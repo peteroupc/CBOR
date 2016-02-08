@@ -191,7 +191,8 @@ PrecisionContext ctx) {
       return new BigInteger(this.Ed.ToEInteger());
     }
 
-    [Obsolete("Implements legacy behavior using an obsolete class for convenience.")]
+  [Obsolete(
+"Implements legacy behavior using an obsolete class for convenience.")]
     internal static ERounding ToERounding(Rounding r) {
       if (r == Rounding.Ceiling) {
         return ERounding.Ceiling;
@@ -424,14 +425,12 @@ PrecisionContext ctx) {
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.IsNaN"]/*'/>
-    [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public bool IsNaN() {
       return this.Ed.IsNaN();
     }
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.IsInfinity"]/*'/>
-    [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public bool IsInfinity() {
       return this.Ed.IsInfinity();
     }

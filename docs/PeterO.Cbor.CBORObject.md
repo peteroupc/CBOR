@@ -88,6 +88,12 @@ Represents the value true.
 
 Represents the value undefined.
 
+### Zero
+
+    public static readonly PeterO.Cbor.CBORObject Zero;
+
+Not documented yet.
+
 ### Count
 
     public int Count { get; }
@@ -137,6 +143,16 @@ Gets a value indicating whether this object represents an integral number, that 
 <b>Returns:</b>
 
 True if this object represents an integral number, that is, a number without a fractional part; otherwise, false.
+
+### IsNegative
+
+    public bool IsNegative { get; }
+
+Gets a value not documented yet.
+
+<b>Returns:</b>
+
+A value not documented yet.
 
 ### IsNull
 

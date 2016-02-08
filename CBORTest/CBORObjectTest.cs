@@ -8,29 +8,36 @@ using PeterO.Numbers;
 namespace Test {
   [TestFixture]
   public class CBORObjectTest {
-
     private static int StringToInt(string str) {
-      bool neg = false;
-      int i = 0;
+      var neg = false;
+      var i = 0;
       if (str.Length > 0 && str[0] == '-') {
         neg = true;
-        i++;
+        ++i;
       }
-      if (i == str.Length) throw new FormatException();
-      int ret = 0;
+      if (i == str.Length) {
+ throw new FormatException();
+}
+      var ret = 0;
       while (i < str.Length) {
         int c = str[i];
-        i++;
+        ++i;
         if (c >= '0' && c <= '9') {
           int x = c - '0';
-          if (ret > 214748364) throw new FormatException();
+          if (ret > 214748364) {
+ throw new FormatException();
+}
           ret *= 10;
           if (ret == 2147483640) {
             if (neg && x == 8) {
-              if (i != str.Length) throw new FormatException();
+              if (i != str.Length) {
+ throw new FormatException();
+}
               return Int32.MinValue;
             }
-            if (x > 7) throw new FormatException();
+            if (x > 7) {
+ throw new FormatException();
+}
           }
           ret += x;
         }
@@ -39,27 +46,35 @@ namespace Test {
     }
 
     private static long StringToLong(string str) {
-      bool neg = false;
-      int i = 0;
+      var neg = false;
+      var i = 0;
       if (str.Length > 0 && str[0] == '-') {
         neg = true;
-        i++;
+        ++i;
       }
-      if (i == str.Length) throw new FormatException();
+      if (i == str.Length) {
+ throw new FormatException();
+}
       long ret = 0;
       while (i < str.Length) {
         int c = str[i];
-        i++;
+        ++i;
         if (c >= '0' && c <= '9') {
           int x = c - '0';
-          if ((long)ret > 922337203685477580L) throw new FormatException();
+          if ((long)ret > 922337203685477580L) {
+ throw new FormatException();
+}
           ret *= 10;
           if ((long)ret == 9223372036854775800L) {
             if (neg && x == 8) {
-              if (i != str.Length) throw new FormatException();
+              if (i != str.Length) {
+ throw new FormatException();
+}
               return Int64.MinValue;
             }
-            if (x > 7) throw new FormatException();
+            if (x > 7) {
+ throw new FormatException();
+}
           }
           ret += x;
         }
@@ -241,8 +256,7 @@ namespace Test {
       // not implemented yet
     }
     private static EDecimal AsED(CBORObject obj) {
-      return PeterO.Numbers.EDecimal.FromString(
-        obj.AsExtendedDecimal().ToString());
+      return EDecimal.FromString(obj.AsExtendedDecimal().ToString());
     }
     [Test]
     public void TestAddition() {
@@ -841,8 +855,8 @@ Assert.AreEqual(objectTemp, objectTemp2);
         CBORTestCommon.RatNegInf,
         CBORObject.FromObject(Double.NegativeInfinity).AsExtendedRational());
       Assert.IsTrue(
-        CBORObject.FromObject(CBORObject.FromObject(Double.NaN).AsExtendedRational())
-                    .IsNaN());
+CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
+          .AsExtendedRational()) .IsNaN());
     }
     [Test]
     public void TestAsInt16() {
@@ -2223,7 +2237,7 @@ stringTemp);
     }
     [Test]
     public void TestFromObjectAndTag() {
-      BigInteger bigvalue = BigInteger.fromString("99999999999999999999999999999");
+  BigInteger bigvalue = BigInteger.fromString("99999999999999999999999999999");
       try {
         CBORObject.FromObjectAndTag(2, bigvalue);
         Assert.Fail("Should have failed");
@@ -3964,7 +3978,7 @@ stringTemp);
               CBORObject.Write(ef, ms);
               CBORObject.Write(cborTemp1, ms);
               cborTemp1.WriteTo(ms);
-              if (cborTemp1.IsNegative && ef.IsZero) {
+              if (cborTemp1.IsNegative && cborTemp1.IsZero) {
                 AssertReadThree(ms.ToArray());
               } else {
                 AssertReadThree(ms.ToArray(), CBORObject.FromObject(ef));
@@ -3993,7 +4007,7 @@ stringTemp);
               CBORObject.Write(ed, ms);
               CBORObject.Write(cborTemp1, ms);
               cborTemp1.WriteTo(ms);
-              if (cborTemp1.IsNegative && ed.IsZero) {
+              if (cborTemp1.IsNegative && cborTemp1.IsZero) {
                 AssertReadThree(ms.ToArray());
               } else {
                 AssertReadThree(ms.ToArray(), CBORObject.FromObject(ed));
@@ -4202,7 +4216,7 @@ stringTemp);
             CBORObject.Write(er, ms);
             CBORObject.Write(cborTemp1, ms);
             cborTemp1.WriteTo(ms);
-            if (cborTemp1.IsNegative && er.IsZero) {
+            if (cborTemp1.IsNegative && cborTemp1.IsZero) {
               AssertReadThree(ms.ToArray());
             } else {
               AssertReadThree(ms.ToArray(), CBORObject.FromObject(er));
@@ -4499,6 +4513,18 @@ stringTemp);
     [Test]
     public void TestWriteTo() {
       // not implemented yet
+    }
+
+    [Test]
+    public void TestZero() {
+      {
+string stringTemp = CBORObject.Zero.ToString();
+Assert.AreEqual(
+"0",
+stringTemp);
+}
+      Assert.AreEqual(CBORObject.FromObject(0),
+       CBORObject.Zero);
     }
 
     internal static void CompareDecimals(CBORObject o1, CBORObject o2) {

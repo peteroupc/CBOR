@@ -24,7 +24,6 @@ namespace PeterO.DocGen {
           OperatorList();
 
     private readonly StringBuilder buffer = new StringBuilder();
-    private StringBuilder currentBuffer;
     private readonly StringBuilder exceptionStr = new StringBuilder();
 
     private readonly IDictionary<string, StringBuilder> members = new
@@ -32,6 +31,7 @@ namespace PeterO.DocGen {
 
     private readonly StringBuilder paramStr = new StringBuilder();
     private readonly StringBuilder returnStr = new StringBuilder();
+    private StringBuilder currentBuffer;
 
     public static void AppendConstraints(
 Type[] genericArguments,
@@ -150,7 +150,8 @@ StringBuilder builder) {
         }
         if (method.IsFinal) {
           builder.Append("sealed ");
-     } else if (method is MethodInfo && IsMethodOverride((MethodInfo)method)) {
+     } else if (method is MethodInfo &&
+          IsMethodOverride((MethodInfo)method)) {
           builder.Append("override ");
         } else if (method.IsVirtual) {
           builder.Append("virtual ");
@@ -672,6 +673,50 @@ StringBuilder builder) {
       }
     }
 
+    private static string Heading(MemberInfo info) {
+      var ret = String.Empty;
+      if (info is MethodBase) {
+        var method = (MethodBase)info;
+        if (method is ConstructorInfo) {
+          return TypeNameUtil.UndecorateTypeName(method.ReflectedType.Name) +
+          " Constructor";
+        }
+        return MethodNameHeading(method.Name);
+      }
+      if (info is Type) {
+        var type = (Type)info;
+        return FormatType(type);
+      } else if (info is PropertyInfo) {
+        var property = (PropertyInfo)info;
+        return property.Name;
+      } else if (info is FieldInfo) {
+        var field = (FieldInfo)info;
+        return field.Name;
+      }
+      return ret;
+    }
+
+    private static string HeadingUnambiguous(MemberInfo info) {
+      var ret = String.Empty;
+      if (info is MethodBase) {
+        var method = (MethodBase)info;
+        return (method is ConstructorInfo) ? ("<1>" + " " +
+          FormatMethod(method)) : ("<4>" + method.Name + " " +
+          FormatMethod(method));
+      }
+      if (info is Type) {
+        var type = (Type)info;
+        return "<0>" + FormatType(type);
+      } else if (info is PropertyInfo) {
+        var property = (PropertyInfo)info;
+        return "<3>" + property.Name;
+      } else if (info is FieldInfo) {
+        var field = (FieldInfo)info;
+        return "<2>" + field.Name;
+      }
+      return ret;
+    }
+
     private static string MethodNameHeading(string p) {
       return ValueOperators.ContainsKey(p) ? ("Operator `" +
         ValueOperators[p] + "`") :
@@ -726,50 +771,6 @@ StringBuilder builder) {
 
     private IDisposable Change(StringBuilder builder) {
       return new BufferChanger(this, builder);
-    }
-
-    private static string Heading(MemberInfo info) {
-      var ret = String.Empty;
-      if (info is MethodBase) {
-        var method = (MethodBase)info;
-        if (method is ConstructorInfo) {
-          return TypeNameUtil.UndecorateTypeName(method.ReflectedType.Name) +
-          " Constructor";
-        }
-        return MethodNameHeading(method.Name);
-      }
-      if (info is Type) {
-        var type = (Type)info;
-        return FormatType(type);
-      } else if (info is PropertyInfo) {
-        var property = (PropertyInfo)info;
-        return property.Name;
-      } else if (info is FieldInfo) {
-        var field = (FieldInfo)info;
-        return field.Name;
-      }
-      return ret;
-    }
-
-    private static string HeadingUnambiguous(MemberInfo info) {
-      var ret = String.Empty;
-      if (info is MethodBase) {
-        var method = (MethodBase)info;
-        return (method is ConstructorInfo) ? ("<1>" + " " +
-          FormatMethod(method)) : ("<4>" + method.Name + " " +
-          FormatMethod(method));
-      }
-      if (info is Type) {
-        var type = (Type)info;
-        return "<0>" + FormatType(type);
-      } else if (info is PropertyInfo) {
-        var property = (PropertyInfo)info;
-        return "<3>" + property.Name;
-      } else if (info is FieldInfo) {
-        var field = (FieldInfo)info;
-        return "<2>" + field.Name;
-      }
-      return ret;
     }
 
     private void Write(string ln) {

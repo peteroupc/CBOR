@@ -9,11 +9,10 @@ using System;
 using PeterO.Numbers;
 
 namespace PeterO {
-  /// <include file='../docs.xml'
-  /// path='docs/doc[@name="T:PeterO.ExtendedRational"]/*'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.ExtendedRational"]/*'/>
   public sealed class ExtendedRational : IComparable<ExtendedRational>,
     IEquatable<ExtendedRational> {
-
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="F:PeterO.ExtendedRational.NaN"]/*'/>
     [Obsolete("Use ERational from PeterO.Numbers/com.upokecenter.numbers.")]
@@ -104,6 +103,7 @@ namespace PeterO {
         return this.Er.IsZero;
       }
     }
+
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="P:PeterO.ExtendedRational.Numerator"]/*'/>
     public BigInteger Numerator {
@@ -146,7 +146,6 @@ int denominatorSmall) {
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedRational.Create(PeterO.BigInteger,PeterO.BigInteger)"]/*'/>
-    [Obsolete("Use ERational from PeterO.Numbers/com.upokecenter.numbers.")]
     public static ExtendedRational Create(
 BigInteger numerator,
 BigInteger denominator) {
@@ -295,7 +294,7 @@ bool negative) {
       }
       return new ExtendedRational(this.Er.Divide(otherValue.Er)).Simplify();
     }
-    
+
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedRational.Equals(System.Object)"]/*'/>
     public override bool Equals(object obj) {

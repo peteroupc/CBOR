@@ -4,7 +4,7 @@
         System.IComparable,
         System.IEquatable
 
-This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.EFloat`  in the  `PeterO.Numbers` library (in .NET), or  `com.upokecenter.numbers.EFloat`  in the  `com.github.peteroupc/numbers` artifact (in Java). This new class can be used in the  `CBORObject.FromObject(Object)` method, among other things, but for method, among other things (by including the new library in your code), but for this versionof the CBOR library doesn't include any methods that explicitly take an  `EFloat`  as a parameter or return value.
+This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.EFloat`  in the  `PeterO.Numbers` library (in .NET), or  `com.upokecenter.numbers.EFloat`  in the  `com.github.peteroupc/numbers` artifact (in Java). This new class can be used in the  `CBORObject.FromObject(Object)` method (by including the new library in your code, among other things), but this version of the CBOR library doesn't include any methods that explicitly take an  `EFloat`  as a parameter or return value.
 
 Represents an arbitrary-precision binary floating-point number. Consists of an integer mantissa and an integer exponent, both arbitrary-precision. The value of the number equals mantissa * 2^exponent. This class also supports values for negative zero, not-a-number (NaN) values, and infinity.
 
@@ -78,8 +78,6 @@ Represents the number 0.
 
     public PeterO.BigInteger Exponent { get; }
 
-<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
-
 Gets this object's exponent. This object's value will be an integer if the exponent is positive or zero.
 
 <b>Returns:</b>
@@ -126,8 +124,6 @@ True if this object's value equals 0; otherwise, false.
 
     public PeterO.BigInteger Mantissa { get; }
 
-<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
-
 Gets this object's un-scaled value.
 
 <b>Returns:</b>
@@ -149,8 +145,6 @@ This value's sign: -1 if negative; 1 if positive; 0 if zero.
 ### UnsignedMantissa
 
     public PeterO.BigInteger UnsignedMantissa { get; }
-
-<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Gets the absolute value of this object's un-scaled value.
 
@@ -326,8 +320,6 @@ The parameter <i>other</i>
         int mantissaSmall,
         int exponentSmall);
 
-<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
-
 Creates a number with the value exponent*2^mantissa.
 
 <b>Parameters:</b>
@@ -345,8 +337,6 @@ An arbitrary-precision binary float.
     public static PeterO.ExtendedFloat Create(
         PeterO.BigInteger mantissa,
         PeterO.BigInteger exponent);
-
-<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Creates a number with the value exponent*2^mantissa.
 
@@ -1093,8 +1083,6 @@ This object's hash code.
 
     public bool IsInfinity();
 
-<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
-
 Gets a value indicating whether this object is positive or negative infinity.
 
 <b>Returns:</b>
@@ -1104,8 +1092,6 @@ True if this object is positive or negative infinity; otherwise, false.
 ### IsNaN
 
     public bool IsNaN();
-
-<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns whether this object is a not-a-number value.
 

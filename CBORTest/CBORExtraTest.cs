@@ -12,6 +12,7 @@ using System.Linq;
 using NUnit.Framework;
 using PeterO;
 using PeterO.Cbor;
+using PeterO.Numbers;
 
 namespace Test {
   [TestFixture]
@@ -130,7 +131,7 @@ Console.Write(String.Empty);
       for (int i = SByte.MinValue; i <= SByte.MaxValue; ++i) {
         CBORTestCommon.AssertSer(
           CBORObject.FromObject((sbyte)i),
-          String.Format(CultureInfo.InvariantCulture, "{0}", i));
+          (TestCommon.LongToString(i)));
       }
     }
 
@@ -4622,7 +4623,7 @@ Console.Write(String.Empty);
         while (true) {
           CBORTestCommon.AssertSer(
             CBORObject.FromObject(j),
-            String.Format(CultureInfo.InvariantCulture, "{0}", j));
+            ((PeterO.Numbers.EDecimal)j).ToString());
           if (j == ranges[i + 1]) {
             break;
           }
@@ -4711,7 +4712,7 @@ stringTemp);
         while (true) {
           CBORTestCommon.AssertSer(
             CBORObject.FromObject(j),
-            String.Format(CultureInfo.InvariantCulture, "{0}", j));
+            (TestCommon.LongToString(j)));
           if (j == ranges[i + 1]) {
             break;
           }
@@ -4724,25 +4725,22 @@ stringTemp);
     public void TestDecimal() {
       CBORTestCommon.AssertSer(
         CBORObject.FromObject(Decimal.MinValue),
-        String.Format(CultureInfo.InvariantCulture, "{0}", Decimal.MinValue));
+        ((EDecimal)(Decimal.MinValue)).ToString());
       CBORTestCommon.AssertSer(
         CBORObject.FromObject(Decimal.MaxValue),
-        String.Format(CultureInfo.InvariantCulture, "{0}", Decimal.MaxValue));
+        ((EDecimal)(Decimal.MaxValue)).ToString());
       for (int i = -100; i <= 100; ++i) {
         CBORTestCommon.AssertSer(
           CBORObject.FromObject((decimal)i),
-          String.Format(CultureInfo.InvariantCulture, "{0}", i));
+          TestCommon.IntToString(i));
         {
 CBORObject objectTemp = CBORObject.FromObject((decimal)i + 0.1m);
-string objectTemp2 = String.Format(
-  CultureInfo.InvariantCulture,
-  "{0}",
-  (decimal)i + 0.1m);
+string objectTemp2 = ((EDecimal)((decimal)i + 0.1m)).ToString();
 CBORTestCommon.AssertSer(objectTemp, objectTemp2);
 }
         CBORTestCommon.AssertSer(
           CBORObject.FromObject((decimal)i + 0.1111m),
-     String.Format(CultureInfo.InvariantCulture, "{0}", (decimal)i + 0.1111m));
+     ((EDecimal)((decimal)i + 0.1111m)).ToString());
       }
     }
 
@@ -4751,7 +4749,7 @@ CBORTestCommon.AssertSer(objectTemp, objectTemp2);
       for (int i = UInt16.MinValue; i <= UInt16.MaxValue; ++i) {
         CBORTestCommon.AssertSer(
           CBORObject.FromObject((UInt16)i),
-          String.Format(CultureInfo.InvariantCulture, "{0}", i));
+          (TestCommon.LongToString(i)));
       }
     }
 

@@ -70,7 +70,9 @@ namespace PeterO {
     [Obsolete("Use EInteger from PeterO.Numbers/com.upokecenter.numbers.")]
   public static readonly BigInteger ZERO = zeroValue;
 
-    private static readonly BigInteger zeroValue = new BigInteger(EInteger.Zero);
+  private static readonly BigInteger zeroValue = new
+      BigInteger(EInteger.Zero);
+
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="P:PeterO.BigInteger.IsEven"]/*'/>
     [Obsolete("Use EInteger from PeterO.Numbers/com.upokecenter.numbers.")]
