@@ -20,6 +20,9 @@ namespace PeterO.Cbor {
     private static CBORObject ConstructSimpleValue(int v) {
       return new CBORObject(CBORObjectTypeSimpleValue, v);
     }
+    private static CBORObject ConstructIntegerValue(int v) {
+      return new CBORObject(CBORObjectTypeInteger, (long)v);
+    }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="F:PeterO.Cbor.CBORObject.False"]/*'/>
@@ -83,9 +86,10 @@ namespace PeterO.Cbor {
     public static readonly CBORObject Undefined =
       CBORObject.ConstructSimpleValue(23);
 
-    /// <summary>Not documented yet.</summary>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.Cbor.CBORObject.Zero"]/*'/>
     public static readonly CBORObject Zero =
-      new CBORObject(CBORObjectTypeInteger, 0L);
+      CBORObject.ConstructIntegerValue(0);
 
     internal const int CBORObjectTypeArray = 4;
     internal const int CBORObjectTypeBigInteger = 1;  // all other integers
@@ -299,8 +303,8 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.IsNegative"]/*'/>
     public bool IsNegative {
       get {
         ICBORNumber cn = NumberInterfaces[this.ItemType];

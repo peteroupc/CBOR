@@ -753,7 +753,7 @@ TestCommon.CompareTestEqual(objectTemp, objectTemp2);
         Int64.MaxValue - 1000, Int64.MaxValue, Int64.MinValue, Int64.MinValue +
           1000 };
       for (var i = 0; i < ranges.Length; i += 2) {
-        long TestCommon.LongToString(j)j = ranges[i];
+        long j = ranges[i];
         while (true) {
           Assert.IsTrue(CBORObject.FromObject(j).IsIntegral);
           Assert.IsTrue(CBORObject.FromObject(j).CanFitInInt64());

@@ -3,9 +3,9 @@
 <summary>
             <para><b>This class is largely obsolete. It will be replaced by a new
             version of this class in a different namespace/package and library,
-            called <c>PeterO.Numbers.EInteger</c> in the <c>PeterO.Numbers</c>
+            called <c>PeterO.Numbers.EInteger</c> in the <a href="https://www.nuget.org/packages/PeterO.Numbers"><c>PeterO.Numbers</c></a>
             library (in .NET), or <c>com.upokecenter.numbers.EInteger</c> in the 
-            <c>com.github.peteroupc/numbers</c>
+            <a href="https://github.com/peteroupc/numbers-java"><c>com.github.peteroupc/numbers</c></a>
             artifact (in Java).  This new class can be used in the <c>CBORObject.FromObject(Object)</c>
             method (by including the new library in your code, among other things), but this version of the CBOR library doesn't
             include any methods that explicitly take an <c>EInteger</c> as a parameter
@@ -19,7 +19,7 @@
             ///
 </doc>
 <doc name="M:PeterO.BigInteger.Abs(PeterO.BigInteger)">
-<summary>Not documented yet.</summary>
+<summary>Gets this integer's absolute value.</summary>
             <param name='thisValue'>Another arbitrary-precision
             integer.</param>
             <returns>An arbitrary-precision integer.</returns>
@@ -48,9 +48,9 @@
             greater.</returns>
 </doc>
 <doc name="M:PeterO.BigInteger.DivRem(PeterO.BigInteger,PeterO.BigInteger,PeterO.BigInteger@)">
-<summary>Not documented yet.</summary>
+<summary>Returns the quotient and remainder of two arbitrary-precision integers.</summary>
             <param name='dividend'>Big integer to be divided.</param>
-            <param name='divisor'>An arbitrary-precision integer. (3).</param>
+            <param name='divisor'>The divisor.</param>
             <param name='remainder'>An arbitrary-precision integer.
             (4).</param>
             <returns>An array of two big integers: the first is the quotient,
@@ -1574,8 +1574,8 @@
             following types are specially handled by this method: null;
             primitive types; string; CBORObject; 
             the <c>EDecimal</c>, <c>EFloat</c>, <c>EInteger</c>, and <c>ERational</c>
-            classes in the new <c>PeterO.Numbers</c> library (in .NET) or the
-            <c>com.github.peteroupc/numbers</c> artifact (in Java);
+            classes in the new <a href="https://www.nuget.org/packages/PeterO.Numbers"><c>PeterO.Numbers</c></a> library (in .NET) or the
+            <a href="https://github.com/peteroupc/numbers-java"><c>com.github.peteroupc/numbers</c></a> artifact (in Java);
             the legacy <c>ExtendedDecimal</c>, <c>ExtendedFloat</c>, 
             <c>ExtendedInteger</c>, and <c>ExtendedRational</c>
             classes in this library; arrays;
@@ -1822,6 +1822,10 @@
             <returns>True if this CBOR object represents a not-a-number value
             (as opposed to whether this object's type is not a number type);
             otherwise, false.</returns>
+</doc>
+<doc name="P:PeterO.Cbor.CBORObject.IsNegative">
+<summary>Gets a value indicating whether this object is a negative number.</summary>
+            <value>True if this object is a negative number; otherwise, false.</value>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.IsNegativeInfinity">
 <summary>Gets a value indicating whether this CBOR object
@@ -2473,6 +2477,9 @@
             <paramref name='stream'/> is null.</exception>
             <exception cref='T:System.IO.IOException'>An I/O error
             occurred.</exception>
+</doc>
+<doc name="F:PeterO.Cbor.CBORObject.Zero">
+<summary>Gets a CBOR object for the number zero.</summary>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.op_Addition(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
 <summary>Adds a CBORObject object and a CBORObject
@@ -3488,9 +3495,9 @@
 <summary>
             <para><b>This class is largely obsolete. It will be replaced by a new
             version of this class in a different namespace/package and library,
-            called <c>PeterO.Numbers.EDecimal</c> in the <c>PeterO.Numbers</c>
+            called <c>PeterO.Numbers.EDecimal</c> in the <a href="https://www.nuget.org/packages/PeterO.Numbers"><c>PeterO.Numbers</c></a>
             library (in .NET), or <c>com.upokecenter.numbers.EDecimal</c> in the 
-            <c>com.github.peteroupc/numbers</c>
+            <a href="https://github.com/peteroupc/numbers-java"><c>com.github.peteroupc/numbers</c></a>
             artifact (in Java).  This new class can be used in the <c>CBORObject.FromObject(Object)</c>
             method (by including the new library in your code, among other things), but this version of the CBOR library doesn't
             include any methods that explicitly take an <c>EDecimal</c> as a parameter
@@ -5168,9 +5175,9 @@
 <summary>
             <para><b>This class is largely obsolete. It will be replaced by a new
             version of this class in a different namespace/package and library,
-            called <c>PeterO.Numbers.EFloat</c> in the <c>PeterO.Numbers</c>
+            called <c>PeterO.Numbers.EFloat</c> in the <a href="https://www.nuget.org/packages/PeterO.Numbers"><c>PeterO.Numbers</c></a>
             library (in .NET), or <c>com.upokecenter.numbers.EFloat</c> in the 
-            <c>com.github.peteroupc/numbers</c>
+            <a href="https://github.com/peteroupc/numbers-java"><c>com.github.peteroupc/numbers</c></a>
             artifact (in Java).  This new class can be used in the <c>CBORObject.FromObject(Object)</c>
             method (by including the new library in your code, among other things), but this version of the CBOR library doesn't
             include any methods that explicitly take an <c>EFloat</c> as a parameter
@@ -6738,9 +6745,9 @@
 <doc name="T:PeterO.ExtendedRational">
 <summary> <para><b>This class is largely obsolete. It will be replaced by a new
             version of this class in a different namespace/package and library,
-            called <c>PeterO.Numbers.ERational</c> in the <c>PeterO.Numbers</c>
+            called <c>PeterO.Numbers.ERational</c> in the <a href="https://www.nuget.org/packages/PeterO.Numbers"><c>PeterO.Numbers</c></a>
             library (in .NET), or <c>com.upokecenter.numbers.ERational</c> in the 
-            <c>com.github.peteroupc/numbers</c>
+            <a href="https://github.com/peteroupc/numbers-java"><c>com.github.peteroupc/numbers</c></a>
             artifact (in Java).  This new class can be used in the <c>CBORObject.FromObject(Object)</c>
             method (by including the new library in your code, among other things), but this version of the CBOR library doesn't
             include any methods that explicitly take an <c>ERational</c> as a parameter
@@ -7161,7 +7168,7 @@
             version of this class in a different namespace/package and library,
             called <c>PeterO.Numbers.EContext</c> in the <c>PeterO.EContext</c>
             library (in .NET), or <c>com.upokecenter.numbers.EFloat</c> in the 
-            <c>com.github.peteroupc/numbers</c>
+            <a href="https://github.com/peteroupc/numbers-java"><c>com.github.peteroupc/numbers</c></a>
             artifact (in Java).</b></para>Contains parameters for controlling the precision,
             rounding, and exponent range of arbitrary-precision
             numbers.</summary>
@@ -7553,7 +7560,7 @@
             version of this class in a different namespace/package and library,
             called <c>PeterO.Numbers.ERounding</c> in the <c>PeterO.ERounding</c>
             library (in .NET), or <c>com.upokecenter.numbers.EFloat</c> in the 
-            <c>com.github.peteroupc/numbers</c>
+            <a href="https://github.com/peteroupc/numbers-java"><c>com.github.peteroupc/numbers</c></a>
             artifact (in Java).</b></para>Specifies the mode to use when &#x22;shortening&#x22;
             numbers that otherwise can&#x27;t fit a given number of digits, so
             that the shortened number has about the same value. This
@@ -7619,9 +7626,9 @@
 <doc name="T:PeterO.TrapException">
 <summary>            <para><b>This class is obsolete. It will be replaced by a new
             version of this class in a different namespace/package and library,
-            called <c>PeterO.Numbers.ETrapException</c> in the <c>PeterO.Numbers</c>
+            called <c>PeterO.Numbers.ETrapException</c> in the <a href="https://www.nuget.org/packages/PeterO.Numbers"><c>PeterO.Numbers</c></a>
             library (in .NET), or <c>com.upokecenter.numbers.ETrapException</c> in the 
-            <c>com.github.peteroupc/numbers</c>
+            <a href="https://github.com/peteroupc/numbers-java"><c>com.github.peteroupc/numbers</c></a>
             artifact (in Java).</b></para>
             Exception thrown for arithmetic trap errors.</summary>
 </doc>
