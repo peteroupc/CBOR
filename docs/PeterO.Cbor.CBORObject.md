@@ -92,7 +92,7 @@ Represents the value undefined.
 
     public static readonly PeterO.Cbor.CBORObject Zero;
 
-Not documented yet.
+Gets a CBOR object for the number zero.
 
 ### Count
 
@@ -148,11 +148,11 @@ True if this object represents an integral number, that is, a number without a f
 
     public bool IsNegative { get; }
 
-Gets a value not documented yet.
+Gets a value indicating whether this object is a negative number.
 
 <b>Returns:</b>
 
-A value not documented yet.
+True if this object is a negative number; otherwise, false.
 
 ### IsNull
 

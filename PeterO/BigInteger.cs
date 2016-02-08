@@ -28,9 +28,9 @@ namespace PeterO {
 #endif
 
     [Obsolete("Use EInteger from PeterO.Numbers/com.upokecenter.numbers.")]
-    public static readonly BigInteger ONE = oneValue;
+    public static readonly BigInteger ONE = new BigInteger(EInteger.One);
 
-  private static readonly BigInteger oneValue = new BigInteger(EInteger.One);
+    private static readonly BigInteger oneValue = new BigInteger(EInteger.One);
     private readonly EInteger ei;
 
     internal BigInteger(EInteger ei) {
@@ -68,7 +68,8 @@ namespace PeterO {
       Justification = "BigInteger is immutable")]
 #endif
     [Obsolete("Use EInteger from PeterO.Numbers/com.upokecenter.numbers.")]
-  public static readonly BigInteger ZERO = zeroValue;
+    public static readonly BigInteger ZERO = new
+      BigInteger(EInteger.Zero);
 
   private static readonly BigInteger zeroValue = new
       BigInteger(EInteger.Zero);

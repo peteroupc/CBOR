@@ -117,7 +117,7 @@ This object's value with the sign removed.
 
 <b>Deprecated.</b> Use EInteger from PeterO.Numbers/com.upokecenter.numbers.
 
-Not documented yet.
+Gets this integer's absolute value.
 
 <b>Parameters:</b>
 
