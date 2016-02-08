@@ -4,7 +4,7 @@
         System.IComparable,
         System.IEquatable
 
-This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.EDecimal`  in the  `PeterO.Numbers` library (in .NET), or  `com.upokecenter.numbers.EDecimal`  in the  `com.github.peteroupc/numbers` artifact (in Java). This new class can be used in the  `CBORObject.FromObject(Object)` method, among other things, but for method, among other things (by including the new library in your code), but for this versionof the CBOR library doesn't include any methods that explicitly take an  `EDecimal`  as a parameter or return value.
+This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.EDecimal`  in the  `PeterO.Numbers` library (in .NET), or  `com.upokecenter.numbers.EDecimal`  in the  `com.github.peteroupc/numbers` artifact (in Java). This new class can be used in the  `CBORObject.FromObject(Object)` method (by including the new library in your code, among other things), but this version of the CBOR library doesn't include any methods that explicitly take an  `EDecimal`  as a parameter or return value.
 
 Represents an arbitrary-precision decimal floating-point number.About decimal arithmetic
 
@@ -104,8 +104,6 @@ Represents the number 0.
 
     public PeterO.BigInteger Exponent { get; }
 
-<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
-
 Gets this object's exponent. This object's value will be an integer if the exponent is positive or zero.
 
 <b>Returns:</b>
@@ -152,8 +150,6 @@ True if this object's value equals 0; otherwise, false.
 
     public PeterO.BigInteger Mantissa { get; }
 
-<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
-
 Gets this object's un-scaled value.
 
 <b>Returns:</b>
@@ -175,8 +171,6 @@ This value's sign: -1 if negative; 1 if positive; 0 if zero.
 ### UnsignedMantissa
 
     public PeterO.BigInteger UnsignedMantissa { get; }
-
-<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Gets the absolute value of this object's un-scaled value.
 
@@ -388,8 +382,6 @@ An arbitrary-precision decimal number.
     public static PeterO.ExtendedDecimal Create(
         PeterO.BigInteger mantissa,
         PeterO.BigInteger exponent);
-
-<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Creates a number with the value exponent*10^mantissa.
 
@@ -1091,8 +1083,6 @@ This object's hash code.
 
     public bool IsInfinity();
 
-<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
-
 Gets a value indicating whether this object is positive or negative infinity.
 
 <b>Returns:</b>
@@ -1102,8 +1092,6 @@ True if this object is positive or negative infinity; otherwise, false.
 ### IsNaN
 
     public bool IsNaN();
-
-<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Gets a value indicating whether this object is not a number (NaN).
 
@@ -2526,8 +2514,6 @@ This object's value is not an exact integer.
 
     public double ToDouble();
 
-<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
-
 Converts this value to a 64-bit floating-point number. The half-even rounding mode is used.If this value is a NaN, sets the high bit of the 64-bit floating point number's mantissa for a quiet NaN, and clears it for a signaling NaN. Then the next highest bit of the mantissa is cleared for a quiet NaN, and set for a signaling NaN. Then the other bits of the mantissa are set to the lowest bits of this object's unsigned mantissa.
 
 <b>Returns:</b>
@@ -2573,8 +2559,6 @@ A text string.
 ### ToSingle
 
     public float ToSingle();
-
-<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Converts this value to a 32-bit floating-point number. The half-even rounding mode is used.If this value is a NaN, sets the high bit of the 32-bit floating point number's mantissa for a quiet NaN, and clears it for a signaling NaN. Then the next highest bit of the mantissa is cleared for a quiet NaN, and set for a signaling NaN. Then the other bits of the mantissa are set to the lowest bits of this object's unsigned mantissa.
 

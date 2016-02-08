@@ -11,7 +11,6 @@ using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   internal class CBORInteger : ICBORNumber {
-
     public object Abs(object obj) {
       var val = (long)obj;
       return (val == Int32.MinValue) ? (EInteger.One << 63) : ((val < 0) ?

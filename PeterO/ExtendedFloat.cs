@@ -333,7 +333,6 @@ PrecisionContext ctx) {
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="F:PeterO.ExtendedFloat.SignalingNaN"]/*'/>
-    [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public static readonly ExtendedFloat SignalingNaN =
      new ExtendedFloat(EFloat.SignalingNaN);
 

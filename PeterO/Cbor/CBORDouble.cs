@@ -150,7 +150,7 @@ namespace PeterO.Cbor {
     }
 
     public bool IsNegative(object obj) {
-      double dbl = (double)obj;
+      var dbl = (double)obj;
       long lvalue = BitConverter.ToInt64(
 BitConverter.GetBytes((double)dbl),
 0);

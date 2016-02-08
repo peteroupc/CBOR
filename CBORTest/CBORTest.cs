@@ -59,7 +59,7 @@ namespace Test {
 
     [Test]
     public void TestBigInteger() {
-      FastRandom r = new FastRandom();
+      var r = new FastRandom();
       for (var i = 0; i < 500; ++i) {
         BigInteger bi = RandomObjects.RandomBigInteger(r);
         CBORTestCommon.AssertSer(
@@ -104,11 +104,13 @@ EInteger.FromString("18446744073709552127")
   o = CBORTestCommon.FromBytesTestAB(new byte[] { 0xc2, 0x44, 0x88, 0x77,
         0x66,
         0x55 });
-      Assert.AreEqual(BigInteger.fromRadixString("88776655", 16), o.AsBigInteger());
+ Assert.AreEqual(BigInteger.fromRadixString("88776655", 16),
+        o.AsBigInteger());
   o = CBORTestCommon.FromBytesTestAB(new byte[] { 0xc2, 0x47, 0x88, 0x77,
         0x66,
         0x55, 0x44, 0x33, 0x22 });
-      Assert.AreEqual(BigInteger.fromRadixString("88776655443322",16), o.AsBigInteger());
+      Assert.AreEqual(BigInteger.fromRadixString("88776655443322",16),
+        o.AsBigInteger());
     }
 
     [Test]
@@ -160,13 +162,11 @@ EInteger.FromString("18446744073709552127")
         EDecimal ed2;
 
         ed2 = EDecimal.FromDouble(AsED(ed).ToDouble());
-        if ((AsED(ed).CompareTo(ed2) == 0) !=
-            ed.CanFitInDouble()) {
+        if ((AsED(ed).CompareTo(ed2) == 0) != ed.CanFitInDouble()) {
           Assert.Fail(ObjectMessage(ed));
         }
         ed2 = EDecimal.FromSingle(AsED(ed).ToSingle());
-        if ((AsED(ed).CompareTo(ed2) == 0) !=
-            ed.CanFitInSingle()) {
+        if ((AsED(ed).CompareTo(ed2) == 0) != ed.CanFitInSingle()) {
           Assert.Fail(ObjectMessage(ed));
         }
         if (!ed.IsInfinity() && !ed.IsNaN()) {
@@ -511,19 +511,12 @@ AddSubCompare(objectTemp, objectTemp2);
           continue;
         }
         var er = new ExtendedRational(o1.AsBigInteger(), o2.AsBigInteger());
-        TestCommon.CompareTestEqual(
-          er,
-          CBORObject.Divide(o1, o2).AsExtendedRational()
-          );
-      }
-      for (var i = 0; i < 3000; ++i) {
-        CBORObject o1 = CBORTestCommon.RandomNumber(r);
-        CBORObject o2 = CBORTestCommon.RandomNumber(r);
-        ExtendedRational er =
-          o1.AsExtendedRational().Divide(o2.AsExtendedRational());
-        TestCommon.CompareTestEqual(
-          er,
-          (CBORObject.Divide(o1, o2).AsExtendedRational()));
+        {
+          ExtendedRational objectTemp = er;
+  ExtendedRational objectTemp2 = CBORObject.Divide(o1,
+            o2).AsExtendedRational() ;
+TestCommon.CompareTestEqual(objectTemp, objectTemp2);
+}
       }
     }
 
@@ -760,22 +753,22 @@ AddSubCompare(objectTemp, objectTemp2);
         Int64.MaxValue - 1000, Int64.MaxValue, Int64.MinValue, Int64.MinValue +
           1000 };
       for (var i = 0; i < ranges.Length; i += 2) {
-        long j = ranges[i];
+        long TestCommon.LongToString(j)j = ranges[i];
         while (true) {
           Assert.IsTrue(CBORObject.FromObject(j).IsIntegral);
           Assert.IsTrue(CBORObject.FromObject(j).CanFitInInt64());
           Assert.IsTrue(CBORObject.FromObject(j).CanTruncatedIntFitInInt64());
           CBORTestCommon.AssertSer(
             CBORObject.FromObject(j),
-            ("" + (j)));
+            TestCommon.LongToString(j));
           Assert.AreEqual(
             CBORObject.FromObject(j),
             CBORObject.FromObject(BigInteger.valueOf(j)));
           CBORObject obj = CBORObject.FromJSONString(
-            ("[" + j + "]"));
+            ("[" + TestCommon.LongToString(j) + "]"));
           CBORTestCommon.AssertSer(
             obj,
-            ("[" + j + "]"));
+            ("[" + TestCommon.LongToString(j) + "]"));
           if (j == ranges[i + 1]) {
             break;
           }
@@ -1008,11 +1001,8 @@ AddSubCompare(objectTemp, objectTemp2);
       for (var i = 0; i < 3000; ++i) {
         CBORObject o1 = CBORTestCommon.RandomNumber(r);
         CBORObject o2 = CBORTestCommon.RandomNumber(r);
-        ExtendedDecimal cmpDecFrac =
-          o1.AsExtendedDecimal().Subtract(o2.AsExtendedDecimal());
-        ExtendedDecimal cmpCobj = CBORObject.Subtract(
-          o1,
-          o2).AsExtendedDecimal();
+        EDecimal cmpDecFrac = AsED(o1).Subtract(AsED(o2));
+        EDecimal cmpCobj = AsED(CBORObject.Subtract(o1, o2));
         TestCommon.CompareTestEqual(cmpDecFrac, cmpCobj);
         CBORTestCommon.AssertRoundTrip(o1);
         CBORTestCommon.AssertRoundTrip(o2);
@@ -1034,8 +1024,8 @@ AddSubCompare(objectTemp, objectTemp2);
         o = CBORObject.FromObjectAndTag(o, i + 1);
         TestCommon.AssertEqualsHashCode(o, o2);
         o =
-  CBORObject.FromObject(BigInteger.fromString("999999999999999999999999999999999"
-));
+  CBORObject.FromObject(BigInteger.fromString(
+"999999999999999999999999999999999"));
         o2 = CBORObject.FromObjectAndTag(o, i);
         TestCommon.AssertEqualsHashCode(o, o2);
         o = CBORObject.FromObjectAndTag(o, i + 1);
@@ -1110,9 +1100,11 @@ BigInteger.fromString("18446744073709551615") };
       for (var i = 0; i < ranges.Length; i += 2) {
         BigInteger bigintTemp = ranges[i];
         while (true) {
-          BigInteger bigintNext = bigintTemp + BigInteger.One;
+          EInteger ei = EInteger.FromBytes(bigintTemp.toBytes(true), true);
+          BigInteger bigintNext =
+            BigInteger.fromBytes(ei.Add(EInteger.One).ToBytes(true), true);
           if (bigintTemp.bitLength() <= 31) {
-            int bc = bigintTemp.intValueChecked();
+            int bc = ei.ToInt32Checked();
             if (bc>=-1 && bc <= 37) {
               bigintTemp = bigintNext;
               continue;
@@ -1128,7 +1120,7 @@ BigInteger.fromString("18446744073709551615") };
           Assert.AreEqual(1, tags.Length);
           Assert.AreEqual(bigintTemp, tags[0]);
           if (!obj.InnermostTag.Equals(bigintTemp)) {
-            string errmsg = ("obj tag doesn't match: " + (obj));
+            string errmsg = ("obj tag doesn't match: " + obj);
             Assert.AreEqual(
               bigintTemp,
               obj.InnermostTag,
@@ -1149,7 +1141,7 @@ BigInteger.fromString("18446744073709551615") };
             BigInteger[] bi = obj2.GetTags();
             if (bi.Length != 2) {
               {
-                string stringTemp = ("Expected 2 tags: " + (obj2));
+                string stringTemp = ("Expected 2 tags: " + obj2);
                 Assert.AreEqual(
                     2,
                     bi.Length,
@@ -1163,7 +1155,7 @@ BigInteger.fromString("18446744073709551615") };
                "Inner tag doesn't match");
             if (!obj2.InnermostTag.Equals((object)bigintTemp)) {
               {
-                string stringTemp = ("Innermost tag doesn't match: " + (obj2));
+                string stringTemp = ("Innermost tag doesn't match: " + obj2);
                 Assert.AreEqual(
                     bigintTemp,
                     obj2.InnermostTag,
@@ -1229,7 +1221,7 @@ stringTemp);
         0x20, 0xff });
     }
     private static EDecimal AsED(CBORObject obj) {
-      return PeterO.Numbers.EDecimal.FromString(
+      return EDecimal.FromString(
         obj.AsExtendedDecimal().ToString());
     }
     private static void AddSubCompare(CBORObject o1, CBORObject o2) {

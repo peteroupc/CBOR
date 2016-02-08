@@ -4,7 +4,7 @@
         System.IComparable,
         System.IEquatable
 
-This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.ERational`  in the  `PeterO.Numbers` library (in .NET), or  `com.upokecenter.numbers.ERational`  in the  `com.github.peteroupc/numbers` artifact (in Java). This new class can be used in the  `CBORObject.FromObject(Object)` method, among other things, but for method, among other things (by including the new library in your code), but for this versionof the CBOR library doesn't include any methods that explicitly take an  `ERational`  as a parameter or return value.
+This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.ERational`  in the  `PeterO.Numbers` library (in .NET), or  `com.upokecenter.numbers.ERational`  in the  `com.github.peteroupc/numbers` artifact (in Java). This new class can be used in the  `CBORObject.FromObject(Object)` method (by including the new library in your code, among other things), but this version of the CBOR library doesn't include any methods that explicitly take an  `ERational`  as a parameter or return value.
 
 Arbitrary-precision rational number. This class cannot be inherited; this is a change in version 2.0 from previous versions, where the class was inadvertently left inheritable.Thread safety:Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same properties are interchangeable, so they should not be compared using the "==" operator (which only checks if each side of the operator is the same instance).
 
@@ -13,8 +13,6 @@ Arbitrary-precision rational number. This class cannot be inherited; this is a c
     public ExtendedRational(
         PeterO.BigInteger numerator,
         PeterO.BigInteger denominator);
-
-<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
 Initializes a new instance of the  class.
 
@@ -83,8 +81,6 @@ A rational number for zero.
 
     public PeterO.BigInteger Denominator { get; }
 
-<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
-
 Gets this object's denominator.
 
 <b>Returns:</b>
@@ -106,8 +102,6 @@ True if this object is finite (not infinity or NaN); otherwise, false.
 ### IsNegative
 
     public bool IsNegative { get; }
-
-<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
 Gets a value indicating whether this object's value is negative (including negative zero).
 
@@ -131,8 +125,6 @@ True if this object's value equals 0; otherwise, false.
 
     public PeterO.BigInteger Numerator { get; }
 
-<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
-
 Gets this object's numerator.
 
 <b>Returns:</b>
@@ -154,8 +146,6 @@ Zero if this value is zero or negative zero; -1 if this value is less than 0; an
 ### UnsignedNumerator
 
     public PeterO.BigInteger UnsignedNumerator { get; }
-
-<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
 Gets this object's numerator with the sign removed.
 
@@ -273,8 +263,6 @@ The parameter <i>other</i>
         int numeratorSmall,
         int denominatorSmall);
 
-<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
-
 Creates a rational number with the given numerator and denominator.
 
 <b>Parameters:</b>
@@ -292,8 +280,6 @@ An arbitrary-precision rational number.
     public static PeterO.ExtendedRational Create(
         PeterO.BigInteger numerator,
         PeterO.BigInteger denominator);
-
-<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
 Creates a rational number with the given numerator and denominator.
 
@@ -593,8 +579,6 @@ True if this object's value is infinity; otherwise, false.
 ### IsNaN
 
     public bool IsNaN();
-
-<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns whether this object is a not-a-number value.
 

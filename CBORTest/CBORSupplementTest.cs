@@ -988,14 +988,16 @@ Assert.AreEqual(objectTemp, objectTemp2);
 }
       {
 object objectTemp = BigInteger.fromString("-281474976710657");
-        object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x47, 1,
+    object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x47,
+          1,
   0, 0, 0, 0,
                     0, 0 }).AsBigInteger();
 Assert.AreEqual(objectTemp, objectTemp2);
 }
       {
 object objectTemp = BigInteger.fromString("-72057594037927937");
-        object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x48, 1,
+    object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x48,
+          1,
   0, 0, 0, 0,
                     0, 0, 0 }).AsBigInteger();
 Assert.AreEqual(objectTemp, objectTemp2);

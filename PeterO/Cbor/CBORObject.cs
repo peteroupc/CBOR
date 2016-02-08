@@ -83,6 +83,10 @@ namespace PeterO.Cbor {
     public static readonly CBORObject Undefined =
       CBORObject.ConstructSimpleValue(23);
 
+    /// <summary>Not documented yet.</summary>
+    public static readonly CBORObject Zero =
+      new CBORObject(CBORObjectTypeInteger, 0L);
+
     internal const int CBORObjectTypeArray = 4;
     internal const int CBORObjectTypeBigInteger = 1;  // all other integers
     internal const int CBORObjectTypeByteString = 2;
@@ -295,9 +299,8 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>
-    ///
-    /// </summary>
+    /// <summary>Gets a value not documented yet.</summary>
+    /// <value>A value not documented yet.</value>
     public bool IsNegative {
       get {
         ICBORNumber cn = NumberInterfaces[this.ItemType];

@@ -4,11 +4,11 @@
         System.IComparable,
         System.IEquatable
 
-This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.EInteger`  in the  `PeterO.Numbers` library (in .NET), or  `com.upokecenter.numbers.EInteger`  in the  `com.github.peteroupc/numbers` artifact (in Java). This new class can be used in the  `CBORObject.FromObject(Object)` method, among other things, but for method, among other things (by including the new library in your code), but for this versionof the CBOR library doesn't include any methods that explicitly take an  `EInteger`  as a parameter or return value.
+This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.EInteger`  in the  `PeterO.Numbers` library (in .NET), or  `com.upokecenter.numbers.EInteger`  in the  `com.github.peteroupc/numbers` artifact (in Java). This new class can be used in the  `CBORObject.FromObject(Object)` method (by including the new library in your code, among other things), but this version of the CBOR library doesn't include any methods that explicitly take an  `EInteger`  as a parameter or return value.
 
 An arbitrary-precision integer.Thread safety:Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same value are interchangeable, but they should be compared using the "Equals" method rather than the "==" operator.
 
-This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.EInteger`  in the  `PeterO.Numbers` library (in .NET), or  `com.upokecenter.numbers.EInteger`  in the  `com.github.peteroupc/numbers` artifact (in Java). This new class can be used in the  `CBORObject.FromObject(Object)` method, among other things, but for method, among other things (by including the new library in your code), but for this versionof the CBOR library doesn't include any methods that explicitly take an  `EInteger`  as a parameter or return value.
+This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.EInteger`  in the  `PeterO.Numbers` library (in .NET), or  `com.upokecenter.numbers.EInteger`  in the  `com.github.peteroupc/numbers` artifact (in Java). This new class can be used in the  `CBORObject.FromObject(Object)` method (by including the new library in your code, among other things), but this version of the CBOR library doesn't include any methods that explicitly take an  `EInteger`  as a parameter or return value.
 
 An arbitrary-precision integer.Thread safety:Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same value are interchangeable, but they should be compared using the "Equals" method rather than the "==" operator.
 
@@ -188,8 +188,6 @@ The parameter <i>a</i>
 ### bitLength
 
     public int bitLength();
-
-<b>Deprecated.</b> Use EInteger from PeterO.Numbers/com.upokecenter.numbers.
 
 Finds the minimum number of bits needed to represent this object's value, except for its sign. If the value is negative, finds the number of bits in a value equal to this object's absolute value minus 1.
 
@@ -371,8 +369,6 @@ The parameter <i>bytes</i>
     public static PeterO.BigInteger fromRadixString(
         string str,
         int radix);
-
-<b>Deprecated.</b> Use EInteger from PeterO.Numbers/com.upokecenter.numbers.
 
 Converts a string to an arbitrary-precision integer.
 
@@ -1485,8 +1481,6 @@ A byte array. If this value is 0, returns a byte array with the single element 0
     public string toRadixString(
         int radix);
 
-<b>Deprecated.</b> Use EInteger from PeterO.Numbers/com.upokecenter.numbers.
-
 Generates a string representing the value of this object, in the given radix.
 
 <b>Parameters:</b>
@@ -1516,8 +1510,6 @@ A string representation of this object. If negative, the string will begin with 
 
     public static PeterO.BigInteger valueOf(
         long longerValue);
-
-<b>Deprecated.</b> Use EInteger from PeterO.Numbers/com.upokecenter.numbers.
 
 Converts a 64-bit signed integer to a big integer.
 

@@ -153,7 +153,7 @@ namespace PeterO.Cbor {
     }
 
     public bool IsNegative(object obj) {
-      float val = (float)obj;
+      var val = (float)obj;
       int ivalue = BitConverter.ToInt32(BitConverter.GetBytes((float)val), 0);
       return (ivalue >> 31) != 0;
     }

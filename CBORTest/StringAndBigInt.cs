@@ -29,11 +29,10 @@ namespace Test {
       BigInteger bv = BigInteger.Zero;
       var sabi = new StringAndBigInt();
       int numDigits = 1 + rand.NextValue(100);
-      var negative = false;
+      bool negative = rand.NextValue(2) == 0;
       var builder = new StringBuilder();
-      if (rand.NextValue(2) == 0) {
+      if (negative) {
         builder.Append('-');
-        negative = true;
       }
       for (int i = 0; i < numDigits; ++i) {
         int digit = rand.NextValue(radix);
@@ -42,15 +41,15 @@ namespace Test {
         } else {
           builder.Append(ValueDigitsLower[digit]);
         }
-        //var bigintTmp = (BigInteger)radix;
-        //bv *= bigintTmp;
-        //bigintTmp = (BigInteger)digit;
-        //bv += bigintTmp;
+        // var bigintTmp = (BigInteger)radix;
+        // bv *= bigintTmp;
+        // bigintTmp = (BigInteger)digit;
+        // bv += bigintTmp;
       }
-      //if (negative) {
+      // if (negative) {
       //  bv = -bv;
-      //}
-      bv = BigInteger.fromRadixString(builder.ToString(),radix);
+      // }
+      bv = BigInteger.fromRadixString(builder.ToString(), radix);
       sabi.bigintValue = bv;
       sabi.stringValue = builder.ToString();
       return sabi;
