@@ -413,7 +413,7 @@ Console.Write(String.Empty);
 
     [Test]
     public void TestCBORBigInteger() {
-      var bi = BigInteger.fromString("9223372036854775808");
+      BigInteger bi = BigInteger.fromString("9223372036854775808");
       try {
         CBORObject.FromObject(bi).AsInt64();
         Assert.Fail("Should have failed");
