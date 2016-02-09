@@ -11,6 +11,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using PeterO.Cbor;
+using PeterO.Numbers;
 
 namespace PeterO {
     /// <summary>Contains methods for reading and writing objects
@@ -215,7 +216,7 @@ namespace PeterO {
         if (length < 0) {
           throw new CBORException("invalid string");
         }
-        var bigLength = (PeterO.Numbers.EInteger)length;
+        EInteger bigLength = EInteger.FromInt64(length);
         writeUtf8(
 bigLength.ToString(),
 stream);
@@ -263,7 +264,7 @@ stream);
             if (length < 0) {
               throw new CBORException("invalid string");
             }
-            var bigLength = PeterO.Numbers.EInteger.FromInt64(length);
+            EInteger bigLength = EInteger.FromInt64(length);
             writeUtf8(
 bigLength.ToString(),
 stream);
@@ -285,7 +286,7 @@ stream);
         if (length < 0) {
           throw new CBORException("invalid string");
         }
-        var bigLength = PeterO.Numbers.EInteger.FromInt64(length);
+        EInteger bigLength = EInteger.FromInt64(length);
         writeUtf8(
 bigLength.ToString(),
 stream);

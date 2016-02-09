@@ -222,10 +222,6 @@ PrecisionContext ctx) {
         Rounding.Odd) ? ERounding.Odd : ERounding.Down);
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage(
-      "",
-      "CS0618",
-      Justification = "Implements legacy behavior using an obsolete class for convenience.")]
     internal static Rounding ToRounding(ERounding r) {
       if (r == ERounding.Ceiling) {
         return Rounding.Ceiling;

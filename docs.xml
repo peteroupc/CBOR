@@ -3,9 +3,9 @@
 <summary>
             <para><b>This class is largely obsolete. It will be replaced by a new
             version of this class in a different namespace/package and library,
-            called <c>PeterO.Numbers.EInteger</c> in the <a href="https://www.nuget.org/packages/PeterO.Numbers"><c>PeterO.Numbers</c></a>
+            called <c>PeterO.Numbers.EInteger</c> in the <a href='https://www.nuget.org/packages/PeterO.Numbers'><c>PeterO.Numbers</c></a>
             library (in .NET), or <c>com.upokecenter.numbers.EInteger</c> in the 
-            <a href="https://github.com/peteroupc/numbers-java"><c>com.github.peteroupc/numbers</c></a>
+            <a href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c></a>
             artifact (in Java).  This new class can be used in the <c>CBORObject.FromObject(Object)</c>
             method (by including the new library in your code, among other things), but this version of the CBOR library doesn't
             include any methods that explicitly take an <c>EInteger</c> as a parameter
@@ -50,7 +50,7 @@
 <doc name="M:PeterO.BigInteger.DivRem(PeterO.BigInteger,PeterO.BigInteger,PeterO.BigInteger@)">
 <summary>Returns the quotient and remainder of two arbitrary-precision integers.</summary>
             <param name='dividend'>Big integer to be divided.</param>
-            <param name='divisor'>The divisor.</param>
+            <param name='divisor'>The number to divide by.</param>
             <param name='remainder'>An arbitrary-precision integer.
             (4).</param>
             <returns>An array of two big integers: the first is the quotient,
@@ -60,21 +60,21 @@
             null.</exception>
 </doc>
 <doc name="M:PeterO.BigInteger.Equals(PeterO.BigInteger)">
-<summary>Not documented yet.</summary>
+<summary>Returns whether this number's value is equal to another number's value.</summary>
             <param name='other'>An arbitrary-precision integer.</param>
-            <returns>A Boolean object.</returns>
+            <returns><c>true</c> if this number's value is equal to another number's value, otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.BigInteger.Equals(System.Object)">
 <inheritdoc/>
             <summary>Determines whether this object and another object are
             equal.</summary>
             <param name='obj'>An arbitrary object.</param>
-            <returns>True if this object and another object are equal;
-            otherwise, false.</returns>
+            <returns><c>true</c> if this object and another object are equal;
+            otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.BigInteger.GetBits(System.Int32,System.Int32)">
 <summary>Not documented yet.</summary>
-            <param name='index'>A 32-bit signed integer.</param>
+            <param name='index'>Zero-based index of the first bit.</param>
             <param name='numberBits'>A 32-bit signed integer. (2).</param>
             <returns>A 64-bit signed integer.</returns>
 </doc>
@@ -95,19 +95,19 @@
 <doc name="P:PeterO.BigInteger.IsEven">
 <summary>Gets a value indicating whether this value is
             even.</summary>
-            <value>True if this value is even; otherwise, false.</value>
+            <value><c>true</c> if this value is even; otherwise, <c>false</c>.</value>
 </doc>
 <doc name="P:PeterO.BigInteger.IsPowerOfTwo">
 <summary>Gets a value indicating whether this object&#x27;s value
             is a power of two. (NOTE: This version allows negative numbers
             to be powers of two. In the EInteger version, only positive
             numbers will be considered powers of two.)</summary>
-            <value>True if this object&apos;s value is a power of two;
-            otherwise, false.</value>
+            <value><c>true</c> if this object&apos;s value is a power of two;
+            otherwise, <c>false</c>.</value>
 </doc>
 <doc name="P:PeterO.BigInteger.IsZero">
 <summary>Gets a value indicating whether this value is 0.</summary>
-            <value>True if this value is 0; otherwise, false.</value>
+            <value><c>true</c> if this value is 0; otherwise, <c>false</c>.</value>
 </doc>
 <doc name="M:PeterO.BigInteger.ModPow(PeterO.BigInteger,PeterO.BigInteger)">
 <summary>Calculates the remainder when an arbitrary-precision
@@ -123,14 +123,7 @@
 <doc name="M:PeterO.BigInteger.ModPow(PeterO.BigInteger,PeterO.BigInteger,PeterO.BigInteger)">
 <summary>Calculates the remainder when an arbitrary-precision
             integer raised to a certain power is divided by another
-            arbitrary-precision integer.</summary>
-            <param name='bigintValue'>The parameter <paramref name='bigintValue'/> is not documented yet.</param>
-            <param name='pow'>The parameter <paramref name='pow'/> is not
-            documented yet.</param>
-            <param name='mod'>The parameter <paramref name='mod'/> is not
-            documented yet.</param>
-            <returns>The value ( <paramref name='bigintValue'/> ^ <paramref name='pow'/> )% <paramref name='mod'/>.</returns>
-            <exception cref='T:System.ArgumentNullException'>The parameter
+            arbitrary-precision integer.</summary><param name='bigintValue'>The number to raise to a power.</param><param name='pow'>The exponent to raise the number to.</param><param name='mod'>The modulus.</param><returns>The value ( <paramref name='bigintValue'/> ^ <paramref name='pow'/> )% <paramref name='mod'/>.</returns><exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='bigintValue'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.BigInteger.Not(PeterO.BigInteger)">
@@ -162,20 +155,14 @@
             operator.</remarks>
 </doc>
 <doc name="M:PeterO.BigInteger.Pow(PeterO.BigInteger,PeterO.BigInteger)">
-<summary>Not documented yet.</summary>
-            <param name='bigValue'>The parameter <paramref name='bigValue'/> is
-            not documented yet.</param>
-            <param name='power'>The parameter <paramref name='power'/> is not
-            documented yet.</param>
-            <returns>A BigInteger object.</returns>
+<summary>Returns this number raised to a power.</summary><param name='bigValue'>
+            The value to raise to an exponent.</param><param name='power'>The exponent.</param><returns>The result. Returns 1 if <paramref name='power'/> is
+            0.</returns>
 </doc>
 <doc name="M:PeterO.BigInteger.Pow(PeterO.BigInteger,System.Int32)">
-<summary>Not documented yet.</summary>
-            <param name='bigValue'>The parameter <paramref name='bigValue'/> is
-            not documented yet.</param>
-            <param name='power'>The parameter <paramref name='power'/> is not
-            documented yet.</param>
-            <returns>A BigInteger object.</returns>
+<summary>Returns this number raised to a power.</summary><param name='bigValue'>The value to raise to an exponent.</param>
+            <param name='power'>The exponent.</param><returns>The result. Returns 1 if <paramref name='power'/> is
+            0.</returns>
 </doc>
 <doc name="M:PeterO.BigInteger.PowBigIntVar(PeterO.BigInteger)">
 <summary>Raises a big integer to a power, which is given as another
@@ -197,8 +184,17 @@
 <summary>BigInteger for the number ten.</summary>
 </doc>
 <doc name="M:PeterO.BigInteger.ToByteArray">
-<summary>Not documented yet.</summary>
-            <returns>A byte array.</returns>
+<summary>Returns a byte array of this integer&#x27;s value. The byte
+            array will take the form of the number's two's-complement
+            representation, using the fewest bytes necessary to store its
+            value unambiguously. If this value is negative, the bits that
+            appear beyond the most significant bit of the number will be all
+            ones.  The resulting byte array can be passed to the <c>FromBytes()</c>
+            method (with the same byte order) to reconstruct this integer's value.
+            The byte order used will be little-endian.</summary>
+            <param name='littleEndian'>If true, the byte order is little-endian,
+            or least-significant-byte first.  If false, the byte order is big-endian,
+            or most-significant-byte first.</param>
 </doc>
 <doc name="M:PeterO.BigInteger.ToString">
 <summary>Converts this object to a text string in base
@@ -251,8 +247,8 @@
 <doc name="M:PeterO.BigInteger.canFitInInt">
 <summary>Returns whether this object's value can fit in a 32-bit
             signed integer.</summary>
-            <returns>True if this object's value is MinValue or greater, and
-            MaxValue or less; otherwise, false.</returns>
+            <returns><c>true</c> if this object's value is MinValue or greater, and
+            MaxValue or less; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.BigInteger.divide(PeterO.BigInteger)">
 <summary>Divides this instance by the value of an
@@ -529,13 +525,7 @@
 </doc>
 <doc name="M:PeterO.BigInteger.op_Division(PeterO.BigInteger,PeterO.BigInteger)">
 <summary>Divides an arbitrary-precision integer by the value of an
-            arbitrary-precision integer object.</summary>
-            <param name='dividend'>The parameter <paramref name='dividend'/> is
-            not documented yet.</param>
-            <param name='divisor'>The parameter <paramref name='divisor'/> is
-            not documented yet.</param>
-            <returns>The quotient of the two objects.</returns>
-            <exception cref='T:System.ArgumentNullException'>The parameter
+            arbitrary-precision integer object.</summary><param name='dividend'>The number that will be divided by the divisor.</param><param name='divisor'>The number to divide by.</param><returns>The quotient of the two objects.</returns><exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='dividend'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.BigInteger.op_Explicit(PeterO.BigInteger)~System.Int32">
@@ -563,8 +553,8 @@
             integer.</param>
             <param name='otherValue'>The second arbitrary-precision
             integer.</param>
-            <returns>True if <paramref name='thisValue'/> is greater than
-            <paramref name='otherValue'/> ; otherwise, false.</returns>
+            <returns><c>true</c> if <paramref name='thisValue'/> is greater than
+            <paramref name='otherValue'/> ; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.BigInteger.op_GreaterThanOrEqual(PeterO.BigInteger,PeterO.BigInteger)">
 <summary>Determines whether an arbitrary-precision integer value is
@@ -573,7 +563,7 @@
             integer.</param>
             <param name='otherValue'>The second arbitrary-precision
             integer.</param>
-            <returns>True if <paramref name='thisValue'/> is at least <paramref name='otherValue'/> ; otherwise, false.</returns>
+            <returns><c>true</c> if <paramref name='thisValue'/> is at least <paramref name='otherValue'/> ; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.BigInteger.op_Implicit(System.Int32)~PeterO.BigInteger">
 <summary>Converts the value of a 32-bit signed integer to
@@ -590,9 +580,10 @@
             Int64 object.</returns>
 </doc>
 <doc name="M:PeterO.BigInteger.op_LeftShift(PeterO.BigInteger,System.Int32)">
-<summary>Not documented yet.</summary>
-            <param name='bthis'>Another arbitrary-precision integer.</param>
-            <param name='bitCount'>A 32-bit signed integer.</param>
+<summary>Returns an arbitrary-precision integer with the bits shifted to the left.</summary>
+            <param name='bthis'>An arbitrary-precision integer whose value will be shifted.</param>
+            <param name='bitCount'>The number of bits to shift left.
+            If this number is negative, shifts right instead.</param>
             <returns>An arbitrary-precision integer.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='bthis'/> is null.</exception>
@@ -604,8 +595,8 @@
             integer.</param>
             <param name='otherValue'>The second arbitrary-precision
             integer.</param>
-            <returns>True if <paramref name='thisValue'/> is less than
-            <paramref name='otherValue'/> ; otherwise, false.</returns>
+            <returns><c>true</c> if <paramref name='thisValue'/> is less than
+            <paramref name='otherValue'/> ; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.BigInteger.op_LessThanOrEqual(PeterO.BigInteger,PeterO.BigInteger)">
 <summary>Determines whether an arbitrary-precision integer is less
@@ -614,29 +605,17 @@
             integer.</param>
             <param name='otherValue'>The second arbitrary-precision
             integer.</param>
-            <returns>True if <paramref name='thisValue'/> is up to <paramref name='otherValue'/> ; otherwise, false.</returns>
+            <returns><c>true</c> if <paramref name='thisValue'/> is up to <paramref name='otherValue'/> ; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.BigInteger.op_Modulus(PeterO.BigInteger,PeterO.BigInteger)">
 <summary>Finds the remainder that results when an
             arbitrary-precision integer is divided by the value of an
-            arbitrary-precision integer.</summary>
-            <param name='dividend'>The parameter <paramref name='dividend'/> is
-            not documented yet.</param>
-            <param name='divisor'>The parameter <paramref name='divisor'/> is
-            not documented yet.</param>
-            <returns>The remainder of the two objects.</returns>
-            <exception cref='T:System.ArgumentNullException'>The parameter
+            arbitrary-precision integer.</summary><param name='dividend'>The number that will be divided by the divisor.</param><param name='divisor'>The number to divide by.</param><returns>The remainder of the two objects.</returns><exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='dividend'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.BigInteger.op_Multiply(PeterO.BigInteger,PeterO.BigInteger)">
 <summary>Multiplies an arbitrary-precision integer by the value of
-            an arbitrary-precision integer.</summary>
-            <param name='operand1'>The parameter <paramref name='operand1'/> is
-            not documented yet.</param>
-            <param name='operand2'>The parameter <paramref name='operand2'/> is
-            not documented yet.</param>
-            <returns>The product of the two numbers.</returns>
-            <exception cref='T:System.ArgumentNullException'>The parameter
+            an arbitrary-precision integer.</summary><param name='operand1'>The first operand.</param><param name='operand2'>The second operand.</param><returns>The product of the two numbers.</returns><exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='operand1'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.BigInteger.op_RightShift(PeterO.BigInteger,System.Int32)">
@@ -736,8 +715,8 @@
             representation of this object's value.</summary>
             <param name='index'>Zero based index of the bit to test. 0 means
             the least significant bit.</param>
-            <returns>True if a bit is set in the two's-complement
-            representation of this object's value; otherwise, false.</returns>
+            <returns><c>true</c> if a bit is set in the two's-complement
+            representation of this object's value; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.BigInteger.toByteArray(System.Boolean)">
 <summary>Returns a byte array of this object&#x27;s
@@ -1222,16 +1201,14 @@
 <doc name="M:PeterO.Cbor.CBORObject.CanFitInInt32">
 <summary>Returns whether this object's value is an integral value,
             is -(2^31) or greater, and is less than 2^31.</summary>
-            <returns>True if this object's value is an integral value, is
-            -(2^31) or greater, and is less than 2^31; otherwise,
-            false.</returns>
+            <returns><c>true</c> if this object's value is an integral value, is
+            -(2^31) or greater, and is less than 2^31, otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.CanFitInInt64">
 <summary>Returns whether this object's value is an integral value,
             is -(2^63) or greater, and is less than 2^63.</summary>
-            <returns>True if this object's value is an integral value, is
-            -(2^63) or greater, and is less than 2^63; otherwise,
-            false.</returns>
+            <returns><c>true</c> if this object's value is an integral value, is
+            -(2^63) or greater, and is less than 2^63, otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.CanFitInSingle">
 <summary>Returns whether this object's value can be converted to a
@@ -1246,16 +1223,14 @@
 <doc name="M:PeterO.Cbor.CBORObject.CanTruncatedIntFitInInt32">
 <summary>Returns whether this object's value, truncated to an
             integer, would be -(2^31) or greater, and less than 2^31.</summary>
-            <returns>True if this object's value, truncated to an integer,
-            would be -(2^31) or greater, and less than 2^31; otherwise,
-            false.</returns>
+            <returns><c>true</c> if this object's value, truncated to an integer,
+            would be -(2^31) or greater, and less than 2^31, otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.CanTruncatedIntFitInInt64">
 <summary>Returns whether this object's value, truncated to an
             integer, would be -(2^63) or greater, and less than 2^63.</summary>
-            <returns>True if this object's value, truncated to an integer,
-            would be -(2^63) or greater, and less than 2^63; otherwise,
-            false.</returns>
+            <returns><c>true</c> if this object's value, truncated to an integer,
+            would be -(2^63) or greater, and less than 2^63, otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.CompareTo(PeterO.Cbor.CBORObject)">
 <summary>Compares two CBOR objects.
@@ -1314,7 +1289,7 @@
 <summary>Determines whether a value of the given key exists in this
             object.</summary>
             <param name='key'>An object that serves as the key.</param>
-            <returns>True if the given key is found, or false if the given key
+            <returns><c>true</c> if the given key is found, or false if the given key
             is not found or this object is not a map.</returns>
             <exception cref='T:System.ArgumentNullException'>Key is null (as
             opposed to CBORObject.Null).</exception>
@@ -1323,7 +1298,7 @@
 <summary>Determines whether a value of the given key exists in this
             object.</summary>
             <param name='key'>A string that serves as the key.</param>
-            <returns>True if the given key (as a CBOR object) is found, or
+            <returns><c>true</c> if the given key (as a CBOR object) is found, or
             false if the given key is not found or this object is not a
             map.</returns>
             <exception cref='T:System.ArgumentNullException'>Key is
@@ -1397,13 +1372,13 @@
 <doc name="M:PeterO.Cbor.CBORObject.Equals(PeterO.Cbor.CBORObject)">
 <summary>Compares the equality of two CBOR objects.</summary>
             <param name='other'>The object to compare.</param>
-            <returns>True if the objects are equal; otherwise, false.</returns>
+            <returns><c>true</c> if the objects are equal; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Equals(System.Object)">
 <summary>Determines whether this object and another object are
             equal.</summary>
             <param name='obj'>An arbitrary object.</param>
-            <returns>True if the objects are equal; otherwise, false.</returns>
+            <returns><c>true</c> if the objects are equal; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="F:PeterO.Cbor.CBORObject.False">
 <summary>Represents the value false.</summary>
@@ -1574,8 +1549,8 @@
             following types are specially handled by this method: null;
             primitive types; string; CBORObject; 
             the <c>EDecimal</c>, <c>EFloat</c>, <c>EInteger</c>, and <c>ERational</c>
-            classes in the new <a href="https://www.nuget.org/packages/PeterO.Numbers"><c>PeterO.Numbers</c></a> library (in .NET) or the
-            <a href="https://github.com/peteroupc/numbers-java"><c>com.github.peteroupc/numbers</c></a> artifact (in Java);
+            classes in the new <a href='https://www.nuget.org/packages/PeterO.Numbers'><c>PeterO.Numbers</c></a> library (in .NET) or the
+            <a href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c></a> artifact (in Java);
             the legacy <c>ExtendedDecimal</c>, <c>ExtendedFloat</c>, 
             <c>ExtendedInteger</c>, and <c>ExtendedRational</c>
             classes in this library; arrays;
@@ -1753,8 +1728,8 @@
 <summary>Returns whether this object has a tag of the given
             number.</summary>
             <param name='bigTagValue'>The tag value to search for.</param>
-            <returns>True if this object has a tag of the given number;
-            otherwise, false.</returns>
+            <returns><c>true</c> if this object has a tag of the given number;
+            otherwise, <c>false</c>.</returns>
             <exception cref='T:System.ArgumentNullException'>BigTagValue is
             null.</exception>
             <exception cref='T:System.ArgumentException'>BigTagValue is less
@@ -1764,8 +1739,8 @@
 <summary>Returns whether this object has a tag of the given
             number.</summary>
             <param name='tagValue'>The tag value to search for.</param>
-            <returns>True if this object has a tag of the given number;
-            otherwise, false.</returns>
+            <returns><c>true</c> if this object has a tag of the given number;
+            otherwise, <c>false</c>.</returns>
             <exception cref='T:System.ArgumentException'>TagValue is less than
             0.</exception>
             <exception cref='T:System.ArgumentNullException'>The parameter
@@ -1793,81 +1768,74 @@
 <doc name="P:PeterO.Cbor.CBORObject.IsFalse">
 <summary>Gets a value indicating whether this value is a CBOR false
             value.</summary>
-            <value>True if this value is a CBOR false value; otherwise,
-            false.</value>
+            <value><c>true</c> if this value is a CBOR false value, otherwise, <c>false</c>.</value>
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsFinite">
 <summary>Gets a value indicating whether this CBOR object
             represents a finite number.</summary>
-            <value>True if this CBOR object represents a finite number;
-            otherwise, false.</value>
+            <value><c>true</c> if this CBOR object represents a finite number;
+            otherwise, <c>false</c>.</value>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.IsInfinity">
 <summary>Gets a value indicating whether this CBOR object
             represents infinity.</summary>
-            <returns>True if this CBOR object represents infinity; otherwise,
-            false.</returns>
+            <returns><c>true</c> if this CBOR object represents infinity, otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsIntegral">
 <summary>Gets a value indicating whether this object represents an
             integral number, that is, a number without a fractional part.
             Infinity and not-a-number are not considered integral.</summary>
-            <value>True if this object represents an integral number, that is,
-            a number without a fractional part; otherwise, false.</value>
+            <value><c>true</c> if this object represents an integral number, that is,
+            a number without a fractional part; otherwise, <c>false</c>.</value>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.IsNaN">
 <summary>Gets a value indicating whether this CBOR object
             represents a not-a-number value (as opposed to whether this
             object&#x27;s type is not a number type).</summary>
-            <returns>True if this CBOR object represents a not-a-number value
+            <returns><c>true</c> if this CBOR object represents a not-a-number value
             (as opposed to whether this object's type is not a number type);
-            otherwise, false.</returns>
+            otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsNegative">
 <summary>Gets a value indicating whether this object is a negative number.</summary>
-            <value>True if this object is a negative number; otherwise, false.</value>
+            <value><c>true</c> if this object is a negative number; otherwise, <c>false</c>.</value>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.IsNegativeInfinity">
 <summary>Gets a value indicating whether this CBOR object
             represents negative infinity.</summary>
-            <returns>True if this CBOR object represents negative infinity;
-            otherwise, false.</returns>
+            <returns><c>true</c> if this CBOR object represents negative infinity;
+            otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsNull">
 <summary>Gets a value indicating whether this value is a CBOR null
             value.</summary>
-            <value>True if this value is a CBOR null value; otherwise,
-            false.</value>
+            <value><c>true</c> if this value is a CBOR null value, otherwise, <c>false</c>.</value>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.IsPositiveInfinity">
 <summary>Gets a value indicating whether this CBOR object
             represents positive infinity.</summary>
-            <returns>True if this CBOR object represents positive infinity;
-            otherwise, false.</returns>
+            <returns><c>true</c> if this CBOR object represents positive infinity;
+            otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsTagged">
 <summary>Gets a value indicating whether this data item has at
             least one tag.</summary>
-            <value>True if this data item has at least one tag; otherwise,
-            false.</value>
+            <value><c>true</c> if this data item has at least one tag, otherwise, <c>false</c>.</value>
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsTrue">
 <summary>Gets a value indicating whether this value is a CBOR true
             value.</summary>
-            <value>True if this value is a CBOR true value; otherwise,
-            false.</value>
+            <value><c>true</c> if this value is a CBOR true value, otherwise, <c>false</c>.</value>
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsUndefined">
 <summary>Gets a value indicating whether this value is a CBOR
             undefined value.</summary>
-            <value>True if this value is a CBOR undefined value; otherwise,
-            false.</value>
+            <value><c>true</c> if this value is a CBOR undefined value, otherwise, <c>false</c>.</value>
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsZero">
 <summary>Gets a value indicating whether this object&#x27;s value
             equals 0.</summary>
-            <value>True if this object&apos;s value equals 0; otherwise,
-            false.</value>
+            <value><c>true</c> if this object&apos;s value equals 0, otherwise, <c>false</c>.</value>
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.Item(PeterO.Cbor.CBORObject)">
 <summary>Gets the value of a CBOR object in this map, using a CBOR
@@ -2026,7 +1994,7 @@
             the specified item from the array. If this object is a map, removes
             the item with the given key from the map.</summary>
             <param name='obj'>The item or key to remove.</param>
-            <returns>True if the item was removed; otherwise, false.</returns>
+            <returns><c>true</c> if the item was removed; otherwise, <c>false</c>.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='obj'/> is null (as opposed to
             CBORObject.Null).</exception>
@@ -2572,16 +2540,15 @@
 <summary>Determines whether this type filter allows CBOR arrays and
             the given array index is allowed under this type filter.</summary>
             <param name='index'>An array index, starting from 0.</param>
-            <returns>True if this type filter allows CBOR arrays and the given
-            array index is allowed under this type filter; otherwise,
-            false.</returns>
+            <returns><c>true</c> if this type filter allows CBOR arrays and the given
+            array index is allowed under this type filter, otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeFilter.ArrayLengthMatches(PeterO.BigInteger)">
 <summary>Returns whether an array's length is allowed under a
             filter.</summary>
             <param name='bigLength'>An arbitrary-precision integer.</param>
-            <returns>True if this filter allows CBOR arrays and an array's
-            length is allowed under a filter; otherwise, false.</returns>
+            <returns><c>true</c> if this filter allows CBOR arrays and an array's
+            length is allowed under a filter; otherwise, <c>false</c>.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='bigLength'/> is null.</exception>
 </doc>
@@ -2589,8 +2556,8 @@
 <summary>Returns whether an array's length is allowed under a
             filter.</summary>
             <param name='bigLength'>An arbitrary-precision integer.</param>
-            <returns>True if this filter allows CBOR arrays and an array's
-            length is allowed under a filter; otherwise, false.</returns>
+            <returns><c>true</c> if this filter allows CBOR arrays and an array's
+            length is allowed under a filter; otherwise, <c>false</c>.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='bigLength'/> is null.</exception>
 </doc>
@@ -2598,15 +2565,15 @@
 <summary>Returns whether an array's length is allowed under this
             filter.</summary>
             <param name='length'>The length of a CBOR array.</param>
-            <returns>True if this filter allows CBOR arrays and an array's
-            length is allowed under this filter; otherwise, false.</returns>
+            <returns><c>true</c> if this filter allows CBOR arrays and an array's
+            length is allowed under this filter; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeFilter.ArrayLengthMatches(System.Int64)">
 <summary>Returns whether an array's length is allowed under a
             filter.</summary>
             <param name='length'>The length of a CBOR array.</param>
-            <returns>True if this filter allows CBOR arrays and an array's
-            length is allowed under a filter; otherwise, false.</returns>
+            <returns><c>true</c> if this filter allows CBOR arrays and an array's
+            length is allowed under a filter; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="F:PeterO.Cbor.CBORTypeFilter.ByteString">
 <summary>A filter that allows byte strings.</summary>
@@ -2622,9 +2589,11 @@
             <returns>A CBORTypeFilter object.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeFilter.MajorTypeMatches(System.Int32)">
-<summary>Not documented yet.</summary>
-            <param name='type'>A 32-bit signed integer.</param>
-            <returns>A Boolean object.</returns>
+<summary>Returns whether the given CBOR major type matches a major type
+allowed by this filter.</summary>
+            <param name='type'>A CBOR major type from 0 to 7.</param>
+            <returns><c>true</c> if the given CBOR major type matches a major type
+allowed by this filter; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="F:PeterO.Cbor.CBORTypeFilter.NegativeInteger">
 <summary>A filter that allows negative integers.</summary>
@@ -2632,8 +2601,8 @@
 <doc name="M:PeterO.Cbor.CBORTypeFilter.NonFPSimpleValueAllowed">
 <summary>Returns whether this filter allows simple values that are
             not floating-point numbers.</summary>
-            <returns>True if this filter allows simple values that are not
-            floating-point numbers; otherwise, false.</returns>
+            <returns><c>true</c> if this filter allows simple values that are not
+            floating-point numbers; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="F:PeterO.Cbor.CBORTypeFilter.None">
 <summary>A filter that allows no CBOR types.</summary>
@@ -2643,8 +2612,8 @@
             given tag number.</summary>
             <param name='bigTag'>A tag number. Returns false if this is less
             than 0.</param>
-            <returns>True if CBOR objects can have the given tag number;
-            otherwise, false.</returns>
+            <returns><c>true</c> if CBOR objects can have the given tag number;
+            otherwise, <c>false</c>.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='bigTag'/> is null.</exception>
 </doc>
@@ -2653,8 +2622,8 @@
             given tag number.</summary>
             <param name='bigTag'>A tag number. Returns false if this is less
             than 0.</param>
-            <returns>True if CBOR objects can have the given tag number;
-            otherwise, false.</returns>
+            <returns><c>true</c> if CBOR objects can have the given tag number;
+            otherwise, <c>false</c>.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='bigTag'/> is null.</exception>
 </doc>
@@ -2663,16 +2632,16 @@
             given tag number.</summary>
             <param name='tag'>A tag number. Returns false if this is less than
             0.</param>
-            <returns>True if CBOR objects can have the given tag number;
-            otherwise, false.</returns>
+            <returns><c>true</c> if CBOR objects can have the given tag number;
+            otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeFilter.TagAllowed(System.Int64)">
 <summary>Gets a value indicating whether CBOR objects can have the
             given tag number.</summary>
             <param name='longTag'>A tag number. Returns false if this is less than
             0.</param>
-            <returns>True if CBOR objects can have the given tag number;
-            otherwise, false.</returns>
+            <returns><c>true</c> if CBOR objects can have the given tag number;
+            otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="F:PeterO.Cbor.CBORTypeFilter.TextString">
 <summary>A filter that allows text strings.</summary>
@@ -2738,22 +2707,15 @@
             <returns>A CBORTypeFilter object.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeFilter.WithTags(PeterO.BigInteger[])">
-<summary>Not documented yet.</summary>
-            <param name='tags'>An arbitrary-precision integer[] object.</param>
+<summary>Copies this filter and includes a set of valid CBOR tags in the new filter.</summary>
+            <param name='tags'>An array of the CBOR tags to add to the new filter.</param>
             <returns>A CBORTypeFilter object.</returns>
-            <exception cref='T:System.ArgumentNullException'>The parameter
-            "tags[i]" is null.</exception>
-</doc>
-<doc name="M:PeterO.Cbor.CBORTypeFilter.WithTags(PeterO.Numbers.EInteger[])">
-<summary>Not documented yet.</summary>
-            <param name='tags'>An arbitrary-precision integer[] object.</param>
-            <returns>A CBORTypeFilter object.</returns>
-            <exception cref='T:System.ArgumentNullException'>The parameter
-            "tags[i]" is null.</exception>
+            <exception cref='T:System.ArgumentNullException'>One or more of
+            the tags in the parameter "tags" is null.</exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeFilter.WithTags(System.Int32[])">
-<summary>Not documented yet.</summary>
-            <param name='tags'>An integer array of tags allowed.</param>
+<summary>Copies this filter and includes a set of valid CBOR tags in the new filter.</summary>
+            <param name='tags'>An array of the CBOR tags to add to the new filter.</param>
             <returns>A CBORTypeFilter object.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeFilter.WithTextString">
@@ -3057,8 +3019,8 @@
             </summary>
             <param name='refValue'>A string representing an IRI to
             check.</param>
-            <returns>True if the string is a valid IRI with a scheme component;
-            otherwise, false.</returns>
+            <returns><c>true</c> if the string is a valid IRI with a scheme component;
+            otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.URIUtility.hasSchemeForURI(System.String)">
 <summary>
@@ -3072,8 +3034,8 @@
             </summary>
             <param name='refValue'>A string representing an IRI to
             check.</param>
-            <returns>True if the string is a valid URI with a scheme component;
-            otherwise, false.</returns>
+            <returns><c>true</c> if the string is a valid URI with a scheme component;
+            otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.URIUtility.isValidCurieReference(System.String,System.Int32,System.Int32)">
 <summary>Determines whether the substring is a valid CURIE
@@ -3085,8 +3047,8 @@
             portion of "s" begins.</param>
             <param name='length'>The number of elements in the desired portion
             of "s" (but not more than "s" 's length).</param>
-            <returns>True if the substring is a valid CURIE reference under
-            RDFA 1; otherwise, false. Returns false if <paramref name='s'/> is
+            <returns><c>true</c> if the substring is a valid CURIE reference under
+            RDFA 1; otherwise, <c>false</c>. Returns false if <paramref name='s'/> is
             null.</returns>
             <exception cref='T:System.ArgumentException'>Either <paramref name='offset'/> or <paramref name='length'/> is less than 0 or
             greater than <paramref name='s'/> 's length, or <paramref name='s'/> ' s length minus <paramref name='offset'/> is less than
@@ -3495,9 +3457,9 @@
 <summary>
             <para><b>This class is largely obsolete. It will be replaced by a new
             version of this class in a different namespace/package and library,
-            called <c>PeterO.Numbers.EDecimal</c> in the <a href="https://www.nuget.org/packages/PeterO.Numbers"><c>PeterO.Numbers</c></a>
+            called <c>PeterO.Numbers.EDecimal</c> in the <a href='https://www.nuget.org/packages/PeterO.Numbers'><c>PeterO.Numbers</c></a>
             library (in .NET), or <c>com.upokecenter.numbers.EDecimal</c> in the 
-            <a href="https://github.com/peteroupc/numbers-java"><c>com.github.peteroupc/numbers</c></a>
+            <a href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c></a>
             artifact (in Java).  This new class can be used in the <c>CBORObject.FromObject(Object)</c>
             method (by including the new library in your code, among other things), but this version of the CBOR library doesn't
             include any methods that explicitly take an <c>EDecimal</c> as a parameter
@@ -3758,7 +3720,7 @@
 <doc name="M:PeterO.ExtendedDecimal.Divide(PeterO.ExtendedDecimal)">
 <summary>Divides this object by another decimal number and returns
             the result. When possible, the result will be exact.</summary>
-            <param name='divisor'>The divisor.</param>
+            <param name='divisor'>The number to divide by.</param>
             <returns>The quotient of the two numbers. Signals FlagDivideByZero
             and returns infinity if the divisor is 0 and the dividend is
             nonzero. Returns not-a-number (NaN) if the divisor and the dividend
@@ -3772,7 +3734,7 @@
             arbitrary-precision decimal number. The preferred exponent for the
             result is this object's exponent minus the divisor's
             exponent.</summary>
-            <param name='divisor'>The divisor.</param>
+            <param name='divisor'>The number to divide by.</param>
             <param name='ctx'>A precision context to control precision,
             rounding, and exponent range of the result. If HasFlags of the
             context is true, will also store the flags resulting from the
@@ -3918,7 +3880,7 @@
             returns the integer part of the result, rounded down, with the
             preferred exponent set to this value's exponent minus the divisor's
             exponent.</summary>
-            <param name='divisor'>The divisor.</param>
+            <param name='divisor'>The number to divide by.</param>
             <returns>The integer part of the quotient of the two objects.
             Signals FlagDivideByZero and returns infinity if the divisor is 0
             and the dividend is nonzero. Signals FlagInvalid and returns
@@ -3930,7 +3892,7 @@
 <summary>Divides this object by another object, and returns the
             integer part of the result, with the preferred exponent set to this
             value's exponent minus the divisor's exponent.</summary>
-            <param name='divisor'>The divisor.</param>
+            <param name='divisor'>The number to divide by.</param>
             <param name='ctx'>A precision context object to control the
             precision, rounding, and exponent range of the integer part of the
             result. Flags will be set on the given context only if the
@@ -3951,7 +3913,7 @@
 <doc name="M:PeterO.ExtendedDecimal.DivideToIntegerZeroScale(PeterO.ExtendedDecimal,PeterO.PrecisionContext)">
 <summary>Divides this object by another object, and returns the
             integer part of the result, with the exponent set to 0.</summary>
-            <param name='divisor'>The divisor.</param>
+            <param name='divisor'>The number to divide by.</param>
             <param name='ctx'>A precision context object to control the
             precision. The rounding and exponent range settings of this context
             are ignored. If HasFlags of the context is true, will also store
@@ -3970,7 +3932,7 @@
 <summary>Divides this object by another decimal number and returns
             a result with the same exponent as this object (the
             dividend).</summary>
-            <param name='divisor'>The divisor.</param>
+            <param name='divisor'>The number to divide by.</param>
             <param name='rounding'>The rounding mode to use if the result must
             be scaled down to have the same exponent as this value.</param>
             <returns>The quotient of the two numbers. Signals FlagDivideByZero
@@ -3986,15 +3948,15 @@
 <summary>Determines whether this object&#x27;s mantissa and
             exponent are equal to those of another object.</summary>
             <param name='other'>An arbitrary-precision decimal number.</param>
-            <returns>True if this object's mantissa and exponent are equal to
-            those of another object; otherwise, false.</returns>
+            <returns><c>true</c> if this object's mantissa and exponent are equal to
+            those of another object; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.Equals(System.Object)">
 <summary>Determines whether this object&#x27;s mantissa and
             exponent are equal to those of another object and that other object
             is an arbitrary-precision decimal number.</summary>
             <param name='obj'>An arbitrary object.</param>
-            <returns>True if the objects are equal; otherwise, false.</returns>
+            <returns><c>true</c> if the objects are equal; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.Exp(PeterO.PrecisionContext)">
 <summary>Finds e (the base of natural logarithms) raised to the
@@ -4173,56 +4135,52 @@
 <doc name="P:PeterO.ExtendedDecimal.IsFinite">
 <summary>Gets a value indicating whether this object is finite (not
             infinity or NaN).</summary>
-            <value>True if this object is finite (not infinity or NaN);
-            otherwise, false.</value>
+            <value><c>true</c> if this object is finite (not infinity or NaN);
+            otherwise, <c>false</c>.</value>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.IsInfinity">
 <summary>Gets a value indicating whether this object is positive or
             negative infinity.</summary>
-            <returns>True if this object is positive or negative infinity;
-            otherwise, false.</returns>
+            <returns><c>true</c> if this object is positive or negative infinity;
+            otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.IsNaN">
 <summary>Gets a value indicating whether this object is not a
             number (NaN).</summary>
-            <returns>True if this object is not a number (NaN); otherwise,
-            false.</returns>
+            <returns><c>true</c> if this object is not a number (NaN), otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="P:PeterO.ExtendedDecimal.IsNegative">
 <summary>Gets a value indicating whether this object is negative,
             including negative zero.</summary>
-            <value>True if this object is negative, including negative zero;
-            otherwise, false.</value>
+            <value><c>true</c> if this object is negative, including negative zero;
+            otherwise, <c>false</c>.</value>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.IsNegativeInfinity">
 <summary>Returns whether this object is negative
             infinity.</summary>
-            <returns>True if this object is negative infinity; otherwise,
-            false.</returns>
+            <returns><c>true</c> if this object is negative infinity, otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.IsPositiveInfinity">
 <summary>Returns whether this object is positive
             infinity.</summary>
-            <returns>True if this object is positive infinity; otherwise,
-            false.</returns>
+            <returns><c>true</c> if this object is positive infinity, otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.IsQuietNaN">
 <summary>Gets a value indicating whether this object is a quiet
             not-a-number value.</summary>
-            <returns>True if this object is a quiet not-a-number value;
-            otherwise, false.</returns>
+            <returns><c>true</c> if this object is a quiet not-a-number value;
+            otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.IsSignalingNaN">
 <summary>Gets a value indicating whether this object is a signaling
             not-a-number value.</summary>
-            <returns>True if this object is a signaling not-a-number value;
-            otherwise, false.</returns>
+            <returns><c>true</c> if this object is a signaling not-a-number value;
+            otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="P:PeterO.ExtendedDecimal.IsZero">
 <summary>Gets a value indicating whether this object&#x27;s value
             equals 0.</summary>
-            <value>True if this object&apos;s value equals 0; otherwise,
-            false.</value>
+            <value><c>true</c> if this object&apos;s value equals 0, otherwise, <c>false</c>.</value>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.Log(PeterO.PrecisionContext)">
 <summary>Finds the natural logarithm of this object, that is, the
@@ -4743,11 +4701,14 @@
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.Quantize(System.Int32,PeterO.Rounding)">
 <summary>Returns a decimal number with the same value as this one
-            but a new exponent.</summary>
-            <param name='desiredExponentSmall'>A 32-bit signed integer.</param>
-            <param name='rounding'>The parameter <paramref name='rounding'/> is
-            not documented yet.</param>
-            <returns>A decimal number with the same value as this object but
+            but a new exponent.</summary><param name='desiredExponentSmall'>The desired exponent for the
+            result. The exponent is the number of fractional digits in the
+            result, expressed as a negative number. Can also be positive, which
+            eliminates lower-order places from the number. For example, -3
+            means round to the thousandth (10^-3, 0.0001), and 3 means round to
+            the thousand (10^3, 1000). A value of 0 rounds the number to an
+            integer.</param><param name='rounding'>The mode to use when the
+            result needs to be rounded in order to have the given exponent.</param><returns>A decimal number with the same value as this object but
             with the exponent changed. Returns not-a-number (NaN) if the
             rounding mode is Rounding.Unnecessary and the result is not
             exact.</returns>
@@ -4822,7 +4783,7 @@
             result's absolute value is half of the divisor's absolute
             value.</item></list> This function is also known as the "IEEE
             Remainder" function.</summary>
-            <param name='divisor'>The divisor.</param>
+            <param name='divisor'>The number to divide by.</param>
             <param name='ctx'>A precision context object to control the
             precision. The rounding and exponent range settings of this context
             are ignored (the rounding mode is always treated as HalfEven). If
@@ -4900,7 +4861,7 @@
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.RoundToExponentExact(PeterO.BigInteger,PeterO.PrecisionContext)">
 <summary>Returns a decimal number with the same value as this
-            object but rounded to an integer, and signals an invalid operation
+            object but rounded to an integer, and signals an inexact flag
             if the result would be inexact.</summary>
             <param name='exponent'>The minimum exponent the result can have.
             This is the maximum number of fractional digits in the result,
@@ -4924,7 +4885,7 @@
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.RoundToExponentExact(System.Int32,PeterO.PrecisionContext)">
 <summary>Returns a decimal number with the same value as this
-            object but rounded to an integer, and signals an invalid operation
+            object but rounded to an integer, and signals an inexact flag
             if the result would be inexact.</summary>
             <param name='exponentSmall'>The minimum exponent the result can
             have. This is the maximum number of fractional digits in the
@@ -4946,7 +4907,7 @@
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.RoundToIntegralExact(PeterO.PrecisionContext)">
 <summary>Returns a decimal number with the same value as this
-            object but rounded to an integer, and signals an invalid operation
+            object but rounded to an integer, and signals an inexact flag
             if the result would be inexact.</summary>
             <param name='ctx'>A precision context to control precision and
             rounding of the result. If HasFlags of the context is true, will
@@ -5175,9 +5136,9 @@
 <summary>
             <para><b>This class is largely obsolete. It will be replaced by a new
             version of this class in a different namespace/package and library,
-            called <c>PeterO.Numbers.EFloat</c> in the <a href="https://www.nuget.org/packages/PeterO.Numbers"><c>PeterO.Numbers</c></a>
+            called <c>PeterO.Numbers.EFloat</c> in the <a href='https://www.nuget.org/packages/PeterO.Numbers'><c>PeterO.Numbers</c></a>
             library (in .NET), or <c>com.upokecenter.numbers.EFloat</c> in the 
-            <a href="https://github.com/peteroupc/numbers-java"><c>com.github.peteroupc/numbers</c></a>
+            <a href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c></a>
             artifact (in Java).  This new class can be used in the <c>CBORObject.FromObject(Object)</c>
             method (by including the new library in your code, among other things), but this version of the CBOR library doesn't
             include any methods that explicitly take an <c>EFloat</c> as a parameter
@@ -5369,7 +5330,7 @@
 <doc name="M:PeterO.ExtendedFloat.Divide(PeterO.ExtendedFloat)">
 <summary>Divides this object by another binary float and returns
             the result. When possible, the result will be exact.</summary>
-            <param name='divisor'>The divisor.</param>
+            <param name='divisor'>The number to divide by.</param>
             <returns>The quotient of the two numbers. Signals FlagDivideByZero
             and returns infinity if the divisor is 0 and the dividend is
             nonzero. Signals FlagInvalid and returns not-a-number (NaN) if the
@@ -5385,7 +5346,7 @@
             arbitrary-precision binary float object. The preferred exponent for
             the result is this object's exponent minus the divisor's
             exponent.</summary>
-            <param name='divisor'>The divisor.</param>
+            <param name='divisor'>The number to divide by.</param>
             <param name='ctx'>A precision context to control precision,
             rounding, and exponent range of the result. If HasFlags of the
             context is true, will also store the flags resulting from the
@@ -5529,7 +5490,7 @@
             the integer part of the result, rounded down, with the preferred
             exponent set to this value's exponent minus the divisor's
             exponent.</summary>
-            <param name='divisor'>The divisor.</param>
+            <param name='divisor'>The number to divide by.</param>
             <returns>The integer part of the quotient of the two objects.
             Signals FlagDivideByZero and returns infinity if the divisor is 0
             and the dividend is nonzero. Signals FlagInvalid and returns
@@ -5541,7 +5502,7 @@
 <summary>Divides this object by another object, and returns the
             integer part of the result, with the preferred exponent set to this
             value's exponent minus the divisor's exponent.</summary>
-            <param name='divisor'>The divisor.</param>
+            <param name='divisor'>The number to divide by.</param>
             <param name='ctx'>A precision context object to control the
             precision, rounding, and exponent range of the integer part of the
             result. Flags will be set on the given context only if the
@@ -5565,7 +5526,7 @@
 <doc name="M:PeterO.ExtendedFloat.DivideToIntegerZeroScale(PeterO.ExtendedFloat,PeterO.PrecisionContext)">
 <summary>Divides this object by another object, and returns the
             integer part of the result, with the exponent set to 0.</summary>
-            <param name='divisor'>The divisor.</param>
+            <param name='divisor'>The number to divide by.</param>
             <param name='ctx'>A precision context object to control the
             precision. The rounding and exponent range settings of this context
             are ignored. If HasFlags of the context is true, will also store
@@ -5584,7 +5545,7 @@
 <summary>Divides this object by another binary float and returns a
             result with the same exponent as this object (the
             dividend).</summary>
-            <param name='divisor'>The divisor.</param>
+            <param name='divisor'>The number to divide by.</param>
             <param name='rounding'>The rounding mode to use if the result must
             be scaled down to have the same exponent as this value.</param>
             <returns>The quotient of the two numbers. Signals FlagDivideByZero
@@ -5600,8 +5561,8 @@
 <summary>Determines whether this object's mantissa and exponent are
             equal to those of another object.</summary>
             <param name='other'>An arbitrary-precision binary float.</param>
-            <returns>True if this object's mantissa and exponent are equal to
-            those of another object; otherwise, false.</returns>
+            <returns><c>true</c> if this object's mantissa and exponent are equal to
+            those of another object; otherwise, <c>false</c>.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='other'/> is null.</exception>
 </doc>
@@ -5610,15 +5571,15 @@
             exponent are equal to those of another object and that other object
             is an arbitrary-precision decimal number.</summary>
             <param name='obj'>An arbitrary object.</param>
-            <returns>True if the objects are equal; otherwise, false.</returns>
+            <returns><c>true</c> if the objects are equal; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.EqualsInternal(PeterO.ExtendedFloat)">
 <summary>Determines whether this object's mantissa and exponent are
             equal to those of another object.</summary>
             <param name='otherValue'>An arbitrary-precision binary
             float.</param>
-            <returns>True if this object's mantissa and exponent are equal to
-            those of another object; otherwise, false.</returns>
+            <returns><c>true</c> if this object's mantissa and exponent are equal to
+            those of another object; otherwise, <c>false</c>.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='otherValue'/> is null.</exception>
 </doc>
@@ -5694,13 +5655,16 @@
             , or a 64-bit floating point number.
             <code>
             public static double StringToDouble(String str) {
-            return arbitrary-precision binary float.FromString(str).ToDouble();
+            return ExtendedFloat.FromString(str).ToDouble();
             }
             </code>
             </example>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.FromString(System.String,PeterO.PrecisionContext)">
-<summary>Not documented yet.</summary>
+<summary>Creates a binary float from a string that represents a
+            number. Note that if the string contains a negative exponent, the
+            resulting value might not be exact, in which case the resulting binary float will be an
+            approximation of this decimal number's value.</summary>
             <param name='str'>A text string.</param>
             <param name='ctx'>A PrecisionContext object specifying the
             precision, rounding, and exponent range to apply to the parsed
@@ -5711,7 +5675,10 @@
             <paramref name='str'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.FromString(System.String,System.Int32,System.Int32)">
-<summary>Not documented yet.</summary>
+<summary>Creates a binary float from a string that represents a
+            number. Note that if the string contains a negative exponent, the
+            resulting value might not be exact, in which case the resulting binary float will be an
+            approximation of this decimal number's value.</summary>
             <param name='str'>A text string.</param>
             <param name='offset'>A zero-based index showing where the desired
             portion of <paramref name='str'/> begins.</param>
@@ -5776,56 +5743,52 @@
 <doc name="P:PeterO.ExtendedFloat.IsFinite">
 <summary>Gets a value indicating whether this object is finite (not
             infinity or NaN).</summary>
-            <value>True if this object is finite (not infinity or NaN);
-            otherwise, false.</value>
+            <value><c>true</c> if this object is finite (not infinity or NaN);
+            otherwise, <c>false</c>.</value>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.IsInfinity">
 <summary>Gets a value indicating whether this object is positive or
             negative infinity.</summary>
-            <returns>True if this object is positive or negative infinity;
-            otherwise, false.</returns>
+            <returns><c>true</c> if this object is positive or negative infinity;
+            otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.IsNaN">
 <summary>Returns whether this object is a not-a-number
             value.</summary>
-            <returns>True if this object is a not-a-number value; otherwise,
-            false.</returns>
+            <returns><c>true</c> if this object is a not-a-number value, otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="P:PeterO.ExtendedFloat.IsNegative">
 <summary>Gets a value indicating whether this object is negative,
             including negative zero.</summary>
-            <value>True if this object is negative, including negative zero;
-            otherwise, false.</value>
+            <value><c>true</c> if this object is negative, including negative zero;
+            otherwise, <c>false</c>.</value>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.IsNegativeInfinity">
 <summary>Returns whether this object is negative
             infinity.</summary>
-            <returns>True if this object is negative infinity; otherwise,
-            false.</returns>
+            <returns><c>true</c> if this object is negative infinity, otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.IsPositiveInfinity">
 <summary>Returns whether this object is positive
             infinity.</summary>
-            <returns>True if this object is positive infinity; otherwise,
-            false.</returns>
+            <returns><c>true</c> if this object is positive infinity, otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.IsQuietNaN">
 <summary>Gets a value indicating whether this object is a quiet
             not-a-number value.</summary>
-            <returns>True if this object is a quiet not-a-number value;
-            otherwise, false.</returns>
+            <returns><c>true</c> if this object is a quiet not-a-number value;
+            otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.IsSignalingNaN">
 <summary>Gets a value indicating whether this object is a signaling
             not-a-number value.</summary>
-            <returns>True if this object is a signaling not-a-number value;
-            otherwise, false.</returns>
+            <returns><c>true</c> if this object is a signaling not-a-number value;
+            otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="P:PeterO.ExtendedFloat.IsZero">
 <summary>Gets a value indicating whether this object&#x27;s value
             equals 0.</summary>
-            <value>True if this object&apos;s value equals 0; otherwise,
-            false.</value>
+            <value><c>true</c> if this object&apos;s value equals 0, otherwise, <c>false</c>.</value>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.Log(PeterO.PrecisionContext)">
 <summary>Finds the natural logarithm of this object, that is, the
@@ -6338,19 +6301,17 @@
             <paramref name='divisor'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.RemainderNaturalScale(PeterO.ExtendedFloat)">
-<summary>Not documented yet.</summary>
-            <param name='divisor'>Another arbitrary-precision binary
-            float.</param>
+<summary>Calculates the remainder of a number by the formula this -
+            ((this / divisor) * divisor).</summary>
+            <param name='divisor'>The number to divide by.</param>
             <returns>An arbitrary-precision binary float.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='divisor'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.RemainderNaturalScale(PeterO.ExtendedFloat,PeterO.PrecisionContext)">
 <summary>Calculates the remainder of a number by the formula this -
-            ((this / divisor) * divisor). This is meant to be similar to the
-            remainder operation in Java's BigDecimal.</summary>
-            <param name='divisor'>Another arbitrary-precision binary
-            float.</param>
+            ((this / divisor) * divisor).</summary>
+            <param name='divisor'>The number to divide by.</param>
             <param name='ctx'>A precision context object to control the
             precision, rounding, and exponent range of the integer part of the
             result. This context will be used only in the division portion of
@@ -6382,7 +6343,7 @@
             result's absolute value is half of the divisor's absolute
             value.</item></list> This function is also known as the "IEEE
             Remainder" function.</summary>
-            <param name='divisor'>The divisor.</param>
+            <param name='divisor'>The number to divide by.</param>
             <param name='ctx'>A precision context object to control the
             precision. The rounding and exponent range settings of this context
             are ignored (the rounding mode is always treated as HalfEven). If
@@ -6440,7 +6401,7 @@
             <param name='exponentSmall'>The minimum exponent the result can
             have. This is the maximum number of fractional digits in the
             result, expressed as a negative number. Can also be positive, which
-            eliminates lower-order places number. For example, -3 means round
+            eliminates lower-order places in the number. For example, -3 means round
             to the sixteenth (10b^-3, 0.0001b), and 3 means round to the
             sixteen-place (10b^3, 1000b). A value of 0 rounds the number to an
             integer.</param>
@@ -6460,7 +6421,7 @@
 </doc>
 <doc name="M:PeterO.ExtendedFloat.RoundToExponentExact(PeterO.BigInteger,PeterO.PrecisionContext)">
 <summary>Returns a binary number with the same value as this object
-            but rounded to the given exponent, and signals an invalid operation if the
+            but rounded to the given exponent, and signals an inexact flag if the
             result would be inexact.</summary>
             <param name='exponent'>The minimum exponent the result can have.
             This is the maximum number of fractional digits in the result,
@@ -6483,12 +6444,12 @@
 </doc>
 <doc name="M:PeterO.ExtendedFloat.RoundToExponentExact(System.Int32,PeterO.PrecisionContext)">
 <summary>Returns a binary number with the same value as this object
-            but rounded to the given exponent, and signals an invalid operation if the
+            but rounded to the given exponent, and signals an inexact flag if the
             result would be inexact.</summary>
             <param name='exponentSmall'>The minimum exponent the result can
             have. This is the maximum number of fractional digits in the
             result, expressed as a negative number. Can also be positive, which
-            eliminates lower-order places number. For example, -3 means round
+            eliminates lower-order places in the number. For example, -3 means round
             to the sixteenth (10b^-3, 0.0001b), and 3 means round to the
             sixteen-place (10b^3, 1000b). A value of 0 rounds the number to an
             integer.</param>
@@ -6504,7 +6465,7 @@
 </doc>
 <doc name="M:PeterO.ExtendedFloat.RoundToIntegralExact(PeterO.PrecisionContext)">
 <summary>Returns a binary number with the same value as this object
-            but rounded to an integer, and signals an invalid operation if the
+            but rounded to an integer, and signals an inexact flag if the
             result would be inexact.</summary>
             <param name='ctx'>A precision context to control precision and
             rounding of the result. If HasFlags of the context is true, will
@@ -6745,9 +6706,9 @@
 <doc name="T:PeterO.ExtendedRational">
 <summary> <para><b>This class is largely obsolete. It will be replaced by a new
             version of this class in a different namespace/package and library,
-            called <c>PeterO.Numbers.ERational</c> in the <a href="https://www.nuget.org/packages/PeterO.Numbers"><c>PeterO.Numbers</c></a>
+            called <c>PeterO.Numbers.ERational</c> in the <a href='https://www.nuget.org/packages/PeterO.Numbers'><c>PeterO.Numbers</c></a>
             library (in .NET), or <c>com.upokecenter.numbers.ERational</c> in the 
-            <a href="https://github.com/peteroupc/numbers-java"><c>com.github.peteroupc/numbers</c></a>
+            <a href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c></a>
             artifact (in Java).  This new class can be used in the <c>CBORObject.FromObject(Object)</c>
             method (by including the new library in your code, among other things), but this version of the CBOR library doesn't
             include any methods that explicitly take an <c>ERational</c> as a parameter
@@ -6874,9 +6835,11 @@
             <paramref name='otherValue'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedRational.Equals(PeterO.ExtendedRational)">
-<summary>Not documented yet.</summary>
-            <param name='other'>An arbitrary-precision rational number.</param>
-            <returns>A Boolean object.</returns>
+<summary>Returns whether this object's properties are equal to the properties
+of another rational number object.</summary>
+            <param name='other'>Another arbitrary-precision rational number.</param>
+            <returns><c>true</c> if this object's properties are equal to the properties
+of another rational number object; otherwise, <c>false</c>.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='other'/> is null.</exception>
 </doc>
@@ -6884,7 +6847,7 @@
 <summary>Determines whether this object and another object are
             equal.</summary>
             <param name='obj'>An arbitrary object.</param>
-            <returns>True if the objects are equal; otherwise, false.</returns>
+            <returns><c>true</c> if the objects are equal; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedRational.FromBigInteger(PeterO.BigInteger)">
 <summary>Converts a big integer to a rational number.</summary>
@@ -6909,19 +6872,20 @@
             <paramref name='ef'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedRational.FromExtendedFloat(PeterO.ExtendedFloat)">
-<summary>Not documented yet.</summary>
+<summary>Converts an arbitrary-precision binary float to a
+            rational number.</summary>
             <param name='ef'>An arbitrary-precision binary float.</param>
             <returns>An arbitrary-precision rational number.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='ef'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedRational.FromInt32(System.Int32)">
-<summary>Not documented yet.</summary>
+<summary>Converts a 32-bit signed integer to a rational number.</summary>
             <param name='smallint'>A 32-bit signed integer.</param>
             <returns>An arbitrary-precision rational number.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedRational.FromInt64(System.Int64)">
-<summary>Not documented yet.</summary>
+<summary>Converts a 64-bit signed integer to a rational number.</summary>
             <param name='longInt'>A 64-bit signed integer.</param>
             <returns>An arbitrary-precision rational number.</returns>
 </doc>
@@ -6940,58 +6904,52 @@
 <doc name="P:PeterO.ExtendedRational.IsFinite">
 <summary>Gets a value indicating whether this object is finite (not
             infinity or NaN).</summary>
-            <value>True if this object is finite (not infinity or NaN);
-            otherwise, false.</value>
+            <value><c>true</c> if this object is finite (not infinity or NaN);
+            otherwise, <c>false</c>.</value>
 </doc>
 <doc name="M:PeterO.ExtendedRational.IsInfinity">
 <summary>Gets a value indicating whether this object's value is
             infinity.</summary>
-            <returns>True if this object's value is infinity; otherwise,
-            false.</returns>
+            <returns><c>true</c> if this object's value is infinity, otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedRational.IsNaN">
 <summary>Returns whether this object is a not-a-number
             value.</summary>
-            <returns>True if this object is a not-a-number value; otherwise,
-            false.</returns>
+            <returns><c>true</c> if this object is a not-a-number value, otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="P:PeterO.ExtendedRational.IsNegative">
 <summary>Gets a value indicating whether this object's value is
             negative (including negative zero).</summary>
-            <value>True if this object&apos;s value is negative; otherwise,
-            false.</value>
+            <value><c>true</c> if this object&apos;s value is negative, otherwise, <c>false</c>.</value>
 </doc>
 <doc name="M:PeterO.ExtendedRational.IsNegativeInfinity">
 <summary>Returns whether this object is negative
             infinity.</summary>
-            <returns>True if this object is negative infinity; otherwise,
-            false.</returns>
+            <returns><c>true</c> if this object is negative infinity, otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedRational.IsPositiveInfinity">
 <summary>Returns whether this object is positive
             infinity.</summary>
-            <returns>True if this object is positive infinity; otherwise,
-            false.</returns>
+            <returns><c>true</c> if this object is positive infinity, otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedRational.IsQuietNaN">
 <summary>Returns whether this object is a quiet not-a-number
             value.</summary>
-            <returns>True if this object is a quiet not-a-number value;
-            otherwise, false.</returns>
+            <returns><c>true</c> if this object is a quiet not-a-number value;
+            otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedRational.IsSignalingNaN">
 <summary>Returns whether this object is a signaling not-a-number
             value (which causes an error if the value is passed to any
             arithmetic operation in this class).</summary>
-            <returns>True if this object is a signaling not-a-number value
+            <returns><c>true</c> if this object is a signaling not-a-number value
             (which causes an error if the value is passed to any arithmetic
-            operation in this class); otherwise, false.</returns>
+            operation in this class); otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="P:PeterO.ExtendedRational.IsZero">
 <summary>Gets a value indicating whether this object's value equals
             0.</summary>
-            <value>True if this object&apos;s value equals 0; otherwise,
-            false.</value>
+            <value><c>true</c> if this object&apos;s value equals 0, otherwise, <c>false</c>.</value>
 </doc>
 <doc name="M:PeterO.ExtendedRational.Multiply(PeterO.ExtendedRational)">
 <summary>Multiplies this instance by the value of an
@@ -7168,21 +7126,14 @@
             version of this class in a different namespace/package and library,
             called <c>PeterO.Numbers.EContext</c> in the <c>PeterO.EContext</c>
             library (in .NET), or <c>com.upokecenter.numbers.EFloat</c> in the 
-            <a href="https://github.com/peteroupc/numbers-java"><c>com.github.peteroupc/numbers</c></a>
+            <a href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c></a>
             artifact (in Java).</b></para>Contains parameters for controlling the precision,
             rounding, and exponent range of arbitrary-precision
             numbers.</summary>
 </doc>
 <doc name="M:PeterO.PrecisionContext.#ctor(System.Int32,PeterO.Rounding,System.Int32,System.Int32,System.Boolean)">
 <summary>Initializes a new instance of the <see cref='T:PeterO.PrecisionContext'/> class. HasFlags will be set to
-            false.</summary>
-            <param name='precision'>The parameter <paramref name='precision'/>
-            is not documented yet.</param>
-            <param name='rounding'>The parameter <paramref name='rounding'/> is
-            not documented yet.</param>
-            <param name='exponentMinSmall'>The parameter <paramref name='exponentMinSmall'/> is not documented yet.</param>
-            <param name='exponentMaxSmall'>The parameter <paramref name='exponentMaxSmall'/> is not documented yet.</param>
-            <param name='clampNormalExponents'>The parameter <paramref name='clampNormalExponents'/> is not documented yet.</param>
+            false.</summary><param name='precision'>The maximum number of digits a number can have, or 0 for an unlimited number of digits.</param><param name='rounding'>The rounding mode to use when a number can't fit the given precision.</param><param name='exponentMinSmall'>The minimum exponent.</param><param name='exponentMaxSmall'>The maximum exponent.</param><param name='clampNormalExponents'>Whether to clamp a number's significand to the given maximum precision (if it isn't zero) while remaining within the exponent range.</param>
 </doc>
 <doc name="P:PeterO.PrecisionContext.AdjustExponent">
 <summary>Gets a value indicating whether the EMax and EMin
@@ -7193,7 +7144,7 @@
             WithAdjustExponent) is useful for modeling floating point
             representations with an integer mantissa and an integer exponent,
             such as Java's BigDecimal.</summary>
-            <value>True if the EMax and EMin properties refer to the
+            <value><c>true</c> if the EMax and EMin properties refer to the
             number&apos;s Exponent property adjusted to the number&apos;s
             precision, or false if they refer to just the number&apos;s
             Exponent property.</value>
@@ -7290,8 +7241,8 @@
             property under this precision context.</summary>
             <param name='exponent'>An arbitrary-precision integer indicating
             the desired exponent.</param>
-            <returns>True if a number can have the given Exponent property
-            under this precision context; otherwise, false. If this context
+            <returns><c>true</c> if a number can have the given Exponent property
+            under this precision context; otherwise, <c>false</c>. If this context
             allows unlimited precision, returns true for the exponent EMax and
             any exponent less than EMax.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
@@ -7341,7 +7292,7 @@
             this value will be 0. This value is a combination of bit fields. To
             retrieve a particular flag, use the AND operation on the return
             value of this method. For example: <c>(this.Flags &amp;
-            PrecisionContext.FlagInexact) != 0</c> returns TRUE if the Inexact
+            PrecisionContext.FlagInexact) != 0</c> returns <c>true</c> if the Inexact
             flag is set.</summary>
             <value>The flags that are set from converting numbers according to
             this precision context. If HasFlags is false, this value will be
@@ -7380,36 +7331,34 @@
             minimum and maximum exponent. If false, converted exponents can
             have any exponent and operations can't cause overflow or
             underflow.</summary>
-            <value>True if this context defines a minimum and maximum exponent;
-            otherwise, false.</value>
+            <value><c>true</c> if this context defines a minimum and maximum exponent;
+            otherwise, <c>false</c>.</value>
 </doc>
 <doc name="P:PeterO.PrecisionContext.HasFlags">
 <summary>Gets a value indicating whether this context has a mutable
             Flags field.</summary>
-            <value>True if this context has a mutable Flags field; otherwise,
-            false.</value>
+            <value><c>true</c> if this context has a mutable Flags field, otherwise, <c>false</c>.</value>
 </doc>
 <doc name="P:PeterO.PrecisionContext.HasMaxPrecision">
 <summary>Gets a value indicating whether this context defines a
             maximum precision.</summary>
-            <value>True if this context defines a maximum precision; otherwise,
-            false.</value>
+            <value><c>true</c> if this context defines a maximum precision, otherwise, <c>false</c>.</value>
 </doc>
 <doc name="P:PeterO.PrecisionContext.IsPrecisionInBits">
 <summary>Gets a value indicating whether this context's Precision
             property is in bits, rather than digits. The default is
             false.</summary>
-            <value>True if this context&apos;s Precision property is in bits,
-            rather than digits; otherwise, false. The default is false.</value>
+            <value><c>true</c> if this context&apos;s Precision property is in bits,
+            rather than digits; otherwise, <c>false</c>. The default is false.</value>
 </doc>
 <doc name="P:PeterO.PrecisionContext.IsSimplified">
 <summary>Gets a value indicating whether to use a "simplified"
             arithmetic. In the simplified arithmetic, infinity, not-a-number,
             and subnormal numbers are not allowed, and negative zero is treated
             the same as positive zero. For further details, see
-            <c>http://speleotrove.com/decimal/dax3274.html</c></summary>
-            <value>True if a &quot;simplified&quot; arithmetic will be used;
-            otherwise, false.</value>
+            <a href='http://speleotrove.com/decimal/dax3274.html'>http://speleotrove.com/decimal/dax3274.html</a></summary>
+            <value><c>true</c> if a &quot;simplified&quot; arithmetic will be used;
+            otherwise, <c>false</c>.</value>
 </doc>
 <doc name="F:PeterO.PrecisionContext.JavaBigDecimal">
 <summary>Precision context for Java's BigDecimal format. The
@@ -7455,9 +7404,7 @@
 </doc>
 <doc name="M:PeterO.PrecisionContext.WithAdjustExponent(System.Boolean)">
 <summary>Copies this PrecisionContext and sets the copy's
-            "AdjustExponent" property to the given value.</summary>
-            <param name='adjustExponent'>The parameter <paramref name='adjustExponent'/> is not documented yet.</param>
-            <returns>A context object for arbitrary-precision arithmetic
+            "AdjustExponent" property to the given value.</summary><param name='adjustExponent'>The new value of the "AdjustExponent" property for the copy.</param><returns>A context object for arbitrary-precision arithmetic
             settings.</returns>
 </doc>
 <doc name="M:PeterO.PrecisionContext.WithBigExponentRange(PeterO.BigInteger,PeterO.BigInteger)">
@@ -7475,7 +7422,8 @@
 <doc name="M:PeterO.PrecisionContext.WithBigPrecision(PeterO.BigInteger)">
 <summary>Copies this PrecisionContext and gives it a particular
             precision value.</summary>
-            <param name='bigintPrecision'>The parameter <paramref name='bigintPrecision'/> is not documented yet.</param>
+            <param name='bigintPrecision'>Desired maximum number of digits a number can have.
+            If 0, the number of digits is unlimited.</param>
             <returns>A context object for arbitrary-precision arithmetic
             settings.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
@@ -7490,8 +7438,7 @@
 <doc name="M:PeterO.PrecisionContext.WithExponentClamp(System.Boolean)">
 <summary>Copies this precision context and sets the copy&#x27;s
             &#x22;ClampNormalExponents&#x22; flag to the given value.</summary>
-            <param name='clamp'>The parameter <paramref name='clamp'/> is not
-            documented yet.</param>
+            <param name='clamp'>Desired value for ClampNormalExponents.</param>
             <returns>A context object for arbitrary-precision arithmetic
             settings.</returns>
 </doc>
@@ -7514,31 +7461,26 @@
 <doc name="M:PeterO.PrecisionContext.WithPrecision(System.Int32)">
 <summary>Copies this PrecisionContext and gives it a particular
             precision value.</summary>
-            <param name='precision'>Desired precision. 0 means unlimited
-            precision.</param>
+            <param name='precision'>Desired maximum number of digits a number can have.
+            If 0, the number of digits is unlimited.</param>
             <returns>A context object for arbitrary-precision arithmetic
             settings.</returns>
 </doc>
 <doc name="M:PeterO.PrecisionContext.WithPrecisionInBits(System.Boolean)">
 <summary>Copies this PrecisionContext and sets the copy's
-            "IsPrecisionInBits" property to the given value.</summary>
-            <param name='isPrecisionBits'>The parameter <paramref name='isPrecisionBits'/> is not documented yet.</param>
-            <returns>A context object for arbitrary-precision arithmetic
+            "IsPrecisionInBits" property to the given value.</summary><param name='isPrecisionBits'>The new value of the "IsPrecisionInBits" property for the copy.</param><returns>A context object for arbitrary-precision arithmetic
             settings.</returns>
 </doc>
 <doc name="M:PeterO.PrecisionContext.WithRounding(PeterO.Rounding)">
 <summary>Copies this PrecisionContext with the specified rounding
             mode.</summary>
-            <param name='rounding'>The parameter <paramref name='rounding'/> is
-            not documented yet.</param>
+            <param name='rounding'>Desired value of the Rounding property.</param>
             <returns>A context object for arbitrary-precision arithmetic
             settings.</returns>
 </doc>
 <doc name="M:PeterO.PrecisionContext.WithSimplified(System.Boolean)">
 <summary>Copies this PrecisionContext and sets the copy's
-            "IsSimplified" property to the given value.</summary>
-            <param name='simplified'>The parameter <paramref name='simplified'/> is not documented yet.</param>
-            <returns>A context object for arbitrary-precision arithmetic
+            "IsSimplified" property to the given value.</summary><param name='simplified'>The new value of the "IsSimplified" property for the copy.</param><returns>A context object for arbitrary-precision arithmetic
             settings.</returns>
 </doc>
 <doc name="M:PeterO.PrecisionContext.WithTraps(System.Int32)">
@@ -7560,7 +7502,7 @@
             version of this class in a different namespace/package and library,
             called <c>PeterO.Numbers.ERounding</c> in the <c>PeterO.ERounding</c>
             library (in .NET), or <c>com.upokecenter.numbers.EFloat</c> in the 
-            <a href="https://github.com/peteroupc/numbers-java"><c>com.github.peteroupc/numbers</c></a>
+            <a href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c></a>
             artifact (in Java).</b></para>Specifies the mode to use when &#x22;shortening&#x22;
             numbers that otherwise can&#x27;t fit a given number of digits, so
             that the shortened number has about the same value. This
@@ -7626,9 +7568,9 @@
 <doc name="T:PeterO.TrapException">
 <summary>            <para><b>This class is obsolete. It will be replaced by a new
             version of this class in a different namespace/package and library,
-            called <c>PeterO.Numbers.ETrapException</c> in the <a href="https://www.nuget.org/packages/PeterO.Numbers"><c>PeterO.Numbers</c></a>
+            called <c>PeterO.Numbers.ETrapException</c> in the <a href='https://www.nuget.org/packages/PeterO.Numbers'><c>PeterO.Numbers</c></a>
             library (in .NET), or <c>com.upokecenter.numbers.ETrapException</c> in the 
-            <a href="https://github.com/peteroupc/numbers-java"><c>com.github.peteroupc/numbers</c></a>
+            <a href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c></a>
             artifact (in Java).</b></para>
             Exception thrown for arithmetic trap errors.</summary>
 </doc>
