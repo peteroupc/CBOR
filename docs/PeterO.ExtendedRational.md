@@ -97,7 +97,7 @@ Gets a value indicating whether this object is finite (not infinity or NaN).
 
 <b>Returns:</b>
 
-True if this object is finite (not infinity or NaN); otherwise, false.
+ `true`  if this object is finite (not infinity or NaN); otherwise,  `false` .
 
 ### IsNegative
 
@@ -107,7 +107,7 @@ Gets a value indicating whether this object's value is negative (including negat
 
 <b>Returns:</b>
 
-True if this object's value is negative; otherwise, false.
+ `true`  if this object's value is negative, otherwise,  `false` .
 
 ### IsZero
 
@@ -119,7 +119,7 @@ Gets a value indicating whether this object's value equals 0.
 
 <b>Returns:</b>
 
-True if this object's value equals 0; otherwise, false.
+ `true`  if this object's value equals 0, otherwise,  `false` .
 
 ### Numerator
 
@@ -396,7 +396,7 @@ Determines whether this object and another object are equal.
 
 <b>Returns:</b>
 
-True if the objects are equal; otherwise, false.
+ `true`  if the objects are equal; otherwise,  `false` .
 
 ### Equals
 
@@ -405,15 +405,15 @@ True if the objects are equal; otherwise, false.
 
 <b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
-Not documented yet.
+Returns whether this object's properties are equal to the properties of another rational number object.
 
 <b>Parameters:</b>
 
- * <i>other</i>: An arbitrary-precision rational number.
+ * <i>other</i>: Another arbitrary-precision rational number.
 
 <b>Returns:</b>
 
-A Boolean object.
+ `true`  if this object's properties are equal to the properties of another rational number object; otherwise,  `false` .
 
 <b>Exceptions:</b>
 
@@ -486,7 +486,7 @@ The parameter <i>ef</i>
 
 <b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
-Not documented yet.
+Converts an arbitrary-precision binary float to a rational number.
 
 <b>Parameters:</b>
 
@@ -509,7 +509,7 @@ The parameter <i>ef</i>
 
 <b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
-Not documented yet.
+Converts a 32-bit signed integer to a rational number.
 
 <b>Parameters:</b>
 
@@ -526,7 +526,7 @@ An arbitrary-precision rational number.
 
 <b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
-Not documented yet.
+Converts a 64-bit signed integer to a rational number.
 
 <b>Parameters:</b>
 
@@ -574,7 +574,7 @@ Gets a value indicating whether this object's value is infinity.
 
 <b>Returns:</b>
 
-True if this object's value is infinity; otherwise, false.
+ `true`  if this object's value is infinity, otherwise,  `false` .
 
 ### IsNaN
 
@@ -584,7 +584,7 @@ Returns whether this object is a not-a-number value.
 
 <b>Returns:</b>
 
-True if this object is a not-a-number value; otherwise, false.
+ `true`  if this object is a not-a-number value, otherwise,  `false` .
 
 ### IsNegativeInfinity
 
@@ -596,7 +596,7 @@ Returns whether this object is negative infinity.
 
 <b>Returns:</b>
 
-True if this object is negative infinity; otherwise, false.
+ `true`  if this object is negative infinity, otherwise,  `false` .
 
 ### IsPositiveInfinity
 
@@ -608,7 +608,7 @@ Returns whether this object is positive infinity.
 
 <b>Returns:</b>
 
-True if this object is positive infinity; otherwise, false.
+ `true`  if this object is positive infinity, otherwise,  `false` .
 
 ### IsQuietNaN
 
@@ -620,7 +620,7 @@ Returns whether this object is a quiet not-a-number value.
 
 <b>Returns:</b>
 
-True if this object is a quiet not-a-number value; otherwise, false.
+ `true`  if this object is a quiet not-a-number value; otherwise,  `false` .
 
 ### IsSignalingNaN
 
@@ -632,7 +632,7 @@ Returns whether this object is a signaling not-a-number value (which causes an e
 
 <b>Returns:</b>
 
-True if this object is a signaling not-a-number value (which causes an error if the value is passed to any arithmetic operation in this class); otherwise, false.
+ `true`  if this object is a signaling not-a-number value (which causes an error if the value is passed to any arithmetic operation in this class); otherwise,  `false` .
 
 ### Multiply
 

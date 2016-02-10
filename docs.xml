@@ -51,8 +51,7 @@
 <summary>Returns the quotient and remainder of two arbitrary-precision integers.</summary>
             <param name='dividend'>Big integer to be divided.</param>
             <param name='divisor'>The number to divide by.</param>
-            <param name='remainder'>An arbitrary-precision integer.
-            (4).</param>
+            <param name='remainder'>An integer reference where the remainder will be set.</param>
             <returns>An array of two big integers: the first is the quotient,
             and the second is the remainder.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
@@ -73,22 +72,24 @@
             otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.BigInteger.GetBits(System.Int32,System.Int32)">
-<summary>Not documented yet.</summary>
-            <param name='index'>Zero-based index of the first bit.</param>
-            <param name='numberBits'>A 32-bit signed integer. (2).</param>
-            <returns>A 64-bit signed integer.</returns>
+<summary>Gets a series of bits from the two's complement representation
+of this number's value.</summary>
+            <param name='index'>Zero-based index of the first bit to retrieve.</param>
+            <param name='numberBits'>The number of bits to retrieve, from 0 to 64.</param>
+            <returns>A 64-bit signed integer containing the bits retrieved.
+            The least significant bit is first.</returns>
+            <exception cref='T:System.ArgumentException'>The parameter
+            <paramref name='numberBits'/> is less than 0 or greater than 64.</exception>
 </doc>
 <doc name="M:PeterO.BigInteger.GetHashCode">
 <summary>Returns the hash code for this instance.</summary>
             <returns>A 32-bit signed integer.</returns>
 </doc>
 <doc name="M:PeterO.BigInteger.GreatestCommonDivisor(PeterO.BigInteger,PeterO.BigInteger)">
-<summary>Not documented yet.</summary>
-            <param name='bigintFirst'>Another arbitrary-precision
-            integer.</param>
-            <param name='bigintSecond'>An arbitrary-precision integer.
-            (3).</param>
-            <returns>An arbitrary-precision integer.</returns>
+<summary>Finds the greatest common divisor/greatest common factor (GCD/GCF) of two big integers.</summary>
+            <param name='bigintFirst'>The first operand.</param>
+            <param name='bigintSecond'>The second operand.</param>
+            <returns>The greatest common divisor.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='bigintFirst'/> is null.</exception>
 </doc>
@@ -192,9 +193,8 @@
             ones.  The resulting byte array can be passed to the <c>FromBytes()</c>
             method (with the same byte order) to reconstruct this integer's value.
             The byte order used will be little-endian.</summary>
-            <param name='littleEndian'>If true, the byte order is little-endian,
-            or least-significant-byte first.  If false, the byte order is big-endian,
-            or most-significant-byte first.</param>
+                       <returns>A byte array. If this value is 0, returns a byte array
+            with the single element 0.</returns>
 </doc>
 <doc name="M:PeterO.BigInteger.ToString">
 <summary>Converts this object to a text string in base
@@ -1384,7 +1384,7 @@
 <summary>Represents the value false.</summary>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromJSONString(System.String)">
-<summary>Generates a CBOR object from a string in JavaScript Object
+<summary>Generates a CBOR object from a text string in JavaScript Object
             Notation (JSON) format.
             <para>If a JSON object has the same key, only the last given value
             will be used for each duplicated key.</para></summary>
@@ -1398,7 +1398,7 @@
             JSON format.</exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromJSONString(System.String,PeterO.Cbor.CBOREncodeOptions)">
-<summary>Generates a CBOR object from a string in JavaScript Object
+<summary>Generates a CBOR object from a text string in JavaScript Object
             Notation (JSON) format.
             <para>By default, if a JSON object has the same key, only the last
             given value will be used for each duplicated key.</para></summary>
@@ -1594,7 +1594,7 @@
             <returns>A CBORObject object.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(System.String)">
-<summary>Generates a CBOR object from a string.</summary>
+<summary>Generates a CBOR object from a text string.</summary>
             <param name='strValue'>A string value. Can be null.</param>
             <returns>A CBOR object representing the string, or CBORObject.Null
             if stringValue is null.</returns>
@@ -2579,14 +2579,16 @@
 <summary>A filter that allows byte strings.</summary>
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeFilter.GetSubFilter(System.Int32)">
-<summary>Not documented yet.</summary>
-            <param name='index'>A 32-bit signed integer.</param>
-            <returns>A CBORTypeFilter object.</returns>
+<summary>Gets the type filter for this array filter by its index.</summary>
+            <param name='index'>A zero-based index of the filter to retrieve.</param>
+            <returns>Returns None if the index is out of range, or Any if this
+            filter doesn't filter an array.  Returns the appropriate filter for the array index otherwise.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeFilter.GetSubFilter(System.Int64)">
-<summary>Not documented yet.</summary>
-            <param name='index'>A 64-bit signed integer.</param>
-            <returns>A CBORTypeFilter object.</returns>
+<summary>Gets the type filter for this array filter by its index.</summary>
+            <param name='index'>A zero-based index of the filter to retrieve.</param>
+            <returns>Returns None if the index is out of range, or Any if this
+            filter doesn't filter an array.  Returns the appropriate filter for the array index otherwise.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeFilter.MajorTypeMatches(System.Int32)">
 <summary>Returns whether the given CBOR major type matches a major type
@@ -4044,7 +4046,7 @@ allowed by this filter; otherwise, <c>false</c>.</returns>
             <returns>A decimal number with the same value as <paramref name='flt'/>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.FromString(System.String)">
-<summary>Creates a decimal number from a string that represents a
+<summary>Creates a decimal number from a text string that represents a
             number. See <c>FromString(String, int, int, EContext)</c> for more
             information.</summary>
             <param name='str'>A string that represents a number.</param>
@@ -4056,7 +4058,7 @@ allowed by this filter; otherwise, <c>false</c>.</returns>
             string.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.FromString(System.String,PeterO.PrecisionContext)">
-<summary>Creates a decimal number from a string that represents a
+<summary>Creates a decimal number from a text string that represents a
             number. See <c>FromString(String, int, int, EContext)</c> for more
             information.</summary>
             <param name='str'>A string that represents a number.</param>
@@ -4073,7 +4075,7 @@ allowed by this filter; otherwise, <c>false</c>.</returns>
             string.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.FromString(System.String,System.Int32,System.Int32)">
-<summary>Creates a decimal number from a string that represents a
+<summary>Creates a decimal number from a text string that represents a
             number. See <c>FromString(String, int, int, EContext)</c> for more
             information.</summary>
             <param name='str'>A string that represents a number.</param>
@@ -4090,7 +4092,7 @@ allowed by this filter; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.FromString(System.String,System.Int32,System.Int32,PeterO.PrecisionContext)">
 <summary>
-            <para>Creates a decimal number from a string that represents a
+            <para>Creates a decimal number from a text string that represents a
             number.</para>
             <para>The format of the string generally consists of:</para>
             <list type=''>
@@ -5642,7 +5644,7 @@ allowed by this filter; otherwise, <c>false</c>.</returns>
             <returns>A binary float with the same value as <paramref name='flt'/>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.FromString(System.String)">
-<summary>Creates a binary float from a string that represents a
+<summary>Creates a binary float from a text string that represents a
             number. See the four-parameter FromString method.</summary>
             <param name='str'>The parameter <paramref name='str'/> is not
             documented yet.</param>
@@ -5661,7 +5663,7 @@ allowed by this filter; otherwise, <c>false</c>.</returns>
             </example>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.FromString(System.String,PeterO.PrecisionContext)">
-<summary>Creates a binary float from a string that represents a
+<summary>Creates a binary float from a text string that represents a
             number. Note that if the string contains a negative exponent, the
             resulting value might not be exact, in which case the resulting binary float will be an
             approximation of this decimal number's value.</summary>
@@ -5675,7 +5677,7 @@ allowed by this filter; otherwise, <c>false</c>.</returns>
             <paramref name='str'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.FromString(System.String,System.Int32,System.Int32)">
-<summary>Creates a binary float from a string that represents a
+<summary>Creates a binary float from a text string that represents a
             number. Note that if the string contains a negative exponent, the
             resulting value might not be exact, in which case the resulting binary float will be an
             approximation of this decimal number's value.</summary>
@@ -5692,7 +5694,7 @@ allowed by this filter; otherwise, <c>false</c>.</returns>
             than <paramref name='length'/>.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.FromString(System.String,System.Int32,System.Int32,PeterO.PrecisionContext)">
-<summary>Creates a binary float from a string that represents a
+<summary>Creates a binary float from a text string that represents a
             number. Note that if the string contains a negative exponent, the
             resulting value might not be exact, in which case the resulting binary float will be an
             approximation of this decimal number's value. (NOTE: This

@@ -131,7 +131,7 @@ Console.Write(String.Empty);
       for (int i = SByte.MinValue; i <= SByte.MaxValue; ++i) {
         CBORTestCommon.AssertSer(
           CBORObject.FromObject((sbyte)i),
-          (TestCommon.LongToString(i)));
+          TestCommon.LongToString(i));
       }
     }
 
@@ -4712,7 +4712,7 @@ stringTemp);
         while (true) {
           CBORTestCommon.AssertSer(
             CBORObject.FromObject(j),
-            (TestCommon.LongToString(j)));
+            TestCommon.LongToString(j));
           if (j == ranges[i + 1]) {
             break;
           }
@@ -4725,10 +4725,10 @@ stringTemp);
     public void TestDecimal() {
       CBORTestCommon.AssertSer(
         CBORObject.FromObject(Decimal.MinValue),
-        ((EDecimal)(Decimal.MinValue)).ToString());
+        ((EDecimal)Decimal.MinValue).ToString());
       CBORTestCommon.AssertSer(
         CBORObject.FromObject(Decimal.MaxValue),
-        ((EDecimal)(Decimal.MaxValue)).ToString());
+        ((EDecimal)Decimal.MaxValue).ToString());
       for (int i = -100; i <= 100; ++i) {
         CBORTestCommon.AssertSer(
           CBORObject.FromObject((decimal)i),
@@ -4749,7 +4749,7 @@ CBORTestCommon.AssertSer(objectTemp, objectTemp2);
       for (int i = UInt16.MinValue; i <= UInt16.MaxValue; ++i) {
         CBORTestCommon.AssertSer(
           CBORObject.FromObject((UInt16)i),
-          (TestCommon.LongToString(i)));
+          TestCommon.LongToString(i));
       }
     }
 

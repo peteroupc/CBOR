@@ -122,7 +122,7 @@ Gets a value indicating whether this value is a CBOR false value.
 
 <b>Returns:</b>
 
-True if this value is a CBOR false value; otherwise, false.
+ `true`  if this value is a CBOR false value, otherwise,  `false` .
 
 ### IsFinite
 
@@ -132,7 +132,7 @@ Gets a value indicating whether this CBOR object represents a finite number.
 
 <b>Returns:</b>
 
-True if this CBOR object represents a finite number; otherwise, false.
+ `true`  if this CBOR object represents a finite number; otherwise,  `false` .
 
 ### IsIntegral
 
@@ -142,7 +142,7 @@ Gets a value indicating whether this object represents an integral number, that 
 
 <b>Returns:</b>
 
-True if this object represents an integral number, that is, a number without a fractional part; otherwise, false.
+ `true`  if this object represents an integral number, that is, a number without a fractional part; otherwise,  `false` .
 
 ### IsNegative
 
@@ -152,7 +152,7 @@ Gets a value indicating whether this object is a negative number.
 
 <b>Returns:</b>
 
-True if this object is a negative number; otherwise, false.
+ `true`  if this object is a negative number; otherwise,  `false` .
 
 ### IsNull
 
@@ -162,7 +162,7 @@ Gets a value indicating whether this value is a CBOR null value.
 
 <b>Returns:</b>
 
-True if this value is a CBOR null value; otherwise, false.
+ `true`  if this value is a CBOR null value, otherwise,  `false` .
 
 ### IsTagged
 
@@ -172,7 +172,7 @@ Gets a value indicating whether this data item has at least one tag.
 
 <b>Returns:</b>
 
-True if this data item has at least one tag; otherwise, false.
+ `true`  if this data item has at least one tag, otherwise,  `false` .
 
 ### IsTrue
 
@@ -182,7 +182,7 @@ Gets a value indicating whether this value is a CBOR true value.
 
 <b>Returns:</b>
 
-True if this value is a CBOR true value; otherwise, false.
+ `true`  if this value is a CBOR true value, otherwise,  `false` .
 
 ### IsUndefined
 
@@ -192,7 +192,7 @@ Gets a value indicating whether this value is a CBOR undefined value.
 
 <b>Returns:</b>
 
-True if this value is a CBOR undefined value; otherwise, false.
+ `true`  if this value is a CBOR undefined value, otherwise,  `false` .
 
 ### IsZero
 
@@ -202,7 +202,7 @@ Gets a value indicating whether this object's value equals 0.
 
 <b>Returns:</b>
 
-True if this object's value equals 0; otherwise, false.
+ `true`  if this object's value equals 0, otherwise,  `false` .
 
 ### Keys
 
@@ -725,7 +725,7 @@ Returns whether this object's value is an integral value, is -(2^31) or greater,
 
 <b>Returns:</b>
 
-True if this object's value is an integral value, is -(2^31) or greater, and is less than 2^31; otherwise, false.
+ `true`  if this object's value is an integral value, is -(2^31) or greater, and is less than 2^31, otherwise,  `false` .
 
 ### CanFitInInt64
 
@@ -735,7 +735,7 @@ Returns whether this object's value is an integral value, is -(2^63) or greater,
 
 <b>Returns:</b>
 
-True if this object's value is an integral value, is -(2^63) or greater, and is less than 2^63; otherwise, false.
+ `true`  if this object's value is an integral value, is -(2^63) or greater, and is less than 2^63, otherwise,  `false` .
 
 ### CanFitInSingle
 
@@ -755,7 +755,7 @@ Returns whether this object's value, truncated to an integer, would be -(2^31) o
 
 <b>Returns:</b>
 
-True if this object's value, truncated to an integer, would be -(2^31) or greater, and less than 2^31; otherwise, false.
+ `true`  if this object's value, truncated to an integer, would be -(2^31) or greater, and less than 2^31, otherwise,  `false` .
 
 ### CanTruncatedIntFitInInt64
 
@@ -765,7 +765,7 @@ Returns whether this object's value, truncated to an integer, would be -(2^63) o
 
 <b>Returns:</b>
 
-True if this object's value, truncated to an integer, would be -(2^63) or greater, and less than 2^63; otherwise, false.
+ `true`  if this object's value, truncated to an integer, would be -(2^63) or greater, and less than 2^63, otherwise,  `false` .
 
 ### CompareTo
 
@@ -830,7 +830,7 @@ Determines whether a value of the given key exists in this object.
 
 <b>Returns:</b>
 
-True if the given key is found, or false if the given key is not found or this object is not a map.
+ `true`  if the given key is found, or false if the given key is not found or this object is not a map.
 
 <b>Exceptions:</b>
 
@@ -850,7 +850,7 @@ Determines whether a value of the given key exists in this object.
 
 <b>Returns:</b>
 
-True if the given key (as a CBOR object) is found, or false if the given key is not found or this object is not a map.
+ `true`  if the given key (as a CBOR object) is found, or false if the given key is not found or this object is not a map.
 
 <b>Exceptions:</b>
 
@@ -972,7 +972,7 @@ Determines whether this object and another object are equal.
 
 <b>Returns:</b>
 
-True if the objects are equal; otherwise, false.
+ `true`  if the objects are equal; otherwise,  `false` .
 
 ### Equals
 
@@ -987,14 +987,14 @@ Compares the equality of two CBOR objects.
 
 <b>Returns:</b>
 
-True if the objects are equal; otherwise, false.
+ `true`  if the objects are equal; otherwise,  `false` .
 
 ### FromJSONString
 
     public static PeterO.Cbor.CBORObject FromJSONString(
         string str);
 
-Generates a CBOR object from a string in JavaScript Object Notation (JSON) format.If a JSON object has the same key, only the last given value will be used for each duplicated key.
+Generates a CBOR object from a text string in JavaScript Object Notation (JSON) format.If a JSON object has the same key, only the last given value will be used for each duplicated key.
 
 <b>Parameters:</b>
 
@@ -1019,7 +1019,7 @@ The string is not in JSON format.
         string str,
         PeterO.Cbor.CBOREncodeOptions options);
 
-Generates a CBOR object from a string in JavaScript Object Notation (JSON) format.By default, if a JSON object has the same key, only the last given value will be used for each duplicated key.
+Generates a CBOR object from a text string in JavaScript Object Notation (JSON) format.By default, if a JSON object has the same key, only the last given value will be used for each duplicated key.
 
 <b>Parameters:</b>
 
@@ -1340,7 +1340,7 @@ A CBORObject object.
     public static PeterO.Cbor.CBORObject FromObject(
         string strValue);
 
-Generates a CBOR object from a string.
+Generates a CBOR object from a text string.
 
 <b>Parameters:</b>
 
@@ -1616,7 +1616,7 @@ Returns whether this object has a tag of the given number.
 
 <b>Returns:</b>
 
-True if this object has a tag of the given number; otherwise, false.
+ `true`  if this object has a tag of the given number; otherwise,  `false` .
 
 <b>Exceptions:</b>
 
@@ -1639,7 +1639,7 @@ Returns whether this object has a tag of the given number.
 
 <b>Returns:</b>
 
-True if this object has a tag of the given number; otherwise, false.
+ `true`  if this object has a tag of the given number; otherwise,  `false` .
 
 <b>Exceptions:</b>
 
@@ -1685,7 +1685,7 @@ Gets a value indicating whether this CBOR object represents infinity.
 
 <b>Returns:</b>
 
-True if this CBOR object represents infinity; otherwise, false.
+ `true`  if this CBOR object represents infinity, otherwise,  `false` .
 
 ### IsNaN
 
@@ -1695,7 +1695,7 @@ Gets a value indicating whether this CBOR object represents a not-a-number value
 
 <b>Returns:</b>
 
-True if this CBOR object represents a not-a-number value (as opposed to whether this object's type is not a number type); otherwise, false.
+ `true`  if this CBOR object represents a not-a-number value (as opposed to whether this object's type is not a number type); otherwise,  `false` .
 
 ### IsNegativeInfinity
 
@@ -1705,7 +1705,7 @@ Gets a value indicating whether this CBOR object represents negative infinity.
 
 <b>Returns:</b>
 
-True if this CBOR object represents negative infinity; otherwise, false.
+ `true`  if this CBOR object represents negative infinity; otherwise,  `false` .
 
 ### IsPositiveInfinity
 
@@ -1715,7 +1715,7 @@ Gets a value indicating whether this CBOR object represents positive infinity.
 
 <b>Returns:</b>
 
-True if this CBOR object represents positive infinity; otherwise, false.
+ `true`  if this CBOR object represents positive infinity; otherwise,  `false` .
 
 ### Multiply
 
@@ -2004,7 +2004,7 @@ If this object is an array, removes the first instance of the specified item fro
 
 <b>Returns:</b>
 
-True if the item was removed; otherwise, false.
+ `true`  if the item was removed; otherwise,  `false` .
 
 <b>Exceptions:</b>
 

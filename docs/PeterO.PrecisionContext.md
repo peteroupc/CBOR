@@ -21,20 +21,15 @@ Initializes a new instance of the  class. HasFlags will be set to false.
 
 <b>Parameters:</b>
 
- * <i>precision</i>: The parameter  <i>precision</i>
-is not documented yet.
+ * <i>precision</i>: The maximum number of digits a number can have, or 0 for an unlimited number of digits.
 
- * <i>rounding</i>: The parameter  <i>rounding</i>
- is not documented yet.
+ * <i>rounding</i>: The rounding mode to use when a number can't fit the given precision.
 
- * <i>exponentMinSmall</i>: The parameter  <i>exponentMinSmall</i>
- is not documented yet.
+ * <i>exponentMinSmall</i>: The minimum exponent.
 
- * <i>exponentMaxSmall</i>: The parameter  <i>exponentMaxSmall</i>
- is not documented yet.
+ * <i>exponentMaxSmall</i>: The maximum exponent.
 
- * <i>clampNormalExponents</i>: The parameter  <i>clampNormalExponents</i>
- is not documented yet.
+ * <i>clampNormalExponents</i>: Whether to clamp a number's significand to the given maximum precision (if it isn't zero) while remaining within the exponent range.
 
 ### Basic
 
@@ -172,7 +167,7 @@ Gets a value indicating whether the EMax and EMin properties refer to the number
 
 <b>Returns:</b>
 
-True if the EMax and EMin properties refer to the number's Exponent property adjusted to the number's precision, or false if they refer to just the number's Exponent property.
+ `true`  if the EMax and EMin properties refer to the number's Exponent property adjusted to the number's precision, or false if they refer to just the number's Exponent property.
 
 ### ClampNormalExponents
 
@@ -217,7 +212,7 @@ The lowest exponent possible when a converted number is expressed in scientific 
 <b>Deprecated.</b> Use EContext from PeterO.Numbers/com.upokecenter.numbers.
 
 Gets or sets the flags that are set from converting numbers according to this precision context. If HasFlags is false, this value will be 0. This value is a combination of bit fields. To retrieve a particular flag, use the AND operation on the return value of this method. For example:  `(this.Flags &
-            PrecisionContext.FlagInexact) != 0`  returns TRUE if the Inexact flag is set.
+            PrecisionContext.FlagInexact) != 0`  returns  `true`  if the Inexact flag is set.
 
 <b>Returns:</b>
 
@@ -233,7 +228,7 @@ Gets a value indicating whether this context defines a minimum and maximum expon
 
 <b>Returns:</b>
 
-True if this context defines a minimum and maximum exponent; otherwise, false.
+ `true`  if this context defines a minimum and maximum exponent; otherwise,  `false` .
 
 ### HasFlags
 
@@ -245,7 +240,7 @@ Gets a value indicating whether this context has a mutable Flags field.
 
 <b>Returns:</b>
 
-True if this context has a mutable Flags field; otherwise, false.
+ `true`  if this context has a mutable Flags field, otherwise,  `false` .
 
 ### HasMaxPrecision
 
@@ -257,7 +252,7 @@ Gets a value indicating whether this context defines a maximum precision.
 
 <b>Returns:</b>
 
-True if this context defines a maximum precision; otherwise, false.
+ `true`  if this context defines a maximum precision, otherwise,  `false` .
 
 ### IsPrecisionInBits
 
@@ -269,7 +264,7 @@ Gets a value indicating whether this context's Precision property is in bits, ra
 
 <b>Returns:</b>
 
-True if this context's Precision property is in bits, rather than digits; otherwise, false. The default is false.
+ `true`  if this context's Precision property is in bits, rather than digits; otherwise,  `false` . The default is false.
 
 ### IsSimplified
 
@@ -277,11 +272,11 @@ True if this context's Precision property is in bits, rather than digits; otherw
 
 <b>Deprecated.</b> Use EContext from PeterO.Numbers/com.upokecenter.numbers.
 
-Gets a value indicating whether to use a "simplified" arithmetic. In the simplified arithmetic, infinity, not-a-number, and subnormal numbers are not allowed, and negative zero is treated the same as positive zero. For further details, see `http://speleotrove.com/decimal/dax3274.html`
+Gets a value indicating whether to use a "simplified" arithmetic. In the simplified arithmetic, infinity, not-a-number, and subnormal numbers are not allowed, and negative zero is treated the same as positive zero. For further details, seehttp://speleotrove.com/decimal/dax3274.html
 
 <b>Returns:</b>
 
-True if a "simplified" arithmetic will be used; otherwise, false.
+ `true`  if a "simplified" arithmetic will be used; otherwise,  `false` .
 
 ### Precision
 
@@ -346,7 +341,7 @@ Determines whether a number can have the given Exponent property under this prec
 
 <b>Returns:</b>
 
-True if a number can have the given Exponent property under this precision context; otherwise, false. If this context allows unlimited precision, returns true for the exponent EMax and any exponent less than EMax.
+ `true`  if a number can have the given Exponent property under this precision context; otherwise,  `false` . If this context allows unlimited precision, returns true for the exponent EMax and any exponent less than EMax.
 
 <b>Exceptions:</b>
 
@@ -429,8 +424,7 @@ Copies this PrecisionContext and sets the copy's "AdjustExponent" property to th
 
 <b>Parameters:</b>
 
- * <i>adjustExponent</i>: The parameter  <i>adjustExponent</i>
- is not documented yet.
+ * <i>adjustExponent</i>: The new value of the "AdjustExponent" property for the copy.
 
 <b>Returns:</b>
 
@@ -477,8 +471,7 @@ Copies this PrecisionContext and gives it a particular precision value.
 
 <b>Parameters:</b>
 
- * <i>bigintPrecision</i>: The parameter  <i>bigintPrecision</i>
- is not documented yet.
+ * <i>bigintPrecision</i>: Desired maximum number of digits a number can have. If 0, the number of digits is unlimited.
 
 <b>Returns:</b>
 
@@ -513,8 +506,7 @@ Copies this precision context and sets the copy's "ClampNormalExponents" flag to
 
 <b>Parameters:</b>
 
- * <i>clamp</i>: The parameter  <i>clamp</i>
- is not documented yet.
+ * <i>clamp</i>: Desired value for ClampNormalExponents.
 
 <b>Returns:</b>
 
@@ -563,7 +555,7 @@ Copies this PrecisionContext and gives it a particular precision value.
 
 <b>Parameters:</b>
 
- * <i>precision</i>: Desired precision. 0 means unlimited precision.
+ * <i>precision</i>: Desired maximum number of digits a number can have. If 0, the number of digits is unlimited.
 
 <b>Returns:</b>
 
@@ -580,8 +572,7 @@ Copies this PrecisionContext and sets the copy's "IsPrecisionInBits" property to
 
 <b>Parameters:</b>
 
- * <i>isPrecisionBits</i>: The parameter  <i>isPrecisionBits</i>
- is not documented yet.
+ * <i>isPrecisionBits</i>: The new value of the "IsPrecisionInBits" property for the copy.
 
 <b>Returns:</b>
 
@@ -598,8 +589,7 @@ Copies this PrecisionContext with the specified rounding mode.
 
 <b>Parameters:</b>
 
- * <i>rounding</i>: The parameter  <i>rounding</i>
- is not documented yet.
+ * <i>rounding</i>: Desired value of the Rounding property.
 
 <b>Returns:</b>
 
@@ -616,8 +606,7 @@ Copies this PrecisionContext and sets the copy's "IsSimplified" property to the 
 
 <b>Parameters:</b>
 
- * <i>simplified</i>: The parameter  <i>simplified</i>
- is not documented yet.
+ * <i>simplified</i>: The new value of the "IsSimplified" property for the copy.
 
 <b>Returns:</b>
 

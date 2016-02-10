@@ -94,7 +94,7 @@ Gets a value indicating whether this object is finite (not infinity or NaN).
 
 <b>Returns:</b>
 
-True if this object is finite (not infinity or NaN); otherwise, false.
+ `true`  if this object is finite (not infinity or NaN); otherwise,  `false` .
 
 ### IsNegative
 
@@ -106,7 +106,7 @@ Gets a value indicating whether this object is negative, including negative zero
 
 <b>Returns:</b>
 
-True if this object is negative, including negative zero; otherwise, false.
+ `true`  if this object is negative, including negative zero; otherwise,  `false` .
 
 ### IsZero
 
@@ -118,7 +118,7 @@ Gets a value indicating whether this object's value equals 0.
 
 <b>Returns:</b>
 
-True if this object's value equals 0; otherwise, false.
+ `true`  if this object's value equals 0, otherwise,  `false` .
 
 ### Mantissa
 
@@ -431,7 +431,7 @@ Divides this object by another binary float and returns the result. When possibl
 
 <b>Parameters:</b>
 
- * <i>divisor</i>: The divisor.
+ * <i>divisor</i>: The number to divide by.
 
 <b>Returns:</b>
 
@@ -458,7 +458,7 @@ Divides this arbitrary-precision binary float by another arbitrary-precision bin
 
 <b>Parameters:</b>
 
- * <i>divisor</i>: The divisor.
+ * <i>divisor</i>: The number to divide by.
 
  * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
@@ -655,7 +655,7 @@ Divides two arbitrary-precision binary floats, and returns the integer part of t
 
 <b>Parameters:</b>
 
- * <i>divisor</i>: The divisor.
+ * <i>divisor</i>: The number to divide by.
 
 <b>Returns:</b>
 
@@ -679,7 +679,7 @@ Divides this object by another object, and returns the integer part of the resul
 
 <b>Parameters:</b>
 
- * <i>divisor</i>: The divisor.
+ * <i>divisor</i>: The number to divide by.
 
  * <i>ctx</i>: A precision context object to control the precision, rounding, and exponent range of the integer part of the result. Flags will be set on the given context only if the context's HasFlags is true and the integer part of the result doesn't fit the precision and exponent range without rounding.
 
@@ -708,7 +708,7 @@ Divides this object by another object, and returns the integer part of the resul
 
 <b>Parameters:</b>
 
- * <i>divisor</i>: The divisor.
+ * <i>divisor</i>: The number to divide by.
 
  * <i>ctx</i>: A precision context object to control the precision. The rounding and exponent range settings of this context are ignored. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
@@ -734,7 +734,7 @@ Divides this object by another binary float and returns a result with the same e
 
 <b>Parameters:</b>
 
- * <i>divisor</i>: The divisor.
+ * <i>divisor</i>: The number to divide by.
 
  * <i>rounding</i>: The rounding mode to use if the result must be scaled down to have the same exponent as this value.
 
@@ -764,7 +764,7 @@ Determines whether this object's mantissa and exponent are equal to those of ano
 
 <b>Returns:</b>
 
-True if the objects are equal; otherwise, false.
+ `true`  if the objects are equal; otherwise,  `false` .
 
 ### Equals
 
@@ -781,7 +781,7 @@ Determines whether this object's mantissa and exponent are equal to those of ano
 
 <b>Returns:</b>
 
-True if this object's mantissa and exponent are equal to those of another object; otherwise, false.
+ `true`  if this object's mantissa and exponent are equal to those of another object; otherwise,  `false` .
 
 <b>Exceptions:</b>
 
@@ -804,7 +804,7 @@ Determines whether this object's mantissa and exponent are equal to those of ano
 
 <b>Returns:</b>
 
-True if this object's mantissa and exponent are equal to those of another object; otherwise, false.
+ `true`  if this object's mantissa and exponent are equal to those of another object; otherwise,  `false` .
 
 <b>Exceptions:</b>
 
@@ -933,10 +933,10 @@ A binary float with the same value as  <i>flt</i>
     public static PeterO.ExtendedFloat FromString(
         string str);
 
-Creates a binary float from a string that represents a number. See the four-parameter FromString method.
+Creates a binary float from a text string that represents a number. See the four-parameter FromString method.
 
 The following example converts a number in the form of a string to a `double` , or a 64-bit floating point number.    public static double StringToDouble(String str) {
-    return arbitrary-precision binary float.FromString(str).ToDouble();
+    return ExtendedFloat.FromString(str).ToDouble();
     }
 
 <b>Parameters:</b>
@@ -957,7 +957,7 @@ The parsed number, converted to arbitrary-precision binary float.
 
 <b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
-Not documented yet.
+Creates a binary float from a text string that represents a number. Note that if the string contains a negative exponent, the resulting value might not be exact, in which case the resulting binary float will be an approximation of this decimal number's value.
 
 <b>Parameters:</b>
 
@@ -999,7 +999,7 @@ Either  <i>offset</i>
 
 <b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
-Creates a binary float from a string that represents a number. Note that if the string contains a negative exponent, the resulting value might not be exact, in which case the resulting binary float will be an approximation of this decimal number's value. (NOTE: This documentation previously said the binary float will contain enough precision to accurately convert it to a 32-bit or 64-bit floating point number. Due to double rounding, this will generally not be the case for certain numbers converted from decimal to ExtendedFloat via this method and in turn converted to  `double`  or  `float` .)The format of the string generally consists of:
+Creates a binary float from a text string that represents a number. Note that if the string contains a negative exponent, the resulting value might not be exact, in which case the resulting binary float will be an approximation of this decimal number's value. (NOTE: This documentation previously said the binary float will contain enough precision to accurately convert it to a 32-bit or 64-bit floating point number. Due to double rounding, this will generally not be the case for certain numbers converted from decimal to ExtendedFloat via this method and in turn converted to  `double`  or  `float` .)The format of the string generally consists of:
 
  * An optional plus sign ("+" , U+002B) or minus sign ("-", U+002D) (if '-' , the value is negative.)
 
@@ -1051,7 +1051,7 @@ Either  <i>offset</i>
 
 <b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
-Not documented yet.
+Creates a binary float from a text string that represents a number. Note that if the string contains a negative exponent, the resulting value might not be exact, in which case the resulting binary float will be an approximation of this decimal number's value.
 
 <b>Parameters:</b>
 
@@ -1087,7 +1087,7 @@ Gets a value indicating whether this object is positive or negative infinity.
 
 <b>Returns:</b>
 
-True if this object is positive or negative infinity; otherwise, false.
+ `true`  if this object is positive or negative infinity; otherwise,  `false` .
 
 ### IsNaN
 
@@ -1097,7 +1097,7 @@ Returns whether this object is a not-a-number value.
 
 <b>Returns:</b>
 
-True if this object is a not-a-number value; otherwise, false.
+ `true`  if this object is a not-a-number value, otherwise,  `false` .
 
 ### IsNegativeInfinity
 
@@ -1109,7 +1109,7 @@ Returns whether this object is negative infinity.
 
 <b>Returns:</b>
 
-True if this object is negative infinity; otherwise, false.
+ `true`  if this object is negative infinity, otherwise,  `false` .
 
 ### IsPositiveInfinity
 
@@ -1121,7 +1121,7 @@ Returns whether this object is positive infinity.
 
 <b>Returns:</b>
 
-True if this object is positive infinity; otherwise, false.
+ `true`  if this object is positive infinity, otherwise,  `false` .
 
 ### IsQuietNaN
 
@@ -1133,7 +1133,7 @@ Gets a value indicating whether this object is a quiet not-a-number value.
 
 <b>Returns:</b>
 
-True if this object is a quiet not-a-number value; otherwise, false.
+ `true`  if this object is a quiet not-a-number value; otherwise,  `false` .
 
 ### IsSignalingNaN
 
@@ -1145,7 +1145,7 @@ Gets a value indicating whether this object is a signaling not-a-number value.
 
 <b>Returns:</b>
 
-True if this object is a signaling not-a-number value; otherwise, false.
+ `true`  if this object is a signaling not-a-number value; otherwise,  `false` .
 
 ### Log
 
@@ -2081,11 +2081,11 @@ The parameter <i>divisor</i>
 
 <b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
-Not documented yet.
+Calculates the remainder of a number by the formula this - ((this / divisor) * divisor).
 
 <b>Parameters:</b>
 
- * <i>divisor</i>: Another arbitrary-precision binary float.
+ * <i>divisor</i>: The number to divide by.
 
 <b>Returns:</b>
 
@@ -2105,11 +2105,11 @@ The parameter <i>divisor</i>
 
 <b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
-Calculates the remainder of a number by the formula this - ((this / divisor) * divisor). This is meant to be similar to the remainder operation in Java's BigDecimal.
+Calculates the remainder of a number by the formula this - ((this / divisor) * divisor).
 
 <b>Parameters:</b>
 
- * <i>divisor</i>: Another arbitrary-precision binary float.
+ * <i>divisor</i>: The number to divide by.
 
  * <i>ctx</i>: A precision context object to control the precision, rounding, and exponent range of the integer part of the result. This context will be used only in the division portion of the remainder calculation. Flags will be set on the given context only if the context's HasFlags is true and the integer part of the division result doesn't fit the precision and exponent range without rounding.
 
@@ -2145,7 +2145,7 @@ Finds the distance to the closest multiple of the given divisor, based on the re
 
 <b>Parameters:</b>
 
- * <i>divisor</i>: The divisor.
+ * <i>divisor</i>: The number to divide by.
 
  * <i>ctx</i>: A precision context object to control the precision. The rounding and exponent range settings of this context are ignored (the rounding mode is always treated as HalfEven). If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
@@ -2189,7 +2189,7 @@ Returns a binary number with the same value as this object but rounded to a new 
 
 <b>Parameters:</b>
 
- * <i>exponentSmall</i>: The minimum exponent the result can have. This is the maximum number of fractional digits in the result, expressed as a negative number. Can also be positive, which eliminates lower-order places number. For example, -3 means round to the sixteenth (10b^-3, 0.0001b), and 3 means round to the sixteen-place (10b^3, 1000b). A value of 0 rounds the number to an integer.
+ * <i>exponentSmall</i>: The minimum exponent the result can have. This is the maximum number of fractional digits in the result, expressed as a negative number. Can also be positive, which eliminates lower-order places in the number. For example, -3 means round to the sixteenth (10b^-3, 0.0001b), and 3 means round to the sixteen-place (10b^3, 1000b). A value of 0 rounds the number to an integer.
 
  * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null, in which case the default rounding mode is HalfEven.
 
@@ -2231,11 +2231,11 @@ The parameter <i>exponent</i>
 
 <b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
-Returns a binary number with the same value as this object but rounded to the given exponent, and signals an invalid operation if the result would be inexact.
+Returns a binary number with the same value as this object but rounded to the given exponent, and signals an inexact flag if the result would be inexact.
 
 <b>Parameters:</b>
 
- * <i>exponentSmall</i>: The minimum exponent the result can have. This is the maximum number of fractional digits in the result, expressed as a negative number. Can also be positive, which eliminates lower-order places number. For example, -3 means round to the sixteenth (10b^-3, 0.0001b), and 3 means round to the sixteen-place (10b^3, 1000b). A value of 0 rounds the number to an integer.
+ * <i>exponentSmall</i>: The minimum exponent the result can have. This is the maximum number of fractional digits in the result, expressed as a negative number. Can also be positive, which eliminates lower-order places in the number. For example, -3 means round to the sixteenth (10b^-3, 0.0001b), and 3 means round to the sixteen-place (10b^3, 1000b). A value of 0 rounds the number to an integer.
 
  * <i>ctx</i>: A PrecisionContext object.
 
@@ -2251,7 +2251,7 @@ A binary number rounded to the closest value representable in the given precisio
 
 <b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
-Returns a binary number with the same value as this object but rounded to the given exponent, and signals an invalid operation if the result would be inexact.
+Returns a binary number with the same value as this object but rounded to the given exponent, and signals an inexact flag if the result would be inexact.
 
 <b>Parameters:</b>
 
@@ -2276,7 +2276,7 @@ The parameter <i>exponent</i>
 
 <b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
-Returns a binary number with the same value as this object but rounded to an integer, and signals an invalid operation if the result would be inexact.
+Returns a binary number with the same value as this object but rounded to an integer, and signals an inexact flag if the result would be inexact.
 
 <b>Parameters:</b>
 

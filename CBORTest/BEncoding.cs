@@ -216,10 +216,7 @@ namespace PeterO {
         if (length < 0) {
           throw new CBORException("invalid string");
         }
-        EInteger bigLength = EInteger.FromInt64(length);
-        writeUtf8(
-bigLength.ToString(),
-stream);
+        writeUtf8(LongToString(length), stream);
         stream.WriteByte(unchecked((byte)((byte)':')));
         writeUtf8(s, stream);
       } else if (obj.Type == CBORType.Map) {
@@ -249,7 +246,8 @@ stream);
             if (length < 0) {
               throw new CBORException("invalid string");
             }
-            writeUtf8(LongToString(length),
+            writeUtf8(
+LongToString(length),
 stream);
             stream.WriteByte(unchecked((byte)((byte)':')));
             writeUtf8(key, stream);
@@ -264,10 +262,7 @@ stream);
             if (length < 0) {
               throw new CBORException("invalid string");
             }
-            EInteger bigLength = EInteger.FromInt64(length);
-            writeUtf8(
-bigLength.ToString(),
-stream);
+            writeUtf8(LongToString(length), stream);
             stream.WriteByte(unchecked((byte)((byte)':')));
             writeUtf8(str, stream);
             Write(obj[key], stream);
@@ -286,10 +281,7 @@ stream);
         if (length < 0) {
           throw new CBORException("invalid string");
         }
-        EInteger bigLength = EInteger.FromInt64(length);
-        writeUtf8(
-bigLength.ToString(),
-stream);
+        writeUtf8(LongToString(length), stream);
         stream.WriteByte(unchecked((byte)((byte)':')));
         writeUtf8(str, stream);
       }

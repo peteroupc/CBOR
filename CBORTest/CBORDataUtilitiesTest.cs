@@ -73,13 +73,13 @@ CBORDataUtilities.ParseJSONNumber(
 false,
 false,
 true));
-AssertNegative(
+this.AssertNegative(
 CBORDataUtilities.ParseJSONNumber(
 "-0e+1",
 false,
 false,
 true));
-AssertNegative(
+this.AssertNegative(
 CBORDataUtilities.ParseJSONNumber(
 "-0e-1",
 false,

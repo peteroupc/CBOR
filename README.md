@@ -278,6 +278,11 @@ In version 2.0:
 - CBORObject's one-argument Add method now adds CBORObject.Null if passed null,
   rather than throwing an exception.
 
+**NOTE**: In the "2.0" tag for this repository, the file `DataUtilities.cs` should be copied
+from the `PeterO` directory to the root directory for this repository, in order for the CBORDocs
+and CBORDocs2 projects to build.  This issue may probably exist in other older versions
+as well.
+
 In version 1.3:
 
 - Added a CompareToIgnoreTags method to CBORObject

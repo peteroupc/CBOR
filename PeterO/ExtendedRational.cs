@@ -489,6 +489,7 @@ bool negative) {
       return new ExtendedRational(ERational.FromEInteger(bigint.Ei));
     }
 
+#pragma warning disable 618
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "",
       "CS0618",
@@ -512,5 +513,6 @@ bool negative) {
       }
       return this;
     }
+#pragma warning restore 618
   }
 }
