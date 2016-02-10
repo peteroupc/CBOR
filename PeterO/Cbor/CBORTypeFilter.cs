@@ -52,9 +52,8 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.ArrayIndexAllowed(System.Int32)"]/*'/>
     public bool ArrayIndexAllowed(int index) {
-   return (this.types & (1 << 4)) != 0 && index >= 0 && (this.anyArrayLength
-        ||
-           ((this.arrayMinLength || index < this.arrayLength) && index >=
+   return (this.types & (1 << 4)) != 0 && index >= 0 && (this.anyArrayLength||
+        ((this.arrayMinLength || index < this.arrayLength) && index >=
                     0));
     }
 

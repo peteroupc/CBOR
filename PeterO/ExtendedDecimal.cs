@@ -222,6 +222,11 @@ PrecisionContext ctx) {
         Rounding.Odd) ? ERounding.Odd : ERounding.Down);
     }
 
+#pragma warning disable 618
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+      "",
+      "CS0618",
+      Justification = "Implements a conversion from a new class to a legacy class.")]
     internal static Rounding ToRounding(ERounding r) {
       if (r == ERounding.Ceiling) {
         return Rounding.Ceiling;
@@ -250,6 +255,7 @@ PrecisionContext ctx) {
       return (r == ERounding.None) ? Rounding.Unnecessary : ((r ==
         ERounding.Odd) ? Rounding.Odd : Rounding.Down);
     }
+#pragma warning restore 618
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.ToBigIntegerExact"]/*'/>

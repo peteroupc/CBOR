@@ -40,7 +40,7 @@ Gets a value indicating whether this value is even.
 
 <b>Returns:</b>
 
-True if this value is even; otherwise, false.
+ `true`  if this value is even; otherwise,  `false` .
 
 ### IsPowerOfTwo
 
@@ -52,7 +52,7 @@ Gets a value indicating whether this object's value is a power of two. (NOTE: Th
 
 <b>Returns:</b>
 
-True if this object's value is a power of two; otherwise, false.
+ `true`  if this object's value is a power of two; otherwise,  `false` .
 
 ### IsZero
 
@@ -64,7 +64,7 @@ Gets a value indicating whether this value is 0.
 
 <b>Returns:</b>
 
-True if this value is 0; otherwise, false.
+ `true`  if this value is 0; otherwise,  `false` .
 
 ### One
 
@@ -205,7 +205,7 @@ Returns whether this object's value can fit in a 32-bit signed integer.
 
 <b>Returns:</b>
 
-True if this object's value is MinValue or greater, and MaxValue or less; otherwise, false.
+ `true`  if this object's value is MinValue or greater, and MaxValue or less; otherwise,  `false` .
 
 ### CompareTo
 
@@ -297,14 +297,14 @@ Determines whether this object and another object are equal.
 
 <b>Returns:</b>
 
-True if this object and another object are equal; otherwise, false.
+ `true`  if this object and another object are equal; otherwise,  `false` .
 
 ### Equals
 
     public sealed bool Equals(
         PeterO.BigInteger other);
 
-Not documented yet.
+Returns whether this number's value is equal to another number's value.
 
 <b>Parameters:</b>
 
@@ -312,7 +312,7 @@ Not documented yet.
 
 <b>Returns:</b>
 
-A Boolean object.
+ `true`  if this number's value is equal to another number's value, otherwise,  `false` .
 
 ### fromByteArray
 
@@ -545,17 +545,23 @@ The parameter <i>bigintSecond</i>
 
 <b>Deprecated.</b> Use EInteger from PeterO.Numbers/com.upokecenter.numbers.
 
-Not documented yet.
+Gets a series of bits from the two's complement representation of this number's value.
 
 <b>Parameters:</b>
 
- * <i>index</i>: A 32-bit signed integer.
+ * <i>index</i>: Zero-based index of the first bit to retrieve.
 
- * <i>numberBits</i>: A 32-bit signed integer. (2).
+ * <i>numberBits</i>: The number of bits to retrieve, from 0 to 64.
 
 <b>Returns:</b>
 
-A 64-bit signed integer.
+A 64-bit signed integer containing the bits retrieved. The least significant bit is first.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentException:
+The parameter <i>numberBits</i>
+ is less than 0 or greater than 64.
 
 ### getDigitCount
 
@@ -623,17 +629,17 @@ The number of bits in this object's value. Returns 0 if this object's value is 0
 
 <b>Deprecated.</b> Use EInteger from PeterO.Numbers/com.upokecenter.numbers.
 
-Not documented yet.
+Finds the greatest common divisor/greatest common factor (GCD/GCF) of two big integers.
 
 <b>Parameters:</b>
 
- * <i>bigintFirst</i>: Another arbitrary-precision integer.
+ * <i>bigintFirst</i>: The first operand.
 
- * <i>bigintSecond</i>: An arbitrary-precision integer. (3).
+ * <i>bigintSecond</i>: The second operand.
 
 <b>Returns:</b>
 
-An arbitrary-precision integer.
+The greatest common divisor.
 
 <b>Exceptions:</b>
 
@@ -800,14 +806,11 @@ Calculates the remainder when an arbitrary-precision integer raised to a certain
 
 <b>Parameters:</b>
 
- * <i>bigintValue</i>: The parameter  <i>bigintValue</i>
- is not documented yet.
+ * <i>bigintValue</i>: The number to raise to a power.
 
- * <i>pow</i>: The parameter  <i>pow</i>
- is not documented yet.
+ * <i>pow</i>: The exponent to raise the number to.
 
- * <i>mod</i>: The parameter  <i>mod</i>
- is not documented yet.
+ * <i>mod</i>: The modulus.
 
 <b>Returns:</b>
 
@@ -920,11 +923,9 @@ Divides an arbitrary-precision integer by the value of an arbitrary-precision in
 
 <b>Parameters:</b>
 
- * <i>dividend</i>: The parameter  <i>dividend</i>
- is not documented yet.
+ * <i>dividend</i>: The number that will be divided by the divisor.
 
- * <i>divisor</i>: The parameter  <i>divisor</i>
- is not documented yet.
+ * <i>divisor</i>: The number to divide by.
 
 <b>Returns:</b>
 
@@ -954,9 +955,9 @@ Determines whether an arbitrary-precision integer is greater than another arbitr
 
 <b>Returns:</b>
 
-True if  <i>thisValue</i>
+ `true`  if  <i>thisValue</i>
  is greater than <i>otherValue</i>
- ; otherwise, false.
+ ; otherwise,  `false` .
 
 ### Operator `>=`
 
@@ -976,9 +977,9 @@ Determines whether an arbitrary-precision integer value is greater than another 
 
 <b>Returns:</b>
 
-True if  <i>thisValue</i>
+ `true`  if  <i>thisValue</i>
  is at least  <i>otherValue</i>
- ; otherwise, false.
+ ; otherwise,  `false` .
 
 ### Operator `<<`
 
@@ -988,13 +989,13 @@ True if  <i>thisValue</i>
 
 <b>Deprecated.</b> Use EInteger from PeterO.Numbers/com.upokecenter.numbers.
 
-Not documented yet.
+Returns an arbitrary-precision integer with the bits shifted to the left.
 
 <b>Parameters:</b>
 
- * <i>bthis</i>: Another arbitrary-precision integer.
+ * <i>bthis</i>: An arbitrary-precision integer whose value will be shifted.
 
- * <i>bitCount</i>: A 32-bit signed integer.
+ * <i>bitCount</i>: The number of bits to shift left. If this number is negative, shifts right instead.
 
 <b>Returns:</b>
 
@@ -1024,9 +1025,9 @@ Determines whether an arbitrary-precision integer is less than another arbitrary
 
 <b>Returns:</b>
 
-True if  <i>thisValue</i>
+ `true`  if  <i>thisValue</i>
  is less than <i>otherValue</i>
- ; otherwise, false.
+ ; otherwise,  `false` .
 
 ### Operator `<=`
 
@@ -1046,9 +1047,9 @@ Determines whether an arbitrary-precision integer is less than or equal to anoth
 
 <b>Returns:</b>
 
-True if  <i>thisValue</i>
+ `true`  if  <i>thisValue</i>
  is up to  <i>otherValue</i>
- ; otherwise, false.
+ ; otherwise,  `false` .
 
 ### Operator `%`
 
@@ -1062,11 +1063,9 @@ Finds the remainder that results when an arbitrary-precision integer is divided 
 
 <b>Parameters:</b>
 
- * <i>dividend</i>: The parameter  <i>dividend</i>
- is not documented yet.
+ * <i>dividend</i>: The number that will be divided by the divisor.
 
- * <i>divisor</i>: The parameter  <i>divisor</i>
- is not documented yet.
+ * <i>divisor</i>: The number to divide by.
 
 <b>Returns:</b>
 
@@ -1090,11 +1089,9 @@ Multiplies an arbitrary-precision integer by the value of an arbitrary-precision
 
 <b>Parameters:</b>
 
- * <i>operand1</i>: The parameter  <i>operand1</i>
- is not documented yet.
+ * <i>operand1</i>: The first operand.
 
- * <i>operand2</i>: The parameter  <i>operand2</i>
- is not documented yet.
+ * <i>operand2</i>: The second operand.
 
 <b>Returns:</b>
 
@@ -1244,19 +1241,18 @@ The parameter <i>powerSmall</i>
 
 <b>Deprecated.</b> Use EInteger from PeterO.Numbers/com.upokecenter.numbers.
 
-Not documented yet.
+Returns this number raised to a power.
 
 <b>Parameters:</b>
 
- * <i>bigValue</i>: The parameter  <i>bigValue</i>
- is not documented yet.
+ * <i>bigValue</i>: The value to raise to an exponent.
 
- * <i>power</i>: The parameter  <i>power</i>
- is not documented yet.
+ * <i>power</i>: The exponent.
 
 <b>Returns:</b>
 
-A BigInteger object.
+The result. Returns 1 if  <i>power</i>
+ is 0.
 
 ### Pow
 
@@ -1266,19 +1262,18 @@ A BigInteger object.
 
 <b>Deprecated.</b> Use EInteger from PeterO.Numbers/com.upokecenter.numbers.
 
-Not documented yet.
+Returns this number raised to a power.
 
 <b>Parameters:</b>
 
- * <i>bigValue</i>: The parameter  <i>bigValue</i>
- is not documented yet.
+ * <i>bigValue</i>: The value to raise to an exponent.
 
- * <i>power</i>: The parameter  <i>power</i>
- is not documented yet.
+ * <i>power</i>: The exponent.
 
 <b>Returns:</b>
 
-A BigInteger object.
+The result. Returns 1 if  <i>power</i>
+ is 0.
 
 ### PowBigIntVar
 
@@ -1430,7 +1425,7 @@ Returns whether a bit is set in the two's-complement representation of this obje
 
 <b>Returns:</b>
 
-True if a bit is set in the two's-complement representation of this object's value; otherwise, false.
+ `true`  if a bit is set in the two's-complement representation of this object's value; otherwise,  `false` .
 
 ### toByteArray
 
@@ -1455,11 +1450,11 @@ A byte array.
 
 <b>Deprecated.</b> Use EInteger from PeterO.Numbers/com.upokecenter.numbers.
 
-Not documented yet.
+Returns a byte array of this integer's value. The byte array will take the form of the number's two's-complement representation, using the fewest bytes necessary to store its value unambiguously. If this value is negative, the bits that appear beyond the most significant bit of the number will be all ones. The resulting byte array can be passed to the  `FromBytes()` method (with the same byte order) to reconstruct this integer's value. The byte order used will be little-endian.
 
 <b>Returns:</b>
 
-A byte array.
+A byte array. If this value is 0, returns a byte array with the single element 0.
 
 ### toBytes
 

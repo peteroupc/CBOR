@@ -9,14 +9,19 @@ namespace Test {
   internal static class CBORTestCommon {
     internal static readonly ExtendedDecimal DecPosInf =
   ExtendedDecimal.PositiveInfinity;
+
     internal static readonly ExtendedDecimal DecNegInf =
       ExtendedDecimal.NegativeInfinity;
+
     internal static readonly ExtendedFloat FloatPosInf =
       ExtendedFloat.PositiveInfinity;
+
     internal static readonly ExtendedFloat FloatNegInf =
       ExtendedFloat.NegativeInfinity;
+
     internal static readonly ExtendedRational RatPosInf =
       ExtendedRational.PositiveInfinity;
+
     internal static readonly ExtendedRational RatNegInf =
       ExtendedRational.NegativeInfinity;
 
