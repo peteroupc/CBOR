@@ -127,14 +127,14 @@ BigInteger mod) {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.BigInteger.op_Explicit(PeterO.BigInteger)~System.Int64"]/*'/>
     [Obsolete("Use EInteger from PeterO.Numbers/com.upokecenter.numbers.")]
-    public static explicit operator long (BigInteger bigValue) {
+    public static explicit operator long(BigInteger bigValue) {
       return bigValue.longValueChecked();
     }
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.BigInteger.op_Explicit(PeterO.BigInteger)~System.Int32"]/*'/>
     [Obsolete("Use EInteger from PeterO.Numbers/com.upokecenter.numbers.")]
-    public static explicit operator int (BigInteger bigValue) {
+    public static explicit operator int(BigInteger bigValue) {
       return bigValue.intValueChecked();
     }
 

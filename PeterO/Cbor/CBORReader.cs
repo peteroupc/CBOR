@@ -13,18 +13,14 @@ using PeterO; using PeterO.Numbers;
 namespace PeterO.Cbor {
   internal class CBORReader {
     private readonly SharedRefs sharedRefs;
-    private readonly CBORStream stream;
+    private readonly Stream stream;
     private bool addSharedRef;
     private int depth;
     private CBORDuplicatePolicy policy;
     private StringRefs stringRefs;
 
     public CBORReader(Stream inStream) {
-      long knownLength = -1;
-      if (inStream is MemoryStream) {
-        knownLength = inStream.Length - inStream.Position;
-      }
-      this.stream = new CBORStream(inStream, knownLength);
+      this.stream = inStream;
       this.sharedRefs = new SharedRefs();
       this.policy = CBORDuplicatePolicy.Overwrite;
     }
@@ -245,13 +241,14 @@ data);
                 " is bigger than supported");
             }
             if (nextByte != 0x60) {  // NOTE: 0x60 means the empty string
-              if (this.stream.LengthRemaining >= 0 &&
-                len > this.stream.LengthRemaining) {
+              if (PropertyMap.ExceedsKnownLength(this.stream, len)) {
+                // TODO: Remove following line in version 3.0
+                PropertyMap.SkipStreamToEnd(this.stream);
                 throw new CBORException("Premature end of data");
               }
               switch (
 DataUtilities.ReadUtf8(
-this.stream.Input,
+this.stream,
 (int)len,
 builder,
 false)) {
@@ -259,8 +256,6 @@ false)) {
                   throw new CBORException("Invalid UTF-8");
                 case -2:
                   throw new CBORException("Premature end of data");
-                default: this.stream.AddLength((int)len);
-                  break;
               }
             }
           }
@@ -277,14 +272,15 @@ false)) {
               CBORUtilities.LongToString(uadditional) +
               " is bigger than supported");
           }
-          if (this.stream.LengthRemaining >= 0 &&
-            uadditional > this.stream.LengthRemaining) {
+          if (PropertyMap.ExceedsKnownLength(this.stream, uadditional)) {
+            // TODO: Remove following line in version 3.0
+            PropertyMap.SkipStreamToEnd(this.stream);
             throw new CBORException("Premature end of data");
           }
           var builder = new StringBuilder();
           switch (
 DataUtilities.ReadUtf8(
-this.stream.Input,
+this.stream,
 (int)uadditional,
 builder,
 false)) {
@@ -292,8 +288,6 @@ false)) {
               throw new CBORException("Invalid UTF-8");
             case -2:
               throw new CBORException("Premature end of data");
-            default: this.stream.AddLength((int)uadditional);
-              break;
           }
           var cbor = new CBORObject(
 CBORObject.CBORObjectTypeTextString,
@@ -349,10 +343,10 @@ filter == null ? null : filter.GetSubFilter(vtindex));
         if (filter != null && !filter.ArrayLengthMatches(uadditional)) {
           throw new CBORException("Array is too long");
         }
-        if (this.stream.LengthRemaining >= 0 &&
-            uadditional > this.stream.LengthRemaining) {
-          throw new
-              CBORException("Remaining data too small for array length");
+        if (PropertyMap.ExceedsKnownLength(this.stream, uadditional)) {
+          // TODO: Remove following line in version 3.0
+          PropertyMap.SkipStreamToEnd(this.stream);
+          throw new CBORException("Remaining data too small for array length");
         }
         ++this.depth;
         for (long i = 0; i < uadditional; ++i) {
@@ -401,8 +395,9 @@ filter == null ? null : filter.GetSubFilter(vtindex));
             CBORUtilities.LongToString(uadditional) +
             " is bigger than supported");
         }
-        if (this.stream.LengthRemaining >= 0 &&
-            uadditional > this.stream.LengthRemaining) {
+        if (PropertyMap.ExceedsKnownLength(this.stream, uadditional)) {
+            // TODO: Remove following line in version 3.0
+            PropertyMap.SkipStreamToEnd(this.stream);
             throw new CBORException("Remaining data too small for map length");
         }
         for (long i = 0; i < uadditional; ++i) {
@@ -523,14 +518,16 @@ taginfo == null ? null : taginfo.GetTypeFilter()) :
     }
 
     private static byte[] ReadByteData(
-CBORStream stream,
+Stream stream,
 long uadditional,
 Stream outputStream) {
       if ((uadditional >> 63) != 0 || uadditional > Int32.MaxValue) {
         throw new CBORException("Length" + ToUnsignedBigInteger(uadditional) +
           " is bigger than supported ");
       }
-      if (stream.LengthRemaining >= 0 && uadditional > stream.LengthRemaining) {
+      if (PropertyMap.ExceedsKnownLength(stream, uadditional)) {
+        // TODO: Remove following line in version 3.0
+        PropertyMap.SkipStreamToEnd(stream);
         throw new CBORException("Premature end of stream");
       }
       if (uadditional <= 0x10000) {
@@ -573,7 +570,7 @@ Stream outputStream) {
     }
 
     private static long ReadDataLength(
-CBORStream stream,
+Stream stream,
 int headByte,
 int expectedType) {
       if (headByte < 0) {

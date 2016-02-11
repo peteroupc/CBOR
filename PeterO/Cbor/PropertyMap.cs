@@ -7,6 +7,7 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using PeterO;
 using PeterO.Numbers;
@@ -95,6 +96,17 @@ Type[] parameters) {
         }
         ValuePropertyLists.Add(t, ret);
         return ret;
+      }
+    }
+
+    public static bool ExceedsKnownLength(Stream inStream, long size) {
+      return (inStream is MemoryStream) ? (size > (inStream.Length -
+        inStream.Position)) : false;
+    }
+
+    public static void SkipStreamToEnd(Stream inStream) {
+      if (inStream is MemoryStream) {
+        inStream.Position = inStream.Length;
       }
     }
 

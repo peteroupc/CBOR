@@ -48,7 +48,7 @@ Gets a value indicating whether this value is even.
 
 <b>Deprecated.</b> Use EInteger from PeterO.Numbers/com.upokecenter.numbers.
 
-Gets a value indicating whether this object's value is a power of two. (NOTE: This version allows negative numbers to be powers of two. In the EInteger version, only positive numbers will be considered powers of two.)
+Gets a value indicating whether this object's value is a power of two. (NOTE: This version allows negative numbers to be powers of two. In the EInteger version, only positive numbers will be considered powers of two.).
 
 <b>Returns:</b>
 

@@ -86,7 +86,6 @@
     <Compile Include="PeterO\Cbor\CBORObjectMath.cs" />
     <Compile Include="PeterO\Cbor\CBORReader.cs" />
     <Compile Include="PeterO\Cbor\CBORSingle.cs" />
-    <Compile Include="PeterO\Cbor\CBORStream.cs" />
     <Compile Include="PeterO\Cbor\CBORTag0.cs" />
     <Compile Include="PeterO\Cbor\CBORTag1.cs" />
     <Compile Include="PeterO\Cbor\CBORTag2.cs" />
