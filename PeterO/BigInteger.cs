@@ -30,7 +30,9 @@ namespace PeterO {
     [Obsolete("Use EInteger from PeterO.Numbers/com.upokecenter.numbers.")]
     public static readonly BigInteger ONE = new BigInteger(EInteger.One);
 
-    private static readonly BigInteger oneValue = new BigInteger(EInteger.One);
+    private static readonly BigInteger ValueOneValue = new
+      BigInteger(EInteger.One);
+
     private readonly EInteger ei;
 
     internal BigInteger(EInteger ei) {
@@ -43,6 +45,7 @@ namespace PeterO {
     internal static BigInteger ToLegacy(EInteger ei) {
       return new BigInteger(ei);
     }
+
     internal static EInteger FromLegacy(BigInteger bei) {
       return bei.Ei;
     }
@@ -71,7 +74,7 @@ namespace PeterO {
     public static readonly BigInteger ZERO = new
       BigInteger(EInteger.Zero);
 
-  private static readonly BigInteger zeroValue = new
+  private static readonly BigInteger ValueZeroValue = new
       BigInteger(EInteger.Zero);
 
     /// <include file='../docs.xml'
@@ -251,7 +254,7 @@ return new BigInteger(this.Ei.Gcd(bigintSecond.Ei));
     /// path='docs/doc[@name="M:PeterO.BigInteger.getLowBit"]/*'/>
     [Obsolete("Use EInteger from PeterO.Numbers/com.upokecenter.numbers.")]
   public int getLowBit() {
-      return (this.IsZero) ? (0) : (this.Ei.GetLowBit());
+      return this.IsZero ? 0 : this.Ei.GetLowBit();
  }
 
     /// <include file='../docs.xml'

@@ -866,7 +866,9 @@ o2).AsExtendedRational();
           }
         }
         using (var ms = new MemoryStream(array)) {
-          while (ms.Position != ms.Length) {
+          var iobj = 0;
+          while (iobj < 25 && ms.Position != ms.Length) {
+            ++iobj;
             try {
               CBORObject o = CBORObject.Read(ms);
               try {

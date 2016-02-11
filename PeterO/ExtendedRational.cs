@@ -140,8 +140,10 @@ namespace PeterO {
     public static ExtendedRational Create(
 int numeratorSmall,
 int denominatorSmall) {
-      return new ExtendedRational(ERational.Create(numeratorSmall,
-        denominatorSmall));
+      return new ExtendedRational(
+ERational.Create(
+numeratorSmall,
+denominatorSmall));
     }
 
     /// <include file='../docs.xml'
@@ -155,8 +157,10 @@ BigInteger denominator) {
       if (denominator == null) {
         throw new ArgumentNullException("denominator");
       }
-      return new ExtendedRational(ERational.Create(numerator.Ei,
-           denominator.Ei));
+      return new ExtendedRational(
+ERational.Create(
+numerator.Ei,
+denominator.Ei));
     }
 
     /// <include file='../docs.xml'
@@ -179,8 +183,11 @@ bool negative) {
       if (diag == null) {
         throw new ArgumentNullException("diag");
       }
-      return new ExtendedRational(ERational.CreateNaN(diag.Ei, signaling,
-              negative));
+      return new ExtendedRational(
+ERational.CreateNaN(
+diag.Ei,
+signaling,
+negative));
     }
 
     /// <include file='../docs.xml'
@@ -477,6 +484,7 @@ bool negative) {
     public override string ToString() {
       return this.Er.ToString();
     }
+
     internal static ERational FromLegacy(ExtendedRational bei) {
       return bei.Er;
     }

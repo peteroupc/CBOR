@@ -20,6 +20,7 @@ namespace PeterO.Cbor {
     private static CBORObject ConstructSimpleValue(int v) {
       return new CBORObject(CBORObjectTypeSimpleValue, v);
     }
+
     private static CBORObject ConstructIntegerValue(int v) {
       return new CBORObject(CBORObjectTypeInteger, (long)v);
     }
@@ -675,9 +676,10 @@ CBOREncodeOptions options) {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.BigInteger)"]/*'/>
     public static CBORObject FromObject(BigInteger bigintValue) {
-      return ((object)bigintValue == (object)null) ? (CBORObject.Null) :
-        (FromObject(PropertyMap.FromLegacy(bigintValue)));
+      return ((object)bigintValue == (object)null) ? CBORObject.Null :
+        FromObject(PropertyMap.FromLegacy(bigintValue));
     }
+
     internal static CBORObject FromObject(EInteger bigintValue) {
       if ((object)bigintValue == (object)null) {
         return CBORObject.Null;
@@ -694,8 +696,8 @@ CBOREncodeOptions options) {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.ExtendedFloat)"]/*'/>
     public static CBORObject FromObject(ExtendedFloat bigValue) {
-      return ((object)bigValue == (object)null) ? (CBORObject.Null) :
-        (FromObject(PropertyMap.FromLegacy(bigValue)));
+      return ((object)bigValue == (object)null) ? CBORObject.Null :
+        FromObject(PropertyMap.FromLegacy(bigValue));
     }
 
     /// <include file='../../docs.xml'
@@ -723,8 +725,8 @@ CBOREncodeOptions options) {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.ExtendedRational)"]/*'/>
     public static CBORObject FromObject(ExtendedRational bigValue) {
-      return ((object)bigValue == (object)null) ? (CBORObject.Null) :
-        (FromObject(PropertyMap.FromLegacy(bigValue)));
+      return ((object)bigValue == (object)null) ? CBORObject.Null :
+        FromObject(PropertyMap.FromLegacy(bigValue));
     }
 
     /// <include file='../../docs.xml'
@@ -772,8 +774,8 @@ CBOREncodeOptions options) {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.ExtendedDecimal)"]/*'/>
     public static CBORObject FromObject(ExtendedDecimal otherValue) {
-      return ((object)otherValue == (object)null) ? (CBORObject.Null) :
-        (FromObject(PropertyMap.FromLegacy(otherValue)));
+      return ((object)otherValue == (object)null) ? CBORObject.Null :
+        FromObject(PropertyMap.FromLegacy(otherValue));
     }
 
     /// <include file='../../docs.xml'
@@ -1062,6 +1064,7 @@ CBOREncodeOptions options) {
       }
       return FromObjectAndTag(valueOb, PropertyMap.FromLegacy(bigintTag));
     }
+
     internal static CBORObject FromObjectAndTag(
       object valueOb,
       EInteger tagEInt) {
@@ -1726,8 +1729,7 @@ CBOREncodeOptions options) {
         return CBORObject.FromObject((EFloat)newItem);
       }
       var rat = newItem as ERational;
-      return (rat != null) ?
-        (CBORObject.FromObject(rat)) : ((oldItem == newItem)?
+     return (rat != null) ? CBORObject.FromObject(rat) : ((oldItem == newItem) ?
         this : CBORObject.FromObject(newItem));
     }
 
@@ -1827,7 +1829,7 @@ CBOREncodeOptions options) {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsExtendedDecimal"]/*'/>
     public ExtendedDecimal AsExtendedDecimal() {
-      return ExtendedDecimal.FromString(AsEDecimal().ToString());
+      return ExtendedDecimal.FromString(this.AsEDecimal().ToString());
     }
 
     internal EDecimal AsEDecimal() {
@@ -1841,8 +1843,9 @@ CBOREncodeOptions options) {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsExtendedFloat"]/*'/>
     public ExtendedFloat AsExtendedFloat() {
-      return ExtendedFloat.FromString(AsEFloat().ToString());
+      return ExtendedFloat.FromString(this.AsEFloat().ToString());
     }
+
     internal EFloat AsEFloat() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       if (cn == null) {
@@ -1854,8 +1857,9 @@ CBOREncodeOptions options) {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsExtendedRational"]/*'/>
     public ExtendedRational AsExtendedRational() {
-      return PropertyMap.ToLegacy(AsERational());
+      return PropertyMap.ToLegacy(this.AsERational());
     }
+
     internal ERational AsERational() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       if (cn == null) {
@@ -2416,7 +2420,7 @@ CBOREncodeOptions options) {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.GetTags"]/*'/>
     public BigInteger[] GetTags() {
-      EInteger[] etags = GetTagsEInteger();
+      EInteger[] etags = this.GetTagsEInteger();
       if (etags.Length == 0) {
         return new BigInteger[0];
       }
@@ -2426,6 +2430,7 @@ CBOREncodeOptions options) {
       }
       return bigret;
     }
+
     private EInteger[] GetTagsEInteger() {
       if (!this.IsTagged) {
         return ValueEmptyTags;
@@ -2475,7 +2480,7 @@ CBOREncodeOptions options) {
       if (bigTagValue == null) {
         throw new ArgumentNullException("bigTagValue");
       }
-      return HasTag(EInteger.FromBytes(
+      return this.HasTag(EInteger.FromBytes(
         bigTagValue.toBytes(true),
         true));
     }
@@ -2564,8 +2569,8 @@ CBOREncodeOptions options) {
         return CBORObject.FromObject((EFloat)newItem);
       }
       var rat = newItem as ERational;
-      return (rat != null) ? (CBORObject.FromObject(rat)) :
-        (CBORObject.FromObject(newItem));
+      return (rat != null) ? CBORObject.FromObject(rat) :
+        CBORObject.FromObject(newItem);
     }
 
     /// <include file='../../docs.xml'

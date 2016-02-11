@@ -122,7 +122,7 @@ Gets a value indicating whether this value is a CBOR false value.
 
 <b>Returns:</b>
 
- `true`  if this value is a CBOR false value, otherwise,  `false` .
+ `true`  if this value is a CBOR false value; otherwise,  `false` .
 
 ### IsFinite
 
@@ -162,7 +162,7 @@ Gets a value indicating whether this value is a CBOR null value.
 
 <b>Returns:</b>
 
- `true`  if this value is a CBOR null value, otherwise,  `false` .
+ `true`  if this value is a CBOR null value; otherwise,  `false` .
 
 ### IsTagged
 
@@ -172,7 +172,7 @@ Gets a value indicating whether this data item has at least one tag.
 
 <b>Returns:</b>
 
- `true`  if this data item has at least one tag, otherwise,  `false` .
+ `true`  if this data item has at least one tag; otherwise,  `false` .
 
 ### IsTrue
 
@@ -182,7 +182,7 @@ Gets a value indicating whether this value is a CBOR true value.
 
 <b>Returns:</b>
 
- `true`  if this value is a CBOR true value, otherwise,  `false` .
+ `true`  if this value is a CBOR true value; otherwise,  `false` .
 
 ### IsUndefined
 
@@ -192,7 +192,7 @@ Gets a value indicating whether this value is a CBOR undefined value.
 
 <b>Returns:</b>
 
- `true`  if this value is a CBOR undefined value, otherwise,  `false` .
+ `true`  if this value is a CBOR undefined value; otherwise,  `false` .
 
 ### IsZero
 
@@ -202,7 +202,7 @@ Gets a value indicating whether this object's value equals 0.
 
 <b>Returns:</b>
 
- `true`  if this object's value equals 0, otherwise,  `false` .
+ `true`  if this object's value equals 0; otherwise,  `false` .
 
 ### Keys
 
@@ -725,7 +725,7 @@ Returns whether this object's value is an integral value, is -(2^31) or greater,
 
 <b>Returns:</b>
 
- `true`  if this object's value is an integral value, is -(2^31) or greater, and is less than 2^31, otherwise,  `false` .
+ `true`  if this object's value is an integral value, is -(2^31) or greater, and is less than 2^31; otherwise,  `false` .
 
 ### CanFitInInt64
 
@@ -735,7 +735,7 @@ Returns whether this object's value is an integral value, is -(2^63) or greater,
 
 <b>Returns:</b>
 
- `true`  if this object's value is an integral value, is -(2^63) or greater, and is less than 2^63, otherwise,  `false` .
+ `true`  if this object's value is an integral value, is -(2^63) or greater, and is less than 2^63; otherwise,  `false` .
 
 ### CanFitInSingle
 
@@ -755,7 +755,7 @@ Returns whether this object's value, truncated to an integer, would be -(2^31) o
 
 <b>Returns:</b>
 
- `true`  if this object's value, truncated to an integer, would be -(2^31) or greater, and less than 2^31, otherwise,  `false` .
+ `true`  if this object's value, truncated to an integer, would be -(2^31) or greater, and less than 2^31; otherwise,  `false` .
 
 ### CanTruncatedIntFitInInt64
 
@@ -765,7 +765,7 @@ Returns whether this object's value, truncated to an integer, would be -(2^63) o
 
 <b>Returns:</b>
 
- `true`  if this object's value, truncated to an integer, would be -(2^63) or greater, and less than 2^63, otherwise,  `false` .
+ `true`  if this object's value, truncated to an integer, would be -(2^63) or greater, and less than 2^63; otherwise,  `false` .
 
 ### CompareTo
 
@@ -1685,7 +1685,7 @@ Gets a value indicating whether this CBOR object represents infinity.
 
 <b>Returns:</b>
 
- `true`  if this CBOR object represents infinity, otherwise,  `false` .
+ `true`  if this CBOR object represents infinity; otherwise,  `false` .
 
 ### IsNaN
 

@@ -101,12 +101,15 @@ Type[] parameters) {
     public static BigInteger ToLegacy(EInteger ei) {
       return BigInteger.ToLegacy(ei);
     }
+
     public static ExtendedDecimal ToLegacy(EDecimal ed) {
       return ExtendedDecimal.ToLegacy(ed);
     }
+
     public static ExtendedFloat ToLegacy(EFloat ef) {
       return ExtendedFloat.ToLegacy(ef);
     }
+
     public static ExtendedRational ToLegacy(ERational er) {
       return ExtendedRational.ToLegacy(er);
     }
@@ -114,12 +117,15 @@ Type[] parameters) {
     public static EInteger FromLegacy(BigInteger ei) {
       return BigInteger.FromLegacy(ei);
     }
+
     public static EDecimal FromLegacy(ExtendedDecimal ed) {
       return ExtendedDecimal.FromLegacy(ed);
     }
+
     public static EFloat FromLegacy(ExtendedFloat ef) {
       return ExtendedFloat.FromLegacy(ef);
     }
+
     public static ERational FromLegacy(ExtendedRational er) {
       return ExtendedRational.FromLegacy(er);
     }

@@ -233,6 +233,36 @@ The following are some clarifications to RFC 7049.
 Release Notes
 -----------
 
+### Version 2.4.0
+
+* The arbitrary-precision classes in this library are being replaced
+ with a new library (called [`PeterO.Numbers`](https://www.nuget.org/packages/PeterO.Numbers) in C#).  As a result, most
+ of the methods in the existing classes are obsolete.  This affects the
+ classes `BigInteger`, `ExtendedDecimal`, `ExtendedFloat`, `ExtendedRational`,
+ `Rounding`, `PrecisionContext`, and `TrapException`.  Changes were made
+ to those classes to call the new classes, and the behavior is mostly
+ compatible with the previous behavior (with the notable exception
+ of a new dependency in the CBOR library).
+* After version 2.3.1, the classes in the new library were greatly changed
+ from what they were in version 2.3.1.  Version 2.4.0 currently uses
+ version 0.2 of the new library, but this may change in future versions.  See the
+ [new library's release notes](https://github.com/peteroupc/Numbers),
+ and this repository's commit history (from "version 2.3.1"
+ to "move big number library...") for details.
+* The FromObject method of the CBORObject class can now convert
+ arbitrary-precision number objects from the new library
+ appropriately, such as `EInteger` and `EDecimal`.  However, there are
+ no methods that directly take or return one of those classes, for
+ compatibility with version 2.0.
+* Added Zero field and IsNegative property to the CBORObject class
+* Added overloads to ReadJSON and FromJSONString in CBORObject class
+* Added parameter in the ParseJSONNumber method of CBORDataUtilities
+ to preserve negative zeros
+* Added CBOR decoding option to disable duplicate keys
+* Fixed JSON parsing bugs
+
+### Older Versions
+
 In version 2.3.1:
 
 - Fixed NuGet package
@@ -283,39 +313,8 @@ from the `PeterO` directory to the root directory for this repository, in order 
 and CBORDocs2 projects to build.  This issue may probably exist in other older versions
 as well.
 
-In version 1.3:
-
-- Added a CompareToIgnoreTags method to CBORObject
-- The BigInteger constructor in the C# version is deprecated
-- Fixed bugs in converting from CBOR float and double to integers in some corner cases
-- Fixed a bug where CBORObject's OutermostTag returns 0 instead of the correct -1 for untagged objects
-- Fixed a bug where BigInteger's bitLength return value can be wrong in some corner cases
-
-In version 1.2:
-
-- The WriteJSON and WriteToJSON methods were added to CBORObject
-- Bugs were fixed in the Set and Add methods of CBORObject
-
-In version 1.1 there were many additions and bug fixes in arbitrary-precision
-arithmetic, including:
-
-- Added unchecked versions of intValue and longValue in BigInteger
-- Added more overloads for FromString in ExtendedDecimal and ExtendedFloat
-- Fixed bug where Pow doesn't compute the exact value in unlimited precision contexts
-- Much added documentation
-
-In version 1.0, the "adjust exponent" and "is precision in bits" flags were added to
-the arbitrary-precision arithmetic contexts, and a new Set method that is similar
-to Add but can replace a key's value in a CBOR map. Some bugs were also fixed.
-
-Version 0.23.0 has no new features of note.
-
-Version 0.22.0 adds CBOR support for decimal fractions and big floats with any
-exponent, even exponents higher than 65 bits, and implements well-formedness
-checking for tag 32 (URIs).  Several bugs were also fixed.
-
-The [commit history](https://github.com/peteroupc/CBOR/commits/master)
-contains details on code changes in previous versions.
+See [History.md](https://github.com/peteroupc/CBOR/tree/master/History.md)
+for release notes for older versions.
 
 Specifications
 -----------

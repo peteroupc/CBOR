@@ -107,7 +107,7 @@ Gets a value indicating whether this object's value is negative (including negat
 
 <b>Returns:</b>
 
- `true`  if this object's value is negative, otherwise,  `false` .
+ `true`  if this object's value is negative; otherwise,  `false` .
 
 ### IsZero
 
@@ -119,7 +119,7 @@ Gets a value indicating whether this object's value equals 0.
 
 <b>Returns:</b>
 
- `true`  if this object's value equals 0, otherwise,  `false` .
+ `true`  if this object's value equals 0; otherwise,  `false` .
 
 ### Numerator
 
@@ -574,7 +574,7 @@ Gets a value indicating whether this object's value is infinity.
 
 <b>Returns:</b>
 
- `true`  if this object's value is infinity, otherwise,  `false` .
+ `true`  if this object's value is infinity; otherwise,  `false` .
 
 ### IsNaN
 
@@ -584,7 +584,7 @@ Returns whether this object is a not-a-number value.
 
 <b>Returns:</b>
 
- `true`  if this object is a not-a-number value, otherwise,  `false` .
+ `true`  if this object is a not-a-number value; otherwise,  `false` .
 
 ### IsNegativeInfinity
 
@@ -596,7 +596,7 @@ Returns whether this object is negative infinity.
 
 <b>Returns:</b>
 
- `true`  if this object is negative infinity, otherwise,  `false` .
+ `true`  if this object is negative infinity; otherwise,  `false` .
 
 ### IsPositiveInfinity
 
@@ -608,7 +608,7 @@ Returns whether this object is positive infinity.
 
 <b>Returns:</b>
 
- `true`  if this object is positive infinity, otherwise,  `false` .
+ `true`  if this object is positive infinity; otherwise,  `false` .
 
 ### IsQuietNaN
 
