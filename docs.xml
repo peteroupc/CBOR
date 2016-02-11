@@ -4549,14 +4549,14 @@ allowed by this filter; otherwise, <c>false</c>.</returns>
 <summary>Represents the number 1.</summary>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.PI(PeterO.PrecisionContext)">
-<summary>Finds the constant &#x3c0;.</summary>
+<summary>Finds the constant &#x3c0;, the circumference of a circle divided by its diameter.</summary>
             <param name='ctx'>A precision context to control precision,
             rounding, and exponent range of the result. If HasFlags of the
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
             <i>This parameter cannot be null, as &#x3c0; can never be represented
             exactly.</i></param>
-            <returns>&#x3c0; rounded to the given precision. Signals FlagInvalid and
+            <returns>The constant &#x3c0; rounded to the given precision. Signals FlagInvalid and
             returns not-a-number (NaN) if the parameter <paramref name='ctx'/>
             is null or the precision is unlimited (the context's Precision
             property is 0).</returns>
@@ -6160,14 +6160,14 @@ allowed by this filter; otherwise, <c>false</c>.</returns>
 <summary>Represents the number 1.</summary>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.PI(PeterO.PrecisionContext)">
-<summary>Finds the constant &#x3c0;.</summary>
+<summary>Finds the constant &#x3c0;, the circumference of a circle divided by its diameter.</summary>
             <param name='ctx'>A precision context to control precision,
             rounding, and exponent range of the result. If HasFlags of the
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
             <i>This parameter cannot be null, as &#x3c0; can never be represented
             exactly.</i></param>
-            <returns>&#x3c0; rounded to the given precision.</returns>
+            <returns>The constant &#x3c0; rounded to the given precision.</returns>
             <exception cref='T:System.ArgumentException'>The parameter
             <paramref name='ctx'/> is null or the precision is unlimited (the
             context's Precision property is 0).</exception>

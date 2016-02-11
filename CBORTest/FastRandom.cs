@@ -1,5 +1,5 @@
 /*
-Written by Peter O. in 2013.
+Written by Peter O. in 2013-2016.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
@@ -8,9 +8,9 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 using System;
 
 namespace Test {
-  /// <summary>The system&#x27;s random number generator will be called
-  /// many times during testing. Unfortunately it can be very slow. So we
-  /// use this wrapper class.</summary>
+    /// <summary>The system&#x27;s random number generator will be called
+    /// many times during testing. Unfortunately it can be very slow. So we
+    /// use this wrapper class.</summary>
   public class FastRandom {
     private const int ReseedCount = 495;
 

@@ -1846,7 +1846,7 @@ The parameter <i>otherValue</i>
 
 <b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
-Finds the constant π.
+Finds the constant π, the circumference of a circle divided by its diameter.
 
 <b>Parameters:</b>
 
@@ -1854,7 +1854,7 @@ Finds the constant π.
 
 <b>Returns:</b>
 
-π rounded to the given precision.
+The constant π rounded to the given precision.
 
 <b>Exceptions:</b>
 

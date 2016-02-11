@@ -743,10 +743,10 @@ CBOREncodeOptions options) {
           CBORObjectTypeExtendedRational,
           bigValue);
       }
-      return ((bigValue.IsFinite && bigValue.Denominator.Equals(EInteger.One)) ?
+      return (bigValue.IsFinite && bigValue.Denominator.Equals(EInteger.One)) ?
             FromObject(bigValue.Numerator) : (new CBORObject(
               CBORObjectTypeExtendedRational,
-              bigValue)));
+              bigValue));
     }
 
     /// <include file='../../docs.xml'
