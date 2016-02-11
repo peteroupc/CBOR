@@ -51,7 +51,7 @@
     <DebugType>None</DebugType>
     <Optimize>True</Optimize>
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;NET40</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DocumentationFile>bin\Debug\CBOR.xml</DocumentationFile>
@@ -60,13 +60,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <DocumentationFile>bin\Release\CBOR.xml</DocumentationFile>
     <CodeAnalysisRuleSet>CBOR.ruleset</CodeAnalysisRuleSet>
-    <DebugType>pdbonly</DebugType>
-    <DebugSymbols>true</DebugSymbols>
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseNet40|AnyCPU'">
     <DocumentationFile>bin\ReleaseNet40\CBOR.xml</DocumentationFile>
-    <CodeAnalysisRuleSet>
-    </CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>CBOR.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="PeterO\BigInteger.cs" />
@@ -87,6 +86,7 @@
     <Compile Include="PeterO\Cbor\CBORObjectMath.cs" />
     <Compile Include="PeterO\Cbor\CBORReader.cs" />
     <Compile Include="PeterO\Cbor\CBORSingle.cs" />
+    <Compile Include="PeterO\Cbor\CBORStream.cs" />
     <Compile Include="PeterO\Cbor\CBORTag0.cs" />
     <Compile Include="PeterO\Cbor\CBORTag1.cs" />
     <Compile Include="PeterO\Cbor\CBORTag2.cs" />
@@ -138,7 +138,5 @@
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
-  <!--
   <Import Project="$(MSBuildExtensionsPath)\StyleCop\v4.7\StyleCop.targets" />
-  -->
 </Project>

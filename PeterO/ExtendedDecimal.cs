@@ -41,6 +41,7 @@ namespace PeterO {
     internal static ExtendedDecimal ToLegacy(EDecimal ei) {
       return new ExtendedDecimal(ei);
     }
+
     internal static EDecimal FromLegacy(ExtendedDecimal bei) {
       return bei.Ed;
     }

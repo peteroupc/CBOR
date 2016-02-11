@@ -61,7 +61,7 @@
 <doc name="M:PeterO.BigInteger.Equals(PeterO.BigInteger)">
 <summary>Returns whether this number's value is equal to another number's value.</summary>
             <param name='other'>An arbitrary-precision integer.</param>
-            <returns><c>true</c> if this number's value is equal to another number's value, otherwise, <c>false</c>.</returns>
+            <returns><c>true</c> if this number's value is equal to another number's value; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.BigInteger.Equals(System.Object)">
 <inheritdoc/>
@@ -102,7 +102,7 @@ of this number's value.</summary>
 <summary>Gets a value indicating whether this object&#x27;s value
             is a power of two. (NOTE: This version allows negative numbers
             to be powers of two. In the EInteger version, only positive
-            numbers will be considered powers of two.)</summary>
+            numbers will be considered powers of two.).</summary>
             <value><c>true</c> if this object&apos;s value is a power of two;
             otherwise, <c>false</c>.</value>
 </doc>
@@ -1202,13 +1202,13 @@ of this number's value.</summary>
 <summary>Returns whether this object's value is an integral value,
             is -(2^31) or greater, and is less than 2^31.</summary>
             <returns><c>true</c> if this object's value is an integral value, is
-            -(2^31) or greater, and is less than 2^31, otherwise, <c>false</c>.</returns>
+            -(2^31) or greater, and is less than 2^31; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.CanFitInInt64">
 <summary>Returns whether this object's value is an integral value,
             is -(2^63) or greater, and is less than 2^63.</summary>
             <returns><c>true</c> if this object's value is an integral value, is
-            -(2^63) or greater, and is less than 2^63, otherwise, <c>false</c>.</returns>
+            -(2^63) or greater, and is less than 2^63; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.CanFitInSingle">
 <summary>Returns whether this object's value can be converted to a
@@ -1224,13 +1224,13 @@ of this number's value.</summary>
 <summary>Returns whether this object's value, truncated to an
             integer, would be -(2^31) or greater, and less than 2^31.</summary>
             <returns><c>true</c> if this object's value, truncated to an integer,
-            would be -(2^31) or greater, and less than 2^31, otherwise, <c>false</c>.</returns>
+            would be -(2^31) or greater, and less than 2^31; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.CanTruncatedIntFitInInt64">
 <summary>Returns whether this object's value, truncated to an
             integer, would be -(2^63) or greater, and less than 2^63.</summary>
             <returns><c>true</c> if this object's value, truncated to an integer,
-            would be -(2^63) or greater, and less than 2^63, otherwise, <c>false</c>.</returns>
+            would be -(2^63) or greater, and less than 2^63; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.CompareTo(PeterO.Cbor.CBORObject)">
 <summary>Compares two CBOR objects.
@@ -1768,7 +1768,7 @@ of this number's value.</summary>
 <doc name="P:PeterO.Cbor.CBORObject.IsFalse">
 <summary>Gets a value indicating whether this value is a CBOR false
             value.</summary>
-            <value><c>true</c> if this value is a CBOR false value, otherwise, <c>false</c>.</value>
+            <value><c>true</c> if this value is a CBOR false value; otherwise, <c>false</c>.</value>
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsFinite">
 <summary>Gets a value indicating whether this CBOR object
@@ -1779,7 +1779,7 @@ of this number's value.</summary>
 <doc name="M:PeterO.Cbor.CBORObject.IsInfinity">
 <summary>Gets a value indicating whether this CBOR object
             represents infinity.</summary>
-            <returns><c>true</c> if this CBOR object represents infinity, otherwise, <c>false</c>.</returns>
+            <returns><c>true</c> if this CBOR object represents infinity; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsIntegral">
 <summary>Gets a value indicating whether this object represents an
@@ -1809,7 +1809,7 @@ of this number's value.</summary>
 <doc name="P:PeterO.Cbor.CBORObject.IsNull">
 <summary>Gets a value indicating whether this value is a CBOR null
             value.</summary>
-            <value><c>true</c> if this value is a CBOR null value, otherwise, <c>false</c>.</value>
+            <value><c>true</c> if this value is a CBOR null value; otherwise, <c>false</c>.</value>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.IsPositiveInfinity">
 <summary>Gets a value indicating whether this CBOR object
@@ -1820,22 +1820,22 @@ of this number's value.</summary>
 <doc name="P:PeterO.Cbor.CBORObject.IsTagged">
 <summary>Gets a value indicating whether this data item has at
             least one tag.</summary>
-            <value><c>true</c> if this data item has at least one tag, otherwise, <c>false</c>.</value>
+            <value><c>true</c> if this data item has at least one tag; otherwise, <c>false</c>.</value>
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsTrue">
 <summary>Gets a value indicating whether this value is a CBOR true
             value.</summary>
-            <value><c>true</c> if this value is a CBOR true value, otherwise, <c>false</c>.</value>
+            <value><c>true</c> if this value is a CBOR true value; otherwise, <c>false</c>.</value>
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsUndefined">
 <summary>Gets a value indicating whether this value is a CBOR
             undefined value.</summary>
-            <value><c>true</c> if this value is a CBOR undefined value, otherwise, <c>false</c>.</value>
+            <value><c>true</c> if this value is a CBOR undefined value; otherwise, <c>false</c>.</value>
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsZero">
 <summary>Gets a value indicating whether this object&#x27;s value
             equals 0.</summary>
-            <value><c>true</c> if this object&apos;s value equals 0, otherwise, <c>false</c>.</value>
+            <value><c>true</c> if this object&apos;s value equals 0; otherwise, <c>false</c>.</value>
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.Item(PeterO.Cbor.CBORObject)">
 <summary>Gets the value of a CBOR object in this map, using a CBOR
@@ -2541,7 +2541,7 @@ of this number's value.</summary>
             the given array index is allowed under this type filter.</summary>
             <param name='index'>An array index, starting from 0.</param>
             <returns><c>true</c> if this type filter allows CBOR arrays and the given
-            array index is allowed under this type filter, otherwise, <c>false</c>.</returns>
+            array index is allowed under this type filter; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeFilter.ArrayLengthMatches(PeterO.BigInteger)">
 <summary>Returns whether an array's length is allowed under a
@@ -4149,7 +4149,7 @@ allowed by this filter; otherwise, <c>false</c>.</returns>
 <doc name="M:PeterO.ExtendedDecimal.IsNaN">
 <summary>Gets a value indicating whether this object is not a
             number (NaN).</summary>
-            <returns><c>true</c> if this object is not a number (NaN), otherwise, <c>false</c>.</returns>
+            <returns><c>true</c> if this object is not a number (NaN); otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="P:PeterO.ExtendedDecimal.IsNegative">
 <summary>Gets a value indicating whether this object is negative,
@@ -4160,12 +4160,12 @@ allowed by this filter; otherwise, <c>false</c>.</returns>
 <doc name="M:PeterO.ExtendedDecimal.IsNegativeInfinity">
 <summary>Returns whether this object is negative
             infinity.</summary>
-            <returns><c>true</c> if this object is negative infinity, otherwise, <c>false</c>.</returns>
+            <returns><c>true</c> if this object is negative infinity; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.IsPositiveInfinity">
 <summary>Returns whether this object is positive
             infinity.</summary>
-            <returns><c>true</c> if this object is positive infinity, otherwise, <c>false</c>.</returns>
+            <returns><c>true</c> if this object is positive infinity; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.IsQuietNaN">
 <summary>Gets a value indicating whether this object is a quiet
@@ -4182,7 +4182,7 @@ allowed by this filter; otherwise, <c>false</c>.</returns>
 <doc name="P:PeterO.ExtendedDecimal.IsZero">
 <summary>Gets a value indicating whether this object&#x27;s value
             equals 0.</summary>
-            <value><c>true</c> if this object&apos;s value equals 0, otherwise, <c>false</c>.</value>
+            <value><c>true</c> if this object&apos;s value equals 0; otherwise, <c>false</c>.</value>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.Log(PeterO.PrecisionContext)">
 <summary>Finds the natural logarithm of this object, that is, the
@@ -5092,7 +5092,7 @@ allowed by this filter; otherwise, <c>false</c>.</returns>
             point number.  Due to double rounding, this will generally not
             be the case for certain numbers converted from decimal
             to ExtendedFloat via this method and in turn converted
-            to <c>double</c> or <c>float</c>.)</summary>
+            to <c>double</c> or <c>float</c>.).</summary>
             <returns>An arbitrary-precision binary float.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.ToPlainString">
@@ -5757,7 +5757,7 @@ allowed by this filter; otherwise, <c>false</c>.</returns>
 <doc name="M:PeterO.ExtendedFloat.IsNaN">
 <summary>Returns whether this object is a not-a-number
             value.</summary>
-            <returns><c>true</c> if this object is a not-a-number value, otherwise, <c>false</c>.</returns>
+            <returns><c>true</c> if this object is a not-a-number value; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="P:PeterO.ExtendedFloat.IsNegative">
 <summary>Gets a value indicating whether this object is negative,
@@ -5768,12 +5768,12 @@ allowed by this filter; otherwise, <c>false</c>.</returns>
 <doc name="M:PeterO.ExtendedFloat.IsNegativeInfinity">
 <summary>Returns whether this object is negative
             infinity.</summary>
-            <returns><c>true</c> if this object is negative infinity, otherwise, <c>false</c>.</returns>
+            <returns><c>true</c> if this object is negative infinity; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.IsPositiveInfinity">
 <summary>Returns whether this object is positive
             infinity.</summary>
-            <returns><c>true</c> if this object is positive infinity, otherwise, <c>false</c>.</returns>
+            <returns><c>true</c> if this object is positive infinity; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.IsQuietNaN">
 <summary>Gets a value indicating whether this object is a quiet
@@ -5790,7 +5790,7 @@ allowed by this filter; otherwise, <c>false</c>.</returns>
 <doc name="P:PeterO.ExtendedFloat.IsZero">
 <summary>Gets a value indicating whether this object&#x27;s value
             equals 0.</summary>
-            <value><c>true</c> if this object&apos;s value equals 0, otherwise, <c>false</c>.</value>
+            <value><c>true</c> if this object&apos;s value equals 0; otherwise, <c>false</c>.</value>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.Log(PeterO.PrecisionContext)">
 <summary>Finds the natural logarithm of this object, that is, the
@@ -6912,27 +6912,27 @@ of another rational number object; otherwise, <c>false</c>.</returns>
 <doc name="M:PeterO.ExtendedRational.IsInfinity">
 <summary>Gets a value indicating whether this object's value is
             infinity.</summary>
-            <returns><c>true</c> if this object's value is infinity, otherwise, <c>false</c>.</returns>
+            <returns><c>true</c> if this object's value is infinity; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedRational.IsNaN">
 <summary>Returns whether this object is a not-a-number
             value.</summary>
-            <returns><c>true</c> if this object is a not-a-number value, otherwise, <c>false</c>.</returns>
+            <returns><c>true</c> if this object is a not-a-number value; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="P:PeterO.ExtendedRational.IsNegative">
 <summary>Gets a value indicating whether this object's value is
             negative (including negative zero).</summary>
-            <value><c>true</c> if this object&apos;s value is negative, otherwise, <c>false</c>.</value>
+            <value><c>true</c> if this object&apos;s value is negative; otherwise, <c>false</c>.</value>
 </doc>
 <doc name="M:PeterO.ExtendedRational.IsNegativeInfinity">
 <summary>Returns whether this object is negative
             infinity.</summary>
-            <returns><c>true</c> if this object is negative infinity, otherwise, <c>false</c>.</returns>
+            <returns><c>true</c> if this object is negative infinity; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedRational.IsPositiveInfinity">
 <summary>Returns whether this object is positive
             infinity.</summary>
-            <returns><c>true</c> if this object is positive infinity, otherwise, <c>false</c>.</returns>
+            <returns><c>true</c> if this object is positive infinity; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedRational.IsQuietNaN">
 <summary>Returns whether this object is a quiet not-a-number
@@ -6951,7 +6951,7 @@ of another rational number object; otherwise, <c>false</c>.</returns>
 <doc name="P:PeterO.ExtendedRational.IsZero">
 <summary>Gets a value indicating whether this object's value equals
             0.</summary>
-            <value><c>true</c> if this object&apos;s value equals 0, otherwise, <c>false</c>.</value>
+            <value><c>true</c> if this object&apos;s value equals 0; otherwise, <c>false</c>.</value>
 </doc>
 <doc name="M:PeterO.ExtendedRational.Multiply(PeterO.ExtendedRational)">
 <summary>Multiplies this instance by the value of an
@@ -7339,12 +7339,12 @@ of another rational number object; otherwise, <c>false</c>.</returns>
 <doc name="P:PeterO.PrecisionContext.HasFlags">
 <summary>Gets a value indicating whether this context has a mutable
             Flags field.</summary>
-            <value><c>true</c> if this context has a mutable Flags field, otherwise, <c>false</c>.</value>
+            <value><c>true</c> if this context has a mutable Flags field; otherwise, <c>false</c>.</value>
 </doc>
 <doc name="P:PeterO.PrecisionContext.HasMaxPrecision">
 <summary>Gets a value indicating whether this context defines a
             maximum precision.</summary>
-            <value><c>true</c> if this context defines a maximum precision, otherwise, <c>false</c>.</value>
+            <value><c>true</c> if this context defines a maximum precision; otherwise, <c>false</c>.</value>
 </doc>
 <doc name="P:PeterO.PrecisionContext.IsPrecisionInBits">
 <summary>Gets a value indicating whether this context's Precision
@@ -7358,7 +7358,7 @@ of another rational number object; otherwise, <c>false</c>.</returns>
             arithmetic. In the simplified arithmetic, infinity, not-a-number,
             and subnormal numbers are not allowed, and negative zero is treated
             the same as positive zero. For further details, see
-            <a href='http://speleotrove.com/decimal/dax3274.html'>http://speleotrove.com/decimal/dax3274.html</a></summary>
+            <a href='http://speleotrove.com/decimal/dax3274.html'><c>http://speleotrove.com/decimal/dax3274.html</c></a></summary>
             <value><c>true</c> if a &quot;simplified&quot; arithmetic will be used;
             otherwise, <c>false</c>.</value>
 </doc>

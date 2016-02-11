@@ -123,7 +123,7 @@ bool neg) {
 EDecimal.FromEInteger(extendedNumber.Denominator),
 EContext.CliDecimal.WithTraps(EContext.FlagOverflow));
         return EncodeDecimal(
-(newDecimal.Mantissa).Abs(),
+newDecimal.Mantissa.Abs(),
 -((int)newDecimal.Exponent),
 newDecimal.Mantissa.Sign < 0);
       } catch (ETrapException ex) {
@@ -140,7 +140,7 @@ newDecimal.Mantissa.Sign < 0);
         EDecimal newDecimal = extendedNumber.RoundToPrecision(
           EContext.CliDecimal.WithTraps(EContext.FlagOverflow));
         return EncodeDecimal(
-(newDecimal.Mantissa).Abs(),
+newDecimal.Mantissa.Abs(),
 -((int)newDecimal.Exponent),
 newDecimal.Mantissa.Sign < 0);
       } catch (ETrapException ex) {

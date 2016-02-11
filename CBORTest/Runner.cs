@@ -31,7 +31,7 @@ namespace PeterO {
     }
 
     public static void Main() {
-      const String ValueParam = null;
+      const String ValueParam = "TestRandomNonsense";
       // Run all the tests in this assembly
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
         if (!HasAttribute(type, typeof(TestFixtureAttribute))) {
@@ -55,6 +55,11 @@ namespace PeterO {
             continue;
           }
           Console.WriteLine(method.Name);
+          if (!String.IsNullOrEmpty(ValueParam)) {
+            if (!method.Name.Contains(ValueParam)) {
+              continue;
+            }
+          }
           Type exctype = null;
           foreach (var a in method.GetCustomAttributes(false)) {
             if (a is ExpectedExceptionAttribute) {

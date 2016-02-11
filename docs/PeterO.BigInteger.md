@@ -312,7 +312,7 @@ Returns whether this number's value is equal to another number's value.
 
 <b>Returns:</b>
 
- `true`  if this number's value is equal to another number's value, otherwise,  `false` .
+ `true`  if this number's value is equal to another number's value; otherwise,  `false` .
 
 ### fromByteArray
 

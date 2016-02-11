@@ -144,7 +144,7 @@ Gets a value indicating whether this object's value equals 0.
 
 <b>Returns:</b>
 
- `true`  if this object's value equals 0, otherwise,  `false` .
+ `true`  if this object's value equals 0; otherwise,  `false` .
 
 ### Mantissa
 
@@ -1097,7 +1097,7 @@ Gets a value indicating whether this object is not a number (NaN).
 
 <b>Returns:</b>
 
- `true`  if this object is not a number (NaN), otherwise,  `false` .
+ `true`  if this object is not a number (NaN); otherwise,  `false` .
 
 ### IsNegativeInfinity
 
@@ -1109,7 +1109,7 @@ Returns whether this object is negative infinity.
 
 <b>Returns:</b>
 
- `true`  if this object is negative infinity, otherwise,  `false` .
+ `true`  if this object is negative infinity; otherwise,  `false` .
 
 ### IsPositiveInfinity
 
@@ -1121,7 +1121,7 @@ Returns whether this object is positive infinity.
 
 <b>Returns:</b>
 
- `true`  if this object is positive infinity, otherwise,  `false` .
+ `true`  if this object is positive infinity; otherwise,  `false` .
 
 ### IsQuietNaN
 

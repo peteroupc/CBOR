@@ -240,7 +240,7 @@ Gets a value indicating whether this context has a mutable Flags field.
 
 <b>Returns:</b>
 
- `true`  if this context has a mutable Flags field, otherwise,  `false` .
+ `true`  if this context has a mutable Flags field; otherwise,  `false` .
 
 ### HasMaxPrecision
 
@@ -252,7 +252,7 @@ Gets a value indicating whether this context defines a maximum precision.
 
 <b>Returns:</b>
 
- `true`  if this context defines a maximum precision, otherwise,  `false` .
+ `true`  if this context defines a maximum precision; otherwise,  `false` .
 
 ### IsPrecisionInBits
 

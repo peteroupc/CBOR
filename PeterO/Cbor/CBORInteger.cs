@@ -114,6 +114,7 @@ namespace PeterO.Cbor {
     public bool IsNegativeInfinity(object obj) {
       return false;
     }
+
     public bool IsPositiveInfinity(object obj) {
       return false;
     }

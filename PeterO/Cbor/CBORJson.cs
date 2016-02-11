@@ -576,7 +576,7 @@ namespace PeterO.Cbor {
               return;
             }
             if (flo.IsFinite &&
-                (flo.Exponent).Abs().CompareTo((EInteger)2500) > 0) {
+                flo.Exponent.Abs().CompareTo((EInteger)2500) > 0) {
               // Too inefficient to convert to a decimal number
               // from a bigfloat with a very high exponent,
               // so convert to double instead

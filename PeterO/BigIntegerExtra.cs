@@ -197,7 +197,7 @@ BigInteger otherValue) {
     [CLSCompliant(false)]
     public static BigInteger Zero {
       get {
-        return zeroValue;
+        return ValueZeroValue;
       }
     }
 
@@ -206,7 +206,7 @@ BigInteger otherValue) {
     [CLSCompliant(false)]
     public static BigInteger One {
       get {
-        return oneValue;
+        return ValueOneValue;
       }
     }
 
