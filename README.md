@@ -36,8 +36,7 @@ text to CBOR objects and back.
 
 **See the [C# (.NET) API documentation](https://peteroupc.github.io/CBOR/docs/).**
 
-The C# implementation is designed as a Portable Class Library, making it usable not only in the .NET
-Framework, but also Silverlight 5 and Windows Phone 8.
+The C# implementation is designed as a Portable Class Library, and supports the .NET Framework 4.0 and later.
 
 Other Sites
 ----------

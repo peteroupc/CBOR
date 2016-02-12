@@ -610,7 +610,7 @@ of this number's value.</summary>
 <doc name="M:PeterO.BigInteger.op_Modulus(PeterO.BigInteger,PeterO.BigInteger)">
 <summary>Finds the remainder that results when an
             arbitrary-precision integer is divided by the value of an
-            arbitrary-precision integer.</summary><param name='dividend'>The number that will be divided by the divisor.</param><param name='divisor'>The number to divide by.</param><returns>The remainder of the two objects.</returns><exception cref='T:System.ArgumentNullException'>The parameter
+            arbitrary-precision integer.</summary><param name='dividend'>The number that will be divided by the divisor.</param><param name='divisor'>The number to divide by.</param><returns>The remainder of the two numbers.</returns><exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='dividend'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.BigInteger.op_Multiply(PeterO.BigInteger,PeterO.BigInteger)">
@@ -663,7 +663,7 @@ of this number's value.</summary>
             remainder has the same sign (positive or negative) as this
             object.</summary>
             <param name='divisor'>Another arbitrary-precision integer.</param>
-            <returns>The remainder of the two objects.</returns>
+            <returns>The remainder of the two numbers.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='divisor'/> is null.</exception>
             <exception cref='T:System.DivideByZeroException'>Attempted to
@@ -1987,7 +1987,7 @@ of this number's value.</summary>
             is divided by the value of a CBORObject object.</summary>
             <param name='first'>A CBORObject object.</param>
             <param name='second'>Another CBOR object.</param>
-            <returns>The remainder of the two objects.</returns>
+            <returns>The remainder of the two numbers.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Remove(PeterO.Cbor.CBORObject)">
 <summary>If this object is an array, removes the first instance of
@@ -2468,7 +2468,7 @@ of this number's value.</summary>
             is divided by the value of a CBORObject object.</summary>
             <param name='a'>A CBORObject object.</param>
             <param name='b'>Another CBORObject object.</param>
-            <returns>The remainder of the two objects.</returns>
+            <returns>The remainder of the two numbers.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.op_Multiply(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
 <summary>Multiplies a CBORObject object by the value of a
@@ -4231,7 +4231,7 @@ allowed by this filter; otherwise, <c>false</c>.</returns>
             <param name='first'>An arbitrary-precision decimal number.</param>
             <param name='second'>Another arbitrary-precision decimal
             number.</param>
-            <returns>The larger value of the two objects.</returns>
+            <returns>The larger value of the two numbers.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='first'/> or <paramref name='second'/> is
             null.</exception>
@@ -4246,7 +4246,7 @@ allowed by this filter; otherwise, <c>false</c>.</returns>
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
             Can be null.</param>
-            <returns>The larger value of the two objects.</returns>
+            <returns>The larger value of the two numbers.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='first'/> or <paramref name='second'/> is
             null.</exception>
@@ -4283,7 +4283,7 @@ allowed by this filter; otherwise, <c>false</c>.</returns>
             numbers.</summary>
             <param name='first'>The first value to compare.</param>
             <param name='second'>The second value to compare.</param>
-            <returns>The smaller value of the two objects.</returns>
+            <returns>The smaller value of the two numbers.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='first'/> or <paramref name='second'/> is
             null.</exception>
@@ -4298,7 +4298,7 @@ allowed by this filter; otherwise, <c>false</c>.</returns>
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
             Can be null.</param>
-            <returns>The smaller value of the two objects.</returns>
+            <returns>The smaller value of the two numbers.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='first'/> or <paramref name='second'/> is
             null.</exception>
@@ -4737,7 +4737,7 @@ allowed by this filter; otherwise, <c>false</c>.</returns>
             number.</param>
             <param name='ctx'>The parameter <paramref name='ctx'/> is not
             documented yet.</param>
-            <returns>The remainder of the two objects.</returns>
+            <returns>The remainder of the two numbers.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='divisor'/> is null.</exception>
 </doc>
@@ -5838,7 +5838,7 @@ allowed by this filter; otherwise, <c>false</c>.</returns>
             <param name='first'>An arbitrary-precision binary float.</param>
             <param name='second'>Another arbitrary-precision binary
             float.</param>
-            <returns>The larger value of the two objects.</returns>
+            <returns>The larger value of the two numbers.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='first'/> or <paramref name='second'/> is
             null.</exception>
@@ -5854,7 +5854,7 @@ allowed by this filter; otherwise, <c>false</c>.</returns>
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
             Can be null.</param>
-            <returns>The larger value of the two objects.</returns>
+            <returns>The larger value of the two numbers.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='first'/> or <paramref name='second'/> is
             null.</exception>
@@ -5895,7 +5895,7 @@ allowed by this filter; otherwise, <c>false</c>.</returns>
             <param name='first'>An arbitrary-precision binary float.</param>
             <param name='second'>Another arbitrary-precision binary
             float.</param>
-            <returns>The smaller value of the two objects.</returns>
+            <returns>The smaller value of the two numbers.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='first'/> or <paramref name='second'/> is
             null.</exception>
@@ -5910,7 +5910,7 @@ allowed by this filter; otherwise, <c>false</c>.</returns>
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
             Can be null.</param>
-            <returns>The smaller value of the two objects.</returns>
+            <returns>The smaller value of the two numbers.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='first'/> or <paramref name='second'/> is
             null.</exception>
@@ -6298,7 +6298,7 @@ allowed by this filter; otherwise, <c>false</c>.</returns>
             arbitrary-precision binary floats.</summary>
             <param name='divisor'>An arbitrary-precision binary float.</param>
             <param name='ctx'>A PrecisionContext object.</param>
-            <returns>The remainder of the two objects.</returns>
+            <returns>The remainder of the two numbers.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='divisor'/> is null.</exception>
 </doc>
@@ -6995,7 +6995,7 @@ of another rational number object; otherwise, <c>false</c>.</returns>
             number.</summary>
             <param name='otherValue'>An arbitrary-precision rational
             number.</param>
-            <returns>The remainder of the two objects.</returns>
+            <returns>The remainder of the two numbers.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='otherValue'/> is null.</exception>
 </doc>

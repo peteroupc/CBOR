@@ -45,7 +45,7 @@ See the project page for release notes on previous versions: https://github.com/
     </releaseNotes>
     <copyright>Written by Peter O. in 2013-2015.  Any copyright is released to the Public Domain.</copyright>
     <tags>cbor data serialization binary json numbers arithmetic</tags>
-   <dependencies> 
+   <dependencies>
    <group>
       <dependency id="PeterO.Numbers" version="0.2.0" />
    </group>
