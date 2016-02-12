@@ -4,13 +4,17 @@
         System.IComparable,
         System.IEquatable
 
-This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.EInteger`  in the  `PeterO.Numbers` library (in .NET), or  `com.upokecenter.numbers.EInteger`  in the  `com.github.peteroupc/numbers` artifact (in Java). This new class can be used in the  `CBORObject.FromObject(Object)` method (by including the new library in your code, among other things), but this version of the CBOR library doesn't include any methods that explicitly take an  `EInteger`  as a parameter or return value.
+This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.EInteger`  in the `PeterO.Numbers` library (in .NET), or  `com.upokecenter.numbers.EInteger`  in the `com.github.peteroupc/numbers` cartifact (in Java). This new class can be used in the `CBORObject.FromObject(object)`  method (by including the new library in your code, among other things), but this version of the CBOR library doesn't include any methods that explicitly take an `EInteger`  as a parameter or return value.
 
-An arbitrary-precision integer.Thread safety:Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same value are interchangeable, but they should be compared using the "Equals" method rather than the "==" operator.
+ An arbitrary-precision integer.Thread safety: Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same value are interchangeable, but they should be compared using the "Equals" method rather than the "==" operator.
 
-This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.EInteger`  in the  `PeterO.Numbers` library (in .NET), or  `com.upokecenter.numbers.EInteger`  in the  `com.github.peteroupc/numbers` artifact (in Java). This new class can be used in the  `CBORObject.FromObject(Object)` method (by including the new library in your code, among other things), but this version of the CBOR library doesn't include any methods that explicitly take an  `EInteger`  as a parameter or return value.
+This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.EInteger`  in the `PeterO.Numbers` library (in .NET), or  `com.upokecenter.numbers.EInteger`  in the `com.github.peteroupc/numbers` artifact (in Java). This new class can be used in the `CBORObject.FromObject(object)`  method (by including the new library in your code, among other things), but this version of the CBOR library doesn't include any methods that explicitly take an `EInteger`  as a parameter or return value.
 
-An arbitrary-precision integer.Thread safety:Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same value are interchangeable, but they should be compared using the "Equals" method rather than the "==" operator.
+ An arbitrary-precision integer.Thread safety: Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same value are interchangeable, but they should be compared using the "Equals" method rather than the "==" operator.
+
+This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.EInteger`  in the `PeterO.Numbers` library (in .NET), or  `com.upokecenter.numbers.EInteger`  in the `com.github.peteroupc/numbers` artifact (in Java). This new class can be used in the `CBORObject.FromObject(object)`  method (by including the new library in your code, among other things), but this version of the CBOR library doesn't include any methods that explicitly take an `EInteger`  as a parameter or return value.
+
+ An arbitrary-precision integer.Thread safety: Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same value are interchangeable, but they should be compared using the "Equals" method rather than the "==" operator.
 
 ### ONE
 
@@ -40,7 +44,7 @@ Gets a value indicating whether this value is even.
 
 <b>Returns:</b>
 
- `true`  if this value is even; otherwise,  `false` .
+<c>true</c> if this value is even; otherwise, <c>false</c>.  `true`  if this value is even; otherwise,  `false` .
 
 ### IsPowerOfTwo
 
@@ -52,7 +56,7 @@ Gets a value indicating whether this object's value is a power of two. (NOTE: Th
 
 <b>Returns:</b>
 
- `true`  if this object's value is a power of two; otherwise,  `false` .
+<c>true</c> if this object&#x27;s value is a power of two; otherwise, <c>false</c>.. (NOTE: This version allows negative numbers to be powers of two. In the EInteger version, only positive numbers will be considered powers of two.).  `true`  if this object's value is a power of two; otherwise,  `false` .
 
 ### IsZero
 
@@ -64,7 +68,7 @@ Gets a value indicating whether this value is 0.
 
 <b>Returns:</b>
 
- `true`  if this value is 0; otherwise,  `false` .
+<c>true</c> if this value is 0; otherwise, <c>false</c>.  `true`  if this value is 0; otherwise,  `false` .
 
 ### One
 
@@ -304,7 +308,7 @@ Determines whether this object and another object are equal.
     public sealed bool Equals(
         PeterO.BigInteger other);
 
-Returns whether this number's value is equal to another number's value.
+Returns whether this number's value equals another number's value.
 
 <b>Parameters:</b>
 
@@ -312,7 +316,7 @@ Returns whether this number's value is equal to another number's value.
 
 <b>Returns:</b>
 
- `true`  if this number's value is equal to another number's value; otherwise,  `false` .
+ `true`  if this number's value equals another number's value; otherwise,  `false` .
 
 ### fromByteArray
 
@@ -372,18 +376,12 @@ The parameter <i>bytes</i>
 
 Converts a string to an arbitrary-precision integer.
 
-The following example (C#) converts a number in the form of a hex string to a big integer.    public static arbitrary-precision integer HexToBigInteger(string
-    hexString) {
-    // Parse the hexadecimal string as a big integer. Will
-    // throw a FormatException if the parsing fails
-    var bigInteger = arbitrary-precision
-    integer.fromRadixString(hexString, 16);
-    // Optional: Check if the parsed integer is negative
-    if (bigInteger.Sign < 0) {
-    throw new FormatException("negative hex string");
-    }
-    return bigInteger;
-    }
+The following example (C#) converts a number in the orm of a hex string to a big integer.    public static arbitrary-precision integer HexToBigInteger(string
+    hexString) {  // Parse the hexadecimal string as a big integer. Will  //
+    throw a FormatException if the parsing fails var bigInteger =
+    arbitrary-precision integer.fromRadixString(hexString, 16);  // Optional:
+    Check if the parsed integer is negative if (bigInteger.Sign < 0) {
+    throw new FormatException("negative hex string"); } return bigInteger; }
 
 <b>Parameters:</b>
 
@@ -1069,7 +1067,7 @@ Finds the remainder that results when an arbitrary-precision integer is divided 
 
 <b>Returns:</b>
 
-The remainder of the two objects.
+The remainder of the two numbers.
 
 <b>Exceptions:</b>
 
@@ -1318,7 +1316,7 @@ Finds the remainder that results when this instance is divided by the value of a
 
 <b>Returns:</b>
 
-The remainder of the two objects.
+The remainder of the two numbers.
 
 <b>Exceptions:</b>
 
@@ -1450,7 +1448,7 @@ A byte array.
 
 <b>Deprecated.</b> Use EInteger from PeterO.Numbers/com.upokecenter.numbers.
 
-Returns a byte array of this integer's value. The byte array will take the form of the number's two's-complement representation, using the fewest bytes necessary to store its value unambiguously. If this value is negative, the bits that appear beyond the most significant bit of the number will be all ones. The resulting byte array can be passed to the  `FromBytes()` method (with the same byte order) to reconstruct this integer's value. The byte order used will be little-endian.
+Returns a byte array of this integer's value. The byte array will take the form of the number's two's-complement representation, using the fewest bytes necessary to store its value unambiguously. If this value is negative, the bits that appear beyond the most significant bit of the number will be all ones. The resulting byte array can be passed to the  `FromBytes()`  method (with the same byte order) to reconstruct this integer's value. The byte order used will be little-endian.
 
 <b>Returns:</b>
 

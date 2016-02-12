@@ -122,7 +122,7 @@ Gets a value indicating whether this value is a CBOR false value.
 
 <b>Returns:</b>
 
- `true`  if this value is a CBOR false value; otherwise,  `false` .
+<c>true</c> if this value is a CBOR false value; otherwise, <c>false</c>.  `true`  if this value is a CBOR false value; otherwise,  `false` .
 
 ### IsFinite
 
@@ -132,7 +132,7 @@ Gets a value indicating whether this CBOR object represents a finite number.
 
 <b>Returns:</b>
 
- `true`  if this CBOR object represents a finite number; otherwise,  `false` .
+<c>true</c> if this CBOR object represents a finite number; otherwise, <c>false</c>.  `true`  if this CBOR object represents a finite number; otherwise, `false` .
 
 ### IsIntegral
 
@@ -142,7 +142,7 @@ Gets a value indicating whether this object represents an integral number, that 
 
 <b>Returns:</b>
 
- `true`  if this object represents an integral number, that is, a number without a fractional part; otherwise,  `false` .
+<c>true</c> if this object represents an integral number, that is, a number without a fractional part; otherwise, <c>false</c>.. Infinity and not-a-number are not considered integral.  `true`  if this object represents an integral number, that is, a number without a fractional part; otherwise,  `false` .
 
 ### IsNegative
 
@@ -152,7 +152,7 @@ Gets a value indicating whether this object is a negative number.
 
 <b>Returns:</b>
 
- `true`  if this object is a negative number; otherwise,  `false` .
+<c>true</c> if this object is a negative number; otherwise, <c>false</c>.  `true`  if this object is a negative number; otherwise,  `false` .
 
 ### IsNull
 
@@ -162,7 +162,7 @@ Gets a value indicating whether this value is a CBOR null value.
 
 <b>Returns:</b>
 
- `true`  if this value is a CBOR null value; otherwise,  `false` .
+<c>true</c> if this value is a CBOR null value; otherwise, <c>false</c>.  `true`  if this value is a CBOR null value; otherwise,  `false` .
 
 ### IsTagged
 
@@ -172,7 +172,7 @@ Gets a value indicating whether this data item has at least one tag.
 
 <b>Returns:</b>
 
- `true`  if this data item has at least one tag; otherwise,  `false` .
+<c>true</c> if this data item has at least one tag; otherwise, <c>false</c>.  `true`  if this data item has at least one tag; otherwise,  `false` .
 
 ### IsTrue
 
@@ -182,7 +182,7 @@ Gets a value indicating whether this value is a CBOR true value.
 
 <b>Returns:</b>
 
- `true`  if this value is a CBOR true value; otherwise,  `false` .
+<c>true</c> if this value is a CBOR true value; otherwise, <c>false</c>.  `true`  if this value is a CBOR true value; otherwise,  `false` .
 
 ### IsUndefined
 
@@ -192,7 +192,7 @@ Gets a value indicating whether this value is a CBOR undefined value.
 
 <b>Returns:</b>
 
- `true`  if this value is a CBOR undefined value; otherwise,  `false` .
+<c>true</c> if this value is a CBOR undefined value; otherwise, <c>false</c>.  `true`  if this value is a CBOR undefined value; otherwise,  `false` .
 
 ### IsZero
 
@@ -202,7 +202,7 @@ Gets a value indicating whether this object's value equals 0.
 
 <b>Returns:</b>
 
- `true`  if this object's value equals 0; otherwise,  `false` .
+<c>true</c> if this object&#x27;s value equals 0; otherwise, <c>false</c>.  `true`  if this object's value equals 0; otherwise,  `false` .
 
 ### Keys
 
@@ -725,7 +725,7 @@ Returns whether this object's value is an integral value, is -(2^31) or greater,
 
 <b>Returns:</b>
 
- `true`  if this object's value is an integral value, is -(2^31) or greater, and is less than 2^31; otherwise,  `false` .
+ `true`  if this object's value is an integral value, is -(2^31) or greater, and is less than 2^31; otherwise, false .
 
 ### CanFitInInt64
 
@@ -735,7 +735,7 @@ Returns whether this object's value is an integral value, is -(2^63) or greater,
 
 <b>Returns:</b>
 
- `true`  if this object's value is an integral value, is -(2^63) or greater, and is less than 2^63; otherwise,  `false` .
+ `true`  if this object's value is an integral value, is -(2^63) or greater, and is less than 2^63; otherwise, false .
 
 ### CanFitInSingle
 
@@ -755,7 +755,7 @@ Returns whether this object's value, truncated to an integer, would be -(2^31) o
 
 <b>Returns:</b>
 
- `true`  if this object's value, truncated to an integer, would be -(2^31) or greater, and less than 2^31; otherwise,  `false` .
+ `true`  if this object's value, truncated to an integer, would be -(2^31) or greater, and less than 2^31; otherwise, false .
 
 ### CanTruncatedIntFitInInt64
 
@@ -765,7 +765,7 @@ Returns whether this object's value, truncated to an integer, would be -(2^63) o
 
 <b>Returns:</b>
 
- `true`  if this object's value, truncated to an integer, would be -(2^63) or greater, and less than 2^63; otherwise,  `false` .
+ `true`  if this object's value, truncated to an integer, would be -(2^63) or greater, and less than 2^63; otherwise, false .
 
 ### CompareTo
 
@@ -972,7 +972,7 @@ Determines whether this object and another object are equal.
 
 <b>Returns:</b>
 
- `true`  if the objects are equal; otherwise,  `false` .
+ `true`  if the objects are equal; otherwise, false .
 
 ### Equals
 
@@ -987,7 +987,7 @@ Compares the equality of two CBOR objects.
 
 <b>Returns:</b>
 
- `true`  if the objects are equal; otherwise,  `false` .
+ `true`  if the objects are equal; otherwise, false .
 
 ### FromJSONString
 
@@ -1201,7 +1201,7 @@ A CBOR array object where each element of the given array is copied to a new arr
     public static PeterO.Cbor.CBORObject FromObject(
         object obj);
 
-Generates a CBORObject from an arbitrary object. The following types are specially handled by this method: null; primitive types; string; CBORObject; the  `EDecimal` ,  `EFloat` ,  `EInteger` , and  `ERational` classes in the new  `PeterO.Numbers`  library (in .NET) or the `com.github.peteroupc/numbers`  artifact (in Java); the legacy  `ExtendedDecimal` ,  `ExtendedFloat` ,  `ExtendedInteger` , and  `ExtendedRational` classes in this library; arrays; enumerations (  `Enum`  objects); and maps.In the .NET version, if the object is a type not specially handled by this method, returns a CBOR map with the values of each of its read/write properties (or all properties in the case of an anonymous type). Properties are converted to their camel-case names (meaning if a name starts with A to Z, that letter is lower-cased). If the property name begins with the word "Is", that word is deleted from the name. Also, .NET  `Enum`  objects will be converted to their integer values, and a multidimensional array is converted to an array of arrays.
+Generates a CBORObject from an arbitrary object. The following types are specially handled by this method: null; primitive types; string; CBORObject; the  `EDecimal` , `EFloat` ,  `EInteger` , and  `ERational`  classes in the new `PeterO.Numbers` library (in .NET) or the `com.github.peteroupc/numbers` artifact (in Java); the legacy  `ExtendedDecimal` , `ExtendedFloat` ,  `ExtendedInteger` , and `ExtendedRational`  classes in this library; arrays; enumerations (  `Enum`  objects); and maps.In the .NET version, if the object is a type not specially handled by this method, returns a CBOR map with the values of each of its read/write properties (or all properties in the case of an anonymous type). Properties are converted to their camel-case names (meaning if a name starts with A to Z, that letter is lower-cased). If the property name begins with the word "Is", that word is deleted from the name. Also, .NET  `Enum`  objects will be converted to their integer values, and a multidimensional array is converted to an array of arrays.
 
 In the Java version, if the object is a type not specially handled by this method, this method checks the CBOR object for methods starting with the word "get" or "is" that take no parameters, and returns a CBOR map with one entry for each such method found. For each method found, the starting word "get" or "is" is deleted from its name, and the name is converted to camel case (meaning if a name starts with A to Z, that letter is lower-cased). Also, Java  `Enum`  objects will be converted to the result of their name method.
 
@@ -1685,7 +1685,7 @@ Gets a value indicating whether this CBOR object represents infinity.
 
 <b>Returns:</b>
 
- `true`  if this CBOR object represents infinity; otherwise,  `false` .
+ `true`  if this CBOR object represents infinity; otherwise, false .
 
 ### IsNaN
 
@@ -1827,7 +1827,7 @@ Finds the remainder that results when a CBORObject object is divided by the valu
 
 <b>Returns:</b>
 
-The remainder of the two objects.
+The remainder of the two numbers.
 
 ### Operator `*`
 
@@ -1989,7 +1989,7 @@ Finds the remainder that results when a CBORObject object is divided by the valu
 
 <b>Returns:</b>
 
-The remainder of the two objects.
+The remainder of the two numbers.
 
 ### Remove
 

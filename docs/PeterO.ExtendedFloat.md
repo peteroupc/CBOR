@@ -4,7 +4,7 @@
         System.IComparable,
         System.IEquatable
 
-This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.EFloat`  in the  `PeterO.Numbers` library (in .NET), or  `com.upokecenter.numbers.EFloat`  in the  `com.github.peteroupc/numbers` artifact (in Java). This new class can be used in the  `CBORObject.FromObject(Object)` method (by including the new library in your code, among other things), but this version of the CBOR library doesn't include any methods that explicitly take an  `EFloat`  as a parameter or return value.
+This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.EFloat`  in the `PeterO.Numbers` library (in .NET), or  `com.upokecenter.numbers.EFloat`  in the `com.github.peteroupc/numbers` artifact (in Java). This new class can be used in the `CBORObject.FromObject(object)`  method (by including the new library in your code, among other things), but this version of the CBOR library doesn't include any methods that explicitly take an `EFloat`  as a parameter or return value.
 
 Represents an arbitrary-precision binary floating-point number. Consists of an integer mantissa and an integer exponent, both arbitrary-precision. The value of the number equals mantissa * 2^exponent. This class also supports values for negative zero, not-a-number (NaN) values, and infinity.
 
@@ -24,7 +24,7 @@ An arbitrary-precision binary float value can be serialized in one of the follow
 
 If an operation requires creating an intermediate value that might be too big to fit in memory (or might require more than 2 gigabytes of memory to store -- due to the current use of a 32-bit integer internally as a length), the operation may signal an invalid-operation flag and return not-a-number (NaN). In certain rare cases, the CompareTo method may throw OutOfMemoryException (called OutOfMemoryError in Java) in the same circumstances.
 
-Thread safety:Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same properties are interchangeable, so they should not be compared using the "==" operator (which only checks if each side of the operator is the same instance).
+Thread safety: Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same properties are interchangeable, so they should not be compared using the "==" operator (which only checks if each side of the operator is the same instance).
 
 ### NaN
 
@@ -94,7 +94,7 @@ Gets a value indicating whether this object is finite (not infinity or NaN).
 
 <b>Returns:</b>
 
- `true`  if this object is finite (not infinity or NaN); otherwise,  `false` .
+<c>true</c> if this object is finite (not infinity or NaN); otherwise, <c>false</c>.  `true` if this object is finite (not infinity or NaN); otherwise, `false` .
 
 ### IsNegative
 
@@ -106,7 +106,7 @@ Gets a value indicating whether this object is negative, including negative zero
 
 <b>Returns:</b>
 
- `true`  if this object is negative, including negative zero; otherwise,  `false` .
+<c>true</c> if this object is negative, including negative zero; otherwise, <c>false</c>. `true`  if this object is negative, including negative zero; otherwise,  `false` .
 
 ### IsZero
 
@@ -118,7 +118,7 @@ Gets a value indicating whether this object's value equals 0.
 
 <b>Returns:</b>
 
- `true`  if this object's value equals 0; otherwise,  `false` .
+<c>true</c> if this object&#x27;s value equals 0; otherwise, <c>false</c>.  `true`  if this object's value equals 0; otherwise,  `false` .
 
 ### Mantissa
 
@@ -764,7 +764,7 @@ Determines whether this object's mantissa and exponent are equal to those of ano
 
 <b>Returns:</b>
 
- `true`  if the objects are equal; otherwise,  `false` .
+ `true`  if the objects are equal; otherwise, false .
 
 ### Equals
 
@@ -823,7 +823,7 @@ Finds e (the base of natural logarithms) raised to the power of this object's va
 
 <b>Parameters:</b>
 
- * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags).This parameter cannot be null, as the exponential function's results are generally not exact.
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags).This parameter cannot be null, as the exponential function's results are generally not exact..
 
 <b>Returns:</b>
 
@@ -933,11 +933,7 @@ A binary float with the same value as  <i>flt</i>
     public static PeterO.ExtendedFloat FromString(
         string str);
 
-Creates a binary float from a text string that represents a number. See the four-parameter FromString method.
-
-The following example converts a number in the form of a string to a `double` , or a 64-bit floating point number.    public static double StringToDouble(String str) {
-    return ExtendedFloat.FromString(str).ToDouble();
-    }
+Not documented yet.
 
 <b>Parameters:</b>
 
@@ -946,7 +942,7 @@ The following example converts a number in the form of a string to a `double` , 
 
 <b>Returns:</b>
 
-The parsed number, converted to arbitrary-precision binary float.
+An ExtendedFloat object.
 
 ### FromString
 
@@ -999,7 +995,7 @@ Either  <i>offset</i>
 
 <b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
-Creates a binary float from a text string that represents a number. Note that if the string contains a negative exponent, the resulting value might not be exact, in which case the resulting binary float will be an approximation of this decimal number's value. (NOTE: This documentation previously said the binary float will contain enough precision to accurately convert it to a 32-bit or 64-bit floating point number. Due to double rounding, this will generally not be the case for certain numbers converted from decimal to ExtendedFloat via this method and in turn converted to  `double`  or  `float` .)The format of the string generally consists of:
+Creates a binary float from a text string that represents a number. Note that if the string contains a negative exponent, the resulting value might not be exact, in which case the resulting binary float will be an approximation of this decimal number's value. (NOTE: This documentation previously said the binary float will contain enough precision to accurately convert it to a 32-bit or 64-bit floating point number. Due to double rounding, this will generally not be the case for certain numbers converted from decimal to ExtendedFloat via this method and in turn converted to `double`  or  `float` .)The format of the string generally consists of:
 
  * An optional plus sign ("+" , U+002B) or minus sign ("-", U+002D) (if '-' , the value is negative.)
 
@@ -1097,7 +1093,7 @@ Returns whether this object is a not-a-number value.
 
 <b>Returns:</b>
 
- `true`  if this object is a not-a-number value; otherwise,  `false` .
+ `true`  if this object is a not-a-number value; otherwise, false .
 
 ### IsNegativeInfinity
 
@@ -1109,7 +1105,7 @@ Returns whether this object is negative infinity.
 
 <b>Returns:</b>
 
- `true`  if this object is negative infinity; otherwise,  `false` .
+ `true`  if this object is negative infinity; otherwise, false .
 
 ### IsPositiveInfinity
 
@@ -1121,7 +1117,7 @@ Returns whether this object is positive infinity.
 
 <b>Returns:</b>
 
- `true`  if this object is positive infinity; otherwise,  `false` .
+ `true`  if this object is positive infinity; otherwise, false .
 
 ### IsQuietNaN
 
@@ -1158,7 +1154,7 @@ Finds the natural logarithm of this object, that is, the power (exponent) that e
 
 <b>Parameters:</b>
 
- * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags).This parameter cannot be null, as the ln function's results are generally not exact.
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags).This parameter cannot be null, as the ln function's results are generally not exact..
 
 <b>Returns:</b>
 
@@ -1181,7 +1177,7 @@ Finds the base-10 logarithm of this object, that is, the power (exponent) that t
 
 <b>Parameters:</b>
 
- * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags).This parameter cannot be null, as the ln function's results are generally not exact.
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags).This parameter cannot be null, as the ln function's results are generally not exact..
 
 <b>Returns:</b>
 
@@ -1206,7 +1202,7 @@ Gets the greater value between two binary floats.
 
 <b>Returns:</b>
 
-The larger value of the two objects.
+The larger value of the two numbers.
 
 <b>Exceptions:</b>
 
@@ -1236,7 +1232,7 @@ Gets the greater value between two binary floats.
 
 <b>Returns:</b>
 
-The larger value of the two objects.
+The larger value of the two numbers.
 
 <b>Exceptions:</b>
 
@@ -1320,7 +1316,7 @@ Gets the lesser value between two binary floats.
 
 <b>Returns:</b>
 
-The smaller value of the two objects.
+The smaller value of the two numbers.
 
 <b>Exceptions:</b>
 
@@ -1350,7 +1346,7 @@ Gets the lesser value between two binary floats.
 
 <b>Returns:</b>
 
-The smaller value of the two objects.
+The smaller value of the two numbers.
 
 <b>Exceptions:</b>
 
@@ -1850,7 +1846,7 @@ Finds the constant π, the circumference of a circle divided by its diameter.
 
 <b>Parameters:</b>
 
- * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags).This parameter cannot be null, as π can never be represented exactly.
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags).This parameter cannot be null, as π can never be represented exactly..
 
 <b>Returns:</b>
 
@@ -2066,7 +2062,7 @@ Finds the remainder that results when dividing two arbitrary-precision binary fl
 
 <b>Returns:</b>
 
-The remainder of the two objects.
+The remainder of the two numbers.
 
 <b>Exceptions:</b>
 
@@ -2419,7 +2415,7 @@ Finds the square root of this object's value.
 
 <b>Parameters:</b>
 
- * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags).This parameter cannot be null, as the square root function's results are generally not exact for many inputs.
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags).This parameter cannot be null, as the square root function's results are generally not exact for many inputs..
 
 <b>Returns:</b>
 
@@ -2523,21 +2519,9 @@ This object's value is not an exact integer.
 
 <b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
-Converts this value to a 64-bit floating-point number. The half-even rounding mode is used. If this value is a NaN, sets the high bit of the 64-bit floating point number's mantissa for a quiet NaN, and clears it for a signaling NaN. Then the next highest bit of the mantissa is cleared for a quiet NaN, and set for a signaling NaN. Then the other bits of the mantissa are set to the lowest bits of this object's unsigned mantissa.
-
-The following example converts a number in the form of a string to a `double` , or a 64-bit floating point number.    public static double StringToDouble(String str) {
-    return arbitrary-precision binary float.FromString(str).ToDouble();
-    }
-
-The following example converts a big integer to a `double` , or a 64-bit floating point number.    public static double arbitrary-precision integerToDouble(BigInteger
-    bigInteger) {
-    return arbitrary-precision binary
-    float.FromBigInteger(bigInteger).ToDouble();
-    }
-
 <b>Returns:</b>
 
-The closest 64-bit floating-point number to this value. The return value can be positive infinity or negative infinity if this value exceeds the range of a 64-bit floating point number.
+A 64-bit floating-point number.
 
 ### ToEngineeringString
 

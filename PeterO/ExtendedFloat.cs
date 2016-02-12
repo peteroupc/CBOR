@@ -207,6 +207,8 @@ PrecisionContext ctx) {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.ToDouble"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
+    /// <summary>Not documented yet.</summary>
+    /// <returns>A 64-bit floating-point number.</returns>
     public double ToDouble() {
       return this.Ef.ToDouble();
     }

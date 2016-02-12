@@ -4,13 +4,13 @@
         System.IComparable,
         System.IEquatable
 
-This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.EDecimal`  in the  `PeterO.Numbers` library (in .NET), or  `com.upokecenter.numbers.EDecimal`  in the  `com.github.peteroupc/numbers` artifact (in Java). This new class can be used in the  `CBORObject.FromObject(Object)` method (by including the new library in your code, among other things), but this version of the CBOR library doesn't include any methods that explicitly take an  `EDecimal`  as a parameter or return value.
+This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.EDecimal`  in the `PeterO.Numbers` library (in .NET), or  `com.upokecenter.numbers.EDecimal`  in the `com.github.peteroupc/numbers` artifact (in Java). This new class can be used in the `CBORObject.FromObject(object)`  method (by including the new library in your code, among other things), but this version of the CBOR library doesn't include any methods that explicitly take an `EDecimal`  as a parameter or return value.
 
 Represents an arbitrary-precision decimal floating-point number.About decimal arithmetic
 
 Decimal (base-10) arithmetic, such as that provided by this class, is appropriate for calculations involving such real-world data as prices and other sums of money, tax rates, and measurements. These calculations often involve multiplying or dividing one decimal with another decimal, or performing other operations on decimal numbers. Many of these calculations also rely on rounding behavior in which the result after rounding is a decimal number (for example, multiplying a price by a premium rate, then rounding, should result in a decimal amount of money).
 
-On the other hand, most implementations of `float`  and  `double` , including in C# and Java, store numbers in a binary (base-2) floating-point format and use binary floating-point arithmetic. Many decimal numbers can't be represented exactly in binary floating-point format (regardless of its length). Applying binary arithmetic to numbers intended to be decimals can sometimes lead to unintuitive results, as is shown in the description for the FromDouble() method of this class.
+On the other hand, most implementations of  `float`  and `double` , including in C# and Java, store numbers in a binary (base-2) floating-point format and use binary floating-point arithmetic. Many decimal numbers can't be represented exactly in binary floating-point format (regardless of its length). Applying binary arithmetic to numbers intended to be decimals can sometimes lead to unintuitive results, as is shown in the description for the FromDouble() method of this class.
 
 About ExtendedDecimal instances
 
@@ -120,7 +120,7 @@ Gets a value indicating whether this object is finite (not infinity or NaN).
 
 <b>Returns:</b>
 
- `true`  if this object is finite (not infinity or NaN); otherwise,  `false` .
+<c>true</c> if this object is finite (not infinity or NaN); otherwise, <c>false</c>.  `true` if this object is finite (not infinity or NaN); otherwise, `false` .
 
 ### IsNegative
 
@@ -132,7 +132,7 @@ Gets a value indicating whether this object is negative, including negative zero
 
 <b>Returns:</b>
 
- `true`  if this object is negative, including negative zero; otherwise,  `false` .
+<c>true</c> if this object is negative, including negative zero; otherwise, <c>false</c>. `true`  if this object is negative, including negative zero; otherwise,  `false` .
 
 ### IsZero
 
@@ -144,7 +144,7 @@ Gets a value indicating whether this object's value equals 0.
 
 <b>Returns:</b>
 
- `true`  if this object's value equals 0; otherwise,  `false` .
+<c>true</c> if this object&#x27;s value equals 0; otherwise, <c>false</c>.  `true`  if this object's value equals 0; otherwise,  `false` .
 
 ### Mantissa
 
@@ -777,7 +777,7 @@ Determines whether this object's mantissa and exponent are equal to those of ano
 
 <b>Returns:</b>
 
- `true`  if the objects are equal; otherwise,  `false` .
+ `true`  if the objects are equal; otherwise, false .
 
 ### Equals
 
@@ -807,7 +807,7 @@ Finds e (the base of natural logarithms) raised to the power of this object's va
 
 <b>Parameters:</b>
 
- * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags).This parameter cannot be null, as the exponential function's results are generally not exact.
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags).This parameter cannot be null, as the exponential function's results are generally not exact..
 
 <b>Returns:</b>
 
@@ -844,7 +844,7 @@ The parameter <i>bigint</i>
 
 <b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
-Creates a decimal number from a 64-bit binary floating-point number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the floating point number to a string first. Remember, though, that the exact value of a 64-bit binary floating-point number is not always the value that results when passing a literal decimal number (for example, calling  `ExtendedDecimal.FromDouble(0.1f)`  ), since not all decimal numbers can be converted to exact binary numbers (in the example given, the resulting arbitrary-precision decimal will be the value of the closest "double" to 0.1, not 0.1 exactly). To create an arbitrary-precision decimal number from a decimal number, use FromString instead in most cases (for example: `ExtendedDecimal.FromString("0.1")`  ).
+Creates a decimal number from a 64-bit binary floating-point number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the floating point number to a string first. Remember, though, that the exact value of a 64-bit binary floating-point number is not always the value that results when passing a literal decimal number (for example, calling `ExtendedDecimal.FromDouble(0.1f)`  ), since not all decimal numbers can be converted to exact binary numbers (in the example given, the resulting arbitrary-precision decimal will be the value of the closest "double" to 0.1, not 0.1 exactly). To create an arbitrary-precision decimal number from a decimal number, use FromString instead in most cases (for example: `ExtendedDecimal.FromString("0.1")`  ).
 
 <b>Parameters:</b>
 
@@ -919,7 +919,7 @@ An arbitrary-precision decimal number with the exponent set to 0.
 
 <b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
-Creates a decimal number from a 32-bit binary floating-point number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the floating point number to a string first. Remember, though, that the exact value of a 32-bit binary floating-point number is not always the value that results when passing a literal decimal number (for example, calling  `ExtendedDecimal.FromSingle(0.1f)`  ), since not all decimal numbers can be converted to exact binary numbers (in the example given, the resulting arbitrary-precision decimal will be the the value of the closest "float" to 0.1, not 0.1 exactly). To create an arbitrary-precision decimal number from a decimal number, use FromString instead in most cases (for example: `ExtendedDecimal.FromString("0.1")`  ).
+Creates a decimal number from a 32-bit binary floating-point number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the floating point number to a string first. Remember, though, that the exact value of a 32-bit binary floating-point number is not always the value that results when passing a literal decimal number (for example, calling `ExtendedDecimal.FromSingle(0.1f)`  ), since not all decimal numbers can be converted to exact binary numbers (in the example given, the resulting arbitrary-precision decimal will be the the value of the closest "float" to 0.1, not 0.1 exactly). To create an arbitrary-precision decimal number from a decimal number, use FromString instead in most cases (for example: `ExtendedDecimal.FromString("0.1")`  ).
 
 <b>Parameters:</b>
 
@@ -935,7 +935,8 @@ A decimal number with the same value as  <i>flt</i>
     public static PeterO.ExtendedDecimal FromString(
         string str);
 
-Creates a decimal number from a text string that represents a number. See  `FromString(String, int, int, EContext)`  for more information.
+Creates a decimal number from a text string that represents a number. See  `FromString(String, int, int,
+            EContext)`  for more information.
 
 <b>Parameters:</b>
 
@@ -964,7 +965,8 @@ The parameter  <i>str</i>
 
 <b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
-Creates a decimal number from a text string that represents a number. See  `FromString(String, int, int, EContext)`  for more information.
+Creates a decimal number from a text string that represents a number. See  `FromString(String, int, int,
+            EContext)`  for more information.
 
 <b>Parameters:</b>
 
@@ -1011,7 +1013,7 @@ The format of the string generally consists of:
 
  * Optionally, "E+"/"e+" (positive exponent) or "E-"/"e-" (negative exponent) plus one or more digits specifying the exponent.
 
-The string can also be "-INF", "-Infinity", "Infinity", "INF" , quiet NaN ("NaN" /"-NaN") followed by any number of digits, or signaling NaN ("sNaN" /"-sNaN") followed by any number of digits, all in any combination of upper and lower case.
+The string can also be "-INF", "-Infinity", "Infinity", "INF", quiet NaN ("NaN" /"-NaN") followed by any number of digits, or signaling NaN ("sNaN" /"-sNaN") followed by any number of digits, all in any combination of upper and lower case.
 
 All characters mentioned above are the corresponding characters in the Basic Latin range. In particular, the digits must be the basic digits 0 to 9 (U+0030 to U+0039). The string portion is not allowed to contain white space characters, including spaces.
 
@@ -1047,7 +1049,8 @@ The parameter  <i>str</i>
 
 <b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
-Creates a decimal number from a text string that represents a number. See  `FromString(String, int, int, EContext)`  for more information.
+Creates a decimal number from a text string that represents a number. See  `FromString(String, int, int,
+            EContext)`  for more information.
 
 <b>Parameters:</b>
 
@@ -1097,7 +1100,7 @@ Gets a value indicating whether this object is not a number (NaN).
 
 <b>Returns:</b>
 
- `true`  if this object is not a number (NaN); otherwise,  `false` .
+ `true`  if this object is not a number (NaN); otherwise, false .
 
 ### IsNegativeInfinity
 
@@ -1109,7 +1112,7 @@ Returns whether this object is negative infinity.
 
 <b>Returns:</b>
 
- `true`  if this object is negative infinity; otherwise,  `false` .
+ `true`  if this object is negative infinity; otherwise, false .
 
 ### IsPositiveInfinity
 
@@ -1121,7 +1124,7 @@ Returns whether this object is positive infinity.
 
 <b>Returns:</b>
 
- `true`  if this object is positive infinity; otherwise,  `false` .
+ `true`  if this object is positive infinity; otherwise, false .
 
 ### IsQuietNaN
 
@@ -1158,7 +1161,7 @@ Finds the natural logarithm of this object, that is, the power (exponent) that e
 
 <b>Parameters:</b>
 
- * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags).This parameter cannot be null, as the ln function's results are generally not exact.
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags).This parameter cannot be null, as the ln function's results are generally not exact..
 
 <b>Returns:</b>
 
@@ -1176,7 +1179,7 @@ Finds the base-10 logarithm of this object, that is, the power (exponent) that t
 
 <b>Parameters:</b>
 
- * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags).This parameter cannot be null, as the ln function's results are generally not exact.
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags).This parameter cannot be null, as the ln function's results are generally not exact..
 
 <b>Returns:</b>
 
@@ -1201,7 +1204,7 @@ Gets the greater value between two decimal numbers.
 
 <b>Returns:</b>
 
-The larger value of the two objects.
+The larger value of the two numbers.
 
 <b>Exceptions:</b>
 
@@ -1231,7 +1234,7 @@ Gets the greater value between two decimal numbers.
 
 <b>Returns:</b>
 
-The larger value of the two objects.
+The larger value of the two numbers.
 
 <b>Exceptions:</b>
 
@@ -1315,7 +1318,7 @@ Gets the lesser value between two decimal numbers.
 
 <b>Returns:</b>
 
-The smaller value of the two objects.
+The smaller value of the two numbers.
 
 <b>Exceptions:</b>
 
@@ -1345,7 +1348,7 @@ Gets the lesser value between two decimal numbers.
 
 <b>Returns:</b>
 
-The smaller value of the two objects.
+The smaller value of the two numbers.
 
 <b>Exceptions:</b>
 
@@ -1834,12 +1837,12 @@ Finds the constant π, the circumference of a circle divided by its diameter.
 
 <b>Parameters:</b>
 
- * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags).This parameter cannot be null, as π can never be represented exactly.
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags).This parameter cannot be null, as π can never be represented exactly..
 
 <b>Returns:</b>
 
-The constant π rounded to the given precision. Signals FlagInvalid and returns not-a-number (NaN) if the parameter  <i>ctx</i>
-is null or the precision is unlimited (the context's Precision property is 0).
+The constant π rounded to the given precision. Signals FlagInvalid and returns not-a-number (NaN) if the parameter <i>ctx</i>
+ is null or the precision is unlimited (the context's Precision property is 0).
 
 ### Plus
 
@@ -2063,7 +2066,7 @@ Finds the remainder that results when dividing two arbitrary-precision decimal n
 
 <b>Returns:</b>
 
-The remainder of the two objects.
+The remainder of the two numbers.
 
 <b>Exceptions:</b>
 
@@ -2416,7 +2419,7 @@ Finds the square root of this object's value.
 
 <b>Parameters:</b>
 
- * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags).This parameter cannot be null, as the square root function's results are generally not exact for many inputs.
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags).This parameter cannot be null, as the square root function's results are generally not exact for many inputs..
 
 <b>Returns:</b>
 
@@ -2537,7 +2540,7 @@ A text string.
 
 <b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
-Creates a binary floating-point number from this object's value. Note that if the binary floating-point number contains a negative exponent, the resulting value might not be exact, in which case the resulting binary float will be an approximation of this decimal number's value. (NOTE: This documentation previously said the binary float will contain enough precision to accurately convert it to a 32-bit or 64-bit floating point number. Due to double rounding, this will generally not be the case for certain numbers converted from decimal to ExtendedFloat via this method and in turn converted to  `double`  or  `float` .).
+Creates a binary floating-point number from this object's value. Note that if the binary floating-point number contains a negative exponent, the resulting value might not be exact, in which case the resulting binary float will be an approximation of this decimal number's value. (NOTE: This documentation previously said the binary float will contain enough precision to accurately convert it to a 32-bit or 64-bit floating point number. Due to double rounding, this will generally not be the case for certain numbers converted from decimal to ExtendedFloat via this method and in turn converted to `double`  or  `float` .).
 
 <b>Returns:</b>
 

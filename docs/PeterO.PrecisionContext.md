@@ -2,9 +2,9 @@
 
     public class PrecisionContext
 
-This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.EContext`  in the  `PeterO.EContext` library (in .NET), or  `com.upokecenter.numbers.EFloat`  in the  `com.github.peteroupc/numbers` artifact (in Java).
+This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.EContext`  in the `PeterO.EContext`  library (in .NET), or `com.upokecenter.numbers.EFloat`  in the `com.github.peteroupc/numbers` artifact (in Java).
 
-Contains parameters for controlling the precision, rounding, and exponent range of arbitrary-precision numbers.
+ Contains parameters for controlling the precision, rounding, and exponent range of arbitrary-precision numbers.
 
 ### PrecisionContext Constructor
 
@@ -167,7 +167,7 @@ Gets a value indicating whether the EMax and EMin properties refer to the number
 
 <b>Returns:</b>
 
- `true`  if the EMax and EMin properties refer to the number's Exponent property adjusted to the number's precision, or false if they refer to just the number's Exponent property.
+<c>true</c> if the EMax and EMin properties refer to the number's Exponent property adjusted to the number's precision, or just the number's Exponent property; otherwise, <c>false</c>.. The default value is true, meaning that EMax and EMin refer to the adjusted exponent. Setting this value to false (using WithAdjustExponent) is useful for modeling floating point representations with an integer mantissa and an integer exponent, such as Java's BigDecimal. `true`  if the EMax and EMin properties refer to the number's Exponent property adjusted to the number's precision, or false if they refer to just the number's Exponent property.
 
 ### ClampNormalExponents
 
@@ -228,7 +228,7 @@ Gets a value indicating whether this context defines a minimum and maximum expon
 
 <b>Returns:</b>
 
- `true`  if this context defines a minimum and maximum exponent; otherwise,  `false` .
+<c>true</c> if this context defines a minimum and maximum exponent; otherwise, <c>false</c>.. If false, converted exponents can have any exponent and operations can't cause overflow or underflow. .
 
 ### HasFlags
 
@@ -252,7 +252,7 @@ Gets a value indicating whether this context defines a maximum precision.
 
 <b>Returns:</b>
 
- `true`  if this context defines a maximum precision; otherwise,  `false` .
+<c>true</c> if this context defines a maximum precision; otherwise, <c>false</c>.  `true`  if this context defines a maximum precision; otherwise,  `false` .
 
 ### IsPrecisionInBits
 
@@ -264,7 +264,7 @@ Gets a value indicating whether this context's Precision property is in bits, ra
 
 <b>Returns:</b>
 
- `true`  if this context's Precision property is in bits, rather than digits; otherwise,  `false` . The default is false.
+<c>true</c> if this context's Precision property is in bits, rather than digits; otherwise, <c>false</c>.. The default is false.  `true`  if this context's Precision property is in bits, rather than digits; otherwise,  `false` . The default is false.
 
 ### IsSimplified
 
