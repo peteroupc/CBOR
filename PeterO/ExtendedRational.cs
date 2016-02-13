@@ -11,6 +11,8 @@ using PeterO.Numbers;
 namespace PeterO {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="T:PeterO.ExtendedRational"]/*'/>
+[Obsolete(
+  "Use ERational from PeterO.Numbers/com.upokecenter.numbers and the output of this class's ToString method.")]
   public sealed class ExtendedRational : IComparable<ExtendedRational>,
     IEquatable<ExtendedRational> {
     /// <include file='../docs.xml'

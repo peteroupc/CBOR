@@ -110,6 +110,10 @@ Type[] parameters) {
       }
     }
 
+// Inappropriate to mark these obsolete; they're
+// just methods to convert to and from legacy
+// arbitrary-precision classes
+#pragma warning disable 618
     public static BigInteger ToLegacy(EInteger ei) {
       return BigInteger.ToLegacy(ei);
     }
@@ -141,7 +145,7 @@ Type[] parameters) {
     public static ERational FromLegacy(ExtendedRational er) {
       return ExtendedRational.FromLegacy(er);
     }
-
+#pragma warning restore 618
     private static void FromArrayRecursive(
 Array arr,
 int[] index,

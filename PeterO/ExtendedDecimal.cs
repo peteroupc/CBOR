@@ -12,6 +12,8 @@ using PeterO.Numbers;
 namespace PeterO {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="T:PeterO.ExtendedDecimal"]/*'/>
+[Obsolete(
+  "Use EDecimal from PeterO.Numbers/com.upokecenter.numbers and the output of this class's ToString method.")]
   public sealed class ExtendedDecimal : IComparable<ExtendedDecimal>,
   IEquatable<ExtendedDecimal> {
     /// <include file='../docs.xml'

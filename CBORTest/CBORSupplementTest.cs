@@ -850,7 +850,7 @@ Console.Write(String.Empty);
         CBORObject.FromObject(Guid.Parse(
           "00112233-4455-6677-8899-AABBCCDDEEFF"));
       Assert.AreEqual(CBORType.ByteString, obj.Type);
-      Assert.AreEqual(EInteger.FromString("37"), obj.InnermostTag);
+      Assert.AreEqual(EInteger.FromString("37"), obj.MostInnerTag);
       byte[] bytes = obj.GetByteString();
       Assert.AreEqual(16, bytes.Length);
       Assert.AreEqual(0x00, bytes[0]);

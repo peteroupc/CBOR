@@ -2417,7 +2417,7 @@ TestCommon.IntToString(j));
       Assert.IsFalse(CBORObject.True.HasTag(EInteger.Zero));
     }
     [Test]
-    public void TestInnermostTag() {
+    public void TestMostInnerTag() {
       // not implemented yet
     }
     [Test]
@@ -2823,12 +2823,12 @@ EInteger.FromRadixString(
       // not implemented yet
     }
     [Test]
-    public void TestOutermostTag() {
+    public void TestMostOuterTag() {
       CBORObject cbor = CBORObject.FromObjectAndTag(CBORObject.True, 999);
       cbor = CBORObject.FromObjectAndTag(CBORObject.True, 1000);
-      Assert.AreEqual(EInteger.FromString("1000"), cbor.OutermostTag);
+      Assert.AreEqual(EInteger.FromString("1000"), cbor.MostOuterTag);
       cbor = CBORObject.True;
-      Assert.AreEqual(EInteger.FromString("-1"), cbor.OutermostTag);
+      Assert.AreEqual(EInteger.FromString("-1"), cbor.MostOuterTag);
     }
     [Test]
     public void TestRead() {
@@ -3903,9 +3903,9 @@ EInteger.FromRadixString(
     [Test]
     public void TestUntag() {
       CBORObject o = CBORObject.FromObjectAndTag("test", 999);
-      Assert.AreEqual(EInteger.FromString("999"), o.InnermostTag);
+      Assert.AreEqual(EInteger.FromString("999"), o.MostInnerTag);
       o = o.Untag();
-      Assert.AreEqual(EInteger.FromString("-1"), o.InnermostTag);
+      Assert.AreEqual(EInteger.FromString("-1"), o.MostInnerTag);
     }
     [Test]
     public void TestUntagOne() {

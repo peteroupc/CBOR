@@ -1085,8 +1085,7 @@ o2).AsERational();
         TestCommon.AssertEqualsHashCode(o, o2);
       }
     }
-    /*
-    TODO
+
     [Test]
     public void TestTags() {
       EInteger maxuint = EInteger.FromString("18446744073709551615");
@@ -1102,8 +1101,8 @@ EInteger.FromString("18446744073709551615") };
       Assert.IsFalse(CBORObject.True.IsTagged);
       Assert.AreEqual(
         EInteger.FromString("-1"),
-        CBORObject.True.InnermostTag);
-      EInteger[] tagstmp = CBORObject.True.GetTags();
+        CBORObject.True.MostInnerTag);
+      EInteger[] tagstmp = CBORObject.True.GetAllTags();
       Assert.AreEqual(0, tagstmp.Length);
       for (var i = 0; i < ranges.Length; i += 2) {
         EInteger bigintTemp = ranges[i];
@@ -1123,14 +1122,14 @@ EInteger.FromString("18446744073709551615") };
           }
           CBORObject obj = CBORObject.FromObjectAndTag(0, bigintTemp);
           Assert.IsTrue(obj.IsTagged, "obj not tagged");
-          EInteger[] tags = obj.GetTags();
+          EInteger[] tags = obj.GetAllTags();
           Assert.AreEqual(1, tags.Length);
           Assert.AreEqual(bigintTemp, tags[0]);
-          if (!obj.InnermostTag.Equals(bigintTemp)) {
+          if (!obj.MostInnerTag.Equals(bigintTemp)) {
             string errmsg = "obj tag doesn't match: " + obj;
             Assert.AreEqual(
               bigintTemp,
-              obj.InnermostTag,
+              obj.MostInnerTag,
               errmsg);
           }
           CBORTestCommon.AssertSer(
@@ -1145,7 +1144,7 @@ EInteger.FromString("18446744073709551615") };
             }
             // Test multiple tags
             CBORObject obj2 = CBORObject.FromObjectAndTag(obj, bigintNew);
-            EInteger[] bi = obj2.GetTags();
+            EInteger[] bi = obj2.GetAllTags();
             if (bi.Length != 2) {
               {
                 string stringTemp = "Expected 2 tags: " + obj2;
@@ -1164,12 +1163,12 @@ bigintNew,
 bi[1],
 bigintTemp,
 "Inner tag doesn't match");
-            if (!obj2.InnermostTag.Equals((object)bigintTemp)) {
+            if (!obj2.MostInnerTag.Equals((object)bigintTemp)) {
               {
                 string stringTemp = "Innermost tag doesn't match: " + obj2;
                 Assert.AreEqual(
                     bigintTemp,
-                    obj2.InnermostTag,
+                    obj2.MostInnerTag,
                     stringTemp);
               }
             }
@@ -1186,7 +1185,7 @@ bigintTemp,
         }
       }
     }
-    */
+
     [Test]
     public void TestTags264And265() {
       CBORObject cbor;

@@ -43,7 +43,7 @@ namespace PeterO.Cbor {
 
     public EFloat AsExtendedFloat(object obj) {
       var ed = (EDecimal)obj;
-      return ed.ToExtendedFloat();
+      return ed.ToEFloat();
     }
 
     public float AsSingle(object obj) {
@@ -155,7 +155,7 @@ namespace PeterO.Cbor {
     }
 
     public ERational AsExtendedRational(object obj) {
-      return ERational.FromExtendedDecimal((EDecimal)obj);
+      return ERational.FromEDecimal((EDecimal)obj);
     }
 
     public bool IsNegative(object obj) {

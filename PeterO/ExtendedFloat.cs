@@ -11,6 +11,8 @@ using PeterO.Numbers;
 namespace PeterO {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="T:PeterO.ExtendedFloat"]/*'/>
+[Obsolete(
+  "Use EFloat from PeterO.Numbers/com.upokecenter.numbers and the output of this class's ToString method.")]
   public sealed class ExtendedFloat : IComparable<ExtendedFloat>,
  IEquatable<ExtendedFloat> {
     private readonly EFloat ef;

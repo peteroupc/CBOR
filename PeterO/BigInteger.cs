@@ -16,6 +16,8 @@ using PeterO.Numbers;
 namespace PeterO {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="T:PeterO.BigInteger"]/*'/>
+[Obsolete(
+  "Use EInteger from PeterO.Numbers/com.upokecenter.numbers and the output of this class's ToString method.")]
   public sealed partial class BigInteger : IComparable<BigInteger>,
     IEquatable<BigInteger> {
     /// <include file='../docs.xml'

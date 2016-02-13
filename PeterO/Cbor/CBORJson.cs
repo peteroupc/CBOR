@@ -652,7 +652,7 @@ namespace PeterO.Cbor {
           }
           case CBORObject.CBORObjectTypeExtendedRational: {
             var dec = (ERational)thisItem;
-            EDecimal f = dec.ToExtendedDecimalExactIfPossible(
+            EDecimal f = dec.ToEDecimalExactIfPossible(
               EContext.Decimal128.WithUnlimitedExponents());
             if (!f.IsFinite) {
               writer.WriteString("null");
