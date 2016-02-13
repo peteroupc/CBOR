@@ -167,7 +167,7 @@ Gets a value indicating whether the EMax and EMin properties refer to the number
 
 <b>Returns:</b>
 
-<c>true</c> if the EMax and EMin properties refer to the number's Exponent property adjusted to the number's precision, or just the number's Exponent property; otherwise, <c>false</c>.. The default value is true, meaning that EMax and EMin refer to the adjusted exponent. Setting this value to false (using WithAdjustExponent) is useful for modeling floating point representations with an integer mantissa and an integer exponent, such as Java's BigDecimal. `true`  if the EMax and EMin properties refer to the number's Exponent property adjusted to the number's precision, or false if they refer to just the number's Exponent property.
+ `true`  if the EMax and EMin properties refer to the number's Exponent property adjusted to the number's precision, or false if they refer to just the number's Exponent property.
 
 ### ClampNormalExponents
 
@@ -252,7 +252,7 @@ Gets a value indicating whether this context defines a maximum precision.
 
 <b>Returns:</b>
 
-<c>true</c> if this context defines a maximum precision; otherwise, <c>false</c>.  `true`  if this context defines a maximum precision; otherwise,  `false` .
+ `true`  if this context defines a maximum precision; otherwise,  `false` .
 
 ### IsPrecisionInBits
 
@@ -264,7 +264,7 @@ Gets a value indicating whether this context's Precision property is in bits, ra
 
 <b>Returns:</b>
 
-<c>true</c> if this context's Precision property is in bits, rather than digits; otherwise, <c>false</c>.. The default is false.  `true`  if this context's Precision property is in bits, rather than digits; otherwise,  `false` . The default is false.
+ `true`  if this context's Precision property is in bits, rather than digits; otherwise,  `false` . The default is false.
 
 ### IsSimplified
 

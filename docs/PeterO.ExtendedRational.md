@@ -6,7 +6,7 @@
 
 This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.ERational`  in the `PeterO.Numbers` library (in .NET), or  `com.upokecenter.numbers.ERational`  in the `com.github.peteroupc/numbers` artifact (in Java). This new class can be used in the `CBORObject.FromObject(object)`  method (by including the new library in your code, among other things), but this version of the CBOR library doesn't include any methods that explicitly take an `ERational`  as a parameter or return value.
 
-Arbitrary-precision rational number. This class cannot be inherited; this is a change in version 2.0 from previous versions, where the class was inadvertently left inheritable.Thread safety: Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same properties are interchangeable, so they should not be compared using the "==" operator (which only checks if each side of the operator is the same instance).
+Arbitrary-precision rational number. This class can't be inherited; this is a change in version 2.0 from previous versions, where the class was inadvertently left inheritable.Thread safety: Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same properties are interchangeable, so they should not be compared using the "==" operator (which only checks if each side of the operator is the same instance).
 
 ### ExtendedRational Constructor
 
@@ -97,7 +97,7 @@ Gets a value indicating whether this object is finite (not infinity or NaN).
 
 <b>Returns:</b>
 
-<c>true</c> if this object is finite (not infinity or NaN); otherwise, <c>false</c>.  `true` if this object is finite (not infinity or NaN); otherwise, `false` .
+ `true` if this object is finite (not infinity or NaN); otherwise, `false` .
 
 ### IsNegative
 
@@ -107,7 +107,7 @@ Gets a value indicating whether this object's value is negative (including negat
 
 <b>Returns:</b>
 
-<c>true</c> if this object's value is negative (including negative zero); otherwise, <c>false</c>.  `true`  if this object's value is negative; otherwise,  `false` .
+ `true`  if this object's value is negative; otherwise,  `false` .
 
 ### IsZero
 
@@ -119,7 +119,7 @@ Gets a value indicating whether this object's value equals 0.
 
 <b>Returns:</b>
 
-<c>true</c> if this object's value equals 0; otherwise, <c>false</c>.  `true`  if this object's value equals 0; otherwise,  `false` .
+ `true`  if this object's value equals 0; otherwise,  `false` .
 
 ### Numerator
 
@@ -775,11 +775,11 @@ Converts this rational number to a decimal number and rounds the result to the g
 
 <b>Parameters:</b>
 
- * <i>ctx</i>: A PrecisionContext object.
+ * <i>ctx</i>: An arithmetic context object to control the precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null, in which case the precision is unlimited and no rounding is needed.
 
 <b>Returns:</b>
 
-An arbitrary-precision decimal.
+The exact value of the rational number if possible, or not-a-number (NaN) if the result can't be exact because it has a nonterminating binary expansion.
 
 ### ToExtendedDecimal
 
@@ -804,11 +804,11 @@ Converts this rational number to a decimal number, but if the result would have 
 
 <b>Parameters:</b>
 
- * <i>ctx</i>: A precision context object to control the precision. The rounding and exponent range settings of this context are ignored. This context will be used only if the exact result would have a nonterminating decimal expansion. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null, in which case this method is the same as ToExtendedDecimal.
+ * <i>ctx</i>: An arithmetic context object to control the precision, rounding, and exponent range of the result. This context will be used only if the exact result would have a nonterminating decimal expansion. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null, in which case the precision is unlimited and no rounding is needed.
 
 <b>Returns:</b>
 
-An arbitrary-precision decimal.
+The exact value of the rational number if possible, or the rounded version of the result if a context is given. Returns not-a-number (NaN) if the context is null and the result can't be exact because it has a nonterminating binary expansion.
 
 ### ToExtendedFloat
 
@@ -850,7 +850,7 @@ Converts this rational number to a binary number, but if the result would have a
 
 <b>Parameters:</b>
 
- * <i>ctx</i>: A precision context object to control the precision. The rounding and exponent range settings of this context are ignored. This context will be used only if the exact result would have a nonterminating binary expansion. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null, in which case this method is the same as ToExtendedFloat.
+ * <i>ctx</i>: An arithmetic context object to control the precision, rounding, and exponent range of the result. The rounding and exponent range settings of this context are ignored. This context will be used only if the exact result would have a nonterminating binary expansion. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null, in which case this method is the same as ToExtendedFloat.
 
 <b>Returns:</b>
 

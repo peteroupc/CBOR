@@ -122,7 +122,7 @@ Gets a value indicating whether this value is a CBOR false value.
 
 <b>Returns:</b>
 
-<c>true</c> if this value is a CBOR false value; otherwise, <c>false</c>.  `true`  if this value is a CBOR false value; otherwise,  `false` .
+ `true`  if this value is a CBOR false value; otherwise,  `false` .
 
 ### IsFinite
 
@@ -132,7 +132,7 @@ Gets a value indicating whether this CBOR object represents a finite number.
 
 <b>Returns:</b>
 
-<c>true</c> if this CBOR object represents a finite number; otherwise, <c>false</c>.  `true`  if this CBOR object represents a finite number; otherwise, `false` .
+ `true`  if this CBOR object represents a finite number; otherwise, `false` .
 
 ### IsIntegral
 
@@ -142,7 +142,7 @@ Gets a value indicating whether this object represents an integral number, that 
 
 <b>Returns:</b>
 
-<c>true</c> if this object represents an integral number, that is, a number without a fractional part; otherwise, <c>false</c>.. Infinity and not-a-number are not considered integral.  `true`  if this object represents an integral number, that is, a number without a fractional part; otherwise,  `false` .
+ `true`  if this object represents an integral number, that is, a number without a fractional part; otherwise,  `false` .
 
 ### IsNegative
 
@@ -152,7 +152,7 @@ Gets a value indicating whether this object is a negative number.
 
 <b>Returns:</b>
 
-<c>true</c> if this object is a negative number; otherwise, <c>false</c>.  `true`  if this object is a negative number; otherwise,  `false` .
+ `true`  if this object is a negative number; otherwise,  `false` .
 
 ### IsNull
 
@@ -162,7 +162,7 @@ Gets a value indicating whether this value is a CBOR null value.
 
 <b>Returns:</b>
 
-<c>true</c> if this value is a CBOR null value; otherwise, <c>false</c>.  `true`  if this value is a CBOR null value; otherwise,  `false` .
+ `true`  if this value is a CBOR null value; otherwise,  `false` .
 
 ### IsTagged
 
@@ -172,7 +172,7 @@ Gets a value indicating whether this data item has at least one tag.
 
 <b>Returns:</b>
 
-<c>true</c> if this data item has at least one tag; otherwise, <c>false</c>.  `true`  if this data item has at least one tag; otherwise,  `false` .
+ `true`  if this data item has at least one tag; otherwise,  `false` .
 
 ### IsTrue
 
@@ -182,7 +182,7 @@ Gets a value indicating whether this value is a CBOR true value.
 
 <b>Returns:</b>
 
-<c>true</c> if this value is a CBOR true value; otherwise, <c>false</c>.  `true`  if this value is a CBOR true value; otherwise,  `false` .
+ `true`  if this value is a CBOR true value; otherwise,  `false` .
 
 ### IsUndefined
 
@@ -192,7 +192,7 @@ Gets a value indicating whether this value is a CBOR undefined value.
 
 <b>Returns:</b>
 
-<c>true</c> if this value is a CBOR undefined value; otherwise, <c>false</c>.  `true`  if this value is a CBOR undefined value; otherwise,  `false` .
+ `true`  if this value is a CBOR undefined value; otherwise,  `false` .
 
 ### IsZero
 
@@ -202,7 +202,7 @@ Gets a value indicating whether this object's value equals 0.
 
 <b>Returns:</b>
 
-<c>true</c> if this object&#x27;s value equals 0; otherwise, <c>false</c>.  `true`  if this object's value equals 0; otherwise,  `false` .
+ `true`  if this object's value equals 0; otherwise,  `false` .
 
 ### Keys
 
