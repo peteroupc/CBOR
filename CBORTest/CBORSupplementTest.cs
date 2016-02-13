@@ -10,6 +10,7 @@ using System.IO;
 using NUnit.Framework;
 using PeterO;
 using PeterO.Cbor;
+using PeterO.Numbers;
 
 namespace Test {
   [TestFixture]
@@ -191,7 +192,7 @@ Console.Write(String.Empty);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.AddTagHandler(null, null);
+        CBORObject.AddTagHandler((EInteger)null, null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
 Console.Write(String.Empty);
@@ -236,7 +237,7 @@ Console.Write(String.Empty);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.True.AsExtendedRational();
+        CBORObject.True.AsERational();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
 Console.Write(String.Empty);
@@ -245,7 +246,7 @@ Console.Write(String.Empty);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.False.AsExtendedRational();
+        CBORObject.False.AsERational();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
 Console.Write(String.Empty);
@@ -254,7 +255,7 @@ Console.Write(String.Empty);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.NewArray().AsExtendedRational();
+        CBORObject.NewArray().AsERational();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
 Console.Write(String.Empty);
@@ -263,7 +264,7 @@ Console.Write(String.Empty);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.NewMap().AsExtendedRational();
+        CBORObject.NewMap().AsERational();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
 Console.Write(String.Empty);
@@ -412,8 +413,8 @@ Console.Write(String.Empty);
     }
 
     [Test]
-    public void TestCBORBigInteger() {
-      BigInteger bi = BigInteger.fromString("9223372036854775808");
+    public void TestCBOREInteger() {
+      EInteger bi = EInteger.FromString("9223372036854775808");
       try {
         CBORObject.FromObject(bi).AsInt64();
         Assert.Fail("Should have failed");
@@ -432,7 +433,7 @@ Console.Write(String.Empty);
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      bi = BigInteger.fromString("-9223372036854775809");
+      bi = EInteger.FromString("-9223372036854775809");
       try {
         CBORObject.FromObject(bi).AsInt64();
         Assert.Fail("Should have failed");
@@ -451,7 +452,7 @@ Console.Write(String.Empty);
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      bi = BigInteger.fromString("-9223372036854775808");
+      bi = EInteger.FromString("-9223372036854775808");
       try {
         CBORObject.FromObject(bi).AsInt32();
         Assert.Fail("Should have failed");
@@ -833,14 +834,14 @@ Console.Write(String.Empty);
       }
 
       Assert.AreEqual(
-        BigInteger.Zero,
-        CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0x40 }).AsBigInteger());
+        EInteger.Zero,
+        CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0x40 }).AsEInteger());
       Assert.AreEqual(
-        BigInteger.fromString("-1"),
-   CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x41, 0x00 }).AsBigInteger());
+        EInteger.FromString("-1"),
+   CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x41, 0x00 }).AsEInteger());
       Assert.AreEqual(
-        BigInteger.fromString("-1"),
-        CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x40 }).AsBigInteger());
+        EInteger.FromString("-1"),
+        CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x40 }).AsEInteger());
     }
 
     [Test]
@@ -849,7 +850,7 @@ Console.Write(String.Empty);
         CBORObject.FromObject(Guid.Parse(
           "00112233-4455-6677-8899-AABBCCDDEEFF"));
       Assert.AreEqual(CBORType.ByteString, obj.Type);
-      Assert.AreEqual(BigInteger.fromString("37"), obj.InnermostTag);
+      Assert.AreEqual(EInteger.FromString("37"), obj.InnermostTag);
       byte[] bytes = obj.GetByteString();
       Assert.AreEqual(16, bytes.Length);
       Assert.AreEqual(0x00, bytes[0]);
@@ -963,57 +964,57 @@ Console.Write(String.Empty);
 
     [Test]
     public void TestNegativeBigInts() {
-      BigInteger minusone = BigInteger.fromString("-1");
+      EInteger minusone = EInteger.FromString("-1");
       Assert.AreEqual(
-BigInteger.fromString("-257"),
-   CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x42, 1, 0 }).AsBigInteger());
+EInteger.FromString("-257"),
+   CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x42, 1, 0 }).AsEInteger());
       Assert.AreEqual(
-BigInteger.fromString("-65537"),
-CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x43, 1, 0, 0 }).AsBigInteger());
+EInteger.FromString("-65537"),
+CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x43, 1, 0, 0 }).AsEInteger());
       {
-object objectTemp = BigInteger.fromString("-16777217");
+object objectTemp = EInteger.FromString("-16777217");
 object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x44, 1,
-  0, 0, 0 }).AsBigInteger();
+  0, 0, 0 }).AsEInteger();
 Assert.AreEqual(objectTemp, objectTemp2);
 }
       {
-object objectTemp = BigInteger.fromString("-4294967297");
+object objectTemp = EInteger.FromString("-4294967297");
 object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x45, 1,
-  0, 0, 0, 0 }).AsBigInteger();
+  0, 0, 0, 0 }).AsEInteger();
 Assert.AreEqual(objectTemp, objectTemp2);
 }
       {
-object objectTemp = BigInteger.fromString("-1099511627777");
+object objectTemp = EInteger.FromString("-1099511627777");
 object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x46, 1,
-  0, 0, 0, 0, 0 }).AsBigInteger();
+  0, 0, 0, 0, 0 }).AsEInteger();
 Assert.AreEqual(objectTemp, objectTemp2);
 }
       {
-object objectTemp = BigInteger.fromString("-281474976710657");
+object objectTemp = EInteger.FromString("-281474976710657");
     object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x47,
           1,
   0, 0, 0, 0,
-                    0, 0 }).AsBigInteger();
+                    0, 0 }).AsEInteger();
 Assert.AreEqual(objectTemp, objectTemp2);
 }
       {
-object objectTemp = BigInteger.fromString("-72057594037927937");
+object objectTemp = EInteger.FromString("-72057594037927937");
     object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x48,
           1,
   0, 0, 0, 0,
-                    0, 0, 0 }).AsBigInteger();
+                    0, 0, 0 }).AsEInteger();
 Assert.AreEqual(objectTemp, objectTemp2);
 }
       {
-object objectTemp = BigInteger.fromString("-18446744073709551617");
+object objectTemp = EInteger.FromString("-18446744073709551617");
 object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x49, 1,
-  0, 0, 0, 0, 0, 0, 0, 0 }).AsBigInteger();
+  0, 0, 0, 0, 0, 0, 0, 0 }).AsEInteger();
 Assert.AreEqual(objectTemp, objectTemp2);
 }
       {
-object objectTemp = BigInteger.fromString("-4722366482869645213697");
+object objectTemp = EInteger.FromString("-4722366482869645213697");
 object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x4a, 1,
-  0, 0, 0, 0, 0, 0, 0, 0, 0 }).AsBigInteger();
+  0, 0, 0, 0, 0, 0, 0, 0, 0 }).AsEInteger();
 Assert.AreEqual(objectTemp, objectTemp2);
 }
     }

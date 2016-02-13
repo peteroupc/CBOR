@@ -120,9 +120,8 @@ return this.Ei.GetSignedBitLength();
       return this.Ei.ToString();
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='other'>A BigInteger object.</param>
-    /// <returns>A 32-bit signed integer.</returns>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.CompareTo(PeterO.BigInteger)"]/*'/>
     public int CompareTo(BigInteger other) {
       return this.Ei.CompareTo(other == null ? null : other.Ei);
     }

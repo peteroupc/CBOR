@@ -15,8 +15,7 @@ This class is largely obsolete.
 This class is largely obsolete.
  * [PeterO.ExtendedRational](PeterO.ExtendedRational.md) -
 This class is largely obsolete.
- * [PeterO.PrecisionContext](PeterO.PrecisionContext.md) -
-This class is largely obsolete.
+ * [PeterO.PrecisionContext](PeterO.PrecisionContext.md) - Not documented yet.
  * [PeterO.Rounding](PeterO.Rounding.md) -
 This class is obsolete.
  * [PeterO.TrapException](PeterO.TrapException.md) -

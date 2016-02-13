@@ -51,7 +51,7 @@ namespace PeterO.Cbor {
       return ef.ToSingle();
     }
 
-    public EInteger AsBigInteger(object obj) {
+    public EInteger AsEInteger(object obj) {
       var ef = (EFloat)obj;
       return ef.ToEInteger();
     }

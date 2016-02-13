@@ -200,7 +200,7 @@ CBORObject obj) {
         data[6] = (byte)((uvalue >> 48) & 0xff);
         data[7] = (byte)((uvalue >> 56) & 0xff);
         data[8] = (byte)0;
-        return new BigInteger(EInteger.FromBytes(data, true));
+        return EInteger.FromBytes(data, true);
       }
       return t.Equals(typeof(long)) ? Convert.ToInt64(value) :
       (t.Equals(typeof(uint)) ? Convert.ToInt64(value) :

@@ -45,7 +45,7 @@ namespace PeterO.Cbor {
       return (float)obj;
     }
 
-    public EInteger AsBigInteger(object obj) {
+    public EInteger AsEInteger(object obj) {
       return CBORUtilities.BigIntegerFromSingle((float)obj);
     }
 

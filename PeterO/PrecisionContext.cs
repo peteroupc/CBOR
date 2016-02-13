@@ -9,7 +9,8 @@ using System;
 using PeterO.Numbers;
 
 namespace PeterO {
-    /// <summary>Not documented yet.</summary>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.PrecisionContext"]/*'/>
   [Obsolete("Use EContext from PeterO.Numbers/com.upokecenter.numbers.")]
   public class PrecisionContext {
     private readonly EContext ec;

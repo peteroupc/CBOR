@@ -181,18 +181,29 @@ denominator.Ei));
       return new ExtendedRational(ERational.FromEInteger(bigint.Ei));
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='other'>An ExtendedRational object.</param>
-    /// <returns>A 32-bit signed integer.</returns>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.ExtendedRational.CompareTo(PeterO.ExtendedRational)"]/*'/>
     public int CompareTo(ExtendedRational other) {
       return this.Er.CompareTo(other == null ? null : other.Er);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='other'>An ExtendedRational object.</param>
-    /// <returns>A Boolean object.</returns>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.ExtendedRational.Equals(PeterO.ExtendedRational)"]/*'/>
     public bool Equals(ExtendedRational other) {
       return this.Er.Equals(other == null ? null : other.Er);
+    }
+
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.ExtendedRational.Equals(System.Object)"]/*'/>
+    public override bool Equals(object obj) {
+      var other = obj as ExtendedRational;
+      return this.Er.Equals(other == null ? null : other.Er);
+    }
+
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.ExtendedRational.GetHashCode"]/*'/>
+    public override int GetHashCode() {
+      return this.Er.GetHashCode();
     }
   }
 }

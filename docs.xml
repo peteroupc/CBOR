@@ -19,26 +19,11 @@
             instances of this object with the same value are interchangeable,
             but they should be compared using the "Equals" method rather than
             the "==" operator.</para></summary>
-            
-            <summary>
-            <para><b>This class is largely obsolete. It will be replaced by a
-            new version of this class in a different namespace/package and
-            library, called <c>PeterO.Numbers.EInteger</c> in the
-            <a href='https://www.nuget.org/packages/PeterO.Numbers'><c>PeterO.Numbers</c></a>
-            library (in .NET), or <c>com.upokecenter.numbers.EInteger</c> in
-            the
-            <a href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c></a>
-            artifact (in Java). This new class can be used in the
-            <c>CBORObject.FromObject(object)</c> method (by including the new
-            library in your code, among other things), but this version of the
-            CBOR library doesn't include any methods that explicitly take an
-            <c>EInteger</c> as a parameter or return value.</b></para> An
-            arbitrary-precision integer.
-            <para><b>Thread safety:</b> Instances of this class are immutable,
-            so they are inherently safe for use by multiple threads. Multiple
-            instances of this object with the same value are interchangeable,
-            but they should be compared using the "Equals" method rather than
-            the "==" operator.</para></summary>
+</doc>
+<doc name="M:PeterO.BigInteger.CompareTo(PeterO.BigInteger)">
+<summary>Not documented yet.</summary>
+            <param name='other'>A BigInteger object.</param>
+            <returns>A 32-bit signed integer.</returns>
 </doc>
 <doc name="M:PeterO.BigInteger.Equals(PeterO.BigInteger)">
 <summary>Returns whether this number's value equals another
@@ -2858,6 +2843,13 @@
             with the same mathematical value, but different exponents, will be
             considered unequal under the Equals method.</para></summary>
 </doc>
+<doc name="M:PeterO.ExtendedDecimal.CompareTo(PeterO.ExtendedDecimal)">
+<summary>
+            
+            </summary>
+            <param name='other'/>
+            <returns/>
+</doc>
 <doc name="M:PeterO.ExtendedDecimal.Create(PeterO.BigInteger,PeterO.BigInteger)">
 <summary>Creates a number with the value
             exponent*10^mantissa.</summary>
@@ -3063,6 +3055,11 @@
             operator (which only checks if each side of the operator is the
             same instance).</para></summary>
 </doc>
+<doc name="M:PeterO.ExtendedFloat.CompareTo(PeterO.ExtendedFloat)">
+<summary>Not documented yet.</summary>
+            <param name='other'>The parameter <paramref name='other'/> is not documented yet.</param>
+            <returns>A 32-bit signed integer.</returns>
+</doc>
 <doc name="M:PeterO.ExtendedFloat.Create(PeterO.BigInteger,PeterO.BigInteger)">
 <summary>Creates a number with the value
             exponent*2^mantissa.</summary>
@@ -3114,7 +3111,9 @@
             be an integer if the exponent is positive or zero.</value>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.FromString(System.String)">
-<param name='str'>The parameter <paramref name='str'/> is not documented yet.</param><returns>An ExtendedFloat object.</returns><summary>Not documented yet.</summary><summary>Not documented yet.</summary><summary>Not documented yet.</summary><summary>Not documented yet.</summary><summary>Not documented yet.</summary><summary>Not documented yet.</summary><summary>Not documented yet.</summary><summary>Not documented yet.</summary><summary>Not documented yet.</summary>
+
+            <param name='str'>The parameter <paramref name='str'/> is not documented yet.</param><returns>An ExtendedFloat object.</returns><summary>Not documented yet.</summary><summary>Not documented yet.</summary><summary>Not documented yet.</summary><summary>Not documented yet.</summary><summary>Not documented yet.</summary><summary>Not documented yet.</summary><summary>Not documented yet.</summary><summary>Not documented yet.</summary><summary>Not documented yet.</summary>
+        
 </doc>
 <doc name="M:PeterO.ExtendedFloat.FromString(System.String,PeterO.PrecisionContext)">
 <summary>Creates a binary float from a text string that represents
@@ -3305,6 +3304,11 @@
             <paramref name='numerator'/> or <paramref name='denominator'/> is
             null.</exception>
 </doc>
+<doc name="M:PeterO.ExtendedRational.CompareTo(PeterO.ExtendedRational)">
+<summary>Not documented yet.</summary>
+            <param name='other'>An ExtendedRational object.</param>
+            <returns>A 32-bit signed integer.</returns>
+</doc>
 <doc name="M:PeterO.ExtendedRational.Create(PeterO.BigInteger,PeterO.BigInteger)">
 <summary>Creates a rational number with the given numerator and
             denominator.</summary>
@@ -3327,6 +3331,24 @@
 <doc name="P:PeterO.ExtendedRational.Denominator">
 <summary>Gets this object's denominator.</summary>
             <value>This object&apos;s denominator.</value>
+</doc>
+<doc name="M:PeterO.ExtendedRational.Equals(PeterO.ExtendedRational)">
+<summary>Not documented yet.</summary>
+            <param name='other'>An ExtendedRational object.</param>
+            <returns>A Boolean object.</returns>
+</doc>
+<doc name="M:PeterO.ExtendedRational.Equals(System.Object)">
+<summary>
+            
+            </summary>
+            <param name='obj'/>
+            <returns/>
+</doc>
+<doc name="M:PeterO.ExtendedRational.GetHashCode">
+<summary>
+            
+            </summary>
+            <returns/>
 </doc>
 <doc name="P:PeterO.ExtendedRational.IsFinite">
 <summary>Gets a value indicating whether this object is finite (not
@@ -3396,6 +3418,9 @@
 </doc>
 <doc name="F:PeterO.ExtendedRational.Zero">
 <summary>A rational number for zero.</summary>
+</doc>
+<doc name="T:PeterO.PrecisionContext">
+<summary>Not documented yet.</summary>
 </doc>
 <doc name="M:PeterO.PrecisionContext.#ctor(System.Int32,PeterO.Rounding,System.Int32,System.Int32,System.Boolean)">
 <summary>Initializes a new instance of the <see cref='T:PeterO.PrecisionContext'/> class. HasFlags will be set

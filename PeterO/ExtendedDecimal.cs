@@ -203,9 +203,8 @@ namespace PeterO {
       return this.Ed.IsQuietNaN();
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='other'>Not documented yet.</param>
-    /// <returns>A 32-bit signed integer.</returns>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.CompareTo(PeterO.ExtendedDecimal)"]/*'/>
     public int CompareTo(ExtendedDecimal other) {
       return this.Ed.CompareTo(other == null ? null : other.Ed);
     }

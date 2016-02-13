@@ -36,14 +36,14 @@ namespace PeterO.Cbor {
       var er = (ERational)obj;
       return
 
-  er.ToExtendedDecimalExactIfPossible(EContext.Decimal128.WithUnlimitedExponents());
+  er.ToEDecimalExactIfPossible(EContext.Decimal128.WithUnlimitedExponents());
     }
 
     public EFloat AsExtendedFloat(object obj) {
       var er = (ERational)obj;
       return
 
-  er.ToExtendedFloatExactIfPossible(EContext.Binary128.WithUnlimitedExponents());
+  er.ToEFloatExactIfPossible(EContext.Binary128.WithUnlimitedExponents());
     }
 
     public float AsSingle(object obj) {
@@ -51,7 +51,7 @@ namespace PeterO.Cbor {
       return er.ToSingle();
     }
 
-    public EInteger AsBigInteger(object obj) {
+    public EInteger AsEInteger(object obj) {
       var er = (ERational)obj;
       return er.ToEInteger();
     }

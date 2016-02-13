@@ -258,9 +258,8 @@ PrecisionContext ctx) {
       return this.Ef.IsSignalingNaN();
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='other'>Not documented yet.</param>
-    /// <returns>A 32-bit signed integer.</returns>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.ExtendedFloat.CompareTo(PeterO.ExtendedFloat)"]/*'/>
     public int CompareTo(ExtendedFloat other) {
       return this.Ef.CompareTo(other == null ? null : other.Ef);
     }
