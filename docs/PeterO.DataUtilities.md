@@ -20,7 +20,7 @@ Gets the Unicode code point at the given index of the string.
 
  * <i>index</i>: Index of the current position into the string.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The Unicode code point at the given position. Returns -1 if  <i>index</i>
  is less than 0, or is the string's length or greater. Returns the replacement character (U+FFFD) if the current character is an unpaired surrogate code point.
@@ -48,7 +48,7 @@ Gets the Unicode code point at the given index of the string.
 
  * <i>surrogateBehavior</i>: Specifies what kind of value to return if the previous character is an unpaired surrogate code point: if 0, return the replacement character (U+FFFD); if 1, return the value of the surrogate code point; if neither 0 nor 1, return -1.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The Unicode code point at the current position. Returns -1 if  <i>index</i>
  is less than 0, or is the string's length or greater. Returns a value as specified under  <i>surrogateBehavior</i>
@@ -74,7 +74,7 @@ Gets the Unicode code point just before the given index of the string.
 
  * <i>index</i>: Index of the current position into the string.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The Unicode code point at the previous position. Returns -1 if  <i>index</i>
  is 0 or less, or is greater than the string's length. Returns the replacement character (U+FFFD) if the previous character is an unpaired surrogate code point.
@@ -102,7 +102,7 @@ Gets the Unicode code point just before the given index of the string.
 
  * <i>surrogateBehavior</i>: Specifies what kind of value to return if the previous character is an unpaired surrogate code point: if 0, return the replacement character (U+FFFD); if 1, return the value of the surrogate code point; if neither 0 nor 1, return -1.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The Unicode code point at the previous position. Returns -1 if  <i>index</i>
  is 0 or less, or is greater than the string's length. Returns a value as specified under  <i>surrogateBehavior</i>
@@ -128,7 +128,7 @@ Compares two strings in Unicode code point order. Unpaired surrogates are treate
 
  * <i>strB</i>: The second string. Can be null.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A value indicating which string is " less" or " greater" . 0: Both strings are equal or null. Less than 0: a is null and b isn't; or the first code point that's different is less in A than in B; or b starts with a and is longer than a. Greater than 0: b is null and a isn't; or the first code point that's different is greater in A than in B; or a starts with b and is longer than b.
 
@@ -146,7 +146,7 @@ Encodes a string in UTF-8 as a byte array.
 
  * <i>replace</i>: If true, replaces unpaired surrogate code points with the replacement character (U+FFFD). If false, stops processing when an unpaired surrogate code point is seen.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The string encoded in UTF-8.
 
@@ -177,7 +177,7 @@ Encodes a string in UTF-8 as a byte array.
 
  * <i>lenientLineBreaks</i>: If true, replaces carriage return (CR) not followed by line feed (LF) and LF not preceded by CR with CR-LF pairs.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The string encoded in UTF-8.
 
@@ -205,7 +205,7 @@ Calculates the number of bytes needed to encode a string in UTF-8.
 
  * <i>replace</i>: If true, treats unpaired surrogate code points as having 3 UTF-8 bytes (the UTF-8 length of the replacement character U+FFFD).
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The number of bytes needed to encode the given string in UTF-8, or -1 if the string contains an unpaired surrogate code point and  <i>replace</i>
  is false.
@@ -230,7 +230,7 @@ Generates a text string from a UTF-8 byte array.
 
  * <i>replace</i>: If true, replaces invalid encoding with the replacement character (U+FFFD). If false, stops processing when invalid UTF-8 is seen.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A string represented by the UTF-8 byte array.
 
@@ -264,7 +264,7 @@ Generates a text string from a portion of a UTF-8 byte array.
 
  * <i>replace</i>: If true, replaces invalid encoding with the replacement character (U+FFFD). If false, stops processing when invalid UTF-8 is seen.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A string represented by the UTF-8 byte array.
 
@@ -303,7 +303,7 @@ Reads a string in UTF-8 encoding from a data stream.
 
  * <i>replace</i>: If true, replaces invalid encoding with the replacement character (U+FFFD). If false, stops processing when an unpaired surrogate code point is seen.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 0 if the entire string was read without errors, -1 if the string is not valid UTF-8 and  <i>replace</i>
  is false, or -2 if the end of the stream was reached before the last character was read completely (which is only the case if  <i>bytesCount</i>
@@ -342,7 +342,7 @@ Reads a string in UTF-8 encoding from a byte array.
 
  * <i>replace</i>: If true, replaces invalid encoding with the replacement character (U+FFFD). If false, stops processing when invalid UTF-8 is seen.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 0 if the entire string was read without errors, or -1 if the string is not valid UTF-8 and  <i>replace</i>
  is false.
@@ -371,7 +371,7 @@ Reads a string in UTF-8 encoding from a data stream in full and returns that str
 
  * <i>stream</i>: A readable data stream.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The string read.
 
@@ -401,7 +401,7 @@ Reads a string in UTF-8 encoding from a data stream and returns that string.
 
  * <i>replace</i>: If true, replaces invalid encoding with the replacement character (U+FFFD). If false, throws an error if an unpaired surrogate code point is seen.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The string read.
 
@@ -426,7 +426,7 @@ Returns a string with the basic upper-case letters A to Z (U+0041 to U+005A) con
 
  * <i>str</i>: A text string.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The converted string, or null if  <i>str</i>
  is null.
@@ -454,7 +454,7 @@ Writes a portion of a string in UTF-8 encoding to a data stream.
 
  * <i>replace</i>: If true, replaces unpaired surrogate code points with the replacement character (U+FFFD). If false, stops processing when an unpaired surrogate code point is seen.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 0 if the entire string portion was written; or -1 if the string portion contains an unpaired surrogate code point and <i>replace</i>
  is false.
@@ -502,7 +502,7 @@ Writes a portion of a string in UTF-8 encoding to a data stream.
 
  * <i>lenientLineBreaks</i>: If true, replaces carriage return (CR) not followed by line feed (LF) and LF not preceded by CR with CR-LF pairs.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 0 if the entire string portion was written; or -1 if the string portion contains an unpaired surrogate code point and <i>replace</i>
  is false.
@@ -541,7 +541,7 @@ Writes a string in UTF-8 encoding to a data stream.
 
  * <i>replace</i>: If true, replaces unpaired surrogate code points with the replacement character (U+FFFD). If false, stops processing when an unpaired surrogate code point is seen.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 0 if the entire string was written; or -1 if the string contains an unpaired surrogate code point and  <i>replace</i>
  is false.

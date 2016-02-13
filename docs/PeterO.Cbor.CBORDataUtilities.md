@@ -15,7 +15,7 @@ Parses a number whose format follows the JSON specification. See #ParseJSONNumbe
 
  * <i>str</i>: A string to parse. The string is not allowed to contain white space characters, including spaces.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBOR object that represents the parsed number. Returns positive zero if the number is a zero that starts with a minus sign (such as "-0" or "-0.0"). Returns null if the parsing fails, including if the string is null or empty.
 
@@ -36,7 +36,7 @@ Parses a number whose format follows the JSON specification (RFC 7159). Roughly 
 
  * <i>positiveOnly</i>: If true, only positive numbers are allowed (the leading minus is disallowed).
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBOR object that represents the parsed number. Returns positive zero if the number is a zero that starts with a minus sign (such as "-0" or "-0.0"). Returns null if the parsing fails, including if the string is null or empty.
 
@@ -60,6 +60,6 @@ Parses a number whose format follows the JSON specification (RFC 7159). Roughly 
 
  * <i>preserveNegativeZero</i>: If true, returns positive zero if the number is a zero that starts with a minus sign (such as "-0" or "-0.0"). Otherwise, returns negative zero in this case.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBOR object that represents the parsed number. Returns null if the parsing fails, including if the string is null or empty.

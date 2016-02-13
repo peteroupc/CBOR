@@ -35,6 +35,6 @@ Initializes a new instance of the  class. HasFlags will be set to false.
 
 Gets a string representation of this object. Note that the format is not intended to be parsed and may change at any time.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A string representation of this object.

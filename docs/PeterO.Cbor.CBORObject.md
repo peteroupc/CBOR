@@ -104,15 +104,25 @@ Gets the number of keys in this map, or the number of items in this array, or 0 
 
 The number of keys in this map, or the number of items in this array, or 0 if this item is neither an array nor a map.
 
-### InnermostTag
+### EInnermostTag
 
-    public PeterO.BigInteger InnermostTag { get; }
+    public PeterO.Numbers.EInteger EInnermostTag { get; }
 
 Gets the last defined tag for this CBOR data item, or -1 if the item is untagged.
 
 <b>Returns:</b>
 
 The last defined tag for this CBOR data item, or -1 if the item is untagged.
+
+### EOutermostTag
+
+    public PeterO.Numbers.EInteger EOutermostTag { get; }
+
+Gets the outermost tag for this CBOR data item, or -1 if the item is untagged.
+
+<b>Returns:</b>
+
+The outermost tag for this CBOR data item, or -1 if the item is untagged.
 
 ### IsFalse
 
@@ -219,16 +229,6 @@ A collection of the keys of this CBOR object.
  * System.InvalidOperationException:
 This object is not a map.
 
-### OutermostTag
-
-    public PeterO.BigInteger OutermostTag { get; }
-
-Gets the outermost tag for this CBOR data item, or -1 if the item is untagged.
-
-<b>Returns:</b>
-
-The outermost tag for this CBOR data item, or -1 if the item is untagged.
-
 ### Sign
 
     public int Sign { get; }
@@ -285,7 +285,7 @@ This object is not a map or an array.
 
 Gets this object's absolute value.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 This object's absolute without its negative sign.
 
@@ -308,7 +308,7 @@ Adds a new key and its value to this CBOR map, or adds the value if the key does
 
  * <i>valueOb</i>: An object representing the value, which will be converted to a CBORObject. Can be null, in which case this value is converted to CBORObject.Null.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 This instance.
 
@@ -337,7 +337,7 @@ Converts an object to a CBOR object and adds it to the end of this array.
 
  * <i>obj</i>: A CBOR object.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 This instance.
 
@@ -361,7 +361,7 @@ Adds a new object to the end of this array. (Used to throw ArgumentNullException
 
  * <i>obj</i>: A CBOR object.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 This instance.
 
@@ -407,7 +407,7 @@ Finds the sum of two CBOR numbers.
 
  * <i>second</i>: A CBORObject object. (3).
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBORObject object.
 
@@ -420,6 +420,33 @@ Either or both operands are not numbers (as opposed to Not-a-Number, NaN).
 
     public static void AddTagHandler(
         PeterO.BigInteger bigintTag,
+        PeterO.Cbor.ICBORTag handler);
+
+<b>Deprecated.</b> Use the EInteger version of this method.
+
+Registers an object that validates CBOR objects with new tags.
+
+<b>Parameters:</b>
+
+ * <i>bigintTag</i>: An arbitrary-precision integer.
+
+ * <i>handler</i>: An ICBORTag object.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter <i>bigintTag</i>
+ or  <i>handler</i>
+ is null.
+
+ * System.ArgumentNullException:
+The parameter <i>bigintTag</i>
+ is less than 0 or greater than (2^64-1).
+
+### AddTagHandler
+
+    public static void AddTagHandler(
+        PeterO.Numbers.EInteger bigintTag,
         PeterO.Cbor.ICBORTag handler);
 
 Registers an object that validates CBOR objects with new tags.
@@ -445,9 +472,11 @@ The parameter <i>bigintTag</i>
 
     public PeterO.BigInteger AsBigInteger();
 
+<b>Deprecated.</b> Use the AsEInteger method instead.
+
 Converts this object to an arbitrary-precision integer. Fractional values are truncated to an integer.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The closest big integer to this object.
 
@@ -465,7 +494,7 @@ This object's value is infinity or not-a-number (NaN).
 
 Returns false if this object is False, Null, or Undefined; otherwise, true.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 False if this object is False, Null, or Undefined; otherwise, true.
 
@@ -475,7 +504,7 @@ False if this object is False, Null, or Undefined; otherwise, true.
 
 Converts this object to a byte (0 to 255). Floating point values are truncated to an integer.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The closest byte-sized integer to this object.
 
@@ -493,7 +522,7 @@ This object's value exceeds the range of a byte (would be less than 0 or greater
 
 Converts this object to a .NET decimal.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The closest big integer to this object.
 
@@ -511,7 +540,7 @@ This object's value exceeds the range of a .NET decimal.
 
 Converts this object to a 64-bit floating point number.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The closest 64-bit floating point number to this object. The return value can be positive infinity or negative infinity if this value exceeds the range of a 64-bit floating point number.
 
@@ -520,13 +549,78 @@ The closest 64-bit floating point number to this object. The return value can be
  * System.InvalidOperationException:
 This object's type is not a number type.
 
+### AsEDecimal
+
+    public PeterO.Numbers.EDecimal AsEDecimal();
+
+Converts this object to a decimal number.
+
+<b>Return Value:</b>
+
+A decimal number for this object's value. If this object is a rational number with a nonterminating decimal expansion, returns a decimal number rounded to 34 digits.
+
+<b>Exceptions:</b>
+
+ * System.InvalidOperationException:
+This object's type is not a number type, including if this object is CBORObject.Null.
+
+### AsEFloat
+
+    public PeterO.Numbers.EFloat AsEFloat();
+
+Converts this object to an arbitrary-precision binary floating point number.
+
+<b>Return Value:</b>
+
+An arbitrary-precision binary floating point number for this object's value. Note that if this object is a decimal number with a fractional part, the conversion may lose information depending on the number. If this object is a rational number with a nonterminating binary expansion, returns a binary floating-point number rounded to 113 bits.
+
+<b>Exceptions:</b>
+
+ * System.InvalidOperationException:
+This object's type is not a number type, including if this object is CBORObject.Null.
+
+### AsEInteger
+
+    public PeterO.Numbers.EInteger AsEInteger();
+
+Converts this object to an arbitrary-precision integer. Fractional values are truncated to an integer.
+
+<b>Return Value:</b>
+
+The closest big integer to this object.
+
+<b>Exceptions:</b>
+
+ * System.InvalidOperationException:
+This object's type is not a number type, including if this object is CBORObject.Null.
+
+ * System.OverflowException:
+This object's value is infinity or not-a-number (NaN).
+
+### AsERational
+
+    public PeterO.Numbers.ERational AsERational();
+
+Converts this object to a rational number.
+
+<b>Return Value:</b>
+
+A rational number for this object's value.
+
+<b>Exceptions:</b>
+
+ * System.InvalidOperationException:
+This object's type is not a number type, including if this object is CBORObject.Null.
+
 ### AsExtendedDecimal
 
     public PeterO.ExtendedDecimal AsExtendedDecimal();
 
+<b>Deprecated.</b> Use AsEDecimal instead.
+
 Converts this object to a decimal number.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A decimal number for this object's value. If this object is a rational number with a nonterminating decimal expansion, returns a decimal number rounded to 34 digits.
 
@@ -539,9 +633,11 @@ This object's type is not a number type, including if this object is CBORObject.
 
     public PeterO.ExtendedFloat AsExtendedFloat();
 
+<b>Deprecated.</b> Use AsEFloat instead.
+
 Converts this object to an arbitrary-precision binary floating point number.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 An arbitrary-precision binary floating point number for this object's value. Note that if this object is a decimal number with a fractional part, the conversion may lose information depending on the number. If this object is a rational number with a nonterminating binary expansion, returns a binary floating-point number rounded to 113 bits.
 
@@ -554,9 +650,11 @@ This object's type is not a number type, including if this object is CBORObject.
 
     public PeterO.ExtendedRational AsExtendedRational();
 
+<b>Deprecated.</b> Use AsERational instead.
+
 Converts this object to a rational number.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A rational number for this object's value.
 
@@ -571,7 +669,7 @@ This object's type is not a number type, including if this object is CBORObject.
 
 Converts this object to a 16-bit signed integer. Floating point values are truncated to an integer.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The closest 16-bit signed integer to this object.
 
@@ -589,7 +687,7 @@ This object's value exceeds the range of a 16-bit signed integer.
 
 Converts this object to a 32-bit signed integer. Floating point values are truncated to an integer.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The closest big integer to this object.
 
@@ -607,7 +705,7 @@ This object's value exceeds the range of a 32-bit signed integer.
 
 Converts this object to a 64-bit signed integer. Floating point values are truncated to an integer.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The closest 64-bit signed integer to this object.
 
@@ -625,7 +723,7 @@ This object's value exceeds the range of a 64-bit signed integer.
 
 Converts this object to an 8-bit signed integer.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 An 8-bit signed integer.
 
@@ -635,7 +733,7 @@ An 8-bit signed integer.
 
 Converts this object to a 32-bit floating point number.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The closest 32-bit floating point number to this object. The return value can be positive infinity or negative infinity if this object's value exceeds the range of a 32-bit floating point number.
 
@@ -650,7 +748,7 @@ This object's type is not a number type.
 
 Gets the value of this object as a text string.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 Gets this object's string.
 
@@ -665,7 +763,7 @@ This object's type is not a string, including if this object is CBORObject.Null.
 
 Converts this object to a 16-bit unsigned integer. The return value will be truncated as necessary.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A 16-bit unsigned integer.
 
@@ -680,7 +778,7 @@ This object's value is outside the range of a 16-bit unsigned integer.
 
 Converts this object to a 32-bit unsigned integer. The return value will be truncated as necessary.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A 32-bit unsigned integer.
 
@@ -695,7 +793,7 @@ This object's value is outside the range of a 32-bit unsigned integer.
 
 Converts this object to a 64-bit unsigned integer. Floating point values are truncated to an integer.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The closest big integer to this object.
 
@@ -713,7 +811,7 @@ This object's value exceeds the range of a 64-bit unsigned integer.
 
 Returns whether this object's value can be converted to a 64-bit floating point number without loss of its numerical value.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 Whether this object's value can be converted to a 64-bit floating point number without loss of its numerical value. Returns true if this is a not-a-number value, even if the value's diagnostic information can' t fit in a 64-bit floating point number.
 
@@ -723,7 +821,7 @@ Whether this object's value can be converted to a 64-bit floating point number w
 
 Returns whether this object's value is an integral value, is -(2^31) or greater, and is less than 2^31.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if this object's value is an integral value, is -(2^31) or greater, and is less than 2^31; otherwise, false .
 
@@ -733,7 +831,7 @@ Returns whether this object's value is an integral value, is -(2^31) or greater,
 
 Returns whether this object's value is an integral value, is -(2^63) or greater, and is less than 2^63.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if this object's value is an integral value, is -(2^63) or greater, and is less than 2^63; otherwise, false .
 
@@ -743,7 +841,7 @@ Returns whether this object's value is an integral value, is -(2^63) or greater,
 
 Returns whether this object's value can be converted to a 32-bit floating point number without loss of its numerical value.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 Whether this object's value can be converted to a 32-bit floating point number without loss of its numerical value. Returns true if this is a not-a-number value, even if the value's diagnostic information can' t fit in a 32-bit floating point number.
 
@@ -753,7 +851,7 @@ Whether this object's value can be converted to a 32-bit floating point number w
 
 Returns whether this object's value, truncated to an integer, would be -(2^31) or greater, and less than 2^31.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if this object's value, truncated to an integer, would be -(2^31) or greater, and less than 2^31; otherwise, false .
 
@@ -763,7 +861,7 @@ Returns whether this object's value, truncated to an integer, would be -(2^31) o
 
 Returns whether this object's value, truncated to an integer, would be -(2^63) or greater, and less than 2^63.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if this object's value, truncated to an integer, would be -(2^63) or greater, and less than 2^63; otherwise, false .
 
@@ -798,7 +896,7 @@ This method is not consistent with the Equals method.
 
  * <i>other</i>: A value to compare with.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 Less than 0, if this value is less than the other object; or 0, if both values are equal; or greater than 0, if this value is less than the other object or if the other object is null.
 
@@ -813,7 +911,7 @@ Compares this object and another CBOR object, ignoring the tags they have, if an
 
  * <i>other</i>: A value to compare with.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 Less than 0, if this value is less than the other object; or 0, if both values are equal; or greater than 0, if this value is less than the other object or if the other object is null.
 
@@ -828,7 +926,7 @@ Determines whether a value of the given key exists in this object.
 
  * <i>key</i>: An object that serves as the key.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if the given key is found, or false if the given key is not found or this object is not a map.
 
@@ -848,7 +946,7 @@ Determines whether a value of the given key exists in this object.
 
  * <i>key</i>: A string that serves as the key.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if the given key (as a CBOR object) is found, or false if the given key is not found or this object is not a map.
 
@@ -868,7 +966,7 @@ Generates a CBOR object from an array of CBOR-encoded bytes.
 
  * <i>data</i>: A byte array.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBOR object corresponding to the data.
 
@@ -896,7 +994,7 @@ Generates a CBOR object from an array of CBOR-encoded bytes.
 
  * <i>options</i>: A CBOREncodeOptions object.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBOR object corresponding to the data.
 
@@ -924,7 +1022,7 @@ Divides a CBORObject object by the value of a CBORObject object.
 
  * <i>second</i>: Another CBOR object.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The quotient of the two objects.
 
@@ -939,7 +1037,7 @@ Gets the binary representation of this data item.
 
  * <i>options</i>: Options for encoding the data to CBOR.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A byte array in CBOR format.
 
@@ -955,7 +1053,7 @@ The parameter <i>options</i>
 
 Gets the binary representation of this data item.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A byte array in CBOR format.
 
@@ -970,7 +1068,7 @@ Determines whether this object and another object are equal.
 
  * <i>obj</i>: An arbitrary object.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if the objects are equal; otherwise, false .
 
@@ -985,7 +1083,7 @@ Compares the equality of two CBOR objects.
 
  * <i>other</i>: The object to compare.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if the objects are equal; otherwise, false .
 
@@ -1000,7 +1098,7 @@ Generates a CBOR object from a text string in JavaScript Object Notation (JSON) 
 
  * <i>str</i>: A string in JSON format. The entire string must contain a single JSON object and not multiple objects. The string may not begin with a byte-order mark (U+FEFF).
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBORObject object.
 
@@ -1027,7 +1125,7 @@ Generates a CBOR object from a text string in JavaScript Object Notation (JSON) 
 
  * <i>options</i>: A CBOREncodeOptions object.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBORObject object.
 
@@ -1051,7 +1149,7 @@ Returns the CBOR true value or false value, depending on "value".
 
  * <i>value</i>: Either True or False.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 CBORObject.True if value is true; otherwise CBORObject.False.
 
@@ -1066,7 +1164,7 @@ Generates a CBOR object from a byte (0 to 255).
 
  * <i>value</i>: A Byte object.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBORObject object.
 
@@ -1081,7 +1179,7 @@ Generates a CBOR object from a byte array. The byte array is copied to a new byt
 
  * <i>bytes</i>: A byte array. Can be null.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBOR byte string object where each byte of the given byte array is copied to a new array, or CBORObject.Null if the value is null.
 
@@ -1096,7 +1194,7 @@ Generates a CBOR string object from a Unicode character.
 
  * <i>value</i>: A char object.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBORObject object.
 
@@ -1117,7 +1215,7 @@ Generates a CBOR object from a 64-bit floating-point number.
 
  * <i>value</i>: A 64-bit floating-point number.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBORObject object.
 
@@ -1132,7 +1230,7 @@ Generates a CBOR object from a 32-bit floating-point number.
 
  * <i>value</i>: A 32-bit floating-point number.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBORObject object.
 
@@ -1147,7 +1245,7 @@ Generates a CBOR object from a 32-bit signed integer.
 
  * <i>value</i>: A 32-bit signed integer.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBORObject object.
 
@@ -1162,7 +1260,7 @@ Generates a CBOR object from an array of 32-bit integers.
 
  * <i>array</i>: An array of 32-bit integers.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBOR array object where each element of the given array is copied to a new array, or CBORObject.Null if the value is null.
 
@@ -1177,7 +1275,7 @@ Generates a CBOR object from a 64-bit signed integer.
 
  * <i>value</i>: A 64-bit signed integer.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBORObject object.
 
@@ -1192,7 +1290,7 @@ Generates a CBOR object from an array of 64-bit integers.
 
  * <i>array</i>: An array of 64-bit integers.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBOR array object where each element of the given array is copied to a new array, or CBORObject.Null if the value is null.
 
@@ -1211,7 +1309,7 @@ If the input is a byte array, the byte array is copied to a new byte array. (Thi
 
  * <i>obj</i>: An arbitrary object.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBOR object corresponding to the given object. Returns CBORObject.Null if the object is null.
 
@@ -1220,13 +1318,15 @@ A CBOR object corresponding to the given object. Returns CBORObject.Null if the 
     public static PeterO.Cbor.CBORObject FromObject(
         PeterO.BigInteger bigintValue);
 
+<b>Deprecated.</b> Use the EInteger version of this method.
+
 Generates a CBOR object from an arbitrary-precision integer.
 
 <b>Parameters:</b>
 
  * <i>bigintValue</i>: An arbitrary-precision value.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBOR number.
 
@@ -1241,7 +1341,7 @@ Generates a CBOR object from a CBOR object.
 
  * <i>value</i>: A CBOR object.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 Same as.
 
@@ -1256,7 +1356,7 @@ Generates a CBOR object from an array of CBOR objects.
 
  * <i>array</i>: An array of CBOR objects.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBOR object where each element of the given array is copied to a new array, or CBORObject.Null if the value is null.
 
@@ -1271,7 +1371,7 @@ Generates a CBOR object from a decimal number.
 
  * <i>otherValue</i>: An arbitrary-precision decimal number.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBOR number.
 
@@ -1286,7 +1386,7 @@ Generates a CBOR object from an arbitrary-precision binary floating-point number
 
  * <i>bigValue</i>: An arbitrary-precision binary floating-point number.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBOR number.
 
@@ -1301,9 +1401,24 @@ Generates a CBOR object from an arbitrary-precision binary floating-point number
 
  * <i>bigValue</i>: An arbitrary-precision binary floating-point number.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBOR number.
+
+### FromObject
+
+    public static PeterO.Cbor.CBORObject FromObject(
+        PeterO.Numbers.EInteger bigintValue);
+
+Not documented yet.
+
+<b>Parameters:</b>
+
+ * <i>bigintValue</i>: Not documented yet.
+
+<b>Return Value:</b>
+
+A CBORObject object.
 
 ### FromObject
 
@@ -1316,7 +1431,7 @@ Converts a signed 8-bit integer to a CBOR object.
 
  * <i>value</i>: An 8-bit signed integer.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBORObject object.
 
@@ -1331,7 +1446,7 @@ Generates a CBOR object from a 16-bit signed integer.
 
  * <i>value</i>: A 16-bit signed integer.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBORObject object.
 
@@ -1346,7 +1461,7 @@ Generates a CBOR object from a text string.
 
  * <i>strValue</i>: A string value. Can be null.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBOR object representing the string, or CBORObject.Null if stringValue is null.
 
@@ -1366,7 +1481,7 @@ Converts a .NET decimal to a CBOR object.
 
  * <i>value</i>: A Decimal object.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBORObject object with the same value as the .NET decimal.
 
@@ -1381,7 +1496,7 @@ Converts a 32-bit unsigned integer to a CBOR object.
 
  * <i>value</i>: A 32-bit unsigned integer.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBORObject object.
 
@@ -1396,7 +1511,7 @@ Converts a 64-bit unsigned integer to a CBOR object.
 
  * <i>value</i>: A 64-bit unsigned integer.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBORObject object.
 
@@ -1411,7 +1526,7 @@ Converts a 16-bit unsigned integer to a CBOR object.
 
  * <i>value</i>: A 16-bit unsigned integer.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBORObject object.
 
@@ -1428,7 +1543,7 @@ Generates a CBOR object from an enumerable set of objects.
 
  * &lt;T&gt;: A type convertible to CBORObject.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBOR object where each element of the given enumerable object is converted to a CBOR object and copied to a new array, or CBORObject.Null if the value is null.
 
@@ -1445,7 +1560,7 @@ Generates a CBOR object from a list of objects.
 
  * &lt;T&gt;: A type convertible to CBORObject.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBOR object where each element of the given array is converted to a CBOR object and copied to a new array, or CBORObject.Null if the value is null.
 
@@ -1464,7 +1579,7 @@ Generates a CBOR object from a map of objects.
 
  * &lt;TValue&gt;: A type convertible to CBORObject; the type of the values.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBOR object where each key and value of the given map is converted to a CBOR object and copied to a new map, or CBORObject.Null if  <i>dic</i>
  is null.
@@ -1483,7 +1598,7 @@ Generates a CBOR object from an arbitrary object and gives the resulting object 
 
  * <i>tag</i>: A 64-bit unsigned integer.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBOR object where the object  <i>o</i>
  is converted to a CBOR object and given the tag  <i>tag</i>
@@ -1495,6 +1610,8 @@ A CBOR object where the object  <i>o</i>
         object valueOb,
         PeterO.BigInteger bigintTag);
 
+<b>Deprecated.</b> Use the EInteger version instead.
+
 Generates a CBOR object from an arbitrary object and gives the resulting object a tag.
 
 <b>Parameters:</b>
@@ -1503,7 +1620,38 @@ Generates a CBOR object from an arbitrary object and gives the resulting object 
 
  * <i>bigintTag</i>: Tag number. The tag number 55799 can be used to mark a "self-described CBOR" object.
 
-<b>Returns:</b>
+<b>Return Value:</b>
+
+A CBOR object where the object  <i>valueOb</i>
+is converted to a CBOR object and given the tag  <i>bigintTag</i>
+.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentException:
+The parameter <i>bigintTag</i>
+ is less than 0 or greater than 2^64-1, or  <i>valueOb</i>
+ 's type is unsupported.
+
+ * System.ArgumentNullException:
+The parameter <i>bigintTag</i>
+ is null.
+
+### FromObjectAndTag
+
+    public static PeterO.Cbor.CBORObject FromObjectAndTag(
+        object valueOb,
+        PeterO.Numbers.EInteger tagEInt);
+
+Generates a CBOR object from an arbitrary object and gives the resulting object a tag.
+
+<b>Parameters:</b>
+
+ * <i>valueOb</i>: An arbitrary object. If the tag number is 2 or 3, this must be a byte string whose bytes represent an integer in little-endian byte order, and the value of the number is 1 minus the integer's value for tag 3. If the tag number is 4 or 5, this must be an array with two elements: the first must be an integer representing the exponent, and the second must be an integer representing a mantissa.
+
+ * <i>bigintTag</i>: Tag number. The tag number 55799 can be used to mark a "self-described CBOR" object.
+
+<b>Return Value:</b>
 
 A CBOR object where the object  <i>valueOb</i>
 is converted to a CBOR object and given the tag  <i>bigintTag</i>
@@ -1534,7 +1682,7 @@ Generates a CBOR object from an arbitrary object and gives the resulting object 
 
  * <i>smallTag</i>: A 32-bit integer that specifies a tag number. The tag number 55799 can be used to mark a "self-described CBOR" object.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBOR object where the object  <i>valueObValue</i>
  is converted to a CBOR object and given the tag  <i>smallTag</i>
@@ -1558,7 +1706,7 @@ Creates a CBOR object from a simple value number.
 
  * <i>simpleValue</i>: A 32-bit signed integer.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBORObject object.
 
@@ -1574,7 +1722,7 @@ The parameter <i>simpleValue</i>
 
 Gets the byte array used in this object, if this object is a byte string, without copying the data to a new one. This method's return value can be used to modify the array's contents. Note, though, that the array' s length can't be changed.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A byte array.
 
@@ -1589,7 +1737,7 @@ This object is not a byte string.
 
 Calculates the hash code of this object.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A 32-bit hash code.
 
@@ -1599,7 +1747,7 @@ A 32-bit hash code.
 
 Gets a list of all tags, from outermost to innermost.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 An array of tags, or the empty string if this object is untagged.
 
@@ -1614,7 +1762,7 @@ Returns whether this object has a tag of the given number.
 
  * <i>tagValue</i>: The tag value to search for.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if this object has a tag of the given number; otherwise,  `false` .
 
@@ -1631,13 +1779,38 @@ The parameter "obj" is null.
     public bool HasTag(
         PeterO.BigInteger bigTagValue);
 
+<b>Deprecated.</b> Use the EInteger version of this method.
+
 Returns whether this object has a tag of the given number.
 
 <b>Parameters:</b>
 
  * <i>bigTagValue</i>: The tag value to search for.
 
-<b>Returns:</b>
+<b>Return Value:</b>
+
+ `true`  if this object has a tag of the given number; otherwise,  `false` .
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+BigTagValue is null.
+
+ * System.ArgumentException:
+BigTagValue is less than 0.
+
+### HasTag
+
+    public bool HasTag(
+        PeterO.Numbers.EInteger bigTagValue);
+
+Returns whether this object has a tag of the given number.
+
+<b>Parameters:</b>
+
+ * <i>bigTagValue</i>: The tag value to search for.
+
+<b>Return Value:</b>
 
  `true`  if this object has a tag of the given number; otherwise,  `false` .
 
@@ -1663,7 +1836,7 @@ Inserts an object at the specified position in this CBOR array.
 
  * <i>valueOb</i>: An object representing the value, which will be converted to a CBORObject. Can be null, in which case this value is converted to CBORObject.Null.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 This instance.
 
@@ -1683,7 +1856,7 @@ The parameter <i>valueOb</i>
 
 Gets a value indicating whether this CBOR object represents infinity.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if this CBOR object represents infinity; otherwise, false .
 
@@ -1693,7 +1866,7 @@ Gets a value indicating whether this CBOR object represents infinity.
 
 Gets a value indicating whether this CBOR object represents a not-a-number value (as opposed to whether this object's type is not a number type).
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if this CBOR object represents a not-a-number value (as opposed to whether this object's type is not a number type); otherwise,  `false` .
 
@@ -1703,7 +1876,7 @@ Gets a value indicating whether this CBOR object represents a not-a-number value
 
 Gets a value indicating whether this CBOR object represents negative infinity.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if this CBOR object represents negative infinity; otherwise,  `false` .
 
@@ -1713,7 +1886,7 @@ Gets a value indicating whether this CBOR object represents negative infinity.
 
 Gets a value indicating whether this CBOR object represents positive infinity.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if this CBOR object represents positive infinity; otherwise,  `false` .
 
@@ -1731,7 +1904,7 @@ Multiplies two CBOR numbers.
 
  * <i>second</i>: Another CBOR object.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The product of the two numbers.
 
@@ -1746,7 +1919,7 @@ Either or both operands are not numbers (as opposed to Not-a-Number, NaN).
 
 Gets this object's value with the sign reversed.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The reversed-sign form of this number.
 
@@ -1761,7 +1934,7 @@ This object's type is not a number type.
 
 Creates a new empty CBOR array.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A new CBOR array.
 
@@ -1771,7 +1944,7 @@ A new CBOR array.
 
 Creates a new empty CBOR map.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A new CBOR map.
 
@@ -1789,7 +1962,7 @@ Adds a CBORObject object and a CBORObject object.
 
  * <i>b</i>: Another CBORObject object.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The sum of the two objects.
 
@@ -1807,7 +1980,7 @@ Divides a CBORObject object by the value of a CBORObject object.
 
  * <i>b</i>: Another CBORObject object.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The quotient of the two objects.
 
@@ -1825,7 +1998,7 @@ Finds the remainder that results when a CBORObject object is divided by the valu
 
  * <i>b</i>: Another CBORObject object.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The remainder of the two numbers.
 
@@ -1843,7 +2016,7 @@ Multiplies a CBORObject object by the value of a CBORObject object.
 
  * <i>b</i>: Another CBORObject object.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The product of the two numbers.
 
@@ -1861,7 +2034,7 @@ Subtracts a CBORObject object from a CBORObject object.
 
  * <i>b</i>: Another CBORObject object.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The difference of the two objects.
 
@@ -1876,7 +2049,7 @@ Reads an object in CBOR format from a data stream. This method will read from th
 
  * <i>stream</i>: A readable data stream.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBOR object that was read.
 
@@ -1903,7 +2076,7 @@ Reads an object in CBOR format from a data stream. This method will read from th
 
  * <i>options</i>: A CBOREncodeOptions object.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBOR object that was read.
 
@@ -1927,7 +2100,7 @@ Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) 
 
  * <i>stream</i>: A readable data stream. The sequence of bytes read from the data stream must contain a single JSON object and not multiple objects.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBORObject object.
 
@@ -1957,7 +2130,7 @@ Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) 
 
  * <i>options</i>: A CBOREncodeOptions object.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBORObject object.
 
@@ -1987,7 +2160,7 @@ Finds the remainder that results when a CBORObject object is divided by the valu
 
  * <i>second</i>: Another CBOR object.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The remainder of the two numbers.
 
@@ -2002,7 +2175,7 @@ If this object is an array, removes the first instance of the specified item fro
 
  * <i>obj</i>: The item or key to remove.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if the item was removed; otherwise,  `false` .
 
@@ -2029,7 +2202,7 @@ Maps an object to a key in this CBOR map, or adds the value if the key doesn't e
 
  * <i>valueOb</i>: An object representing the value, which will be converted to a CBORObject. Can be null, in which case this value is converted to CBORObject.Null.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 This instance.
 
@@ -2057,7 +2230,7 @@ Finds the difference between two CBOR number objects.
 
  * <i>second</i>: Another CBOR object.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The difference of the two objects.
 
@@ -2086,7 +2259,7 @@ Converts this object to a string in JavaScript Object Notation (JSON) format. Th
 
  * Infinity and not-a-number will be converted to null.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A text string containing the converted object.
 
@@ -2096,7 +2269,7 @@ A text string containing the converted object.
 
 Returns this CBOR object in string form. The format is intended to be human-readable, not machine-readable, and the format may change at any time.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A text representation of this object.
 
@@ -2106,7 +2279,7 @@ A text representation of this object.
 
 Gets an object with the same value as this one but without the tags it has, if any. If this object is an array, map, or byte string, the data will not be copied to the returned object, so changes to the returned object will be reflected in this one.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBORObject object.
 
@@ -2116,7 +2289,7 @@ A CBORObject object.
 
 Gets an object with the same value as this one but without this object's outermost tag, if any. If this object is an array, map, or byte string, the data will not be copied to the returned object, so changes to the returned object will be reflected in this one.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBORObject object.
 
@@ -2387,6 +2560,8 @@ The parameter <i>stream</i>
         PeterO.ExtendedDecimal bignum,
         System.IO.Stream stream);
 
+<b>Deprecated.</b> Use the EDecimal version of this method.
+
 Writes a decimal floating-point number in CBOR format to a data stream, as follows:
 
  * If the value is null, writes the byte 0xF6.
@@ -2456,6 +2631,37 @@ Writes a rational number in CBOR format to a data stream.
  * <i>rational</i>: An arbitrary-precision rational number.
 
  * <i>stream</i>: A writable data stream.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter <i>stream</i>
+ is null.
+
+ * System.IO.IOException:
+An I/O error occurred.
+
+### Write
+
+    public static void Write(
+        PeterO.Numbers.EDecimal bignum,
+        System.IO.Stream stream);
+
+Writes a decimal floating-point number in CBOR format to a data stream, as follows:
+
+ * If the value is null, writes the byte 0xF6.
+
+ * If the value is negative zero, infinity, or NaN, converts the number to a  `double`  and writes that  `double` . If negative zero should not be written this way, use the Plus method to convert the value beforehand.
+
+ * If the value has an exponent of zero, writes the value as an unsigned integer or signed integer if the number can fit either type or as a big integer otherwise.
+
+ * In all other cases, writes the value as a decimal number.
+
+<b>Parameters:</b>
+
+ * <i>bignum</i>: The arbitrary-precision decimal number to write. Can be null.
+
+ * <i>stream</i>: Stream to write to.
 
 <b>Exceptions:</b>
 

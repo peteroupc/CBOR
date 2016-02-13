@@ -164,7 +164,7 @@ Not documented yet.
 
  * <i>other</i>: An ExtendedRational object.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A 32-bit signed integer.
 
@@ -182,7 +182,7 @@ Creates a rational number with the given numerator and denominator.
 
  * <i>denominatorSmall</i>: A 32-bit signed integer. (2).
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 An arbitrary-precision rational number.
 
@@ -200,7 +200,7 @@ Creates a rational number with the given numerator and denominator.
 
  * <i>denominator</i>: Another arbitrary-precision integer.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 An arbitrary-precision rational number.
 
@@ -213,6 +213,17 @@ The parameter <i>numerator</i>
 
 ### Equals
 
+    public override bool Equals(
+        object obj);
+
+<b>Parameters:</b>
+
+ * <i>obj</i>:
+
+<b>Return Value:</b>
+
+### Equals
+
     public sealed bool Equals(
         PeterO.ExtendedRational other);
 
@@ -222,9 +233,15 @@ Not documented yet.
 
  * <i>other</i>: An ExtendedRational object.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A Boolean object.
+
+### GetHashCode
+
+    public override int GetHashCode();
+
+<b>Return Value:</b>
 
 ### ToString
 
@@ -232,6 +249,6 @@ A Boolean object.
 
 Converts this object to a text string.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A string representation of this object. The result can be Infinity, NaN, or sNaN (with a minus sign before it for negative values), or a number of the following form: [-]numerator/denominator.

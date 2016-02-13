@@ -12,14 +12,6 @@ This class is largely obsolete. It will be replaced by a new version of this cla
 
  An arbitrary-precision integer.Thread safety: Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same value are interchangeable, but they should be compared using the "Equals" method rather than the "==" operator.
 
-This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.EInteger`  in the `PeterO.Numbers` library (in .NET), or  `com.upokecenter.numbers.EInteger`  in the `com.github.peteroupc/numbers` artifact (in Java). This new class can be used in the `CBORObject.FromObject(object)`  method (by including the new library in your code, among other things), but this version of the CBOR library doesn't include any methods that explicitly take an `EInteger`  as a parameter or return value.
-
- An arbitrary-precision integer.Thread safety: Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same value are interchangeable, but they should be compared using the "Equals" method rather than the "==" operator.
-
-This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.EInteger`  in the `PeterO.Numbers` library (in .NET), or  `com.upokecenter.numbers.EInteger`  in the `com.github.peteroupc/numbers` artifact (in Java). This new class can be used in the `CBORObject.FromObject(object)`  method (by including the new library in your code, among other things), but this version of the CBOR library doesn't include any methods that explicitly take an `EInteger`  as a parameter or return value.
-
- An arbitrary-precision integer.Thread safety: Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same value are interchangeable, but they should be compared using the "Equals" method rather than the "==" operator.
-
 ### ONE
 
     public static readonly PeterO.BigInteger ONE;
@@ -52,7 +44,7 @@ The arbitrary-precision integer for zero.
 
 Finds the minimum number of bits needed to represent this object's value, except for its sign. If the value is negative, finds the number of bits in a value equal to this object's absolute value minus 1.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The number of bits in this object's value. Returns 0 if this object's value is 0 or negative 1.
 
@@ -67,7 +59,7 @@ Not documented yet.
 
  * <i>other</i>: A BigInteger object.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A 32-bit signed integer.
 
@@ -82,7 +74,7 @@ Determines whether this object and another object are equal.
 
  * <i>obj</i>: An arbitrary object.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if this object and another object are equal; otherwise,  `false` .
 
@@ -97,7 +89,7 @@ Returns whether this number's value equals another number's value.
 
  * <i>other</i>: An arbitrary-precision integer.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if this number's value equals another number's value; otherwise,  `false` .
 
@@ -115,7 +107,7 @@ Initializes an arbitrary-precision integer from an array of bytes.
 
  * <i>littleEndian</i>: If true, the byte order is little-endian, or least-significant-byte first. If false, the byte order is big-endian, or most-significant-byte first.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 An arbitrary-precision integer. Returns 0 if the byte array's length is 0.
 
@@ -146,7 +138,7 @@ The following example (C#) converts a number in the form of a hex string to a bi
 
  * <i>radix</i>: A base from 2 to 36. Depending on the radix, the string can use the basic digits 0 to 9 (U+0030 to U+0039) and then the basic letters A to Z (U+0041 to U+005A). For example, 0-9 in radix 10, and 0-9, then A-F in radix 16.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 An arbitrary-precision integer with the same value as given in the string.
 
@@ -174,7 +166,7 @@ Converts a string to an arbitrary-precision integer.
 
  * <i>str</i>: A text string. The string must contain only basic digits 0 to 9 (U+0030 to U+0039), except that it may start with a minus sign ("-", U+002D) to indicate a negative number. The string is not allowed to contain white space characters, including spaces.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 An arbitrary-precision integer with the same value as given in the string.
 
@@ -194,7 +186,7 @@ The parameter  <i>str</i>
 
 Returns the hash code for this instance.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A 32-bit signed integer.
 
@@ -209,7 +201,7 @@ Returns a byte array of this object's value. The byte array will take the form o
 
  * <i>littleEndian</i>: If true, the least significant bits will appear first.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A byte array. If this value is 0, returns a byte array with the single element 0.
 
@@ -224,7 +216,7 @@ Generates a string representing the value of this object, in the given radix.
 
  * <i>radix</i>: A radix from 2 through 36. For example, to generate a hexadecimal (base-16) string, specify 16. To generate a decimal (base-10) string, specify 10.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A string representing the value of this object. If this value is 0, returns "0". If negative, the string will begin with a hyphen/minus ("-"). Depending on the radix, the string will use the basic digits 0 to 9 (U+0030 to U+0039) and then the basic letters A to Z (U+0041 to U+005A). For example, 0-9 in radix 10, and 0-9, then A-F in radix 16.
 
@@ -239,7 +231,7 @@ The parameter "index" is less than 0, "endIndex" is less than 0, or either is gr
 
 Converts this object to a text string in base 10.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A string representation of this object. If negative, the string will begin with a minus sign ("-", U+002D). The string will use the basic digits 0 to 9 (U+0030 to U+0039).
 
@@ -254,6 +246,6 @@ Converts a 64-bit signed integer to a big integer.
 
  * <i>longerValue</i>: A 64-bit signed integer.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 An arbitrary-precision integer with the same value as the 64-bit number.

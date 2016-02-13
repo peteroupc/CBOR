@@ -10,7 +10,7 @@ Implemented by classes that validate CBOR objects belonging to a specific tag.
 
 Gets a type filter specifying what kinds of CBOR objects are supported by this tag.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBOR type filter.
 
@@ -25,6 +25,6 @@ Generates a CBOR object based on the data of another object. If the data is not 
 
  * <i>obj</i>: A CBOR object with the corresponding tag handled by the ICBORTag object.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBORObject object. Note that this method may choose to return the same object as the parameter.

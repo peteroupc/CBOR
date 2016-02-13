@@ -150,8 +150,7 @@ StringBuilder builder) {
         }
         if (method.IsFinal) {
           builder.Append("sealed ");
-     } else if (method is MethodInfo &&
-          IsMethodOverride((MethodInfo)method)) {
+     } else if (method is MethodInfo && IsMethodOverride((MethodInfo)method)) {
           builder.Append("override ");
         } else if (method.IsVirtual) {
           builder.Append("virtual ");
@@ -638,7 +637,7 @@ StringBuilder builder) {
 
     public override void VisitReturns(Returns returns) {
       using (var ch = this.Change(this.returnStr)) {
-        this.WriteLine("<b>Returns:</b>\r\n");
+        this.WriteLine("<b>Return Value:</b>\r\n");
         base.VisitReturns(returns);
         this.WriteLine("\r\n\r\n");
       }

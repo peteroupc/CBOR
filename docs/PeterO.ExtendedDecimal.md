@@ -159,15 +159,11 @@ The absolute value of this object's un-scaled value.
     public sealed int CompareTo(
         PeterO.ExtendedDecimal other);
 
-Not documented yet.
-
 <b>Parameters:</b>
 
- * <i>other</i>: Not documented yet.
+ * <i>other</i>:
 
-<b>Returns:</b>
-
-A 32-bit signed integer.
+<b>Return Value:</b>
 
 ### Create
 
@@ -183,7 +179,7 @@ Creates a number with the value exponent*10^mantissa.
 
  * <i>exponent</i>: The decimal exponent.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 An arbitrary-precision decimal number.
 
@@ -205,7 +201,7 @@ Determines whether this object's mantissa and exponent are equal to those of ano
 
  * <i>obj</i>: An arbitrary object.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if the objects are equal; otherwise, false .
 
@@ -222,7 +218,7 @@ Determines whether this object's mantissa and exponent are equal to those of ano
 
  * <i>other</i>: An arbitrary-precision decimal number.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if this object's mantissa and exponent are equal to those of another object; otherwise,  `false` .
 
@@ -238,7 +234,7 @@ Creates a decimal number from a text string that represents a number. See  `From
 
  * <i>str</i>: A string that represents a number.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 An arbitrary-precision decimal number with the same value as the given string.
 
@@ -258,7 +254,7 @@ The parameter  <i>str</i>
 
 Calculates this object's hash code.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 This object's hash code.
 
@@ -268,7 +264,7 @@ This object's hash code.
 
 Gets a value indicating whether this object is positive or negative infinity.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if this object is positive or negative infinity; otherwise,  `false` .
 
@@ -278,7 +274,7 @@ Gets a value indicating whether this object is positive or negative infinity.
 
 Gets a value indicating whether this object is not a number (NaN).
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if this object is not a number (NaN); otherwise, false .
 
@@ -290,7 +286,7 @@ Gets a value indicating whether this object is not a number (NaN).
 
 Gets a value indicating whether this object is a quiet not-a-number value.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if this object is a quiet not-a-number value; otherwise,  `false` .
 
@@ -300,7 +296,7 @@ Gets a value indicating whether this object is a quiet not-a-number value.
 
 Converts this value to a 64-bit floating-point number. The half-even rounding mode is used.If this value is a NaN, sets the high bit of the 64-bit floating point number's mantissa for a quiet NaN, and clears it for a signaling NaN. Then the next highest bit of the mantissa is cleared for a quiet NaN, and set for a signaling NaN. Then the other bits of the mantissa are set to the lowest bits of this object's unsigned mantissa.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The closest 64-bit floating-point number to this value. The return value can be positive infinity or negative infinity if this value exceeds the range of a 64-bit floating point number.
 
@@ -310,7 +306,7 @@ The closest 64-bit floating-point number to this value. The return value can be 
 
 Converts this value to a 32-bit floating-point number. The half-even rounding mode is used.If this value is a NaN, sets the high bit of the 32-bit floating point number's mantissa for a quiet NaN, and clears it for a signaling NaN. Then the next highest bit of the mantissa is cleared for a quiet NaN, and set for a signaling NaN. Then the other bits of the mantissa are set to the lowest bits of this object's unsigned mantissa.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The closest 32-bit floating-point number to this value. The return value can be positive infinity or negative infinity if this value exceeds the range of a 32-bit floating point number.
 
@@ -320,6 +316,6 @@ The closest 32-bit floating-point number to this value. The return value can be 
 
 Converts this value to a string. Returns a value compatible with this class's FromString method.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A string representation of this object.

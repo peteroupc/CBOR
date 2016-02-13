@@ -137,9 +137,10 @@ Not documented yet.
 
 <b>Parameters:</b>
 
- * <i>other</i>: Not documented yet.
+ * <i>other</i>: The parameter  <i>other</i>
+ is not documented yet.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A 32-bit signed integer.
 
@@ -157,7 +158,7 @@ Creates a number with the value exponent*2^mantissa.
 
  * <i>exponentSmall</i>: The binary exponent.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 An arbitrary-precision binary float.
 
@@ -175,7 +176,7 @@ Creates a number with the value exponent*2^mantissa.
 
  * <i>exponent</i>: The binary exponent.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 An arbitrary-precision binary float.
 
@@ -197,7 +198,7 @@ Determines whether this object's mantissa and exponent are equal to those of ano
 
  * <i>obj</i>: An arbitrary object.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if the objects are equal; otherwise, false .
 
@@ -214,7 +215,7 @@ Determines whether this object's mantissa and exponent are equal to those of ano
 
  * <i>other</i>: An arbitrary-precision binary float.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if this object's mantissa and exponent are equal to those of another object; otherwise,  `false` .
 
@@ -237,7 +238,7 @@ Determines whether this object's mantissa and exponent are equal to those of ano
 
  * <i>otherValue</i>: An arbitrary-precision binary float.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if this object's mantissa and exponent are equal to those of another object; otherwise,  `false` .
 
@@ -275,7 +276,7 @@ Not documented yet.
  * <i>str</i>: The parameter  <i>str</i>
  is not documented yet.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 An ExtendedFloat object.
 
@@ -314,7 +315,7 @@ All characters mentioned above are the corresponding characters in the Basic Lat
 
  * <i>ctx</i>: A PrecisionContext object specifying the precision, rounding, and exponent range to apply to the parsed number. Can be null.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 The parsed number, converted to arbitrary-precision binary float.
 
@@ -339,7 +340,7 @@ Either  <i>offset</i>
 
 Calculates this object's hash code.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 This object's hash code.
 
@@ -349,7 +350,7 @@ This object's hash code.
 
 Gets a value indicating whether this object is positive or negative infinity.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if this object is positive or negative infinity; otherwise,  `false` .
 
@@ -359,7 +360,7 @@ Gets a value indicating whether this object is positive or negative infinity.
 
 Returns whether this object is a not-a-number value.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if this object is a not-a-number value; otherwise, false .
 
@@ -371,7 +372,7 @@ Returns whether this object is a not-a-number value.
 
 Returns whether this object is negative infinity.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if this object is negative infinity; otherwise, false .
 
@@ -383,7 +384,7 @@ Returns whether this object is negative infinity.
 
 Returns whether this object is positive infinity.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if this object is positive infinity; otherwise, false .
 
@@ -395,7 +396,7 @@ Returns whether this object is positive infinity.
 
 Gets a value indicating whether this object is a quiet not-a-number value.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if this object is a quiet not-a-number value; otherwise,  `false` .
 
@@ -407,7 +408,7 @@ Gets a value indicating whether this object is a quiet not-a-number value.
 
 Gets a value indicating whether this object is a signaling not-a-number value.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if this object is a signaling not-a-number value; otherwise,  `false` .
 
@@ -417,6 +418,6 @@ Gets a value indicating whether this object is a signaling not-a-number value.
 
 Converts this value to a string.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A string representation of this object. The value is converted to decimal and the decimal form of this number's value is returned.
