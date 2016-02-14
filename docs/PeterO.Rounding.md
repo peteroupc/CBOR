@@ -8,7 +8,7 @@
 
 <b>Deprecated.</b> Use ERounding from PeterO.Numbers/com.upokecenter.numbers.
 
-This class is obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.ERounding`  in the `PeterO.ERounding`  library (in .NET), or `com.upokecenter.numbers.EFloat`  in the `com.github.peteroupc/numbers` artifact (in Java).
+<b>This class is obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.ERounding`  in the `PeterO.ERounding`  library (in .NET), or `com.upokecenter.numbers.EFloat`  in the<a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers` </a>artifact (in Java).</b>
 
  Specifies the mode to use when "shortening" numbers that otherwise can't fit a given number of digits, so that the shortened number has about the same value. This "shortening" is known as rounding.
 

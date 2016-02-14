@@ -10,9 +10,7 @@
             <a href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c></a>
             artifact (in Java). This new class can be used in the
             <c>CBORObject.FromObject(object)</c> method (by including the new
-            library in your code, among other things), but this version of the
-            CBOR library doesn't include any methods that explicitly take an
-            <c>EInteger</c> as a parameter or return value.</b></para> An
+            library in your code, among other things).</b></para> An
             arbitrary-precision integer.
             <para><b>Thread safety:</b> Instances of this class are immutable,
             so they are inherently safe for use by multiple threads. Multiple
@@ -73,8 +71,7 @@
 <doc name="M:PeterO.BigInteger.fromBytes(System.Byte[],System.Boolean)">
 <summary>Initializes an arbitrary-precision integer from an array
             of bytes.</summary>
-            <param name='bytes'>A byte array consisting of the two's-complement
-            integer representation of the arbitrary-precision integer to
+            <param name='bytes'>A byte array consisting of the two's-complement form of the arbitrary-precision integer to
             create. The last byte contains the lowest 8-bits, the next-to-last
             contains the next lowest 8 bits, and so on. To encode negative
             numbers, take the absolute value of the number, subtract by 1,
@@ -2741,9 +2738,7 @@
             <a href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c></a>
             artifact (in Java). This new class can be used in the
             <c>CBORObject.FromObject(object)</c> method (by including the new
-            library in your code, among other things), but this version of the
-            CBOR library doesn't include any methods that explicitly take an
-            <c>EDecimal</c> as a parameter or return value.</b></para>
+            library in your code, among other things).</b></para>
             Represents an arbitrary-precision decimal floating-point number.
             <para><b>About decimal arithmetic</b></para>
             <para>Decimal (base-10) arithmetic, such as that provided by this
@@ -3008,9 +3003,7 @@
             <a href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c></a>
             artifact (in Java). This new class can be used in the
             <c>CBORObject.FromObject(object)</c> method (by including the new
-            library in your code, among other things), but this version of the
-            CBOR library doesn't include any methods that explicitly take an
-            <c>EFloat</c> as a parameter or return value.</b></para>
+            library in your code, among other things).</b></para>
             <para>Represents an arbitrary-precision binary floating-point
             number. Consists of an integer mantissa and an integer exponent,
             both arbitrary-precision. The value of the number equals mantissa *
@@ -3056,9 +3049,9 @@
             same instance).</para></summary>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.CompareTo(PeterO.ExtendedFloat)">
-<summary>Not documented yet.</summary>
-            <param name='other'>The parameter <paramref name='other'/> is not documented yet.</param>
-            <returns>A 32-bit signed integer.</returns>
+
+            <summary>Not documented yet.</summary><param name='other'>The parameter <paramref name='other'/> is not documented yet.</param><returns>A 32-bit signed integer.</returns>
+        
 </doc>
 <doc name="M:PeterO.ExtendedFloat.Create(PeterO.BigInteger,PeterO.BigInteger)">
 <summary>Creates a number with the value
@@ -3282,9 +3275,7 @@
             <a href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c></a>
             artifact (in Java). This new class can be used in the
             <c>CBORObject.FromObject(object)</c> method (by including the new
-            library in your code, among other things), but this version of the
-            CBOR library doesn't include any methods that explicitly take an
-            <c>ERational</c> as a parameter or return value.</b></para>
+            library in your code, among other things).</b></para>
             Arbitrary-precision rational number. This class can't be
             inherited; this is a change in version 2.0 from previous versions,
             where the class was inadvertently left inheritable.

@@ -1099,9 +1099,10 @@ EInteger.FromString("9223372036854776307"),
 EInteger.FromString("18446744073709551115"),
 EInteger.FromString("18446744073709551615") };
       Assert.IsFalse(CBORObject.True.IsTagged);
+      CBORObject trueObj = CBORObject.True;
       Assert.AreEqual(
         EInteger.FromString("-1"),
-        CBORObject.True.MostInnerTag);
+        trueObj.MostInnerTag);
       EInteger[] tagstmp = CBORObject.True.GetAllTags();
       Assert.AreEqual(0, tagstmp.Length);
       for (var i = 0; i < ranges.Length; i += 2) {

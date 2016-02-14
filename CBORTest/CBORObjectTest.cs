@@ -2262,8 +2262,9 @@ TestCommon.IntToString(j));
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
+      EInteger eintNull = null;
       try {
-        CBORObject.FromObjectAndTag(2, (EInteger)null);
+        CBORObject.FromObjectAndTag(2, eintNull);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
         Console.Write(String.Empty);

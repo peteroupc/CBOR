@@ -15,7 +15,7 @@ Not documented yet.
         int exponentMaxSmall,
         bool clampNormalExponents);
 
-Initializes a new instance of the  class. HasFlags will be set to false.
+Initializes a new instance of the [PeterO.PrecisionContext](PeterO.PrecisionContext.md) class. HasFlags will be set to false.
 
 <b>Parameters:</b>
 

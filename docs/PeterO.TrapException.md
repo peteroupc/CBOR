@@ -7,7 +7,7 @@
 
 <b>Deprecated.</b> Use ETrapException from PeterO.Numbers/com.upokecenter.numbers.
 
-This class is obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.ETrapException`  in the `PeterO.Numbers` library (in .NET), or  `com.upokecenter.numbers.ETrapException` in the `com.github.peteroupc/numbers` artifact (in Java).
+<b>This class is obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.ETrapException`  in the<a href="https://www.nuget.org/packages/PeterO.Numbers"> `PeterO.Numbers` </a>library (in .NET), or  `com.upokecenter.numbers.ETrapException` in the<a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers` </a>artifact (in Java).</b>
 
  Exception thrown for arithmetic trap errors.
 
@@ -18,7 +18,7 @@ This class is obsolete. It will be replaced by a new version of this class in a 
         PeterO.PrecisionContext ctx,
         object result);
 
-Initializes a new instance of the  class.
+Initializes a new instance of the [PeterO.TrapException](PeterO.TrapException.md) class.
 
 <b>Parameters:</b>
 

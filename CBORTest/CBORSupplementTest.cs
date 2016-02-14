@@ -191,8 +191,9 @@ Console.Write(String.Empty);
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
+      EInteger eintNull = null;
       try {
-        CBORObject.AddTagHandler((EInteger)null, null);
+        CBORObject.AddTagHandler(eintNull, null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
 Console.Write(String.Empty);

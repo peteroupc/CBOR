@@ -6,9 +6,9 @@
 
 <b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers and the output of this class's ToString method.
 
-This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.ERational`  in the `PeterO.Numbers` library (in .NET), or  `com.upokecenter.numbers.ERational`  in the `com.github.peteroupc/numbers` artifact (in Java). This new class can be used in the `CBORObject.FromObject(object)`  method (by including the new library in your code, among other things), but this version of the CBOR library doesn't include any methods that explicitly take an `ERational`  as a parameter or return value.
+<b>This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.ERational`  in the<a href="https://www.nuget.org/packages/PeterO.Numbers"> `PeterO.Numbers` </a>library (in .NET), or  `com.upokecenter.numbers.ERational`  in the<a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers` </a>artifact (in Java). This new class can be used in the `CBORObject.FromObject(object)`  method (by including the new library in your code, among other things), but this version of the CBOR library doesn't include any methods that explicitly take an `ERational`  as a parameter or return value.</b>
 
-Arbitrary-precision rational number. This class can't be inherited; this is a change in version 2.0 from previous versions, where the class was inadvertently left inheritable.Thread safety: Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same properties are interchangeable, so they should not be compared using the "==" operator (which only checks if each side of the operator is the same instance).
+Arbitrary-precision rational number. This class can't be inherited; this is a change in version 2.0 from previous versions, where the class was inadvertently left inheritable.<b>Thread safety:</b> Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same properties are interchangeable, so they should not be compared using the "==" operator (which only checks if each side of the operator is the same instance).
 
 ### ExtendedRational Constructor
 
@@ -16,7 +16,7 @@ Arbitrary-precision rational number. This class can't be inherited; this is a ch
         PeterO.BigInteger numerator,
         PeterO.BigInteger denominator);
 
-Initializes a new instance of the  class.
+Initializes a new instance of the [PeterO.ExtendedRational](PeterO.ExtendedRational.md) class.
 
 <b>Parameters:</b>
 
