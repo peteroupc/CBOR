@@ -1113,7 +1113,7 @@ CBOREncodeOptions options) {
       CBORObject c = FromObject(valueOb);
       if (bigintTag.GetSignedBitLength() <= 16) {
         // Low-numbered, commonly used tags
-        return FromObjectAndTag(c, (int)bigintTag);
+        return FromObjectAndTag(c, bigintTag.ToInt32Checked());
       } else {
         var tagLow = 0;
         var tagHigh = 0;

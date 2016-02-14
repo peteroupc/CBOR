@@ -111,8 +111,8 @@ Type[] parameters) {
     }
 
 // Inappropriate to mark these obsolete; they're
-// just methods to convert to and from legacy
-// arbitrary-precision classes
+// just non-publicly-visible methods to convert to
+// and from legacy arbitrary-precision classes
 #pragma warning disable 618
     public static BigInteger ToLegacy(EInteger ei) {
       return BigInteger.ToLegacy(ei);

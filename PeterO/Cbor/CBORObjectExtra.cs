@@ -47,18 +47,14 @@ namespace PeterO.Cbor {
       return (sbyte)v;
     }
 
-    private static readonly EInteger DecimalMaxValue = (EInteger.One <<
-      96) - EInteger.One;
-
-    private static readonly EInteger DecimalMinValue = -((EInteger.One <<
-      96) - EInteger.One);
-
     private static EInteger DecimalToEInteger(decimal dec) {
       return ((EDecimal)dec).ToEInteger();
     }
 
     private static decimal ExtendedRationalToDecimal(ERational
       extendedNumber) {
+      // TODO: When this library uses PeterO.Numbers later than 0.2, use an
+      // operator
       if (extendedNumber.IsInfinity() || extendedNumber.IsNaN()) {
         throw new OverflowException("This object's value is out of range");
       }
@@ -97,6 +93,8 @@ EContext.CliDecimal.WithTraps(EContext.FlagOverflow));
       if (cn == null) {
         throw new InvalidOperationException("Not a number type");
       }
+      // TODO: When this library uses PeterO.Numbers later than 0.2, use an
+      // operator
       EInteger bigint = cn.AsEInteger(this.ThisItem);
       if (bigint.Sign < 0 || bigint.GetSignedBitLength() > 64) {
         throw new OverflowException("This object's value is out of range");
