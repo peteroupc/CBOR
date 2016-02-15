@@ -310,7 +310,7 @@
             <para>Instances of CBORObject should not be compared for equality
             using the "==" operator; it's possible to create two CBOR objects
             with the same value but not the same reference. (The "==" operator
-            only checks if each side of the operator is the same
+            might only check if each side of the operator is the same
             instance.)</para>
             <para>This class's natural ordering (under the CompareTo method) is
             not consistent with the Equals method. This means that two values
@@ -2490,8 +2490,7 @@
             <paramref name='str'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.DataUtilities.CodePointCompare(System.String,System.String)">
-<summary>Compares two strings in Unicode code point order. Unpaired
-            surrogates are treated as individual code points.</summary>
+<summary>Compares two strings in Unicode code point order. Unpaired surrogate code points are treated as individual code points.</summary>
             <param name='strA'>The first string. Can be null.</param>
             <param name='strB'>The second string. Can be null.</param>
             <returns>A value indicating which string is " less" or " greater" .
@@ -2826,7 +2825,7 @@
             <para>Instances of this class are immutable, so they are inherently
             safe for use by multiple threads. Multiple instances of this object
             with the same properties are interchangeable, so they should not be
-            compared using the "==" operator (which only checks if each side of
+            compared using the "==" operator (which might only check if each side of
             the operator is the same instance).</para>
             <para><b>Comparison considerations</b></para>
             <para>This class's natural ordering (under the CompareTo method) is
@@ -3045,7 +3044,7 @@
             so they are inherently safe for use by multiple threads. Multiple
             instances of this object with the same properties are
             interchangeable, so they should not be compared using the "=="
-            operator (which only checks if each side of the operator is the
+            operator (which might only check if each side of the operator is the
             same instance).</para></summary>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.CompareTo(PeterO.ExtendedFloat)">
@@ -3283,7 +3282,7 @@
             so they are inherently safe for use by multiple threads. Multiple
             instances of this object with the same properties are
             interchangeable, so they should not be compared using the "=="
-            operator (which only checks if each side of the operator is the
+            operator (which might only check if each side of the operator is the
             same instance).</para></summary>
 </doc>
 <doc name="M:PeterO.ExtendedRational.#ctor(PeterO.BigInteger,PeterO.BigInteger)">

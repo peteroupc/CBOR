@@ -1283,6 +1283,7 @@ CBOREncodeOptions options) {
       if (str == null) {
         stream.WriteByte(0xf6);  // Write null instead of string
       } else {
+        // TODO: Maybe change to unstreamed string in 3.0
         WriteStreamedString(str, stream);
       }
     }

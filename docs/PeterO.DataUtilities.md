@@ -120,7 +120,7 @@ The parameter <i>str</i>
         string strA,
         string strB);
 
-Compares two strings in Unicode code point order. Unpaired surrogates are treated as individual code points.
+Compares two strings in Unicode code point order. Unpaired surrogate code points are treated as individual code points.
 
 <b>Parameters:</b>
 
