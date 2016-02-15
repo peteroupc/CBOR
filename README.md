@@ -233,6 +233,11 @@ The following are some clarifications to RFC 7049.
 Release Notes
 -----------
 
+### Version 2.4.1
+
+* C# implementation now uses version 0.2.2 of
+  [`PeterO.Numbers`](https://www.nuget.org/packages/PeterO.Numbers)
+
 ### Version 2.4.0
 
 * The arbitrary-precision classes in this library are being replaced

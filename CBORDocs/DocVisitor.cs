@@ -150,8 +150,7 @@ StringBuilder builder) {
         }
         if (method.IsFinal) {
           builder.Append("sealed ");
-     } else if (method is MethodInfo &&
-          IsMethodOverride((MethodInfo)method)) {
+     } else if (method is MethodInfo && IsMethodOverride((MethodInfo)method)) {
           builder.Append("override ");
         } else if (method.IsVirtual) {
           builder.Append("virtual ");
