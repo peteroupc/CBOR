@@ -17,6 +17,7 @@ namespace Test {
     private readonly Random rand;
     private readonly Random rand2;
     private int count;
+    private static readonly object ValueSeedsLock = new Object();
 
     private int w = 521288629;
     private int z = 362436069;
@@ -26,7 +27,7 @@ namespace Test {
     private static readonly int[] ValueSeeds = new int[32];
 
     private static void AddSeed(int seed) {
-      lock (ValueSeeds) {
+      lock (ValueSeedsLock) {
         if (seedIndex == -1) {
           seedIndex = 0;
         }
@@ -38,7 +39,7 @@ namespace Test {
     }
 
     private static int GetSeed() {
-      lock (ValueSeeds) {
+      lock (ValueSeedsLock) {
         if (seedCount == 0) {
           return 0;
         }

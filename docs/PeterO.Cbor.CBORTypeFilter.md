@@ -2,7 +2,7 @@
 
     public sealed class CBORTypeFilter
 
-Specifies what kinds of CBOR objects a tag can be. This class is used when a CBOR object is being read from a data stream. This class cannot be inherited; this is a change in version 2.0 from previous versions, where the class was inadvertently left inheritable.
+Specifies what kinds of CBOR objects a tag can be. This class is used when a CBOR object is being read from a data stream. This class can't be inherited; this is a change in version 2.0 from previous versions, where the class was inadvertently left inheritable.
 
 ### Any
 
@@ -51,9 +51,9 @@ Determines whether this type filter allows CBOR arrays and the given array index
 
  * <i>index</i>: An array index, starting from 0.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
- `true`  if this type filter allows CBOR arrays and the given array index is allowed under this type filter; otherwise,  `false` .
+ `true`  if this type filter allows CBOR arrays and the given array index is allowed under this type filter; otherwise, false .
 
 ### ArrayLengthMatches
 
@@ -66,7 +66,7 @@ Returns whether an array's length is allowed under this filter.
 
  * <i>length</i>: The length of a CBOR array.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if this filter allows CBOR arrays and an array's length is allowed under this filter; otherwise,  `false` .
 
@@ -81,7 +81,7 @@ Returns whether an array's length is allowed under a filter.
 
  * <i>length</i>: The length of a CBOR array.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if this filter allows CBOR arrays and an array's length is allowed under a filter; otherwise,  `false` .
 
@@ -96,7 +96,7 @@ Returns whether an array's length is allowed under a filter.
 
  * <i>bigLength</i>: An arbitrary-precision integer.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if this filter allows CBOR arrays and an array's length is allowed under a filter; otherwise,  `false` .
 
@@ -117,7 +117,7 @@ Gets the type filter for this array filter by its index.
 
  * <i>index</i>: A zero-based index of the filter to retrieve.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 Returns None if the index is out of range, or Any if this filter doesn't filter an array. Returns the appropriate filter for the array index otherwise.
 
@@ -132,7 +132,7 @@ Gets the type filter for this array filter by its index.
 
  * <i>index</i>: A zero-based index of the filter to retrieve.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 Returns None if the index is out of range, or Any if this filter doesn't filter an array. Returns the appropriate filter for the array index otherwise.
 
@@ -147,7 +147,7 @@ Returns whether the given CBOR major type matches a major type allowed by this f
 
  * <i>type</i>: A CBOR major type from 0 to 7.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if the given CBOR major type matches a major type allowed by this filter; otherwise,  `false` .
 
@@ -157,7 +157,7 @@ Returns whether the given CBOR major type matches a major type allowed by this f
 
 Returns whether this filter allows simple values that are not floating-point numbers.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if this filter allows simple values that are not floating-point numbers; otherwise,  `false` .
 
@@ -172,7 +172,7 @@ Gets a value indicating whether CBOR objects can have the given tag number.
 
  * <i>tag</i>: A tag number. Returns false if this is less than 0.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if CBOR objects can have the given tag number; otherwise,  `false` .
 
@@ -187,7 +187,7 @@ Gets a value indicating whether CBOR objects can have the given tag number.
 
  * <i>longTag</i>: A tag number. Returns false if this is less than 0.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if CBOR objects can have the given tag number; otherwise,  `false` .
 
@@ -202,7 +202,7 @@ Gets a value indicating whether CBOR objects can have the given tag number.
 
  * <i>bigTag</i>: A tag number. Returns false if this is less than 0.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
  `true`  if CBOR objects can have the given tag number; otherwise,  `false` .
 
@@ -218,7 +218,7 @@ The parameter <i>bigTag</i>
 
 Copies this filter and includes arrays of any length in the new filter.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBORTypeFilter object.
 
@@ -236,7 +236,7 @@ Copies this filter and includes CBOR arrays with an exact length to the new filt
 
  * <i>elements</i>: An array containing the allowed types for each element in the array. There must be at least as many elements here as given in the arrayLength parameter.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBORTypeFilter object.
 
@@ -265,7 +265,7 @@ Copies this filter and includes CBOR arrays with at least a given length to the 
 
  * <i>elements</i>: An array containing the allowed types for each element in the array. There must be at least as many elements here as given in the arrayLength parameter.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBORTypeFilter object.
 
@@ -286,7 +286,7 @@ The parameter elements has fewer elements than specified in arrayLength.
 
 Copies this filter and includes byte strings in the new filter.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBORTypeFilter object.
 
@@ -296,7 +296,7 @@ A CBORTypeFilter object.
 
 Copies this filter and includes floating-point numbers in the new filter.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBORTypeFilter object.
 
@@ -306,7 +306,7 @@ A CBORTypeFilter object.
 
 Copies this filter and includes maps in the new filter.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBORTypeFilter object.
 
@@ -316,7 +316,7 @@ A CBORTypeFilter object.
 
 Copies this filter and includes negative integers in the new filter.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBORTypeFilter object.
 
@@ -331,7 +331,7 @@ Copies this filter and includes a set of valid CBOR tags in the new filter.
 
  * <i>tags</i>: An array of the CBOR tags to add to the new filter.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBORTypeFilter object.
 
@@ -341,7 +341,7 @@ A CBORTypeFilter object.
 
 Copies this filter and includes text strings in the new filter.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBORTypeFilter object.
 
@@ -351,6 +351,6 @@ A CBORTypeFilter object.
 
 Copies this filter and includes unsigned integers in the new filter.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBORTypeFilter object.

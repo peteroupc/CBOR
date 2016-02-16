@@ -26,7 +26,7 @@ CBORObject objectWithTags) {
       if (!objectWithTags.IsTagged) {
         return newObject;
       }
-      BigInteger[] tags = objectWithTags.GetTags();
+      EInteger[] tags = objectWithTags.GetAllTags();
       for (int i = tags.Length - 1; i >= 0; --i) {
         newObject = CBORObject.FromObjectAndTag(newObject, tags[i]);
       }

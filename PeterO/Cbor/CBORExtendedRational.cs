@@ -51,7 +51,7 @@ namespace PeterO.Cbor {
       return er.ToSingle();
     }
 
-    public EInteger AsBigInteger(object obj) {
+    public EInteger AsEInteger(object obj) {
       var er = (ERational)obj;
       return er.ToEInteger();
     }

@@ -233,11 +233,11 @@ namespace Test {
         CBORObject.FromObject(2.5),
         CBORObject.FromObject(-2.5).Abs());
       Assert.AreEqual(
-        CBORObject.FromObject(ExtendedDecimal.FromString("6.63")),
-        CBORObject.FromObject(ExtendedDecimal.FromString("-6.63")).Abs());
+        CBORObject.FromObject(EDecimal.FromString("6.63")),
+        CBORObject.FromObject(EDecimal.FromString("-6.63")).Abs());
       Assert.AreEqual(
-        CBORObject.FromObject(ExtendedFloat.FromString("2.75")),
-        CBORObject.FromObject(ExtendedFloat.FromString("-2.75")).Abs());
+        CBORObject.FromObject(EFloat.FromString("2.75")),
+        CBORObject.FromObject(EFloat.FromString("-2.75")).Abs());
       Assert.AreEqual(
         CBORObject.FromObject(ERational.FromDouble(2.5)),
         CBORObject.FromObject(ERational.FromDouble(-2.5)).Abs());
@@ -257,7 +257,7 @@ namespace Test {
     }
 
     private static EDecimal AsED(CBORObject obj) {
-      return EDecimal.FromString(obj.AsExtendedDecimal().ToString());
+      return EDecimal.FromString(obj.AsEDecimal().ToString());
     }
     [Test]
     public void TestAddition() {
@@ -314,9 +314,9 @@ namespace Test {
     }
 
     [Test]
-    public void TestAsBigInteger() {
+    public void TestAsEInteger() {
       try {
-        CBORObject.FromObject((object)null).AsBigInteger();
+        CBORObject.FromObject((object)null).AsEInteger();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         Console.Write(String.Empty);
@@ -325,7 +325,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.Null.AsBigInteger();
+        CBORObject.Null.AsEInteger();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         Console.Write(String.Empty);
@@ -334,7 +334,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.True.AsBigInteger();
+        CBORObject.True.AsEInteger();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         Console.Write(String.Empty);
@@ -343,7 +343,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.False.AsBigInteger();
+        CBORObject.False.AsEInteger();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         Console.Write(String.Empty);
@@ -352,7 +352,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.Undefined.AsBigInteger();
+        CBORObject.Undefined.AsEInteger();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         Console.Write(String.Empty);
@@ -361,7 +361,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.NewArray().AsBigInteger();
+        CBORObject.NewArray().AsEInteger();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         Console.Write(String.Empty);
@@ -370,7 +370,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.NewMap().AsBigInteger();
+        CBORObject.NewMap().AsEInteger();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         Console.Write(String.Empty);
@@ -383,14 +383,14 @@ namespace Test {
         CBORObject numberinfo = numbers[i];
         string numberString = numberinfo["number"].AsString();
         CBORObject cbornumber =
-          CBORObject.FromObject(ExtendedDecimal.FromString(numberString));
+          CBORObject.FromObject(EDecimal.FromString(numberString));
         if (!numberinfo["integer"].Equals(CBORObject.Null)) {
           Assert.AreEqual(
             numberinfo["integer"].AsString(),
-            cbornumber.AsBigInteger().ToString());
+            cbornumber.AsEInteger().ToString());
         } else {
           try {
-            cbornumber.AsBigInteger();
+            cbornumber.AsEInteger();
             Assert.Fail("Should have failed");
           } catch (OverflowException) {
             Console.Write(String.Empty);
@@ -403,21 +403,21 @@ namespace Test {
 
       {
         string stringTemp =
-          CBORObject.FromObject((float)0.75).AsBigInteger().ToString();
+          CBORObject.FromObject((float)0.75).AsEInteger().ToString();
         Assert.AreEqual(
         "0",
         stringTemp);
       }
       {
         string stringTemp =
-          CBORObject.FromObject((float)0.99).AsBigInteger().ToString();
+          CBORObject.FromObject((float)0.99).AsEInteger().ToString();
         Assert.AreEqual(
         "0",
         stringTemp);
       }
       {
         string stringTemp =
-          CBORObject.FromObject((float)0.0000000000000001).AsBigInteger()
+          CBORObject.FromObject((float)0.0000000000000001).AsEInteger()
                 .ToString();
         Assert.AreEqual(
         "0",
@@ -425,49 +425,49 @@ namespace Test {
       }
       {
         string stringTemp =
-          CBORObject.FromObject((float)0.5).AsBigInteger().ToString();
+          CBORObject.FromObject((float)0.5).AsEInteger().ToString();
         Assert.AreEqual(
         "0",
         stringTemp);
       }
       {
         string stringTemp =
-          CBORObject.FromObject((float)1.5).AsBigInteger().ToString();
+          CBORObject.FromObject((float)1.5).AsEInteger().ToString();
         Assert.AreEqual(
         "1",
         stringTemp);
       }
       {
         string stringTemp =
-          CBORObject.FromObject((float)2.5).AsBigInteger().ToString();
+          CBORObject.FromObject((float)2.5).AsEInteger().ToString();
         Assert.AreEqual(
         "2",
         stringTemp);
       }
       {
         string stringTemp =
-          CBORObject.FromObject((float)328323f).AsBigInteger().ToString();
+          CBORObject.FromObject((float)328323f).AsEInteger().ToString();
         Assert.AreEqual(
         "328323",
         stringTemp);
       }
       {
         string stringTemp =
-          CBORObject.FromObject((double)0.75).AsBigInteger().ToString();
+          CBORObject.FromObject((double)0.75).AsEInteger().ToString();
         Assert.AreEqual(
         "0",
         stringTemp);
       }
       {
         string stringTemp =
-          CBORObject.FromObject((double)0.99).AsBigInteger().ToString();
+          CBORObject.FromObject((double)0.99).AsEInteger().ToString();
         Assert.AreEqual(
         "0",
         stringTemp);
       }
       {
         string stringTemp =
-          CBORObject.FromObject((double)0.0000000000000001).AsBigInteger()
+          CBORObject.FromObject((double)0.0000000000000001).AsEInteger()
                 .ToString();
         Assert.AreEqual(
         "0",
@@ -475,34 +475,34 @@ namespace Test {
       }
       {
         string stringTemp =
-          CBORObject.FromObject((double)0.5).AsBigInteger().ToString();
+          CBORObject.FromObject((double)0.5).AsEInteger().ToString();
         Assert.AreEqual(
         "0",
         stringTemp);
       }
       {
         string stringTemp =
-          CBORObject.FromObject((double)1.5).AsBigInteger().ToString();
+          CBORObject.FromObject((double)1.5).AsEInteger().ToString();
         Assert.AreEqual(
         "1",
         stringTemp);
       }
       {
         string stringTemp =
-          CBORObject.FromObject((double)2.5).AsBigInteger().ToString();
+          CBORObject.FromObject((double)2.5).AsEInteger().ToString();
         Assert.AreEqual(
         "2",
         stringTemp);
       }
       {
         string stringTemp =
-          CBORObject.FromObject((double)328323).AsBigInteger().ToString();
+          CBORObject.FromObject((double)328323).AsEInteger().ToString();
         Assert.AreEqual(
         "328323",
         stringTemp);
       }
       try {
-        CBORObject.FromObject(Single.PositiveInfinity).AsBigInteger();
+        CBORObject.FromObject(Single.PositiveInfinity).AsEInteger();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         Console.Write(String.Empty);
@@ -511,7 +511,7 @@ namespace Test {
           InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.FromObject(Single.NegativeInfinity).AsBigInteger();
+        CBORObject.FromObject(Single.NegativeInfinity).AsEInteger();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         Console.Write(String.Empty);
@@ -520,7 +520,7 @@ namespace Test {
           InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.FromObject(Single.NaN).AsBigInteger();
+        CBORObject.FromObject(Single.NaN).AsEInteger();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         Console.Write(String.Empty);
@@ -529,7 +529,7 @@ namespace Test {
           InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.FromObject(Double.PositiveInfinity).AsBigInteger();
+        CBORObject.FromObject(Double.PositiveInfinity).AsEInteger();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         Console.Write(String.Empty);
@@ -538,7 +538,7 @@ namespace Test {
           InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.FromObject(Double.NegativeInfinity).AsBigInteger();
+        CBORObject.FromObject(Double.NegativeInfinity).AsEInteger();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         Console.Write(String.Empty);
@@ -547,7 +547,7 @@ namespace Test {
           InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.FromObject(Double.NaN).AsBigInteger();
+        CBORObject.FromObject(Double.NaN).AsEInteger();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         Console.Write(String.Empty);
@@ -627,7 +627,7 @@ namespace Test {
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
-          CBORObject.FromObject(ExtendedDecimal.FromString(
+          CBORObject.FromObject(EDecimal.FromString(
   numberinfo["number"].AsString()));
         if (numberinfo["byte"].AsBoolean()) {
           Assert.AreEqual(
@@ -730,43 +730,43 @@ namespace Test {
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
-          CBORObject.FromObject(ExtendedDecimal.FromString(
+          CBORObject.FromObject(EDecimal.FromString(
   numberinfo["number"].AsString()));
         AreEqualExact(
-(double)ExtendedDecimal.FromString(numberinfo["number"].AsString()).ToDouble(),
+(double)EDecimal.FromString(numberinfo["number"].AsString()).ToDouble(),
 cbornumber.AsDouble());
       }
     }
 
     [Test]
-    public void TestAsExtendedDecimal() {
+    public void TestAsEDecimal() {
       Assert.AreEqual(
         CBORTestCommon.DecPosInf,
-        CBORObject.FromObject(Single.PositiveInfinity).AsExtendedDecimal());
+        CBORObject.FromObject(Single.PositiveInfinity).AsEDecimal());
       Assert.AreEqual(
         CBORTestCommon.DecNegInf,
-        CBORObject.FromObject(Single.NegativeInfinity).AsExtendedDecimal());
+        CBORObject.FromObject(Single.NegativeInfinity).AsEDecimal());
       {
         string stringTemp =
-          CBORObject.FromObject(Single.NaN).AsExtendedDecimal().ToString();
+          CBORObject.FromObject(Single.NaN).AsEDecimal().ToString();
         Assert.AreEqual(
         "NaN",
         stringTemp);
       }
       Assert.AreEqual(
         CBORTestCommon.DecPosInf,
-        CBORObject.FromObject(Double.PositiveInfinity).AsExtendedDecimal());
+        CBORObject.FromObject(Double.PositiveInfinity).AsEDecimal());
       Assert.AreEqual(
         CBORTestCommon.DecNegInf,
-        CBORObject.FromObject(Double.NegativeInfinity).AsExtendedDecimal());
+        CBORObject.FromObject(Double.NegativeInfinity).AsEDecimal());
       {
         object objectTemp = "NaN";
-     object objectTemp2 = CBORObject.FromObject(Double.NaN).AsExtendedDecimal()
+     object objectTemp2 = CBORObject.FromObject(Double.NaN).AsEDecimal()
                     .ToString();
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       try {
-        CBORObject.NewArray().AsExtendedDecimal();
+        CBORObject.NewArray().AsEDecimal();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         Console.Write(String.Empty);
@@ -775,7 +775,7 @@ cbornumber.AsDouble());
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.NewMap().AsExtendedDecimal();
+        CBORObject.NewMap().AsEDecimal();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         Console.Write(String.Empty);
@@ -784,7 +784,7 @@ cbornumber.AsDouble());
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.True.AsExtendedDecimal();
+        CBORObject.True.AsEDecimal();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         Console.Write(String.Empty);
@@ -793,7 +793,7 @@ cbornumber.AsDouble());
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.False.AsExtendedDecimal();
+        CBORObject.False.AsEDecimal();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         Console.Write(String.Empty);
@@ -802,7 +802,7 @@ cbornumber.AsDouble());
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.Undefined.AsExtendedDecimal();
+        CBORObject.Undefined.AsEDecimal();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         Console.Write(String.Empty);
@@ -811,7 +811,7 @@ cbornumber.AsDouble());
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.FromObject(String.Empty).AsExtendedDecimal();
+        CBORObject.FromObject(String.Empty).AsEDecimal();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         Console.Write(String.Empty);
@@ -821,43 +821,43 @@ cbornumber.AsDouble());
       }
     }
     [Test]
-    public void TestAsExtendedFloat() {
+    public void TestAsEFloat() {
       Assert.AreEqual(
         CBORTestCommon.FloatPosInf,
-        CBORObject.FromObject(Single.PositiveInfinity).AsExtendedFloat());
+        CBORObject.FromObject(Single.PositiveInfinity).AsEFloat());
       Assert.AreEqual(
         CBORTestCommon.FloatNegInf,
-        CBORObject.FromObject(Single.NegativeInfinity).AsExtendedFloat());
-      Assert.IsTrue(CBORObject.FromObject(Single.NaN).AsExtendedFloat()
+        CBORObject.FromObject(Single.NegativeInfinity).AsEFloat());
+      Assert.IsTrue(CBORObject.FromObject(Single.NaN).AsEFloat()
                     .IsNaN());
       Assert.AreEqual(
         CBORTestCommon.FloatPosInf,
-        CBORObject.FromObject(Double.PositiveInfinity).AsExtendedFloat());
+        CBORObject.FromObject(Double.PositiveInfinity).AsEFloat());
       Assert.AreEqual(
         CBORTestCommon.FloatNegInf,
-        CBORObject.FromObject(Double.NegativeInfinity).AsExtendedFloat());
-      Assert.IsTrue(CBORObject.FromObject(Double.NaN).AsExtendedFloat()
+        CBORObject.FromObject(Double.NegativeInfinity).AsEFloat());
+      Assert.IsTrue(CBORObject.FromObject(Double.NaN).AsEFloat()
                     .IsNaN());
     }
     [Test]
-    public void TestAsExtendedRational() {
+    public void TestAsERational() {
       Assert.AreEqual(
         CBORTestCommon.RatPosInf,
-        CBORObject.FromObject(Single.PositiveInfinity).AsExtendedRational());
+        CBORObject.FromObject(Single.PositiveInfinity).AsERational());
       Assert.AreEqual(
         CBORTestCommon.RatNegInf,
-        CBORObject.FromObject(Single.NegativeInfinity).AsExtendedRational());
+        CBORObject.FromObject(Single.NegativeInfinity).AsERational());
       Assert.IsTrue(CBORObject.FromObject(CBORObject.FromObject(Single.NaN)
-        .AsExtendedRational()).IsNaN());
+        .AsERational()).IsNaN());
       Assert.AreEqual(
         CBORTestCommon.RatPosInf,
-        CBORObject.FromObject(Double.PositiveInfinity).AsExtendedRational());
+        CBORObject.FromObject(Double.PositiveInfinity).AsERational());
       Assert.AreEqual(
         CBORTestCommon.RatNegInf,
-        CBORObject.FromObject(Double.NegativeInfinity).AsExtendedRational());
+        CBORObject.FromObject(Double.NegativeInfinity).AsERational());
       Assert.IsTrue(
 CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
-          .AsExtendedRational()).IsNaN());
+          .AsERational()).IsNaN());
     }
     [Test]
     public void TestAsInt16() {
@@ -920,7 +920,7 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
           CBORObject.FromObject(
-            ExtendedDecimal.FromString(numberinfo["number"].AsString()));
+            EDecimal.FromString(numberinfo["number"].AsString()));
         if (numberinfo["int16"].AsBoolean()) {
           Assert.AreEqual(
     StringToInt(numberinfo["integer"].AsString()),
@@ -998,8 +998,8 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
-        ExtendedDecimal edec =
-          ExtendedDecimal.FromString(numberinfo["number"].AsString());
+        EDecimal edec =
+          EDecimal.FromString(numberinfo["number"].AsString());
         CBORObject cbornumber = CBORObject.FromObject(edec);
         bool isdouble = numberinfo["double"].AsBoolean();
         CBORObject cbornumberdouble = CBORObject.FromObject(edec.ToDouble());
@@ -1113,8 +1113,8 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
-        ExtendedDecimal edec =
-          ExtendedDecimal.FromString(numberinfo["number"].AsString());
+        EDecimal edec =
+          EDecimal.FromString(numberinfo["number"].AsString());
         CBORObject cbornumber = CBORObject.FromObject(edec);
         bool isdouble = numberinfo["double"].AsBoolean();
         CBORObject cbornumberdouble = CBORObject.FromObject(edec.ToDouble());
@@ -1233,10 +1233,10 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
-          CBORObject.FromObject(ExtendedDecimal.FromString(
+          CBORObject.FromObject(EDecimal.FromString(
   numberinfo["number"].AsString()));
         AreEqualExact(
-(float)ExtendedDecimal.FromString(numberinfo["number"].AsString()).ToSingle(),
+(float)EDecimal.FromString(numberinfo["number"].AsString()).ToSingle(),
 cbornumber.AsSingle());
       }
     }
@@ -1329,7 +1329,7 @@ cbornumber.AsSingle());
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
-          CBORObject.FromObject(ExtendedDecimal.FromString(
+          CBORObject.FromObject(EDecimal.FromString(
   numberinfo["number"].AsString()));
         if (numberinfo["double"].AsBoolean()) {
           Assert.IsTrue(cbornumber.CanFitInDouble());
@@ -1362,7 +1362,7 @@ i)).CanFitInDouble());
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
-          CBORObject.FromObject(ExtendedDecimal.FromString(
+          CBORObject.FromObject(EDecimal.FromString(
   numberinfo["number"].AsString()));
         if (numberinfo["int32"].AsBoolean() &&
   numberinfo["isintegral"].AsBoolean()) {
@@ -1388,7 +1388,7 @@ i)).CanFitInDouble());
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
-          CBORObject.FromObject(ExtendedDecimal.FromString(
+          CBORObject.FromObject(EDecimal.FromString(
   numberinfo["number"].AsString()));
         if (numberinfo["int64"].AsBoolean() &&
   numberinfo["isintegral"].AsBoolean()) {
@@ -1414,7 +1414,7 @@ i)).CanFitInDouble());
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
-          CBORObject.FromObject(ExtendedDecimal.FromString(
+          CBORObject.FromObject(EDecimal.FromString(
   numberinfo["number"].AsString()));
         if (numberinfo["single"].AsBoolean()) {
           Assert.IsTrue(cbornumber.CanFitInSingle());
@@ -1477,7 +1477,7 @@ i)).CanFitInSingle());
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
           CBORObject.FromObject(
-            ExtendedDecimal.FromString(numberinfo["number"].AsString()));
+            EDecimal.FromString(numberinfo["number"].AsString()));
         if (numberinfo["int32"].AsBoolean()) {
           Assert.IsTrue(cbornumber.CanTruncatedIntFitInInt32());
         } else {
@@ -1505,7 +1505,7 @@ i)).CanFitInSingle());
                     .CanTruncatedIntFitInInt32());
       Assert.IsFalse(CBORObject.FromObject(CBORTestCommon.DecNegInf)
                     .CanTruncatedIntFitInInt32());
-      Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.NaN)
+      Assert.IsFalse(CBORObject.FromObject(EDecimal.NaN)
                     .CanTruncatedIntFitInInt32());
     }
 
@@ -1551,7 +1551,7 @@ i)).CanFitInSingle());
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
-          CBORObject.FromObject(ExtendedDecimal.FromString(
+          CBORObject.FromObject(EDecimal.FromString(
   numberinfo["number"].AsString()));
         if (numberinfo["int64"].AsBoolean()) {
           Assert.IsTrue(cbornumber.CanTruncatedIntFitInInt64());
@@ -1611,13 +1611,13 @@ CBORObject.FromObject(0.1f));
         CBORObject.Undefined, CBORObject.Null,
         CBORObject.False, CBORObject.True,
         CBORObject.FromObject(Double.NegativeInfinity),
-        CBORObject.FromObject(ExtendedDecimal.FromString("-1E+5000")),
+        CBORObject.FromObject(EDecimal.FromString("-1E+5000")),
         CBORObject.FromObject(Int64.MinValue),
         CBORObject.FromObject(Int32.MinValue),
         CBORObject.FromObject(-2), CBORObject.FromObject(-1),
         CBORObject.FromObject(0), CBORObject.FromObject(1),
         CBORObject.FromObject(2), CBORObject.FromObject(Int64.MaxValue),
-        CBORObject.FromObject(ExtendedDecimal.FromString("1E+5000")),
+        CBORObject.FromObject(EDecimal.FromString("1E+5000")),
         CBORObject.FromObject(Double.PositiveInfinity),
         CBORObject.FromObject(Double.NaN), CBORObject.FromSimpleValue(0),
         CBORObject.FromSimpleValue(19), CBORObject.FromSimpleValue(32),
@@ -2146,15 +2146,15 @@ TestCommon.IntToString(j));
       CBORTestCommon.AssertRoundTrip(cbor);
       Assert.AreEqual(
         CBORObject.Null,
-        CBORObject.FromObject((ExtendedRational)null));
+        CBORObject.FromObject((ERational)null));
       Assert.AreEqual(
         CBORObject.Null,
-        CBORObject.FromObject((ExtendedDecimal)null));
+        CBORObject.FromObject((EDecimal)null));
       Assert.AreEqual(
         CBORObject.FromObject(10),
-        CBORObject.FromObject(ExtendedRational.Create(10, 1)));
+        CBORObject.FromObject(ERational.Create(10, 1)));
       try {
-        CBORObject.FromObject(ExtendedRational.Create(10, 2));
+        CBORObject.FromObject(ERational.Create(10, 2));
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2228,7 +2228,7 @@ TestCommon.IntToString(j));
     }
     [Test]
     public void TestFromObjectAndTag() {
-  BigInteger bigvalue = BigInteger.fromString("99999999999999999999999999999");
+  EInteger bigvalue = EInteger.FromString("99999999999999999999999999999");
       try {
         CBORObject.FromObjectAndTag(2, bigvalue);
         Assert.Fail("Should have failed");
@@ -2262,8 +2262,9 @@ TestCommon.IntToString(j));
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
+      EInteger eintNull = null;
       try {
-        CBORObject.FromObjectAndTag(2, null);
+        CBORObject.FromObjectAndTag(2, eintNull);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
         Console.Write(String.Empty);
@@ -2272,7 +2273,7 @@ TestCommon.IntToString(j));
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.FromObjectAndTag(2, BigInteger.fromString("-1"));
+        CBORObject.FromObjectAndTag(2, EInteger.FromString("-1"));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
         Console.Write(String.Empty);
@@ -2395,7 +2396,7 @@ TestCommon.IntToString(j));
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        const BigInteger ValueBigintNull = null;
+        const EInteger ValueBigintNull = null;
         CBORObject.True.HasTag(ValueBigintNull);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
@@ -2405,7 +2406,7 @@ TestCommon.IntToString(j));
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.True.HasTag(BigInteger.fromString("-1"));
+        CBORObject.True.HasTag(EInteger.FromString("-1"));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
         Console.Write(String.Empty);
@@ -2414,10 +2415,10 @@ TestCommon.IntToString(j));
         throw new InvalidOperationException(String.Empty, ex);
       }
       Assert.IsFalse(CBORObject.True.HasTag(0));
-      Assert.IsFalse(CBORObject.True.HasTag(BigInteger.Zero));
+      Assert.IsFalse(CBORObject.True.HasTag(EInteger.Zero));
     }
     [Test]
-    public void TestInnermostTag() {
+    public void TestMostInnerTag() {
       // not implemented yet
     }
     [Test]
@@ -2453,12 +2454,12 @@ TestCommon.IntToString(j));
         CBORTestCommon.DecPosInf).IsFinite);
       Assert.IsFalse(CBORObject.FromObject(
         CBORTestCommon.DecNegInf).IsFinite);
-      Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.NaN).IsFinite);
+      Assert.IsFalse(CBORObject.FromObject(EDecimal.NaN).IsFinite);
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
-          CBORObject.FromObject(ExtendedDecimal.FromString(
+          CBORObject.FromObject(EDecimal.FromString(
   numberinfo["number"].AsString()));
         if (!numberinfo["integer"].Equals(CBORObject.Null)) {
           Assert.IsTrue(cbornumber.IsFinite);
@@ -2483,27 +2484,27 @@ TestCommon.IntToString(j));
       Assert.IsFalse(CBORObject.NewArray().IsIntegral);
       Assert.IsFalse(CBORObject.NewMap().IsIntegral);
       bool isint = CBORObject.FromObject(
-BigInteger.fromRadixString(
+EInteger.FromRadixString(
 "8000000000000000",
 16)).IsIntegral;
       Assert.IsTrue(isint);
       isint =
         CBORObject.FromObject(
-      BigInteger.fromRadixString(
+      EInteger.FromRadixString(
       "80000000000000000000",
       16)).IsIntegral;
       Assert.IsTrue(isint);
 
       isint = CBORObject.FromObject(
-    BigInteger.fromRadixString(
+    EInteger.FromRadixString(
     "8000000000000000000000000",
     16)).IsIntegral;
       Assert.IsTrue(isint);
       Assert.IsTrue(CBORObject.FromObject(
-        ExtendedDecimal.FromString("4444e+800")).IsIntegral);
+        EDecimal.FromString("4444e+800")).IsIntegral);
 
       Assert.IsFalse(CBORObject.FromObject(
-        ExtendedDecimal.FromString("4444e-800")).IsIntegral);
+        EDecimal.FromString("4444e-800")).IsIntegral);
       Assert.IsFalse(CBORObject.FromObject(2.5).IsIntegral);
       Assert.IsFalse(CBORObject.FromObject(999.99).IsIntegral);
       Assert.IsFalse(CBORObject.FromObject(Double.PositiveInfinity).IsIntegral);
@@ -2513,7 +2514,7 @@ BigInteger.fromRadixString(
         CBORTestCommon.DecPosInf).IsIntegral);
       Assert.IsFalse(CBORObject.FromObject(
         CBORTestCommon.DecNegInf).IsIntegral);
-      Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.NaN).IsIntegral);
+      Assert.IsFalse(CBORObject.FromObject(EDecimal.NaN).IsIntegral);
       cbor = CBORObject.True;
       Assert.IsFalse(cbor.IsIntegral);
       cbor = CBORObject.False;
@@ -2526,7 +2527,7 @@ BigInteger.fromRadixString(
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
-          CBORObject.FromObject(ExtendedDecimal.FromString(
+          CBORObject.FromObject(EDecimal.FromString(
             numberinfo["number"].AsString()));
         if (numberinfo["isintegral"].AsBoolean()) {
           Assert.IsTrue(cbornumber.IsIntegral);
@@ -2791,7 +2792,7 @@ BigInteger.fromRadixString(
     [Test]
     public void TestNegativeZero() {
       CBORObject negzero = CBORObject.FromObject(
-        ExtendedDecimal.FromString("-0"));
+        EDecimal.FromString("-0"));
       CBORTestCommon.AssertRoundTrip(negzero);
     }
     [Test]
@@ -2823,12 +2824,12 @@ BigInteger.fromRadixString(
       // not implemented yet
     }
     [Test]
-    public void TestOutermostTag() {
+    public void TestMostOuterTag() {
       CBORObject cbor = CBORObject.FromObjectAndTag(CBORObject.True, 999);
       cbor = CBORObject.FromObjectAndTag(CBORObject.True, 1000);
-      Assert.AreEqual(BigInteger.fromString("1000"), cbor.OutermostTag);
+      Assert.AreEqual(EInteger.FromString("1000"), cbor.MostOuterTag);
       cbor = CBORObject.True;
-      Assert.AreEqual(BigInteger.fromString("-1"), cbor.OutermostTag);
+      Assert.AreEqual(EInteger.FromString("-1"), cbor.MostOuterTag);
     }
     [Test]
     public void TestRead() {
@@ -3690,7 +3691,7 @@ BigInteger.fromRadixString(
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
-          CBORObject.FromObject(ExtendedDecimal.FromString(
+          CBORObject.FromObject(EDecimal.FromString(
   numberinfo["number"].AsString()));
         if (cbornumber.IsNaN()) {
           try {
@@ -3903,9 +3904,9 @@ BigInteger.fromRadixString(
     [Test]
     public void TestUntag() {
       CBORObject o = CBORObject.FromObjectAndTag("test", 999);
-      Assert.AreEqual(BigInteger.fromString("999"), o.InnermostTag);
+      Assert.AreEqual(EInteger.FromString("999"), o.MostInnerTag);
       o = o.Untag();
-      Assert.AreEqual(BigInteger.fromString("-1"), o.InnermostTag);
+      Assert.AreEqual(EInteger.FromString("-1"), o.MostInnerTag);
     }
     [Test]
     public void TestUntagOne() {
@@ -3924,12 +3925,12 @@ BigInteger.fromRadixString(
     }
 
     public void TestWrite3() {
-      ExtendedFloat ef;
-      ExtendedDecimal ed;
+      EFloat ef;
+      EDecimal ed;
       var fr = new FastRandom();
       try {
         for (var i = 0; i < 50; ++i) {
-          ef = RandomObjects.RandomExtendedFloat(fr);
+          ef = RandomObjects.RandomEFloat(fr);
           if (!ef.IsNaN()) {
             CBORObject cborTemp1 = CBORObject.FromObject(ef);
             CBORObject cborTemp2 = CBORObject.FromObject((object)ef);
@@ -3953,9 +3954,9 @@ BigInteger.fromRadixString(
             TestWriteObj((object)ef, ef);
           }
 
-          ef = ExtendedFloat.Create(
-           RandomObjects.RandomBigInteger(fr),
-           RandomObjects.RandomBigInteger(fr));
+          ef = EFloat.Create(
+           RandomObjects.RandomEInteger(fr),
+           RandomObjects.RandomEInteger(fr));
           {
             CBORObject cborTemp1 = CBORObject.FromObject(ef);
             CBORObject cborTemp2 = CBORObject.FromObject((object)ef);
@@ -3984,7 +3985,7 @@ BigInteger.fromRadixString(
           }
         }
         for (var i = 0; i < 50; ++i) {
-          ed = RandomObjects.RandomExtendedDecimal(fr);
+          ed = RandomObjects.RandomEDecimal(fr);
           if (!ed.IsNaN()) {
             CBORObject cborTemp1 = CBORObject.FromObject(ed);
             CBORObject cborTemp2 = CBORObject.FromObject((object)ed);
@@ -4012,9 +4013,9 @@ BigInteger.fromRadixString(
             TestWriteObj((object)ed, ed);
           }
 
-          ed = ExtendedDecimal.Create(
-           RandomObjects.RandomBigInteger(fr),
-           RandomObjects.RandomBigInteger(fr));
+          ed = EDecimal.Create(
+           RandomObjects.RandomEInteger(fr),
+           RandomObjects.RandomEInteger(fr));
           {
             CBORObject cborTemp1 = CBORObject.FromObject(ed);
             CBORObject cborTemp2 = CBORObject.FromObject((object)ed);
@@ -4119,7 +4120,7 @@ BigInteger.fromRadixString(
           TestWriteObj((object)str, str);
         }
 
-        ExtendedFloat ef = null;
+        EFloat ef = null;
         {
           CBORObject cborTemp1 = CBORObject.FromObject(ef);
           CBORObject cborTemp2 = CBORObject.FromObject((object)ef);
@@ -4143,7 +4144,7 @@ BigInteger.fromRadixString(
           TestWriteObj((object)ef, null);
         }
 
-        ef = ExtendedFloat.FromString("20");
+        ef = EFloat.FromString("20");
         {
           CBORObject cborTemp1 = CBORObject.FromObject(ef);
           CBORObject cborTemp2 = CBORObject.FromObject((object)ef);
@@ -4167,7 +4168,7 @@ BigInteger.fromRadixString(
           TestWriteObj((object)ef, ef);
         }
 
-        ExtendedRational er = null;
+        ERational er = null;
         {
           CBORObject cborTemp1 = CBORObject.FromObject(er);
           CBORObject cborTemp2 = CBORObject.FromObject((object)er);
@@ -4191,9 +4192,9 @@ BigInteger.fromRadixString(
           TestWriteObj((object)er, null);
         }
 
-        er = ExtendedRational.Create(
-          RandomObjects.RandomBigInteger(fr),
-          RandomObjects.RandomBigInteger(fr));
+        er = ERational.Create(
+          RandomObjects.RandomEInteger(fr),
+          RandomObjects.RandomEInteger(fr));
         {
           CBORObject cborTemp1 = CBORObject.FromObject(er);
           CBORObject cborTemp2 = CBORObject.FromObject((object)er);
@@ -4221,7 +4222,7 @@ BigInteger.fromRadixString(
           TestWriteObj((object)er, er);
         }
 
-        ExtendedDecimal ed = null;
+        EDecimal ed = null;
         {
           CBORObject cborTemp1 = CBORObject.FromObject(ed);
           CBORObject cborTemp2 = CBORObject.FromObject((object)ed);
@@ -4245,7 +4246,7 @@ BigInteger.fromRadixString(
           TestWriteObj((object)ed, null);
         }
 
-        BigInteger bigint = null;
+        EInteger bigint = null;
         {
           CBORObject cborTemp1 = CBORObject.FromObject(bigint);
           CBORObject cborTemp2 = CBORObject.FromObject((object)bigint);
@@ -4300,7 +4301,7 @@ BigInteger.fromRadixString(
             TestWriteObj((object)values[i], values[i]);
           }
 
-          BigInteger bigintVal = BigInteger.valueOf(values[i]);
+          EInteger bigintVal = EInteger.FromInt64(values[i]);
           {
             CBORObject cborTemp1 = CBORObject.FromObject(bigintVal);
             CBORObject cborTemp2 = CBORObject.FromObject((object)bigintVal);
@@ -4527,8 +4528,8 @@ CBORObject.Zero);
 
     internal static void CompareDecimals(CBORObject o1, CBORObject o2) {
       int cmpDecFrac = TestCommon.CompareTestReciprocal(
-        o1.AsExtendedDecimal(),
-        o2.AsExtendedDecimal());
+        o1.AsEDecimal(),
+        o2.AsEDecimal());
       int cmpCobj = TestCommon.CompareTestReciprocal(o1, o2);
       if (cmpDecFrac != cmpCobj) {
         Assert.AreEqual(

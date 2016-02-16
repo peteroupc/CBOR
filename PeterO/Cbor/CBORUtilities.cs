@@ -78,8 +78,7 @@ namespace PeterO.Cbor {
       return Convert.ToString(
 (double)dbl,
 System.Globalization.CultureInfo.InvariantCulture);
-      // TODO: Use this version in version 3, and preserve
-      // TODO: negative zeros in that version
+      // TODO
       // return EFloat.FromDouble(dbl).ToShortestString(EContext.Binary32);
     }
 
@@ -87,8 +86,7 @@ System.Globalization.CultureInfo.InvariantCulture);
       return Convert.ToString(
 (float)sing,
 System.Globalization.CultureInfo.InvariantCulture);
-      // TODO: Use this version in version 3, and preserve
-      // TODO: negative zeros in that version
+      // TODO
       // return EFloat.FromSingle(sing).ToShortestString(EContext.Binary64);
     }
 

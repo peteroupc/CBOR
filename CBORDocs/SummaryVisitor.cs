@@ -26,6 +26,7 @@ namespace PeterO.DocGen {
     }
 
     public void Finish() {
+      this.writer.Write("## API Documentation\r\n\r\n");
       foreach (var key in this.docs.Keys) {
         var finalString = this.docs[key].ToString();
         var typeName = DocVisitor.FormatType(key);

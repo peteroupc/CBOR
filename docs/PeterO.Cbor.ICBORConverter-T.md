@@ -19,6 +19,6 @@ Converts an object to a CBOR object.
 
  * <i>obj</i>: An object to convert to a CBOR object.
 
-<b>Returns:</b>
+<b>Return Value:</b>
 
 A CBOR object.

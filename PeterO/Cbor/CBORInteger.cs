@@ -17,7 +17,7 @@ namespace PeterO.Cbor {
       -val : obj);
     }
 
-    public EInteger AsBigInteger(object obj) {
+    public EInteger AsEInteger(object obj) {
       return (EInteger)(long)obj;
     }
 

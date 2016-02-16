@@ -4,26 +4,27 @@ using System.Text;
 using NUnit.Framework;
 using PeterO;
 using PeterO.Cbor;
+using PeterO.Numbers;
 
 namespace Test {
   internal static class CBORTestCommon {
-    internal static readonly ExtendedDecimal DecPosInf =
-  ExtendedDecimal.PositiveInfinity;
+    internal static readonly EDecimal DecPosInf =
+  EDecimal.PositiveInfinity;
 
-    internal static readonly ExtendedDecimal DecNegInf =
-      ExtendedDecimal.NegativeInfinity;
+    internal static readonly EDecimal DecNegInf =
+      EDecimal.NegativeInfinity;
 
-    internal static readonly ExtendedFloat FloatPosInf =
-      ExtendedFloat.PositiveInfinity;
+    internal static readonly EFloat FloatPosInf =
+      EFloat.PositiveInfinity;
 
-    internal static readonly ExtendedFloat FloatNegInf =
-      ExtendedFloat.NegativeInfinity;
+    internal static readonly EFloat FloatNegInf =
+      EFloat.NegativeInfinity;
 
-    internal static readonly ExtendedRational RatPosInf =
-      ExtendedRational.PositiveInfinity;
+    internal static readonly ERational RatPosInf =
+      ERational.PositiveInfinity;
 
-    internal static readonly ExtendedRational RatNegInf =
-      ExtendedRational.NegativeInfinity;
+    internal static readonly ERational RatNegInf =
+      ERational.NegativeInfinity;
 
     public static CBORObject RandomNumber(FastRandom rand) {
       switch (rand.NextValue(6)) {
@@ -38,12 +39,12 @@ RandomObjects.RandomSingle(
 rand,
 Int32.MaxValue));
         case 2:
-          return CBORObject.FromObject(RandomObjects.RandomBigInteger(rand));
+          return CBORObject.FromObject(RandomObjects.RandomEInteger(rand));
         case 3:
-          return CBORObject.FromObject(RandomObjects.RandomExtendedFloat(rand));
+          return CBORObject.FromObject(RandomObjects.RandomEFloat(rand));
         case 4:
        return
-  CBORObject.FromObject(RandomObjects.RandomExtendedDecimal(rand));
+  CBORObject.FromObject(RandomObjects.RandomEDecimal(rand));
         case 5:
           return CBORObject.FromObject(RandomObjects.RandomInt64(rand));
         default: throw new ArgumentException();
@@ -63,12 +64,12 @@ RandomObjects.RandomSingle(
 rand,
 Int32.MaxValue));
         case 2:
-          return CBORObject.FromObject(RandomObjects.RandomBigInteger(rand));
+          return CBORObject.FromObject(RandomObjects.RandomEInteger(rand));
         case 3:
-          return CBORObject.FromObject(RandomObjects.RandomExtendedFloat(rand));
+          return CBORObject.FromObject(RandomObjects.RandomEFloat(rand));
         case 4:
        return
-  CBORObject.FromObject(RandomObjects.RandomExtendedDecimal(rand));
+  CBORObject.FromObject(RandomObjects.RandomEDecimal(rand));
         case 5:
           return CBORObject.FromObject(RandomObjects.RandomInt64(rand));
         case 6:
@@ -117,11 +118,11 @@ Int32.MaxValue));
         } else if (tag == 4 || tag == 5) {
           o = CBORObject.NewArray();
           o.Add(CBORObject.FromObject(RandomObjects.RandomSmallIntegral(rand)));
-          o.Add(CBORObject.FromObject(RandomObjects.RandomBigInteger(rand)));
+          o.Add(CBORObject.FromObject(RandomObjects.RandomEInteger(rand)));
         } else if (tag == 30) {
           o = CBORObject.NewArray();
           o.Add(CBORObject.FromObject(RandomObjects.RandomSmallIntegral(rand)));
-          o.Add(CBORObject.FromObject(RandomObjects.RandomBigInteger(rand)));
+          o.Add(CBORObject.FromObject(RandomObjects.RandomEInteger(rand)));
         } else {
           o = RandomCBORObject(rand, depth + 1);
         }
@@ -233,7 +234,7 @@ Int32.MaxValue));
           throw new InvalidOperationException(String.Empty, ex);
         }
         try {
-          o.AsBigInteger();
+          o.AsEInteger();
           Assert.Fail("Should have failed");
         } catch (OverflowException) {
           Console.Write(String.Empty);

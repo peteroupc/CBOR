@@ -496,6 +496,54 @@ StringBuilder builder) {
       }
     }
 
+    private static string HtmlEscape(string str) {
+      if (str == null) {
+        return str;
+      }
+      str = str.Replace("&", "&amp;");
+      str = str.Replace("<", "&lt;");
+      str = str.Replace(">", "&gt;");
+      str = str.Replace("\"", "&#x22;");
+      return str;
+    }
+
+    public override void VisitUnknownElement(UnknownElement element) {
+      string xmlName = element.Xml.Name.ToString()
+        .ToLowerInvariant();
+      if (xmlName.Equals("b") ||
+        xmlName.Equals("i") || xmlName.Equals("a") ||
+        xmlName.Equals("sup") || xmlName.Equals("i")) {
+        var sb = new StringBuilder();
+        sb.Append("<" + xmlName);
+        foreach (var attr in element.Xml.Attributes()) {
+          sb.Append(" " + attr.Name.ToString() + "=");
+          sb.Append("\"" + HtmlEscape(attr.Value) + "\"");
+        }
+        sb.Append(">");
+        this.Write(sb.ToString());
+        base.VisitUnknownElement(element);
+        this.Write("</" + xmlName + ">");
+      } else {
+        base.VisitUnknownElement(element);
+      }
+    }
+
+    public override void VisitSee(See see) {
+      string cref = see.Cref;
+      if (cref.Substring(0, 2).Equals("T:")) {
+        string typeName = TypeNameUtil.UndecorateTypeName(cref.Substring(2));
+        string content = HtmlEscape(see.Content);
+        if (String.IsNullOrEmpty(content)) {
+          content = HtmlEscape(see.ToText());
+        }
+        this.Write("["+content+"]");
+        this.Write("(" + typeName + ".md)");
+        base.VisitSee(see);
+      } else {
+        base.VisitSee(see);
+      }
+    }
+
     public override void VisitItem(Item item) {
       this.Write(" * ");
       base.VisitItem(item);
@@ -637,7 +685,7 @@ StringBuilder builder) {
 
     public override void VisitReturns(Returns returns) {
       using (var ch = this.Change(this.returnStr)) {
-        this.WriteLine("<b>Returns:</b>\r\n");
+        this.WriteLine("<b>Return Value:</b>\r\n");
         base.VisitReturns(returns);
         this.WriteLine("\r\n\r\n");
       }

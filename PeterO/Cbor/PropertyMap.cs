@@ -110,6 +110,10 @@ Type[] parameters) {
       }
     }
 
+// Inappropriate to mark these obsolete; they're
+// just non-publicly-visible methods to convert to
+// and from legacy arbitrary-precision classes
+#pragma warning disable 618
     public static BigInteger ToLegacy(EInteger ei) {
       return BigInteger.ToLegacy(ei);
     }
@@ -141,7 +145,7 @@ Type[] parameters) {
     public static ERational FromLegacy(ExtendedRational er) {
       return ExtendedRational.FromLegacy(er);
     }
-
+#pragma warning restore 618
     private static void FromArrayRecursive(
 Array arr,
 int[] index,
@@ -200,7 +204,7 @@ CBORObject obj) {
         data[6] = (byte)((uvalue >> 48) & 0xff);
         data[7] = (byte)((uvalue >> 56) & 0xff);
         data[8] = (byte)0;
-        return new BigInteger(EInteger.FromBytes(data, true));
+        return EInteger.FromBytes(data, true);
       }
       return t.Equals(typeof(long)) ? Convert.ToInt64(value) :
       (t.Equals(typeof(uint)) ? Convert.ToInt64(value) :

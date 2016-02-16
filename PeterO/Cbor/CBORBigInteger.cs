@@ -43,7 +43,7 @@ namespace PeterO.Cbor {
       return EFloat.FromEInteger((EInteger)obj).ToSingle();
     }
 
-    public EInteger AsBigInteger(object obj) {
+    public EInteger AsEInteger(object obj) {
       return (EInteger)obj;
     }
 

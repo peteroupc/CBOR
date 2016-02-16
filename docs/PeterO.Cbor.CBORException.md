@@ -12,7 +12,7 @@ Exception thrown for errors involving CBOR data.
     public CBORException(
         string message);
 
-Initializes a new instance of the  class.
+Initializes a new instance of the [PeterO.Cbor.CBORException](PeterO.Cbor.CBORException.md) class.
 
 <b>Parameters:</b>
 
@@ -24,7 +24,7 @@ Initializes a new instance of the  class.
         string message,
         System.Exception innerException);
 
-Initializes a new instance of the  class. Uses the given message and inner exception.
+Initializes a new instance of the [PeterO.Cbor.CBORException](PeterO.Cbor.CBORException.md) class. Uses the given message and inner exception.
 
 <b>Parameters:</b>
 
@@ -36,4 +36,4 @@ Initializes a new instance of the  class. Uses the given message and inner excep
 
     public CBORException();
 
-Initializes a new instance of the  class.
+Initializes a new instance of the [PeterO.Cbor.CBORException](PeterO.Cbor.CBORException.md) class.

@@ -53,7 +53,7 @@ namespace Test {
         }
       }
       try {
-        CBORObject.FromObject(ExtendedDecimal.NaN).AsDecimal();
+        CBORObject.FromObject(EDecimal.NaN).AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
 Console.Write(String.Empty);
@@ -62,7 +62,7 @@ Console.Write(String.Empty);
           InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.FromObject(ExtendedDecimal.SignalingNaN).AsDecimal();
+        CBORObject.FromObject(EDecimal.SignalingNaN).AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
 Console.Write(String.Empty);
@@ -89,7 +89,7 @@ Console.Write(String.Empty);
           InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.FromObject(ExtendedFloat.NaN).AsDecimal();
+        CBORObject.FromObject(EFloat.NaN).AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
 Console.Write(String.Empty);
@@ -98,7 +98,7 @@ Console.Write(String.Empty);
           InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.FromObject(ExtendedFloat.SignalingNaN).AsDecimal();
+        CBORObject.FromObject(EFloat.SignalingNaN).AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
 Console.Write(String.Empty);
