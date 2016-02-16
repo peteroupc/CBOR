@@ -8,7 +8,7 @@
 
 <b>This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.EDecimal`  in the<a href="https://www.nuget.org/packages/PeterO.Numbers"> `PeterO.Numbers` </a>library (in .NET), or  `com.upokecenter.numbers.EDecimal`  in the<a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers` </a>artifact (in Java). This new class can be used in the `CBORObject.FromObject(object)`  method (by including the new library in your code, among other things).</b>
 
-Represents an arbitrary-precision decimal floating-point number.<b>About decimal arithmetic</b>
+ Represents an arbitrary-precision decimal floating-point number.<b>About decimal arithmetic</b>
 
 Decimal (base-10) arithmetic, such as that provided by this class, is appropriate for calculations involving such real-world data as prices and other sums of money, tax rates, and measurements. These calculations often involve multiplying or dividing one decimal with another decimal, or performing other operations on decimal numbers. Many of these calculations also rely on rounding behavior in which the result after rounding is a decimal number (for example, multiplying a price by a premium rate, then rounding, should result in a decimal amount of money).
 
@@ -122,7 +122,7 @@ Gets a value indicating whether this object is negative, including negative zero
 
 <b>Returns:</b>
 
- `true`  if this object is negative, including negative zero; otherwise,  `false` .
+ `true`  If this object is negative, including negative zero; otherwise,.  `false` .
 
 ### Mantissa
 
@@ -161,11 +161,15 @@ The absolute value of this object's un-scaled value.
     public sealed int CompareTo(
         PeterO.ExtendedDecimal other);
 
+Not documented yet.
+
 <b>Parameters:</b>
 
- * <i>other</i>:
+ * <i>other</i>: An ExtendedDecimal object.
 
 <b>Return Value:</b>
+
+A 32-bit signed integer.
 
 ### Create
 

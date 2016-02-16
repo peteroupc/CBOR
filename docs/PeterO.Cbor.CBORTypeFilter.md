@@ -68,7 +68,7 @@ Returns whether an array's length is allowed under this filter.
 
 <b>Return Value:</b>
 
- `true`  if this filter allows CBOR arrays and an array's length is allowed under this filter; otherwise,  `false` .
+ `true`  if this filter allows CBOR arrays and an array's length is allowed under this filter; otherwise, `false` .
 
 ### ArrayLengthMatches
 

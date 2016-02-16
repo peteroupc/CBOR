@@ -124,7 +124,7 @@ Gets a value indicating whether this value is a CBOR false value.
 
 <b>Returns:</b>
 
- `true`  if this value is a CBOR false value; otherwise,  `false` .
+ `true`  If this value is a CBOR false value; otherwise,. `false` .
 
 ### IsFinite
 
@@ -134,7 +134,7 @@ Gets a value indicating whether this CBOR object represents a finite number.
 
 <b>Returns:</b>
 
- `true`  if this CBOR object represents a finite number; otherwise, `false` .
+ `true`  If this CBOR object represents a finite number; otherwise,.  `false` .
 
 ### IsIntegral
 
@@ -144,7 +144,7 @@ Gets a value indicating whether this object represents an integral number, that 
 
 <b>Returns:</b>
 
- `true`  if this object represents an integral number, that is, a number without a fractional part; otherwise,  `false` .
+ `true`  If this object represents an integral number, that is, a number without a fractional part; otherwise,. `false` .
 
 ### IsNegative
 
@@ -154,7 +154,7 @@ Gets a value indicating whether this object is a negative number.
 
 <b>Returns:</b>
 
- `true`  if this object is a negative number; otherwise,  `false` .
+ `true`  If this object is a negative number; otherwise,. `false` .
 
 ### IsNull
 
@@ -164,7 +164,7 @@ Gets a value indicating whether this value is a CBOR null value.
 
 <b>Returns:</b>
 
- `true`  if this value is a CBOR null value; otherwise,  `false` .
+ `true`  If this value is a CBOR null value; otherwise,. `false` .
 
 ### IsTagged
 
@@ -174,7 +174,7 @@ Gets a value indicating whether this data item has at least one tag.
 
 <b>Returns:</b>
 
- `true`  if this data item has at least one tag; otherwise,  `false` .
+ `true`  If this data item has at least one tag; otherwise,.  `false` .
 
 ### IsTrue
 
@@ -184,7 +184,7 @@ Gets a value indicating whether this value is a CBOR true value.
 
 <b>Returns:</b>
 
- `true`  if this value is a CBOR true value; otherwise,  `false` .
+ `true`  If this value is a CBOR true value; otherwise,. `false` .
 
 ### IsUndefined
 
@@ -194,7 +194,7 @@ Gets a value indicating whether this value is a CBOR undefined value.
 
 <b>Returns:</b>
 
- `true`  if this value is a CBOR undefined value; otherwise,  `false` .
+ `true`  If this value is a CBOR undefined value; otherwise,.  `false` .
 
 ### IsZero
 
@@ -204,7 +204,7 @@ Gets a value indicating whether this object's value equals 0.
 
 <b>Returns:</b>
 
- `true`  if this object's value equals 0; otherwise,  `false` .
+ `true`  If this object's value equals 0; otherwise,.  `false` .
 
 ### Keys
 
@@ -1120,7 +1120,7 @@ Generates a CBOR object from a text string in JavaScript Object Notation (JSON) 
 
 <b>Parameters:</b>
 
- * <i>str</i>: A string in JSON format. The entire string must contain a single JSON object and not multiple objects. The string may not begin with a byte-order mark (U+FEFF).
+ * <i>str</i>: A string in JSON format. The entire string must contain a single JSON object and not multiple objects. The string may not begin with a byte-order mark (U + FEFF).
 
 <b>Return Value:</b>
 
@@ -1145,7 +1145,7 @@ Generates a CBOR object from a text string in JavaScript Object Notation (JSON) 
 
 <b>Parameters:</b>
 
- * <i>str</i>: A string in JSON format. The entire string must contain a single JSON object and not multiple objects. The string may not begin with a byte-order mark (U+FEFF).
+ * <i>str</i>: A string in JSON format. The entire string must contain a single JSON object and not multiple objects. The string may not begin with a byte-order mark (U + FEFF).
 
  * <i>options</i>: A CBOREncodeOptions object.
 
@@ -2136,7 +2136,7 @@ There was an error in reading or parsing the data.
     public static PeterO.Cbor.CBORObject ReadJSON(
         System.IO.Stream stream);
 
-Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format. The JSON stream may begin with a byte-order mark (U+FEFF). Since version 2.0, the JSON stream can be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by assuming that the first character read must be a byte-order mark or a nonzero basic character (U+0001 to U+007F). (In previous versions, only UTF-8 was allowed.)If a JSON object has the same key, only the last given value will be used for each duplicated key.
+Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format. The JSON stream may begin with a byte-order mark (U + FEFF). Since version 2.0, the JSON stream can be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by assuming that the first character read must be a byte-order mark or a nonzero basic character (U + 0001 to U + 007F). (In previous versions, only UTF-8 was allowed.)If a JSON object has the same key, only the last given value will be used for each duplicated key.
 
 <b>Parameters:</b>
 
@@ -2164,7 +2164,7 @@ The data stream contains invalid encoding or is not in JSON format.
         System.IO.Stream stream,
         PeterO.Cbor.CBOREncodeOptions options);
 
-Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format. The JSON stream may begin with a byte-order mark (U+FEFF). Since version 2.0, the JSON stream can be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by assuming that the first character read must be a byte-order mark or a nonzero basic character (U+0001 to U+007F). (In previous versions, only UTF-8 was allowed.)By default, if a JSON object has the same key, only the last given value will be used for each duplicated key.
+Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format. The JSON stream may begin with a byte-order mark (U + FEFF). Since version 2.0, the JSON stream can be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by assuming that the first character read must be a byte-order mark or a nonzero basic character (U + 0001 to U + 007F). (In previous versions, only UTF-8 was allowed.)By default, if a JSON object has the same key, only the last given value will be used for each duplicated key.
 
 <b>Parameters:</b>
 
@@ -2219,7 +2219,7 @@ If this object is an array, removes the first instance of the specified item fro
 
 <b>Return Value:</b>
 
- `true`  if the item was removed; otherwise,  `false` .
+ `true`  if the item was removed; otherwise, `false` .
 
 <b>Exceptions:</b>
 
@@ -2291,7 +2291,7 @@ Converts this object to a string in JavaScript Object Notation (JSON) format. Th
 
  * If a number in the form of an arbitrary-precision binary float has a very high binary exponent, it will be converted to a double before being converted to a JSON string. (The resulting double could overflow to infinity, in which case the arbitrary-precision binary float is converted to null.)
 
- * The string will not begin with a byte-order mark (U+FEFF); RFC 7159 (the JSON specification) forbids placing a byte-order mark at the beginning of a JSON string.
+ * The string will not begin with a byte-order mark (U + FEFF); RFC 7159 (the JSON specification) forbids placing a byte-order mark at the beginning of a JSON string.
 
  * Byte strings are converted to Base64 URL by default.
 

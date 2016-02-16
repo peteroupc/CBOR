@@ -17,6 +17,7 @@
             instances of this object with the same value are interchangeable,
             but they should be compared using the "Equals" method rather than
             the "==" operator.</para></summary>
+            <summary>See summary.</summary>
 </doc>
 <doc name="M:PeterO.BigInteger.CompareTo(PeterO.BigInteger)">
 <summary>Not documented yet.</summary>
@@ -27,8 +28,8 @@
 <summary>Returns whether this number's value equals another
             number's value.</summary>
             <param name='other'>An arbitrary-precision integer.</param>
-            <returns><c>true</c> if this number's value equals another number's value;
-            otherwise, <c>false</c>.</returns>
+            <returns><c>true</c> if this number's value equals another number's
+            value; otherwise,<c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.BigInteger.Equals(System.Object)">
 <inheritdoc/>
@@ -36,7 +37,7 @@
             equal.</summary>
             <param name='obj'>An arbitrary object.</param>
             <returns><c>true</c> if this object and another object are equal;
-            otherwise, <c>false</c>.</returns>
+            otherwise,<c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.BigInteger.GetHashCode">
 <summary>Returns the hash code for this instance.</summary>
@@ -71,14 +72,14 @@
 <doc name="M:PeterO.BigInteger.fromBytes(System.Byte[],System.Boolean)">
 <summary>Initializes an arbitrary-precision integer from an array
             of bytes.</summary>
-            <param name='bytes'>A byte array consisting of the two's-complement form of the arbitrary-precision integer to
-            create. The last byte contains the lowest 8-bits, the next-to-last
-            contains the next lowest 8 bits, and so on. To encode negative
-            numbers, take the absolute value of the number, subtract by 1,
-            encode the number into bytes, XOR each byte, and if the
-            most-significant bit of the first byte isn't set, add an additional
-            byte at the start with the value 255. For little-endian, the byte
-            order is reversed from the byte order just discussed.</param>
+            <param name='bytes'>A byte array consisting of the two's-complement form of the arbitrary-precision integer to create. The last byte
+            contains the lowest 8-bits, the next-to-last contains the next
+            lowest 8 bits, and so on. To encode negative numbers, take the
+            absolute value of the number, subtract by 1, encode the number into
+            bytes, XOR each byte, and if the most-significant bit of the first
+            byte isn't set, add an additional byte at the start with the value
+            255. For little-endian, the byte order is reversed from the byte
+            order just discussed.</param>
             <param name='littleEndian'>If true, the byte order is
             little-endian, or least-significant-byte first. If false, the byte
             order is big-endian, or most-significant-byte first.</param>
@@ -109,7 +110,7 @@
             <exception cref='T:System.FormatException'>The string is empty or
             in an invalid format.</exception>
             <example>
-            The following example (C#) converts a number in the
+             The following example (C#) converts a number in the
             form of a hex string to a big integer.
             <code>
             public static arbitrary-precision integer HexToBigInteger(string
@@ -125,9 +126,9 @@
 <summary>Converts a string to an arbitrary-precision
             integer.</summary>
             <param name='str'>A text string. The string must contain only basic
-            digits 0 to 9 (U+0030 to U+0039), except that it may start with a
-            minus sign ("-", U+002D) to indicate a negative number. The string
-            is not allowed to contain white space characters, including
+            digits 0 to 9 (U+0030 to U+0039), except that it may start with
+            a minus sign ("-", U+002D) to indicate a negative number. The
+            string is not allowed to contain white space characters, including
             spaces.</param>
             <returns>An arbitrary-precision integer with the same value as
             given in the string.</returns>
@@ -463,9 +464,9 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsBoolean">
 <summary>Returns false if this object is False, Null, or Undefined;
-            otherwise, true.</summary>
+            otherwise,true.</summary>
             <returns>False if this object is False, Null, or Undefined;
-            otherwise, true.</returns>
+            otherwise,true.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsByte">
 <summary>Converts this object to a byte (0 to 255). Floating point
@@ -494,6 +495,45 @@
             number.</returns>
             <exception cref='T:System.InvalidOperationException'>This object's
             type is not a number type.</exception>
+</doc>
+<doc name="M:PeterO.Cbor.CBORObject.AsEDecimal">
+<summary>Converts this object to a decimal number.</summary>
+            <returns>A decimal number for this object's value. If this object
+            is a rational number with a nonterminating decimal expansion,
+            returns a decimal number rounded to 34 digits.</returns>
+            <exception cref='T:System.InvalidOperationException'>This object's
+            type is not a number type, including if this object is
+            CBORObject.Null.</exception>
+</doc>
+<doc name="M:PeterO.Cbor.CBORObject.AsEFloat">
+<summary>Converts this object to an arbitrary-precision binary
+            floating point number.</summary>
+            <returns>An arbitrary-precision binary floating point number for
+            this object's value. Note that if this object is a decimal number
+            with a fractional part, the conversion may lose information
+            depending on the number. If this object is a rational number with a
+            nonterminating binary expansion, returns a binary floating-point
+            number rounded to 113 bits.</returns>
+            <exception cref='T:System.InvalidOperationException'>This object's
+            type is not a number type, including if this object is
+            CBORObject.Null.</exception>
+</doc>
+<doc name="M:PeterO.Cbor.CBORObject.AsEInteger">
+<summary>Converts this object to an arbitrary-precision integer.
+            Fractional values are truncated to an integer.</summary>
+            <returns>The closest big integer to this object.</returns>
+            <exception cref='T:System.InvalidOperationException'>This object's
+            type is not a number type, including if this object is
+            CBORObject.Null.</exception>
+            <exception cref='T:System.OverflowException'>This object's value is
+            infinity or not-a-number (NaN).</exception>
+</doc>
+<doc name="M:PeterO.Cbor.CBORObject.AsERational">
+<summary>Converts this object to a rational number.</summary>
+            <returns>A rational number for this object's value.</returns>
+            <exception cref='T:System.InvalidOperationException'>This object's
+            type is not a number type, including if this object is
+            CBORObject.Null.</exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsExtendedDecimal">
 <summary>Converts this object to a decimal number.</summary>
@@ -610,16 +650,14 @@
 <doc name="M:PeterO.Cbor.CBORObject.CanFitInInt32">
 <summary>Returns whether this object's value is an integral value,
             is -(2^31) or greater, and is less than 2^31.</summary>
-            <returns><c>true</c> if this object's value is an integral value, is
-            -(2^31) or greater, and is less than 2^31; otherwise, false
-            .</returns>
+            <returns><c>true</c> if this object's value is an integral value,
+            is -(2^31) or greater, and is less than 2^31; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.CanFitInInt64">
 <summary>Returns whether this object's value is an integral value,
             is -(2^63) or greater, and is less than 2^63.</summary>
-            <returns><c>true</c> if this object's value is an integral value, is
-            -(2^63) or greater, and is less than 2^63; otherwise, false
-            .</returns>
+            <returns><c>true</c> if this object's value is an integral value,
+            is -(2^63) or greater, and is less than 2^63; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.CanFitInSingle">
 <summary>Returns whether this object's value can be converted to a
@@ -634,16 +672,14 @@
 <doc name="M:PeterO.Cbor.CBORObject.CanTruncatedIntFitInInt32">
 <summary>Returns whether this object's value, truncated to an
             integer, would be -(2^31) or greater, and less than 2^31.</summary>
-            <returns><c>true</c> if this object's value, truncated to an integer,
-            would be -(2^31) or greater, and less than 2^31; otherwise, false
-            .</returns>
+            <returns><c>true</c> if this object's value, truncated to an
+            integer, would be -(2^31) or greater, and less than 2^31; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.CanTruncatedIntFitInInt64">
 <summary>Returns whether this object's value, truncated to an
             integer, would be -(2^63) or greater, and less than 2^63.</summary>
-            <returns><c>true</c> if this object's value, truncated to an integer,
-            would be -(2^63) or greater, and less than 2^63; otherwise, false
-            .</returns>
+            <returns><c>true</c> if this object's value, truncated to an
+            integer, would be -(2^63) or greater, and less than 2^63; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.CompareTo(PeterO.Cbor.CBORObject)">
 <summary>Compares two CBOR objects.
@@ -702,8 +738,8 @@
 <summary>Determines whether a value of the given key exists in this
             object.</summary>
             <param name='key'>An object that serves as the key.</param>
-            <returns><c>true</c> if the given key is found, or false if the given key
-            is not found or this object is not a map.</returns>
+            <returns><c>true</c> if the given key is found, or false if the
+            given key is not found or this object is not a map.</returns>
             <exception cref='T:System.ArgumentNullException'>Key is null (as
             opposed to CBORObject.Null).</exception>
 </doc>
@@ -711,8 +747,8 @@
 <summary>Determines whether a value of the given key exists in this
             object.</summary>
             <param name='key'>A string that serves as the key.</param>
-            <returns><c>true</c> if the given key (as a CBOR object) is found, or
-            false if the given key is not found or this object is not a
+            <returns><c>true</c> if the given key (as a CBOR object) is found,
+            or false if the given key is not found or this object is not a
             map.</returns>
             <exception cref='T:System.ArgumentNullException'>Key is
             null.</exception>
@@ -785,15 +821,13 @@
 <doc name="M:PeterO.Cbor.CBORObject.Equals(PeterO.Cbor.CBORObject)">
 <summary>Compares the equality of two CBOR objects.</summary>
             <param name='other'>The object to compare.</param>
-            <returns><c>true</c> if the objects are equal; otherwise, false
-            .</returns>
+            <returns><c>true</c> if the objects are equal; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Equals(System.Object)">
 <summary>Determines whether this object and another object are
             equal.</summary>
             <param name='obj'>An arbitrary object.</param>
-            <returns><c>true</c> if the objects are equal; otherwise, false
-            .</returns>
+            <returns><c>true</c> if the objects are equal; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="F:PeterO.Cbor.CBORObject.False">
 <summary>Represents the value false.</summary>
@@ -877,6 +911,12 @@
             floating-point number.</summary>
             <param name='bigValue'>An arbitrary-precision binary floating-point
             number.</param>
+            <returns>A CBOR number.</returns>
+</doc>
+<doc name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Numbers.EInteger)">
+<summary>Generates a CBOR object from an arbitrary-precision
+            integer.</summary>
+            <param name='bigintValue'>An arbitrary-precision value.</param>
             <returns>A CBOR number.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Numbers.ERational)">
@@ -1057,6 +1097,26 @@
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='bigintTag'/> is null.</exception>
 </doc>
+<doc name="M:PeterO.Cbor.CBORObject.FromObjectAndTag(System.Object,PeterO.Numbers.EInteger)">
+<summary>Generates a CBOR object from an arbitrary object and gives
+            the resulting object a tag.</summary>
+            <param name='valueOb'>An arbitrary object. If the tag number is 2
+            or 3, this must be a byte string whose bytes represent an integer
+            in little-endian byte order, and the value of the number is 1 minus
+            the integer's value for tag 3. If the tag number is 4 or 5, this
+            must be an array with two elements: the first must be an integer
+            representing the exponent, and the second must be an integer
+            representing a mantissa.</param>
+            <param name='bigintTag'>Tag number. The tag number 55799 can be
+            used to mark a "self-described CBOR" object.</param>
+            <returns>A CBOR object where the object <paramref name='valueOb'/>
+            is converted to a CBOR object and given the tag <paramref name='bigintTag'/>.</returns>
+            <exception cref='T:System.ArgumentException'>The parameter
+            <paramref name='bigintTag'/> is less than 0 or greater than 2^64-1,
+            or <paramref name='valueOb'/> 's type is unsupported.</exception>
+            <exception cref='T:System.ArgumentNullException'>The parameter
+            <paramref name='bigintTag'/> is null.</exception>
+</doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObjectAndTag(System.Object,System.Int32)">
 <summary>Generates a CBOR object from an arbitrary object and gives
             the resulting object a tag.</summary>
@@ -1123,6 +1183,12 @@
             <paramref name='simpleValue'/> is less than 0, greater than 255, or
             from 24 through 31.</exception>
 </doc>
+<doc name="M:PeterO.Cbor.CBORObject.GetAllTags">
+<summary>Gets a list of all tags, from outermost to
+            innermost.</summary>
+            <returns>An array of tags, or the empty string if this object is
+            untagged.</returns>
+</doc>
 <doc name="M:PeterO.Cbor.CBORObject.GetByteString">
 <summary>Gets the byte array used in this object, if this object is
             a byte string, without copying the data to a new one. This method's
@@ -1147,7 +1213,18 @@
             number.</summary>
             <param name='bigTagValue'>The tag value to search for.</param>
             <returns><c>true</c> if this object has a tag of the given number;
-            otherwise, <c>false</c>.</returns>
+            otherwise,<c>false</c>.</returns>
+            <exception cref='T:System.ArgumentNullException'>BigTagValue is
+            null.</exception>
+            <exception cref='T:System.ArgumentException'>BigTagValue is less
+            than 0.</exception>
+</doc>
+<doc name="M:PeterO.Cbor.CBORObject.HasTag(PeterO.Numbers.EInteger)">
+<summary>Returns whether this object has a tag of the given
+            number.</summary>
+            <param name='bigTagValue'>The tag value to search for.</param>
+            <returns><c>true</c> if this object has a tag of the given number;
+            otherwise,<c>false</c>.</returns>
             <exception cref='T:System.ArgumentNullException'>BigTagValue is
             null.</exception>
             <exception cref='T:System.ArgumentException'>BigTagValue is less
@@ -1158,7 +1235,7 @@
             number.</summary>
             <param name='tagValue'>The tag value to search for.</param>
             <returns><c>true</c> if this object has a tag of the given number;
-            otherwise, <c>false</c>.</returns>
+            otherwise,<c>false</c>.</returns>
             <exception cref='T:System.ArgumentException'>TagValue is less than
             0.</exception>
             <exception cref='T:System.ArgumentNullException'>The parameter
@@ -1186,85 +1263,83 @@
 <doc name="P:PeterO.Cbor.CBORObject.IsFalse">
 <summary>Gets a value indicating whether this value is a CBOR false
             value.</summary>
-            <value><c>true</c> if this value is a
-            CBOR false value; otherwise, <c>false</c>.</value>
+            <value><c>true</c> If this value is a CBOR false value; otherwise,
+            . <c>false</c>.</value>
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsFinite">
 <summary>Gets a value indicating whether this CBOR object
             represents a finite number.</summary>
-            <value><c>true</c> if
-            this CBOR object represents a finite number; otherwise,
-            <c>false</c>.</value>
+            <value><c>true</c> If this CBOR object represents a finite number;
+            otherwise, <c>false</c>.</value>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.IsInfinity">
 <summary>Gets a value indicating whether this CBOR object
             represents infinity.</summary>
-            <returns><c>true</c> if this CBOR object represents infinity; otherwise,
-            false .</returns>
+            <returns><c>true</c> if this CBOR object represents infinity; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsIntegral">
 <summary>Gets a value indicating whether this object represents an
             integral number, that is, a number without a fractional part.
             Infinity and not-a-number are not considered integral.</summary>
-            <value><c>true</c> if this object represents an
-            integral number, that is, a number without a fractional part;
-            otherwise, <c>false</c>.</value>
+            <value><c>true</c> If this object represents an integral number,
+            that is, a number without a fractional part; otherwise,
+            <c>false</c>.</value>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.IsNaN">
 <summary>Gets a value indicating whether this CBOR object
             represents a not-a-number value (as opposed to whether this
             object&#x27;s type is not a number type).</summary>
-            <returns><c>true</c> if this CBOR object represents a not-a-number value
-            (as opposed to whether this object's type is not a number type);
-            otherwise, <c>false</c>.</returns>
+            <returns><c>true</c> if this CBOR object represents a not-a-number
+            value (as opposed to whether this object's type is not a number
+            type); otherwise,<c>false</c>.</returns>
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsNegative">
 <summary>Gets a value indicating whether this object is a negative
             number.</summary>
-            <value><c>true</c> if this object is
-            a negative number; otherwise, <c>false</c>.</value>
+            <value><c>true</c> If this object is a negative number; otherwise,
+            . <c>false</c>.</value>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.IsNegativeInfinity">
 <summary>Gets a value indicating whether this CBOR object
             represents negative infinity.</summary>
-            <returns><c>true</c> if this CBOR object represents negative infinity;
-            otherwise, <c>false</c>.</returns>
+            <returns><c>true</c> if this CBOR object represents negative
+            infinity; otherwise,<c>false</c>.</returns>
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsNull">
 <summary>Gets a value indicating whether this value is a CBOR null
             value.</summary>
-            <value><c>true</c> if this value is a
-            CBOR null value; otherwise, <c>false</c>.</value>
+            <value><c>true</c> If this value is a CBOR null value; otherwise,
+            <c>false</c>.</value>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.IsPositiveInfinity">
 <summary>Gets a value indicating whether this CBOR object
             represents positive infinity.</summary>
-            <returns><c>true</c> if this CBOR object represents positive infinity;
-            otherwise, <c>false</c>.</returns>
+            <returns><c>true</c> if this CBOR object represents positive
+            infinity; otherwise,<c>false</c>.</returns>
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsTagged">
 <summary>Gets a value indicating whether this data item has at
             least one tag.</summary>
-            <value><c>true</c> if this data
-            item has at least one tag; otherwise, <c>false</c>.</value>
+            <value><c>true</c> If this data item has at least one tag;
+            otherwise, <c>false</c>.</value>
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsTrue">
 <summary>Gets a value indicating whether this value is a CBOR true
             value.</summary>
-            <value><c>true</c> if this value is a
-            CBOR true value; otherwise, <c>false</c>.</value>
+            <value><c>true</c> If this value is a CBOR true value; otherwise,
+            <c>false</c>.</value>
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsUndefined">
 <summary>Gets a value indicating whether this value is a CBOR
             undefined value.</summary>
-            <value><c>true</c> if this
-            value is a CBOR undefined value; otherwise, <c>false</c>.</value>
+            <value><c>true</c> If this value is a CBOR undefined value;
+            otherwise, <c>false</c>.</value>
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsZero">
 <summary>Gets a value indicating whether this object&#x27;s value
             equals 0.</summary>
-            <value><c>true</c> if this
-            object&#x27;s value equals 0; otherwise, <c>false</c>.</value>
+            <value><c>true</c> If this object&apos;s value equals 0; otherwise,
+            . <c>false</c>.</value>
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.Item(PeterO.Cbor.CBORObject)">
 <summary>Gets the value of a CBOR object in this map, using a CBOR
@@ -1303,6 +1378,18 @@
             <value>A collection of the keys of this CBOR object.</value>
             <exception cref='T:System.InvalidOperationException'>This object is
             not a map.</exception>
+</doc>
+<doc name="P:PeterO.Cbor.CBORObject.MostInnerTag">
+<summary>Gets the last defined tag for this CBOR data item, or -1
+            if the item is untagged.</summary>
+            <value>The last defined tag for this CBOR data item, or -1 if the
+            item is untagged.</value>
+</doc>
+<doc name="P:PeterO.Cbor.CBORObject.MostOuterTag">
+<summary>Gets the outermost tag for this CBOR data item, or -1 if
+            the item is untagged.</summary>
+            <value>The outermost tag for this CBOR data item, or -1 if the item
+            is untagged.</value>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Multiply(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
 <summary>Multiplies two CBOR numbers.</summary>
@@ -1423,7 +1510,8 @@
             the specified item from the array. If this object is a map, removes
             the item with the given key from the map.</summary>
             <param name='obj'>The item or key to remove.</param>
-            <returns><c>true</c> if the item was removed; otherwise, <c>false</c>.</returns>
+            <returns><c>true</c> if the item was removed; otherwise,
+            <c>false</c>.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='obj'/> is null (as opposed to
             CBORObject.Null).</exception>
@@ -1959,8 +2047,8 @@
 <doc name="T:PeterO.Cbor.CBORTypeFilter">
 <summary>Specifies what kinds of CBOR objects a tag can be. This
             class is used when a CBOR object is being read from a data stream.
-            This class can't be inherited; this is a change in version 2.0
-            from previous versions, where the class was inadvertently left
+            This class can't be inherited; this is a change in version 2.0 from
+            previous versions, where the class was inadvertently left
             inheritable.</summary>
 </doc>
 <doc name="F:PeterO.Cbor.CBORTypeFilter.Any">
@@ -1970,16 +2058,16 @@
 <summary>Determines whether this type filter allows CBOR arrays and
             the given array index is allowed under this type filter.</summary>
             <param name='index'>An array index, starting from 0.</param>
-            <returns><c>true</c> if this type filter allows CBOR arrays and the given
-            array index is allowed under this type filter; otherwise, false
-            .</returns>
+            <returns><c>true</c> if this type filter allows CBOR arrays and the
+            given array index is allowed under this type filter; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeFilter.ArrayLengthMatches(PeterO.Numbers.EInteger)">
 <summary>Returns whether an array's length is allowed under a
             filter.</summary>
             <param name='bigLength'>An arbitrary-precision integer.</param>
-            <returns><c>true</c> if this filter allows CBOR arrays and an array's
-            length is allowed under a filter; otherwise, <c>false</c>.</returns>
+            <returns><c>true</c> if this filter allows CBOR arrays and an
+            array's length is allowed under a filter; otherwise,<c>false</c>
+            .</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='bigLength'/> is null.</exception>
 </doc>
@@ -1987,15 +2075,17 @@
 <summary>Returns whether an array's length is allowed under this
             filter.</summary>
             <param name='length'>The length of a CBOR array.</param>
-            <returns><c>true</c> if this filter allows CBOR arrays and an array's
-            length is allowed under this filter; otherwise, <c>false</c>.</returns>
+            <returns><c>true</c> if this filter allows CBOR arrays and an
+            array's length is allowed under this filter; otherwise,
+            <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeFilter.ArrayLengthMatches(System.Int64)">
 <summary>Returns whether an array's length is allowed under a
             filter.</summary>
             <param name='length'>The length of a CBOR array.</param>
-            <returns><c>true</c> if this filter allows CBOR arrays and an array's
-            length is allowed under a filter; otherwise, <c>false</c>.</returns>
+            <returns><c>true</c> if this filter allows CBOR arrays and an
+            array's length is allowed under a filter; otherwise,<c>false</c>
+            .</returns>
 </doc>
 <doc name="F:PeterO.Cbor.CBORTypeFilter.ByteString">
 <summary>A filter that allows byte strings.</summary>
@@ -2022,8 +2112,8 @@
 <summary>Returns whether the given CBOR major type matches a major
             type allowed by this filter.</summary>
             <param name='type'>A CBOR major type from 0 to 7.</param>
-            <returns><c>true</c> if the given CBOR major type matches a major type
-            allowed by this filter; otherwise, <c>false</c>.</returns>
+            <returns><c>true</c> if the given CBOR major type matches a major
+            type allowed by this filter; otherwise,<c>false</c>.</returns>
 </doc>
 <doc name="F:PeterO.Cbor.CBORTypeFilter.NegativeInteger">
 <summary>A filter that allows negative integers.</summary>
@@ -2031,8 +2121,8 @@
 <doc name="M:PeterO.Cbor.CBORTypeFilter.NonFPSimpleValueAllowed">
 <summary>Returns whether this filter allows simple values that are
             not floating-point numbers.</summary>
-            <returns><c>true</c> if this filter allows simple values that are not
-            floating-point numbers; otherwise, <c>false</c>.</returns>
+            <returns><c>true</c> if this filter allows simple values that are
+            not floating-point numbers; otherwise,<c>false</c>.</returns>
 </doc>
 <doc name="F:PeterO.Cbor.CBORTypeFilter.None">
 <summary>A filter that allows no CBOR types.</summary>
@@ -2043,7 +2133,7 @@
             <param name='bigTag'>A tag number. Returns false if this is less
             than 0.</param>
             <returns><c>true</c> if CBOR objects can have the given tag number;
-            otherwise, <c>false</c>.</returns>
+            otherwise,<c>false</c>.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='bigTag'/> is null.</exception>
 </doc>
@@ -2053,7 +2143,7 @@
             <param name='tag'>A tag number. Returns false if this is less than
             0.</param>
             <returns><c>true</c> if CBOR objects can have the given tag number;
-            otherwise, <c>false</c>.</returns>
+            otherwise,<c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeFilter.TagAllowed(System.Int64)">
 <summary>Gets a value indicating whether CBOR objects can have the
@@ -2061,7 +2151,7 @@
             <param name='longTag'>A tag number. Returns false if this is less
             than 0.</param>
             <returns><c>true</c> if CBOR objects can have the given tag number;
-            otherwise, <c>false</c>.</returns>
+            otherwise,<c>false</c>.</returns>
 </doc>
 <doc name="F:PeterO.Cbor.CBORTypeFilter.TextString">
 <summary>A filter that allows text strings.</summary>
@@ -2281,15 +2371,17 @@
             <code>
             xx-x:mm example:/ww
             </code>
-            The following cases return false:
+             The following cases return false:
             <code>
             x@y:/z /x/y/z example.xyz
             </code>
             </summary>
             <param name='refValue'>A string representing an IRI to
             check.</param>
-            <returns><c>true</c> if the string is a valid IRI with a scheme component;
-            otherwise, <c>false</c>.</returns>
+            <returns><c>true</c>
+             if the string is a valid IRI with a scheme
+            component; otherwise,<c>false</c>
+             .</returns>
 </doc>
 <doc name="M:PeterO.Cbor.URIUtility.hasSchemeForURI(System.String)">
 <summary>
@@ -2300,15 +2392,17 @@
             <code>
             http://example/z xx-x:mm example:/ww
             </code>
-            The following cases return false:
+             The following cases return false:
             <code>
             x@y:/z /x/y/z example.xyz
             </code>
             </summary>
             <param name='refValue'>A string representing an IRI to
             check.</param>
-            <returns><c>true</c> if the string is a valid URI with a scheme component;
-            otherwise, <c>false</c>.</returns>
+            <returns><c>true</c>
+             if the string is a valid URI with a scheme
+            component; otherwise,<c>false</c>
+             .</returns>
 </doc>
 <doc name="M:PeterO.Cbor.URIUtility.isValidCurieReference(System.String,System.Int32,System.Int32)">
 <summary>Determines whether the substring is a valid CURIE
@@ -2320,9 +2414,8 @@
             portion of "s" begins.</param>
             <param name='length'>The number of elements in the desired portion
             of "s" (but not more than "s" 's length).</param>
-            <returns><c>true</c> if the substring is a valid CURIE reference under
-            RDFA 1; otherwise, <c>false</c>. Returns false if <paramref name='s'/> is
-            null.</returns>
+            <returns><c>true</c> if the substring is a valid CURIE reference
+            under RDFA 1; otherwise,<c>false</c>. Returns false if <paramref name='s'/> is null.</returns>
             <exception cref='T:System.ArgumentException'>Either <paramref name='offset'/> or <paramref name='length'/> is less than 0 or
             greater than <paramref name='s'/> 's length, or <paramref name='s'/> ' s length minus <paramref name='offset'/> is less than
             <paramref name='length'/>.</exception>
@@ -2336,8 +2429,8 @@
             <param name='baseURI'>A string representing an absolute URI
             reference. Example: <c>http://example.com/my/path/</c>.</param>
             <returns>The resolved IRI, or null if <paramref name='refValue'/>
-            is null or is not a valid IRI. If <paramref name='baseURI'/> is null or is not a valid
-            IRI, returns refValue. Example:
+            is null or is not a valid IRI. If <paramref name='baseURI'/> is
+            null or is not a valid IRI, returns refValue. Example:
             <c>http://example.com/my/path/dir/file.txt</c>.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.URIUtility.relativeResolve(System.String,System.String,PeterO.Cbor.URIUtility.ParseMode)">
@@ -2350,8 +2443,8 @@
             <param name='parseMode'>Parse mode that specifies whether certain
             characters are allowed when parsing IRIs and URIs.</param>
             <returns>The resolved IRI, or null if <paramref name='refValue'/>
-            is null or is not a valid IRI. If <paramref name='baseURI'/> is null or is not a valid
-            IRI, returns refValue.</returns>
+            is null or is not a valid IRI. If <paramref name='baseURI'/> is
+            null or is not a valid IRI, returns refValue.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.URIUtility.splitIRI(System.String)">
 <summary>Parses an Internationalized Resource Identifier (IRI)
@@ -2465,9 +2558,8 @@
             string.</param>
             <returns>The Unicode code point at the previous position. Returns
             -1 if <paramref name='index'/> is 0 or less, or is greater than the
-            string's length. Returns the replacement character (U+FFFD) if
-            the previous character is an unpaired surrogate code
-            point.</returns>
+            string's length. Returns the replacement character (U+FFFD) if the
+            previous character is an unpaired surrogate code point.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='str'/> is null.</exception>
 </doc>
@@ -2490,7 +2582,9 @@
             <paramref name='str'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.DataUtilities.CodePointCompare(System.String,System.String)">
-<summary>Compares two strings in Unicode code point order. Unpaired surrogate code points are treated as individual code points.</summary>
+<summary>Compares two strings in Unicode code point order. Unpaired
+            surrogate code points are treated as individual code
+            points.</summary>
             <param name='strA'>The first string. Can be null.</param>
             <param name='strB'>The second string. Can be null.</param>
             <returns>A value indicating which string is " less" or " greater" .
@@ -2737,8 +2831,8 @@
             <a href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c></a>
             artifact (in Java). This new class can be used in the
             <c>CBORObject.FromObject(object)</c> method (by including the new
-            library in your code, among other things).</b></para>
-            Represents an arbitrary-precision decimal floating-point number.
+            library in your code, among other things).</b></para> Represents an
+            arbitrary-precision decimal floating-point number.
             <para><b>About decimal arithmetic</b></para>
             <para>Decimal (base-10) arithmetic, such as that provided by this
             class, is appropriate for calculations involving such real-world
@@ -2796,7 +2890,7 @@
             will return a quiet NaN, unless noted otherwise. Invalid operations
             will also return a quiet NaN, as stated in the individual
             methods.</para>
-            <para>Unless noted otherwise, passing a null arbitrary-precision
+            <para>Unless noted otherwise,passing a null arbitrary-precision
             decimal argument to any method here will throw an exception.</para>
             <para>When an arithmetic operation signals the flag FlagInvalid,
             FlagOverflow, or FlagDivideByZero, it will not throw an exception
@@ -2825,8 +2919,8 @@
             <para>Instances of this class are immutable, so they are inherently
             safe for use by multiple threads. Multiple instances of this object
             with the same properties are interchangeable, so they should not be
-            compared using the "==" operator (which might only check if each side of
-            the operator is the same instance).</para>
+            compared using the "==" operator (which might only check if each
+            side of the operator is the same instance).</para>
             <para><b>Comparison considerations</b></para>
             <para>This class's natural ordering (under the CompareTo method) is
             not consistent with the Equals method. This means that two values
@@ -2838,11 +2932,9 @@
             considered unequal under the Equals method.</para></summary>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.CompareTo(PeterO.ExtendedDecimal)">
-<summary>
-            
-            </summary>
-            <param name='other'/>
-            <returns/>
+<summary>Not documented yet.</summary>
+            <param name='other'>An ExtendedDecimal object.</param>
+            <returns>A 32-bit signed integer.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.Create(PeterO.BigInteger,PeterO.BigInteger)">
 <summary>Creates a number with the value
@@ -2858,16 +2950,16 @@
 <summary>Determines whether this object&#x27;s mantissa and
             exponent are equal to those of another object.</summary>
             <param name='other'>An arbitrary-precision decimal number.</param>
-            <returns><c>true</c> if this object's mantissa and exponent are equal to
-            those of another object; otherwise, <c>false</c>.</returns>
+            <returns><c>true</c> if this object's mantissa and exponent are
+            equal to those of another object; otherwise,<c>false</c>
+            .</returns>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.Equals(System.Object)">
 <summary>Determines whether this object&#x27;s mantissa and
             exponent are equal to those of another object and that other object
             is an arbitrary-precision decimal number.</summary>
             <param name='obj'>An arbitrary object.</param>
-            <returns><c>true</c> if the objects are equal; otherwise, false
-            .</returns>
+            <returns><c>true</c> if the objects are equal; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="P:PeterO.ExtendedDecimal.Exponent">
 <summary>Gets this object&#x27;s exponent. This object&#x27;s value
@@ -2894,26 +2986,25 @@
 <doc name="M:PeterO.ExtendedDecimal.IsInfinity">
 <summary>Gets a value indicating whether this object is positive or
             negative infinity.</summary>
-            <returns><c>true</c> if this object is positive or negative infinity;
-            otherwise, <c>false</c>.</returns>
+            <returns><c>true</c> if this object is positive or negative
+            infinity; otherwise,<c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.IsNaN">
 <summary>Gets a value indicating whether this object is not a
             number (NaN).</summary>
-            <returns><c>true</c> if this object is not a number (NaN); otherwise,
-            false .</returns>
+            <returns><c>true</c> if this object is not a number (NaN); otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="P:PeterO.ExtendedDecimal.IsNegative">
 <summary>Gets a value indicating whether this object is negative,
             including negative zero.</summary>
-            <value><c>true</c> if this object is negative, including negative zero;
-            otherwise, <c>false</c>.</value>
+            <value><c>true</c> If this object is negative, including negative
+            zero; otherwise, <c>false</c>.</value>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.IsQuietNaN">
 <summary>Gets a value indicating whether this object is a quiet
             not-a-number value.</summary>
             <returns><c>true</c> if this object is a quiet not-a-number value;
-            otherwise, <c>false</c>.</returns>
+            otherwise,<c>false</c>.</returns>
 </doc>
 <doc name="P:PeterO.ExtendedDecimal.Mantissa">
 <summary>Gets this object&#x27;s un-scaled value.</summary>
@@ -3014,7 +3105,7 @@
             otherwise.</para>
             <para>Passing a quiet NaN to any arithmetic operation shown here
             will return a quiet NaN, unless noted otherwise.</para>
-            <para>Unless noted otherwise, passing a null arbitrary-precision
+            <para>Unless noted otherwise,passing a null arbitrary-precision
             binary float argument to any method here will throw an
             exception.</para>
             <para>When an arithmetic operation signals the flag FlagInvalid,
@@ -3044,13 +3135,14 @@
             so they are inherently safe for use by multiple threads. Multiple
             instances of this object with the same properties are
             interchangeable, so they should not be compared using the "=="
-            operator (which might only check if each side of the operator is the
-            same instance).</para></summary>
+            operator (which might only check if each side of the operator is
+            the same instance).</para></summary>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.CompareTo(PeterO.ExtendedFloat)">
-
-            <summary>Not documented yet.</summary><param name='other'>The parameter <paramref name='other'/> is not documented yet.</param><returns>A 32-bit signed integer.</returns>
-        
+<summary>Not documented yet.</summary>
+            <param name='other'>The parameter <paramref name='other'/> is not
+            documented yet.</param>
+            <returns>A 32-bit signed integer.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.Create(PeterO.BigInteger,PeterO.BigInteger)">
 <summary>Creates a number with the value
@@ -3073,8 +3165,9 @@
 <summary>Determines whether this object's mantissa and exponent are
             equal to those of another object.</summary>
             <param name='other'>An arbitrary-precision binary float.</param>
-            <returns><c>true</c> if this object's mantissa and exponent are equal to
-            those of another object; otherwise, <c>false</c>.</returns>
+            <returns><c>true</c> if this object's mantissa and exponent are
+            equal to those of another object; otherwise,<c>false</c>
+            .</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='other'/> is null.</exception>
 </doc>
@@ -3083,16 +3176,16 @@
             exponent are equal to those of another object and that other object
             is an arbitrary-precision decimal number.</summary>
             <param name='obj'>An arbitrary object.</param>
-            <returns><c>true</c> if the objects are equal; otherwise, false
-            .</returns>
+            <returns><c>true</c> if the objects are equal; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.EqualsInternal(PeterO.ExtendedFloat)">
 <summary>Determines whether this object's mantissa and exponent are
             equal to those of another object.</summary>
             <param name='otherValue'>An arbitrary-precision binary
             float.</param>
-            <returns><c>true</c> if this object's mantissa and exponent are equal to
-            those of another object; otherwise, <c>false</c>.</returns>
+            <returns><c>true</c> if this object's mantissa and exponent are
+            equal to those of another object; otherwise,<c>false</c>
+            .</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='otherValue'/> is null.</exception>
 </doc>
@@ -3103,9 +3196,10 @@
             be an integer if the exponent is positive or zero.</value>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.FromString(System.String)">
-
-            <param name='str'>The parameter <paramref name='str'/> is not documented yet.</param><returns>An ExtendedFloat object.</returns><summary>Not documented yet.</summary><summary>Not documented yet.</summary><summary>Not documented yet.</summary><summary>Not documented yet.</summary><summary>Not documented yet.</summary><summary>Not documented yet.</summary><summary>Not documented yet.</summary><summary>Not documented yet.</summary><summary>Not documented yet.</summary>
-        
+<summary>Not documented yet.</summary>
+             <param name='str'>The parameter <paramref name='str'/> is not
+             documented yet.</param>
+             <returns>An ExtendedFloat object.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.FromString(System.String,PeterO.PrecisionContext)">
 <summary>Creates a binary float from a text string that represents
@@ -3174,44 +3268,41 @@
 <doc name="M:PeterO.ExtendedFloat.IsInfinity">
 <summary>Gets a value indicating whether this object is positive or
             negative infinity.</summary>
-            <returns><c>true</c> if this object is positive or negative infinity;
-            otherwise, <c>false</c>.</returns>
+            <returns><c>true</c> if this object is positive or negative
+            infinity; otherwise,<c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.IsNaN">
 <summary>Returns whether this object is a not-a-number
             value.</summary>
-            <returns><c>true</c> if this object is a not-a-number value; otherwise,
-            false .</returns>
+            <returns><c>true</c> if this object is a not-a-number value; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="P:PeterO.ExtendedFloat.IsNegative">
 <summary>Gets a value indicating whether this object is negative,
             including negative zero.</summary>
-            <value><c>true</c> if this object is negative, including negative zero;
-            otherwise, <c>false</c>.</value>
+            <value><c>true</c> If this object is negative, including negative
+            zero; otherwise, <c>false</c>.</value>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.IsNegativeInfinity">
 <summary>Returns whether this object is negative
             infinity.</summary>
-            <returns><c>true</c> if this object is negative infinity; otherwise, false
-            .</returns>
+            <returns><c>true</c> if this object is negative infinity; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.IsPositiveInfinity">
 <summary>Returns whether this object is positive
             infinity.</summary>
-            <returns><c>true</c> if this object is positive infinity; otherwise, false
-            .</returns>
+            <returns><c>true</c> if this object is positive infinity; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.IsQuietNaN">
 <summary>Gets a value indicating whether this object is a quiet
             not-a-number value.</summary>
             <returns><c>true</c> if this object is a quiet not-a-number value;
-            otherwise, <c>false</c>.</returns>
+            otherwise,<c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.IsSignalingNaN">
 <summary>Gets a value indicating whether this object is a signaling
             not-a-number value.</summary>
-            <returns><c>true</c> if this object is a signaling not-a-number value;
-            otherwise, <c>false</c>.</returns>
+            <returns><c>true</c> if this object is a signaling not-a-number
+            value; otherwise,<c>false</c>.</returns>
 </doc>
 <doc name="P:PeterO.ExtendedFloat.Mantissa">
 <summary>Gets this object&#x27;s un-scaled value.</summary>
@@ -3275,15 +3366,15 @@
             artifact (in Java). This new class can be used in the
             <c>CBORObject.FromObject(object)</c> method (by including the new
             library in your code, among other things).</b></para>
-            Arbitrary-precision rational number. This class can't be
-            inherited; this is a change in version 2.0 from previous versions,
-            where the class was inadvertently left inheritable.
+            Arbitrary-precision rational number. This class can't be inherited;
+            this is a change in version 2.0 from previous versions, where the
+            class was inadvertently left inheritable.
             <para><b>Thread safety:</b> Instances of this class are immutable,
             so they are inherently safe for use by multiple threads. Multiple
             instances of this object with the same properties are
             interchangeable, so they should not be compared using the "=="
-            operator (which might only check if each side of the operator is the
-            same instance).</para></summary>
+            operator (which might only check if each side of the operator is
+            the same instance).</para></summary>
 </doc>
 <doc name="M:PeterO.ExtendedRational.#ctor(PeterO.BigInteger,PeterO.BigInteger)">
 <summary>Initializes a new instance of the <see cref='T:PeterO.ExtendedRational'/> class.</summary>
@@ -3328,36 +3419,31 @@
             <returns>A Boolean object.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedRational.Equals(System.Object)">
-<summary>
-            
-            </summary>
-            <param name='obj'/>
-            <returns/>
+<summary>Not documented yet.</summary>
+            <param name='obj'>An arbitrary object.</param>
+            <returns>A Boolean object.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedRational.GetHashCode">
-<summary>
-            
-            </summary>
-            <returns/>
+<summary>Not documented yet.</summary>
+            <returns>A 32-bit signed integer.</returns>
 </doc>
 <doc name="P:PeterO.ExtendedRational.IsFinite">
 <summary>Gets a value indicating whether this object is finite (not
             infinity or NaN).</summary>
-            <value><c>true</c>
-            if this object is finite (not infinity or NaN); otherwise,
-            <c>false</c>.</value>
+            <value><c>true</c> If this object is finite (not infinity or NaN);
+            otherwise, <c>false</c>.</value>
 </doc>
 <doc name="P:PeterO.ExtendedRational.IsNegative">
 <summary>Gets a value indicating whether this object's value is
             negative (including negative zero).</summary>
-            <value><c>true</c> if this object&#x27;s value
-            is negative; otherwise, <c>false</c>.</value>
+            <value><c>true</c> If this object&apos;s value is negative;
+            otherwise, <c>false</c>.</value>
 </doc>
 <doc name="P:PeterO.ExtendedRational.IsZero">
 <summary>Gets a value indicating whether this object's value equals
             0.</summary>
-            <value><c>true</c> if this
-            object&#x27;s value equals 0; otherwise, <c>false</c>.</value>
+            <value><c>true</c> If this object&apos;s value equals 0; otherwise,
+            . <c>false</c>.</value>
 </doc>
 <doc name="F:PeterO.ExtendedRational.NaN">
 <summary>A not-a-number value.</summary>

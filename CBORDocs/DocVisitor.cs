@@ -536,7 +536,7 @@ StringBuilder builder) {
         if (String.IsNullOrEmpty(content)) {
           content = HtmlEscape(see.ToText());
         }
-        this.Write("["+content+"]");
+        this.Write("[" + content + "]");
         this.Write("(" + typeName + ".md)");
         base.VisitSee(see);
       } else {

@@ -16,7 +16,7 @@ Arbitrary-precision rational number. This class can't be inherited; this is a ch
         PeterO.BigInteger numerator,
         PeterO.BigInteger denominator);
 
-Initializes a new instance of the [PeterO.ExtendedRational](PeterO.ExtendedRational.md) class.
+Initializes a new instance of the[PeterO.ExtendedRational](PeterO.ExtendedRational.md) class.
 
 <b>Parameters:</b>
 
@@ -99,7 +99,7 @@ Gets a value indicating whether this object is finite (not infinity or NaN).
 
 <b>Returns:</b>
 
- `true` if this object is finite (not infinity or NaN); otherwise, `false` .
+ `true`  If this object is finite (not infinity or NaN); otherwise,.  `false` .
 
 ### IsNegative
 
@@ -109,7 +109,7 @@ Gets a value indicating whether this object's value is negative (including negat
 
 <b>Returns:</b>
 
- `true`  if this object's value is negative; otherwise,  `false` .
+ `true`  If this object's value is negative; otherwise,.  `false` .
 
 ### IsZero
 
@@ -121,7 +121,7 @@ Gets a value indicating whether this object's value equals 0.
 
 <b>Returns:</b>
 
- `true`  if this object's value equals 0; otherwise,  `false` .
+ `true`  If this object's value equals 0; otherwise,.  `false` .
 
 ### Numerator
 
@@ -218,11 +218,15 @@ The parameter <i>numerator</i>
     public override bool Equals(
         object obj);
 
+Not documented yet.
+
 <b>Parameters:</b>
 
- * <i>obj</i>:
+ * <i>obj</i>: An arbitrary object.
 
 <b>Return Value:</b>
+
+A Boolean object.
 
 ### Equals
 
@@ -243,7 +247,11 @@ A Boolean object.
 
     public override int GetHashCode();
 
+Not documented yet.
+
 <b>Return Value:</b>
+
+A 32-bit signed integer.
 
 ### ToString
 
