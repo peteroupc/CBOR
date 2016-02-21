@@ -53,7 +53,7 @@ Determines whether this type filter allows CBOR arrays and the given array index
 
 <b>Return Value:</b>
 
- `true`  if this type filter allows CBOR arrays and the given array index is allowed under this type filter; otherwise, false .
+ `true`  if this type filter allows CBOR arrays and the given array index is allowed under this type filter; otherwise,  `false` .
 
 ### ArrayLengthMatches
 
@@ -68,7 +68,7 @@ Returns whether an array's length is allowed under this filter.
 
 <b>Return Value:</b>
 
- `true`  if this filter allows CBOR arrays and an array's length is allowed under this filter; otherwise, `false` .
+ `true`  if this filter allows CBOR arrays and an array's length is allowed under this filter; otherwise,  `false` .
 
 ### ArrayLengthMatches
 

@@ -17,7 +17,6 @@
             instances of this object with the same value are interchangeable,
             but they should be compared using the "Equals" method rather than
             the "==" operator.</para></summary>
-            <summary>See summary.</summary>
 </doc>
 <doc name="M:PeterO.BigInteger.CompareTo(PeterO.BigInteger)">
 <summary>Not documented yet.</summary>
@@ -29,15 +28,14 @@
             number's value.</summary>
             <param name='other'>An arbitrary-precision integer.</param>
             <returns><c>true</c> if this number's value equals another number's
-            value; otherwise,<c>false</c>.</returns>
+            value; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.BigInteger.Equals(System.Object)">
 <inheritdoc/>
             <summary>Determines whether this object and another object are
             equal.</summary>
             <param name='obj'>An arbitrary object.</param>
-            <returns><c>true</c> if this object and another object are equal;
-            otherwise,<c>false</c>.</returns>
+            <returns><c>true</c> if this object and another object are equal; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.BigInteger.GetHashCode">
 <summary>Returns the hash code for this instance.</summary>
@@ -1212,8 +1210,7 @@
 <summary>Returns whether this object has a tag of the given
             number.</summary>
             <param name='bigTagValue'>The tag value to search for.</param>
-            <returns><c>true</c> if this object has a tag of the given number;
-            otherwise,<c>false</c>.</returns>
+            <returns><c>true</c> if this object has a tag of the given number; otherwise, <c>false</c>.</returns>
             <exception cref='T:System.ArgumentNullException'>BigTagValue is
             null.</exception>
             <exception cref='T:System.ArgumentException'>BigTagValue is less
@@ -1223,8 +1220,7 @@
 <summary>Returns whether this object has a tag of the given
             number.</summary>
             <param name='bigTagValue'>The tag value to search for.</param>
-            <returns><c>true</c> if this object has a tag of the given number;
-            otherwise,<c>false</c>.</returns>
+            <returns><c>true</c> if this object has a tag of the given number; otherwise, <c>false</c>.</returns>
             <exception cref='T:System.ArgumentNullException'>BigTagValue is
             null.</exception>
             <exception cref='T:System.ArgumentException'>BigTagValue is less
@@ -1234,8 +1230,7 @@
 <summary>Returns whether this object has a tag of the given
             number.</summary>
             <param name='tagValue'>The tag value to search for.</param>
-            <returns><c>true</c> if this object has a tag of the given number;
-            otherwise,<c>false</c>.</returns>
+            <returns><c>true</c> if this object has a tag of the given number; otherwise, <c>false</c>.</returns>
             <exception cref='T:System.ArgumentException'>TagValue is less than
             0.</exception>
             <exception cref='T:System.ArgumentNullException'>The parameter
@@ -1269,8 +1264,7 @@
 <doc name="P:PeterO.Cbor.CBORObject.IsFinite">
 <summary>Gets a value indicating whether this CBOR object
             represents a finite number.</summary>
-            <value><c>true</c> If this CBOR object represents a finite number;
-            otherwise, <c>false</c>.</value>
+            <value><c>true</c> If this CBOR object represents a finite number; otherwise, <c>false</c>.</value>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.IsInfinity">
 <summary>Gets a value indicating whether this CBOR object
@@ -1282,8 +1276,7 @@
             integral number, that is, a number without a fractional part.
             Infinity and not-a-number are not considered integral.</summary>
             <value><c>true</c> If this object represents an integral number,
-            that is, a number without a fractional part; otherwise,
-            <c>false</c>.</value>
+            that is, a number without a fractional part; otherwise, <c>false</c>.</value>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.IsNaN">
 <summary>Gets a value indicating whether this CBOR object
@@ -1291,7 +1284,7 @@
             object&#x27;s type is not a number type).</summary>
             <returns><c>true</c> if this CBOR object represents a not-a-number
             value (as opposed to whether this object's type is not a number
-            type); otherwise,<c>false</c>.</returns>
+            type); otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsNegative">
 <summary>Gets a value indicating whether this object is a negative
@@ -1303,37 +1296,33 @@
 <summary>Gets a value indicating whether this CBOR object
             represents negative infinity.</summary>
             <returns><c>true</c> if this CBOR object represents negative
-            infinity; otherwise,<c>false</c>.</returns>
+            infinity; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsNull">
 <summary>Gets a value indicating whether this value is a CBOR null
             value.</summary>
-            <value><c>true</c> If this value is a CBOR null value; otherwise,
-            <c>false</c>.</value>
+            <value><c>true</c> If this value is a CBOR null value; otherwise, <c>false</c>.</value>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.IsPositiveInfinity">
 <summary>Gets a value indicating whether this CBOR object
             represents positive infinity.</summary>
             <returns><c>true</c> if this CBOR object represents positive
-            infinity; otherwise,<c>false</c>.</returns>
+            infinity; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsTagged">
 <summary>Gets a value indicating whether this data item has at
             least one tag.</summary>
-            <value><c>true</c> If this data item has at least one tag;
-            otherwise, <c>false</c>.</value>
+            <value><c>true</c> If this data item has at least one tag; otherwise, <c>false</c>.</value>
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsTrue">
 <summary>Gets a value indicating whether this value is a CBOR true
             value.</summary>
-            <value><c>true</c> If this value is a CBOR true value; otherwise,
-            <c>false</c>.</value>
+            <value><c>true</c> If this value is a CBOR true value; otherwise, <c>false</c>.</value>
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsUndefined">
 <summary>Gets a value indicating whether this value is a CBOR
             undefined value.</summary>
-            <value><c>true</c> If this value is a CBOR undefined value;
-            otherwise, <c>false</c>.</value>
+            <value><c>true</c> If this value is a CBOR undefined value; otherwise, <c>false</c>.</value>
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsZero">
 <summary>Gets a value indicating whether this object&#x27;s value
@@ -1510,8 +1499,7 @@
             the specified item from the array. If this object is a map, removes
             the item with the given key from the map.</summary>
             <param name='obj'>The item or key to remove.</param>
-            <returns><c>true</c> if the item was removed; otherwise,
-            <c>false</c>.</returns>
+            <returns><c>true</c> if the item was removed; otherwise, <c>false</c>.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='obj'/> is null (as opposed to
             CBORObject.Null).</exception>
@@ -2066,7 +2054,7 @@
             filter.</summary>
             <param name='bigLength'>An arbitrary-precision integer.</param>
             <returns><c>true</c> if this filter allows CBOR arrays and an
-            array's length is allowed under a filter; otherwise,<c>false</c>
+            array's length is allowed under a filter; otherwise, <c>false</c>
             .</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='bigLength'/> is null.</exception>
@@ -2076,15 +2064,14 @@
             filter.</summary>
             <param name='length'>The length of a CBOR array.</param>
             <returns><c>true</c> if this filter allows CBOR arrays and an
-            array's length is allowed under this filter; otherwise,
-            <c>false</c>.</returns>
+            array's length is allowed under this filter; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeFilter.ArrayLengthMatches(System.Int64)">
 <summary>Returns whether an array's length is allowed under a
             filter.</summary>
             <param name='length'>The length of a CBOR array.</param>
             <returns><c>true</c> if this filter allows CBOR arrays and an
-            array's length is allowed under a filter; otherwise,<c>false</c>
+            array's length is allowed under a filter; otherwise, <c>false</c>
             .</returns>
 </doc>
 <doc name="F:PeterO.Cbor.CBORTypeFilter.ByteString">
@@ -2113,7 +2100,7 @@
             type allowed by this filter.</summary>
             <param name='type'>A CBOR major type from 0 to 7.</param>
             <returns><c>true</c> if the given CBOR major type matches a major
-            type allowed by this filter; otherwise,<c>false</c>.</returns>
+            type allowed by this filter; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="F:PeterO.Cbor.CBORTypeFilter.NegativeInteger">
 <summary>A filter that allows negative integers.</summary>
@@ -2122,7 +2109,7 @@
 <summary>Returns whether this filter allows simple values that are
             not floating-point numbers.</summary>
             <returns><c>true</c> if this filter allows simple values that are
-            not floating-point numbers; otherwise,<c>false</c>.</returns>
+            not floating-point numbers; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="F:PeterO.Cbor.CBORTypeFilter.None">
 <summary>A filter that allows no CBOR types.</summary>
@@ -2132,8 +2119,7 @@
             given tag number.</summary>
             <param name='bigTag'>A tag number. Returns false if this is less
             than 0.</param>
-            <returns><c>true</c> if CBOR objects can have the given tag number;
-            otherwise,<c>false</c>.</returns>
+            <returns><c>true</c> if CBOR objects can have the given tag number; otherwise, <c>false</c>.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='bigTag'/> is null.</exception>
 </doc>
@@ -2142,16 +2128,14 @@
             given tag number.</summary>
             <param name='tag'>A tag number. Returns false if this is less than
             0.</param>
-            <returns><c>true</c> if CBOR objects can have the given tag number;
-            otherwise,<c>false</c>.</returns>
+            <returns><c>true</c> if CBOR objects can have the given tag number; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeFilter.TagAllowed(System.Int64)">
 <summary>Gets a value indicating whether CBOR objects can have the
             given tag number.</summary>
             <param name='longTag'>A tag number. Returns false if this is less
             than 0.</param>
-            <returns><c>true</c> if CBOR objects can have the given tag number;
-            otherwise,<c>false</c>.</returns>
+            <returns><c>true</c> if CBOR objects can have the given tag number; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="F:PeterO.Cbor.CBORTypeFilter.TextString">
 <summary>A filter that allows text strings.</summary>
@@ -2380,7 +2364,7 @@
             check.</param>
             <returns><c>true</c>
              if the string is a valid IRI with a scheme
-            component; otherwise,<c>false</c>
+            component; otherwise, <c>false</c>
              .</returns>
 </doc>
 <doc name="M:PeterO.Cbor.URIUtility.hasSchemeForURI(System.String)">
@@ -2401,7 +2385,7 @@
             check.</param>
             <returns><c>true</c>
              if the string is a valid URI with a scheme
-            component; otherwise,<c>false</c>
+            component; otherwise, <c>false</c>
              .</returns>
 </doc>
 <doc name="M:PeterO.Cbor.URIUtility.isValidCurieReference(System.String,System.Int32,System.Int32)">
@@ -2415,7 +2399,7 @@
             <param name='length'>The number of elements in the desired portion
             of "s" (but not more than "s" 's length).</param>
             <returns><c>true</c> if the substring is a valid CURIE reference
-            under RDFA 1; otherwise,<c>false</c>. Returns false if <paramref name='s'/> is null.</returns>
+            under RDFA 1; otherwise, <c>false</c>. Returns false if <paramref name='s'/> is null.</returns>
             <exception cref='T:System.ArgumentException'>Either <paramref name='offset'/> or <paramref name='length'/> is less than 0 or
             greater than <paramref name='s'/> 's length, or <paramref name='s'/> ' s length minus <paramref name='offset'/> is less than
             <paramref name='length'/>.</exception>
@@ -2951,7 +2935,7 @@
             exponent are equal to those of another object.</summary>
             <param name='other'>An arbitrary-precision decimal number.</param>
             <returns><c>true</c> if this object's mantissa and exponent are
-            equal to those of another object; otherwise,<c>false</c>
+            equal to those of another object; otherwise, <c>false</c>
             .</returns>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.Equals(System.Object)">
@@ -2987,7 +2971,7 @@
 <summary>Gets a value indicating whether this object is positive or
             negative infinity.</summary>
             <returns><c>true</c> if this object is positive or negative
-            infinity; otherwise,<c>false</c>.</returns>
+            infinity; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.IsNaN">
 <summary>Gets a value indicating whether this object is not a
@@ -3003,8 +2987,7 @@
 <doc name="M:PeterO.ExtendedDecimal.IsQuietNaN">
 <summary>Gets a value indicating whether this object is a quiet
             not-a-number value.</summary>
-            <returns><c>true</c> if this object is a quiet not-a-number value;
-            otherwise,<c>false</c>.</returns>
+            <returns><c>true</c> if this object is a quiet not-a-number value; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="P:PeterO.ExtendedDecimal.Mantissa">
 <summary>Gets this object&#x27;s un-scaled value.</summary>
@@ -3166,7 +3149,7 @@
             equal to those of another object.</summary>
             <param name='other'>An arbitrary-precision binary float.</param>
             <returns><c>true</c> if this object's mantissa and exponent are
-            equal to those of another object; otherwise,<c>false</c>
+            equal to those of another object; otherwise, <c>false</c>
             .</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='other'/> is null.</exception>
@@ -3184,7 +3167,7 @@
             <param name='otherValue'>An arbitrary-precision binary
             float.</param>
             <returns><c>true</c> if this object's mantissa and exponent are
-            equal to those of another object; otherwise,<c>false</c>
+            equal to those of another object; otherwise, <c>false</c>
             .</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='otherValue'/> is null.</exception>
@@ -3269,7 +3252,7 @@
 <summary>Gets a value indicating whether this object is positive or
             negative infinity.</summary>
             <returns><c>true</c> if this object is positive or negative
-            infinity; otherwise,<c>false</c>.</returns>
+            infinity; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.IsNaN">
 <summary>Returns whether this object is a not-a-number
@@ -3295,14 +3278,13 @@
 <doc name="M:PeterO.ExtendedFloat.IsQuietNaN">
 <summary>Gets a value indicating whether this object is a quiet
             not-a-number value.</summary>
-            <returns><c>true</c> if this object is a quiet not-a-number value;
-            otherwise,<c>false</c>.</returns>
+            <returns><c>true</c> if this object is a quiet not-a-number value; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.IsSignalingNaN">
 <summary>Gets a value indicating whether this object is a signaling
             not-a-number value.</summary>
             <returns><c>true</c> if this object is a signaling not-a-number
-            value; otherwise,<c>false</c>.</returns>
+            value; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="P:PeterO.ExtendedFloat.Mantissa">
 <summary>Gets this object&#x27;s un-scaled value.</summary>
@@ -3430,14 +3412,12 @@
 <doc name="P:PeterO.ExtendedRational.IsFinite">
 <summary>Gets a value indicating whether this object is finite (not
             infinity or NaN).</summary>
-            <value><c>true</c> If this object is finite (not infinity or NaN);
-            otherwise, <c>false</c>.</value>
+            <value><c>true</c> If this object is finite (not infinity or NaN); otherwise, <c>false</c>.</value>
 </doc>
 <doc name="P:PeterO.ExtendedRational.IsNegative">
 <summary>Gets a value indicating whether this object's value is
             negative (including negative zero).</summary>
-            <value><c>true</c> If this object&apos;s value is negative;
-            otherwise, <c>false</c>.</value>
+            <value><c>true</c> If this object&apos;s value is negative; otherwise, <c>false</c>.</value>
 </doc>
 <doc name="P:PeterO.ExtendedRational.IsZero">
 <summary>Gets a value indicating whether this object's value equals

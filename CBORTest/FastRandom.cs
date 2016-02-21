@@ -145,7 +145,8 @@ namespace Test {
       if (v == 0x100) {
         return this.NextValueInternal(0xff);
       }
-      int maxExclusive = (Int32.MaxValue / v) * v;
+      int maxExclusive;
+      maxExclusive = (v <= 100) ? 2147483600 : ((Int32.MaxValue / v) * v);
       while (true) {
         int vi = this.NextValueInternal(0x7fffffff);
         if (vi < maxExclusive) {

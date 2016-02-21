@@ -14,7 +14,7 @@ Passing a signaling NaN to any arithmetic operation shown here will signal the f
 
 Passing a quiet NaN to any arithmetic operation shown here will return a quiet NaN, unless noted otherwise.
 
-Unless noted otherwise, passing a null arbitrary-precision binary float argument to any method here will throw an exception.
+Unless noted otherwise,passing a null arbitrary-precision binary float argument to any method here will throw an exception.
 
 When an arithmetic operation signals the flag FlagInvalid, FlagOverflow, or FlagDivideByZero, it will not throw an exception too, unless the operation's trap is enabled in the precision context (see PrecisionContext's Traps property).
 
@@ -96,7 +96,7 @@ Gets a value indicating whether this object is negative, including negative zero
 
 <b>Returns:</b>
 
- `true`  If this object is negative, including negative zero; otherwise,.  `false` .
+ `true`  If this object is negative, including negative zero; otherwise,  `false` .
 
 ### Mantissa
 
@@ -202,7 +202,7 @@ Determines whether this object's mantissa and exponent are equal to those of ano
 
 <b>Return Value:</b>
 
- `true`  if the objects are equal; otherwise, false .
+ `true`  if the objects are equal; otherwise,  `false` .
 
 ### Equals
 
@@ -286,7 +286,7 @@ Creates a binary float from a text string that represents a number. Note that if
 
 The string can also be "-INF", "-Infinity", "Infinity", "INF", quiet NaN ("NaN") followed by any number of digits, or signaling NaN ("sNaN") followed by any number of digits, all in any combination of upper and lower case.
 
-All characters mentioned above are the corresponding characters in the Basic Latin range. In particular, the digits must be the basic digits 0 to 9 (U + 0030 to U + 0039). The string is not allowed to contain white space characters, including spaces.
+All characters mentioned above are the corresponding characters in the Basic Latin range. In particular, the digits must be the basic digits 0 to 9 (U+0030 to U+0039). The string is not allowed to contain white space characters, including spaces.
 
 <b>Parameters:</b>
 
@@ -348,7 +348,7 @@ Returns whether this object is a not-a-number value.
 
 <b>Return Value:</b>
 
- `true`  if this object is a not-a-number value; otherwise, false .
+ `true`  if this object is a not-a-number value; otherwise,  `false` .
 
 ### IsNegativeInfinity
 
@@ -360,7 +360,7 @@ Returns whether this object is negative infinity.
 
 <b>Return Value:</b>
 
- `true`  if this object is negative infinity; otherwise, false .
+ `true`  if this object is negative infinity; otherwise,  `false` .
 
 ### IsPositiveInfinity
 
@@ -372,7 +372,7 @@ Returns whether this object is positive infinity.
 
 <b>Return Value:</b>
 
- `true`  if this object is positive infinity; otherwise, false .
+ `true`  if this object is positive infinity; otherwise,  `false` .
 
 ### IsQuietNaN
 

@@ -18,7 +18,7 @@
         PeterO.PrecisionContext ctx,
         object result);
 
-Initializes a new instance of the[PeterO.TrapException](PeterO.TrapException.md) class.
+Initializes a new instance of the [PeterO.TrapException](PeterO.TrapException.md) class.
 
 <b>Parameters:</b>
 

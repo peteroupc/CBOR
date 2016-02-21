@@ -32,7 +32,7 @@ Passing a signaling NaN to any arithmetic operation shown here will signal the f
 
 Passing a quiet NaN to any arithmetic operation shown here will return a quiet NaN, unless noted otherwise. Invalid operations will also return a quiet NaN, as stated in the individual methods.
 
-Unless noted otherwise, passing a null arbitrary-precision decimal argument to any method here will throw an exception.
+Unless noted otherwise,passing a null arbitrary-precision decimal argument to any method here will throw an exception.
 
 When an arithmetic operation signals the flag FlagInvalid, FlagOverflow, or FlagDivideByZero, it will not throw an exception too, unless the flag's trap is enabled in the precision context (see EContext's Traps property).
 
@@ -122,7 +122,7 @@ Gets a value indicating whether this object is negative, including negative zero
 
 <b>Returns:</b>
 
- `true`  If this object is negative, including negative zero; otherwise,.  `false` .
+ `true`  If this object is negative, including negative zero; otherwise,  `false` .
 
 ### Mantissa
 
@@ -209,7 +209,7 @@ Determines whether this object's mantissa and exponent are equal to those of ano
 
 <b>Return Value:</b>
 
- `true`  if the objects are equal; otherwise, false .
+ `true`  if the objects are equal; otherwise,  `false` .
 
 ### Equals
 
@@ -282,7 +282,7 @@ Gets a value indicating whether this object is not a number (NaN).
 
 <b>Return Value:</b>
 
- `true`  if this object is not a number (NaN); otherwise, false .
+ `true`  if this object is not a number (NaN); otherwise,  `false` .
 
 ### IsQuietNaN
 
