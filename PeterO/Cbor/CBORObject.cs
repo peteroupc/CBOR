@@ -2442,6 +2442,7 @@ CBOREncodeOptions options) {
       unchecked {
         if (this.itemValue != null) {
           var itemHashCode = 0;
+          long longValue = 0L;
           switch (this.itemtypeValue) {
             case CBORObjectTypeByteString:
               itemHashCode =
@@ -2453,13 +2454,35 @@ CBOREncodeOptions options) {
             case CBORObjectTypeArray:
               itemHashCode = CBORArrayHashCode(this.AsList());
               break;
+            case CBORObjectTypeString:
+              itemHashCode = StringHashCode((string)this.itemValue);
+              break;
+            case CBORObjectSimpleValue:
+              itemHashCode = (int)this.itemValue;
+              break;
+            case CBORObjectSingle:
+              itemHashCode =
+  BitConverter.ToInt32(BitConverter.GetBytes((float)this.itemValue), 0);
+              break;
+            case CBORObjectDouble:
+              longValue =
+  BitConverter.ToInt64(BitConverter.GetBytes((double)this.itemValue), 0);
+              longValue |= (longValue >> 32);
+              itemHashCode = unchecked((int)longValue);
+              break;
+            case CBORObjectInteger:
+              longValue = (long)this.itemValue;
+              longValue |= (longValue >> 32);
+              itemHashCode = unchecked((int)longValue);
+              break;
             default:
+              // einteger, efloat, edecimal, erational, CBORObject
               itemHashCode = this.itemValue.GetHashCode();
               break;
           }
           hashCode += 651869479 * itemHashCode;
         }
-        hashCode += 651869483 * (this.itemtypeValue.GetHashCode() +
+        hashCode += 651869483 * (this.itemtypeValue +
                     this.tagLow + this.tagHigh);
       }
       return hashCode;
@@ -3100,8 +3123,8 @@ CBOREncodeOptions options) {
               // (additional is a signed long)
               return new CBORObject(CBORObjectTypeInteger, uadditional);
             } else {
-              int low = unchecked((int)((uadditional) & 0xFFFFFFFFL));
-              int high = unchecked((int)((uadditional >> 32) & 0xFFFFFFFFL));
+              int low = unchecked((int)((uadditional) & 0xffffffffL));
+              int high = unchecked((int)((uadditional >> 32) & 0xffffffffL));
               return FromObject(LowHighToEInteger(low, high));
             }
           case 1:
@@ -3110,8 +3133,8 @@ CBOREncodeOptions options) {
               // (additional is a signed long)
               return new CBORObject(CBORObjectTypeInteger, -1 - uadditional);
             } else {
-              int low = unchecked((int)((uadditional) & 0xFFFFFFFFL));
-              int high = unchecked((int)((uadditional >> 32) & 0xFFFFFFFFL));
+              int low = unchecked((int)((uadditional) & 0xffffffffL));
+              int high = unchecked((int)((uadditional >> 32) & 0xffffffffL));
               EInteger bigintAdditional = LowHighToEInteger(low, high);
               EInteger minusOne = -EInteger.One;
               bigintAdditional = minusOne - (EInteger)bigintAdditional;
@@ -3244,6 +3267,21 @@ CBOREncodeOptions options) {
         ret = (ret * 31) + count;
         for (var i = 0; i < count; ++i) {
           ret = (ret * 31) + list[i].GetHashCode();
+        }
+      }
+      return ret;
+    }
+
+    private static int StringHashCode(string str) {
+      if (str == null) {
+        return 0;
+      }
+      var ret = 19;
+      int count = str.Length;
+      unchecked {
+        ret = (ret * 31) + count;
+        for (var i = 0; i < count; ++i) {
+          ret = (ret * 31) + (int)str[i];
         }
       }
       return ret;
@@ -3429,16 +3467,16 @@ CBOREncodeOptions options) {
       if (value < 24) {
         return new[] { (byte)((byte)value | (byte)(type << 5)) };
       }
-      if (value <= 0xFFL) {
+      if (value <= 0xffL) {
         return new[] { (byte)(24 | (type << 5)), (byte)(value & 0xff)
         };
       }
-      if (value <= 0xFFFFL) {
+      if (value <= 0xffffL) {
         return new[] { (byte)(25 | (type << 5)),
           (byte)((value >> 8) & 0xff), (byte)(value & 0xff)
         };
       }
-      if (value <= 0xFFFFFFFFL) {
+      if (value <= 0xffffffffL) {
         return new[] { (byte)(26 | (type << 5)),
           (byte)((value >> 24) & 0xff), (byte)((value >> 16) & 0xff),
           (byte)((value >> 8) & 0xff), (byte)(value & 0xff)
@@ -3870,11 +3908,11 @@ CBOREncodeOptions options) {
         if (high == 0 && (low >> 16) == 0) {
           WritePositiveInt(6, low, s);
         } else if (high == 0) {
-          long value = ((long)low) & 0xFFFFFFFFL;
+          long value = ((long)low) & 0xffffffffL;
           WritePositiveInt64(6, value, s);
         } else if ((high >> 16) == 0) {
-          long value = ((long)low) & 0xFFFFFFFFL;
-          long highValue = ((long)high) & 0xFFFFFFFFL;
+          long value = ((long)low) & 0xffffffffL;
+          long highValue = ((long)high) & 0xffffffffL;
           value |= highValue << 32;
           WritePositiveInt64(6, value, s);
         } else {

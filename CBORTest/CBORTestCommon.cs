@@ -189,7 +189,7 @@ Int32.MaxValue));
           o.AsByte();
           Assert.Fail("Should have failed");
         } catch (OverflowException) {
-          Console.Write(String.Empty);
+          new Object();
         } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex); throw new
             InvalidOperationException(String.Empty, ex);
@@ -198,7 +198,7 @@ Int32.MaxValue));
           o.AsInt16();
           Assert.Fail("Should have failed");
         } catch (OverflowException) {
-          Console.Write(String.Empty);
+          new Object();
         } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex); throw new
             InvalidOperationException(String.Empty, ex);
@@ -207,7 +207,7 @@ Int32.MaxValue));
           o.AsInt32();
           Assert.Fail("Should have failed");
         } catch (OverflowException) {
-          Console.Write(String.Empty);
+          new Object();
         } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex); throw new
             InvalidOperationException(String.Empty, ex);
@@ -216,7 +216,7 @@ Int32.MaxValue));
           o.AsInt64();
           Assert.Fail("Should have failed");
         } catch (OverflowException) {
-          Console.Write(String.Empty);
+          new Object();
         } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex); throw new
             InvalidOperationException(String.Empty, ex);
@@ -237,7 +237,7 @@ Int32.MaxValue));
           o.AsEInteger();
           Assert.Fail("Should have failed");
         } catch (OverflowException) {
-          Console.Write(String.Empty);
+          new Object();
         } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex); throw new
             InvalidOperationException(String.Empty, ex);

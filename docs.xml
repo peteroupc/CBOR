@@ -38,7 +38,7 @@
             <returns><c>true</c> if this object and another object are equal; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.BigInteger.GetHashCode">
-<summary>Returns the hash code for this instance.</summary>
+<summary>Returns the hash code for this instance.  No application or process IDs are used in the hash code calculation.</summary>
             <returns>A 32-bit signed integer.</returns>
 </doc>
 <doc name="F:PeterO.BigInteger.ONE">
@@ -1197,7 +1197,7 @@
             not a byte string.</exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.GetHashCode">
-<summary>Calculates the hash code of this object.</summary>
+<summary>Calculates the hash code of this object.  No application or process IDs are used in the hash code calculation.</summary>
             <returns>A 32-bit hash code.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.GetTags">
@@ -2964,7 +2964,7 @@
             string.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.GetHashCode">
-<summary>Calculates this object&#x27;s hash code.</summary>
+<summary>Calculates this object&#x27;s hash code.  No application or process IDs are used in the hash code calculation.</summary>
             <returns>This object's hash code.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.IsInfinity">
@@ -3245,7 +3245,7 @@
             than <paramref name='length'/>.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.GetHashCode">
-<summary>Calculates this object&#x27;s hash code.</summary>
+<summary>Calculates this object&#x27;s hash code.  No application or process IDs are used in the hash code calculation.</summary>
             <returns>This object's hash code.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.IsInfinity">
@@ -3406,7 +3406,7 @@
             <returns>A Boolean object.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedRational.GetHashCode">
-<summary>Not documented yet.</summary>
+<summary>Calculates the hash code for this object.  No application or process IDs are used in the hash code calculation.</summary>
             <returns>A 32-bit signed integer.</returns>
 </doc>
 <doc name="P:PeterO.ExtendedRational.IsFinite">

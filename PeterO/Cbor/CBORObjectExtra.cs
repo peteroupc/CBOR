@@ -111,9 +111,9 @@ EContext.CliDecimal.WithTraps(EContext.FlagOverflow));
       unchecked
       {
         var ret = (ulong)a;
-        ret &= 0xFFFFFFFFL;
+        ret &= 0xffffffffL;
         var retb = (ulong)b;
-        retb &= 0xFFFFFFFFL;
+        retb &= 0xffffffffL;
         ret |= retb << 32;
         return ret;
       }

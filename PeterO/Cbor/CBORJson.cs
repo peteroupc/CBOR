@@ -546,8 +546,9 @@ namespace PeterO.Cbor {
               writer.WriteString("null");
               return;
             }
-            writer.WriteString(CBORObject.TrimDotZero(
-              CBORUtilities.DoubleToString(f)));
+            string dblString = CBORUtilities.DoubleToString(f);
+            writer.WriteString(
+              CBORObject.TrimDotZero(dblString));
             return;
           }
           case CBORObject.CBORObjectTypeInteger: {
@@ -586,9 +587,10 @@ namespace PeterO.Cbor {
                 writer.WriteString("null");
                 return;
               }
+              string dblString =
+                  CBORUtilities.DoubleToString(f);
               writer.WriteString(
-                CBORObject.TrimDotZero(
-                  CBORUtilities.DoubleToString(f)));
+                CBORObject.TrimDotZero(dblString));
               return;
             }
             writer.WriteString(flo.ToString());
