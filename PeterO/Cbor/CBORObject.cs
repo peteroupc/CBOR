@@ -2454,29 +2454,29 @@ CBOREncodeOptions options) {
             case CBORObjectTypeArray:
               itemHashCode = CBORArrayHashCode(this.AsList());
               break;
-            case CBORObjectTypeString:
+            case CBORObjectTypeTextString:
               itemHashCode = StringHashCode((string)this.itemValue);
               break;
-            case CBORObjectSimpleValue:
+            case CBORObjectTypeSimpleValue:
               itemHashCode = (int)this.itemValue;
               break;
-            case CBORObjectSingle:
+            case CBORObjectTypeSingle:
               itemHashCode =
   BitConverter.ToInt32(BitConverter.GetBytes((float)this.itemValue), 0);
               break;
-            case CBORObjectDouble:
+            case CBORObjectTypeDouble:
               longValue =
   BitConverter.ToInt64(BitConverter.GetBytes((double)this.itemValue), 0);
-              longValue |= (longValue >> 32);
+              longValue |= longValue >> 32;
               itemHashCode = unchecked((int)longValue);
               break;
-            case CBORObjectInteger:
+            case CBORObjectTypeInteger:
               longValue = (long)this.itemValue;
-              longValue |= (longValue >> 32);
+              longValue |= longValue >> 32;
               itemHashCode = unchecked((int)longValue);
               break;
             default:
-              // einteger, efloat, edecimal, erational, CBORObject
+              // EInteger, EFloat, EDecimal, ERational, CBORObject
               itemHashCode = this.itemValue.GetHashCode();
               break;
           }

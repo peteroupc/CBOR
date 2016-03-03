@@ -817,13 +817,14 @@
             <paramref name='options'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Equals(PeterO.Cbor.CBORObject)">
-<summary>Compares the equality of two CBOR objects.</summary>
+<summary>Compares the equality of two CBOR objects.
+            Not-a-number values can be considered equal by this method.</summary>
             <param name='other'>The object to compare.</param>
             <returns><c>true</c> if the objects are equal; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Equals(System.Object)">
 <summary>Determines whether this object and another object are
-            equal.</summary>
+            equal and have the same type.  Not-a-number values can be considered equal by this method.</summary>
             <param name='obj'>An arbitrary object.</param>
             <returns><c>true</c> if the objects are equal; otherwise, <c>false</c>.</returns>
 </doc>
