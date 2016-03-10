@@ -105,15 +105,17 @@
     <Compile Include="CBORTestCommon.cs" />
     <Compile Include="CBORTypeFilterTest.cs" />
     <Compile Include="DataUtilitiesTest.cs" />
-    <Compile Include="FastRandom.cs" />
+    <Compile Include="IRandomGen.cs" />
     <Compile Include="MiniCBOR.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RandomGenerator.cs" />
     <Compile Include="RandomObjects.cs" />
     <Compile Include="Reflect.cs" />
     <Compile Include="Runner.cs" />
     <Compile Include="StringAndBigInt.cs" />
     <Compile Include="TestCommon.cs" />
     <Compile Include="URIUtilityTest.cs" />
+    <Compile Include="XorShift128Plus.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

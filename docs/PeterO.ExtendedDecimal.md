@@ -258,7 +258,7 @@ The parameter  <i>str</i>
 
     public override int GetHashCode();
 
-Calculates this object's hash code.
+Calculates this object's hash code. No application or process IDs are used in the hash code calculation.
 
 <b>Return Value:</b>
 

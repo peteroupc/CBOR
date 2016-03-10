@@ -17,23 +17,23 @@ using PeterO.Numbers;
 namespace Test {
   [TestFixture]
   public class CBORExtraTest {
-    private static decimal RandomDecimal(FastRandom rand, int exponent) {
+    private static decimal RandomDecimal(RandomGenerator rand, int exponent) {
       var x = new int[4];
-      int r = rand.NextValue(0x10000);
-      r |= ((int)rand.NextValue(0x10000)) << 16;
+      int r = rand.UniformInt(0x10000);
+      r |= ((int)rand.UniformInt(0x10000)) << 16;
       x[0] = r;
-      if (rand.NextValue(2) == 0) {
-        r = rand.NextValue(0x10000);
-        r |= ((int)rand.NextValue(0x10000)) << 16;
+      if (rand.UniformInt(2) == 0) {
+        r = rand.UniformInt(0x10000);
+        r |= ((int)rand.UniformInt(0x10000)) << 16;
         x[1] = r;
-        if (rand.NextValue(2) == 0) {
-          r = rand.NextValue(0x10000);
-          r |= ((int)rand.NextValue(0x10000)) << 16;
+        if (rand.UniformInt(2) == 0) {
+          r = rand.UniformInt(0x10000);
+          r |= ((int)rand.UniformInt(0x10000)) << 16;
           x[2] = r;
         }
       }
       x[3] = exponent << 16;
-      if (rand.NextValue(2) == 0) {
+      if (rand.UniformInt(2) == 0) {
         x[3] |= 1 << 31;
       }
       return new Decimal(x);
@@ -41,7 +41,7 @@ namespace Test {
 
     [Test]
     public void TestCBORObjectDecimal() {
-      var rand = new FastRandom();
+      var rand = new RandomGenerator();
       for (var i = 0; i <= 28; ++i) {
         // Try a random decimal with a given
         // exponent
@@ -4683,12 +4683,12 @@ stringTemp);
 
     [Test]
     public void TestDivideUnsigned() {
-      var fr = new FastRandom();
+      var fr = new RandomGenerator();
       unchecked {
         for (var i = 0; i < 1000; ++i) {
-          var x = (uint)fr.NextValue(0x10000);
-          x |= ((uint)fr.NextValue(0x10000)) << 16;
-          var y = (ushort)fr.NextValue(0x10000);
+          var x = (uint)fr.UniformInt(0x10000);
+          x |= ((uint)fr.UniformInt(0x10000)) << 16;
+          var y = (ushort)fr.UniformInt(0x10000);
           var dx = (int)x;
           var dy = (short)y;
           if (dy == 0) {

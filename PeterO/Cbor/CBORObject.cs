@@ -755,7 +755,7 @@ CBOREncodeOptions options) {
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Numbers.ERational)"]/*'/>
-    internal static CBORObject FromObject(ERational bigValue) {
+    public static CBORObject FromObject(ERational bigValue) {
       if ((object)bigValue == (object)null) {
         return CBORObject.Null;
       }
@@ -1385,7 +1385,7 @@ CBOREncodeOptions options) {
         stream.WriteByte(0xf6);
         return;
       }
-      if (!rational.IsFinite) {
+      if (!rational.IsFinite || (rational.IsNegative && rational.IsZero)) {
         Write(rational.ToDouble(), stream);
         return;
       }

@@ -186,7 +186,7 @@ The parameter  <i>str</i>
 
     public override int GetHashCode();
 
-Returns the hash code for this instance.
+Returns the hash code for this instance. No application or process IDs are used in the hash code calculation.
 
 <b>Return Value:</b>
 

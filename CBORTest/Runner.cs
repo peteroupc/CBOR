@@ -31,7 +31,7 @@ namespace PeterO {
     }
 
     public static void Main() {
-      const String ValueParam = "TestRandomNonsense";
+      const String ValueParam = "TestWrite";
       // Run all the tests in this assembly
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
         if (!HasAttribute(type, typeof(TestFixtureAttribute))) {
@@ -40,11 +40,6 @@ namespace PeterO {
         Console.WriteLine("-------");
         Console.WriteLine(type.FullName);
         Console.WriteLine("-------");
-        if (!String.IsNullOrEmpty(ValueParam)) {
-          if (!type.FullName.Contains(ValueParam)) {
-            // continue;
-          }
-        }
         object test = Activator.CreateInstance(type);
         var setup = type.GetMethod("SetUp");
         if (setup != null) {
@@ -56,7 +51,7 @@ namespace PeterO {
           }
           Console.WriteLine(method.Name);
           if (!String.IsNullOrEmpty(ValueParam)) {
-            if (!method.Name.Contains(ValueParam)) {
+            if (!method.Name.Equals(ValueParam)) {
               continue;
             }
           }

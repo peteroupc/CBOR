@@ -59,7 +59,7 @@ namespace Test {
 
     [Test]
     public void TestEInteger() {
-      var r = new FastRandom();
+      var r = new RandomGenerator();
       for (var i = 0; i < 500; ++i) {
         EInteger bi = RandomObjects.RandomEInteger(r);
         CBORTestCommon.AssertSer(
@@ -158,7 +158,7 @@ o.AsEInteger());
 
     [Test]
     public void TestCanFitIn() {
-      var r = new FastRandom();
+      var r = new RandomGenerator();
       for (var i = 0; i < 5000; ++i) {
         CBORObject ed = CBORTestCommon.RandomNumber(r);
         EDecimal ed2;
@@ -506,7 +506,7 @@ cbor.AsEInteger());
 
     [Test]
     public void TestDivide() {
-      var r = new FastRandom();
+      var r = new RandomGenerator();
       for (var i = 0; i < 3000; ++i) {
         CBORObject o1 =
           CBORObject.FromObject(RandomObjects.RandomEInteger(r));
@@ -831,7 +831,7 @@ o2).AsERational();
 
     [Test]
     public void TestParseDecimalStrings() {
-      var rand = new FastRandom();
+      var rand = new RandomGenerator();
       for (var i = 0; i < 3000; ++i) {
         string r = RandomObjects.RandomDecimalString(rand);
         TestDecimalString(r);
@@ -841,7 +841,7 @@ o2).AsERational();
     [Test]
     [Timeout(50000)]
     public void TestRandomData() {
-      var rand = new FastRandom();
+      var rand = new RandomGenerator();
       CBORObject obj;
       for (var i = 0; i < 1000; ++i) {
         obj = CBORTestCommon.RandomCBORObject(rand);
@@ -853,18 +853,18 @@ o2).AsERational();
     [Test]
     [Timeout(50000)]
     public void TestRandomNonsense() {
-      var rand = new FastRandom();
+      var rand = new RandomGenerator();
       for (var i = 0; i < 200; ++i) {
-        var array = new byte[rand.NextValue(1000000) + 1];
+        var array = new byte[rand.UniformInt(1000000) + 1];
         for (int j = 0; j < array.Length; ++j) {
           if (j + 3 <= array.Length) {
-            int r = rand.NextValue(0x1000000);
+            int r = rand.UniformInt(0x1000000);
             array[j] = (byte)(r & 0xff);
             array[j + 1] = (byte)((r >> 8) & 0xff);
             array[j + 2] = (byte)((r >> 16) & 0xff);
             j += 2;
           } else {
-            array[j] = (byte)rand.NextValue(256);
+            array[j] = (byte)rand.UniformInt(256);
           }
         }
         using (var ms = new MemoryStream(array)) {
@@ -905,16 +905,16 @@ o2).AsERational();
     [Test]
     [Timeout(20000)]
     public void TestRandomSlightlyModified() {
-      var rand = new FastRandom();
+      var rand = new RandomGenerator();
       // Test slightly modified objects
       for (var i = 0; i < 200; ++i) {
         CBORObject originalObject = CBORTestCommon.RandomCBORObject(rand);
         byte[] array = originalObject.EncodeToBytes();
         // Console.WriteLine(originalObject);
-        int count2 = rand.NextValue(10) + 1;
+        int count2 = rand.UniformInt(10) + 1;
         for (int j = 0; j < count2; ++j) {
-          int index = rand.NextValue(array.Length);
-          array[index] = unchecked((byte)rand.NextValue(256));
+          int index = rand.UniformInt(array.Length);
+          array[index] = unchecked((byte)rand.UniformInt(256));
         }
         using (var inputStream = new MemoryStream(array)) {
           while (inputStream.Position != inputStream.Length) {
@@ -954,7 +954,7 @@ o2).AsERational();
 
     [Test]
     public void TestReadWriteInt() {
-      var r = new FastRandom();
+      var r = new RandomGenerator();
       try {
         for (var i = 0; i < 100000; ++i) {
           int val = unchecked((int)RandomObjects.RandomInt64(r));
@@ -1004,7 +1004,7 @@ o2).AsERational();
 
     [Test]
     public void TestSubtract() {
-      var r = new FastRandom();
+      var r = new RandomGenerator();
       for (var i = 0; i < 3000; ++i) {
         CBORObject o1 = CBORTestCommon.RandomNumber(r);
         CBORObject o2 = CBORTestCommon.RandomNumber(r);

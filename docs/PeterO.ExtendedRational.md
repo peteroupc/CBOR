@@ -247,7 +247,7 @@ A Boolean object.
 
     public override int GetHashCode();
 
-Not documented yet.
+Calculates the hash code for this object. No application or process IDs are used in the hash code calculation.
 
 <b>Return Value:</b>
 

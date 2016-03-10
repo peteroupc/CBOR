@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using PeterO.Numbers;
+using PeterO;
 
 namespace Test {
   internal sealed class StringAndBigInt {
@@ -25,7 +26,7 @@ namespace Test {
       }
     }
 
-    public static StringAndBigInt Generate(FastRandom rand, int radix) {
+    public static StringAndBigInt Generate(RandomGenerator rand, int radix) {
       if (radix < 2) {
   throw new ArgumentException("radix (" + radix +
     ") is less than " + 2);
@@ -36,10 +37,10 @@ if (radix > 36) {
 }
       EInteger bv = EInteger.Zero;
       var sabi = new StringAndBigInt();
-      int numDigits = 1 + rand.NextValue(100);
+      int numDigits = 1 + rand.UniformInt(100);
       var negative = false;
       var builder = new StringBuilder();
-      if (rand.NextValue(2) == 0) {
+      if (rand.UniformInt(2) == 0) {
         builder.Append('-');
         negative = true;
       }
@@ -48,7 +49,7 @@ if (radix > 36) {
       EInteger radixpow1 = EInteger.FromInt32(radix);
       var count = 0;
       for (int i = 0; i < numDigits - 4; i += 4) {
-        int digitvalues = rand.NextValue(radixpowint);
+        int digitvalues = rand.UniformInt(radixpowint);
         int digit = digitvalues % radix;
         digitvalues /= radix;
         int digit2 = digitvalues % radix;
@@ -58,7 +59,7 @@ if (radix > 36) {
         int digit4 = digitvalues % radix;
         digitvalues /= radix;
         count += 4;
-        int bits = rand.NextValue(16);
+        int bits = rand.UniformInt(16);
         if ((bits & 0x01) == 0) {
           builder.Append(ValueDigits[digit]);
         } else {
@@ -86,8 +87,8 @@ if (radix > 36) {
         bv += bigintTmp;
       }
       for (int i = count; i < numDigits; ++i) {
-        int digit = rand.NextValue(radix);
-        if (rand.NextValue(2) == 0) {
+        int digit = rand.UniformInt(radix);
+        if (rand.UniformInt(2) == 0) {
           builder.Append(ValueDigits[digit]);
         } else {
           builder.Append(ValueDigitsLower[digit]);

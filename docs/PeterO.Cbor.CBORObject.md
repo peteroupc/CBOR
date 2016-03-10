@@ -1086,7 +1086,7 @@ A byte array in CBOR format.
     public override bool Equals(
         object obj);
 
-Determines whether this object and another object are equal.
+Determines whether this object and another object are equal and have the same type. Not-a-number values can be considered equal by this method.
 
 <b>Parameters:</b>
 
@@ -1101,7 +1101,7 @@ Determines whether this object and another object are equal.
     public sealed bool Equals(
         PeterO.Cbor.CBORObject other);
 
-Compares the equality of two CBOR objects.
+Compares the equality of two CBOR objects. Not-a-number values can be considered equal by this method.
 
 <b>Parameters:</b>
 
@@ -1453,6 +1453,21 @@ A CBOR number.
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
+        PeterO.Numbers.ERational bigValue);
+
+Generates a CBOR object from a rational number.
+
+<b>Parameters:</b>
+
+ * <i>bigValue</i>: A rational number.
+
+<b>Return Value:</b>
+
+A CBOR number.
+
+### FromObject
+
+    public static PeterO.Cbor.CBORObject FromObject(
         sbyte value);
 
 Converts a signed 8-bit integer to a CBOR object.
@@ -1775,7 +1790,7 @@ This object is not a byte string.
 
     public override int GetHashCode();
 
-Calculates the hash code of this object.
+Calculates the hash code of this object. No application or process IDs are used in the hash code calculation.
 
 <b>Return Value:</b>
 
