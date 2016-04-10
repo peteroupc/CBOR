@@ -51,8 +51,8 @@ namespace PeterO.Cbor {
     }
 
     public CBORObject ReadForFirstByte(
-int firstbyte,
-CBORTypeFilter filter) {
+  int firstbyte,
+  CBORTypeFilter filter) {
       if (this.depth > 500) {
         throw new CBORException("Too deeply nested");
       }
@@ -202,8 +202,8 @@ CBORTypeFilter filter) {
             }
             data = ms.ToArray();
             return new CBORObject(
-CBORObject.CBORObjectTypeByteString,
-data);
+  CBORObject.CBORObjectTypeByteString,
+  data);
           }
         } else {
           if (hasBigAdditional) {
@@ -247,11 +247,11 @@ data);
                 throw new CBORException("Premature end of data");
               }
               switch (
-DataUtilities.ReadUtf8(
-this.stream,
-(int)len,
-builder,
-false)) {
+  DataUtilities.ReadUtf8(
+  this.stream,
+  (int)len,
+  builder,
+  false)) {
                 case -1:
                   throw new CBORException("Invalid UTF-8");
                 case -2:
@@ -279,19 +279,19 @@ false)) {
           }
           var builder = new StringBuilder();
           switch (
-DataUtilities.ReadUtf8(
-this.stream,
-(int)uadditional,
-builder,
-false)) {
+  DataUtilities.ReadUtf8(
+  this.stream,
+  (int)uadditional,
+  builder,
+  false)) {
             case -1:
               throw new CBORException("Invalid UTF-8");
             case -2:
               throw new CBORException("Premature end of data");
           }
           var cbor = new CBORObject(
-CBORObject.CBORObjectTypeTextString,
-builder.ToString());
+  CBORObject.CBORObjectTypeTextString,
+  builder.ToString());
           if (this.stringRefs != null) {
             int hint = (uadditional > Int32.MaxValue || hasBigAdditional) ?
             Int32.MaxValue : (int)uadditional;
@@ -323,8 +323,8 @@ builder.ToString());
             }
             ++this.depth;
             CBORObject o = this.ReadForFirstByte(
-headByte,
-filter == null ? null : filter.GetSubFilter(vtindex));
+  headByte,
+  filter == null ? null : filter.GetSubFilter(vtindex));
             --this.depth;
             cbor.Add(o);
             ++vtindex;
@@ -471,8 +471,8 @@ filter == null ? null : filter.GetSubFilter(vtindex));
         }
         ++this.depth;
         CBORObject o = haveFirstByte ? this.ReadForFirstByte(
-newFirstByte,
-taginfo == null ? null : taginfo.GetTypeFilter()) :
+  newFirstByte,
+  taginfo == null ? null : taginfo.GetTypeFilter()) :
         this.Read(taginfo == null ? null : taginfo.GetTypeFilter());
         --this.depth;
         if (hasBigAdditional) {
@@ -518,9 +518,9 @@ taginfo == null ? null : taginfo.GetTypeFilter()) :
     }
 
     private static byte[] ReadByteData(
-Stream stream,
-long uadditional,
-Stream outputStream) {
+  Stream stream,
+  long uadditional,
+  Stream outputStream) {
       if ((uadditional >> 63) != 0 || uadditional > Int32.MaxValue) {
         throw new CBORException("Length" + ToUnsignedBigInteger(uadditional) +
           " is bigger than supported ");
@@ -570,9 +570,9 @@ Stream outputStream) {
     }
 
     private static long ReadDataLength(
-Stream stream,
-int headByte,
-int expectedType) {
+  Stream stream,
+  int headByte,
+  int expectedType) {
       if (headByte < 0) {
         throw new CBORException("Unexpected data encountered");
       }

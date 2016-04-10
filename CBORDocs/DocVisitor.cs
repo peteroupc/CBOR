@@ -34,8 +34,8 @@ namespace PeterO.DocGen {
     private StringBuilder currentBuffer;
 
     public static void AppendConstraints(
-Type[] genericArguments,
-StringBuilder builder) {
+  Type[] genericArguments,
+  StringBuilder builder) {
       foreach (var arg in genericArguments) {
         if (arg.IsGenericParameter) {
           var constraints = arg.GetGenericParameterConstraints();

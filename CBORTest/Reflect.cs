@@ -33,7 +33,7 @@ namespace Test {
         BindingFlags flags = BindingFlags.Instance | BindingFlags.Public |
  BindingFlags.NonPublic | BindingFlags.CreateInstance;
         return Activator.CreateInstance(
-FindType(type),
+  FindType(type),
           flags,
  null,
  parameters,
@@ -47,15 +47,15 @@ FindType(type),
       BindingFlags flags = BindingFlags.Instance | BindingFlags.Public |
         BindingFlags.NonPublic | BindingFlags.InvokeMethod;
       return obj.GetType().GetMethod(
-name,
-flags);
+  name,
+  flags);
     }
 
     private static object GetMethodExtended(
-IReflect type,
-string name,
-bool staticMethod,
-int parameterCount) {
+  IReflect type,
+  string name,
+  bool staticMethod,
+  int parameterCount) {
       var haveMethodName = false;
       BindingFlags flags = (staticMethod ? BindingFlags.Static :
         BindingFlags.Instance) | BindingFlags.Public |
@@ -72,9 +72,9 @@ int parameterCount) {
     }
 
     public static object InvokeMethod(
-object obj,
-object method,
-params object[] parameters) {
+  object obj,
+  object method,
+  params object[] parameters) {
       try {
         return ((MethodInfo)method).Invoke(obj, parameters);
       } catch (TargetInvocationException ex) {
@@ -83,23 +83,23 @@ params object[] parameters) {
     }
 
     public static object Invoke(
-object obj,
-string name,
-params object[] parameters) {
+  object obj,
+  string name,
+  params object[] parameters) {
       return InvokeMethod(
-obj,
-GetMethodExtended(obj.GetType(), name, false, parameters.Length),
-parameters);
+  obj,
+  GetMethodExtended(obj.GetType(), name, false, parameters.Length),
+  parameters);
     }
 
     public static object InvokeStatic(
-string type,
-string name,
-params object[] parameters) {
+  string type,
+  string name,
+  params object[] parameters) {
       return InvokeMethod(
-null,
-GetMethodExtended(FindType(type), name, true, parameters.Length),
-parameters);
+  null,
+  GetMethodExtended(FindType(type), name, true, parameters.Length),
+  parameters);
     }
 
     public static object GetProperty(object obj, string name) {
@@ -107,30 +107,30 @@ parameters);
         BindingFlags.NonPublic |
         BindingFlags.Instance | BindingFlags.GetProperty;
       return InvokeMethod(
-obj,
-obj.GetType().GetProperty(name, flags).GetGetMethod());
+  obj,
+  obj.GetType().GetProperty(name, flags).GetGetMethod());
     }
 
     public static object GetPropertyStatic(string type, string name) {
       var prop = FindType(type).GetProperty(
-name,
-BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.GetProperty).GetGetMethod();
+  name,
+  BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.GetProperty).GetGetMethod();
       return InvokeMethod(
-null,
-prop);
+  null,
+  prop);
     }
 
     public static object GetField(object obj, string name) {
       return obj.GetType().GetField(
-name,
-BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField).GetValue(obj);
+  name,
+  BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField).GetValue(obj);
     }
 
     public static object GetFieldStatic(string type, string name) {
       return FindType(
-type).GetField(
-name,
-BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.GetField).GetValue(null);
+  type).GetField(
+  name,
+  BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.GetField).GetValue(null);
     }
   }
 }

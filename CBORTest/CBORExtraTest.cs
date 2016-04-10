@@ -4675,8 +4675,8 @@ new Object();
       {
 string stringTemp = cbor.ToJSONString();
 Assert.AreEqual(
-"[[[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0]]]",
-stringTemp);
+  "[[[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0]]]",
+  stringTemp);
 }
       CBORTestCommon.AssertRoundTrip(cbor);
     }

@@ -60,9 +60,9 @@ See the project page for release notes on previous versions: https://github.com/
   </metadata>
 
   <files>
-    <file src="bin/Release/CBOR.dll" target="lib/portable-net45+dnxcore50+netcore45+win+wpa81+wp80" />
-    <file src="bin/Release/CBOR.xml" target="lib/portable-net45+dnxcore50+netcore45+win+wpa81+wp80" />
-    <file src="bin/ReleaseNet40/CBOR.dll" target="lib/portable-net40+sl50+win+wpa81+wp80" />
-    <file src="bin/ReleaseNet40/CBOR.xml" target="lib/portable-net40+sl50+win+wpa81+wp80" />
+    <file src="bin/Release/CBOR.dll" target="lib/portable-net45+dnxcore50+netcore45+win+wpa81+wp8" />
+    <file src="bin/Release/CBOR.xml" target="lib/portable-net45+dnxcore50+netcore45+win+wpa81+wp8" />
+    <file src="bin/ReleaseNet40/CBOR.dll" target="lib/portable-net40+sl5+win+wpa81+wp8" />
+    <file src="bin/ReleaseNet40/CBOR.xml" target="lib/portable-net40+sl5+win+wpa81+wp8" />
   </files>
 </package>

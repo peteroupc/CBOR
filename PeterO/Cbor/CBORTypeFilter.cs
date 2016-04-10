@@ -220,8 +220,8 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.WithArrayExactLength(System.Int32,PeterO.Cbor.CBORTypeFilter[])"]/*'/>
     public CBORTypeFilter WithArrayExactLength(
-int arrayLength,
-params CBORTypeFilter[] elements) {
+  int arrayLength,
+  params CBORTypeFilter[] elements) {
       if (this.any) {
         return this;
       }
@@ -248,8 +248,8 @@ params CBORTypeFilter[] elements) {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.WithArrayMinLength(System.Int32,PeterO.Cbor.CBORTypeFilter[])"]/*'/>
     public CBORTypeFilter WithArrayMinLength(
-int arrayLength,
-params CBORTypeFilter[] elements) {
+  int arrayLength,
+  params CBORTypeFilter[] elements) {
       if (this.any) {
         return this;
       }

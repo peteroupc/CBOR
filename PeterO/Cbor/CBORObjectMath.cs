@@ -245,9 +245,9 @@ namespace PeterO.Cbor {
         long rem = valueA - (quo * valueB);
         return (rem == 0) ? CBORObject.FromObject(quo) :
         CBORObject.FromObject(
-new ERational(
-(EInteger)valueA,
-(EInteger)valueB));
+  new ERational(
+  (EInteger)valueA,
+  (EInteger)valueB));
       }
       if (typeA == CBORObject.CBORObjectTypeExtendedRational ||
              typeB == CBORObject.CBORObjectTypeExtendedRational) {

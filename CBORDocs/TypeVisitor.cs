@@ -29,13 +29,13 @@ namespace PeterO.DocGen {
       foreach (var key in this.docs.Keys) {
         var finalString = this.docs[key].ToString();
         var filename = Path.Combine(
-this.directory,
-DocVisitor.GetTypeID(key) + ".md");
+  this.directory,
+  DocVisitor.GetTypeID(key) + ".md");
         using (var writer = new StreamWriter(filename, false, Encoding.UTF8)) {
           finalString = Regex.Replace(
-finalString,
-@"\r?\n(\r?\n)+",
-"\r\n\r\n");
+  finalString,
+  @"\r?\n(\r?\n)+",
+  "\r\n\r\n");
           writer.WriteLine(finalString);
         }
       }

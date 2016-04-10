@@ -204,8 +204,8 @@ namespace PeterO.Cbor {
 
     public static EInteger BigIntegerFromDouble(double dbl) {
       long lvalue = BitConverter.ToInt64(
-BitConverter.GetBytes((double)dbl),
-0);
+  BitConverter.GetBytes((double)dbl),
+  0);
       int value0 = unchecked((int)(lvalue & 0xffffffffL));
       int value1 = unchecked((int)((lvalue >> 32) & 0xffffffffL));
       var floatExponent = (int)((value1 >> 20) & 0x7ff);
@@ -271,20 +271,20 @@ BitConverter.GetBytes((double)dbl),
       if (value >= 0x7c00) {
         value = (int)(0x3fc00 | (value & 0x3ff)) << 13 | negvalue;
         return BitConverter.ToSingle(
-BitConverter.GetBytes(value),
-0);
+  BitConverter.GetBytes(value),
+  0);
       }
       if (value > 0x400) {
         value = (int)((value + 0x1c000) << 13) | negvalue;
         return BitConverter.ToSingle(
-BitConverter.GetBytes(value),
-0);
+  BitConverter.GetBytes(value),
+  0);
       }
       if ((value & 0x400) == value) {
         value = (int)((value == 0) ? 0 : 0x38800000) | negvalue;
         return BitConverter.ToSingle(
-BitConverter.GetBytes(value),
-0);
+  BitConverter.GetBytes(value),
+  0);
       } else {
         // denormalized
         int m = value & 0x3ff;

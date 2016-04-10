@@ -69,7 +69,7 @@ namespace Test {
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -83,12 +83,12 @@ namespace Test {
       Assert.AreEqual(0xfffd, DataUtilities.CodePointAt("\udc00X", 0));
       Assert.AreEqual(0xfffd, DataUtilities.CodePointAt("\ud800\ud800", 0));
       Assert.AreEqual(0xfffd, DataUtilities.CodePointAt("\udc00\ud800", 0));
-   Assert.AreEqual(
-0xfffd,
-DataUtilities.CodePointAt("\ud800\ud800\udc00", 0));
-   Assert.AreEqual(
-0xfffd,
-DataUtilities.CodePointAt("\udc00\ud800\udc00", 0));
+      Assert.AreEqual(
+     0xfffd,
+     DataUtilities.CodePointAt("\ud800\ud800\udc00", 0));
+      Assert.AreEqual(
+     0xfffd,
+     DataUtilities.CodePointAt("\udc00\ud800\udc00", 0));
       Assert.AreEqual(0xfffd, DataUtilities.CodePointAt("\udc00\udc00", 0));
       Assert.AreEqual(0x10000, DataUtilities.CodePointAt("\ud800\udc00", 0));
       Assert.AreEqual(0xfffd, DataUtilities.CodePointAt("\ud800", 0, 0));
@@ -97,12 +97,12 @@ DataUtilities.CodePointAt("\udc00\ud800\udc00", 0));
       Assert.AreEqual(0xfffd, DataUtilities.CodePointAt("\udc00X", 0, 0));
       Assert.AreEqual(0xfffd, DataUtilities.CodePointAt("\ud800\ud800", 0, 0));
       Assert.AreEqual(0xfffd, DataUtilities.CodePointAt("\udc00\ud800", 0, 0));
-Assert.AreEqual(
-0xfffd,
-DataUtilities.CodePointAt("\ud800\ud800\udc00", 0, 0));
-Assert.AreEqual(
-0xfffd,
-DataUtilities.CodePointAt("\udc00\ud800\udc00", 0, 0));
+      Assert.AreEqual(
+        0xfffd,
+        DataUtilities.CodePointAt("\ud800\ud800\udc00", 0, 0));
+      Assert.AreEqual(
+        0xfffd,
+        DataUtilities.CodePointAt("\udc00\ud800\udc00", 0, 0));
       Assert.AreEqual(0xfffd, DataUtilities.CodePointAt("\udc00\udc00", 0, 0));
       Assert.AreEqual(0x10000, DataUtilities.CodePointAt("\ud800\udc00", 0, 0));
 
@@ -111,13 +111,13 @@ DataUtilities.CodePointAt("\udc00\ud800\udc00", 0, 0));
       Assert.AreEqual(0xd800, DataUtilities.CodePointAt("\ud800X", 0, 1));
       Assert.AreEqual(0xdc00, DataUtilities.CodePointAt("\udc00X", 0, 1));
       Assert.AreEqual(0xd800, DataUtilities.CodePointAt("\ud800\ud800", 0, 1));
-Assert.AreEqual(
-0xd800,
-DataUtilities.CodePointAt("\ud800\ud800\udc00", 0, 1));
+      Assert.AreEqual(
+        0xd800,
+        DataUtilities.CodePointAt("\ud800\ud800\udc00", 0, 1));
       Assert.AreEqual(0xdc00, DataUtilities.CodePointAt("\udc00\ud800", 0, 1));
-Assert.AreEqual(
-0xdc00,
-DataUtilities.CodePointAt("\udc00\ud800\udc00", 0, 1));
+      Assert.AreEqual(
+        0xdc00,
+        DataUtilities.CodePointAt("\udc00\ud800\udc00", 0, 1));
       Assert.AreEqual(0xdc00, DataUtilities.CodePointAt("\udc00\udc00", 0, 1));
       Assert.AreEqual(0x10000, DataUtilities.CodePointAt("\ud800\udc00", 0, 1));
 
@@ -126,15 +126,15 @@ DataUtilities.CodePointAt("\udc00\ud800\udc00", 0, 1));
       Assert.AreEqual(-1, DataUtilities.CodePointAt("\ud800X", 0, 2));
       Assert.AreEqual(-1, DataUtilities.CodePointAt("\udc00X", 0, 2));
       Assert.AreEqual(-1, DataUtilities.CodePointAt("\ud800\ud800", 0, 2));
-    {
-long numberTemp = DataUtilities.CodePointAt("\ud800\ud800\udc00", 0, 2);
-Assert.AreEqual(-1, numberTemp);
-}
+      {
+        long numberTemp = DataUtilities.CodePointAt("\ud800\ud800\udc00", 0, 2);
+        Assert.AreEqual(-1, numberTemp);
+      }
       Assert.AreEqual(-1, DataUtilities.CodePointAt("\udc00\ud800", 0, 2));
-    {
-long numberTemp = DataUtilities.CodePointAt("\udc00\ud800\udc00", 0, 2);
-Assert.AreEqual(-1, numberTemp);
-}
+      {
+        long numberTemp = DataUtilities.CodePointAt("\udc00\ud800\udc00", 0, 2);
+        Assert.AreEqual(-1, numberTemp);
+      }
       Assert.AreEqual(-1, DataUtilities.CodePointAt("\udc00\udc00", 0, 2));
       Assert.AreEqual(0x10000, DataUtilities.CodePointAt("\ud800\udc00", 0, 2));
     }
@@ -145,7 +145,7 @@ Assert.AreEqual(-1, numberTemp);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -153,25 +153,25 @@ Assert.AreEqual(-1, numberTemp);
       Assert.AreEqual(-1, DataUtilities.CodePointBefore("A", -1));
       Assert.AreEqual((int)'A', DataUtilities.CodePointBefore("A", 1));
       Assert.AreEqual(-1, DataUtilities.CodePointBefore("A", 2));
- Assert.AreEqual(
-(int)'A',
-DataUtilities.CodePointBefore("A\ud800\udc00B", 1));
-  Assert.AreEqual(
-0x10000,
-DataUtilities.CodePointBefore("A\ud800\udc00B", 3));
-   Assert.AreEqual(
-0xfffd,
-DataUtilities.CodePointBefore("A\ud800\udc00B", 2));
- Assert.AreEqual(
-0xd800,
-DataUtilities.CodePointBefore("A\ud800\udc00B", 2, 1));
-    {
-long numberTemp = DataUtilities.CodePointBefore(
-  "A\ud800\udc00B",
-  2,
-  2);
-Assert.AreEqual(-1, numberTemp);
-}
+      Assert.AreEqual(
+       (int)'A',
+       DataUtilities.CodePointBefore("A\ud800\udc00B", 1));
+      Assert.AreEqual(
+      0x10000,
+      DataUtilities.CodePointBefore("A\ud800\udc00B", 3));
+      Assert.AreEqual(
+     0xfffd,
+     DataUtilities.CodePointBefore("A\ud800\udc00B", 2));
+      Assert.AreEqual(
+       0xd800,
+       DataUtilities.CodePointBefore("A\ud800\udc00B", 2, 1));
+      {
+        long numberTemp = DataUtilities.CodePointBefore(
+          "A\ud800\udc00B",
+          2,
+          2);
+        Assert.AreEqual(-1, numberTemp);
+      }
       Assert.AreEqual(0xfffd, DataUtilities.CodePointBefore("\udc00B", 1));
       Assert.AreEqual(0xdc00, DataUtilities.CodePointBefore("\udc00B", 1, 1));
       Assert.AreEqual(-1, DataUtilities.CodePointBefore("\udc00B", 1, 2));
@@ -192,29 +192,29 @@ Assert.AreEqual(-1, numberTemp);
       {
         long numberTemp = Math.Sign(
           DataUtilities.CodePointCompare(
-"\ud800\udc00",
-"\ud800\udc00"));
+  "\ud800\udc00",
+  "\ud800\udc00"));
         Assert.AreEqual(0, numberTemp);
       }
       {
         long numberTemp = Math.Sign(
           DataUtilities.CodePointCompare(
-"abc",
-"\ud800\udc00"));
+  "abc",
+  "\ud800\udc00"));
         Assert.AreEqual(-1, numberTemp);
       }
       {
         long numberTemp = Math.Sign(
           DataUtilities.CodePointCompare(
-"\uf000",
-"\ud800\udc00"));
+  "\uf000",
+  "\ud800\udc00"));
         Assert.AreEqual(-1, numberTemp);
       }
       {
         long numberTemp = Math.Sign(
-DataUtilities.CodePointCompare(
-"\uf000",
-"\ud800"));
+  DataUtilities.CodePointCompare(
+  "\uf000",
+  "\ud800"));
         Assert.AreEqual(1, numberTemp);
       }
       Assert.IsTrue(DataUtilities.CodePointCompare("abc", "def") < 0);
@@ -260,8 +260,8 @@ DataUtilities.CodePointCompare(
 
     private void TestUtf8RoundTrip(string str) {
       Assert.AreEqual(
-str,
-DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
+  str,
+  DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
     }
 
     [Test]
@@ -316,7 +316,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -325,7 +325,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -334,7 +334,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -343,7 +343,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -352,7 +352,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -361,7 +361,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -370,7 +370,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -379,7 +379,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -388,7 +388,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -397,7 +397,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -442,7 +442,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -452,7 +452,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
         DataUtilities.GetUtf8Length(null, true);
       } catch (ArgumentNullException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
       }
@@ -460,7 +460,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
         DataUtilities.GetUtf8Length(null, false);
       } catch (ArgumentNullException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
       }
@@ -580,7 +580,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -589,7 +589,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -598,7 +598,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -607,7 +607,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -616,7 +616,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -625,7 +625,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -634,7 +634,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -665,7 +665,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -676,7 +676,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
           Assert.Fail("Should have failed");
         } catch (ArgumentException) {
           new Object();
-} catch (Exception ex) {
+        } catch (Exception ex) {
           Assert.Fail(ex.ToString());
           throw new InvalidOperationException(String.Empty, ex);
         }
@@ -688,7 +688,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
           Assert.Fail("Should have failed");
         } catch (ArgumentException) {
           new Object();
-} catch (Exception ex) {
+        } catch (Exception ex) {
           Assert.Fail(ex.ToString());
           throw new InvalidOperationException(String.Empty, ex);
         }
@@ -772,7 +772,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -783,7 +783,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
             new Object();
-} catch (Exception ex) {
+          } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
           }
@@ -796,7 +796,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
             new Object();
-} catch (Exception ex) {
+          } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
           }
@@ -936,7 +936,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -945,7 +945,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -959,7 +959,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -973,7 +973,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -987,7 +987,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -1001,7 +1001,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -1015,7 +1015,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -1024,7 +1024,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -1063,7 +1063,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -1072,7 +1072,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
         new Object();
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -1084,7 +1084,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
             Assert.Fail("Should have failed");
           } catch (IOException) {
             new Object();
-} catch (Exception ex) {
+          } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
           }
@@ -1166,7 +1166,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
               Assert.Fail("Should have failed");
             } catch (ArgumentNullException) {
               new Object();
-} catch (Exception ex) {
+            } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
             }
@@ -1175,7 +1175,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
               Assert.Fail("Should have failed");
             } catch (ArgumentNullException) {
               new Object();
-} catch (Exception ex) {
+            } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
             }
@@ -1184,7 +1184,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
               Assert.Fail("Should have failed");
             } catch (ArgumentNullException) {
               new Object();
-} catch (Exception ex) {
+            } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
             }
@@ -1193,7 +1193,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
               Assert.Fail("Should have failed");
             } catch (ArgumentNullException) {
               new Object();
-} catch (Exception ex) {
+            } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
             }
@@ -1202,7 +1202,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
               Assert.Fail("Should have failed");
             } catch (ArgumentException) {
               new Object();
-} catch (Exception ex) {
+            } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
             }
@@ -1211,7 +1211,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
               Assert.Fail("Should have failed");
             } catch (ArgumentException) {
               new Object();
-} catch (Exception ex) {
+            } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
             }
@@ -1220,7 +1220,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
               Assert.Fail("Should have failed");
             } catch (ArgumentException) {
               new Object();
-} catch (Exception ex) {
+            } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
             }
@@ -1229,7 +1229,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
               Assert.Fail("Should have failed");
             } catch (ArgumentException) {
               new Object();
-} catch (Exception ex) {
+            } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
             }
@@ -1238,7 +1238,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
               Assert.Fail("Should have failed");
             } catch (ArgumentException) {
               new Object();
-} catch (Exception ex) {
+            } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
             }
@@ -1247,7 +1247,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
               Assert.Fail("Should have failed");
             } catch (ArgumentNullException) {
               new Object();
-} catch (Exception ex) {
+            } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
             }
@@ -1256,7 +1256,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
               Assert.Fail("Should have failed");
             } catch (ArgumentException) {
               new Object();
-} catch (Exception ex) {
+            } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
             }
@@ -1265,7 +1265,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
               Assert.Fail("Should have failed");
             } catch (ArgumentException) {
               new Object();
-} catch (Exception ex) {
+            } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
             }
@@ -1274,7 +1274,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
               Assert.Fail("Should have failed");
             } catch (ArgumentException) {
               new Object();
-} catch (Exception ex) {
+            } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
             }
@@ -1283,7 +1283,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
               Assert.Fail("Should have failed");
             } catch (ArgumentException) {
               new Object();
-} catch (Exception ex) {
+            } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
             }
@@ -1292,7 +1292,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
               Assert.Fail("Should have failed");
             } catch (ArgumentException) {
               new Object();
-} catch (Exception ex) {
+            } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
             }
@@ -1301,7 +1301,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
               Assert.Fail("Should have failed");
             } catch (ArgumentNullException) {
               new Object();
-} catch (Exception ex) {
+            } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
             }
@@ -1310,7 +1310,7 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
               Assert.Fail("Should have failed");
             } catch (ArgumentNullException) {
               new Object();
-} catch (Exception ex) {
+            } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
             }

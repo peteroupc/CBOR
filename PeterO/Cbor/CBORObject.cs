@@ -596,8 +596,8 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.DecodeFromBytes(System.Byte[],PeterO.Cbor.CBOREncodeOptions)"]/*'/>
     public static CBORObject DecodeFromBytes(
-byte[] data,
-CBOREncodeOptions options) {
+  byte[] data,
+  CBOREncodeOptions options) {
       if (data == null) {
         throw new ArgumentNullException("data");
       }
@@ -652,8 +652,8 @@ CBOREncodeOptions options) {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromJSONString(System.String,PeterO.Cbor.CBOREncodeOptions)"]/*'/>
     public static CBORObject FromJSONString(
-string str,
-CBOREncodeOptions options) {
+  string str,
+  CBOREncodeOptions options) {
       if (str == null) {
         throw new ArgumentNullException("str");
       }

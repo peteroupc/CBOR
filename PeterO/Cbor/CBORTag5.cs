@@ -13,15 +13,15 @@ namespace PeterO.Cbor {
   {
     internal static readonly CBORTypeFilter Filter = new
     CBORTypeFilter().WithArrayExactLength(
-2,
-CBORTypeFilter.UnsignedInteger.WithNegativeInteger(),
-CBORTypeFilter.UnsignedInteger.WithNegativeInteger().WithTags(2, 3));
+  2,
+  CBORTypeFilter.UnsignedInteger.WithNegativeInteger(),
+  CBORTypeFilter.UnsignedInteger.WithNegativeInteger().WithTags(2, 3));
 
     internal static readonly CBORTypeFilter ExtendedFilter = new
     CBORTypeFilter().WithArrayExactLength(
-2,
-CBORTypeFilter.UnsignedInteger.WithNegativeInteger().WithTags(2, 3),
-CBORTypeFilter.UnsignedInteger.WithNegativeInteger().WithTags(2, 3));
+  2,
+  CBORTypeFilter.UnsignedInteger.WithNegativeInteger().WithTags(2, 3),
+  CBORTypeFilter.UnsignedInteger.WithNegativeInteger().WithTags(2, 3));
 
     public CBORTag5() : this(false) {
     }

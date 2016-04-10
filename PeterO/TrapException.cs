@@ -12,7 +12,7 @@ namespace PeterO {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="T:PeterO.TrapException"]/*'/>
   [Obsolete(
-"Use ETrapException from PeterO.Numbers/com.upokecenter.numbers.")]
+  "Use ETrapException from PeterO.Numbers/com.upokecenter.numbers.")]
   public class TrapException : ArithmeticException {
     private ETrapException ete;
 
@@ -61,9 +61,9 @@ namespace PeterO {
  wrappedResult = new ExtendedFloat(ef);
 }
       this.ete = new ETrapException(
-flag,
-ctx == null ? null : ctx.Ec,
-wrappedResult);
+  flag,
+  ctx == null ? null : ctx.Ec,
+  wrappedResult);
     }
   }
 }

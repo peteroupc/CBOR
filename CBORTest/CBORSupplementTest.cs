@@ -967,11 +967,11 @@ new Object();
     public void TestNegativeBigInts() {
       EInteger minusone = EInteger.FromString("-1");
       Assert.AreEqual(
-EInteger.FromString("-257"),
+  EInteger.FromString("-257"),
    CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x42, 1, 0 }).AsEInteger());
       Assert.AreEqual(
-EInteger.FromString("-65537"),
-CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x43, 1, 0, 0 }).AsEInteger());
+  EInteger.FromString("-65537"),
+  CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x43, 1, 0, 0 }).AsEInteger());
       {
 object objectTemp = EInteger.FromString("-16777217");
 object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x44, 1,

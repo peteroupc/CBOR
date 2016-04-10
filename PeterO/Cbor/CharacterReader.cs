@@ -36,9 +36,9 @@ namespace PeterO.Cbor {
     // <include file='../../docs.xml'
     // path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.String,System.Boolean,System.Boolean)"]/*'/>
   public CharacterReader(
-string str,
-bool skipByteOrderMark,
-bool errorThrow) {
+  string str,
+  bool skipByteOrderMark,
+  bool errorThrow) {
       if (str == null) {
         throw new ArgumentNullException("str");
       }
@@ -61,17 +61,17 @@ bool errorThrow) {
     // <include file='../../docs.xml'
     // path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.String,System.Int32,System.Int32,System.Boolean,System.Boolean)"]/*'/>
     public CharacterReader(
-string str,
-int offset,
-int length,
-bool skipByteOrderMark,
-bool errorThrow) {
+  string str,
+  int offset,
+  int length,
+  bool skipByteOrderMark,
+  bool errorThrow) {
       if (str == null) {
   throw new ArgumentNullException("str");
 }
 if (offset < 0) {
   throw new ArgumentException("offset (" + offset +
-    ") is less than " + 0);
+    ") is less than 0");
 }
 if (offset > str.Length) {
   throw new ArgumentException("offset (" + offset +
@@ -79,7 +79,7 @@ if (offset > str.Length) {
 }
 if (length < 0) {
   throw new ArgumentException("length (" + length +
-    ") is less than " + 0);
+    ") is less than 0");
 }
 if (length > str.Length) {
   throw new ArgumentException("length (" + length +
@@ -119,10 +119,10 @@ if (str.Length - offset < length) {
     // <include file='../../docs.xml'
     // path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.IO.Stream,System.Int32,System.Boolean,System.Boolean)"]/*'/>
     public CharacterReader(
-Stream stream,
-int mode,
-bool errorThrow,
-bool dontSkipUtf8Bom) {
+  Stream stream,
+  int mode,
+  bool errorThrow,
+  bool dontSkipUtf8Bom) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
       }
@@ -146,7 +146,7 @@ bool dontSkipUtf8Bom) {
       }
       if (index < 0) {
         throw new ArgumentException("index (" + index +
-          ") is less than " + 0);
+          ") is less than 0");
       }
       if (index > chars.Length) {
         throw new ArgumentException("index (" + index +
@@ -154,7 +154,7 @@ bool dontSkipUtf8Bom) {
       }
       if (length < 0) {
         throw new ArgumentException("length (" + length +
-          ") is less than " + 0);
+          ") is less than 0");
       }
       if (length > chars.Length) {
         throw new ArgumentException("length (" + length +
@@ -224,9 +224,9 @@ bool dontSkipUtf8Bom) {
             return this.reader.ReadChar();
           } else {
       var newReader = new Utf16Reader(
-this.stream,
-bigEndian,
-this.errorThrow);
+  this.stream,
+  bigEndian,
+  this.errorThrow);
             newReader.Unget(c3, c4);
             this.reader = newReader;
             return newReader.ReadChar();
@@ -270,15 +270,15 @@ this.errorThrow);
             c4 = this.stream.ReadByte();
             if (c3 == 0 && c4 == 0) {
             this.reader = new Utf32Reader(
-this.stream,
-false,
-this.errorThrow);
+  this.stream,
+  false,
+  this.errorThrow);
               return c1;
             } else {
           var newReader = new Utf16Reader(
-this.stream,
-false,
-this.errorThrow);
+  this.stream,
+  false,
+  this.errorThrow);
               newReader.Unget(c3, c4);
               this.reader = newReader;
               return c1;
@@ -339,9 +339,9 @@ this.errorThrow);
         int otherbyte = bigEndian ? 0xff : 0xfe;
         if (c2 == otherbyte) {
       var newReader = new Utf16Reader(
-this.stream,
-bigEndian,
-this.errorThrow);
+  this.stream,
+  bigEndian,
+  this.errorThrow);
           this.reader = newReader;
           return newReader.ReadChar();
         }
@@ -361,9 +361,9 @@ this.errorThrow);
           if (c2 == 0) {
             // NZA 0, so UTF-16LE
           var newReader = new Utf16Reader(
-this.stream,
-false,
-this.errorThrow);
+  this.stream,
+  false,
+  this.errorThrow);
             this.reader = newReader;
           } else {
             // NZA NZ

@@ -50,12 +50,12 @@ namespace PeterO.Cbor {
           this.WriteCodePoint((int)str[index]);
         } else {
           if (
-DataUtilities.WriteUtf8(
-str,
-index,
-length,
-this.outputStream,
-false) < 0) {
+  DataUtilities.WriteUtf8(
+  str,
+  index,
+  length,
+  this.outputStream,
+  false) < 0) {
             throw new ArgumentException("str has an unpaired surrogate");
           }
         }
@@ -67,7 +67,7 @@ false) < 0) {
     public void WriteCodePoint(int codePoint) {
       if (codePoint < 0) {
         throw new ArgumentException("codePoint (" + codePoint +
-                ") is less than " + 0);
+                ") is less than 0");
       }
       if (codePoint > 0x10ffff) {
         throw new ArgumentException("codePoint (" + codePoint +

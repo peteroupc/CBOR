@@ -30,14 +30,14 @@ namespace Test {
       switch (rand.UniformInt(6)) {
         case 0:
 return CBORObject.FromObject(
-RandomObjects.RandomDouble(
-rand,
-Int32.MaxValue));
+  RandomObjects.RandomDouble(
+  rand,
+  Int32.MaxValue));
         case 1:
 return CBORObject.FromObject(
-RandomObjects.RandomSingle(
-rand,
-Int32.MaxValue));
+  RandomObjects.RandomSingle(
+  rand,
+  Int32.MaxValue));
         case 2:
           return CBORObject.FromObject(RandomObjects.RandomEInteger(rand));
         case 3:
@@ -55,14 +55,14 @@ Int32.MaxValue));
       switch (rand.UniformInt(7)) {
         case 0:
 return CBORObject.FromObject(
-RandomObjects.RandomDouble(
-rand,
-Int32.MaxValue));
+  RandomObjects.RandomDouble(
+  rand,
+  Int32.MaxValue));
         case 1:
 return CBORObject.FromObject(
-RandomObjects.RandomSingle(
-rand,
-Int32.MaxValue));
+  RandomObjects.RandomSingle(
+  rand,
+  Int32.MaxValue));
         case 2:
           return CBORObject.FromObject(RandomObjects.RandomEInteger(rand));
         case 3:

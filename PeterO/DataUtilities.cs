@@ -31,10 +31,10 @@ namespace PeterO {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.DataUtilities.GetUtf8String(System.Byte[],System.Int32,System.Int32,System.Boolean)"]/*'/>
     public static string GetUtf8String(
-byte[] bytes,
-int offset,
-int bytesCount,
-bool replace) {
+  byte[] bytes,
+  int offset,
+  int bytesCount,
+  bool replace) {
       if (bytes == null) {
         throw new ArgumentNullException("bytes");
       }
@@ -74,9 +74,9 @@ bool replace) {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.DataUtilities.GetUtf8Bytes(System.String,System.Boolean,System.Boolean)"]/*'/>
     public static byte[] GetUtf8Bytes(
-string str,
-bool replace,
-bool lenientLineBreaks) {
+  string str,
+  bool replace,
+  bool lenientLineBreaks) {
       if (str == null) {
         throw new ArgumentNullException("str");
       }
@@ -172,9 +172,9 @@ bool lenientLineBreaks) {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.DataUtilities.CodePointBefore(System.String,System.Int32,System.Int32)"]/*'/>
     public static int CodePointBefore(
-string str,
-int index,
-int surrogateBehavior) {
+  string str,
+  int index,
+  int surrogateBehavior) {
       if (str == null) {
         throw new ArgumentNullException("str");
       }
@@ -207,9 +207,9 @@ int surrogateBehavior) {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.DataUtilities.CodePointAt(System.String,System.Int32,System.Int32)"]/*'/>
     public static int CodePointAt(
-string str,
-int index,
-int surrogateBehavior) {
+  string str,
+  int index,
+  int surrogateBehavior) {
       if (str == null) {
         throw new ArgumentNullException("str");
       }
@@ -323,23 +323,23 @@ int surrogateBehavior) {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.DataUtilities.WriteUtf8(System.String,System.Int32,System.Int32,System.IO.Stream,System.Boolean)"]/*'/>
     public static int WriteUtf8(
-string str,
-int offset,
-int length,
-Stream stream,
-bool replace) {
+  string str,
+  int offset,
+  int length,
+  Stream stream,
+  bool replace) {
       return WriteUtf8(str, offset, length, stream, replace, false);
     }
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.DataUtilities.WriteUtf8(System.String,System.Int32,System.Int32,System.IO.Stream,System.Boolean,System.Boolean)"]/*'/>
     public static int WriteUtf8(
-string str,
-int offset,
-int length,
-Stream stream,
-bool replace,
-bool lenientLineBreaks) {
+  string str,
+  int offset,
+  int length,
+  Stream stream,
+  bool replace,
+  bool lenientLineBreaks) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
       }
@@ -477,11 +477,11 @@ bool lenientLineBreaks) {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.DataUtilities.ReadUtf8FromBytes(System.Byte[],System.Int32,System.Int32,System.Text.StringBuilder,System.Boolean)"]/*'/>
     public static int ReadUtf8FromBytes(
-byte[] data,
-int offset,
-int bytesCount,
-StringBuilder builder,
-bool replace) {
+  byte[] data,
+  int offset,
+  int bytesCount,
+  StringBuilder builder,
+  bool replace) {
       if (data == null) {
         throw new ArgumentNullException("data");
       }
@@ -597,9 +597,9 @@ bool replace) {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.DataUtilities.ReadUtf8ToString(System.IO.Stream,System.Int32,System.Boolean)"]/*'/>
     public static string ReadUtf8ToString(
-Stream stream,
-int bytesCount,
-bool replace) {
+  Stream stream,
+  int bytesCount,
+  bool replace) {
       var builder = new StringBuilder();
       if (DataUtilities.ReadUtf8(stream, bytesCount, builder, replace) == -1) {
         throw new IOException(
@@ -612,10 +612,10 @@ bool replace) {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.DataUtilities.ReadUtf8(System.IO.Stream,System.Int32,System.Text.StringBuilder,System.Boolean)"]/*'/>
     public static int ReadUtf8(
-Stream stream,
-int bytesCount,
-StringBuilder builder,
-bool replace) {
+  Stream stream,
+  int bytesCount,
+  StringBuilder builder,
+  bool replace) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
       }

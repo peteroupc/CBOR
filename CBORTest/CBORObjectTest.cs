@@ -91,31 +91,31 @@ namespace Test {
       "[\"\\udc00\ud800\udc00\"]", "[\"\\ud800\ud800\udc00\"]",
       "[\"\\ud800\"]", "[1,2,", "[1,2,3", "{,\"0\":0,\"1\":1}",
       "{\"0\":0,,\"1\":1}", "{\"0\":0,\"1\":1,}", "[,0,1,2]", "[0,,1,2]",
-"[0,1,,2]", "[0,1,2,]", "[0001]", "{a:true}",
+  "[0,1,,2]", "[0,1,2,]", "[0001]", "{a:true}",
       "{\"a\"://comment\ntrue}", "{\"a\":/*comment*/true}", "{'a':true}",
       "{\"a\":'b'}", "{\"a\t\":true}", "{\"a\r\":true}", "{\"a\n\":true}",
-"['a']", "{\"a\":\"a\t\"}", "[\"a\\'\"]", "[NaN]", "[+Infinity]",
-"[-Infinity]", "[Infinity]", "{\"a\":\"a\r\"}", "{\"a\":\"a\n\"}",
-"[\"a\t\"]", "\"test\"\"", "\"test\"x", "\"test\"\u0300",
+  "['a']", "{\"a\":\"a\t\"}", "[\"a\\'\"]", "[NaN]", "[+Infinity]",
+  "[-Infinity]", "[Infinity]", "{\"a\":\"a\r\"}", "{\"a\":\"a\n\"}",
+  "[\"a\t\"]", "\"test\"\"", "\"test\"x", "\"test\"\u0300",
       "\"test\"\u0005", "[5]\"", "[5]x", "[5]\u0300", "[5]\u0005",
       "{\"test\":5}\"", "{\"test\":5}x", "{\"test\":5}\u0300",
       "{\"test\":5}\u0005", "true\"", "truex", "true}", "true\u0300",
       "true\u0005", "8024\"", "8024x", "8024}", "8024\u0300",
       "8024\u0005", "{\"test\":5}}", "{\"test\":5}{", "[5]]", "[5][",
       "0000", "0x1", "0xf", "0x20", "0x01",
-"-3x", "-3e89x",
+  "-3x", "-3e89x",
       "0X1", "0Xf", "0X20", "0X01", ".2", ".05", "-.2",
       "-.05", "23.", "23.e0", "23.e1", "0.", "[0000]", "[0x1]",
       "[0xf]", "[0x20]", "[0x01]", "[.2]", "[.05]", "[-.2]", "[-.05]",
-"[23.]", "[23.e0]", "[23.e1]", "[0.]", "\"abc", "\"ab\u0004c\"",
-"\u0004\"abc\"", "[1,\u0004" + "2]" };
+  "[23.]", "[23.e0]", "[23.e1]", "[0.]", "\"abc", "\"ab\u0004c\"",
+  "\u0004\"abc\"", "[1,\u0004" + "2]" };
 
     private static readonly string[] ValueJsonSucceeds = { "[0]",
       "[0.1]",
       "[0.1001]",
       "[0.0]",
       "[-3 " + ",-5]",
-"[0.00]", "[0.000]", "[0.01]", "[0.001]", "[0.5]", "[0E5]",
+  "[0.00]", "[0.000]", "[0.01]", "[0.001]", "[0.5]", "[0E5]",
   "[0E+6]", "[\"\ud800\udc00\"]", "[\"\\ud800\\udc00\"]",
   "[\"\\ud800\\udc00\ud800\udc00\"]", "23.0e01", "23.0e00", "[23.0e01]",
   "[23.0e00]", "0", "1", "0.2", "0.05", "-0.2", "-0.05" };
@@ -733,8 +733,8 @@ namespace Test {
           CBORObject.FromObject(EDecimal.FromString(
   numberinfo["number"].AsString()));
         AreEqualExact(
-(double)EDecimal.FromString(numberinfo["number"].AsString()).ToDouble(),
-cbornumber.AsDouble());
+  (double)EDecimal.FromString(numberinfo["number"].AsString()).ToDouble(),
+  cbornumber.AsDouble());
       }
     }
 
@@ -856,7 +856,7 @@ cbornumber.AsDouble());
         CBORTestCommon.RatNegInf,
         CBORObject.FromObject(Double.NegativeInfinity).AsERational());
       Assert.IsTrue(
-CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
+  CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
           .AsERational()).IsNaN());
     }
     [Test]
@@ -1236,8 +1236,8 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
           CBORObject.FromObject(EDecimal.FromString(
   numberinfo["number"].AsString()));
         AreEqualExact(
-(float)EDecimal.FromString(numberinfo["number"].AsString()).ToSingle(),
-cbornumber.AsSingle());
+  (float)EDecimal.FromString(numberinfo["number"].AsString()).ToSingle(),
+  cbornumber.AsSingle());
       }
     }
     [Test]
@@ -1342,10 +1342,10 @@ cbornumber.AsSingle());
         // Try a random double with a given
         // exponent
         Assert.IsTrue(
-CBORObject.FromObject(
-RandomObjects.RandomDouble(
-rand,
-i)).CanFitInDouble());
+  CBORObject.FromObject(
+  RandomObjects.RandomDouble(
+  rand,
+  i)).CanFitInDouble());
       }
     }
     [Test]
@@ -1428,10 +1428,10 @@ i)).CanFitInDouble());
         // Try a random float with a given
         // exponent
         Assert.IsTrue(
-CBORObject.FromObject(
-RandomObjects.RandomSingle(
-rand,
-i)).CanFitInSingle());
+  CBORObject.FromObject(
+  RandomObjects.RandomSingle(
+  rand,
+  i)).CanFitInSingle());
       }
     }
     [Test]
@@ -1577,11 +1577,11 @@ i)).CanFitInSingle());
         CompareDecimals(o1, o2);
       }
       TestCommon.CompareTestEqual(
-CBORObject.FromObject(0.1),
-CBORObject.FromObject(0.1));
+  CBORObject.FromObject(0.1),
+  CBORObject.FromObject(0.1));
       TestCommon.CompareTestEqual(
-CBORObject.FromObject(0.1f),
-CBORObject.FromObject(0.1f));
+  CBORObject.FromObject(0.1f),
+  CBORObject.FromObject(0.1f));
       for (var i = 0; i < 50; ++i) {
         CBORObject o1 = CBORObject.FromObject(Single.NegativeInfinity);
         CBORObject o2 = CBORTestCommon.RandomNumberOrRational(r);
@@ -1904,9 +1904,9 @@ CBORObject.FromObject(0.1f));
           byte[] bytes = CBORObject.FromObject(j).EncodeToBytes();
           if (bytes.Length != ranges[i + 2]) {
             Assert.AreEqual(
-ranges[i + 2],
-bytes.Length,
-TestCommon.IntToString(j));
+  ranges[i + 2],
+  bytes.Length,
+  TestCommon.IntToString(j));
           }
         }
       }
@@ -1945,12 +1945,12 @@ TestCommon.IntToString(j));
       TestCommon.CompareTestEqualAndConsistent(cbor, cbor2);
       TestWriteObj(erat, erat);
       erat = ERational.Create(
-EInteger.Zero,
-EInteger.FromString("84170882933504200501581262010093"));
+  EInteger.Zero,
+  EInteger.FromString("84170882933504200501581262010093"));
       cbor = CBORObject.FromObject(erat);
       ERational erat2 = ERational.Create(
-EInteger.Zero,
-EInteger.FromString("84170882933504200501581262010093"));
+  EInteger.Zero,
+  EInteger.FromString("84170882933504200501581262010093"));
       cbor2 = CBORObject.FromObject(erat2);
       TestCommon.CompareTestEqualAndConsistent(cbor, cbor2);
       cbor2 = CBORObject.FromObject(cbor2);
@@ -2507,12 +2507,11 @@ EInteger.FromString("84170882933504200501581262010093"));
       Assert.IsFalse(CBORObject.NewArray().IsIntegral);
       Assert.IsFalse(CBORObject.NewMap().IsIntegral);
       bool isint = CBORObject.FromObject(
-EInteger.FromRadixString(
-"8000000000000000",
-16)).IsIntegral;
+  EInteger.FromRadixString(
+  "8000000000000000",
+  16)).IsIntegral;
       Assert.IsTrue(isint);
-      isint =
-        CBORObject.FromObject(
+      isint = CBORObject.FromObject(
       EInteger.FromRadixString(
       "80000000000000000000",
       16)).IsIntegral;
@@ -4560,8 +4559,8 @@ EInteger.FromRadixString(
         stringTemp);
       }
       Assert.AreEqual(
-CBORObject.FromObject(0),
-CBORObject.Zero);
+  CBORObject.FromObject(0),
+  CBORObject.Zero);
     }
 
     internal static void CompareDecimals(CBORObject o1, CBORObject o2) {

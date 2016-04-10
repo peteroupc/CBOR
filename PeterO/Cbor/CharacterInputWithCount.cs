@@ -25,7 +25,7 @@ namespace PeterO.Cbor {
       }
       if (index < 0) {
         throw new ArgumentException("index (" + index +
-          ") is less than " + 0);
+          ") is less than 0");
       }
       if (index > chars.Length) {
         throw new ArgumentException("index (" + index +
@@ -33,7 +33,7 @@ namespace PeterO.Cbor {
       }
       if (length < 0) {
         throw new ArgumentException("length (" + length +
-          ") is less than " + 0);
+          ") is less than 0");
       }
       if (length > chars.Length) {
         throw new ArgumentException("length (" + length +
@@ -57,12 +57,12 @@ namespace PeterO.Cbor {
       } catch (InvalidOperationException ex) {
         if (ex.InnerException == null) {
           throw new CBORException(
-this.NewErrorString(ex.Message),
-ex);
+  this.NewErrorString(ex.Message),
+  ex);
         } else {
           throw new CBORException(
-this.NewErrorString(ex.Message),
-ex.InnerException);
+  this.NewErrorString(ex.Message),
+  ex.InnerException);
         }
       }
       if (c >= 0) {

@@ -115,9 +115,9 @@ namespace Test {
     }
 
 private static long ReadInteger(
-Stream stream,
-int headByte,
-bool check32bit) {
+  Stream stream,
+  int headByte,
+  bool check32bit) {
       int kind = headByte & 0x1f;
       if (kind == 0x18) {
         int b = stream.ReadByte();

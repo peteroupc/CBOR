@@ -38,10 +38,10 @@ if (docdir.Length == 0) {
       members.Accept(visitor);
       visitor.Finish();
       using (
-var writer = new StreamWriter(
-Path.Combine(directory, "APIDocs.md"),
-false,
-Encoding.UTF8)) {
+  var writer = new StreamWriter(
+  Path.Combine(directory, "APIDocs.md"),
+  false,
+  Encoding.UTF8)) {
         var visitor2 = new SummaryVisitor(writer);
         members.Accept(visitor2);
         visitor2.Finish();

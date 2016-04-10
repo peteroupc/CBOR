@@ -140,19 +140,19 @@ namespace PeterO {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedRational.Create(System.Int32,System.Int32)"]/*'/>
     public static ExtendedRational Create(
-int numeratorSmall,
-int denominatorSmall) {
+  int numeratorSmall,
+  int denominatorSmall) {
       return new ExtendedRational(
-ERational.Create(
-numeratorSmall,
-denominatorSmall));
+  ERational.Create(
+  numeratorSmall,
+  denominatorSmall));
     }
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedRational.Create(PeterO.BigInteger,PeterO.BigInteger)"]/*'/>
     public static ExtendedRational Create(
-BigInteger numerator,
-BigInteger denominator) {
+  BigInteger numerator,
+  BigInteger denominator) {
       if (numerator == null) {
         throw new ArgumentNullException("numerator");
       }
@@ -160,9 +160,9 @@ BigInteger denominator) {
         throw new ArgumentNullException("denominator");
       }
       return new ExtendedRational(
-ERational.Create(
-numerator.Ei,
-denominator.Ei));
+  ERational.Create(
+  numerator.Ei,
+  denominator.Ei));
     }
 
     /// <include file='../docs.xml'

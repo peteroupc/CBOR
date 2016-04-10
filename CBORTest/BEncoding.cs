@@ -247,8 +247,8 @@ namespace PeterO {
               throw new CBORException("invalid string");
             }
             writeUtf8(
-LongToString(length),
-stream);
+  LongToString(length),
+  stream);
             stream.WriteByte(unchecked((byte)((byte)':')));
             writeUtf8(key, stream);
             Write(value, stream);

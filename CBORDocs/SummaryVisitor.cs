@@ -36,8 +36,8 @@ namespace PeterO.DocGen {
         typeName = "[" + typeName + "](" + DocVisitor.GetTypeID(key) + ".md)";
         if (finalString.IndexOf(".", StringComparison.Ordinal) >= 0) {
           finalString = finalString.Substring(
-0,
-finalString.IndexOf(".", StringComparison.Ordinal) + 1);
+  0,
+  finalString.IndexOf(".", StringComparison.Ordinal) + 1);
         }
         finalString = Regex.Replace(finalString, @"\r?\n(\r?\n)+", "\r\n\r\n");
         this.writer.Write(" * " + typeName + " - ");

@@ -72,13 +72,13 @@ namespace Test {
       }
       EInteger[] ranges = {
        EInteger.FromString("-9223372036854776320"),
-EInteger.FromString("-9223372036854775296"),
-EInteger.FromString("-512"),
-EInteger.FromString("512"),
-EInteger.FromString("9223372036854775295"),
-EInteger.FromString("9223372036854776319"),
-EInteger.FromString("18446744073709551103"),
-EInteger.FromString("18446744073709552127")
+  EInteger.FromString("-9223372036854775296"),
+  EInteger.FromString("-512"),
+  EInteger.FromString("512"),
+  EInteger.FromString("9223372036854775295"),
+  EInteger.FromString("9223372036854776319"),
+  EInteger.FromString("18446744073709551103"),
+  EInteger.FromString("18446744073709552127")
       };
       for (var i = 0; i < ranges.Length; i += 2) {
         EInteger bigintTemp = ranges[i];
@@ -105,14 +105,14 @@ EInteger.FromString("18446744073709552127")
         0x66,
         0x55 });
       Assert.AreEqual(
-EInteger.FromRadixString("88776655", 16),
-o.AsEInteger());
+  EInteger.FromRadixString("88776655", 16),
+  o.AsEInteger());
       o = CBORTestCommon.FromBytesTestAB(new byte[] { 0xc2, 0x47, 0x88, 0x77,
         0x66,
         0x55, 0x44, 0x33, 0x22 });
       Assert.AreEqual(
-EInteger.FromRadixString("88776655443322", 16),
-o.AsEInteger());
+  EInteger.FromRadixString("88776655443322", 16),
+  o.AsEInteger());
     }
 
     [Test]
@@ -207,8 +207,8 @@ o.AsEInteger());
       CBORObject cbor = CBORObject.DecodeFromBytes(new byte[] { (byte)0xfb,
         0x41, (byte)0xe0, (byte)0x85, 0x48, 0x2d, 0x14, 0x47, 0x7a });  // 2217361768.63373
       Assert.AreEqual(
-EInteger.FromString("2217361768"),
-cbor.AsEInteger());
+  EInteger.FromString("2217361768"),
+  cbor.AsEInteger());
       Assert.IsFalse(cbor.AsEInteger().GetSignedBitLength() <= 31);
       Assert.IsFalse(cbor.CanTruncatedIntFitInInt32());
       cbor = CBORObject.DecodeFromBytes(new byte[] { (byte)0xc5, (byte)0x82,
@@ -518,8 +518,8 @@ cbor.AsEInteger());
         {
           ERational objectTemp = er;
           ERational objectTemp2 = CBORObject.Divide(
-o1,
-o2).AsERational();
+  o1,
+  o2).AsERational();
           TestCommon.CompareTestEqual(objectTemp, objectTemp2);
         }
       }
@@ -1032,7 +1032,7 @@ o2).AsERational();
         TestCommon.AssertEqualsHashCode(o, o2);
         o =
   CBORObject.FromObject(EInteger.FromString(
-"999999999999999999999999999999999"));
+  "999999999999999999999999999999999"));
         o2 = CBORObject.FromObjectAndTag(o, i);
         TestCommon.AssertEqualsHashCode(o, o2);
         o = CBORObject.FromObjectAndTag(o, i + 1);
@@ -1093,11 +1093,11 @@ o2).AsERational();
         EInteger.FromString("37"),
         EInteger.FromString("65539"),
        EInteger.FromString("2147483147"),
-EInteger.FromString("2147484147"),
-EInteger.FromString("9223372036854775307"),
-EInteger.FromString("9223372036854776307"),
-EInteger.FromString("18446744073709551115"),
-EInteger.FromString("18446744073709551615") };
+  EInteger.FromString("2147484147"),
+  EInteger.FromString("9223372036854775307"),
+  EInteger.FromString("9223372036854776307"),
+  EInteger.FromString("18446744073709551115"),
+  EInteger.FromString("18446744073709551615") };
       Assert.IsFalse(CBORObject.True.IsTagged);
       CBORObject trueObj = CBORObject.True;
       Assert.AreEqual(
@@ -1157,13 +1157,13 @@ EInteger.FromString("18446744073709551615") };
             }
             bigintNew = bigintNext;
             TestCommon.CompareTestEqualAndConsistent(
-bi[0],
-bigintNew,
-"Outer tag doesn't match");
+  bi[0],
+  bigintNew,
+  "Outer tag doesn't match");
             TestCommon.CompareTestEqualAndConsistent(
-bi[1],
-bigintTemp,
-"Inner tag doesn't match");
+  bi[1],
+  bigintTemp,
+  "Inner tag doesn't match");
             if (!obj2.MostInnerTag.Equals((object)bigintTemp)) {
               {
                 string stringTemp = "Innermost tag doesn't match: " + obj2;

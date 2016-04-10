@@ -16,8 +16,8 @@ namespace PeterO.Cbor {
     }
 
     private static CBORObject FromObjectAndInnerTags(
-object objectValue,
-CBORObject objectWithTags) {
+  object objectValue,
+  CBORObject objectWithTags) {
       CBORObject newObject = CBORObject.FromObject(objectValue);
       if (!objectWithTags.IsTagged) {
         return newObject;

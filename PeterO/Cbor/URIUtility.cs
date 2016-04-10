@@ -39,28 +39,28 @@ namespace PeterO.Cbor {
     private const string HexChars = "0123456789ABCDEF";
 
     private static void appendAuthority(
-StringBuilder builder,
-string refValue,
-int[] segments) {
+  StringBuilder builder,
+  string refValue,
+  int[] segments) {
       if (segments[2] >= 0) {
         builder.Append("//");
         builder.Append(
-refValue.Substring(
-segments[2],
-segments[3] - segments[2]));
+  refValue.Substring(
+  segments[2],
+  segments[3] - segments[2]));
       }
     }
 
     private static void appendFragment(
-StringBuilder builder,
-string refValue,
-int[] segments) {
+  StringBuilder builder,
+  string refValue,
+  int[] segments) {
       if (segments[8] >= 0) {
         builder.Append('#');
         builder.Append(
-refValue.Substring(
-segments[8],
-segments[9] - segments[8]));
+  refValue.Substring(
+  segments[8],
+  segments[9] - segments[8]));
       }
     }
 
@@ -70,43 +70,43 @@ segments[9] - segments[8]));
       int[] segments) {
       builder.Append(
         normalizePath(
-refValue.Substring(
-segments[4],
-segments[5] - segments[4])));
+  refValue.Substring(
+  segments[4],
+  segments[5] - segments[4])));
     }
 
     private static void appendPath(
-StringBuilder builder,
-string refValue,
-int[] segments) {
+  StringBuilder builder,
+  string refValue,
+  int[] segments) {
       builder.Append(
-refValue.Substring(
-segments[4],
-segments[5] - segments[4]));
+  refValue.Substring(
+  segments[4],
+  segments[5] - segments[4]));
     }
 
     private static void appendQuery(
-StringBuilder builder,
-string refValue,
-int[] segments) {
+  StringBuilder builder,
+  string refValue,
+  int[] segments) {
       if (segments[6] >= 0) {
         builder.Append('?');
         builder.Append(
-refValue.Substring(
-segments[6],
-segments[7] - segments[6]));
+  refValue.Substring(
+  segments[6],
+  segments[7] - segments[6]));
       }
     }
 
     private static void appendScheme(
-StringBuilder builder,
-string refValue,
-int[] segments) {
+  StringBuilder builder,
+  string refValue,
+  int[] segments) {
       if (segments[0] >= 0) {
         builder.Append(
           refValue.Substring(
-segments[0],
-segments[1] - segments[0]));
+  segments[0],
+  segments[1] - segments[0]));
         builder.Append(':');
       }
     }
@@ -121,19 +121,19 @@ segments[1] - segments[0]));
       if (mode == 1) {
         components = (
           s == null) ? null : splitIRI(
-s,
-0,
-s.Length,
-ParseMode.IRIStrict);
+  s,
+  0,
+  s.Length,
+  ParseMode.IRIStrict);
         if (components == null) {
           return null;
         }
       } else {
         components = (s == null) ? null : splitIRI(
-s,
-0,
-s.Length,
-ParseMode.IRISurrogateLenient);
+  s,
+  0,
+  s.Length,
+  ParseMode.IRISurrogateLenient);
       }
       var index = 0;
       int valueSLength = s.Length;
@@ -388,12 +388,12 @@ ParseMode.IRISurrogateLenient);
 
     public static bool isValidIRI(string s) {
       return (
-(
-s == null) ? null : splitIRI(
-s,
-0,
-s.Length,
-ParseMode.IRIStrict)) != null;
+  (
+  s == null) ? null : splitIRI(
+  s,
+  0,
+  s.Length,
+  ParseMode.IRIStrict)) != null;
     }
 
     private const string ValueDotSlash = "." + "/";
@@ -406,8 +406,8 @@ ParseMode.IRIStrict)) != null;
       }
       if (path.IndexOf(ValueSlashDot, StringComparison.Ordinal) < 0 &&
           path.IndexOf(
-ValueDotSlash,
-StringComparison.Ordinal) < 0) {
+  ValueDotSlash,
+  StringComparison.Ordinal) < 0) {
         return path;
       }
       var builder = new StringBuilder();
@@ -496,11 +496,11 @@ StringComparison.Ordinal) < 0) {
     }
 
     private static int parseDecOctet(
-string s,
-int index,
-int endOffset,
-int c,
-int delim) {
+  string s,
+  int index,
+  int endOffset,
+  int c,
+  int delim) {
       if (c >= '1' && c <= '9' && index + 2 < endOffset &&
           s[index + 1] >= '0' && s[index + 1] <= '9' &&
           s[index + 2] == delim) {
@@ -621,11 +621,11 @@ int delim) {
                 }
                 char tmpc = (index < endOffset) ? s[index] : '\0';
                 decOctet = parseDecOctet(
-s,
-index,
-endOffset,
-tmpc,
-'.');
+  s,
+  index,
+  endOffset,
+  tmpc,
+  '.');
                 if (decOctet >= 100) {
                   index += 4;
                 } else if (decOctet >= 10) {
@@ -739,9 +739,9 @@ tmpc,
     }
 
     private static string pathParent(
-string refValue,
-int startIndex,
-int endIndex) {
+  string refValue,
+  int startIndex,
+  int endIndex) {
       if (startIndex > endIndex) {
         return String.Empty;
       }
@@ -790,9 +790,9 @@ int endIndex) {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.relativeResolve(System.String,System.String,PeterO.Cbor.URIUtility.ParseMode)"]/*'/>
     public static string relativeResolve(
-string refValue,
-string baseURI,
-ParseMode parseMode) {
+  string refValue,
+  string baseURI,
+  ParseMode parseMode) {
       int[] segments = (refValue == null) ? null : splitIRI(
         refValue,
         0,
@@ -803,10 +803,10 @@ ParseMode parseMode) {
       }
       int[] segmentsBase = (
         baseURI == null) ? null : splitIRI(
-baseURI,
-0,
-baseURI.Length,
-parseMode);
+  baseURI,
+  0,
+  baseURI.Length,
+  parseMode);
       if (segmentsBase == null) {
         return refValue;
       }
@@ -847,9 +847,9 @@ parseMode);
           } else {
             merged.Append(
               pathParent(
-baseURI,
-segmentsBase[4],
-segmentsBase[5]));
+  baseURI,
+  segmentsBase[4],
+  segmentsBase[5]));
             appendPath(merged, refValue, segments);
             builder.Append(normalizePath(merged.ToString()));
           }
@@ -869,10 +869,10 @@ segmentsBase[5]));
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.splitIRI(System.String,System.Int32,System.Int32,PeterO.Cbor.URIUtility.ParseMode)"]/*'/>
     public static int[] splitIRI(
-string s,
-int offset,
-int length,
-ParseMode parseMode) {
+  string s,
+  int offset,
+  int length,
+  ParseMode parseMode) {
       if (s == null) {
         return null;
       }
@@ -881,7 +881,7 @@ ParseMode parseMode) {
 }
 if (offset < 0) {
   throw new ArgumentException("offset (" + offset +
-    ") is less than " + 0);
+    ") is less than 0");
 }
 if (offset > s.Length) {
   throw new ArgumentException("offset (" + offset +
@@ -889,7 +889,7 @@ if (offset > s.Length) {
 }
 if (length < 0) {
   throw new ArgumentException("length (" + length +
-    ") is less than " + 0);
+    ") is less than 0");
 }
 if (length > s.Length) {
   throw new ArgumentException("length (" + length +

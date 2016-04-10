@@ -136,8 +136,8 @@ namespace Test {
       }
       if (selection < 50) {
       StringAndBigInt sabi = StringAndBigInt.Generate(
-r,
-2 + r.UniformInt(35));
+  r,
+  2 + r.UniformInt(35));
         return sabi.BigIntValue;
       } else {
         int count = r.UniformInt(60) + 1;
@@ -163,8 +163,8 @@ r,
         }
       }
       return EFloat.Create(
-RandomEInteger(r),
-(EInteger)(r.UniformInt(400) - 200));
+  RandomEInteger(r),
+  (EInteger)(r.UniformInt(400) - 200));
     }
 
     public static String RandomBigIntString(RandomGenerator r) {

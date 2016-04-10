@@ -30,7 +30,7 @@ namespace Test {
       if (o.Equals(o2)) {
         if (!o2.Equals(o)) {
           Assert.Fail(
-String.Empty + o + " equals " + o2 + " but not vice versa");
+  String.Empty + o + " equals " + o2 + " but not vice versa");
         }
         // Test for the guarantee that equal objects
         // must have equal hash codes
@@ -38,7 +38,7 @@ String.Empty + o + " equals " + o2 + " but not vice versa");
           // Don't use Assert.AreEqual directly because it has
           // quite a lot of overhead
           Assert.Fail(
-String.Empty + o + " and " + o2 + " don't have equal hash codes");
+  String.Empty + o + " and " + o2 + " don't have equal hash codes");
         }
       } else {
         if (o2.Equals(o)) {
@@ -110,9 +110,9 @@ String.Empty + o + " and " + o2 + " don't have equal hash codes");
     }
 
     public static void CompareTestEqualAndConsistent<T>(
-T o1,
-T o2,
-string msg) where T :
+  T o1,
+  T o2,
+  string msg) where T :
     IComparable<T> {
       if (CompareTestReciprocal(o1, o2) != 0) {
         msg = (msg == null ? String.Empty : (msg + "\r\n")) +

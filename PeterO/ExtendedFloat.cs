@@ -97,8 +97,8 @@ namespace PeterO {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.Create(PeterO.BigInteger,PeterO.BigInteger)"]/*'/>
     public static ExtendedFloat Create(
-BigInteger mantissa,
-BigInteger exponent) {
+  BigInteger mantissa,
+  BigInteger exponent) {
       if (mantissa == null) {
         throw new ArgumentNullException("mantissa");
       }
@@ -112,10 +112,10 @@ BigInteger exponent) {
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.FromString(System.String,System.Int32,System.Int32,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public static ExtendedFloat FromString(
-string str,
-int offset,
-int length,
-PrecisionContext ctx) {
+  string str,
+  int offset,
+  int length,
+  PrecisionContext ctx) {
       try {
         return new ExtendedFloat(
   EFloat.FromString(
