@@ -203,7 +203,8 @@ namespace PeterO.Cbor {
     [Obsolete("Use MostInnerTag instead.")]
     public BigInteger InnermostTag {
       get {
-        throw new NotImplementedException();
+        EInteger ei = this.MostInnerTag;
+        return BigInteger.fromString(.ToString());
       }
     }
 
@@ -212,7 +213,8 @@ namespace PeterO.Cbor {
     [Obsolete("Use MostOuterTag instead.")]
     public BigInteger OutermostTag {
       get {
-        throw new NotImplementedException();
+        EInteger ei = this.MostOuterTag;
+        return BigInteger.fromString(EInteger.ToString(this.MostOuterTag));
       }
     }
 

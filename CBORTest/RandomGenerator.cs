@@ -179,11 +179,13 @@ namespace PeterO {
     }
 
     /// <summary>Conceptually, given a set of tokens, some of which are
-    /// labeled 1 and the others labeled 0, draws "trials" tokens and then
-    /// counts the number of 1's drawn.</summary>
-    /// <param name='trials'>Not documented yet.</param>
-    /// <param name='ones'>Not documented yet.</param>
-    /// <param name='count'>Not documented yet. (3).</param>
+    /// labeled 1 and the others labeled 0, draws "trials" tokens at random
+    /// without replacement and then counts the number of 1's
+    /// drawn.</summary>
+    /// <param name='trials'>The number of tokens drawn at random without
+    /// replacement.</param>
+    /// <param name='ones'>The number of tokens labeled 1.</param>
+    /// <param name='count'>The number of tokens labeled 1 or 0.</param>
     /// <returns>A 32-bit signed integer.</returns>
     public int Hypergeometric(int trials, int ones, int count) {
       if (ones < 0) {
