@@ -204,7 +204,8 @@ namespace PeterO.Cbor {
     public BigInteger InnermostTag {
       get {
         EInteger ei = this.MostInnerTag;
-        return BigInteger.fromString(.ToString());
+        String eis = ei.ToString;
+        return BigInteger.FromString(eis);
       }
     }
 
