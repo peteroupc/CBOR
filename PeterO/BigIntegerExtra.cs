@@ -3,7 +3,7 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
+at: http://peteroupc.github.io/
  */
 using System;
 using PeterO.Numbers;
@@ -14,8 +14,9 @@ namespace PeterO {
   public sealed partial class BigInteger {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="P:PeterO.BigInteger.Zero"]/*'/>
-    [CLSCompliant(false)]
-    public static BigInteger Zero {
+    [CLSCompliant(false)] [Obsolete(
+  "Use EInteger from PeterO.Numbers/com.upokecenter.numbers and the output of this class's ToString method.")]
+        public static BigInteger Zero {
       get {
         return ValueZeroValue;
       }
@@ -23,8 +24,9 @@ namespace PeterO {
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="P:PeterO.BigInteger.One"]/*'/>
-    [CLSCompliant(false)]
-    public static BigInteger One {
+    [CLSCompliant(false)] [Obsolete(
+  "Use EInteger from PeterO.Numbers/com.upokecenter.numbers and the output of this class's ToString method.")]
+        public static BigInteger One {
       get {
         return ValueOneValue;
       }
@@ -32,7 +34,9 @@ namespace PeterO {
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.BigInteger.Equals(PeterO.BigInteger)"]/*'/>
-    public bool Equals(BigInteger other) {
+        [Obsolete(
+  "Use EInteger from PeterO.Numbers/com.upokecenter.numbers and the output of this class's ToString method.")]
+        public bool Equals(BigInteger other) {
       return this.Equals((object)other);
     }
   }

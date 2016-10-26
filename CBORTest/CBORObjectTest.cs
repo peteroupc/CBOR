@@ -3953,7 +3953,6 @@ namespace Test {
     public void TestWriteExtra() {
       try {
         string str = null;
-        var fr = new RandomGenerator();
         {
           CBORObject cborTemp1 = CBORObject.FromObject(str);
           CBORObject cborTemp2 = CBORObject.FromObject((object)str);

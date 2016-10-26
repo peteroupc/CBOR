@@ -23,7 +23,6 @@ if (docdir.Length == 0) {
 }
       var directory = Path.GetFullPath(docdir);
       assemblyFile = Path.GetFullPath(assemblyFile);
-      var appdomain = AppDomain.CreateDomain("docgen");
       Directory.SetCurrentDirectory(Path.GetDirectoryName(assemblyFile));
       if (!File.Exists(assemblyFile)) {
         // Exit early, not found

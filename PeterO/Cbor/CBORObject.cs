@@ -3,7 +3,7 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
+at: http://peteroupc.github.io/
  */
 using System;
 using System.Collections.Generic;
@@ -204,8 +204,8 @@ namespace PeterO.Cbor {
     public BigInteger InnermostTag {
       get {
         EInteger ei = this.MostInnerTag;
-        String eis = ei.ToString;
-        return BigInteger.FromString(eis);
+        String eis = ei.ToString();
+        return BigInteger.fromString(eis);
       }
     }
 
@@ -215,7 +215,7 @@ namespace PeterO.Cbor {
     public BigInteger OutermostTag {
       get {
         EInteger ei = this.MostOuterTag;
-        return BigInteger.fromString(EInteger.ToString(this.MostOuterTag));
+        return BigInteger.fromString(this.MostOuterTag.ToString());
       }
     }
 

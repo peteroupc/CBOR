@@ -3,7 +3,7 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
+at: http://peteroupc.github.io/
  */
 using System;
 using PeterO; using PeterO.Numbers;
@@ -307,14 +307,6 @@ namespace PeterO.Cbor {
     private MutableNumber mnum;  // if integerMode is 1
     private EInteger largeValue;  // if integerMode is 2
     private int integerMode;
-    private static readonly EInteger ValueInt32MinValue =
-      (EInteger)Int32.MinValue;
-
-    private static readonly EInteger ValueInt32MaxValue =
-      (EInteger)Int32.MaxValue;
-
-    private static readonly EInteger ValueNegativeInt32MinValue =
-    -(EInteger)ValueInt32MinValue;
 
     internal FastInteger2(int value) {
       this.smallValue = value;
