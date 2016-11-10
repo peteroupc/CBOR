@@ -24,6 +24,8 @@ BigInteger for the number one.
 
     public static PeterO.BigInteger One { get; }
 
+<b>Deprecated.</b> Use EInteger from PeterO.Numbers/com.upokecenter.numbers and the output of this class's ToString method.
+
 Gets the arbitrary-precision integer for one.
 
 <b>Returns:</b>
@@ -33,6 +35,8 @@ The arbitrary-precision integer for one.
 ### Zero
 
     public static PeterO.BigInteger Zero { get; }
+
+<b>Deprecated.</b> Use EInteger from PeterO.Numbers/com.upokecenter.numbers and the output of this class's ToString method.
 
 Gets the arbitrary-precision integer for zero.
 
@@ -84,6 +88,8 @@ Determines whether this object and another object are equal.
 
     public sealed bool Equals(
         PeterO.BigInteger other);
+
+<b>Deprecated.</b> Use EInteger from PeterO.Numbers/com.upokecenter.numbers and the output of this class's ToString method.
 
 Returns whether this number's value equals another number's value.
 
