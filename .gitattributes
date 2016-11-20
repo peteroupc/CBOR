@@ -23,6 +23,8 @@
 *.htm eol=lf
 *.css eol=lf
 *.less eol=lf
+*.xml eol=lf
+*.ruleset eol=lf
 .gitattributes eol=lf
 .gitignore eol=lf
 .npmignore eol=lf

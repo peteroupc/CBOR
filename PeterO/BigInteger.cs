@@ -1,10 +1,6 @@
 /*
 Written in 2013 by Peter O.
 
-Parts of the code were adapted by Peter O. from
-the public-domain code from the library
-CryptoPP by Wei Dai.
-
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
