@@ -139,9 +139,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Numbers, Version=0.2.2.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>packages\PeterO.Numbers.0.2.2\lib\portable-net40+sl50+win+wpa81+wp80\Numbers.dll</HintPath>
-      <HintPath>packages\PeterO.Numbers.0.2.2\lib\portable-net40+sl50+win+wpa81+wp80\Numbers.dll</HintPath>
+    <Reference Include="Numbers">
+      <HintPath>packages\PeterO.Numbers.0.3.0\lib\portable-net40+sl50+win+wpa81+wp80\Numbers.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

@@ -4,6 +4,7 @@
 *.class
 *.jar
 *.log
+*.map
 *.sdsettings
 *.shf*
 *.suo

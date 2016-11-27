@@ -64,9 +64,6 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Xml" />
-    <Reference Include="Numbers, Version=0.2.2.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\PeterO.Numbers.0.2.2\lib\portable-net45+dnxcore50+netcore45+win+wpa81+wp8\Numbers.dll</HintPath>
-    </Reference>
     <Reference Include="nunit.core, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
       <HintPath>..\packages\NUnitTestAdapter.WithFramework.2.0.0\lib\nunit.core.dll</HintPath>
       <Private>False</Private>
@@ -85,6 +82,9 @@
     <Reference Include="NUnit.VisualStudio.TestAdapter, Version=2.0.0.0, Culture=neutral, PublicKeyToken=4cb40d35494691ac">
       <HintPath>..\packages\NUnitTestAdapter.WithFramework.2.0.0\lib\NUnit.VisualStudio.TestAdapter.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="Numbers">
+      <HintPath>..\packages\PeterO.Numbers.0.3.0\lib\portable-net45+dnxcore50+netcore45+win+wpa81+wp80\Numbers.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
