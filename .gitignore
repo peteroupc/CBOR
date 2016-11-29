@@ -13,6 +13,7 @@
 *.versionsBackup
 *.vspx
 .classpath
+.nuget/
 .pmd
 .project
 .settings/

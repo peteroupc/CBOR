@@ -387,9 +387,8 @@ namespace PeterO.Cbor {
     }
 
     public static bool isValidIRI(string s) {
-      return (
-  (
-  s == null) ? null : splitIRI(
+      return ((s == null) ?
+  null : splitIRI(
   s,
   0,
   s.Length,

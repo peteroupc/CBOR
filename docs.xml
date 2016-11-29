@@ -2404,7 +2404,6 @@
             <exception cref='T:System.ArgumentException'>Either <paramref name='offset'/> or <paramref name='length'/> is less than 0 or
             greater than <paramref name='s'/> 's length, or <paramref name='s'/> ' s length minus <paramref name='offset'/> is less than
             <paramref name='length'/>.</exception>
-            <exception cref='T:System.ArgumentNullException'>--.</exception>
 </doc>
 <doc name="M:PeterO.Cbor.URIUtility.relativeResolve(System.String,System.String)">
 <summary>Resolves a URI or IRI relative to another URI or

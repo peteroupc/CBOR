@@ -52,7 +52,8 @@ namespace PeterO {
     /// <summary>Conceptually, generates either 1 or 0 the given number of
     /// times, where either number is equally likely, and counts the number
     /// of 1's generated.</summary>
-    /// <param name='trials'>Another 32-bit signed integer.</param>
+    /// <param name='trials'>The number of times to generate a random
+    /// number, conceptually.</param>
     /// <returns>A 32-bit signed integer.</returns>
     public int Binomial(int trials) {
       return this.Binomial(trials, 0.5);
@@ -61,7 +62,8 @@ namespace PeterO {
     /// <summary>Conceptually, generates either 1 or 0 the given number of
     /// times, where a 1 is generated at the given probability, and counts
     /// the number of 1's generated.</summary>
-    /// <param name='trials'>Another 32-bit signed integer.</param>
+    /// <param name='trials'>The number of times to generate a random
+    /// number, conceptually.</param>
     /// <param name='p'>The probability for each trial to succeed, from 0
     /// (never) to 1 (always).</param>
     /// <returns>The number of successes in a given number of
@@ -354,8 +356,10 @@ namespace PeterO {
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <param name='min'>Not documented yet.</param>
-    /// <param name='max'>Not documented yet.</param>
+    /// <param name='min'>Smallest possible number that will be
+    /// generated.</param>
+    /// <param name='max'>Number that the randomly-generated number will be
+    /// less than.</param>
     /// <returns>A 64-bit floating-point number.</returns>
     public double Uniform(double min, double max) {
       if (min >= max) {
@@ -372,7 +376,8 @@ namespace PeterO {
       return this.Uniform(0.0, max);
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Returns a uniformly-distributed 64-bit floating-point
+    /// number from 0 and up, but less than 1.</summary>
     /// <returns>A 64-bit floating-point number.</returns>
     public double Uniform() {
       var b = new byte[7];
@@ -388,7 +393,8 @@ namespace PeterO {
       return BitConverter.Int64BitsToDouble(lb) - 1.0;
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Returns a uniformly-distributed 32-bit floating-point
+    /// number from 0 and up, but less than 1.</summary>
     /// <returns>A 64-bit floating-point number.</returns>
     public double UniformSingle() {
       var b = new byte[3];
@@ -402,11 +408,14 @@ namespace PeterO {
        0) - 1.0;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='minInclusive'>Not documented yet.</param>
-    /// <param name='maxExclusive'>Not documented yet.</param>
+    /// <summary>Generates a random 32-bit signed integer within a given
+    /// range.</summary>
+    /// <param name='minInclusive'>Smallest possible value of the random
+    /// number.</param>
+    /// <param name='maxExclusive'>One plus the largest possible value of
+    /// the random number.</param>
     /// <returns>A 32-bit signed integer.</returns>
-    public int UniformInt(int minInclusive, int maxExclusive) {
+        public int UniformInt(int minInclusive, int maxExclusive) {
       if (minInclusive > maxExclusive) {
   throw new ArgumentException("minInclusive (" + minInclusive +
     ") is more than " + maxExclusive);
@@ -426,9 +435,12 @@ if (minInclusive == maxExclusive) {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='minInclusive'>Not documented yet.</param>
-    /// <param name='maxExclusive'>Not documented yet.</param>
+    /// <summary>Generates a random 64-bit signed integer within a given
+    /// range.</summary>
+    /// <param name='minInclusive'>Smallest possible value of the random
+    /// number.</param>
+    /// <param name='maxExclusive'>One plus the largest possible value of
+    /// the random number.</param>
     /// <returns>A 64-bit signed integer.</returns>
     public long UniformLong(long minInclusive, long maxExclusive) {
       if (minInclusive > maxExclusive) {
@@ -467,8 +479,10 @@ if (minInclusive == maxExclusive) {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='maxExclusive'>Not documented yet.</param>
+    /// <summary>Generates a random 32-bit signed integer 0 or greater and
+    /// less than the given number.</summary>
+    /// <param name='maxExclusive'>One plus the largest possible value of
+    /// the random number.</param>
     /// <returns>A 32-bit signed integer.</returns>
     public int UniformInt(int maxExclusive) {
       if (maxExclusive < 0) {
@@ -522,10 +536,12 @@ if (minInclusive == maxExclusive) {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='maxExclusive'>Not documented yet.</param>
+    /// <summary>Generates a random 32-bit signed integer 0 or greater and
+    /// less than the given number.</summary>
+    /// <param name='maxExclusive'>One plus the largest possible value of
+    /// the random number.</param>
     /// <returns>A 64-bit signed integer.</returns>
-    public long UniformLong(long maxExclusive) {
+        public long UniformLong(long maxExclusive) {
       if (maxExclusive < 0) {
   throw new ArgumentException("maxExclusive (" + maxExclusive +
     ") is less than 0");
