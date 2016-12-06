@@ -164,10 +164,10 @@ namespace PeterO.Cbor {
 
     private static CBORObject[] valueFixedObjects = InitializeFixedObjects();
 
-    private int itemtypeValue;
-    private object itemValue;
-    private int tagHigh;
-    private int tagLow;
+    private readonly int itemtypeValue;
+    private readonly object itemValue;
+    private readonly int tagHigh;
+    private readonly int tagLow;
 
     internal CBORObject(CBORObject obj, int tagLow, int tagHigh) :
       this(CBORObjectTypeTagged, obj) {
@@ -1782,13 +1782,13 @@ namespace PeterO.Cbor {
           mapKey = CBORObject.Null;
         } else {
           mapKey = key as CBORObject;
-          mapKey = mapKey ?? CBORObject.FromObject(key);
+mapKey = mapKey ?? CBORObject.FromObject(key);
         }
         if (valueOb == null) {
           mapValue = CBORObject.Null;
         } else {
           mapValue = valueOb as CBORObject;
-          mapValue = mapValue ?? CBORObject.FromObject(valueOb);
+mapValue = mapValue ?? CBORObject.FromObject(valueOb);
         }
         IDictionary<CBORObject, CBORObject> map = this.AsMap();
         if (map.ContainsKey(mapKey)) {
@@ -2594,7 +2594,7 @@ namespace PeterO.Cbor {
           mapValue = CBORObject.Null;
         } else {
           mapValue = valueOb as CBORObject;
-          mapValue = mapValue ?? CBORObject.FromObject(valueOb);
+mapValue = mapValue ?? CBORObject.FromObject(valueOb);
         }
         list.Insert(index, mapValue);
       } else {
@@ -2685,13 +2685,13 @@ namespace PeterO.Cbor {
           mapKey = CBORObject.Null;
         } else {
           mapKey = key as CBORObject;
-          mapKey = mapKey ?? CBORObject.FromObject(key);
+mapKey = mapKey ?? CBORObject.FromObject(key);
         }
         if (valueOb == null) {
           mapValue = CBORObject.Null;
         } else {
           mapValue = valueOb as CBORObject;
-          mapValue = mapValue ?? CBORObject.FromObject(valueOb);
+mapValue = mapValue ?? CBORObject.FromObject(valueOb);
         }
         IDictionary<CBORObject, CBORObject> map = this.AsMap();
         if (map.ContainsKey(mapKey)) {
@@ -2777,7 +2777,7 @@ namespace PeterO.Cbor {
               }
               sb.Append(simvalue);
             } else {
-              sb = sb ?? (new StringBuilder());
+sb = sb ?? (new StringBuilder());
               sb.Append("simple(");
               var thisItemInt = (int)this.ThisItem;
               sb.Append(
@@ -2835,7 +2835,7 @@ namespace PeterO.Cbor {
             break;
           }
         case CBORObjectTypeByteString: {
-            sb = sb ?? (new StringBuilder());
+sb = sb ?? (new StringBuilder());
             sb.Append("h'");
             CBORUtilities.ToBase16(sb, (byte[])this.ThisItem);
             sb.Append("'");
@@ -2851,7 +2851,7 @@ namespace PeterO.Cbor {
             break;
           }
         case CBORObjectTypeArray: {
-            sb = sb ?? (new StringBuilder());
+sb = sb ?? (new StringBuilder());
             var first = true;
             sb.Append("[");
             foreach (CBORObject i in this.AsList()) {
@@ -2865,7 +2865,7 @@ namespace PeterO.Cbor {
             break;
           }
         case CBORObjectTypeMap: {
-            sb = sb ?? (new StringBuilder());
+sb = sb ?? (new StringBuilder());
             var first = true;
             sb.Append("{");
             IDictionary<CBORObject, CBORObject> map = this.AsMap();
@@ -3219,7 +3219,7 @@ namespace PeterO.Cbor {
     internal IDictionary<CBORObject, CBORObject> AsMap() {
       return (IDictionary<CBORObject, CBORObject>)this.ThisItem;
     }
-
+    /*
     internal void Redefine(CBORObject cbor) {
 #if DEBUG
       if (cbor == null) {
@@ -3230,7 +3230,7 @@ namespace PeterO.Cbor {
       this.tagLow = cbor.tagLow;
       this.tagHigh = cbor.tagHigh;
       this.itemValue = cbor.itemValue;
-    }
+    } */
 
     private static bool BigIntFits(EInteger bigint) {
       return bigint.GetSignedBitLength() <= 64;

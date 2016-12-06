@@ -7,8 +7,8 @@ at: http://peteroupc.github.io/
  */
 using System;
 using System.Text;
-using PeterO.Numbers;
 using PeterO;
+using PeterO.Numbers;
 
 namespace Test {
     /// <summary>Description of RandomObjects.</summary>

@@ -1,10 +1,10 @@
 using System;
 
 namespace PeterO {
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Interface for random-number generators.</summary>
  public interface IRandomGen {
-    /// <summary>Not documented yet.</summary>
-    /// <returns>Not documented yet.</returns>
+    /// <summary>Randomly generates a set of bytes.</summary>
+    /// <returns>Number of bytes returned.</returns>
     int GetBytes(byte[] bytes, int offset, int length);
   }
 }

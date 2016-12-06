@@ -52,9 +52,9 @@ namespace PeterO.DocGen {
       } else {
         return;
       }
-      if (currentType == null || !currentType.IsPublic) {
-        return;
-      }
+if (currentType == null || !currentType.IsPublic) {
+return;
+}
       if (!this.docs.ContainsKey(currentType)) {
         var docVisitor = new StringBuilder();
         this.docs[currentType] = docVisitor;

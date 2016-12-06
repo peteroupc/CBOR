@@ -51,9 +51,9 @@ namespace PeterO.DocGen {
         }
         currentType = member.Info.ReflectedType;
       }
-      if (currentType == null || !currentType.IsPublic) {
-        return;
-      }
+if (currentType == null || !currentType.IsPublic) {
+return;
+}
       if (!this.docs.ContainsKey(currentType)) {
         var docVisitor = new DocVisitor();
         this.docs[currentType] = docVisitor;

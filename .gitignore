@@ -27,6 +27,7 @@ ProfilingSessions/
 TestResults/
 bin/
 coverage/
+encoding/
 obj/
 packages/
 release.properties

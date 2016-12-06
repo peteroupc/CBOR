@@ -116,7 +116,7 @@ namespace PeterO {
       if (df <= 0) {
         throw new ArgumentException("df (" + df + ") is not greater than 0");
       }
-      return this.Gamma(df / 2, 2);
+      return this.Gamma(df / 2.0, 2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -145,17 +145,17 @@ namespace PeterO {
             (-1));
       }
       double v, x, u, x2, d, c;
-      d = (a < 1 ? 1 + a : a) - 1 / 3;
+      d = (a < 1 ? 1 + a : a) - (1.0 / 3.0);
       c = 1 / Math.Sqrt(9 * d);
       do {
         do {
           x = this.Normal();
-          v = Math.Pow(c * x + 1, 3);
+          v = Math.Pow((c * x) + 1, 3);
         } while (v <= 0);
         u = this.Uniform();
         x2 = Math.Pow(x, 2);
       } while (u >= 1 - (0.0331 * x2 * x2) &&
-               Math.Log(u) >= 0.5 * x2 + d * (1 - v + Math.Log(v)));
+               Math.Log(u) >= (0.5 * x2) + (d * (1 - v + Math.Log(v))));
       if (a < 1) {
         return d * v * Math.Exp(this.Exponential() / -a);
       } else {
@@ -222,8 +222,8 @@ namespace PeterO {
 
     /// <summary>Generates a logarithmic normally-distributed number with
     /// the given mean and standard deviation.</summary>
-    /// <param name='mean'>Not documented yet.</param>
-    /// <param name='sd'>Not documented yet.</param>
+    /// <param name='mean'>The desired mean.</param>
+    /// <param name='sd'>Standard deviation.</param>
     /// <returns>A 64-bit floating-point number.</returns>
     public double LogNormal(double mean, double sd) {
       return Math.Exp((this.Normal() * sd) + mean);
@@ -301,8 +301,7 @@ namespace PeterO {
     }
     // The Normal, Exponential, Poisson, and
     // single-argument Gamma methods were adapted
-    // from "Seedable random number generator functions",
-    // a public-domain JavaScript file.
+    // from a third-party public-domain JavaScript file.
 
     /// <summary>Generates a normally-distributed number with mean 0 and
     /// standard deviation 1.</summary>
@@ -328,8 +327,8 @@ namespace PeterO {
 
     /// <summary>Generates a normally-distributed number with the given
     /// mean and standard deviation.</summary>
-    /// <param name='mean'>Not documented yet.</param>
-    /// <param name='sd'>Not documented yet.</param>
+    /// <param name='mean'>The desired mean.</param>
+    /// <param name='sd'>Standard deviation.</param>
     /// <returns>A 64-bit floating-point number.</returns>
     public double Normal(double mean, double sd) {
       return (this.Normal() * sd) + mean;
@@ -366,11 +365,13 @@ namespace PeterO {
         throw new ArgumentException("min (" + min + ") is not less than " +
             max);
       }
-      return min + (max - min) * this.Uniform();
+      return min + ((max - min) * this.Uniform());
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='max'>Not documented yet.</param>
+    /// <summary>Returns a uniformly-distributed 64-bit floating-point
+    /// number from 0 and up, but less than the given number.</summary>
+    /// <param name='max'>Number that the randomly-generated number will be
+    /// less than.</param>
     /// <returns>A 64-bit floating-point number.</returns>
     public double Uniform(double max) {
       return this.Uniform(0.0, max);

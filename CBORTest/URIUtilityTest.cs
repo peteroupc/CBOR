@@ -73,8 +73,7 @@ namespace Test {
     }
 
     private static void assertIdempotencyNeg(string s) {
-      Assert.IsTrue(!(
-    (
+      Assert.IsTrue(!((
     bool)Reflect.InvokeStatic(
     URIUtilityName,
     "isValidIRI",
