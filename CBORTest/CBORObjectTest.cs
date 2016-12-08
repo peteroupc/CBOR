@@ -40,7 +40,9 @@ namespace Test {
             }
           }
           ret += x;
-        }
+        } else {
+              throw new FormatException();
+}
       }
       return neg ? -ret : ret;
     }
@@ -77,7 +79,9 @@ namespace Test {
             }
           }
           ret += x;
-        }
+        } else {
+              throw new FormatException();
+}
       }
       return neg ? -ret : ret;
     }
