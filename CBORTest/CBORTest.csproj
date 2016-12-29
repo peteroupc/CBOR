@@ -116,7 +116,6 @@
     <None Include="app.config" />
     <None Include="CBOR.ruleset" />
     <None Include="packages.config" />
-    <None Include="Settings.StyleCop" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CBOR.csproj">
