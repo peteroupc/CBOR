@@ -169,8 +169,9 @@ namespace PeterO.Cbor {
     private readonly int tagHigh;
     private readonly int tagLow;
 
-    internal CBORObject(CBORObject obj, int tagLow, int tagHigh) :
-      this(CBORObjectTypeTagged, obj) {
+    internal CBORObject(CBORObject obj, int tagLow, int tagHigh) {
+      this.itemtypeValue = CBORObjectTypeTagged;
+      this.itemValue = obj;
       this.tagLow = tagLow;
       this.tagHigh = tagHigh;
     }
@@ -187,6 +188,8 @@ namespace PeterO.Cbor {
 #endif
       this.itemtypeValue = type;
       this.itemValue = item;
+      this.tagLow = 0;
+      this.tagHigh = 0;
     }
 
     /// <include file='../../docs.xml'
