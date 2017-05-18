@@ -8,7 +8,8 @@ at: http://peteroupc.github.io/
 using System;
 using System.IO;
 using System.Text;
-using PeterO; using PeterO.Numbers;
+using PeterO;
+using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   internal sealed class StringOutput {

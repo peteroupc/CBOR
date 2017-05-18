@@ -6,7 +6,8 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/
  */
 using System;
-using PeterO; using PeterO.Numbers;
+using PeterO;
+using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   internal class CBOREInteger : ICBORNumber

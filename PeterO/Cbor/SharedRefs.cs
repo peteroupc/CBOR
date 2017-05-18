@@ -7,7 +7,8 @@ at: http://peteroupc.github.io/
  */
 using System;
 using System.Collections.Generic;
-using PeterO; using PeterO.Numbers;
+using PeterO;
+using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   internal class SharedRefs {

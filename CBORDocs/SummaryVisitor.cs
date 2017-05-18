@@ -12,7 +12,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-
 using NuDoq;
 
 namespace PeterO.DocGen {
@@ -70,7 +69,8 @@ return;
     }
 
     /// <summary>Compares a Type object with a Type.</summary>
-    /// <param name='x'>Not documented yet.</param>
+    /// <param name='x'>The parameter <paramref name='x'/> is not
+    /// documented yet.</param>
     /// <param name='y'>A Type object.</param>
     /// <returns>Zero if both values are equal; a negative number if
     /// <paramref name='x'/> is less than <paramref name='y'/>, or a

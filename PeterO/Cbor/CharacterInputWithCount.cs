@@ -1,6 +1,6 @@
 using System;
-
-using PeterO; using PeterO.Numbers;
+using PeterO;
+using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   internal class CharacterInputWithCount : ICharacterInput {

@@ -8,7 +8,8 @@ at: http://peteroupc.github.io/
 using System;
 using System.Collections.Generic;
 using System.Text;
-using PeterO; using PeterO.Numbers;
+using PeterO;
+using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   internal sealed class CBORJson {
@@ -63,7 +64,7 @@ namespace PeterO.Cbor {
               case 't':
                 this.sb.Append('\t');
                 break;
-                case 'u': { // Unicode escape
+                case 'u': {  // Unicode escape
                   c = 0;
                   // Consists of 4 hex digits
                   for (var i = 0; i < 4; ++i) {

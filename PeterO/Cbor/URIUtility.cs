@@ -7,7 +7,7 @@ at: http://peteroupc.github.io/
  */
 namespace PeterO.Cbor {
   using System;
-  using System.Text;
+using System.Text;
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="T:PeterO.Cbor.URIUtility"]/*'/>
