@@ -2308,7 +2308,7 @@ Converts this object to a string in JavaScript Object Notation (JSON) format. Th
 
  * The string will not begin with a byte-order mark (U+FEFF); RFC 7159 (the JSON specification) forbids placing a byte-order mark at the beginning of a JSON string.
 
- * Byte strings are converted to Base64 URL by default.
+ * Byte strings are converted to Base64 URL without whitespace or padding by default. (A byte string will instead be converted to traditional base64 without whitespace or padding if it has tag 22, or base16 for tag 23.)
 
  * Rational numbers will be converted to their exact form, if possible, otherwise to a high-precision approximation. (The resulting approximation could overflow to infinity, in which case the rational number is converted to null.)
 

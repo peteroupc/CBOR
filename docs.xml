@@ -1567,8 +1567,8 @@
             <item>The string will not begin with a byte-order mark (U+FEFF);
             RFC 7159 (the JSON specification) forbids placing a byte-order mark
             at the beginning of a JSON string.</item>
-            <item>Byte strings are converted to Base64 URL by default.
-(A byte string will instead be converted to traditional base64 if it has
+            <item>Byte strings are converted to Base64 URL without whitespace or padding by default.
+(A byte string will instead be converted to traditional base64 without whitespace or padding if it has
 tag 22, or base16 for tag 23.)</item>
             <item>Rational numbers will be converted to their exact form, if
             possible, otherwise to a high-precision approximation. (The
