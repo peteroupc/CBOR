@@ -3,7 +3,7 @@ Written in 2013-2016 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
+at: http://peteroupc.github.io/
  */
 using System;
 using System.Text;
@@ -20,11 +20,17 @@ namespace Test {
       }
     }
 
+    public static void AssertEquals(Object o, Object o2) {
+      if (!o.Equals(o2)) {
+         Assert.AreEqual(o, o2);
+      }
+    }
+
     public static void AssertEqualsHashCode(Object o, Object o2) {
       if (o.Equals(o2)) {
         if (!o2.Equals(o)) {
           Assert.Fail(
-String.Empty + o + " equals " + o2 + " but not vice versa");
+  String.Empty + o + " equals " + o2 + " but not vice versa");
         }
         // Test for the guarantee that equal objects
         // must have equal hash codes
@@ -32,7 +38,7 @@ String.Empty + o + " equals " + o2 + " but not vice versa");
           // Don't use Assert.AreEqual directly because it has
           // quite a lot of overhead
           Assert.Fail(
-String.Empty + o + " and " + o2 + " don't have equal hash codes");
+  String.Empty + o + " and " + o2 + " don't have equal hash codes");
         }
       } else {
         if (o2.Equals(o)) {
@@ -104,9 +110,9 @@ String.Empty + o + " and " + o2 + " don't have equal hash codes");
     }
 
     public static void CompareTestEqualAndConsistent<T>(
-T o1,
-T o2,
-string msg) where T :
+  T o1,
+  T o2,
+  string msg) where T :
     IComparable<T> {
       if (CompareTestReciprocal(o1, o2) != 0) {
         msg = (msg == null ? String.Empty : (msg + "\r\n")) +
@@ -137,6 +143,21 @@ string msg) where T :
           o1,
           o2,
           "Not less: " + CompareTestReciprocal(o1, o2)));
+      }
+    }
+
+    public static void CompareTestGreaterEqual<T>(T o1, T o2) where T :
+          IComparable<T> {
+      CompareTestLessEqual(o2, o1);
+    }
+
+    public static void CompareTestLessEqual<T>(T o1, T o2) where T :
+      IComparable<T> {
+      if (CompareTestReciprocal(o1, o2) > 0) {
+        Assert.Fail(ObjectMessages(
+          o1,
+          o2,
+          "Not less or equal: " + CompareTestReciprocal(o1, o2)));
       }
     }
 
@@ -214,25 +235,32 @@ string msg) where T :
         return "0";
       }
       bool neg = value < 0;
-      var chars = new char[24];
-      var count = 0;
+      var chars = new char[12];
+      var count = 11;
       if (neg) {
-        chars[0] = '-';
-        ++count;
         value = -value;
       }
-      while (value != 0) {
+      while (value > 43698) {
         int intdivvalue = value / 10;
         char digit = ValueDigits[(int)(value - (intdivvalue * 10))];
-        chars[count++] = digit;
+        chars[count--] = digit;
         value = intdivvalue;
       }
-      if (neg) {
-        ReverseChars(chars, 1, count - 1);
-      } else {
-        ReverseChars(chars, 0, count);
+      while (value > 9) {
+        int intdivvalue = (value * 26215) >> 18;
+        char digit = ValueDigits[(int)(value - (intdivvalue * 10))];
+        chars[count--] = digit;
+        value = intdivvalue;
       }
-      return new String(chars, 0, count);
+      if (value != 0) {
+        chars[count--] = ValueDigits[(int)value];
+      }
+      if (neg) {
+        chars[count] = '-';
+      } else {
+        ++count;
+      }
+      return new String(chars, count, 12 - count);
     }
 
     public static string LongToString(long longValue) {
@@ -251,38 +279,59 @@ string msg) where T :
       int intlongValue = unchecked((int)longValue);
       if ((long)intlongValue == longValue) {
         chars = new char[12];
+        count = 11;
         if (neg) {
-          chars[0] = '-';
-          ++count;
           intlongValue = -intlongValue;
         }
-        while (intlongValue != 0) {
-          int intdivlongValue = intlongValue / 10;
-        char digit = ValueDigits[(int)(intlongValue - (intdivlongValue *
-            10))];
-          chars[count++] = digit;
-          intlongValue = intdivlongValue;
-        }
-      } else {
-        chars = new char[24];
-        if (neg) {
-          chars[0] = '-';
-          ++count;
-          longValue = -longValue;
-        }
-        while (longValue != 0) {
-          long divlongValue = longValue / 10;
-          char digit = ValueDigits[(int)(longValue - (divlongValue * 10))];
-          chars[count++] = digit;
-          longValue = divlongValue;
-        }
+        while (intlongValue > 43698) {
+          int intdivValue = intlongValue / 10;
+        char digit = ValueDigits[(int)(intlongValue - (intdivValue * 10))];
+        chars[count--] = digit;
+        intlongValue = intdivValue;
+      }
+      while (intlongValue > 9) {
+        int intdivValue = (intlongValue * 26215) >> 18;
+        char digit = ValueDigits[(int)(intlongValue - (intdivValue * 10))];
+        chars[count--] = digit;
+        intlongValue = intdivValue;
+      }
+      if (intlongValue != 0) {
+        chars[count--] = ValueDigits[(int)intlongValue];
       }
       if (neg) {
-        ReverseChars(chars, 1, count - 1);
+        chars[count] = '-';
       } else {
-        ReverseChars(chars, 0, count);
+        ++count;
       }
-      return new String(chars, 0, count);
+      return new String(chars, count, 12 - count);
+      } else {
+        chars = new char[24];
+        count = 23;
+        if (neg) {
+          longValue = -longValue;
+        }
+        while (longValue > 43698) {
+          long divValue = longValue / 10;
+        char digit = ValueDigits[(int)(longValue - (divValue * 10))];
+        chars[count--] = digit;
+        longValue = divValue;
+      }
+      while (longValue > 9) {
+        long divValue = (longValue * 26215) >> 18;
+        char digit = ValueDigits[(int)(longValue - (divValue * 10))];
+        chars[count--] = digit;
+        longValue = divValue;
+      }
+      if (longValue != 0) {
+        chars[count--] = ValueDigits[(int)longValue];
+      }
+      if (neg) {
+        chars[count] = '-';
+      } else {
+        ++count;
+      }
+      return new String(chars, count, 24 - count);
+      }
     }
 
     public static string ObjectMessages(
@@ -354,16 +403,6 @@ string msg) where T :
         }
       }
       return true;
-    }
-
-    private static void ReverseChars(char[] chars, int offset, int length) {
-      int half = length >> 1;
-      int right = offset + length - 1;
-      for (var i = 0; i < half; i++, right--) {
-        char value = chars[offset + i];
-        chars[offset + i] = chars[right];
-        chars[right] = value;
-      }
     }
   }
 }

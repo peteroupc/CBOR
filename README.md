@@ -5,7 +5,7 @@ CBOR
 
 **Download source code: [ZIP file](https://github.com/peteroupc/CBOR/archive/master.zip)**
 
-If you like this software, consider donating to me at this link: [http://upokecenter.dreamhosters.com/articles/donate-now-2/](http://upokecenter.dreamhosters.com/articles/donate-now-2/)
+If you like this software, consider donating to me at this link: [http://peteroupc.github.io/](http://peteroupc.github.io/)
 
 ----
 
@@ -232,6 +232,12 @@ The following are some clarifications to RFC 7049.
 
 Release Notes
 -----------
+
+### Version 2.5
+
+* Sign the CBOR assembly with a strong name key
+* Update [`PeterO.Numbers`](https://www.nuget.org/packages/PeterO.Numbers) to
+  strong-named version
 
 ### Version 2.4.2
 

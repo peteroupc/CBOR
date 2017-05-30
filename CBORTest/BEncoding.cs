@@ -3,7 +3,7 @@ Written in 2013 by Peter Occil.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
+at: http://peteroupc.github.io/
  */
 using System;
 using System.Collections.Generic;
@@ -247,8 +247,8 @@ namespace PeterO {
               throw new CBORException("invalid string");
             }
             writeUtf8(
-LongToString(length),
-stream);
+  LongToString(length),
+  stream);
             stream.WriteByte(unchecked((byte)((byte)':')));
             writeUtf8(key, stream);
             Write(value, stream);

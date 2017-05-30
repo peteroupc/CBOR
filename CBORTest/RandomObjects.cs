@@ -3,7 +3,7 @@ Written by Peter O. in 2014.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
+at: http://peteroupc.github.io/
  */
 using System;
 using System.Text;
@@ -72,7 +72,7 @@ namespace Test {
           r |= ((long)rand.NextValue(0x10000)) << 48;
         }
       }
-      r &= ~0x7FF0000000000000L;  // clear exponent
+      r &= ~0x7ff0000000000000L;  // clear exponent
       r |= ((long)exponent) << 52;  // set exponent
       return BitConverter.ToDouble(BitConverter.GetBytes((long)r), 0);
     }
@@ -142,8 +142,8 @@ namespace Test {
         }
       }
       return ExtendedFloat.Create(
-RandomBigInteger(r),
-BigInteger.valueOf(r.NextValue(400) - 200));
+  RandomBigInteger(r),
+  BigInteger.valueOf(r.NextValue(400) - 200));
     }
 
     public static byte[] RandomByteString(FastRandom rand) {

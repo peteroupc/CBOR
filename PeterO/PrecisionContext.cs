@@ -1,9 +1,9 @@
 /*
-Written in 2013 by Peter O.
+Written by Peter O. in 2013.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
+at: http://peteroupc.github.io/
  */
 using System;
 using PeterO.Numbers;
@@ -215,13 +215,13 @@ namespace PeterO {
     /// path='docs/doc[@name="M:PeterO.PrecisionContext.#ctor(System.Int32,PeterO.Rounding,System.Int32,System.Int32,System.Boolean)"]/*'/>
     [Obsolete("Use EContext from PeterO.Numbers/com.upokecenter.numbers.")]
    public PrecisionContext(
-int precision,
-Rounding rounding,
-int exponentMinSmall,
-int exponentMaxSmall,
-bool clampNormalExponents) {
+  int precision,
+  Rounding rounding,
+  int exponentMinSmall,
+  int exponentMaxSmall,
+  bool clampNormalExponents) {
       this.ec = new EContext(
-precision,
+  precision,
         ExtendedDecimal.ToERounding(rounding),
         exponentMinSmall,
  exponentMaxSmall,
@@ -353,12 +353,12 @@ return new PrecisionContext(EContext.ForPrecision(precision));
     /// path='docs/doc[@name="M:PeterO.PrecisionContext.ForPrecisionAndRounding(System.Int32,PeterO.Rounding)"]/*'/>
     [Obsolete("Use EContext from PeterO.Numbers/com.upokecenter.numbers.")]
    public static PrecisionContext ForPrecisionAndRounding(
-int precision,
-Rounding rounding) {
+  int precision,
+  Rounding rounding) {
 return new PrecisionContext(
-EContext.ForPrecisionAndRounding(
-precision,
-ExtendedDecimal.ToERounding(rounding)));
+  EContext.ForPrecisionAndRounding(
+  precision,
+  ExtendedDecimal.ToERounding(rounding)));
 }
 
     /// <include file='../docs.xml'
@@ -403,8 +403,8 @@ return new PrecisionContext(this.Ec.WithAdjustExponent(adjustExponent));
     /// path='docs/doc[@name="M:PeterO.PrecisionContext.WithBigExponentRange(PeterO.BigInteger,PeterO.BigInteger)"]/*'/>
     [Obsolete("Use EContext from PeterO.Numbers/com.upokecenter.numbers.")]
    public PrecisionContext WithBigExponentRange(
-BigInteger exponentMin,
-BigInteger exponentMax) {
+  BigInteger exponentMin,
+  BigInteger exponentMax) {
   if (exponentMin == null) {
   throw new ArgumentNullException("exponentMin");
 }
@@ -412,9 +412,9 @@ BigInteger exponentMax) {
   throw new ArgumentNullException("exponentMax");
 }
 return new PrecisionContext(
-this.Ec.WithBigExponentRange(
-exponentMin.Ei,
-exponentMax.Ei));
+  this.Ec.WithBigExponentRange(
+  exponentMin.Ei,
+  exponentMax.Ei));
 }
 
     /// <include file='../docs.xml'
@@ -445,12 +445,12 @@ return new PrecisionContext(this.Ec.WithExponentClamp(clamp));
     /// path='docs/doc[@name="M:PeterO.PrecisionContext.WithExponentRange(System.Int32,System.Int32)"]/*'/>
     [Obsolete("Use EContext from PeterO.Numbers/com.upokecenter.numbers.")]
    public PrecisionContext WithExponentRange(
-int exponentMinSmall,
-int exponentMaxSmall) {
+  int exponentMinSmall,
+  int exponentMaxSmall) {
 return new PrecisionContext(
-this.Ec.WithExponentRange(
-exponentMinSmall,
-exponentMaxSmall));
+  this.Ec.WithExponentRange(
+  exponentMinSmall,
+  exponentMaxSmall));
 }
 
     /// <include file='../docs.xml'

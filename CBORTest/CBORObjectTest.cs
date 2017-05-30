@@ -91,31 +91,31 @@ namespace Test {
       "[\"\\udc00\ud800\udc00\"]", "[\"\\ud800\ud800\udc00\"]",
       "[\"\\ud800\"]", "[1,2,", "[1,2,3", "{,\"0\":0,\"1\":1}",
       "{\"0\":0,,\"1\":1}", "{\"0\":0,\"1\":1,}", "[,0,1,2]", "[0,,1,2]",
-"[0,1,,2]", "[0,1,2,]", "[0001]", "{a:true}",
+  "[0,1,,2]", "[0,1,2,]", "[0001]", "{a:true}",
       "{\"a\"://comment\ntrue}", "{\"a\":/*comment*/true}", "{'a':true}",
       "{\"a\":'b'}", "{\"a\t\":true}", "{\"a\r\":true}", "{\"a\n\":true}",
-"['a']", "{\"a\":\"a\t\"}", "[\"a\\'\"]", "[NaN]", "[+Infinity]",
-"[-Infinity]", "[Infinity]", "{\"a\":\"a\r\"}", "{\"a\":\"a\n\"}",
-"[\"a\t\"]", "\"test\"\"", "\"test\"x", "\"test\"\u0300",
+  "['a']", "{\"a\":\"a\t\"}", "[\"a\\'\"]", "[NaN]", "[+Infinity]",
+  "[-Infinity]", "[Infinity]", "{\"a\":\"a\r\"}", "{\"a\":\"a\n\"}",
+  "[\"a\t\"]", "\"test\"\"", "\"test\"x", "\"test\"\u0300",
       "\"test\"\u0005", "[5]\"", "[5]x", "[5]\u0300", "[5]\u0005",
       "{\"test\":5}\"", "{\"test\":5}x", "{\"test\":5}\u0300",
       "{\"test\":5}\u0005", "true\"", "truex", "true}", "true\u0300",
       "true\u0005", "8024\"", "8024x", "8024}", "8024\u0300",
       "8024\u0005", "{\"test\":5}}", "{\"test\":5}{", "[5]]", "[5][",
       "0000", "0x1", "0xf", "0x20", "0x01",
-"-3x", "-3e89x",
+  "-3x", "-3e89x",
       "0X1", "0Xf", "0X20", "0X01", ".2", ".05", "-.2",
       "-.05", "23.", "23.e0", "23.e1", "0.", "[0000]", "[0x1]",
       "[0xf]", "[0x20]", "[0x01]", "[.2]", "[.05]", "[-.2]", "[-.05]",
-"[23.]", "[23.e0]", "[23.e1]", "[0.]", "\"abc", "\"ab\u0004c\"",
-"\u0004\"abc\"", "[1,\u0004" + "2]" };
+  "[23.]", "[23.e0]", "[23.e1]", "[0.]", "\"abc", "\"ab\u0004c\"",
+  "\u0004\"abc\"", "[1,\u0004" + "2]" };
 
     private static readonly string[] ValueJsonSucceeds = { "[0]",
       "[0.1]",
       "[0.1001]",
       "[0.0]",
       "[-3 " + ",-5]",
-"[0.00]", "[0.000]", "[0.01]", "[0.001]", "[0.5]", "[0E5]",
+  "[0.00]", "[0.000]", "[0.01]", "[0.001]", "[0.5]", "[0E5]",
   "[0E+6]", "[\"\ud800\udc00\"]", "[\"\\ud800\\udc00\"]",
   "[\"\\ud800\\udc00\ud800\udc00\"]", "23.0e01", "23.0e00", "[23.0e01]",
   "[23.0e00]", "0", "1", "0.2", "0.05", "-0.2", "-0.05" };
@@ -143,7 +143,7 @@ namespace Test {
           }
           Assert.Fail("Should have failed");
         } catch (CBORException) {
-          Console.Write(String.Empty);
+          new Object();
         } catch (Exception ex) {
           Assert.Fail(ex.ToString());
           throw new InvalidOperationException(String.Empty, ex);
@@ -159,7 +159,7 @@ namespace Test {
           }
           Assert.Fail("Should have failed");
         } catch (CBORException) {
-          Console.Write(String.Empty);
+          new Object();
         } catch (Exception ex) {
           Assert.Fail(str + "\r\n" + ex.ToString());
           throw new InvalidOperationException(String.Empty, ex);
@@ -173,7 +173,7 @@ namespace Test {
         }
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -275,7 +275,7 @@ namespace Test {
         CBORObject.Addition(null, CBORObject.FromObject(2));
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -284,7 +284,7 @@ namespace Test {
         CBORObject.Addition(CBORObject.FromObject(2), null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -293,7 +293,7 @@ namespace Test {
         CBORObject.Addition(CBORObject.Null, CBORObject.FromObject(2));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -302,7 +302,7 @@ namespace Test {
         CBORObject.Addition(CBORObject.FromObject(2), CBORObject.Null);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -319,7 +319,7 @@ namespace Test {
         CBORObject.FromObject((object)null).AsBigInteger();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -328,7 +328,7 @@ namespace Test {
         CBORObject.Null.AsBigInteger();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -337,7 +337,7 @@ namespace Test {
         CBORObject.True.AsBigInteger();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -346,7 +346,7 @@ namespace Test {
         CBORObject.False.AsBigInteger();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -355,7 +355,7 @@ namespace Test {
         CBORObject.Undefined.AsBigInteger();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -364,7 +364,7 @@ namespace Test {
         CBORObject.NewArray().AsBigInteger();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -373,7 +373,7 @@ namespace Test {
         CBORObject.NewMap().AsBigInteger();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -393,7 +393,7 @@ namespace Test {
             cbornumber.AsBigInteger();
             Assert.Fail("Should have failed");
           } catch (OverflowException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -505,7 +505,7 @@ namespace Test {
         CBORObject.FromObject(Single.PositiveInfinity).AsBigInteger();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -514,7 +514,7 @@ namespace Test {
         CBORObject.FromObject(Single.NegativeInfinity).AsBigInteger();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -523,7 +523,7 @@ namespace Test {
         CBORObject.FromObject(Single.NaN).AsBigInteger();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -532,7 +532,7 @@ namespace Test {
         CBORObject.FromObject(Double.PositiveInfinity).AsBigInteger();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -541,7 +541,7 @@ namespace Test {
         CBORObject.FromObject(Double.NegativeInfinity).AsBigInteger();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -550,7 +550,7 @@ namespace Test {
         CBORObject.FromObject(Double.NaN).AsBigInteger();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -573,7 +573,7 @@ namespace Test {
         CBORObject.NewArray().AsByte();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -582,7 +582,7 @@ namespace Test {
         CBORObject.NewMap().AsByte();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -591,7 +591,7 @@ namespace Test {
         CBORObject.True.AsByte();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -600,7 +600,7 @@ namespace Test {
         CBORObject.False.AsByte();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -609,7 +609,7 @@ namespace Test {
         CBORObject.Undefined.AsByte();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -618,7 +618,7 @@ namespace Test {
         CBORObject.FromObject(String.Empty).AsByte();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -638,7 +638,7 @@ namespace Test {
             cbornumber.AsByte();
             Assert.Fail("Should have failed " + cbornumber);
           } catch (OverflowException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString() + cbornumber);
             throw new InvalidOperationException(String.Empty, ex);
@@ -652,7 +652,7 @@ namespace Test {
         try {
           CBORObject.FromObject(i).AsByte();
         } catch (OverflowException) {
-          Console.Write(String.Empty);
+          new Object();
         } catch (Exception ex) {
           Assert.Fail(ex.ToString()); throw new
             InvalidOperationException(String.Empty, ex);
@@ -662,7 +662,7 @@ namespace Test {
         try {
           CBORObject.FromObject(i).AsByte();
         } catch (OverflowException) {
-          Console.Write(String.Empty);
+          new Object();
         } catch (Exception ex) {
           Assert.Fail(ex.ToString()); throw new
             InvalidOperationException(String.Empty, ex);
@@ -676,7 +676,7 @@ namespace Test {
         CBORObject.NewArray().AsDouble();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -685,7 +685,7 @@ namespace Test {
         CBORObject.NewMap().AsDouble();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -694,7 +694,7 @@ namespace Test {
         CBORObject.True.AsDouble();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -703,7 +703,7 @@ namespace Test {
         CBORObject.False.AsDouble();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -712,7 +712,7 @@ namespace Test {
         CBORObject.Undefined.AsDouble();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -721,7 +721,7 @@ namespace Test {
         CBORObject.FromObject(String.Empty).AsDouble();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -733,8 +733,8 @@ namespace Test {
           CBORObject.FromObject(ExtendedDecimal.FromString(
   numberinfo["number"].AsString()));
         AreEqualExact(
-(double)ExtendedDecimal.FromString(numberinfo["number"].AsString()).ToDouble(),
-cbornumber.AsDouble());
+  (double)ExtendedDecimal.FromString(numberinfo["number"].AsString()).ToDouble(),
+  cbornumber.AsDouble());
       }
     }
 
@@ -769,7 +769,7 @@ cbornumber.AsDouble());
         CBORObject.NewArray().AsExtendedDecimal();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -778,7 +778,7 @@ cbornumber.AsDouble());
         CBORObject.NewMap().AsExtendedDecimal();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -787,7 +787,7 @@ cbornumber.AsDouble());
         CBORObject.True.AsExtendedDecimal();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -796,7 +796,7 @@ cbornumber.AsDouble());
         CBORObject.False.AsExtendedDecimal();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -805,7 +805,7 @@ cbornumber.AsDouble());
         CBORObject.Undefined.AsExtendedDecimal();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -814,7 +814,7 @@ cbornumber.AsDouble());
         CBORObject.FromObject(String.Empty).AsExtendedDecimal();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -856,7 +856,7 @@ cbornumber.AsDouble());
         CBORTestCommon.RatNegInf,
         CBORObject.FromObject(Double.NegativeInfinity).AsExtendedRational());
       Assert.IsTrue(
-CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
+  CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
           .AsExtendedRational()).IsNaN());
     }
     [Test]
@@ -865,7 +865,7 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
         CBORObject.NewArray().AsInt16();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -874,7 +874,7 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
         CBORObject.NewMap().AsInt16();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -883,7 +883,7 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
         CBORObject.True.AsInt16();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -892,7 +892,7 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
         CBORObject.False.AsInt16();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -901,7 +901,7 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
         CBORObject.Undefined.AsInt16();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -910,7 +910,7 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
         CBORObject.FromObject(String.Empty).AsInt16();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -930,7 +930,7 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
             cbornumber.AsInt16();
             Assert.Fail("Should have failed " + cbornumber);
           } catch (OverflowException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString() + cbornumber);
             throw new InvalidOperationException(String.Empty, ex);
@@ -945,7 +945,7 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
         CBORObject.NewArray().AsInt32();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -954,7 +954,7 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
         CBORObject.NewMap().AsInt32();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -963,7 +963,7 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
         CBORObject.True.AsInt32();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -972,7 +972,7 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
         CBORObject.False.AsInt32();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -981,7 +981,7 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
         CBORObject.Undefined.AsInt32();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -990,7 +990,7 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
         CBORObject.FromObject(String.Empty).AsInt32();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1024,7 +1024,7 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
             cbornumber.AsInt32();
             Assert.Fail("Should have failed " + cbornumber);
           } catch (OverflowException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString() + cbornumber);
             throw new InvalidOperationException(String.Empty, ex);
@@ -1034,7 +1034,7 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
               cbornumberdouble.AsInt32();
               Assert.Fail("Should have failed");
             } catch (OverflowException) {
-              Console.Write(String.Empty);
+              new Object();
             } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
@@ -1045,7 +1045,7 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
               cbornumbersingle.AsInt32();
               Assert.Fail("Should have failed");
             } catch (OverflowException) {
-              Console.Write(String.Empty);
+              new Object();
             } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
@@ -1060,7 +1060,7 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
         CBORObject.NewArray().AsInt64();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1069,7 +1069,7 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
         CBORObject.NewMap().AsInt64();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1078,7 +1078,7 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
         CBORObject.True.AsInt64();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1087,7 +1087,7 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
         CBORObject.False.AsInt64();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1096,7 +1096,7 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
         CBORObject.Undefined.AsInt64();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1105,7 +1105,7 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
         CBORObject.FromObject(String.Empty).AsInt64();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1139,7 +1139,7 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
             cbornumber.AsInt64();
             Assert.Fail("Should have failed " + cbornumber);
           } catch (OverflowException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString() + cbornumber);
             throw new InvalidOperationException(String.Empty, ex);
@@ -1149,7 +1149,7 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
               cbornumberdouble.AsInt64();
               Assert.Fail("Should have failed");
             } catch (OverflowException) {
-              Console.Write(String.Empty);
+              new Object();
             } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
@@ -1160,7 +1160,7 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
               cbornumbersingle.AsInt64();
               Assert.Fail("Should have failed");
             } catch (OverflowException) {
-              Console.Write(String.Empty);
+              new Object();
             } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
@@ -1179,7 +1179,7 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
         CBORObject.NewArray().AsSingle();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1188,7 +1188,7 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
         CBORObject.NewMap().AsSingle();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1197,7 +1197,7 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
         CBORObject.True.AsSingle();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1206,7 +1206,7 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
         CBORObject.False.AsSingle();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1215,7 +1215,7 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
         CBORObject.Undefined.AsSingle();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1224,7 +1224,7 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
         CBORObject.FromObject(String.Empty).AsSingle();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1236,8 +1236,8 @@ CBORObject.FromObject(CBORObject.FromObject(Double.NaN)
           CBORObject.FromObject(ExtendedDecimal.FromString(
   numberinfo["number"].AsString()));
         AreEqualExact(
-(float)ExtendedDecimal.FromString(numberinfo["number"].AsString()).ToSingle(),
-cbornumber.AsSingle());
+  (float)ExtendedDecimal.FromString(numberinfo["number"].AsString()).ToSingle(),
+  cbornumber.AsSingle());
       }
     }
     [Test]
@@ -1252,7 +1252,7 @@ cbornumber.AsSingle());
         CBORObject.FromObject(CBORObject.Null).AsString();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1261,7 +1261,7 @@ cbornumber.AsSingle());
         CBORObject.FromObject(true).AsString();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1270,7 +1270,7 @@ cbornumber.AsSingle());
         CBORObject.FromObject(false).AsString();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1279,7 +1279,7 @@ cbornumber.AsSingle());
         CBORObject.FromObject(5).AsString();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1288,7 +1288,7 @@ cbornumber.AsSingle());
         CBORObject.NewArray().AsString();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1297,7 +1297,7 @@ cbornumber.AsSingle());
         CBORObject.NewMap().AsString();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1342,10 +1342,10 @@ cbornumber.AsSingle());
         // Try a random double with a given
         // exponent
         Assert.IsTrue(
-CBORObject.FromObject(
-RandomObjects.RandomDouble(
-rand,
-i)).CanFitInDouble());
+  CBORObject.FromObject(
+  RandomObjects.RandomDouble(
+  rand,
+  i)).CanFitInDouble());
       }
     }
     [Test]
@@ -1428,10 +1428,10 @@ i)).CanFitInDouble());
         // Try a random float with a given
         // exponent
         Assert.IsTrue(
-CBORObject.FromObject(
-RandomObjects.RandomSingle(
-rand,
-i)).CanFitInSingle());
+  CBORObject.FromObject(
+  RandomObjects.RandomSingle(
+  rand,
+  i)).CanFitInSingle());
       }
     }
     [Test]
@@ -1577,11 +1577,11 @@ i)).CanFitInSingle());
         CompareDecimals(o1, o2);
       }
       TestCommon.CompareTestEqual(
-CBORObject.FromObject(0.1),
-CBORObject.FromObject(0.1));
+  CBORObject.FromObject(0.1),
+  CBORObject.FromObject(0.1));
       TestCommon.CompareTestEqual(
-CBORObject.FromObject(0.1f),
-CBORObject.FromObject(0.1f));
+  CBORObject.FromObject(0.1f),
+  CBORObject.FromObject(0.1f));
       for (var i = 0; i < 50; ++i) {
         CBORObject o1 = CBORObject.FromObject(Single.NegativeInfinity);
         CBORObject o2 = CBORTestCommon.RandomNumberOrRational(r);
@@ -1708,7 +1708,7 @@ CBORObject.FromObject(0.1f));
         CBORObject.DecodeFromBytes(null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1717,7 +1717,7 @@ CBORObject.FromObject(0.1f));
         CBORObject.DecodeFromBytes(new byte[] { });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1726,7 +1726,7 @@ CBORObject.FromObject(0.1f));
         CBORObject.DecodeFromBytes(new byte[] { 0 }, null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1735,7 +1735,7 @@ CBORObject.FromObject(0.1f));
         CBORObject.DecodeFromBytes(new byte[] { 0x1c });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1744,7 +1744,7 @@ CBORObject.FromObject(0.1f));
         CBORObject.DecodeFromBytes(null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1753,7 +1753,7 @@ CBORObject.FromObject(0.1f));
         CBORObject.DecodeFromBytes(new byte[] { 0x1e });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1762,7 +1762,7 @@ CBORObject.FromObject(0.1f));
         CBORObject.DecodeFromBytes(new byte[] { 0xfe });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1771,7 +1771,7 @@ CBORObject.FromObject(0.1f));
         CBORObject.DecodeFromBytes(new byte[] { 0xff });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1793,7 +1793,7 @@ CBORObject.FromObject(0.1f));
         CBORObject.DecodeFromBytes(bytes, CBOREncodeOptions.NoDuplicateKeys);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1810,7 +1810,7 @@ CBORObject.FromObject(0.1f));
         CBORObject.DecodeFromBytes(bytes, CBOREncodeOptions.NoDuplicateKeys);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1820,7 +1820,7 @@ CBORObject.FromObject(0.1f));
         CBORObject.DecodeFromBytes(bytes, CBOREncodeOptions.NoDuplicateKeys);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1830,7 +1830,7 @@ CBORObject.FromObject(0.1f));
         CBORObject.DecodeFromBytes(bytes, CBOREncodeOptions.NoDuplicateKeys);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1842,7 +1842,7 @@ CBORObject.FromObject(0.1f));
         CBORObject.Divide(null, CBORObject.FromObject(2));
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1851,7 +1851,7 @@ CBORObject.FromObject(0.1f));
         CBORObject.Divide(CBORObject.FromObject(2), null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1860,7 +1860,7 @@ CBORObject.FromObject(0.1f));
         CBORObject.Divide(CBORObject.Null, CBORObject.FromObject(2));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1869,7 +1869,7 @@ CBORObject.FromObject(0.1f));
         CBORObject.Divide(CBORObject.FromObject(2), CBORObject.Null);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1904,9 +1904,9 @@ CBORObject.FromObject(0.1f));
           byte[] bytes = CBORObject.FromObject(j).EncodeToBytes();
           if (bytes.Length != ranges[i + 2]) {
             Assert.AreEqual(
-ranges[i + 2],
-bytes.Length,
-TestCommon.IntToString(j));
+  ranges[i + 2],
+  bytes.Length,
+  TestCommon.IntToString(j));
           }
         }
       }
@@ -1925,7 +1925,7 @@ TestCommon.IntToString(j));
         CBORObject.True.EncodeToBytes(null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2041,7 +2041,7 @@ TestCommon.IntToString(j));
         CBORObject.FromJSONString("\ufeff\u0020 {}");
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2050,7 +2050,7 @@ TestCommon.IntToString(j));
         CBORObject.FromJSONString("[]", null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2164,7 +2164,7 @@ TestCommon.IntToString(j));
         CBORObject.FromObject(CBORObject.FromObject(Double.NaN).Sign);
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2174,7 +2174,7 @@ TestCommon.IntToString(j));
         CBORObject.FromObject(cbor[0]);
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2183,7 +2183,7 @@ TestCommon.IntToString(j));
         cbor[0] = CBORObject.False;
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2193,7 +2193,7 @@ TestCommon.IntToString(j));
         CBORObject.FromObject(cbor.Keys);
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2202,7 +2202,7 @@ TestCommon.IntToString(j));
         CBORObject.FromObject(CBORObject.NewArray().Keys);
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2211,7 +2211,7 @@ TestCommon.IntToString(j));
         CBORObject.FromObject(CBORObject.NewArray().Sign);
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2220,7 +2220,7 @@ TestCommon.IntToString(j));
         CBORObject.FromObject(CBORObject.NewMap().Sign);
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2233,7 +2233,7 @@ TestCommon.IntToString(j));
         CBORObject.FromObjectAndTag(2, bigvalue);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2242,7 +2242,7 @@ TestCommon.IntToString(j));
         CBORObject.FromObjectAndTag(2, -1);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2251,7 +2251,7 @@ TestCommon.IntToString(j));
         CBORObject.FromObjectAndTag(CBORObject.Null, -1);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2266,7 +2266,7 @@ TestCommon.IntToString(j));
         CBORObject.FromObjectAndTag(2, null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2275,7 +2275,7 @@ TestCommon.IntToString(j));
         CBORObject.FromObjectAndTag(2, BigInteger.fromString("-1"));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2287,7 +2287,7 @@ TestCommon.IntToString(j));
         CBORObject.FromSimpleValue(-1);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2296,7 +2296,7 @@ TestCommon.IntToString(j));
         CBORObject.FromSimpleValue(256);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2307,7 +2307,7 @@ TestCommon.IntToString(j));
             CBORObject.FromSimpleValue(i);
             Assert.Fail("Should have failed");
           } catch (ArgumentException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -2324,7 +2324,7 @@ TestCommon.IntToString(j));
         CBORObject.True.GetByteString();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2333,7 +2333,7 @@ TestCommon.IntToString(j));
         CBORObject.FromObject(0).GetByteString();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2342,7 +2342,7 @@ TestCommon.IntToString(j));
         CBORObject.FromObject("test").GetByteString();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2351,7 +2351,7 @@ TestCommon.IntToString(j));
         CBORObject.False.GetByteString();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2360,7 +2360,7 @@ TestCommon.IntToString(j));
         CBORObject.NewArray().GetByteString();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2369,7 +2369,7 @@ TestCommon.IntToString(j));
         CBORObject.NewMap().GetByteString();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2389,7 +2389,7 @@ TestCommon.IntToString(j));
         CBORObject.True.HasTag(-1);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2399,7 +2399,7 @@ TestCommon.IntToString(j));
         CBORObject.True.HasTag(ValueBigintNull);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2408,7 +2408,7 @@ TestCommon.IntToString(j));
         CBORObject.True.HasTag(BigInteger.fromString("-1"));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2483,12 +2483,11 @@ TestCommon.IntToString(j));
       Assert.IsFalse(CBORObject.NewArray().IsIntegral);
       Assert.IsFalse(CBORObject.NewMap().IsIntegral);
       bool isint = CBORObject.FromObject(
-BigInteger.fromRadixString(
-"8000000000000000",
-16)).IsIntegral;
+  BigInteger.fromRadixString(
+  "8000000000000000",
+  16)).IsIntegral;
       Assert.IsTrue(isint);
-      isint =
-        CBORObject.FromObject(
+      isint = CBORObject.FromObject(
       BigInteger.fromRadixString(
       "80000000000000000000",
       16)).IsIntegral;
@@ -2623,7 +2622,7 @@ BigInteger.fromRadixString(
         CBORObject cbor2 = cbor[0];
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2633,7 +2632,7 @@ BigInteger.fromRadixString(
         CBORObject cbor2 = cbor[0];
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2643,7 +2642,7 @@ BigInteger.fromRadixString(
         CBORObject cbor2 = cbor[0];
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2653,7 +2652,7 @@ BigInteger.fromRadixString(
         CBORObject cbor2 = cbor[0];
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2663,7 +2662,7 @@ BigInteger.fromRadixString(
         CBORObject cbor2 = cbor[0];
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2679,7 +2678,7 @@ BigInteger.fromRadixString(
         CBORObject.Multiply(null, CBORObject.FromObject(2));
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2688,7 +2687,7 @@ BigInteger.fromRadixString(
         CBORObject.Multiply(CBORObject.FromObject(2), null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2697,7 +2696,7 @@ BigInteger.fromRadixString(
         CBORObject.Multiply(CBORObject.Null, CBORObject.FromObject(2));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2706,7 +2705,7 @@ BigInteger.fromRadixString(
         CBORObject.Multiply(CBORObject.FromObject(2), CBORObject.Null);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2737,7 +2736,7 @@ BigInteger.fromRadixString(
         CBORObject.True.Negate();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2746,7 +2745,7 @@ BigInteger.fromRadixString(
         CBORObject.False.Negate();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2755,7 +2754,7 @@ BigInteger.fromRadixString(
         CBORObject.NewArray().Negate();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2764,7 +2763,7 @@ BigInteger.fromRadixString(
         CBORObject.NewMap().Negate();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2836,7 +2835,7 @@ BigInteger.fromRadixString(
         CBORObject.Read(null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2847,7 +2846,7 @@ BigInteger.fromRadixString(
             CBORObject.Read(ms2, null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -2866,7 +2865,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(ms2, null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -2888,7 +2887,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(ms2);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -2899,7 +2898,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(ms2a);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -2910,7 +2909,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(ms2b);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -2923,7 +2922,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(ms3);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3067,7 +3066,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3081,7 +3080,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3094,7 +3093,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3109,7 +3108,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3122,7 +3121,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3135,7 +3134,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3148,7 +3147,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3160,7 +3159,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3171,7 +3170,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3182,7 +3181,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3195,7 +3194,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3207,7 +3206,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3218,7 +3217,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3229,7 +3228,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3241,7 +3240,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3253,7 +3252,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3265,7 +3264,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3277,7 +3276,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3289,7 +3288,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3301,7 +3300,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3313,7 +3312,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3324,7 +3323,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3336,7 +3335,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3348,7 +3347,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3360,7 +3359,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3372,7 +3371,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3384,7 +3383,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3396,7 +3395,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3409,7 +3408,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3420,7 +3419,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3431,7 +3430,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3443,7 +3442,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3455,7 +3454,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3467,7 +3466,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3479,7 +3478,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3491,7 +3490,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3502,7 +3501,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3513,7 +3512,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3525,7 +3524,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3537,7 +3536,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3549,7 +3548,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3561,7 +3560,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3573,7 +3572,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3585,7 +3584,7 @@ BigInteger.fromRadixString(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3602,7 +3601,7 @@ BigInteger.fromRadixString(
         CBORObject.Remainder(null, CBORObject.FromObject(2));
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -3611,7 +3610,7 @@ BigInteger.fromRadixString(
         CBORObject.Remainder(CBORObject.FromObject(2), null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -3620,7 +3619,7 @@ BigInteger.fromRadixString(
         CBORObject.Remainder(CBORObject.Null, CBORObject.FromObject(2));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -3629,7 +3628,7 @@ BigInteger.fromRadixString(
         CBORObject.Remainder(CBORObject.FromObject(2), CBORObject.Null);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -3654,7 +3653,7 @@ BigInteger.fromRadixString(
         int sign = CBORObject.True.Sign;
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -3663,7 +3662,7 @@ BigInteger.fromRadixString(
         int sign = CBORObject.False.Sign;
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -3672,7 +3671,7 @@ BigInteger.fromRadixString(
         int sign = CBORObject.NewArray().Sign;
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -3681,7 +3680,7 @@ BigInteger.fromRadixString(
         int sign = CBORObject.NewMap().Sign;
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -3697,7 +3696,7 @@ BigInteger.fromRadixString(
             Assert.Fail(String.Empty + cbornumber.Sign);
             Assert.Fail("Should have failed");
           } catch (InvalidOperationException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3721,7 +3720,7 @@ BigInteger.fromRadixString(
         CBORObject.Subtract(null, CBORObject.FromObject(2));
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -3730,7 +3729,7 @@ BigInteger.fromRadixString(
         CBORObject.Subtract(CBORObject.FromObject(2), null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -3739,7 +3738,7 @@ BigInteger.fromRadixString(
         CBORObject.Subtract(CBORObject.Null, CBORObject.FromObject(2));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -3748,7 +3747,7 @@ BigInteger.fromRadixString(
         CBORObject.Subtract(CBORObject.FromObject(2), CBORObject.Null);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -3938,7 +3937,7 @@ BigInteger.fromRadixString(
               CBORObject.Write(ef, null);
               Assert.Fail("Should have failed");
             } catch (ArgumentNullException) {
-              Console.Write(String.Empty);
+              new Object();
             } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
@@ -3964,7 +3963,7 @@ BigInteger.fromRadixString(
               CBORObject.Write(ef, null);
               Assert.Fail("Should have failed");
             } catch (ArgumentNullException) {
-              Console.Write(String.Empty);
+              new Object();
             } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
@@ -3993,7 +3992,7 @@ BigInteger.fromRadixString(
               CBORObject.Write(ed, null);
               Assert.Fail("Should have failed");
             } catch (ArgumentNullException) {
-              Console.Write(String.Empty);
+              new Object();
             } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
@@ -4023,7 +4022,7 @@ BigInteger.fromRadixString(
               CBORObject.Write(ed, null);
               Assert.Fail("Should have failed");
             } catch (ArgumentNullException) {
-              Console.Write(String.Empty);
+              new Object();
             } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
@@ -4057,7 +4056,7 @@ BigInteger.fromRadixString(
             CBORObject.Write(str, null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -4080,7 +4079,7 @@ BigInteger.fromRadixString(
             CBORObject.Write("test", null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -4104,7 +4103,7 @@ BigInteger.fromRadixString(
             CBORObject.Write(str, null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -4128,7 +4127,7 @@ BigInteger.fromRadixString(
             CBORObject.Write(ef, null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -4152,7 +4151,7 @@ BigInteger.fromRadixString(
             CBORObject.Write(ef, null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -4176,7 +4175,7 @@ BigInteger.fromRadixString(
             CBORObject.Write(er, null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -4202,7 +4201,7 @@ BigInteger.fromRadixString(
             CBORObject.Write(er, null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -4230,7 +4229,7 @@ BigInteger.fromRadixString(
             CBORObject.Write(ed, null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -4254,7 +4253,7 @@ BigInteger.fromRadixString(
             CBORObject.Write(bigint, null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -4285,7 +4284,7 @@ BigInteger.fromRadixString(
               CBORObject.Write(values[i], null);
               Assert.Fail("Should have failed");
             } catch (ArgumentNullException) {
-              Console.Write(String.Empty);
+              new Object();
             } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
@@ -4309,7 +4308,7 @@ BigInteger.fromRadixString(
               CBORObject.Write(bigintVal, null);
               Assert.Fail("Should have failed");
             } catch (ArgumentNullException) {
-              Console.Write(String.Empty);
+              new Object();
             } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
@@ -4335,7 +4334,7 @@ BigInteger.fromRadixString(
                 CBORObject.Write(intval, null);
                 Assert.Fail("Should have failed");
               } catch (ArgumentNullException) {
-                Console.Write(String.Empty);
+                new Object();
               } catch (Exception ex) {
                 Assert.Fail(ex.ToString());
                 throw new InvalidOperationException(String.Empty, ex);
@@ -4360,7 +4359,7 @@ BigInteger.fromRadixString(
                 CBORObject.Write(shortval, null);
                 Assert.Fail("Should have failed");
               } catch (ArgumentNullException) {
-                Console.Write(String.Empty);
+                new Object();
               } catch (Exception ex) {
                 Assert.Fail(ex.ToString());
                 throw new InvalidOperationException(String.Empty, ex);
@@ -4385,7 +4384,7 @@ BigInteger.fromRadixString(
                 CBORObject.Write(byteval, null);
                 Assert.Fail("Should have failed");
               } catch (ArgumentNullException) {
-                Console.Write(String.Empty);
+                new Object();
               } catch (Exception ex) {
                 Assert.Fail(ex.ToString());
                 throw new InvalidOperationException(String.Empty, ex);
@@ -4409,7 +4408,7 @@ BigInteger.fromRadixString(
             CBORObject.Write(0.0f, null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -4432,7 +4431,7 @@ BigInteger.fromRadixString(
             CBORObject.Write(2.6, null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -4456,7 +4455,7 @@ BigInteger.fromRadixString(
             CBORObject.Write(cbor, null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -4480,7 +4479,7 @@ BigInteger.fromRadixString(
             CBORObject.Write(aobj, null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -4521,8 +4520,8 @@ BigInteger.fromRadixString(
         stringTemp);
       }
       Assert.AreEqual(
-CBORObject.FromObject(0),
-CBORObject.Zero);
+  CBORObject.FromObject(0),
+  CBORObject.Zero);
     }
 
     internal static void CompareDecimals(CBORObject o1, CBORObject o2) {
@@ -4601,7 +4600,7 @@ CBORObject.Zero);
         cbor.WriteTo(null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -4610,7 +4609,7 @@ CBORObject.Zero);
         CBORObject.Write(cbor, null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        Console.Write(String.Empty);
+        new Object();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -4625,7 +4624,7 @@ CBORObject.Zero);
             CBORObject.Write(obj, null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -4652,7 +4651,7 @@ CBORObject.Zero);
             CBORObject.Write(obj, null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            Console.Write(String.Empty);
+            new Object();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);

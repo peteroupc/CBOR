@@ -4,7 +4,7 @@
         System.IComparable,
         System.IEquatable
 
-This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.EDecimal`  in the  `PeterO.Numbers` library (in .NET), or  `com.upokecenter.numbers.EDecimal`  in the  `com.github.peteroupc/numbers` artifact (in Java). This new class can be used in the  `CBORObject.FromObject(Object)` method (by including the new library in your code, among other things), but this version of the CBOR library doesn't include any methods that explicitly take an  `EDecimal`  as a parameter or return value.
+This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.EDecimal`  in the  `PeterO.Numbers` library (in .NET), or  `com.upokecenter.numbers.EDecimal`  in the `com.github.peteroupc/numbers` artifact (in Java). This new class can be used in the  `CBORObject.FromObject(Object)` method (by including the new library in your code, among other things), but this version of the CBOR library doesn't include any methods that explicitly take an  `EDecimal`  as a parameter or return value.
 
 Represents an arbitrary-precision decimal floating-point number.About decimal arithmetic
 

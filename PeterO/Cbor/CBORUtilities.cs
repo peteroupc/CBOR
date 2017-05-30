@@ -1,13 +1,14 @@
 /*
-Written in 2013 by Peter O.
+Written by Peter O. in 2013.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
+at: http://peteroupc.github.io/
  */
 using System;
 using System.Text;
-using PeterO; using PeterO.Numbers;
+using PeterO;
+using PeterO.Numbers;
 
 namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
@@ -76,8 +77,8 @@ namespace PeterO.Cbor {
 
     public static string DoubleToString(double dbl) {
       return Convert.ToString(
-(double)dbl,
-System.Globalization.CultureInfo.InvariantCulture);
+  (double)dbl,
+  System.Globalization.CultureInfo.InvariantCulture);
       // TODO: Use this version in version 3, and preserve
       // TODO: negative zeros in that version
       // return EFloat.FromDouble(dbl).ToShortestString(EContext.Binary32);
@@ -85,8 +86,8 @@ System.Globalization.CultureInfo.InvariantCulture);
 
     public static string SingleToString(float sing) {
       return Convert.ToString(
-(float)sing,
-System.Globalization.CultureInfo.InvariantCulture);
+  (float)sing,
+  System.Globalization.CultureInfo.InvariantCulture);
       // TODO: Use this version in version 3, and preserve
       // TODO: negative zeros in that version
       // return EFloat.FromSingle(sing).ToShortestString(EContext.Binary64);
@@ -202,10 +203,10 @@ System.Globalization.CultureInfo.InvariantCulture);
 
     public static EInteger BigIntegerFromDouble(double dbl) {
       long lvalue = BitConverter.ToInt64(
-BitConverter.GetBytes((double)dbl),
-0);
-      int value0 = unchecked((int)(lvalue & 0xFFFFFFFFL));
-      int value1 = unchecked((int)((lvalue >> 32) & 0xFFFFFFFFL));
+  BitConverter.GetBytes((double)dbl),
+  0);
+      int value0 = unchecked((int)(lvalue & 0xffffffffL));
+      int value1 = unchecked((int)((lvalue >> 32) & 0xffffffffL));
       var floatExponent = (int)((value1 >> 20) & 0x7ff);
       bool neg = (value1 >> 31) != 0;
       if (floatExponent == 2047) {
@@ -269,20 +270,20 @@ BitConverter.GetBytes((double)dbl),
       if (value >= 0x7c00) {
         value = (int)(0x3fc00 | (value & 0x3ff)) << 13 | negvalue;
         return BitConverter.ToSingle(
-BitConverter.GetBytes(value),
-0);
+  BitConverter.GetBytes(value),
+  0);
       }
       if (value > 0x400) {
         value = (int)((value + 0x1c000) << 13) | negvalue;
         return BitConverter.ToSingle(
-BitConverter.GetBytes(value),
-0);
+  BitConverter.GetBytes(value),
+  0);
       }
       if ((value & 0x400) == value) {
         value = (int)((value == 0) ? 0 : 0x38800000) | negvalue;
         return BitConverter.ToSingle(
-BitConverter.GetBytes(value),
-0);
+  BitConverter.GetBytes(value),
+  0);
       } else {
         // denormalized
         int m = value & 0x3ff;

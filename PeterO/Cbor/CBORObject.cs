@@ -1,9 +1,9 @@
 /*
-Written in 2013 by Peter O.
+Written by Peter O. in 2013.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
+at: http://peteroupc.github.io/
  */
 using System;
 using System.Collections.Generic;
@@ -577,8 +577,8 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.DecodeFromBytes(System.Byte[],PeterO.Cbor.CBOREncodeOptions)"]/*'/>
     public static CBORObject DecodeFromBytes(
-byte[] data,
-CBOREncodeOptions options) {
+  byte[] data,
+  CBOREncodeOptions options) {
       if (data == null) {
         throw new ArgumentNullException("data");
       }
@@ -633,8 +633,8 @@ CBOREncodeOptions options) {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromJSONString(System.String,PeterO.Cbor.CBOREncodeOptions)"]/*'/>
     public static CBORObject FromJSONString(
-string str,
-CBOREncodeOptions options) {
+  string str,
+  CBOREncodeOptions options) {
       if (str == null) {
         throw new ArgumentNullException("str");
       }
@@ -3046,8 +3046,8 @@ CBOREncodeOptions options) {
               // (additional is a signed long)
               return new CBORObject(CBORObjectTypeInteger, uadditional);
             } else {
-              int low = unchecked((int)((uadditional) & 0xFFFFFFFFL));
-              int high = unchecked((int)((uadditional >> 32) & 0xFFFFFFFFL));
+              int low = unchecked((int)((uadditional) & 0xffffffffL));
+              int high = unchecked((int)((uadditional >> 32) & 0xffffffffL));
               return FromObject(LowHighToEInteger(low, high));
             }
           case 1:
@@ -3056,8 +3056,8 @@ CBOREncodeOptions options) {
               // (additional is a signed long)
               return new CBORObject(CBORObjectTypeInteger, -1 - uadditional);
             } else {
-              int low = unchecked((int)((uadditional) & 0xFFFFFFFFL));
-              int high = unchecked((int)((uadditional >> 32) & 0xFFFFFFFFL));
+              int low = unchecked((int)((uadditional) & 0xffffffffL));
+              int high = unchecked((int)((uadditional >> 32) & 0xffffffffL));
               EInteger bigintAdditional = LowHighToEInteger(low, high);
               EInteger minusOne = -EInteger.One;
               bigintAdditional = minusOne - (EInteger)bigintAdditional;
@@ -3375,16 +3375,16 @@ CBOREncodeOptions options) {
       if (value < 24) {
         return new[] { (byte)((byte)value | (byte)(type << 5)) };
       }
-      if (value <= 0xFFL) {
+      if (value <= 0xffL) {
         return new[] { (byte)(24 | (type << 5)), (byte)(value & 0xff)
         };
       }
-      if (value <= 0xFFFFL) {
+      if (value <= 0xffffL) {
         return new[] { (byte)(25 | (type << 5)),
           (byte)((value >> 8) & 0xff), (byte)(value & 0xff)
         };
       }
-      if (value <= 0xFFFFFFFFL) {
+      if (value <= 0xffffffffL) {
         return new[] { (byte)(26 | (type << 5)),
           (byte)((value >> 24) & 0xff), (byte)((value >> 16) & 0xff),
           (byte)((value >> 8) & 0xff), (byte)(value & 0xff)
@@ -3816,11 +3816,11 @@ CBOREncodeOptions options) {
         if (high == 0 && (low >> 16) == 0) {
           WritePositiveInt(6, low, s);
         } else if (high == 0) {
-          long value = ((long)low) & 0xFFFFFFFFL;
+          long value = ((long)low) & 0xffffffffL;
           WritePositiveInt64(6, value, s);
         } else if ((high >> 16) == 0) {
-          long value = ((long)low) & 0xFFFFFFFFL;
-          long highValue = ((long)high) & 0xFFFFFFFFL;
+          long value = ((long)low) & 0xffffffffL;
+          long highValue = ((long)high) & 0xffffffffL;
           value |= highValue << 32;
           WritePositiveInt64(6, value, s);
         } else {

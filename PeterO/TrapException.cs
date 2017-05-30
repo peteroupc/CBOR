@@ -1,9 +1,9 @@
 /*
-Written in 2014 by Peter O.
+Written by Peter O. in 2014.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
+at: http://peteroupc.github.io/
  */
 using System;
 using PeterO.Numbers;
@@ -12,7 +12,7 @@ namespace PeterO {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="T:PeterO.TrapException"]/*'/>
   [Obsolete(
-"Use ETrapException from PeterO.Numbers/com.upokecenter.numbers.")]
+  "Use ETrapException from PeterO.Numbers/com.upokecenter.numbers.")]
   public class TrapException : ArithmeticException {
     private ETrapException ete;
 
@@ -61,9 +61,9 @@ namespace PeterO {
  wrappedResult = new ExtendedFloat(ef);
 }
       this.ete = new ETrapException(
-flag,
-ctx == null ? null : ctx.Ec,
-wrappedResult);
+  flag,
+  ctx == null ? null : ctx.Ec,
+  wrappedResult);
     }
   }
 }

@@ -2,13 +2,13 @@
 
     public sealed struct Rounding :
         System.Enum,
-        System.IComparable,
+        System.IConvertible,
         System.IFormattable,
-        System.IConvertible
+        System.IComparable
 
 <b>Deprecated.</b> Use ERounding from PeterO.Numbers/com.upokecenter.numbers.
 
-This class is obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.ERounding`  in the  `PeterO.ERounding` library (in .NET), or  `com.upokecenter.numbers.EFloat`  in the  `com.github.peteroupc/numbers` artifact (in Java).
+This class is obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.ERounding`  in the  `PeterO.ERounding` library (in .NET), or  `com.upokecenter.numbers.EFloat`  in the `com.github.peteroupc/numbers` artifact (in Java).
 
 Specifies the mode to use when "shortening" numbers that otherwise can't fit a given number of digits, so that the shortened number has about the same value. This "shortening" is known as rounding.
 

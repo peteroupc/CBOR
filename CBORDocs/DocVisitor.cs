@@ -1,10 +1,10 @@
 /*
-Written in 2014 by Peter O.
+Written by Peter O. in 2014.
 
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
+at: http://peteroupc.github.io/
  */
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,6 @@ using System.Globalization;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-
 using NuDoq;
 
 namespace PeterO.DocGen {
@@ -34,8 +33,8 @@ namespace PeterO.DocGen {
     private StringBuilder currentBuffer;
 
     public static void AppendConstraints(
-Type[] genericArguments,
-StringBuilder builder) {
+  Type[] genericArguments,
+  StringBuilder builder) {
       foreach (var arg in genericArguments) {
         if (arg.IsGenericParameter) {
           var constraints = arg.GetGenericParameterConstraints();

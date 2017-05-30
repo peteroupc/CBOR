@@ -1,9 +1,9 @@
 /*
-Written in 2013 by Peter O.
+Written by Peter O. in 2013.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
+at: http://peteroupc.github.io/
  */
 using System;
 using System.IO;
@@ -48,16 +48,16 @@ namespace PeterO.Cbor {
     }
 
     private static decimal EncodeDecimal(
-EInteger bigmant,
-int scale,
-bool neg) {
+  EInteger bigmant,
+  int scale,
+  bool neg) {
       if (scale < 0) {
         throw new ArgumentException(
-"scale (" + scale + ") is less than 0");
+  "scale (" + scale + ") is less than 0");
       }
       if (scale > 28) {
         throw new ArgumentException(
-"scale (" + scale + ") is more than " + "28");
+  "scale (" + scale + ") is more than " + "28");
       }
       byte[] data = bigmant.ToBytes(true);
       var a = 0;
@@ -120,12 +120,12 @@ bool neg) {
       try {
         EDecimal newDecimal = EDecimal.FromEInteger(extendedNumber.Numerator)
           .Divide(
-EDecimal.FromEInteger(extendedNumber.Denominator),
-EContext.CliDecimal.WithTraps(EContext.FlagOverflow));
+  EDecimal.FromEInteger(extendedNumber.Denominator),
+  EContext.CliDecimal.WithTraps(EContext.FlagOverflow));
         return EncodeDecimal(
-newDecimal.Mantissa.Abs(),
--((int)newDecimal.Exponent),
-newDecimal.Mantissa.Sign < 0);
+  newDecimal.Mantissa.Abs(),
+  -((int)newDecimal.Exponent),
+  newDecimal.Mantissa.Sign < 0);
       } catch (ETrapException ex) {
         throw new OverflowException("This object's value is out of range", ex);
       }
@@ -140,9 +140,9 @@ newDecimal.Mantissa.Sign < 0);
         EDecimal newDecimal = extendedNumber.RoundToPrecision(
           EContext.CliDecimal.WithTraps(EContext.FlagOverflow));
         return EncodeDecimal(
-newDecimal.Mantissa.Abs(),
--((int)newDecimal.Exponent),
-newDecimal.Mantissa.Sign < 0);
+  newDecimal.Mantissa.Abs(),
+  -((int)newDecimal.Exponent),
+  newDecimal.Mantissa.Sign < 0);
       } catch (ETrapException ex) {
         throw new OverflowException("This object's value is out of range", ex);
       }
@@ -183,9 +183,9 @@ newDecimal.Mantissa.Sign < 0);
       unchecked
       {
         var ret = (ulong)a;
-        ret &= 0xFFFFFFFFL;
+        ret &= 0xffffffffL;
         var retb = (ulong)b;
-        retb &= 0xFFFFFFFFL;
+        retb &= 0xffffffffL;
         ret |= retb << 32;
         return ret;
       }
@@ -250,7 +250,7 @@ newDecimal.Mantissa.Sign < 0);
         mantissa = -mantissa;
       }
       return FromObjectAndTag(
-new[] { FromObject(-scale),
+  new[] { FromObject(-scale),
         FromObject(mantissa) },
  4);
     }

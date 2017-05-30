@@ -1,9 +1,9 @@
 /*
-Written in 2014 by Peter O.
+Written by Peter O. in 2014.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
+at: http://peteroupc.github.io/
  */
 using System;
 using PeterO.Numbers;
@@ -138,19 +138,19 @@ namespace PeterO {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedRational.Create(System.Int32,System.Int32)"]/*'/>
     public static ExtendedRational Create(
-int numeratorSmall,
-int denominatorSmall) {
+  int numeratorSmall,
+  int denominatorSmall) {
       return new ExtendedRational(
-ERational.Create(
-numeratorSmall,
-denominatorSmall));
+  ERational.Create(
+  numeratorSmall,
+  denominatorSmall));
     }
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedRational.Create(PeterO.BigInteger,PeterO.BigInteger)"]/*'/>
     public static ExtendedRational Create(
-BigInteger numerator,
-BigInteger denominator) {
+  BigInteger numerator,
+  BigInteger denominator) {
       if (numerator == null) {
         throw new ArgumentNullException("numerator");
       }
@@ -158,9 +158,9 @@ BigInteger denominator) {
         throw new ArgumentNullException("denominator");
       }
       return new ExtendedRational(
-ERational.Create(
-numerator.Ei,
-denominator.Ei));
+  ERational.Create(
+  numerator.Ei,
+  denominator.Ei));
     }
 
     /// <include file='../docs.xml'
@@ -177,17 +177,17 @@ denominator.Ei));
     /// path='docs/doc[@name="M:PeterO.ExtendedRational.CreateNaN(PeterO.BigInteger,System.Boolean,System.Boolean)"]/*'/>
     [Obsolete("Use ERational from PeterO.Numbers/com.upokecenter.numbers.")]
     public static ExtendedRational CreateNaN(
-BigInteger diag,
-bool signaling,
-bool negative) {
+  BigInteger diag,
+  bool signaling,
+  bool negative) {
       if (diag == null) {
         throw new ArgumentNullException("diag");
       }
       return new ExtendedRational(
-ERational.CreateNaN(
-diag.Ei,
-signaling,
-negative));
+  ERational.CreateNaN(
+  diag.Ei,
+  signaling,
+  negative));
     }
 
     /// <include file='../docs.xml'

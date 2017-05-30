@@ -47,7 +47,7 @@ namespace Test {
         // bv += bigintTmp;
       }
       // if (negative) {
-      //  bv = -bv;
+      // bv = -bv;
       // }
       bv = BigInteger.fromRadixString(builder.ToString(), radix);
       sabi.bigintValue = bv;

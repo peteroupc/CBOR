@@ -1,9 +1,9 @@
 /*
-Written in 2014 by Peter O.
+Written by Peter O. in 2014.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
+at: http://peteroupc.github.io/
  */
 using System;
 using System.Collections.Generic;
@@ -55,9 +55,9 @@ namespace PeterO.Cbor {
     }
 
     private static MethodInfo GetTypeMethod(
-Type t,
-string name,
-Type[] parameters) {
+  Type t,
+  string name,
+  Type[] parameters) {
        return t.GetRuntimeMethod(name, parameters);
     }
 #endif
@@ -143,10 +143,10 @@ Type[] parameters) {
     }
 
     private static void FromArrayRecursive(
-Array arr,
-int[] index,
-int dimension,
-CBORObject obj) {
+  Array arr,
+  int[] index,
+  int dimension,
+  CBORObject obj) {
       int dimLength = arr.GetLength(dimension);
       int rank = index.Length;
       for (var i = 0; i < dimLength; ++i) {
@@ -208,16 +208,16 @@ CBORObject obj) {
     }
 
     public static object FindOneArgumentMethod(
-object obj,
-string name,
-Type argtype) {
+  object obj,
+  string name,
+  Type argtype) {
       return GetTypeMethod(obj.GetType(), name, new[] { argtype });
     }
 
     public static object InvokeOneArgumentMethod(
-object methodInfo,
-object obj,
-object argument) {
+  object methodInfo,
+  object obj,
+  object argument) {
       return ((MethodInfo)methodInfo).Invoke(obj, new[] { argument });
     }
 
@@ -225,8 +225,8 @@ object argument) {
     GetProperties(Object o) {
       foreach (PropertyData key in GetPropertyList(o.GetType())) {
         yield return new KeyValuePair<string, object>(
-key.Name,
-key.Prop.GetValue(o, null));
+  key.Name,
+  key.Prop.GetValue(o, null));
       }
     }
   }

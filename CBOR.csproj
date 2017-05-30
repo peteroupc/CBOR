@@ -102,7 +102,7 @@
     <Compile Include="PeterO\Cbor\CBORTagGenericString.cs" />
     <Compile Include="PeterO\Cbor\CBORTagUnsigned.cs" />
     <Compile Include="PeterO\Cbor\CBORType.cs" />
-    <Compile Include="PeterO\Cbor\CborTypeFilter.cs" />
+    <Compile Include="PeterO\Cbor\CBORTypeFilter.cs" />
     <Compile Include="PeterO\Cbor\CBORUtilities.cs" />
     <Compile Include="PeterO\Cbor\CharacterReader.cs" />
     <Compile Include="PeterO\Cbor\CharacterInputWithCount.cs" />
@@ -131,11 +131,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Numbers, Version=0.2.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\PeterO.Numbers.0.2.2\lib\portable-net40+sl50+win+wpa81+wp80\Numbers.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Numbers">
+      <HintPath>packages\PeterO.Numbers.0.4.0\lib\portable-net40+sl5+win+wpa81+wp80\Numbers.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
-  <Import Project="$(MSBuildExtensionsPath)\StyleCop\v4.7\StyleCop.targets" />
 </Project>

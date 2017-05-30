@@ -2,12 +2,12 @@
 
     public class TrapException :
         System.ArithmeticException,
-        System.Runtime.Serialization.ISerializable,
-        System.Runtime.InteropServices._Exception
+        System.Runtime.InteropServices._Exception,
+        System.Runtime.Serialization.ISerializable
 
 <b>Deprecated.</b> Use ETrapException from PeterO.Numbers/com.upokecenter.numbers.
 
-This class is obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.ETrapException`  in the  `PeterO.Numbers` library (in .NET), or  `com.upokecenter.numbers.ETrapException`  in the  `com.github.peteroupc/numbers` artifact (in Java).
+This class is obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.ETrapException`  in the  `PeterO.Numbers` library (in .NET), or  `com.upokecenter.numbers.ETrapException`  in the `com.github.peteroupc/numbers` artifact (in Java).
 
 Exception thrown for arithmetic trap errors.
 

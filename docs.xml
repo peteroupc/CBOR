@@ -4,7 +4,7 @@
             <para><b>This class is largely obsolete. It will be replaced by a new
             version of this class in a different namespace/package and library,
             called <c>PeterO.Numbers.EInteger</c> in the <a href='https://www.nuget.org/packages/PeterO.Numbers'><c>PeterO.Numbers</c></a>
-            library (in .NET), or <c>com.upokecenter.numbers.EInteger</c> in the 
+            library (in .NET), or <c>com.upokecenter.numbers.EInteger</c> in the
             <a href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c></a>
             artifact (in Java).  This new class can be used in the <c>CBORObject.FromObject(Object)</c>
             method (by including the new library in your code, among other things), but this version of the CBOR library doesn't
@@ -1547,11 +1547,11 @@ of this number's value.</summary>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Object)">
 <summary>Generates a CBORObject from an arbitrary object. The
             following types are specially handled by this method: null;
-            primitive types; string; CBORObject; 
+            primitive types; string; CBORObject;
             the <c>EDecimal</c>, <c>EFloat</c>, <c>EInteger</c>, and <c>ERational</c>
             classes in the new <a href='https://www.nuget.org/packages/PeterO.Numbers'><c>PeterO.Numbers</c></a> library (in .NET) or the
             <a href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c></a> artifact (in Java);
-            the legacy <c>ExtendedDecimal</c>, <c>ExtendedFloat</c>, 
+            the legacy <c>ExtendedDecimal</c>, <c>ExtendedFloat</c>,
             <c>ExtendedInteger</c>, and <c>ExtendedRational</c>
             classes in this library; arrays;
             enumerations ( <c>Enum</c> objects); and maps.
@@ -3460,7 +3460,7 @@ allowed by this filter; otherwise, <c>false</c>.</returns>
             <para><b>This class is largely obsolete. It will be replaced by a new
             version of this class in a different namespace/package and library,
             called <c>PeterO.Numbers.EDecimal</c> in the <a href='https://www.nuget.org/packages/PeterO.Numbers'><c>PeterO.Numbers</c></a>
-            library (in .NET), or <c>com.upokecenter.numbers.EDecimal</c> in the 
+            library (in .NET), or <c>com.upokecenter.numbers.EDecimal</c> in the
             <a href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c></a>
             artifact (in Java).  This new class can be used in the <c>CBORObject.FromObject(Object)</c>
             method (by including the new library in your code, among other things), but this version of the CBOR library doesn't
@@ -3482,12 +3482,12 @@ allowed by this filter; otherwise, <c>false</c>.</returns>
             </para>
             <para>On the other hand, most implementations of
             <c>float</c> and <c>double</c>, including in C# and Java,
-            store numbers in a binary (base-2) floating-point format and use 
+            store numbers in a binary (base-2) floating-point format and use
             binary floating-point arithmetic.  Many decimal numbers
             can't be represented exactly in binary floating-point format (regardless
-            of its length). Applying binary arithmetic to numbers intended 
-            to be decimals can sometimes lead to unintuitive results, 
-            as is shown in the description for the FromDouble() method 
+            of its length). Applying binary arithmetic to numbers intended
+            to be decimals can sometimes lead to unintuitive results,
+            as is shown in the description for the FromDouble() method
             of this class.</para>
             <para><b>About ExtendedDecimal instances</b></para>
             <para>
@@ -5139,7 +5139,7 @@ allowed by this filter; otherwise, <c>false</c>.</returns>
             <para><b>This class is largely obsolete. It will be replaced by a new
             version of this class in a different namespace/package and library,
             called <c>PeterO.Numbers.EFloat</c> in the <a href='https://www.nuget.org/packages/PeterO.Numbers'><c>PeterO.Numbers</c></a>
-            library (in .NET), or <c>com.upokecenter.numbers.EFloat</c> in the 
+            library (in .NET), or <c>com.upokecenter.numbers.EFloat</c> in the
             <a href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c></a>
             artifact (in Java).  This new class can be used in the <c>CBORObject.FromObject(Object)</c>
             method (by including the new library in your code, among other things), but this version of the CBOR library doesn't
@@ -6709,7 +6709,7 @@ allowed by this filter; otherwise, <c>false</c>.</returns>
 <summary> <para><b>This class is largely obsolete. It will be replaced by a new
             version of this class in a different namespace/package and library,
             called <c>PeterO.Numbers.ERational</c> in the <a href='https://www.nuget.org/packages/PeterO.Numbers'><c>PeterO.Numbers</c></a>
-            library (in .NET), or <c>com.upokecenter.numbers.ERational</c> in the 
+            library (in .NET), or <c>com.upokecenter.numbers.ERational</c> in the
             <a href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c></a>
             artifact (in Java).  This new class can be used in the <c>CBORObject.FromObject(Object)</c>
             method (by including the new library in your code, among other things), but this version of the CBOR library doesn't
@@ -7127,7 +7127,7 @@ of another rational number object; otherwise, <c>false</c>.</returns>
 <summary>            <para><b>This class is largely obsolete. It will be replaced by a new
             version of this class in a different namespace/package and library,
             called <c>PeterO.Numbers.EContext</c> in the <c>PeterO.EContext</c>
-            library (in .NET), or <c>com.upokecenter.numbers.EFloat</c> in the 
+            library (in .NET), or <c>com.upokecenter.numbers.EFloat</c> in the
             <a href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c></a>
             artifact (in Java).</b></para>Contains parameters for controlling the precision,
             rounding, and exponent range of arbitrary-precision
@@ -7503,7 +7503,7 @@ of another rational number object; otherwise, <c>false</c>.</returns>
 <summary>            <para><b>This class is obsolete. It will be replaced by a new
             version of this class in a different namespace/package and library,
             called <c>PeterO.Numbers.ERounding</c> in the <c>PeterO.ERounding</c>
-            library (in .NET), or <c>com.upokecenter.numbers.EFloat</c> in the 
+            library (in .NET), or <c>com.upokecenter.numbers.EFloat</c> in the
             <a href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c></a>
             artifact (in Java).</b></para>Specifies the mode to use when &#x22;shortening&#x22;
             numbers that otherwise can&#x27;t fit a given number of digits, so
@@ -7571,7 +7571,7 @@ of another rational number object; otherwise, <c>false</c>.</returns>
 <summary>            <para><b>This class is obsolete. It will be replaced by a new
             version of this class in a different namespace/package and library,
             called <c>PeterO.Numbers.ETrapException</c> in the <a href='https://www.nuget.org/packages/PeterO.Numbers'><c>PeterO.Numbers</c></a>
-            library (in .NET), or <c>com.upokecenter.numbers.ETrapException</c> in the 
+            library (in .NET), or <c>com.upokecenter.numbers.ETrapException</c> in the
             <a href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c></a>
             artifact (in Java).</b></para>
             Exception thrown for arithmetic trap errors.</summary>

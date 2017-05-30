@@ -1,9 +1,9 @@
 /*
-Written in 2013 by Peter O.
+Written by Peter O. in 2013.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
+at: http://peteroupc.github.io/
  */
 using System;
 using PeterO.Numbers;
@@ -100,20 +100,20 @@ namespace PeterO {
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.CreateNaN(PeterO.BigInteger,System.Boolean,System.Boolean,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public static ExtendedFloat CreateNaN(
-BigInteger diag,
-bool signaling,
-bool negative,
-PrecisionContext ctx) {
+  BigInteger diag,
+  bool signaling,
+  bool negative,
+  PrecisionContext ctx) {
       if (diag == null) {
         throw new ArgumentNullException("diag");
       }
 
       return new ExtendedFloat(
-EFloat.CreateNaN(
-diag.Ei,
-signaling,
-negative,
-ctx == null ? null : ctx.Ec));
+  EFloat.CreateNaN(
+  diag.Ei,
+  signaling,
+  negative,
+  ctx == null ? null : ctx.Ec));
     }
 
     /// <include file='../docs.xml'
@@ -125,8 +125,8 @@ ctx == null ? null : ctx.Ec));
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.Create(PeterO.BigInteger,PeterO.BigInteger)"]/*'/>
     public static ExtendedFloat Create(
-BigInteger mantissa,
-BigInteger exponent) {
+  BigInteger mantissa,
+  BigInteger exponent) {
       if (mantissa == null) {
         throw new ArgumentNullException("mantissa");
       }
@@ -140,10 +140,10 @@ BigInteger exponent) {
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.FromString(System.String,System.Int32,System.Int32,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public static ExtendedFloat FromString(
-string str,
-int offset,
-int length,
-PrecisionContext ctx) {
+  string str,
+  int offset,
+  int length,
+  PrecisionContext ctx) {
       try {
         return new ExtendedFloat(
   EFloat.FromString(
@@ -457,15 +457,15 @@ PrecisionContext ctx) {
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.DivideToSameExponent(PeterO.ExtendedFloat,PeterO.Rounding)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedFloat DivideToSameExponent(
-ExtendedFloat divisor,
-Rounding rounding) {
+  ExtendedFloat divisor,
+  Rounding rounding) {
       if (divisor == null) {
         throw new ArgumentNullException("divisor");
       }
       return new ExtendedFloat(
-this.Ef.DivideToSameExponent(
-divisor.Ef,
-ExtendedDecimal.ToERounding(rounding)));
+  this.Ef.DivideToSameExponent(
+  divisor.Ef,
+  ExtendedDecimal.ToERounding(rounding)));
     }
 
     /// <include file='../docs.xml'
@@ -503,17 +503,17 @@ ExtendedDecimal.ToERounding(rounding)));
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.RemainderNaturalScale(PeterO.ExtendedFloat,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedFloat RemainderNaturalScale(
-ExtendedFloat divisor,
-PrecisionContext ctx) {
+  ExtendedFloat divisor,
+  PrecisionContext ctx) {
       try {
         if (divisor == null) {
           throw new ArgumentNullException("divisor");
         }
 
         return new ExtendedFloat(
-this.Ef.RemainderNaturalScale(
-divisor.Ef,
-ctx == null ? null : ctx.Ec));
+  this.Ef.RemainderNaturalScale(
+  divisor.Ef,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -523,19 +523,19 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.DivideToExponent(PeterO.ExtendedFloat,System.Int64,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedFloat DivideToExponent(
-ExtendedFloat divisor,
-long desiredExponentSmall,
-PrecisionContext ctx) {
+  ExtendedFloat divisor,
+  long desiredExponentSmall,
+  PrecisionContext ctx) {
       try {
         if (divisor == null) {
           throw new ArgumentNullException("divisor");
         }
 
         return new ExtendedFloat(
-this.Ef.DivideToExponent(
-divisor.Ef,
-desiredExponentSmall,
-ctx == null ? null : ctx.Ec));
+  this.Ef.DivideToExponent(
+  divisor.Ef,
+  desiredExponentSmall,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -545,16 +545,16 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.Divide(PeterO.ExtendedFloat,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedFloat Divide(
-ExtendedFloat divisor,
-PrecisionContext ctx) {
+  ExtendedFloat divisor,
+  PrecisionContext ctx) {
       try {
         if (divisor == null) {
           throw new ArgumentNullException("divisor");
         }
         return new ExtendedFloat(
-this.Ef.Divide(
-divisor.Ef,
-ctx == null ? null : ctx.Ec));
+  this.Ef.Divide(
+  divisor.Ef,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -564,26 +564,26 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.DivideToExponent(PeterO.ExtendedFloat,System.Int64,PeterO.Rounding)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedFloat DivideToExponent(
-ExtendedFloat divisor,
-long desiredExponentSmall,
-Rounding rounding) {
+  ExtendedFloat divisor,
+  long desiredExponentSmall,
+  Rounding rounding) {
       if (divisor == null) {
         throw new ArgumentNullException("divisor");
       }
       return new ExtendedFloat(
-this.Ef.DivideToExponent(
-divisor.Ef,
-desiredExponentSmall,
-ExtendedDecimal.ToERounding(rounding)));
+  this.Ef.DivideToExponent(
+  divisor.Ef,
+  desiredExponentSmall,
+  ExtendedDecimal.ToERounding(rounding)));
     }
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.DivideToExponent(PeterO.ExtendedFloat,PeterO.BigInteger,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedFloat DivideToExponent(
-ExtendedFloat divisor,
-BigInteger exponent,
-PrecisionContext ctx) {
+  ExtendedFloat divisor,
+  BigInteger exponent,
+  PrecisionContext ctx) {
       try {
         if (divisor == null) {
           throw new ArgumentNullException("divisor");
@@ -606,9 +606,9 @@ PrecisionContext ctx) {
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.DivideToExponent(PeterO.ExtendedFloat,PeterO.BigInteger,PeterO.Rounding)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedFloat DivideToExponent(
-ExtendedFloat divisor,
-BigInteger desiredExponent,
-Rounding rounding) {
+  ExtendedFloat divisor,
+  BigInteger desiredExponent,
+  Rounding rounding) {
       if (divisor == null) {
         throw new ArgumentNullException("divisor");
       }
@@ -616,10 +616,10 @@ Rounding rounding) {
         throw new ArgumentNullException("desiredExponent");
       }
       return new ExtendedFloat(
-this.Ef.DivideToExponent(
-divisor.Ef,
-desiredExponent.Ei,
-ExtendedDecimal.ToERounding(rounding)));
+  this.Ef.DivideToExponent(
+  divisor.Ef,
+  desiredExponent.Ei,
+  ExtendedDecimal.ToERounding(rounding)));
     }
 
     /// <include file='../docs.xml'
@@ -673,17 +673,17 @@ ExtendedDecimal.ToERounding(rounding)));
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.Subtract(PeterO.ExtendedFloat,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedFloat Subtract(
-ExtendedFloat otherValue,
-PrecisionContext ctx) {
+  ExtendedFloat otherValue,
+  PrecisionContext ctx) {
       try {
         if (otherValue == null) {
           throw new ArgumentNullException("otherValue");
         }
 
         return new ExtendedFloat(
-this.Ef.Subtract(
-otherValue.Ef,
-ctx == null ? null : ctx.Ec));
+  this.Ef.Subtract(
+  otherValue.Ef,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -703,8 +703,8 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.MultiplyAndAdd(PeterO.ExtendedFloat,PeterO.ExtendedFloat)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedFloat MultiplyAndAdd(
-ExtendedFloat multiplicand,
-ExtendedFloat augend) {
+  ExtendedFloat multiplicand,
+  ExtendedFloat augend) {
       if (multiplicand == null) {
         throw new ArgumentNullException("multiplicand");
       }
@@ -712,26 +712,26 @@ ExtendedFloat augend) {
         throw new ArgumentNullException("augend");
       }
       return new ExtendedFloat(
-this.Ef.MultiplyAndAdd(
-multiplicand.Ef,
-augend.Ef));
+  this.Ef.MultiplyAndAdd(
+  multiplicand.Ef,
+  augend.Ef));
     }
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.DivideToIntegerNaturalScale(PeterO.ExtendedFloat,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedFloat DivideToIntegerNaturalScale(
-ExtendedFloat divisor,
-PrecisionContext ctx) {
+  ExtendedFloat divisor,
+  PrecisionContext ctx) {
       try {
         if (divisor == null) {
           throw new ArgumentNullException("divisor");
         }
 
         return new ExtendedFloat(
-this.Ef.DivideToIntegerNaturalScale(
-divisor.Ef,
-ctx == null ? null : ctx.Ec));
+  this.Ef.DivideToIntegerNaturalScale(
+  divisor.Ef,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -741,17 +741,17 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.DivideToIntegerZeroScale(PeterO.ExtendedFloat,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedFloat DivideToIntegerZeroScale(
-ExtendedFloat divisor,
-PrecisionContext ctx) {
+  ExtendedFloat divisor,
+  PrecisionContext ctx) {
       try {
         if (divisor == null) {
           throw new ArgumentNullException("divisor");
         }
 
         return new ExtendedFloat(
-this.Ef.DivideToIntegerZeroScale(
-divisor.Ef,
-ctx == null ? null : ctx.Ec));
+  this.Ef.DivideToIntegerZeroScale(
+  divisor.Ef,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -761,17 +761,17 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.Remainder(PeterO.ExtendedFloat,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedFloat Remainder(
-ExtendedFloat divisor,
-PrecisionContext ctx) {
+  ExtendedFloat divisor,
+  PrecisionContext ctx) {
       try {
         if (divisor == null) {
           throw new ArgumentNullException("divisor");
         }
 
         return new ExtendedFloat(
-this.Ef.Remainder(
-divisor.Ef,
-ctx == null ? null : ctx.Ec));
+  this.Ef.Remainder(
+  divisor.Ef,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -781,17 +781,17 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.RemainderNear(PeterO.ExtendedFloat,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedFloat RemainderNear(
-ExtendedFloat divisor,
-PrecisionContext ctx) {
+  ExtendedFloat divisor,
+  PrecisionContext ctx) {
       try {
         if (divisor == null) {
           throw new ArgumentNullException("divisor");
         }
 
         return new ExtendedFloat(
-this.Ef.RemainderNear(
-divisor.Ef,
-ctx == null ? null : ctx.Ec));
+  this.Ef.RemainderNear(
+  divisor.Ef,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -824,17 +824,17 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.NextToward(PeterO.ExtendedFloat,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedFloat NextToward(
-ExtendedFloat otherValue,
-PrecisionContext ctx) {
+  ExtendedFloat otherValue,
+  PrecisionContext ctx) {
       try {
         if (otherValue == null) {
           throw new ArgumentNullException("otherValue");
         }
 
         return new ExtendedFloat(
-this.Ef.NextToward(
-otherValue.Ef,
-ctx == null ? null : ctx.Ec));
+  this.Ef.NextToward(
+  otherValue.Ef,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -844,9 +844,9 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.Max(PeterO.ExtendedFloat,PeterO.ExtendedFloat,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public static ExtendedFloat Max(
-ExtendedFloat first,
-ExtendedFloat second,
-PrecisionContext ctx) {
+  ExtendedFloat first,
+  ExtendedFloat second,
+  PrecisionContext ctx) {
       if (first == null) {
         throw new ArgumentNullException("first");
       }
@@ -855,19 +855,19 @@ PrecisionContext ctx) {
       }
 
       return new ExtendedFloat(
-EFloat.Max(
-first.Ef,
-second.Ef,
-ctx == null ? null : ctx.Ec));
+  EFloat.Max(
+  first.Ef,
+  second.Ef,
+  ctx == null ? null : ctx.Ec));
     }
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.Min(PeterO.ExtendedFloat,PeterO.ExtendedFloat,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public static ExtendedFloat Min(
-ExtendedFloat first,
-ExtendedFloat second,
-PrecisionContext ctx) {
+  ExtendedFloat first,
+  ExtendedFloat second,
+  PrecisionContext ctx) {
       if (first == null) {
         throw new ArgumentNullException("first");
       }
@@ -876,19 +876,19 @@ PrecisionContext ctx) {
       }
 
       return new ExtendedFloat(
-EFloat.Min(
-first.Ef,
-second.Ef,
-ctx == null ? null : ctx.Ec));
+  EFloat.Min(
+  first.Ef,
+  second.Ef,
+  ctx == null ? null : ctx.Ec));
     }
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.MaxMagnitude(PeterO.ExtendedFloat,PeterO.ExtendedFloat,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public static ExtendedFloat MaxMagnitude(
-ExtendedFloat first,
-ExtendedFloat second,
-PrecisionContext ctx) {
+  ExtendedFloat first,
+  ExtendedFloat second,
+  PrecisionContext ctx) {
       if (first == null) {
         throw new ArgumentNullException("first");
       }
@@ -897,19 +897,19 @@ PrecisionContext ctx) {
       }
 
       return new ExtendedFloat(
-EFloat.MaxMagnitude(
-first.Ef,
-second.Ef,
-ctx == null ? null : ctx.Ec));
+  EFloat.MaxMagnitude(
+  first.Ef,
+  second.Ef,
+  ctx == null ? null : ctx.Ec));
     }
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.MinMagnitude(PeterO.ExtendedFloat,PeterO.ExtendedFloat,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public static ExtendedFloat MinMagnitude(
-ExtendedFloat first,
-ExtendedFloat second,
-PrecisionContext ctx) {
+  ExtendedFloat first,
+  ExtendedFloat second,
+  PrecisionContext ctx) {
       if (first == null) {
         throw new ArgumentNullException("first");
       }
@@ -918,18 +918,18 @@ PrecisionContext ctx) {
       }
 
       return new ExtendedFloat(
-EFloat.MinMagnitude(
-first.Ef,
-second.Ef,
-ctx == null ? null : ctx.Ec));
+  EFloat.MinMagnitude(
+  first.Ef,
+  second.Ef,
+  ctx == null ? null : ctx.Ec));
     }
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.Max(PeterO.ExtendedFloat,PeterO.ExtendedFloat)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public static ExtendedFloat Max(
-ExtendedFloat first,
-ExtendedFloat second) {
+  ExtendedFloat first,
+  ExtendedFloat second) {
       if (first == null) {
         throw new ArgumentNullException("first");
       }
@@ -943,8 +943,8 @@ ExtendedFloat second) {
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.Min(PeterO.ExtendedFloat,PeterO.ExtendedFloat)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public static ExtendedFloat Min(
-ExtendedFloat first,
-ExtendedFloat second) {
+  ExtendedFloat first,
+  ExtendedFloat second) {
       if (first == null) {
         throw new ArgumentNullException("first");
       }
@@ -958,8 +958,8 @@ ExtendedFloat second) {
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.MaxMagnitude(PeterO.ExtendedFloat,PeterO.ExtendedFloat)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public static ExtendedFloat MaxMagnitude(
-ExtendedFloat first,
-ExtendedFloat second) {
+  ExtendedFloat first,
+  ExtendedFloat second) {
       if (first == null) {
         throw new ArgumentNullException("first");
       }
@@ -973,8 +973,8 @@ ExtendedFloat second) {
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.MinMagnitude(PeterO.ExtendedFloat,PeterO.ExtendedFloat)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public static ExtendedFloat MinMagnitude(
-ExtendedFloat first,
-ExtendedFloat second) {
+  ExtendedFloat first,
+  ExtendedFloat second) {
       if (first == null) {
         throw new ArgumentNullException("first");
       }
@@ -998,17 +998,17 @@ ExtendedFloat second) {
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.CompareToWithContext(PeterO.ExtendedFloat,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedFloat CompareToWithContext(
-ExtendedFloat other,
-PrecisionContext ctx) {
+  ExtendedFloat other,
+  PrecisionContext ctx) {
       try {
         if (other == null) {
           throw new ArgumentNullException("other");
         }
 
         return new ExtendedFloat(
-this.Ef.CompareToWithContext(
-other.Ef,
-ctx == null ? null : ctx.Ec));
+  this.Ef.CompareToWithContext(
+  other.Ef,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1018,17 +1018,17 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.CompareToSignal(PeterO.ExtendedFloat,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedFloat CompareToSignal(
-ExtendedFloat other,
-PrecisionContext ctx) {
+  ExtendedFloat other,
+  PrecisionContext ctx) {
       try {
         if (other == null) {
           throw new ArgumentNullException("other");
         }
 
         return new ExtendedFloat(
-this.Ef.CompareToSignal(
-other.Ef,
-ctx == null ? null : ctx.Ec));
+  this.Ef.CompareToSignal(
+  other.Ef,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1038,17 +1038,17 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.Add(PeterO.ExtendedFloat,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedFloat Add(
-ExtendedFloat otherValue,
-PrecisionContext ctx) {
+  ExtendedFloat otherValue,
+  PrecisionContext ctx) {
       try {
         if (otherValue == null) {
           throw new ArgumentNullException("otherValue");
         }
 
         return new ExtendedFloat(
-this.Ef.Add(
-otherValue.Ef,
-ctx == null ? null : ctx.Ec));
+  this.Ef.Add(
+  otherValue.Ef,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1058,17 +1058,17 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.Quantize(PeterO.BigInteger,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedFloat Quantize(
-BigInteger desiredExponent,
-PrecisionContext ctx) {
+  BigInteger desiredExponent,
+  PrecisionContext ctx) {
       try {
         if (desiredExponent == null) {
           throw new ArgumentNullException("desiredExponent");
         }
 
         return new ExtendedFloat(
-this.Ef.Quantize(
-desiredExponent.Ei,
-ctx == null ? null : ctx.Ec));
+  this.Ef.Quantize(
+  desiredExponent.Ei,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1078,13 +1078,13 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.Quantize(System.Int32,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedFloat Quantize(
-int desiredExponentSmall,
-PrecisionContext ctx) {
+  int desiredExponentSmall,
+  PrecisionContext ctx) {
       try {
         return new ExtendedFloat(
-this.Ef.Quantize(
-desiredExponentSmall,
-ctx == null ? null : ctx.Ec));
+  this.Ef.Quantize(
+  desiredExponentSmall,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1094,16 +1094,16 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.Quantize(PeterO.ExtendedFloat,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedFloat Quantize(
-ExtendedFloat otherValue,
-PrecisionContext ctx) {
+  ExtendedFloat otherValue,
+  PrecisionContext ctx) {
       try {
         if (otherValue == null) {
           throw new ArgumentNullException("otherValue");
         }
         return new ExtendedFloat(
-this.Ef.Quantize(
-otherValue.Ef,
-ctx == null ? null : ctx.Ec));
+  this.Ef.Quantize(
+  otherValue.Ef,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1138,17 +1138,17 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.RoundToExponentExact(PeterO.BigInteger,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedFloat RoundToExponentExact(
-BigInteger exponent,
-PrecisionContext ctx) {
+  BigInteger exponent,
+  PrecisionContext ctx) {
       try {
         if (exponent == null) {
           throw new ArgumentNullException("exponent");
         }
 
         return new ExtendedFloat(
-this.Ef.RoundToExponentExact(
-exponent.Ei,
-ctx == null ? null : ctx.Ec));
+  this.Ef.RoundToExponentExact(
+  exponent.Ei,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1158,17 +1158,17 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.RoundToExponent(PeterO.BigInteger,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedFloat RoundToExponent(
-BigInteger exponent,
-PrecisionContext ctx) {
+  BigInteger exponent,
+  PrecisionContext ctx) {
       try {
         if (exponent == null) {
           throw new ArgumentNullException("exponent");
         }
 
         return new ExtendedFloat(
-this.Ef.RoundToExponent(
-exponent.Ei,
-ctx == null ? null : ctx.Ec));
+  this.Ef.RoundToExponent(
+  exponent.Ei,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1178,13 +1178,13 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.RoundToExponentExact(System.Int32,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedFloat RoundToExponentExact(
-int exponentSmall,
-PrecisionContext ctx) {
+  int exponentSmall,
+  PrecisionContext ctx) {
       try {
         return new ExtendedFloat(
-this.Ef.RoundToExponentExact(
-exponentSmall,
-ctx == null ? null : ctx.Ec));
+  this.Ef.RoundToExponentExact(
+  exponentSmall,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1194,13 +1194,13 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.RoundToExponent(System.Int32,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedFloat RoundToExponent(
-int exponentSmall,
-PrecisionContext ctx) {
+  int exponentSmall,
+  PrecisionContext ctx) {
       try {
         return new ExtendedFloat(
-this.Ef.RoundToExponent(
-exponentSmall,
-ctx == null ? null : ctx.Ec));
+  this.Ef.RoundToExponent(
+  exponentSmall,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1210,17 +1210,17 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.Multiply(PeterO.ExtendedFloat,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedFloat Multiply(
-ExtendedFloat op,
-PrecisionContext ctx) {
+  ExtendedFloat op,
+  PrecisionContext ctx) {
       try {
         if (op == null) {
           throw new ArgumentNullException("op");
         }
 
         return new ExtendedFloat(
-this.Ef.Multiply(
-op.Ef,
-ctx == null ? null : ctx.Ec));
+  this.Ef.Multiply(
+  op.Ef,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1230,9 +1230,9 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.MultiplyAndAdd(PeterO.ExtendedFloat,PeterO.ExtendedFloat,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedFloat MultiplyAndAdd(
-ExtendedFloat op,
-ExtendedFloat augend,
-PrecisionContext ctx) {
+  ExtendedFloat op,
+  ExtendedFloat augend,
+  PrecisionContext ctx) {
       try {
         if (op == null) {
           throw new ArgumentNullException("op");
@@ -1242,10 +1242,10 @@ PrecisionContext ctx) {
         }
 
         return new ExtendedFloat(
-this.Ef.MultiplyAndAdd(
-op.Ef,
-augend.Ef,
-ctx == null ? null : ctx.Ec));
+  this.Ef.MultiplyAndAdd(
+  op.Ef,
+  augend.Ef,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1255,9 +1255,9 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.MultiplyAndSubtract(PeterO.ExtendedFloat,PeterO.ExtendedFloat,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedFloat MultiplyAndSubtract(
-ExtendedFloat op,
-ExtendedFloat subtrahend,
-PrecisionContext ctx) {
+  ExtendedFloat op,
+  ExtendedFloat subtrahend,
+  PrecisionContext ctx) {
       try {
         if (op == null) {
           throw new ArgumentNullException("op");
@@ -1368,9 +1368,9 @@ PrecisionContext ctx) {
           throw new ArgumentNullException("exponent");
         }
         return new ExtendedFloat(
-this.Ef.Pow(
-exponent.Ef,
-ctx == null ? null : ctx.Ec));
+  this.Ef.Pow(
+  exponent.Ef,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1382,9 +1382,9 @@ ctx == null ? null : ctx.Ec));
     public ExtendedFloat Pow(int exponentSmall, PrecisionContext ctx) {
       try {
         return new ExtendedFloat(
-this.Ef.Pow(
-exponentSmall,
-ctx == null ? null : ctx.Ec));
+  this.Ef.Pow(
+  exponentSmall,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1417,9 +1417,9 @@ ctx == null ? null : ctx.Ec));
     public ExtendedFloat MovePointLeft(int places, PrecisionContext ctx) {
       try {
         return new ExtendedFloat(
-this.Ef.MovePointLeft(
-places,
-ctx == null ? null : ctx.Ec));
+  this.Ef.MovePointLeft(
+  places,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1439,8 +1439,8 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.MovePointLeft(PeterO.BigInteger,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedFloat MovePointLeft(
-BigInteger bigPlaces,
-PrecisionContext ctx) {
+  BigInteger bigPlaces,
+  PrecisionContext ctx) {
       try {
         if (bigPlaces == null) {
           throw new ArgumentNullException("bigPlaces");
@@ -1468,9 +1468,9 @@ PrecisionContext ctx) {
     public ExtendedFloat MovePointRight(int places, PrecisionContext ctx) {
       try {
         return new ExtendedFloat(
-this.Ef.MovePointRight(
-places,
-ctx == null ? null : ctx.Ec));
+  this.Ef.MovePointRight(
+  places,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1490,17 +1490,17 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.MovePointRight(PeterO.BigInteger,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedFloat MovePointRight(
-BigInteger bigPlaces,
-PrecisionContext ctx) {
+  BigInteger bigPlaces,
+  PrecisionContext ctx) {
       try {
         if (bigPlaces == null) {
           throw new ArgumentNullException("bigPlaces");
         }
 
         return new ExtendedFloat(
-this.Ef.MovePointRight(
-bigPlaces.Ei,
-ctx == null ? null : ctx.Ec));
+  this.Ef.MovePointRight(
+  bigPlaces.Ei,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1519,9 +1519,9 @@ ctx == null ? null : ctx.Ec));
     public ExtendedFloat ScaleByPowerOfTwo(int places, PrecisionContext ctx) {
       try {
         return new ExtendedFloat(
-this.Ef.ScaleByPowerOfTwo(
-places,
-ctx == null ? null : ctx.Ec));
+  this.Ef.ScaleByPowerOfTwo(
+  places,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1541,17 +1541,17 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.ScaleByPowerOfTwo(PeterO.BigInteger,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedFloat ScaleByPowerOfTwo(
-BigInteger bigPlaces,
-PrecisionContext ctx) {
+  BigInteger bigPlaces,
+  PrecisionContext ctx) {
       try {
         if (bigPlaces == null) {
           throw new ArgumentNullException("bigPlaces");
         }
 
         return new ExtendedFloat(
-this.Ef.ScaleByPowerOfTwo(
-bigPlaces.Ei,
-ctx == null ? null : ctx.Ec));
+  this.Ef.ScaleByPowerOfTwo(
+  bigPlaces.Ei,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1591,8 +1591,8 @@ ctx == null ? null : ctx.Ec));
      PrecisionContext ctx) {
       try {
         EFloat[] edec = this.Ef.DivideAndRemainderNaturalScale(
-divisor == null ? null : divisor.Ef,
-ctx == null ? null : ctx.Ec);
+  divisor == null ? null : divisor.Ef,
+  ctx == null ? null : ctx.Ec);
         return new ExtendedFloat[] {
         new ExtendedFloat(edec[0]), new ExtendedFloat(edec[1])
       };

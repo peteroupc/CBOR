@@ -1,9 +1,9 @@
 /*
-Written in 2013 by Peter O.
+Written by Peter O. in 2013.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
+at: http://peteroupc.github.io/
  */
 using System;
 using System.Text;
@@ -113,10 +113,10 @@ namespace PeterO {
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.CreateNaN(PeterO.BigInteger,System.Boolean,System.Boolean,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public static ExtendedDecimal CreateNaN(
-BigInteger diag,
-bool signaling,
-bool negative,
-PrecisionContext ctx) {
+  BigInteger diag,
+  bool signaling,
+  bool negative,
+  PrecisionContext ctx) {
       if (diag == null) {
         throw new ArgumentNullException("diag");
       }
@@ -152,9 +152,9 @@ PrecisionContext ctx) {
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.FromString(System.String,System.Int32,System.Int32)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public static ExtendedDecimal FromString(
-string str,
-int offset,
-int length) {
+  string str,
+  int offset,
+  int length) {
       return new ExtendedDecimal(EDecimal.FromString(str, offset, length));
     }
 
@@ -162,10 +162,10 @@ int length) {
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.FromString(System.String,System.Int32,System.Int32,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public static ExtendedDecimal FromString(
-string str,
-int offset,
-int length,
-PrecisionContext ctx) {
+  string str,
+  int offset,
+  int length,
+  PrecisionContext ctx) {
       try {
         return new ExtendedDecimal(
   EDecimal.FromString(
@@ -193,7 +193,7 @@ PrecisionContext ctx) {
     }
 
   [Obsolete(
-"Implements legacy behavior using an obsolete class for convenience.")]
+  "Implements legacy behavior using an obsolete class for convenience.")]
     internal static ERounding ToERounding(Rounding r) {
       if (r == Rounding.Ceiling) {
         return ERounding.Ceiling;
@@ -522,15 +522,15 @@ PrecisionContext ctx) {
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.DivideToSameExponent(PeterO.ExtendedDecimal,PeterO.Rounding)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedDecimal DivideToSameExponent(
-ExtendedDecimal divisor,
-Rounding rounding) {
+  ExtendedDecimal divisor,
+  Rounding rounding) {
       if (divisor == null) {
         throw new ArgumentNullException("divisor");
       }
       return new ExtendedDecimal(
-this.Ed.DivideToSameExponent(
-divisor.Ed,
-ExtendedDecimal.ToERounding(rounding)));
+  this.Ed.DivideToSameExponent(
+  divisor.Ed,
+  ExtendedDecimal.ToERounding(rounding)));
     }
 
     /// <include file='../docs.xml'
@@ -569,16 +569,16 @@ ExtendedDecimal.ToERounding(rounding)));
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.RemainderNaturalScale(PeterO.ExtendedDecimal,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedDecimal RemainderNaturalScale(
-ExtendedDecimal divisor,
-PrecisionContext ctx) {
+  ExtendedDecimal divisor,
+  PrecisionContext ctx) {
       try {
         if (divisor == null) {
           throw new ArgumentNullException("divisor");
         }
         return new ExtendedDecimal(
-this.Ed.RemainderNaturalScale(
-divisor.Ed,
-ctx == null ? null : ctx.Ec));
+  this.Ed.RemainderNaturalScale(
+  divisor.Ed,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -588,18 +588,18 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.DivideToExponent(PeterO.ExtendedDecimal,System.Int64,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedDecimal DivideToExponent(
-ExtendedDecimal divisor,
-long desiredExponentSmall,
-PrecisionContext ctx) {
+  ExtendedDecimal divisor,
+  long desiredExponentSmall,
+  PrecisionContext ctx) {
       try {
         if (divisor == null) {
           throw new ArgumentNullException("divisor");
         }
         return new ExtendedDecimal(
-this.Ed.DivideToExponent(
-divisor.Ed,
-desiredExponentSmall,
-ctx == null ? null : ctx.Ec));
+  this.Ed.DivideToExponent(
+  divisor.Ed,
+  desiredExponentSmall,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -609,8 +609,8 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.Divide(PeterO.ExtendedDecimal,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedDecimal Divide(
-ExtendedDecimal divisor,
-PrecisionContext ctx) {
+  ExtendedDecimal divisor,
+  PrecisionContext ctx) {
       try {
         if (divisor == null) {
           throw new ArgumentNullException("divisor");
@@ -628,26 +628,26 @@ PrecisionContext ctx) {
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.DivideToExponent(PeterO.ExtendedDecimal,System.Int64,PeterO.Rounding)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedDecimal DivideToExponent(
-ExtendedDecimal divisor,
-long desiredExponentSmall,
-Rounding rounding) {
+  ExtendedDecimal divisor,
+  long desiredExponentSmall,
+  Rounding rounding) {
       if (divisor == null) {
         throw new ArgumentNullException("divisor");
       }
       return new ExtendedDecimal(
-this.Ed.DivideToExponent(
-divisor.Ed,
-desiredExponentSmall,
-ExtendedDecimal.ToERounding(rounding)));
+  this.Ed.DivideToExponent(
+  divisor.Ed,
+  desiredExponentSmall,
+  ExtendedDecimal.ToERounding(rounding)));
     }
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.DivideToExponent(PeterO.ExtendedDecimal,PeterO.BigInteger,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedDecimal DivideToExponent(
-ExtendedDecimal divisor,
-BigInteger exponent,
-PrecisionContext ctx) {
+  ExtendedDecimal divisor,
+  BigInteger exponent,
+  PrecisionContext ctx) {
       try {
         if (divisor == null) {
           throw new ArgumentNullException("divisor");
@@ -669,9 +669,9 @@ PrecisionContext ctx) {
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.DivideToExponent(PeterO.ExtendedDecimal,PeterO.BigInteger,PeterO.Rounding)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedDecimal DivideToExponent(
-ExtendedDecimal divisor,
-BigInteger desiredExponent,
-Rounding rounding) {
+  ExtendedDecimal divisor,
+  BigInteger desiredExponent,
+  Rounding rounding) {
       if (divisor == null) {
         throw new ArgumentNullException("divisor");
       }
@@ -679,10 +679,10 @@ Rounding rounding) {
         throw new ArgumentNullException("desiredExponent");
       }
       return new ExtendedDecimal(
-this.Ed.DivideToExponent(
-divisor.Ed,
-desiredExponent.Ei,
-ExtendedDecimal.ToERounding(rounding)));
+  this.Ed.DivideToExponent(
+  divisor.Ed,
+  desiredExponent.Ei,
+  ExtendedDecimal.ToERounding(rounding)));
     }
 
     /// <include file='../docs.xml'
@@ -736,8 +736,8 @@ ExtendedDecimal.ToERounding(rounding)));
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.Subtract(PeterO.ExtendedDecimal,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedDecimal Subtract(
-ExtendedDecimal otherValue,
-PrecisionContext ctx) {
+  ExtendedDecimal otherValue,
+  PrecisionContext ctx) {
       try {
         if (otherValue == null) {
           throw new ArgumentNullException("otherValue");
@@ -765,8 +765,8 @@ PrecisionContext ctx) {
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.MultiplyAndAdd(PeterO.ExtendedDecimal,PeterO.ExtendedDecimal)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedDecimal MultiplyAndAdd(
-ExtendedDecimal multiplicand,
-ExtendedDecimal augend) {
+  ExtendedDecimal multiplicand,
+  ExtendedDecimal augend) {
       if (multiplicand == null) {
         throw new ArgumentNullException("multiplicand");
       }
@@ -783,8 +783,8 @@ ExtendedDecimal augend) {
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.DivideToIntegerNaturalScale(PeterO.ExtendedDecimal,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedDecimal DivideToIntegerNaturalScale(
-ExtendedDecimal divisor,
-PrecisionContext ctx) {
+  ExtendedDecimal divisor,
+  PrecisionContext ctx) {
       try {
         if (divisor == null) {
           throw new ArgumentNullException("divisor");
@@ -802,16 +802,16 @@ PrecisionContext ctx) {
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.DivideToIntegerZeroScale(PeterO.ExtendedDecimal,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedDecimal DivideToIntegerZeroScale(
-ExtendedDecimal divisor,
-PrecisionContext ctx) {
+  ExtendedDecimal divisor,
+  PrecisionContext ctx) {
       try {
         if (divisor == null) {
           throw new ArgumentNullException("divisor");
         }
         return new ExtendedDecimal(
-this.Ed.DivideToIntegerZeroScale(
-divisor.Ed,
-ctx == null ? null : ctx.Ec));
+  this.Ed.DivideToIntegerZeroScale(
+  divisor.Ed,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -821,8 +821,8 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.Remainder(PeterO.ExtendedDecimal,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedDecimal Remainder(
-ExtendedDecimal divisor,
-PrecisionContext ctx) {
+  ExtendedDecimal divisor,
+  PrecisionContext ctx) {
       try {
         if (divisor == null) {
           throw new ArgumentNullException("divisor");
@@ -840,8 +840,8 @@ PrecisionContext ctx) {
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.RemainderNear(PeterO.ExtendedDecimal,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedDecimal RemainderNear(
-ExtendedDecimal divisor,
-PrecisionContext ctx) {
+  ExtendedDecimal divisor,
+  PrecisionContext ctx) {
       try {
         if (divisor == null) {
           throw new ArgumentNullException("divisor");
@@ -883,8 +883,8 @@ PrecisionContext ctx) {
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.NextToward(PeterO.ExtendedDecimal,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedDecimal NextToward(
-ExtendedDecimal otherValue,
-PrecisionContext ctx) {
+  ExtendedDecimal otherValue,
+  PrecisionContext ctx) {
       try {
         if (otherValue == null) {
           throw new ArgumentNullException("otherValue");
@@ -902,9 +902,9 @@ PrecisionContext ctx) {
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.Max(PeterO.ExtendedDecimal,PeterO.ExtendedDecimal,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public static ExtendedDecimal Max(
-ExtendedDecimal first,
-ExtendedDecimal second,
-PrecisionContext ctx) {
+  ExtendedDecimal first,
+  ExtendedDecimal second,
+  PrecisionContext ctx) {
       if (first == null) {
         throw new ArgumentNullException("first");
       }
@@ -912,19 +912,19 @@ PrecisionContext ctx) {
         throw new ArgumentNullException("second");
       }
       return new ExtendedDecimal(
-EDecimal.Max(
-first.Ed,
-second.Ed,
-ctx == null ? null : ctx.Ec));
+  EDecimal.Max(
+  first.Ed,
+  second.Ed,
+  ctx == null ? null : ctx.Ec));
     }
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.Min(PeterO.ExtendedDecimal,PeterO.ExtendedDecimal,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public static ExtendedDecimal Min(
-ExtendedDecimal first,
-ExtendedDecimal second,
-PrecisionContext ctx) {
+  ExtendedDecimal first,
+  ExtendedDecimal second,
+  PrecisionContext ctx) {
       if (first == null) {
         throw new ArgumentNullException("first");
       }
@@ -932,19 +932,19 @@ PrecisionContext ctx) {
         throw new ArgumentNullException("second");
       }
       return new ExtendedDecimal(
-EDecimal.Min(
-first.Ed,
-second.Ed,
-ctx == null ? null : ctx.Ec));
+  EDecimal.Min(
+  first.Ed,
+  second.Ed,
+  ctx == null ? null : ctx.Ec));
     }
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.MaxMagnitude(PeterO.ExtendedDecimal,PeterO.ExtendedDecimal,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public static ExtendedDecimal MaxMagnitude(
-ExtendedDecimal first,
-ExtendedDecimal second,
-PrecisionContext ctx) {
+  ExtendedDecimal first,
+  ExtendedDecimal second,
+  PrecisionContext ctx) {
       if (first == null) {
         throw new ArgumentNullException("first");
       }
@@ -952,19 +952,19 @@ PrecisionContext ctx) {
         throw new ArgumentNullException("second");
       }
       return new ExtendedDecimal(
-EDecimal.MaxMagnitude(
-first.Ed,
-second.Ed,
-ctx == null ? null : ctx.Ec));
+  EDecimal.MaxMagnitude(
+  first.Ed,
+  second.Ed,
+  ctx == null ? null : ctx.Ec));
     }
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.MinMagnitude(PeterO.ExtendedDecimal,PeterO.ExtendedDecimal,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public static ExtendedDecimal MinMagnitude(
-ExtendedDecimal first,
-ExtendedDecimal second,
-PrecisionContext ctx) {
+  ExtendedDecimal first,
+  ExtendedDecimal second,
+  PrecisionContext ctx) {
       if (first == null) {
         throw new ArgumentNullException("first");
       }
@@ -972,18 +972,18 @@ PrecisionContext ctx) {
         throw new ArgumentNullException("second");
       }
       return new ExtendedDecimal(
-EDecimal.MinMagnitude(
-first.Ed,
-second.Ed,
-ctx == null ? null : ctx.Ec));
+  EDecimal.MinMagnitude(
+  first.Ed,
+  second.Ed,
+  ctx == null ? null : ctx.Ec));
     }
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.Max(PeterO.ExtendedDecimal,PeterO.ExtendedDecimal)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public static ExtendedDecimal Max(
-ExtendedDecimal first,
-ExtendedDecimal second) {
+  ExtendedDecimal first,
+  ExtendedDecimal second) {
       if (first == null) {
         throw new ArgumentNullException("first");
       }
@@ -997,8 +997,8 @@ ExtendedDecimal second) {
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.Min(PeterO.ExtendedDecimal,PeterO.ExtendedDecimal)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public static ExtendedDecimal Min(
-ExtendedDecimal first,
-ExtendedDecimal second) {
+  ExtendedDecimal first,
+  ExtendedDecimal second) {
       if (first == null) {
         throw new ArgumentNullException("first");
       }
@@ -1012,8 +1012,8 @@ ExtendedDecimal second) {
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.MaxMagnitude(PeterO.ExtendedDecimal,PeterO.ExtendedDecimal)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public static ExtendedDecimal MaxMagnitude(
-ExtendedDecimal first,
-ExtendedDecimal second) {
+  ExtendedDecimal first,
+  ExtendedDecimal second) {
       if (first == null) {
         throw new ArgumentNullException("first");
       }
@@ -1027,8 +1027,8 @@ ExtendedDecimal second) {
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.MinMagnitude(PeterO.ExtendedDecimal,PeterO.ExtendedDecimal)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public static ExtendedDecimal MinMagnitude(
-ExtendedDecimal first,
-ExtendedDecimal second) {
+  ExtendedDecimal first,
+  ExtendedDecimal second) {
       if (first == null) {
         throw new ArgumentNullException("first");
       }
@@ -1052,8 +1052,8 @@ ExtendedDecimal second) {
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.CompareToWithContext(PeterO.ExtendedDecimal,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedDecimal CompareToWithContext(
-ExtendedDecimal other,
-PrecisionContext ctx) {
+  ExtendedDecimal other,
+  PrecisionContext ctx) {
       try {
         if (other == null) {
           throw new ArgumentNullException("other");
@@ -1071,8 +1071,8 @@ PrecisionContext ctx) {
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.CompareToSignal(PeterO.ExtendedDecimal,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedDecimal CompareToSignal(
-ExtendedDecimal other,
-PrecisionContext ctx) {
+  ExtendedDecimal other,
+  PrecisionContext ctx) {
       try {
         if (other == null) {
           throw new ArgumentNullException("other");
@@ -1090,8 +1090,8 @@ PrecisionContext ctx) {
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.Add(PeterO.ExtendedDecimal,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedDecimal Add(
-ExtendedDecimal otherValue,
-PrecisionContext ctx) {
+  ExtendedDecimal otherValue,
+  PrecisionContext ctx) {
       try {
         if (otherValue == null) {
           throw new ArgumentNullException("otherValue");
@@ -1109,8 +1109,8 @@ PrecisionContext ctx) {
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.Quantize(PeterO.BigInteger,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedDecimal Quantize(
-BigInteger desiredExponent,
-PrecisionContext ctx) {
+  BigInteger desiredExponent,
+  PrecisionContext ctx) {
       try {
         if (desiredExponent == null) {
           throw new ArgumentNullException("desiredExponent");
@@ -1128,20 +1128,20 @@ PrecisionContext ctx) {
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.Quantize(System.Int32,PeterO.Rounding)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedDecimal Quantize(
-int desiredExponentSmall,
-Rounding rounding) {
+  int desiredExponentSmall,
+  Rounding rounding) {
       return new ExtendedDecimal(
-this.Ed.Quantize(
-desiredExponentSmall,
-ExtendedDecimal.ToERounding(rounding)));
+  this.Ed.Quantize(
+  desiredExponentSmall,
+  ExtendedDecimal.ToERounding(rounding)));
     }
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.Quantize(System.Int32,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedDecimal Quantize(
-int desiredExponentSmall,
-PrecisionContext ctx) {
+  int desiredExponentSmall,
+  PrecisionContext ctx) {
       try {
         return new ExtendedDecimal(
         this.Ed.Quantize(
@@ -1156,8 +1156,8 @@ PrecisionContext ctx) {
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.Quantize(PeterO.ExtendedDecimal,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedDecimal Quantize(
-ExtendedDecimal otherValue,
-PrecisionContext ctx) {
+  ExtendedDecimal otherValue,
+  PrecisionContext ctx) {
       try {
         if (otherValue == null) {
           throw new ArgumentNullException("otherValue");
@@ -1199,16 +1199,16 @@ PrecisionContext ctx) {
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.RoundToExponentExact(PeterO.BigInteger,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedDecimal RoundToExponentExact(
-BigInteger exponent,
-PrecisionContext ctx) {
+  BigInteger exponent,
+  PrecisionContext ctx) {
       try {
         if (exponent == null) {
           throw new ArgumentNullException("exponent");
         }
         return new ExtendedDecimal(
-this.Ed.RoundToExponentExact(
-exponent.Ei,
-ctx == null ? null : ctx.Ec));
+  this.Ed.RoundToExponentExact(
+  exponent.Ei,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1218,8 +1218,8 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.RoundToExponent(PeterO.BigInteger,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedDecimal RoundToExponent(
-BigInteger exponent,
-PrecisionContext ctx) {
+  BigInteger exponent,
+  PrecisionContext ctx) {
       try {
         if (exponent == null) {
           throw new ArgumentNullException("exponent");
@@ -1237,13 +1237,13 @@ PrecisionContext ctx) {
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.RoundToExponentExact(System.Int32,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedDecimal RoundToExponentExact(
-int exponentSmall,
-PrecisionContext ctx) {
+  int exponentSmall,
+  PrecisionContext ctx) {
       try {
         return new ExtendedDecimal(
-this.Ed.RoundToExponentExact(
-exponentSmall,
-ctx == null ? null : ctx.Ec));
+  this.Ed.RoundToExponentExact(
+  exponentSmall,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1253,8 +1253,8 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.RoundToExponent(System.Int32,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedDecimal RoundToExponent(
-int exponentSmall,
-PrecisionContext ctx) {
+  int exponentSmall,
+  PrecisionContext ctx) {
       try {
         return new ExtendedDecimal(
         this.Ed.RoundToExponent(
@@ -1274,9 +1274,9 @@ PrecisionContext ctx) {
           throw new ArgumentNullException("op");
         }
         return new ExtendedDecimal(
-this.Ed.Multiply(
-op.Ed,
-ctx == null ? null : ctx.Ec));
+  this.Ed.Multiply(
+  op.Ed,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1286,9 +1286,9 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.MultiplyAndAdd(PeterO.ExtendedDecimal,PeterO.ExtendedDecimal,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedDecimal MultiplyAndAdd(
-ExtendedDecimal op,
-ExtendedDecimal augend,
-PrecisionContext ctx) {
+  ExtendedDecimal op,
+  ExtendedDecimal augend,
+  PrecisionContext ctx) {
       try {
         if (op == null) {
           throw new ArgumentNullException("op");
@@ -1297,10 +1297,10 @@ PrecisionContext ctx) {
           throw new ArgumentNullException("augend");
         }
         return new ExtendedDecimal(
-this.Ed.MultiplyAndAdd(
-op.Ed,
-augend.Ed,
-ctx == null ? null : ctx.Ec));
+  this.Ed.MultiplyAndAdd(
+  op.Ed,
+  augend.Ed,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1310,9 +1310,9 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.MultiplyAndSubtract(PeterO.ExtendedDecimal,PeterO.ExtendedDecimal,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedDecimal MultiplyAndSubtract(
-ExtendedDecimal op,
-ExtendedDecimal subtrahend,
-PrecisionContext ctx) {
+  ExtendedDecimal op,
+  ExtendedDecimal subtrahend,
+  PrecisionContext ctx) {
       try {
         if (op == null) {
           throw new ArgumentNullException("op");
@@ -1422,9 +1422,9 @@ PrecisionContext ctx) {
           throw new ArgumentNullException("exponent");
         }
         return new ExtendedDecimal(
-this.Ed.Pow(
-exponent.Ed,
-ctx == null ? null : ctx.Ec));
+  this.Ed.Pow(
+  exponent.Ed,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1493,16 +1493,16 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.MovePointLeft(PeterO.BigInteger,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedDecimal MovePointLeft(
-BigInteger bigPlaces,
-PrecisionContext ctx) {
+  BigInteger bigPlaces,
+  PrecisionContext ctx) {
       try {
         if (bigPlaces == null) {
           throw new ArgumentNullException("bigPlaces");
         }
         return new ExtendedDecimal(
-this.Ed.MovePointLeft(
-bigPlaces.Ei,
-ctx == null ? null : ctx.Ec));
+  this.Ed.MovePointLeft(
+  bigPlaces.Ei,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1543,8 +1543,8 @@ ctx == null ? null : ctx.Ec));
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.MovePointRight(PeterO.BigInteger,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedDecimal MovePointRight(
-BigInteger bigPlaces,
-PrecisionContext ctx) {
+  BigInteger bigPlaces,
+  PrecisionContext ctx) {
       try {
         if (bigPlaces == null) {
           throw new ArgumentNullException("bigPlaces");
@@ -1594,17 +1594,17 @@ PrecisionContext ctx) {
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.ScaleByPowerOfTen(PeterO.BigInteger,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public ExtendedDecimal ScaleByPowerOfTen(
-BigInteger bigPlaces,
-PrecisionContext ctx) {
+  BigInteger bigPlaces,
+  PrecisionContext ctx) {
       try {
         if (bigPlaces == null) {
           throw new ArgumentNullException("bigPlaces");
         }
 
         return new ExtendedDecimal(
-this.Ed.ScaleByPowerOfTen(
-bigPlaces.Ei,
-ctx == null ? null : ctx.Ec));
+  this.Ed.ScaleByPowerOfTen(
+  bigPlaces.Ei,
+  ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1644,8 +1644,8 @@ ctx == null ? null : ctx.Ec));
       PrecisionContext ctx) {
       try {
         EDecimal[] edec = this.Ed.DivideAndRemainderNaturalScale(
-divisor == null ? null : divisor.Ed,
-ctx == null ? null : ctx.Ec);
+  divisor == null ? null : divisor.Ed,
+  ctx == null ? null : ctx.Ec);
         return new ExtendedDecimal[] {
         new ExtendedDecimal(edec[0]), new ExtendedDecimal(edec[1])
       };

@@ -1,12 +1,13 @@
 /*
-Written in 2013 by Peter O.
+Written by Peter O. in 2013.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
+at: http://peteroupc.github.io/
  */
 using System;
-using PeterO; using PeterO.Numbers;
+using PeterO;
+using PeterO.Numbers;
 
 namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
@@ -245,9 +246,9 @@ namespace PeterO.Cbor {
         long rem = valueA - (quo * valueB);
         return (rem == 0) ? CBORObject.FromObject(quo) :
         CBORObject.FromObject(
-new ERational(
-(EInteger)valueA,
-(EInteger)valueB));
+  new ERational(
+  (EInteger)valueA,
+  (EInteger)valueB));
       }
       if (typeA == CBORObject.CBORObjectTypeExtendedRational ||
              typeB == CBORObject.CBORObjectTypeExtendedRational) {

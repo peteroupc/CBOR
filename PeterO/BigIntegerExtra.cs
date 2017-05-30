@@ -1,9 +1,9 @@
 /*
-Written in 2013 by Peter O.
+Written by Peter O. in 2013.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
+at: http://peteroupc.github.io/
  */
 using System;
 using PeterO.Numbers;
@@ -40,8 +40,8 @@ namespace PeterO {
     /// path='docs/doc[@name="M:PeterO.BigInteger.op_Subtraction(PeterO.BigInteger,PeterO.BigInteger)"]/*'/>
     [Obsolete("Use EInteger from PeterO.Numbers/com.upokecenter.numbers.")]
     public static BigInteger operator -(
-BigInteger bthis,
-BigInteger subtrahend) {
+  BigInteger bthis,
+  BigInteger subtrahend) {
       if (bthis == null) {
         throw new ArgumentNullException("bthis");
       }
@@ -52,8 +52,8 @@ BigInteger subtrahend) {
     /// path='docs/doc[@name="M:PeterO.BigInteger.op_Multiply(PeterO.BigInteger,PeterO.BigInteger)"]/*'/>
     [Obsolete("Use EInteger from PeterO.Numbers/com.upokecenter.numbers.")]
     public static BigInteger operator *(
-BigInteger operand1,
-BigInteger operand2) {
+  BigInteger operand1,
+  BigInteger operand2) {
       if (operand1 == null) {
         throw new ArgumentNullException("operand1");
       }
@@ -64,8 +64,8 @@ BigInteger operand2) {
     /// path='docs/doc[@name="M:PeterO.BigInteger.op_Division(PeterO.BigInteger,PeterO.BigInteger)"]/*'/>
     [Obsolete("Use EInteger from PeterO.Numbers/com.upokecenter.numbers.")]
     public static BigInteger operator /(
-BigInteger dividend,
-BigInteger divisor) {
+  BigInteger dividend,
+  BigInteger divisor) {
       if (dividend == null) {
         throw new ArgumentNullException("dividend");
       }
@@ -76,8 +76,8 @@ BigInteger divisor) {
     /// path='docs/doc[@name="M:PeterO.BigInteger.op_Modulus(PeterO.BigInteger,PeterO.BigInteger)"]/*'/>
     [Obsolete("Use EInteger from PeterO.Numbers/com.upokecenter.numbers.")]
     public static BigInteger operator %(
-BigInteger dividend,
-BigInteger divisor) {
+  BigInteger dividend,
+  BigInteger divisor) {
       if (dividend == null) {
         throw new ArgumentNullException("dividend");
       }
@@ -98,9 +98,9 @@ BigInteger divisor) {
     /// path='docs/doc[@name="M:PeterO.BigInteger.ModPow(PeterO.BigInteger,PeterO.BigInteger,PeterO.BigInteger)"]/*'/>
     [Obsolete("Use EInteger from PeterO.Numbers/com.upokecenter.numbers.")]
     public static BigInteger ModPow(
-BigInteger bigintValue,
-BigInteger pow,
-BigInteger mod) {
+  BigInteger bigintValue,
+  BigInteger pow,
+  BigInteger mod) {
       return bigintValue.ModPow(pow, mod);
     }
 
@@ -150,8 +150,8 @@ BigInteger mod) {
     /// path='docs/doc[@name="M:PeterO.BigInteger.op_LessThanOrEqual(PeterO.BigInteger,PeterO.BigInteger)"]/*'/>
     [Obsolete("Use EInteger from PeterO.Numbers/com.upokecenter.numbers.")]
     public static bool operator <=(
-BigInteger thisValue,
-BigInteger otherValue) {
+  BigInteger thisValue,
+  BigInteger otherValue) {
       return (thisValue == null) || (thisValue.CompareTo(otherValue) <= 0);
     }
 
@@ -221,9 +221,9 @@ BigInteger otherValue) {
     /// path='docs/doc[@name="M:PeterO.BigInteger.DivRem(PeterO.BigInteger,PeterO.BigInteger,PeterO.BigInteger@)"]/*'/>
     [Obsolete("Use EInteger from PeterO.Numbers/com.upokecenter.numbers.")]
     public static BigInteger DivRem(
-BigInteger dividend,
-BigInteger divisor,
-out BigInteger remainder) {
+  BigInteger dividend,
+  BigInteger divisor,
+  out BigInteger remainder) {
       if (dividend == null) {
         throw new ArgumentNullException("dividend");
       }
@@ -236,8 +236,8 @@ out BigInteger remainder) {
     /// path='docs/doc[@name="M:PeterO.BigInteger.GreatestCommonDivisor(PeterO.BigInteger,PeterO.BigInteger)"]/*'/>
     [Obsolete("Use EInteger from PeterO.Numbers/com.upokecenter.numbers.")]
     public static BigInteger GreatestCommonDivisor(
-BigInteger bigintFirst,
-BigInteger bigintSecond) {
+  BigInteger bigintFirst,
+  BigInteger bigintSecond) {
       return bigintFirst.gcd(bigintSecond);
     }
 
