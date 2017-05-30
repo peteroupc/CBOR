@@ -233,6 +233,11 @@ The following are some clarifications to RFC 7049.
 Release Notes
 -----------
 
+### Version 2.5
+
+* Sign the CBOR assembly with a strong name key
+* Update [`PeterO.Numbers`](https://www.nuget.org/packages/PeterO.Numbers) to strong-named version
+
 ### Version 2.4.2
 
 * Really use 0.2.2 of
