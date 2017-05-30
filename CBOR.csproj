@@ -12,10 +12,13 @@
     <AssemblyName>CBOR</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <NoWin32Manifest>False</NoWin32Manifest>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <AssemblyOriginatorKeyFile>PeterO.snk</AssemblyOriginatorKeyFile>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -62,10 +65,12 @@
     <CodeAnalysisRuleSet>CBOR.ruleset</CodeAnalysisRuleSet>
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseNet40|AnyCPU'">
     <DocumentationFile>bin\ReleaseNet40\CBOR.xml</DocumentationFile>
     <CodeAnalysisRuleSet>CBOR.ruleset</CodeAnalysisRuleSet>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="PeterO\BigInteger.cs" />
