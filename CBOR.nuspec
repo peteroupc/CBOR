@@ -15,6 +15,9 @@
     </description>
     <summary>A C# implementation of Concise Binary Object Representation (CBOR), a data serialization format. This implementation can also convert between CBOR and JSON.</summary>
     <releaseNotes>
+In version 2.5.2:
+* Unlike version 2.4.2, signed CBOR assembly with a strong name key.
+* Unlike version 2.4.2, library uses strong-named version of  [`PeterO.Numbers`](https://www.nuget.org/packages/PeterO.Numbers), version 0.4.0
 In version 2.4.2:
 * Really use 0.2.2 of
   [`PeterO.Numbers`](https://www.nuget.org/packages/PeterO.Numbers)
@@ -50,11 +53,11 @@ In version 2.4:
 * Fixed JSON parsing bugs
 See the project page for release notes on previous versions: https://github.com/peteroupc/CBOR
     </releaseNotes>
-    <copyright>Written by Peter O. in 2013-2015.  Any copyright is released to the Public Domain.</copyright>
+    <copyright>Written by Peter O. in 2013-2017.  Any copyright is released to the Public Domain.</copyright>
     <tags>cbor data serialization binary json numbers arithmetic</tags>
    <dependencies>
    <group>
-      <dependency id="PeterO.Numbers" version="0.2.2" />
+      <dependency id="PeterO.Numbers" version="0.4.0" />
    </group>
   </dependencies>
   </metadata>

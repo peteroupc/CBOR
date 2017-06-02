@@ -381,32 +381,14 @@ namespace PeterO {
     /// number from 0 and up, but less than 1.</summary>
     /// <returns>A 64-bit floating-point number.</returns>
     public double Uniform() {
-      var b = new byte[7];
-      this.valueIrg.GetBytes(b, 0, 7);
-      var lb = (long)b[0] & 0xffL;
-      lb |= ((long)b[1] & 0xffL) << 8;
-      lb |= ((long)b[2] & 0xffL) << 16;
-      lb |= ((long)b[3] & 0xffL) << 24;
-      lb |= ((long)b[4] & 0xffL) << 32;
-      lb |= ((long)b[5] & 0xffL) << 40;
-      lb |= ((long)b[6] & 0xfL) << 48;
-      lb |= 0x3ffL << 52;
-      return BitConverter.Int64BitsToDouble(lb) - 1.0;
+  return this.UniformLong(9007199254740992L)/9007199254740992.0;
     }
 
     /// <summary>Returns a uniformly-distributed 32-bit floating-point
     /// number from 0 and up, but less than 1.</summary>
-    /// <returns>A 64-bit floating-point number.</returns>
+    /// <returns>A 32-bit floating-point number.</returns>
     public double UniformSingle() {
-      var b = new byte[3];
-      this.valueIrg.GetBytes(b, 0, 3);
-      var lb = (int)b[0] & 0xff;
-      lb |= ((int)b[1] & 0xff) << 8;
-      lb |= ((int)b[2] & 0x7f) << 16;
-      lb |= 0x7f << 23;
-      return BitConverter.ToSingle(
-       BitConverter.GetBytes(lb),
-       0) - 1.0;
+  return this.UniformInt(16777216)/16777216.0f;
     }
 
     /// <summary>Generates a random 32-bit signed integer within a given
