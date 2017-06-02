@@ -36,8 +36,7 @@ text to CBOR objects and back.
 
 **See the [C# (.NET) API documentation](https://peteroupc.github.io/CBOR/docs/).**
 
-The C# implementation is designed as a Portable Class Library, making it usable not only in the .NET
-Framework, but also Silverlight 5 and Windows Phone 8.
+The C# implementation is designed as a Portable Class Library.
 
 Other Sites
 ----------
@@ -231,18 +230,19 @@ The following are some clarifications to RFC 7049.
   IRI are like URIs except that they also allow non-ASCII characters.
 
 Release Notes
------------
+
+### Version 2.5.2
+
+* Unlike version 2.4.2, signed CBOR assembly with a strong name key.
+* Unlike version 2.4.2, library uses strong-named version of  [`PeterO.Numbers`](https://www.nuget.org/packages/PeterO.Numbers), version 0.4.0
 
 ### Version 2.5.1
 
-* Really sign the CBOR assembly with a strong name key.
+* Release was erroneous.
 
 ### Version 2.5
 
-* Sign the CBOR assembly with a strong name key (UPDATE: Version 2.5 was
-  mistakenly released without a strong name.)
-* Update [`PeterO.Numbers`](https://www.nuget.org/packages/PeterO.Numbers) to
-  strong-named version
+* Release was erroneous.
 
 ### Version 2.4.2
 

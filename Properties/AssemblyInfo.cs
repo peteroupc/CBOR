@@ -21,7 +21,7 @@ using System.Reflection;
 [assembly: AssemblyProduct("CBOR")]
 [assembly:
  AssemblyCopyright(
-   "Written by Peter O. in 2013-2015. Any copyright is " +
+   "Written by Peter O. in 2013-2017. Any copyright is " +
    "dedicated to the Public Domain. " +
    "<http://creativecommons.org/publicdomain/zero/1.0/>")]
 [assembly: AssemblyTrademark("")]
@@ -33,4 +33,4 @@ using System.Reflection;
 //
 // You can specify all the values or you can use the default the Revision and
 // Build Numbers by using the '*' as shown below:
-[assembly: AssemblyVersion("2.5.1")]
+[assembly: AssemblyVersion("2.5.2")]
