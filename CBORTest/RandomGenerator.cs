@@ -116,13 +116,13 @@ namespace PeterO {
       if (df <= 0) {
         throw new ArgumentException("df (" + df + ") is not greater than 0");
       }
-      return this.Gamma(df / 2.0, 2);
+      return this.Gamma(df * 0.5, 2);
     }
 
     /// <summary>Not documented yet.</summary>
     /// <returns>A 64-bit floating-point number.</returns>
     public double Exponential() {
-      return -Math.Log(this.NonZeroUniform());
+      return -Math.Log(1.0 - this.Uniform());
     }
 
     /// <summary>Not documented yet.</summary>
@@ -140,9 +140,8 @@ namespace PeterO {
     /// <param name='a'>Another 64-bit floating-point number.</param>
     /// <returns>A 64-bit floating-point number.</returns>
     public double Gamma(double a) {
-      if (a <= -1) {
-        throw new ArgumentException("a (" + a + ") is not greater than " +
-            (-1));
+      if (a <= 0) {
+        throw new ArgumentException("a (" + a + ") is not greater than 0");
       }
       double v, x, u, x2, d, c;
       d = (a < 1 ? 1 + a : a) - (1.0 / 3.0);
@@ -152,9 +151,9 @@ namespace PeterO {
           x = this.Normal();
           v = Math.Pow((c * x) + 1, 3);
         } while (v <= 0);
-        u = this.Uniform();
-        x2 = Math.Pow(x, 2);
-      } while (u >= 1 - (0.0331 * x2 * x2) &&
+         u = 1.0 - this.Uniform();
+         x2 = x * x;
+  } while (u >= 1 - (0.0331 * x2 * x2) &&
                Math.Log(u) >= (0.5 * x2) + (d * (1 - v + Math.Log(v))));
       if (a < 1) {
         return d * v * Math.Exp(this.Exponential() / -a);
@@ -226,7 +225,7 @@ namespace PeterO {
     /// <param name='sd'>Standard deviation.</param>
     /// <returns>A 64-bit floating-point number.</returns>
     public double LogNormal(double mean, double sd) {
-      return Math.Exp((this.Normal() * sd) + mean);
+      return Math.Exp(this.Normal(mean, sd));
     }
 
     /// <summary>Conceptually, generates either 1 or 0 until the given
@@ -313,7 +312,7 @@ namespace PeterO {
           return this.valueLastNormal;
         }
       }
-      double x = this.NonZeroUniform();
+      double x = 1.0 - this.Uniform();
       double y = this.Uniform();
       double s = Math.Sqrt(-2 * Math.Log(x));
       double t = 2 * Math.PI * y;
@@ -345,13 +344,15 @@ namespace PeterO {
           ") is less than 0");
       }
       double l = Math.Exp(-mean);
-      var k = 0;
-      double p = 0;
-      do {
-        ++k;
+      var count = -1;
+      double p = 1.0;
+      while (true) {
+        ++count;
         p *= this.Uniform();
-      } while (p > l);
-      return k - 1;
+        if (p <= l) {
+          return count;
+        }
+      }
     }
 
     /// <summary>Not documented yet.</summary>
@@ -381,14 +382,14 @@ namespace PeterO {
     /// number from 0 and up, but less than 1.</summary>
     /// <returns>A 64-bit floating-point number.</returns>
     public double Uniform() {
-  return this.UniformLong(9007199254740992L)/9007199254740992.0;
+  return this.UniformLong(9007199254740992L) / 9007199254740992.0;
     }
 
     /// <summary>Returns a uniformly-distributed 32-bit floating-point
     /// number from 0 and up, but less than 1.</summary>
     /// <returns>A 32-bit floating-point number.</returns>
     public double UniformSingle() {
-  return this.UniformInt(16777216)/16777216.0f;
+  return this.UniformInt(16777216) / 16777216.0f;
     }
 
     /// <summary>Generates a random 32-bit signed integer within a given
@@ -472,7 +473,7 @@ if (minInclusive == maxExclusive) {
   throw new ArgumentException("maxExclusive (" + maxExclusive +
     ") is less than 0");
 }
-      if (maxExclusive <= 0) {
+      if (maxExclusive <= 1) {
  return 0;
 }
       var b = new byte[4];
@@ -502,8 +503,7 @@ if (minInclusive == maxExclusive) {
                 return ib;
               }
               int maxexc;
-              maxexc = (maxExclusive <= 100) ? 2147483600 :
-                ((Int32.MaxValue / maxExclusive) * maxExclusive);
+              maxexc = (Int32.MaxValue / maxExclusive) * maxExclusive;
               while (true) {
                 this.valueIrg.GetBytes(b, 0, 4);
                 ib = b[0] & 0xff;
@@ -550,23 +550,6 @@ if (minInclusive == maxExclusive) {
           return lb % maxExclusive;
         }
       }
-    }
-
-    private double NonZeroUniform() {
-      var b = new byte[7];
-      long lb = 0;
-      do {
-        this.valueIrg.GetBytes(b, 0, 7);
-        lb = b[0] & 0xffL;
-        lb |= (b[1] & 0xffL) << 8;
-        lb |= (b[2] & 0xffL) << 16;
-        lb |= (b[3] & 0xffL) << 24;
-        lb |= (b[4] & 0xffL) << 32;
-        lb |= (b[5] & 0xffL) << 40;
-        lb |= (b[6] & 0xfL) << 48;
-      } while (lb == 0);
-      lb |= 0x3ffL << 52;
-      return BitConverter.Int64BitsToDouble(lb) - 1.0;
     }
   }
 }
