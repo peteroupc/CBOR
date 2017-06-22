@@ -514,7 +514,7 @@ namespace Test {
         if (o2.IsZero) {
           continue;
         }
-        var er = new ERational(o1.AsEInteger(), o2.AsEInteger());
+        var er = ERational.Create(o1.AsEInteger(), o2.AsEInteger());
         {
           ERational objectTemp = er;
           ERational objectTemp2 = CBORObject.Divide(
@@ -813,7 +813,7 @@ namespace Test {
       CBORObject oo;
       oo = CBORObject.NewArray().Add(CBORObject.NewMap()
                     .Add(
-              new ERational(EInteger.One, EInteger.FromString("2")),
+              ERational.Create(EInteger.One, EInteger.FromString("2")),
               3).Add(4, false)).Add(true);
       CBORTestCommon.AssertRoundTrip(oo);
       oo = CBORObject.NewArray();

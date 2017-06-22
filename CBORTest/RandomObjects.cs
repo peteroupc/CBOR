@@ -37,7 +37,7 @@ namespace Test {
       if (bigintB.IsZero) {
         bigintB = EInteger.One;
       }
-      return new ERational(bigintA, bigintB);
+      return ERational.Create(bigintA, bigintB);
     }
 
     public static string RandomTextString(RandomGenerator rand) {

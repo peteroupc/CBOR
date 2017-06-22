@@ -20,7 +20,7 @@
 </doc>
 <doc name="M:PeterO.BigInteger.CompareTo(PeterO.BigInteger)">
 <summary>Not documented yet.</summary>
-            <param name='other'>A BigInteger object.</param>
+            <param name='other'>The parameter <paramref name='other'/> is a BigInteger object.</param>
             <returns>A 32-bit signed integer.</returns>
 </doc>
 <doc name="M:PeterO.BigInteger.Equals(PeterO.BigInteger)">
@@ -34,7 +34,7 @@
 <inheritdoc/>
             <summary>Determines whether this object and another object are
             equal.</summary>
-            <param name='obj'>An arbitrary object.</param>
+            <param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param>
             <returns><c>true</c> if this object and another object are equal; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.BigInteger.GetHashCode">
@@ -166,7 +166,7 @@
 <doc name="M:PeterO.BigInteger.valueOf(System.Int64)">
 <summary>Converts a 64-bit signed integer to a big
             integer.</summary>
-            <param name='longerValue'>A 64-bit signed integer.</param>
+            <param name='longerValue'>The parameter <paramref name='longerValue'/> is a 64-bit signed integer.</param>
             <returns>An arbitrary-precision integer with the same value as the
             64-bit number.</returns>
 </doc>
@@ -232,7 +232,7 @@
 <doc name="M:PeterO.Cbor.CBOREncodeOptions.And(PeterO.Cbor.CBOREncodeOptions)">
 <summary>Returns an options object whose flags are shared by this
             and another options object.</summary>
-            <param name='o'>Another CBOREncodeOptions object.</param>
+            <param name='o'>The parameter <paramref name='o'/> is a CBOREncodeOptions object.</param>
             <returns>A CBOREncodeOptions object.</returns>
 </doc>
 <doc name="F:PeterO.Cbor.CBOREncodeOptions.NoDuplicateKeys">
@@ -251,7 +251,7 @@
 <doc name="M:PeterO.Cbor.CBOREncodeOptions.Or(PeterO.Cbor.CBOREncodeOptions)">
 <summary>Combines the flags of this options object with another
             options object.</summary>
-            <param name='o'>Another CBOREncodeOptions object.</param>
+            <param name='o'>The parameter <paramref name='o'/> is a CBOREncodeOptions object.</param>
             <returns>A CBOREncodeOptions object.</returns>
 </doc>
 <doc name="P:PeterO.Cbor.CBOREncodeOptions.Value">
@@ -266,13 +266,13 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORException.#ctor(System.String)">
 <summary>Initializes a new instance of the <see cref='T:PeterO.Cbor.CBORException'/> class.</summary>
-            <param name='message'>A text string.</param>
+            <param name='message'>The parameter <paramref name='message'/> is a text string.</param>
 </doc>
 <doc name="M:PeterO.Cbor.CBORException.#ctor(System.String,System.Exception)">
 <summary>Initializes a new instance of the <see cref='T:PeterO.Cbor.CBORException'/> class. Uses the given
             message and inner exception.</summary>
-            <param name='message'>A text string.</param>
-            <param name='innerException'>An Exception object.</param>
+            <param name='message'>The parameter <paramref name='message'/> is a text string.</param>
+            <param name='innerException'>The parameter <paramref name='innerException'/> is an Exception object.</param>
 </doc>
 <doc name="T:PeterO.Cbor.CBORObject">
 <summary>Represents an object in Concise Binary Object
@@ -373,7 +373,7 @@
             ArgumentNullException on a null reference, but now converts the
             null reference to CBORObject.Null, for convenience with the Object
             overload of this method.).</summary>
-            <param name='obj'>A CBOR object.</param>
+            <param name='obj'>The parameter <paramref name='obj'/> is a CBOR object.</param>
             <returns>This instance.</returns>
             <exception cref='T:System.InvalidOperationException'>This object is
             not an array.</exception>
@@ -381,7 +381,7 @@
 <doc name="M:PeterO.Cbor.CBORObject.Add(System.Object)">
 <summary>Converts an object to a CBOR object and adds it to the end
             of this array.</summary>
-            <param name='obj'>A CBOR object.</param>
+            <param name='obj'>The parameter <paramref name='obj'/> is a CBOR object.</param>
             <returns>This instance.</returns>
             <exception cref='T:System.InvalidOperationException'>This object is
             not an array.</exception>
@@ -410,7 +410,7 @@
             to CBOR objects (called a CBOR converter).</summary>
             <param name='type'>A Type object specifying the type that the
             converter converts to CBOR objects.</param>
-            <param name='converter'>An ICBORConverter object.</param>
+            <param name='converter'>The parameter <paramref name='converter'/> is an ICBORConverter object.</param>
             <typeparam name='T'>Must be the same as the "type"
             parameter.</typeparam>
             <exception cref='T:System.ArgumentNullException'>The parameter
@@ -421,7 +421,7 @@
 <summary>Registers an object that validates CBOR objects with new
             tags.</summary>
             <param name='bigintTag'>An arbitrary-precision integer.</param>
-            <param name='handler'>An ICBORTag object.</param>
+            <param name='handler'>The parameter <paramref name='handler'/> is an ICBORTag object.</param>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='bigintTag'/> or <paramref name='handler'/> is
             null.</exception>
@@ -433,7 +433,7 @@
 <summary>Registers an object that validates CBOR objects with new
             tags.</summary>
             <param name='bigintTag'>An arbitrary-precision integer.</param>
-            <param name='handler'>An ICBORTag object.</param>
+            <param name='handler'>The parameter <paramref name='handler'/> is an ICBORTag object.</param>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='bigintTag'/> or <paramref name='handler'/> is
             null.</exception>
@@ -443,8 +443,8 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Addition(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
 <summary>Finds the sum of two CBOR numbers.</summary>
-            <param name='first'>Another CBOR object.</param>
-            <param name='second'>A CBORObject object. (3).</param>
+            <param name='first'>The parameter <paramref name='first'/> is a CBOR object.</param>
+            <param name='second'>The parameter <paramref name='second'/> is a CBORObject object.</param>
             <returns>A CBORObject object.</returns>
             <exception cref='T:System.ArgumentException'>Either or both
             operands are not numbers (as opposed to Not-a-Number,
@@ -785,7 +785,7 @@
 <summary>Generates a CBOR object from an array of CBOR-encoded
             bytes.</summary>
             <param name='data'>A byte array.</param>
-            <param name='options'>A CBOREncodeOptions object.</param>
+            <param name='options'>The parameter <paramref name='options'/> is a CBOREncodeOptions object.</param>
             <returns>A CBOR object corresponding to the data.</returns>
             <exception cref='T:PeterO.Cbor.CBORException'>There was an error in
             reading or parsing the data. This includes cases where not all of
@@ -798,8 +798,8 @@
 <doc name="M:PeterO.Cbor.CBORObject.Divide(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
 <summary>Divides a CBORObject object by the value of a CBORObject
             object.</summary>
-            <param name='first'>A CBORObject object.</param>
-            <param name='second'>Another CBOR object.</param>
+            <param name='first'>The parameter <paramref name='first'/> is a CBORObject object.</param>
+            <param name='second'>The parameter <paramref name='second'/> is a CBOR object.</param>
             <returns>The quotient of the two objects.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.EncodeToBytes">
@@ -825,7 +825,7 @@
 <doc name="M:PeterO.Cbor.CBORObject.Equals(System.Object)">
 <summary>Determines whether this object and another object are
             equal and have the same type.  Not-a-number values can be considered equal by this method.</summary>
-            <param name='obj'>An arbitrary object.</param>
+            <param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param>
             <returns><c>true</c> if the objects are equal; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="F:PeterO.Cbor.CBORObject.False">
@@ -853,7 +853,7 @@
             <param name='str'>A string in JSON format. The entire string must
             contain a single JSON object and not multiple objects. The string
             may not begin with a byte-order mark (U+FEFF).</param>
-            <param name='options'>A CBOREncodeOptions object.</param>
+            <param name='options'>The parameter <paramref name='options'/> is a CBOREncodeOptions object.</param>
             <returns>A CBORObject object.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='str'/> is null.</exception>
@@ -868,7 +868,7 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Cbor.CBORObject)">
 <summary>Generates a CBOR object from a CBOR object.</summary>
-            <param name='value'>A CBOR object.</param>
+            <param name='value'>The parameter <paramref name='value'/> is a CBOR object.</param>
             <returns>Same as.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Cbor.CBORObject[])">
@@ -932,7 +932,7 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Byte)">
 <summary>Generates a CBOR object from a byte (0 to 255).</summary>
-            <param name='value'>A Byte object.</param>
+            <param name='value'>The parameter <paramref name='value'/> is a byte (from 0 to 255).</param>
             <returns>A CBORObject object.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Byte[])">
@@ -948,33 +948,33 @@
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Char)">
 <summary>Generates a CBOR string object from a Unicode
             character.</summary>
-            <param name='value'>A char object.</param>
+            <param name='value'>The parameter <paramref name='value'/> is a char object.</param>
             <returns>A CBORObject object.</returns>
             <exception cref='T:System.ArgumentException'>The parameter
             <paramref name='value'/> is a surrogate code point.</exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Decimal)">
 <summary>Converts a .NET decimal to a CBOR object.</summary>
-            <param name='value'>A Decimal object.</param>
+            <param name='value'>The parameter <paramref name='value'/> is a Decimal object.</param>
             <returns>A CBORObject object with the same value as the .NET
             decimal.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Double)">
 <summary>Generates a CBOR object from a 64-bit floating-point
             number.</summary>
-            <param name='value'>A 64-bit floating-point number.</param>
+            <param name='value'>The parameter <paramref name='value'/> is a 64-bit floating-point number.</param>
             <returns>A CBORObject object.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Int16)">
 <summary>Generates a CBOR object from a 16-bit signed
             integer.</summary>
-            <param name='value'>A 16-bit signed integer.</param>
+            <param name='value'>The parameter <paramref name='value'/> is a 16-bit signed integer.</param>
             <returns>A CBORObject object.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Int32)">
 <summary>Generates a CBOR object from a 32-bit signed
             integer.</summary>
-            <param name='value'>A 32-bit signed integer.</param>
+            <param name='value'>The parameter <paramref name='value'/> is a 32-bit signed integer.</param>
             <returns>A CBORObject object.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Int32[])">
@@ -988,7 +988,7 @@
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Int64)">
 <summary>Generates a CBOR object from a 64-bit signed
             integer.</summary>
-            <param name='value'>A 64-bit signed integer.</param>
+            <param name='value'>The parameter <paramref name='value'/> is a 64-bit signed integer.</param>
             <returns>A CBORObject object.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Int64[])">
@@ -1034,20 +1034,20 @@
             new byte array. (This method can't be used to decode CBOR data from
             a byte array; for that, use the DecodeFromBytes method
             instead.).</para></summary>
-            <param name='obj'>An arbitrary object.</param>
+            <param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param>
             <returns>A CBOR object corresponding to the given object. Returns
             CBORObject.Null if the object is null.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(System.SByte)">
 <summary>Converts a signed 8-bit integer to a CBOR
             object.</summary>
-            <param name='value'>An 8-bit signed integer.</param>
+            <param name='value'>The parameter <paramref name='value'/> is an 8-bit signed integer.</param>
             <returns>A CBORObject object.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Single)">
 <summary>Generates a CBOR object from a 32-bit floating-point
             number.</summary>
-            <param name='value'>A 32-bit floating-point number.</param>
+            <param name='value'>The parameter <paramref name='value'/> is a 32-bit floating-point number.</param>
             <returns>A CBORObject object.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(System.String)">
@@ -1137,7 +1137,7 @@
 <doc name="M:PeterO.Cbor.CBORObject.FromObjectAndTag(System.Object,System.UInt64)">
 <summary>Generates a CBOR object from an arbitrary object and gives
             the resulting object a tag.</summary>
-            <param name='o'>An arbitrary object.</param>
+            <param name='o'>The parameter <paramref name='o'/> is an arbitrary object.</param>
             <param name='tag'>A 64-bit unsigned integer.</param>
             <returns>A CBOR object where the object <paramref name='o'/> is
             converted to a CBOR object and given the tag <paramref name='tag'/>
@@ -1176,7 +1176,7 @@
 <doc name="M:PeterO.Cbor.CBORObject.FromSimpleValue(System.Int32)">
 <summary>Creates a CBOR object from a simple value
             number.</summary>
-            <param name='simpleValue'>A 32-bit signed integer.</param>
+            <param name='simpleValue'>The parameter <paramref name='simpleValue'/> is a 32-bit signed integer.</param>
             <returns>A CBORObject object.</returns>
             <exception cref='T:System.ArgumentException'>The parameter
             <paramref name='simpleValue'/> is less than 0, greater than 255, or
@@ -1334,7 +1334,7 @@
 <doc name="P:PeterO.Cbor.CBORObject.Item(PeterO.Cbor.CBORObject)">
 <summary>Gets the value of a CBOR object in this map, using a CBOR
             object as the key.</summary>
-            <param name='key'>Another CBOR object.</param>
+            <param name='key'>The parameter <paramref name='key'/> is a CBOR object.</param>
             <returns>A CBORObject object.</returns>
             <exception cref='T:System.ArgumentNullException'>The key is null
             (as opposed to CBORObject.Null); or the set method is called and
@@ -1383,8 +1383,8 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Multiply(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
 <summary>Multiplies two CBOR numbers.</summary>
-            <param name='first'>A CBORObject object.</param>
-            <param name='second'>Another CBOR object.</param>
+            <param name='first'>The parameter <paramref name='first'/> is a CBORObject object.</param>
+            <param name='second'>The parameter <paramref name='second'/> is a CBOR object.</param>
             <returns>The product of the two numbers.</returns>
             <exception cref='T:System.ArgumentException'>Either or both
             operands are not numbers (as opposed to Not-a-Number,
@@ -1438,7 +1438,7 @@
             method will read from the stream until the end of the CBOR object
             is reached or an error occurs, whichever happens first.</summary>
             <param name='stream'>A readable data stream.</param>
-            <param name='options'>A CBOREncodeOptions object.</param>
+            <param name='options'>The parameter <paramref name='options'/> is a CBOREncodeOptions object.</param>
             <returns>A CBOR object that was read.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='stream'/> is null.</exception>
@@ -1479,7 +1479,7 @@
             <param name='stream'>A readable data stream. The sequence of bytes
             read from the data stream must contain a single JSON object and not
             multiple objects.</param>
-            <param name='options'>A CBOREncodeOptions object.</param>
+            <param name='options'>The parameter <paramref name='options'/> is a CBOREncodeOptions object.</param>
             <returns>A CBORObject object.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='stream'/> is null.</exception>
@@ -1491,8 +1491,8 @@
 <doc name="M:PeterO.Cbor.CBORObject.Remainder(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
 <summary>Finds the remainder that results when a CBORObject object
             is divided by the value of a CBORObject object.</summary>
-            <param name='first'>A CBORObject object.</param>
-            <param name='second'>Another CBOR object.</param>
+            <param name='first'>The parameter <paramref name='first'/> is a CBORObject object.</param>
+            <param name='second'>The parameter <paramref name='second'/> is a CBOR object.</param>
             <returns>The remainder of the two numbers.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Remove(PeterO.Cbor.CBORObject)">
@@ -1543,8 +1543,8 @@
 <doc name="M:PeterO.Cbor.CBORObject.Subtract(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
 <summary>Finds the difference between two CBOR number
             objects.</summary>
-            <param name='first'>A CBORObject object.</param>
-            <param name='second'>Another CBOR object.</param>
+            <param name='first'>The parameter <paramref name='first'/> is a CBORObject object.</param>
+            <param name='second'>The parameter <paramref name='second'/> is a CBOR object.</param>
             <returns>The difference of the two objects.</returns>
             <exception cref='T:System.ArgumentException'>Either or both
             operands are not numbers (as opposed to Not-a-Number,
@@ -1833,7 +1833,7 @@ tag 22, or base16 for tag 23.)</item>
 <summary>Writes a CBOR object to a CBOR data stream. See the
             three-parameter Write method that takes a
             CBOREncodeOptions.</summary>
-            <param name='objValue'>An arbitrary object.</param>
+            <param name='objValue'>The parameter <paramref name='objValue'/> is an arbitrary object.</param>
             <param name='stream'>A writable data stream.</param>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Write(System.Object,System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)">
@@ -1864,7 +1864,7 @@ tag 22, or base16 for tag 23.)</item>
 <doc name="M:PeterO.Cbor.CBORObject.Write(System.SByte,System.IO.Stream)">
 <summary>Writes an 8-bit signed integer in CBOR format to a data
             stream.</summary>
-            <param name='value'>An 8-bit signed integer.</param>
+            <param name='value'>The parameter <paramref name='value'/> is an 8-bit signed integer.</param>
             <param name='stream'>A writable data stream.</param>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Write(System.Single,System.IO.Stream)">
@@ -1924,7 +1924,7 @@ tag 22, or base16 for tag 23.)</item>
 <summary>Converts an arbitrary object to a string in JavaScript
             Object Notation (JSON) format, as in the ToJSONString method, and
             writes that string to a data stream in UTF-8.</summary>
-            <param name='obj'>An arbitrary object.</param>
+            <param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param>
             <param name='outputStream'>A writable data stream.</param>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.WriteJSONTo(System.IO.Stream)">
@@ -1961,36 +1961,36 @@ tag 22, or base16 for tag 23.)</item>
 <doc name="M:PeterO.Cbor.CBORObject.op_Addition(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
 <summary>Adds a CBORObject object and a CBORObject
             object.</summary>
-            <param name='a'>A CBORObject object.</param>
-            <param name='b'>Another CBORObject object.</param>
+            <param name='a'>The parameter <paramref name='a'/> is a CBORObject object.</param>
+            <param name='b'>The parameter <paramref name='b'/> is a CBORObject object.</param>
             <returns>The sum of the two objects.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.op_Division(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
 <summary>Divides a CBORObject object by the value of a CBORObject
             object.</summary>
-            <param name='a'>A CBORObject object.</param>
-            <param name='b'>Another CBORObject object.</param>
+            <param name='a'>The parameter <paramref name='a'/> is a CBORObject object.</param>
+            <param name='b'>The parameter <paramref name='b'/> is a CBORObject object.</param>
             <returns>The quotient of the two objects.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.op_Modulus(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
 <summary>Finds the remainder that results when a CBORObject object
             is divided by the value of a CBORObject object.</summary>
-            <param name='a'>A CBORObject object.</param>
-            <param name='b'>Another CBORObject object.</param>
+            <param name='a'>The parameter <paramref name='a'/> is a CBORObject object.</param>
+            <param name='b'>The parameter <paramref name='b'/> is a CBORObject object.</param>
             <returns>The remainder of the two numbers.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.op_Multiply(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
 <summary>Multiplies a CBORObject object by the value of a
             CBORObject object.</summary>
-            <param name='a'>A CBORObject object.</param>
-            <param name='b'>Another CBORObject object.</param>
+            <param name='a'>The parameter <paramref name='a'/> is a CBORObject object.</param>
+            <param name='b'>The parameter <paramref name='b'/> is a CBORObject object.</param>
             <returns>The product of the two numbers.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.op_Subtraction(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
 <summary>Subtracts a CBORObject object from a CBORObject
             object.</summary>
-            <param name='a'>A CBORObject object.</param>
-            <param name='b'>Another CBORObject object.</param>
+            <param name='a'>The parameter <paramref name='a'/> is a CBORObject object.</param>
+            <param name='b'>The parameter <paramref name='b'/> is a CBORObject object.</param>
             <returns>The difference of the two objects.</returns>
 </doc>
 <doc name="T:PeterO.Cbor.CBORObjectMath">
@@ -2345,7 +2345,7 @@ tag 22, or base16 for tag 23.)</item>
             function is idempotent; that is, calling the function again on the
             result with the same mode doesn't change the result.</summary>
             <param name='s'>A string to escape.</param>
-            <param name='mode'>A 32-bit signed integer.</param>
+            <param name='mode'>The parameter <paramref name='mode'/> is a 32-bit signed integer.</param>
             <returns>A string possibly containing escaped characters, or null
             if s is null.</returns>
 </doc>
@@ -2451,7 +2451,7 @@ tag 22, or base16 for tag 23.)</item>
             the string into its components and returns an array containing the
             indices into the components.</summary>
             <param name='s'>A string representing an IRI. Can be null.</param>
-            <param name='parseMode'>A ParseMode object.</param>
+            <param name='parseMode'>The parameter <paramref name='parseMode'/> is a ParseMode object.</param>
             <returns>If the string is a valid IRI reference, returns an array
             of 10 integers. Each of the five pairs corresponds to the start and
             end index of the IRI's scheme, authority, path, query, or fragment
@@ -2507,7 +2507,7 @@ tag 22, or base16 for tag 23.)</item>
 <doc name="M:PeterO.DataUtilities.CodePointAt(System.String,System.Int32)">
 <summary>Gets the Unicode code point at the given index of the
             string.</summary>
-            <param name='str'>A text string.</param>
+            <param name='str'>The parameter <paramref name='str'/> is a text string.</param>
             <param name='index'>Index of the current position into the
             string.</param>
             <returns>The Unicode code point at the given position. Returns -1
@@ -2521,7 +2521,7 @@ tag 22, or base16 for tag 23.)</item>
 <doc name="M:PeterO.DataUtilities.CodePointAt(System.String,System.Int32,System.Int32)">
 <summary>Gets the Unicode code point at the given index of the
             string.</summary>
-            <param name='str'>A text string.</param>
+            <param name='str'>The parameter <paramref name='str'/> is a text string.</param>
             <param name='index'>Index of the current position into the
             string.</param>
             <param name='surrogateBehavior'>Specifies what kind of value to
@@ -2539,7 +2539,7 @@ tag 22, or base16 for tag 23.)</item>
 <doc name="M:PeterO.DataUtilities.CodePointBefore(System.String,System.Int32)">
 <summary>Gets the Unicode code point just before the given index of
             the string.</summary>
-            <param name='str'>A text string.</param>
+            <param name='str'>The parameter <paramref name='str'/> is a text string.</param>
             <param name='index'>Index of the current position into the
             string.</param>
             <returns>The Unicode code point at the previous position. Returns
@@ -2552,7 +2552,7 @@ tag 22, or base16 for tag 23.)</item>
 <doc name="M:PeterO.DataUtilities.CodePointBefore(System.String,System.Int32,System.Int32)">
 <summary>Gets the Unicode code point just before the given index of
             the string.</summary>
-            <param name='str'>A text string.</param>
+            <param name='str'>The parameter <paramref name='str'/> is a text string.</param>
             <param name='index'>Index of the current position into the
             string.</param>
             <param name='surrogateBehavior'>Specifies what kind of value to
@@ -2583,7 +2583,7 @@ tag 22, or base16 for tag 23.)</item>
 </doc>
 <doc name="M:PeterO.DataUtilities.GetUtf8Bytes(System.String,System.Boolean)">
 <summary>Encodes a string in UTF-8 as a byte array.</summary>
-            <param name='str'>A text string.</param>
+            <param name='str'>The parameter <paramref name='str'/> is a text string.</param>
             <param name='replace'>If true, replaces unpaired surrogate code
             points with the replacement character (U+FFFD). If false, stops
             processing when an unpaired surrogate code point is seen.</param>
@@ -2596,7 +2596,7 @@ tag 22, or base16 for tag 23.)</item>
 </doc>
 <doc name="M:PeterO.DataUtilities.GetUtf8Bytes(System.String,System.Boolean,System.Boolean)">
 <summary>Encodes a string in UTF-8 as a byte array.</summary>
-            <param name='str'>A text string.</param>
+            <param name='str'>The parameter <paramref name='str'/> is a text string.</param>
             <param name='replace'>If true, replaces unpaired surrogate code
             points with the replacement character (U+FFFD). If false, stops
             processing when an unpaired surrogate code point is seen.</param>
@@ -2613,7 +2613,7 @@ tag 22, or base16 for tag 23.)</item>
 <doc name="M:PeterO.DataUtilities.GetUtf8Length(System.String,System.Boolean)">
 <summary>Calculates the number of bytes needed to encode a string
             in UTF-8.</summary>
-            <param name='str'>A text string.</param>
+            <param name='str'>The parameter <paramref name='str'/> is a text string.</param>
             <param name='replace'>If true, treats unpaired surrogate code
             points as having 3 UTF-8 bytes (the UTF-8 length of the replacement
             character U+FFFD).</param>
@@ -2735,7 +2735,7 @@ tag 22, or base16 for tag 23.)</item>
 <summary>Returns a string with the basic upper-case letters A to Z
             (U+0041 to U+005A) converted to lower-case. Other characters
             remain unchanged.</summary>
-            <param name='str'>A text string.</param>
+            <param name='str'>The parameter <paramref name='str'/> is a text string.</param>
             <returns>The converted string, or null if <paramref name='str'/> is
             null.</returns>
 </doc>
@@ -2919,7 +2919,7 @@ tag 22, or base16 for tag 23.)</item>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.CompareTo(PeterO.ExtendedDecimal)">
 <summary>Not documented yet.</summary>
-            <param name='other'>An ExtendedDecimal object.</param>
+            <param name='other'>The parameter <paramref name='other'/> is an ExtendedDecimal object.</param>
             <returns>A 32-bit signed integer.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.Create(PeterO.BigInteger,PeterO.BigInteger)">
@@ -2944,7 +2944,7 @@ tag 22, or base16 for tag 23.)</item>
 <summary>Determines whether this object&#x27;s mantissa and
             exponent are equal to those of another object and that other object
             is an arbitrary-precision decimal number.</summary>
-            <param name='obj'>An arbitrary object.</param>
+            <param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param>
             <returns><c>true</c> if the objects are equal; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="P:PeterO.ExtendedDecimal.Exponent">
@@ -3160,7 +3160,7 @@ tag 22, or base16 for tag 23.)</item>
 <summary>Determines whether this object&#x27;s mantissa and
             exponent are equal to those of another object and that other object
             is an arbitrary-precision decimal number.</summary>
-            <param name='obj'>An arbitrary object.</param>
+            <param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param>
             <returns><c>true</c> if the objects are equal; otherwise, <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.EqualsInternal(PeterO.ExtendedFloat)">
@@ -3192,7 +3192,7 @@ tag 22, or base16 for tag 23.)</item>
             resulting value might not be exact, in which case the resulting
             binary float will be an approximation of this decimal number's
             value.</summary>
-            <param name='str'>A text string.</param>
+            <param name='str'>The parameter <paramref name='str'/> is a text string.</param>
             <param name='ctx'>A PrecisionContext object specifying the
             precision, rounding, and exponent range to apply to the parsed
             number. Can be null.</param>
@@ -3230,7 +3230,7 @@ tag 22, or base16 for tag 23.)</item>
             be the basic digits 0 to 9 (U+0030 to U+0039). The string is
             not allowed to contain white space characters, including
             spaces.</para></summary>
-            <param name='str'>A text string.</param>
+            <param name='str'>The parameter <paramref name='str'/> is a text string.</param>
             <param name='offset'>A zero-based index showing where the desired
             portion of <paramref name='str'/> begins.</param>
             <param name='length'>The length, in code units, of the desired
@@ -3371,7 +3371,7 @@ tag 22, or base16 for tag 23.)</item>
 </doc>
 <doc name="M:PeterO.ExtendedRational.CompareTo(PeterO.ExtendedRational)">
 <summary>Not documented yet.</summary>
-            <param name='other'>An ExtendedRational object.</param>
+            <param name='other'>The parameter <paramref name='other'/> is an ExtendedRational object.</param>
             <returns>A 32-bit signed integer.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedRational.Create(PeterO.BigInteger,PeterO.BigInteger)">
@@ -3388,9 +3388,8 @@ tag 22, or base16 for tag 23.)</item>
 <doc name="M:PeterO.ExtendedRational.Create(System.Int32,System.Int32)">
 <summary>Creates a rational number with the given numerator and
             denominator.</summary>
-            <param name='numeratorSmall'>A 32-bit signed integer.</param>
-            <param name='denominatorSmall'>A 32-bit signed integer.
-            (2).</param>
+            <param name='numeratorSmall'>The parameter <paramref name='numeratorSmall'/> is a 32-bit signed integer.</param>
+            <param name='denominatorSmall'>The parameter <paramref name='denominatorSmall'/> is a 32-bit signed integer.</param>
             <returns>An arbitrary-precision rational number.</returns>
 </doc>
 <doc name="P:PeterO.ExtendedRational.Denominator">
@@ -3399,12 +3398,12 @@ tag 22, or base16 for tag 23.)</item>
 </doc>
 <doc name="M:PeterO.ExtendedRational.Equals(PeterO.ExtendedRational)">
 <summary>Not documented yet.</summary>
-            <param name='other'>An ExtendedRational object.</param>
+            <param name='other'>The parameter <paramref name='other'/> is an ExtendedRational object.</param>
             <returns>A Boolean object.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedRational.Equals(System.Object)">
 <summary>Not documented yet.</summary>
-            <param name='obj'>An arbitrary object.</param>
+            <param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param>
             <returns>A Boolean object.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedRational.GetHashCode">
