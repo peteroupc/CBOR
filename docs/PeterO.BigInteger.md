@@ -63,7 +63,8 @@ Not documented yet.
 
 <b>Parameters:</b>
 
- * <i>other</i>: A BigInteger object.
+ * <i>other</i>: The parameter  <i>other</i>
+ is a BigInteger object.
 
 <b>Return Value:</b>
 
@@ -78,7 +79,8 @@ Determines whether this object and another object are equal.
 
 <b>Parameters:</b>
 
- * <i>obj</i>: An arbitrary object.
+ * <i>obj</i>: The parameter  <i>obj</i>
+ is an arbitrary object.
 
 <b>Return Value:</b>
 
@@ -252,7 +254,8 @@ Converts a 64-bit signed integer to a big integer.
 
 <b>Parameters:</b>
 
- * <i>longerValue</i>: A 64-bit signed integer.
+ * <i>longerValue</i>: The parameter  <i>longerValue</i>
+ is a 64-bit signed integer.
 
 <b>Return Value:</b>
 

@@ -164,7 +164,8 @@ Not documented yet.
 
 <b>Parameters:</b>
 
- * <i>other</i>: An ExtendedRational object.
+ * <i>other</i>: The parameter  <i>other</i>
+ is an ExtendedRational object.
 
 <b>Return Value:</b>
 
@@ -180,9 +181,11 @@ Creates a rational number with the given numerator and denominator.
 
 <b>Parameters:</b>
 
- * <i>numeratorSmall</i>: A 32-bit signed integer.
+ * <i>numeratorSmall</i>: The parameter  <i>numeratorSmall</i>
+ is a 32-bit signed integer.
 
- * <i>denominatorSmall</i>: A 32-bit signed integer. (2).
+ * <i>denominatorSmall</i>: The parameter  <i>denominatorSmall</i>
+ is a 32-bit signed integer.
 
 <b>Return Value:</b>
 
@@ -222,7 +225,8 @@ Not documented yet.
 
 <b>Parameters:</b>
 
- * <i>obj</i>: An arbitrary object.
+ * <i>obj</i>: The parameter  <i>obj</i>
+ is an arbitrary object.
 
 <b>Return Value:</b>
 
@@ -237,7 +241,8 @@ Not documented yet.
 
 <b>Parameters:</b>
 
- * <i>other</i>: An ExtendedRational object.
+ * <i>other</i>: The parameter  <i>other</i>
+ is an ExtendedRational object.
 
 <b>Return Value:</b>
 

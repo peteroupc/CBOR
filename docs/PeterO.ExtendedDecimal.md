@@ -165,7 +165,8 @@ Not documented yet.
 
 <b>Parameters:</b>
 
- * <i>other</i>: An ExtendedDecimal object.
+ * <i>other</i>: The parameter  <i>other</i>
+ is an ExtendedDecimal object.
 
 <b>Return Value:</b>
 
@@ -205,7 +206,8 @@ Determines whether this object's mantissa and exponent are equal to those of ano
 
 <b>Parameters:</b>
 
- * <i>obj</i>: An arbitrary object.
+ * <i>obj</i>: The parameter  <i>obj</i>
+ is an arbitrary object.
 
 <b>Return Value:</b>
 

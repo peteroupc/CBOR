@@ -49,7 +49,14 @@ namespace Test {
           decimal d = RandomDecimal(rand, i);
           CBORObject obj = CBORObject.FromObject(d);
           CBORTestCommon.AssertRoundTrip(obj);
-          Assert.AreEqual(d, obj.AsDecimal());
+          decimal decimalOther = 0m;
+          try {
+ decimalOther = obj.AsDecimal();
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+                    Assert.AreEqual(d, decimalOther);
         }
       }
       try {

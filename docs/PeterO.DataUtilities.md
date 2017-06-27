@@ -16,7 +16,8 @@ Gets the Unicode code point at the given index of the string.
 
 <b>Parameters:</b>
 
- * <i>str</i>: A text string.
+ * <i>str</i>: The parameter  <i>str</i>
+ is a text string.
 
  * <i>index</i>: Index of the current position into the string.
 
@@ -42,7 +43,8 @@ Gets the Unicode code point at the given index of the string.
 
 <b>Parameters:</b>
 
- * <i>str</i>: A text string.
+ * <i>str</i>: The parameter  <i>str</i>
+ is a text string.
 
  * <i>index</i>: Index of the current position into the string.
 
@@ -70,7 +72,8 @@ Gets the Unicode code point just before the given index of the string.
 
 <b>Parameters:</b>
 
- * <i>str</i>: A text string.
+ * <i>str</i>: The parameter  <i>str</i>
+ is a text string.
 
  * <i>index</i>: Index of the current position into the string.
 
@@ -96,7 +99,8 @@ Gets the Unicode code point just before the given index of the string.
 
 <b>Parameters:</b>
 
- * <i>str</i>: A text string.
+ * <i>str</i>: The parameter  <i>str</i>
+ is a text string.
 
  * <i>index</i>: Index of the current position into the string.
 
@@ -142,7 +146,8 @@ Encodes a string in UTF-8 as a byte array.
 
 <b>Parameters:</b>
 
- * <i>str</i>: A text string.
+ * <i>str</i>: The parameter  <i>str</i>
+ is a text string.
 
  * <i>replace</i>: If true, replaces unpaired surrogate code points with the replacement character (U+FFFD). If false, stops processing when an unpaired surrogate code point is seen.
 
@@ -171,7 +176,8 @@ Encodes a string in UTF-8 as a byte array.
 
 <b>Parameters:</b>
 
- * <i>str</i>: A text string.
+ * <i>str</i>: The parameter  <i>str</i>
+ is a text string.
 
  * <i>replace</i>: If true, replaces unpaired surrogate code points with the replacement character (U+FFFD). If false, stops processing when an unpaired surrogate code point is seen.
 
@@ -201,7 +207,8 @@ Calculates the number of bytes needed to encode a string in UTF-8.
 
 <b>Parameters:</b>
 
- * <i>str</i>: A text string.
+ * <i>str</i>: The parameter  <i>str</i>
+ is a text string.
 
  * <i>replace</i>: If true, treats unpaired surrogate code points as having 3 UTF-8 bytes (the UTF-8 length of the replacement character U+FFFD).
 
@@ -424,7 +431,8 @@ Returns a string with the basic upper-case letters A to Z (U+0041 to U+005A) con
 
 <b>Parameters:</b>
 
- * <i>str</i>: A text string.
+ * <i>str</i>: The parameter  <i>str</i>
+ is a text string.
 
 <b>Return Value:</b>
 

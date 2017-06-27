@@ -462,13 +462,13 @@ namespace PeterO.Cbor {
           }
           sb.WriteCodePoint((int)'\\');
           sb.WriteCodePoint((int)c);
-        } else if (c < 0x20 || (c >= 0x85 && (c == 0x2028 || c == 0x2029 ||
-                    c == 0x85 || c == 0xfeff || c == 0xfffe ||
+        } else if (c < 0x20 || (c >= 0x7f &&
+                    (c == 0x2028 || c == 0x2029 ||
+                    (c >= 0x7f && c <= 0xa0) || c == 0xfeff || c == 0xfffe ||
                     c == 0xffff))) {
           // Control characters, and also the line and paragraph separators
           // which apparently can't appear in JavaScript (as opposed to
           // JSON) strings
-          // TODO: Also include 0x7f..0x9f in version 3
           if (first) {
             first = false;
             sb.WriteString(str, 0, i);
@@ -485,7 +485,7 @@ namespace PeterO.Cbor {
             sb.WriteString("\\t");
           } else if (c == 0x85) {
             sb.WriteString("\\u0085");
-          } else if (c >= 0x2028) {
+          } else if (c >= 0x100) {
             sb.WriteString("\\u");
             sb.WriteCodePoint((int)Hex16[(int)((c >> 12) & 15)]);
             sb.WriteCodePoint((int)Hex16[(int)((c >> 8) & 15)]);

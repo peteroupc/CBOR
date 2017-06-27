@@ -243,8 +243,6 @@ namespace PeterO.Cbor {
             }
             if (nextByte != 0x60) {  // NOTE: 0x60 means the empty string
               if (PropertyMap.ExceedsKnownLength(this.stream, len)) {
-                // TODO: Remove following line in version 3.0
-                PropertyMap.SkipStreamToEnd(this.stream);
                 throw new CBORException("Premature end of data");
               }
               switch (
@@ -274,8 +272,6 @@ namespace PeterO.Cbor {
               " is bigger than supported");
           }
           if (PropertyMap.ExceedsKnownLength(this.stream, uadditional)) {
-            // TODO: Remove following line in version 3.0
-            PropertyMap.SkipStreamToEnd(this.stream);
             throw new CBORException("Premature end of data");
           }
           var builder = new StringBuilder();
@@ -345,8 +341,6 @@ namespace PeterO.Cbor {
           throw new CBORException("Array is too long");
         }
         if (PropertyMap.ExceedsKnownLength(this.stream, uadditional)) {
-          // TODO: Remove following line in version 3.0
-          PropertyMap.SkipStreamToEnd(this.stream);
           throw new CBORException("Remaining data too small for array length");
         }
         ++this.depth;
@@ -397,8 +391,6 @@ namespace PeterO.Cbor {
             " is bigger than supported");
         }
         if (PropertyMap.ExceedsKnownLength(this.stream, uadditional)) {
-            // TODO: Remove following line in version 3.0
-            PropertyMap.SkipStreamToEnd(this.stream);
             throw new CBORException("Remaining data too small for map length");
         }
         for (long i = 0; i < uadditional; ++i) {
@@ -529,8 +521,6 @@ namespace PeterO.Cbor {
           " is bigger than supported ");
       }
       if (PropertyMap.ExceedsKnownLength(stream, uadditional)) {
-        // TODO: Remove following line in version 3.0
-        PropertyMap.SkipStreamToEnd(stream);
         throw new CBORException("Premature end of stream");
       }
       if (uadditional <= 0x10000) {

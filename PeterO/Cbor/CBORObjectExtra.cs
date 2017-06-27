@@ -53,20 +53,7 @@ namespace PeterO.Cbor {
 
     private static decimal ExtendedRationalToDecimal(ERational
       extendedNumber) {
-      // TODO: When this library uses PeterO.Numbers later than 0.2, use an
-      // operator
-      if (extendedNumber.IsInfinity() || extendedNumber.IsNaN()) {
-        throw new OverflowException("This object's value is out of range");
-      }
-      try {
-        EDecimal newDecimal = EDecimal.FromEInteger(extendedNumber.Numerator)
-          .Divide(
-  EDecimal.FromEInteger(extendedNumber.Denominator),
-  EContext.CliDecimal.WithTraps(EContext.FlagOverflow));
-        return (decimal)newDecimal;
-      } catch (ETrapException ex) {
-        throw new OverflowException("This object's value is out of range", ex);
-      }
+      return (decimal)extendedNumber;
     }
 
     private static decimal ExtendedDecimalToDecimal(EDecimal
@@ -99,24 +86,7 @@ namespace PeterO.Cbor {
       if (bigint.Sign < 0 || bigint.GetSignedBitLength() > 64) {
         throw new OverflowException("This object's value is out of range");
       }
-      byte[] data = bigint.ToBytes(true);
-      var a = 0;
-      var b = 0;
-      for (var i = 0; i < Math.Min(4, data.Length); ++i) {
-        a |= (((int)data[i]) & 0xff) << (i * 8);
-      }
-      for (int i = 4; i < Math.Min(8, data.Length); ++i) {
-        b |= (((int)data[i]) & 0xff) << ((i - 4) * 8);
-      }
-      unchecked
-      {
-        var ret = (ulong)a;
-        ret &= 0xffffffffL;
-        var retb = (ulong)b;
-        retb &= 0xffffffffL;
-        ret |= retb << 32;
-        return ret;
-      }
+      return (ulong)bigint;
     }
 
     /// <include file='../../docs.xml'

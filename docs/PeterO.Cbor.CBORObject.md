@@ -359,7 +359,8 @@ Converts an object to a CBOR object and adds it to the end of this array.
 
 <b>Parameters:</b>
 
- * <i>obj</i>: A CBOR object.
+ * <i>obj</i>: The parameter  <i>obj</i>
+ is a CBOR object.
 
 <b>Return Value:</b>
 
@@ -383,7 +384,8 @@ Adds a new object to the end of this array. (Used to throw ArgumentNullException
 
 <b>Parameters:</b>
 
- * <i>obj</i>: A CBOR object.
+ * <i>obj</i>: The parameter  <i>obj</i>
+ is a CBOR object.
 
 <b>Return Value:</b>
 
@@ -406,7 +408,8 @@ Registers an object that converts objects of a given type to CBOR objects (calle
 
  * <i>type</i>: A Type object specifying the type that the converter converts to CBOR objects.
 
- * <i>converter</i>: An ICBORConverter object.
+ * <i>converter</i>: The parameter  <i>converter</i>
+ is an ICBORConverter object.
 
  * &lt;T&gt;: Must be the same as the "type" parameter.
 
@@ -427,9 +430,11 @@ Finds the sum of two CBOR numbers.
 
 <b>Parameters:</b>
 
- * <i>first</i>: Another CBOR object.
+ * <i>first</i>: The parameter  <i>first</i>
+ is a CBOR object.
 
- * <i>second</i>: A CBORObject object. (3).
+ * <i>second</i>: The parameter  <i>second</i>
+ is a CBORObject object.
 
 <b>Return Value:</b>
 
@@ -454,7 +459,8 @@ Registers an object that validates CBOR objects with new tags.
 
  * <i>bigintTag</i>: An arbitrary-precision integer.
 
- * <i>handler</i>: An ICBORTag object.
+ * <i>handler</i>: The parameter  <i>handler</i>
+ is an ICBORTag object.
 
 <b>Exceptions:</b>
 
@@ -479,7 +485,8 @@ Registers an object that validates CBOR objects with new tags.
 
  * <i>bigintTag</i>: An arbitrary-precision integer.
 
- * <i>handler</i>: An ICBORTag object.
+ * <i>handler</i>: The parameter  <i>handler</i>
+ is an ICBORTag object.
 
 <b>Exceptions:</b>
 
@@ -1016,7 +1023,8 @@ Generates a CBOR object from an array of CBOR-encoded bytes.
 
  * <i>data</i>: A byte array.
 
- * <i>options</i>: A CBOREncodeOptions object.
+ * <i>options</i>: The parameter  <i>options</i>
+ is a CBOREncodeOptions object.
 
 <b>Return Value:</b>
 
@@ -1042,9 +1050,11 @@ Divides a CBORObject object by the value of a CBORObject object.
 
 <b>Parameters:</b>
 
- * <i>first</i>: A CBORObject object.
+ * <i>first</i>: The parameter  <i>first</i>
+ is a CBORObject object.
 
- * <i>second</i>: Another CBOR object.
+ * <i>second</i>: The parameter  <i>second</i>
+ is a CBOR object.
 
 <b>Return Value:</b>
 
@@ -1090,7 +1100,8 @@ Determines whether this object and another object are equal and have the same ty
 
 <b>Parameters:</b>
 
- * <i>obj</i>: An arbitrary object.
+ * <i>obj</i>: The parameter  <i>obj</i>
+ is an arbitrary object.
 
 <b>Return Value:</b>
 
@@ -1147,7 +1158,8 @@ Generates a CBOR object from a text string in JavaScript Object Notation (JSON) 
 
  * <i>str</i>: A string in JSON format. The entire string must contain a single JSON object and not multiple objects. The string may not begin with a byte-order mark (U+FEFF).
 
- * <i>options</i>: A CBOREncodeOptions object.
+ * <i>options</i>: The parameter  <i>options</i>
+ is a CBOREncodeOptions object.
 
 <b>Return Value:</b>
 
@@ -1186,7 +1198,8 @@ Generates a CBOR object from a byte (0 to 255).
 
 <b>Parameters:</b>
 
- * <i>value</i>: A Byte object.
+ * <i>value</i>: The parameter  <i>value</i>
+ is a byte (from 0 to 255).
 
 <b>Return Value:</b>
 
@@ -1216,7 +1229,8 @@ Generates a CBOR string object from a Unicode character.
 
 <b>Parameters:</b>
 
- * <i>value</i>: A char object.
+ * <i>value</i>: The parameter  <i>value</i>
+ is a char object.
 
 <b>Return Value:</b>
 
@@ -1237,7 +1251,8 @@ Generates a CBOR object from a 64-bit floating-point number.
 
 <b>Parameters:</b>
 
- * <i>value</i>: A 64-bit floating-point number.
+ * <i>value</i>: The parameter  <i>value</i>
+ is a 64-bit floating-point number.
 
 <b>Return Value:</b>
 
@@ -1252,7 +1267,8 @@ Generates a CBOR object from a 32-bit floating-point number.
 
 <b>Parameters:</b>
 
- * <i>value</i>: A 32-bit floating-point number.
+ * <i>value</i>: The parameter  <i>value</i>
+ is a 32-bit floating-point number.
 
 <b>Return Value:</b>
 
@@ -1267,7 +1283,8 @@ Generates a CBOR object from a 32-bit signed integer.
 
 <b>Parameters:</b>
 
- * <i>value</i>: A 32-bit signed integer.
+ * <i>value</i>: The parameter  <i>value</i>
+ is a 32-bit signed integer.
 
 <b>Return Value:</b>
 
@@ -1297,7 +1314,8 @@ Generates a CBOR object from a 64-bit signed integer.
 
 <b>Parameters:</b>
 
- * <i>value</i>: A 64-bit signed integer.
+ * <i>value</i>: The parameter  <i>value</i>
+ is a 64-bit signed integer.
 
 <b>Return Value:</b>
 
@@ -1331,7 +1349,8 @@ If the input is a byte array, the byte array is copied to a new byte array. (Thi
 
 <b>Parameters:</b>
 
- * <i>obj</i>: An arbitrary object.
+ * <i>obj</i>: The parameter  <i>obj</i>
+ is an arbitrary object.
 
 <b>Return Value:</b>
 
@@ -1363,7 +1382,8 @@ Generates a CBOR object from a CBOR object.
 
 <b>Parameters:</b>
 
- * <i>value</i>: A CBOR object.
+ * <i>value</i>: The parameter  <i>value</i>
+ is a CBOR object.
 
 <b>Return Value:</b>
 
@@ -1438,6 +1458,36 @@ A CBOR number.
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
+        PeterO.Numbers.EDecimal otherValue);
+
+Generates a CBOR object from a decimal number.
+
+<b>Parameters:</b>
+
+ * <i>otherValue</i>: An arbitrary-precision decimal number.
+
+<b>Return Value:</b>
+
+A CBOR number.
+
+### FromObject
+
+    public static PeterO.Cbor.CBORObject FromObject(
+        PeterO.Numbers.EFloat bigValue);
+
+Generates a CBOR object from an arbitrary-precision binary floating-point number.
+
+<b>Parameters:</b>
+
+ * <i>bigValue</i>: An arbitrary-precision binary floating-point number.
+
+<b>Return Value:</b>
+
+A CBOR number.
+
+### FromObject
+
+    public static PeterO.Cbor.CBORObject FromObject(
         PeterO.Numbers.EInteger bigintValue);
 
 Generates a CBOR object from an arbitrary-precision integer.
@@ -1474,7 +1524,8 @@ Converts a signed 8-bit integer to a CBOR object.
 
 <b>Parameters:</b>
 
- * <i>value</i>: An 8-bit signed integer.
+ * <i>value</i>: The parameter  <i>value</i>
+ is an 8-bit signed integer.
 
 <b>Return Value:</b>
 
@@ -1489,7 +1540,8 @@ Generates a CBOR object from a 16-bit signed integer.
 
 <b>Parameters:</b>
 
- * <i>value</i>: A 16-bit signed integer.
+ * <i>value</i>: The parameter  <i>value</i>
+ is a 16-bit signed integer.
 
 <b>Return Value:</b>
 
@@ -1524,7 +1576,8 @@ Converts a .NET decimal to a CBOR object.
 
 <b>Parameters:</b>
 
- * <i>value</i>: A Decimal object.
+ * <i>value</i>: The parameter  <i>value</i>
+ is a Decimal object.
 
 <b>Return Value:</b>
 
@@ -1639,7 +1692,8 @@ Generates a CBOR object from an arbitrary object and gives the resulting object 
 
 <b>Parameters:</b>
 
- * <i>o</i>: An arbitrary object.
+ * <i>o</i>: The parameter  <i>o</i>
+ is an arbitrary object.
 
  * <i>tag</i>: A 64-bit unsigned integer.
 
@@ -1749,7 +1803,8 @@ Creates a CBOR object from a simple value number.
 
 <b>Parameters:</b>
 
- * <i>simpleValue</i>: A 32-bit signed integer.
+ * <i>simpleValue</i>: The parameter  <i>simpleValue</i>
+ is a 32-bit signed integer.
 
 <b>Return Value:</b>
 
@@ -1957,9 +2012,11 @@ Multiplies two CBOR numbers.
 
 <b>Parameters:</b>
 
- * <i>first</i>: A CBORObject object.
+ * <i>first</i>: The parameter  <i>first</i>
+ is a CBORObject object.
 
- * <i>second</i>: Another CBOR object.
+ * <i>second</i>: The parameter  <i>second</i>
+ is a CBOR object.
 
 <b>Return Value:</b>
 
@@ -2015,9 +2072,11 @@ Adds a CBORObject object and a CBORObject object.
 
 <b>Parameters:</b>
 
- * <i>a</i>: A CBORObject object.
+ * <i>a</i>: The parameter  <i>a</i>
+ is a CBORObject object.
 
- * <i>b</i>: Another CBORObject object.
+ * <i>b</i>: The parameter  <i>b</i>
+ is a CBORObject object.
 
 <b>Return Value:</b>
 
@@ -2033,9 +2092,11 @@ Divides a CBORObject object by the value of a CBORObject object.
 
 <b>Parameters:</b>
 
- * <i>a</i>: A CBORObject object.
+ * <i>a</i>: The parameter  <i>a</i>
+ is a CBORObject object.
 
- * <i>b</i>: Another CBORObject object.
+ * <i>b</i>: The parameter  <i>b</i>
+ is a CBORObject object.
 
 <b>Return Value:</b>
 
@@ -2051,9 +2112,11 @@ Finds the remainder that results when a CBORObject object is divided by the valu
 
 <b>Parameters:</b>
 
- * <i>a</i>: A CBORObject object.
+ * <i>a</i>: The parameter  <i>a</i>
+ is a CBORObject object.
 
- * <i>b</i>: Another CBORObject object.
+ * <i>b</i>: The parameter  <i>b</i>
+ is a CBORObject object.
 
 <b>Return Value:</b>
 
@@ -2069,9 +2132,11 @@ Multiplies a CBORObject object by the value of a CBORObject object.
 
 <b>Parameters:</b>
 
- * <i>a</i>: A CBORObject object.
+ * <i>a</i>: The parameter  <i>a</i>
+ is a CBORObject object.
 
- * <i>b</i>: Another CBORObject object.
+ * <i>b</i>: The parameter  <i>b</i>
+ is a CBORObject object.
 
 <b>Return Value:</b>
 
@@ -2087,9 +2152,11 @@ Subtracts a CBORObject object from a CBORObject object.
 
 <b>Parameters:</b>
 
- * <i>a</i>: A CBORObject object.
+ * <i>a</i>: The parameter  <i>a</i>
+ is a CBORObject object.
 
- * <i>b</i>: Another CBORObject object.
+ * <i>b</i>: The parameter  <i>b</i>
+ is a CBORObject object.
 
 <b>Return Value:</b>
 
@@ -2131,7 +2198,8 @@ Reads an object in CBOR format from a data stream. This method will read from th
 
  * <i>stream</i>: A readable data stream.
 
- * <i>options</i>: A CBOREncodeOptions object.
+ * <i>options</i>: The parameter  <i>options</i>
+ is a CBOREncodeOptions object.
 
 <b>Return Value:</b>
 
@@ -2185,7 +2253,8 @@ Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) 
 
  * <i>stream</i>: A readable data stream. The sequence of bytes read from the data stream must contain a single JSON object and not multiple objects.
 
- * <i>options</i>: A CBOREncodeOptions object.
+ * <i>options</i>: The parameter  <i>options</i>
+ is a CBOREncodeOptions object.
 
 <b>Return Value:</b>
 
@@ -2213,9 +2282,11 @@ Finds the remainder that results when a CBORObject object is divided by the valu
 
 <b>Parameters:</b>
 
- * <i>first</i>: A CBORObject object.
+ * <i>first</i>: The parameter  <i>first</i>
+ is a CBORObject object.
 
- * <i>second</i>: Another CBOR object.
+ * <i>second</i>: The parameter  <i>second</i>
+ is a CBOR object.
 
 <b>Return Value:</b>
 
@@ -2283,9 +2354,11 @@ Finds the difference between two CBOR number objects.
 
 <b>Parameters:</b>
 
- * <i>first</i>: A CBORObject object.
+ * <i>first</i>: The parameter  <i>first</i>
+ is a CBORObject object.
 
- * <i>second</i>: Another CBOR object.
+ * <i>second</i>: The parameter  <i>second</i>
+ is a CBOR object.
 
 <b>Return Value:</b>
 
@@ -2564,7 +2637,8 @@ Writes a CBOR object to a CBOR data stream. See the three-parameter Write method
 
 <b>Parameters:</b>
 
- * <i>objValue</i>: An arbitrary object.
+ * <i>objValue</i>: The parameter  <i>objValue</i>
+ is an arbitrary object.
 
  * <i>stream</i>: A writable data stream.
 
@@ -2822,7 +2896,8 @@ Writes an 8-bit signed integer in CBOR format to a data stream.
 
 <b>Parameters:</b>
 
- * <i>value</i>: An 8-bit signed integer.
+ * <i>value</i>: The parameter  <i>value</i>
+ is an 8-bit signed integer.
 
  * <i>stream</i>: A writable data stream.
 
@@ -2956,7 +3031,8 @@ Converts an arbitrary object to a string in JavaScript Object Notation (JSON) fo
 
 <b>Parameters:</b>
 
- * <i>obj</i>: An arbitrary object.
+ * <i>obj</i>: The parameter  <i>obj</i>
+ is an arbitrary object.
 
  * <i>outputStream</i>: A writable data stream.
 
