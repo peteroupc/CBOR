@@ -149,6 +149,7 @@ namespace Test {
         } catch (CBORException) {
           new Object();
         } catch (Exception ex) {
+    Console.WriteLine(ex.Message);
           throw;  // TODO: Temporary
 // Assert.Fail(ex.ToString());
 // throw new InvalidOperationException(String.Empty, ex);

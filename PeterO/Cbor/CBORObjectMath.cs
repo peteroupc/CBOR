@@ -246,7 +246,7 @@ namespace PeterO.Cbor {
         long rem = valueA - (quo * valueB);
         return (rem == 0) ? CBORObject.FromObject(quo) :
         CBORObject.FromObject(
-  new ERational(
+  ERational.Create(
   (EInteger)valueA,
   (EInteger)valueB));
       }
@@ -316,7 +316,7 @@ EInteger[] divrem = b1.DivRem(b2);
 bigquo = divrem[0];
 bigrem = divrem[1]; }
         return bigrem.IsZero ? CBORObject.FromObject(bigquo) :
-        CBORObject.FromObject(new ERational(b1, b2));
+        CBORObject.FromObject(ERational.Create(b1, b2));
       }
     }
 

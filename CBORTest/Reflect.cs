@@ -127,8 +127,8 @@ namespace Test {
     }
 
     public static object GetFieldStatic(string type, string name) {
-      return FindType(
-  type).GetField(
+  var typeInfo = FindType(type);
+      return typeInfo.GetField(
   name,
   BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.GetField).GetValue(null);
     }
