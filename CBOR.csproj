@@ -102,7 +102,6 @@
     <Compile Include="PeterO\Cbor\CBORTag2.cs" />
     <Compile Include="PeterO\Cbor\CBORTag26.cs" />
     <Compile Include="PeterO\Cbor\CBORTag27.cs" />
-    <Compile Include="PeterO\Cbor\CBORTag28.cs" />
     <Compile Include="PeterO\Cbor\CBORTag3.cs" />
     <Compile Include="PeterO\Cbor\CBORTag30.cs" />
     <Compile Include="PeterO\Cbor\CBORTag32.cs" />

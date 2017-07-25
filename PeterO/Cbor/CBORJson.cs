@@ -233,8 +233,8 @@ namespace PeterO.Cbor {
               c = this.reader.ReadChar();
             }
             if (lengthTwo) {
-              // TODO: Preserve negative zero in JSON in version 3
-              obj = cval == 0 ? CBORDataUtilities.ParseJSONNumber("-0") :
+              obj = cval == 0 ?
+              CBORDataUtilities.ParseJSONNumber("-0", true, false, true) :
                 CBORObject.FromObject(cval);
             } else {
               str = sb.ToString();
@@ -462,8 +462,7 @@ namespace PeterO.Cbor {
           }
           sb.WriteCodePoint((int)'\\');
           sb.WriteCodePoint((int)c);
-        } else if (c < 0x20 || (c >= 0x7f &&
-                    (c == 0x2028 || c == 0x2029 ||
+        } else if (c < 0x20 || (c >= 0x7f && (c == 0x2028 || c == 0x2029 ||
                     (c >= 0x7f && c <= 0xa0) || c == 0xfeff || c == 0xfffe ||
                     c == 0xffff))) {
           // Control characters, and also the line and paragraph separators

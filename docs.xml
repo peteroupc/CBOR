@@ -20,7 +20,7 @@
 </doc>
 <doc name="M:PeterO.BigInteger.CompareTo(PeterO.BigInteger)">
 <summary>Not documented yet.</summary>
-            <param name='other'>The parameter <paramref name='other'/> is a BigInteger object.</param>
+            <param name='other'>The parameter <paramref name='other'/> is an arbitrary-precision integer.</param>
             <returns>A 32-bit signed integer.</returns>
 </doc>
 <doc name="M:PeterO.BigInteger.Equals(PeterO.BigInteger)">
@@ -3399,12 +3399,12 @@ tag 22, or base16 for tag 23.)</item>
 <doc name="M:PeterO.ExtendedRational.Equals(PeterO.ExtendedRational)">
 <summary>Not documented yet.</summary>
             <param name='other'>The parameter <paramref name='other'/> is an ExtendedRational object.</param>
-            <returns>A Boolean object.</returns>
+            <returns>Either <c>true</c> or <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedRational.Equals(System.Object)">
 <summary>Not documented yet.</summary>
             <param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param>
-            <returns>A Boolean object.</returns>
+            <returns>Either <c>true</c> or <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedRational.GetHashCode">
 <summary>Calculates the hash code for this object.  No application or process IDs are used in the hash code calculation.</summary>

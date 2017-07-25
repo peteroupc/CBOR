@@ -13,16 +13,14 @@ using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   internal class CBORReader {
-    private readonly SharedRefs sharedRefs;
     private readonly Stream stream;
-    private bool addSharedRef;
     private int depth;
     private CBORDuplicatePolicy policy;
     private StringRefs stringRefs;
+    private bool hasSharableObjects;
 
     public CBORReader(Stream inStream) {
       this.stream = inStream;
-      this.sharedRefs = new SharedRefs();
       this.policy = CBORDuplicatePolicy.Overwrite;
     }
 
@@ -38,6 +36,43 @@ namespace PeterO.Cbor {
       set {
         this.policy = value;
       }
+    }
+
+    public CBORObject ResolveSharedRefsIfNeeded(CBORObject obj) {
+      if (hasSharableObjects) {
+        var sharedRefs = new SharedRefs();
+        return ResolveSharedRefs(obj, sharedRefs);
+      }
+      return obj;
+    }
+    private static CBORObject ResolveSharedRefs(CBORObject obj, SharedRefs
+      sharedRefs) {
+  int type = obj.ItemType;
+  bool hasTag = obj.MostOuterTag.Equals((EInteger)29);
+  DebugUtility.Log(CBORObject.FromObject(obj.GetTags()).ToJSONString());
+  DebugUtility.Log(obj.ToJSONString());
+  if (hasTag) {
+    return sharedRefs.GetObject(obj.AsEInteger());
+  }
+  hasTag = obj.MostOuterTag.Equals((EInteger)28);
+  if (hasTag) {
+      obj = obj.Untag();
+      sharedRefs.AddObject(obj);
+  }
+  if (type == CBORObject.CBORObjectTypeMap) {
+    foreach (var key in obj.Keys) {
+      var value = obj[key];
+      var newvalue = ResolveSharedRefs(value, sharedRefs);
+      if (value != newvalue) {
+        obj[key]=newvalue;
+      }
+    }
+  } else if (type == CBORObject.CBORObjectTypeArray) {
+    for (var i = 0;i<obj.Count; ++i) {
+      obj[i]=ResolveSharedRefs(obj[i], sharedRefs);
+    }
+  }
+  return obj;
     }
 
     public CBORObject Read(CBORTypeFilter filter) {
@@ -103,9 +138,6 @@ namespace PeterO.Cbor {
         CBORObject cbor = CBORObject.GetFixedLengthObject(firstbyte, data);
         if (this.stringRefs != null && (type == 2 || type == 3)) {
           this.stringRefs.AddStringIfNeeded(cbor, expectedLength - 1);
-        }
-        if (this.addSharedRef && (type == 4 || type == 5)) {
-          this.sharedRefs.AddObject(cbor);
         }
         return cbor;
       }
@@ -299,10 +331,6 @@ namespace PeterO.Cbor {
       }
       if (type == 4) {  // Array
         CBORObject cbor = CBORObject.NewArray();
-        if (this.addSharedRef) {
-          this.sharedRefs.AddObject(cbor);
-          this.addSharedRef = false;
-        }
         if (additional == 31) {
           var vtindex = 0;
           // Indefinite-length array
@@ -353,10 +381,6 @@ namespace PeterO.Cbor {
       }
       if (type == 5) {  // Map, type 5
         CBORObject cbor = CBORObject.NewMap();
-        if (this.addSharedRef) {
-          this.sharedRefs.AddObject(cbor);
-          this.addSharedRef = false;
-        }
         if (additional == 31) {
           // Indefinite-length map
           while (true) {
@@ -411,8 +435,6 @@ namespace PeterO.Cbor {
         ICBORTag taginfo = null;
         var haveFirstByte = false;
         var newFirstByte = -1;
-        var unnestedObject = false;
-        CBORObject tagObject = null;
         if (!hasBigAdditional) {
           if (filter != null && !filter.TagAllowed(uadditional)) {
             throw new CBORException("Unexpected tag encountered: " +
@@ -420,7 +442,7 @@ namespace PeterO.Cbor {
           }
           int uad = uadditional >= 257 ? 257 : (uadditional < 0 ? 0 :
             (int)uadditional);
-          switch (uad) {
+    switch (uad) {
             case 256:
               // Tag 256: String namespace
               this.stringRefs = this.stringRefs ?? (new StringRefs());
@@ -431,27 +453,12 @@ namespace PeterO.Cbor {
               if (this.stringRefs == null) {
                 throw new CBORException("No stringref namespace");
               }
-
               break;
-            case 28:
-              // Shareable object
-              newFirstByte = this.stream.ReadByte();
-              if (newFirstByte < 0) {
-                throw new CBORException("Premature end of data");
-              }
-              if (newFirstByte >= 0x80 && newFirstByte < 0xc0) {
-                // Major types 4 and 5 (array and map)
-                this.addSharedRef = true;
-              } else if ((newFirstByte & 0xe0) == 0xc0) {
-                // Major type 6 (tagged object)
-                tagObject = new CBORObject(CBORObject.Undefined, 28, 0);
-                this.sharedRefs.AddObject(tagObject);
-              } else {
-                // All other major types
-                unnestedObject = true;
-              }
-              haveFirstByte = true;
-              break;
+     case 28:
+     case 29:
+            DebugUtility.Log("Read tag "+uad);
+          hasSharableObjects = true;
+       break;
           }
 
           taginfo = CBORObject.FindTagConverterLong(uadditional);
@@ -482,23 +489,6 @@ namespace PeterO.Cbor {
             case 25:
               // stringref tag
               return this.stringRefs.GetString(o.AsEInteger());
-            case 28:
-              // shareable object
-              this.addSharedRef = false;
-              if (unnestedObject) {
-                this.sharedRefs.AddObject(o);
-              }
-              if (tagObject != null) {
-              // TODO: Somehow implement sharable objects
-              // without relying on Redefine method
-              // tagObject.Redefine(o);
-              // o = tagObject;
-              }
-
-              break;
-            case 29:
-              // shared object reference
-              return this.sharedRefs.GetObject(o.AsEInteger());
           }
 
           return CBORObject.FromObjectAndTag(

@@ -80,8 +80,6 @@ namespace PeterO.Cbor {
       if (cn == null) {
         throw new InvalidOperationException("Not a number type");
       }
-      // TODO: When this library uses PeterO.Numbers later than 0.2, use an
-      // operator
       EInteger bigint = cn.AsEInteger(this.ThisItem);
       if (bigint.Sign < 0 || bigint.GetSignedBitLength() > 64) {
         throw new OverflowException("This object's value is out of range");

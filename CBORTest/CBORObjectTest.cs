@@ -2121,6 +2121,15 @@ namespace Test {
      2000);
       TestFailingJSON(jsonTemp);
     }
+    
+    
+    [Test]
+    public void TestTagArray() {
+        var obj=CBORObject.FromObjectAndTag("test",999);
+        Assert.AreEqual("[999]",CBORObject.FromObject(obj.GetTags()).ToJSONString());
+	    obj=CBORObject.FromObject("test");
+        Assert.AreEqual("[]",CBORObject.FromObject(obj.GetTags()).ToJSONString());
+    }
     [Test]
     public void TestEI() {
       CBORObject cbor = CBORObject.FromObject(EInteger.FromString("100"));

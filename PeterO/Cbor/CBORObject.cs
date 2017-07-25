@@ -185,6 +185,9 @@ namespace PeterO.Cbor {
           ((EInteger)item).CompareTo(Int64MaxValue) <= 0) {
         throw new ArgumentException("Big integer is within range for Integer");
       }
+      if(type==CBORObjectTypeArray && !(item is IList<CBORObject>)){
+       throw new InvalidOperationException();
+      }
 #endif
       this.itemtypeValue = type;
       this.itemValue = item;
@@ -924,9 +927,6 @@ namespace PeterO.Cbor {
       if (value == null) {
         return CBORObject.Null;
       }
-      if (value.Count == 0) {
-        return new CBORObject(CBORObjectTypeArray, new List<T>());
-      }
       CBORObject retCbor = CBORObject.NewArray();
       foreach (T i in (IList<T>)value) {
         retCbor.Add(CBORObject.FromObject(i));
@@ -1140,7 +1140,7 @@ namespace PeterO.Cbor {
         return c2;
       }
     }
-
+    
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObjectAndTag(System.Object,System.Int32)"]/*'/>
     public static CBORObject FromObjectAndTag(
@@ -1204,7 +1204,8 @@ namespace PeterO.Cbor {
         throw new ArgumentNullException("stream");
       }
       try {
-        return new CBORReader(stream).Read(null);
+       var reader=new CBORReader(stream);
+        return reader.ResolveSharedRefsIfNeeded(reader.Read(null));
       } catch (IOException ex) {
         throw new CBORException("I/O error occurred.", ex);
       }
@@ -1222,7 +1223,7 @@ namespace PeterO.Cbor {
         if (opt.Value != 0) {
           reader.DuplicatePolicy = CBORReader.CBORDuplicatePolicy.Disallow;
         }
-        return reader.Read(null);
+        return reader.ResolveSharedRefsIfNeeded(reader.Read(null));
       } catch (IOException ex) {
         throw new CBORException("I/O error occurred.", ex);
       }
@@ -1286,12 +1287,7 @@ namespace PeterO.Cbor {
       if (stream == null) {
         throw new ArgumentNullException("stream");
       }
-      if (str == null) {
-        stream.WriteByte(0xf6);  // Write null instead of string
-      } else {
-        // TODO: Maybe change to unstreamed string in 3.0
-        WriteStreamedString(str, stream);
-      }
+      Write(str, stream, CBOREncodeOptions.None);
     }
 
     /// <include file='../../docs.xml'
@@ -3028,7 +3024,6 @@ sb = sb ?? (new StringBuilder());
         AddTagHandler((EInteger)264, new CBORTag4(true));
         AddTagHandler((EInteger)265, new CBORTag5(true));
         AddTagHandler((EInteger)25, new CBORTagUnsigned());
-        AddTagHandler((EInteger)28, new CBORTag28());
         AddTagHandler((EInteger)29, new CBORTagUnsigned());
         AddTagHandler((EInteger)256, new CBORTagAny());
         AddTagHandler(EInteger.Zero, new CBORTag0());
