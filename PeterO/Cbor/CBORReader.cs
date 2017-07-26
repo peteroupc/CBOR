@@ -60,9 +60,9 @@ namespace PeterO.Cbor {
       sharedRefs.AddObject(obj);
   }
   if (type == CBORObject.CBORObjectTypeMap) {
-    foreach (var key in obj.Keys) {
-      var value = obj[key];
-      var newvalue = ResolveSharedRefs(value, sharedRefs);
+    foreach (CBORObject key in obj.Keys) {
+      CBORObject value = obj[key];
+      CBORObject newvalue = ResolveSharedRefs(value, sharedRefs);
       if (value != newvalue) {
         obj[key] = newvalue;
       }
@@ -456,7 +456,6 @@ namespace PeterO.Cbor {
               break;
      case 28:
      case 29:
-            DebugUtility.Log("Read tag " + uad);
           this.hasSharableObjects = true;
        break;
           }

@@ -149,9 +149,8 @@ namespace Test {
         } catch (CBORException) {
           new Object();
         } catch (Exception ex) {
-    Console.WriteLine(ex.Message);
-   Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
+  Assert.Fail(ex.ToString());
+  throw new InvalidOperationException(String.Empty, ex);
         }
         return;
       }
@@ -2123,7 +2122,7 @@ namespace Test {
 
     [Test]
     public void TestTagArray() {
-        var obj = CBORObject.FromObjectAndTag("test", 999);
+        CBORObject obj = CBORObject.FromObjectAndTag("test", 999);
         {
 string stringTemp = CBORObject.FromObject(obj.GetAllTags()).ToJSONString();
 Assert.AreEqual(

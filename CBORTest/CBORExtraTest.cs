@@ -53,7 +53,8 @@ namespace Test {
           try {
  decimalOther = obj.AsDecimal();
 } catch (Exception ex) {
-                    Assert.Fail(ex.ToString()+"\r\n" + CBORTest.ObjectMessage(obj));
+               Assert.Fail(ex.ToString() + "\r\n" +
+                    CBORTest.ObjectMessage(obj));
 throw new InvalidOperationException(String.Empty, ex);
 }
                     Assert.AreEqual(d, decimalOther);
@@ -176,10 +177,18 @@ new Object();
     public void TestArbitraryTypes() {
       CBORObject obj = CBORObject.FromObject(new { AByte.A, B = AInt.A, C =
                     AULong.A });
-      Assert.NotNull (obj);
-      Assert.NotNull (obj ["a"]);
-            Assert.NotNull (obj ["b"]);
-            Assert.NotNull (obj ["c"]);
+      if (obj == null) {
+ Assert.Fail();
+ }
+      if (obj["a"] == null) {
+ Assert.Fail();
+ }
+            if (obj["b"] == null) {
+ Assert.Fail();
+ }
+            if (obj["c"] == null) {
+ Assert.Fail();
+ }
     Assert.AreEqual(254, obj["a"].AsInt32());
       Assert.AreEqual(256, obj["b"].AsInt32());
       Assert.AreEqual(999999, obj["c"].AsInt32());

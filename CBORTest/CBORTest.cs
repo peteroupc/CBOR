@@ -514,7 +514,7 @@ namespace Test {
         if (o2.IsZero) {
           continue;
         }
-        var er = ERational.Create(o1.AsEInteger(), o2.AsEInteger());
+        ERational er = ERational.Create(o1.AsEInteger(), o2.AsEInteger());
         {
           ERational objectTemp = er;
           ERational objectTemp2 = CBORObject.Divide(

@@ -51,8 +51,7 @@ namespace PeterO.Cbor {
     }
         private static bool HasCustomAttribute (
   Type t,
-  string name)
-        {
+  string name) {
             foreach (var attr in t.CustomAttributes) {
                 DebugUtility.Log (attr.AttributeType.GetType ().FullName);
                 if (attr.GetType ().FullName.Equals (name)) {
@@ -73,13 +72,12 @@ namespace PeterO.Cbor {
        return t.GetRuntimeMethod(name, parameters);
     }
 
-        private static bool HasCustomAttribute (
+        private static bool HasCustomAttribute(
   Type t,
-  string name)
-        {
-      foreach (var attr in t.GetTypeInfo ().GetCustomAttributes ()) {
-        DebugUtility.Log (attr.GetType ().FullName);
-        if (attr.GetType ().FullName.Equals (name)) {
+  string name) {
+       foreach (var attr in t.GetTypeInfo().GetCustomAttributes()) {
+        DebugUtility.Log(attr.GetType().FullName);
+         if (attr.GetType().FullName.Equals(name)) {
           return true;
         }
       }
@@ -99,9 +97,10 @@ namespace PeterO.Cbor {
         }
         ret = new List<PropertyData>();
         bool anonymous = HasCustomAttribute(
-          t,"System.Runtime.CompilerServices.CompilerGeneratedAttribute");
+          t,
+          "System.Runtime.CompilerServices.CompilerGeneratedAttribute");
         foreach (PropertyInfo pi in GetTypeProperties(t)) {
-  	      if (pi.CanRead && (pi.CanWrite || anonymous) &&
+          if (pi.CanRead && (pi.CanWrite || anonymous) &&
           pi.GetIndexParameters().Length == 0) {
             PropertyData pd = new PropertyMap.PropertyData();
             pd.Name = pi.Name;
