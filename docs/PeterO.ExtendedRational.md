@@ -160,7 +160,7 @@ This object's numerator. If this object is a not-a-number value, returns the dia
     public sealed int CompareTo(
         PeterO.ExtendedRational other);
 
-Not documented yet.
+Compares this value to another.
 
 <b>Parameters:</b>
 
@@ -169,7 +169,7 @@ Not documented yet.
 
 <b>Return Value:</b>
 
-A 32-bit signed integer.
+Less than 0 if this value is less than, 0 if equal to, or greater than 0 if greater than the other value.
 
 ### Create
 
@@ -221,7 +221,7 @@ The parameter <i>numerator</i>
     public override bool Equals(
         object obj);
 
-Not documented yet.
+Checks whether this and another value are equal.
 
 <b>Parameters:</b>
 
@@ -237,7 +237,7 @@ Either  `true`  or  `false` .
     public sealed bool Equals(
         PeterO.ExtendedRational other);
 
-Not documented yet.
+Checks whether this and another value are equal.
 
 <b>Parameters:</b>
 

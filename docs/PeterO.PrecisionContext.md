@@ -4,7 +4,7 @@
 
 <b>Deprecated.</b> Use EContext from PeterO.Numbers/com.upokecenter.numbers.
 
-Not documented yet.
+A precision context.
 
 ### PrecisionContext Constructor
 

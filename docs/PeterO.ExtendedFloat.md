@@ -135,7 +135,7 @@ The absolute value of this object's un-scaled value.
     public sealed int CompareTo(
         PeterO.ExtendedFloat other);
 
-Not documented yet.
+Compares this extended float to another.
 
 <b>Parameters:</b>
 
@@ -144,7 +144,7 @@ Not documented yet.
 
 <b>Return Value:</b>
 
-A 32-bit signed integer.
+Less than 0 if this value is less than, 0 if equal to, or greater than 0 if greater than the other value.
 
 ### Create
 
@@ -256,16 +256,15 @@ The parameter <i>otherValue</i>
     public static PeterO.ExtendedFloat FromString(
         string str);
 
-Not documented yet.
+Creates a binary float from a text string that represents a number.
 
 <b>Parameters:</b>
 
- * <i>str</i>: The parameter  <i>str</i>
- is not documented yet.
+ * <i>str</i>: A text string containing the number to convert.
 
 <b>Return Value:</b>
 
-An ExtendedFloat object.
+The parsed number, converted to arbitrary-precision binary float.
 
 ### FromString
 

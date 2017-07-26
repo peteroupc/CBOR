@@ -161,7 +161,7 @@ The absolute value of this object's un-scaled value.
     public sealed int CompareTo(
         PeterO.ExtendedDecimal other);
 
-Not documented yet.
+Compares this extended decimal to another.
 
 <b>Parameters:</b>
 
@@ -170,7 +170,7 @@ Not documented yet.
 
 <b>Return Value:</b>
 
-A 32-bit signed integer.
+Less than 0 if this value is less than, 0 if equal to, or greater than 0 if greater than the other extended decimal.
 
 ### Create
 

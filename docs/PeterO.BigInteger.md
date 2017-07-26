@@ -59,7 +59,7 @@ The number of bits in this object's value. Returns 0 if this object's value is 0
     public sealed int CompareTo(
         PeterO.BigInteger other);
 
-Not documented yet.
+Compares this value to another.
 
 <b>Parameters:</b>
 
@@ -68,7 +68,7 @@ Not documented yet.
 
 <b>Return Value:</b>
 
-A 32-bit signed integer.
+Less than 0 if this value is less than, 0 if equal to, or greater than 0 if greater than the other value.
 
 ### Equals
 
