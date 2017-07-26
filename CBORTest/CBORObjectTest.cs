@@ -150,9 +150,8 @@ namespace Test {
           new Object();
         } catch (Exception ex) {
     Console.WriteLine(ex.Message);
-          throw;  // TODO: Temporary
-// Assert.Fail(ex.ToString());
-// throw new InvalidOperationException(String.Empty, ex);
+   Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
         }
         return;
       }
@@ -2121,14 +2120,23 @@ namespace Test {
      2000);
       TestFailingJSON(jsonTemp);
     }
-    
-    
+
     [Test]
     public void TestTagArray() {
-        var obj=CBORObject.FromObjectAndTag("test",999);
-        Assert.AreEqual("[999]",CBORObject.FromObject(obj.GetTags()).ToJSONString());
-	    obj=CBORObject.FromObject("test");
-        Assert.AreEqual("[]",CBORObject.FromObject(obj.GetTags()).ToJSONString());
+        var obj = CBORObject.FromObjectAndTag("test", 999);
+        {
+string stringTemp = CBORObject.FromObject(obj.GetAllTags()).ToJSONString();
+Assert.AreEqual(
+  "[999]",
+  stringTemp);
+}
+      obj = CBORObject.FromObject("test");
+        {
+string stringTemp = CBORObject.FromObject(obj.GetAllTags()).ToJSONString();
+Assert.AreEqual(
+  "[]",
+  stringTemp);
+}
     }
     [Test]
     public void TestEI() {

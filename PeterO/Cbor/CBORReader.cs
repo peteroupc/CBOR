@@ -39,18 +39,18 @@ namespace PeterO.Cbor {
     }
 
     public CBORObject ResolveSharedRefsIfNeeded(CBORObject obj) {
-      if (hasSharableObjects) {
+      if (this.hasSharableObjects) {
         var sharedRefs = new SharedRefs();
         return ResolveSharedRefs(obj, sharedRefs);
       }
       return obj;
     }
-    private static CBORObject ResolveSharedRefs(CBORObject obj, SharedRefs
-      sharedRefs) {
+
+    private static CBORObject ResolveSharedRefs(
+  CBORObject obj,
+  SharedRefs sharedRefs) {
   int type = obj.ItemType;
   bool hasTag = obj.MostOuterTag.Equals((EInteger)29);
-  DebugUtility.Log(CBORObject.FromObject(obj.GetTags()).ToJSONString());
-  DebugUtility.Log(obj.ToJSONString());
   if (hasTag) {
     return sharedRefs.GetObject(obj.AsEInteger());
   }
@@ -64,12 +64,12 @@ namespace PeterO.Cbor {
       var value = obj[key];
       var newvalue = ResolveSharedRefs(value, sharedRefs);
       if (value != newvalue) {
-        obj[key]=newvalue;
+        obj[key] = newvalue;
       }
     }
   } else if (type == CBORObject.CBORObjectTypeArray) {
-    for (var i = 0;i<obj.Count; ++i) {
-      obj[i]=ResolveSharedRefs(obj[i], sharedRefs);
+    for (var i = 0; i < obj.Count; ++i) {
+      obj[i] = ResolveSharedRefs(obj[i], sharedRefs);
     }
   }
   return obj;
@@ -456,8 +456,8 @@ namespace PeterO.Cbor {
               break;
      case 28:
      case 29:
-            DebugUtility.Log("Read tag "+uad);
-          hasSharableObjects = true;
+            DebugUtility.Log("Read tag " + uad);
+          this.hasSharableObjects = true;
        break;
           }
 

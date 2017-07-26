@@ -230,7 +230,7 @@ Not documented yet.
 
 <b>Return Value:</b>
 
-either  `true`  or  `false` .
+Either  `true`  or  `false` .
 
 ### Equals
 
@@ -246,7 +246,7 @@ Not documented yet.
 
 <b>Return Value:</b>
 
-either  `true`  or  `false` .
+Either  `true`  or  `false` .
 
 ### GetHashCode
 

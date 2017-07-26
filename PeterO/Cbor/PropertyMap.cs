@@ -49,6 +49,18 @@ namespace PeterO.Cbor {
       Type[] parameters) {
        return t.GetMethod(name, parameters);
     }
+        private static bool HasCustomAttribute (
+  Type t,
+  string name)
+        {
+            foreach (var attr in t.CustomAttributes) {
+                DebugUtility.Log (attr.AttributeType.GetType ().FullName);
+                if (attr.GetType ().FullName.Equals (name)) {
+                    return true;
+                }
+            }
+            return false;
+        }
 #else
     private static IEnumerable<PropertyInfo> GetTypeProperties(Type t) {
       return t.GetRuntimeProperties();
@@ -60,9 +72,23 @@ namespace PeterO.Cbor {
   Type[] parameters) {
        return t.GetRuntimeMethod(name, parameters);
     }
+
+        private static bool HasCustomAttribute (
+  Type t,
+  string name)
+        {
+      foreach (var attr in t.GetTypeInfo ().GetCustomAttributes ()) {
+        DebugUtility.Log (attr.GetType ().FullName);
+        if (attr.GetType ().FullName.Equals (name)) {
+          return true;
+        }
+      }
+      return false;
+        }
+
 #endif
 
-    private static readonly IDictionary<Type, IList<PropertyData>>
+        private static readonly IDictionary<Type, IList<PropertyData>>
       ValuePropertyLists = new Dictionary<Type, IList<PropertyData>>();
 
     private static IList<PropertyData> GetPropertyList(Type t) {
@@ -72,9 +98,10 @@ namespace PeterO.Cbor {
           return ret;
         }
         ret = new List<PropertyData>();
-        bool anonymous = t.Name.Contains("__AnonymousType");
+        bool anonymous = HasCustomAttribute(
+          t,"System.Runtime.CompilerServices.CompilerGeneratedAttribute");
         foreach (PropertyInfo pi in GetTypeProperties(t)) {
-          if (pi.CanRead && (pi.CanWrite || anonymous) &&
+  	      if (pi.CanRead && (pi.CanWrite || anonymous) &&
           pi.GetIndexParameters().Length == 0) {
             PropertyData pd = new PropertyMap.PropertyData();
             pd.Name = pi.Name;

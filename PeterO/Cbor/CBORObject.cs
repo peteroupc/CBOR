@@ -185,7 +185,7 @@ namespace PeterO.Cbor {
           ((EInteger)item).CompareTo(Int64MaxValue) <= 0) {
         throw new ArgumentException("Big integer is within range for Integer");
       }
-      if(type==CBORObjectTypeArray && !(item is IList<CBORObject>)){
+      if (type == CBORObjectTypeArray && !(item is IList<CBORObject>)) {
        throw new InvalidOperationException();
       }
 #endif
@@ -1140,7 +1140,7 @@ namespace PeterO.Cbor {
         return c2;
       }
     }
-    
+
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObjectAndTag(System.Object,System.Int32)"]/*'/>
     public static CBORObject FromObjectAndTag(
@@ -1204,7 +1204,7 @@ namespace PeterO.Cbor {
         throw new ArgumentNullException("stream");
       }
       try {
-       var reader=new CBORReader(stream);
+       var reader = new CBORReader(stream);
         return reader.ResolveSharedRefsIfNeeded(reader.Read(null));
       } catch (IOException ex) {
         throw new CBORException("I/O error occurred.", ex);

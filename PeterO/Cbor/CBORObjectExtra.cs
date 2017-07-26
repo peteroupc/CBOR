@@ -58,7 +58,22 @@ namespace PeterO.Cbor {
 
     private static decimal ExtendedDecimalToDecimal(EDecimal
       extendedNumber) {
-      return (decimal)extendedNumber;
+      // HACK: Workaround for bug in Numbers 0.4
+            if (extendedNumber.IsInfinity () || extendedNumber.IsNaN ()) {
+                throw new OverflowException ("This object's value is out of range");
+            }
+            decimal ret;
+            if (
+        Decimal.TryParse (
+          extendedNumber.ToString (),
+        System.Globalization.NumberStyles.Number|
+          System.Globalization.NumberStyles.AllowExponent,
+        System.Globalization.CultureInfo.InvariantCulture,
+        out ret)) {
+                return ret;
+            }
+            throw new OverflowException ("This object's value is out of range");
+//            return (decimal)extendedNumber;
     }
 
     /// <include file='../../docs.xml'
@@ -84,7 +99,11 @@ namespace PeterO.Cbor {
       if (bigint.Sign < 0 || bigint.GetSignedBitLength() > 64) {
         throw new OverflowException("This object's value is out of range");
       }
-      return (ulong)bigint;
+            // HACK: Workaround for bug in Numbers 0.4
+            if (bigint.GetSignedBitLength () == 64) {
+                return bigint.ToUInt64Unchecked ();
+            }
+       return (ulong)bigint;
     }
 
     /// <include file='../../docs.xml'

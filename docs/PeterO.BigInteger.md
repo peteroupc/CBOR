@@ -64,7 +64,7 @@ Not documented yet.
 <b>Parameters:</b>
 
  * <i>other</i>: The parameter  <i>other</i>
- is a BigInteger object.
+ is an arbitrary-precision integer.
 
 <b>Return Value:</b>
 

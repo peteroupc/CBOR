@@ -149,7 +149,7 @@ namespace Test {
         0x20, 0xff });
     }
 
-    private static string ObjectMessage(CBORObject obj) {
+    public static string ObjectMessage(CBORObject obj) {
       return new System.Text.StringBuilder()
         .Append("CBORObject.DecodeFromBytes(")
            .Append(TestCommon.ToByteArrayString(obj.EncodeToBytes()))
