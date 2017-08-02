@@ -28,6 +28,7 @@ TestResults/
 bin/
 coverage/
 encoding/
+encodingfldr/
 obj/
 packages/
 release.properties

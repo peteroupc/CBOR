@@ -1,0 +1,8 @@
+﻿{
+  "dependencies": {
+    "PeterO.Numbers": "0.4.0"
+  },
+  "frameworks": {
+    ".NETPortable,Version=v4.5,Profile=Profile111": {}
+  }
+}

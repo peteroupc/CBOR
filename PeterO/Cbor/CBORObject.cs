@@ -1451,7 +1451,7 @@ namespace PeterO.Cbor {
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.BigInteger,System.IO.Stream)"]/*'/>
-    [Obsolete("Pass an EInteger to this method instead.")]
+    [Obsolete("Pass an EInteger to the Write method instead.")]
     public static void Write(BigInteger bigint, Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException("stream");

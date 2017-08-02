@@ -2648,7 +2648,7 @@ Writes a CBOR object to a CBOR data stream. See the three-parameter Write method
         PeterO.BigInteger bigint,
         System.IO.Stream stream);
 
-<b>Deprecated.</b> Pass an EInteger to this method instead.
+<b>Deprecated.</b> Pass an EInteger to the Write method instead.
 
 Writes a big integer in CBOR format to a data stream.
 

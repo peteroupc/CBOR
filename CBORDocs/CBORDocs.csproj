@@ -7,7 +7,8 @@
     <ProjectGuid>{B4719819-FE90-4A02-A71B-0169583B4752}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CBORDocs</RootNamespace>
+    <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
+<RootNamespace>CBORDocs</RootNamespace>
     <AssemblyName>CBORDocs</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
