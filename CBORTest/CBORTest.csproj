@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <OutputType>Exe</OutputType>
     <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
-<RootNamespace>CBORTest</RootNamespace>
+    <RootNamespace>CBORTest</RootNamespace>
     <AssemblyName>CBORTest</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile />
@@ -60,6 +60,10 @@
     <CodeAnalysisRuleSet>..\CBOR.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Numbers, Version=0.5.0.0, Culture=neutral, PublicKeyToken=9cd62db60ea5554c">
+      <HintPath>../packages/PeterO.Numbers.0.5.0/lib/netstandard1.0/Numbers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
@@ -82,9 +86,6 @@
     <Reference Include="NUnit.VisualStudio.TestAdapter, Version=2.0.0.0, Culture=neutral, PublicKeyToken=4cb40d35494691ac">
       <HintPath>..\packages\NUnitTestAdapter.WithFramework.2.0.0\lib\NUnit.VisualStudio.TestAdapter.dll</HintPath>
       <Private>False</Private>
-    </Reference>
-    <Reference Include="Numbers">
-      <HintPath>..\packages\PeterO.Numbers.0.4.0\lib\portable-net45+dnxcore50+netcore45+win+wpa81+wp80\Numbers.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -118,7 +119,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CBOR.csproj">
+    <ProjectReference Include="..\CBOR\CBOR.csproj">
       <Project>{23A1B70C-F064-47B6-8B7E-E2042CDAD8C7}</Project>
       <Name>CBOR</Name>
     </ProjectReference>
@@ -132,6 +133,4 @@
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-
-  
 </Project>

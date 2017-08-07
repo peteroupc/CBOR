@@ -52,7 +52,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\PeterO\DataUtilities.cs">
+    <Compile Include="..\CBOR\PeterO\DataUtilities.cs">
       <Link>DataUtilities.cs</Link>
     </Compile>
     <Compile Include="DocGenerator.cs" />
