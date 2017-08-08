@@ -14,9 +14,16 @@
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <PackageLicenseUrl>http://creativecommons.org/publicdomain/zero/1.0/</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/peteroupc/CBOR</PackageProjectUrl>
-    <PackageReleaseNotes>Version 0.5
+    <PackageReleaseNotes>Version 3.0.0
 
 - Moved from .NET Portable to .NET Standard 1.0.
+- Deprecated arbitrary-precision classes in PeterO namespace; use the classes from the "PeterO.Numbers" library and namespace instead.  In particular, methods that used the former classes were deprecated and often replaced with versions that use the newer classes.
+- Change JSON output behavior slightly, including preserving negative zero
+- Hash code calculation was changed in this version
+- Deprecated OutermostTag in favor of MostOuterTag in CBORObject
+- Deprecated InnermostTag in favor of MostInnerTag in CBORObject
+- Assembly was signed with a strong name
+- Bug fixes
 
 </PackageReleaseNotes>
     <PackageTags>cbor data serialization binary json numbers arithmetic</PackageTags>
