@@ -60,8 +60,8 @@
     <CodeAnalysisRuleSet>..\CBOR.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Numbers, Version=0.5.0.0, Culture=neutral, PublicKeyToken=9cd62db60ea5554c">
-      <HintPath>../packages/PeterO.Numbers.0.5.0/lib/netstandard1.0/Numbers.dll</HintPath>
+    <Reference Include="Numbers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9cd62db60ea5554c">
+      <HintPath>../packages/PeterO.Numbers.1.0.0/lib/netstandard1.0/Numbers.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -133,4 +133,5 @@
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  
 </Project>

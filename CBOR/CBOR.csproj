@@ -40,6 +40,6 @@
     <DocumentationFile>bin\Release\netstandard1.0\CBOR.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="PeterO.Numbers" Version="0.5.0" />
+    <PackageReference Include="PeterO.Numbers" Version="1.0.0" />
   </ItemGroup>
 </Project>

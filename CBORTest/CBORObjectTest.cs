@@ -147,7 +147,7 @@ namespace Test {
           }
           Assert.Fail("Should have failed");
         } catch (CBORException) {
-          new Object();
+          // NOTE: Intentionally empty
         } catch (Exception ex) {
   Assert.Fail(ex.ToString());
   throw new InvalidOperationException(String.Empty, ex);
@@ -163,7 +163,7 @@ namespace Test {
           }
           Assert.Fail("Should have failed");
         } catch (CBORException) {
-          new Object();
+          // NOTE: Intentionally empty
         } catch (Exception ex) {
           Assert.Fail(str + "\r\n" + ex.ToString());
           throw new InvalidOperationException(String.Empty, ex);
@@ -177,7 +177,7 @@ namespace Test {
         }
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -279,7 +279,7 @@ namespace Test {
         CBORObject.Addition(null, CBORObject.FromObject(2));
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -288,7 +288,7 @@ namespace Test {
         CBORObject.Addition(CBORObject.FromObject(2), null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -297,7 +297,7 @@ namespace Test {
         CBORObject.Addition(CBORObject.Null, CBORObject.FromObject(2));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -306,7 +306,7 @@ namespace Test {
         CBORObject.Addition(CBORObject.FromObject(2), CBORObject.Null);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -323,7 +323,7 @@ namespace Test {
         CBORObject.FromObject((object)null).AsEInteger();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -332,7 +332,7 @@ namespace Test {
         CBORObject.Null.AsEInteger();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -341,7 +341,7 @@ namespace Test {
         CBORObject.True.AsEInteger();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -350,7 +350,7 @@ namespace Test {
         CBORObject.False.AsEInteger();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -359,7 +359,7 @@ namespace Test {
         CBORObject.Undefined.AsEInteger();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -368,7 +368,7 @@ namespace Test {
         CBORObject.NewArray().AsEInteger();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -377,7 +377,7 @@ namespace Test {
         CBORObject.NewMap().AsEInteger();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -397,7 +397,7 @@ namespace Test {
             cbornumber.AsEInteger();
             Assert.Fail("Should have failed");
           } catch (OverflowException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -509,7 +509,7 @@ namespace Test {
         CBORObject.FromObject(Single.PositiveInfinity).AsEInteger();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -518,7 +518,7 @@ namespace Test {
         CBORObject.FromObject(Single.NegativeInfinity).AsEInteger();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -527,7 +527,7 @@ namespace Test {
         CBORObject.FromObject(Single.NaN).AsEInteger();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -536,7 +536,7 @@ namespace Test {
         CBORObject.FromObject(Double.PositiveInfinity).AsEInteger();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -545,7 +545,7 @@ namespace Test {
         CBORObject.FromObject(Double.NegativeInfinity).AsEInteger();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -554,7 +554,7 @@ namespace Test {
         CBORObject.FromObject(Double.NaN).AsEInteger();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -577,7 +577,7 @@ namespace Test {
         CBORObject.NewArray().AsByte();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -586,7 +586,7 @@ namespace Test {
         CBORObject.NewMap().AsByte();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -595,7 +595,7 @@ namespace Test {
         CBORObject.True.AsByte();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -604,7 +604,7 @@ namespace Test {
         CBORObject.False.AsByte();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -613,7 +613,7 @@ namespace Test {
         CBORObject.Undefined.AsByte();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -622,7 +622,7 @@ namespace Test {
         CBORObject.FromObject(String.Empty).AsByte();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -642,7 +642,7 @@ namespace Test {
             cbornumber.AsByte();
             Assert.Fail("Should have failed " + cbornumber);
           } catch (OverflowException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString() + cbornumber);
             throw new InvalidOperationException(String.Empty, ex);
@@ -656,7 +656,7 @@ namespace Test {
         try {
           CBORObject.FromObject(i).AsByte();
         } catch (OverflowException) {
-          new Object();
+          // NOTE: Intentionally empty
         } catch (Exception ex) {
           Assert.Fail(ex.ToString()); throw new
             InvalidOperationException(String.Empty, ex);
@@ -666,7 +666,7 @@ namespace Test {
         try {
           CBORObject.FromObject(i).AsByte();
         } catch (OverflowException) {
-          new Object();
+          // NOTE: Intentionally empty
         } catch (Exception ex) {
           Assert.Fail(ex.ToString()); throw new
             InvalidOperationException(String.Empty, ex);
@@ -680,7 +680,7 @@ namespace Test {
         CBORObject.NewArray().AsDouble();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -689,7 +689,7 @@ namespace Test {
         CBORObject.NewMap().AsDouble();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -698,7 +698,7 @@ namespace Test {
         CBORObject.True.AsDouble();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -707,7 +707,7 @@ namespace Test {
         CBORObject.False.AsDouble();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -716,7 +716,7 @@ namespace Test {
         CBORObject.Undefined.AsDouble();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -725,7 +725,7 @@ namespace Test {
         CBORObject.FromObject(String.Empty).AsDouble();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -773,7 +773,7 @@ namespace Test {
         CBORObject.NewArray().AsEDecimal();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -782,7 +782,7 @@ namespace Test {
         CBORObject.NewMap().AsEDecimal();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -791,7 +791,7 @@ namespace Test {
         CBORObject.True.AsEDecimal();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -800,7 +800,7 @@ namespace Test {
         CBORObject.False.AsEDecimal();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -809,7 +809,7 @@ namespace Test {
         CBORObject.Undefined.AsEDecimal();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -818,7 +818,7 @@ namespace Test {
         CBORObject.FromObject(String.Empty).AsEDecimal();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -869,7 +869,7 @@ namespace Test {
         CBORObject.NewArray().AsInt16();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -878,7 +878,7 @@ namespace Test {
         CBORObject.NewMap().AsInt16();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -887,7 +887,7 @@ namespace Test {
         CBORObject.True.AsInt16();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -896,7 +896,7 @@ namespace Test {
         CBORObject.False.AsInt16();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -905,7 +905,7 @@ namespace Test {
         CBORObject.Undefined.AsInt16();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -914,7 +914,7 @@ namespace Test {
         CBORObject.FromObject(String.Empty).AsInt16();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -934,7 +934,7 @@ namespace Test {
             cbornumber.AsInt16();
             Assert.Fail("Should have failed " + cbornumber);
           } catch (OverflowException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString() + cbornumber);
             throw new InvalidOperationException(String.Empty, ex);
@@ -949,7 +949,7 @@ namespace Test {
         CBORObject.NewArray().AsInt32();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -958,7 +958,7 @@ namespace Test {
         CBORObject.NewMap().AsInt32();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -967,7 +967,7 @@ namespace Test {
         CBORObject.True.AsInt32();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -976,7 +976,7 @@ namespace Test {
         CBORObject.False.AsInt32();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -985,7 +985,7 @@ namespace Test {
         CBORObject.Undefined.AsInt32();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -994,7 +994,7 @@ namespace Test {
         CBORObject.FromObject(String.Empty).AsInt32();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1028,7 +1028,7 @@ namespace Test {
             cbornumber.AsInt32();
             Assert.Fail("Should have failed " + cbornumber);
           } catch (OverflowException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString() + cbornumber);
             throw new InvalidOperationException(String.Empty, ex);
@@ -1038,7 +1038,7 @@ namespace Test {
               cbornumberdouble.AsInt32();
               Assert.Fail("Should have failed");
             } catch (OverflowException) {
-              new Object();
+              // NOTE: Intentionally empty
             } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
@@ -1049,7 +1049,7 @@ namespace Test {
               cbornumbersingle.AsInt32();
               Assert.Fail("Should have failed");
             } catch (OverflowException) {
-              new Object();
+              // NOTE: Intentionally empty
             } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
@@ -1064,7 +1064,7 @@ namespace Test {
         CBORObject.NewArray().AsInt64();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1073,7 +1073,7 @@ namespace Test {
         CBORObject.NewMap().AsInt64();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1082,7 +1082,7 @@ namespace Test {
         CBORObject.True.AsInt64();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1091,7 +1091,7 @@ namespace Test {
         CBORObject.False.AsInt64();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1100,7 +1100,7 @@ namespace Test {
         CBORObject.Undefined.AsInt64();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1109,7 +1109,7 @@ namespace Test {
         CBORObject.FromObject(String.Empty).AsInt64();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1143,7 +1143,7 @@ namespace Test {
             cbornumber.AsInt64();
             Assert.Fail("Should have failed " + cbornumber);
           } catch (OverflowException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString() + cbornumber);
             throw new InvalidOperationException(String.Empty, ex);
@@ -1153,7 +1153,7 @@ namespace Test {
               cbornumberdouble.AsInt64();
               Assert.Fail("Should have failed");
             } catch (OverflowException) {
-              new Object();
+              // NOTE: Intentionally empty
             } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
@@ -1164,7 +1164,7 @@ namespace Test {
               cbornumbersingle.AsInt64();
               Assert.Fail("Should have failed");
             } catch (OverflowException) {
-              new Object();
+              // NOTE: Intentionally empty
             } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
@@ -1183,7 +1183,7 @@ namespace Test {
         CBORObject.NewArray().AsSingle();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1192,7 +1192,7 @@ namespace Test {
         CBORObject.NewMap().AsSingle();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1201,7 +1201,7 @@ namespace Test {
         CBORObject.True.AsSingle();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1210,7 +1210,7 @@ namespace Test {
         CBORObject.False.AsSingle();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1219,7 +1219,7 @@ namespace Test {
         CBORObject.Undefined.AsSingle();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1228,7 +1228,7 @@ namespace Test {
         CBORObject.FromObject(String.Empty).AsSingle();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1256,7 +1256,7 @@ namespace Test {
         CBORObject.FromObject(CBORObject.Null).AsString();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1265,7 +1265,7 @@ namespace Test {
         CBORObject.FromObject(true).AsString();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1274,7 +1274,7 @@ namespace Test {
         CBORObject.FromObject(false).AsString();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1283,7 +1283,7 @@ namespace Test {
         CBORObject.FromObject(5).AsString();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1292,7 +1292,7 @@ namespace Test {
         CBORObject.NewArray().AsString();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1301,7 +1301,7 @@ namespace Test {
         CBORObject.NewMap().AsString();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1712,7 +1712,7 @@ namespace Test {
         CBORObject.DecodeFromBytes(null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1721,7 +1721,7 @@ namespace Test {
         CBORObject.DecodeFromBytes(new byte[] { });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1730,7 +1730,7 @@ namespace Test {
         CBORObject.DecodeFromBytes(new byte[] { 0 }, null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1739,7 +1739,7 @@ namespace Test {
         CBORObject.DecodeFromBytes(new byte[] { 0x1c });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1748,7 +1748,7 @@ namespace Test {
         CBORObject.DecodeFromBytes(null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1757,7 +1757,7 @@ namespace Test {
         CBORObject.DecodeFromBytes(new byte[] { 0x1e });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1766,7 +1766,7 @@ namespace Test {
         CBORObject.DecodeFromBytes(new byte[] { 0xfe });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1775,7 +1775,7 @@ namespace Test {
         CBORObject.DecodeFromBytes(new byte[] { 0xff });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1797,7 +1797,7 @@ namespace Test {
         CBORObject.DecodeFromBytes(bytes, CBOREncodeOptions.NoDuplicateKeys);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1814,7 +1814,7 @@ namespace Test {
         CBORObject.DecodeFromBytes(bytes, CBOREncodeOptions.NoDuplicateKeys);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1824,7 +1824,7 @@ namespace Test {
         CBORObject.DecodeFromBytes(bytes, CBOREncodeOptions.NoDuplicateKeys);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1834,7 +1834,7 @@ namespace Test {
         CBORObject.DecodeFromBytes(bytes, CBOREncodeOptions.NoDuplicateKeys);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1846,7 +1846,7 @@ namespace Test {
         CBORObject.Divide(null, CBORObject.FromObject(2));
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1855,7 +1855,7 @@ namespace Test {
         CBORObject.Divide(CBORObject.FromObject(2), null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1864,7 +1864,7 @@ namespace Test {
         CBORObject.Divide(CBORObject.Null, CBORObject.FromObject(2));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1873,7 +1873,7 @@ namespace Test {
         CBORObject.Divide(CBORObject.FromObject(2), CBORObject.Null);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1929,7 +1929,7 @@ namespace Test {
         CBORObject.True.EncodeToBytes(null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2068,7 +2068,7 @@ namespace Test {
         CBORObject.FromJSONString("\ufeff\u0020 {}");
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2077,7 +2077,7 @@ namespace Test {
         CBORObject.FromJSONString("[]", null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2209,7 +2209,7 @@ Assert.AreEqual(
         CBORObject.FromObject(CBORObject.FromObject(Double.NaN).Sign);
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2219,7 +2219,7 @@ Assert.AreEqual(
         CBORObject.FromObject(cbor[0]);
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2228,7 +2228,7 @@ Assert.AreEqual(
         cbor[0] = CBORObject.False;
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2238,7 +2238,7 @@ Assert.AreEqual(
         CBORObject.FromObject(cbor.Keys);
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2247,7 +2247,7 @@ Assert.AreEqual(
         CBORObject.FromObject(CBORObject.NewArray().Keys);
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2256,7 +2256,7 @@ Assert.AreEqual(
         CBORObject.FromObject(CBORObject.NewArray().Sign);
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2265,7 +2265,7 @@ Assert.AreEqual(
         CBORObject.FromObject(CBORObject.NewMap().Sign);
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2278,7 +2278,7 @@ Assert.AreEqual(
         CBORObject.FromObjectAndTag(2, bigvalue);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2287,7 +2287,7 @@ Assert.AreEqual(
         CBORObject.FromObjectAndTag(2, -1);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2296,7 +2296,7 @@ Assert.AreEqual(
         CBORObject.FromObjectAndTag(CBORObject.Null, -1);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2312,7 +2312,7 @@ Assert.AreEqual(
         CBORObject.FromObjectAndTag(2, eintNull);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2321,7 +2321,7 @@ Assert.AreEqual(
         CBORObject.FromObjectAndTag(2, EInteger.FromString("-1"));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2333,7 +2333,7 @@ Assert.AreEqual(
         CBORObject.FromSimpleValue(-1);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2342,7 +2342,7 @@ Assert.AreEqual(
         CBORObject.FromSimpleValue(256);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2353,7 +2353,7 @@ Assert.AreEqual(
             CBORObject.FromSimpleValue(i);
             Assert.Fail("Should have failed");
           } catch (ArgumentException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -2370,7 +2370,7 @@ Assert.AreEqual(
         CBORObject.True.GetByteString();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2379,7 +2379,7 @@ Assert.AreEqual(
         CBORObject.FromObject(0).GetByteString();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2388,7 +2388,7 @@ Assert.AreEqual(
         CBORObject.FromObject("test").GetByteString();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2397,7 +2397,7 @@ Assert.AreEqual(
         CBORObject.False.GetByteString();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2406,7 +2406,7 @@ Assert.AreEqual(
         CBORObject.NewArray().GetByteString();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2415,7 +2415,7 @@ Assert.AreEqual(
         CBORObject.NewMap().GetByteString();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2435,7 +2435,7 @@ Assert.AreEqual(
         CBORObject.True.HasTag(-1);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2445,7 +2445,7 @@ Assert.AreEqual(
         CBORObject.True.HasTag(ValueBigintNull);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2454,7 +2454,7 @@ Assert.AreEqual(
         CBORObject.True.HasTag(EInteger.FromString("-1"));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2668,7 +2668,7 @@ Assert.AreEqual(
         CBORObject cbor2 = cbor[0];
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2678,7 +2678,7 @@ Assert.AreEqual(
         CBORObject cbor2 = cbor[0];
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2688,7 +2688,7 @@ Assert.AreEqual(
         CBORObject cbor2 = cbor[0];
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2698,7 +2698,7 @@ Assert.AreEqual(
         CBORObject cbor2 = cbor[0];
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2708,7 +2708,7 @@ Assert.AreEqual(
         CBORObject cbor2 = cbor[0];
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2724,7 +2724,7 @@ Assert.AreEqual(
         CBORObject.Multiply(null, CBORObject.FromObject(2));
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2733,7 +2733,7 @@ Assert.AreEqual(
         CBORObject.Multiply(CBORObject.FromObject(2), null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2742,7 +2742,7 @@ Assert.AreEqual(
         CBORObject.Multiply(CBORObject.Null, CBORObject.FromObject(2));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2751,7 +2751,7 @@ Assert.AreEqual(
         CBORObject.Multiply(CBORObject.FromObject(2), CBORObject.Null);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2782,7 +2782,7 @@ Assert.AreEqual(
         CBORObject.True.Negate();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2791,7 +2791,7 @@ Assert.AreEqual(
         CBORObject.False.Negate();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2800,7 +2800,7 @@ Assert.AreEqual(
         CBORObject.NewArray().Negate();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2809,7 +2809,7 @@ Assert.AreEqual(
         CBORObject.NewMap().Negate();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2881,7 +2881,7 @@ Assert.AreEqual(
         CBORObject.Read(null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2892,7 +2892,7 @@ Assert.AreEqual(
             CBORObject.Read(ms2, null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -2911,7 +2911,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(ms2, null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -2933,7 +2933,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(ms2);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -2944,7 +2944,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(ms2a);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -2955,7 +2955,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(ms2b);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -2968,7 +2968,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(ms3);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3112,7 +3112,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3126,7 +3126,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3139,7 +3139,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3154,7 +3154,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3167,7 +3167,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3180,7 +3180,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3193,7 +3193,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3205,7 +3205,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3216,7 +3216,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3227,7 +3227,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3240,7 +3240,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3252,7 +3252,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3263,7 +3263,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3274,7 +3274,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3286,7 +3286,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3298,7 +3298,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3310,7 +3310,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3322,7 +3322,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3334,7 +3334,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3346,7 +3346,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3358,7 +3358,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3369,7 +3369,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3381,7 +3381,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3393,7 +3393,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3405,7 +3405,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3417,7 +3417,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3429,7 +3429,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3441,7 +3441,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3454,7 +3454,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3465,7 +3465,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3476,7 +3476,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3488,7 +3488,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3500,7 +3500,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3512,7 +3512,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3524,7 +3524,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3536,7 +3536,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3547,7 +3547,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3558,7 +3558,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3570,7 +3570,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3582,7 +3582,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3594,7 +3594,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3606,7 +3606,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3618,7 +3618,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3630,7 +3630,7 @@ Assert.AreEqual(
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3647,7 +3647,7 @@ Assert.AreEqual(
         CBORObject.Remainder(null, CBORObject.FromObject(2));
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -3656,7 +3656,7 @@ Assert.AreEqual(
         CBORObject.Remainder(CBORObject.FromObject(2), null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -3665,7 +3665,7 @@ Assert.AreEqual(
         CBORObject.Remainder(CBORObject.Null, CBORObject.FromObject(2));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -3674,7 +3674,7 @@ Assert.AreEqual(
         CBORObject.Remainder(CBORObject.FromObject(2), CBORObject.Null);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -3699,7 +3699,7 @@ Assert.AreEqual(
         int sign = CBORObject.True.Sign;
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -3708,7 +3708,7 @@ Assert.AreEqual(
         int sign = CBORObject.False.Sign;
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -3717,7 +3717,7 @@ Assert.AreEqual(
         int sign = CBORObject.NewArray().Sign;
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -3726,7 +3726,7 @@ Assert.AreEqual(
         int sign = CBORObject.NewMap().Sign;
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -3742,7 +3742,7 @@ Assert.AreEqual(
             Assert.Fail(String.Empty + cbornumber.Sign);
             Assert.Fail("Should have failed");
           } catch (InvalidOperationException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -3766,7 +3766,7 @@ Assert.AreEqual(
         CBORObject.Subtract(null, CBORObject.FromObject(2));
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -3775,7 +3775,7 @@ Assert.AreEqual(
         CBORObject.Subtract(CBORObject.FromObject(2), null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -3784,7 +3784,7 @@ Assert.AreEqual(
         CBORObject.Subtract(CBORObject.Null, CBORObject.FromObject(2));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -3793,7 +3793,7 @@ Assert.AreEqual(
         CBORObject.Subtract(CBORObject.FromObject(2), CBORObject.Null);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -3983,7 +3983,7 @@ Assert.AreEqual(
             CBORObject.Write(str, null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -4006,7 +4006,7 @@ Assert.AreEqual(
             CBORObject.Write("test", null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -4030,7 +4030,7 @@ Assert.AreEqual(
             CBORObject.Write(str, null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -4062,7 +4062,7 @@ Assert.AreEqual(
               CBORObject.Write(values[i], null);
               Assert.Fail("Should have failed");
             } catch (ArgumentNullException) {
-              new Object();
+              // NOTE: Intentionally empty
             } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
@@ -4086,7 +4086,7 @@ Assert.AreEqual(
               CBORObject.Write(bigintVal, null);
               Assert.Fail("Should have failed");
             } catch (ArgumentNullException) {
-              new Object();
+              // NOTE: Intentionally empty
             } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
@@ -4112,7 +4112,7 @@ Assert.AreEqual(
                 CBORObject.Write(intval, null);
                 Assert.Fail("Should have failed");
               } catch (ArgumentNullException) {
-                new Object();
+                // NOTE: Intentionally empty
               } catch (Exception ex) {
                 Assert.Fail(ex.ToString());
                 throw new InvalidOperationException(String.Empty, ex);
@@ -4137,7 +4137,7 @@ Assert.AreEqual(
                 CBORObject.Write(shortval, null);
                 Assert.Fail("Should have failed");
               } catch (ArgumentNullException) {
-                new Object();
+                // NOTE: Intentionally empty
               } catch (Exception ex) {
                 Assert.Fail(ex.ToString());
                 throw new InvalidOperationException(String.Empty, ex);
@@ -4162,7 +4162,7 @@ Assert.AreEqual(
                 CBORObject.Write(byteval, null);
                 Assert.Fail("Should have failed");
               } catch (ArgumentNullException) {
-                new Object();
+                // NOTE: Intentionally empty
               } catch (Exception ex) {
                 Assert.Fail(ex.ToString());
                 throw new InvalidOperationException(String.Empty, ex);
@@ -4186,7 +4186,7 @@ Assert.AreEqual(
             CBORObject.Write(0.0f, null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -4209,7 +4209,7 @@ Assert.AreEqual(
             CBORObject.Write(2.6, null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -4233,7 +4233,7 @@ Assert.AreEqual(
             CBORObject.Write(cbor, null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -4257,7 +4257,7 @@ Assert.AreEqual(
             CBORObject.Write(aobj, null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -4292,7 +4292,7 @@ Assert.AreEqual(
               CBORObject.Write(ef, null);
               Assert.Fail("Should have failed");
             } catch (ArgumentNullException) {
-              new Object();
+              // NOTE: Intentionally empty
             } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
@@ -4318,7 +4318,7 @@ Assert.AreEqual(
               CBORObject.Write(ef, null);
               Assert.Fail("Should have failed");
             } catch (ArgumentNullException) {
-              new Object();
+              // NOTE: Intentionally empty
             } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
@@ -4347,7 +4347,7 @@ Assert.AreEqual(
               CBORObject.Write(ed, null);
               Assert.Fail("Should have failed");
             } catch (ArgumentNullException) {
-              new Object();
+              // NOTE: Intentionally empty
             } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
@@ -4379,7 +4379,7 @@ Assert.AreEqual(
               CBORObject.Write(ed, null);
               Assert.Fail("Should have failed");
             } catch (ArgumentNullException) {
-              new Object();
+              // NOTE: Intentionally empty
             } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
@@ -4414,7 +4414,7 @@ Assert.AreEqual(
             CBORObject.Write(ef, null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -4438,7 +4438,7 @@ Assert.AreEqual(
             CBORObject.Write(ef, null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -4462,7 +4462,7 @@ Assert.AreEqual(
             CBORObject.Write(er, null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -4487,7 +4487,7 @@ Assert.AreEqual(
             CBORObject.Write(er, null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -4515,7 +4515,7 @@ Assert.AreEqual(
             CBORObject.Write(ed, null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -4539,7 +4539,7 @@ Assert.AreEqual(
             CBORObject.Write(bigint, null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -4660,7 +4660,7 @@ Assert.AreEqual(
         cbor.WriteTo(null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -4669,7 +4669,7 @@ Assert.AreEqual(
         CBORObject.Write(cbor, null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-        new Object();
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -4684,7 +4684,7 @@ Assert.AreEqual(
             CBORObject.Write(obj, null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -4711,7 +4711,7 @@ Assert.AreEqual(
             CBORObject.Write(obj, null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
-            new Object();
+            // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
