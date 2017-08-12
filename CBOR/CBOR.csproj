@@ -9,9 +9,9 @@
     This implementation also doubles as a reader and writer of JSON, and can convert data from JSON to CBOR and back.</Description>
     <Copyright>Written by Peter O. in 2013-2017.  Any copyright is released to the Public Domain.</Copyright>
     <Authors>Peter Occil</Authors>
-    <PackageId>PeterO.CBOR</PackageId>
+    <PackageId>PeterO.Cbor</PackageId>
     <PackageTitle>CBOR (Concise Binary Object Representation)</PackageTitle>
-    <PackageSummary>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049.</PackageSummary>
+    <Summary>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049.</Summary>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <PackageLicenseUrl>http://creativecommons.org/publicdomain/zero/1.0/</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/peteroupc/CBOR</PackageProjectUrl>
