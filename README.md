@@ -232,9 +232,11 @@ The following are some clarifications to RFC 7049.
 Release Notes
 -----------
 
-### Version 3.0.0
+### Version 3.0.1
 
-Version 3.0.0
+- Really strong-name sign the assembly, which (probably) was inadvertently delay-signed in version 3.0.
+
+### Version 3.0.0
 
 - Moved from .NET Portable to .NET Standard 1.0.
 - Deprecated arbitrary-precision classes in PeterO namespace; use the classes from the "PeterO.Numbers" library and namespace instead.  In particular, methods that used the former classes were deprecated and often replaced with versions that use the newer classes.

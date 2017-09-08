@@ -3,18 +3,22 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.0</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>3.0.0</Version>
+    <Version>3.0.1</Version>
     <Owners>Peter Occil</Owners>
-    <Description>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049. According to that RFC, CBOR's data model "is an extended version of the JSON data model", supporting many more types of data than JSON. This implementation was written by Peter O. and is released to the Public Domain under the CC0 Declaration.
-    This implementation also doubles as a reader and writer of JSON, and can convert data from JSON to CBOR and back.</Description>
+    <Description>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049.</Description>
+    <PackageSummary>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049. </PackageSummary>
     <Summary>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049. </Summary>
     <Copyright>Written by Peter O. in 2013-2017.  Any copyright is released to the Public Domain.</Copyright>
     <Authors>Peter Occil</Authors>
     <PackageId>PeterO.Cbor</PackageId>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseUrl>http://creativecommons.org/publicdomain/zero/1.0/</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/peteroupc/CBOR</PackageProjectUrl>
-    <PackageReleaseNotes>Version 3.0.0
+    <PackageReleaseNotes>
+Version 3.0.1
+
+- Really strong-name sign the assembly, which (probably) was inadvertently delay-signed in version 3.0.
+    
+Version 3.0.0
 
 - Moved from .NET Portable to .NET Standard 1.0.
 - Deprecated arbitrary-precision classes in PeterO namespace; use the classes from the "PeterO.Numbers" library and namespace instead.  In particular, methods that used the former classes were deprecated and often replaced with versions that use the newer classes.
@@ -24,20 +28,48 @@
 - Deprecated InnermostTag in favor of MostInnerTag in CBORObject
 - Bug fixes
 
+A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049. 
+    According to that RFC, CBOR's data model "is an extended version of the JSON data model", supporting many more types of data than JSON. 
+    This implementation was written by Peter O. and is released to the Public Domain under the CC0 Declaration.
+    This implementation also doubles as a reader and writer of JSON, and can convert data from JSON to CBOR and back.
+
 </PackageReleaseNotes>
     <PackageTags>cbor data serialization binary json numbers arithmetic</PackageTags>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>True</SignAssembly>
+    <DelaySign>False</DelaySign>
     <AssemblyOriginatorKeyFile>PeterO.snk</AssemblyOriginatorKeyFile>
-    <Summary>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049.</Summary>
     <Title>CBOR (Concise Binary Object Representation)</Title>
+    <PackOnBuild>true</PackOnBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DocumentationFile>bin\Debug\netstandard1.0\CBOR.xml</DocumentationFile>
+    <CustomCommands>
+      <CustomCommands>
+        <Command>
+          <type>Custom</type>
+          <name>Signing Workaround</name>
+          <command>sn -R bin/Debug/netstandard1.0/CBOR.dll PeterO.snk</command>
+          <workingdir>${ProjectDir}</workingdir>
+          <externalConsole>True</externalConsole>
+        </Command>
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType></DebugType>
     <DocumentationFile>bin\Release\netstandard1.0\CBOR.xml</DocumentationFile>
+    <CustomCommands>
+      <CustomCommands>
+        <Command>
+          <type>Custom</type>
+          <name>Signing Workaround</name>
+          <command>sn -R bin/Release/netstandard1.0/CBOR.dll PeterO.snk</command>
+          <workingdir>${ProjectDir}</workingdir>
+          <externalConsole>True</externalConsole>
+        </Command>
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="PeterO.Numbers" Version="1.0.0" />
