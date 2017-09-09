@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.0</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>3.0.1</Version>
+    <Version>3.0.2</Version>
     <Owners>Peter Occil</Owners>
     <Description>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049.</Description>
     <PackageSummary>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049. </PackageSummary>
@@ -14,7 +14,7 @@
     <PackageLicenseUrl>http://creativecommons.org/publicdomain/zero/1.0/</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/peteroupc/CBOR</PackageProjectUrl>
     <PackageReleaseNotes>
-Version 3.0.1
+Version 3.0.2
 
 - Really strong-name sign the assembly, which (probably) was inadvertently delay-signed in version 3.0.
     
@@ -36,7 +36,6 @@ A C# implementation of Concise Binary Object Representation (CBOR), a general-pu
 </PackageReleaseNotes>
     <PackageTags>cbor data serialization binary json numbers arithmetic</PackageTags>
     <SignAssembly>True</SignAssembly>
-    <DelaySign>False</DelaySign>
     <AssemblyOriginatorKeyFile>PeterO.snk</AssemblyOriginatorKeyFile>
     <Title>CBOR (Concise Binary Object Representation)</Title>
     <PackOnBuild>true</PackOnBuild>
@@ -72,6 +71,6 @@ A C# implementation of Concise Binary Object Representation (CBOR), a general-pu
     </CustomCommands>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="PeterO.Numbers" Version="1.0.0" />
+    <PackageReference Include="PeterO.Numbers" Version="1.0.2" />
   </ItemGroup>
 </Project>
