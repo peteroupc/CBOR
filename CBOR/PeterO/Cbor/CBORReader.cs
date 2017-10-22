@@ -225,7 +225,8 @@ namespace PeterO.Cbor {
                 throw new CBORException("Length" + ToUnsignedBigInteger(len) +
                   " is bigger than supported ");
               }
-              if (nextByte != 0x40) {  // NOTE: 0x40 means the empty byte string
+              if (nextByte != 0x40) {
+  // NOTE: 0x40 means the empty byte string
                 ReadByteData(this.stream, len, ms);
               }
             }
@@ -273,7 +274,8 @@ namespace PeterO.Cbor {
               throw new CBORException("Length" + ToUnsignedBigInteger(len) +
                 " is bigger than supported");
             }
-            if (nextByte != 0x60) {  // NOTE: 0x60 means the empty string
+            if (nextByte != 0x60) {
+  // NOTE: 0x60 means the empty string
               if (PropertyMap.ExceedsKnownLength(this.stream, len)) {
                 throw new CBORException("Premature end of data");
               }

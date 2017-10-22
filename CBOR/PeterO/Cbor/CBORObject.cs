@@ -3709,7 +3709,7 @@ sb = sb ?? (new StringBuilder());
           WriteObjectMap(child.AsMap(), outputStream, stack, options);
           stack.RemoveAt(stack.Count - 1);
         } else {
-          child.WriteTo(outputStream);
+          child.WriteTo(outputStream, options);
         }
       }
       return stack;

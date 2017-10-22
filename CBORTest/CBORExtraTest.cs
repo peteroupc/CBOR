@@ -64,7 +64,7 @@ throw new InvalidOperationException(String.Empty, ex);
         CBORObject.FromObject(EDecimal.NaN).AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -73,7 +73,7 @@ new Object();
         CBORObject.FromObject(EDecimal.SignalingNaN).AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -82,7 +82,7 @@ new Object();
         CBORObject.FromObject(CBORTestCommon.DecPosInf).AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -91,7 +91,7 @@ new Object();
         CBORObject.FromObject(CBORTestCommon.DecNegInf).AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -100,7 +100,7 @@ new Object();
         CBORObject.FromObject(EFloat.NaN).AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -109,7 +109,7 @@ new Object();
         CBORObject.FromObject(EFloat.SignalingNaN).AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -118,7 +118,7 @@ new Object();
         CBORObject.FromObject(CBORTestCommon.FloatPosInf).AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -127,7 +127,7 @@ new Object();
         CBORObject.FromObject(CBORTestCommon.FloatNegInf).AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -307,14 +307,14 @@ select new { A = i, B = i + 1 };
       try {
         CBORObject.FromObject(2.147483647E9d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(2.147483647E9d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -331,14 +331,14 @@ new Object();
       try {
         CBORObject.FromObject(2.1474836470000002E9d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(2.1474836470000002E9d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -355,14 +355,14 @@ new Object();
       try {
         CBORObject.FromObject(2.1474836469999998E9d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(2.1474836469999998E9d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -379,14 +379,14 @@ new Object();
       try {
         CBORObject.FromObject(2.147483648E9d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(2.147483648E9d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -403,14 +403,14 @@ new Object();
       try {
         CBORObject.FromObject(2.1474836480000005E9d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(2.1474836480000005E9d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -427,14 +427,14 @@ new Object();
       try {
         CBORObject.FromObject(2.1474836479999998E9d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(2.1474836479999998E9d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -451,14 +451,14 @@ new Object();
       try {
         CBORObject.FromObject(2.147483646E9d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(2.147483646E9d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -475,14 +475,14 @@ new Object();
       try {
         CBORObject.FromObject(2.1474836460000002E9d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(2.1474836460000002E9d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -499,273 +499,273 @@ new Object();
       try {
         CBORObject.FromObject(2.1474836459999998E9d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(2.1474836459999998E9d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.147483648E9d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.147483648E9d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.147483648E9d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.147483648E9d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.1474836479999998E9d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.1474836479999998E9d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.1474836479999998E9d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.1474836479999998E9d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.1474836480000005E9d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.1474836480000005E9d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.1474836480000005E9d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.1474836480000005E9d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.147483647E9d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.147483647E9d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.147483647E9d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.147483647E9d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.1474836469999998E9d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.1474836469999998E9d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.1474836469999998E9d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.1474836469999998E9d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.1474836470000002E9d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.1474836470000002E9d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.1474836470000002E9d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.1474836470000002E9d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.147483649E9d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.147483649E9d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.147483649E9d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.147483649E9d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.1474836489999995E9d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.1474836489999995E9d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.1474836489999995E9d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.1474836489999995E9d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.1474836490000005E9d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.1474836490000005E9d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.1474836490000005E9d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.1474836490000005E9d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(9.223372036854776E18d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -777,21 +777,21 @@ new Object();
       try {
         CBORObject.FromObject(9.223372036854776E18d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(9.223372036854776E18d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(9.223372036854778E18d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -803,21 +803,21 @@ new Object();
       try {
         CBORObject.FromObject(9.223372036854778E18d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(9.223372036854778E18d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(9.2233720368547748E18d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -829,98 +829,98 @@ new Object();
       try {
         CBORObject.FromObject(9.2233720368547748E18d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(9.2233720368547748E18d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-9.223372036854776E18d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-9.223372036854776E18d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-9.223372036854776E18d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-9.223372036854776E18d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-9.2233720368547748E18d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-9.2233720368547748E18d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-9.2233720368547748E18d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-9.2233720368547748E18d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-9.223372036854778E18d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-9.223372036854778E18d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-9.223372036854778E18d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-9.223372036854778E18d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -942,7 +942,7 @@ new Object();
       try {
         CBORObject.FromObject(32767.0d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -964,7 +964,7 @@ new Object();
       try {
         CBORObject.FromObject(32767.000000000004d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -986,7 +986,7 @@ new Object();
       try {
         CBORObject.FromObject(32766.999999999996d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -1008,7 +1008,7 @@ new Object();
       try {
         CBORObject.FromObject(32768.0d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -1030,7 +1030,7 @@ new Object();
       try {
         CBORObject.FromObject(32768.00000000001d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -1052,7 +1052,7 @@ new Object();
       try {
         CBORObject.FromObject(32767.999999999996d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -1074,7 +1074,7 @@ new Object();
       try {
         CBORObject.FromObject(32766.0d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -1096,7 +1096,7 @@ new Object();
       try {
         CBORObject.FromObject(32766.000000000004d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -1118,259 +1118,259 @@ new Object();
       try {
         CBORObject.FromObject(32765.999999999996d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32768.0d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32768.0d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32768.0d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32768.0d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32767.999999999996d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32767.999999999996d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32767.999999999996d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32767.999999999996d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32768.00000000001d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32768.00000000001d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32768.00000000001d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32768.00000000001d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32767.0d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32767.0d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32767.0d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32767.0d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32766.999999999996d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32766.999999999996d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32766.999999999996d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32766.999999999996d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32767.000000000004d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32767.000000000004d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32767.000000000004d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32767.000000000004d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32769.0d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32769.0d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32769.0d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32769.0d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32768.99999999999d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32768.99999999999d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32768.99999999999d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32768.99999999999d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32769.00000000001d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32769.00000000001d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32769.00000000001d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32769.00000000001d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -1497,21 +1497,21 @@ new Object();
       try {
         CBORObject.FromObject(-1.0d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-1.0d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-1.0d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -1543,21 +1543,21 @@ new Object();
       try {
         CBORObject.FromObject(-1.0000000000000002d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-1.0000000000000002d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-1.0000000000000002d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -1584,7 +1584,7 @@ new Object();
       try {
         CBORObject.FromObject(255.0d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -1606,7 +1606,7 @@ new Object();
       try {
         CBORObject.FromObject(255.00000000000003d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -1628,7 +1628,7 @@ new Object();
       try {
         CBORObject.FromObject(254.99999999999997d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -1650,7 +1650,7 @@ new Object();
       try {
         CBORObject.FromObject(256.0d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -1672,7 +1672,7 @@ new Object();
       try {
         CBORObject.FromObject(256.00000000000006d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -1694,7 +1694,7 @@ new Object();
       try {
         CBORObject.FromObject(255.99999999999997d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -1716,7 +1716,7 @@ new Object();
       try {
         CBORObject.FromObject(254.0d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -1738,7 +1738,7 @@ new Object();
       try {
         CBORObject.FromObject(254.00000000000003d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -1760,7 +1760,7 @@ new Object();
       try {
         CBORObject.FromObject(253.99999999999997d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -1777,14 +1777,14 @@ new Object();
       try {
         CBORObject.FromObject(2.14748365E9f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(2.14748365E9f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -1801,14 +1801,14 @@ new Object();
       try {
         CBORObject.FromObject(2.1474839E9f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(2.1474839E9f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -1825,105 +1825,105 @@ new Object();
       try {
         CBORObject.FromObject(2.14748352E9f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(2.14748352E9f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.14748365E9f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.14748365E9f).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.14748365E9f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.14748365E9f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.14748352E9f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.14748352E9f).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.14748352E9f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.14748352E9f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.1474839E9f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.1474839E9f).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.1474839E9f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-2.1474839E9f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(9.223372E18f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -1935,21 +1935,21 @@ new Object();
       try {
         CBORObject.FromObject(9.223372E18f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(9.223372E18f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(9.223373E18f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -1961,21 +1961,21 @@ new Object();
       try {
         CBORObject.FromObject(9.223373E18f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(9.223373E18f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(9.2233715E18f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -1987,98 +1987,98 @@ new Object();
       try {
         CBORObject.FromObject(9.2233715E18f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(9.2233715E18f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-9.223372E18f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-9.223372E18f).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-9.223372E18f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-9.223372E18f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-9.2233715E18f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-9.2233715E18f).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-9.2233715E18f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-9.2233715E18f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-9.223373E18f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-9.223373E18f).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-9.223373E18f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-9.223373E18f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -2100,7 +2100,7 @@ new Object();
       try {
         CBORObject.FromObject(32767.0f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -2122,7 +2122,7 @@ new Object();
       try {
         CBORObject.FromObject(32767.002f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -2144,7 +2144,7 @@ new Object();
       try {
         CBORObject.FromObject(32766.998f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -2166,7 +2166,7 @@ new Object();
       try {
         CBORObject.FromObject(32768.0f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -2188,7 +2188,7 @@ new Object();
       try {
         CBORObject.FromObject(32768.004f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -2210,7 +2210,7 @@ new Object();
       try {
         CBORObject.FromObject(32767.998f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -2232,7 +2232,7 @@ new Object();
       try {
         CBORObject.FromObject(32766.0f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -2254,7 +2254,7 @@ new Object();
       try {
         CBORObject.FromObject(32766.002f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -2276,259 +2276,259 @@ new Object();
       try {
         CBORObject.FromObject(32765.998f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32768.0f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32768.0f).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32768.0f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32768.0f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32767.998f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32767.998f).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32767.998f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32767.998f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32768.004f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32768.004f).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32768.004f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32768.004f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32767.0f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32767.0f).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32767.0f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32767.0f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32766.998f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32766.998f).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32766.998f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32766.998f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32767.002f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32767.002f).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32767.002f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32767.002f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32769.0f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32769.0f).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32769.0f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32769.0f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32768.996f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32768.996f).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32768.996f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32768.996f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32769.004f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32769.004f).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32769.004f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-32769.004f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -2655,21 +2655,21 @@ new Object();
       try {
         CBORObject.FromObject(-1.0f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-1.0f).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-1.0f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -2701,21 +2701,21 @@ new Object();
       try {
         CBORObject.FromObject(-1.0000001f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-1.0000001f).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-1.0000001f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -2742,7 +2742,7 @@ new Object();
       try {
         CBORObject.FromObject(255.0f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -2764,7 +2764,7 @@ new Object();
       try {
         CBORObject.FromObject(255.00002f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -2786,7 +2786,7 @@ new Object();
       try {
         CBORObject.FromObject(254.99998f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -2808,7 +2808,7 @@ new Object();
       try {
         CBORObject.FromObject(256.0f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -2830,7 +2830,7 @@ new Object();
       try {
         CBORObject.FromObject(256.00003f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -2852,7 +2852,7 @@ new Object();
       try {
         CBORObject.FromObject(255.99998f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -2874,7 +2874,7 @@ new Object();
       try {
         CBORObject.FromObject(254.0f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -2896,7 +2896,7 @@ new Object();
       try {
         CBORObject.FromObject(254.00002f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -2918,7 +2918,7 @@ new Object();
       try {
         CBORObject.FromObject(253.99998f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -2940,7 +2940,7 @@ new Object();
       try {
         CBORObject.FromObject(65535.0d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -2962,7 +2962,7 @@ new Object();
       try {
         CBORObject.FromObject(65535.00000000001d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -2984,7 +2984,7 @@ new Object();
       try {
         CBORObject.FromObject(65534.99999999999d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -3001,14 +3001,14 @@ new Object();
       try {
         CBORObject.FromObject(65536.0d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(65536.0d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -3025,14 +3025,14 @@ new Object();
       try {
         CBORObject.FromObject(65536.00000000001d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(65536.00000000001d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -3054,7 +3054,7 @@ new Object();
       try {
         CBORObject.FromObject(65535.99999999999d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -3076,7 +3076,7 @@ new Object();
       try {
         CBORObject.FromObject(65534.0d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -3098,7 +3098,7 @@ new Object();
       try {
         CBORObject.FromObject(65534.00000000001d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -3120,7 +3120,7 @@ new Object();
       try {
         CBORObject.FromObject(65533.99999999999d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -3137,14 +3137,14 @@ new Object();
       try {
         CBORObject.FromObject(4.294967295E9d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(4.294967295E9d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -3161,14 +3161,14 @@ new Object();
       try {
         CBORObject.FromObject(4.2949672950000005E9d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(4.2949672950000005E9d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -3185,21 +3185,21 @@ new Object();
       try {
         CBORObject.FromObject(4.2949672949999995E9d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(4.2949672949999995E9d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(4.294967296E9d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -3211,21 +3211,21 @@ new Object();
       try {
         CBORObject.FromObject(4.294967296E9d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(4.294967296E9d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(4.294967296000001E9d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -3237,14 +3237,14 @@ new Object();
       try {
         CBORObject.FromObject(4.294967296000001E9d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(4.294967296000001E9d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -3261,14 +3261,14 @@ new Object();
       try {
         CBORObject.FromObject(4.2949672959999995E9d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(4.2949672959999995E9d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -3285,14 +3285,14 @@ new Object();
       try {
         CBORObject.FromObject(4.294967294E9d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(4.294967294E9d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -3309,14 +3309,14 @@ new Object();
       try {
         CBORObject.FromObject(4.2949672940000005E9d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(4.2949672940000005E9d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -3333,77 +3333,77 @@ new Object();
       try {
         CBORObject.FromObject(4.2949672939999995E9d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(4.2949672939999995E9d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(1.8446744073709552E19d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(1.8446744073709552E19d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(1.8446744073709552E19d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(1.8446744073709552E19d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(1.8446744073709556E19d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(1.8446744073709556E19d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(1.8446744073709556E19d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(1.8446744073709556E19d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(1.844674407370955E19d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -3415,35 +3415,35 @@ new Object();
       try {
         CBORObject.FromObject(1.844674407370955E19d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(1.844674407370955E19d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-128.0d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-128.0d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-128.0d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -3455,21 +3455,21 @@ new Object();
       try {
         CBORObject.FromObject(-127.99999999999999d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-127.99999999999999d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-127.99999999999999d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -3481,21 +3481,21 @@ new Object();
       try {
         CBORObject.FromObject(-128.00000000000003d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-128.00000000000003d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-128.00000000000003d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -3507,21 +3507,21 @@ new Object();
       try {
         CBORObject.FromObject(-127.0d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-127.0d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-127.0d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -3533,21 +3533,21 @@ new Object();
       try {
         CBORObject.FromObject(-126.99999999999999d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-126.99999999999999d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-126.99999999999999d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -3559,21 +3559,21 @@ new Object();
       try {
         CBORObject.FromObject(-127.00000000000001d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-127.00000000000001d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-127.00000000000001d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -3585,49 +3585,49 @@ new Object();
       try {
         CBORObject.FromObject(-129.0d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-129.0d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-129.0d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-129.0d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-128.99999999999997d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-128.99999999999997d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-128.99999999999997d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -3639,28 +3639,28 @@ new Object();
       try {
         CBORObject.FromObject(-129.00000000000003d).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-129.00000000000003d).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-129.00000000000003d).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-129.00000000000003d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -3742,7 +3742,7 @@ new Object();
       try {
         CBORObject.FromObject(128.0d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -3764,7 +3764,7 @@ new Object();
       try {
         CBORObject.FromObject(128.00000000000003d).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -3866,7 +3866,7 @@ new Object();
       try {
         CBORObject.FromObject(65535.0f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -3888,7 +3888,7 @@ new Object();
       try {
         CBORObject.FromObject(65535.004f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -3910,7 +3910,7 @@ new Object();
       try {
         CBORObject.FromObject(65534.996f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -3927,14 +3927,14 @@ new Object();
       try {
         CBORObject.FromObject(65536.0f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(65536.0f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -3951,14 +3951,14 @@ new Object();
       try {
         CBORObject.FromObject(65536.01f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(65536.01f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -3980,7 +3980,7 @@ new Object();
       try {
         CBORObject.FromObject(65535.996f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -4002,7 +4002,7 @@ new Object();
       try {
         CBORObject.FromObject(65534.0f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -4024,7 +4024,7 @@ new Object();
       try {
         CBORObject.FromObject(65534.004f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -4046,14 +4046,14 @@ new Object();
       try {
         CBORObject.FromObject(65533.996f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(4.2949673E9f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -4065,21 +4065,21 @@ new Object();
       try {
         CBORObject.FromObject(4.2949673E9f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(4.2949673E9f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(4.2949678E9f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -4091,14 +4091,14 @@ new Object();
       try {
         CBORObject.FromObject(4.2949678E9f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(4.2949678E9f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -4115,77 +4115,77 @@ new Object();
       try {
         CBORObject.FromObject(4.29496704E9f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(4.29496704E9f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(1.8446744E19f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(1.8446744E19f).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(1.8446744E19f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(1.8446744E19f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(1.8446746E19f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(1.8446746E19f).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(1.8446746E19f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(1.8446746E19f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(1.8446743E19f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -4197,35 +4197,35 @@ new Object();
       try {
         CBORObject.FromObject(1.8446743E19f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(1.8446743E19f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-128.0f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-128.0f).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-128.0f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -4237,21 +4237,21 @@ new Object();
       try {
         CBORObject.FromObject(-127.99999f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-127.99999f).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-127.99999f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -4263,21 +4263,21 @@ new Object();
       try {
         CBORObject.FromObject(-128.00002f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-128.00002f).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-128.00002f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -4289,21 +4289,21 @@ new Object();
       try {
         CBORObject.FromObject(-127.0f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-127.0f).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-127.0f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -4315,21 +4315,21 @@ new Object();
       try {
         CBORObject.FromObject(-126.99999f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-126.99999f).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-126.99999f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -4341,21 +4341,21 @@ new Object();
       try {
         CBORObject.FromObject(-127.00001f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-127.00001f).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-127.00001f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -4367,49 +4367,49 @@ new Object();
       try {
         CBORObject.FromObject(-129.0f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-129.0f).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-129.0f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-129.0f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-128.99998f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-128.99998f).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-128.99998f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -4421,28 +4421,28 @@ new Object();
       try {
         CBORObject.FromObject(-129.00002f).AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-129.00002f).AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-129.00002f).AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         CBORObject.FromObject(-129.00002f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -4524,7 +4524,7 @@ new Object();
       try {
         CBORObject.FromObject(128.0f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -4546,7 +4546,7 @@ new Object();
       try {
         CBORObject.FromObject(128.00002f).AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
@@ -4780,42 +4780,42 @@ CBORTestCommon.AssertSer(objectTemp, objectTemp2);
       try {
         dbl1.AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         dbl1.AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         dbl1.AsUInt32();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         dbl1.AsUInt64();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         dbl2.AsUInt16();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }
       try {
         dbl2.AsSByte();
       } catch (OverflowException) {
-new Object();
+// NOTE: Intentionally empty
 } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
       }

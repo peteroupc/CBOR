@@ -189,7 +189,7 @@ return CBORObject.FromObject(
           o.AsByte();
           Assert.Fail("Should have failed");
         } catch (OverflowException) {
-          new Object();
+          // NOTE: Intentionally empty
         } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex); throw new
             InvalidOperationException(String.Empty, ex);
@@ -198,7 +198,7 @@ return CBORObject.FromObject(
           o.AsInt16();
           Assert.Fail("Should have failed");
         } catch (OverflowException) {
-          new Object();
+          // NOTE: Intentionally empty
         } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex); throw new
             InvalidOperationException(String.Empty, ex);
@@ -207,7 +207,7 @@ return CBORObject.FromObject(
           o.AsInt32();
           Assert.Fail("Should have failed");
         } catch (OverflowException) {
-          new Object();
+          // NOTE: Intentionally empty
         } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex); throw new
             InvalidOperationException(String.Empty, ex);
@@ -216,7 +216,7 @@ return CBORObject.FromObject(
           o.AsInt64();
           Assert.Fail("Should have failed");
         } catch (OverflowException) {
-          new Object();
+          // NOTE: Intentionally empty
         } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex); throw new
             InvalidOperationException(String.Empty, ex);
@@ -237,7 +237,7 @@ return CBORObject.FromObject(
           o.AsEInteger();
           Assert.Fail("Should have failed");
         } catch (OverflowException) {
-          new Object();
+          // NOTE: Intentionally empty
         } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex); throw new
             InvalidOperationException(String.Empty, ex);
