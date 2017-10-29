@@ -232,6 +232,10 @@ The following are some clarifications to RFC 7049.
 Release Notes
 -----------
 
+### Version 3.0.3
+
+- Fix issue "Encode options not honored for some nested objects".
+
 ### Version 3.0.2
 
 - Really strong-name sign the assembly, which (probably) was inadvertently delay-signed in version 3.0.
