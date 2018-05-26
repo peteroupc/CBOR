@@ -106,7 +106,7 @@ namespace PeterO.Cbor {
             pd.Name = pi.Name;
             // Convert 'IsXYZ' to 'XYZ'
             if (pd.Name.Length >= 3 && pd.Name[0] == 'I' && pd.Name[1] == 's' &&
-                pd.Name[2] >= 'A' && pd.Name[2] == 'Z') {
+                pd.Name[2] >= 'A' && pd.Name[2] <= 'Z') {
               pd.Name = pd.Name.Substring(2);
             }
             // Convert to camel case
