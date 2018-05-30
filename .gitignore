@@ -5,6 +5,7 @@
 *.jar
 *.log
 *.map
+*.pyc
 *.sdsettings
 *.shf*
 *.snk
