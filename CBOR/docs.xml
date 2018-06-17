@@ -444,7 +444,7 @@
 <doc name="M:PeterO.Cbor.CBORObject.Addition(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
 <summary>Finds the sum of two CBOR numbers.</summary>
             <param name='first'>The parameter <paramref name='first'/> is a CBOR object.</param>
-            <param name='second'>The parameter <paramref name='second'/> is a CBORObject object.</param>
+            <param name='second'>The parameter <paramref name='second'/> is a CBOR object.</param>
             <returns>A CBORObject object.</returns>
             <exception cref='T:System.ArgumentException'>Either or both
             operands are not numbers (as opposed to Not-a-Number,
@@ -628,7 +628,7 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsUInt64">
 <summary>Converts this object to a 64-bit unsigned integer.
-            Floating point values are truncated to an integer.</summary>
+            Non-integer values are truncated to an integer.</summary>
             <returns>The closest big integer to this object.</returns>
             <exception cref='T:System.InvalidOperationException'>This object's
             type is not a number type.</exception>
@@ -798,18 +798,17 @@
 <doc name="M:PeterO.Cbor.CBORObject.Divide(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
 <summary>Divides a CBORObject object by the value of a CBORObject
             object.</summary>
-            <param name='first'>The parameter <paramref name='first'/> is a CBORObject object.</param>
+            <param name='first'>The parameter <paramref name='first'/> is a CBOR object.</param>
             <param name='second'>The parameter <paramref name='second'/> is a CBOR object.</param>
             <returns>The quotient of the two objects.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.EncodeToBytes">
-<summary>Gets the binary representation of this data
-            item.</summary>
+<summary>Writes the binary representation of this CBOR object and returns a byte array of that representation.  If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the byte array in an undefined order.
+</summary>
             <returns>A byte array in CBOR format.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.EncodeToBytes(PeterO.Cbor.CBOREncodeOptions)">
-<summary>Gets the binary representation of this data
-            item.</summary>
+<summary>Writes the binary representation of this CBOR object and returns a byte array of that representation, using the specified options for encoding the object to CBOR format.  If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the byte array in an undefined order.</summary>
             <param name='options'>Options for encoding the data to
             CBOR.</param>
             <returns>A byte array in CBOR format.</returns>
@@ -1383,7 +1382,7 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Multiply(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
 <summary>Multiplies two CBOR numbers.</summary>
-            <param name='first'>The parameter <paramref name='first'/> is a CBORObject object.</param>
+            <param name='first'>The parameter <paramref name='first'/> is a CBOR object.</param>
             <param name='second'>The parameter <paramref name='second'/> is a CBOR object.</param>
             <returns>The product of the two numbers.</returns>
             <exception cref='T:System.ArgumentException'>Either or both
@@ -1491,7 +1490,7 @@
 <doc name="M:PeterO.Cbor.CBORObject.Remainder(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
 <summary>Finds the remainder that results when a CBORObject object
             is divided by the value of a CBORObject object.</summary>
-            <param name='first'>The parameter <paramref name='first'/> is a CBORObject object.</param>
+            <param name='first'>The parameter <paramref name='first'/> is a CBOR object.</param>
             <param name='second'>The parameter <paramref name='second'/> is a CBOR object.</param>
             <returns>The remainder of the two numbers.</returns>
 </doc>
@@ -1543,7 +1542,7 @@
 <doc name="M:PeterO.Cbor.CBORObject.Subtract(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
 <summary>Finds the difference between two CBOR number
             objects.</summary>
-            <param name='first'>The parameter <paramref name='first'/> is a CBORObject object.</param>
+            <param name='first'>The parameter <paramref name='first'/> is a CBOR object.</param>
             <param name='second'>The parameter <paramref name='second'/> is a CBOR object.</param>
             <returns>The difference of the two objects.</returns>
             <exception cref='T:System.ArgumentException'>Either or both
@@ -1559,6 +1558,7 @@
             <item>If this object contains maps with non-string keys, the keys
             are converted to JSON strings before writing the map as a JSON
             string.</item>
+            <item>If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the JSON string in an undefined order.</item>
             <item>If a number in the form of an arbitrary-precision binary
             float has a very high binary exponent, it will be converted to a
             double before being converted to a JSON string. (The resulting
@@ -1837,11 +1837,12 @@ tag 22, or base16 for tag 23.)</item>
             <param name='stream'>A writable data stream.</param>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Write(System.Object,System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)">
-<summary>Writes an arbitrary object to a CBOR data stream.
+<summary>Writes an arbitrary object to a CBOR data stream, using the specified options
+    for controlling how the object is encoded to CBOR data format.   If the object is convertible to a CBOR map or a CBOR object that contains CBOR maps, the keys to those maps are written out to the data stream in an undefined order.
             Currently, the following objects are supported:
             <list type=''>
             <item>Lists of CBORObject.</item>
-            <item>Maps of CBORObject.</item>
+            <item>Maps of CBORObject. The keys to the map are written out to the data stream in an undefined order.</item>
             <item>Null.</item>
             <item>Byte arrays, which will always be written as definite-length
             byte strings.</item>
@@ -1923,14 +1924,14 @@ tag 22, or base16 for tag 23.)</item>
 <doc name="M:PeterO.Cbor.CBORObject.WriteJSON(System.Object,System.IO.Stream)">
 <summary>Converts an arbitrary object to a string in JavaScript
             Object Notation (JSON) format, as in the ToJSONString method, and
-            writes that string to a data stream in UTF-8.</summary>
+            writes that string to a data stream in UTF-8.   If the object is convertible to a CBOR map, or to a CBOR object that contains CBOR maps, the keys to those maps are written out to the JSON string in an undefined order.</summary>
             <param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param>
             <param name='outputStream'>A writable data stream.</param>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.WriteJSONTo(System.IO.Stream)">
 <summary>Converts this object to a string in JavaScript Object
             Notation (JSON) format, as in the ToJSONString method, and writes
-            that string to a data stream in UTF-8.</summary>
+            that string to a data stream in UTF-8.   If the CBOR object contains CBOR maps, or is a CBOR map, the keys to the map are written out to the JSON string in an undefined order.</summary>
             <param name='outputStream'>A writable data stream.</param>
             <exception cref='T:System.IO.IOException'>An I/O error
             occurred.</exception>
@@ -1938,7 +1939,7 @@ tag 22, or base16 for tag 23.)</item>
             <paramref name='outputStream'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)">
-<summary>Writes this CBOR object to a data stream.</summary>
+<summary>Writes this CBOR object to a data stream.    If the CBOR object contains CBOR maps, or is a CBOR map, the keys to the map are written out to the data stream in an undefined order.</summary>
             <param name='stream'>A writable data stream.</param>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='stream'/> is null.</exception>
@@ -1946,7 +1947,7 @@ tag 22, or base16 for tag 23.)</item>
             occurred.</exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)">
-<summary>Writes this CBOR object to a data stream.</summary>
+<summary>Writes this CBOR object to a data stream, using the specified options for encoding the data to CBOR format.   If the CBOR object contains CBOR maps, or is a CBOR map, the keys to the map are written out to the data stream in an undefined order.</summary>
             <param name='stream'>A writable data stream.</param>
             <param name='options'>Options for encoding the data to
             CBOR.</param>
@@ -1961,36 +1962,36 @@ tag 22, or base16 for tag 23.)</item>
 <doc name="M:PeterO.Cbor.CBORObject.op_Addition(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
 <summary>Adds a CBORObject object and a CBORObject
             object.</summary>
-            <param name='a'>The parameter <paramref name='a'/> is a CBORObject object.</param>
-            <param name='b'>The parameter <paramref name='b'/> is a CBORObject object.</param>
+            <param name='a'>The parameter <paramref name='a'/> is a CBOR object.</param>
+            <param name='b'>The parameter <paramref name='b'/> is a CBOR object.</param>
             <returns>The sum of the two objects.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.op_Division(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
 <summary>Divides a CBORObject object by the value of a CBORObject
             object.</summary>
-            <param name='a'>The parameter <paramref name='a'/> is a CBORObject object.</param>
-            <param name='b'>The parameter <paramref name='b'/> is a CBORObject object.</param>
+            <param name='a'>The parameter <paramref name='a'/> is a CBOR object.</param>
+            <param name='b'>The parameter <paramref name='b'/> is a CBOR object.</param>
             <returns>The quotient of the two objects.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.op_Modulus(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
 <summary>Finds the remainder that results when a CBORObject object
             is divided by the value of a CBORObject object.</summary>
-            <param name='a'>The parameter <paramref name='a'/> is a CBORObject object.</param>
-            <param name='b'>The parameter <paramref name='b'/> is a CBORObject object.</param>
+            <param name='a'>The parameter <paramref name='a'/> is a CBOR object.</param>
+            <param name='b'>The parameter <paramref name='b'/> is a CBOR object.</param>
             <returns>The remainder of the two numbers.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.op_Multiply(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
 <summary>Multiplies a CBORObject object by the value of a
             CBORObject object.</summary>
-            <param name='a'>The parameter <paramref name='a'/> is a CBORObject object.</param>
-            <param name='b'>The parameter <paramref name='b'/> is a CBORObject object.</param>
+            <param name='a'>The parameter <paramref name='a'/> is a CBOR object.</param>
+            <param name='b'>The parameter <paramref name='b'/> is a CBOR object.</param>
             <returns>The product of the two numbers.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.op_Subtraction(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
 <summary>Subtracts a CBORObject object from a CBORObject
             object.</summary>
-            <param name='a'>The parameter <paramref name='a'/> is a CBORObject object.</param>
-            <param name='b'>The parameter <paramref name='b'/> is a CBORObject object.</param>
+            <param name='a'>The parameter <paramref name='a'/> is a CBOR object.</param>
+            <param name='b'>The parameter <paramref name='b'/> is a CBOR object.</param>
             <returns>The difference of the two objects.</returns>
 </doc>
 <doc name="T:PeterO.Cbor.CBORObjectMath">
