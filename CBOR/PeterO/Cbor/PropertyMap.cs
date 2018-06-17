@@ -106,7 +106,10 @@ namespace PeterO.Cbor {
             pd.Name = pi.Name;
             // Convert 'IsXYZ' to 'XYZ'
             if (pd.Name.Length >= 3 && pd.Name[0] == 'I' && pd.Name[1] == 's' &&
-                pd.Name[2] >= 'A' && pd.Name[2] == 'Z') {
+                pd.Name[2] >= 'A' && pd.Name[2] <= 'Z') {
+              // NOTE (Jun. 17, 2017, Peter O.): Was "== 'Z'", which was a
+              // bug reported
+              // by GitHub user "richardschneider". See peteroupc/CBOR#17.
               pd.Name = pd.Name.Substring(2);
             }
             // Convert to camel case

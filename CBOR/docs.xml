@@ -230,8 +230,7 @@
             objects.</summary>
 </doc>
 <doc name="M:PeterO.Cbor.CBOREncodeOptions.And(PeterO.Cbor.CBOREncodeOptions)">
-<summary>Returns an options object whose flags are shared by this
-            and another options object.</summary>
+<summary>Returns an options object containing the flags shared by this and another options object.</summary>
             <param name='o'>The parameter <paramref name='o'/> is a CBOREncodeOptions object.</param>
             <returns>A CBOREncodeOptions object.</returns>
 </doc>
@@ -249,10 +248,9 @@
             0.</summary>
 </doc>
 <doc name="M:PeterO.Cbor.CBOREncodeOptions.Or(PeterO.Cbor.CBOREncodeOptions)">
-<summary>Combines the flags of this options object with another
-            options object.</summary>
+<summary>Returns an options object containing the combined flags of this and another options object.</summary>
             <param name='o'>The parameter <paramref name='o'/> is a CBOREncodeOptions object.</param>
-            <returns>A CBOREncodeOptions object.</returns>
+            <returns>A new CBOREncodeOptions object.</returns>
 </doc>
 <doc name="P:PeterO.Cbor.CBOREncodeOptions.Value">
 <summary>Gets this options object's value.</summary>
