@@ -4614,7 +4614,38 @@ TestSucceedingJSON(cbor.ToJSONString());
   CBORObject.FromObject(0),
   CBORObject.Zero);
     }
+    
+     class poco
+     {
+        public bool IsSomething { get; set; }
+        public int Value { get; set; }
+     } 
+     class Poco
+     {
+        public bool IsSomething { get; set; }
+        public int Value { get; set; }
+     } 
+     [Test]
+     public void TestFromPoco()
+     {
+        var cbor = CBORObject.FromObject(new poco());
+        Assert.IsTrue(cbor.ContainsKey("value"));
+        Assert.IsTrue(cbor.ContainsKey("something"));
 
+        POCOOptions.RemoveIsPrefix = false;
+        POCOOptions.UseCamelCase = false;
+        try
+        {
+            var cbor1 = CBORObject.FromObject(new Poco());
+            Assert.IsTrue(cbor1.ContainsKey("Value"));
+            Assert.IsTrue(cbor1.ContainsKey("IsSomething"));
+        }
+        finally
+        {
+            POCOOptions.RemoveIsPrefix = true;
+            POCOOptions.UseCamelCase = true;
+        }
+        }
     internal static void CompareDecimals(CBORObject o1, CBORObject o2) {
       int cmpDecFrac = TestCommon.CompareTestReciprocal(
         o1.AsEDecimal(),

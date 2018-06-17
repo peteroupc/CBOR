@@ -105,12 +105,12 @@ namespace PeterO.Cbor {
             PropertyData pd = new PropertyMap.PropertyData();
             pd.Name = pi.Name;
             // Convert 'IsXYZ' to 'XYZ'
-            if (pd.Name.Length >= 3 && pd.Name[0] == 'I' && pd.Name[1] == 's' &&
-                pd.Name[2] >= 'A' && pd.Name[2] == 'Z') {
+            if (POCOOptions.RemoveIsPrefix && pd.Name.Length >= 3 && pd.Name[0] == 'I' && pd.Name[1] == 's' &&
+                pd.Name[2] >= 'A' && pd.Name[2] <= 'Z') {
               pd.Name = pd.Name.Substring(2);
             }
             // Convert to camel case
-            if (pd.Name[0] >= 'A' && pd.Name[0] <= 'Z') {
+            if (POCOOptions.UseCamelCase && pd.Name[0] >= 'A' && pd.Name[0] <= 'Z') {
               var sb = new System.Text.StringBuilder();
               sb.Append((char)(pd.Name[0] + 0x20));
               sb.Append(pd.Name.Substring(1));
