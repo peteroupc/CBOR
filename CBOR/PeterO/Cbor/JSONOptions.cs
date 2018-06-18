@@ -5,15 +5,15 @@ using System.Text;
 namespace PeterO.Cbor
 {
     /// <summary>
-    ///   CBOR to JSON onversion options.
+    ///   CBOR to JSON conversion options.
     /// </summary>
-    /// <seealso cref="CBORObject.ToJSONString"/>
-    public class JSONOptions
+    /// <seealso cref="CBORObject.ToJSONString()"/>
+    public sealed class JSONOptions
     {
-        /// <summary>
-        ///   The default options for converting to JSON.
-        /// </summary>
-        public readonly static JSONOptions Default = new JSONOptions();
+    /// <summary>
+    ///   The default options for converting to JSON.
+    /// </summary>
+    public readonly static JSONOptions Default = new JSONOptions();
 
         /// <summary>
         ///   Pad any base-64 encoding.
