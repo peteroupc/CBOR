@@ -29,6 +29,27 @@ namespace PeterO.Cbor {
 
       private PropertyInfo prop;
 
+      public static string GetAdjustedName(bool removeIsPrefix, bool useCamelCase){
+            string name=this.Name;
+            // Convert 'IsXYZ' to 'XYZ'
+            if (removeIsPrefix && name.Length >= 3 && name[0] == 'I' && name[1] == 's' &&
+                name[2] >= 'A' && name[2] <= 'Z') {
+              // NOTE (Jun. 17, 2017, Peter O.): Was "== 'Z'", which was a
+              // bug reported
+              // by GitHub user "richardschneider". See peteroupc/CBOR#17.
+              name = name.Substring(2);
+            }
+            // Convert to camel case
+            if (useCamelCase && name[0] >= 'A' && name[0] <= 'Z') {
+              var sb = new System.Text.StringBuilder();
+              sb.Append((char)(name[0] + 0x20));
+              sb.Append(name.Substring(1));
+              name = sb.ToString();
+            }
+            return name;
+      }
+
+
       public PropertyInfo Prop {
         get {
           return this.prop;
@@ -104,21 +125,6 @@ namespace PeterO.Cbor {
           pi.GetIndexParameters().Length == 0) {
             PropertyData pd = new PropertyMap.PropertyData();
             pd.Name = pi.Name;
-            // Convert 'IsXYZ' to 'XYZ'
-            if (pd.Name.Length >= 3 && pd.Name[0] == 'I' && pd.Name[1] == 's' &&
-                pd.Name[2] >= 'A' && pd.Name[2] <= 'Z') {
-              // NOTE (Jun. 17, 2017, Peter O.): Was "== 'Z'", which was a
-              // bug reported
-              // by GitHub user "richardschneider". See peteroupc/CBOR#17.
-              pd.Name = pd.Name.Substring(2);
-            }
-            // Convert to camel case
-            if (pd.Name[0] >= 'A' && pd.Name[0] <= 'Z') {
-              var sb = new System.Text.StringBuilder();
-              sb.Append((char)(pd.Name[0] + 0x20));
-              sb.Append(pd.Name.Substring(1));
-              pd.Name = sb.ToString();
-            }
             pd.Prop = pi;
             ret.Add(pd);
           }
@@ -256,11 +262,17 @@ namespace PeterO.Cbor {
 
     public static IEnumerable<KeyValuePair<string, object>>
     GetProperties(Object o) {
+         return GetProperties(o, true, true);
+    }
+    public static IEnumerable<KeyValuePair<string, object>>
+    GetProperties(Object o, bool removeIsPrefix, bool useCamelCase) {
       foreach (PropertyData key in GetPropertyList(o.GetType())) {
         yield return new KeyValuePair<string, object>(
-  key.Name,
+  key.GetAdjustedName(removeIsPrefix, useCamelCase),
   key.Prop.GetValue(o, null));
       }
     }
+
+
   }
 }
