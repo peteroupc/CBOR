@@ -26,12 +26,12 @@ if (docdir.Length == 0) {
       Directory.SetCurrentDirectory(Path.GetDirectoryName(assemblyFile));
       if (!File.Exists(assemblyFile)) {
         // Exit early, not found
-        return;
+        throw new ArgumentException("Assembly file not found: " + assemblyFile);
       }
-      var assembly = Assembly.LoadFrom(assemblyFile);
+      var asm = Assembly.LoadFrom(assemblyFile);
       Directory.CreateDirectory(directory);
       try {
-        var members = DocReader.Read(assembly);
+        var members = DocReader.Read(asm);
         var oldWriter = Console.Out;
       var visitor = new TypeVisitor(directory);
       members.Accept(visitor);

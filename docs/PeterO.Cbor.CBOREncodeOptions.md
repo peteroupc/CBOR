@@ -37,7 +37,7 @@ This options object's value.
     public PeterO.Cbor.CBOREncodeOptions And(
         PeterO.Cbor.CBOREncodeOptions o);
 
-Returns an options object whose flags are shared by this and another options object.
+Returns an options object containing the flags shared by this and another options object.
 
 <b>Parameters:</b>
 
@@ -53,7 +53,7 @@ A CBOREncodeOptions object.
     public PeterO.Cbor.CBOREncodeOptions Or(
         PeterO.Cbor.CBOREncodeOptions o);
 
-Combines the flags of this options object with another options object.
+Returns an options object containing the combined flags of this and another options object.
 
 <b>Parameters:</b>
 
@@ -62,4 +62,4 @@ Combines the flags of this options object with another options object.
 
 <b>Return Value:</b>
 
-A CBOREncodeOptions object.
+A new CBOREncodeOptions object.

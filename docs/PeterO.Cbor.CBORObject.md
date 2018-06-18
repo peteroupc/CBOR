@@ -1,8 +1,8 @@
 ## PeterO.Cbor.CBORObject
 
     public sealed class CBORObject :
-        System.IComparable,
-        System.IEquatable
+        System.IEquatable,
+        System.IComparable
 
 Represents an object in Concise Binary Object Representation (CBOR) and contains methods for reading and writing CBOR data. CBOR is defined in RFC 7049.<b>Converting CBOR objects</b>
 
@@ -434,7 +434,7 @@ Finds the sum of two CBOR numbers.
  is a CBOR object.
 
  * <i>second</i>: The parameter  <i>second</i>
- is a CBORObject object.
+ is a CBOR object.
 
 <b>Return Value:</b>
 
@@ -822,7 +822,7 @@ This object's value is outside the range of a 32-bit unsigned integer.
 
     public ulong AsUInt64();
 
-Converts this object to a 64-bit unsigned integer. Floating point values are truncated to an integer.
+Converts this object to a 64-bit unsigned integer. Non-integer values are truncated to an integer.
 
 <b>Return Value:</b>
 
@@ -1051,7 +1051,7 @@ Divides a CBORObject object by the value of a CBORObject object.
 <b>Parameters:</b>
 
  * <i>first</i>: The parameter  <i>first</i>
- is a CBORObject object.
+ is a CBOR object.
 
  * <i>second</i>: The parameter  <i>second</i>
  is a CBOR object.
@@ -1065,7 +1065,7 @@ The quotient of the two objects.
     public byte[] EncodeToBytes(
         PeterO.Cbor.CBOREncodeOptions options);
 
-Gets the binary representation of this data item.
+Writes the binary representation of this CBOR object and returns a byte array of that representation, using the specified options for encoding the object to CBOR format. If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the byte array in an undefined order.
 
 <b>Parameters:</b>
 
@@ -1085,7 +1085,7 @@ The parameter <i>options</i>
 
     public byte[] EncodeToBytes();
 
-Gets the binary representation of this data item.
+Writes the binary representation of this CBOR object and returns a byte array of that representation. If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the byte array in an undefined order.
 
 <b>Return Value:</b>
 
@@ -2013,7 +2013,7 @@ Multiplies two CBOR numbers.
 <b>Parameters:</b>
 
  * <i>first</i>: The parameter  <i>first</i>
- is a CBORObject object.
+ is a CBOR object.
 
  * <i>second</i>: The parameter  <i>second</i>
  is a CBOR object.
@@ -2073,10 +2073,10 @@ Adds a CBORObject object and a CBORObject object.
 <b>Parameters:</b>
 
  * <i>a</i>: The parameter  <i>a</i>
- is a CBORObject object.
+ is a CBOR object.
 
  * <i>b</i>: The parameter  <i>b</i>
- is a CBORObject object.
+ is a CBOR object.
 
 <b>Return Value:</b>
 
@@ -2093,10 +2093,10 @@ Divides a CBORObject object by the value of a CBORObject object.
 <b>Parameters:</b>
 
  * <i>a</i>: The parameter  <i>a</i>
- is a CBORObject object.
+ is a CBOR object.
 
  * <i>b</i>: The parameter  <i>b</i>
- is a CBORObject object.
+ is a CBOR object.
 
 <b>Return Value:</b>
 
@@ -2113,10 +2113,10 @@ Finds the remainder that results when a CBORObject object is divided by the valu
 <b>Parameters:</b>
 
  * <i>a</i>: The parameter  <i>a</i>
- is a CBORObject object.
+ is a CBOR object.
 
  * <i>b</i>: The parameter  <i>b</i>
- is a CBORObject object.
+ is a CBOR object.
 
 <b>Return Value:</b>
 
@@ -2133,10 +2133,10 @@ Multiplies a CBORObject object by the value of a CBORObject object.
 <b>Parameters:</b>
 
  * <i>a</i>: The parameter  <i>a</i>
- is a CBORObject object.
+ is a CBOR object.
 
  * <i>b</i>: The parameter  <i>b</i>
- is a CBORObject object.
+ is a CBOR object.
 
 <b>Return Value:</b>
 
@@ -2153,10 +2153,10 @@ Subtracts a CBORObject object from a CBORObject object.
 <b>Parameters:</b>
 
  * <i>a</i>: The parameter  <i>a</i>
- is a CBORObject object.
+ is a CBOR object.
 
  * <i>b</i>: The parameter  <i>b</i>
- is a CBORObject object.
+ is a CBOR object.
 
 <b>Return Value:</b>
 
@@ -2283,7 +2283,7 @@ Finds the remainder that results when a CBORObject object is divided by the valu
 <b>Parameters:</b>
 
  * <i>first</i>: The parameter  <i>first</i>
- is a CBORObject object.
+ is a CBOR object.
 
  * <i>second</i>: The parameter  <i>second</i>
  is a CBOR object.
@@ -2355,7 +2355,7 @@ Finds the difference between two CBOR number objects.
 <b>Parameters:</b>
 
  * <i>first</i>: The parameter  <i>first</i>
- is a CBORObject object.
+ is a CBOR object.
 
  * <i>second</i>: The parameter  <i>second</i>
  is a CBOR object.
@@ -2377,11 +2377,13 @@ Converts this object to a string in JavaScript Object Notation (JSON) format. Th
 
  * If this object contains maps with non-string keys, the keys are converted to JSON strings before writing the map as a JSON string.
 
+ * If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the JSON string in an undefined order.
+
  * If a number in the form of an arbitrary-precision binary float has a very high binary exponent, it will be converted to a double before being converted to a JSON string. (The resulting double could overflow to infinity, in which case the arbitrary-precision binary float is converted to null.)
 
  * The string will not begin with a byte-order mark (U+FEFF); RFC 7159 (the JSON specification) forbids placing a byte-order mark at the beginning of a JSON string.
 
- * Byte strings are converted to Base64 URL without whitespace or padding by default. (A byte string will instead be converted to traditional base64 without whitespace or padding if it has tag 22, or base16 for tag 23.)
+ * Byte strings are converted to Base64 URL without whitespace or padding by default (see section 4.1 of RFC 7049). (A byte string will instead be converted to traditional base64 without whitespace or padding if it has tag 22, or base16 for tag 23.)
 
  * Rational numbers will be converted to their exact form, if possible, otherwise to a high-precision approximation. (The resulting approximation could overflow to infinity, in which case the rational number is converted to null.)
 
@@ -2595,11 +2597,11 @@ An I/O error occurred.
         System.IO.Stream output,
         PeterO.Cbor.CBOREncodeOptions options);
 
-Writes an arbitrary object to a CBOR data stream. Currently, the following objects are supported:
+Writes an arbitrary object to a CBOR data stream, using the specified options for controlling how the object is encoded to CBOR data format. If the object is convertible to a CBOR map or a CBOR object that contains CBOR maps, the keys to those maps are written out to the data stream in an undefined order. Currently, the following objects are supported:
 
  * Lists of CBORObject.
 
- * Maps of CBORObject.
+ * Maps of CBORObject. The keys to the map are written out to the data stream in an undefined order.
 
  * Null.
 
@@ -3027,7 +3029,7 @@ Writes a 16-bit unsigned integer in CBOR format to a data stream.
         object obj,
         System.IO.Stream outputStream);
 
-Converts an arbitrary object to a string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8.
+Converts an arbitrary object to a string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8. If the object is convertible to a CBOR map, or to a CBOR object that contains CBOR maps, the keys to those maps are written out to the JSON string in an undefined order.
 
 <b>Parameters:</b>
 
@@ -3041,7 +3043,7 @@ Converts an arbitrary object to a string in JavaScript Object Notation (JSON) fo
     public void WriteJSONTo(
         System.IO.Stream outputStream);
 
-Converts this object to a string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8.
+Converts this object to a string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8. If the CBOR object contains CBOR maps, or is a CBOR map, the keys to the map are written out to the JSON string in an undefined order.
 
 <b>Parameters:</b>
 
@@ -3061,7 +3063,7 @@ The parameter <i>outputStream</i>
     public void WriteTo(
         System.IO.Stream stream);
 
-Writes this CBOR object to a data stream.
+Writes this CBOR object to a data stream. If the CBOR object contains CBOR maps, or is a CBOR map, the keys to the map are written out to the data stream in an undefined order.
 
 <b>Parameters:</b>
 
@@ -3082,7 +3084,7 @@ An I/O error occurred.
         System.IO.Stream stream,
         PeterO.Cbor.CBOREncodeOptions options);
 
-Writes this CBOR object to a data stream.
+Writes this CBOR object to a data stream, using the specified options for encoding the data to CBOR format. If the CBOR object contains CBOR maps, or is a CBOR map, the keys to the map are written out to the data stream in an undefined order.
 
 <b>Parameters:</b>
 

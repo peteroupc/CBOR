@@ -2,9 +2,9 @@
 
     public sealed struct Rounding :
         System.Enum,
+        System.IFormattable,
         System.IComparable,
-        System.IConvertible,
-        System.IFormattable
+        System.IConvertible
 
 <b>Deprecated.</b> Use ERounding from PeterO.Numbers/com.upokecenter.numbers.
 
