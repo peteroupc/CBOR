@@ -1,8 +1,8 @@
 ## PeterO.BigInteger
 
     public sealed class BigInteger :
-        System.IComparable,
-        System.IEquatable
+        System.IEquatable,
+        System.IComparable
 
 <b>Deprecated.</b> Use EInteger from PeterO.Numbers/com.upokecenter.numbers and the output of this class's ToString method.
 

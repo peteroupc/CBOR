@@ -1,8 +1,8 @@
 ## PeterO.ExtendedDecimal
 
     public sealed class ExtendedDecimal :
-        System.IComparable,
-        System.IEquatable
+        System.IEquatable,
+        System.IComparable
 
 <b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers and the output of this class's ToString method.
 

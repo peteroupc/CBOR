@@ -29,10 +29,11 @@ namespace PeterO.Cbor {
 
       private PropertyInfo prop;
 
-      public static string GetAdjustedName(bool removeIsPrefix, bool useCamelCase){
-            string name=this.Name;
+      public string GetAdjustedName(bool removeIsPrefix, bool useCamelCase) {
+            string name = this.Name;
             // Convert 'IsXYZ' to 'XYZ'
-            if (removeIsPrefix && name.Length >= 3 && name[0] == 'I' && name[1] == 's' &&
+  if (removeIsPrefix && name.Length >= 3 && name[0] == 'I' && name[1] == 's'
+              &&
                 name[2] >= 'A' && name[2] <= 'Z') {
               // NOTE (Jun. 17, 2017, Peter O.): Was "== 'Z'", which was a
               // bug reported
@@ -48,7 +49,6 @@ namespace PeterO.Cbor {
             }
             return name;
       }
-
 
       public PropertyInfo Prop {
         get {
@@ -272,7 +272,5 @@ namespace PeterO.Cbor {
   key.Prop.GetValue(o, null));
       }
     }
-
-
   }
 }

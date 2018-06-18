@@ -25,8 +25,8 @@ namespace PeterO.Cbor {
     /// path='docs/doc[@name="P:PeterO.Cbor.CBOREncodeOptions.Value"]/*'/>
     public int Value {
       get {
- return this.value;
-}
+        return this.value;
+      }
     }
 
     private CBOREncodeOptions(int value) {

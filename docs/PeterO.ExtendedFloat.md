@@ -1,8 +1,8 @@
 ## PeterO.ExtendedFloat
 
     public sealed class ExtendedFloat :
-        System.IComparable,
-        System.IEquatable
+        System.IEquatable,
+        System.IComparable
 
 <b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers and the output of this class's ToString method.
 
