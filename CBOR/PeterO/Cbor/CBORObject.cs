@@ -2704,13 +2704,14 @@ mapValue = mapValue ?? CBORObject.FromObject(valueOb);
       return this;
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToJSONString"]/*'/>
+    /// 
     public string ToJSONString() {
       return ToJSONString(JSONOptions.Default);
     }
-    
-    public string ToJSONString(JSONOptions options) { 
+
+        /// <include file='../../docs.xml'
+        /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)"]/*'/>
+        public string ToJSONString(JSONOptions options) { 
       int type = this.ItemType;
       switch (type) {
         case CBORObjectTypeSimpleValue: {
@@ -2928,7 +2929,9 @@ sb = sb ?? (new StringBuilder());
       CBORJson.WriteJSONToInternal(this, new StringOutput(outputStream), JSONOptions.Default);
     }
 
-    public void WriteJSONTo(Stream outputStream, JSONOptions options) {
+        /// <include file='../../docs.xml'
+        /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteJSONTo(System.IO.Stream,PeterO.Cbor.JSONOptions)"]/*'/>
+        public void WriteJSONTo(Stream outputStream, JSONOptions options) {
       if (outputStream == null) {
         throw new ArgumentNullException("outputStream");
       }

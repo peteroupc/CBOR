@@ -1547,9 +1547,16 @@
             operands are not numbers (as opposed to Not-a-Number,
             NaN).</exception>
 </doc>
-<doc name="M:PeterO.Cbor.CBORObject.ToJSONString">
+<doc name="M:PeterO.Cbor.CBORObject.ToJSONString()">
 <summary>Converts this object to a string in JavaScript Object
-            Notation (JSON) format. This function works not only with arrays
+            Notation (JSON) format, using the specified options to control the encoding process.  See the overload to JSONString taking a JSONOptions argument.
+            <returns>A text string containing the converted object.</returns>
+</summary>
+</doc>
+<doc name="M:PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)">
+<summary>Converts this object to a string in JavaScript Object
+            Notation (JSON) format, using the specified options to control the encoding process. 
+					 This function works not only with arrays
             and maps, but also integers, strings, byte arrays, and other JSON
             data types. Notes:
             <list type=''>
@@ -1565,9 +1572,8 @@
             <item>The string will not begin with a byte-order mark (U+FEFF);
             RFC 7159 (the JSON specification) forbids placing a byte-order mark
             at the beginning of a JSON string.</item>
-            <item>Byte strings are converted to Base64 URL without whitespace or padding by default (see section 4.1 of RFC 7049).
-(A byte string will instead be converted to traditional base64 without whitespace or padding if it has
-tag 22, or base16 for tag 23.)</item>
+            <item>Byte strings are converted to Base64 URL without whitespace or padding by default (see section 4.1 of RFC 7049).  A byte string will instead be converted to traditional base64 without whitespace or padding by default if it has
+tag 22, or base16 for tag 23.  Padding will be included in the Base64 URL or traditional base64 form if <b>Base64Padding</b> in the JSON options is set to <b>true</b>.</item>
             <item>Rational numbers will be converted to their exact form, if
             possible, otherwise to a high-precision approximation. (The
             resulting approximation could overflow to infinity, in which case
@@ -1936,6 +1942,16 @@ tag 22, or base16 for tag 23.)</item>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='outputStream'/> is null.</exception>
 </doc>
+<doc name="M:PeterO.Cbor.CBORObject.WriteJSONTo(System.IO.Stream,PeterO.Cbor.JSONOptions)">
+<summary>Converts this object to a string in JavaScript Object
+            Notation (JSON) format, as in the ToJSONString method, and writes
+            that string to a data stream in UTF-8, using the given JSON options to control the encoding process.   If the CBOR object contains CBOR maps, or is a CBOR map, the keys to the map are written out to the JSON string in an undefined order.</summary>
+            <param name='outputStream'>A writable data stream.</param>
+            <exception cref='T:System.IO.IOException'>An I/O error
+            occurred.</exception>
+            <exception cref='T:System.ArgumentNullException'>The parameter
+            <paramref name='outputStream'/> is null.</exception>
+</doc>
 <doc name="M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)">
 <summary>Writes this CBOR object to a data stream.    If the CBOR object contains CBOR maps, or is a CBOR map, the keys to the map are written out to the data stream in an undefined order.</summary>
             <param name='stream'>A writable data stream.</param>
@@ -2294,6 +2310,28 @@ tag 22, or base16 for tag 23.)</item>
             <returns>Either a Unicode code point (from 0-0xd7ff or from 0xe000
             to 0x10ffff), or the value -1 indicating the end of the
             source.</returns>
+</doc>
+<doc name="T:PeterO.Cbor.JSONOptions">
+<summary>
+              Includes options to control how CBOR objects are converted to JSON.
+             </summary>
+             <seealso cref='M:PeterO.Cbor.CBORObject.ToJSONString'/>
+</doc>
+<doc name="P:PeterO.Cbor.JSONOptions.Base64Padding">
+<summary>
+            If <b>true</b>, include padding when writing data in base64url or traditional base64 format to JSON.
+             </summary>
+             <value>
+               The default is <b>false</b>, no padding.
+             </value>
+             <remarks>
+               The padding character is '='.
+             </remarks>
+</doc>
+<doc name="F:PeterO.Cbor.JSONOptions.Default">
+<summary>
+               The default options for converting CBOR objects to JSON.
+             </summary>
 </doc>
 <doc name="T:PeterO.Cbor.StringRefs">
 <summary>Implements CBOR string references, described at
