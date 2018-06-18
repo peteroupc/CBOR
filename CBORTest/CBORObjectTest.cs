@@ -3955,13 +3955,10 @@ TestSucceedingJSON(cbor.ToJSONString());
     public void TestToJSONString_ByteArray_Padding()
     {
       CBORObject o;
-      var options = new JSONOptions
-      {
-          Base64Padding = true
-      };
+      var options = new JSONOptions(true); // base64 padding enabled
       o = CBORObject.FromObjectAndTag(
         new byte[] { 0x9a, 0xd6, 0xf0, 0xe8 }, 22);
-      {
+     
         string stringTemp = o.ToJSONString(options);
         Assert.AreEqual(
         "\"mtbw6A==\"",
