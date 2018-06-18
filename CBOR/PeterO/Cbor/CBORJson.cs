@@ -511,7 +511,8 @@ namespace PeterO.Cbor {
 
     internal static void WriteJSONToInternal(
       CBORObject obj,
-      StringOutput writer) {
+      StringOutput writer,
+      JSONOptions options) {
       int type = obj.ItemType;
       object thisItem = obj.ThisItem;
       switch (type) {
@@ -610,7 +611,7 @@ namespace PeterO.Cbor {
                 byteArray,
                 0,
                 byteArray.Length,
-                false);
+                options.Base64Padding);
             } else if (obj.HasTag(23)) {
               // Write as base16
               for (int i = 0; i < byteArray.Length; ++i) {
@@ -623,7 +624,7 @@ namespace PeterO.Cbor {
                 byteArray,
                 0,
                 byteArray.Length,
-                false);
+                options.Base64Padding);
             }
             writer.WriteCodePoint((int)'\"');
             break;
@@ -646,7 +647,7 @@ namespace PeterO.Cbor {
               if (!first) {
                 writer.WriteCodePoint((int)',');
               }
-              WriteJSONToInternal(i, writer);
+              WriteJSONToInternal(i, writer, options);
               first = false;
             }
             writer.WriteCodePoint((int)']');
@@ -686,7 +687,7 @@ namespace PeterO.Cbor {
                 WriteJSONStringUnquoted((string)key.ThisItem, writer);
                 writer.WriteCodePoint((int)'\"');
                 writer.WriteCodePoint((int)':');
-                WriteJSONToInternal(value, writer);
+                WriteJSONToInternal(value, writer, options);
                 first = false;
               }
               writer.WriteCodePoint((int)'}');
@@ -716,7 +717,7 @@ namespace PeterO.Cbor {
                 WriteJSONStringUnquoted((string)key, writer);
                 writer.WriteCodePoint((int)'\"');
                 writer.WriteCodePoint((int)':');
-                WriteJSONToInternal(value, writer);
+                WriteJSONToInternal(value, writer, options);
                 first = false;
               }
               writer.WriteCodePoint((int)'}');
