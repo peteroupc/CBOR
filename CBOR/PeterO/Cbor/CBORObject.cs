@@ -2707,6 +2707,10 @@ mapValue = mapValue ?? CBORObject.FromObject(valueOb);
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToJSONString"]/*'/>
     public string ToJSONString() {
+      return ToJSONString(JSONOptions.Default);
+    }
+    
+    public string ToJSONString(JSONOptions options) { 
       int type = this.ItemType;
       switch (type) {
         case CBORObjectTypeSimpleValue: {
@@ -2719,7 +2723,7 @@ mapValue = mapValue ?? CBORObject.FromObject(valueOb);
           {
             var sb = new StringBuilder();
             try {
-              CBORJson.WriteJSONToInternal(this, new StringOutput(sb));
+              CBORJson.WriteJSONToInternal(this, new StringOutput(sb), options);
             } catch (IOException ex) {
               // This is truly exceptional
               throw new InvalidOperationException("Internal error", ex);
@@ -2921,7 +2925,14 @@ sb = sb ?? (new StringBuilder());
       if (outputStream == null) {
         throw new ArgumentNullException("outputStream");
       }
-      CBORJson.WriteJSONToInternal(this, new StringOutput(outputStream));
+      CBORJson.WriteJSONToInternal(this, new StringOutput(outputStream), JSONOptions.Default);
+    }
+
+    public void WriteJSONTo(Stream outputStream, JSONOptions options) {
+      if (outputStream == null) {
+        throw new ArgumentNullException("outputStream");
+      }
+      CBORJson.WriteJSONToInternal(this, new StringOutput(outputStream), options);
     }
 
     /// <include file='../../docs.xml'
