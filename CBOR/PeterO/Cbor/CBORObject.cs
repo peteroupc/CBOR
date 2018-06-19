@@ -2704,14 +2704,14 @@ mapValue = mapValue ?? CBORObject.FromObject(valueOb);
       return this;
     }
 
-    /// 
+    /// <returns>A string object.</returns>
     public string ToJSONString() {
       return ToJSONString(JSONOptions.Default);
     }
 
-        /// <include file='../../docs.xml'
-        /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)"]/*'/>
-        public string ToJSONString(JSONOptions options) { 
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)"]/*'/>
+        public string ToJSONString(JSONOptions options) {
       int type = this.ItemType;
       switch (type) {
         case CBORObjectTypeSimpleValue: {
@@ -2926,16 +2926,18 @@ sb = sb ?? (new StringBuilder());
       if (outputStream == null) {
         throw new ArgumentNullException("outputStream");
       }
-      CBORJson.WriteJSONToInternal(this, new StringOutput(outputStream), JSONOptions.Default);
+      CBORJson.WriteJSONToInternal(this, new StringOutput(outputStream),
+        JSONOptions.Default);
     }
 
-        /// <include file='../../docs.xml'
-        /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteJSONTo(System.IO.Stream,PeterO.Cbor.JSONOptions)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteJSONTo(System.IO.Stream,PeterO.Cbor.JSONOptions)"]/*'/>
         public void WriteJSONTo(Stream outputStream, JSONOptions options) {
       if (outputStream == null) {
         throw new ArgumentNullException("outputStream");
       }
-      CBORJson.WriteJSONToInternal(this, new StringOutput(outputStream), options);
+   CBORJson.WriteJSONToInternal(this, new StringOutput(outputStream),
+        options);
     }
 
     /// <include file='../../docs.xml'

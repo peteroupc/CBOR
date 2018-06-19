@@ -724,8 +724,7 @@ namespace PeterO.Cbor {
             }
             break;
           }
-        default:
-          throw new InvalidOperationException("Unexpected item type");
+        default: throw new InvalidOperationException("Unexpected item type");
       }
     }
   }

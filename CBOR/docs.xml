@@ -1555,8 +1555,8 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)">
 <summary>Converts this object to a string in JavaScript Object
-            Notation (JSON) format, using the specified options to control the encoding process. 
-					 This function works not only with arrays
+            Notation (JSON) format, using the specified options to control the encoding process.
+           This function works not only with arrays
             and maps, but also integers, strings, byte arrays, and other JSON
             data types. Notes:
             <list type=''>
