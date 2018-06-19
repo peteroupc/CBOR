@@ -1359,6 +1359,27 @@ A CBOR object corresponding to the given object. Returns CBORObject.Null if the 
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
+        object obj,
+        PeterO.Cbor.PODOptions options);
+
+Generates a CBORObject from an arbitrary object. The following types are specially handled by this method: null; primitive types; string; CBORObject; the  `EDecimal` , `EFloat` ,  `EInteger` , and  `ERational`  classes in the new<a href="https://www.nuget.org/packages/PeterO.Numbers"> `PeterO.Numbers` </a>library (in .NET) or the<a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers` </a>artifact (in Java); the legacy  `ExtendedDecimal` , `ExtendedFloat` ,  `ExtendedInteger` , and `ExtendedRational`  classes in this library; arrays; enumerations (  `Enum`  objects); and maps.In the .NET version, if the object is a type not specially handled by this method, returns a CBOR map with the values of each of its read/write properties (or all properties in the case of a compiler-generated type). Properties are converted to their camel-case names (meaning if a name starts with A to Z, that letter is lower-cased). If the property name begins with the word "Is", that word is deleted from the name. Also, .NET  `Enum`  objects will be converted to their integer values, and a multidimensional array is converted to an array of arrays.
+
+In the Java version, if the object is a type not specially handled by this method, this method checks the CBOR object for methods starting with the word "get" or "is" that take no parameters, and returns a CBOR map with one entry for each such method found. For each method found, the starting word "get" or "is" is deleted from its name, and the name is converted to camel case (meaning if a name starts with A to Z, that letter is lower-cased). Also, Java  `Enum`  objects will be converted to the result of their  `name`  method.
+
+If the input is a byte array, the byte array is copied to a new byte array. (This method can't be used to decode CBOR data from a byte array; for that, use the DecodeFromBytes method instead.).
+
+<b>Parameters:</b>
+
+ * <i>obj</i>: The parameter  <i>obj</i>
+ is an arbitrary object.
+
+<b>Return Value:</b>
+
+A CBOR object corresponding to the given object. Returns CBORObject.Null if the object is null.
+
+### FromObject
+
+    public static PeterO.Cbor.CBORObject FromObject(
         PeterO.BigInteger bigintValue);
 
 <b>Deprecated.</b> Use the EInteger version of this method.
@@ -2371,9 +2392,10 @@ Either or both operands are not numbers (as opposed to Not-a-Number, NaN).
 
 ### ToJSONString
 
-    public string ToJSONString();
+    public string ToJSONString(
+        PeterO.Cbor.JSONOptions options);
 
-Converts this object to a string in JavaScript Object Notation (JSON) format. This function works not only with arrays and maps, but also integers, strings, byte arrays, and other JSON data types. Notes:
+Converts this object to a string in JavaScript Object Notation (JSON) format, using the specified options to control the encoding process. This function works not only with arrays and maps, but also integers, strings, byte arrays, and other JSON data types. Notes:
 
  * If this object contains maps with non-string keys, the keys are converted to JSON strings before writing the map as a JSON string.
 
@@ -2383,13 +2405,27 @@ Converts this object to a string in JavaScript Object Notation (JSON) format. Th
 
  * The string will not begin with a byte-order mark (U+FEFF); RFC 7159 (the JSON specification) forbids placing a byte-order mark at the beginning of a JSON string.
 
- * Byte strings are converted to Base64 URL without whitespace or padding by default (see section 4.1 of RFC 7049). (A byte string will instead be converted to traditional base64 without whitespace or padding if it has tag 22, or base16 for tag 23.)
+ * Byte strings are converted to Base64 URL without whitespace or padding by default (see section 4.1 of RFC 7049). A byte string will instead be converted to traditional base64 without whitespace or padding by default if it has tag 22, or base16 for tag 23. Padding will be included in the Base64 URL or traditional base64 form if <b>Base64Padding</b> in the JSON options is set to <b>true</b>.
 
  * Rational numbers will be converted to their exact form, if possible, otherwise to a high-precision approximation. (The resulting approximation could overflow to infinity, in which case the rational number is converted to null.)
 
  * Simple values other than true and false will be converted to null. (This doesn't include floating-point numbers.)
 
  * Infinity and not-a-number will be converted to null.
+
+<b>Parameters:</b>
+
+ * <i>options</i>: An object containing the options to control writing the CBOR object to JSON.
+
+<b>Return Value:</b>
+
+A text string containing the converted object.
+
+### ToJSONString
+
+    public string ToJSONString();
+
+Converts this object to a string in JavaScript Object Notation (JSON) format, using the specified options to control the encoding process. See the overload to JSONString taking a JSONOptions argument.
 
 <b>Return Value:</b>
 
@@ -3048,6 +3084,29 @@ Converts this object to a string in JavaScript Object Notation (JSON) format, as
 <b>Parameters:</b>
 
  * <i>outputStream</i>: A writable data stream.
+
+<b>Exceptions:</b>
+
+ * System.IO.IOException:
+An I/O error occurred.
+
+ * System.ArgumentNullException:
+The parameter <i>outputStream</i>
+ is null.
+
+### WriteJSONTo
+
+    public void WriteJSONTo(
+        System.IO.Stream outputStream,
+        PeterO.Cbor.JSONOptions options);
+
+Converts this object to a string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8, using the given JSON options to control the encoding process. If the CBOR object contains CBOR maps, or is a CBOR map, the keys to the map are written out to the JSON string in an undefined order.
+
+<b>Parameters:</b>
+
+ * <i>outputStream</i>: A writable data stream.
+
+ * <i>options</i>: An object containing the options to control writing the CBOR object to JSON.
 
 <b>Exceptions:</b>
 

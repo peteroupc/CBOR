@@ -7,11 +7,11 @@ namespace PeterO.Cbor {
     /// path='docs/doc[@name="T:PeterO.Cbor.JSONOptions"]/*'/>
     public sealed class JSONOptions {
     /// <include file='../../docs.xml'
-  /// path='docs/doc[@name="M:PeterO.Cbor.JSONOptions.#ctor"]/*'/>
+    /// path='docs/doc[@name="M:PeterO.Cbor.JSONOptions.#ctor"]/*'/>
     public JSONOptions() : this(false) {}
 
     /// <include file='../../docs.xml'
-  /// path='docs/doc[@name="M:PeterO.Cbor.JSONOptions.#ctor(System.Boolean)"]/*'/>
+    /// path='docs/doc[@name="M:PeterO.Cbor.JSONOptions.#ctor(System.Boolean)"]/*'/>
     public JSONOptions(bool base64Padding) {
         this.Base64Padding = base64Padding;
     }

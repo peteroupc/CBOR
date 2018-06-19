@@ -965,7 +965,17 @@ namespace PeterO.Cbor {
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Object)"]/*'/>
-    public static CBORObject FromObject(object obj) {
+    public static CBORObject FromObject (object obj) {
+      return FromObject(obj, PODOptions.Default);
+    }
+
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Object)"]/*'/>
+          public static CBORObject FromObject(object obj, PODOptions
+              options) {
+      if ((options) == null) {
+  throw new ArgumentNullException("options");
+}
       if (obj == null) {
         return CBORObject.Null;
       }
@@ -1082,7 +1092,10 @@ namespace PeterO.Cbor {
       }
       objret = CBORObject.NewMap();
       foreach (KeyValuePair<string, object> key in
-               PropertyMap.GetProperties(obj)) {
+               PropertyMap.GetProperties(
+                 obj,
+                 options.RemoveIsPrefix,
+                 options.UseCamelCase)) {
         objret[key.Key] = CBORObject.FromObject(key.Value);
       }
       return objret;
@@ -2705,7 +2718,7 @@ mapValue = mapValue ?? CBORObject.FromObject(valueOb);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToJSONString()"]/*'/>
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToJSONString"]/*'/>
     public string ToJSONString() {
       return ToJSONString(JSONOptions.Default);
     }
@@ -2713,6 +2726,7 @@ mapValue = mapValue ?? CBORObject.FromObject(valueOb);
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)"]/*'/>
         public string ToJSONString(JSONOptions options) {
+      ArgumentAssert.NotNull (options);
       int type = this.ItemType;
       switch (type) {
         case CBORObjectTypeSimpleValue: {
@@ -2937,7 +2951,8 @@ sb = sb ?? (new StringBuilder());
       if (outputStream == null) {
         throw new ArgumentNullException("outputStream");
       }
-   CBORJson.WriteJSONToInternal(this, new StringOutput(outputStream),
+            ArgumentAssert.NotNull (options);
+            CBORJson.WriteJSONToInternal(this, new StringOutput(outputStream),
         options);
     }
 
