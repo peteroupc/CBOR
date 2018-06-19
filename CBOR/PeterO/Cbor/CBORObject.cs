@@ -2704,7 +2704,8 @@ mapValue = mapValue ?? CBORObject.FromObject(valueOb);
       return this;
     }
 
-    /// <returns>A string object.</returns>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToJSONString()"]/*'/>
     public string ToJSONString() {
       return ToJSONString(JSONOptions.Default);
     }

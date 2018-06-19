@@ -1582,6 +1582,7 @@ tag 22, or base16 for tag 23.  Padding will be included in the Base64 URL or tra
             null. (This doesn't include floating-point numbers.)</item>
             <item>Infinity and not-a-number will be converted to
             null.</item></list></summary>
+<param name='options'>An object containing the options to control writing the CBOR object to JSON.</param>
             <returns>A text string containing the converted object.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.ToString">
@@ -1947,6 +1948,7 @@ tag 22, or base16 for tag 23.  Padding will be included in the Base64 URL or tra
             Notation (JSON) format, as in the ToJSONString method, and writes
             that string to a data stream in UTF-8, using the given JSON options to control the encoding process.   If the CBOR object contains CBOR maps, or is a CBOR map, the keys to the map are written out to the JSON string in an undefined order.</summary>
             <param name='outputStream'>A writable data stream.</param>
+<param name='options'>An object containing the options to control writing the CBOR object to JSON.</param>
             <exception cref='T:System.IO.IOException'>An I/O error
             occurred.</exception>
             <exception cref='T:System.ArgumentNullException'>The parameter
@@ -2316,6 +2318,17 @@ tag 22, or base16 for tag 23.  Padding will be included in the Base64 URL or tra
               Includes options to control how CBOR objects are converted to JSON.
              </summary>
              <seealso cref='M:PeterO.Cbor.CBORObject.ToJSONString'/>
+</doc>
+<doc name="M:PeterO.Cbor.JSONOptions.#ctor">
+<summary>Initializes a new instance of the <see cref="JSONOptions" /> class with
+            default options.</summary>
+</doc>
+<doc name="M:PeterO.Cbor.JSONOptions.#ctor(System.Boolean)">
+<summary>Initializes a new instance of the <see cref="JSONOptions" /> class with
+            the given values for the options.</summary>
+            <param name='base64Padding'>Whether padding is included when
+            writing data in base64url or traditional base64 format to
+            JSON.</param>
 </doc>
 <doc name="P:PeterO.Cbor.JSONOptions.Base64Padding">
 <summary>
