@@ -12,7 +12,7 @@ namespace PeterO.Cbor
     public JSONOptions() : this(true) {}
 
     public JSONOptions(bool base64Padding) { 
-        this.base64Padding=base64Padding;
+        Base64Padding = base64Padding;
     }
 
     /// <include file='../../docs.xml'
@@ -21,6 +21,6 @@ namespace PeterO.Cbor
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="P:PeterO.Cbor.JSONOptions.Base64Padding"]/*'/>
-    public bool Base64Padding { get; }
+    public bool Base64Padding { get; private set; }
    }
 }
