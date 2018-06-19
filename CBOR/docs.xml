@@ -997,7 +997,14 @@
             null.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Object)">
-<summary>Generates a CBORObject from an arbitrary object. The
+<summary>Generates a CBORObject from an arbitrary object. See the overload of this
+method that takes a PODOptions argument.</summary>
+            <param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param>
+            <returns>A CBOR object corresponding to the given object. Returns
+            CBORObject.Null if the object is null.</returns>
+</doc>
+<doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Object,PeterO.Cbor.PODOptions)">
+<summary>Generates a CBORObject from an arbitrary object, using the given options to control how certain objects are converted to CBOR objects. The
             following types are specially handled by this method: null;
             primitive types; string; CBORObject; the <c>EDecimal</c>,
             <c>EFloat</c>, <c>EInteger</c>, and <c>ERational</c> classes in
@@ -1015,7 +1022,7 @@
         type). Properties are converted to their camel-case names
             (meaning if a name starts with A to Z, that letter is lower-cased).
             If the property name begins with the word "Is", that word is
-            deleted from the name. Also, .NET <c>Enum</c> objects will be
+            deleted from the name. (Passing the appropriate "options" parameter can be done to control whether the "Is" prefix is removed and whether a camel-case conversion happens.) Also, .NET <c>Enum</c> objects will be
             converted to their integer values, and a multidimensional array is
             converted to an array of arrays.</para>
             <para>In the Java version, if the object is a type not specially
@@ -1025,13 +1032,14 @@
             method found. For each method found, the starting word "get" or
             "is" is deleted from its name, and the name is converted to camel
             case (meaning if a name starts with A to Z, that letter is
-            lower-cased). Also, Java <c>Enum</c> objects will be converted to
+            lower-cased).  (Passing the appropriate "options" parameter can be done to control whether the "is" prefix is removed and whether a camel-case conversion happens.)   Also, Java <c>Enum</c> objects will be converted to
             the result of their <c>name</c> method.</para>
             <para>If the input is a byte array, the byte array is copied to a
             new byte array. (This method can't be used to decode CBOR data from
             a byte array; for that, use the DecodeFromBytes method
             instead.).</para></summary>
             <param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param>
+            <param name='options'>An object containing options to control how certain objects are converted to CBOR objects.</param>
             <returns>A CBOR object corresponding to the given object. Returns
             CBORObject.Null if the object is null.</returns>
 </doc>
@@ -1546,6 +1554,12 @@
             <exception cref='T:System.ArgumentException'>Either or both
             operands are not numbers (as opposed to Not-a-Number,
             NaN).</exception>
+</doc>
+<doc name="M:PeterO.Cbor.CBORObject.ToJSONString()">
+<summary>Converts this object to a string in JavaScript Object
+            Notation (JSON) format, using the specified options to control the encoding process.  See the overload to JSONString taking a JSONOptions argument.
+            <returns>A text string containing the converted object.</returns>
+</summary>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.ToJSONString">
 <summary>Converts this object to a string in JavaScript Object
