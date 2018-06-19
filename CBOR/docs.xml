@@ -3230,8 +3230,7 @@ tag 22, or base16 for tag 23.  Padding will be included in the Base64 URL or tra
             <returns>Less than 0 if this value is less than, 0 if equal to, or greater than 0 if greater than the other value.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.Create(PeterO.BigInteger,PeterO.BigInteger)">
-<summary>Creates a number with the value
-            exponent*2^mantissa.</summary>
+<summary>Creates a number with the value exponent*2^mantissa.</summary>
             <param name='mantissa'>The un-scaled value.</param>
             <param name='exponent'>The binary exponent.</param>
             <returns>An arbitrary-precision binary float.</returns>
