@@ -169,12 +169,19 @@ internal static void CheckPropertyNames(
   "PropA",
   "PropB",
   "PropC");
+         /*
+   TODO: The following case conflicts with the Java version
+  of the CBOR library.  Resolving this conflict may result in the
+  Java version being backward-incompatible and so require
+  a major version change.
+   //--
           CBORObjectTest.CheckPropertyNames(
   ao,
   valueCcFF,
   "PropA",
   "PropB",
   "IsPropC");
+        */
           CBORObjectTest.CheckPropertyNames(
   ao,
   valueCcFT,
@@ -2395,7 +2402,7 @@ public void TestFromObject_Dictionary() {
             this.CheckKeyValue(c, "TestKey2", "TestValue2");
         }
 
-    private sealed class PODClass {
+    public sealed class PODClass {
         public PODClass() {
             this.PropA = 0;
             this.PropB = 1;
@@ -2408,7 +2415,7 @@ public void TestFromObject_Dictionary() {
         public bool IsPropC { get; private set; }
     }
 
-    private sealed class NestedPODClass {
+    public sealed class NestedPODClass {
         public NestedPODClass() {
             this.PropValue = new PODClass();
         }
@@ -2433,12 +2440,6 @@ public void TestFromObject_Dictionary() {
   "PropB",
   "PropC");
             CBORObjectTest.CheckArrayPropertyNames(
-  CBORObject.FromObject(arrao, valueCcFF),
-                 2,
-  "PropA",
-  "PropB",
-  "IsPropC");
-            CBORObjectTest.CheckArrayPropertyNames(
   CBORObject.FromObject(arrao, valueCcFT),
                  2,
   "propA",
@@ -2457,12 +2458,6 @@ public void TestFromObject_Dictionary() {
                  "PropA",
   "PropB",
   "PropC");
-            CBORObjectTest.CheckPODPropertyNames(
-  CBORObject.FromObject(ao2, valueCcFF),
- valueCcFF,
-                 "PropA",
-  "PropB",
-  "IsPropC");
             CBORObjectTest.CheckPODPropertyNames(
   CBORObject.FromObject(ao2, valueCcFT),
  valueCcFT,
@@ -2484,11 +2479,6 @@ public void TestFromObject_Dictionary() {
   "PropB",
   "PropC");
             CBORObjectTest.CheckPODInDictPropertyNames(
-  CBORObject.FromObject(aodict, valueCcFF),
-  "PropA",
-  "PropB",
-  "IsPropC");
-            CBORObjectTest.CheckPODInDictPropertyNames(
   CBORObject.FromObject(aodict, valueCcFT),
   "propA",
   "propB",
@@ -2498,6 +2488,30 @@ public void TestFromObject_Dictionary() {
   "propA",
   "propB",
   "propC");
+         /*
+   TODO: The following cases conflict with the Java version
+  of the CBOR library.  Resolving this conflict may result in the
+  Java version being backward-incompatible and so require
+  a major version change.
+   // ----
+            CBORObjectTest.CheckArrayPropertyNames(
+  CBORObject.FromObject(arrao, valueCcFF),
+                 2,
+  "PropA",
+  "PropB",
+  "IsPropC");
+            CBORObjectTest.CheckPODPropertyNames(
+  CBORObject.FromObject(ao2, valueCcFF),
+ valueCcFF,
+                 "PropA",
+  "PropB",
+  "IsPropC");
+            CBORObjectTest.CheckPODInDictPropertyNames(
+  CBORObject.FromObject(aodict, valueCcFF),
+  "PropA",
+  "PropB",
+  "IsPropC");
+          */
         }
 
         [Test]
