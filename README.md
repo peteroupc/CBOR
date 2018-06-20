@@ -232,6 +232,11 @@ The following are some clarifications to RFC 7049.
 Release Notes
 -----------
 
+### Version 3.1
+
+- Add options to control property name generation in CBORObject.FromObject.
+- Add option to control base64 padding write-out in CBORObject.ToJSONString and CBORObject.WriteJSONTo.
+
 ### Version 3.0.3
 
 - Fix issue "Encode options not honored for some nested objects".

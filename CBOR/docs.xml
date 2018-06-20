@@ -1601,7 +1601,8 @@ tag 22, or base16 for tag 23.  Padding will be included in the Base64 URL or tra
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.ToString">
 <summary>Returns this CBOR object in string form. The format is
-            intended to be human-readable, not machine-readable, and the format
+            intended to be human-readable, not machine-readable, the format
+            is not intended to be parsed, and the format
             may change at any time.</summary>
             <returns>A text representation of this object.</returns>
 </doc>

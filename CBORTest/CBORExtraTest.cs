@@ -177,33 +177,33 @@ throw new InvalidOperationException(String.Empty, ex);
 public void TestPODOptions() {
             var ao = new { PropA = 0, PropB = 0, IsPropC = false };
             // remove 'Is' prefix, don't use camel case
-            var cc = new PODOptions (true, false);
-            var o = CBORObject.FromObject (ao, cc);
-            Assert.AreEqual (CBORType.Map, o.Type);
-            Assert.IsTrue (o.ContainsKey ("PropA"));
-            Assert.IsTrue (o.ContainsKey ("PropB"));
-            Assert.IsTrue (o.ContainsKey ("PropC"));
+            var cc = new PODOptions(true, false);
+            var o = CBORObject.FromObject(ao, cc);
+            Assert.AreEqual(CBORType.Map, o.Type);
+            Assert.IsTrue(o.ContainsKey("PropA"));
+            Assert.IsTrue(o.ContainsKey("PropB"));
+            Assert.IsTrue(o.ContainsKey("PropC"));
             // don't remove 'Is' prefix, don't use camel case
-            cc = new PODOptions (false, false);
-            o = CBORObject.FromObject (ao, cc);
-            Assert.AreEqual (CBORType.Map, o.Type);
-            Assert.IsTrue (o.ContainsKey ("PropA"));
-            Assert.IsTrue (o.ContainsKey ("PropB"));
-            Assert.IsTrue (o.ContainsKey ("IsPropC"));
+            cc = new PODOptions(false, false);
+            o = CBORObject.FromObject(ao, cc);
+            Assert.AreEqual(CBORType.Map, o.Type);
+            Assert.IsTrue(o.ContainsKey("PropA"));
+            Assert.IsTrue(o.ContainsKey("PropB"));
+            Assert.IsTrue(o.ContainsKey("IsPropC"));
             // don't remove 'Is' prefix, use camel case
-            cc = new PODOptions (false, true);
-            o = CBORObject.FromObject (ao, cc);
-            Assert.AreEqual (CBORType.Map, o.Type);
-            Assert.IsTrue (o.ContainsKey ("propA"));
-            Assert.IsTrue (o.ContainsKey ("propB"));
-            Assert.IsTrue (o.ContainsKey ("isPropC"));
+            cc = new PODOptions(false, true);
+            o = CBORObject.FromObject(ao, cc);
+            Assert.AreEqual(CBORType.Map, o.Type);
+            Assert.IsTrue(o.ContainsKey("propA"));
+            Assert.IsTrue(o.ContainsKey("propB"));
+            Assert.IsTrue(o.ContainsKey("isPropC"));
             // remove 'Is' prefix, use camel case
-            cc = new PODOptions (true, true);
-            o = CBORObject.FromObject (ao, cc);
-            Assert.AreEqual (CBORType.Map, o.Type);
-            Assert.IsTrue (o.ContainsKey ("propA"));
-            Assert.IsTrue (o.ContainsKey ("propB"));
-            Assert.IsTrue (o.ContainsKey ("propC"));
+            cc = new PODOptions(true, true);
+            o = CBORObject.FromObject(ao, cc);
+            Assert.AreEqual(CBORType.Map, o.Type);
+            Assert.IsTrue(o.ContainsKey("propA"));
+            Assert.IsTrue(o.ContainsKey("propB"));
+            Assert.IsTrue(o.ContainsKey("propC"));
         }
 
     [Test]

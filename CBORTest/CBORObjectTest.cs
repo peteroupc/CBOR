@@ -3963,7 +3963,7 @@ TestSucceedingJSON(cbor.ToJSONString());
         "\"mtbw6A==\"",
         stringTemp);
       }
-      o = CBORObject.FromObject(new byte [] { 0x9a, 0xd6, 0xf0, 0xe8 });
+      o = CBORObject.FromObject(new byte[] { 0x9a, 0xd6, 0xf0, 0xe8 });
       {
         string stringTemp = o.ToJSONString(options);
         Assert.AreEqual(
