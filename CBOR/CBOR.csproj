@@ -19,6 +19,8 @@ Version 3.1
 
 - Add options to control property name generation in CBORObject.FromObject.
 - Add option to control base64 padding write-out in CBORObject.ToJSONString and CBORObject.WriteJSONTo.
+- Fixed a bug where CBORObject.FromObject(object) did not behave correctly with IDictionary objects, as opposed
+   to CBORObject.FromObject(IDictionary).
 
 </PackageReleaseNotes>
     <PackageTags>cbor data serialization binary json numbers arithmetic</PackageTags>

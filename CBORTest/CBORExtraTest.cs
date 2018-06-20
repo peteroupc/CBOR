@@ -173,37 +173,208 @@ throw new InvalidOperationException(String.Empty, ex);
       B
     }
 
+    private void CheckPropertyNames(
+  object ao,
+  PODOptions cc,
+  string p1,
+  string p2,
+  string p3) {
+       this.CheckPropertyNames(
+  CBORObject.FromObject(ao, cc),
+  p1,
+  p2,
+  p3);
+    }
+
+    private void CheckArrayPropertyNames(
+  CBORObject co,
+  int expectedCount,
+  string p1,
+  string p2,
+  string p3) {
+            Assert.AreEqual(CBORType.Array, co.Type);
+            Assert.AreEqual(expectedCount, co.Count);
+            for (var i = 0; i < co.Count; ++i) {
+             this.CheckPropertyNames(co[i], p1, p2, p3);
+            }
+            CBORTestCommon.AssertRoundTrip(co);
+    }
+
+    private void CheckPODPropertyNames(
+  CBORObject co,
+  PODOptions cc,
+  string p1,
+  string p2,
+  string p3) {
+            Assert.AreEqual(CBORType.Map, co.Type);
+            string keyName = cc.UseCamelCase ? "propValue" : "PropValue";
+            if (!co.ContainsKey(keyName)) {
+ Assert.Fail("Expected " + keyName + " to exist: " + co.ToString());
+}
+            this.CheckPropertyNames(co[keyName], p1, p2, p3);
+    }
+
+    private void CheckPODInDictPropertyNames(
+  CBORObject co,
+  string p1,
+  string p2,
+  string p3) {
+            Assert.AreEqual(CBORType.Map, co.Type);
+            if (!co.ContainsKey("PropValue")) {
+ Assert.Fail("Expected PropValue to exist: " + co.ToString());
+}
+            this.CheckPropertyNames(co["PropValue"], p1, p2, p3);
+    }
+
+private void CheckPropertyNames(
+  CBORObject o,
+  string p1,
+  string p2,
+  string p3) {
+            Assert.AreEqual(CBORType.Map, o.Type);
+            if (!o.ContainsKey(p1)) {
+ Assert.Fail("Expected " + p1 + " to exist: " + o.ToString());
+}
+            if (!o.ContainsKey(p2)) {
+ Assert.Fail("Expected " + p2 + " to exist: " + o.ToString());
+}
+            if (!o.ContainsKey(p3)) {
+ Assert.Fail("Expected " + p3 + " to exist: " + o.ToString());
+}
+            CBORTestCommon.AssertRoundTrip(o);
+    }
+
+    private void CheckPropertyNames(object ao) {
+            var valueCcTF = new PODOptions(true, false);
+            var valueCcFF = new PODOptions(false, false);
+            var valueCcFT = new PODOptions(false, true);
+            var valueCcTT = new PODOptions(true, true);
+             this.CheckPropertyNames(ao, valueCcTF, "PropA", "PropB","PropC");
+          this.CheckPropertyNames(
+  ao,
+  valueCcFF,
+  "PropA",
+  "PropB",
+  "IsPropC");
+          this.CheckPropertyNames(
+  ao,
+  valueCcFT,
+  "propA",
+  "propB",
+  "isPropC");
+            this.CheckPropertyNames(ao, valueCcTT, "propA", "propB","propC");
+    }
+
         [Test]
-public void TestPODOptions() {
+    [Timeout(5000)] public void TestPODOptions() {
             var ao = new { PropA = 0, PropB = 0, IsPropC = false };
-            // remove 'Is' prefix, don't use camel case
-            var cc = new PODOptions(true, false);
-            var o = CBORObject.FromObject(ao, cc);
-            Assert.AreEqual(CBORType.Map, o.Type);
-            Assert.IsTrue(o.ContainsKey("PropA"));
-            Assert.IsTrue(o.ContainsKey("PropB"));
-            Assert.IsTrue(o.ContainsKey("PropC"));
-            // don't remove 'Is' prefix, don't use camel case
-            cc = new PODOptions(false, false);
-            o = CBORObject.FromObject(ao, cc);
-            Assert.AreEqual(CBORType.Map, o.Type);
-            Assert.IsTrue(o.ContainsKey("PropA"));
-            Assert.IsTrue(o.ContainsKey("PropB"));
-            Assert.IsTrue(o.ContainsKey("IsPropC"));
-            // don't remove 'Is' prefix, use camel case
-            cc = new PODOptions(false, true);
-            o = CBORObject.FromObject(ao, cc);
-            Assert.AreEqual(CBORType.Map, o.Type);
-            Assert.IsTrue(o.ContainsKey("propA"));
-            Assert.IsTrue(o.ContainsKey("propB"));
-            Assert.IsTrue(o.ContainsKey("isPropC"));
-            // remove 'Is' prefix, use camel case
-            cc = new PODOptions(true, true);
-            o = CBORObject.FromObject(ao, cc);
-            Assert.AreEqual(CBORType.Map, o.Type);
-            Assert.IsTrue(o.ContainsKey("propA"));
-            Assert.IsTrue(o.ContainsKey("propB"));
-            Assert.IsTrue(o.ContainsKey("propC"));
+            var valueCcTF = new PODOptions(true, false);
+            var valueCcFF = new PODOptions(false, false);
+            var valueCcFT = new PODOptions(false, true);
+            var valueCcTT = new PODOptions(true, true);
+            this.CheckPropertyNames(ao);
+            var arrao = new[] { ao, ao };
+            var co = CBORObject.FromObject(arrao, valueCcTF);
+            this.CheckArrayPropertyNames(
+  CBORObject.FromObject(arrao, valueCcTF),
+                 2,
+  "PropA",
+  "PropB",
+  "PropC");
+            this.CheckArrayPropertyNames(
+  CBORObject.FromObject(arrao, valueCcFF),
+                 2,
+  "PropA",
+  "PropB",
+  "IsPropC");
+            this.CheckArrayPropertyNames(
+  CBORObject.FromObject(arrao, valueCcFT),
+                 2,
+  "propA",
+  "propB",
+  "isPropC");
+            this.CheckArrayPropertyNames(
+  CBORObject.FromObject(arrao, valueCcTT),
+                 2,
+  "propA",
+  "propB",
+  "propC");
+            var queryao =
+from x in arrao select x;
+            co = CBORObject.FromObject(queryao, valueCcTF);
+            this.CheckArrayPropertyNames(
+  CBORObject.FromObject(queryao, valueCcTF),
+                 2,
+  "PropA",
+  "PropB",
+  "PropC");
+            this.CheckArrayPropertyNames(
+  CBORObject.FromObject(queryao, valueCcFF),
+                 2,
+  "PropA",
+  "PropB",
+  "IsPropC");
+            this.CheckArrayPropertyNames(
+  CBORObject.FromObject(queryao, valueCcFT),
+                 2,
+  "propA",
+  "propB",
+  "isPropC");
+            this.CheckArrayPropertyNames(
+  CBORObject.FromObject(queryao, valueCcTT),
+                 2,
+  "propA",
+  "propB",
+  "propC");
+   var ao2 = new { PropValue = new { PropA = 0, PropB = 0, IsPropC = false }
+              };
+            this.CheckPODPropertyNames(
+  CBORObject.FromObject(ao2, valueCcTF),
+ valueCcTF,
+                 "PropA",
+  "PropB",
+  "PropC");
+            this.CheckPODPropertyNames(
+  CBORObject.FromObject(ao2, valueCcFF),
+ valueCcFF,
+                 "PropA",
+  "PropB",
+  "IsPropC");
+            this.CheckPODPropertyNames(
+  CBORObject.FromObject(ao2, valueCcFT),
+ valueCcFT,
+                 "propA",
+  "propB",
+  "isPropC");
+            this.CheckPODPropertyNames(
+  CBORObject.FromObject(ao2, valueCcTT),
+ valueCcTT,
+                 "propA",
+  "propB",
+  "propC");
+            var aodict = new Dictionary<string, object>();
+            aodict["PropValue"] = new { PropA = 0, PropB = 0, IsPropC = false };
+
+            this.CheckPODInDictPropertyNames(
+  CBORObject.FromObject(aodict, valueCcTF),
+  "PropA",
+  "PropB",
+  "PropC");
+            this.CheckPODInDictPropertyNames(
+  CBORObject.FromObject(aodict, valueCcFF),
+  "PropA",
+  "PropB",
+  "IsPropC");
+            this.CheckPODInDictPropertyNames(
+  CBORObject.FromObject(aodict, valueCcFT),
+  "propA",
+  "propB",
+  "isPropC");
+            this.CheckPODInDictPropertyNames(
+  CBORObject.FromObject(aodict, valueCcTT),
+  "propA",
+  "propB",
+  "propC");
         }
 
     [Test]

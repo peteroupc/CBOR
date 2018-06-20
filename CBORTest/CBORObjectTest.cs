@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 using PeterO;
@@ -2271,7 +2272,28 @@ Assert.AreEqual(
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
-    [Test]
+
+        private void CheckKeyValue(CBORObject o, string key, object value) {
+            if (!o.ContainsKey(key)) {
+                Assert.Fail("Expected " + key + " to exist: " + o.ToString());
+            }
+            TestCommon.AssertEqualsHashCode(o[key], value);
+        }
+
+        [Test]
+public void FromObject_Dictionary() {
+          IDictionary<string, object> dict = new Dictionary<string, object>();
+            dict["TestKey"] = "TestValue";
+            dict["TestKey2"] = "TestValue2";
+            CBORObject c = CBORObject.FromObject(dict);
+            this.CheckKeyValue(c, "TestKey", "TestValue");
+            this.CheckKeyValue(c, "TestKey2", "TestValue2");
+            c = CBORObject.FromObject((object)dict);
+            this.CheckKeyValue(c, "TestKey", "TestValue");
+            this.CheckKeyValue(c, "TestKey2", "TestValue2");
+        }
+
+        [Test]
     public void TestFromObjectAndTag() {
       EInteger bigvalue = EInteger.FromString("99999999999999999999999999999");
       try {

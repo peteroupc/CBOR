@@ -1071,18 +1071,21 @@ namespace PeterO.Cbor {
         objret = CBORObject.NewMap();
         System.Collections.IDictionary objdic =
           (System.Collections.IDictionary)obj;
-        foreach (object key in (System.Collections.IDictionary)objdic) {
-       objret[CBORObject.FromObject(key)] = CBORObject.FromObject(objdic[key]);
+        foreach (object keyPair in (System.Collections.IDictionary)objdic) {
+          System.Collections.DictionaryEntry
+            kvp=(System.Collections.DictionaryEntry)keyPair;
+            CBORObject objKey = CBORObject.FromObject(kvp.Key, options);
+            objret[objKey] = CBORObject.FromObject(kvp.Value, options);
         }
         return objret;
       }
       if (obj is Array) {
-        return PropertyMap.FromArray(obj);
+        return PropertyMap.FromArray(obj, options);
       }
       if (obj is System.Collections.IEnumerable) {
         objret = CBORObject.NewArray();
         foreach (object element in (System.Collections.IEnumerable)obj) {
-          objret.Add(CBORObject.FromObject(element));
+          objret.Add(CBORObject.FromObject(element, options));
         }
         return objret;
       }
@@ -1096,7 +1099,7 @@ namespace PeterO.Cbor {
                  obj,
                  options.RemoveIsPrefix,
                  options.UseCamelCase)) {
-        objret[key.Key] = CBORObject.FromObject(key.Value);
+        objret[key.Key] = CBORObject.FromObject(key.Value, options);
       }
       return objret;
     }

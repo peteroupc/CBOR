@@ -1004,7 +1004,7 @@ method that takes a PODOptions argument.</summary>
             CBORObject.Null if the object is null.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Object,PeterO.Cbor.PODOptions)">
-<summary>Generates a CBORObject from an arbitrary object, using the given options to control how certain objects are converted to CBOR objects. The
+<summary><para>Generates a CBORObject from an arbitrary object, using the given options to control how certain objects are converted to CBOR objects. The
             following types are specially handled by this method: null;
             primitive types; string; CBORObject; the <c>EDecimal</c>,
             <c>EFloat</c>, <c>EInteger</c>, and <c>ERational</c> classes in
@@ -1015,7 +1015,8 @@ method that takes a PODOptions argument.</summary>
             artifact (in Java); the legacy <c>ExtendedDecimal</c>,
             <c>ExtendedFloat</c>, <c>ExtendedInteger</c>, and
             <c>ExtendedRational</c> classes in this library; arrays;
-            enumerations ( <c>Enum</c> objects); and maps.
+            enumerations ( <c>Enum</c> objects); and maps. (See also the other overloads
+            to the FromObject method.)</para>
             <para>In the .NET version, if the object is a type not specially
             handled by this method, returns a CBOR map with the values of each
             of its read/write properties (or all properties in the case of a compiler-generated
