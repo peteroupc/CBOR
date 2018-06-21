@@ -2369,12 +2369,12 @@ tag 22, or base16 for tag 23.  Padding will be included in the Base64 URL or tra
 </doc>
 <doc name="M:PeterO.Cbor.PODOptions.#ctor">
 <summary>
-            Initializes a new instance of the <see cref='T:CBOR.PeterO.Cbor.PODOptions'/> class.
+            Initializes a new instance of the <see cref='T:PeterO.Cbor.PODOptions'/> class.
             </summary>
 </doc>
 <doc name="M:PeterO.Cbor.PODOptions.#ctor(System.Boolean,System.Boolean)">
 <summary>
-            Initializes a new instance of the <see cref='T:CBOR.PeterO.Cbor.PODOptions'/> class.
+            Initializes a new instance of the <see cref='T:PeterO.Cbor.PODOptions'/> class.
             </summary>
             <param name='removeIsPrefix'>If set to <c>true</c> remove is prefix.</param>
             <param name='useCamelCase'>If set to <c>true</c> use camel case.</param>
