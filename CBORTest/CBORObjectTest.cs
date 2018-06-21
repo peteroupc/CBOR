@@ -171,7 +171,7 @@ internal static void CheckPropertyNames(
   "PropC");
          /*
    TODO: The following case conflicts with the Java version
-  of the CBOR library.  Resolving this conflict may result in the
+  of the CBOR library. Resolving this conflict may result in the
   Java version being backward-incompatible and so require
   a major version change.
    //--
@@ -2430,9 +2430,10 @@ public void TestFromObject_Dictionary() {
             var valueCcFF = new PODOptions(false, false);
             var valueCcFT = new PODOptions(false, true);
             var valueCcTT = new PODOptions(true, true);
+            CBORObject co;
             CBORObjectTest.CheckPropertyNames(ao);
             var arrao = new PODClass[] { ao, ao };
-            var co = CBORObject.FromObject(arrao, valueCcTF);
+            co = CBORObject.FromObject(arrao, valueCcTF);
             CBORObjectTest.CheckArrayPropertyNames(
   CBORObject.FromObject(arrao, valueCcTF),
                  2,
@@ -2490,7 +2491,7 @@ public void TestFromObject_Dictionary() {
   "propC");
          /*
    TODO: The following cases conflict with the Java version
-  of the CBOR library.  Resolving this conflict may result in the
+  of the CBOR library. Resolving this conflict may result in the
   Java version being backward-incompatible and so require
   a major version change.
    // ----
