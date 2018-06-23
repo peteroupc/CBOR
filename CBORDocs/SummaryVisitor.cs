@@ -17,17 +17,19 @@ using NuDoq;
 namespace PeterO.DocGen {
   internal class SummaryVisitor : Visitor, IComparer<Type> {
     private readonly SortedDictionary<Type, StringBuilder> docs;
-    private readonly TextWriter writer;
+    private readonly string filename;
 
-    public SummaryVisitor(TextWriter writer) {
+    public SummaryVisitor(string filename) {
       this.docs = new SortedDictionary<Type, StringBuilder>(this);
-      this.writer = writer;
+      this.filename = filename;
     }
 
     public void Finish() {
-      this.writer.Write("## API Documentation\r\n\r\n");
+      var sb = new StringBuilder();
+      string finalString;
+      sb.Append("## API Documentation\r\n\r\n");
       foreach (var key in this.docs.Keys) {
-        var finalString = this.docs[key].ToString();
+        finalString = this.docs[key].ToString();
         var typeName = DocVisitor.FormatType(key);
         typeName = typeName.Replace("&", "&amp;");
         typeName = typeName.Replace("<", "&lt;");
@@ -38,10 +40,11 @@ namespace PeterO.DocGen {
   0,
   finalString.IndexOf(".", StringComparison.Ordinal) + 1);
         }
-        finalString = Regex.Replace(finalString, @"\r?\n(\r?\n)+", "\r\n\r\n");
-        this.writer.Write(" * " + typeName + " - ");
-        this.writer.WriteLine(finalString);
+        sb.Append(" * " + typeName + " - ");
+        sb.Append(finalString + "\n");
       }
+finalString = TypeVisitor.NormalizeLines(sb.ToString());
+        TypeVisitor.FileEdit(this.filename, finalString);
     }
 
     public override void VisitMember(Member member) {

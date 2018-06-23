@@ -36,15 +36,10 @@ if (docdir.Length == 0) {
       var visitor = new TypeVisitor(directory);
       members.Accept(visitor);
       visitor.Finish();
-      using (
-  var writer = new StreamWriter(
-  Path.Combine(directory, "APIDocs.md"),
-  false,
-  Encoding.UTF8)) {
-        var visitor2 = new SummaryVisitor(writer);
+      var visitor2 = new SummaryVisitor(Path.Combine(directory, "APIDocs.md"
+));
         members.Accept(visitor2);
         visitor2.Finish();
-      }
     } catch (IOException ex) {
       Console.WriteLine(ex.Message);
       return;

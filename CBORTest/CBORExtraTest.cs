@@ -4806,8 +4806,10 @@ select new { A = i, B = i + 1 };
       CBORObject cbor = CBORObject.FromObject(new int[2, 3, 2]);
       {
 string stringTemp = cbor.ToJSONString();
+string str145009 = "[[[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0]]]";
+
 Assert.AreEqual(
-  "[[[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0]]]",
+  str145009,
   stringTemp);
 }
       CBORTestCommon.AssertRoundTrip(cbor);

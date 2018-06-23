@@ -51,9 +51,11 @@ namespace Test {
                     6, 7, 0xff });
       {
         string stringTemp = cbor.ToJSONString();
+string str1817 = "[0,1,2,3,4,5,6,7]";
+
         Assert.AreEqual(
-        "[0,1,2,3,4,5,6,7]",
-        stringTemp);
+  str1817,
+  stringTemp);
       }
     }
 

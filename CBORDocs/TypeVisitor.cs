@@ -24,19 +24,38 @@ namespace PeterO.DocGen {
       this.directory = directory;
     }
 
+    public static string NormalizeLines(string x) {
+      if (String.IsNullOrEmpty(x)) {
+ return x;
+}
+      x = Regex.Replace(x, @"[ \t]+(?=[\r\n]|$)",String.Empty);
+      x = Regex.Replace(x, @"\r*\n(\r*\n)+", "\n\n");
+      x = Regex.Replace(x, @"\r*\n", "\n");
+      x = Regex.Replace(x, @"^\s*", String.Empty);
+      x = Regex.Replace(x, @"\s+$", String.Empty);
+      return x + "\n";
+    }
+
+    public static void FileEdit(string filename, string newString) {
+      string oldString = null;
+      try {
+           oldString = File.ReadAllText(filename);
+      } catch (IOException) {
+           oldString = null;
+      }
+      if (!oldString.Equals(newString)) {
+             File.WriteAllText(filename, newString);
+      }
+    }
+
     public void Finish() {
       foreach (var key in this.docs.Keys) {
         var finalString = this.docs[key].ToString();
         var filename = Path.Combine(
   this.directory,
   DocVisitor.GetTypeID(key) + ".md");
-        using (var writer = new StreamWriter(filename, false, Encoding.UTF8)) {
-          finalString = Regex.Replace(
-  finalString,
-  @"\r?\n(\r?\n)+",
-  "\r\n\r\n");
-          writer.WriteLine(finalString);
-        }
+        finalString = NormalizeLines(finalString);
+        FileEdit(filename, finalString);
       }
     }
 
