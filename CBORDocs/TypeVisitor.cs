@@ -28,9 +28,9 @@ namespace PeterO.DocGen {
       if (String.IsNullOrEmpty(x)) {
  return x;
 }
-      x = Regex.Replace(x, @"[ \t]+(?=[\r\n]|$)",String.Empty);
-      x = Regex.Replace(x, @"\r*\n(\r*\n)+", "\n\n");
-      x = Regex.Replace(x, @"\r*\n", "\n");
+      x = Regex.Replace(x, @"[ \t]+(?=[\r\n]|$)", String.Empty);
+      x = Regex.Replace(x, @"\r?\n(\r?\n)+", "\n\n");
+      x = Regex.Replace(x, @"\r?\n", "\n");
       x = Regex.Replace(x, @"^\s*", String.Empty);
       x = Regex.Replace(x, @"\s+$", String.Empty);
       return x + "\n";
