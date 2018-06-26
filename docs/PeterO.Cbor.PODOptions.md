@@ -10,7 +10,7 @@ Options for converting "plain old data" objects to CBOR objects.
         bool removeIsPrefix,
         bool useCamelCase);
 
-Initializes a new instance of the [CBOR.PeterO.Cbor.PODOptions](CBOR.PeterO.Cbor.PODOptions.md) class.
+Initializes a new instance of the [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) class.
 
 <b>Parameters:</b>
 
