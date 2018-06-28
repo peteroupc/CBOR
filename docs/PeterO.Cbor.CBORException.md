@@ -2,8 +2,8 @@
 
     public class CBORException :
         System.Exception,
-        System.Runtime.InteropServices._Exception,
-        System.Runtime.Serialization.ISerializable
+        System.Runtime.Serialization.ISerializable,
+        System.Runtime.InteropServices._Exception
 
 Exception thrown for errors involving CBOR data.
 

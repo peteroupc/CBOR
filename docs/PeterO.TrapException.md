@@ -2,8 +2,8 @@
 
     public class TrapException :
         System.ArithmeticException,
-        System.Runtime.InteropServices._Exception,
-        System.Runtime.Serialization.ISerializable
+        System.Runtime.Serialization.ISerializable,
+        System.Runtime.InteropServices._Exception
 
 <b>Deprecated.</b> Use ETrapException from PeterO.Numbers/com.upokecenter.numbers.
 
