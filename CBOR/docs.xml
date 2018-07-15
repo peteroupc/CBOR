@@ -1556,13 +1556,13 @@ method that takes a PODOptions argument.</summary>
             operands are not numbers (as opposed to Not-a-Number,
             NaN).</exception>
 </doc>
-<doc name="M:PeterO.Cbor.CBORObject.ToJSONString()">
+<doc name="M:PeterO.Cbor.CBORObject.ToJSONString">
 <summary>Converts this object to a string in JavaScript Object
             Notation (JSON) format, using the specified options to control the encoding process.  See the overload to JSONString taking a JSONOptions argument.
             <returns>A text string containing the converted object.</returns>
 </summary>
 </doc>
-<doc name="M:PeterO.Cbor.CBORObject.ToJSONString">
+<doc name="M:PeterO.Cbor.CBORObject.ToJSONString()">
 <summary>Converts this object to a string in JavaScript Object
             Notation (JSON) format, using the specified options to control the encoding process.  See the overload to JSONString taking a JSONOptions argument.
             <returns>A text string containing the converted object.</returns>

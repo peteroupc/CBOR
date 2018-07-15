@@ -30,23 +30,24 @@ namespace PeterO.Cbor {
       private PropertyInfo prop;
 
       public string GetAdjustedName(bool removeIsPrefix, bool useCamelCase) {
-            string name = this.Name;
+        string thisName = this.Name;
             // Convert 'IsXYZ' to 'XYZ'
-  if (removeIsPrefix && name.Length >= 3 && name[0] == 'I' && name[1] == 's'&&
-              name[2] >= 'A' && name[2] <= 'Z') {
+  if (removeIsPrefix && thisName.Length >= 3 && thisName[0] == 'I' &&
+    thisName[1] == 's' &&
+              thisName[2] >= 'A' && thisName[2] <= 'Z') {
               // NOTE (Jun. 17, 2017, Peter O.): Was "== 'Z'", which was a
               // bug reported
               // by GitHub user "richardschneider". See peteroupc/CBOR#17.
-              name = name.Substring(2);
+              thisName = thisName.Substring(2);
             }
             // Convert to camel case
-            if (useCamelCase && name[0] >= 'A' && name[0] <= 'Z') {
+            if (useCamelCase && thisName[0] >= 'A' && thisName[0] <= 'Z') {
               var sb = new System.Text.StringBuilder();
-              sb.Append((char)(name[0] + 0x20));
-              sb.Append(name.Substring(1));
-              name = sb.ToString();
+              sb.Append((char)(thisName[0] + 0x20));
+              sb.Append(thisName.Substring(1));
+              thisName = sb.ToString();
             }
-            return name;
+            return thisName;
       }
 
       public PropertyInfo Prop {
@@ -96,7 +97,6 @@ namespace PeterO.Cbor {
   Type t,
   string name) {
        foreach (var attr in t.GetTypeInfo().GetCustomAttributes()) {
-        DebugUtility.Log(attr.GetType().FullName);
          if (attr.GetType().FullName.Equals(name)) {
           return true;
         }
@@ -111,8 +111,8 @@ namespace PeterO.Cbor {
 
     private static IList<PropertyData> GetPropertyList(Type t) {
       lock (ValuePropertyLists) {
-        IList<PropertyData> ret;
-        if (ValuePropertyLists.TryGetValue(t, out ret)) {
+         if (ValuePropertyLists.TryGetValue (t, out IList<PropertyData>
+                  ret)) {
           return ret;
         }
         ret = new List<PropertyData>();
@@ -122,9 +122,10 @@ namespace PeterO.Cbor {
         foreach (PropertyInfo pi in GetTypeProperties(t)) {
           if (pi.CanRead && (pi.CanWrite || anonymous) &&
           pi.GetIndexParameters().Length == 0) {
-            PropertyData pd = new PropertyMap.PropertyData();
-            pd.Name = pi.Name;
-            pd.Prop = pi;
+            PropertyData pd = new PropertyMap.PropertyData () {
+                Name = pi.Name,
+                Prop = pi
+            };
             ret.Add(pd);
           }
         }
@@ -134,8 +135,8 @@ namespace PeterO.Cbor {
     }
 
     public static bool ExceedsKnownLength(Stream inStream, long size) {
-      return (inStream is MemoryStream) ? (size > (inStream.Length -
-        inStream.Position)) : false;
+      return (inStream is MemoryStream) && (size > (inStream.Length -
+        inStream.Position));
     }
 
     public static void SkipStreamToEnd(Stream inStream) {
