@@ -10,13 +10,13 @@ namespace PeterO.DocGen {
 public static class DocGenerator {
     public static void Generate(string assemblyFile, string docdir) {
       if (assemblyFile == null) {
-  throw new ArgumentNullException("assemblyFile");
+  throw new ArgumentNullException(nameof(assemblyFile));
 }
 if (assemblyFile.Length == 0) {
   throw new ArgumentException("assemblyFile is empty.");
 }
       if (docdir == null) {
-  throw new ArgumentNullException("docdir");
+  throw new ArgumentNullException(nameof(docdir));
 }
 if (docdir.Length == 0) {
   throw new ArgumentException("docdir is empty.");
