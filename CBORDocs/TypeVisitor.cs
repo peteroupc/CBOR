@@ -43,7 +43,7 @@ namespace PeterO.DocGen {
       } catch (IOException) {
            oldString = null;
       }
-      if (!oldString.Equals(newString)) {
+      if (oldString == null || !oldString.Equals(newString)) {
              File.WriteAllText(filename, newString);
       }
     }
