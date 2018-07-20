@@ -67,7 +67,7 @@ namespace PeterO {
 
     internal ExtendedRational(ERational er) {
       if (er == null) {
-        throw new ArgumentNullException("er");
+        throw new ArgumentNullException(nameof(er));
       }
       this.er = er;
     }
@@ -154,10 +154,10 @@ namespace PeterO {
   BigInteger numerator,
   BigInteger denominator) {
       if (numerator == null) {
-        throw new ArgumentNullException("numerator");
+        throw new ArgumentNullException(nameof(numerator));
       }
       if (denominator == null) {
-        throw new ArgumentNullException("denominator");
+        throw new ArgumentNullException(nameof(denominator));
       }
       return new ExtendedRational(
   ERational.Create(

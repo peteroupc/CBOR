@@ -462,7 +462,7 @@ namespace PeterO.Cbor {
       set {
         if (this.ItemType == CBORObjectTypeArray) {
           if (value == null) {
-            throw new ArgumentNullException("value");
+            throw new ArgumentNullException(nameof(value));
           }
           IList<CBORObject> list = this.AsList();
           list[index] = value;
@@ -477,7 +477,7 @@ namespace PeterO.Cbor {
     public CBORObject this[CBORObject key] {
       get {
         if (key == null) {
-          throw new ArgumentNullException("key");
+          throw new ArgumentNullException(nameof(key));
         }
         if (this.ItemType == CBORObjectTypeMap) {
           IDictionary<CBORObject, CBORObject> map = this.AsMap();
@@ -488,10 +488,10 @@ namespace PeterO.Cbor {
 
       set {
         if (key == null) {
-          throw new ArgumentNullException("value");
+          throw new ArgumentNullException(nameof(value));
         }
         if (value == null) {
-          throw new ArgumentNullException("value");
+          throw new ArgumentNullException(nameof(value));
         }
         if (this.ItemType == CBORObjectTypeMap) {
           IDictionary<CBORObject, CBORObject> map = this.AsMap();
@@ -507,7 +507,7 @@ namespace PeterO.Cbor {
     public CBORObject this[string key] {
       get {
         if (key == null) {
-          throw new ArgumentNullException("key");
+          throw new ArgumentNullException(nameof(key));
         }
         CBORObject objkey = CBORObject.FromObject(key);
         return this[objkey];
@@ -515,10 +515,10 @@ namespace PeterO.Cbor {
 
       set {
         if (key == null) {
-          throw new ArgumentNullException("value");
+          throw new ArgumentNullException(nameof(value));
         }
         if (value == null) {
-          throw new ArgumentNullException("value");
+          throw new ArgumentNullException(nameof(value));
         }
         CBORObject objkey = CBORObject.FromObject(key);
         if (this.ItemType == CBORObjectTypeMap) {
@@ -534,10 +534,10 @@ namespace PeterO.Cbor {
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AddConverter``1(System.Type,PeterO.Cbor.ICBORConverter{``0})"]/*'/>
     public static void AddConverter<T>(Type type, ICBORConverter<T> converter) {
       if (type == null) {
-        throw new ArgumentNullException("type");
+        throw new ArgumentNullException(nameof(type));
       }
       if (converter == null) {
-        throw new ArgumentNullException("converter");
+        throw new ArgumentNullException(nameof(converter));
       }
       ConverterInfo ci = new CBORObject.ConverterInfo();
       ci.Converter = converter;
@@ -565,10 +565,10 @@ namespace PeterO.Cbor {
     [Obsolete("Use the EInteger version of this method.")]
     public static void AddTagHandler(BigInteger bigintTag, ICBORTag handler) {
       if (bigintTag == null) {
-        throw new ArgumentNullException("bigintTag");
+        throw new ArgumentNullException(nameof(bigintTag));
       }
       if (handler == null) {
-        throw new ArgumentNullException("handler");
+        throw new ArgumentNullException(nameof(handler));
       }
       AddTagHandler(PropertyMap.FromLegacy(bigintTag), handler);
     }
@@ -577,10 +577,10 @@ namespace PeterO.Cbor {
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AddTagHandler(PeterO.Numbers.EInteger,PeterO.Cbor.ICBORTag)"]/*'/>
     public static void AddTagHandler(EInteger bigintTag, ICBORTag handler) {
       if (bigintTag == null) {
-        throw new ArgumentNullException("bigintTag");
+        throw new ArgumentNullException(nameof(bigintTag));
       }
       if (handler == null) {
-        throw new ArgumentNullException("handler");
+        throw new ArgumentNullException(nameof(handler));
       }
       if (bigintTag.Sign < 0) {
         throw new ArgumentException("bigintTag.Sign (" +
@@ -608,13 +608,13 @@ namespace PeterO.Cbor {
   byte[] data,
   CBOREncodeOptions options) {
       if (data == null) {
-        throw new ArgumentNullException("data");
+        throw new ArgumentNullException(nameof(data));
       }
       if (data.Length == 0) {
         throw new CBORException("data is empty.");
       }
       if (options == null) {
-        throw new ArgumentNullException("options");
+        throw new ArgumentNullException(nameof(options));
       }
       var firstbyte = (int)(data[0] & (int)0xff);
       int expectedLength = ValueExpectedLengths[firstbyte];
@@ -664,10 +664,10 @@ namespace PeterO.Cbor {
   string str,
   CBOREncodeOptions options) {
       if (str == null) {
-        throw new ArgumentNullException("str");
+        throw new ArgumentNullException(nameof(str));
       }
       if (options == null) {
-        throw new ArgumentNullException("options");
+        throw new ArgumentNullException(nameof(options));
       }
       if (str.Length > 0 && str[0] == 0xfeff) {
         throw new CBORException(
@@ -974,7 +974,7 @@ namespace PeterO.Cbor {
           public static CBORObject FromObject(object obj, PODOptions
               options) {
       if ((options) == null) {
-  throw new ArgumentNullException("options");
+  throw new ArgumentNullException(nameof(options));
 }
       if (obj == null) {
         return CBORObject.Null;
@@ -1111,7 +1111,7 @@ namespace PeterO.Cbor {
       object valueOb,
       BigInteger bigintTag) {
       if (bigintTag == null) {
-        throw new ArgumentNullException("bigintTag");
+        throw new ArgumentNullException(nameof(bigintTag));
       }
       return FromObjectAndTag(valueOb, PropertyMap.FromLegacy(bigintTag));
     }
@@ -1122,7 +1122,7 @@ namespace PeterO.Cbor {
       object valueOb,
       EInteger bigintTag) {
       if (bigintTag == null) {
-        throw new ArgumentNullException("bigintTag");
+        throw new ArgumentNullException(nameof(bigintTag));
       }
       if (bigintTag.Sign < 0) {
         throw new ArgumentException("tagEInt's sign (" + bigintTag.Sign +
@@ -1217,7 +1217,7 @@ namespace PeterO.Cbor {
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Read(System.IO.Stream)"]/*'/>
     public static CBORObject Read(Stream stream) {
       if (stream == null) {
-        throw new ArgumentNullException("stream");
+        throw new ArgumentNullException(nameof(stream));
       }
       try {
        var reader = new CBORReader(stream);
@@ -1231,7 +1231,7 @@ namespace PeterO.Cbor {
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Read(System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)"]/*'/>
     public static CBORObject Read(Stream stream, CBOREncodeOptions options) {
       if (options == null) {
-        throw new ArgumentNullException("options");
+        throw new ArgumentNullException(nameof(options));
       }
       try {
         var reader = new CBORReader(stream);
@@ -1257,10 +1257,10 @@ namespace PeterO.Cbor {
   Stream stream,
   CBOREncodeOptions options) {
       if (stream == null) {
-        throw new ArgumentNullException("stream");
+        throw new ArgumentNullException(nameof(stream));
       }
       if (options == null) {
-        throw new ArgumentNullException("options");
+        throw new ArgumentNullException(nameof(options));
       }
       var reader = new CharacterInputWithCount(
         new CharacterReader(stream, 2, true));
@@ -1301,7 +1301,7 @@ namespace PeterO.Cbor {
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.String,System.IO.Stream)"]/*'/>
     public static void Write(string str, Stream stream) {
       if (stream == null) {
-        throw new ArgumentNullException("stream");
+        throw new ArgumentNullException(nameof(stream));
       }
       Write(str, stream, CBOREncodeOptions.None);
     }
@@ -1313,7 +1313,7 @@ namespace PeterO.Cbor {
       Stream stream,
       CBOREncodeOptions options) {
       if (stream == null) {
-        throw new ArgumentNullException("stream");
+        throw new ArgumentNullException(nameof(stream));
       }
       if (str == null) {
         stream.WriteByte(0xf6);  // Write null instead of string
@@ -1337,7 +1337,7 @@ namespace PeterO.Cbor {
     [Obsolete("Pass an EFloat to the Write method instead.")]
     public static void Write(ExtendedFloat bignum, Stream stream) {
       if (stream == null) {
-        throw new ArgumentNullException("stream");
+        throw new ArgumentNullException(nameof(stream));
       }
       if (bignum == null) {
         stream.WriteByte(0xf6);
@@ -1350,7 +1350,7 @@ namespace PeterO.Cbor {
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.EFloat,System.IO.Stream)"]/*'/>
     public static void Write(EFloat bignum, Stream stream) {
       if (stream == null) {
-        throw new ArgumentNullException("stream");
+        throw new ArgumentNullException(nameof(stream));
       }
       if (bignum == null) {
         stream.WriteByte(0xf6);
@@ -1384,7 +1384,7 @@ namespace PeterO.Cbor {
     [Obsolete("Pass an ERational to the Write method instead.")]
     public static void Write(ExtendedRational rational, Stream stream) {
       if (stream == null) {
-        throw new ArgumentNullException("stream");
+        throw new ArgumentNullException(nameof(stream));
       }
       if (rational == null) {
         stream.WriteByte(0xf6);
@@ -1397,7 +1397,7 @@ namespace PeterO.Cbor {
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.ERational,System.IO.Stream)"]/*'/>
     public static void Write(ERational rational, Stream stream) {
       if (stream == null) {
-        throw new ArgumentNullException("stream");
+        throw new ArgumentNullException(nameof(stream));
       }
       if (rational == null) {
         stream.WriteByte(0xf6);
@@ -1423,7 +1423,7 @@ namespace PeterO.Cbor {
     [Obsolete("Pass an EDecimal to the Write method instead.")]
     public static void Write(ExtendedDecimal bignum, Stream stream) {
       if (stream == null) {
-        throw new ArgumentNullException("stream");
+        throw new ArgumentNullException(nameof(stream));
       }
       if (bignum == null) {
         stream.WriteByte(0xf6);
@@ -1436,7 +1436,7 @@ namespace PeterO.Cbor {
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.EDecimal,System.IO.Stream)"]/*'/>
     public static void Write(EDecimal bignum, Stream stream) {
       if (stream == null) {
-        throw new ArgumentNullException("stream");
+        throw new ArgumentNullException(nameof(stream));
       }
       if (bignum == null) {
         stream.WriteByte(0xf6);
@@ -1470,7 +1470,7 @@ namespace PeterO.Cbor {
     [Obsolete("Pass an EInteger to the Write method instead.")]
     public static void Write(BigInteger bigint, Stream stream) {
       if (stream == null) {
-        throw new ArgumentNullException("stream");
+        throw new ArgumentNullException(nameof(stream));
       }
       if ((object)bigint == (object)null) {
         stream.WriteByte(0xf6);
@@ -1483,7 +1483,7 @@ namespace PeterO.Cbor {
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.EInteger,System.IO.Stream)"]/*'/>
     public static void Write(EInteger bigint, Stream stream) {
       if (stream == null) {
-        throw new ArgumentNullException("stream");
+        throw new ArgumentNullException(nameof(stream));
       }
       if ((object)bigint == (object)null) {
         stream.WriteByte(0xf6);
@@ -1575,7 +1575,7 @@ namespace PeterO.Cbor {
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Int64,System.IO.Stream)"]/*'/>
     public static void Write(long value, Stream stream) {
       if (stream == null) {
-        throw new ArgumentNullException("stream");
+        throw new ArgumentNullException(nameof(stream));
       }
       if (value >= 0) {
         WritePositiveInt64(0, value, stream);
@@ -1590,7 +1590,7 @@ namespace PeterO.Cbor {
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Int32,System.IO.Stream)"]/*'/>
     public static void Write(int value, Stream stream) {
       if (stream == null) {
-        throw new ArgumentNullException("stream");
+        throw new ArgumentNullException(nameof(stream));
       }
       var type = 0;
       if (value < 0) {
@@ -1635,7 +1635,7 @@ namespace PeterO.Cbor {
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Boolean,System.IO.Stream)"]/*'/>
     public static void Write(bool value, Stream stream) {
       if (stream == null) {
-        throw new ArgumentNullException("stream");
+        throw new ArgumentNullException(nameof(stream));
       }
       stream.WriteByte(value ? (byte)0xf5 : (byte)0xf4);
     }
@@ -1644,7 +1644,7 @@ namespace PeterO.Cbor {
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Byte,System.IO.Stream)"]/*'/>
     public static void Write(byte value, Stream stream) {
       if (stream == null) {
-        throw new ArgumentNullException("stream");
+        throw new ArgumentNullException(nameof(stream));
       }
       if ((((int)value) & 0xff) < 24) {
         stream.WriteByte(value);
@@ -1658,7 +1658,7 @@ namespace PeterO.Cbor {
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Single,System.IO.Stream)"]/*'/>
     public static void Write(float value, Stream s) {
       if (s == null) {
-        throw new ArgumentNullException("s");
+        throw new ArgumentNullException(nameof(s));
       }
       int bits = BitConverter.ToInt32(BitConverter.GetBytes((float)value), 0);
       byte[] data = { (byte)0xfa, (byte)((bits >> 24) & 0xff),
@@ -1671,7 +1671,7 @@ namespace PeterO.Cbor {
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Double,System.IO.Stream)"]/*'/>
     public static void Write(double value, Stream stream) {
       if (stream == null) {
-        throw new ArgumentNullException("stream");
+        throw new ArgumentNullException(nameof(stream));
       }
       long bits =
         BitConverter.ToInt64(
@@ -1689,7 +1689,7 @@ namespace PeterO.Cbor {
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Cbor.CBORObject,System.IO.Stream)"]/*'/>
     public static void Write(CBORObject value, Stream stream) {
       if (stream == null) {
-        throw new ArgumentNullException("stream");
+        throw new ArgumentNullException(nameof(stream));
       }
       if (value == null) {
         stream.WriteByte(0xf6);
@@ -1711,10 +1711,10 @@ namespace PeterO.Cbor {
       Stream output,
       CBOREncodeOptions options) {
       if (options == null) {
-        throw new ArgumentNullException("options");
+        throw new ArgumentNullException(nameof(options));
       }
       if (output == null) {
-        throw new ArgumentNullException("output");
+        throw new ArgumentNullException(nameof(output));
       }
       if (objValue == null) {
         output.WriteByte(0xf6);
@@ -2251,7 +2251,7 @@ mapValue = mapValue ?? CBORObject.FromObject(valueOb);
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ContainsKey(PeterO.Cbor.CBORObject)"]/*'/>
     public bool ContainsKey(CBORObject key) {
       if (key == null) {
-        throw new ArgumentNullException("key");
+        throw new ArgumentNullException(nameof(key));
       }
       if (this.ItemType == CBORObjectTypeMap) {
         IDictionary<CBORObject, CBORObject> map = this.AsMap();
@@ -2264,7 +2264,7 @@ mapValue = mapValue ?? CBORObject.FromObject(valueOb);
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ContainsKey(System.String)"]/*'/>
     public bool ContainsKey(string key) {
       if (key == null) {
-        throw new ArgumentNullException("key");
+        throw new ArgumentNullException(nameof(key));
       }
       if (this.ItemType == CBORObjectTypeMap) {
         IDictionary<CBORObject, CBORObject> map = this.AsMap();
@@ -2283,7 +2283,7 @@ mapValue = mapValue ?? CBORObject.FromObject(valueOb);
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.EncodeToBytes(PeterO.Cbor.CBOREncodeOptions)"]/*'/>
     public byte[] EncodeToBytes(CBOREncodeOptions options) {
       if (options == null) {
-        throw new ArgumentNullException("options");
+        throw new ArgumentNullException(nameof(options));
       }
 
       // For some types, a memory stream is a lot of
@@ -2560,7 +2560,7 @@ mapValue = mapValue ?? CBORObject.FromObject(valueOb);
         obj = (CBORObject)obj.itemValue;
 #if DEBUG
         if (obj == null) {
-          throw new ArgumentNullException("tagValue");
+          throw new ArgumentNullException(nameof(tagValue));
         }
 #endif
       }
@@ -2571,7 +2571,7 @@ mapValue = mapValue ?? CBORObject.FromObject(valueOb);
     [Obsolete("Use the EInteger version of this method.")]
     public bool HasTag(BigInteger bigTagValue) {
       if (bigTagValue == null) {
-        throw new ArgumentNullException("bigTagValue");
+        throw new ArgumentNullException(nameof(bigTagValue));
       }
       return this.HasTag(EInteger.FromBytes(
         bigTagValue.toBytes(true),
@@ -2582,7 +2582,7 @@ mapValue = mapValue ?? CBORObject.FromObject(valueOb);
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasTag(PeterO.Numbers.EInteger)"]/*'/>
     public bool HasTag(EInteger bigTagValue) {
       if (bigTagValue == null) {
-        throw new ArgumentNullException("bigTagValue");
+        throw new ArgumentNullException(nameof(bigTagValue));
       }
       if (bigTagValue.Sign < 0) {
         throw new ArgumentException("doesn't satisfy bigTagValue.Sign>= 0");
@@ -2672,7 +2672,7 @@ mapValue = mapValue ?? CBORObject.FromObject(valueOb);
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Remove(PeterO.Cbor.CBORObject)"]/*'/>
     public bool Remove(CBORObject obj) {
       if (obj == null) {
-        throw new ArgumentNullException("obj");
+        throw new ArgumentNullException(nameof(obj));
       }
       if (this.ItemType == CBORObjectTypeMap) {
         IDictionary<CBORObject, CBORObject> dict = this.AsMap();
@@ -2730,7 +2730,7 @@ mapValue = mapValue ?? CBORObject.FromObject(valueOb);
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)"]/*'/>
         public string ToJSONString(JSONOptions options) {
       if (options == null) {
- throw new ArgumentNullException("options");
+ throw new ArgumentNullException(nameof(options));
 }
       int type = this.ItemType;
       switch (type) {
@@ -2944,7 +2944,7 @@ sb = sb ?? (new StringBuilder());
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteJSONTo(System.IO.Stream)"]/*'/>
     public void WriteJSONTo(Stream outputStream) {
       if (outputStream == null) {
-        throw new ArgumentNullException("outputStream");
+        throw new ArgumentNullException(nameof(outputStream));
       }
       CBORJson.WriteJSONToInternal(this, new StringOutput(outputStream),
         JSONOptions.Default);
@@ -2954,10 +2954,10 @@ sb = sb ?? (new StringBuilder());
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteJSONTo(System.IO.Stream,PeterO.Cbor.JSONOptions)"]/*'/>
         public void WriteJSONTo(Stream outputStream, JSONOptions options) {
       if (outputStream == null) {
-        throw new ArgumentNullException("outputStream");
+        throw new ArgumentNullException(nameof(outputStream));
       }
             if (options == null) {
- throw new ArgumentNullException("options");
+ throw new ArgumentNullException(nameof(options));
 }
             CBORJson.WriteJSONToInternal(this, new StringOutput(outputStream),
         options);
@@ -2973,7 +2973,7 @@ sb = sb ?? (new StringBuilder());
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)"]/*'/>
     public void WriteTo(Stream stream, CBOREncodeOptions options) {
       if (stream == null) {
-        throw new ArgumentNullException("stream");
+        throw new ArgumentNullException(nameof(stream));
       }
       this.WriteTags(stream);
       int type = this.ItemType;
@@ -3260,7 +3260,7 @@ sb = sb ?? (new StringBuilder());
     internal void Redefine(CBORObject cbor) {
 #if DEBUG
       if (cbor == null) {
-        throw new ArgumentNullException("cbor");
+        throw new ArgumentNullException(nameof(cbor));
       }
 #endif
       this.itemtypeValue = cbor.itemtypeValue;
@@ -3387,7 +3387,7 @@ sb = sb ?? (new StringBuilder());
     private static CBORObject ConvertWithConverter(object obj) {
 #if DEBUG
       if (obj == null) {
-        throw new ArgumentNullException("obj");
+        throw new ArgumentNullException(nameof(obj));
       }
 #endif
       Object type = obj.GetType();

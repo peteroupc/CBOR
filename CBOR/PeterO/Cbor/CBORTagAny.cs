@@ -17,7 +17,7 @@ namespace PeterO.Cbor {
     public CBORObject ValidateObject(CBORObject obj) {
       #if DEBUG
       if (obj == null) {
-        throw new ArgumentNullException("obj");
+        throw new ArgumentNullException(nameof(obj));
       }
       #endif
       return obj;

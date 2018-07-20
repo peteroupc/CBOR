@@ -30,7 +30,7 @@ namespace PeterO.Cbor {
 
     public CBORObject ToCBORObject(Uri uri) {
       if (uri == null) {
-        throw new ArgumentNullException("uri");
+        throw new ArgumentNullException(nameof(uri));
       }
       string uriString = uri.ToString();
       return CBORObject.FromObjectAndTag(uriString, (int)32);

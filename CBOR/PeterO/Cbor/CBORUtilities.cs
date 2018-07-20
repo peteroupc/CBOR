@@ -18,7 +18,7 @@ namespace PeterO.Cbor {
 
     public static void ToBase16(StringBuilder str, byte[] data) {
       if (data == null) {
-        throw new ArgumentNullException("data");
+        throw new ArgumentNullException(nameof(data));
       }
       int length = data.Length;
       for (var i = 0; i < length; ++i) {

@@ -15,10 +15,10 @@ namespace PeterO.Cbor {
   internal static class CBORObjectMath {
     public static CBORObject Addition(CBORObject a, CBORObject b) {
       if (a == null) {
-        throw new ArgumentNullException("a");
+        throw new ArgumentNullException(nameof(a));
       }
       if (b == null) {
-        throw new ArgumentNullException("b");
+        throw new ArgumentNullException(nameof(b));
       }
       if (a.Type != CBORType.Number) {
         throw new ArgumentException("a.Type (" + a.Type +
@@ -79,10 +79,10 @@ namespace PeterO.Cbor {
 
     public static CBORObject Subtract(CBORObject a, CBORObject b) {
       if (a == null) {
-        throw new ArgumentNullException("a");
+        throw new ArgumentNullException(nameof(a));
       }
       if (b == null) {
-        throw new ArgumentNullException("b");
+        throw new ArgumentNullException(nameof(b));
       }
       if (a.Type != CBORType.Number) {
         throw new ArgumentException("a.Type (" + a.Type +
@@ -143,10 +143,10 @@ namespace PeterO.Cbor {
 
     public static CBORObject Multiply(CBORObject a, CBORObject b) {
       if (a == null) {
-        throw new ArgumentNullException("a");
+        throw new ArgumentNullException(nameof(a));
       }
       if (b == null) {
-        throw new ArgumentNullException("b");
+        throw new ArgumentNullException(nameof(b));
       }
       if (a.Type != CBORType.Number) {
         throw new ArgumentException("a.Type (" + a.Type +
@@ -214,10 +214,10 @@ namespace PeterO.Cbor {
 
     public static CBORObject Divide(CBORObject a, CBORObject b) {
       if (a == null) {
-        throw new ArgumentNullException("a");
+        throw new ArgumentNullException(nameof(a));
       }
       if (b == null) {
-        throw new ArgumentNullException("b");
+        throw new ArgumentNullException(nameof(b));
       }
       if (a.Type != CBORType.Number) {
         throw new ArgumentException("a.Type (" + a.Type +
@@ -322,10 +322,10 @@ bigrem = divrem[1]; }
 
     public static CBORObject Remainder(CBORObject a, CBORObject b) {
       if (a == null) {
-        throw new ArgumentNullException("a");
+        throw new ArgumentNullException(nameof(a));
       }
       if (b == null) {
-        throw new ArgumentNullException("b");
+        throw new ArgumentNullException(nameof(b));
       }
       if (a.Type != CBORType.Number) {
         throw new ArgumentException("a.Type (" + a.Type +

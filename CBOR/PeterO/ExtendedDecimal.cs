@@ -74,7 +74,7 @@ namespace PeterO {
 
     internal ExtendedDecimal(EDecimal ed) {
       if (ed == null) {
-        throw new ArgumentNullException("ed");
+        throw new ArgumentNullException(nameof(ed));
       }
       this.ed = ed;
     }
@@ -85,10 +85,10 @@ namespace PeterO {
       BigInteger mantissa,
       BigInteger exponent) {
       if (mantissa == null) {
-        throw new ArgumentNullException("mantissa");
+        throw new ArgumentNullException(nameof(mantissa));
       }
       if (exponent == null) {
-        throw new ArgumentNullException("exponent");
+        throw new ArgumentNullException(nameof(exponent));
       }
       return new ExtendedDecimal(EDecimal.Create(mantissa.Ei, exponent.Ei));
     }

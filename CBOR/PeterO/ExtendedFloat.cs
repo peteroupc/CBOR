@@ -59,7 +59,7 @@ namespace PeterO {
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public bool EqualsInternal(ExtendedFloat otherValue) {
       if (otherValue == null) {
-        throw new ArgumentNullException("otherValue");
+        throw new ArgumentNullException(nameof(otherValue));
       }
       return this.Ef.EqualsInternal(otherValue.Ef);
     }
@@ -69,7 +69,7 @@ namespace PeterO {
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public bool Equals(ExtendedFloat other) {
       if (other == null) {
-        throw new ArgumentNullException("other");
+        throw new ArgumentNullException(nameof(other));
       }
       return this.Ef.Equals(other.Ef);
     }
@@ -100,10 +100,10 @@ namespace PeterO {
   BigInteger mantissa,
   BigInteger exponent) {
       if (mantissa == null) {
-        throw new ArgumentNullException("mantissa");
+        throw new ArgumentNullException(nameof(mantissa));
       }
       if (exponent == null) {
-        throw new ArgumentNullException("exponent");
+        throw new ArgumentNullException(nameof(exponent));
       }
       return new ExtendedFloat(EFloat.Create(mantissa.Ei, exponent.Ei));
     }

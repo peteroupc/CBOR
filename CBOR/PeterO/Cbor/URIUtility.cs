@@ -876,7 +876,7 @@ using System.Text;
         return null;
       }
       if (s == null) {
-  throw new ArgumentNullException("s");
+  throw new ArgumentNullException(nameof(s));
 }
 if (offset < 0) {
   throw new ArgumentException("offset (" + offset +

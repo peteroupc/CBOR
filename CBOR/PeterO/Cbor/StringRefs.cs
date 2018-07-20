@@ -40,7 +40,7 @@ namespace PeterO.Cbor {
     public void AddStringIfNeeded(CBORObject str, int lengthHint) {
       #if DEBUG
       if (str == null) {
-        throw new ArgumentNullException("str");
+        throw new ArgumentNullException(nameof(str));
       }
       if (!(str.Type == CBORType.ByteString || str.Type ==
             CBORType.TextString)) {

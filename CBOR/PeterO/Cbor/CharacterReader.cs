@@ -40,7 +40,7 @@ namespace PeterO.Cbor {
   bool skipByteOrderMark,
   bool errorThrow) {
       if (str == null) {
-        throw new ArgumentNullException("str");
+        throw new ArgumentNullException(nameof(str));
       }
       this.strLength = str.Length;
       this.offset = (skipByteOrderMark && this.strLength > 0 && str[0] ==
@@ -67,7 +67,7 @@ namespace PeterO.Cbor {
   bool skipByteOrderMark,
   bool errorThrow) {
       if (str == null) {
-  throw new ArgumentNullException("str");
+  throw new ArgumentNullException(nameof(str));
 }
 if (offset < 0) {
   throw new ArgumentException("offset (" + offset +
@@ -124,7 +124,7 @@ if (str.Length - offset < length) {
   bool errorThrow,
   bool dontSkipUtf8Bom) {
       if (stream == null) {
-        throw new ArgumentNullException("stream");
+        throw new ArgumentNullException(nameof(stream));
       }
       this.stream = new WrappedStream(stream);
       this.mode = mode;
@@ -142,7 +142,7 @@ if (str.Length - offset < length) {
     // path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.Read(System.Int32[],System.Int32,System.Int32)"]/*'/>
     public int Read(int[] chars, int index, int length) {
       if (chars == null) {
-        throw new ArgumentNullException("chars");
+        throw new ArgumentNullException(nameof(chars));
       }
       if (index < 0) {
         throw new ArgumentException("index (" + index +

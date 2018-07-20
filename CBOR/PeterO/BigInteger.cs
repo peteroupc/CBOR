@@ -35,7 +35,7 @@ namespace PeterO {
 
     internal BigInteger(EInteger ei) {
       if (ei == null) {
-  throw new ArgumentNullException("ei");
+  throw new ArgumentNullException(nameof(ei));
 }
       this.ei = ei;
     }

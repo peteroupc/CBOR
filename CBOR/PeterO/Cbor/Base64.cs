@@ -42,7 +42,7 @@ namespace PeterO.Cbor {
   string alphabet,
   bool padding) {
       if (writer == null) {
-        throw new ArgumentNullException("writer");
+        throw new ArgumentNullException(nameof(writer));
       }
       if (offset < 0) {
         throw new ArgumentException("offset (" + offset + ") is less than " +

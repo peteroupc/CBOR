@@ -46,7 +46,7 @@ namespace Test {
 
     public static bool ReadBoolean(Stream stream) {
       if (stream == null) {
-        throw new ArgumentNullException("stream");
+        throw new ArgumentNullException(nameof(stream));
       }
       int b = stream.ReadByte();
       if (b == 0xf4) {
@@ -81,14 +81,14 @@ namespace Test {
 
     public static void WriteBoolean(bool value, Stream stream) {
       if (stream == null) {
-        throw new ArgumentNullException("stream");
+        throw new ArgumentNullException(nameof(stream));
       }
       stream.WriteByte(value ? (byte)0xf5 : (byte)0xf4);
     }
 
     public static void WriteInt32(int value, Stream stream) {
       if (stream == null) {
-        throw new ArgumentNullException("stream");
+        throw new ArgumentNullException(nameof(stream));
       }
       var type = 0;
       byte[] bytes;
@@ -251,7 +251,7 @@ private static long ReadInteger(
     /// name='stream'/> is null.</exception>
     public static double ReadDouble(Stream stream) {
       if (stream == null) {
-        throw new ArgumentNullException("stream");
+        throw new ArgumentNullException(nameof(stream));
       }
       int b = stream.ReadByte();
       if (b >= 0x00 && b < 0x18) {
@@ -304,7 +304,7 @@ private static long ReadInteger(
     /// name='stream'/> is null.</exception>
     public static int ReadInt32(Stream stream) {
       if (stream == null) {
-        throw new ArgumentNullException("stream");
+        throw new ArgumentNullException(nameof(stream));
       }
       int b = stream.ReadByte();
       if (b >= 0x00 && b < 0x18) {

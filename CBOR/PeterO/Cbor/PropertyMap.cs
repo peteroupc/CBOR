@@ -33,8 +33,7 @@ namespace PeterO.Cbor {
         string thisName = this.Name;
             // Convert 'IsXYZ' to 'XYZ'
   if (removeIsPrefix && thisName.Length >= 3 && thisName[0] == 'I' &&
-    thisName[1] == 's' &&
-              thisName[2] >= 'A' && thisName[2] <= 'Z') {
+    thisName[1] == 's' && thisName[2] >= 'A' && thisName[2] <= 'Z') {
               // NOTE (Jun. 17, 2017, Peter O.): Was "== 'Z'", which was a
               // bug reported
               // by GitHub user "richardschneider". See peteroupc/CBOR#17.

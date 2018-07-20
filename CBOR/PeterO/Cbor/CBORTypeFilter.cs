@@ -79,7 +79,7 @@ namespace PeterO.Cbor {
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.ArrayLengthMatches(PeterO.Numbers.EInteger)"]/*'/>
     public bool ArrayLengthMatches(EInteger bigLength) {
       if (bigLength == null) {
-        throw new ArgumentNullException("bigLength");
+        throw new ArgumentNullException(nameof(bigLength));
       }
       return ((this.types & (1 << 4)) == 0) && (this.anyArrayLength ||
         ((!this.arrayMinLength &&
@@ -175,7 +175,7 @@ namespace PeterO.Cbor {
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.TagAllowed(PeterO.Numbers.EInteger)"]/*'/>
     public bool TagAllowed(EInteger bigTag) {
       if (bigTag == null) {
-        throw new ArgumentNullException("bigTag");
+        throw new ArgumentNullException(nameof(bigTag));
       }
       if (bigTag.Sign < 0) {
         return false;
@@ -226,7 +226,7 @@ namespace PeterO.Cbor {
         return this;
       }
       if (elements == null) {
-        throw new ArgumentNullException("elements");
+        throw new ArgumentNullException(nameof(elements));
       }
       if (arrayLength < 0) {
         throw new ArgumentException("arrayLength (" + arrayLength +
@@ -254,7 +254,7 @@ namespace PeterO.Cbor {
         return this;
       }
       if (elements == null) {
-        throw new ArgumentNullException("elements");
+        throw new ArgumentNullException(nameof(elements));
       }
       if (arrayLength < 0) {
         throw new ArgumentException("arrayLength (" + arrayLength +
@@ -332,7 +332,7 @@ namespace PeterO.Cbor {
       }
       for (var i = 0; i < tags.Length; ++i) {
         if (tags[i] == null) {
-          throw new ArgumentNullException("tags");
+          throw new ArgumentNullException(nameof(tags));
         }
       }
       CBORTypeFilter filter = this.Copy();

@@ -99,7 +99,7 @@ namespace PeterO.Cbor {
     [CLSCompliant(false)]
     public static void Write(ulong value, Stream stream) {
       if (stream == null) {
-        throw new ArgumentNullException("stream");
+        throw new ArgumentNullException(nameof(stream));
       }
       if (value <= Int64.MaxValue) {
         Write((long)value, stream);

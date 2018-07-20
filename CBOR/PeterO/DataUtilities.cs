@@ -19,7 +19,7 @@ namespace PeterO {
     /// path='docs/doc[@name="M:PeterO.DataUtilities.GetUtf8String(System.Byte[],System.Boolean)"]/*'/>
     public static string GetUtf8String(byte[] bytes, bool replace) {
       if (bytes == null) {
-        throw new ArgumentNullException("bytes");
+        throw new ArgumentNullException(nameof(bytes));
       }
       var b = new StringBuilder();
       if (ReadUtf8FromBytes(bytes, 0, bytes.Length, b, replace) != 0) {
@@ -36,7 +36,7 @@ namespace PeterO {
   int bytesCount,
   bool replace) {
       if (bytes == null) {
-        throw new ArgumentNullException("bytes");
+        throw new ArgumentNullException(nameof(bytes));
       }
       if (offset < 0) {
         throw new ArgumentException("offset (" + offset + ") is less than " +
@@ -78,7 +78,7 @@ namespace PeterO {
   bool replace,
   bool lenientLineBreaks) {
       if (str == null) {
-        throw new ArgumentNullException("str");
+        throw new ArgumentNullException(nameof(str));
       }
       if (!lenientLineBreaks && str.Length == 1) {
         int c = str[0];
@@ -129,7 +129,7 @@ namespace PeterO {
     /// path='docs/doc[@name="M:PeterO.DataUtilities.GetUtf8Length(System.String,System.Boolean)"]/*'/>
     public static long GetUtf8Length(string str, bool replace) {
       if (str == null) {
-        throw new ArgumentNullException("str");
+        throw new ArgumentNullException(nameof(str));
       }
       long size = 0;
       for (var i = 0; i < str.Length; ++i) {
@@ -176,7 +176,7 @@ namespace PeterO {
   int index,
   int surrogateBehavior) {
       if (str == null) {
-        throw new ArgumentNullException("str");
+        throw new ArgumentNullException(nameof(str));
       }
       if (index <= 0) {
         return -1;
@@ -211,7 +211,7 @@ namespace PeterO {
   int index,
   int surrogateBehavior) {
       if (str == null) {
-        throw new ArgumentNullException("str");
+        throw new ArgumentNullException(nameof(str));
       }
       if (index >= str.Length) {
         return -1;
@@ -341,10 +341,10 @@ namespace PeterO {
   bool replace,
   bool lenientLineBreaks) {
       if (stream == null) {
-        throw new ArgumentNullException("stream");
+        throw new ArgumentNullException(nameof(stream));
       }
       if (str == null) {
-        throw new ArgumentNullException("str");
+        throw new ArgumentNullException(nameof(str));
       }
       if (offset < 0) {
         throw new ArgumentException("offset (" + offset + ") is less than " +
@@ -469,7 +469,7 @@ namespace PeterO {
     /// path='docs/doc[@name="M:PeterO.DataUtilities.WriteUtf8(System.String,System.IO.Stream,System.Boolean)"]/*'/>
     public static int WriteUtf8(string str, Stream stream, bool replace) {
       if (str == null) {
-        throw new ArgumentNullException("str");
+        throw new ArgumentNullException(nameof(str));
       }
       return WriteUtf8(str, 0, str.Length, stream, replace);
     }
@@ -483,7 +483,7 @@ namespace PeterO {
   StringBuilder builder,
   bool replace) {
       if (data == null) {
-        throw new ArgumentNullException("data");
+        throw new ArgumentNullException(nameof(data));
       }
       if (offset < 0) {
         throw new ArgumentException("offset (" + offset + ") is less than " +
@@ -506,7 +506,7 @@ namespace PeterO {
                 (data.Length - offset) + ") is less than " + bytesCount);
       }
       if (builder == null) {
-        throw new ArgumentNullException("builder");
+        throw new ArgumentNullException(nameof(builder));
       }
       var cp = 0;
       var bytesSeen = 0;
@@ -617,10 +617,10 @@ namespace PeterO {
   StringBuilder builder,
   bool replace) {
       if (stream == null) {
-        throw new ArgumentNullException("stream");
+        throw new ArgumentNullException(nameof(stream));
       }
       if (builder == null) {
-        throw new ArgumentNullException("builder");
+        throw new ArgumentNullException(nameof(builder));
       }
       int b;
       var cp = 0;

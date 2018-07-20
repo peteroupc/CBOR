@@ -64,13 +64,13 @@ namespace Test {
     public static void CompareTestConsistency<T>(T o1, T o2, T o3) where T :
       IComparable<T> {
       if (o1 == null) {
-        throw new ArgumentNullException("o1");
+        throw new ArgumentNullException(nameof(o1));
       }
       if (o2 == null) {
-        throw new ArgumentNullException("o2");
+        throw new ArgumentNullException(nameof(o2));
       }
       if (o3 == null) {
-        throw new ArgumentNullException("o3");
+        throw new ArgumentNullException(nameof(o3));
       }
       int cmp = CompareTestReciprocal(o1, o2);
       int cmp2 = CompareTestReciprocal(o2, o3);
@@ -164,10 +164,10 @@ namespace Test {
     public static int CompareTestReciprocal<T>(T o1, T o2) where T :
       IComparable<T> {
       if (o1 == null) {
-        throw new ArgumentNullException("o1");
+        throw new ArgumentNullException(nameof(o1));
       }
       if (o2 == null) {
-        throw new ArgumentNullException("o2");
+        throw new ArgumentNullException(nameof(o2));
       }
       int cmp, cmp2;
       cmp = Math.Sign(o1.CompareTo(o2));
@@ -181,13 +181,13 @@ namespace Test {
     public static void CompareTestRelations<T>(T o1, T o2, T o3) where T :
       IComparable<T> {
       if (o1 == null) {
-        throw new ArgumentNullException("o1");
+        throw new ArgumentNullException(nameof(o1));
       }
       if (o2 == null) {
-        throw new ArgumentNullException("o2");
+        throw new ArgumentNullException(nameof(o2));
       }
       if (o3 == null) {
-        throw new ArgumentNullException("o3");
+        throw new ArgumentNullException(nameof(o3));
       }
       if (o1.CompareTo(o1) != 0) {
         Assert.Fail(o1.ToString());

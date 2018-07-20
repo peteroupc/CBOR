@@ -21,7 +21,7 @@ namespace PeterO.Cbor {
 
     public int Read(int[] chars, int index, int length) {
       if (chars == null) {
-        throw new ArgumentNullException("chars");
+        throw new ArgumentNullException(nameof(chars));
       }
       if (index < 0) {
         throw new ArgumentException("index (" + index +

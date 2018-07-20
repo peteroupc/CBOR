@@ -17,7 +17,7 @@ namespace PeterO {
 
     public int GetBytes(byte[] bytes, int offset, int length) {
       if (bytes == null) {
-        throw new ArgumentNullException("bytes");
+        throw new ArgumentNullException(nameof(bytes));
       }
       if (offset < 0) {
         throw new ArgumentException("offset (" + offset +
