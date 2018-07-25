@@ -107,18 +107,6 @@
             36.</exception>
             <exception cref='T:System.FormatException'>The string is empty or
             in an invalid format.</exception>
-            <example>
-             The following example (C#) converts a number in the
-            form of a hex string to a big integer.
-            <code>
-            public static arbitrary-precision integer HexToBigInteger(string
-            hexString) {  // Parse the hexadecimal string as a big integer. Will  //
-            throw a FormatException if the parsing fails var bigInteger =
-            arbitrary-precision integer.fromRadixString(hexString, 16);  // Optional:
-            Check if the parsed integer is negative if (bigInteger.Sign &lt; 0) {
-            throw new FormatException("negative hex string"); } return bigInteger; }
-            </code>
-            </example>
 </doc>
 <doc name="M:PeterO.BigInteger.fromString(System.String)">
 <summary>Converts a string to an arbitrary-precision
@@ -1600,7 +1588,7 @@ tag 22, or base16 for tag 23.  Padding will be included in the Base64 URL or tra
             null. (This doesn't include floating-point numbers.)</item>
             <item>Infinity and not-a-number will be converted to
             null.</item></list>
-The example code given below can be used to write out certain keys of a CBOR map in a given order
+The example code given below (written in in C# for the .NET version) can be used to write out certain keys of a CBOR map in a given order
 to a JSON string.
 <code>
     // Generates a JSON string of 'mapObj' whose keys are in the order given in 'keys'.  Only keys

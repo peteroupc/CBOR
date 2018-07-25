@@ -135,15 +135,6 @@ The parameter <i>bytes</i>
 
 Converts a string to an arbitrary-precision integer.
 
-The following example (C#) converts a number in the orm of a hex string to a big integer.
-
-    public static arbitrary-precision integer HexToBigInteger(string
-    hexString) {  // Parse the hexadecimal string as a big integer. Will  //
-    throw a FormatException if the parsing fails var bigInteger =
-    arbitrary-precision integer.fromRadixString(hexString, 16);  // Optional:
-    Check if the parsed integer is negative if (bigInteger.Sign < 0) {
-    throw new FormatException("negative hex string"); } return bigInteger; }
-
 <b>Parameters:</b>
 
  * <i>str</i>: A text string. The string must contain only characters allowed by the given radix, except that it may start with a minus sign ("-", U+002D) to indicate a negative number. The string is not allowed to contain white space characters, including spaces.

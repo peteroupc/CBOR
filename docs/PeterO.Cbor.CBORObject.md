@@ -2413,7 +2413,7 @@ Converts this object to a string in JavaScript Object Notation (JSON) format, us
 
  * Infinity and not-a-number will be converted to null.
 
-The example code given below can be used to write out certain keys of a CBOR map in a given order to a JSON string.
+The example code given below (written in in C# for the .NET version) can be used to write out certain keys of a CBOR map in a given order to a JSON string.
 
         // Generates a JSON string of 'mapObj' whose keys are in the order given in 'keys'.  Only keys
         // found in 'keys' will be written if they exist in 'mapObj'.
