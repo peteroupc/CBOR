@@ -135,7 +135,9 @@ The parameter <i>bytes</i>
 
 Converts a string to an arbitrary-precision integer.
 
-The following example (C#) converts a number in the orm of a hex string to a big integer.    public static arbitrary-precision integer HexToBigInteger(string
+The following example (C#) converts a number in the orm of a hex string to a big integer.
+
+    public static arbitrary-precision integer HexToBigInteger(string
     hexString) {  // Parse the hexadecimal string as a big integer. Will  //
     throw a FormatException if the parsing fails var bigInteger =
     arbitrary-precision integer.fromRadixString(hexString, 16);  // Optional:

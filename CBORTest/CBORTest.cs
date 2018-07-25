@@ -1266,7 +1266,7 @@ string str1817 = "[0,1,2,3,4,5,6,7]";
       {
         object objectTemp = longString;
         object objectTemp2 = CBORObject.DecodeFromBytes(cbor.EncodeToBytes(
-                  CBOREncodeOptions.NoIndefLengthStrings)).AsString();
+                  new CBOREncodeOptions(false, true))).AsString();
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       TestCommon.AssertEqualsHashCode(cbor, cbor2);

@@ -4,6 +4,20 @@
 
 Specifies options for encoding and decoding CBOR objects.
 
+### CBOREncodeOptions Constructor
+
+    public CBOREncodeOptions(
+        bool useIndefLengthStrings,
+        bool useDuplicateKeys);
+
+Initializes a new instance of the CBOREncodeOptions class.
+
+<b>Parameters:</b>
+
+ * <i>useIndefLengthStrings</i>: A Boolean object.
+
+ * <i>useDuplicateKeys</i>: Another Boolean object.
+
 ### NoDuplicateKeys
 
     public static readonly PeterO.Cbor.CBOREncodeOptions NoDuplicateKeys;
@@ -22,6 +36,26 @@ Always encode strings with a definite-length encoding. Used only when encoding C
 
 No special options for encoding/decoding. Value: 0.
 
+### UseDuplicateKeys
+
+    public bool UseDuplicateKeys { get; }
+
+Gets a value not documented yet.
+
+<b>Returns:</b>
+
+A value not documented yet.
+
+### UseIndefLengthStrings
+
+    public bool UseIndefLengthStrings { get; }
+
+Gets a value not documented yet.
+
+<b>Returns:</b>
+
+A value not documented yet.
+
 ### Value
 
     public int Value { get; }
@@ -39,7 +73,7 @@ This options object's value.
     public PeterO.Cbor.CBOREncodeOptions And(
         PeterO.Cbor.CBOREncodeOptions o);
 
-<b>Deprecated.</b> May be removed in a later version.  Option classes in this library will follow the form seen in JSONOptions in a later version; the approach used in this class is too complicated.
+<b>Deprecated.</b> May be removed in a later version. Option classes in this library will follow the form seen in JSONOptions in a later version; the approach used in this class is too complicated.
 
 Returns an options object containing the flags shared by this and another options object.
 
@@ -57,7 +91,7 @@ A CBOREncodeOptions object.
     public PeterO.Cbor.CBOREncodeOptions Or(
         PeterO.Cbor.CBOREncodeOptions o);
 
-<b>Deprecated.</b> May be removed in a later version.  Option classes in this library will follow the form seen in JSONOptions in a later version; the approach used in this class is too complicated.
+<b>Deprecated.</b> May be removed in a later version. Option classes in this library will follow the form seen in JSONOptions in a later version; the approach used in this class is too complicated.
 
 Returns an options object containing the combined flags of this and another options object.
 

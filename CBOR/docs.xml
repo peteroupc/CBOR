@@ -1599,7 +1599,7 @@ tag 22, or base16 for tag 23.  Padding will be included in the Base64 URL or tra
             <item>Simple values other than true and false will be converted to
             null. (This doesn't include floating-point numbers.)</item>
             <item>Infinity and not-a-number will be converted to
-            null.</item></list></code>
+            null.</item></list>
 The example code given below can be used to write out certain keys of a CBOR map in a given order
 to a JSON string.
 <code>

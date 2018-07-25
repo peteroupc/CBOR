@@ -9,6 +9,9 @@ using PeterO.Numbers;
 namespace Test {
   [TestFixture]
   public class CBORObjectTest {
+    private static CBOREncodeOptions noDuplicateKeys = new
+      CBOREncodeOptions(true, false);
+
     private static int StringToInt(string str) {
       var neg = false;
       var i = 0;
@@ -239,7 +242,7 @@ internal static void CheckPropertyNames(
     }
 
     public static void TestFailingJSON(string str) {
-      TestFailingJSON(str, CBOREncodeOptions.None);
+      TestFailingJSON(str, new CBOREncodeOptions(true, true));
     }
 
     public static void TestFailingJSON(string str, CBOREncodeOptions opt) {
@@ -250,11 +253,7 @@ internal static void CheckPropertyNames(
         Console.WriteLine(ex2.Message);
         // Check only FromJSONString
         try {
-          if (opt.Value == 0) {
-            CBORObject.FromJSONString(str);
-          } else {
             CBORObject.FromJSONString(str, opt);
-          }
           Assert.Fail("Should have failed");
         } catch (CBORException) {
           // NOTE: Intentionally empty
@@ -266,11 +265,7 @@ internal static void CheckPropertyNames(
       }
       using (var ms = new MemoryStream(bytes)) {
         try {
-          if (opt.Value == 0) {
-            CBORObject.ReadJSON(ms);
-          } else {
             CBORObject.ReadJSON(ms, opt);
-          }
           Assert.Fail("Should have failed");
         } catch (CBORException) {
           // NOTE: Intentionally empty
@@ -280,11 +275,7 @@ internal static void CheckPropertyNames(
         }
       }
       try {
-        if (opt.Value == 0) {
-          CBORObject.FromJSONString(str);
-        } else {
           CBORObject.FromJSONString(str, opt);
-        }
         Assert.Fail("Should have failed");
       } catch (CBORException) {
         // NOTE: Intentionally empty
@@ -1897,14 +1888,14 @@ internal static void CheckPropertyNames(
       byte[] bytes;
       bytes = new byte[] { 0xa2, 0x01, 0x00, 0x02, 0x03 };
       try {
-        CBORObject.DecodeFromBytes(bytes, CBOREncodeOptions.NoDuplicateKeys);
+        CBORObject.DecodeFromBytes(bytes, noDuplicateKeys);
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
       bytes = new byte[] { 0xa2, 0x01, 0x00, 0x01, 0x03 };
       try {
-        CBORObject.DecodeFromBytes(bytes, CBOREncodeOptions.NoDuplicateKeys);
+        CBORObject.DecodeFromBytes(bytes, noDuplicateKeys);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
         // NOTE: Intentionally empty
@@ -1914,14 +1905,14 @@ internal static void CheckPropertyNames(
       }
       bytes = new byte[] { 0xa2, 0x01, 0x00, 0x01, 0x03 };
       try {
-        CBORObject.DecodeFromBytes(bytes, CBOREncodeOptions.None);
+        CBORObject.DecodeFromBytes(bytes, new CBOREncodeOptions(true, true));
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
       bytes = new byte[] { 0xa2, 0x60, 0x00, 0x60, 0x03 };
       try {
-        CBORObject.DecodeFromBytes(bytes, CBOREncodeOptions.NoDuplicateKeys);
+        CBORObject.DecodeFromBytes(bytes, noDuplicateKeys);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
         // NOTE: Intentionally empty
@@ -1931,7 +1922,7 @@ internal static void CheckPropertyNames(
       }
    bytes = new byte[] { 0xa3, 0x60, 0x00, 0x62, 0x41, 0x41, 0x00, 0x60, 0x03 };
       try {
-        CBORObject.DecodeFromBytes(bytes, CBOREncodeOptions.NoDuplicateKeys);
+        CBORObject.DecodeFromBytes(bytes, noDuplicateKeys);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
         // NOTE: Intentionally empty
@@ -1941,7 +1932,7 @@ internal static void CheckPropertyNames(
       }
       bytes = new byte[] { 0xa2, 0x61, 0x41, 0x00, 0x61, 0x41, 0x03 };
       try {
-        CBORObject.DecodeFromBytes(bytes, CBOREncodeOptions.NoDuplicateKeys);
+        CBORObject.DecodeFromBytes(bytes, noDuplicateKeys);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
         // NOTE: Intentionally empty
@@ -2192,9 +2183,9 @@ internal static void CheckPropertyNames(
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      TestFailingJSON("{\"a\":1,\"a\":2}", CBOREncodeOptions.NoDuplicateKeys);
+      TestFailingJSON("{\"a\":1,\"a\":2}", noDuplicateKeys);
       string aba = "{\"a\":1,\"b\":3,\"a\":2}";
-      TestFailingJSON(aba, CBOREncodeOptions.NoDuplicateKeys);
+      TestFailingJSON(aba, noDuplicateKeys);
       cbor = TestSucceedingJSON(aba);
       Assert.AreEqual(CBORObject.FromObject(2), cbor["a"]);
       cbor = TestSucceedingJSON("{\"a\":1,\"a\":4}");

@@ -599,7 +599,7 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.DecodeFromBytes(System.Byte[])"]/*'/>
     public static CBORObject DecodeFromBytes(byte[] data) {
-      return DecodeFromBytes(data, CBOREncodeOptions.None);
+      return DecodeFromBytes(data, new CBOREncodeOptions(true, true));
     }
 
     /// <include file='../../docs.xml'
@@ -655,7 +655,7 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromJSONString(System.String)"]/*'/>
     public static CBORObject FromJSONString(string str) {
-      return FromJSONString(str, CBOREncodeOptions.None);
+      return FromJSONString(str, new CBOREncodeOptions(true, true));
     }
 
     /// <include file='../../docs.xml'
@@ -675,11 +675,10 @@ namespace PeterO.Cbor {
       }
       var reader = new CharacterInputWithCount(
         new CharacterReader(str, false, true));
-      CBOREncodeOptions opt = options.And(CBOREncodeOptions.NoDuplicateKeys);
       var nextchar = new int[1];
       CBORObject obj = CBORJson.ParseJSONValue(
       reader,
-      opt.Value != 0,
+      !options.UseDuplicateKeys,
       false,
       nextchar);
       if (nextchar[0] != -1) {
@@ -1235,8 +1234,7 @@ namespace PeterO.Cbor {
       }
       try {
         var reader = new CBORReader(stream);
-        CBOREncodeOptions opt = options.And(CBOREncodeOptions.NoDuplicateKeys);
-        if (opt.Value != 0) {
+        if (!options.UseDuplicateKeys) {
           reader.DuplicatePolicy = CBORReader.CBORDuplicatePolicy.Disallow;
         }
         return reader.ResolveSharedRefsIfNeeded(reader.Read(null));
@@ -1248,7 +1246,7 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ReadJSON(System.IO.Stream)"]/*'/>
     public static CBORObject ReadJSON(Stream stream) {
-      return ReadJSON(stream, CBOREncodeOptions.None);
+      return ReadJSON(stream, new CBOREncodeOptions(true, true));
     }
 
     /// <include file='../../docs.xml'
@@ -1265,11 +1263,10 @@ namespace PeterO.Cbor {
       var reader = new CharacterInputWithCount(
         new CharacterReader(stream, 2, true));
       try {
-        CBOREncodeOptions opt = options.And(CBOREncodeOptions.NoDuplicateKeys);
         var nextchar = new int[1];
         CBORObject obj = CBORJson.ParseJSONValue(
      reader,
-     opt.Value != 0,
+     !options.UseDuplicateKeys,
      false,
      nextchar);
         if (nextchar[0] != -1) {
@@ -1303,7 +1300,8 @@ namespace PeterO.Cbor {
       if (stream == null) {
         throw new ArgumentNullException(nameof(stream));
       }
-      Write(str, stream, CBOREncodeOptions.None);
+      // TODO: Use CBOREncodeOptions.Default in future versions
+      Write(str, stream, new CBOREncodeOptions(true, true));
     }
 
     /// <include file='../../docs.xml'
@@ -1318,9 +1316,7 @@ namespace PeterO.Cbor {
       if (str == null) {
         stream.WriteByte(0xf6);  // Write null instead of string
       } else {
-        CBOREncodeOptions noIndef =
-          options.And(CBOREncodeOptions.NoIndefLengthStrings);
-        if (noIndef.Value != 0) {
+        if (!options.UseIndefLengthStrings) {
           // NOTE: Length of a String object won't be higher than the maximum
           // allowed for definite-length strings
           long codePointLength = DataUtilities.GetUtf8Length(str, true);
@@ -1701,7 +1697,8 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Object,System.IO.Stream)"]/*'/>
     public static void Write(object objValue, Stream stream) {
-      Write(objValue, stream, CBOREncodeOptions.None);
+      // TODO: Use CBOREncodeOptions.Default in future versions
+      Write(objValue, stream, new CBOREncodeOptions(true, true));
     }
 
     /// <include file='../../docs.xml'
@@ -2276,7 +2273,7 @@ mapValue = mapValue ?? CBORObject.FromObject(valueOb);
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.EncodeToBytes"]/*'/>
     public byte[] EncodeToBytes() {
-      return this.EncodeToBytes(CBOREncodeOptions.None);
+      return this.EncodeToBytes(new CBOREncodeOptions(true, true));
     }
 
     /// <include file='../../docs.xml'
@@ -2966,7 +2963,7 @@ sb = sb ?? (new StringBuilder());
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)"]/*'/>
     public void WriteTo(Stream stream) {
-      this.WriteTo(stream, CBOREncodeOptions.None);
+      this.WriteTo(stream, new CBOREncodeOptions(true, true));
     }
 
     /// <include file='../../docs.xml'
