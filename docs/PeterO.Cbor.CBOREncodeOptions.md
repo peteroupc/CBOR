@@ -26,6 +26,8 @@ No special options for encoding/decoding. Value: 0.
 
     public int Value { get; }
 
+<b>Deprecated.</b> Option classes in this library will follow the form seen in JSONOptions in a later version; the approach used in this class is too complicated.
+
 Gets this options object's value.
 
 <b>Returns:</b>
@@ -36,6 +38,8 @@ This options object's value.
 
     public PeterO.Cbor.CBOREncodeOptions And(
         PeterO.Cbor.CBOREncodeOptions o);
+
+<b>Deprecated.</b> May be removed in a later version.  Option classes in this library will follow the form seen in JSONOptions in a later version; the approach used in this class is too complicated.
 
 Returns an options object containing the flags shared by this and another options object.
 
@@ -52,6 +56,8 @@ A CBOREncodeOptions object.
 
     public PeterO.Cbor.CBOREncodeOptions Or(
         PeterO.Cbor.CBOREncodeOptions o);
+
+<b>Deprecated.</b> May be removed in a later version.  Option classes in this library will follow the form seen in JSONOptions in a later version; the approach used in this class is too complicated.
 
 Returns an options object containing the combined flags of this and another options object.
 
