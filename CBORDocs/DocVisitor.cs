@@ -471,6 +471,7 @@ namespace PeterO.DocGen {
     }
 
     public override void VisitCode(Code code) {
+      this.WriteLine("\r\n\r\n");
       foreach (var line in code.Content.Split('\n')) {
         this.WriteLine(FourSpaces + line.TrimEnd());
       }
@@ -538,6 +539,12 @@ namespace PeterO.DocGen {
         this.Write("[" + content + "]");
         this.Write("(" + typeName + ".md)");
         base.VisitSee(see);
+      } else if (cref.Substring(0, 2).Equals("M:")) {
+        string content = HtmlEscape(see.Content);
+        if (String.IsNullOrEmpty(content)) {
+          content = HtmlEscape(see.ToText());
+        }
+        this.Write("**" + content + "**");
       } else {
         base.VisitSee(see);
       }
