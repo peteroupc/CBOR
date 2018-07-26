@@ -3013,9 +3013,6 @@ to a JSON string.
             generally used when a non-zero number is divided by zero, or when a
             very high number can't be represented in a given exponent range.
             <b>Not-a-number</b> is generally used to signal errors.</para>
-            <para>This class implements the General Decimal Arithmetic
-            Specification version 1.70 (except part of chapter 6):
-            <c>http://speleotrove.com/decimal/decarith.html</c></para>
             <para><b>Errors and Exceptions</b></para>
             <para>Passing a signaling NaN to any arithmetic operation shown
             here will signal the flag FlagInvalid and return a quiet NaN, even

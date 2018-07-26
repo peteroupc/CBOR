@@ -24,8 +24,6 @@ The mantissa and exponent format preserves trailing zeros in the number's value.
 
 This class also supports values for negative zero, not-a-number (NaN) values, and infinity. <b>Negative zero</b> is generally used when a negative number is rounded to 0; it has the same mathematical value as positive zero. <b>Infinity</b> is generally used when a non-zero number is divided by zero, or when a very high number can't be represented in a given exponent range.<b>Not-a-number</b> is generally used to signal errors.
 
-This class implements the General Decimal Arithmetic Specification version 1.70 (except part of chapter 6): `http://speleotrove.com/decimal/decarith.html`
-
 <b>Errors and Exceptions</b>
 
 Passing a signaling NaN to any arithmetic operation shown here will signal the flag FlagInvalid and return a quiet NaN, even if another operand to that operation is a quiet NaN, unless noted otherwise.
