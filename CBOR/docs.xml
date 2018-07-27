@@ -434,7 +434,7 @@
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='bigintTag'/> or <paramref name='handler'/> is
             null.</exception>
-            <exception cref='T:System.ArgumentNullException'>The parameter
+            <exception cref='T:System.ArgumentException'>The parameter
             <paramref name='bigintTag'/> is less than 0 or greater than
             (2^64-1).</exception>
 </doc>
@@ -446,7 +446,7 @@
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='bigintTag'/> or <paramref name='handler'/> is
             null.</exception>
-            <exception cref='T:System.ArgumentNullException'>The parameter
+            <exception cref='T:System.ArgumentException'>The parameter
             <paramref name='bigintTag'/> is less than 0 or greater than
             (2^64-1).</exception>
 </doc>

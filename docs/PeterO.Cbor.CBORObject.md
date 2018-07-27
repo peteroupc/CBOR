@@ -469,7 +469,7 @@ The parameter <i>bigintTag</i>
  or  <i>handler</i>
  is null.
 
- * System.ArgumentNullException:
+ * System.ArgumentException:
 The parameter <i>bigintTag</i>
  is less than 0 or greater than (2^64-1).
 
@@ -495,7 +495,7 @@ The parameter <i>bigintTag</i>
  or  <i>handler</i>
  is null.
 
- * System.ArgumentNullException:
+ * System.ArgumentException:
 The parameter <i>bigintTag</i>
  is less than 0 or greater than (2^64-1).
 
