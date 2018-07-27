@@ -678,7 +678,7 @@ namespace PeterO.Cbor {
       var nextchar = new int[1];
       CBORObject obj = CBORJson.ParseJSONValue(
       reader,
-      !options.UseDuplicateKeys,
+      !options.AllowDuplicateKeys,
       false,
       nextchar);
       if (nextchar[0] != -1) {
@@ -1234,7 +1234,7 @@ namespace PeterO.Cbor {
       }
       try {
         var reader = new CBORReader(stream);
-        if (!options.UseDuplicateKeys) {
+        if (!options.AllowDuplicateKeys) {
           reader.DuplicatePolicy = CBORReader.CBORDuplicatePolicy.Disallow;
         }
         return reader.ResolveSharedRefsIfNeeded(reader.Read(null));
@@ -1266,7 +1266,7 @@ namespace PeterO.Cbor {
         var nextchar = new int[1];
         CBORObject obj = CBORJson.ParseJSONValue(
      reader,
-     !options.UseDuplicateKeys,
+     !options.AllowDuplicateKeys,
      false,
      nextchar);
         if (nextchar[0] != -1) {

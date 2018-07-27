@@ -8,15 +8,21 @@ Specifies options for encoding and decoding CBOR objects.
 
     public CBOREncodeOptions(
         bool useIndefLengthStrings,
-        bool useDuplicateKeys);
+        bool allowDuplicateKeys);
 
-Initializes a new instance of the CBOREncodeOptions class.
+Initializes a new instance of the [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) class.
 
 <b>Parameters:</b>
 
- * <i>useIndefLengthStrings</i>: A Boolean object.
+ * <i>useIndefLengthStrings</i>: A value indicating whether to always encode strings with a definite-length encoding.
 
- * <i>useDuplicateKeys</i>: Another Boolean object.
+ * <i>allowDuplicateKeys</i>: A value indicating whether to disallow duplicate keys when reading CBOR objects from a data stream.
+
+### Default
+
+    public static readonly PeterO.Cbor.CBOREncodeOptions Default;
+
+Default options for CBOR objects. Disallow duplicate keys, and always encode strings using definite-length encoding. These are recommended settings for the options that may be adopted by certain CBORObject methods in the next major version.
 
 ### NoDuplicateKeys
 
@@ -36,25 +42,25 @@ Always encode strings with a definite-length encoding. Used only when encoding C
 
 No special options for encoding/decoding. Value: 0.
 
-### UseDuplicateKeys
+### AllowDuplicateKeys
 
-    public bool UseDuplicateKeys { get; }
+    public bool AllowDuplicateKeys { get; }
 
-Gets a value not documented yet.
+Gets a value indicating whether to disallow duplicate keys when reading CBOR objects from a data stream. Used only when decoding CBOR objects.
 
 <b>Returns:</b>
 
-A value not documented yet.
+A value indicating whether to disallow duplicate keys when reading CBOR objects from a data stream.
 
 ### UseIndefLengthStrings
 
     public bool UseIndefLengthStrings { get; }
 
-Gets a value not documented yet.
+Gets a value indicating whether to always encode strings with a definite-length encoding.
 
 <b>Returns:</b>
 
-A value not documented yet.
+A value indicating whether to always encode strings with a definite-length encoding.
 
 ### Value
 

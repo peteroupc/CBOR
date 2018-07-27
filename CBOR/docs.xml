@@ -217,10 +217,29 @@
 <summary>Specifies options for encoding and decoding CBOR
             objects.</summary>
 </doc>
+<doc name="M:PeterO.Cbor.CBOREncodeOptions.#ctor">
+<summary>Initializes a new instance of the <see cref="CBOREncodeOptions" /> class.</summary>
+</doc>
+<doc name="M:PeterO.Cbor.CBOREncodeOptions.#ctor(System.Boolean,System.Boolean)">
+<summary>Initializes a new instance of the <see cref="CBOREncodeOptions" /> class.</summary>
+             <param name='useIndefLengthStrings'>A value indicating whether to always encode strings with a definite-length encoding.</param>
+             <param name='allowDuplicateKeys'>A value indicating whether to disallow duplicate keys
+             when reading CBOR objects from a data stream. </param>
+</doc>
+<doc name="P:PeterO.Cbor.CBOREncodeOptions.AllowDuplicateKeys">
+<summary>Gets a value indicating whether to disallow duplicate keys
+             when reading CBOR objects from a data stream.
+             Used only when decoding CBOR objects.</summary>
+             <value>A value indicating whether to disallow duplicate keys
+             when reading CBOR objects from a data stream. </value>
+</doc>
 <doc name="M:PeterO.Cbor.CBOREncodeOptions.And(PeterO.Cbor.CBOREncodeOptions)">
 <summary>Returns an options object containing the flags shared by this and another options object.</summary>
             <param name='o'>The parameter <paramref name='o'/> is a CBOREncodeOptions object.</param>
             <returns>A CBOREncodeOptions object.</returns>
+</doc>
+<doc name="F:PeterO.Cbor.CBOREncodeOptions.Default">
+<summary>Default options for CBOR objects.  Disallow duplicate keys, and always encode strings using definite-length encoding.  These are recommended settings for the options that may be adopted by certain CBORObject methods in the next major version.</summary>
 </doc>
 <doc name="F:PeterO.Cbor.CBOREncodeOptions.NoDuplicateKeys">
 <summary>Disallow duplicate keys when reading CBOR objects from a
@@ -239,6 +258,10 @@
 <summary>Returns an options object containing the combined flags of this and another options object.</summary>
             <param name='o'>The parameter <paramref name='o'/> is a CBOREncodeOptions object.</param>
             <returns>A new CBOREncodeOptions object.</returns>
+</doc>
+<doc name="P:PeterO.Cbor.CBOREncodeOptions.UseIndefLengthStrings">
+<summary>Gets a value indicating whether to always encode strings with a definite-length encoding.</summary>
+             <value>A value indicating whether to always encode strings with a definite-length encoding.</value>
 </doc>
 <doc name="P:PeterO.Cbor.CBOREncodeOptions.Value">
 <summary>Gets this options object's value.</summary>
@@ -755,8 +778,8 @@
             map.</value>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.DecodeFromBytes(System.Byte[])">
-<summary>Generates a CBOR object from an array of CBOR-encoded
-            bytes.</summary>
+<summary><para><b>At the moment, use the overload of this method that takes a CBOREncodeOptions object.  The object <c>CBOREncodeOptions.Default</c> contains recommended settings for CBOREncodeOptions, and those settings may be adopted by this overload (without a CBOREncodeOptions argument) in the next major version.</b></para>
+<para>Generates a CBOR object from an array of CBOR-encoded bytes.</para></summary>
             <param name='data'>A byte array.</param>
             <returns>A CBOR object corresponding to the data.</returns>
             <exception cref='T:PeterO.Cbor.CBORException'>There was an error in
@@ -769,7 +792,7 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.DecodeFromBytes(System.Byte[],PeterO.Cbor.CBOREncodeOptions)">
 <summary>Generates a CBOR object from an array of CBOR-encoded
-            bytes.</summary>
+            bytes, using the given <c>CBOREncodeOptions</c> object to control the decoding process.</summary>
             <param name='data'>A byte array.</param>
             <param name='options'>The parameter <paramref name='options'/> is a CBOREncodeOptions object.</param>
             <returns>A CBOR object corresponding to the data.</returns>
@@ -789,7 +812,7 @@
             <returns>The quotient of the two objects.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.EncodeToBytes">
-<summary>Writes the binary representation of this CBOR object and returns a byte array of that representation.  If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the byte array in an undefined order.  The example code given in <see cref='M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)'/> can be used to write out certain keys of a CBOR map in a given order.
+<summary><para><b>At the moment, use the overload of this method that takes a CBOREncodeOptions object.  The object <c>CBOREncodeOptions.Default</c> contains recommended settings for CBOREncodeOptions, and those settings may be adopted by this overload (without a CBOREncodeOptions argument) in the next major version.</b></para><para>Writes the binary representation of this CBOR object and returns a byte array of that representation.  If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the byte array in an undefined order.  The example code given in <see cref='M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)'/> can be used to write out certain keys of a CBOR map in a given order.</para>
 </summary>
             <returns>A byte array in CBOR format.</returns>
 </doc>
@@ -817,8 +840,8 @@
 <summary>Represents the value false.</summary>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromJSONString(System.String)">
-<summary>Generates a CBOR object from a text string in JavaScript
-            Object Notation (JSON) format.
+<summary><para><b>At the moment, use the overload of this method that takes a CBOREncodeOptions object.  The object <c>CBOREncodeOptions.Default</c> contains recommended settings for CBOREncodeOptions, and those settings may be adopted by this overload (without a CBOREncodeOptions argument) in the next major version.</b></para><para>Generates a CBOR object from a text string in JavaScript
+            Object Notation (JSON) format.</para>
             <para>If a JSON object has the same key, only the last given value
             will be used for each duplicated key.</para></summary>
             <param name='str'>A string in JSON format. The entire string must
@@ -832,7 +855,8 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromJSONString(System.String,PeterO.Cbor.CBOREncodeOptions)">
 <summary>Generates a CBOR object from a text string in JavaScript
-            Object Notation (JSON) format.
+            Object Notation (JSON) format, using the specified options
+to control the decoding proces.
             <para>By default, if a JSON object has the same key, only the last
             given value will be used for each duplicated key.</para></summary>
             <param name='str'>A string in JSON format. The entire string must
@@ -1417,9 +1441,9 @@ method that takes a PODOptions argument.</summary>
 <summary>The value positive infinity.</summary>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Read(System.IO.Stream)">
-<summary>Reads an object in CBOR format from a data stream. This
+<summary><para><b>At the moment, use the overload of this method that takes a CBOREncodeOptions object.  The object <c>CBOREncodeOptions.Default</c> contains recommended settings for CBOREncodeOptions, and those settings may be adopted by this overload (without a CBOREncodeOptions argument) in the next major version.</b></para><para>Reads an object in CBOR format from a data stream. This
             method will read from the stream until the end of the CBOR object
-            is reached or an error occurs, whichever happens first.</summary>
+            is reached or an error occurs, whichever happens first.</para></summary>
             <param name='stream'>A readable data stream.</param>
             <returns>A CBOR object that was read.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
@@ -1428,7 +1452,8 @@ method that takes a PODOptions argument.</summary>
             reading or parsing the data.</exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Read(System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)">
-<summary>Reads an object in CBOR format from a data stream. This
+<summary>Reads an object in CBOR format from a data stream, using the
+specified options to control the decoding process. This
             method will read from the stream until the end of the CBOR object
             is reached or an error occurs, whichever happens first.</summary>
             <param name='stream'>A readable data stream.</param>
@@ -1462,7 +1487,8 @@ method that takes a PODOptions argument.</summary>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.ReadJSON(System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)">
 <summary>Generates a CBOR object from a data stream in JavaScript
-            Object Notation (JSON) format. The JSON stream may begin with a
+            Object Notation (JSON) format, using the specified options
+to control the decoding process. The JSON stream may begin with a
             byte-order mark (U+FEFF). Since version 2.0, the JSON stream can
             be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected
             by assuming that the first character read must be a byte-order mark
@@ -1874,9 +1900,9 @@ to a JSON string.
             occurred.</exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Write(System.Object,System.IO.Stream)">
-<summary>Writes a CBOR object to a CBOR data stream. See the
+<summary><para><b>At the moment, use the overload of this method that takes a CBOREncodeOptions object.  The object <c>CBOREncodeOptions.Default</c> contains recommended settings for CBOREncodeOptions, and those settings may be adopted by this overload (without a CBOREncodeOptions argument) in the next major version.</b></para><para>Writes a CBOR object to a CBOR data stream. See the
             three-parameter Write method that takes a
-            CBOREncodeOptions.</summary>
+            CBOREncodeOptions.</para></summary>
             <param name='objValue'>The parameter <paramref name='objValue'/> is an arbitrary object.</param>
             <param name='stream'>A writable data stream.</param>
 </doc>
@@ -1923,10 +1949,10 @@ to a JSON string.
             occurred.</exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Write(System.String,System.IO.Stream)">
-<summary>Writes a string in CBOR format to a data stream. The
+<summary><para><b>At the moment, use the overload of this method that takes a CBOREncodeOptions object.  The object <c>CBOREncodeOptions.Default</c> contains recommended settings for CBOREncodeOptions, and those settings may be adopted by this overload (without a CBOREncodeOptions argument) in the next major version.</b></para><para>Writes a string in CBOR format to a data stream. The
             string will be encoded using indefinite-length encoding if its
             length exceeds a certain threshold (this behavior may change in
-            future versions of this library).</summary>
+            future versions of this library).</para></summary>
             <param name='str'>The string to write. Can be null.</param>
             <param name='stream'>A writable data stream.</param>
             <exception cref='T:System.ArgumentNullException'>The parameter
@@ -1935,7 +1961,8 @@ to a JSON string.
             occurred.</exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Write(System.String,System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)">
-<summary>Writes a string in CBOR format to a data stream.</summary>
+<summary>Writes a string in CBOR format to a data stream, using the
+given options to control the encoding process.</summary>
             <param name='str'>The string to write. Can be null.</param>
             <param name='stream'>A writable data stream.</param>
             <param name='options'>Options for encoding the data to
@@ -1994,7 +2021,7 @@ to a JSON string.
             <paramref name='outputStream'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)">
-<summary>Writes this CBOR object to a data stream.    If the CBOR object contains CBOR maps, or is a CBOR map, the keys to the map are written out to the data stream in an undefined order.  The example method given below (written in C# for the .NET version) can be used to write out certain keys of a CBOR map in a given order:
+<summary><para><b>At the moment, use the overload of this method that takes a CBOREncodeOptions object.  The object <c>CBOREncodeOptions.Default</c> contains recommended settings for CBOREncodeOptions, and those settings may be adopted by this overload (without a CBOREncodeOptions argument) in the next major version.</b></para><para>Writes this CBOR object to a data stream.    If the CBOR object contains CBOR maps, or is a CBOR map, the keys to the map are written out to the data stream in an undefined order.  The example method given below (written in C# for the .NET version) can be used to write out certain keys of a CBOR map in a given order:</para>
 <code>
     // Writes each key of 'mapObj' to 'outputStream'in the order given in 'keys'.  Only keys
     // found in 'keys' will be written if they exist in 'mapObj'.

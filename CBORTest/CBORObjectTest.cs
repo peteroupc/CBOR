@@ -199,7 +199,7 @@ internal static void CheckPropertyNames(
   "propC");
     }
 
-    private static string[] jsonFails = { "\"\\uxxxx\"",
+    private static readonly string[] ValueJsonFails = { "\"\\uxxxx\"",
       "\"\\ud800\udc00\"",
       "\"\ud800\\udc00\"", "\"\\U0023\"", "\"\\u002x\"", "\"\\u00xx\"",
       "\"\\u0xxx\"", "\"\\u0\"", "\"\\u00\"", "\"\\u000\"", "trbb",
@@ -2159,7 +2159,7 @@ internal static void CheckPropertyNames(
           }
         }
       }
-      foreach (string str in jsonFails) {
+      foreach (string str in ValueJsonFails) {
         TestFailingJSON(str);
       }
       foreach (string str in ValueJsonSucceeds) {

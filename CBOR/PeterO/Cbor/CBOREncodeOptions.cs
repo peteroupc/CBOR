@@ -6,9 +6,14 @@ namespace PeterO.Cbor {
   public sealed class CBOREncodeOptions {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="F:PeterO.Cbor.CBOREncodeOptions.None"]/*'/>
-  [Obsolete("Use 'new CBOREncodeOptions(true,true)' instead. Option classes in this library will follow the form seen in JSONOptions in a later version; the approach used in this class is too complicated.")]
+  [Obsolete("Use 'new CBOREncodeOptions(true,true)' instead. Option classes in this library will follow the form seen in JSONOptions in a later version; the approach used in this class is too complicated.  'CBOREncodeOptions.Default' contains recommended default options that may be adopted by certain CBORObject methods in the next major version.")]
     public static readonly CBOREncodeOptions None =
       new CBOREncodeOptions(0);
+
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.Cbor.CBOREncodeOptions.Default"]/*'/>
+    public static readonly CBOREncodeOptions Default =
+      new CBOREncodeOptions(false, false);
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="F:PeterO.Cbor.CBOREncodeOptions.NoIndefLengthStrings"]/*'/>
@@ -24,37 +29,35 @@ namespace PeterO.Cbor {
 
     private readonly int value;
 
-    /// <summary>Initializes a new instance of the CBOREncodeOptions
-    /// class.</summary>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBOREncodeOptions.#ctor"]/*'/>
     public CBOREncodeOptions() : this(false, false) {}
 
-    /// <summary>Initializes a new instance of the CBOREncodeOptions
-    /// class.</summary>
-    /// <param name='useIndefLengthStrings'>A Boolean object.</param>
-    /// <param name='useDuplicateKeys'>Another Boolean object.</param>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBOREncodeOptions.#ctor(System.Boolean,System.Boolean)"]/*'/>
     public CBOREncodeOptions(bool useIndefLengthStrings, bool
-      useDuplicateKeys) {
+      allowDuplicateKeys) {
       var val = 0;
       if (!useIndefLengthStrings) {
  val|=1;
 }
-      if (!useDuplicateKeys) {
+      if (!allowDuplicateKeys) {
  val|=2;
 }
       this.value = val;
     }
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Cbor.CBOREncodeOptions.UseIndefLengthStrings"]/*'/>
     public bool UseIndefLengthStrings {
       get {
         return (this.value & 1) == 0;
       }
     }
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
-    public bool UseDuplicateKeys {
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Cbor.CBOREncodeOptions.AllowDuplicateKeys"]/*'/>
+    public bool AllowDuplicateKeys {
       get {
         return (this.value & 2) == 0;
       }
