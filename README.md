@@ -61,7 +61,7 @@ var cbor = CBORObject.NewMap()
    .Add("array", CBORObject.NewArray().Add(999f).Add("xyz"))
    .Add("bytes", new byte[] { 0, 1, 2 });
 // The following converts the map to CBOR
-byte[] bytes = cbor.EncodeToBytes();
+byte[] bytes = cbor.EncodeToBytes(CBOREncodeOptions.Default);
 // The following converts the map to JSON
 string json = cbor.ToJSONString();
 Console.WriteLine(json);
@@ -78,7 +78,8 @@ file I/O; the portable class library doesn't make that assumption.
  // the array may be needed.
  // 2.  The decoding will succeed only if the entire array,
  // not just the start of the array, consists of a CBOR object.
- var cbor = CBORObject.DecodeFromBytes(File.ReadAllBytes("object.cbor"));
+ var cbor = CBORObject.DecodeFromBytes(
+    File.ReadAllBytes("object.cbor"), CBOREncodeOptions.Default);
 ```
 
 Another example of reading data from a file:
@@ -168,13 +169,13 @@ File.WriteAllText(
   new System.Text.Encoding.UTF8Encoding(false));
 
 // This is an alternative way to write the CBOR object
-// and is now supported in version 1.2.
+// and is supported since version 1.2.
 using (var stream = new FileStream("object2.json", FileMode.Create)) {
     // Write the CBOR object as JSON; here, a byte order
     // mark won't be added
     cbor.WriteJSONTo(stream);
 }
-// Version 1.2 now supports a third way to write
+// Version 1.2 and later support a third way to write
 // objects to JSON: the CBORObject.WriteJSON method
 using (var stream = new FileStream("object3.json", FileMode.Create)) {
    CBORObject.WriteJSON("some string", stream);
