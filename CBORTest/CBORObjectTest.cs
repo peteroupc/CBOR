@@ -9,7 +9,47 @@ using PeterO.Numbers;
 namespace Test {
   [TestFixture]
   public class CBORObjectTest {
-    private static CBOREncodeOptions noDuplicateKeys = new
+    private static readonly string[] ValueJsonFails = {
+      "\"\\uxxxx\"",
+      "\"\\ud800\udc00\"",
+      "\"\ud800\\udc00\"", "\"\\U0023\"", "\"\\u002x\"", "\"\\u00xx\"",
+      "\"\\u0xxx\"", "\"\\u0\"", "\"\\u00\"", "\"\\u000\"", "trbb",
+      "trub", "falsb", "nulb", "[true", "[true,", "[true]!",
+      "[\"\ud800\\udc00\"]", "[\"\\ud800\udc00\"]",
+      "[\"\\udc00\ud800\udc00\"]", "[\"\\ud800\ud800\udc00\"]",
+      "[\"\\ud800\"]", "[1,2,", "[1,2,3", "{,\"0\":0,\"1\":1}",
+      "{\"0\":0,,\"1\":1}", "{\"0\":0,\"1\":1,}", "[,0,1,2]", "[0,,1,2]",
+  "[0,1,,2]", "[0,1,2,]", "[0001]", "{a:true}",
+      "{\"a\"://comment\ntrue}", "{\"a\":/*comment*/true}", "{'a':true}",
+      "{\"a\":'b'}", "{\"a\t\":true}", "{\"a\r\":true}", "{\"a\n\":true}",
+  "['a']", "{\"a\":\"a\t\"}", "[\"a\\'\"]", "[NaN]", "[+Infinity]",
+  "[-Infinity]", "[Infinity]", "{\"a\":\"a\r\"}", "{\"a\":\"a\n\"}",
+  "[\"a\t\"]", "\"test\"\"", "\"test\"x", "\"test\"\u0300",
+      "\"test\"\u0005", "[5]\"", "[5]x", "[5]\u0300", "[5]\u0005",
+      "{\"test\":5}\"", "{\"test\":5}x", "{\"test\":5}\u0300",
+      "{\"test\":5}\u0005", "true\"", "truex", "true}", "true\u0300",
+      "true\u0005", "8024\"", "8024x", "8024}", "8024\u0300",
+      "8024\u0005", "{\"test\":5}}", "{\"test\":5}{", "[5]]", "[5][",
+      "0000", "0x1", "0xf", "0x20", "0x01",
+  "-3x", "-3e89x",
+      "0X1", "0Xf", "0X20", "0X01", ".2", ".05", "-.2",
+      "-.05", "23.", "23.e0", "23.e1", "0.", "[0000]", "[0x1]",
+      "[0xf]", "[0x20]", "[0x01]", "[.2]", "[.05]", "[-.2]", "[-.05]",
+  "[23.]", "[23.e0]", "[23.e1]", "[0.]", "\"abc", "\"ab\u0004c\"",
+  "\u0004\"abc\"", "[1,\u0004" + "2]" };
+
+    private static readonly string[] ValueJsonSucceeds = {
+      "[0]",
+      "[0.1]",
+      "[0.1001]",
+      "[0.0]",
+      "[-3 " + ",-5]",
+  "[0.00]", "[0.000]", "[0.01]", "[0.001]", "[0.5]", "[0E5]",
+  "[0E+6]", "[\"\ud800\udc00\"]", "[\"\\ud800\\udc00\"]",
+  "[\"\\ud800\\udc00\ud800\udc00\"]", "23.0e01", "23.0e00", "[23.0e01]",
+  "[23.0e00]", "0", "1", "0.2", "0.05", "-0.2", "-0.05" };
+
+    private static readonly CBOREncodeOptions ValueNoDuplicateKeys = new
       CBOREncodeOptions(true, false);
 
     private static int StringToInt(string str) {
@@ -198,44 +238,6 @@ internal static void CheckPropertyNames(
   "propB",
   "propC");
     }
-
-    private static readonly string[] ValueJsonFails = { "\"\\uxxxx\"",
-      "\"\\ud800\udc00\"",
-      "\"\ud800\\udc00\"", "\"\\U0023\"", "\"\\u002x\"", "\"\\u00xx\"",
-      "\"\\u0xxx\"", "\"\\u0\"", "\"\\u00\"", "\"\\u000\"", "trbb",
-      "trub", "falsb", "nulb", "[true", "[true,", "[true]!",
-      "[\"\ud800\\udc00\"]", "[\"\\ud800\udc00\"]",
-      "[\"\\udc00\ud800\udc00\"]", "[\"\\ud800\ud800\udc00\"]",
-      "[\"\\ud800\"]", "[1,2,", "[1,2,3", "{,\"0\":0,\"1\":1}",
-      "{\"0\":0,,\"1\":1}", "{\"0\":0,\"1\":1,}", "[,0,1,2]", "[0,,1,2]",
-  "[0,1,,2]", "[0,1,2,]", "[0001]", "{a:true}",
-      "{\"a\"://comment\ntrue}", "{\"a\":/*comment*/true}", "{'a':true}",
-      "{\"a\":'b'}", "{\"a\t\":true}", "{\"a\r\":true}", "{\"a\n\":true}",
-  "['a']", "{\"a\":\"a\t\"}", "[\"a\\'\"]", "[NaN]", "[+Infinity]",
-  "[-Infinity]", "[Infinity]", "{\"a\":\"a\r\"}", "{\"a\":\"a\n\"}",
-  "[\"a\t\"]", "\"test\"\"", "\"test\"x", "\"test\"\u0300",
-      "\"test\"\u0005", "[5]\"", "[5]x", "[5]\u0300", "[5]\u0005",
-      "{\"test\":5}\"", "{\"test\":5}x", "{\"test\":5}\u0300",
-      "{\"test\":5}\u0005", "true\"", "truex", "true}", "true\u0300",
-      "true\u0005", "8024\"", "8024x", "8024}", "8024\u0300",
-      "8024\u0005", "{\"test\":5}}", "{\"test\":5}{", "[5]]", "[5][",
-      "0000", "0x1", "0xf", "0x20", "0x01",
-  "-3x", "-3e89x",
-      "0X1", "0Xf", "0X20", "0X01", ".2", ".05", "-.2",
-      "-.05", "23.", "23.e0", "23.e1", "0.", "[0000]", "[0x1]",
-      "[0xf]", "[0x20]", "[0x01]", "[.2]", "[.05]", "[-.2]", "[-.05]",
-  "[23.]", "[23.e0]", "[23.e1]", "[0.]", "\"abc", "\"ab\u0004c\"",
-  "\u0004\"abc\"", "[1,\u0004" + "2]" };
-
-    private static readonly string[] ValueJsonSucceeds = { "[0]",
-      "[0.1]",
-      "[0.1001]",
-      "[0.0]",
-      "[-3 " + ",-5]",
-  "[0.00]", "[0.000]", "[0.01]", "[0.001]", "[0.5]", "[0E5]",
-  "[0E+6]", "[\"\ud800\udc00\"]", "[\"\\ud800\\udc00\"]",
-  "[\"\\ud800\\udc00\ud800\udc00\"]", "23.0e01", "23.0e00", "[23.0e01]",
-  "[23.0e00]", "0", "1", "0.2", "0.05", "-0.2", "-0.05" };
 
     public static CBORObject GetNumberData() {
       return new AppResources("Resources").GetJSON("numbers");
@@ -1888,14 +1890,14 @@ internal static void CheckPropertyNames(
       byte[] bytes;
       bytes = new byte[] { 0xa2, 0x01, 0x00, 0x02, 0x03 };
       try {
-        CBORObject.DecodeFromBytes(bytes, noDuplicateKeys);
+        CBORObject.DecodeFromBytes(bytes, ValueNoDuplicateKeys);
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
       bytes = new byte[] { 0xa2, 0x01, 0x00, 0x01, 0x03 };
       try {
-        CBORObject.DecodeFromBytes(bytes, noDuplicateKeys);
+        CBORObject.DecodeFromBytes(bytes, ValueNoDuplicateKeys);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
         // NOTE: Intentionally empty
@@ -1912,7 +1914,7 @@ internal static void CheckPropertyNames(
       }
       bytes = new byte[] { 0xa2, 0x60, 0x00, 0x60, 0x03 };
       try {
-        CBORObject.DecodeFromBytes(bytes, noDuplicateKeys);
+        CBORObject.DecodeFromBytes(bytes, ValueNoDuplicateKeys);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
         // NOTE: Intentionally empty
@@ -1922,7 +1924,7 @@ internal static void CheckPropertyNames(
       }
    bytes = new byte[] { 0xa3, 0x60, 0x00, 0x62, 0x41, 0x41, 0x00, 0x60, 0x03 };
       try {
-        CBORObject.DecodeFromBytes(bytes, noDuplicateKeys);
+        CBORObject.DecodeFromBytes(bytes, ValueNoDuplicateKeys);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
         // NOTE: Intentionally empty
@@ -1932,7 +1934,7 @@ internal static void CheckPropertyNames(
       }
       bytes = new byte[] { 0xa2, 0x61, 0x41, 0x00, 0x61, 0x41, 0x03 };
       try {
-        CBORObject.DecodeFromBytes(bytes, noDuplicateKeys);
+        CBORObject.DecodeFromBytes(bytes, ValueNoDuplicateKeys);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
         // NOTE: Intentionally empty
@@ -2183,9 +2185,9 @@ internal static void CheckPropertyNames(
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      TestFailingJSON("{\"a\":1,\"a\":2}", noDuplicateKeys);
+      TestFailingJSON("{\"a\":1,\"a\":2}", ValueNoDuplicateKeys);
       string aba = "{\"a\":1,\"b\":3,\"a\":2}";
-      TestFailingJSON(aba, noDuplicateKeys);
+      TestFailingJSON(aba, ValueNoDuplicateKeys);
       cbor = TestSucceedingJSON(aba);
       Assert.AreEqual(CBORObject.FromObject(2), cbor["a"]);
       cbor = TestSucceedingJSON("{\"a\":1,\"a\":4}");
