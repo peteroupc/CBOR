@@ -43,7 +43,7 @@ namespace PeterO.Cbor {
                 this.sb.Append('\\');
                 break;
               case '/':
-                // Now allowed to be escaped under RFC 7159
+                // Now allowed to be escaped under RFC 8259
                 this.sb.Append('/');
                 break;
               case '\"':

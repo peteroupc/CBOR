@@ -175,7 +175,7 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,System.Boolean,System.Boolean)">
 <summary>Parses a number whose format follows the JSON
-            specification (RFC 7159). Roughly speaking, a valid number consists
+            specification (RFC 8259). Roughly speaking, a valid number consists
             of an optional minus sign, one or more basic digits (starting with
             1 to 9 unless the only digit is 0), an optional decimal point (".",
             full stop) with one or more basic digits, and an optional letter E
@@ -194,7 +194,7 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,System.Boolean,System.Boolean,System.Boolean)">
 <summary>Parses a number whose format follows the JSON
-            specification (RFC 7159). Roughly speaking, a valid number consists
+            specification (RFC 8259). Roughly speaking, a valid number consists
             of an optional minus sign, one or more basic digits (starting with
             1 to 9 unless the only digit is 0), an optional decimal point (".",
             full stop) with one or more basic digits, and an optional letter E
@@ -1602,7 +1602,7 @@ to control the decoding process. The JSON stream may begin with a
             double could overflow to infinity, in which case the
             arbitrary-precision binary float is converted to null.)</item>
             <item>The string will not begin with a byte-order mark (U+FEFF);
-            RFC 7159 (the JSON specification) forbids placing a byte-order mark
+            RFC 8259 (the JSON specification) forbids placing a byte-order mark
             at the beginning of a JSON string.</item>
             <item>Byte strings are converted to Base64 URL without whitespace or padding by default (see section 4.1 of RFC 7049).  A byte string will instead be converted to traditional base64 without whitespace or padding by default if it has
 tag 22, or base16 for tag 23.  Padding will be included in the Base64 URL or traditional base64 form if <b>Base64Padding</b> in the JSON options is set to <b>true</b>.</item>
