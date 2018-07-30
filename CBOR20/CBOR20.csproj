@@ -205,10 +205,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="System" />
     <Reference Include="Numbers">
       <HintPath>..\packages\PeterO.Numbers.1.1.0\lib\net20\Numbers.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

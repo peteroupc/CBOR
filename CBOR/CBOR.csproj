@@ -60,11 +60,6 @@ Version 3.1
     </CustomCommands>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="PeterO.Numbers" Version="1.0.2" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\Numbers\PeterO.Numbers.1.0.2.nupkg">
-      <Link>PeterO.Numbers.1.0.2.nupkg</Link>
-    </None>
+    <PackageReference Include="PeterO.Numbers" Version="1.1.0" />
   </ItemGroup>
 </Project>
