@@ -29,7 +29,7 @@ namespace PeterO.Cbor {
     private string NextJSONString() {
       int c;
       this.sb = this.sb ?? new StringBuilder();
-      this.sb.Clear();
+      this.sb.Remove(0, this.sb.Length);
       while (true) {
         c = this.reader.ReadChar();
         if (c == -1 || c < 0x20) {

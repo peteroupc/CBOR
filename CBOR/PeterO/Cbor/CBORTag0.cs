@@ -8,10 +8,14 @@ at: http://peteroupc.github.io/
 using System;
 
 namespace PeterO.Cbor {
-  internal class CBORTag0 : ICBORTag, ICBORConverter<DateTime>
-  {
+  internal class CBORTag0 : ICBORTag, ICBORConverter<DateTime> {
     private static string DateTimeToString(DateTime bi) {
-      DateTime dt = TimeZoneInfo.ConvertTime(bi, TimeZoneInfo.Utc);
+#if NET40
+      DateTime dt = bi.ToUniversalTime();
+#else
+ DateTime dt = TimeZoneInfo.ConvertTime(bi, TimeZoneInfo.Utc);
+#endif
+
       int year = dt.Year;
       int month = dt.Month;
       int day = dt.Day;
