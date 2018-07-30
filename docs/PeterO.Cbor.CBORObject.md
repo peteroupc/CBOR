@@ -2438,7 +2438,7 @@ The example code given below (written in in C# for the .NET version) can be used
           var builder=new StringBuilder();
           var first=true;
           builder.Append("{");
-          for(CBORObject key in keys)[
+          for(CBORObject key in keys){
             if(mapObj.ContainsKey(key)){
               if(!first)builder.Append(", ");
               var keyString=(key.CBORType==CBORType.String) ?

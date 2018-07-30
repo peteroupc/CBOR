@@ -1630,7 +1630,7 @@ to a JSON string.
       var builder=new StringBuilder();
       var first=true;
       builder.Append("{");
-      for(CBORObject key in keys)[
+      for(CBORObject key in keys){
         if(mapObj.ContainsKey(key)){
           if(!first)builder.Append(", ");
           var keyString=(key.CBORType==CBORType.String) ?
