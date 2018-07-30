@@ -228,10 +228,17 @@ The following are some clarifications to RFC 7049.
   treats values of infinity and NaN as invalid.
 * For tag 32, this implementation accepts strings that are valid
   Internationalized Resource Identifiers (IRIs) in addition to URIs.
-  IRI are like URIs except that they also allow non-ASCII characters.
+  IRIs are like URIs except that they also allow non-ASCII characters.
 
 Release Notes
 -----------
+
+### Version 3.2
+
+- Added build targeting the .NET Framework 2.0
+- Obsoleted much of the existing API in CBOREncodeOptions and added new APIs to replace it.
+- Documentation for some CBORObject methods now points to the use of CBOREncodeOptions.Default
+- Documentation edited in other places
 
 ### Version 3.1
 
