@@ -964,15 +964,16 @@ namespace PeterO.Cbor {
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Object)"]/*'/>
-    public static CBORObject FromObject (object obj) {
+    public static CBORObject FromObject(object obj) {
       return FromObject(obj, PODOptions.Default);
     }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Object,PeterO.Cbor.PODOptions)"]/*'/>
-          public static CBORObject FromObject(object obj, PODOptions
-              options) {
-      if ((options) == null) {
+          public static CBORObject FromObject(
+  object obj,
+  PODOptions options) {
+      if (options == null) {
   throw new ArgumentNullException(nameof(options));
 }
       if (obj == null) {
@@ -1072,7 +1073,7 @@ namespace PeterO.Cbor {
           (System.Collections.IDictionary)obj;
         foreach (object keyPair in (System.Collections.IDictionary)objdic) {
           System.Collections.DictionaryEntry
-            kvp=(System.Collections.DictionaryEntry)keyPair;
+            kvp = (System.Collections.DictionaryEntry)keyPair;
             CBORObject objKey = CBORObject.FromObject(kvp.Key, options);
             objret[objKey] = CBORObject.FromObject(kvp.Value, options);
         }
@@ -2719,8 +2720,9 @@ mapValue = mapValue ?? CBORObject.FromObject(valueOb);
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToJSONString"]/*'/>
+    /// <returns>Not documented yet.</returns>
     public string ToJSONString() {
-      return ToJSONString(JSONOptions.Default);
+      return this.ToJSONString(JSONOptions.Default);
     }
 
     /// <include file='../../docs.xml'
@@ -2943,8 +2945,10 @@ sb = sb ?? (new StringBuilder());
       if (outputStream == null) {
         throw new ArgumentNullException(nameof(outputStream));
       }
-      CBORJson.WriteJSONToInternal(this, new StringOutput(outputStream),
-        JSONOptions.Default);
+      CBORJson.WriteJSONToInternal(
+  this,
+  new StringOutput(outputStream),
+  JSONOptions.Default);
     }
 
     /// <include file='../../docs.xml'
@@ -2956,8 +2960,10 @@ sb = sb ?? (new StringBuilder());
             if (options == null) {
  throw new ArgumentNullException(nameof(options));
 }
-            CBORJson.WriteJSONToInternal(this, new StringOutput(outputStream),
-        options);
+            CBORJson.WriteJSONToInternal(
+  this,
+  new StringOutput(outputStream),
+  options);
     }
 
     /// <include file='../../docs.xml'

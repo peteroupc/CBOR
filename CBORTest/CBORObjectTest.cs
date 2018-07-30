@@ -2399,6 +2399,7 @@ public void TestFromObject_Dictionary() {
         public PODClass() {
             this.PropA = 0;
             this.PropB = 1;
+            this.IsPropC = false;
         }
 
         public int PropA { get; private set; }

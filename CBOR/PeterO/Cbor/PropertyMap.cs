@@ -65,11 +65,15 @@ namespace PeterO.Cbor {
       return t.GetProperties(BindingFlags.Public |
         BindingFlags.Instance);
     }
-    private static MethodInfo GetTypeMethod(Type t, string name,
-      Type[] parameters) {
+
+    private static MethodInfo GetTypeMethod(
+  Type t,
+  string name,
+  Type[] parameters) {
        return t.GetMethod(name, parameters);
     }
-        private static bool HasCustomAttribute (
+
+        private static bool HasCustomAttribute(
   Type t,
   string name) {
 #if NET40
@@ -77,8 +81,8 @@ namespace PeterO.Cbor {
 #else
     foreach (var attr in t.CustomAttributes) {
 #endif
-        //DebugUtility.Log (attr.AttributeType.GetType ().FullName);
-                if (attr.GetType ().FullName.Equals (name)) {
+        // DebugUtility.Log (attr.AttributeType.GetType ().FullName);
+                if (attr.GetType().FullName.Equals(name)) {
                     return true;
                 }
             }
@@ -114,8 +118,10 @@ namespace PeterO.Cbor {
 
     private static IList<PropertyData> GetPropertyList(Type t) {
       lock (ValuePropertyLists) {
-         if (ValuePropertyLists.TryGetValue (t, out IList<PropertyData>
-                  ret)) {
+         if (
+  ValuePropertyLists.TryGetValue(
+  t,
+  out IList<PropertyData> ret)) {
           return ret;
         }
         ret = new List<PropertyData>();
@@ -125,7 +131,7 @@ namespace PeterO.Cbor {
         foreach (PropertyInfo pi in GetTypeProperties(t)) {
           if (pi.CanRead && (pi.CanWrite || anonymous) &&
           pi.GetIndexParameters().Length == 0) {
-            PropertyData pd = new PropertyMap.PropertyData () {
+            PropertyData pd = new PropertyMap.PropertyData() {
                 Name = pi.Name,
                 Prop = pi
             };
@@ -268,6 +274,7 @@ namespace PeterO.Cbor {
     GetProperties(Object o) {
          return GetProperties(o, true, true);
     }
+
     public static IEnumerable<KeyValuePair<string, object>>
     GetProperties(Object o, bool removeIsPrefix, bool useCamelCase) {
       foreach (PropertyData key in GetPropertyList(o.GetType())) {

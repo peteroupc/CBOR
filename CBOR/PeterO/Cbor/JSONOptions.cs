@@ -8,7 +8,8 @@ namespace PeterO.Cbor {
     public sealed class JSONOptions {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.JSONOptions.#ctor"]/*'/>
-    public JSONOptions() : this(false) {}
+    public JSONOptions() : this(false) {
+}
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.JSONOptions.#ctor(System.Boolean)"]/*'/>

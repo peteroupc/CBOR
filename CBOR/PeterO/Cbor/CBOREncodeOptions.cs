@@ -6,7 +6,7 @@ namespace PeterO.Cbor {
   public sealed class CBOREncodeOptions {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="F:PeterO.Cbor.CBOREncodeOptions.None"]/*'/>
-  [Obsolete("Use 'new CBOREncodeOptions(true,true)' instead. Option classes in this library will follow the form seen in JSONOptions in a later version; the approach used in this class is too complicated.  'CBOREncodeOptions.Default' contains recommended default options that may be adopted by certain CBORObject methods in the next major version.")]
+  [Obsolete("Use 'new CBOREncodeOptions(true,true)' instead. Option classes in this library will follow the form seen in JSONOptions in a later version; the approach used in this class is too complicated. 'CBOREncodeOptions.Default' contains recommended default options that may be adopted by certain CBORObject methods in the next major version.")]
     public static readonly CBOREncodeOptions None =
       new CBOREncodeOptions(0);
 
@@ -17,13 +17,13 @@ namespace PeterO.Cbor {
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="F:PeterO.Cbor.CBOREncodeOptions.NoIndefLengthStrings"]/*'/>
-  [Obsolete("Use  'new CBOREncodeOptions(false,true)' instead. Option classes in this library will follow the form seen in JSONOptions in a later version; the approach used in this class is too complicated.")]
+  [Obsolete("Use 'new CBOREncodeOptions(false,true)' instead. Option classes in this library will follow the form seen in JSONOptions in a later version; the approach used in this class is too complicated.")]
     public static readonly CBOREncodeOptions NoIndefLengthStrings =
       new CBOREncodeOptions(1);
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="F:PeterO.Cbor.CBOREncodeOptions.NoDuplicateKeys"]/*'/>
-  [Obsolete("Use  'new CBOREncodeOptions(true,false)' instead. Option classes in this library will follow the form seen in JSONOptions in a later version; the approach used in this class is too complicated.")]
+  [Obsolete("Use 'new CBOREncodeOptions(true,false)' instead. Option classes in this library will follow the form seen in JSONOptions in a later version; the approach used in this class is too complicated.")]
     public static readonly CBOREncodeOptions NoDuplicateKeys =
       new CBOREncodeOptions(2);
 
@@ -31,18 +31,20 @@ namespace PeterO.Cbor {
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBOREncodeOptions.#ctor"]/*'/>
-    public CBOREncodeOptions() : this(false, false) {}
+    public CBOREncodeOptions() : this(false, false) {
+}
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBOREncodeOptions.#ctor(System.Boolean,System.Boolean)"]/*'/>
-    public CBOREncodeOptions(bool useIndefLengthStrings, bool
-      allowDuplicateKeys) {
+    public CBOREncodeOptions(
+  bool useIndefLengthStrings,
+  bool allowDuplicateKeys) {
       var val = 0;
       if (!useIndefLengthStrings) {
- val|=1;
+ val |= 1;
 }
       if (!allowDuplicateKeys) {
- val|=2;
+ val |= 2;
 }
       this.value = val;
     }
