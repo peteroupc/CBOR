@@ -72,8 +72,12 @@ namespace PeterO.Cbor {
         private static bool HasCustomAttribute (
   Type t,
   string name) {
-            foreach (var attr in t.CustomAttributes) {
-                DebugUtility.Log (attr.AttributeType.GetType ().FullName);
+#if NET40
+      foreach (var attr in t.GetCustomAttributes(false)) {
+#else
+    foreach (var attr in t.CustomAttributes) {
+#endif
+        //DebugUtility.Log (attr.AttributeType.GetType ().FullName);
                 if (attr.GetType ().FullName.Equals (name)) {
                     return true;
                 }
@@ -81,7 +85,7 @@ namespace PeterO.Cbor {
             return false;
         }
 #else
-    private static IEnumerable<PropertyInfo> GetTypeProperties(Type t) {
+      private static IEnumerable<PropertyInfo> GetTypeProperties(Type t) {
       return t.GetRuntimeProperties();
     }
 
@@ -105,7 +109,7 @@ namespace PeterO.Cbor {
 
 #endif
 
-        private static readonly IDictionary<Type, IList<PropertyData>>
+    private static readonly IDictionary<Type, IList<PropertyData>>
       ValuePropertyLists = new Dictionary<Type, IList<PropertyData>>();
 
     private static IList<PropertyData> GetPropertyList(Type t) {

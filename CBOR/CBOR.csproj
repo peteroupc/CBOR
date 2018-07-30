@@ -60,6 +60,6 @@ Version 3.2
     </CustomCommands>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="PeterO.Numbers" Version="1.1.0" />
+    <PackageReference Include="PeterO.Numbers" Version="1.1.1" />
   </ItemGroup>
 </Project>
