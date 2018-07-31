@@ -15,7 +15,7 @@ namespace PeterO {
       Type t,
       string name,
       Type[] parameters) {
-#if NET40
+#if NET40 || NET20
       return t.GetMethod(name, parameters);
 #else
 {

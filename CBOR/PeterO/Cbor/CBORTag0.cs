@@ -10,7 +10,7 @@ using System;
 namespace PeterO.Cbor {
   internal class CBORTag0 : ICBORTag, ICBORConverter<DateTime> {
     private static string DateTimeToString(DateTime bi) {
-#if NET40
+#if NET20
       DateTime dt = bi.ToUniversalTime();
 #else
  DateTime dt = TimeZoneInfo.ConvertTime(bi, TimeZoneInfo.Utc);

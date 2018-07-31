@@ -1189,6 +1189,14 @@ string str1817 = "[0,1,2,3,4,5,6,7]";
       }
     }
 
+[Test]
+public void TestOverlongSimpleValues(){
+ for(var i=0;i<=0x1f;i++){
+  byte[] bytes=new byte[]{ (byte)0xf8, (byte)i };
+  Assert.Throws<CBORException>(()=>CBORObject.DecodeFromBytes(bytes));
+ }
+}
+
     [Test]
     public void TestTags264And265() {
       CBORObject cbor;
