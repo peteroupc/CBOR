@@ -856,7 +856,7 @@
 <doc name="M:PeterO.Cbor.CBORObject.FromJSONString(System.String,PeterO.Cbor.CBOREncodeOptions)">
 <summary>Generates a CBOR object from a text string in JavaScript
             Object Notation (JSON) format, using the specified options
-to control the decoding proces.
+to control the decoding process.
             <para>By default, if a JSON object has the same key, only the last
             given value will be used for each duplicated key.</para></summary>
             <param name='str'>A string in JSON format. The entire string must

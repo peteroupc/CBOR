@@ -1160,7 +1160,7 @@ The string is not in JSON format.
         string str,
         PeterO.Cbor.CBOREncodeOptions options);
 
-Generates a CBOR object from a text string in JavaScript Object Notation (JSON) format, using the specified options to control the decoding proces.By default, if a JSON object has the same key, only the last given value will be used for each duplicated key.
+Generates a CBOR object from a text string in JavaScript Object Notation (JSON) format, using the specified options to control the decoding process.By default, if a JSON object has the same key, only the last given value will be used for each duplicated key.
 
 <b>Parameters:</b>
 
@@ -2469,6 +2469,10 @@ Converts this object to a string in JavaScript Object Notation (JSON) format, us
 <b>Return Value:</b>
 
 A text string containing the converted object.
+
+<b>Return Value:</b>
+
+Not documented yet.
 
 ### ToString
 

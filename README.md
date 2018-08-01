@@ -237,7 +237,6 @@ Release Notes
 
 - Add .NET Framework 4.0 targeted assembly to avoid compiler warnings that can appear when this package is added to a project that targets .NET Framework 4.0 or later.
 
-
 ### Version 3.2
 
 - Added build targeting the .NET Framework 2.0
