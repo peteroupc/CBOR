@@ -2690,7 +2690,8 @@ given options to control the encoding process.</summary>
             if <paramref name='index'/> is less than 0, or is the string's
             length or greater. Returns the replacement character (U+FFFD) if
             the current character is an unpaired surrogate code
-            point.</returns>
+            point. <b>NOTE:</b> If the return value is 65536 (0x10000) or greater,
+this indicates a supplemental code point that takes up two <c>char</c>s rather than one.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='str'/> is null.</exception>
 </doc>
@@ -2708,7 +2709,8 @@ given options to control the encoding process.</summary>
             <returns>The Unicode code point at the current position. Returns -1
             if <paramref name='index'/> is less than 0, or is the string's
             length or greater. Returns a value as specified under <paramref name='surrogateBehavior'/> if the previous character is an unpaired
-            surrogate code point.</returns>
+            surrogate code point. <b>NOTE:</b> If the return value is 65536 (0x10000) or greater,
+this indicates a supplemental code point that takes up two <c>char</c>s rather than one.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='str'/> is null.</exception>
 </doc>
@@ -2721,7 +2723,8 @@ given options to control the encoding process.</summary>
             <returns>The Unicode code point at the previous position. Returns
             -1 if <paramref name='index'/> is 0 or less, or is greater than the
             string's length. Returns the replacement character (U+FFFD) if the
-            previous character is an unpaired surrogate code point.</returns>
+            previous character is an unpaired surrogate code point. <b>NOTE:</b> If the return value is 65536 (0x10000) or greater,
+this indicates a supplemental code point that takes up two <c>char</c>s rather than one.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='str'/> is null.</exception>
 </doc>
@@ -2739,7 +2742,8 @@ given options to control the encoding process.</summary>
             <returns>The Unicode code point at the previous position. Returns
             -1 if <paramref name='index'/> is 0 or less, or is greater than the
             string's length. Returns a value as specified under <paramref name='surrogateBehavior'/> if the previous character is an unpaired
-            surrogate code point.</returns>
+            surrogate code point. <b>NOTE:</b> If the return value is 65536 (0x10000) or greater,
+this indicates a supplemental code point that takes up two <c>char</c>s rather than one.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='str'/> is null.</exception>
 </doc>

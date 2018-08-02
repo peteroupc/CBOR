@@ -24,7 +24,7 @@ Gets the Unicode code point at the given index of the string.
 <b>Return Value:</b>
 
 The Unicode code point at the given position. Returns -1 if  <i>index</i>
- is less than 0, or is the string's length or greater. Returns the replacement character (U+FFFD) if the current character is an unpaired surrogate code point.
+ is less than 0, or is the string's length or greater. Returns the replacement character (U+FFFD) if the current character is an unpaired surrogate code point. <b>NOTE:</b> If the return value is 65536 (0x10000) or greater, this indicates a supplemental code point that takes up two  `char` s rather than one.
 
 <b>Exceptions:</b>
 
@@ -54,7 +54,7 @@ Gets the Unicode code point at the given index of the string.
 
 The Unicode code point at the current position. Returns -1 if  <i>index</i>
  is less than 0, or is the string's length or greater. Returns a value as specified under  <i>surrogateBehavior</i>
- if the previous character is an unpaired surrogate code point.
+ if the previous character is an unpaired surrogate code point. <b>NOTE:</b> If the return value is 65536 (0x10000) or greater, this indicates a supplemental code point that takes up two  `char` s rather than one.
 
 <b>Exceptions:</b>
 
@@ -80,7 +80,7 @@ Gets the Unicode code point just before the given index of the string.
 <b>Return Value:</b>
 
 The Unicode code point at the previous position. Returns -1 if  <i>index</i>
- is 0 or less, or is greater than the string's length. Returns the replacement character (U+FFFD) if the previous character is an unpaired surrogate code point.
+ is 0 or less, or is greater than the string's length. Returns the replacement character (U+FFFD) if the previous character is an unpaired surrogate code point. <b>NOTE:</b> If the return value is 65536 (0x10000) or greater, this indicates a supplemental code point that takes up two  `char` s rather than one.
 
 <b>Exceptions:</b>
 
@@ -110,7 +110,7 @@ Gets the Unicode code point just before the given index of the string.
 
 The Unicode code point at the previous position. Returns -1 if  <i>index</i>
  is 0 or less, or is greater than the string's length. Returns a value as specified under  <i>surrogateBehavior</i>
- if the previous character is an unpaired surrogate code point.
+ if the previous character is an unpaired surrogate code point. <b>NOTE:</b> If the return value is 65536 (0x10000) or greater, this indicates a supplemental code point that takes up two  `char` s rather than one.
 
 <b>Exceptions:</b>
 

@@ -258,7 +258,8 @@ using System.Text;
         ((c & 0x7F) == c && "/?-._~:@!$&'()*+,;=".IndexOf((char)c) >= 0) ||
         (c >= 0xa0 && c <= 0xd7ff) || (c >= 0xf900 && c <= 0xfdcf) ||
         (c >= 0xfdf0 && c <= 0xffef) ||
-        (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
+        (c >= 0xe1000 && c <= 0xefffd) || (c >= 0x10000 && c <= 0xdfffd && (c&
+          0xfffe) != 0xfffe);
     }
 
     private static bool isIpchar(int c) {
@@ -268,7 +269,8 @@ using System.Text;
         ((c & 0x7F) == c && "/-._~:@!$&'()*+,;=".IndexOf((char)c) >= 0) ||
         (c >= 0xa0 && c <= 0xd7ff) || (c >= 0xf900 && c <= 0xfdcf) ||
         (c >= 0xfdf0 && c <= 0xffef) ||
-        (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
+        (c >= 0xe1000 && c <= 0xefffd) || (c >= 0x10000 && c <= 0xdfffd && (c&
+          0xfffe) != 0xfffe);
     }
 
     private static bool isIqueryChar(int c) {
@@ -278,7 +280,8 @@ using System.Text;
         ((c & 0x7F) == c && "/?-._~:@!$&'()*+,;=".IndexOf((char)c) >= 0) ||
         (c >= 0xa0 && c <= 0xd7ff) || (c >= 0xe000 && c <= 0xfdcf) ||
         (c >= 0xfdf0 && c <= 0xffef) ||
-        (c >= 0x10000 && c <= 0x10fffd && (c & 0xfffe) != 0xfffe);
+        (c >= 0x10000 && c <= 0x10fffd && (c & 0xfffe) != 0xfffe &&
+           !(c >= 0xe0000 && c <= 0xe0fff));
     }
 
     private static bool isIRegNameChar(int c) {
@@ -288,7 +291,8 @@ using System.Text;
         ((c & 0x7F) == c && "-._~!$&'()*+,;=".IndexOf((char)c) >= 0) ||
         (c >= 0xa0 && c <= 0xd7ff) || (c >= 0xf900 && c <= 0xfdcf) ||
         (c >= 0xfdf0 && c <= 0xffef) ||
-        (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
+        (c >= 0xe1000 && c <= 0xefffd) || (c >= 0x10000 && c <= 0xdfffd && (c&
+          0xfffe) != 0xfffe);
     }
 
     private static bool isIUserInfoChar(int c) {
@@ -298,7 +302,8 @@ using System.Text;
         ((c & 0x7F) == c && "-._~:!$&'()*+,;=".IndexOf((char)c) >= 0) ||
         (c >= 0xa0 && c <= 0xd7ff) || (c >= 0xf900 && c <= 0xfdcf) ||
         (c >= 0xfdf0 && c <= 0xffef) ||
-        (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
+        (c >= 0xe1000 && c <= 0xefffd) || (c >= 0x10000 && c <= 0xdfffd && (c&
+          0xfffe) != 0xfffe);
     }
 
     /// <include file='../../docs.xml'

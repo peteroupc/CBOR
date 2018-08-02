@@ -9,5 +9,5 @@ using System.Reflection;
   [assembly:AssemblyDescription("A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049.")]
 [assembly:AssemblyCompany("Peter Occil")]
 
-  [assembly:AssemblyCopyright("http://creativecommons.org/publicdomain/zero/1.0/"
-)]
+  [assembly:AssemblyCopyright(
+  "http://creativecommons.org/publicdomain/zero/1.0/")]
