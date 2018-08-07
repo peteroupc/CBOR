@@ -2516,6 +2516,11 @@ given options to control the encoding process.</summary>
             code points outside the Basic Latin range (U+0000 to U+007F)
             are not allowed.</summary>
 </doc>
+<doc name="M:PeterO.Cbor.URIUtility.PercentDecode(System.String)">
+<summary>Not documented yet.</summary>
+            <param name='str'>The parameter <paramref name='str'/> is not documented yet.</param>
+            <returns>A text string.</returns>
+</doc>
 <doc name="M:PeterO.Cbor.URIUtility.escapeURI(System.String,System.Int32)">
 <summary>Escapes characters that can't appear in URIs or IRIs. The
             function is idempotent; that is, calling the function again on the
@@ -2617,7 +2622,7 @@ given options to control the encoding process.</summary>
             <returns>If the string is a valid IRI reference, returns an array
             of 10 integers. Each of the five pairs corresponds to the start and
             end index of the IRI's scheme, authority, path, query, or fragment
-            component, respectively. If a component is absent, both indices in
+            component, respectively.  The scheme, authority, query, and fragment components, if present, will each be given without the ending colon, the starting "//", the starting "?", and the starting "#", respectively. If a component is absent, both indices in
             that pair will be -1. If the string is null or is not a valid IRI,
             returns null.</returns>
 </doc>
@@ -2631,7 +2636,7 @@ given options to control the encoding process.</summary>
             <returns>If the string is a valid IRI reference, returns an array
             of 10 integers. Each of the five pairs corresponds to the start and
             end index of the IRI's scheme, authority, path, query, or fragment
-            component, respectively. If a component is absent, both indices in
+            component, respectively.  The scheme, authority, query, and fragment components, if present, will each be given without the ending colon, the starting "//", the starting "?", and the starting "#", respectively. If a component is absent, both indices in
             that pair will be -1. If the string is null or is not a valid IRI,
             returns null.</returns>
 </doc>
@@ -2651,7 +2656,7 @@ given options to control the encoding process.</summary>
             <returns>If the string is a valid IRI, returns an array of 10
             integers. Each of the five pairs corresponds to the start and end
             index of the IRI's scheme, authority, path, query, or fragment
-            component, respectively. If a component is absent, both indices in
+            component, respectively.  The scheme, authority, query, and fragment components, if present, will each be given without the ending colon, the starting "//", the starting "?", and the starting "#", respectively. If a component is absent, both indices in
             that pair will be -1 (an index won't be less than 0 in any other
             case). If the string is null or is not a valid IRI, returns
             null.</returns>

@@ -75,7 +75,7 @@ using System.Text;
   segments[5] - segments[4])));
     }
 
-    private static void appendPath(
+    private static void AppendPath(
   StringBuilder builder,
   string refValue,
   int[] segments) {
@@ -251,6 +251,150 @@ using System.Text;
         (c >= 'A' && c <= 'F') || (c >= '0' && c <= '9');
     }
 
+    private static int ToHex(char b1) {
+      if (b1 >= '0' && b1 <= '9') {
+        return b1 - '0';
+      } else if (b1 >= 'A' && b1 <= 'F') {
+        return b1 + 10 - 'A';
+      } else {
+        return (b1 >= 'a' && b1 <= 'f') ? (b1 + 10 - 'a') : 1;
+      }
+    }
+
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.PercentDecode(System.String)"]/*'/>
+    public static string PercentDecode(string str) {
+      // Quick check
+      var quickCheck = true;
+      var lastIndex = 0;
+      for (var i = 0; i < str.Length; ++i) {
+        if (str[i] >= 0xd800 || str[i] == '%') {
+          quickCheck = false;
+          lastIndex = i;
+          break;
+        }
+      }
+      if (quickCheck) {
+ return str;
+}
+      var retString = new StringBuilder();
+      retString.Append(str, 0, lastIndex);
+      var cp = 0;
+      var bytesSeen = 0;
+      var bytesNeeded = 0;
+      var lower = 0x80;
+      var upper = 0xbf;
+      var markedPos = -1;
+      for (var i = lastIndex; i < str.Length; ++i) {
+        int c = str[i];
+        if ((c & 0xfc00) == 0xd800 && i + 1 < str.Length &&
+            str[i + 1] >= 0xdc00 && str[i + 1] <= 0xdfff) {
+          // Get the Unicode code point for the surrogate pair
+          c = 0x10000 + ((c - 0xd800) << 10) + (str[i + 1] - 0xdc00);
+          ++i;
+        } else if ((c & 0xf800) == 0xd800) {
+          c = 0xfffd;
+        }
+        if (c == '%') {
+          if (i + 2 < str.Length) {
+            int a = ToHex(str[i + 1]);
+            int b = ToHex(str[i + 2]);
+            if (a >= 0 && b >= 0) {
+              b = (byte)(a * 16 + b);
+              i += 2;
+              // b now contains the byte read
+              if (bytesNeeded == 0) {
+                // this is the lead byte
+                if (b < 0x80) {
+                  retString.Append((char)b);
+                  continue;
+                } else if (b >= 0xc2 && b <= 0xdf) {
+                  markedPos = i;
+                  bytesNeeded = 1;
+                  cp = b - 0xc0;
+                } else if (b >= 0xe0 && b <= 0xef) {
+                  markedPos = i;
+                  lower = (b == 0xe0) ? 0xa0 : 0x80;
+                  upper = (b == 0xed) ? 0x9f : 0xbf;
+                  bytesNeeded = 2;
+                  cp = b - 0xe0;
+                } else if (b >= 0xf0 && b <= 0xf4) {
+                  markedPos = i;
+                  lower = (b == 0xf0) ? 0x90 : 0x80;
+                  upper = (b == 0xf4) ? 0x8f : 0xbf;
+                  bytesNeeded = 3;
+                  cp = b - 0xf0;
+                } else {
+                  // illegal byte in UTF-8
+                  retString.Append('\uFFFD');
+                  continue;
+                }
+                cp <<= 6 * bytesNeeded;
+                continue;
+              } else {
+                // this is a second or further byte
+                if (b < lower || b > upper) {
+                  // illegal trailing byte
+                  cp = bytesNeeded = bytesSeen = 0;
+                  lower = 0x80;
+                  upper = 0xbf;
+                  i = markedPos;  // reset to the last marked position
+                  retString.Append('\uFFFD');
+                  continue;
+                }
+                // reset lower and upper for the third
+                // and further bytes
+                lower = 0x80;
+                upper = 0xbf;
+                ++bytesSeen;
+                cp += (b - 0x80) << (6 * (bytesNeeded - bytesSeen));
+                markedPos = i;
+                if (bytesSeen != bytesNeeded) {
+                  // continue if not all bytes needed
+                  // were read yet
+                  continue;
+                }
+                int ret = cp;
+                cp = 0;
+                bytesSeen = 0;
+                bytesNeeded = 0;
+                // append the Unicode character
+                if (ret <= 0xffff) {
+  { retString.Append((char)ret);
+} } else {
+              retString.Append((char)((((ret - 0x10000) >> 10) &
+                    0x3ff) + 0xd800));
+                  retString.Append((char)(((ret - 0x10000) & 0x3ff) + 0xdc00));
+                }
+                continue;
+              }
+            }
+          }
+        }
+        if (bytesNeeded > 0) {
+          // we expected further bytes here,
+          // so emit a replacement character instead
+          bytesNeeded = 0;
+          retString.Append('\uFFFD');
+        }
+        // append the code point as is
+        if (c <= 0xffff) {
+  { retString.Append((char)c);
+}
+  } else if (c <= 0x10ffff) {
+retString.Append((char)((((c - 0x10000) >> 10) & 0x3ff) + 0xd800));
+retString.Append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
+}
+      }
+      if (bytesNeeded > 0) {
+        // we expected further bytes here,
+        // so emit a replacement character instead
+        bytesNeeded = 0;
+        retString.Append('\uFFFD');
+      }
+      return retString.ToString();
+      }
+
     private static bool isIfragmentChar(int c) {
       // '%' omitted
       return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
@@ -258,7 +402,7 @@ using System.Text;
         ((c & 0x7F) == c && "/?-._~:@!$&'()*+,;=".IndexOf((char)c) >= 0) ||
         (c >= 0xa0 && c <= 0xd7ff) || (c >= 0xf900 && c <= 0xfdcf) ||
         (c >= 0xfdf0 && c <= 0xffef) ||
-        (c >= 0xe1000 && c <= 0xefffd) || (c >= 0x10000 && c <= 0xdfffd && (c&
+        (c >= 0xe1000 && c <= 0xefffd) || (c >= 0x10000 && c <= 0xdfffd && (c &
           0xfffe) != 0xfffe);
     }
 
@@ -269,7 +413,7 @@ using System.Text;
         ((c & 0x7F) == c && "/-._~:@!$&'()*+,;=".IndexOf((char)c) >= 0) ||
         (c >= 0xa0 && c <= 0xd7ff) || (c >= 0xf900 && c <= 0xfdcf) ||
         (c >= 0xfdf0 && c <= 0xffef) ||
-        (c >= 0xe1000 && c <= 0xefffd) || (c >= 0x10000 && c <= 0xdfffd && (c&
+        (c >= 0xe1000 && c <= 0xefffd) || (c >= 0x10000 && c <= 0xdfffd && (c &
           0xfffe) != 0xfffe);
     }
 
@@ -291,7 +435,7 @@ using System.Text;
         ((c & 0x7F) == c && "-._~!$&'()*+,;=".IndexOf((char)c) >= 0) ||
         (c >= 0xa0 && c <= 0xd7ff) || (c >= 0xf900 && c <= 0xfdcf) ||
         (c >= 0xfdf0 && c <= 0xffef) ||
-        (c >= 0xe1000 && c <= 0xefffd) || (c >= 0x10000 && c <= 0xdfffd && (c&
+        (c >= 0xe1000 && c <= 0xefffd) || (c >= 0x10000 && c <= 0xdfffd && (c &
           0xfffe) != 0xfffe);
     }
 
@@ -302,7 +446,7 @@ using System.Text;
         ((c & 0x7F) == c && "-._~:!$&'()*+,;=".IndexOf((char)c) >= 0) ||
         (c >= 0xa0 && c <= 0xd7ff) || (c >= 0xf900 && c <= 0xfdcf) ||
         (c >= 0xfdf0 && c <= 0xffef) ||
-        (c >= 0xe1000 && c <= 0xefffd) || (c >= 0x10000 && c <= 0xdfffd && (c&
+        (c >= 0xe1000 && c <= 0xefffd) || (c >= 0x10000 && c <= 0xdfffd && (c &
           0xfffe) != 0xfffe);
     }
 
@@ -830,7 +974,7 @@ using System.Text;
       } else if (segments[4] == segments[5]) {
         appendScheme(builder, baseURI, segmentsBase);
         appendAuthority(builder, baseURI, segmentsBase);
-        appendPath(builder, baseURI, segmentsBase);
+        AppendPath(builder, baseURI, segmentsBase);
         if (segments[6] >= 0) {
           appendQuery(builder, refValue, segments);
         } else {
@@ -846,7 +990,7 @@ using System.Text;
           var merged = new StringBuilder();
           if (segmentsBase[2] >= 0 && segmentsBase[4] == segmentsBase[5]) {
             merged.Append('/');
-            appendPath(merged, refValue, segments);
+            AppendPath(merged, refValue, segments);
             builder.Append(normalizePath(merged.ToString()));
           } else {
             merged.Append(
@@ -854,7 +998,7 @@ using System.Text;
   baseURI,
   segmentsBase[4],
   segmentsBase[5]));
-            appendPath(merged, refValue, segments);
+            AppendPath(merged, refValue, segments);
             builder.Append(normalizePath(merged.ToString()));
           }
         }
@@ -862,6 +1006,49 @@ using System.Text;
         appendFragment(builder, refValue, segments);
       }
       return builder.ToString();
+    }
+
+    private static string ToLowerCaseAscii(string str) {
+      if (str == null) {
+        return null;
+      }
+      var len = str.Length;
+      var c = (char)0;
+      var hasUpperCase = false;
+      for (var i = 0; i < len; ++i) {
+        c = str[i];
+        if (c >= 'A' && c <= 'Z') {
+          hasUpperCase = true;
+          break;
+        }
+      }
+      if (!hasUpperCase) {
+        return str;
+      }
+      var builder = new StringBuilder();
+      for (var i = 0; i < len; ++i) {
+        c = str[i];
+        if (c >= 'A' && c <= 'Z') {
+          builder.Append((char)(c + 0x20));
+        } else {
+          builder.Append(c);
+        }
+      }
+      return builder.ToString();
+    }
+
+    public static string[] splitIRIToStrings(string s) {
+      int[] ret = splitIRI(s);
+if (ret == null) {
+ return null;
+}
+return new string[] {
+ ret[0] < 0 ? null : ToLowerCaseAscii(s.Substring(ret[0], ret[1] - ret[0])),
+ ret[2] < 0 ? null : s.Substring(ret[2], ret[3] - ret[2]),
+ ret[4] < 0 ? null : s.Substring(ret[4], ret[5] - ret[4]),
+ ret[6] < 0 ? null : s.Substring(ret[6], ret[7] - ret[6]),
+ ret[8] < 0 ? null : s.Substring(ret[8], ret[9] - ret[8])
+};
     }
 
     /// <include file='../../docs.xml'
