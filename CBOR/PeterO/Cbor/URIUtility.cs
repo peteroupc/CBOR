@@ -535,6 +535,83 @@ retString.Append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
       return true;
     }
 
+public static string BuildIRI(
+  string schemeAndAuthority,
+  string path,
+  string query,
+  string fragment) {
+  var builder = new StringBuilder();
+  if (!String.IsNullOrEmpty(schemeAndAuthority)) {
+    int[] irisplit = splitIRI(schemeAndAuthority);
+     // TODO: Figure out behavior with path component in
+     // URIs like "s://h" or "s://" or "s:" or "//h"
+    if (irisplit == null || (irisplit[0] < 0 && irisplit[2] < 0) ||
+      irisplit[4] >= 0 || irisplit[6] >= 0 || irisplit[8] >= 0) {
+ throw new ArgumentException("invalid schemeAndAuthority");
+}
+  }
+  if (String.IsNullOrEmpty(path)) {
+ path = String.Empty;
+}
+  for (var phase = 0; phase < 3; ++phase) {
+    string s = path;
+    if (phase == 1) {
+      s = query;
+      if (query == null) {
+ continue;
+}
+      builder.Append('?');
+    } else if (phase == 2) {
+      s = fragment;
+      if (fragment == null) {
+ continue;
+}
+      builder.Append('#');
+    }
+      var index = 0;
+      while (index < s.Length) {
+        int c = s[index];
+        if ((c & 0xfc00) == 0xd800 && index + 1 < s.Length &&
+            s[index + 1] >= 0xdc00 && s[index + 1] <= 0xdfff) {
+          // Get the Unicode code point for the surrogate pair
+          c = 0x10000 + ((c - 0xd800) << 10) + (s[index + 1] - 0xdc00);
+        } else if ((c & 0xf800) == 0xd800) {
+          c = 0xfffd;
+        }
+        if (c >= 0x10000) {
+ ++index;
+}
+        if (c == '%') {
+          if (index + 2 < s.Length && isHexChar(s[index + 1]) &&
+            isHexChar(s[index + 2])) {
+            builder.Append('%');
+            builder.Append(s[index + 1]);
+            builder.Append(s[index + 2]);
+            index += 3;
+          } else {
+            builder.Append("%25");
+            ++index;
+          }
+        } else if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
+            (c >= '0' && c <= '9') ||
+            "-_.~/(=):!$&'*+,;@".IndexOf((char)c) >= 0) {
+          // NOTE: Question mark will be percent encoded even though
+          // it can appear in query and fragment strings
+          builder.Append((char)c);
+          ++index;
+        } else {
+          percentEncodeUtf8(builder, c);
+          ++index;
+        }
+      }
+  }
+  string ret = builder.ToString();
+  if (splitIRI(ret) == null) {
+ throw new ArgumentException();
+}
+  return ret;
+}
+
     public static bool isValidIRI(string s) {
       return ((s == null) ?
   null : splitIRI(
@@ -850,6 +927,7 @@ retString.Append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
               s[index + 2] == '5') {
             // Zone identifier in an IPv6 address
             // (see RFC6874)
+            // TODO: Allow only if address has prefix fe80::/10
             index += 3;
             var haveChar = false;
             while (index < endOffset) {

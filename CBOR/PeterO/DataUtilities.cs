@@ -265,6 +265,37 @@ namespace PeterO {
     }
 
     /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.DataUtilities.ToUpperCaseAscii(System.String)"]/*'/>
+    public static string ToUpperCaseAscii(string str) {
+      if (str == null) {
+        return null;
+      }
+      var len = str.Length;
+      var c = (char)0;
+      var hasLowerCase = false;
+      for (var i = 0; i < len; ++i) {
+        c = str[i];
+        if (c >= 'a' && c <= 'z') {
+          hasLowerCase = true;
+          break;
+        }
+      }
+      if (!hasLowerCase) {
+        return str;
+      }
+      var builder = new StringBuilder();
+      for (var i = 0; i < len; ++i) {
+        c = str[i];
+        if (c >= 'a' && c <= 'z') {
+          builder.Append((char)(c - 0x20));
+        } else {
+          builder.Append(c);
+        }
+      }
+      return builder.ToString();
+    }
+
+    /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.DataUtilities.CodePointCompare(System.String,System.String)"]/*'/>
     public static int CodePointCompare(string strA, string strB) {
       if (strA == null) {

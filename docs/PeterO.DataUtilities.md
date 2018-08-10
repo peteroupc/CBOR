@@ -439,6 +439,23 @@ Returns a string with the basic upper-case letters A to Z (U+0041 to U+005A) con
 The converted string, or null if  <i>str</i>
  is null.
 
+### ToUpperCaseAscii
+
+    public static string ToUpperCaseAscii(
+        string str);
+
+Returns a string with the basic lower-case letters A to Z (U+0061 to U+007A) converted to upper-case. Other characters remain unchanged.
+
+<b>Parameters:</b>
+
+ * <i>str</i>: The parameter  <i>str</i>
+ is a text string.
+
+<b>Return Value:</b>
+
+The converted string, or null if  <i>str</i>
+ is null.
+
 ### WriteUtf8
 
     public static int WriteUtf8(

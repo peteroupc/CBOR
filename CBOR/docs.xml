@@ -688,6 +688,9 @@
             <returns><c>true</c> if this object's value, truncated to an
             integer, would be -(2^63) or greater, and less than 2^63; otherwise, <c>false</c>.</returns>
 </doc>
+<doc name="M:PeterO.Cbor.CBORObject.Clear">
+<summary/>
+</doc>
 <doc name="M:PeterO.Cbor.CBORObject.CompareTo(PeterO.Cbor.CBORObject)">
 <summary>Compares two CBOR objects.
             <para>In this implementation:</para>
@@ -1526,6 +1529,14 @@ to control the decoding process. The JSON stream may begin with a
             CBORObject.Null).</exception>
             <exception cref='T:System.InvalidOperationException'>The object is
             not an array or map.</exception>
+</doc>
+<doc name="M:PeterO.Cbor.CBORObject.Remove(System.Object)">
+<summary>Not documented yet.</summary>
+            <param name='obj'>The parameter <paramref name='obj'/> is not documented yet.</param>
+            <returns>Either <c>true</c> or <c>false</c>.</returns>
+</doc>
+<doc name="M:PeterO.Cbor.CBORObject.RemoveAt(System.Int32)">
+<summary/>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Set(System.Object,System.Object)">
 <summary>Maps an object to a key in this CBOR map, or adds the
@@ -2517,9 +2528,9 @@ given options to control the encoding process.</summary>
             are not allowed.</summary>
 </doc>
 <doc name="M:PeterO.Cbor.URIUtility.PercentDecode(System.String)">
-<summary>Not documented yet.</summary>
-            <param name='str'>The parameter <paramref name='str'/> is not documented yet.</param>
-            <returns>A text string.</returns>
+
+            <summary>Not documented yet.</summary><param name='str'>The parameter <paramref name='str'/> is not documented yet.</param><returns>A text string.</returns>
+
 </doc>
 <doc name="M:PeterO.Cbor.URIUtility.escapeURI(System.String,System.Int32)">
 <summary>Escapes characters that can't appear in URIs or IRIs. The
@@ -2919,6 +2930,14 @@ this indicates a supplemental code point that takes up two <c>char</c>s rather t
 <doc name="M:PeterO.DataUtilities.ToLowerCaseAscii(System.String)">
 <summary>Returns a string with the basic upper-case letters A to Z
             (U+0041 to U+005A) converted to lower-case. Other characters
+            remain unchanged.</summary>
+            <param name='str'>The parameter <paramref name='str'/> is a text string.</param>
+            <returns>The converted string, or null if <paramref name='str'/> is
+            null.</returns>
+</doc>
+<doc name="M:PeterO.DataUtilities.ToUpperCaseAscii(System.String)">
+<summary>Returns a string with the basic lower-case letters A to Z
+            (U+0061 to U+007A) converted to upper-case. Other characters
             remain unchanged.</summary>
             <param name='str'>The parameter <paramref name='str'/> is a text string.</param>
             <returns>The converted string, or null if <paramref name='str'/> is

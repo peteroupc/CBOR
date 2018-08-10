@@ -8,8 +8,6 @@ at: http://peteroupc.github.io/
 using System;
 
 namespace PeterO.Cbor {
-  // TODO: Uses Uri class which requires the System
-  // assembly for .NET Framework 2.0.
   internal class CBORTag32 : ICBORTag, ICBORConverter<Uri>
   {
     public CBORTypeFilter GetTypeFilter() {

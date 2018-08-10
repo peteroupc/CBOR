@@ -896,6 +896,10 @@ Returns whether this object's value, truncated to an integer, would be -(2^63) o
 
  `true`  if this object's value, truncated to an integer, would be -(2^63) or greater, and less than 2^63; otherwise,  `false` .
 
+### Clear
+
+    public void Clear();
+
 ### CompareTo
 
     public sealed int CompareTo(
@@ -2326,6 +2330,22 @@ The remainder of the two numbers.
 ### Remove
 
     public bool Remove(
+        object obj);
+
+Not documented yet.
+
+<b>Parameters:</b>
+
+ * <i>obj</i>: The parameter  <i>obj</i>
+ is not documented yet.
+
+<b>Return Value:</b>
+
+Either  `true`  or  `false` .
+
+### Remove
+
+    public bool Remove(
         PeterO.Cbor.CBORObject obj);
 
 If this object is an array, removes the first instance of the specified item from the array. If this object is a map, removes the item with the given key from the map.
@@ -2346,6 +2366,11 @@ The parameter <i>obj</i>
 
  * System.InvalidOperationException:
 The object is not an array or map.
+
+### RemoveAt
+
+    public bool RemoveAt(
+        int index);
 
 ### Set
 

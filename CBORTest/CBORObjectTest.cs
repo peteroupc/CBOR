@@ -85,8 +85,8 @@ namespace Test {
           }
           ret += x;
         } else {
-              throw new FormatException();
-}
+          throw new FormatException();
+        }
       }
       return neg ? -ret : ret;
     }
@@ -124,8 +124,8 @@ namespace Test {
           }
           ret += x;
         } else {
-              throw new FormatException();
-}
+          throw new FormatException();
+        }
       }
       return neg ? -ret : ret;
     }
@@ -136,11 +136,11 @@ namespace Test {
   string p1,
   string p2,
   string p3) {
-       CBORObjectTest.CheckPropertyNames(
-  CBORObject.FromObject(ao, cc),
-  p1,
-  p2,
-  p3);
+      CBORObjectTest.CheckPropertyNames(
+ CBORObject.FromObject(ao, cc),
+ p1,
+ p2,
+ p3);
     }
 
     internal static void CheckArrayPropertyNames(
@@ -149,12 +149,12 @@ namespace Test {
   string p1,
   string p2,
   string p3) {
-            Assert.AreEqual(CBORType.Array, co.Type);
-            Assert.AreEqual(expectedCount, co.Count);
-            for (var i = 0; i < co.Count; ++i) {
-             CBORObjectTest.CheckPropertyNames(co[i], p1, p2, p3);
-            }
-            CBORTestCommon.AssertRoundTrip(co);
+      Assert.AreEqual(CBORType.Array, co.Type);
+      Assert.AreEqual(expectedCount, co.Count);
+      for (var i = 0; i < co.Count; ++i) {
+        CBORObjectTest.CheckPropertyNames(co[i], p1, p2, p3);
+      }
+      CBORTestCommon.AssertRoundTrip(co);
     }
 
     internal static void CheckPODPropertyNames(
@@ -163,12 +163,12 @@ namespace Test {
   string p1,
   string p2,
   string p3) {
-            Assert.AreEqual(CBORType.Map, co.Type);
-            string keyName = cc.UseCamelCase ? "propValue" : "PropValue";
-            if (!co.ContainsKey(keyName)) {
- Assert.Fail("Expected " + keyName + " to exist: " + co.ToString());
-}
-            CBORObjectTest.CheckPropertyNames(co[keyName], p1, p2, p3);
+      Assert.AreEqual(CBORType.Map, co.Type);
+      string keyName = cc.UseCamelCase ? "propValue" : "PropValue";
+      if (!co.ContainsKey(keyName)) {
+        Assert.Fail("Expected " + keyName + " to exist: " + co.ToString());
+      }
+      CBORObjectTest.CheckPropertyNames(co[keyName], p1, p2, p3);
     }
 
     internal static void CheckPODInDictPropertyNames(
@@ -176,67 +176,66 @@ namespace Test {
   string p1,
   string p2,
   string p3) {
-            Assert.AreEqual(CBORType.Map, co.Type);
-            if (!co.ContainsKey("PropValue")) {
- Assert.Fail("Expected PropValue to exist: " + co.ToString());
-}
-            CBORObjectTest.CheckPropertyNames(co["PropValue"], p1, p2, p3);
+      Assert.AreEqual(CBORType.Map, co.Type);
+      if (!co.ContainsKey("PropValue")) {
+        Assert.Fail("Expected PropValue to exist: " + co.ToString());
+      }
+      CBORObjectTest.CheckPropertyNames(co["PropValue"], p1, p2, p3);
     }
 
-internal static void CheckPropertyNames(
-  CBORObject o,
-  string p1,
-  string p2,
-  string p3) {
-            Assert.AreEqual(CBORType.Map, o.Type);
-            if (!o.ContainsKey(p1)) {
- Assert.Fail("Expected " + p1 + " to exist: " + o.ToString());
-}
-            if (!o.ContainsKey(p2)) {
- Assert.Fail("Expected " + p2 + " to exist: " + o.ToString());
-}
-            if (!o.ContainsKey(p3)) {
- Assert.Fail("Expected " + p3 + " to exist: " + o.ToString());
-}
-            CBORTestCommon.AssertRoundTrip(o);
+    internal static void CheckPropertyNames(
+      CBORObject o,
+      string p1,
+      string p2,
+      string p3) {
+      Assert.AreEqual(CBORType.Map, o.Type);
+      if (!o.ContainsKey(p1)) {
+        Assert.Fail("Expected " + p1 + " to exist: " + o.ToString());
+      }
+      if (!o.ContainsKey(p2)) {
+        Assert.Fail("Expected " + p2 + " to exist: " + o.ToString());
+      }
+      if (!o.ContainsKey(p3)) {
+        Assert.Fail("Expected " + p3 + " to exist: " + o.ToString());
+      }
+      CBORTestCommon.AssertRoundTrip(o);
     }
 
     internal static void CheckPropertyNames(object ao) {
-            var valueCcTF = new PODOptions(true, false);
-            var valueCcFF = new PODOptions(false, false);
-            var valueCcFT = new PODOptions(false, true);
-            var valueCcTT = new PODOptions(true, true);
-    CBORObjectTest.CheckPropertyNames(
-  ao,
-  valueCcTF,
-  "PropA",
-  "PropB",
-  "PropC");
-         /*
-   TODO: The following case conflicts with the Java version
-  of the CBOR library. Resolving this conflict may result in the
-  Java version being backward-incompatible and so require
-  a major version change.
-   //--
-          CBORObjectTest.CheckPropertyNames(
+      var valueCcTF = new PODOptions(true, false);
+      var valueCcFF = new PODOptions(false, false);
+      var valueCcFT = new PODOptions(false, true);
+      var valueCcTT = new PODOptions(true, true);
+      CBORObjectTest.CheckPropertyNames(
+    ao,
+    valueCcTF,
+    "PropA",
+    "PropB",
+    "PropC");
+      /*
+TODO: The following case conflicts with the Java version
+of the CBOR library. Resolving this conflict may result in the
+Java version being backward-incompatible and so require
+a major version change.
+//--
+       CBORObjectTest.CheckPropertyNames(
   ao,
   valueCcFF,
   "PropA",
   "PropB",
   "IsPropC");
-        */
-          CBORObjectTest.CheckPropertyNames(
+     */ CBORObjectTest.CheckPropertyNames(
   ao,
   valueCcFT,
   "propA",
   "propB",
   "isPropC");
-    CBORObjectTest.CheckPropertyNames(
-  ao,
-  valueCcTT,
-  "propA",
-  "propB",
-  "propC");
+      CBORObjectTest.CheckPropertyNames(
+    ao,
+    valueCcTT,
+    "propA",
+    "propB",
+    "propC");
     }
 
     public static CBORObject GetNumberData() {
@@ -255,19 +254,19 @@ internal static void CheckPropertyNames(
         Console.WriteLine(ex2.Message);
         // Check only FromJSONString
         try {
-            CBORObject.FromJSONString(str, opt);
+          CBORObject.FromJSONString(str, opt);
           Assert.Fail("Should have failed");
         } catch (CBORException) {
           // NOTE: Intentionally empty
         } catch (Exception ex) {
-  Assert.Fail(ex.ToString());
-  throw new InvalidOperationException(String.Empty, ex);
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
         }
         return;
       }
       using (var ms = new MemoryStream(bytes)) {
         try {
-            CBORObject.ReadJSON(ms, opt);
+          CBORObject.ReadJSON(ms, opt);
           Assert.Fail("Should have failed");
         } catch (CBORException) {
           // NOTE: Intentionally empty
@@ -277,7 +276,7 @@ internal static void CheckPropertyNames(
         }
       }
       try {
-          CBORObject.FromJSONString(str, opt);
+        CBORObject.FromJSONString(str, opt);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
         // NOTE: Intentionally empty
@@ -2225,20 +2224,20 @@ internal static void CheckPropertyNames(
 
     [Test]
     public void TestTagArray() {
-        CBORObject obj = CBORObject.FromObjectAndTag("test", 999);
-        {
-string stringTemp = CBORObject.FromObject(obj.GetAllTags()).ToJSONString();
-Assert.AreEqual(
-  "[999]",
-  stringTemp);
-}
+      CBORObject obj = CBORObject.FromObjectAndTag("test", 999);
+      {
+    string stringTemp = CBORObject.FromObject(obj.GetAllTags()).ToJSONString();
+        Assert.AreEqual(
+          "[999]",
+          stringTemp);
+      }
       obj = CBORObject.FromObject("test");
-        {
-string stringTemp = CBORObject.FromObject(obj.GetAllTags()).ToJSONString();
-Assert.AreEqual(
-  "[]",
-  stringTemp);
-}
+      {
+    string stringTemp = CBORObject.FromObject(obj.GetAllTags()).ToJSONString();
+        Assert.AreEqual(
+          "[]",
+          stringTemp);
+      }
     }
     [Test]
     public void TestEI() {
@@ -2375,141 +2374,142 @@ Assert.AreEqual(
       }
     }
 
-        private void CheckKeyValue(CBORObject o, string key, object value) {
-            if (!o.ContainsKey(key)) {
-                Assert.Fail("Expected " + key + " to exist: " + o.ToString());
-            }
-            TestCommon.AssertEqualsHashCode(o[key], value);
-        }
+    private void CheckKeyValue(CBORObject o, string key, object value) {
+      if (!o.ContainsKey(key)) {
+        Assert.Fail("Expected " + key + " to exist: " + o.ToString());
+      }
+      TestCommon.AssertEqualsHashCode(o[key], value);
+    }
 
-        [Test]
-public void TestFromObject_Dictionary() {
-          IDictionary<string, object> dict = new Dictionary<string, object>();
-            dict["TestKey"] = "TestValue";
-            dict["TestKey2"] = "TestValue2";
-            CBORObject c = CBORObject.FromObject(dict);
-            this.CheckKeyValue(c, "TestKey", "TestValue");
-            this.CheckKeyValue(c, "TestKey2", "TestValue2");
-            c = CBORObject.FromObject((object)dict);
-            this.CheckKeyValue(c, "TestKey", "TestValue");
-            this.CheckKeyValue(c, "TestKey2", "TestValue2");
-        }
+    [Test]
+    public void TestFromObject_Dictionary() {
+      IDictionary<string, object> dict = new Dictionary<string, object>();
+      dict["TestKey"] = "TestValue";
+      dict["TestKey2"] = "TestValue2";
+      CBORObject c = CBORObject.FromObject(dict);
+      this.CheckKeyValue(c, "TestKey", "TestValue");
+      this.CheckKeyValue(c, "TestKey2", "TestValue2");
+      c = CBORObject.FromObject((object)dict);
+      this.CheckKeyValue(c, "TestKey", "TestValue");
+      this.CheckKeyValue(c, "TestKey2", "TestValue2");
+    }
 
     public sealed class PODClass {
-        public PODClass() {
-            this.PropA = 0;
-            this.PropB = 1;
-            this.IsPropC = false;
-        }
+      public PODClass() {
+        this.PropA = 0;
+        this.PropB = 1;
+        this.IsPropC = false;
+      }
 
-        public int PropA { get; private set; }
+      public int PropA { get; private set; }
 
-        public int PropB { get; private set; }
+      public int PropB { get; private set; }
 
-        public bool IsPropC { get; private set; }
+      public bool IsPropC { get; private set; }
     }
 
     public sealed class NestedPODClass {
-        public NestedPODClass() {
-            this.PropValue = new PODClass();
-        }
+      public NestedPODClass() {
+        this.PropValue = new PODClass();
+      }
 
-        public PODClass PropValue { get; private set; }
+      public PODClass PropValue { get; private set; }
     }
 
-        [Test]
-    [Timeout(5000)] public void TestFromObject_PODOptions() {
-            var ao = new PODClass();
-            var valueCcTF = new PODOptions(true, false);
-            var valueCcFF = new PODOptions(false, false);
-            var valueCcFT = new PODOptions(false, true);
-            var valueCcTT = new PODOptions(true, true);
-            CBORObject co;
-            CBORObjectTest.CheckPropertyNames(ao);
-            var arrao = new PODClass[] { ao, ao };
-            co = CBORObject.FromObject(arrao, valueCcTF);
-            CBORObjectTest.CheckArrayPropertyNames(
+    [Test]
+    [Timeout(5000)]
+    public void TestFromObject_PODOptions() {
+      var ao = new PODClass();
+      var valueCcTF = new PODOptions(true, false);
+      var valueCcFF = new PODOptions(false, false);
+      var valueCcFT = new PODOptions(false, true);
+      var valueCcTT = new PODOptions(true, true);
+      CBORObject co;
+      CBORObjectTest.CheckPropertyNames(ao);
+      var arrao = new PODClass[] { ao, ao };
+      co = CBORObject.FromObject(arrao, valueCcTF);
+      CBORObjectTest.CheckArrayPropertyNames(
   CBORObject.FromObject(arrao, valueCcTF),
-                 2,
+           2,
   "PropA",
   "PropB",
   "PropC");
-            CBORObjectTest.CheckArrayPropertyNames(
+      CBORObjectTest.CheckArrayPropertyNames(
   CBORObject.FromObject(arrao, valueCcFT),
-                 2,
+           2,
   "propA",
   "propB",
   "isPropC");
-            CBORObjectTest.CheckArrayPropertyNames(
+      CBORObjectTest.CheckArrayPropertyNames(
   CBORObject.FromObject(arrao, valueCcTT),
-                 2,
+           2,
   "propA",
   "propB",
   "propC");
-   var ao2 = new NestedPODClass();
-            CBORObjectTest.CheckPODPropertyNames(
+      var ao2 = new NestedPODClass();
+      CBORObjectTest.CheckPODPropertyNames(
   CBORObject.FromObject(ao2, valueCcTF),
- valueCcTF,
-                 "PropA",
+  valueCcTF,
+           "PropA",
   "PropB",
   "PropC");
-            CBORObjectTest.CheckPODPropertyNames(
+      CBORObjectTest.CheckPODPropertyNames(
   CBORObject.FromObject(ao2, valueCcFT),
- valueCcFT,
-                 "propA",
+  valueCcFT,
+           "propA",
   "propB",
   "isPropC");
-            CBORObjectTest.CheckPODPropertyNames(
+      CBORObjectTest.CheckPODPropertyNames(
   CBORObject.FromObject(ao2, valueCcTT),
- valueCcTT,
-                 "propA",
+  valueCcTT,
+           "propA",
   "propB",
   "propC");
-            var aodict = new Dictionary<string, object>();
-            aodict["PropValue"] = new PODClass();
+      var aodict = new Dictionary<string, object>();
+      aodict["PropValue"] = new PODClass();
 
-            CBORObjectTest.CheckPODInDictPropertyNames(
+      CBORObjectTest.CheckPODInDictPropertyNames(
   CBORObject.FromObject(aodict, valueCcTF),
   "PropA",
   "PropB",
   "PropC");
-            CBORObjectTest.CheckPODInDictPropertyNames(
+      CBORObjectTest.CheckPODInDictPropertyNames(
   CBORObject.FromObject(aodict, valueCcFT),
   "propA",
   "propB",
   "isPropC");
-            CBORObjectTest.CheckPODInDictPropertyNames(
+      CBORObjectTest.CheckPODInDictPropertyNames(
   CBORObject.FromObject(aodict, valueCcTT),
   "propA",
   "propB",
   "propC");
-         /*
-   TODO: The following cases conflict with the Java version
-  of the CBOR library. Resolving this conflict may result in the
-  Java version being backward-incompatible and so require
-  a major version change.
-   // ----
-            CBORObjectTest.CheckArrayPropertyNames(
+      /*
+TODO: The following cases conflict with the Java version
+of the CBOR library. Resolving this conflict may result in the
+Java version being backward-incompatible and so require
+a major version change.
+// ----
+         CBORObjectTest.CheckArrayPropertyNames(
   CBORObject.FromObject(arrao, valueCcFF),
-                 2,
+              2,
   "PropA",
   "PropB",
   "IsPropC");
-            CBORObjectTest.CheckPODPropertyNames(
+         CBORObjectTest.CheckPODPropertyNames(
   CBORObject.FromObject(ao2, valueCcFF),
- valueCcFF,
-                 "PropA",
+  valueCcFF,
+              "PropA",
   "PropB",
   "IsPropC");
-            CBORObjectTest.CheckPODInDictPropertyNames(
+         CBORObjectTest.CheckPODInDictPropertyNames(
   CBORObject.FromObject(aodict, valueCcFF),
   "PropA",
   "PropB",
   "IsPropC");
-          */
-        }
+       */
+    }
 
-        [Test]
+    [Test]
     public void TestFromObjectAndTag() {
       EInteger bigvalue = EInteger.FromString("99999999999999999999999999999");
       try {
@@ -3918,9 +3918,201 @@ public void TestFromObject_Dictionary() {
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
+
+    [Test]
+    public void TestClear() {
+      CBORObject cbor;
+      cbor = CBORObject.NewArray().Add("a").Add("b").Add("c");
+      Assert.AreEqual(3, cbor.Count);
+      cbor.Clear();
+      Assert.AreEqual(0, cbor.Count);
+      cbor = CBORObject.NewMap()
+        .Add("a", 0).Add("b", 1).Add("c", 2);
+      Assert.AreEqual(3, cbor.Count);
+      cbor.Clear();
+      Assert.AreEqual(0, cbor.Count);
+      try {
+        CBORObject.FromObject(1).Clear();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.False.Clear();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.Null.Clear();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
+
     [Test]
     public void TestRemove() {
-      // not implemented yet
+      CBORObject cbor;
+      cbor = CBORObject.NewArray().Add("a").Add("b").Add("c");
+      Assert.AreEqual(3, cbor.Count);
+      Assert.IsTrue(cbor.Remove(CBORObject.FromObject("b")));
+      Assert.IsFalse(cbor.Remove(CBORObject.FromObject("x")));
+      try {
+        cbor.Remove((CBORObject)null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      Assert.AreEqual(2, cbor.Count);
+      Assert.AreEqual(CBORObject.FromObject("a"), cbor[0]);
+      Assert.AreEqual(CBORObject.FromObject("c"), cbor[1]);
+      cbor = CBORObject.NewArray().Add("a").Add("b").Add("c");
+      Assert.AreEqual(3, cbor.Count);
+
+      Assert.IsTrue(cbor.Remove("b"));
+      Assert.IsFalse(cbor.Remove("x"));
+      Assert.AreEqual(2, cbor.Count);
+      Assert.AreEqual(CBORObject.FromObject("a"), cbor[0]);
+      Assert.AreEqual(CBORObject.FromObject("c"), cbor[1]);
+      cbor = CBORObject.NewMap().Add("a", 0).Add("b", 1).Add("c", 2);
+      Assert.AreEqual(3, cbor.Count);
+
+      Assert.IsTrue(cbor.Remove(CBORObject.FromObject("b")));
+      Assert.IsFalse(cbor.Remove(CBORObject.FromObject("x")));
+      try {
+        cbor.Remove((CBORObject)null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      Assert.AreEqual(2, cbor.Count);
+      Assert.IsTrue(cbor.ContainsKey("a"));
+      Assert.IsTrue(cbor.ContainsKey("c"));
+      cbor = CBORObject.NewMap().Add("a", 0).Add("b", 1).Add("c", 2);
+      Assert.AreEqual(3, cbor.Count);
+
+      Assert.IsTrue(cbor.Remove("b"));
+      Assert.IsFalse(cbor.Remove("x"));
+      Assert.AreEqual(2, cbor.Count);
+      Assert.IsTrue(cbor.ContainsKey("a"));
+      Assert.IsTrue(cbor.ContainsKey("c"));
+      try {
+        CBORObject.FromObject(1).Remove("x");
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.False.Remove("x");
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.Null.Remove("x");
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(1).Remove(CBORObject.FromObject("b"));
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.False.Remove(CBORObject.FromObject("b"));
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.Null.Remove(CBORObject.FromObject("b"));
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
+    [Test]
+    public void TestRemoveAt() {
+      CBORObject cbor;
+      cbor = CBORObject.NewArray().Add("a").Add("b").Add("c");
+      Assert.IsTrue(cbor.RemoveAt(1));
+      Assert.IsFalse(cbor.RemoveAt(2));
+      Assert.IsFalse(cbor.RemoveAt(-1));
+      Assert.AreEqual(2, cbor.Count);
+      Assert.AreEqual(CBORObject.FromObject("a"), cbor[0]);
+      Assert.AreEqual(CBORObject.FromObject("c"), cbor[1]);
+      try {
+        CBORObject.NewMap().RemoveAt(0);
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(1).RemoveAt(0);
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.False.RemoveAt(0);
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.Null.RemoveAt(0);
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
     [Test]
     public void TestSet() {
@@ -4158,7 +4350,7 @@ public void TestFromObject_Dictionary() {
       }
 
       CBORObject cbor = CBORObject.NewArray();
-var b64bytes = new byte[] { 0x01, 0xfe, 0xdd, 0xfd, 0xdc,
+      var b64bytes = new byte[] { 0x01, 0xfe, 0xdd, 0xfd, 0xdc,
   0x01, 0xff, 0xdd, 0xfd, 0xdc,
   0x01, 0xfe, 0xdd, 0xfd, 0xdc,
   0x01, 0xff, 0xdd, 0xfd, 0xdc,
@@ -4182,11 +4374,11 @@ var b64bytes = new byte[] { 0x01, 0xfe, 0xdd, 0xfd, 0xdc,
   0x01, 0xfe, 0xdd, 0xfd, 0xdc,
   0x01, 0xfe, 0xdd, 0xfd, 0xdc,
   0x01, 0xfe, 0xdd, 0xfd, 0xdc };
-cbor.Add(b64bytes);
-TestSucceedingJSON(cbor.ToJSONString());
-cbor = CBORObject.NewArray();
-cbor.Add(CBORObject.FromObjectAndTag(b64bytes, 22));
-TestSucceedingJSON(cbor.ToJSONString());
+      cbor.Add(b64bytes);
+      TestSucceedingJSON(cbor.ToJSONString());
+      cbor = CBORObject.NewArray();
+      cbor.Add(CBORObject.FromObjectAndTag(b64bytes, 22));
+      TestSucceedingJSON(cbor.ToJSONString());
     }
 
     [Test]

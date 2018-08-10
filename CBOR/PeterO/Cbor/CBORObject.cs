@@ -186,7 +186,7 @@ namespace PeterO.Cbor {
         throw new ArgumentException("Big integer is within range for Integer");
       }
       if (type == CBORObjectTypeArray && !(item is IList<CBORObject>)) {
-       throw new InvalidOperationException();
+        throw new InvalidOperationException();
       }
 #endif
       this.itemtypeValue = type;
@@ -970,12 +970,12 @@ namespace PeterO.Cbor {
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Object,PeterO.Cbor.PODOptions)"]/*'/>
-          public static CBORObject FromObject(
+    public static CBORObject FromObject(
   object obj,
   PODOptions options) {
       if (options == null) {
-  throw new ArgumentNullException(nameof(options));
-}
+        throw new ArgumentNullException(nameof(options));
+      }
       if (obj == null) {
         return CBORObject.Null;
       }
@@ -1026,7 +1026,7 @@ namespace PeterO.Cbor {
       }
 #pragma warning restore 618
       if (obj is short) {
-      return FromObject((short)obj);
+        return FromObject((short)obj);
       }
       if (obj is char) {
         return FromObject((char)obj);
@@ -1074,8 +1074,8 @@ namespace PeterO.Cbor {
         foreach (object keyPair in (System.Collections.IDictionary)objdic) {
           System.Collections.DictionaryEntry
             kvp = (System.Collections.DictionaryEntry)keyPair;
-            CBORObject objKey = CBORObject.FromObject(kvp.Key, options);
-            objret[objKey] = CBORObject.FromObject(kvp.Value, options);
+          CBORObject objKey = CBORObject.FromObject(kvp.Key, options);
+          objret[objKey] = CBORObject.FromObject(kvp.Value, options);
         }
         return objret;
       }
@@ -1220,7 +1220,7 @@ namespace PeterO.Cbor {
         throw new ArgumentNullException(nameof(stream));
       }
       try {
-       var reader = new CBORReader(stream);
+        var reader = new CBORReader(stream);
         return reader.ResolveSharedRefsIfNeeded(reader.Read(null));
       } catch (IOException ex) {
         throw new CBORException("I/O error occurred.", ex);
@@ -1781,8 +1781,8 @@ namespace PeterO.Cbor {
         return CBORObject.FromObject((EFloat)newItem);
       }
       var rat = newItem as ERational;
-     return (rat != null) ? CBORObject.FromObject(rat) : ((oldItem == newItem) ?
-        this : CBORObject.FromObject(newItem));
+    return (rat != null) ? CBORObject.FromObject(rat) : ((oldItem ==
+        newItem) ? this : CBORObject.FromObject(newItem));
     }
 
     /// <include file='../../docs.xml'
@@ -1795,13 +1795,13 @@ namespace PeterO.Cbor {
           mapKey = CBORObject.Null;
         } else {
           mapKey = key as CBORObject;
-mapKey = mapKey ?? CBORObject.FromObject(key);
+          mapKey = mapKey ?? CBORObject.FromObject(key);
         }
         if (valueOb == null) {
           mapValue = CBORObject.Null;
         } else {
           mapValue = valueOb as CBORObject;
-mapValue = mapValue ?? CBORObject.FromObject(valueOb);
+          mapValue = mapValue ?? CBORObject.FromObject(valueOb);
         }
         IDictionary<CBORObject, CBORObject> map = this.AsMap();
         if (map.ContainsKey(mapKey)) {
@@ -1852,6 +1852,8 @@ mapValue = mapValue ?? CBORObject.FromObject(valueOb);
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsEInteger"]/*'/>
     public EInteger AsEInteger() {
+      // TODO: Consider returning null if this object is null
+      // in next major version
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       if (cn == null) {
         throw new InvalidOperationException("Not a number type");
@@ -1891,6 +1893,8 @@ mapValue = mapValue ?? CBORObject.FromObject(valueOb);
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsEDecimal"]/*'/>
     public EDecimal AsEDecimal() {
+      // TODO: Consider returning null if this object is null
+      // in next major version
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       if (cn == null) {
         throw new InvalidOperationException("Not a number type");
@@ -1908,6 +1912,8 @@ mapValue = mapValue ?? CBORObject.FromObject(valueOb);
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsEFloat"]/*'/>
     public EFloat AsEFloat() {
+      // TODO: Consider returning null if this object is null
+      // in next major version
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       if (cn == null) {
         throw new InvalidOperationException("Not a number type");
@@ -1924,6 +1930,8 @@ mapValue = mapValue ?? CBORObject.FromObject(valueOb);
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsERational"]/*'/>
+    // TODO: Consider returning null if this object is null
+    // in next major version
     public ERational AsERational() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       if (cn == null) {
@@ -1967,6 +1975,8 @@ mapValue = mapValue ?? CBORObject.FromObject(valueOb);
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsString"]/*'/>
     public string AsString() {
+      // TODO: Consider returning null if this object is null
+      // in next major version
       int type = this.ItemType;
       switch (type) {
         case CBORObjectTypeTextString: {
@@ -2607,7 +2617,7 @@ mapValue = mapValue ?? CBORObject.FromObject(valueOb);
           mapValue = CBORObject.Null;
         } else {
           mapValue = valueOb as CBORObject;
-mapValue = mapValue ?? CBORObject.FromObject(valueOb);
+          mapValue = mapValue ?? CBORObject.FromObject(valueOb);
         }
         list.Insert(index, mapValue);
       } else {
@@ -2667,6 +2677,43 @@ mapValue = mapValue ?? CBORObject.FromObject(valueOb);
     }
 
     /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Clear"]/*'/>
+    public void Clear() {
+      if (this.ItemType == CBORObjectTypeArray) {
+        IList<CBORObject> list = this.AsList();
+        list.Clear();
+      } else if (this.ItemType == CBORObjectTypeMap) {
+        IDictionary<CBORObject, CBORObject> dict = this.AsMap();
+        dict.Clear();
+      } else {
+ throw new InvalidOperationException("Not a map or array");
+}
+    }
+
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Remove(System.Object)"]/*'/>
+    public bool Remove(object obj) {
+      // TODO: Convert null to CBORObject.Null in next major version
+      return this.Remove(CBORObject.FromObject(obj));
+    }
+
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.RemoveAt(System.Int32)"]/*'/>
+    /// <param name='index'>Not documented yet.</param>
+    /// <returns>Not documented yet.</returns>
+    public bool RemoveAt(int index) {
+      if (this.ItemType != CBORObjectTypeArray) {
+        throw new InvalidOperationException("Not an array");
+      }
+      if (index < 0 || index >= this.Count) {
+        return false;
+      }
+      IList<CBORObject> list = this.AsList();
+      list.RemoveAt(index);
+      return true;
+    }
+
+    /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Remove(PeterO.Cbor.CBORObject)"]/*'/>
     public bool Remove(CBORObject obj) {
       if (obj == null) {
@@ -2698,13 +2745,13 @@ mapValue = mapValue ?? CBORObject.FromObject(valueOb);
           mapKey = CBORObject.Null;
         } else {
           mapKey = key as CBORObject;
-mapKey = mapKey ?? CBORObject.FromObject(key);
+          mapKey = mapKey ?? CBORObject.FromObject(key);
         }
         if (valueOb == null) {
           mapValue = CBORObject.Null;
         } else {
           mapValue = valueOb as CBORObject;
-mapValue = mapValue ?? CBORObject.FromObject(valueOb);
+          mapValue = mapValue ?? CBORObject.FromObject(valueOb);
         }
         IDictionary<CBORObject, CBORObject> map = this.AsMap();
         if (map.ContainsKey(mapKey)) {
@@ -2727,10 +2774,10 @@ mapValue = mapValue ?? CBORObject.FromObject(valueOb);
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)"]/*'/>
-        public string ToJSONString(JSONOptions options) {
+    public string ToJSONString(JSONOptions options) {
       if (options == null) {
- throw new ArgumentNullException(nameof(options));
-}
+        throw new ArgumentNullException(nameof(options));
+      }
       int type = this.ItemType;
       switch (type) {
         case CBORObjectTypeSimpleValue: {
@@ -2739,8 +2786,7 @@ mapValue = mapValue ?? CBORObject.FromObject(valueOb);
         case CBORObjectTypeInteger: {
             return CBORUtilities.LongToString((long)this.ThisItem);
           }
-        default:
-          {
+        default: {
             var sb = new StringBuilder();
             try {
               CBORJson.WriteJSONToInternal(this, new StringOutput(sb), options);
@@ -2800,7 +2846,7 @@ mapValue = mapValue ?? CBORObject.FromObject(valueOb);
               }
               sb.Append(simvalue);
             } else {
-sb = sb ?? (new StringBuilder());
+              sb = sb ?? (new StringBuilder());
               sb.Append("simple(");
               var thisItemInt = (int)this.ThisItem;
               sb.Append(
@@ -2858,7 +2904,7 @@ sb = sb ?? (new StringBuilder());
             break;
           }
         case CBORObjectTypeByteString: {
-sb = sb ?? (new StringBuilder());
+            sb = sb ?? (new StringBuilder());
             sb.Append("h'");
             CBORUtilities.ToBase16(sb, (byte[])this.ThisItem);
             sb.Append("'");
@@ -2874,7 +2920,7 @@ sb = sb ?? (new StringBuilder());
             break;
           }
         case CBORObjectTypeArray: {
-sb = sb ?? (new StringBuilder());
+            sb = sb ?? (new StringBuilder());
             var first = true;
             sb.Append("[");
             foreach (CBORObject i in this.AsList()) {
@@ -2888,7 +2934,7 @@ sb = sb ?? (new StringBuilder());
             break;
           }
         case CBORObjectTypeMap: {
-sb = sb ?? (new StringBuilder());
+            sb = sb ?? (new StringBuilder());
             var first = true;
             sb.Append("{");
             IDictionary<CBORObject, CBORObject> map = this.AsMap();
@@ -2906,8 +2952,7 @@ sb = sb ?? (new StringBuilder());
             sb.Append("}");
             break;
           }
-        default:
-          {
+        default: {
             if (sb == null) {
               return this.ThisItem.ToString();
             }
@@ -2953,14 +2998,14 @@ sb = sb ?? (new StringBuilder());
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteJSONTo(System.IO.Stream,PeterO.Cbor.JSONOptions)"]/*'/>
-        public void WriteJSONTo(Stream outputStream, JSONOptions options) {
+    public void WriteJSONTo(Stream outputStream, JSONOptions options) {
       if (outputStream == null) {
         throw new ArgumentNullException(nameof(outputStream));
       }
-            if (options == null) {
- throw new ArgumentNullException(nameof(options));
-}
-            CBORJson.WriteJSONToInternal(
+      if (options == null) {
+        throw new ArgumentNullException(nameof(options));
+      }
+      CBORJson.WriteJSONToInternal(
   this,
   new StringOutput(outputStream),
   options);
