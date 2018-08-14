@@ -1,8 +1,8 @@
 ## PeterO.Cbor.CBORObject
 
     public sealed class CBORObject :
-        System.IEquatable,
-        System.IComparable
+        System.IComparable,
+        System.IEquatable
 
 Represents an object in Concise Binary Object Representation (CBOR) and contains methods for reading and writing CBOR data. CBOR is defined in RFC 7049.<b>Converting CBOR objects</b>
 
@@ -2371,6 +2371,14 @@ The object is not an array or map.
 
     public bool RemoveAt(
         int index);
+
+<b>Parameters:</b>
+
+ * <i>index</i>: Not documented yet.
+
+<b>Return Value:</b>
+
+Not documented yet.
 
 ### Set
 

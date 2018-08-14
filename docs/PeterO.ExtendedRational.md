@@ -1,8 +1,8 @@
 ## PeterO.ExtendedRational
 
     public sealed class ExtendedRational :
-        System.IEquatable,
-        System.IComparable
+        System.IComparable,
+        System.IEquatable
 
 <b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers and the output of this class's ToString method.
 

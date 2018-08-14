@@ -1531,9 +1531,9 @@ to control the decoding process. The JSON stream may begin with a
             not an array or map.</exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Remove(System.Object)">
-<summary>Not documented yet.</summary>
-            <param name='obj'>The parameter <paramref name='obj'/> is not documented yet.</param>
-            <returns>Either <c>true</c> or <c>false</c>.</returns>
+
+            <summary>Not documented yet.</summary><param name='obj'>The parameter <paramref name='obj'/> is not documented yet.</param><returns>Either <c>true</c> or <c>false</c>.</returns>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.RemoveAt(System.Int32)">
 <summary/>
@@ -2707,7 +2707,7 @@ given options to control the encoding process.</summary>
             length or greater. Returns the replacement character (U+FFFD) if
             the current character is an unpaired surrogate code
             point. <b>NOTE:</b> If the return value is 65536 (0x10000) or greater,
-this indicates a supplemental code point that takes up two <c>char</c>s rather than one.</returns>
+this indicates a supplementary code point that takes up two <c>char</c>s rather than one.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='str'/> is null.</exception>
 </doc>
@@ -2726,7 +2726,7 @@ this indicates a supplemental code point that takes up two <c>char</c>s rather t
             if <paramref name='index'/> is less than 0, or is the string's
             length or greater. Returns a value as specified under <paramref name='surrogateBehavior'/> if the previous character is an unpaired
             surrogate code point. <b>NOTE:</b> If the return value is 65536 (0x10000) or greater,
-this indicates a supplemental code point that takes up two <c>char</c>s rather than one.</returns>
+this indicates a supplementary code point that takes up two <c>char</c>s rather than one.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='str'/> is null.</exception>
 </doc>
@@ -2740,7 +2740,7 @@ this indicates a supplemental code point that takes up two <c>char</c>s rather t
             -1 if <paramref name='index'/> is 0 or less, or is greater than the
             string's length. Returns the replacement character (U+FFFD) if the
             previous character is an unpaired surrogate code point. <b>NOTE:</b> If the return value is 65536 (0x10000) or greater,
-this indicates a supplemental code point that takes up two <c>char</c>s rather than one.</returns>
+this indicates a supplementary code point that takes up two <c>char</c>s rather than one.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='str'/> is null.</exception>
 </doc>
@@ -2759,7 +2759,7 @@ this indicates a supplemental code point that takes up two <c>char</c>s rather t
             -1 if <paramref name='index'/> is 0 or less, or is greater than the
             string's length. Returns a value as specified under <paramref name='surrogateBehavior'/> if the previous character is an unpaired
             surrogate code point. <b>NOTE:</b> If the return value is 65536 (0x10000) or greater,
-this indicates a supplemental code point that takes up two <c>char</c>s rather than one.</returns>
+this indicates a supplementary code point that takes up two <c>char</c>s rather than one.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='str'/> is null.</exception>
 </doc>
