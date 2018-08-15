@@ -1533,7 +1533,7 @@ to control the decoding process. The JSON stream may begin with a
 <doc name="M:PeterO.Cbor.CBORObject.Remove(System.Object)">
 
             <summary>Not documented yet.</summary><param name='obj'>The parameter <paramref name='obj'/> is not documented yet.</param><returns>Either <c>true</c> or <c>false</c>.</returns>
-        
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.RemoveAt(System.Int32)">
 <summary/>
@@ -2530,7 +2530,7 @@ given options to control the encoding process.</summary>
 <doc name="M:PeterO.Cbor.URIUtility.PercentDecode(System.String)">
 
             <summary>Not documented yet.</summary><param name='str'>The parameter <paramref name='str'/> is not documented yet.</param><returns>A text string.</returns>
-        
+
 </doc>
 <doc name="M:PeterO.Cbor.URIUtility.escapeURI(System.String,System.Int32)">
 <summary>Escapes characters that can't appear in URIs or IRIs. The
