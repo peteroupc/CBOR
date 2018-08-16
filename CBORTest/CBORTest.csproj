@@ -111,6 +111,8 @@
     <Compile Include="TestCommon.cs" />
     <Compile Include="URIUtilityTest.cs" />
     <Compile Include="XorShift128Plus.cs" />
+    <Compile Include="JSONPatch.cs" />
+    <Compile Include="JSONPointer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
