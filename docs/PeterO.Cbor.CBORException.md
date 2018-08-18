@@ -16,8 +16,8 @@ Initializes a new instance of the [PeterO.Cbor.CBORException](PeterO.Cbor.CBOREx
 
 <b>Parameters:</b>
 
- * <i>message</i>: The parameter  <i>message</i>
- is a text string.
+ * <i>message</i>: The parameter <i>message</i>
+is a text string.
 
 ### CBORException Constructor
 
@@ -29,11 +29,11 @@ Initializes a new instance of the [PeterO.Cbor.CBORException](PeterO.Cbor.CBOREx
 
 <b>Parameters:</b>
 
- * <i>message</i>: The parameter  <i>message</i>
- is a text string.
+ * <i>message</i>: The parameter <i>message</i>
+is a text string.
 
- * <i>innerException</i>: The parameter  <i>innerException</i>
- is an Exception object.
+ * <i>innerException</i>: The parameter <i>innerException</i>
+is an Exception object.
 
 ### CBORException Constructor
 

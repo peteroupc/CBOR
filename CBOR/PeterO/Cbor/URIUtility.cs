@@ -397,7 +397,7 @@ retString.Append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
 
 // <summary></summary>
     public static string EncodeStringForURI(string s) {
-      if ((s) == null) {
+      if (s == null) {
   throw new ArgumentNullException(nameof(s));
 }
 int index = 0;
@@ -416,7 +416,7 @@ var builder = new StringBuilder();
 }
     if ((c & 0x7F) == c && ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'
 ) ||
-            (c >= '0' && c <= '9') || ("-_.~").IndexOf((char)c) >= 0)) {
+            (c >= '0' && c <= '9') || "-_.~".IndexOf((char)c) >= 0)) {
           builder.Append((char)c);
           ++index;
         } else {

@@ -6,13 +6,13 @@
 
 <b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers and the output of this class's ToString method.
 
-<b>This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.EDecimal`  in the<a href="https://www.nuget.org/packages/PeterO.Numbers"> `PeterO.Numbers` </a>library (in .NET), or  `com.upokecenter.numbers.EDecimal`  in the<a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers` </a>artifact (in Java). This new class can be used in the `CBORObject.FromObject(object)`  method (by including the new library in your code, among other things).</b>
+<b>This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called `PeterO.Numbers.EDecimal` in the<a href="https://www.nuget.org/packages/PeterO.Numbers"> `PeterO.Numbers` </a>library (in .NET), or `com.upokecenter.numbers.EDecimal` in the<a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers` </a>artifact (in Java). This new class can be used in the `CBORObject.FromObject(object)` method (by including the new library in your code, among other hings).</b>
 
- Represents an arbitrary-precision decimal floating-point number.<b>About decimal arithmetic</b>
+Represents an arbitrary-precision decimal floating-point number.<b>About decimal arithmetic</b>
 
 Decimal (base-10) arithmetic, such as that provided by this class, is appropriate for calculations involving such real-world data as prices and other sums of money, tax rates, and measurements. These calculations often involve multiplying or dividing one decimal with another decimal, or performing other operations on decimal numbers. Many of these calculations also rely on rounding behavior in which the result after rounding is a decimal number (for example, multiplying a price by a premium rate, then rounding, should result in a decimal amount of money).
 
-On the other hand, most implementations of  `float`  and `double` , including in C# and Java, store numbers in a binary (base-2) floating-point format and use binary floating-point arithmetic. Many decimal numbers can't be represented exactly in binary floating-point format (regardless of its length). Applying binary arithmetic to numbers intended to be decimals can sometimes lead to unintuitive results, as is shown in the description for the FromDouble() method of this class.
+On the other hand, most implementations of `float` and `double` , including in C# and Java, store numbers in a binary (base-2) floating-point format and use binary floating-point arithmetic. Many decimal numbers can't be represented exactly in binary floating-point format (regardless of its length). Applying binary arithmetic to numbers intended to be decimals can sometimes lead to unintuitive results, as is shown in the description for the FromDouble() method of this class.
 
 <b>About ExtendedDecimal instances</b>
 
@@ -22,7 +22,7 @@ The mantissa is the value of the digits that make up a number, ignoring the deci
 
 The mantissa and exponent format preserves trailing zeros in the number's value. This may give rise to multiple ways to store the same value. For example, 1.00 and 1 would be stored differently, even though they have the same value. In the first case, 100 * 10^-2 (100 with decimal point moved left by 2), and in the second case, 1 * 10^0 (1 with decimal point moved 0).
 
-This class also supports values for negative zero, not-a-number (NaN) values, and infinity. <b>Negative zero</b> is generally used when a negative number is rounded to 0; it has the same mathematical value as positive zero. <b>Infinity</b> is generally used when a non-zero number is divided by zero, or when a very high number can't be represented in a given exponent range.<b>Not-a-number</b> is generally used to signal errors.
+This class also supports values for negative zero, not-a-number (NaN) values, and infinity.<b>Negative zero</b>is generally used when a negative number is rounded to 0; it has the ame mathematical value as positive zero.<b>Infinity</b>is generally used when a non-zero number is divided by zero, or when a ery high number can't be represented in a given exponent range.<b>Not-a-number</b>is generally used to signal errors.
 
 <b>Errors and Exceptions</b>
 
@@ -120,7 +120,7 @@ Gets a value indicating whether this object is negative, including negative zero
 
 <b>Returns:</b>
 
- `true`  If this object is negative, including negative zero; otherwise,  `false` .
+ `true` If this object is negative, including negative zero; otherwise,  `false` .
 
 ### Mantissa
 
@@ -163,8 +163,8 @@ Compares this extended decimal to another.
 
 <b>Parameters:</b>
 
- * <i>other</i>: The parameter  <i>other</i>
- is an ExtendedDecimal object.
+ * <i>other</i>: The parameter <i>other</i>
+is an ExtendedDecimal object.
 
 <b>Return Value:</b>
 
@@ -192,8 +192,8 @@ An arbitrary-precision decimal number.
 
  * System.ArgumentNullException:
 The parameter <i>mantissa</i>
- or  <i>exponent</i>
- is null.
+or <i>exponent</i>
+is null.
 
 ### Equals
 
@@ -204,12 +204,12 @@ Determines whether this object's mantissa and exponent are equal to those of ano
 
 <b>Parameters:</b>
 
- * <i>obj</i>: The parameter  <i>obj</i>
- is an arbitrary object.
+ * <i>obj</i>: The parameter <i>obj</i>
+is an arbitrary object.
 
 <b>Return Value:</b>
 
- `true`  if the objects are equal; otherwise,  `false` .
+ `true` if the objects are equal; otherwise,  `false` .
 
 ### Equals
 
@@ -226,15 +226,14 @@ Determines whether this object's mantissa and exponent are equal to those of ano
 
 <b>Return Value:</b>
 
- `true`  if this object's mantissa and exponent are equal to those of another object; otherwise,  `false` .
+ `true` if this object's mantissa and exponent are equal to those of another bject; otherwise,  `false` .
 
 ### FromString
 
     public static PeterO.ExtendedDecimal FromString(
         string str);
 
-Creates a decimal number from a text string that represents a number. See  `FromString(String, int, int,
-            EContext)`  for more information.
+Creates a decimal number from a text string that represents a number. See `FromString(String, int, int, EContext)` for more information.
 
 <b>Parameters:</b>
 
@@ -248,11 +247,11 @@ An arbitrary-precision decimal number with the same value as the given string.
 
  * System.ArgumentNullException:
 The parameter <i>str</i>
- is null.
+is null.
 
  * System.FormatException:
-The parameter  <i>str</i>
- is not a correctly formatted number string.
+The parameter <i>str</i>
+is not a correctly formatted number string.
 
 ### GetHashCode
 
@@ -272,7 +271,7 @@ Gets a value indicating whether this object is positive or negative infinity.
 
 <b>Return Value:</b>
 
- `true`  if this object is positive or negative infinity; otherwise,  `false` .
+ `true` if this object is positive or negative infinity; otherwise,  `false` .
 
 ### IsNaN
 
@@ -282,7 +281,7 @@ Gets a value indicating whether this object is not a number (NaN).
 
 <b>Return Value:</b>
 
- `true`  if this object is not a number (NaN); otherwise,  `false` .
+ `true` if this object is not a number (NaN); otherwise,  `false` .
 
 ### IsQuietNaN
 
@@ -294,7 +293,7 @@ Gets a value indicating whether this object is a quiet not-a-number value.
 
 <b>Return Value:</b>
 
- `true`  if this object is a quiet not-a-number value; otherwise,  `false` .
+ `true` if this object is a quiet not-a-number value; otherwise,  `false` .
 
 ### ToDouble
 

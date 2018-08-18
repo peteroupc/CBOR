@@ -85,8 +85,8 @@ Returns an options object containing the flags shared by this and another option
 
 <b>Parameters:</b>
 
- * <i>o</i>: The parameter  <i>o</i>
- is a CBOREncodeOptions object.
+ * <i>o</i>: The parameter <i>o</i>
+is a CBOREncodeOptions object.
 
 <b>Return Value:</b>
 
@@ -103,8 +103,8 @@ Returns an options object containing the combined flags of this and another opti
 
 <b>Parameters:</b>
 
- * <i>o</i>: The parameter  <i>o</i>
- is a CBOREncodeOptions object.
+ * <i>o</i>: The parameter <i>o</i>
+is a CBOREncodeOptions object.
 
 <b>Return Value:</b>
 

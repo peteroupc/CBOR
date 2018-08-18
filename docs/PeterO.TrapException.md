@@ -7,9 +7,9 @@
 
 <b>Deprecated.</b> Use ETrapException from PeterO.Numbers/com.upokecenter.numbers.
 
-<b>This class is obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.ETrapException`  in the<a href="https://www.nuget.org/packages/PeterO.Numbers"> `PeterO.Numbers` </a>library (in .NET), or  `com.upokecenter.numbers.ETrapException` in the<a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers` </a>artifact (in Java).</b>
+<b>This class is obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called `PeterO.Numbers.ETrapException` in the<a href="https://www.nuget.org/packages/PeterO.Numbers"> `PeterO.Numbers` </a>library (in .NET), or `com.upokecenter.numbers.ETrapException` in the<a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers` </a>artifact (in Java).</b>
 
- Exception thrown for arithmetic trap errors.
+Exception thrown for arithmetic trap errors.
 
 ### TrapException Constructor
 
@@ -26,7 +26,7 @@ Initializes a new instance of the [PeterO.TrapException](PeterO.TrapException.md
 
  * <i>ctx</i>: A context object for arbitrary-precision arithmetic settings.
 
- * <i>result</i>: The desired result of the operation that caused the trap, such as an  `ExtendedDecimal`  or `ExtendedFloat` .
+ * <i>result</i>: The desired result of the operation that caused the trap, such as an `ExtendedDecimal` or `ExtendedFloat` .
 
 ### Context
 

@@ -53,7 +53,7 @@ Determines whether this type filter allows CBOR arrays and the given array index
 
 <b>Return Value:</b>
 
- `true`  if this type filter allows CBOR arrays and the given array index is allowed under this type filter; otherwise,  `false` .
+ `true` if this type filter allows CBOR arrays and the given array index is llowed under this type filter; otherwise,  `false` .
 
 ### ArrayLengthMatches
 
@@ -68,7 +68,7 @@ Returns whether an array's length is allowed under this filter.
 
 <b>Return Value:</b>
 
- `true`  if this filter allows CBOR arrays and an array's length is allowed under this filter; otherwise,  `false` .
+ `true` if this filter allows CBOR arrays and an array's length is allowed under his filter; otherwise,  `false` .
 
 ### ArrayLengthMatches
 
@@ -83,7 +83,7 @@ Returns whether an array's length is allowed under a filter.
 
 <b>Return Value:</b>
 
- `true`  if this filter allows CBOR arrays and an array's length is allowed under a filter; otherwise,  `false` .
+ `true` if this filter allows CBOR arrays and an array's length is allowed under filter; otherwise,  `false` .
 
 ### ArrayLengthMatches
 
@@ -98,13 +98,13 @@ Returns whether an array's length is allowed under a filter.
 
 <b>Return Value:</b>
 
- `true`  if this filter allows CBOR arrays and an array's length is allowed under a filter; otherwise,  `false` .
+ `true` if this filter allows CBOR arrays and an array's length is allowed under filter; otherwise,  `false` .
 
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
 The parameter <i>bigLength</i>
- is null.
+is null.
 
 ### GetSubFilter
 
@@ -149,7 +149,7 @@ Returns whether the given CBOR major type matches a major type allowed by this f
 
 <b>Return Value:</b>
 
- `true`  if the given CBOR major type matches a major type allowed by this filter; otherwise,  `false` .
+ `true` if the given CBOR major type matches a major type allowed by this filter; otherwise,  `false` .
 
 ### NonFPSimpleValueAllowed
 
@@ -159,7 +159,7 @@ Returns whether this filter allows simple values that are not floating-point num
 
 <b>Return Value:</b>
 
- `true`  if this filter allows simple values that are not floating-point numbers; otherwise,  `false` .
+ `true` if this filter allows simple values that are not floating-point numbers; otherwise,  `false` .
 
 ### TagAllowed
 
@@ -174,7 +174,7 @@ Gets a value indicating whether CBOR objects can have the given tag number.
 
 <b>Return Value:</b>
 
- `true`  if CBOR objects can have the given tag number; otherwise,  `false` .
+ `true` if CBOR objects can have the given tag number; otherwise,  `false` .
 
 ### TagAllowed
 
@@ -189,7 +189,7 @@ Gets a value indicating whether CBOR objects can have the given tag number.
 
 <b>Return Value:</b>
 
- `true`  if CBOR objects can have the given tag number; otherwise,  `false` .
+ `true` if CBOR objects can have the given tag number; otherwise,  `false` .
 
 ### TagAllowed
 
@@ -204,13 +204,13 @@ Gets a value indicating whether CBOR objects can have the given tag number.
 
 <b>Return Value:</b>
 
- `true`  if CBOR objects can have the given tag number; otherwise,  `false` .
+ `true` if CBOR objects can have the given tag number; otherwise,  `false` .
 
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
 The parameter <i>bigTag</i>
- is null.
+is null.
 
 ### WithArrayAnyLength
 

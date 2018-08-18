@@ -6,13 +6,13 @@
 
 <b>Deprecated.</b> Use EInteger from PeterO.Numbers/com.upokecenter.numbers and the output of this class's ToString method.
 
-<b>This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.EInteger`  in the<a href="https://www.nuget.org/packages/PeterO.Numbers"> `PeterO.Numbers` </a>library (in .NET), or  `com.upokecenter.numbers.EInteger`  in the<a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers` </a>artifact (in Java). This new class can be used in the `CBORObject.FromObject(object)`  method (by including the new library in your code, among other things).</b>
+<b>This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called `PeterO.Numbers.EInteger` in the<a href="https://www.nuget.org/packages/PeterO.Numbers"> `PeterO.Numbers` </a>library (in .NET), or `com.upokecenter.numbers.EInteger` in the<a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers` </a>artifact (in Java). This new class can be used in the `CBORObject.FromObject(object)` method (by including the new library in your code, among other hings).</b>
 
- An arbitrary-precision integer.<b>Thread safety:</b> Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same value are interchangeable, but they should be compared using the "Equals" method rather than the "==" operator.
+An arbitrary-precision integer.<b>Thread safety:</b>Instances of this class are immutable, so they are inherently safe for se by multiple threads. Multiple instances of this object with the same alue are interchangeable, but they should be compared using the Equals" method rather than the "==" operator.
 
-<b>This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.EInteger`  in the<a href="https://www.nuget.org/packages/PeterO.Numbers"> `PeterO.Numbers` </a>library (in .NET), or  `com.upokecenter.numbers.EInteger`  in the<a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers` </a>artifact (in Java). This new class can be used in the `CBORObject.FromObject(object)`  method (by including the new library in your code, among other things).</b>
+<b>This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called `PeterO.Numbers.EInteger` in the<a href="https://www.nuget.org/packages/PeterO.Numbers"> `PeterO.Numbers` </a>library (in .NET), or `com.upokecenter.numbers.EInteger` in the<a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers` </a>artifact (in Java). This new class can be used in the `CBORObject.FromObject(object)` method (by including the new library in your code, among other hings).</b>
 
- An arbitrary-precision integer.<b>Thread safety:</b> Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same value are interchangeable, but they should be compared using the "Equals" method rather than the "==" operator.
+An arbitrary-precision integer.<b>Thread safety:</b>Instances of this class are immutable, so they are inherently safe for se by multiple threads. Multiple instances of this object with the same alue are interchangeable, but they should be compared using the Equals" method rather than the "==" operator.
 
 ### ONE
 
@@ -63,8 +63,8 @@ Compares this value to another.
 
 <b>Parameters:</b>
 
- * <i>other</i>: The parameter  <i>other</i>
- is an arbitrary-precision integer.
+ * <i>other</i>: The parameter <i>other</i>
+is an arbitrary-precision integer.
 
 <b>Return Value:</b>
 
@@ -79,12 +79,12 @@ Determines whether this object and another object are equal.
 
 <b>Parameters:</b>
 
- * <i>obj</i>: The parameter  <i>obj</i>
- is an arbitrary object.
+ * <i>obj</i>: The parameter <i>obj</i>
+is an arbitrary object.
 
 <b>Return Value:</b>
 
- `true`  if this object and another object are equal; otherwise,  `false` .
+ `true` if this object and another object are equal; otherwise,  `false` .
 
 ### Equals
 
@@ -101,7 +101,7 @@ Returns whether this number's value equals another number's value.
 
 <b>Return Value:</b>
 
- `true`  if this number's value equals another number's value; otherwise,  `false` .
+ `true` if this number's value equals another number's value; otherwise,  `false` .
 
 ### fromBytes
 
@@ -125,7 +125,7 @@ An arbitrary-precision integer. Returns 0 if the byte array's length is 0.
 
  * System.ArgumentNullException:
 The parameter <i>bytes</i>
- is null.
+is null.
 
 ### fromRadixString
 
@@ -149,11 +149,11 @@ An arbitrary-precision integer with the same value as given in the string.
 
  * System.ArgumentNullException:
 The parameter <i>str</i>
- is null.
+is null.
 
  * System.ArgumentException:
 The parameter <i>radix</i>
- is less than 2 or greater than 36.
+is less than 2 or greater than 36.
 
  * System.FormatException:
 The string is empty or in an invalid format.
@@ -177,11 +177,11 @@ An arbitrary-precision integer with the same value as given in the string.
 
  * System.ArgumentNullException:
 The parameter <i>str</i>
- is null.
+is null.
 
  * System.FormatException:
-The parameter  <i>str</i>
- is in an invalid format.
+The parameter <i>str</i>
+is in an invalid format.
 
 ### GetHashCode
 
@@ -247,8 +247,8 @@ Converts a 64-bit signed integer to a big integer.
 
 <b>Parameters:</b>
 
- * <i>longerValue</i>: The parameter  <i>longerValue</i>
- is a 64-bit signed integer.
+ * <i>longerValue</i>: The parameter <i>longerValue</i>
+is a 64-bit signed integer.
 
 <b>Return Value:</b>
 
