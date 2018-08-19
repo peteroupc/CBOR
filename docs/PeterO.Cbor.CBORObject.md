@@ -2490,6 +2490,10 @@ Converts this object to a string in JavaScript Object Notation (JSON) ormat, usi
 
 A text string containing the converted object.
 
+<b>Return Value:</b>
+
+Not documented yet.
+
 ### ToString
 
     public override string ToString();
