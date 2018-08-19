@@ -2,7 +2,7 @@
 
     public static class DataUtilities
 
-Contains methods useful for reading and writing strings. It is designed o have no dependencies other than the basic runtime class library.Many of these methods work with text encoded in UTF-8, an encoding form f the Unicode Standard which uses one byte to encode the most basic haracters and two to four bytes to encode other characters. For xample, the `GetUtf8` method converts a text string to an array of bytes in UTF-8.
+Contains methods useful for reading and writing strings. It is designed to have no dependencies other than the basic runtime class library.Many of these methods work with text encoded in UTF-8, an encoding form f the Unicode Standard which uses one byte to encode the most basic haracters and two to four bytes to encode other characters. For xample, the `GetUtf8` method converts a text string to an array of bytes in UTF-8.
 
 In C# and Java, text strings are represented as sequences of 16-bit alues called `char` s. These sequences are well-formed under UTF-16, a 16-bit encoding form f Unicode, except if they contain unpaired surrogate code points. (A urrogate code point is used to encode supplementary characters, those ith code points U+10000 or higher, in UTF-16. A surrogate pair is a igh surrogate [U+D800 to U+DBFF] followed by a low surrogate [U+DC00 to +DFFF]. An unpaired surrogate code point is a surrogate not appearing n a surrogate pair.) Many of the methods in this class allow setting he behavior to follow when unpaired surrogate code points are found in ext strings, such as throwing an error or treating the unpaired urrogate as a replacement character (U+FFFD).
 
@@ -48,7 +48,7 @@ is a text string.
 
  * <i>index</i>: Index of the current position into the string.
 
- * <i>surrogateBehavior</i>: Specifies what kind of value to return if the previous character is an npaired surrogate code point: if 0, return the replacement character U+FFFD); if 1, return the value of the surrogate code point; if neither 0 or 1, return -1.
+ * <i>surrogateBehavior</i>: Specifies what kind of value to return if the previous character is an unpaired surrogate code point: if 0, return the replacement character (U+FFFD); if 1, return the value of the surrogate code point; if neither 0 nor 1, return -1.
 
 <b>Return Value:</b>
 
@@ -104,7 +104,7 @@ is a text string.
 
  * <i>index</i>: Index of the current position into the string.
 
- * <i>surrogateBehavior</i>: Specifies what kind of value to return if the previous character is an npaired surrogate code point: if 0, return the replacement character U+FFFD); if 1, return the value of the surrogate code point; if neither 0 or 1, return -1.
+ * <i>surrogateBehavior</i>: Specifies what kind of value to return if the previous character is an unpaired surrogate code point: if 0, return the replacement character (U+FFFD); if 1, return the value of the surrogate code point; if neither 0 nor 1, return -1.
 
 <b>Return Value:</b>
 
@@ -124,7 +124,7 @@ is null.
         string strA,
         string strB);
 
-Compares two strings in Unicode code point order. Unpaired surrogate code oints are treated as individual code points.
+Compares two strings in Unicode code point order. Unpaired surrogate code points are treated as individual code points.
 
 <b>Parameters:</b>
 
@@ -134,7 +134,7 @@ Compares two strings in Unicode code point order. Unpaired surrogate code oints 
 
 <b>Return Value:</b>
 
-A value indicating which string is " less" or " greater" . 0: Both trings are equal or null. Less than 0: a is null and b isn't; or the irst code point that's different is less in A than in B; or b starts with and is longer than a. Greater than 0: b is null and a isn't; or the irst code point that's different is greater in A than in B; or a starts ith b and is longer than b.
+A value indicating which string is " less" or " greater" . 0: Both strings are equal or null. Less than 0: a is null and b isn't; or the first code point that's different is less in A than in B; or b starts with a and is longer than a. Greater than 0: b is null and a isn't; or the first code point that's different is greater in A than in B; or a starts with b and is longer than b.
 
 ### GetUtf8Bytes
 
@@ -149,7 +149,7 @@ Encodes a string in UTF-8 as a byte array.
  * <i>str</i>: The parameter <i>str</i>
 is a text string.
 
- * <i>replace</i>: If true, replaces unpaired surrogate code points with the replacement haracter (U+FFFD). If false, stops processing when an unpaired surrogate ode point is seen.
+ * <i>replace</i>: If true, replaces unpaired surrogate code points with the replacement character (U+FFFD). If false, stops processing when an unpaired surrogate code point is seen.
 
 <b>Return Value:</b>
 
@@ -179,9 +179,9 @@ Encodes a string in UTF-8 as a byte array.
  * <i>str</i>: The parameter <i>str</i>
 is a text string.
 
- * <i>replace</i>: If true, replaces unpaired surrogate code points with the replacement haracter (U+FFFD). If false, stops processing when an unpaired surrogate ode point is seen.
+ * <i>replace</i>: If true, replaces unpaired surrogate code points with the replacement character (U+FFFD). If false, stops processing when an unpaired surrogate code point is seen.
 
- * <i>lenientLineBreaks</i>: If true, replaces carriage return (CR) not followed by line feed (LF) and F not preceded by CR with CR-LF pairs.
+ * <i>lenientLineBreaks</i>: If true, replaces carriage return (CR) not followed by line feed (LF) and LF not preceded by CR with CR-LF pairs.
 
 <b>Return Value:</b>
 
@@ -210,11 +210,11 @@ Calculates the number of bytes needed to encode a string in UTF-8.
  * <i>str</i>: The parameter <i>str</i>
 is a text string.
 
- * <i>replace</i>: If true, treats unpaired surrogate code points as having 3 UTF-8 bytes the UTF-8 length of the replacement character U+FFFD).
+ * <i>replace</i>: If true, treats unpaired surrogate code points as having 3 UTF-8 bytes (the UTF-8 length of the replacement character U+FFFD).
 
 <b>Return Value:</b>
 
-The number of bytes needed to encode the given string in UTF-8, or -1 if he string contains an unpaired surrogate code point and <i>replace</i>
+The number of bytes needed to encode the given string in UTF-8, or -1 if the string contains an unpaired surrogate code point and <i>replace</i>
 is false.
 
 <b>Exceptions:</b>
@@ -235,7 +235,7 @@ Generates a text string from a UTF-8 byte array.
 
  * <i>bytes</i>: A byte array containing text encoded in UTF-8.
 
- * <i>replace</i>: If true, replaces invalid encoding with the replacement character U+FFFD). If false, stops processing when invalid UTF-8 is seen.
+ * <i>replace</i>: If true, replaces invalid encoding with the replacement character (U+FFFD). If false, stops processing when invalid UTF-8 is seen.
 
 <b>Return Value:</b>
 
@@ -269,7 +269,7 @@ Generates a text string from a portion of a UTF-8 byte array.
 
  * <i>bytesCount</i>: Length, in bytes, of the UTF-8 string.
 
- * <i>replace</i>: If true, replaces invalid encoding with the replacement character U+FFFD). If false, stops processing when invalid UTF-8 is seen.
+ * <i>replace</i>: If true, replaces invalid encoding with the replacement character (U+FFFD). If false, stops processing when invalid UTF-8 is seen.
 
 <b>Return Value:</b>
 
@@ -304,15 +304,15 @@ Reads a string in UTF-8 encoding from a data stream.
 
  * <i>stream</i>: A readable data stream.
 
- * <i>bytesCount</i>: The length, in bytes, of the string. If this is less than 0, this unction will read until the end of the stream.
+ * <i>bytesCount</i>: The length, in bytes, of the string. If this is less than 0, this function will read until the end of the stream.
 
  * <i>builder</i>: A string builder object where the resulting string will be stored.
 
- * <i>replace</i>: If true, replaces invalid encoding with the replacement character U+FFFD). If false, stops processing when an unpaired surrogate code point s seen.
+ * <i>replace</i>: If true, replaces invalid encoding with the replacement character (U+FFFD). If false, stops processing when an unpaired surrogate code point is seen.
 
 <b>Return Value:</b>
 
-0 if the entire string was read without errors, -1 if the string is not alid UTF-8 and <i>replace</i>
+0 if the entire string was read without errors, -1 if the string is not valid UTF-8 and <i>replace</i>
 is false, or -2 if the end of the stream was reached before the last haracter was read completely (which is only the case if <i>bytesCount</i>
 is 0 or greater).
 
@@ -347,11 +347,11 @@ Reads a string in UTF-8 encoding from a byte array.
 
  * <i>builder</i>: A string builder object where the resulting string will be stored.
 
- * <i>replace</i>: If true, replaces invalid encoding with the replacement character U+FFFD). If false, stops processing when invalid UTF-8 is seen.
+ * <i>replace</i>: If true, replaces invalid encoding with the replacement character (U+FFFD). If false, stops processing when invalid UTF-8 is seen.
 
 <b>Return Value:</b>
 
-0 if the entire string was read without errors, or -1 if the string is ot valid UTF-8 and <i>replace</i>
+0 if the entire string was read without errors, or -1 if the string is not valid UTF-8 and <i>replace</i>
 is false.
 
 <b>Exceptions:</b>
@@ -372,7 +372,7 @@ is less than 0, or offset plus bytesCount is greater than the length of <i>data<
     public static string ReadUtf8ToString(
         System.IO.Stream stream);
 
-Reads a string in UTF-8 encoding from a data stream in full and returns hat string. Replaces invalid encoding with the replacement character U+FFFD).
+Reads a string in UTF-8 encoding from a data stream in full and returns that string. Replaces invalid encoding with the replacement character (U+FFFD).
 
 <b>Parameters:</b>
 
@@ -398,15 +398,15 @@ is null.
         int bytesCount,
         bool replace);
 
-Reads a string in UTF-8 encoding from a data stream and returns that tring.
+Reads a string in UTF-8 encoding from a data stream and returns that string.
 
 <b>Parameters:</b>
 
  * <i>stream</i>: A readable data stream.
 
- * <i>bytesCount</i>: The length, in bytes, of the string. If this is less than 0, this unction will read until the end of the stream.
+ * <i>bytesCount</i>: The length, in bytes, of the string. If this is less than 0, this function will read until the end of the stream.
 
- * <i>replace</i>: If true, replaces invalid encoding with the replacement character U+FFFD). If false, throws an error if an unpaired surrogate code point is een.
+ * <i>replace</i>: If true, replaces invalid encoding with the replacement character (U+FFFD). If false, throws an error if an unpaired surrogate code point is seen.
 
 <b>Return Value:</b>
 
@@ -427,7 +427,7 @@ is null.
     public static string ToLowerCaseAscii(
         string str);
 
-Returns a string with the basic upper-case letters A to Z (U+0041 to +005A) converted to lower-case. Other characters remain unchanged.
+Returns a string with the basic upper-case letters A to Z (U+0041 to U+005A) converted to lower-case. Other characters remain unchanged.
 
 <b>Parameters:</b>
 
@@ -444,7 +444,7 @@ is null.
     public static string ToUpperCaseAscii(
         string str);
 
-Returns a string with the basic lower-case letters A to Z (U+0061 to +007A) converted to upper-case. Other characters remain unchanged.
+Returns a string with the basic lower-case letters A to Z (U+0061 to U+007A) converted to upper-case. Other characters remain unchanged.
 
 <b>Parameters:</b>
 
@@ -477,11 +477,11 @@ Writes a portion of a string in UTF-8 encoding to a data stream.
 
  * <i>stream</i>: A writable data stream.
 
- * <i>replace</i>: If true, replaces unpaired surrogate code points with the replacement haracter (U+FFFD). If false, stops processing when an unpaired surrogate ode point is seen.
+ * <i>replace</i>: If true, replaces unpaired surrogate code points with the replacement character (U+FFFD). If false, stops processing when an unpaired surrogate code point is seen.
 
 <b>Return Value:</b>
 
-0 if the entire string portion was written; or -1 if the string portion ontains an unpaired surrogate code point and <i>replace</i>
+0 if the entire string portion was written; or -1 if the string portion contains an unpaired surrogate code point and <i>replace</i>
 is false.
 
 <b>Exceptions:</b>
@@ -523,13 +523,13 @@ Writes a portion of a string in UTF-8 encoding to a data stream.
 
  * <i>stream</i>: A writable data stream.
 
- * <i>replace</i>: If true, replaces unpaired surrogate code points with the replacement haracter (U+FFFD). If false, stops processing when an unpaired surrogate ode point is seen.
+ * <i>replace</i>: If true, replaces unpaired surrogate code points with the replacement character (U+FFFD). If false, stops processing when an unpaired surrogate code point is seen.
 
- * <i>lenientLineBreaks</i>: If true, replaces carriage return (CR) not followed by line feed (LF) and F not preceded by CR with CR-LF pairs.
+ * <i>lenientLineBreaks</i>: If true, replaces carriage return (CR) not followed by line feed (LF) and LF not preceded by CR with CR-LF pairs.
 
 <b>Return Value:</b>
 
-0 if the entire string portion was written; or -1 if the string portion ontains an unpaired surrogate code point and <i>replace</i>
+0 if the entire string portion was written; or -1 if the string portion contains an unpaired surrogate code point and <i>replace</i>
 is false.
 
 <b>Exceptions:</b>
@@ -564,11 +564,11 @@ Writes a string in UTF-8 encoding to a data stream.
 
  * <i>stream</i>: A writable data stream.
 
- * <i>replace</i>: If true, replaces unpaired surrogate code points with the replacement haracter (U+FFFD). If false, stops processing when an unpaired surrogate ode point is seen.
+ * <i>replace</i>: If true, replaces unpaired surrogate code points with the replacement character (U+FFFD). If false, stops processing when an unpaired surrogate code point is seen.
 
 <b>Return Value:</b>
 
-0 if the entire string was written; or -1 if the string contains an npaired surrogate code point and <i>replace</i>
+0 if the entire string was written; or -1 if the string contains an unpaired surrogate code point and <i>replace</i>
 is false.
 
 <b>Exceptions:</b>

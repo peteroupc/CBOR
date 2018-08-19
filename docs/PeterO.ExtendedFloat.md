@@ -62,7 +62,7 @@ Positive infinity, greater than any other number.
 
     public static readonly PeterO.ExtendedFloat SignalingNaN;
 
-A not-a-number value that signals an invalid operation flag when it's assed as an argument to any arithmetic operation in arbitrary-precision inary float.
+A not-a-number value that signals an invalid operation flag when it's passed as an argument to any arithmetic operation in arbitrary-precision binary float.
 
 ### Ten
 
@@ -80,7 +80,7 @@ Represents the number 0.
 
     public PeterO.BigInteger Exponent { get; }
 
-Gets this object's exponent. This object's value will be an integer if he exponent is positive or zero.
+Gets this object's exponent. This object's value will be an integer if the exponent is positive or zero.
 
 <b>Returns:</b>
 
@@ -92,7 +92,7 @@ This object's exponent. This object's value will be an integer if the xponent is
 
 <b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
-Gets a value indicating whether this object is negative, including egative zero.
+Gets a value indicating whether this object is negative, including negative zero.
 
 <b>Returns:</b>
 
@@ -194,7 +194,7 @@ is null.
     public override bool Equals(
         object obj);
 
-Determines whether this object's mantissa and exponent are equal to those f another object and that other object is an arbitrary-precision decimal umber.
+Determines whether this object's mantissa and exponent are equal to those of another object and that other object is an arbitrary-precision decimal number.
 
 <b>Parameters:</b>
 
@@ -212,7 +212,7 @@ is an arbitrary object.
 
 <b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
-Determines whether this object's mantissa and exponent are equal to those f another object.
+Determines whether this object's mantissa and exponent are equal to those of another object.
 
 <b>Parameters:</b>
 
@@ -235,7 +235,7 @@ is null.
 
 <b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
-Determines whether this object's mantissa and exponent are equal to those f another object.
+Determines whether this object's mantissa and exponent are equal to those of another object.
 
 <b>Parameters:</b>
 
@@ -276,7 +276,7 @@ The parsed number, converted to arbitrary-precision binary float.
 
 <b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
-Creates a binary float from a text string that represents a number. Note hat if the string contains a negative exponent, the resulting value might ot be exact, in which case the resulting binary float will be an pproximation of this decimal number's value. (NOTE: This documentation reviously said the binary float will contain enough precision to ccurately convert it to a 32-bit or 64-bit floating point number. Due to ouble rounding, this will generally not be the case for certain numbers onverted from decimal to ExtendedFloat via this method and in turn onverted to `double` or `float` .)The format of the string generally consists of:
+Creates a binary float from a text string that represents a number. Note that if the string contains a negative exponent, the resulting value might not be exact, in which case the resulting binary float will be an approximation of this decimal number's value. (NOTE: This documentation previously said the binary float will contain enough precision to accurately convert it to a 32-bit or 64-bit floating point number. Due to double rounding, this will generally not be the case for certain numbers converted from decimal to ExtendedFloat via this method and in turn converted to `double` or `float` .)The format of the string generally consists of:
 
  * An optional plus sign ("+" , U+002B) or minus sign ("-", U+002D) (if -' , the value is negative.)
 
@@ -300,7 +300,7 @@ begins.
 (but not more than <i>str</i>
 's length).
 
- * <i>ctx</i>: A PrecisionContext object specifying the precision, rounding, and xponent range to apply to the parsed number. Can be null.
+ * <i>ctx</i>: A PrecisionContext object specifying the precision, rounding, and exponent range to apply to the parsed number. Can be null.
 
 <b>Return Value:</b>
 
@@ -325,7 +325,7 @@ is less than <i>length</i>
 
     public override int GetHashCode();
 
-Calculates this object's hash code. No application or process IDs are sed in the hash code calculation.
+Calculates this object's hash code. No application or process IDs are used in the hash code calculation.
 
 <b>Return Value:</b>
 
@@ -335,7 +335,7 @@ This object's hash code.
 
     public bool IsInfinity();
 
-Gets a value indicating whether this object is positive or negative nfinity.
+Gets a value indicating whether this object is positive or negative infinity.
 
 <b>Return Value:</b>
 
@@ -381,7 +381,7 @@ Returns whether this object is positive infinity.
 
 <b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
-Gets a value indicating whether this object is a quiet not-a-number alue.
+Gets a value indicating whether this object is a quiet not-a-number value.
 
 <b>Return Value:</b>
 
@@ -393,7 +393,7 @@ Gets a value indicating whether this object is a quiet not-a-number alue.
 
 <b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
-Gets a value indicating whether this object is a signaling not-a-number alue.
+Gets a value indicating whether this object is a signaling not-a-number value.
 
 <b>Return Value:</b>
 
@@ -407,4 +407,4 @@ Converts this value to a string.
 
 <b>Return Value:</b>
 
-A string representation of this object. The value is converted to decimal nd the decimal form of this number's value is returned.
+A string representation of this object. The value is converted to decimal and the decimal form of this number's value is returned.

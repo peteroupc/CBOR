@@ -2,13 +2,13 @@
 
     public interface ICBORTag
 
-Implemented by classes that validate CBOR objects belonging to a specific ag.
+Implemented by classes that validate CBOR objects belonging to a specific tag.
 
 ### GetTypeFilter
 
     PeterO.Cbor.CBORTypeFilter GetTypeFilter();
 
-Gets a type filter specifying what kinds of CBOR objects are supported by his tag.
+Gets a type filter specifying what kinds of CBOR objects are supported by this tag.
 
 <b>Return Value:</b>
 
@@ -19,7 +19,7 @@ A CBOR type filter.
     PeterO.Cbor.CBORObject ValidateObject(
         PeterO.Cbor.CBORObject obj);
 
-Generates a CBOR object based on the data of another object. If the data s not valid, should throw a CBORException.
+Generates a CBOR object based on the data of another object. If the data is not valid, should throw a CBORException.
 
 <b>Parameters:</b>
 
@@ -27,4 +27,4 @@ Generates a CBOR object based on the data of another object. If the data s not v
 
 <b>Return Value:</b>
 
-A CBORObject object. Note that this method may choose to return the same bject as the parameter.
+A CBORObject object. Note that this method may choose to return the same object as the parameter.

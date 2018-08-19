@@ -36,7 +36,7 @@ A map of CBOR objects.
 
     public static PeterO.Cbor.CBORType Number = 0;
 
-A number of any kind, including integers, big integers, floating point umbers, and decimal numbers. The floating-point value Not-a-Number is lso included in the Number type.
+A number of any kind, including integers, big integers, floating point numbers, and decimal numbers. The floating-point value Not-a-Number is also included in the Number type.
 
 ### SimpleValue
 

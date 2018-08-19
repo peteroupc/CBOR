@@ -86,7 +86,7 @@ Positive infinity, greater than any other number.
 
     public static readonly PeterO.ExtendedDecimal SignalingNaN;
 
-A not-a-number value that signals an invalid operation flag when it's assed as an argument to any arithmetic operation in arbitrary-precision ecimal.
+A not-a-number value that signals an invalid operation flag when it's passed as an argument to any arithmetic operation in arbitrary-precision decimal.
 
 ### Ten
 
@@ -104,7 +104,7 @@ Represents the number 0.
 
     public PeterO.BigInteger Exponent { get; }
 
-Gets this object's exponent. This object's value will be an integer if he exponent is positive or zero.
+Gets this object's exponent. This object's value will be an integer if the exponent is positive or zero.
 
 <b>Returns:</b>
 
@@ -116,7 +116,7 @@ This object's exponent. This object's value will be an integer if the xponent is
 
 <b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
-Gets a value indicating whether this object is negative, including egative zero.
+Gets a value indicating whether this object is negative, including negative zero.
 
 <b>Returns:</b>
 
@@ -168,7 +168,7 @@ is an ExtendedDecimal object.
 
 <b>Return Value:</b>
 
-Less than 0 if this value is less than, 0 if equal to, or greater than 0 f greater than the other extended decimal.
+Less than 0 if this value is less than, 0 if equal to, or greater than 0 if greater than the other extended decimal.
 
 ### Create
 
@@ -200,7 +200,7 @@ is null.
     public override bool Equals(
         object obj);
 
-Determines whether this object's mantissa and exponent are equal to those f another object and that other object is an arbitrary-precision decimal umber.
+Determines whether this object's mantissa and exponent are equal to those of another object and that other object is an arbitrary-precision decimal number.
 
 <b>Parameters:</b>
 
@@ -218,7 +218,7 @@ is an arbitrary object.
 
 <b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
-Determines whether this object's mantissa and exponent are equal to those f another object.
+Determines whether this object's mantissa and exponent are equal to those of another object.
 
 <b>Parameters:</b>
 
@@ -241,7 +241,7 @@ Creates a decimal number from a text string that represents a number. See `FromS
 
 <b>Return Value:</b>
 
-An arbitrary-precision decimal number with the same value as the given tring.
+An arbitrary-precision decimal number with the same value as the given string.
 
 <b>Exceptions:</b>
 
@@ -257,7 +257,7 @@ is not a correctly formatted number string.
 
     public override int GetHashCode();
 
-Calculates this object's hash code. No application or process IDs are sed in the hash code calculation.
+Calculates this object's hash code. No application or process IDs are used in the hash code calculation.
 
 <b>Return Value:</b>
 
@@ -267,7 +267,7 @@ This object's hash code.
 
     public bool IsInfinity();
 
-Gets a value indicating whether this object is positive or negative nfinity.
+Gets a value indicating whether this object is positive or negative infinity.
 
 <b>Return Value:</b>
 
@@ -289,7 +289,7 @@ Gets a value indicating whether this object is not a number (NaN).
 
 <b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
-Gets a value indicating whether this object is a quiet not-a-number alue.
+Gets a value indicating whether this object is a quiet not-a-number value.
 
 <b>Return Value:</b>
 
@@ -299,27 +299,27 @@ Gets a value indicating whether this object is a quiet not-a-number alue.
 
     public double ToDouble();
 
-Converts this value to a 64-bit floating-point number. The half-even ounding mode is used.If this value is a NaN, sets the high bit of the 64-bit floating point umber's mantissa for a quiet NaN, and clears it for a signaling NaN. hen the next highest bit of the mantissa is cleared for a quiet NaN, nd set for a signaling NaN. Then the other bits of the mantissa are set o the lowest bits of this object's unsigned mantissa.
+Converts this value to a 64-bit floating-point number. The half-even rounding mode is used.If this value is a NaN, sets the high bit of the 64-bit floating point umber's mantissa for a quiet NaN, and clears it for a signaling NaN. hen the next highest bit of the mantissa is cleared for a quiet NaN, nd set for a signaling NaN. Then the other bits of the mantissa are set o the lowest bits of this object's unsigned mantissa.
 
 <b>Return Value:</b>
 
-The closest 64-bit floating-point number to this value. The return value an be positive infinity or negative infinity if this value exceeds the ange of a 64-bit floating point number.
+The closest 64-bit floating-point number to this value. The return value can be positive infinity or negative infinity if this value exceeds the range of a 64-bit floating point number.
 
 ### ToSingle
 
     public float ToSingle();
 
-Converts this value to a 32-bit floating-point number. The half-even ounding mode is used.If this value is a NaN, sets the high bit of the 32-bit floating point umber's mantissa for a quiet NaN, and clears it for a signaling NaN. hen the next highest bit of the mantissa is cleared for a quiet NaN, nd set for a signaling NaN. Then the other bits of the mantissa are set o the lowest bits of this object's unsigned mantissa.
+Converts this value to a 32-bit floating-point number. The half-even rounding mode is used.If this value is a NaN, sets the high bit of the 32-bit floating point umber's mantissa for a quiet NaN, and clears it for a signaling NaN. hen the next highest bit of the mantissa is cleared for a quiet NaN, nd set for a signaling NaN. Then the other bits of the mantissa are set o the lowest bits of this object's unsigned mantissa.
 
 <b>Return Value:</b>
 
-The closest 32-bit floating-point number to this value. The return value an be positive infinity or negative infinity if this value exceeds the ange of a 32-bit floating point number.
+The closest 32-bit floating-point number to this value. The return value can be positive infinity or negative infinity if this value exceeds the range of a 32-bit floating point number.
 
 ### ToString
 
     public override string ToString();
 
-Converts this value to a string. Returns a value compatible with this lass's FromString method.
+Converts this value to a string. Returns a value compatible with this class's FromString method.
 
 <b>Return Value:</b>
 

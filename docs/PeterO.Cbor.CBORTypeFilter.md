@@ -2,7 +2,7 @@
 
     public sealed class CBORTypeFilter
 
-Specifies what kinds of CBOR objects a tag can be. This class is used hen a CBOR object is being read from a data stream. This class can't be nherited; this is a change in version 2.0 from previous versions, where he class was inadvertently left inheritable.
+Specifies what kinds of CBOR objects a tag can be. This class is used when a CBOR object is being read from a data stream. This class can't be inherited; this is a change in version 2.0 from previous versions, where the class was inadvertently left inheritable.
 
 ### Any
 
@@ -45,7 +45,7 @@ A filter that allows unsigned integers.
     public bool ArrayIndexAllowed(
         int index);
 
-Determines whether this type filter allows CBOR arrays and the given rray index is allowed under this type filter.
+Determines whether this type filter allows CBOR arrays and the given array index is allowed under this type filter.
 
 <b>Parameters:</b>
 
@@ -119,7 +119,7 @@ Gets the type filter for this array filter by its index.
 
 <b>Return Value:</b>
 
-Returns None if the index is out of range, or Any if this filter doesn't ilter an array. Returns the appropriate filter for the array index therwise.
+Returns None if the index is out of range, or Any if this filter doesn't filter an array. Returns the appropriate filter for the array index otherwise.
 
 ### GetSubFilter
 
@@ -134,14 +134,14 @@ Gets the type filter for this array filter by its index.
 
 <b>Return Value:</b>
 
-Returns None if the index is out of range, or Any if this filter doesn't ilter an array. Returns the appropriate filter for the array index therwise.
+Returns None if the index is out of range, or Any if this filter doesn't filter an array. Returns the appropriate filter for the array index otherwise.
 
 ### MajorTypeMatches
 
     public bool MajorTypeMatches(
         int type);
 
-Returns whether the given CBOR major type matches a major type allowed by his filter.
+Returns whether the given CBOR major type matches a major type allowed by this filter.
 
 <b>Parameters:</b>
 
@@ -155,7 +155,7 @@ Returns whether the given CBOR major type matches a major type allowed by his fi
 
     public bool NonFPSimpleValueAllowed();
 
-Returns whether this filter allows simple values that are not loating-point numbers.
+Returns whether this filter allows simple values that are not floating-point numbers.
 
 <b>Return Value:</b>
 
@@ -166,7 +166,7 @@ Returns whether this filter allows simple values that are not loating-point numb
     public bool TagAllowed(
         int tag);
 
-Gets a value indicating whether CBOR objects can have the given tag umber.
+Gets a value indicating whether CBOR objects can have the given tag number.
 
 <b>Parameters:</b>
 
@@ -181,7 +181,7 @@ Gets a value indicating whether CBOR objects can have the given tag umber.
     public bool TagAllowed(
         long longTag);
 
-Gets a value indicating whether CBOR objects can have the given tag umber.
+Gets a value indicating whether CBOR objects can have the given tag number.
 
 <b>Parameters:</b>
 
@@ -196,7 +196,7 @@ Gets a value indicating whether CBOR objects can have the given tag umber.
     public bool TagAllowed(
         PeterO.Numbers.EInteger bigTag);
 
-Gets a value indicating whether CBOR objects can have the given tag umber.
+Gets a value indicating whether CBOR objects can have the given tag number.
 
 <b>Parameters:</b>
 
@@ -228,13 +228,13 @@ A CBORTypeFilter object.
         int arrayLength,
         params PeterO.Cbor.CBORTypeFilter[] elements);
 
-Copies this filter and includes CBOR arrays with an exact length to the ew filter.
+Copies this filter and includes CBOR arrays with an exact length to the new filter.
 
 <b>Parameters:</b>
 
  * <i>arrayLength</i>: The desired maximum length of an array.
 
- * <i>elements</i>: An array containing the allowed types for each element in the array. here must be at least as many elements here as given in the arrayLength arameter.
+ * <i>elements</i>: An array containing the allowed types for each element in the array. There must be at least as many elements here as given in the arrayLength parameter.
 
 <b>Return Value:</b>
 
@@ -257,13 +257,13 @@ The parameter elements has fewer elements than specified in arrayLength.
         int arrayLength,
         params PeterO.Cbor.CBORTypeFilter[] elements);
 
-Copies this filter and includes CBOR arrays with at least a given length o the new filter.
+Copies this filter and includes CBOR arrays with at least a given length to the new filter.
 
 <b>Parameters:</b>
 
  * <i>arrayLength</i>: The desired minimum length of an array.
 
- * <i>elements</i>: An array containing the allowed types for each element in the array. here must be at least as many elements here as given in the arrayLength arameter.
+ * <i>elements</i>: An array containing the allowed types for each element in the array. There must be at least as many elements here as given in the arrayLength parameter.
 
 <b>Return Value:</b>
 
@@ -325,7 +325,7 @@ A CBORTypeFilter object.
     public PeterO.Cbor.CBORTypeFilter WithTags(
         params int[] tags);
 
-Copies this filter and includes a set of valid CBOR tags in the new ilter.
+Copies this filter and includes a set of valid CBOR tags in the new filter.
 
 <b>Parameters:</b>
 

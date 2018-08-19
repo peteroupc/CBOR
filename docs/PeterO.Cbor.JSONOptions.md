@@ -13,7 +13,7 @@ Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOpti
 
 <b>Parameters:</b>
 
- * <i>base64Padding</i>: Whether padding is included when writing data in base64url or traditional ase64 format to JSON.
+ * <i>base64Padding</i>: Whether padding is included when writing data in base64url or traditional base64 format to JSON.
 
 ### Default
 

@@ -28,7 +28,7 @@ The default settings for "plain old data" options.
 
     public bool RemoveIsPrefix { get; }
 
-Gets a value indicating whether the "Is" prefix in property names is emoved before they are used as keys.
+Gets a value indicating whether the "Is" prefix in property names is removed before they are used as keys.
 
 <b>Returns:</b>
 
@@ -38,7 +38,7 @@ Gets a value indicating whether the "Is" prefix in property names is emoved befo
 
     public bool UseCamelCase { get; }
 
-Gets a value indicating whether property names are converted to camel ase before they are used as keys.
+Gets a value indicating whether property names are converted to camel case before they are used as keys.
 
 <b>Returns:</b>
 
