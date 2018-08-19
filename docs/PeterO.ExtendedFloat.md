@@ -8,23 +8,23 @@
 
 <b>This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called `PeterO.Numbers.EFloat` in the<a href="https://www.nuget.org/packages/PeterO.Numbers"> `PeterO.Numbers` </a>library (in .NET), or `com.upokecenter.numbers.EFloat` in the<a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers` </a>artifact (in Java). This new class can be used in the `CBORObject.FromObject(object)` method (by including the new library in your code, among other hings).</b>
 
-Represents an arbitrary-precision binary floating-point number. Consists of an integer mantissa and an integer exponent, both arbitrary-precision. The value of the number equals mantissa * 2^exponent. This class also supports values for negative zero, not-a-number (NaN) values, and infinity.
+Represents an arbitrary-precision binary floating-point number. onsists of an integer mantissa and an integer exponent, both rbitrary-precision. The value of the number equals mantissa * ^exponent. This class also supports values for negative zero, ot-a-number (NaN) values, and infinity.
 
-Passing a signaling NaN to any arithmetic operation shown here will signal the flag FlagInvalid and return a quiet NaN, even if another operand to that operation is a quiet NaN, unless noted otherwise.
+Passing a signaling NaN to any arithmetic operation shown here will ignal the flag FlagInvalid and return a quiet NaN, even if another perand to that operation is a quiet NaN, unless noted otherwise.
 
-Passing a quiet NaN to any arithmetic operation shown here will return a quiet NaN, unless noted otherwise.
+Passing a quiet NaN to any arithmetic operation shown here will return quiet NaN, unless noted otherwise.
 
-Unless noted otherwise,passing a null arbitrary-precision binary float argument to any method here will throw an exception.
+Unless noted otherwise,passing a null arbitrary-precision binary float rgument to any method here will throw an exception.
 
-When an arithmetic operation signals the flag FlagInvalid, FlagOverflow, or FlagDivideByZero, it will not throw an exception too, unless the operation's trap is enabled in the precision context (see PrecisionContext's Traps property).
+When an arithmetic operation signals the flag FlagInvalid, lagOverflow, or FlagDivideByZero, it will not throw an exception too, nless the operation's trap is enabled in the precision context (see recisionContext's Traps property).
 
-An arbitrary-precision binary float value can be serialized in one of the following ways:
+An arbitrary-precision binary float value can be serialized in one of he following ways:
 
- * By calling the toString() method. However, not all strings can be converted back to an arbitrary-precision binary float without loss, especially if the string has a fractional part.
+ * By calling the toString() method. However, not all strings can be onverted back to an arbitrary-precision binary float without loss, specially if the string has a fractional part.
 
- * By calling the UnsignedMantissa, Exponent, and IsNegative properties, and calling the IsInfinity, IsQuietNaN, and IsSignalingNaN methods. The return values combined will uniquely identify a particular arbitrary-precision binary float value.
+ * By calling the UnsignedMantissa, Exponent, and IsNegative properties, nd calling the IsInfinity, IsQuietNaN, and IsSignalingNaN methods. he return values combined will uniquely identify a particular rbitrary-precision binary float value.
 
-If an operation requires creating an intermediate value that might be too big to fit in memory (or might require more than 2 gigabytes of memory to store -- due to the current use of a 32-bit integer internally as a length), the operation may signal an invalid-operation flag and return not-a-number (NaN). In certain rare cases, the CompareTo method may throw OutOfMemoryException (called OutOfMemoryError in Java) in the same circumstances.
+If an operation requires creating an intermediate value that might be oo big to fit in memory (or might require more than 2 gigabytes of emory to store -- due to the current use of a 32-bit integer internally s a length), the operation may signal an invalid-operation flag and eturn not-a-number (NaN). In certain rare cases, the CompareTo method ay throw OutOfMemoryException (called OutOfMemoryError in Java) in the ame circumstances.
 
 <b>Thread safety:</b>Instances of this class are immutable, so they are inherently safe for se by multiple threads. Multiple instances of this object with the same roperties are interchangeable, so they should not be compared using the ==" operator (which might only check if each side of the operator is he same instance).
 
@@ -62,7 +62,7 @@ Positive infinity, greater than any other number.
 
     public static readonly PeterO.ExtendedFloat SignalingNaN;
 
-A not-a-number value that signals an invalid operation flag when it's passed as an argument to any arithmetic operation in arbitrary-precision binary float.
+A not-a-number value that signals an invalid operation flag when it's assed as an argument to any arithmetic operation in arbitrary-precision inary float.
 
 ### Ten
 
@@ -80,11 +80,11 @@ Represents the number 0.
 
     public PeterO.BigInteger Exponent { get; }
 
-Gets this object's exponent. This object's value will be an integer if the exponent is positive or zero.
+Gets this object's exponent. This object's value will be an integer if he exponent is positive or zero.
 
 <b>Returns:</b>
 
-This object's exponent. This object's value will be an integer if the exponent is positive or zero.
+This object's exponent. This object's value will be an integer if the xponent is positive or zero.
 
 ### IsNegative
 
@@ -92,7 +92,7 @@ This object's exponent. This object's value will be an integer if the exponent i
 
 <b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
-Gets a value indicating whether this object is negative, including negative zero.
+Gets a value indicating whether this object is negative, including egative zero.
 
 <b>Returns:</b>
 
@@ -106,7 +106,7 @@ Gets this object's un-scaled value.
 
 <b>Returns:</b>
 
-This object's un-scaled value. Will be negative if this object's value is negative (including a negative NaN).
+This object's un-scaled value. Will be negative if this object's value is egative (including a negative NaN).
 
 ### Sign
 
@@ -139,8 +139,8 @@ Compares this extended float to another.
 
 <b>Parameters:</b>
 
- * <i>other</i>: The parameter  <i>other</i>
- is not documented yet.
+ * <i>other</i>: The parameter <i>other</i>
+is not documented yet.
 
 <b>Return Value:</b>
 
@@ -194,7 +194,7 @@ is null.
     public override bool Equals(
         object obj);
 
-Determines whether this object's mantissa and exponent are equal to those of another object and that other object is an arbitrary-precision decimal number.
+Determines whether this object's mantissa and exponent are equal to those f another object and that other object is an arbitrary-precision decimal umber.
 
 <b>Parameters:</b>
 
@@ -212,7 +212,7 @@ is an arbitrary object.
 
 <b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
-Determines whether this object's mantissa and exponent are equal to those of another object.
+Determines whether this object's mantissa and exponent are equal to those f another object.
 
 <b>Parameters:</b>
 
@@ -235,7 +235,7 @@ is null.
 
 <b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
-Determines whether this object's mantissa and exponent are equal to those of another object.
+Determines whether this object's mantissa and exponent are equal to those f another object.
 
 <b>Parameters:</b>
 
@@ -276,17 +276,17 @@ The parsed number, converted to arbitrary-precision binary float.
 
 <b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
-Creates a binary float from a text string that represents a number. Note that if the string contains a negative exponent, the resulting value might not be exact, in which case the resulting binary float will be an approximation of this decimal number's value. (NOTE: This documentation previously said the binary float will contain enough precision to accurately convert it to a 32-bit or 64-bit floating point number. Due to double rounding, this will generally not be the case for certain numbers converted from decimal to ExtendedFloat via this method and in turn converted to `double` or `float` .)The format of the string generally consists of:
+Creates a binary float from a text string that represents a number. Note hat if the string contains a negative exponent, the resulting value might ot be exact, in which case the resulting binary float will be an pproximation of this decimal number's value. (NOTE: This documentation reviously said the binary float will contain enough precision to ccurately convert it to a 32-bit or 64-bit floating point number. Due to ouble rounding, this will generally not be the case for certain numbers onverted from decimal to ExtendedFloat via this method and in turn onverted to `double` or `float` .)The format of the string generally consists of:
 
- * An optional plus sign ("+" , U+002B) or minus sign ("-", U+002D) (if '-' , the value is negative.)
+ * An optional plus sign ("+" , U+002B) or minus sign ("-", U+002D) (if -' , the value is negative.)
 
- * One or more digits, with a single optional decimal point after the first digit and before the last digit.
+ * One or more digits, with a single optional decimal point after the irst digit and before the last digit.
 
- * Optionally, "E+"/"e+" (positive exponent) or "E-"/"e-" (negative exponent) plus one or more digits specifying the exponent.
+ * Optionally, "E+"/"e+" (positive exponent) or "E-"/"e-" (negative xponent) plus one or more digits specifying the exponent.
 
-The string can also be "-INF", "-Infinity", "Infinity", "INF", quiet NaN ("NaN") followed by any number of digits, or signaling NaN ("sNaN") followed by any number of digits, all in any combination of upper and lower case.
+The string can also be "-INF", "-Infinity", "Infinity", "INF", quiet aN ("NaN") followed by any number of digits, or signaling NaN ("sNaN") ollowed by any number of digits, all in any combination of upper and ower case.
 
-All characters mentioned above are the corresponding characters in the Basic Latin range. In particular, the digits must be the basic digits 0 to 9 (U+0030 to U+0039). The string is not allowed to contain white space characters, including spaces.
+All characters mentioned above are the corresponding characters in the asic Latin range. In particular, the digits must be the basic digits 0 o 9 (U+0030 to U+0039). The string is not allowed to contain white pace characters, including spaces.
 
 <b>Parameters:</b>
 
@@ -300,7 +300,7 @@ begins.
 (but not more than <i>str</i>
 's length).
 
- * <i>ctx</i>: A PrecisionContext object specifying the precision, rounding, and exponent range to apply to the parsed number. Can be null.
+ * <i>ctx</i>: A PrecisionContext object specifying the precision, rounding, and xponent range to apply to the parsed number. Can be null.
 
 <b>Return Value:</b>
 
@@ -325,7 +325,7 @@ is less than <i>length</i>
 
     public override int GetHashCode();
 
-Calculates this object's hash code. No application or process IDs are used in the hash code calculation.
+Calculates this object's hash code. No application or process IDs are sed in the hash code calculation.
 
 <b>Return Value:</b>
 
@@ -335,7 +335,7 @@ This object's hash code.
 
     public bool IsInfinity();
 
-Gets a value indicating whether this object is positive or negative infinity.
+Gets a value indicating whether this object is positive or negative nfinity.
 
 <b>Return Value:</b>
 
@@ -381,7 +381,7 @@ Returns whether this object is positive infinity.
 
 <b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
-Gets a value indicating whether this object is a quiet not-a-number value.
+Gets a value indicating whether this object is a quiet not-a-number alue.
 
 <b>Return Value:</b>
 
@@ -393,7 +393,7 @@ Gets a value indicating whether this object is a quiet not-a-number value.
 
 <b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
-Gets a value indicating whether this object is a signaling not-a-number value.
+Gets a value indicating whether this object is a signaling not-a-number alue.
 
 <b>Return Value:</b>
 
@@ -407,4 +407,4 @@ Converts this value to a string.
 
 <b>Return Value:</b>
 
-A string representation of this object. The value is converted to decimal and the decimal form of this number's value is returned.
+A string representation of this object. The value is converted to decimal nd the decimal form of this number's value is returned.

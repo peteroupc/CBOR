@@ -95,7 +95,7 @@ This object's denominator.
 
 <b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
-Gets a value indicating whether this object is finite (not infinity or NaN).
+Gets a value indicating whether this object is finite (not infinity or aN).
 
 <b>Returns:</b>
 
@@ -105,7 +105,7 @@ Gets a value indicating whether this object is finite (not infinity or NaN).
 
     public bool IsNegative { get; }
 
-Gets a value indicating whether this object's value is negative (including negative zero).
+Gets a value indicating whether this object's value is negative including negative zero).
 
 <b>Returns:</b>
 
@@ -131,7 +131,7 @@ Gets this object's numerator.
 
 <b>Returns:</b>
 
-This object's numerator. If this object is a not-a-number value, returns the diagnostic information (which will be negative if this object is negative).
+This object's numerator. If this object is a not-a-number value, returns he diagnostic information (which will be negative if this object is egative).
 
 ### Sign
 
@@ -143,7 +143,7 @@ Gets the sign of this rational number.
 
 <b>Returns:</b>
 
-Zero if this value is zero or negative zero; -1 if this value is less than 0; and 1 if this value is greater than 0.
+Zero if this value is zero or negative zero; -1 if this value is less han 0; and 1 if this value is greater than 0.
 
 ### UnsignedNumerator
 
@@ -153,7 +153,7 @@ Gets this object's numerator with the sign removed.
 
 <b>Returns:</b>
 
-This object's numerator. If this object is a not-a-number value, returns the diagnostic information.
+This object's numerator. If this object is a not-a-number value, returns he diagnostic information.
 
 ### CompareTo
 
@@ -169,7 +169,7 @@ is an ExtendedRational object.
 
 <b>Return Value:</b>
 
-Less than 0 if this value is less than, 0 if equal to, or greater than 0 if greater than the other value.
+Less than 0 if this value is less than, 0 if equal to, or greater than 0 f greater than the other value.
 
 ### Create
 
@@ -252,7 +252,7 @@ Either `true` or `false` .
 
     public override int GetHashCode();
 
-Calculates the hash code for this object. No application or process IDs are used in the hash code calculation.
+Calculates the hash code for this object. No application or process IDs re used in the hash code calculation.
 
 <b>Return Value:</b>
 
@@ -266,4 +266,4 @@ Converts this object to a text string.
 
 <b>Return Value:</b>
 
-A string representation of this object. The result can be Infinity, NaN, or sNaN (with a minus sign before it for negative values), or a number of the following form: [-]numerator/denominator.
+A string representation of this object. The result can be Infinity, NaN, r sNaN (with a minus sign before it for negative values), or a number of he following form: [-]numerator/denominator.

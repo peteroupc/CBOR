@@ -10,47 +10,47 @@
 
 Represents an arbitrary-precision decimal floating-point number.<b>About decimal arithmetic</b>
 
-Decimal (base-10) arithmetic, such as that provided by this class, is appropriate for calculations involving such real-world data as prices and other sums of money, tax rates, and measurements. These calculations often involve multiplying or dividing one decimal with another decimal, or performing other operations on decimal numbers. Many of these calculations also rely on rounding behavior in which the result after rounding is a decimal number (for example, multiplying a price by a premium rate, then rounding, should result in a decimal amount of money).
+Decimal (base-10) arithmetic, such as that provided by this class, is ppropriate for calculations involving such real-world data as prices nd other sums of money, tax rates, and measurements. These calculations ften involve multiplying or dividing one decimal with another decimal, r performing other operations on decimal numbers. Many of these alculations also rely on rounding behavior in which the result after ounding is a decimal number (for example, multiplying a price by a remium rate, then rounding, should result in a decimal amount of oney).
 
-On the other hand, most implementations of `float` and `double` , including in C# and Java, store numbers in a binary (base-2) floating-point format and use binary floating-point arithmetic. Many decimal numbers can't be represented exactly in binary floating-point format (regardless of its length). Applying binary arithmetic to numbers intended to be decimals can sometimes lead to unintuitive results, as is shown in the description for the FromDouble() method of this class.
+On the other hand, most implementations of `float` and `double` , including in C# and Java, store numbers in a binary (base-2) loating-point format and use binary floating-point arithmetic. Many ecimal numbers can't be represented exactly in binary floating-point ormat (regardless of its length). Applying binary arithmetic to numbers ntended to be decimals can sometimes lead to unintuitive results, as is hown in the description for the FromDouble() method of this class.
 
 <b>About ExtendedDecimal instances</b>
 
-Each instance of this class consists of an integer mantissa and an integer exponent, both arbitrary-precision. The value of the number equals mantissa * 10^exponent.
+Each instance of this class consists of an integer mantissa and an nteger exponent, both arbitrary-precision. The value of the number quals mantissa * 10^exponent.
 
-The mantissa is the value of the digits that make up a number, ignoring the decimal point and exponent. For example, in the number 2356.78, the mantissa is 235678. The exponent is where the "floating" decimal point of the number is located. A positive exponent means "move it to the right", and a negative exponent means "move it to the left." In the example 2, 356.78, the exponent is -2, since it has 2 decimal places and the decimal point is "moved to the left by 2." Therefore, in the arbitrary-precision decimal representation, this number would be stored as 235678 * 10^-2.
+The mantissa is the value of the digits that make up a number, ignoring he decimal point and exponent. For example, in the number 2356.78, the antissa is 235678. The exponent is where the "floating" decimal point f the number is located. A positive exponent means "move it to the ight", and a negative exponent means "move it to the left." In the xample 2, 356.78, the exponent is -2, since it has 2 decimal places and he decimal point is "moved to the left by 2." Therefore, in the rbitrary-precision decimal representation, this number would be stored s 235678 * 10^-2.
 
-The mantissa and exponent format preserves trailing zeros in the number's value. This may give rise to multiple ways to store the same value. For example, 1.00 and 1 would be stored differently, even though they have the same value. In the first case, 100 * 10^-2 (100 with decimal point moved left by 2), and in the second case, 1 * 10^0 (1 with decimal point moved 0).
+The mantissa and exponent format preserves trailing zeros in the umber's value. This may give rise to multiple ways to store the same alue. For example, 1.00 and 1 would be stored differently, even though hey have the same value. In the first case, 100 * 10^-2 (100 with ecimal point moved left by 2), and in the second case, 1 * 10^0 (1 with ecimal point moved 0).
 
-This class also supports values for negative zero, not-a-number (NaN) values, and infinity.<b>Negative zero</b>is generally used when a negative number is rounded to 0; it has the ame mathematical value as positive zero.<b>Infinity</b>is generally used when a non-zero number is divided by zero, or when a ery high number can't be represented in a given exponent range.<b>Not-a-number</b>is generally used to signal errors.
+This class also supports values for negative zero, not-a-number (NaN) alues, and infinity.<b>Negative zero</b>is generally used when a negative number is rounded to 0; it has the ame mathematical value as positive zero.<b>Infinity</b>is generally used when a non-zero number is divided by zero, or when a ery high number can't be represented in a given exponent range.<b>Not-a-number</b>is generally used to signal errors.
 
 <b>Errors and Exceptions</b>
 
-Passing a signaling NaN to any arithmetic operation shown here will signal the flag FlagInvalid and return a quiet NaN, even if another operand to that operation is a quiet NaN, unless noted otherwise.
+Passing a signaling NaN to any arithmetic operation shown here will ignal the flag FlagInvalid and return a quiet NaN, even if another perand to that operation is a quiet NaN, unless noted otherwise.
 
-Passing a quiet NaN to any arithmetic operation shown here will return a quiet NaN, unless noted otherwise. Invalid operations will also return a quiet NaN, as stated in the individual methods.
+Passing a quiet NaN to any arithmetic operation shown here will return quiet NaN, unless noted otherwise. Invalid operations will also return quiet NaN, as stated in the individual methods.
 
-Unless noted otherwise,passing a null arbitrary-precision decimal argument to any method here will throw an exception.
+Unless noted otherwise,passing a null arbitrary-precision decimal rgument to any method here will throw an exception.
 
-When an arithmetic operation signals the flag FlagInvalid, FlagOverflow, or FlagDivideByZero, it will not throw an exception too, unless the flag's trap is enabled in the precision context (see EContext's Traps property).
+When an arithmetic operation signals the flag FlagInvalid, lagOverflow, or FlagDivideByZero, it will not throw an exception too, nless the flag's trap is enabled in the precision context (see Context's Traps property).
 
-If an operation requires creating an intermediate value that might be too big to fit in memory (or might require more than 2 gigabytes of memory to store -- due to the current use of a 32-bit integer internally as a length), the operation may signal an invalid-operation flag and return not-a-number (NaN). In certain rare cases, the CompareTo method may throw OutOfMemoryException (called OutOfMemoryError in Java) in the same circumstances.
+If an operation requires creating an intermediate value that might be oo big to fit in memory (or might require more than 2 gigabytes of emory to store -- due to the current use of a 32-bit integer internally s a length), the operation may signal an invalid-operation flag and eturn not-a-number (NaN). In certain rare cases, the CompareTo method ay throw OutOfMemoryException (called OutOfMemoryError in Java) in the ame circumstances.
 
 <b>Serialization</b>
 
-An arbitrary-precision decimal value can be serialized (converted to a stable format) in one of the following ways:
+An arbitrary-precision decimal value can be serialized (converted to a table format) in one of the following ways:
 
- * By calling the toString() method, which will always return distinct strings for distinct arbitrary-precision decimal values.
+ * By calling the toString() method, which will always return distinct trings for distinct arbitrary-precision decimal values.
 
- * By calling the UnsignedMantissa, Exponent, and IsNegative properties, and calling the IsInfinity, IsQuietNaN, and IsSignalingNaN methods. The return values combined will uniquely identify a particular arbitrary-precision decimal value.
+ * By calling the UnsignedMantissa, Exponent, and IsNegative properties, nd calling the IsInfinity, IsQuietNaN, and IsSignalingNaN methods. he return values combined will uniquely identify a particular rbitrary-precision decimal value.
 
 <b>Thread safety</b>
 
-Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same properties are interchangeable, so they should not be compared using the "==" operator (which might only check if each side of the operator is the same instance).
+Instances of this class are immutable, so they are inherently safe for se by multiple threads. Multiple instances of this object with the same roperties are interchangeable, so they should not be compared using the ==" operator (which might only check if each side of the operator is he same instance).
 
 <b>Comparison considerations</b>
 
-This class's natural ordering (under the CompareTo method) is not consistent with the Equals method. This means that two values that compare as equal under the CompareTo method might not be equal under the Equals method. The CompareTo method compares the mathematical values of the two instances passed to it (and considers two different NaN values as equal), while two instances with the same mathematical value, but different exponents, will be considered unequal under the Equals method.
+This class's natural ordering (under the CompareTo method) is not onsistent with the Equals method. This means that two values that ompare as equal under the CompareTo method might not be equal under the quals method. The CompareTo method compares the mathematical values of he two instances passed to it (and considers two different NaN values s equal), while two instances with the same mathematical value, but ifferent exponents, will be considered unequal under the Equals method.
 
 ### NaN
 
@@ -86,7 +86,7 @@ Positive infinity, greater than any other number.
 
     public static readonly PeterO.ExtendedDecimal SignalingNaN;
 
-A not-a-number value that signals an invalid operation flag when it's passed as an argument to any arithmetic operation in arbitrary-precision decimal.
+A not-a-number value that signals an invalid operation flag when it's assed as an argument to any arithmetic operation in arbitrary-precision ecimal.
 
 ### Ten
 
@@ -104,11 +104,11 @@ Represents the number 0.
 
     public PeterO.BigInteger Exponent { get; }
 
-Gets this object's exponent. This object's value will be an integer if the exponent is positive or zero.
+Gets this object's exponent. This object's value will be an integer if he exponent is positive or zero.
 
 <b>Returns:</b>
 
-This object's exponent. This object's value will be an integer if the exponent is positive or zero.
+This object's exponent. This object's value will be an integer if the xponent is positive or zero.
 
 ### IsNegative
 
@@ -116,7 +116,7 @@ This object's exponent. This object's value will be an integer if the exponent i
 
 <b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
-Gets a value indicating whether this object is negative, including negative zero.
+Gets a value indicating whether this object is negative, including egative zero.
 
 <b>Returns:</b>
 
@@ -130,7 +130,7 @@ Gets this object's un-scaled value.
 
 <b>Returns:</b>
 
-This object's un-scaled value. Will be negative if this object's value is negative (including a negative NaN).
+This object's un-scaled value. Will be negative if this object's value is egative (including a negative NaN).
 
 ### Sign
 
@@ -168,7 +168,7 @@ is an ExtendedDecimal object.
 
 <b>Return Value:</b>
 
-Less than 0 if this value is less than, 0 if equal to, or greater than 0 if greater than the other extended decimal.
+Less than 0 if this value is less than, 0 if equal to, or greater than 0 f greater than the other extended decimal.
 
 ### Create
 
@@ -200,7 +200,7 @@ is null.
     public override bool Equals(
         object obj);
 
-Determines whether this object's mantissa and exponent are equal to those of another object and that other object is an arbitrary-precision decimal number.
+Determines whether this object's mantissa and exponent are equal to those f another object and that other object is an arbitrary-precision decimal umber.
 
 <b>Parameters:</b>
 
@@ -218,7 +218,7 @@ is an arbitrary object.
 
 <b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
-Determines whether this object's mantissa and exponent are equal to those of another object.
+Determines whether this object's mantissa and exponent are equal to those f another object.
 
 <b>Parameters:</b>
 
@@ -241,7 +241,7 @@ Creates a decimal number from a text string that represents a number. See `FromS
 
 <b>Return Value:</b>
 
-An arbitrary-precision decimal number with the same value as the given string.
+An arbitrary-precision decimal number with the same value as the given tring.
 
 <b>Exceptions:</b>
 
@@ -257,7 +257,7 @@ is not a correctly formatted number string.
 
     public override int GetHashCode();
 
-Calculates this object's hash code. No application or process IDs are used in the hash code calculation.
+Calculates this object's hash code. No application or process IDs are sed in the hash code calculation.
 
 <b>Return Value:</b>
 
@@ -267,7 +267,7 @@ This object's hash code.
 
     public bool IsInfinity();
 
-Gets a value indicating whether this object is positive or negative infinity.
+Gets a value indicating whether this object is positive or negative nfinity.
 
 <b>Return Value:</b>
 
@@ -289,7 +289,7 @@ Gets a value indicating whether this object is not a number (NaN).
 
 <b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
-Gets a value indicating whether this object is a quiet not-a-number value.
+Gets a value indicating whether this object is a quiet not-a-number alue.
 
 <b>Return Value:</b>
 
@@ -299,27 +299,27 @@ Gets a value indicating whether this object is a quiet not-a-number value.
 
     public double ToDouble();
 
-Converts this value to a 64-bit floating-point number. The half-even rounding mode is used.If this value is a NaN, sets the high bit of the 64-bit floating point number's mantissa for a quiet NaN, and clears it for a signaling NaN. Then the next highest bit of the mantissa is cleared for a quiet NaN, and set for a signaling NaN. Then the other bits of the mantissa are set to the lowest bits of this object's unsigned mantissa.
+Converts this value to a 64-bit floating-point number. The half-even ounding mode is used.If this value is a NaN, sets the high bit of the 64-bit floating point umber's mantissa for a quiet NaN, and clears it for a signaling NaN. hen the next highest bit of the mantissa is cleared for a quiet NaN, nd set for a signaling NaN. Then the other bits of the mantissa are set o the lowest bits of this object's unsigned mantissa.
 
 <b>Return Value:</b>
 
-The closest 64-bit floating-point number to this value. The return value can be positive infinity or negative infinity if this value exceeds the range of a 64-bit floating point number.
+The closest 64-bit floating-point number to this value. The return value an be positive infinity or negative infinity if this value exceeds the ange of a 64-bit floating point number.
 
 ### ToSingle
 
     public float ToSingle();
 
-Converts this value to a 32-bit floating-point number. The half-even rounding mode is used.If this value is a NaN, sets the high bit of the 32-bit floating point number's mantissa for a quiet NaN, and clears it for a signaling NaN. Then the next highest bit of the mantissa is cleared for a quiet NaN, and set for a signaling NaN. Then the other bits of the mantissa are set to the lowest bits of this object's unsigned mantissa.
+Converts this value to a 32-bit floating-point number. The half-even ounding mode is used.If this value is a NaN, sets the high bit of the 32-bit floating point umber's mantissa for a quiet NaN, and clears it for a signaling NaN. hen the next highest bit of the mantissa is cleared for a quiet NaN, nd set for a signaling NaN. Then the other bits of the mantissa are set o the lowest bits of this object's unsigned mantissa.
 
 <b>Return Value:</b>
 
-The closest 32-bit floating-point number to this value. The return value can be positive infinity or negative infinity if this value exceeds the range of a 32-bit floating point number.
+The closest 32-bit floating-point number to this value. The return value an be positive infinity or negative infinity if this value exceeds the ange of a 32-bit floating point number.
 
 ### ToString
 
     public override string ToString();
 
-Converts this value to a string. Returns a value compatible with this class's FromString method.
+Converts this value to a string. Returns a value compatible with this lass's FromString method.
 
 <b>Return Value:</b>
 

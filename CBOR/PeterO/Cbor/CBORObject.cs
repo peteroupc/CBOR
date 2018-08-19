@@ -2699,8 +2699,6 @@ namespace PeterO.Cbor {
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.RemoveAt(System.Int32)"]/*'/>
-    /// <param name='index'>Not documented yet.</param>
-    /// <returns>Not documented yet.</returns>
     public bool RemoveAt(int index) {
       if (this.ItemType != CBORObjectTypeArray) {
         throw new InvalidOperationException("Not an array");

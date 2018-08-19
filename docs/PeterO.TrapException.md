@@ -22,7 +22,7 @@ Initializes a new instance of the [PeterO.TrapException](PeterO.TrapException.md
 
 <b>Parameters:</b>
 
- * <i>flag</i>: A flag that specifies the kind of error (PrecisionContext.FlagXXX). This will only be one flag, such as FlagInexact or FlagSubnormal.
+ * <i>flag</i>: A flag that specifies the kind of error (PrecisionContext.FlagXXX). This ill only be one flag, such as FlagInexact or FlagSubnormal.
 
  * <i>ctx</i>: A context object for arbitrary-precision arithmetic settings.
 
@@ -32,21 +32,21 @@ Initializes a new instance of the [PeterO.TrapException](PeterO.TrapException.md
 
     public PeterO.PrecisionContext Context { get; }
 
-Gets the precision context used during the operation that triggered the trap. May be null.
+Gets the precision context used during the operation that triggered the rap. May be null.
 
 <b>Returns:</b>
 
-The precision context used during the operation that triggered the trap. May be null.
+The precision context used during the operation that triggered the trap. ay be null.
 
 ### Error
 
     public int Error { get; }
 
-Gets the flag that specifies the kind of error (PrecisionContext.FlagXXX). This will only be one flag, such as FlagInexact or FlagSubnormal.
+Gets the flag that specifies the kind of error PrecisionContext.FlagXXX). This will only be one flag, such as lagInexact or FlagSubnormal.
 
 <b>Returns:</b>
 
-The flag that specifies the kind of error (PrecisionContext.FlagXXX). This will only be one flag, such as FlagInexact or FlagSubnormal.
+The flag that specifies the kind of error (PrecisionContext.FlagXXX). his will only be one flag, such as FlagInexact or FlagSubnormal.
 
 ### Result
 

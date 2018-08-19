@@ -19,7 +19,7 @@ Initializes a new instance of the [PeterO.PrecisionContext](PeterO.PrecisionCont
 
 <b>Parameters:</b>
 
- * <i>precision</i>: The maximum number of digits a number can have, or 0 for an unlimited number of digits.
+ * <i>precision</i>: The maximum number of digits a number can have, or 0 for an unlimited umber of digits.
 
  * <i>rounding</i>: The rounding mode to use when a number can't fit the given precision.
 
@@ -27,13 +27,13 @@ Initializes a new instance of the [PeterO.PrecisionContext](PeterO.PrecisionCont
 
  * <i>exponentMaxSmall</i>: The maximum exponent.
 
- * <i>clampNormalExponents</i>: Whether to clamp a number's significand to the given maximum precision (if it isn't zero) while remaining within the exponent range.
+ * <i>clampNormalExponents</i>: Whether to clamp a number's significand to the given maximum precision if it isn't zero) while remaining within the exponent range.
 
 ### ToString
 
     public override string ToString();
 
-Gets a string representation of this object. Note that the format is not intended to be parsed and may change at any time.
+Gets a string representation of this object. Note that the format is not ntended to be parsed and may change at any time.
 
 <b>Return Value:</b>
 
