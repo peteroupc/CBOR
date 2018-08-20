@@ -131,7 +131,7 @@ Gets this object's numerator.
 
 <b>Returns:</b>
 
-This object's numerator. If this object is a not-a-number value, returns he diagnostic information (which will be negative if this object is egative).
+This object's numerator. If this object is a not-a-number value, returns the diagnostic information (which will be negative if this object is negative).
 
 ### Sign
 
@@ -143,7 +143,7 @@ Gets the sign of this rational number.
 
 <b>Returns:</b>
 
-Zero if this value is zero or negative zero; -1 if this value is less han 0; and 1 if this value is greater than 0.
+Zero if this value is zero or negative zero; -1 if this value is less than 0; and 1 if this value is greater than 0.
 
 ### UnsignedNumerator
 
@@ -153,7 +153,7 @@ Gets this object's numerator with the sign removed.
 
 <b>Returns:</b>
 
-This object's numerator. If this object is a not-a-number value, returns he diagnostic information.
+This object's numerator. If this object is a not-a-number value, returns the diagnostic information.
 
 ### CompareTo
 

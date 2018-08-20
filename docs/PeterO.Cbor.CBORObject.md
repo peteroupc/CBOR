@@ -6,7 +6,7 @@
 
 Represents an object in Concise Binary Object Representation (CBOR) and contains methods for reading and writing CBOR data. CBOR is defined in RFC 7049.<b>Converting CBOR objects</b>
 
-There are many ways to get a CBOR object, including from bytes, bjects, streams and JSON, as described below.
+There are many ways to get a CBOR object, including from bytes, objects, streams and JSON, as described below.
 
 <b>To and from byte arrays:</b>The CBORObject.DecodeToBytes method converts a byte array in CBOR ormat to a CBOR object. The EncodeToBytes method converts a CBOR object o its corresponding byte array in CBOR format.
 
@@ -16,35 +16,35 @@ There are many ways to get a CBOR object, including from bytes, bjects, streams 
 
 <b>To and from JSON:</b>This class also doubles as a reader and writer of JavaScript Object otation (JSON). The CBORObject.FromJSONString method converts JSON to a BOR object, and the ToJSONString method converts a CBOR object to a SON string.
 
-In addition, the CBORObject.WriteJSON method writes many kinds of bjects as JSON to a data stream, including numbers, CBOR objects, trings, and arrays of numbers and strings. The CBORObject.Read method eads a CBOR object from a JSON data stream.
+In addition, the CBORObject.WriteJSON method writes many kinds of objects as JSON to a data stream, including numbers, CBOR objects, strings, and arrays of numbers and strings. The CBORObject.Read method reads a CBOR object from a JSON data stream.
 
 <b>Comparison Considerations:</b>
 
-Instances of CBORObject should not be compared for equality using the ==" operator; it's possible to create two CBOR objects with the same alue but not the same reference. (The "==" operator might only check if ach side of the operator is the same instance.)
+Instances of CBORObject should not be compared for equality using the "==" operator; it's possible to create two CBOR objects with the same value but not the same reference. (The "==" operator might only check if each side of the operator is the same instance.)
 
-This class's natural ordering (under the CompareTo method) is not onsistent with the Equals method. This means that two values that ompare as equal under the CompareTo method might not be equal under the quals method. This is important to consider especially if an pplication wants to compare numbers, since the CBOR number type upports numbers of different formats, such as big integers, rational umbers, and arbitrary-precision decimal numbers.
+This class's natural ordering (under the CompareTo method) is not consistent with the Equals method. This means that two values that compare as equal under the CompareTo method might not be equal under the Equals method. This is important to consider especially if an application wants to compare numbers, since the CBOR number type supports numbers of different formats, such as big integers, rational numbers, and arbitrary-precision decimal numbers.
 
-Another consideration is that two values that are otherwise equal may ave different tags. To strip the tags from a CBOR object before omparing, use the `Untag` method.
+Another consideration is that two values that are otherwise equal may have different tags. To strip the tags from a CBOR object before comparing, use the `Untag` method.
 
-To compare two numbers, the CompareToIgnoreTags or CompareTo method hould be used. Which method to use depends on whether two equal values hould still be considered equal if they have different tags.
+To compare two numbers, the CompareToIgnoreTags or CompareTo method should be used. Which method to use depends on whether two equal values should still be considered equal if they have different tags.
 
-Although this class is inconsistent with the Equals method, it is safe o use CBORObject instances as hash keys as long as all of the keys are ntagged text strings (which means GetTags returns an empty array and he Type property, or "getType()" in Java, returns TextString). This is ecause the natural ordering of these instances is consistent with the quals method.
+Although this class is inconsistent with the Equals method, it is safe to use CBORObject instances as hash keys as long as all of the keys are untagged text strings (which means GetTags returns an empty array and the Type property, or "getType()" in Java, returns TextString). This is because the natural ordering of these instances is consistent with the Equals method.
 
 <b>Thread Safety:</b>
 
-CBOR objects that are numbers, "simple values", and text strings are mmutable (their values can't be changed), so they are inherently safe or use by multiple threads.
+CBOR objects that are numbers, "simple values", and text strings are immutable (their values can't be changed), so they are inherently safe for use by multiple threads.
 
-CBOR objects that are arrays, maps, and byte strings are mutable, but his class doesn't attempt to synchronize reads and writes to those bjects by multiple threads, so those objects are not thread safe ithout such synchronization.
+CBOR objects that are arrays, maps, and byte strings are mutable, but this class doesn't attempt to synchronize reads and writes to those objects by multiple threads, so those objects are not thread safe without such synchronization.
 
-One kind of CBOR object is called a map, or a list of key-value pairs. eys can be any kind of CBOR object, including numbers, strings, arrays, nd maps. However, text strings are the most suitable to use as keys; ther kinds of CBOR object are much better used as map values instead, eeping in mind that some of them are not thread safe without ynchronizing reads and writes to them.
+One kind of CBOR object is called a map, or a list of key-value pairs. Keys can be any kind of CBOR object, including numbers, strings, arrays, and maps. However, text strings are the most suitable to use as keys; other kinds of CBOR object are much better used as map values instead, keeping in mind that some of them are not thread safe without synchronizing reads and writes to them.
 
-To find the type of a CBOR object, call its Type property (or getType()" in Java). The return value can be Number, Boolean, impleValue, or TextString for immutable CBOR objects, and Array, Map, r ByteString for mutable CBOR objects.
+To find the type of a CBOR object, call its Type property (or "getType()" in Java). The return value can be Number, Boolean, SimpleValue, or TextString for immutable CBOR objects, and Array, Map, or ByteString for mutable CBOR objects.
 
 <b>Nesting Depth:</b>
 
-The DecodeFromBytes and Read methods can only read objects with a imited maximum depth of arrays and maps nested within other arrays and aps. The code sets this maximum depth to 500 (allowing more than enough esting for most purposes), but it's possible that stack overflows in ome runtimes might lower the effective maximum nesting depth. When the esting depth goes above 500, the DecodeFromBytes and Read methods throw CBORException.
+The DecodeFromBytes and Read methods can only read objects with a limited maximum depth of arrays and maps nested within other arrays and maps. The code sets this maximum depth to 500 (allowing more than enough nesting for most purposes), but it's possible that stack overflows in some runtimes might lower the effective maximum nesting depth. When the nesting depth goes above 500, the DecodeFromBytes and Read methods throw a CBORException.
 
-The ReadJSON and FromJSONString methods currently have nesting depths f 1000.
+The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 
 ### False
 
@@ -102,7 +102,7 @@ Gets the number of keys in this map, or the number of items in this array, or 0 
 
 <b>Returns:</b>
 
-The number of keys in this map, or the number of items in this array, or if this item is neither an array nor a map.
+The number of keys in this map, or the number of items in this array, or 0 if this item is neither an array nor a map.
 
 ### InnermostTag
 
@@ -114,7 +114,7 @@ Gets the last defined tag for this CBOR data item, or -1 if the item is untagged
 
 <b>Returns:</b>
 
-The last defined tag for this CBOR data item, or -1 if the item is ntagged.
+The last defined tag for this CBOR data item, or -1 if the item is untagged.
 
 ### IsFalse
 
@@ -134,7 +134,7 @@ Gets a value indicating whether this CBOR object represents a finite number.
 
 <b>Returns:</b>
 
- `true` If this CBOR object represents a finite number; otherwise,  `false` .
+ `true`  If this CBOR object represents a finite number; otherwise,.  `false` .
 
 ### IsIntegral
 
@@ -144,7 +144,7 @@ Gets a value indicating whether this object represents an integral number, that 
 
 <b>Returns:</b>
 
- `true` If this object represents an integral number, that is, a number without a ractional part; otherwise,  `false` .
+ `true`  If this object represents an integral number, that is, a number without a fractional part; otherwise,. `false` .
 
 ### IsNegative
 
@@ -164,7 +164,7 @@ Gets a value indicating whether this value is a CBOR null value.
 
 <b>Returns:</b>
 
- `true` If this value is a CBOR null value; otherwise,  `false` .
+ `true`  If this value is a CBOR null value; otherwise,. `false` .
 
 ### IsTagged
 
@@ -174,7 +174,7 @@ Gets a value indicating whether this data item has at least one tag.
 
 <b>Returns:</b>
 
- `true` If this data item has at least one tag; otherwise,  `false` .
+ `true`  If this data item has at least one tag; otherwise,.  `false` .
 
 ### IsTrue
 
@@ -184,7 +184,7 @@ Gets a value indicating whether this value is a CBOR true value.
 
 <b>Returns:</b>
 
- `true` If this value is a CBOR true value; otherwise,  `false` .
+ `true`  If this value is a CBOR true value; otherwise,. `false` .
 
 ### IsUndefined
 
@@ -194,7 +194,7 @@ Gets a value indicating whether this value is a CBOR undefined value.
 
 <b>Returns:</b>
 
- `true` If this value is a CBOR undefined value; otherwise,  `false` .
+ `true`  If this value is a CBOR undefined value; otherwise,.  `false` .
 
 ### IsZero
 
@@ -204,7 +204,7 @@ Gets a value indicating whether this object's value equals 0.
 
 <b>Returns:</b>
 
- `true` If this object's value equals 0; otherwise, . `false` .
+ `true`  If this object's value equals 0; otherwise, .  `false` .
 
 ### Keys
 
@@ -229,7 +229,7 @@ Gets the last defined tag for this CBOR data item, or -1 if the item is untagged
 
 <b>Returns:</b>
 
-The last defined tag for this CBOR data item, or -1 if the item is ntagged.
+The last defined tag for this CBOR data item, or -1 if the item is untagged.
 
 ### MostOuterTag
 
@@ -276,7 +276,7 @@ Gets the simple value ID of this object, or -1 if this object is not a simple va
 
 <b>Returns:</b>
 
-The simple value ID of this object, or -1 if this object is not a simple alue (including if the value is a floating-point number).
+The simple value ID of this object, or -1 if this object is not a simple value (including if the value is a floating-point number).
 
 ### Type
 
@@ -900,6 +900,8 @@ Returns whether this object's value, truncated to an integer, would be -(2^63) o
 
     public void Clear();
 
+Not documented yet.
+
 ### CompareTo
 
     public sealed int CompareTo(
@@ -907,23 +909,23 @@ Returns whether this object's value, truncated to an integer, would be -(2^63) o
 
 Compares two CBOR objects.In this implementation:
 
- * The null pointer (null reference) is considered less than any other bject.
+ * The null pointer (null reference) is considered less than any other object.
 
- * If either object is true, false, CBORObject.Null, or the undefined alue, it is treated as less than the other value. If both objects ave one of these four values, then undefined is less than BORObject.Null, which is less than false, which is less than true.
+ * If either object is true, false, CBORObject.Null, or the undefined value, it is treated as less than the other value. If both objects have one of these four values, then undefined is less than CBORObject.Null, which is less than false, which is less than true.
 
- * If both objects are numbers, their mathematical values are compared. ere, NaN (not-a-number) is considered greater than any number.
+ * If both objects are numbers, their mathematical values are compared. Here, NaN (not-a-number) is considered greater than any number.
 
- * If both objects are simple values other than true, false, BORObject.Null, and the undefined value, the objects are compared ccording to their ordinal numbers.
+ * If both objects are simple values other than true, false, CBORObject.Null, and the undefined value, the objects are compared according to their ordinal numbers.
 
- * If both objects are arrays, each element is compared. If one array is horter than the other and the other array begins with that array (for he purposes of comparison), the shorter array is considered less than he longer array.
+ * If both objects are arrays, each element is compared. If one array is shorter than the other and the other array begins with that array (for the purposes of comparison), the shorter array is considered less than the longer array.
 
- * If both objects are strings, compares each string code-point by ode-point, as though by the DataUtilities.CodePointCompare method.
+ * If both objects are strings, compares each string code-point by code-point, as though by the DataUtilities.CodePointCompare method.
 
- * If both objects are maps, compares each map as though each were an rray with the sorted keys of that map as the array's elements. If oth maps have the same keys, their values are compared in the order f the sorted keys.
+ * If both objects are maps, compares each map as though each were an array with the sorted keys of that map as the array's elements. If both maps have the same keys, their values are compared in the order of the sorted keys.
 
- * If each object is a different type, then they are sorted by their ype number, in the order given for the CBORType enumeration.
+ * If each object is a different type, then they are sorted by their type number, in the order given for the CBORType enumeration.
 
- * If each object has different tags and both objects are otherwise qual under this method, each element is compared as though each were n array with that object's tags listed in order from outermost to nnermost.
+ * If each object has different tags and both objects are otherwise equal under this method, each element is compared as though each were an array with that object's tags listed in order from outermost to innermost.
 
 This method is not consistent with the Equals method.
 
@@ -1093,7 +1095,7 @@ is null.
 
 <b>At the moment, use the overload of this method that takes a[PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md)object. The object `CBOREncodeOptions.Default` contains recommended settings for CBOREncodeOptions, and those ettings may be adopted by this overload (without a CBOREncodeOptions rgument) in the next major version.</b>
 
-Writes the binary representation of this CBOR object and returns a byte rray of that representation. If the CBOR object contains CBOR maps, or s a CBOR map itself, the keys to the map are written out to the byte rray in an undefined order. The example code given in**PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)**can be used to write out certain keys of a CBOR map in a given order.
+Writes the binary representation of this CBOR object and returns a byte array of that representation. If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the byte array in an undefined order. The example code given in**PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)**can be used to write out certain keys of a CBOR map in a given order.
 
 <b>Return Value:</b>
 
@@ -1137,9 +1139,9 @@ Compares the equality of two CBOR objects. Not-a-number values can be considered
 
 <b>At the moment, use the overload of this method that takes a[PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md)object. The object `CBOREncodeOptions.Default` contains recommended settings for CBOREncodeOptions, and those ettings may be adopted by this overload (without a CBOREncodeOptions rgument) in the next major version.</b>
 
-Generates a CBOR object from a text string in JavaScript Object otation (JSON) format.
+Generates a CBOR object from a text string in JavaScript Object Notation (JSON) format.
 
-If a JSON object has the same key, only the last given value will be sed for each duplicated key.
+If a JSON object has the same key, only the last given value will be used for each duplicated key.
 
 <b>Parameters:</b>
 
@@ -1164,7 +1166,7 @@ The string is not in JSON format.
         string str,
         PeterO.Cbor.CBOREncodeOptions options);
 
-Generates a CBOR object from a text string in JavaScript Object Notation (JSON) format, using the specified options to control the decoding process.By default, if a JSON object has the same key, only the last given alue will be used for each duplicated key.
+Generates a CBOR object from a text string in JavaScript Object Notation (JSON) format, using the specified options to control the decoding process.By default, if a JSON object has the same key, only the last given value will be used for each duplicated key.
 
 <b>Parameters:</b>
 
@@ -1370,24 +1372,29 @@ A CBOR object corresponding to the given object. Returns CBORObject.Null if the 
         object obj,
         PeterO.Cbor.PODOptions options);
 
-Generates a CBORObject from an arbitrary object, using the given ptions to control how certain objects are converted to CBOR objects. he following types are specially handled by this method: null; rimitive types; string; CBORObject; the `EDecimal` , `EFloat` , `EInteger` , and `ERational` classes in the new<a href="https://www.nuget.org/packages/PeterO.Numbers"> `PeterO.Numbers` </a>library (in .NET) or the<a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers` </a>artifact (in Java); the legacy `ExtendedDecimal` , `ExtendedFloat` , `ExtendedInteger` , and `ExtendedRational` classes in this library; arrays; enumerations ( `Enum` objects); and maps. (See also the other overloads to the FromObject ethod.)
+Generates a CBORObject from an arbitrary object, using the given options to control how certain objects are converted to CBOR objects. The following types are specially handled by this method: null; primitive types; string; CBORObject; the  `EDecimal` , `EFloat` ,  `EInteger` , and  `ERational`  classes in the new<a href="https://www.nuget.org/packages/PeterO.Numbers"> `PeterO.Numbers` </a>library (in .NET) or the<a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers` </a>artifact (in Java); the legacy  `ExtendedDecimal` , `ExtendedFloat` ,  `ExtendedInteger` , and `ExtendedRational`  classes in this library; arrays; enumerations (  `Enum`  objects); and maps. (See also the other overloads to the FromObject method.)
 
-In the .NET version, if the object is a type not specially handled by his method, returns a CBOR map with the values of each of its ead/write properties (or all properties in the case of a ompiler-generated type). Properties are converted to their camel-case ames (meaning if a name starts with A to Z, that letter is ower-cased). If the property name begins with the word "Is" followed by n upper-case A to Z, the "Is" prefix is deleted from the name. (Passing he appropriate "options" parameter can be done to control whether the Is" prefix is removed and whether a camel-case conversion happens.) lso, .NET `Enum` objects will be converted to their integer values, and a ultidimensional array is converted to an array of arrays.
+In the .NET version, if the object is a type not specially handled by this method, returns a CBOR map with the values of each of its read/write properties (or all properties in the case of a compiler-generated type). Properties are converted to their camel-case names (meaning if a name starts with A to Z, that letter is lower-cased). If the property name begins with the word "Is" followed by an upper-case A to Z, the "Is" prefix is deleted from the name. (Passing the appropriate "options" parameter can be done to control whether the "Is" prefix is removed and whether a camel-case conversion happens.) Also, .NET  `Enum`  objects will be converted to their integer values, and a multidimensional array is converted to an array of arrays.
 
-In the Java version, if the object is a type not specially handled by his method, this method checks the CBOR object for methods starting ith the word "get" or "is" (either word followed by an upper-case A to ) that take no parameters, and returns a CBOR map with one entry for ach such method found. For each method found, the starting word "get" r "is" is deleted from its name, and the name is converted to camel ase (meaning if a name starts with A to Z, that letter is lower-cased). Passing the appropriate "options" parameter can be done to control hether the "is" prefix is removed and whether a camel-case conversion appens.) Also, Java `Enum` objects will be converted to the result of their `name` method.
+In the Java version, if the object is a type not specially handled by this method, this method checks the CBOR object for methods starting with the word "get" or "is" (either word followed by an upper-case A to Z) that take no parameters, and returns a CBOR map with one entry for each such method found. For each method found, the starting word "get" or "is" is deleted from its name, and the name is converted to camel case (meaning if a name starts with A to Z, that letter is lower-cased). (Passing the appropriate "options" parameter can be done to control whether the "is" prefix is removed and whether a camel-case conversion happens.) Also, Java `Enum`  objects will be converted to the result of their `name`  method.
 
-If the input is a byte array, the byte array is copied to a new byte rray. (This method can't be used to decode CBOR data from a byte array; or that, use the DecodeFromBytes method instead.).
+If the input is a byte array, the byte array is copied to a new byte array. (This method can't be used to decode CBOR data from a byte array; for that, use the DecodeFromBytes method instead.).
 
 <b>Parameters:</b>
 
- * <i>obj</i>: The parameter <i>obj</i>
-is an arbitrary object.
+ * <i>obj</i>: The parameter  <i>obj</i>
+ is an arbitrary object.
 
  * <i>options</i>: An object containing options to control how certain objects are converted to CBOR objects.
 
 <b>Return Value:</b>
 
 A CBOR object corresponding to the given object. Returns CBORObject.Null if the object is null.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter is null.
 
 ### FromObject
 
@@ -2202,7 +2209,7 @@ The difference of the two objects.
 
 <b>At the moment, use the overload of this method that takes a[PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md)object. The object `CBOREncodeOptions.Default` contains recommended settings for CBOREncodeOptions, and those ettings may be adopted by this overload (without a CBOREncodeOptions rgument) in the next major version.</b>
 
-Reads an object in CBOR format from a data stream. This method will ead from the stream until the end of the CBOR object is reached or an rror occurs, whichever happens first.
+Reads an object in CBOR format from a data stream. This method will read from the stream until the end of the CBOR object is reached or an error occurs, whichever happens first.
 
 <b>Parameters:</b>
 
@@ -2254,7 +2261,7 @@ There was an error in reading or parsing the data.
     public static PeterO.Cbor.CBORObject ReadJSON(
         System.IO.Stream stream);
 
-Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format. The JSON stream may begin with a byte-order mark (U+FEFF). Since version 2.0, the JSON stream can be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by assuming that the first character read must be a byte-order mark or a nonzero basic character (U+0001 to U+007F). (In previous versions, only UTF-8 was allowed.)If a JSON object has the same key, only the last given value will be sed for each duplicated key.
+Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format. The JSON stream may begin with a byte-order mark (U+FEFF). Since version 2.0, the JSON stream can be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by assuming that the first character read must be a byte-order mark or a nonzero basic character (U+0001 to U+007F). (In previous versions, only UTF-8 was allowed.)If a JSON object has the same key, only the last given value will be used for each duplicated key.
 
 <b>Parameters:</b>
 
@@ -2282,7 +2289,7 @@ The data stream contains invalid encoding or is not in JSON format.
         System.IO.Stream stream,
         PeterO.Cbor.CBOREncodeOptions options);
 
-Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format, using the specified options to control the decoding process. The JSON stream may begin with a byte-order mark (U+FEFF). Since version 2.0, the JSON stream can be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by assuming that the first character read must be a byte-order mark or a nonzero basic character (U+0001 to U+007F). (In previous versions, only UTF-8 was allowed.)By default, if a JSON object has the same key, only the last given alue will be used for each duplicated key.
+Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format, using the specified options to control the decoding process. The JSON stream may begin with a byte-order mark (U+FEFF). Since version 2.0, the JSON stream can be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by assuming that the first character read must be a byte-order mark or a nonzero basic character (U+0001 to U+007F). (In previous versions, only UTF-8 was allowed.)By default, if a JSON object has the same key, only the last given value will be used for each duplicated key.
 
 <b>Parameters:</b>
 
@@ -2336,12 +2343,11 @@ Not documented yet.
 
 <b>Parameters:</b>
 
- * <i>obj</i>: The parameter <i>obj</i>
-is not documented yet.
+ * <i>obj</i>: Not documented yet.
 
 <b>Return Value:</b>
 
-Either `true` or `false` .
+Either  `true`  or  `false` .
 
 ### Remove
 
@@ -2372,13 +2378,15 @@ The object is not an array or map.
     public bool RemoveAt(
         int index);
 
+Not documented yet.
+
 <b>Parameters:</b>
 
  * <i>index</i>: Not documented yet.
 
 <b>Return Value:</b>
 
-Not documented yet.
+The return value is not documented yet.
 
 ### Set
 
@@ -2440,37 +2448,37 @@ Either or both operands are not numbers (as opposed to Not-a-Number, NaN).
 
 Converts this object to a string in JavaScript Object Notation (JSON) format, using the specified options to control the encoding process. This function works not only with arrays and maps, but also integers, strings, byte arrays, and other JSON data types. Notes:
 
- * If this object contains maps with non-string keys, the keys are onverted to JSON strings before writing the map as a JSON string.
+ * If this object contains maps with non-string keys, the keys are converted to JSON strings before writing the map as a JSON string.
 
- * If the CBOR object contains CBOR maps, or is a CBOR map itself, the eys to the map are written out to the JSON string in an undefined rder.
+ * If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the JSON string in an undefined order.
 
- * If a number in the form of an arbitrary-precision binary float has a ery high binary exponent, it will be converted to a double before eing converted to a JSON string. (The resulting double could overflow o infinity, in which case the arbitrary-precision binary float is onverted to null.)
+ * If a number in the form of an arbitrary-precision binary float has a very high binary exponent, it will be converted to a double before being converted to a JSON string. (The resulting double could overflow to infinity, in which case the arbitrary-precision binary float is converted to null.)
 
- * The string will not begin with a byte-order mark (U+FEFF); RFC 8259 the JSON specification) forbids placing a byte-order mark at the eginning of a JSON string.
+ * The string will not begin with a byte-order mark (U+FEFF); RFC 8259 (the JSON specification) forbids placing a byte-order mark at the beginning of a JSON string.
 
- * Byte strings are converted to Base64 URL without whitespace or adding by default (see section 4.1 of RFC 7049). A byte string will nstead be converted to traditional base64 without whitespace or adding by default if it has tag 22, or base16 for tag 23. Padding ill be included in the Base64 URL or traditional base64 form if<b>Base64Padding</b>in the JSON options is set to<b>true</b>.
+ * Byte strings are converted to Base64 URL without whitespace or padding by default (see section 4.1 of RFC 7049). A byte string will instead be converted to traditional base64 without whitespace or padding by default if it has tag 22, or base16 for tag 23. Padding will be included in the Base64 URL or traditional base64 form if <b>Base64Padding</b>in the JSON options is set to<b>true</b>.
 
- * Rational numbers will be converted to their exact form, if possible, therwise to a high-precision approximation. (The resulting pproximation could overflow to infinity, in which case the rational umber is converted to null.)
+ * Rational numbers will be converted to their exact form, if possible, otherwise to a high-precision approximation. (The resulting approximation could overflow to infinity, in which case the rational number is converted to null.)
 
- * Simple values other than true and false will be converted to null. This doesn't include floating-point numbers.)
+ * Simple values other than true and false will be converted to null. (This doesn't include floating-point numbers.)
 
  * Infinity and not-a-number will be converted to null.
 
-The example code given below (written in in C# for the .NET version) can e used to write out certain keys of a CBOR map in a given order to a JSON tring.
+The example code given below (written in in C# for the NET version) can be used to write out certain keys of CBOR map in a given order to a JSON string.
 
-    // Generates a JSON string of 'mapObj' whose keys are in the order
-    iven in 'keys'. Only keys // found in 'keys' will be written if they
-    xist in 'mapObj'. private static string KeysToJSONMap(CBORObject
-    apObj, IList<CBORObject> keys){ if(mapObj==null) throw new
-    rgumentNullException(nameof(mapObj)); if(keys==null) throw new
-    rgumentNullException(nameof(keys)); if(obj.Type!=CBORType.Map){ throw
-    ew ArgumentException("'obj' is not a map."); } var builder=new
-    tringBuilder(); var first=true; builder.Append("{"); for(CBORObject key
-    n keys){ if(mapObj.ContainsKey(key)){ if(!first)builder.Append(", ");
-    ar keyString=(key.CBORType==CBORType.String) ? key.AsString() :
-    ey.ToJSONString(); builder.Append(CBORObject.FromObject(keyString)
-    ToJSONString()) .Append(":").Append(mapObj[key].ToJSONString());
-    irst=false; } } return builder.Append("}").ToString(); }
+    // Generates a JSON string of 'mapObj' whose keys are in the order given
+                        in 'keys'. Only keys // found in 'keys' will be written if they exist in
+                        'mapObj'. private static string KeysToJSONMap(CBORObject mapObj,
+                        IList<CBORObject> keys){ if(mapObj==null) throw new
+                        ArgumentNullException(nameof(mapObj)); if(keys==null) throw new
+                        ArgumentNullException(nameof(keys)); if(obj.Type!=CBORType.Map){ throw
+                        new ArgumentException("'obj' is not a map."); } var builder=new
+                        StringBuilder(); var first=true; builder.Append("{"); for(CBORObject key
+                        in keys){ if(mapObj.ContainsKey(key)){ if(!first)builder.Append(", ");
+                        var keyString=(key.CBORType==CBORType.String) ? key.AsString() :
+                        key.ToJSONString(); builder.Append(CBORObject.FromObject(keyString)
+                        .ToJSONString()) .Append(":").Append(mapObj[key].ToJSONString());
+                        first=false; } } return builder.Append("}").ToString(); }
 
 <b>Parameters:</b>
 
@@ -2480,19 +2488,20 @@ The example code given below (written in in C# for the .NET version) can e used 
 
 A text string containing the converted object.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter is null.
+
 ### ToJSONString
 
     public string ToJSONString();
 
-Converts this object to a string in JavaScript Object Notation (JSON) format, using the specified options to control the encoding process. See the overload to JSONString taking a JSONOptions argument.If the CBOR object contains CBOR maps, or is a CBOR map itself, the eys to the map are written out to the JSON string in an undefined rder. The example code given in**PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)**can be used to write out certain keys of a CBOR map in a given order to JSON string.
+Converts this object to a string in JavaScript Object Notation (JSON) format, using the specified options to control the encoding process. See the overload to JSONString taking a JSONOptions argument.If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the JSON string in an undefined order. The example code given in**PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)**can be used to write out certain keys of a CBOR map in a given order to a JSON string.
 
 <b>Return Value:</b>
 
-A text string containing the converted object.
-
-<b>Return Value:</b>
-
-Not documented yet.
+A string object.
 
 ### ToString
 
@@ -2700,13 +2709,13 @@ Writes an arbitrary object to a CBOR data stream, using the specified options fo
 
  * Lists of CBORObject.
 
- * Maps of CBORObject. The keys to the map are written out to the data tream in an undefined order.
+ * Maps of CBORObject. The keys to the map are written out to the data stream in an undefined order.
 
  * Null.
 
- * Byte arrays, which will always be written as definite-length byte trings.
+ * Byte arrays, which will always be written as definite-length byte strings.
 
- * String objects, which will be written as indefinite-length text trings if their size exceeds a certain threshold (this behavior may hange in future versions of this library).
+ * String objects, which will be written as indefinite-length text strings if their size exceeds a certain threshold (this behavior may change in future versions of this library).
 
  * Any object accepted by the FromObject static methods.
 
@@ -2736,7 +2745,7 @@ is null.
 
 <b>At the moment, use the overload of this method that takes a[PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md)object. The object `CBOREncodeOptions.Default` contains recommended settings for CBOREncodeOptions, and those ettings may be adopted by this overload (without a CBOREncodeOptions rgument) in the next major version.</b>
 
-Writes a CBOR object to a CBOR data stream. See the three-parameter rite method that takes a CBOREncodeOptions.
+Writes a CBOR object to a CBOR data stream. See the three-parameter Write method that takes a CBOREncodeOptions.
 
 <b>Parameters:</b>
 
@@ -2802,9 +2811,9 @@ Writes a decimal floating-point number in CBOR format to a data stream, as follo
 
  * If the value is null, writes the byte 0xF6.
 
- * If the value is negative zero, infinity, or NaN, converts the number o a `double` and writes that `double` . If negative zero should not be written this way, use the Plus ethod to convert the value beforehand.
+ * If the value is negative zero, infinity, or NaN, converts the number to a `double` and writes that `double` . If negative zero should not be written this way, use the Plus ethod to convert the value beforehand.
 
- * If the value has an exponent of zero, writes the value as an unsigned nteger or signed integer if the number can fit either type or as a ig integer otherwise.
+ * If the value has an exponent of zero, writes the value as an unsigned integer or signed integer if the number can fit either type or as a big integer otherwise.
 
  * In all other cases, writes the value as a decimal number.
 
@@ -2835,9 +2844,9 @@ Writes a binary floating-point number in CBOR format to a data stream as follows
 
  * If the value is null, writes the byte 0xF6.
 
- * If the value is negative zero, infinity, or NaN, converts the number o a `double` and writes that `double` . If negative zero should not be written this way, use the Plus ethod to convert the value beforehand.
+ * If the value is negative zero, infinity, or NaN, converts the number to a `double` and writes that `double` . If negative zero should not be written this way, use the Plus ethod to convert the value beforehand.
 
- * If the value has an exponent of zero, writes the value as an unsigned nteger or signed integer if the number can fit either type or as a ig integer otherwise.
+ * If the value has an exponent of zero, writes the value as an unsigned integer or signed integer if the number can fit either type or as a big integer otherwise.
 
  * In all other cases, writes the value as a big float.
 
@@ -2891,9 +2900,9 @@ Writes a decimal floating-point number in CBOR format to a data stream, as follo
 
  * If the value is null, writes the byte 0xF6.
 
- * If the value is negative zero, infinity, or NaN, converts the number o a `double` and writes that `double` . If negative zero should not be written this way, use the Plus ethod to convert the value beforehand.
+ * If the value is negative zero, infinity, or NaN, converts the number to a `double` and writes that `double` . If negative zero should not be written this way, use the Plus ethod to convert the value beforehand.
 
- * If the value has an exponent of zero, writes the value as an unsigned nteger or signed integer if the number can fit either type or as a ig integer otherwise.
+ * If the value has an exponent of zero, writes the value as an unsigned integer or signed integer if the number can fit either type or as a big integer otherwise.
 
  * In all other cases, writes the value as a decimal number.
 
@@ -2922,9 +2931,9 @@ Writes a binary floating-point number in CBOR format to a data stream as follows
 
  * If the value is null, writes the byte 0xF6.
 
- * If the value is negative zero, infinity, or NaN, converts the number o a `double` and writes that `double` . If negative zero should not be written this way, use the Plus ethod to convert the value beforehand.
+ * If the value is negative zero, infinity, or NaN, converts the number to a `double` and writes that `double` . If negative zero should not be written this way, use the Plus ethod to convert the value beforehand.
 
- * If the value has an exponent of zero, writes the value as an unsigned nteger or signed integer if the number can fit either type or as a ig integer otherwise.
+ * If the value has an exponent of zero, writes the value as an unsigned integer or signed integer if the number can fit either type or as a big integer otherwise.
 
  * In all other cases, writes the value as a big float.
 
@@ -3035,7 +3044,7 @@ An I/O error occurred.
 
 <b>At the moment, use the overload of this method that takes a[PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md)object. The object `CBOREncodeOptions.Default` contains recommended settings for CBOREncodeOptions, and those ettings may be adopted by this overload (without a CBOREncodeOptions rgument) in the next major version.</b>
 
-Writes a string in CBOR format to a data stream. The string will be ncoded using indefinite-length encoding if its length exceeds a certain hreshold (this behavior may change in future versions of this library).
+Writes a string in CBOR format to a data stream. The string will be encoded using indefinite-length encoding if its length exceeds a certain threshold (this behavior may change in future versions of this library).
 
 <b>Parameters:</b>
 
@@ -3191,20 +3200,20 @@ is null.
 
 <b>At the moment, use the overload of this method that takes a[PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md)object. The object `CBOREncodeOptions.Default` contains recommended settings for CBOREncodeOptions, and those ettings may be adopted by this overload (without a CBOREncodeOptions rgument) in the next major version.</b>
 
-Writes this CBOR object to a data stream. If the CBOR object contains BOR maps, or is a CBOR map, the keys to the map are written out to the ata stream in an undefined order. The example method given below written in C# for the .NET version) can be used to write out certain eys of a CBOR map in a given order:
+Writes this CBOR object to a data stream. If the CBOR object contains CBOR maps, or is a CBOR map, the keys to the map are written out to the data stream in an undefined order. The example method given below (written in C# for the .NET version) can be used to write out certain keys of a CBOR map in a given order:
 
     // Writes each key of 'mapObj' to 'outputStream'in the order given in
-    keys'. Only keys // found in 'keys' will be written if they exist in
-    mapObj'. private static void WriteKeysToIndefMap(CBORObject mapObj,
-    List<CBORObject> keys, Stream outputStream){ if(mapObj==null)
-    hrow new ArgumentNullException(nameof(mapObj)); if(keys==null) throw
-    ew ArgumentNullException(nameof(keys)); if(outputStream==null) throw
-    ew ArgumentNullException(nameof(outputStream));
-    f(obj.Type!=CBORType.Map){ throw new ArgumentException("'obj' is not a
-    ap."); } outputStream.WriteByte((byte)0xBF); for(CBORObject key in
-    eys)[ if(mapObj.ContainsKey(key)){ key.WriteTo(outputStream);
-    apObj[key].WriteTo(outputStream); } }
-    utputStream.WriteByte((byte)0xBF); }
+            'keys'. Only keys // found in 'keys' will be written if they exist in
+            'mapObj'. private static void WriteKeysToIndefMap(CBORObject mapObj,
+            IList<CBORObject> keys, Stream outputStream){ if(mapObj==null)
+            throw new ArgumentNullException(nameof(mapObj)); if(keys==null) throw
+            new ArgumentNullException(nameof(keys)); if(outputStream==null) throw
+            new ArgumentNullException(nameof(outputStream));
+            if(obj.Type!=CBORType.Map){ throw new ArgumentException("'obj' is not a
+            map."); } outputStream.WriteByte((byte)0xBF); for(CBORObject key in
+            keys)[ if(mapObj.ContainsKey(key)){ key.WriteTo(outputStream);
+            mapObj[key].WriteTo(outputStream); } }
+            outputStream.WriteByte((byte)0xBF); }
 
 <b>Parameters:</b>
 

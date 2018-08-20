@@ -32,6 +32,7 @@ namespace PeterO {
     /// <param name='p'>A probability from 0 through 1. 0 means always
     /// false, and 1 means always true.</param>
     /// <returns>A Boolean object.</returns>
+    /// <exception cref='ArgumentException'/>
     public bool Bernoulli(double p) {
       if (p < 0) {
         throw new ArgumentException("p (" + p + ") is less than 0");
@@ -68,6 +69,7 @@ namespace PeterO {
     /// (never) to 1 (always).</param>
     /// <returns>The number of successes in a given number of
     /// trials.</returns>
+    /// <exception cref='ArgumentException'/>
     public int Binomial(int trials, double p) {
       if (p < 0) {
         throw new ArgumentException("p (" + p + ") is less than 0");
@@ -112,6 +114,7 @@ namespace PeterO {
     /// <param name='df'>Degrees of freedom (the number of independently
     /// chosen normally-distributed numbers).</param>
     /// <returns>A 64-bit floating-point number.</returns>
+    /// <exception cref='ArgumentException'/>
     public double ChiSquared(int df) {
       if (df <= 0) {
         throw new ArgumentException("df (" + df + ") is not greater than 0");
@@ -129,6 +132,7 @@ namespace PeterO {
     /// <param name='a'>Another 64-bit floating-point number.</param>
     /// <param name='b'>A 64-bit floating-point number. (3).</param>
     /// <returns>A 64-bit floating-point number.</returns>
+    /// <exception cref='ArgumentException'/>
     public double Gamma(double a, double b) {
       if (b <= 0) {
         throw new ArgumentException("b (" + b + ") is not greater than 0");
@@ -139,6 +143,7 @@ namespace PeterO {
     /// <summary>Not documented yet.</summary>
     /// <param name='a'>Another 64-bit floating-point number.</param>
     /// <returns>A 64-bit floating-point number.</returns>
+    /// <exception cref='ArgumentException'/>
     public double Gamma(double a) {
       if (a <= 0) {
         throw new ArgumentException("a (" + a + ") is not greater than 0");
@@ -188,6 +193,7 @@ namespace PeterO {
     /// <param name='ones'>The number of tokens labeled 1.</param>
     /// <param name='count'>The number of tokens labeled 1 or 0.</param>
     /// <returns>A 32-bit signed integer.</returns>
+    /// <exception cref='ArgumentException'/>
     public int Hypergeometric(int trials, int ones, int count) {
       if (ones < 0) {
         throw new ArgumentException("ones (" + ones + ") is less than 0");
@@ -237,6 +243,7 @@ namespace PeterO {
     /// (never) to 1 (always).</param>
     /// <returns>The number of 0's generated. Returns Int32.MaxValue if
     /// <paramref name='p'/> is 0.</returns>
+    /// <exception cref='ArgumentException'/>
     public int NegativeBinomial(int trials, double p) {
       if (p < 0) {
         throw new ArgumentException("p (" + p + ") is less than 0");
@@ -338,6 +345,7 @@ namespace PeterO {
     /// repeatedly with the same mean.</summary>
     /// <param name='mean'>The expected mean of the random numbers.</param>
     /// <returns>A 32-bit signed integer.</returns>
+    /// <exception cref='ArgumentException'/>
     public int Poisson(double mean) {
       if (mean < 0) {
         throw new ArgumentException("mean (" + mean +
@@ -361,6 +369,7 @@ namespace PeterO {
     /// <param name='max'>Number that the randomly-generated number will be
     /// less than.</param>
     /// <returns>A 64-bit floating-point number.</returns>
+    /// <exception cref='ArgumentException'/>
     public double Uniform(double min, double max) {
       if (min >= max) {
         throw new ArgumentException("min (" + min + ") is not less than " +
@@ -399,6 +408,7 @@ namespace PeterO {
     /// <param name='maxExclusive'>One plus the largest possible value of
     /// the random number.</param>
     /// <returns>A 32-bit signed integer.</returns>
+    /// <exception cref='ArgumentException'/>
         public int UniformInt(int minInclusive, int maxExclusive) {
       if (minInclusive > maxExclusive) {
   throw new ArgumentException("minInclusive (" + minInclusive +
@@ -426,6 +436,7 @@ if (minInclusive == maxExclusive) {
     /// <param name='maxExclusive'>One plus the largest possible value of
     /// the random number.</param>
     /// <returns>A 64-bit signed integer.</returns>
+    /// <exception cref='ArgumentException'/>
     public long UniformLong(long minInclusive, long maxExclusive) {
       if (minInclusive > maxExclusive) {
   throw new ArgumentException("minInclusive (" + minInclusive +
@@ -468,6 +479,7 @@ if (minInclusive == maxExclusive) {
     /// <param name='maxExclusive'>One plus the largest possible value of
     /// the random number.</param>
     /// <returns>A 32-bit signed integer.</returns>
+    /// <exception cref='ArgumentException'/>
     public int UniformInt(int maxExclusive) {
       if (maxExclusive < 0) {
   throw new ArgumentException("maxExclusive (" + maxExclusive +
@@ -524,6 +536,7 @@ if (minInclusive == maxExclusive) {
     /// <param name='maxExclusive'>One plus the largest possible value of
     /// the random number.</param>
     /// <returns>A 64-bit signed integer.</returns>
+    /// <exception cref='ArgumentException'/>
         public long UniformLong(long maxExclusive) {
       if (maxExclusive < 0) {
   throw new ArgumentException("maxExclusive (" + maxExclusive +

@@ -50,7 +50,7 @@ Gets a value indicating whether to disallow duplicate keys when reading CBOR obj
 
 <b>Returns:</b>
 
-A value indicating whether to disallow duplicate keys when reading CBOR bjects from a data stream.
+A value indicating whether to disallow duplicate keys when reading CBOR objects from a data stream.
 
 ### UseIndefLengthStrings
 
@@ -60,7 +60,7 @@ Gets a value indicating whether to always encode strings with a definite-length 
 
 <b>Returns:</b>
 
-A value indicating whether to always encode strings with a efinite-length encoding.
+A value indicating whether to always encode strings with a definite-length encoding.
 
 ### Value
 
