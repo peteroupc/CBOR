@@ -10,7 +10,7 @@ This class is largely obsolete.
  * [PeterO.Cbor.CBORTypeFilter](PeterO.Cbor.CBORTypeFilter.md) - Specifies what kinds of CBOR objects a tag can be.
  * [PeterO.Cbor.ICBORConverter&lt;T&gt;](PeterO.Cbor.ICBORConverter-T.md) - Interface implemented by classes that convert objects of arbitrary types       to CBOR objects.
  * [PeterO.Cbor.ICBORTag](PeterO.Cbor.ICBORTag.md) - Implemented by classes that validate CBOR objects belonging to a specific       tag.
- * [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) - Includes options to control how CBOR objects are converted to JSON.
+ * [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) - Includes options to control how CBOR objects are converted              to JSON.
  * [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) - Options for converting "plain old data" objects to CBOR objects.
  * [PeterO.DataUtilities](PeterO.DataUtilities.md) - Contains methods useful for reading and writing strings.
  * [PeterO.ExtendedDecimal](PeterO.ExtendedDecimal.md) -

@@ -25,10 +25,10 @@ The default options for converting CBOR objects to JSON.
 
     public bool Base64Padding { get; }
 
-If<b>true</b>, include padding when writing data in base64url or traditional base64 ormat to JSON.
+If <b>true</b>, include padding when writing data in base64url or traditional base64 format to JSON.
 
 The padding character is '='.
 
 <b>Returns:</b>
 
-The default is<b>false</b>, no padding.
+The default is. <b>false</b>, no padding.

@@ -134,7 +134,7 @@ Gets a value indicating whether this CBOR object represents a finite number.
 
 <b>Returns:</b>
 
- `true`  If this CBOR object represents a finite number; otherwise,.  `false` .
+ `true`  If this CBOR object represents a finite number; otherwise, .  `false` .
 
 ### IsIntegral
 
@@ -144,7 +144,7 @@ Gets a value indicating whether this object represents an integral number, that 
 
 <b>Returns:</b>
 
- `true`  If this object represents an integral number, that is, a number without a fractional part; otherwise,. `false` .
+ `true`  If this object represents an integral number, that is, a number without a fractional part; otherwise, . `false` .
 
 ### IsNegative
 
@@ -164,7 +164,7 @@ Gets a value indicating whether this value is a CBOR null value.
 
 <b>Returns:</b>
 
- `true`  If this value is a CBOR null value; otherwise,. `false` .
+ `true`  If this value is a CBOR null value; otherwise, . `false` .
 
 ### IsTagged
 
@@ -174,7 +174,7 @@ Gets a value indicating whether this data item has at least one tag.
 
 <b>Returns:</b>
 
- `true`  If this data item has at least one tag; otherwise,.  `false` .
+ `true`  If this data item has at least one tag; otherwise, .  `false` .
 
 ### IsTrue
 
@@ -184,7 +184,7 @@ Gets a value indicating whether this value is a CBOR true value.
 
 <b>Returns:</b>
 
- `true`  If this value is a CBOR true value; otherwise,. `false` .
+ `true`  If this value is a CBOR true value; otherwise, . `false` .
 
 ### IsUndefined
 
@@ -194,7 +194,7 @@ Gets a value indicating whether this value is a CBOR undefined value.
 
 <b>Returns:</b>
 
- `true`  If this value is a CBOR undefined value; otherwise,.  `false` .
+ `true`  If this value is a CBOR undefined value; otherwise, .  `false` .
 
 ### IsZero
 
@@ -204,7 +204,7 @@ Gets a value indicating whether this object's value equals 0.
 
 <b>Returns:</b>
 
- `true`  If this object's value equals 0; otherwise, .  `false` .
+ `true` If this object's value equals 0; otherwise, . `false` .
 
 ### Keys
 
@@ -408,7 +408,7 @@ Registers an object that converts objects of a given type to CBOR objects (calle
 
  * <i>type</i>: A Type object specifying the type that the converter converts to CBOR objects.
 
- * <i>converter</i>: The parameter <i>converter</i>
+ * <i>converter</i>: The parameter  <i>converter</i>
 is an ICBORConverter object.
 
  * &lt;T&gt;: Must be the same as the "type" parameter.
@@ -417,8 +417,11 @@ is an ICBORConverter object.
 
  * System.ArgumentNullException:
 The parameter <i>type</i>
-or <i>converter</i>
-is null.
+ or  <i>converter</i>
+ is null.
+
+ * System.ArgumentException:
+"Converter doesn't contain a proper ToCBORObject method".
 
 ### Addition
 
@@ -937,6 +940,11 @@ This method is not consistent with the Equals method.
 
 Less than 0, if this value is less than the other object; or 0, if both values are equal; or greater than 0, if this value is less than the other object or if the other object is null.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentException:
+"Unexpected data type"; "doesn't satisfy typeOrderA == 0"; "doesn't satisfy typeOrderB == 0".
+
 ### CompareToIgnoreTags
 
     public int CompareToIgnoreTags(
@@ -1394,7 +1402,8 @@ A CBOR object corresponding to the given object. Returns CBORObject.Null if the 
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter is null.
+The parameter  <i>options</i>
+ is null.
 
 ### FromObject
 
@@ -2343,11 +2352,12 @@ Not documented yet.
 
 <b>Parameters:</b>
 
- * <i>obj</i>: Not documented yet.
+ * <i>obj</i>: The parameter <i>obj</i>
+is not documented yet.
 
 <b>Return Value:</b>
 
-Either  `true`  or  `false` .
+Either `true` or `false` .
 
 ### Remove
 
@@ -2382,7 +2392,8 @@ Not documented yet.
 
 <b>Parameters:</b>
 
- * <i>index</i>: Not documented yet.
+ * <i>index</i>: The parameter  <i>index</i>
+ is not documented yet.
 
 <b>Return Value:</b>
 
@@ -2469,13 +2480,14 @@ The example code given below (written in in C# for the NET version) can be used 
     // Generates a JSON string of 'mapObj' whose keys are in the order given
                         in 'keys'. Only keys // found in 'keys' will be written if they exist in
                         'mapObj'. private static string KeysToJSONMap(CBORObject mapObj,
-                        IList<CBORObject> keys){ if(mapObj==null) throw new
-                        ArgumentNullException(nameof(mapObj)); if(keys==null) throw new
-                        ArgumentNullException(nameof(keys)); if(obj.Type!=CBORType.Map){ throw
-                        new ArgumentException("'obj' is not a map."); } var builder=new
-                        StringBuilder(); var first=true; builder.Append("{"); for(CBORObject key
-                        in keys){ if(mapObj.ContainsKey(key)){ if(!first)builder.Append(", ");
-                        var keyString=(key.CBORType==CBORType.String) ? key.AsString() :
+                        IList<CBORObject> keys){ if(mapObj == null) { throw new
+                        ArgumentNullException(nameof(mapObj));} if(keys == null) { throw new
+                        ArgumentNullException(nameof(keys));} if(obj.Type!=CBORType.Map){ throw
+                        new ArgumentException("'obj' is not a map."); } StringBuilder
+                        builder=new StringBuilder(); var first=true; builder.Append("{");
+                        for(CBORObject key in keys){ if(mapObj.ContainsKey(key)){
+                        if(!first){builder.Append(", ");} var
+                        keyString=(key.CBORType==CBORType.String) ? key.AsString() :
                         key.ToJSONString(); builder.Append(CBORObject.FromObject(keyString)
                         .ToJSONString()) .Append(":").Append(mapObj[key].ToJSONString());
                         first=false; } } return builder.Append("}").ToString(); }
@@ -2491,7 +2503,8 @@ A text string containing the converted object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter is null.
+The parameter  <i>options</i>
+ is null.
 
 ### ToJSONString
 
@@ -2501,7 +2514,7 @@ Converts this object to a string in JavaScript Object Notation (JSON) format, us
 
 <b>Return Value:</b>
 
-A string object.
+A text string.
 
 ### ToString
 
@@ -3246,7 +3259,10 @@ Writes this CBOR object to a data stream, using the specified options for encodi
 
  * System.ArgumentNullException:
 The parameter <i>stream</i>
-is null.
+ is null.
 
  * System.IO.IOException:
 An I/O error occurred.
+
+ * System.ArgumentException:
+"Unexpected data type".
