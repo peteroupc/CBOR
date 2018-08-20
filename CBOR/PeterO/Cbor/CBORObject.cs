@@ -2769,10 +2769,8 @@ namespace PeterO.Cbor {
       return this.ToJSONString(JSONOptions.Default);
     }
 
- throw
-
-} StringBuilder
-
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)"]/*'/>
     public string ToJSONString(JSONOptions options) {
       if (options == null) {
         throw new ArgumentNullException(nameof(options));

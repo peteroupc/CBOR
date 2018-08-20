@@ -1929,7 +1929,7 @@
     <value><c>true</c>
        If this object&apos;s value equals 0; otherwise, .
       <c>false</c>
-      .
+       .
     </value>
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.Item(PeterO.Cbor.CBORObject)">
@@ -2334,6 +2334,10 @@
     </param>
     <returns>A text string containing the converted object.
     </returns>
+    <exception cref='T:System.ArgumentNullException'>The parameter
+      <paramref name='options'/>
+       is null.
+    </exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.ToString">
 

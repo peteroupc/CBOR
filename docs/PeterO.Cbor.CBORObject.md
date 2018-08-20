@@ -2467,7 +2467,7 @@ Converts this object to a string in JavaScript Object Notation (JSON) format, us
 
  * The string will not begin with a byte-order mark (U+FEFF); RFC 8259 (the JSON specification) forbids placing a byte-order mark at the beginning of a JSON string.
 
- * Byte strings are converted to Base64 URL without whitespace or padding by default (see section 4.1 of RFC 7049). A byte string will instead be converted to traditional base64 without whitespace or padding by default if it has tag 22, or base16 for tag 23. Padding will be included in the Base64 URL or traditional base64 form if <b>Base64Padding</b>in the JSON options is set to<b>true</b>.
+ * Byte strings are converted to Base64 URL without whitespace or padding by default (see section 4.1 of RFC 7049). A byte string will instead be converted to traditional base64 without whitespace or padding by default if it has tag 22, or base16 for tag 23. Padding will be included in the Base64 URL or traditional base64 form if<b>Base64Padding</b>in the JSON options is set to<b>true</b>.
 
  * Rational numbers will be converted to their exact form, if possible, otherwise to a high-precision approximation. (The resulting approximation could overflow to infinity, in which case the rational number is converted to null.)
 
@@ -2475,22 +2475,22 @@ Converts this object to a string in JavaScript Object Notation (JSON) format, us
 
  * Infinity and not-a-number will be converted to null.
 
-The example code given below (written in in C# for the NET version) can be used to write out certain keys of CBOR map in a given order to a JSON string.
+The example code given below (written in in C# for the .NET version) can e used to write out certain keys of a CBOR map in a given order to a JSON tring.
 
     // Generates a JSON string of 'mapObj' whose keys are in the order given
-                        in 'keys'. Only keys // found in 'keys' will be written if they exist in
-                        'mapObj'. private static string KeysToJSONMap(CBORObject mapObj,
-                        IList<CBORObject> keys){ if(mapObj == null) { throw new
-                        ArgumentNullException(nameof(mapObj));} if(keys == null) { throw new
-                        ArgumentNullException(nameof(keys));} if(obj.Type!=CBORType.Map){ throw
-                        new ArgumentException("'obj' is not a map."); } StringBuilder
-                        builder=new StringBuilder(); var first=true; builder.Append("{");
-                        for(CBORObject key in keys){ if(mapObj.ContainsKey(key)){
-                        if(!first){builder.Append(", ");} var
-                        keyString=(key.CBORType==CBORType.String) ? key.AsString() :
-                        key.ToJSONString(); builder.Append(CBORObject.FromObject(keyString)
-                        .ToJSONString()) .Append(":").Append(mapObj[key].ToJSONString());
-                        first=false; } } return builder.Append("}").ToString(); }
+            in 'keys'. Only keys // found in 'keys' will be written if they exist in
+            'mapObj'. private static string KeysToJSONMap(CBORObject mapObj,
+            IList<CBORObject> keys){ if(mapObj == null) { throw new
+            ArgumentNullException(nameof(mapObj));} if(keys == null) { throw new
+            ArgumentNullException(nameof(keys));} if(obj.Type!=CBORType.Map){ throw
+            new ArgumentException("'obj' is not a map."); } StringBuilder
+            builder=new StringBuilder(); var first=true; builder.Append("{");
+            for(CBORObject key in keys){ if(mapObj.ContainsKey(key)){
+            if(!first){builder.Append(", ");} var
+            keyString=(key.CBORType==CBORType.String) ? key.AsString() :
+            key.ToJSONString(); builder.Append(CBORObject.FromObject(keyString)
+            .ToJSONString()) .Append(":").Append(mapObj[key].ToJSONString());
+            first=false; } } return builder.Append("}").ToString(); }
 
 <b>Parameters:</b>
 
@@ -2503,8 +2503,8 @@ A text string containing the converted object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>options</i>
- is null.
+The parameter <i>options</i>
+is null.
 
 ### ToJSONString
 
