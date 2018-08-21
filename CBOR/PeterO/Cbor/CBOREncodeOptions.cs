@@ -65,8 +65,8 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Cbor.CBOREncodeOptions.Value"]/*'/>
+    /// <summary>Gets this options object's value.</summary>
+    /// <value>This options object&apos;s value.</value>
   [Obsolete("Option classes in this library will follow the form seen in JSONOptions in a later version; the approach used in this class is too complicated.")]
     public int Value {
       get {

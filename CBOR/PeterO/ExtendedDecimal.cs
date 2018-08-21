@@ -16,24 +16,29 @@ namespace PeterO {
   "Use EDecimal from PeterO.Numbers/com.upokecenter.numbers and the output of this class's ToString method.")]
   public sealed class ExtendedDecimal : IComparable<ExtendedDecimal>,
   IEquatable<ExtendedDecimal> {
-    /// <include file='../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.ExtendedDecimal.Exponent"]/*'/>
+    /// <summary>Gets this object's exponent. This object's value will be
+    /// an integer if the exponent is positive or zero.</summary>
+    /// <value>This object&apos;s exponent. This object&apos;s value will
+    /// be an integer if the exponent is positive or zero.</value>
     public BigInteger Exponent {
       get {
         return new BigInteger(this.Ed.Exponent);
       }
     }
 
-    /// <include file='../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.ExtendedDecimal.UnsignedMantissa"]/*'/>
+    /// <summary>Gets the absolute value of this object's un-scaled
+    /// value.</summary>
+    /// <value>The absolute value of this object&apos;s un-scaled
+    /// value.</value>
     public BigInteger UnsignedMantissa {
       get {
         return new BigInteger(this.Ed.UnsignedMantissa);
       }
     }
 
-    /// <include file='../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.ExtendedDecimal.Mantissa"]/*'/>
+    /// <summary>Gets this object's un-scaled value.</summary>
+    /// <value>This object&apos;s un-scaled value. Will be negative if this
+    /// object&apos;s value is negative (including a negative NaN).</value>
     public BigInteger Mantissa {
       get {
         return new BigInteger(this.Ed.Mantissa);
@@ -189,8 +194,10 @@ namespace PeterO {
       return this.Ed.IsInfinity();
     }
 
-    /// <include file='../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.ExtendedDecimal.IsNegative"]/*'/>
+    /// <summary>Gets a value indicating whether this object is negative,
+    /// including negative zero.</summary>
+    /// <value><c>true</c> If this object is negative, including negative
+    /// zero; otherwise,. <c>false</c>.</value>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public bool IsNegative {
       get {
@@ -211,8 +218,10 @@ namespace PeterO {
       return this.Ed.CompareTo(other == null ? null : other.Ed);
     }
 
-    /// <include file='../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.ExtendedDecimal.Sign"]/*'/>
+    /// <summary>Gets this value's sign: -1 if negative; 1 if positive; 0
+    /// if zero.</summary>
+    /// <value>This value&apos;s sign: -1 if negative; 1 if positive; 0 if
+    /// zero.</value>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public int Sign {
       get {
