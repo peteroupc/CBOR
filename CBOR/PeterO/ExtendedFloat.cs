@@ -21,29 +21,24 @@ namespace PeterO {
       this.ef = ef;
     }
 
-    /// <summary>Gets this object's exponent. This object's value will be
-    /// an integer if the exponent is positive or zero.</summary>
-    /// <value>This object&apos;s exponent. This object&apos;s value will
-    /// be an integer if the exponent is positive or zero.</value>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.ExtendedFloat.Exponent"]/*'/>
     public BigInteger Exponent {
       get {
         return new BigInteger(this.Ef.Exponent);
       }
     }
 
-    /// <summary>Gets the absolute value of this object's un-scaled
-    /// value.</summary>
-    /// <value>The absolute value of this object&apos;s un-scaled
-    /// value.</value>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.ExtendedFloat.UnsignedMantissa"]/*'/>
     public BigInteger UnsignedMantissa {
       get {
         return new BigInteger(this.Ef.UnsignedMantissa);
       }
     }
 
-    /// <summary>Gets this object's un-scaled value.</summary>
-    /// <value>This object&apos;s un-scaled value. Will be negative if this
-    /// object&apos;s value is negative (including a negative NaN).</value>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.ExtendedFloat.Mantissa"]/*'/>
     public BigInteger Mantissa {
       get {
         return new BigInteger(this.Ef.Mantissa);
@@ -273,10 +268,8 @@ namespace PeterO {
       return this.Ef.CompareTo(other == null ? null : other.Ef);
     }
 
-    /// <summary>Gets this value's sign: -1 if negative; 1 if positive; 0
-    /// if zero.</summary>
-    /// <value>This value&apos;s sign: -1 if negative; 1 if positive; 0 if
-    /// zero.</value>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.ExtendedFloat.Sign"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public int Sign {
       get {

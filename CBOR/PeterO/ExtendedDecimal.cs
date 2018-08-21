@@ -16,29 +16,24 @@ namespace PeterO {
   "Use EDecimal from PeterO.Numbers/com.upokecenter.numbers and the output of this class's ToString method.")]
   public sealed class ExtendedDecimal : IComparable<ExtendedDecimal>,
   IEquatable<ExtendedDecimal> {
-    /// <summary>Gets this object's exponent. This object's value will be
-    /// an integer if the exponent is positive or zero.</summary>
-    /// <value>This object&apos;s exponent. This object&apos;s value will
-    /// be an integer if the exponent is positive or zero.</value>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.ExtendedDecimal.Exponent"]/*'/>
     public BigInteger Exponent {
       get {
         return new BigInteger(this.Ed.Exponent);
       }
     }
 
-    /// <summary>Gets the absolute value of this object's un-scaled
-    /// value.</summary>
-    /// <value>The absolute value of this object&apos;s un-scaled
-    /// value.</value>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.ExtendedDecimal.UnsignedMantissa"]/*'/>
     public BigInteger UnsignedMantissa {
       get {
         return new BigInteger(this.Ed.UnsignedMantissa);
       }
     }
 
-    /// <summary>Gets this object's un-scaled value.</summary>
-    /// <value>This object&apos;s un-scaled value. Will be negative if this
-    /// object&apos;s value is negative (including a negative NaN).</value>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.ExtendedDecimal.Mantissa"]/*'/>
     public BigInteger Mantissa {
       get {
         return new BigInteger(this.Ed.Mantissa);
@@ -218,10 +213,8 @@ namespace PeterO {
       return this.Ed.CompareTo(other == null ? null : other.Ed);
     }
 
-    /// <summary>Gets this value's sign: -1 if negative; 1 if positive; 0
-    /// if zero.</summary>
-    /// <value>This value&apos;s sign: -1 if negative; 1 if positive; 0 if
-    /// zero.</value>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.ExtendedDecimal.Sign"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public int Sign {
       get {

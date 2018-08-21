@@ -72,8 +72,8 @@ namespace PeterO {
       this.er = er;
     }
 
-    /// <summary>Gets this object's denominator.</summary>
-    /// <value>This object&apos;s denominator.</value>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.ExtendedRational.Denominator"]/*'/>
     public BigInteger Denominator {
       get {
         return new BigInteger(this.Er.Denominator);
@@ -101,10 +101,8 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Gets a value indicating whether this object's value equals
-    /// 0.</summary>
-    /// <value><c>true</c> If this object&apos;s value equals 0; otherwise,
-    /// . <c>false</c>.</value>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.ExtendedRational.IsZero"]/*'/>
     [Obsolete("Use ERational from PeterO.Numbers/com.upokecenter.numbers.")]
     public bool IsZero {
       get {
@@ -112,10 +110,8 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Gets this object's numerator.</summary>
-    /// <value>This object&apos;s numerator. If this object is a
-    /// not-a-number value, returns the diagnostic information (which will
-    /// be negative if this object is negative).</value>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.ExtendedRational.Numerator"]/*'/>
     public BigInteger Numerator {
       get {
         return new BigInteger(this.Er.Numerator);
@@ -131,10 +127,8 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Gets this object's numerator with the sign
-    /// removed.</summary>
-    /// <value>This object&apos;s numerator. If this object is a
-    /// not-a-number value, returns the diagnostic information.</value>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.ExtendedRational.UnsignedNumerator"]/*'/>
     public BigInteger UnsignedNumerator {
       get {
         return new BigInteger(this.Er.UnsignedNumerator);

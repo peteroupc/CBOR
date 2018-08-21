@@ -430,11 +430,10 @@
 
 </doc>
 <doc name="P:PeterO.Cbor.CBOREncodeOptions.Value">
-
-            <summary>Gets this options object's value.
-    </summary><value>This options object's value.
+<summary>Gets this options object's value.
+    </summary>
+    <value>This options object&apos;s value.
     </value>
-
 </doc>
 <doc name="T:PeterO.Cbor.CBORException">
 
@@ -3502,24 +3501,14 @@
 
 </doc>
 <doc name="P:PeterO.Cbor.PODOptions.RemoveIsPrefix">
-
-            <summary>Gets a value indicating whether the "Is" prefix in property names is
-      removed before they are used as keys.
-    </summary><value><c>true</c>
-       if the prefix is removed; otherwise, <c>false</c>
-       .
-    </value>
-
+<summary>Gets a value indicating whether the "Is" prefix in
+            property names is removed before they are used as keys.</summary>
+            <value><c>true</c> If the prefix is removed; otherwise, <c>false</c>.</value>
 </doc>
 <doc name="P:PeterO.Cbor.PODOptions.UseCamelCase">
-
-            <summary>Gets a value indicating whether property names are converted to camel
-      case before they are used as keys.
-    </summary><value><c>true</c>
-       if the names are converted to camel case; otherwise, <c>false</c>
-       .
-    </value>
-
+<summary>Gets a value indicating whether property names are
+            converted to camel case before they are used as keys.</summary>
+            <value><c>true</c> If the names are converted to camel case; otherwise, <c>false</c>.</value>
 </doc>
 <doc name="T:PeterO.Cbor.StringRefs">
 
@@ -4391,13 +4380,12 @@
 
 </doc>
 <doc name="P:PeterO.ExtendedDecimal.Exponent">
-
-            <summary>Gets this object's exponent. This object's value will be an integer if
-      the exponent is positive or zero.
-    </summary><value>This object's exponent. This object's value will be an integer if the
+<summary>Gets this object's exponent. This object's value will be an integer if the
       exponent is positive or zero.
+    </summary>
+    <value>This object&apos;s exponent. This object&apos;s value will be an integer
+      if the exponent is positive or zero.
     </value>
-
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.FromString(System.String)">
 
@@ -4445,14 +4433,10 @@
 
 </doc>
 <doc name="P:PeterO.ExtendedDecimal.IsNegative">
-
-            <summary>Gets a value indicating whether this object is negative, including
-      negative zero.
-    </summary><value><c>true</c>
-       If this object is negative, including negative zero; otherwise, <c>false</c>
-       .
-    </value>
-
+<summary>Gets a value indicating whether this object is negative,
+            including negative zero.</summary>
+            <value><c>true</c> If this object is negative, including negative
+            zero; otherwise, <c>false</c>.</value>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.IsQuietNaN">
 
@@ -4465,12 +4449,11 @@
 
 </doc>
 <doc name="P:PeterO.ExtendedDecimal.Mantissa">
-
-            <summary>Gets this object's un-scaled value.
-    </summary><value>This object's un-scaled value. Will be negative if this object's value is
-      negative (including a negative NaN).
+<summary>Gets this object's un-scaled value.
+    </summary>
+    <value>This object&apos;s un-scaled value. Will be negative if this object&apos;s
+      value is negative (including a negative NaN).
     </value>
-
 </doc>
 <doc name="F:PeterO.ExtendedDecimal.NaN">
 
@@ -4503,11 +4486,10 @@
 
 </doc>
 <doc name="P:PeterO.ExtendedDecimal.Sign">
-
-            <summary>Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
-    </summary><value>This value's sign: -1 if negative; 1 if positive; 0 if zero.
+<summary>Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
+    </summary>
+    <value>This value&apos;s sign: -1 if negative; 1 if positive; 0 if zero.
     </value>
-
 </doc>
 <doc name="F:PeterO.ExtendedDecimal.SignalingNaN">
 
@@ -4564,11 +4546,10 @@
 
 </doc>
 <doc name="P:PeterO.ExtendedDecimal.UnsignedMantissa">
-
-            <summary>Gets the absolute value of this object's un-scaled value.
-    </summary><value>The absolute value of this object's un-scaled value.
+<summary>Gets the absolute value of this object's un-scaled value.
+    </summary>
+    <value>The absolute value of this object&apos;s un-scaled value.
     </value>
-
 </doc>
 <doc name="F:PeterO.ExtendedDecimal.Zero">
 
@@ -4728,13 +4709,12 @@
 
 </doc>
 <doc name="P:PeterO.ExtendedFloat.Exponent">
-
-            <summary>Gets this object's exponent. This object's value will be an integer if
-      the exponent is positive or zero.
-    </summary><value>This object's exponent. This object's value will be an integer if the
+<summary>Gets this object's exponent. This object's value will be an integer if the
       exponent is positive or zero.
+    </summary>
+    <value>This object&apos;s exponent. This object&apos;s value will be an integer
+      if the exponent is positive or zero.
     </value>
-
 </doc>
 <doc name="M:PeterO.ExtendedFloat.FromString(System.String)">
 
@@ -4843,14 +4823,10 @@
 
 </doc>
 <doc name="P:PeterO.ExtendedFloat.IsNegative">
-
-            <summary>Gets a value indicating whether this object is negative, including
-      negative zero.
-    </summary><value><c>true</c>
-       If this object is negative, including negative zero; otherwise, <c>false</c>
-       .
-    </value>
-
+<summary>Gets a value indicating whether this object is negative,
+            including negative zero.</summary>
+            <value><c>true</c> If this object is negative, including negative
+            zero; otherwise, <c>false</c>.</value>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.IsNegativeInfinity">
 
@@ -4891,12 +4867,11 @@
 
 </doc>
 <doc name="P:PeterO.ExtendedFloat.Mantissa">
-
-            <summary>Gets this object's un-scaled value.
-    </summary><value>This object's un-scaled value. Will be negative if this object's value is
-      negative (including a negative NaN).
+<summary>Gets this object's un-scaled value.
+    </summary>
+    <value>This object&apos;s un-scaled value. Will be negative if this object&apos;s
+      value is negative (including a negative NaN).
     </value>
-
 </doc>
 <doc name="F:PeterO.ExtendedFloat.NaN">
 
@@ -4929,11 +4904,10 @@
 
 </doc>
 <doc name="P:PeterO.ExtendedFloat.Sign">
-
-            <summary>Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
-    </summary><value>This value's sign: -1 if negative; 1 if positive; 0 if zero.
+<summary>Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
+    </summary>
+    <value>This value&apos;s sign: -1 if negative; 1 if positive; 0 if zero.
     </value>
-
 </doc>
 <doc name="F:PeterO.ExtendedFloat.SignalingNaN">
 
@@ -4958,11 +4932,10 @@
 
 </doc>
 <doc name="P:PeterO.ExtendedFloat.UnsignedMantissa">
-
-            <summary>Gets the absolute value of this object's un-scaled value.
-    </summary><value>The absolute value of this object's un-scaled value.
+<summary>Gets the absolute value of this object's un-scaled value.
+    </summary>
+    <value>The absolute value of this object&apos;s un-scaled value.
     </value>
-
 </doc>
 <doc name="F:PeterO.ExtendedFloat.Zero">
 
@@ -5055,11 +5028,10 @@
 
 </doc>
 <doc name="P:PeterO.ExtendedRational.Denominator">
-
-            <summary>Gets this object's denominator.
-    </summary><value>This object's denominator.
+<summary>Gets this object's denominator.
+    </summary>
+    <value>This object&apos;s denominator.
     </value>
-
 </doc>
 <doc name="M:PeterO.ExtendedRational.Equals(PeterO.ExtendedRational)">
 
@@ -5098,34 +5070,23 @@
 
 </doc>
 <doc name="P:PeterO.ExtendedRational.IsFinite">
-
-            <summary>Gets a value indicating whether this object is finite (not infinity or
-      NaN).
-    </summary><value><c>true</c>
-       If this object is finite (not infinity or NaN); otherwise, <c>false</c>
-       .
-    </value>
-
+<summary>Gets a value indicating whether this object is finite (not
+            infinity or NaN).</summary>
+            <value><c>true</c> If this object is finite (not infinity or NaN); otherwise, <c>false</c>.</value>
 </doc>
 <doc name="P:PeterO.ExtendedRational.IsNegative">
-
-            <summary>Gets a value indicating whether this object's value is negative
-      (including negative zero).
-    </summary><value><c>true</c>
-       If this object's value is negative; otherwise, <c>false</c>
-       .
-    </value>
-
+<summary>Gets a value indicating whether this object's value is
+            negative (including negative zero).</summary>
+            <value><c>true</c> If this object&apos;s value is negative; otherwise, <c>false</c>.</value>
 </doc>
 <doc name="P:PeterO.ExtendedRational.IsZero">
-
-            <summary>Gets a value indicating whether this object's value equals 0.
-    </summary><value><c>true</c>
-       If this object's value equals 0; otherwise, .
+<summary>Gets a value indicating whether this object's value equals 0.
+    </summary>
+    <value><c>true</c>
+       If this object&apos;s value equals 0; otherwise, .
       <c>false</c>
        .
     </value>
-
 </doc>
 <doc name="F:PeterO.ExtendedRational.NaN">
 
@@ -5146,13 +5107,12 @@
 
 </doc>
 <doc name="P:PeterO.ExtendedRational.Numerator">
-
-            <summary>Gets this object's numerator.
-    </summary><value>This object's numerator. If this object is a not-a-number value, returns
-      the diagnostic information (which will be negative if this object is
-      negative).
+<summary>Gets this object's numerator.
+    </summary>
+    <value>This object&apos;s numerator. If this object is a not-a-number value,
+      returns the diagnostic information (which will be negative if this object
+      is negative).
     </value>
-
 </doc>
 <doc name="F:PeterO.ExtendedRational.One">
 
@@ -5196,12 +5156,11 @@
 
 </doc>
 <doc name="P:PeterO.ExtendedRational.UnsignedNumerator">
-
-            <summary>Gets this object's numerator with the sign removed.
-    </summary><value>This object's numerator. If this object is a not-a-number value, returns
-      the diagnostic information.
+<summary>Gets this object's numerator with the sign removed.
+    </summary>
+    <value>This object&apos;s numerator. If this object is a not-a-number value,
+      returns the diagnostic information.
     </value>
-
 </doc>
 <doc name="F:PeterO.ExtendedRational.Zero">
 

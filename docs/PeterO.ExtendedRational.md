@@ -99,7 +99,7 @@ Gets a value indicating whether this object is finite (not infinity or NaN).
 
 <b>Returns:</b>
 
- `true` If this object is finite (not infinity or NaN); otherwise,  `false` .
+ `true`  If this object is finite (not infinity or NaN); otherwise,.  `false` .
 
 ### IsNegative
 
@@ -109,7 +109,7 @@ Gets a value indicating whether this object's value is negative (including negat
 
 <b>Returns:</b>
 
- `true` If this object's value is negative; otherwise,  `false` .
+ `true`  If this object's value is negative; otherwise,.  `false` .
 
 ### IsZero
 

@@ -96,7 +96,7 @@ Gets a value indicating whether this object is negative, including negative zero
 
 <b>Returns:</b>
 
- `true` If this object is negative, including negative zero; otherwise,  `false` .
+ `true`  If this object is negative, including negative zero; otherwise,.  `false` .
 
 ### Mantissa
 
