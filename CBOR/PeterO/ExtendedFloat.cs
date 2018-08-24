@@ -54,8 +54,15 @@ namespace PeterO {
     }
 
     #region Equals and GetHashCode implementation
-    /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.ExtendedFloat.EqualsInternal(PeterO.ExtendedFloat)"]/*'/>
+    /// <summary>Determines whether this object's mantissa and exponent are
+    /// equal to those of another object.</summary>
+    /// <param name='otherValue'>An arbitrary-precision binary
+    /// float.</param>
+    /// <returns><c>true</c> if this object's mantissa and exponent are
+    /// equal to those of another object; otherwise, <c>false</c>
+    /// .</returns>
+    /// <exception cref='T:System.ArgumentNullException'>The parameter
+    /// <paramref name='otherValue'/> is null.</exception>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public bool EqualsInternal(ExtendedFloat otherValue) {
       if (otherValue == null) {
@@ -64,8 +71,14 @@ namespace PeterO {
       return this.Ef.EqualsInternal(otherValue.Ef);
     }
 
-    /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.ExtendedFloat.Equals(PeterO.ExtendedFloat)"]/*'/>
+    /// <summary>Determines whether this object's mantissa and exponent are
+    /// equal to those of another object.</summary>
+    /// <param name='other'>An arbitrary-precision binary float.</param>
+    /// <returns><c>true</c> if this object's mantissa and exponent are
+    /// equal to those of another object; otherwise, <c>false</c>
+    /// .</returns>
+    /// <exception cref='T:System.ArgumentNullException'>The parameter
+    /// <paramref name='other'/> is null.</exception>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public bool Equals(ExtendedFloat other) {
       if (other == null) {
@@ -94,8 +107,14 @@ namespace PeterO {
       return new ExtendedFloat(EFloat.Create(mantissaSmall, exponentSmall));
     }
 
-    /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.ExtendedFloat.Create(PeterO.BigInteger,PeterO.BigInteger)"]/*'/>
+    /// <summary>Creates a number with the value
+    /// exponent*2^mantissa.</summary>
+    /// <param name='mantissa'>The un-scaled value.</param>
+    /// <param name='exponent'>The binary exponent.</param>
+    /// <returns>An arbitrary-precision binary float.</returns>
+    /// <exception cref='T:System.ArgumentNullException'>The parameter
+    /// <paramref name='mantissa'/> or <paramref name='exponent'/> is
+    /// null.</exception>
     public static ExtendedFloat Create(
   BigInteger mantissa,
   BigInteger exponent) {
@@ -108,8 +127,53 @@ namespace PeterO {
       return new ExtendedFloat(EFloat.Create(mantissa.Ei, exponent.Ei));
     }
 
-    /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.ExtendedFloat.FromString(System.String,System.Int32,System.Int32,PeterO.PrecisionContext)"]/*'/>
+    /// <summary>Creates a binary float from a text string that represents
+    /// a number. Note that if the string contains a negative exponent, the
+    /// resulting value might not be exact, in which case the resulting
+    /// binary float will be an approximation of this decimal number's
+    /// value. (NOTE: This documentation previously said the binary float
+    /// will contain enough precision to accurately convert it to a 32-bit
+    /// or 64-bit floating point number. Due to double rounding, this will
+    /// generally not be the case for certain numbers converted from
+    /// decimal to ExtendedFloat via this method and in turn converted to
+    /// <c>double</c> or <c>float</c>.)
+    /// <para>The format of the string generally consists of:</para>
+    /// <list type=''>
+    /// <item>An optional plus sign ("+" , U+002B) or minus sign ("-",
+    /// U+002D) (if '-' , the value is negative.)</item>
+    /// <item>One or more digits, with a single optional decimal point
+    /// after the first digit and before the last digit.</item>
+    /// <item>Optionally, "E+"/"e+" (positive exponent) or "E-"/"e-"
+    /// (negative exponent) plus one or more digits specifying the
+    /// exponent.</item></list>
+    /// <para>The string can also be "-INF", "-Infinity", "Infinity",
+    /// "INF", quiet NaN ("NaN") followed by any number of digits, or
+    /// signaling NaN ("sNaN") followed by any number of digits, all in any
+    /// combination of upper and lower case.</para>
+    /// <para>All characters mentioned above are the corresponding
+    /// characters in the Basic Latin range. In particular, the digits must
+    /// be the basic digits 0 to 9 (U+0030 to U+0039). The string is not
+    /// allowed to contain white space characters, including
+    /// spaces.</para></summary>
+    /// <param name='str'>The parameter <paramref name='str'/> is a text
+    /// string.</param>
+    /// <param name='offset'>A zero-based index showing where the desired
+    /// portion of <paramref name='str'/> begins.</param>
+    /// <param name='length'>The length, in code units, of the desired
+    /// portion of <paramref name='str'/> (but not more than <paramref
+    /// name='str'/> 's length).</param>
+    /// <param name='ctx'>A PrecisionContext object specifying the
+    /// precision, rounding, and exponent range to apply to the parsed
+    /// number. Can be null.</param>
+    /// <returns>The parsed number, converted to arbitrary-precision binary
+    /// float.</returns>
+    /// <exception cref='T:System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/> is null.</exception>
+    /// <exception cref='T:System.ArgumentException'>Either <paramref
+    /// name='offset'/> or <paramref name='length'/> is less than 0 or
+    /// greater than <paramref name='str'/> 's length, or <paramref
+    /// name='str'/> ' s length minus <paramref name='offset'/> is less
+    /// than <paramref name='length'/>.</exception>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public static ExtendedFloat FromString(
   string str,
@@ -237,10 +301,8 @@ namespace PeterO {
       return this.Ef.IsInfinity();
     }
 
-    /// <summary>Gets a value indicating whether this object is negative,
-    /// including negative zero.</summary>
-    /// <value><c>true</c> If this object is negative, including negative
-    /// zero; otherwise,. <c>false</c>.</value>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.ExtendedFloat.IsNegative"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public bool IsNegative {
       get {

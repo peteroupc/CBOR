@@ -20,16 +20,12 @@ namespace PeterO.Cbor {
     /// path='docs/doc[@name="F:PeterO.Cbor.PODOptions.Default"]/*'/>
     public static readonly PODOptions Default = new PODOptions();
 
-    /// <summary>Gets a value indicating whether the "Is" prefix in
-    /// property names is removed before they are used as keys.</summary>
-    /// <value><c>true</c> If the prefix is removed; otherwise,.
-    /// <c>false</c>.</value>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Cbor.PODOptions.RemoveIsPrefix"]/*'/>
         public bool RemoveIsPrefix { get; private set; }
 
-    /// <summary>Gets a value indicating whether property names are
-    /// converted to camel case before they are used as keys.</summary>
-    /// <value><c>true</c> If the names are converted to camel case;
-    /// otherwise,. <c>false</c>.</value>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Cbor.PODOptions.UseCamelCase"]/*'/>
     public bool UseCamelCase { get; private set; }
     }
 }

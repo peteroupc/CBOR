@@ -59,8 +59,14 @@ namespace PeterO {
 
     private readonly ERational er;
 
-    /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.ExtendedRational.#ctor(PeterO.BigInteger,PeterO.BigInteger)"]/*'/>
+    /// <summary>Initializes a new instance of the
+    /// <see cref='T:PeterO.ExtendedRational'/> class.</summary>
+    /// <param name='numerator'>An arbitrary-precision integer.</param>
+    /// <param name='denominator'>Another arbitrary-precision
+    /// integer.</param>
+    /// <exception cref='T:System.ArgumentNullException'>The parameter
+    /// <paramref name='numerator'/> or <paramref name='denominator'/> is
+    /// null.</exception>
     public ExtendedRational(BigInteger numerator, BigInteger denominator) {
       this.er = new ERational(numerator.Ei, denominator.Ei);
     }
@@ -80,10 +86,8 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Gets a value indicating whether this object is finite (not
-    /// infinity or NaN).</summary>
-    /// <value><c>true</c> If this object is finite (not infinity or NaN);
-    /// otherwise,. <c>false</c>.</value>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.ExtendedRational.IsFinite"]/*'/>
     [Obsolete("Use ERational from PeterO.Numbers/com.upokecenter.numbers.")]
     public bool IsFinite {
       get {
@@ -91,10 +95,8 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Gets a value indicating whether this object's value is
-    /// negative (including negative zero).</summary>
-    /// <value><c>true</c> If this object&apos;s value is negative;
-    /// otherwise,. <c>false</c>.</value>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.ExtendedRational.IsNegative"]/*'/>
     public bool IsNegative {
       get {
         return this.Er.IsNegative;
@@ -152,8 +154,15 @@ namespace PeterO {
   denominatorSmall));
     }
 
-    /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.ExtendedRational.Create(PeterO.BigInteger,PeterO.BigInteger)"]/*'/>
+    /// <summary>Creates a rational number with the given numerator and
+    /// denominator.</summary>
+    /// <param name='numerator'>An arbitrary-precision integer.</param>
+    /// <param name='denominator'>Another arbitrary-precision
+    /// integer.</param>
+    /// <returns>An arbitrary-precision rational number.</returns>
+    /// <exception cref='T:System.ArgumentNullException'>The parameter
+    /// <paramref name='numerator'/> or <paramref name='denominator'/> is
+    /// null.</exception>
     public static ExtendedRational Create(
   BigInteger numerator,
   BigInteger denominator) {

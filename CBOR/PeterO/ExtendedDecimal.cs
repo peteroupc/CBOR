@@ -79,8 +79,14 @@ namespace PeterO {
       this.ed = ed;
     }
 
-    /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.Create(PeterO.BigInteger,PeterO.BigInteger)"]/*'/>
+    /// <summary>Creates a number with the value
+    /// exponent*10^mantissa.</summary>
+    /// <param name='mantissa'>The un-scaled value.</param>
+    /// <param name='exponent'>The decimal exponent.</param>
+    /// <returns>An arbitrary-precision decimal number.</returns>
+    /// <exception cref='T:System.ArgumentNullException'>The parameter
+    /// <paramref name='mantissa'/> or <paramref name='exponent'/> is
+    /// null.</exception>
     public static ExtendedDecimal Create(
       BigInteger mantissa,
       BigInteger exponent) {
@@ -93,8 +99,17 @@ namespace PeterO {
       return new ExtendedDecimal(EDecimal.Create(mantissa.Ei, exponent.Ei));
     }
 
-    /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.FromString(System.String)"]/*'/>
+    /// <summary>Creates a decimal number from a text string that
+    /// represents a number. See <c>FromString(String, int, int,
+    /// EContext)</c> for more information.</summary>
+    /// <param name='str'>A string that represents a number.</param>
+    /// <returns>An arbitrary-precision decimal number with the same value
+    /// as the given string.</returns>
+    /// <exception cref='T:System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/> is null.</exception>
+    /// <exception cref='T:System.FormatException'>The parameter <paramref
+    /// name='str'/> is not a correctly formatted number
+    /// string.</exception>
     public static ExtendedDecimal FromString(string str) {
       return new ExtendedDecimal(EDecimal.FromString(str));
     }
@@ -189,10 +204,8 @@ namespace PeterO {
       return this.Ed.IsInfinity();
     }
 
-    /// <summary>Gets a value indicating whether this object is negative,
-    /// including negative zero.</summary>
-    /// <value><c>true</c> If this object is negative, including negative
-    /// zero; otherwise,. <c>false</c>.</value>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.ExtendedDecimal.IsNegative"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public bool IsNegative {
       get {

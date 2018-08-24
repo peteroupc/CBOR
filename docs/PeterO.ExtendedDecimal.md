@@ -120,7 +120,7 @@ Gets a value indicating whether this object is negative, including negative zero
 
 <b>Returns:</b>
 
- `true`  If this object is negative, including negative zero; otherwise,.  `false` .
+ `true`  If this object is negative, including negative zero; otherwise, .  `false` .
 
 ### Mantissa
 
@@ -192,8 +192,8 @@ An arbitrary-precision decimal number.
 
  * System.ArgumentNullException:
 The parameter <i>mantissa</i>
-or <i>exponent</i>
-is null.
+ or  <i>exponent</i>
+ is null.
 
 ### Equals
 
@@ -233,7 +233,8 @@ Determines whether this object's mantissa and exponent are equal to those of ano
     public static PeterO.ExtendedDecimal FromString(
         string str);
 
-Creates a decimal number from a text string that represents a number. See `FromString(String, int, int, EContext)` for more information.
+Creates a decimal number from a text string that represents a number. See  `FromString(String, int, int,
+            EContext)`  for more information.
 
 <b>Parameters:</b>
 
@@ -247,11 +248,11 @@ An arbitrary-precision decimal number with the same value as the given string.
 
  * System.ArgumentNullException:
 The parameter <i>str</i>
-is null.
+ is null.
 
  * System.FormatException:
-The parameter <i>str</i>
-is not a correctly formatted number string.
+The parameter  <i>str</i>
+ is not a correctly formatted number string.
 
 ### GetHashCode
 

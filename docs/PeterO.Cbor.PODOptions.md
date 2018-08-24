@@ -32,7 +32,7 @@ Gets a value indicating whether the "Is" prefix in property names is removed bef
 
 <b>Returns:</b>
 
- `true`  If the prefix is removed; otherwise,. `false` .
+ `true`  If the prefix is removed; otherwise, . `false` .
 
 ### UseCamelCase
 
@@ -42,4 +42,4 @@ Gets a value indicating whether property names are converted to camel case befor
 
 <b>Returns:</b>
 
- `true`  If the names are converted to camel case; otherwise,.  `false` .
+ `true`  If the names are converted to camel case; otherwise, .  `false` .

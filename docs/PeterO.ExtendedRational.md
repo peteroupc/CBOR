@@ -16,7 +16,7 @@ Arbitrary-precision rational number. This class can't be inherited; this s a cha
         PeterO.BigInteger numerator,
         PeterO.BigInteger denominator);
 
-Initializes a new instance of the [PeterO.ExtendedRational](PeterO.ExtendedRational.md) class.
+Initializes a new instance of the[PeterO.ExtendedRational](PeterO.ExtendedRational.md) class.
 
 <b>Parameters:</b>
 
@@ -28,8 +28,8 @@ Initializes a new instance of the [PeterO.ExtendedRational](PeterO.ExtendedRatio
 
  * System.ArgumentNullException:
 The parameter <i>numerator</i>
-or <i>denominator</i>
-is null.
+ or  <i>denominator</i>
+ is null.
 
 ### NaN
 
@@ -99,7 +99,7 @@ Gets a value indicating whether this object is finite (not infinity or NaN).
 
 <b>Returns:</b>
 
- `true`  If this object is finite (not infinity or NaN); otherwise,.  `false` .
+ `true`  If this object is finite (not infinity or NaN); otherwise, .  `false` .
 
 ### IsNegative
 
@@ -109,7 +109,7 @@ Gets a value indicating whether this object's value is negative (including negat
 
 <b>Returns:</b>
 
- `true`  If this object's value is negative; otherwise,.  `false` .
+ `true`  If this object's value is negative; otherwise, . `false` .
 
 ### IsZero
 
@@ -121,7 +121,7 @@ Gets a value indicating whether this object's value equals 0.
 
 <b>Returns:</b>
 
- `true` If this object's value equals 0; otherwise, . `false` .
+ `true`  If this object's value equals 0; otherwise, . `false` .
 
 ### Numerator
 
@@ -213,8 +213,8 @@ An arbitrary-precision rational number.
 
  * System.ArgumentNullException:
 The parameter <i>numerator</i>
-or <i>denominator</i>
-is null.
+ or  <i>denominator</i>
+ is null.
 
 ### Equals
 
