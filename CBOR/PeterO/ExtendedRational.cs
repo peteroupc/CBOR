@@ -59,14 +59,8 @@ namespace PeterO {
 
     private readonly ERational er;
 
-    /// <summary>Initializes a new instance of the
-    /// <see cref='T:PeterO.ExtendedRational'/> class.</summary>
-    /// <param name='numerator'>An arbitrary-precision integer.</param>
-    /// <param name='denominator'>Another arbitrary-precision
-    /// integer.</param>
-    /// <exception cref='T:System.ArgumentNullException'>The parameter
-    /// <paramref name='numerator'/> or <paramref name='denominator'/> is
-    /// null.</exception>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.ExtendedRational.#ctor(PeterO.BigInteger,PeterO.BigInteger)"]/*'/>
     public ExtendedRational(BigInteger numerator, BigInteger denominator) {
       this.er = new ERational(numerator.Ei, denominator.Ei);
     }
@@ -154,15 +148,8 @@ namespace PeterO {
   denominatorSmall));
     }
 
-    /// <summary>Creates a rational number with the given numerator and
-    /// denominator.</summary>
-    /// <param name='numerator'>An arbitrary-precision integer.</param>
-    /// <param name='denominator'>Another arbitrary-precision
-    /// integer.</param>
-    /// <returns>An arbitrary-precision rational number.</returns>
-    /// <exception cref='T:System.ArgumentNullException'>The parameter
-    /// <paramref name='numerator'/> or <paramref name='denominator'/> is
-    /// null.</exception>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.ExtendedRational.Create(PeterO.BigInteger,PeterO.BigInteger)"]/*'/>
     public static ExtendedRational Create(
   BigInteger numerator,
   BigInteger denominator) {

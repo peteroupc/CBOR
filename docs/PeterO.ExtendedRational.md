@@ -16,7 +16,7 @@ Arbitrary-precision rational number. This class can't be inherited; this s a cha
         PeterO.BigInteger numerator,
         PeterO.BigInteger denominator);
 
-Initializes a new instance of the[PeterO.ExtendedRational](PeterO.ExtendedRational.md) class.
+Initializes a new instance of the [PeterO.ExtendedRational](PeterO.ExtendedRational.md) class.
 
 <b>Parameters:</b>
 

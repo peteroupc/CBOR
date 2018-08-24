@@ -1146,34 +1146,8 @@ return new string[] {
       return (s == null) ? null : splitIRI(s, 0, s.Length, ParseMode.IRIStrict);
     }
 
-    /// <summary>Parses a substring that represents an Internationalized
-    /// Resource Identifier (IRI) under RFC3987. If the IRI is
-    /// syntactically valid, splits the string into its components and
-    /// returns an array containing the indices into the
-    /// components.</summary>
-    /// <param name='s'>A string that contains an IRI. Can be null.</param>
-    /// <param name='offset'>A zero-based index showing where the desired
-    /// portion of "s" begins.</param>
-    /// <param name='length'>The length of the desired portion of "s" (but
-    /// not more than "s" 's length).</param>
-    /// <param name='parseMode'>Parse mode that specifies whether certain
-    /// characters are allowed when parsing IRIs and URIs.</param>
-    /// <returns>If the string is a valid IRI, returns an array of 10
-    /// integers. Each of the five pairs corresponds to the start and end
-    /// index of the IRI's scheme, authority, path, query, or fragment
-    /// component, respectively. The scheme, authority, query, and fragment
-    /// components, if present, will each be given without the ending
-    /// colon, the starting "//", the starting "?", and the starting "#",
-    /// respectively. If a component is absent, both indices in that pair
-    /// will be -1 (an index won't be less than 0 in any other case). If
-    /// the string is null or is not a valid IRI, returns null.</returns>
-    /// <exception cref='T:System.ArgumentException'>Either <paramref
-    /// name='offset'/> or <paramref name='length'/> is less than 0 or
-    /// greater than <paramref name='s'/> 's length, or <paramref
-    /// name='s'/> ' s length minus <paramref name='offset'/> is less than
-    /// <paramref name='length'/>.</exception>
-    /// <exception cref='T:System.ArgumentNullException'>The parameter
-    /// <paramref name='s'/> is null.</exception>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.splitIRI(System.String,System.Int32,System.Int32,PeterO.Cbor.URIUtility.ParseMode)"]/*'/>
     public static int[] splitIRI(
   string s,
   int offset,
