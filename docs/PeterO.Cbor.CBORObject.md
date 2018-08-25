@@ -2457,7 +2457,7 @@ Either or both operands are not numbers (as opposed to Not-a-Number, NaN).
     public string ToJSONString(
         PeterO.Cbor.JSONOptions options);
 
-Converts this object to a string in JavaScript Object Notation (JSON) format, using the specified options to control the encoding process. This function works not only with arrays and maps, but also integers, strings, byte arrays, and other JSON data types. Notes:
+Converts this object to a string in JavaScript Object otation (JSON) format, using the specified options to ontrol the encoding process. This function works not nly with arrays and maps, but also integers, strings, yte arrays, and other JSON data types. Notes:
 
  * If this object contains maps with non-string keys, the keys are converted to JSON strings before writing the map as a JSON string.
 
@@ -2465,7 +2465,7 @@ Converts this object to a string in JavaScript Object Notation (JSON) format, us
 
  * If a number in the form of an arbitrary-precision binary float has a very high binary exponent, it will be converted to a double before being converted to a JSON string. (The resulting double could overflow to infinity, in which case the arbitrary-precision binary float is converted to null.)
 
- * The string will not begin with a byte-order mark (U+FEFF); RFC 8259 (the JSON specification) forbids placing a byte-order mark at the beginning of a JSON string.
+ * The string will not begin with a byte-order mark (U + FEFF); RFC 8259 (the JSON specification) forbids placing a byte-order mark at the beginning of a JSON string.
 
  * Byte strings are converted to Base64 URL without whitespace or padding by default (see section 4.1 of RFC 7049). A byte string will instead be converted to traditional base64 without whitespace or padding by default if it has tag 22, or base16 for tag 23. Padding will be included in the Base64 URL or traditional base64 form if <b>Base64Padding</b>in the JSON options s set to <b>true</b>.
 
@@ -2479,16 +2479,16 @@ The example code given below (written in in C# for the NET version) can be used 
 
     // Generates a JSON string of 'mapObj' whose keys are in the
                 order given
-                in 'keys'. Only keys  // found in 'keys' will be written if they exist in
+                in 'keys' . Only keys  // found in 'keys' will be written if they
+                exist in
                 'mapObj'. private static string KeysToJSONMap(CBORObject mapObj,
                 IList<CBORObject> keys){ if (mapObj == null) { throw new
-                ArgumentNullException(nameof(mapObj));} if (keys == null) { throw new
-                ArgumentNullException(nameof(keys));} if (obj.Type != CBORType.Map)
-                { throw
-                new ArgumentException("'obj' is not a map."); } StringBuilder
-                builder=new StringBuilder(); var first=true; builder.Append("{");
-                for (CBORObject key in keys) { if (mapObj.ContainsKey(key)) {
-                if (!first) {builder.Append(", ");} var
+                ArgumentNullException)nameof(mapObj));} if (keys == null) { throw
+                new ArgumentNullException)nameof(keys));} if (obj.Type !=
+                CBORType.Map) { throw new ArgumentException("'obj' is not a map."); }
+                StringBuilder builder = new StringBuilder(); var first = true;
+                builder.Append("{"); for (CBORObject key in keys) { if
+                (mapObj.ContainsKey(key)) { if (!first) {builder.Append(", ");} var
                 keyString=(key.CBORType == CBORType.String) ? key.AsString() :
                 key.ToJSONString(); builder.Append(CBORObject.FromObject(keyString)
                 .ToJSONString()) .Append(":").Append(mapObj[key].ToJSONString());
@@ -3207,6 +3207,43 @@ An I/O error occurred.
  * System.ArgumentNullException:
 The parameter <i>outputStream</i>
  is null.
+
+### WriteTo
+
+    public void WriteTo(
+        System.IO.Stream stream);
+
+<b>At the moment, use the overload of this method that takes a [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) object. The object `CBOREncodeOptions.Default` contains recommended settings for BOREncodeOptions, and those settings may be adopted by this verload (without a CBOREncodeOptions argument) in the next major ersion.</b>
+
+Writes this CBOR object to a data stream. If the CBOR object contains CBOR maps, or is a CBOR map, the keys to the map are written out to the data stream in an undefined order. The example method given below (written in C# for the .NET version) can be used to write out certain keys of a CBOR map in a given order:
+
+    // Writes each key of 'mapObj' to 'outputStream'in the order given in
+                        'keys'. Only keys // found in 'keys' will be written if they exist in
+                        'mapObj'. private static void WriteKeysToIndefMap)CBORObject
+                        mapObj, IList<CBORObject> keys, Stream outputStream){
+                        if)mapObj==null) throw new
+                        ArgumentNullException)nameof(mapObj)); if)keys==null) throw
+                        new ArgumentNullException)nameof(keys));
+                        if)outputStream==null) throw new
+                        ArgumentNullException)nameof(outputStream));
+                        if)obj.Type!=CBORType.Map){ throw new ArgumentException("'obj' is
+                        not a map."); } outputStream.WriteByte((byte)0xBF); for(CBORObject key
+                        in keys) { if)mapObj.ContainsKey(key)){ key.WriteTo(outputStream);
+                        mapObj[key].WriteTo(outputStream); } }
+                        outputStream.WriteByte((byte)0xBF); }
+
+<b>Parameters:</b>
+
+ * <i>stream</i>: A writable data stream.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter <i>stream</i>
+ is null. .
+
+ * System.IO.IOException:
+An I/O error occurred. .
 
 ### WriteTo
 

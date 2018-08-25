@@ -2531,9 +2531,9 @@
         (written in C# for the .NET version) can be used to write out certain
         keys of a CBOR map in a given order:
       </para>
-      <code>// Writes each key of 'mapObj' to 'outputStream'in the order given in
-        'keys'. Only keys // found in 'keys' will be written if they exist in
-        'mapObj'. private static void WriteKeysToIndefMap&#x29;CBORObject
+      <code>/* Writes each key of 'mapObj' to 'outputStream' in the order given in
+        'keys'. Only keys  found in 'keys' will be written if they exist in
+        'mapObj'. */ private static void WriteKeysToIndefMap&#x29;CBORObject
         mapObj, IList&lt;CBORObject&gt; keys, Stream outputStream){
         if&#x29;mapObj==null) throw new
         ArgumentNullException&#x29;nameof(mapObj)); if&#x29;keys==null) throw
@@ -2542,7 +2542,7 @@
         ArgumentNullException&#x29;nameof(outputStream));
         if&#x29;obj.Type!=CBORType.Map){ throw new ArgumentException("'obj' is
         not a map."); } outputStream.WriteByte((byte)0xBF); for(CBORObject key
-        in keys)[ if&#x29;mapObj.ContainsKey(key)){ key.WriteTo(outputStream);
+        in keys) { if&#x29;mapObj.ContainsKey(key)){ key.WriteTo(outputStream);
         mapObj[key].WriteTo(outputStream); } }
         outputStream.WriteByte((byte)0xBF); }
       </code>
@@ -3174,8 +3174,26 @@
       (URIs) and Internationalized Resource Identifiers (IRIs) under RFC3986 and
       RFC3987, respectively. In the following documentation, URIs and IRIs
       include URI references and IRI references, for convenience.
-    </summary>
-
+<para>There are five components to a URI: scheme, authority, path, query, and fragment identifier.
+The generic syntax to these components is defined in RFC3986 and extended in RFC3987.  According to RFC3986, different URI schemes can further restrict the syntax of the authority, path, and query component (see also RFC 7320).  However, the syntax of fragment identifiers depends on the media type (also known as MIME type) of the resource a URI references (see also RFC 3986 and RFC 7320).  As of Aug. 24, 2018, only the following media types specify a syntax for fragment identifiers:</para>
+<list>
+<item>The following application/* media types: epub+zip, pdf, senml+cbor, senml+json, senml-exi, sensml+cbor, sensml+json, sensml-exi, smil,
+vnd.3gpp-v2x-local-service-information, vnd.3gpp.mcdata-signalling,
+vnd.collection.doc+json, vnd.hc+json, vnd.hyper+json,
+vnd.hyper-item+json, vnd.mason+json,
+vnd.microsoft.portable-executable, vnd.oma.bcast.sgdu,
+vnd.shootproof+json</item>
+<item>The following image/* media types: avci, avcs, heic, heic-sequence, heif, heif-sequence</item>
+<item>The XML media types: application/xml, application/xml-external-parsed-entity, text/xml, text/xml-external-parsed-entity, application/xml-dtd</item>
+<item>All media types with subtypes ending in "+xml" (see RFC 7303) use XPointer Framework syntax as fragment identifiers, except the following application/* media types: dicom+xml, senml+xml, sensml+xml, ttml+xml, xliff+xml, yang-data+xml</item>
+<item>font/collection</item>
+<item>multipart/x-mixed-replace</item>
+<item>text/plain</item>
+<item>text/csv</item>
+<item>text/html</item>
+<item>text/markdown</item>
+<item>text/vnd.a</item></list>
+     </summary>
 </doc>
 <doc name="T:PeterO.Cbor.URIUtility.ParseMode">
 
@@ -3345,8 +3363,8 @@
     </summary><param name='s'>A string that contains an IRI. Can be null.
     </param><returns>If the string is a valid IRI reference, returns an array of 10 integers.
       Each of the five pairs corresponds to the start and end index of the IRI's
-      scheme, authority, path, query, or fragment component, respectively. The
-      scheme, authority, query, and fragment components, if present, will each
+      scheme, authority, path, query, or fragment identifier, respectively. The
+      scheme, authority, query, and fragment identifier, if present, will each
       be given without the ending colon, the starting "//", the starting "?",
       and the starting "#", respectively. If a component is absent, both indices
       in that pair will be -1. If the string is null or is not a valid IRI,
@@ -3366,8 +3384,8 @@
        is a ParseMode object.
     </param><returns>If the string is a valid IRI reference, returns an array of 10 integers.
       Each of the five pairs corresponds to the start and end index of the IRI's
-      scheme, authority, path, query, or fragment component, respectively. The
-      scheme, authority, query, and fragment components, if present, will each
+      scheme, authority, path, query, or fragment identifier, respectively. The
+      scheme, authority, query, and fragment identifier, if present, will each
       be given without the ending colon, the starting "//", the starting "?",
       and the starting "#", respectively. If a component is absent, both indices
       in that pair will be -1. If the string is null or is not a valid IRI,
@@ -4929,7 +4947,7 @@
       components.
       <returns>If the string is a valid IRI reference, returns an array of 10 integers.
         Each of the five pairs corresponds to the start and end index of the
-        IRI's scheme, authority, path, query, or fragment component,
+        IRI's scheme, authority, path, query, or fragment identifier,
         respectively. If a component is absent, both indices in that pair will
         be -1. If the string is null or is not a valid IRI, returns null.
       </returns>
@@ -4951,7 +4969,7 @@
     </param>
     <returns>If the string is a valid IRI reference, returns an array of 10 integers.
       Each of the five pairs corresponds to the start and end index of the IRI's
-      scheme, authority, path, query, or fragment component, respectively. If a
+      scheme, authority, path, query, or fragment identifier, respectively. If a
       component is absent, both indices in that pair will be -1. If the string
       is null or is not a valid IRI, returns null.
     </returns>
@@ -4974,7 +4992,7 @@
     </param>
     <returns>If the string is a valid IRI, returns an array of 10 integers. Each of the
       five pairs corresponds to the start and end index of the IRI's scheme,
-      authority, path, query, or fragment component, respectively. If a
+      authority, path, query, or fragment identifier, respectively. If a
       component is absent, both indices in that pair will be -1 (an index won't
       be less than 0 in any other case). If the string is null or is not a valid
       IRI, returns null.
