@@ -3008,8 +3008,8 @@ namespace PeterO.Cbor {
   options);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='stream'>Not documented yet.</param>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)"]/*'/>
     public void WriteTo(Stream stream) {
       this.WriteTo(stream, new CBOREncodeOptions(true, true));
     }
