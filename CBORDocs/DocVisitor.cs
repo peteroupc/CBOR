@@ -503,6 +503,7 @@ namespace PeterO.DocGen {
       str = str.Replace("&", "&amp;");
       str = str.Replace("<", "&lt;");
       str = str.Replace(">", "&gt;");
+      str = str.Replace("*", "&#x2a;");
       str = str.Replace("\"", "&#x22;");
       return str;
     }
