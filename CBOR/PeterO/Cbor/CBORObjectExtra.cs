@@ -47,6 +47,33 @@ namespace PeterO.Cbor {
       return (sbyte)v;
     }
 
+
+    /// <summary>Not documented yet.</summary>
+    [CLSCompliant(false)]
+    public static int WriteValue(Stream outputStream, int majorType, uint value){
+      return WriteValue(outputStream,majorType,(long)value);
+    }
+
+    /// <summary>Not documented yet.</summary>
+    [CLSCompliant(false)]
+    public static int WriteValue(Stream outputStream, int majorType, ulong value){
+      if(value<=Int64.MaxValue){
+        return WriteValue(outputStream,majorType,(long)value);
+      } else {
+        //ArgumentAssert.CheckRange(majorType,0,7);
+        if(majorType==7){
+          throw new ArgumentException("majorType is 7 and value is greater than 255");
+        }
+        byte[] bytes=new[] { (byte)(27 | (majorType << 5)), (byte)((value >> 56) & 0xff),
+        (byte)((value >> 48) & 0xff), (byte)((value >> 40) & 0xff),
+        (byte)((value >> 32) & 0xff), (byte)((value >> 24) & 0xff),
+        (byte)((value >> 16) & 0xff), (byte)((value >> 8) & 0xff),
+        (byte)(value & 0xff) };
+        outputStream.Write(bytes,0,bytes.Length);
+        return bytes.Length;
+      }
+    }
+
     private static EInteger DecimalToEInteger(decimal dec) {
       return ((EDecimal)dec).ToEInteger();
     }

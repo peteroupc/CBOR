@@ -29,6 +29,22 @@ namespace PeterO {
     }
 
     /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.DataUtilities.CodePointLength(System.String)"]/*'/>
+    public static int CodePointLength(string str) {
+      if (str == null) {
+        throw new ArgumentNullException(nameof(str));
+      }
+      var i = 0;
+      var count = 0;
+     while (i < str.Length) {
+       int c = CodePointAt(str, i);
+       ++count;
+       i += (c >= 0x10000) ? 2 : 1;
+     }
+     return count;
+}
+
+    /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.DataUtilities.GetUtf8String(System.Byte[],System.Int32,System.Int32,System.Boolean)"]/*'/>
     public static string GetUtf8String(
   byte[] bytes,
@@ -186,7 +202,7 @@ namespace PeterO {
       }
       int c = str[index - 1];
       if ((c & 0xfc00) == 0xdc00 && index - 2 >= 0 &&
-          str[index - 2] >= 0xd800 && str[index - 2] <= 0xdbff) {
+          (str[index - 2] & 0xfc00) == 0xd800) {
         // Get the Unicode code point for the surrogate pair
         return 0x10000 + ((str[index - 2] - 0xd800) << 10) + (c - 0xdc00);
       }
@@ -221,7 +237,7 @@ namespace PeterO {
       }
       int c = str[index];
       if ((c & 0xfc00) == 0xd800 && index + 1 < str.Length &&
-          str[index + 1] >= 0xdc00 && str[index + 1] <= 0xdfff) {
+          (str[index + 1] & 0xfc00) == 0xdc00) {
         // Get the Unicode code point for the surrogate pair
         c = 0x10000 + ((c - 0xd800) << 10) + (str[index + 1] - 0xdc00);
         ++index;
@@ -316,13 +332,11 @@ namespace PeterO {
             continue;
           }
           var incindex = false;
-          if (i + 1 < strA.Length && strA[i + 1] >= 0xdc00 && strA[i + 1] <=
-              0xdfff) {
+          if (i + 1 < strA.Length && (strA[i + 1] & 0xfc00) == 0xdc00) {
             ca = 0x10000 + ((ca - 0xd800) << 10) + (strA[i + 1] - 0xdc00);
             incindex = true;
           }
-          if (i + 1 < strB.Length && strB[i + 1] >= 0xdc00 && strB[i + 1] <=
-              0xdfff) {
+          if (i + 1 < strB.Length && (strB[i + 1] & 0xfc00) == 0xdc00) {
             cb = 0x10000 + ((cb - 0xd800) << 10) + (strB[i + 1] - 0xdc00);
             incindex = true;
           }
@@ -337,11 +351,11 @@ namespace PeterO {
             return ca - cb;
           }
           if ((ca & 0xfc00) == 0xd800 && i + 1 < strA.Length &&
-              strA[i + 1] >= 0xdc00 && strA[i + 1] <= 0xdfff) {
+              (strA[i + 1] & 0xfc00) == 0xdc00) {
             ca = 0x10000 + ((ca - 0xd800) << 10) + (strA[i + 1] - 0xdc00);
           }
           if ((cb & 0xfc00) == 0xd800 && i + 1 < strB.Length &&
-              strB[i + 1] >= 0xdc00 && strB[i + 1] <= 0xdfff) {
+              (strB[i + 1] & 0xfc00) == 0xdc00) {
             cb = 0x10000 + ((cb - 0xd800) << 10) + (strB[i + 1] - 0xdc00);
           }
           return ca - cb;
@@ -458,7 +472,7 @@ namespace PeterO {
           bytes[byteIndex++] = (byte)(0x80 | (c & 0x3f));
         } else {
           if ((c & 0xfc00) == 0xd800 && index + 1 < endIndex &&
-              str[index + 1] >= 0xdc00 && str[index + 1] <= 0xdfff) {
+              (str[index + 1] & 0xfc00) == 0xdc00) {
             // Get the Unicode code point for the surrogate pair
             c = 0x10000 + ((c - 0xd800) << 10) + (str[index + 1] - 0xdc00);
             ++index;

@@ -917,8 +917,8 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Clear">
 
-            <summary>Not documented yet.</summary>
-
+            <summary>Removes all items from this CBOR array or all keys and values from this CBOR map.</summary>
+<exception cref="InvalidOperationException">This object is not a CBOR array or CBOR map.</exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.CompareTo(PeterO.Cbor.CBORObject)">
 
@@ -2089,9 +2089,9 @@
        The example code given below (written in in C# for the .NET version) can
       be used to write out certain keys of a CBOR map in a given order to a JSON
       string.
-      <code>// Generates a JSON string of 'mapObj' whose keys are in the order given
-        in 'keys' . Only keys // found in 'keys' will be written if they exist
-        in 'mapObj'. private static string KeysToJSONMap&#x28;CBORObject mapObj,
+      <code>/* Generates a JSON string of 'mapObj' whose keys are in the order given
+        in 'keys' . Only keys found in 'keys' will be written if they exist
+        in 'mapObj'. */ private static string KeysToJSONMap&#x28;CBORObject mapObj,
         IList&lt;CBORObject&gt; keys&#x29;&#x7b; if (mapObj == null) { throw new
         ArgumentNullException&#x29;nameof(mapObj));} if (keys == null) { throw
         new ArgumentNullException&#x29;nameof(keys));} if (obj.Type !=
@@ -3071,10 +3071,10 @@
 
 </doc>
 <doc name="P:PeterO.Cbor.JSONOptions.Base64Padding">
-
-            <summary>If <b>true</b>, include padding when writing data in
-             base64url or traditional base64 format to JSON.</summary><value>The default is. <b>false</b>, no padding.</value><remarks>The padding character is '='.</remarks>
-
+<summary>Gets a value indicating whether to include padding when writing data in
+             base64url or traditional base64 format to JSON.</summary>
+            <value>The default is. <b>false</b>, no padding.</value>
+            <remarks>The padding character is '='.</remarks>
 </doc>
 <doc name="F:PeterO.Cbor.JSONOptions.Default">
 
@@ -3161,6 +3161,12 @@ vnd.shootproof+json</item>
      </summary>
 
 </doc>
+<doc name="M:PeterO.Cbor.URIUtility.EncodeStringForURI(System.String)">
+
+            <summary>Encodes characters other than "unreserved" characters for
+            URIs.</summary><param name='s'>A string to encode.</param><returns>The encoded string.</returns><exception cref='T:System.ArgumentNullException'>The parameter <paramref name='s'/> is null.</exception>
+
+</doc>
 <doc name="T:PeterO.Cbor.URIUtility.ParseMode">
 
             <summary>Specifies whether certain characters are allowed when parsing IRIs and
@@ -3219,6 +3225,20 @@ vnd.shootproof+json</item>
     </summary><param name='str'>A string that may contain percent encoding. May be null.
     </param><returns>The string in which percent-encoding was decoded.
     </returns>
+
+</doc>
+<doc name="M:PeterO.Cbor.URIUtility.PercentDecode(System.String,System.Int32,System.Int32)">
+
+            <summary>Decodes percent-encoding (of the form "%XX" where X is a
+            hexadecimal digit) in the given portion of a string. Successive
+            percent-encoded bytes are assumed to form characters in
+            UTF-8.</summary><param name='str'>A string a portion of which may contain percent
+            encoding. May be null.</param><param name='index'>Zero-based index showing where the desired
+            portion of <paramref name='str'/> begins.</param><param name='endIndex'>Zero-based index showing where the desired
+            portion of <paramref name='str'/> ends. The character before this
+            index is the last character.</param><returns>The portion of the given string in which percent-encoding
+            was decoded. Returns null if <paramref name='str'/> is
+            ull.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.URIUtility.escapeURI(System.String,System.Int32)">
@@ -3505,6 +3525,16 @@ vnd.shootproof+json</item>
       first code point that's different is greater in A than in B; or a starts
       with b and is longer than b.
     </returns>
+
+</doc>
+<doc name="M:PeterO.DataUtilities.CodePointLength(System.String)">
+
+            <summary>Finds the number of Unicode code points in the given text
+            string. Unpaired surrogate code points increase this number by 1.
+            This is not necessarily the length of the string in "char"
+            s.</summary><param name='str'>The parameter <paramref name='str'/> is a text string.</param><returns>The number of Unicode code points in the given
+            string.</returns><exception cref='T:System.ArgumentNullException'>The parameter
+            <paramref name='str'/> is null.</exception>
 
 </doc>
 <doc name="M:PeterO.DataUtilities.GetUtf8Bytes(System.String,System.Boolean)">

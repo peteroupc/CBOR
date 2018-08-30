@@ -3008,6 +3008,76 @@ namespace PeterO.Cbor {
   options);
     }
 
+ /// <summary>Not documented yet.</summary>
+  public static int WriteValue(Stream outputStream, int majorType, long value){
+  //ArgumentAssert.CheckRange(majorType,0,7);
+  //ArgumentAssert.GreaterOrEqual(value,0);
+  if(majorType==7){
+   //ArgumentAssert.LessOrEqual(value,255);
+   if(value<=23){
+          outputStream.WriteByte((byte)(0xE0+(int)value));
+    return 1;
+   } else if(value<32){
+    throw new ArgumentException("value is from 24 to 31 and major type is 7");
+   } else {
+          outputStream.WriteByte((byte)0xF8);
+          outputStream.WriteByte((byte)value);
+    return 2;
+   }
+  } else {
+   return WritePositiveInt64(majorType,value,outputStream);
+  }
+}
+
+   /// <summary>Not documented yet.</summary>
+  public static int WriteValue(Stream outputStream, int majorType, int value){
+  //ArgumentAssert.CheckRange(majorType,0,7);
+  //ArgumentAssert.GreaterOrEqual(value,0);
+  if(majorType==7){
+   //ArgumentAssert.LessOrEqual(value,255);
+   if(value<=23){
+          outputStream.WriteByte((byte)(0xE0+value));
+    return 1;
+   } else if(value<32){
+    throw new ArgumentException("value is from 24 to 31 and major type is 7");
+   } else {
+          outputStream.WriteByte((byte)0xF8);
+          outputStream.WriteByte((byte)value);
+    return 2;
+   }
+  } else {
+   return WritePositiveInt(majorType,value,outputStream);
+  }
+ }
+
+  /// <summary>Not documented yet.</summary>
+  public static int WriteValue(Stream outputStream, int majorType, EInteger bigintValue){
+      if (bigintValue.Sign < 0) {
+        throw new ArgumentException("tagEInt's sign (" + bigintValue.Sign +
+                    ") is less than 0");
+      }
+      if (bigintValue.CompareTo(UInt64MaxValue) > 0) {
+        throw new ArgumentException(
+          "tag more than 18446744073709551615 (" + bigintValue + ")");
+      }
+      if (bigintValue.CompareTo(Int64MaxValue) <= 0) {
+        return WriteValue(outputStream, majorType, bigintValue.ToInt64Checked());
+      }
+      long longVal=bigintValue.ToInt64Unchecked();
+      int highbyte=(int)((longVal>>56)&0xFF);
+        //ArgumentAssert.CheckRange(majorType,0,7);
+        if(majorType==7){
+          throw new ArgumentException("majorType is 7 and value is greater than 255");
+        }
+        byte[] bytes=new[] { (byte)(27 | (majorType << 5)), (byte)highbyte,
+        (byte)((longVal >> 48) & 0xff), (byte)((longVal >> 40) & 0xff),
+        (byte)((longVal >> 32) & 0xff), (byte)((longVal >> 24) & 0xff),
+        (byte)((longVal >> 16) & 0xff), (byte)((longVal >> 8) & 0xff),
+        (byte)(longVal & 0xff) };
+      outputStream.Write(bytes,0,bytes.Length);
+      return bytes.Length;
+ }
+
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)"]/*'/>
     public void WriteTo(Stream stream) {
@@ -3850,14 +3920,16 @@ namespace PeterO.Cbor {
       }
     }
 
-    private static void WritePositiveInt(int type, int value, Stream s) {
+    private static int WritePositiveInt(int type, int value, Stream s) {
       byte[] bytes = GetPositiveIntBytes(type, value);
       s.Write(bytes, 0, bytes.Length);
+      return bytes.Length;
     }
 
-    private static void WritePositiveInt64(int type, long value, Stream s) {
+    private static int WritePositiveInt64(int type, long value, Stream s) {
       byte[] bytes = GetPositiveInt64Bytes(type, value);
       s.Write(bytes, 0, bytes.Length);
+      return bytes.Length;
     }
 
     private static void WriteStreamedString(string str, Stream stream) {
@@ -3901,7 +3973,7 @@ namespace PeterO.Cbor {
           bytes[byteIndex++] = (byte)(0x80 | (c & 0x3f));
         } else {
           if ((c & 0xfc00) == 0xd800 && index + 1 < str.Length &&
-              str[index + 1] >= 0xdc00 && str[index + 1] <= 0xdfff) {
+              (str[index + 1] & 0xfc00) == 0xdc00) {
             // Get the Unicode code point for the surrogate pair
             c = 0x10000 + ((c - 0xd800) << 10) + (str[index + 1] - 0xdc00);
             ++index;

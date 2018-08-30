@@ -141,7 +141,7 @@ using System.Text;
       while (index < valueSLength) {
         int c = s[index];
         if ((c & 0xfc00) == 0xd800 && index + 1 < valueSLength &&
-            s[index + 1] >= 0xdc00 && s[index + 1] <= 0xdfff) {
+            (s[index + 1] & 0xfc00) == 0xdc00) {
           // Get the Unicode code point for the surrogate pair
           c = 0x10000 + ((c - 0xd800) << 10) + (s[index + 1] - 0xdc00);
           ++index;
@@ -264,11 +264,20 @@ using System.Text;
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.PercentDecode(System.String)"]/*'/>
     public static string PercentDecode(string str) {
+      return (str == null) ? null : PercentDecode(str, 0, str.Length);
+    }
+
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.PercentDecode(System.String,System.Int32,System.Int32)"]/*'/>
+    public static string PercentDecode(string str, int index, int endIndex) {
+      if (str == null) {
+ return null;
+}
       // Quick check
       var quickCheck = true;
       var lastIndex = 0;
-      var i = 0;
-      for (; i < str.Length; ++i) {
+      int i = index;
+      for (; i < endIndex; ++i) {
         if (str[i] >= 0xd800 || str[i] == '%') {
           quickCheck = false;
           lastIndex = i;
@@ -276,20 +285,20 @@ using System.Text;
         }
       }
       if (quickCheck) {
- return str;
+ return str.Substring(index, endIndex - index);
 }
       var retString = new StringBuilder();
-      retString.Append(str, 0, lastIndex);
+      retString.Append(str, index, lastIndex);
       var cp = 0;
       var bytesSeen = 0;
       var bytesNeeded = 0;
       var lower = 0x80;
       var upper = 0xbf;
       var markedPos = -1;
-      for (i = lastIndex; i < str.Length; ++i) {
+      for (i = lastIndex; i < endIndex; ++i) {
         int c = str[i];
-        if ((c & 0xfc00) == 0xd800 && i + 1 < str.Length &&
-            str[i + 1] >= 0xdc00 && str[i + 1] <= 0xdfff) {
+        if ((c & 0xfc00) == 0xd800 && i + 1 < endIndex &&
+            (str[i + 1] & 0xfc00) == 0xdc00) {
           // Get the Unicode code point for the surrogate pair
           c = 0x10000 + ((c - 0xd800) << 10) + (str[i + 1] - 0xdc00);
           ++i;
@@ -297,7 +306,7 @@ using System.Text;
           c = 0xfffd;
         }
         if (c == '%') {
-          if (i + 2 < str.Length) {
+          if (i + 2 < endIndex) {
             int a = ToHex(str[i + 1]);
             int b = ToHex(str[i + 2]);
             if (a >= 0 && b >= 0) {
@@ -396,7 +405,8 @@ retString.Append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
       return retString.ToString();
       }
 
-// <summary></summary>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.EncodeStringForURI(System.String)"]/*'/>
     public static string EncodeStringForURI(string s) {
       if (s == null) {
   throw new ArgumentNullException(nameof(s));
@@ -406,7 +416,7 @@ var builder = new StringBuilder();
       while (index < s.Length) {
         int c = s[index];
         if ((c & 0xfc00) == 0xd800 && index + 1 < s.Length &&
-            s[index + 1] >= 0xdc00 && s[index + 1] <= 0xdfff) {
+            (s[index + 1] & 0xfc00) == 0xdc00) {
           // Get the Unicode code point for the surrogate pair
           c = 0x10000 + ((c - 0xd800) << 10) + (s[index + 1] - 0xdc00);
         } else if ((c & 0xf800) == 0xd800) {
@@ -415,8 +425,8 @@ var builder = new StringBuilder();
         if (c >= 0x10000) {
  ++index;
 }
-    if ((c & 0x7F) == c && ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'
-) ||
+    if ((c & 0x7F) == c && ((c >= 'A' && c <= 'Z') ||
+        (c >= 'a' && c <= 'z') ||
             (c >= '0' && c <= '9') || "-_.~".IndexOf((char)c) >= 0)) {
           builder.Append((char)c);
           ++index;
@@ -525,7 +535,7 @@ return builder.ToString();
         // Get the next Unicode character
         int c = s[index];
         if ((c & 0xfc00) == 0xd800 && index + 1 < valueSLength &&
-            s[index + 1] >= 0xdc00 && s[index + 1] <= 0xdfff) {
+            (s[index + 1] & 0xfc00) == 0xdc00) {
           // Get the Unicode code point for the surrogate pair
           c = 0x10000 + ((c - 0xd800) << 10) + (s[index + 1] - 0xdc00);
           ++index;
@@ -605,7 +615,7 @@ public static string BuildIRI(
       while (index < s.Length) {
         int c = s[index];
         if ((c & 0xfc00) == 0xd800 && index + 1 < s.Length &&
-            s[index + 1] >= 0xdc00 && s[index + 1] <= 0xdfff) {
+            (s[index + 1] & 0xfc00) == 0xdc00) {
           // Get the Unicode code point for the surrogate pair
           c = 0x10000 + ((c - 0xd800) << 10) + (s[index + 1] - 0xdc00);
         } else if ((c & 0xf800) == 0xd800) {
@@ -1235,7 +1245,7 @@ if (s.Length - offset < length) {
             return null;
           }
           if ((c & 0xfc00) == 0xd800 && index + 1 < valueSLength &&
-              s[index + 1] >= 0xdc00 && s[index + 1] <= 0xdfff) {
+              (s[index + 1] & 0xfc00) == 0xdc00) {
             // Get the Unicode code point for the surrogate pair
             c = 0x10000 + ((c - 0xd800) << 10) + (s[index + 1] - 0xdc00);
             ++index;
@@ -1336,7 +1346,7 @@ if (s.Length - offset < length) {
           return null;
         }
         if ((c & 0xfc00) == 0xd800 && index + 1 < valueSLength &&
-            s[index + 1] >= 0xdc00 && s[index + 1] <= 0xdfff) {
+            (s[index + 1] & 0xfc00) == 0xdc00) {
           // Get the Unicode code point for the surrogate pair
           c = 0x10000 + ((c - 0xd800) << 10) + (s[index + 1] - 0xdc00);
           ++index;

@@ -68,7 +68,9 @@ namespace Test {
             ++index;
           }
           if (!tilde) {
-            key = pointer.Substring(oldIndex, (index) - oldIndex);
+            key = pointer.Substring(
+  oldIndex,
+  index - oldIndex);
           } else {
             index = oldIndex;
             var sb = new StringBuilder();
