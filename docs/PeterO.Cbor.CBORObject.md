@@ -903,7 +903,12 @@ Returns whether this object's value, truncated to an integer, would be -(2^63) o
 
     public void Clear();
 
-Not documented yet.
+Removes all items from this CBOR array or all keys and values from this CBOR map.
+
+<b>Exceptions:</b>
+
+ * System.InvalidOperationException:
+This object is not a CBOR array or CBOR map.
 
 ### CompareTo
 
@@ -2477,9 +2482,9 @@ Converts this object to a string in JavaScript Object Notation (JSON) format, us
 
 The example code given below (written in in C# for the .NET version) can e used to write out certain keys of a CBOR map in a given order to a JSON tring.
 
-    // Generates a JSON string of 'mapObj' whose keys are in the order given
-            in 'keys' . Only keys // found in 'keys' will be written if they exist
-            in 'mapObj'. private static string KeysToJSONMap(CBORObject mapObj,
+    /* Generates a JSON string of 'mapObj' whose keys are in the order given
+            in 'keys' . Only keys found in 'keys' will be written if they exist in
+            'mapObj'. */ private static string KeysToJSONMap(CBORObject mapObj,
             IList<CBORObject> keys){ if (mapObj == null) { throw new
             ArgumentNullException)nameof(mapObj));} if (keys == null) { throw
             new ArgumentNullException)nameof(keys));} if (obj.Type !=
@@ -3211,12 +3216,39 @@ The parameter <i>outputStream</i>
     public void WriteTo(
         System.IO.Stream stream);
 
-Not documented yet.
+<b>At the moment, use the overload of this method that takes a[PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md)object. The object `CBOREncodeOptions.Default` contains recommended settings for CBOREncodeOptions, and those ettings may be adopted by this overload (without a CBOREncodeOptions rgument) in the next major version.</b>
+
+Writes this CBOR object to a data stream. If the CBOR object contains CBOR maps, or is a CBOR map, the keys to the map are written out to the data stream in an undefined order. The example method given below (written in C# for the .NET version) can be used to write out certain keys of a CBOR map in a given order:
+
+    /* Writes each key of 'mapObj' to 'outputStream'in the order given in
+            'keys'. Only keys found in 'keys' will be written if they exist in
+            'mapObj'.*/ private static void WriteKeysToIndefMap(CBORObject
+            mapObj, IList<CBORObject> keys, Stream outputStream){
+            if(mapObj==null) throw new
+            ArgumentNullException(nameof(mapObj));
+            if(keys==null){throw new
+            ArgumentNullException(nameof(keys));}
+            if(outputStream==null){throw new
+            ArgumentNullException(nameof(outputStream));}
+            if(obj.Type!=CBORType.Map){ throw new ArgumentException("'obj'
+            is not a map."); } outputStream.WriteByte((byte)0xBF);
+            for(CBORObject key in keys) {
+            if(mapObj.ContainsKey(key)){ key.WriteTo(outputStream);
+            mapObj[key].WriteTo(outputStream); } }
+            outputStream.WriteByte((byte)0xBF); }
 
 <b>Parameters:</b>
 
- * <i>stream</i>: The parameter  <i>stream</i>
- is not documented yet.
+ * <i>stream</i>: A writable data stream.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter <i>stream</i>
+is null.
+
+ * System.IO.IOException:
+An I/O error occurred.
 
 ### WriteTo
 
@@ -3243,3 +3275,168 @@ An I/O error occurred.
 
  * System.ArgumentException:
 "Unexpected data type".
+
+### WriteValue
+
+    public static int WriteValue(
+        System.IO.Stream outputStream,
+        int majorType,
+        int value);
+
+Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as a 32-bit signed integer. This is a low-level method that is useful for implementing custom CBOR encoding methodologies. This method encodes the given major type and value in the shortest form allowed for the major type.
+
+In the following example, an array of three objects is written as CBOR to a data stream.
+
+    CBORObject.WriteValue(stream, 4, 3);  // array, length 3
+                CBORObject.Write("hello world", stream);  // item 1
+                CBORObject.Write(25, stream);  // item 2
+                CBORObject.Write(false, stream);  // item 3
+
+In the following example, a map consisting of two key-value pairs is written as CBOR to a data stream.
+
+    CBORObject.WriteValue(stream, 5, 2);  // map, 2 pairs
+                CBORObject.Write("number", stream);  // key 1
+                CBORObject.Write(25, stream);  // value 1
+                CBORObject.Write("string", stream);  // key 2
+                CBORObject.Write("hello", stream);  // value 2
+
+<b>Parameters:</b>
+
+ * <i>outputStream</i>: A writable data stream.
+
+ * <i>majorType</i>: The CBOR major type to write. This is a number from 0 through 7 as follows. 0: integer 0 or greater; 1: negative integer; 2: byte string; 3: UTF-8 text string; 4: array; 5: map; 6: tag; 7: simple value. See RFC 7049 for details on these major types.
+
+ * <i>value</i>: An integer 0 or greater associated with the major type, as follows. 0: integer 0 or greater; 1: the negative integer's absolute value is this number plus 1; 2: length in bytes of the byte string; 3: length in bytes of the UTF-8 text string; 4: number of items in the array; 5: number of key-value pairs in the map; 6: tag number; 7: simple value number, which must be in the interval [0, 23] or [32, 255].
+
+<b>Return Value:</b>
+
+The number of bytes ordered to be written to the data stream.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentException:
+Value is from 24 to 31 and major type is 7.
+
+ * System.ArgumentNullException:
+The parameter  <i>outputStream</i>
+ is null.
+
+### WriteValue
+
+    public static int WriteValue(
+        System.IO.Stream outputStream,
+        int majorType,
+        long value);
+
+Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as a 64-bit signed integer. This is a low-level method that is useful for implementing custom CBOR encoding methodologies. This method encodes the given major type and value in the shortest form allowed for the major type.
+
+<b>Parameters:</b>
+
+ * <i>outputStream</i>: A writable data stream.
+
+ * <i>majorType</i>: The CBOR major type to write. This is a number from 0 through 7 as follows. 0: integer 0 or greater; 1: negative integer; 2: byte string; 3: UTF-8 text string; 4: array; 5: map; 6: tag; 7: simple value. See RFC 7049 for details on these major types.
+
+ * <i>value</i>: An integer 0 or greater associated with the major type, as follows. 0: integer 0 or greater; 1: the negative integer's absolute value is this number plus 1; 2: length in bytes of the byte string; 3: length in bytes of the UTF-8 text string; 4: number of items in the array; 5: number of key-value pairs in the map; 6: tag number; 7: simple value number, which must be in the interval [0, 23] or [32, 255].
+
+<b>Return Value:</b>
+
+The number of bytes ordered to be written to the data stream.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentException:
+Value is from 24 to 31 and major type is 7.
+
+ * System.ArgumentNullException:
+The parameter  <i>outputStream</i>
+ is null.
+
+### WriteValue
+
+    public static int WriteValue(
+        System.IO.Stream outputStream,
+        int majorType,
+        PeterO.Numbers.EInteger bigintValue);
+
+Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as an arbitrary-precision integer. This is a low-level method that is useful for implementing custom CBOR encoding methodologies. This method encodes the given major type and value in the shortest form allowed for the major type.
+
+<b>Parameters:</b>
+
+ * <i>outputStream</i>: A writable data stream.
+
+ * <i>majorType</i>: The CBOR major type to write. This is a number from 0 through 7 as follows. 0: integer 0 or greater; 1: negative integer; 2: byte string; 3: UTF-8 text string; 4: array; 5: map; 6: tag; 7: simple value. See RFC 7049 for details on these major types.
+
+ * <i>bigintValue</i>: An integer 0 or greater associated with the major type, as follows. 0: integer 0 or greater; 1: the negative integer's absolute value is this number plus 1; 2: length in bytes of the byte string; 3: length in bytes of the UTF-8 text string; 4: number of items in the array; 5: number of key-value pairs in the map; 6: tag number; 7: simple value number, which must be in the interval [0, 23] or [32, 255]. For major types 0 to 6, this number may not be greater than 2^64 - 1.
+
+<b>Return Value:</b>
+
+The number of bytes ordered to be written to the data stream.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentException:
+The parameter <i>majorType</i>
+ is 7 and value is greater than 255.
+
+ * System.ArgumentNullException:
+The parameter  <i>outputStream</i>
+ or  <i>bigintValue</i>
+ is null.
+
+### WriteValue
+
+    public static int WriteValue(
+        System.IO.Stream outputStream,
+        int majorType,
+        uint value);
+
+Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as a 32-bit unsigned integer. This is a low-level method that is useful for implementing custom CBOR encoding methodologies. This method encodes the given major type and value in the shortest form allowed for the major type.
+
+<b>Parameters:</b>
+
+ * <i>outputStream</i>: A writable data stream.
+
+ * <i>majorType</i>: The CBOR major type to write. This is a number from 0 through 7 as follows. 0: integer 0 or greater; 1: negative integer; 2: byte string; 3: UTF-8 text string; 4: array; 5: map; 6: tag; 7: simple value. See RFC 7049 for details on these major types.
+
+ * <i>value</i>: An integer 0 or greater associated with the major type, as follows. 0: integer 0 or greater; 1: the negative integer's absolute value is this number plus 1; 2: length in bytes of the byte string; 3: length in bytes of the UTF-8 text string; 4: number of items in the array; 5: number of key-value pairs in the map; 6: tag number; 7: simple value number, which must be in the interval [0, 23] or [32, 255].
+
+<b>Return Value:</b>
+
+The number of bytes ordered to be written to the data stream.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter  <i>outputStream</i>
+ is null.
+
+### WriteValue
+
+    public static int WriteValue(
+        System.IO.Stream outputStream,
+        int majorType,
+        ulong value);
+
+Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as a 64-bit unsigned integer. This is a low-level method that is useful for implementing custom CBOR encoding methodologies. This method encodes the given major type and value in the shortest form allowed for the major type.
+
+<b>Parameters:</b>
+
+ * <i>outputStream</i>: A writable data stream.
+
+ * <i>majorType</i>: The CBOR major type to write. This is a number from 0 through 7 as follows. 0: integer 0 or greater; 1: negative integer; 2: byte string; 3: UTF-8 text string; 4: array; 5: map; 6: tag; 7: simple value. See RFC 7049 for details on these major types.
+
+ * <i>value</i>: An integer 0 or greater associated with the major type, as follows. 0: integer 0 or greater; 1: the negative integer's absolute value is this number plus 1; 2: length in bytes of the byte string; 3: length in bytes of the UTF-8 text string; 4: number of items in the array; 5: number of key-value pairs in the map; 6: tag number; 7: simple value number, which must be in the interval [0, 23] or [32, 255].
+
+<b>Return Value:</b>
+
+The number of bytes ordered to be written to the data stream.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentException:
+The parameter <i>majorType</i>
+ is 7 and value is greater than 255.
+
+ * System.ArgumentNullException:
+The parameter  <i>outputStream</i>
+ is null.

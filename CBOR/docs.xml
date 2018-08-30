@@ -916,9 +916,11 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Clear">
-
-            <summary>Removes all items from this CBOR array or all keys and values from this CBOR map.</summary>
-<exception cref="InvalidOperationException">This object is not a CBOR array or CBOR map.</exception>
+<summary>Removes all items from this CBOR array or all keys and values from this
+      CBOR map.
+    </summary>
+    <exception cref='InvalidOperationException'>This object is not a CBOR array or CBOR map.
+    </exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.CompareTo(PeterO.Cbor.CBORObject)">
 
@@ -2090,8 +2092,8 @@
       be used to write out certain keys of a CBOR map in a given order to a JSON
       string.
       <code>/* Generates a JSON string of 'mapObj' whose keys are in the order given
-        in 'keys' . Only keys found in 'keys' will be written if they exist
-        in 'mapObj'. */ private static string KeysToJSONMap&#x28;CBORObject mapObj,
+        in 'keys' . Only keys found in 'keys' will be written if they exist in
+        'mapObj'. */ private static string KeysToJSONMap&#x28;CBORObject mapObj,
         IList&lt;CBORObject&gt; keys&#x29;&#x7b; if (mapObj == null) { throw new
         ArgumentNullException&#x29;nameof(mapObj));} if (keys == null) { throw
         new ArgumentNullException&#x29;nameof(keys));} if (obj.Type !=
@@ -2517,9 +2519,46 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)">
-
-            <summary>Not documented yet.</summary><param name='stream'>The parameter <paramref name='stream'/> is not documented yet.</param>
-
+<summary><para><b>At the moment, use the overload of this method that takes a
+          <see cref='T:PeterO.Cbor.CBOREncodeOptions'/>
+           object. The object
+          <c>CBOREncodeOptions.Default</c>
+           contains recommended settings for CBOREncodeOptions, and those
+          settings may be adopted by this overload (without a CBOREncodeOptions
+          argument) in the next major version.</b>
+      </para>
+      <para>Writes this CBOR object to a data stream. If the CBOR object contains
+        CBOR maps, or is a CBOR map, the keys to the map are written out to the
+        data stream in an undefined order. The example method given below
+        (written in C# for the .NET version) can be used to write out certain
+        keys of a CBOR map in a given order:
+      </para>
+      <code>/* Writes each key of 'mapObj' to 'outputStream'in the order given in
+        'keys'. Only keys found in 'keys' will be written if they exist in
+        'mapObj'.*/ private static void WriteKeysToIndefMap&#x28;CBORObject
+        mapObj, IList&lt;CBORObject&gt; keys, Stream outputStream)&#x7b;
+        if&#x28;mapObj==null) throw new
+        ArgumentNullException&#x28;nameof(mapObj));
+        if&#x28;keys==null)&#x7b;throw new
+        ArgumentNullException&#x28;nameof(keys));&#x7d;
+        if&#x28;outputStream==null)&#x7b;throw new
+        ArgumentNullException&#x28;nameof(outputStream));&#x7d;
+        if&#x28;obj.Type!=CBORType.Map)&#x7b; throw new ArgumentException("'obj'
+        is not a map."); &#x7d; outputStream.WriteByte((byte)0xBF);
+        for(CBORObject key in keys) &#x7b;
+        if&#x28;mapObj.ContainsKey(key))&#x7b; key.WriteTo(outputStream);
+        mapObj[key].WriteTo(outputStream); &#x7d; &#x7d;
+        outputStream.WriteByte((byte)0xBF); &#x7d;
+      </code>
+    </summary>
+    <param name='stream'>A writable data stream.
+    </param>
+    <exception cref='T:System.ArgumentNullException'>The parameter
+      <paramref name='stream'/>
+       is null.
+    </exception>
+    <exception cref='T:System.IO.IOException'>An I/O error occurred.
+    </exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)">
 
@@ -2535,6 +2574,48 @@
              <paramref name='stream'/> is null.</exception><exception cref='T:System.IO.IOException'>An I/O error
              occurred.</exception><exception cref='T:System.ArgumentException'>"Unexpected data
              type".</exception>
+
+</doc>
+<doc name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,PeterO.Numbers.EInteger)">
+
+            <summary>Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as an arbitrary-precision integer.  This is a low-level method that is useful for implementing custom CBOR encoding methodologies.  This method encodes the given major type and value in the shortest form allowed for the major type.</summary><param name='outputStream'>A writable data stream.</param><param name='majorType'>The CBOR major type to write.  This is a number from 0 through 7 as follows. 0: integer 0 or greater; 1: negative integer; 2: byte string; 3: UTF-8 text string; 4: array; 5: map; 6: tag; 7: simple value.  See RFC 7049 for details on these major types.</param><param name='bigintValue'>an integer 0 or greater associated with the major type, as follows. 0: integer 0 or greater; 1: the negative integer's absolute value is this number plus 1; 2: length in bytes of the byte string; 3: length in bytes of the UTF-8 text string; 4: number of items in the array; 5: number of key-value pairs in the map; 6: tag number; 7: simple value number, which must be in the interval [0, 23] or [32, 255].  For major types 0 to 6, this number may not be greater than 2^64 - 1</param><returns>The number of bytes ordered to be written to the data stream.</returns><exception cref='T:System.ArgumentException'>"majorType" is 7 and value is
+            greater than 255.</exception>
+
+</doc>
+<doc name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,System.Int32)">
+
+            <summary>Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as a 32-bit signed integer.  This is a low-level method that is useful for implementing custom CBOR encoding methodologies.  This method encodes the given major type and value in the shortest form allowed for the major type.</summary><param name='outputStream'>A writable data stream.</param><param name='majorType'>The CBOR major type to write.  This is a number from 0 through 7 as follows. 0: integer 0 or greater; 1: negative integer; 2: byte string; 3: UTF-8 text string; 4: array; 5: map; 6: tag; 7: simple value.  See RFC 7049 for details on these major types.</param><param name='value'>an integer 0 or greater associated with the major type, as follows. 0: integer 0 or greater; 1: the negative integer's absolute value is this number plus 1; 2: length in bytes of the byte string; 3: length in bytes of the UTF-8 text string; 4: number of items in the array; 5: number of key-value pairs in the map; 6: tag number; 7: simple value number, which must be in the interval [0, 23] or [32, 255].</param><returns>The number of bytes ordered to be written to the data stream.</returns><exception cref='T:System.ArgumentException'>Value is from 24 to 31 and
+            major type is 7.</exception><example><para>In the following example, an array of three objects is written as CBOR to a data stream.</para>
+<code>CBORObject.WriteValue(stream, 4, 3); /* array, length 3 */
+CBORObject.Write("hello world", stream); /* item 1 */
+CBORObject.Write(25, stream); /* item 2 */
+CBORObject.Write(false, stream); /* item 3 */
+</code>
+<para>In the following example, a map consisting of two key-value pairs is written as CBOR to a data stream.</para>
+<code>CBORObject.WriteValue(stream, 5, 2); /* map, 2 pairs */
+CBORObject.Write("number", stream); /* key 1 */
+CBORObject.Write(25, stream); /* value 1 */
+CBORObject.Write("string", stream); /* key 2 */
+CBORObject.Write("hello", stream); /* value 2 */
+</code>
+</example>
+
+</doc>
+<doc name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,System.Int64)">
+
+            <summary>Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as a 64-bit signed integer.  This is a low-level method that is useful for implementing custom CBOR encoding methodologies.  This method encodes the given major type and value in the shortest form allowed for the major type.</summary><param name='outputStream'>A writable data stream.</param><param name='majorType'>The CBOR major type to write.  This is a number from 0 through 7 as follows. 0: integer 0 or greater; 1: negative integer; 2: byte string; 3: UTF-8 text string; 4: array; 5: map; 6: tag; 7: simple value.  See RFC 7049 for details on these major types.</param><param name='value'>an integer 0 or greater associated with the major type, as follows. 0: integer 0 or greater; 1: the negative integer's absolute value is this number plus 1; 2: length in bytes of the byte string; 3: length in bytes of the UTF-8 text string; 4: number of items in the array; 5: number of key-value pairs in the map; 6: tag number; 7: simple value number, which must be in the interval [0, 23] or [32, 255].</param><returns>The number of bytes ordered to be written to the data stream.</returns><exception cref='T:System.ArgumentException'>Value is from 24 to 31 and
+            major type is 7.</exception>
+
+</doc>
+<doc name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,System.UInt32)">
+
+            <summary>Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as a 32-bit unsigned integer.  This is a low-level method that is useful for implementing custom CBOR encoding methodologies.  This method encodes the given major type and value in the shortest form allowed for the major type.</summary><param name='outputStream'>A writable data stream.</param><param name='majorType'>The CBOR major type to write.  This is a number from 0 through 7 as follows. 0: integer 0 or greater; 1: negative integer; 2: byte string; 3: UTF-8 text string; 4: array; 5: map; 6: tag; 7: simple value.  See RFC 7049 for details on these major types.</param><param name='value'>an integer 0 or greater associated with the major type, as follows. 0: integer 0 or greater; 1: the negative integer's absolute value is this number plus 1; 2: length in bytes of the byte string; 3: length in bytes of the UTF-8 text string; 4: number of items in the array; 5: number of key-value pairs in the map; 6: tag number; 7: simple value number, which must be in the interval [0, 23] or [32, 255].</param><returns>The number of bytes ordered to be written to the data stream.</returns>
+
+</doc>
+<doc name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,System.UInt64)">
+
+            <summary>Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as a 64-bit unsigned integer.  This is a low-level method that is useful for implementing custom CBOR encoding methodologies.  This method encodes the given major type and value in the shortest form allowed for the major type.</summary><param name='outputStream'>A writable data stream.</param><param name='majorType'>The CBOR major type to write.  This is a number from 0 through 7 as follows. 0: integer 0 or greater; 1: negative integer; 2: byte string; 3: UTF-8 text string; 4: array; 5: map; 6: tag; 7: simple value.  See RFC 7049 for details on these major types.</param><param name='value'>an integer 0 or greater associated with the major type, as follows. 0: integer 0 or greater; 1: the negative integer's absolute value is this number plus 1; 2: length in bytes of the byte string; 3: length in bytes of the UTF-8 text string; 4: number of items in the array; 5: number of key-value pairs in the map; 6: tag number; 7: simple value number, which must be in the interval [0, 23] or [32, 255].</param><returns>The number of bytes ordered to be written to the data stream.</returns><exception cref='T:System.ArgumentException'>"majorType" is 7 and value is
+            greater than 255.</exception>
 
 </doc>
 <doc name="F:PeterO.Cbor.CBORObject.Zero">
@@ -3071,10 +3152,9 @@
 
 </doc>
 <doc name="P:PeterO.Cbor.JSONOptions.Base64Padding">
-<summary>Gets a value indicating whether to include padding when writing data in
-             base64url or traditional base64 format to JSON.</summary>
-            <value>The default is. <b>false</b>, no padding.</value>
-            <remarks>The padding character is '='.</remarks>
+
+            <summary>Gets a value not documented yet.</summary><value>The default is. <b>false</b>, no padding.</value><remarks>The padding character is '='.</remarks>
+
 </doc>
 <doc name="F:PeterO.Cbor.JSONOptions.Default">
 
@@ -3616,7 +3696,7 @@ vnd.shootproof+json</item>
             <summary>Generates a text string from a portion of a UTF-8 byte array.
     </summary><param name='bytes'>A byte array containing text encoded in UTF-8.
     </param><param name='offset'>Offset into the byte array to start reading.
-    </param><param name='bytesCount'>Length, in bytes, of the UTF-8 string.
+    </param><param name='bytesCount'>Length, in bytes, of the UTF-8 text string.
     </param><param name='replace'>If true, replaces invalid encoding with the replacement character
       (U+FFFD). If false, stops processing when invalid UTF-8 is seen.
     </param><returns>A string represented by the UTF-8 byte array.
@@ -3664,9 +3744,9 @@ vnd.shootproof+json</item>
 <doc name="M:PeterO.DataUtilities.ReadUtf8FromBytes(System.Byte[],System.Int32,System.Int32,System.Text.StringBuilder,System.Boolean)">
 
             <summary>Reads a string in UTF-8 encoding from a byte array.
-    </summary><param name='data'>A byte array containing a UTF-8 string.
+    </summary><param name='data'>A byte array containing a UTF-8 text string.
     </param><param name='offset'>Offset into the byte array to start reading.
-    </param><param name='bytesCount'>Length, in bytes, of the UTF-8 string.
+    </param><param name='bytesCount'>Length, in bytes, of the UTF-8 text string.
     </param><param name='builder'>A string builder object where the resulting string will be stored.
     </param><param name='replace'>If true, replaces invalid encoding with the replacement character
       (U+FFFD). If false, stops processing when invalid UTF-8 is seen.

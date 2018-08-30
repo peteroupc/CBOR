@@ -3008,50 +3008,186 @@ namespace PeterO.Cbor {
   options);
     }
 
- /// <summary>Not documented yet.</summary>
-  public static int WriteValue(Stream outputStream, int majorType, long value){
-  //ArgumentAssert.CheckRange(majorType,0,7);
-  //ArgumentAssert.GreaterOrEqual(value,0);
-  if(majorType==7){
-   //ArgumentAssert.LessOrEqual(value,255);
-   if(value<=23){
-          outputStream.WriteByte((byte)(0xE0+(int)value));
+    /// <summary>Writes a CBOR major type number and an integer 0 or
+    /// greater associated with it to a data stream, where that integer is
+    /// passed to this method as a 64-bit signed integer. This is a
+    /// low-level method that is useful for implementing custom CBOR
+    /// encoding methodologies. This method encodes the given major type
+    /// and value in the shortest form allowed for the major
+    /// type.</summary>
+    /// <param name='outputStream'>A writable data stream.</param>
+    /// <param name='majorType'>The CBOR major type to write. This is a
+    /// number from 0 through 7 as follows. 0: integer 0 or greater; 1:
+    /// negative integer; 2: byte string; 3: UTF-8 text string; 4: array;
+    /// 5: map; 6: tag; 7: simple value. See RFC 7049 for details on these
+    /// major types.</param>
+    /// <param name='value'>An integer 0 or greater associated with the
+    /// major type, as follows. 0: integer 0 or greater; 1: the negative
+    /// integer's absolute value is this number plus 1; 2: length in bytes
+    /// of the byte string; 3: length in bytes of the UTF-8 text string; 4:
+    /// number of items in the array; 5: number of key-value pairs in the
+    /// map; 6: tag number; 7: simple value number, which must be in the
+    /// interval [0, 23] or [32, 255].</param>
+    /// <returns>The number of bytes ordered to be written to the data
+    /// stream.</returns>
+    /// <exception cref='T:System.ArgumentException'>Value is from 24 to 31
+    /// and major type is 7.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='outputStream'/> is null.</exception>
+  public static int WriteValue(Stream outputStream, int majorType, long value) {
+   if (outputStream == null) {
+  throw new ArgumentNullException(nameof(outputStream));
+}
+  if (majorType < 0) {
+  throw new ArgumentException("majorType (" + majorType +
+    ") is less than 0");
+}
+if (majorType > 7) {
+  throw new ArgumentException("majorType (" + majorType +
+    ") is more than 7");
+}
+  if (value < 0) {
+  throw new ArgumentException("value (" + value +
+    ") is less than 0");
+}
+  if (majorType == 7) {
+   if (value > 255) {
+  throw new ArgumentException("value (" + value +
+    ") is more than 255");
+}
+   if (value <= 23) {
+          outputStream.WriteByte((byte)(0xe0 + (int)value));
     return 1;
-   } else if(value<32){
+   } else if (value < 32) {
     throw new ArgumentException("value is from 24 to 31 and major type is 7");
    } else {
-          outputStream.WriteByte((byte)0xF8);
+          outputStream.WriteByte((byte)0xf8);
           outputStream.WriteByte((byte)value);
     return 2;
    }
   } else {
-   return WritePositiveInt64(majorType,value,outputStream);
+   return WritePositiveInt64(majorType, value, outputStream);
   }
 }
 
-   /// <summary>Not documented yet.</summary>
-  public static int WriteValue(Stream outputStream, int majorType, int value){
-  //ArgumentAssert.CheckRange(majorType,0,7);
-  //ArgumentAssert.GreaterOrEqual(value,0);
-  if(majorType==7){
-   //ArgumentAssert.LessOrEqual(value,255);
-   if(value<=23){
-          outputStream.WriteByte((byte)(0xE0+value));
+    /// <summary>Writes a CBOR major type number and an integer 0 or
+    /// greater associated with it to a data stream, where that integer is
+    /// passed to this method as a 32-bit signed integer. This is a
+    /// low-level method that is useful for implementing custom CBOR
+    /// encoding methodologies. This method encodes the given major type
+    /// and value in the shortest form allowed for the major
+    /// type.</summary>
+    /// <param name='outputStream'>A writable data stream.</param>
+    /// <param name='majorType'>The CBOR major type to write. This is a
+    /// number from 0 through 7 as follows. 0: integer 0 or greater; 1:
+    /// negative integer; 2: byte string; 3: UTF-8 text string; 4: array;
+    /// 5: map; 6: tag; 7: simple value. See RFC 7049 for details on these
+    /// major types.</param>
+    /// <param name='value'>An integer 0 or greater associated with the
+    /// major type, as follows. 0: integer 0 or greater; 1: the negative
+    /// integer's absolute value is this number plus 1; 2: length in bytes
+    /// of the byte string; 3: length in bytes of the UTF-8 text string; 4:
+    /// number of items in the array; 5: number of key-value pairs in the
+    /// map; 6: tag number; 7: simple value number, which must be in the
+    /// interval [0, 23] or [32, 255].</param>
+    /// <returns>The number of bytes ordered to be written to the data
+    /// stream.</returns>
+    /// <exception cref='T:System.ArgumentException'>Value is from 24 to 31
+    /// and major type is 7.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='outputStream'/> is null.</exception>
+    /// <example>
+    /// <para>In the following example, an array of three objects is
+    /// written as CBOR to a data stream.</para>
+    /// <code>CBORObject.WriteValue(stream, 4, 3);  // array, length 3
+    /// CBORObject.Write("hello world", stream);  // item 1
+    /// CBORObject.Write(25, stream);  // item 2
+    /// CBORObject.Write(false, stream);  // item 3
+    /// </code>
+    /// <para>In the following example, a map consisting of two key-value
+    /// pairs is written as CBOR to a data stream.</para>
+    /// <code>CBORObject.WriteValue(stream, 5, 2);  // map, 2 pairs
+    /// CBORObject.Write("number", stream);  // key 1
+    /// CBORObject.Write(25, stream);  // value 1
+    /// CBORObject.Write("string", stream);  // key 2
+    /// CBORObject.Write("hello", stream);  // value 2
+    /// </code>
+    /// </example>
+  public static int WriteValue(Stream outputStream, int majorType, int value) {
+   if (outputStream == null) {
+  throw new ArgumentNullException(nameof(outputStream));
+}
+  if (majorType < 0) {
+  throw new ArgumentException("majorType (" + majorType +
+    ") is less than 0");
+}
+if (majorType > 7) {
+  throw new ArgumentException("majorType (" + majorType +
+    ") is more than 7");
+}
+  if (value < 0) {
+  throw new ArgumentException("value (" + value +
+    ") is less than 0");
+}
+  if (majorType == 7) {
+   if (value > 255) {
+  throw new ArgumentException("value (" + value +
+    ") is more than 255");
+}
+   if (value <= 23) {
+          outputStream.WriteByte((byte)(0xe0 + value));
     return 1;
-   } else if(value<32){
+   } else if (value < 32) {
     throw new ArgumentException("value is from 24 to 31 and major type is 7");
    } else {
-          outputStream.WriteByte((byte)0xF8);
+          outputStream.WriteByte((byte)0xf8);
           outputStream.WriteByte((byte)value);
     return 2;
    }
   } else {
-   return WritePositiveInt(majorType,value,outputStream);
+   return WritePositiveInt(majorType, value, outputStream);
   }
  }
 
-  /// <summary>Not documented yet.</summary>
-  public static int WriteValue(Stream outputStream, int majorType, EInteger bigintValue){
+    /// <summary>Writes a CBOR major type number and an integer 0 or
+    /// greater associated with it to a data stream, where that integer is
+    /// passed to this method as an arbitrary-precision integer. This is a
+    /// low-level method that is useful for implementing custom CBOR
+    /// encoding methodologies. This method encodes the given major type
+    /// and value in the shortest form allowed for the major
+    /// type.</summary>
+    /// <param name='outputStream'>A writable data stream.</param>
+    /// <param name='majorType'>The CBOR major type to write. This is a
+    /// number from 0 through 7 as follows. 0: integer 0 or greater; 1:
+    /// negative integer; 2: byte string; 3: UTF-8 text string; 4: array;
+    /// 5: map; 6: tag; 7: simple value. See RFC 7049 for details on these
+    /// major types.</param>
+    /// <param name='bigintValue'>An integer 0 or greater associated with
+    /// the major type, as follows. 0: integer 0 or greater; 1: the
+    /// negative integer's absolute value is this number plus 1; 2: length
+    /// in bytes of the byte string; 3: length in bytes of the UTF-8 text
+    /// string; 4: number of items in the array; 5: number of key-value
+    /// pairs in the map; 6: tag number; 7: simple value number, which must
+    /// be in the interval [0, 23] or [32, 255]. For major types 0 to 6,
+    /// this number may not be greater than 2^64 - 1.</param>
+    /// <returns>The number of bytes ordered to be written to the data
+    /// stream.</returns>
+    /// <exception cref='T:System.ArgumentException'>The parameter
+    /// <paramref name='majorType'/> is 7 and value is greater than
+    /// 255.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='outputStream'/> or <paramref name='bigintValue'/> is
+    /// null.</exception>
+  public static int WriteValue(
+  Stream outputStream,
+  int majorType,
+  EInteger bigintValue) {
+   if (outputStream == null) {
+  throw new ArgumentNullException(nameof(outputStream));
+}
+   if (bigintValue == null) {
+  throw new ArgumentNullException(nameof(bigintValue));
+}
       if (bigintValue.Sign < 0) {
         throw new ArgumentException("tagEInt's sign (" + bigintValue.Sign +
                     ") is less than 0");
@@ -3061,20 +3197,30 @@ namespace PeterO.Cbor {
           "tag more than 18446744073709551615 (" + bigintValue + ")");
       }
       if (bigintValue.CompareTo(Int64MaxValue) <= 0) {
-        return WriteValue(outputStream, majorType, bigintValue.ToInt64Checked());
+      return WriteValue(
+  outputStream,
+  majorType,
+  bigintValue.ToInt64Checked());
       }
-      long longVal=bigintValue.ToInt64Unchecked();
-      int highbyte=(int)((longVal>>56)&0xFF);
-        //ArgumentAssert.CheckRange(majorType,0,7);
-        if(majorType==7){
-          throw new ArgumentException("majorType is 7 and value is greater than 255");
+      long longVal = bigintValue.ToInt64Unchecked();
+      var highbyte = (int)((longVal >> 56) & 0xff);
+        if (majorType < 0) {
+  throw new ArgumentException("majorType (" + majorType +
+    ") is less than 0");
+}
+if (majorType > 7) {
+  throw new ArgumentException("majorType (" + majorType +
+    ") is more than 7");
+}
+        if (majorType == 7) {
+   throw new ArgumentException("majorType is 7 and value is greater than 255");
         }
-        byte[] bytes=new[] { (byte)(27 | (majorType << 5)), (byte)highbyte,
+        byte[] bytes = new[] { (byte)(27 | (majorType << 5)), (byte)highbyte,
         (byte)((longVal >> 48) & 0xff), (byte)((longVal >> 40) & 0xff),
         (byte)((longVal >> 32) & 0xff), (byte)((longVal >> 24) & 0xff),
         (byte)((longVal >> 16) & 0xff), (byte)((longVal >> 8) & 0xff),
         (byte)(longVal & 0xff) };
-      outputStream.Write(bytes,0,bytes.Length);
+      outputStream.Write(bytes, 0, bytes.Length);
       return bytes.Length;
  }
 
