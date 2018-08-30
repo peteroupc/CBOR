@@ -5239,5 +5239,158 @@ a major version change.
         throw new InvalidOperationException(ex.ToString(), ex);
       }
     }
+
+[Test]
+public void TestWriteValue() {
+ try {
+try {
+ CBORObject.WriteValue(null, 0, 0);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+try {
+ CBORObject.WriteValue(null, 1, 0);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+try {
+ CBORObject.WriteValue(null, 2, 0);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+try {
+ CBORObject.WriteValue(null, 3, 0);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+try {
+ CBORObject.WriteValue(null, 4, 0);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+          using (var ms = new MemoryStream()) {
+try {
+ CBORObject.WriteValue(ms, -1, 0);
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+try {
+ CBORObject.WriteValue(ms, 8, 0);
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+try {
+ CBORObject.WriteValue(ms, 7, 256);
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+try {
+ CBORObject.WriteValue(ms, 7, Int32.MaxValue);
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+try {
+ CBORObject.WriteValue(ms, 7, Int64.MaxValue);
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+for (var i = 0; i <= 7; ++i) {
+try {
+ CBORObject.WriteValue(ms, i, -1);
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+try {
+ CBORObject.WriteValue(ms, i, Int32.MinValue);
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+try {
+ CBORObject.WriteValue(ms, i, (long)-1);
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+try {
+ CBORObject.WriteValue(ms, i, Int64.MinValue);
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+}
+for (var i = 0; i <= 6; ++i) {
+try {
+ CBORObject.WriteValue(ms, i, Int32.MaxValue);
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+try {
+ CBORObject.WriteValue(ms, i, Int64.MaxValue);
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+}
+          }
+      } catch (IOException ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(ex.ToString(), ex);
+      }
+}
   }
 }

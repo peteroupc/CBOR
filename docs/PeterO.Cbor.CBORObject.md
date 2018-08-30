@@ -2353,16 +2353,24 @@ The remainder of the two numbers.
     public bool Remove(
         object obj);
 
-Not documented yet.
+If this object is an array, removes the first instance of the specified item (once converted to a CBOR object) from the array. If this object is a map, removes the item with the given key (once converted to a CBOR object) from the map.
 
 <b>Parameters:</b>
 
- * <i>obj</i>: The parameter <i>obj</i>
-is not documented yet.
+ * <i>obj</i>: The item or key (once converted to a CBOR object) to remove.
 
 <b>Return Value:</b>
 
-Either `true` or `false` .
+ `true`  if the item was removed; otherwise,  `false` .
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter <i>obj</i>
+ is null (as opposed to CBORObject.Null).
+
+ * System.InvalidOperationException:
+The object is not an array or map.
 
 ### Remove
 
@@ -2393,16 +2401,20 @@ The object is not an array or map.
     public bool RemoveAt(
         int index);
 
-Not documented yet.
+Removes the item at the given index of this CBOR array.
 
 <b>Parameters:</b>
 
- * <i>index</i>: The parameter  <i>index</i>
- is not documented yet.
+ * <i>index</i>: The index, starting at 0, of the item to remove.
 
 <b>Return Value:</b>
 
-The return value is not documented yet.
+Returns "true" if the object was removed. Returns "false" if the given index is less than 0, or equals or is greater than the number of items in the array.
+
+<b>Exceptions:</b>
+
+ * System.InvalidOperationException:
+This object is not a CBOR array.
 
 ### Set
 
@@ -3235,7 +3247,7 @@ Writes this CBOR object to a data stream. If the CBOR object contains CBOR maps,
             for(CBORObject key in keys) {
             if(mapObj.ContainsKey(key)){ key.WriteTo(outputStream);
             mapObj[key].WriteTo(outputStream); } }
-            outputStream.WriteByte((byte)0xBF); }
+            outputStream.WriteByte((byte)0xFF); }
 
 <b>Parameters:</b>
 
@@ -3287,18 +3299,18 @@ Writes a CBOR major type number and an integer 0 or greater associated with it t
 
 In the following example, an array of three objects is written as CBOR to a data stream.
 
-    CBORObject.WriteValue(stream, 4, 3);  // array, length 3
-                CBORObject.Write("hello world", stream);  // item 1
-                CBORObject.Write(25, stream);  // item 2
-                CBORObject.Write(false, stream);  // item 3
+    CBORObject.WriteValue(stream, 4, 3); /* array, length 3 */
+                CBORObject.Write("hello world", stream); /* item 1 */
+                CBORObject.Write(25, stream); /* item 2 */
+                CBORObject.Write(false, stream); /* item 3 */
 
 In the following example, a map consisting of two key-value pairs is written as CBOR to a data stream.
 
-    CBORObject.WriteValue(stream, 5, 2);  // map, 2 pairs
-                CBORObject.Write("number", stream);  // key 1
-                CBORObject.Write(25, stream);  // value 1
-                CBORObject.Write("string", stream);  // key 2
-                CBORObject.Write("hello", stream);  // value 2
+    CBORObject.WriteValue(stream, 5, 2); /* map, 2 pairs */
+                CBORObject.Write("number", stream); /* key 1 */
+                CBORObject.Write(25, stream); /* value 1 */
+                CBORObject.Write("string", stream); /* key 2 */
+                CBORObject.Write("hello", stream); /* value 2 */
 
 <b>Parameters:</b>
 
@@ -3306,7 +3318,7 @@ In the following example, a map consisting of two key-value pairs is written as 
 
  * <i>majorType</i>: The CBOR major type to write. This is a number from 0 through 7 as follows. 0: integer 0 or greater; 1: negative integer; 2: byte string; 3: UTF-8 text string; 4: array; 5: map; 6: tag; 7: simple value. See RFC 7049 for details on these major types.
 
- * <i>value</i>: An integer 0 or greater associated with the major type, as follows. 0: integer 0 or greater; 1: the negative integer's absolute value is this number plus 1; 2: length in bytes of the byte string; 3: length in bytes of the UTF-8 text string; 4: number of items in the array; 5: number of key-value pairs in the map; 6: tag number; 7: simple value number, which must be in the interval [0, 23] or [32, 255].
+ * <i>value</i>: An integer 0 or greater associated with the major type, as follows. 0: integer 0 or greater; 1: the negative integer's absolute value is 1 plus this number; 2: length in bytes of the byte string; 3: length in bytes of the UTF-8 text string; 4: number of items in the array; 5: number of key-value pairs in the map; 6: tag number; 7: simple value number, which must be in the interval [0, 23] or [32, 255].
 
 <b>Return Value:</b>
 
@@ -3336,7 +3348,7 @@ Writes a CBOR major type number and an integer 0 or greater associated with it t
 
  * <i>majorType</i>: The CBOR major type to write. This is a number from 0 through 7 as follows. 0: integer 0 or greater; 1: negative integer; 2: byte string; 3: UTF-8 text string; 4: array; 5: map; 6: tag; 7: simple value. See RFC 7049 for details on these major types.
 
- * <i>value</i>: An integer 0 or greater associated with the major type, as follows. 0: integer 0 or greater; 1: the negative integer's absolute value is this number plus 1; 2: length in bytes of the byte string; 3: length in bytes of the UTF-8 text string; 4: number of items in the array; 5: number of key-value pairs in the map; 6: tag number; 7: simple value number, which must be in the interval [0, 23] or [32, 255].
+ * <i>value</i>: An integer 0 or greater associated with the major type, as follows. 0: integer 0 or greater; 1: the negative integer's absolute value is 1 plus this number; 2: length in bytes of the byte string; 3: length in bytes of the UTF-8 text string; 4: number of items in the array; 5: number of key-value pairs in the map; 6: tag number; 7: simple value number, which must be in the interval [0, 23] or [32, 255].
 
 <b>Return Value:</b>
 
@@ -3366,7 +3378,7 @@ Writes a CBOR major type number and an integer 0 or greater associated with it t
 
  * <i>majorType</i>: The CBOR major type to write. This is a number from 0 through 7 as follows. 0: integer 0 or greater; 1: negative integer; 2: byte string; 3: UTF-8 text string; 4: array; 5: map; 6: tag; 7: simple value. See RFC 7049 for details on these major types.
 
- * <i>bigintValue</i>: An integer 0 or greater associated with the major type, as follows. 0: integer 0 or greater; 1: the negative integer's absolute value is this number plus 1; 2: length in bytes of the byte string; 3: length in bytes of the UTF-8 text string; 4: number of items in the array; 5: number of key-value pairs in the map; 6: tag number; 7: simple value number, which must be in the interval [0, 23] or [32, 255]. For major types 0 to 6, this number may not be greater than 2^64 - 1.
+ * <i>bigintValue</i>: An integer 0 or greater associated with the major type, as follows. 0: integer 0 or greater; 1: the negative integer's absolute value is 1 plus this number; 2: length in bytes of the byte string; 3: length in bytes of the UTF-8 text string; 4: number of items in the array; 5: number of key-value pairs in the map; 6: tag number; 7: simple value number, which must be in the interval [0, 23] or [32, 255]. For major types 0 to 6, this number may not be greater than 2^64 - 1.
 
 <b>Return Value:</b>
 
@@ -3398,7 +3410,7 @@ Writes a CBOR major type number and an integer 0 or greater associated with it t
 
  * <i>majorType</i>: The CBOR major type to write. This is a number from 0 through 7 as follows. 0: integer 0 or greater; 1: negative integer; 2: byte string; 3: UTF-8 text string; 4: array; 5: map; 6: tag; 7: simple value. See RFC 7049 for details on these major types.
 
- * <i>value</i>: An integer 0 or greater associated with the major type, as follows. 0: integer 0 or greater; 1: the negative integer's absolute value is this number plus 1; 2: length in bytes of the byte string; 3: length in bytes of the UTF-8 text string; 4: number of items in the array; 5: number of key-value pairs in the map; 6: tag number; 7: simple value number, which must be in the interval [0, 23] or [32, 255].
+ * <i>value</i>: An integer 0 or greater associated with the major type, as follows. 0: integer 0 or greater; 1: the negative integer's absolute value is 1 plus this number; 2: length in bytes of the byte string; 3: length in bytes of the UTF-8 text string; 4: number of items in the array; 5: number of key-value pairs in the map; 6: tag number; 7: simple value number, which must be in the interval [0, 23] or [32, 255].
 
 <b>Return Value:</b>
 
@@ -3425,7 +3437,7 @@ Writes a CBOR major type number and an integer 0 or greater associated with it t
 
  * <i>majorType</i>: The CBOR major type to write. This is a number from 0 through 7 as follows. 0: integer 0 or greater; 1: negative integer; 2: byte string; 3: UTF-8 text string; 4: array; 5: map; 6: tag; 7: simple value. See RFC 7049 for details on these major types.
 
- * <i>value</i>: An integer 0 or greater associated with the major type, as follows. 0: integer 0 or greater; 1: the negative integer's absolute value is this number plus 1; 2: length in bytes of the byte string; 3: length in bytes of the UTF-8 text string; 4: number of items in the array; 5: number of key-value pairs in the map; 6: tag number; 7: simple value number, which must be in the interval [0, 23] or [32, 255].
+ * <i>value</i>: An integer 0 or greater associated with the major type, as follows. 0: integer 0 or greater; 1: the negative integer's absolute value is 1 plus this number; 2: length in bytes of the byte string; 3: length in bytes of the UTF-8 text string; 4: number of items in the array; 5: number of key-value pairs in the map; 6: tag number; 7: simple value number, which must be in the interval [0, 23] or [32, 255].
 
 <b>Return Value:</b>
 

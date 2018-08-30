@@ -23,7 +23,7 @@ namespace Test {
         return new JSONPointer(obj, pointer);
       }
       while (true) {
-        if (obj is CBORObject) {
+        if (obj.Type == CBORType.Array) {
           if (index >= pointer.Length || pointer[index] != '/') {
             throw new ArgumentException(pointer);
           }
@@ -45,7 +45,7 @@ namespace Test {
             index = newIndex;
           }
           index = newIndex;
-        } else if (obj is CBORObject) {
+        } else if (obj.Type == CBORType.Map) {
           if (obj.Equals(CBORObject.Null)) {
             throw new KeyNotFoundException(pointer);
           }
@@ -115,19 +115,16 @@ namespace Test {
     /// <pre>'/' KEY '/' KEY [...]</pre> where KEY represents a key into
     /// the JSON object or its sub-objects in the hierarchy. For example,
     /// <pre>/foo/2/bar</pre> means the same as
-    /// <pre>obj['foo'][2]['bar']</pre> in JavaScript. If "~" and "/" occur
-    /// in a key, they must be escaped with "~0" and "~1", respectively, in
-    /// a JSON pointer. @param obj An object, especially a CBORObject or
-    /// @param pointer A JSON pointer according to RFC 6901. @return An
-    /// object within the specified JSON object, or _obj_ if pointer is the
-    /// empty _string, if the pointer is null, if the pointer is invalid ,
-    /// if there is no JSON object at the given pointer, or if _obj_ is not
-    /// of type CBORObject, unless pointer is the empty _string.</summary>
-    /// <param name='obj'>The parameter <paramref name='obj'/> is not
-    /// documented yet.</param>
-    /// <param name='pointer'>The parameter <paramref name='pointer'/> is
-    /// not documented yet.</param>
-    /// <returns>An arbitrary object.</returns>
+    /// <pre>obj['foo'][2]['bar']</pre> in JavaScript. If "~" and/or "/"
+    /// occurs in a key, it must be escaped with "~0" or "~1",
+    /// respectively, in a JSON pointer.</summary>
+    /// <param name='obj'>A CBOR object.</param>
+    /// <param name='pointer'>A JSON pointer according to RFC 6901.</param>
+    /// <returns>An object within the specified JSON object, or <paramref
+    /// name='obj'/> if pointer is the empty string, if the pointer is
+    /// null, if the pointer is invalid , if there is no JSON object at the
+    /// given pointer, or if <paramref name='obj'/> is not of type
+    /// CBORObject, unless pointer is the empty string.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='pointer'/> is null.</exception>
     public static Object getObject(CBORObject obj, string pointer) {

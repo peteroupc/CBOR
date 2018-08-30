@@ -62,7 +62,7 @@ namespace PeterO.Cbor {
     /// major types.</param>
     /// <param name='value'>An integer 0 or greater associated with the
     /// major type, as follows. 0: integer 0 or greater; 1: the negative
-    /// integer's absolute value is this number plus 1; 2: length in bytes
+    /// integer's absolute value is 1 plus this number; 2: length in bytes
     /// of the byte string; 3: length in bytes of the UTF-8 text string; 4:
     /// number of items in the array; 5: number of key-value pairs in the
     /// map; 6: tag number; 7: simple value number, which must be in the
@@ -97,7 +97,7 @@ namespace PeterO.Cbor {
     /// major types.</param>
     /// <param name='value'>An integer 0 or greater associated with the
     /// major type, as follows. 0: integer 0 or greater; 1: the negative
-    /// integer's absolute value is this number plus 1; 2: length in bytes
+    /// integer's absolute value is 1 plus this number; 2: length in bytes
     /// of the byte string; 3: length in bytes of the UTF-8 text string; 4:
     /// number of items in the array; 5: number of key-value pairs in the
     /// map; 6: tag number; 7: simple value number, which must be in the

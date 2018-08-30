@@ -139,8 +139,7 @@ Compares this extended float to another.
 
 <b>Parameters:</b>
 
- * <i>other</i>: The parameter <i>other</i>
-is not documented yet.
+ * <i>other</i>: An extended float to compare this one with.
 
 <b>Return Value:</b>
 
