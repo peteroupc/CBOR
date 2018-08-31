@@ -84,7 +84,7 @@ if (majorType > 7) {
         if (majorType == 7) {
    throw new ArgumentException("majorType is 7 and value is greater than 255");
         }
-        byte[] bytes = new[] { (byte)(27 | (majorType << 5)), (byte)((value >>
+        byte[] bytes = { (byte)(27 | (majorType << 5)), (byte)((value >>
           56) & 0xff),
         (byte)((value >> 48) & 0xff), (byte)((value >> 40) & 0xff),
         (byte)((value >> 32) & 0xff), (byte)((value >> 24) & 0xff),
