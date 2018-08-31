@@ -105,11 +105,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomGenerator.cs" />
     <Compile Include="RandomObjects.cs" />
-    <Compile Include="Reflect.cs" />
     <Compile Include="Runner.cs" />
     <Compile Include="StringAndBigInt.cs" />
     <Compile Include="TestCommon.cs" />
-    <Compile Include="URIUtilityTest.cs" />
     <Compile Include="XorShift128Plus.cs" />
     <Compile Include="JSONPatch.cs" />
     <Compile Include="JSONPointer.cs" />

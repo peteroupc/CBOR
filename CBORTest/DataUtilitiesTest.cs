@@ -1121,6 +1121,24 @@ namespace Test {
       }
     }
     [Test]
+    public void TestToUpperCaseAscii() {
+      if (DataUtilities.ToUpperCaseAscii(null) != null) {
+        Assert.Fail();
+      }
+      {
+        string stringTemp = DataUtilities.ToUpperCaseAscii("abc012-=?");
+        Assert.AreEqual(
+          "ABC012-=?",
+          stringTemp);
+      }
+      {
+        string stringTemp = DataUtilities.ToUpperCaseAscii("ABC012-=?");
+        Assert.AreEqual(
+          "ABC012-=?",
+          stringTemp);
+      }
+    }
+    [Test]
     public void TestWriteUtf8() {
       try {
         try {

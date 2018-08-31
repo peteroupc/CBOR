@@ -5386,6 +5386,46 @@ Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
 }
 }
+      // Test minimum data length
+      int[] ranges = {
+        0, 23, 1,
+        24, 255, 2,
+        256, 266, 3,
+        65525, 65535, 3,
+        65536, 65546, 5,
+      };
+      string[] bigRanges = {
+        "4294967285", "4294967295",
+        "4294967296", "4294967306",
+        "18446744073709551604", "18446744073709551615"
+      };
+      int[] bigSizes = { 5, 9, 9, 5, 9, 9 };
+      for (int i = 0; i < ranges.Length; i += 3) {
+        for (int j = ranges[i]; j <= ranges[i + 1]; ++j) {
+for(var k=0;k<=6;k++){
+  int count;
+  count=CBORObject.WriteValue(ms,k,j);
+  Assert.AreEqual(ranges[i+2],count);
+  count=CBORObject.WriteValue(ms,k,(long)j);
+  Assert.AreEqual(ranges[i+2],count);
+  count=CBORObject.WriteValue(ms,k,EInteger.FromInt32(j));
+  Assert.AreEqual(ranges[i+2],count);
+}
+        }
+      }
+      for (int i = 0; i < bigRanges.Length; i += 2) {
+        EInteger bj = EInteger.FromString(bigRanges[i]);
+        EInteger valueBjEnd = EInteger.FromString(bigRanges[i + 1]);
+        while (bj < valueBjEnd) {
+for(var k=0;k<=6;k++){
+  int count;
+  count=CBORObject.WriteValue(ms,k,bj);
+  Assert.AreEqual(bigSizes[i/2],count);
+}
+          bj += EInteger.One;
+        }
+      }
+
           }
       } catch (IOException ex) {
         Assert.Fail(ex.ToString());
