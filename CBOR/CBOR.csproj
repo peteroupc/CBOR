@@ -14,16 +14,12 @@
     <PackageProjectUrl>https://github.com/peteroupc/CBOR</PackageProjectUrl>
     <PackageReleaseNotes>
 
-Version 3.2.1
+Version 3.3:
 
-- Add .NET Framework 4.0 targeted assembly to avoid compiler warnings that can appear when this package is added to a project that targets .NET Framework 4.0 or later.
-
-Version 3.2
-
-- Added build targeting the .NET Framework 2.0
-- Obsoleted much of the existing API in CBOREncodeOptions and added new APIs to replace it.
-- Documentation for some CBORObject methods now points to the use of CBOREncodeOptions.Default
-- Documentation edited in other places
+- Added Clear, RemoveAt and Remove(object) methods to CBORObject class.  Formerly, it was very hard with existing methods to remove items from CBOR maps and arrays.
+- Added CodePointLength and ToUpperCaseAscii methods to DataUtilities class.
+- Added WriteValue family of methods to CBORObject class.  This can be used for lower-level encoding of CBOR objects.  Examples on its use were included in the documentation.
+- Bug fixes.
 
 </PackageReleaseNotes>
     <PackageTags>cbor data serialization binary json numbers arithmetic</PackageTags>

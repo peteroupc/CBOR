@@ -2409,7 +2409,7 @@ Removes the item at the given index of this CBOR array.
 
 <b>Return Value:</b>
 
-Returns "true" if the object was removed. Returns "false" if the given index is less than 0, or equals or is greater than the number of items in the array.
+Returns "true" if the object was removed. Returns "false" if the given index is less than 0, or is at least the number of items in the array.
 
 <b>Exceptions:</b>
 
@@ -2492,7 +2492,7 @@ Converts this object to a string in JavaScript Object Notation (JSON) format, us
 
  * Infinity and not-a-number will be converted to null.
 
-The example code given below (written in in C# for the .NET version) can e used to write out certain keys of a CBOR map in a given order to a JSON tring.
+The example code given below (originally written in C# for the .NET ersion) can be used to write out certain keys of a CBOR map in a given rder to a JSON string.
 
     /* Generates a JSON string of 'mapObj' whose keys are in the order given
             in 'keys' . Only keys found in 'keys' will be written if they exist in
@@ -3347,7 +3347,7 @@ In the following example, a map consisting of two key-value pairs is written as 
                 CBORObject.Write("string", stream);  // key 2
                 CBORObject.Write("hello", stream);  // value 2
 
-In the following example (written in C# for the .NET Framework version), a text string is written as CBOR to a data stream.
+In the following example (originally written in C# for the .NET Framework version), a text string is written as CBOR to a data stream.
 
     string str = "hello world";
     byte[] bytes = DataUtilities.GetUtf8Bytes(str, true);

@@ -233,6 +233,13 @@ The following are some clarifications to RFC 7049.
 Release Notes
 -----------
 
+### Version 3.3
+
+- Added Clear, RemoveAt and Remove(object) methods to CBORObject class.  Formerly, it was very hard with existing methods to remove items from CBOR maps and arrays.
+- Added CodePointLength and ToUpperCaseAscii methods to DataUtilities class.
+- Added WriteValue family of methods to CBORObject class.  This can be used for lower-level encoding of CBOR objects.  Examples on its use were included in the documentation.
+- Bug fixes.
+
 ### Version 3.2.1
 
 - Add .NET Framework 4.0 targeted assembly to avoid compiler warnings that can appear when this package is added to a project that targets .NET Framework 4.0 or later.
