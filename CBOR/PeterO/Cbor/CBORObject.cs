@@ -3009,7 +3009,7 @@ namespace PeterO.Cbor {
     }
 
     /// <include file='../../docs.xml'
-  /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,System.Int64)"]/*'/>
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,System.Int64)"]/*'/>
   public static int WriteValue(Stream outputStream, int majorType, long value) {
    if (outputStream == null) {
   throw new ArgumentNullException(nameof(outputStream));
@@ -3047,7 +3047,7 @@ if (majorType > 7) {
 }
 
     /// <include file='../../docs.xml'
-  /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,System.Int32)"]/*'/>
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,System.Int32)"]/*'/>
   public static int WriteValue(Stream outputStream, int majorType, int value) {
    if (outputStream == null) {
   throw new ArgumentNullException(nameof(outputStream));
@@ -3085,7 +3085,7 @@ if (majorType > 7) {
  }
 
     /// <include file='../../docs.xml'
-  /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,PeterO.Numbers.EInteger)"]/*'/>
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,PeterO.Numbers.EInteger)"]/*'/>
   public static int WriteValue(
   Stream outputStream,
   int majorType,

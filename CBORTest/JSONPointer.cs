@@ -1,5 +1,5 @@
 /*
-Written in 2013 by Peter Occil.
+Written in 2013-2018 by Peter Occil.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 
@@ -41,7 +41,7 @@ namespace Test {
           if (newIndex == pointer.Length) {
             return new JSONPointer(obj, pointer.Substring(index));
           } else {
-            obj = ((CBORObject)obj)[value[0]];
+            obj = obj[value[0]];
             index = newIndex;
           }
           index = newIndex;
@@ -156,11 +156,11 @@ namespace Test {
         haveNumber = true;
         haveZeros = true;
       }
-      long value = 0;
+      long lvalue = 0;
       while (index < str.Length) {
         int number = str[index++];
         if (number >= '0' && number <= '9') {
-          value = (value * 10) + (number - '0');
+          lvalue = (lvalue * 10) + (number - '0');
           haveNumber = true;
           if (haveZeros) {
             return oldIndex + 1;
@@ -169,14 +169,14 @@ namespace Test {
           --index;
           break;
         }
-        if (value > Int32.MaxValue) {
+        if (lvalue > Int32.MaxValue) {
           return index - 1;
         }
       }
       if (!haveNumber) {
         return index;
       }
-      result[0] = (int)value;
+      result[0] = (int)lvalue;
       return index;
     }
 
@@ -199,10 +199,10 @@ if (!(refValue != null)) {
         if (this.refValue.Equals("-")) {
           return false;
         }
-        EInteger
-        value = PeterO.Numbers.EInteger.FromString(this.refValue);
-        return value.Sign >= 0 &&
-                    value.CompareTo(((CBORObject)this.jsonobj).Count) < 0;
+        EInteger eivalue = EInteger.FromString(this.refValue);
+        int icount = ((CBORObject)this.jsonobj).Count;
+        return eivalue.Sign >= 0 &&
+                    eivalue.CompareTo(EInteger.FromInt32(icount)) < 0;
       } else if (this.jsonobj.Type == CBORType.Map) {
         return ((CBORObject)this.jsonobj).ContainsKey(this.refValue);
       } else {
@@ -219,10 +219,10 @@ if (!(refValue != null)) {
         if (this.refValue.Equals("-")) {
           return ((CBORObject)this.jsonobj).Count;
         }
-        EInteger
-        value = PeterO.Numbers.EInteger.FromString(this.refValue);
+        EInteger value = EInteger.FromString(this.refValue);
+        int icount = ((CBORObject)this.jsonobj).Count;
         return (value.Sign < 0) ? (-1) :
-          ((value.CompareTo(((CBORObject)this.jsonobj).Count) > 0) ? (-1) :
+          ((value.CompareTo(EInteger.FromInt32(icount)) > 0) ? (-1) :
            value.ToInt32Unchecked()); } else {
         return -1;
       }
@@ -240,15 +240,18 @@ if (!(refValue != null)) {
       if (this.refValue.Length == 0) {
         return this.jsonobj;
       }
+  CBORObject tmpcbor = null;
       if (this.jsonobj.Type == CBORType.Array) {
         int index = this.getIndex();
         if (index >= 0 && index < ((CBORObject)this.jsonobj).Count) {
-          return ((CBORObject)this.jsonobj)[index];
+    tmpcbor = this.jsonobj;
+       return tmpcbor[index];
         } else {
           return null;
         }
       } else if (this.jsonobj.Type == CBORType.Map) {
-        return ((CBORObject)this.jsonobj)[this.refValue];
+        tmpcbor = this.jsonobj;
+       return tmpcbor[this.refValue];
       } else {
         return (this.refValue.Length == 0) ? this.jsonobj : null;
       }
@@ -357,7 +360,7 @@ if (!(refValue != null)) {
         }
       } else if (root.Type == CBORType.Array) {
         for (int i = 0; i < root.Count; ++i) {
-          string ptrkey = PeterO.Numbers.EInteger.FromInt32(i).ToString();
+          string ptrkey = EInteger.FromInt32(i).ToString();
           getPointersWithKey(
   root[i],
   keyToFind,

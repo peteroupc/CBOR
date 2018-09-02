@@ -5402,14 +5402,14 @@ throw new InvalidOperationException(String.Empty, ex);
       int[] bigSizes = { 5, 9, 9, 5, 9, 9 };
       for (int i = 0; i < ranges.Length; i += 3) {
         for (int j = ranges[i]; j <= ranges[i + 1]; ++j) {
-for(var k=0;k<=6;k++){
+for (var k = 0; k <= 6; ++k) {
   int count;
-  count=CBORObject.WriteValue(ms,k,j);
-  Assert.AreEqual(ranges[i+2],count);
-  count=CBORObject.WriteValue(ms,k,(long)j);
-  Assert.AreEqual(ranges[i+2],count);
-  count=CBORObject.WriteValue(ms,k,EInteger.FromInt32(j));
-  Assert.AreEqual(ranges[i+2],count);
+  count = CBORObject.WriteValue(ms, k, j);
+  Assert.AreEqual(ranges[i + 2], count);
+  count = CBORObject.WriteValue(ms, k, (long)j);
+  Assert.AreEqual(ranges[i + 2], count);
+  count = CBORObject.WriteValue(ms, k, EInteger.FromInt32(j));
+  Assert.AreEqual(ranges[i + 2], count);
 }
         }
       }
@@ -5417,15 +5417,14 @@ for(var k=0;k<=6;k++){
         EInteger bj = EInteger.FromString(bigRanges[i]);
         EInteger valueBjEnd = EInteger.FromString(bigRanges[i + 1]);
         while (bj < valueBjEnd) {
-for(var k=0;k<=6;k++){
+for (var k = 0; k <= 6; ++k) {
   int count;
-  count=CBORObject.WriteValue(ms,k,bj);
-  Assert.AreEqual(bigSizes[i/2],count);
+  count = CBORObject.WriteValue(ms, k, bj);
+  Assert.AreEqual(bigSizes[i / 2], count);
 }
           bj += EInteger.One;
         }
       }
-
           }
       } catch (IOException ex) {
         Assert.Fail(ex.ToString());

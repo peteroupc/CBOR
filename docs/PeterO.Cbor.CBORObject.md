@@ -948,7 +948,7 @@ Less than 0, if this value is less than the other object; or 0, if both values a
 <b>Exceptions:</b>
 
  * System.ArgumentException:
-"Unexpected data type"; "doesn't satisfy typeOrderA == 0"; "doesn't satisfy typeOrderB == 0".
+An internal error occurred.
 
 ### CompareToIgnoreTags
 
@@ -3228,26 +3228,61 @@ The parameter <i>outputStream</i>
     public void WriteTo(
         System.IO.Stream stream);
 
-<b>At the moment, use the overload of this method that takes a[PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md)object. The object `CBOREncodeOptions.Default` contains recommended settings for CBOREncodeOptions, and those ettings may be adopted by this overload (without a CBOREncodeOptions rgument) in the next major version.</b>
+<b>At the moment, use the overload of this method that takes a [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) object. The object  `CBOREncodeOptions.Default` contains recommended ettings for CBOREncodeOptions, and those settings may be adopted y this overload (without a CBOREncodeOptions argument) in the next ajor version.</b>
 
-Writes this CBOR object to a data stream. If the CBOR object contains CBOR maps, or is a CBOR map, the keys to the map are written out to the data stream in an undefined order. The example method given below (written in C# for the .NET version) can be used to write out certain keys of a CBOR map in a given order:
+Writes this CBOR object to a data stream. If the CBOR object contains CBOR maps, or is a CBOR map, the keys to the map are written out to the data stream in an undefined order. See the examples (written in C# for the .NET version) for ways to write out certain keys of a CBOR map in a given order.
 
-    /* Writes each key of 'mapObj' to 'outputStream'in the order given in
-            'keys'. Only keys found in 'keys' will be written if they exist in
-            'mapObj'.*/ private static void WriteKeysToIndefMap(CBORObject
-            mapObj, IList<CBORObject> keys, Stream outputStream){
-            if(mapObj==null) throw new
-            ArgumentNullException(nameof(mapObj));
-            if(keys==null){throw new
-            ArgumentNullException(nameof(keys));}
-            if(outputStream==null){throw new
-            ArgumentNullException(nameof(outputStream));}
-            if(obj.Type!=CBORType.Map){ throw new ArgumentException("'obj'
-            is not a map."); } outputStream.WriteByte((byte)0xBF);
-            for(CBORObject key in keys) {
-            if(mapObj.ContainsKey(key)){ key.WriteTo(outputStream);
-            mapObj[key].WriteTo(outputStream); } }
-            outputStream.WriteByte((byte)0xFF); }
+The following example shows a method that writes each key of 'mapObj' to 'outputStream', in the order given in 'keys', where 'mapObj' is written out in the form of a CBOR <b>definite-length map</b>. Only keys found in 'keys' will be written if they exist n 'mapObj'.
+
+    private static void WriteKeysToMap(CBORObject
+                mapObj, IList<CBORObject> keys, Stream outputStream){
+                if(mapObj == null){ throw new
+                ArgumentNullException(nameof(mapObj));}
+                if(keys == null){throw new
+                ArgumentNullException(nameof(keys));}
+                if(outputStream == null){throw new
+                ArgumentNullException(nameof(outputStream));}
+                if(obj.Type!=CBORType.Map){ throw new ArgumentException("'obj'
+                is not a map."); }
+                int keyCount = 0;
+                for (CBORObject key in keys) {
+                if(mapObj.ContainsKey(key)){ keyCount++;
+                } }
+                CBORObject.WriteValue(outputStream, 5, keyCount);
+                for (CBORObject key in keys) {
+                if(mapObj.ContainsKey(key)){ key.WriteTo(outputStream);
+                mapObj[key].WriteTo(outputStream); } }
+                }
+
+The following example shows a method that writes each key of 'mapObj' to 'outputStream', in the order given in 'keys', where 'mapObj' is written out in the form of a CBOR <b>indefinite-length map</b>. Only keys found in 'keys' will be written if they exist n 'mapObj'.
+
+    private static void WriteKeysToIndefMap(CBORObject
+                mapObj, IList<CBORObject> keys, Stream outputStream){
+                if(mapObj == null){ throw new
+                ArgumentNullException(nameof(mapObj));}
+                if(keys == null){throw new
+                ArgumentNullException(nameof(keys));}
+                if(outputStream == null){throw new
+                ArgumentNullException(nameof(outputStream));}
+                if(obj.Type!=CBORType.Map){ throw new ArgumentException("'obj'
+                is not a map."); } outputStream.WriteByte((byte)0xBF);
+                for (CBORObject key in keys) {
+                if(mapObj.ContainsKey(key)){ key.WriteTo(outputStream);
+                mapObj[key].WriteTo(outputStream); } }
+                outputStream.WriteByte((byte)0xff); }
+
+The following example shows a method that writes out a list of objects to 'outputStream' as an <b>indefinite-length CBOR array</b>.
+
+    private static void WriteToIndefArray(
+                IList<object> list, Stream outputStream){
+                if(list == null){ throw new
+                ArgumentNullException(nameof(list));}
+                if(outputStream == null){throw new
+                ArgumentNullException(nameof(outputStream));}
+                outputStream.WriteByte((byte)0x9f);
+                for (object item in list) {
+                new CBORObject(item).WriteTo(outputStream); }
+                outputStream.WriteByte((byte)0xff); }
 
 <b>Parameters:</b>
 
@@ -3257,7 +3292,7 @@ Writes this CBOR object to a data stream. If the CBOR object contains CBOR maps,
 
  * System.ArgumentNullException:
 The parameter <i>stream</i>
-is null.
+ is null.
 
  * System.IO.IOException:
 An I/O error occurred.
@@ -3299,18 +3334,25 @@ Writes a CBOR major type number and an integer 0 or greater associated with it t
 
 In the following example, an array of three objects is written as CBOR to a data stream.
 
-    CBORObject.WriteValue(stream, 4, 3); /* array, length 3 */
-                CBORObject.Write("hello world", stream); /* item 1 */
-                CBORObject.Write(25, stream); /* item 2 */
-                CBORObject.Write(false, stream); /* item 3 */
+    CBORObject.WriteValue(stream, 4, 3);  /* array, length 3 */
+                CBORObject.Write("hello world", stream);  /* item 1 */
+                CBORObject.Write(25, stream);  /* item 2 */
+                CBORObject.Write(false, stream);  // item 3
 
 In the following example, a map consisting of two key-value pairs is written as CBOR to a data stream.
 
-    CBORObject.WriteValue(stream, 5, 2); /* map, 2 pairs */
-                CBORObject.Write("number", stream); /* key 1 */
-                CBORObject.Write(25, stream); /* value 1 */
-                CBORObject.Write("string", stream); /* key 2 */
-                CBORObject.Write("hello", stream); /* value 2 */
+    CBORObject.WriteValue(stream, 5, 2);  // map, 2 pairs
+                CBORObject.Write("number", stream);  // key 1
+                CBORObject.Write(25, stream);  // value 1
+                CBORObject.Write("string", stream);  // key 2
+                CBORObject.Write("hello", stream);  // value 2
+
+In the following example (written in C# for the .NET Framework version), a text string is written as CBOR to a data stream.
+
+    string str = "hello world";
+    byte[] bytes = DataUtilities.GetUtf8Bytes(str, true);
+    CBORObject.WriteValue(stream, 4, bytes.Length);
+    stream.Write(bytes, 0, bytes.Length);
 
 <b>Parameters:</b>
 

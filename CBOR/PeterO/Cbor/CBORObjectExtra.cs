@@ -48,7 +48,7 @@ namespace PeterO.Cbor {
     }
 
     /// <include file='../../docs.xml'
-  /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,System.UInt32)"]/*'/>
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,System.UInt32)"]/*'/>
     [CLSCompliant(false)]
   public static int WriteValue(
   Stream outputStream,
@@ -61,7 +61,7 @@ namespace PeterO.Cbor {
     }
 
     /// <include file='../../docs.xml'
-  /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,System.UInt64)"]/*'/>
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,System.UInt64)"]/*'/>
     [CLSCompliant(false)]
  public static int WriteValue(
   Stream outputStream,

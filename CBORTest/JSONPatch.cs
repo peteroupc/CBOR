@@ -7,6 +7,7 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/
 */
 using System;
+using System.Collections.Generic;
 using PeterO.Cbor;
 
 namespace Test {
@@ -62,20 +63,18 @@ namespace Test {
         if ("add".Equals(valueOpStr)) {
           // operation
           CBORObject value = null;
-          try {
-            value = patchOp["value"];
-          } catch (System.Collections.Generic.KeyNotFoundException) {
-            throw new ArgumentException("patch " + valueOpStr + " value");
+          if (!patchOp.ContainsKey("value")) {
+throw new ArgumentException("patch " + valueOpStr + " value");
           }
+            value = patchOp["value"];
           o = addOperation(o, valueOpStr, getString(patchOp, "path"), value);
         } else if ("replace".Equals(valueOpStr)) {
           // operation
           CBORObject value = null;
-          try {
-            value = patchOp["value"];
-          } catch (System.Collections.Generic.KeyNotFoundException) {
-            throw new ArgumentException("patch " + valueOpStr + " value");
+          if (!patchOp.ContainsKey("value")) {
+throw new ArgumentException("patch " + valueOpStr + " value");
           }
+            value = patchOp["value"];
         o = replaceOperation(
   o,
   valueOpStr,
@@ -117,7 +116,7 @@ namespace Test {
           }
           JSONPointer pointer = JSONPointer.fromPointer(o, path);
           if (!pointer.exists()) {
-            throw new System.Collections.Generic.KeyNotFoundException("patch " +
+            throw new KeyNotFoundException("patch " +
               valueOpStr + " " + fromPath);
           }
           CBORObject copiedObj = pointer.getValue();
@@ -132,14 +131,13 @@ namespace Test {
             throw new ArgumentException("patch " + valueOpStr + " path");
           }
           CBORObject value = null;
-          try {
-            value = patchOp["value"];
-          } catch (System.Collections.Generic.KeyNotFoundException) {
-            throw new ArgumentException("patch " + valueOpStr + " value");
+          if (!patchOp.ContainsKey("value")) {
+throw new ArgumentException("patch " + valueOpStr + " value");
           }
+            value = patchOp["value"];
           JSONPointer pointer = JSONPointer.fromPointer(o, path);
           if (!pointer.exists()) {
-            throw new System.Collections.Generic.KeyNotFoundException("patch " +
+            throw new ArgumentException("patch " +
               valueOpStr + " " + path);
           }
           Object testedObj = pointer.getValue();
@@ -164,7 +162,7 @@ namespace Test {
       } else {
         JSONPointer pointer = JSONPointer.fromPointer(o, path);
         if (!pointer.exists()) {
-          throw new System.Collections.Generic.KeyNotFoundException("patch " +
+          throw new KeyNotFoundException("patch " +
             valueOpStr + " " + path);
         }
         o = pointer.getValue();
@@ -191,7 +189,7 @@ namespace Test {
       } else {
         JSONPointer pointer = JSONPointer.fromPointer(o, path);
         if (!pointer.exists()) {
-          throw new System.Collections.Generic.KeyNotFoundException("patch " +
+          throw new KeyNotFoundException("patch " +
             valueOpStr + " " + path);
         }
         if (pointer.getParent().Type == CBORType.Array) {
