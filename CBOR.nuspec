@@ -1,12 +1,8 @@
 <package
-><metadata><version>3.2.1</version><id>PeterO.Cbor</id><requireLicenseAcceptance>false</requireLicenseAcceptance><releaseNotes>Version 3.2.1
+><metadata><version>3.3.0</version><id>PeterO.Cbor</id><requireLicenseAcceptance>false</requireLicenseAcceptance><releaseNotes>Version 3.3:
 
-- Add .NET Framework 4.0 targeted assembly to avoid compiler warnings that can appear when this package is added to a project that targets .NET Framework 4.0 or later.
-
-Version 3.2
-
-- Added build targeting the .NET Framework 2.0
-- Obsoleted much of the existing API in CBOREncodeOptions and added new APIs to replace it.
-- Documentation for some CBORObject methods now points to the use of CBOREncodeOptions.Default
-- Documentation edited in other places</releaseNotes><summary></summary><licenseUrl>http://creativecommons.org/publicdomain/zero/1.0/</licenseUrl><projectUrl>https://github.com/peteroupc/CBOR</projectUrl><authors>Peter Occil</authors><description>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049.</description><owners>Peter Occil</owners><title>CBOR (Concise Binary Object Representation)</title><tags>cbor data serialization binary json numbers arithmetic</tags><dependencies><group><dependency id='PeterO.Numbers' version='1.1.2' /></group></dependencies></metadata><files><file src='CBOR/bin/Release/netstandard1.0/CBOR.dll' target='/lib/netstandard1.0' /><file src='CBOR/bin/Release/netstandard1.0/CBOR.xml' target='/lib/netstandard1.0' /><file src='CBOR20/bin/Release/CBOR.dll' target='/lib/net20' /><file src='CBOR20/bin/Release/CBOR.xml' target='/lib/net20' /><file src='CBOR40/bin/Release/CBOR.dll' target='/lib/net40' /><file src='CBOR40/bin/Release/CBOR.xml' target='/lib/net40' /></files></package
+- Added Clear, RemoveAt and Remove(object) methods to CBORObject class.  Formerly, it was very hard with existing methods to remove items from CBOR maps and arrays.
+- Added CodePointLength and ToUpperCaseAscii methods to DataUtilities class.
+- Added WriteValue family of methods to CBORObject class.  This can be used for lower-level encoding of CBOR objects.  Examples on its use were included in the documentation.
+- Bug fixes.</releaseNotes><summary></summary><licenseUrl>http://creativecommons.org/publicdomain/zero/1.0/</licenseUrl><projectUrl>https://github.com/peteroupc/CBOR</projectUrl><authors>Peter Occil</authors><description>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049.</description><owners>Peter Occil</owners><title>CBOR (Concise Binary Object Representation)</title><tags>cbor data serialization binary json numbers arithmetic</tags><dependencies><group><dependency id='PeterO.Numbers' version='1.1.2' /></group></dependencies></metadata><files><file src='CBOR/bin/Release/netstandard1.0/CBOR.dll' target='/lib/netstandard1.0' /><file src='CBOR/bin/Release/netstandard1.0/CBOR.xml' target='/lib/netstandard1.0' /><file src='CBOR20/bin/Release/CBOR.dll' target='/lib/net20' /><file src='CBOR20/bin/Release/CBOR.xml' target='/lib/net20' /><file src='CBOR40/bin/Release/CBOR.dll' target='/lib/net40' /><file src='CBOR40/bin/Release/CBOR.xml' target='/lib/net40' /></files></package
 >
