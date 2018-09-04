@@ -452,7 +452,7 @@ namespace PeterO.Cbor {
         if (this.ItemType == CBORObjectTypeArray) {
           IList<CBORObject> list = this.AsList();
           if (index < 0 || index >= list.Count) {
-            throw new ArgumentOutOfRangeException("index");
+            throw new ArgumentOutOfRangeException(nameof(index));
           }
           return list[index];
         }
@@ -1314,10 +1314,11 @@ namespace PeterO.Cbor {
       if (stream == null) {
         throw new ArgumentNullException(nameof(stream));
       }
+ //ArgumentAssert.NotNull(options);
       if (str == null) {
         stream.WriteByte(0xf6);  // Write null instead of string
       } else {
-        if (!options.UseIndefLengthStrings) {
+        if (!options.UseIndefLengthStrings || options.Ctap2Canonical) {
           // NOTE: Length of a String object won't be higher than the maximum
           // allowed for definite-length strings
           long codePointLength = DataUtilities.GetUtf8Length(str, true);
@@ -1718,6 +1719,10 @@ namespace PeterO.Cbor {
         output.WriteByte(0xf6);
         return;
       }
+if(options.Ctap2Canonical){
+ FromObject(objValue).WriteTo(output, options);
+ return;
+}
       byte[] data = objValue as byte[];
       if (data != null) {
         WritePositiveInt(3, data.Length, output);
@@ -1738,7 +1743,7 @@ namespace PeterO.Cbor {
           options);
         return;
       }
-      FromObject(objValue).WriteTo(output);
+      FromObject(objValue).WriteTo(output, options);
     }
 
     /// <include file='../../docs.xml'
@@ -2293,7 +2298,9 @@ namespace PeterO.Cbor {
       if (options == null) {
         throw new ArgumentNullException(nameof(options));
       }
-
+if(options.Ctap2Canonical){
+ return CBORCanonical.CtapCanonicalEncode(this);
+}
       // For some types, a memory stream is a lot of
       // overhead since the amount of memory the types
       // use is fixed and small
@@ -3144,6 +3151,12 @@ if (majorType > 7) {
       if (stream == null) {
         throw new ArgumentNullException(nameof(stream));
       }
+ //ArgumentAssert.NotNull(options);
+if(options.Ctap2Canonical){
+ byte[] bytes=CBORCanonical.CtapCanonicalEncode(this);
+ stream.Write(bytes,0,bytes.Length);
+ return;
+}
       this.WriteTags(stream);
       int type = this.ItemType;
       switch (type) {

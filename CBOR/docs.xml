@@ -380,6 +380,15 @@
     </returns>
 
 </doc>
+<doc name="P:PeterO.Cbor.CBOREncodeOptions.Ctap2Canonical">
+<summary>Gets a value indicating whether CBOR objects are written out using the
+            CTAP2 canonical CBOR encoding form.  In this form, CBOR tags are not
+            used, map keys are written out in a canonical order, and
+            non-integer numbers and integers 2^63 or greater are written
+            as 64-bit binary floating-point numbers.
+            </summary>
+            <value>Not documented yet.</value>
+</doc>
 <doc name="F:PeterO.Cbor.CBOREncodeOptions.Default">
 
             <summary>Default options for CBOR objects. Disallow duplicate keys, and always
@@ -783,7 +792,7 @@
 <doc name="M:PeterO.Cbor.CBORObject.AsInt32">
 
             <summary>Converts this object to a 32-bit signed integer. Floating
-            point values are truncated to an integer.</summary><returns>The closest big integer to this object.</returns><exception cref='T:System.InvalidOperationException'>This object's
+            point values are truncated to an integer.</summary><returns>The closest 32-bit signed integer to this object.</returns><exception cref='T:System.InvalidOperationException'>This object's
             type is not a number type.</exception><exception cref='T:System.OverflowException'>This object's value
             exceeds the range of a 32-bit signed integer.</exception>
 
@@ -1984,7 +1993,8 @@
     <param name='index'>The index, starting at 0, of the item to remove.
     </param>
     <returns>Returns "true" if the object was removed. Returns "false" if the given
-      index is less than 0, or is at least as high as the number of items in the array.
+      index is less than 0, or is at least as high as the number of items in the
+      array.
     </returns>
     <exception cref='InvalidOperationException'>This object is not a CBOR array.
     </exception>

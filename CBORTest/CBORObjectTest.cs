@@ -52,83 +52,6 @@ namespace Test {
     private static readonly CBOREncodeOptions ValueNoDuplicateKeys = new
       CBOREncodeOptions(true, false);
 
-    private static int StringToInt(string str) {
-      var neg = false;
-      var i = 0;
-      if (str.Length > 0 && str[0] == '-') {
-        neg = true;
-        ++i;
-      }
-      if (i == str.Length) {
-        throw new FormatException();
-      }
-      var ret = 0;
-      while (i < str.Length) {
-        int c = str[i];
-        ++i;
-        if (c >= '0' && c <= '9') {
-          int x = c - '0';
-          if (ret > 214748364) {
-            throw new FormatException();
-          }
-          ret *= 10;
-          if (ret == 2147483640) {
-            if (neg && x == 8) {
-              if (i != str.Length) {
-                throw new FormatException();
-              }
-              return Int32.MinValue;
-            }
-            if (x > 7) {
-              throw new FormatException();
-            }
-          }
-          ret += x;
-        } else {
-          throw new FormatException();
-        }
-      }
-      return neg ? -ret : ret;
-    }
-
-    private static long StringToLong(string str) {
-      var neg = false;
-      var i = 0;
-      if (str.Length > 0 && str[0] == '-') {
-        neg = true;
-        ++i;
-      }
-      if (i == str.Length) {
-        throw new FormatException();
-      }
-      long ret = 0;
-      while (i < str.Length) {
-        int c = str[i];
-        ++i;
-        if (c >= '0' && c <= '9') {
-          int x = c - '0';
-          if ((long)ret > 922337203685477580L) {
-            throw new FormatException();
-          }
-          ret *= 10;
-          if ((long)ret == 9223372036854775800L) {
-            if (neg && x == 8) {
-              if (i != str.Length) {
-                throw new FormatException();
-              }
-              return Int64.MinValue;
-            }
-            if (x > 7) {
-              throw new FormatException();
-            }
-          }
-          ret += x;
-        } else {
-          throw new FormatException();
-        }
-      }
-      return neg ? -ret : ret;
-    }
 
     internal static void CheckPropertyNames(
   object ao,
@@ -224,12 +147,13 @@ a major version change.
   "PropA",
   "PropB",
   "IsPropC");
-     */ CBORObjectTest.CheckPropertyNames(
-  ao,
-  valueCcFT,
-  "propA",
-  "propB",
-  "isPropC");
+     */
+      CBORObjectTest.CheckPropertyNames(
+ao,
+valueCcFT,
+"propA",
+"propB",
+"isPropC");
       CBORObjectTest.CheckPropertyNames(
     ao,
     valueCcTT,
@@ -737,7 +661,7 @@ a major version change.
   numberinfo["number"].AsString()));
         if (numberinfo["byte"].AsBoolean()) {
           Assert.AreEqual(
-    StringToInt(numberinfo["integer"].AsString()),
+    TestCommon.StringToInt(numberinfo["integer"].AsString()),
     ((int)cbornumber.AsByte()) & 0xff);
         } else {
           try {
@@ -1029,7 +953,7 @@ a major version change.
             EDecimal.FromString(numberinfo["number"].AsString()));
         if (numberinfo["int16"].AsBoolean()) {
           Assert.AreEqual(
-    StringToInt(numberinfo["integer"].AsString()),
+    TestCommon.StringToInt(numberinfo["integer"].AsString()),
     cbornumber.AsInt16());
         } else {
           try {
@@ -1113,16 +1037,16 @@ a major version change.
         CBORObject cbornumbersingle = CBORObject.FromObject(edec.ToSingle());
         if (numberinfo["int32"].AsBoolean()) {
           Assert.AreEqual(
-    StringToInt(numberinfo["integer"].AsString()),
+    TestCommon.StringToInt(numberinfo["integer"].AsString()),
     cbornumber.AsInt32());
           if (isdouble) {
             Assert.AreEqual(
-    StringToInt(numberinfo["integer"].AsString()),
+    TestCommon.StringToInt(numberinfo["integer"].AsString()),
     cbornumberdouble.AsInt32());
           }
           if (issingle) {
             Assert.AreEqual(
-    StringToInt(numberinfo["integer"].AsString()),
+    TestCommon.StringToInt(numberinfo["integer"].AsString()),
     cbornumbersingle.AsInt32());
           }
         } else {
@@ -1228,16 +1152,16 @@ a major version change.
         CBORObject cbornumbersingle = CBORObject.FromObject(edec.ToSingle());
         if (numberinfo["int64"].AsBoolean()) {
           Assert.AreEqual(
-   StringToLong(numberinfo["integer"].AsString()),
+   TestCommon.StringToLong(numberinfo["integer"].AsString()),
    cbornumber.AsInt64());
           if (isdouble) {
             Assert.AreEqual(
-   StringToLong(numberinfo["integer"].AsString()),
+   TestCommon.StringToLong(numberinfo["integer"].AsString()),
    cbornumberdouble.AsInt64());
           }
           if (issingle) {
             Assert.AreEqual(
-   StringToLong(numberinfo["integer"].AsString()),
+   TestCommon.StringToLong(numberinfo["integer"].AsString()),
    cbornumbersingle.AsInt64());
           }
         } else {
@@ -1921,7 +1845,7 @@ a major version change.
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-   bytes = new byte[] { 0xa3, 0x60, 0x00, 0x62, 0x41, 0x41, 0x00, 0x60, 0x03 };
+      bytes = new byte[] { 0xa3, 0x60, 0x00, 0x62, 0x41, 0x41, 0x00, 0x60, 0x03 };
       try {
         CBORObject.DecodeFromBytes(bytes, ValueNoDuplicateKeys);
         Assert.Fail("Should have failed");
@@ -2014,13 +1938,33 @@ a major version change.
   bytes.Length,
   TestCommon.IntToString(j));
           }
+bytes=CBORObject.FromObject(j).EncodeToBytes(new CBOREncodeOptions(false,false,true));
+          if (bytes.Length != ranges[i + 2]) {
+            Assert.AreEqual(
+  ranges[i + 2],
+  bytes.Length,
+  TestCommon.IntToString(j));
+          }
         }
       }
+string veryLongString=TestCommon.Repeat("x",10000);
+byte[] stringBytes=CBORObject.FromObject(veryLongString)
+.EncodeToBytes(new CBOREncodeOptions(false,false,true));
+Assert.AreEqual(10003,stringBytes.Length);
+stringBytes=CBORObject.FromObject(veryLongString)
+.EncodeToBytes(new CBOREncodeOptions(true,false));
+Assert.AreEqual(10003,stringBytes.Length);
+
       for (int i = 0; i < bigRanges.Length; i += 2) {
         EInteger bj = EInteger.FromString(bigRanges[i]);
         EInteger valueBjEnd = EInteger.FromString(bigRanges[i + 1]);
         while (bj < valueBjEnd) {
           byte[] bytes = CBORObject.FromObject(bj).EncodeToBytes();
+          if (bytes.Length != bigSizes[i / 2]) {
+            Assert.AreEqual(bigSizes[i / 2], bytes.Length, bj.ToString());
+          }
+bytes = CBORObject.FromObject(bj)
+.EncodeToBytes(new CBOREncodeOptions(false,false,true));
           if (bytes.Length != bigSizes[i / 2]) {
             Assert.AreEqual(bigSizes[i / 2], bytes.Length, bj.ToString());
           }
@@ -2083,7 +2027,7 @@ a major version change.
         TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
       }
       {
-     CBORObject objectTemp = CBORObject.FromObject(CBORTestCommon.FloatNegInf);
+        CBORObject objectTemp = CBORObject.FromObject(CBORTestCommon.FloatNegInf);
         CBORObject objectTemp2 = CBORObject.FromObject(Double.NegativeInfinity);
         TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
       }
@@ -2094,7 +2038,7 @@ a major version change.
         TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
       }
       {
-     CBORObject objectTemp = CBORObject.FromObject(CBORTestCommon.FloatNegInf);
+        CBORObject objectTemp = CBORObject.FromObject(CBORTestCommon.FloatNegInf);
         CBORObject objectTemp2 =
           CBORObject.FromObject(CBORTestCommon.FloatNegInf);
         TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
@@ -2109,7 +2053,7 @@ a major version change.
       {
         CBORObject objectTemp =
           CBORObject.FromObject(CBORTestCommon.DecPosInf);
-      CBORObject objectTemp2 = CBORObject.FromObject(CBORTestCommon.RatPosInf);
+        CBORObject objectTemp2 = CBORObject.FromObject(CBORTestCommon.RatPosInf);
         TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
       }
       {
@@ -2118,7 +2062,7 @@ a major version change.
         TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
       }
       {
-     CBORObject objectTemp = CBORObject.FromObject(CBORTestCommon.FloatPosInf);
+        CBORObject objectTemp = CBORObject.FromObject(CBORTestCommon.FloatPosInf);
         CBORObject objectTemp2 = CBORObject.FromObject(Double.PositiveInfinity);
         TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
       }
@@ -2128,8 +2072,8 @@ a major version change.
         TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
       }
       {
-     CBORObject objectTemp = CBORObject.FromObject(CBORTestCommon.FloatPosInf);
-      CBORObject objectTemp2 = CBORObject.FromObject(CBORTestCommon.RatPosInf);
+        CBORObject objectTemp = CBORObject.FromObject(CBORTestCommon.FloatPosInf);
+        CBORObject objectTemp2 = CBORObject.FromObject(CBORTestCommon.RatPosInf);
         TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
       }
     }
@@ -2226,14 +2170,14 @@ a major version change.
     public void TestTagArray() {
       CBORObject obj = CBORObject.FromObjectAndTag("test", 999);
       {
-    string stringTemp = CBORObject.FromObject(obj.GetAllTags()).ToJSONString();
+        string stringTemp = CBORObject.FromObject(obj.GetAllTags()).ToJSONString();
         Assert.AreEqual(
           "[999]",
           stringTemp);
       }
       obj = CBORObject.FromObject("test");
       {
-    string stringTemp = CBORObject.FromObject(obj.GetAllTags()).ToJSONString();
+        string stringTemp = CBORObject.FromObject(obj.GetAllTags()).ToJSONString();
         Assert.AreEqual(
           "[]",
           stringTemp);
@@ -3261,7 +3205,7 @@ a major version change.
        0x65 })) {
           Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         }
- using (var msjson = new MemoryStream(new byte[] { 0x74, 0x72, 0x75, 0x65 })) {
+        using (var msjson = new MemoryStream(new byte[] { 0x74, 0x72, 0x75, 0x65 })) {
           Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         }
         using (var msjson = new MemoryStream(new byte[] { 0, 0, 0xfe, 0xff, 0,
@@ -3305,7 +3249,7 @@ a major version change.
             stringTemp);
           }
         }
-   using (var msjson = new MemoryStream(new byte[] { 0xfe, 0xff, 0, 0x22, 0xd8,
+        using (var msjson = new MemoryStream(new byte[] { 0xfe, 0xff, 0, 0x22, 0xd8,
         0,
                     0xdc, 0, 0, 0x22 })) {
           {
@@ -3496,7 +3440,7 @@ a major version change.
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
- using (var msjson = new MemoryStream(new byte[] { 0xfe, 0xff, 0xd8, 0x00 })) {
+        using (var msjson = new MemoryStream(new byte[] { 0xfe, 0xff, 0xd8, 0x00 })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -3507,7 +3451,7 @@ a major version change.
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
- using (var msjson = new MemoryStream(new byte[] { 0xfe, 0xff, 0xdc, 0x00 })) {
+        using (var msjson = new MemoryStream(new byte[] { 0xfe, 0xff, 0xdc, 0x00 })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -3591,7 +3535,7 @@ a major version change.
           }
         }
 
- using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8 })) {
+        using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8 })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -3602,7 +3546,7 @@ a major version change.
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
- using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xdc })) {
+        using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xdc })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -3698,7 +3642,7 @@ a major version change.
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-    using (var msjson = new MemoryStream(new byte[] { 0, 0, 0, 0x20, 0, 0 })) {
+        using (var msjson = new MemoryStream(new byte[] { 0, 0, 0, 0x20, 0, 0 })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -3709,7 +3653,7 @@ a major version change.
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
- using (var msjson = new MemoryStream(new byte[] { 0, 0, 0, 0x20, 0, 0, 0 })) {
+        using (var msjson = new MemoryStream(new byte[] { 0, 0, 0, 0x20, 0, 0, 0 })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -3780,7 +3724,7 @@ a major version change.
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-    using (var msjson = new MemoryStream(new byte[] { 0, 0, 0xfe, 0xff, 0 })) {
+        using (var msjson = new MemoryStream(new byte[] { 0, 0, 0xfe, 0xff, 0 })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -3791,7 +3735,7 @@ a major version change.
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
- using (var msjson = new MemoryStream(new byte[] { 0, 0, 0xfe, 0xff, 0, 0 })) {
+        using (var msjson = new MemoryStream(new byte[] { 0, 0, 0xfe, 0xff, 0, 0 })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -5213,6 +5157,13 @@ a major version change.
       }
     }
 
+    [Test]
+    public void TestEMap() {
+      CBORObject cbor = CBORObject.NewMap()
+                                .Add("name", "Example");
+      byte[] bytes = cbor.EncodeToBytes();
+    }
+
     private void TestWriteObj(object obj, object objTest) {
       try {
         {
@@ -5240,196 +5191,199 @@ a major version change.
       }
     }
 
-[Test]
-public void TestWriteValue() {
- try {
-try {
- CBORObject.WriteValue(null, 0, 0);
-Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
-try {
- CBORObject.WriteValue(null, 1, 0);
-Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
-try {
- CBORObject.WriteValue(null, 2, 0);
-Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
-try {
- CBORObject.WriteValue(null, 3, 0);
-Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
-try {
- CBORObject.WriteValue(null, 4, 0);
-Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
-          using (var ms = new MemoryStream()) {
-try {
- CBORObject.WriteValue(ms, -1, 0);
-Assert.Fail("Should have failed");
-} catch (ArgumentException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
-try {
- CBORObject.WriteValue(ms, 8, 0);
-Assert.Fail("Should have failed");
-} catch (ArgumentException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
-try {
- CBORObject.WriteValue(ms, 7, 256);
-Assert.Fail("Should have failed");
-} catch (ArgumentException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
-try {
- CBORObject.WriteValue(ms, 7, Int32.MaxValue);
-Assert.Fail("Should have failed");
-} catch (ArgumentException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
-try {
- CBORObject.WriteValue(ms, 7, Int64.MaxValue);
-Assert.Fail("Should have failed");
-} catch (ArgumentException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
-for (var i = 0; i <= 7; ++i) {
-try {
- CBORObject.WriteValue(ms, i, -1);
-Assert.Fail("Should have failed");
-} catch (ArgumentException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
-try {
- CBORObject.WriteValue(ms, i, Int32.MinValue);
-Assert.Fail("Should have failed");
-} catch (ArgumentException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
-try {
- CBORObject.WriteValue(ms, i, (long)-1);
-Assert.Fail("Should have failed");
-} catch (ArgumentException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
-try {
- CBORObject.WriteValue(ms, i, Int64.MinValue);
-Assert.Fail("Should have failed");
-} catch (ArgumentException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
-}
-for (var i = 0; i <= 6; ++i) {
-try {
- CBORObject.WriteValue(ms, i, Int32.MaxValue);
-} catch (Exception ex) {
-Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
-try {
- CBORObject.WriteValue(ms, i, Int64.MaxValue);
-} catch (Exception ex) {
-Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
-}
-      // Test minimum data length
-      int[] ranges = {
+    [Test]
+    public void TestWriteValue() {
+      try {
+        try {
+          CBORObject.WriteValue(null, 0, 0);
+          Assert.Fail("Should have failed");
+        } catch (ArgumentNullException) {
+          // NOTE: Intentionally empty
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
+        }
+        try {
+          CBORObject.WriteValue(null, 1, 0);
+          Assert.Fail("Should have failed");
+        } catch (ArgumentNullException) {
+          // NOTE: Intentionally empty
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
+        }
+        try {
+          CBORObject.WriteValue(null, 2, 0);
+          Assert.Fail("Should have failed");
+        } catch (ArgumentNullException) {
+          // NOTE: Intentionally empty
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
+        }
+        try {
+          CBORObject.WriteValue(null, 3, 0);
+          Assert.Fail("Should have failed");
+        } catch (ArgumentNullException) {
+          // NOTE: Intentionally empty
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
+        }
+        try {
+          CBORObject.WriteValue(null, 4, 0);
+          Assert.Fail("Should have failed");
+        } catch (ArgumentNullException) {
+          // NOTE: Intentionally empty
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
+        }
+        using (var ms = new MemoryStream()) {
+          try {
+            CBORObject.WriteValue(ms, -1, 0);
+            Assert.Fail("Should have failed");
+          } catch (ArgumentException) {
+            // NOTE: Intentionally empty
+          } catch (Exception ex) {
+            Assert.Fail(ex.ToString());
+            throw new InvalidOperationException(String.Empty, ex);
+          }
+          try {
+            CBORObject.WriteValue(ms, 8, 0);
+            Assert.Fail("Should have failed");
+          } catch (ArgumentException) {
+            // NOTE: Intentionally empty
+          } catch (Exception ex) {
+            Assert.Fail(ex.ToString());
+            throw new InvalidOperationException(String.Empty, ex);
+          }
+          try {
+            CBORObject.WriteValue(ms, 7, 256);
+            Assert.Fail("Should have failed");
+          } catch (ArgumentException) {
+            // NOTE: Intentionally empty
+          } catch (Exception ex) {
+            Assert.Fail(ex.ToString());
+            throw new InvalidOperationException(String.Empty, ex);
+          }
+          try {
+            CBORObject.WriteValue(ms, 7, Int32.MaxValue);
+            Assert.Fail("Should have failed");
+          } catch (ArgumentException) {
+            // NOTE: Intentionally empty
+          } catch (Exception ex) {
+            Assert.Fail(ex.ToString());
+            throw new InvalidOperationException(String.Empty, ex);
+          }
+          try {
+            CBORObject.WriteValue(ms, 7, Int64.MaxValue);
+            Assert.Fail("Should have failed");
+          } catch (ArgumentException) {
+            // NOTE: Intentionally empty
+          } catch (Exception ex) {
+            Assert.Fail(ex.ToString());
+            throw new InvalidOperationException(String.Empty, ex);
+          }
+          for (var i = 0; i <= 7; ++i) {
+            try {
+              CBORObject.WriteValue(ms, i, -1);
+              Assert.Fail("Should have failed");
+            } catch (ArgumentException) {
+              // NOTE: Intentionally empty
+            } catch (Exception ex) {
+              Assert.Fail(ex.ToString());
+              throw new InvalidOperationException(String.Empty, ex);
+            }
+            try {
+              CBORObject.WriteValue(ms, i, Int32.MinValue);
+              Assert.Fail("Should have failed");
+            } catch (ArgumentException) {
+              // NOTE: Intentionally empty
+            } catch (Exception ex) {
+              Assert.Fail(ex.ToString());
+              throw new InvalidOperationException(String.Empty, ex);
+            }
+            try {
+              CBORObject.WriteValue(ms, i, (long)-1);
+              Assert.Fail("Should have failed");
+            } catch (ArgumentException) {
+              // NOTE: Intentionally empty
+            } catch (Exception ex) {
+              Assert.Fail(ex.ToString());
+              throw new InvalidOperationException(String.Empty, ex);
+            }
+            try {
+              CBORObject.WriteValue(ms, i, Int64.MinValue);
+              Assert.Fail("Should have failed");
+            } catch (ArgumentException) {
+              // NOTE: Intentionally empty
+            } catch (Exception ex) {
+              Assert.Fail(ex.ToString());
+              throw new InvalidOperationException(String.Empty, ex);
+            }
+          }
+          for (var i = 0; i <= 6; ++i) {
+            try {
+              CBORObject.WriteValue(ms, i, Int32.MaxValue);
+            } catch (Exception ex) {
+              Assert.Fail(ex.ToString());
+              throw new InvalidOperationException(String.Empty, ex);
+            }
+            try {
+              CBORObject.WriteValue(ms, i, Int64.MaxValue);
+            } catch (Exception ex) {
+              Assert.Fail(ex.ToString());
+              throw new InvalidOperationException(String.Empty, ex);
+            }
+          }
+          // Test minimum data length
+          int[] ranges = {
         0, 23, 1,
         24, 255, 2,
         256, 266, 3,
         65525, 65535, 3,
         65536, 65546, 5,
       };
-      string[] bigRanges = {
+          string[] bigRanges = {
         "4294967285", "4294967295",
         "4294967296", "4294967306",
         "18446744073709551604", "18446744073709551615"
       };
-      int[] bigSizes = { 5, 9, 9, 5, 9, 9 };
-      for (int i = 0; i < ranges.Length; i += 3) {
-        for (int j = ranges[i]; j <= ranges[i + 1]; ++j) {
-for (var k = 0; k <= 6; ++k) {
-  int count;
-  count = CBORObject.WriteValue(ms, k, j);
-  Assert.AreEqual(ranges[i + 2], count);
-  count = CBORObject.WriteValue(ms, k, (long)j);
-  Assert.AreEqual(ranges[i + 2], count);
-  count = CBORObject.WriteValue(ms, k, EInteger.FromInt32(j));
-  Assert.AreEqual(ranges[i + 2], count);
-}
-        }
-      }
-      for (int i = 0; i < bigRanges.Length; i += 2) {
-        EInteger bj = EInteger.FromString(bigRanges[i]);
-        EInteger valueBjEnd = EInteger.FromString(bigRanges[i + 1]);
-        while (bj < valueBjEnd) {
-for (var k = 0; k <= 6; ++k) {
-  int count;
-  count = CBORObject.WriteValue(ms, k, bj);
-  Assert.AreEqual(bigSizes[i / 2], count);
-}
-          bj += EInteger.One;
-        }
-      }
+          int[] bigSizes = { 5, 9, 9, 5, 9, 9 };
+          for (int i = 0; i < ranges.Length; i += 3) {
+            for (int j = ranges[i]; j <= ranges[i + 1]; ++j) {
+              for (var k = 0; k <= 6; ++k) {
+                int count;
+                count = CBORObject.WriteValue(ms, k, j);
+                Assert.AreEqual(ranges[i + 2], count);
+                count = CBORObject.WriteValue(ms, k, (long)j);
+                Assert.AreEqual(ranges[i + 2], count);
+                count = CBORObject.WriteValue(ms, k, EInteger.FromInt32(j));
+                Assert.AreEqual(ranges[i + 2], count);
+              }
+            }
           }
+          for (int i = 0; i < bigRanges.Length; i += 2) {
+            EInteger bj = EInteger.FromString(bigRanges[i]);
+            EInteger valueBjEnd = EInteger.FromString(bigRanges[i + 1]);
+            while (bj < valueBjEnd) {
+              for (var k = 0; k <= 6; ++k) {
+                int count;
+                count = CBORObject.WriteValue(ms, k, bj);
+                Assert.AreEqual(bigSizes[i / 2], count);
+              }
+              bj += EInteger.One;
+            }
+          }
+        }
       } catch (IOException ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(ex.ToString(), ex);
       }
-}
+    }
+
+
+
   }
 }

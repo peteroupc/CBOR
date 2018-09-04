@@ -38,15 +38,24 @@ namespace PeterO.Cbor {
     /// path='docs/doc[@name="M:PeterO.Cbor.CBOREncodeOptions.#ctor(System.Boolean,System.Boolean)"]/*'/>
     public CBOREncodeOptions(
   bool useIndefLengthStrings,
-  bool allowDuplicateKeys) {
+      bool allowDuplicateKeys) : this(useIndefLengthStrings,allowDuplicateKeys,false) {
+    }
+
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBOREncodeOptions.#ctor(System.Boolean,System.Boolean)"]/*'/>
+    public CBOREncodeOptions(
+  bool useIndefLengthStrings,
+  bool allowDuplicateKeys,
+    bool ctap2Canonical) {
       var val = 0;
       if (!useIndefLengthStrings) {
- val |= 1;
-}
+        val |= 1;
+      }
       if (!allowDuplicateKeys) {
- val |= 2;
-}
+        val |= 2;
+      }
       this.value = val;
+      this.Ctap2Canonical = ctap2Canonical;
     }
 
     /// <include file='../../docs.xml'
@@ -66,6 +75,10 @@ namespace PeterO.Cbor {
     }
 
     /// <include file='../../docs.xml'
+  /// path='docs/doc[@name="P:PeterO.Cbor.CBOREncodeOptions.Ctap2Canonical"]/*'/>
+    public bool Ctap2Canonical { get; private set; }
+
+    /// <include file='../../docs.xml'
     /// path='docs/doc[@name="P:PeterO.Cbor.CBOREncodeOptions.Value"]/*'/>
   [Obsolete("Option classes in this library will follow the form seen in JSONOptions in a later version; the approach used in this class is too complicated.")]
     public int Value {
@@ -74,8 +87,8 @@ namespace PeterO.Cbor {
       }
     }
 
-    private CBOREncodeOptions(int value) {
-      this.value = value;
+    private CBOREncodeOptions(int value) :
+    this((value&1)==0,(value&2)==0){
     }
 
     /// <include file='../../docs.xml'

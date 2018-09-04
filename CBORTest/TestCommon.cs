@@ -13,6 +13,85 @@ namespace Test {
   public static class TestCommon {
     private static readonly string ValueDigits = "0123456789";
 
+    public static int StringToInt(string str) {
+      var neg = false;
+      var i = 0;
+      if (str.Length > 0 && str[0] == '-') {
+        neg = true;
+        ++i;
+      }
+      if (i == str.Length) {
+        throw new FormatException();
+      }
+      var ret = 0;
+      while (i < str.Length) {
+        int c = str[i];
+        ++i;
+        if (c >= '0' && c <= '9') {
+          int x = c - '0';
+          if (ret > 214748364) {
+            throw new FormatException();
+          }
+          ret *= 10;
+          if (ret == 2147483640) {
+            if (neg && x == 8) {
+              if (i != str.Length) {
+                throw new FormatException();
+              }
+              return Int32.MinValue;
+            }
+            if (x > 7) {
+              throw new FormatException();
+            }
+          }
+          ret += x;
+        } else {
+          throw new FormatException();
+        }
+      }
+      return neg ? -ret : ret;
+    }
+
+    public static long StringToLong(string str) {
+      var neg = false;
+      var i = 0;
+      if (str.Length > 0 && str[0] == '-') {
+        neg = true;
+        ++i;
+      }
+      if (i == str.Length) {
+        throw new FormatException();
+      }
+      long ret = 0;
+      while (i < str.Length) {
+        int c = str[i];
+        ++i;
+        if (c >= '0' && c <= '9') {
+          int x = c - '0';
+          if ((long)ret > 922337203685477580L) {
+            throw new FormatException();
+          }
+          ret *= 10;
+          if ((long)ret == 9223372036854775800L) {
+            if (neg && x == 8) {
+              if (i != str.Length) {
+                throw new FormatException();
+              }
+              return Int64.MinValue;
+            }
+            if (x > 7) {
+              throw new FormatException();
+            }
+          }
+          ret += x;
+        } else {
+          throw new FormatException();
+        }
+      }
+      return neg ? -ret : ret;
+    }
+
+
     public static void AssertByteArraysEqual(byte[] arr1, byte[] arr2) {
       if (!ByteArraysEqual(arr1, arr2)) {
         Assert.Fail("Expected " + ToByteArrayString(arr1) + ",\ngot..... " +
