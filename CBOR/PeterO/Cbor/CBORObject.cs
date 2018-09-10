@@ -13,8 +13,8 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="T:PeterO.Cbor.CBORObject"]/*'/>
+  /// <include file='../../docs.xml'
+  /// path='docs/doc[@name="T:PeterO.Cbor.CBORObject"]/*'/>
   public sealed partial class CBORObject : IComparable<CBORObject>,
   IEquatable<CBORObject> {
     private static CBORObject ConstructSimpleValue(int v) {
@@ -687,46 +687,51 @@ namespace PeterO.Cbor {
       return obj;
     }
 
+    /// <summary>
+    /// Not documented yet.
+    /// </summary>
+    /// <returns>The object.</returns>
+    /// <typeparam name="T">An arbitrary object type.</typeparam>
     public T ToObject<T>() {
       if (this.IsNull) {
- return default(T);
-}
-if (this.Type == CBORType.Map) {
-  var values = new List<KeyValuePair<string, object>>();
-  foreach (string key in PropertyMap.GetPropertyNames(
-             typeof(T),
-             true,
-             true)) {
-    if (this.ContainsKey(key)) {
-      CBORObject cborValue = this[key];
-      object thisItem = cborValue.ThisItem;
-      if (cborValue.IsTrue) {
- thisItem = true;
-  } else if (cborValue.IsFalse) {
- thisItem = false;
-  } else if (cborValue.IsNull) {
- thisItem = null;
-  } else if (cborValue.Type == CBORType.SimpleValue) {
-    throw new NotSupportedException(
-      "A value in the map is a non-true/false/null simple value");
+        return default(T);
       }
-      {
-object objectTemp = new KeyValuePair<string;
-object objectTemp2 = object>(
+      if (this.Type == CBORType.Map) {
+        var values = new List<KeyValuePair<string, object>>();
+        foreach (string key in PropertyMap.GetPropertyNames(
+                   typeof(T),
+                   true,
+                   true)) {
+          if (this.ContainsKey(key)) {
+            CBORObject cborValue = this[key];
+            object thisItem = cborValue.ThisItem;
+            if (cborValue.IsTrue) {
+              thisItem = true;
+            } else if (cborValue.IsFalse) {
+              thisItem = false;
+            } else if (cborValue.IsNull) {
+              thisItem = null;
+            } else if (cborValue.Type == CBORType.SimpleValue) {
+              throw new NotSupportedException(
+                "A value in the map is a non-true/false/null simple value");
+            }
+            if (cborValue.HasTag(0)) {
+              thisItem = CBORTag0.StringToDateTime((string)thisItem);
+            }
+            var dict = new KeyValuePair<string, object>(
               key,
               thisItem);
-values.Add(objectTemp, objectTemp2);
-}
-    }
-  }
+            values.Add(dict);
+          }
+        }
         return (T)PropertyMap.ObjectWithProperties(
     typeof(T),
     values,
     true,
     true);
-} else {
-  throw new NotSupportedException();
-}
+      } else {
+        throw new NotSupportedException();
+      }
     }
 
     /// <include file='../../docs.xml'
@@ -1356,9 +1361,9 @@ values.Add(objectTemp, objectTemp2);
       if (stream == null) {
         throw new ArgumentNullException(nameof(stream));
       }
- if (options == null) {
-  throw new ArgumentNullException(nameof(options));
-}
+      if (options == null) {
+        throw new ArgumentNullException(nameof(options));
+      }
       if (str == null) {
         stream.WriteByte(0xf6);  // Write null instead of string
       } else {
@@ -1604,7 +1609,8 @@ values.Add(objectTemp, objectTemp2);
             stream.WriteByte((byte)((datatype << 5) | 27));
             stream.Write(bytes, 0, byteCount);
             break;
-          default: stream.WriteByte((datatype == 0) ?
+          default:
+            stream.WriteByte((datatype == 0) ?
 (byte)0xc2 : (byte)0xc3);
             WritePositiveInt(2, byteCount, stream);
             stream.Write(bytes, 0, byteCount);
@@ -1763,10 +1769,10 @@ values.Add(objectTemp, objectTemp2);
         output.WriteByte(0xf6);
         return;
       }
-if (options.Ctap2Canonical) {
- FromObject(objValue).WriteTo(output, options);
- return;
-}
+      if (options.Ctap2Canonical) {
+        FromObject(objValue).WriteTo(output, options);
+        return;
+      }
       byte[] data = objValue as byte[];
       if (data != null) {
         WritePositiveInt(3, data.Length, output);
@@ -1830,8 +1836,8 @@ if (options.Ctap2Canonical) {
         return CBORObject.FromObject((EFloat)newItem);
       }
       var rat = newItem as ERational;
-    return (rat != null) ? CBORObject.FromObject(rat) : ((oldItem ==
-        newItem) ? this : CBORObject.FromObject(newItem));
+      return (rat != null) ? CBORObject.FromObject(rat) : ((oldItem ==
+          newItem) ? this : CBORObject.FromObject(newItem));
     }
 
     /// <include file='../../docs.xml'
@@ -2342,9 +2348,9 @@ if (options.Ctap2Canonical) {
       if (options == null) {
         throw new ArgumentNullException(nameof(options));
       }
-if (options.Ctap2Canonical) {
- return CBORCanonical.CtapCanonicalEncode(this);
-}
+      if (options.Ctap2Canonical) {
+        return CBORCanonical.CtapCanonicalEncode(this);
+      }
       // For some types, a memory stream is a lot of
       // overhead since the amount of memory the types
       // use is fixed and small
@@ -2737,8 +2743,8 @@ if (options.Ctap2Canonical) {
         IDictionary<CBORObject, CBORObject> dict = this.AsMap();
         dict.Clear();
       } else {
- throw new InvalidOperationException("Not a map or array");
-}
+        throw new InvalidOperationException("Not a map or array");
+      }
     }
 
     /// <include file='../../docs.xml'
@@ -3061,92 +3067,92 @@ if (options.Ctap2Canonical) {
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,System.Int64)"]/*'/>
-  public static int WriteValue(Stream outputStream, int majorType, long value) {
-   if (outputStream == null) {
-  throw new ArgumentNullException(nameof(outputStream));
-}
-  if (majorType < 0) {
-  throw new ArgumentException("majorType (" + majorType +
-    ") is less than 0");
-}
-if (majorType > 7) {
-  throw new ArgumentException("majorType (" + majorType +
-    ") is more than 7");
-}
-  if (value < 0) {
-  throw new ArgumentException("value (" + value +
-    ") is less than 0");
-}
-  if (majorType == 7) {
-   if (value > 255) {
-  throw new ArgumentException("value (" + value +
-    ") is more than 255");
-}
-   if (value <= 23) {
+    public static int WriteValue(Stream outputStream, int majorType, long value) {
+      if (outputStream == null) {
+        throw new ArgumentNullException(nameof(outputStream));
+      }
+      if (majorType < 0) {
+        throw new ArgumentException("majorType (" + majorType +
+          ") is less than 0");
+      }
+      if (majorType > 7) {
+        throw new ArgumentException("majorType (" + majorType +
+          ") is more than 7");
+      }
+      if (value < 0) {
+        throw new ArgumentException("value (" + value +
+          ") is less than 0");
+      }
+      if (majorType == 7) {
+        if (value > 255) {
+          throw new ArgumentException("value (" + value +
+            ") is more than 255");
+        }
+        if (value <= 23) {
           outputStream.WriteByte((byte)(0xe0 + (int)value));
-    return 1;
-   } else if (value < 32) {
-    throw new ArgumentException("value is from 24 to 31 and major type is 7");
-   } else {
+          return 1;
+        } else if (value < 32) {
+          throw new ArgumentException("value is from 24 to 31 and major type is 7");
+        } else {
           outputStream.WriteByte((byte)0xf8);
           outputStream.WriteByte((byte)value);
-    return 2;
-   }
-  } else {
-   return WritePositiveInt64(majorType, value, outputStream);
-  }
-}
+          return 2;
+        }
+      } else {
+        return WritePositiveInt64(majorType, value, outputStream);
+      }
+    }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,System.Int32)"]/*'/>
-  public static int WriteValue(Stream outputStream, int majorType, int value) {
-   if (outputStream == null) {
-  throw new ArgumentNullException(nameof(outputStream));
-}
-  if (majorType < 0) {
-  throw new ArgumentException("majorType (" + majorType +
-    ") is less than 0");
-}
-if (majorType > 7) {
-  throw new ArgumentException("majorType (" + majorType +
-    ") is more than 7");
-}
-  if (value < 0) {
-  throw new ArgumentException("value (" + value +
-    ") is less than 0");
-}
-  if (majorType == 7) {
-   if (value > 255) {
-  throw new ArgumentException("value (" + value +
-    ") is more than 255");
-}
-   if (value <= 23) {
+    public static int WriteValue(Stream outputStream, int majorType, int value) {
+      if (outputStream == null) {
+        throw new ArgumentNullException(nameof(outputStream));
+      }
+      if (majorType < 0) {
+        throw new ArgumentException("majorType (" + majorType +
+          ") is less than 0");
+      }
+      if (majorType > 7) {
+        throw new ArgumentException("majorType (" + majorType +
+          ") is more than 7");
+      }
+      if (value < 0) {
+        throw new ArgumentException("value (" + value +
+          ") is less than 0");
+      }
+      if (majorType == 7) {
+        if (value > 255) {
+          throw new ArgumentException("value (" + value +
+            ") is more than 255");
+        }
+        if (value <= 23) {
           outputStream.WriteByte((byte)(0xe0 + value));
-    return 1;
-   } else if (value < 32) {
-    throw new ArgumentException("value is from 24 to 31 and major type is 7");
-   } else {
+          return 1;
+        } else if (value < 32) {
+          throw new ArgumentException("value is from 24 to 31 and major type is 7");
+        } else {
           outputStream.WriteByte((byte)0xf8);
           outputStream.WriteByte((byte)value);
-    return 2;
-   }
-  } else {
-   return WritePositiveInt(majorType, value, outputStream);
-  }
- }
+          return 2;
+        }
+      } else {
+        return WritePositiveInt(majorType, value, outputStream);
+      }
+    }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,PeterO.Numbers.EInteger)"]/*'/>
-  public static int WriteValue(
-  Stream outputStream,
-  int majorType,
-  EInteger bigintValue) {
-   if (outputStream == null) {
-  throw new ArgumentNullException(nameof(outputStream));
-}
-   if (bigintValue == null) {
-  throw new ArgumentNullException(nameof(bigintValue));
-}
+    public static int WriteValue(
+    Stream outputStream,
+    int majorType,
+    EInteger bigintValue) {
+      if (outputStream == null) {
+        throw new ArgumentNullException(nameof(outputStream));
+      }
+      if (bigintValue == null) {
+        throw new ArgumentNullException(nameof(bigintValue));
+      }
       if (bigintValue.Sign < 0) {
         throw new ArgumentException("tagEInt's sign (" + bigintValue.Sign +
                     ") is less than 0");
@@ -3156,32 +3162,32 @@ if (majorType > 7) {
           "tag more than 18446744073709551615 (" + bigintValue + ")");
       }
       if (bigintValue.CompareTo(Int64MaxValue) <= 0) {
-      return WriteValue(
-  outputStream,
-  majorType,
-  bigintValue.ToInt64Checked());
+        return WriteValue(
+    outputStream,
+    majorType,
+    bigintValue.ToInt64Checked());
       }
       long longVal = bigintValue.ToInt64Unchecked();
       var highbyte = (int)((longVal >> 56) & 0xff);
-        if (majorType < 0) {
-  throw new ArgumentException("majorType (" + majorType +
-    ") is less than 0");
-}
-if (majorType > 7) {
-  throw new ArgumentException("majorType (" + majorType +
-    ") is more than 7");
-}
-        if (majorType == 7) {
-   throw new ArgumentException("majorType is 7 and value is greater than 255");
-        }
-        byte[] bytes = new[] { (byte)(27 | (majorType << 5)), (byte)highbyte,
+      if (majorType < 0) {
+        throw new ArgumentException("majorType (" + majorType +
+          ") is less than 0");
+      }
+      if (majorType > 7) {
+        throw new ArgumentException("majorType (" + majorType +
+          ") is more than 7");
+      }
+      if (majorType == 7) {
+        throw new ArgumentException("majorType is 7 and value is greater than 255");
+      }
+      byte[] bytes = new[] { (byte)(27 | (majorType << 5)), (byte)highbyte,
         (byte)((longVal >> 48) & 0xff), (byte)((longVal >> 40) & 0xff),
         (byte)((longVal >> 32) & 0xff), (byte)((longVal >> 24) & 0xff),
         (byte)((longVal >> 16) & 0xff), (byte)((longVal >> 8) & 0xff),
         (byte)(longVal & 0xff) };
       outputStream.Write(bytes, 0, bytes.Length);
       return bytes.Length;
- }
+    }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)"]/*'/>
@@ -3195,14 +3201,14 @@ if (majorType > 7) {
       if (stream == null) {
         throw new ArgumentNullException(nameof(stream));
       }
- if (options == null) {
-  throw new ArgumentNullException(nameof(options));
-}
-if (options.Ctap2Canonical) {
- byte[] bytes = CBORCanonical.CtapCanonicalEncode(this);
- stream.Write(bytes, 0, bytes.Length);
- return;
-}
+      if (options == null) {
+        throw new ArgumentNullException(nameof(options));
+      }
+      if (options.Ctap2Canonical) {
+        byte[] bytes = CBORCanonical.CtapCanonicalEncode(this);
+        stream.Write(bytes, 0, bytes.Length);
+        return;
+      }
       this.WriteTags(stream);
       int type = this.ItemType;
       switch (type) {
@@ -4200,8 +4206,8 @@ if (options.Ctap2Canonical) {
     private sealed class ConverterInfo {
       private object toObject;
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.ConverterInfo.ToObject"]/*'/>
+      /// <include file='../../docs.xml'
+      /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.ConverterInfo.ToObject"]/*'/>
       public object ToObject {
         get {
           return this.toObject;
@@ -4214,8 +4220,8 @@ if (options.Ctap2Canonical) {
 
       private object converter;
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.ConverterInfo.Converter"]/*'/>
+      /// <include file='../../docs.xml'
+      /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.ConverterInfo.Converter"]/*'/>
       public object Converter {
         get {
           return this.converter;

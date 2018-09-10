@@ -31,22 +31,22 @@ namespace PeterO.Cbor {
 
       public string GetAdjustedName(bool removeIsPrefix, bool useCamelCase) {
         string thisName = this.Name;
-            // Convert 'IsXYZ' to 'XYZ'
-  if (removeIsPrefix && thisName.Length >= 3 && thisName[0] == 'I' &&
-    thisName[1] == 's' && thisName[2] >= 'A' && thisName[2] <= 'Z') {
-              // NOTE (Jun. 17, 2017, Peter O.): Was "== 'Z'", which was a
-              // bug reported
-              // by GitHub user "richardschneider". See peteroupc/CBOR#17.
-              thisName = thisName.Substring(2);
-            }
-            // Convert to camel case
-            if (useCamelCase && thisName[0] >= 'A' && thisName[0] <= 'Z') {
-              var sb = new System.Text.StringBuilder();
-              sb.Append((char)(thisName[0] + 0x20));
-              sb.Append(thisName.Substring(1));
-              thisName = sb.ToString();
-            }
-            return thisName;
+        // Convert 'IsXYZ' to 'XYZ'
+        if (removeIsPrefix && thisName.Length >= 3 && thisName[0] == 'I' &&
+          thisName[1] == 's' && thisName[2] >= 'A' && thisName[2] <= 'Z') {
+          // NOTE (Jun. 17, 2017, Peter O.): Was "== 'Z'", which was a
+          // bug reported
+          // by GitHub user "richardschneider". See peteroupc/CBOR#17.
+          thisName = thisName.Substring(2);
+        }
+        // Convert to camel case
+        if (useCamelCase && thisName[0] >= 'A' && thisName[0] <= 'Z') {
+          var sb = new System.Text.StringBuilder();
+          sb.Append((char)(thisName[0] + 0x20));
+          sb.Append(thisName.Substring(1));
+          thisName = sb.ToString();
+        }
+        return thisName;
       }
 
       public PropertyInfo Prop {
@@ -70,24 +70,24 @@ namespace PeterO.Cbor {
   Type t,
   string name,
   Type[] parameters) {
-       return t.GetMethod(name, parameters);
+      return t.GetMethod(name, parameters);
     }
 
-        private static bool HasCustomAttribute(
-  Type t,
-  string name) {
+    private static bool HasCustomAttribute(
+Type t,
+string name) {
 #if NET40 || NET20
       foreach (var attr in t.GetCustomAttributes(false)) {
 #else
     foreach (var attr in t.CustomAttributes) {
 #endif
         // DebugUtility.Log (attr.AttributeType.GetType ().FullName);
-                if (attr.GetType().FullName.Equals(name)) {
-                    return true;
-                }
-            }
-            return false;
+        if (attr.GetType().FullName.Equals(name)) {
+          return true;
         }
+      }
+      return false;
+    }
 #else
       private static IEnumerable<PropertyInfo> GetTypeProperties(Type t) {
       return t.GetRuntimeProperties();
@@ -118,10 +118,10 @@ namespace PeterO.Cbor {
 
     private static IList<PropertyData> GetPropertyList(Type t) {
       lock (ValuePropertyLists) {
-         if (
-  ValuePropertyLists.TryGetValue(
-  t,
-  out IList<PropertyData> ret)) {
+        if (
+ ValuePropertyLists.TryGetValue(
+ t,
+ out IList<PropertyData> ret)) {
           return ret;
         }
         ret = new List<PropertyData>();
@@ -132,8 +132,8 @@ namespace PeterO.Cbor {
           if (pi.CanRead && (pi.CanWrite || anonymous) &&
           pi.GetIndexParameters().Length == 0) {
             PropertyData pd = new PropertyMap.PropertyData() {
-                Name = pi.Name,
-                Prop = pi
+              Name = pi.Name,
+              Prop = pi
             };
             ret.Add(pd);
           }
@@ -154,9 +154,9 @@ namespace PeterO.Cbor {
       }
     }
 
-// Inappropriate to mark these obsolete; they're
-// just non-publicly-visible methods to convert to
-// and from legacy arbitrary-precision classes
+    // Inappropriate to mark these obsolete; they're
+    // just non-publicly-visible methods to convert to
+    // and from legacy arbitrary-precision classes
 #pragma warning disable 618
     public static BigInteger ToLegacy(EInteger ei) {
       return BigInteger.ToLegacy(ei);
@@ -273,15 +273,29 @@ namespace PeterO.Cbor {
     public static object ObjectWithProperties<T>(
       Type t,
       IEnumerable<KeyValuePair<string, object>> keysValues) {
-         return ObjectWithProperties(t, keysValues, true, true);
+      return ObjectWithProperties(t, keysValues, true, true);
     }
 
     public static object ObjectWithProperties(
          Type t,
          IEnumerable<KeyValuePair<string, object>> keysValues,
          bool removeIsPrefix,
-         bool useCamelCase) {
-      object o = Activator.CreateInstance(t);
+  bool useCamelCase) {
+      object o = null;
+#if NET20 || NET40
+      foreach (var ci in t.GetConstructors()) {
+#else
+      foreach (var ci in t.GetTypeInfo().DeclaredConstructors) {
+#endif
+        if (ci.IsPublic) {
+          int nump=ci.GetParameters().Length;
+          o = ci.Invoke(new object[nump]);
+          break;
+        }
+      }
+      if (o == null) {
+        o = Activator.CreateInstance(t);
+      }
       var dict = new Dictionary<string, object>();
       foreach (var kv in keysValues) {
         var name = kv.Key;
