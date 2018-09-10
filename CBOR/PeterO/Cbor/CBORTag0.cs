@@ -71,64 +71,99 @@ namespace PeterO.Cbor {
     }
 
     public static DateTime StringToDateTime(string str) {
-      bool bad = false;
-      if (str.Length < 19) throw new ArgumentException("Invalid date time");
-      for (var i = 0; i < 19 && !bad; i++) {
-        if (i == 4 || i == 7) { bad |= (str[i] != '-'); } else if (i == 13 || i == 16) { bad |= (str[i] != ':'); } else if (i == 10) {
-          bad |= (str[i] != 'T');
+      var bad = false;
+      if (str.Length < 19) {
+ throw new ArgumentException("Invalid date time");
+}
+      for (var i = 0; i < 19 && !bad; ++i) {
+        if (i == 4 || i == 7) {
+  { bad |= str[i] != '-';
+} } else if (i == 13 || i == 16) {
+  { bad |= str[i] != ':';
+} } else if (i == 10) {
+          bad |= str[i] != 'T';
           /*lowercase t not used to separate date/time,
-            following RFC 4287 sec. 3.3*/
-        } else { bad |= (str[i] < '0' || str[i] > '9'); }
+    following RFC 4287 sec. 3.3*/ } else { bad |= str[i] < '0' || str[i] >
+              '9';
+}
       }
-      if (bad) throw new ArgumentException("Invalid date/time");
-      int year = (str[0] - '0') * 1000 +
-        (str[1] - '0') * 100 +
-        (str[2] - '0') * 10 +
-        (str[3] - '0');
+      if (bad) {
+ throw new ArgumentException("Invalid date/time");
+}
+      int year = (str[0] - '0') * 1000 + (str[1] - '0') * 100 +
+        (str[2] - '0') * 10 + (str[3] - '0');
       int month = (str[5] - '0') * 10 + (str[6] - '0');
-      if (month >= 12) throw new ArgumentException("Invalid date/time");
+      if (month >= 12) {
+ throw new ArgumentException("Invalid date/time");
+}
       int day = (str[8] - '0') * 10 + (str[9] - '0');
       int hour = (str[11] - '0') * 10 + (str[12] - '0');
       int minute = (str[14] - '0') * 10 + (str[15] - '0');
-      if (minute >= 60) throw new ArgumentException("Invalid date/time");
+      if (minute >= 60) {
+ throw new ArgumentException("Invalid date/time");
+}
       int second = (str[17] - '0') * 10 + (str[18] - '0');
-      int index = 19;
-      int tenthsMicrosec = 0;
+      var index = 19;
+      var tenthsMicrosec = 0;
       if (index <= str.Length && str[index] == '.') {
-        int count = 0;
-        index++;
+        var count = 0;
+        ++index;
         while (index < str.Length) {
-          if (str[index] < '0' || str[index] > '9') break;
-          if (count < 7) { tenthsMicrosec = tenthsMicrosec * 10 + (str[index] - '0'); count++; }
-          index++;
+          if (str[index] < '0' || str[index] > '9') {
+ break;
+}
+          if (count < 7) {
+  { tenthsMicrosec = tenthsMicrosec * 10 + (str[index] - '0');
+} count++; }
+          ++index;
         }
-        while (count < 7) { tenthsMicrosec *= 10; count++; }
+        while (count < 7) {
+  { tenthsMicrosec *= 10;
+} count++; }
       }
       if (index + 1 == str.Length && str[index] == 'Z') {
         /*lowercase z not used to indicate UTC,
           following RFC 4287 sec. 3.3*/
-        return new DateTime(year, month, day, hour, minute,
-                            second, DateTimeKind.Utc)
-          .AddTicks((long)tenthsMicrosec);
+        return new DateTime(
+  year,
+  month,
+  day,
+  hour,
+  minute,
+  second,
+  DateTimeKind.Utc).AddTicks((long)tenthsMicrosec);
       } else if (index + 6 == str.Length) {
         bad = false;
-        for (var i = 0; i < 6 && !bad; i++) {
-          if (i == 0) { bad |= (str[index + i] != '-' && str[index + i] != '+'); } else if (i == 3) { bad |= (str[index + i] != ':'); } else { bad |= (str[index + i] < '0' || str[index + i] > '9'); }
+        for (var i = 0; i < 6 && !bad; ++i) {
+          if (i == 0) {
+  { bad |= str[index + i] != '-' && str[index + i] != '+';
+} } else if (i == 3) {
+  { bad |= str[index + i] != ':';
+} } else { bad |= str[index + i] < '0' || str[index + i] > '9';
+}
         }
-        if (bad) throw new ArgumentException("Invalid date/time");
-        bool neg = (str[index] == '-');
+        if (bad) {
+ throw new ArgumentException("Invalid date/time");
+}
+        bool neg = str[index] == '-';
         int tzhour = (str[index + 1] - '0') * 10 + (str[index + 2] - '0');
         int tzminute = (str[index + 4] - '0') * 10 + (str[index + 5] - '0');
-        if (tzminute >= 60) throw new ArgumentException("Invalid date/time");
+        if (tzminute >= 60) {
+ throw new ArgumentException("Invalid date/time");
+}
         int localToUtc = (neg ? 1 : -1) * (tzhour * 60) + tzminute;
-        return new DateTime(year, month, day, hour, minute,
-                            second, DateTimeKind.Utc)
-                .AddMinutes(localToUtc)
-          .AddTicks((long)tenthsMicrosec);
-      } else throw new ArgumentException("Invalid date/time");
+        return new DateTime(
+  year,
+  month,
+  day,
+  hour,
+  minute,
+  second,
+  DateTimeKind.Utc).AddMinutes(localToUtc).AddTicks((long)tenthsMicrosec);
+      } else {
+ throw new ArgumentException("Invalid date/time");
+}
     }
-
-
 
     public CBORObject ToCBORObject(DateTime obj) {
       return CBORObject.FromObjectAndTag(DateTimeToString(obj), 0);

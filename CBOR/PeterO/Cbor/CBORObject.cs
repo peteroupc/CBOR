@@ -13,8 +13,8 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-  /// <include file='../../docs.xml'
-  /// path='docs/doc[@name="T:PeterO.Cbor.CBORObject"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.Cbor.CBORObject"]/*'/>
   public sealed partial class CBORObject : IComparable<CBORObject>,
   IEquatable<CBORObject> {
     private static CBORObject ConstructSimpleValue(int v) {
@@ -687,11 +687,9 @@ namespace PeterO.Cbor {
       return obj;
     }
 
-    /// <summary>
-    /// Not documented yet.
-    /// </summary>
+    /// <summary>Not documented yet.</summary>
+    /// <typeparam name='T'>An arbitrary object type.</typeparam>
     /// <returns>The object.</returns>
-    /// <typeparam name="T">An arbitrary object type.</typeparam>
     public T ToObject<T>() {
       if (this.IsNull) {
         return default(T);
@@ -1609,8 +1607,7 @@ namespace PeterO.Cbor {
             stream.WriteByte((byte)((datatype << 5) | 27));
             stream.Write(bytes, 0, byteCount);
             break;
-          default:
-            stream.WriteByte((datatype == 0) ?
+          default: stream.WriteByte((datatype == 0) ?
 (byte)0xc2 : (byte)0xc3);
             WritePositiveInt(2, byteCount, stream);
             stream.Write(bytes, 0, byteCount);
@@ -3067,7 +3064,10 @@ namespace PeterO.Cbor {
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,System.Int64)"]/*'/>
-    public static int WriteValue(Stream outputStream, int majorType, long value) {
+ public static int WriteValue(
+  Stream outputStream,
+  int majorType,
+  long value) {
       if (outputStream == null) {
         throw new ArgumentNullException(nameof(outputStream));
       }
@@ -3092,7 +3092,7 @@ namespace PeterO.Cbor {
           outputStream.WriteByte((byte)(0xe0 + (int)value));
           return 1;
         } else if (value < 32) {
-          throw new ArgumentException("value is from 24 to 31 and major type is 7");
+     throw new ArgumentException("value is from 24 to 31 and major type is 7");
         } else {
           outputStream.WriteByte((byte)0xf8);
           outputStream.WriteByte((byte)value);
@@ -3105,7 +3105,10 @@ namespace PeterO.Cbor {
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,System.Int32)"]/*'/>
-    public static int WriteValue(Stream outputStream, int majorType, int value) {
+  public static int WriteValue(
+  Stream outputStream,
+  int majorType,
+  int value) {
       if (outputStream == null) {
         throw new ArgumentNullException(nameof(outputStream));
       }
@@ -3130,7 +3133,7 @@ namespace PeterO.Cbor {
           outputStream.WriteByte((byte)(0xe0 + value));
           return 1;
         } else if (value < 32) {
-          throw new ArgumentException("value is from 24 to 31 and major type is 7");
+     throw new ArgumentException("value is from 24 to 31 and major type is 7");
         } else {
           outputStream.WriteByte((byte)0xf8);
           outputStream.WriteByte((byte)value);
@@ -3178,7 +3181,7 @@ namespace PeterO.Cbor {
           ") is more than 7");
       }
       if (majorType == 7) {
-        throw new ArgumentException("majorType is 7 and value is greater than 255");
+   throw new ArgumentException("majorType is 7 and value is greater than 255");
       }
       byte[] bytes = new[] { (byte)(27 | (majorType << 5)), (byte)highbyte,
         (byte)((longVal >> 48) & 0xff), (byte)((longVal >> 40) & 0xff),
@@ -4206,8 +4209,8 @@ namespace PeterO.Cbor {
     private sealed class ConverterInfo {
       private object toObject;
 
-      /// <include file='../../docs.xml'
-      /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.ConverterInfo.ToObject"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.ConverterInfo.ToObject"]/*'/>
       public object ToObject {
         get {
           return this.toObject;
@@ -4220,8 +4223,8 @@ namespace PeterO.Cbor {
 
       private object converter;
 
-      /// <include file='../../docs.xml'
-      /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.ConverterInfo.Converter"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.ConverterInfo.Converter"]/*'/>
       public object Converter {
         get {
           return this.converter;

@@ -74,8 +74,8 @@ namespace PeterO.Cbor {
     }
 
     private static bool HasCustomAttribute(
-Type t,
-string name) {
+  Type t,
+  string name) {
 #if NET40 || NET20
       foreach (var attr in t.GetCustomAttributes(false)) {
 #else
@@ -288,18 +288,16 @@ string name) {
       foreach (var ci in t.GetTypeInfo().DeclaredConstructors) {
 #endif
         if (ci.IsPublic) {
-          int nump=ci.GetParameters().Length;
+          int nump = ci.GetParameters().Length;
           o = ci.Invoke(new object[nump]);
           break;
         }
       }
-      if (o == null) {
-        o = Activator.CreateInstance(t);
-      }
+      o = o ?? Activator.CreateInstance(t);
       var dict = new Dictionary<string, object>();
       foreach (var kv in keysValues) {
         var name = kv.Key;
-        dict[name]=kv.Value;
+        dict[name] = kv.Value;
       }
       foreach (PropertyData key in GetPropertyList(o.GetType())) {
         var name = key.GetAdjustedName(removeIsPrefix, useCamelCase);

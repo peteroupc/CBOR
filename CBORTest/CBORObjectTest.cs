@@ -5077,7 +5077,6 @@ a major version change.
       }
     }
 
-
     private static void AssertReadThree(byte[] bytes) {
       try {
         using (var ms = new MemoryStream(bytes)) {
@@ -5391,6 +5390,5 @@ a major version change.
         throw new InvalidOperationException(ex.ToString(), ex);
       }
     }
-
   }
 }

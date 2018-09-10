@@ -22,7 +22,7 @@ namespace PeterO.Cbor {
   int offset,
   int count,
   bool padding) {
-      WriteBase64(writer, data, offset, count, Base64Classic, padding);
+      WriteBase64(writer, data, offset, count, true, padding);
     }
 
     public static void WriteBase64URL(
@@ -31,7 +31,7 @@ namespace PeterO.Cbor {
   int offset,
   int count,
   bool padding) {
-      WriteBase64(writer, data, offset, count, Base64URL, padding);
+      WriteBase64(writer, data, offset, count, false, padding);
     }
 
     private static void WriteBase64(
@@ -39,7 +39,7 @@ namespace PeterO.Cbor {
   byte[] data,
   int offset,
   int count,
-  string alphabet,
+  bool classic,
   bool padding) {
       if (writer == null) {
         throw new ArgumentNullException(nameof(writer));
@@ -64,6 +64,7 @@ namespace PeterO.Cbor {
         throw new ArgumentException("data's length minus " + offset + " (" +
                 (data.Length - offset) + ") is less than " + count);
       }
+      string alphabet = classic ? Base64Classic : Base64URL;
       int length = offset + count;
       int i = offset;
       var buffer = new char[4];

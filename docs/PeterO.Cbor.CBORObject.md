@@ -2533,6 +2533,20 @@ Converts this object to a string in JavaScript Object Notation (JSON) format, us
 
 A text string.
 
+### ToObject
+
+    public T ToObject<T>();
+
+Not documented yet.
+
+<b>Parameters:</b>
+
+ * &lt;T&gt;: An arbitrary object type.
+
+<b>Return Value:</b>
+
+The object.
+
 ### ToString
 
     public override string ToString();
