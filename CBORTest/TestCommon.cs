@@ -91,7 +91,6 @@ namespace Test {
       return neg ? -ret : ret;
     }
 
-
     public static void AssertByteArraysEqual(byte[] arr1, byte[] arr2) {
       if (!ByteArraysEqual(arr1, arr2)) {
         Assert.Fail("Expected " + ToByteArrayString(arr1) + ",\ngot..... " +

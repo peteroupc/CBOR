@@ -38,15 +38,16 @@ namespace PeterO.Cbor {
     /// path='docs/doc[@name="M:PeterO.Cbor.CBOREncodeOptions.#ctor(System.Boolean,System.Boolean)"]/*'/>
     public CBOREncodeOptions(
   bool useIndefLengthStrings,
-      bool allowDuplicateKeys) : this(useIndefLengthStrings,allowDuplicateKeys,false) {
+  bool allowDuplicateKeys) :
+        this(useIndefLengthStrings, allowDuplicateKeys, false) {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBOREncodeOptions.#ctor(System.Boolean,System.Boolean)"]/*'/>
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBOREncodeOptions.#ctor(System.Boolean,System.Boolean,System.Boolean)"]/*'/>
     public CBOREncodeOptions(
   bool useIndefLengthStrings,
   bool allowDuplicateKeys,
-    bool ctap2Canonical) {
+  bool ctap2Canonical) {
       var val = 0;
       if (!useIndefLengthStrings) {
         val |= 1;
@@ -75,7 +76,7 @@ namespace PeterO.Cbor {
     }
 
     /// <include file='../../docs.xml'
-  /// path='docs/doc[@name="P:PeterO.Cbor.CBOREncodeOptions.Ctap2Canonical"]/*'/>
+    /// path='docs/doc[@name="P:PeterO.Cbor.CBOREncodeOptions.Ctap2Canonical"]/*'/>
     public bool Ctap2Canonical { get; private set; }
 
     /// <include file='../../docs.xml'
@@ -88,7 +89,7 @@ namespace PeterO.Cbor {
     }
 
     private CBOREncodeOptions(int value) :
-    this((value&1)==0,(value&2)==0){
+    this((value & 1) == 0, (value & 2) == 0) {
     }
 
     /// <include file='../../docs.xml'

@@ -360,6 +360,16 @@
     </param>
 
 </doc>
+<doc name="M:PeterO.Cbor.CBOREncodeOptions.#ctor(System.Boolean,System.Boolean,System.Boolean)">
+<summary>Initializes a new instance of the <see cref='T:PeterO.Cbor.CBOREncodeOptions'/> class.</summary>
+            <param name='useIndefLengthStrings'>A value indicating whether to
+            always encode strings with a definite-length encoding.</param>
+            <param name='allowDuplicateKeys'>A value indicating whether to
+            disallow duplicate keys when reading CBOR objects from a data
+            stream.</param>
+            <param name='ctap2Canonical'>Either <c>true</c> or <c>false</c>
+            .</param>
+</doc>
 <doc name="P:PeterO.Cbor.CBOREncodeOptions.AllowDuplicateKeys">
 
             <summary>Gets a value indicating whether to disallow duplicate keys when reading
@@ -381,13 +391,18 @@
 
 </doc>
 <doc name="P:PeterO.Cbor.CBOREncodeOptions.Ctap2Canonical">
-<summary>Gets a value indicating whether CBOR objects are written out using the
-            CTAP2 canonical CBOR encoding form.  In this form, CBOR tags are not
-            used, map keys are written out in a canonical order, and
-            non-integer numbers and integers 2^63 or greater are written
-            as 64-bit binary floating-point numbers.
-            </summary>
-            <value>Not documented yet.</value>
+
+            <summary>Gets a value indicating whether CBOR objects are written
+            out using the CTAP2 canonical CBOR encoding form. In this form,
+            CBOR tags are not used, map keys are written out in a canonical
+            order, and non-integer numbers and integers 2^63 or greater are
+            written as 64-bit binary floating-point numbers.</summary><value><c>true</c> if CBOR objects are written out using the CTAP2
+            canonical CBOR encoding form; otherwise, <c>false</c>.. In this
+            form, CBOR tags are not used, map keys are written out in a
+            canonical order, and non-integer numbers and integers 2^63 or
+            greater are written as 64-bit binary floating-point
+            numbers.</value>
+
 </doc>
 <doc name="F:PeterO.Cbor.CBOREncodeOptions.Default">
 
@@ -2176,13 +2191,16 @@
 
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.Values">
-
-            <summary>Gets a collection of the values of this CBOR object. If
-            this object is a map, returns one value for each key in the map in
-            an undefined order. If this is an array, returns all the values of
-            the array in the order they are listed.</summary><value>A collection of the values of this CBOR object.</value><exception cref='T:System.InvalidOperationException'>This object is
+<summary>Gets a collection of the values of this CBOR object, if
+            it's a map or an array. If this object is a map, returns one value
+            for each key in the map in an undefined order. If this is an array,
+            returns all the values of the array in the order they are listed.
+            (This method can't be used to get the bytes in a CBOR byte string;
+            for that, use the GetByteArray method instead.).</summary>
+            <value>A collection of the values of this CBOR map or
+            array.</value>
+            <exception cref='T:System.InvalidOperationException'>This object is
             not a map or an array.</exception>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Write(PeterO.BigInteger,System.IO.Stream)">
 

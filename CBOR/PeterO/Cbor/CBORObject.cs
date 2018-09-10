@@ -687,6 +687,48 @@ namespace PeterO.Cbor {
       return obj;
     }
 
+    public T ToObject<T>() {
+      if (this.IsNull) {
+ return default(T);
+}
+if (this.Type == CBORType.Map) {
+  var values = new List<KeyValuePair<string, object>>();
+  foreach (string key in PropertyMap.GetPropertyNames(
+             typeof(T),
+             true,
+             true)) {
+    if (this.ContainsKey(key)) {
+      CBORObject cborValue = this[key];
+      object thisItem = cborValue.ThisItem;
+      if (cborValue.IsTrue) {
+ thisItem = true;
+  } else if (cborValue.IsFalse) {
+ thisItem = false;
+  } else if (cborValue.IsNull) {
+ thisItem = null;
+  } else if (cborValue.Type == CBORType.SimpleValue) {
+    throw new NotSupportedException(
+      "A value in the map is a non-true/false/null simple value");
+      }
+      {
+object objectTemp = new KeyValuePair<string;
+object objectTemp2 = object>(
+              key,
+              thisItem);
+values.Add(objectTemp, objectTemp2);
+}
+    }
+  }
+        return (T)PropertyMap.ObjectWithProperties(
+    typeof(T),
+    values,
+    true,
+    true);
+} else {
+  throw new NotSupportedException();
+}
+    }
+
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Int64)"]/*'/>
     public static CBORObject FromObject(long value) {
@@ -1314,7 +1356,9 @@ namespace PeterO.Cbor {
       if (stream == null) {
         throw new ArgumentNullException(nameof(stream));
       }
- //ArgumentAssert.NotNull(options);
+ if (options == null) {
+  throw new ArgumentNullException(nameof(options));
+}
       if (str == null) {
         stream.WriteByte(0xf6);  // Write null instead of string
       } else {
@@ -1719,7 +1763,7 @@ namespace PeterO.Cbor {
         output.WriteByte(0xf6);
         return;
       }
-if(options.Ctap2Canonical){
+if (options.Ctap2Canonical) {
  FromObject(objValue).WriteTo(output, options);
  return;
 }
@@ -2298,7 +2342,7 @@ if(options.Ctap2Canonical){
       if (options == null) {
         throw new ArgumentNullException(nameof(options));
       }
-if(options.Ctap2Canonical){
+if (options.Ctap2Canonical) {
  return CBORCanonical.CtapCanonicalEncode(this);
 }
       // For some types, a memory stream is a lot of
@@ -3151,10 +3195,12 @@ if (majorType > 7) {
       if (stream == null) {
         throw new ArgumentNullException(nameof(stream));
       }
- //ArgumentAssert.NotNull(options);
-if(options.Ctap2Canonical){
- byte[] bytes=CBORCanonical.CtapCanonicalEncode(this);
- stream.Write(bytes,0,bytes.Length);
+ if (options == null) {
+  throw new ArgumentNullException(nameof(options));
+}
+if (options.Ctap2Canonical) {
+ byte[] bytes = CBORCanonical.CtapCanonicalEncode(this);
+ stream.Write(bytes, 0, bytes.Length);
  return;
 }
       this.WriteTags(stream);

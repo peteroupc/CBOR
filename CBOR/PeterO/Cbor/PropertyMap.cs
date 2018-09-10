@@ -270,9 +270,48 @@ namespace PeterO.Cbor {
       return ((MethodInfo)methodInfo).Invoke(obj, new[] { argument });
     }
 
+    public static object ObjectWithProperties<T>(
+      Type t,
+      IEnumerable<KeyValuePair<string, object>> keysValues) {
+         return ObjectWithProperties(t, keysValues, true, true);
+    }
+
+    public static object ObjectWithProperties(
+         Type t,
+         IEnumerable<KeyValuePair<string, object>> keysValues,
+         bool removeIsPrefix,
+         bool useCamelCase) {
+      object o = Activator.CreateInstance(t);
+      var dict = new Dictionary<string, object>();
+      foreach (var kv in keysValues) {
+        var name = kv.Key;
+        dict[name]=kv.Value;
+      }
+      foreach (PropertyData key in GetPropertyList(o.GetType())) {
+        var name = key.GetAdjustedName(removeIsPrefix, useCamelCase);
+        if (dict.ContainsKey(name)) {
+          object dobj = dict[name];
+          if (key.Prop.PropertyType == typeof(int)) {
+            dobj = CBORObject.FromObject(dobj).AsInt32();
+          } else if (key.Prop.PropertyType == typeof(double)) {
+            dobj = CBORObject.FromObject(dobj).AsDouble();
+          }
+          key.Prop.SetValue(o, dobj, null);
+        }
+      }
+      return o;
+    }
+
     public static IEnumerable<KeyValuePair<string, object>>
     GetProperties(Object o) {
          return GetProperties(o, true, true);
+    }
+
+    public static IEnumerable<string>
+    GetPropertyNames(Type t, bool removeIsPrefix, bool useCamelCase) {
+      foreach (PropertyData key in GetPropertyList(t)) {
+        yield return key.GetAdjustedName(removeIsPrefix, useCamelCase);
+      }
     }
 
     public static IEnumerable<KeyValuePair<string, object>>

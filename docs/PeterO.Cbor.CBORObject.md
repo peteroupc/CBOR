@@ -292,11 +292,11 @@ The general data type of this CBOR object.
 
     public System.Collections.Generic.ICollection Values { get; }
 
-Gets a collection of the values of this CBOR object. If this object is a map, returns one value for each key in the map in an undefined order. If this is an array, returns all the values of the array in the order they are listed.
+Gets a collection of the values of this CBOR object, if it's a map or an array. If this object is a map, returns one value for each key in the map in an undefined order. If this is an array, returns all the values of the array in the order they are listed. (This method can't be used to get the bytes in a CBOR byte string; for that, use the GetByteArray method instead.).
 
 <b>Returns:</b>
 
-A collection of the values of this CBOR object.
+A collection of the values of this CBOR map or array.
 
 <b>Exceptions:</b>
 
@@ -723,7 +723,7 @@ Converts this object to a 32-bit signed integer. Floating point values are trunc
 
 <b>Return Value:</b>
 
-The closest big integer to this object.
+The closest 32-bit signed integer to this object.
 
 <b>Exceptions:</b>
 
@@ -2409,7 +2409,7 @@ Removes the item at the given index of this CBOR array.
 
 <b>Return Value:</b>
 
-Returns "true" if the object was removed. Returns "false" if the given index is less than 0, or is at least the number of items in the array.
+Returns "true" if the object was removed. Returns "false" if the given index is less than 0, or is at least as high as the number of items in the array.
 
 <b>Exceptions:</b>
 
@@ -3228,61 +3228,52 @@ The parameter <i>outputStream</i>
     public void WriteTo(
         System.IO.Stream stream);
 
-<b>At the moment, use the overload of this method that takes a [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) object. The object  `CBOREncodeOptions.Default` contains recommended ettings for CBOREncodeOptions, and those settings may be adopted y this overload (without a CBOREncodeOptions argument) in the next ajor version.</b>
+<b>At the moment, use the overload of this method that takes a[PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md)object. The object `CBOREncodeOptions.Default` contains recommended settings for CBOREncodeOptions, and those ettings may be adopted by this overload (without a CBOREncodeOptions rgument) in the next major version.</b>
 
 Writes this CBOR object to a data stream. If the CBOR object contains CBOR maps, or is a CBOR map, the keys to the map are written out to the data stream in an undefined order. See the examples (written in C# for the .NET version) for ways to write out certain keys of a CBOR map in a given order.
 
-The following example shows a method that writes each key of 'mapObj' to 'outputStream', in the order given in 'keys', where 'mapObj' is written out in the form of a CBOR <b>definite-length map</b>. Only keys found in 'keys' will be written if they exist n 'mapObj'.
+The following example shows a method that writes each key of 'mapObj' to 'outputStream', in the order given in 'keys', where 'mapObj' is written out in the form of a CBOR<b>definite-length map</b>. Only keys found in 'keys' will be written if they exist in 'mapObj'.
 
-    private static void WriteKeysToMap(CBORObject
-                mapObj, IList<CBORObject> keys, Stream outputStream){
-                if(mapObj == null){ throw new
-                ArgumentNullException(nameof(mapObj));}
-                if(keys == null){throw new
-                ArgumentNullException(nameof(keys));}
-                if(outputStream == null){throw new
-                ArgumentNullException(nameof(outputStream));}
-                if(obj.Type!=CBORType.Map){ throw new ArgumentException("'obj'
-                is not a map."); }
-                int keyCount = 0;
-                for (CBORObject key in keys) {
-                if(mapObj.ContainsKey(key)){ keyCount++;
-                } }
-                CBORObject.WriteValue(outputStream, 5, keyCount);
-                for (CBORObject key in keys) {
-                if(mapObj.ContainsKey(key)){ key.WriteTo(outputStream);
-                mapObj[key].WriteTo(outputStream); } }
-                }
+    private static void WriteKeysToMap(CBORObject mapObj,
+            IList<CBORObject> keys, Stream outputStream){ if(mapObj
+            == null){ throw new
+            ArgumentNullException(nameof(mapObj));} if(keys ==
+            null){throw new ArgumentNullException(nameof(keys));}
+            if(outputStream == null){throw new
+            ArgumentNullException(nameof(outputStream));}
+            if(obj.Type!=CBORType.Map){ throw new ArgumentException("'obj'
+            is not a map."); } int keyCount = 0; for (CBORObject key in keys)
+            { if(mapObj.ContainsKey(key)){ keyCount++; } }
+            CBORObject.WriteValue(outputStream, 5, keyCount); for (CBORObject key in
+            keys) { if(mapObj.ContainsKey(key)){
+            key.WriteTo(outputStream); mapObj[key].WriteTo(outputStream); }
+            } }
 
-The following example shows a method that writes each key of 'mapObj' to 'outputStream', in the order given in 'keys', where 'mapObj' is written out in the form of a CBOR <b>indefinite-length map</b>. Only keys found in 'keys' will be written if they exist n 'mapObj'.
+The following example shows a method that writes each key of 'mapObj' to 'outputStream', in the order given in 'keys', where 'mapObj' is written out in the form of a CBOR<b>indefinite-length map</b>. Only keys found in 'keys' will be written if they exist in 'mapObj'.
 
-    private static void WriteKeysToIndefMap(CBORObject
-                mapObj, IList<CBORObject> keys, Stream outputStream){
-                if(mapObj == null){ throw new
-                ArgumentNullException(nameof(mapObj));}
-                if(keys == null){throw new
-                ArgumentNullException(nameof(keys));}
-                if(outputStream == null){throw new
-                ArgumentNullException(nameof(outputStream));}
-                if(obj.Type!=CBORType.Map){ throw new ArgumentException("'obj'
-                is not a map."); } outputStream.WriteByte((byte)0xBF);
-                for (CBORObject key in keys) {
-                if(mapObj.ContainsKey(key)){ key.WriteTo(outputStream);
-                mapObj[key].WriteTo(outputStream); } }
-                outputStream.WriteByte((byte)0xff); }
+    private static void WriteKeysToIndefMap(CBORObject mapObj,
+            IList<CBORObject> keys, Stream outputStream){ if(mapObj
+            == null){ throw new
+            ArgumentNullException(nameof(mapObj));} if(keys ==
+            null){throw new ArgumentNullException(nameof(keys));}
+            if(outputStream == null){throw new
+            ArgumentNullException(nameof(outputStream));}
+            if(obj.Type!=CBORType.Map){ throw new ArgumentException("'obj'
+            is not a map."); } outputStream.WriteByte((byte)0xBF); for
+            (CBORObject key in keys) { if(mapObj.ContainsKey(key)){
+            key.WriteTo(outputStream); mapObj[key].WriteTo(outputStream); }
+            } outputStream.WriteByte((byte)0xff); }
 
-The following example shows a method that writes out a list of objects to 'outputStream' as an <b>indefinite-length CBOR array</b>.
+The following example shows a method that writes out a list of objects to 'outputStream' as an<b>indefinite-length CBOR array</b>.
 
-    private static void WriteToIndefArray(
-                IList<object> list, Stream outputStream){
-                if(list == null){ throw new
-                ArgumentNullException(nameof(list));}
-                if(outputStream == null){throw new
-                ArgumentNullException(nameof(outputStream));}
-                outputStream.WriteByte((byte)0x9f);
-                for (object item in list) {
-                new CBORObject(item).WriteTo(outputStream); }
-                outputStream.WriteByte((byte)0xff); }
+    private static void WriteToIndefArray( IList<object> list,
+            Stream outputStream){ if(list == null){ throw new
+            ArgumentNullException(nameof(list));} if(outputStream ==
+            null){throw new
+            ArgumentNullException(nameof(outputStream));}
+            outputStream.WriteByte((byte)0x9f); for (object item in list) { new
+            CBORObject(item).WriteTo(outputStream); }
+            outputStream.WriteByte((byte)0xff); }
 
 <b>Parameters:</b>
 
@@ -3292,7 +3283,7 @@ The following example shows a method that writes out a list of objects to 'outpu
 
  * System.ArgumentNullException:
 The parameter <i>stream</i>
- is null.
+is null.
 
  * System.IO.IOException:
 An I/O error occurred.
