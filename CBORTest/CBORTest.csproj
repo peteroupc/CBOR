@@ -118,9 +118,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CBOR20\CBOR20.csproj">
-      <Project>{F25D228F-FE3D-4BE8-8AEB-DCA3700DFED5}</Project>
-      <Name>CBOR40</Name>
+    <ProjectReference Include="..\CBOR\CBOR.csproj">
+      <Project>{44A061F7-B6A8-4FBD-993E-3746E8C42D6B}</Project>
+      <Name>CBOR</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

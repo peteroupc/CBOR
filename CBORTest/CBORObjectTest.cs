@@ -2364,8 +2364,51 @@ bytes = CBORObject.FromObject(bj)
       var ao = new PODClass();
       CBORObject co = CBORObject.FromObject(ao);
       co["propA"] = CBORObject.FromObject(999);
-      ao = co.ToObject<PODClass>();
+      ao = (PODClass)co.ToObject(typeof(PODClass));
       Assert.AreEqual(999, ao.PropA);
+      co = CBORObject.True;
+      Assert.AreEqual(true, co.ToObject(typeof(bool)));
+      co = CBORObject.False;
+      Assert.AreEqual(false, co.ToObject(typeof(bool)));
+      co = CBORObject.FromObject("hello world");
+      {
+string stringTemp = co.ToObject<string>();
+Assert.AreEqual(
+  "hello world",
+  stringTemp);
+}
+      co = CBORObject.NewArray();
+      co.Add("hello");
+      co.Add("world");
+      List<string> stringList = (List<string>)
+        co.ToObject(typeof(List<string>));
+      Assert.AreEqual(2, stringList.Count);
+      Assert.AreEqual("hello", stringList[0]);
+      Assert.AreEqual("world", stringList[1]);
+      IList<string> istringList = (IList<string>)
+        co.ToObject(typeof(IList<string>));
+      Assert.AreEqual(2, istringList.Count);
+      Assert.AreEqual("hello", istringList[0]);
+      Assert.AreEqual("world", istringList[1]);
+      co = CBORObject.NewMap();
+      co.Add("a", 1);
+      co.Add("b", 2);
+      Dictionary<string, int> intDict =
+        (Dictionary<string, int>)co.ToObject(
+          typeof(Dictionary<string, int>));
+      Assert.AreEqual(2, intDict.Count);
+      Assert.IsTrue(intDict.ContainsKey("a"));
+      Assert.IsTrue(intDict.ContainsKey("b"));
+      Assert.AreEqual(1, intDict["a"]);
+      Assert.AreEqual(2, intDict["b"]);
+      IDictionary<string, int> iintDict =
+        (IDictionary<string, int>)co.ToObject(
+          typeof(IDictionary<string, int>));
+      Assert.AreEqual(2, iintDict.Count);
+      Assert.IsTrue(iintDict.ContainsKey("a"));
+      Assert.IsTrue(iintDict.ContainsKey("b"));
+      Assert.AreEqual(1, iintDict["a"]);
+      Assert.AreEqual(2, iintDict["b"]);
     }
 
     [Test]

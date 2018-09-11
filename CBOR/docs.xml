@@ -361,14 +361,13 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBOREncodeOptions.#ctor(System.Boolean,System.Boolean,System.Boolean)">
-<summary>Initializes a new instance of the <see cref='T:PeterO.Cbor.CBOREncodeOptions'/> class.</summary>
-            <param name='useIndefLengthStrings'>A value indicating whether to
-            always encode strings with a definite-length encoding.</param>
-            <param name='allowDuplicateKeys'>A value indicating whether to
+
+            <summary>Initializes a new instance of the <see cref='T:PeterO.Cbor.CBOREncodeOptions'/> class.</summary><param name='useIndefLengthStrings'>A value indicating whether to
+            always encode strings with a definite-length encoding.</param><param name='allowDuplicateKeys'>A value indicating whether to
             disallow duplicate keys when reading CBOR objects from a data
-            stream.</param>
-            <param name='ctap2Canonical'>Either <c>true</c> or <c>false</c>
+            stream.</param><param name='ctap2Canonical'>Either <c>true</c> or <c>false</c>
             .</param>
+
 </doc>
 <doc name="P:PeterO.Cbor.CBOREncodeOptions.AllowDuplicateKeys">
 
@@ -1289,13 +1288,34 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Byte[])">
 
-            <summary>Generates a CBOR object from a byte array. The byte array is copied to a
-      new byte array. (This method can't be used to decode CBOR data from a byte
-      array; for that, use the DecodeFromBytes method instead.).
-    </summary><param name='bytes'>A byte array. Can be null.
-    </param><returns>A CBOR byte string object where each byte of the given byte array is
-      copied to a new array, or CBORObject.Null if the value is null.
-    </returns>
+            <summary><para>Generates a CBOR object from a byte array. The byte
+            array is copied to a new byte array. (This method can't be used to
+            decode CBOR data from a byte array; for that, use the
+            DecodeFromBytes method instead.).</para>
+             </summary><param name='bytes'>A byte array. Can be null.</param><returns>A CBOR byte string object where each byte of the given
+            byte array is copied to a new array, or CBORObject.Null if the
+            value is null.</returns><example><para>The following example encodes a text string to a UTF-8 byte
+            array, then uses the array to create a CBOR byte string object. It
+            is not recommended to use <c>Encoding.UTF8.GetBytes</c>
+             in .NET, or
+            the <c>getBytes()</c>
+             method in Java to do this. For instance,
+            <c>Encoding.UTF8</c>
+             begins the encoded string with a byte-order
+            mark, and <c>getBytes()</c>
+             encodes text strings in an unspecified
+            character encoding. Both behaviors can be undesirable. Instead, use
+            the <c>DataUtilities.GetUtf8Bytes</c>
+             method to convert text
+            strings to UTF-8.</para>
+            <code>/* true does character replacement of
+            invalid UTF-8; false throws an exception
+            on invalid UTF-8 */
+            byte[] bytes = DataUtilities.GetUtf8Bytes(
+            textString,  // / true);
+            CBORObject cbor = CBORObject.FromBytes(bytes);
+            </code>
+            </example>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Char)">
@@ -1429,7 +1449,11 @@
              <para>If the input is a byte array, the byte array is copied to a
              new byte array. (This method can't be used to decode CBOR data from
              a byte array; for that, use the DecodeFromBytes method
-             instead.).</para></summary><param name='obj'>The parameter <paramref name='obj'/> is an
+             instead.).</para>
+
+<para>If the input is a text string, a CBOR text string object will be created.  To create a CBOR byte string object from a text string, see the example given in
+<see cref='M:PeterO.Cbor.CBORObject.FromObject(System.Byte[])'/>.</para>
+</summary><param name='obj'>The parameter <paramref name='obj'/> is an
              arbitrary object.</param><param name='options'>An object containing options to control how
              certain objects are converted to CBOR objects.</param><returns>A CBOR object corresponding to the given object. Returns
              CBORObject.Null if the object is null.</returns><exception cref='T:System.ArgumentNullException'>The parameter <paramref name='options'/> is null.</exception>
@@ -2142,11 +2166,31 @@
        is null.
     </exception>
 </doc>
+<doc name="M:PeterO.Cbor.CBORObject.ToObject``1">
+<summary>
+<para>Converts this CBOR object to an object of an arbitrary type.</para>
+<para>If the type "T" is CBORObject, returns this CBOR object.</para>
+<para>If this CBOR object is a null object, returns null, except if "T" is CBORObject.</para>
+<para>If the type "T" is Object, returns this CBOR object.</para>
+<para>If the type "T" is the generic List, IList, ICollection, or IEnumerable (or ArrayList, List, Collection, or Iterable in Java), and if this CBOR object is an array, returns an object conforming to the type, class, or interface passed to this method, where the object will contain all items in this CBOR array.</para>
+<para>If the type "T" is the generic Dictionary or IDictionary (or HashMap or Map in Java), and if this CBOR object is a map, returns an object conforming to the type, class, or interface passed to this method, where the object will contain all keys and values in this CBOR map.</para>
+<para>If the type "T" is <c>int</c>, returns the result of the AsInt32 method.</para>
+<para>If the type "T" is <c>long</c>, returns the result of the AsInt64 method.</para>
+<para>If the type "T" is <c>double</c>, returns the result of the AsDouble method.</para>
+<para>If the type "T" is String, returns the result of the AsString method.</para>
+<para>If the type "T" is Boolean, returns the result of the IsTrue method.</para>
+<para>If this object is a CBOR map, and the type "T" is a type not specially handled by the FromObject method, creates an object of the given type, and, for each key matching the name of a property in that object (using the rules given in CBORObject.FromObject), sets that property's value to the corresponding value for that key.</para>
+</summary><typeparam name='T'>An arbitrary object type.</typeparam><returns>The converted object.</returns>
+    <exception cref='T:System.NotSupportedException'>The given type "T", or this object's CBOR type, is not supported.
+    </exception>
+</doc>
 <doc name="M:PeterO.Cbor.CBORObject.ToString">
 
             <summary>Returns this CBOR object in string form. The format is intended to be
       human-readable, not machine-readable, the format is not intended to be
-      parsed, and the format may change at any time.
+      parsed, and the format may change at any time.  The returned string
+is not necessarily in JavaScript Object Notation (JSON); to convert
+CBOR objects to JSON strings, use the <see cref='M:PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)'/> method instead.
     </summary><returns>A text representation of this object.
     </returns>
 
@@ -2191,16 +2235,16 @@
 
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.Values">
-<summary>Gets a collection of the values of this CBOR object, if
+
+            <summary>Gets a collection of the values of this CBOR object, if
             it's a map or an array. If this object is a map, returns one value
             for each key in the map in an undefined order. If this is an array,
             returns all the values of the array in the order they are listed.
             (This method can't be used to get the bytes in a CBOR byte string;
-            for that, use the GetByteArray method instead.).</summary>
-            <value>A collection of the values of this CBOR map or
-            array.</value>
-            <exception cref='T:System.InvalidOperationException'>This object is
+            for that, use the GetByteArray method instead.).</summary><value>A collection of the values of this CBOR map or
+            array.</value><exception cref='T:System.InvalidOperationException'>This object is
             not a map or an array.</exception>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Write(PeterO.BigInteger,System.IO.Stream)">
 
@@ -3782,7 +3826,8 @@ vnd.shootproof+json</item>
 </doc>
 <doc name="M:PeterO.DataUtilities.GetUtf8Bytes(System.String,System.Boolean)">
 
-            <summary>Encodes a string in UTF-8 as a byte array.
+            <summary><para>Encodes a string in UTF-8 as a byte array.  This method does not insert a byte-order mark (U+FEFF) at the beginning of the encoded byte array.</para>
+<para>REMARK: It is not recommended to use <c>Encoding.UTF8.GetBytes</c> in .NET, or the <c>getBytes()</c> method in Java to do this.  For instance, <c>Encoding.UTF8</c> begins the encoded string with a byte-order mark, and <c>getBytes()</c> encodes text strings in an unspecified character encoding.  Both behaviors can be undesirable.</para>
     </summary><param name='str'>The parameter
       <paramref name='str'/>
        is a text string.
@@ -3801,7 +3846,8 @@ vnd.shootproof+json</item>
 </doc>
 <doc name="M:PeterO.DataUtilities.GetUtf8Bytes(System.String,System.Boolean,System.Boolean)">
 
-            <summary>Encodes a string in UTF-8 as a byte array.
+            <summary><para>Encodes a string in UTF-8 as a byte array.  This method does not insert a byte-order mark (U+FEFF) at the beginning of the encoded byte array.</para>
+<para>REMARK: It is not recommended to use <c>Encoding.UTF8.GetBytes</c> in .NET, or the <c>getBytes()</c> method in Java to do this.  For instance, <c>Encoding.UTF8</c> begins the encoded string with a byte-order mark, and <c>getBytes()</c> encodes text strings in an unspecified character encoding.  Both behaviors can be undesirable.</para>
     </summary><param name='str'>The parameter
       <paramref name='str'/>
        is a text string.

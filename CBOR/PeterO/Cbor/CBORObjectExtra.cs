@@ -235,6 +235,12 @@ if (majorType > 7) {
     }
 
     /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToObject``1"]/*'/>
+    public T ToObject<T>() {
+      return (T)this.ToObject(typeof(T));
+    }
+
+    /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.op_Addition(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]/*'/>
     public static CBORObject operator +(CBORObject a, CBORObject b) {
       return Addition(a, b);
