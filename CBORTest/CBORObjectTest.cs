@@ -1951,7 +1951,7 @@ byte[] stringBytes = CBORObject.FromObject(veryLongString)
 .EncodeToBytes(new CBOREncodeOptions(false, false, true));
 Assert.AreEqual(10003, stringBytes.Length);
 stringBytes = CBORObject.FromObject(veryLongString)
-.EncodeToBytes(new CBOREncodeOptions(true, false));
+.EncodeToBytes(new CBOREncodeOptions(false, true));
 Assert.AreEqual(10003, stringBytes.Length);
 
       for (int i = 0; i < bigRanges.Length; i += 2) {

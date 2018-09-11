@@ -81,7 +81,6 @@ namespace PeterO.Cbor {
 #else
     foreach (var attr in t.CustomAttributes) {
 #endif
-        // DebugUtility.Log (attr.AttributeType.GetType ().FullName);
         if (attr.GetType().FullName.Equals(name)) {
           return true;
         }
@@ -270,7 +269,7 @@ namespace PeterO.Cbor {
       return ((MethodInfo)methodInfo).Invoke(obj, new[] { argument });
     }
 
-    public static object ObjectWithProperties<T>(
+    public static object ObjectWithProperties(
       Type t,
       IEnumerable<KeyValuePair<string, object>> keysValues) {
       return ObjectWithProperties(t, keysValues, true, true);
