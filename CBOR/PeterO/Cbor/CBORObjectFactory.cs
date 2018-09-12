@@ -1,6 +1,6 @@
 using System;
 
-namespace CBOR.PeterO.Cbor {
+namespace PeterO.Cbor {
   internal class CBORObjectFactory {
     public CBORObjectFactory() {
     }

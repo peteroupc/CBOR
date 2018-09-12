@@ -2546,9 +2546,78 @@ A text string.
 
 ### ToObject
 
+    public object ToObject(
+        System.Type t);
+
+Converts this CBOR object to an object of an arbitrary type.
+
+If the type "T" is CBORObject, returns this CBOR object.
+
+If this CBOR object is a null object, returns null, except if "T" is CBORObject.
+
+If the type "T" is Object, returns this CBOR object.
+
+If the type "T" is the generic List, IList, ICollection, or IEnumerable (or ArrayList, List, Collection, or Iterable in Java), and if this CBOR object is an array, returns an object conforming to the type, class, or interface passed to this method, where the object will contain all items in this CBOR array.
+
+If the type "T" is the generic Dictionary or IDictionary (or HashMap or Map in Java), and if this CBOR object is a map, returns an object conforming to the type, class, or interface passed to this method, where the object will contain all keys and values in this CBOR map.
+
+If the type "T" is  `int` , returns the result of the AsInt32 method.
+
+If the type "T" is  `long` , returns the result of the AsInt64 method.
+
+If the type "T" is  `double` , returns the result of the AsDouble method.
+
+If the type "T" is String, returns the result of the AsString method.
+
+If the type "T" is Boolean, returns the result of the IsTrue method.
+
+If this object is a CBOR map, and the type "T" is a type not specially handled by the FromObject method, creates an object of the given type, and, for each key matching the name of a property in that object (using the rules given in CBORObject.FromObject), sets that property's value to the corresponding value for that key.
+
+<b>Parameters:</b>
+
+ * <i>t</i>: The type, class, or interface that this method's return value will belong to.
+
+<b>Return Value:</b>
+
+The converted object.
+
+<b>Exceptions:</b>
+
+ * System.NotSupportedException:
+The given type <i>t</i>
+, or this object's CBOR type, is not supported.
+
+ * System.ArgumentNullException:
+The parameter  <i>t</i>
+ is null.
+
+### ToObject
+
     public T ToObject<T>();
 
-Not documented yet.
+Converts this CBOR object to an object of an arbitrary type.
+
+If the type "T" is CBORObject, returns this CBOR object.
+
+If this CBOR object is a null object, returns null, except if "T" is CBORObject.
+
+If the type "T" is Object, returns this CBOR object.
+
+If the type "T" is the generic List, IList, ICollection, or IEnumerable (or ArrayList, List, Collection, or Iterable in Java), and if this CBOR object is an array, returns an object conforming to the type, class, or interface passed to this method, where the object will contain all items in this CBOR array.
+
+If the type "T" is the generic Dictionary or IDictionary (or HashMap or Map in Java), and if this CBOR object is a map, returns an object conforming to the type, class, or interface passed to this method, where the object will contain all keys and values in this CBOR map.
+
+If the type "T" is  `int` , returns the result of the AsInt32 method.
+
+If the type "T" is  `long` , returns the result of the AsInt64 method.
+
+If the type "T" is  `double` , returns the result of the AsDouble method.
+
+If the type "T" is String, returns the result of the AsString method.
+
+If the type "T" is Boolean, returns the result of the IsTrue method.
+
+If this object is a CBOR map, and the type "T" is a type not specially handled by the FromObject method, creates an object of the given type, and, for each key matching the name of a property in that object (using the rules given in CBORObject.FromObject), sets that property's value to the corresponding value for that key.
 
 <b>Parameters:</b>
 
@@ -2556,7 +2625,12 @@ Not documented yet.
 
 <b>Return Value:</b>
 
-The object.
+The converted object.
+
+<b>Exceptions:</b>
+
+ * System.NotSupportedException:
+The given type "T", or this object's CBOR type, is not supported.
 
 ### ToString
 

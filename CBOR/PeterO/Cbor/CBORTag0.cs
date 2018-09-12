@@ -8,7 +8,7 @@ at: http://peteroupc.github.io/
 using System;
 
 namespace PeterO.Cbor {
-  internal class CBORTag0 : ICBORTag, ICBORConverter<DateTime> {
+  internal class CBORTag0 : ICBORTag, ICBORObjectConverter<DateTime> {
     private static string DateTimeToString(DateTime bi) {
 #if NET20
       DateTime dt = bi.ToUniversalTime();
@@ -68,6 +68,13 @@ namespace PeterO.Cbor {
         throw new CBORException("Not a text string");
       }
       return obj;
+    }
+
+    public DateTime FromCBORObject(CBORObject obj) {
+      if (!obj.HasTag(0)) {
+        throw new CBORException("Not tag 0");
+      }
+      return StringToDateTime(obj.AsString());
     }
 
     public static DateTime StringToDateTime(string str) {

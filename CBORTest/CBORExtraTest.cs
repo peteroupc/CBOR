@@ -260,10 +260,10 @@ from x in arrao select x;
                  "propA",
   "propB",
   "propC");
-            var aodict = new Dictionary<string, object>();
-            aodict["PropValue"] = new { PropA = 0, PropB = 0, IsPropC = false };
-
-            CBORObjectTest.CheckPODInDictPropertyNames(
+      var aodict = new Dictionary<string, object> {
+        ["PropValue"] = new { PropA = 0, PropB = 0, IsPropC = false }
+      };
+      CBORObjectTest.CheckPODInDictPropertyNames(
   CBORObject.FromObject(aodict, valueCcTF),
   "PropA",
   "PropB",
@@ -4944,6 +4944,8 @@ CBORTestCommon.AssertSer(objectTemp, objectTemp2);
         Assert.Fail(ex.ToString()); throw;
       }
     }
+
+
 
     [Test]
     public void TestDateTime() {

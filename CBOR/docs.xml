@@ -1312,7 +1312,7 @@
             invalid UTF-8; false throws an exception
             on invalid UTF-8 */
             byte[] bytes = DataUtilities.GetUtf8Bytes(
-            textString,  // / true);
+            textString, true);
             CBORObject cbor = CBORObject.FromBytes(bytes);
             </code>
             </example>
@@ -1418,7 +1418,7 @@
              library (in .NET) or the
              <a href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c></a>
              artifact (in Java); the legacy <c>ExtendedDecimal</c>,
-             <c>ExtendedFloat</c>, <c>ExtendedInteger</c>, and
+             <c>ExtendedFloat</c>, <c>BigInteger</c>, and
              <c>ExtendedRational</c> classes in this library; arrays;
              enumerations ( <c>Enum</c> objects); and maps. (See also the other
              overloads to the FromObject method.)</para>
@@ -2166,23 +2166,54 @@
        is null.
     </exception>
 </doc>
+<doc name="M:PeterO.Cbor.CBORObject.ToObject(System.Type)">
+
+            <summary><para>Converts this CBOR object to an object of an arbitrary
+             type.</para>
+             <para>If the type "T" is CBORObject, returns this CBOR
+             object.</para>
+             <para>If this CBOR object is a null object, returns null, except if
+             "T" is CBORObject.</para>
+             <para>If the type "T" is Object, returns this CBOR object.</para>
+             <para>If the type "T" is the generic List, IList, ICollection, or
+             IEnumerable (or ArrayList, List, Collection, or Iterable in Java),
+             and if this CBOR object is an array, returns an object conforming
+             to the type, class, or interface passed to this method, where the
+             object will contain all items in this CBOR array.</para>
+             <para>If the type "T" is the generic Dictionary or IDictionary (or
+             HashMap or Map in Java), and if this CBOR object is a map, returns
+             an object conforming to the type, class, or interface passed to
+             this method, where the object will contain all keys and values in
+             this CBOR map.</para>
+             <para>If the type "T" is <c>int</c>, returns the result of the
+             AsInt32 method.</para>
+             <para>If the type "T" is <c>long</c>, returns the result of the
+             AsInt64 method.</para>
+             <para>If the type "T" is <c>double</c>, returns the result of the
+             AsDouble method.</para>
+             <para>If the type "T" is String, returns the result of the AsString
+             method.</para>
+             <para>If the type "T" is <c>byte[]</c> and this CBOR object is a byte array, returns a byte array which this CBOR byte string's data will be copied to.</para>
+             <para>In the .NET version, if the type "T" is <c>DateTime</c> and this CBOR object is a text string with tag 0, converts that text string to a DateTime and returns that DateTime.</para>
+             <para>If the type "T" is Boolean, returns the result of the IsTrue
+             method.</para>
+             <para>If this object is a CBOR map, and the type "T" is a type not
+             specially handled by the FromObject method, creates an object of
+             the given type, and, for each key matching the name of a property
+             in that object (using the rules given in CBORObject.FromObject),
+             sets that property's value to the corresponding value for that
+             key.</para></summary><param name='t'>The type, class, or interface that this
+             method's return value will belong to.</param><returns>The converted object.</returns><exception cref='T:System.NotSupportedException'>The given type
+             <paramref name='t'/>, or this object's CBOR type, is not
+             supported.</exception><exception cref='T:System.ArgumentNullException'>The parameter <paramref name='t'/> is null.</exception>
+
+</doc>
 <doc name="M:PeterO.Cbor.CBORObject.ToObject``1">
-<summary>
-<para>Converts this CBOR object to an object of an arbitrary type.</para>
-<para>If the type "T" is CBORObject, returns this CBOR object.</para>
-<para>If this CBOR object is a null object, returns null, except if "T" is CBORObject.</para>
-<para>If the type "T" is Object, returns this CBOR object.</para>
-<para>If the type "T" is the generic List, IList, ICollection, or IEnumerable (or ArrayList, List, Collection, or Iterable in Java), and if this CBOR object is an array, returns an object conforming to the type, class, or interface passed to this method, where the object will contain all items in this CBOR array.</para>
-<para>If the type "T" is the generic Dictionary or IDictionary (or HashMap or Map in Java), and if this CBOR object is a map, returns an object conforming to the type, class, or interface passed to this method, where the object will contain all keys and values in this CBOR map.</para>
-<para>If the type "T" is <c>int</c>, returns the result of the AsInt32 method.</para>
-<para>If the type "T" is <c>long</c>, returns the result of the AsInt64 method.</para>
-<para>If the type "T" is <c>double</c>, returns the result of the AsDouble method.</para>
-<para>If the type "T" is String, returns the result of the AsString method.</para>
-<para>If the type "T" is Boolean, returns the result of the IsTrue method.</para>
-<para>If this object is a CBOR map, and the type "T" is a type not specially handled by the FromObject method, creates an object of the given type, and, for each key matching the name of a property in that object (using the rules given in CBORObject.FromObject), sets that property's value to the corresponding value for that key.</para>
-</summary><typeparam name='T'>An arbitrary object type.</typeparam><returns>The converted object.</returns>
-    <exception cref='T:System.NotSupportedException'>The given type "T", or this object's CBOR type, is not supported.
+
+            <summary><para>Converts this CBOR object to an object of an arbitrary type.  See <see cref='M:PeterO.Cbor.CBORObject.ToObject(System.Type)'/> for further information.</para>
+</summary><typeparam name='T'>An arbitrary object type.</typeparam><returns>The converted object.</returns><exception cref='T:System.NotSupportedException'>The given type "T", or this object's CBOR type, is not supported.
     </exception>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.ToString">
 
@@ -3287,6 +3318,12 @@ stream.Write(bytes, 0, bytes.Length);
     </param><returns>A CBOR object.
     </returns>
 
+</doc>
+<doc name="T:PeterO.Cbor.ICBORObjectConverter`1">
+<summary>Not documented yet.</summary>
+</doc>
+<doc name="M:PeterO.Cbor.ICBORObjectConverter`1.FromCBORObject(PeterO.Cbor.CBORObject)">
+<summary>Not documented yet.</summary>
 </doc>
 <doc name="T:PeterO.Cbor.ICBORTag">
 

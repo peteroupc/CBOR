@@ -688,175 +688,37 @@ namespace PeterO.Cbor {
       return obj;
     }
 
-    /// <summary>
-    /// <para>Converts this CBOR object to an object of an arbitrary
-    /// type.</para>
-    /// <para>If the type "T" is CBORObject, returns this CBOR
-    /// object.</para>
-    /// <para>If this CBOR object is a null object, returns null, except if
-    /// "T" is CBORObject.</para>
-    /// <para>If the type "T" is Object, returns this CBOR object.</para>
-    /// <para>If the type "T" is the generic List, IList, ICollection, or
-    /// IEnumerable (or ArrayList, List, Collection, or Iterable in Java),
-    /// and if this CBOR object is an array, returns an object conforming
-    /// to the type, class, or interface passed to this method, where the
-    /// object will contain all items in this CBOR array.</para>
-    /// <para>If the type "T" is the generic Dictionary or IDictionary (or
-    /// HashMap or Map in Java), and if this CBOR object is a map, returns
-    /// an object conforming to the type, class, or interface passed to
-    /// this method, where the object will contain all keys and values in
-    /// this CBOR map.</para>
-    /// <para>If the type "T" is <c>int</c>, returns the result of the
-    /// AsInt32 method.</para>
-    /// <para>If the type "T" is <c>long</c>, returns the result of the
-    /// AsInt64 method.</para>
-    /// <para>If the type "T" is <c>double</c>, returns the result of the
-    /// AsDouble method.</para>
-    /// <para>If the type "T" is String, returns the result of the AsString
-    /// method.</para>
-    /// <para>If the type "T" is Boolean, returns the result of the IsTrue
-    /// method.</para>
-    /// <para>If this object is a CBOR map, and the type "T" is a type not
-    /// specially handled by the FromObject method, creates an object of
-    /// the given type, and, for each key matching the name of a property
-    /// in that object (using the rules given in CBORObject.FromObject),
-    /// sets that property's value to the corresponding value for that
-    /// key.</para></summary>
-    /// <param name='t'>Not documented yet.</param>
-    /// <typeparam name='T'>An arbitrary object type.</typeparam>
-    /// <returns>The converted object.</returns>
-    /// <exception cref='T:System.NotSupportedException'>The given type
-    /// <paramref name='t'/>, or this object's CBOR type, is not
-    /// supported.</exception>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='t'/> is null.</exception>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToObject(System.Type)"]/*'/>
     public object ToObject(Type t) {
       if (t == null) {
-  throw new ArgumentNullException(nameof(t));
-}
-      DebugUtility.Log("ToObject");
+        throw new ArgumentNullException(nameof(t));
+      }
       if (t.Equals(typeof(CBORObject))) {
- return this;
-}
+        return this;
+      }
       if (this.IsNull) {
         return null;
       }
       if (t.Equals(typeof(object))) {
- return this;
-}
+        return this;
+      }
       if (t.Equals(typeof(string))) {
- return this.AsString();
-}
+        return this.AsString();
+      }
       if (t.Equals(typeof(int))) {
- return this.AsInt32();
-}
+        return this.AsInt32();
+      }
       if (t.Equals(typeof(long))) {
- return this.AsInt64();
-}
+        return this.AsInt64();
+      }
       if (t.Equals(typeof(double))) {
- return this.AsDouble();
-}
+        return this.AsDouble();
+      }
       if (t.Equals(typeof(bool))) {
- return this.IsTrue;
-}
-      if (this.Type == CBORType.Array) {
-        var isList = false;
-#if NET40 || NET20
-        // TODO
-        throw new NotImplementedException();
-#else
-        Type objectType = typeof(object);
-        if (t.GetTypeInfo().IsGenericType) {
-          Type td = t.GetGenericTypeDefinition();
-          isList = (td.Equals(typeof(List<>)) ||
-  td.Equals(typeof(IList<>)) ||
-  td.Equals(typeof(ICollection<>)) ||
-  td.Equals(typeof(IEnumerable<>)));
-            } else {
-          throw new NotImplementedException();
-        }
-        isList = (isList && t.GenericTypeArguments.Length == 1);
-        if (isList) {
-          objectType = t.GenericTypeArguments[0];
-          Type listType = typeof(List<>).MakeGenericType(objectType);
-          object o = Activator.CreateInstance(listType);
-          System.Collections.IList ie = (System.Collections.IList)o;
-          foreach (CBORObject value in this.Values) {
-            ie.Add(value.ToObject(objectType));
-          }
-          return o;
-        }
-#endif
+        return this.IsTrue;
       }
-      if (this.Type == CBORType.Map) {
-        var isDict = false;
-#if NET40 || NET20
-        // TODO: Implement dict support
-// throw new NotImplementedException();
-#else
-
-        isDict = (t.GetTypeInfo().IsGenericType);
-        if (t.GetTypeInfo().IsGenericType) {
-          Type td = t.GetGenericTypeDefinition();
-          isDict = (td.Equals(typeof(Dictionary<, >)) ||
-  td.Equals(typeof(IDictionary<, >)));
-        }
-        DebugUtility.Log("list=" + isDict);
-        isDict = (isDict && t.GenericTypeArguments.Length == 2);
-        DebugUtility.Log("list=" + isDict);
-        if (isDict) {
-          Type keyType = t.GenericTypeArguments[0];
-          Type valueType = t.GenericTypeArguments[1];
-          Type listType = typeof(Dictionary<, >).MakeGenericType(
-            keyType,
-            valueType);
-          object o = Activator.CreateInstance(listType);
-          System.Collections.IDictionary idic =
-            (System.Collections.IDictionary)o;
-          foreach (CBORObject key in this.Keys) {
-            CBORObject value = this[key];
-            idic.Add(key.ToObject(keyType),
-                   value.ToObject(valueType));
-          }
-          return o;
-        }
-#endif
-        var values = new List<KeyValuePair<string, object>>();
-        foreach (string key in PropertyMap.GetPropertyNames(
-                   t,
-                   true,
-                   true)) {
-          if (this.ContainsKey(key)) {
-            CBORObject cborValue = this[key];
-            // TODO: Use ToObject with the property's type, rather than ThisItem
-            object thisItem = cborValue.ThisItem;
-            if (cborValue.IsTrue) {
-              thisItem = true;
-            } else if (cborValue.IsFalse) {
-              thisItem = false;
-            } else if (cborValue.IsNull) {
-              thisItem = null;
-            } else if (cborValue.Type == CBORType.SimpleValue) {
-              throw new NotSupportedException(
-                "A value in the map is a non-true/false/null simple value");
-            }
-            if (cborValue.HasTag(0)) {
-              thisItem = CBORTag0.StringToDateTime((string)thisItem);
-            }
-            var dict = new KeyValuePair<string, object>(
-              key,
-              thisItem);
-            values.Add(dict);
-          }
-        }
-        return PropertyMap.ObjectWithProperties(
-    t,
-    values,
-    true,
-    true);
-      } else {
-        throw new NotSupportedException();
-      }
+      return PropertyMap.TypeToObject(this, t);
     }
 
     /// <include file='../../docs.xml'
@@ -3191,10 +3053,10 @@ namespace PeterO.Cbor {
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,System.Int64)"]/*'/>
- public static int WriteValue(
-  Stream outputStream,
-  int majorType,
-  long value) {
+    public static int WriteValue(
+     Stream outputStream,
+     int majorType,
+     long value) {
       if (outputStream == null) {
         throw new ArgumentNullException(nameof(outputStream));
       }
@@ -3232,10 +3094,10 @@ namespace PeterO.Cbor {
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,System.Int32)"]/*'/>
-  public static int WriteValue(
-  Stream outputStream,
-  int majorType,
-  int value) {
+    public static int WriteValue(
+    Stream outputStream,
+    int majorType,
+    int value) {
       if (outputStream == null) {
         throw new ArgumentNullException(nameof(outputStream));
       }

@@ -269,15 +269,147 @@ namespace PeterO.Cbor {
       return ((MethodInfo)methodInfo).Invoke(obj, new[] { argument });
     }
 
+    public static object TypeToObject(CBORObject objThis, Type t) {
+      if (t.Equals(typeof(DateTime))) {
+        return new CBORTag0().FromCBORObject(objThis);
+      }
+      if (objThis.Type == CBORType.ByteString) {
+        if(t.Equals(typeof(byte[]))){
+          byte[] bytes=objThis.GetByteString();
+          byte[] byteret=new byte[bytes.Length];
+          Array.Copy(bytes,0,byteret,0,byteret.Length);
+          return byteret;
+        }
+      }
+      if (objThis.Type == CBORType.Array) {
+        Type objectType = typeof(object);
+        var isList = false;
+        object listObject = null;
+#if NET40 || NET20
+        if (t.IsGenericType) {
+          Type td = t.GetGenericTypeDefinition();
+          isList = (td.Equals(typeof(List<>)) ||
+  td.Equals(typeof(IList<>)) ||
+  td.Equals(typeof(ICollection<>)) ||
+  td.Equals(typeof(IEnumerable<>)));
+            } else {
+          throw new NotImplementedException();
+        }
+        isList = (isList && t.GetGenericArguments().Length == 1);
+        if (isList) {
+          objectType = t.GetGenericArguments()[0];
+          Type listType = typeof(List<>).MakeGenericType(objectType);
+          listObject = Activator.CreateInstance(listType);
+        }
+#else
+        if (t.GetTypeInfo().IsGenericType) {
+          Type td = t.GetGenericTypeDefinition();
+          isList = (td.Equals(typeof(List<>)) ||
+  td.Equals(typeof(IList<>)) ||
+  td.Equals(typeof(ICollection<>)) ||
+  td.Equals(typeof(IEnumerable<>)));
+            } else {
+          throw new NotImplementedException();
+        }
+        isList = (isList && t.GenericTypeArguments.Length == 1);
+        if (isList) {
+          objectType = t.GenericTypeArguments[0];
+          Type listType = typeof(List<>).MakeGenericType(objectType);
+          listObject = Activator.CreateInstance(listType);
+        }
+#endif
+        if(listObject!=null){
+          System.Collections.IList ie = (System.Collections.IList)listObject;
+          foreach (CBORObject value in objThis.Values) {
+            ie.Add(value.ToObject(objectType));
+          }
+          return listObject;
+        }
+      }
+      if (objThis.Type == CBORType.Map) {
+        var isDict = false;
+        Type keyType=null;
+        Type valueType=null;
+        object dictObject=null;
+#if NET40 || NET20
+        isDict = (t.IsGenericType);
+        if (t.IsGenericType) {
+          Type td = t.GetGenericTypeDefinition();
+          isDict = (td.Equals(typeof(Dictionary<, >)) ||
+  td.Equals(typeof(IDictionary<, >)));
+        }
+        //DebugUtility.Log("list=" + isDict);
+        isDict = (isDict && t.GetGenericArguments().Length == 2);
+        //DebugUtility.Log("list=" + isDict);
+        if (isDict) {
+          keyType = t.GetGenericArguments()[0];
+          valueType = t.GetGenericArguments()[1];
+          Type listType = typeof(Dictionary<, >).MakeGenericType(
+            keyType,
+            valueType);
+          dictObject = Activator.CreateInstance(listType);
+        }
+#else
+        isDict = (t.GetTypeInfo().IsGenericType);
+        if (t.GetTypeInfo().IsGenericType) {
+          Type td = t.GetGenericTypeDefinition();
+          isDict = (td.Equals(typeof(Dictionary<, >)) ||
+  td.Equals(typeof(IDictionary<, >)));
+        }
+        //DebugUtility.Log("list=" + isDict);
+        isDict = (isDict && t.GenericTypeArguments.Length == 2);
+        //DebugUtility.Log("list=" + isDict);
+        if (isDict) {
+          keyType = t.GenericTypeArguments[0];
+          valueType = t.GenericTypeArguments[1];
+          Type listType = typeof(Dictionary<, >).MakeGenericType(
+            keyType,
+            valueType);
+          dictObject = Activator.CreateInstance(listType);
+        }
+#endif
+        if(dictObject!=null){
+          System.Collections.IDictionary idic =
+            (System.Collections.IDictionary)dictObject;
+          foreach (CBORObject key in objThis.Keys) {
+            CBORObject value = objThis[key];
+            idic.Add(key.ToObject(keyType),
+                   value.ToObject(valueType));
+          }
+          return dictObject;
+        }
+        var values = new List<KeyValuePair<string, CBORObject>>();
+        foreach (string key in PropertyMap.GetPropertyNames(
+                   t,
+                   true,
+                   true)) {
+          if (objThis.ContainsKey(key)) {
+            CBORObject cborValue = objThis[key];
+            var dict = new KeyValuePair<string, CBORObject>(
+              key,
+              cborValue);
+            values.Add(dict);
+          }
+        }
+        return PropertyMap.ObjectWithProperties(
+    t,
+    values,
+    true,
+    true);
+      } else {
+        throw new NotSupportedException();
+      }
+    }
+
     public static object ObjectWithProperties(
       Type t,
-      IEnumerable<KeyValuePair<string, object>> keysValues) {
+      IEnumerable<KeyValuePair<string, CBORObject>> keysValues) {
       return ObjectWithProperties(t, keysValues, true, true);
     }
 
     public static object ObjectWithProperties(
          Type t,
-         IEnumerable<KeyValuePair<string, object>> keysValues,
+         IEnumerable<KeyValuePair<string, CBORObject>> keysValues,
          bool removeIsPrefix,
   bool useCamelCase) {
       object o = null;
@@ -293,7 +425,7 @@ namespace PeterO.Cbor {
         }
       }
       o = o ?? Activator.CreateInstance(t);
-      var dict = new Dictionary<string, object>();
+  var dict = new Dictionary<string, CBORObject>();
       foreach (var kv in keysValues) {
         var name = kv.Key;
         dict[name] = kv.Value;
@@ -301,12 +433,7 @@ namespace PeterO.Cbor {
       foreach (PropertyData key in GetPropertyList(o.GetType())) {
         var name = key.GetAdjustedName(removeIsPrefix, useCamelCase);
         if (dict.ContainsKey(name)) {
-          object dobj = dict[name];
-          if (key.Prop.PropertyType == typeof(int)) {
-            dobj = CBORObject.FromObject(dobj).AsInt32();
-          } else if (key.Prop.PropertyType == typeof(double)) {
-            dobj = CBORObject.FromObject(dobj).AsDouble();
-          }
+          object dobj = dict[name].ToObject(key.Prop.PropertyType);
           key.Prop.SetValue(o, dobj, null);
         }
       }
