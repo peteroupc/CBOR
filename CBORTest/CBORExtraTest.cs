@@ -4945,8 +4945,6 @@ CBORTestCommon.AssertSer(objectTemp, objectTemp2);
       }
     }
 
-
-
     [Test]
     public void TestDateTime() {
       DateTime[] ranges = {

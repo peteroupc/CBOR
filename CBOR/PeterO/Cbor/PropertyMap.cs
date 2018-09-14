@@ -274,10 +274,10 @@ namespace PeterO.Cbor {
         return new CBORTag0().FromCBORObject(objThis);
       }
       if (objThis.Type == CBORType.ByteString) {
-        if(t.Equals(typeof(byte[]))){
-          byte[] bytes=objThis.GetByteString();
-          byte[] byteret=new byte[bytes.Length];
-          Array.Copy(bytes,0,byteret,0,byteret.Length);
+        if (t.Equals(typeof(byte[]))) {
+          byte[] bytes = objThis.GetByteString();
+          var byteret = new byte[bytes.Length];
+          Array.Copy(bytes, 0, byteret, 0, byteret.Length);
           return byteret;
         }
       }
@@ -288,14 +288,13 @@ namespace PeterO.Cbor {
 #if NET40 || NET20
         if (t.IsGenericType) {
           Type td = t.GetGenericTypeDefinition();
-          isList = (td.Equals(typeof(List<>)) ||
-  td.Equals(typeof(IList<>)) ||
-  td.Equals(typeof(ICollection<>)) ||
-  td.Equals(typeof(IEnumerable<>)));
+          isList = td.Equals(typeof(List<>)) || td.Equals(typeof(IList<>)) ||
+            td.Equals(typeof(ICollection<>)) ||
+            td.Equals(typeof(IEnumerable<>));
             } else {
           throw new NotImplementedException();
         }
-        isList = (isList && t.GetGenericArguments().Length == 1);
+        isList = isList && t.GetGenericArguments().Length == 1;
         if (isList) {
           objectType = t.GetGenericArguments()[0];
           Type listType = typeof(List<>).MakeGenericType(objectType);
@@ -318,7 +317,7 @@ namespace PeterO.Cbor {
           listObject = Activator.CreateInstance(listType);
         }
 #endif
-        if(listObject!=null){
+        if (listObject != null) {
           System.Collections.IList ie = (System.Collections.IList)listObject;
           foreach (CBORObject value in objThis.Values) {
             ie.Add(value.ToObject(objectType));
@@ -328,19 +327,19 @@ namespace PeterO.Cbor {
       }
       if (objThis.Type == CBORType.Map) {
         var isDict = false;
-        Type keyType=null;
-        Type valueType=null;
-        object dictObject=null;
+        Type keyType = null;
+        Type valueType = null;
+        object dictObject = null;
 #if NET40 || NET20
-        isDict = (t.IsGenericType);
+        isDict = t.IsGenericType;
         if (t.IsGenericType) {
           Type td = t.GetGenericTypeDefinition();
-          isDict = (td.Equals(typeof(Dictionary<, >)) ||
-  td.Equals(typeof(IDictionary<, >)));
+          isDict = td.Equals(typeof(Dictionary<, >)) ||
+            td.Equals(typeof(IDictionary<, >));
         }
-        //DebugUtility.Log("list=" + isDict);
-        isDict = (isDict && t.GetGenericArguments().Length == 2);
-        //DebugUtility.Log("list=" + isDict);
+        // DebugUtility.Log("list=" + isDict);
+        isDict = isDict && t.GetGenericArguments().Length == 2;
+        // DebugUtility.Log("list=" + isDict);
         if (isDict) {
           keyType = t.GetGenericArguments()[0];
           valueType = t.GetGenericArguments()[1];
@@ -368,13 +367,14 @@ namespace PeterO.Cbor {
           dictObject = Activator.CreateInstance(listType);
         }
 #endif
-        if(dictObject!=null){
+        if (dictObject != null) {
           System.Collections.IDictionary idic =
             (System.Collections.IDictionary)dictObject;
           foreach (CBORObject key in objThis.Keys) {
             CBORObject value = objThis[key];
-            idic.Add(key.ToObject(keyType),
-                   value.ToObject(valueType));
+            idic.Add(
+  key.ToObject(keyType),
+  value.ToObject(valueType));
           }
           return dictObject;
         }

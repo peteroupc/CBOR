@@ -8,7 +8,6 @@ at: http://peteroupc.github.io/
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Text;
 using PeterO;
 using PeterO.Numbers;
@@ -715,10 +714,8 @@ namespace PeterO.Cbor {
       if (t.Equals(typeof(double))) {
         return this.AsDouble();
       }
-      if (t.Equals(typeof(bool))) {
-        return this.IsTrue;
-      }
-      return PropertyMap.TypeToObject(this, t);
+      return t.Equals(typeof(bool)) ? this.IsTrue :
+        PropertyMap.TypeToObject(this, t);
     }
 
     /// <include file='../../docs.xml'

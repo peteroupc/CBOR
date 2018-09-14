@@ -2202,8 +2202,25 @@
              the given type, and, for each key matching the name of a property
              in that object (using the rules given in CBORObject.FromObject),
              sets that property's value to the corresponding value for that
-             key.</para></summary><param name='t'>The type, class, or interface that this
-             method's return value will belong to.</param><returns>The converted object.</returns><exception cref='T:System.NotSupportedException'>The given type
+             key.</para></summary>
+<example>
+<para>Java offers no easy way to express a generic type, at least none as easy as C#'s <c>typeof</c> operator. The following example, written in Java, is a way to specify that the return value will be an ArrayList of String objects.</para>
+<code>
+Type arrayListString = new java.lang.reflect.ParameterizedType(){
+   public Type[] getActualTypeArguments(){
+     /* Contains one type parameter, String */
+     return new Type[]{ String.class };
+   }
+   public Type getRawType(){ 
+     /* Raw type is ArrayList */ 
+     return ArrayList.class; }
+   public Type getOwnerType(){ return null; }
+};
+ArrayList&lt;String&gt; array = cborArray.ToObject(arrayListString); 
+</code>
+</example>
+<param name='t'>The type, class, or interface that this
+             method's return value will belong to.  To express a generic type in Java, see the example.</param><returns>The converted object.</returns><exception cref='T:System.NotSupportedException'>The given type
              <paramref name='t'/>, or this object's CBOR type, is not
              supported.</exception><exception cref='T:System.ArgumentNullException'>The parameter <paramref name='t'/> is null.</exception>
 
@@ -3321,9 +3338,12 @@ stream.Write(bytes, 0, bytes.Length);
 </doc>
 <doc name="T:PeterO.Cbor.ICBORObjectConverter`1">
 <summary>Not documented yet.</summary>
+            <typeparam name='T'>Type parameter not documented yet.</typeparam>
 </doc>
 <doc name="M:PeterO.Cbor.ICBORObjectConverter`1.FromCBORObject(PeterO.Cbor.CBORObject)">
 <summary>Not documented yet.</summary>
+            <param name='cbor'>The parameter <paramref name='cbor'/> is not documented yet.</param>
+            <returns>The return value is not documented yet.</returns>
 </doc>
 <doc name="T:PeterO.Cbor.ICBORTag">
 

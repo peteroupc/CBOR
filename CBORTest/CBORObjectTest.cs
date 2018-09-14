@@ -2372,7 +2372,7 @@ bytes = CBORObject.FromObject(bj)
       Assert.AreEqual(false, co.ToObject(typeof(bool)));
       co = CBORObject.FromObject("hello world");
       {
-string stringTemp = co.ToObject<string>();
+string stringTemp = co.ToObject(typeof(string));
 Assert.AreEqual(
   "hello world",
   stringTemp);
