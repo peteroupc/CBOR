@@ -273,6 +273,19 @@ namespace PeterO.Cbor {
       if (t.Equals(typeof(DateTime))) {
         return new CBORTag0().FromCBORObject(objThis);
       }
+
+      if (t.Equals(typeof(int))) {
+        return objThis.AsInt32();
+      }
+      if (t.Equals(typeof(long))) {
+        return objThis.AsInt64();
+      }
+      if (t.Equals(typeof(double))) {
+        return objThis.AsDouble();
+      }
+      if (t.Equals(typeof(bool))) {
+        return objThis.IsTrue;
+      }
       if (objThis.Type == CBORType.ByteString) {
         if (t.Equals(typeof(byte[]))) {
           byte[] bytes = objThis.GetByteString();

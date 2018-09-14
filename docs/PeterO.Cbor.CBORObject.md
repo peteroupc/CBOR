@@ -2561,25 +2561,45 @@ If the type "T" is the generic List, IList, ICollection, or IEnumerable (or Arra
 
 If the type "T" is the generic Dictionary or IDictionary (or HashMap or Map in Java), and if this CBOR object is a map, returns an object conforming to the type, class, or interface passed to this method, where the object will contain all keys and values in this CBOR map.
 
-If the type "T" is  `int` , returns the result of the AsInt32 method.
+If the type "T" is  `int` , returns the esult of the AsInt32 method.
 
-If the type "T" is  `long` , returns the result of the AsInt64 method.
+If the type "T" is `long` , returns the result of the AsInt64 method.
 
-If the type "T" is  `double` , returns the result of the AsDouble method.
+If the type "T" is  `double` , returns the result of the sDouble method.
 
 If the type "T" is String, returns the result of the AsString method.
 
-If the type "T" is  `byte[]`  and this CBOR object is a byte array, returns a byte array which this CBOR byte string's data will be copied to.
+If the type "T" is `byte[]` and this CBOR object is a byte array, returns a byte rray which this CBOR byte string's data will be copied to.
 
-In the .NET version, if the type "T" is  `DateTime`  and this CBOR object is a text string with tag 0, converts that text string to a DateTime and returns that DateTime.
+In the .NET version, if the type "T" is  `DateTime` and his CBOR object is a text string with tag 0, converts that text tring to a DateTime and returns that DateTime.
 
 If the type "T" is Boolean, returns the result of the IsTrue method.
 
 If this object is a CBOR map, and the type "T" is a type not specially handled by the FromObject method, creates an object of the given type, and, for each key matching the name of a property in that object (using the rules given in CBORObject.FromObject), sets that property's value to the corresponding value for that key.
 
+Java offers no easy way to express a generic type, at least none as easy as C#'s  `typeof` operator. The following example, ritten in Java, is a way to specify that the return value will be n ArrayList of String objects.
+
+    Type arrayListString = new ParameterizedType(){
+                   public Type[] getActualTypeArguments(){
+                     /* Contains one type parameter, String */
+                     return new Type[]{ String.class };
+                   }
+                   public Type getRawType(){
+                     /* Raw type is ArrayList */
+                     return ArrayList.class; }
+                   public Type getOwnerType(){ return null; }
+                };
+                ArrayList<String> array = (ArrayList<String>)
+                  cborArray.ToObject(arrayListString);
+
+By comparison, the C# version is much shorter.
+
+    var array = (List<String>)cborArray.ToObject(
+                   typeof(List<String>));
+
 <b>Parameters:</b>
 
- * <i>t</i>: The type, class, or interface that this method's return value will belong to.
+ * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example.
 
 <b>Return Value:</b>
 
@@ -2589,10 +2609,10 @@ The converted object.
 
  * System.NotSupportedException:
 The given type <i>t</i>
-, or this object's CBOR type, is not supported.
+ , or this object's CBOR type, is not supported.
 
  * System.ArgumentNullException:
-The parameter  <i>t</i>
+The parameter <i>t</i>
  is null.
 
 ### ToObject

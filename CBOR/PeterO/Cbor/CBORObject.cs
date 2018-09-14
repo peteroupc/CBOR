@@ -702,19 +702,7 @@ namespace PeterO.Cbor {
       if (t.Equals(typeof(object))) {
         return this;
       }
-      if (t.Equals(typeof(string))) {
-        return this.AsString();
-      }
-      if (t.Equals(typeof(int))) {
-        return this.AsInt32();
-      }
-      if (t.Equals(typeof(long))) {
-        return this.AsInt64();
-      }
-      if (t.Equals(typeof(double))) {
-        return this.AsDouble();
-      }
-      return t.Equals(typeof(bool)) ? this.IsTrue :
+      return t.Equals(typeof(string)) ? this.AsString() :
         PropertyMap.TypeToObject(this, t);
     }
 

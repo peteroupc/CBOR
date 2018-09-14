@@ -2360,6 +2360,7 @@ bytes = CBORObject.FromObject(bj)
     }
 
     [Test]
+    [Timeout(5000)]
     public void TestToObject() {
       var ao = new PODClass();
       CBORObject co = CBORObject.FromObject(ao);
@@ -2371,12 +2372,10 @@ bytes = CBORObject.FromObject(bj)
       co = CBORObject.False;
       Assert.AreEqual(false, co.ToObject(typeof(bool)));
       co = CBORObject.FromObject("hello world");
-      {
-string stringTemp = co.ToObject(typeof(string));
+string stringTemp = (string)co.ToObject(typeof(string));
 Assert.AreEqual(
   "hello world",
   stringTemp);
-}
       co = CBORObject.NewArray();
       co.Add("hello");
       co.Add("world");
@@ -2399,16 +2398,27 @@ Assert.AreEqual(
       Assert.AreEqual(2, intDict.Count);
       Assert.IsTrue(intDict.ContainsKey("a"));
       Assert.IsTrue(intDict.ContainsKey("b"));
-      Assert.AreEqual(1, intDict["a"]);
-      Assert.AreEqual(2, intDict["b"]);
-      IDictionary<string, int> iintDict =
-        (IDictionary<string, int>)co.ToObject(
+if (intDict["a"] != 1) {
+  { Assert.Fail();
+}
+}
+if (intDict["b"] != 2) {
+  { Assert.Fail();
+}
+}
+      IDictionary<string, int> iintDict = (IDictionary<string, int>)co.ToObject(
           typeof(IDictionary<string, int>));
       Assert.AreEqual(2, iintDict.Count);
       Assert.IsTrue(iintDict.ContainsKey("a"));
       Assert.IsTrue(iintDict.ContainsKey("b"));
-      Assert.AreEqual(1, iintDict["a"]);
-      Assert.AreEqual(2, iintDict["b"]);
+if (iintDict["a"] != 1) {
+  { Assert.Fail();
+}
+}
+if (iintDict["b"] != 2) {
+  { Assert.Fail();
+}
+}
     }
 
     [Test]
