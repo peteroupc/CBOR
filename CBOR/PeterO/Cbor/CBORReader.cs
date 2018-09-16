@@ -242,7 +242,7 @@ namespace PeterO.Cbor {
         } else {
           if (hasBigAdditional) {
             throw new CBORException("Length of " +
-  CBORUtilities.BigIntToString(bigintAdditional) + " is bigger than supported");
+                    bigintAdditional.ToString() + " is bigger than supported");
           }
           if (uadditional > Int32.MaxValue) {
             throw new CBORException("Length of " +
@@ -298,7 +298,7 @@ namespace PeterO.Cbor {
         } else {
           if (hasBigAdditional) {
             throw new CBORException("Length of " +
-  CBORUtilities.BigIntToString(bigintAdditional) + " is bigger than supported");
+                    bigintAdditional.ToString() + " is bigger than supported");
           }
           if (uadditional > Int32.MaxValue) {
             throw new CBORException("Length of " +
@@ -360,7 +360,7 @@ namespace PeterO.Cbor {
         }
         if (hasBigAdditional) {
           throw new CBORException("Length of " +
-  CBORUtilities.BigIntToString(bigintAdditional) + " is bigger than supported");
+  bigintAdditional.ToString() + " is bigger than supported");
         }
         if (uadditional > Int32.MaxValue) {
           throw new CBORException("Length of " +
@@ -409,7 +409,7 @@ namespace PeterO.Cbor {
         }
         if (hasBigAdditional) {
           throw new CBORException("Length of " +
-  CBORUtilities.BigIntToString(bigintAdditional) + " is bigger than supported");
+  bigintAdditional.ToString() + " is bigger than supported");
         }
         if (uadditional > Int32.MaxValue) {
           throw new CBORException("Length of " +

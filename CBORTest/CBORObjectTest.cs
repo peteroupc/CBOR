@@ -2367,6 +2367,10 @@ bytes = CBORObject.FromObject(bj)
       co["propA"] = CBORObject.FromObject(999);
       ao = (PODClass)co.ToObject(typeof(PODClass));
       Assert.AreEqual(999, ao.PropA);
+      Assert.IsFalse(ao.IsPropC);
+      co["propC"] = CBORObject.True;
+      ao = (PODClass)co.ToObject(typeof(PODClass));
+      Assert.IsTrue(ao.IsPropC);
       co = CBORObject.True;
       Assert.AreEqual(true, co.ToObject(typeof(bool)));
       co = CBORObject.False;

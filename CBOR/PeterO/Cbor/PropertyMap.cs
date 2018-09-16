@@ -473,5 +473,34 @@ namespace PeterO.Cbor {
   key.Prop.GetValue(o, null));
       }
     }
+
+    public static int[] BreakDownDateTime(DateTime bi) {
+#if NET20
+      DateTime dt = bi.ToUniversalTime();
+#else
+      DateTime dt = TimeZoneInfo.ConvertTime(bi, TimeZoneInfo.Utc);
+#endif
+      int year = dt.Year;
+      int month = dt.Month;
+      int day = dt.Day;
+      int hour = dt.Hour;
+      int minute = dt.Minute;
+      int second = dt.Second;
+      int millisecond = dt.Millisecond;
+      return new int[] { year, month, day,
+        hour, minute, second,
+        millisecond, 0 };
+    }
+
+    public static DateTime BuildUpDateTime(int[] dt) {
+      return new DateTime(
+  dt[0],
+  dt[1],
+  dt[2],
+  dt[3],
+  dt[4],
+  dt[5],
+  DateTimeKind.Utc).AddMinutes(-dt[7]).AddTicks((long)(dt[6] / 100));
+    }
   }
 }

@@ -558,8 +558,7 @@ namespace PeterO.Cbor {
             return;
           }
           case CBORObject.CBORObjectTypeBigInteger: {
-            writer.WriteString(
-              CBORUtilities.BigIntToString((EInteger)thisItem));
+            writer.WriteString(((EInteger)thisItem).ToString());
             return;
           }
           case CBORObject.CBORObjectTypeExtendedDecimal: {

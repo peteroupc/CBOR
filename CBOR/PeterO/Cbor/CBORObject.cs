@@ -1840,8 +1840,33 @@ namespace PeterO.Cbor {
       return this;
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Add(PeterO.Cbor.CBORObject)"]/*'/>
+    /// <summary><para>Adds a new object to the end of this array. (Used to
+    /// throw ArgumentNullException on a null reference, but now converts
+    /// the null reference to CBORObject.Null, for convenience with the
+    /// Object overload of this method).</para>
+    ///  <para>NOTE: This method
+    /// can't be used to add a tag to an existing CBOR object. To create a
+    /// CBOR object with a given tag, call the
+    /// <c>CBORObject.FromObjectAndTag</c>
+    ///  method and pass the CBOR object
+    /// and the desired tag number to that method.</para>
+    ///  </summary>
+    /// <param name='obj'>The parameter <paramref name='obj'/> is a CBOR
+    /// object.</param>
+    /// <returns>This instance.</returns>
+    /// <exception cref='T:System.InvalidOperationException'>This object is
+    /// not an array.</exception>
+    /// <example>
+    /// <para>The following example creates a CBOR array and adds several
+    /// CBOR objects, one of which has a custom CBOR tag, to that array.
+    /// Note the chaining behavior made possible by this method.</para>
+    /// <code>CBORObject obj = CBORObject.NewArray()
+    /// .Add(CBORObject.False)
+    /// .Add(CBORObject.FromObject(5))
+    /// .Add(CBORObject.FromObject("text string"))
+    /// .Add(CBORObject.FromObjectAndTag(9999, 1));
+    /// </code>
+    /// </example>
     public CBORObject Add(CBORObject obj) {
       if (this.ItemType == CBORObjectTypeArray) {
         IList<CBORObject> list = this.AsList();
@@ -1851,8 +1876,32 @@ namespace PeterO.Cbor {
       throw new InvalidOperationException("Not an array");
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Add(System.Object)"]/*'/>
+    /// <summary><para>Converts an object to a CBOR object and adds it to
+    /// the end of this array.</para>
+    ///  <para>NOTE: This method can't be used
+    /// to add a tag to an existing CBOR object. To create a CBOR object
+    /// with a given tag, call the <c>CBORObject.FromObjectAndTag</c>
+    /// method and pass the CBOR object and the desired tag number to that
+    /// method.</para>
+    ///  </summary>
+    /// <param name='obj'>The parameter <paramref name='obj'/> is a CBOR
+    /// object.</param>
+    /// <returns>This instance.</returns>
+    /// <exception cref='T:System.InvalidOperationException'>This object is
+    /// not an array.</exception>
+    /// <exception cref='T:System.ArgumentException'>The type of <paramref
+    /// name='obj'/> is not supported.</exception>
+    /// <example>
+    /// <para>The following example creates a CBOR array and adds several
+    /// CBOR objects, one of which has a custom CBOR tag, to that array.
+    /// Note the chaining behavior made possible by this method.</para>
+    /// <code>CBORObject obj = CBORObject.NewArray()
+    /// .Add(CBORObject.False)
+    /// .Add(5)
+    /// .Add("text string")
+    /// .Add(CBORObject.FromObjectAndTag(9999, 1));
+    /// </code>
+    /// </example>
     public CBORObject Add(object obj) {
       if (this.ItemType == CBORObjectTypeArray) {
         IList<CBORObject> list = this.AsList();
@@ -2921,7 +2970,7 @@ namespace PeterO.Cbor {
             break;
           }
         case CBORObjectTypeBigInteger: {
-            simvalue = CBORUtilities.BigIntToString((EInteger)this.ThisItem);
+            simvalue = ((EInteger)this.ThisItem).ToString();
             if (sb == null) {
               return simvalue;
             }
@@ -4138,7 +4187,7 @@ namespace PeterO.Cbor {
           sb.Append(CBORUtilities.LongToString(low));
         } else {
           EInteger bi = LowHighToEInteger(low, high);
-          sb.Append(CBORUtilities.BigIntToString(bi));
+          sb.Append(bi.ToString());
         }
         sb.Append('(');
         curobject = (CBORObject)curobject.itemValue;
