@@ -369,7 +369,7 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
         charbuf[21] = (char)('0' + ((fracSeconds / 10) % 10));
         charbuf[22] = (char)('0' + (fracSeconds % 10));
         charbuf[23] = 'Z';
-        ++charbufLength;
+        charbufLength+=5;
       } else {
         charbuf[19] = 'Z';
         ++charbufLength;

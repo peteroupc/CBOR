@@ -2416,12 +2416,19 @@ if (intDict["b"] != 2) {
       Assert.IsTrue(iintDict.ContainsKey("a"));
       Assert.IsTrue(iintDict.ContainsKey("b"));
 if (iintDict["a"] != 1) {
-  { Assert.Fail();
-}
+  Assert.Fail();
 }
 if (iintDict["b"] != 2) {
-  { Assert.Fail();
+  Assert.Fail();
 }
+      co = CBORObject.FromObjectAndTag(
+       "2000-01-01T00:00:00Z",
+       0);
+      try {
+ co.ToObject(typeof(DateTime));
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
 }
     }
 

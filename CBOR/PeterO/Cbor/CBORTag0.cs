@@ -16,7 +16,14 @@ namespace PeterO.Cbor {
     }
 
     internal static void AddConverter() {
-      CBORObject.AddConverter(typeof(DateTime), new CBORTag0());
+      // TODO: FromObject with Dates has different behavior
+      // in Java version, which has to be retained until
+      // the next major version for backward compatibility.
+      // However, since ToObject is new, we can convert
+      // to Date in the .NET and Java versions
+      if (PropertyMap.DateTimeCompatHack) {
+        CBORObject.AddConverter(typeof(DateTime), new CBORTag0());
+      }
     }
 
     public CBORTypeFilter GetTypeFilter() {
@@ -31,7 +38,8 @@ namespace PeterO.Cbor {
     }
 
     public DateTime FromCBORObject(CBORObject obj) {
-      if (!obj.HasTag(0)) {
+      // TODO: Support tag 1
+      if (!obj.HasMostOuterTag(0)) {
         throw new CBORException("Not tag 0");
       }
       return StringToDateTime(obj.AsString());

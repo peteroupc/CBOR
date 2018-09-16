@@ -366,10 +366,10 @@ NOTE: This method can't be used to add a tag to an existing CBOR object. To crea
 The following example creates a CBOR array and adds several CBOR objects, one of which has a custom CBOR tag, to that array. Note the chaining behavior made possible by this method.
 
     CBORObject obj = CBORObject.NewArray()
-                  .Add(CBORObject.False)
-                  .Add(5)
-                  .Add("text string")
-                  .Add(CBORObject.FromObjectAndTag(9999, 1));
+                .Add(CBORObject.False)
+                .Add(5)
+                .Add("text string")
+                .Add(CBORObject.FromObjectAndTag(9999, 1));
 
 <b>Parameters:</b>
 
@@ -401,10 +401,10 @@ NOTE: This method can't be used to add a tag to an existing CBOR object. To crea
 The following example creates a CBOR array and adds several CBOR objects, one of which has a custom CBOR tag, to that array. Note the chaining behavior made possible by this method.
 
     CBORObject obj = CBORObject.NewArray()
-                  .Add(CBORObject.False)
-                  .Add(CBORObject.FromObject(5))
-                  .Add(CBORObject.FromObject("text string"))
-                  .Add(CBORObject.FromObjectAndTag(9999, 1));
+                .Add(CBORObject.False)
+                .Add(CBORObject.FromObject(5))
+                .Add(CBORObject.FromObject("text string"))
+                .Add(CBORObject.FromObjectAndTag(9999, 1));
 
 <b>Parameters:</b>
 

@@ -14,6 +14,9 @@ using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   internal static class PropertyMap {
+// TODO: Remove in next major version
+internal const bool DateTimeCompatHack = true;
+
     private sealed class PropertyData {
       private string name;
 
@@ -269,11 +272,28 @@ namespace PeterO.Cbor {
       return ((MethodInfo)methodInfo).Invoke(obj, new[] { argument });
     }
 
+    public static byte[] UUIDToBytes(Guid guid) {
+      var bytes2 = new byte[16];
+      Array.Copy(guid.ToByteArray(), bytes2, 16);
+      // Swap the bytes to conform with the UUID RFC
+      bytes2[0] = bytes[3];
+      bytes2[1] = bytes[2];
+      bytes2[2] = bytes[1];
+      bytes2[3] = bytes[0];
+      bytes2[4] = bytes[5];
+      bytes2[5] = bytes[4];
+      bytes2[6] = bytes[7];
+      bytes2[7] = bytes[6];
+      return bytes2;
+    }
+
     public static object TypeToObject(CBORObject objThis, Type t) {
       if (t.Equals(typeof(DateTime))) {
         return new CBORTag0().FromCBORObject(objThis);
       }
-
+      if (t.Equals(typeof(Guid))) {
+        return new CBORTag37().FromCBORObject(objThis);
+      }
       if (t.Equals(typeof(int))) {
         return objThis.AsInt32();
       }

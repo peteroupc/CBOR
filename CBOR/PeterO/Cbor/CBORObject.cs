@@ -2629,6 +2629,29 @@ namespace PeterO.Cbor {
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasTag(System.Int32)"]/*'/>
+ public bool HasMostOuterTag(int tagValue) {
+      if (tagValue < 0) {
+        throw new ArgumentException("tagValue (" + tagValue +
+                    ") is less than 0");
+      }
+ return this.IsTagged && this.tagHigh == 0 && this.tagLow == tagValue;
+ }
+
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasTag(PeterO.BigInteger)"]/*'/>
+ public bool HasMostOuterTag(EInteger bigTagValue) {
+    if ((bigTagValue) == null) {
+  throw new ArgumentNullException(nameof(bigTagValue));
+}
+      if (bigTagValue.Sign < 0) {
+        throw new ArgumentException("bigTagValue (" + bigTagValue +
+                    ") is less than 0");
+      }
+ return (!this.IsTagged) ? (false) : (this.MostOuterTag.Equals(bigTagValue));
+ }
+
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasTag(System.Int32)"]/*'/>
     public bool HasTag(int tagValue) {
       if (tagValue < 0) {
         throw new ArgumentException("tagValue (" + tagValue +

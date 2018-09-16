@@ -8,7 +8,7 @@ at: http://peteroupc.github.io/
 using System;
 
 namespace PeterO.Cbor {
-  internal class CBORTag37 : ICBORTag, ICBORConverter<Guid>
+  internal class CBORTag37 : ICBORTag, ICBORObjectConverter<Guid>
   {
     public CBORTypeFilter GetTypeFilter() {
       return CBORTypeFilter.ByteString;
@@ -26,25 +26,33 @@ namespace PeterO.Cbor {
     }
 
     internal static void AddConverter() {
-      CBORObject.AddConverter(typeof(Guid), new CBORTag37());
+        CBORObject.AddConverter(typeof(Guid), new CBORTag37());
     }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTag37.ToCBORObject(System.Guid)"]/*'/>
     public CBORObject ToCBORObject(Guid obj) {
-      byte[] bytes = obj.ToByteArray();
-      var bytes2 = new byte[16];
-      Array.Copy(bytes, bytes2, 16);
-      // Swap the bytes to conform with the UUID RFC
-      bytes2[0] = bytes[3];
-      bytes2[1] = bytes[2];
-      bytes2[2] = bytes[1];
-      bytes2[3] = bytes[0];
-      bytes2[4] = bytes[5];
-      bytes2[5] = bytes[4];
-      bytes2[6] = bytes[7];
-      bytes2[7] = bytes[6];
+      byte[] bytes = PropertyMap.UUIDToBytes(obj);
       return CBORObject.FromObjectAndTag(bytes2, (int)37);
+    }
+    public Guid FromCBORObject(CBORObject obj) {
+      if (!obj.HasMostOuterTag(37)) {
+        throw new CBORObject("Must have outermost tag 37");
+      }
+      ValidateObject(obj);
+      byte[] bytes = obj.GetByteString();
+      char[] guidChars = new char[36];
+      string hex="0123456789abcdef";
+      int index = 0;
+      for (var i = 0; i < 16; ++i) {
+       if (i == 4 || i == 6 || i == 8 || i == 10) {
+         guidChars[index++]='-';
+       }
+       guidChars[index++]=hex[(int)(bytes[i]>>4) & 15];
+       guidChars[index++]=hex[(int)(bytes[i]) & 15];
+      }
+      string guidString = new String(guidChars);
+      return Guid.Parse(guidString);
     }
   }
 }
