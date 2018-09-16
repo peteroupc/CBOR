@@ -274,7 +274,8 @@ internal const bool DateTimeCompatHack = true;
 
     public static byte[] UUIDToBytes(Guid guid) {
       var bytes2 = new byte[16];
-      Array.Copy(guid.ToByteArray(), bytes2, 16);
+      var bytes = guid.ToByteArray();
+      Array.Copy(bytes, bytes2, 16);
       // Swap the bytes to conform with the UUID RFC
       bytes2[0] = bytes[3];
       bytes2[1] = bytes[2];
@@ -494,33 +495,36 @@ internal const bool DateTimeCompatHack = true;
       }
     }
 
-    public static int[] BreakDownDateTime(DateTime bi) {
+    public static void BreakDownDateTime(DateTime bi,
+        EInteger[] year, int[] lf) {
 #if NET20
       DateTime dt = bi.ToUniversalTime();
 #else
       DateTime dt = TimeZoneInfo.ConvertTime(bi, TimeZoneInfo.Utc);
 #endif
-      int year = dt.Year;
-      int month = dt.Month;
-      int day = dt.Day;
-      int hour = dt.Hour;
-      int minute = dt.Minute;
-      int second = dt.Second;
-      int millisecond = dt.Millisecond;
-      return new int[] { year, month, day,
-        hour, minute, second,
-        millisecond, 0 };
+      year[0] = EInteger.FromInt32(dt.Year);
+      lf[0] = dt.Month;
+      lf[1] = dt.Day;
+      lf[2] = dt.Hour;
+      lf[3] = dt.Minute;
+      lf[4] = dt.Second;
+      // lf[5] is the number of nanoseconds
+      lf[5] = (dt.Ticks % 10000000L) * 100;
     }
-
-    public static DateTime BuildUpDateTime(int[] dt) {
+    public static DateTime BuildUpDateTime(EInteger year, int[] dt) {
       return new DateTime(
+  year.ToInt32Checked(),
   dt[0],
   dt[1],
   dt[2],
   dt[3],
   dt[4],
-  dt[5],
-  DateTimeKind.Utc).AddMinutes(-dt[7]).AddTicks((long)(dt[6] / 100));
+  DateTimeKind.Utc).AddMinutes(-dt[6]).AddTicks((long)(dt[5] / 100));
+    }
+
+    public static DateTime BuildUpDateTime(int[] dt) {
+return BuildUpDateTime(EInteger.FromInt32(dt[0]),
+  new int[] { dt[1], dt[2], dt[3], dt[4], dt[5], dt[6], dt[7] });
     }
   }
 }

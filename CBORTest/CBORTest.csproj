@@ -111,6 +111,7 @@
     <Compile Include="XorShift128Plus.cs" />
     <Compile Include="JSONPatch.cs" />
     <Compile Include="JSONPointer.cs" />
+    <Compile Include="DateTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

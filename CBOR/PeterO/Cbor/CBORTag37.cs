@@ -33,17 +33,17 @@ namespace PeterO.Cbor {
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTag37.ToCBORObject(System.Guid)"]/*'/>
     public CBORObject ToCBORObject(Guid obj) {
       byte[] bytes = PropertyMap.UUIDToBytes(obj);
-      return CBORObject.FromObjectAndTag(bytes2, (int)37);
+      return CBORObject.FromObjectAndTag(bytes, (int)37);
     }
     public Guid FromCBORObject(CBORObject obj) {
       if (!obj.HasMostOuterTag(37)) {
-        throw new CBORObject("Must have outermost tag 37");
+        throw new CBORException("Must have outermost tag 37");
       }
       ValidateObject(obj);
       byte[] bytes = obj.GetByteString();
-      char[] guidChars = new char[36];
+      var guidChars = new char[36];
       string hex="0123456789abcdef";
-      int index = 0;
+      var index = 0;
       for (var i = 0; i < 16; ++i) {
        if (i == 4 || i == 6 || i == 8 || i == 10) {
          guidChars[index++]='-';
@@ -52,7 +52,7 @@ namespace PeterO.Cbor {
        guidChars[index++]=hex[(int)(bytes[i]) & 15];
       }
       string guidString = new String(guidChars);
-      return Guid.Parse(guidString);
+      return new Guid(guidString);
     }
   }
 }
