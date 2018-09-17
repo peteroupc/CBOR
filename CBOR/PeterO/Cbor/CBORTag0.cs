@@ -11,8 +11,8 @@ using PeterO.Numbers;
 namespace PeterO.Cbor {
   internal class CBORTag0 : ICBORTag, ICBORObjectConverter<DateTime> {
     private static string DateTimeToString(DateTime bi) {
-      int[] lesserFields = new int[7];
-      EInteger[] year = new EInteger[1];
+      var lesserFields = new int[7];
+      var year = new EInteger[1];
       PropertyMap.BreakDownDateTime(bi, year, lesserFields);
       // TODO: Change to true in next major version
       return CBORUtilities.ToAtomDateTimeString(year[0], lesserFields, false);
@@ -41,16 +41,27 @@ namespace PeterO.Cbor {
     }
 
     public DateTime FromCBORObject(CBORObject obj) {
-      // TODO: Support tag 1
-      if (!obj.HasMostOuterTag(0)) {
-        throw new CBORException("Not tag 0");
+      if (obj.HasMostOuterTag(0)) {
+        return StringToDateTime(obj.AsString());
+      } else if (obj.HasMostOuterTag(1)) {
+        if (!obj.IsFinite) {
+          throw new CBORException("Not a finite number");
+        }
+          EDecimal dec = obj.AsEDecimal();
+          var lesserFields = new int[7];
+          var year = new EInteger[1];
+          CBORUtilities.BreakDownSecondsSinceEpoch(
+                  dec,
+                  year,
+                  lesserFields);
+          return PropertyMap.BuildUpDateTime(year[0], lesserFields);
       }
-      return StringToDateTime(obj.AsString());
+      throw new CBORException("Not tag 0 or 1");
     }
 
     public static DateTime StringToDateTime(string str) {
-      int[] lesserFields = new int[7];
-      EInteger[] year = new EInteger[1];
+      var lesserFields = new int[7];
+      var year = new EInteger[1];
       CBORUtilities.ParseAtomDateTimeString(str, year, lesserFields);
       return PropertyMap.BuildUpDateTime(year[0], lesserFields);
     }

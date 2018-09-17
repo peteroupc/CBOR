@@ -495,8 +495,10 @@ internal const bool DateTimeCompatHack = true;
       }
     }
 
-    public static void BreakDownDateTime(DateTime bi,
-        EInteger[] year, int[] lf) {
+    public static void BreakDownDateTime(
+  DateTime bi,
+  EInteger[] year,
+  int[] lf) {
 #if NET20
       DateTime dt = bi.ToUniversalTime();
 #else
@@ -511,6 +513,7 @@ internal const bool DateTimeCompatHack = true;
       // lf[5] is the number of nanoseconds
   lf[5] = (int)(dt.Ticks % 10000000L) * 100;
     }
+
     public static DateTime BuildUpDateTime(EInteger year, int[] dt) {
       return new DateTime(
   year.ToInt32Checked(),
@@ -520,11 +523,6 @@ internal const bool DateTimeCompatHack = true;
   dt[3],
   dt[4],
   DateTimeKind.Utc).AddMinutes(-dt[6]).AddTicks((long)(dt[5] / 100));
-    }
-
-    public static DateTime BuildUpDateTime(int[] dt) {
-return BuildUpDateTime(EInteger.FromInt32(dt[0]),
-  new int[] { dt[1], dt[2], dt[3], dt[4], dt[5], dt[6], dt[7] });
     }
   }
 }

@@ -201,23 +201,26 @@ namespace PeterO.Cbor {
 
     private static EInteger FloorDiv(EInteger a, EInteger n) {
       return a.Sign >= 0 ? a.Divide(n) : EInteger.FromInt32(-1).Subtract(
-                EInteger.FromInt32(-1).Subtract(a) .Divide(n));
+                EInteger.FromInt32(-1).Subtract(a).Divide(n));
     }
 
     private static EInteger FloorMod(EInteger a, EInteger n) {
       return a.Subtract(FloorDiv(a, n).Multiply(n));
     }
 
-    private static readonly int[] normalDays = { 0, 31, 28, 31, 30, 31, 30,
+    private static readonly int[] ValueNormalDays = { 0, 31, 28, 31, 30, 31, 30,
       31, 31, 30,
       31, 30, 31 };
-    private static readonly int[] leapDays = { 0, 31, 29, 31, 30, 31, 30,
+
+    private static readonly int[] ValueLeapDays = { 0, 31, 29, 31, 30, 31, 30,
       31, 31, 30,
       31, 30, 31 };
-    private static readonly int[] normalToMonth = { 0, 0x1f, 0x3b, 90, 120,
+
+    private static readonly int[] ValueNormalToMonth = { 0, 0x1f, 0x3b, 90, 120,
       0x97, 0xb5,
       0xd4, 0xf3, 0x111, 0x130, 0x14e, 0x16d };
-    private static readonly int[] leapToMonth = { 0, 0x1f, 60, 0x5b, 0x79,
+
+    private static readonly int[] ValueLeapToMonth = { 0, 0x1f, 60, 0x5b, 0x79,
       0x98, 0xb6,
       0xd5, 0xf4, 0x112, 0x131, 0x14f, 0x16e };
 
@@ -230,18 +233,19 @@ namespace PeterO.Cbor {
       if (month <= 0 || month > 12) {
         throw new ArgumentOutOfRangeException(nameof(month));
       }
+      EInteger num4 = EInteger.FromInt32(4);
       EInteger num100 = EInteger.FromInt32(100);
       EInteger num101 = EInteger.FromInt32(101);
       EInteger num146097 = EInteger.FromInt32(146097);
       EInteger num400 = EInteger.FromInt32(400);
-      int[] dayArray = (year.Remainder(4).Sign != 0 || (
-                    year.Remainder(100).Sign == 0 &&
-                    year.Remainder(400).Sign != 0)) ?
-         normalDays : leapDays;
+      int[] dayArray = (year.Remainder(num4).Sign != 0 || (
+                    year.Remainder(num100).Sign == 0 &&
+                    year.Remainder(num400).Sign != 0)) ?
+         ValueNormalDays : ValueLeapDays;
       if (day.CompareTo(num101) > 0) {
         EInteger count = day.Subtract(num100).Divide(num146097);
         day = day.Subtract(count.Multiply(num146097));
-        year = year.Add(count.Multiply(400));
+        year = year.Add(count.Multiply(num400));
       }
       while (true) {
         EInteger days = EInteger.FromInt32(dayArray[month]);
@@ -253,21 +257,22 @@ namespace PeterO.Cbor {
           if (month == 12) {
             month = 1;
             year = year.Add(EInteger.One);
-            dayArray = (year.Remainder(4).Sign != 0 || (
-                    year.Remainder(100).Sign == 0 &&
-                    year.Remainder(400).Sign != 0)) ? normalDays :
-              leapDays;
+            dayArray = (year.Remainder(num4).Sign != 0 || (
+                    year.Remainder(num100).Sign == 0 &&
+                    year.Remainder(num400).Sign != 0)) ? ValueNormalDays :
+              ValueLeapDays;
           } else {
             ++month;
           }
         }
         if (day.Sign <= 0) {
           int divResult = (month - 2) / 12;
-          year = year.Add(divResult);
+          year = year.Add(EInteger.FromInt32(divResult));
           month = ((month - 2) - 12 * divResult) + 1;
-          dayArray = (year.Remainder(4).Sign != 0 || (
-                    year.Remainder(100).Sign == 0 &&
-                    year.Remainder(400).Sign != 0)) ? normalDays : leapDays;
+          dayArray = (year.Remainder(num4).Sign != 0 || (
+                    year.Remainder(num100).Sign == 0 &&
+             year.Remainder(num400).Sign != 0)) ? ValueNormalDays :
+                    ValueLeapDays;
           day = day.Add(EInteger.FromInt32(dayArray[month]));
         }
       }
@@ -279,65 +284,67 @@ namespace PeterO.Cbor {
     public static EInteger GetNumberOfDaysProlepticGregorian(
          EInteger year,
          int month,
-         int day) {
+         int mday) {
       // NOTE: month = 1 is January, year = 1 is year 1
       if (month <= 0 || month > 12) {
  throw new ArgumentException();
 }
-      if (day <= 0 || day > 31) {
+      if (mday <= 0 || mday > 31) {
  throw new ArgumentException();
 }
+      EInteger num4 = EInteger.FromInt32(4);
+      EInteger num100 = EInteger.FromInt32(100);
+      EInteger num400 = EInteger.FromInt32(400);
       EInteger numDays = EInteger.Zero;
       var startYear = 1970;
-      if (year < EInteger.FromInt32(startYear)) {
-        for (EInteger i = EInteger.FromInt32(startYear - 1);
-             i.CompareTo(year) > 0;
-             i = i.Subtract(EInteger.One)) {
+      if (year.CompareTo(EInteger.FromInt32(startYear)) < 0) {
+        for (EInteger ei = EInteger.FromInt32(startYear - 1);
+             ei.CompareTo(year) > 0;
+             ei = ei.Subtract(EInteger.One)) {
           numDays = numDays.Subtract(EInteger.FromInt32(365));
-          if (!(i.Remainder(4).Sign != 0 || (
-                    i.Remainder(100).Sign == 0 &&
-                    i.Remainder(400).Sign != 0))) {
+          if (!(ei.Remainder(num4).Sign != 0 || (
+                    ei.Remainder(num100).Sign == 0 &&
+                    ei.Remainder(num400).Sign != 0))) {
             numDays = numDays.Subtract(EInteger.One);
           }
         }
-        if (year.Remainder(4).Sign != 0 || (
-                    year.Remainder(100).Sign == 0 &&
-                    year.Remainder(400).Sign != 0)) {
+        if (year.Remainder(num4).Sign != 0 || (
+                    year.Remainder(num100).Sign == 0 &&
+                    year.Remainder(num400).Sign != 0)) {
           numDays = numDays.Subtract(
-             EInteger.FromInt32(365 - normalToMonth[month]));
+             EInteger.FromInt32(365 - ValueNormalToMonth[month]));
           numDays = numDays.Subtract(
-             EInteger.FromInt32(normalDays[month] - day + 1));
+             EInteger.FromInt32(ValueNormalDays[month] - mday + 1));
         } else {
           numDays = numDays.Subtract(
-             EInteger.FromInt32(366 - leapToMonth[month]));
+             EInteger.FromInt32(366 - ValueLeapToMonth[month]));
           numDays = numDays.Subtract(
-             EInteger.FromInt32(leapDays[month] - day + 1));
+             EInteger.FromInt32(ValueLeapDays[month] - mday + 1));
         }
       } else {
-        bool isNormalYear = (year.Remainder(4).Sign != 0 || (
-                    year.Remainder(100).Sign == 0 &&
-                    year.Remainder(400).Sign != 0));
-        EInteger i = EInteger.FromInt32(startYear);
+        bool isNormalYear = year.Remainder(num4).Sign != 0 ||
+        (year.Remainder(num100).Sign == 0 && year.Remainder(num400).Sign !=
+            0);
+        EInteger ei = EInteger.FromInt32(startYear);
         EInteger num401 = EInteger.FromInt32(401);
-        EInteger num400 = EInteger.FromInt32(400);
         EInteger num146097 = EInteger.FromInt32(146097);
-        for (; i.Add(num401).CompareTo(year) < 0;
-            i = i.Add(num400)) {
+        for (; ei.Add(num401).CompareTo(year) < 0;
+            ei = ei.Add(num400)) {
           numDays = numDays.Add(num146097);
         }
-        for (; i.CompareTo(year) < 0;
-            i = i.Add(EInteger.One)) {
+        for (; ei.CompareTo(year) < 0;
+            ei = ei.Add(EInteger.One)) {
           numDays = numDays.Add(EInteger.FromInt32(365));
-          if (!(i.Remainder(4).Sign != 0 || (
-                    i.Remainder(100).Sign == 0 &&
-                    i.Remainder(400).Sign != 0))) {
+          if (!(ei.Remainder(num4).Sign != 0 || (
+                    ei.Remainder(num100).Sign == 0 &&
+                    ei.Remainder(num400).Sign != 0))) {
             numDays = numDays.Add(EInteger.One);
           }
         }
-        int yearToMonth = (isNormalYear) ? normalToMonth[month - 1] :
-          leapToMonth[month - 1];
+        int yearToMonth = isNormalYear ? ValueNormalToMonth[month - 1] :
+          ValueLeapToMonth[month - 1];
         numDays = numDays.Add(EInteger.FromInt32(yearToMonth))
-             .Add(EInteger.FromInt32(day - 1));
+             .Add(EInteger.FromInt32(mday - 1));
       }
       return numDays;
     }
@@ -352,11 +359,12 @@ namespace PeterO.Cbor {
       int nanoseconds = fractionalPart .Multiply(EDecimal.FromInt32(1000000000))
        .ToInt32Checked();
       var normPart = new EInteger[3];
-      EInteger days = FloorDiv(integerPart,
-                    EInteger.FromInt32(86400))
-        .Add(EInteger.One);
-      int secondsInDay = FloorMod(integerPart,
-                EInteger.FromInt32(86400)) .ToInt32Checked();
+      EInteger days = FloorDiv(
+  integerPart,
+  EInteger.FromInt32(86400)).Add(EInteger.One);
+      int secondsInDay = FloorMod(
+  integerPart,
+  EInteger.FromInt32(86400)).ToInt32Checked();
       GetNormalizedPartProlepticGregorian(
      EInteger.FromInt32(1970),
      1,
@@ -409,12 +417,15 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
       return (((yr % 4) == 0) && ((yr % 100) != 0)) || ((yr % 400) == 0);
     }
 
-    public static void ParseAtomDateTimeString(string str,
-         EInteger[] bigYearArray, int[] lf) {
+    public static void ParseAtomDateTimeString(
+  string str,
+  EInteger[] bigYearArray,
+  int[] lf) {
   int[] d = ParseAtomDateTimeString(str);
-   bigYearArray[0]=EInteger.FromInt32(d[0]);
+   bigYearArray[0] = EInteger.FromInt32(d[0]);
    Array.Copy(d, 1, lf, 0, 7);
     }
+
     private static int[] ParseAtomDateTimeString(string str) {
       var bad = false;
       if (str.Length < 19) {
@@ -446,21 +457,21 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
       var index = 19;
       var nanoSeconds = 0;
       if (index <= str.Length && str[index] == '.') {
-        var count = 0;
+        var icount = 0;
         ++index;
         while (index < str.Length) {
           if (str[index] < '0' || str[index] > '9') {
             break;
           }
-          if (count < 9) {
+          if (icount < 9) {
             nanoSeconds = nanoSeconds * 10 + (str[index] - '0');
-            ++count;
+            ++icount;
           }
           ++index;
         }
-        while (count < 9) {
+        while (icount < 9) {
           nanoSeconds *= 10;
-          ++count;
+          ++icount;
         }
       }
       var utcToLocal = 0;
@@ -510,13 +521,14 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
         throw new NotSupportedException(
           "Local time offsets not supported");
       }
-      int year = bigYear.ToInt32Checked();
-      if (year < 0) {
-  throw new ArgumentException("year (" + year +
+      int smallYear = bigYear.ToInt32Checked();
+      if (smallYear < 0) {
+  throw new ArgumentException("year (" + smallYear +
     ") is not greater or equal to 0");
 }
-if (year > 9999) {
-  throw new ArgumentException("year (" + year + ") is not less or equal to 9999");
+if (smallYear > 9999) {
+  throw new ArgumentException("year (" + smallYear +
+    ") is not less or equal to 9999");
 }
       int month = lesserFields[0];
       int day = lesserFields[1];
@@ -525,10 +537,10 @@ if (year > 9999) {
       int second = lesserFields[4];
       int fracSeconds = lesserFields[5];
       var charbuf = new char[32];
-      charbuf[0] = (char)('0' + ((year / 1000) % 10));
-      charbuf[1] = (char)('0' + ((year / 100) % 10));
-      charbuf[2] = (char)('0' + ((year / 10) % 10));
-      charbuf[3] = (char)('0' + (year % 10));
+      charbuf[0] = (char)('0' + ((smallYear / 1000) % 10));
+      charbuf[1] = (char)('0' + ((smallYear / 100) % 10));
+      charbuf[2] = (char)('0' + ((smallYear / 10) % 10));
+      charbuf[3] = (char)('0' + (smallYear % 10));
       charbuf[4] = '-';
       charbuf[5] = (char)('0' + ((month / 10) % 10));
       charbuf[6] = (char)('0' + (month % 10));
@@ -546,14 +558,14 @@ if (year > 9999) {
       charbuf[18] = (char)('0' + (second % 10));
       var charbufLength = 19;
       if (!fracIsNanoseconds) {
-         int milliseconds = fracSeconds/1000000;
+         int milliseconds = fracSeconds / 1000000;
          if (milliseconds > 0) {
           charbuf[19] = '.';
           charbuf[20] = (char)('0' + ((milliseconds / 100) % 10));
           charbuf[21] = (char)('0' + ((milliseconds / 10) % 10));
           charbuf[22] = (char)('0' + (milliseconds % 10));
           charbuf[23] = 'Z';
-          charbufLength+=5;
+          charbufLength += 5;
         } else {
           charbuf[19] = 'Z';
           ++charbufLength;
@@ -564,12 +576,12 @@ if (year > 9999) {
  ++charbufLength;
 int digitdiv = 100000000;
 int index = 20;
-while (digitdiv>0 && fracSeconds != 0) {
- int digit=(fracSeconds/digitdiv)%10;
- fracSeconds-=digit*digitdiv;
- charbuf[index++]=(char)('0'+digit);
+while (digitdiv > 0 && fracSeconds != 0) {
+ int digit = (fracSeconds / digitdiv) % 10;
+ fracSeconds -= digit * digitdiv;
+ charbuf[index++] = (char)('0' + digit);
  ++charbufLength;
- digitdiv/=10;
+ digitdiv /= 10;
 }
           charbuf[index] = 'Z';
           ++charbufLength;

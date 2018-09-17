@@ -743,7 +743,19 @@ This object's value exceeds the range of a 16-bit signed integer.
 
     public int AsInt32();
 
-Converts this object to a 32-bit signed integer. Floating point values are truncated to an integer.
+Converts this object to a 32-bit signed integer. Non-integer number values are truncated to an integer. (NOTE: To determine whether this method call can succeed, call the<b>CanTruncatedIntFitInInt32</b>method before calling this method. hecking whether this object's type is  `CBORType.Number` is ot sufficient. See the example.).
+
+The following example code (originally written in C# for the .NET Framework) shows a way to check whether a given CBOR object stores a 32-bit signed integer before getting its value.
+
+    CBORObject obj = CBORObject.FromInt32(99999);
+    if(obj.IsIntegral &&
+      obj.CanTruncatedIntFitInInt32()) {
+     // Not an Int32; handle the error
+     Console.WriteLine("Not a 32-bit integer.");
+    } else {
+     Console.WriteLine("The value is " +
+          obj.AsInt32());
+    }
 
 <b>Return Value:</b>
 
@@ -761,7 +773,19 @@ This object's value exceeds the range of a 32-bit signed integer.
 
     public long AsInt64();
 
-Converts this object to a 64-bit signed integer. Floating point values are truncated to an integer.
+Converts this object to a 64-bit signed integer. Non-integer numbers are truncated to an integer. (NOTE: To determine whether this method call can succeed, call the<b>CanTruncatedIntFitInInt64</b>method before calling this method. hecking whether this object's type is  `CBORType.Number` is ot sufficient. See the example.).
+
+The following example code (originally written in C# for the .NET Framework) shows a way to check whether a given CBOR object stores a 64-bit signed integer before getting its value.
+
+    CBORObject obj = CBORObject.FromInt64(99999);
+    if(obj.IsIntegral &&
+      obj.CanTruncatedIntFitInInt64()) {
+     // Not an Int64; handle the error
+     Console.WriteLine("Not a 64-bit integer.");
+    } else {
+     Console.WriteLine("The value is " +
+          obj.AsInt64());
+    }
 
 <b>Return Value:</b>
 
@@ -805,6 +829,11 @@ This object's type is not a number type.
     public string AsString();
 
 Gets the value of this object as a text string.
+
+The following example code (originally written in C# for the .NET Framework) shows an idiom for returning a string value if a CBOR object is a text string, or  `null` if the CBOR object is CBOR null.
+
+    CBORObject obj = CBORObject.FromString("test");
+    string str = obj.IsNull ? null : obj.AsString();
 
 <b>Return Value:</b>
 
@@ -867,41 +896,41 @@ This object's value exceeds the range of a 64-bit unsigned integer.
 
     public bool CanFitInDouble();
 
-Returns whether this object's value can be converted to a 64-bit floating point number without loss of its numerical value.
+Returns whether this object's value can be converted to a 64-bit floating point number without its value being rounded to another numerical value.
 
 <b>Return Value:</b>
 
-Whether this object's value can be converted to a 64-bit floating point number without loss of its numerical value. Returns true if this is a not-a-number value, even if the value's diagnostic information can' t fit in a 64-bit floating point number.
+Whether this object's value can be converted to a 64-bit floating point number without its value being rounded to another numerical value. Returns true if this is a not-a-number value, even if the value's diagnostic information can' t fit in a 64-bit floating point number.
 
 ### CanFitInInt32
 
     public bool CanFitInInt32();
 
-Returns whether this object's value is an integral value, is -(2^31) or greater, and is less than 2^31.
+Returns whether this object's numerical value is an integer, is -(2^31) or greater, and is less than 2^31.
 
 <b>Return Value:</b>
 
- `true` if this object's value is an integral value, is -(2^31) or greater, and s less than 2^31; otherwise,  `false` .
+ `true` if this object's numerical value is an integer, is -(2^31) or greater, and s less than 2^31; otherwise,  `false` .
 
 ### CanFitInInt64
 
     public bool CanFitInInt64();
 
-Returns whether this object's value is an integral value, is -(2^63) or greater, and is less than 2^63.
+Returns whether this object's numerical value is an integer, is -(2^63) or greater, and is less than 2^63.
 
 <b>Return Value:</b>
 
- `true` if this object's value is an integral value, is -(2^63) or greater, and s less than 2^63; otherwise,  `false` .
+ `true` if this object's numerical value is an integer, is -(2^63) or greater, and s less than 2^63; otherwise,  `false` .
 
 ### CanFitInSingle
 
     public bool CanFitInSingle();
 
-Returns whether this object's value can be converted to a 32-bit floating point number without loss of its numerical value.
+Returns whether this object's value can be converted to a 32-bit floating point number without its value being rounded to another numerical value.
 
 <b>Return Value:</b>
 
-Whether this object's value can be converted to a 32-bit floating point number without loss of its numerical value. Returns true if this is a not-a-number value, even if the value's diagnostic information can' t fit in a 32-bit floating point number.
+Whether this object's value can be converted to a 32-bit floating point number without its value being rounded to another numerical value. Returns true if this is a not-a-number value, even if the value's diagnostic information can' t fit in a 32-bit floating point number.
 
 ### CanTruncatedIntFitInInt32
 
@@ -1040,11 +1069,11 @@ Generates a CBOR object from an array of CBOR-encoded bytes.
 
 <b>Parameters:</b>
 
- * <i>data</i>: A byte array.
+ * <i>data</i>: A byte array in which a single CBOR object is encoded.
 
 <b>Return Value:</b>
 
-A CBOR object corresponding to the data.
+A CBOR object decoded from the given byte array.
 
 <b>Exceptions:</b>
 
@@ -1062,18 +1091,30 @@ The parameter <i>data</i>
         byte[] data,
         PeterO.Cbor.CBOREncodeOptions options);
 
-Generates a CBOR object from an array of CBOR-encoded bytes, using the given  `CBOREncodeOptions`  object to control the decoding process.
+Generates a CBOR object from an array of CBOR-encoded bytes, using the given  `CBOREncodeOptions` object to control he decoding process.
+
+The following example (originally written in C# for the .NET version) implements a method that decodes a text string from a CBOR byte array. It's successful only if the CBOR object contains an untagged text string.
+
+    private static String DecodeTextString(byte[]
+                bytes){ if(bytes
+                == null){ throw new
+                ArgumentNullException(nameof(mapObj));}
+                if(bytes.Length ==
+                0 || bytes[0]<0x60 || bytes[0]>0x7f){throw new
+                CBORException();}
+                return CBORObject.DecodeFromBytes(bytes,
+                CBOREncodeOptions.Default).AsString(); }
 
 <b>Parameters:</b>
 
- * <i>data</i>: A byte array.
+ * <i>data</i>: A byte array in which a single CBOR object is encoded.
 
  * <i>options</i>: The parameter  <i>options</i>
  is a CBOREncodeOptions object.
 
 <b>Return Value:</b>
 
-A CBOR object corresponding to the data.
+A CBOR object decoded from the given byte array.
 
 <b>Exceptions:</b>
 
@@ -1951,6 +1992,52 @@ Gets a list of all tags, from outermost to innermost.
 <b>Return Value:</b>
 
 An array of tags, or the empty string if this object is untagged.
+
+### HasMostOuterTag
+
+    public bool HasMostOuterTag(
+        int tagValue);
+
+Returns whether this object has a tag of the given number.
+
+<b>Parameters:</b>
+
+ * <i>tagValue</i>: The tag value to search for.
+
+<b>Return Value:</b>
+
+ `true`  if this object has a tag of the given number; otherwise,  `false` .
+
+<b>Exceptions:</b>
+
+ * System.ArgumentException:
+TagValue is less than 0.
+
+ * System.ArgumentNullException:
+The parameter "obj" is null.
+
+### HasMostOuterTag
+
+    public bool HasMostOuterTag(
+        PeterO.Numbers.EInteger bigTagValue);
+
+Returns whether this object has a tag of the given number.
+
+<b>Parameters:</b>
+
+ * <i>bigTagValue</i>: The tag value to search for.
+
+<b>Return Value:</b>
+
+ `true`  if this object has a tag of the given number; otherwise,  `false` .
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+BigTagValue is null.
+
+ * System.ArgumentException:
+BigTagValue is less than 0.
 
 ### HasTag
 

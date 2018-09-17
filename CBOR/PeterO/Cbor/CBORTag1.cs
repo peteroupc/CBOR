@@ -8,9 +8,8 @@ at: http://peteroupc.github.io/
 using System;
 using PeterO.Numbers;
 
-
 namespace PeterO.Cbor {
-  internal class CBORTag1 : ICBORTag, ICBORObjectConverter<DateTime>
+  internal class CBORTag1 : ICBORTag, ICBORConverter<DateTime>
   {
     public CBORTypeFilter GetTypeFilter() {
       return
@@ -27,19 +26,6 @@ namespace PeterO.Cbor {
     public CBORObject ToCBORObject(DateTime obj) {
        // TODO
        throw new NotImplementedException();
-    }
-    public DateTime FromCBORObject(CBORObject obj) {
-      if (!obj.HasMostOuterTag(1) || !obj.IsFinite) {
-        throw new CBORException("Not a valid date");
-      }
-      EDecimal dec = obj.AsEDecimal();
-      var lesserFields = new int[7];
-      EInteger[] year = new EInteger[1];
-      CBORUtilities.BreakDownSecondsSinceEpoch(
-              dec,
-              year,
-              lesserFields);
-      return PropertyMap.BuildUpDateTime(year[0], lesserFields);
     }
   }
 }

@@ -35,21 +35,22 @@ namespace PeterO.Cbor {
       byte[] bytes = PropertyMap.UUIDToBytes(obj);
       return CBORObject.FromObjectAndTag(bytes, (int)37);
     }
+
     public Guid FromCBORObject(CBORObject obj) {
       if (!obj.HasMostOuterTag(37)) {
         throw new CBORException("Must have outermost tag 37");
       }
-      ValidateObject(obj);
+      this.ValidateObject(obj);
       byte[] bytes = obj.GetByteString();
       var guidChars = new char[36];
-      string hex="0123456789abcdef";
+      string hex = "0123456789abcdef";
       var index = 0;
       for (var i = 0; i < 16; ++i) {
        if (i == 4 || i == 6 || i == 8 || i == 10) {
-         guidChars[index++]='-';
+         guidChars[index++] = '-';
        }
-       guidChars[index++]=hex[(int)(bytes[i]>>4) & 15];
-       guidChars[index++]=hex[(int)(bytes[i]) & 15];
+       guidChars[index++] = hex[(int)(bytes[i] >> 4) & 15];
+       guidChars[index++] = hex[(int)bytes[i] & 15];
       }
       string guidString = new String(guidChars);
       return new Guid(guidString);

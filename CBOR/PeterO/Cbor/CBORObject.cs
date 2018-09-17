@@ -602,8 +602,38 @@ namespace PeterO.Cbor {
       return DecodeFromBytes(data, new CBOREncodeOptions(true, true));
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.DecodeFromBytes(System.Byte[],PeterO.Cbor.CBOREncodeOptions)"]/*'/>
+    /// <summary>Generates a CBOR object from an array of CBOR-encoded
+    /// bytes, using the given <c>CBOREncodeOptions</c>
+    ///  object to control
+    /// the decoding process.</summary>
+    /// <param name='data'>A byte array in which a single CBOR object is
+    /// encoded.</param>
+    /// <param name='options'>The parameter <paramref name='options'/> is a
+    /// CBOREncodeOptions object.</param>
+    /// <returns>A CBOR object decoded from the given byte array.</returns>
+    /// <exception cref='T:PeterO.Cbor.CBORException'>There was an error in
+    /// reading or parsing the data. This includes cases where not all of
+    /// the byte array represents a CBOR object. This exception is also
+    /// thrown if the parameter <paramref name='data'/> is
+    /// empty.</exception>
+    /// <exception cref='T:System.ArgumentNullException'>The parameter
+    /// <paramref name='data'/> is null.</exception>
+    /// <example>
+    /// <para>The following example (originally written in C# for the .NET
+    /// version) implements a method that decodes a text string from a CBOR
+    /// byte array. It's successful only if the CBOR object contains an
+    /// untagged text string.</para>
+    /// <code>private static String DecodeTextString&#x28;byte[]
+    /// bytes)&#x7b; if&#x28;bytes
+    /// == null)&#x7b; throw new
+    /// ArgumentNullException&#x28;nameof(mapObj));&#x7d;
+    /// if&#x28;bytes.Length ==
+    /// 0 || bytes[0]&lt;0x60 || bytes[0]&gt;0x7f)&#x7b;throw new
+    /// CBORException&#x28;);&#x7d;
+    /// return CBORObject.DecodeFromBytes&#x28;bytes,
+    /// CBOREncodeOptions.Default).AsString&#x28;); &#x7d;
+    /// </code>
+    /// </example>
     public static CBORObject DecodeFromBytes(
   byte[] data,
   CBOREncodeOptions options) {
@@ -2021,14 +2051,70 @@ namespace PeterO.Cbor {
       return (short)this.AsInt32(Int16.MinValue, Int16.MaxValue);
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsInt32"]/*'/>
+    /// <summary>Converts this object to a 32-bit signed integer.
+    /// Non-integer number values are truncated to an integer. (NOTE: To
+    /// determine whether this method call can succeed, call the
+    /// <b>CanTruncatedIntFitInInt32</b>
+    ///  method before calling this method.
+    /// Checking whether this object's type is <c>CBORType.Number</c>
+    ///  is
+    /// not sufficient. See the example.).</summary>
+    /// <returns>The closest 32-bit signed integer to this
+    /// object.</returns>
+    /// <exception cref='T:System.InvalidOperationException'>This object's
+    /// type is not a number type.</exception>
+    /// <exception cref='T:System.OverflowException'>This object's value
+    /// exceeds the range of a 32-bit signed integer.</exception>
+    /// <example>
+    /// <para>The following example code (originally written in C# for the
+    /// .NET Framework) shows a way to check whether a given CBOR object
+    /// stores a 32-bit signed integer before getting its value.</para>
+    /// <code>
+    /// CBORObject obj = CBORObject.FromInt32(99999);
+    /// if&#x28;obj.IsIntegral &amp;&amp;
+    /// obj.CanTruncatedIntFitInInt32&#x28;)) &#x7b;
+    ///  // Not an Int32; handle the error
+    /// Console.WriteLine("Not a 32-bit integer.");
+    /// &#x7d; else {
+    /// Console.WriteLine("The value is " +
+    /// obj.AsInt32());
+    /// }
+    /// </code>
+    /// </example>
     public int AsInt32() {
       return this.AsInt32(Int32.MinValue, Int32.MaxValue);
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsInt64"]/*'/>
+    /// <summary>Converts this object to a 64-bit signed integer.
+    /// Non-integer numbers are truncated to an integer. (NOTE: To
+    /// determine whether this method call can succeed, call the
+    /// <b>CanTruncatedIntFitInInt64</b>
+    ///  method before calling this method.
+    /// Checking whether this object's type is <c>CBORType.Number</c>
+    ///  is
+    /// not sufficient. See the example.).</summary>
+    /// <returns>The closest 64-bit signed integer to this
+    /// object.</returns>
+    /// <exception cref='T:System.InvalidOperationException'>This object's
+    /// type is not a number type.</exception>
+    /// <exception cref='T:System.OverflowException'>This object's value
+    /// exceeds the range of a 64-bit signed integer.</exception>
+    /// <example>
+    /// <para>The following example code (originally written in C# for the
+    /// .NET Framework) shows a way to check whether a given CBOR object
+    /// stores a 64-bit signed integer before getting its value.</para>
+    /// <code>
+    /// CBORObject obj = CBORObject.FromInt64(99999);
+    /// if&#x28;obj.IsIntegral &amp;&amp;
+    /// obj.CanTruncatedIntFitInInt64&#x28;)) &#x7b;
+    ///  // Not an Int64; handle the error
+    /// Console.WriteLine("Not a 64-bit integer.");
+    /// &#x7d; else {
+    /// Console.WriteLine("The value is " +
+    /// obj.AsInt64());
+    /// }
+    /// </code>
+    /// </example>
     public long AsInt64() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       if (cn == null) {
@@ -2047,8 +2133,22 @@ namespace PeterO.Cbor {
       return cn.AsSingle(this.ThisItem);
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsString"]/*'/>
+    /// <summary>Gets the value of this object as a text string.</summary>
+    /// <returns>Gets this object's string.</returns>
+    /// <exception cref='T:System.InvalidOperationException'>This object's
+    /// type is not a string, including if this object is
+    /// CBORObject.Null.</exception>
+    /// <example>
+    /// <para>The following example code (originally written in C# for the
+    /// .NET Framework) shows an idiom for returning a string value if a
+    /// CBOR object is a text string, or <c>null</c>
+    ///  if the CBOR object is
+    /// a CBOR null.</para>
+    /// <code>
+    /// CBORObject obj = CBORObject.FromString("test");
+    /// string str = obj.IsNull ? null : obj.AsString();
+    /// </code>
+    /// </example>
     public string AsString() {
       // TODO: Consider returning null if this object is null
       // in next major version
@@ -2640,14 +2740,14 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasTag(PeterO.BigInteger)"]/*'/>
  public bool HasMostOuterTag(EInteger bigTagValue) {
-    if ((bigTagValue) == null) {
+    if (bigTagValue == null) {
   throw new ArgumentNullException(nameof(bigTagValue));
 }
       if (bigTagValue.Sign < 0) {
         throw new ArgumentException("bigTagValue (" + bigTagValue +
                     ") is less than 0");
       }
- return (!this.IsTagged) ? (false) : (this.MostOuterTag.Equals(bigTagValue));
+ return (!this.IsTagged) ? false : this.MostOuterTag.Equals(bigTagValue);
  }
 
     /// <include file='../../docs.xml'

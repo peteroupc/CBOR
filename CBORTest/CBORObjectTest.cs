@@ -2968,9 +2968,63 @@ a major version change.
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
+
+    private void Sink(object obj) {
+      Console.WriteLine("Sink for " + obj);
+      Assert.Fail();
+    }
+
     [Test]
     public void TestKeys() {
-      // not implemented yet
+try {
+        this.Sink(CBORObject.True.Keys);
+Assert.Fail("Should have failed");
+} catch (InvalidOperationException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+        this.Sink(CBORObject.FromObject(0).Keys);
+Assert.Fail("Should have failed");
+} catch (InvalidOperationException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+        this.Sink(CBORObject.FromObject("string").Keys);
+Assert.Fail("Should have failed");
+} catch (InvalidOperationException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+        this.Sink(CBORObject.NewArray().Keys);
+Assert.Fail("Should have failed");
+} catch (InvalidOperationException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ this.Sink(CBORObject.FromObject(
+          new byte[] { 0 }).Keys);
+Assert.Fail("Should have failed");
+} catch (InvalidOperationException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      if (CBORObject.NewMap().Keys == null) {
+ Assert.Fail();
+ }
     }
     [Test]
     public void TestMultiply() {
