@@ -6,9 +6,11 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/
  */
 using System;
+using PeterO.Numbers;
+
 
 namespace PeterO.Cbor {
-  internal class CBORTag1 : ICBORTag, ICBORObjectConverter<Date>
+  internal class CBORTag1 : ICBORTag, ICBORObjectConverter<DateTime>
   {
     public CBORTypeFilter GetTypeFilter() {
       return
@@ -32,12 +34,12 @@ namespace PeterO.Cbor {
       }
       EDecimal dec = obj.AsEDecimal();
       var lesserFields = new int[7];
-      EInteger[] year = new int[1];
+      EInteger[] year = new EInteger[1];
       CBORUtilities.BreakDownSecondsSinceEpoch(
               dec,
               year,
               lesserFields);
-      return CBORUtilities.BuildUpDateTime(year[0], lesserFields);
+      return PropertyMap.BuildUpDateTime(year[0], lesserFields);
     }
   }
 }

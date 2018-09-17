@@ -500,13 +500,13 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
       return dt;
     }
 
-    public static string ToAtomDateTimeStrings(
+    public static string ToAtomDateTimeString(
       EInteger bigYear,
       int[] lesserFields,
       bool fracIsNanoseconds) {
       // TODO: fracIsNanoseconds is a parameter
       // for compatibility purposes only
-      if (dateTime[7] != 0) {
+      if (lesserFields[6] != 0) {
         throw new NotSupportedException(
           "Local time offsets not supported");
       }
@@ -518,12 +518,12 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
 if (year > 9999) {
   throw new ArgumentException("year (" + year + ") is not less or equal to 9999");
 }
-      int month = dateTime[0];
-      int day = dateTime[1];
-      int hour = dateTime[2];
-      int minute = dateTime[3];
-      int second = dateTime[4];
-      int fracSeconds = dateTime[5];
+      int month = lesserFields[0];
+      int day = lesserFields[1];
+      int hour = lesserFields[2];
+      int minute = lesserFields[3];
+      int second = lesserFields[4];
+      int fracSeconds = lesserFields[5];
       var charbuf = new char[32];
       charbuf[0] = (char)('0' + ((year / 1000) % 10));
       charbuf[1] = (char)('0' + ((year / 100) % 10));

@@ -509,7 +509,7 @@ internal const bool DateTimeCompatHack = true;
       lf[3] = dt.Minute;
       lf[4] = dt.Second;
       // lf[5] is the number of nanoseconds
-      lf[5] = (dt.Ticks % 10000000L) * 100;
+  lf[5] = (int)(dt.Ticks % 10000000L) * 100;
     }
     public static DateTime BuildUpDateTime(EInteger year, int[] dt) {
       return new DateTime(

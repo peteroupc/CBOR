@@ -6,13 +6,16 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/
  */
 using System;
+using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   internal class CBORTag0 : ICBORTag, ICBORObjectConverter<DateTime> {
     private static string DateTimeToString(DateTime bi) {
-      int[] dt = PropertyMap.BreakDownDateTime(bi);
+      int[] lesserFields = new int[7];
+      EInteger[] year = new EInteger[1];
+      PropertyMap.BreakDownDateTime(bi, year, lesserFields);
       // TODO: Change to true in next major version
-      return CBORUtilities.ToAtomDateTimeString(dt, false);
+      return CBORUtilities.ToAtomDateTimeString(year[0], lesserFields, false);
     }
 
     internal static void AddConverter() {
@@ -46,8 +49,10 @@ namespace PeterO.Cbor {
     }
 
     public static DateTime StringToDateTime(string str) {
-      int[] dt = CBORUtilities.ParseAtomDateTimeString(str);
-      return PropertyMap.BuildUpDateTime(dt);
+      int[] lesserFields = new int[7];
+      EInteger[] year = new EInteger[1];
+      CBORUtilities.ParseAtomDateTimeString(str, year, lesserFields);
+      return PropertyMap.BuildUpDateTime(year[0], lesserFields);
     }
 
     public CBORObject ToCBORObject(DateTime obj) {
