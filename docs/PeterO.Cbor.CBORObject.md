@@ -748,14 +748,14 @@ Converts this object to a 32-bit signed integer. Non-integer number values are t
 The following example code (originally written in C# for the .NET Framework) shows a way to check whether a given CBOR object stores a 32-bit signed integer before getting its value.
 
     CBORObject obj = CBORObject.FromInt32(99999);
-    if(obj.IsIntegral &&
-      obj.CanTruncatedIntFitInInt32()) {
-     // Not an Int32; handle the error
-     Console.WriteLine("Not a 32-bit integer.");
-    } else {
-     Console.WriteLine("The value is " +
-          obj.AsInt32());
-    }
+                if(obj.IsIntegral &&
+                obj.CanTruncatedIntFitInInt32()) {
+                 // Not an Int32; handle the error
+                Console.WriteLine("Not a 32-bit integer.");
+                } else {
+                Console.WriteLine("The value is " +
+                obj.AsInt32());
+                }
 
 <b>Return Value:</b>
 
@@ -778,14 +778,14 @@ Converts this object to a 64-bit signed integer. Non-integer numbers are truncat
 The following example code (originally written in C# for the .NET Framework) shows a way to check whether a given CBOR object stores a 64-bit signed integer before getting its value.
 
     CBORObject obj = CBORObject.FromInt64(99999);
-    if(obj.IsIntegral &&
-      obj.CanTruncatedIntFitInInt64()) {
-     // Not an Int64; handle the error
-     Console.WriteLine("Not a 64-bit integer.");
-    } else {
-     Console.WriteLine("The value is " +
-          obj.AsInt64());
-    }
+                if(obj.IsIntegral &&
+                obj.CanTruncatedIntFitInInt64()) {
+                 // Not an Int64; handle the error
+                Console.WriteLine("Not a 64-bit integer.");
+                } else {
+                Console.WriteLine("The value is " +
+                obj.AsInt64());
+                }
 
 <b>Return Value:</b>
 
@@ -833,7 +833,7 @@ Gets the value of this object as a text string.
 The following example code (originally written in C# for the .NET Framework) shows an idiom for returning a string value if a CBOR object is a text string, or  `null` if the CBOR object is CBOR null.
 
     CBORObject obj = CBORObject.FromString("test");
-    string str = obj.IsNull ? null : obj.AsString();
+                string str = obj.IsNull ? null : obj.AsString();
 
 <b>Return Value:</b>
 

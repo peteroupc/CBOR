@@ -607,39 +607,58 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Add(PeterO.Cbor.CBORObject)">
-
-            <summary><para>Adds a new object to the end of this array. (Used to throw
-            ArgumentNullException on a null reference, but now converts the
-            null reference to CBORObject.Null, for convenience with the Object
-            overload of this method).</para>
-<para>NOTE: This method can't be used to add a tag to an existing CBOR object.  To create a CBOR object with a given tag, call the <c>CBORObject.FromObjectAndTag</c> method and pass the CBOR object and the desired tag number to that method.</para></summary><example><para>The following example creates a CBOR array and adds several CBOR objects, one of which has a custom CBOR tag, to that array.  Note the chaining behavior made possible by this method.</para>
-<code>CBORObject obj = CBORObject.NewArray()
-  .Add(CBORObject.False)
-  .Add(CBORObject.FromObject(5))
-  .Add(CBORObject.FromObject("text string"))
-  .Add(CBORObject.FromObjectAndTag(9999, 1));
-</code>
-</example><param name='obj'>The parameter <paramref name='obj'/> is a CBOR
-            object.</param><returns>This instance.</returns><exception cref='T:System.InvalidOperationException'>This object is
+<summary><para>Adds a new object to the end of this array. (Used to
+            throw ArgumentNullException on a null reference, but now converts
+            the null reference to CBORObject.Null, for convenience with the
+            Object overload of this method).</para>
+             <para>NOTE: This method
+            can't be used to add a tag to an existing CBOR object. To create a
+            CBOR object with a given tag, call the
+            <c>CBORObject.FromObjectAndTag</c>
+             method and pass the CBOR object
+            and the desired tag number to that method.</para>
+             </summary>
+            <param name='obj'>The parameter <paramref name='obj'/> is a CBOR
+            object.</param>
+            <returns>This instance.</returns>
+            <exception cref='T:System.InvalidOperationException'>This object is
             not an array.</exception>
-
+            <example><para>The following example creates a CBOR array and adds several
+            CBOR objects, one of which has a custom CBOR tag, to that array.
+            Note the chaining behavior made possible by this method.</para>
+            <code>CBORObject obj = CBORObject.NewArray()
+            .Add(CBORObject.False)
+            .Add(CBORObject.FromObject(5))
+            .Add(CBORObject.FromObject("text string"))
+            .Add(CBORObject.FromObjectAndTag(9999, 1));
+            </code>
+            </example>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Add(System.Object)">
-
-            <summary><para>Converts an object to a CBOR object and adds it to the end
-            of this array.</para>
-<para>NOTE: This method can't be used to add a tag to an existing CBOR object.  To create a CBOR object with a given tag, call the <c>CBORObject.FromObjectAndTag</c> method and pass the CBOR object and the desired tag number to that method.</para>
-</summary><example><para>The following example creates a CBOR array and adds several CBOR objects, one of which has a custom CBOR tag, to that array.  Note the chaining behavior made possible by this method.</para>
-<code>CBORObject obj = CBORObject.NewArray()
-  .Add(CBORObject.False)
-  .Add(5)
-  .Add("text string")
-  .Add(CBORObject.FromObjectAndTag(9999, 1));
-</code>
-</example><param name='obj'>The parameter <paramref name='obj'/> is a CBOR
-            object.</param><returns>This instance.</returns><exception cref='T:System.InvalidOperationException'>This object is
-            not an array.</exception><exception cref='T:System.ArgumentException'>The type of <paramref name='obj'/> is not supported.</exception>
-
+<summary><para>Converts an object to a CBOR object and adds it to
+            the end of this array.</para>
+             <para>NOTE: This method can't be used
+            to add a tag to an existing CBOR object. To create a CBOR object
+            with a given tag, call the <c>CBORObject.FromObjectAndTag</c>
+            method and pass the CBOR object and the desired tag number to that
+            method.</para>
+             </summary>
+            <param name='obj'>The parameter <paramref name='obj'/> is a CBOR
+            object.</param>
+            <returns>This instance.</returns>
+            <exception cref='T:System.InvalidOperationException'>This object is
+            not an array.</exception>
+            <exception cref='T:System.ArgumentException'>The type of <paramref name='obj'/> is not supported.</exception>
+            <example><para>The following example creates a CBOR array and adds several
+            CBOR objects, one of which has a custom CBOR tag, to that array.
+            Note the chaining behavior made possible by this method.</para>
+            <code>CBORObject obj = CBORObject.NewArray()
+            .Add(CBORObject.False)
+            .Add(5)
+            .Add("text string")
+            .Add(CBORObject.FromObjectAndTag(9999, 1));
+            </code>
+            </example>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Add(System.Object,System.Object)">
 
@@ -821,47 +840,64 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsInt32">
-
-            <summary>Converts this object to a 32-bit signed integer. Non-integer number values are truncated to an integer. (NOTE: To determine whether this method call can succeed, call the <b>CanTruncatedIntFitInInt32</b> method before calling this method.  Checking whether this object's type is <c>CBORType.Number</c> is not sufficient.  See the example.)</summary>
-<example><para>The following example code (originally written in C# for the .NET Framework) shows a way to check whether a given CBOR object stores a 32-bit signed integer before getting its value.</para>
-<code>
-CBORObject obj = CBORObject.FromInt32(99999);
-if&#x28;obj.IsIntegral &amp;&amp;
-  obj.CanTruncatedIntFitInInt32&#x28;)) &#x7b;
- // Not an Int32; handle the error
- Console.WriteLine("Not a 32-bit integer.");
-&#x7d; else {
- Console.WriteLine("The value is " +
-      obj.AsInt32());
-}
-</code>
-</example>
-<returns>The closest 32-bit signed integer to this object.</returns><exception cref='T:System.InvalidOperationException'>This object's
-            type is not a number type.</exception><exception cref='T:System.OverflowException'>This object's value
+<summary>Converts this object to a 32-bit signed integer.
+            Non-integer number values are truncated to an integer. (NOTE: To
+            determine whether this method call can succeed, call the
+            <b>CanTruncatedIntFitInInt32</b>
+             method before calling this method.
+            Checking whether this object's type is <c>CBORType.Number</c>
+             is
+            not sufficient. See the example.).</summary>
+            <returns>The closest 32-bit signed integer to this
+            object.</returns>
+            <exception cref='T:System.InvalidOperationException'>This object's
+            type is not a number type.</exception>
+            <exception cref='T:System.OverflowException'>This object's value
             exceeds the range of a 32-bit signed integer.</exception>
-
+            <example><para>The following example code (originally written in C# for the
+            .NET Framework) shows a way to check whether a given CBOR object
+            stores a 32-bit signed integer before getting its value.</para>
+            <code>CBORObject obj = CBORObject.FromInt32(99999);
+            if&#x28;obj.IsIntegral &amp;&amp;
+            obj.CanTruncatedIntFitInInt32&#x28;)) &#x7b;
+             // Not an Int32; handle the error
+            Console.WriteLine("Not a 32-bit integer.");
+            &#x7d; else {
+            Console.WriteLine("The value is " +
+            obj.AsInt32());
+            }
+            </code>
+            </example>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsInt64">
-
-            <summary>Converts this object to a 64-bit signed integer. Non-integer numbers are truncated to an integer. (NOTE: To determine whether this method call can succeed, call the <b>CanTruncatedIntFitInInt64</b> method before calling this method.  Checking whether this object's type is <c>CBORType.Number</c> is not sufficient.  See the example.)</summary>
-<example><para>The following example code (originally written in C# for the .NET Framework) shows a way to check whether a given CBOR object stores a 64-bit signed integer before getting its value.</para>
-<code>
-CBORObject obj = CBORObject.FromInt64(99999);
-if&#x28;obj.IsIntegral &amp;&amp;
-  obj.CanTruncatedIntFitInInt64&#x28;)) &#x7b;
- // Not an Int64; handle the error
- Console.WriteLine("Not a 64-bit integer.");
-&#x7d; else {
- Console.WriteLine("The value is " +
-      obj.AsInt64());
-}
-</code>
-</example>
-<returns>The closest 64-bit signed integer to this
-            object.</returns><exception cref='T:System.InvalidOperationException'>This object's
-            type is not a number type.</exception><exception cref='T:System.OverflowException'>This object's value
+<summary>Converts this object to a 64-bit signed integer.
+            Non-integer numbers are truncated to an integer. (NOTE: To
+            determine whether this method call can succeed, call the
+            <b>CanTruncatedIntFitInInt64</b>
+             method before calling this method.
+            Checking whether this object's type is <c>CBORType.Number</c>
+             is
+            not sufficient. See the example.).</summary>
+            <returns>The closest 64-bit signed integer to this
+            object.</returns>
+            <exception cref='T:System.InvalidOperationException'>This object's
+            type is not a number type.</exception>
+            <exception cref='T:System.OverflowException'>This object's value
             exceeds the range of a 64-bit signed integer.</exception>
-
+            <example><para>The following example code (originally written in C# for the
+            .NET Framework) shows a way to check whether a given CBOR object
+            stores a 64-bit signed integer before getting its value.</para>
+            <code>CBORObject obj = CBORObject.FromInt64(99999);
+            if&#x28;obj.IsIntegral &amp;&amp;
+            obj.CanTruncatedIntFitInInt64&#x28;)) &#x7b;
+             // Not an Int64; handle the error
+            Console.WriteLine("Not a 64-bit integer.");
+            &#x7d; else {
+            Console.WriteLine("The value is " +
+            obj.AsInt64());
+            }
+            </code>
+            </example>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsSByte">
 
@@ -881,18 +917,20 @@ if&#x28;obj.IsIntegral &amp;&amp;
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsString">
-
-            <summary>Gets the value of this object as a text string.</summary><returns>Gets this object's string.</returns>
-<example><para>The following example code (originally written in C# for the .NET Framework) shows an idiom for returning a string value if a CBOR object is a text string, or <c>null</c> if the CBOR object is a CBOR null.</para>
-<code>
-CBORObject obj = CBORObject.FromString("test");
-string str = obj.IsNull ? null : obj.AsString();
-</code>
-</example>
-<exception cref='T:System.InvalidOperationException'>This object's
+<summary>Gets the value of this object as a text string.</summary>
+            <returns>Gets this object's string.</returns>
+            <exception cref='T:System.InvalidOperationException'>This object's
             type is not a string, including if this object is
             CBORObject.Null.</exception>
-
+            <example><para>The following example code (originally written in C# for the
+            .NET Framework) shows an idiom for returning a string value if a
+            CBOR object is a text string, or <c>null</c>
+             if the CBOR object is
+            a CBOR null.</para>
+            <code>CBORObject obj = CBORObject.FromString("test");
+            string str = obj.IsNull ? null : obj.AsString();
+            </code>
+            </example>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsUInt16">
 
@@ -1108,31 +1146,37 @@ string str = obj.IsNull ? null : obj.AsString();
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.DecodeFromBytes(System.Byte[],PeterO.Cbor.CBOREncodeOptions)">
-
-            <summary>Generates a CBOR object from an array of CBOR-encoded
-            bytes, using the given <c>CBOREncodeOptions</c> object to control
+<summary>Generates a CBOR object from an array of CBOR-encoded
+            bytes, using the given <c>CBOREncodeOptions</c>
+             object to control
             the decoding process.</summary>
-<example>
-<para>The following example (originally written in C# for the .NET version)
-implements a method that
-decodes a text string from a CBOR byte array.
-It's successful only if the CBOR object contains an untagged text string.</para>
-<code>private static String DecodeTextString&#x28;byte[] bytes)&#x7b; if&#x28;bytes
-        == null)&#x7b; throw new
-        ArgumentNullException&#x28;nameof(mapObj));&#x7d; if&#x28;bytes.Length ==
-        0 || bytes[0]&lt;0x60 || bytes[0]&gt;0x7f)&#x7b;throw new CBORException&#x28;);&#x7d;
-        return CBORObject.DecodeFromBytes&#x28;bytes,
-        CBOREncodeOptions.Default).AsString&#x28;); &#x7d;
-      </code>
-</example>
-<param name='data'>A byte array in which a single CBOR object is encoded.</param><param name='options'>The parameter <paramref name='options'/> is a
-            CBOREncodeOptions object.</param><returns>A CBOR object decoded from the given byte array</returns><exception cref='T:PeterO.Cbor.CBORException'>There was an error in
+            <param name='data'>A byte array in which a single CBOR object is
+            encoded.</param>
+            <param name='options'>The parameter <paramref name='options'/> is a
+            CBOREncodeOptions object.</param>
+            <returns>A CBOR object decoded from the given byte array.</returns>
+            <exception cref='T:PeterO.Cbor.CBORException'>There was an error in
             reading or parsing the data. This includes cases where not all of
             the byte array represents a CBOR object. This exception is also
             thrown if the parameter <paramref name='data'/> is
-            empty.</exception><exception cref='T:System.ArgumentNullException'>The parameter
+            empty.</exception>
+            <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='data'/> is null.</exception>
-
+            <example><para>The following example (originally written in C# for the .NET
+            version) implements a method that decodes a text string from a CBOR
+            byte array. It's successful only if the CBOR object contains an
+            untagged text string.</para>
+            <code>private static String DecodeTextString&#x28;byte[]
+            bytes)&#x7b; if&#x28;bytes
+            == null)&#x7b; throw new
+            ArgumentNullException&#x28;nameof(mapObj));&#x7d;
+            if&#x28;bytes.Length ==
+            0 || bytes[0]&lt;0x60 || bytes[0]&gt;0x7f)&#x7b;throw new
+            CBORException&#x28;);&#x7d;
+            return CBORObject.DecodeFromBytes&#x28;bytes,
+            CBOREncodeOptions.Default).AsString&#x28;); &#x7d;
+            </code>
+            </example>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Divide(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
 
@@ -1517,6 +1561,9 @@ It's successful only if the CBOR object contains an untagged text string.</para>
 
 <para>If the input is a text string, a CBOR text string object will be created.  To create a CBOR byte string object from a text string, see the example given in
 <see cref='M:PeterO.Cbor.CBORObject.FromObject(System.Byte[])'/>.</para>
+<para>REMARK: The behavior of this method is likely to change in the next major version (4.0).  There are certain inconsistencies between the ToObject method and the FromObject method as well as between the .NET and Java versions of FromObject.  For one thing, DateTime/Date objects are converted differently between the two versions -- either as CBOR maps with their "get" properties (Java) or as tag-0 strings (.NET) -- this difference has to remain for backward compatibility with version 3.0.  For another thing, the treatment of properties/getters starting with "Is" is subtly inconsistent between the .NET and Java versions of FromObject, especially when using certain PODOptions.  A certain consistency between .NET and Java and between FromObject and ToObject are sought for version 4.0.  It is also hoped that--</para><list>
+<item>the ToObject method will support deserializing to objects consisting of fields and not getters ("getX()" methods), both in .NET and in Java, and</item>
+<item>both FromObject and ToObject will be better designed, in version 4.0 so that backward-compatible improvements are easier to make.</list>
 </summary><param name='obj'>The parameter <paramref name='obj'/> is an
              arbitrary object.</param><param name='options'>An object containing options to control how
              certain objects are converted to CBOR objects.</param><returns>A CBOR object corresponding to the given object. Returns
@@ -2206,9 +2253,9 @@ It's successful only if the CBOR object contains an untagged text string.</para>
         <item>Infinity and not-a-number will be converted to null.
         </item>
       </list>
-       The example code given below (originally written in C# for the .NET
+      <para>The example code given below (originally written in C# for the .NET
       version) can be used to write out certain keys of a CBOR map in a given
-      order to a JSON string.
+      order to a JSON string.</para>
       <code>/* Generates a JSON string of 'mapObj' whose keys are in the order given
         in 'keys' . Only keys found in 'keys' will be written if they exist in
         'mapObj'. */ private static string KeysToJSONMap&#x28;CBORObject mapObj,
@@ -2260,6 +2307,11 @@ It's successful only if the CBOR object contains an untagged text string.</para>
         <c>int</c>
          , returns the result of the AsInt32 method.
       </para>
+
+      <para>If the type "T" is
+        <c>DateTime</c> (or <c>Date</c> in Java)
+         , returns a date/time object if the CBOR object's outermost tag is 0 or 1.
+      </para>
       <para>If the type "T" is
         <c>long</c>
          , returns the result of the AsInt64 method.
@@ -2282,12 +2334,18 @@ It's successful only if the CBOR object contains an untagged text string.</para>
       </para>
       <para>If the type "T" is Boolean, returns the result of the IsTrue method.
       </para>
-      <para>If this object is a CBOR map, and the type "T" is a type not specially
-        handled by the FromObject method, creates an object of the given type,
-        and, for each key matching the name of a property in that object (using
-        the rules given in CBORObject.FromObject), sets that property's value to
-        the corresponding value for that key.
-      </para>
+             <para>In the .NET version, if the object is a CBOR map and the type "T" is not specially
+             handled by this method, an object of the given type is created, then this method checks the CBOR object for public writable properties. For each method
+             found, if its name (with the "Is" prefix deleted and then converted to camel case) matches the name of a key in this CBOR map, that property's setter is invoked and the corresponding value is passed to that method.</para>
+             <para>In the Java version, if the object is a CBOR map and the type "T" is not specially
+             handled by this method, an object of the given type is created, then this method checks the CBOR object for
+             public methods starting with the word "set" (followed
+             by an upper-case A to Z) that take a single parameter. 
+             For each method
+             found, if its name (with the starting word "set" deleted and then converted to camel case) matches the name of a key in this CBOR map, that method is invoked and the corresponding value is passed to that method.</para>
+<para>REMARK: The behavior of this method is likely to change in the final version 3.4 of this library as well as in the next major version (4.0).  There are certain inconsistencies between the ToObject method and the FromObject method as well as between the .NET and Java versions of FromObject.  For one thing, DateTime/Date objects are converted differently between the two versions -- either as CBOR maps with their "get" properties (Java) or as tag-0 strings (.NET) -- this difference has to remain for backward compatibility with version 3.0.  For another thing, the treatment of properties/getters starting with "Is" is subtly inconsistent between the .NET and Java versions of FromObject, especially when using certain PODOptions.  A certain consistency between .NET and Java and between FromObject and ToObject are sought for version 4.0.  It is also hoped that--</para><list>
+<item>the ToObject method will support deserializing to objects consisting of fields and not getters ("getX()" methods), both in .NET and in Java, and</item>
+<item>both FromObject and ToObject will be better designed, in version 4.0 so that backward-compatible improvements are easier to make.</list>
     </summary>
     <param name='t'>The type, class, or interface that this method's return value will belong
       to. To express a generic type in Java, see the example.
@@ -3435,12 +3493,13 @@ stream.Write(bytes, 0, bytes.Length);
 </doc>
 <doc name="T:PeterO.Cbor.ICBORObjectConverter`1">
 
-            <summary>Not documented yet.</summary><typeparam name='T'>Type parameter not documented yet.</typeparam>
+            <summary>Interface implemented by classes that convert objects of arbitrary types
+      to and from CBOR objects.</summary><typeparam name='T'>Type of objects that a class implementing this method can convert to and from CBOR objects.</typeparam>
 
 </doc>
 <doc name="M:PeterO.Cbor.ICBORObjectConverter`1.FromCBORObject(PeterO.Cbor.CBORObject)">
 
-            <summary>Not documented yet.</summary><param name='cbor'>The parameter <paramref name='cbor'/> is not documented yet.</param><returns>The return value is not documented yet.</returns>
+            <summary>Converts a CBOR object to an object of a type supported by the implementing class.</summary><param name='cbor'>A CBOR object to convert.</param><returns>The converted object.</returns><exception cref='T:PeterO.Cbor.CBORException'>An error occurred in the conversion; for example, the conversion doesn't support the given CBOR object.</exception>
 
 </doc>
 <doc name="T:PeterO.Cbor.ICBORTag">

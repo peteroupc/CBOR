@@ -2976,8 +2976,10 @@ a major version change.
 
     [Test]
     public void TestKeys() {
+CBORObject co;
 try {
-        this.Sink(CBORObject.True.Keys);
+co = CBORObject.True;
+        this.Sink(co.Keys);
 Assert.Fail("Should have failed");
 } catch (InvalidOperationException) {
 // NOTE: Intentionally empty

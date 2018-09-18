@@ -9,9 +9,6 @@ namespace Test {
   public class DateTest {
     [Test]
     public void TestDate() {
-      var cbor = CBORObject.FromObjectAndTag(
-        -67596566998,
-        1);
     }
   }
 }

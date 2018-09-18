@@ -48,6 +48,8 @@ Other Sites
 Examples
 ----------
 
+The following shows certain use examples of this library.  Additional examples can be found in the API documentation.
+
 Creating a map and converting that map to CBOR bytes
 and a JSON string:
 
@@ -232,6 +234,14 @@ The following are some clarifications to RFC 7049.
 
 Release Notes
 -----------
+
+### Version 3.4.0a1
+
+- Add ToObject method for deserializing CBOR objects.
+- Add ICBORObjectConverter interface.
+- Add HasMostOuterTag method to CBORObject class.
+- Add CTAP2 canonicalization support to CBOR object encoding.
+- Added examples in several places in documentation.
 
 ### Version 3.3
 
