@@ -11,6 +11,10 @@
 
 Exception thrown for arithmetic trap errors.
 
+* <code> public PeterO.PrecisionContext Context { get; }</code> - Gets the precision context used during the operation that triggered the trap.
+* <code> public int Error { get; }</code> - Gets the flag that specifies the kind of error (PrecisionContext.
+* <code> public object Result { get; }</code> - Gets the defined result of the operation that caused the trap.
+
 ### TrapException Constructor
 
     public TrapException(

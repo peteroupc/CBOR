@@ -4,6 +4,8 @@
 
 Contains methods useful for reading and writing data, with a focus on CBOR.
 
+* <code> public static PeterO.Cbor.CBORObject ParseJSONNumber( string str);</code> - Parses a number whose format follows the JSON specification.
+
 ### ParseJSONNumber
 
     public static PeterO.Cbor.CBORObject ParseJSONNumber(

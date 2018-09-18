@@ -28,6 +28,33 @@ If an operation requires creating an intermediate value that might be too big to
 
 <b>Thread safety:</b>Instances of this class are immutable, so they are inherently safe for se by multiple threads. Multiple instances of this object with the same roperties are interchangeable, so they should not be compared using the ==" operator (which might only check if each side of the operator is he same instance).
 
+* <code> public sealed int CompareTo( PeterO.ExtendedFloat other);</code> - Compares this extended float to another.
+* <code> public static PeterO.ExtendedFloat Create( int mantissaSmall, int exponentSmall);</code> - Creates a number with the value exponent*2^mantissa.
+* <code> public sealed bool Equals( PeterO.ExtendedFloat other);</code> - Determines whether this object's mantissa and exponent are equal to those of another object.
+* <code> public bool EqualsInternal( PeterO.ExtendedFloat otherValue);</code> - Determines whether this object's mantissa and exponent are equal to those of another object.
+* <code> public PeterO.BigInteger Exponent { get; }</code> - Gets this object's exponent.
+* <code> public static PeterO.ExtendedFloat FromString( string str, int offset, int length, PeterO.PrecisionContext ctx);</code> - Creates a binary float from a text string that represents a number.
+* <code> public override int GetHashCode();</code> - Calculates this object's hash code.
+* <code> public bool IsInfinity();</code> - Gets a value indicating whether this object is positive or negative infinity.
+* <code> public bool IsNaN();</code> - Returns whether this object is a not-a-number value.
+* <code> public bool IsNegative { get; }</code> - Gets a value indicating whether this object is negative, including negative zero.
+* <code> public bool IsNegativeInfinity();</code> - Returns whether this object is negative infinity.
+* <code> public bool IsPositiveInfinity();</code> - Returns whether this object is positive infinity.
+* <code> public bool IsQuietNaN();</code> - Gets a value indicating whether this object is a quiet not-a-number value.
+* <code> public bool IsSignalingNaN();</code> - Gets a value indicating whether this object is a signaling not-a-number value.
+* <code> public PeterO.BigInteger Mantissa { get; }</code> - Gets this object's un-scaled value.
+* <code> public static readonly PeterO.ExtendedFloat NaN;</code> - A not-a-number value.
+* <code> public static readonly PeterO.ExtendedFloat NegativeInfinity;</code> - Negative infinity, less than any other number.
+* <code> public static readonly PeterO.ExtendedFloat NegativeZero;</code> - Represents the number negative zero.
+* <code> public static readonly PeterO.ExtendedFloat One;</code> - Represents the number 1.
+* <code> public static readonly PeterO.ExtendedFloat PositiveInfinity;</code> - Positive infinity, greater than any other number.
+* <code> public int Sign { get; }</code> - Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
+* <code> public static readonly PeterO.ExtendedFloat SignalingNaN;</code> - A not-a-number value that signals an invalid operation flag when it's passed as an argument to any arithmetic operation in arbitrary-precision binary float.
+* <code> public static readonly PeterO.ExtendedFloat Ten;</code> - Represents the number 10.
+* <code> public override string ToString();</code> - Converts this value to a string.
+* <code> public PeterO.BigInteger UnsignedMantissa { get; }</code> - Gets the absolute value of this object's un-scaled value.
+* <code> public static readonly PeterO.ExtendedFloat Zero;</code> - Represents the number 0.
+
 ### NaN
 
     public static readonly PeterO.ExtendedFloat NaN;

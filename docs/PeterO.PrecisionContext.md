@@ -6,6 +6,8 @@
 
 A precision context.
 
+* <code> public override string ToString();</code> - Gets a string representation of this object.
+
 ### PrecisionContext Constructor
 
     public PrecisionContext(

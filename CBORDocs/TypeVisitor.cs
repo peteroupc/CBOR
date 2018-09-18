@@ -17,10 +17,12 @@ using NuDoq;
 namespace PeterO.DocGen {
   internal class TypeVisitor : Visitor, IComparer<Type> {
     private readonly SortedDictionary<Type, DocVisitor> docs;
+    private readonly Dictionary<Type, MemberSummaryVisitor> memSummaries;
     private readonly string directory;
 
     public TypeVisitor(string directory) {
       this.docs = new SortedDictionary<Type, DocVisitor>(this);
+      this.memSummaries = new Dictionary<Type, MemberSummaryVisitor>();
       this.directory = directory;
     }
 
@@ -51,10 +53,16 @@ namespace PeterO.DocGen {
     public void Finish() {
       foreach (var key in this.docs.Keys) {
         var finalString = this.docs[key].ToString();
+        this.memSummaries[key].Finish();
+        var memSummaryString = this.memSummaries[key].ToString();
         var filename = Path.Combine(
   this.directory,
   DocVisitor.GetTypeID(key) + ".md");
         finalString = NormalizeLines(finalString);
+        finalString = Regex.Replace(
+            finalString,
+            "<<<MEMBER_SUMMARY>>>",
+            memSummaryString);
         FileEdit(filename, finalString);
       }
     }
@@ -75,8 +83,10 @@ return;
       if (!this.docs.ContainsKey(currentType)) {
         var docVisitor = new DocVisitor();
         this.docs[currentType] = docVisitor;
+        this.memSummaries[currentType] = new MemberSummaryVisitor();
       }
       this.docs[currentType].VisitMember(member);
+      this.memSummaries[currentType].VisitMember(member);
       base.VisitMember(member);
     }
 

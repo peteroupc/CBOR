@@ -14,6 +14,21 @@ An arbitrary-precision integer.<b>Thread safety:</b>Instances of this class are 
 
 An arbitrary-precision integer.<b>Thread safety:</b>Instances of this class are immutable, so they are inherently safe for se by multiple threads. Multiple instances of this object with the same alue are interchangeable, but they should be compared using the Equals" method rather than the "==" operator.
 
+* <code> public sealed int CompareTo( PeterO.BigInteger other);</code> - Compares this value to another.
+* <code> public override bool Equals( object obj);</code> - Determines whether this object and another object are equal.
+* <code> public override int GetHashCode();</code> - Returns the hash code for this instance.
+* <code> public static readonly PeterO.BigInteger ONE;</code> - BigInteger for the number one.
+* <code> public static PeterO.BigInteger One { get; }</code> - Gets the arbitrary-precision integer for one.
+* <code> public override string ToString();</code> - Converts this object to a text string in base 10.
+* <code> public static PeterO.BigInteger Zero { get; }</code> - Gets the arbitrary-precision integer for zero.
+* <code> public int bitLength();</code> - Finds the minimum number of bits needed to represent this object's value, except for its sign.
+* <code> public static PeterO.BigInteger fromBytes( byte[] bytes, bool littleEndian);</code> - Initializes an arbitrary-precision integer from an array of bytes.
+* <code> public static PeterO.BigInteger fromRadixString( string str, int radix);</code> - Converts a string to an arbitrary-precision integer.
+* <code> public static PeterO.BigInteger fromString( string str);</code> - Converts a string to an arbitrary-precision integer.
+* <code> public byte[] toBytes( bool littleEndian);</code> - Returns a byte array of this object's value.
+* <code> public string toRadixString( int radix);</code> - Generates a string representing the value of this object, in the given radix.
+* <code> public static PeterO.BigInteger valueOf( long longerValue);</code> - Converts a 64-bit signed integer to a big integer.
+
 ### ONE
 
     public static readonly PeterO.BigInteger ONE;

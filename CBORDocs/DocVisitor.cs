@@ -128,7 +128,8 @@ namespace PeterO.DocGen {
       return builder.ToString();
     }
 
-    public static string FormatMethod(MethodBase method) {
+    public static string FormatMethod(
+       MethodBase method) {
       var builder = new StringBuilder();
       builder.Append(FourSpaces);
       if (!method.ReflectedType.IsInterface) {
@@ -512,8 +513,9 @@ namespace PeterO.DocGen {
       string xmlName = element.Xml.Name.ToString()
         .ToLowerInvariant();
       if (xmlName.Equals("b") ||
+        xmlName.Equals("strong") ||
         xmlName.Equals("i") || xmlName.Equals("a") ||
-        xmlName.Equals("sup") || xmlName.Equals("i")) {
+        xmlName.Equals("sup") || xmlName.Equals("em")) {
         var sb = new StringBuilder();
         sb.Append("<" + xmlName);
         foreach (var attr in element.Xml.Attributes()) {
@@ -614,6 +616,7 @@ namespace PeterO.DocGen {
           }
           this.paramStr.Clear();
           base.VisitMember(member);
+          this.WriteLine("<<<MEMBER_SUMMARY>>>");
           if (this.paramStr.Length > 0) {
             this.Write("<b>Parameters:</b>\r\n\r\n");
             var paramString = this.paramStr.ToString();

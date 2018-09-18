@@ -62,6 +62,7 @@
     <Compile Include="TestGenerator.cs" />
     <Compile Include="TypeNameUtil.cs" />
     <Compile Include="TypeVisitor.cs" />
+    <Compile Include="MemberSummaryVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

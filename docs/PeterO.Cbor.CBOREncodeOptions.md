@@ -4,6 +4,17 @@
 
 Specifies options for encoding and decoding CBOR objects.
 
+* <code> public bool AllowDuplicateKeys { get; }</code> - Gets a value indicating whether to disallow duplicate keys when reading CBOR objects from a data stream.
+* <code> public PeterO.Cbor.CBOREncodeOptions And( PeterO.Cbor.CBOREncodeOptions o);</code> - Returns an options object containing the flags shared by this and another options object.
+* <code> public bool Ctap2Canonical { get; }</code> - Gets a value indicating whether CBOR objects are written out using the CTAP2 canonical CBOR encoding form.
+* <code> public static readonly PeterO.Cbor.CBOREncodeOptions Default;</code> - Default options for CBOR objects.
+* <code> public static readonly PeterO.Cbor.CBOREncodeOptions NoDuplicateKeys;</code> - Disallow duplicate keys when reading CBOR objects from a data stream.
+* <code> public static readonly PeterO.Cbor.CBOREncodeOptions NoIndefLengthStrings;</code> - Always encode strings with a definite-length encoding.
+* <code> public static readonly PeterO.Cbor.CBOREncodeOptions None;</code> - No special options for encoding/decoding.
+* <code> public PeterO.Cbor.CBOREncodeOptions Or( PeterO.Cbor.CBOREncodeOptions o);</code> - Returns an options object containing the combined flags of this and another options object.
+* <code> public bool UseIndefLengthStrings { get; }</code> - Gets a value indicating whether to always encode strings with a definite-length encoding.
+* <code> public int Value { get; }</code> - Gets this options object's value.
+
 ### CBOREncodeOptions Constructor
 
     public CBOREncodeOptions(

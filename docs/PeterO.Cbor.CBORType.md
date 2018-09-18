@@ -8,6 +8,14 @@
 
 Represents a type that a CBOR object can have.
 
+* <code> public static PeterO.Cbor.CBORType Array = 5;</code> - An array of CBOR objects.
+* <code> public static PeterO.Cbor.CBORType Boolean = 1;</code> - The simple values true and false.
+* <code> public static PeterO.Cbor.CBORType ByteString = 3;</code> - An array of bytes.
+* <code> public static PeterO.Cbor.CBORType Map = 6;</code> - A map of CBOR objects.
+* <code> public static PeterO.Cbor.CBORType Number = 0;</code> - A number of any kind, including integers, big integers, floating point numbers, and decimal numbers.
+* <code> public static PeterO.Cbor.CBORType SimpleValue = 2;</code> - A "simple value" other than floating point values, true, and false.
+* <code> public static PeterO.Cbor.CBORType TextString = 4;</code> - A text string.
+
 ### Array
 
     public static PeterO.Cbor.CBORType Array = 5;

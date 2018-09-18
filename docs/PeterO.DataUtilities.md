@@ -6,6 +6,20 @@ Contains methods useful for reading and writing strings. It is designed to have 
 
 In C# and Java, text strings are represented as sequences of 16-bit values called `char` s. These sequences are well-formed under UTF-16, a 16-bit encoding form f Unicode, except if they contain unpaired surrogate code points. (A urrogate code point is used to encode supplementary characters, those ith code points U+10000 or higher, in UTF-16. A surrogate pair is a igh surrogate [U+D800 to U+DBFF] followed by a low surrogate [U+DC00 to +DFFF]. An unpaired surrogate code point is a surrogate not appearing n a surrogate pair.) Many of the methods in this class allow setting he behavior to follow when unpaired surrogate code points are found in ext strings, such as throwing an error or treating the unpaired urrogate as a replacement character (U+FFFD).
 
+* <code> public static int CodePointAt( string str, int index);</code> - Gets the Unicode code point at the given index of the string.
+* <code> public static int CodePointBefore( string str, int index);</code> - Gets the Unicode code point just before the given index of the string.
+* <code> public static int CodePointCompare( string strA, string strB);</code> - Compares two strings in Unicode code point order.
+* <code> public static int CodePointLength( string str);</code> - Finds the number of Unicode code points in the given text string.
+* <code> public static byte[] GetUtf8Bytes( string str, bool replace);</code> -  Encodes a string in UTF-8 as a byte array.
+* <code> public static long GetUtf8Length( string str, bool replace);</code> - Calculates the number of bytes needed to encode a string in UTF-8.
+* <code> public static string GetUtf8String( byte[] bytes, bool replace);</code> - Generates a text string from a UTF-8 byte array.
+* <code> public static int ReadUtf8( System.IO.Stream stream, int bytesCount, System.Text.StringBuilder builder, bool replace);</code> - Reads a string in UTF-8 encoding from a data stream.
+* <code> public static int ReadUtf8FromBytes( byte[] data, int offset, int bytesCount, System.Text.StringBuilder builder, bool replace);</code> - Reads a string in UTF-8 encoding from a byte array.
+* <code> public static string ReadUtf8ToString( System.IO.Stream stream);</code> - Reads a string in UTF-8 encoding from a data stream in full and returns that string.
+* <code> public static string ToLowerCaseAscii( string str);</code> - Returns a string with the basic upper-case letters A to Z (U+0041 to U+005A) converted to lower-case.
+* <code> public static string ToUpperCaseAscii( string str);</code> - Returns a string with the basic lower-case letters A to Z (U+0061 to U+007A) converted to upper-case.
+* <code> public static int WriteUtf8( string str, int offset, int length, System.IO.Stream stream, bool replace);</code> - Writes a portion of a string in UTF-8 encoding to a data stream.
+
 ### CodePointAt
 
     public static int CodePointAt(

@@ -4,6 +4,9 @@
 
 Implemented by classes that validate CBOR objects belonging to a specific tag.
 
+* <code> PeterO.Cbor.CBORTypeFilter GetTypeFilter();</code> - Gets a type filter specifying what kinds of CBOR objects are supported by this tag.
+* <code> PeterO.Cbor.CBORObject ValidateObject( PeterO.Cbor.CBORObject obj);</code> - Generates a CBOR object based on the data of another object.
+
 ### GetTypeFilter
 
     PeterO.Cbor.CBORTypeFilter GetTypeFilter();

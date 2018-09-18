@@ -4,6 +4,10 @@
 
 Options for converting "plain old data" objects to CBOR objects.
 
+* <code> public static readonly PeterO.Cbor.PODOptions Default;</code> - The default settings for "plain old data" options.
+* <code> public bool RemoveIsPrefix { get; }</code> - Gets a value indicating whether the "Is" prefix in property names is removed before they are used as keys.
+* <code> public bool UseCamelCase { get; }</code> - Gets a value indicating whether property names are converted to camel case before they are used as keys.
+
 ### PODOptions Constructor
 
     public PODOptions(
