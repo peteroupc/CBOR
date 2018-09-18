@@ -235,7 +235,7 @@ The following are some clarifications to RFC 7049.
 Release Notes
 -----------
 
-### Version 3.4.0a1
+### Version 3.4.0-alpha1
 
 - Add ToObject method for deserializing CBOR objects.
 - Add ICBORObjectConverter interface.

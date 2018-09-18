@@ -166,7 +166,7 @@ The parameter <i>str</i>
 
 Encodes a string in UTF-8 as a byte array. This method does not insert a byte-order mark (U+FEFF) at the beginning of the encoded byte array.
 
-REMARK: It is not recommended to use  `Encoding.UTF8.GetBytes`  in .NET, or the  `getBytes()`  method in Java to do this. For instance,  `Encoding.UTF8`  begins the encoded string with a byte-order mark, and  `getBytes()`  encodes text strings in an unspecified character encoding. Both behaviors can be undesirable.
+REMARK: It is not recommended to use  `Encoding.UTF8.GetBytes`  in .NET, or the  `getBytes()`  method in Java to do this. For instance,  `getBytes()`  encodes text strings in an unspecified character encoding. Both behaviors can be undesirable.
 
 <b>Parameters:</b>
 
@@ -198,7 +198,7 @@ is false, or an internal error occurred.
 
 Encodes a string in UTF-8 as a byte array. This method does not insert a byte-order mark (U+FEFF) at the beginning of the encoded byte array.
 
-REMARK: It is not recommended to use  `Encoding.UTF8.GetBytes`  in .NET, or the  `getBytes()`  method in Java to do this. For instance,  `Encoding.UTF8`  begins the encoded string with a byte-order mark, and  `getBytes()`  encodes text strings in an unspecified character encoding. Both behaviors can be undesirable.
+REMARK: It is not recommended to use  `Encoding.UTF8.GetBytes`  in .NET, or the  `getBytes()`  method in Java to do this. For instance,  `getBytes()`  encodes text strings in an unspecified character encoding. Both behaviors can be undesirable.
 
 <b>Parameters:</b>
 

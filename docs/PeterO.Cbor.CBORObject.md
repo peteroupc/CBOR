@@ -743,19 +743,14 @@ This object's value exceeds the range of a 16-bit signed integer.
 
     public int AsInt32();
 
-Converts this object to a 32-bit signed integer. Non-integer number values are truncated to an integer. (NOTE: To determine whether this method call can succeed, call the<b>CanTruncatedIntFitInInt32</b>method before calling this method. hecking whether this object's type is  `CBORType.Number` is ot sufficient. See the example.).
+Converts this object to a 32-bit signed integer. Non-integer number values are truncated to an integer. (NOTE: To determine whether this method call can succeed, call the<b>CanTruncatedIntFitInInt32</b>method before calling this method. Checking whether this object's type is `CBORType.Number` is not sufficient. See the example.).
 
 The following example code (originally written in C# for the .NET Framework) shows a way to check whether a given CBOR object stores a 32-bit signed integer before getting its value.
 
-    CBORObject obj = CBORObject.FromInt32(99999);
-                if(obj.IsIntegral &&
-                obj.CanTruncatedIntFitInInt32()) {
-                 // Not an Int32; handle the error
-                Console.WriteLine("Not a 32-bit integer.");
-                } else {
-                Console.WriteLine("The value is " +
-                obj.AsInt32());
-                }
+    CBORObject obj = CBORObject.FromInt32(99999); if(obj.IsIntegral
+            && obj.CanTruncatedIntFitInInt32()) { // Not an Int32;
+            handle the error Console.WriteLine("Not a 32-bit integer."); } else
+            { Console.WriteLine("The value is " + obj.AsInt32()); }
 
 <b>Return Value:</b>
 
@@ -773,19 +768,14 @@ This object's value exceeds the range of a 32-bit signed integer.
 
     public long AsInt64();
 
-Converts this object to a 64-bit signed integer. Non-integer numbers are truncated to an integer. (NOTE: To determine whether this method call can succeed, call the<b>CanTruncatedIntFitInInt64</b>method before calling this method. hecking whether this object's type is  `CBORType.Number` is ot sufficient. See the example.).
+Converts this object to a 64-bit signed integer. Non-integer numbers are truncated to an integer. (NOTE: To determine whether this method call can succeed, call the<b>CanTruncatedIntFitInInt64</b>method before calling this method. Checking whether this object's type is `CBORType.Number` is not sufficient. See the example.).
 
 The following example code (originally written in C# for the .NET Framework) shows a way to check whether a given CBOR object stores a 64-bit signed integer before getting its value.
 
-    CBORObject obj = CBORObject.FromInt64(99999);
-                if(obj.IsIntegral &&
-                obj.CanTruncatedIntFitInInt64()) {
-                 // Not an Int64; handle the error
-                Console.WriteLine("Not a 64-bit integer.");
-                } else {
-                Console.WriteLine("The value is " +
-                obj.AsInt64());
-                }
+    CBORObject obj = CBORObject.FromInt64(99999); if(obj.IsIntegral
+            && obj.CanTruncatedIntFitInInt64()) { // Not an Int64;
+            handle the error Console.WriteLine("Not a 64-bit integer."); } else
+            { Console.WriteLine("The value is " + obj.AsInt64()); }
 
 <b>Return Value:</b>
 
@@ -1091,26 +1081,24 @@ The parameter <i>data</i>
         byte[] data,
         PeterO.Cbor.CBOREncodeOptions options);
 
-Generates a CBOR object from an array of CBOR-encoded bytes, using the given  `CBOREncodeOptions` object to control he decoding process.
+Generates a CBOR object from an array of CBOR-encoded bytes, using the given `CBOREncodeOptions` object to control the decoding process.
 
 The following example (originally written in C# for the .NET version) implements a method that decodes a text string from a CBOR byte array. It's successful only if the CBOR object contains an untagged text string.
 
-    private static String DecodeTextString(byte[]
-                bytes){ if(bytes
-                == null){ throw new
-                ArgumentNullException(nameof(mapObj));}
-                if(bytes.Length ==
-                0 || bytes[0]<0x60 || bytes[0]>0x7f){throw new
-                CBORException();}
-                return CBORObject.DecodeFromBytes(bytes,
-                CBOREncodeOptions.Default).AsString(); }
+    private static String DecodeTextString(byte[] bytes){
+            if(bytes == null){ throw new
+            ArgumentNullException(nameof(mapObj));} if(bytes.Length
+            == 0 || bytes[0]<0x60 || bytes[0]>0x7f){throw new
+            CBORException();} return
+            CBORObject.DecodeFromBytes(bytes,
+            CBOREncodeOptions.Default).AsString(); }
 
 <b>Parameters:</b>
 
  * <i>data</i>: A byte array in which a single CBOR object is encoded.
 
- * <i>options</i>: The parameter  <i>options</i>
- is a CBOREncodeOptions object.
+ * <i>options</i>: The parameter <i>options</i>
+is a CBOREncodeOptions object.
 
 <b>Return Value:</b>
 
@@ -1119,12 +1107,12 @@ A CBOR object decoded from the given byte array.
 <b>Exceptions:</b>
 
  * PeterO.Cbor.CBORException:
-There was an error in reading or parsing the data. This includes cases where not all of the byte array represents a CBOR object. This exception is also thrown if the parameter  <i>data</i>
- is empty.
+There was an error in reading or parsing the data. This includes cases where not all of the byte array represents a CBOR object. This exception is also thrown if the parameter <i>data</i>
+is empty.
 
  * System.ArgumentNullException:
 The parameter <i>data</i>
- is null.
+is null.
 
 ### Divide
 
@@ -1468,6 +1456,12 @@ In the Java version, if the object is a type not specially handled by this metho
 If the input is a byte array, the byte array is copied to a new byte array. (This method can't be used to decode CBOR data from a byte array; for that, use the DecodeFromBytes method instead.).
 
 If the input is a text string, a CBOR text string object will be created. To create a CBOR byte string object from a text string, see the example given in**PeterO.Cbor.CBORObject.FromObject(System.Byte[])**.
+
+REMARK: The behavior of this method is likely to change in the next major version (4.0). There are certain inconsistencies between the ToObject method and the FromObject method as well as between the .NET and Java versions of FromObject. For one thing, DateTime/Date objects are converted differently between the two versions -- either as CBOR maps with their "get" properties (Java) or as tag-0 strings (.NET) -- this difference has to remain for backward compatibility with version 3.0. For another thing, the treatment of properties/getters starting with "Is" is subtly inconsistent between the .NET and Java versions of FromObject, especially when using certain PODOptions. A certain consistency between .NET and Java and between FromObject and ToObject are sought for version 4.0. It is also hoped that--
+
+ * the ToObject method will support deserializing to objects consisting of fields and not getters ("getX()" methods), both in .NET and in Java, and
+
+ * both FromObject and ToObject will be better designed, in version 4.0, so that backward-compatible improvements are easier to make.
 
 <b>Parameters:</b>
 
@@ -2614,7 +2608,7 @@ Converts this object to a string in JavaScript Object Notation (JSON) format, us
 
  * Infinity and not-a-number will be converted to null.
 
-The example code given below (originally written in C# for the .NET ersion) can be used to write out certain keys of a CBOR map in a given rder to a JSON string.
+The example code given below (originally written in C# for the .NET version) can be used to write out certain keys of a CBOR map in a given order to a JSON string.
 
     /* Generates a JSON string of 'mapObj' whose keys are in the order given
             in 'keys' . Only keys found in 'keys' will be written if they exist in
@@ -2674,6 +2668,8 @@ If the type "T" is the generic Dictionary or IDictionary (or HashMap or Map in J
 
 If the type "T" is `int` , returns the result of the AsInt32 method.
 
+If the type "T" is `DateTime` (or `Date` in Java) , returns a date/time object if the CBOR object's outermost ag is 0 or 1.
+
 If the type "T" is `long` , returns the result of the AsInt64 method.
 
 If the type "T" is `double` , returns the result of the AsDouble method.
@@ -2686,7 +2682,15 @@ In the .NET version, if the type "T" is `DateTime` and this CBOR object is a tex
 
 If the type "T" is Boolean, returns the result of the IsTrue method.
 
-If this object is a CBOR map, and the type "T" is a type not specially handled by the FromObject method, creates an object of the given type, and, for each key matching the name of a property in that object (using the rules given in CBORObject.FromObject), sets that property's value to the corresponding value for that key.
+In the .NET version, if the object is a CBOR map and the type "T" is not specially handled by this method, an object of the given type is created, then this method checks the CBOR object for public writable properties. For each method found, if its name (with the "Is" prefix deleted and then converted to camel case) matches the name of a key in this CBOR map, that property's setter is invoked and the corresponding value is passed to that method.
+
+In the Java version, if the object is a CBOR map and the type "T" is not specially handled by this method, an object of the given type is created, then this method checks the CBOR object for public methods starting with the word "set" (followed by an upper-case A to Z) that take a single parameter. For each method found, if its name (with the starting word "set" deleted and then converted to camel case) matches the name of a key in this CBOR map, that method is invoked and the corresponding value is passed to that method.
+
+REMARK: The behavior of this method is likely to change in the final version 3.4 of this library as well as in the next major version (4.0). There are certain inconsistencies between the ToObject method and the FromObject method as well as between the .NET and Java versions of FromObject. For one thing, DateTime/Date objects are converted differently between the two versions -- either as CBOR maps with their "get" properties (Java) or as tag-0 strings (.NET) -- this difference has to remain for backward compatibility with version 3.0. For another thing, the treatment of properties/getters starting with "Is" is subtly inconsistent between the .NET and Java versions of FromObject, especially when using certain PODOptions. A certain consistency between .NET and Java and between FromObject and ToObject are sought for version 4.0. It is also hoped that--
+
+ * the ToObject method will support deserializing to objects consisting of fields and not getters ("getX()" methods), both in .NET and in Java, and
+
+ * both FromObject and ToObject will be better designed, in version 4.0, so that backward-compatible improvements are easier to make.
 
 Java offers no easy way to express a generic type, at least none as easy as C#'s `typeof` operator. The following example, written in Java, is a way to specify hat the return value will be an ArrayList of String objects.
 

@@ -285,7 +285,7 @@ a major version change.
     }
 
     private static EDecimal AsED(CBORObject obj) {
-      return EDecimal.FromString(obj.AsEDecimal().ToString());
+      return obj.AsEDecimal();
     }
     [Test]
     public void TestAddition() {
