@@ -10,27 +10,29 @@
 
 Arbitrary-precision rational number. This class can't be inherited; this s a change in version 2.0 from previous versions, where the class was nadvertently left inheritable.<b>Thread safety:</b>Instances of this class are immutable, so they are inherently safe for se by multiple threads. Multiple instances of this object with the same roperties are interchangeable, so they should not be compared using the ==" operator (which might only check if each side of the operator is he same instance).
 
-* <code> public sealed int CompareTo( PeterO.ExtendedRational other);</code> - Compares this value to another.
-* <code> public static PeterO.ExtendedRational Create( int numeratorSmall, int denominatorSmall);</code> - Creates a rational number with the given numerator and denominator.
-* <code> public PeterO.BigInteger Denominator { get; }</code> - Gets this object's denominator.
-* <code> public sealed bool Equals( PeterO.ExtendedRational other);</code> - Checks whether this and another value are equal.
-* <code> public override int GetHashCode();</code> - Calculates the hash code for this object.
-* <code> public bool IsFinite { get; }</code> - Gets a value indicating whether this object is finite (not infinity or NaN).
-* <code> public bool IsNegative { get; }</code> - Gets a value indicating whether this object's value is negative (including negative zero).
-* <code> public bool IsZero { get; }</code> - Gets a value indicating whether this object's value equals 0.
-* <code> public static readonly PeterO.ExtendedRational NaN;</code> - A not-a-number value.
-* <code> public static readonly PeterO.ExtendedRational NegativeInfinity;</code> - Negative infinity, less than any other number.
-* <code> public static readonly PeterO.ExtendedRational NegativeZero;</code> - A rational number for negative zero.
-* <code> public PeterO.BigInteger Numerator { get; }</code> - Gets this object's numerator.
-* <code> public static readonly PeterO.ExtendedRational One;</code> - The rational number one.
-* <code> public static readonly PeterO.ExtendedRational PositiveInfinity;</code> - Positive infinity, greater than any other number.
-* <code> public int Sign { get; }</code> - Gets the sign of this rational number.
-* <code> public static readonly PeterO.ExtendedRational SignalingNaN;</code> - A signaling not-a-number value.
-* <code> public static readonly PeterO.ExtendedRational Ten;</code> - The rational number ten.
-* <code> public override string ToString();</code> - Converts this object to a text string.
-* <code> public PeterO.BigInteger UnsignedNumerator { get; }</code> - Gets this object's numerator with the sign removed.
-* <code> public static readonly PeterO.ExtendedRational Zero;</code> - A rational number for zero.
+### Member Summary
+* <code>[CompareTo(PeterO.ExtendedRational)](#CompareTo_PeterO_ExtendedRational)</code> - Compares this value to another.
+* <code>[Create(int, int)](#Create_int_int)</code> - Creates a rational number with the given numerator and denominator.
+* <code>[Denominator](#Denominator)</code> - Gets this object's denominator.
+* <code>[Equals(PeterO.ExtendedRational)](#Equals_PeterO_ExtendedRational)</code> - Checks whether this and another value are equal.
+* <code>[GetHashCode()](#GetHashCode)</code> - Calculates the hash code for this object.
+* <code>[IsFinite](#IsFinite)</code> - Gets a value indicating whether this object is finite (not infinity or NaN).
+* <code>[IsNegative](#IsNegative)</code> - Gets a value indicating whether this object's value is negative (including negative zero).
+* <code>[IsZero](#IsZero)</code> - Gets a value indicating whether this object's value equals 0.
+* <code>[public static readonly PeterO.ExtendedRational NaN;](#NaN)</code> - A not-a-number value.
+* <code>[public static readonly PeterO.ExtendedRational NegativeInfinity;](#NegativeInfinity)</code> - Negative infinity, less than any other number.
+* <code>[public static readonly PeterO.ExtendedRational NegativeZero;](#NegativeZero)</code> - A rational number for negative zero.
+* <code>[Numerator](#Numerator)</code> - Gets this object's numerator.
+* <code>[public static readonly PeterO.ExtendedRational One;](#One)</code> - The rational number one.
+* <code>[public static readonly PeterO.ExtendedRational PositiveInfinity;](#PositiveInfinity)</code> - Positive infinity, greater than any other number.
+* <code>[Sign](#Sign)</code> - Gets the sign of this rational number.
+* <code>[public static readonly PeterO.ExtendedRational SignalingNaN;](#SignalingNaN)</code> - A signaling not-a-number value.
+* <code>[public static readonly PeterO.ExtendedRational Ten;](#Ten)</code> - The rational number ten.
+* <code>[ToString()](#ToString)</code> - Converts this object to a text string.
+* <code>[UnsignedNumerator](#UnsignedNumerator)</code> - Gets this object's numerator with the sign removed.
+* <code>[public static readonly PeterO.ExtendedRational Zero;](#Zero)</code> - A rational number for zero.
 
+<a id="Void_ctor_BigInteger_BigInteger"></a>
 ### ExtendedRational Constructor
 
     public ExtendedRational(
@@ -52,54 +54,63 @@ The parameter <i>numerator</i>
  or  <i>denominator</i>
  is null.
 
+<a id="NaN"></a>
 ### NaN
 
     public static readonly PeterO.ExtendedRational NaN;
 
 A not-a-number value.
 
+<a id="NegativeInfinity"></a>
 ### NegativeInfinity
 
     public static readonly PeterO.ExtendedRational NegativeInfinity;
 
 Negative infinity, less than any other number.
 
+<a id="NegativeZero"></a>
 ### NegativeZero
 
     public static readonly PeterO.ExtendedRational NegativeZero;
 
 A rational number for negative zero.
 
+<a id="One"></a>
 ### One
 
     public static readonly PeterO.ExtendedRational One;
 
 The rational number one.
 
+<a id="PositiveInfinity"></a>
 ### PositiveInfinity
 
     public static readonly PeterO.ExtendedRational PositiveInfinity;
 
 Positive infinity, greater than any other number.
 
+<a id="SignalingNaN"></a>
 ### SignalingNaN
 
     public static readonly PeterO.ExtendedRational SignalingNaN;
 
 A signaling not-a-number value.
 
+<a id="Ten"></a>
 ### Ten
 
     public static readonly PeterO.ExtendedRational Ten;
 
 The rational number ten.
 
+<a id="Zero"></a>
 ### Zero
 
     public static readonly PeterO.ExtendedRational Zero;
 
 A rational number for zero.
 
+<a id="Denominator"></a>
 ### Denominator
 
     public PeterO.BigInteger Denominator { get; }
@@ -110,6 +121,7 @@ Gets this object's denominator.
 
 This object's denominator.
 
+<a id="IsFinite"></a>
 ### IsFinite
 
     public bool IsFinite { get; }
@@ -122,6 +134,7 @@ Gets a value indicating whether this object is finite (not infinity or NaN).
 
  `true`  If this object is finite (not infinity or NaN); otherwise, .  `false` .
 
+<a id="IsNegative"></a>
 ### IsNegative
 
     public bool IsNegative { get; }
@@ -132,6 +145,7 @@ Gets a value indicating whether this object's value is negative (including negat
 
  `true`  If this object's value is negative; otherwise, . `false` .
 
+<a id="IsZero"></a>
 ### IsZero
 
     public bool IsZero { get; }
@@ -144,6 +158,7 @@ Gets a value indicating whether this object's value equals 0.
 
  `true`  If this object's value equals 0; otherwise, . `false` .
 
+<a id="Numerator"></a>
 ### Numerator
 
     public PeterO.BigInteger Numerator { get; }
@@ -154,6 +169,7 @@ Gets this object's numerator.
 
 This object's numerator. If this object is a not-a-number value, returns the diagnostic information (which will be negative if this object is negative).
 
+<a id="Sign"></a>
 ### Sign
 
     public int Sign { get; }
@@ -166,6 +182,7 @@ Gets the sign of this rational number.
 
 Zero if this value is zero or negative zero; -1 if this value is less than 0; and 1 if this value is greater than 0.
 
+<a id="UnsignedNumerator"></a>
 ### UnsignedNumerator
 
     public PeterO.BigInteger UnsignedNumerator { get; }
@@ -176,6 +193,7 @@ Gets this object's numerator with the sign removed.
 
 This object's numerator. If this object is a not-a-number value, returns the diagnostic information.
 
+<a id="CompareTo_PeterO_ExtendedRational"></a>
 ### CompareTo
 
     public sealed int CompareTo(
@@ -192,6 +210,7 @@ is an ExtendedRational object.
 
 Less than 0 if this value is less than, 0 if equal to, or greater than 0 if greater than the other value.
 
+<a id="Create_int_int"></a>
 ### Create
 
     public static PeterO.ExtendedRational Create(
@@ -212,6 +231,7 @@ is a 32-bit signed integer.
 
 An arbitrary-precision rational number.
 
+<a id="Create_PeterO_BigInteger_PeterO_BigInteger"></a>
 ### Create
 
     public static PeterO.ExtendedRational Create(
@@ -237,6 +257,7 @@ The parameter <i>numerator</i>
  or  <i>denominator</i>
  is null.
 
+<a id="Equals_object"></a>
 ### Equals
 
     public override bool Equals(
@@ -253,6 +274,7 @@ is an arbitrary object.
 
 Either `true` or `false` .
 
+<a id="Equals_PeterO_ExtendedRational"></a>
 ### Equals
 
     public sealed bool Equals(
@@ -269,6 +291,7 @@ is an ExtendedRational object.
 
 Either `true` or `false` .
 
+<a id="GetHashCode"></a>
 ### GetHashCode
 
     public override int GetHashCode();
@@ -279,6 +302,7 @@ Calculates the hash code for this object. No application or process IDs are used
 
 A 32-bit signed integer.
 
+<a id="ToString"></a>
 ### ToString
 
     public override string ToString();

@@ -129,31 +129,35 @@ namespace PeterO.DocGen {
     }
 
     public static string FormatMethod(
-       MethodBase method) {
+       MethodBase method,
+       bool shortform) {
       var builder = new StringBuilder();
-      builder.Append(FourSpaces);
-      if (!method.ReflectedType.IsInterface) {
-        if (method.IsPublic) {
-          builder.Append("public ");
-        }
-        if (method.IsAssembly) {
-          builder.Append("internal ");
-        }
-        if (method.IsFamily) {
-          builder.Append("protected ");
-        }
-        if (method.IsStatic) {
-          builder.Append("static ");
-        }
-        if (method.IsAbstract) {
-          builder.Append("abstract ");
-        }
-        if (method.IsFinal) {
-          builder.Append("sealed ");
-     } else if (method is MethodInfo && IsMethodOverride((MethodInfo)method)) {
-          builder.Append("override ");
-        } else if (method.IsVirtual) {
-          builder.Append("virtual ");
+      if (!shortform) {
+        builder.Append(FourSpaces);
+        if (!method.ReflectedType.IsInterface) {
+          if (method.IsPublic) {
+            builder.Append("public ");
+          }
+          if (method.IsAssembly) {
+            builder.Append("internal ");
+          }
+          if (method.IsFamily) {
+            builder.Append("protected ");
+          }
+          if (method.IsStatic) {
+            builder.Append("static ");
+          }
+          if (method.IsAbstract) {
+            builder.Append("abstract ");
+          }
+          if (method.IsFinal) {
+            builder.Append("sealed ");
+     } else if (method is MethodInfo &&
+            IsMethodOverride((MethodInfo)method)) {
+            builder.Append("override ");
+          } else if (method.IsVirtual) {
+            builder.Append("virtual ");
+          }
         }
       }
       var methodInfo = method as MethodInfo;
@@ -174,7 +178,9 @@ namespace PeterO.DocGen {
           builder.Append(" operator ");
           builder.Append(ValueOperators[method.Name]);
         } else {
+          if (!shortform) {
           builder.Append(FormatType(methodInfo.ReturnType));
+          }
           builder.Append(" ");
           builder.Append(method.Name);
         }
@@ -198,9 +204,12 @@ namespace PeterO.DocGen {
       first = true;
       foreach (var param in method.GetParameters()) {
         if (!first) {
-          builder.Append(",\r\n" + FourSpaces + FourSpaces);
-        } else {
+          builder.Append(",");
+        }
+        if (!shortform) {
           builder.Append("\r\n" + FourSpaces + FourSpaces);
+        } else if (!first) {
+          builder.Append(" ");
         }
         if (first && isExtension) {
           builder.Append("this ");
@@ -210,22 +219,32 @@ namespace PeterO.DocGen {
           builder.Append("params ");
         }
         builder.Append(FormatType(param.ParameterType));
-        builder.Append(" ");
-        builder.Append(param.Name);
+        if (!shortform) {
+          builder.Append(" ");
+          builder.Append(param.Name);
+        }
         first = false;
       }
       builder.Append(")");
       if (method is MethodInfo && method.GetGenericArguments().Length > 0) {
         AppendConstraints(method.GetGenericArguments(), builder);
       }
-      builder.Append(";");
+      if (!shortform) {
+        builder.Append(";");
+      }
       return builder.ToString();
     }
 
     public static string FormatProperty(PropertyInfo property) {
+     return FormatProperty(property,false);
+    }
+
+
+    public static string FormatProperty(PropertyInfo property, bool shortform) {
       var builder = new StringBuilder();
       var getter = property.GetGetMethod();
       var setter = property.GetSetMethod();
+    if(!shortform){
       builder.Append(FourSpaces);
       if (!property.ReflectedType.IsInterface) {
         if ((getter != null && getter.IsPublic) ||
@@ -258,6 +277,7 @@ namespace PeterO.DocGen {
       }
       builder.Append(FormatType(property.PropertyType));
       builder.Append(" ");
+    }
       bool first;
       var indexParams = property.GetIndexParameters();
       if (indexParams.Length > 0) {
@@ -278,13 +298,16 @@ namespace PeterO.DocGen {
           builder.Append("params ");
         }
         builder.Append(FormatType(param.ParameterType));
+   if(!shortform){
         builder.Append(" ");
         builder.Append(param.Name);
+   }
         first = false;
       }
       if (indexParams.Length > 0) {
-        builder.Append(")");
+        builder.Append("]");
       }
+    if(!shortform){
       builder.Append(" { ");
       if (getter != null) {
         if (getter.IsPrivate && setter != null && !setter.IsPrivate) {
@@ -299,6 +322,7 @@ namespace PeterO.DocGen {
         builder.Append("set;");
       }
       builder.Append("}");
+    }
       return builder.ToString();
     }
 
@@ -575,7 +599,8 @@ namespace PeterO.DocGen {
           return;
         }
         using (var ch = this.AddMember(info)) {
-          signature = FormatMethod(method);
+          signature = FormatMethod(method, false);
+          this.WriteLine("<a id=\""+MemberSummaryVisitor.MemberAnchor(info)+"\"></a>");
           this.WriteLine("### " + Heading(info) +
                     "\r\n\r\n" + signature + "\r\n\r\n");
           var attr = method.GetCustomAttribute(typeof(ObsoleteAttribute)) as
@@ -634,6 +659,7 @@ namespace PeterO.DocGen {
         }
         using (var ch = this.AddMember(info)) {
           signature = FormatProperty(property);
+          this.WriteLine("<a id=\""+MemberSummaryVisitor.MemberAnchor(info)+"\"></a>");
           this.WriteLine("### " + property.Name + "\r\n\r\n" + signature +
                     "\r\n\r\n");
           var attr = property.GetCustomAttribute(typeof(ObsoleteAttribute)) as
@@ -663,6 +689,7 @@ namespace PeterO.DocGen {
         }
         using (var ch = this.AddMember(info)) {
           signature = FormatField(field);
+          this.WriteLine("<a id=\""+MemberSummaryVisitor.MemberAnchor(info)+"\"></a>");
           this.WriteLine("### " + field.Name + "\r\n\r\n" + signature +
                     "\r\n\r\n");
           base.VisitMember(member);
@@ -758,8 +785,8 @@ namespace PeterO.DocGen {
       if (info is MethodBase) {
         var method = (MethodBase)info;
         return (method is ConstructorInfo) ? ("<1>" + " " +
-          FormatMethod(method)) : ("<4>" + method.Name + " " +
-          FormatMethod(method));
+          FormatMethod(method, false)) : ("<4>" + method.Name + " " +
+          FormatMethod(method, false));
       }
       if (info is Type) {
         var type = (Type)info;

@@ -48,163 +48,173 @@ The DecodeFromBytes and Read methods can only read objects with a limited maximu
 
 The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 
-* <code> public PeterO.Cbor.CBORObject Abs();</code> - Gets this object's absolute value.
-* <code> public PeterO.Cbor.CBORObject Add( object key, object valueOb);</code> -  Adds a new key and its value to this CBOR map, or adds the value if the key doesn't exist.
-* <code> public static void AddConverter&lt;T&gt;( System.Type type, PeterO.Cbor.ICBORConverter&lt;T&gt; converter);</code> - Registers an object that converts objects of a given type to CBOR objects (called a CBOR converter).
-* <code> public static void AddTagHandler( PeterO.BigInteger bigintTag, PeterO.Cbor.ICBORTag handler);</code> - Registers an object that validates CBOR objects with new tags.
-* <code> public static PeterO.Cbor.CBORObject Addition( PeterO.Cbor.CBORObject first, PeterO.Cbor.CBORObject second);</code> - Finds the sum of two CBOR numbers.
-* <code> public PeterO.BigInteger AsBigInteger();</code> - Converts this object to an arbitrary-precision integer.
-* <code> public bool AsBoolean();</code> - Returns false if this object is False, Null, or Undefined; otherwise,true.
-* <code> public byte AsByte();</code> - Converts this object to a byte (0 to 255).
-* <code> public System.Decimal AsDecimal();</code> - Converts this object to a .
-* <code> public double AsDouble();</code> - Converts this object to a 64-bit floating point number.
-* <code> public PeterO.Numbers.EDecimal AsEDecimal();</code> - Converts this object to a decimal number.
-* <code> public PeterO.Numbers.EFloat AsEFloat();</code> - Converts this object to an arbitrary-precision binary floating point number.
-* <code> public PeterO.Numbers.EInteger AsEInteger();</code> - Converts this object to an arbitrary-precision integer.
-* <code> public PeterO.Numbers.ERational AsERational();</code> - Converts this object to a rational number.
-* <code> public PeterO.ExtendedDecimal AsExtendedDecimal();</code> - Converts this object to a decimal number.
-* <code> public PeterO.ExtendedFloat AsExtendedFloat();</code> - Converts this object to an arbitrary-precision binary floating point number.
-* <code> public PeterO.ExtendedRational AsExtendedRational();</code> - Converts this object to a rational number.
-* <code> public short AsInt16();</code> - Converts this object to a 16-bit signed integer.
-* <code> public int AsInt32();</code> - Converts this object to a 32-bit signed integer.
-* <code> public long AsInt64();</code> - Converts this object to a 64-bit signed integer.
-* <code> public sbyte AsSByte();</code> - Converts this object to an 8-bit signed integer.
-* <code> public float AsSingle();</code> - Converts this object to a 32-bit floating point number.
-* <code> public string AsString();</code> - Gets the value of this object as a text string.
-* <code> public ushort AsUInt16();</code> - Converts this object to a 16-bit unsigned integer.
-* <code> public uint AsUInt32();</code> - Converts this object to a 32-bit unsigned integer.
-* <code> public ulong AsUInt64();</code> - Converts this object to a 64-bit unsigned integer.
-* <code> public bool CanFitInDouble();</code> - Returns whether this object's value can be converted to a 64-bit floating point number without its value being rounded to another numerical value.
-* <code> public bool CanFitInInt32();</code> - Returns whether this object's numerical value is an integer, is -(2^31) or greater, and is less than 2^31.
-* <code> public bool CanFitInInt64();</code> - Returns whether this object's numerical value is an integer, is -(2^63) or greater, and is less than 2^63.
-* <code> public bool CanFitInSingle();</code> - Returns whether this object's value can be converted to a 32-bit floating point number without its value being rounded to another numerical value.
-* <code> public bool CanTruncatedIntFitInInt32();</code> - Returns whether this object's value, truncated to an integer, would be -(2^31) or greater, and less than 2^31.
-* <code> public bool CanTruncatedIntFitInInt64();</code> - Returns whether this object's value, truncated to an integer, would be -(2^63) or greater, and less than 2^63.
-* <code> public void Clear();</code> - Removes all items from this CBOR array or all keys and values from this CBOR map.
-* <code> public sealed int CompareTo( PeterO.Cbor.CBORObject other);</code> - Compares two CBOR objects.
-* <code> public int CompareToIgnoreTags( PeterO.Cbor.CBORObject other);</code> - Compares this object and another CBOR object, ignoring the tags they have, if any.
-* <code> public bool ContainsKey( PeterO.Cbor.CBORObject key);</code> - Determines whether a value of the given key exists in this object.
-* <code> public int Count { get; }</code> - Gets the number of keys in this map, or the number of items in this array, or 0 if this item is neither an array nor a map.
-* <code> public static PeterO.Cbor.CBORObject DecodeFromBytes( byte[] data);</code> -  At the moment, use the overload of this method that takes aPeterO.
-* <code> public static PeterO.Cbor.CBORObject Divide( PeterO.Cbor.CBORObject first, PeterO.Cbor.CBORObject second);</code> - Divides a CBORObject object by the value of a CBORObject object.
-* <code> public byte[] EncodeToBytes();</code> -  At the moment, use the overload of this method that takes aPeterO.
-* <code> public override bool Equals( object obj);</code> - Determines whether this object and another object are equal and have the same type.
-* <code> public static readonly PeterO.Cbor.CBORObject False;</code> - Represents the value false.
-* <code> public static PeterO.Cbor.CBORObject FromJSONString( string str);</code> -  At the moment, use the overload of this method that takes aPeterO.
-* <code> public static PeterO.Cbor.CBORObject FromObject( long value);</code> - Generates a CBOR object from a 64-bit signed integer.
-* <code> public static PeterO.Cbor.CBORObject FromObjectAndTag( object valueOb, PeterO.BigInteger bigintTag);</code> - Generates a CBOR object from an arbitrary object and gives the resulting object a tag.
-* <code> public static PeterO.Cbor.CBORObject FromSimpleValue( int simpleValue);</code> - Creates a CBOR object from a simple value number.
-* <code> public PeterO.Numbers.EInteger[] GetAllTags();</code> - Gets a list of all tags, from outermost to innermost.
-* <code> public byte[] GetByteString();</code> - Gets the byte array used in this object, if this object is a byte string, without copying the data to a new one.
-* <code> public override int GetHashCode();</code> - Calculates the hash code of this object.
-* <code> public PeterO.BigInteger[] GetTags();</code> - Gets a list of all tags, from outermost to innermost.
-* <code> public bool HasMostOuterTag( int tagValue);</code> - Returns whether this object has a tag of the given number.
-* <code> public bool HasTag( int tagValue);</code> - Returns whether this object has a tag of the given number.
-* <code> public PeterO.BigInteger InnermostTag { get; }</code> - Gets the last defined tag for this CBOR data item, or -1 if the item is untagged.
-* <code> public PeterO.Cbor.CBORObject Insert( int index, object valueOb);</code> - Inserts an object at the specified position in this CBOR array.
-* <code> public bool IsFalse { get; }</code> - Gets a value indicating whether this value is a CBOR false value.
-* <code> public bool IsFinite { get; }</code> - Gets a value indicating whether this CBOR object represents a finite number.
-* <code> public bool IsInfinity();</code> - Gets a value indicating whether this CBOR object represents infinity.
-* <code> public bool IsIntegral { get; }</code> - Gets a value indicating whether this object represents an integral number, that is, a number without a fractional part.
-* <code> public bool IsNaN();</code> - Gets a value indicating whether this CBOR object represents a not-a-number value (as opposed to whether this object's type is not a number type).
-* <code> public bool IsNegative { get; }</code> - Gets a value indicating whether this object is a negative number.
-* <code> public bool IsNegativeInfinity();</code> - Gets a value indicating whether this CBOR object represents negative infinity.
-* <code> public bool IsNull { get; }</code> - Gets a value indicating whether this value is a CBOR null value.
-* <code> public bool IsPositiveInfinity();</code> - Gets a value indicating whether this CBOR object represents positive infinity.
-* <code> public bool IsTagged { get; }</code> - Gets a value indicating whether this data item has at least one tag.
-* <code> public bool IsTrue { get; }</code> - Gets a value indicating whether this value is a CBOR true value.
-* <code> public bool IsUndefined { get; }</code> - Gets a value indicating whether this value is a CBOR undefined value.
-* <code> public bool IsZero { get; }</code> - Gets a value indicating whether this object's value equals 0.
-* <code> public System.Collections.Generic.ICollection Keys { get; }</code> - Gets a collection of the keys of this CBOR object in an undefined order.
-* <code> public PeterO.Numbers.EInteger MostInnerTag { get; }</code> - Gets the last defined tag for this CBOR data item, or -1 if the item is untagged.
-* <code> public PeterO.Numbers.EInteger MostOuterTag { get; }</code> - Gets the outermost tag for this CBOR data item, or -1 if the item is untagged.
-* <code> public static PeterO.Cbor.CBORObject Multiply( PeterO.Cbor.CBORObject first, PeterO.Cbor.CBORObject second);</code> - Multiplies two CBOR numbers.
-* <code> public static readonly PeterO.Cbor.CBORObject NaN;</code> - A not-a-number value.
-* <code> public PeterO.Cbor.CBORObject Negate();</code> - Gets this object's value with the sign reversed.
-* <code> public static readonly PeterO.Cbor.CBORObject NegativeInfinity;</code> - The value negative infinity.
-* <code> public static PeterO.Cbor.CBORObject NewArray();</code> - Creates a new empty CBOR array.
-* <code> public static PeterO.Cbor.CBORObject NewMap();</code> - Creates a new empty CBOR map.
-* <code> public static readonly PeterO.Cbor.CBORObject Null;</code> - Represents the value null.
-* <code> public PeterO.BigInteger OutermostTag { get; }</code> - Gets the outermost tag for this CBOR data item, or -1 if the item is untagged.
-* <code> public static readonly PeterO.Cbor.CBORObject PositiveInfinity;</code> - The value positive infinity.
-* <code> public static PeterO.Cbor.CBORObject Read( System.IO.Stream stream);</code> -  At the moment, use the overload of this method that takes aPeterO.
-* <code> public static PeterO.Cbor.CBORObject ReadJSON( System.IO.Stream stream);</code> - Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format.
-* <code> public static PeterO.Cbor.CBORObject Remainder( PeterO.Cbor.CBORObject first, PeterO.Cbor.CBORObject second);</code> - Finds the remainder that results when a CBORObject object is divided by the value of a CBORObject object.
-* <code> public bool Remove( object obj);</code> - If this object is an array, removes the first instance of the specified item (once converted to a CBOR object) from the array.
-* <code> public bool RemoveAt( int index);</code> - Removes the item at the given index of this CBOR array.
-* <code> public PeterO.Cbor.CBORObject Set( object key, object valueOb);</code> - Maps an object to a key in this CBOR map, or adds the value if the key doesn't exist.
-* <code> public int Sign { get; }</code> - Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
-* <code> public int SimpleValue { get; }</code> - Gets the simple value ID of this object, or -1 if this object is not a simple value (including if the value is a floating-point number).
-* <code> public static PeterO.Cbor.CBORObject Subtract( PeterO.Cbor.CBORObject first, PeterO.Cbor.CBORObject second);</code> - Finds the difference between two CBOR number objects.
-* <code> public string ToJSONString();</code> - Converts this object to a string in JavaScript Object Notation (JSON) format, using the specified options to control the encoding process.
-* <code> public object ToObject( System.Type t);</code> -  Converts this CBOR object to an object of an arbitrary type.
-* <code> public override string ToString();</code> - Returns this CBOR object in string form.
-* <code> public static readonly PeterO.Cbor.CBORObject True;</code> - Represents the value true.
-* <code> public PeterO.Cbor.CBORType Type { get; }</code> - Gets the general data type of this CBOR object.
-* <code> public static readonly PeterO.Cbor.CBORObject Undefined;</code> - Represents the value undefined.
-* <code> public PeterO.Cbor.CBORObject Untag();</code> - Gets an object with the same value as this one but without the tags it has, if any.
-* <code> public PeterO.Cbor.CBORObject UntagOne();</code> - Gets an object with the same value as this one but without this object's outermost tag, if any.
-* <code> public System.Collections.Generic.ICollection Values { get; }</code> - Gets a collection of the values of this CBOR object, if it's a map or an array.
-* <code> public static void Write( string str, System.IO.Stream stream);</code> -  At the moment, use the overload of this method that takes aPeterO.
-* <code> public static void WriteJSON( object obj, System.IO.Stream outputStream);</code> - Converts an arbitrary object to a string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8.
-* <code> public void WriteJSONTo( System.IO.Stream outputStream);</code> - Converts this object to a string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8.
-* <code> public void WriteTo( System.IO.Stream stream);</code> -  At the moment, use the overload of this method that takes aPeterO.
-* <code> public static int WriteValue( System.IO.Stream outputStream, int majorType, long value);</code> - Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as a 64-bit signed integer.
-* <code> public static readonly PeterO.Cbor.CBORObject Zero;</code> - Gets a CBOR object for the number zero.
-* <code> public static PeterO.Cbor.CBORObject operator +( PeterO.Cbor.CBORObject a, PeterO.Cbor.CBORObject b);</code> - Adds two CBOR objects and returns their result.
-* <code> public static PeterO.Cbor.CBORObject operator /( PeterO.Cbor.CBORObject a, PeterO.Cbor.CBORObject b);</code> - Divides a CBORObject object by the value of a CBORObject object.
-* <code> public static PeterO.Cbor.CBORObject operator %( PeterO.Cbor.CBORObject a, PeterO.Cbor.CBORObject b);</code> - Finds the remainder that results when a CBORObject object is divided by the value of a CBORObject object.
-* <code> public static PeterO.Cbor.CBORObject operator *( PeterO.Cbor.CBORObject a, PeterO.Cbor.CBORObject b);</code> - Multiplies a CBORObject object by the value of a CBORObject object.
-* <code> public static PeterO.Cbor.CBORObject operator -( PeterO.Cbor.CBORObject a, PeterO.Cbor.CBORObject b);</code> - Subtracts a CBORObject object from a CBORObject object.
+### Member Summary
+* <code>[Abs()](#Abs)</code> - Gets this object's absolute value.
+* <code>[Add(object, object)](#Add_object_object)</code> -  Adds a new key and its value to this CBOR map, or adds the value if the key doesn't exist.
+* <code>[AddConverter&lt;T&gt;(System.Type, PeterO.Cbor.ICBORConverter&lt;T&gt;)](#AddConverter_T_System_Type_PeterO_Cbor_ICBORConverter_T)</code> - Registers an object that converts objects of a given type to CBOR objects (called a CBOR converter).
+* <code>[AddTagHandler(PeterO.BigInteger, PeterO.Cbor.ICBORTag)](#AddTagHandler_PeterO_BigInteger_PeterO_Cbor_ICBORTag)</code> - Registers an object that validates CBOR objects with new tags.
+* <code>[Addition(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#Addition_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject)</code> - Finds the sum of two CBOR numbers.
+* <code>[AsBigInteger()](#AsBigInteger)</code> - Converts this object to an arbitrary-precision integer.
+* <code>[AsBoolean()](#AsBoolean)</code> - Returns false if this object is False, Null, or Undefined; otherwise,true.
+* <code>[AsByte()](#AsByte)</code> - Converts this object to a byte (0 to 255).
+* <code>[AsDecimal()](#AsDecimal)</code> - Converts this object to a .
+* <code>[AsDouble()](#AsDouble)</code> - Converts this object to a 64-bit floating point number.
+* <code>[AsEDecimal()](#AsEDecimal)</code> - Converts this object to a decimal number.
+* <code>[AsEFloat()](#AsEFloat)</code> - Converts this object to an arbitrary-precision binary floating point number.
+* <code>[AsEInteger()](#AsEInteger)</code> - Converts this object to an arbitrary-precision integer.
+* <code>[AsERational()](#AsERational)</code> - Converts this object to a rational number.
+* <code>[AsExtendedDecimal()](#AsExtendedDecimal)</code> - Converts this object to a decimal number.
+* <code>[AsExtendedFloat()](#AsExtendedFloat)</code> - Converts this object to an arbitrary-precision binary floating point number.
+* <code>[AsExtendedRational()](#AsExtendedRational)</code> - Converts this object to a rational number.
+* <code>[AsInt16()](#AsInt16)</code> - Converts this object to a 16-bit signed integer.
+* <code>[AsInt32()](#AsInt32)</code> - Converts this object to a 32-bit signed integer.
+* <code>[AsInt64()](#AsInt64)</code> - Converts this object to a 64-bit signed integer.
+* <code>[AsSByte()](#AsSByte)</code> - Converts this object to an 8-bit signed integer.
+* <code>[AsSingle()](#AsSingle)</code> - Converts this object to a 32-bit floating point number.
+* <code>[AsString()](#AsString)</code> - Gets the value of this object as a text string.
+* <code>[AsUInt16()](#AsUInt16)</code> - Converts this object to a 16-bit unsigned integer.
+* <code>[AsUInt32()](#AsUInt32)</code> - Converts this object to a 32-bit unsigned integer.
+* <code>[AsUInt64()](#AsUInt64)</code> - Converts this object to a 64-bit unsigned integer.
+* <code>[CanFitInDouble()](#CanFitInDouble)</code> - Returns whether this object's value can be converted to a 64-bit floating point number without its value being rounded to another numerical value.
+* <code>[CanFitInInt32()](#CanFitInInt32)</code> - Returns whether this object's numerical value is an integer, is -(2^31) or greater, and is less than 2^31.
+* <code>[CanFitInInt64()](#CanFitInInt64)</code> - Returns whether this object's numerical value is an integer, is -(2^63) or greater, and is less than 2^63.
+* <code>[CanFitInSingle()](#CanFitInSingle)</code> - Returns whether this object's value can be converted to a 32-bit floating point number without its value being rounded to another numerical value.
+* <code>[CanTruncatedIntFitInInt32()](#CanTruncatedIntFitInInt32)</code> - Returns whether this object's value, truncated to an integer, would be -(2^31) or greater, and less than 2^31.
+* <code>[CanTruncatedIntFitInInt64()](#CanTruncatedIntFitInInt64)</code> - Returns whether this object's value, truncated to an integer, would be -(2^63) or greater, and less than 2^63.
+* <code>[Clear()](#Clear)</code> - Removes all items from this CBOR array or all keys and values from this CBOR map.
+* <code>[CompareTo(PeterO.Cbor.CBORObject)](#CompareTo_PeterO_Cbor_CBORObject)</code> - Compares two CBOR objects.
+* <code>[CompareToIgnoreTags(PeterO.Cbor.CBORObject)](#CompareToIgnoreTags_PeterO_Cbor_CBORObject)</code> - Compares this object and another CBOR object, ignoring the tags they have, if any.
+* <code>[ContainsKey(PeterO.Cbor.CBORObject)](#ContainsKey_PeterO_Cbor_CBORObject)</code> - Determines whether a value of the given key exists in this object.
+* <code>[Count](#Count)</code> - Gets the number of keys in this map, or the number of items in this array, or 0 if this item is neither an array nor a map.
+* <code>[DecodeFromBytes(byte[])](#DecodeFromBytes_byte)</code> -  At the moment, use the overload of this method that takes aPeterO.
+* <code>[Divide(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#Divide_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject)</code> - Divides a CBORObject object by the value of a CBORObject object.
+* <code>[EncodeToBytes()](#EncodeToBytes)</code> -  At the moment, use the overload of this method that takes aPeterO.
+* <code>[Equals(object)](#Equals_object)</code> - Determines whether this object and another object are equal and have the same type.
+* <code>[public static readonly PeterO.Cbor.CBORObject False;](#False)</code> - Represents the value false.
+* <code>[FromJSONString(string)](#FromJSONString_string)</code> -  At the moment, use the overload of this method that takes aPeterO.
+* <code>[FromObject(long)](#FromObject_long)</code> - Generates a CBOR object from a 64-bit signed integer.
+* <code>[FromObjectAndTag(object, PeterO.BigInteger)](#FromObjectAndTag_object_PeterO_BigInteger)</code> - Generates a CBOR object from an arbitrary object and gives the resulting object a tag.
+* <code>[FromSimpleValue(int)](#FromSimpleValue_int)</code> - Creates a CBOR object from a simple value number.
+* <code>[GetAllTags()](#GetAllTags)</code> - Gets a list of all tags, from outermost to innermost.
+* <code>[GetByteString()](#GetByteString)</code> - Gets the byte array used in this object, if this object is a byte string, without copying the data to a new one.
+* <code>[GetHashCode()](#GetHashCode)</code> - Calculates the hash code of this object.
+* <code>[GetTags()](#GetTags)</code> - Gets a list of all tags, from outermost to innermost.
+* <code>[HasMostOuterTag(int)](#HasMostOuterTag_int)</code> - Returns whether this object has a tag of the given number.
+* <code>[HasTag(int)](#HasTag_int)</code> - Returns whether this object has a tag of the given number.
+* <code>[InnermostTag](#InnermostTag)</code> - Gets the last defined tag for this CBOR data item, or -1 if the item is untagged.
+* <code>[Insert(int, object)](#Insert_int_object)</code> - Inserts an object at the specified position in this CBOR array.
+* <code>[IsFalse](#IsFalse)</code> - Gets a value indicating whether this value is a CBOR false value.
+* <code>[IsFinite](#IsFinite)</code> - Gets a value indicating whether this CBOR object represents a finite number.
+* <code>[IsInfinity()](#IsInfinity)</code> - Gets a value indicating whether this CBOR object represents infinity.
+* <code>[IsIntegral](#IsIntegral)</code> - Gets a value indicating whether this object represents an integral number, that is, a number without a fractional part.
+* <code>[IsNaN()](#IsNaN)</code> - Gets a value indicating whether this CBOR object represents a not-a-number value (as opposed to whether this object's type is not a number type).
+* <code>[IsNegative](#IsNegative)</code> - Gets a value indicating whether this object is a negative number.
+* <code>[IsNegativeInfinity()](#IsNegativeInfinity)</code> - Gets a value indicating whether this CBOR object represents negative infinity.
+* <code>[IsNull](#IsNull)</code> - Gets a value indicating whether this value is a CBOR null value.
+* <code>[IsPositiveInfinity()](#IsPositiveInfinity)</code> - Gets a value indicating whether this CBOR object represents positive infinity.
+* <code>[IsTagged](#IsTagged)</code> - Gets a value indicating whether this data item has at least one tag.
+* <code>[IsTrue](#IsTrue)</code> - Gets a value indicating whether this value is a CBOR true value.
+* <code>[IsUndefined](#IsUndefined)</code> - Gets a value indicating whether this value is a CBOR undefined value.
+* <code>[IsZero](#IsZero)</code> - Gets a value indicating whether this object's value equals 0.
+* <code>[Keys](#Keys)</code> - Gets a collection of the keys of this CBOR object in an undefined order.
+* <code>[MostInnerTag](#MostInnerTag)</code> - Gets the last defined tag for this CBOR data item, or -1 if the item is untagged.
+* <code>[MostOuterTag](#MostOuterTag)</code> - Gets the outermost tag for this CBOR data item, or -1 if the item is untagged.
+* <code>[Multiply(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#Multiply_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject)</code> - Multiplies two CBOR numbers.
+* <code>[public static readonly PeterO.Cbor.CBORObject NaN;](#NaN)</code> - A not-a-number value.
+* <code>[Negate()](#Negate)</code> - Gets this object's value with the sign reversed.
+* <code>[public static readonly PeterO.Cbor.CBORObject NegativeInfinity;](#NegativeInfinity)</code> - The value negative infinity.
+* <code>[NewArray()](#NewArray)</code> - Creates a new empty CBOR array.
+* <code>[NewMap()](#NewMap)</code> - Creates a new empty CBOR map.
+* <code>[public static readonly PeterO.Cbor.CBORObject Null;](#Null)</code> - Represents the value null.
+* <code>[OutermostTag](#OutermostTag)</code> - Gets the outermost tag for this CBOR data item, or -1 if the item is untagged.
+* <code>[public static readonly PeterO.Cbor.CBORObject PositiveInfinity;](#PositiveInfinity)</code> - The value positive infinity.
+* <code>[Read(System.IO.Stream)](#Read_System_IO_Stream)</code> -  At the moment, use the overload of this method that takes aPeterO.
+* <code>[ReadJSON(System.IO.Stream)](#ReadJSON_System_IO_Stream)</code> - Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format.
+* <code>[Remainder(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#Remainder_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject)</code> - Finds the remainder that results when a CBORObject object is divided by the value of a CBORObject object.
+* <code>[Remove(object)](#Remove_object)</code> - If this object is an array, removes the first instance of the specified item (once converted to a CBOR object) from the array.
+* <code>[RemoveAt(int)](#RemoveAt_int)</code> - Removes the item at the given index of this CBOR array.
+* <code>[Set(object, object)](#Set_object_object)</code> - Maps an object to a key in this CBOR map, or adds the value if the key doesn't exist.
+* <code>[Sign](#Sign)</code> - Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
+* <code>[SimpleValue](#SimpleValue)</code> - Gets the simple value ID of this object, or -1 if this object is not a simple value (including if the value is a floating-point number).
+* <code>[Subtract(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#Subtract_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject)</code> - Finds the difference between two CBOR number objects.
+* <code>[ToJSONString()](#ToJSONString)</code> - Converts this object to a string in JavaScript Object Notation (JSON) format, using the specified options to control the encoding process.
+* <code>[ToObject(System.Type)](#ToObject_System_Type)</code> -  Converts this CBOR object to an object of an arbitrary type.
+* <code>[ToString()](#ToString)</code> - Returns this CBOR object in string form.
+* <code>[public static readonly PeterO.Cbor.CBORObject True;](#True)</code> - Represents the value true.
+* <code>[Type](#Type)</code> - Gets the general data type of this CBOR object.
+* <code>[public static readonly PeterO.Cbor.CBORObject Undefined;](#Undefined)</code> - Represents the value undefined.
+* <code>[Untag()](#Untag)</code> - Gets an object with the same value as this one but without the tags it has, if any.
+* <code>[UntagOne()](#UntagOne)</code> - Gets an object with the same value as this one but without this object's outermost tag, if any.
+* <code>[Values](#Values)</code> - Gets a collection of the values of this CBOR object, if it's a map or an array.
+* <code>[Write(string, System.IO.Stream)](#Write_string_System_IO_Stream)</code> -  At the moment, use the overload of this method that takes aPeterO.
+* <code>[WriteJSON(object, System.IO.Stream)](#WriteJSON_object_System_IO_Stream)</code> - Converts an arbitrary object to a string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8.
+* <code>[WriteJSONTo(System.IO.Stream)](#WriteJSONTo_System_IO_Stream)</code> - Converts this object to a string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8.
+* <code>[WriteTo(System.IO.Stream)](#WriteTo_System_IO_Stream)</code> -  At the moment, use the overload of this method that takes aPeterO.
+* <code>[WriteValue(System.IO.Stream, int, long)](#WriteValue_System_IO_Stream_int_long)</code> - Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as a 64-bit signed integer.
+* <code>[public static readonly PeterO.Cbor.CBORObject Zero;](#Zero)</code> - Gets a CBOR object for the number zero.
+* <code>[PeterO.Cbor.CBORObject operator +(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#PeterO_Cbor_CBORObject_operator_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject)</code> - Adds two CBOR objects and returns their result.
+* <code>[PeterO.Cbor.CBORObject operator /(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#PeterO_Cbor_CBORObject_operator_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject)</code> - Divides a CBORObject object by the value of a CBORObject object.
+* <code>[PeterO.Cbor.CBORObject operator %(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#PeterO_Cbor_CBORObject_operator_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject)</code> - Finds the remainder that results when a CBORObject object is divided by the value of a CBORObject object.
+* <code>[PeterO.Cbor.CBORObject operator *(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#PeterO_Cbor_CBORObject_operator_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject)</code> - Multiplies a CBORObject object by the value of a CBORObject object.
+* <code>[PeterO.Cbor.CBORObject operator -(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#PeterO_Cbor_CBORObject_operator_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject)</code> - Subtracts a CBORObject object from a CBORObject object.
 
+<a id="False"></a>
 ### False
 
     public static readonly PeterO.Cbor.CBORObject False;
 
 Represents the value false.
 
+<a id="NaN"></a>
 ### NaN
 
     public static readonly PeterO.Cbor.CBORObject NaN;
 
 A not-a-number value.
 
+<a id="NegativeInfinity"></a>
 ### NegativeInfinity
 
     public static readonly PeterO.Cbor.CBORObject NegativeInfinity;
 
 The value negative infinity.
 
+<a id="Null"></a>
 ### Null
 
     public static readonly PeterO.Cbor.CBORObject Null;
 
 Represents the value null.
 
+<a id="PositiveInfinity"></a>
 ### PositiveInfinity
 
     public static readonly PeterO.Cbor.CBORObject PositiveInfinity;
 
 The value positive infinity.
 
+<a id="True"></a>
 ### True
 
     public static readonly PeterO.Cbor.CBORObject True;
 
 Represents the value true.
 
+<a id="Undefined"></a>
 ### Undefined
 
     public static readonly PeterO.Cbor.CBORObject Undefined;
 
 Represents the value undefined.
 
+<a id="Zero"></a>
 ### Zero
 
     public static readonly PeterO.Cbor.CBORObject Zero;
 
 Gets a CBOR object for the number zero.
 
+<a id="Count"></a>
 ### Count
 
     public int Count { get; }
@@ -215,6 +225,7 @@ Gets the number of keys in this map, or the number of items in this array, or 0 
 
 The number of keys in this map, or the number of items in this array, or 0 if this item is neither an array nor a map.
 
+<a id="InnermostTag"></a>
 ### InnermostTag
 
     public PeterO.BigInteger InnermostTag { get; }
@@ -227,6 +238,7 @@ Gets the last defined tag for this CBOR data item, or -1 if the item is untagged
 
 The last defined tag for this CBOR data item, or -1 if the item is untagged.
 
+<a id="IsFalse"></a>
 ### IsFalse
 
     public bool IsFalse { get; }
@@ -237,6 +249,7 @@ Gets a value indicating whether this value is a CBOR false value.
 
  `true` If this value is a CBOR false value; otherwise, . `false` .
 
+<a id="IsFinite"></a>
 ### IsFinite
 
     public bool IsFinite { get; }
@@ -247,6 +260,7 @@ Gets a value indicating whether this CBOR object represents a finite number.
 
  `true`  If this CBOR object represents a finite number; otherwise, .  `false` .
 
+<a id="IsIntegral"></a>
 ### IsIntegral
 
     public bool IsIntegral { get; }
@@ -257,6 +271,7 @@ Gets a value indicating whether this object represents an integral number, that 
 
  `true`  If this object represents an integral number, that is, a number without a fractional part; otherwise, . `false` .
 
+<a id="IsNegative"></a>
 ### IsNegative
 
     public bool IsNegative { get; }
@@ -267,6 +282,7 @@ Gets a value indicating whether this object is a negative number.
 
  `true` If this object is a negative number; otherwise, . `false` .
 
+<a id="IsNull"></a>
 ### IsNull
 
     public bool IsNull { get; }
@@ -277,6 +293,7 @@ Gets a value indicating whether this value is a CBOR null value.
 
  `true`  If this value is a CBOR null value; otherwise, . `false` .
 
+<a id="IsTagged"></a>
 ### IsTagged
 
     public bool IsTagged { get; }
@@ -287,6 +304,7 @@ Gets a value indicating whether this data item has at least one tag.
 
  `true`  If this data item has at least one tag; otherwise, .  `false` .
 
+<a id="IsTrue"></a>
 ### IsTrue
 
     public bool IsTrue { get; }
@@ -297,6 +315,7 @@ Gets a value indicating whether this value is a CBOR true value.
 
  `true`  If this value is a CBOR true value; otherwise, . `false` .
 
+<a id="IsUndefined"></a>
 ### IsUndefined
 
     public bool IsUndefined { get; }
@@ -307,6 +326,7 @@ Gets a value indicating whether this value is a CBOR undefined value.
 
  `true`  If this value is a CBOR undefined value; otherwise, .  `false` .
 
+<a id="IsZero"></a>
 ### IsZero
 
     public bool IsZero { get; }
@@ -317,6 +337,7 @@ Gets a value indicating whether this object's value equals 0.
 
  `true` If this object's value equals 0; otherwise, . `false` .
 
+<a id="Keys"></a>
 ### Keys
 
     public System.Collections.Generic.ICollection Keys { get; }
@@ -332,6 +353,7 @@ A collection of the keys of this CBOR object.
  * System.InvalidOperationException:
 This object is not a map.
 
+<a id="MostInnerTag"></a>
 ### MostInnerTag
 
     public PeterO.Numbers.EInteger MostInnerTag { get; }
@@ -342,6 +364,7 @@ Gets the last defined tag for this CBOR data item, or -1 if the item is untagged
 
 The last defined tag for this CBOR data item, or -1 if the item is untagged.
 
+<a id="MostOuterTag"></a>
 ### MostOuterTag
 
     public PeterO.Numbers.EInteger MostOuterTag { get; }
@@ -352,6 +375,7 @@ Gets the outermost tag for this CBOR data item, or -1 if the item is untagged.
 
 The outermost tag for this CBOR data item, or -1 if the item is untagged.
 
+<a id="OutermostTag"></a>
 ### OutermostTag
 
     public PeterO.BigInteger OutermostTag { get; }
@@ -364,6 +388,7 @@ Gets the outermost tag for this CBOR data item, or -1 if the item is untagged.
 
 The outermost tag for this CBOR data item, or -1 if the item is untagged.
 
+<a id="Sign"></a>
 ### Sign
 
     public int Sign { get; }
@@ -379,6 +404,7 @@ This value's sign: -1 if negative; 1 if positive; 0 if zero.
  * System.InvalidOperationException:
 This object's type is not a number type, including the special not-a-number value (NaN).
 
+<a id="SimpleValue"></a>
 ### SimpleValue
 
     public int SimpleValue { get; }
@@ -389,6 +415,7 @@ Gets the simple value ID of this object, or -1 if this object is not a simple va
 
 The simple value ID of this object, or -1 if this object is not a simple value (including if the value is a floating-point number).
 
+<a id="Type"></a>
 ### Type
 
     public PeterO.Cbor.CBORType Type { get; }
@@ -399,6 +426,7 @@ Gets the general data type of this CBOR object.
 
 The general data type of this CBOR object.
 
+<a id="Values"></a>
 ### Values
 
     public System.Collections.Generic.ICollection Values { get; }
@@ -414,6 +442,7 @@ A collection of the values of this CBOR map or array.
  * System.InvalidOperationException:
 This object is not a map or an array.
 
+<a id="Abs"></a>
 ### Abs
 
     public PeterO.Cbor.CBORObject Abs();
@@ -429,6 +458,7 @@ This object's absolute without its negative sign.
  * System.InvalidOperationException:
 This object's type is not a number type.
 
+<a id="Add_object_object"></a>
 ### Add
 
     public PeterO.Cbor.CBORObject Add(
@@ -463,6 +493,7 @@ The parameter <i>key</i>
  or  <i>valueOb</i>
  has an unsupported type.
 
+<a id="Add_object"></a>
 ### Add
 
     public PeterO.Cbor.CBORObject Add(
@@ -498,6 +529,7 @@ This object is not an array.
 The type of  <i>obj</i>
  is not supported.
 
+<a id="Add_PeterO_Cbor_CBORObject"></a>
 ### Add
 
     public PeterO.Cbor.CBORObject Add(
@@ -529,6 +561,7 @@ This instance.
  * System.InvalidOperationException:
 This object is not an array.
 
+<a id="AddConverter_T_System_Type_PeterO_Cbor_ICBORConverter_T"></a>
 ### AddConverter
 
     public static void AddConverter<T>(
@@ -556,6 +589,7 @@ The parameter <i>type</i>
  * System.ArgumentException:
 "Converter doesn't contain a proper ToCBORObject method".
 
+<a id="Addition_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject"></a>
 ### Addition
 
     public static PeterO.Cbor.CBORObject Addition(
@@ -581,6 +615,7 @@ A CBORObject object.
  * System.ArgumentException:
 Either or both operands are not numbers (as opposed to Not-a-Number, NaN).
 
+<a id="AddTagHandler_PeterO_BigInteger_PeterO_Cbor_ICBORTag"></a>
 ### AddTagHandler
 
     public static void AddTagHandler(
@@ -609,6 +644,7 @@ The parameter <i>bigintTag</i>
 The parameter <i>bigintTag</i>
  is less than 0 or greater than (2^64-1).
 
+<a id="AddTagHandler_PeterO_Numbers_EInteger_PeterO_Cbor_ICBORTag"></a>
 ### AddTagHandler
 
     public static void AddTagHandler(
@@ -635,6 +671,7 @@ The parameter <i>bigintTag</i>
 The parameter <i>bigintTag</i>
  is less than 0 or greater than (2^64-1).
 
+<a id="AsBigInteger"></a>
 ### AsBigInteger
 
     public PeterO.BigInteger AsBigInteger();
@@ -655,6 +692,7 @@ This object's type is not a number type, including if this object is CBORObject.
  * System.OverflowException:
 This object's value is infinity or not-a-number (NaN).
 
+<a id="AsBoolean"></a>
 ### AsBoolean
 
     public bool AsBoolean();
@@ -665,6 +703,7 @@ Returns false if this object is False, Null, or Undefined; otherwise,true.
 
 False if this object is False, Null, or Undefined; otherwise,true.
 
+<a id="AsByte"></a>
 ### AsByte
 
     public byte AsByte();
@@ -683,6 +722,7 @@ This object's type is not a number type.
  * System.OverflowException:
 This object's value exceeds the range of a byte (would be less than 0 or greater than 255 when truncated to an integer).
 
+<a id="AsDecimal"></a>
 ### AsDecimal
 
     public System.Decimal AsDecimal();
@@ -701,6 +741,7 @@ This object's type is not a number type.
  * System.OverflowException:
 This object's value exceeds the range of a .NET decimal.
 
+<a id="AsDouble"></a>
 ### AsDouble
 
     public double AsDouble();
@@ -716,6 +757,7 @@ The closest 64-bit floating point number to this object. The return value can be
  * System.InvalidOperationException:
 This object's type is not a number type.
 
+<a id="AsEDecimal"></a>
 ### AsEDecimal
 
     public PeterO.Numbers.EDecimal AsEDecimal();
@@ -731,6 +773,7 @@ A decimal number for this object's value. If this object is a rational number wi
  * System.InvalidOperationException:
 This object's type is not a number type, including if this object is CBORObject.Null.
 
+<a id="AsEFloat"></a>
 ### AsEFloat
 
     public PeterO.Numbers.EFloat AsEFloat();
@@ -746,6 +789,7 @@ An arbitrary-precision binary floating point number for this object's value. Not
  * System.InvalidOperationException:
 This object's type is not a number type, including if this object is CBORObject.Null.
 
+<a id="AsEInteger"></a>
 ### AsEInteger
 
     public PeterO.Numbers.EInteger AsEInteger();
@@ -764,6 +808,7 @@ This object's type is not a number type, including if this object is CBORObject.
  * System.OverflowException:
 This object's value is infinity or not-a-number (NaN).
 
+<a id="AsERational"></a>
 ### AsERational
 
     public PeterO.Numbers.ERational AsERational();
@@ -779,6 +824,7 @@ A rational number for this object's value.
  * System.InvalidOperationException:
 This object's type is not a number type, including if this object is CBORObject.Null.
 
+<a id="AsExtendedDecimal"></a>
 ### AsExtendedDecimal
 
     public PeterO.ExtendedDecimal AsExtendedDecimal();
@@ -796,6 +842,7 @@ A decimal number for this object's value. If this object is a rational number wi
  * System.InvalidOperationException:
 This object's type is not a number type, including if this object is CBORObject.Null.
 
+<a id="AsExtendedFloat"></a>
 ### AsExtendedFloat
 
     public PeterO.ExtendedFloat AsExtendedFloat();
@@ -813,6 +860,7 @@ An arbitrary-precision binary floating point number for this object's value. Not
  * System.InvalidOperationException:
 This object's type is not a number type, including if this object is CBORObject.Null.
 
+<a id="AsExtendedRational"></a>
 ### AsExtendedRational
 
     public PeterO.ExtendedRational AsExtendedRational();
@@ -830,6 +878,7 @@ A rational number for this object's value.
  * System.InvalidOperationException:
 This object's type is not a number type, including if this object is CBORObject.Null.
 
+<a id="AsInt16"></a>
 ### AsInt16
 
     public short AsInt16();
@@ -848,6 +897,7 @@ This object's type is not a number type.
  * System.OverflowException:
 This object's value exceeds the range of a 16-bit signed integer.
 
+<a id="AsInt32"></a>
 ### AsInt32
 
     public int AsInt32();
@@ -873,6 +923,7 @@ This object's type is not a number type.
  * System.OverflowException:
 This object's value exceeds the range of a 32-bit signed integer.
 
+<a id="AsInt64"></a>
 ### AsInt64
 
     public long AsInt64();
@@ -898,6 +949,7 @@ This object's type is not a number type.
  * System.OverflowException:
 This object's value exceeds the range of a 64-bit signed integer.
 
+<a id="AsSByte"></a>
 ### AsSByte
 
     public sbyte AsSByte();
@@ -908,6 +960,7 @@ Converts this object to an 8-bit signed integer.
 
 An 8-bit signed integer.
 
+<a id="AsSingle"></a>
 ### AsSingle
 
     public float AsSingle();
@@ -923,6 +976,7 @@ The closest 32-bit floating point number to this object. The return value can be
  * System.InvalidOperationException:
 This object's type is not a number type.
 
+<a id="AsString"></a>
 ### AsString
 
     public string AsString();
@@ -943,6 +997,7 @@ Gets this object's string.
  * System.InvalidOperationException:
 This object's type is not a string, including if this object is CBORObject.Null.
 
+<a id="AsUInt16"></a>
 ### AsUInt16
 
     public ushort AsUInt16();
@@ -958,6 +1013,7 @@ A 16-bit unsigned integer.
  * System.OverflowException:
 This object's value is outside the range of a 16-bit unsigned integer.
 
+<a id="AsUInt32"></a>
 ### AsUInt32
 
     public uint AsUInt32();
@@ -973,6 +1029,7 @@ A 32-bit unsigned integer.
  * System.OverflowException:
 This object's value is outside the range of a 32-bit unsigned integer.
 
+<a id="AsUInt64"></a>
 ### AsUInt64
 
     public ulong AsUInt64();
@@ -991,6 +1048,7 @@ This object's type is not a number type.
  * System.OverflowException:
 This object's value exceeds the range of a 64-bit unsigned integer.
 
+<a id="CanFitInDouble"></a>
 ### CanFitInDouble
 
     public bool CanFitInDouble();
@@ -1001,6 +1059,7 @@ Returns whether this object's value can be converted to a 64-bit floating point 
 
 Whether this object's value can be converted to a 64-bit floating point number without its value being rounded to another numerical value. Returns true if this is a not-a-number value, even if the value's diagnostic information can' t fit in a 64-bit floating point number.
 
+<a id="CanFitInInt32"></a>
 ### CanFitInInt32
 
     public bool CanFitInInt32();
@@ -1011,6 +1070,7 @@ Returns whether this object's numerical value is an integer, is -(2^31) or great
 
  `true` if this object's numerical value is an integer, is -(2^31) or greater, and s less than 2^31; otherwise,  `false` .
 
+<a id="CanFitInInt64"></a>
 ### CanFitInInt64
 
     public bool CanFitInInt64();
@@ -1021,6 +1081,7 @@ Returns whether this object's numerical value is an integer, is -(2^63) or great
 
  `true` if this object's numerical value is an integer, is -(2^63) or greater, and s less than 2^63; otherwise,  `false` .
 
+<a id="CanFitInSingle"></a>
 ### CanFitInSingle
 
     public bool CanFitInSingle();
@@ -1031,6 +1092,7 @@ Returns whether this object's value can be converted to a 32-bit floating point 
 
 Whether this object's value can be converted to a 32-bit floating point number without its value being rounded to another numerical value. Returns true if this is a not-a-number value, even if the value's diagnostic information can' t fit in a 32-bit floating point number.
 
+<a id="CanTruncatedIntFitInInt32"></a>
 ### CanTruncatedIntFitInInt32
 
     public bool CanTruncatedIntFitInInt32();
@@ -1041,6 +1103,7 @@ Returns whether this object's value, truncated to an integer, would be -(2^31) o
 
  `true` if this object's value, truncated to an integer, would be -(2^31) or reater, and less than 2^31; otherwise,  `false` .
 
+<a id="CanTruncatedIntFitInInt64"></a>
 ### CanTruncatedIntFitInInt64
 
     public bool CanTruncatedIntFitInInt64();
@@ -1051,6 +1114,7 @@ Returns whether this object's value, truncated to an integer, would be -(2^63) o
 
  `true` if this object's value, truncated to an integer, would be -(2^63) or reater, and less than 2^63; otherwise,  `false` .
 
+<a id="Clear"></a>
 ### Clear
 
     public void Clear();
@@ -1062,6 +1126,7 @@ Removes all items from this CBOR array or all keys and values from this CBOR map
  * System.InvalidOperationException:
 This object is not a CBOR array or CBOR map.
 
+<a id="CompareTo_PeterO_Cbor_CBORObject"></a>
 ### CompareTo
 
     public sealed int CompareTo(
@@ -1102,6 +1167,7 @@ Less than 0, if this value is less than the other object; or 0, if both values a
  * System.ArgumentException:
 An internal error occurred.
 
+<a id="CompareToIgnoreTags_PeterO_Cbor_CBORObject"></a>
 ### CompareToIgnoreTags
 
     public int CompareToIgnoreTags(
@@ -1117,6 +1183,7 @@ Compares this object and another CBOR object, ignoring the tags they have, if an
 
 Less than 0, if this value is less than the other object; or 0, if both values are equal; or greater than 0, if this value is less than the other object or if the other object is null.
 
+<a id="ContainsKey_PeterO_Cbor_CBORObject"></a>
 ### ContainsKey
 
     public bool ContainsKey(
@@ -1137,6 +1204,7 @@ Determines whether a value of the given key exists in this object.
  * System.ArgumentNullException:
 Key is null (as opposed to CBORObject.Null).
 
+<a id="ContainsKey_string"></a>
 ### ContainsKey
 
     public bool ContainsKey(
@@ -1157,6 +1225,7 @@ Determines whether a value of the given key exists in this object.
  * System.ArgumentNullException:
 Key is null.
 
+<a id="DecodeFromBytes_byte"></a>
 ### DecodeFromBytes
 
     public static PeterO.Cbor.CBORObject DecodeFromBytes(
@@ -1184,6 +1253,7 @@ There was an error in reading or parsing the data. This includes cases where not
 The parameter <i>data</i>
  is null.
 
+<a id="DecodeFromBytes_byte_PeterO_Cbor_CBOREncodeOptions"></a>
 ### DecodeFromBytes
 
     public static PeterO.Cbor.CBORObject DecodeFromBytes(
@@ -1223,6 +1293,7 @@ is empty.
 The parameter <i>data</i>
 is null.
 
+<a id="Divide_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject"></a>
 ### Divide
 
     public static PeterO.Cbor.CBORObject Divide(
@@ -1243,6 +1314,7 @@ is a CBOR object.
 
 The quotient of the two objects.
 
+<a id="EncodeToBytes_PeterO_Cbor_CBOREncodeOptions"></a>
 ### EncodeToBytes
 
     public byte[] EncodeToBytes(
@@ -1264,6 +1336,7 @@ A byte array in CBOR format.
 The parameter <i>options</i>
  is null.
 
+<a id="EncodeToBytes"></a>
 ### EncodeToBytes
 
     public byte[] EncodeToBytes();
@@ -1276,6 +1349,7 @@ Writes the binary representation of this CBOR object and returns a byte array of
 
 A byte array in CBOR format.
 
+<a id="Equals_object"></a>
 ### Equals
 
     public override bool Equals(
@@ -1292,6 +1366,7 @@ is an arbitrary object.
 
  `true` if the objects are equal; otherwise,  `false` .
 
+<a id="Equals_PeterO_Cbor_CBORObject"></a>
 ### Equals
 
     public sealed bool Equals(
@@ -1307,6 +1382,7 @@ Compares the equality of two CBOR objects. Not-a-number values can be considered
 
  `true` if the objects are equal; otherwise,  `false` .
 
+<a id="FromJSONString_string"></a>
 ### FromJSONString
 
     public static PeterO.Cbor.CBORObject FromJSONString(
@@ -1335,6 +1411,7 @@ The parameter <i>str</i>
  * PeterO.Cbor.CBORException:
 The string is not in JSON format.
 
+<a id="FromJSONString_string_PeterO_Cbor_CBOREncodeOptions"></a>
 ### FromJSONString
 
     public static PeterO.Cbor.CBORObject FromJSONString(
@@ -1363,6 +1440,7 @@ The parameter <i>str</i>
  * PeterO.Cbor.CBORException:
 The string is not in JSON format.
 
+<a id="FromObject_bool"></a>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
@@ -1378,6 +1456,7 @@ Returns the CBOR true value or false value, depending on "value".
 
 CBORObject.True if value is true; otherwise CBORObject.False.
 
+<a id="FromObject_byte"></a>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
@@ -1394,6 +1473,7 @@ is a byte (from 0 to 255).
 
 A CBORObject object.
 
+<a id="FromObject_byte"></a>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
@@ -1418,6 +1498,7 @@ The following example encodes a text string to a UTF-8 byte array, then uses the
 
 A CBOR byte string object where each byte of the given byte array is copied to a new array, or CBORObject.Null if the value is null.
 
+<a id="FromObject_char"></a>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
@@ -1440,6 +1521,7 @@ A CBORObject object.
 The parameter <i>value</i>
  is a surrogate code point.
 
+<a id="FromObject_double"></a>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
@@ -1456,6 +1538,7 @@ is a 64-bit floating-point number.
 
 A CBORObject object.
 
+<a id="FromObject_float"></a>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
@@ -1472,6 +1555,7 @@ is a 32-bit floating-point number.
 
 A CBORObject object.
 
+<a id="FromObject_int"></a>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
@@ -1488,6 +1572,7 @@ is a 32-bit signed integer.
 
 A CBORObject object.
 
+<a id="FromObject_int"></a>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
@@ -1503,6 +1588,7 @@ Generates a CBOR object from an array of 32-bit integers.
 
 A CBOR array object where each element of the given array is copied to a new array, or CBORObject.Null if the value is null.
 
+<a id="FromObject_long"></a>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
@@ -1519,6 +1605,7 @@ is a 64-bit signed integer.
 
 A CBORObject object.
 
+<a id="FromObject_long"></a>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
@@ -1534,6 +1621,7 @@ Generates a CBOR object from an array of 64-bit integers.
 
 A CBOR array object where each element of the given array is copied to a new array, or CBORObject.Null if the value is null.
 
+<a id="FromObject_object"></a>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
@@ -1550,6 +1638,7 @@ is an arbitrary object.
 
 A CBOR object corresponding to the given object. Returns CBORObject.Null if the object is null.
 
+<a id="FromObject_object_PeterO_Cbor_PODOptions"></a>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
@@ -1589,6 +1678,7 @@ A CBOR object corresponding to the given object. Returns CBORObject.Null if the 
 The parameter  <i>options</i>
  is null.
 
+<a id="FromObject_PeterO_BigInteger"></a>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
@@ -1606,6 +1696,7 @@ Generates a CBOR object from an arbitrary-precision integer.
 
 A CBOR number.
 
+<a id="FromObject_PeterO_Cbor_CBORObject"></a>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
@@ -1622,6 +1713,7 @@ is a CBOR object.
 
 Same as.
 
+<a id="FromObject_PeterO_Cbor_CBORObject"></a>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
@@ -1637,6 +1729,7 @@ Generates a CBOR object from an array of CBOR objects.
 
 A CBOR object where each element of the given array is copied to a new array, or CBORObject.Null if the value is null.
 
+<a id="FromObject_PeterO_ExtendedDecimal"></a>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
@@ -1654,6 +1747,7 @@ Generates a CBOR object from a decimal number.
 
 A CBOR number.
 
+<a id="FromObject_PeterO_ExtendedFloat"></a>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
@@ -1671,6 +1765,7 @@ Generates a CBOR object from an arbitrary-precision binary floating-point number
 
 A CBOR number.
 
+<a id="FromObject_PeterO_ExtendedRational"></a>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
@@ -1688,6 +1783,7 @@ Generates a CBOR object from an arbitrary-precision binary floating-point number
 
 A CBOR number.
 
+<a id="FromObject_PeterO_Numbers_EDecimal"></a>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
@@ -1703,6 +1799,7 @@ Generates a CBOR object from a decimal number.
 
 A CBOR number.
 
+<a id="FromObject_PeterO_Numbers_EFloat"></a>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
@@ -1718,6 +1815,7 @@ Generates a CBOR object from an arbitrary-precision binary floating-point number
 
 A CBOR number.
 
+<a id="FromObject_PeterO_Numbers_EInteger"></a>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
@@ -1733,6 +1831,7 @@ Generates a CBOR object from an arbitrary-precision integer.
 
 A CBOR number.
 
+<a id="FromObject_PeterO_Numbers_ERational"></a>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
@@ -1748,6 +1847,7 @@ Generates a CBOR object from a rational number.
 
 A CBOR number.
 
+<a id="FromObject_sbyte"></a>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
@@ -1764,6 +1864,7 @@ is an 8-bit signed integer.
 
 A CBORObject object.
 
+<a id="FromObject_short"></a>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
@@ -1780,6 +1881,7 @@ is a 16-bit signed integer.
 
 A CBORObject object.
 
+<a id="FromObject_string"></a>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
@@ -1800,6 +1902,7 @@ A CBOR object representing the string, or CBORObject.Null if stringValue is null
  * System.ArgumentException:
 The string contains an unpaired surrogate code point.
 
+<a id="FromObject_System_Decimal"></a>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
@@ -1816,6 +1919,7 @@ is a Decimal object.
 
 A CBORObject object with the same value as the .NET decimal.
 
+<a id="FromObject_uint"></a>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
@@ -1831,6 +1935,7 @@ Converts a 32-bit unsigned integer to a CBOR object.
 
 A CBORObject object.
 
+<a id="FromObject_ulong"></a>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
@@ -1846,6 +1951,7 @@ Converts a 64-bit unsigned integer to a CBOR object.
 
 A CBORObject object.
 
+<a id="FromObject_ushort"></a>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
@@ -1861,6 +1967,7 @@ Converts a 16-bit unsigned integer to a CBOR object.
 
 A CBORObject object.
 
+<a id="FromObject_T_System_Collections_Generic_IEnumerable_T"></a>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject<T>(
@@ -1878,6 +1985,7 @@ Generates a CBOR object from an enumerable set of objects.
 
 A CBOR object where each element of the given enumerable object is converted to a CBOR object and copied to a new array, or CBORObject.Null if the value is null.
 
+<a id="FromObject_T_System_Collections_Generic_IList_T"></a>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject<T>(
@@ -1895,6 +2003,7 @@ Generates a CBOR object from a list of objects.
 
 A CBOR object where each element of the given array is converted to a CBOR object and copied to a new array, or CBORObject.Null if the value is null.
 
+<a id="FromObject_TKey_TValue_System_Collections_Generic_IDictionary_TKey_TValue"></a>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject<TKey, TValue>(
@@ -1915,6 +2024,7 @@ Generates a CBOR object from a map of objects.
 A CBOR object where each key and value of the given map is converted to a CBOR object and copied to a new map, or CBORObject.Null if <i>dic</i>
 is null.
 
+<a id="FromObjectAndTag_object_ulong"></a>
 ### FromObjectAndTag
 
     public static PeterO.Cbor.CBORObject FromObjectAndTag(
@@ -1936,6 +2046,7 @@ A CBOR object where the object <i>o</i>
 is converted to a CBOR object and given the tag <i>tag</i>
 .
 
+<a id="FromObjectAndTag_object_PeterO_BigInteger"></a>
 ### FromObjectAndTag
 
     public static PeterO.Cbor.CBORObject FromObjectAndTag(
@@ -1969,6 +2080,7 @@ The parameter <i>bigintTag</i>
 The parameter <i>bigintTag</i>
  is null.
 
+<a id="FromObjectAndTag_object_PeterO_Numbers_EInteger"></a>
 ### FromObjectAndTag
 
     public static PeterO.Cbor.CBORObject FromObjectAndTag(
@@ -2000,6 +2112,7 @@ The parameter <i>bigintTag</i>
 The parameter <i>bigintTag</i>
  is null.
 
+<a id="FromObjectAndTag_object_int"></a>
 ### FromObjectAndTag
 
     public static PeterO.Cbor.CBORObject FromObjectAndTag(
@@ -2027,6 +2140,7 @@ The parameter <i>smallTag</i>
  is less than 0 or  <i>valueObValue</i>
  's type is unsupported.
 
+<a id="FromSimpleValue_int"></a>
 ### FromSimpleValue
 
     public static PeterO.Cbor.CBORObject FromSimpleValue(
@@ -2049,6 +2163,7 @@ A CBORObject object.
 The parameter <i>simpleValue</i>
  is less than 0, greater than 255, or from 24 through 31.
 
+<a id="GetAllTags"></a>
 ### GetAllTags
 
     public PeterO.Numbers.EInteger[] GetAllTags();
@@ -2059,6 +2174,7 @@ Gets a list of all tags, from outermost to innermost.
 
 An array of tags, or the empty string if this object is untagged.
 
+<a id="GetByteString"></a>
 ### GetByteString
 
     public byte[] GetByteString();
@@ -2074,6 +2190,7 @@ The byte array held by this CBOR object.
  * System.InvalidOperationException:
 This object is not a byte string.
 
+<a id="GetHashCode"></a>
 ### GetHashCode
 
     public override int GetHashCode();
@@ -2084,6 +2201,7 @@ Calculates the hash code of this object. No application or process IDs are used 
 
 A 32-bit hash code.
 
+<a id="GetTags"></a>
 ### GetTags
 
     public PeterO.BigInteger[] GetTags();
@@ -2096,6 +2214,7 @@ Gets a list of all tags, from outermost to innermost.
 
 An array of tags, or the empty string if this object is untagged.
 
+<a id="HasMostOuterTag_int"></a>
 ### HasMostOuterTag
 
     public bool HasMostOuterTag(
@@ -2119,6 +2238,7 @@ TagValue is less than 0.
  * System.ArgumentNullException:
 The parameter "obj" is null.
 
+<a id="HasMostOuterTag_PeterO_Numbers_EInteger"></a>
 ### HasMostOuterTag
 
     public bool HasMostOuterTag(
@@ -2142,6 +2262,7 @@ BigTagValue is null.
  * System.ArgumentException:
 BigTagValue is less than 0.
 
+<a id="HasTag_int"></a>
 ### HasTag
 
     public bool HasTag(
@@ -2165,6 +2286,7 @@ TagValue is less than 0.
  * System.ArgumentNullException:
 The parameter "obj" is null.
 
+<a id="HasTag_PeterO_BigInteger"></a>
 ### HasTag
 
     public bool HasTag(
@@ -2190,6 +2312,7 @@ BigTagValue is null.
  * System.ArgumentException:
 BigTagValue is less than 0.
 
+<a id="HasTag_PeterO_Numbers_EInteger"></a>
 ### HasTag
 
     public bool HasTag(
@@ -2213,6 +2336,7 @@ BigTagValue is null.
  * System.ArgumentException:
 BigTagValue is less than 0.
 
+<a id="Insert_int_object"></a>
 ### Insert
 
     public PeterO.Cbor.CBORObject Insert(
@@ -2241,6 +2365,7 @@ The parameter <i>valueOb</i>
  has an unsupported type; or  <i>index</i>
  is not a valid index into this array.
 
+<a id="IsInfinity"></a>
 ### IsInfinity
 
     public bool IsInfinity();
@@ -2251,6 +2376,7 @@ Gets a value indicating whether this CBOR object represents infinity.
 
  `true` if this CBOR object represents infinity; otherwise,  `false` .
 
+<a id="IsNaN"></a>
 ### IsNaN
 
     public bool IsNaN();
@@ -2261,6 +2387,7 @@ Gets a value indicating whether this CBOR object represents a not-a-number value
 
  `true` if this CBOR object represents a not-a-number value (as opposed to hether this object's type is not a number type); otherwise,  `false` .
 
+<a id="IsNegativeInfinity"></a>
 ### IsNegativeInfinity
 
     public bool IsNegativeInfinity();
@@ -2271,6 +2398,7 @@ Gets a value indicating whether this CBOR object represents negative infinity.
 
  `true` if this CBOR object represents negative infinity; otherwise,  `false` .
 
+<a id="IsPositiveInfinity"></a>
 ### IsPositiveInfinity
 
     public bool IsPositiveInfinity();
@@ -2281,6 +2409,7 @@ Gets a value indicating whether this CBOR object represents positive infinity.
 
  `true` if this CBOR object represents positive infinity; otherwise,  `false` .
 
+<a id="Multiply_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject"></a>
 ### Multiply
 
     public static PeterO.Cbor.CBORObject Multiply(
@@ -2306,6 +2435,7 @@ The product of the two numbers.
  * System.ArgumentException:
 Either or both operands are not numbers (as opposed to Not-a-Number, NaN).
 
+<a id="Negate"></a>
 ### Negate
 
     public PeterO.Cbor.CBORObject Negate();
@@ -2321,6 +2451,7 @@ The reversed-sign form of this number.
  * System.InvalidOperationException:
 This object's type is not a number type.
 
+<a id="NewArray"></a>
 ### NewArray
 
     public static PeterO.Cbor.CBORObject NewArray();
@@ -2331,6 +2462,7 @@ Creates a new empty CBOR array.
 
 A new CBOR array.
 
+<a id="NewMap"></a>
 ### NewMap
 
     public static PeterO.Cbor.CBORObject NewMap();
@@ -2341,6 +2473,7 @@ Creates a new empty CBOR map.
 
 A new CBOR map.
 
+<a id="PeterO_Cbor_CBORObject_operator_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject"></a>
 ### Operator `+`
 
     public static PeterO.Cbor.CBORObject operator +(
@@ -2361,6 +2494,7 @@ is a CBOR object.
 
 The sum of the two objects.
 
+<a id="PeterO_Cbor_CBORObject_operator_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject"></a>
 ### Operator `/`
 
     public static PeterO.Cbor.CBORObject operator /(
@@ -2381,6 +2515,7 @@ is a CBOR object.
 
 The quotient of the two objects.
 
+<a id="PeterO_Cbor_CBORObject_operator_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject"></a>
 ### Operator `%`
 
     public static PeterO.Cbor.CBORObject operator %(
@@ -2401,6 +2536,7 @@ is a CBOR object.
 
 The remainder of the two numbers.
 
+<a id="PeterO_Cbor_CBORObject_operator_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject"></a>
 ### Operator `*`
 
     public static PeterO.Cbor.CBORObject operator *(
@@ -2421,6 +2557,7 @@ is a CBOR object.
 
 The product of the two numbers.
 
+<a id="PeterO_Cbor_CBORObject_operator_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject"></a>
 ### Operator `-`
 
     public static PeterO.Cbor.CBORObject operator -(
@@ -2441,6 +2578,7 @@ is a CBOR object.
 
 The difference of the two objects.
 
+<a id="Read_System_IO_Stream"></a>
 ### Read
 
     public static PeterO.Cbor.CBORObject Read(
@@ -2467,6 +2605,7 @@ The parameter <i>stream</i>
  * PeterO.Cbor.CBORException:
 There was an error in reading or parsing the data.
 
+<a id="Read_System_IO_Stream_PeterO_Cbor_CBOREncodeOptions"></a>
 ### Read
 
     public static PeterO.Cbor.CBORObject Read(
@@ -2495,6 +2634,7 @@ The parameter <i>stream</i>
  * PeterO.Cbor.CBORException:
 There was an error in reading or parsing the data.
 
+<a id="ReadJSON_System_IO_Stream"></a>
 ### ReadJSON
 
     public static PeterO.Cbor.CBORObject ReadJSON(
@@ -2522,6 +2662,7 @@ An I/O error occurred.
  * PeterO.Cbor.CBORException:
 The data stream contains invalid encoding or is not in JSON format.
 
+<a id="ReadJSON_System_IO_Stream_PeterO_Cbor_CBOREncodeOptions"></a>
 ### ReadJSON
 
     public static PeterO.Cbor.CBORObject ReadJSON(
@@ -2553,6 +2694,7 @@ An I/O error occurred.
  * PeterO.Cbor.CBORException:
 The data stream contains invalid encoding or is not in JSON format.
 
+<a id="Remainder_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject"></a>
 ### Remainder
 
     public static PeterO.Cbor.CBORObject Remainder(
@@ -2573,6 +2715,7 @@ is a CBOR object.
 
 The remainder of the two numbers.
 
+<a id="Remove_object"></a>
 ### Remove
 
     public bool Remove(
@@ -2597,6 +2740,7 @@ The parameter <i>obj</i>
  * System.InvalidOperationException:
 The object is not an array or map.
 
+<a id="Remove_PeterO_Cbor_CBORObject"></a>
 ### Remove
 
     public bool Remove(
@@ -2621,6 +2765,7 @@ The parameter <i>obj</i>
  * System.InvalidOperationException:
 The object is not an array or map.
 
+<a id="RemoveAt_int"></a>
 ### RemoveAt
 
     public bool RemoveAt(
@@ -2641,6 +2786,7 @@ Returns "true" if the object was removed. Returns "false" if the given index is 
  * System.InvalidOperationException:
 This object is not a CBOR array.
 
+<a id="Set_object_object"></a>
 ### Set
 
     public PeterO.Cbor.CBORObject Set(
@@ -2669,6 +2815,7 @@ The parameter <i>key</i>
  or  <i>valueOb</i>
  has an unsupported type.
 
+<a id="Subtract_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject"></a>
 ### Subtract
 
     public static PeterO.Cbor.CBORObject Subtract(
@@ -2694,6 +2841,7 @@ The difference of the two objects.
  * System.ArgumentException:
 Either or both operands are not numbers (as opposed to Not-a-Number, NaN).
 
+<a id="ToJSONString_PeterO_Cbor_JSONOptions"></a>
 ### ToJSONString
 
     public string ToJSONString(
@@ -2748,6 +2896,7 @@ A text string containing the converted object.
 The parameter <i>options</i>
 is null.
 
+<a id="ToJSONString"></a>
 ### ToJSONString
 
     public string ToJSONString();
@@ -2758,6 +2907,7 @@ Converts this object to a string in JavaScript Object Notation (JSON) format, us
 
 A text string.
 
+<a id="ToObject_System_Type"></a>
 ### ToObject
 
     public object ToObject(
@@ -2833,6 +2983,7 @@ The given type <i>t</i>
 The parameter <i>t</i>
 is null.
 
+<a id="ToObject_T"></a>
 ### ToObject
 
     public T ToObject<T>();
@@ -2852,6 +3003,7 @@ The converted object.
  * System.NotSupportedException:
 The given type "T", or this object's CBOR type, is not supported.
 
+<a id="ToString"></a>
 ### ToString
 
     public override string ToString();
@@ -2862,6 +3014,7 @@ Returns this CBOR object in string form. The format is intended to be human-read
 
 A text representation of this object.
 
+<a id="Untag"></a>
 ### Untag
 
     public PeterO.Cbor.CBORObject Untag();
@@ -2872,6 +3025,7 @@ Gets an object with the same value as this one but without the tags it has, if a
 
 A CBORObject object.
 
+<a id="UntagOne"></a>
 ### UntagOne
 
     public PeterO.Cbor.CBORObject UntagOne();
@@ -2882,6 +3036,7 @@ Gets an object with the same value as this one but without this object's outermo
 
 A CBORObject object.
 
+<a id="Write_bool_System_IO_Stream"></a>
 ### Write
 
     public static void Write(
@@ -2905,6 +3060,7 @@ The parameter <i>stream</i>
  * System.IO.IOException:
 An I/O error occurred.
 
+<a id="Write_byte_System_IO_Stream"></a>
 ### Write
 
     public static void Write(
@@ -2928,6 +3084,7 @@ The parameter <i>stream</i>
  * System.IO.IOException:
 An I/O error occurred.
 
+<a id="Write_char_System_IO_Stream"></a>
 ### Write
 
     public static void Write(
@@ -2955,6 +3112,7 @@ The parameter <i>value</i>
  * System.IO.IOException:
 An I/O error occurred.
 
+<a id="Write_double_System_IO_Stream"></a>
 ### Write
 
     public static void Write(
@@ -2978,6 +3136,7 @@ The parameter <i>stream</i>
  * System.IO.IOException:
 An I/O error occurred.
 
+<a id="Write_float_System_IO_Stream"></a>
 ### Write
 
     public static void Write(
@@ -3001,6 +3160,7 @@ The parameter <i>s</i>
  * System.IO.IOException:
 An I/O error occurred.
 
+<a id="Write_int_System_IO_Stream"></a>
 ### Write
 
     public static void Write(
@@ -3024,6 +3184,7 @@ The parameter <i>stream</i>
  * System.IO.IOException:
 An I/O error occurred.
 
+<a id="Write_long_System_IO_Stream"></a>
 ### Write
 
     public static void Write(
@@ -3047,6 +3208,7 @@ The parameter <i>stream</i>
  * System.IO.IOException:
 An I/O error occurred.
 
+<a id="Write_object_System_IO_Stream_PeterO_Cbor_CBOREncodeOptions"></a>
 ### Write
 
     public static void Write(
@@ -3086,6 +3248,7 @@ The parameter <i>options</i>
  or  <i>output</i>
  is null.
 
+<a id="Write_object_System_IO_Stream"></a>
 ### Write
 
     public static void Write(
@@ -3103,6 +3266,7 @@ is an arbitrary object.
 
  * <i>stream</i>: A writable data stream.
 
+<a id="Write_PeterO_BigInteger_System_IO_Stream"></a>
 ### Write
 
     public static void Write(
@@ -3128,6 +3292,7 @@ The parameter <i>stream</i>
  * System.IO.IOException:
 An I/O error occurred.
 
+<a id="Write_PeterO_Cbor_CBORObject_System_IO_Stream"></a>
 ### Write
 
     public static void Write(
@@ -3148,6 +3313,7 @@ Writes a CBOR object to a CBOR data stream.
 The parameter <i>stream</i>
  is null.
 
+<a id="Write_PeterO_ExtendedDecimal_System_IO_Stream"></a>
 ### Write
 
     public static void Write(
@@ -3181,6 +3347,7 @@ The parameter <i>stream</i>
  * System.IO.IOException:
 An I/O error occurred.
 
+<a id="Write_PeterO_ExtendedFloat_System_IO_Stream"></a>
 ### Write
 
     public static void Write(
@@ -3214,6 +3381,7 @@ The parameter <i>stream</i>
  * System.IO.IOException:
 An I/O error occurred.
 
+<a id="Write_PeterO_ExtendedRational_System_IO_Stream"></a>
 ### Write
 
     public static void Write(
@@ -3239,6 +3407,7 @@ The parameter <i>stream</i>
  * System.IO.IOException:
 An I/O error occurred.
 
+<a id="Write_PeterO_Numbers_EDecimal_System_IO_Stream"></a>
 ### Write
 
     public static void Write(
@@ -3270,6 +3439,7 @@ The parameter <i>stream</i>
  * System.IO.IOException:
 An I/O error occurred.
 
+<a id="Write_PeterO_Numbers_EFloat_System_IO_Stream"></a>
 ### Write
 
     public static void Write(
@@ -3301,6 +3471,7 @@ The parameter <i>stream</i>
  * System.IO.IOException:
 An I/O error occurred.
 
+<a id="Write_PeterO_Numbers_EInteger_System_IO_Stream"></a>
 ### Write
 
     public static void Write(
@@ -3324,6 +3495,7 @@ The parameter <i>stream</i>
  * System.IO.IOException:
 An I/O error occurred.
 
+<a id="Write_PeterO_Numbers_ERational_System_IO_Stream"></a>
 ### Write
 
     public static void Write(
@@ -3347,6 +3519,7 @@ The parameter <i>stream</i>
  * System.IO.IOException:
 An I/O error occurred.
 
+<a id="Write_sbyte_System_IO_Stream"></a>
 ### Write
 
     public static void Write(
@@ -3362,6 +3535,7 @@ is an 8-bit signed integer.
 
  * <i>stream</i>: A writable data stream.
 
+<a id="Write_short_System_IO_Stream"></a>
 ### Write
 
     public static void Write(
@@ -3385,6 +3559,7 @@ The parameter <i>stream</i>
  * System.IO.IOException:
 An I/O error occurred.
 
+<a id="Write_string_System_IO_Stream"></a>
 ### Write
 
     public static void Write(
@@ -3410,6 +3585,7 @@ The parameter <i>stream</i>
  * System.IO.IOException:
 An I/O error occurred.
 
+<a id="Write_string_System_IO_Stream_PeterO_Cbor_CBOREncodeOptions"></a>
 ### Write
 
     public static void Write(
@@ -3436,6 +3612,7 @@ The parameter <i>stream</i>
  * System.IO.IOException:
 An I/O error occurred.
 
+<a id="Write_uint_System_IO_Stream"></a>
 ### Write
 
     public static void Write(
@@ -3450,6 +3627,7 @@ Writes a 32-bit unsigned integer in CBOR format to a data stream.
 
  * <i>stream</i>: A writable data stream.
 
+<a id="Write_ulong_System_IO_Stream"></a>
 ### Write
 
     public static void Write(
@@ -3470,6 +3648,7 @@ Writes a 64-bit unsigned integer in CBOR format to a data stream.
 The parameter <i>stream</i>
 is null.
 
+<a id="Write_ushort_System_IO_Stream"></a>
 ### Write
 
     public static void Write(
@@ -3484,6 +3663,7 @@ Writes a 16-bit unsigned integer in CBOR format to a data stream.
 
  * <i>stream</i>: A writable data stream.
 
+<a id="WriteJSON_object_System_IO_Stream"></a>
 ### WriteJSON
 
     public static void WriteJSON(
@@ -3499,6 +3679,7 @@ is an arbitrary object.
 
  * <i>outputStream</i>: A writable data stream.
 
+<a id="WriteJSONTo_System_IO_Stream"></a>
 ### WriteJSONTo
 
     public void WriteJSONTo(
@@ -3519,6 +3700,7 @@ An I/O error occurred.
 The parameter <i>outputStream</i>
  is null.
 
+<a id="WriteJSONTo_System_IO_Stream_PeterO_Cbor_JSONOptions"></a>
 ### WriteJSONTo
 
     public void WriteJSONTo(
@@ -3542,6 +3724,7 @@ An I/O error occurred.
 The parameter <i>outputStream</i>
  is null.
 
+<a id="WriteTo_System_IO_Stream"></a>
 ### WriteTo
 
     public void WriteTo(
@@ -3607,6 +3790,7 @@ is null.
  * System.IO.IOException:
 An I/O error occurred.
 
+<a id="WriteTo_System_IO_Stream_PeterO_Cbor_CBOREncodeOptions"></a>
 ### WriteTo
 
     public void WriteTo(
@@ -3633,6 +3817,7 @@ An I/O error occurred.
  * System.ArgumentException:
 "Unexpected data type".
 
+<a id="WriteValue_System_IO_Stream_int_int"></a>
 ### WriteValue
 
     public static int WriteValue(
@@ -3685,6 +3870,7 @@ Value is from 24 to 31 and major type is 7.
 The parameter  <i>outputStream</i>
  is null.
 
+<a id="WriteValue_System_IO_Stream_int_long"></a>
 ### WriteValue
 
     public static int WriteValue(
@@ -3715,6 +3901,7 @@ Value is from 24 to 31 and major type is 7.
 The parameter  <i>outputStream</i>
  is null.
 
+<a id="WriteValue_System_IO_Stream_int_PeterO_Numbers_EInteger"></a>
 ### WriteValue
 
     public static int WriteValue(
@@ -3747,6 +3934,7 @@ The parameter  <i>outputStream</i>
  or  <i>bigintValue</i>
  is null.
 
+<a id="WriteValue_System_IO_Stream_int_uint"></a>
 ### WriteValue
 
     public static int WriteValue(
@@ -3774,6 +3962,7 @@ The number of bytes ordered to be written to the data stream.
 The parameter  <i>outputStream</i>
  is null.
 
+<a id="WriteValue_System_IO_Stream_int_ulong"></a>
 ### WriteValue
 
     public static int WriteValue(

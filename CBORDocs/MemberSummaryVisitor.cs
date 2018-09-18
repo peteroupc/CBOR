@@ -28,12 +28,29 @@ namespace PeterO.DocGen {
     }
 
     public static string MemberName(object obj) {
+      return (obj is Type) ? (((Type)obj).FullName) : ((obj is MethodInfo) ?
+        ((MethodInfo)obj).Name : ((obj is PropertyInfo) ?
+        ((PropertyInfo)obj).Name : ((obj is FieldInfo) ?
+        ((FieldInfo)obj).Name : (obj.ToString())))); }
+
+    public static string MemberAnchor(object obj) {
+      string anchor = String.Empty;
       if (obj is Type) {
-        return ((Type)obj).FullName;
+        anchor = ((Type)obj).FullName;
+      } else if (obj is MethodInfo) {
+        anchor = DocVisitor.FormatMethod((MethodInfo)obj, true);
+      } else if (obj is PropertyInfo) {
+        anchor = DocVisitor.FormatProperty((PropertyInfo)obj, true);
+      } else if (obj is FieldInfo) {
+        anchor = ((FieldInfo)obj).Name;
+      } else {
+        anchor = obj.ToString();
       }
-      return (obj is MethodInfo) ? (((MethodInfo)obj).Name) : ((obj is
-        PropertyInfo) ? ((PropertyInfo)obj).Name : ((obj is FieldInfo) ?
-        ((FieldInfo)obj).Name : (obj.ToString())));
+      anchor = anchor.Trim();
+      anchor = Regex.Replace(anchor, "\\(\\)", "");
+      anchor = Regex.Replace(anchor, "\\W+", "_");
+      anchor = Regex.Replace(anchor, "_+$", "");
+      return anchor;
     }
 
     public static string FormatMember(object obj) {
@@ -41,18 +58,21 @@ namespace PeterO.DocGen {
         return ((Type)obj).FullName;
       }
       if (obj is MethodInfo) {
-        string m = DocVisitor.FormatMethod((MethodInfo)obj);
+        string m = DocVisitor.FormatMethod((MethodInfo)obj, true);
         m = Regex.Replace(m, "\\s+", " ");
+        m = m.Trim();
         return m;
       }
       if (obj is PropertyInfo) {
-        string m = DocVisitor.FormatProperty((PropertyInfo)obj);
+        string m = DocVisitor.FormatProperty((PropertyInfo)obj, true);
         m = Regex.Replace(m, "\\s+", " ");
+        m = m.Trim();
         return m;
       }
       if (obj is FieldInfo) {
         string m = DocVisitor.FormatField((FieldInfo)obj);
         m = Regex.Replace(m, "\\s+", " ");
+        m = m.Trim();
         return m;
       }
       return obj.ToString();
@@ -61,13 +81,14 @@ namespace PeterO.DocGen {
     public void Finish() {
       var sb = new StringBuilder();
       string finalString;
+      sb.Append("### Member Summary\n");
       foreach (var key in this.docs.Keys) {
         finalString = this.docs[key].ToString();
         var typeName = FormatMember(key);
         typeName = typeName.Replace("&", "&amp;");
         typeName = typeName.Replace("<", "&lt;");
         typeName = typeName.Replace(">", "&gt;");
-
+        typeName = "[" + typeName + "](#" + MemberAnchor(key) + ")";
         finalString = Regex.Replace(finalString, "\\s+", " ");
         if (finalString.IndexOf(".", StringComparison.Ordinal) >= 0) {
           finalString = finalString.Substring(

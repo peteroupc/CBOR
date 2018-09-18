@@ -52,79 +52,89 @@ Instances of this class are immutable, so they are inherently safe for use by mu
 
 This class's natural ordering (under the CompareTo method) is not consistent with the Equals method. This means that two values that compare as equal under the CompareTo method might not be equal under the Equals method. The CompareTo method compares the mathematical values of the two instances passed to it (and considers two different NaN values as equal), while two instances with the same mathematical value, but different exponents, will be considered unequal under the Equals method.
 
-* <code> public sealed int CompareTo( PeterO.ExtendedDecimal other);</code> - Compares this extended decimal to another.
-* <code> public static PeterO.ExtendedDecimal Create( PeterO.BigInteger mantissa, PeterO.BigInteger exponent);</code> - Creates a number with the value exponent*10^mantissa.
-* <code> public sealed bool Equals( PeterO.ExtendedDecimal other);</code> - Determines whether this object's mantissa and exponent are equal to those of another object.
-* <code> public PeterO.BigInteger Exponent { get; }</code> - Gets this object's exponent.
-* <code> public static PeterO.ExtendedDecimal FromString( string str);</code> - Creates a decimal number from a text string that represents a number.
-* <code> public override int GetHashCode();</code> - Calculates this object's hash code.
-* <code> public bool IsInfinity();</code> - Gets a value indicating whether this object is positive or negative infinity.
-* <code> public bool IsNaN();</code> - Gets a value indicating whether this object is not a number (NaN).
-* <code> public bool IsNegative { get; }</code> - Gets a value indicating whether this object is negative, including negative zero.
-* <code> public bool IsQuietNaN();</code> - Gets a value indicating whether this object is a quiet not-a-number value.
-* <code> public PeterO.BigInteger Mantissa { get; }</code> - Gets this object's un-scaled value.
-* <code> public static readonly PeterO.ExtendedDecimal NaN;</code> - A not-a-number value.
-* <code> public static readonly PeterO.ExtendedDecimal NegativeInfinity;</code> - Negative infinity, less than any other number.
-* <code> public static readonly PeterO.ExtendedDecimal NegativeZero;</code> - Represents the number negative zero.
-* <code> public static readonly PeterO.ExtendedDecimal One;</code> - Represents the number 1.
-* <code> public static readonly PeterO.ExtendedDecimal PositiveInfinity;</code> - Positive infinity, greater than any other number.
-* <code> public int Sign { get; }</code> - Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
-* <code> public static readonly PeterO.ExtendedDecimal SignalingNaN;</code> - A not-a-number value that signals an invalid operation flag when it's passed as an argument to any arithmetic operation in arbitrary-precision decimal.
-* <code> public static readonly PeterO.ExtendedDecimal Ten;</code> - Represents the number 10.
-* <code> public double ToDouble();</code> - Converts this value to a 64-bit floating-point number.
-* <code> public float ToSingle();</code> - Converts this value to a 32-bit floating-point number.
-* <code> public override string ToString();</code> - Converts this value to a string.
-* <code> public PeterO.BigInteger UnsignedMantissa { get; }</code> - Gets the absolute value of this object's un-scaled value.
-* <code> public static readonly PeterO.ExtendedDecimal Zero;</code> - Represents the number 0.
+### Member Summary
+* <code>[CompareTo(PeterO.ExtendedDecimal)](#CompareTo_PeterO_ExtendedDecimal)</code> - Compares this extended decimal to another.
+* <code>[Create(PeterO.BigInteger, PeterO.BigInteger)](#Create_PeterO_BigInteger_PeterO_BigInteger)</code> - Creates a number with the value exponent*10^mantissa.
+* <code>[Equals(PeterO.ExtendedDecimal)](#Equals_PeterO_ExtendedDecimal)</code> - Determines whether this object's mantissa and exponent are equal to those of another object.
+* <code>[Exponent](#Exponent)</code> - Gets this object's exponent.
+* <code>[FromString(string)](#FromString_string)</code> - Creates a decimal number from a text string that represents a number.
+* <code>[GetHashCode()](#GetHashCode)</code> - Calculates this object's hash code.
+* <code>[IsInfinity()](#IsInfinity)</code> - Gets a value indicating whether this object is positive or negative infinity.
+* <code>[IsNaN()](#IsNaN)</code> - Gets a value indicating whether this object is not a number (NaN).
+* <code>[IsNegative](#IsNegative)</code> - Gets a value indicating whether this object is negative, including negative zero.
+* <code>[IsQuietNaN()](#IsQuietNaN)</code> - Gets a value indicating whether this object is a quiet not-a-number value.
+* <code>[Mantissa](#Mantissa)</code> - Gets this object's un-scaled value.
+* <code>[public static readonly PeterO.ExtendedDecimal NaN;](#NaN)</code> - A not-a-number value.
+* <code>[public static readonly PeterO.ExtendedDecimal NegativeInfinity;](#NegativeInfinity)</code> - Negative infinity, less than any other number.
+* <code>[public static readonly PeterO.ExtendedDecimal NegativeZero;](#NegativeZero)</code> - Represents the number negative zero.
+* <code>[public static readonly PeterO.ExtendedDecimal One;](#One)</code> - Represents the number 1.
+* <code>[public static readonly PeterO.ExtendedDecimal PositiveInfinity;](#PositiveInfinity)</code> - Positive infinity, greater than any other number.
+* <code>[Sign](#Sign)</code> - Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
+* <code>[public static readonly PeterO.ExtendedDecimal SignalingNaN;](#SignalingNaN)</code> - A not-a-number value that signals an invalid operation flag when it's passed as an argument to any arithmetic operation in arbitrary-precision decimal.
+* <code>[public static readonly PeterO.ExtendedDecimal Ten;](#Ten)</code> - Represents the number 10.
+* <code>[ToDouble()](#ToDouble)</code> - Converts this value to a 64-bit floating-point number.
+* <code>[ToSingle()](#ToSingle)</code> - Converts this value to a 32-bit floating-point number.
+* <code>[ToString()](#ToString)</code> - Converts this value to a string.
+* <code>[UnsignedMantissa](#UnsignedMantissa)</code> - Gets the absolute value of this object's un-scaled value.
+* <code>[public static readonly PeterO.ExtendedDecimal Zero;](#Zero)</code> - Represents the number 0.
 
+<a id="NaN"></a>
 ### NaN
 
     public static readonly PeterO.ExtendedDecimal NaN;
 
 A not-a-number value.
 
+<a id="NegativeInfinity"></a>
 ### NegativeInfinity
 
     public static readonly PeterO.ExtendedDecimal NegativeInfinity;
 
 Negative infinity, less than any other number.
 
+<a id="NegativeZero"></a>
 ### NegativeZero
 
     public static readonly PeterO.ExtendedDecimal NegativeZero;
 
 Represents the number negative zero.
 
+<a id="One"></a>
 ### One
 
     public static readonly PeterO.ExtendedDecimal One;
 
 Represents the number 1.
 
+<a id="PositiveInfinity"></a>
 ### PositiveInfinity
 
     public static readonly PeterO.ExtendedDecimal PositiveInfinity;
 
 Positive infinity, greater than any other number.
 
+<a id="SignalingNaN"></a>
 ### SignalingNaN
 
     public static readonly PeterO.ExtendedDecimal SignalingNaN;
 
 A not-a-number value that signals an invalid operation flag when it's passed as an argument to any arithmetic operation in arbitrary-precision decimal.
 
+<a id="Ten"></a>
 ### Ten
 
     public static readonly PeterO.ExtendedDecimal Ten;
 
 Represents the number 10.
 
+<a id="Zero"></a>
 ### Zero
 
     public static readonly PeterO.ExtendedDecimal Zero;
 
 Represents the number 0.
 
+<a id="Exponent"></a>
 ### Exponent
 
     public PeterO.BigInteger Exponent { get; }
@@ -135,6 +145,7 @@ Gets this object's exponent. This object's value will be an integer if the expon
 
 This object's exponent. This object's value will be an integer if the exponent is positive or zero.
 
+<a id="IsNegative"></a>
 ### IsNegative
 
     public bool IsNegative { get; }
@@ -147,6 +158,7 @@ Gets a value indicating whether this object is negative, including negative zero
 
  `true`  If this object is negative, including negative zero; otherwise, .  `false` .
 
+<a id="Mantissa"></a>
 ### Mantissa
 
     public PeterO.BigInteger Mantissa { get; }
@@ -157,6 +169,7 @@ Gets this object's un-scaled value.
 
 This object's un-scaled value. Will be negative if this object's value is negative (including a negative NaN).
 
+<a id="Sign"></a>
 ### Sign
 
     public int Sign { get; }
@@ -169,6 +182,7 @@ Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
 
 This value's sign: -1 if negative; 1 if positive; 0 if zero.
 
+<a id="UnsignedMantissa"></a>
 ### UnsignedMantissa
 
     public PeterO.BigInteger UnsignedMantissa { get; }
@@ -179,6 +193,7 @@ Gets the absolute value of this object's un-scaled value.
 
 The absolute value of this object's un-scaled value.
 
+<a id="CompareTo_PeterO_ExtendedDecimal"></a>
 ### CompareTo
 
     public sealed int CompareTo(
@@ -195,6 +210,7 @@ is an ExtendedDecimal object.
 
 Less than 0 if this value is less than, 0 if equal to, or greater than 0 if greater than the other extended decimal.
 
+<a id="Create_PeterO_BigInteger_PeterO_BigInteger"></a>
 ### Create
 
     public static PeterO.ExtendedDecimal Create(
@@ -220,6 +236,7 @@ The parameter <i>mantissa</i>
  or  <i>exponent</i>
  is null.
 
+<a id="Equals_object"></a>
 ### Equals
 
     public override bool Equals(
@@ -236,6 +253,7 @@ is an arbitrary object.
 
  `true` if the objects are equal; otherwise,  `false` .
 
+<a id="Equals_PeterO_ExtendedDecimal"></a>
 ### Equals
 
     public sealed bool Equals(
@@ -253,6 +271,7 @@ Determines whether this object's mantissa and exponent are equal to those of ano
 
  `true` if this object's mantissa and exponent are equal to those of another bject; otherwise,  `false` .
 
+<a id="FromString_string"></a>
 ### FromString
 
     public static PeterO.ExtendedDecimal FromString(
@@ -279,6 +298,7 @@ The parameter <i>str</i>
 The parameter  <i>str</i>
  is not a correctly formatted number string.
 
+<a id="GetHashCode"></a>
 ### GetHashCode
 
     public override int GetHashCode();
@@ -289,6 +309,7 @@ Calculates this object's hash code. No application or process IDs are used in th
 
 This object's hash code.
 
+<a id="IsInfinity"></a>
 ### IsInfinity
 
     public bool IsInfinity();
@@ -299,6 +320,7 @@ Gets a value indicating whether this object is positive or negative infinity.
 
  `true` if this object is positive or negative infinity; otherwise,  `false` .
 
+<a id="IsNaN"></a>
 ### IsNaN
 
     public bool IsNaN();
@@ -309,6 +331,7 @@ Gets a value indicating whether this object is not a number (NaN).
 
  `true` if this object is not a number (NaN); otherwise,  `false` .
 
+<a id="IsQuietNaN"></a>
 ### IsQuietNaN
 
     public bool IsQuietNaN();
@@ -321,6 +344,7 @@ Gets a value indicating whether this object is a quiet not-a-number value.
 
  `true` if this object is a quiet not-a-number value; otherwise,  `false` .
 
+<a id="ToDouble"></a>
 ### ToDouble
 
     public double ToDouble();
@@ -331,6 +355,7 @@ Converts this value to a 64-bit floating-point number. The half-even rounding mo
 
 The closest 64-bit floating-point number to this value. The return value can be positive infinity or negative infinity if this value exceeds the range of a 64-bit floating point number.
 
+<a id="ToSingle"></a>
 ### ToSingle
 
     public float ToSingle();
@@ -341,6 +366,7 @@ Converts this value to a 32-bit floating-point number. The half-even rounding mo
 
 The closest 32-bit floating-point number to this value. The return value can be positive infinity or negative infinity if this value exceeds the range of a 32-bit floating point number.
 
+<a id="ToString"></a>
 ### ToString
 
     public override string ToString();

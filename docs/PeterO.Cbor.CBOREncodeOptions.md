@@ -4,17 +4,19 @@
 
 Specifies options for encoding and decoding CBOR objects.
 
-* <code> public bool AllowDuplicateKeys { get; }</code> - Gets a value indicating whether to disallow duplicate keys when reading CBOR objects from a data stream.
-* <code> public PeterO.Cbor.CBOREncodeOptions And( PeterO.Cbor.CBOREncodeOptions o);</code> - Returns an options object containing the flags shared by this and another options object.
-* <code> public bool Ctap2Canonical { get; }</code> - Gets a value indicating whether CBOR objects are written out using the CTAP2 canonical CBOR encoding form.
-* <code> public static readonly PeterO.Cbor.CBOREncodeOptions Default;</code> - Default options for CBOR objects.
-* <code> public static readonly PeterO.Cbor.CBOREncodeOptions NoDuplicateKeys;</code> - Disallow duplicate keys when reading CBOR objects from a data stream.
-* <code> public static readonly PeterO.Cbor.CBOREncodeOptions NoIndefLengthStrings;</code> - Always encode strings with a definite-length encoding.
-* <code> public static readonly PeterO.Cbor.CBOREncodeOptions None;</code> - No special options for encoding/decoding.
-* <code> public PeterO.Cbor.CBOREncodeOptions Or( PeterO.Cbor.CBOREncodeOptions o);</code> - Returns an options object containing the combined flags of this and another options object.
-* <code> public bool UseIndefLengthStrings { get; }</code> - Gets a value indicating whether to always encode strings with a definite-length encoding.
-* <code> public int Value { get; }</code> - Gets this options object's value.
+### Member Summary
+* <code>[AllowDuplicateKeys](#AllowDuplicateKeys)</code> - Gets a value indicating whether to disallow duplicate keys when reading CBOR objects from a data stream.
+* <code>[And(PeterO.Cbor.CBOREncodeOptions)](#And_PeterO_Cbor_CBOREncodeOptions)</code> - Returns an options object containing the flags shared by this and another options object.
+* <code>[Ctap2Canonical](#Ctap2Canonical)</code> - Gets a value indicating whether CBOR objects are written out using the CTAP2 canonical CBOR encoding form.
+* <code>[public static readonly PeterO.Cbor.CBOREncodeOptions Default;](#Default)</code> - Default options for CBOR objects.
+* <code>[public static readonly PeterO.Cbor.CBOREncodeOptions NoDuplicateKeys;](#NoDuplicateKeys)</code> - Disallow duplicate keys when reading CBOR objects from a data stream.
+* <code>[public static readonly PeterO.Cbor.CBOREncodeOptions NoIndefLengthStrings;](#NoIndefLengthStrings)</code> - Always encode strings with a definite-length encoding.
+* <code>[public static readonly PeterO.Cbor.CBOREncodeOptions None;](#None)</code> - No special options for encoding/decoding.
+* <code>[Or(PeterO.Cbor.CBOREncodeOptions)](#Or_PeterO_Cbor_CBOREncodeOptions)</code> - Returns an options object containing the combined flags of this and another options object.
+* <code>[UseIndefLengthStrings](#UseIndefLengthStrings)</code> - Gets a value indicating whether to always encode strings with a definite-length encoding.
+* <code>[Value](#Value)</code> - Gets this options object's value.
 
+<a id="Void_ctor_Boolean_Boolean"></a>
 ### CBOREncodeOptions Constructor
 
     public CBOREncodeOptions(
@@ -29,6 +31,7 @@ Initializes a new instance of the [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CB
 
  * <i>allowDuplicateKeys</i>: A value indicating whether to disallow duplicate keys when reading CBOR objects from a data stream.
 
+<a id="Void_ctor_Boolean_Boolean_Boolean"></a>
 ### CBOREncodeOptions Constructor
 
     public CBOREncodeOptions(
@@ -46,30 +49,35 @@ Initializes a new instance of the [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CB
 
  * <i>ctap2Canonical</i>: Either  `true`  or  `false` .
 
+<a id="Default"></a>
 ### Default
 
     public static readonly PeterO.Cbor.CBOREncodeOptions Default;
 
 Default options for CBOR objects. Disallow duplicate keys, and always encode strings using definite-length encoding. These are recommended settings for the options that may be adopted by certain CBORObject methods in the next major version.
 
+<a id="NoDuplicateKeys"></a>
 ### NoDuplicateKeys
 
     public static readonly PeterO.Cbor.CBOREncodeOptions NoDuplicateKeys;
 
 Disallow duplicate keys when reading CBOR objects from a data stream. Used only when decoding CBOR objects. Value: 2.
 
+<a id="NoIndefLengthStrings"></a>
 ### NoIndefLengthStrings
 
     public static readonly PeterO.Cbor.CBOREncodeOptions NoIndefLengthStrings;
 
 Always encode strings with a definite-length encoding. Used only when encoding CBOR objects. Value: 1.
 
+<a id="None"></a>
 ### None
 
     public static readonly PeterO.Cbor.CBOREncodeOptions None;
 
 No special options for encoding/decoding. Value: 0.
 
+<a id="AllowDuplicateKeys"></a>
 ### AllowDuplicateKeys
 
     public bool AllowDuplicateKeys { get; }
@@ -80,6 +88,7 @@ Gets a value indicating whether to disallow duplicate keys when reading CBOR obj
 
 A value indicating whether to disallow duplicate keys when reading CBOR objects from a data stream.
 
+<a id="Ctap2Canonical"></a>
 ### Ctap2Canonical
 
     public bool Ctap2Canonical { get; }
@@ -90,6 +99,7 @@ Gets a value indicating whether CBOR objects are written out using the CTAP2 can
 
  `true`  if CBOR objects are written out using the CTAP2 canonical CBOR encoding form; otherwise,  `false` .. In this form, CBOR tags are not used, map keys are written out in a canonical order, and non-integer numbers and integers 2^63 or greater are written as 64-bit binary floating-point numbers.
 
+<a id="UseIndefLengthStrings"></a>
 ### UseIndefLengthStrings
 
     public bool UseIndefLengthStrings { get; }
@@ -100,6 +110,7 @@ Gets a value indicating whether to always encode strings with a definite-length 
 
 A value indicating whether to always encode strings with a definite-length encoding.
 
+<a id="Value"></a>
 ### Value
 
     public int Value { get; }
@@ -112,6 +123,7 @@ Gets this options object's value.
 
 This options object's value.
 
+<a id="And_PeterO_Cbor_CBOREncodeOptions"></a>
 ### And
 
     public PeterO.Cbor.CBOREncodeOptions And(
@@ -130,6 +142,7 @@ is a CBOREncodeOptions object.
 
 A CBOREncodeOptions object.
 
+<a id="Or_PeterO_Cbor_CBOREncodeOptions"></a>
 ### Or
 
     public PeterO.Cbor.CBOREncodeOptions Or(

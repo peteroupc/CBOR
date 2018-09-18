@@ -4,9 +4,11 @@
 
 Includes options to control how CBOR objects are converted to JSON.
 
-* <code> public bool Base64Padding { get; }</code> - Gets a value indicating whether padding is written out when writing base64url or traditional base64 to JSON.
-* <code> public static readonly PeterO.Cbor.JSONOptions Default;</code> - The default options for converting CBOR objects to JSON.
+### Member Summary
+* <code>[Base64Padding](#Base64Padding)</code> - Gets a value indicating whether padding is written out when writing base64url or traditional base64 to JSON.
+* <code>[public static readonly PeterO.Cbor.JSONOptions Default;](#Default)</code> - The default options for converting CBOR objects to JSON.
 
+<a id="Void_ctor_Boolean"></a>
 ### JSONOptions Constructor
 
     public JSONOptions(
@@ -18,12 +20,14 @@ Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOpti
 
  * <i>base64Padding</i>: Whether padding is included when writing data in base64url or traditional base64 format to JSON.
 
+<a id="Default"></a>
 ### Default
 
     public static readonly PeterO.Cbor.JSONOptions Default;
 
 The default options for converting CBOR objects to JSON.
 
+<a id="Base64Padding"></a>
 ### Base64Padding
 
     public bool Base64Padding { get; }

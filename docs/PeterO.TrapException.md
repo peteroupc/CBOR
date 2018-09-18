@@ -11,10 +11,12 @@
 
 Exception thrown for arithmetic trap errors.
 
-* <code> public PeterO.PrecisionContext Context { get; }</code> - Gets the precision context used during the operation that triggered the trap.
-* <code> public int Error { get; }</code> - Gets the flag that specifies the kind of error (PrecisionContext.
-* <code> public object Result { get; }</code> - Gets the defined result of the operation that caused the trap.
+### Member Summary
+* <code>[Context](#Context)</code> - Gets the precision context used during the operation that triggered the trap.
+* <code>[Error](#Error)</code> - Gets the flag that specifies the kind of error (PrecisionContext.
+* <code>[Result](#Result)</code> - Gets the defined result of the operation that caused the trap.
 
+<a id="Void_ctor_Int32_PrecisionContext_Object"></a>
 ### TrapException Constructor
 
     public TrapException(
@@ -32,6 +34,7 @@ Initializes a new instance of the [PeterO.TrapException](PeterO.TrapException.md
 
  * <i>result</i>: The desired result of the operation that caused the trap, such as an `ExtendedDecimal` or `ExtendedFloat` .
 
+<a id="Context"></a>
 ### Context
 
     public PeterO.PrecisionContext Context { get; }
@@ -42,6 +45,7 @@ Gets the precision context used during the operation that triggered the trap. Ma
 
 The precision context used during the operation that triggered the trap. May be null.
 
+<a id="Error"></a>
 ### Error
 
     public int Error { get; }
@@ -52,6 +56,7 @@ Gets the flag that specifies the kind of error (PrecisionContext.FlagXXX). This 
 
 The flag that specifies the kind of error (PrecisionContext.FlagXXX). This will only be one flag, such as FlagInexact or FlagSubnormal.
 
+<a id="Result"></a>
 ### Result
 
     public object Result { get; }

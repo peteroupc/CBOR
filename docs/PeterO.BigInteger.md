@@ -14,27 +14,30 @@ An arbitrary-precision integer.<b>Thread safety:</b>Instances of this class are 
 
 An arbitrary-precision integer.<b>Thread safety:</b>Instances of this class are immutable, so they are inherently safe for se by multiple threads. Multiple instances of this object with the same alue are interchangeable, but they should be compared using the Equals" method rather than the "==" operator.
 
-* <code> public sealed int CompareTo( PeterO.BigInteger other);</code> - Compares this value to another.
-* <code> public override bool Equals( object obj);</code> - Determines whether this object and another object are equal.
-* <code> public override int GetHashCode();</code> - Returns the hash code for this instance.
-* <code> public static readonly PeterO.BigInteger ONE;</code> - BigInteger for the number one.
-* <code> public static PeterO.BigInteger One { get; }</code> - Gets the arbitrary-precision integer for one.
-* <code> public override string ToString();</code> - Converts this object to a text string in base 10.
-* <code> public static PeterO.BigInteger Zero { get; }</code> - Gets the arbitrary-precision integer for zero.
-* <code> public int bitLength();</code> - Finds the minimum number of bits needed to represent this object's value, except for its sign.
-* <code> public static PeterO.BigInteger fromBytes( byte[] bytes, bool littleEndian);</code> - Initializes an arbitrary-precision integer from an array of bytes.
-* <code> public static PeterO.BigInteger fromRadixString( string str, int radix);</code> - Converts a string to an arbitrary-precision integer.
-* <code> public static PeterO.BigInteger fromString( string str);</code> - Converts a string to an arbitrary-precision integer.
-* <code> public byte[] toBytes( bool littleEndian);</code> - Returns a byte array of this object's value.
-* <code> public string toRadixString( int radix);</code> - Generates a string representing the value of this object, in the given radix.
-* <code> public static PeterO.BigInteger valueOf( long longerValue);</code> - Converts a 64-bit signed integer to a big integer.
+### Member Summary
+* <code>[CompareTo(PeterO.BigInteger)](#CompareTo_PeterO_BigInteger)</code> - Compares this value to another.
+* <code>[Equals(object)](#Equals_object)</code> - Determines whether this object and another object are equal.
+* <code>[GetHashCode()](#GetHashCode)</code> - Returns the hash code for this instance.
+* <code>[public static readonly PeterO.BigInteger ONE;](#ONE)</code> - BigInteger for the number one.
+* <code>[One](#One)</code> - Gets the arbitrary-precision integer for one.
+* <code>[ToString()](#ToString)</code> - Converts this object to a text string in base 10.
+* <code>[Zero](#Zero)</code> - Gets the arbitrary-precision integer for zero.
+* <code>[bitLength()](#bitLength)</code> - Finds the minimum number of bits needed to represent this object's value, except for its sign.
+* <code>[fromBytes(byte[], bool)](#fromBytes_byte_bool)</code> - Initializes an arbitrary-precision integer from an array of bytes.
+* <code>[fromRadixString(string, int)](#fromRadixString_string_int)</code> - Converts a string to an arbitrary-precision integer.
+* <code>[fromString(string)](#fromString_string)</code> - Converts a string to an arbitrary-precision integer.
+* <code>[toBytes(bool)](#toBytes_bool)</code> - Returns a byte array of this object's value.
+* <code>[toRadixString(int)](#toRadixString_int)</code> - Generates a string representing the value of this object, in the given radix.
+* <code>[valueOf(long)](#valueOf_long)</code> - Converts a 64-bit signed integer to a big integer.
 
+<a id="ONE"></a>
 ### ONE
 
     public static readonly PeterO.BigInteger ONE;
 
 BigInteger for the number one.
 
+<a id="One"></a>
 ### One
 
     public static PeterO.BigInteger One { get; }
@@ -47,6 +50,7 @@ Gets the arbitrary-precision integer for one.
 
 The arbitrary-precision integer for one.
 
+<a id="Zero"></a>
 ### Zero
 
     public static PeterO.BigInteger Zero { get; }
@@ -59,6 +63,7 @@ Gets the arbitrary-precision integer for zero.
 
 The arbitrary-precision integer for zero.
 
+<a id="bitLength"></a>
 ### bitLength
 
     public int bitLength();
@@ -69,6 +74,7 @@ Finds the minimum number of bits needed to represent this object's value, except
 
 The number of bits in this object's value. Returns 0 if this object's value is 0 or negative 1.
 
+<a id="CompareTo_PeterO_BigInteger"></a>
 ### CompareTo
 
     public sealed int CompareTo(
@@ -85,6 +91,7 @@ is an arbitrary-precision integer.
 
 Less than 0 if this value is less than, 0 if equal to, or greater than 0 if greater than the other value.
 
+<a id="Equals_object"></a>
 ### Equals
 
     public override bool Equals(
@@ -101,6 +108,7 @@ is an arbitrary object.
 
  `true` if this object and another object are equal; otherwise,  `false` .
 
+<a id="Equals_PeterO_BigInteger"></a>
 ### Equals
 
     public sealed bool Equals(
@@ -118,6 +126,7 @@ Returns whether this number's value equals another number's value.
 
  `true` if this number's value equals another number's value; otherwise,  `false` .
 
+<a id="fromBytes_byte_bool"></a>
 ### fromBytes
 
     public static PeterO.BigInteger fromBytes(
@@ -142,6 +151,7 @@ An arbitrary-precision integer. Returns 0 if the byte array's length is 0.
 The parameter <i>bytes</i>
 is null.
 
+<a id="fromRadixString_string_int"></a>
 ### fromRadixString
 
     public static PeterO.BigInteger fromRadixString(
@@ -173,6 +183,7 @@ is less than 2 or greater than 36.
  * System.FormatException:
 The string is empty or in an invalid format.
 
+<a id="fromString_string"></a>
 ### fromString
 
     public static PeterO.BigInteger fromString(
@@ -198,6 +209,7 @@ is null.
 The parameter <i>str</i>
 is in an invalid format.
 
+<a id="GetHashCode"></a>
 ### GetHashCode
 
     public override int GetHashCode();
@@ -208,6 +220,7 @@ Returns the hash code for this instance. No application or process IDs are used 
 
 A 32-bit signed integer.
 
+<a id="toBytes_bool"></a>
 ### toBytes
 
     public byte[] toBytes(
@@ -223,6 +236,7 @@ Returns a byte array of this object's value. The byte array will take the form o
 
 A byte array. If this value is 0, returns a byte array with the single element 0.
 
+<a id="toRadixString_int"></a>
 ### toRadixString
 
     public string toRadixString(
@@ -243,6 +257,7 @@ A string representing the value of this object. If this value is 0, returns "0".
  * System.ArgumentException:
 The parameter "index" is less than 0, "endIndex" is less than 0, or either is greater than the string's length, or "endIndex" is less than "index" ; or radix is less than 2 or greater than 36.
 
+<a id="ToString"></a>
 ### ToString
 
     public override string ToString();
@@ -253,6 +268,7 @@ Converts this object to a text string in base 10.
 
 A string representation of this object. If negative, the string will begin with a minus sign ("-", U+002D). The string will use the basic digits 0 to 9 (U+0030 to U+0039).
 
+<a id="valueOf_long"></a>
 ### valueOf
 
     public static PeterO.BigInteger valueOf(

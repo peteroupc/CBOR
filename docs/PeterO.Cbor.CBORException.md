@@ -7,6 +7,9 @@
 
 Exception thrown for errors involving CBOR data.
 
+### Member Summary
+
+<a id="Void_ctor_String"></a>
 ### CBORException Constructor
 
     public CBORException(
@@ -19,6 +22,7 @@ Initializes a new instance of the [PeterO.Cbor.CBORException](PeterO.Cbor.CBOREx
  * <i>message</i>: The parameter <i>message</i>
 is a text string.
 
+<a id="Void_ctor_String_Exception"></a>
 ### CBORException Constructor
 
     public CBORException(
@@ -35,6 +39,7 @@ is a text string.
  * <i>innerException</i>: The parameter <i>innerException</i>
 is an Exception object.
 
+<a id="Void_ctor"></a>
 ### CBORException Constructor
 
     public CBORException();

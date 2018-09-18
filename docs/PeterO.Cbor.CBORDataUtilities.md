@@ -4,8 +4,10 @@
 
 Contains methods useful for reading and writing data, with a focus on CBOR.
 
-* <code> public static PeterO.Cbor.CBORObject ParseJSONNumber( string str);</code> - Parses a number whose format follows the JSON specification.
+### Member Summary
+* <code>[ParseJSONNumber(string)](#ParseJSONNumber_string)</code> - Parses a number whose format follows the JSON specification.
 
+<a id="ParseJSONNumber_string"></a>
 ### ParseJSONNumber
 
     public static PeterO.Cbor.CBORObject ParseJSONNumber(
@@ -21,6 +23,7 @@ Parses a number whose format follows the JSON specification. See #ParseJSONNumbe
 
 A CBOR object that represents the parsed number. Returns positive zero if the number is a zero that starts with a minus sign (such as "-0" or "-0.0"). Returns null if the parsing fails, including if the string is null or empty.
 
+<a id="ParseJSONNumber_string_bool_bool"></a>
 ### ParseJSONNumber
 
     public static PeterO.Cbor.CBORObject ParseJSONNumber(
@@ -42,6 +45,7 @@ Parses a number whose format follows the JSON specification (RFC 8259). Roughly 
 
 A CBOR object that represents the parsed number. Returns positive zero if the number is a zero that starts with a minus sign (such as "-0" or "-0.0"). Returns null if the parsing fails, including if the string is null or empty.
 
+<a id="ParseJSONNumber_string_bool_bool_bool"></a>
 ### ParseJSONNumber
 
     public static PeterO.Cbor.CBORObject ParseJSONNumber(

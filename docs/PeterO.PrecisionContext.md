@@ -6,8 +6,10 @@
 
 A precision context.
 
-* <code> public override string ToString();</code> - Gets a string representation of this object.
+### Member Summary
+* <code>[ToString()](#ToString)</code> - Gets a string representation of this object.
 
+<a id="Void_ctor_Int32_Rounding_Int32_Int32_Boolean"></a>
 ### PrecisionContext Constructor
 
     public PrecisionContext(
@@ -31,6 +33,7 @@ Initializes a new instance of the [PeterO.PrecisionContext](PeterO.PrecisionCont
 
  * <i>clampNormalExponents</i>: Whether to clamp a number's significand to the given maximum precision (if it isn't zero) while remaining within the exponent range.
 
+<a id="ToString"></a>
 ### ToString
 
     public override string ToString();
