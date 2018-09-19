@@ -14,8 +14,7 @@ namespace PeterO.Cbor {
       var lesserFields = new int[7];
       var year = new EInteger[1];
       PropertyMap.BreakDownDateTime(bi, year, lesserFields);
-      // TODO: Change to true in next major version
-      return CBORUtilities.ToAtomDateTimeString(year[0], lesserFields, false);
+      return CBORUtilities.ToAtomDateTimeString(year[0], lesserFields);
     }
 
     internal static void AddConverter() {

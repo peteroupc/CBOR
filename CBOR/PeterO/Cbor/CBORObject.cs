@@ -599,7 +599,7 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.DecodeFromBytes(System.Byte[])"]/*'/>
     public static CBORObject DecodeFromBytes(byte[] data) {
-      return DecodeFromBytes(data, new CBOREncodeOptions(true, true));
+      return DecodeFromBytes(data, CBOREncodeOptions.Default);
     }
 
     /// <include file='../../docs.xml'
@@ -655,7 +655,7 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromJSONString(System.String)"]/*'/>
     public static CBORObject FromJSONString(string str) {
-      return FromJSONString(str, new CBOREncodeOptions(true, true));
+      return FromJSONString(str, CBOREncodeOptions.Default);
     }
 
     /// <include file='../../docs.xml'
@@ -1266,7 +1266,7 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ReadJSON(System.IO.Stream)"]/*'/>
     public static CBORObject ReadJSON(Stream stream) {
-      return ReadJSON(stream, new CBOREncodeOptions(true, true));
+      return ReadJSON(stream, CBOREncodeOptions.Default);
     }
 
     /// <include file='../../docs.xml'
@@ -1317,11 +1317,7 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.String,System.IO.Stream)"]/*'/>
     public static void Write(string str, Stream stream) {
-      if (stream == null) {
-        throw new ArgumentNullException(nameof(stream));
-      }
-      // TODO: Use CBOREncodeOptions.Default in future versions
-      Write(str, stream, new CBOREncodeOptions(true, true));
+      Write(str, stream, CBOREncodeOptions.Default);
     }
 
     /// <include file='../../docs.xml'
@@ -1720,8 +1716,7 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Object,System.IO.Stream)"]/*'/>
     public static void Write(object objValue, Stream stream) {
-      // TODO: Use CBOREncodeOptions.Default in future versions
-      Write(objValue, stream, new CBOREncodeOptions(true, true));
+      Write(objValue, stream, CBOREncodeOptions.Default);
     }
 
     /// <include file='../../docs.xml'
@@ -2310,7 +2305,7 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.EncodeToBytes"]/*'/>
     public byte[] EncodeToBytes() {
-      return this.EncodeToBytes(new CBOREncodeOptions(true, true));
+      return this.EncodeToBytes(CBOREncodeOptions.Default);
     }
 
     /// <include file='../../docs.xml'
@@ -2744,7 +2739,6 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Remove(System.Object)"]/*'/>
     public bool Remove(object obj) {
-      // TODO: Convert null to CBORObject.Null in next major version
       return this.Remove(CBORObject.FromObject(obj));
     }
 
@@ -3192,7 +3186,7 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)"]/*'/>
     public void WriteTo(Stream stream) {
-      this.WriteTo(stream, new CBOREncodeOptions(true, true));
+      this.WriteTo(stream, CBOREncodeOptions.Default);
     }
 
     /// <include file='../../docs.xml'

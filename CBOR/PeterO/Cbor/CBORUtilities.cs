@@ -513,10 +513,7 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
 
     public static string ToAtomDateTimeString(
       EInteger bigYear,
-      int[] lesserFields,
-      bool fracIsNanoseconds) {
-      // TODO: fracIsNanoseconds is a parameter
-      // for compatibility purposes only
+      int[] lesserFields) {
       if (lesserFields[6] != 0) {
         throw new NotSupportedException(
           "Local time offsets not supported");
@@ -557,20 +554,6 @@ if (smallYear > 9999) {
       charbuf[17] = (char)('0' + ((second / 10) % 10));
       charbuf[18] = (char)('0' + (second % 10));
       var charbufLength = 19;
-      if (!fracIsNanoseconds) {
-         int milliseconds = fracSeconds / 1000000;
-         if (milliseconds > 0) {
-          charbuf[19] = '.';
-          charbuf[20] = (char)('0' + ((milliseconds / 100) % 10));
-          charbuf[21] = (char)('0' + ((milliseconds / 10) % 10));
-          charbuf[22] = (char)('0' + (milliseconds % 10));
-          charbuf[23] = 'Z';
-          charbufLength += 5;
-        } else {
-          charbuf[19] = 'Z';
-          ++charbufLength;
-        }
-      } else {
         if (fracSeconds > 0) {
           charbuf[19] = '.';
  ++charbufLength;
@@ -589,7 +572,6 @@ while (digitdiv > 0 && fracSeconds != 0) {
           charbuf[19] = 'Z';
           ++charbufLength;
         }
-      }
       return new String(charbuf, 0, charbufLength);
     }
 
