@@ -2744,6 +2744,9 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Remove(System.Object)"]/*'/>
     public bool Remove(object obj) {
+      if (obj == null) {
+        throw new ArgumentNullException(nameof(obj));
+      }
       // TODO: Convert null to CBORObject.Null in next major version
       return this.Remove(CBORObject.FromObject(obj));
     }
