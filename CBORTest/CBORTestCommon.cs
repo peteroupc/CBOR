@@ -265,14 +265,14 @@ return CBORObject.FromObject(
       TestCommon.AssertEqualsHashCode(o, o2);
     }
 
-    public static void AssertSer(CBORObject o, String s) {
-      if (!s.Equals(o.ToString())) {
-        Assert.AreEqual(s, o.ToString(), "o is not equal to s");
+    public static void AssertJSONSer(CBORObject o, String s) {
+      if (!s.Equals(o.ToJSONString())) {
+        Assert.AreEqual(s, o.ToJSONString(), "o is not equal to s");
       }
       // Test round-tripping
       CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());
-      if (!s.Equals(o2.ToString())) {
-        Assert.AreEqual(s, o2.ToString(), "o2 is not equal to s");
+      if (!s.Equals(o2.ToJSONString())) {
+        Assert.AreEqual(s, o2.ToJSONString(), "o2 is not equal to s");
       }
       TestNumber(o);
       TestCommon.AssertEqualsHashCode(o, o2);

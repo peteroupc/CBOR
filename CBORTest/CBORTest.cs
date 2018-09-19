@@ -64,7 +64,7 @@ string str1817 = "[0,1,2,3,4,5,6,7]";
       var r = new RandomGenerator();
       for (var i = 0; i < 500; ++i) {
         EInteger bi = RandomObjects.RandomEInteger(r);
-        CBORTestCommon.AssertSer(
+        CBORTestCommon.AssertJSONSer(
           CBORObject.FromObject(bi),
           bi.ToString());
         Assert.IsTrue(CBORObject.FromObject(bi).IsIntegral);
@@ -85,7 +85,7 @@ string str1817 = "[0,1,2,3,4,5,6,7]";
       for (var i = 0; i < ranges.Length; i += 2) {
         EInteger bigintTemp = ranges[i];
         while (true) {
-          CBORTestCommon.AssertSer(
+          CBORTestCommon.AssertJSONSer(
             CBORObject.FromObject(bigintTemp),
             bigintTemp.ToString());
           if (bigintTemp.Equals(ranges[i + 1])) {
@@ -120,7 +120,7 @@ string str1817 = "[0,1,2,3,4,5,6,7]";
     [Test]
     public void TestByte() {
       for (var i = 0; i <= 255; ++i) {
-        CBORTestCommon.AssertSer(
+        CBORTestCommon.AssertJSONSer(
           CBORObject.FromObject((byte)i),
           TestCommon.IntToString(i));
       }
@@ -128,9 +128,14 @@ string str1817 = "[0,1,2,3,4,5,6,7]";
 
     [Test]
     public void TestByteArray() {
-      CBORTestCommon.AssertSer(
-        CBORObject.FromObject(new byte[] { 0x20, 0x78 }),
-        "h'2078'");
+CBORObject co = CBORObject.FromObject(
+        new byte[] { 0x20, 0x78 });
+      EInteger[] tags = co.GetAllTags();
+      Assert.AreEqual(0, tags.Length);
+      byte[] bytes = co.GetByteString();
+      Assert.AreEqual(2, bytes.Length);
+      Assert.AreEqual(0x20, bytes[0]);
+      Assert.AreEqual(0x78, bytes[1]);
     }
 
     [Test]
@@ -533,22 +538,18 @@ string str1817 = "[0,1,2,3,4,5,6,7]";
         (!CBORObject.FromObject(Double.PositiveInfinity).IsPositiveInfinity()) {
         Assert.Fail("Not positive infinity");
       }
-      CBORTestCommon.AssertSer(
-        CBORObject.FromObject(Double.PositiveInfinity),
-        "Infinity");
-      CBORTestCommon.AssertSer(
-        CBORObject.FromObject(Double.NegativeInfinity),
-        "-Infinity");
-      CBORTestCommon.AssertSer(
-        CBORObject.FromObject(Double.NaN),
-        "NaN");
+Assert.IsTrue(CBORObject.FromObject(Double.PositiveInfinity).AsEDecimal()
+        .IsPositiveInfinity());
+Assert.IsTrue(CBORObject.FromObject(Double.NegativeInfinity).AsEDecimal()
+        .IsNegativeInfinity());
+      Assert.IsTrue(CBORObject.FromObject(Double.NaN).AsEDecimal().IsNaN());
       CBORObject oldobj = null;
       for (int i = -65539; i <= 65539; ++i) {
         CBORObject o = CBORObject.FromObject((double)i);
         Assert.IsTrue(o.CanFitInDouble());
         Assert.IsTrue(o.CanFitInInt32());
         Assert.IsTrue(o.IsIntegral);
-        CBORTestCommon.AssertSer(
+        CBORTestCommon.AssertJSONSer(
           o,
           TestCommon.IntToString(i));
         if (oldobj != null) {
@@ -598,17 +599,13 @@ string str1817 = "[0,1,2,3,4,5,6,7]";
 
     [Test]
     public void TestFloat() {
-      CBORTestCommon.AssertSer(
-        CBORObject.FromObject(Single.PositiveInfinity),
-        "Infinity");
-      CBORTestCommon.AssertSer(
-        CBORObject.FromObject(Single.NegativeInfinity),
-        "-Infinity");
-      CBORTestCommon.AssertSer(
-        CBORObject.FromObject(Single.NaN),
-        "NaN");
+Assert.IsTrue(CBORObject.FromObject(Single.PositiveInfinity).AsEDecimal()
+        .IsPositiveInfinity());
+Assert.IsTrue(CBORObject.FromObject(Single.NegativeInfinity).AsEDecimal()
+        .IsNegativeInfinity());
+      Assert.IsTrue(CBORObject.FromObject(Single.NaN).AsEDecimal().IsNaN());
       for (int i = -65539; i <= 65539; ++i) {
-        CBORTestCommon.AssertSer(
+        CBORTestCommon.AssertJSONSer(
           CBORObject.FromObject((float)i),
           TestCommon.IntToString(i));
       }
@@ -765,7 +762,7 @@ string str1817 = "[0,1,2,3,4,5,6,7]";
           Assert.IsTrue(CBORObject.FromObject(j).IsIntegral);
           Assert.IsTrue(CBORObject.FromObject(j).CanFitInInt64());
           Assert.IsTrue(CBORObject.FromObject(j).CanTruncatedIntFitInInt64());
-          CBORTestCommon.AssertSer(
+          CBORTestCommon.AssertJSONSer(
             CBORObject.FromObject(j),
             TestCommon.LongToString(j));
           Assert.AreEqual(
@@ -773,7 +770,7 @@ string str1817 = "[0,1,2,3,4,5,6,7]";
             CBORObject.FromObject(EInteger.FromInt64(j)));
           CBORObject obj = CBORObject.FromJSONString(
             "[" + TestCommon.LongToString(j) + "]");
-          CBORTestCommon.AssertSer(
+          CBORTestCommon.AssertJSONSer(
             obj,
             "[" + TestCommon.LongToString(j) + "]");
           if (j == ranges[i + 1]) {
@@ -985,7 +982,7 @@ string str1817 = "[0,1,2,3,4,5,6,7]";
     [Test]
     public void TestShort() {
       for (int i = Int16.MinValue; i <= Int16.MaxValue; ++i) {
-        CBORTestCommon.AssertSer(
+        CBORTestCommon.AssertJSONSer(
           CBORObject.FromObject((short)i),
           TestCommon.IntToString(i));
       }
@@ -993,13 +990,13 @@ string str1817 = "[0,1,2,3,4,5,6,7]";
 
     [Test]
     public void TestSimpleValues() {
-      CBORTestCommon.AssertSer(
+      CBORTestCommon.AssertJSONSer(
         CBORObject.FromObject(true),
         "true");
-      CBORTestCommon.AssertSer(
+      CBORTestCommon.AssertJSONSer(
         CBORObject.FromObject(false),
         "false");
-      CBORTestCommon.AssertSer(
+      CBORTestCommon.AssertJSONSer(
         CBORObject.FromObject((object)null),
         "null");
     }
@@ -1135,10 +1132,11 @@ string str1817 = "[0,1,2,3,4,5,6,7]";
               obj.MostInnerTag,
               errmsg);
           }
-          CBORTestCommon.AssertSer(
-            obj,
-            bigintTemp.ToString() + "(0)");
-          if (!bigintTemp.Equals(maxuint)) {
+          tags = obj.GetAllTags();
+          Assert.AreEqual(1, tags.Length);
+          Assert.AreEqual(bigintTemp, obj.MostOuterTag);
+          Assert.AreEqual(bigintTemp, obj.MostInnerTag);
+ Assert.AreEqual(0, obj.AsInt32()); if (!bigintTemp.Equals(maxuint)) {
             EInteger bigintNew = bigintNext;
             if (bigintNew.Equals(EInteger.FromString("264")) ||
                 bigintNew.Equals(EInteger.FromString("265"))) {
@@ -1175,11 +1173,11 @@ string str1817 = "[0,1,2,3,4,5,6,7]";
                     stringTemp);
               }
             }
-            String str = bigintNext.ToString() + "(" +
-              bigintTemp.ToString() + "(0))";
-            CBORTestCommon.AssertSer(
-              obj2,
-              str);
+EInteger[] tags2 = obj2.GetAllTags();
+            Assert.AreEqual(2, tags2.Length);
+            Assert.AreEqual(bigintNext, obj2.MostOuterTag);
+            Assert.AreEqual(bigintTemp, obj2.MostInnerTag);
+            Assert.AreEqual(0, obj2.AsInt32());
           }
           if (bigintTemp.Equals(ranges[i + 1])) {
             break;

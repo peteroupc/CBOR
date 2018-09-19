@@ -1266,19 +1266,12 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromJSONString(System.String)">
 
-            <summary><para><b>At the moment, use the overload of this method that takes
-            a
-            <see cref='T:PeterO.Cbor.CBOREncodeOptions'/> object. The object
-            <c>CBOREncodeOptions.Default</c> contains recommended settings for
-            CBOREncodeOptions, and those settings may be adopted by this
-            overload (without a CBOREncodeOptions argument) in the next major
-            version.</b></para>
+            <summary>
             <para>Generates a CBOR object from a text string in JavaScript
             Object Notation (JSON) format.</para>
-            <para>If a JSON object has the same key, only the last given value
-            will be used for each duplicated key.</para></summary><param name='str'>A string in JSON format. The entire string must
+            <para>If a JSON object has duplicate keys, a CBORException is thrown.  This is a change in version 4.0.</para></summary><param name='str'>A string in JSON format. The entire string must
             contain a single JSON object and not multiple objects. The string
-            may not begin with a byte-order mark (U+FEFF).</param><returns>A CBORObject object.</returns><exception cref='T:System.ArgumentNullException'>The parameter
+            may not begin with a byte-order mark (U+FEFF).</param><returns>A CBOR object.</returns><exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='str'/> is null.</exception><exception cref='T:PeterO.Cbor.CBORException'>The string is not in
             JSON format.</exception>
 
@@ -1287,13 +1280,10 @@
 
             <summary>Generates a CBOR object from a text string in JavaScript
             Object Notation (JSON) format, using the specified options to
-            control the decoding process.
-            <para>By default, if a JSON object has the same key, only the last
-            given value will be used for each duplicated key.</para></summary><param name='str'>A string in JSON format. The entire string must
+            control the decoding process.</summary><param name='str'>A string in JSON format. The entire string must
             contain a single JSON object and not multiple objects. The string
-            may not begin with a byte-order mark (U+FEFF).</param><param name='options'>The parameter <paramref name='options'/> is a
-            CBOREncodeOptions object.</param><returns>A CBORObject object.</returns><exception cref='T:System.ArgumentNullException'>The parameter
-            <paramref name='str'/> is null.</exception><exception cref='T:PeterO.Cbor.CBORException'>The string is not in
+            may not begin with a byte-order mark (U+FEFF).</param><param name='options'>Specifies options to control the decoding process.</param><returns>A CBORObject object.</returns><exception cref='T:System.ArgumentNullException'>The parameter
+            <paramref name='str'/> or <paramref name='options'/> is null.</exception><exception cref='T:PeterO.Cbor.CBORException'>The string is not in
             JSON format.</exception>
 
 </doc>

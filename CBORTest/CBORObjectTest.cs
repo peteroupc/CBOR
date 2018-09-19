@@ -209,18 +209,27 @@ a major version change.
     }
 
     public static CBORObject TestSucceedingJSON(string str) {
+      return TestSucceedingJSON(str, null);
+    }
+
+    public static CBORObject TestSucceedingJSON(
+  string str,
+  CBOREncodeOptions options) {
       byte[] bytes = DataUtilities.GetUtf8Bytes(str, false);
       try {
         using (var ms = new MemoryStream(bytes)) {
-          CBORObject obj = CBORObject.ReadJSON(ms);
+          CBORObject obj = options == null ? CBORObject.ReadJSON(ms) :
+                    CBORObject.ReadJSON(ms, options);
+          CBORObject obj2 = options == null ? CBORObject.FromJSONString(str) :
+                    CBORObject.FromJSONString(str, options);
           TestCommon.CompareTestEqualAndConsistent(
             obj,
-            CBORObject.FromJSONString(str));
+            obj2);
           CBORTestCommon.AssertRoundTrip(obj);
           return obj;
         }
       } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
+        Assert.Fail(ex.ToString() + "\n" + str);
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
@@ -1936,8 +1945,8 @@ a major version change.
   bytes.Length,
   TestCommon.IntToString(j));
           }
-bytes = CBORObject.FromObject(j).EncodeToBytes(new
-  CBOREncodeOptions(false, false, true));
+          bytes = CBORObject.FromObject(j).EncodeToBytes(new
+            CBOREncodeOptions(false, false, true));
           if (bytes.Length != ranges[i + 2]) {
             Assert.AreEqual(
   ranges[i + 2],
@@ -1946,13 +1955,13 @@ bytes = CBORObject.FromObject(j).EncodeToBytes(new
           }
         }
       }
-string veryLongString = TestCommon.Repeat("x", 10000);
-byte[] stringBytes = CBORObject.FromObject(veryLongString)
-.EncodeToBytes(new CBOREncodeOptions(false, false, true));
-Assert.AreEqual(10003, stringBytes.Length);
-stringBytes = CBORObject.FromObject(veryLongString)
-.EncodeToBytes(new CBOREncodeOptions(false, true));
-Assert.AreEqual(10003, stringBytes.Length);
+      string veryLongString = TestCommon.Repeat("x", 10000);
+      byte[] stringBytes = CBORObject.FromObject(veryLongString)
+      .EncodeToBytes(new CBOREncodeOptions(false, false, true));
+      Assert.AreEqual(10003, stringBytes.Length);
+      stringBytes = CBORObject.FromObject(veryLongString)
+      .EncodeToBytes(new CBOREncodeOptions(false, true));
+      Assert.AreEqual(10003, stringBytes.Length);
 
       for (int i = 0; i < bigRanges.Length; i += 2) {
         EInteger bj = EInteger.FromString(bigRanges[i]);
@@ -1962,8 +1971,8 @@ Assert.AreEqual(10003, stringBytes.Length);
           if (bytes.Length != bigSizes[i / 2]) {
             Assert.AreEqual(bigSizes[i / 2], bytes.Length, bj.ToString());
           }
-bytes = CBORObject.FromObject(bj)
-.EncodeToBytes(new CBOREncodeOptions(false, false, true));
+          bytes = CBORObject.FromObject(bj)
+          .EncodeToBytes(new CBOREncodeOptions(false, false, true));
           if (bytes.Length != bigSizes[i / 2]) {
             Assert.AreEqual(bigSizes[i / 2], bytes.Length, bj.ToString());
           }
@@ -2079,7 +2088,7 @@ bytes = CBORObject.FromObject(bj)
 
     [Test]
     public void TestFalse() {
-      CBORTestCommon.AssertSer(CBORObject.False, "false");
+      CBORTestCommon.AssertJSONSer(CBORObject.False, "false");
       Assert.AreEqual(CBORObject.False, CBORObject.FromObject(false));
     }
 
@@ -2130,9 +2139,10 @@ bytes = CBORObject.FromObject(bj)
       TestFailingJSON("{\"a\":1,\"a\":2}", ValueNoDuplicateKeys);
       string aba = "{\"a\":1,\"b\":3,\"a\":2}";
       TestFailingJSON(aba, ValueNoDuplicateKeys);
-      cbor = TestSucceedingJSON(aba);
+      cbor = TestSucceedingJSON(aba, new CBOREncodeOptions(false, true));
       Assert.AreEqual(CBORObject.FromObject(2), cbor["a"]);
-      cbor = TestSucceedingJSON("{\"a\":1,\"a\":4}");
+      aba = "{\"a\":1,\"a\":4}";
+      cbor = TestSucceedingJSON(aba, new CBOREncodeOptions(false, true));
       Assert.AreEqual(CBORObject.FromObject(4), cbor["a"]);
       cbor = TestSucceedingJSON("\"\\t\"");
       {
@@ -2376,10 +2386,10 @@ bytes = CBORObject.FromObject(bj)
       co = CBORObject.False;
       Assert.AreEqual(false, co.ToObject(typeof(bool)));
       co = CBORObject.FromObject("hello world");
-string stringTemp = (string)co.ToObject(typeof(string));
-Assert.AreEqual(
-  "hello world",
-  stringTemp);
+      var stringTemp = (string)co.ToObject(typeof(string));
+      Assert.AreEqual(
+        "hello world",
+        stringTemp);
       co = CBORObject.NewArray();
       co.Add("hello");
       co.Add("world");
@@ -2402,34 +2412,36 @@ Assert.AreEqual(
       Assert.AreEqual(2, intDict.Count);
       Assert.IsTrue(intDict.ContainsKey("a"));
       Assert.IsTrue(intDict.ContainsKey("b"));
-if (intDict["a"] != 1) {
-  { Assert.Fail();
-}
-}
-if (intDict["b"] != 2) {
-  { Assert.Fail();
-}
-}
+      if (intDict["a"] != 1) {
+        {
+          Assert.Fail();
+        }
+      }
+      if (intDict["b"] != 2) {
+        {
+          Assert.Fail();
+        }
+      }
       IDictionary<string, int> iintDict = (IDictionary<string, int>)co.ToObject(
           typeof(IDictionary<string, int>));
       Assert.AreEqual(2, iintDict.Count);
       Assert.IsTrue(iintDict.ContainsKey("a"));
       Assert.IsTrue(iintDict.ContainsKey("b"));
-if (iintDict["a"] != 1) {
-  Assert.Fail();
-}
-if (iintDict["b"] != 2) {
-  Assert.Fail();
-}
+      if (iintDict["a"] != 1) {
+        Assert.Fail();
+      }
+      if (iintDict["b"] != 2) {
+        Assert.Fail();
+      }
       co = CBORObject.FromObjectAndTag(
        "2000-01-01T00:00:00Z",
        0);
       try {
- co.ToObject(typeof(DateTime));
-} catch (Exception ex) {
-Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        co.ToObject(typeof(DateTime));
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
 
     [Test]
@@ -2976,57 +2988,57 @@ a major version change.
 
     [Test]
     public void TestKeys() {
-CBORObject co;
-try {
-co = CBORObject.True;
+      CBORObject co;
+      try {
+        co = CBORObject.True;
         this.Sink(co.Keys);
-Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
         this.Sink(CBORObject.FromObject(0).Keys);
-Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
         this.Sink(CBORObject.FromObject("string").Keys);
-Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
         this.Sink(CBORObject.NewArray().Keys);
-Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- this.Sink(CBORObject.FromObject(
-          new byte[] { 0 }).Keys);
-Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        this.Sink(CBORObject.FromObject(
+                 new byte[] { 0 }).Keys);
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       if (CBORObject.NewMap().Keys == null) {
- Assert.Fail();
- }
+        Assert.Fail();
+      }
     }
     [Test]
     public void TestMultiply() {
@@ -4519,7 +4531,7 @@ throw new InvalidOperationException(String.Empty, ex);
 
     [Test]
     public void TestTrue() {
-      CBORTestCommon.AssertSer(CBORObject.True, "true");
+      CBORTestCommon.AssertJSONSer(CBORObject.True, "true");
       Assert.AreEqual(CBORObject.True, CBORObject.FromObject(true));
     }
 

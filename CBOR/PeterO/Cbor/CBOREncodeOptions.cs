@@ -4,7 +4,6 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="T:PeterO.Cbor.CBOREncodeOptions"]/*'/>
   public sealed class CBOREncodeOptions {
-
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="F:PeterO.Cbor.CBOREncodeOptions.Default"]/*'/>
     public static readonly CBOREncodeOptions Default =

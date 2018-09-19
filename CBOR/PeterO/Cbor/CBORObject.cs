@@ -1762,6 +1762,7 @@ namespace PeterO.Cbor {
       }
       return cn.AsExtendedFloat(this.ThisItem);
     }
+
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsERational"]/*'/>
     // TODO: Consider returning null if this object is null
@@ -2348,13 +2349,6 @@ namespace PeterO.Cbor {
                     this.tagLow + this.tagHigh);
       }
       return hashCode;
-    }
-
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.GetTags"]/*'/>
-    [Obsolete("Use the GetAllTags method instead.")]
-    public EInteger[] GetTags() {
-      return GetAllTags();
     }
 
     /// <include file='../../docs.xml'

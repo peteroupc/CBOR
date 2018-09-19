@@ -7,7 +7,6 @@ at: http://peteroupc.github.io/
  */
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using NUnit.Framework;
 using PeterO;
@@ -137,7 +136,7 @@ throw new InvalidOperationException(String.Empty, ex);
     [Test]
     public void TestSByte() {
       for (int i = SByte.MinValue; i <= SByte.MaxValue; ++i) {
-        CBORTestCommon.AssertSer(
+        CBORTestCommon.AssertJSONSer(
           CBORObject.FromObject((sbyte)i),
           TestCommon.LongToString(i));
       }
@@ -4753,7 +4752,7 @@ select new { A = i, B = i + 1 };
       for (var i = 0; i < ranges.Length; i += 2) {
         ulong j = ranges[i];
         while (true) {
-          CBORTestCommon.AssertSer(
+          CBORTestCommon.AssertJSONSer(
             CBORObject.FromObject(j),
             ((PeterO.Numbers.EDecimal)j).ToString());
           if (j == ranges[i + 1]) {
@@ -4844,7 +4843,7 @@ Assert.AreEqual(
       for (var i = 0; i < ranges.Length; i += 2) {
         uint j = ranges[i];
         while (true) {
-          CBORTestCommon.AssertSer(
+          CBORTestCommon.AssertJSONSer(
             CBORObject.FromObject(j),
             TestCommon.LongToString(j));
           if (j == ranges[i + 1]) {
@@ -4857,22 +4856,22 @@ Assert.AreEqual(
 
     [Test]
     public void TestDecimal() {
-      CBORTestCommon.AssertSer(
+      CBORTestCommon.AssertJSONSer(
         CBORObject.FromObject(Decimal.MinValue),
         ((EDecimal)Decimal.MinValue).ToString());
-      CBORTestCommon.AssertSer(
+      CBORTestCommon.AssertJSONSer(
         CBORObject.FromObject(Decimal.MaxValue),
         ((EDecimal)Decimal.MaxValue).ToString());
       for (int i = -100; i <= 100; ++i) {
-        CBORTestCommon.AssertSer(
+        CBORTestCommon.AssertJSONSer(
           CBORObject.FromObject((decimal)i),
           TestCommon.IntToString(i));
         {
 CBORObject objectTemp = CBORObject.FromObject((decimal)i + 0.1m);
 string objectTemp2 = ((EDecimal)((decimal)i + 0.1m)).ToString();
-CBORTestCommon.AssertSer(objectTemp, objectTemp2);
+CBORTestCommon.AssertJSONSer(objectTemp, objectTemp2);
 }
-        CBORTestCommon.AssertSer(
+        CBORTestCommon.AssertJSONSer(
           CBORObject.FromObject((decimal)i + 0.1111m),
      ((EDecimal)((decimal)i + 0.1111m)).ToString());
       }
@@ -4881,7 +4880,7 @@ CBORTestCommon.AssertSer(objectTemp, objectTemp2);
     [Test]
     public void TestUShort() {
       for (int i = UInt16.MinValue; i <= UInt16.MaxValue; ++i) {
-        CBORTestCommon.AssertSer(
+        CBORTestCommon.AssertJSONSer(
           CBORObject.FromObject((UInt16)i),
           TestCommon.LongToString(i));
       }
@@ -4945,6 +4944,11 @@ CBORTestCommon.AssertSer(objectTemp, objectTemp2);
       }
     }
 
+    private static void AssertTaggedDate(CBORObject obj, string str) {
+      Assert.IsTrue(obj.HasMostOuterTag(0));
+      Assert.AreEqual(str, obj.AsString());
+    }
+
     [Test]
     public void TestDateTime() {
       DateTime[] ranges = {
@@ -4955,16 +4959,27 @@ CBORTestCommon.AssertSer(objectTemp, objectTemp2);
         new DateTime(9998, 1, 1, 0, 0, 0, DateTimeKind.Utc),
         new DateTime(9999, 12, 31, 23, 59, 59, DateTimeKind.Utc)
       };
+      var dt = new DateTime(1, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+        .AddMilliseconds(200);
+      AssertTaggedDate(
+        CBORObject.FromObject(dt),
+        "0001-01-01T00:00:00.2Z");
+      dt = new DateTime(1, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+              .AddMilliseconds(220);
+      AssertTaggedDate(
+        CBORObject.FromObject(dt),
+        "0001-01-01T00:00:00.22Z");
+      dt = new DateTime(1, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+              .AddMilliseconds(222);
+      AssertTaggedDate(
+        CBORObject.FromObject(dt),
+        "0001-01-01T00:00:00.222Z");
       for (var i = 0; i < ranges.Length; i += 2) {
         DateTime j = ranges[i];
         while (true) {
-          DateTime j2 = j.AddMilliseconds(200);
-          CBORTestCommon.AssertSer(
+          AssertTaggedDate(
             CBORObject.FromObject(j),
-            "0(\"" + DateTimeToString(j) + "\")");
-          CBORTestCommon.AssertSer(
-            CBORObject.FromObject(j2),
-            "0(\"" + DateTimeToString(j2) + "\")");
+            DateTimeToString(j));
           if (j >= ranges[i + 1]) {
             break;
           }
