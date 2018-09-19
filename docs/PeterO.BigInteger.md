@@ -16,6 +16,7 @@ An arbitrary-precision integer.<b>Thread safety:</b>Instances of this class are 
 
 ### Member Summary
 * <code>[CompareTo(PeterO.BigInteger)](#CompareTo_PeterO_BigInteger)</code> - Compares this value to another.
+* <code>[Equals(PeterO.BigInteger)](#Equals_PeterO_BigInteger)</code> - Returns whether this number's value equals another number's value.
 * <code>[Equals(object)](#Equals_object)</code> - Determines whether this object and another object are equal.
 * <code>[GetHashCode()](#GetHashCode)</code> - Returns the hash code for this instance.
 * <code>[public static readonly PeterO.BigInteger ONE;](#ONE)</code> - BigInteger for the number one.

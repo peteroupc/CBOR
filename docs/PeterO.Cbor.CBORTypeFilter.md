@@ -7,14 +7,19 @@ Specifies what kinds of CBOR objects a tag can be. This class is used when a CBO
 ### Member Summary
 * <code>[public static readonly PeterO.Cbor.CBORTypeFilter Any;](#Any)</code> - A filter that allows any CBOR object.
 * <code>[ArrayIndexAllowed(int)](#ArrayIndexAllowed_int)</code> - Determines whether this type filter allows CBOR arrays and the given array index is allowed under this type filter.
+* <code>[ArrayLengthMatches(PeterO.Numbers.EInteger)](#ArrayLengthMatches_PeterO_Numbers_EInteger)</code> - Returns whether an array's length is allowed under a filter.
 * <code>[ArrayLengthMatches(int)](#ArrayLengthMatches_int)</code> - Returns whether an array's length is allowed under this filter.
+* <code>[ArrayLengthMatches(long)](#ArrayLengthMatches_long)</code> - Returns whether an array's length is allowed under a filter.
 * <code>[public static readonly PeterO.Cbor.CBORTypeFilter ByteString;](#ByteString)</code> - A filter that allows byte strings.
 * <code>[GetSubFilter(int)](#GetSubFilter_int)</code> - Gets the type filter for this array filter by its index.
+* <code>[GetSubFilter(long)](#GetSubFilter_long)</code> - Gets the type filter for this array filter by its index.
 * <code>[MajorTypeMatches(int)](#MajorTypeMatches_int)</code> - Returns whether the given CBOR major type matches a major type allowed by this filter.
 * <code>[public static readonly PeterO.Cbor.CBORTypeFilter NegativeInteger;](#NegativeInteger)</code> - A filter that allows negative integers.
 * <code>[NonFPSimpleValueAllowed()](#NonFPSimpleValueAllowed)</code> - Returns whether this filter allows simple values that are not floating-point numbers.
 * <code>[public static readonly PeterO.Cbor.CBORTypeFilter None;](#None)</code> - A filter that allows no CBOR types.
+* <code>[TagAllowed(PeterO.Numbers.EInteger)](#TagAllowed_PeterO_Numbers_EInteger)</code> - Gets a value indicating whether CBOR objects can have the given tag number.
 * <code>[TagAllowed(int)](#TagAllowed_int)</code> - Gets a value indicating whether CBOR objects can have the given tag number.
+* <code>[TagAllowed(long)](#TagAllowed_long)</code> - Gets a value indicating whether CBOR objects can have the given tag number.
 * <code>[public static readonly PeterO.Cbor.CBORTypeFilter TextString;](#TextString)</code> - A filter that allows text strings.
 * <code>[public static readonly PeterO.Cbor.CBORTypeFilter UnsignedInteger;](#UnsignedInteger)</code> - A filter that allows unsigned integers.
 * <code>[WithArrayAnyLength()](#WithArrayAnyLength)</code> - Copies this filter and includes arrays of any length in the new filter.

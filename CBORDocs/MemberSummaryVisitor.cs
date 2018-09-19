@@ -31,25 +31,24 @@ namespace PeterO.DocGen {
       return (obj is Type) ? (((Type)obj).FullName) : ((obj is MethodInfo) ?
         ((MethodInfo)obj).Name : ((obj is PropertyInfo) ?
         ((PropertyInfo)obj).Name : ((obj is FieldInfo) ?
-        ((FieldInfo)obj).Name : (obj.ToString())))); }
-
-    public static string MemberAnchor(object obj) {
+        ((FieldInfo)obj).Name : (obj.ToString())))); } public static string
+        MemberAnchor(object obj) {
       string anchor = String.Empty;
       if (obj is Type) {
         anchor = ((Type)obj).FullName;
       } else if (obj is MethodInfo) {
-        anchor = DocVisitor.FormatMethod((MethodInfo)obj, true);
-      } else if (obj is PropertyInfo) {
-        anchor = DocVisitor.FormatProperty((PropertyInfo)obj, true);
-      } else if (obj is FieldInfo) {
-        anchor = ((FieldInfo)obj).Name;
-      } else {
-        anchor = obj.ToString();
-      }
+        anchor = (((MethodInfo)obj).Name.IndexOf(
+          "op_",
+          StringComparison.Ordinal) == 0) ? ((MethodInfo)obj).Name :
+            DocVisitor.FormatMethod((MethodInfo)obj, true); } else {
+ anchor = (obj is PropertyInfo) ?
+   DocVisitor.FormatProperty((PropertyInfo)obj, true) : ((obj is FieldInfo)?
+     ((FieldInfo)obj).Name : obj.ToString());
+}
       anchor = anchor.Trim();
-      anchor = Regex.Replace(anchor, "\\(\\)", "");
+      anchor = Regex.Replace(anchor, "\\(\\)", String.Empty);
       anchor = Regex.Replace(anchor, "\\W+", "_");
-      anchor = Regex.Replace(anchor, "_+$", "");
+      anchor = Regex.Replace(anchor, "_+$", String.Empty);
       return anchor;
     }
 
@@ -151,8 +150,8 @@ namespace PeterO.DocGen {
     /// name='y'/>.</returns>
     public int Compare(object x, object y) {
       return string.Compare(
-        MemberName(x),
-        MemberName(y),
+        MemberAnchor(x),
+        MemberAnchor(y),
         StringComparison.Ordinal);
     }
   }

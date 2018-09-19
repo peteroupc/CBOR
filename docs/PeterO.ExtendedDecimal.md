@@ -56,6 +56,7 @@ This class's natural ordering (under the CompareTo method) is not consistent wit
 * <code>[CompareTo(PeterO.ExtendedDecimal)](#CompareTo_PeterO_ExtendedDecimal)</code> - Compares this extended decimal to another.
 * <code>[Create(PeterO.BigInteger, PeterO.BigInteger)](#Create_PeterO_BigInteger_PeterO_BigInteger)</code> - Creates a number with the value exponent*10^mantissa.
 * <code>[Equals(PeterO.ExtendedDecimal)](#Equals_PeterO_ExtendedDecimal)</code> - Determines whether this object's mantissa and exponent are equal to those of another object.
+* <code>[Equals(object)](#Equals_object)</code> - Determines whether this object's mantissa and exponent are equal to those of another object and that other object is an arbitrary-precision decimal number.
 * <code>[Exponent](#Exponent)</code> - Gets this object's exponent.
 * <code>[FromString(string)](#FromString_string)</code> - Creates a decimal number from a text string that represents a number.
 * <code>[GetHashCode()](#GetHashCode)</code> - Calculates this object's hash code.

@@ -12,9 +12,11 @@ Arbitrary-precision rational number. This class can't be inherited; this s a cha
 
 ### Member Summary
 * <code>[CompareTo(PeterO.ExtendedRational)](#CompareTo_PeterO_ExtendedRational)</code> - Compares this value to another.
+* <code>[Create(PeterO.BigInteger, PeterO.BigInteger)](#Create_PeterO_BigInteger_PeterO_BigInteger)</code> - Creates a rational number with the given numerator and denominator.
 * <code>[Create(int, int)](#Create_int_int)</code> - Creates a rational number with the given numerator and denominator.
 * <code>[Denominator](#Denominator)</code> - Gets this object's denominator.
 * <code>[Equals(PeterO.ExtendedRational)](#Equals_PeterO_ExtendedRational)</code> - Checks whether this and another value are equal.
+* <code>[Equals(object)](#Equals_object)</code> - Checks whether this and another value are equal.
 * <code>[GetHashCode()](#GetHashCode)</code> - Calculates the hash code for this object.
 * <code>[IsFinite](#IsFinite)</code> - Gets a value indicating whether this object is finite (not infinity or NaN).
 * <code>[IsNegative](#IsNegative)</code> - Gets a value indicating whether this object's value is negative (including negative zero).

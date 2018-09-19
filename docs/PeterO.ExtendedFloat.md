@@ -30,10 +30,13 @@ If an operation requires creating an intermediate value that might be too big to
 
 ### Member Summary
 * <code>[CompareTo(PeterO.ExtendedFloat)](#CompareTo_PeterO_ExtendedFloat)</code> - Compares this extended float to another.
+* <code>[Create(PeterO.BigInteger, PeterO.BigInteger)](#Create_PeterO_BigInteger_PeterO_BigInteger)</code> - Creates a number with the value exponent*2^mantissa.
 * <code>[Create(int, int)](#Create_int_int)</code> - Creates a number with the value exponent*2^mantissa.
-* <code>[Equals(PeterO.ExtendedFloat)](#Equals_PeterO_ExtendedFloat)</code> - Determines whether this object's mantissa and exponent are equal to those of another object.
 * <code>[EqualsInternal(PeterO.ExtendedFloat)](#EqualsInternal_PeterO_ExtendedFloat)</code> - Determines whether this object's mantissa and exponent are equal to those of another object.
+* <code>[Equals(PeterO.ExtendedFloat)](#Equals_PeterO_ExtendedFloat)</code> - Determines whether this object's mantissa and exponent are equal to those of another object.
+* <code>[Equals(object)](#Equals_object)</code> - Determines whether this object's mantissa and exponent are equal to those of another object and that other object is an arbitrary-precision decimal number.
 * <code>[Exponent](#Exponent)</code> - Gets this object's exponent.
+* <code>[FromString(string)](#FromString_string)</code> - Creates a binary float from a text string that represents a number.
 * <code>[FromString(string, int, int, PeterO.PrecisionContext)](#FromString_string_int_int_PeterO_PrecisionContext)</code> - Creates a binary float from a text string that represents a number.
 * <code>[GetHashCode()](#GetHashCode)</code> - Calculates this object's hash code.
 * <code>[IsInfinity()](#IsInfinity)</code> - Gets a value indicating whether this object is positive or negative infinity.
