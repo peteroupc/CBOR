@@ -205,27 +205,6 @@ namespace PeterO.Cbor {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.InnermostTag"]/*'/>
-    [Obsolete("Use MostInnerTag instead.")]
-    public BigInteger InnermostTag {
-      get {
-        EInteger ei = this.MostInnerTag;
-        String eis = ei.ToString();
-        return BigInteger.fromString(eis);
-      }
-    }
-
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.OutermostTag"]/*'/>
-    [Obsolete("Use MostOuterTag instead.")]
-    public BigInteger OutermostTag {
-      get {
-        EInteger ei = this.MostOuterTag;
-        return BigInteger.fromString(this.MostOuterTag.ToString());
-      }
-    }
-
-    /// <include file='../../docs.xml'
     /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.MostInnerTag"]/*'/>
     public EInteger MostInnerTag {
       get {
@@ -561,19 +540,6 @@ namespace PeterO.Cbor {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AddTagHandler(PeterO.BigInteger,PeterO.Cbor.ICBORTag)"]/*'/>
-    [Obsolete("Use the EInteger version of this method.")]
-    public static void AddTagHandler(BigInteger bigintTag, ICBORTag handler) {
-      if (bigintTag == null) {
-        throw new ArgumentNullException(nameof(bigintTag));
-      }
-      if (handler == null) {
-        throw new ArgumentNullException(nameof(handler));
-      }
-      AddTagHandler(PropertyMap.FromLegacy(bigintTag), handler);
-    }
-
-    /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AddTagHandler(PeterO.Numbers.EInteger,PeterO.Cbor.ICBORTag)"]/*'/>
     public static void AddTagHandler(EInteger bigintTag, ICBORTag handler) {
       if (bigintTag == null) {
@@ -720,14 +686,6 @@ namespace PeterO.Cbor {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.BigInteger)"]/*'/>
-    [Obsolete("Use the EInteger version of this method.")]
-    public static CBORObject FromObject(BigInteger bigintValue) {
-      return ((object)bigintValue == (object)null) ? CBORObject.Null :
-        FromObject(PropertyMap.FromLegacy(bigintValue));
-    }
-
-    /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Numbers.EInteger)"]/*'/>
     public static CBORObject FromObject(EInteger bigintValue) {
       if ((object)bigintValue == (object)null) {
@@ -742,13 +700,6 @@ namespace PeterO.Cbor {
         bigintValue));
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.ExtendedFloat)"]/*'/>
-    [Obsolete("Use the EFloat version of this method instead.")]
-    public static CBORObject FromObject(ExtendedFloat bigValue) {
-      return ((object)bigValue == (object)null) ? CBORObject.Null :
-        FromObject(PropertyMap.FromLegacy(bigValue));
-    }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Numbers.EFloat)"]/*'/>
@@ -772,13 +723,6 @@ namespace PeterO.Cbor {
           bigValue);
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.ExtendedRational)"]/*'/>
-    [Obsolete("Use the ERational version of this method instead.")]
-    public static CBORObject FromObject(ExtendedRational bigValue) {
-      return ((object)bigValue == (object)null) ? CBORObject.Null :
-        FromObject(PropertyMap.FromLegacy(bigValue));
-    }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Numbers.ERational)"]/*'/>
@@ -822,13 +766,6 @@ namespace PeterO.Cbor {
           otherValue);
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.ExtendedDecimal)"]/*'/>
-    [Obsolete("Use the EDecimal version of this method instead.")]
-    public static CBORObject FromObject(ExtendedDecimal otherValue) {
-      return ((object)otherValue == (object)null) ? CBORObject.Null :
-        FromObject(PropertyMap.FromLegacy(otherValue));
-    }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.String)"]/*'/>
@@ -1026,24 +963,6 @@ namespace PeterO.Cbor {
       if (erf != null) {
         return FromObject(erf);
       }
-#pragma warning disable 618
-      var bi = obj as BigInteger;
-      if (bi != null) {
-        return FromObject(bi);
-      }
-      var df = obj as ExtendedDecimal;
-      if (df != null) {
-        return FromObject(df);
-      }
-      var bf = obj as ExtendedFloat;
-      if (bf != null) {
-        return FromObject(bf);
-      }
-      var rf = obj as ExtendedRational;
-      if (rf != null) {
-        return FromObject(rf);
-      }
-#pragma warning restore 618
       if (obj is short) {
         return FromObject((short)obj);
       }
@@ -1123,17 +1042,7 @@ namespace PeterO.Cbor {
       return objret;
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObjectAndTag(System.Object,PeterO.BigInteger)"]/*'/>
-    [Obsolete("Use the EInteger version instead.")]
-    public static CBORObject FromObjectAndTag(
-      object valueOb,
-      BigInteger bigintTag) {
-      if (bigintTag == null) {
-        throw new ArgumentNullException(nameof(bigintTag));
-      }
-      return FromObjectAndTag(valueOb, PropertyMap.FromLegacy(bigintTag));
-    }
+   
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObjectAndTag(System.Object,PeterO.Numbers.EInteger)"]/*'/>
@@ -1347,19 +1256,6 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.ExtendedFloat,System.IO.Stream)"]/*'/>
-    [Obsolete("Pass an EFloat to the Write method instead.")]
-    public static void Write(ExtendedFloat bignum, Stream stream) {
-      if (stream == null) {
-        throw new ArgumentNullException(nameof(stream));
-      }
-      if (bignum == null) {
-        stream.WriteByte(0xf6);
-        return;
-      }
-      Write(PropertyMap.FromLegacy(bignum), stream);
-    }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.EFloat,System.IO.Stream)"]/*'/>
@@ -1394,19 +1290,6 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.ExtendedRational,System.IO.Stream)"]/*'/>
-    [Obsolete("Pass an ERational to the Write method instead.")]
-    public static void Write(ExtendedRational rational, Stream stream) {
-      if (stream == null) {
-        throw new ArgumentNullException(nameof(stream));
-      }
-      if (rational == null) {
-        stream.WriteByte(0xf6);
-        return;
-      }
-      Write(PropertyMap.FromLegacy(rational), stream);
-    }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.ERational,System.IO.Stream)"]/*'/>
@@ -1433,19 +1316,6 @@ namespace PeterO.Cbor {
       Write(rational.Denominator, stream);
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.ExtendedDecimal,System.IO.Stream)"]/*'/>
-    [Obsolete("Pass an EDecimal to the Write method instead.")]
-    public static void Write(ExtendedDecimal bignum, Stream stream) {
-      if (stream == null) {
-        throw new ArgumentNullException(nameof(stream));
-      }
-      if (bignum == null) {
-        stream.WriteByte(0xf6);
-        return;
-      }
-      Write(PropertyMap.FromLegacy(bignum), stream);
-    }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.EDecimal,System.IO.Stream)"]/*'/>
@@ -1480,19 +1350,6 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.BigInteger,System.IO.Stream)"]/*'/>
-    [Obsolete("Pass an EInteger to the Write method instead.")]
-    public static void Write(BigInteger bigint, Stream stream) {
-      if (stream == null) {
-        throw new ArgumentNullException(nameof(stream));
-      }
-      if ((object)bigint == (object)null) {
-        stream.WriteByte(0xf6);
-        return;
-      }
-      Write(PropertyMap.FromLegacy(bigint), stream);
-    }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.EInteger,System.IO.Stream)"]/*'/>
@@ -1858,19 +1715,6 @@ namespace PeterO.Cbor {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsBigInteger"]/*'/>
-    [Obsolete("Use the AsEInteger method instead.")]
-    public BigInteger AsBigInteger() {
-      ICBORNumber cn = NumberInterfaces[this.ItemType];
-      if (cn == null) {
-        throw new InvalidOperationException("Not a number type");
-      }
-      return BigInteger.fromBytes(
-        cn.AsEInteger(this.ThisItem).ToBytes(true),
-        true);
-    }
-
-    /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsEInteger"]/*'/>
     public EInteger AsEInteger() {
       // TODO: Consider returning null if this object is null
@@ -1904,12 +1748,6 @@ namespace PeterO.Cbor {
       return cn.AsDouble(this.ThisItem);
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsExtendedDecimal"]/*'/>
-    [Obsolete("Use AsEDecimal instead.")]
-    public ExtendedDecimal AsExtendedDecimal() {
-      return ExtendedDecimal.FromString(this.AsEDecimal().ToString());
-    }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsEDecimal"]/*'/>
@@ -1924,13 +1762,6 @@ namespace PeterO.Cbor {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsExtendedFloat"]/*'/>
-    [Obsolete("Use AsEFloat instead.")]
-    public ExtendedFloat AsExtendedFloat() {
-      return ExtendedFloat.FromString(this.AsEFloat().ToString());
-    }
-
-    /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsEFloat"]/*'/>
     public EFloat AsEFloat() {
       // TODO: Consider returning null if this object is null
@@ -1941,14 +1772,6 @@ namespace PeterO.Cbor {
       }
       return cn.AsExtendedFloat(this.ThisItem);
     }
-
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsExtendedRational"]/*'/>
-    [Obsolete("Use AsERational instead.")]
-    public ExtendedRational AsExtendedRational() {
-      return PropertyMap.ToLegacy(this.AsERational());
-    }
-
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsERational"]/*'/>
     // TODO: Consider returning null if this object is null
@@ -2540,16 +2363,8 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.GetTags"]/*'/>
     [Obsolete("Use the GetAllTags method instead.")]
-    public BigInteger[] GetTags() {
-      EInteger[] etags = this.GetAllTags();
-      if (etags.Length == 0) {
-        return new BigInteger[0];
-      }
-      var bigret = new BigInteger[etags.Length];
-      for (var i = 0; i < bigret.Length; ++i) {
-        bigret[i] = PropertyMap.ToLegacy(etags[i]);
-      }
-      return bigret;
+    public EInteger[] GetTags() {
+      return GetAllTags();
     }
 
     /// <include file='../../docs.xml'
@@ -2620,17 +2435,6 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasTag(PeterO.BigInteger)"]/*'/>
-    [Obsolete("Use the EInteger version of this method.")]
-    public bool HasTag(BigInteger bigTagValue) {
-      if (bigTagValue == null) {
-        throw new ArgumentNullException(nameof(bigTagValue));
-      }
-      return this.HasTag(EInteger.FromBytes(
-        bigTagValue.toBytes(true),
-        true));
-    }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasTag(PeterO.Numbers.EInteger)"]/*'/>
