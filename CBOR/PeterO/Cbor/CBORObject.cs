@@ -700,7 +700,6 @@ namespace PeterO.Cbor {
         bigintValue));
     }
 
-
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Numbers.EFloat)"]/*'/>
     public static CBORObject FromObject(EFloat bigValue) {
@@ -722,7 +721,6 @@ namespace PeterO.Cbor {
           CBORObjectTypeExtendedFloat,
           bigValue);
     }
-
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Numbers.ERational)"]/*'/>
@@ -765,7 +763,6 @@ namespace PeterO.Cbor {
           CBORObjectTypeExtendedDecimal,
           otherValue);
     }
-
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.String)"]/*'/>
@@ -1042,8 +1039,6 @@ namespace PeterO.Cbor {
       return objret;
     }
 
-   
-
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObjectAndTag(System.Object,PeterO.Numbers.EInteger)"]/*'/>
     public static CBORObject FromObjectAndTag(
@@ -1256,7 +1251,6 @@ namespace PeterO.Cbor {
       }
     }
 
-
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.EFloat,System.IO.Stream)"]/*'/>
     public static void Write(EFloat bignum, Stream stream) {
@@ -1290,7 +1284,6 @@ namespace PeterO.Cbor {
       }
     }
 
-
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.ERational,System.IO.Stream)"]/*'/>
     public static void Write(ERational rational, Stream stream) {
@@ -1315,7 +1308,6 @@ namespace PeterO.Cbor {
       Write(rational.Numerator, stream);
       Write(rational.Denominator, stream);
     }
-
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.EDecimal,System.IO.Stream)"]/*'/>
@@ -1349,7 +1341,6 @@ namespace PeterO.Cbor {
         Write(bignum.Mantissa, stream);
       }
     }
-
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.EInteger,System.IO.Stream)"]/*'/>
@@ -1747,7 +1738,6 @@ namespace PeterO.Cbor {
       }
       return cn.AsDouble(this.ThisItem);
     }
-
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsEDecimal"]/*'/>
@@ -2434,7 +2424,6 @@ namespace PeterO.Cbor {
 #endif
       }
     }
-
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasTag(PeterO.Numbers.EInteger)"]/*'/>
