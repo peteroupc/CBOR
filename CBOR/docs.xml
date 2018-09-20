@@ -3675,7 +3675,7 @@ stream.Write(bytes, 0, bytes.Length);
 </doc>
 <doc name="T:PeterO.Cbor.PODOptions">
 
-            <summary>Options for converting "plain old data" objects to CBOR objects.
+            <summary>Options for converting "plain old data" objects (better known as POCOs in .NET or POJOs in Java) to CBOR objects.
     </summary>
 
 </doc>
