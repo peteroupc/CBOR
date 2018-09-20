@@ -110,6 +110,10 @@ namespace Test {
       string p1,
       string p2,
       string p3) {
+Assert.IsFalse(o.ContainsKey("PrivatePropA"));
+Assert.IsFalse(o.ContainsKey("privatePropA"));
+Assert.IsFalse(o.ContainsKey("StaticPropA"));
+Assert.IsFalse(o.ContainsKey("staticPropA"));
       Assert.AreEqual(CBORType.Map, o.Type);
       if (!o.ContainsKey(p1)) {
         Assert.Fail("Expected " + p1 + " to exist: " + o.ToString());
@@ -2352,7 +2356,13 @@ a major version change.
         this.PropA = 0;
         this.PropB = 1;
         this.IsPropC = false;
+        this.PrivatePropA = 2;
       }
+      private int PrivatePropA { get; }
+
+      public static int StaticPropA { get {
+ return 0;
+} }
 
       public int PropA { get; set; }
 
@@ -2374,6 +2384,10 @@ a major version change.
     public void TestToObject() {
       var ao = new PODClass();
       CBORObject co = CBORObject.FromObject(ao);
+Assert.IsFalse(co.ContainsKey("PrivatePropA"));
+Assert.IsFalse(co.ContainsKey("privatePropA"));
+Assert.IsFalse(co.ContainsKey("staticPropA"));
+Assert.IsFalse(co.ContainsKey("StaticPropA"));
       co["propA"] = CBORObject.FromObject(999);
       ao = (PODClass)co.ToObject(typeof(PODClass));
       Assert.AreEqual(999, ao.PropA);

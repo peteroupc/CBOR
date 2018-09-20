@@ -14,9 +14,6 @@ using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   internal static class PropertyMap {
-// TODO: Remove in next major version
-internal const bool DateTimeCompatHack = true;
-
     private sealed class PropertyData {
       private string name;
 
@@ -133,11 +130,14 @@ internal const bool DateTimeCompatHack = true;
         foreach (PropertyInfo pi in GetTypeProperties(t)) {
           if (pi.CanRead && (pi.CanWrite || anonymous) &&
           pi.GetIndexParameters().Length == 0) {
-            PropertyData pd = new PropertyMap.PropertyData() {
-              Name = pi.Name,
-              Prop = pi
-            };
-            ret.Add(pd);
+        if ((!pi.CanRead || !pi.GetMethod.IsStatic) &&
+            (!pi.CanWrite || !pi.SetMethod.IsStatic)) {
+              PropertyData pd = new PropertyMap.PropertyData() {
+                Name = pi.Name,
+                Prop = pi
+              };
+              ret.Add(pd);
+            }
           }
         }
         ValuePropertyLists.Add(t, ret);

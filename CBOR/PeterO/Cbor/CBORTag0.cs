@@ -23,9 +23,7 @@ namespace PeterO.Cbor {
       // the next major version for backward compatibility.
       // However, since ToObject is new, we can convert
       // to Date in the .NET and Java versions
-      if (PropertyMap.DateTimeCompatHack) {
         CBORObject.AddConverter(typeof(DateTime), new CBORTag0());
-      }
     }
 
     public CBORTypeFilter GetTypeFilter() {
