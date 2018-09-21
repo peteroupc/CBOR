@@ -884,15 +884,16 @@ namespace PeterO.Cbor {
     public static CBORObject FromObject(
   object obj,
   PODOptions options) {
-      return FromObject(obj,options,depth);
+      return FromObject(obj, options, depth);
     }
-    public static CBORObject FromObject(
+    internal static CBORObject FromObject(
   object obj,
-  PODOptions options, int depth) {
+  PODOptions options,
+  int depth) {
       if (options == null) {
         throw new ArgumentNullException(nameof(options));
       }
-   if(depth>=50){
+   if (depth >= 50) {
     throw new CBORException("Nesting depth too high");
    }
       if (obj == null) {
@@ -975,18 +976,18 @@ namespace PeterO.Cbor {
         foreach (object keyPair in (System.Collections.IDictionary)objdic) {
           System.Collections.DictionaryEntry
             kvp = (System.Collections.DictionaryEntry)keyPair;
-          CBORObject objKey = CBORObject.FromObject(kvp.Key, options,depth+1);
-          objret[objKey] = CBORObject.FromObject(kvp.Value, options,depth+1);
+          CBORObject objKey = CBORObject.FromObject(kvp.Key, options, depth + 1);
+          objret[objKey] = CBORObject.FromObject(kvp.Value, options, depth + 1);
         }
         return objret;
       }
       if (obj is Array) {
-        return PropertyMap.FromArray(obj, options,depth);
+        return PropertyMap.FromArray(obj, options, depth);
       }
       if (obj is System.Collections.IEnumerable) {
         objret = CBORObject.NewArray();
         foreach (object element in (System.Collections.IEnumerable)obj) {
-          objret.Add(CBORObject.FromObject(element, options,depth+1));
+          objret.Add(CBORObject.FromObject(element, options, depth + 1));
         }
         return objret;
       }
@@ -1000,7 +1001,7 @@ namespace PeterO.Cbor {
                  obj,
                  options.RemoveIsPrefix,
                  options.UseCamelCase)) {
-        objret[key.Key] = CBORObject.FromObject(key.Value, options,depth+1);
+        objret[key.Key] = CBORObject.FromObject(key.Value, options, depth + 1);
       }
       return objret;
     }

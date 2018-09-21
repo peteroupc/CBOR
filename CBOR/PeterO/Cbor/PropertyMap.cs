@@ -196,19 +196,21 @@ namespace PeterO.Cbor {
       for (var i = 0; i < dimLength; ++i) {
         if (dimension + 1 == rank) {
           index[dimension] = i;
-          obj.Add(CBORObject.FromObject(arr.GetValue(index), options, depth+1));
+          obj.Add(CBORObject.FromObject(arr.GetValue(index), options, depth + 1));
         } else {
           CBORObject child = CBORObject.NewArray();
           for (int j = dimension + 1; j < dimLength; ++j) {
             index[j] = 0;
           }
-          FromArrayRecursive(arr, index, dimension + 1, child, options, depth+1);
+        FromArrayRecursive(arr, index, dimension + 1, child, options,
+            depth + 1);
           obj.Add(child);
         }
       }
     }
 
-    public static CBORObject FromArray(Object arrObj, PODOptions options, int depth) {
+    public static CBORObject FromArray(Object arrObj, PODOptions options,
+      int depth) {
       var arr = (Array)arrObj;
       int rank = arr.Rank;
       if (rank == 0) {
@@ -220,13 +222,13 @@ namespace PeterO.Cbor {
         obj = CBORObject.NewArray();
         int len = arr.GetLength(0);
         for (var i = 0; i < len; ++i) {
-          obj.Add(CBORObject.FromObject(arr.GetValue(i), options, depth+1));
+          obj.Add(CBORObject.FromObject(arr.GetValue(i), options, depth + 1));
         }
         return obj;
       }
       var index = new int[rank];
       obj = CBORObject.NewArray();
-      FromArrayRecursive(arr, index, 0, obj, options,depth);
+      FromArrayRecursive(arr, index, 0, obj, options, depth);
       return obj;
     }
 
@@ -478,26 +480,16 @@ if (typeof(Array).GetTypeInfo().IsAssignableFrom(t.GetTypeInfo())) {
          IEnumerable<KeyValuePair<string, CBORObject>> keysValues,
          bool removeIsPrefix,
   bool useCamelCase) {
-      object o = null;
-#if NET20 || NET40
-      foreach (var ci in t.GetConstructors()) {
-#else
-      foreach (var ci in t.GetTypeInfo().DeclaredConstructors) {
-#endif
-        if (ci.IsPublic) {
-          int nump = ci.GetParameters().Length;
-          o = ci.Invoke(new object[nump]);
-          break;
-        }
-      }
-      o = o ?? Activator.CreateInstance(t);
+      object o = Activator.CreateInstance(t);
       var dict = new Dictionary<string, CBORObject>();
       foreach (var kv in keysValues) {
         var name = kv.Key;
         dict[name] = kv.Value;
       }
       foreach (PropertyData key in GetPropertyList(o.GetType())) {
-        if (!key.HasUsableSetter()) {
+        if (!key.HasUsableSetter() || !key.HasUsableGetter()) {
+          // Require properties to have both a setter and
+          // a getter to be eligible for setting
           continue;
         }
         var name = key.GetAdjustedName(removeIsPrefix, useCamelCase);
