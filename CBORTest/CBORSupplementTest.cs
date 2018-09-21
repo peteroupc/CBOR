@@ -1042,17 +1042,17 @@ Assert.AreEqual(objectTemp, objectTemp2);
     }
 
     public sealed class CPOD {
-      public string a { get; set; }
+      public string Aa { get; set; }
 
-      private string b { get; set; }
+      private string Bb { get; set; }
     }
     [Test]
     public void TestCPOD() {
       var m = new CPOD();
-      m.a = "Test";
+      m.Aa = "Test";
       CBORObject cbor = CBORObject.FromObject(m);
-      Assert.IsFalse(cbor.ContainsKey("b"));
-      Assert.AreEqual("Test", cbor["a"]);
+      Assert.IsFalse(cbor.ContainsKey("bb"),cbor.ToString());
+      Assert.AreEqual("Test", cbor["aa"],cbor.ToString());
     }
   }
 }

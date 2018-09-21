@@ -189,25 +189,26 @@ namespace PeterO.Cbor {
  int[] index,
  int dimension,
  CBORObject obj,
- PODOptions options) {
+ PODOptions options,
+ int depth) {
       int dimLength = arr.GetLength(dimension);
       int rank = index.Length;
       for (var i = 0; i < dimLength; ++i) {
         if (dimension + 1 == rank) {
           index[dimension] = i;
-          obj.Add(CBORObject.FromObject(arr.GetValue(index), options));
+          obj.Add(CBORObject.FromObject(arr.GetValue(index), options, depth+1));
         } else {
           CBORObject child = CBORObject.NewArray();
           for (int j = dimension + 1; j < dimLength; ++j) {
             index[j] = 0;
           }
-          FromArrayRecursive(arr, index, dimension + 1, child, options);
+          FromArrayRecursive(arr, index, dimension + 1, child, options, depth+1);
           obj.Add(child);
         }
       }
     }
 
-    public static CBORObject FromArray(Object arrObj, PODOptions options) {
+    public static CBORObject FromArray(Object arrObj, PODOptions options, int depth) {
       var arr = (Array)arrObj;
       int rank = arr.Rank;
       if (rank == 0) {
@@ -219,13 +220,13 @@ namespace PeterO.Cbor {
         obj = CBORObject.NewArray();
         int len = arr.GetLength(0);
         for (var i = 0; i < len; ++i) {
-          obj.Add(CBORObject.FromObject(arr.GetValue(i), options));
+          obj.Add(CBORObject.FromObject(arr.GetValue(i), options, depth+1));
         }
         return obj;
       }
       var index = new int[rank];
       obj = CBORObject.NewArray();
-      FromArrayRecursive(arr, index, 0, obj, options);
+      FromArrayRecursive(arr, index, 0, obj, options,depth);
       return obj;
     }
 

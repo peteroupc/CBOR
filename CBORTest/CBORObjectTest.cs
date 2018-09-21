@@ -2366,10 +2366,6 @@ a major version change.
 
       private int PrivatePropA { get; }
 
-      public static int StaticPropA { get {
- return 0;
-} }
-
       public int PropA { get; set; }
 
       public int PropB { get; set; }

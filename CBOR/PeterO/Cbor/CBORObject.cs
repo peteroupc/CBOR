@@ -839,11 +839,11 @@ namespace PeterO.Cbor {
       if (array == null) {
         return CBORObject.Null;
       }
-      IList<CBORObject> list = new List<CBORObject>();
+      CBORObject cbor = CBORObject.NewArray();
       foreach (CBORObject i in array) {
-        list.Add(FromObject(i));
+        cbor.Add(i);
       }
-      return new CBORObject(CBORObjectTypeArray, list);
+      return cbor;
     }
 
     /// <include file='../../docs.xml'
@@ -874,48 +874,6 @@ namespace PeterO.Cbor {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject``1(System.Collections.Generic.IList{``0})"]/*'/>
-    public static CBORObject FromObject<T>(IList<T> value) {
-      if (value == null) {
-        return CBORObject.Null;
-      }
-      CBORObject retCbor = CBORObject.NewArray();
-      foreach (T i in (IList<T>)value) {
-        retCbor.Add(CBORObject.FromObject(i));
-      }
-      return retCbor;
-    }
-
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject``1(System.Collections.Generic.IEnumerable{``0})"]/*'/>
-    public static CBORObject FromObject<T>(IEnumerable<T> value) {
-      if (value == null) {
-        return CBORObject.Null;
-      }
-      CBORObject retCbor = CBORObject.NewArray();
-      foreach (T i in (IEnumerable<T>)value) {
-        retCbor.Add(CBORObject.FromObject(i));
-      }
-      return retCbor;
-    }
-
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject``2(System.Collections.Generic.IDictionary{``0,``1})"]/*'/>
-    public static CBORObject FromObject<TKey, TValue>(IDictionary<TKey,
-                    TValue> dic) {
-      if (dic == null) {
-        return CBORObject.Null;
-      }
-      var map = new Dictionary<CBORObject, CBORObject>();
-      foreach (KeyValuePair<TKey, TValue> entry in dic) {
-        CBORObject key = FromObject(entry.Key);
-        CBORObject value = FromObject(entry.Value);
-        map[key] = value;
-      }
-      return new CBORObject(CBORObjectTypeMap, map);
-    }
-
-    /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Object)"]/*'/>
     public static CBORObject FromObject(object obj) {
       return FromObject(obj, PODOptions.Default);
@@ -926,9 +884,17 @@ namespace PeterO.Cbor {
     public static CBORObject FromObject(
   object obj,
   PODOptions options) {
+      return FromObject(obj,options,depth);
+    }
+    public static CBORObject FromObject(
+  object obj,
+  PODOptions options, int depth) {
       if (options == null) {
         throw new ArgumentNullException(nameof(options));
       }
+   if(depth>=50){
+    throw new CBORException("Nesting depth too high");
+   }
       if (obj == null) {
         return CBORObject.Null;
       }
@@ -1009,18 +975,18 @@ namespace PeterO.Cbor {
         foreach (object keyPair in (System.Collections.IDictionary)objdic) {
           System.Collections.DictionaryEntry
             kvp = (System.Collections.DictionaryEntry)keyPair;
-          CBORObject objKey = CBORObject.FromObject(kvp.Key, options);
-          objret[objKey] = CBORObject.FromObject(kvp.Value, options);
+          CBORObject objKey = CBORObject.FromObject(kvp.Key, options,depth+1);
+          objret[objKey] = CBORObject.FromObject(kvp.Value, options,depth+1);
         }
         return objret;
       }
       if (obj is Array) {
-        return PropertyMap.FromArray(obj, options);
+        return PropertyMap.FromArray(obj, options,depth);
       }
       if (obj is System.Collections.IEnumerable) {
         objret = CBORObject.NewArray();
         foreach (object element in (System.Collections.IEnumerable)obj) {
-          objret.Add(CBORObject.FromObject(element, options));
+          objret.Add(CBORObject.FromObject(element, options,depth+1));
         }
         return objret;
       }
@@ -1034,7 +1000,7 @@ namespace PeterO.Cbor {
                  obj,
                  options.RemoveIsPrefix,
                  options.UseCamelCase)) {
-        objret[key.Key] = CBORObject.FromObject(key.Value, options);
+        objret[key.Key] = CBORObject.FromObject(key.Value, options,depth+1);
       }
       return objret;
     }
