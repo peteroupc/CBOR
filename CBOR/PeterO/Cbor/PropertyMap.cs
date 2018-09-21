@@ -283,6 +283,9 @@ return str != null && str.Length >= pfx.Length &&
       if (t.Equals(typeof(double))) {
         return objThis.AsDouble();
       }
+      if (t.Equals(typeof(float))) {
+        return objThis.AsSingle();
+      }
       if (t.Equals(typeof(bool))) {
         return objThis.IsTrue;
       }
