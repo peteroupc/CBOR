@@ -288,6 +288,10 @@ internal const bool DateTimeCompatHack = true;
       return bytes2;
     }
 
+    private static bool StartsWith(string str, string pfx){
+return str!=null && str.Length>=pfx.Length && str.Substring(0,pfx.Length).Equals(pfx);
+    }
+
     public static object TypeToObject(CBORObject objThis, Type t) {
       if (t.Equals(typeof(DateTime))) {
         return new CBORTag0().FromCBORObject(objThis);
@@ -307,6 +311,13 @@ internal const bool DateTimeCompatHack = true;
       if (t.Equals(typeof(bool))) {
         return objThis.IsTrue;
       }
+
+if(t.FullName!=null &&
+   (StartsWith(t.FullName,"System.Win32.") ||
+   StartsWith(t.FullName,"System.IO."))){
+  throw new NotSupportedException("Type "+name+" not supported");
+}
+
       if (objThis.Type == CBORType.ByteString) {
         if (t.Equals(typeof(byte[]))) {
           byte[] bytes = objThis.GetByteString();
