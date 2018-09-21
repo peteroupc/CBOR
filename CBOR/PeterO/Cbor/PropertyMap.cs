@@ -29,6 +29,16 @@ namespace PeterO.Cbor {
 
       private PropertyInfo prop;
 
+      public bool HasUsableGetter() {
+return prop.CanRead && !prop.GetMethod.IsStatic &&
+     prop.GetMethod.IsPublic;
+      }
+
+      public bool HasUsableSetter() {
+return prop.CanWrite && !prop.SetMethod.IsStatic &&
+     prop.SetMethod.IsPublic;
+      }
+
       public string GetAdjustedName(bool removeIsPrefix, bool useCamelCase) {
         string thisName = this.Name;
         // Convert 'IsXYZ' to 'XYZ'
@@ -252,6 +262,11 @@ namespace PeterO.Cbor {
       return bytes2;
     }
 
+    private static bool StartsWith(string str, string pfx) {
+return str != null && str.Length >= pfx.Length &&
+  str.Substring(0, pfx.Length).Equals(pfx);
+    }
+
     public static object TypeToObject(CBORObject objThis, Type t) {
       if (t.Equals(typeof(DateTime))) {
         return new CBORTag0().FromCBORObject(objThis);
@@ -271,6 +286,12 @@ namespace PeterO.Cbor {
       if (t.Equals(typeof(bool))) {
         return objThis.IsTrue;
       }
+
+if (t.FullName != null &&
+   (StartsWith(t.FullName,"System.Win32.") ||
+   StartsWith(t.FullName,"System.IO."))) {
+  throw new NotSupportedException("Type "+name+" not supported");
+}
       if (objThis.Type == CBORType.ByteString) {
         if (t.Equals(typeof(byte[]))) {
           byte[] bytes = objThis.GetByteString();
@@ -429,6 +450,9 @@ namespace PeterO.Cbor {
         dict[name] = kv.Value;
       }
       foreach (PropertyData key in GetPropertyList(o.GetType())) {
+        if (!key.HasUsableSetter()) {
+ continue;
+}
         var name = key.GetAdjustedName(removeIsPrefix, useCamelCase);
         if (dict.ContainsKey(name)) {
           object dobj = dict[name].ToObject(key.Prop.PropertyType);
@@ -453,6 +477,9 @@ namespace PeterO.Cbor {
     public static IEnumerable<KeyValuePair<string, object>>
     GetProperties(Object o, bool removeIsPrefix, bool useCamelCase) {
       foreach (PropertyData key in GetPropertyList(o.GetType())) {
+        if (!key.HasUsableGetter()) {
+ continue;
+}
         yield return new KeyValuePair<string, object>(
   key.GetAdjustedName(removeIsPrefix, useCamelCase),
   key.Prop.GetValue(o, null));

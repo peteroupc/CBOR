@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 
     /*
@@ -8,13 +9,8 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/
  */
 namespace PeterO.Cbor {
-<<<<<<< HEAD
-/// <include file='../../docs.xml'
-
-=======
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="T:PeterO.Cbor.URIUtility"]/*'/>
->>>>>>> 03c5966f06a7ca444906e7c5a053b82aee240044
   internal static class URIUtility {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="T:PeterO.Cbor.URIUtility.ParseMode"]/*'/>

@@ -1040,5 +1040,18 @@ Assert.AreEqual(objectTemp, objectTemp2);
      "[\"abcd\",\"aa\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]";
       Assert.AreEqual(expected, cbor.ToJSONString());
     }
+
+    public sealed class CPOD {
+      public string a { get; set; }
+      private string b { get; set; }
+    }
+    [Test]
+    public void TestCPOD() {
+      var m = new CPOD();
+      m.a = "Test";
+      CBORObject cbor = CBORObject.FromObject(m);
+      Assert.IsFalse(cbor.ContainsKey("b"));
+      Assert.AreEqual("Test", cbor["a"]);
+    }
   }
 }
