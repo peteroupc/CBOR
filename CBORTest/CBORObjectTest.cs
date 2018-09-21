@@ -1603,6 +1603,7 @@ a major version change.
     }
 
     [Test]
+    [Timeout(100000)]
     public void TestCompareTo() {
       var r = new RandomGenerator();
       const int CompareCount = 500;
@@ -2357,7 +2358,12 @@ a major version change.
         this.PropB = 1;
         this.IsPropC = false;
         this.PrivatePropA = 2;
+        this.FloatProp = 0;
+        this.DoubleProp = 0;
+        this.StringProp = String.Empty;
+        this.StringArray = null;
       }
+
       private int PrivatePropA { get; }
 
       public static int StaticPropA { get {
@@ -2369,6 +2375,14 @@ a major version change.
       public int PropB { get; set; }
 
       public bool IsPropC { get; set; }
+
+      public float FloatProp { get; set; }
+
+      public double DoubleProp { get; set; }
+
+      public string StringProp { get; set; }
+
+      public string[] StringArray { get; set; }
     }
 
     public sealed class NestedPODClass {
@@ -2389,8 +2403,19 @@ Assert.IsFalse(co.ContainsKey("privatePropA"));
 Assert.IsFalse(co.ContainsKey("staticPropA"));
 Assert.IsFalse(co.ContainsKey("StaticPropA"));
       co["propA"] = CBORObject.FromObject(999);
+      co["floatProp"] = CBORObject.FromObject(3.5);
+      co["doubleProp"] = CBORObject.FromObject(4.5);
+      co["stringProp"] = CBORObject.FromObject("stringProp");
+      co["stringArray"] = CBORObject.NewArray().Add("a").Add("b");
       ao = (PODClass)co.ToObject(typeof(PODClass));
       Assert.AreEqual(999, ao.PropA);
+      Assert.AreEqual((float)3.5, ao.FloatProp);
+      Assert.AreEqual(4.5, ao.DoubleProp);
+      Assert.AreEqual("stringProp", ao.StringProp);
+      string[] stringArray = ao.StringArray;
+      Assert.AreEqual(2, stringArray.Length);
+      Assert.AreEqual("a", stringArray[0]);
+      Assert.AreEqual("b", stringArray[1]);
       Assert.IsFalse(ao.IsPropC);
       co["propC"] = CBORObject.True;
       ao = (PODClass)co.ToObject(typeof(PODClass));

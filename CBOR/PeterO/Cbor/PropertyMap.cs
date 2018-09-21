@@ -28,15 +28,33 @@ namespace PeterO.Cbor {
       }
 
       private PropertyInfo prop;
+#if NET20 || NET40
+            public static bool HasUsableGetter(PropertyInfo pi) {
+        return pi != null && pi.CanRead && !pi.GetGetMethod().IsStatic &&
+                    pi.GetGetMethod().IsPublic;
+      }
 
+      public static bool HasUsableSetter(PropertyInfo pi) {
+        return pi != null && pi.CanWrite && !pi.GetSetMethod().IsStatic &&
+           pi.GetSetMethod().IsPublic;
+      }
+#else
+      public static bool HasUsableGetter(PropertyInfo pi) {
+        return pi != null && pi.CanRead && !pi.GetMethod.IsStatic &&
+             pi.GetMethod.IsPublic;
+      }
+
+      public static bool HasUsableSetter(PropertyInfo pi) {
+        return pi != null && pi.CanWrite && !pi.SetMethod.IsStatic &&
+             pi.SetMethod.IsPublic;
+      }
+#endif
       public bool HasUsableGetter() {
-return prop.CanRead && !prop.GetMethod.IsStatic &&
-     prop.GetMethod.IsPublic;
+        return HasUsableGetter(this.prop);
       }
 
       public bool HasUsableSetter() {
-return prop.CanWrite && !prop.SetMethod.IsStatic &&
-     prop.SetMethod.IsPublic;
+        return HasUsableSetter(this.prop);
       }
 
       public string GetAdjustedName(bool removeIsPrefix, bool useCamelCase) {
@@ -98,7 +116,7 @@ return prop.CanWrite && !prop.SetMethod.IsStatic &&
       return false;
     }
 #else
-      private static IEnumerable<PropertyInfo> GetTypeProperties(Type t) {
+    private static IEnumerable<PropertyInfo> GetTypeProperties(Type t) {
       return t.GetRuntimeProperties();
     }
 
@@ -106,19 +124,19 @@ return prop.CanWrite && !prop.SetMethod.IsStatic &&
   Type t,
   string name,
   Type[] parameters) {
-       return t.GetRuntimeMethod(name, parameters);
+      return t.GetRuntimeMethod(name, parameters);
     }
 
-        private static bool HasCustomAttribute(
+    private static bool HasCustomAttribute(
   Type t,
   string name) {
-       foreach (var attr in t.GetTypeInfo().GetCustomAttributes()) {
-         if (attr.GetType().FullName.Equals(name)) {
+      foreach (var attr in t.GetTypeInfo().GetCustomAttributes()) {
+        if (attr.GetType().FullName.Equals(name)) {
           return true;
         }
       }
       return false;
-        }
+    }
 
 #endif
 
@@ -140,8 +158,8 @@ return prop.CanWrite && !prop.SetMethod.IsStatic &&
         foreach (PropertyInfo pi in GetTypeProperties(t)) {
           if (pi.CanRead && (pi.CanWrite || anonymous) &&
           pi.GetIndexParameters().Length == 0) {
-        if ((!pi.CanRead || !pi.GetMethod.IsStatic) &&
-            (!pi.CanWrite || !pi.SetMethod.IsStatic)) {
+            if (PropertyData.HasUsableGetter(pi) ||
+                PropertyData.HasUsableSetter(pi)) {
               PropertyData pd = new PropertyMap.PropertyData() {
                 Name = pi.Name,
                 Prop = pi
@@ -166,12 +184,12 @@ return prop.CanWrite && !prop.SetMethod.IsStatic &&
       }
     }
 
-     private static void FromArrayRecursive(
-  Array arr,
-  int[] index,
-  int dimension,
-  CBORObject obj,
-  PODOptions options) {
+    private static void FromArrayRecursive(
+ Array arr,
+ int[] index,
+ int dimension,
+ CBORObject obj,
+ PODOptions options) {
       int dimLength = arr.GetLength(dimension);
       int rank = index.Length;
       for (var i = 0; i < dimLength; ++i) {
@@ -263,8 +281,8 @@ return prop.CanWrite && !prop.SetMethod.IsStatic &&
     }
 
     private static bool StartsWith(string str, string pfx) {
-return str != null && str.Length >= pfx.Length &&
-  str.Substring(0, pfx.Length).Equals(pfx);
+      return str != null && str.Length >= pfx.Length &&
+        str.Substring(0, pfx.Length).Equals(pfx);
     }
 
     public static object TypeToObject(CBORObject objThis, Type t) {
@@ -290,11 +308,6 @@ return str != null && str.Length >= pfx.Length &&
         return objThis.IsTrue;
       }
 
-if (t.FullName != null &&
-   (StartsWith(t.FullName,"System.Win32.") ||
-   StartsWith(t.FullName,"System.IO."))) {
-  throw new NotSupportedException("Type "+name+" not supported");
-}
       if (objThis.Type == CBORType.ByteString) {
         if (t.Equals(typeof(byte[]))) {
           byte[] bytes = objThis.GetByteString();
@@ -308,6 +321,16 @@ if (t.FullName != null &&
         var isList = false;
         object listObject = null;
 #if NET40 || NET20
+    if (typeof(Array).IsAssignableFrom(t)) {
+Type elementType = t.GetElementType();
+          Array array = Array.CreateInstance(
+        elementType,
+        objThis.Count);
+          for (var i = 0; i < objThis.Count; ++i) {
+            array.SetValue(objThis[i].ToObject(elementType), i);
+          }
+    return array;
+        }
         if (t.IsGenericType) {
           Type td = t.GetGenericTypeDefinition();
           isList = td.Equals(typeof(List<>)) || td.Equals(typeof(IList<>)) ||
@@ -323,13 +346,23 @@ if (t.FullName != null &&
           listObject = Activator.CreateInstance(listType);
         }
 #else
+if (typeof(Array).GetTypeInfo().IsAssignableFrom(t.GetTypeInfo())) {
+          Type elementType = t.GetElementType();
+          Array array = Array.CreateInstance(
+        elementType,
+        objThis.Count);
+          for (var i = 0; i < objThis.Count; ++i) {
+            array.SetValue(objThis[i].ToObject(elementType), i);
+          }
+    return array;
+        }
         if (t.GetTypeInfo().IsGenericType) {
           Type td = t.GetGenericTypeDefinition();
           isList = (td.Equals(typeof(List<>)) ||
   td.Equals(typeof(IList<>)) ||
   td.Equals(typeof(ICollection<>)) ||
   td.Equals(typeof(IEnumerable<>)));
-            } else {
+        } else {
           throw new NotImplementedException();
         }
         isList = (isList && t.GenericTypeArguments.Length == 1);
@@ -400,6 +433,16 @@ if (t.FullName != null &&
           }
           return dictObject;
         }
+        if (t.FullName != null && (StartsWith(t.FullName, "Microsoft.Win32.") ||
+           StartsWith(t.FullName, "System.IO."))) {
+      throw new NotSupportedException("Type " + t.FullName +
+            " not supported");
+        }
+        if (StartsWith(t.FullName, "System.") &&
+          !HasCustomAttribute(t, "System.SerializableAttribute")) {
+      throw new NotSupportedException("Type " + t.FullName +
+            " not supported");
+        }
         var values = new List<KeyValuePair<string, CBORObject>>();
         foreach (string key in PropertyMap.GetPropertyNames(
                    t,
@@ -447,15 +490,15 @@ if (t.FullName != null &&
         }
       }
       o = o ?? Activator.CreateInstance(t);
-  var dict = new Dictionary<string, CBORObject>();
+      var dict = new Dictionary<string, CBORObject>();
       foreach (var kv in keysValues) {
         var name = kv.Key;
         dict[name] = kv.Value;
       }
       foreach (PropertyData key in GetPropertyList(o.GetType())) {
         if (!key.HasUsableSetter()) {
- continue;
-}
+          continue;
+        }
         var name = key.GetAdjustedName(removeIsPrefix, useCamelCase);
         if (dict.ContainsKey(name)) {
           object dobj = dict[name].ToObject(key.Prop.PropertyType);
@@ -467,7 +510,7 @@ if (t.FullName != null &&
 
     public static IEnumerable<KeyValuePair<string, object>>
     GetProperties(Object o) {
-         return GetProperties(o, true, true);
+      return GetProperties(o, true, true);
     }
 
     public static IEnumerable<string>
@@ -481,8 +524,8 @@ if (t.FullName != null &&
     GetProperties(Object o, bool removeIsPrefix, bool useCamelCase) {
       foreach (PropertyData key in GetPropertyList(o.GetType())) {
         if (!key.HasUsableGetter()) {
- continue;
-}
+          continue;
+        }
         yield return new KeyValuePair<string, object>(
   key.GetAdjustedName(removeIsPrefix, useCamelCase),
   key.Prop.GetValue(o, null));
@@ -505,7 +548,7 @@ if (t.FullName != null &&
       lf[3] = dt.Minute;
       lf[4] = dt.Second;
       // lf[5] is the number of nanoseconds
-  lf[5] = (int)(dt.Ticks % 10000000L) * 100;
+      lf[5] = (int)(dt.Ticks % 10000000L) * 100;
     }
 
     public static DateTime BuildUpDateTime(EInteger year, int[] dt) {

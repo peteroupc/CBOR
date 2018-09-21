@@ -1043,6 +1043,7 @@ Assert.AreEqual(objectTemp, objectTemp2);
 
     public sealed class CPOD {
       public string a { get; set; }
+
       private string b { get; set; }
     }
     [Test]
