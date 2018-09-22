@@ -438,12 +438,12 @@ if (typeof(Array).GetTypeInfo().IsAssignableFrom(t.GetTypeInfo())) {
         }
         if (t.FullName != null && (StartsWith(t.FullName, "Microsoft.Win32.") ||
            StartsWith(t.FullName, "System.IO."))) {
-      throw new NotSupportedException("Type " + t.FullName +
+      throw new CBORException("Type " + t.FullName +
             " not supported");
         }
         if (StartsWith(t.FullName, "System.") &&
           !HasCustomAttribute(t, "System.SerializableAttribute")) {
-      throw new NotSupportedException("Type " + t.FullName +
+      throw new CBORException("Type " + t.FullName +
             " not supported");
         }
         var values = new List<KeyValuePair<string, CBORObject>>();
@@ -465,7 +465,7 @@ if (typeof(Array).GetTypeInfo().IsAssignableFrom(t.GetTypeInfo())) {
     true,
     true);
       } else {
-        throw new NotSupportedException();
+        throw new CBORException();
       }
     }
 

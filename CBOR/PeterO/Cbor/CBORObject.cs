@@ -884,7 +884,7 @@ namespace PeterO.Cbor {
     public static CBORObject FromObject(
   object obj,
   PODOptions options) {
-      return FromObject(obj, options, depth);
+      return FromObject(obj, options, 0);
     }
     internal static CBORObject FromObject(
   object obj,
@@ -976,7 +976,8 @@ namespace PeterO.Cbor {
         foreach (object keyPair in (System.Collections.IDictionary)objdic) {
           System.Collections.DictionaryEntry
             kvp = (System.Collections.DictionaryEntry)keyPair;
-          CBORObject objKey = CBORObject.FromObject(kvp.Key, options, depth + 1);
+        CBORObject objKey = CBORObject.FromObject(kvp.Key, options, depth +
+            1);
           objret[objKey] = CBORObject.FromObject(kvp.Value, options, depth + 1);
         }
         return objret;
@@ -1100,7 +1101,9 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.NewMap"]/*'/>
     public static CBORObject NewMap() {
-      return FromObject(new Dictionary<CBORObject, CBORObject>());
+      return new CBORObject(
+        CBORObjectTypeMap,
+        new Dictionary<CBORObject, CBORObject>());
     }
 
     /// <include file='../../docs.xml'

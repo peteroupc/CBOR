@@ -2358,21 +2358,24 @@
       </para>
       <para>If the type "T" is Boolean, returns the result of the IsTrue method.
       </para>
-      <para>In the .NET version, if the object is a CBOR map and the type "T" is not
-        specially handled by this method, an object of the given type is
+      <para>In the .NET version, if the object is a CBOR map,  if the type "T" is not
+        specially handled by this method, and if that type has a zero-argument constructor (default or otherwise), an object of the given type is
         created, then this method checks the CBOR object for public, nonstatic writable
-        properties. For each method found, if its name (with the "Is" prefix
+        properties. For each property found, if its name (with the "Is" prefix
         deleted and then converted to camel case) matches the name of a key in
-        this CBOR map, that property's setter is invoked and the corresponding
+        this CBOR map, and if that property has a getter,
+        that property's setter is invoked and the corresponding
         value is passed to that method.
       </para>
-      <para>In the Java version, if the object is a CBOR map and the type "T" is not
-        specially handled by this method, an object of the given type is
-        created, then this method checks the CBOR object for public, nonstatic methods
+      <para>In the Java version, if the object is a CBOR map, if the type "T" is not
+        specially handled by this method, and if that type has a zero-argument constructor (default or otherwise), 
+        an object of the given type is created, then this method checks the CBOR 
+        object for public, nonstatic methods
         starting with the word "set" (followed by an upper-case A to Z) that
         take a single parameter. For each method found, if its name (with the
         starting word "set" deleted and then converted to camel case) matches
-        the name of a key in this CBOR map, that method is invoked and the
+        the name of a key in this CBOR map, and if it has a corresponding getter method
+        that takes no parameters, that method is invoked and the
         corresponding value is passed to that method.
       </para>
       <para>REMARK: The behavior of this method is likely to change in the final

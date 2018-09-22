@@ -104,9 +104,6 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[FromObject(PeterO.Numbers.EInteger)](#FromObject_PeterO_Numbers_EInteger)</code> - Generates a CBOR object from an arbitrary-precision integer.
 * <code>[FromObject(PeterO.Numbers.ERational)](#FromObject_PeterO_Numbers_ERational)</code> - Generates a CBOR object from a rational number.
 * <code>[FromObject(System.Decimal)](#FromObject_System_Decimal)</code> - Converts a .
-* <code>[FromObject&lt;TKey, TValue&gt;(System.Collections.Generic.IDictionary&lt;TKey, TValue&gt;)](#FromObject_TKey_TValue_System_Collections_Generic_IDictionary_TKey_TValue)</code> - Generates a CBOR object from a map of objects.
-* <code>[FromObject&lt;T&gt;(System.Collections.Generic.IEnumerable&lt;T&gt;)](#FromObject_T_System_Collections_Generic_IEnumerable_T)</code> - Generates a CBOR object from an enumerable set of objects.
-* <code>[FromObject&lt;T&gt;(System.Collections.Generic.IList&lt;T&gt;)](#FromObject_T_System_Collections_Generic_IList_T)</code> - Generates a CBOR object from a list of objects.
 * <code>[FromObject(bool)](#FromObject_bool)</code> - Returns the CBOR true value or false value, depending on "value".
 * <code>[FromObject(byte)](#FromObject_byte)</code> - Generates a CBOR object from a byte (0 to 255).
 * <code>[FromObject(char)](#FromObject_char)</code> - Generates a CBOR string object from a Unicode character.
@@ -1820,63 +1817,6 @@ Converts a 16-bit unsigned integer to a CBOR object.
 <b>Return Value:</b>
 
 A CBORObject object.
-
-<a id="FromObject_T_System_Collections_Generic_IEnumerable_T"></a>
-### FromObject
-
-    public static PeterO.Cbor.CBORObject FromObject<T>(
-        System.Collections.Generic.IEnumerable<T> value);
-
-Generates a CBOR object from an enumerable set of objects.
-
-<b>Parameters:</b>
-
- * <i>value</i>: An object that implements the IEnumerable interface. In the .NET version, this can be the return value of an iterator or the result of a LINQ query.
-
- * &lt;T&gt;: A type convertible to CBORObject.
-
-<b>Return Value:</b>
-
-A CBOR object where each element of the given enumerable object is converted to a CBOR object and copied to a new array, or CBORObject.Null if the value is null.
-
-<a id="FromObject_T_System_Collections_Generic_IList_T"></a>
-### FromObject
-
-    public static PeterO.Cbor.CBORObject FromObject<T>(
-        System.Collections.Generic.IList<T> value);
-
-Generates a CBOR object from a list of objects.
-
-<b>Parameters:</b>
-
- * <i>value</i>: An array of CBOR objects. Can be null.
-
- * &lt;T&gt;: A type convertible to CBORObject.
-
-<b>Return Value:</b>
-
-A CBOR object where each element of the given array is converted to a CBOR object and copied to a new array, or CBORObject.Null if the value is null.
-
-<a id="FromObject_TKey_TValue_System_Collections_Generic_IDictionary_TKey_TValue"></a>
-### FromObject
-
-    public static PeterO.Cbor.CBORObject FromObject<TKey, TValue>(
-        System.Collections.Generic.IDictionary<TKey, TValue> dic);
-
-Generates a CBOR object from a map of objects.
-
-<b>Parameters:</b>
-
- * <i>dic</i>: A map of CBOR objects.
-
- * &lt;TKey&gt;: A type convertible to CBORObject; the type of the keys.
-
- * &lt;TValue&gt;: A type convertible to CBORObject; the type of the values.
-
-<b>Return Value:</b>
-
-A CBOR object where each key and value of the given map is converted to a CBOR object and copied to a new map, or CBORObject.Null if <i>dic</i>
-is null.
 
 <a id="FromObjectAndTag_object_ulong"></a>
 ### FromObjectAndTag
