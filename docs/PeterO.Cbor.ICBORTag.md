@@ -2,6 +2,8 @@
 
     public interface ICBORTag
 
+<b>Deprecated.</b> May be removed in the future without replacement.  Not as useful as ICBORConverters and ICBORObjectConverters for FromObject and ToObject.
+
 Implemented by classes that validate CBOR objects belonging to a specific tag.
 
 ### Member Summary

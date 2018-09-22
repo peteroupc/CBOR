@@ -698,7 +698,7 @@ Either or both operands are not numbers (as opposed to Not-a-Number, NaN).
         PeterO.BigInteger bigintTag,
         PeterO.Cbor.ICBORTag handler);
 
-<b>Deprecated.</b> Use the EInteger version of this method.
+<b>Deprecated.</b> May be removed in the future without replacement.  Not as useful as ICBORConverters and ICBORObjectConverters for FromObject and ToObject.  Moreover, registering tag handlers as this method does may tie them to the lifetime of the application.
 
 Registers an object that validates CBOR objects with new tags.
 
@@ -726,6 +726,8 @@ The parameter <i>bigintTag</i>
     public static void AddTagHandler(
         PeterO.Numbers.EInteger bigintTag,
         PeterO.Cbor.ICBORTag handler);
+
+<b>Deprecated.</b> May be removed in the future without replacement.  Not as useful as ICBORConverters and ICBORObjectConverters for FromObject and ToObject.  Moreover, registering tag handlers as this method does may tie them to the lifetime of the application.
 
 Registers an object that validates CBOR objects with new tags.
 

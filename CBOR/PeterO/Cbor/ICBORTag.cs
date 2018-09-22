@@ -10,6 +10,7 @@ using System;
 namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="T:PeterO.Cbor.ICBORTag"]/*'/>
+  [Obsolete("May be removed in the future without replacement.  Not as useful as ICBORConverters and ICBORObjectConverters for FromObject and ToObject.")]
   public interface ICBORTag
   {
     /// <include file='../../docs.xml'

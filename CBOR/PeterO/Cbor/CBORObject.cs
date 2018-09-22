@@ -123,6 +123,7 @@ namespace PeterO.Cbor {
       null, new CBORExtendedFloat(), new CBORExtendedRational()
     };
 
+    [Obsolete]
     private static readonly IDictionary<EInteger, ICBORTag>
       ValueTagHandlers = new Dictionary<EInteger, ICBORTag>();
 
@@ -562,7 +563,7 @@ namespace PeterO.Cbor {
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AddTagHandler(PeterO.BigInteger,PeterO.Cbor.ICBORTag)"]/*'/>
-    [Obsolete("Use the EInteger version of this method.")]
+  [Obsolete("May be removed in the future without replacement. Not as useful as ICBORConverters and ICBORObjectConverters for FromObject and ToObject. Moreover, registering tag handlers as this method does may tie them to the lifetime of the application.")]
     public static void AddTagHandler(BigInteger bigintTag, ICBORTag handler) {
       if (bigintTag == null) {
         throw new ArgumentNullException(nameof(bigintTag));
@@ -575,6 +576,7 @@ namespace PeterO.Cbor {
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AddTagHandler(PeterO.Numbers.EInteger,PeterO.Cbor.ICBORTag)"]/*'/>
+  [Obsolete("May be removed in the future without replacement. Not as useful as ICBORConverters and ICBORObjectConverters for FromObject and ToObject. Moreover, registering tag handlers as this method does may tie them to the lifetime of the application.")]
     public static void AddTagHandler(EInteger bigintTag, ICBORTag handler) {
       if (bigintTag == null) {
         throw new ArgumentNullException(nameof(bigintTag));
@@ -3291,6 +3293,7 @@ namespace PeterO.Cbor {
       }
     }
 
+    [Obsolete]
     internal static ICBORTag FindTagConverter(EInteger bigintTag) {
       if (TagHandlersEmpty()) {
         AddTagHandler((EInteger)2, new CBORTag2());
@@ -3660,6 +3663,7 @@ namespace PeterO.Cbor {
       return ef.ToString();
     }
 
+    [Obsolete]
     private static ICBORTag FindTagConverter(int tag) {
       return FindTagConverter((EInteger)tag);
     }
