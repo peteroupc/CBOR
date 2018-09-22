@@ -37,37 +37,6 @@ namespace PeterO.Cbor {
       return this.extended ? ExtendedFilter : Filter;
     }
 
-    internal static CBORObject ConvertToDecimalFrac(
-      CBORObject o,
-      bool isDecimal,
-      bool extended) {
-      if (o.Type != CBORType.Array) {
-        throw new CBORException("Big fraction must be an array");
-      }
-      if (o.Count != 2) {
-        throw new CBORException("Big fraction requires exactly 2 items");
-      }
-      if (!o[0].IsIntegral) {
-        throw new CBORException("Exponent is not an integer");
-      }
-      if (!o[1].IsIntegral) {
-        throw new CBORException("Mantissa is not an integer");
-      }
-      EInteger exponent = o[0].AsEInteger();
-      EInteger mantissa = o[1].AsEInteger();
-      if (exponent.GetSignedBitLength() > 64 && !extended) {
-        throw new CBORException("Exponent is too big");
-      }
-      if (exponent.IsZero) {
-        // Exponent is 0, so return mantissa instead
-        return CBORObject.FromObject(mantissa);
-      }
-      // NOTE: Discards tags. See comment in CBORTag2.
-      return isDecimal ?
-      CBORObject.FromObject(EDecimal.Create(mantissa, exponent)) :
-      CBORObject.FromObject(EFloat.Create(mantissa, exponent));
-    }
-
     public CBORObject ValidateObject(CBORObject obj) {
       return ConvertToDecimalFrac(obj, false, this.extended);
     }

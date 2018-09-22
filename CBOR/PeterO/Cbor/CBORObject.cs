@@ -1040,10 +1040,6 @@ namespace PeterO.Cbor {
           tagHigh = unchecked(tagHigh | (((int)b) << (i * 8)));
         }
         var c2 = new CBORObject(c, tagLow, tagHigh);
-        ICBORTag tagconv = FindTagConverter(bigintTag);
-        if (tagconv != null) {
-          c2 = tagconv.ValidateObject(c2);
-        }
         return c2;
       }
     }
@@ -1057,10 +1053,12 @@ namespace PeterO.Cbor {
         throw new ArgumentException("smallTag (" + smallTag +
                     ") is less than 0");
       }
-      ICBORTag tagconv = FindTagConverter(smallTag);
       CBORObject c = FromObject(valueObValue);
       c = new CBORObject(c, smallTag, 0);
-      return (tagconv != null) ? tagconv.ValidateObject(c) : c;
+      if (smallTag <= 264) {
+       c=ConvertToNativeObject(c);
+      }
+      return c;
     }
 
     /// <include file='../../docs.xml'
