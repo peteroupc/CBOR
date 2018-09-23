@@ -8,7 +8,7 @@ at: http://peteroupc.github.io/
 using System;
 using PeterO;
 using PeterO.Numbers;
-
+#pragma warning disable 618
 namespace PeterO.Cbor {
   internal class CBORTag5 : ICBORTag
   {

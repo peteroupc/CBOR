@@ -12,6 +12,7 @@ using PeterO.Numbers;
 namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="T:PeterO.Cbor.CBORTypeFilter"]/*'/>
+  [Obsolete("May be removed without replacement.")]
   public sealed class CBORTypeFilter {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="F:PeterO.Cbor.CBORTypeFilter.Any"]/*'/>

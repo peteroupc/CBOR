@@ -7,7 +7,7 @@ at: http://peteroupc.github.io/
  */
 using System;
 using PeterO.Numbers;
-
+#pragma warning disable 618
 namespace PeterO.Cbor {
   internal class CBORTag1 : ICBORTag, ICBORConverter<DateTime>
   {

@@ -7,7 +7,7 @@ at: http://peteroupc.github.io/
  */
 using System;
 using PeterO.Numbers;
-
+#pragma warning disable 618
 namespace PeterO.Cbor {
   internal class CBORTag0 : ICBORTag, ICBORObjectConverter<DateTime> {
     private static string DateTimeToString(DateTime bi) {
