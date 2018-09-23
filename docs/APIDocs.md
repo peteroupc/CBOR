@@ -1,5 +1,7 @@
 ## API Documentation
 
+ * [PeterO.BigInteger](PeterO.BigInteger.md) -
+This class is largely obsolete.
  * [PeterO.Cbor.CBORDataUtilities](PeterO.Cbor.CBORDataUtilities.md) - Contains methods useful for reading and writing data, with a focus on       CBOR.
  * [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) - Specifies options for encoding and decoding CBOR objects.
  * [PeterO.Cbor.CBORException](PeterO.Cbor.CBORException.md) - Exception thrown for errors involving CBOR data.
@@ -12,3 +14,14 @@ Represents an object in Concise Binary Object Representation (CBOR) and       co
  * [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) - Includes options to control how CBOR objects are converted              to JSON.
  * [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) - Options for converting "plain old data" objects (better known as POCOs in .
  * [PeterO.DataUtilities](PeterO.DataUtilities.md) - Contains methods useful for reading and writing strings.
+ * [PeterO.ExtendedDecimal](PeterO.ExtendedDecimal.md) -
+This class is largely obsolete.
+ * [PeterO.ExtendedFloat](PeterO.ExtendedFloat.md) -
+This class is largely obsolete.
+ * [PeterO.ExtendedRational](PeterO.ExtendedRational.md) -
+This class is largely obsolete.
+ * [PeterO.PrecisionContext](PeterO.PrecisionContext.md) - A precision context.
+ * [PeterO.Rounding](PeterO.Rounding.md) -
+This class is obsolete.
+ * [PeterO.TrapException](PeterO.TrapException.md) -
+This class is obsolete.
