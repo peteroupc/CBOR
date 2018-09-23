@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{8FE63143-541E-448D-8337-A98D1FA51541}</ProjectGuid>
@@ -21,8 +20,7 @@
     <CodeAnalysisRules>-Microsoft.Design#CA1017;-Microsoft.Globalization#CA1303;-Microsoft.Naming#CA1705;-Microsoft.Naming#CA1708;-Microsoft.Naming#CA1709;-Microsoft.Usage#CA2225</CodeAnalysisRules>
     <SourceAnalysisOverrideSettingsFile>Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
     <SignAssembly>False</SignAssembly>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <NuGetPackageImportStamp></NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -98,7 +96,6 @@
     <Compile Include="CBORSupplementTest.cs" />
     <Compile Include="CBORTest.cs" />
     <Compile Include="CBORTestCommon.cs" />
-    <Compile Include="CBORTypeFilterTest.cs" />
     <Compile Include="DataUtilitiesTest.cs" />
     <Compile Include="IRandomGen.cs" />
     <Compile Include="MiniCBOR.cs" />
@@ -112,6 +109,9 @@
     <Compile Include="JSONPatch.cs" />
     <Compile Include="JSONPointer.cs" />
     <Compile Include="DateTest.cs" />
+    <Compile Include="ToObjectTest.cs" />
+    <Compile Include="PODClass.cs" />
+    <Compile Include="CBORTypeMapperTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -133,5 +133,4 @@
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-
 </Project>

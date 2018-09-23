@@ -1529,9 +1529,9 @@ Generates a CBORObject from an arbitrary object, using the given options to cont
 
  * A  `String`  is converted to a CBOR text string. To create a CBOR byte string object from  `String` , see the example given in**PeterO.Cbor.CBORObject.FromObject(System.Byte[])**.
 
- * A number of type  `EDecimal` , `EFloat` ,  `EInteger` , and  `ERational`  in the new<a href="https://www.nuget.org/packages/PeterO.Numbers"> `PeterO.Numbers` </a>library (in .NET) or the<a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers` </a>artifact (in Java) is converted to the corresponding CBOR number.
+ * A number of type  `EDecimal` , `EFloat` ,  `EInteger` , and  `ERational`  in the<a href="https://www.nuget.org/packages/PeterO.Numbers"> `PeterO.Numbers` </a>library (in .NET) or the<a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers` </a>artifact (in Java) is converted to the corresponding CBOR number.
 
- * An array is converted to a CBOR array. In the .NET version, a multidimensional array is converted to an array of arrays.
+ * An array (other than a byte array) is converted to a CBOR array. In the .NET version, a multidimensional array is converted to an array of arrays. A byte array is converted to a CBOR byte string.
 
  * An object implementing IDictionary (Map in Java) is converted to a CBOR map containing the keys and values enumerated.
 
@@ -2635,33 +2635,41 @@ A text string.
     public object ToObject(
         System.Type t);
 
-Converts this CBOR object to an object of an arbitrary type.
+Converts this CBOR object to an object of an arbitrary type. The following types are specially handled by this method:
 
-If the type "T" is CBORObject, returns this CBOR object.
+ * If the type is `CBORObject` , return this object.
 
-If this CBOR object is a null object, returns null, except if "T" is CBORObject.
+ * If the given object is `CBORObject.Null` (with or without tags), returns `null` .
 
-If the type "T" is Object, returns this CBOR object.
+ * If the type is `object` , return this object.
 
-If the type "T" is the generic List, IList, ICollection, or IEnumerable (or ArrayList, List, Collection, or Iterable in Java), and if this CBOR object is an array, returns an object conforming to the type, class, or interface passed to this method, where the object will contain all items in this CBOR array.
+ * If the type is `char` ... (To be implemented).
 
-If the type "T" is the generic Dictionary or IDictionary (or HashMap or Map in Java), and if this CBOR object is a map, returns an object conforming to the type, class, or interface passed to this method, where the object will contain all keys and values in this CBOR map.
+ * If the type is `bool` ( `boolean` in Java), returns the result of AsBoolean.
 
-If the type "T" is `int` , returns the result of the AsInt32 method.
+ * If the type is a primitive integer type ( `byte` , `int` , `short` , `long` , as well as `sbyte` , `ushort` , `uint` , and `ulong` in .NET) or a primitive floating-point type ( `float` , `double` , as well as `decimal` in .NET), returns the result of the corresponding As* method.
 
-If the type "T" is `DateTime` (or `Date` in Java) , returns a date/time object if the CBOR object's outermost ag is 0 or 1.
+ * If the type is `String` , returns the result of AsString.
 
-If the type "T" is `long` , returns the result of the AsInt64 method.
+ * If the type is `EDecimal` , `EFloat` , `EInteger` , or `ERational` in the<a href="https://www.nuget.org/packages/PeterO.Numbers"> `PeterO.Numbers` </a>library (in .NET) or the<a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers` </a>artifact (in Java), returns the result of the corresponding As* ethod.
 
-If the type "T" is `double` , returns the result of the AsDouble method.
+ * If the type is `byte[]` and this CBOR object is a byte array, returns a byte array which this BOR byte string's data will be copied to.
 
-If the type "T" is String, returns the result of the AsString method.
+ * If the type is an array type other than a byte array type.... (To be documented.)
 
-If the type "T" is `byte[]` and this CBOR object is a byte array, returns a byte array which this BOR byte string's data will be copied to.
+ * If the type is the generic List, IList, ICollection, or IEnumerable (or ArrayList, List, Collection, or Iterable in Java), and if this CBOR object is an array, returns an object conforming to the type, class, or interface passed to this method, where the object will contain all items in this CBOR array.
 
-In the .NET version, if the type "T" is `DateTime` and this CBOR object is a text string with tag 0, converts that text tring to a DateTime and returns that DateTime.
+ * If the type is the generic Dictionary or IDictionary (or HashMap or Map in Java), and if this CBOR object is a map, returns an object conforming to the type, class, or interface passed to this method, where the object will contain all keys and values in this CBOR map.
 
-If the type "T" is Boolean, returns the result of the IsTrue method.
+ * Enums (To be implemented).
+
+ * Type converters (To be implemented).
+
+ * If the type is `DateTime` (or `Date` in Java) , returns a date/time object if the CBOR object's outermost ag is 0 or 1.
+
+ * If the type is `Uri` (or `URI` in Java), returns a URI object if possible.
+
+ * If the type is `Guid` (or `UUID` in Java), returns a UUID object if possible.
 
 In the .NET version, if the object is a CBOR map, if the type "T" is not specially handled by this method, and if that type has a zero-argument constructor (default or otherwise), an object of the given type is created, then this method checks the CBOR object for public, nonstatic writable properties. For each property found, if its name (with the "Is" prefix deleted and then converted to camel case) matches the name of a key in this CBOR map, and if that property has a getter, that property's setter is invoked and the corresponding value is passed to that method.
 

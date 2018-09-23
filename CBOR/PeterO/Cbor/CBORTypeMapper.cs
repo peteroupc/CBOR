@@ -10,8 +10,8 @@ namespace PeterO.Cbor {
     private readonly IDictionary<Object, ConverterInfo>
       converters;
 
-    /// <summary>Initializes a new instance of the CBORTypeMapper
-    /// class.</summary>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.#ctor"]/*'/>
     public CBORTypeMapper() {
 this.typePrefixes = new List<string>();
 this.typeNames = new List<string>();
@@ -57,9 +57,8 @@ this.converters = new Dictionary<Object, ConverterInfo>();
         obj);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='typeName'>Not documented yet.</param>
-    /// <returns>A Boolean object.</returns>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.FilterTypeName(System.String)"]/*'/>
     public bool FilterTypeName(string typeName) {
       if (String.IsNullOrEmpty(typeName)) {
  return false;

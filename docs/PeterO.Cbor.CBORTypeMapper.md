@@ -8,6 +8,14 @@ Not documented yet.
 * <code>[AddConverter&lt;T&gt;(System.Type, PeterO.Cbor.ICBORConverter&lt;T&gt;)](#AddConverter_T_System_Type_PeterO_Cbor_ICBORConverter_T)</code> - Not documented yet.
 * <code>[AddTypeName(string)](#AddTypeName_string)</code> - Adds the fully qualified name of a Java or .
 * <code>[AddTypePrefix(string)](#AddTypePrefix_string)</code> - Adds a prefix of a Java or .
+* <code>[FilterTypeName(string)](#FilterTypeName_string)</code> - Not documented yet.
+
+<a id="Void_ctor"></a>
+### CBORTypeMapper Constructor
+
+    public CBORTypeMapper();
+
+Initializes a new instance of the [PeterO.Cbor.CBORTypeMapper](PeterO.Cbor.CBORTypeMapper.md) class.
 
 <a id="AddConverter_T_System_Type_PeterO_Cbor_ICBORConverter_T"></a>
 ### AddConverter
@@ -91,3 +99,20 @@ The parameter  <i>prefix</i>
  * System.ArgumentException:
 The parameter  <i>prefix</i>
  is empty.
+
+<a id="FilterTypeName_string"></a>
+### FilterTypeName
+
+    public bool FilterTypeName(
+        string typeName);
+
+Not documented yet.
+
+<b>Parameters:</b>
+
+ * <i>typeName</i>: The parameter  <i>typeName</i>
+ is not documented yet.
+
+<b>Return Value:</b>
+
+Either  `true`  or  `false` .

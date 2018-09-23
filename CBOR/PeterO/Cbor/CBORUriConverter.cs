@@ -8,7 +8,7 @@ at: http://peteroupc.github.io/
 using System;
 
 namespace PeterO.Cbor {
-  internal class CBORUriConverter : ICBORConverter<Uri>
+  internal class CBORUriConverter : ICBORObjectConverter<Uri>
   {
     private CBORObject ValidateObject(CBORObject obj) {
       if (obj.Type != CBORType.TextString) {
@@ -18,6 +18,14 @@ namespace PeterO.Cbor {
         throw new CBORException("String is not a valid URI/IRI");
       }
       return obj;
+    }
+
+    public Uri FromCBORObject(CBORObject obj) {
+      if (obj.HasMostOuterTag(32)) {
+        this.ValidateObject(obj);
+        return new Uri(obj.AsString());
+      }
+      throw new CBORException();
     }
 
     public CBORObject ToCBORObject(Uri uri) {

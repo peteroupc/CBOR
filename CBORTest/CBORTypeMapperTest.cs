@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
 using PeterO.Cbor;
+
 namespace Test {
   [TestFixture]
   public class CBORTypeMapperTest {

@@ -1045,7 +1045,7 @@ objret[key.Key] = CBORObject.FromObject(
       }
       CBORObject c = FromObject(valueObValue);
       c = new CBORObject(c, smallTag, 0);
-      if (smallTag <= 264) {
+      if (smallTag <= 265) {
        c = CBORNativeConvert.ConvertToNativeObject(c);
       }
       return c;

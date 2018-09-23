@@ -309,17 +309,29 @@ namespace PeterO.Cbor {
     }
 
     public static object TypeToObject(CBORObject objThis, Type t) {
-      if (t.Equals(typeof(DateTime))) {
-        return new CBORDateConverter().FromCBORObject(objThis);
-      }
-      if (t.Equals(typeof(Guid))) {
-        return new CBORUuidConverter().FromCBORObject(objThis);
-      }
       if (t.Equals(typeof(int))) {
         return objThis.AsInt32();
       }
+      if (t.Equals(typeof(short))) {
+        return objThis.AsInt16();
+      }
+      if (t.Equals(typeof(ushort))) {
+        return objThis.AsUInt16();
+      }
+      if (t.Equals(typeof(byte))) {
+        return objThis.AsByte();
+      }
+      if (t.Equals(typeof(sbyte))) {
+        return objThis.AsSByte();
+      }
       if (t.Equals(typeof(long))) {
         return objThis.AsInt64();
+      }
+      if (t.Equals(typeof(uint))) {
+        return objThis.AsUInt32();
+      }
+      if (t.Equals(typeof(ulong))) {
+        return objThis.AsUInt64();
       }
       if (t.Equals(typeof(double))) {
         return objThis.AsDouble();
@@ -328,9 +340,29 @@ namespace PeterO.Cbor {
         return objThis.AsSingle();
       }
       if (t.Equals(typeof(bool))) {
-        return objThis.IsTrue;
+        return objThis.AsBoolean();
       }
-
+      if (t.Equals(typeof(DateTime))) {
+        return new CBORDateConverter().FromCBORObject(objThis);
+      }
+      if (t.Equals(typeof(Guid))) {
+        return new CBORUuidConverter().FromCBORObject(objThis);
+      }
+      if (t.Equals(typeof(Uri))) {
+        return new CBORUriConverter().FromCBORObject(objThis);
+      }
+      if (t.Equals(typeof(EDecimal))) {
+        return objThis.AsEDecimal();
+      }
+      if (t.Equals(typeof(EFloat))) {
+        return objThis.AsEFloat();
+      }
+      if (t.Equals(typeof(EInteger))) {
+        return objThis.AsEInteger();
+      }
+      if (t.Equals(typeof(ERational))) {
+        return objThis.AsERational();
+      }
       if (objThis.Type == CBORType.ByteString) {
         if (t.Equals(typeof(byte[]))) {
           byte[] bytes = objThis.GetByteString();

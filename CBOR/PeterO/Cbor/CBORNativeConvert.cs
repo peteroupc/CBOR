@@ -34,7 +34,7 @@ namespace PeterO.Cbor {
  return ConvertToBigNum(o, false);
 }
      if (o.HasMostOuterTag(3)) {
- return ConvertToBigNum(o, false);
+ return ConvertToBigNum(o, true);
 }
      if (o.HasMostOuterTag(4)) {
  return ConvertToDecimalFrac(o, true, false);

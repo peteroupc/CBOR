@@ -161,7 +161,7 @@ namespace Test {
     [Test]
     public void TestCBORObjectArgumentValidation() {
       try {
-        CBORObject.FromObject('\udddd');
+        ToObjectTest.TestToFromObjectRoundTrip('\udddd');
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
 // NOTE: Intentionally empty
@@ -169,13 +169,21 @@ namespace Test {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      Assert.AreEqual(CBORObject.Null, CBORObject.FromObject((byte[])null));
+      Assert.AreEqual(
+  CBORObject.Null,
+  ToObjectTest.TestToFromObjectRoundTrip((byte[])null));
       Assert.AreEqual(
         CBORObject.Null,
-        CBORObject.FromObject((CBORObject[])null));
-      Assert.AreEqual(CBORObject.True, CBORObject.FromObject(true));
-      Assert.AreEqual(CBORObject.False, CBORObject.FromObject(false));
-      Assert.AreEqual(CBORObject.FromObject(8), CBORObject.FromObject((byte)8));
+        ToObjectTest.TestToFromObjectRoundTrip((CBORObject[])null));
+Assert.AreEqual(
+  CBORObject.True,
+  ToObjectTest.TestToFromObjectRoundTrip(true));
+      Assert.AreEqual(
+  CBORObject.False,
+  ToObjectTest.TestToFromObjectRoundTrip(false));
+      Assert.AreEqual(
+  ToObjectTest.TestToFromObjectRoundTrip(8),
+  ToObjectTest.TestToFromObjectRoundTrip((byte)8));
 
       try {
         CBORObject.True.Abs();
@@ -393,7 +401,7 @@ namespace Test {
     public void TestCBOREInteger() {
       EInteger bi = EInteger.FromString("9223372036854775808");
       try {
-        CBORObject.FromObject(bi).AsInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(bi).AsInt64();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
 // NOTE: Intentionally empty
@@ -402,7 +410,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.FromObject(bi).AsInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(bi).AsInt32();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
 // NOTE: Intentionally empty
@@ -412,7 +420,7 @@ namespace Test {
       }
       bi = EInteger.FromString("-9223372036854775809");
       try {
-        CBORObject.FromObject(bi).AsInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(bi).AsInt64();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
 // NOTE: Intentionally empty
@@ -421,7 +429,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.FromObject(bi).AsInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(bi).AsInt32();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
 // NOTE: Intentionally empty
@@ -431,7 +439,7 @@ namespace Test {
       }
       bi = EInteger.FromString("-9223372036854775808");
       try {
-        CBORObject.FromObject(bi).AsInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(bi).AsInt32();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
 // NOTE: Intentionally empty
@@ -444,8 +452,8 @@ namespace Test {
     [Test]
     public void TestEquivalentInfinities() {
       CBORObject co, co2;
-      co = CBORObject.FromObject(CBORTestCommon.DecPosInf);
-      co2 = CBORObject.FromObject(Double.PositiveInfinity);
+      co = ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecPosInf);
+      co2 = ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity);
       TestCommon.CompareTestEqual(co, co2);
       co = CBORObject.NewMap().Add(
         CBORTestCommon.DecPosInf,
@@ -824,7 +832,7 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff };
     [Test]
     public void TestUUID() {
       CBORObject obj =
-        CBORObject.FromObject(Guid.Parse(
+        ToObjectTest.TestToFromObjectRoundTrip(Guid.Parse(
           "00112233-4455-6677-8899-AABBCCDDEEFF"));
       Assert.AreEqual(CBORType.ByteString, obj.Type);
       Assert.AreEqual(EInteger.FromString("37"), obj.MostInnerTag);
@@ -1023,7 +1031,7 @@ Assert.AreEqual(objectTemp, objectTemp2);
     public void TestCPOD() {
       var m = new CPOD();
       m.Aa = "Test";
-      CBORObject cbor = CBORObject.FromObject(m);
+      CBORObject cbor = ToObjectTest.TestToFromObjectRoundTrip(m);
       Assert.IsFalse(cbor.ContainsKey("bb"), cbor.ToString());
       Assert.AreEqual("Test", cbor["aa"], cbor.ToString());
     }
