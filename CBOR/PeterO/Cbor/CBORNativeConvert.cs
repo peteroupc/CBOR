@@ -29,8 +29,8 @@ namespace PeterO.Cbor {
       }
       return newObject;
     }
-    
-    private static CBORObject ConvertToNativeObject(CBORObject o){
+
+    public static CBORObject ConvertToNativeObject(CBORObject o){
      if(o.HasMostOuterTag(2))return ConvertToBigNum(o,false);
      if(o.HasMostOuterTag(3))return ConvertToBigNum(o,false);
      if(o.HasMostOuterTag(4))return ConvertToDecimalFrac(o,true,false);
@@ -121,7 +121,7 @@ namespace PeterO.Cbor {
       return CBORObject.FromObject(bi);
     }
 
-    private CBORObject ConvertToRationalNumber(CBORObject obj) {
+    private static CBORObject ConvertToRationalNumber(CBORObject obj) {
       if (obj.Type != CBORType.Array) {
         throw new CBORException("Rational number must be an array");
       }

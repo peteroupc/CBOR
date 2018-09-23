@@ -8,13 +8,9 @@ at: http://peteroupc.github.io/
 using System;
 
 namespace PeterO.Cbor {
-  internal class CBORTag32 : ICBORTag, ICBORConverter<Uri>
+  internal class CBORUriConverter : ICBORConverter<Uri>
   {
-    public CBORTypeFilter GetTypeFilter() {
-      return CBORTypeFilter.TextString;
-    }
-
-    public CBORObject ValidateObject(CBORObject obj) {
+    private CBORObject ValidateObject(CBORObject obj) {
       if (obj.Type != CBORType.TextString) {
         throw new CBORException("URI must be a text string");
       }
@@ -24,9 +20,6 @@ namespace PeterO.Cbor {
       return obj;
     }
 
-    internal static void AddConverter() {
-      CBORObject.AddConverter(typeof(Uri), new CBORTag32());
-    }
 
     public CBORObject ToCBORObject(Uri uri) {
       if (uri == null) {

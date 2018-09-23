@@ -9,7 +9,7 @@ using System;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-  internal class CBORTag0 : ICBORTag, ICBORObjectConverter<DateTime> {
+  internal class CBORDateConverter : ICBORObjectConverter<DateTime> {
     private static string DateTimeToString(DateTime bi) {
       var lesserFields = new int[7];
       var year = new EInteger[1];
@@ -17,18 +17,6 @@ namespace PeterO.Cbor {
       return CBORUtilities.ToAtomDateTimeString(year[0], lesserFields);
     }
 
-    internal static void AddConverter() {
-      // TODO: FromObject with Dates has different behavior
-      // in Java version, which has to be retained until
-      // the next major version for backward compatibility.
-      // However, since ToObject is new, we can convert
-      // to Date in the .NET and Java versions
-        CBORObject.AddConverter(typeof(DateTime), new CBORTag0());
-    }
-
-    public CBORTypeFilter GetTypeFilter() {
-      return CBORTypeFilter.TextString;
-    }
 
     public CBORObject ValidateObject(CBORObject obj) {
       if (obj.Type != CBORType.TextString) {

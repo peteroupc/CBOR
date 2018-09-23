@@ -1,4 +1,4 @@
-/*
+﻿/*
 Written by Peter O. in 2013.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -113,18 +113,12 @@ namespace PeterO.Cbor {
 
     private const int StreamedStringBufferLength = 4096;
 
-    private static readonly IDictionary<Object, ConverterInfo>
-      ValueConverters = new Dictionary<Object, ConverterInfo>();
-
     private static readonly ICBORNumber[] NumberInterfaces = {
       new CBORInteger(), new CBOREInteger(), null, null,
       null, null, null, new CBORSingle(),
       new CBORDouble(), new CBORExtendedDecimal(),
       null, new CBORExtendedFloat(), new CBORExtendedRational()
     };
-
-    private static readonly IDictionary<EInteger, ICBORTag>
-      ValueTagHandlers = new Dictionary<EInteger, ICBORTag>();
 
     private static readonly EInteger UInt64MaxValue =
       (EInteger.One << 64) - EInteger.One;
@@ -509,57 +503,11 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AddConverter``1(System.Type,PeterO.Cbor.ICBORConverter{``0})"]/*'/>
-    public static void AddConverter<T>(Type type, ICBORConverter<T> converter) {
-      if (type == null) {
-        throw new ArgumentNullException(nameof(type));
-      }
-      if (converter == null) {
-        throw new ArgumentNullException(nameof(converter));
-      }
-      ConverterInfo ci = new CBORObject.ConverterInfo();
-      ci.Converter = converter;
-      ci.ToObject = PropertyMap.FindOneArgumentMethod(
-        converter,
-        "ToCBORObject",
-        type);
-      if (ci.ToObject == null) {
-        throw new ArgumentException(
-          "Converter doesn't contain a proper ToCBORObject method");
-      }
-      lock (ValueConverters) {
-        ValueConverters[type] = ci;
-      }
-    }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Addition(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]/*'/>
     public static CBORObject Addition(CBORObject first, CBORObject second) {
       return CBORObjectMath.Addition(first, second);
-    }
-
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AddTagHandler(PeterO.Numbers.EInteger,PeterO.Cbor.ICBORTag)"]/*'/>
-    public static void AddTagHandler(EInteger bigintTag, ICBORTag handler) {
-      if (bigintTag == null) {
-        throw new ArgumentNullException(nameof(bigintTag));
-      }
-      if (handler == null) {
-        throw new ArgumentNullException(nameof(handler));
-      }
-      if (bigintTag.Sign < 0) {
-        throw new ArgumentException("bigintTag.Sign (" +
-                    bigintTag.Sign + ") is less than 0");
-      }
-      if (bigintTag.GetSignedBitLength() > 64) {
-        throw new ArgumentException("bigintTag.bitLength (" +
-                    (long)bigintTag.GetSignedBitLength() + ") is more than " +
-                    "64");
-      }
-      lock (ValueTagHandlers) {
-        ValueTagHandlers[bigintTag] = handler;
-      }
     }
 
     /// <include file='../../docs.xml'
@@ -867,7 +815,6 @@ namespace PeterO.Cbor {
       }
       IList<CBORObject> list = new List<CBORObject>();
       foreach (long i in array) {
-        // Console.WriteLine(i);
         list.Add(FromObject(i));
       }
       return new CBORObject(CBORObjectTypeArray, list);
@@ -884,12 +831,25 @@ namespace PeterO.Cbor {
     public static CBORObject FromObject(
   object obj,
   PODOptions options) {
-      return FromObject(obj, options, 0);
+      return FromObject(obj, options, null, 0);
     }
+
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Object,PeterO.Cbor.PODOptions)"]/*'/>
+    public static CBORObject FromObject(
+  object obj,
+  CBORTypeMapper mapper,
+  PODOptions options) {
+      // ArgumentAssert.NotNull(mapper);
+      return FromObject(obj, options, mapper, 0);
+    }
+
     internal static CBORObject FromObject(
   object obj,
   PODOptions options,
-  int depth) {
+  CBORTypeMapper mapper,
+  int depth
+  ) {
       if (options == null) {
         throw new ArgumentNullException(nameof(options));
       }
@@ -976,25 +936,36 @@ namespace PeterO.Cbor {
         foreach (object keyPair in (System.Collections.IDictionary)objdic) {
           System.Collections.DictionaryEntry
             kvp = (System.Collections.DictionaryEntry)keyPair;
-        CBORObject objKey = CBORObject.FromObject(kvp.Key, options, depth +
+        CBORObject objKey = CBORObject.FromObject(kvp.Key, options, mapper, depth +
             1);
-          objret[objKey] = CBORObject.FromObject(kvp.Value, options, depth + 1);
+          objret[objKey] = CBORObject.FromObject(kvp.Value, options, mapper, depth + 1);
         }
         return objret;
       }
       if (obj is Array) {
-        return PropertyMap.FromArray(obj, options, depth);
+        return PropertyMap.FromArray(obj, options, mapper, depth);
       }
       if (obj is System.Collections.IEnumerable) {
         objret = CBORObject.NewArray();
         foreach (object element in (System.Collections.IEnumerable)obj) {
-          objret.Add(CBORObject.FromObject(element, options, depth + 1));
+          objret.Add(CBORObject.FromObject(element, options, mapper, depth + 1));
         }
         return objret;
       }
-      objret = ConvertWithConverter(obj);
-      if (objret != null) {
-        return objret;
+      if (mapper != null) {
+        objret = mapper.ConvertWithConverter(obj);
+        if (objret != null) {
+          return objret;
+        }
+      }
+      if(obj is DateTime){
+        return new CBORDateConverter().ToCBORObject((DateTime)obj);
+      }
+      if(obj is Uri){
+        return new CBORUriConverter().ToCBORObject((Uri)obj);
+      }
+      if(obj is Guid){
+        return new CBORUuidConverter().ToCBORObject((Guid)obj);
       }
       objret = CBORObject.NewMap();
       foreach (KeyValuePair<string, object> key in
@@ -1002,7 +973,7 @@ namespace PeterO.Cbor {
                  obj,
                  options.RemoveIsPrefix,
                  options.UseCamelCase)) {
-        objret[key.Key] = CBORObject.FromObject(key.Value, options, depth + 1);
+        objret[key.Key] = CBORObject.FromObject(key.Value, options, mapper, depth + 1);
       }
       return objret;
     }
@@ -1056,7 +1027,7 @@ namespace PeterO.Cbor {
       CBORObject c = FromObject(valueObValue);
       c = new CBORObject(c, smallTag, 0);
       if (smallTag <= 264) {
-       c=ConvertToNativeObject(c);
+       c=CBORNativeConvert.ConvertToNativeObject(c);
       }
       return c;
     }
@@ -3037,43 +3008,6 @@ namespace PeterO.Cbor {
       }
     }
 
-    internal static ICBORTag FindTagConverter(EInteger bigintTag) {
-      if (TagHandlersEmpty()) {
-        AddTagHandler((EInteger)2, new CBORTag2());
-        AddTagHandler((EInteger)3, new CBORTag3());
-        AddTagHandler((EInteger)4, new CBORTag4());
-        AddTagHandler((EInteger)5, new CBORTag5());
-        AddTagHandler((EInteger)264, new CBORTag4(true));
-        AddTagHandler((EInteger)265, new CBORTag5(true));
-        AddTagHandler((EInteger)25, new CBORTagUnsigned());
-        AddTagHandler((EInteger)29, new CBORTagUnsigned());
-        AddTagHandler((EInteger)256, new CBORTagAny());
-        AddTagHandler(EInteger.Zero, new CBORTag0());
-        AddTagHandler((EInteger)32, new CBORTag32());
-        AddTagHandler((EInteger)33, new CBORTagGenericString());
-        AddTagHandler((EInteger)34, new CBORTagGenericString());
-        AddTagHandler((EInteger)35, new CBORTagGenericString());
-        AddTagHandler((EInteger)36, new CBORTagGenericString());
-        AddTagHandler((EInteger)37, new CBORTag37());
-        AddTagHandler((EInteger)30, new CBORTag30());
-      }
-      lock (ValueTagHandlers) {
-        if (ValueTagHandlers.ContainsKey(bigintTag)) {
-          return ValueTagHandlers[bigintTag];
-        }
-#if DEBUG
-        if (bigintTag.Equals((EInteger)2)) {
-          throw new InvalidOperationException("Expected valid tag handler");
-        }
-#endif
-        return null;
-      }
-    }
-
-    internal static ICBORTag FindTagConverterLong(long tagLong) {
-      return FindTagConverter((EInteger)tagLong);
-    }
-
     internal static CBORObject FromRaw(string str) {
       return new CBORObject(CBORObjectTypeTextString, str);
     }
@@ -3367,35 +3301,6 @@ namespace PeterO.Cbor {
       }
     }
 
-    private static CBORObject ConvertWithConverter(object obj) {
-#if DEBUG
-      if (obj == null) {
-        throw new ArgumentNullException(nameof(obj));
-      }
-#endif
-      Object type = obj.GetType();
-      ConverterInfo convinfo = null;
-      lock (ValueConverters) {
-        if (ValueConverters.Count == 0) {
-          CBORTag0.AddConverter();
-          CBORTag37.AddConverter();
-          CBORTag32.AddConverter();
-        }
-        if (ValueConverters.ContainsKey(type)) {
-          convinfo = ValueConverters[type];
-        } else {
-          return null;
-        }
-      }
-      if (convinfo == null) {
-        return null;
-      }
-      return (CBORObject)PropertyMap.InvokeOneArgumentMethod(
-        convinfo.ToObject,
-        convinfo.Converter,
-        obj);
-    }
-
     private static string ExtendedToString(EFloat ef) {
       if (ef.IsFinite && (ef.Exponent.CompareTo((EInteger)2500) > 0 ||
                     ef.Exponent.CompareTo((EInteger)(-2500)) < 0)) {
@@ -3406,9 +3311,6 @@ namespace PeterO.Cbor {
       return ef.ToString();
     }
 
-    private static ICBORTag FindTagConverter(int tag) {
-      return FindTagConverter((EInteger)tag);
-    }
 
     private static byte[] GetOptimizedBytesIfShortAscii(
       string str,
@@ -3684,11 +3586,6 @@ namespace PeterO.Cbor {
       return stack;
     }
 
-    private static bool TagHandlersEmpty() {
-      lock (ValueTagHandlers) {
-        return ValueTagHandlers.Count == 0;
-      }
-    }
 
     private static int TagsCompare(EInteger[] tagsA, EInteger[] tagsB) {
       if (tagsA == null) {
@@ -3949,36 +3846,6 @@ namespace PeterO.Cbor {
           s.Write(arrayToWrite, 0, 9);
         }
         curobject = (CBORObject)curobject.itemValue;
-      }
-    }
-
-    private sealed class ConverterInfo {
-      private object toObject;
-
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.ConverterInfo.ToObject"]/*'/>
-      public object ToObject {
-        get {
-          return this.toObject;
-        }
-
-        set {
-          this.toObject = value;
-        }
-      }
-
-      private object converter;
-
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.ConverterInfo.Converter"]/*'/>
-      public object Converter {
-        get {
-          return this.converter;
-        }
-
-        set {
-          this.converter = value;
-        }
       }
     }
   }

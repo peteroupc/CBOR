@@ -194,16 +194,6 @@ namespace Test {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      EInteger eintNull = null;
-      try {
-        CBORObject.AddTagHandler(eintNull, null);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
       try {
         CBORObject.True.Abs();
         Assert.Fail("Should have failed");

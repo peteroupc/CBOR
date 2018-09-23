@@ -190,26 +190,27 @@ namespace PeterO.Cbor {
  int dimension,
  CBORObject obj,
  PODOptions options,
+ CBORTypeMapper mapper,
  int depth) {
       int dimLength = arr.GetLength(dimension);
       int rank = index.Length;
       for (var i = 0; i < dimLength; ++i) {
         if (dimension + 1 == rank) {
           index[dimension] = i;
-          obj.Add(CBORObject.FromObject(arr.GetValue(index), options, depth + 1));
+          obj.Add(CBORObject.FromObject(arr.GetValue(index), options, mapper, depth + 1));
         } else {
           CBORObject child = CBORObject.NewArray();
           for (int j = dimension + 1; j < dimLength; ++j) {
             index[j] = 0;
           }
-        FromArrayRecursive(arr, index, dimension + 1, child, options,
+        FromArrayRecursive(arr, index, dimension + 1, child, options,mapper,
             depth + 1);
           obj.Add(child);
         }
       }
     }
 
-    public static CBORObject FromArray(Object arrObj, PODOptions options,
+    public static CBORObject FromArray(Object arrObj, PODOptions options,CBORTypeMapper mapper,
       int depth) {
       var arr = (Array)arrObj;
       int rank = arr.Rank;
@@ -222,13 +223,13 @@ namespace PeterO.Cbor {
         obj = CBORObject.NewArray();
         int len = arr.GetLength(0);
         for (var i = 0; i < len; ++i) {
-          obj.Add(CBORObject.FromObject(arr.GetValue(i), options, depth + 1));
+          obj.Add(CBORObject.FromObject(arr.GetValue(i), options, mapper,depth + 1));
         }
         return obj;
       }
       var index = new int[rank];
       obj = CBORObject.NewArray();
-      FromArrayRecursive(arr, index, 0, obj, options, depth);
+      FromArrayRecursive(arr, index, 0, obj, options, mapper,depth);
       return obj;
     }
 
@@ -290,10 +291,10 @@ namespace PeterO.Cbor {
 
     public static object TypeToObject(CBORObject objThis, Type t) {
       if (t.Equals(typeof(DateTime))) {
-        return new CBORTag0().FromCBORObject(objThis);
+        return new CBORDateConverter().FromCBORObject(objThis);
       }
       if (t.Equals(typeof(Guid))) {
-        return new CBORTag37().FromCBORObject(objThis);
+        return new CBORUuidConverter().FromCBORObject(objThis);
       }
       if (t.Equals(typeof(int))) {
         return objThis.AsInt32();
