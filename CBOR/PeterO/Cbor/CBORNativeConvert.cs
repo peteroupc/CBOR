@@ -10,8 +10,7 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-  internal static class CBORNativeConvert
-  {
+  internal static class CBORNativeConvert {
     private static CBORObject FromObjectAndInnerTags(
   object objectValue,
   CBORObject objectWithTags) {
@@ -30,15 +29,27 @@ namespace PeterO.Cbor {
       return newObject;
     }
 
-    public static CBORObject ConvertToNativeObject(CBORObject o){
-     if(o.HasMostOuterTag(2))return ConvertToBigNum(o,false);
-     if(o.HasMostOuterTag(3))return ConvertToBigNum(o,false);
-     if(o.HasMostOuterTag(4))return ConvertToDecimalFrac(o,true,false);
-     if(o.HasMostOuterTag(5))return ConvertToDecimalFrac(o,false,false);
-     if(o.HasMostOuterTag(30))return ConvertToRationalNumber(o);
-     if(o.HasMostOuterTag(264))return ConvertToDecimalFrac(o,true,true);
-     if(o.HasMostOuterTag(265))return ConvertToDecimalFrac(o,false,true);
-     return o;
+    public static CBORObject ConvertToNativeObject(CBORObject o) {
+     if (o.HasMostOuterTag(2)) {
+ return ConvertToBigNum(o, false);
+}
+     if (o.HasMostOuterTag(3)) {
+ return ConvertToBigNum(o, false);
+}
+     if (o.HasMostOuterTag(4)) {
+ return ConvertToDecimalFrac(o, true, false);
+}
+     if (o.HasMostOuterTag(5)) {
+ return ConvertToDecimalFrac(o, false, false);
+}
+     if (o.HasMostOuterTag(30)) {
+ return ConvertToRationalNumber(o);
+}
+     if (o.HasMostOuterTag(264)) {
+ return ConvertToDecimalFrac(o, true, true);
+}
+  return o.HasMostOuterTag(265) ? ConvertToDecimalFrac(o, false, true) :
+       o;
     }
 
     private static CBORObject ConvertToDecimalFrac(

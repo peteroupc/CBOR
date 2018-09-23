@@ -1,4 +1,4 @@
-﻿/*
+/*
 Written by Peter O. in 2013.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -503,7 +503,6 @@ namespace PeterO.Cbor {
       }
     }
 
-
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Addition(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]/*'/>
     public static CBORObject Addition(CBORObject first, CBORObject second) {
@@ -742,6 +741,7 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Char)"]/*'/>
     public static CBORObject FromObject(char value) {
+      // TODO: Consider changing this method's behavior
       char[] valueChar = { value };
       return FromObject(new String(valueChar));
     }
@@ -835,12 +835,14 @@ namespace PeterO.Cbor {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Object,PeterO.Cbor.PODOptions)"]/*'/>
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Object,PeterO.Cbor.CBORTypeMapper,PeterO.Cbor.PODOptions)"]/*'/>
     public static CBORObject FromObject(
   object obj,
   CBORTypeMapper mapper,
   PODOptions options) {
-      // ArgumentAssert.NotNull(mapper);
+      if (mapper == null) {
+  throw new ArgumentNullException(nameof(mapper));
+}
       return FromObject(obj, options, mapper, 0);
     }
 
@@ -848,8 +850,7 @@ namespace PeterO.Cbor {
   object obj,
   PODOptions options,
   CBORTypeMapper mapper,
-  int depth
-  ) {
+  int depth) {
       if (options == null) {
         throw new ArgumentNullException(nameof(options));
       }
@@ -918,6 +919,8 @@ namespace PeterO.Cbor {
         return FromObject((decimal)obj);
       }
       if (obj is Enum) {
+        // TODO: Consider using consistent behavior in .NET
+        // and Java
         return FromObject(PropertyMap.EnumToObject((Enum)obj));
       }
       if (obj is double) {
@@ -936,9 +939,16 @@ namespace PeterO.Cbor {
         foreach (object keyPair in (System.Collections.IDictionary)objdic) {
           System.Collections.DictionaryEntry
             kvp = (System.Collections.DictionaryEntry)keyPair;
-        CBORObject objKey = CBORObject.FromObject(kvp.Key, options, mapper, depth +
-            1);
-          objret[objKey] = CBORObject.FromObject(kvp.Value, options, mapper, depth + 1);
+    CBORObject objKey = CBORObject.FromObject(
+  kvp.Key,
+  options,
+  mapper,
+  depth + 1);
+ objret[objKey] = CBORObject.FromObject(
+  kvp.Value,
+  options,
+  mapper,
+  depth + 1);
         }
         return objret;
       }
@@ -948,7 +958,12 @@ namespace PeterO.Cbor {
       if (obj is System.Collections.IEnumerable) {
         objret = CBORObject.NewArray();
         foreach (object element in (System.Collections.IEnumerable)obj) {
-          objret.Add(CBORObject.FromObject(element, options, mapper, depth + 1));
+        objret.Add(
+  CBORObject.FromObject(
+  element,
+  options,
+  mapper,
+  depth + 1));
         }
         return objret;
       }
@@ -958,13 +973,13 @@ namespace PeterO.Cbor {
           return objret;
         }
       }
-      if(obj is DateTime){
+      if (obj is DateTime) {
         return new CBORDateConverter().ToCBORObject((DateTime)obj);
       }
-      if(obj is Uri){
+      if (obj is Uri) {
         return new CBORUriConverter().ToCBORObject((Uri)obj);
       }
-      if(obj is Guid){
+      if (obj is Guid) {
         return new CBORUuidConverter().ToCBORObject((Guid)obj);
       }
       objret = CBORObject.NewMap();
@@ -973,7 +988,11 @@ namespace PeterO.Cbor {
                  obj,
                  options.RemoveIsPrefix,
                  options.UseCamelCase)) {
-        objret[key.Key] = CBORObject.FromObject(key.Value, options, mapper, depth + 1);
+objret[key.Key] = CBORObject.FromObject(
+  key.Value,
+  options,
+  mapper,
+  depth + 1);
       }
       return objret;
     }
@@ -1027,7 +1046,7 @@ namespace PeterO.Cbor {
       CBORObject c = FromObject(valueObValue);
       c = new CBORObject(c, smallTag, 0);
       if (smallTag <= 264) {
-       c=CBORNativeConvert.ConvertToNativeObject(c);
+       c = CBORNativeConvert.ConvertToNativeObject(c);
       }
       return c;
     }
@@ -1426,6 +1445,7 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Char,System.IO.Stream)"]/*'/>
     public static void Write(char value, Stream stream) {
+      // TODO: Consider changing this method's behavior
       if (value >= 0xd800 && value < 0xe000) {
         throw new ArgumentException("Value is a surrogate code point.");
       }
@@ -3173,18 +3193,6 @@ namespace PeterO.Cbor {
     internal IDictionary<CBORObject, CBORObject> AsMap() {
       return (IDictionary<CBORObject, CBORObject>)this.ThisItem;
     }
-    /*
-    internal void Redefine(CBORObject cbor) {
-#if DEBUG
-      if (cbor == null) {
-        throw new ArgumentNullException(nameof(cbor));
-      }
-#endif
-      this.itemtypeValue = cbor.itemtypeValue;
-      this.tagLow = cbor.tagLow;
-      this.tagHigh = cbor.tagHigh;
-      this.itemValue = cbor.itemValue;
-    } */
 
     private static bool BigIntFits(EInteger bigint) {
       return bigint.GetSignedBitLength() <= 64;
@@ -3310,7 +3318,6 @@ namespace PeterO.Cbor {
       }
       return ef.ToString();
     }
-
 
     private static byte[] GetOptimizedBytesIfShortAscii(
       string str,
@@ -3585,7 +3592,6 @@ namespace PeterO.Cbor {
       stack.Add(child);
       return stack;
     }
-
 
     private static int TagsCompare(EInteger[] tagsA, EInteger[] tagsB) {
       if (tagsA == null) {

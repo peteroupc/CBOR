@@ -1,12 +1,25 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+
 namespace PeterO.Cbor {
-  public class CBORTypeMapper {
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.Cbor.CBORTypeMapper"]/*'/>
+  public sealed class CBORTypeMapper {
     private readonly IList<string> typePrefixes;
     private readonly IList<string> typeNames;
     private readonly IDictionary<Object, ConverterInfo>
-      converters = new Dictionary<Object, ConverterInfo>();
+      converters;
 
+    /// <summary>Initializes a new instance of the CBORTypeMapper
+    /// class.</summary>
+    public CBORTypeMapper() {
+this.typePrefixes = new List<string>();
+this.typeNames = new List<string>();
+this.converters = new Dictionary<Object, ConverterInfo>();
+    }
+
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.AddConverter``1(System.Type,PeterO.Cbor.ICBORConverter{``0})"]/*'/>
     public void AddConverter<T>(Type type, ICBORConverter<T> converter) {
       if (type == null) {
         throw new ArgumentNullException(nameof(type));
@@ -14,7 +27,7 @@ namespace PeterO.Cbor {
       if (converter == null) {
         throw new ArgumentNullException(nameof(converter));
       }
-      ConverterInfo ci = new ConverterInfo();
+      var ci = new ConverterInfo();
       ci.Converter = converter;
       ci.ToObject = PropertyMap.FindOneArgumentMethod(
         converter,
@@ -24,14 +37,14 @@ namespace PeterO.Cbor {
         throw new ArgumentException(
           "Converter doesn't contain a proper ToCBORObject method");
       }
-      converters[type] = ci;
+      this.converters[type] = ci;
     }
 
     internal CBORObject ConvertWithConverter(object obj) {
       Object type = obj.GetType();
       ConverterInfo convinfo = null;
-        if (converters.ContainsKey(type)) {
-          convinfo = converters[type];
+        if (this.converters.ContainsKey(type)) {
+          convinfo = this.converters[type];
         } else {
           return null;
         }
@@ -44,13 +57,50 @@ namespace PeterO.Cbor {
         obj);
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <param name='typeName'>Not documented yet.</param>
+    /// <returns>A Boolean object.</returns>
+    public bool FilterTypeName(string typeName) {
+      if (String.IsNullOrEmpty(typeName)) {
+ return false;
+}
+      foreach (string prefix in this.typePrefixes) {
+   if (typeName.Length >= prefix.Length &&
+     typeName.Substring(0, prefix.Length).Equals(prefix)) {
+     return true;
+   }
+      }
+      foreach (string name in this.typeNames) {
+   if (typeName.Equals(name)) {
+     return true;
+   }
+      }
+      return false;
+    }
 
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.AddTypePrefix(System.String)"]/*'/>
     public CBORTypeMapper AddTypePrefix(string prefix) {
-      //ArgumentAssert.NotEmpty(prefix);
+      if (prefix == null) {
+  throw new ArgumentNullException(nameof(prefix));
+}
+if (prefix.Length == 0) {
+  throw new ArgumentException("prefix" + " is empty.");
+}
+typePrefixes.Add(prefix);
       return this;
     }
+
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.AddTypeName(System.String)"]/*'/>
     public CBORTypeMapper AddTypeName(string name) {
-      //ArgumentAssert.NotEmpty(name);
+      if (name == null) {
+  throw new ArgumentNullException(nameof(name));
+}
+if (name.Length == 0) {
+  throw new ArgumentException("name" + " is empty.");
+}
+typeNames.Add(name);
       return this;
     }
 

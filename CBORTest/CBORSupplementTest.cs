@@ -176,24 +176,7 @@ namespace Test {
       Assert.AreEqual(CBORObject.True, CBORObject.FromObject(true));
       Assert.AreEqual(CBORObject.False, CBORObject.FromObject(false));
       Assert.AreEqual(CBORObject.FromObject(8), CBORObject.FromObject((byte)8));
-      try {
-        CBORObject.AddConverter(null, new FakeConverter());
-        Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.AddConverter(typeof(String), new FakeConverter());
-        Assert.Fail("Should have failed");
-      } catch (ArgumentException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
+
       try {
         CBORObject.True.Abs();
         Assert.Fail("Should have failed");
@@ -1041,8 +1024,8 @@ Assert.AreEqual(objectTemp, objectTemp2);
       var m = new CPOD();
       m.Aa = "Test";
       CBORObject cbor = CBORObject.FromObject(m);
-      Assert.IsFalse(cbor.ContainsKey("bb"),cbor.ToString());
-      Assert.AreEqual("Test", cbor["aa"],cbor.ToString());
+      Assert.IsFalse(cbor.ContainsKey("bb"), cbor.ToString());
+      Assert.AreEqual("Test", cbor["aa"], cbor.ToString());
     }
   }
 }

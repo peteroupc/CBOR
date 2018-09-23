@@ -335,7 +335,8 @@ namespace PeterO.Cbor {
             }
             ++this.depth;
             CBORObject o = this.ReadForFirstByte(
-  headByte,null);
+  headByte,
+  null);
             --this.depth;
             cbor.Add(o);
             ++vtindex;
@@ -437,12 +438,11 @@ namespace PeterO.Cbor {
           this.hasSharableObjects = true;
        break;
           }
-
-        } 
+        }
         ++this.depth;
         CBORObject o = haveFirstByte ? this.ReadForFirstByte(
-  newFirstByte,null) :
-        this.Read(null);
+  newFirstByte,
+  null) : this.Read(null);
         --this.depth;
         if (hasBigAdditional) {
           return CBORObject.FromObjectAndTag(o, bigintAdditional);

@@ -17,7 +17,6 @@ namespace PeterO.Cbor {
       return CBORUtilities.ToAtomDateTimeString(year[0], lesserFields);
     }
 
-
     public CBORObject ValidateObject(CBORObject obj) {
       if (obj.Type != CBORType.TextString) {
         throw new CBORException("Not a text string");

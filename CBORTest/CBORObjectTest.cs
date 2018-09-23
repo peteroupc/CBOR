@@ -4905,12 +4905,20 @@ a major version change.
         throw new InvalidOperationException(ex.ToString(), ex);
       }
     }
-
     public void TestWrite3() {
       EFloat ef = null;
       EDecimal ed = null;
       var fr = new RandomGenerator();
       try {
+for (var i = 0; i < 256; ++i) {
+ byte b=(byte)(i & 0xff);
+ using(var ms = new MemoryStream()) {
+  CBORObject.Write((byte)b, ms);
+  CBORObject cobj = CBORObject.DecodeFromBytes(b.ToArray());
+  Assert.AreEqual(i, cobj.AsInt32());
+ }
+}
+
         for (var i = 0; i < 50; ++i) {
           ef = RandomObjects.RandomEFloat(fr);
           if (!ef.IsNaN()) {

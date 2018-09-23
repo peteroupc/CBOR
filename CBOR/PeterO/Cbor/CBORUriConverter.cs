@@ -20,7 +20,6 @@ namespace PeterO.Cbor {
       return obj;
     }
 
-
     public CBORObject ToCBORObject(Uri uri) {
       if (uri == null) {
         throw new ArgumentNullException(nameof(uri));

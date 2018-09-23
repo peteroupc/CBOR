@@ -50,8 +50,6 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 
 ### Member Summary
 * <code>[Abs()](#Abs)</code> - Gets this object's absolute value.
-* <code>[AddConverter&lt;T&gt;(System.Type, PeterO.Cbor.ICBORConverter&lt;T&gt;)](#AddConverter_T_System_Type_PeterO_Cbor_ICBORConverter_T)</code> - Registers an object that converts objects of a given type to CBOR objects (called a CBOR converter).
-* <code>[AddTagHandler(PeterO.Numbers.EInteger, PeterO.Cbor.ICBORTag)](#AddTagHandler_PeterO_Numbers_EInteger_PeterO_Cbor_ICBORTag)</code> - Registers an object that validates CBOR objects with new tags.
 * <code>[Add(PeterO.Cbor.CBORObject)](#Add_PeterO_Cbor_CBORObject)</code> -  Adds a new object to the end of this array.
 * <code>[Add(object)](#Add_object)</code> -  Converts an object to a CBOR object and adds it to the end of this array.
 * <code>[Add(object, object)](#Add_object_object)</code> -  Adds a new key and its value to this CBOR map, or adds the value if the key doesn't exist.
@@ -112,7 +110,8 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[FromObject(int)](#FromObject_int)</code> - Generates a CBOR object from a 32-bit signed integer.
 * <code>[FromObject(long)](#FromObject_long)</code> - Generates a CBOR object from a 64-bit signed integer.
 * <code>[FromObject(object)](#FromObject_object)</code> - Generates a CBORObject from an arbitrary object.
-* <code>[FromObject(object, PeterO.Cbor.PODOptions)](#FromObject_object_PeterO_Cbor_PODOptions)</code> -  Generates a CBORObject from an arbitrary object, using the given options to control how certain objects are converted to CBOR objects.
+* <code>[FromObject(object, PeterO.Cbor.CBORTypeMapper, PeterO.Cbor.PODOptions)](#FromObject_object_PeterO_Cbor_CBORTypeMapper_PeterO_Cbor_PODOptions)</code> -  Generates a CBORObject from an arbitrary object, using the given options to control how certain objects are converted to CBOR objects.
+* <code>[FromObject(object, PeterO.Cbor.PODOptions)](#FromObject_object_PeterO_Cbor_PODOptions)</code> - Generates a CBORObject from an arbitrary object.
 * <code>[FromObject(sbyte)](#FromObject_sbyte)</code> - Converts a signed 8-bit integer to a CBOR object.
 * <code>[FromObject(short)](#FromObject_short)</code> - Generates a CBOR object from a 16-bit signed integer.
 * <code>[FromObject(string)](#FromObject_string)</code> - Generates a CBOR object from a text string.
@@ -590,34 +589,6 @@ This instance.
  * System.InvalidOperationException:
 This object is not an array.
 
-<a id="AddConverter_T_System_Type_PeterO_Cbor_ICBORConverter_T"></a>
-### AddConverter
-
-    public static void AddConverter<T>(
-        System.Type type,
-        PeterO.Cbor.ICBORConverter<T> converter);
-
-Registers an object that converts objects of a given type to CBOR objects (called a CBOR converter).
-
-<b>Parameters:</b>
-
- * <i>type</i>: A Type object specifying the type that the converter converts to CBOR objects.
-
- * <i>converter</i>: The parameter  <i>converter</i>
-is an ICBORConverter object.
-
- * &lt;T&gt;: Must be the same as the "type" parameter.
-
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter <i>type</i>
- or  <i>converter</i>
- is null.
-
- * System.ArgumentException:
-"Converter doesn't contain a proper ToCBORObject method".
-
 <a id="Addition_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject"></a>
 ### Addition
 
@@ -643,33 +614,6 @@ A CBORObject object.
 
  * System.ArgumentException:
 Either or both operands are not numbers (as opposed to Not-a-Number, NaN).
-
-<a id="AddTagHandler_PeterO_Numbers_EInteger_PeterO_Cbor_ICBORTag"></a>
-### AddTagHandler
-
-    public static void AddTagHandler(
-        PeterO.Numbers.EInteger bigintTag,
-        PeterO.Cbor.ICBORTag handler);
-
-Registers an object that validates CBOR objects with new tags.
-
-<b>Parameters:</b>
-
- * <i>bigintTag</i>: An arbitrary-precision integer.
-
- * <i>handler</i>: The parameter  <i>handler</i>
- is an ICBORTag object.
-
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter <i>bigintTag</i>
- or  <i>handler</i>
- is null.
-
- * System.ArgumentException:
-The parameter <i>bigintTag</i>
- is less than 0 or greater than (2^64-1).
 
 <a id="AsBoolean"></a>
 ### AsBoolean
@@ -1550,7 +1494,7 @@ A CBOR array object where each element of the given array is copied to a new arr
     public static PeterO.Cbor.CBORObject FromObject(
         object obj);
 
-Generates a CBORObject from an arbitrary object. See the overload of this method that takes a PODOptions argument.
+Generates a CBORObject from an arbitrary object. See the overload of this method that takes CBORTypeMapper and PODOptions arguments.
 
 <b>Parameters:</b>
 
@@ -1561,6 +1505,77 @@ is an arbitrary object.
 
 A CBOR object corresponding to the given object. Returns CBORObject.Null if the object is null.
 
+<a id="FromObject_object_PeterO_Cbor_CBORTypeMapper_PeterO_Cbor_PODOptions"></a>
+### FromObject
+
+    public static PeterO.Cbor.CBORObject FromObject(
+        object obj,
+        PeterO.Cbor.CBORTypeMapper mapper,
+        PeterO.Cbor.PODOptions options);
+
+Generates a CBORObject from an arbitrary object, using the given options to control how certain objects are converted to CBOR objects. The following types are specially handled by this method:
+
+ *  `null`  is converted to  `CBORObject.Null` .
+
+ * A  `char`  is TBD.
+
+ * A  `bool`  ( `boolean`  in Java) is converted to  `CBORObject.True`  or  `CBORObject.False` .
+
+ * A  `byte`  is converted to a CBOR integer from 0 through 255.
+
+ * A primitive integer type ( `int` ,  `short` ,  `long` , as well as  `sbyte` ,  `ushort` ,  `uint` , and  `ulong`  in .NET) is converted to the corresponding CBOR integer.
+
+ * A primitive floating-point type ( `float` ,  `double` , as well as  `decimal`  in .NET) is converted to the corresponding CBOR number.
+
+ * A  `String`  is converted to a CBOR text string. To create a CBOR byte string object from  `String` , see the example given in**PeterO.Cbor.CBORObject.FromObject(System.Byte[])**.
+
+ * A number of type  `EDecimal` , `EFloat` ,  `EInteger` , and  `ERational`  in the new<a href="https://www.nuget.org/packages/PeterO.Numbers"> `PeterO.Numbers` </a>library (in .NET) or the<a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers` </a>artifact (in Java) is converted to the corresponding CBOR number.
+
+ * An array is converted to a CBOR array. In the .NET version, a multidimensional array is converted to an array of arrays.
+
+ * An object implementing IDictionary (Map in Java) is converted to a CBOR map containing the keys and values enumerated.
+
+ * An object implementing IEnumerable (Iterable in Java) is converted to a CBOR array containing the items enumerated.
+
+ * An enumeration  `Enum`  object is converted to its integer value in the .NET version, or the result of its "getName" method in the Java version. (TBD)
+
+ * If the object is of a type corresponding to a type converter mentioned in the  <i>mapper</i>
+ parameter, that converter will be used to convert the object to a CBOR object.
+
+ * An object of type  `DateTime` ,  `Uri` , or  `Guid`  ( `Date` ,  `URI` , or  `UUID` , respectively, in Java) will be converted to a tagged CBOR object of the appropriate kind. (TBD: Decide whether a custom CBORTypeMapper can override these behaviors.)
+
+In the .NET version, if the object is a type not specially handled above, returns a CBOR map with the values of each of its public, nonstatic properties (limited to read/write properties except in the case of a compiler-generated type). Properties are converted to their camel-case names (meaning if a name starts with A to Z, that letter is lower-cased). If the property name begins with the word "Is" followed by an upper-case A to Z, the "Is" prefix is deleted from the name. (Passing the appropriate "options" parameter can be done to control whether the "Is" prefix is removed and whether a camel-case conversion happens.) Also, .NET  `Enum`  objects will be converted to their integer values, and .
+
+In the Java version, if the object is a type not specially handled above, this method checks the CBOR object for public, nonstatic methods starting with the word "get" or "is" (either word followed by an upper-case A to Z) that take no parameters, and returns a CBOR map with one entry for each such method found. For each method found, the starting word "get" or "is" is deleted from its name, and the name is converted to camel case (meaning if a name starts with A to Z, that letter is lower-cased). (Passing the appropriate "options" parameter can be done to control whether the "is" prefix is removed and whether a camel-case conversion happens.) Also, Java  `Enum`  objects will be converted to the result of their  `name`  method.
+
+If the input is a byte array, the byte array is copied to a new byte array. (This method can't be used to decode CBOR data from a byte array; for that, use the DecodeFromBytes method instead.).
+
+REMARK: The behavior of this method is likely to change in the next major version (4.0). There are certain inconsistencies between the ToObject method and the FromObject method as well as between the .NET and Java versions of FromObject. For one thing, DateTime/Date objects are converted differently between the two versions -- either as CBOR maps with their "get" properties (Java) or as tag-0 strings (.NET) -- this difference has to remain for backward compatibility with version 3.0. For another thing, the treatment of properties/getters starting with "Is" is subtly inconsistent between the .NET and Java versions of FromObject, especially when using certain PODOptions. A certain consistency between .NET and Java and between FromObject and ToObject are sought for version 4.0. It is also hoped that--
+
+ * the ToObject method will support deserializing to objects consisting of fields and not getters ("getX()" methods), both in .NET and in Java, and
+
+ * both FromObject and ToObject will be better designed, in version 4.0, so that backward-compatible improvements are easier to make.
+
+<b>Parameters:</b>
+
+ * <i>obj</i>: The parameter  <i>obj</i>
+ is an arbitrary object.
+
+ * <i>mapper</i>: The parameter  <i>mapper</i>
+ is not documented yet.
+
+ * <i>options</i>: An object containing options to control how certain objects are converted to CBOR objects.
+
+<b>Return Value:</b>
+
+A CBOR object corresponding to the given object. Returns CBORObject.Null if the object is null.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter <i>options</i>
+ is null.
+
 <a id="FromObject_object_PeterO_Cbor_PODOptions"></a>
 ### FromObject
 
@@ -1568,21 +1583,7 @@ A CBOR object corresponding to the given object. Returns CBORObject.Null if the 
         object obj,
         PeterO.Cbor.PODOptions options);
 
-Generates a CBORObject from an arbitrary object, using the given options to control how certain objects are converted to CBOR objects. The following types are specially handled by this method: null; primitive types; string; CBORObject; the  `EDecimal` , `EFloat` ,  `EInteger` , and  `ERational`  classes in the new<a href="https://www.nuget.org/packages/PeterO.Numbers"> `PeterO.Numbers` </a>library (in .NET) or the<a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers` </a>artifact (in Java); the legacy  `ExtendedDecimal` , `ExtendedFloat` ,  `BigInteger` , and `ExtendedRational`  classes in this library; arrays; enumerations (  `Enum`  objects); and maps. (See also the other overloads to the FromObject method.)
-
-In the .NET version, if the object is a type not specially handled by this method, returns a CBOR map with the values of each of its public, nonstatic properties (limited to read/write properties except in the case of a compiler-generated type). Properties are converted to their camel-case names (meaning if a name starts with A to Z, that letter is lower-cased). If the property name begins with the word "Is" followed by an upper-case A to Z, the "Is" prefix is deleted from the name. (Passing the appropriate "options" parameter can be done to control whether the "Is" prefix is removed and whether a camel-case conversion happens.) Also, .NET  `Enum`  objects will be converted to their integer values, and a multidimensional array is converted to an array of arrays.
-
-In the Java version, if the object is a type not specially handled by this method, this method checks the CBOR object for public, nonstatic methods starting with the word "get" or "is" (either word followed by an upper-case A to Z) that take no parameters, and returns a CBOR map with one entry for each such method found. For each method found, the starting word "get" or "is" is deleted from its name, and the name is converted to camel case (meaning if a name starts with A to Z, that letter is lower-cased). (Passing the appropriate "options" parameter can be done to control whether the "is" prefix is removed and whether a camel-case conversion happens.) Also, Java `Enum`  objects will be converted to the result of their `name`  method.
-
-If the input is a byte array, the byte array is copied to a new byte array. (This method can't be used to decode CBOR data from a byte array; for that, use the DecodeFromBytes method instead.).
-
-If the input is a text string, a CBOR text string object will be created. To create a CBOR byte string object from a text string, see the example given in**PeterO.Cbor.CBORObject.FromObject(System.Byte[])**.
-
-REMARK: The behavior of this method is likely to change in the next major version (4.0). There are certain inconsistencies between the ToObject method and the FromObject method as well as between the .NET and Java versions of FromObject. For one thing, DateTime/Date objects are converted differently between the two versions -- either as CBOR maps with their "get" properties (Java) or as tag-0 strings (.NET) -- this difference has to remain for backward compatibility with version 3.0. For another thing, the treatment of properties/getters starting with "Is" is subtly inconsistent between the .NET and Java versions of FromObject, especially when using certain PODOptions. A certain consistency between .NET and Java and between FromObject and ToObject are sought for version 4.0. It is also hoped that--
-
- * the ToObject method will support deserializing to objects consisting of fields and not getters ("getX()" methods), both in .NET and in Java, and
-
- * both FromObject and ToObject will be better designed, in version 4.0, so that backward-compatible improvements are easier to make.
+Generates a CBORObject from an arbitrary object. See the overload of this method that takes CBORTypeMapper and PODOptions arguments.
 
 <b>Parameters:</b>
 
@@ -2662,9 +2663,9 @@ In the .NET version, if the type "T" is `DateTime` and this CBOR object is a tex
 
 If the type "T" is Boolean, returns the result of the IsTrue method.
 
-In the .NET version, if the object is a CBOR map and the type "T" is not specially handled by this method, an object of the given type is created, then this method checks the CBOR object for public, nonstatic writable properties. For each method found, if its name (with the "Is" prefix deleted and then converted to camel case) matches the name of a key in this CBOR map, that property's setter is invoked and the corresponding value is passed to that method.
+In the .NET version, if the object is a CBOR map, if the type "T" is not specially handled by this method, and if that type has a zero-argument constructor (default or otherwise), an object of the given type is created, then this method checks the CBOR object for public, nonstatic writable properties. For each property found, if its name (with the "Is" prefix deleted and then converted to camel case) matches the name of a key in this CBOR map, and if that property has a getter, that property's setter is invoked and the corresponding value is passed to that method.
 
-In the Java version, if the object is a CBOR map and the type "T" is not specially handled by this method, an object of the given type is created, then this method checks the CBOR object for public, nonstatic methods starting with the word "set" (followed by an upper-case A to Z) that take a single parameter. For each method found, if its name (with the starting word "set" deleted and then converted to camel case) matches the name of a key in this CBOR map, that method is invoked and the corresponding value is passed to that method.
+In the Java version, if the object is a CBOR map, if the type "T" is not specially handled by this method, and if that type has a zero-argument constructor (default or otherwise), an object of the given type is created, then this method checks the CBOR object for public, nonstatic methods starting with the word "set" (followed by an upper-case A to Z) that take a single parameter. For each method found, if its name (with the starting word "set" deleted and then converted to camel case) matches the name of a key in this CBOR map, and if it has a corresponding getter method that takes no parameters, that method is invoked and the corresponding value is passed to that method.
 
 REMARK: The behavior of this method is likely to change in the final version 3.4 of this library as well as in the next major version (4.0). There are certain inconsistencies between the ToObject method and the FromObject method as well as between the .NET and Java versions of FromObject. For one thing, DateTime/Date objects are converted differently between the two versions -- either as CBOR maps with their "get" properties (Java) or as tag-0 strings (.NET) -- this difference has to remain for backward compatibility with version 3.0. For another thing, the treatment of properties/getters starting with "Is" is subtly inconsistent between the .NET and Java versions of FromObject, especially when using certain PODOptions. A certain consistency between .NET and Java and between FromObject and ToObject are sought for version 4.0. It is also hoped that--
 

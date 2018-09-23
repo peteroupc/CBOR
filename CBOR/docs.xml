@@ -667,16 +667,27 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AddConverter``1(System.Type,PeterO.Cbor.ICBORConverter{``0})">
-
-            <summary>Registers an object that converts objects of a given type
-             to CBOR objects (called a CBOR converter).</summary><param name='type'>A Type object specifying the type that the
-             converter converts to CBOR objects.</param><param name='converter'>The parameter <paramref name='converter'/>
-             is an ICBORConverter object.</param><typeparam name='T'>Must be the same as the "type"
-             parameter.</typeparam><exception cref='T:System.ArgumentNullException'>The parameter
-             <paramref name='type'/> or <paramref name='converter'/> is
-             null.</exception><exception cref='T:System.ArgumentException'>"Converter doesn't contain a
-             proper ToCBORObject method".</exception>
-
+<summary>Registers an object that converts objects of a given type to CBOR objects
+      (called a CBOR converter).
+    </summary>
+    <param name='type'>A Type object specifying the type that the converter converts to CBOR
+      objects.
+    </param>
+    <param name='converter'>The parameter
+      <paramref name='converter'/>
+       is an ICBORConverter object.
+    </param>
+    <typeparam name='T'>
+       Must be the same as the "type" parameter.
+    </typeparam>
+    <exception cref='T:System.ArgumentNullException'>The parameter
+      <paramref name='type'/>
+       or
+      <paramref name='converter'/>
+       is null.
+    </exception>
+    <exception cref='T:System.ArgumentException'>"Converter doesn't contain a proper ToCBORObject method".
+    </exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AddTagHandler(PeterO.BigInteger,PeterO.Cbor.ICBORTag)">
 <summary>Registers an object that validates CBOR objects with new tags.
@@ -699,15 +710,24 @@
     </exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AddTagHandler(PeterO.Numbers.EInteger,PeterO.Cbor.ICBORTag)">
-
-            <summary>Registers an object that validates CBOR objects with new
-            tags.</summary><param name='bigintTag'>An arbitrary-precision integer.</param><param name='handler'>The parameter <paramref name='handler'/> is
-            an ICBORTag object.</param><exception cref='T:System.ArgumentNullException'>The parameter
-            <paramref name='bigintTag'/> or <paramref name='handler'/> is
-            null.</exception><exception cref='T:System.ArgumentException'>The parameter
-            <paramref name='bigintTag'/> is less than 0 or greater than
-            (2^64-1).</exception>
-
+<summary>Registers an object that validates CBOR objects with new tags.
+    </summary>
+    <param name='bigintTag'>An arbitrary-precision integer.
+    </param>
+    <param name='handler'>The parameter
+      <paramref name='handler'/>
+       is an ICBORTag object.
+    </param>
+    <exception cref='T:System.ArgumentNullException'>The parameter
+      <paramref name='bigintTag'/>
+       or
+      <paramref name='handler'/>
+       is null.
+    </exception>
+    <exception cref='T:System.ArgumentException'>The parameter
+      <paramref name='bigintTag'/>
+       is less than 0 or greater than (2^64-1).
+    </exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Addition(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
 
@@ -1107,11 +1127,10 @@
 
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.ConverterInfo.Converter">
-
-            <summary>Gets or sets the ICBORConverter object.
-    </summary><value>The ICBORConverter object.
+<summary>Gets or sets the ICBORConverter object.
+    </summary>
+    <value>The ICBORConverter object.
     </value>
-
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.ConverterInfo.ToObject">
 <summary>Gets or sets the converter's ToCBORObject method.
@@ -1266,8 +1285,7 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromJSONString(System.String)">
 
-            <summary>
-            <para>Generates a CBOR object from a text string in JavaScript
+            <summary><para>Generates a CBOR object from a text string in JavaScript
             Object Notation (JSON) format.</para>
             <para>If a JSON object has duplicate keys, a CBORException is thrown.  This is a change in version 4.0.</para></summary><param name='str'>A string in JSON format. The entire string must
             contain a single JSON object and not multiple objects. The string
@@ -1502,7 +1520,7 @@
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Object)">
 
             <summary>Generates a CBORObject from an arbitrary object. See the overload of this
-      method that takes a PODOptions argument.
+      method that takes CBORTypeMapper and PODOptions arguments.
     </summary><param name='obj'>The parameter
       <paramref name='obj'/>
        is an arbitrary object.
@@ -1511,57 +1529,93 @@
     </returns>
 
 </doc>
-<doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Object,PeterO.Cbor.PODOptions)">
+<doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Object,PeterO.Cbor.CBORTypeMapper,PeterO.Cbor.PODOptions)">
 
             <summary><para>Generates a CBORObject from an arbitrary object, using the
-             given options to control how certain objects are converted to CBOR
-             objects. The following types are specially handled by this method:
-             null; primitive types; string; CBORObject; the <c>EDecimal</c>,
-             <c>EFloat</c>, <c>EInteger</c>, and <c>ERational</c> classes in
-             the new
-             <a href='https://www.nuget.org/packages/PeterO.Numbers'><c>PeterO.Numbers</c></a>
-             library (in .NET) or the
-             <a href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c></a>
-             artifact (in Java); the legacy <c>ExtendedDecimal</c>,
-             <c>ExtendedFloat</c>, <c>BigInteger</c>, and
-             <c>ExtendedRational</c> classes in this library; arrays;
-             enumerations ( <c>Enum</c> objects); and maps. (See also the other
-             overloads to the FromObject method.)</para>
-             <para>In the .NET version, if the object is a type not specially
-             handled by this method, returns a CBOR map with the values of each
-             of its public, nonstatic properties (limited to read/write properties except
-             in the case of a
-             compiler-generated type). Properties are converted to their
-             camel-case names (meaning if a name starts with A to Z, that letter
-             is lower-cased). If the property name begins with the word "Is"
-             followed by an upper-case A to Z, the "Is" prefix is deleted from
-             the name. (Passing the appropriate "options" parameter can be done
-             to control whether the "Is" prefix is removed and whether a
-             camel-case conversion happens.) Also, .NET <c>Enum</c> objects will
-             be converted to their integer values, and a multidimensional array
-             is converted to an array of arrays.</para>
-             <para>In the Java version, if the object is a type not specially
-             handled by this method, this method checks the CBOR object for
-             public, nonstatic methods starting with the word "get" or "is" (either word followed
-             by an upper-case A to Z) that take no parameters, and returns a
-             CBOR map with one entry for each such method found. For each method
-             found, the starting word "get" or "is" is deleted from its name,
-             and the name is converted to camel case (meaning if a name starts
-             with A to Z, that letter is lower-cased). (Passing the appropriate
-             "options" parameter can be done to control whether the "is" prefix
-             is removed and whether a camel-case conversion happens.) Also, Java
-             <c>Enum</c> objects will be converted to the result of their
-             <c>name</c> method.</para>
-             <para>If the input is a byte array, the byte array is copied to a
-             new byte array. (This method can't be used to decode CBOR data from
-             a byte array; for that, use the DecodeFromBytes method
-             instead.).</para>
+            given options to control how certain objects are converted to CBOR
+            objects. The following types are specially handled by this method:</para><list>
+<item><c>null</c> is converted to <c>CBORObject.Null</c>.</item>
+<item>A <c>char</c> is TBD.</item>
+<item>A <c>bool</c> (<c>boolean</c> in Java) is converted to <c>CBORObject.True</c> or <c>CBORObject.False</c>.</item>
+<item>A <c>byte</c> is converted to a CBOR integer from 0 through 255.</item>
+<item>A primitive integer type (<c>int</c>, <c>short</c>, <c>long</c>, as well as <c>sbyte</c>, <c>ushort</c>, <c>uint</c>, and <c>ulong</c> in .NET) is converted to the corresponding CBOR integer.</item>
+<item>A primitive floating-point type (<c>float</c>, <c>double</c>, as well as <c>decimal</c> in .NET) is converted to the corresponding CBOR number.</item>
+<item>A <c>String</c> is converted to a CBOR text string.  To create a CBOR byte string object from <c>String</c>,
+            see the example given in
+            <see cref='M:PeterO.Cbor.CBORObject.FromObject(System.Byte[])'/>
+            .</item>
+<item>A number of type <c>EDecimal</c>,
+            <c>EFloat</c>, <c>EInteger</c>, and <c>ERational</c> in
+            the new
+            <a href='https://www.nuget.org/packages/PeterO.Numbers'><c>PeterO.Numbers</c></a>
+            library (in .NET) or the
+            <a href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c></a>
+            artifact (in Java) is converted to the corresponding CBOR number.</item>
+<item>An array is converted to a CBOR array.  In the .NET version, a multidimensional array is converted to an
+            array of arrays.</item>
+<item>An object implementing IDictionary (Map in Java) is converted to a CBOR map containing the keys and values enumerated.</item>
+<item>An object implementing IEnumerable (Iterable in Java) is converted to a CBOR array containing the items enumerated.</item>
+<item>An enumeration <c>Enum</c> object is converted to its integer value in the .NET version, or the result of its "getName" method in the Java version. (TBD)</item>
+<item>If the object is of a type corresponding to a type converter mentioned in the <paramref name='mapper'/> parameter, that converter will be used to convert the object to a CBOR object.</item>
+<item>An object of type <c>DateTime</c>, <c>Uri</c>, or <c>Guid</c> (<c>Date</c>, <c>URI</c>, or <c>UUID</c>, respectively, in Java) will be converted to a tagged CBOR object of the appropriate kind. (TBD: Decide whether a custom CBORTypeMapper can override these behaviors.)</item>
+</list>
+            <para>In the .NET version, if the object is a type not specially
+            handled above, returns a CBOR map with the values of each
+            of its public, nonstatic properties (limited to read/write
+            properties except in the case of a compiler-generated type).
+            Properties are converted to their camel-case names (meaning if a
+            name starts with A to Z, that letter is lower-cased). If the
+            property name begins with the word "Is" followed by an upper-case A
+            to Z, the "Is" prefix is deleted from the name. (Passing the
+            appropriate "options" parameter can be done to control whether the
+            "Is" prefix is removed and whether a camel-case conversion
+            happens.) Also, .NET <c>Enum</c> objects will be converted to their
+            integer values, and .</para>
+            <para>In the Java version, if the object is a type not specially
+            handled above, this method checks the CBOR object for
+            public, nonstatic methods starting with the word "get" or "is"
+            (either word followed by an upper-case A to Z) that take no
+            parameters, and returns a CBOR map with one entry for each such
+            method found. For each method found, the starting word "get" or
+            "is" is deleted from its name, and the name is converted to camel
+            case (meaning if a name starts with A to Z, that letter is
+            lower-cased). (Passing the appropriate "options" parameter can be
+            done to control whether the "is" prefix is removed and whether a
+            camel-case conversion happens.) Also, Java <c>Enum</c> objects will
+            be converted to the result of their <c>name</c> method.</para>
+            <para>If the input is a byte array, the byte array is copied to a
+            new byte array. (This method can't be used to decode CBOR data from
+            a byte array; for that, use the DecodeFromBytes method
+            instead.).</para>
+            <para>REMARK: The behavior of this method is likely to change in
+            the next major version (4.0). There are certain inconsistencies
+            between the ToObject method and the FromObject method as well as
+            between the .NET and Java versions of FromObject. For one thing,
+            DateTime/Date objects are converted differently between the two
+            versions -- either as CBOR maps with their "get" properties (Java)
+            or as tag-0 strings (.NET) -- this difference has to remain for
+            backward compatibility with version 3.0. For another thing, the
+            treatment of properties/getters starting with "Is" is subtly
+            inconsistent between the .NET and Java versions of FromObject,
+            especially when using certain PODOptions. A certain consistency
+            between .NET and Java and between FromObject and ToObject are
+            sought for version 4.0. It is also hoped that--</para>
+            <list>
+            <item>the ToObject method will support deserializing to objects
+            consisting of fields and not getters ("getX()" methods), both in
+            .NET and in Java, and</item>
+            <item>both FromObject and ToObject will be better designed, in
+            version 4.0, so that backward-compatible improvements are easier to
+            make.</item></list></summary><param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param><param name='mapper'>The parameter <paramref name='mapper'/> is not documented yet.</param><param name='options'>An object containing options to control how
+             certain objects are converted to CBOR objects.</param><returns>A CBOR object corresponding to the given object. Returns
+            CBORObject.Null if the object is null.</returns><exception cref='T:System.ArgumentNullException'>The parameter
+            <paramref name='options'/> is null.</exception>
 
-<para>If the input is a text string, a CBOR text string object will be created.  To create a CBOR byte string object from a text string, see the example given in
-<see cref='M:PeterO.Cbor.CBORObject.FromObject(System.Byte[])'/>.</para>
-<para>REMARK: The behavior of this method is likely to change in the next major version (4.0).  There are certain inconsistencies between the ToObject method and the FromObject method as well as between the .NET and Java versions of FromObject.  For one thing, DateTime/Date objects are converted differently between the two versions -- either as CBOR maps with their "get" properties (Java) or as tag-0 strings (.NET) -- this difference has to remain for backward compatibility with version 3.0.  For another thing, the treatment of properties/getters starting with "Is" is subtly inconsistent between the .NET and Java versions of FromObject, especially when using certain PODOptions.  A certain consistency between .NET and Java and between FromObject and ToObject are sought for version 4.0.  It is also hoped that--</para><list>
-<item>the ToObject method will support deserializing to objects consisting of fields and not getters ("getX()" methods), both in .NET and in Java, and</item>
-<item>both FromObject and ToObject will be better designed, in version 4.0, so that backward-compatible improvements are easier to make.</item></list>
+</doc>
+<doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Object,PeterO.Cbor.PODOptions)">
+
+            <summary>Generates a CBORObject from an arbitrary object. See the overload of this
+      method that takes CBORTypeMapper and PODOptions arguments.
 </summary><param name='obj'>The parameter <paramref name='obj'/> is an
              arbitrary object.</param><param name='options'>An object containing options to control how
              certain objects are converted to CBOR objects.</param><returns>A CBOR object corresponding to the given object. Returns
@@ -1635,15 +1689,15 @@
       their meanings. An up-to-date list can be found at the CBOR Tags registry
       maintained by the Internet Assigned Numbers Authority (
       <i>
-        iana.org/assignments/cbor-tags
+         iana.org/assignments/cbor-tags
       </i>
-      ).
+       ).
     </param>
     <returns>A CBOR object where the object
       <paramref name='valueOb'/>
        is converted to a CBOR object and given the tag
       <paramref name='bigintTag'/>
-      .
+       .
     </returns>
     <exception cref='T:System.ArgumentException'>The parameter
       <paramref name='bigintTag'/>
@@ -1708,45 +1762,49 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject``1(System.Collections.Generic.IEnumerable{``0})">
-
-            <summary>Generates a CBOR object from an enumerable set of objects.
-    </summary><param name='value'>An object that implements the IEnumerable interface. In the .NET version,
+<summary>Generates a CBOR object from an enumerable set of objects.
+    </summary>
+    <param name='value'>An object that implements the IEnumerable interface. In the .NET version,
       this can be the return value of an iterator or the result of a LINQ query.
 
-    </param><typeparam name='T'>
+    </param>
+    <typeparam name='T'>
        A type convertible to CBORObject.
-    </typeparam><returns>A CBOR object where each element of the given enumerable object is
+    </typeparam>
+    <returns>A CBOR object where each element of the given enumerable object is
       converted to a CBOR object and copied to a new array, or CBORObject.Null
       if the value is null.
     </returns>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject``1(System.Collections.Generic.IList{``0})">
-
-            <summary>Generates a CBOR object from a list of objects.
-    </summary><param name='value'>An array of CBOR objects. Can be null.
-    </param><typeparam name='T'>
+<summary>Generates a CBOR object from a list of objects.
+    </summary>
+    <param name='value'>An array of CBOR objects. Can be null.
+    </param>
+    <typeparam name='T'>
        A type convertible to CBORObject.
-    </typeparam><returns>A CBOR object where each element of the given array is converted to a
-      CBOR object and copied to a new array, or CBORObject.Null if the value is
-      null.
-    </returns>
+    </typeparam>
+    <returns>A CBOR object where each element of the given array is converted to a CBOR
+      object and copied to a new array, or CBORObject.Null if the value is null.
 
+    </returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject``2(System.Collections.Generic.IDictionary{``0,``1})">
-
-            <summary>Generates a CBOR object from a map of objects.
-    </summary><param name='dic'>A map of CBOR objects.
-    </param><typeparam name='TKey'>
+<summary>Generates a CBOR object from a map of objects.
+    </summary>
+    <param name='dic'>A map of CBOR objects.
+    </param>
+    <typeparam name='TKey'>
        A type convertible to CBORObject; the type of the keys.
-    </typeparam><typeparam name='TValue'>
+    </typeparam>
+    <typeparam name='TValue'>
        A type convertible to CBORObject; the type of the values.
-    </typeparam><returns>A CBOR object where each key and value of the given map is converted to a
+    </typeparam>
+    <returns>A CBOR object where each key and value of the given map is converted to a
       CBOR object and copied to a new map, or CBORObject.Null if
       <paramref name='dic'/>
        is null.
     </returns>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromSimpleValue(System.Int32)">
 
@@ -1781,11 +1839,10 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.GetTags">
-
-            <summary>Gets a list of all tags, from outermost to innermost.
-    </summary><returns>An array of tags, or the empty string if this object is untagged.
+<summary>Gets a list of all tags, from outermost to innermost.
+    </summary>
+    <returns>An array of tags, or the empty string if this object is untagged.
     </returns>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.HasTag(PeterO.BigInteger)">
 <summary>Returns whether this object has a tag of the given number.
@@ -1794,7 +1851,7 @@
     </param>
     <returns><c>true</c>
        if this object has a tag of the given number; otherwise, <c>false</c>
-      .
+       .
     </returns>
     <exception cref='T:System.ArgumentNullException'>BigTagValue is null.
     </exception>
@@ -2358,25 +2415,25 @@
       </para>
       <para>If the type "T" is Boolean, returns the result of the IsTrue method.
       </para>
-      <para>In the .NET version, if the object is a CBOR map,  if the type "T" is not
-        specially handled by this method, and if that type has a zero-argument constructor (default or otherwise), an object of the given type is
-        created, then this method checks the CBOR object for public, nonstatic writable
-        properties. For each property found, if its name (with the "Is" prefix
-        deleted and then converted to camel case) matches the name of a key in
-        this CBOR map, and if that property has a getter,
-        that property's setter is invoked and the corresponding
-        value is passed to that method.
+      <para>In the .NET version, if the object is a CBOR map, if the type "T" is not
+        specially handled by this method, and if that type has a zero-argument
+        constructor (default or otherwise), an object of the given type is
+        created, then this method checks the CBOR object for public, nonstatic
+        writable properties. For each property found, if its name (with the "Is"
+        prefix deleted and then converted to camel case) matches the name of a
+        key in this CBOR map, and if that property has a getter, that property's
+        setter is invoked and the corresponding value is passed to that method.
       </para>
       <para>In the Java version, if the object is a CBOR map, if the type "T" is not
-        specially handled by this method, and if that type has a zero-argument constructor (default or otherwise), 
-        an object of the given type is created, then this method checks the CBOR 
-        object for public, nonstatic methods
-        starting with the word "set" (followed by an upper-case A to Z) that
-        take a single parameter. For each method found, if its name (with the
-        starting word "set" deleted and then converted to camel case) matches
-        the name of a key in this CBOR map, and if it has a corresponding getter method
-        that takes no parameters, that method is invoked and the
-        corresponding value is passed to that method.
+        specially handled by this method, and if that type has a zero-argument
+        constructor (default or otherwise), an object of the given type is
+        created, then this method checks the CBOR object for public, nonstatic
+        methods starting with the word "set" (followed by an upper-case A to Z)
+        that take a single parameter. For each method found, if its name (with
+        the starting word "set" deleted and then converted to camel case)
+        matches the name of a key in this CBOR map, and if it has a
+        corresponding getter method that takes no parameters, that method is
+        invoked and the corresponding value is passed to that method.
       </para>
       <para>REMARK: The behavior of this method is likely to change in the final
         version 3.4 of this library as well as in the next major version (4.0).
@@ -2535,8 +2592,8 @@ CBOR objects to JSON strings, use the <see cref='M:PeterO.Cbor.CBORObject.ToJSON
           <c>double</c>
            and writes that
           <c>double</c>
-          . If negative zero should not be written this way, use the Plus method
-          to convert the value beforehand.
+           . If negative zero should not be written this way, use the Plus
+          method to convert the value beforehand.
         </item>
         <item>If the value has an exponent of zero, writes the value as an unsigned
           integer or signed integer if the number can fit either type or as a
@@ -2568,8 +2625,8 @@ CBOR objects to JSON strings, use the <see cref='M:PeterO.Cbor.CBORObject.ToJSON
           <c>double</c>
            and writes that
           <c>double</c>
-          . If negative zero should not be written this way, use the Plus method
-          to convert the value beforehand.
+           . If negative zero should not be written this way, use the Plus
+          method to convert the value beforehand.
         </item>
         <item>If the value has an exponent of zero, writes the value as an unsigned
           integer or signed integer if the number can fit either type or as a
@@ -3200,24 +3257,20 @@ stream.Write(bytes, 0, bytes.Length);
 
 </doc>
 <doc name="T:PeterO.Cbor.CBORTag3">
-
-            <summary>Implements CBOR tag 3.
+<summary>Implements CBOR tag 3.
     </summary>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORTag37.ToCBORObject(System.Guid)">
-
-            <summary>Converts a UUID to a CBOR object.
-    </summary><param name='obj'>A UUID.
-    </param><returns>A CBORObject object.
+<summary>Converts a UUID to a CBOR object.
+    </summary>
+    <param name='obj'>A UUID.
+    </param>
+    <returns>A CBORObject object.
     </returns>
-
 </doc>
 <doc name="T:PeterO.Cbor.CBORTagGenericString">
-
-            <summary>A generic CBOR tag class for strings.
+<summary>A generic CBOR tag class for strings.
     </summary>
-
 </doc>
 <doc name="T:PeterO.Cbor.CBORType">
 
@@ -3269,263 +3322,25 @@ stream.Write(bytes, 0, bytes.Length);
     </summary>
 
 </doc>
-<doc name="T:PeterO.Cbor.CBORTypeFilter">
+<doc name="T:PeterO.Cbor.CBORTypeMapper">
 
-            <summary>Specifies what kinds of CBOR objects a tag can be. This class is used
-      when a CBOR object is being read from a data stream. This class can't be
-      inherited; this is a change in version 2.0 from previous versions, where
-      the class was inadvertently left inheritable.
-    </summary>
+            <summary>Not documented yet.</summary>
 
 </doc>
-<doc name="F:PeterO.Cbor.CBORTypeFilter.Any">
+<doc name="M:PeterO.Cbor.CBORTypeMapper.AddConverter``1(System.Type,PeterO.Cbor.ICBORConverter{``0})">
 
-            <summary>A filter that allows any CBOR object.
-    </summary>
-
-</doc>
-<doc name="M:PeterO.Cbor.CBORTypeFilter.ArrayIndexAllowed(System.Int32)">
-
-            <summary>Determines whether this type filter allows CBOR arrays and the given
-      array index is allowed under this type filter.
-    </summary><param name='index'>An array index, starting from 0.
-    </param><returns><c>true</c>
-       if this type filter allows CBOR arrays and the given array index is
-      allowed under this type filter; otherwise, <c>false</c>
-       .
-    </returns>
+            <summary>Not documented yet.</summary><param name='type'>The parameter <paramref name='type'/> is not documented yet.</param><param name='converter'>The parameter <paramref name='converter'/> is not documented yet.</param><typeparam name='T'>Type parameter not documented yet.</typeparam><exception cref='T:System.ArgumentNullException'>The parameter <paramref name='type'/> or <paramref name='converter'/> is null.</exception><exception cref='T:System.ArgumentException'>Converter doesn't contain a
+            proper ToCBORObject method.</exception>
 
 </doc>
-<doc name="M:PeterO.Cbor.CBORTypeFilter.ArrayLengthMatches(PeterO.Numbers.EInteger)">
+<doc name="M:PeterO.Cbor.CBORTypeMapper.AddTypeName(System.String)">
 
-            <summary>Returns whether an array's length is allowed under a filter.
-    </summary><param name='bigLength'>An arbitrary-precision integer.
-    </param><returns><c>true</c>
-       if this filter allows CBOR arrays and an array's length is allowed under
-      a filter; otherwise, <c>false</c>
-       .
-    </returns><exception cref='T:System.ArgumentNullException'>The parameter
-      <paramref name='bigLength'/>
-       is null.
-    </exception>
+            <summary>Adds the fully qualified name of a Java or .NET type for use in type matching.</summary><param name='name'>The parameter <paramref name='name'/> is not documented yet.</param><returns>A CBORTypeMapper object.</returns><exception cref='T:System.ArgumentNullException'>The parameter <paramref name='name'/> is null.</exception><exception cref='T:System.ArgumentException'>The parameter <paramref name='name'/> is empty.</exception>
 
 </doc>
-<doc name="M:PeterO.Cbor.CBORTypeFilter.ArrayLengthMatches(System.Int32)">
+<doc name="M:PeterO.Cbor.CBORTypeMapper.AddTypePrefix(System.String)">
 
-            <summary>Returns whether an array's length is allowed under this filter.
-    </summary><param name='length'>The length of a CBOR array.
-    </param><returns><c>true</c>
-       if this filter allows CBOR arrays and an array's length is allowed under
-      this filter; otherwise, <c>false</c>
-       .
-    </returns>
-
-</doc>
-<doc name="M:PeterO.Cbor.CBORTypeFilter.ArrayLengthMatches(System.Int64)">
-
-            <summary>Returns whether an array's length is allowed under a filter.
-    </summary><param name='length'>The length of a CBOR array.
-    </param><returns><c>true</c>
-       if this filter allows CBOR arrays and an array's length is allowed under
-      a filter; otherwise, <c>false</c>
-       .
-    </returns>
-
-</doc>
-<doc name="F:PeterO.Cbor.CBORTypeFilter.ByteString">
-
-            <summary>A filter that allows byte strings.
-    </summary>
-
-</doc>
-<doc name="M:PeterO.Cbor.CBORTypeFilter.GetSubFilter(System.Int32)">
-
-            <summary>Gets the type filter for this array filter by its index.
-    </summary><param name='index'>A zero-based index of the filter to retrieve.
-    </param><returns>Returns None if the index is out of range, or Any if this filter doesn't
-      filter an array. Returns the appropriate filter for the array index
-      otherwise.
-    </returns>
-
-</doc>
-<doc name="M:PeterO.Cbor.CBORTypeFilter.GetSubFilter(System.Int64)">
-
-            <summary>Gets the type filter for this array filter by its index.
-    </summary><param name='index'>A zero-based index of the filter to retrieve.
-    </param><returns>Returns None if the index is out of range, or Any if this filter doesn't
-      filter an array. Returns the appropriate filter for the array index
-      otherwise.
-    </returns>
-
-</doc>
-<doc name="M:PeterO.Cbor.CBORTypeFilter.MajorTypeMatches(System.Int32)">
-
-            <summary>Returns whether the given CBOR major type matches a major type allowed by
-      this filter.
-    </summary><param name='type'>A CBOR major type from 0 to 7.
-    </param><returns><c>true</c>
-       if the given CBOR major type matches a major type allowed by this filter; otherwise, <c>false</c>
-       .
-    </returns>
-
-</doc>
-<doc name="F:PeterO.Cbor.CBORTypeFilter.NegativeInteger">
-
-            <summary>A filter that allows negative integers.
-    </summary>
-
-</doc>
-<doc name="M:PeterO.Cbor.CBORTypeFilter.NonFPSimpleValueAllowed">
-
-            <summary>Returns whether this filter allows simple values that are not
-      floating-point numbers.
-    </summary><returns><c>true</c>
-       if this filter allows simple values that are not floating-point numbers; otherwise, <c>false</c>
-       .
-    </returns>
-
-</doc>
-<doc name="F:PeterO.Cbor.CBORTypeFilter.None">
-
-            <summary>A filter that allows no CBOR types.
-    </summary>
-
-</doc>
-<doc name="M:PeterO.Cbor.CBORTypeFilter.TagAllowed(PeterO.Numbers.EInteger)">
-
-            <summary>Gets a value indicating whether CBOR objects can have the given tag
-      number.
-    </summary><param name='bigTag'>A tag number. Returns false if this is less than 0.
-    </param><returns><c>true</c>
-       if CBOR objects can have the given tag number; otherwise, <c>false</c>
-       .
-    </returns><exception cref='T:System.ArgumentNullException'>The parameter
-      <paramref name='bigTag'/>
-       is null.
-    </exception>
-
-</doc>
-<doc name="M:PeterO.Cbor.CBORTypeFilter.TagAllowed(System.Int32)">
-
-            <summary>Gets a value indicating whether CBOR objects can have the given tag
-      number.
-    </summary><param name='tag'>A tag number. Returns false if this is less than 0.
-    </param><returns><c>true</c>
-       if CBOR objects can have the given tag number; otherwise, <c>false</c>
-       .
-    </returns>
-
-</doc>
-<doc name="M:PeterO.Cbor.CBORTypeFilter.TagAllowed(System.Int64)">
-
-            <summary>Gets a value indicating whether CBOR objects can have the given tag
-      number.
-    </summary><param name='longTag'>A tag number. Returns false if this is less than 0.
-    </param><returns><c>true</c>
-       if CBOR objects can have the given tag number; otherwise, <c>false</c>
-       .
-    </returns>
-
-</doc>
-<doc name="F:PeterO.Cbor.CBORTypeFilter.TextString">
-
-            <summary>A filter that allows text strings.
-    </summary>
-
-</doc>
-<doc name="F:PeterO.Cbor.CBORTypeFilter.UnsignedInteger">
-
-            <summary>A filter that allows unsigned integers.
-    </summary>
-
-</doc>
-<doc name="M:PeterO.Cbor.CBORTypeFilter.WithArrayAnyLength">
-
-            <summary>Copies this filter and includes arrays of any length in the new filter.
-    </summary><returns>A CBORTypeFilter object.
-    </returns>
-
-</doc>
-<doc name="M:PeterO.Cbor.CBORTypeFilter.WithArrayExactLength(System.Int32,PeterO.Cbor.CBORTypeFilter[])">
-
-            <summary>Copies this filter and includes CBOR arrays with an exact length to the
-      new filter.
-    </summary><param name='arrayLength'>The desired maximum length of an array.
-    </param><param name='elements'>An array containing the allowed types for each element in the array.
-      There must be at least as many elements here as given in the arrayLength
-      parameter.
-    </param><returns>A CBORTypeFilter object.
-    </returns><exception cref='T:System.ArgumentException'>The parameter arrayLength is less than 0.
-    </exception><exception cref='T:System.ArgumentNullException'>The parameter elements is null.
-    </exception><exception cref='T:System.ArgumentException'>The parameter elements has fewer elements than specified in arrayLength.
-    </exception>
-
-</doc>
-<doc name="M:PeterO.Cbor.CBORTypeFilter.WithArrayMinLength(System.Int32,PeterO.Cbor.CBORTypeFilter[])">
-
-            <summary>Copies this filter and includes CBOR arrays with at least a given length
-      to the new filter.
-    </summary><param name='arrayLength'>The desired minimum length of an array.
-    </param><param name='elements'>An array containing the allowed types for each element in the array.
-      There must be at least as many elements here as given in the arrayLength
-      parameter.
-    </param><returns>A CBORTypeFilter object.
-    </returns><exception cref='T:System.ArgumentException'>The parameter arrayLength is less than 0.
-    </exception><exception cref='T:System.ArgumentNullException'>The parameter elements is null.
-    </exception><exception cref='T:System.ArgumentException'>The parameter elements has fewer elements than specified in arrayLength.
-    </exception>
-
-</doc>
-<doc name="M:PeterO.Cbor.CBORTypeFilter.WithByteString">
-
-            <summary>Copies this filter and includes byte strings in the new filter.
-    </summary><returns>A CBORTypeFilter object.
-    </returns>
-
-</doc>
-<doc name="M:PeterO.Cbor.CBORTypeFilter.WithFloatingPoint">
-
-            <summary>Copies this filter and includes floating-point numbers in the new filter.
-
-    </summary><returns>A CBORTypeFilter object.
-    </returns>
-
-</doc>
-<doc name="M:PeterO.Cbor.CBORTypeFilter.WithMap">
-
-            <summary>Copies this filter and includes maps in the new filter.
-    </summary><returns>A CBORTypeFilter object.
-    </returns>
-
-</doc>
-<doc name="M:PeterO.Cbor.CBORTypeFilter.WithNegativeInteger">
-
-            <summary>Copies this filter and includes negative integers in the new filter.
-    </summary><returns>A CBORTypeFilter object.
-    </returns>
-
-</doc>
-<doc name="M:PeterO.Cbor.CBORTypeFilter.WithTags(System.Int32[])">
-
-            <summary>Copies this filter and includes a set of valid CBOR tags in the new
-      filter.
-    </summary><param name='tags'>An array of the CBOR tags to add to the new filter.
-    </param><returns>A CBORTypeFilter object.
-    </returns>
-
-</doc>
-<doc name="M:PeterO.Cbor.CBORTypeFilter.WithTextString">
-
-            <summary>Copies this filter and includes text strings in the new filter.
-    </summary><returns>A CBORTypeFilter object.
-    </returns>
-
-</doc>
-<doc name="M:PeterO.Cbor.CBORTypeFilter.WithUnsignedInteger">
-
-            <summary>Copies this filter and includes unsigned integers in the new filter.
-    </summary><returns>A CBORTypeFilter object.
-    </returns>
+            <summary>Adds a prefix of a Java or .NET type for use in type matching.  A type matches a prefix if its fully qualified name is or begins with that prefix, using codepoint-by-codepoint (case-sensitive) matching.</summary><param name='prefix'>The parameter <paramref name='prefix'/> is not documented yet.</param><returns>A CBORTypeMapper object.</returns><exception cref='T:System.ArgumentNullException'>The parameter <paramref name='prefix'/> is null.</exception><exception cref='T:System.ArgumentException'>The parameter <paramref name='prefix'/> is empty.</exception>
 
 </doc>
 <doc name="T:PeterO.Cbor.CBORUtilities">
@@ -3596,29 +3411,26 @@ stream.Write(bytes, 0, bytes.Length);
 
 </doc>
 <doc name="T:PeterO.Cbor.ICBORTag">
-
-            <summary>Implemented by classes that validate CBOR objects belonging to a specific
+<summary>Implemented by classes that validate CBOR objects belonging to a specific
       tag.
     </summary>
-
 </doc>
 <doc name="M:PeterO.Cbor.ICBORTag.GetTypeFilter">
-
-            <summary>Gets a type filter specifying what kinds of CBOR objects are supported by
+<summary>Gets a type filter specifying what kinds of CBOR objects are supported by
       this tag.
-    </summary><returns>A CBOR type filter.
+    </summary>
+    <returns>A CBOR type filter.
     </returns>
-
 </doc>
 <doc name="M:PeterO.Cbor.ICBORTag.ValidateObject(PeterO.Cbor.CBORObject)">
-
-            <summary>Generates a CBOR object based on the data of another object. If the data
+<summary>Generates a CBOR object based on the data of another object. If the data
       is not valid, should throw a CBORException.
-    </summary><param name='obj'>A CBOR object with the corresponding tag handled by the ICBORTag object.
-    </param><returns>A CBORObject object. Note that this method may choose to return the same
+    </summary>
+    <param name='obj'>A CBOR object with the corresponding tag handled by the ICBORTag object.
+    </param>
+    <returns>A CBORObject object. Note that this method may choose to return the same
       object as the parameter.
     </returns>
-
 </doc>
 <doc name="T:PeterO.Cbor.ICharacterInput">
 
@@ -4682,7 +4494,7 @@ vnd.shootproof+json</item>
     <value><c>true</c>
        If this object is negative, including negative zero; otherwise, .
       <c>false</c>
-      .
+       .
     </value>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.IsQuietNaN">
@@ -4965,7 +4777,7 @@ vnd.shootproof+json</item>
       <c>double</c>
        or
       <c>float</c>
-      .)
+       .)
       <para>The format of the string generally consists of:
       </para>
       <list type=''>
@@ -5025,7 +4837,7 @@ vnd.shootproof+json</item>
       <paramref name='offset'/>
        is less than
       <paramref name='length'/>
-      .
+       .
     </exception>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.GetHashCode">
@@ -5059,7 +4871,7 @@ vnd.shootproof+json</item>
     <value><c>true</c>
        If this object is negative, including negative zero; otherwise, .
       <c>false</c>
-      .
+       .
     </value>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.IsNegativeInfinity">
@@ -5290,7 +5102,7 @@ vnd.shootproof+json</item>
     <value><c>true</c>
        If this object is finite (not infinity or NaN); otherwise, .
       <c>false</c>
-      .
+       .
     </value>
 </doc>
 <doc name="P:PeterO.ExtendedRational.IsNegative">
@@ -5300,7 +5112,7 @@ vnd.shootproof+json</item>
     <value><c>true</c>
        If this object's value is negative; otherwise, .
       <c>false</c>
-      .
+       .
     </value>
 </doc>
 <doc name="P:PeterO.ExtendedRational.IsZero">
@@ -5309,7 +5121,7 @@ vnd.shootproof+json</item>
     <value><c>true</c>
        If this object's value equals 0; otherwise, .
       <c>false</c>
-      .
+       .
     </value>
 </doc>
 <doc name="F:PeterO.ExtendedRational.NaN">
