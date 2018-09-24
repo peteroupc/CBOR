@@ -838,11 +838,22 @@ namespace PeterO.Cbor {
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Object,PeterO.Cbor.CBORTypeMapper,PeterO.Cbor.PODOptions)"]/*'/>
     public static CBORObject FromObject(
   object obj,
+  CBORTypeMapper mapper) {
+      if (mapper == null) {
+        throw new ArgumentNullException(nameof(mapper));
+      }
+      return FromObject(obj, PODOptions.Default, mapper, 0);
+    }
+
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Object,PeterO.Cbor.CBORTypeMapper,PeterO.Cbor.PODOptions)"]/*'/>
+    public static CBORObject FromObject(
+  object obj,
   CBORTypeMapper mapper,
   PODOptions options) {
       if (mapper == null) {
-  throw new ArgumentNullException(nameof(mapper));
-}
+        throw new ArgumentNullException(nameof(mapper));
+      }
       return FromObject(obj, options, mapper, 0);
     }
 

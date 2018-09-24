@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using NUnit.Framework;
 using PeterO;
 using PeterO.Cbor;
@@ -11,15 +12,7 @@ namespace Test {
   public class ToObjectTest {
     [Test]
     public void TestAsEInteger() {
-      try {
-        CBORObject.Null.ToObject(typeof(EInteger));
-        Assert.Fail("Should have failed");
-      } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
+      Assert.IsNull(CBORObject.Null.ToObject(typeof(EInteger)));
       try {
         CBORObject.True.ToObject(typeof(EInteger));
         Assert.Fail("Should have failed");
@@ -68,7 +61,7 @@ namespace Test {
       CBORObject numbers = CBORObjectTest.GetNumberData();
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
-      var numberString = (string)numberinfo["number"].ToObject(typeof(string));
+        var numberString = (string)numberinfo["number"].ToObject(typeof(string));
         CBORObject cbornumber =
   ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(numberString));
         if (!numberinfo["integer"].Equals(CBORObject.Null)) {
@@ -107,7 +100,7 @@ ToObjectTest.TestToFromObjectRoundTrip((float)0.99)
       {
         string stringTemp =
 ToObjectTest.TestToFromObjectRoundTrip((float)0.0000000000000001)
-            .ToObject(typeof(EInteger)) .ToString();
+            .ToObject(typeof(EInteger)).ToString();
         Assert.AreEqual(
         "0",
         stringTemp);
@@ -163,7 +156,7 @@ ToObjectTest.TestToFromObjectRoundTrip((double)0.99)
       {
         string stringTemp =
 ToObjectTest.TestToFromObjectRoundTrip((double)0.0000000000000001)
-            .ToObject(typeof(EInteger)) .ToString();
+            .ToObject(typeof(EInteger)).ToString();
         Assert.AreEqual(
         "0",
         stringTemp);
@@ -201,8 +194,8 @@ ToObjectTest.TestToFromObjectRoundTrip((double)328323)
         stringTemp);
       }
       try {
-ToObjectTest.TestToFromObjectRoundTrip(Single.PositiveInfinity)
-          .ToObject(typeof(EInteger));
+        ToObjectTest.TestToFromObjectRoundTrip(Single.PositiveInfinity)
+                  .ToObject(typeof(EInteger));
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         // NOTE: Intentionally empty
@@ -211,8 +204,8 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.PositiveInfinity)
           InvalidOperationException(String.Empty, ex);
       }
       try {
-ToObjectTest.TestToFromObjectRoundTrip(Single.NegativeInfinity)
-          .ToObject(typeof(EInteger));
+        ToObjectTest.TestToFromObjectRoundTrip(Single.NegativeInfinity)
+                  .ToObject(typeof(EInteger));
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         // NOTE: Intentionally empty
@@ -221,8 +214,8 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NegativeInfinity)
           InvalidOperationException(String.Empty, ex);
       }
       try {
-ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
-          .ToObject(typeof(EInteger));
+        ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
+                  .ToObject(typeof(EInteger));
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         // NOTE: Intentionally empty
@@ -231,8 +224,8 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
           InvalidOperationException(String.Empty, ex);
       }
       try {
-ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity)
-          .ToObject(typeof(EInteger));
+        ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity)
+                  .ToObject(typeof(EInteger));
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         // NOTE: Intentionally empty
@@ -241,8 +234,8 @@ ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity)
           InvalidOperationException(String.Empty, ex);
       }
       try {
-ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
-          .ToObject(typeof(EInteger));
+        ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
+                  .ToObject(typeof(EInteger));
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         // NOTE: Intentionally empty
@@ -251,8 +244,8 @@ ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
           InvalidOperationException(String.Empty, ex);
       }
       try {
-ToObjectTest.TestToFromObjectRoundTrip(Double.NaN)
-          .ToObject(typeof(EInteger));
+        ToObjectTest.TestToFromObjectRoundTrip(Double.NaN)
+                  .ToObject(typeof(EInteger));
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         // NOTE: Intentionally empty
@@ -264,16 +257,21 @@ ToObjectTest.TestToFromObjectRoundTrip(Double.NaN)
     [Test]
     public void TestAsBoolean() {
       Assert.IsTrue((bool)CBORObject.True.ToObject(typeof(bool)));
-Assert.IsTrue((bool)ToObjectTest.TestToFromObjectRoundTrip(0)
-        .ToObject(typeof(bool)));
-Assert.IsTrue((bool)ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
-        .ToObject(typeof(bool)));
+      Assert.IsTrue((bool)ToObjectTest.TestToFromObjectRoundTrip(0)
+              .ToObject(typeof(bool)));
+      Assert.IsTrue((bool)ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
+              .ToObject(typeof(bool)));
       Assert.IsFalse((bool)CBORObject.False.ToObject(typeof(bool)));
-      Assert.IsFalse((bool)CBORObject.Null.ToObject(typeof(bool)));
       Assert.IsFalse((bool)CBORObject.Undefined.ToObject(typeof(bool)));
       Assert.IsTrue((bool)CBORObject.NewArray().ToObject(typeof(bool)));
       Assert.IsTrue((bool)CBORObject.NewMap().ToObject(typeof(bool)));
     }
+
+    [Test]
+    public void TestNullBoolean() {
+      Assert.IsNull(CBORObject.Null.ToObject(typeof(bool)));
+    }
+
     [Test]
     public void TestAsByte() {
       try {
@@ -322,8 +320,8 @@ Assert.IsTrue((bool)ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
-          .ToObject(typeof(byte));
+        ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
+                  .ToObject(typeof(byte));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -340,7 +338,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
         if ((bool)numberinfo["byte"].ToObject(typeof(bool)) == true) {
           Assert.AreEqual(
   TestCommon.StringToInt((string)numberinfo["integer"].ToObject(typeof(string))),
-    ((int)cbornumber.ToObject(typeof(byte))) & 0xff);
+            ((int)(byte)cbornumber.ToObject(typeof(byte))) & 0xff);
         } else {
           try {
             cbornumber.ToObject(typeof(byte));
@@ -428,8 +426,8 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
-          .ToObject(typeof(double));
+        ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
+                  .ToObject(typeof(double));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -452,19 +450,19 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
     [Test]
     public void TestAsEDecimal() {
       {
-object objectTemp = CBORTestCommon.DecPosInf;
-object objectTemp2 =
-  ToObjectTest.TestToFromObjectRoundTrip(Single.PositiveInfinity)
-          .ToObject(typeof(EDecimal));
-Assert.AreEqual(objectTemp, objectTemp2);
-}
+        object objectTemp = CBORTestCommon.DecPosInf;
+        object objectTemp2 =
+          ToObjectTest.TestToFromObjectRoundTrip(Single.PositiveInfinity)
+                  .ToObject(typeof(EDecimal));
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
       {
-object objectTemp = CBORTestCommon.DecNegInf;
-object objectTemp2 =
-  ToObjectTest.TestToFromObjectRoundTrip(Single.NegativeInfinity)
-          .ToObject(typeof(EDecimal));
-Assert.AreEqual(objectTemp, objectTemp2);
-}
+        object objectTemp = CBORTestCommon.DecNegInf;
+        object objectTemp2 =
+          ToObjectTest.TestToFromObjectRoundTrip(Single.NegativeInfinity)
+                  .ToObject(typeof(EDecimal));
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
       {
         string stringTemp =
 ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
@@ -474,24 +472,24 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
         stringTemp);
       }
       {
-object objectTemp = CBORTestCommon.DecPosInf;
-object objectTemp2 =
-  ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity)
-          .ToObject(typeof(EDecimal));
-Assert.AreEqual(objectTemp, objectTemp2);
-}
+        object objectTemp = CBORTestCommon.DecPosInf;
+        object objectTemp2 =
+          ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity)
+                  .ToObject(typeof(EDecimal));
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
       {
-object objectTemp = CBORTestCommon.DecNegInf;
-object objectTemp2 =
-  ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
-          .ToObject(typeof(EDecimal));
-Assert.AreEqual(objectTemp, objectTemp2);
-}
+        object objectTemp = CBORTestCommon.DecNegInf;
+        object objectTemp2 =
+          ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
+                  .ToObject(typeof(EDecimal));
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
       {
         object objectTemp = "NaN";
         object objectTemp2 =
           ToObjectTest.TestToFromObjectRoundTrip(Double.NaN)
-          .ToObject(typeof(EDecimal)) .ToString();
+          .ToObject(typeof(EDecimal)).ToString();
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       try {
@@ -540,8 +538,8 @@ Assert.AreEqual(objectTemp, objectTemp2);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
-          .ToObject(typeof(EDecimal));
+        ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
+                  .ToObject(typeof(EDecimal));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -553,73 +551,73 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
     [Test]
     public void TestAsEFloat() {
       {
-object objectTemp = CBORTestCommon.FloatPosInf;
-object objectTemp2 =
-  ToObjectTest.TestToFromObjectRoundTrip(Single.PositiveInfinity)
-          .ToObject(typeof(EFloat));
-Assert.AreEqual(objectTemp, objectTemp2);
-}
+        object objectTemp = CBORTestCommon.FloatPosInf;
+        object objectTemp2 =
+          ToObjectTest.TestToFromObjectRoundTrip(Single.PositiveInfinity)
+                  .ToObject(typeof(EFloat));
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
       {
-object objectTemp = CBORTestCommon.FloatNegInf;
-object objectTemp2 =
-  ToObjectTest.TestToFromObjectRoundTrip(Single.NegativeInfinity)
-          .ToObject(typeof(EFloat));
-Assert.AreEqual(objectTemp, objectTemp2);
-}
+        object objectTemp = CBORTestCommon.FloatNegInf;
+        object objectTemp2 =
+          ToObjectTest.TestToFromObjectRoundTrip(Single.NegativeInfinity)
+                  .ToObject(typeof(EFloat));
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
       var ef = (EFloat)ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
         .ToObject(typeof(EFloat));
       Assert.IsTrue(ef.IsNaN());
       {
-object objectTemp = CBORTestCommon.FloatPosInf;
-object objectTemp2 =
-  ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity)
-          .ToObject(typeof(EFloat));
-Assert.AreEqual(objectTemp, objectTemp2);
-}
+        object objectTemp = CBORTestCommon.FloatPosInf;
+        object objectTemp2 =
+          ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity)
+                  .ToObject(typeof(EFloat));
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
       {
-object objectTemp = CBORTestCommon.FloatNegInf;
-object objectTemp2 =
-  ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
-          .ToObject(typeof(EFloat));
-Assert.AreEqual(objectTemp, objectTemp2);
-}
+        object objectTemp = CBORTestCommon.FloatNegInf;
+        object objectTemp2 =
+          ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
+                  .ToObject(typeof(EFloat));
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
       ef = (EFloat)ToObjectTest.TestToFromObjectRoundTrip(Double.NaN)
         .ToObject(typeof(EFloat));
-                    Assert.IsTrue(ef.IsNaN());
+      Assert.IsTrue(ef.IsNaN());
     }
     [Test]
     public void TestAsERational() {
       {
-object objectTemp = CBORTestCommon.RatPosInf;
-object objectTemp2 =
-  ToObjectTest.TestToFromObjectRoundTrip(Single.PositiveInfinity)
-          .ToObject(typeof(ERational));
-Assert.AreEqual(objectTemp, objectTemp2);
-}
+        object objectTemp = CBORTestCommon.RatPosInf;
+        object objectTemp2 =
+          ToObjectTest.TestToFromObjectRoundTrip(Single.PositiveInfinity)
+                  .ToObject(typeof(ERational));
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
       {
-object objectTemp = CBORTestCommon.RatNegInf;
-object objectTemp2 =
-  ToObjectTest.TestToFromObjectRoundTrip(Single.NegativeInfinity)
-          .ToObject(typeof(ERational));
-Assert.AreEqual(objectTemp, objectTemp2);
-}
+        object objectTemp = CBORTestCommon.RatNegInf;
+        object objectTemp2 =
+          ToObjectTest.TestToFromObjectRoundTrip(Single.NegativeInfinity)
+                  .ToObject(typeof(ERational));
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
 
-  Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
-        .ToObject(typeof(ERational))).IsNaN());
+      Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
+            .ToObject(typeof(ERational))).IsNaN());
       {
-object objectTemp = CBORTestCommon.RatPosInf;
-object objectTemp2 =
-  ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity)
-          .ToObject(typeof(ERational));
-Assert.AreEqual(objectTemp, objectTemp2);
-}
+        object objectTemp = CBORTestCommon.RatPosInf;
+        object objectTemp2 =
+          ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity)
+                  .ToObject(typeof(ERational));
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
       {
-object objectTemp = CBORTestCommon.RatNegInf;
-object objectTemp2 =
-  ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
-          .ToObject(typeof(ERational));
-Assert.AreEqual(objectTemp, objectTemp2);
-}
+        object objectTemp = CBORTestCommon.RatNegInf;
+        object objectTemp2 =
+          ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
+                  .ToObject(typeof(ERational));
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
       Assert.IsTrue(
   ToObjectTest.TestToFromObjectRoundTrip(ToObjectTest.TestToFromObjectRoundTrip(Double.NaN)
           .ToObject(typeof(ERational))).IsNaN());
@@ -672,8 +670,8 @@ Assert.AreEqual(objectTemp, objectTemp2);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
-          .ToObject(typeof(short));
+        ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
+                  .ToObject(typeof(short));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -753,7 +751,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
+        ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -870,8 +868,8 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
-          .ToObject(typeof(long));
+        ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
+                  .ToObject(typeof(long));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -992,8 +990,8 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
-          .ToObject(typeof(float));
+        ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
+                  .ToObject(typeof(float));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -1022,10 +1020,10 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
         stringTemp);
       }
 
-  if ((ToObjectTest.TestToFromObjectRoundTrip(CBORObject.Null)ToObject(typeof(string)))!=
-        null) {
- Assert.Fail();
- }
+      if ((ToObjectTest.TestToFromObjectRoundTrip(CBORObject.Null).ToObject(typeof(string))) !=
+            null) {
+        Assert.Fail();
+      }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(true).ToObject(typeof(string));
         Assert.Fail("Should have failed");
@@ -1163,50 +1161,56 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
       }
     }
 
-[Test]
-public static void TestCharRoundTrip() {
- for (var i = 0; i < 0x10000; ++i) {
-  if ((i & 0xf800) == 0xd800) {
- continue;
-}
-  var c = (char)i;
-  TestToFromObjectRoundTrip(c);
- }
-}
-[Test]
-public static void TestUUIDRoundTrip(){
- var rng=new RandomGenerator();
- for(var i=0;i<500;i++){
-  TestToFromObjectRoundTrip(RandomUUID(rng));
- }
-}
+    [Test]
+    public static void TestCharRoundTrip() {
+      for (var i = 0; i < 0x10000; ++i) {
+        if ((i & 0xf800) == 0xd800) {
+          continue;
+        }
+        var c = (char)i;
+        TestToFromObjectRoundTrip(c);
+      }
+    }
 
-[Test]
-public object RandomUUID(RandomGenerator rand){
- string hex="0123456789ABCDEF";
- StringBuilder sb=new StringBuilder();
- for(var i=0;i<8;i++){sb.Append(hex[rand.UniformInt(16)]); }
- sb.Append('-');
- for(var i=0;i<4;i++){sb.Append(hex[rand.UniformInt(16)]); }
- sb.Append('-');
- for(var i=0;i<4;i++){sb.Append(hex[rand.UniformInt(16)]); }
- sb.Append('-');
- for(var i=0;i<4;i++){sb.Append(hex[rand.UniformInt(16)]); }
- sb.Append('-');
- for(var i=0;i<12;i++){sb.Append(hex[rand.UniformInt(16)]); }
- return new Guid(sb.ToString());
-}
+    [Test]
+    public void TestUriRoundTrip() {
+      Uri uri = new Uri("http://example.com/path/path2?query#fragment");
+      TestToFromObjectRoundTrip(uri);
+    }
+
+    [Test]
+    public void TestUUIDRoundTrip() {
+      var rng = new RandomGenerator();
+      for (var i = 0; i < 500; i++) {
+        TestToFromObjectRoundTrip(RandomUUID(rng));
+      }
+    }
+
+    public static object RandomUUID(RandomGenerator rand) {
+      string hex = "0123456789ABCDEF";
+      StringBuilder sb = new StringBuilder();
+      for (var i = 0; i < 8; i++) { sb.Append(hex[rand.UniformInt(16)]); }
+      sb.Append('-');
+      for (var i = 0; i < 4; i++) { sb.Append(hex[rand.UniformInt(16)]); }
+      sb.Append('-');
+      for (var i = 0; i < 4; i++) { sb.Append(hex[rand.UniformInt(16)]); }
+      sb.Append('-');
+      for (var i = 0; i < 4; i++) { sb.Append(hex[rand.UniformInt(16)]); }
+      sb.Append('-');
+      for (var i = 0; i < 12; i++) { sb.Append(hex[rand.UniformInt(16)]); }
+      return new Guid(sb.ToString());
+    }
 
     public static CBORObject TestToFromObjectRoundTrip(object obj) {
       CBORObject cbor = CBORObject.FromObject(obj);
       if (obj != null) {
         object obj2 = null;
         try {
- obj2 = cbor.ToObject(obj.GetType());
-} catch (Exception ex) {
-Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+          obj2 = cbor.ToObject(obj.GetType());
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString() + "\n" + cbor);
+          throw new InvalidOperationException(String.Empty, ex);
+        }
         if (!obj.Equals(obj2)) {
           Assert.AreEqual(obj, obj2, cbor.ToString());
         }

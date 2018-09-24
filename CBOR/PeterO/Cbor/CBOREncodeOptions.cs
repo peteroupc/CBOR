@@ -9,9 +9,6 @@ namespace PeterO.Cbor {
     public static readonly CBOREncodeOptions Default =
       new CBOREncodeOptions(false, false);
 
-    // TODO: Avoid
-    private readonly int value;
-
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBOREncodeOptions.#ctor"]/*'/>
     public CBOREncodeOptions() : this(false, false) {
@@ -31,32 +28,18 @@ namespace PeterO.Cbor {
   bool useIndefLengthStrings,
   bool allowDuplicateKeys,
   bool ctap2Canonical) {
-      var val = 0;
-      if (!useIndefLengthStrings) {
-        val |= 1;
-      }
-      if (!allowDuplicateKeys) {
-        val |= 2;
-      }
-      this.value = val;
+      this.UseIndefLengthStrings = useIndefLengthStrings;
+      this.AllowDuplicateKeys = allowDuplicateKeys;
       this.Ctap2Canonical = ctap2Canonical;
     }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="P:PeterO.Cbor.CBOREncodeOptions.UseIndefLengthStrings"]/*'/>
-    public bool UseIndefLengthStrings {
-      get {
-        return (this.value & 1) == 0;
-      }
-    }
+    public bool UseIndefLengthStrings { get; private set; }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="P:PeterO.Cbor.CBOREncodeOptions.AllowDuplicateKeys"]/*'/>
-    public bool AllowDuplicateKeys {
-      get {
-        return (this.value & 2) == 0;
-      }
-    }
+    public bool AllowDuplicateKeys { get; private set; }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="P:PeterO.Cbor.CBOREncodeOptions.Ctap2Canonical"]/*'/>

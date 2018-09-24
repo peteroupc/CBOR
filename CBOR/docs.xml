@@ -1555,7 +1555,7 @@
             array of arrays.  A byte array is converted to a CBOR byte string.</item>
 <item>An object implementing IDictionary (Map in Java) is converted to a CBOR map containing the keys and values enumerated.</item>
 <item>An object implementing IEnumerable (Iterable in Java) is converted to a CBOR array containing the items enumerated.</item>
-<item>An enumeration <c>Enum</c> object is converted to its integer value in the .NET version, or the result of its "getName" method in the Java version. (TBD)</item>
+<item>An enumeration (<c>Enum</c>) object is converted to its integer value in the .NET version, or the result of its "getName" method in the Java version. (TBD)</item>
 <item>If the object is of a type corresponding to a type converter mentioned in the <paramref name='mapper'/> parameter, that converter will be used to convert the object to a CBOR object.</item>
 <item>An object of type <c>DateTime</c>, <c>Uri</c>, or <c>Guid</c> (<c>Date</c>, <c>URI</c>, or <c>UUID</c>, respectively, in Java) will be converted to a tagged CBOR object of the appropriate kind. (TBD: Decide whether a custom CBORTypeMapper can override these behaviors.)</item>
 </list>
@@ -1591,7 +1591,7 @@
             the next major version (4.0). There are certain inconsistencies
             between the ToObject method and the FromObject method as well as
             between the .NET and Java versions of FromObject. For one thing,
-            DateTime/Date objects are converted differently between the two
+            DateTime/Date objects in FromObject are converted differently between the two
             versions -- either as CBOR maps with their "get" properties (Java)
             or as tag-0 strings (.NET) -- this difference has to remain for
             backward compatibility with version 3.0. For another thing, the
@@ -2438,11 +2438,11 @@
           method.
         </item>
         <item>If the type is
-          <c>byte[]</c>
-           and this CBOR object is a byte array, returns a byte array which this
+          <c>byte[]</c> and this CBOR object is a byte string, returns a byte array which this
           CBOR byte string's data will be copied to.
         </item>
-        <item>If the type is an array type other than a byte array type.... (To be
+        <item>If the type is a one-dimensional array type and this CBOR object is an array,
+   returns an array containing the items in this CBOR object. (Multidimensional arrays to be
           documented.)
         </item>
         <item>If the type is the generic List, IList, ICollection, or IEnumerable
@@ -2480,18 +2480,18 @@
            in Java), returns a UUID object if possible.
         </item>
       </list>
-      <para>In the .NET version, if the object is a CBOR map, if the type "T" is not
-        specially handled by this method, and if that type has a zero-argument
-        constructor (default or otherwise), an object of the given type is
+      <para>In the .NET version, if the object is a CBOR map, and if the type is not
+        specially handled above and has a zero-argument
+        public constructor (default or otherwise), an object of the given type is
         created, then this method checks the CBOR object for public, nonstatic
         writable properties. For each property found, if its name (with the "Is"
         prefix deleted and then converted to camel case) matches the name of a
         key in this CBOR map, and if that property has a getter, that property's
         setter is invoked and the corresponding value is passed to that method.
       </para>
-      <para>In the Java version, if the object is a CBOR map, if the type "T" is not
-        specially handled by this method, and if that type has a zero-argument
-        constructor (default or otherwise), an object of the given type is
+      <para>In the Java version, if the object is a CBOR map, and if the type is not
+        specially handled above and has a zero-argument
+        public constructor (default or otherwise), an object of the given type is
         created, then this method checks the CBOR object for public, nonstatic
         methods starting with the word "set" (followed by an upper-case A to Z)
         that take a single parameter. For each method found, if its name (with
@@ -2504,7 +2504,7 @@
         version 3.4 of this library as well as in the next major version (4.0).
         There are certain inconsistencies between the ToObject method and the
         FromObject method as well as between the .NET and Java versions of
-        FromObject. For one thing, DateTime/Date objects are converted
+        FromObject. For one thing, DateTime/Date objects in FromObject are converted
         differently between the two versions -- either as CBOR maps with their
         "get" properties (Java) or as tag-0 strings (.NET) -- this difference
         has to remain for backward compatibility with version 3.0. For another
@@ -2525,7 +2525,12 @@
       </list>
     </summary>
     <param name='t'>The type, class, or interface that this method's return value will belong
-      to. To express a generic type in Java, see the example.
+      to. To express a generic type in Java, see the example.  <b>Note:</b> For security purposes,
+      an application should not base this parameter on user input or other externally supplied
+      data.  Whenever possible, this parameter should be either a type specially handled by
+      this method (such as <c>int</c> or <c>String</c>) or a plain-old-data type 
+      (POCO or POJO type) within the control of the application.  If the plain-old-data 
+      type references other data types, those types should likewise meet either criterion above.
     </param>
     <returns>The converted object.
     </returns>
@@ -2560,7 +2565,13 @@
 <doc name="M:PeterO.Cbor.CBORObject.ToObject``1">
 
             <summary><para>Converts this CBOR object to an object of an arbitrary type.  See <see cref='M:PeterO.Cbor.CBORObject.ToObject(System.Type)'/> for further information.</para>
-</summary><typeparam name='T'>An arbitrary object type.</typeparam><returns>The converted object.</returns><exception cref='T:System.NotSupportedException'>The given type "T", or this object's CBOR type, is not supported.
+</summary><typeparam name='T'>The type, class, or interface that this method's return value will belong
+      to. <b>Note:</b> For security purposes,
+      an application should not base this parameter on user input or other externally supplied
+      data.  Whenever possible, this parameter should be either a type specially handled by
+      this method (such as <c>int</c> or <c>String</c>) or a plain-old-data type 
+      (POCO type) within the control of the application.  If the plain-old-data 
+      type references other data types, those types should likewise meet either criterion above.</typeparam><returns>The converted object.</returns><exception cref='T:System.NotSupportedException'>The given type "T", or this object's CBOR type, is not supported.
     </exception>
 
 </doc>

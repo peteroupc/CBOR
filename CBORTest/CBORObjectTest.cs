@@ -2499,9 +2499,13 @@ Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(3).CompareTo(cbor[1])
       CBORObject c = ToObjectTest.TestToFromObjectRoundTrip(dict);
       this.CheckKeyValue(c, "TestKey", "TestValue");
       this.CheckKeyValue(c, "TestKey2", "TestValue2");
-      c = ToObjectTest.TestToFromObjectRoundTrip((object)dict);
-      this.CheckKeyValue(c, "TestKey", "TestValue");
-      this.CheckKeyValue(c, "TestKey2", "TestValue2");
+      dict=(IDictionary<string, object>)c.ToObject(
+        typeof(IDictionary<string, object>));
+      Assert.AreEqual(2,dict.Keys.Count);
+      Assert.IsTrue(dict.ContainsKey("TestKey"));
+      Assert.IsTrue(dict.ContainsKey("TestKey2"));
+      Assert.AreEqual("TestValue",dict["TestKey"]);
+      Assert.AreEqual("TestValue2",dict["TestKey2"]);
     }
 
     public sealed class NestedPODClass {
@@ -4723,10 +4727,9 @@ Assert.AreEqual(
             CBORObject.Write(cborTemp1, ms);
             cborTemp1.WriteTo(ms);
  {
-object objectTemp = ms.ToArray();
-object objectTemp2 = ToObjectTest.TestToFromObjectRoundTrip(
+CBORObject objectTemp2 = ToObjectTest.TestToFromObjectRoundTrip(
   "test");
-AssertReadThree(objectTemp, objectTemp2);
+              AssertReadThree(ms.ToArray(), objectTemp2);
 }
           }
           TestWriteObj((object)"test", "test");
@@ -5695,6 +5698,57 @@ AssertReadThree(
       } catch (IOException ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(ex.ToString(), ex);
+      }
+    }
+
+    private static string DateTimeToString(int year, int month, int day, int hour, int minute, int second, int millisecond) {
+      var charbuf = new char[millisecond > 0 ? 24 : 20];
+      charbuf[0] = (char)('0' + ((year / 1000) % 10));
+      charbuf[1] = (char)('0' + ((year / 100) % 10));
+      charbuf[2] = (char)('0' + ((year / 10) % 10));
+      charbuf[3] = (char)('0' + (year % 10));
+      charbuf[4] = '-';
+      charbuf[5] = (char)('0' + ((month / 10) % 10));
+      charbuf[6] = (char)('0' + (month % 10));
+      charbuf[7] = '-';
+      charbuf[8] = (char)('0' + ((day / 10) % 10));
+      charbuf[9] = (char)('0' + (day % 10));
+      charbuf[10] = 'T';
+      charbuf[11] = (char)('0' + ((hour / 10) % 10));
+      charbuf[12] = (char)('0' + (hour % 10));
+      charbuf[13] = ':';
+      charbuf[14] = (char)('0' + ((minute / 10) % 10));
+      charbuf[15] = (char)('0' + (minute % 10));
+      charbuf[16] = ':';
+      charbuf[17] = (char)('0' + ((second / 10) % 10));
+      charbuf[18] = (char)('0' + (second % 10));
+      if (millisecond > 0) {
+        charbuf[19] = '.';
+        charbuf[20] = (char)('0' + ((millisecond / 100) % 10));
+        charbuf[21] = (char)('0' + ((millisecond / 10) % 10));
+        charbuf[22] = (char)('0' + (millisecond % 10));
+        charbuf[23] = 'Z';
+      } else {
+        charbuf[19] = 'Z';
+      }
+      return new String(charbuf);
+    }
+
+    [Test]
+    public void TestDateTime() {
+      var rng = new RandomGenerator();
+      for (var i = 0; i < 2000; i++) {
+        string dtstr = DateTimeToString(
+          rng.UniformInt(9999) + 1,
+          rng.UniformInt(12) + 1,
+          rng.UniformInt(28) + 1,
+          rng.UniformInt(24),
+          rng.UniformInt(60),
+          rng.UniformInt(60),
+          rng.UniformInt(1000));
+        CBORObject cbor = CBORObject.FromObjectAndTag(dtstr, 0);
+        DateTime dt = (DateTime)cbor.ToObject(typeof(DateTime));
+        ToObjectTest.TestToFromObjectRoundTrip(dt);
       }
     }
   }
