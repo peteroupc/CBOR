@@ -1549,44 +1549,39 @@
             the
             <a href='https://www.nuget.org/packages/PeterO.Numbers'><c>PeterO.Numbers</c></a>
             library (in .NET) or the
-            <a href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c></a>
-            artifact (in Java) is converted to the corresponding CBOR number.</item>
-<item>An array (other than a byte array) is converted to a CBOR array.  In the .NET version, a multidimensional array is converted to an
-            array of arrays.  A byte array is converted to a CBOR byte string.</item>
+            <a href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c></a> artifact (in Java) is converted to the corresponding CBOR number.</item>
+<item>An array other than <c>byte[]</c> is converted to a CBOR array.  In the .NET version, a multidimensional array is converted to an
+            array of arrays.</item>
+<item>A <c>byte[]</c> (1-dimensional byte array) is converted to a CBOR byte string; the byte array is copied to a
+            new byte array in this process. (This method can't be used to decode CBOR data from
+            a byte array; for that, use the <b>DecodeFromBytes</b> method
+            instead.)</item>
 <item>An object implementing IDictionary (Map in Java) is converted to a CBOR map containing the keys and values enumerated.</item>
 <item>An object implementing IEnumerable (Iterable in Java) is converted to a CBOR array containing the items enumerated.</item>
 <item>An enumeration (<c>Enum</c>) object is converted to its integer value in the .NET version, or the result of its "getName" method in the Java version. (TBD)</item>
 <item>If the object is of a type corresponding to a type converter mentioned in the <paramref name='mapper'/> parameter, that converter will be used to convert the object to a CBOR object.</item>
 <item>An object of type <c>DateTime</c>, <c>Uri</c>, or <c>Guid</c> (<c>Date</c>, <c>URI</c>, or <c>UUID</c>, respectively, in Java) will be converted to a tagged CBOR object of the appropriate kind. (TBD: Decide whether a custom CBORTypeMapper can override these behaviors.)</item>
-</list>
-            <para>In the .NET version, if the object is a type not specially
-            handled above, returns a CBOR map with the values of each
-            of its public, nonstatic properties (limited to read/write
-            properties except in the case of a compiler-generated type).
-            Properties are converted to their camel-case names (meaning if a
-            name starts with A to Z, that letter is lower-cased). If the
-            property name begins with the word "Is" followed by an upper-case A
-            to Z, the "Is" prefix is deleted from the name. (Passing the
-            appropriate "options" parameter can be done to control whether the
-            "Is" prefix is removed and whether a camel-case conversion
-            happens.) Also, .NET <c>Enum</c> objects will be converted to their
-            integer values, and .</para>
-            <para>In the Java version, if the object is a type not specially
-            handled above, this method checks the CBOR object for
-            public, nonstatic methods starting with the word "get" or "is"
-            (either word followed by an upper-case A to Z) that take no
-            parameters, and returns a CBOR map with one entry for each such
-            method found. For each method found, the starting word "get" or
-            "is" is deleted from its name, and the name is converted to camel
-            case (meaning if a name starts with A to Z, that letter is
-            lower-cased). (Passing the appropriate "options" parameter can be
-            done to control whether the "is" prefix is removed and whether a
-            camel-case conversion happens.) Also, Java <c>Enum</c> objects will
-            be converted to the result of their <c>name</c> method.</para>
-            <para>If the input is a byte array, the byte array is copied to a
-            new byte array. (This method can't be used to decode CBOR data from
-            a byte array; for that, use the DecodeFromBytes method
-            instead.).</para>
+<item>If the object is a type not specially handled above, this method checks
+the <paramref name='obj'/> parameter for eligible getters as follows:</item>
+<item>(*) In the .NET version, eligible getters are the public, nonstatic
+getters of read/write properties (and also those of read-only properties in the case
+of a compiler-generated type).</item>
+<item>(*) In the Java version, eligible getters are public, nonstatic
+methods starting with "get" or "is", either word followed by upper-case
+"A" to "Z", that take no parameters and do not return void.</item>
+<item>Then, the method returns a CBOR map with each eligible getter's
+name or property name as each key, and with the corresponding value
+returned by that getter as that key's value.  If a key begins with the word
+"Is", "is", or "get", followed by an upper-case A to Z, the "Is", "is",
+or "get" is deleted from the key.  Then, each key is converted
+to camel-case (meaning if the key starts with A to Z, that letter
+is lower-cased). (Passing the appropriate "options" parameter can be done
+to control whether the "Is" or "is" prefix is removed and whether
+a camel-case conversion happens.)</item></list>
+<para><b>Note:</b> For security reasons,
+      an application should, whenever possible, not base this parameter on user input or other externally supplied data unless the application ensures that the possible set of <paramref name="obj"/> inputs to this method is limited to types specially handled by this method (such as <c>int</c> or <c>String</c>) and/or to plain-old-data types
+      (POCO or POJO types) within the control of the application.  If the plain-old-data
+      type references other data types, those types should likewise meet either criterion above.</para>
             <para>REMARK: The behavior of this method is likely to change in
             the next major version (4.0). There are certain inconsistencies
             between the ToObject method and the FromObject method as well as
@@ -1606,7 +1601,7 @@
             .NET and in Java, and</item>
             <item>both FromObject and ToObject will be better designed, in
             version 4.0, so that backward-compatible improvements are easier to
-            make.</item></list></summary><param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param><param name='mapper'>The parameter <paramref name='mapper'/> is not documented yet.</param><param name='options'>An object containing options to control how
+            make.</item></list></summary><param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param><param name='mapper'>An object containing optional converters to convert objects of certain types to CBOR objects.</param><param name='options'>An object containing options to control how
              certain objects are converted to CBOR objects.</param><returns>A CBOR object corresponding to the given object. Returns
             CBORObject.Null if the object is null.</returns><exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='options'/> is null.</exception>
@@ -2438,8 +2433,8 @@
           method.
         </item>
         <item>If the type is
-          <c>byte[]</c> and this CBOR object is a byte string, returns a byte array which this
-          CBOR byte string's data will be copied to.
+          <c>byte[]</c> (a one-dimensional byte array) and this CBOR object is a byte string, returns a byte array which this
+          CBOR byte string's data will be copied to. (This method can't be used to encode CBOR data to a byte array; for that, use the EncodeToBytes method instead.)
         </item>
         <item>If the type is a one-dimensional array type and this CBOR object is an array,
    returns an array containing the items in this CBOR object. (Multidimensional arrays to be
@@ -2525,11 +2520,11 @@
       </list>
     </summary>
     <param name='t'>The type, class, or interface that this method's return value will belong
-      to. To express a generic type in Java, see the example.  <b>Note:</b> For security purposes,
+      to. To express a generic type in Java, see the example.  <b>Note:</b> For security reasons,
       an application should not base this parameter on user input or other externally supplied
       data.  Whenever possible, this parameter should be either a type specially handled by
-      this method (such as <c>int</c> or <c>String</c>) or a plain-old-data type 
-      (POCO or POJO type) within the control of the application.  If the plain-old-data 
+      this method (such as <c>int</c> or <c>String</c>) or a plain-old-data type
+      (POCO or POJO type) within the control of the application.  If the plain-old-data
       type references other data types, those types should likewise meet either criterion above.
     </param>
     <returns>The converted object.
@@ -2569,8 +2564,8 @@
       to. <b>Note:</b> For security purposes,
       an application should not base this parameter on user input or other externally supplied
       data.  Whenever possible, this parameter should be either a type specially handled by
-      this method (such as <c>int</c> or <c>String</c>) or a plain-old-data type 
-      (POCO type) within the control of the application.  If the plain-old-data 
+      this method (such as <c>int</c> or <c>String</c>) or a plain-old-data type
+      (POCO type) within the control of the application.  If the plain-old-data
       type references other data types, those types should likewise meet either criterion above.</typeparam><returns>The converted object.</returns><exception cref='T:System.NotSupportedException'>The given type "T", or this object's CBOR type, is not supported.
     </exception>
 

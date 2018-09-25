@@ -384,8 +384,9 @@ Type elementType = t.GetElementType();
           Array array = Array.CreateInstance(
         elementType,
         objThis.Count);
-         if(array.Rank!=1){
-           throw new NotSupportedException("Multidimensional arrays not supported yet.");
+         if (array.Rank != 1) {
+ throw new
+  NotSupportedException("Multidimensional arrays not supported yet.");
          }
           for (var i = 0; i < objThis.Count; ++i) {
             array.SetValue(objThis[i].ToObject(elementType), i);

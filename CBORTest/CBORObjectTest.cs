@@ -138,11 +138,6 @@ Assert.IsFalse(o.ContainsKey("staticPropA"));
     "PropA",
     "PropB",
     "PropC");
-      /*
-TODO: The following case conflicts with the Java version
-of the CBOR library. Resolving this conflict may result in the
-Java version being backward-incompatible and so require
-a major version change.
 //--
        CBORObjectTest.CheckPropertyNames(
   ao,
@@ -150,7 +145,7 @@ a major version change.
   "PropA",
   "PropB",
   "IsPropC");
-     */ CBORObjectTest.CheckPropertyNames(
+      CBORObjectTest.CheckPropertyNames(
   ao,
   valueCcFT,
   "propA",
@@ -473,7 +468,7 @@ ToObjectTest.TestToFromObjectRoundTrip((float)0.99).AsEInteger()
       {
         string stringTemp =
 ToObjectTest.TestToFromObjectRoundTrip((float)0.0000000000000001)
-            .AsEInteger() .ToString();
+            .AsEInteger().ToString();
         Assert.AreEqual(
         "0",
         stringTemp);
@@ -529,7 +524,7 @@ ToObjectTest.TestToFromObjectRoundTrip((double)0.99).AsEInteger()
       {
         string stringTemp =
 ToObjectTest.TestToFromObjectRoundTrip((double)0.0000000000000001)
-            .AsEInteger() .ToString();
+            .AsEInteger().ToString();
         Assert.AreEqual(
         "0",
         stringTemp);
@@ -2499,13 +2494,13 @@ Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(3).CompareTo(cbor[1])
       CBORObject c = ToObjectTest.TestToFromObjectRoundTrip(dict);
       this.CheckKeyValue(c, "TestKey", "TestValue");
       this.CheckKeyValue(c, "TestKey2", "TestValue2");
-      dict=(IDictionary<string, object>)c.ToObject(
+      dict = (IDictionary<string, object>)c.ToObject(
         typeof(IDictionary<string, object>));
-      Assert.AreEqual(2,dict.Keys.Count);
+      Assert.AreEqual(2, dict.Keys.Count);
       Assert.IsTrue(dict.ContainsKey("TestKey"));
       Assert.IsTrue(dict.ContainsKey("TestKey2"));
-      Assert.AreEqual("TestValue",dict["TestKey"]);
-      Assert.AreEqual("TestValue2",dict["TestKey2"]);
+      Assert.AreEqual("TestValue", dict["TestKey"]);
+      Assert.AreEqual("TestValue2", dict["TestKey2"]);
     }
 
     public sealed class NestedPODClass {
@@ -2653,30 +2648,23 @@ Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(3).CompareTo(cbor[1])
         "propA",
         "propB",
         "propC");
-      /*
-TODO: The following cases conflict with the Java version
-of the CBOR library. Resolving this conflict may result in the
-Java version being backward-incompatible and so require
-a major version change.
-// ----
          CBORObjectTest.CheckArrayPropertyNames(
-  ToObjectTest.TestToFromObjectRoundTrip(arrao, valueCcFF),
+        CBORObject.FromObject(arrao, valueCcFF),
               2,
   "PropA",
   "PropB",
   "IsPropC");
          CBORObjectTest.CheckPODPropertyNames(
-  ToObjectTest.TestToFromObjectRoundTrip(ao2, valueCcFF),
+        CBORObject.FromObject(ao2, valueCcFF),
   valueCcFF,
               "PropA",
   "PropB",
   "IsPropC");
          CBORObjectTest.CheckPODInDictPropertyNames(
-  ToObjectTest.TestToFromObjectRoundTrip(aodict, valueCcFF),
-  "PropA",
-  "PropB",
-  "IsPropC");
-       */
+        CBORObject.FromObject(aodict, valueCcFF),
+        "PropA",
+        "PropB",
+        "IsPropC");
     }
 
     [Test]
@@ -2934,26 +2922,26 @@ Assert.IsFalse(ToObjectTest.TestToFromObjectRoundTrip(EDecimal.NaN)
     public void TestIsIntegral() {
       CBORObject cbor;
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(0).IsIntegral);
-Assert.IsFalse(ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
-        .IsIntegral);
+cbor = ToObjectTest.TestToFromObjectRoundTrip(String.Empty);
+      Assert.IsFalse(cbor.IsIntegral);
       Assert.IsFalse(CBORObject.NewArray().IsIntegral);
       Assert.IsFalse(CBORObject.NewMap().IsIntegral);
-      bool isint = ToObjectTest.TestToFromObjectRoundTrip(
+      cbor = ToObjectTest.TestToFromObjectRoundTrip(
   EInteger.FromRadixString(
   "8000000000000000",
-  16)).IsIntegral;
-      Assert.IsTrue(isint);
-      isint = ToObjectTest.TestToFromObjectRoundTrip(
+  16));
+      Assert.IsTrue(cbor.IsIntegral);
+      cbor = ToObjectTest.TestToFromObjectRoundTrip(
       EInteger.FromRadixString(
       "80000000000000000000",
-      16)).IsIntegral;
-      Assert.IsTrue(isint);
+      16));
+      Assert.IsTrue(cbor.IsIntegral);
 
-      isint = ToObjectTest.TestToFromObjectRoundTrip(
+      cbor = ToObjectTest.TestToFromObjectRoundTrip(
     EInteger.FromRadixString(
     "8000000000000000000000000",
-    16)).IsIntegral;
-      Assert.IsTrue(isint);
+    16));
+      Assert.IsTrue(cbor.IsIntegral);
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(
         EDecimal.FromString("4444e+800")).IsIntegral);
 
@@ -2961,20 +2949,23 @@ Assert.IsFalse(ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
         EDecimal.FromString("4444e-800")).IsIntegral);
       Assert.IsFalse(ToObjectTest.TestToFromObjectRoundTrip(2.5).IsIntegral);
       Assert.IsFalse(ToObjectTest.TestToFromObjectRoundTrip(999.99).IsIntegral);
+cbor = ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity);
 
-  Assert.IsFalse(ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity)
-        .IsIntegral);
+  Assert.IsFalse(cbor.IsIntegral);
 
-  Assert.IsFalse(ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
-        .IsIntegral);
-Assert.IsFalse(ToObjectTest.TestToFromObjectRoundTrip(Double.NaN)
-        .IsIntegral);
+cbor = ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity);
+
+  Assert.IsFalse(cbor.IsIntegral);
+cbor = ToObjectTest.TestToFromObjectRoundTrip(Double.NaN);
+
+  Assert.IsFalse(cbor.IsIntegral);
       Assert.IsFalse(ToObjectTest.TestToFromObjectRoundTrip(
         CBORTestCommon.DecPosInf).IsIntegral);
       Assert.IsFalse(ToObjectTest.TestToFromObjectRoundTrip(
         CBORTestCommon.DecNegInf).IsIntegral);
-Assert.IsFalse(ToObjectTest.TestToFromObjectRoundTrip(EDecimal.NaN)
-        .IsIntegral);
+cbor = ToObjectTest.TestToFromObjectRoundTrip(EDecimal.NaN);
+
+  Assert.IsFalse(cbor.IsIntegral);
       cbor = CBORObject.True;
       Assert.IsFalse(cbor.IsIntegral);
       cbor = CBORObject.False;
@@ -5701,7 +5692,14 @@ AssertReadThree(
       }
     }
 
-    private static string DateTimeToString(int year, int month, int day, int hour, int minute, int second, int millisecond) {
+    private static string DateTimeToString(
+  int year,
+  int month,
+  int day,
+  int hour,
+  int minute,
+  int second,
+  int millisecond) {
       var charbuf = new char[millisecond > 0 ? 24 : 20];
       charbuf[0] = (char)('0' + ((year / 1000) % 10));
       charbuf[1] = (char)('0' + ((year / 100) % 10));
@@ -5736,8 +5734,11 @@ AssertReadThree(
 
     [Test]
     public void TestDateTime() {
+      var dateList = new List<string>();
+      dateList.Add("0783-08-19T03:10:29.406Z");
+      dateList.Add("1954-03-07T16:20:38.256Z");
       var rng = new RandomGenerator();
-      for (var i = 0; i < 2000; i++) {
+      for (var i = 0; i < 2000; ++i) {
         string dtstr = DateTimeToString(
           rng.UniformInt(9999) + 1,
           rng.UniformInt(12) + 1,
@@ -5746,8 +5747,11 @@ AssertReadThree(
           rng.UniformInt(60),
           rng.UniformInt(60),
           rng.UniformInt(1000));
+        dateList.Add(dtstr);
+      }
+      foreach (string dtstr in dateList) {
         CBORObject cbor = CBORObject.FromObjectAndTag(dtstr, 0);
-        DateTime dt = (DateTime)cbor.ToObject(typeof(DateTime));
+        var dt = (DateTime)cbor.ToObject(typeof(DateTime));
         ToObjectTest.TestToFromObjectRoundTrip(dt);
       }
     }

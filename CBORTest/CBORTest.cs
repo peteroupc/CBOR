@@ -511,7 +511,6 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
     [Test]
     [ExpectedException(typeof(CBORException))]
     public void TestDecimalFracExponentMustNotBeBignum() {
-      Assert.Ignore();
       CBORTestCommon.FromBytesTestAB(new byte[] { 0xc4, 0x82, 0xc2, 0x41, 1,
         0x1a,
         1, 2, 3, 4 });
@@ -557,10 +556,10 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
       }
 
   Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity)
-  .AsEDecimal() .IsPositiveInfinity());
+  .AsEDecimal().IsPositiveInfinity());
 
   Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
-  .AsEDecimal() .IsNegativeInfinity());
+  .AsEDecimal().IsNegativeInfinity());
 Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Double.NaN)
         .AsEDecimal().IsNaN());
       CBORObject oldobj = null;
@@ -620,10 +619,10 @@ Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Double.NaN)
     [Test]
     public void TestFloat() {
   Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Single.PositiveInfinity)
-  .AsEDecimal() .IsPositiveInfinity());
+  .AsEDecimal().IsPositiveInfinity());
 
   Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Single.NegativeInfinity)
-  .AsEDecimal() .IsNegativeInfinity());
+  .AsEDecimal().IsNegativeInfinity());
 Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
         .AsEDecimal().IsNaN());
       for (int i = -65539; i <= 65539; ++i) {

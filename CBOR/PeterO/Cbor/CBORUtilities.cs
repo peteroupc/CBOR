@@ -266,9 +266,11 @@ namespace PeterO.Cbor {
           }
         }
         if (day.Sign <= 0) {
-          int divResult = (month - 2) / 12;
-          year = year.Add(EInteger.FromInt32(divResult));
-          month = ((month - 2) - (12 * divResult)) + 1;
+          --month;
+          if (month <= 0) {
+            year = year.Add(EInteger.FromInt32(-1));
+            month = 12;
+          }
           dayArray = (year.Remainder(num4).Sign != 0 || (
                     year.Remainder(num100).Sign == 0 &&
              year.Remainder(num400).Sign != 0)) ? ValueNormalDays :
@@ -353,7 +355,8 @@ namespace PeterO.Cbor {
       EDecimal edec,
       EInteger[] year,
       int[] lesserFields) {
-      EInteger integerPart = edec.ToEInteger();
+      EInteger integerPart = edec.Quantize(0, ERounding.Floor)
+        .ToEInteger();
       EDecimal fractionalPart = edec.Abs()
         .Subtract(EDecimal.FromEInteger(integerPart).Abs());
       int nanoseconds = fractionalPart .Multiply(EDecimal.FromInt32(1000000000))

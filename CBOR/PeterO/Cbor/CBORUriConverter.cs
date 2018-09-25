@@ -23,7 +23,11 @@ namespace PeterO.Cbor {
     public Uri FromCBORObject(CBORObject obj) {
       if (obj.HasMostOuterTag(32)) {
         this.ValidateObject(obj);
-        return new Uri(obj.AsString());
+        try {
+         return new Uri(obj.AsString());
+        } catch (Exception ex) {
+         throw new CBORException(ex.Message, ex);
+        }
       }
       throw new CBORException();
     }
