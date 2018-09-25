@@ -59,20 +59,13 @@ namespace PeterO.Cbor {
 
       public string GetAdjustedName(bool removeIsPrefix, bool useCamelCase) {
         string thisName = this.Name;
-        // Convert 'IsXYZ' to 'XYZ'
-        if (removeIsPrefix && thisName.Length >= 3 && thisName[0] == 'I' &&
-          thisName[1] == 's' && thisName[2] >= 'A' && thisName[2] <= 'Z') {
-          // NOTE (Jun. 17, 2017, Peter O.): Was "== 'Z'", which was a
-          // bug reported
-          // by GitHub user "richardschneider". See peteroupc/CBOR#17.
-          thisName = thisName.Substring(2);
-        }
-        // Convert to camel case
-        if (useCamelCase && thisName[0] >= 'A' && thisName[0] <= 'Z') {
-          var sb = new System.Text.StringBuilder();
-          sb.Append((char)(thisName[0] + 0x20));
-          sb.Append(thisName.Substring(1));
-          thisName = sb.ToString();
+        if(useCamelCase){
+          if(CBORUtilities.NameStartsWithWord(thisName,"Is")){
+            thisName = thisName.Substring(2);
+          }
+          thisName = CBORUtilities.FirstCharLower(thisName);
+        } else {
+          thisName = CBORUtilities.FirstCharUpper(thisName);
         }
         return thisName;
       }

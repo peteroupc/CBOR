@@ -1567,17 +1567,16 @@ the <paramref name='obj'/> parameter for eligible getters as follows:</item>
 getters of read/write properties (and also those of read-only properties in the case
 of a compiler-generated type).</item>
 <item>(*) In the Java version, eligible getters are public, nonstatic
-methods starting with "get" or "is", either word followed by upper-case
-"A" to "Z", that take no parameters and do not return void.</item>
+methods starting with "get" or "is" (either word followed by a character other
+than a basic digit or lower-case letter, that is, other than "a" to "z" or 
+"0" to "9"), that take no parameters and 
+do not return void, except that methods named "getClass" are not
+eligible getters.</item>
 <item>Then, the method returns a CBOR map with each eligible getter's
 name or property name as each key, and with the corresponding value
-returned by that getter as that key's value.  If a key begins with the word
-"Is", "is", or "get", followed by an upper-case A to Z, the "Is", "is",
-or "get" is deleted from the key.  Then, each key is converted
-to camel-case (meaning if the key starts with A to Z, that letter
-is lower-cased). (Passing the appropriate "options" parameter can be done
-to control whether the "Is" or "is" prefix is removed and whether
-a camel-case conversion happens.)</item></list>
+returned by that getter as that key's value.  Before adding a key-value
+pair to the map, the key's name is adjusted according to the rules
+described in the <see cref="T:PeterO.Cbor.PODOptions"/> documentation.</item></list>
 <para><b>Note:</b> For security reasons,
       an application should, whenever possible, not base this parameter on user input or other externally supplied data unless the application ensures that the possible set of <paramref name="obj"/> inputs to this method is limited to types specially handled by this method (such as <c>int</c> or <c>String</c>) and/or to plain-old-data types
       (POCO or POJO types) within the control of the application.  If the plain-old-data
@@ -3606,8 +3605,17 @@ stream.Write(bytes, 0, bytes.Length);
 </doc>
 <doc name="P:PeterO.Cbor.PODOptions.UseCamelCase">
 
-            <summary>Gets a value indicating whether property names are
-            converted to camel case before they are used as keys.</summary><value><c>true</c> If the names are converted to camel case;
+            <summary><para>Gets a value indicating whether property names are
+            converted to camel case before they are used as keys.  This option changes the behavior of key name serialization as follows.  If "useCamelCase" is <c>false</c>:</para><list>
+<item>In the .NET version, all key names are capitalized, meaning the first letter in the name is converted to upper case if it's a basic lower-case letter ("a" to "z"). (For example, "Name" and "IsName" both remain unchanged.)</item>
+<item>In the Java version, for each eligible method name, the word "get" or "set" is removed from the name if the name starts with that word, then the name is capitalized. (For example, "getName" and "setName" both become "Name", and "isName" becomes "IsName".)</item>
+</list><para>If "useCamelCase" is <c>true</c>:</para><list>
+<item>In the .NET version, for each eligible method name, the word "Is" is removed from the name if the name starts with that word, then the name is converted to camel case, meaning the first letter in the name is converted to camel case if it's a basic lower-case letter ("a" to "z").  (For example, "Name" and "IsName" both become "name".)</item>
+<item>In the Java version, for each eligible method name, the word "get", "set", or "is" is removed from the name if the name starts with that word, then the name is converted to camel case. (For example, "getName", "setName", and "isName" all become "name".)</item>
+</list>
+<para>In the description above, a name "starts with" a word if that word begins the name and is followed by a character other than a basic digit or lower-case letter, that is, other than "a" to "z" or "0" to "9".</para>
+
+</summary><value><c>true</c> If the names are converted to camel case;
             otherwise, . <c>false</c>.</value>
 
 </doc>
