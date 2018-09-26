@@ -36,6 +36,8 @@ The default settings for "plain old data" options.
 
     public bool RemoveIsPrefix { get; }
 
+<b>Deprecated.</b> Property name conversion may change, making this property obsolete.
+
 Gets a value indicating whether the "Is" prefix in property names is removed before they are used as keys.
 
 <b>Returns:</b>

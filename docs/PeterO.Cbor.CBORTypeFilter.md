@@ -2,6 +2,8 @@
 
     public sealed class CBORTypeFilter
 
+<b>Deprecated.</b> May be removed without replacement.
+
 Specifies what kinds of CBOR objects a tag can be. This class is used when a CBOR object is being read from a data stream. This class can't be inherited; this is a change in version 2.0 from previous versions, where the class was inadvertently left inheritable.
 
 ### Member Summary

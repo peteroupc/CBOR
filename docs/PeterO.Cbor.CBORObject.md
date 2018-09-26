@@ -644,6 +644,8 @@ This object is not an array.
         System.Type type,
         PeterO.Cbor.ICBORConverter<T> converter);
 
+<b>Deprecated.</b> To be replaced with the AddConverter method of CBORTypeMapper.
+
 Registers an object that converts objects of a given type to CBOR objects (called a CBOR converter).
 
 <b>Parameters:</b>
@@ -698,7 +700,7 @@ Either or both operands are not numbers (as opposed to Not-a-Number, NaN).
         PeterO.BigInteger bigintTag,
         PeterO.Cbor.ICBORTag handler);
 
-<b>Deprecated.</b> May be removed in the future without replacement.  Not as useful as ICBORConverters and ICBORObjectConverters for FromObject and ToObject.  Moreover, registering tag handlers as this method does may tie them to the lifetime of the application.
+<b>Deprecated.</b> May be removed in the future without replacement. Not as useful as ICBORConverters and ICBORObjectConverters for FromObject and ToObject. Moreover, registering tag handlers as this method does may tie them to the lifetime of the application.
 
 Registers an object that validates CBOR objects with new tags.
 
@@ -727,7 +729,7 @@ The parameter <i>bigintTag</i>
         PeterO.Numbers.EInteger bigintTag,
         PeterO.Cbor.ICBORTag handler);
 
-<b>Deprecated.</b> May be removed in the future without replacement.  Not as useful as ICBORConverters and ICBORObjectConverters for FromObject and ToObject.  Moreover, registering tag handlers as this method does may tie them to the lifetime of the application.
+<b>Deprecated.</b> May be removed in the future without replacement. Not as useful as ICBORConverters and ICBORObjectConverters for FromObject and ToObject. Moreover, registering tag handlers as this method does may tie them to the lifetime of the application.
 
 Registers an object that validates CBOR objects with new tags.
 
