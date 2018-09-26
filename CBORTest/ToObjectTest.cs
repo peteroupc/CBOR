@@ -9,7 +9,6 @@ using PeterO.Numbers;
 
 namespace Test {
   [TestFixture]
-  [Ignore]
   public class ToObjectTest {
     [Test]
     public void TestAsEInteger() {
@@ -349,7 +348,7 @@ Assert.AreEqual(objectTemp, objectTemp2);
         CBORObject cbornumber =
           ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(
   (string)numberinfo["number"].ToObject(typeof(string))));
-        if ((object)true == numberinfo["byte"].ToObject(typeof(bool))) {
+        if ((bool)numberinfo["byte"].AsBoolean()) {
           Assert.AreEqual(
   TestCommon.StringToInt((string)numberinfo["integer"].ToObject(typeof(string))),
             ((int)(Byte)cbornumber.ToObject(typeof(byte))) & 0xff);
@@ -699,7 +698,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
         CBORObject cbornumber =
           ToObjectTest.TestToFromObjectRoundTrip(
    EDecimal.FromString((string)numberinfo["number"].ToObject(typeof(string))));
-        if ((object)true == numberinfo["int16"].ToObject(typeof(bool))) {
+        if ((bool)numberinfo["int16"].AsBoolean()) {
           Assert.AreEqual(
   (short)TestCommon.StringToInt((string)numberinfo["integer"].ToObject(typeof(string))),
   cbornumber.ToObject(typeof(short)));
@@ -779,13 +778,13 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
         EDecimal edec =
     EDecimal.FromString((string)numberinfo["number"].ToObject(typeof(string)));
         CBORObject cbornumber = ToObjectTest.TestToFromObjectRoundTrip(edec);
-        bool isdouble; isdouble = (object)true == numberinfo["double"].ToObject(typeof(bool));
+        bool isdouble; isdouble = (bool)numberinfo["double"].AsBoolean();
         CBORObject cbornumberdouble =
           ToObjectTest.TestToFromObjectRoundTrip(edec.ToDouble());
-        bool issingle; issingle = (object)true == numberinfo["single"].ToObject(typeof(bool));
+        bool issingle; issingle = (bool)numberinfo["single"].AsBoolean();
         CBORObject cbornumbersingle =
           ToObjectTest.TestToFromObjectRoundTrip(edec.ToSingle());
-        if ((object)true == numberinfo["int32"].ToObject(typeof(bool))) {
+        if ((bool)numberinfo["int32"].AsBoolean()) {
           Assert.AreEqual(
   TestCommon.StringToInt((string)numberinfo["integer"].ToObject(typeof(string))),
     cbornumber.ToObject(typeof(int)));
@@ -801,7 +800,8 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
           }
         } else {
           try {
-            cbornumber.ToObject(typeof(int));
+            Console.WriteLine(cbornumber.ToObject(typeof(int)));
+            Console.WriteLine(cbornumber.ToObject(typeof(int)));
             Assert.Fail("Should have failed " + cbornumber);
           } catch (OverflowException) {
             // NOTE: Intentionally empty
@@ -897,13 +897,13 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
         EDecimal edec =
     EDecimal.FromString((string)numberinfo["number"].ToObject(typeof(string)));
         CBORObject cbornumber = ToObjectTest.TestToFromObjectRoundTrip(edec);
-        bool isdouble; isdouble = (object)true == numberinfo["double"].ToObject(typeof(bool));
+        bool isdouble; isdouble = (bool)numberinfo["double"].AsBoolean();
         CBORObject cbornumberdouble =
           ToObjectTest.TestToFromObjectRoundTrip(edec.ToDouble());
-        bool issingle; issingle = (object)true == numberinfo["single"].ToObject(typeof(bool));
+        bool issingle; issingle = (bool)numberinfo["single"].AsBoolean();
         CBORObject cbornumbersingle =
           ToObjectTest.TestToFromObjectRoundTrip(edec.ToSingle());
-        if ((object)true == numberinfo["int64"].ToObject(typeof(bool))) {
+        if ((bool)numberinfo["int64"].AsBoolean()) {
           Assert.AreEqual(
    TestCommon.StringToLong((string)numberinfo["integer"].ToObject(typeof(string))),
    cbornumber.ToObject(typeof(long)));

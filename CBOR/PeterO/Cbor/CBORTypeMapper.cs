@@ -18,9 +18,21 @@ this.typeNames = new List<string>();
 this.converters = new Dictionary<Object, ConverterInfo>();
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.AddConverter``1(System.Type,PeterO.Cbor.ICBORConverter{``0})"]/*'/>
-    public void AddConverter<T>(Type type, ICBORConverter<T> converter) {
+    /// <summary>Not documented yet.</summary>
+    /// <param name='type'>The parameter <paramref name='type'/> is not
+    /// documented yet.</param>
+    /// <param name='converter'>The parameter <paramref name='converter'/>
+    /// is not documented yet.</param>
+    /// <typeparam name='T'>Type parameter not documented yet.</typeparam>
+    /// <returns>A CBORTypeMapper object.</returns>
+    /// <exception cref='T:System.ArgumentNullException'>The parameter
+    /// <paramref name='type'/> or <paramref name='converter'/> is
+    /// null.</exception>
+    /// <exception cref='T:System.ArgumentException'>Converter doesn't
+    /// contain a proper ToCBORObject method.</exception>
+public CBORTypeMapper AddConverter<T>(
+  Type type,
+  ICBORConverter<T> converter) {
       if (type == null) {
         throw new ArgumentNullException(nameof(type));
       }
@@ -38,6 +50,7 @@ this.converters = new Dictionary<Object, ConverterInfo>();
           "Converter doesn't contain a proper ToCBORObject method");
       }
       this.converters[type] = ci;
+      return this;
     }
 
     internal CBORObject ConvertWithConverter(object obj) {

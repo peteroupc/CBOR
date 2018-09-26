@@ -1540,9 +1540,14 @@ The parameter <i>mapper</i>
         PeterO.Cbor.CBORTypeMapper mapper,
         PeterO.Cbor.PODOptions options);
 
-Generates a CBORObject from an arbitrary object, using the given options to control how certain objects are converted to CBOR objects. The following types are specially handled by this method:
+Generates a CBORObject from an arbitrary object, using the given options to control how certain objects are converted to CBOR objects. The following cases are checked in the logical order given (rather than the strict order in which they are implemented by this library):
 
  *  `null`  is converted to  `CBORObject.Null` .
+
+ * A  `CBORObject`  is returned as itself.
+
+ * If the object is of a type corresponding to a type converter mentioned in the  <i>mapper</i>
+ parameter, that converter will be used to convert the object to a CBOR object. Type converters can be used to override the default conversion behavior of almost any object.
 
  * A  `char`  is TBD.
 
@@ -1566,12 +1571,9 @@ Generates a CBORObject from an arbitrary object, using the given options to cont
 
  * An object implementing IEnumerable (Iterable in Java) is converted to a CBOR array containing the items enumerated.
 
- * An enumeration ( `Enum` ) object is converted to its integer value in the .NET version, or the result of its "getName" method in the Java version. (TBD)
+ * An enumeration ( `Enum` ) object is converted to the result of "toString()" in the .NET version, or the result of its  `name`  method in the Java version. <b>Note:</b> For .NET, this behavior is a change from versions before 4.0. Note that .NET's  `toString`  will return multiple names if the given Enum object is a combination of Enum objects (e.g. if the object is  `FileAccess.Read | FileAccess.Write` ). More generally, constants from Enum types with the  `Flags`  attribute, and constants from the same Enum type that share an underlying value, should not be passed to this method.
 
- * If the object is of a type corresponding to a type converter mentioned in the  <i>mapper</i>
- parameter, that converter will be used to convert the object to a CBOR object.
-
- * An object of type  `DateTime` ,  `Uri` , or  `Guid`  ( `Date` ,  `URI` , or  `UUID` , respectively, in Java) will be converted to a tagged CBOR object of the appropriate kind. (TBD: Decide whether a custom CBORTypeMapper can override these behaviors.)
+ * An object of type  `DateTime` ,  `Uri` , or  `Guid`  ( `Date` ,  `URI` , or  `UUID` , respectively, in Java) will be converted to a tagged CBOR object of the appropriate kind.  `DateTime` / `Date`  will be converted to a tag-0 string following the date format used in the Atom syndication format.
 
  * If the object is a type not specially handled above, this method checks the  <i>obj</i>
  parameter for eligible getters as follows:
@@ -2687,6 +2689,8 @@ Converts this CBOR object to an object of an arbitrary type. The following types
 
  * If the type is `EDecimal` , `EFloat` , `EInteger` , or `ERational` in the<a href="https://www.nuget.org/packages/PeterO.Numbers"> `PeterO.Numbers` </a>library (in .NET) or the<a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers` </a>artifact (in Java), returns the result of the corresponding As* ethod.
 
+ * If the type is an enumeration ( `Enum` ) type this CBOR object is a text string or an integer, returns the appropriate enumerated constant. (For example, if  `MyEnum`  includes an entry for  `MyValue` , this method will return  `MyEnum.MyValue`  if the CBOR object represents  `"MyValue"`  or the underlying value for  `MyEnum.MyValue` .)
+
  * If the type is `byte[]` (a one-dimensional byte array) and this CBOR object is a byte string, eturns a byte array which this CBOR byte string's data will be copied o. (This method can't be used to encode CBOR data to a byte array; or that, use the EncodeToBytes method instead.)
 
  * If the type is a one-dimensional array type and this CBOR object is an array, returns an array containing the items in this CBOR object. (Multidimensional arrays to be documented.)
@@ -2695,7 +2699,7 @@ Converts this CBOR object to an object of an arbitrary type. The following types
 
  * If the type is the generic Dictionary or IDictionary (or HashMap or Map in Java), and if this CBOR object is a map, returns an object conforming to the type, class, or interface passed to this method, where the object will contain all keys and values in this CBOR map.
 
- * Enums (To be implemented).
+ * If the type is an enumeration constant ("enum"), and this CBOR object is an integer or text string, returns the enumeration constant with the given number or name, respectively. (Enumeration constants made up of multiple enumeration constants, as allowed by .NET, can only be matched by number this way.) (To be implemented for Java.)
 
  * Type converters (To be implemented).
 
@@ -2705,9 +2709,13 @@ Converts this CBOR object to an object of an arbitrary type. The following types
 
  * If the type is `Guid` (or `UUID` in Java), returns a UUID object if possible.
 
-In the .NET version, if the object is a CBOR map, and if the type is not specially handled above and has a zero-argument public constructor (default or otherwise), an object of the given type is created, then this method checks the CBOR object for public, nonstatic writable properties. For each property found, if its name (with the "Is" prefix deleted and then converted to camel case) matches the name of a key in this CBOR map, and if that property has a getter, that property's setter is invoked and the corresponding value is passed to that method.
+ * If the object is a type not specially handled above, the type includes a zero-argument constructor (default or not), and this CBOR object is a CBOR map. this method checks the given type for eligible setters as follows:
 
-In the Java version, if the object is a CBOR map, and if the type is not specially handled above and has a zero-argument public constructor (default or otherwise), an object of the given type is created, then this method checks the CBOR object for public, nonstatic methods starting with the word "set" (followed by an upper-case A to Z) that take a single parameter. For each method found, if its name (with the starting word "set" deleted and then converted to camel case) matches the name of a key in this CBOR map, and if it has a corresponding getter method that takes no parameters, that method is invoked and the corresponding value is passed to that method.
+ * (*) In the .NET version, eligible setters are the public, nonstatic setters of properties with a public, nonstatic getter (TODO: To be implemented).
+
+ * (*) In the Java version, eligible setters are public, nonstatic methods starting with "set" followed by a character other than a basic digit or lower-case letter, that is, other than "a" to "z" or "0" to "9", that take one parameter. The class containing an eligible setter must have a public, nonstatic method with the same name, but starting with "get" or "is" rather than "set", that takes no parameters and does not return void. (For example, if a class has "public setValue(String)" and "public getValue()", "setValue" is an eligible setter. However, "setValue()" and "setValue(String, int)" are not eligible setters.) (TODO: To be implemented)
+
+ * Then, the method creates an object of the given type and invokes each eligible setter with the corresponding value in the CBOR map, if any. Key names in the map are matched to eligible setters according to the rules described in the [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) documentation.
 
 REMARK: The behavior of this method is likely to change in the final version 3.4 of this library as well as in the next major version (4.0). There are certain inconsistencies between the ToObject method and the FromObject method as well as between the .NET and Java versions of FromObject. For one thing, DateTime/Date objects in FromObject are converted differently between the two versions -- either as CBOR maps with their "get" properties (Java) or as tag-0 strings (.NET) -- this difference has to remain for backward compatibility with version 3.0. For another thing, the treatment of properties/getters starting with "Is" is subtly inconsistent between the .NET and Java versions of FromObject, especially when using certain PODOptions. A certain consistency between .NET and Java and between FromObject and ToObject are sought for version 4.0. It is also hoped that--
 

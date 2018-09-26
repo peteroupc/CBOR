@@ -2477,8 +2477,75 @@ Assert.IsTrue(CBORObject.FromObject(3).CompareTo(cbor[1])
       TestCommon.AssertEqualsHashCode(o[key], value);
     }
 
+    public enum EnumClass { Value1, Value2, Value3 };
+
     [Test]
-    [Ignore]
+    public void TestFromObject_Enum() {
+      CBORObject cbor;
+      cbor = ToObjectTest.TestToFromObjectRoundTrip(EnumClass.Value1);
+      {
+string stringTemp = cbor.AsString();
+Assert.AreEqual(
+  "Value1",
+  stringTemp);
+}
+      cbor = ToObjectTest.TestToFromObjectRoundTrip(EnumClass.Value2);
+      {
+string stringTemp = cbor.AsString();
+Assert.AreEqual(
+  "Value2",
+  stringTemp);
+}
+      cbor = ToObjectTest.TestToFromObjectRoundTrip(EnumClass.Value3);
+      {
+string stringTemp = cbor.AsString();
+Assert.AreEqual(
+  "Value3",
+  stringTemp);
+}
+    }
+
+    public sealed class BooleanStringConverter : ICBORObjectConverter<bool> {
+      public CBORObject ToCBORObject(bool value) {
+        string str = value ? "true" : "false";
+        return CBORObject.FromObject(str);
+      }
+
+      public bool FromCBORObject(CBORObject cbor) {
+        if (cbor.Type == CBORType.Boolean) {
+          return cbor.AsBoolean();
+        }
+        if (cbor.Type == CBORType.TextString) {
+          string str = DataUtilities.ToLowerCaseAscii(cbor.AsString());
+          return str.Equals("true");
+        }
+        return false;
+      }
+    }
+
+    [Test]
+    public void TestFromObject_TypeMapper() {
+      var mapper = new CBORTypeMapper()
+        .AddConverter(typeof(bool), new BooleanStringConverter());
+      CBORObject cbor = CBORObject.FromObject(true, mapper);
+      Assert.AreEqual(CBORType.TextString, cbor.Type);
+      {
+string stringTemp = cbor.AsString();
+Assert.AreEqual(
+  "true",
+  stringTemp);
+}
+      cbor = CBORObject.FromObject(false, mapper);
+      Assert.AreEqual(CBORType.TextString, cbor.Type);
+      {
+string stringTemp = cbor.AsString();
+Assert.AreEqual(
+  "false",
+  stringTemp);
+}
+    }
+
+    [Test]
     public void TestFromObject_Dictionary() {
       IDictionary<string, object> dict = new Dictionary<string, object>();
       dict["TestKey"] = "TestValue";

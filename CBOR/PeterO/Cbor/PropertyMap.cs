@@ -89,6 +89,10 @@ namespace PeterO.Cbor {
         BindingFlags.Instance);
     }
 
+    private static bool IsAssignableFrom(Type superType, Type subType) {
+      return superType.IsAssignableFrom(subType);
+    }
+
     private static MethodInfo GetTypeMethod(
   Type t,
   string name,
@@ -111,6 +115,10 @@ namespace PeterO.Cbor {
       return false;
     }
 #else
+    private static bool IsAssignableFrom(Type superType, Type subType) {
+      return superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
+    }
+
     private static IEnumerable<PropertyInfo> GetTypeProperties(Type t) {
       return t.GetRuntimeProperties();
     }
@@ -247,7 +255,29 @@ namespace PeterO.Cbor {
       return obj;
     }
 
+    public static object ObjectToEnum(CBORObject obj, Type enumType) {
+      Type utype = Enum.GetUnderlyingType(enumType);
+      if (obj.Type == CBORType.Number && obj.IsIntegral) {
+        return Enum.ToObject(enumType, TypeToIntegerObject(obj, utype));
+      } else if (obj.Type == CBORType.TextString) {
+        var nameString = obj.AsString();
+        foreach (var name in Enum.GetNames(enumType)) {
+          if (nameString.Equals(name)) {
+            return Enum.Parse(enumType, name);
+          }
+        }
+    throw new CBORException("Not found: " + obj.ToString());
+      } else {
+        throw new CBORException("Unrecognized enum value: " +
+           obj.ToString());
+      }
+    }
+
     public static object EnumToObject(Enum value) {
+      return value.ToString();
+    }
+
+    public static object EnumToObjectAsInteger(Enum value) {
       Type t = Enum.GetUnderlyingType(value.GetType());
       if (t.Equals(typeof(ulong))) {
         var data = new byte[13];
@@ -301,6 +331,34 @@ namespace PeterO.Cbor {
     private static bool StartsWith(string str, string pfx) {
       return str != null && str.Length >= pfx.Length &&
         str.Substring(0, pfx.Length).Equals(pfx);
+    }
+
+    private static object TypeToIntegerObject(CBORObject objThis, Type t) {
+      if (t.Equals(typeof(int))) {
+        return objThis.AsInt32();
+      }
+      if (t.Equals(typeof(short))) {
+        return objThis.AsInt16();
+      }
+      if (t.Equals(typeof(ushort))) {
+        return objThis.AsUInt16();
+      }
+      if (t.Equals(typeof(byte))) {
+        return objThis.AsByte();
+      }
+      if (t.Equals(typeof(sbyte))) {
+        return objThis.AsSByte();
+      }
+      if (t.Equals(typeof(long))) {
+        return objThis.AsInt64();
+      }
+      if (t.Equals(typeof(uint))) {
+        return objThis.AsUInt32();
+      }
+      if (t.Equals(typeof(ulong))) {
+        return objThis.AsUInt64();
+      }
+      throw new CBORException("Type not supported");
     }
 
     public static object TypeToObject(CBORObject objThis, Type t) {
@@ -361,6 +419,9 @@ namespace PeterO.Cbor {
       if (t.Equals(typeof(ERational))) {
         return objThis.AsERational();
       }
+if (IsAssignableFrom(typeof(Enum), t)) {
+  return ObjectToEnum(objThis, t);
+}
       if (objThis.Type == CBORType.ByteString) {
         if (t.Equals(typeof(byte[]))) {
           byte[] bytes = objThis.GetByteString();
@@ -374,7 +435,7 @@ namespace PeterO.Cbor {
         var isList = false;
         object listObject = null;
 #if NET40 || NET20
-    if (typeof(Array).IsAssignableFrom(t)) {
+    if (IsAssignableFrom(typeof(Array), t)) {
 Type elementType = t.GetElementType();
           Array array = Array.CreateInstance(
         elementType,
@@ -403,7 +464,7 @@ Type elementType = t.GetElementType();
           listObject = Activator.CreateInstance(listType);
         }
 #else
-if (typeof(Array).GetTypeInfo().IsAssignableFrom(t.GetTypeInfo())) {
+if (IsAssignableFrom(typeof(Array), t)) {
           Type elementType = t.GetElementType();
           Array array = Array.CreateInstance(
         elementType,

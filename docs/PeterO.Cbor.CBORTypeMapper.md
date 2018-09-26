@@ -20,7 +20,7 @@ Initializes a new instance of the [PeterO.Cbor.CBORTypeMapper](PeterO.Cbor.CBORT
 <a id="AddConverter_T_System_Type_PeterO_Cbor_ICBORConverter_T"></a>
 ### AddConverter
 
-    public void AddConverter<T>(
+    public PeterO.Cbor.CBORTypeMapper AddConverter<T>(
         System.Type type,
         PeterO.Cbor.ICBORConverter<T> converter);
 
@@ -32,14 +32,18 @@ Not documented yet.
  is not documented yet.
 
  * <i>converter</i>: The parameter  <i>converter</i>
- is not documented yet.
+is not documented yet.
 
  * &lt;T&gt;: Type parameter not documented yet.
+
+<b>Return Value:</b>
+
+A CBORTypeMapper object.
 
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>type</i>
+The parameter <i>type</i>
  or  <i>converter</i>
  is null.
 
