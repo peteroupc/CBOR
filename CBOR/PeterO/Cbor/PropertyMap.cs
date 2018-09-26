@@ -57,10 +57,12 @@ namespace PeterO.Cbor {
         return HasUsableSetter(this.prop);
       }
 
+      // TODO: Property name conversion has changed
+      // for FromObject, but not yet for ToObject
       public string GetAdjustedName(bool removeIsPrefix, bool useCamelCase) {
         string thisName = this.Name;
-        if(useCamelCase){
-          if(CBORUtilities.NameStartsWithWord(thisName,"Is")){
+        if (useCamelCase) {
+          if (CBORUtilities.NameStartsWithWord(thisName, "Is")) {
             thisName = thisName.Substring(2);
           }
           thisName = CBORUtilities.FirstCharLower(thisName);

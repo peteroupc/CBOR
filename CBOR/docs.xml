@@ -1529,6 +1529,17 @@
     </returns>
 
 </doc>
+<doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Object,PeterO.Cbor.CBORTypeMapper)">
+<summary>Generates a CBORObject from an arbitrary object. See the overload of this
+      method that takes CBORTypeMapper and PODOptions arguments.</summary>
+            <param name='obj'>The parameter <paramref name='obj'/> is an
+            arbitrary object.</param>
+            <param name='mapper'>An object containing optional converters to convert objects of certain types to CBOR objects.</param>
+            <returns>A CBOR object corresponding to the given object. Returns
+            CBORObject.Null if the object is null.</returns>
+            <exception cref='T:System.ArgumentNullException'>The parameter
+            <paramref name='mapper'/> is null.</exception>
+</doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Object,PeterO.Cbor.CBORTypeMapper,PeterO.Cbor.PODOptions)">
 
             <summary><para>Generates a CBORObject from an arbitrary object, using the
@@ -1568,17 +1579,17 @@ getters of read/write properties (and also those of read-only properties in the 
 of a compiler-generated type).</item>
 <item>(*) In the Java version, eligible getters are public, nonstatic
 methods starting with "get" or "is" (either word followed by a character other
-than a basic digit or lower-case letter, that is, other than "a" to "z" or 
-"0" to "9"), that take no parameters and 
+than a basic digit or lower-case letter, that is, other than "a" to "z" or
+"0" to "9"), that take no parameters and
 do not return void, except that methods named "getClass" are not
 eligible getters.</item>
 <item>Then, the method returns a CBOR map with each eligible getter's
 name or property name as each key, and with the corresponding value
 returned by that getter as that key's value.  Before adding a key-value
 pair to the map, the key's name is adjusted according to the rules
-described in the <see cref="T:PeterO.Cbor.PODOptions"/> documentation.</item></list>
+described in the <see cref='T:PeterO.Cbor.PODOptions'/> documentation.</item></list>
 <para><b>Note:</b> For security reasons,
-      an application should, whenever possible, not base this parameter on user input or other externally supplied data unless the application ensures that the possible set of <paramref name="obj"/> inputs to this method is limited to types specially handled by this method (such as <c>int</c> or <c>String</c>) and/or to plain-old-data types
+      an application should, whenever possible, not base this parameter on user input or other externally supplied data unless the application limits <paramref name='obj'/> inputs to types specially handled by this method (such as <c>int</c> or <c>String</c>) and/or to plain-old-data types
       (POCO or POJO types) within the control of the application.  If the plain-old-data
       type references other data types, those types should likewise meet either criterion above.</para>
             <para>REMARK: The behavior of this method is likely to change in
@@ -2362,17 +2373,17 @@ described in the <see cref="T:PeterO.Cbor.PODOptions"/> documentation.</item></l
       <list>
         <item>If the type is
           <c>CBORObject</c>
-          , return this object.
+           , return this object.
         </item>
         <item>If the given object is
           <c>CBORObject.Null</c>
            (with or without tags), returns
           <c>null</c>
-          .
+           .
         </item>
         <item>If the type is
           <c>object</c>
-          , return this object.
+           , return this object.
         </item>
         <item>If the type is
           <c>char</c>
@@ -2386,39 +2397,39 @@ described in the <see cref="T:PeterO.Cbor.PODOptions"/> documentation.</item></l
         </item>
         <item>If the type is a primitive integer type (
           <c>byte</c>
-          ,
+           ,
           <c>int</c>
-          ,
+           ,
           <c>short</c>
-          ,
+           ,
           <c>long</c>
-          , as well as
+           , as well as
           <c>sbyte</c>
-          ,
+           ,
           <c>ushort</c>
-          ,
+           ,
           <c>uint</c>
-          , and
+           , and
           <c>ulong</c>
            in .NET) or a primitive floating-point type (
           <c>float</c>
-          ,
+           ,
           <c>double</c>
-          , as well as
+           , as well as
           <c>decimal</c>
            in .NET), returns the result of the corresponding As* method.
         </item>
         <item>If the type is
           <c>String</c>
-          , returns the result of AsString.
+           , returns the result of AsString.
         </item>
         <item>If the type is
           <c>EDecimal</c>
-          ,
+           ,
           <c>EFloat</c>
-          ,
+           ,
           <c>EInteger</c>
-          , or
+           , or
           <c>ERational</c>
            in the
           <a href='https://www.nuget.org/packages/PeterO.Numbers'>
@@ -2432,12 +2443,15 @@ described in the <see cref="T:PeterO.Cbor.PODOptions"/> documentation.</item></l
           method.
         </item>
         <item>If the type is
-          <c>byte[]</c> (a one-dimensional byte array) and this CBOR object is a byte string, returns a byte array which this
-          CBOR byte string's data will be copied to. (This method can't be used to encode CBOR data to a byte array; for that, use the EncodeToBytes method instead.)
+          <c>byte[]</c>
+           (a one-dimensional byte array) and this CBOR object is a byte string,
+          returns a byte array which this CBOR byte string's data will be copied
+          to. (This method can't be used to encode CBOR data to a byte array;
+          for that, use the EncodeToBytes method instead.)
         </item>
-        <item>If the type is a one-dimensional array type and this CBOR object is an array,
-   returns an array containing the items in this CBOR object. (Multidimensional arrays to be
-          documented.)
+        <item>If the type is a one-dimensional array type and this CBOR object is an
+          array, returns an array containing the items in this CBOR object.
+          (Multidimensional arrays to be documented.)
         </item>
         <item>If the type is the generic List, IList, ICollection, or IEnumerable
           (or ArrayList, List, Collection, or Iterable in Java), and if this
@@ -2475,38 +2489,38 @@ described in the <see cref="T:PeterO.Cbor.PODOptions"/> documentation.</item></l
         </item>
       </list>
       <para>In the .NET version, if the object is a CBOR map, and if the type is not
-        specially handled above and has a zero-argument
-        public constructor (default or otherwise), an object of the given type is
-        created, then this method checks the CBOR object for public, nonstatic
-        writable properties. For each property found, if its name (with the "Is"
-        prefix deleted and then converted to camel case) matches the name of a
-        key in this CBOR map, and if that property has a getter, that property's
-        setter is invoked and the corresponding value is passed to that method.
+        specially handled above and has a zero-argument public constructor
+        (default or otherwise), an object of the given type is created, then
+        this method checks the CBOR object for public, nonstatic writable
+        properties. For each property found, if its name (with the "Is" prefix
+        deleted and then converted to camel case) matches the name of a key in
+        this CBOR map, and if that property has a getter, that property's setter
+        is invoked and the corresponding value is passed to that method.
       </para>
       <para>In the Java version, if the object is a CBOR map, and if the type is not
-        specially handled above and has a zero-argument
-        public constructor (default or otherwise), an object of the given type is
-        created, then this method checks the CBOR object for public, nonstatic
-        methods starting with the word "set" (followed by an upper-case A to Z)
-        that take a single parameter. For each method found, if its name (with
-        the starting word "set" deleted and then converted to camel case)
-        matches the name of a key in this CBOR map, and if it has a
-        corresponding getter method that takes no parameters, that method is
-        invoked and the corresponding value is passed to that method.
+        specially handled above and has a zero-argument public constructor
+        (default or otherwise), an object of the given type is created, then
+        this method checks the CBOR object for public, nonstatic methods
+        starting with the word "set" (followed by an upper-case A to Z) that
+        take a single parameter. For each method found, if its name (with the
+        starting word "set" deleted and then converted to camel case) matches
+        the name of a key in this CBOR map, and if it has a corresponding getter
+        method that takes no parameters, that method is invoked and the
+        corresponding value is passed to that method.
       </para>
       <para>REMARK: The behavior of this method is likely to change in the final
         version 3.4 of this library as well as in the next major version (4.0).
         There are certain inconsistencies between the ToObject method and the
         FromObject method as well as between the .NET and Java versions of
-        FromObject. For one thing, DateTime/Date objects in FromObject are converted
-        differently between the two versions -- either as CBOR maps with their
-        "get" properties (Java) or as tag-0 strings (.NET) -- this difference
-        has to remain for backward compatibility with version 3.0. For another
-        thing, the treatment of properties/getters starting with "Is" is subtly
-        inconsistent between the .NET and Java versions of FromObject,
-        especially when using certain PODOptions. A certain consistency between
-        .NET and Java and between FromObject and ToObject are sought for version
-        4.0. It is also hoped that--
+        FromObject. For one thing, DateTime/Date objects in FromObject are
+        converted differently between the two versions -- either as CBOR maps
+        with their "get" properties (Java) or as tag-0 strings (.NET) -- this
+        difference has to remain for backward compatibility with version 3.0.
+        For another thing, the treatment of properties/getters starting with
+        "Is" is subtly inconsistent between the .NET and Java versions of
+        FromObject, especially when using certain PODOptions. A certain
+        consistency between .NET and Java and between FromObject and ToObject
+        are sought for version 4.0. It is also hoped that--
       </para>
       <list>
         <item>the ToObject method will support deserializing to objects consisting
@@ -2519,12 +2533,18 @@ described in the <see cref="T:PeterO.Cbor.PODOptions"/> documentation.</item></l
       </list>
     </summary>
     <param name='t'>The type, class, or interface that this method's return value will belong
-      to. To express a generic type in Java, see the example.  <b>Note:</b> For security reasons,
-      an application should not base this parameter on user input or other externally supplied
-      data.  Whenever possible, this parameter should be either a type specially handled by
-      this method (such as <c>int</c> or <c>String</c>) or a plain-old-data type
-      (POCO or POJO type) within the control of the application.  If the plain-old-data
-      type references other data types, those types should likewise meet either criterion above.
+      to. To express a generic type in Java, see the example.
+      <b>Note:</b>
+       For security reasons, an application should not base this parameter on
+      user input or other externally supplied data. Whenever possible, this
+      parameter should be either a type specially handled by this method (such
+      as
+      <c>int</c>
+       or
+      <c>String</c>
+      ) or a plain-old-data type (POCO or POJO type) within the control of the
+      application. If the plain-old-data type references other data types, those
+      types should likewise meet either criterion above.
     </param>
     <returns>The converted object.
     </returns>
@@ -2560,7 +2580,7 @@ described in the <see cref="T:PeterO.Cbor.PODOptions"/> documentation.</item></l
 
             <summary><para>Converts this CBOR object to an object of an arbitrary type.  See <see cref='M:PeterO.Cbor.CBORObject.ToObject(System.Type)'/> for further information.</para>
 </summary><typeparam name='T'>The type, class, or interface that this method's return value will belong
-      to. <b>Note:</b> For security purposes,
+      to. <b>Note:</b> For security reasons,
       an application should not base this parameter on user input or other externally supplied
       data.  Whenever possible, this parameter should be either a type specially handled by
       this method (such as <c>int</c> or <c>String</c>) or a plain-old-data type
@@ -3398,7 +3418,8 @@ stream.Write(bytes, 0, bytes.Length);
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeMapper.#ctor">
-<summary>Initializes a new instance of the <see cref="CBORTypeMapper" /> class.</summary>
+<summary>Initializes a new instance of the <see cref='CBORTypeMapper'/> class.
+    </summary>
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeMapper.AddConverter``1(System.Type,PeterO.Cbor.ICBORConverter{``0})">
 
@@ -3417,9 +3438,9 @@ stream.Write(bytes, 0, bytes.Length);
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeMapper.FilterTypeName(System.String)">
-<summary>Not documented yet.</summary>
-            <param name='typeName'>The parameter <paramref name='typeName'/> is not documented yet.</param>
-            <returns>Either <c>true</c> or <c>false</c>.</returns>
+
+            <summary>Not documented yet.</summary><param name='typeName'>The parameter <paramref name='typeName'/> is not documented yet.</param><returns>Either <c>true</c> or <c>false</c>.</returns>
+
 </doc>
 <doc name="T:PeterO.Cbor.CBORUtilities">
 

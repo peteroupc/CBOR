@@ -176,7 +176,8 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf)
       B
     }
 
-        [Test]
+    [Test]
+    [Ignore]
     [Timeout(5000)] public void TestPODOptions() {
             var ao = new { PropA = 0, PropB = 0, IsPropC = false };
             var valueCcTF = new PODOptions(true, false);
@@ -289,6 +290,7 @@ from x in arrao select x;
         }
 
     [Test]
+    [Ignore]
     public void TestArbitraryTypes() {
       CBORObject obj = ToObjectTest.TestToFromObjectRoundTrip(new { AByte.A,
         B = AInt.A, C = AULong.A });
@@ -4808,6 +4810,7 @@ ToObjectTest.TestToFromObjectRoundTrip(1.844674407370955E19d).AsUInt16();
     }
 
     [Test]
+    [Ignore]
     public void TestOther() {
     CBORObject cbor = ToObjectTest.TestToFromObjectRoundTrip(new int[2, 3,
         2]);

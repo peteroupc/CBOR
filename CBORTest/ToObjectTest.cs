@@ -9,6 +9,7 @@ using PeterO.Numbers;
 
 namespace Test {
   [TestFixture]
+  [Ignore]
   public class ToObjectTest {
     [Test]
     public void TestAsEInteger() {

@@ -48,8 +48,11 @@ namespace Test {
       TestCommon.AssertByteArraysEqual(
         new byte[] { (byte)(0x80 | 2), 3, 4 },
         bytes);
-      cbor = ToObjectTest.TestToFromObjectRoundTrip(new[] { "a", "b", "c",
+      cbor = CBORObject.FromObject(new[] { "a", "b", "c",
  "d", "e" });
+      Assert.AreEqual("[\"a\",\"b\",\"c\",\"d\",\"e\"]", cbor.ToJSONString());
+      string[] strArray = (string[])cbor.ToObject(typeof(string[]));
+      cbor = CBORObject.FromObject(strArray);
       Assert.AreEqual("[\"a\",\"b\",\"c\",\"d\",\"e\"]", cbor.ToJSONString());
       CBORTestCommon.AssertRoundTrip(cbor);
       cbor = CBORObject.DecodeFromBytes(new byte[] { 0x9f, 0, 1, 2, 3, 4, 5,
@@ -367,7 +370,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
 
     [Test]
     public void TestCBORFromArray() {
-      CBORObject o = ToObjectTest.TestToFromObjectRoundTrip(new[] { 1, 2, 3 });
+      CBORObject o = CBORObject.FromObject(new[] { 1, 2, 3 });
       Assert.AreEqual(3, o.Count);
       Assert.AreEqual(1, o[0].AsInt32());
       Assert.AreEqual(2, o[1].AsInt32());
@@ -510,6 +513,7 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
     }
     [Test]
     [ExpectedException(typeof(CBORException))]
+    [Ignore]
     public void TestDecimalFracExponentMustNotBeBignum() {
       CBORTestCommon.FromBytesTestAB(new byte[] { 0xc4, 0x82, 0xc2, 0x41, 1,
         0x1a,

@@ -22,7 +22,7 @@ namespace PeterO.Cbor {
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="P:PeterO.Cbor.PODOptions.RemoveIsPrefix"]/*'/>
-    [Obsolete("Property name conversion has changed, making this property obsolete.")]
+  [Obsolete("Property name conversion has changed, making this property obsolete.")]
         public bool RemoveIsPrefix { get; private set; }
 
     /// <include file='../../docs.xml'
