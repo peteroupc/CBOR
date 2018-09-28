@@ -8,7 +8,7 @@ at: http://peteroupc.github.io/
 using System;
 
 namespace PeterO.Cbor {
-  internal class CBORTag37 : ICBORTag, ICBORObjectConverter<Guid>
+  internal class CBORTag37 : ICBORTag, ICBORToFromConverter<Guid>
   {
     public CBORTypeFilter GetTypeFilter() {
       return CBORTypeFilter.ByteString;

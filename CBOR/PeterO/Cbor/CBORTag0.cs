@@ -9,7 +9,7 @@ using System;
 using PeterO.Numbers;
 #pragma warning disable 618
 namespace PeterO.Cbor {
-  internal class CBORTag0 : ICBORTag, ICBORObjectConverter<DateTime> {
+  internal class CBORTag0 : ICBORTag, ICBORToFromConverter<DateTime> {
     private static string DateTimeToString(DateTime bi) {
       var lesserFields = new int[7];
       var year = new EInteger[1];

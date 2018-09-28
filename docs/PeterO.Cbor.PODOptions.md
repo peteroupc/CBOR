@@ -20,7 +20,7 @@ Initializes a new instance of the [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOption
 
 <b>Parameters:</b>
 
- * <i>removeIsPrefix</i>: If set to `true` remove is prefix.
+ * <i>removeIsPrefix</i>: If set to `true` remove is prefix. NOTE: May be ignored in future versions of this library.
 
  * <i>useCamelCase</i>: If set to `true` use camel case.
 
