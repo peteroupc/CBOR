@@ -177,7 +177,6 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf)
     }
 
     [Test]
-    [Ignore]
     [Timeout(5000)] public void TestPODOptions() {
             var ao = new { PropA = 0, PropB = 0, IsPropC = false };
             var valueCcTF = new PODOptions(true, false);
@@ -192,7 +191,7 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf)
                  2,
   "PropA",
   "PropB",
-  "PropC");
+  "IsPropC");
             CBORObjectTest.CheckArrayPropertyNames(
   CBORObject.FromObject(arrao, valueCcFF),
                  2,
@@ -204,7 +203,7 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf)
                  2,
   "propA",
   "propB",
-  "isPropC");
+  "propC");
             CBORObjectTest.CheckArrayPropertyNames(
   CBORObject.FromObject(arrao, valueCcTT),
                  2,
@@ -219,7 +218,7 @@ from x in arrao select x;
                  2,
   "PropA",
   "PropB",
-  "PropC");
+  "IsPropC");
             CBORObjectTest.CheckArrayPropertyNames(
   CBORObject.FromObject(queryao, valueCcFF),
                  2,
@@ -231,7 +230,7 @@ from x in arrao select x;
                  2,
   "propA",
   "propB",
-  "isPropC");
+  "propC");
             CBORObjectTest.CheckArrayPropertyNames(
   CBORObject.FromObject(queryao, valueCcTT),
                  2,
@@ -245,7 +244,7 @@ from x in arrao select x;
  valueCcTF,
                  "PropA",
   "PropB",
-  "PropC");
+  "IsPropC");
             CBORObjectTest.CheckPODPropertyNames(
   CBORObject.FromObject(ao2, valueCcFF),
  valueCcFF,
@@ -257,7 +256,7 @@ from x in arrao select x;
  valueCcFT,
                  "propA",
   "propB",
-  "isPropC");
+  "propC");
             CBORObjectTest.CheckPODPropertyNames(
   CBORObject.FromObject(ao2, valueCcTT),
  valueCcTT,
@@ -271,7 +270,7 @@ from x in arrao select x;
   CBORObject.FromObject(aodict, valueCcTF),
   "PropA",
   "PropB",
-  "PropC");
+  "IsPropC");
             CBORObjectTest.CheckPODInDictPropertyNames(
   CBORObject.FromObject(aodict, valueCcFF),
   "PropA",
@@ -281,7 +280,7 @@ from x in arrao select x;
   CBORObject.FromObject(aodict, valueCcFT),
   "propA",
   "propB",
-  "isPropC");
+  "propC");
             CBORObjectTest.CheckPODInDictPropertyNames(
   CBORObject.FromObject(aodict, valueCcTT),
   "propA",
@@ -290,9 +289,8 @@ from x in arrao select x;
         }
 
     [Test]
-    [Ignore]
     public void TestArbitraryTypes() {
-      CBORObject obj = ToObjectTest.TestToFromObjectRoundTrip(new { AByte.A,
+      CBORObject obj = CBORObject.FromObject(new { AByte.A,
         B = AInt.A, C = AULong.A });
       if (obj == null) {
  Assert.Fail();
@@ -309,7 +307,7 @@ from x in arrao select x;
     Assert.AreEqual(254, obj["a"].AsInt32());
       Assert.AreEqual(256, obj["b"].AsInt32());
       Assert.AreEqual(999999, obj["c"].AsInt32());
-      obj = ToObjectTest.TestToFromObjectRoundTrip(new { A = "a", B = "b" });
+      obj = CBORObject.FromObject(new { A = "a", B = "b" });
       {
         string stringTemp = obj["a"].AsString();
         Assert.AreEqual(
@@ -323,7 +321,7 @@ from x in arrao select x;
           stringTemp);
       }
       CBORTestCommon.AssertRoundTrip(obj);
-      obj = ToObjectTest.TestToFromObjectRoundTrip(new { A = "c", B = "b" });
+      obj = CBORObject.FromObject(new { A = "c", B = "b" });
       {
         string stringTemp = obj["a"].AsString();
         Assert.AreEqual(
@@ -337,11 +335,11 @@ from x in arrao select x;
           stringTemp);
       }
       CBORTestCommon.AssertRoundTrip(obj);
-      obj = ToObjectTest.TestToFromObjectRoundTrip(RangeExclusive(0, 10));
+      obj = CBORObject.FromObject(RangeExclusive(0, 10));
       Assert.AreEqual(10, obj.Count);
       Assert.AreEqual(0, obj[0].AsInt32());
       Assert.AreEqual(1, obj[1].AsInt32());
-   obj = ToObjectTest.TestToFromObjectRoundTrip((
+      obj = CBORObject.FromObject((
   object)RangeExclusive(
   0,
   10));
@@ -354,7 +352,7 @@ from x in arrao select x;
 from i in RangeExclusive(0, 10)
 where i % 2 == 0
 select i;
-      obj = ToObjectTest.TestToFromObjectRoundTrip(query);
+      obj = CBORObject.FromObject(query);
       Assert.AreEqual(5, obj.Count);
       Assert.AreEqual(0, obj[0].AsInt32());
       Assert.AreEqual(2, obj[1].AsInt32());
@@ -364,7 +362,7 @@ select i;
 from i in RangeExclusive(0, 10)
 where i % 2 == 0
 select new { A = i, B = i + 1 };
-      obj = ToObjectTest.TestToFromObjectRoundTrip(query2);
+      obj = CBORObject.FromObject(query2);
       Assert.AreEqual(5, obj.Count);
       Assert.AreEqual(0, obj[0]["a"].AsInt32());
       Assert.AreEqual(3, obj[1]["b"].AsInt32());
@@ -4810,9 +4808,8 @@ ToObjectTest.TestToFromObjectRoundTrip(1.844674407370955E19d).AsUInt16();
     }
 
     [Test]
-    [Ignore]
     public void TestOther() {
-    CBORObject cbor = ToObjectTest.TestToFromObjectRoundTrip(new int[2, 3,
+    CBORObject cbor = CBORObject.FromObject(new int[2, 3,
         2]);
       {
 string stringTemp = cbor.ToJSONString();
@@ -4955,55 +4952,6 @@ CBORTestCommon.AssertJSONSer(objectTemp, objectTemp2);
         dbl2.AsUInt64();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw;
-      }
-    }
-
-    private static void AssertTaggedDate(CBORObject obj, string str) {
-      Assert.IsTrue(obj.HasMostOuterTag(0));
-      Assert.AreEqual(str, obj.AsString());
-    }
-
-    [Test]
-    public void TestDateTime() {
-      DateTime[] ranges = {
-        new DateTime(1, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-        new DateTime(100, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-        new DateTime(1998, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-        new DateTime(2030, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-        new DateTime(9998, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-        new DateTime(9999, 12, 31, 23, 59, 59, DateTimeKind.Utc)
-      };
-      var dt = new DateTime(1, 1, 1, 0, 0, 0, DateTimeKind.Utc)
-        .AddMilliseconds(200);
-      AssertTaggedDate(
-        ToObjectTest.TestToFromObjectRoundTrip(dt),
-        "0001-01-01T00:00:00.2Z");
-      dt = new DateTime(1, 1, 1, 0, 0, 0, DateTimeKind.Utc)
-              .AddMilliseconds(220);
-      AssertTaggedDate(
-        ToObjectTest.TestToFromObjectRoundTrip(dt),
-        "0001-01-01T00:00:00.22Z");
-      dt = new DateTime(1, 1, 1, 0, 0, 0, DateTimeKind.Utc)
-              .AddMilliseconds(222);
-      AssertTaggedDate(
-        ToObjectTest.TestToFromObjectRoundTrip(dt),
-        "0001-01-01T00:00:00.222Z");
-      for (var i = 0; i < ranges.Length; i += 2) {
-        DateTime j = ranges[i];
-        while (true) {
-          AssertTaggedDate(
-            ToObjectTest.TestToFromObjectRoundTrip(j),
-            DateTimeToString(j));
-          if (j >= ranges[i + 1]) {
-            break;
-          }
-          try {
-            j = j.AddHours(10);
-          } catch (ArgumentOutOfRangeException) {
-            // Can't add more hours, so break
-            break;
-          }
-        }
       }
     }
   }

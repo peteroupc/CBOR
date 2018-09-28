@@ -59,7 +59,7 @@ namespace PeterO.Cbor {
 
       // TODO: Property name conversion has changed
       // for FromObject, but not yet for ToObject
-      public string GetAdjustedName(bool removeIsPrefix, bool useCamelCase) {
+      public string GetAdjustedName(bool useCamelCase) {
         string thisName = this.Name;
         if (useCamelCase) {
           if (CBORUtilities.NameStartsWithWord(thisName, "Is")) {
@@ -280,18 +280,8 @@ namespace PeterO.Cbor {
     public static object EnumToObjectAsInteger(Enum value) {
       Type t = Enum.GetUnderlyingType(value.GetType());
       if (t.Equals(typeof(ulong))) {
-        var data = new byte[13];
         ulong uvalue = Convert.ToUInt64(value);
-        data[0] = (byte)(uvalue & 0xff);
-        data[1] = (byte)((uvalue >> 8) & 0xff);
-        data[2] = (byte)((uvalue >> 16) & 0xff);
-        data[3] = (byte)((uvalue >> 24) & 0xff);
-        data[4] = (byte)((uvalue >> 32) & 0xff);
-        data[5] = (byte)((uvalue >> 40) & 0xff);
-        data[6] = (byte)((uvalue >> 48) & 0xff);
-        data[7] = (byte)((uvalue >> 56) & 0xff);
-        data[8] = (byte)0;
-        return EInteger.FromBytes(data, true);
+        return EInteger.FromUInt64(uvalue);
       }
       return t.Equals(typeof(long)) ? Convert.ToInt64(value) :
       (t.Equals(typeof(uint)) ? Convert.ToInt64(value) :
@@ -361,7 +351,10 @@ namespace PeterO.Cbor {
       throw new CBORException("Type not supported");
     }
 
-    public static object TypeToObject(CBORObject objThis, Type t) {
+    public static object TypeToObject(
+         CBORObject objThis,
+         Type t,
+         CBORTypeMapper mapper) {
       if (t.Equals(typeof(int))) {
         return objThis.AsInt32();
       }
@@ -419,9 +412,9 @@ namespace PeterO.Cbor {
       if (t.Equals(typeof(ERational))) {
         return objThis.AsERational();
       }
-if (IsAssignableFrom(typeof(Enum), t)) {
-  return ObjectToEnum(objThis, t);
-}
+      if (IsAssignableFrom(typeof(Enum), t)) {
+        return ObjectToEnum(objThis, t);
+      }
       if (objThis.Type == CBORType.ByteString) {
         if (t.Equals(typeof(byte[]))) {
           byte[] bytes = objThis.GetByteString();
@@ -551,6 +544,12 @@ if (IsAssignableFrom(typeof(Array), t)) {
           }
           return dictObject;
         }
+        if (mapper != null) {
+if (!mapper.FilterTypeName(t.FullName)) {
+      throw new CBORException("Type " + t.FullName +
+            " not supported");
+}
+        } else {
         if (t.FullName != null && (StartsWith(t.FullName, "Microsoft.Win32.") ||
            StartsWith(t.FullName, "System.IO."))) {
       throw new CBORException("Type " + t.FullName +
@@ -561,10 +560,10 @@ if (IsAssignableFrom(typeof(Array), t)) {
       throw new CBORException("Type " + t.FullName +
             " not supported");
         }
+        }
         var values = new List<KeyValuePair<string, CBORObject>>();
         foreach (string key in PropertyMap.GetPropertyNames(
                    t,
-                   true,
                    true)) {
           if (objThis.ContainsKey(key)) {
             CBORObject cborValue = objThis[key];
@@ -607,7 +606,7 @@ if (IsAssignableFrom(typeof(Array), t)) {
           // a getter to be eligible for setting
           continue;
         }
-        var name = key.GetAdjustedName(removeIsPrefix, useCamelCase);
+        var name = key.GetAdjustedName(useCamelCase);
         if (dict.ContainsKey(name)) {
           object dobj = dict[name].ToObject(key.Prop.PropertyType);
           key.Prop.SetValue(o, dobj, null);
@@ -618,24 +617,24 @@ if (IsAssignableFrom(typeof(Array), t)) {
 
     public static IEnumerable<KeyValuePair<string, object>>
     GetProperties(Object o) {
-      return GetProperties(o, true, true);
+      return GetProperties(o, true);
     }
 
     public static IEnumerable<string>
-    GetPropertyNames(Type t, bool removeIsPrefix, bool useCamelCase) {
+    GetPropertyNames(Type t, bool useCamelCase) {
       foreach (PropertyData key in GetPropertyList(t)) {
-        yield return key.GetAdjustedName(removeIsPrefix, useCamelCase);
+        yield return key.GetAdjustedName(useCamelCase);
       }
     }
 
     public static IEnumerable<KeyValuePair<string, object>>
-    GetProperties(Object o, bool removeIsPrefix, bool useCamelCase) {
+    GetProperties(Object o, bool useCamelCase) {
       foreach (PropertyData key in GetPropertyList(o.GetType())) {
         if (!key.HasUsableGetter()) {
           continue;
         }
         yield return new KeyValuePair<string, object>(
-  key.GetAdjustedName(removeIsPrefix, useCamelCase),
+  key.GetAdjustedName(useCamelCase),
   key.Prop.GetValue(o, null));
       }
     }

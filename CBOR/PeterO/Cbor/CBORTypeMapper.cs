@@ -13,26 +13,16 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.#ctor"]/*'/>
     public CBORTypeMapper() {
-this.typePrefixes = new List<string>();
-this.typeNames = new List<string>();
-this.converters = new Dictionary<Object, ConverterInfo>();
+      this.typePrefixes = new List<string>();
+      this.typeNames = new List<string>();
+      this.converters = new Dictionary<Object, ConverterInfo>();
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='type'>The parameter <paramref name='type'/> is not
-    /// documented yet.</param>
-    /// <param name='converter'>The parameter <paramref name='converter'/>
-    /// is not documented yet.</param>
-    /// <typeparam name='T'>Type parameter not documented yet.</typeparam>
-    /// <returns>A CBORTypeMapper object.</returns>
-    /// <exception cref='T:System.ArgumentNullException'>The parameter
-    /// <paramref name='type'/> or <paramref name='converter'/> is
-    /// null.</exception>
-    /// <exception cref='T:System.ArgumentException'>Converter doesn't
-    /// contain a proper ToCBORObject method.</exception>
-public CBORTypeMapper AddConverter<T>(
-  Type type,
-  ICBORConverter<T> converter) {
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.AddConverter``1(System.Type,PeterO.Cbor.ICBORConverter{``0})"]/*'/>
+    public CBORTypeMapper AddConverter<T>(
+      Type type,
+      ICBORConverter<T> converter) {
       if (type == null) {
         throw new ArgumentNullException(nameof(type));
       }
@@ -49,18 +39,43 @@ public CBORTypeMapper AddConverter<T>(
         throw new ArgumentException(
           "Converter doesn't contain a proper ToCBORObject method");
       }
+      ci.FromObject = PropertyMap.FindOneArgumentMethod(
+        converter,
+        "FromCBORObject",
+        typeof(CBORObject));
       this.converters[type] = ci;
       return this;
+    }
+
+    internal object ConvertBackWithConverter(
+        CBORObject cbor,
+        Type type) {
+      ConverterInfo convinfo = null;
+      if (this.converters.ContainsKey(type)) {
+        convinfo = this.converters[type];
+      } else {
+        return null;
+      }
+      if (convinfo == null) {
+        return null;
+      }
+      if (convinfo.FromObject == null) {
+        return null;
+      }
+      return PropertyMap.InvokeOneArgumentMethod(
+        convinfo.FromObject,
+        convinfo.Converter,
+        cbor);
     }
 
     internal CBORObject ConvertWithConverter(object obj) {
       Object type = obj.GetType();
       ConverterInfo convinfo = null;
-        if (this.converters.ContainsKey(type)) {
-          convinfo = this.converters[type];
-        } else {
-          return null;
-        }
+      if (this.converters.ContainsKey(type)) {
+        convinfo = this.converters[type];
+      } else {
+        return null;
+      }
       if (convinfo == null) {
         return null;
       }
@@ -74,18 +89,18 @@ public CBORTypeMapper AddConverter<T>(
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.FilterTypeName(System.String)"]/*'/>
     public bool FilterTypeName(string typeName) {
       if (String.IsNullOrEmpty(typeName)) {
- return false;
-}
+        return false;
+      }
       foreach (string prefix in this.typePrefixes) {
-   if (typeName.Length >= prefix.Length &&
-     typeName.Substring(0, prefix.Length).Equals(prefix)) {
-     return true;
-   }
+        if (typeName.Length >= prefix.Length &&
+          typeName.Substring(0, prefix.Length).Equals(prefix)) {
+          return true;
+        }
       }
       foreach (string name in this.typeNames) {
-   if (typeName.Equals(name)) {
-     return true;
-   }
+        if (typeName.Equals(name)) {
+          return true;
+        }
       }
       return false;
     }
@@ -94,12 +109,12 @@ public CBORTypeMapper AddConverter<T>(
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.AddTypePrefix(System.String)"]/*'/>
     public CBORTypeMapper AddTypePrefix(string prefix) {
       if (prefix == null) {
-  throw new ArgumentNullException(nameof(prefix));
-}
-if (prefix.Length == 0) {
-  throw new ArgumentException("prefix" + " is empty.");
-}
-typePrefixes.Add(prefix);
+        throw new ArgumentNullException(nameof(prefix));
+      }
+      if (prefix.Length == 0) {
+        throw new ArgumentException("prefix" + " is empty.");
+      }
+      this.typePrefixes.Add(prefix);
       return this;
     }
 
@@ -107,43 +122,25 @@ typePrefixes.Add(prefix);
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.AddTypeName(System.String)"]/*'/>
     public CBORTypeMapper AddTypeName(string name) {
       if (name == null) {
-  throw new ArgumentNullException(nameof(name));
-}
-if (name.Length == 0) {
-  throw new ArgumentException("name" + " is empty.");
-}
-typeNames.Add(name);
+        throw new ArgumentNullException(nameof(name));
+      }
+      if (name.Length == 0) {
+        throw new ArgumentException("name" + " is empty.");
+      }
+      this.typeNames.Add(name);
       return this;
     }
 
     internal sealed class ConverterInfo {
-      private object toObject;
-
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.ConverterInfo.ToObject"]/*'/>
-      public object ToObject {
-        get {
-          return this.toObject;
-        }
+      public object ToObject { get; set; }
 
-        set {
-          this.toObject = value;
-        }
-      }
+      public object FromObject { get; set; }
 
-      private object converter;
-
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.ConverterInfo.Converter"]/*'/>
-      public object Converter {
-        get {
-          return this.converter;
-        }
-
-        set {
-          this.converter = value;
-        }
-      }
+    /// <summary>Gets a value not documented yet.</summary>
+    /// <value>A value not documented yet.</value>
+      public object Converter { get; set; }
     }
   }
 }

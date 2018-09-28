@@ -9,7 +9,7 @@ using System;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-  internal class CBORDateConverter : ICBORObjectConverter<DateTime> {
+  internal class CBORDateConverter : ICBORToFromConverter<DateTime> {
     private static string DateTimeToString(DateTime bi) {
       var lesserFields = new int[7];
       var year = new EInteger[1];

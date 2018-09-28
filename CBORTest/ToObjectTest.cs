@@ -957,6 +957,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
       // not implemented yet
     }
     [Test]
+    [Ignore]
     public void TestAsSingle() {
       try {
         CBORObject.NewArray().ToObject(typeof(float));
@@ -1092,7 +1093,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
     [Timeout(5000)]
     public void TestToObject() {
       var ao = new PODClass();
-      CBORObject co = ToObjectTest.TestToFromObjectRoundTrip(ao);
+      CBORObject co = CBORObject.FromObject(ao);
       Assert.IsFalse(co.ContainsKey("PrivatePropA"));
       Assert.IsFalse(co.ContainsKey("privatePropA"));
       Assert.IsFalse(co.ContainsKey("staticPropA"));
@@ -1187,6 +1188,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
     }
 
     [Test]
+    [Ignore]
     public void TestCharRoundTrip() {
       for (var i = 0; i < 0x10000; ++i) {
         if ((i & 0xf800) == 0xd800) {

@@ -8,7 +8,7 @@ Represents an object in Concise Binary Object Representation (CBOR) and       co
  * [PeterO.Cbor.CBORType](PeterO.Cbor.CBORType.md) - Represents a type that a CBOR object can have.
  * [PeterO.Cbor.CBORTypeMapper](PeterO.Cbor.CBORTypeMapper.md) - Not documented yet.
  * [PeterO.Cbor.ICBORConverter&lt;T&gt;](PeterO.Cbor.ICBORConverter-T.md) - Interface implemented by classes that convert objects of arbitrary types       to CBOR objects.
- * [PeterO.Cbor.ICBORObjectConverter&lt;T&gt;](PeterO.Cbor.ICBORObjectConverter-T.md) - Interface implemented by classes that convert objects of arbitrary types       to and from CBOR objects.
+ * [PeterO.Cbor.ICBORToFromConverter&lt;T&gt;](PeterO.Cbor.ICBORToFromConverter-T.md) - Interface implemented by classes that convert objects of arbitrary types       to and from CBOR objects.
  * [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) - Includes options to control how CBOR objects are converted              to JSON.
  * [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) - Options for converting "plain old data" objects (better known as POCOs in .
  * [PeterO.DataUtilities](PeterO.DataUtilities.md) - Contains methods useful for reading and writing strings.

@@ -8,7 +8,7 @@ at: http://peteroupc.github.io/
 using System;
 
 namespace PeterO.Cbor {
-  internal class CBORUriConverter : ICBORObjectConverter<Uri>
+  internal class CBORUriConverter : ICBORToFromConverter<Uri>
   {
     private CBORObject ValidateObject(CBORObject obj) {
       if (obj.Type != CBORType.TextString) {

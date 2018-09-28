@@ -6,7 +6,6 @@ Options for converting "plain old data" objects (better known as POCOs in .NET o
 
 ### Member Summary
 * <code>[public static readonly PeterO.Cbor.PODOptions Default;](#Default)</code> - The default settings for "plain old data" options.
-* <code>[RemoveIsPrefix](#RemoveIsPrefix)</code> - Gets a value indicating whether the "Is" prefix in property names is removed before they are used as keys.
 * <code>[UseCamelCase](#UseCamelCase)</code> -  Gets a value indicating whether property names are converted to camel case before they are used as keys.
 
 <a id="Void_ctor_Boolean_Boolean"></a>
@@ -30,19 +29,6 @@ Initializes a new instance of the [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOption
     public static readonly PeterO.Cbor.PODOptions Default;
 
 The default settings for "plain old data" options.
-
-<a id="RemoveIsPrefix"></a>
-### RemoveIsPrefix
-
-    public bool RemoveIsPrefix { get; }
-
-<b>Deprecated.</b> Property name conversion has changed, making this property obsolete.
-
-Gets a value indicating whether the "Is" prefix in property names is removed before they are used as keys.
-
-<b>Returns:</b>
-
- `true`  If the prefix is removed; otherwise, . `false` .
 
 <a id="UseCamelCase"></a>
 ### UseCamelCase

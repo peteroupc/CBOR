@@ -12,18 +12,12 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.PODOptions.#ctor(System.Boolean,System.Boolean)"]/*'/>
     public PODOptions(bool removeIsPrefix, bool useCamelCase) {
-      this.RemoveIsPrefix = removeIsPrefix;
       this.UseCamelCase = useCamelCase;
     }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="F:PeterO.Cbor.PODOptions.Default"]/*'/>
     public static readonly PODOptions Default = new PODOptions();
-
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Cbor.PODOptions.RemoveIsPrefix"]/*'/>
-  [Obsolete("Property name conversion has changed, making this property obsolete.")]
-        public bool RemoveIsPrefix { get; private set; }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="P:PeterO.Cbor.PODOptions.UseCamelCase"]/*'/>
