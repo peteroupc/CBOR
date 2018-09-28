@@ -10,7 +10,7 @@ Interface implemented by classes that convert objects of arbitrary types to and 
 
 <b>Parameters:</b>
 
- * &lt;T&gt;: Type of objects that a class implementing this method can convert to and from CBOR objects.
+ * &lt;T&gt;: Type of objects that a class implementing this method can convert to and rom CBOR objects.
 
 <a id="FromCBORObject_PeterO_Cbor_CBORObject"></a>
 ### FromCBORObject

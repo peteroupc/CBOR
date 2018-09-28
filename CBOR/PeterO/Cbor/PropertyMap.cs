@@ -192,30 +192,76 @@ internal const bool DateTimeCompatHack = true;
       return ExtendedRational.FromLegacy(er);
     }
 #pragma warning restore 618
-    private static void FromArrayRecursive(
-  Array arr,
-  int[] index,
-  int dimension,
-  CBORObject obj,
-  PODOptions options) {
-      int dimLength = arr.GetLength(dimension);
-      int rank = index.Length;
-      for (var i = 0; i < dimLength; ++i) {
-        if (dimension + 1 == rank) {
-          index[dimension] = i;
-          obj.Add(CBORObject.FromObject(arr.GetValue(index), options));
-        } else {
-          CBORObject child = CBORObject.NewArray();
-          for (int j = dimension + 1; j < dimLength; ++j) {
-            index[j] = 0;
-          }
-          FromArrayRecursive(arr, index, dimension + 1, child, options);
-          obj.Add(child);
-        }
+    public static bool FirstElement(int[] index, int[] dimensions) {
+      foreach (var d in dimensions) {
+         if (d == 0) {
+ return false;
+}
       }
+      return true;
     }
 
-    public static CBORObject FromArray(Object arrObj, PODOptions options) {
+    public static bool NextElement(int[] index, int[] dimensions) {
+      for (var i = dimensions.Length - 1; i >= 0; --i) {
+        if (dimensions[i] > 0) {
+          ++index[i];
+          if (index[i] >= dimensions[i]) {
+            index[i] = 0;
+          } else {
+ return true;
+}
+        }
+      }
+      return false;
+    }
+
+    public static CBORObject BuildCBORArray(int[] dimensions) {
+      int zeroPos = dimensions.Length;
+      for (var i = 0; i < dimensions.Length; ++i) {
+         if (dimensions[i] == 0) {
+  {zeroPos = i;
+} break;
+}
+      }
+      int arraydims = zeroPos - 1;
+      if (arraydims <= 0) {
+ return CBORObject.NewArray();
+}
+      var stack = new CBORObject[zeroPos];
+      var index = new int[zeroPos];
+      var stackpos = 0;
+      CBORObject ret = CBORObject.NewArray();
+      stack[0] = ret;
+      index[0] = 0;
+      for (var i = 0; i < dimensions[0]; ++i) {
+       ret.Add(CBORObject.NewArray());
+      }
+      ++stackpos;
+      while (stackpos > 0) {
+        int curindex = index[stackpos - 1];
+        if (curindex < stack[stackpos - 1].Count) {
+          CBORObject subobj = stack[stackpos - 1][curindex];
+          if (stackpos < zeroPos) {
+            stack[stackpos] = subobj;
+            index[stackpos] = 0;
+            for (var i = 0; i < dimensions[stackpos]; ++i) {
+             subobj.Add(CBORObject.NewArray());
+            }
+            ++index[stackpos - 1];
+            ++stackpos;
+          } else {
+            ++index[stackpos - 1];
+          }
+        } else {
+           --stackpos;
+        }
+      }
+      return ret;
+    }
+
+    public static CBORObject FromArray(
+  Object arrObj,
+  PODOptions options) {
       var arr = (Array)arrObj;
       int rank = arr.Rank;
       if (rank == 0) {
@@ -227,14 +273,53 @@ internal const bool DateTimeCompatHack = true;
         obj = CBORObject.NewArray();
         int len = arr.GetLength(0);
         for (var i = 0; i < len; ++i) {
-          obj.Add(CBORObject.FromObject(arr.GetValue(i), options));
+    obj.Add(
+  CBORObject.FromObject(
+  arr.GetValue(i),
+  options));
         }
         return obj;
       }
       var index = new int[rank];
-      obj = CBORObject.NewArray();
-      FromArrayRecursive(arr, index, 0, obj, options);
+      var dimensions = new int[rank];
+      for (var i = 0; i < rank; ++i) { dimensions[i] = arr.GetLength(i);
+}
+      if (!FirstElement(index, dimensions)) {
+ return obj;
+}
+      obj = BuildCBORArray(dimensions);
+      do {
+       CBORObject o = CBORObject.FromObject(
+        arr.GetValue(index),
+        options);
+       SetCBORObject(obj, index, o);
+      } while (NextElement(index, dimensions));
       return obj;
+    }
+
+    private static CBORObject GetCBORObject(CBORObject cbor, int[] index) {
+      CBORObject ret = cbor;
+      foreach (var i in index) { ret = ret[i];
+}
+      return ret;
+    }
+
+    private static void SetCBORObject(
+  CBORObject cbor,
+  int[] index,
+  CBORObject obj) {
+      CBORObject ret = cbor;
+      for (var i = 0; i < index.Length - 1; ++i) {
+        ret = ret[index[i]];
+      }
+      int ilen = index[index.Length - 1];
+      while (ilen >= ret.Count) {
+  { ret.Add(CBORObject.Null);
+}
+}
+      // TODO: Make Set(object, object) work with arrays
+      // in next major version
+      ret[ilen] = obj;
     }
 
     public static object EnumToObject(Enum value) {

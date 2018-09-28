@@ -3521,7 +3521,7 @@ stream.Write(bytes, 0, bytes.Length);
       to and from CBOR objects.
     </summary>
     <typeparam name='T'>
-      Type of objects that a class implementing this method can convert to and
+       Type of objects that a class implementing this method can convert to and
       from CBOR objects.
     </typeparam>
 </doc>
