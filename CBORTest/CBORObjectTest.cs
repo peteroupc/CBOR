@@ -2491,6 +2491,31 @@ Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Double.NaN).AsEFloat()
       Assert.AreEqual(2, cbor.AsInt32());
     }
 
+    [Test]
+public void TestToObject_Enum(){
+CBORObject cbor;
+EnumClass ec;
+cbor=CBORObject.FromObject("Value1");
+ec=(EnumClass)cbor.ToObject(typeof(EnumClass));
+Assert.AreEqual(EnumClass.Value1,ec);
+cbor=CBORObject.FromObject("Value2");
+ec=(EnumClass)cbor.ToObject(typeof(EnumClass));
+Assert.AreEqual(EnumClass.Value2,ec);
+cbor=CBORObject.FromObject("Value3");
+ec=(EnumClass)cbor.ToObject(typeof(EnumClass));
+Assert.AreEqual(EnumClass.Value3,ec);
+cbor=CBORObject.FromObject("ValueXYZ");
+Assert.Throws<CBORException>(()=>cbor.ToObject(typeof(EnumClass)));
+cbor=CBORObject.FromObject(true);
+Assert.Throws<CBORException>(()=>cbor.ToObject(typeof(EnumClass)));
+}
+
+    [Test]
+    public void TestToObject_UnknownEnum() {
+      CBORObject cbor;
+      cbor = CBORObject.FromObject(999);
+      Assert.Throws<CBORException>(() => cbor.ToObject(typeof(EnumClass)));
+    }
     public sealed class TestConverter : ICBORToFromConverter<string> {
       public CBORObject ToCBORObject(string strValue) {
         return CBORObject.FromObject(

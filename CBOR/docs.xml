@@ -1546,7 +1546,7 @@
 <item><c>null</c> is converted to <c>CBORObject.Null</c>.</item>
 <item>A <c>CBORObject</c> is returned as itself.</item>
 <item>If the object is of a type corresponding to a type converter mentioned in the <paramref name='mapper'/> parameter, that converter will be used to convert the object to a CBOR object.  Type converters can be used to override the default conversion behavior of almost any object.</item>
-<item>A <c>char</c> is TBD.</item>
+<item>A <c>char</c> is... (to be implemented).</item>
 <item>A <c>bool</c> (<c>boolean</c> in Java) is converted to <c>CBORObject.True</c> or <c>CBORObject.False</c>.</item>
 <item>A <c>byte</c> is converted to a CBOR integer from 0 through 255.</item>
 <item>A primitive integer type (<c>int</c>, <c>short</c>, <c>long</c>, as well as <c>sbyte</c>, <c>ushort</c>, <c>uint</c>, and <c>ulong</c> in .NET) is converted to the corresponding CBOR integer.</item>
@@ -1593,17 +1593,7 @@ Note that for security reasons, certain types are not supported even if they con
       (POCO or POJO types) within the control of the application.  If the plain-old-data
       type references other data types, those types should likewise meet either criterion above.</para>
 <para><b>REMARK:</b> .NET enumeration (<c>Enum</c>) constants could also have been converted to text strings with <c>ToString()</c>, but that method will return multiple names if the given Enum object is a combination of Enum objects (e.g. if the object is <c>FileAccess.Read | FileAccess.Write</c>).  More generally, if Enums are converted to text strings, constants from Enum types with the <c>Flags</c> attribute, and constants from the same Enum type that share an underlying value, should not be passed to this method.</para>
-            <para>REMARK: The behavior of this method is likely to change in
-            the next major version (4.0). There are certain inconsistencies
-            between the ToObject method and the FromObject method as well as
-            between the .NET and Java versions of FromObject. For one thing,
-            DateTime/Date objects in FromObject are converted differently between the two
-            versions -- either as CBOR maps with their "get" properties (Java)
-            or as tag-0 strings (.NET) -- this difference has to remain for
-            backward compatibility with version 3.0. For another thing, the
-            treatment of properties/getters starting with "Is" is subtly
-            inconsistent between the .NET and Java versions of FromObject,
-            especially when using certain PODOptions. A certain consistency
+            <para>REMARK: A certain consistency
             between .NET and Java and between FromObject and ToObject are
             sought for version 4.0. It is also hoped that--</para>
             <list>
@@ -2473,9 +2463,8 @@ Note that for security reasons, certain types are not supported even if they con
           to. (This method can't be used to encode CBOR data to a byte array;
           for that, use the EncodeToBytes method instead.)
         </item>
-        <item>If the type is a one-dimensional array type and this CBOR object is an
+        <item>If the type is an array type and this CBOR object is an
           array, returns an array containing the items in this CBOR object.
-          (Multidimensional arrays to be documented.)
         </item>
         <item>If the type is the generic List, IList, ICollection, or IEnumerable
           (or ArrayList, List, Collection, or Iterable in Java), and if this
@@ -2492,7 +2481,7 @@ Note that for security reasons, certain types are not supported even if they con
           is an integer or text string, returns the enumeration constant with
           the given number or name, respectively. (Enumeration constants made up
           of multiple enumeration constants, as allowed by .NET, can only be
-          matched by number this way.) (To be implemented for Java.)
+          matched by number this way.)
         </item>
         <item>If the type is
           <c>DateTime</c>
@@ -2542,17 +2531,7 @@ Note that for security reasons, certain types are not supported even if they con
           supported even if they contain eligible setters.
         </item>
       </list>
-      <para>REMARK: The behavior of this method is likely to change in the final
-        version 3.4 of this library as well as in the next major version (4.0).
-        There are certain inconsistencies between the ToObject method and the
-        FromObject method as well as between the .NET and Java versions of
-        FromObject. For one thing, DateTime/Date objects in FromObject are
-        converted differently between the two versions -- either as CBOR maps
-        with their "get" properties (Java) or as tag-0 strings (.NET) -- this
-        difference has to remain for backward compatibility with version 3.0.
-        For another thing, the treatment of properties/getters starting with
-        "Is" is subtly inconsistent between the .NET and Java versions of
-        FromObject, especially when using certain PODOptions. A certain
+      <para>REMARK: A certain
         consistency between .NET and Java and between FromObject and ToObject
         are sought for version 4.0. It is also hoped that--
       </para>
@@ -3451,7 +3430,7 @@ stream.Write(bytes, 0, bytes.Length);
 </doc>
 <doc name="T:PeterO.Cbor.CBORTypeMapper">
 
-            <summary>Not documented yet.</summary>
+            <summary>Holds converters to customize the serialization and deserialization behavior of <c>CBORObject.FromObject</c> and <c>CBORObject#ToObject</c>, as well as type filters for <c>ToObject</c>.</summary>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeMapper.#ctor">
@@ -3484,7 +3463,7 @@ stream.Write(bytes, 0, bytes.Length);
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeMapper.FilterTypeName(System.String)">
 
-            <summary>Not documented yet.</summary><param name='typeName'>The parameter <paramref name='typeName'/> is not documented yet.</param><returns>Either <c>true</c> or <c>false</c>.</returns>
+            <summary>Not documented yet.</summary><param name='typeName'>The fully qualified name of a Java or .NET class (e.g., <c>java.math.BigInteger</c> or <c>System.Globalization.CultureInfo</c>).</param><returns>Either <c>true</c> or <c>false</c>.</returns>
 
 </doc>
 <doc name="T:PeterO.Cbor.CBORUtilities">
@@ -4099,7 +4078,7 @@ vnd.shootproof+json</item>
 <doc name="M:PeterO.DataUtilities.GetUtf8Bytes(System.String,System.Boolean)">
 
             <summary><para>Encodes a string in UTF-8 as a byte array.  This method does not insert a byte-order mark (U+FEFF) at the beginning of the encoded byte array.</para>
-<para>REMARK: It is not recommended to use <c>Encoding.UTF8.GetBytes</c> in .NET, or the <c>getBytes()</c> method in Java to do this.  For instance, <c>getBytes()</c> encodes text strings in an unspecified character encoding.  Both behaviors can be undesirable.</para>
+<para>REMARK: It is not recommended to use <c>Encoding.UTF8.GetBytes</c> in .NET, or the <c>getBytes()</c> method in Java to do this.  For instance, <c>getBytes()</c> encodes text strings in an unspecified character encoding, which can be undesirable.</para>
     </summary><param name='str'>The parameter
       <paramref name='str'/>
        is a text string.
@@ -4119,7 +4098,7 @@ vnd.shootproof+json</item>
 <doc name="M:PeterO.DataUtilities.GetUtf8Bytes(System.String,System.Boolean,System.Boolean)">
 
             <summary><para>Encodes a string in UTF-8 as a byte array.  This method does not insert a byte-order mark (U+FEFF) at the beginning of the encoded byte array.</para>
-<para>REMARK: It is not recommended to use <c>Encoding.UTF8.GetBytes</c> in .NET, or the <c>getBytes()</c> method in Java to do this.  For instance, <c>getBytes()</c> encodes text strings in an unspecified character encoding.  Both behaviors can be undesirable.</para>
+<para>REMARK: It is not recommended to use <c>Encoding.UTF8.GetBytes</c> in .NET, or the <c>getBytes()</c> method in Java to do this.  For instance, <c>getBytes()</c> encodes text strings in an unspecified character encoding, which can be undesirable.</para>
     </summary><param name='str'>The parameter
       <paramref name='str'/>
        is a text string.

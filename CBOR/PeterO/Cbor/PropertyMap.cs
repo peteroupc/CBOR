@@ -187,41 +187,60 @@ namespace PeterO.Cbor {
       }
     }
 
-    private static void FromArrayRecursive(
- Array arr,
- int[] index,
- int dimension,
- CBORObject obj,
- PODOptions options,
- CBORTypeMapper mapper,
- int depth) {
-      int dimLength = arr.GetLength(dimension);
-      int rank = index.Length;
-      for (var i = 0; i < dimLength; ++i) {
-        if (dimension + 1 == rank) {
-          index[dimension] = i;
-          obj.Add(
-  CBORObject.FromObject(
-  arr.GetValue(index),
-  options,
-  mapper,
-  depth + 1));
-        } else {
-          CBORObject child = CBORObject.NewArray();
-          for (int j = dimension + 1; j < dimLength; ++j) {
-            index[j] = 0;
-          }
-        FromArrayRecursive(
-  arr,
-  index,
-  dimension + 1,
-  child,
-  options,
-  mapper,
-  depth + 1);
-          obj.Add(child);
+    public static bool FirstElement(int[] index, int[] dimensions){
+      foreach(var d in dimensions){
+         if(d==0)return false;
+      }
+      return true;
+    }
+    public static bool NextElement(int[] index, int[] dimensions){
+      for(var i=dimensions.Length-1;i>=0;i--){
+        if(dimensions[i]>0){
+          index[i]++;
+          if(index[i]>=dimensions[i]){
+            index[i]=0;
+          } else return true;
         }
       }
+      return false;
+    }
+    public static CBORObject BuildCBORArray(int[] dimensions){
+      int zeroPos=dimensions.Length;
+      for(var i=0;i<dimensions.Length;i++){
+         if(dimensions[i]==0){zeroPos=i; break; }
+      }
+      int arraydims=zeroPos-1;
+      if(arraydims<=0)return CBORObject.NewArray();
+      CBORObject[] stack=new CBORObject[zeroPos];
+      int[] index=new int[zeroPos];
+      int stackpos=0;
+      CBORObject ret=CBORObject.NewArray();
+      stack[0]=ret;
+      index[0]=0;
+      for(var i=0;i<dimensions[0];i++){
+       ret.Add(CBORObject.NewArray());
+      }
+      stackpos++;
+      while(stackpos>0){
+        int curindex=index[stackpos-1];
+        if(curindex < stack[stackpos-1].Count){
+          CBORObject subobj=stack[stackpos-1][curindex];
+          if(stackpos<zeroPos){
+            stack[stackpos]=subobj;
+            index[stackpos]=0;
+            for(var i=0;i<dimensions[stackpos];i++){
+             subobj.Add(CBORObject.NewArray());
+            }
+            index[stackpos-1]++;
+            stackpos++;
+          } else {
+            index[stackpos-1]++;
+          }
+        } else {
+           stackpos--;
+        }
+      }
+      return ret;
     }
 
     public static CBORObject FromArray(
@@ -250,9 +269,82 @@ namespace PeterO.Cbor {
         return obj;
       }
       var index = new int[rank];
-      obj = CBORObject.NewArray();
-      FromArrayRecursive(arr, index, 0, obj, options, mapper, depth);
+      var dimensions = new int[rank];
+      for(var i=0;i<rank;i++){ dimensions[i]=arr.GetLength(i); }
+      if(!FirstElement(index,dimensions))return obj;
+      obj = BuildCBORArray(dimensions);
+      do {
+       CBORObject o=
+        CBORObject.FromObject(
+        arr.GetValue(index),
+        options,
+        mapper,
+        depth + 1);
+       SetCBORObject(obj,index,o);
+      } while(NextElement(index,dimensions));
       return obj;
+    }
+
+    private static CBORObject GetCBORObject(CBORObject cbor, int[] index){
+      CBORObject ret=cbor;
+      foreach(var i in index){ ret=ret[i]; }
+      return ret;
+    }
+
+    private static void SetCBORObject(CBORObject cbor, int[] index, CBORObject obj){
+      CBORObject ret=cbor;
+      for(var i=0;i<index.Length-1;i++){
+        ret=ret[index[i]];
+      }
+      int ilen=index[index.Length-1];
+      while(ilen>=ret.Count){ ret.Add(CBORObject.Null); }
+      // TODO: Make Set(object,object) work with arrays
+      ret[ilen]=obj;
+    }
+
+    public static Array FillArray(
+  Array arr,
+  Type elementType,
+  CBORObject cbor,
+  CBORTypeMapper mapper,
+  int depth) {
+      int rank = arr.Rank;
+      if (rank == 0) {
+        return arr;
+      }
+      if (rank == 1) {
+        int len = arr.GetLength(0);
+        for (var i = 0; i < len; ++i) {
+  object item=cbor[i].ToObject(elementType,mapper);
+  arr.SetValue(item,i);
+        }
+        return arr;
+      }
+      var index = new int[rank];
+      var dimensions = new int[rank];
+      for(var i=0;i<rank;i++){ dimensions[i]=arr.GetLength(i); }
+      if(!FirstElement(index,dimensions))return arr;
+       do {
+        object item=GetCBORObject(cbor, index).ToObject(elementType,mapper);
+        arr.SetValue(item,index);
+       } while(NextElement(index,dimensions));
+      return arr;
+    }
+
+    public static int[] GetDimensions(CBORObject obj){
+      if(obj.Type!=CBORType.Array)throw new CBORException();
+      // Common cases
+      if(obj.Count==0)return new int[]{0};
+      if(obj[0].Type!=CBORType.Array)return new int[]{obj.Count};
+      // Complex cases
+      var list=new List<int>();
+      list.Add(obj.Count);
+      while(obj.Type==CBORType.Array &&
+            obj.Count>0 && obj[0].Type==CBORType.Array){
+        list.Add(obj[0].Count);
+        obj=obj[0];
+      }
+      return list.ToArray();
     }
 
     public static object ObjectToEnum(CBORObject obj, Type enumType) {
@@ -432,15 +524,8 @@ namespace PeterO.Cbor {
 Type elementType = t.GetElementType();
           Array array = Array.CreateInstance(
         elementType,
-        objThis.Count);
-         if (array.Rank != 1) {
- throw new
-  NotSupportedException("Multidimensional arrays not supported yet.");
-         }
-          for (var i = 0; i < objThis.Count; ++i) {
-            array.SetValue(objThis[i].ToObject(elementType), i);
-          }
-    return array;
+        GetDimensions(objThis));
+    return FillArray(array,elementType,objThis,mapper,0);
         }
         if (t.IsGenericType) {
           Type td = t.GetGenericTypeDefinition();
@@ -461,11 +546,8 @@ if (IsAssignableFrom(typeof(Array), t)) {
           Type elementType = t.GetElementType();
           Array array = Array.CreateInstance(
         elementType,
-        objThis.Count);
-          for (var i = 0; i < objThis.Count; ++i) {
-            array.SetValue(objThis[i].ToObject(elementType), i);
-          }
-    return array;
+        GetDimensions(objThis));
+    return FillArray(array,elementType,objThis,mapper,0);
         }
         if (t.GetTypeInfo().IsGenericType) {
           Type td = t.GetGenericTypeDefinition();

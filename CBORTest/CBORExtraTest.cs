@@ -369,45 +369,29 @@ select new { A = i, B = i + 1 };
       CBORTestCommon.AssertRoundTrip(obj);
     }
 
-    private static string DateTimeToString(DateTime bi) {
-      DateTime dt = TimeZoneInfo.ConvertTime(bi, TimeZoneInfo.Utc);
-      int year = dt.Year;
-      int month = dt.Month;
-      int day = dt.Day;
-      int hour = dt.Hour;
-      int minute = dt.Minute;
-      int second = dt.Second;
-      int millisecond = dt.Millisecond;
-      var charbuf = new char[millisecond > 0 ? 24 : 20];
-      charbuf[0] = (char)('0' + ((year / 1000) % 10));
-      charbuf[1] = (char)('0' + ((year / 100) % 10));
-      charbuf[2] = (char)('0' + ((year / 10) % 10));
-      charbuf[3] = (char)('0' + (year % 10));
-      charbuf[4] = '-';
-      charbuf[5] = (char)('0' + ((month / 10) % 10));
-      charbuf[6] = (char)('0' + (month % 10));
-      charbuf[7] = '-';
-      charbuf[8] = (char)('0' + ((day / 10) % 10));
-      charbuf[9] = (char)('0' + (day % 10));
-      charbuf[10] = 'T';
-      charbuf[11] = (char)('0' + ((hour / 10) % 10));
-      charbuf[12] = (char)('0' + (hour % 10));
-      charbuf[13] = ':';
-      charbuf[14] = (char)('0' + ((minute / 10) % 10));
-      charbuf[15] = (char)('0' + (minute % 10));
-      charbuf[16] = ':';
-      charbuf[17] = (char)('0' + ((second / 10) % 10));
-      charbuf[18] = (char)('0' + (second % 10));
-      if (millisecond > 0) {
-        charbuf[19] = '.';
-        charbuf[20] = (char)('0' + ((millisecond / 100) % 10));
-        charbuf[21] = (char)('0' + ((millisecond / 10) % 10));
-        charbuf[22] = (char)('0' + (millisecond % 10));
-        charbuf[23] = 'Z';
-      } else {
-        charbuf[19] = 'Z';
-      }
-      return new String(charbuf);
+   
+    [Test]
+    public void TestMultidimArray() {
+      int[,] arr = { { 0, 1, 99 }, { 2, 3, 299 } };
+      var cbor = CBORObject.FromObject(arr);
+      Assert.AreEqual(0, cbor[0][0].AsInt32());
+      Assert.AreEqual(1, cbor[0][1].AsInt32());
+      Assert.AreEqual(99, cbor[0][2].AsInt32());
+      Assert.AreEqual(2, cbor[1][0].AsInt32());
+      Assert.AreEqual(3, cbor[1][1].AsInt32());
+      Assert.AreEqual(299, cbor[1][2].AsInt32());
+      var arr2 = cbor.ToObject(typeof(int[,]));
+      Assert.AreEqual(arr, arr2);
+      int[,,] arr3 = { { { 0, 1 }, { 99, 100 } }, { { 2, 3 }, { 299, 300 } } };
+      cbor = CBORObject.FromObject(arr3);
+      Assert.AreEqual(0, cbor[0][0][0].AsInt32());
+      Assert.AreEqual(1, cbor[0][0][1].AsInt32());
+      Assert.AreEqual(99, cbor[0][1][0].AsInt32());
+      Assert.AreEqual(100, cbor[0][1][1].AsInt32());
+      Assert.AreEqual(2, cbor[1][0][0].AsInt32());
+      Assert.AreEqual(299, cbor[1][1][0].AsInt32());
+      var arr4 = cbor.ToObject(typeof(int[,,]));
+      Assert.AreEqual(arr3, arr4);
     }
 
     [Test]

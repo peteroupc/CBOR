@@ -1028,7 +1028,6 @@ Assert.AreEqual(objectTemp, objectTemp2);
       private string Bb { get; set; }
     }
     [Test]
-    [Ignore]
     public void TestCPOD() {
       var m = new CPOD();
       m.Aa = "Test";
