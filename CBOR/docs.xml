@@ -3625,7 +3625,7 @@ stream.Write(bytes, 0, bytes.Length);
             <summary>Initializes a new instance of the <see cref='T:PeterO.Cbor.PODOptions'/> class.
     </summary><param name='removeIsPrefix'>If set to
       <c>true</c>
-       remove is prefix.
+       remove is prefix. NOTE: May be ignored in future versions of this library.
     </param><param name='useCamelCase'>If set to
       <c>true</c>
        use camel case.
