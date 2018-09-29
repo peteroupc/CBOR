@@ -1098,12 +1098,15 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
       Assert.IsFalse(co.ContainsKey("privatePropA"));
       Assert.IsFalse(co.ContainsKey("staticPropA"));
       Assert.IsFalse(co.ContainsKey("StaticPropA"));
+      co["privatePropA"] = ToObjectTest.TestToFromObjectRoundTrip(999);
       co["propA"] = ToObjectTest.TestToFromObjectRoundTrip(999);
       co["floatProp"] = ToObjectTest.TestToFromObjectRoundTrip(3.5);
       co["doubleProp"] = ToObjectTest.TestToFromObjectRoundTrip(4.5);
       co["stringProp"] = ToObjectTest.TestToFromObjectRoundTrip("stringProp");
       co["stringArray"] = CBORObject.NewArray().Add("a").Add("b");
       ao = (PODClass)co.ToObject(typeof(PODClass));
+      // Check whether ToObject ignores private setters
+      Assert.IsTrue(ao.HasGoodPrivateProp());
       Assert.AreEqual(999, ao.PropA);
       if (ao.FloatProp != (float)3.5) {
  Assert.Fail();

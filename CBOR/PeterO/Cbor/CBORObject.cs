@@ -603,7 +603,7 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToObject(System.Type)"]/*'/>
     public object ToObject(Type t) {
-      return this.ToObjectInternal(t, null);
+      return this.ToObject(t, null, 0);
     }
 
     /// <include file='../../docs.xml'
@@ -612,11 +612,14 @@ namespace PeterO.Cbor {
 if (mapper == null) {
   throw new ArgumentNullException(nameof(mapper));
 }
-return this.ToObjectInternal(t, mapper);
+return this.ToObject(t, mapper, 0);
     }
 
-    private object ToObjectInternal(Type t, CBORTypeMapper mapper) {
-      // TODO: Depth
+    internal object ToObject(Type t, CBORTypeMapper mapper, int depth) {
+depth++;
+if (depth>100) {
+ throw new CBORException("Depth level too high");
+}
       if (t == null) {
         throw new ArgumentNullException(nameof(t));
       }
@@ -636,7 +639,7 @@ return this.ToObjectInternal(t, mapper);
         return this;
       }
       return t.Equals(typeof(string)) ? this.AsString() :
-        PropertyMap.TypeToObject(this, t, mapper);
+        PropertyMap.TypeToObject(this, t, mapper, depth);
     }
 
     /// <include file='../../docs.xml'

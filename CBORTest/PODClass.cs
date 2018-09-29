@@ -13,6 +13,10 @@ namespace Test {
       this.StringArray = null;
     }
 
+    public bool HasGoodPrivateProp() {
+      return this.PrivatePropA == 2;
+    }
+
     private int PrivatePropA { get; }
 
     public static int StaticPropA { get; set; }

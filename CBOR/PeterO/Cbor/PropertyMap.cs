@@ -6,6 +6,7 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/
  */
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -350,7 +351,7 @@ foreach (PropertyInfo pi in GetTypeProperties(t)) {
       if (rank == 1) {
         int len = arr.GetLength(0);
         for (var i = 0; i < len; ++i) {
-  object item = cbor[i].ToObject(elementType, mapper);
+  object item = cbor[i].ToObject(elementType, mapper, depth + 1);
   arr.SetValue(item, i);
         }
         return arr;
@@ -363,7 +364,8 @@ foreach (PropertyInfo pi in GetTypeProperties(t)) {
  return arr;
 }
        do {
-        object item = GetCBORObject(cbor, index).ToObject(elementType, mapper);
+        object item = GetCBORObject(cbor, index).ToObject(elementType,
+          mapper, depth + 1);
         arr.SetValue(item, index);
        } while (NextElement(index, dimensions));
       return arr;
@@ -496,7 +498,8 @@ foreach (PropertyInfo pi in GetTypeProperties(t)) {
     public static object TypeToObject(
          CBORObject objThis,
          Type t,
-         CBORTypeMapper mapper) {
+         CBORTypeMapper mapper,
+         int depth) {
       if (t.Equals(typeof(int))) {
         return objThis.AsInt32();
       }
@@ -575,15 +578,13 @@ Type elementType = t.GetElementType();
           Array array = Array.CreateInstance(
         elementType,
         GetDimensions(objThis));
-    return FillArray(array, elementType, objThis, mapper, 0);
+    return FillArray(array, elementType, objThis, mapper, depth);
         }
         if (t.IsGenericType) {
           Type td = t.GetGenericTypeDefinition();
           isList = td.Equals(typeof(List<>)) || td.Equals(typeof(IList<>)) ||
             td.Equals(typeof(ICollection<>)) ||
             td.Equals(typeof(IEnumerable<>));
-            } else {
-          throw new NotImplementedException();
         }
         isList = isList && t.GetGenericArguments().Length == 1;
         if (isList) {
@@ -597,7 +598,7 @@ if (IsAssignableFrom(typeof(Array), t)) {
           Array array = Array.CreateInstance(
         elementType,
         GetDimensions(objThis));
-    return FillArray(array, elementType, objThis, mapper, 0);
+    return FillArray(array, elementType, objThis, mapper, depth);
         }
         if (t.GetTypeInfo().IsGenericType) {
           Type td = t.GetGenericTypeDefinition();
@@ -605,8 +606,6 @@ if (IsAssignableFrom(typeof(Array), t)) {
   td.Equals(typeof(IList<>)) ||
   td.Equals(typeof(ICollection<>)) ||
   td.Equals(typeof(IEnumerable<>)));
-        } else {
-          throw new NotImplementedException();
         }
         isList = (isList && t.GenericTypeArguments.Length == 1);
         if (isList) {
@@ -615,10 +614,17 @@ if (IsAssignableFrom(typeof(Array), t)) {
           listObject = Activator.CreateInstance(listType);
         }
 #endif
+        if (listObject == null) {
+          if (td.Equals(typeof(ArrayList)) || td.Equals(typeof(IList)) ||
+            td.Equals(typeof(ICollection)) || td.Equals(typeof(IEnumerable))) {
+            listObject = new List<object>();
+            objectType = typeof(object);
+          }
+        }
         if (listObject != null) {
           System.Collections.IList ie = (System.Collections.IList)listObject;
           foreach (CBORObject value in objThis.Values) {
-            ie.Add(value.ToObject(objectType));
+            ie.Add(value.ToObject(objectType, mapper, depth + 1));
           }
           return listObject;
         }
@@ -665,14 +671,21 @@ if (IsAssignableFrom(typeof(Array), t)) {
           dictObject = Activator.CreateInstance(listType);
         }
 #endif
+        if (dictObject == null) {
+          if (td.Equals(typeof(Dictionary)) || td.Equals(typeof(IDictionary))) {
+            listObject = new Dictionary<object>();
+            keyType = typeof(object);
+            valueType = typeof(object);
+          }
+        }
         if (dictObject != null) {
           System.Collections.IDictionary idic =
             (System.Collections.IDictionary)dictObject;
           foreach (CBORObject key in objThis.Keys) {
             CBORObject value = objThis[key];
             idic.Add(
-  key.ToObject(keyType),
-  value.ToObject(valueType));
+  key.ToObject(keyType, mapper, depth + 1),
+  value.ToObject(valueType, mapper, depth + 1));
           }
           return dictObject;
         }
@@ -708,24 +721,19 @@ if (!mapper.FilterTypeName(t.FullName)) {
         return PropertyMap.ObjectWithProperties(
     t,
     values,
+    mapper,
     true,
-    true);
+    depth);
       } else {
         throw new CBORException();
       }
     }
 
     public static object ObjectWithProperties(
-      Type t,
-      IEnumerable<KeyValuePair<string, CBORObject>> keysValues) {
-      return ObjectWithProperties(t, keysValues, true, true);
-    }
-
-    public static object ObjectWithProperties(
          Type t,
          IEnumerable<KeyValuePair<string, CBORObject>> keysValues,
-         bool removeIsPrefix,
-  bool useCamelCase) {
+       CBORTypeMapper mapper,
+  bool useCamelCase, int depth) {
       object o = Activator.CreateInstance(t);
       var dict = new Dictionary<string, CBORObject>();
       foreach (var kv in keysValues) {
@@ -740,7 +748,8 @@ if (!mapper.FilterTypeName(t.FullName)) {
         }
         var name = key.GetAdjustedName(useCamelCase);
         if (dict.ContainsKey(name)) {
-          object dobj = dict[name].ToObject(key.Prop.PropertyType);
+       object dobj =
+            dict[name].ToObject(key.Prop.PropertyType, mapper, depth + 1);
           key.Prop.SetValue(o, dobj, null);
         }
       }

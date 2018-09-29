@@ -2536,13 +2536,13 @@ is less than 0, is the size of this array or greater, or is not a 32-bit signed 
           array, returns an array containing the items in this CBOR object.
           (Multidimensional arrays to be documented.)
         </item>
-        <item>If the type is the generic List, IList, ICollection, or IEnumerable
+        <item>If the type is ArrayList, List, or the generic or non-generic IList, ICollection, or IEnumerable,
           (or ArrayList, List, Collection, or Iterable in Java), and if this
           CBOR object is an array, returns an object conforming to the type,
           class, or interface passed to this method, where the object will
           contain all items in this CBOR array.
         </item>
-        <item>If the type is the generic Dictionary or IDictionary (or HashMap or
+        <item>If the type is the generic or non-generic Dictionary or IDictionary (or HashMap or
           Map in Java), and if this CBOR object is a map, returns an object
           conforming to the type, class, or interface passed to this method,
           where the object will contain all keys and values in this CBOR map.
