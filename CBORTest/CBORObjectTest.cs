@@ -4432,6 +4432,19 @@ Assert.Throws<CBORException>(()=>cbor.ToObject(typeof(EnumClass)));
       cbor.Set("x", 5).Set("z", 6);
       Assert.AreEqual(5, cbor["x"].AsInt32());
       Assert.AreEqual(6, cbor["z"].AsInt32());
+cbor=CBORObject.NewArray().Add(1).Add(2).Add(3).Add(4);
+Assert.AreEqual(1,cbor[0].AsInt32());
+Assert.AreEqual(2,cbor[1].AsInt32());
+Assert.AreEqual(3,cbor[2].AsInt32());
+Assert.Throws<ArgumentException>(()=>cbor.Set(-1,0));
+Assert.Throws<ArgumentException>(()=>cbor.Set(4,0));
+Assert.Throws<ArgumentException>(()=>cbor.Set(999,0));
+CBORObject cbor2=CBORObject.True;
+Assert.Throws<InvalidOperationException>(()=>cbor2.Set(0,0));
+cbor.Set(0,99);
+Assert.AreEqual(99,cbor[0].AsInt32());
+cbor.Set(3,199);
+Assert.AreEqual(199,cbor[0].AsInt32());
     }
     [Test]
     public void TestSign() {

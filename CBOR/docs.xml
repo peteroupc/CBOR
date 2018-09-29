@@ -1581,7 +1581,7 @@ methods starting with "get" or "is" (either word followed by a character other
 than a basic digit or lower-case letter, that is, other than "a" to "z" or
 "0" to "9"), that take no parameters and
 do not return void, except that methods named "getClass" are not
-eligible getters.</item>
+eligible getters.  If a class has two otherwise eligible getters of the form "isX" and "getX", where "X" is the same in both, or two such getters with the same name but different return type, they are not eligible getters.</item>
 <item>Then, the method returns a CBOR map with each eligible getter's
 name or property name as each key, and with the corresponding value
 returned by that getter as that key's value.  Before adding a key-value
@@ -2228,14 +2228,17 @@ Note that for security reasons, certain types are not supported even if they con
 <doc name="M:PeterO.Cbor.CBORObject.Set(System.Object,System.Object)">
 
             <summary>Maps an object to a key in this CBOR map, or adds the
-            value if the key doesn't exist.</summary><param name='key'>An object representing the key, which will be
-            converted to a CBORObject. Can be null, in which case this value is
-            converted to CBORObject.Null.</param><param name='valueOb'>An object representing the value, which will
+            value if the key doesn't exist.  If this is a CBOR array, instead
+      sets the value at the given index to the given value.</summary><param name='key'>
+If this instance is a CBOR map, this parameter is an object representing the key, which will be
+            converted to a CBORObject; in this case, this parameter can be null, in which case this value is
+            converted to CBORObject.Null.  If this instance is a CBOR array, this parameter must be a 32-bit signed integer (<c>int</c>) identifying the index (starting from 0) of the item to set in the array.</param><param name='valueOb'>An object representing the value, which will
             be converted to a CBORObject. Can be null, in which case this value
             is converted to CBORObject.Null.</param><returns>This instance.</returns><exception cref='T:System.InvalidOperationException'>This object is
-            not a map.</exception><exception cref='T:System.ArgumentException'>The parameter
+            not a map or an array.</exception><exception cref='T:System.ArgumentException'>The parameter
             <paramref name='key'/> or <paramref name='valueOb'/> has an
-            unsupported type.</exception>
+            unsupported type, or this instance is a CBOR array and <paramref name='key'/>
+is less than 0, is the size of this array or greater, or is not a 32-bit signed integer (<c>int</c>).</exception>
 
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.Sign">
@@ -2504,7 +2507,7 @@ Note that for security reasons, certain types are not supported even if they con
         </item>
         <item>If the object is a type not specially handled above, the type includes
           a zero-argument constructor (default or not), and this CBOR object is
-          a CBOR map. this method checks the given type for eligible setters as
+          a CBOR map, this method checks the given type for eligible setters as
           follows:
         </item>
         <item>(*) In the .NET version, eligible setters are the public, nonstatic
@@ -2517,11 +2520,10 @@ Note that for security reasons, certain types are not supported even if they con
           "9", that take one parameter. The class containing an eligible setter
           must have a public, nonstatic method with the same name, but starting
           with "get" or "is" rather than "set", that takes no parameters and
-          does not return void. (For example, if a class has "public
-          setValue(String)" and "public getValue()", "setValue" is an eligible
-          setter. However, "setValue()" and "setValue(String, int)" are not
-          eligible setters.) (TODO: To be implemented)
-        </item>
+          returns the setter's parameter type. (For example, if a class has "public
+          void setValue(String)" and "public String getValue()", "setValue" 
+          is an eligible setter. However, "setValue()" and "setValue(String, int)" 
+          are not eligible setters.) If a class has two otherwise eligible setters with the same name, but different parameter type, they are not eligible setters.</item>
         <item>Then, the method creates an object of the given type and invokes each
           eligible setter with the corresponding value in the CBOR map, if any.
           Key names in the map are matched to eligible setters according to the

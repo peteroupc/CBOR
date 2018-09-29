@@ -2784,8 +2784,24 @@ objret[key.Key] = CBORObject.FromObject(
         } else {
           map.Add(mapKey, mapValue);
         }
+      } else if(this.ItemType==CBORObjectTypeArray){
+        if(key is int){
+        IList<CBORObject> list = this.AsList();
+        int index=(int)key;
+if(index<0 || index>=this.Count)throw new ArgumentOutOfRangeException("key");
+        CBORObject mapValue;
+        if (valueOb == null) {
+          mapValue = CBORObject.Null;
+        } else {
+          mapValue = valueOb as CBORObject;
+          mapValue = mapValue ?? CBORObject.FromObject(valueOb);
+        }
+        list[index]=mapValue;
+        } else {
+          throw new ArgumentException("Is an array, but key is not int");
+        }
       } else {
-        throw new InvalidOperationException("Not a map");
+        throw new InvalidOperationException("Not a map or array");
       }
       return this;
     }
