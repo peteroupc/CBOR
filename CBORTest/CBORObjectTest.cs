@@ -2492,30 +2492,56 @@ Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Double.NaN).AsEFloat()
     }
 
     [Test]
-public void TestToObject_Enum(){
+public void TestToObject_Enum() {
 CBORObject cbor;
 EnumClass ec;
-cbor=CBORObject.FromObject("Value1");
-ec=(EnumClass)cbor.ToObject(typeof(EnumClass));
-Assert.AreEqual(EnumClass.Value1,ec);
-cbor=CBORObject.FromObject("Value2");
-ec=(EnumClass)cbor.ToObject(typeof(EnumClass));
-Assert.AreEqual(EnumClass.Value2,ec);
-cbor=CBORObject.FromObject("Value3");
-ec=(EnumClass)cbor.ToObject(typeof(EnumClass));
-Assert.AreEqual(EnumClass.Value3,ec);
-cbor=CBORObject.FromObject("ValueXYZ");
-Assert.Throws<CBORException>(()=>cbor.ToObject(typeof(EnumClass)));
-cbor=CBORObject.FromObject(true);
-Assert.Throws<CBORException>(()=>cbor.ToObject(typeof(EnumClass)));
+cbor = CBORObject.FromObject("Value1");
+ec = (EnumClass)cbor.ToObject(typeof(EnumClass));
+Assert.AreEqual(EnumClass.Value1, ec);
+cbor = CBORObject.FromObject("Value2");
+ec = (EnumClass)cbor.ToObject(typeof(EnumClass));
+Assert.AreEqual(EnumClass.Value2, ec);
+cbor = CBORObject.FromObject("Value3");
+ec = (EnumClass)cbor.ToObject(typeof(EnumClass));
+Assert.AreEqual(EnumClass.Value3, ec);
+cbor = CBORObject.FromObject("ValueXYZ");
+try {
+ cbor.ToObject(typeof(EnumClass));
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+cbor = CBORObject.FromObject(true);
+try {
+ cbor.ToObject(typeof(EnumClass));
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
 }
 
     [Test]
     public void TestToObject_UnknownEnum() {
       CBORObject cbor;
       cbor = CBORObject.FromObject(999);
-      Assert.Throws<CBORException>(() => cbor.ToObject(typeof(EnumClass)));
+      try {
+ cbor.ToObject(typeof(EnumClass));
+      Assert.Fail("Should have failed -- " +
+          cbor.ToObject(typeof(EnumClass)));
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
     }
+
     public sealed class TestConverter : ICBORToFromConverter<string> {
       public CBORObject ToCBORObject(string strValue) {
         return CBORObject.FromObject(
@@ -4432,19 +4458,51 @@ Assert.Throws<CBORException>(()=>cbor.ToObject(typeof(EnumClass)));
       cbor.Set("x", 5).Set("z", 6);
       Assert.AreEqual(5, cbor["x"].AsInt32());
       Assert.AreEqual(6, cbor["z"].AsInt32());
-cbor=CBORObject.NewArray().Add(1).Add(2).Add(3).Add(4);
-Assert.AreEqual(1,cbor[0].AsInt32());
-Assert.AreEqual(2,cbor[1].AsInt32());
-Assert.AreEqual(3,cbor[2].AsInt32());
-Assert.Throws<ArgumentException>(()=>cbor.Set(-1,0));
-Assert.Throws<ArgumentException>(()=>cbor.Set(4,0));
-Assert.Throws<ArgumentException>(()=>cbor.Set(999,0));
-CBORObject cbor2=CBORObject.True;
-Assert.Throws<InvalidOperationException>(()=>cbor2.Set(0,0));
-cbor.Set(0,99);
-Assert.AreEqual(99,cbor[0].AsInt32());
-cbor.Set(3,199);
-Assert.AreEqual(199,cbor[0].AsInt32());
+cbor = CBORObject.NewArray().Add(1).Add(2).Add(3).Add(4);
+Assert.AreEqual(1, cbor[0].AsInt32());
+Assert.AreEqual(2, cbor[1].AsInt32());
+Assert.AreEqual(3, cbor[2].AsInt32());
+try {
+ cbor.Set(-1, 0);
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+try {
+ cbor.Set(4, 0);
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+try {
+ cbor.Set(999, 0);
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+CBORObject cbor2 = CBORObject.True;
+try {
+ cbor2.Set(0, 0);
+Assert.Fail("Should have failed");
+} catch (InvalidOperationException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+cbor.Set(0, 99);
+Assert.AreEqual(99, cbor[0].AsInt32());
+cbor.Set(3, 199);
+Assert.AreEqual(199, cbor[3].AsInt32());
     }
     [Test]
     public void TestSign() {

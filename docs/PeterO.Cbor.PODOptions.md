@@ -43,7 +43,7 @@ Gets a value indicating whether property names are converted to camel case befor
 
 If "useCamelCase" is  `true` :
 
- * In the .NET version, for each eligible method name, the word "Is" is removed from the name if the name starts with that word, then the name is converted to camel case, meaning the first letter in the name is converted to camel case if it's a basic lower-case letter ("a" to "z"). (For example, "Name" and "IsName" both become "name".)
+ * In the .NET version, for each eligible property name, the word "Is" is removed from the name if the name starts with that word, then the name is converted to camel case, meaning the first letter in the name is converted to lower case if it's a basic upper-case letter ("A" to "Z"). (For example, "Name" and "IsName" both become "name".)
 
  * In the Java version, for each eligible method name, the word "get", "set", or "is" is removed from the name if the name starts with that word, then the name is converted to camel case. (For example, "getName", "setName", and "isName" all become "name".)
 
@@ -51,4 +51,4 @@ In the description above, a name "starts with" a word if that word begins the na
 
 <b>Returns:</b>
 
- `true`  If the names are converted to camel case; otherwise, .  `false` .
+ `true`  If the names are converted to camel case; otherwise,  `false` . This property is  `true`  by default.

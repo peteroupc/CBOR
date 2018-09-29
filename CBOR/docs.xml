@@ -1422,12 +1422,9 @@
             is not recommended to use <c>Encoding.UTF8.GetBytes</c>
              in .NET, or
             the <c>getBytes()</c>
-             method in Java to do this. For instance,
-            <c>Encoding.UTF8</c>
-             begins the encoded string with a byte-order
-            mark, and <c>getBytes()</c>
-             encodes text strings in an unspecified
-            character encoding. Both behaviors can be undesirable. Instead, use
+             method in Java to do this. For instance, <c>getBytes()</c>
+             encodes text strings in a default (so not fixed)
+            character encoding, which can be undesirable. Instead, use
             the <c>DataUtilities.GetUtf8Bytes</c>
              method to convert text
             strings to UTF-8.</para>
@@ -1575,7 +1572,8 @@
 the <paramref name='obj'/> parameter for eligible getters as follows:</item>
 <item>(*) In the .NET version, eligible getters are the public, nonstatic
 getters of read/write properties (and also those of read-only properties in the case
-of a compiler-generated type).</item>
+of a compiler-generated type).  If a class has two properties of the form "X" and "IsX", where "X" is any name, or has multiple properties with the same name, those properties are ignored.
+</item>
 <item>(*) In the Java version, eligible getters are public, nonstatic
 methods starting with "get" or "is" (either word followed by a character other
 than a basic digit or lower-case letter, that is, other than "a" to "z" or
@@ -2229,8 +2227,7 @@ Note that for security reasons, certain types are not supported even if they con
 
             <summary>Maps an object to a key in this CBOR map, or adds the
             value if the key doesn't exist.  If this is a CBOR array, instead
-      sets the value at the given index to the given value.</summary><param name='key'>
-If this instance is a CBOR map, this parameter is an object representing the key, which will be
+      sets the value at the given index to the given value.</summary><param name='key'>If this instance is a CBOR map, this parameter is an object representing the key, which will be
             converted to a CBORObject; in this case, this parameter can be null, in which case this value is
             converted to CBORObject.Null.  If this instance is a CBOR array, this parameter must be a 32-bit signed integer (<c>int</c>) identifying the index (starting from 0) of the item to set in the array.</param><param name='valueOb'>An object representing the value, which will
             be converted to a CBORObject. Can be null, in which case this value
@@ -2361,6 +2358,60 @@ is less than 0, is the size of this array or greater, or is not a 32-bit signed 
     </exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.ToObject(System.Type)">
+<summary>Converts this CBOR object to an object of an arbitrary type. See the
+      documentation for the overload of this method taking a CBORTypeMapper
+      parameter for more information. This method (without a CBORTypeMapper
+      parameter) allows all data types not otherwise handled to be eligible for
+      Plain-Old-Data serialization.
+    </summary>
+    <param name='t'>The type, class, or interface that this method's return value will belong
+      to. To express a generic type in Java, see the example.
+      <b>Note:</b>
+       For security reasons, an application should not base this parameter on
+      user input or other externally supplied data. Whenever possible, this
+      parameter should be either a type specially handled by this method (such
+      as
+      <c>int</c>
+       or
+      <c>String</c>
+       ) or a plain-old-data type (POCO or POJO type) within the control of the
+      application. If the plain-old-data type references other data types, those
+      types should likewise meet either criterion above.
+    </param>
+    <returns>The converted object.
+    </returns>
+    <exception cref='T:System.NotSupportedException'>The given type
+      <paramref name='t'/>
+       , or this object's CBOR type, is not supported.
+    </exception>
+    <exception cref='T:System.ArgumentNullException'>The parameter
+      <paramref name='t'/>
+       is null.
+    </exception>
+    <exception cref='T:System.CBORException'>The given object's nesting is too deep, or another error occurred when
+      serializing the object.
+    </exception>
+    <example><para>Java offers no easy way to express a generic type, at least none as easy
+        as C#'s
+        <c>typeof</c>
+         operator. The following example, written in Java, is a way to specify
+        that the return value will be an ArrayList of String objects.
+      </para>
+      <code>Type arrayListString = new ParameterizedType(){ public Type[]
+        getActualTypeArguments(){ /* Contains one type parameter, String */
+        return new Type[]{ String.class }; } public Type getRawType(){ /* Raw
+        type is ArrayList */ return ArrayList.class; } public Type
+        getOwnerType(){ return null; } }; ArrayList&lt;String&gt; array =
+        (ArrayList&lt;String&gt;) cborArray.ToObject(arrayListString);
+      </code>
+      <para>By comparison, the C# version is much shorter.
+      </para>
+      <code>var&#x20;array = (List&lt;String&gt;)cborArray.ToObject(
+        typeof&#x28;List&lt;String&gt;));
+      </code>
+    </example>
+</doc>
+<doc name="M:PeterO.Cbor.CBORObject.ToObject(System.Type,PeterO.Cbor.CBORTypeMapper)">
 <summary><para>Converts this CBOR object to an object of an arbitrary type. The
         following cases are checked in the logical order given (rather than the
         strict order in which they are implemented by this library):
@@ -2446,18 +2497,33 @@ is less than 0, is the size of this array or greater, or is not a 32-bit signed 
         </item>
         <item>If the type is an enumeration (
           <c>Enum</c>
-          ) type this CBOR object is a text string or an integer, returns the
-          appropriate enumerated constant. (For example, if
+           ///) type this CBOR object is a text string or an integer, returns
+          the appropriate enumerated constant. (For example, if
           <c>MyEnum</c>
            includes an entry for
           <c>MyValue</c>
-          , this method will return
+           , this method will return
           <c>MyEnum.MyValue</c>
            if the CBOR object represents
           <c>"MyValue"</c>
            or the underlying value for
           <c>MyEnum.MyValue</c>
-          .)  <b>Note:</b>  If an integer is converted to a .NET Enum constant, and that integer is shared by more than one constant of the same type, it is undefined which constant from among them is returned.  (For example, if <c>MyEnum.Zero = 0</c> and <c>MyEnum.Null = 0</c>, converting 0 to <c>MyEnum</c> may return either <c>MyEnum.Zero</c> or <c>MyEnum.Null</c>.)  As a result, .NET Enum types with constants that share an underlying value should not be passed to this method.
+           .)
+          <b>Note:</b>
+           If an integer is converted to a .NET Enum constant, and that integer
+          is shared by more than one constant of the same type, it is undefined
+          which constant from among them is returned. (For example, if
+          <c>MyEnum.Zero = 0</c>
+           and
+          <c>MyEnum.Null = 0</c>
+           , converting 0 to
+          <c>MyEnum</c>
+           may return either
+          <c>MyEnum.Zero</c>
+           or
+          <c>MyEnum.Null</c>
+           .) As a result, .NET Enum types with constants that share an
+          underlying value should not be passed to this method.
         </item>
         <item>If the type is
           <c>byte[]</c>
@@ -2466,8 +2532,9 @@ is less than 0, is the size of this array or greater, or is not a 32-bit signed 
           to. (This method can't be used to encode CBOR data to a byte array;
           for that, use the EncodeToBytes method instead.)
         </item>
-        <item>If the type is an array type and this CBOR object is an
+        <item>If the type is a one-dimensional array type and this CBOR object is an
           array, returns an array containing the items in this CBOR object.
+          (Multidimensional arrays to be documented.)
         </item>
         <item>If the type is the generic List, IList, ICollection, or IEnumerable
           (or ArrayList, List, Collection, or Iterable in Java), and if this
@@ -2484,7 +2551,9 @@ is less than 0, is the size of this array or greater, or is not a 32-bit signed 
           is an integer or text string, returns the enumeration constant with
           the given number or name, respectively. (Enumeration constants made up
           of multiple enumeration constants, as allowed by .NET, can only be
-          matched by number this way.)
+          matched by number this way.) (To be implemented for Java.)
+        </item>
+        <item>Type converters (To be implemented).
         </item>
         <item>If the type is
           <c>DateTime</c>
@@ -2505,14 +2574,18 @@ is less than 0, is the size of this array or greater, or is not a 32-bit signed 
           <c>UUID</c>
            in Java), returns a UUID object if possible.
         </item>
-        <item>If the object is a type not specially handled above, the type includes
-          a zero-argument constructor (default or not), and this CBOR object is
-          a CBOR map, this method checks the given type for eligible setters as
+        <item>Plain-Old-Data deserialization: If the object is a type not specially
+          handled above, the type includes a zero-argument constructor (default
+          or not), this CBOR object is a CBOR map, and the "mapper" parameter
+          allows this type to be eligible for Plain-Old-Data deserialization,
+          then this method checks the given type for eligible setters as
           follows:
         </item>
         <item>(*) In the .NET version, eligible setters are the public, nonstatic
-          setters of properties with a public, nonstatic getter (TODO: To be
-          implemented).
+          setters of properties with a public, nonstatic getter. If a class has
+          two properties of the form "X" and "IsX", where "X" is any name, or
+          has multiple properties with the same name, those properties are
+          ignored.
         </item>
         <item>(*) In the Java version, eligible setters are public, nonstatic
           methods starting with "set" followed by a character other than a basic
@@ -2520,10 +2593,13 @@ is less than 0, is the size of this array or greater, or is not a 32-bit signed 
           "9", that take one parameter. The class containing an eligible setter
           must have a public, nonstatic method with the same name, but starting
           with "get" or "is" rather than "set", that takes no parameters and
-          returns the setter's parameter type. (For example, if a class has "public
-          void setValue(String)" and "public String getValue()", "setValue" 
-          is an eligible setter. However, "setValue()" and "setValue(String, int)" 
-          are not eligible setters.) If a class has two otherwise eligible setters with the same name, but different parameter type, they are not eligible setters.</item>
+          does not return void. (For example, if a class has "public
+          setValue(String)" and "public getValue()", "setValue" is an eligible
+          setter. However, "setValue()" and "setValue(String, int)" are not
+          eligible setters.) If a class has two otherwise eligible setters with
+          the same name, but different parameter type, they are not eligible
+          setters.
+        </item>
         <item>Then, the method creates an object of the given type and invokes each
           eligible setter with the corresponding value in the CBOR map, if any.
           Key names in the map are matched to eligible setters according to the
@@ -2533,9 +2609,9 @@ is less than 0, is the size of this array or greater, or is not a 32-bit signed 
           supported even if they contain eligible setters.
         </item>
       </list>
-      <para>REMARK: A certain
-        consistency between .NET and Java and between FromObject and ToObject
-        are sought for version 4.0. It is also hoped that--
+      <para>REMARK: A certain consistency between .NET and Java and between
+        FromObject and ToObject are sought for version 4.0. It is also hoped
+        that--
       </para>
       <list>
         <item>the ToObject method will support deserializing to objects consisting
@@ -2557,9 +2633,13 @@ is less than 0, is the size of this array or greater, or is not a 32-bit signed 
       <c>int</c>
        or
       <c>String</c>
-       ) or a plain-old-data type (POCO or POJO type) within the control of the
-      application. If the plain-old-data type references other data types, those
-      types should likewise meet either criterion above.
+       ///) or a plain-old-data type (POCO or POJO type) within the control of
+      the application. If the plain-old-data type references other data types,
+      those types should likewise meet either criterion above.
+    </param>
+    <param name='mapper'>This parameter controls which data types are eligible for Plain-Old-Data
+      deserialization and includes custom converters from CBOR objects to
+      certain data types.
     </param>
     <returns>The converted object.
     </returns>
@@ -2580,11 +2660,11 @@ is less than 0, is the size of this array or greater, or is not a 32-bit signed 
          operator. The following example, written in Java, is a way to specify
         that the return value will be an ArrayList of String objects.
       </para>
-      <code>Type arrayListString = new ParameterizedType(){ public Type[]
-        getActualTypeArguments(){ /* Contains one type parameter, String */
-        return new Type[]{ String.class }; } public Type getRawType(){ /* Raw
-        type is ArrayList */ return ArrayList.class; } public Type
-        getOwnerType(){ return null; } }; ArrayList&lt;String&gt; array =
+      <code>Type arrayListString = new ParameterizedType() { public Type[]
+        getActualTypeArguments() { // Contains one type parameter, String return
+        new Type[] { String.class }; } public Type getRawType() { /* Raw type is
+        ArrayList */ return ArrayList.class; } public Type getOwnerType() {
+        return null; } }; ArrayList&lt;String&gt; array =
         (ArrayList&lt;String&gt;) cborArray.ToObject(arrayListString);
       </code>
       <para>By comparison, the C# version is much shorter.
@@ -3431,27 +3511,24 @@ stream.Write(bytes, 0, bytes.Length);
 
 </doc>
 <doc name="T:PeterO.Cbor.CBORTypeMapper">
-
-            <summary>Holds converters to customize the serialization and deserialization behavior of <c>CBORObject.FromObject</c> and <c>CBORObject#ToObject</c>, as well as type filters for <c>ToObject</c>.</summary>
-
+<summary>Holds converters to customize the serialization and
+            deserialization behavior of <c>CBORObject.FromObject</c> and
+            <c>CBORObject#ToObject</c>, as well as type filters for
+            <c>ToObject</c></summary>
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeMapper.#ctor">
 <summary>Initializes a new instance of the <see cref='CBORTypeMapper'/> class.
     </summary>
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeMapper.AddConverter``1(System.Type,PeterO.Cbor.ICBORConverter{``0})">
-<summary>Not documented yet.</summary>
-            <param name='type'>The parameter <paramref name='type'/> is not
-            documented yet.</param>
-            <param name='converter'>The parameter <paramref name='converter'/>
-            is not documented yet.</param>
-            <typeparam name='T'>Type parameter not documented yet.</typeparam>
-            <returns>A CBORTypeMapper object.</returns>
-            <exception cref='T:System.ArgumentNullException'>The parameter
+
+            <summary>Not documented yet.</summary><param name='type'>The parameter <paramref name='type'/> is not
+            documented yet.</param><param name='converter'>The parameter <paramref name='converter'/>
+            is not documented yet.</param><typeparam name='T'>Type parameter not documented yet.</typeparam><returns>A CBORTypeMapper object.</returns><exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='type'/> or <paramref name='converter'/> is
-            null.</exception>
-            <exception cref='T:System.ArgumentException'>Converter doesn't
+            null.</exception><exception cref='T:System.ArgumentException'>Converter doesn't
             contain a proper ToCBORObject method.</exception>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeMapper.AddTypeName(System.String)">
 
@@ -3462,6 +3539,10 @@ stream.Write(bytes, 0, bytes.Length);
 
             <summary>Adds a prefix of a Java or .NET type for use in type matching.  A type matches a prefix if its fully qualified name is or begins with that prefix, using codepoint-by-codepoint (case-sensitive) matching.</summary><param name='prefix'>The parameter <paramref name='prefix'/> is not documented yet.</param><returns>A CBORTypeMapper object.</returns><exception cref='T:System.ArgumentNullException'>The parameter <paramref name='prefix'/> is null.</exception><exception cref='T:System.ArgumentException'>The parameter <paramref name='prefix'/> is empty.</exception>
 
+</doc>
+<doc name="P:PeterO.Cbor.CBORTypeMapper.ConverterInfo.Converter">
+<summary>Gets a value not documented yet.</summary>
+            <value>A value not documented yet.</value>
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeMapper.FilterTypeName(System.String)">
 
@@ -3525,15 +3606,25 @@ stream.Write(bytes, 0, bytes.Length);
 
 </doc>
 <doc name="T:PeterO.Cbor.ICBORObjectConverter`1">
-
-            <summary>Interface implemented by classes that convert objects of arbitrary types
-      to and from CBOR objects.</summary><typeparam name='T'>Type of objects that a class implementing this method can convert to and from CBOR objects.</typeparam>
-
+<summary>Interface implemented by classes that convert objects of arbitrary types
+      to and from CBOR objects.
+    </summary>
+    <typeparam name='T'>
+       Type of objects that a class implementing this method can convert to and
+      from CBOR objects.
+    </typeparam>
 </doc>
 <doc name="M:PeterO.Cbor.ICBORObjectConverter`1.FromCBORObject(PeterO.Cbor.CBORObject)">
-
-            <summary>Converts a CBOR object to an object of a type supported by the implementing class.</summary><param name='cbor'>A CBOR object to convert.</param><returns>The converted object.</returns><exception cref='T:PeterO.Cbor.CBORException'>An error occurred in the conversion; for example, the conversion doesn't support the given CBOR object.</exception>
-
+<summary>Converts a CBOR object to an object of a type supported by the
+      implementing class.
+    </summary>
+    <param name='cbor'>A CBOR object to convert.
+    </param>
+    <returns>The converted object.
+    </returns>
+    <exception cref='T:PeterO.Cbor.CBORException'>An error occurred in the conversion; for example, the conversion doesn't
+      support the given CBOR object.
+    </exception>
 </doc>
 <doc name="T:PeterO.Cbor.ICBORTag">
 <summary>Implemented by classes that validate CBOR objects belonging to a specific
@@ -3644,11 +3735,14 @@ stream.Write(bytes, 0, bytes.Length);
 
 </doc>
 <doc name="P:PeterO.Cbor.PODOptions.RemoveIsPrefix">
-
-            <summary>Gets a value indicating whether the "Is" prefix in
-            property names is removed before they are used as keys.</summary><value><c>true</c> If the prefix is removed; otherwise, .
-            <c>false</c>.</value>
-
+<summary>Gets a value indicating whether the "Is" prefix in property names is
+      removed before they are used as keys.
+    </summary>
+    <value><c>true</c>
+       If the prefix is removed; otherwise, .
+      <c>false</c>
+       .
+    </value>
 </doc>
 <doc name="P:PeterO.Cbor.PODOptions.UseCamelCase">
 
@@ -3657,13 +3751,12 @@ stream.Write(bytes, 0, bytes.Length);
 <item>In the .NET version, all key names are capitalized, meaning the first letter in the name is converted to upper case if it's a basic lower-case letter ("a" to "z"). (For example, "Name" and "IsName" both remain unchanged.)</item>
 <item>In the Java version, for each eligible method name, the word "get" or "set" is removed from the name if the name starts with that word, then the name is capitalized. (For example, "getName" and "setName" both become "Name", and "isName" becomes "IsName".)</item>
 </list><para>If "useCamelCase" is <c>true</c>:</para><list>
-<item>In the .NET version, for each eligible method name, the word "Is" is removed from the name if the name starts with that word, then the name is converted to camel case, meaning the first letter in the name is converted to camel case if it's a basic lower-case letter ("a" to "z").  (For example, "Name" and "IsName" both become "name".)</item>
+<item>In the .NET version, for each eligible property name, the word "Is" is removed from the name if the name starts with that word, then the name is converted to camel case, meaning the first letter in the name is converted to lower case if it's a basic upper-case letter ("A" to "Z").  (For example, "Name" and "IsName" both become "name".)</item>
 <item>In the Java version, for each eligible method name, the word "get", "set", or "is" is removed from the name if the name starts with that word, then the name is converted to camel case. (For example, "getName", "setName", and "isName" all become "name".)</item>
 </list>
 <para>In the description above, a name "starts with" a word if that word begins the name and is followed by a character other than a basic digit or lower-case letter, that is, other than "a" to "z" or "0" to "9".</para>
 
-</summary><value><c>true</c> If the names are converted to camel case;
-            otherwise, . <c>false</c>.</value>
+</summary><value><c>true</c> If the names are converted to camel case; otherwise, <c>false</c>. This property is <c>true</c> by default.</value>
 
 </doc>
 <doc name="T:PeterO.Cbor.StringRefs">
@@ -3675,10 +3768,7 @@ stream.Write(bytes, 0, bytes.Length);
 </doc>
 <doc name="T:PeterO.Cbor.URIUtility">
 
-            <summary>Contains utility methods for processing Uniform Resource Identifiers
-      (URIs) and Internationalized Resource Identifiers (IRIs) under RFC3986 and
-      RFC3987, respectively. In the following documentation, URIs and IRIs
-      include URI references and IRI references, for convenience.
+            <summary>Contains utility methods for processing Uniform Resource Identifiers (URIs) and Internationalized Resource Identifiers (IRIs) under RFC3986 and RFC3987, respectively. In the following documentation, URIs and IRIs include URI references and IRI references, for convenience.
 <para>There are five components to a URI: scheme, authority, path, query, and fragment identifier.
 The generic syntax to these components is defined in RFC3986 and extended in RFC3987.  According to RFC3986, different URI schemes can further restrict the syntax of the authority, path, and query component (see also RFC 7320).  However, the syntax of fragment identifiers depends on the media type (also known as MIME type) of the resource a URI references (see also RFC 3986 and RFC 7320).  As of Aug. 24, 2018, only the following media types specify a syntax for fragment identifiers:</para>
 <list>
@@ -4080,7 +4170,7 @@ vnd.shootproof+json</item>
 <doc name="M:PeterO.DataUtilities.GetUtf8Bytes(System.String,System.Boolean)">
 
             <summary><para>Encodes a string in UTF-8 as a byte array.  This method does not insert a byte-order mark (U+FEFF) at the beginning of the encoded byte array.</para>
-<para>REMARK: It is not recommended to use <c>Encoding.UTF8.GetBytes</c> in .NET, or the <c>getBytes()</c> method in Java to do this.  For instance, <c>getBytes()</c> encodes text strings in an unspecified character encoding, which can be undesirable.</para>
+<para>REMARK: It is not recommended to use <c>Encoding.UTF8.GetBytes</c> in .NET, or the <c>getBytes()</c> method in Java to do this.  For instance, <c>getBytes()</c> encodes text strings in a default (so not fixed) character encoding, which can be undesirable.</para>
     </summary><param name='str'>The parameter
       <paramref name='str'/>
        is a text string.
@@ -4100,7 +4190,7 @@ vnd.shootproof+json</item>
 <doc name="M:PeterO.DataUtilities.GetUtf8Bytes(System.String,System.Boolean,System.Boolean)">
 
             <summary><para>Encodes a string in UTF-8 as a byte array.  This method does not insert a byte-order mark (U+FEFF) at the beginning of the encoded byte array.</para>
-<para>REMARK: It is not recommended to use <c>Encoding.UTF8.GetBytes</c> in .NET, or the <c>getBytes()</c> method in Java to do this.  For instance, <c>getBytes()</c> encodes text strings in an unspecified character encoding, which can be undesirable.</para>
+<para>REMARK: It is not recommended to use <c>Encoding.UTF8.GetBytes</c> in .NET, or the <c>getBytes()</c> method in Java to do this.  For instance, <c>getBytes()</c> encodes text strings in a default (so not fixed) character encoding, which can be undesirable.</para>
     </summary><param name='str'>The parameter
       <paramref name='str'/>
        is a text string.

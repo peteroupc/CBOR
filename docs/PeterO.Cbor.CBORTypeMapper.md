@@ -2,7 +2,7 @@
 
     public sealed class CBORTypeMapper
 
-Not documented yet.
+Holds converters to customize the serialization and deserialization behavior of  `CBORObject.FromObject`  and `CBORObject#ToObject` , as well as type filters for `ToObject`
 
 ### Member Summary
 * <code>[AddConverter&lt;T&gt;(System.Type, PeterO.Cbor.ICBORConverter&lt;T&gt;)](#AddConverter_T_System_Type_PeterO_Cbor_ICBORConverter_T)</code> - Not documented yet.
@@ -114,8 +114,7 @@ Not documented yet.
 
 <b>Parameters:</b>
 
- * <i>typeName</i>: The parameter  <i>typeName</i>
- is not documented yet.
+ * <i>typeName</i>: The fully qualified name of a Java or .NET class (e.g.,  `java.math.BigInteger`  or  `System.Globalization.CultureInfo` ).
 
 <b>Return Value:</b>
 

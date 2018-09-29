@@ -1105,8 +1105,12 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
       co["stringArray"] = CBORObject.NewArray().Add("a").Add("b");
       ao = (PODClass)co.ToObject(typeof(PODClass));
       Assert.AreEqual(999, ao.PropA);
-      if(ao.FloatProp!=(float)3.5)Assert.Fail();
-      if(ao.DoubleProp!=4.5)Assert.Fail();
+      if (ao.FloatProp != (float)3.5) {
+ Assert.Fail();
+}
+      if (ao.DoubleProp != 4.5) {
+ Assert.Fail();
+}
       Assert.AreEqual("stringProp", ao.StringProp);
       string[] stringArray = ao.StringArray;
       Assert.AreEqual(2, stringArray.Length);

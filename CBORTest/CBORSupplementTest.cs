@@ -1033,7 +1033,7 @@ Assert.AreEqual(objectTemp, objectTemp2);
       m.Aa = "Test";
       CBORObject cbor = CBORObject.FromObject(m);
       Assert.IsFalse(cbor.ContainsKey("bb"), cbor.ToString());
-      Assert.AreEqual("Test", cbor["aa"], cbor.ToString());
+      Assert.AreEqual("Test", cbor["aa"].AsString(), cbor.ToString());
     }
   }
 }
