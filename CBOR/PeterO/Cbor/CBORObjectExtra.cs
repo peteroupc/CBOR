@@ -240,6 +240,73 @@ if (majorType > 7) {
       return (T)this.ToObject(typeof(T));
     }
 
+    /// <summary>
+    /// <para>Converts this CBOR object to an object of an arbitrary type.
+    /// See
+    /// <see cref='M:PeterO.Cbor.CBORObject.ToObject(System.Type)'/> for
+    /// further information.</para></summary>
+    /// <param name='mapper'>Not documented yet.</param>
+    /// <typeparam name='T'>The type, class, or interface that this
+    /// method's return value will belong to. <b>Note:</b> For security
+    /// reasons, an application should not base this parameter on user
+    /// input or other externally supplied data. Whenever possible, this
+    /// parameter should be either a type specially handled by this method
+    /// (such as <c>int</c> or <c>String</c> ) or a plain-old-data type
+    /// (POCO type) within the control of the application. If the
+    /// plain-old-data type references other data types, those types should
+    /// likewise meet either criterion above.</typeparam>
+    /// <returns>The converted object.</returns>
+    /// <exception cref='T:System.NotSupportedException'>The given type
+    /// "T", or this object's CBOR type, is not supported.</exception>
+    public T ToObject<T>(CBORTypeMapper mapper) {
+      return (T)this.ToObject(typeof(T), mapper);
+    }
+
+    /// <summary>
+    /// <para>Converts this CBOR object to an object of an arbitrary type.
+    /// See
+    /// <see cref='M:PeterO.Cbor.CBORObject.ToObject(System.Type)'/> for
+    /// further information.</para></summary>
+    /// <param name='options'>Not documented yet.</param>
+    /// <typeparam name='T'>The type, class, or interface that this
+    /// method's return value will belong to. <b>Note:</b> For security
+    /// reasons, an application should not base this parameter on user
+    /// input or other externally supplied data. Whenever possible, this
+    /// parameter should be either a type specially handled by this method
+    /// (such as <c>int</c> or <c>String</c> ) or a plain-old-data type
+    /// (POCO type) within the control of the application. If the
+    /// plain-old-data type references other data types, those types should
+    /// likewise meet either criterion above.</typeparam>
+    /// <returns>The converted object.</returns>
+    /// <exception cref='T:System.NotSupportedException'>The given type
+    /// "T", or this object's CBOR type, is not supported.</exception>
+    public T ToObject<T>(PODOptions options) {
+      return (T)this.ToObject(typeof(T), options);
+    }
+
+    /// <summary>
+    /// <para>Converts this CBOR object to an object of an arbitrary type.
+    /// See
+    /// <see cref='M:PeterO.Cbor.CBORObject.ToObject(System.Type)'/> for
+    /// further information.</para></summary>
+    /// <param name='mapper'>Not documented yet.</param>
+    /// <param name='options'>Not documented yet.</param>
+    /// <typeparam name='T'>The type, class, or interface that this
+    /// method's return value will belong to. <b>Note:</b> For security
+    /// reasons, an application should not base this parameter on user
+    /// input or other externally supplied data. Whenever possible, this
+    /// parameter should be either a type specially handled by this method
+    /// (such as <c>int</c> or <c>String</c> ) or a plain-old-data type
+    /// (POCO type) within the control of the application. If the
+    /// plain-old-data type references other data types, those types should
+    /// likewise meet either criterion above.</typeparam>
+    /// <returns>The converted object.</returns>
+    /// <exception cref='T:System.NotSupportedException'>The given type
+    /// "T", or this object's CBOR type, is not supported.</exception>
+    public T ToObject<T>(CBORTypeMapper mapper, PODOptions options) {
+      return (T)this.ToObject(typeof(T), mapper, options);
+    }
+
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.op_Addition(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]/*'/>
     public static CBORObject operator +(CBORObject a, CBORObject b) {

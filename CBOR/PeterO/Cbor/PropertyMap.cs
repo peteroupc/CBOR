@@ -145,9 +145,9 @@ namespace PeterO.Cbor {
     private static readonly IDictionary<Type, IList<PropertyData>>
       ValuePropertyLists = new Dictionary<Type, IList<PropertyData>>();
 
-private static string RemoveIsPrefix(string pn) {
-return CBORUtilities.NameStartsWithWord(pn, "Is") ? pn.Substring(2) : pn;
-}
+    private static string RemoveIsPrefix(string pn) {
+      return CBORUtilities.NameStartsWithWord(pn, "Is") ? pn.Substring(2) : pn;
+    }
 
     private static IList<PropertyData> GetPropertyList(Type t) {
       lock (ValuePropertyLists) {
@@ -161,25 +161,25 @@ return CBORUtilities.NameStartsWithWord(pn, "Is") ? pn.Substring(2) : pn;
         bool anonymous = HasCustomAttribute(
           t,
           "System.Runtime.CompilerServices.CompilerGeneratedAttribute");
-var names = new Dictionary<string, int>();
-foreach (PropertyInfo pi in GetTypeProperties(t)) {
- var pn = RemoveIsPrefix(pi.Name);
- if (names.ContainsKey(pn)) {
- ++names[pn];
-} else {
- names[pn] = 1;
-}
-}
+        var names = new Dictionary<string, int>();
+        foreach (PropertyInfo pi in GetTypeProperties(t)) {
+          var pn = RemoveIsPrefix(pi.Name);
+          if (names.ContainsKey(pn)) {
+            ++names[pn];
+          } else {
+            names[pn] = 1;
+          }
+        }
         foreach (PropertyInfo pi in GetTypeProperties(t)) {
           if (pi.CanRead && (pi.CanWrite || anonymous) &&
           pi.GetIndexParameters().Length == 0) {
             if (PropertyData.HasUsableGetter(pi) ||
                 PropertyData.HasUsableSetter(pi)) {
- var pn = RemoveIsPrefix(pi.Name);
- // Ignore ambiguous properties
- if (names.ContainsKey(pn) && names[pn] > 1) {
- continue;
-}
+              var pn = RemoveIsPrefix(pi.Name);
+              // Ignore ambiguous properties
+              if (names.ContainsKey(pn) && names[pn] > 1) {
+                continue;
+              }
               PropertyData pd = new PropertyMap.PropertyData() {
                 Name = pi.Name,
                 Prop = pi
@@ -206,9 +206,9 @@ foreach (PropertyInfo pi in GetTypeProperties(t)) {
 
     public static bool FirstElement(int[] index, int[] dimensions) {
       foreach (var d in dimensions) {
-         if (d == 0) {
- return false;
-}
+        if (d == 0) {
+          return false;
+        }
       }
       return true;
     }
@@ -220,8 +220,8 @@ foreach (PropertyInfo pi in GetTypeProperties(t)) {
           if (index[i] >= dimensions[i]) {
             index[i] = 0;
           } else {
- return true;
-}
+            return true;
+          }
         }
       }
       return false;
@@ -230,15 +230,17 @@ foreach (PropertyInfo pi in GetTypeProperties(t)) {
     public static CBORObject BuildCBORArray(int[] dimensions) {
       int zeroPos = dimensions.Length;
       for (var i = 0; i < dimensions.Length; ++i) {
-         if (dimensions[i] == 0) {
-  {zeroPos = i;
-} break;
-}
+        if (dimensions[i] == 0) {
+          {
+            zeroPos = i;
+          }
+          break;
+        }
       }
       int arraydims = zeroPos - 1;
       if (arraydims <= 0) {
- return CBORObject.NewArray();
-}
+        return CBORObject.NewArray();
+      }
       var stack = new CBORObject[zeroPos];
       var index = new int[zeroPos];
       var stackpos = 0;
@@ -246,7 +248,7 @@ foreach (PropertyInfo pi in GetTypeProperties(t)) {
       stack[0] = ret;
       index[0] = 0;
       for (var i = 0; i < dimensions[0]; ++i) {
-       ret.Add(CBORObject.NewArray());
+        ret.Add(CBORObject.NewArray());
       }
       ++stackpos;
       while (stackpos > 0) {
@@ -257,7 +259,7 @@ foreach (PropertyInfo pi in GetTypeProperties(t)) {
             stack[stackpos] = subobj;
             index[stackpos] = 0;
             for (var i = 0; i < dimensions[stackpos]; ++i) {
-             subobj.Add(CBORObject.NewArray());
+              subobj.Add(CBORObject.NewArray());
             }
             ++index[stackpos - 1];
             ++stackpos;
@@ -265,7 +267,7 @@ foreach (PropertyInfo pi in GetTypeProperties(t)) {
             ++index[stackpos - 1];
           }
         } else {
-           --stackpos;
+          --stackpos;
         }
       }
       return ret;
@@ -287,38 +289,40 @@ foreach (PropertyInfo pi in GetTypeProperties(t)) {
         obj = CBORObject.NewArray();
         int len = arr.GetLength(0);
         for (var i = 0; i < len; ++i) {
-    obj.Add(
-  CBORObject.FromObject(
-  arr.GetValue(i),
-  options,
-  mapper,
-  depth + 1));
+          obj.Add(
+        CBORObject.FromObject(
+        arr.GetValue(i),
+        options,
+        mapper,
+        depth + 1));
         }
         return obj;
       }
       var index = new int[rank];
       var dimensions = new int[rank];
-      for (var i = 0; i < rank; ++i) { dimensions[i] = arr.GetLength(i);
-}
+      for (var i = 0; i < rank; ++i) {
+        dimensions[i] = arr.GetLength(i);
+      }
       if (!FirstElement(index, dimensions)) {
- return obj;
-}
+        return obj;
+      }
       obj = BuildCBORArray(dimensions);
       do {
-       CBORObject o = CBORObject.FromObject(
-        arr.GetValue(index),
-        options,
-        mapper,
-        depth + 1);
-       SetCBORObject(obj, index, o);
+        CBORObject o = CBORObject.FromObject(
+         arr.GetValue(index),
+         options,
+         mapper,
+         depth + 1);
+        SetCBORObject(obj, index, o);
       } while (NextElement(index, dimensions));
       return obj;
     }
 
     private static CBORObject GetCBORObject(CBORObject cbor, int[] index) {
       CBORObject ret = cbor;
-      foreach (var i in index) { ret = ret[i];
-}
+      foreach (var i in index) {
+        ret = ret[i];
+      }
       return ret;
     }
 
@@ -332,9 +336,10 @@ foreach (PropertyInfo pi in GetTypeProperties(t)) {
       }
       int ilen = index[index.Length - 1];
       while (ilen >= ret.Count) {
-  { ret.Add(CBORObject.Null);
-}
-}
+        {
+          ret.Add(CBORObject.Null);
+        }
+      }
       ret[ilen] = obj;
     }
 
@@ -343,6 +348,7 @@ foreach (PropertyInfo pi in GetTypeProperties(t)) {
   Type elementType,
   CBORObject cbor,
   CBORTypeMapper mapper,
+  PODOptions options,
   int depth) {
       int rank = arr.Rank;
       if (rank == 0) {
@@ -351,37 +357,47 @@ foreach (PropertyInfo pi in GetTypeProperties(t)) {
       if (rank == 1) {
         int len = arr.GetLength(0);
         for (var i = 0; i < len; ++i) {
-  object item = cbor[i].ToObject(elementType, mapper, depth + 1);
-  arr.SetValue(item, i);
+       object item = cbor[i].ToObject(
+  elementType,
+  mapper,
+  options,
+  depth + 1);
+          arr.SetValue(item, i);
         }
         return arr;
       }
       var index = new int[rank];
       var dimensions = new int[rank];
-      for (var i = 0; i < rank; ++i) { dimensions[i] = arr.GetLength(i);
-}
+      for (var i = 0; i < rank; ++i) {
+        dimensions[i] = arr.GetLength(i);
+      }
       if (!FirstElement(index, dimensions)) {
- return arr;
-}
-       do {
-        object item = GetCBORObject(cbor, index).ToObject(elementType,
-          mapper, depth + 1);
+        return arr;
+      }
+      do {
+        object item = GetCBORObject(
+  cbor,
+  index).ToObject(
+  elementType,
+  mapper,
+  options,
+  depth + 1);
         arr.SetValue(item, index);
-       } while (NextElement(index, dimensions));
+      } while (NextElement(index, dimensions));
       return arr;
     }
 
     public static int[] GetDimensions(CBORObject obj) {
       if (obj.Type != CBORType.Array) {
- throw new CBORException();
-}
+        throw new CBORException();
+      }
       // Common cases
       if (obj.Count == 0) {
- return new int[] { 0 };
-}
+        return new int[] { 0 };
+      }
       if (obj[0].Type != CBORType.Array) {
- return new int[] { obj.Count };
-}
+        return new int[] { obj.Count };
+      }
       // Complex cases
       var list = new List<int>();
       list.Add(obj.Count);
@@ -398,11 +414,11 @@ foreach (PropertyInfo pi in GetTypeProperties(t)) {
       object ret = null;
       if (obj.Type == CBORType.Number && obj.IsIntegral) {
         ret = Enum.ToObject(enumType, TypeToIntegerObject(obj, utype));
-            if (!Enum.IsDefined(enumType, ret)) {
-               throw new CBORException("Unrecognized enum value: " +
-               obj.ToString());
-            }
-            return ret;
+        if (!Enum.IsDefined(enumType, ret)) {
+          throw new CBORException("Unrecognized enum value: " +
+          obj.ToString());
+        }
+        return ret;
       } else if (obj.Type == CBORType.TextString) {
         var nameString = obj.AsString();
         foreach (var name in Enum.GetNames(enumType)) {
@@ -410,7 +426,7 @@ foreach (PropertyInfo pi in GetTypeProperties(t)) {
             return Enum.Parse(enumType, name);
           }
         }
-    throw new CBORException("Not found: " + obj.ToString());
+        throw new CBORException("Not found: " + obj.ToString());
       } else {
         throw new CBORException("Unrecognized enum value: " +
            obj.ToString());
@@ -499,6 +515,7 @@ foreach (PropertyInfo pi in GetTypeProperties(t)) {
          CBORObject objThis,
          Type t,
          CBORTypeMapper mapper,
+         PODOptions options,
          int depth) {
       if (t.Equals(typeof(int))) {
         return objThis.AsInt32();
@@ -578,7 +595,7 @@ Type elementType = t.GetElementType();
           Array array = Array.CreateInstance(
         elementType,
         GetDimensions(objThis));
-    return FillArray(array, elementType, objThis, mapper, depth);
+    return FillArray(array, elementType, objThis, mapper, options, depth);
         }
         if (t.IsGenericType) {
           Type td = t.GetGenericTypeDefinition();
@@ -593,12 +610,12 @@ Type elementType = t.GetElementType();
           listObject = Activator.CreateInstance(listType);
         }
 #else
-if (IsAssignableFrom(typeof(Array), t)) {
+        if (IsAssignableFrom(typeof(Array), t)) {
           Type elementType = t.GetElementType();
           Array array = Array.CreateInstance(
         elementType,
         GetDimensions(objThis));
-    return FillArray(array, elementType, objThis, mapper, depth);
+          return FillArray(array, elementType, objThis, mapper, options, depth);
         }
         if (t.GetTypeInfo().IsGenericType) {
           Type td = t.GetGenericTypeDefinition();
@@ -615,8 +632,8 @@ if (IsAssignableFrom(typeof(Array), t)) {
         }
 #endif
         if (listObject == null) {
-          if (td.Equals(typeof(ArrayList)) || td.Equals(typeof(IList)) ||
-            td.Equals(typeof(ICollection)) || td.Equals(typeof(IEnumerable))) {
+          if (t.Equals(typeof(IList)) ||
+            t.Equals(typeof(ICollection)) || t.Equals(typeof(IEnumerable))) {
             listObject = new List<object>();
             objectType = typeof(object);
           }
@@ -624,7 +641,7 @@ if (IsAssignableFrom(typeof(Array), t)) {
         if (listObject != null) {
           System.Collections.IList ie = (System.Collections.IList)listObject;
           foreach (CBORObject value in objThis.Values) {
-            ie.Add(value.ToObject(objectType, mapper, depth + 1));
+            ie.Add(value.ToObject(objectType, mapper, options, depth + 1));
           }
           return listObject;
         }
@@ -672,8 +689,8 @@ if (IsAssignableFrom(typeof(Array), t)) {
         }
 #endif
         if (dictObject == null) {
-          if (td.Equals(typeof(Dictionary)) || td.Equals(typeof(IDictionary))) {
-            listObject = new Dictionary<object>();
+          if (t.Equals(typeof(IDictionary))) {
+            dictObject = new Dictionary<object, object>();
             keyType = typeof(object);
             valueType = typeof(object);
           }
@@ -684,32 +701,33 @@ if (IsAssignableFrom(typeof(Array), t)) {
           foreach (CBORObject key in objThis.Keys) {
             CBORObject value = objThis[key];
             idic.Add(
-  key.ToObject(keyType, mapper, depth + 1),
-  value.ToObject(valueType, mapper, depth + 1));
+  key.ToObject(keyType, mapper, options, depth + 1),
+  value.ToObject(valueType, mapper, options, depth + 1));
           }
           return dictObject;
         }
         if (mapper != null) {
-if (!mapper.FilterTypeName(t.FullName)) {
-      throw new CBORException("Type " + t.FullName +
-            " not supported");
-}
+          if (!mapper.FilterTypeName(t.FullName)) {
+            throw new CBORException("Type " + t.FullName +
+                  " not supported");
+          }
         } else {
-        if (t.FullName != null && (StartsWith(t.FullName, "Microsoft.Win32.") ||
-           StartsWith(t.FullName, "System.IO."))) {
-      throw new CBORException("Type " + t.FullName +
-            " not supported");
-        }
-        if (StartsWith(t.FullName, "System.") &&
-          !HasCustomAttribute(t, "System.SerializableAttribute")) {
-      throw new CBORException("Type " + t.FullName +
-            " not supported");
-        }
+       if (t.FullName != null && (StartsWith(t.FullName, "Microsoft.Win32."
+) ||
+             StartsWith(t.FullName, "System.IO."))) {
+            throw new CBORException("Type " + t.FullName +
+                  " not supported");
+          }
+          if (StartsWith(t.FullName, "System.") &&
+            !HasCustomAttribute(t, "System.SerializableAttribute")) {
+            throw new CBORException("Type " + t.FullName +
+                  " not supported");
+          }
         }
         var values = new List<KeyValuePair<string, CBORObject>>();
         foreach (string key in PropertyMap.GetPropertyNames(
                    t,
-                   true)) {
+                   options != null ? options.UseCamelCase : true)) {
           if (objThis.ContainsKey(key)) {
             CBORObject cborValue = objThis[key];
             var dict = new KeyValuePair<string, CBORObject>(
@@ -722,7 +740,7 @@ if (!mapper.FilterTypeName(t.FullName)) {
     t,
     values,
     mapper,
-    true,
+    options,
     depth);
       } else {
         throw new CBORException();
@@ -733,7 +751,8 @@ if (!mapper.FilterTypeName(t.FullName)) {
          Type t,
          IEnumerable<KeyValuePair<string, CBORObject>> keysValues,
        CBORTypeMapper mapper,
-  bool useCamelCase, int depth) {
+       PODOptions options,
+ int depth) {
       object o = Activator.CreateInstance(t);
       var dict = new Dictionary<string, CBORObject>();
       foreach (var kv in keysValues) {
@@ -746,10 +765,14 @@ if (!mapper.FilterTypeName(t.FullName)) {
           // a getter to be eligible for setting
           continue;
         }
-        var name = key.GetAdjustedName(useCamelCase);
+   var name = key.GetAdjustedName(options != null ? options.UseCamelCase :
+          true);
         if (dict.ContainsKey(name)) {
-       object dobj =
-            dict[name].ToObject(key.Prop.PropertyType, mapper, depth + 1);
+          object dobj = dict[name].ToObject(
+  key.Prop.PropertyType,
+  mapper,
+  options,
+  depth + 1);
           key.Prop.SetValue(o, dobj, null);
         }
       }

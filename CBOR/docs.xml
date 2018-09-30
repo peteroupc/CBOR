@@ -1915,8 +1915,8 @@ Note that for security reasons, certain types are not supported even if they con
 <doc name="P:PeterO.Cbor.CBORObject.IsIntegral">
 
             <summary>Gets a value indicating whether this object represents an
-             integral number, that is, a number without a fractional part.
-             Infinity and not-a-number are not considered integral.</summary><value><c>true</c> If this object represents an integral number,
+             integer number, that is, a number without a fractional part.
+             Infinity and not-a-number are not considered integers.</summary><value><c>true</c> If this object represents an integer number,
              that is, a number without a fractional part; otherwise, .
              <c>false</c>.</value>
 
@@ -2536,16 +2536,17 @@ is less than 0, is the size of this array or greater, or is not a 32-bit signed 
           array, returns an array containing the items in this CBOR object.
           (Multidimensional arrays to be documented.)
         </item>
-        <item>If the type is ArrayList, List, or the generic or non-generic IList, ICollection, or IEnumerable,
-          (or ArrayList, List, Collection, or Iterable in Java), and if this
-          CBOR object is an array, returns an object conforming to the type,
-          class, or interface passed to this method, where the object will
-          contain all items in this CBOR array.
+        <item>If the type is List or the generic or non-generic IList, ICollection,
+          or IEnumerable, (or ArrayList, List, Collection, or Iterable in Java),
+          and if this CBOR object is an array, returns an object conforming to
+          the type, class, or interface passed to this method, where the object
+          will contain all items in this CBOR array.
         </item>
-        <item>If the type is the generic or non-generic Dictionary or IDictionary (or HashMap or
-          Map in Java), and if this CBOR object is a map, returns an object
-          conforming to the type, class, or interface passed to this method,
-          where the object will contain all keys and values in this CBOR map.
+        <item>If the type is Dictionary or the generic or non-generic IDictionary
+          (or HashMap or Map in Java), and if this CBOR object is a map, returns
+          an object conforming to the type, class, or interface passed to this
+          method, where the object will contain all keys and values in this CBOR
+          map.
         </item>
         <item>If the type is an enumeration constant ("enum"), and this CBOR object
           is an integer or text string, returns the enumeration constant with
@@ -3511,10 +3512,12 @@ stream.Write(bytes, 0, bytes.Length);
 
 </doc>
 <doc name="T:PeterO.Cbor.CBORTypeMapper">
-<summary>Holds converters to customize the serialization and
+
+            <summary>Holds converters to customize the serialization and
             deserialization behavior of <c>CBORObject.FromObject</c> and
             <c>CBORObject#ToObject</c>, as well as type filters for
             <c>ToObject</c></summary>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeMapper.#ctor">
 <summary>Initializes a new instance of the <see cref='CBORTypeMapper'/> class.

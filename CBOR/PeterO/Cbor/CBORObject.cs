@@ -603,21 +603,349 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToObject(System.Type)"]/*'/>
     public object ToObject(Type t) {
-      return this.ToObject(t, null, 0);
+      return this.ToObject(t, null, null, 0);
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToObject(System.Type,PeterO.Cbor.CBORTypeMapper)"]/*'/>
+    /// <summary>Converts this CBOR object to an object of an arbitrary
+    /// type. See the documentation for the overload of this method taking
+    /// a CBORTypeMapper parameter for more information. This method
+    /// (without a CBORTypeMapper parameter) allows all data types not
+    /// otherwise handled to be eligible for Plain-Old-Data
+    /// serialization.</summary>
+    /// <param name='t'>The type, class, or interface that this method's
+    /// return value will belong to. To express a generic type in Java, see
+    /// the example. <b>Note:</b>
+    ///  For security reasons, an application
+    /// should not base this parameter on user input or other externally
+    /// supplied data. Whenever possible, this parameter should be either a
+    /// type specially handled by this method (such as <c>int</c>
+    ///  or
+    /// <c>String</c>
+    ///  ///) or a plain-old-data type (POCO or POJO type)
+    /// within the control of the application. If the plain-old-data type
+    /// references other data types, those types should likewise meet
+    /// either criterion above.</param>
+    /// <param name='mapper'>A CBORTypeMapper object.</param>
+    /// <returns>The converted object.</returns>
+    /// <exception cref='T:System.NotSupportedException'>The given type
+    /// <paramref name='t'/> , or this object's CBOR type, is not
+    /// supported.</exception>
+    /// <exception cref='T:System.ArgumentNullException'>The parameter
+    /// <paramref name='t'/> is null.</exception>
+    /// <exception cref='T:System.CBORException'>The given object's nesting
+    /// is too deep, or another error occurred when serializing the
+    /// object.</exception>
+    /// <example>
+    /// <para>Java offers no easy way to express a generic type, at least
+    /// none as easy as C#'s <c>typeof</c>
+    ///  operator. The following example,
+    /// written in Java, is a way to specify that the return value will be
+    /// an ArrayList of String objects.</para>
+    /// <code>Type arrayListString = new ParameterizedType() { public Type[]
+    /// getActualTypeArguments() {  // Contains one type parameter, String
+    /// return new Type[] { String.class }; } public Type getRawType() { /* Raw
+    /// type is ArrayList */ return ArrayList.class; } public Type
+    /// getOwnerType() { return null; } }; ArrayList&lt;String&gt; array =
+    /// (ArrayList&lt;String&gt;) cborArray.ToObject(arrayListString);
+    /// </code>
+    /// <para>By comparison, the C# version is much shorter.</para>
+    /// <code>var&#x20;array = (List&lt;String&gt;)cborArray.ToObject(
+    /// typeof&#x28;List&lt;String&gt;));
+    /// </code>
+    /// </example>
     public object ToObject(Type t, CBORTypeMapper mapper) {
 if (mapper == null) {
   throw new ArgumentNullException(nameof(mapper));
 }
-return this.ToObject(t, mapper, 0);
+return this.ToObject(t, mapper, null, 0);
     }
 
-    internal object ToObject(Type t, CBORTypeMapper mapper, int depth) {
+    /// <summary>Converts this CBOR object to an object of an arbitrary
+    /// type. See the documentation for the overload of this method taking
+    /// a CBORTypeMapper parameter for more information. This method
+    /// (without a CBORTypeMapper parameter) allows all data types not
+    /// otherwise handled to be eligible for Plain-Old-Data
+    /// serialization.</summary>
+    /// <param name='t'>The type, class, or interface that this method's
+    /// return value will belong to. To express a generic type in Java, see
+    /// the example. <b>Note:</b>
+    ///  For security reasons, an application
+    /// should not base this parameter on user input or other externally
+    /// supplied data. Whenever possible, this parameter should be either a
+    /// type specially handled by this method (such as <c>int</c>
+    ///  or
+    /// <c>String</c>
+    ///  ///) or a plain-old-data type (POCO or POJO type)
+    /// within the control of the application. If the plain-old-data type
+    /// references other data types, those types should likewise meet
+    /// either criterion above.</param>
+    /// <param name='options'>A PODOptions object.</param>
+    /// <returns>The converted object.</returns>
+    /// <exception cref='T:System.NotSupportedException'>The given type
+    /// <paramref name='t'/> , or this object's CBOR type, is not
+    /// supported.</exception>
+    /// <exception cref='T:System.ArgumentNullException'>The parameter
+    /// <paramref name='t'/> is null.</exception>
+    /// <exception cref='T:System.CBORException'>The given object's nesting
+    /// is too deep, or another error occurred when serializing the
+    /// object.</exception>
+    /// <example>
+    /// <para>Java offers no easy way to express a generic type, at least
+    /// none as easy as C#'s <c>typeof</c>
+    ///  operator. The following example,
+    /// written in Java, is a way to specify that the return value will be
+    /// an ArrayList of String objects.</para>
+    /// <code>Type arrayListString = new ParameterizedType() { public Type[]
+    /// getActualTypeArguments() {  // Contains one type parameter, String
+    /// return new Type[] { String.class }; } public Type getRawType() { /* Raw
+    /// type is ArrayList */ return ArrayList.class; } public Type
+    /// getOwnerType() { return null; } }; ArrayList&lt;String&gt; array =
+    /// (ArrayList&lt;String&gt;) cborArray.ToObject(arrayListString);
+    /// </code>
+    /// <para>By comparison, the C# version is much shorter.</para>
+    /// <code>var&#x20;array = (List&lt;String&gt;)cborArray.ToObject(
+    /// typeof&#x28;List&lt;String&gt;));
+    /// </code>
+    /// </example>
+    public object ToObject(Type t, PODOptions options) {
+if (options == null) {
+  throw new ArgumentNullException(nameof(options));
+}
+return this.ToObject(t, null, options, 0);
+    }
+
+    /// <summary><para>Converts this CBOR object to an object of an
+    /// arbitrary type. The following cases are checked in the logical
+    /// order given (rather than the strict order in which they are
+    /// implemented by this library):</para>
+    ///  <list><item>If the type is
+    /// <c>CBORObject</c>
+    ///  , return this object.</item>
+    ///  <item>If the given
+    /// object is <c>CBORObject.Null</c>
+    ///  (with or without tags), returns
+    /// <c>null</c>
+    ///  .</item>
+    ///  <item>If the object is of a type corresponding
+    /// to a type converter mentioned in the <paramref name='mapper'/>
+    /// parameter, that converter will be used to convert the CBOR object
+    /// to an object of the given type. Type converters can be used to
+    /// override the default conversion behavior of almost any
+    /// object.</item>
+    ///  <item>If the type is <c>object</c>
+    ///  , return this
+    /// object.</item>
+    ///  <item>If the type is <c>char</c>
+    ///  ... (To be
+    /// implemented).</item>
+    ///  <item>If the type is <c>bool</c>
+    ///  (
+    /// <c>boolean</c>
+    ///  in Java), returns the result of AsBoolean.</item>
+    /// <item>If the type is a primitive integer type ( <c>byte</c>
+    ///  ,
+    /// <c>int</c>
+    ///  , <c>short</c>
+    ///  , <c>long</c>
+    ///  , as well as <c>sbyte</c>
+    ///  ,
+    /// <c>ushort</c>
+    ///  , <c>uint</c>
+    ///  , and <c>ulong</c>
+    ///  in .NET) or a
+    /// primitive floating-point type ( <c>float</c>
+    ///  , <c>double</c>
+    ///  , as
+    /// well as <c>decimal</c>
+    ///  in .NET), returns the result of the
+    /// corresponding As* method.</item>
+    ///  <item>If the type is <c>String</c>
+    /// , returns the result of AsString.</item>
+    ///  <item>If the type is
+    /// <c>EDecimal</c>
+    ///  , <c>EFloat</c>
+    ///  , <c>EInteger</c>
+    ///  , or
+    /// <c>ERational</c>
+    ///  in the <a
+    /// href='https://www.nuget.org/packages/PeterO.Numbers'><c>PeterO.Numbers</c>
+    /// </a>
+    ///  library (in .NET) or the <a
+    /// href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c>
+    /// </a>
+    ///  artifact (in Java), returns the result of the corresponding
+    /// As* method.</item>
+    ///  <item>If the type is an enumeration (
+    /// <c>Enum</c>
+    ///  ///) type this CBOR object is a text string or an
+    /// integer, returns the appropriate enumerated constant. (For example,
+    /// if <c>MyEnum</c>
+    ///  includes an entry for <c>MyValue</c>
+    ///  , this method
+    /// will return <c>MyEnum.MyValue</c>
+    ///  if the CBOR object represents
+    /// <c>"MyValue"</c>
+    ///  or the underlying value for <c>MyEnum.MyValue</c>
+    /// .) <b>Note:</b>
+    ///  If an integer is converted to a .NET Enum constant,
+    /// and that integer is shared by more than one constant of the same
+    /// type, it is undefined which constant from among them is returned.
+    /// (For example, if <c>MyEnum.Zero = 0</c>
+    ///  and <c>MyEnum.Null = 0</c>
+    /// , converting 0 to <c>MyEnum</c>
+    ///  may return either
+    /// <c>MyEnum.Zero</c>
+    ///  or <c>MyEnum.Null</c>
+    ///  .) As a result, .NET Enum
+    /// types with constants that share an underlying value should not be
+    /// passed to this method.</item>
+    ///  <item>If the type is <c>byte[]</c>
+    ///  (a
+    /// one-dimensional byte array) and this CBOR object is a byte string,
+    /// returns a byte array which this CBOR byte string's data will be
+    /// copied to. (This method can't be used to encode CBOR data to a byte
+    /// array; for that, use the EncodeToBytes method instead.)</item>
+    /// <item>If the type is a one-dimensional array type and this CBOR
+    /// object is an array, returns an array containing the items in this
+    /// CBOR object. (Multidimensional arrays to be documented.)</item>
+    /// <item>If the type is List or the generic or non-generic IList,
+    /// ICollection, or IEnumerable, (or ArrayList, List, Collection, or
+    /// Iterable in Java), and if this CBOR object is an array, returns an
+    /// object conforming to the type, class, or interface passed to this
+    /// method, where the object will contain all items in this CBOR
+    /// array.</item>
+    ///  <item>If the type is Dictionary or the generic or
+    /// non-generic IDictionary (or HashMap or Map in Java), and if this
+    /// CBOR object is a map, returns an object conforming to the type,
+    /// class, or interface passed to this method, where the object will
+    /// contain all keys and values in this CBOR map.</item>
+    ///  <item>If the
+    /// type is an enumeration constant ("enum"), and this CBOR object is
+    /// an integer or text string, returns the enumeration constant with
+    /// the given number or name, respectively. (Enumeration constants made
+    /// up of multiple enumeration constants, as allowed by .NET, can only
+    /// be matched by number this way.) (To be implemented for
+    /// Java.)</item>
+    ///  <item>Type converters (To be implemented).</item>
+    /// <item>If the type is <c>DateTime</c>
+    ///  (or <c>Date</c>
+    ///  in Java) ,
+    /// returns a date/time object if the CBOR object's outermost tag is 0
+    /// or 1.</item>
+    ///  <item>If the type is <c>Uri</c>
+    ///  (or <c>URI</c>
+    ///  in
+    /// Java), returns a URI object if possible.</item>
+    ///  <item>If the type
+    /// is <c>Guid</c>
+    ///  (or <c>UUID</c>
+    ///  in Java), returns a UUID object if
+    /// possible.</item>
+    ///  <item>Plain-Old-Data deserialization: If the
+    /// object is a type not specially handled above, the type includes a
+    /// zero-argument constructor (default or not), this CBOR object is a
+    /// CBOR map, and the "mapper" parameter allows this type to be
+    /// eligible for Plain-Old-Data deserialization, then this method
+    /// checks the given type for eligible setters as follows:</item>
+    /// <item>(*) In the .NET version, eligible setters are the public,
+    /// nonstatic setters of properties with a public, nonstatic getter. If
+    /// a class has two properties of the form "X" and "IsX", where "X" is
+    /// any name, or has multiple properties with the same name, those
+    /// properties are ignored.</item>
+    ///  <item>(*) In the Java version,
+    /// eligible setters are public, nonstatic methods starting with "set"
+    /// followed by a character other than a basic digit or lower-case
+    /// letter, that is, other than "a" to "z" or "0" to "9", that take one
+    /// parameter. The class containing an eligible setter must have a
+    /// public, nonstatic method with the same name, but starting with
+    /// "get" or "is" rather than "set", that takes no parameters and does
+    /// not return void. (For example, if a class has "public
+    /// setValue(String)" and "public getValue()", "setValue" is an
+    /// eligible setter. However, "setValue()" and "setValue(String, int)"
+    /// are not eligible setters.) If a class has two otherwise eligible
+    /// setters with the same name, but different parameter type, they are
+    /// not eligible setters.</item>
+    ///  <item>Then, the method creates an
+    /// object of the given type and invokes each eligible setter with the
+    /// corresponding value in the CBOR map, if any. Key names in the map
+    /// are matched to eligible setters according to the rules described in
+    /// the <see cref='T:PeterO.Cbor.PODOptions'/> documentation. Note that
+    /// for security reasons, certain types are not supported even if they
+    /// contain eligible setters.</item>
+    ///  </list>
+    ///  <para>REMARK: A certain
+    /// consistency between .NET and Java and between FromObject and
+    /// ToObject are sought for version 4.0. It is also hoped that--</para>
+    /// <list><item>the ToObject method will support deserializing to
+    /// objects consisting of fields and not getters ("getX()" methods),
+    /// both in .NET and in Java, and</item>
+    ///  <item>both FromObject and
+    /// ToObject will be better designed, in version 4.0, so that
+    /// backward-compatible improvements are easier to make.</item>
+    ///  </list>
+    /// </summary>
+    /// <param name='t'>The type, class, or interface that this method's
+    /// return value will belong to. To express a generic type in Java, see
+    /// the example. <b>Note:</b>
+    ///  For security reasons, an application
+    /// should not base this parameter on user input or other externally
+    /// supplied data. Whenever possible, this parameter should be either a
+    /// type specially handled by this method (such as <c>int</c>
+    ///  or
+    /// <c>String</c>
+    ///  ///) or a plain-old-data type (POCO or POJO type)
+    /// within the control of the application. If the plain-old-data type
+    /// references other data types, those types should likewise meet
+    /// either criterion above.</param>
+    /// <param name='mapper'>This parameter controls which data types are
+    /// eligible for Plain-Old-Data deserialization and includes custom
+    /// converters from CBOR objects to certain data types.</param>
+    /// <param name='options'>A PODOptions object.</param>
+    /// <returns>The converted object.</returns>
+    /// <exception cref='T:System.NotSupportedException'>The given type
+    /// <paramref name='t'/> , or this object's CBOR type, is not
+    /// supported.</exception>
+    /// <exception cref='T:System.ArgumentNullException'>The parameter
+    /// <paramref name='t'/> is null.</exception>
+    /// <exception cref='T:System.CBORException'>The given object's nesting
+    /// is too deep, or another error occurred when serializing the
+    /// object.</exception>
+    /// <example>
+    /// <para>Java offers no easy way to express a generic type, at least
+    /// none as easy as C#'s <c>typeof</c>
+    ///  operator. The following example,
+    /// written in Java, is a way to specify that the return value will be
+    /// an ArrayList of String objects.</para>
+    /// <code>Type arrayListString = new ParameterizedType() { public Type[]
+    /// getActualTypeArguments() {  // Contains one type parameter, String
+    /// return
+    /// new Type[] { String.class }; } public Type getRawType() { /* Raw type is
+    /// ArrayList */ return ArrayList.class; } public Type getOwnerType() {
+    /// return null; } }; ArrayList&lt;String&gt; array =
+    /// (ArrayList&lt;String&gt;) cborArray.ToObject(arrayListString);
+    /// </code>
+    /// <para>By comparison, the C# version is much shorter.</para>
+    /// <code>var&#x20;array = (List&lt;String&gt;)cborArray.ToObject(
+    /// typeof&#x28;List&lt;String&gt;));
+    /// </code>
+    /// </example>
+    public object ToObject(Type t, CBORTypeMapper mapper, PODOptions options) {
+if (mapper == null) {
+  throw new ArgumentNullException(nameof(mapper));
+}
+if (options == null) {
+  throw new ArgumentNullException(nameof(options));
+}
+return this.ToObject(t, mapper, options, 0);
+    }
+
+    internal object ToObject(
+  Type t,
+  CBORTypeMapper mapper,
+  PODOptions options,
+  int depth) {
 depth++;
-if (depth>100) {
+if (depth > 100) {
  throw new CBORException("Depth level too high");
 }
       if (t == null) {
@@ -639,7 +967,7 @@ if (depth>100) {
         return this;
       }
       return t.Equals(typeof(string)) ? this.AsString() :
-        PropertyMap.TypeToObject(this, t, mapper, depth);
+        PropertyMap.TypeToObject(this, t, mapper, options, depth);
     }
 
     /// <include file='../../docs.xml'
