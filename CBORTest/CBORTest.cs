@@ -513,9 +513,15 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
     }
     [Test]
     [ExpectedException(typeof(CBORException))]
-    [Ignore]
     public void TestDecimalFracExponentMustNotBeBignum() {
       CBORTestCommon.FromBytesTestAB(new byte[] { 0xc4, 0x82, 0xc2, 0x41, 1,
+        0x1a,
+        1, 2, 3, 4 });
+    }
+    [Test]
+    [ExpectedException(typeof(CBORException))]
+    public void TestBigFloatExponentMustNotBeBignum() {
+      CBORTestCommon.FromBytesTestAB(new byte[] { 0xc5, 0x82, 0xc2, 0x41, 1,
         0x1a,
         1, 2, 3, 4 });
     }
@@ -527,6 +533,15 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
       Assert.AreEqual(
         EDecimal.FromString("1e3"),
         o.AsEDecimal());
+    }
+
+    [Test]
+    public void TestBigFloatFracMantissaMayBeBignum() {
+      CBORObject o = CBORTestCommon.FromBytesTestAB(
+        new byte[] { 0xc5, 0x82, 0x3, 0xc2, 0x41, 1 });
+      Assert.AreEqual(
+        0,
+        EFloat.FromString("8").CompareTo(o.AsEFloat()));
     }
 
     [Test]
