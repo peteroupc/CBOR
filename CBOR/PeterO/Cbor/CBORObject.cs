@@ -607,7 +607,7 @@ namespace PeterO.Cbor {
     }
 
     /// <include file='../../docs.xml'
-  /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToObject(System.Type,PeterO.Cbor.CBORTypeMapper)"]/*'/>
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToObject(System.Type,PeterO.Cbor.CBORTypeMapper)"]/*'/>
     public object ToObject(Type t, CBORTypeMapper mapper) {
 if (mapper == null) {
   throw new ArgumentNullException(nameof(mapper));
@@ -616,7 +616,7 @@ return this.ToObject(t, mapper, null, 0);
     }
 
     /// <include file='../../docs.xml'
-  /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToObject(System.Type,PeterO.Cbor.PODOptions)"]/*'/>
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToObject(System.Type,PeterO.Cbor.PODOptions)"]/*'/>
     public object ToObject(Type t, PODOptions options) {
 if (options == null) {
   throw new ArgumentNullException(nameof(options));
@@ -625,7 +625,7 @@ return this.ToObject(t, null, options, 0);
     }
 
     /// <include file='../../docs.xml'
-  /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToObject(System.Type,PeterO.Cbor.CBORTypeMapper,PeterO.Cbor.PODOptions)"]/*'/>
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToObject(System.Type,PeterO.Cbor.CBORTypeMapper,PeterO.Cbor.PODOptions)"]/*'/>
     public object ToObject(Type t, CBORTypeMapper mapper, PODOptions options) {
 if (mapper == null) {
   throw new ArgumentNullException(nameof(mapper));
@@ -784,14 +784,6 @@ if (depth > 100) {
     public static CBORObject FromObject(short value) {
       return (value >= 0 && value < 24) ? valueFixedObjects[value] :
         FromObject((long)value);
-    }
-
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Char)"]/*'/>
-    public static CBORObject FromObject(char value) {
-      // TODO: Consider changing this method's behavior
-      char[] valueChar = { value };
-      return FromObject(new String(valueChar));
     }
 
     /// <include file='../../docs.xml'
@@ -958,7 +950,7 @@ if (depth > 100) {
         return FromObject((short)obj);
       }
       if (obj is char) {
-        return FromObject((char)obj);
+        return FromObject((int)(char)obj);
       }
       if (obj is bool) {
         return FromObject((bool)obj);
@@ -1496,17 +1488,6 @@ objret[key.Key] = CBORObject.FromObject(
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Int16,System.IO.Stream)"]/*'/>
     public static void Write(short value, Stream stream) {
       Write((long)value, stream);
-    }
-
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Char,System.IO.Stream)"]/*'/>
-    public static void Write(char value, Stream stream) {
-      // TODO: Consider changing this method's behavior
-      if (value >= 0xd800 && value < 0xe000) {
-        throw new ArgumentException("Value is a surrogate code point.");
-      }
-      char[] valueChar = { value };
-      Write(new String(valueChar), stream);
     }
 
     /// <include file='../../docs.xml'

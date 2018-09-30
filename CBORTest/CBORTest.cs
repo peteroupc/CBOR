@@ -539,9 +539,10 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
     public void TestBigFloatFracMantissaMayBeBignum() {
       CBORObject o = CBORTestCommon.FromBytesTestAB(
         new byte[] { 0xc5, 0x82, 0x3, 0xc2, 0x41, 1 });
-      Assert.AreEqual(
-        0,
-        EFloat.FromString("8").CompareTo(o.AsEFloat()));
+      {
+long numberTemp = EFloat.FromString("8").CompareTo(o.AsEFloat());
+Assert.AreEqual(0, numberTemp);
+}
     }
 
     [Test]

@@ -553,6 +553,23 @@ namespace PeterO.Cbor {
       if (t.Equals(typeof(bool))) {
         return objThis.AsBoolean();
       }
+      if (t.Equals(typeof(char))) {
+if (objThis.Type == CBORType.TextString) {
+  string s = objThis.AsString();
+  if (s.Length != 1) {
+ throw new CBORException("Can't convert to char");
+}
+  return s[0];
+}
+if (objThis.IsIntegral && objThis.CanTruncatedIntFitInInt32()) {
+  int c = objThis.AsInt32();
+  if (c < 0 || c >= 0x10000) {
+ throw new CBORException("Can't convert to char");
+}
+  return (char)c;
+}
+throw new CBORException("Can't convert to char");
+      }
       if (t.Equals(typeof(DateTime))) {
         return new CBORDateConverter().FromCBORObject(objThis);
       }
@@ -655,8 +672,8 @@ Type elementType = t.GetElementType();
         isDict = t.IsGenericType;
         if (t.IsGenericType) {
           Type td = t.GetGenericTypeDefinition();
-          isDict = td.Equals(typeof(Dictionary<, >)) ||
-            td.Equals(typeof(IDictionary<, >));
+          isDict = td.Equals(typeof(Dictionary<,>)) ||
+            td.Equals(typeof(IDictionary<,>));
         }
         // DebugUtility.Log("list=" + isDict);
         isDict = isDict && t.GetGenericArguments().Length == 2;
@@ -664,7 +681,7 @@ Type elementType = t.GetElementType();
         if (isDict) {
           keyType = t.GetGenericArguments()[0];
           valueType = t.GetGenericArguments()[1];
-          Type listType = typeof(Dictionary<, >).MakeGenericType(
+          Type listType = typeof(Dictionary<,>).MakeGenericType(
             keyType,
             valueType);
           dictObject = Activator.CreateInstance(listType);
@@ -673,8 +690,8 @@ Type elementType = t.GetElementType();
         isDict = (t.GetTypeInfo().IsGenericType);
         if (t.GetTypeInfo().IsGenericType) {
           Type td = t.GetGenericTypeDefinition();
-          isDict = (td.Equals(typeof(Dictionary<, >)) ||
-  td.Equals(typeof(IDictionary<, >)));
+          isDict = (td.Equals(typeof(Dictionary<,>)) ||
+  td.Equals(typeof(IDictionary<,>)));
         }
         //DebugUtility.Log("list=" + isDict);
         isDict = (isDict && t.GenericTypeArguments.Length == 2);
@@ -682,7 +699,7 @@ Type elementType = t.GetElementType();
         if (isDict) {
           keyType = t.GenericTypeArguments[0];
           valueType = t.GenericTypeArguments[1];
-          Type listType = typeof(Dictionary<, >).MakeGenericType(
+          Type listType = typeof(Dictionary<,>).MakeGenericType(
             keyType,
             valueType);
           dictObject = Activator.CreateInstance(listType);

@@ -128,29 +128,30 @@ namespace PeterO.Cbor {
         return cbor;
       }
       // Special check: Decimal fraction or bigfloat
-      if(firstbyte==0xc4 || firstbyte==0xc5){
-        int nextbyte=this.stream.ReadByte();
-        if(nextbyte!=0x82 && nextbyte!=0x9f)
-          throw new CBORException("2-item array expected");
-        bool indefArray=(nextbyte==0x9f);
-        nextbyte=this.stream.ReadByte();
-        if(nextbyte>=0x40){
+      if (firstbyte == 0xc4 || firstbyte == 0xc5) {
+        int nextbyte = this.stream.ReadByte();
+        if (nextbyte != 0x82 && nextbyte != 0x9f) {
+ throw new CBORException("2-item array expected");
+}
+        bool indefArray = nextbyte == 0x9f;
+        nextbyte = this.stream.ReadByte();
+        if (nextbyte >= 0x40) {
           throw new CBORException("Major type 0 or 1 or bignum expected");
         }
-        CBORObject exponent=ReadForFirstByte(nextbyte);
-        nextbyte=this.stream.ReadByte();
-        if(nextbyte>=0x40 && nextbyte!=0xc2 && nextbyte!=0xc3){
+        CBORObject exponent = this.ReadForFirstByte(nextbyte);
+        nextbyte = this.stream.ReadByte();
+        if (nextbyte >= 0x40 && nextbyte != 0xc2 && nextbyte != 0xc3) {
           throw new CBORException("Major type 0 or 1 expected");
         }
-        CBORObject significand=ReadForFirstByte(nextbyte);
-        if(indefArray && this.stream.ReadByte()!=0xff){
+        CBORObject significand = this.ReadForFirstByte(nextbyte);
+        if (indefArray && this.stream.ReadByte() != 0xff) {
           throw new CBORException("End of array expected");
         }
-        CBORObject arr=CBORObject.NewArray()
+        CBORObject arr = CBORObject.NewArray()
           .Add(exponent).Add(significand);
         return CBORObject.FromObjectAndTag(
           arr,
-          firstbyte==0xc4 ? 4 : 5);
+          firstbyte == 0xc4 ? 4 : 5);
       }
       var uadditional = (long)additional;
       EInteger bigintAdditional = EInteger.Zero;

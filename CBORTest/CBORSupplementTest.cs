@@ -160,15 +160,6 @@ namespace Test {
 
     [Test]
     public void TestCBORObjectArgumentValidation() {
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip('\udddd');
-        Assert.Fail("Should have failed");
-      } catch (ArgumentException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
       Assert.AreEqual(
   CBORObject.Null,
   ToObjectTest.TestToFromObjectRoundTrip((byte[])null));

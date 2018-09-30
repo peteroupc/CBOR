@@ -14,7 +14,8 @@ namespace Test {
     }
 
     public bool HasGoodPrivateProp() {
-      return this.PrivatePropA == 2;
+      int ppa = this.PrivatePropA;
+      return ppa == 2;
     }
 
     private int PrivatePropA { get; }

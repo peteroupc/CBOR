@@ -138,8 +138,8 @@ namespace PeterO.Cbor {
 
       public object FromObject { get; set; }
 
-    /// <include file='../../docs.xml'
-  /// path='docs/doc[@name="P:PeterO.Cbor.CBORTypeMapper.ConverterInfo.Converter"]/*'/>
+    /// <summary>Gets a value not documented yet.</summary>
+    /// <value>A value not documented yet.</value>
       public object Converter { get; set; }
     }
   }

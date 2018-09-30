@@ -2443,6 +2443,12 @@ Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Double.NaN).AsEFloat()
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
+ ToObjectTest.TestToFromObjectRoundTrip('\udddd');
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
         CBORObject.FromObject(CBORObject.NewArray().Keys);
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {

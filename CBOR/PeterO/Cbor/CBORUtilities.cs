@@ -477,13 +477,13 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
       if (bad) {
         throw new ArgumentException("Invalid date/time");
       }
-      int year = (str[0] - '0') * 1000 + (str[1] - '0') * 100 +
+      int year = ((str[0] - '0') * 1000) + (str[1] - '0') * 100 +
         (str[2] - '0') * 10 + (str[3] - '0');
-      int month = (str[5] - '0') * 10 + (str[6] - '0');
-      int day = (str[8] - '0') * 10 + (str[9] - '0');
-      int hour = (str[11] - '0') * 10 + (str[12] - '0');
-      int minute = (str[14] - '0') * 10 + (str[15] - '0');
-      int second = (str[17] - '0') * 10 + (str[18] - '0');
+      int month = ((str[5] - '0') * 10) + (str[6] - '0');
+      int day = ((str[8] - '0') * 10) + (str[9] - '0');
+      int hour = ((str[11] - '0') * 10) + (str[12] - '0');
+      int minute = ((str[14] - '0') * 10) + (str[15] - '0');
+      int second = ((str[17] - '0') * 10) + (str[18] - '0');
       var index = 19;
       var nanoSeconds = 0;
       if (index <= str.Length && str[index] == '.') {
@@ -524,8 +524,8 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
           throw new ArgumentException("Invalid date/time");
         }
         bool neg = str[index] == '-';
-        int tzhour = (str[index + 1] - '0') * 10 + (str[index + 2] - '0');
-        int tzminute = (str[index + 4] - '0') * 10 + (str[index + 5] - '0');
+        int tzhour = ((str[index + 1] - '0') * 10) + (str[index + 2] - '0');
+        int tzminute = ((str[index + 4] - '0') * 10) + (str[index + 5] - '0');
         if (tzminute >= 60) {
           throw new ArgumentException("Invalid date/time");
         }
