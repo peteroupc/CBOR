@@ -10,6 +10,7 @@ using System.IO;
 using System.Text;
 using PeterO;
 using PeterO.Numbers;
+#pragma warning disable 618
 
 namespace PeterO.Cbor {
   internal class CBORReader {
@@ -468,6 +469,8 @@ namespace PeterO.Cbor {
             throw new CBORException("Unexpected tag encountered: " +
                  uadditional);
           }
+          #pragma warning disable 618
+
           taginfo = CBORObject.FindTagConverter(bigintAdditional);
         }
         ++this.depth;

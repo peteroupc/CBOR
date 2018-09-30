@@ -241,6 +241,24 @@ if (majorType > 7) {
     }
 
     /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToObject``1(PeterO.Cbor.CBORTypeMapper)"]/*'/>
+    public T ToObject<T>(CBORTypeMapper mapper) {
+      return (T)this.ToObject(typeof(T), mapper);
+    }
+
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToObject``1(PeterO.Cbor.PODOptions)"]/*'/>
+    public T ToObject<T>(PODOptions options) {
+      return (T)this.ToObject(typeof(T), options);
+    }
+
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToObject``1(PeterO.Cbor.CBORTypeMapper,PeterO.Cbor.PODOptions)"]/*'/>
+    public T ToObject<T>(CBORTypeMapper mapper, PODOptions options) {
+      return (T)this.ToObject(typeof(T), mapper, options);
+    }
+
+    /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.op_Addition(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]/*'/>
     public static CBORObject operator +(CBORObject a, CBORObject b) {
       return Addition(a, b);

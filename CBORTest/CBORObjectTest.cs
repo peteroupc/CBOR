@@ -5181,7 +5181,7 @@ throw new InvalidOperationException(String.Empty, ex);
       CBORTestCommon.AssertRoundTrip(o2);
     }
 
-    private static void AreEqualExact(double a, double b) {
+    internal static void AreEqualExact(double a, double b) {
       if (Double.IsNaN(a)) {
         Assert.IsTrue(Double.IsNaN(b));
       } else if (a != b) {
@@ -5189,7 +5189,7 @@ throw new InvalidOperationException(String.Empty, ex);
       }
     }
 
-    private static void AreEqualExact(float a, float b) {
+    internal static void AreEqualExact(float a, float b) {
       if (Single.IsNaN(a)) {
         Assert.IsTrue(Single.IsNaN(b));
       } else if (a != b) {

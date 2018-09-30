@@ -112,6 +112,8 @@
     <Compile Include="JSONPatch.cs" />
     <Compile Include="JSONPointer.cs" />
     <Compile Include="DateTest.cs" />
+    <Compile Include="ToObjectTest.cs" />
+    <Compile Include="PODClass.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

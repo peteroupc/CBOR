@@ -6,6 +6,7 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/
  */
 using System;
+#pragma warning disable 618
 
 namespace PeterO.Cbor {
   internal class CBORTag26 : ICBORTag

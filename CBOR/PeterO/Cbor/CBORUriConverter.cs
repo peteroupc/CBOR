@@ -7,15 +7,10 @@ at: http://peteroupc.github.io/
  */
 using System;
 
-#pragma warning disable 618
 namespace PeterO.Cbor {
-  internal class CBORTag32 : ICBORTag, ICBORConverter<Uri>
+  internal class CBORUriConverter : ICBORToFromConverter<Uri>
   {
-    public CBORTypeFilter GetTypeFilter() {
-      return CBORTypeFilter.TextString;
-    }
-
-    public CBORObject ValidateObject(CBORObject obj) {
+    private CBORObject ValidateObject(CBORObject obj) {
       if (obj.Type != CBORType.TextString) {
         throw new CBORException("URI must be a text string");
       }
@@ -25,8 +20,16 @@ namespace PeterO.Cbor {
       return obj;
     }
 
-    internal static void AddConverter() {
-      CBORObject.AddConverter(typeof(Uri), new CBORTag32());
+    public Uri FromCBORObject(CBORObject obj) {
+      if (obj.HasMostOuterTag(32)) {
+        this.ValidateObject(obj);
+        try {
+         return new Uri(obj.AsString());
+        } catch (Exception ex) {
+         throw new CBORException(ex.Message, ex);
+        }
+      }
+      throw new CBORException();
     }
 
     public CBORObject ToCBORObject(Uri uri) {

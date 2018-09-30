@@ -1,4 +1,6 @@
-/*
+using System.Text;
+
+    /*
 Written in 2013 by Peter Occil.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -6,11 +8,8 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/
  */
 namespace PeterO.Cbor {
-  using System;
-using System.Text;
+/// <include file='../../docs.xml'
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="T:PeterO.Cbor.URIUtility"]/*'/>
   internal static class URIUtility {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="T:PeterO.Cbor.URIUtility.ParseMode"]/*'/>
@@ -141,7 +140,7 @@ using System.Text;
       while (index < valueSLength) {
         int c = s[index];
         if ((c & 0xfc00) == 0xd800 && index + 1 < valueSLength &&
-            s[index + 1] >= 0xdc00 && s[index + 1] <= 0xdfff) {
+            (s[index + 1] & 0xfc00) == 0xdc00) {
           // Get the Unicode code point for the surrogate pair
           c = 0x10000 + ((c - 0xd800) << 10) + (s[index + 1] - 0xdc00);
           ++index;
@@ -343,7 +342,7 @@ using System.Text;
         // Get the next Unicode character
         int c = s[index];
         if ((c & 0xfc00) == 0xd800 && index + 1 < valueSLength &&
-            s[index + 1] >= 0xdc00 && s[index + 1] <= 0xdfff) {
+            (s[index + 1] & 0xfc00) == 0xdc00) {
           // Get the Unicode code point for the surrogate pair
           c = 0x10000 + ((c - 0xd800) << 10) + (s[index + 1] - 0xdc00);
           ++index;
@@ -876,7 +875,7 @@ using System.Text;
         return null;
       }
       if (s == null) {
-  throw new ArgumentNullException("s");
+  throw new ArgumentNullException(nameof(s));
 }
 if (offset < 0) {
   throw new ArgumentException("offset (" + offset +
@@ -954,7 +953,7 @@ if (s.Length - offset < length) {
             return null;
           }
           if ((c & 0xfc00) == 0xd800 && index + 1 < valueSLength &&
-              s[index + 1] >= 0xdc00 && s[index + 1] <= 0xdfff) {
+              (s[index + 1] & 0xfc00) == 0xdc00) {
             // Get the Unicode code point for the surrogate pair
             c = 0x10000 + ((c - 0xd800) << 10) + (s[index + 1] - 0xdc00);
             ++index;
@@ -1055,7 +1054,7 @@ if (s.Length - offset < length) {
           return null;
         }
         if ((c & 0xfc00) == 0xd800 && index + 1 < valueSLength &&
-            s[index + 1] >= 0xdc00 && s[index + 1] <= 0xdfff) {
+            (s[index + 1] & 0xfc00) == 0xdc00) {
           // Get the Unicode code point for the surrogate pair
           c = 0x10000 + ((c - 0xd800) << 10) + (s[index + 1] - 0xdc00);
           ++index;

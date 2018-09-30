@@ -380,6 +380,33 @@ namespace PeterO.Cbor {
       year[0] = normPart[0];
     }
 
+    public static bool NameStartsWithWord(String name, String word) {
+      int wl = word.Length;
+      return name.Length > wl && name.Substring(0, wl).Equals(word) &&
+              !(name[wl] >= 'a' && name[wl] <= 'z') &&
+              !(name[wl] >= '0' && name[wl] <= '9');
+    }
+
+    public static String FirstCharLower(String name) {
+      if (name.Length > 0 && name[0] >= 'A' && name[0] <= 'Z') {
+              var sb = new StringBuilder();
+              sb.Append((char)(name[0] + 0x20));
+              sb.Append(name.Substring(1));
+              return sb.ToString();
+      }
+      return name;
+    }
+
+    public static String FirstCharUpper(String name) {
+      if (name.Length > 0 && name[0] >= 'a' && name[0] <= 'z') {
+              var sb = new StringBuilder();
+              sb.Append((char)(name[0] - 0x20));
+              sb.Append(name.Substring(1));
+              return sb.ToString();
+      }
+      return name;
+    }
+
     private static bool IsValidDateTime(int[] dateTime) {
       if (dateTime == null || dateTime.Length < 8) {
         return false;

@@ -8,15 +8,9 @@ at: http://peteroupc.github.io/
 using System;
 
 namespace PeterO.Cbor {
-  #pragma warning disable 618
-
-  internal class CBORTag37 : ICBORTag, ICBORToFromConverter<Guid>
+  internal class CBORUuidConverter : ICBORToFromConverter<Guid>
   {
-    public CBORTypeFilter GetTypeFilter() {
-      return CBORTypeFilter.ByteString;
-    }
-
-    public CBORObject ValidateObject(CBORObject obj) {
+    private CBORObject ValidateObject(CBORObject obj) {
       if (obj.Type != CBORType.ByteString) {
         throw new CBORException("UUID must be a byte string");
       }
@@ -25,10 +19,6 @@ namespace PeterO.Cbor {
         throw new CBORException("UUID must be 16 bytes long");
       }
       return obj;
-    }
-
-    internal static void AddConverter() {
-        CBORObject.AddConverter(typeof(Guid), new CBORTag37());
     }
 
     /// <include file='../../docs.xml'

@@ -7,6 +7,7 @@ at: http://peteroupc.github.io/
  */
 using System;
 
+#pragma warning disable 618
 namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="T:PeterO.Cbor.CBORTagGenericString"]/*'/>

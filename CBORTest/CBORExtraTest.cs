@@ -365,7 +365,7 @@ select new { A = i, B = i + 1 };
 
     [Test]
     public void TestMultidimArray() {
-      int[, ] arr = { { 0, 1, 99 }, { 2, 3, 299 } };
+      int[,] arr = { { 0, 1, 99 }, { 2, 3, 299 } };
       var cbor = CBORObject.FromObject(arr);
       Assert.AreEqual(0, cbor[0][0].AsInt32());
       Assert.AreEqual(1, cbor[0][1].AsInt32());
@@ -373,7 +373,7 @@ select new { A = i, B = i + 1 };
       Assert.AreEqual(2, cbor[1][0].AsInt32());
       Assert.AreEqual(3, cbor[1][1].AsInt32());
       Assert.AreEqual(299, cbor[1][2].AsInt32());
-    int[, , ] arr3 = { { { 0, 1 }, { 99, 100 } }, { { 2, 3 }, { 299, 300 } }
+    int[,,] arr3 = { { { 0, 1 }, { 99, 100 } }, { { 2, 3 }, { 299, 300 } }
         };
       cbor = CBORObject.FromObject(arr3);
       Assert.AreEqual(0, cbor[0][0][0].AsInt32());

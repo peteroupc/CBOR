@@ -1,5 +1,5 @@
 /*
-Written by Peter O. in 2013.
+Written by Peter O. in 2013-2018.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
@@ -693,6 +693,48 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToObject(System.Type)"]/*'/>
     public object ToObject(Type t) {
+      return this.ToObject(t, null, null, 0);
+    }
+
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToObject(System.Type,PeterO.Cbor.CBORTypeMapper)"]/*'/>
+    public object ToObject(Type t, CBORTypeMapper mapper) {
+if (mapper == null) {
+  throw new ArgumentNullException(nameof(mapper));
+}
+return this.ToObject(t, mapper, null, 0);
+    }
+
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToObject(System.Type,PeterO.Cbor.PODOptions)"]/*'/>
+    public object ToObject(Type t, PODOptions options) {
+if (options == null) {
+  throw new ArgumentNullException(nameof(options));
+}
+return this.ToObject(t, null, options, 0);
+    }
+
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToObject(System.Type,PeterO.Cbor.CBORTypeMapper,PeterO.Cbor.PODOptions)"]/*'/>
+    public object ToObject(Type t, CBORTypeMapper mapper, PODOptions options) {
+if (mapper == null) {
+  throw new ArgumentNullException(nameof(mapper));
+}
+if (options == null) {
+  throw new ArgumentNullException(nameof(options));
+}
+return this.ToObject(t, mapper, options, 0);
+    }
+
+    internal object ToObject(
+  Type t,
+  CBORTypeMapper mapper,
+  PODOptions options,
+  int depth) {
+depth++;
+if (depth > 100) {
+ throw new CBORException("Depth level too high");
+}
       if (t == null) {
         throw new ArgumentNullException(nameof(t));
       }
@@ -702,11 +744,17 @@ namespace PeterO.Cbor {
       if (this.IsNull) {
         return null;
       }
+      if (mapper != null) {
+        object obj = mapper.ConvertBackWithConverter(this, t);
+        if (obj != null) {
+          return obj;
+        }
+      }
       if (t.Equals(typeof(object))) {
         return this;
       }
       return t.Equals(typeof(string)) ? this.AsString() :
-        PropertyMap.TypeToObject(this, t);
+        PropertyMap2.TypeToObject(this, t, mapper, options, depth);
     }
 
     /// <include file='../../docs.xml'
@@ -860,8 +908,16 @@ namespace PeterO.Cbor {
         FromObject((long)value);
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Char)"]/*'/>
+    /// <summary>Generates a CBOR string object from a Unicode
+    /// character.</summary>
+    /// <param name='value'>The parameter <paramref name='value'/> is a
+    /// char object.</param>
+    /// <returns>A CBORObject object.</returns>
+    /// <exception cref='T:System.ArgumentException'>The parameter
+    /// <paramref name='value'/> is a surrogate code point.</exception>
+    /// <remarks>Note that this method's behavior may change in the future.
+    /// Currently, it converts ' char's to text strings, but it may change
+    /// to convert them to integers instead.</remarks>
     public static CBORObject FromObject(char value) {
       char[] valueChar = { value };
       return FromObject(new String(valueChar));
@@ -1171,7 +1227,9 @@ namespace PeterO.Cbor {
           tagHigh = unchecked(tagHigh | (((int)b) << (i * 8)));
         }
         var c2 = new CBORObject(c, tagLow, tagHigh);
+        #pragma warning disable 618
         ICBORTag tagconv = FindTagConverter(bigintTag);
+        #pragma warning enable 618
         if (tagconv != null) {
           c2 = tagconv.ValidateObject(c2);
         }
@@ -1188,7 +1246,9 @@ namespace PeterO.Cbor {
         throw new ArgumentException("smallTag (" + smallTag +
                     ") is less than 0");
       }
-      ICBORTag tagconv = FindTagConverter(smallTag);
+      #pragma warning disable 618
+ICBORTag tagconv = FindTagConverter(smallTag);
+      #pragma warning enable 618
       CBORObject c = FromObject(valueObValue);
       c = new CBORObject(c, smallTag, 0);
       return (tagconv != null) ? tagconv.ValidateObject(c) : c;
@@ -1643,8 +1703,19 @@ namespace PeterO.Cbor {
       Write((long)value, stream);
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Char,System.IO.Stream)"]/*'/>
+    /// <summary>Writes a Unicode character as a string in CBOR format to a
+    /// data stream.</summary>
+    /// <param name='value'>The value to write.</param>
+    /// <param name='stream'>A writable data stream.</param>
+    /// <exception cref='T:System.ArgumentNullException'>The parameter
+    /// <paramref name='stream'/> is null.</exception>
+    /// <exception cref='T:System.ArgumentException'>The parameter
+    /// <paramref name='value'/> is a surrogate code point.</exception>
+    /// <exception cref='T:System.IO.IOException'>An I/O error
+    /// occurred.</exception>
+    /// <remarks>Note that this method's behavior may change in the future.
+    /// Currently, it converts ' char's to text strings, but it may change
+    /// to convert them to integers instead.</remarks>
     public static void Write(char value, Stream stream) {
       if (value >= 0xd800 && value < 0xe000) {
         throw new ArgumentException("Value is a surrogate code point.");
