@@ -225,12 +225,7 @@ The following are some clarifications to RFC 7049.
 * Section 2.4.1 specifies the number of seconds since the start of 1970.  It is
   based on the POSIX definition of "seconds since the Epoch", which
   the RFC cites as a normative reference.  This definition does not
-  count leap seconds.  When this implementation supports date
-  conversion, it won't count leap seconds, either.  This implementation
-  treats values of infinity and NaN as invalid.
-* For tag 32, this implementation accepts strings that are valid
-  Internationalized Resource Identifiers (IRIs) in addition to URIs.
-  IRIs are like URIs except that they also allow non-ASCII characters.
+  count leap seconds.
 
 Release Notes
 -----------

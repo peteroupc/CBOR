@@ -31,8 +31,9 @@ namespace PeterO.DocGen {
       return (obj is Type) ? (((Type)obj).FullName) : ((obj is MethodInfo) ?
         ((MethodInfo)obj).Name : ((obj is PropertyInfo) ?
         ((PropertyInfo)obj).Name : ((obj is FieldInfo) ?
+
         ((FieldInfo)obj).Name : (obj.ToString())))); } public static string
-        MemberAnchor(object obj) {
+          MemberAnchor(object obj) {
       string anchor = String.Empty;
       if (obj is Type) {
         anchor = ((Type)obj).FullName;
@@ -42,7 +43,7 @@ namespace PeterO.DocGen {
           StringComparison.Ordinal) == 0) ? ((MethodInfo)obj).Name :
             DocVisitor.FormatMethod((MethodInfo)obj, true); } else {
  anchor = (obj is PropertyInfo) ?
-   DocVisitor.FormatProperty((PropertyInfo)obj, true) : ((obj is FieldInfo)?
+   DocVisitor.FormatProperty((PropertyInfo)obj, true) : ((obj is FieldInfo) ?
      ((FieldInfo)obj).Name : obj.ToString());
 }
       anchor = anchor.Trim();
