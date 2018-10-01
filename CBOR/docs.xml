@@ -3836,7 +3836,7 @@ stream.Write(bytes, 0, bytes.Length);
 
 </doc>
 <doc name="P:PeterO.Cbor.CBORTypeMapper.ConverterInfo.Converter">
-<summary>Gets a value not documented yet.</summary>
+<summary>Gets an internal API value.</summary>
             <value>An internal API value.</value>
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeMapper.FilterTypeName(System.String)">
