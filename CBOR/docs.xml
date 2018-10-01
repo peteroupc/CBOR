@@ -491,6 +491,31 @@
     </param>
 
 </doc>
+<doc name="M:PeterO.Cbor.CBORMapper.AddConverter``1(System.Type,PeterO.Cbor.ICBORConverter{``0})">
+<summary>Registers an object that converts objects of a given type to CBOR objects
+      (called a CBOR converter).
+    </summary>
+    <param name='type'>A Type object specifying the type that the converter converts to CBOR
+      objects.
+    </param>
+    <param name='converter'>The parameter
+      <paramref name='converter'/>
+      A CBOR converter.
+    </param>
+    <typeparam name='T'>
+      Must be the same as the "type" parameter.
+    </typeparam>
+    <returns>This object.
+    </returns>
+    <exception cref='T:System.ArgumentNullException'>The parameter
+      <paramref name='type'/>
+       or
+      <paramref name='converter'/>
+       is null.
+    </exception>
+    <exception cref='T:System.ArgumentException'>"Converter doesn't contain a proper ToCBORObject method".
+    </exception>
+</doc>
 <doc name="T:PeterO.Cbor.CBORObject">
 
             <summary><para>Represents an object in Concise Binary Object Representation (CBOR) and
@@ -1421,18 +1446,14 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Char)">
-<summary>Generates a CBOR string object from a Unicode character.
-    </summary>
-    <param name='value'>The parameter
-      <paramref name='value'/>
-       is a char object.
-    </param>
-    <returns>A CBORObject object.
-    </returns>
-    <exception cref='T:System.ArgumentException'>The parameter
-      <paramref name='value'/>
-       is a surrogate code point.
-    </exception>
+
+            <summary>Generates a CBOR string object from a Unicode
+            character.</summary><param name='value'>The parameter <paramref name='value'/> is a
+            char object.</param><returns>A CBORObject object.</returns><exception cref='T:System.ArgumentException'>The parameter
+            <paramref name='value'/> is a surrogate code point.</exception><remarks>Note that this method's behavior may change in the future.
+            Currently, it converts ' char's to text strings, but it may change
+            to convert them to integers instead.</remarks>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Decimal)">
 
@@ -2651,8 +2672,7 @@
              ///) or a plain-old-data type (POCO or POJO type)
             within the control of the application. If the plain-old-data type
             references other data types, those types should likewise meet
-            either criterion above.</param>
-    <param name='options'>Specifies options for controlling deserialization of CBOR objects.
+            either criterion above.</param><param name='options'>Specifies options for controlling deserialization of CBOR objects.
     </param><returns>The converted object.</returns><exception cref='T:System.NotSupportedException'>The given type
             <paramref name='t'/> , or this object's CBOR type, is not
             supported.</exception><exception cref='T:System.ArgumentNullException'>The parameter
@@ -2679,8 +2699,7 @@
             <summary><para>Converts this CBOR object to an object of an arbitrary type.
             See
             <see cref='M:PeterO.Cbor.CBORObject.ToObject(System.Type)'/> for
-            further information.</para></summary>
-    <param name='mapper'>This parameter controls which data types are eligible for Plain-Old-Data
+            further information.</para></summary><param name='mapper'>This parameter controls which data types are eligible for Plain-Old-Data
       deserialization and includes custom converters from CBOR objects to
       certain data types.
     </param><typeparam name='T'>The type, class, or interface that this
@@ -2700,12 +2719,10 @@
             <summary><para>Converts this CBOR object to an object of an arbitrary type.
             See
             <see cref='M:PeterO.Cbor.CBORObject.ToObject(System.Type)'/> for
-            further information.</para></summary>
-    <param name='mapper'>This parameter controls which data types are eligible for Plain-Old-Data
+            further information.</para></summary><param name='mapper'>This parameter controls which data types are eligible for Plain-Old-Data
       deserialization and includes custom converters from CBOR objects to
       certain data types.
-    </param>
-    <param name='options'>Specifies options for controlling deserialization of CBOR objects.
+    </param><param name='options'>Specifies options for controlling deserialization of CBOR objects.
     </param><typeparam name='T'>The type, class, or interface that this
             method's return value will belong to. <b>Note:</b> For security
             reasons, an application should not base this parameter on user
@@ -2723,8 +2740,7 @@
             <summary><para>Converts this CBOR object to an object of an arbitrary type.
             See
             <see cref='M:PeterO.Cbor.CBORObject.ToObject(System.Type)'/> for
-            further information.</para></summary>
-    <param name='options'>Specifies options for controlling deserialization of CBOR objects.
+            further information.</para></summary><param name='options'>Specifies options for controlling deserialization of CBOR objects.
     </param><typeparam name='T'>The type, class, or interface that this
             method's return value will belong to. <b>Note:</b> For security
             reasons, an application should not base this parameter on user
@@ -2935,22 +2951,15 @@ CBOR objects to JSON strings, use the <see cref='M:PeterO.Cbor.CBORObject.ToJSON
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Write(System.Char,System.IO.Stream)">
-<summary>Writes a Unicode character as a string in CBOR format to a data stream.
-    </summary>
-    <param name='value'>The value to write.
-    </param>
-    <param name='stream'>A writable data stream.
-    </param>
-    <exception cref='T:System.ArgumentNullException'>The parameter
-      <paramref name='stream'/>
-       is null.
-    </exception>
-    <exception cref='T:System.ArgumentException'>The parameter
-      <paramref name='value'/>
-       is a surrogate code point.
-    </exception>
-    <exception cref='T:System.IO.IOException'>An I/O error occurred.
-    </exception>
+
+            <summary>Writes a Unicode character as a string in CBOR format to a
+            data stream.</summary><param name='value'>The value to write.</param><param name='stream'>A writable data stream.</param><exception cref='T:System.ArgumentNullException'>The parameter
+            <paramref name='stream'/> is null.</exception><exception cref='T:System.ArgumentException'>The parameter
+            <paramref name='value'/> is a surrogate code point.</exception><exception cref='T:System.IO.IOException'>An I/O error
+            occurred.</exception><remarks>Note that this method's behavior may change in the future.
+            Currently, it converts ' char's to text strings, but it may change
+            to convert them to integers instead.</remarks>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Write(System.Double,System.IO.Stream)">
 
@@ -3802,33 +3811,19 @@ stream.Write(bytes, 0, bytes.Length);
             <c>ToObject</c></summary>
 
 </doc>
-<doc name="M:PeterO.Cbor.CBORTypeMapper.#ctor">
-<summary>Initializes a new instance of the <see cref='CBORTypeMapper'/> class.
-    </summary>
-</doc>
 <doc name="M:PeterO.Cbor.CBORTypeMapper.AddConverter``1(System.Type,PeterO.Cbor.ICBORConverter{``0})">
-<summary>Registers an object that converts objects of a given type to CBOR objects
-      (called a CBOR converter).
-    </summary>
-    <param name='type'>A Type object specifying the type that the converter converts to CBOR
-      objects.
-    </param>
-    <param name='converter'>The parameter
-      <paramref name='converter'/>
-       is an ICBORConverter object.
-    </param>
+
+            <summary>Registers an object that converts objects of a given type
+             to CBOR objects (called a CBOR converter).</summary><param name='type'>A Type object specifying the type that the
+             converter converts to CBOR objects.</param><param name='converter'>The parameter <paramref name='converter'/>
+             is an ICBORConverter object.</param>
 <returns>This object.</returns>
-    <typeparam name='T'>
-       Must be the same as the "type" parameter.
-    </typeparam>
-    <exception cref='T:System.ArgumentNullException'>The parameter
-      <paramref name='type'/>
-       or
-      <paramref name='converter'/>
-       is null.
-    </exception>
-    <exception cref='T:System.ArgumentException'>"Converter doesn't contain a proper ToCBORObject method".
-    </exception>
+
+<typeparam name='T'>Must be the same as the "type"
+             parameter.</typeparam><exception cref='T:System.ArgumentNullException'>The parameter
+             <paramref name='type'/> or <paramref name='converter'/> is
+             null.</exception><exception cref='T:System.ArgumentException'>"Converter doesn't contain a
+             proper ToCBORObject method".</exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeMapper.AddTypeName(System.String)">
 
@@ -3837,16 +3832,16 @@ stream.Write(bytes, 0, bytes.Length);
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeMapper.AddTypePrefix(System.String)">
 
-            <summary>Adds a prefix of a Java or .NET type for use in type matching.  A type matches a prefix if its fully qualified name is or begins with that prefix, using codepoint-by-codepoint (case-sensitive) matching.</summary><param name='prefix'>The prefix of a Java or .NET type to add (e.g., <c>java.math.</c> or <c>System.Globalization.</c>).</param><returns>This object.</returns><exception cref='T:System.ArgumentNullException'>The parameter <paramref name='prefix'/> is null.</exception><exception cref='T:System.ArgumentException'>The parameter <paramref name='prefix'/> is empty.</exception>
+            <summary>Adds a prefix of a Java or .NET type for use in type matching.  A type matches a prefix if its fully qualified name is or begins with that prefix, using codepoint-by-codepoint (case-sensitive) matching.</summary><param name='prefix'>The prefix of a Java or .NET type (e.g., `java.math.` or `System.Globalization`).</param><returns>This object.</returns><exception cref='T:System.ArgumentNullException'>The parameter <paramref name='prefix'/> is null.</exception><exception cref='T:System.ArgumentException'>The parameter <paramref name='prefix'/> is empty.</exception>
 
 </doc>
 <doc name="P:PeterO.Cbor.CBORTypeMapper.ConverterInfo.Converter">
-<summary>Gets an internal API value.</summary>
+<summary>Gets a value not documented yet.</summary>
             <value>An internal API value.</value>
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeMapper.FilterTypeName(System.String)">
 
-            <summary>Returns whether a Java or .NET class name is covered by this mapper's filters.</summary><param name='typeName'>The fully qualified name of a Java or .NET class (e.g., <c>java.math.BigInteger</c> or <c>System.Globalization.CultureInfo</c>).</param><returns>Either <c>true</c> if the class name is covered by this mapper's filters, or <c>false</c> otherwise.</returns>
+            <summary>Returns whether the given Java or .NET type name fits the filters given in this mapper.</summary><param name='typeName'>The fully qualified name of a Java or .NET class (e.g., <c>java.math.BigInteger</c> or <c>System.Globalization.CultureInfo</c>).</param><returns>Either <c>true</c> if the given Java or .NET type name fits the filters given in this mapper, or <c>false</c> otherwise.</returns>
 
 </doc>
 <doc name="T:PeterO.Cbor.CBORUtilities">

@@ -123,9 +123,10 @@ namespace PeterO.Cbor {
       null, new CBORExtendedFloat(), new CBORExtendedRational()
     };
 
-    [Obsolete]
+        #pragma warning disable 618
     private static readonly IDictionary<EInteger, ICBORTag>
       ValueTagHandlers = new Dictionary<EInteger, ICBORTag>();
+        #pragma warning restore 618
 
     private static readonly EInteger UInt64MaxValue =
       (EInteger.One << 64) - EInteger.One;
@@ -908,16 +909,8 @@ if (depth > 100) {
         FromObject((long)value);
     }
 
-    /// <summary>Generates a CBOR string object from a Unicode
-    /// character.</summary>
-    /// <param name='value'>The parameter <paramref name='value'/> is a
-    /// char object.</param>
-    /// <returns>A CBORObject object.</returns>
-    /// <exception cref='T:System.ArgumentException'>The parameter
-    /// <paramref name='value'/> is a surrogate code point.</exception>
-    /// <remarks>Note that this method's behavior may change in the future.
-    /// Currently, it converts ' char's to text strings, but it may change
-    /// to convert them to integers instead.</remarks>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Char)"]/*'/>
     public static CBORObject FromObject(char value) {
       char[] valueChar = { value };
       return FromObject(new String(valueChar));
@@ -1172,6 +1165,7 @@ if (depth > 100) {
         return objret;
       }
       objret = CBORObject.NewMap();
+        #pragma warning disable 618
       foreach (KeyValuePair<string, object> key in
                PropertyMap.GetProperties(
                  obj,
@@ -1179,6 +1173,7 @@ if (depth > 100) {
                  options.UseCamelCase)) {
         objret[key.Key] = CBORObject.FromObject(key.Value, options);
       }
+        #pragma warning restore 618
       return objret;
     }
 
@@ -1237,6 +1232,8 @@ if (depth > 100) {
       }
     }
 
+      #pragma warning disable 612
+      #pragma warning disable 618
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObjectAndTag(System.Object,System.Int32)"]/*'/>
     public static CBORObject FromObjectAndTag(
@@ -1246,13 +1243,13 @@ if (depth > 100) {
         throw new ArgumentException("smallTag (" + smallTag +
                     ") is less than 0");
       }
-      #pragma warning disable 618
-ICBORTag tagconv = FindTagConverter(smallTag);
-      #pragma warning restore 618
+      ICBORTag tagconv = FindTagConverter(smallTag);
       CBORObject c = FromObject(valueObValue);
       c = new CBORObject(c, smallTag, 0);
       return (tagconv != null) ? tagconv.ValidateObject(c) : c;
     }
+      #pragma warning restore 618
+      #pragma warning restore 612
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromSimpleValue(System.Int32)"]/*'/>
@@ -1703,19 +1700,8 @@ ICBORTag tagconv = FindTagConverter(smallTag);
       Write((long)value, stream);
     }
 
-    /// <summary>Writes a Unicode character as a string in CBOR format to a
-    /// data stream.</summary>
-    /// <param name='value'>The value to write.</param>
-    /// <param name='stream'>A writable data stream.</param>
-    /// <exception cref='T:System.ArgumentNullException'>The parameter
-    /// <paramref name='stream'/> is null.</exception>
-    /// <exception cref='T:System.ArgumentException'>The parameter
-    /// <paramref name='value'/> is a surrogate code point.</exception>
-    /// <exception cref='T:System.IO.IOException'>An I/O error
-    /// occurred.</exception>
-    /// <remarks>Note that this method's behavior may change in the future.
-    /// Currently, it converts ' char's to text strings, but it may change
-    /// to convert them to integers instead.</remarks>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Char,System.IO.Stream)"]/*'/>
     public static void Write(char value, Stream stream) {
       if (value >= 0xd800 && value < 0xe000) {
         throw new ArgumentException("Value is a surrogate code point.");
@@ -3365,7 +3351,7 @@ ICBORTag tagconv = FindTagConverter(smallTag);
       }
     }
 
-    [Obsolete]
+        #pragma warning disable 618
     internal static ICBORTag FindTagConverter(EInteger bigintTag) {
       if (TagHandlersEmpty()) {
         AddTagHandler((EInteger)2, new CBORTag2());
@@ -3402,6 +3388,7 @@ ICBORTag tagconv = FindTagConverter(smallTag);
     internal static ICBORTag FindTagConverterLong(long tagLong) {
       return FindTagConverter((EInteger)tagLong);
     }
+        #pragma warning restore 618
 
     internal static CBORObject FromRaw(string str) {
       return new CBORObject(CBORObjectTypeTextString, str);
@@ -4014,11 +4001,13 @@ ICBORTag tagconv = FindTagConverter(smallTag);
       return stack;
     }
 
+        #pragma warning disable 618
     private static bool TagHandlersEmpty() {
       lock (ValueTagHandlers) {
         return ValueTagHandlers.Count == 0;
       }
     }
+        #pragma warning restore 618
 
     private static int TagsCompare(EInteger[] tagsA, EInteger[] tagsB) {
       if (tagsA == null) {

@@ -235,6 +235,15 @@ The following are some clarifications to RFC 7049.
 Release Notes
 -----------
 
+### Version 3.4.0-beta1
+
+- Improved implementation of new ToObject method.
+- Bugs in multidimensional array serialization by FromObject were fixed.
+- URI parsing restored to 3.0 version for backward compatibility.
+- Remove method disallows null for backward compatibility.
+- ICBORObjectConverter renamed to ICBORToFromConverter.
+- Several APIs were obsoleted.
+
 ### Version 3.4.0-alpha1
 
 - Add ToObject method for deserializing CBOR objects.

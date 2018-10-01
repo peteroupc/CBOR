@@ -12,7 +12,9 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.PODOptions.#ctor(System.Boolean,System.Boolean)"]/*'/>
     public PODOptions(bool removeIsPrefix, bool useCamelCase) {
+        #pragma warning disable 618
       this.RemoveIsPrefix = removeIsPrefix;
+        #pragma warning restore 618
       this.UseCamelCase = useCamelCase;
     }
 

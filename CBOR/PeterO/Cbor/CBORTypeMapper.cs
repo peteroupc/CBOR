@@ -18,14 +18,20 @@ namespace PeterO.Cbor {
       this.converters = new Dictionary<Object, ConverterInfo>();
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='type'>Not documented yet.</param>
-    /// <param name='converter'>Not documented yet.</param>
-    /// <returns>A CBORTypeMapper object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='type'/> or <paramref name='converter'/> is null.</exception>
-    /// <exception cref='ArgumentException'>Converter doesn't contain a
-    /// proper ToCBORObject method.</exception>
+    /// <summary>Registers an object that converts objects of a given type
+    /// to CBOR objects (called a CBOR converter).</summary>
+    /// <param name='type'>A Type object specifying the type that the
+    /// converter converts to CBOR objects.</param>
+    /// <param name='converter'>The parameter <paramref name='converter'/>
+    /// is an ICBORConverter object.</param>
+    /// <typeparam name='T'>Must be the same as the "type"
+    /// parameter.</typeparam>
+    /// <returns>This object.</returns>
+    /// <exception cref='T:System.ArgumentNullException'>The parameter
+    /// <paramref name='type'/> or <paramref name='converter'/> is
+    /// null.</exception>
+    /// <exception cref='T:System.ArgumentException'>"Converter doesn't
+    /// contain a proper ToCBORObject method".</exception>
     public CBORTypeMapper AddConverter<T>(
       Type type,
       ICBORConverter<T> converter) {
@@ -91,9 +97,8 @@ namespace PeterO.Cbor {
         obj);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='typeName'>Not documented yet.</param>
-    /// <returns>A Boolean object.</returns>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.FilterTypeName(System.String)"]/*'/>
     public bool FilterTypeName(string typeName) {
       if (String.IsNullOrEmpty(typeName)) {
         return false;
@@ -112,11 +117,8 @@ namespace PeterO.Cbor {
       return false;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='prefix'>Not documented yet.</param>
-    /// <returns>A CBORTypeMapper object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='prefix'/> is null.</exception>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.AddTypePrefix(System.String)"]/*'/>
     public CBORTypeMapper AddTypePrefix(string prefix) {
       if (prefix == null) {
         throw new ArgumentNullException(nameof(prefix));
@@ -128,11 +130,8 @@ namespace PeterO.Cbor {
       return this;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='name'>Not documented yet.</param>
-    /// <returns>A CBORTypeMapper object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='name'/> is null.</exception>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.AddTypeName(System.String)"]/*'/>
     public CBORTypeMapper AddTypeName(string name) {
       if (name == null) {
         throw new ArgumentNullException(nameof(name));
@@ -151,8 +150,8 @@ namespace PeterO.Cbor {
 
       public object FromObject { get; set; }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Cbor.CBORTypeMapper.ConverterInfo.Converter"]/*'/>
+    /// <summary>Gets a value not documented yet.</summary>
+    /// <value>An internal API value.</value>
       public object Converter { get; set; }
     }
   }
