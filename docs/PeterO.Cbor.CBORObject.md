@@ -1592,12 +1592,12 @@ A CBOR byte string object where each byte of the given byte array is copied to a
 
 Generates a CBOR string object from a Unicode character.
 
-Note that this method's behavior may change in the future. Currently, it converts 'char's to text strings, but it may change to convert them to integers instead.
+Note that this method's behavior may change in the future. Currently, it converts ' char's to text strings, but it may change to convert them to integers instead.
 
 <b>Parameters:</b>
 
- * <i>value</i>: The parameter <i>value</i>
-is a char object.
+ * <i>value</i>: The parameter  <i>value</i>
+ is a char object.
 
 <b>Return Value:</b>
 
@@ -1607,7 +1607,7 @@ A CBORObject object.
 
  * System.ArgumentException:
 The parameter <i>value</i>
-is a surrogate code point.
+ is a surrogate code point.
 
 <a id="FromObject_double"></a>
 ### FromObject
@@ -3151,8 +3151,7 @@ By comparison, the C# version is much shorter.
 
  * <i>mapper</i>: This parameter controls which data types are eligible for Plain-Old-Data deserialization and includes custom converters from CBOR objects to certain data types.
 
- * <i>options</i>: The parameter <i>options</i>
-is a PODOptions object.
+ * <i>options</i>: Specifies options for controlling deserialization of CBOR objects.
 
 <b>Return Value:</b>
 
@@ -3184,8 +3183,7 @@ Converts this CBOR object to an object of an arbitrary type. See the documentati
 
  * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b>For security reasons, an application hould not base this parameter on user input or other externally upplied data. Whenever possible, this parameter should be either a ype specially handled by this method (such as  `int` or `String` ///) or a plain-old-data type (POCO or POJO type) ithin the control of the application. If the plain-old-data type eferences other data types, those types should likewise meet ither criterion above.
 
- * <i>options</i>: The parameter  <i>options</i>
- is a PODOptions object.
+ * <i>options</i>: Specifies options for controlling deserialization of CBOR objects.
 
 <b>Return Value:</b>
 
@@ -3214,8 +3212,7 @@ Converts this CBOR object to an object of an arbitrary type. See**PeterO.Cbor.CB
 
 <b>Parameters:</b>
 
- * <i>mapper</i>: The parameter  <i>mapper</i>
- is not documented yet.
+ * <i>mapper</i>: This parameter controls which data types are eligible for Plain-Old-Data deserialization and includes custom converters from CBOR objects to certain data types.
 
  * &lt;T&gt;: The type, class, or interface that this method's return value will belong to. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as  `int`  or  `String`  ) or a plain-old-data type (POCO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
 
@@ -3239,11 +3236,9 @@ Converts this CBOR object to an object of an arbitrary type. See**PeterO.Cbor.CB
 
 <b>Parameters:</b>
 
- * <i>mapper</i>: The parameter  <i>mapper</i>
- is not documented yet.
+ * <i>mapper</i>: This parameter controls which data types are eligible for Plain-Old-Data deserialization and includes custom converters from CBOR objects to certain data types.
 
- * <i>options</i>: The parameter  <i>options</i>
- is not documented yet.
+ * <i>options</i>: Specifies options for controlling deserialization of CBOR objects.
 
  * &lt;T&gt;: The type, class, or interface that this method's return value will belong to. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as  `int`  or  `String`  ) or a plain-old-data type (POCO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
 
@@ -3266,8 +3261,7 @@ Converts this CBOR object to an object of an arbitrary type. See**PeterO.Cbor.CB
 
 <b>Parameters:</b>
 
- * <i>options</i>: The parameter  <i>options</i>
- is not documented yet.
+ * <i>options</i>: Specifies options for controlling deserialization of CBOR objects.
 
  * &lt;T&gt;: The type, class, or interface that this method's return value will belong to. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as  `int`  or  `String`  ) or a plain-old-data type (POCO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
 
@@ -3390,7 +3384,7 @@ An I/O error occurred.
 
 Writes a Unicode character as a string in CBOR format to a data stream.
 
-Note that this method's behavior may change in the future. Currently, it converts 'char's to text strings, but it may change to convert them to integers instead.
+Note that this method's behavior may change in the future. Currently, it converts ' char's to text strings, but it may change to convert them to integers instead.
 
 <b>Parameters:</b>
 
@@ -3402,11 +3396,11 @@ Note that this method's behavior may change in the future. Currently, it convert
 
  * System.ArgumentNullException:
 The parameter <i>stream</i>
-is null.
+ is null.
 
  * System.ArgumentException:
 The parameter <i>value</i>
-is a surrogate code point.
+ is a surrogate code point.
 
  * System.IO.IOException:
 An I/O error occurred.

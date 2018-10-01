@@ -1590,6 +1590,7 @@ a major version change.
     }
 
     [Test]
+    [Timeout(100000)]
     public void TestCompareTo() {
       var r = new RandomGenerator();
       const int CompareCount = 500;
@@ -2335,20 +2336,6 @@ bytes = CBORObject.FromObject(bj)
       c = CBORObject.FromObject((object)dict);
       this.CheckKeyValue(c, "TestKey", "TestValue");
       this.CheckKeyValue(c, "TestKey2", "TestValue2");
-    }
-
-    public sealed class PODClass {
-      public PODClass() {
-        this.PropA = 0;
-        this.PropB = 1;
-        this.IsPropC = false;
-      }
-
-      public int PropA { get; set; }
-
-      public int PropB { get; set; }
-
-      public bool IsPropC { get; set; }
     }
 
     public sealed class NestedPODClass {

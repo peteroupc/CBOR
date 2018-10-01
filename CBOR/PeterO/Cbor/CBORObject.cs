@@ -1229,7 +1229,7 @@ if (depth > 100) {
         var c2 = new CBORObject(c, tagLow, tagHigh);
         #pragma warning disable 618
         ICBORTag tagconv = FindTagConverter(bigintTag);
-        #pragma warning enable 618
+        #pragma warning restore 618
         if (tagconv != null) {
           c2 = tagconv.ValidateObject(c2);
         }
@@ -1248,7 +1248,7 @@ if (depth > 100) {
       }
       #pragma warning disable 618
 ICBORTag tagconv = FindTagConverter(smallTag);
-      #pragma warning enable 618
+      #pragma warning restore 618
       CBORObject c = FromObject(valueObValue);
       c = new CBORObject(c, smallTag, 0);
       return (tagconv != null) ? tagconv.ValidateObject(c) : c;

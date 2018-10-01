@@ -176,6 +176,8 @@ namespace Test {
       Assert.AreEqual(CBORObject.True, CBORObject.FromObject(true));
       Assert.AreEqual(CBORObject.False, CBORObject.FromObject(false));
       Assert.AreEqual(CBORObject.FromObject(8), CBORObject.FromObject((byte)8));
+      #pragma warning disable 618
+
       try {
         CBORObject.AddConverter(null, new FakeConverter());
         Assert.Fail("Should have failed");
@@ -204,7 +206,8 @@ namespace Test {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      try {
+      #pragma warning restore 618
+try {
         CBORObject.True.Abs();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
