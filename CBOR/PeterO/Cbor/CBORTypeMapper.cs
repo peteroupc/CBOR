@@ -18,8 +18,20 @@ namespace PeterO.Cbor {
       this.converters = new Dictionary<Object, ConverterInfo>();
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.AddConverter``1(System.Type,PeterO.Cbor.ICBORConverter{``0})"]/*'/>
+    /// <summary>Registers an object that converts objects of a given type
+    /// to CBOR objects (called a CBOR converter).</summary>
+    /// <param name='type'>A Type object specifying the type that the
+    /// converter converts to CBOR objects.</param>
+    /// <param name='converter'>The parameter <paramref name='converter'/>
+    /// is an ICBORConverter object.</param>
+    /// <typeparam name='T'>Must be the same as the "type"
+    /// parameter.</typeparam>
+    /// <returns>This object.</returns>
+    /// <exception cref='T:System.ArgumentNullException'>The parameter
+    /// <paramref name='type'/> or <paramref name='converter'/> is
+    /// null.</exception>
+    /// <exception cref='T:System.ArgumentException'>"Converter doesn't
+    /// contain a proper ToCBORObject method".</exception>
     public CBORTypeMapper AddConverter<T>(
       Type type,
       ICBORConverter<T> converter) {

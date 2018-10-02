@@ -2484,7 +2484,16 @@ throw new InvalidOperationException(String.Empty, ex);
       TestCommon.AssertEqualsHashCode(o[key], value);
     }
 
-    public enum EnumClass { Value1, Value2, Value3 };
+    public enum EnumClass {
+    /// <summary>Internal API.</summary>
+Value1,
+
+    /// <summary>Internal API.</summary>
+Value2,
+
+    /// <summary>Internal API.</summary>
+Value3
+  }
 
     [Test]
     public void TestFromObject_Enum() {

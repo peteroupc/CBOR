@@ -477,7 +477,7 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
       if (bad) {
         throw new ArgumentException("Invalid date/time");
       }
-      int year = ((str[0] - '0') * 1000) + (str[1] - '0') * 100 +
+      int year = ((str[0] - '0') * 1000) + ((str[1] - '0') * 100) +
         (str[2] - '0') * 10 + (str[3] - '0');
       int month = ((str[5] - '0') * 10) + (str[6] - '0');
       int day = ((str[8] - '0') * 10) + (str[9] - '0');

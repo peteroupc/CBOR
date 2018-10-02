@@ -2279,9 +2279,8 @@ is less than 0, is the size of this array or greater, or is not a 32-bit signed 
 <doc name="M:PeterO.Cbor.CBORObject.ToJSONString">
 
             <summary>Converts this object to a string in JavaScript Object
-             Notation (JSON) format, using the specified options to control the
-             encoding process. See the overload to JSONString taking a
-             JSONOptions argument.
+             Notation (JSON) format. See the overload to JSONString taking a
+             JSONOptions argument for further information.
              <para>If the CBOR object contains CBOR maps, or is a CBOR map
              itself, the keys to the map are written out to the JSON string in
              an undefined order. The example code given in
@@ -2476,8 +2475,8 @@ is less than 0, is the size of this array or greater, or is not a 32-bit signed 
         </item>
         <item>If the type is
           <c>char</c>
-          , converts single-character CBOR text strings and CBOR integers from 0
-          through 65535 to a
+           , converts single-character CBOR text strings and CBOR integers from
+          0 through 65535 to a
           <c>char</c>
            object and returns that
           <c>char</c>
@@ -2681,9 +2680,7 @@ is less than 0, is the size of this array or greater, or is not a 32-bit signed 
       deserialization and includes custom converters from CBOR objects to
       certain data types.
     </param>
-    <param name='options'>The parameter
-      <paramref name='options'/>
-       is a PODOptions object.
+    <param name='options'>Specifies options for controlling deserialization of CBOR objects.
     </param>
     <returns>The converted object.
     </returns>
@@ -2737,7 +2734,8 @@ is less than 0, is the size of this array or greater, or is not a 32-bit signed 
              ///) or a plain-old-data type (POCO or POJO type)
             within the control of the application. If the plain-old-data type
             references other data types, those types should likewise meet
-            either criterion above.</param><param name='options'>The parameter <paramref name='options'/> is a PODOptions object.</param><returns>The converted object.</returns><exception cref='T:System.NotSupportedException'>The given type
+            either criterion above.</param><param name='options'>Specifies options for controlling deserialization of CBOR objects.
+    </param><returns>The converted object.</returns><exception cref='T:System.NotSupportedException'>The given type
             <paramref name='t'/> , or this object's CBOR type, is not
             supported.</exception><exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='t'/> is null.</exception><exception cref='T:System.CBORException'>The given object's nesting
@@ -2763,7 +2761,10 @@ is less than 0, is the size of this array or greater, or is not a 32-bit signed 
             <summary><para>Converts this CBOR object to an object of an arbitrary type.
             See
             <see cref='M:PeterO.Cbor.CBORObject.ToObject(System.Type)'/> for
-            further information.</para></summary><param name='mapper'>The parameter <paramref name='mapper'/> is not documented yet.</param><typeparam name='T'>The type, class, or interface that this
+            further information.</para></summary><param name='mapper'>This parameter controls which data types are eligible for Plain-Old-Data
+      deserialization and includes custom converters from CBOR objects to
+      certain data types.
+    </param><typeparam name='T'>The type, class, or interface that this
             method's return value will belong to. <b>Note:</b> For security
             reasons, an application should not base this parameter on user
             input or other externally supplied data. Whenever possible, this
@@ -2780,7 +2781,11 @@ is less than 0, is the size of this array or greater, or is not a 32-bit signed 
             <summary><para>Converts this CBOR object to an object of an arbitrary type.
             See
             <see cref='M:PeterO.Cbor.CBORObject.ToObject(System.Type)'/> for
-            further information.</para></summary><param name='mapper'>The parameter <paramref name='mapper'/> is not documented yet.</param><param name='options'>The parameter <paramref name='options'/> is not documented yet.</param><typeparam name='T'>The type, class, or interface that this
+            further information.</para></summary><param name='mapper'>This parameter controls which data types are eligible for Plain-Old-Data
+      deserialization and includes custom converters from CBOR objects to
+      certain data types.
+    </param><param name='options'>Specifies options for controlling deserialization of CBOR objects.
+    </param><typeparam name='T'>The type, class, or interface that this
             method's return value will belong to. <b>Note:</b> For security
             reasons, an application should not base this parameter on user
             input or other externally supplied data. Whenever possible, this
@@ -2797,7 +2802,8 @@ is less than 0, is the size of this array or greater, or is not a 32-bit signed 
             <summary><para>Converts this CBOR object to an object of an arbitrary type.
             See
             <see cref='M:PeterO.Cbor.CBORObject.ToObject(System.Type)'/> for
-            further information.</para></summary><param name='options'>The parameter <paramref name='options'/> is not documented yet.</param><typeparam name='T'>The type, class, or interface that this
+            further information.</para></summary><param name='options'>Specifies options for controlling deserialization of CBOR objects.
+    </param><typeparam name='T'>The type, class, or interface that this
             method's return value will belong to. <b>Note:</b> For security
             reasons, an application should not base this parameter on user
             input or other externally supplied data. Whenever possible, this
@@ -3649,37 +3655,37 @@ stream.Write(bytes, 0, bytes.Length);
             <c>ToObject</c></summary>
 
 </doc>
-<doc name="M:PeterO.Cbor.CBORTypeMapper.#ctor">
-<summary>Initializes a new instance of the <see cref='CBORTypeMapper'/> class.
-    </summary>
-</doc>
 <doc name="M:PeterO.Cbor.CBORTypeMapper.AddConverter``1(System.Type,PeterO.Cbor.ICBORConverter{``0})">
 
-            <summary>Not documented yet.</summary><param name='type'>The parameter <paramref name='type'/> is not
-            documented yet.</param><param name='converter'>The parameter <paramref name='converter'/>
-            is not documented yet.</param><typeparam name='T'>Type parameter not documented yet.</typeparam><returns>A CBORTypeMapper object.</returns><exception cref='T:System.ArgumentNullException'>The parameter
-            <paramref name='type'/> or <paramref name='converter'/> is
-            null.</exception><exception cref='T:System.ArgumentException'>Converter doesn't
-            contain a proper ToCBORObject method.</exception>
+            <summary>Registers an object that converts objects of a given type
+             to CBOR objects (called a CBOR converter).</summary><param name='type'>A Type object specifying the type that the
+             converter converts to CBOR objects.</param><param name='converter'>The parameter <paramref name='converter'/>
+             is an ICBORConverter object.</param>
+<returns>This object.</returns>
 
+<typeparam name='T'>Must be the same as the "type"
+             parameter.</typeparam><exception cref='T:System.ArgumentNullException'>The parameter
+             <paramref name='type'/> or <paramref name='converter'/> is
+             null.</exception><exception cref='T:System.ArgumentException'>"Converter doesn't contain a
+             proper ToCBORObject method".</exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeMapper.AddTypeName(System.String)">
 
-            <summary>Adds the fully qualified name of a Java or .NET type for use in type matching.</summary><param name='name'>The parameter <paramref name='name'/> is not documented yet.</param><returns>A CBORTypeMapper object.</returns><exception cref='T:System.ArgumentNullException'>The parameter <paramref name='name'/> is null.</exception><exception cref='T:System.ArgumentException'>The parameter <paramref name='name'/> is empty.</exception>
+            <summary>Adds the fully qualified name of a Java or .NET type for use in type matching.</summary><param name='name'>The fully qualified name of a Java or .NET class (e.g., <c>java.math.BigInteger</c> or <c>System.Globalization.CultureInfo</c>).</param><returns>This object.</returns><exception cref='T:System.ArgumentNullException'>The parameter <paramref name='name'/> is null.</exception><exception cref='T:System.ArgumentException'>The parameter <paramref name='name'/> is empty.</exception>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeMapper.AddTypePrefix(System.String)">
 
-            <summary>Adds a prefix of a Java or .NET type for use in type matching.  A type matches a prefix if its fully qualified name is or begins with that prefix, using codepoint-by-codepoint (case-sensitive) matching.</summary><param name='prefix'>The parameter <paramref name='prefix'/> is not documented yet.</param><returns>A CBORTypeMapper object.</returns><exception cref='T:System.ArgumentNullException'>The parameter <paramref name='prefix'/> is null.</exception><exception cref='T:System.ArgumentException'>The parameter <paramref name='prefix'/> is empty.</exception>
+            <summary>Adds a prefix of a Java or .NET type for use in type matching.  A type matches a prefix if its fully qualified name is or begins with that prefix, using codepoint-by-codepoint (case-sensitive) matching.</summary><param name='prefix'>The prefix of a Java or .NET type (e.g., `java.math.` or `System.Globalization`).</param><returns>This object.</returns><exception cref='T:System.ArgumentNullException'>The parameter <paramref name='prefix'/> is null.</exception><exception cref='T:System.ArgumentException'>The parameter <paramref name='prefix'/> is empty.</exception>
 
 </doc>
 <doc name="P:PeterO.Cbor.CBORTypeMapper.ConverterInfo.Converter">
-<summary>Gets a value not documented yet.</summary>
-            <value>A value not documented yet.</value>
+<summary>Gets an internal API value.</summary>
+            <value>An internal API value.</value>
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeMapper.FilterTypeName(System.String)">
 
-            <summary>Not documented yet.</summary><param name='typeName'>The fully qualified name of a Java or .NET class (e.g., <c>java.math.BigInteger</c> or <c>System.Globalization.CultureInfo</c>).</param><returns>Either <c>true</c> or <c>false</c>.</returns>
+            <summary>Returns whether the given Java or .NET type name fits the filters given in this mapper.</summary><param name='typeName'>The fully qualified name of a Java or .NET class (e.g., <c>java.math.BigInteger</c> or <c>System.Globalization.CultureInfo</c>).</param><returns>Either <c>true</c> if the given Java or .NET type name fits the filters given in this mapper, or <c>false</c> otherwise.</returns>
 
 </doc>
 <doc name="T:PeterO.Cbor.CBORUtilities">
@@ -3687,38 +3693,6 @@ stream.Write(bytes, 0, bytes.Length);
             <summary>Contains utility methods that may have use outside of the CBORObject
       class.
     </summary>
-
-</doc>
-<doc name="M:PeterO.Cbor.FastInteger2.Multiply(System.Int32)">
-
-            <summary>Sets this object's value to the current value times another integer.
-    </summary><param name='val'>The integer to multiply by.
-    </param><returns>This instance.
-    </returns>
-
-</doc>
-<doc name="P:PeterO.Cbor.FastInteger2.Sign">
-
-            <summary>Gets the sign of this object's value.
-    </summary><value>1 if positive, -1 if negative, 0 if zero.
-    </value>
-
-</doc>
-<doc name="M:PeterO.Cbor.FastInteger2.Subtract(PeterO.Cbor.FastInteger2)">
-
-            <summary>Sets this object's value to the current value minus the given FastInteger
-      value.
-    </summary><param name='val'>The subtrahend.
-    </param><returns>This instance.
-    </returns>
-
-</doc>
-<doc name="M:PeterO.Cbor.FastInteger2.SubtractInt(System.Int32)">
-
-            <summary>Sets this object's value to the current value minus the given integer.
-    </summary><param name='val'>The subtrahend.
-    </param><returns>This instance.
-    </returns>
 
 </doc>
 <doc name="T:PeterO.Cbor.ICBORConverter`1">

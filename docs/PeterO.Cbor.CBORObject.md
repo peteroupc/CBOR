@@ -163,7 +163,7 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[Sign](#Sign)</code> - Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
 * <code>[SimpleValue](#SimpleValue)</code> - Gets the simple value ID of this object, or -1 if this object is not a simple value (including if the value is a floating-point number).
 * <code>[Subtract(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#Subtract_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject)</code> - Finds the difference between two CBOR number objects.
-* <code>[ToJSONString()](#ToJSONString)</code> - Converts this object to a string in JavaScript Object Notation (JSON) format, using the specified options to control the encoding process.
+* <code>[ToJSONString()](#ToJSONString)</code> - Converts this object to a string in JavaScript Object Notation (JSON) format.
 * <code>[ToJSONString(PeterO.Cbor.JSONOptions)](#ToJSONString_PeterO_Cbor_JSONOptions)</code> - Converts this object to a string in JavaScript Object Notation (JSON) format, using the specified options to control the encoding process.
 * <code>[ToObject(System.Type)](#ToObject_System_Type)</code> - Converts this CBOR object to an object of an arbitrary type.
 * <code>[ToObject(System.Type, PeterO.Cbor.CBORTypeMapper)](#ToObject_System_Type_PeterO_Cbor_CBORTypeMapper)</code> - Converts this CBOR object to an object of an arbitrary type.
@@ -2643,7 +2643,7 @@ is null.
 
     public string ToJSONString();
 
-Converts this object to a string in JavaScript Object Notation (JSON) format, using the specified options to control the encoding process. See the overload to JSONString taking a JSONOptions argument.If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the JSON string in an undefined order. The example code given in**PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)**can be used to write out certain keys of a CBOR map in a given order to a JSON string.
+Converts this object to a string in JavaScript Object Notation (JSON) format. See the overload to JSONString taking a JSONOptions argument for further information.If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the JSON string in an undefined order. The example code given in**PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)**can be used to write out certain keys of a CBOR map in a given order to a JSON string.
 
 <b>Return Value:</b>
 
@@ -2743,7 +2743,7 @@ parameter, that converter will be used to convert the CBOR object to n object of
 
  * If the type is `object` , return this object.
 
- * If the type is `char` , converts single-character CBOR text strings and CBOR integers from 0 through 65535 to a `char` object and returns that `char` object.
+ * If the type is `char` , converts single-character CBOR text strings and CBOR integers from through 65535 to a `char` object and returns that `char` object.
 
  * If the type is `bool` ( `boolean` in Java), returns the result of AsBoolean.
 
@@ -2805,8 +2805,7 @@ By comparison, the C# version is much shorter.
 
  * <i>mapper</i>: This parameter controls which data types are eligible for Plain-Old-Data deserialization and includes custom converters from CBOR objects to certain data types.
 
- * <i>options</i>: The parameter <i>options</i>
-is a PODOptions object.
+ * <i>options</i>: Specifies options for controlling deserialization of CBOR objects.
 
 <b>Return Value:</b>
 
@@ -2838,8 +2837,7 @@ Converts this CBOR object to an object of an arbitrary type. See the documentati
 
  * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b>For security reasons, an application hould not base this parameter on user input or other externally upplied data. Whenever possible, this parameter should be either a ype specially handled by this method (such as  `int` or `String` ///) or a plain-old-data type (POCO or POJO type) ithin the control of the application. If the plain-old-data type eferences other data types, those types should likewise meet ither criterion above.
 
- * <i>options</i>: The parameter  <i>options</i>
- is a PODOptions object.
+ * <i>options</i>: Specifies options for controlling deserialization of CBOR objects.
 
 <b>Return Value:</b>
 
@@ -2868,8 +2866,7 @@ Converts this CBOR object to an object of an arbitrary type. See**PeterO.Cbor.CB
 
 <b>Parameters:</b>
 
- * <i>mapper</i>: The parameter  <i>mapper</i>
- is not documented yet.
+ * <i>mapper</i>: This parameter controls which data types are eligible for Plain-Old-Data deserialization and includes custom converters from CBOR objects to certain data types.
 
  * &lt;T&gt;: The type, class, or interface that this method's return value will belong to. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as  `int`  or  `String`  ) or a plain-old-data type (POCO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
 
@@ -2893,11 +2890,9 @@ Converts this CBOR object to an object of an arbitrary type. See**PeterO.Cbor.CB
 
 <b>Parameters:</b>
 
- * <i>mapper</i>: The parameter  <i>mapper</i>
- is not documented yet.
+ * <i>mapper</i>: This parameter controls which data types are eligible for Plain-Old-Data deserialization and includes custom converters from CBOR objects to certain data types.
 
- * <i>options</i>: The parameter  <i>options</i>
- is not documented yet.
+ * <i>options</i>: Specifies options for controlling deserialization of CBOR objects.
 
  * &lt;T&gt;: The type, class, or interface that this method's return value will belong to. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as  `int`  or  `String`  ) or a plain-old-data type (POCO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
 
@@ -2920,8 +2915,7 @@ Converts this CBOR object to an object of an arbitrary type. See**PeterO.Cbor.CB
 
 <b>Parameters:</b>
 
- * <i>options</i>: The parameter  <i>options</i>
- is not documented yet.
+ * <i>options</i>: Specifies options for controlling deserialization of CBOR objects.
 
  * &lt;T&gt;: The type, class, or interface that this method's return value will belong to. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as  `int`  or  `String`  ) or a plain-old-data type (POCO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
 

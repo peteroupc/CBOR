@@ -235,6 +235,21 @@ The following are some clarifications to RFC 7049.
 Release Notes
 -----------
 
+Version 4.0.0-alpha1:
+
+- Remove all APIs obsoleted since version 3.4.  This
+  includes the BigInteger, ExtendedDecimal, and ExtendedFloat APIs,
+  which were renamed and moved to a different library, as well as the
+  ICBORTag and CBORTypeFilter APIs.
+- Changed implementation of FromObject, including imposing a nesting depth
+  limit and supporting a CBORTypeMapper parameter.
+- Property name conversion rules (in PODOptions) were changed
+  in this version with respect to FromObject.  In this sense,
+  PODOptions.RemoveIsPrefix was removed.
+- Certain other changes in CBOR object reading and validation were
+  made; they are largely compatible with previous versions but may be
+  backwards-incompatible in certain rare cases
+
 ### Version 3.4.0-alpha1
 
 - Add ToObject method for deserializing CBOR objects.
