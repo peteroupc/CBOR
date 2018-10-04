@@ -7,8 +7,7 @@ using PeterO.Numbers;
 namespace Test {
   [TestFixture]
   public class DateTest {
-    [Test]
-    public void TestDate() {
-    }
+    #region datetests
+#endregion
   }
 }

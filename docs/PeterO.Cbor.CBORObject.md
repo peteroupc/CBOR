@@ -120,7 +120,7 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[FromObject(ushort)](#FromObject_ushort)</code> - Converts a 16-bit unsigned integer to a CBOR object.
 * <code>[FromSimpleValue(int)](#FromSimpleValue_int)</code> - Creates a CBOR object from a simple value number.
 * <code>[GetAllTags()](#GetAllTags)</code> - Gets a list of all tags, from outermost to innermost.
-* <code>[GetByteString()](#GetByteString)</code> - Gets the byte array used in this object, if this object is a byte string, without copying the data to a new one.
+* <code>[GetByteString()](#GetByteString)</code> - Gets the backing byte array used in this CBOR object, if this object is a byte string, without copying the data to a new byte array.
 * <code>[GetHashCode()](#GetHashCode)</code> - Calculates the hash code of this object.
 * <code>[HasMostOuterTag(PeterO.Numbers.EInteger)](#HasMostOuterTag_PeterO_Numbers_EInteger)</code> - Returns whether this object has a tag of the given number.
 * <code>[HasMostOuterTag(int)](#HasMostOuterTag_int)</code> - Returns whether this object has a tag of the given number.
@@ -464,7 +464,7 @@ The general data type of this CBOR object.
 
     public System.Collections.Generic.ICollection Values { get; }
 
-Gets a collection of the values of this CBOR object, if it's a map or an array. If this object is a map, returns one value for each key in the map in an undefined order. If this is an array, returns all the values of the array in the order they are listed. (This method can't be used to get the bytes in a CBOR byte string; for that, use the GetByteArray method instead.).
+Gets a collection of the values of this CBOR object, if it's a map or an array. If this object is a map, returns one value for each key in the map in an undefined order. If this is an array, returns all the values of the array in the order they are listed. (This method can't be used to get the bytes in a CBOR byte string; for that, use the GetByteString method instead.).
 
 <b>Returns:</b>
 
@@ -1959,7 +1959,7 @@ An array of tags, or the empty string if this object is untagged.
 
     public byte[] GetByteString();
 
-Gets the byte array used in this object, if this object is a byte string, without copying the data to a new one. This method's return value can be used to modify the array's contents. Note, though, that the array' s length can't be changed.
+Gets the backing byte array used in this CBOR object, if this object is a byte string, without copying the data to a new byte array. Any changes in the returned array's contents will be reflected in this CBOR object. Note, though, that the array's length can't be changed.
 
 <b>Return Value:</b>
 
