@@ -424,7 +424,8 @@ namespace PeterO.Cbor {
     /// key to this map. (If this is a map, the given index can be any
     /// 32-bit signed integer, even a negative one.).</param>
     /// <returns>The CBOR object referred to by index or key in this array
-    /// or map.</returns>
+    /// or map. If this is a CBOR map, returns null if an item with the
+    /// given key doesn't exist.</returns>
     /// <exception cref='T:System.InvalidOperationException'>This object is
     /// not an array or map.</exception>
     /// <exception cref='T:System.ArgumentException'>This object is an
@@ -443,7 +444,7 @@ namespace PeterO.Cbor {
         }
         if (this.ItemType == CBORObjectTypeMap) {
           IDictionary<CBORObject, CBORObject> map = this.AsMap();
-          CBORObject key = CBORObject.FromObject(key);
+          CBORObject key = CBORObject.FromObject(index);
           return (!map.ContainsKey(key)) ? null : map[key];
         }
         throw new InvalidOperationException("Not an array or map");
@@ -461,7 +462,7 @@ namespace PeterO.Cbor {
           list[index] = value;
         } else if (this.ItemType == CBORObjectTypeMap) {
           IDictionary<CBORObject, CBORObject> map = this.AsMap();
-          CBORObject key = CBORObject.FromObject(key);
+          CBORObject key = CBORObject.FromObject(index);
           map[key] = value;
         } else {
           throw new InvalidOperationException("Not an array or map");
@@ -489,7 +490,7 @@ namespace PeterO.Cbor {
 }
           IList<CBORObject> list = this.AsList();
           int index = key.AsInt32();
-          if (index<0 || index >= list.Count) {
+          if (index < 0 || index >= list.Count) {
  throw new ArgumentOutOfRangeException("index");
 }
           return list[index];
@@ -507,6 +508,7 @@ namespace PeterO.Cbor {
         if (this.ItemType == CBORObjectTypeMap) {
           IDictionary<CBORObject, CBORObject> map = this.AsMap();
           map[key] = value;
+          return;
         }
         if (this.ItemType == CBORObjectTypeArray) {
     if (!key.IsIntegral) {
@@ -517,10 +519,11 @@ namespace PeterO.Cbor {
 }
           IList<CBORObject> list = this.AsList();
           int index = key.AsInt32();
-          if (index<0 || index >= list.Count) {
+          if (index < 0 || index >= list.Count) {
  throw new ArgumentOutOfRangeException("index");
 }
-          list[index]=value;
+          list[index] = value;
+          return;
         }
         throw new InvalidOperationException("Not an array or map");
       }

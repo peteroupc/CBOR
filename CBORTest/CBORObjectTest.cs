@@ -2117,6 +2117,192 @@ Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Double.NaN).AsEFloat()
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
+
+    [Test]
+    public void TestItem() {
+      CBORObject cbor;
+      CBORObject dummy = CBORObject.True;
+      cbor = CBORObject.NewArray().Add(1).Add(2);
+      Assert.AreEqual(1, cbor[0].AsInt32());
+      Assert.AreEqual(2, cbor[1].AsInt32());
+      Assert.AreEqual(1, cbor[CBORObject.FromObject(0)].AsInt32());
+      Assert.AreEqual(2, cbor[CBORObject.FromObject(1)].AsInt32());
+      try {
+ dummy = cbor[-1];
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ dummy = cbor[2];
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ dummy = cbor[CBORObject.FromObject(-1)];
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ dummy = cbor[CBORObject.FromObject(2)];
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      cbor[0] = CBORObject.FromObject(3);
+      cbor[1] = CBORObject.FromObject(4);
+      Assert.AreEqual(3, cbor[0].AsInt32());
+      Assert.AreEqual(4, cbor[1].AsInt32());
+      Assert.AreEqual(3, cbor[CBORObject.FromObject(0)].AsInt32());
+      Assert.AreEqual(4, cbor[CBORObject.FromObject(1)].AsInt32());
+      try {
+ cbor[-1] = dummy;
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ cbor[2] = dummy;
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ cbor[CBORObject.FromObject(-1)] = dummy;
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ cbor[CBORObject.FromObject(2)] = dummy;
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+byte[] bytes = new byte[] { 1, 2, 3, 4 };
+      var othercbor = new CBORObject[] {
+  CBORObject.FromObject(9), CBORObject.True,
+        CBORObject.FromObject(bytes),
+  CBORObject.False, CBORObject.Null, CBORObject.FromObject("test"),
+  CBORObject.FromObject(99999), CBORObject.FromObject(-1)
+ };
+      foreach (CBORObject c2 in othercbor) {
+        try {
+ dummy = c2[0];
+Assert.Fail("Should have failed");
+} catch (InvalidOperationException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+        try {
+ dummy = c2[CBORObject.FromObject(0)];
+Assert.Fail("Should have failed");
+} catch (InvalidOperationException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      }
+      cbor = CBORObject.NewMap().Add(0, 1).Add(-1, 2);
+      Assert.AreEqual(1, cbor[0].AsInt32());
+      Assert.AreEqual(2, cbor[-1].AsInt32());
+      Assert.AreEqual(1, cbor[CBORObject.FromObject(0)].AsInt32());
+      Assert.AreEqual(2, cbor[CBORObject.FromObject(-1)].AsInt32());
+      if (cbor[-2] != null) {
+ Assert.Fail();
+ }
+      if (cbor[2] != null) {
+ Assert.Fail();
+ }
+      if (cbor["test"] != null) {
+ Assert.Fail();
+ }
+      if (cbor[CBORObject.FromObject(-2)] != null) {
+ Assert.Fail();
+ }
+      if (cbor[CBORObject.FromObject(2)] != null) {
+ Assert.Fail();
+ }
+      if (cbor[CBORObject.FromObject("test")] != null) {
+ Assert.Fail();
+ }
+      cbor[0] = CBORObject.FromObject(3);
+      cbor[-1] = CBORObject.FromObject(4);
+      Assert.AreEqual(3, cbor[0].AsInt32());
+      Assert.AreEqual(4, cbor[-1].AsInt32());
+      Assert.AreEqual(3, cbor[CBORObject.FromObject(0)].AsInt32());
+      Assert.AreEqual(4, cbor[CBORObject.FromObject(-1)].AsInt32());
+      try {
+ cbor[-2] = dummy;
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      Assert.AreEqual(dummy, cbor[-2]);
+      try {
+ cbor[2] = dummy;
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ cbor[CBORObject.FromObject(-2)] = dummy;
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ cbor[CBORObject.FromObject(2)] = dummy;
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      Assert.AreEqual(dummy, cbor[2]);
+      try {
+ cbor[CBORObject.FromObject(-5)] = dummy;
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      Assert.AreEqual(dummy, cbor[-5]);
+      try {
+ cbor[CBORObject.FromObject(5)] = dummy;
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      Assert.AreEqual(dummy, cbor[-5]);
+    }
+
     [Test]
     public void TestEquals() {
       var cborbytes = new byte[] { (byte)0xd8, 0x1e, (byte)0x82, 0x00, 0x19,
@@ -3186,7 +3372,7 @@ throw new InvalidOperationException(String.Empty, ex);
       // not implemented yet
     }
     [Test]
-    public void TestItem() {
+    public void TestItem2() {
       CBORObject cbor = CBORObject.True;
       try {
         CBORObject cbor2 = cbor[0];

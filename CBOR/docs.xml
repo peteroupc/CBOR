@@ -2010,11 +2010,10 @@ Note that for security reasons, certain types are not supported even if they con
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.Item(PeterO.Cbor.CBORObject)">
 
-            <summary>Gets the value of a CBOR object in this map, using a CBOR
-            object as the key.  Or, gets the value of a CBOR object in the specified
-index in this CBOR array.</summary><param name='key'>A CBOR object serving as the
+            <summary>Gets the value of a CBOR object by integer index in this
+            array or by CBOR object key in this map.</summary><param name='key'>A CBOR object serving as the
 key to the map or index to the array.  If this is a CBOR array, the key must be
-an integer 0 or greater and less than the size of the array.</param><returns>The CBOR object referred to by index or key in this array or map.</returns><exception cref='T:System.ArgumentNullException'>The key is null
+an integer 0 or greater and less than the size of the array.</param><returns>The CBOR object referred to by index or key in this array or map.  If this is a CBOR map, returns null if an item with the given key doesn't exist.</returns><exception cref='T:System.ArgumentNullException'>The key is null
             (as opposed to CBORObject.Null); or the set method is called and
             the value is null.</exception><exception cref='T:System.ArgumentException'>This CBOR object is an array and the key
 is not an integer 0 or greater and less than the size of the array.</exception><exception cref='T:System.InvalidOperationException'>This object is
@@ -2025,7 +2024,7 @@ is not an integer 0 or greater and less than the size of the array.</exception><
 
             <summary>Gets the value of a CBOR object by integer index in this
             array or by integer key in this map.</summary><param name='index'>Zero-based index of the element, or the integer key to this map. (If this is a map,
-the given index can be any 32-bit signed integer, even a negative one.)</param><returns>The CBOR object referred to by index or key in this array or map.</returns><exception cref='T:System.InvalidOperationException'>This object is
+the given index can be any 32-bit signed integer, even a negative one.)</param><returns>The CBOR object referred to by index or key in this array or map.  If this is a CBOR map, returns null if an item with the given key doesn't exist.</returns><exception cref='T:System.InvalidOperationException'>This object is
             not an array or map.</exception><exception cref='T:System.ArgumentException'>This object is an array and the index is less than 0 or equal to or greater than the size of the array.</exception><exception cref='T:System.ArgumentNullException'>The parameter
             "value" is null (as opposed to CBORObject.Null).</exception>
 
@@ -2033,7 +2032,7 @@ the given index can be any 32-bit signed integer, even a negative one.)</param><
 <doc name="P:PeterO.Cbor.CBORObject.Item(System.String)">
 
             <summary>Gets the value of a CBOR object in this map, using a
-            string as the key.</summary><param name='key'>A key that points to the desired value.</param><returns>The CBOR object referred to by key in this map.</returns><exception cref='T:System.ArgumentNullException'>The key is
+            string as the key.</summary><param name='key'>A key that points to the desired value.</param><returns>The CBOR object referred to by key in this map.  Returns <c>null</c> if an item with the given key doesn't exist.</returns><exception cref='T:System.ArgumentNullException'>The key is
             null.</exception><exception cref='T:System.InvalidOperationException'>This object is
             not a map.</exception>
 
