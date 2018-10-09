@@ -2140,12 +2140,20 @@ objret[key.Key] = CBORObject.FromObject(
                     this.Untag().CompareTo(other.Untag()));
     }
 
+    /// <summary>Determines whether a value of the given key exists in this
+    /// object.</summary>
+    /// <param name='objKey'>An arbitrary object.</param>
+    /// <returns><c>true</c> if the given key is found, or false if the
+    /// given key is not found or this object is not a map.</returns>
+    public bool ContainsKey(object objKey) {
+      return (this.ItemType == CBORObjectTypeMap) ?
+        (ContainsKey(CBORObject.FromObject(objKey))) : (false);
+    }
+
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ContainsKey(PeterO.Cbor.CBORObject)"]/*'/>
     public bool ContainsKey(CBORObject key) {
-      if (key == null) {
-        throw new ArgumentNullException(nameof(key));
-      }
+      key = key ?? (CBORObject.Null);
       if (this.ItemType == CBORObjectTypeMap) {
         IDictionary<CBORObject, CBORObject> map = this.AsMap();
         return map.ContainsKey(key);
@@ -2156,9 +2164,7 @@ objret[key.Key] = CBORObject.FromObject(
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ContainsKey(System.String)"]/*'/>
     public bool ContainsKey(string key) {
-      if (key == null) {
-        throw new ArgumentNullException(nameof(key));
-      }
+      key = key ?? (CBORObject.Null);
       if (this.ItemType == CBORObjectTypeMap) {
         IDictionary<CBORObject, CBORObject> map = this.AsMap();
         return map.ContainsKey(CBORObject.FromObject(key));

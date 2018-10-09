@@ -1112,18 +1112,16 @@
 <doc name="M:PeterO.Cbor.CBORObject.ContainsKey(PeterO.Cbor.CBORObject)">
 
             <summary>Determines whether a value of the given key exists in this
-            object.</summary><param name='key'>An object that serves as the key.</param><returns><c>true</c> if the given key is found, or false if the
-            given key is not found or this object is not a map.</returns><exception cref='T:System.ArgumentNullException'>Key is null (as
-            opposed to CBORObject.Null).</exception>
+            object.</summary><param name='key'>An object that serves as the key.  If this is <c>null</c>, checks for <c>CBORObject.Null</c>.</param><returns><c>true</c> if the given key is found, or false if the
+            given key is not found or this object is not a map.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.ContainsKey(System.String)">
 
             <summary>Determines whether a value of the given key exists in this
-            object.</summary><param name='key'>A string that serves as the key.</param><returns><c>true</c> if the given key (as a CBOR object) is found,
+            object.</summary><param name='key'>A string that serves as the key.  If this is <c>null</c>, checks for <c>CBORObject.Null</c>.</param><returns><c>true</c> if the given key (as a CBOR object) is found,
             or false if the given key is not found or this object is not a
-            map.</returns><exception cref='T:System.ArgumentNullException'>Key is
-            null.</exception>
+            map.</returns>
 
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.ConverterInfo.Converter">
