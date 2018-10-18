@@ -1116,6 +1116,13 @@
             given key is not found or this object is not a map.</returns>
 
 </doc>
+<doc name="M:PeterO.Cbor.CBORObject.ContainsKey(System.Object)">
+
+            <summary>Determines whether a value of the given key exists in this
+            object.</summary><param name='objKey'>The parameter <paramref name='objKey'/> is an arbitrary object.</param><returns><c>true</c> if the given key is found, or false if the
+            given key is not found or this object is not a map.</returns>
+
+</doc>
 <doc name="M:PeterO.Cbor.CBORObject.ContainsKey(System.String)">
 
             <summary>Determines whether a value of the given key exists in this
@@ -2021,9 +2028,14 @@ is not an integer 0 or greater and less than the size of the array.</exception><
 <doc name="P:PeterO.Cbor.CBORObject.Item(System.Int32)">
 
             <summary>Gets the value of a CBOR object by integer index in this
-            array or by integer key in this map.</summary><param name='index'>Zero-based index of the element, or the integer key to this map. (If this is a map,
-the given index can be any 32-bit signed integer, even a negative one.)</param><returns>The CBOR object referred to by index or key in this array or map.  If this is a CBOR map, returns null if an item with the given key doesn't exist.</returns><exception cref='T:System.InvalidOperationException'>This object is
-            not an array or map.</exception><exception cref='T:System.ArgumentException'>This object is an array and the index is less than 0 or equal to or greater than the size of the array.</exception><exception cref='T:System.ArgumentNullException'>The parameter
+            array or by integer key in this map.</summary><param name='index'>Zero-based index of the element, or the integer
+            key to this map. (If this is a map, the given index can be any
+            32-bit signed integer, even a negative one.).</param><returns>The CBOR object referred to by index or key in this array
+            or map. If this is a CBOR map, returns null if an item with the
+            given key doesn't exist.</returns><exception cref='T:System.InvalidOperationException'>This object is
+            not an array or map.</exception><exception cref='T:System.ArgumentException'>This object is an
+            array and the index is less than 0 or at least the
+            size of the array.</exception><exception cref='T:System.ArgumentNullException'>The parameter
             "value" is null (as opposed to CBORObject.Null).</exception>
 
 </doc>
@@ -3654,19 +3666,20 @@ stream.Write(bytes, 0, bytes.Length);
             <c>ToObject</c></summary>
 
 </doc>
+<doc name="M:PeterO.Cbor.CBORTypeMapper.#ctor">
+<summary>Not documented yet.</summary>
+</doc>
 <doc name="M:PeterO.Cbor.CBORTypeMapper.AddConverter``1(System.Type,PeterO.Cbor.ICBORConverter{``0})">
 
             <summary>Registers an object that converts objects of a given type
-             to CBOR objects (called a CBOR converter).</summary><param name='type'>A Type object specifying the type that the
-             converter converts to CBOR objects.</param><param name='converter'>The parameter <paramref name='converter'/>
-             is an ICBORConverter object.</param>
-<returns>This object.</returns>
+            to CBOR objects (called a CBOR converter).</summary><param name='type'>A Type object specifying the type that the
+            converter converts to CBOR objects.</param><param name='converter'>The parameter <paramref name='converter'/>
+            is an ICBORConverter object.</param><typeparam name='T'>Must be the same as the "type"
+            parameter.</typeparam><returns>This object.</returns><exception cref='T:System.ArgumentNullException'>The parameter
+            <paramref name='type'/> or <paramref name='converter'/> is
+            null.</exception><exception cref='T:System.ArgumentException'>"Converter doesn't
+            contain a proper ToCBORObject method".</exception>
 
-<typeparam name='T'>Must be the same as the "type"
-             parameter.</typeparam><exception cref='T:System.ArgumentNullException'>The parameter
-             <paramref name='type'/> or <paramref name='converter'/> is
-             null.</exception><exception cref='T:System.ArgumentException'>"Converter doesn't contain a
-             proper ToCBORObject method".</exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeMapper.AddTypeName(System.String)">
 
@@ -3679,8 +3692,9 @@ stream.Write(bytes, 0, bytes.Length);
 
 </doc>
 <doc name="P:PeterO.Cbor.CBORTypeMapper.ConverterInfo.Converter">
-<summary>Gets an internal API value.</summary>
-            <value>An internal API value.</value>
+
+            <summary>Gets a value not documented yet.</summary><value>A value not documented yet.</value>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeMapper.FilterTypeName(System.String)">
 
@@ -3693,6 +3707,18 @@ stream.Write(bytes, 0, bytes.Length);
       class.
     </summary>
 
+</doc>
+<doc name="M:PeterO.Cbor.FastInteger2.Multiply(System.Int32)">
+<summary>Not documented yet.</summary>
+</doc>
+<doc name="P:PeterO.Cbor.FastInteger2.Sign">
+<summary>Not documented yet.</summary>
+</doc>
+<doc name="M:PeterO.Cbor.FastInteger2.Subtract(PeterO.Cbor.FastInteger2)">
+<summary>Not documented yet.</summary>
+</doc>
+<doc name="M:PeterO.Cbor.FastInteger2.SubtractInt(System.Int32)">
+<summary>Not documented yet.</summary>
 </doc>
 <doc name="T:PeterO.Cbor.ICBORConverter`1">
 
@@ -4177,11 +4203,21 @@ vnd.shootproof+json</item>
       <paramref name='index'/>
        is less than 0, or is the string's length or greater. Returns the
       replacement character (U+FFFD) if the current character is an unpaired
-      surrogate code point.
+      surrogate code point.  If the return value is 65536 (0x10000) or greater,
+      the code point takes up two UTF-16 code units.
     </returns><exception cref='T:System.ArgumentNullException'>The parameter
       <paramref name='str'/>
        is null.
-    </exception>
+    </exception><example><para>The following example shows how to iterate
+a text string code point by code point.</para>
+<code>for(var i=0;i&lt;str.Length;i++) {
+ int codePoint = DataUtilities.CodePointAt(str,i);
+ Console.WriteLine("codePoint:"+codePoint);
+ if(codePoint &gt;= 0x10000) {
+  i++; /* Supplementary code point */
+ }
+}
+</code></example>
 
 </doc>
 <doc name="M:PeterO.DataUtilities.CodePointAt(System.String,System.Int32,System.Int32)">
@@ -4200,11 +4236,25 @@ vnd.shootproof+json</item>
        is less than 0, or is the string's length or greater. Returns a value as
       specified under
       <paramref name='surrogateBehavior'/>
-       if the previous character is an unpaired surrogate code point.
+       if the previous character is an unpaired surrogate code point.  If the return value is 65536 (0x10000) or greater,
+      the code point takes up two UTF-16 code units.
     </returns><exception cref='T:System.ArgumentNullException'>The parameter
       <paramref name='str'/>
        is null.
-    </exception>
+    </exception><example><para>The following example shows how to iterate
+a text string code point by code point, terminating the loop
+when an unpaired surrogate is found.</para>
+<code>for(var i=0;i&lt;str.Length;i++) {
+ int codePoint = DataUtilities.CodePointAt(str, i, 2);
+ if(codePoint &lt; 0) {
+  break; /* Unpaired surrogate */
+ }
+ Console.WriteLine("codePoint:"+codePoint);
+ if(codePoint &gt;= 0x10000) {
+  i++; /* Supplementary code point */
+ }
+}
+</code></example>
 
 </doc>
 <doc name="M:PeterO.DataUtilities.CodePointBefore(System.String,System.Int32)">
@@ -4218,7 +4268,8 @@ vnd.shootproof+json</item>
       <paramref name='index'/>
        is 0 or less, or is greater than the string's length. Returns the
       replacement character (U+FFFD) if the previous character is an unpaired
-      surrogate code point.
+      surrogate code point.  If the return value is 65536 (0x10000) or greater,
+      the code point takes up two UTF-16 code units.
     </returns><exception cref='T:System.ArgumentNullException'>The parameter
       <paramref name='str'/>
        is null.
@@ -4241,7 +4292,8 @@ vnd.shootproof+json</item>
        is 0 or less, or is greater than the string's length. Returns a value as
       specified under
       <paramref name='surrogateBehavior'/>
-       if the previous character is an unpaired surrogate code point.
+       if the previous character is an unpaired surrogate code point.  If the return value is 65536 (0x10000) or greater,
+      the code point takes up two UTF-16 code units.
     </returns><exception cref='T:System.ArgumentNullException'>The parameter
       <paramref name='str'/>
        is null.

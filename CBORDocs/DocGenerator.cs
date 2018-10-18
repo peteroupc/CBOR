@@ -8,6 +8,7 @@ using NuDoq;
 namespace PeterO.DocGen {
 /// <summary>A documentation generator.</summary>
 public static class DocGenerator {
+// TODO: Make indexers ("this[]") show in documentation
     public static void Generate(string assemblyFile, string docdir) {
       if (assemblyFile == null) {
   throw new ArgumentNullException(nameof(assemblyFile));

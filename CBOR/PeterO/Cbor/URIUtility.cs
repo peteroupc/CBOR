@@ -788,8 +788,8 @@ public static string BuildIRI(
         while (index < endOffset) {
           char c = s[index];
           if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
-              (c >= '0' && c <= '9') ||
-              ((c & 0x7F) == c && ":-._~!$&'()*+,;=".IndexOf(c) >= 0)) {
+              (c >= '0' && c <= '9') || ((c & 0x7F) == c &&
+               ":-._~!$&'()*+,;=".IndexOf(c) >= 0)) {
             hex = true;
           } else {
             break;

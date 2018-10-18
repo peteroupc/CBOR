@@ -3425,6 +3425,46 @@ throw new InvalidOperationException(String.Empty, ex);
       }
     }
 
+[Test]
+public void TestGetOrDefault() {
+CBORObject cbor = CBORObject.NewArray().Add(2).Add(3).Add(7);
+Assert.AreEqual(CBORObject.Null, cbor.GetOrDefault(-1, CBORObject.Null));
+Assert.AreEqual(CBORObject.FromObject(2), cbor.GetOrDefault(0,
+  CBORObject.Null));
+Assert.AreEqual(
+  CBORObject.FromObject(2),
+  cbor.GetOrDefault(CBORObject.FromObject(0), CBORObject.Null));
+Assert.AreEqual(CBORObject.FromObject(3), cbor.GetOrDefault(1,
+  CBORObject.Null));
+Assert.AreEqual(CBORObject.FromObject(7), cbor.GetOrDefault(2,
+  CBORObject.Null));
+Assert.AreEqual(CBORObject.Null, cbor.GetOrDefault(3, CBORObject.Null));
+Assert.AreEqual(CBORObject.Null, cbor.GetOrDefault("key", CBORObject.Null));
+cbor = CBORObject.NewMap().Add(1, 2).Add("key", "value");
+Assert.AreEqual(CBORObject.Null, cbor.GetOrDefault(-1, CBORObject.Null));
+Assert.AreEqual(CBORObject.Null, cbor.GetOrDefault(0, CBORObject.Null));
+Assert.AreEqual(CBORObject.FromObject(2), cbor.GetOrDefault(1,
+  CBORObject.Null));
+Assert.AreEqual(CBORObject.Null, cbor.GetOrDefault(2, CBORObject.Null));
+Assert.AreEqual(CBORObject.Null, cbor.GetOrDefault(3, CBORObject.Null));
+{
+object objectTemp = CBORObject.FromObject("value");
+object objectTemp2 = cbor.GetOrDefault(
+  "key",
+  CBORObject.Null);
+Assert.AreEqual(objectTemp, objectTemp2);
+}
+Assert.AreEqual(
+  CBORObject.FromObject("value"),
+  cbor.GetOrDefault(CBORObject.FromObject("key"), CBORObject.Null));
+Assert.AreEqual(CBORObject.Null, cbor.GetOrDefault("key2", CBORObject.Null));
+cbor = CBORObject.False;
+Assert.AreEqual(CBORObject.Null, cbor.GetOrDefault(-1, CBORObject.Null));
+Assert.AreEqual(CBORObject.Null, cbor.GetOrDefault(0, CBORObject.Null));
+Assert.AreEqual(CBORObject.Null, cbor.GetOrDefault("key", CBORObject.Null));
+Assert.AreEqual(CBORObject.Null, cbor.GetOrDefault("key2", CBORObject.Null));
+}
+
     private void Sink(object obj) {
       Console.WriteLine("Sink for " + obj);
       Assert.Fail();

@@ -418,21 +418,8 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>Gets the value of a CBOR object by integer index in this
-    /// array or by integer key in this map.</summary>
-    /// <param name='index'>Zero-based index of the element, or the integer
-    /// key to this map. (If this is a map, the given index can be any
-    /// 32-bit signed integer, even a negative one.).</param>
-    /// <returns>The CBOR object referred to by index or key in this array
-    /// or map. If this is a CBOR map, returns null if an item with the
-    /// given key doesn't exist.</returns>
-    /// <exception cref='T:System.InvalidOperationException'>This object is
-    /// not an array or map.</exception>
-    /// <exception cref='T:System.ArgumentException'>This object is an
-    /// array and the index is less than 0 or equal to or greater than the
-    /// size of the array.</exception>
-    /// <exception cref='T:System.ArgumentNullException'>The parameter
-    /// "value" is null (as opposed to CBORObject.Null).</exception>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.Item(System.Int32)"]/*'/>
     public CBORObject this[int index] {
       get {
         if (this.ItemType == CBORObjectTypeArray) {
@@ -468,6 +455,37 @@ namespace PeterO.Cbor {
           throw new InvalidOperationException("Not an array or map");
         }
       }
+    }
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='key'>Not documented yet.</param>
+    /// <param name='defaultValue'>Not documented yet.</param>
+    /// <returns>A CBORObject object.</returns>
+    public CBORObject GetOrDefault(object key, CBORObject defaultValue) {
+        if (this.ItemType == CBORObjectTypeArray) {
+int index = 0;
+if (key is int) {
+  index = (int)key;
+} else {
+  CBORObject cborkey = CBORObject.FromObject(key);
+    if (!cborkey.IsIntegral) {
+return defaultValue;
+}
+    if (!cborkey.CanTruncatedIntFitInInt32()) {
+return defaultValue;
+}
+          index = cborkey.AsInt32();
+}
+          IList<CBORObject> list = this.AsList();
+    return (index < 0 || index >= list.Count) ? defaultValue :
+            list[index];
+        }
+        if (this.ItemType == CBORObjectTypeMap) {
+          IDictionary<CBORObject, CBORObject> map = this.AsMap();
+          CBORObject ckey = CBORObject.FromObject(key);
+          return (!map.ContainsKey(ckey)) ? defaultValue : map[ckey];
+        }
+        return defaultValue;
     }
 
     /// <include file='../../docs.xml'
@@ -2140,20 +2158,17 @@ objret[key.Key] = CBORObject.FromObject(
                     this.Untag().CompareTo(other.Untag()));
     }
 
-    /// <summary>Determines whether a value of the given key exists in this
-    /// object.</summary>
-    /// <param name='objKey'>An arbitrary object.</param>
-    /// <returns><c>true</c> if the given key is found, or false if the
-    /// given key is not found or this object is not a map.</returns>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ContainsKey(System.Object)"]/*'/>
     public bool ContainsKey(object objKey) {
       return (this.ItemType == CBORObjectTypeMap) ?
-        (ContainsKey(CBORObject.FromObject(objKey))) : (false);
+        this.ContainsKey(CBORObject.FromObject(objKey)) : false;
     }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ContainsKey(PeterO.Cbor.CBORObject)"]/*'/>
     public bool ContainsKey(CBORObject key) {
-      key = key ?? (CBORObject.Null);
+      key = key ?? CBORObject.Null;
       if (this.ItemType == CBORObjectTypeMap) {
         IDictionary<CBORObject, CBORObject> map = this.AsMap();
         return map.ContainsKey(key);
@@ -2164,10 +2179,11 @@ objret[key.Key] = CBORObject.FromObject(
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ContainsKey(System.String)"]/*'/>
     public bool ContainsKey(string key) {
-      key = key ?? (CBORObject.Null);
       if (this.ItemType == CBORObjectTypeMap) {
+CBORObject ckey = key == null ? CBORObject.Null :
+          CBORObject.FromObject(key);
         IDictionary<CBORObject, CBORObject> map = this.AsMap();
-        return map.ContainsKey(CBORObject.FromObject(key));
+        return map.ContainsKey(ckey);
       }
       return false;
     }

@@ -81,6 +81,7 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[CompareToIgnoreTags(PeterO.Cbor.CBORObject)](#CompareToIgnoreTags_PeterO_Cbor_CBORObject)</code> - Compares this object and another CBOR object, ignoring the tags they have, if any.
 * <code>[CompareTo(PeterO.Cbor.CBORObject)](#CompareTo_PeterO_Cbor_CBORObject)</code> - Compares two CBOR objects.
 * <code>[ContainsKey(PeterO.Cbor.CBORObject)](#ContainsKey_PeterO_Cbor_CBORObject)</code> - Determines whether a value of the given key exists in this object.
+* <code>[ContainsKey(object)](#ContainsKey_object)</code> - Determines whether a value of the given key exists in this object.
 * <code>[ContainsKey(string)](#ContainsKey_string)</code> - Determines whether a value of the given key exists in this object.
 * <code>[Count](#Count)</code> - Gets the number of keys in this map, or the number of items in this array, or 0 if this item is neither an array nor a map.
 * <code>[DecodeFromBytes(byte[])](#DecodeFromBytes_byte)</code> -  At the moment, use the overload of this method that takes aPeterO.
@@ -1057,6 +1058,23 @@ Compares this object and another CBOR object, ignoring the tags they have, if an
 
 Less than 0, if this value is less than the other object; or 0, if both values are equal; or greater than 0, if this value is less than the other object or if the other object is null.
 
+<a id="ContainsKey_object"></a>
+### ContainsKey
+
+    public bool ContainsKey(
+        object objKey);
+
+Determines whether a value of the given key exists in this object.
+
+<b>Parameters:</b>
+
+ * <i>objKey</i>: The parameter  <i>objKey</i>
+ is an arbitrary object.
+
+<b>Return Value:</b>
+
+ `true`  if the given key is found, or false if the given key is not found or this object is not a map.
+
 <a id="ContainsKey_PeterO_Cbor_CBORObject"></a>
 ### ContainsKey
 
@@ -1067,16 +1085,11 @@ Determines whether a value of the given key exists in this object.
 
 <b>Parameters:</b>
 
- * <i>key</i>: An object that serves as the key.
+ * <i>key</i>: An object that serves as the key. If this is  `null` , checks for  `CBORObject.Null` .
 
 <b>Return Value:</b>
 
  `true`  if the given key is found, or false if the given key is not found or this object is not a map.
-
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-Key is null (as opposed to CBORObject.Null).
 
 <a id="ContainsKey_string"></a>
 ### ContainsKey
@@ -1088,16 +1101,11 @@ Determines whether a value of the given key exists in this object.
 
 <b>Parameters:</b>
 
- * <i>key</i>: A string that serves as the key.
+ * <i>key</i>: A string that serves as the key. If this is  `null` , checks for  `CBORObject.Null` .
 
 <b>Return Value:</b>
 
  `true`  if the given key (as a CBOR object) is found, or false if the given key is not found or this object is not a map.
-
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-Key is null.
 
 <a id="DecodeFromBytes_byte"></a>
 ### DecodeFromBytes
