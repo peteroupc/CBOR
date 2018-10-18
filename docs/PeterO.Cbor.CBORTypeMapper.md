@@ -15,7 +15,7 @@ Holds converters to customize the serialization and deserialization behavior of 
 
     public CBORTypeMapper();
 
-Initializes a new instance of the CBORTypeMapper class.
+Initializes a new instance of the [PeterO.Cbor.CBORTypeMapper](PeterO.Cbor.CBORTypeMapper.md) class.
 
 <a id="AddConverter_T_System_Type_PeterO_Cbor_ICBORConverter_T"></a>
 ### AddConverter

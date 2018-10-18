@@ -123,8 +123,9 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[GetAllTags()](#GetAllTags)</code> - Gets a list of all tags, from outermost to innermost.
 * <code>[GetByteString()](#GetByteString)</code> - Gets the backing byte array used in this CBOR object, if this object is a byte string, without copying the data to a new byte array.
 * <code>[GetHashCode()](#GetHashCode)</code> - Calculates the hash code of this object.
-* <code>[HasMostOuterTag(PeterO.Numbers.EInteger)](#HasMostOuterTag_PeterO_Numbers_EInteger)</code> - Returns whether this object has a tag of the given number.
-* <code>[HasMostOuterTag(int)](#HasMostOuterTag_int)</code> - Returns whether this object has a tag of the given number.
+* <code>[GetOrDefault(object, PeterO.Cbor.CBORObject)](#GetOrDefault_object_PeterO_Cbor_CBORObject)</code> - Not documented yet.
+* <code>[HasMostOuterTag(PeterO.Numbers.EInteger)](#HasMostOuterTag_PeterO_Numbers_EInteger)</code> - Not documented yet.
+* <code>[HasMostOuterTag(int)](#HasMostOuterTag_int)</code> - Not documented yet.
 * <code>[HasTag(PeterO.Numbers.EInteger)](#HasTag_PeterO_Numbers_EInteger)</code> - Returns whether this object has a tag of the given number.
 * <code>[HasTag(int)](#HasTag_int)</code> - Returns whether this object has a tag of the given number.
 * <code>[Insert(int, object)](#Insert_int_object)</code> - Inserts an object at the specified position in this CBOR array.
@@ -1989,29 +1990,42 @@ Calculates the hash code of this object. No application or process IDs are used 
 
 A 32-bit hash code.
 
+<a id="GetOrDefault_object_PeterO_Cbor_CBORObject"></a>
+### GetOrDefault
+
+    public PeterO.Cbor.CBORObject GetOrDefault(
+        object key,
+        PeterO.Cbor.CBORObject defaultValue);
+
+Not documented yet.
+
+<b>Parameters:</b>
+
+ * <i>key</i>: The parameter  <i>key</i>
+ is not documented yet.
+
+ * <i>defaultValue</i>: The parameter  <i>defaultValue</i>
+ is not documented yet.
+
+<b>Return Value:</b>
+
+A CBORObject object.
+
 <a id="HasMostOuterTag_int"></a>
 ### HasMostOuterTag
 
     public bool HasMostOuterTag(
         int tagValue);
 
-Returns whether this object has a tag of the given number.
+Not documented yet.
 
 <b>Parameters:</b>
 
- * <i>tagValue</i>: The tag value to search for.
+ * <i>tagValue</i>: Not documented yet.
 
 <b>Return Value:</b>
 
- `true`  if this object has a tag of the given number; otherwise,  `false` .
-
-<b>Exceptions:</b>
-
- * System.ArgumentException:
-TagValue is less than 0.
-
- * System.ArgumentNullException:
-The parameter "obj" is null.
+A Boolean object.
 
 <a id="HasMostOuterTag_PeterO_Numbers_EInteger"></a>
 ### HasMostOuterTag
@@ -2019,23 +2033,21 @@ The parameter "obj" is null.
     public bool HasMostOuterTag(
         PeterO.Numbers.EInteger bigTagValue);
 
-Returns whether this object has a tag of the given number.
+Not documented yet.
 
 <b>Parameters:</b>
 
- * <i>bigTagValue</i>: The tag value to search for.
+ * <i>bigTagValue</i>: Not documented yet.
 
 <b>Return Value:</b>
 
- `true` if this object has a tag of the given number; otherwise,  `false` .
+A Boolean object.
 
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-BigTagValue is null.
-
- * System.ArgumentException:
-BigTagValue is less than 0.
+The parameter  <i>bigTagValue</i>
+ is null.
 
 <a id="HasTag_int"></a>
 ### HasTag

@@ -1845,11 +1845,26 @@ Note that for security reasons, certain types are not supported even if they con
     </returns>
 
 </doc>
+<doc name="M:PeterO.Cbor.CBORObject.GetOrDefault(System.Object,PeterO.Cbor.CBORObject)">
+
+            <summary>Not documented yet.</summary><param name='key'>The parameter <paramref name='key'/> is not documented yet.</param><param name='defaultValue'>The parameter <paramref name='defaultValue'/> is not documented yet.</param><returns>A CBORObject object.</returns>
+
+</doc>
 <doc name="M:PeterO.Cbor.CBORObject.GetTags">
 <summary>Gets a list of all tags, from outermost to innermost.
     </summary>
     <returns>An array of tags, or the empty string if this object is untagged.
     </returns>
+</doc>
+<doc name="M:PeterO.Cbor.CBORObject.HasMostOuterTag(PeterO.Numbers.EInteger)">
+
+            <summary>Not documented yet.</summary>
+
+</doc>
+<doc name="M:PeterO.Cbor.CBORObject.HasMostOuterTag(System.Int32)">
+
+            <summary>Not documented yet.</summary>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.HasTag(PeterO.BigInteger)">
 <summary>Returns whether this object has a tag of the given number.
@@ -3667,7 +3682,8 @@ stream.Write(bytes, 0, bytes.Length);
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeMapper.#ctor">
-<summary>Not documented yet.</summary>
+<summary>Initializes a new instance of the <see cref='CBORTypeMapper'/> class.
+    </summary>
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeMapper.AddConverter``1(System.Type,PeterO.Cbor.ICBORConverter{``0})">
 
@@ -3696,6 +3712,11 @@ stream.Write(bytes, 0, bytes.Length);
             <summary>Gets a value not documented yet.</summary><value>A value not documented yet.</value>
 
 </doc>
+<doc name="P:PeterO.Cbor.CBORTypeMapper.ConverterInfo.ToObject">
+
+            <summary>Not documented yet.</summary>
+
+</doc>
 <doc name="M:PeterO.Cbor.CBORTypeMapper.FilterTypeName(System.String)">
 
             <summary>Returns whether the given Java or .NET type name fits the filters given in this mapper.</summary><param name='typeName'>The fully qualified name of a Java or .NET class (e.g., <c>java.math.BigInteger</c> or <c>System.Globalization.CultureInfo</c>).</param><returns>Either <c>true</c> if the given Java or .NET type name fits the filters given in this mapper, or <c>false</c> otherwise.</returns>
@@ -3708,17 +3729,30 @@ stream.Write(bytes, 0, bytes.Length);
     </summary>
 
 </doc>
+<doc name="M:PeterO.Cbor.CBORUuidConverter.ToCBORObject(System.Guid)">
+
+            <summary>Not documented yet.</summary>
+
+</doc>
 <doc name="M:PeterO.Cbor.FastInteger2.Multiply(System.Int32)">
-<summary>Not documented yet.</summary>
+
+            <summary>Not documented yet.</summary><param name='val'>The parameter <paramref name='val'/> is not documented yet.</param><returns>A FastInteger2 object.</returns>
+
 </doc>
 <doc name="P:PeterO.Cbor.FastInteger2.Sign">
-<summary>Not documented yet.</summary>
+
+            <summary>Gets a value not documented yet.</summary><value>A value not documented yet.</value>
+
 </doc>
 <doc name="M:PeterO.Cbor.FastInteger2.Subtract(PeterO.Cbor.FastInteger2)">
-<summary>Not documented yet.</summary>
+
+            <summary>Not documented yet.</summary><param name='val'>The parameter <paramref name='val'/> is not documented yet.</param><returns>A FastInteger2 object.</returns>
+
 </doc>
 <doc name="M:PeterO.Cbor.FastInteger2.SubtractInt(System.Int32)">
-<summary>Not documented yet.</summary>
+
+            <summary>Not documented yet.</summary><param name='val'>The parameter <paramref name='val'/> is not documented yet.</param><returns>A FastInteger2 object.</returns>
+
 </doc>
 <doc name="T:PeterO.Cbor.ICBORConverter`1">
 
@@ -3779,6 +3813,16 @@ stream.Write(bytes, 0, bytes.Length);
     <returns>A CBORObject object. Note that this method may choose to return the same
       object as the parameter.
     </returns>
+</doc>
+<doc name="T:PeterO.Cbor.ICBORToFromConverter`1">
+
+            <summary>Not documented yet.</summary>
+
+</doc>
+<doc name="M:PeterO.Cbor.ICBORToFromConverter`1.FromCBORObject(PeterO.Cbor.CBORObject)">
+
+            <summary>Not documented yet.</summary>
+
 </doc>
 <doc name="T:PeterO.Cbor.ICharacterInput">
 

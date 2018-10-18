@@ -457,10 +457,8 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='key'>Not documented yet.</param>
-    /// <param name='defaultValue'>Not documented yet.</param>
-    /// <returns>A CBORObject object.</returns>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.GetOrDefault(System.Object,PeterO.Cbor.CBORObject)"]/*'/>
     public CBORObject GetOrDefault(object key, CBORObject defaultValue) {
         if (this.ItemType == CBORObjectTypeArray) {
 int index = 0;
@@ -2444,8 +2442,9 @@ CBORObject ckey = key == null ? CBORObject.Null :
       return new[] { LowHighToEInteger(this.tagLow, this.tagHigh) };
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasTag(System.Int32)"]/*'/>
+    /// <summary>Not documented yet.</summary>
+    /// <param name='tagValue'>Not documented yet.</param>
+    /// <returns>A Boolean object.</returns>
  public bool HasMostOuterTag(int tagValue) {
       if (tagValue < 0) {
         throw new ArgumentException("tagValue (" + tagValue +
@@ -2454,8 +2453,11 @@ CBORObject ckey = key == null ? CBORObject.Null :
  return this.IsTagged && this.tagHigh == 0 && this.tagLow == tagValue;
  }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasTag(PeterO.BigInteger)"]/*'/>
+    /// <summary>Not documented yet.</summary>
+    /// <param name='bigTagValue'>Not documented yet.</param>
+    /// <returns>A Boolean object.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='bigTagValue'/> is null.</exception>
  public bool HasMostOuterTag(EInteger bigTagValue) {
     if (bigTagValue == null) {
   throw new ArgumentNullException(nameof(bigTagValue));

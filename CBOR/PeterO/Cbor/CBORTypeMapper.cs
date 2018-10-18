@@ -10,8 +10,8 @@ namespace PeterO.Cbor {
     private readonly IDictionary<Object, ConverterInfo>
       converters;
 
-    /// <summary>Initializes a new instance of the CBORTypeMapper
-    /// class.</summary>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.#ctor"]/*'/>
     public CBORTypeMapper() {
       this.typePrefixes = new List<string>();
       this.typeNames = new List<string>();
@@ -132,8 +132,8 @@ namespace PeterO.Cbor {
     }
 
     internal sealed class ConverterInfo {
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.ConverterInfo.ToObject"]/*'/>
+    /// <summary>Gets a value not documented yet.</summary>
+    /// <value>A value not documented yet.</value>
       public object ToObject { get; set; }
 
       public object FromObject { get; set; }
