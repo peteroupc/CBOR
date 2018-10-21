@@ -116,7 +116,7 @@ namespace PeterO.Cbor {
       throw new OverflowException("This object's value is out of range");
     }
 
-    public bool IsZero(object obj) {
+    public bool IsNumberZero(object obj) {
       return (double)obj == 0.0;
     }
 

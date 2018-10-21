@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.0</TargetFramework>
+    <TargetFrameworks>netstandard1.0;net461</TargetFrameworks>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Version>4.0.0-alpha1</Version>
     <Owners>Peter Occil</Owners>
@@ -30,7 +30,6 @@ Version 4.0.0-alpha1:
 
 </PackageReleaseNotes>
     <PackageTags>cbor data serialization binary json numbers arithmetic</PackageTags>
-    <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>PeterO.snk</AssemblyOriginatorKeyFile>
     <Title>CBOR (Concise Binary Object Representation)</Title>
     <PackOnBuild>true</PackOnBuild>

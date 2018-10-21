@@ -287,8 +287,8 @@ namespace PeterO.Cbor {
     /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.IsZero"]/*'/>
     public bool IsZero {
       get {
-        ICBORNumber cn = NumberInterfaces[this.ItemType];
-        return cn != null && cn.IsZero(this.ThisItem);
+        ICBORNumber cniface = NumberInterfaces[this.ItemType];
+        return cniface != null && cniface.IsNumberZero(this.ThisItem);
       }
     }
 
