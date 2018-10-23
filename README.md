@@ -230,6 +230,10 @@ The following are some clarifications to RFC 7049.
 Release Notes
 -----------
 
+### Version 3.4.0
+
+No significant changes from beta1.
+
 ### Version 3.4.0-beta1
 
 - Improved implementation of new ToObject method.
