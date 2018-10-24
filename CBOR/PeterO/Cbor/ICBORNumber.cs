@@ -1,4 +1,4 @@
-/*
+﻿/*
 Written by Peter O. in 2013.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -54,7 +54,7 @@ namespace PeterO.Cbor {
 
     int AsInt32(Object obj, int minValue, int maxValue);
 
-    bool IsZero(Object obj);
+    bool IsNumberZero(Object obj);
 
     int Sign(Object obj);
 

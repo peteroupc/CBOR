@@ -1,4 +1,4 @@
-/*
+﻿/*
 Written by Peter O. in 2014.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -119,7 +119,7 @@ namespace PeterO.Cbor {
       return false;
     }
 
-    public bool IsZero(object obj) {
+    public bool IsNumberZero(object obj) {
       return ((long)obj) == 0;
     }
 

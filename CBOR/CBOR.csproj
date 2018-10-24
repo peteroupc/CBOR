@@ -1,9 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.0</TargetFramework>
+    <TargetFrameworks>netstandard1.0;net461</TargetFrameworks>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Version>3.4.0</Version>
+    <Version>4.0.0-alpha1</Version>
     <Owners>Peter Occil</Owners>
     <Description>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049.</Description>
     <Summary>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049. </Summary>
@@ -27,16 +28,25 @@ Version 3.4.0-beta1:
 - Several APIs were obsoleted.
 
 Version 3.4.0-alpha1:
+Version 4.0.0-alpha1:
 
-- Add ToObject method for deserializing CBOR objects.
-- Add ICBORObjectConverter interface.
-- Add HasMostOuterTag method to CBORObject class.
-- Add CTAP2 canonicalization support to CBOR object encoding.
-- Added examples in several places in documentation.
+- Remove all APIs obsoleted since version 3.4.  This
+  includes the BigInteger, ExtendedDecimal, and ExtendedFloat APIs,
+  which were renamed and moved to a different library, as well as the
+  ICBORTag and CBORTypeFilter APIs.
+- Changed implementation of FromObject, including imposing a nesting depth
+  limit and supporting a CBORTypeMapper parameter.
+- Property name conversion rules (in PODOptions) were changed
+  in this version with respect to FromObject.  In this sense,
+  PODOptions.RemoveIsPrefix was removed.
+- Certain other changes in CBOR object reading and validation were
+  made; they are largely compatible with previous versions but may be
+  backwards-incompatible in certain rare cases
 
 </PackageReleaseNotes>
     <PackageTags>cbor data serialization binary json</PackageTags>
     <SignAssembly>True</SignAssembly>
+    <PackageTags>cbor data serialization binary json numbers arithmetic</PackageTags>
     <AssemblyOriginatorKeyFile>PeterO.snk</AssemblyOriginatorKeyFile>
     <Title>CBOR (Concise Binary Object Representation)</Title>
     <PackOnBuild>true</PackOnBuild>
@@ -73,5 +83,14 @@ Version 3.4.0-alpha1:
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="PeterO.Numbers" Version="1.1.2" />
+  </ItemGroup>
+</Project>
+  <ItemGroup>
+    <Compile Remove="PeterO\Cbor\CBORTag1.cs" />
+    <Compile Remove="PeterO\Cbor\CBORTag2.cs" />
+    <Compile Remove="PeterO\Cbor\CBORTag30.cs" />
+    <Compile Remove="PeterO\Cbor\CBORTag26.cs" />
+    <Compile Remove="PeterO\Cbor\CBORTag27.cs" />
+    <Compile Remove="PeterO\Cbor\CBORObjectFactory.cs" />
   </ItemGroup>
 </Project>

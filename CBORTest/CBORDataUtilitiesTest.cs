@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using NUnit.Framework;
 using PeterO;
 using PeterO.Cbor;
@@ -327,7 +327,7 @@ Assert.AreEqual(
  Assert.Fail();
  }
       CBORObject cbor = CBORDataUtilities.ParseJSONNumber("2e-2147483648");
-      CBORTestCommon.AssertSer(cbor, "2E-2147483648");
+      CBORTestCommon.AssertJSONSer(cbor, "2E-2147483648");
     if (
   CBORDataUtilities.ParseJSONNumber(
   "0.5e+xyz",
@@ -395,10 +395,10 @@ Assert.AreEqual(
  }
 
       TestCommon.CompareTestEqual(
-  CBORObject.FromObject(230),
+  ToObjectTest.TestToFromObjectRoundTrip(230),
   CBORDataUtilities.ParseJSONNumber("23.0e01"));
       TestCommon.CompareTestEqual(
-  CBORObject.FromObject(23),
+  ToObjectTest.TestToFromObjectRoundTrip(23),
   CBORDataUtilities.ParseJSONNumber("23.0e00"));
       cbor = CBORDataUtilities.ParseJSONNumber(
   "1e+99999999999999999999999999",

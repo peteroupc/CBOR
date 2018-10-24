@@ -1090,6 +1090,8 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
       CBORObject co = CBORObject.FromObject(ao);
       Assert.IsFalse(co.ContainsKey("PrivatePropA"));
       Assert.IsFalse(co.ContainsKey("privatePropA"));
+      Assert.IsFalse(co.ContainsKey("staticPropA"));
+      Assert.IsFalse(co.ContainsKey("StaticPropA"));
       co["privatePropA"] = ToObjectTest.TestToFromObjectRoundTrip(999);
       co["propA"] = ToObjectTest.TestToFromObjectRoundTrip(999);
       co["floatProp"] = ToObjectTest.TestToFromObjectRoundTrip(3.5);
@@ -1189,12 +1191,6 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
     [Test]
     public void TestCharRoundTrip() {
       for (var i = 0; i < 0x10000; ++i) {
-        if ((i & 0xf800) == 0xd800) {
-          // Surrogate code point, not currently
-          // handled well by the current version
-          // of FromObject
-          continue;
-        }
         var c = (char)i;
         TestToFromObjectRoundTrip(c);
       }

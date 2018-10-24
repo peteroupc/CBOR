@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Text;
 using NUnit.Framework;
@@ -58,10 +58,10 @@ namespace Test {
     [Test]
     public void testList() {
       CBORObject beo = CBORObject.NewArray();
-      beo.Add(CBORObject.FromObject(1));
-      beo.Add(CBORObject.FromObject("two"));
-      beo.Add(CBORObject.FromObject(3));
-      beo.Add(CBORObject.FromObject("four"));
+      beo.Add(ToObjectTest.TestToFromObjectRoundTrip(1));
+      beo.Add(ToObjectTest.TestToFromObjectRoundTrip("two"));
+      beo.Add(ToObjectTest.TestToFromObjectRoundTrip(3));
+      beo.Add(ToObjectTest.TestToFromObjectRoundTrip("four"));
       Assert.AreEqual(4, beo.Count);
       Assert.AreEqual(1, beo[0].AsInt64());
       {
@@ -99,10 +99,10 @@ Assert.AreEqual(
     [Test]
     public void testDictionary() {
       CBORObject beo = CBORObject.NewMap();
-      beo["zero"] = CBORObject.FromObject(1);
-      beo["one"] = CBORObject.FromObject("two");
-      beo["two"] = CBORObject.FromObject(3);
-      beo["three"] = CBORObject.FromObject("four");
+      beo["zero"] = ToObjectTest.TestToFromObjectRoundTrip(1);
+      beo["one"] = ToObjectTest.TestToFromObjectRoundTrip("two");
+      beo["two"] = ToObjectTest.TestToFromObjectRoundTrip(3);
+      beo["three"] = ToObjectTest.TestToFromObjectRoundTrip("four");
       Assert.AreEqual(4, beo.Count);
       Assert.AreEqual(1, beo["zero"].AsInt64());
       {

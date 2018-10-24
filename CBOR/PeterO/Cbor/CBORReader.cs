@@ -10,7 +10,6 @@ using System.IO;
 using System.Text;
 using PeterO;
 using PeterO.Numbers;
-#pragma warning disable 618
 
 namespace PeterO.Cbor {
   internal class CBORReader {
@@ -76,7 +75,7 @@ namespace PeterO.Cbor {
   return obj;
     }
 
-    public CBORObject Read(CBORTypeFilter filter) {
+    public CBORObject Read() {
       if (this.depth > 500) {
         throw new CBORException("Too deeply nested");
       }
@@ -84,12 +83,10 @@ namespace PeterO.Cbor {
       if (firstbyte < 0) {
         throw new CBORException("Premature end of data");
       }
-      return this.ReadForFirstByte(firstbyte, filter);
+      return this.ReadForFirstByte(firstbyte);
     }
 
-    public CBORObject ReadForFirstByte(
-  int firstbyte,
-  CBORTypeFilter filter) {
+    public CBORObject ReadForFirstByte(int firstbyte) {
       if (this.depth > 500) {
         throw new CBORException("Too deeply nested");
       }
@@ -106,18 +103,6 @@ namespace PeterO.Cbor {
       if (expectedLength == -1) {
         // if the head byte is invalid
         throw new CBORException("Unexpected data encountered");
-      }
-      if (filter != null) {
-        // Check for valid major types if asked
-        if (!filter.MajorTypeMatches(type)) {
-          throw new CBORException("Unexpected data type encountered");
-        }
-        if (firstbyte >= 0xe0 && firstbyte <= 0xff && firstbyte != 0xf9 &&
-        firstbyte != 0xfa && firstbyte != 0xfb) {
-          if (!filter.NonFPSimpleValueAllowed()) {
-            throw new CBORException("Unexpected data type encountered");
-          }
-        }
       }
       // Check if this represents a fixed object
       CBORObject fixedObject = CBORObject.GetFixedObject(firstbyte);
@@ -141,6 +126,32 @@ namespace PeterO.Cbor {
           this.stringRefs.AddStringIfNeeded(cbor, expectedLength - 1);
         }
         return cbor;
+      }
+      // Special check: Decimal fraction or bigfloat
+      if (firstbyte == 0xc4 || firstbyte == 0xc5) {
+        int nextbyte = this.stream.ReadByte();
+        if (nextbyte != 0x82 && nextbyte != 0x9f) {
+ throw new CBORException("2-item array expected");
+}
+        bool indefArray = nextbyte == 0x9f;
+        nextbyte = this.stream.ReadByte();
+        if (nextbyte >= 0x40) {
+          throw new CBORException("Major type 0 or 1 or bignum expected");
+        }
+        CBORObject exponent = this.ReadForFirstByte(nextbyte);
+        nextbyte = this.stream.ReadByte();
+        if (nextbyte >= 0x40 && nextbyte != 0xc2 && nextbyte != 0xc3) {
+          throw new CBORException("Major type 0 or 1 expected");
+        }
+        CBORObject significand = this.ReadForFirstByte(nextbyte);
+        if (indefArray && this.stream.ReadByte() != 0xff) {
+          throw new CBORException("End of array expected");
+        }
+        CBORObject arr = CBORObject.NewArray()
+          .Add(exponent).Add(significand);
+        return CBORObject.FromObjectAndTag(
+          arr,
+          firstbyte == 0xc4 ? 4 : 5);
       }
       var uadditional = (long)additional;
       EInteger bigintAdditional = EInteger.Zero;
@@ -346,13 +357,9 @@ namespace PeterO.Cbor {
               // Break code was read
               break;
             }
-            if (filter != null && !filter.ArrayIndexAllowed(vtindex)) {
-              throw new CBORException("Array is too long");
-            }
             ++this.depth;
             CBORObject o = this.ReadForFirstByte(
-  headByte,
-  filter == null ? null : filter.GetSubFilter(vtindex));
+  headByte);
             --this.depth;
             cbor.Add(o);
             ++vtindex;
@@ -368,16 +375,13 @@ namespace PeterO.Cbor {
             CBORUtilities.LongToString(uadditional) +
             " is bigger than supported");
         }
-        if (filter != null && !filter.ArrayLengthMatches(uadditional)) {
-          throw new CBORException("Array is too long");
-        }
         if (PropertyMap.ExceedsKnownLength(this.stream, uadditional)) {
           throw new CBORException("Remaining data too small for array length");
         }
         ++this.depth;
         for (long i = 0; i < uadditional; ++i) {
           cbor.Add(
-            this.Read(filter == null ? null : filter.GetSubFilter(i)));
+            this.Read());
         }
         --this.depth;
         return cbor;
@@ -396,8 +400,8 @@ namespace PeterO.Cbor {
               break;
             }
             ++this.depth;
-            CBORObject key = this.ReadForFirstByte(headByte, null);
-            CBORObject value = this.Read(null);
+            CBORObject key = this.ReadForFirstByte(headByte);
+            CBORObject value = this.Read();
             --this.depth;
             if (this.policy == CBORDuplicatePolicy.Disallow) {
               if (cbor.ContainsKey(key)) {
@@ -422,8 +426,8 @@ namespace PeterO.Cbor {
         }
         for (long i = 0; i < uadditional; ++i) {
           ++this.depth;
-          CBORObject key = this.Read(null);
-          CBORObject value = this.Read(null);
+          CBORObject key = this.Read();
+          CBORObject value = this.Read();
           --this.depth;
           if (this.policy == CBORDuplicatePolicy.Disallow) {
             if (cbor.ContainsKey(key)) {
@@ -435,14 +439,9 @@ namespace PeterO.Cbor {
         return cbor;
       }
       if (type == 6) {  // Tagged item
-        ICBORTag taginfo = null;
         var haveFirstByte = false;
         var newFirstByte = -1;
         if (!hasBigAdditional) {
-          if (filter != null && !filter.TagAllowed(uadditional)) {
-            throw new CBORException("Unexpected tag encountered: " +
-                 uadditional);
-          }
           int uad = uadditional >= 257 ? 257 : (uadditional < 0 ? 0 :
             (int)uadditional);
     switch (uad) {
@@ -462,22 +461,10 @@ namespace PeterO.Cbor {
           this.hasSharableObjects = true;
        break;
           }
-
-          taginfo = CBORObject.FindTagConverterLong(uadditional);
-        } else {
-          if (filter != null && !filter.TagAllowed(bigintAdditional)) {
-            throw new CBORException("Unexpected tag encountered: " +
-                 uadditional);
-          }
-          #pragma warning disable 618
-
-          taginfo = CBORObject.FindTagConverter(bigintAdditional);
         }
         ++this.depth;
         CBORObject o = haveFirstByte ? this.ReadForFirstByte(
-  newFirstByte,
-  taginfo == null ? null : taginfo.GetTypeFilter()) :
-        this.Read(taginfo == null ? null : taginfo.GetTypeFilter());
+  newFirstByte) : this.Read();
         --this.depth;
         if (hasBigAdditional) {
           return CBORObject.FromObjectAndTag(o, bigintAdditional);

@@ -558,8 +558,8 @@ namespace PeterO.Cbor {
         while (index < endOffset) {
           char c = s[index];
           if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
-              (c >= '0' && c <= '9') ||
-              ((c & 0x7F) == c && ":-._~!$&'()*+,;=".IndexOf(c) >= 0)) {
+              (c >= '0' && c <= '9') || ((c & 0x7F) == c &&
+               ":-._~!$&'()*+,;=".IndexOf(c) >= 0)) {
             hex = true;
           } else {
             break;
@@ -786,6 +786,42 @@ namespace PeterO.Cbor {
     public static string relativeResolve(string refValue, string baseURI) {
       return relativeResolve(refValue, baseURI, ParseMode.IRIStrict);
     }
+
+public static string directoryPath(string uri) {
+ return directoryPath(uri, ParseMode.IRIStrict);
+}
+
+public static string directoryPath(string uri, ParseMode parseMode) {
+ string ss = splitIRIToStrings(uri, parseMode);
+ if (indexes == null) {
+  return null;
+ }
+ string schemeAndAuthority = s.Substring(0, indexes[4]);
+ string path = s.Substring(indexes[4], indexes[5] - indexes[4]);
+ if (path.Length>0) {
+  for (int i = path.Length-1;i >= 0; --i) {
+    if (path[i]=='/') {
+       return schemeAndAuthority + path.Substring(0, i + 1);
+    }
+  }
+  return schemeAndAuthority + path;
+ } else {
+  return schemeAndAuthority;
+ }
+}
+
+public static string relativeResolveWithinBaseURI(
+  string refValue,
+  string absoluteBaseURI) {
+  string rel = relativeResolve(refValue, absoluteBaseURI);
+  if (rel == null) {
+ return null;
+}
+  string absuri = directoryPath(absoluteBaseURI);
+  string reluri = directoryPath(rel);
+  return (absuri == null || reluri == null ||
+     !absuri.Equals(reluri)) ? (null) : (rel);
+}
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.relativeResolve(System.String,System.String,PeterO.Cbor.URIUtility.ParseMode)"]/*'/>

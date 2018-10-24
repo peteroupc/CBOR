@@ -1,4 +1,4 @@
-/*
+﻿/*
 Written by Peter O. in 2014.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -120,7 +120,7 @@ namespace PeterO.Cbor {
       throw new OverflowException("This object's value is out of range");
     }
 
-    public bool IsZero(object obj) {
+    public bool IsNumberZero(object obj) {
       return (float)obj == 0.0f;
     }
 

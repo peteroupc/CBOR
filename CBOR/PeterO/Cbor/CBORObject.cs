@@ -113,20 +113,12 @@ namespace PeterO.Cbor {
 
     private const int StreamedStringBufferLength = 4096;
 
-    private static readonly IDictionary<Object, ConverterInfo>
-      ValueConverters = new Dictionary<Object, ConverterInfo>();
-
     private static readonly ICBORNumber[] NumberInterfaces = {
       new CBORInteger(), new CBOREInteger(), null, null,
       null, null, null, new CBORSingle(),
       new CBORDouble(), new CBORExtendedDecimal(),
       null, new CBORExtendedFloat(), new CBORExtendedRational()
     };
-
-        #pragma warning disable 618
-    private static readonly IDictionary<EInteger, ICBORTag>
-      ValueTagHandlers = new Dictionary<EInteger, ICBORTag>();
-        #pragma warning restore 618
 
     private static readonly EInteger UInt64MaxValue =
       (EInteger.One << 64) - EInteger.One;
@@ -203,27 +195,6 @@ namespace PeterO.Cbor {
       get {
         return (this.ItemType == CBORObjectTypeArray) ? this.AsList().Count :
           ((this.ItemType == CBORObjectTypeMap) ? this.AsMap().Count : 0);
-      }
-    }
-
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.InnermostTag"]/*'/>
-    [Obsolete("Use MostInnerTag instead.")]
-    public BigInteger InnermostTag {
-      get {
-        EInteger ei = this.MostInnerTag;
-        String eis = ei.ToString();
-        return BigInteger.fromString(eis);
-      }
-    }
-
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.OutermostTag"]/*'/>
-    [Obsolete("Use MostOuterTag instead.")]
-    public BigInteger OutermostTag {
-      get {
-        EInteger ei = this.MostOuterTag;
-        return BigInteger.fromString(this.MostOuterTag.ToString());
       }
     }
 
@@ -316,8 +287,8 @@ namespace PeterO.Cbor {
     /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.IsZero"]/*'/>
     public bool IsZero {
       get {
-        ICBORNumber cn = NumberInterfaces[this.ItemType];
-        return cn != null && cn.IsZero(this.ThisItem);
+        ICBORNumber cniface = NumberInterfaces[this.ItemType];
+        return cniface != null && cniface.IsNumberZero(this.ThisItem);
       }
     }
 
@@ -458,7 +429,12 @@ namespace PeterO.Cbor {
           }
           return list[index];
         }
-        throw new InvalidOperationException("Not an array");
+        if (this.ItemType == CBORObjectTypeMap) {
+          IDictionary<CBORObject, CBORObject> map = this.AsMap();
+          CBORObject key = CBORObject.FromObject(index);
+          return (!map.ContainsKey(key)) ? null : map[key];
+        }
+        throw new InvalidOperationException("Not an array or map");
       }
 
       set {
@@ -467,11 +443,47 @@ namespace PeterO.Cbor {
             throw new ArgumentNullException(nameof(value));
           }
           IList<CBORObject> list = this.AsList();
+          if (index < 0 || index >= list.Count) {
+            throw new ArgumentOutOfRangeException(nameof(index));
+          }
           list[index] = value;
+        } else if (this.ItemType == CBORObjectTypeMap) {
+          IDictionary<CBORObject, CBORObject> map = this.AsMap();
+          CBORObject key = CBORObject.FromObject(index);
+          map[key] = value;
         } else {
-          throw new InvalidOperationException("Not an array");
+          throw new InvalidOperationException("Not an array or map");
         }
       }
+    }
+
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.GetOrDefault(System.Object,PeterO.Cbor.CBORObject)"]/*'/>
+    public CBORObject GetOrDefault(object key, CBORObject defaultValue) {
+        if (this.ItemType == CBORObjectTypeArray) {
+int index = 0;
+if (key is int) {
+  index = (int)key;
+} else {
+  CBORObject cborkey = CBORObject.FromObject(key);
+    if (!cborkey.IsIntegral) {
+return defaultValue;
+}
+    if (!cborkey.CanTruncatedIntFitInInt32()) {
+return defaultValue;
+}
+          index = cborkey.AsInt32();
+}
+          IList<CBORObject> list = this.AsList();
+    return (index < 0 || index >= list.Count) ? defaultValue :
+            list[index];
+        }
+        if (this.ItemType == CBORObjectTypeMap) {
+          IDictionary<CBORObject, CBORObject> map = this.AsMap();
+          CBORObject ckey = CBORObject.FromObject(key);
+          return (!map.ContainsKey(ckey)) ? defaultValue : map[ckey];
+        }
+        return defaultValue;
     }
 
     /// <include file='../../docs.xml'
@@ -485,7 +497,21 @@ namespace PeterO.Cbor {
           IDictionary<CBORObject, CBORObject> map = this.AsMap();
           return (!map.ContainsKey(key)) ? null : map[key];
         }
-        throw new InvalidOperationException("Not a map");
+        if (this.ItemType == CBORObjectTypeArray) {
+    if (!key.IsIntegral) {
+ throw new ArgumentException("Not an integer");
+}
+    if (!key.CanTruncatedIntFitInInt32()) {
+ throw new ArgumentOutOfRangeException("index");
+}
+          IList<CBORObject> list = this.AsList();
+          int index = key.AsInt32();
+          if (index < 0 || index >= list.Count) {
+ throw new ArgumentOutOfRangeException("index");
+}
+          return list[index];
+        }
+        throw new InvalidOperationException("Not an array or map");
       }
 
       set {
@@ -498,9 +524,24 @@ namespace PeterO.Cbor {
         if (this.ItemType == CBORObjectTypeMap) {
           IDictionary<CBORObject, CBORObject> map = this.AsMap();
           map[key] = value;
-        } else {
-          throw new InvalidOperationException("Not a map");
+          return;
         }
+        if (this.ItemType == CBORObjectTypeArray) {
+    if (!key.IsIntegral) {
+ throw new ArgumentException("Not an integer");
+}
+    if (!key.CanTruncatedIntFitInInt32()) {
+ throw new ArgumentOutOfRangeException("index");
+}
+          IList<CBORObject> list = this.AsList();
+          int index = key.AsInt32();
+          if (index < 0 || index >= list.Count) {
+ throw new ArgumentOutOfRangeException("index");
+}
+          list[index] = value;
+          return;
+        }
+        throw new InvalidOperationException("Not an array or map");
       }
     }
 
@@ -533,77 +574,15 @@ namespace PeterO.Cbor {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AddConverter``1(System.Type,PeterO.Cbor.ICBORConverter{``0})"]/*'/>
-    [Obsolete("To be replaced with the AddConverter method of CBORTypeMapper.")]
-    public static void AddConverter<T>(Type type, ICBORConverter<T> converter) {
-      if (type == null) {
-        throw new ArgumentNullException(nameof(type));
-      }
-      if (converter == null) {
-        throw new ArgumentNullException(nameof(converter));
-      }
-      ConverterInfo ci = new CBORObject.ConverterInfo();
-      ci.Converter = converter;
-      ci.ToObject = PropertyMap.FindOneArgumentMethod(
-        converter,
-        "ToCBORObject",
-        type);
-      if (ci.ToObject == null) {
-        throw new ArgumentException(
-          "Converter doesn't contain a proper ToCBORObject method");
-      }
-      lock (ValueConverters) {
-        ValueConverters[type] = ci;
-      }
-    }
-
-    /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Addition(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]/*'/>
     public static CBORObject Addition(CBORObject first, CBORObject second) {
       return CBORObjectMath.Addition(first, second);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AddTagHandler(PeterO.BigInteger,PeterO.Cbor.ICBORTag)"]/*'/>
-  [Obsolete("May be removed in the future without replacement. Not as useful as ICBORConverters and ICBORObjectConverters for FromObject and ToObject. Moreover, registering tag handlers as this method does may tie them to the lifetime of the application.")]
-    public static void AddTagHandler(BigInteger bigintTag, ICBORTag handler) {
-      if (bigintTag == null) {
-        throw new ArgumentNullException(nameof(bigintTag));
-      }
-      if (handler == null) {
-        throw new ArgumentNullException(nameof(handler));
-      }
-      AddTagHandler(PropertyMap.FromLegacy(bigintTag), handler);
-    }
-
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AddTagHandler(PeterO.Numbers.EInteger,PeterO.Cbor.ICBORTag)"]/*'/>
-  [Obsolete("May be removed in the future without replacement. Not as useful as ICBORConverters and ICBORObjectConverters for FromObject and ToObject. Moreover, registering tag handlers as this method does may tie them to the lifetime of the application.")]
-    public static void AddTagHandler(EInteger bigintTag, ICBORTag handler) {
-      if (bigintTag == null) {
-        throw new ArgumentNullException(nameof(bigintTag));
-      }
-      if (handler == null) {
-        throw new ArgumentNullException(nameof(handler));
-      }
-      if (bigintTag.Sign < 0) {
-        throw new ArgumentException("bigintTag.Sign (" +
-                    bigintTag.Sign + ") is less than 0");
-      }
-      if (bigintTag.GetSignedBitLength() > 64) {
-        throw new ArgumentException("bigintTag.bitLength (" +
-                    (long)bigintTag.GetSignedBitLength() + ") is more than " +
-                    "64");
-      }
-      lock (ValueTagHandlers) {
-        ValueTagHandlers[bigintTag] = handler;
-      }
-    }
-
-    /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.DecodeFromBytes(System.Byte[])"]/*'/>
     public static CBORObject DecodeFromBytes(byte[] data) {
-      return DecodeFromBytes(data, new CBOREncodeOptions(true, true));
+      return DecodeFromBytes(data, CBOREncodeOptions.Default);
     }
 
     /// <include file='../../docs.xml'
@@ -659,7 +638,7 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromJSONString(System.String)"]/*'/>
     public static CBORObject FromJSONString(string str) {
-      return FromJSONString(str, new CBOREncodeOptions(true, true));
+      return FromJSONString(str, CBOREncodeOptions.Default);
     }
 
     /// <include file='../../docs.xml'
@@ -755,7 +734,7 @@ if (depth > 100) {
         return this;
       }
       return t.Equals(typeof(string)) ? this.AsString() :
-        PropertyMap2.TypeToObject(this, t, mapper, options, depth);
+        PropertyMap.TypeToObject(this, t, mapper, options, depth);
     }
 
     /// <include file='../../docs.xml'
@@ -772,14 +751,6 @@ if (depth > 100) {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.BigInteger)"]/*'/>
-    [Obsolete("Use the EInteger version of this method.")]
-    public static CBORObject FromObject(BigInteger bigintValue) {
-      return ((object)bigintValue == (object)null) ? CBORObject.Null :
-        FromObject(PropertyMap.FromLegacy(bigintValue));
-    }
-
-    /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Numbers.EInteger)"]/*'/>
     public static CBORObject FromObject(EInteger bigintValue) {
       if ((object)bigintValue == (object)null) {
@@ -792,14 +763,6 @@ if (depth > 100) {
           (long)(EInteger)bigintValue) : (new CBORObject(
         CBORObjectTypeBigInteger,
         bigintValue));
-    }
-
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.ExtendedFloat)"]/*'/>
-    [Obsolete("Use the EFloat version of this method instead.")]
-    public static CBORObject FromObject(ExtendedFloat bigValue) {
-      return ((object)bigValue == (object)null) ? CBORObject.Null :
-        FromObject(PropertyMap.FromLegacy(bigValue));
     }
 
     /// <include file='../../docs.xml'
@@ -822,14 +785,6 @@ if (depth > 100) {
         new CBORObject(
           CBORObjectTypeExtendedFloat,
           bigValue);
-    }
-
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.ExtendedRational)"]/*'/>
-    [Obsolete("Use the ERational version of this method instead.")]
-    public static CBORObject FromObject(ExtendedRational bigValue) {
-      return ((object)bigValue == (object)null) ? CBORObject.Null :
-        FromObject(PropertyMap.FromLegacy(bigValue));
     }
 
     /// <include file='../../docs.xml'
@@ -875,14 +830,6 @@ if (depth > 100) {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.ExtendedDecimal)"]/*'/>
-    [Obsolete("Use the EDecimal version of this method instead.")]
-    public static CBORObject FromObject(ExtendedDecimal otherValue) {
-      return ((object)otherValue == (object)null) ? CBORObject.Null :
-        FromObject(PropertyMap.FromLegacy(otherValue));
-    }
-
-    /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.String)"]/*'/>
     public static CBORObject FromObject(string strValue) {
       if (strValue == null) {
@@ -907,13 +854,6 @@ if (depth > 100) {
     public static CBORObject FromObject(short value) {
       return (value >= 0 && value < 24) ? valueFixedObjects[value] :
         FromObject((long)value);
-    }
-
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Char)"]/*'/>
-    public static CBORObject FromObject(char value) {
-      char[] valueChar = { value };
-      return FromObject(new String(valueChar));
     }
 
     /// <include file='../../docs.xml'
@@ -957,11 +897,11 @@ if (depth > 100) {
       if (array == null) {
         return CBORObject.Null;
       }
-      IList<CBORObject> list = new List<CBORObject>();
+      CBORObject cbor = CBORObject.NewArray();
       foreach (CBORObject i in array) {
-        list.Add(FromObject(i));
+        cbor.Add(i);
       }
-      return new CBORObject(CBORObjectTypeArray, list);
+      return cbor;
     }
 
     /// <include file='../../docs.xml'
@@ -985,52 +925,9 @@ if (depth > 100) {
       }
       IList<CBORObject> list = new List<CBORObject>();
       foreach (long i in array) {
-        // Console.WriteLine(i);
         list.Add(FromObject(i));
       }
       return new CBORObject(CBORObjectTypeArray, list);
-    }
-
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject``1(System.Collections.Generic.IList{``0})"]/*'/>
-    public static CBORObject FromObject<T>(IList<T> value) {
-      if (value == null) {
-        return CBORObject.Null;
-      }
-      CBORObject retCbor = CBORObject.NewArray();
-      foreach (T i in (IList<T>)value) {
-        retCbor.Add(CBORObject.FromObject(i));
-      }
-      return retCbor;
-    }
-
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject``1(System.Collections.Generic.IEnumerable{``0})"]/*'/>
-    public static CBORObject FromObject<T>(IEnumerable<T> value) {
-      if (value == null) {
-        return CBORObject.Null;
-      }
-      CBORObject retCbor = CBORObject.NewArray();
-      foreach (T i in (IEnumerable<T>)value) {
-        retCbor.Add(CBORObject.FromObject(i));
-      }
-      return retCbor;
-    }
-
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject``2(System.Collections.Generic.IDictionary{``0,``1})"]/*'/>
-    public static CBORObject FromObject<TKey, TValue>(IDictionary<TKey,
-                    TValue> dic) {
-      if (dic == null) {
-        return CBORObject.Null;
-      }
-      var map = new Dictionary<CBORObject, CBORObject>();
-      foreach (KeyValuePair<TKey, TValue> entry in dic) {
-        CBORObject key = FromObject(entry.Key);
-        CBORObject value = FromObject(entry.Value);
-        map[key] = value;
-      }
-      return new CBORObject(CBORObjectTypeMap, map);
     }
 
     /// <include file='../../docs.xml'
@@ -1044,11 +941,55 @@ if (depth > 100) {
     public static CBORObject FromObject(
   object obj,
   PODOptions options) {
+      return FromObject(obj, options, null, 0);
+    }
+
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Object,PeterO.Cbor.CBORTypeMapper)"]/*'/>
+    public static CBORObject FromObject(
+  object obj,
+  CBORTypeMapper mapper) {
+      if (mapper == null) {
+        throw new ArgumentNullException(nameof(mapper));
+      }
+      return FromObject(obj, PODOptions.Default, mapper, 0);
+    }
+
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Object,PeterO.Cbor.CBORTypeMapper,PeterO.Cbor.PODOptions)"]/*'/>
+    public static CBORObject FromObject(
+  object obj,
+  CBORTypeMapper mapper,
+  PODOptions options) {
+      if (mapper == null) {
+        throw new ArgumentNullException(nameof(mapper));
+      }
+      return FromObject(obj, options, mapper, 0);
+    }
+
+    internal static CBORObject FromObject(
+  object obj,
+  PODOptions options,
+  CBORTypeMapper mapper,
+  int depth) {
       if (options == null) {
         throw new ArgumentNullException(nameof(options));
       }
+   if (depth >= 100) {
+    throw new CBORException("Nesting depth too high");
+   }
       if (obj == null) {
         return CBORObject.Null;
+      }
+      if (obj is CBORObject) {
+        return FromObject((CBORObject)obj);
+      }
+      CBORObject objret;
+      if (mapper != null) {
+        objret = mapper.ConvertWithConverter(obj);
+        if (objret != null) {
+          return objret;
+        }
       }
       if (obj is string) {
         return FromObject((string)obj);
@@ -1058,9 +999,6 @@ if (depth > 100) {
       }
       if (obj is long) {
         return FromObject((long)obj);
-      }
-      if (obj is CBORObject) {
-        return FromObject((CBORObject)obj);
       }
       var eif = obj as EInteger;
       if (eif != null) {
@@ -1078,29 +1016,11 @@ if (depth > 100) {
       if (erf != null) {
         return FromObject(erf);
       }
-#pragma warning disable 618
-      var bi = obj as BigInteger;
-      if (bi != null) {
-        return FromObject(bi);
-      }
-      var df = obj as ExtendedDecimal;
-      if (df != null) {
-        return FromObject(df);
-      }
-      var bf = obj as ExtendedFloat;
-      if (bf != null) {
-        return FromObject(bf);
-      }
-      var rf = obj as ExtendedRational;
-      if (rf != null) {
-        return FromObject(rf);
-      }
-#pragma warning restore 618
       if (obj is short) {
         return FromObject((short)obj);
       }
       if (obj is char) {
-        return FromObject((char)obj);
+        return FromObject((int)(char)obj);
       }
       if (obj is bool) {
         return FromObject((bool)obj);
@@ -1126,9 +1046,6 @@ if (depth > 100) {
       if (obj is decimal) {
         return FromObject((decimal)obj);
       }
-      if (obj is Enum) {
-        return FromObject(PropertyMap.EnumToObject((Enum)obj));
-      }
       if (obj is double) {
         return FromObject((double)obj);
       }
@@ -1136,7 +1053,6 @@ if (depth > 100) {
       if (bytearr != null) {
         return FromObject(bytearr);
       }
-      CBORObject objret;
       if (obj is System.Collections.IDictionary) {
         // IDictionary appears first because IDictionary includes IEnumerable
         objret = CBORObject.NewMap();
@@ -1145,48 +1061,58 @@ if (depth > 100) {
         foreach (object keyPair in (System.Collections.IDictionary)objdic) {
           System.Collections.DictionaryEntry
             kvp = (System.Collections.DictionaryEntry)keyPair;
-          CBORObject objKey = CBORObject.FromObject(kvp.Key, options);
-          objret[objKey] = CBORObject.FromObject(kvp.Value, options);
+    CBORObject objKey = CBORObject.FromObject(
+  kvp.Key,
+  options,
+  mapper,
+  depth + 1);
+ objret[objKey] = CBORObject.FromObject(
+  kvp.Value,
+  options,
+  mapper,
+  depth + 1);
         }
         return objret;
       }
       if (obj is Array) {
-        return PropertyMap.FromArray(obj, options);
+        return PropertyMap.FromArray(obj, options, mapper, depth);
       }
       if (obj is System.Collections.IEnumerable) {
         objret = CBORObject.NewArray();
         foreach (object element in (System.Collections.IEnumerable)obj) {
-          objret.Add(CBORObject.FromObject(element, options));
+        objret.Add(
+  CBORObject.FromObject(
+  element,
+  options,
+  mapper,
+  depth + 1));
         }
         return objret;
       }
-      objret = ConvertWithConverter(obj);
-      if (objret != null) {
-        return objret;
+      if (obj is Enum) {
+        return FromObject(PropertyMap.EnumToObjectAsInteger((Enum)obj));
+      }
+      if (obj is DateTime) {
+        return new CBORDateConverter().ToCBORObject((DateTime)obj);
+      }
+      if (obj is Uri) {
+        return new CBORUriConverter().ToCBORObject((Uri)obj);
+      }
+      if (obj is Guid) {
+        return new CBORUuidConverter().ToCBORObject((Guid)obj);
       }
       objret = CBORObject.NewMap();
-        #pragma warning disable 618
       foreach (KeyValuePair<string, object> key in
                PropertyMap.GetProperties(
                  obj,
-                 options.RemoveIsPrefix,
                  options.UseCamelCase)) {
-        objret[key.Key] = CBORObject.FromObject(key.Value, options);
+objret[key.Key] = CBORObject.FromObject(
+  key.Value,
+  options,
+  mapper,
+  depth + 1);
       }
-        #pragma warning restore 618
       return objret;
-    }
-
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObjectAndTag(System.Object,PeterO.BigInteger)"]/*'/>
-    [Obsolete("Use the EInteger version instead.")]
-    public static CBORObject FromObjectAndTag(
-      object valueOb,
-      BigInteger bigintTag) {
-      if (bigintTag == null) {
-        throw new ArgumentNullException(nameof(bigintTag));
-      }
-      return FromObjectAndTag(valueOb, PropertyMap.FromLegacy(bigintTag));
     }
 
     /// <include file='../../docs.xml'
@@ -1222,18 +1148,10 @@ if (depth > 100) {
           tagHigh = unchecked(tagHigh | (((int)b) << (i * 8)));
         }
         var c2 = new CBORObject(c, tagLow, tagHigh);
-        #pragma warning disable 618
-        ICBORTag tagconv = FindTagConverter(bigintTag);
-        #pragma warning restore 618
-        if (tagconv != null) {
-          c2 = tagconv.ValidateObject(c2);
-        }
         return c2;
       }
     }
 
-      #pragma warning disable 612
-      #pragma warning disable 618
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObjectAndTag(System.Object,System.Int32)"]/*'/>
     public static CBORObject FromObjectAndTag(
@@ -1243,13 +1161,13 @@ if (depth > 100) {
         throw new ArgumentException("smallTag (" + smallTag +
                     ") is less than 0");
       }
-      ICBORTag tagconv = FindTagConverter(smallTag);
       CBORObject c = FromObject(valueObValue);
       c = new CBORObject(c, smallTag, 0);
-      return (tagconv != null) ? tagconv.ValidateObject(c) : c;
+      if (smallTag <= 265) {
+       c = CBORNativeConvert.ConvertToNativeObject(c);
+      }
+      return c;
     }
-      #pragma warning restore 618
-      #pragma warning restore 612
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromSimpleValue(System.Int32)"]/*'/>
@@ -1289,7 +1207,9 @@ if (depth > 100) {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.NewMap"]/*'/>
     public static CBORObject NewMap() {
-      return FromObject(new Dictionary<CBORObject, CBORObject>());
+      return new CBORObject(
+        CBORObjectTypeMap,
+        new Dictionary<CBORObject, CBORObject>());
     }
 
     /// <include file='../../docs.xml'
@@ -1300,7 +1220,7 @@ if (depth > 100) {
       }
       try {
         var reader = new CBORReader(stream);
-        return reader.ResolveSharedRefsIfNeeded(reader.Read(null));
+        return reader.ResolveSharedRefsIfNeeded(reader.Read());
       } catch (IOException ex) {
         throw new CBORException("I/O error occurred.", ex);
       }
@@ -1317,7 +1237,7 @@ if (depth > 100) {
         if (!options.AllowDuplicateKeys) {
           reader.DuplicatePolicy = CBORReader.CBORDuplicatePolicy.Disallow;
         }
-        return reader.ResolveSharedRefsIfNeeded(reader.Read(null));
+        return reader.ResolveSharedRefsIfNeeded(reader.Read());
       } catch (IOException ex) {
         throw new CBORException("I/O error occurred.", ex);
       }
@@ -1326,7 +1246,7 @@ if (depth > 100) {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ReadJSON(System.IO.Stream)"]/*'/>
     public static CBORObject ReadJSON(Stream stream) {
-      return ReadJSON(stream, new CBOREncodeOptions(true, true));
+      return ReadJSON(stream, CBOREncodeOptions.Default);
     }
 
     /// <include file='../../docs.xml'
@@ -1377,11 +1297,7 @@ if (depth > 100) {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.String,System.IO.Stream)"]/*'/>
     public static void Write(string str, Stream stream) {
-      if (stream == null) {
-        throw new ArgumentNullException(nameof(stream));
-      }
-      // TODO: Use CBOREncodeOptions.Default in future versions
-      Write(str, stream, new CBOREncodeOptions(true, true));
+      Write(str, stream, CBOREncodeOptions.Default);
     }
 
     /// <include file='../../docs.xml'
@@ -1409,20 +1325,6 @@ if (depth > 100) {
           WriteStreamedString(str, stream);
         }
       }
-    }
-
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.ExtendedFloat,System.IO.Stream)"]/*'/>
-    [Obsolete("Pass an EFloat to the Write method instead.")]
-    public static void Write(ExtendedFloat bignum, Stream stream) {
-      if (stream == null) {
-        throw new ArgumentNullException(nameof(stream));
-      }
-      if (bignum == null) {
-        stream.WriteByte(0xf6);
-        return;
-      }
-      Write(PropertyMap.FromLegacy(bignum), stream);
     }
 
     /// <include file='../../docs.xml'
@@ -1459,20 +1361,6 @@ if (depth > 100) {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.ExtendedRational,System.IO.Stream)"]/*'/>
-    [Obsolete("Pass an ERational to the Write method instead.")]
-    public static void Write(ExtendedRational rational, Stream stream) {
-      if (stream == null) {
-        throw new ArgumentNullException(nameof(stream));
-      }
-      if (rational == null) {
-        stream.WriteByte(0xf6);
-        return;
-      }
-      Write(PropertyMap.FromLegacy(rational), stream);
-    }
-
-    /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.ERational,System.IO.Stream)"]/*'/>
     public static void Write(ERational rational, Stream stream) {
       if (stream == null) {
@@ -1495,20 +1383,6 @@ if (depth > 100) {
       stream.WriteByte(0x82);  // array, length 2
       Write(rational.Numerator, stream);
       Write(rational.Denominator, stream);
-    }
-
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.ExtendedDecimal,System.IO.Stream)"]/*'/>
-    [Obsolete("Pass an EDecimal to the Write method instead.")]
-    public static void Write(ExtendedDecimal bignum, Stream stream) {
-      if (stream == null) {
-        throw new ArgumentNullException(nameof(stream));
-      }
-      if (bignum == null) {
-        stream.WriteByte(0xf6);
-        return;
-      }
-      Write(PropertyMap.FromLegacy(bignum), stream);
     }
 
     /// <include file='../../docs.xml'
@@ -1542,20 +1416,6 @@ if (depth > 100) {
         Write(bignum.Exponent, stream);
         Write(bignum.Mantissa, stream);
       }
-    }
-
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.BigInteger,System.IO.Stream)"]/*'/>
-    [Obsolete("Pass an EInteger to the Write method instead.")]
-    public static void Write(BigInteger bigint, Stream stream) {
-      if (stream == null) {
-        throw new ArgumentNullException(nameof(stream));
-      }
-      if ((object)bigint == (object)null) {
-        stream.WriteByte(0xf6);
-        return;
-      }
-      Write(PropertyMap.FromLegacy(bigint), stream);
     }
 
     /// <include file='../../docs.xml'
@@ -1701,16 +1561,6 @@ if (depth > 100) {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Char,System.IO.Stream)"]/*'/>
-    public static void Write(char value, Stream stream) {
-      if (value >= 0xd800 && value < 0xe000) {
-        throw new ArgumentException("Value is a surrogate code point.");
-      }
-      char[] valueChar = { value };
-      Write(new String(valueChar), stream);
-    }
-
-    /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Boolean,System.IO.Stream)"]/*'/>
     public static void Write(bool value, Stream stream) {
       if (stream == null) {
@@ -1780,8 +1630,7 @@ if (depth > 100) {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Object,System.IO.Stream)"]/*'/>
     public static void Write(object objValue, Stream stream) {
-      // TODO: Use CBOREncodeOptions.Default in future versions
-      Write(objValue, stream, new CBOREncodeOptions(true, true));
+      Write(objValue, stream, CBOREncodeOptions.Default);
     }
 
     /// <include file='../../docs.xml'
@@ -1923,19 +1772,6 @@ if (depth > 100) {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsBigInteger"]/*'/>
-    [Obsolete("Use the AsEInteger method instead.")]
-    public BigInteger AsBigInteger() {
-      ICBORNumber cn = NumberInterfaces[this.ItemType];
-      if (cn == null) {
-        throw new InvalidOperationException("Not a number type");
-      }
-      return BigInteger.fromBytes(
-        cn.AsEInteger(this.ThisItem).ToBytes(true),
-        true);
-    }
-
-    /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsEInteger"]/*'/>
     public EInteger AsEInteger() {
       // TODO: Consider returning null if this object is null
@@ -1970,13 +1806,6 @@ if (depth > 100) {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsExtendedDecimal"]/*'/>
-    [Obsolete("Use AsEDecimal instead.")]
-    public ExtendedDecimal AsExtendedDecimal() {
-      return ExtendedDecimal.FromString(this.AsEDecimal().ToString());
-    }
-
-    /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsEDecimal"]/*'/>
     public EDecimal AsEDecimal() {
       // TODO: Consider returning null if this object is null
@@ -1989,13 +1818,6 @@ if (depth > 100) {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsExtendedFloat"]/*'/>
-    [Obsolete("Use AsEFloat instead.")]
-    public ExtendedFloat AsExtendedFloat() {
-      return ExtendedFloat.FromString(this.AsEFloat().ToString());
-    }
-
-    /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsEFloat"]/*'/>
     public EFloat AsEFloat() {
       // TODO: Consider returning null if this object is null
@@ -2005,13 +1827,6 @@ if (depth > 100) {
         throw new InvalidOperationException("Not a number type");
       }
       return cn.AsExtendedFloat(this.ThisItem);
-    }
-
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsExtendedRational"]/*'/>
-    [Obsolete("Use AsERational instead.")]
-    public ExtendedRational AsExtendedRational() {
-      return PropertyMap.ToLegacy(this.AsERational());
     }
 
     /// <include file='../../docs.xml'
@@ -2342,11 +2157,16 @@ if (depth > 100) {
     }
 
     /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ContainsKey(System.Object)"]/*'/>
+    public bool ContainsKey(object objKey) {
+      return (this.ItemType == CBORObjectTypeMap) ?
+        this.ContainsKey(CBORObject.FromObject(objKey)) : false;
+    }
+
+    /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ContainsKey(PeterO.Cbor.CBORObject)"]/*'/>
     public bool ContainsKey(CBORObject key) {
-      if (key == null) {
-        throw new ArgumentNullException(nameof(key));
-      }
+      key = key ?? CBORObject.Null;
       if (this.ItemType == CBORObjectTypeMap) {
         IDictionary<CBORObject, CBORObject> map = this.AsMap();
         return map.ContainsKey(key);
@@ -2357,12 +2177,11 @@ if (depth > 100) {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ContainsKey(System.String)"]/*'/>
     public bool ContainsKey(string key) {
-      if (key == null) {
-        throw new ArgumentNullException(nameof(key));
-      }
       if (this.ItemType == CBORObjectTypeMap) {
+CBORObject ckey = key == null ? CBORObject.Null :
+          CBORObject.FromObject(key);
         IDictionary<CBORObject, CBORObject> map = this.AsMap();
-        return map.ContainsKey(CBORObject.FromObject(key));
+        return map.ContainsKey(ckey);
       }
       return false;
     }
@@ -2370,7 +2189,7 @@ if (depth > 100) {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.EncodeToBytes"]/*'/>
     public byte[] EncodeToBytes() {
-      return this.EncodeToBytes(new CBOREncodeOptions(true, true));
+      return this.EncodeToBytes(CBOREncodeOptions.Default);
     }
 
     /// <include file='../../docs.xml'
@@ -2603,21 +2422,6 @@ if (depth > 100) {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.GetTags"]/*'/>
-    [Obsolete("Use the GetAllTags method instead.")]
-    public BigInteger[] GetTags() {
-      EInteger[] etags = this.GetAllTags();
-      if (etags.Length == 0) {
-        return new BigInteger[0];
-      }
-      var bigret = new BigInteger[etags.Length];
-      for (var i = 0; i < bigret.Length; ++i) {
-        bigret[i] = PropertyMap.ToLegacy(etags[i]);
-      }
-      return bigret;
-    }
-
-    /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.GetAllTags"]/*'/>
     public EInteger[] GetAllTags() {
       if (!this.IsTagged) {
@@ -2638,8 +2442,9 @@ if (depth > 100) {
       return new[] { LowHighToEInteger(this.tagLow, this.tagHigh) };
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasTag(System.Int32)"]/*'/>
+    /// <summary>Not documented yet.</summary>
+    /// <param name='tagValue'>Not documented yet.</param>
+    /// <returns>A Boolean object.</returns>
  public bool HasMostOuterTag(int tagValue) {
       if (tagValue < 0) {
         throw new ArgumentException("tagValue (" + tagValue +
@@ -2648,8 +2453,11 @@ if (depth > 100) {
  return this.IsTagged && this.tagHigh == 0 && this.tagLow == tagValue;
  }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasTag(PeterO.BigInteger)"]/*'/>
+    /// <summary>Not documented yet.</summary>
+    /// <param name='bigTagValue'>Not documented yet.</param>
+    /// <returns>A Boolean object.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='bigTagValue'/> is null.</exception>
  public bool HasMostOuterTag(EInteger bigTagValue) {
     if (bigTagValue == null) {
   throw new ArgumentNullException(nameof(bigTagValue));
@@ -2683,18 +2491,6 @@ if (depth > 100) {
         }
 #endif
       }
-    }
-
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasTag(PeterO.BigInteger)"]/*'/>
-    [Obsolete("Use the EInteger version of this method.")]
-    public bool HasTag(BigInteger bigTagValue) {
-      if (bigTagValue == null) {
-        throw new ArgumentNullException(nameof(bigTagValue));
-      }
-      return this.HasTag(EInteger.FromBytes(
-        bigTagValue.toBytes(true),
-        true));
     }
 
     /// <include file='../../docs.xml'
@@ -2804,10 +2600,6 @@ if (depth > 100) {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Remove(System.Object)"]/*'/>
     public bool Remove(object obj) {
-      if (obj == null) {
-        throw new ArgumentNullException(nameof(obj));
-      }
-      // TODO: Convert null to CBORObject.Null in next major version
       return this.Remove(CBORObject.FromObject(obj));
     }
 
@@ -2871,8 +2663,26 @@ if (depth > 100) {
         } else {
           map.Add(mapKey, mapValue);
         }
+      } else if (this.ItemType == CBORObjectTypeArray) {
+        if (key is int) {
+        IList<CBORObject> list = this.AsList();
+        var index = (int)key;
+if (index < 0 || index >= this.Count) {
+ throw new ArgumentOutOfRangeException("key");
+}
+        CBORObject mapValue;
+        if (valueOb == null) {
+          mapValue = CBORObject.Null;
+        } else {
+          mapValue = valueOb as CBORObject;
+          mapValue = mapValue ?? CBORObject.FromObject(valueOb);
+        }
+        list[index] = mapValue;
+        } else {
+          throw new ArgumentException("Is an array, but key is not int");
+        }
       } else {
-        throw new InvalidOperationException("Not a map");
+        throw new InvalidOperationException("Not a map or array");
       }
       return this;
     }
@@ -3255,7 +3065,7 @@ if (depth > 100) {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)"]/*'/>
     public void WriteTo(Stream stream) {
-      this.WriteTo(stream, new CBOREncodeOptions(true, true));
+      this.WriteTo(stream, CBOREncodeOptions.Default);
     }
 
     /// <include file='../../docs.xml'
@@ -3350,45 +3160,6 @@ if (depth > 100) {
           }
       }
     }
-
-        #pragma warning disable 618
-    internal static ICBORTag FindTagConverter(EInteger bigintTag) {
-      if (TagHandlersEmpty()) {
-        AddTagHandler((EInteger)2, new CBORTag2());
-        AddTagHandler((EInteger)3, new CBORTag3());
-        AddTagHandler((EInteger)4, new CBORTag4());
-        AddTagHandler((EInteger)5, new CBORTag5());
-        AddTagHandler((EInteger)264, new CBORTag4(true));
-        AddTagHandler((EInteger)265, new CBORTag5(true));
-        AddTagHandler((EInteger)25, new CBORTagUnsigned());
-        AddTagHandler((EInteger)29, new CBORTagUnsigned());
-        AddTagHandler((EInteger)256, new CBORTagAny());
-        AddTagHandler(EInteger.Zero, new CBORTag0());
-        AddTagHandler((EInteger)32, new CBORTag32());
-        AddTagHandler((EInteger)33, new CBORTagGenericString());
-        AddTagHandler((EInteger)34, new CBORTagGenericString());
-        AddTagHandler((EInteger)35, new CBORTagGenericString());
-        AddTagHandler((EInteger)36, new CBORTagGenericString());
-        AddTagHandler((EInteger)37, new CBORTag37());
-        AddTagHandler((EInteger)30, new CBORTag30());
-      }
-      lock (ValueTagHandlers) {
-        if (ValueTagHandlers.ContainsKey(bigintTag)) {
-          return ValueTagHandlers[bigintTag];
-        }
-#if DEBUG
-        if (bigintTag.Equals((EInteger)2)) {
-          throw new InvalidOperationException("Expected valid tag handler");
-        }
-#endif
-        return null;
-      }
-    }
-
-    internal static ICBORTag FindTagConverterLong(long tagLong) {
-      return FindTagConverter((EInteger)tagLong);
-    }
-        #pragma warning restore 618
 
     internal static CBORObject FromRaw(string str) {
       return new CBORObject(CBORObjectTypeTextString, str);
@@ -3525,11 +3296,11 @@ if (depth > 100) {
       }
       if (firstbyte == 0x80) {
         // empty array
-        return FromObject(new List<CBORObject>());
+        return CBORObject.NewArray();
       }
       if (firstbyte == 0xa0) {
         // empty map
-        return FromObject(new Dictionary<CBORObject, CBORObject>());
+        return CBORObject.NewMap();
       }
       throw new CBORException("Unexpected data encountered");
     }
@@ -3555,18 +3326,6 @@ if (depth > 100) {
     internal IDictionary<CBORObject, CBORObject> AsMap() {
       return (IDictionary<CBORObject, CBORObject>)this.ThisItem;
     }
-    /*
-    internal void Redefine(CBORObject cbor) {
-#if DEBUG
-      if (cbor == null) {
-        throw new ArgumentNullException(nameof(cbor));
-      }
-#endif
-      this.itemtypeValue = cbor.itemtypeValue;
-      this.tagLow = cbor.tagLow;
-      this.tagHigh = cbor.tagHigh;
-      this.itemValue = cbor.itemValue;
-    } */
 
     private static bool BigIntFits(EInteger bigint) {
       return bigint.GetSignedBitLength() <= 64;
@@ -3683,35 +3442,6 @@ if (depth > 100) {
       }
     }
 
-    private static CBORObject ConvertWithConverter(object obj) {
-#if DEBUG
-      if (obj == null) {
-        throw new ArgumentNullException(nameof(obj));
-      }
-#endif
-      Object type = obj.GetType();
-      ConverterInfo convinfo = null;
-      lock (ValueConverters) {
-        if (ValueConverters.Count == 0) {
-          CBORTag0.AddConverter();
-          CBORTag37.AddConverter();
-          CBORTag32.AddConverter();
-        }
-        if (ValueConverters.ContainsKey(type)) {
-          convinfo = ValueConverters[type];
-        } else {
-          return null;
-        }
-      }
-      if (convinfo == null) {
-        return null;
-      }
-      return (CBORObject)PropertyMap.InvokeOneArgumentMethod(
-        convinfo.ToObject,
-        convinfo.Converter,
-        obj);
-    }
-
     private static string ExtendedToString(EFloat ef) {
       if (ef.IsFinite && (ef.Exponent.CompareTo((EInteger)2500) > 0 ||
                     ef.Exponent.CompareTo((EInteger)(-2500)) < 0)) {
@@ -3720,11 +3450,6 @@ if (depth > 100) {
         return ef.Mantissa + "p" + ef.Exponent;
       }
       return ef.ToString();
-    }
-
-    [Obsolete]
-    private static ICBORTag FindTagConverter(int tag) {
-      return FindTagConverter((EInteger)tag);
     }
 
     private static byte[] GetOptimizedBytesIfShortAscii(
@@ -4001,14 +3726,6 @@ if (depth > 100) {
       return stack;
     }
 
-        #pragma warning disable 618
-    private static bool TagHandlersEmpty() {
-      lock (ValueTagHandlers) {
-        return ValueTagHandlers.Count == 0;
-      }
-    }
-        #pragma warning restore 618
-
     private static int TagsCompare(EInteger[] tagsA, EInteger[] tagsB) {
       if (tagsA == null) {
         return (tagsB == null) ? 0 : -1;
@@ -4268,36 +3985,6 @@ if (depth > 100) {
           s.Write(arrayToWrite, 0, 9);
         }
         curobject = (CBORObject)curobject.itemValue;
-      }
-    }
-
-    private sealed class ConverterInfo {
-      private object toObject;
-
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.ConverterInfo.ToObject"]/*'/>
-      public object ToObject {
-        get {
-          return this.toObject;
-        }
-
-        set {
-          this.toObject = value;
-        }
-      }
-
-      private object converter;
-
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.ConverterInfo.Converter"]/*'/>
-      public object Converter {
-        get {
-          return this.converter;
-        }
-
-        set {
-          this.converter = value;
-        }
       }
     }
   }
