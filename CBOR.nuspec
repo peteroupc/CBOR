@@ -1,5 +1,9 @@
 <package
-><metadata><version>3.4.0-beta1</version><id>PeterO.Cbor</id><requireLicenseAcceptance>false</requireLicenseAcceptance><releaseNotes>Version 3.4.0-beta1:
+><metadata><version>3.4.0</version><id>PeterO.Cbor</id><requireLicenseAcceptance>false</requireLicenseAcceptance><releaseNotes>Version 3.4.0
+
+No significant changes from beta1.
+
+Version 3.4.0-beta1:
 
 - Improved implemenation of new ToObject method.
 - Bugs in multidimensional array serialization by FromObject were fixed.
