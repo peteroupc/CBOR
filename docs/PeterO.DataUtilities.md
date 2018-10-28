@@ -37,6 +37,16 @@ In C# and Java, text strings are represented as sequences of 16-bit values calle
 
 Gets the Unicode code point at the given index of the string.
 
+The following example shows how to iterate a text string code point by code point.
+
+    for(var i=0;i<str.Length;i++) {
+     int codePoint = DataUtilities.CodePointAt(str,i);
+     Console.WriteLine("codePoint:"+codePoint);
+     if(codePoint >= 0x10000) {
+      i++; /* Supplementary code point */
+     }
+    }
+
 <b>Parameters:</b>
 
  * <i>str</i>: The parameter <i>str</i>
@@ -47,7 +57,7 @@ is a text string.
 <b>Return Value:</b>
 
 The Unicode code point at the given position. Returns -1 if <i>index</i>
-is less than 0, or is the string's length or greater. Returns the eplacement character (U+FFFD) if the current character is an unpaired urrogate code point.
+is less than 0, or is the string's length or greater. Returns the eplacement character (U+FFFD) if the current character is an unpaired urrogate code point. If the return value is 65536 (0x10000) or greater, he code point takes up two UTF-16 code units.
 
 <b>Exceptions:</b>
 
@@ -65,6 +75,19 @@ is null.
 
 Gets the Unicode code point at the given index of the string.
 
+The following example shows how to iterate a text string code point by code point, terminating the loop when an unpaired surrogate is found.
+
+    for(var i=0;i<str.Length;i++) {
+     int codePoint = DataUtilities.CodePointAt(str, i, 2);
+     if(codePoint < 0) {
+      break; /* Unpaired surrogate */
+     }
+     Console.WriteLine("codePoint:"+codePoint);
+     if(codePoint >= 0x10000) {
+      i++; /* Supplementary code point */
+     }
+    }
+
 <b>Parameters:</b>
 
  * <i>str</i>: The parameter <i>str</i>
@@ -78,7 +101,7 @@ is a text string.
 
 The Unicode code point at the current position. Returns -1 if <i>index</i>
 is less than 0, or is the string's length or greater. Returns a value as pecified under <i>surrogateBehavior</i>
-if the previous character is an unpaired surrogate code point.
+if the previous character is an unpaired surrogate code point. If the return value is 65536 (0x10000) or greater, he code point takes up two UTF-16 code units.
 
 <b>Exceptions:</b>
 
@@ -105,7 +128,7 @@ is a text string.
 <b>Return Value:</b>
 
 The Unicode code point at the previous position. Returns -1 if <i>index</i>
-is 0 or less, or is greater than the string's length. Returns the eplacement character (U+FFFD) if the previous character is an unpaired urrogate code point.
+is 0 or less, or is greater than the string's length. Returns the eplacement character (U+FFFD) if the previous character is an unpaired urrogate code point. If the return value is 65536 (0x10000) or greater, he code point takes up two UTF-16 code units.
 
 <b>Exceptions:</b>
 
@@ -136,7 +159,7 @@ is a text string.
 
 The Unicode code point at the previous position. Returns -1 if <i>index</i>
 is 0 or less, or is greater than the string's length. Returns a value as pecified under <i>surrogateBehavior</i>
-if the previous character is an unpaired surrogate code point.
+if the previous character is an unpaired surrogate code point. If the return value is 65536 (0x10000) or greater, he code point takes up two UTF-16 code units.
 
 <b>Exceptions:</b>
 
@@ -195,7 +218,7 @@ The parameter <i>str</i>
 
 Encodes a string in UTF-8 as a byte array. This method does not insert a byte-order mark (U+FEFF) at the beginning of the encoded byte array.
 
-REMARK: It is not recommended to use  `Encoding.UTF8.GetBytes`  in .NET, or the  `getBytes()`  method in Java to do this. For instance,  `getBytes()`  encodes text strings in an unspecified character encoding. Both behaviors can be undesirable.
+REMARK: It is not recommended to use  `Encoding.UTF8.GetBytes`  in .NET, or the  `getBytes()`  method in Java to do this. For instance,  `getBytes()`  encodes text strings in a default (so not fixed) character encoding, which can be undesirable.
 
 <b>Parameters:</b>
 
@@ -228,7 +251,7 @@ is false, or an internal error occurred.
 
 Encodes a string in UTF-8 as a byte array. This method does not insert a byte-order mark (U+FEFF) at the beginning of the encoded byte array.
 
-REMARK: It is not recommended to use  `Encoding.UTF8.GetBytes`  in .NET, or the  `getBytes()`  method in Java to do this. For instance,  `getBytes()`  encodes text strings in an unspecified character encoding. Both behaviors can be undesirable.
+REMARK: It is not recommended to use  `Encoding.UTF8.GetBytes`  in .NET, or the  `getBytes()`  method in Java to do this. For instance,  `getBytes()`  encodes text strings in a default (so not fixed) character encoding, which can be undesirable.
 
 <b>Parameters:</b>
 

@@ -1854,14 +1854,15 @@ Note that for security reasons, certain types are not supported even if they con
     </returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.HasMostOuterTag(PeterO.Numbers.EInteger)">
-
-            <summary>Not documented yet.</summary>
-
+<summary>Not documented yet.</summary>
+             <param name='bigTagValue'>The parameter <paramref name='bigTagValue'/> is not documented yet.</param>
+             <returns>Either <c>true</c> or <c>false</c>.</returns>
+             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='bigTagValue'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.HasMostOuterTag(System.Int32)">
-
-            <summary>Not documented yet.</summary>
-
+<summary>Not documented yet.</summary>
+             <param name='tagValue'>The parameter <paramref name='tagValue'/> is not documented yet.</param>
+             <returns>Either <c>true</c> or <c>false</c>.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.HasTag(PeterO.BigInteger)">
 <summary>Returns whether this object has a tag of the given number.
@@ -2622,7 +2623,16 @@ is less than 0, is the size of this array or greater, or is not a 32-bit signed 
            (or
           <c>Date</c>
            in Java) , returns a date/time object if the CBOR object's outermost
-          tag is 0 or 1.  For tag 1, this method treats the CBOR object as a number of seconds since the start of 1970, which is based on the POSIX definition of "seconds since the Epoch", a definition that does not count leap seconds.  In this method, this number of seconds assumes the use of a proleptic Gregorian calendar, in which the rules regarding the number of days in each month and which years are leap years are the same for all years as they were in 1970 (including without regard to transitions from other calendars to the Gregorian).  For tag 1, CBOR objects that express infinity or not-a-number (NaN) are treated as invalid by this method.
+          tag is 0 or 1. For tag 1, this method treats the CBOR object as a
+          number of seconds since the start of 1970, which is based on the POSIX
+          definition of "seconds since the Epoch", a definition that does not
+          count leap seconds. In this method, this number of seconds assumes the
+          use of a proleptic Gregorian calendar, in which the rules regarding
+          the number of days in each month and which years are leap years are
+          the same for all years as they were in 1970 (including without regard
+          to transitions from other calendars to the Gregorian). For tag 1, CBOR
+          objects that express infinity or not-a-number (NaN) are treated as
+          invalid by this method.
         </item>
         <item>If the type is
           <c>Uri</c>
@@ -3705,14 +3715,12 @@ stream.Write(bytes, 0, bytes.Length);
 
 </doc>
 <doc name="P:PeterO.Cbor.CBORTypeMapper.ConverterInfo.Converter">
-
-            <summary>Gets a value not documented yet.</summary><value>A value not documented yet.</value>
-
+<summary>Gets a value not documented yet.</summary>
+             <value>A value not documented yet.</value>
 </doc>
 <doc name="P:PeterO.Cbor.CBORTypeMapper.ConverterInfo.ToObject">
-
-            <summary>Not documented yet.</summary>
-
+<summary>Gets a value not documented yet.</summary>
+             <value>A value not documented yet.</value>
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeMapper.FilterTypeName(System.String)">
 
@@ -3727,9 +3735,9 @@ stream.Write(bytes, 0, bytes.Length);
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORUuidConverter.ToCBORObject(System.Guid)">
-
-            <summary>Not documented yet.</summary>
-
+<summary>Not documented yet.</summary>
+             <param name='obj'>The parameter <paramref name='obj'/> is not documented yet.</param>
+             <returns>A CBORObject object.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.FastInteger2.Multiply(System.Int32)">
 
@@ -3817,9 +3825,8 @@ stream.Write(bytes, 0, bytes.Length);
 
 </doc>
 <doc name="M:PeterO.Cbor.ICBORToFromConverter`1.FromCBORObject(PeterO.Cbor.CBORObject)">
-
-            <summary>Not documented yet.</summary>
-
+<summary>Not documented yet.
+    </summary>
 </doc>
 <doc name="T:PeterO.Cbor.ICharacterInput">
 
@@ -3940,127 +3947,156 @@ stream.Write(bytes, 0, bytes.Length);
 
 </doc>
 <doc name="T:PeterO.Cbor.URIUtility">
-
-            <summary>Contains utility methods for processing Uniform Resource Identifiers (URIs) and Internationalized Resource Identifiers (IRIs) under RFC3986 and RFC3987, respectively. In the following documentation, URIs and IRIs include URI references and IRI references, for convenience.
-<para>There are five components to a URI: scheme, authority, path, query, and fragment identifier.
-The generic syntax to these components is defined in RFC3986 and extended in RFC3987.  According to RFC3986, different URI schemes can further restrict the syntax of the authority, path, and query component (see also RFC 7320).  However, the syntax of fragment identifiers depends on the media type (also known as MIME type) of the resource a URI references (see also RFC 3986 and RFC 7320).  As of Aug. 24, 2018, only the following media types specify a syntax for fragment identifiers:</para>
-<list>
-<item>The following application/* media types: epub+zip, pdf, senml+cbor, senml+json, senml-exi, sensml+cbor, sensml+json, sensml-exi, smil,
-vnd.3gpp-v2x-local-service-information, vnd.3gpp.mcdata-signalling,
-vnd.collection.doc+json, vnd.hc+json, vnd.hyper+json,
-vnd.hyper-item+json, vnd.mason+json,
-vnd.microsoft.portable-executable, vnd.oma.bcast.sgdu,
-vnd.shootproof+json</item>
-<item>The following image/* media types: avci, avcs, heic, heic-sequence, heif, heif-sequence</item>
-<item>The XML media types: application/xml, application/xml-external-parsed-entity, text/xml, text/xml-external-parsed-entity, application/xml-dtd</item>
-<item>All media types with subtypes ending in "+xml" (see RFC 7303) use XPointer Framework syntax as fragment identifiers, except the following application/* media types: dicom+xml, senml+xml, sensml+xml, ttml+xml, xliff+xml, yang-data+xml</item>
-<item>font/collection</item>
-<item>multipart/x-mixed-replace</item>
-<item>text/plain</item>
-<item>text/csv</item>
-<item>text/html</item>
-<item>text/markdown</item>
-<item>text/vnd.a</item></list>
-     </summary>
-
+<summary>Contains utility methods for processing Uniform Resource Identifiers
+      (URIs) and Internationalized Resource Identifiers (IRIs) under RFC3986 and
+      RFC3987, respectively. In the following documentation, URIs and IRIs
+      include URI references and IRI references, for convenience.
+      <para>There are five components to a URI: scheme, authority, path, query, and
+        fragment identifier. The generic syntax to these components is defined
+        in RFC3986 and extended in RFC3987. According to RFC3986, different URI
+        schemes can further restrict the syntax of the authority, path, and
+        query component (see also RFC 7320). However, the syntax of fragment
+        identifiers depends on the media type (also known as MIME type) of the
+        resource a URI references (see also RFC 3986 and RFC 7320). As of Aug.
+        24, 2018, only the following media types specify a syntax for fragment
+        identifiers:
+      </para>
+      <list>
+        <item>The following application/* media types: epub+zip, pdf, senml+cbor,
+          senml+json, senml-exi, sensml+cbor, sensml+json, sensml-exi, smil,
+          vnd.3gpp-v2x-local-service-information, vnd.3gpp.mcdata-signalling,
+          vnd.collection.doc+json, vnd.hc+json, vnd.hyper+json,
+          vnd.hyper-item+json, vnd.mason+json,
+          vnd.microsoft.portable-executable, vnd.oma.bcast.sgdu,
+          vnd.shootproof+json
+        </item>
+        <item>The following image/* media types: avci, avcs, heic, heic-sequence,
+          heif, heif-sequence
+        </item>
+        <item>The XML media types: application/xml,
+          application/xml-external-parsed-entity, text/xml,
+          text/xml-external-parsed-entity, application/xml-dtd
+        </item>
+        <item>All media types with subtypes ending in "+xml" (see RFC 7303) use
+          XPointer Framework syntax as fragment identifiers, except the
+          following application/* media types: dicom+xml, senml+xml, sensml+xml,
+          ttml+xml, xliff+xml, yang-data+xml
+        </item>
+        <item>font/collection
+        </item>
+        <item>multipart/x-mixed-replace
+        </item>
+        <item>text/plain
+        </item>
+        <item>text/csv
+        </item>
+        <item>text/html
+        </item>
+        <item>text/markdown
+        </item>
+        <item>text/vnd.a
+        </item>
+      </list>
+    </summary>
 </doc>
 <doc name="M:PeterO.Cbor.URIUtility.EncodeStringForURI(System.String)">
-
-            <summary>Encodes characters other than "unreserved" characters for
-            URIs.</summary><param name='s'>A string to encode.</param><returns>The encoded string.</returns><exception cref='T:System.ArgumentNullException'>The parameter <paramref name='s'/> is null.</exception>
-
+<summary>Encodes characters other than "unreserved" characters for URIs.
+    </summary>
+    <param name='s'>A string to encode.
+    </param>
+    <returns>The encoded string.
+    </returns>
+    <exception cref='T:System.ArgumentNullException'>The parameter
+      <paramref name='s'/>
+       is null.
+    </exception>
 </doc>
 <doc name="T:PeterO.Cbor.URIUtility.ParseMode">
-
-            <summary>Specifies whether certain characters are allowed when parsing IRIs and
+<summary>Specifies whether certain characters are allowed when parsing IRIs and
       URIs.
     </summary>
-
 </doc>
 <doc name="F:PeterO.Cbor.URIUtility.ParseMode.IRILenient">
-
-            <summary>The rules only check for the appropriate delimiters when splitting the
+<summary>The rules only check for the appropriate delimiters when splitting the
       path, without checking if all the characters in each component are valid.
       Even with this mode, strings with unpaired surrogate code points are
       considered invalid.
     </summary>
-
 </doc>
 <doc name="F:PeterO.Cbor.URIUtility.ParseMode.IRIStrict">
-
-            <summary>The rules follow the syntax for parsing IRIs. In particular, many code
+<summary>The rules follow the syntax for parsing IRIs. In particular, many code
       points outside the Basic Latin range (U+0000 to U+007F) are allowed.
       Strings with unpaired surrogate code points are considered invalid.
     </summary>
-
 </doc>
 <doc name="F:PeterO.Cbor.URIUtility.ParseMode.IRISurrogateLenient">
-
-            <summary>The rules only check for the appropriate delimiters when splitting the
+<summary>The rules only check for the appropriate delimiters when splitting the
       path, without checking if all the characters in each component are valid.
       Unpaired surrogate code points are treated as though they were replacement
       characters instead for the purposes of these rules, so that strings with
       those code points are not considered invalid strings.
     </summary>
-
 </doc>
 <doc name="F:PeterO.Cbor.URIUtility.ParseMode.URILenient">
-
-            <summary>The rules only check for the appropriate delimiters when splitting the
+<summary>The rules only check for the appropriate delimiters when splitting the
       path, without checking if all the characters in each component are valid.
       Code points outside the Basic Latin range (U+0000 to U+007F) are not
       allowed.
     </summary>
-
 </doc>
 <doc name="F:PeterO.Cbor.URIUtility.ParseMode.URIStrict">
-
-            <summary>The rules follow the syntax for parsing IRIs, except that code points
+<summary>The rules follow the syntax for parsing IRIs, except that code points
       outside the Basic Latin range (U+0000 to U+007F) are not allowed.
     </summary>
-
 </doc>
 <doc name="M:PeterO.Cbor.URIUtility.PercentDecode(System.String)">
-
-            <summary>Decodes percent-encoding (of the form "%XX" where X is a hexadecimal
+<summary>Decodes percent-encoding (of the form "%XX" where X is a hexadecimal
       digit) in the given string. Successive percent-encoded bytes are assumed
       to form characters in UTF-8.
-    </summary><param name='str'>A string that may contain percent encoding. May be null.
-    </param><returns>The string in which percent-encoding was decoded.
+    </summary>
+    <param name='str'>A string that may contain percent encoding. May be null.
+    </param>
+    <returns>The string in which percent-encoding was decoded.
     </returns>
-
 </doc>
 <doc name="M:PeterO.Cbor.URIUtility.PercentDecode(System.String,System.Int32,System.Int32)">
-
-            <summary>Decodes percent-encoding (of the form "%XX" where X is a
-            hexadecimal digit) in the given portion of a string. Successive
-            percent-encoded bytes are assumed to form characters in
-            UTF-8.</summary><param name='str'>A string a portion of which may contain percent
-            encoding. May be null.</param><param name='index'>Zero-based index showing where the desired
-            portion of <paramref name='str'/> begins.</param><param name='endIndex'>Zero-based index showing where the desired
-            portion of <paramref name='str'/> ends. The character before this
-            index is the last character.</param><returns>The portion of the given string in which percent-encoding
-            was decoded. Returns null if <paramref name='str'/> is
-            ull.</returns>
-
+<summary>Decodes percent-encoding (of the form "%XX" where X is a hexadecimal
+      digit) in the given portion of a string. Successive percent-encoded bytes
+      are assumed to form characters in UTF-8.
+    </summary>
+    <param name='str'>A string a portion of which may contain percent encoding. May be null.
+    </param>
+    <param name='index'>Zero-based index showing where the desired portion of
+      <paramref name='str'/>
+       begins.
+    </param>
+    <param name='endIndex'>Zero-based index showing where the desired portion of
+      <paramref name='str'/>
+       ends. The character before this index is the last character.
+    </param>
+    <returns>The portion of the given string in which percent-encoding was decoded.
+      Returns null if
+      <paramref name='str'/>
+       is ull.
+    </returns>
 </doc>
 <doc name="M:PeterO.Cbor.URIUtility.escapeURI(System.String,System.Int32)">
-
-            <summary>Escapes characters that can't appear in URIs or IRIs. The function is
+<summary>Escapes characters that can't appear in URIs or IRIs. The function is
       idempotent; that is, calling the function again on the result with the
       same mode doesn't change the result.
-    </summary><param name='s'>A string to escape.
-    </param><param name='mode'>The parameter
+    </summary>
+    <param name='s'>A string to escape.
+    </param>
+    <param name='mode'>The parameter
       <paramref name='mode'/>
        is a 32-bit signed integer.
-    </param><returns>A string possibly containing escaped characters, or null if s is null.
+    </param>
+    <returns>A string possibly containing escaped characters, or null if s is null.
     </returns>
-
 </doc>
 <doc name="M:PeterO.Cbor.URIUtility.hasScheme(System.String)">
-
-            <summary>Determines whether the string is a valid IRI with a scheme component.
-      This can be used to check for relative IRI references.
+<summary>Determines whether the string is a valid IRI with a scheme component. This
+      can be used to check for relative IRI references.
       <para>The following cases return true:
       </para>
       <code>xx-x:mm example:/ww
@@ -4068,53 +4104,79 @@ vnd.shootproof+json</item>
        The following cases return false:
       <code>x@y:/z /x/y/z example.xyz
       </code>
-    </summary><param name='refValue'>A string representing an IRI to check.
-    </param><returns><c>true</c>
+    </summary>
+    <param name='refValue'>A string representing an IRI to check.
+    </param>
+    <returns><c>true</c>
        if the string is a valid IRI with a scheme component; otherwise, <c>false</c>
        .
     </returns>
-
 </doc>
 <doc name="M:PeterO.Cbor.URIUtility.hasSchemeForURI(System.String)">
-
-            <summary>Determines whether the string is a valid URI with a scheme component.
-      This can be used to check for relative URI references. The following cases
+<summary>Determines whether the string is a valid URI with a scheme component. This
+      can be used to check for relative URI references. The following cases
       return true:
       <code>http://example/z xx-x:mm example:/ww
       </code>
        The following cases return false:
       <code>x@y:/z /x/y/z example.xyz
       </code>
-    </summary><param name='refValue'>A string representing an IRI to check.
-    </param><returns><c>true</c>
+    </summary>
+    <param name='refValue'>A string representing an IRI to check.
+    </param>
+    <returns><c>true</c>
        if the string is a valid URI with a scheme component; otherwise, <c>false</c>
        .
     </returns>
-
 </doc>
 <doc name="M:PeterO.Cbor.URIUtility.isValidCurieReference(System.String,System.Int32,System.Int32)">
-
-            <summary>Determines whether the substring is a valid CURIE
-             reference under RDFA 1.1. (The CURIE reference is the part after
-             the colon.).</summary><param name='s'>A string containing a CURIE reference. Can be
-             null.</param><param name='offset'>A zero-based index showing where the desired
-             portion of "s" begins.</param><param name='length'>The number of elements in the desired portion
-             of "s" (but not more than "s" 's length).</param><returns><c>true</c> if the substring is a valid CURIE reference
-             under RDFA 1; otherwise, <c>false</c>. Returns false if <paramref name='s'/> is null.</returns><exception cref='T:System.ArgumentException'>Either <paramref name='offset'/> or <paramref name='length'/> is less than 0 or
-             greater than <paramref name='s'/> 's length, or <paramref name='s'/> ' s length minus <paramref name='offset'/> is less than
-             <paramref name='length'/>.</exception><exception cref='T:System.ArgumentNullException'>The parameter <paramref name='s'/> is null.</exception>
-
+<summary>Determines whether the substring is a valid CURIE reference under RDFA
+      1.1. (The CURIE reference is the part after the colon.).
+    </summary>
+    <param name='s'>A string containing a CURIE reference. Can be null.
+    </param>
+    <param name='offset'>A zero-based index showing where the desired portion of "s" begins.
+    </param>
+    <param name='length'>The number of elements in the desired portion of "s" (but not more than
+      "s" 's length).
+    </param>
+    <returns><c>true</c>
+       if the substring is a valid CURIE reference under RDFA 1; otherwise, <c>false</c>
+      . Returns false if
+      <paramref name='s'/>
+       is null.
+    </returns>
+    <exception cref='T:System.ArgumentException'>Either
+      <paramref name='offset'/>
+       or
+      <paramref name='length'/>
+       is less than 0 or greater than
+      <paramref name='s'/>
+       's length, or
+      <paramref name='s'/>
+       ' s length minus
+      <paramref name='offset'/>
+       is less than
+      <paramref name='length'/>
+      .
+    </exception>
+    <exception cref='T:System.ArgumentNullException'>The parameter
+      <paramref name='s'/>
+       is null.
+    </exception>
 </doc>
 <doc name="M:PeterO.Cbor.URIUtility.relativeResolve(System.String,System.String)">
-
-            <summary>Resolves a URI or IRI relative to another URI or IRI.
-    </summary><param name='refValue'>A string representing a URI or IRI reference. Example:
+<summary>Resolves a URI or IRI relative to another URI or IRI.
+    </summary>
+    <param name='refValue'>A string representing a URI or IRI reference. Example:
       <c>dir/file.txt</c>
        .
-    </param><param name='baseURI'>A string representing an absolute URI reference. Example:
+    </param>
+    <param name='baseURI'>A string representing an absolute URI reference. Example:
       <c>http://example.com/my/path/</c>
        .
-    </param><returns>The resolved IRI, or null if
+    </param>
+    <returns>The resolved IRI, or null if
       <paramref name='refValue'/>
        is null or is not a valid IRI. If
       <paramref name='baseURI'/>
@@ -4122,35 +4184,37 @@ vnd.shootproof+json</item>
       <c>http://example.com/my/path/dir/file.txt</c>
        .
     </returns>
-
 </doc>
 <doc name="M:PeterO.Cbor.URIUtility.relativeResolve(System.String,System.String,PeterO.Cbor.URIUtility.ParseMode)">
-
-            <summary>Resolves a URI or IRI relative to another URI or IRI.
-    </summary><param name='refValue'>A string representing a URI or IRI reference. Example:
+<summary>Resolves a URI or IRI relative to another URI or IRI.
+    </summary>
+    <param name='refValue'>A string representing a URI or IRI reference. Example:
       <c>dir/file.txt</c>
        . Can be null.
-    </param><param name='baseURI'>A string representing an absolute URI reference. Example:
+    </param>
+    <param name='baseURI'>A string representing an absolute URI reference. Example:
       <c>http://example.com/my/path/</c>
        .
-    </param><param name='parseMode'>Parse mode that specifies whether certain characters are allowed when
+    </param>
+    <param name='parseMode'>Parse mode that specifies whether certain characters are allowed when
       parsing IRIs and URIs.
-    </param><returns>The resolved IRI, or null if
+    </param>
+    <returns>The resolved IRI, or null if
       <paramref name='refValue'/>
        is null or is not a valid IRI. If
       <paramref name='baseURI'/>
        is null or is not a valid IRI, returns refValue.
     </returns>
-
 </doc>
 <doc name="M:PeterO.Cbor.URIUtility.splitIRI(System.String)">
-
-            <summary>Parses an Internationalized Resource Identifier (IRI) reference under
+<summary>Parses an Internationalized Resource Identifier (IRI) reference under
       RFC3987. If the IRI reference is syntactically valid, splits the string
       into its components and returns an array containing the indices into the
       components.
-    </summary><param name='s'>A string that contains an IRI. Can be null.
-    </param><returns>If the string is a valid IRI reference, returns an array of 10 integers.
+    </summary>
+    <param name='s'>A string that contains an IRI. Can be null.
+    </param>
+    <returns>If the string is a valid IRI reference, returns an array of 10 integers.
       Each of the five pairs corresponds to the start and end index of the IRI's
       scheme, authority, path, query, or fragment identifier, respectively. The
       scheme, authority, query, and fragment identifier, if present, will each
@@ -4159,19 +4223,20 @@ vnd.shootproof+json</item>
       in that pair will be -1. If the string is null or is not a valid IRI,
       returns null.
     </returns>
-
 </doc>
 <doc name="M:PeterO.Cbor.URIUtility.splitIRI(System.String,PeterO.Cbor.URIUtility.ParseMode)">
-
-            <summary>Parses an Internationalized Resource Identifier (IRI) reference under
+<summary>Parses an Internationalized Resource Identifier (IRI) reference under
       RFC3987. If the IRI is syntactically valid, splits the string into its
       components and returns an array containing the indices into the
       components.
-    </summary><param name='s'>A string representing an IRI. Can be null.
-    </param><param name='parseMode'>The parameter
+    </summary>
+    <param name='s'>A string representing an IRI. Can be null.
+    </param>
+    <param name='parseMode'>The parameter
       <paramref name='parseMode'/>
        is a ParseMode object.
-    </param><returns>If the string is a valid IRI reference, returns an array of 10 integers.
+    </param>
+    <returns>If the string is a valid IRI reference, returns an array of 10 integers.
       Each of the five pairs corresponds to the start and end index of the IRI's
       scheme, authority, path, query, or fragment identifier, respectively. The
       scheme, authority, query, and fragment identifier, if present, will each
@@ -4180,30 +4245,50 @@ vnd.shootproof+json</item>
       in that pair will be -1. If the string is null or is not a valid IRI,
       returns null.
     </returns>
-
 </doc>
 <doc name="M:PeterO.Cbor.URIUtility.splitIRI(System.String,System.Int32,System.Int32,PeterO.Cbor.URIUtility.ParseMode)">
-
-            <summary>Parses a substring that represents an Internationalized
-            Resource Identifier (IRI) under RFC3987. If the IRI is
-            syntactically valid, splits the string into its components and
-            returns an array containing the indices into the
-            components.</summary><param name='s'>A string that contains an IRI. Can be null.</param><param name='offset'>A zero-based index showing where the desired
-            portion of "s" begins.</param><param name='length'>The length of the desired portion of "s" (but
-            not more than "s" 's length).</param><param name='parseMode'>Parse mode that specifies whether certain
-            characters are allowed when parsing IRIs and URIs.</param><returns>If the string is a valid IRI, returns an array of 10
-            integers. Each of the five pairs corresponds to the start and end
-            index of the IRI's scheme, authority, path, query, or fragment
-            component, respectively. The scheme, authority, query, and fragment
-            components, if present, will each be given without the ending
-            colon, the starting "//", the starting "?", and the starting "#",
-            respectively. If a component is absent, both indices in that pair
-            will be -1 (an index won't be less than 0 in any other case). If
-            the string is null or is not a valid IRI, returns null.</returns><exception cref='T:System.ArgumentException'>Either <paramref name='offset'/> or <paramref name='length'/> is less than 0 or
-            greater than <paramref name='s'/> 's length, or <paramref name='s'/> ' s length minus <paramref name='offset'/> is less than
-            <paramref name='length'/>.</exception><exception cref='T:System.ArgumentNullException'>The parameter
-            <paramref name='s'/> is null.</exception>
-
+<summary>Parses a substring that represents an Internationalized Resource
+      Identifier (IRI) under RFC3987. If the IRI is syntactically valid, splits
+      the string into its components and returns an array containing the indices
+      into the components.
+    </summary>
+    <param name='s'>A string that contains an IRI. Can be null.
+    </param>
+    <param name='offset'>A zero-based index showing where the desired portion of "s" begins.
+    </param>
+    <param name='length'>The length of the desired portion of "s" (but not more than "s" 's
+      length).
+    </param>
+    <param name='parseMode'>Parse mode that specifies whether certain characters are allowed when
+      parsing IRIs and URIs.
+    </param>
+    <returns>If the string is a valid IRI, returns an array of 10 integers. Each of the
+      five pairs corresponds to the start and end index of the IRI's scheme,
+      authority, path, query, or fragment component, respectively. The scheme,
+      authority, query, and fragment components, if present, will each be given
+      without the ending colon, the starting "//", the starting "?", and the
+      starting "#", respectively. If a component is absent, both indices in that
+      pair will be -1 (an index won't be less than 0 in any other case). If the
+      string is null or is not a valid IRI, returns null.
+    </returns>
+    <exception cref='T:System.ArgumentException'>Either
+      <paramref name='offset'/>
+       or
+      <paramref name='length'/>
+       is less than 0 or greater than
+      <paramref name='s'/>
+       's length, or
+      <paramref name='s'/>
+       ' s length minus
+      <paramref name='offset'/>
+       is less than
+      <paramref name='length'/>
+      .
+    </exception>
+    <exception cref='T:System.ArgumentNullException'>The parameter
+      <paramref name='s'/>
+       is null.
+    </exception>
 </doc>
 <doc name="T:PeterO.DataUtilities">
 

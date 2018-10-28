@@ -14,20 +14,6 @@
     <PackageLicenseUrl>http://creativecommons.org/publicdomain/zero/1.0/</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/peteroupc/CBOR</PackageProjectUrl>
     <PackageReleaseNotes>
-Version 3.4.0
-
-No significant changes from beta1.
-
-Version 3.4.0-beta1:
-
-- Improved implemenation of new ToObject method.
-- Bugs in multidimensional array serialization by FromObject were fixed.
-- URI parsing restored to 3.0 version for backward compatibility.
-- Remove method disallows null for backward compatibility.
-- ICBORObjectConverter renamed to ICBORToFromConverter.
-- Several APIs were obsoleted.
-
-Version 3.4.0-alpha1:
 Version 4.0.0-alpha1:
 
 - Remove all APIs obsoleted since version 3.4.  This
@@ -84,7 +70,6 @@ Version 4.0.0-alpha1:
   <ItemGroup>
     <PackageReference Include="PeterO.Numbers" Version="1.1.2" />
   </ItemGroup>
-</Project>
   <ItemGroup>
     <Compile Remove="PeterO\Cbor\CBORTag1.cs" />
     <Compile Remove="PeterO\Cbor\CBORTag2.cs" />

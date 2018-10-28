@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace PeterO.Mail {
+namespace PeterO.Cbor {
     internal static class URIUtility {
     internal enum ParseMode {
     IRIStrict,
@@ -1387,9 +1387,9 @@ if (s.Length - offset < length) {
  }
  string schemeAndAuthority = uri.Substring(0, indexes[4]);
  string path = uri.Substring(indexes[4], indexes[5] - indexes[4]);
- if (path.Length>0) {
-  for (int i = path.Length-1;i >= 0; --i) {
-    if (path[i]=='/') {
+ if (path.Length > 0) {
+  for (int i = path.Length - 1; i >= 0; --i) {
+    if (path[i] == '/') {
        return schemeAndAuthority + path.Substring(0, i + 1);
     }
   }
@@ -1409,7 +1409,4 @@ if (s.Length - offset < length) {
   string absuri = directoryPath(absoluteBaseURI);
   string reluri = directoryPath(rel);
   return (absuri == null || reluri == null ||
-     !absuri.Equals(reluri)) ? (null) : (rel);
-}
-  }
-}
+     !absuri.Equals(reluri)) ? null : rel; } } }

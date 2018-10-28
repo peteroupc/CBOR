@@ -2442,9 +2442,8 @@ CBORObject ckey = key == null ? CBORObject.Null :
       return new[] { LowHighToEInteger(this.tagLow, this.tagHigh) };
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='tagValue'>Not documented yet.</param>
-    /// <returns>A Boolean object.</returns>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasMostOuterTag(System.Int32)"]/*'/>
  public bool HasMostOuterTag(int tagValue) {
       if (tagValue < 0) {
         throw new ArgumentException("tagValue (" + tagValue +
@@ -2453,11 +2452,8 @@ CBORObject ckey = key == null ? CBORObject.Null :
  return this.IsTagged && this.tagHigh == 0 && this.tagLow == tagValue;
  }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='bigTagValue'>Not documented yet.</param>
-    /// <returns>A Boolean object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='bigTagValue'/> is null.</exception>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasMostOuterTag(PeterO.Numbers.EInteger)"]/*'/>
  public bool HasMostOuterTag(EInteger bigTagValue) {
     if (bigTagValue == null) {
   throw new ArgumentNullException(nameof(bigTagValue));
