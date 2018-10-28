@@ -48,7 +48,7 @@ Other Sites
 Examples
 ----------
 
-The following shows certain use examples of this library.  Additional examples can be found in the API documentation.
+The following shows certain use examples of this library.  Additional examples can be found in the [API documentation](https://peteroupc.github.io/CBOR/docs/).
 
 Creating a map and converting that map to CBOR bytes
 and a JSON string:
@@ -63,10 +63,28 @@ var cbor = CBORObject.NewMap()
    .Add("array", CBORObject.NewArray().Add(999f).Add("xyz"))
    .Add("bytes", new byte[] { 0, 1, 2 });
 // The following converts the map to CBOR
-byte[] bytes = cbor.EncodeToBytes(CBOREncodeOptions.Default);
+byte[] bytes = cbor.EncodeToBytes();
 // The following converts the map to JSON
 string json = cbor.ToJSONString();
 Console.WriteLine(json);
+```
+
+Creating a map and converting that map to canonical CBOR
+bytes (for WebAuthn and other purposes) and a .NET
+dictionary:
+
+```c#
+// The following creates a CBOR map and adds
+// several kinds of objects to it
+var cbor = CBORObject.NewMap()
+   .Add("item", "any string")
+   .Add("foo", "another string")
+   .Add("quux", "a third string");
+// The following converts the map to canonical CBOR
+byte[] bytes = cbor.EncodeToBytes(CBOREncodeOptions.Ctap2Canonical);
+// The following converts the map to a dictionary
+var dict = cbor.ToObject<IDictionary<string,string>>();
+Console.WriteLine(dict.Count);
 ```
 
 Reading data from a file (C#).  Note that all the examples for
@@ -222,10 +240,6 @@ The following are some clarifications to RFC 7049.
   string has a length of 0.  This implementation treats a positive
   bignum with length 0 as having a value of 0 and a negative
   bignum with length 0 as having a value of -1.
-* Section 2.4.1 specifies the number of seconds since the start of 1970.  It is
-  based on the POSIX definition of "seconds since the Epoch", which
-  the RFC cites as a normative reference.  This definition does not
-  count leap seconds.
 
 Release Notes
 -----------
@@ -272,40 +286,6 @@ No significant changes from beta1.
 - Added CodePointLength and ToUpperCaseAscii methods to DataUtilities class.
 - Added WriteValue family of methods to CBORObject class.  This can be used for lower-level encoding of CBOR objects.  Examples on its use were included in the documentation.
 - Bug fixes.
-
-### Version 3.2.1
-
-- Add .NET Framework 4.0 targeted assembly to avoid compiler warnings that can appear when this package is added to a project that targets .NET Framework 4.0 or later.
-
-### Version 3.2
-
-- Added build targeting the .NET Framework 2.0
-- Obsoleted much of the existing API in CBOREncodeOptions and added new APIs to replace it.
-- Documentation for some CBORObject methods now points to the use of CBOREncodeOptions.Default
-- Documentation edited in other places
-
-### Version 3.1
-
-- Add options to control property name generation in CBORObject.FromObject.
-- Add option to control base64 padding write-out in CBORObject.ToJSONString and CBORObject.WriteJSONTo.
-
-### Version 3.0.3
-
-- Fix issue "Encode options not honored for some nested objects".
-
-### Version 3.0.2
-
-- Really strong-name sign the assembly, which (probably) was inadvertently delay-signed in version 3.0.
-
-### Version 3.0.0
-
-- Moved from .NET Portable to .NET Standard 1.0.
-- Deprecated arbitrary-precision classes in PeterO namespace; use the classes from the "PeterO.Numbers" library and namespace instead.  In particular, methods that used the former classes were deprecated and often replaced with versions that use the newer classes.
-- Change JSON output behavior slightly, including preserving negative zero
-- Hash code calculation was changed in this version
-- Deprecated OutermostTag in favor of MostOuterTag in CBORObject
-- Deprecated InnermostTag in favor of MostInnerTag in CBORObject
-- Bug fixes
 
 See [History.md](https://github.com/peteroupc/CBOR/tree/master/History.md)
 for release notes for older versions.

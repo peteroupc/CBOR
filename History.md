@@ -1,6 +1,40 @@
 Older versions release notes
 ---------------------
 
+### Version 3.2.1
+
+- Add .NET Framework 4.0 targeted assembly to avoid compiler warnings that can appear when this package is added to a project that targets .NET Framework 4.0 or later.
+
+### Version 3.2
+
+- Added build targeting the .NET Framework 2.0
+- Obsoleted much of the existing API in CBOREncodeOptions and added new APIs to replace it.
+- Documentation for some CBORObject methods now points to the use of CBOREncodeOptions.Default
+- Documentation edited in other places
+
+### Version 3.1
+
+- Add options to control property name generation in CBORObject.FromObject.
+- Add option to control base64 padding write-out in CBORObject.ToJSONString and CBORObject.WriteJSONTo.
+
+### Version 3.0.3
+
+- Fix issue "Encode options not honored for some nested objects".
+
+### Version 3.0.2
+
+- Really strong-name sign the assembly, which (probably) was inadvertently delay-signed in version 3.0.
+
+### Version 3.0.0
+
+- Moved from .NET Portable to .NET Standard 1.0.
+- Deprecated arbitrary-precision classes in PeterO namespace; use the classes from the "PeterO.Numbers" library and namespace instead.  In particular, methods that used the former classes were deprecated and often replaced with versions that use the newer classes.
+- Change JSON output behavior slightly, including preserving negative zero
+- Hash code calculation was changed in this version
+- Deprecated OutermostTag in favor of MostOuterTag in CBORObject
+- Deprecated InnermostTag in favor of MostInnerTag in CBORObject
+- Bug fixes
+
 ### Version 2.5.2
 
 * Unlike version 2.4.2, signed CBOR assembly with a strong name key.
