@@ -12,16 +12,22 @@ namespace PeterO.Cbor {
   {
     private CBORObject ValidateObject(CBORObject obj) {
       if (obj.Type != CBORType.TextString) {
-        throw new CBORException("URI must be a text string");
+        throw new CBORException("URI/IRI must be a text string");
       }
-      if (!URIUtility.isValidIRI(obj.AsString())) {
-        throw new CBORException("String is not a valid URI/IRI");
+      int isuri = obj.HasMostOuterTag(32);
+      ParseMode pm = isuri ? ParseMode.URIStrict : ParseMode.IRIStrict;
+      if (!URIUtility.isValidIRI(obj.AsString(), pm)) {
+        if (uri) {
+ throw new CBORException("String is not a valid URI");
+} else {
+ throw new CBORException("String is not a valid IRI");
+}
       }
       return obj;
     }
 
     public Uri FromCBORObject(CBORObject obj) {
-      if (obj.HasMostOuterTag(32)) {
+      if (obj.HasMostOuterTag(32) || obj.HasMostOuterTag(266)) {
         this.ValidateObject(obj);
         try {
          return new Uri(obj.AsString());
@@ -37,7 +43,14 @@ namespace PeterO.Cbor {
         throw new ArgumentNullException(nameof(uri));
       }
       string uriString = uri.ToString();
-      return CBORObject.FromObjectAndTag(uriString, (int)32);
+      bool nonascii = false;
+      for (var i = 0;i<uriString.Length; ++i) {
+        if (uriString[i]>= 0x80) {
+ nonascii = true;
+}
+      }
+      int tag=(nonascii) ? 266 : 32;
+      return CBORObject.FromObjectAndTag(uriString, (int)tag);
     }
   }
 }
