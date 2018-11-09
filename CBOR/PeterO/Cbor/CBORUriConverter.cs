@@ -14,20 +14,28 @@ namespace PeterO.Cbor {
       if (obj.Type != CBORType.TextString) {
         throw new CBORException("URI/IRI must be a text string");
       }
-      int isuri = obj.HasMostOuterTag(32);
-      ParseMode pm = isuri ? ParseMode.URIStrict : ParseMode.IRIStrict;
-      if (!URIUtility.isValidIRI(obj.AsString(), pm)) {
-        if (uri) {
- throw new CBORException("String is not a valid URI");
-} else {
- throw new CBORException("String is not a valid IRI");
+      bool isiri = obj.HasMostOuterTag(266);
+      bool isiriref = obj.HasMostOuterTag(267);
+if (isiriref && !URIUtility.isValidIRI(obj.AsString(),
+                    URIUtility.ParseMode.IRIStrict)) {
+  throw new CBORException("String is not a valid IRI Reference");
 }
-      }
+if (isiri && (!URIUtility.isValidIRI(obj.AsString(),
+                    URIUtility.ParseMode.IRIStrict) ||
+   !URIUtility.hasScheme(obj.AsString()))) {
+  throw new CBORException("String is not a valid IRI");
+}
+      if (!URIUtility.isValidIRI(obj.AsString(),
+      URIUtility.ParseMode.URIStrict) ||
+   !URIUtility.hasScheme(obj.AsString())) {
+  throw new CBORException("String is not a valid URI");
+}
       return obj;
     }
 
     public Uri FromCBORObject(CBORObject obj) {
-      if (obj.HasMostOuterTag(32) || obj.HasMostOuterTag(266)) {
+      if (obj.HasMostOuterTag(32) || obj.HasMostOuterTag(266) ||
+          obj.HasMostOuterTag(267)) {
         this.ValidateObject(obj);
         try {
          return new Uri(obj.AsString());
@@ -43,13 +51,16 @@ namespace PeterO.Cbor {
         throw new ArgumentNullException(nameof(uri));
       }
       string uriString = uri.ToString();
-      bool nonascii = false;
+      var nonascii = false;
       for (var i = 0;i<uriString.Length; ++i) {
         if (uriString[i]>= 0x80) {
  nonascii = true;
 }
       }
       int tag=(nonascii) ? 266 : 32;
+if (!URIUtility.hasScheme(uriString)) {
+ tag = 267;
+}
       return CBORObject.FromObjectAndTag(uriString, (int)tag);
     }
   }

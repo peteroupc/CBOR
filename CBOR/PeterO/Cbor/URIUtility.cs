@@ -630,6 +630,15 @@ public static string BuildIRI(
   ParseMode.IRIStrict)) != null;
     }
 
+    public static bool isValidIRI(string s, ParseMode mode) {
+      return ((s == null) ?
+  null : splitIRI(
+  s,
+  0,
+  s.Length,
+  mode)) != null;
+    }
+
     private const string ValueDotSlash = "." + "/";
     private const string ValueSlashDot = "/" + ".";
 
