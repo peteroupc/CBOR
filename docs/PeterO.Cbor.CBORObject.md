@@ -84,10 +84,10 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[ContainsKey(object)](#ContainsKey_object)</code> - Determines whether a value of the given key exists in this object.
 * <code>[ContainsKey(string)](#ContainsKey_string)</code> - Determines whether a value of the given key exists in this object.
 * <code>[Count](#Count)</code> - Gets the number of keys in this map, or the number of items in this array, or 0 if this item is neither an array nor a map.
-* <code>[DecodeFromBytes(byte[])](#DecodeFromBytes_byte)</code> -  At the moment, use the overload of this method that takes aPeterO.
+* <code>[DecodeFromBytes(byte[])](#DecodeFromBytes_byte)</code> -  Generates a CBOR object from an array of CBOR-encoded bytes.
 * <code>[DecodeFromBytes(byte[], PeterO.Cbor.CBOREncodeOptions)](#DecodeFromBytes_byte_PeterO_Cbor_CBOREncodeOptions)</code> - Generates a CBOR object from an array of CBOR-encoded bytes, using the givenCBOREncodeOptionsobject to control the decoding process.
 * <code>[Divide(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#Divide_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject)</code> - Divides a CBORObject object by the value of a CBORObject object.
-* <code>[EncodeToBytes()](#EncodeToBytes)</code> -  At the moment, use the overload of this method that takes aPeterO.
+* <code>[EncodeToBytes()](#EncodeToBytes)</code> -  Writes the binary representation of this CBOR object and returns a byte array of that representation.
 * <code>[EncodeToBytes(PeterO.Cbor.CBOREncodeOptions)](#EncodeToBytes_PeterO_Cbor_CBOREncodeOptions)</code> - Writes the binary representation of this CBOR object and returns a byte array of that representation, using the specified options for encoding the object to CBOR format.
 * <code>[Equals(PeterO.Cbor.CBORObject)](#Equals_PeterO_Cbor_CBORObject)</code> - Compares the equality of two CBOR objects.
 * <code>[Equals(object)](#Equals_object)</code> - Determines whether this object and another object are equal and have the same type.
@@ -155,7 +155,7 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[public static readonly PeterO.Cbor.CBORObject PositiveInfinity;](#PositiveInfinity)</code> - The value positive infinity.
 * <code>[ReadJSON(System.IO.Stream)](#ReadJSON_System_IO_Stream)</code> - Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format.
 * <code>[ReadJSON(System.IO.Stream, PeterO.Cbor.CBOREncodeOptions)](#ReadJSON_System_IO_Stream_PeterO_Cbor_CBOREncodeOptions)</code> - Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format, using the specified options to control the decoding process.
-* <code>[Read(System.IO.Stream)](#Read_System_IO_Stream)</code> -  At the moment, use the overload of this method that takes aPeterO.
+* <code>[Read(System.IO.Stream)](#Read_System_IO_Stream)</code> -  Reads an object in CBOR format from a data stream.
 * <code>[Read(System.IO.Stream, PeterO.Cbor.CBOREncodeOptions)](#Read_System_IO_Stream_PeterO_Cbor_CBOREncodeOptions)</code> - Reads an object in CBOR format from a data stream, using the specified options to control the decoding process.
 * <code>[Remainder(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#Remainder_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject)</code> - Finds the remainder that results when a CBORObject object is divided by the value of a CBORObject object.
 * <code>[RemoveAt(int)](#RemoveAt_int)</code> - Removes the item at the given index of this CBOR array.
@@ -185,7 +185,7 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[WriteJSONTo(System.IO.Stream)](#WriteJSONTo_System_IO_Stream)</code> - Converts this object to a string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8.
 * <code>[WriteJSONTo(System.IO.Stream, PeterO.Cbor.JSONOptions)](#WriteJSONTo_System_IO_Stream_PeterO_Cbor_JSONOptions)</code> - Converts this object to a string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8, using the given JSON options to control the encoding process.
 * <code>[WriteJSON(object, System.IO.Stream)](#WriteJSON_object_System_IO_Stream)</code> - Converts an arbitrary object to a string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8.
-* <code>[WriteTo(System.IO.Stream)](#WriteTo_System_IO_Stream)</code> -  At the moment, use the overload of this method that takes aPeterO.
+* <code>[WriteTo(System.IO.Stream)](#WriteTo_System_IO_Stream)</code> -  Writes this CBOR object to a data stream.
 * <code>[WriteTo(System.IO.Stream, PeterO.Cbor.CBOREncodeOptions)](#WriteTo_System_IO_Stream_PeterO_Cbor_CBOREncodeOptions)</code> - Writes this CBOR object to a data stream, using the specified options for encoding the data to CBOR format.
 * <code>[WriteValue(System.IO.Stream, int, PeterO.Numbers.EInteger)](#WriteValue_System_IO_Stream_int_PeterO_Numbers_EInteger)</code> - Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as an arbitrary-precision integer.
 * <code>[WriteValue(System.IO.Stream, int, int)](#WriteValue_System_IO_Stream_int_int)</code> - Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as a 32-bit signed integer.
@@ -203,11 +203,11 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[Write(float, System.IO.Stream)](#Write_float_System_IO_Stream)</code> - Writes a 32-bit floating-point number in CBOR format to a data stream.
 * <code>[Write(int, System.IO.Stream)](#Write_int_System_IO_Stream)</code> - Writes a 32-bit signed integer in CBOR format to a data stream.
 * <code>[Write(long, System.IO.Stream)](#Write_long_System_IO_Stream)</code> - Writes a 64-bit signed integer in CBOR format to a data stream.
-* <code>[Write(object, System.IO.Stream)](#Write_object_System_IO_Stream)</code> -  At the moment, use the overload of this method that takes aPeterO.
+* <code>[Write(object, System.IO.Stream)](#Write_object_System_IO_Stream)</code> -  Writes a CBOR object to a CBOR data stream.
 * <code>[Write(object, System.IO.Stream, PeterO.Cbor.CBOREncodeOptions)](#Write_object_System_IO_Stream_PeterO_Cbor_CBOREncodeOptions)</code> - Writes an arbitrary object to a CBOR data stream, using the specified options for controlling how the object is encoded to CBOR data format.
 * <code>[Write(sbyte, System.IO.Stream)](#Write_sbyte_System_IO_Stream)</code> - Writes an 8-bit signed integer in CBOR format to a data stream.
 * <code>[Write(short, System.IO.Stream)](#Write_short_System_IO_Stream)</code> - Writes a 16-bit signed integer in CBOR format to a data stream.
-* <code>[Write(string, System.IO.Stream)](#Write_string_System_IO_Stream)</code> -  At the moment, use the overload of this method that takes aPeterO.
+* <code>[Write(string, System.IO.Stream)](#Write_string_System_IO_Stream)</code> -  Writes a string in CBOR format to a data stream.
 * <code>[Write(string, System.IO.Stream, PeterO.Cbor.CBOREncodeOptions)](#Write_string_System_IO_Stream_PeterO_Cbor_CBOREncodeOptions)</code> - Writes a string in CBOR format to a data stream, using the given options to control the encoding process.
 * <code>[Write(uint, System.IO.Stream)](#Write_uint_System_IO_Stream)</code> - Writes a 32-bit unsigned integer in CBOR format to a data stream.
 * <code>[Write(ulong, System.IO.Stream)](#Write_ulong_System_IO_Stream)</code> - Writes a 64-bit unsigned integer in CBOR format to a data stream.
@@ -1114,8 +1114,6 @@ Determines whether a value of the given key exists in this object.
     public static PeterO.Cbor.CBORObject DecodeFromBytes(
         byte[] data);
 
-<b>At the moment, use the overload of this method that takes a[PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) object. The object `CBOREncodeOptions.Default`  contains recommended settings for CBOREncodeOptions, and those settings may be adopted by this overload (without a CBOREncodeOptions argument) in the next major version.</b>
-
 Generates a CBOR object from an array of CBOR-encoded bytes.
 
 <b>Parameters:</b>
@@ -1203,7 +1201,8 @@ The quotient of the two objects.
     public byte[] EncodeToBytes(
         PeterO.Cbor.CBOREncodeOptions options);
 
-Writes the binary representation of this CBOR object and returns a byte array of that representation, using the specified options for encoding the object to CBOR format. If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the byte array in an undefined order. The example code given in**PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)**can be used to write out certain keys of a CBOR map in a given order.
+Writes the binary representation of this CBOR object and returns a byte array of that representation, using the specified options for encoding the object to CBOR format. For the CTAP2 canonical ordering, which is useful for implementing Web Authentication, call this method as follows:  `EncodeToBytes(new
+            CBOREncodeOptions(false, false, true))`
 
 <b>Parameters:</b>
 
@@ -1224,9 +1223,7 @@ The parameter <i>options</i>
 
     public byte[] EncodeToBytes();
 
-<b>At the moment, use the overload of this method that takes a[PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md)object. The object `CBOREncodeOptions.Default` contains recommended settings for CBOREncodeOptions, and those ettings may be adopted by this overload (without a CBOREncodeOptions rgument) in the next major version.</b>
-
-Writes the binary representation of this CBOR object and returns a byte array of that representation. If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the byte array in an undefined order. The example code given in**PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)**can be used to write out certain keys of a CBOR map in a given order.
+Writes the binary representation of this CBOR object and returns a byte array of that representation. If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the byte array in an undefined order. The example code given in**PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)**can be used to write out certain keys of a CBOR map in a given order. For the CTAP2 canonical ordering, which is useful for implementing Web Authentication, call  `EncodeToBytes(new CBOREncodeOptions(false,false,true))`  rather than this method.
 
 <b>Return Value:</b>
 
@@ -2347,8 +2344,6 @@ The difference of the two objects.
     public static PeterO.Cbor.CBORObject Read(
         System.IO.Stream stream);
 
-<b>At the moment, use the overload of this method that takes a[PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) object. The object `CBOREncodeOptions.Default`  contains recommended settings for CBOREncodeOptions, and those settings may be adopted by this overload (without a CBOREncodeOptions argument) in the next major version.</b>
-
 Reads an object in CBOR format from a data stream. This method will read from the stream until the end of the CBOR object is reached or an error occurs, whichever happens first.
 
 <b>Parameters:</b>
@@ -3194,8 +3189,6 @@ The parameter <i>options</i>
         object objValue,
         System.IO.Stream stream);
 
-<b>At the moment, use the overload of this method that takes a[PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md)object. The object `CBOREncodeOptions.Default` contains recommended settings for CBOREncodeOptions, and those ettings may be adopted by this overload (without a CBOREncodeOptions rgument) in the next major version.</b>
-
 Writes a CBOR object to a CBOR data stream. See the three-parameter Write method that takes a CBOREncodeOptions.
 
 <b>Parameters:</b>
@@ -3385,8 +3378,6 @@ An I/O error occurred.
         string str,
         System.IO.Stream stream);
 
-<b>At the moment, use the overload of this method that takes a[PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) object. The object `CBOREncodeOptions.Default`  contains recommended settings for CBOREncodeOptions, and those settings may be adopted by this overload (without a CBOREncodeOptions argument) in the next major version.</b>
-
 Writes a string in CBOR format to a data stream. The string will be encoded using indefinite-length encoding if its length exceeds a certain threshold (this behavior may change in future versions of this library).
 
 <b>Parameters:</b>
@@ -3548,8 +3539,6 @@ The parameter <i>outputStream</i>
 
     public void WriteTo(
         System.IO.Stream stream);
-
-<b>At the moment, use the overload of this method that takes a[PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md)object. The object `CBOREncodeOptions.Default` contains recommended settings for CBOREncodeOptions, and those ettings may be adopted by this overload (without a CBOREncodeOptions rgument) in the next major version.</b>
 
 Writes this CBOR object to a data stream. If the CBOR object contains CBOR maps, or is a CBOR map, the keys to the map are written out to the data stream in an undefined order. See the examples (written in C# for the .NET version) for ways to write out certain keys of a CBOR map in a given order.
 

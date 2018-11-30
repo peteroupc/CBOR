@@ -22,8 +22,9 @@ Not documented yet.
 
 <b>Parameters:</b>
 
- * <i>obj</i>: Not documented yet.
+ * <i>obj</i>: The parameter  <i>obj</i>
+ is not documented yet.
 
 <b>Return Value:</b>
 
-Not documented yet.
+The return value is not documented yet.

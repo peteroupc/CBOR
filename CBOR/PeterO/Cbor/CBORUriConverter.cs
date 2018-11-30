@@ -16,17 +16,22 @@ namespace PeterO.Cbor {
       }
       bool isiri = obj.HasMostOuterTag(266);
       bool isiriref = obj.HasMostOuterTag(267);
-if (isiriref && !URIUtility.isValidIRI(obj.AsString(),
-                    URIUtility.ParseMode.IRIStrict)) {
+if (
+  isiriref && !URIUtility.isValidIRI(
+  obj.AsString(),
+  URIUtility.ParseMode.IRIStrict)) {
   throw new CBORException("String is not a valid IRI Reference");
 }
-if (isiri && (!URIUtility.isValidIRI(obj.AsString(),
-                    URIUtility.ParseMode.IRIStrict) ||
+if (
+  isiri && (!URIUtility.isValidIRI(
+  obj.AsString(),
+  URIUtility.ParseMode.IRIStrict) ||
    !URIUtility.hasScheme(obj.AsString()))) {
   throw new CBORException("String is not a valid IRI");
 }
-      if (!URIUtility.isValidIRI(obj.AsString(),
-      URIUtility.ParseMode.URIStrict) ||
+      if (!URIUtility.isValidIRI(
+  obj.AsString(),
+  URIUtility.ParseMode.URIStrict) ||
    !URIUtility.hasScheme(obj.AsString())) {
   throw new CBORException("String is not a valid URI");
 }
@@ -52,12 +57,12 @@ if (isiri && (!URIUtility.isValidIRI(obj.AsString(),
       }
       string uriString = uri.ToString();
       var nonascii = false;
-      for (var i = 0;i<uriString.Length; ++i) {
-        if (uriString[i]>= 0x80) {
+      for (var i = 0; i < uriString.Length; ++i) {
+        if (uriString[i] >= 0x80) {
  nonascii = true;
 }
       }
-      int tag=(nonascii) ? 266 : 32;
+      int tag = nonascii ? 266 : 32;
 if (!URIUtility.hasScheme(uriString)) {
  tag = 267;
 }

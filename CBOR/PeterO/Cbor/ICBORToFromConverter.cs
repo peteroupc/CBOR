@@ -8,13 +8,12 @@ at: http://peteroupc.github.io/
 using System;
 
 namespace PeterO.Cbor {
-    /// <summary>Not documented yet.</summary>
-    /// <typeparam name='T'>Type parameter not documented yet.</typeparam>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.Cbor.ICBORToFromConverter`1"]/*'/>
   public interface ICBORToFromConverter<T> : ICBORConverter<T>
   {
-    /// <summary>Not documented yet.</summary>
-    /// <param name='obj'>Not documented yet.</param>
-    /// <returns>Not documented yet.</returns>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.ICBORToFromConverter`1.FromCBORObject(PeterO.Cbor.CBORObject)"]/*'/>
     T FromCBORObject(CBORObject obj);
   }
 }

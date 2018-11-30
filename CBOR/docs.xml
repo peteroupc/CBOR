@@ -148,9 +148,9 @@
 <doc name="M:PeterO.BigInteger.ToString">
 <summary>Converts this object to a text string in base 10.
     </summary>
-    <returns>A string representation of this object. If negative, the string will begin
-      with a minus sign ("-", U+002D). The string will use the basic digits 0 to
-      9 (U+0030 to U+0039).
+    <returns>A string representation of this object. If negative, the string will
+      beginthe with a minus sign ("-", U+002D). The string will use the basic
+      digits 0 to 9 (U+0030 to U+0039).
     </returns>
 </doc>
 <doc name="P:PeterO.BigInteger.Zero">
@@ -365,18 +365,19 @@
 <doc name="M:PeterO.Cbor.CBOREncodeOptions.#ctor(System.Boolean,System.Boolean,System.Boolean)">
 
             <summary>Initializes a new instance of the <see cref='T:PeterO.Cbor.CBOREncodeOptions'/> class.</summary><param name='useIndefLengthStrings'>A value indicating whether to
-            always encode strings with a definite-length encoding.</param><param name='allowDuplicateKeys'>A value indicating whether to
-            disallow duplicate keys when reading CBOR objects from a data
-            stream.</param><param name='ctap2Canonical'>Either <c>true</c> or <c>false</c>
-            .</param>
+            encode strings with a definite-length encoding in certain cases.</param><param name='allowDuplicateKeys'>A value indicating whether to
+            allow duplicate keys when reading CBOR objects from a data
+            stream.</param><param name='ctap2Canonical'>A value indicating whether CBOR objects are written
+            out using the CTAP2 canonical CBOR encoding form, which is useful
+for implementing Web Authentication.</param>
 
 </doc>
 <doc name="P:PeterO.Cbor.CBOREncodeOptions.AllowDuplicateKeys">
 
-            <summary>Gets a value indicating whether to disallow duplicate keys when reading
+            <summary>Gets a value indicating whether to allow duplicate keys when reading
       CBOR objects from a data stream. Used only when decoding CBOR objects.
-    </summary><value>A value indicating whether to disallow duplicate keys when reading CBOR
-      objects from a data stream.
+    </summary><value>A value indicating whether to allow duplicate keys when reading CBOR
+      objects from a data stream.  The default is false.
     </value>
 
 </doc>
@@ -438,10 +439,10 @@ for implementing Web Authentication. In this form,
 </doc>
 <doc name="P:PeterO.Cbor.CBOREncodeOptions.UseIndefLengthStrings">
 
-            <summary>Gets a value indicating whether to always encode strings with a
-      definite-length encoding.
-    </summary><value>A value indicating whether to always encode strings with a
-      definite-length encoding.
+            <summary>Gets a value indicating whether to encode strings with an
+      indefinite-length encoding under certain circumstances.
+    </summary><value>A value indicating whether to encode strings with an
+      indefinite-length encoding under certain circumstances.  The default is false.
     </value>
 
 </doc>
@@ -1151,14 +1152,7 @@ for implementing Web Authentication. In this form,
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.DecodeFromBytes(System.Byte[])">
 
-            <summary><para><b>At the moment, use the overload of this method that takes
-            a
-            <see cref='T:PeterO.Cbor.CBOREncodeOptions'/> object. The object
-            <c>CBOREncodeOptions.Default</c> contains recommended settings for
-            CBOREncodeOptions, and those settings may be adopted by this
-            overload (without a CBOREncodeOptions argument) in the next major
-            version.</b></para>
-            <para>Generates a CBOR object from an array of CBOR-encoded
+            <summary><para>Generates a CBOR object from an array of CBOR-encoded
             bytes.</para></summary><param name='data'>A byte array in which a single CBOR object is encoded.</param><returns>A CBOR object decoded from the given byte array.</returns><exception cref='T:PeterO.Cbor.CBORException'>There was an error in
             reading or parsing the data. This includes cases where not all of
             the byte array represents a CBOR object. This exception is also
@@ -1221,39 +1215,29 @@ for implementing Web Authentication. In this form,
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.EncodeToBytes">
 
-            <summary><para><b>At the moment, use the overload of this method that takes a
-          <see cref='T:PeterO.Cbor.CBOREncodeOptions'/>
-           object. The object
-          <c>CBOREncodeOptions.Default</c>
-           contains recommended settings for CBOREncodeOptions, and those
-          settings may be adopted by this overload (without a CBOREncodeOptions
-          argument) in the next major version.</b>
-      </para>
-      <para>Writes the binary representation of this CBOR object and returns a byte
+            <summary><para>Writes the binary representation of this CBOR object and returns a byte
         array of that representation. If the CBOR object contains CBOR maps, or
         is a CBOR map itself, the keys to the map are written out to the byte
         array in an undefined order. The example code given in
         <see cref='M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)'/>
-         can be used to write out certain keys of a CBOR map in a given order.
+         can be used to write out certain keys of a CBOR map in a given order.  For the CTAP2 canonical ordering, which is useful for implementing Web Authentication, call <c>EncodeToBytes(new CBOREncodeOptions(false,false,true))</c> rather than this method.
       </para>
     </summary><returns>A byte array in CBOR format.
     </returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.EncodeToBytes(PeterO.Cbor.CBOREncodeOptions)">
-
-            <summary>Writes the binary representation of this CBOR object and
+<summary>Writes the binary representation of this CBOR object and
             returns a byte array of that representation, using the specified
-            options for encoding the object to CBOR format. If the CBOR object
-            contains CBOR maps, or is a CBOR map itself, the keys to the map
-            are written out to the byte array in an undefined order. The
-            example code given in
-            <see cref='M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)'/>
-            can be used to write out certain keys of a CBOR map in a given
-            order.</summary><param name='options'>Options for encoding the data to
-            CBOR.</param><returns>A byte array in CBOR format.</returns><exception cref='T:System.ArgumentNullException'>The parameter
+            options for encoding the object to CBOR format. For the CTAP2
+            canonical ordering, which is useful for implementing Web
+            Authentication, call this method as follows: <c>EncodeToBytes(new
+            CBOREncodeOptions(false, false, true))</c></summary>
+            <param name='options'>Options for encoding the data to
+            CBOR.</param>
+            <returns>A byte array in CBOR format.</returns>
+            <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='options'/> is null.</exception>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Equals(PeterO.Cbor.CBORObject)">
 
@@ -1854,15 +1838,14 @@ Note that for security reasons, certain types are not supported even if they con
     </returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.HasMostOuterTag(PeterO.Numbers.EInteger)">
-<summary>Not documented yet.</summary>
-             <param name='bigTagValue'>The parameter <paramref name='bigTagValue'/> is not documented yet.</param>
-             <returns>Either <c>true</c> or <c>false</c>.</returns>
-             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='bigTagValue'/> is null.</exception>
+
+            <summary>Not documented yet.</summary><param name='bigTagValue'>The parameter <paramref name='bigTagValue'/> is not documented yet.</param><returns>Either <c>true</c> or <c>false</c>.</returns><exception cref='T:System.ArgumentNullException'>The parameter <paramref name='bigTagValue'/> is null.</exception>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.HasMostOuterTag(System.Int32)">
-<summary>Not documented yet.</summary>
-             <param name='tagValue'>The parameter <paramref name='tagValue'/> is not documented yet.</param>
-             <returns>Either <c>true</c> or <c>false</c>.</returns>
+
+            <summary>Not documented yet.</summary><param name='tagValue'>The parameter <paramref name='tagValue'/> is not documented yet.</param><returns>Either <c>true</c> or <c>false</c>.</returns>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.HasTag(PeterO.BigInteger)">
 <summary>Returns whether this object has a tag of the given number.
@@ -2147,14 +2130,7 @@ is not an integer 0 or greater and less than the size of the array.</exception><
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Read(System.IO.Stream)">
 
-            <summary><para><b>At the moment, use the overload of this method that takes
-            a
-            <see cref='T:PeterO.Cbor.CBOREncodeOptions'/> object. The object
-            <c>CBOREncodeOptions.Default</c> contains recommended settings for
-            CBOREncodeOptions, and those settings may be adopted by this
-            overload (without a CBOREncodeOptions argument) in the next major
-            version.</b></para>
-            <para>Reads an object in CBOR format from a data stream. This
+            <summary><para>Reads an object in CBOR format from a data stream. This
             method will read from the stream until the end of the CBOR object
             is reached or an error occurs, whichever happens
             first.</para></summary><param name='stream'>A readable data stream.</param><returns>A CBOR object that was read.</returns><exception cref='T:System.ArgumentNullException'>The parameter
@@ -3135,15 +3111,7 @@ CBOR objects to JSON strings, use the <see cref='M:PeterO.Cbor.CBORObject.ToJSON
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Write(System.Object,System.IO.Stream)">
 
-            <summary><para><b>At the moment, use the overload of this method that takes a
-          <see cref='T:PeterO.Cbor.CBOREncodeOptions'/>
-           object. The object
-          <c>CBOREncodeOptions.Default</c>
-           contains recommended settings for CBOREncodeOptions, and those
-          settings may be adopted by this overload (without a CBOREncodeOptions
-          argument) in the next major version.</b>
-      </para>
-      <para>Writes a CBOR object to a CBOR data stream. See the three-parameter
+            <summary><para>Writes a CBOR object to a CBOR data stream. See the three-parameter
         Write method that takes a CBOREncodeOptions.
       </para>
     </summary><param name='objValue'>The parameter
@@ -3203,14 +3171,7 @@ CBOR objects to JSON strings, use the <see cref='M:PeterO.Cbor.CBORObject.ToJSON
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Write(System.String,System.IO.Stream)">
 
-            <summary><para><b>At the moment, use the overload of this method that takes
-            a
-            <see cref='T:PeterO.Cbor.CBOREncodeOptions'/> object. The object
-            <c>CBOREncodeOptions.Default</c> contains recommended settings for
-            CBOREncodeOptions, and those settings may be adopted by this
-            overload (without a CBOREncodeOptions argument) in the next major
-            version.</b></para>
-            <para>Writes a string in CBOR format to a data stream. The string
+            <summary><para>Writes a string in CBOR format to a data stream. The string
             will be encoded using indefinite-length encoding if its length
             exceeds a certain threshold (this behavior may change in future
             versions of this library).</para></summary><param name='str'>The string to write. Can be null.</param><param name='stream'>A writable data stream.</param><exception cref='T:System.ArgumentNullException'>The parameter
@@ -3302,15 +3263,7 @@ CBOR objects to JSON strings, use the <see cref='M:PeterO.Cbor.CBORObject.ToJSON
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)">
-<summary><para><b>At the moment, use the overload of this method that takes a
-          <see cref='T:PeterO.Cbor.CBOREncodeOptions'/>
-           object. The object
-          <c>CBOREncodeOptions.Default</c>
-           contains recommended settings for CBOREncodeOptions, and those
-          settings may be adopted by this overload (without a CBOREncodeOptions
-          argument) in the next major version.</b>
-      </para>
-      <para>Writes this CBOR object to a data stream. If the CBOR object contains
+<summary><para>Writes this CBOR object to a data stream. If the CBOR object contains
         CBOR maps, or is a CBOR map, the keys to the map are written out to the
         data stream in an undefined order. See the examples (written in C# for
         the .NET version) for ways to write out certain keys of a CBOR map in a
@@ -3716,11 +3669,11 @@ stream.Write(bytes, 0, bytes.Length);
 </doc>
 <doc name="P:PeterO.Cbor.CBORTypeMapper.ConverterInfo.Converter">
 <summary>Gets a value not documented yet.</summary>
-             <value>A value not documented yet.</value>
+            <value>A value not documented yet.</value>
 </doc>
 <doc name="P:PeterO.Cbor.CBORTypeMapper.ConverterInfo.ToObject">
 <summary>Gets a value not documented yet.</summary>
-             <value>A value not documented yet.</value>
+            <value>A value not documented yet.</value>
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeMapper.FilterTypeName(System.String)">
 
@@ -3735,9 +3688,9 @@ stream.Write(bytes, 0, bytes.Length);
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORUuidConverter.ToCBORObject(System.Guid)">
-<summary>Not documented yet.</summary>
-             <param name='obj'>The parameter <paramref name='obj'/> is not documented yet.</param>
-             <returns>A CBORObject object.</returns>
+
+            <summary>Not documented yet.</summary><param name='obj'>The parameter <paramref name='obj'/> is not documented yet.</param><returns>A CBORObject object.</returns>
+
 </doc>
 <doc name="M:PeterO.Cbor.FastInteger2.Multiply(System.Int32)">
 
@@ -3821,12 +3774,13 @@ stream.Write(bytes, 0, bytes.Length);
 </doc>
 <doc name="T:PeterO.Cbor.ICBORToFromConverter`1">
 
-            <summary>Not documented yet.</summary>
+            <summary>Not documented yet.</summary><typeparam name='T'>Type parameter not documented yet.</typeparam>
 
 </doc>
 <doc name="M:PeterO.Cbor.ICBORToFromConverter`1.FromCBORObject(PeterO.Cbor.CBORObject)">
-<summary>Not documented yet.
-    </summary>
+
+            <summary>Not documented yet.</summary><param name='obj'>The parameter <paramref name='obj'/> is not documented yet.</param><returns>The return value is not documented yet.</returns>
+
 </doc>
 <doc name="T:PeterO.Cbor.ICharacterInput">
 
@@ -4142,7 +4096,7 @@ stream.Write(bytes, 0, bytes.Length);
     </param>
     <returns><c>true</c>
        if the substring is a valid CURIE reference under RDFA 1; otherwise, <c>false</c>
-      . Returns false if
+       . Returns false if
       <paramref name='s'/>
        is null.
     </returns>
@@ -4158,7 +4112,7 @@ stream.Write(bytes, 0, bytes.Length);
       <paramref name='offset'/>
        is less than
       <paramref name='length'/>
-      .
+       .
     </exception>
     <exception cref='T:System.ArgumentNullException'>The parameter
       <paramref name='s'/>
@@ -4283,7 +4237,7 @@ stream.Write(bytes, 0, bytes.Length);
       <paramref name='offset'/>
        is less than
       <paramref name='length'/>
-      .
+       .
     </exception>
     <exception cref='T:System.ArgumentNullException'>The parameter
       <paramref name='s'/>
