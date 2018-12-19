@@ -412,6 +412,9 @@ for implementing Web Authentication. In this form,
     </summary>
 
 </doc>
+<doc name="F:PeterO.Cbor.CBOREncodeOptions.DefaultCtap2Canonical">
+<summary>Not documented yet.</summary>
+</doc>
 <doc name="F:PeterO.Cbor.CBOREncodeOptions.NoDuplicateKeys">
 <summary>Disallow duplicate keys when reading CBOR objects from a data stream. Used
       only when decoding CBOR objects. Value: 2.
@@ -1227,17 +1230,16 @@ for implementing Web Authentication. In this form,
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.EncodeToBytes(PeterO.Cbor.CBOREncodeOptions)">
-<summary>Writes the binary representation of this CBOR object and
+
+            <summary>Writes the binary representation of this CBOR object and
             returns a byte array of that representation, using the specified
             options for encoding the object to CBOR format. For the CTAP2
             canonical ordering, which is useful for implementing Web
             Authentication, call this method as follows: <c>EncodeToBytes(new
-            CBOREncodeOptions(false, false, true))</c></summary>
-            <param name='options'>Options for encoding the data to
-            CBOR.</param>
-            <returns>A byte array in CBOR format.</returns>
-            <exception cref='T:System.ArgumentNullException'>The parameter
+            CBOREncodeOptions(false, false, true))</c></summary><param name='options'>Options for encoding the data to
+            CBOR.</param><returns>A byte array in CBOR format.</returns><exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='options'/> is null.</exception>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Equals(PeterO.Cbor.CBORObject)">
 
@@ -3911,8 +3913,8 @@ stream.Write(bytes, 0, bytes.Length);
         schemes can further restrict the syntax of the authority, path, and
         query component (see also RFC 7320). However, the syntax of fragment
         identifiers depends on the media type (also known as MIME type) of the
-        resource a URI references (see also RFC 3986 and RFC 7320). As of Aug.
-        24, 2018, only the following media types specify a syntax for fragment
+        resource a URI references (see also RFC 3986 and RFC 7320). As of Dec. 17,
+        2018, only the following media types specify a syntax for fragment
         identifiers:
       </para>
       <list>

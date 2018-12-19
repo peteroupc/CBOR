@@ -10,6 +10,11 @@ namespace PeterO.Cbor {
       new CBOREncodeOptions(false, false);
 
     /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.Cbor.CBOREncodeOptions.DefaultCtap2Canonical"]/*'/>
+    public static readonly CBOREncodeOptions DefaultCtap2Canonical =
+      new CBOREncodeOptions(false, false, true);
+
+    /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBOREncodeOptions.#ctor"]/*'/>
     public CBOREncodeOptions() : this(false, false) {
 }

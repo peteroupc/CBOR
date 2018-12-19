@@ -449,9 +449,6 @@ namespace PeterO.Cbor {
     internal static void WriteJSONStringUnquoted(
       string str,
       StringOutput sb) {
-      // Surrogates were already verified when this
-      // string was added to the CBOR object; that check
-      // is not repeated here
       var first = true;
       for (var i = 0; i < str.Length; ++i) {
         char c = str[i];
@@ -495,12 +492,24 @@ namespace PeterO.Cbor {
             sb.WriteCodePoint((int)Hex16[(int)(c >> 4)]);
             sb.WriteCodePoint((int)Hex16[(int)(c & 15)]);
           }
-        } else if (!first) {
+        } else {
           if ((c & 0xfc00) == 0xd800) {
-            sb.WriteString(str, i, 2);
-            ++i;
-          } else {
-            sb.WriteCodePoint((int)c);
+           if (i >= str.Length-1 || (str[i + 1] & 0xfc00) != 0xdc00) {
+            // TODO: Add JSONOptions for handling of unpaired
+            // surrogates in strings (at least U + FFFD/escape seqs.).
+            // NOTE: RFC 8259 doesn't prohibit any particular
+            // error-handling behavior when a writer of JSON
+            // receives a string with an unpaired surrogate.
+            throw new CBORException("Unpaired surrogate in string");
+           }
+          }
+          if (!first) {
+            if ((c & 0xfc00) == 0xd800) {
+              sb.WriteString(str, i, 2);
+              ++i;
+            } else {
+              sb.WriteCodePoint((int)c);
+            }
           }
         }
       }

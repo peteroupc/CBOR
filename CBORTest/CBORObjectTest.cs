@@ -4984,6 +4984,164 @@ ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
   0x01, 0xfe, 0xdd, 0xfd, 0xdc };
       cbor.Add(b64bytes);
       TestSucceedingJSON(cbor.ToJSONString());
+cbor = CBORObject.NewMap();
+cbor.Add("key","\d800\dc00");
+try {
+ cbor.ToJSONString();
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+cbor = CBORObject.NewMap();
+cbor.Add("key","\d800");
+try {
+ cbor.ToJSONString();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+cbor = CBORObject.NewMap();
+cbor.Add("key","\dc00");
+try {
+ cbor.ToJSONString();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+cbor = CBORObject.NewMap();
+cbor.Add("key","\d800\dc00\d800");
+try {
+ cbor.ToJSONString();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+cbor = CBORObject.NewMap();
+cbor.Add("key","\dc00\dc00\d800");
+try {
+ cbor.ToJSONString();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+
+cbor = CBORObject.NewMap();
+cbor.Add("\d800\dc00","value");
+try {
+ cbor.ToJSONString();
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+cbor = CBORObject.NewMap();
+cbor.Add("\d800","value");
+try {
+ cbor.ToJSONString();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+cbor = CBORObject.NewMap();
+cbor.Add("\dc00","value");
+try {
+ cbor.ToJSONString();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+cbor = CBORObject.NewMap();
+cbor.Add("\d800\dc00\d800","value");
+try {
+ cbor.ToJSONString();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+cbor = CBORObject.NewMap();
+cbor.Add("\dc00\dc00\d800","value");
+try {
+ cbor.ToJSONString();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+
+cbor = CBORObject.NewArray();
+cbor.Add("\d800\dc00");
+try {
+ cbor.ToJSONString();
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+cbor = CBORObject.NewArray();
+cbor.Add("\d800");
+try {
+ cbor.ToJSONString();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+cbor = CBORObject.NewArray();
+cbor.Add("\dc00");
+try {
+ cbor.ToJSONString();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+cbor = CBORObject.NewArray();
+cbor.Add("\d800\dc00\d800");
+try {
+ cbor.ToJSONString();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+cbor = CBORObject.NewArray();
+cbor.Add("\dc00\dc00\d800");
+try {
+ cbor.ToJSONString();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
     }
 
     [Test]
