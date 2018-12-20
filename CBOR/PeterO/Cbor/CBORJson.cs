@@ -494,7 +494,7 @@ namespace PeterO.Cbor {
           }
         } else {
           if ((c & 0xfc00) == 0xd800) {
-           if (i >= str.Length-1 || (str[i + 1] & 0xfc00) != 0xdc00) {
+           if (i >= str.Length - 1 || (str[i + 1] & 0xfc00) != 0xdc00) {
             // TODO: Add JSONOptions for handling of unpaired
             // surrogates in strings (at least U + FFFD/escape seqs.).
             // NOTE: RFC 8259 doesn't prohibit any particular
