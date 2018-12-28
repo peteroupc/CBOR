@@ -548,8 +548,7 @@ The following example creates a CBOR array and adds several CBOR objects, one of
 
 <b>Parameters:</b>
 
- * <i>obj</i>: The parameter  <i>obj</i>
- is a CBOR object.
+ * <i>obj</i>: A CBOR object (or an object convertible to a CBOR object) to add to this CBOR array.
 
 <b>Return Value:</b>
 
@@ -558,7 +557,7 @@ This instance.
 <b>Exceptions:</b>
 
  * System.InvalidOperationException:
-This object is not an array.
+This instance is not an array.
 
  * System.ArgumentException:
 The type of  <i>obj</i>

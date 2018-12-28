@@ -492,7 +492,8 @@ for implementing Web Authentication. In this form,
 
             <summary><para>Represents an object in Concise Binary Object Representation (CBOR) and
       contains methods for reading and writing CBOR data. CBOR is defined in RFC
-      7049.</para>
+      7049.</para></summary>
+<remarks>
       <para><b>Converting CBOR objects</b>
       </para>
       <para>There are many ways to get a CBOR object, including from bytes,
@@ -593,7 +594,7 @@ for implementing Web Authentication. In this form,
       <para>The ReadJSON and FromJSONString methods currently have nesting depths
         of 1000.
       </para>
-    </summary>
+    </remarks>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Abs">
@@ -638,8 +639,7 @@ for implementing Web Authentication. In this form,
             with a given tag, call the <c>CBORObject.FromObjectAndTag</c>
             method and pass the CBOR object and the desired tag number to that
             method.</para>
-             </summary><param name='obj'>The parameter <paramref name='obj'/> is a CBOR
-            object.</param><returns>This instance.</returns><exception cref='T:System.InvalidOperationException'>This object is
+             </summary><param name='obj'>A CBOR object (or an object convertible to a CBOR object) to add to this CBOR array.</param><returns>This instance.</returns><exception cref='T:System.InvalidOperationException'>This instance is
             not an array.</exception><exception cref='T:System.ArgumentException'>The type of <paramref name='obj'/> is not supported.</exception><example><para>The following example creates a CBOR array and adds several
             CBOR objects, one of which has a custom CBOR tag, to that array.
             Note the chaining behavior made possible by this method.</para>
