@@ -82,7 +82,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Numbers">
-      <HintPath>..\packages\PeterO.Numbers.1.1.2\lib\net40\Numbers.dll</HintPath>
+      <HintPath>..\packages\PeterO.Numbers.1.2.0\lib\net40\Numbers.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

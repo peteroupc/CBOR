@@ -1,5 +1,5 @@
 <package
-><metadata><version>4.0.0-alpha1</version><id>PeterO.Cbor</id><requireLicenseAcceptance>false</requireLicenseAcceptance><releaseNotes>Version 4.0.0-alpha1:
+><metadata><version>3.4.0</version><id>PeterO.Cbor</id><requireLicenseAcceptance>false</requireLicenseAcceptance><releaseNotes>Version 4.0.0-alpha1:
 
 - Remove all APIs obsoleted since version 3.4.  This
   includes the BigInteger, ExtendedDecimal, and ExtendedFloat APIs,
@@ -12,5 +12,5 @@
   PODOptions.RemoveIsPrefix was removed.
 - Certain other changes in CBOR object reading and validation were
   made; they are largely compatible with previous versions but may be
-  backwards-incompatible in certain rare cases</releaseNotes><summary></summary><licenseUrl>http://creativecommons.org/publicdomain/zero/1.0/</licenseUrl><projectUrl>https://github.com/peteroupc/CBOR</projectUrl><authors>Peter Occil</authors><description>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049.</description><owners>Peter Occil</owners><title>CBOR (Concise Binary Object Representation)</title><tags>cbor data serialization binary json numbers arithmetic</tags><dependencies><group><dependency id='PeterO.Numbers' version='1.1.2' /></group></dependencies></metadata><files><file src='CBOR/bin/Release/netstandard1.0/CBOR.dll' target='/lib/netstandard1.0' /><file src='CBOR/bin/Release/netstandard1.0/CBOR.xml' target='/lib/netstandard1.0' /><file src='CBOR20/bin/Release/CBOR.dll' target='/lib/net20' /><file src='CBOR20/bin/Release/CBOR.xml' target='/lib/net20' /><file src='CBOR40/bin/Release/CBOR.dll' target='/lib/net40' /><file src='CBOR40/bin/Release/CBOR.xml' target='/lib/net40' /></files></package
+  backwards-incompatible in certain rare cases</releaseNotes><summary></summary><license type='expression'>CC0-1.0</license><projectUrl>https://github.com/peteroupc/CBOR</projectUrl><authors>Peter Occil</authors><description>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049.</description><owners>Peter Occil</owners><title>CBOR (Concise Binary Object Representation)</title><tags>cbor data serialization binary json</tags><dependencies><group><dependency id='PeterO.Numbers' version='1.1.2' /></group></dependencies></metadata><files><file src='CBOR/bin/Release/netstandard1.0/CBOR.dll' target='/lib/netstandard1.0' /><file src='CBOR/bin/Release/netstandard1.0/CBOR.xml' target='/lib/netstandard1.0' /><file src='CBOR20/bin/Release/CBOR.dll' target='/lib/net20' /><file src='CBOR20/bin/Release/CBOR.xml' target='/lib/net20' /><file src='CBOR40/bin/Release/CBOR.dll' target='/lib/net40' /><file src='CBOR40/bin/Release/CBOR.xml' target='/lib/net40' /></files></package
 >

@@ -68,7 +68,7 @@ Version 4.0.0-alpha1:
     </CustomCommands>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="PeterO.Numbers" Version="1.1.2" />
+    <PackageReference Include="PeterO.Numbers" Version="1.2.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="PeterO\Cbor\CBORTag1.cs" />
