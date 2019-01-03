@@ -3,8 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard1.0;net461</TargetFrameworks>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>3.4.0</Version>
-    <Version>4.0.0-alpha1</Version>
+    <Version>4.0.0-alpha2</Version>
     <Owners>Peter Occil</Owners>
     <Description>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049.</Description>
     <Summary>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049. </Summary>
@@ -14,6 +13,11 @@
     <PackageLicenseUrl>http://creativecommons.org/publicdomain/zero/1.0/</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/peteroupc/CBOR</PackageProjectUrl>
     <PackageReleaseNotes>
+Version 4.0.0-alpha2:
+
+- Support CBOR tags for IRIs and IRI references.
+- Add CBOREncodeOptions.DefaultCtap2Canonical field.
+
 Version 4.0.0-alpha1:
 
 - Remove all APIs obsoleted since version 3.4.  This
@@ -32,7 +36,6 @@ Version 4.0.0-alpha1:
 </PackageReleaseNotes>
     <PackageTags>cbor data serialization binary json</PackageTags>
     <SignAssembly>True</SignAssembly>
-    <PackageTags>cbor data serialization binary json numbers arithmetic</PackageTags>
     <AssemblyOriginatorKeyFile>PeterO.snk</AssemblyOriginatorKeyFile>
     <Title>CBOR (Concise Binary Object Representation)</Title>
     <PackOnBuild>true</PackOnBuild>
@@ -68,7 +71,7 @@ Version 4.0.0-alpha1:
     </CustomCommands>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="PeterO.Numbers" Version="1.2.0" />
+    <PackageReference Include="PeterO.Numbers" Version="1.2.1" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="PeterO\Cbor\CBORTag1.cs" />

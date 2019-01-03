@@ -316,10 +316,12 @@ namespace PeterO.Cbor {
         bool isNormalYear = year.Remainder(4).Sign != 0 ||
         (year.Remainder(100).Sign == 0 && year.Remainder(400).Sign != 0);
         EInteger ei = EInteger.FromInt32(startYear);
-        for (; ei.Add(401).CompareTo(year) < 0;
-            ei = ei.Add(400)) {
-          numDays = numDays.Add(146097);
-        }
+        if (ei.Add(401).CompareTo(year) < 0) {
+EInteger y2 = year.Subtract(2);
+EInteger adds = y2.Subtract(startYear).Divide(400);
+ei = y2.Subtract(
+  y2.Subtract(startYear).Remainder(400));
+       }
         for (; ei.CompareTo(year) < 0;
             ei = ei.Add(1)) {
           numDays = numDays.Add(365);

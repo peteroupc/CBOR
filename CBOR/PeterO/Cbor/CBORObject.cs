@@ -457,8 +457,22 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.GetOrDefault(System.Object,PeterO.Cbor.CBORObject)"]/*'/>
+    /// <summary>Gets the value of a CBOR object by integer index in this
+    /// array or by CBOR object key in this map, or a default value if that
+    /// value is not found.</summary>
+    /// <param name='key'>An arbitrary object. If this is a CBOR map, this
+    /// parameter is converted to a CBOR object serving as the key to the
+    /// map or index to the array, and can be null. If this is a CBOR
+    /// array, the key must be an integer 0 or greater and less than the
+    /// size of the array, and may be any object convertible to a CBOR
+    /// integer.</param>
+    /// <param name='defaultValue'>A value to return if an item with the
+    /// given key doesn't exist, or if the CBOR object is an array and the
+    /// key is not an integer 0 or greater and less than the size of the
+    /// array.</param>
+    /// <returns>The CBOR object referred to by index or key in this array
+    /// or map. If this is a CBOR map, returns null if an item with the
+    /// given key doesn't exist.</returns>
     public CBORObject GetOrDefault(object key, CBORObject defaultValue) {
         if (this.ItemType == CBORObjectTypeArray) {
 int index = 0;
@@ -2442,8 +2456,13 @@ CBORObject ckey = key == null ? CBORObject.Null :
       return new[] { LowHighToEInteger(this.tagLow, this.tagHigh) };
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasMostOuterTag(System.Int32)"]/*'/>
+    /// <summary>Returns whether this object has an outermost tag and that
+    /// tag is of the given number.</summary>
+    /// <param name='tagValue'>The tag number.</param>
+    /// <returns><c>true</c> if this object has an outermost tag and that
+    /// tag is of the given number; otherwise, <c>false</c>.</returns>
+    /// <exception cref='T:System.ArgumentException'>The parameter
+    /// <paramref name='tagValue'/> is less than 0.</exception>
  public bool HasMostOuterTag(int tagValue) {
       if (tagValue < 0) {
         throw new ArgumentException("tagValue (" + tagValue +
@@ -2452,8 +2471,15 @@ CBORObject ckey = key == null ? CBORObject.Null :
  return this.IsTagged && this.tagHigh == 0 && this.tagLow == tagValue;
  }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasMostOuterTag(PeterO.Numbers.EInteger)"]/*'/>
+    /// <summary>Returns whether this object has an outermost tag and that
+    /// tag is of the given number.</summary>
+    /// <param name='bigTagValue'>The tag number.</param>
+    /// <returns><c>true</c> if this object has an outermost tag and that
+    /// tag is of the given number; otherwise, <c>false</c>.</returns>
+    /// <exception cref='T:System.ArgumentNullException'>The parameter
+    /// <paramref name='bigTagValue'/> is null.</exception>
+    /// <exception cref='T:System.ArgumentException'>The parameter
+    /// <paramref name='bigTagValue'/> is less than 0.</exception>
  public bool HasMostOuterTag(EInteger bigTagValue) {
     if (bigTagValue == null) {
   throw new ArgumentNullException(nameof(bigTagValue));
@@ -2465,8 +2491,15 @@ CBORObject ckey = key == null ? CBORObject.Null :
  return (!this.IsTagged) ? false : this.MostOuterTag.Equals(bigTagValue);
  }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasTag(System.Int32)"]/*'/>
+    /// <summary>Returns whether this object has a tag of the given
+    /// number.</summary>
+    /// <param name='tagValue'>The tag value to search for.</param>
+    /// <returns><c>true</c> if this object has a tag of the given number;
+    /// otherwise, <c>false</c>.</returns>
+    /// <exception cref='T:System.ArgumentException'>The parameter
+    /// <paramref name='tagValue'/> is less than 0.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='tagValue'/> is null.</exception>
     public bool HasTag(int tagValue) {
       if (tagValue < 0) {
         throw new ArgumentException("tagValue (" + tagValue +
@@ -2489,8 +2522,15 @@ CBORObject ckey = key == null ? CBORObject.Null :
       }
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasTag(PeterO.Numbers.EInteger)"]/*'/>
+    /// <summary>Returns whether this object has a tag of the given
+    /// number.</summary>
+    /// <param name='bigTagValue'>The tag value to search for.</param>
+    /// <returns><c>true</c> if this object has a tag of the given number;
+    /// otherwise, <c>false</c>.</returns>
+    /// <exception cref='T:System.ArgumentNullException'>The parameter
+    /// <paramref name='bigTagValue'/> is null.</exception>
+    /// <exception cref='T:System.ArgumentException'>The parameter
+    /// <paramref name='bigTagValue'/> is less than 0.</exception>
     public bool HasTag(EInteger bigTagValue) {
       if (bigTagValue == null) {
         throw new ArgumentNullException(nameof(bigTagValue));

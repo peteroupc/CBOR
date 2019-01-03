@@ -406,15 +406,14 @@ for implementing Web Authentication. In this form,
 <doc name="F:PeterO.Cbor.CBOREncodeOptions.Default">
 
             <summary>Default options for CBOR objects. Disallow duplicate keys, and always
-      encode strings using definite-length encoding. These are recommended
-      settings for the options that may be adopted by certain CBORObject methods
-      in the next major version.
+      encode strings using definite-length encoding.
     </summary>
 
 </doc>
 <doc name="F:PeterO.Cbor.CBOREncodeOptions.DefaultCtap2Canonical">
 
-            <summary>Not documented yet.</summary>
+            <summary>Default options for CBOR objects serialized using the CTAP2 canonicalization (used in Web Authentication, among other specifications). Disallow duplicate keys, and always
+      encode strings using definite-length encoding.</summary>
 
 </doc>
 <doc name="F:PeterO.Cbor.CBOREncodeOptions.NoDuplicateKeys">
@@ -1831,7 +1830,11 @@ Note that for security reasons, certain types are not supported even if they con
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.GetOrDefault(System.Object,PeterO.Cbor.CBORObject)">
 
-            <summary>Not documented yet.</summary><param name='key'>The parameter <paramref name='key'/> is not documented yet.</param><param name='defaultValue'>The parameter <paramref name='defaultValue'/> is not documented yet.</param><returns>A CBORObject object.</returns>
+            <summary>Gets the value of a CBOR object by integer index in this
+            array or by CBOR object key in this map, or a default value if that value is not found.</summary><param name='key'>An arbitrary object.  If this is a CBOR map, this parameter is converted to a CBOR object serving as the
+key to the map or index to the array, and can be null.  If this is a CBOR array, the key must be
+an integer 0 or greater and less than the size of the array, and may be any object convertible to a CBOR integer.</param><returns>The CBOR object referred to by index or key in this array or map.  If this is a CBOR map, returns null if an item with the given key doesn't exist.</returns><param name='defaultValue'>A value to return if an item with the given key doesn't exist, or if the CBOR object is an array and the key
+is not an integer 0 or greater and less than the size of the array.</param><returns>The CBOR object with the given key or index.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.GetTags">
@@ -1842,12 +1845,20 @@ Note that for security reasons, certain types are not supported even if they con
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.HasMostOuterTag(PeterO.Numbers.EInteger)">
 
-            <summary>Not documented yet.</summary><param name='bigTagValue'>The parameter <paramref name='bigTagValue'/> is not documented yet.</param><returns>Either <c>true</c> or <c>false</c>.</returns><exception cref='T:System.ArgumentNullException'>The parameter <paramref name='bigTagValue'/> is null.</exception>
+            <summary>Returns whether this object has an outermost tag and that tag is of the given number.</summary><param name='bigTagValue'>The tag number.</param><returns><c>true</c>
+       if this object has an outermost tag and that tag is of the given number; otherwise, <c>false</c>.</returns>
+    <exception cref='T:System.ArgumentNullException'>"bigTagValue" is null.
+    </exception>
+    <exception cref='T:System.ArgumentException'>"bigTagValue" is less than 0.
+    </exception>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.HasMostOuterTag(System.Int32)">
 
-            <summary>Not documented yet.</summary><param name='tagValue'>The parameter <paramref name='tagValue'/> is not documented yet.</param><returns>Either <c>true</c> or <c>false</c>.</returns>
+            <summary>Returns whether this object has an outermost tag and that tag is of the given number.</summary><param name='tagValue'>The tag number.</param><returns><c>true</c>
+       if this object has an outermost tag and that tag is of the given number; otherwise, <c>false</c>.</returns>
+    <exception cref='T:System.ArgumentException'>"tagValue" is less than 0.
+    </exception>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.HasTag(PeterO.BigInteger)">
@@ -1859,25 +1870,24 @@ Note that for security reasons, certain types are not supported even if they con
        if this object has a tag of the given number; otherwise, <c>false</c>
        .
     </returns>
-    <exception cref='T:System.ArgumentNullException'>BigTagValue is null.
+    <exception cref='T:System.ArgumentNullException'>"bigTagValue" is null.
     </exception>
-    <exception cref='T:System.ArgumentException'>BigTagValue is less than 0.
+    <exception cref='T:System.ArgumentException'>"bigTagValue" is less than 0.
     </exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.HasTag(PeterO.Numbers.EInteger)">
 
             <summary>Returns whether this object has a tag of the given
-            number.</summary><param name='bigTagValue'>The tag value to search for.</param><returns><c>true</c> if this object has a tag of the given number; otherwise, <c>false</c>.</returns><exception cref='T:System.ArgumentNullException'>BigTagValue is
-            null.</exception><exception cref='T:System.ArgumentException'>BigTagValue is less
+            number.</summary><param name='bigTagValue'>The tag value to search for.</param><returns><c>true</c> if this object has a tag of the given number; otherwise, <c>false</c>.</returns><exception cref='T:System.ArgumentNullException'>"bigTagValue" is
+            null.</exception><exception cref='T:System.ArgumentException'>"bigTagValue" is less
             than 0.</exception>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.HasTag(System.Int32)">
 
             <summary>Returns whether this object has a tag of the given
-            number.</summary><param name='tagValue'>The tag value to search for.</param><returns><c>true</c> if this object has a tag of the given number; otherwise, <c>false</c>.</returns><exception cref='T:System.ArgumentException'>TagValue is less than
-            0.</exception><exception cref='T:System.ArgumentNullException'>The parameter
-            "obj" is null.</exception>
+            number.</summary><param name='tagValue'>The tag value to search for.</param><returns><c>true</c> if this object has a tag of the given number; otherwise, <c>false</c>.</returns><exception cref='T:System.ArgumentException'>"tagValue" is less than
+            0.</exception>
 
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.InnermostTag">
@@ -3672,12 +3682,12 @@ stream.Write(bytes, 0, bytes.Length);
 </doc>
 <doc name="P:PeterO.Cbor.CBORTypeMapper.ConverterInfo.Converter">
 
-            <summary>Gets a value not documented yet.</summary><value>A value not documented yet.</value>
+            <summary>Internal value.</summary><value>Returns an internal value.</value>
 
 </doc>
 <doc name="P:PeterO.Cbor.CBORTypeMapper.ConverterInfo.ToObject">
 
-            <summary>Gets a value not documented yet.</summary><value>A value not documented yet.</value>
+            <summary>Internal value.</summary><value>Returns an internal value.</value>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeMapper.FilterTypeName(System.String)">
@@ -3692,31 +3702,7 @@ stream.Write(bytes, 0, bytes.Length);
     </summary>
 
 </doc>
-<doc name="M:PeterO.Cbor.CBORUuidConverter.ToCBORObject(System.Guid)">
 
-            <summary>Not documented yet.</summary><param name='obj'>The parameter <paramref name='obj'/> is not documented yet.</param><returns>A CBORObject object.</returns>
-
-</doc>
-<doc name="M:PeterO.Cbor.FastInteger2.Multiply(System.Int32)">
-
-            <summary>Not documented yet.</summary><param name='val'>The parameter <paramref name='val'/> is not documented yet.</param><returns>A FastInteger2 object.</returns>
-
-</doc>
-<doc name="P:PeterO.Cbor.FastInteger2.Sign">
-
-            <summary>Gets a value not documented yet.</summary><value>A value not documented yet.</value>
-
-</doc>
-<doc name="M:PeterO.Cbor.FastInteger2.Subtract(PeterO.Cbor.FastInteger2)">
-
-            <summary>Not documented yet.</summary><param name='val'>The parameter <paramref name='val'/> is not documented yet.</param><returns>A FastInteger2 object.</returns>
-
-</doc>
-<doc name="M:PeterO.Cbor.FastInteger2.SubtractInt(System.Int32)">
-
-            <summary>Not documented yet.</summary><param name='val'>The parameter <paramref name='val'/> is not documented yet.</param><returns>A FastInteger2 object.</returns>
-
-</doc>
 <doc name="T:PeterO.Cbor.ICBORConverter`1">
 
             <summary>Interface implemented by classes that convert objects of arbitrary types
@@ -3779,12 +3765,12 @@ stream.Write(bytes, 0, bytes.Length);
 </doc>
 <doc name="T:PeterO.Cbor.ICBORToFromConverter`1">
 
-            <summary>Not documented yet.</summary><typeparam name='T'>Type parameter not documented yet.</typeparam>
+            <summary>Classes that implement this interface can support conversions from CBOR objects to a custom type and back.</summary><typeparam name='T'>Type of objects to convert to and from CBOR objects.</typeparam>
 
 </doc>
 <doc name="M:PeterO.Cbor.ICBORToFromConverter`1.FromCBORObject(PeterO.Cbor.CBORObject)">
 
-            <summary>Not documented yet.</summary><param name='obj'>The parameter <paramref name='obj'/> is not documented yet.</param><returns>The return value is not documented yet.</returns>
+            <summary>Converts a CBOR object to a custom type.</summary><param name='obj'>A CBOR object to convert to the custom type.</param><returns>An object of the custom type after conversion.</returns>
 
 </doc>
 <doc name="T:PeterO.Cbor.ICharacterInput">

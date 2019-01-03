@@ -123,9 +123,9 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[GetAllTags()](#GetAllTags)</code> - Gets a list of all tags, from outermost to innermost.
 * <code>[GetByteString()](#GetByteString)</code> - Gets the backing byte array used in this CBOR object, if this object is a byte string, without copying the data to a new byte array.
 * <code>[GetHashCode()](#GetHashCode)</code> - Calculates the hash code of this object.
-* <code>[GetOrDefault(object, PeterO.Cbor.CBORObject)](#GetOrDefault_object_PeterO_Cbor_CBORObject)</code> - Not documented yet.
-* <code>[HasMostOuterTag(PeterO.Numbers.EInteger)](#HasMostOuterTag_PeterO_Numbers_EInteger)</code> - Not documented yet.
-* <code>[HasMostOuterTag(int)](#HasMostOuterTag_int)</code> - Not documented yet.
+* <code>[GetOrDefault(object, PeterO.Cbor.CBORObject)](#GetOrDefault_object_PeterO_Cbor_CBORObject)</code> - Gets the value of a CBOR object by integer index in this array or by CBOR object key in this map, or a default value if that value is not found.
+* <code>[HasMostOuterTag(PeterO.Numbers.EInteger)](#HasMostOuterTag_PeterO_Numbers_EInteger)</code> - Returns whether this object has an outermost tag and that tag is of the given number.
+* <code>[HasMostOuterTag(int)](#HasMostOuterTag_int)</code> - Returns whether this object has an outermost tag and that tag is of the given number.
 * <code>[HasTag(PeterO.Numbers.EInteger)](#HasTag_PeterO_Numbers_EInteger)</code> - Returns whether this object has a tag of the given number.
 * <code>[HasTag(int)](#HasTag_int)</code> - Returns whether this object has a tag of the given number.
 * <code>[Insert(int, object)](#Insert_int_object)</code> - Inserts an object at the specified position in this CBOR array.
@@ -1993,19 +1993,21 @@ A 32-bit hash code.
         object key,
         PeterO.Cbor.CBORObject defaultValue);
 
-Not documented yet.
+Gets the value of a CBOR object by integer index in this array or by CBOR object key in this map, or a default value if that value is not found.
 
 <b>Parameters:</b>
 
- * <i>key</i>: The parameter  <i>key</i>
- is not documented yet.
+ * <i>key</i>: An arbitrary object. If this is a CBOR map, this parameter is converted to a CBOR object serving as the key to the map or index to the array, and can be null. If this is a CBOR array, the key must be an integer 0 or greater and less than the size of the array, and may be any object convertible to a CBOR integer.
 
- * <i>defaultValue</i>: The parameter  <i>defaultValue</i>
- is not documented yet.
+ * <i>defaultValue</i>: A value to return if an item with the given key doesn't exist, or if the CBOR object is an array and the key is not an integer 0 or greater and less than the size of the array.
 
 <b>Return Value:</b>
 
-A CBORObject object.
+The CBOR object referred to by index or key in this array or map. If this is a CBOR map, returns null if an item with the given key doesn't exist.
+
+<b>Return Value:</b>
+
+The CBOR object with the given key or index.
 
 <a id="HasMostOuterTag_int"></a>
 ### HasMostOuterTag
@@ -2013,16 +2015,20 @@ A CBORObject object.
     public bool HasMostOuterTag(
         int tagValue);
 
-Not documented yet.
+Returns whether this object has an outermost tag and that tag is of the given number.
 
 <b>Parameters:</b>
 
- * <i>tagValue</i>: The parameter  <i>tagValue</i>
- is not documented yet.
+ * <i>tagValue</i>: The tag number.
 
 <b>Return Value:</b>
 
-Either  `true`  or  `false` .
+ `true` if this object has an outermost tag and that tag is of the given number; otherwise,  `false` .
+
+<b>Exceptions:</b>
+
+ * System.ArgumentException:
+"tagValue" is less than 0.
 
 <a id="HasMostOuterTag_PeterO_Numbers_EInteger"></a>
 ### HasMostOuterTag
@@ -2030,22 +2036,23 @@ Either  `true`  or  `false` .
     public bool HasMostOuterTag(
         PeterO.Numbers.EInteger bigTagValue);
 
-Not documented yet.
+Returns whether this object has an outermost tag and that tag is of the given number.
 
 <b>Parameters:</b>
 
- * <i>bigTagValue</i>: The parameter  <i>bigTagValue</i>
- is not documented yet.
+ * <i>bigTagValue</i>: The tag number.
 
 <b>Return Value:</b>
 
-Either  `true`  or  `false` .
+ `true` if this object has an outermost tag and that tag is of the given number; otherwise,  `false` .
 
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>bigTagValue</i>
- is null.
+"bigTagValue" is null.
+
+ * System.ArgumentException:
+"bigTagValue" is less than 0.
 
 <a id="HasTag_int"></a>
 ### HasTag
@@ -2066,10 +2073,7 @@ Returns whether this object has a tag of the given number.
 <b>Exceptions:</b>
 
  * System.ArgumentException:
-TagValue is less than 0.
-
- * System.ArgumentNullException:
-The parameter "obj" is null.
+"tagValue" is less than 0.
 
 <a id="HasTag_PeterO_Numbers_EInteger"></a>
 ### HasTag
@@ -2090,10 +2094,10 @@ Returns whether this object has a tag of the given number.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-BigTagValue is null.
+"bigTagValue" is null.
 
  * System.ArgumentException:
-BigTagValue is less than 0.
+"bigTagValue" is less than 0.
 
 <a id="Insert_int_object"></a>
 ### Insert
