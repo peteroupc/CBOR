@@ -244,6 +244,12 @@ The following are some clarifications to RFC 7049.
 Release Notes
 -----------
 
+
+### Version 4.0.0-alpha2:
+
+- Support CBOR tags for IRIs and IRI references.
+- Add CBOREncodeOptions.DefaultCtap2Canonical field.
+
 ### Version 4.0.0-alpha1:
 
 - Remove all APIs obsoleted since version 3.4.  This

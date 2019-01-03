@@ -132,14 +132,10 @@ namespace PeterO.Cbor {
     }
 
     internal sealed class ConverterInfo {
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
       public object ToObject { get; set; }
 
       public object FromObject { get; set; }
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
       public object Converter { get; set; }
     }
   }

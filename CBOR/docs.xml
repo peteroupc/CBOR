@@ -1829,13 +1829,22 @@ Note that for security reasons, certain types are not supported even if they con
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.GetOrDefault(System.Object,PeterO.Cbor.CBORObject)">
-
-            <summary>Gets the value of a CBOR object by integer index in this
-            array or by CBOR object key in this map, or a default value if that value is not found.</summary><param name='key'>An arbitrary object.  If this is a CBOR map, this parameter is converted to a CBOR object serving as the
-key to the map or index to the array, and can be null.  If this is a CBOR array, the key must be
-an integer 0 or greater and less than the size of the array, and may be any object convertible to a CBOR integer.</param><returns>The CBOR object referred to by index or key in this array or map.  If this is a CBOR map, returns null if an item with the given key doesn't exist.</returns><param name='defaultValue'>A value to return if an item with the given key doesn't exist, or if the CBOR object is an array and the key
-is not an integer 0 or greater and less than the size of the array.</param><returns>The CBOR object with the given key or index.</returns>
-
+<summary>Gets the value of a CBOR object by integer index in this
+            array or by CBOR object key in this map, or a default value if that
+            value is not found.</summary>
+            <param name='key'>An arbitrary object. If this is a CBOR map, this
+            parameter is converted to a CBOR object serving as the key to the
+            map or index to the array, and can be null. If this is a CBOR
+            array, the key must be an integer 0 or greater and less than the
+            size of the array, and may be any object convertible to a CBOR
+            integer.</param>
+            <param name='defaultValue'>A value to return if an item with the
+            given key doesn't exist, or if the CBOR object is an array and the
+            key is not an integer 0 or greater and less than the size of the
+            array.</param>
+            <returns>The CBOR object referred to by index or key in this array
+            or map. If this is a CBOR map, returns null if an item with the
+            given key doesn't exist.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.GetTags">
 <summary>Gets a list of all tags, from outermost to innermost.
@@ -1844,22 +1853,24 @@ is not an integer 0 or greater and less than the size of the array.</param><retu
     </returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.HasMostOuterTag(PeterO.Numbers.EInteger)">
-
-            <summary>Returns whether this object has an outermost tag and that tag is of the given number.</summary><param name='bigTagValue'>The tag number.</param><returns><c>true</c>
-       if this object has an outermost tag and that tag is of the given number; otherwise, <c>false</c>.</returns>
-    <exception cref='T:System.ArgumentNullException'>"bigTagValue" is null.
-    </exception>
-    <exception cref='T:System.ArgumentException'>"bigTagValue" is less than 0.
-    </exception>
-
+<summary>Returns whether this object has an outermost tag and that
+            tag is of the given number.</summary>
+            <param name='bigTagValue'>The tag number.</param>
+            <returns><c>true</c> if this object has an outermost tag and that
+            tag is of the given number; otherwise, <c>false</c>.</returns>
+            <exception cref='T:System.ArgumentNullException'>The parameter
+            <paramref name='bigTagValue'/> is null.</exception>
+            <exception cref='T:System.ArgumentException'>The parameter
+            <paramref name='bigTagValue'/> is less than 0.</exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.HasMostOuterTag(System.Int32)">
-
-            <summary>Returns whether this object has an outermost tag and that tag is of the given number.</summary><param name='tagValue'>The tag number.</param><returns><c>true</c>
-       if this object has an outermost tag and that tag is of the given number; otherwise, <c>false</c>.</returns>
-    <exception cref='T:System.ArgumentException'>"tagValue" is less than 0.
-    </exception>
-
+<summary>Returns whether this object has an outermost tag and that
+            tag is of the given number.</summary>
+            <param name='tagValue'>The tag number.</param>
+            <returns><c>true</c> if this object has an outermost tag and that
+            tag is of the given number; otherwise, <c>false</c>.</returns>
+            <exception cref='T:System.ArgumentException'>The parameter
+            <paramref name='tagValue'/> is less than 0.</exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.HasTag(PeterO.BigInteger)">
 <summary>Returns whether this object has a tag of the given number.
@@ -1876,19 +1887,23 @@ is not an integer 0 or greater and less than the size of the array.</param><retu
     </exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.HasTag(PeterO.Numbers.EInteger)">
-
-            <summary>Returns whether this object has a tag of the given
-            number.</summary><param name='bigTagValue'>The tag value to search for.</param><returns><c>true</c> if this object has a tag of the given number; otherwise, <c>false</c>.</returns><exception cref='T:System.ArgumentNullException'>"bigTagValue" is
-            null.</exception><exception cref='T:System.ArgumentException'>"bigTagValue" is less
-            than 0.</exception>
-
+<summary>Returns whether this object has a tag of the given
+            number.</summary>
+            <param name='bigTagValue'>The tag value to search for.</param>
+            <returns><c>true</c> if this object has a tag of the given number; otherwise, <c>false</c>.</returns>
+            <exception cref='T:System.ArgumentNullException'>The parameter
+            <paramref name='bigTagValue'/> is null.</exception>
+            <exception cref='T:System.ArgumentException'>The parameter
+            <paramref name='bigTagValue'/> is less than 0.</exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.HasTag(System.Int32)">
-
-            <summary>Returns whether this object has a tag of the given
-            number.</summary><param name='tagValue'>The tag value to search for.</param><returns><c>true</c> if this object has a tag of the given number; otherwise, <c>false</c>.</returns><exception cref='T:System.ArgumentException'>"tagValue" is less than
-            0.</exception>
-
+<summary>Returns whether this object has a tag of the given
+            number.</summary>
+            <param name='tagValue'>The tag value to search for.</param>
+            <returns><c>true</c> if this object has a tag of the given number; otherwise, <c>false</c>.</returns>
+            <exception cref='T:System.ArgumentException'>The parameter
+            <paramref name='tagValue'/> is less than 0.</exception>
+            <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='tagValue'/> is null.</exception>
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.InnermostTag">
 <summary>Gets the last defined tag for this CBOR data item, or -1 if the item is
@@ -3680,16 +3695,6 @@ stream.Write(bytes, 0, bytes.Length);
             <summary>Adds a prefix of a Java or .NET type for use in type matching.  A type matches a prefix if its fully qualified name is or begins with that prefix, using codepoint-by-codepoint (case-sensitive) matching.</summary><param name='prefix'>The prefix of a Java or .NET type (e.g., `java.math.` or `System.Globalization`).</param><returns>This object.</returns><exception cref='T:System.ArgumentNullException'>The parameter <paramref name='prefix'/> is null.</exception><exception cref='T:System.ArgumentException'>The parameter <paramref name='prefix'/> is empty.</exception>
 
 </doc>
-<doc name="P:PeterO.Cbor.CBORTypeMapper.ConverterInfo.Converter">
-
-            <summary>Internal value.</summary><value>Returns an internal value.</value>
-
-</doc>
-<doc name="P:PeterO.Cbor.CBORTypeMapper.ConverterInfo.ToObject">
-
-            <summary>Internal value.</summary><value>Returns an internal value.</value>
-
-</doc>
 <doc name="M:PeterO.Cbor.CBORTypeMapper.FilterTypeName(System.String)">
 
             <summary>Returns whether the given Java or .NET type name fits the filters given in this mapper.</summary><param name='typeName'>The fully qualified name of a Java or .NET class (e.g., <c>java.math.BigInteger</c> or <c>System.Globalization.CultureInfo</c>).</param><returns>Either <c>true</c> if the given Java or .NET type name fits the filters given in this mapper, or <c>false</c> otherwise.</returns>
@@ -3702,7 +3707,6 @@ stream.Write(bytes, 0, bytes.Length);
     </summary>
 
 </doc>
-
 <doc name="T:PeterO.Cbor.ICBORConverter`1">
 
             <summary>Interface implemented by classes that convert objects of arbitrary types
