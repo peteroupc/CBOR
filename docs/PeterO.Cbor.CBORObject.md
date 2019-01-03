@@ -2005,10 +2005,6 @@ Gets the value of a CBOR object by integer index in this array or by CBOR object
 
 The CBOR object referred to by index or key in this array or map. If this is a CBOR map, returns null if an item with the given key doesn't exist.
 
-<b>Return Value:</b>
-
-The CBOR object with the given key or index.
-
 <a id="HasMostOuterTag_int"></a>
 ### HasMostOuterTag
 
@@ -2023,12 +2019,13 @@ Returns whether this object has an outermost tag and that tag is of the given nu
 
 <b>Return Value:</b>
 
- `true` if this object has an outermost tag and that tag is of the given number; otherwise,  `false` .
+ `true`  if this object has an outermost tag and that tag is of the given number; otherwise,  `false` .
 
 <b>Exceptions:</b>
 
  * System.ArgumentException:
-"tagValue" is less than 0.
+The parameter <i>tagValue</i>
+ is less than 0.
 
 <a id="HasMostOuterTag_PeterO_Numbers_EInteger"></a>
 ### HasMostOuterTag
@@ -2044,15 +2041,17 @@ Returns whether this object has an outermost tag and that tag is of the given nu
 
 <b>Return Value:</b>
 
- `true` if this object has an outermost tag and that tag is of the given number; otherwise,  `false` .
+ `true`  if this object has an outermost tag and that tag is of the given number; otherwise,  `false` .
 
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-"bigTagValue" is null.
+The parameter <i>bigTagValue</i>
+ is null.
 
  * System.ArgumentException:
-"bigTagValue" is less than 0.
+The parameter <i>bigTagValue</i>
+ is less than 0.
 
 <a id="HasTag_int"></a>
 ### HasTag
@@ -2073,7 +2072,12 @@ Returns whether this object has a tag of the given number.
 <b>Exceptions:</b>
 
  * System.ArgumentException:
-"tagValue" is less than 0.
+The parameter <i>tagValue</i>
+ is less than 0.
+
+ * System.ArgumentNullException:
+The parameter  <i>tagValue</i>
+ is null.
 
 <a id="HasTag_PeterO_Numbers_EInteger"></a>
 ### HasTag
@@ -2094,10 +2098,12 @@ Returns whether this object has a tag of the given number.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-"bigTagValue" is null.
+The parameter <i>bigTagValue</i>
+ is null.
 
  * System.ArgumentException:
-"bigTagValue" is less than 0.
+The parameter <i>bigTagValue</i>
+ is less than 0.
 
 <a id="Insert_int_object"></a>
 ### Insert

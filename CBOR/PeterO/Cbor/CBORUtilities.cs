@@ -318,7 +318,8 @@ namespace PeterO.Cbor {
         EInteger ei = EInteger.FromInt32(startYear);
         if (ei.Add(401).CompareTo(year) < 0) {
 EInteger y2 = year.Subtract(2);
-EInteger adds = y2.Subtract(startYear).Divide(400);
+numDays = numDays.Add(
+  y2.Subtract(startYear).Divide(400).Multiply(146097));
 ei = y2.Subtract(
   y2.Subtract(startYear).Remainder(400));
        }
