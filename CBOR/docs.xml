@@ -3906,8 +3906,8 @@ stream.Write(bytes, 0, bytes.Length);
         schemes can further restrict the syntax of the authority, path, and
         query component (see also RFC 7320). However, the syntax of fragment
         identifiers depends on the media type (also known as MIME type) of the
-        resource a URI references (see also RFC 3986 and RFC 7320). As of Dec.
-        17, 2018, only the following media types specify a syntax for fragment
+        resource a URI references (see also RFC 3986 and RFC 7320). As of Feb.
+        13, 2019, only the following media types specify a syntax for fragment
         identifiers:
       </para>
       <list>

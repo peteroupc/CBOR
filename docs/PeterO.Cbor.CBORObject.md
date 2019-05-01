@@ -1,8 +1,8 @@
 ## PeterO.Cbor.CBORObject
 
     public sealed class CBORObject :
-        System.IComparable,
-        System.IEquatable
+        System.IEquatable,
+        System.IComparable
 
 Represents an object in Concise Binary Object Representation (CBOR) and contains methods for reading and writing CBOR data. CBOR is defined in RFC 7049.
 

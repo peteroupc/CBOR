@@ -1,4 +1,5 @@
 using System.Reflection;
+
 [assembly: System.CLSCompliant(true)]
 [assembly: AssemblyInformationalVersion("4.0.0-alpha2")]
 [assembly: AssemblyVersion("4.0.0")]
