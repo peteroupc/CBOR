@@ -2619,7 +2619,7 @@ Converts this object to a string in JavaScript Object Notation (JSON) format, us
 
  * If this object contains maps with non-string keys, the keys are converted to JSON strings before writing the map as a JSON string.
 
- * If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the JSON string in an undefined order.
+ * If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the JSON string in an undefined order. If two or more keys in a map have the same JSON string conversion (for example, 22("Test") and "Test" have the same JSON string conversion), it is undefined which key among them (together with that key's value) is written out to the JSON string.
 
  * If a number in the form of an arbitrary-precision binary float has a very high binary exponent, it will be converted to a double before being converted to a JSON string. (The resulting double could overflow to infinity, in which case the arbitrary-precision binary float is converted to null.)
 
@@ -2669,7 +2669,7 @@ is null.
 
     public string ToJSONString();
 
-Converts this object to a string in JavaScript Object Notation (JSON) format. See the overload to JSONString taking a JSONOptions argument for further information.If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the JSON string in an undefined order. The example code given in**PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)**can be used to write out certain keys of a CBOR map in a given order to a JSON string.
+Converts this object to a string in JavaScript Object Notation (JSON) format. See the overload to JSONString taking a JSONOptions argument for further information.If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the JSON string in an undefined order. If two or more keys in a map have the same JSON string conversion (for example, 22("Test") and "Test" have the same JSON string conversion), it is undefined which key among them (together with that key's value) is written out to the JSON string. The example code given in**PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)**can be used to write out certain keys of a CBOR map in a given order to a JSON string.
 
 <b>Return Value:</b>
 

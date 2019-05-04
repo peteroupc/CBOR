@@ -1829,22 +1829,21 @@ Note that for security reasons, certain types are not supported even if they con
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.GetOrDefault(System.Object,PeterO.Cbor.CBORObject)">
-<summary>Gets the value of a CBOR object by integer index in this
+
+            <summary>Gets the value of a CBOR object by integer index in this
             array or by CBOR object key in this map, or a default value if that
-            value is not found.</summary>
-            <param name='key'>An arbitrary object. If this is a CBOR map, this
+            value is not found.</summary><param name='key'>An arbitrary object. If this is a CBOR map, this
             parameter is converted to a CBOR object serving as the key to the
             map or index to the array, and can be null. If this is a CBOR
             array, the key must be an integer 0 or greater and less than the
             size of the array, and may be any object convertible to a CBOR
-            integer.</param>
-            <param name='defaultValue'>A value to return if an item with the
+            integer.</param><param name='defaultValue'>A value to return if an item with the
             given key doesn't exist, or if the CBOR object is an array and the
             key is not an integer 0 or greater and less than the size of the
-            array.</param>
-            <returns>The CBOR object referred to by index or key in this array
+            array.</param><returns>The CBOR object referred to by index or key in this array
             or map. If this is a CBOR map, returns null if an item with the
             given key doesn't exist.</returns>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.GetTags">
 <summary>Gets a list of all tags, from outermost to innermost.
@@ -1853,24 +1852,21 @@ Note that for security reasons, certain types are not supported even if they con
     </returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.HasMostOuterTag(PeterO.Numbers.EInteger)">
-<summary>Returns whether this object has an outermost tag and that
-            tag is of the given number.</summary>
-            <param name='bigTagValue'>The tag number.</param>
-            <returns><c>true</c> if this object has an outermost tag and that
-            tag is of the given number; otherwise, <c>false</c>.</returns>
-            <exception cref='T:System.ArgumentNullException'>The parameter
-            <paramref name='bigTagValue'/> is null.</exception>
-            <exception cref='T:System.ArgumentException'>The parameter
+
+            <summary>Returns whether this object has an outermost tag and that
+            tag is of the given number.</summary><param name='bigTagValue'>The tag number.</param><returns><c>true</c> if this object has an outermost tag and that
+            tag is of the given number; otherwise, <c>false</c>.</returns><exception cref='T:System.ArgumentNullException'>The parameter
+            <paramref name='bigTagValue'/> is null.</exception><exception cref='T:System.ArgumentException'>The parameter
             <paramref name='bigTagValue'/> is less than 0.</exception>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.HasMostOuterTag(System.Int32)">
-<summary>Returns whether this object has an outermost tag and that
-            tag is of the given number.</summary>
-            <param name='tagValue'>The tag number.</param>
-            <returns><c>true</c> if this object has an outermost tag and that
-            tag is of the given number; otherwise, <c>false</c>.</returns>
-            <exception cref='T:System.ArgumentException'>The parameter
+
+            <summary>Returns whether this object has an outermost tag and that
+            tag is of the given number.</summary><param name='tagValue'>The tag number.</param><returns><c>true</c> if this object has an outermost tag and that
+            tag is of the given number; otherwise, <c>false</c>.</returns><exception cref='T:System.ArgumentException'>The parameter
             <paramref name='tagValue'/> is less than 0.</exception>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.HasTag(PeterO.BigInteger)">
 <summary>Returns whether this object has a tag of the given number.
@@ -1887,23 +1883,19 @@ Note that for security reasons, certain types are not supported even if they con
     </exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.HasTag(PeterO.Numbers.EInteger)">
-<summary>Returns whether this object has a tag of the given
-            number.</summary>
-            <param name='bigTagValue'>The tag value to search for.</param>
-            <returns><c>true</c> if this object has a tag of the given number; otherwise, <c>false</c>.</returns>
-            <exception cref='T:System.ArgumentNullException'>The parameter
-            <paramref name='bigTagValue'/> is null.</exception>
-            <exception cref='T:System.ArgumentException'>The parameter
+
+            <summary>Returns whether this object has a tag of the given
+            number.</summary><param name='bigTagValue'>The tag value to search for.</param><returns><c>true</c> if this object has a tag of the given number; otherwise, <c>false</c>.</returns><exception cref='T:System.ArgumentNullException'>The parameter
+            <paramref name='bigTagValue'/> is null.</exception><exception cref='T:System.ArgumentException'>The parameter
             <paramref name='bigTagValue'/> is less than 0.</exception>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.HasTag(System.Int32)">
-<summary>Returns whether this object has a tag of the given
-            number.</summary>
-            <param name='tagValue'>The tag value to search for.</param>
-            <returns><c>true</c> if this object has a tag of the given number; otherwise, <c>false</c>.</returns>
-            <exception cref='T:System.ArgumentException'>The parameter
-            <paramref name='tagValue'/> is less than 0.</exception>
-            <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='tagValue'/> is null.</exception>
+
+            <summary>Returns whether this object has a tag of the given
+            number.</summary><param name='tagValue'>The tag value to search for.</param><returns><c>true</c> if this object has a tag of the given number; otherwise, <c>false</c>.</returns><exception cref='T:System.ArgumentException'>The parameter
+            <paramref name='tagValue'/> is less than 0.</exception><exception cref='T:System.ArgumentNullException'>The parameter <paramref name='tagValue'/> is null.</exception>
+
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.InnermostTag">
 <summary>Gets the last defined tag for this CBOR data item, or -1 if the item is
@@ -2311,10 +2303,13 @@ is less than 0, is the size of this array or greater, or is not a 32-bit signed 
              JSONOptions argument for further information.
              <para>If the CBOR object contains CBOR maps, or is a CBOR map
              itself, the keys to the map are written out to the JSON string in
-             an undefined order. The example code given in
+             an undefined order. If two or more keys in a map have the same JSON string
+     conversion (for example, 22("Test") and "Test" have the same JSON string conversion), it is undefined which key among them (together with that key's value) is written out to the JSON string.
+             The example code given in
              <see cref='M:PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)'/>
              can be used to write out certain keys of a CBOR map in a given
-             order to a JSON string.</para></summary><returns>A text string.</returns>
+             order to a JSON string.
+             </para></summary><returns>A text string.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)">
@@ -2328,7 +2323,8 @@ is less than 0, is the size of this array or greater, or is not a 32-bit signed 
         </item>
         <item>If the CBOR object contains CBOR maps, or is a CBOR map itself, the
           keys to the map are written out to the JSON string in an undefined
-          order.
+          order. If two or more keys in a map have the same JSON string
+     conversion (for example, 22("Test") and "Test" have the same JSON string conversion), it is undefined which key among them (together with that key's value) is written out to the JSON string.
         </item>
         <item>If a number in the form of an arbitrary-precision binary float has a
           very high binary exponent, it will be converted to a double before
@@ -3706,6 +3702,30 @@ stream.Write(bytes, 0, bytes.Length);
       class.
     </summary>
 
+</doc>
+<doc name="M:PeterO.Cbor.CBORUuidConverter.ToCBORObject(System.Guid)">
+<summary>Internal API.</summary>
+            <param name='obj'>The parameter <paramref name='obj'/> is an internal parameter.</param>
+            <returns>A CBORObject object.</returns>
+</doc>
+<doc name="M:PeterO.Cbor.FastInteger2.Multiply(System.Int32)">
+<summary>Internal API.</summary>
+            <param name='val'>The parameter <paramref name='val'/> is an internal parameter.</param>
+            <returns>A FastInteger2 object.</returns>
+</doc>
+<doc name="P:PeterO.Cbor.FastInteger2.Sign">
+<summary>Internal API.</summary>
+            <value>Internal API value.</value>
+</doc>
+<doc name="M:PeterO.Cbor.FastInteger2.Subtract(PeterO.Cbor.FastInteger2)">
+<summary>Internal API.</summary>
+            <param name='val'>The parameter <paramref name='val'/> is an internal parameter.</param>
+            <returns>A FastInteger2 object.</returns>
+</doc>
+<doc name="M:PeterO.Cbor.FastInteger2.SubtractInt(System.Int32)">
+<summary>Internal API.</summary>
+            <param name='val'>The parameter <paramref name='val'/> is an internal parameter.</param>
+            <returns>A FastInteger2 object.</returns>
 </doc>
 <doc name="T:PeterO.Cbor.ICBORConverter`1">
 

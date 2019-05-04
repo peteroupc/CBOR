@@ -678,7 +678,10 @@ namespace PeterO.Cbor {
             IDictionary<CBORObject, CBORObject> objMap = obj.AsMap();
             foreach (KeyValuePair<CBORObject, CBORObject> entry in objMap) {
               CBORObject key = entry.Key;
-              if (key.ItemType != CBORObject.CBORObjectTypeTextString) {
+              if (key.ItemType != CBORObject.CBORObjectTypeTextString ||
+              key.IsTagged) {
+                // treat a non-text-string item or a tagged item
+                // as having non-string keys
                 hasNonStringKeys = true;
                 break;
               }

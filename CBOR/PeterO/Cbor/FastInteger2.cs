@@ -347,11 +347,8 @@ namespace PeterO.Cbor {
       return this;
     }
 
-    /// <xmlbegin id='1'/>
-    /// <xmlend/>
-    /// <summary>Not documented yet.</summary>
-    /// <param name='val'>Not documented yet.</param>
-    /// <returns>A FastInteger2 object.</returns>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.FastInteger2.Multiply(System.Int32)"]/*'/>
     internal FastInteger2 Multiply(int val) {
       if (val == 0) {
         this.smallValue = 0;
@@ -403,11 +400,8 @@ namespace PeterO.Cbor {
       return this;
     }
 
-    /// <xmlbegin id='2'/>
-    /// <xmlend/>
-    /// <summary>Not documented yet.</summary>
-    /// <param name='val'>Not documented yet.</param>
-    /// <returns>A FastInteger2 object.</returns>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.FastInteger2.Subtract(PeterO.Cbor.FastInteger2)"]/*'/>
     internal FastInteger2 Subtract(FastInteger2 val) {
       EInteger valValue;
       switch (this.integerMode) {
@@ -453,11 +447,8 @@ namespace PeterO.Cbor {
       return this;
     }
 
-    /// <xmlbegin id='3'/>
-    /// <xmlend/>
-    /// <summary>Not documented yet.</summary>
-    /// <param name='val'>Not documented yet.</param>
-    /// <returns>A FastInteger2 object.</returns>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.FastInteger2.SubtractInt(System.Int32)"]/*'/>
     internal FastInteger2 SubtractInt(int val) {
       if (val == Int32.MinValue) {
         return this.AddInt(Int32.MaxValue).AddInt(1);
@@ -579,10 +570,8 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <xmlbegin id='4'/>
-    /// <xmlend/>
     /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
+    /// <value>Internal API value.</value>
     internal int Sign {
       get {
         switch (this.integerMode) {
