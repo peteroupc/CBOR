@@ -51,7 +51,7 @@ namespace PeterO.Cbor {
   SharedRefs sharedRefs) {
   int type = obj.ItemType;
   bool hasTag = obj.MostOuterTag.Equals((EInteger)29);
-  if (hasTag) {
+  if (hasTag && obj.IsIntegral) {
     return sharedRefs.GetObject(obj.AsEInteger());
   }
   hasTag = obj.MostOuterTag.Equals((EInteger)28);

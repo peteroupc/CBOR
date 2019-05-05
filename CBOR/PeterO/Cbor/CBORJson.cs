@@ -714,6 +714,7 @@ namespace PeterO.Cbor {
                 CBORObject value = entry.Value;
            string str = (key.ItemType == CBORObject.CBORObjectTypeTextString) ?
                   ((string)key.ThisItem) : key.ToJSONString();
+                // TODO: Consider whether rejecting duplicates is better
                 stringMap[str] = value;
               }
               first = true;
