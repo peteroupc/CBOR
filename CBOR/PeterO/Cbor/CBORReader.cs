@@ -51,12 +51,16 @@ namespace PeterO.Cbor {
   SharedRefs sharedRefs) {
   int type = obj.ItemType;
   bool hasTag = obj.MostOuterTag.Equals((EInteger)29);
-  if (hasTag && obj.IsIntegral) {
-    return sharedRefs.GetObject(obj.AsEInteger());
+  if (hasTag) {
+        if (!obj.IsIntegral || obj.IsNegative) {
+   throw new
+            CBORException("Shared ref index must be an integer 0 or greater");
+        }
+        return sharedRefs.GetObject(obj.AsEInteger());
   }
   hasTag = obj.MostOuterTag.Equals((EInteger)28);
   if (hasTag) {
-      obj = obj.Untag();
+      obj = obj.UntagOne();
       sharedRefs.AddObject(obj);
   }
   if (type == CBORObject.CBORObjectTypeMap) {
