@@ -416,17 +416,23 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
       Assert.IsTrue(CBORObject.NegativeInfinity.IsNegativeInfinity());
       Assert.IsTrue(CBORObject.NaN.IsNaN());
 
-  CBORTestCommon.AssertRoundTrip(ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecNegInf));
+      CBORTestCommon.AssertRoundTrip(
+  ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecNegInf));
 
-  CBORTestCommon.AssertRoundTrip(ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf));
+      CBORTestCommon.AssertRoundTrip(
+  ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf));
 
-  CBORTestCommon.AssertRoundTrip(ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity));
+      CBORTestCommon.AssertRoundTrip(
+  ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity));
 
-  CBORTestCommon.AssertRoundTrip(ToObjectTest.TestToFromObjectRoundTrip(Single.NegativeInfinity));
+      CBORTestCommon.AssertRoundTrip(
+  ToObjectTest.TestToFromObjectRoundTrip(Single.NegativeInfinity));
 
-  CBORTestCommon.AssertRoundTrip(ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecPosInf));
+      CBORTestCommon.AssertRoundTrip(
+  ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecPosInf));
 
-  CBORTestCommon.AssertRoundTrip(ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatPosInf));
+      CBORTestCommon.AssertRoundTrip(
+  ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatPosInf));
 
   CBORTestCommon.AssertRoundTrip(ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity));
 
@@ -907,7 +913,16 @@ Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(j).CanFitInInt64());
       for (var i = 0; i < 1000; ++i) {
         obj = CBORTestCommon.RandomCBORObject(rand);
         CBORTestCommon.AssertRoundTrip(obj);
-        TestWriteToJSON(obj);
+string jsonString = String.Empty;
+try {
+                  jsonString = obj.ToJSONString();
+} catch (CBORException ex) {
+jsonString = String.Empty;
+}
+if (jsonString.Length > 0) {
+                  CBORObject.FromJSONString(jsonString);
+                  TestWriteToJSON(obj);
+}
       }
     }
 
@@ -969,21 +984,6 @@ throw new InvalidOperationException(String.Empty, ex);
 }
     }
 
-    [Test]
-    public void TestJsonBytes() {
-      CBORObject cbor = CBORObject.DecodeFromBytes(JsonBytes);
-      Console.WriteLine(cbor.ToString());
-
-      string json = cbor.ToJSONString();
-      CBORObject.FromJSONString(json);
-    }
-
-    private static readonly byte[] JsonBytes = new byte[] { (byte)0xa2,
-      (byte)0xd0, 0x60, (byte)0xcc, (byte)0xcc, 0x29, (byte)0xd2, 0x60,
-      0x52, 0x57, (byte)0x9e, 0x03, (byte)0x9b, 0x55, 0x2e, (byte)0xfc,
-      (byte)0xf1, (byte)0x94, 0x24, (byte)0xed, 0x03, 0x5f, 0x33, 0x30,
-      0x74, 0x20, 0x68 };
-
     private static string ToByteArrayStringFrom(byte[] array, int pos) {
       var newArray = new byte[array.Length - pos];
       Array.Copy(array, pos, newArray, 0, newArray.Length);
@@ -1032,9 +1032,15 @@ throw new InvalidOperationException(String.Empty, ex);
               String jsonString = String.Empty;
               try {
                 if (o.Type == CBORType.Array || o.Type == CBORType.Map) {
+try {
                   jsonString = o.ToJSONString();
+} catch (CBORException ex) {
+jsonString = String.Empty;
+}
+if (jsonString.Length > 0) {
                   CBORObject.FromJSONString(jsonString);
                   TestWriteToJSON(o);
+}
                 }
               } catch (Exception ex) {
                 string failString = jsonString + "\n" + ex.ToString() +

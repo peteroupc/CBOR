@@ -2303,8 +2303,7 @@ is less than 0, is the size of this array or greater, or is not a 32-bit signed 
              JSONOptions argument for further information.
              <para>If the CBOR object contains CBOR maps, or is a CBOR map
              itself, the keys to the map are written out to the JSON string in
-             an undefined order. If two or more keys in a map have the same JSON string
-     conversion (for example, 22("Test") and "Test" have the same JSON string conversion), it is undefined which key among them (together with that key's value) is written out to the JSON string.
+             an undefined order. Map keys other than untagged text strings are converted to JSON strings before writing them out (for example, <c>22("Test")</c> is converted to <c>"Test"</c> and <c>true</c> is converted to <c>"true"</c>).  If, after such conversion, two or more map keys are identical, this method throws a CBORException.
              The example code given in
              <see cref='M:PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)'/>
              can be used to write out certain keys of a CBOR map in a given
@@ -2323,8 +2322,7 @@ is less than 0, is the size of this array or greater, or is not a 32-bit signed 
         </item>
         <item>If the CBOR object contains CBOR maps, or is a CBOR map itself, the
           keys to the map are written out to the JSON string in an undefined
-          order. If two or more keys in a map have the same JSON string
-     conversion (for example, 22("Test") and "Test" have the same JSON string conversion), it is undefined which key among them (together with that key's value) is written out to the JSON string.
+          order. Map keys other than untagged text strings are converted to JSON strings before writing them out (for example, <c>22("Test")</c> is converted to <c>"Test"</c> and <c>true</c> is converted to <c>"true"</c>).  If, after such conversion, two or more map keys are identical, this method throws a CBORException.
         </item>
         <item>If a number in the form of an arbitrary-precision binary float has a
           very high binary exponent, it will be converted to a double before

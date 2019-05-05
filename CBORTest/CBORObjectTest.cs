@@ -5131,6 +5131,66 @@ throw new InvalidOperationException(String.Empty, ex);
     }
 
     [Test]
+    public void TestToJSONString_DuplicateKeys() {
+      CBORObject cbor;
+      cbor = CBORObject.NewMap().Add("true", 1).Add(true, 1);
+      try {
+ cbor.ToJSONString();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      cbor = CBORObject.NewMap().Add("true", 1).Add(false, 1);
+      try {
+ cbor.ToJSONString();
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      cbor = CBORObject.NewMap().Add("9999-01-01T00:00:00Z", 1)
+         .Add(CBORObject.FromObjectAndTag("9999-01-01T00:00:00Z", 0), 1);
+      try {
+ cbor.ToJSONString();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      cbor = CBORObject.NewMap().Add("34", 1).Add(34, 1);
+      try {
+ cbor.ToJSONString();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      cbor = CBORObject.NewMap().Add("-34", 1).Add(-34, 1);
+      try {
+ cbor.ToJSONString();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      cbor = CBORObject.NewMap().Add("-34", 1).Add(-35, 1);
+      try {
+ cbor.ToJSONString();
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+    }
+
+    [Test]
     public void TestToJSONString_ByteArray_Padding() {
       CBORObject o;
       var options = new JSONOptions(true);  // base64 padding enabled
