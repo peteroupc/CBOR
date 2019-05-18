@@ -53,8 +53,7 @@ namespace PeterO.Cbor {
   bool hasTag = obj.MostOuterTag.Equals((EInteger)29);
   if (hasTag) {
         if (!obj.IsIntegral || obj.IsNegative) {
-   throw new
-            CBORException("Shared ref index must be an integer 0 or greater");
+   throw new CBORException("Shared ref index must be an integer 0 or greater");
         }
         return sharedRefs.GetObject(obj.AsEInteger());
   }

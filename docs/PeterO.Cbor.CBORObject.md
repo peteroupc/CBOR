@@ -700,7 +700,8 @@ A decimal number for this object's value. If this object is a rational number wi
 <b>Exceptions:</b>
 
  * System.InvalidOperationException:
-This object's type is not a number type, including if this object is CBORObject.Null.
+This object's type is not a number type, including if this object is CBORObject.Null. To check the CBOR object for null before conversion, use the following idiom (originally written in C# for the .NET version):  `(cbor == null || cbor.IsNull) ? null :
+            cbor.AsEDecimal()` .
 
 <a id="AsEFloat"></a>
 ### AsEFloat
@@ -711,12 +712,13 @@ Converts this object to an arbitrary-precision binary floating point number.
 
 <b>Return Value:</b>
 
-An arbitrary-precision binary floating point number for this object's value. Note that if this object is a decimal number with a fractional part, the conversion may lose information depending on the number. If this object is a rational number with a nonterminating binary expansion, returns a binary floating-point number rounded to 113 bits.
+An arbitrary-precision binary floating point number for this object's value. Note that if this object is a decimal number with a fractional part, the conversion may lose information depending on the number. If this object is a rational number with a nonterminating binary expansion, returns a binary floating-point number rounded to a high but limited precision.
 
 <b>Exceptions:</b>
 
  * System.InvalidOperationException:
-This object's type is not a number type, including if this object is CBORObject.Null.
+This object's type is not a number type, including if this object is CBORObject.Null. To check the CBOR object for null before conversion, use the following idiom (originally written in C# for the .NET version):  `(cbor == null || cbor.IsNull) ? null :
+            cbor.AsEFloat()` .
 
 <a id="AsEInteger"></a>
 ### AsEInteger
@@ -732,7 +734,8 @@ The closest big integer to this object.
 <b>Exceptions:</b>
 
  * System.InvalidOperationException:
-This object's type is not a number type, including if this object is CBORObject.Null.
+This object's type is not a number type, including if this object is CBORObject.Null. To check the CBOR object for null before conversion, use the following idiom (originally written in C# for the .NET version):  `(cbor == null || cbor.IsNull) ? null :
+            cbor.AsEInteger()` .
 
  * System.OverflowException:
 This object's value is infinity or not-a-number (NaN).
@@ -751,7 +754,8 @@ A rational number for this object's value.
 <b>Exceptions:</b>
 
  * System.InvalidOperationException:
-This object's type is not a number type, including if this object is CBORObject.Null.
+This object's type is not a number type, including if this object is CBORObject.Null. To check the CBOR object for null before conversion, use the following idiom (originally written in C# for the .NET version):  `(cbor == null || cbor.IsNull) ? null :
+            cbor.AsERational()` .
 
 <a id="AsInt16"></a>
 ### AsInt16
@@ -858,11 +862,6 @@ This object's type is not a number type.
 
 Gets the value of this object as a text string.
 
-The following example code (originally written in C# for the .NET Framework) shows an idiom for returning a string value if a CBOR object is a text string, or  `null` if the CBOR object is CBOR null.
-
-    CBORObject obj = CBORObject.FromString("test");
-                string str = obj.IsNull ? null : obj.AsString();
-
 <b>Return Value:</b>
 
 Gets this object's string.
@@ -870,7 +869,7 @@ Gets this object's string.
 <b>Exceptions:</b>
 
  * System.InvalidOperationException:
-This object's type is not a string, including if this object is CBORObject.Null.
+This object's type is not a string, including if this object is CBORObject.Null. To check the CBOR object for null before conversion, use the following idiom (originally written in C# for the .NET version): `(cbor == null || cbor.IsNull) ? null : cbor.AsString()` .
 
 <a id="AsUInt16"></a>
 ### AsUInt16

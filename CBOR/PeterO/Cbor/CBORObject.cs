@@ -1771,11 +1771,18 @@ objret[key.Key] = CBORObject.FromObject(
       throw new InvalidOperationException("Not an array");
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsEInteger"]/*'/>
+    /// <summary>Converts this object to an arbitrary-precision integer.
+    /// Fractional values are truncated to an integer.</summary>
+    /// <returns>The closest big integer to this object.</returns>
+    /// <exception cref='T:System.InvalidOperationException'>This object's
+    /// type is not a number type, including if this object is
+    /// CBORObject.Null. To check the CBOR object for null before
+    /// conversion, use the following idiom (originally written in C# for
+    /// the .NET version): <c>(cbor == null || cbor.IsNull) ? null :
+    /// cbor.AsEInteger()</c>.</exception>
+    /// <exception cref='T:System.OverflowException'>This object's value is
+    /// infinity or not-a-number (NaN).</exception>
     public EInteger AsEInteger() {
-      // TODO: Consider returning null if this object is null
-      // in next major version
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       if (cn == null) {
         throw new InvalidOperationException("Not a number type");
@@ -1805,11 +1812,17 @@ objret[key.Key] = CBORObject.FromObject(
       return cn.AsDouble(this.ThisItem);
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsEDecimal"]/*'/>
+    /// <summary>Converts this object to a decimal number.</summary>
+    /// <returns>A decimal number for this object's value. If this object
+    /// is a rational number with a nonterminating decimal expansion,
+    /// returns a decimal number rounded to 34 digits.</returns>
+    /// <exception cref='T:System.InvalidOperationException'>This object's
+    /// type is not a number type, including if this object is
+    /// CBORObject.Null. To check the CBOR object for null before
+    /// conversion, use the following idiom (originally written in C# for
+    /// the .NET version): <c>(cbor == null || cbor.IsNull) ? null :
+    /// cbor.AsEDecimal()</c>.</exception>
     public EDecimal AsEDecimal() {
-      // TODO: Consider returning null if this object is null
-      // in next major version
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       if (cn == null) {
         throw new InvalidOperationException("Not a number type");
@@ -1817,11 +1830,21 @@ objret[key.Key] = CBORObject.FromObject(
       return cn.AsExtendedDecimal(this.ThisItem);
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsEFloat"]/*'/>
+    /// <summary>Converts this object to an arbitrary-precision binary
+    /// floating point number.</summary>
+    /// <returns>An arbitrary-precision binary floating point number for
+    /// this object's value. Note that if this object is a decimal number
+    /// with a fractional part, the conversion may lose information
+    /// depending on the number. If this object is a rational number with a
+    /// nonterminating binary expansion, returns a binary floating-point
+    /// number rounded to a high but limited precision.</returns>
+    /// <exception cref='T:System.InvalidOperationException'>This object's
+    /// type is not a number type, including if this object is
+    /// CBORObject.Null. To check the CBOR object for null before
+    /// conversion, use the following idiom (originally written in C# for
+    /// the .NET version): <c>(cbor == null || cbor.IsNull) ? null :
+    /// cbor.AsEFloat()</c>.</exception>
     public EFloat AsEFloat() {
-      // TODO: Consider returning null if this object is null
-      // in next major version
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       if (cn == null) {
         throw new InvalidOperationException("Not a number type");
@@ -1829,10 +1852,14 @@ objret[key.Key] = CBORObject.FromObject(
       return cn.AsExtendedFloat(this.ThisItem);
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsERational"]/*'/>
-    // TODO: Consider returning null if this object is null
-    // in next major version
+    /// <summary>Converts this object to a rational number.</summary>
+    /// <returns>A rational number for this object's value.</returns>
+    /// <exception cref='T:System.InvalidOperationException'>This object's
+    /// type is not a number type, including if this object is
+    /// CBORObject.Null. To check the CBOR object for null before
+    /// conversion, use the following idiom (originally written in C# for
+    /// the .NET version): <c>(cbor == null || cbor.IsNull) ? null :
+    /// cbor.AsERational()</c>.</exception>
     public ERational AsERational() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       if (cn == null) {
@@ -1873,11 +1900,15 @@ objret[key.Key] = CBORObject.FromObject(
       return cn.AsSingle(this.ThisItem);
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsString"]/*'/>
+    /// <summary>Gets the value of this object as a text string.</summary>
+    /// <returns>Gets this object's string.</returns>
+    /// <exception cref='T:System.InvalidOperationException'>This object's
+    /// type is not a string, including if this object is CBORObject.Null.
+    /// To check the CBOR object for null before conversion, use the
+    /// following idiom (originally written in C# for the .NET version):
+    /// <c>(cbor == null || cbor.IsNull) ? null : cbor.AsString()</c>
+    /// .</exception>
     public string AsString() {
-      // TODO: Consider returning null if this object is null
-      // in next major version
       int type = this.ItemType;
       switch (type) {
         case CBORObjectTypeTextString: {

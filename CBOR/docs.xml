@@ -793,7 +793,7 @@ for implementing Web Authentication. In this form,
             is a rational number with a nonterminating decimal expansion,
             returns a decimal number rounded to 34 digits.</returns><exception cref='T:System.InvalidOperationException'>This object's
             type is not a number type, including if this object is
-            CBORObject.Null.</exception>
+            CBORObject.Null.  To check the CBOR object for null before conversion, use the following idiom (originally written in C# for the .NET version): <c>(cbor==null || cbor.IsNull) ? null : cbor.AsEDecimal()</c></exception>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsEFloat">
@@ -804,9 +804,9 @@ for implementing Web Authentication. In this form,
             with a fractional part, the conversion may lose information
             depending on the number. If this object is a rational number with a
             nonterminating binary expansion, returns a binary floating-point
-            number rounded to 113 bits.</returns><exception cref='T:System.InvalidOperationException'>This object's
+            number rounded to a high but limited precision.</returns><exception cref='T:System.InvalidOperationException'>This object's
             type is not a number type, including if this object is
-            CBORObject.Null.</exception>
+            CBORObject.Null.  To check the CBOR object for null before conversion, use the following idiom (originally written in C# for the .NET version): <c>(cbor==null || cbor.IsNull) ? null : cbor.AsEFloat()</c></exception>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsEInteger">
@@ -814,7 +814,7 @@ for implementing Web Authentication. In this form,
             <summary>Converts this object to an arbitrary-precision integer.
             Fractional values are truncated to an integer.</summary><returns>The closest big integer to this object.</returns><exception cref='T:System.InvalidOperationException'>This object's
             type is not a number type, including if this object is
-            CBORObject.Null.</exception><exception cref='T:System.OverflowException'>This object's value is
+            CBORObject.Null.  To check the CBOR object for null before conversion, use the following idiom (originally written in C# for the .NET version): <c>(cbor==null || cbor.IsNull) ? null : cbor.AsEInteger()</c></exception><exception cref='T:System.OverflowException'>This object's value is
             infinity or not-a-number (NaN).</exception>
 
 </doc>
@@ -822,43 +822,10 @@ for implementing Web Authentication. In this form,
 
             <summary>Converts this object to a rational number.</summary><returns>A rational number for this object's value.</returns><exception cref='T:System.InvalidOperationException'>This object's
             type is not a number type, including if this object is
-            CBORObject.Null.</exception>
+            CBORObject.Null.  To check the CBOR object for null before conversion, use the following idiom (originally written in C# for the .NET version): <c>(cbor==null || cbor.IsNull) ? null : cbor.AsERational()</c></exception>
 
 </doc>
-<doc name="M:PeterO.Cbor.CBORObject.AsExtendedDecimal">
-<summary>Converts this object to a decimal number.
-    </summary>
-    <returns>A decimal number for this object's value. If this object is a rational
-      number with a nonterminating decimal expansion, returns a decimal number
-      rounded to 34 digits.
-    </returns>
-    <exception cref='T:System.InvalidOperationException'>This object's type is not a number type, including if this object is
-      CBORObject.Null.
-    </exception>
-</doc>
-<doc name="M:PeterO.Cbor.CBORObject.AsExtendedFloat">
-<summary>Converts this object to an arbitrary-precision binary floating point
-      number.
-    </summary>
-    <returns>An arbitrary-precision binary floating point number for this object's
-      value. Note that if this object is a decimal number with a fractional
-      part, the conversion may lose information depending on the number. If this
-      object is a rational number with a nonterminating binary expansion,
-      returns a binary floating-point number rounded to 113 bits.
-    </returns>
-    <exception cref='T:System.InvalidOperationException'>This object's type is not a number type, including if this object is
-      CBORObject.Null.
-    </exception>
-</doc>
-<doc name="M:PeterO.Cbor.CBORObject.AsExtendedRational">
-<summary>Converts this object to a rational number.
-    </summary>
-    <returns>A rational number for this object's value.
-    </returns>
-    <exception cref='T:System.InvalidOperationException'>This object's type is not a number type, including if this object is
-      CBORObject.Null.
-    </exception>
-</doc>
+
 <doc name="M:PeterO.Cbor.CBORObject.AsInt16">
 
             <summary>Converts this object to a 16-bit signed integer. Floating
@@ -943,15 +910,7 @@ for implementing Web Authentication. In this form,
 
             <summary>Gets the value of this object as a text string.</summary><returns>Gets this object's string.</returns><exception cref='T:System.InvalidOperationException'>This object's
             type is not a string, including if this object is
-            CBORObject.Null.</exception><example><para>The following example code (originally written in C# for the
-            .NET Framework) shows an idiom for returning a string value if a
-            CBOR object is a text string, or <c>null</c>
-             if the CBOR object is
-            a CBOR null.</para>
-            <code>CBORObject obj = CBORObject.FromString("test");
-            string str = obj.IsNull ? null : obj.AsString();
-            </code>
-            </example>
+            CBORObject.Null.  To check the CBOR object for null before conversion, use the following idiom (originally written in C# for the .NET version): <c>(cbor==null || cbor.IsNull) ? null : cbor.AsString()</c></exception>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsUInt16">

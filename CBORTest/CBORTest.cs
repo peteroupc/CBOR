@@ -916,7 +916,7 @@ Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(j).CanFitInInt64());
 string jsonString = String.Empty;
 try {
                   jsonString = obj.ToJSONString();
-} catch (CBORException ex) {
+} catch (CBORException) {
 jsonString = String.Empty;
 }
 if (jsonString.Length > 0) {
@@ -1031,17 +1031,15 @@ throw new InvalidOperationException(String.Empty, ex);
               }
               String jsonString = String.Empty;
               try {
-                if (o.Type == CBORType.Array || o.Type == CBORType.Map) {
 try {
                   jsonString = o.ToJSONString();
-} catch (CBORException ex) {
+} catch (CBORException) {
 jsonString = String.Empty;
 }
 if (jsonString.Length > 0) {
                   CBORObject.FromJSONString(jsonString);
                   TestWriteToJSON(o);
 }
-                }
               } catch (Exception ex) {
                 string failString = jsonString + "\n" + ex.ToString() +
                   (ex.InnerException == null ? String.Empty : "\n" +
@@ -1068,13 +1066,15 @@ if (jsonString.Length > 0) {
     }
 
     [Test]
-    [Timeout(20000)]
     public void TestRandomSlightlyModified() {
       var rand = new RandomGenerator();
       // Test slightly modified objects
-      for (var i = 0; i < 200; ++i) {
+      for (var i = 0; i < 2000; ++i) {
         CBORObject originalObject = CBORTestCommon.RandomCBORObject(rand);
         byte[] array = originalObject.EncodeToBytes();
+if (array.Length > 50000) {
+  Console.WriteLine(String.Empty + array.Length);
+}
         // Console.WriteLine(originalObject);
         int count2 = rand.UniformInt(10) + 1;
         for (int j = 0; j < count2; ++j) {
@@ -1084,7 +1084,8 @@ if (jsonString.Length > 0) {
         using (var inputStream = new MemoryStream(array)) {
           while (inputStream.Position != inputStream.Length) {
             try {
-              CBORObject o = CBORObject.Read(inputStream);
+              CBORObject o;
+              o = CBORObject.Read(inputStream);
               byte[] encodedBytes = (o == null) ? null : o.EncodeToBytes();
               try {
                 CBORObject.DecodeFromBytes(encodedBytes);
@@ -1101,12 +1102,17 @@ if (jsonString.Length > 0) {
                 if (o == null) {
                   Assert.Fail("object is null");
                 }
-                if (o != null && (o.Type == CBORType.Array || o.Type ==
-                    CBORType.Map)) {
+                if (o != null) {
+try {
                   jsonString = o.ToJSONString();
-                  // reread JSON string to test validity
+} catch (CBORException ex) {
+Console.WriteLine(ex.Message);
+jsonString = String.Empty;
+}
+if (jsonString.Length > 0) {
                   CBORObject.FromJSONString(jsonString);
                   TestWriteToJSON(o);
+}
                 }
               } catch (Exception ex) {
                 string failString = jsonString + "\n" + ex +
@@ -1119,7 +1125,7 @@ if (jsonString.Length > 0) {
             } catch (CBORException ex) {
               // Expected exception
               Console.Write(ex.Message.Substring(0, 0));
-            } catch (Exception ex) {
+            } catch (InvalidOperationException ex) {
               string failString = ex.ToString() +
             (ex.InnerException == null ? String.Empty : "\n" +
               ex.InnerException.ToString());
