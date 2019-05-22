@@ -448,7 +448,8 @@ namespace PeterO.Cbor {
 
     internal static void WriteJSONStringUnquoted(
       string str,
-      StringOutput sb) {
+      StringOutput sb,
+      JSONOptions options) {
       var first = true;
       for (var i = 0; i < str.Length; ++i) {
         char c = str[i];
@@ -503,7 +504,8 @@ namespace PeterO.Cbor {
             first = false;
             sb.WriteString(str, 0, i);
           }
-     c = 0xfffd;
+// Replace unpaired surrogate with U + FFFD
+     c = (char)0xfffd;
 } else {
             throw new CBORException("Unpaired surrogate in string");
 }
@@ -650,7 +652,7 @@ namespace PeterO.Cbor {
               return;
             }
             writer.WriteCodePoint((int)'\"');
-            WriteJSONStringUnquoted(thisString, writer);
+            WriteJSONStringUnquoted(thisString, writer, options);
             writer.WriteCodePoint((int)'\"');
             break;
           }
@@ -701,7 +703,7 @@ namespace PeterO.Cbor {
                   writer.WriteCodePoint((int)',');
                 }
                 writer.WriteCodePoint((int)'\"');
-                WriteJSONStringUnquoted((string)key.ThisItem, writer);
+                WriteJSONStringUnquoted((string)key.ThisItem, writer, options);
                 writer.WriteCodePoint((int)'\"');
                 writer.WriteCodePoint((int)':');
                 WriteJSONToInternal(value, writer, options);
@@ -735,7 +737,7 @@ namespace PeterO.Cbor {
                   writer.WriteCodePoint((int)',');
                 }
                 writer.WriteCodePoint((int)'\"');
-                WriteJSONStringUnquoted((string)key, writer);
+                WriteJSONStringUnquoted((string)key, writer, options);
                 writer.WriteCodePoint((int)'\"');
                 writer.WriteCodePoint((int)':');
                 WriteJSONToInternal(value, writer, options);

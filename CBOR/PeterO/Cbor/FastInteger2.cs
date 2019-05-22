@@ -570,8 +570,8 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>Internal API value.</value>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Cbor.FastInteger2.Sign"]/*'/>
     internal int Sign {
       get {
         switch (this.integerMode) {

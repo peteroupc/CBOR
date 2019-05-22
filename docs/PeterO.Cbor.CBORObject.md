@@ -701,7 +701,7 @@ A decimal number for this object's value. If this object is a rational number wi
 
  * System.InvalidOperationException:
 This object's type is not a number type, including if this object is CBORObject.Null. To check the CBOR object for null before conversion, use the following idiom (originally written in C# for the .NET version):  `(cbor == null || cbor.IsNull) ? null :
-            cbor.AsEDecimal()` .
+             cbor.AsEDecimal()` .
 
 <a id="AsEFloat"></a>
 ### AsEFloat
@@ -718,7 +718,7 @@ An arbitrary-precision binary floating point number for this object's value. Not
 
  * System.InvalidOperationException:
 This object's type is not a number type, including if this object is CBORObject.Null. To check the CBOR object for null before conversion, use the following idiom (originally written in C# for the .NET version):  `(cbor == null || cbor.IsNull) ? null :
-            cbor.AsEFloat()` .
+             cbor.AsEFloat()` .
 
 <a id="AsEInteger"></a>
 ### AsEInteger
@@ -735,7 +735,7 @@ The closest big integer to this object.
 
  * System.InvalidOperationException:
 This object's type is not a number type, including if this object is CBORObject.Null. To check the CBOR object for null before conversion, use the following idiom (originally written in C# for the .NET version):  `(cbor == null || cbor.IsNull) ? null :
-            cbor.AsEInteger()` .
+             cbor.AsEInteger()` .
 
  * System.OverflowException:
 This object's value is infinity or not-a-number (NaN).
@@ -755,7 +755,7 @@ A rational number for this object's value.
 
  * System.InvalidOperationException:
 This object's type is not a number type, including if this object is CBORObject.Null. To check the CBOR object for null before conversion, use the following idiom (originally written in C# for the .NET version):  `(cbor == null || cbor.IsNull) ? null :
-            cbor.AsERational()` .
+             cbor.AsERational()` .
 
 <a id="AsInt16"></a>
 ### AsInt16
@@ -1270,6 +1270,8 @@ Generates a CBOR object from a text string in JavaScript Object Notation (JSON) 
 
 If a JSON object has duplicate keys, a CBORException is thrown. This is a change in version 4.0.
 
+Note that if a CBOR object is converted to JSON with  `ToJSONString` , then the JSON is converted back to CBOR with this method, the new CBOR object will not necessarily be the same as the old CBOR object, especially if the old CBOR object uses data types not supported in JSON, such as integers in map keys.
+
 <b>Parameters:</b>
 
  * <i>str</i>: A string in JSON format. The entire string must contain a single JSON object and not multiple objects. The string may not begin with a byte-order mark (U+FEFF).
@@ -1294,7 +1296,7 @@ The string is not in JSON format.
         string str,
         PeterO.Cbor.CBOREncodeOptions options);
 
-Generates a CBOR object from a text string in JavaScript Object Notation (JSON) format, using the specified options to control the decoding process.
+Generates a CBOR object from a text string in JavaScript Object Notation (JSON) format, using the specified options to control the decoding process.Note that if a CBOR object is converted to JSON with  `ToJSONString` , then the JSON is converted back to CBOR with this method, the new CBOR object will not necessarily be the same as the old CBOR object, especially if the old CBOR object uses data types not supported in JSON, such as integers in map keys.
 
 <b>Parameters:</b>
 
@@ -2618,7 +2620,7 @@ Converts this object to a string in JavaScript Object Notation (JSON) format, us
 
  * If this object contains maps with non-string keys, the keys are converted to JSON strings before writing the map as a JSON string.
 
- * If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the JSON string in an undefined order. Map keys other than untagged text strings are converted to JSON strings before writing them out (for example,  `22("Test")`  is converted to  `"Test"`  and  `true`  is converted to  `"true"` ). If, after such conversion, two or more map keys are identical, this method throws a CBORException.
+ * If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the JSON string in an undefined order. Map keys other than untagged text strings are converted to JSON strings before writing them out (for example, `22("Test")` is converted to `"Test"` and `true` is converted to `"true"` ). If, after such conversion, two or more map keys are identical, his method throws a CBORException.
 
  * If a number in the form of an arbitrary-precision binary float has a very high binary exponent, it will be converted to a double before being converted to a JSON string. (The resulting double could overflow to infinity, in which case the arbitrary-precision binary float is converted to null.)
 

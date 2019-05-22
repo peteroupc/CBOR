@@ -790,42 +790,53 @@ for implementing Web Authentication. In this form,
 <doc name="M:PeterO.Cbor.CBORObject.AsEDecimal">
 
             <summary>Converts this object to a decimal number.</summary><returns>A decimal number for this object's value. If this object
-            is a rational number with a nonterminating decimal expansion,
-            returns a decimal number rounded to 34 digits.</returns><exception cref='T:System.InvalidOperationException'>This object's
-            type is not a number type, including if this object is
-            CBORObject.Null.  To check the CBOR object for null before conversion, use the following idiom (originally written in C# for the .NET version): <c>(cbor==null || cbor.IsNull) ? null : cbor.AsEDecimal()</c></exception>
+             is a rational number with a nonterminating decimal expansion,
+             returns a decimal number rounded to 34 digits.</returns><exception cref='T:System.InvalidOperationException'>This object's
+             type is not a number type, including if this object is
+             CBORObject.Null. To check the CBOR object for null before
+             conversion, use the following idiom (originally written in C# for
+             the .NET version): <c>(cbor == null || cbor.IsNull) ? null :
+             cbor.AsEDecimal()</c>.</exception>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsEFloat">
 
             <summary>Converts this object to an arbitrary-precision binary
-            floating point number.</summary><returns>An arbitrary-precision binary floating point number for
-            this object's value. Note that if this object is a decimal number
-            with a fractional part, the conversion may lose information
-            depending on the number. If this object is a rational number with a
-            nonterminating binary expansion, returns a binary floating-point
-            number rounded to a high but limited precision.</returns><exception cref='T:System.InvalidOperationException'>This object's
-            type is not a number type, including if this object is
-            CBORObject.Null.  To check the CBOR object for null before conversion, use the following idiom (originally written in C# for the .NET version): <c>(cbor==null || cbor.IsNull) ? null : cbor.AsEFloat()</c></exception>
+             floating point number.</summary><returns>An arbitrary-precision binary floating point number for
+             this object's value. Note that if this object is a decimal number
+             with a fractional part, the conversion may lose information
+             depending on the number. If this object is a rational number with a
+             nonterminating binary expansion, returns a binary floating-point
+             number rounded to a high but limited precision.</returns><exception cref='T:System.InvalidOperationException'>This object's
+             type is not a number type, including if this object is
+             CBORObject.Null. To check the CBOR object for null before
+             conversion, use the following idiom (originally written in C# for
+             the .NET version): <c>(cbor == null || cbor.IsNull) ? null :
+             cbor.AsEFloat()</c>.</exception>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsEInteger">
 
             <summary>Converts this object to an arbitrary-precision integer.
-            Fractional values are truncated to an integer.</summary><returns>The closest big integer to this object.</returns><exception cref='T:System.InvalidOperationException'>This object's
-            type is not a number type, including if this object is
-            CBORObject.Null.  To check the CBOR object for null before conversion, use the following idiom (originally written in C# for the .NET version): <c>(cbor==null || cbor.IsNull) ? null : cbor.AsEInteger()</c></exception><exception cref='T:System.OverflowException'>This object's value is
-            infinity or not-a-number (NaN).</exception>
+             Fractional values are truncated to an integer.</summary><returns>The closest big integer to this object.</returns><exception cref='T:System.InvalidOperationException'>This object's
+             type is not a number type, including if this object is
+             CBORObject.Null. To check the CBOR object for null before
+             conversion, use the following idiom (originally written in C# for
+             the .NET version): <c>(cbor == null || cbor.IsNull) ? null :
+             cbor.AsEInteger()</c>.</exception><exception cref='T:System.OverflowException'>This object's value is
+             infinity or not-a-number (NaN).</exception>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsERational">
 
             <summary>Converts this object to a rational number.</summary><returns>A rational number for this object's value.</returns><exception cref='T:System.InvalidOperationException'>This object's
-            type is not a number type, including if this object is
-            CBORObject.Null.  To check the CBOR object for null before conversion, use the following idiom (originally written in C# for the .NET version): <c>(cbor==null || cbor.IsNull) ? null : cbor.AsERational()</c></exception>
+             type is not a number type, including if this object is
+             CBORObject.Null. To check the CBOR object for null before
+             conversion, use the following idiom (originally written in C# for
+             the .NET version): <c>(cbor == null || cbor.IsNull) ? null :
+             cbor.AsERational()</c>.</exception>
 
 </doc>
-
 <doc name="M:PeterO.Cbor.CBORObject.AsInt16">
 
             <summary>Converts this object to a 16-bit signed integer. Floating
@@ -909,8 +920,11 @@ for implementing Web Authentication. In this form,
 <doc name="M:PeterO.Cbor.CBORObject.AsString">
 
             <summary>Gets the value of this object as a text string.</summary><returns>Gets this object's string.</returns><exception cref='T:System.InvalidOperationException'>This object's
-            type is not a string, including if this object is
-            CBORObject.Null.  To check the CBOR object for null before conversion, use the following idiom (originally written in C# for the .NET version): <c>(cbor==null || cbor.IsNull) ? null : cbor.AsString()</c></exception>
+             type is not a string, including if this object is CBORObject.Null.
+             To check the CBOR object for null before conversion, use the
+             following idiom (originally written in C# for the .NET version):
+             <c>(cbor == null || cbor.IsNull) ? null : cbor.AsString()</c>
+             .</exception>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsUInt16">
@@ -2285,7 +2299,17 @@ is less than 0, is the size of this array or greater, or is not a 32-bit signed 
         </item>
         <item>If the CBOR object contains CBOR maps, or is a CBOR map itself, the
           keys to the map are written out to the JSON string in an undefined
-          order. Map keys other than untagged text strings are converted to JSON strings before writing them out (for example, <c>22("Test")</c> is converted to <c>"Test"</c> and <c>true</c> is converted to <c>"true"</c>).  If, after such conversion, two or more map keys are identical, this method throws a CBORException.
+          order. Map keys other than untagged text strings are converted to JSON
+          strings before writing them out (for example,
+          <c>22("Test")</c>
+           is converted to
+          <c>"Test"</c>
+           and
+          <c>true</c>
+           is converted to
+          <c>"true"</c>
+           ). If, after such conversion, two or more map keys are identical,
+          this method throws a CBORException.
         </item>
         <item>If a number in the form of an arbitrary-precision binary float has a
           very high binary exponent, it will be converted to a double before
@@ -3665,28 +3689,29 @@ stream.Write(bytes, 0, bytes.Length);
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORUuidConverter.ToCBORObject(System.Guid)">
-<summary>Internal API.</summary>
-            <param name='obj'>The parameter <paramref name='obj'/> is an internal parameter.</param>
-            <returns>A CBORObject object.</returns>
+
+            <summary>Internal API.</summary><param name='obj'>The parameter <paramref name='obj'/> is an internal parameter.</param><returns>A CBORObject object.</returns>
+
 </doc>
 <doc name="M:PeterO.Cbor.FastInteger2.Multiply(System.Int32)">
-<summary>Internal API.</summary>
-            <param name='val'>The parameter <paramref name='val'/> is an internal parameter.</param>
-            <returns>A FastInteger2 object.</returns>
+
+            <summary>Internal API.</summary><param name='val'>The parameter <paramref name='val'/> is an internal parameter.</param><returns>A FastInteger2 object.</returns>
+
 </doc>
 <doc name="P:PeterO.Cbor.FastInteger2.Sign">
-<summary>Internal API.</summary>
-            <value>Internal API value.</value>
+
+            <summary>Gets a value not documented yet.</summary><value>Internal API value.</value>
+
 </doc>
 <doc name="M:PeterO.Cbor.FastInteger2.Subtract(PeterO.Cbor.FastInteger2)">
-<summary>Internal API.</summary>
-            <param name='val'>The parameter <paramref name='val'/> is an internal parameter.</param>
-            <returns>A FastInteger2 object.</returns>
+
+            <summary>Internal API.</summary><param name='val'>The parameter <paramref name='val'/> is an internal parameter.</param><returns>A FastInteger2 object.</returns>
+
 </doc>
 <doc name="M:PeterO.Cbor.FastInteger2.SubtractInt(System.Int32)">
-<summary>Internal API.</summary>
-            <param name='val'>The parameter <paramref name='val'/> is an internal parameter.</param>
-            <returns>A FastInteger2 object.</returns>
+
+            <summary>Internal API.</summary><param name='val'>The parameter <paramref name='val'/> is an internal parameter.</param><returns>A FastInteger2 object.</returns>
+
 </doc>
 <doc name="T:PeterO.Cbor.ICBORConverter`1">
 
@@ -3887,7 +3912,8 @@ stream.Write(bytes, 0, bytes.Length);
         schemes can further restrict the syntax of the authority, path, and
         query component (see also RFC 7320). However, the syntax of fragment
         identifiers depends on the media type (also known as MIME type) of the
-        resource a URI references (see also RFC 3986 and RFC 7320). As of May 18, 2019, only the following media types specify a syntax for fragment
+        resource a URI references (see also RFC 3986 and RFC 7320). As of May
+        18, 2019, only the following media types specify a syntax for fragment
         identifiers:
       </para>
       <list>
