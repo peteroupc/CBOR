@@ -495,12 +495,18 @@ namespace PeterO.Cbor {
         } else {
           if ((c & 0xfc00) == 0xd800) {
            if (i >= str.Length - 1 || (str[i + 1] & 0xfc00) != 0xdc00) {
-            // TODO: Add JSONOptions for handling of unpaired
-            // surrogates in strings (at least U + FFFD/escape seqs.).
             // NOTE: RFC 8259 doesn't prohibit any particular
             // error-handling behavior when a writer of JSON
             // receives a string with an unpaired surrogate.
+            if (options.ReplaceSurrogates) {
+          if (first) {
+            first = false;
+            sb.WriteString(str, 0, i);
+          }
+     c = 0xfffd;
+} else {
             throw new CBORException("Unpaired surrogate in string");
+}
            }
           }
           if (!first) {

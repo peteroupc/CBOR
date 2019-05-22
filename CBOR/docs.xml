@@ -1234,7 +1234,9 @@ for implementing Web Authentication. In this form,
 
             <summary><para>Generates a CBOR object from a text string in JavaScript
             Object Notation (JSON) format.</para>
-            <para>If a JSON object has duplicate keys, a CBORException is thrown.  This is a change in version 4.0.</para></summary><param name='str'>A string in JSON format. The entire string must
+            <para>If a JSON object has duplicate keys, a CBORException is thrown.  This is a change in version 4.0.</para>
+<para>Note that if a CBOR object is converted to JSON with <c>ToJSONString</c>, then the JSON is converted back to CBOR with this method, the new CBOR object will not necessarily be the same as the old CBOR object, especially if the old CBOR object uses data types not supported in JSON, such as integers in map keys.</para>
+</summary><param name='str'>A string in JSON format. The entire string must
             contain a single JSON object and not multiple objects. The string
             may not begin with a byte-order mark (U+FEFF).</param><returns>A CBOR object.</returns><exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='str'/> is null.</exception><exception cref='T:PeterO.Cbor.CBORException'>The string is not in
@@ -1245,7 +1247,9 @@ for implementing Web Authentication. In this form,
 
             <summary>Generates a CBOR object from a text string in JavaScript
             Object Notation (JSON) format, using the specified options to
-            control the decoding process.</summary><param name='str'>A string in JSON format. The entire string must
+            control the decoding process.
+<para>Note that if a CBOR object is converted to JSON with <c>ToJSONString</c>, then the JSON is converted back to CBOR with this method, the new CBOR object will not necessarily be the same as the old CBOR object, especially if the old CBOR object uses data types not supported in JSON, such as integers in map keys.</para>
+</summary><param name='str'>A string in JSON format. The entire string must
             contain a single JSON object and not multiple objects. The string
             may not begin with a byte-order mark (U+FEFF).</param><param name='options'>Specifies options to control the decoding process.</param><returns>A CBORObject object.</returns><exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='str'/> or <paramref name='options'/> is null.</exception><exception cref='T:PeterO.Cbor.CBORException'>The string is not in

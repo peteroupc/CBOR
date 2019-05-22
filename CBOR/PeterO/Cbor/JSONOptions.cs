@@ -13,8 +13,12 @@ namespace PeterO.Cbor {
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.JSONOptions.#ctor(System.Boolean)"]/*'/>
-    public JSONOptions(bool base64Padding) {
+    public JSONOptions(bool base64Padding) : this(base64Padding, false) {
+    }
+
+    public JSONOptions(bool base64Padding, bool replaceSurrogates) {
         this.Base64Padding = base64Padding;
+        this.ReplaceSurrogates = replaceSurrogates;
     }
 
     /// <include file='../../docs.xml'
@@ -24,5 +28,7 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="P:PeterO.Cbor.JSONOptions.Base64Padding"]/*'/>
     public bool Base64Padding { get; private set; }
+
+    public bool ReplaceSurrogates { get; private set; }
    }
 }
