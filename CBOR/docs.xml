@@ -3822,11 +3822,17 @@ stream.Write(bytes, 0, bytes.Length);
 </doc>
 <doc name="M:PeterO.Cbor.JSONOptions.#ctor(System.Boolean)">
 
-            <summary>Initializes a new instance of the <see cref='T:PeterO.Cbor.JSONOptions'/> class with the given values for the options.
+            <summary>Initializes a new instance of the <see cref='T:PeterO.Cbor.JSONOptions'/> class with the given value for the Base64Padding option.
     </summary><param name='base64Padding'>Whether padding is included when writing data in base64url or traditional
       base64 format to JSON.
     </param>
 
+</doc>
+<doc name="M:PeterO.Cbor.JSONOptions.#ctor(System.Boolean,System.Boolean)">
+<summary>Initializes a new instance of the <see cref="JSONOptions" /> class with the given values for the options.</summary>
+            <param name='base64Padding'>Whether padding is included when writing data in base64url or traditional
+      base64 format to JSON.</param>
+            <param name='replaceSurrogates'>Whether surrogate code points not part of a surrogate pair (which consists of two consecutive <c>char</c>s forming one Unicode code point) are each replaced with a replacement character (U+FFFD).  The default is false; an exception is thrown when such code points are encountered.</param>
 </doc>
 <doc name="P:PeterO.Cbor.JSONOptions.Base64Padding">
 
@@ -3838,6 +3844,10 @@ stream.Write(bytes, 0, bytes.Length);
             <summary>The default options for converting CBOR objects to JSON.
     </summary>
 
+</doc>
+<doc name="P:PeterO.Cbor.JSONOptions.ReplaceSurrogates">
+<summary>Gets a value indicating whether surrogate code points not part of a surrogate pair (which consists of two consecutive <c>char</c>s forming one Unicode code point) are each replaced with a replacement character (U+FFFD).  The default is false; an exception is thrown when such code points are encountered.</summary>
+            <value>True, if surrogate code points not part of a surrogate pair are each replaced with a replacement character, or false if an exception is thrown when such code points are encountered.</value>
 </doc>
 <doc name="T:PeterO.Cbor.PODOptions">
 

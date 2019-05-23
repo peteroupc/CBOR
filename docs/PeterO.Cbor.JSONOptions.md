@@ -7,7 +7,7 @@ Includes options to control how CBOR objects are converted to JSON.
 ### Member Summary
 * <code>[Base64Padding](#Base64Padding)</code> - Gets a value indicating whether padding is written out when writing base64url or traditional base64 to JSON.
 * <code>[public static readonly PeterO.Cbor.JSONOptions Default;](#Default)</code> - The default options for converting CBOR objects to JSON.
-* <code>[ReplaceSurrogates](#ReplaceSurrogates)</code> - Gets a value not documented yet.
+* <code>[ReplaceSurrogates](#ReplaceSurrogates)</code> - Gets a value indicating whether surrogate code points not part of a surrogate pair (which consists of two consecutive chars forming one Unicode code point) are each replaced with a replacement character (U+FFFD).
 
 <a id="Void_ctor_Boolean"></a>
 ### JSONOptions Constructor
@@ -15,7 +15,7 @@ Includes options to control how CBOR objects are converted to JSON.
     public JSONOptions(
         bool base64Padding);
 
-Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) class with the given values for the options.
+Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) class with the given value for the Base64Padding option.
 
 <b>Parameters:</b>
 
@@ -28,13 +28,13 @@ Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOpti
         bool base64Padding,
         bool replaceSurrogates);
 
-Initializes a new instance of the JSONOptions class.
+Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) class with the given values for the options.
 
 <b>Parameters:</b>
 
- * <i>base64Padding</i>: A Boolean object.
+ * <i>base64Padding</i>: Whether padding is included when writing data in base64url or traditional base64 format to JSON.
 
- * <i>replaceSurrogates</i>: Another Boolean object.
+ * <i>replaceSurrogates</i>: Whether surrogate code points not part of a surrogate pair (which consists of two consecutive  `char` s forming one Unicode code point) are each replaced with a replacement character (U+FFFD). The default is false; an exception is thrown when such code points are encountered.
 
 <a id="Default"></a>
 ### Default
@@ -61,8 +61,8 @@ The default is false, no padding.
 
     public bool ReplaceSurrogates { get; }
 
-Gets a value not documented yet.
+Gets a value indicating whether surrogate code points not part of a surrogate pair (which consists of two consecutive  `char` s forming one Unicode code point) are each replaced with a replacement character (U+FFFD). The default is false; an exception is thrown when such code points are encountered.
 
 <b>Returns:</b>
 
-A value not documented yet.
+True, if surrogate code points not part of a surrogate pair are each replaced with a replacement character, or false if an exception is thrown when such code points are encountered.
