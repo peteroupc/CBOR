@@ -3700,7 +3700,7 @@ stream.Write(bytes, 0, bytes.Length);
 </doc>
 <doc name="P:PeterO.Cbor.FastInteger2.Sign">
 
-            <summary>Gets a value not documented yet.</summary><value>Internal API value.</value>
+            <summary>This is an internal API.</summary><value>Internal API value.</value>
 
 </doc>
 <doc name="M:PeterO.Cbor.FastInteger2.Subtract(PeterO.Cbor.FastInteger2)">
