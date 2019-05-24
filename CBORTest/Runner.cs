@@ -31,7 +31,7 @@ namespace PeterO {
     }
 
     public static void Main() {
-      const String ValueParam = "TestWrite";
+      const String ValueParam = "TestCompareTo";
       // Run all the tests in this assembly
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
         if (!HasAttribute(type, typeof(TestFixtureAttribute))) {
@@ -49,12 +49,12 @@ namespace PeterO {
           if (!HasAttribute(method, typeof(TestAttribute))) {
             continue;
           }
-          Console.WriteLine(method.Name);
           if (!String.IsNullOrEmpty(ValueParam)) {
             if (!method.Name.Equals(ValueParam)) {
               continue;
             }
           }
+          Console.WriteLine(method.Name);
           Type exctype = null;
           foreach (var a in method.GetCustomAttributes(false)) {
             if (a is ExpectedExceptionAttribute) {

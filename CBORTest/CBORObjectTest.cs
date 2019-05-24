@@ -1697,17 +1697,44 @@ Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Double.NaN).AsEFloat()
       }
     }
 
+[Test]
+[Timeout(1000)]
+public void TestSlowCompareTo(){
+CBORObject cbor1=CBORObject.DecodeFromBytes(new byte[] { (byte)0xC5,(byte)0x82,0x3B,0x00,0x00,0x00,0x15,(byte)0xFC,(byte)0xA0,(byte)0xD9,(byte)0xF9,(byte)0xC3,0x58,0x36,0x02,(byte)0x83,0x3B,0x3C,(byte)0x99,(byte)0xDB,(byte)0xE4,(byte)0xFC,0x2A,0x69,0x69,(byte)0xE7,0x63,(byte)0xB7,0x5D,0x48,(byte)0xCF,0x51,0x33,(byte)0xD7,(byte)0xC3,0x59,0x4D,0x63,0x3C,(byte)0xBB,(byte)0x9D,0x43,0x2D,(byte)0xD1,0x51,0x39,0x1F,0x03,0x22,0x5C,0x13,(byte)0xED,0x02,(byte)0xCA,(byte)0xDA,0x09,0x22,0x07,(byte)0x9F,0x34,(byte)0x84,(byte)0xB4,0x22,(byte)0xA8,0x26,(byte)0x9F,0x35,(byte)0x8D});
+CBORObject cbor2=CBORObject.DecodeFromBytes(new byte[] { (byte)0xC4,(byte)0x82,0x24,0x26});
+Console.WriteLine(cbor1);
+Console.WriteLine(cbor2);
+TestCommon.CompareTestGreater(cbor1,cbor2);
+}
+
     [Test]
     [Timeout(100000)]
     public void TestCompareTo() {
       var r = new RandomGenerator();
-      const int CompareCount = 500;
+      const int CompareCount = 1000;
+      var list=new List<CBORObject>();
       for (var i = 0; i < CompareCount; ++i) {
         CBORObject o1 = CBORTestCommon.RandomCBORObject(r);
         CBORObject o2 = CBORTestCommon.RandomCBORObject(r);
         CBORObject o3 = CBORTestCommon.RandomCBORObject(r);
         TestCommon.CompareTestRelations(o1, o2, o3);
+        if(list.Count<200){
+           if(o1.Type==CBORType.Number)list.Add(o1.Untag());
+           if(o2.Type==CBORType.Number)list.Add(o2.Untag());
+           if(o3.Type==CBORType.Number)list.Add(o3.Untag());
+        }
       }
+Console.WriteLine("Sorting "+(list.Count)+" numbers");
+for(var i=0;i<list.Count;i++){
+ for(var j=i+1;j<list.Count;j++){
+         CBORObject o1=list[i];
+         CBORObject o2=list[j];
+   Console.WriteLine("//--");
+   Console.WriteLine(TestCommon.ToByteArrayString(o1.EncodeToBytes()));
+   Console.WriteLine(TestCommon.ToByteArrayString(o2.EncodeToBytes()));
+   TestCommon.CompareTestReciprocal(o1,o2);
+ }
+}
       for (var i = 0; i < 5000; ++i) {
         CBORObject o1 = CBORTestCommon.RandomNumber(r);
         CBORObject o2 = CBORTestCommon.RandomNumber(r);

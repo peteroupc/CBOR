@@ -2107,12 +2107,12 @@ objret[key.Key] = CBORObject.FromObject(
             if (typeA == CBORObjectTypeExtendedFloat) {
               var ef1 = (EFloat)objA;
               e2 = (EDecimal)objB;
-              cmp = e2.CompareToBinary(ef1);
+              cmp = CompareEDecimalToEFloat(e2,ef1);
               cmp = -cmp;
             } else if (typeB == CBORObjectTypeExtendedFloat) {
               var ef1 = (EFloat)objB;
               e2 = (EDecimal)objA;
-              cmp = e2.CompareToBinary(ef1);
+              cmp = CompareEDecimalToEFloat(e2,ef1);
             } else {
               e1 = NumberInterfaces[typeA].AsExtendedDecimal(objA);
               e2 = NumberInterfaces[typeB].AsExtendedDecimal(objB);
@@ -2138,6 +2138,40 @@ objret[key.Key] = CBORObject.FromObject(
            TagsCompare(this.GetAllTags(), other.GetAllTags())) :
                     cmp;
     }
+
+
+private static int CompareEDecimalToEFloat(EDecimal ed, EFloat ef){
+ if(ef.IsFinite && ed.IsFinite && 
+    ef.Exponent.CompareTo(EInteger.FromInt32(-60000))<0 &&
+    ef.Sign == ef.Sign && !ef.IsZero){
+   // Float has negative exponent and same sign as decimal,
+   // and is nonzero
+   EInteger bitCount=ef.Mantissa.GetUnsignedBitLengthAsEInteger();
+   EInteger absexp=ef.Exponent.Abs();
+   if(absexp.CompareTo(bitCount)>0){
+     // Float is less than 1, so do a trial comparison
+     // using exponent closer to 0
+     EFloat trial=EFloat.Create(ef.Mantissa,EInteger.FromInt32(-60000));
+     int trialcmp=ed.CompareToBinary(trial);
+     if(ef.Sign<0 && trialcmp<0){
+       // if float and decimal are negative and
+       // decimal is less than trial float (which in turn is
+       // less than the actual float), then the decimal is
+       // less than the actual float
+       return -1;
+     }
+     if(ef.Sign>0 && trialcmp>0){
+       // if float and decimal are positive and
+       // decimal is greater than trial float (which in turn is
+       // greater than the actual float), then the decimal is
+       // greater than the actual float
+       return 1;
+     }
+   }
+ }
+ return ed.CompareToBinary(ef);
+}
+
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.CompareToIgnoreTags(PeterO.Cbor.CBORObject)"]/*'/>
