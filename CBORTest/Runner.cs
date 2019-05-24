@@ -31,7 +31,7 @@ namespace PeterO {
     }
 
     public static void Main() {
-      const String ValueParam = "TestCompareTo";
+      const String ValueParam = "TestSlowCompareTo";
       // Run all the tests in this assembly
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
         if (!HasAttribute(type, typeof(TestFixtureAttribute))) {
