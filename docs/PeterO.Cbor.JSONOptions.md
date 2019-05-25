@@ -7,7 +7,7 @@ Includes options to control how CBOR objects are converted to JSON.
 ### Member Summary
 * <code>[Base64Padding](#Base64Padding)</code> - Gets a value indicating whether padding is written out when writing base64url or traditional base64 to JSON.
 * <code>[public static readonly PeterO.Cbor.JSONOptions Default;](#Default)</code> - The default options for converting CBOR objects to JSON.
-* <code>[ReplaceSurrogates](#ReplaceSurrogates)</code> - Gets a value indicating whether surrogate code points not part of a surrogate pair (which consists of two consecutive chars forming one Unicode code point) are each replaced with a replacement character (U+FFFD).
+* <code>[ReplaceSurrogates](#ReplaceSurrogates)</code> - Gets a value indicating whether surrogate code points not part of a surrogate pair (which consists of two consecutivechar s forming one Unicode code point) are each replaced with a replacement haracter (U+FFFD).
 
 <a id="Void_ctor_Boolean"></a>
 ### JSONOptions Constructor
@@ -34,7 +34,8 @@ Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOpti
 
  * <i>base64Padding</i>: Whether padding is included when writing data in base64url or traditional base64 format to JSON.
 
- * <i>replaceSurrogates</i>: Whether surrogate code points not part of a surrogate pair (which consists of two consecutive  `char` s forming one Unicode code point) are each replaced with a replacement character (U+FFFD). The default is false; an exception is thrown when such code points are encountered.
+ * <i>replaceSurrogates</i>: Whether surrogate code points not part of a surrogate pair (which consists of two consecutive `char
+      ` s forming one Unicode code point) are each replaced with a replacement haracter (U+FFFD). The default is false; an exception is thrown when such ode points are encountered.
 
 <a id="Default"></a>
 ### Default
@@ -61,7 +62,8 @@ The default is false, no padding.
 
     public bool ReplaceSurrogates { get; }
 
-Gets a value indicating whether surrogate code points not part of a surrogate pair (which consists of two consecutive  `char` s forming one Unicode code point) are each replaced with a replacement character (U+FFFD). The default is false; an exception is thrown when such code points are encountered.
+Gets a value indicating whether surrogate code points not part of a surrogate pair (which consists of two consecutive `char
+      ` s forming one Unicode code point) are each replaced with a replacement haracter (U+FFFD). The default is false; an exception is thrown when such ode points are encountered.
 
 <b>Returns:</b>
 

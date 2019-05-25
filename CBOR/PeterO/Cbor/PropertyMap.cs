@@ -151,10 +151,10 @@ namespace PeterO.Cbor {
 
     private static IList<PropertyData> GetPropertyList(Type t) {
       lock (ValuePropertyLists) {
-        if (
- ValuePropertyLists.TryGetValue(
- t,
- out IList<PropertyData> ret)) {
+        var tgv = ValuePropertyLists.TryGetValue(
+             t,
+             out IList<PropertyData> ret);
+        if (tgv) {
           return ret;
         }
         ret = new List<PropertyData>();
@@ -729,8 +729,8 @@ Type elementType = t.GetElementType();
                   " not supported");
           }
         } else {
-       if (t.FullName != null && (StartsWith(t.FullName, "Microsoft.Win32."
-) ||
+       if (t.FullName != null && (
+             StartsWith(t.FullName, "Microsoft.Win32.") ||
              StartsWith(t.FullName, "System.IO."))) {
             throw new CBORException("Type " + t.FullName +
                   " not supported");
@@ -742,9 +742,10 @@ Type elementType = t.GetElementType();
           }
         }
         var values = new List<KeyValuePair<string, CBORObject>>();
-        foreach (string key in PropertyMap.GetPropertyNames(
+var propNames = PropertyMap.GetPropertyNames(
                    t,
-                   options != null ? options.UseCamelCase : true)) {
+                   options != null ? options.UseCamelCase : true);
+        foreach (string key in propNames) {
           if (objThis.ContainsKey(key)) {
             CBORObject cborValue = objThis[key];
             var dict = new KeyValuePair<string, CBORObject>(

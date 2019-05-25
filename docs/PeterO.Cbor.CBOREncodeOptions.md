@@ -78,7 +78,9 @@ Gets a value indicating whether CBOR objects are written out using the CTAP2 can
 
 <b>Returns:</b>
 
- `true`  if CBOR objects are written out using the CTAP2 canonical CBOR encoding form; otherwise,  `false` .
+ `true
+      ` if CBOR objects are written out using the CTAP2 canonical CBOR encoding orm; otherwise, `false
+      ` .
 
 <a id="UseIndefLengthStrings"></a>
 ### UseIndefLengthStrings

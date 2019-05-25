@@ -2187,14 +2187,14 @@ private static int CompareEDecimalToEFloat(EDecimal ed, EFloat ef) {
             return (signA > 0) ? 1 : -1;
           }
         }
-//DebugUtility.Log("edexp={0}, efexp={1}",ed.Exponent,ef.Exponent);
+// DebugUtility.Log("edexp=" + ed.Exponent + ", efexp=" + (ef.Exponent));
    EInteger bitCount = ef.Mantissa.GetUnsignedBitLengthAsEInteger();
    EInteger absexp = ef.Exponent.Abs();
    if (absexp.CompareTo(bitCount) > 0) {
      // Float's absolute value is less than 1, so do a trial comparison
      // using exponent closer to 0
      EFloat trial = EFloat.Create(ef.Mantissa, EInteger.FromInt32(-1000));
-     int trialcmp = CompareEDecimalToEFloat(ed,trial);
+     int trialcmp = CompareEDecimalToEFloat(ed, trial);
      if (ef.Sign < 0 && trialcmp < 0) {
        // if float and decimal are negative and
        // decimal is less than trial float (which in turn is
@@ -2212,23 +2212,24 @@ private static int CompareEDecimalToEFloat(EDecimal ed, EFloat ef) {
    }
         EInteger thisAdjExp = GetAdjustedExponent(ed);
         EInteger otherAdjExp = GetAdjustedExponentBinary(ef);
-//DebugUtility.Log("taexp={0}, oaexp={1}",thisAdjExp,otherAdjExp);
-        if (thisAdjExp.Sign < 0 && thisAdjExp.CompareTo((EInteger)(-1000)) < 0 &&
-                otherAdjExp.CompareTo((EInteger)(-1000)) < 0) {
+// DebugUtility.Log("taexp=" + thisAdjExp + ", oaexp=" + otherAdjExp);
+      if (thisAdjExp.Sign < 0 && thisAdjExp.CompareTo((EInteger)(-1000)) < 0 &&
+          otherAdjExp.CompareTo((EInteger)(-1000)) < 0) {
           thisAdjExp = thisAdjExp.Add(EInteger.One).Abs();
           otherAdjExp = otherAdjExp.Add(EInteger.One).Abs();
           EInteger ratio = otherAdjExp.Multiply(1000).Divide(thisAdjExp);
-//DebugUtility.Log("taexp={0}, oaexp={1} ratio={2}",thisAdjExp,otherAdjExp,ratio);
-          // Check the ratio of the negative binary exponent to 
+// DebugUtility.Log("taexp={0}, oaexp={1} ratio={2}"
+// , thisAdjExp, otherAdjExp, ratio);
+          // Check the ratio of the negative binary exponent to
           // negative the decimal exponent.
-          // If the ratio times 1000, rounded down, is less than 3321, the 
+          // If the ratio times 1000, rounded down, is less than 3321, the
           // binary's absolute value is
           // greater. If it's 3322 or greater, the decimal's absolute value is
           // greater.
           // (If the two absolute values are equal, the ratio will approach
           // ln(10)/ln(2), or about 3.32193, as the exponents get higher and
           // higher.) This check assumes that both exponents are 1000 or
-          // greater, when the ratio between exponents of equal values is 
+          // greater, when the ratio between exponents of equal values is
           // close to ln(10)/ln(2).
           if (ratio.CompareTo((EInteger)3321) < 0) {
             // Binary abs. value is greater
@@ -2263,14 +2264,14 @@ private static int CompareEDecimalToEFloat(EDecimal ed, EFloat ef) {
           otherAdjExp = otherAdjExp.Add(EInteger.One);
           EInteger ratio = otherAdjExp.Multiply(1000).Divide(thisAdjExp);
           // Check the ratio of the binary exponent to the decimal exponent.
-          // If the ratio times 1000, rounded down, is less than 3321, the 
+          // If the ratio times 1000, rounded down, is less than 3321, the
           // decimal's absolute value is
           // greater. If it's 3322 or greater, the binary's absolute value is
           // greater.
           // (If the two absolute values are equal, the ratio will approach
           // ln(10)/ln(2), or about 3.32193, as the exponents get higher and
           // higher.) This check assumes that both exponents are 1000 or
-          // greater, when the ratio between exponents of equal values is 
+          // greater, when the ratio between exponents of equal values is
           // close to ln(10)/ln(2).
           if (ratio.CompareTo((EInteger)3321) < 0) {
             // Decimal abs. value is greater
@@ -2293,9 +2294,9 @@ private static int CompareEDecimalToEFloat(EDecimal ed, EFloat ef) {
         return EInteger.Zero;
       }
       EInteger retEInt = ed.Exponent;
-      EInteger eiPrecision = EInteger.FromInt32(
+      EInteger valueEiPrecision = EInteger.FromInt32(
           ed.UnsignedMantissa.GetDigitCount());
-      retEInt = retEInt.Add(eiPrecision.Subtract(1));
+      retEInt = retEInt.Add(valueEiPrecision.Subtract(1));
       return retEInt;
     }
 
@@ -2307,12 +2308,11 @@ private static int CompareEDecimalToEFloat(EDecimal ed, EFloat ef) {
         return EInteger.Zero;
       }
       EInteger retEInt = ef.Exponent;
-      EInteger eiPrecision = EInteger.FromInt32(
+      EInteger valueEiPrecision = EInteger.FromInt32(
            ef.UnsignedMantissa.GetSignedBitLength());
-      retEInt = retEInt.Add(eiPrecision.Subtract(1));
+      retEInt = retEInt.Add(valueEiPrecision.Subtract(1));
       return retEInt;
     }
-
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.CompareToIgnoreTags(PeterO.Cbor.CBORObject)"]/*'/>

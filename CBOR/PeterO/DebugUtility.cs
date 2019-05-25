@@ -19,7 +19,7 @@ namespace PeterO {
       return t.GetMethod(name, parameters);
 #else
 {
-        return t?.GetRuntimeMethod(name, parameters);
+ return t?.GetRuntimeMethod(name, parameters);
 }
 #endif
     }
