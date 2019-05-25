@@ -151,13 +151,10 @@ namespace PeterO.Cbor {
 
     private static IList<PropertyData> GetPropertyList(Type t) {
       lock (ValuePropertyLists) {
-        var tgv = ValuePropertyLists.TryGetValue(
-             t,
-             out IList<PropertyData> ret);
-        if (tgv) {
-          return ret;
+        IList<PropertyData> ret = new List<PropertyData>();
+        if (ValuePropertyLists.ContainsKey(t)) {
+          return ValuePropertyLists[t];
         }
-        ret = new List<PropertyData>();
         bool anonymous = HasCustomAttribute(
           t,
           "System.Runtime.CompilerServices.CompilerGeneratedAttribute");

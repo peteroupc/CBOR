@@ -1735,17 +1735,17 @@ TestCommon.CompareTestGreater(cbor1, cbor2);
 }
 
     [Test]
-    [Timeout(100000)]
+    [Timeout(300000)]
     public void TestCompareTo() {
       var r = new RandomGenerator();
-      const int CompareCount = 1000;
+      const int CompareCount = 3000;
       var list = new List<CBORObject>();
       for (var i = 0; i < CompareCount; ++i) {
         CBORObject o1 = CBORTestCommon.RandomCBORObject(r);
         CBORObject o2 = CBORTestCommon.RandomCBORObject(r);
         CBORObject o3 = CBORTestCommon.RandomCBORObject(r);
         TestCommon.CompareTestRelations(o1, o2, o3);
-        if (list.Count < 200) {
+        if (list.Count < 400) {
            if (o1.Type == CBORType.Number) {
  list.Add(o1.Untag());
 }
@@ -1757,16 +1757,24 @@ TestCommon.CompareTestGreater(cbor1, cbor2);
 }
         }
       }
-Console.WriteLine("Sorting " + (list.Count)+" numbers");
+Console.WriteLine("Check compare");
 for (var i = 0; i < list.Count; ++i) {
  for (var j = i + 1; j < list.Count; ++j) {
          CBORObject o1 = list[i];
          CBORObject o2 = list[j];
-   Console.WriteLine("//--");
-   Console.WriteLine(TestCommon.ToByteArrayString(o1.EncodeToBytes()));
-   Console.WriteLine(TestCommon.ToByteArrayString(o2.EncodeToBytes()));
+   // Console.WriteLine("// --");
+   // Console.WriteLine(TestCommon.ToByteArrayString(o1.EncodeToBytes()));
+   // Console.WriteLine(TestCommon.ToByteArrayString(o2.EncodeToBytes()));
    TestCommon.CompareTestReciprocal(o1, o2);
  }
+}
+Console.WriteLine("Sorting");
+list.Sort();
+Console.WriteLine("Check compare 2");
+for (var i = 0; i < list.Count - 1; ++i) {
+         CBORObject o1 = list[i];
+         CBORObject o2 = list[i + 1];
+  TestCommon.CompareTestLessEqual(o1, o2);
 }
       for (var i = 0; i < 5000; ++i) {
         CBORObject o1 = CBORTestCommon.RandomNumber(r);
