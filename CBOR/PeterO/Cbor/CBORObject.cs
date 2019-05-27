@@ -2212,7 +2212,15 @@ private static int CompareEDecimalToEFloat(EDecimal ed, EFloat ef) {
    }
         EInteger thisAdjExp = GetAdjustedExponent(ed);
         EInteger otherAdjExp = GetAdjustedExponentBinary(ef);
-// DebugUtility.Log("taexp=" + thisAdjExp + ", oaexp=" + otherAdjExp);
+ // DebugUtility.Log("taexp=" + thisAdjExp + ", oaexp=" + otherAdjExp);
+ // DebugUtility.Log("td=" + ed.ToDouble() + ", tf=" + ef.ToDouble());
+      if (thisAdjExp.Sign < 0 && thisAdjExp.CompareTo((EInteger)(-1000)) >= 0 &&
+        otherAdjExp.Sign < 0 && otherAdjExp.CompareTo((EInteger)(-4000)) <
+            0) {
+        // With these exponent combinations, the binary's absolute
+        // value is less than the decimal's
+        return (signA > 0) ? 1 : -1;
+      }
       if (thisAdjExp.Sign < 0 && thisAdjExp.CompareTo((EInteger)(-1000)) < 0 &&
           otherAdjExp.CompareTo((EInteger)(-1000)) < 0) {
           thisAdjExp = thisAdjExp.Add(EInteger.One).Abs();
