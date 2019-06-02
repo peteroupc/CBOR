@@ -39,8 +39,9 @@ if (
     }
 
     public Uri FromCBORObject(CBORObject obj) {
-      if (obj.HasMostOuterTag(32) || obj.HasMostOuterTag(266) ||
-          obj.HasMostOuterTag(267)) {
+      if (obj.HasMostOuterTag(32) ||
+obj.HasMostOuterTag(266) ||
+obj.HasMostOuterTag(267)) {
         this.ValidateObject(obj);
         try {
          return new Uri(obj.AsString());

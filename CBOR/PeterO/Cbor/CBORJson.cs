@@ -548,7 +548,8 @@ namespace PeterO.Cbor {
           case CBORObject.CBORObjectTypeSingle: {
             var f = (float)thisItem;
             if (Single.IsNegativeInfinity(f) ||
-                Single.IsPositiveInfinity(f) || Single.IsNaN(f)) {
+Single.IsPositiveInfinity(f) ||
+Single.IsNaN(f)) {
               writer.WriteString("null");
               return;
             }
@@ -559,8 +560,9 @@ namespace PeterO.Cbor {
           }
           case CBORObject.CBORObjectTypeDouble: {
             var f = (double)thisItem;
-            if (Double.IsNegativeInfinity(f) || Double.IsPositiveInfinity(f) ||
-                Double.IsNaN(f)) {
+            if (Double.IsNegativeInfinity(f) ||
+Double.IsPositiveInfinity(f) ||
+Double.IsNaN(f)) {
               writer.WriteString("null");
               return;
             }
@@ -600,7 +602,8 @@ namespace PeterO.Cbor {
               // so convert to double instead
               double f = flo.ToDouble();
               if (Double.IsNegativeInfinity(f) ||
-                  Double.IsPositiveInfinity(f) || Double.IsNaN(f)) {
+Double.IsPositiveInfinity(f) ||
+Double.IsNaN(f)) {
                 writer.WriteString("null");
                 return;
               }

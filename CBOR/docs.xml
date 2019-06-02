@@ -2874,8 +2874,8 @@
   <doc name='M:PeterO.Cbor.CBORObject.ToObject(System.Type)'>
     <summary>Converts this CBOR object to an object of an arbitrary type. See the
       documentation for the overload of this method taking a CBORTypeMapper
-      parameter for more information. This method (without a CBORTypeMapper
-      parameter) allows all data types not otherwise handled to be eligible for
+      parameter for more information. This method doesn't use a CBORTypeMapper
+      parameter to restrict which data types are eligible for
       Plain-Old-Data serialization.
     </summary>
     <param name='t'>The type, class, or interface that this method's return value will belong
@@ -3213,7 +3213,7 @@
           does not return void. (For example, if a class has "public
           setValue(String)" and "public getValue()", "setValue" is an eligible
           setter. However, "setValue()" and "setValue(String, int)" are not
-          eligible setters.) If a class has two otherwise eligible setters with
+          eligible setters.) If a class has two or more otherwise eligible setters with
           the same name, but different parameter type, they are not eligible
           setters.
         </item>

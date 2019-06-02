@@ -223,7 +223,7 @@ CBOR library in the form of a calculator.
 About
 -----------
 
-Written in 2013-2017 by Peter O.
+Written in 2013-2019 by Peter O.
 
 Any copyright is dedicated to the Public Domain.
 [http://creativecommons.org/publicdomain/zero/1.0/](http://creativecommons.org/publicdomain/zero/1.0/)
@@ -263,6 +263,11 @@ Release Notes
 - Certain other changes in CBOR object reading and validation were
   made; they are largely compatible with previous versions but may be
   backwards-incompatible in certain rare cases
+
+### Version 3.5.0
+
+- Update Numbers library used by this library.
+- Deprecate Base64Padding property of JSONOptions.
 
 ### Version 3.4.0
 
