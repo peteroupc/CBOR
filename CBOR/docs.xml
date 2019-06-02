@@ -4786,7 +4786,7 @@
     </exception>
   </doc>
   <doc name='P:PeterO.Cbor.CBORTypeMapper.ConverterInfo.Converter'>
-    <summary>Gets a value not documented yet.
+    <summary>Internal API.
     </summary>
     <value>An internal API value.
     </value>

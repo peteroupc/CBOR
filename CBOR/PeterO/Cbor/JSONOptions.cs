@@ -22,9 +22,11 @@ namespace PeterO.Cbor {
     /// padding when writing traditional base64 to JSON and include no
     /// padding when writing base64url to JSON, in accordance with the
     /// revision of the CBOR specification.</remarks>
+#pragma warning disable CS0618
     public JSONOptions(bool base64Padding) {
         this.Base64Padding = base64Padding;
     }
+#pragma warning restore CS0618
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="F:PeterO.Cbor.JSONOptions.Default"]/*'/>

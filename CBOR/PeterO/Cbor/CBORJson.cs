@@ -404,6 +404,7 @@ namespace PeterO.Cbor {
       }
     }
 
+#pragma warning disable CS0618
     internal CBORObject ParseJSONArray(int depth) {
       // Assumes that the last character read was '['
       if (depth > 1000) {
@@ -729,5 +730,6 @@ Double.IsNaN(f)) {
         default: throw new InvalidOperationException("Unexpected item type");
       }
     }
+#pragma warning restore CS0618
   }
 }

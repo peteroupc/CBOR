@@ -183,20 +183,20 @@ string str1817 = "[0,1,2,3,4,5,6,7]";
         if (!ed.IsInfinity() && !ed.IsNaN()) {
           EInteger bi = ed.AsEInteger();
           if (ed.IsIntegral) {
-            if ((bi.GetSignedBitLength() <= 31) != ed.CanFitInInt32()) {
+            if ((bi.GetSignedBitLengthAsEInteger().ToInt32Checked() <= 31) != ed.CanFitInInt32()) {
               Assert.Fail(ObjectMessage(ed));
             }
           }
-       if ((bi.GetSignedBitLength() <= 31) !=
+       if ((bi.GetSignedBitLengthAsEInteger().ToInt32Checked() <= 31) !=
             ed.CanTruncatedIntFitInInt32()) {
             Assert.Fail(ObjectMessage(ed));
           }
           if (ed.IsIntegral) {
-            if ((bi.GetSignedBitLength() <= 63) != ed.CanFitInInt64()) {
+            if ((bi.GetSignedBitLengthAsEInteger().ToInt32Checked() <= 63) != ed.CanFitInInt64()) {
               Assert.Fail(ObjectMessage(ed));
             }
           }
-       if ((bi.GetSignedBitLength() <= 63) !=
+       if ((bi.GetSignedBitLengthAsEInteger().ToInt32Checked() <= 63) !=
             ed.CanTruncatedIntFitInInt64()) {
             Assert.Fail(ObjectMessage(ed));
           }
@@ -211,11 +211,11 @@ string str1817 = "[0,1,2,3,4,5,6,7]";
       Assert.AreEqual(
   EInteger.FromString("2217361768"),
   cbor.AsEInteger());
-      Assert.IsFalse(cbor.AsEInteger().GetSignedBitLength() <= 31);
+      Assert.IsFalse(cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked() <= 31);
       Assert.IsFalse(cbor.CanTruncatedIntFitInInt32());
       cbor = CBORObject.DecodeFromBytes(new byte[] { (byte)0xc5, (byte)0x82,
         0x18, 0x2f, 0x32 });  // -2674012278751232
-      Assert.AreEqual(52, cbor.AsEInteger().GetSignedBitLength());
+      Assert.AreEqual(52, cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked());
       Assert.IsTrue(cbor.CanFitInInt64());
       Assert.IsFalse(CBORObject.FromObject(2554895343L).CanFitInSingle());
       cbor = CBORObject.DecodeFromBytes(new byte[] { (byte)0xc5, (byte)0x82,
@@ -1112,7 +1112,7 @@ string str1817 = "[0,1,2,3,4,5,6,7]";
         while (true) {
           EInteger ei = bigintTemp;
           EInteger bigintNext = ei.Add(EInteger.One);
-          if (bigintTemp.GetSignedBitLength() <= 31) {
+          if (bigintTemp.GetSignedBitLengthAsEInteger().ToInt32Checked() <= 31) {
             int bc = ei.ToInt32Checked();
             if (bc >= -1 && bc <= 37) {
               bigintTemp = bigintNext;
