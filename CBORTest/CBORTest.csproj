@@ -82,7 +82,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Numbers">
-      <HintPath>..\packages\PeterO.Numbers.1.2.2\lib\net40\Numbers.dll</HintPath>
+      <HintPath>..\packages\PeterO.Numbers.1.3.0\lib\net40\Numbers.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -133,5 +133,5 @@
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  
+
 </Project>
