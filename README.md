@@ -230,6 +230,11 @@ The following are some clarifications to RFC 7049.
 Release Notes
 -----------
 
+### Version 3.5.0
+
+- Update Numbers library used by this library.
+- Deprecate Base64Padding property of JSONOptions.
+
 ### Version 3.4.0
 
 No significant changes from beta1.

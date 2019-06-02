@@ -91,7 +91,9 @@ Determines whether this type filter allows CBOR arrays and the given array index
 
 <b>Return Value:</b>
 
- `true` if this type filter allows CBOR arrays and the given array index is llowed under this type filter; otherwise,  `false` .
+ `true
+      ` if this type filter allows CBOR arrays and the given array index is llowed under this type filter; otherwise, `false
+      ` .
 
 <a id="ArrayLengthMatches_int"></a>
 ### ArrayLengthMatches
@@ -107,7 +109,9 @@ Returns whether an array's length is allowed under this filter.
 
 <b>Return Value:</b>
 
- `true` if this filter allows CBOR arrays and an array's length is allowed under his filter; otherwise,  `false` .
+ `true
+      ` if this filter allows CBOR arrays and an array's length is allowed under his filter; otherwise, `false
+      ` .
 
 <a id="ArrayLengthMatches_long"></a>
 ### ArrayLengthMatches
@@ -123,7 +127,9 @@ Returns whether an array's length is allowed under a filter.
 
 <b>Return Value:</b>
 
- `true` if this filter allows CBOR arrays and an array's length is allowed under filter; otherwise,  `false` .
+ `true
+      ` if this filter allows CBOR arrays and an array's length is allowed under filter; otherwise, `false
+      ` .
 
 <a id="ArrayLengthMatches_PeterO_Numbers_EInteger"></a>
 ### ArrayLengthMatches
@@ -139,7 +145,9 @@ Returns whether an array's length is allowed under a filter.
 
 <b>Return Value:</b>
 
- `true` if this filter allows CBOR arrays and an array's length is allowed under filter; otherwise,  `false` .
+ `true
+      ` if this filter allows CBOR arrays and an array's length is allowed under filter; otherwise, `false
+      ` .
 
 <b>Exceptions:</b>
 
@@ -193,7 +201,9 @@ Returns whether the given CBOR major type matches a major type allowed by this f
 
 <b>Return Value:</b>
 
- `true` if the given CBOR major type matches a major type allowed by this filter; otherwise,  `false` .
+ `true
+      ` if the given CBOR major type matches a major type allowed by this filter; therwise, `false
+      ` .
 
 <a id="NonFPSimpleValueAllowed"></a>
 ### NonFPSimpleValueAllowed
@@ -204,7 +214,9 @@ Returns whether this filter allows simple values that are not floating-point num
 
 <b>Return Value:</b>
 
- `true` if this filter allows simple values that are not floating-point numbers; otherwise,  `false` .
+ `true
+      ` if this filter allows simple values that are not floating-point numbers; therwise, `false
+      ` .
 
 <a id="TagAllowed_int"></a>
 ### TagAllowed
@@ -220,7 +232,9 @@ Gets a value indicating whether CBOR objects can have the given tag number.
 
 <b>Return Value:</b>
 
- `true` if CBOR objects can have the given tag number; otherwise,  `false` .
+ `true
+      ` if CBOR objects can have the given tag number; otherwise, `false
+      ` .
 
 <a id="TagAllowed_long"></a>
 ### TagAllowed
@@ -236,7 +250,9 @@ Gets a value indicating whether CBOR objects can have the given tag number.
 
 <b>Return Value:</b>
 
- `true` if CBOR objects can have the given tag number; otherwise,  `false` .
+ `true
+      ` if CBOR objects can have the given tag number; otherwise, `false
+      ` .
 
 <a id="TagAllowed_PeterO_Numbers_EInteger"></a>
 ### TagAllowed
@@ -252,7 +268,9 @@ Gets a value indicating whether CBOR objects can have the given tag number.
 
 <b>Return Value:</b>
 
- `true` if CBOR objects can have the given tag number; otherwise,  `false` .
+ `true
+      ` if CBOR objects can have the given tag number; otherwise, `false
+      ` .
 
 <b>Exceptions:</b>
 

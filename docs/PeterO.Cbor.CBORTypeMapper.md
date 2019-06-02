@@ -2,7 +2,10 @@
 
     public sealed class CBORTypeMapper
 
-Holds converters to customize the serialization and deserialization behavior of  `CBORObject.FromObject`  and `CBORObject#ToObject` , as well as type filters for `ToObject`
+Holds converters to customize the serialization and deserialization behavior of `CBORObject.FromObject
+      ` and `CBORObject#ToObject
+      ` , as well as type filters for `ToObject
+      `
 
 ### Member Summary
 * <code>[AddConverter&lt;T&gt;(System.Type, PeterO.Cbor.ICBORConverter&lt;T&gt;)](#AddConverter_T_System_Type_PeterO_Cbor_ICBORConverter_T)</code> - Registers an object that converts objects of a given type to CBOR objects (called a CBOR converter).
@@ -15,7 +18,7 @@ Holds converters to customize the serialization and deserialization behavior of 
 
     public CBORTypeMapper();
 
-Initializes a new instance of the CBORTypeMapper class.
+Initializes a new instance of the [PeterO.Cbor.CBORTypeMapper](PeterO.Cbor.CBORTypeMapper.md) class.
 
 <a id="AddConverter_T_System_Type_PeterO_Cbor_ICBORConverter_T"></a>
 ### AddConverter
@@ -30,7 +33,7 @@ Registers an object that converts objects of a given type to CBOR objects (calle
 
  * <i>type</i>: A Type object specifying the type that the converter converts to CBOR objects.
 
- * <i>converter</i>: The parameter  <i>converter</i>
+ * <i>converter</i>: The parameter <i>converter</i>
 is an ICBORConverter object.
 
  * &lt;T&gt;: Must be the same as the "type" parameter.
@@ -43,11 +46,11 @@ This object.
 
  * System.ArgumentNullException:
 The parameter <i>type</i>
- or  <i>converter</i>
- is null.
+or <i>converter</i>
+is null.
 
  * System.ArgumentException:
-"Converter doesn't contain a proper ToCBORObject method".
+Converter doesn't contain a proper ToCBORObject method".
 
 <a id="AddTypeName_string"></a>
 ### AddTypeName
@@ -59,7 +62,9 @@ Adds the fully qualified name of a Java or .NET type for use in type matching.
 
 <b>Parameters:</b>
 
- * <i>name</i>: The fully qualified name of a Java or .NET class (e.g.,  `java.math.BigInteger`  or  `System.Globalization.CultureInfo` ).
+ * <i>name</i>: The fully qualified name of a Java or .NET class (e.g., `java.math.BigInteger
+      ` or `System.Globalization.CultureInfo
+      ` ).
 
 <b>Return Value:</b>
 
@@ -68,12 +73,12 @@ This object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>name</i>
- is null.
+The parameter <i>name</i>
+is null.
 
  * System.ArgumentException:
-The parameter  <i>name</i>
- is empty.
+The parameter <i>name</i>
+is empty.
 
 <a id="AddTypePrefix_string"></a>
 ### AddTypePrefix
@@ -94,12 +99,12 @@ This object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>prefix</i>
- is null.
+The parameter <i>prefix</i>
+is null.
 
  * System.ArgumentException:
-The parameter  <i>prefix</i>
- is empty.
+The parameter <i>prefix</i>
+is empty.
 
 <a id="FilterTypeName_string"></a>
 ### FilterTypeName
@@ -111,8 +116,12 @@ Returns whether the given Java or .NET type name fits the filters given in this 
 
 <b>Parameters:</b>
 
- * <i>typeName</i>: The fully qualified name of a Java or .NET class (e.g.,  `java.math.BigInteger`  or  `System.Globalization.CultureInfo` ).
+ * <i>typeName</i>: The fully qualified name of a Java or .NET class (e.g., `java.math.BigInteger
+      ` or `System.Globalization.CultureInfo
+      ` ).
 
 <b>Return Value:</b>
 
-Either  `true`  if the given Java or .NET type name fits the filters given in this mapper, or  `false`  otherwise.
+Either `true
+      ` if the given Java or .NET type name fits the filters given in this apper, or `false
+      ` otherwise.

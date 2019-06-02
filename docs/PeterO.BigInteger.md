@@ -1,16 +1,26 @@
 ## PeterO.BigInteger
 
     public sealed class BigInteger :
-        System.IComparable,
-        System.IEquatable
+        System.IEquatable,
+        System.IComparable
 
 <b>Deprecated.</b> Use EInteger from PeterO.Numbers/com.upokecenter.numbers and the output of this class's ToString method.
 
-<b>This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called `PeterO.Numbers.EInteger` in the<a href="https://www.nuget.org/packages/PeterO.Numbers"> `PeterO.Numbers` </a>library (in .NET), or `com.upokecenter.numbers.EInteger` in the<a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers` </a>artifact (in Java). This new class can be used in the `CBORObject.FromObject(object)` method (by including the new library in your code, among other hings).</b>
+<b>This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called `PeterO.Numbers.EInteger
+          ` in the<a href="https://www.nuget.org/packages/PeterO.Numbers"> `PeterO.Numbers
+            ` </a>library (in .NET), or `com.upokecenter.numbers.EInteger
+          ` in the<a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers
+            ` </a>artifact (in Java). This new class can be used in the `CBORObject.FromObject(object)
+          ` method (by including the new library in your code, among other hings).</b>
 
 An arbitrary-precision integer.<b>Thread safety:</b>Instances of this class are immutable, so they are inherently safe for se by multiple threads. Multiple instances of this object with the same alue are interchangeable, but they should be compared using the Equals" method rather than the "==" operator.
 
-<b>This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called `PeterO.Numbers.EInteger` in the<a href="https://www.nuget.org/packages/PeterO.Numbers"> `PeterO.Numbers` </a>library (in .NET), or `com.upokecenter.numbers.EInteger` in the<a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers` </a>artifact (in Java). This new class can be used in the `CBORObject.FromObject(object)` method (by including the new library in your code, among other hings).</b>
+<b>This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called `PeterO.Numbers.EInteger
+          ` in the<a href="https://www.nuget.org/packages/PeterO.Numbers"> `PeterO.Numbers
+            ` </a>library (in .NET), or `com.upokecenter.numbers.EInteger
+          ` in the<a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers
+            ` </a>artifact (in Java). This new class can be used in the `CBORObject.FromObject(object)
+          ` method (by including the new library in your code, among other hings).</b>
 
 An arbitrary-precision integer.<b>Thread safety:</b>Instances of this class are immutable, so they are inherently safe for se by multiple threads. Multiple instances of this object with the same alue are interchangeable, but they should be compared using the Equals" method rather than the "==" operator.
 
@@ -107,7 +117,9 @@ is an arbitrary object.
 
 <b>Return Value:</b>
 
- `true` if this object and another object are equal; otherwise,  `false` .
+ `true
+      ` if this object and another object are equal; otherwise, `false
+      ` .
 
 <a id="Equals_PeterO_BigInteger"></a>
 ### Equals
@@ -125,7 +137,9 @@ Returns whether this number's value equals another number's value.
 
 <b>Return Value:</b>
 
- `true` if this number's value equals another number's value; otherwise,  `false` .
+ `true
+      ` if this number's value equals another number's value; otherwise, `false
+      ` .
 
 <a id="fromBytes_byte_bool"></a>
 ### fromBytes

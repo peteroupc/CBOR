@@ -529,9 +529,11 @@ namespace PeterO.DocGen {
       string xmlName = element.Xml.Name.ToString()
         .ToLowerInvariant();
       if (xmlName.Equals("b") ||
-        xmlName.Equals("strong") ||
-        xmlName.Equals("i") || xmlName.Equals("a") ||
-        xmlName.Equals("sup") || xmlName.Equals("em")) {
+xmlName.Equals("strong") ||
+xmlName.Equals("i") ||
+xmlName.Equals("a") ||
+xmlName.Equals("sup") ||
+xmlName.Equals("em")) {
         var sb = new StringBuilder();
         sb.Append("<" + xmlName);
         foreach (var attr in element.Xml.Attributes()) {

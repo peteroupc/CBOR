@@ -20,9 +20,11 @@ Initializes a new instance of the [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOption
 
 <b>Parameters:</b>
 
- * <i>removeIsPrefix</i>: If set to `true` remove is prefix. NOTE: May be ignored in future versions of this library.
+ * <i>removeIsPrefix</i>: If set to `true
+      ` remove is prefix. NOTE: May be ignored in future versions of this ibrary.
 
- * <i>useCamelCase</i>: If set to `true` use camel case.
+ * <i>useCamelCase</i>: If set to `true
+      ` use camel case.
 
 <a id="Default"></a>
 ### Default
@@ -42,7 +44,9 @@ Gets a value indicating whether the "Is" prefix in property names is removed bef
 
 <b>Returns:</b>
 
- `true`  If the prefix is removed; otherwise, . `false` .
+ `true
+      ` If the prefix is removed; otherwise, . `false
+      ` .
 
 <a id="UseCamelCase"></a>
 ### UseCamelCase
@@ -53,4 +57,6 @@ Gets a value indicating whether property names are converted to camel case befor
 
 <b>Returns:</b>
 
- `true`  If the names are converted to camel case; otherwise, .  `false` .
+ `true
+      ` If the names are converted to camel case; otherwise, . `false
+      ` .

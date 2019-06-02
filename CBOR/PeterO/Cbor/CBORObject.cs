@@ -1019,8 +1019,7 @@ if (depth > 100) {
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject``2(System.Collections.Generic.IDictionary{``0,``1})"]/*'/>
-    public static CBORObject FromObject<TKey, TValue>(IDictionary<TKey,
-                    TValue> dic) {
+    public static CBORObject FromObject<TKey, TValue>(IDictionary<TKey, TValue> dic) {
       if (dic == null) {
         return CBORObject.Null;
       }

@@ -14,7 +14,9 @@ Includes options to control how CBOR objects are converted to JSON.
     public JSONOptions(
         bool base64Padding);
 
-Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) class with the given values for the options.
+Initializes a new instance of the[PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) class with the given values for the options.
+
+NOTE: The base64Padding parameter may have no effect in the future. A future version may, by default, include necessary padding when writing traditional base64 to JSON and include no padding when writing base64url to JSON, in accordance with the revision of the CBOR specification.
 
 <b>Parameters:</b>
 
@@ -31,6 +33,8 @@ The default options for converting CBOR objects to JSON.
 ### Base64Padding
 
     public bool Base64Padding { get; }
+
+<b>Deprecated.</b> This option may have no effect in the future.  A future version may, by default, include necessary padding when writing traditional base64 to JSON and include no padding when writing base64url to JSON, in accordance with the revision of the CBOR specification.
 
 Gets a value indicating whether padding is written out when writing base64url or traditional base64 to JSON.
 

@@ -1,18 +1,25 @@
 ## PeterO.ExtendedDecimal
 
     public sealed class ExtendedDecimal :
-        System.IComparable,
-        System.IEquatable
+        System.IEquatable,
+        System.IComparable
 
 <b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers and the output of this class's ToString method.
 
-<b>This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called `PeterO.Numbers.EDecimal` in the<a href="https://www.nuget.org/packages/PeterO.Numbers"> `PeterO.Numbers` </a>library (in .NET), or `com.upokecenter.numbers.EDecimal` in the<a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers` </a>artifact (in Java). This new class can be used in the `CBORObject.FromObject(object)` method (by including the new library in your code, among other hings).</b>
+<b>This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called `PeterO.Numbers.EDecimal
+          ` in the<a href="https://www.nuget.org/packages/PeterO.Numbers"> `PeterO.Numbers
+            ` </a>library (in .NET), or `com.upokecenter.numbers.EDecimal
+          ` in the<a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers
+            ` </a>artifact (in Java). This new class can be used in the `CBORObject.FromObject(object)
+          ` method (by including the new library in your code, among other hings).</b>
 
 Represents an arbitrary-precision decimal floating-point number.<b>About decimal arithmetic</b>
 
 Decimal (base-10) arithmetic, such as that provided by this class, is appropriate for calculations involving such real-world data as prices and other sums of money, tax rates, and measurements. These calculations often involve multiplying or dividing one decimal with another decimal, or performing other operations on decimal numbers. Many of these calculations also rely on rounding behavior in which the result after rounding is a decimal number (for example, multiplying a price by a premium rate, then rounding, should result in a decimal amount of money).
 
-On the other hand, most implementations of `float` and `double` , including in C# and Java, store numbers in a binary (base-2) loating-point format and use binary floating-point arithmetic. Many ecimal numbers can't be represented exactly in binary floating-point ormat (regardless of its length). Applying binary arithmetic to numbers ntended to be decimals can sometimes lead to unintuitive results, as is hown in the description for the FromDouble() method of this class.
+On the other hand, most implementations of `float
+        ` and `double
+        ` , including in C# and Java, store numbers in a binary (base-2) loating-point format and use binary floating-point arithmetic. Many ecimal numbers can't be represented exactly in binary floating-point ormat (regardless of its length). Applying binary arithmetic to numbers ntended to be decimals can sometimes lead to unintuitive results, as is hown in the description for the FromDouble() method of this class.
 
 <b>About ExtendedDecimal instances</b>
 
@@ -157,7 +164,9 @@ Gets a value indicating whether this object is negative, including negative zero
 
 <b>Returns:</b>
 
- `true`  If this object is negative, including negative zero; otherwise, .  `false` .
+ `true
+      ` If this object is negative, including negative zero; otherwise, . `false
+      ` .
 
 <a id="Mantissa"></a>
 ### Mantissa
@@ -234,8 +243,8 @@ An arbitrary-precision decimal number.
 
  * System.ArgumentNullException:
 The parameter <i>mantissa</i>
- or  <i>exponent</i>
- is null.
+or <i>exponent</i>
+is null.
 
 <a id="Equals_object"></a>
 ### Equals
@@ -252,7 +261,9 @@ is an arbitrary object.
 
 <b>Return Value:</b>
 
- `true` if the objects are equal; otherwise,  `false` .
+ `true
+      ` if the objects are equal; otherwise, `false
+      ` .
 
 <a id="Equals_PeterO_ExtendedDecimal"></a>
 ### Equals
@@ -270,7 +281,9 @@ Determines whether this object's mantissa and exponent are equal to those of ano
 
 <b>Return Value:</b>
 
- `true` if this object's mantissa and exponent are equal to those of another bject; otherwise,  `false` .
+ `true
+      ` if this object's mantissa and exponent are equal to those of another bject; otherwise, `false
+      ` .
 
 <a id="FromString_string"></a>
 ### FromString
@@ -278,8 +291,8 @@ Determines whether this object's mantissa and exponent are equal to those of ano
     public static PeterO.ExtendedDecimal FromString(
         string str);
 
-Creates a decimal number from a text string that represents a number. See  `FromString(String, int, int,
-            EContext)`  for more information.
+Creates a decimal number from a text string that represents a number. See `FromString(String, int, int, EContext)
+      ` for more information.
 
 <b>Parameters:</b>
 
@@ -293,11 +306,11 @@ An arbitrary-precision decimal number with the same value as the given string.
 
  * System.ArgumentNullException:
 The parameter <i>str</i>
- is null.
+is null.
 
  * System.FormatException:
-The parameter  <i>str</i>
- is not a correctly formatted number string.
+The parameter <i>str</i>
+is not a correctly formatted number string.
 
 <a id="GetHashCode"></a>
 ### GetHashCode
@@ -319,7 +332,9 @@ Gets a value indicating whether this object is positive or negative infinity.
 
 <b>Return Value:</b>
 
- `true` if this object is positive or negative infinity; otherwise,  `false` .
+ `true
+      ` if this object is positive or negative infinity; otherwise, `false
+      ` .
 
 <a id="IsNaN"></a>
 ### IsNaN
@@ -330,7 +345,9 @@ Gets a value indicating whether this object is not a number (NaN).
 
 <b>Return Value:</b>
 
- `true` if this object is not a number (NaN); otherwise,  `false` .
+ `true
+      ` if this object is not a number (NaN); otherwise, `false
+      ` .
 
 <a id="IsQuietNaN"></a>
 ### IsQuietNaN
@@ -343,7 +360,9 @@ Gets a value indicating whether this object is a quiet not-a-number value.
 
 <b>Return Value:</b>
 
- `true` if this object is a quiet not-a-number value; otherwise,  `false` .
+ `true
+      ` if this object is a quiet not-a-number value; otherwise, `false
+      ` .
 
 <a id="ToDouble"></a>
 ### ToDouble

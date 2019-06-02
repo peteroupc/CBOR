@@ -47,7 +47,9 @@ Initializes a new instance of the [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CB
 
  * <i>allowDuplicateKeys</i>: A value indicating whether to disallow duplicate keys when reading CBOR objects from a data stream.
 
- * <i>ctap2Canonical</i>: Either  `true`  or  `false` .
+ * <i>ctap2Canonical</i>: Either `true
+      ` or `false
+      ` .
 
 <a id="Default"></a>
 ### Default
@@ -97,7 +99,9 @@ Gets a value indicating whether CBOR objects are written out using the CTAP2 can
 
 <b>Returns:</b>
 
- `true`  if CBOR objects are written out using the CTAP2 canonical CBOR encoding form; otherwise,  `false` .. In this form, CBOR tags are not used, map keys are written out in a canonical order, and non-integer numbers and integers 2^63 or greater are written as 64-bit binary floating-point numbers.
+ `true
+      ` if CBOR objects are written out using the CTAP2 canonical CBOR encoding orm; otherwise, `false
+      ` .. In this form, CBOR tags are not used, map keys are written out in a canonical order, and non-integer numbers and integers 2^63 or greater are written as 64-bit binary floating-point numbers.
 
 <a id="UseIndefLengthStrings"></a>
 ### UseIndefLengthStrings
