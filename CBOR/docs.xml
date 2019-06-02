@@ -1721,22 +1721,7 @@
           supported even if they contain eligible getters.
         </item>
       </list>
-      <para><b>Note:
-        </b>
-         For security reasons, an application should, whenever possible, not
-        base this parameter on user input or other externally supplied data
-        unless the application limits
-        <paramref name='obj'/>
-         inputs to types specially handled by this method (such as
-        <c>int
-        </c>
-         or
-        <c>String
-        </c>
-         ) and/or to plain-old-data types (POCO or POJO types) within the
-        control of the application. If the plain-old-data type references other
-        data types, those types should likewise meet either criterion above.
-      </para>
+
       <para><b>REMARK:
         </b>
          .NET enumeration (
@@ -1770,9 +1755,17 @@
         </item>
       </list>
     </summary>
-    <param name='obj'>The parameter
-      <paramref name='obj'/>
-       is an arbitrary object.
+    <param name='obj'>An arbitrary object to convert to a CBOR object. <para><b>NOTE:
+        </b>For security reasons, an application should, whenever possible, not
+        base this parameter on user input or other externally supplied data
+        unless the application limits this parameter's inputs to types specially handled by this method (such as <c>int</c>
+         or
+        <c>String
+        </c>
+         ) and/or to plain-old-data types (POCO or POJO types) within the
+        control of the application. If the plain-old-data type references other
+        data types, those types should likewise meet either criterion above.
+      </para>
     </param>
     <param name='mapper'>An object containing optional converters to convert objects of certain
       types to CBOR objects.

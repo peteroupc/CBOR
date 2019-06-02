@@ -1661,11 +1661,6 @@ parameter for eligible getters as follows:
 
  * Then, the method returns a CBOR map with each eligible getter's name or property name as each key, and with the corresponding value returned by that getter as that key's value. Before adding a key-value pair to the map, the key's name is adjusted according to the rules described in the [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md)documentation. Note that for security reasons, certain types are not upported even if they contain eligible getters.
 
-<b>Note:</b>For security reasons, an application should, whenever possible, not ase this parameter on user input or other externally supplied data nless the application limits <i>obj</i>
-inputs to types specially handled by this method (such as `int
-        ` or `String
-        ` ) and/or to plain-old-data types (POCO or POJO types) within the ontrol of the application. If the plain-old-data type references other ata types, those types should likewise meet either criterion above.
-
 <b>REMARK:</b>.NET enumeration ( `Enum
         ` ) constants could also have been converted to text strings with `ToString()
         ` , but that method will return multiple names if the given Enum object s a combination of Enum objects (e.g. if the object is `FileAccess.Read | FileAccess.Write
@@ -1680,8 +1675,8 @@ REMARK: A certain consistency between .NET and Java and between FromObject and T
 
 <b>Parameters:</b>
 
- * <i>obj</i>: The parameter <i>obj</i>
-is an arbitrary object.
+ * <i>obj</i>: An arbitrary object to convert to a CBOR object. <b>NOTE:</b>For security reasons, an application should, whenever possible, not base this parameter on user input or other externally supplied data unless the application limits this parameter's inputs to types specially handled by this method (such as  `int` or `String
+        ` ) and/or to plain-old-data types (POCO or POJO types) within the ontrol of the application. If the plain-old-data type references other ata types, those types should likewise meet either criterion above.
 
  * <i>mapper</i>: An object containing optional converters to convert objects of certain types to CBOR objects.
 
@@ -2809,7 +2804,7 @@ A text string.
     public object ToObject(
         System.Type t);
 
-Converts this CBOR object to an object of an arbitrary type. See the documentation for the overload of this method taking a CBORTypeMapper parameter for more information. This method (without a CBORTypeMapper parameter) allows all data types not otherwise handled to be eligible for Plain-Old-Data serialization.
+Converts this CBOR object to an object of an arbitrary type. See the documentation for the overload of this method taking a CBORTypeMapper parameter for more information. This method doesn't use a CBORTypeMapper parameter to restrict which data types are eligible for Plain-Old-Data serialization.
 
 Java offers no easy way to express a generic type, at least none as easy as C#'s `typeof
         ` operator. The following example, written in Java, is a way to specify hat the return value will be an ArrayList of String objects.
@@ -2979,7 +2974,7 @@ parameter, that converter will be used to convert the CBOR object to n object of
 
  * (*) In the .NET version, eligible setters are the public, nonstatic setters of properties with a public, nonstatic getter. If a class has two properties of the form "X" and "IsX", where "X" is any name, or has multiple properties with the same name, those properties are ignored.
 
- * (*) In the Java version, eligible setters are public, nonstatic methods starting with "set" followed by a character other than a basic digit or lower-case letter, that is, other than "a" to "z" or "0" to "9", that take one parameter. The class containing an eligible setter must have a public, nonstatic method with the same name, but starting with "get" or "is" rather than "set", that takes no parameters and does not return void. (For example, if a class has "public setValue(String)" and "public getValue()", "setValue" is an eligible setter. However, "setValue()" and "setValue(String, int)" are not eligible setters.) If a class has two otherwise eligible setters with the same name, but different parameter type, they are not eligible setters.
+ * (*) In the Java version, eligible setters are public, nonstatic methods starting with "set" followed by a character other than a basic digit or lower-case letter, that is, other than "a" to "z" or "0" to "9", that take one parameter. The class containing an eligible setter must have a public, nonstatic method with the same name, but starting with "get" or "is" rather than "set", that takes no parameters and does not return void. (For example, if a class has "public setValue(String)" and "public getValue()", "setValue" is an eligible setter. However, "setValue()" and "setValue(String, int)" are not eligible setters.) If a class has two or more otherwise eligible setters with the same name, but different parameter type, they are not eligible setters.
 
  * Then, the method creates an object of the given type and invokes each eligible setter with the corresponding value in the CBOR map, if any. Key names in the map are matched to eligible setters according to the rules described in the [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md)documentation. Note that for security reasons, certain types are not upported even if they contain eligible setters.
 
