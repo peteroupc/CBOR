@@ -1537,9 +1537,9 @@
       </list>
     </summary>
     <param name='obj'>An arbitrary object to convert to a CBOR object.
-      <para><b>NOTE:</b> For security reasons, an application should, whenever possible, not base
-        this parameter on user input or other externally supplied data unless
-        the application limits this parameter's inputs to types specially
+      <para><b>NOTE:</b> For security reasons, an application should, whenever possible, not
+        base this parameter on user input or other externally supplied data
+        unless the application limits this parameter's inputs to types specially
         handled by this method (such as
         <c>int</c> or
         <c>String</c> ) and/or to plain-old-data types (POCO or POJO types) within the
