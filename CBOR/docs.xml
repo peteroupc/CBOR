@@ -486,8 +486,7 @@
       <paramref name='converter'/>
        is an ICBORConverter object.
     </param>
-    <typeparam name='T'>
-       Must be the same as the "type" parameter.
+    <typeparam name='T'>Must be the same as the "type" parameter.
     </typeparam>
     <exception cref='T:System.ArgumentNullException'>The parameter
       <paramref name='type'/>
@@ -1352,6 +1351,15 @@
     <param name='obj'>The parameter
       <paramref name='obj'/>
        is an arbitrary object.
+      <para><b>NOTE:</b> For security reasons, whenever possible, an application should not base
+        this parameter on user input or other externally supplied data unless
+        the application limits this parameter's inputs to types specially
+        handled by this method (such as
+        <c>int</c> or
+        <c>String</c> ) and/or to plain-old-data types (POCO or POJO types) within the
+        control of the application. If the plain-old-data type references other
+        data types, those types should likewise meet either criterion above.
+      </para>
     </param>
     <returns>A CBOR object corresponding to the given object. Returns CBORObject.Null
       if the object is null.
@@ -1364,6 +1372,15 @@
     <param name='obj'>The parameter
       <paramref name='obj'/>
        is an arbitrary object.
+      <para><b>NOTE:</b> For security reasons, whenever possible, an application should not base
+        this parameter on user input or other externally supplied data unless
+        the application limits this parameter's inputs to types specially
+        handled by this method (such as
+        <c>int</c> or
+        <c>String</c> ) and/or to plain-old-data types (POCO or POJO types) within the
+        control of the application. If the plain-old-data type references other
+        data types, those types should likewise meet either criterion above.
+      </para>
     </param>
     <param name='mapper'>An object containing optional converters to convert objects of certain
       types to CBOR objects.
@@ -1537,9 +1554,9 @@
       </list>
     </summary>
     <param name='obj'>An arbitrary object to convert to a CBOR object.
-      <para><b>NOTE:</b> For security reasons, an application should, whenever possible, not
-        base this parameter on user input or other externally supplied data
-        unless the application limits this parameter's inputs to types specially
+      <para><b>NOTE:</b> For security reasons, whenever possible, an application should not base
+        this parameter on user input or other externally supplied data unless
+        the application limits this parameter's inputs to types specially
         handled by this method (such as
         <c>int</c> or
         <c>String</c> ) and/or to plain-old-data types (POCO or POJO types) within the
@@ -1568,6 +1585,15 @@
     <param name='obj'>The parameter
       <paramref name='obj'/>
        is an arbitrary object.
+      <para><b>NOTE:</b> For security reasons, whenever possible, an application should not base
+        this parameter on user input or other externally supplied data unless
+        the application limits this parameter's inputs to types specially
+        handled by this method (such as
+        <c>int</c> or
+        <c>String</c> ) and/or to plain-old-data types (POCO or POJO types) within the
+        control of the application. If the plain-old-data type references other
+        data types, those types should likewise meet either criterion above.
+      </para>
     </param>
     <param name='options'>An object containing options to control how certain objects are converted
       to CBOR objects.
@@ -1775,8 +1801,7 @@
       this can be the return value of an iterator or the result of a LINQ query.
 
     </param>
-    <typeparam name='T'>
-       A type convertible to CBORObject.
+    <typeparam name='T'>A type convertible to CBORObject.
     </typeparam>
     <returns>A CBOR object where each element of the given enumerable object is
       converted to a CBOR object and copied to a new array, or CBORObject.Null
@@ -1788,8 +1813,7 @@
     </summary>
     <param name='value'>An array of CBOR objects. Can be null.
     </param>
-    <typeparam name='T'>
-       A type convertible to CBORObject.
+    <typeparam name='T'>A type convertible to CBORObject.
     </typeparam>
     <returns>A CBOR object where each element of the given array is converted to a CBOR
       object and copied to a new array, or CBORObject.Null if the value is null.
@@ -1801,11 +1825,9 @@
     </summary>
     <param name='dic'>A map of CBOR objects.
     </param>
-    <typeparam name='TKey'>
-       A type convertible to CBORObject; the type of the keys.
+    <typeparam name='TKey'>A type convertible to CBORObject; the type of the keys.
     </typeparam>
-    <typeparam name='TValue'>
-       A type convertible to CBORObject; the type of the values.
+    <typeparam name='TValue'>A type convertible to CBORObject; the type of the values.
     </typeparam>
     <returns>A CBOR object where each key and value of the given map is converted to a
       CBOR object and copied to a new map, or CBORObject.Null if
@@ -2877,15 +2899,14 @@
          for further information.
       </para>
     </summary>
-    <typeparam name='T'>
-       The type, class, or interface that this method's return value will belong
+    <typeparam name='T'>The type, class, or interface that this method's return value will belong
       to.
       <b>Note:</b> For security reasons, an application should not base this parameter on
       user input or other externally supplied data. Whenever possible, this
       parameter should be either a type specially handled by this method (such
       as
       <c>int</c> or
-      <c>String</c> ) or a plain-old-data type (POCO type) within the control of the
+      <c>String</c> ) or a plain-old-data type (POCO or POJO type) within the control of the
       application. If the plain-old-data type references other data types, those
       types should likewise meet either criterion above.
     </typeparam>
@@ -2904,15 +2925,14 @@
       deserialization and includes custom converters from CBOR objects to
       certain data types.
     </param>
-    <typeparam name='T'>
-       The type, class, or interface that this method's return value will belong
+    <typeparam name='T'>The type, class, or interface that this method's return value will belong
       to.
       <b>Note:</b> For security reasons, an application should not base this parameter on
       user input or other externally supplied data. Whenever possible, this
       parameter should be either a type specially handled by this method (such
       as
       <c>int</c> or
-      <c>String</c> ) or a plain-old-data type (POCO type) within the control of the
+      <c>String</c> ) or a plain-old-data type (POCO or POJO type) within the control of the
       application. If the plain-old-data type references other data types, those
       types should likewise meet either criterion above.
     </typeparam>
@@ -2933,15 +2953,14 @@
     </param>
     <param name='options'>Specifies options for controlling deserialization of CBOR objects.
     </param>
-    <typeparam name='T'>
-       The type, class, or interface that this method's return value will belong
+    <typeparam name='T'>The type, class, or interface that this method's return value will belong
       to.
       <b>Note:</b> For security reasons, an application should not base this parameter on
       user input or other externally supplied data. Whenever possible, this
       parameter should be either a type specially handled by this method (such
       as
       <c>int</c> or
-      <c>String</c> ) or a plain-old-data type (POCO type) within the control of the
+      <c>String</c> ) or a plain-old-data type (POCO or POJO type) within the control of the
       application. If the plain-old-data type references other data types, those
       types should likewise meet either criterion above.
     </typeparam>
@@ -2958,15 +2977,14 @@
     </summary>
     <param name='options'>Specifies options for controlling deserialization of CBOR objects.
     </param>
-    <typeparam name='T'>
-       The type, class, or interface that this method's return value will belong
+    <typeparam name='T'>The type, class, or interface that this method's return value will belong
       to.
       <b>Note:</b> For security reasons, an application should not base this parameter on
       user input or other externally supplied data. Whenever possible, this
       parameter should be either a type specially handled by this method (such
       as
       <c>int</c> or
-      <c>String</c> ) or a plain-old-data type (POCO type) within the control of the
+      <c>String</c> ) or a plain-old-data type (POCO or POJO type) within the control of the
       application. If the plain-old-data type references other data types, those
       types should likewise meet either criterion above.
     </typeparam>
@@ -3941,8 +3959,7 @@
       <paramref name='converter'/>
        is an ICBORConverter object.
     </param>
-    <typeparam name='T'>
-       Must be the same as the "type" parameter.
+    <typeparam name='T'>Must be the same as the "type" parameter.
     </typeparam>
     <returns>This object.
     </returns>
@@ -4062,8 +4079,7 @@
     <summary>Interface implemented by classes that convert objects of arbitrary types
       to CBOR objects.
     </summary>
-    <typeparam name='T'>
-       Type to convert to a CBOR object.
+    <typeparam name='T'>Type to convert to a CBOR object.
     </typeparam>
   </doc>
   <doc name='M:PeterO.Cbor.ICBORConverter`1.ToCBORObject(`0)'>
@@ -4078,8 +4094,7 @@
     <summary>Interface implemented by classes that convert objects of arbitrary types
       to and from CBOR objects.
     </summary>
-    <typeparam name='T'>
-       Type of objects that a class implementing this method can convert to and
+    <typeparam name='T'>Type of objects that a class implementing this method can convert to and
       from CBOR objects.
     </typeparam>
   </doc>
@@ -4121,8 +4136,7 @@
     <summary>Classes that implement this interface can support conversions from CBOR
       objects to a custom type and back.
     </summary>
-    <typeparam name='T'>
-       Type of objects to convert to and from CBOR objects.
+    <typeparam name='T'>Type of objects to convert to and from CBOR objects.
     </typeparam>
   </doc>
   <doc name='M:PeterO.Cbor.ICBORToFromConverter`1.FromCBORObject(PeterO.Cbor.CBORObject)'>

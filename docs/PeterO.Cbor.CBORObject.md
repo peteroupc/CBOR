@@ -1474,7 +1474,7 @@ Generates a CBORObject from an arbitrary object. See the overload of this method
 <b>Parameters:</b>
 
  * <i>obj</i>: The parameter <i>obj</i>
-is an arbitrary object.
+is an arbitrary object.<b>NOTE:</b> For security reasons, whenever possible, an application should not base this parameter on user input or other externally supplied data unless the application limits this parameter's inputs to types specially handled by this method (such as `int`  or `String`  ) and/or to plain-old-data types (POCO or POJO types) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
 
 <b>Return Value:</b>
 
@@ -1492,7 +1492,7 @@ Generates a CBORObject from an arbitrary object. See the overload of this method
 <b>Parameters:</b>
 
  * <i>obj</i>: The parameter <i>obj</i>
-is an arbitrary object.
+is an arbitrary object.<b>NOTE:</b> For security reasons, whenever possible, an application should not base this parameter on user input or other externally supplied data unless the application limits this parameter's inputs to types specially handled by this method (such as `int`  or `String`  ) and/or to plain-old-data types (POCO or POJO types) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
 
  * <i>mapper</i>: An object containing optional converters to convert objects of certain types to CBOR objects.
 
@@ -1568,7 +1568,7 @@ REMARK: A certain consistency between .NET and Java and between FromObject and T
 
 <b>Parameters:</b>
 
- * <i>obj</i>: An arbitrary object to convert to a CBOR object.<b>NOTE:</b> For security reasons, an application should, whenever possible, not base this parameter on user input or other externally supplied data unless the application limits this parameter's inputs to types specially handled by this method (such as `int`  or `String`  ) and/or to plain-old-data types (POCO or POJO types) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ * <i>obj</i>: An arbitrary object to convert to a CBOR object.<b>NOTE:</b> For security reasons, whenever possible, an application should not base this parameter on user input or other externally supplied data unless the application limits this parameter's inputs to types specially handled by this method (such as `int`  or `String`  ) and/or to plain-old-data types (POCO or POJO types) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
 
  * <i>mapper</i>: An object containing optional converters to convert objects of certain types to CBOR objects.
 
@@ -1596,7 +1596,7 @@ Generates a CBORObject from an arbitrary object. See the overload of this method
 <b>Parameters:</b>
 
  * <i>obj</i>: The parameter <i>obj</i>
-is an arbitrary object.
+is an arbitrary object.<b>NOTE:</b> For security reasons, whenever possible, an application should not base this parameter on user input or other externally supplied data unless the application limits this parameter's inputs to types specially handled by this method (such as `int`  or `String`  ) and/or to plain-old-data types (POCO or POJO types) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
 
  * <i>options</i>: An object containing options to control how certain objects are converted to CBOR objects.
 
@@ -2878,7 +2878,7 @@ Converts this CBOR object to an object of an arbitrary type. See**PeterO.Cbor.CB
 
  * <i>mapper</i>: This parameter controls which data types are eligible for Plain-Old-Data deserialization and includes custom converters from CBOR objects to certain data types.
 
- * &lt;T&gt;: The type, class, or interface that this method's return value will belong o.<b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as `int`  or `String`  ) or a plain-old-data type (POCO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ * &lt;T&gt;: The type, class, or interface that this method's return value will belong to.<b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as `int`  or `String`  ) or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
 
 <b>Return Value:</b>
 
@@ -2904,7 +2904,7 @@ Converts this CBOR object to an object of an arbitrary type. See**PeterO.Cbor.CB
 
  * <i>options</i>: Specifies options for controlling deserialization of CBOR objects.
 
- * &lt;T&gt;: The type, class, or interface that this method's return value will belong o.<b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as `int`  or `String`  ) or a plain-old-data type (POCO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ * &lt;T&gt;: The type, class, or interface that this method's return value will belong to.<b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as `int`  or `String`  ) or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
 
 <b>Return Value:</b>
 
@@ -2927,7 +2927,7 @@ Converts this CBOR object to an object of an arbitrary type. See**PeterO.Cbor.CB
 
  * <i>options</i>: Specifies options for controlling deserialization of CBOR objects.
 
- * &lt;T&gt;: The type, class, or interface that this method's return value will belong o.<b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as `int`  or `String`  ) or a plain-old-data type (POCO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ * &lt;T&gt;: The type, class, or interface that this method's return value will belong to.<b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as `int`  or `String`  ) or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
 
 <b>Return Value:</b>
 
@@ -2947,7 +2947,7 @@ Converts this CBOR object to an object of an arbitrary type. See**PeterO.Cbor.CB
 
 <b>Parameters:</b>
 
- * &lt;T&gt;: The type, class, or interface that this method's return value will belong o.<b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as `int`  or `String`  ) or a plain-old-data type (POCO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ * &lt;T&gt;: The type, class, or interface that this method's return value will belong to.<b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as `int`  or `String`  ) or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
 
 <b>Return Value:</b>
 
