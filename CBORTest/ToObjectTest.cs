@@ -1149,14 +1149,10 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
       Assert.IsTrue(intDict.ContainsKey("a"));
       Assert.IsTrue(intDict.ContainsKey("b"));
       if (intDict["a"] != 1) {
-        {
           Assert.Fail();
-        }
       }
       if (intDict["b"] != 2) {
-        {
           Assert.Fail();
-        }
       }
       IDictionary<string, int> iintDict = (IDictionary<string, int>)co.ToObject(
           typeof(IDictionary<string, int>));
@@ -1238,6 +1234,81 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
         TestToFromObjectRoundTrip(dtime);
       }
     }
+   [Test]
+public void TestBadDate() {
+CBORObject cbor = CBORObject.FromObjectAndTag(
+  "2000-1-01T00:00:00Z",
+  0);
+try {
+ cbor.ToObject(typeof(DateTime));
+Assert.Fail("Should have failed");
+} catch (InvalidOperationException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+cbor = CBORObject.FromObjectAndTag(
+  "2000-01-1T00:00:00Z",
+  0);
+try {
+ cbor.ToObject(typeof(DateTime));
+Assert.Fail("Should have failed");
+} catch (InvalidOperationException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+cbor = CBORObject.FromObjectAndTag(
+  "2000-01-01T0:00:00Z",
+  0);
+try {
+ cbor.ToObject(typeof(DateTime));
+Assert.Fail("Should have failed");
+} catch (InvalidOperationException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+cbor = CBORObject.FromObjectAndTag(
+  "2000-01-01T00:0:00Z",
+  0);
+try {
+ cbor.ToObject(typeof(DateTime));
+Assert.Fail("Should have failed");
+} catch (InvalidOperationException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+cbor = CBORObject.FromObjectAndTag(
+  "2000-01-01T00:00:0Z",
+  0);
+try {
+ cbor.ToObject(typeof(DateTime));
+Assert.Fail("Should have failed");
+} catch (InvalidOperationException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+cbor = CBORObject.FromObjectAndTag(
+  "T01:01:01Z",
+  0);
+try {
+ cbor.ToObject(typeof(DateTime));
+Assert.Fail("Should have failed");
+} catch (InvalidOperationException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+}
 
     [Test]
     public void TestUriRoundTrip() {

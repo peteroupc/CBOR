@@ -635,7 +635,9 @@ xmlName.Equals("em")) {
             this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
           }
           this.paramStr.Clear();
+          // Console.WriteLine("Visiting type " + member);
           base.VisitMember(member);
+          // Console.WriteLine("Visited type " + member);
           this.WriteLine("<<<MEMBER_SUMMARY>>>");
           if (this.paramStr.Length > 0) {
             this.Write("<b>Parameters:</b>\r\n\r\n");
