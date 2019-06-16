@@ -7,26 +7,26 @@ Contains methods useful for reading and writing strings. It is designed to have 
 In C# and Java, text strings are represented as sequences of 16-bit values called `char`  s. These sequences are well-formed under UTF-16, a 16-bit encoding form of Unicode, except if they contain unpaired surrogate code points. (A surrogate code point is used to encode supplementary characters, those with code points U+10000 or higher, in UTF-16. A surrogate pair is a high surrogate [U+D800 to U+DBFF] followed by a low surrogate [U+DC00 to U+DFFF]. An unpaired surrogate code point is a surrogate not appearing in a surrogate pair.) Many of the methods in this class allow setting the behavior to follow when unpaired surrogate code points are found in text strings, such as throwing an error or treating the unpaired surrogate as a replacement character (U+FFFD).
 
 ### Member Summary
-* <code>[CodePointAt(string, int)](#CodePointAt_string_int)</code> - Gets the Unicode code point at the given index of the string.
-* <code>[CodePointAt(string, int, int)](#CodePointAt_string_int_int)</code> - Gets the Unicode code point at the given index of the string.
-* <code>[CodePointBefore(string, int)](#CodePointBefore_string_int)</code> - Gets the Unicode code point just before the given index of the string.
-* <code>[CodePointBefore(string, int, int)](#CodePointBefore_string_int_int)</code> - Gets the Unicode code point just before the given index of the string.
-* <code>[CodePointCompare(string, string)](#CodePointCompare_string_string)</code> - Compares two strings in Unicode code point order.
-* <code>[CodePointLength(string)](#CodePointLength_string)</code> - Finds the number of Unicode code points in the given text string.
-* <code>[GetUtf8Bytes(string, bool)](#GetUtf8Bytes_string_bool)</code> -  Encodes a string in UTF-8 as a byte array.
-* <code>[GetUtf8Bytes(string, bool, bool)](#GetUtf8Bytes_string_bool_bool)</code> -  Encodes a string in UTF-8 as a byte array.
-* <code>[GetUtf8Length(string, bool)](#GetUtf8Length_string_bool)</code> - Calculates the number of bytes needed to encode a string in UTF-8.
-* <code>[GetUtf8String(byte[], bool)](#GetUtf8String_byte_bool)</code> - Generates a text string from a UTF-8 byte array.
-* <code>[GetUtf8String(byte[], int, int, bool)](#GetUtf8String_byte_int_int_bool)</code> - Generates a text string from a portion of a UTF-8 byte array.
-* <code>[ReadUtf8FromBytes(byte[], int, int, System.Text.StringBuilder, bool)](#ReadUtf8FromBytes_byte_int_int_System_Text_StringBuilder_bool)</code> - Reads a string in UTF-8 encoding from a byte array.
-* <code>[ReadUtf8ToString(System.IO.Stream)](#ReadUtf8ToString_System_IO_Stream)</code> - Reads a string in UTF-8 encoding from a data stream in full and returns that string.
-* <code>[ReadUtf8ToString(System.IO.Stream, int, bool)](#ReadUtf8ToString_System_IO_Stream_int_bool)</code> - Reads a string in UTF-8 encoding from a data stream and returns that string.
-* <code>[ReadUtf8(System.IO.Stream, int, System.Text.StringBuilder, bool)](#ReadUtf8_System_IO_Stream_int_System_Text_StringBuilder_bool)</code> - Reads a string in UTF-8 encoding from a data stream.
-* <code>[ToLowerCaseAscii(string)](#ToLowerCaseAscii_string)</code> - Returns a string with the basic upper-case letters A to Z (U+0041 to U+005A) converted to lower-case.
-* <code>[ToUpperCaseAscii(string)](#ToUpperCaseAscii_string)</code> - Returns a string with the basic lower-case letters A to Z (U+0061 to U+007A) converted to upper-case.
-* <code>[WriteUtf8(string, System.IO.Stream, bool)](#WriteUtf8_string_System_IO_Stream_bool)</code> - Writes a string in UTF-8 encoding to a data stream.
-* <code>[WriteUtf8(string, int, int, System.IO.Stream, bool)](#WriteUtf8_string_int_int_System_IO_Stream_bool)</code> - Writes a portion of a string in UTF-8 encoding to a data stream.
-* <code>[WriteUtf8(string, int, int, System.IO.Stream, bool, bool)](#WriteUtf8_string_int_int_System_IO_Stream_bool_bool)</code> - Writes a portion of a string in UTF-8 encoding to a data stream.
+* <code>[CodePointAt_string_int](#CodePointAt_string_int)</code> - Gets the Unicode code point at the given index of the string.
+* <code>[CodePointAt_string_int_int](#CodePointAt_string_int_int)</code> - Gets the Unicode code point at the given index of the string.
+* <code>[CodePointBefore_string_int](#CodePointBefore_string_int)</code> - Gets the Unicode code point just before the given index of the string.
+* <code>[CodePointBefore_string_int_int](#CodePointBefore_string_int_int)</code> - Gets the Unicode code point just before the given index of the string.
+* <code>[CodePointCompare_string_string](#CodePointCompare_string_string)</code> - Compares two strings in Unicode code point order.
+* <code>[CodePointLength_string](#CodePointLength_string)</code> - Finds the number of Unicode code points in the given text string.
+* <code>[GetUtf8Bytes_string_bool](#GetUtf8Bytes_string_bool)</code> -  Encodes a string in UTF-8 as a byte array.
+* <code>[GetUtf8Bytes_string_bool_bool](#GetUtf8Bytes_string_bool_bool)</code> -  Encodes a string in UTF-8 as a byte array.
+* <code>[GetUtf8Length_string_bool](#GetUtf8Length_string_bool)</code> - Calculates the number of bytes needed to encode a string in UTF-8.
+* <code>[GetUtf8String_byte_bool](#GetUtf8String_byte_bool)</code> - Generates a text string from a UTF-8 byte array.
+* <code>[GetUtf8String_byte_int_int_bool](#GetUtf8String_byte_int_int_bool)</code> - Generates a text string from a portion of a UTF-8 byte array.
+* <code>[ReadUtf8_System_IO_Stream_int_System_Text_StringBuilder_bool](#ReadUtf8_System_IO_Stream_int_System_Text_StringBuilder_bool)</code> - Reads a string in UTF-8 encoding from a data stream.
+* <code>[ReadUtf8FromBytes_byte_int_int_System_Text_StringBuilder_bool](#ReadUtf8FromBytes_byte_int_int_System_Text_StringBuilder_bool)</code> - Reads a string in UTF-8 encoding from a byte array.
+* <code>[ReadUtf8ToString_System_IO_Stream](#ReadUtf8ToString_System_IO_Stream)</code> - Reads a string in UTF-8 encoding from a data stream in full and returns that string.
+* <code>[ReadUtf8ToString_System_IO_Stream_int_bool](#ReadUtf8ToString_System_IO_Stream_int_bool)</code> - Reads a string in UTF-8 encoding from a data stream and returns that string.
+* <code>[ToLowerCaseAscii_string](#ToLowerCaseAscii_string)</code> - Returns a string with the basic upper-case letters A to Z (U+0041 to U+005A) converted to lower-case.
+* <code>[ToUpperCaseAscii_string](#ToUpperCaseAscii_string)</code> - Returns a string with the basic lower-case letters A to Z (U+0061 to U+007A) converted to upper-case.
+* <code>[WriteUtf8_string_int_int_System_IO_Stream_bool](#WriteUtf8_string_int_int_System_IO_Stream_bool)</code> - Writes a portion of a string in UTF-8 encoding to a data stream.
+* <code>[WriteUtf8_string_int_int_System_IO_Stream_bool_bool](#WriteUtf8_string_int_int_System_IO_Stream_bool_bool)</code> - Writes a portion of a string in UTF-8 encoding to a data stream.
+* <code>[WriteUtf8_string_System_IO_Stream_bool](#WriteUtf8_string_System_IO_Stream_bool)</code> - Writes a string in UTF-8 encoding to a data stream.
 
 <a id="CodePointAt_string_int"></a>
 ### CodePointAt

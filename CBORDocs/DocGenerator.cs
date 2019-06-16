@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Xml;
 using System.Text;
 using NuDoq;
 
@@ -24,24 +25,37 @@ if (docdir.Length == 0) {
 }
       var directory = Path.GetFullPath(docdir);
       assemblyFile = Path.GetFullPath(assemblyFile);
+      var assemblyXml = Path.ChangeExtension(assemblyFile, ".xml");
       Directory.SetCurrentDirectory(Path.GetDirectoryName(assemblyFile));
       if (!File.Exists(assemblyFile)) {
         // Exit early, not found
         throw new ArgumentException("Assembly file not found: " + assemblyFile);
       }
+      if (!File.Exists(assemblyXml)) {
+        // Exit early, not found
+        throw new ArgumentException("XML documentation not found: " + assemblyXml);
+      }
       var asm = Assembly.LoadFrom(assemblyFile);
       Directory.CreateDirectory(directory);
       try {
+        var xmldoc=new XmlDoc(assemblyXml);
         var members = DocReader.Read(asm);
         var oldWriter = Console.Out;
       var visitor = new TypeVisitor(directory);
       members.Accept(visitor);
       visitor.Finish();
-      var visitor2 = new SummaryVisitor(Path.Combine(directory, "APIDocs.md"
+      var visitor2 = new SummaryVisitor(
+          Path.Combine(directory, "APIDocs.md"
 ));
-        members.Accept(visitor2);
+        foreach (var t in asm.GetTypes()) {
+          visitor2.HandleType(t, xmldoc);
+        }
+        //members.Accept(visitor2);
         visitor2.Finish();
-    } catch (IOException ex) {
+      } catch (IOException ex) {
+        Console.WriteLine(ex.Message);
+        return;
+      } catch (System.Exception ex) {
       Console.WriteLine(ex.Message);
       return;
     }

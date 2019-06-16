@@ -15,14 +15,16 @@ using System.Text.RegularExpressions;
 using NuDoq;
 
 namespace PeterO.DocGen {
-  internal class TypeVisitor : Visitor, IComparer<Type> {
-    private readonly SortedDictionary<Type, DocVisitor> docs;
-    private readonly Dictionary<Type, MemberSummaryVisitor> memSummaries;
+  internal class TypeVisitor : Visitor {
+    private readonly SortedDictionary<string, DocVisitor> docs;
+    private readonly Dictionary<string, MemberSummaryVisitor> memSummaries;
+    private readonly Dictionary<string, string> typeIDs;
     private readonly string directory;
 
     public TypeVisitor(string directory) {
-      this.docs = new SortedDictionary<Type, DocVisitor>(this);
-      this.memSummaries = new Dictionary<Type, MemberSummaryVisitor>();
+      this.docs = new SortedDictionary<string, DocVisitor>();
+      this.memSummaries = new Dictionary<string, MemberSummaryVisitor>();
+      this.typeIDs = new Dictionary<string, string>();
       this.directory = directory;
     }
 
@@ -57,7 +59,7 @@ namespace PeterO.DocGen {
         var memSummaryString = this.memSummaries[key].ToString();
         var filename = Path.Combine(
   this.directory,
-  DocVisitor.GetTypeID(key) + ".md");
+  this.typeIDs[key] + ".md");
         finalString = NormalizeLines(finalString);
         finalString = Regex.Replace(
             finalString,
@@ -80,26 +82,17 @@ namespace PeterO.DocGen {
 if (currentType == null || !currentType.IsPublic) {
 return;
 }
-      if (!this.docs.ContainsKey(currentType)) {
+      var typeFullName = currentType.FullName;
+      if (!this.docs.ContainsKey(typeFullName)) {
         var docVisitor = new DocVisitor();
-        this.docs[currentType] = docVisitor;
-        this.memSummaries[currentType] = new MemberSummaryVisitor();
+        this.docs[typeFullName] = docVisitor;
+        this.typeIDs[typeFullName] = DocVisitor.GetTypeID(currentType);
+        this.memSummaries[typeFullName] = new MemberSummaryVisitor();
       }
-      this.docs[currentType].VisitMember(member);
-      this.memSummaries[currentType].VisitMember(member);
+      this.docs[typeFullName].VisitMember(member);
+      this.memSummaries[typeFullName].VisitMember(member);
       base.VisitMember(member);
     }
 
-    /// <summary>Compares a Type object with a Type.</summary>
-    /// <param name='x'>The parameter <paramref name='x'/> is not
-    /// documented yet.</param>
-    /// <param name='y'>A Type object.</param>
-    /// <returns>Zero if both values are equal; a negative number if
-    /// <paramref name='x'/> is less than <paramref name='y'/>, or a
-    /// positive number if <paramref name='x'/> is greater than <paramref
-    /// name='y'/>.</returns>
-    public int Compare(Type x, Type y) {
-      return string.Compare(x.FullName, y.FullName, StringComparison.Ordinal);
-    }
   }
 }

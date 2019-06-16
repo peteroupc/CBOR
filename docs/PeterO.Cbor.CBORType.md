@@ -9,13 +9,13 @@
 Represents a type that a CBOR object can have.
 
 ### Member Summary
-* <code>[public static PeterO.Cbor.CBORType Array = 5;](#Array)</code> - An array of CBOR objects.
-* <code>[public static PeterO.Cbor.CBORType Boolean = 1;](#Boolean)</code> - The simple values true and false.
-* <code>[public static PeterO.Cbor.CBORType ByteString = 3;](#ByteString)</code> - An array of bytes.
-* <code>[public static PeterO.Cbor.CBORType Map = 6;](#Map)</code> - A map of CBOR objects.
-* <code>[public static PeterO.Cbor.CBORType Number = 0;](#Number)</code> - A number of any kind, including integers, big integers, floating point numbers, and decimal numbers.
-* <code>[public static PeterO.Cbor.CBORType SimpleValue = 2;](#SimpleValue)</code> - A "simple value" other than floating point values, true, and false.
-* <code>[public static PeterO.Cbor.CBORType TextString = 4;](#TextString)</code> - A text string.
+* <code>[Array](#Array)</code> - An array of CBOR objects.
+* <code>[Boolean](#Boolean)</code> - The simple values true and false.
+* <code>[ByteString](#ByteString)</code> - An array of bytes.
+* <code>[Map](#Map)</code> - A map of CBOR objects.
+* <code>[Number](#Number)</code> - A number of any kind, including integers, big integers, floating point numbers, and decimal numbers.
+* <code>[SimpleValue](#SimpleValue)</code> - A "simple value" other than floating point values, true, and false.
+* <code>[TextString](#TextString)</code> - A text string.
 
 <a id="Array"></a>
 ### Array

@@ -63,6 +63,7 @@
     <Compile Include="TypeNameUtil.cs" />
     <Compile Include="TypeVisitor.cs" />
     <Compile Include="MemberSummaryVisitor.cs" />
+    <Compile Include="XmlDoc.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

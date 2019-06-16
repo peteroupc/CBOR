@@ -15,72 +15,80 @@ using System.Text.RegularExpressions;
 using NuDoq;
 
 namespace PeterO.DocGen {
-  internal class SummaryVisitor : Visitor, IComparer<Type> {
-    private readonly SortedDictionary<Type, StringBuilder> docs;
+  internal class SummaryVisitor {
+    private sealed class TypeLinkAndBuilder {
+      public TypeLinkAndBuilder(Type type) {
+        var typeName = DocVisitor.FormatType(type);
+        typeName = typeName.Replace("&", "&amp;");
+        typeName = typeName.Replace("<", "&lt;");
+        typeName = typeName.Replace(">", "&gt;");
+        typeName = "[" + typeName + "](" +
+          DocVisitor.GetTypeID(type) + ".md)";
+        this.TypeLink = typeName;
+        this.Builder = new StringBuilder();
+      }
+      public string TypeLink { get; }
+      public StringBuilder Builder { get; }
+    }
+
+    private readonly SortedDictionary<string, TypeLinkAndBuilder> docs;
     private readonly string filename;
 
     public SummaryVisitor(string filename) {
-      this.docs = new SortedDictionary<Type, StringBuilder>(this);
+      this.docs = new SortedDictionary<string, TypeLinkAndBuilder>();
       this.filename = filename;
     }
+
 
     public void Finish() {
       var sb = new StringBuilder();
       string finalString;
       sb.Append("## API Documentation\r\n\r\n");
       foreach (var key in this.docs.Keys) {
-        finalString = this.docs[key].ToString();
-        var typeName = DocVisitor.FormatType(key);
-        typeName = typeName.Replace("&", "&amp;");
-        typeName = typeName.Replace("<", "&lt;");
-        typeName = typeName.Replace(">", "&gt;");
-        typeName = "[" + typeName + "](" + DocVisitor.GetTypeID(key) + ".md)";
+        finalString = this.docs[key].Builder.ToString();
         if (finalString.IndexOf(".", StringComparison.Ordinal) >= 0) {
           finalString = finalString.Substring(
   0,
   finalString.IndexOf(".", StringComparison.Ordinal) + 1);
         }
-        sb.Append(" * " + typeName + " - ");
+        sb.Append(" * " + this.docs[key].TypeLink + " - ");
         sb.Append(finalString + "\n");
       }
-finalString = TypeVisitor.NormalizeLines(sb.ToString());
-        TypeVisitor.FileEdit(this.filename, finalString);
+      finalString = TypeVisitor.NormalizeLines(
+              sb.ToString());
+      TypeVisitor.FileEdit(this.filename, finalString);
     }
 
-    public override void VisitMember(Member member) {
-      Type currentType;
-      if (member.Info is Type) {
-        currentType = (Type)member.Info;
-      } else {
-        return;
-      }
-if (currentType == null || !currentType.IsPublic) {
-return;
-}
-      if (!this.docs.ContainsKey(currentType)) {
-        var docVisitor = new StringBuilder();
-        this.docs[currentType] = docVisitor;
+    private void HandleType(Type currentType, Member member) {
+      if (!currentType.IsPublic) return;
+      var typeFullName = currentType.FullName;
+      if (!this.docs.ContainsKey(typeFullName)) {
+        var docVisitor = new TypeLinkAndBuilder(currentType);
+        this.docs[typeFullName] = docVisitor;
       }
       foreach (var element in member.Elements) {
         if (element is Summary) {
           var text = element.ToText();
-          this.docs[currentType].Append(text);
-          this.docs[currentType].Append("\r\n");
+          this.docs[typeFullName].Builder.Append(text)
+              .Append("\r\n");
         }
       }
-      base.VisitMember(member);
     }
 
-    /// <summary>Compares a Type object with a Type.</summary>
-    /// <param name='x'>The parameter <paramref name='x'/> is not
-    /// documented yet.</param>
-    /// <param name='y'>A Type object.</param>
-    /// <returns>Zero if both values are equal; a negative number if
-    /// <paramref name='x'/> is less than <paramref name='y'/>, or a
-    /// positive number if <paramref name='x'/> is greater than <paramref
-    /// name='y'/>.</returns>
-    public int Compare(Type x, Type y) {
-      return string.Compare(x.FullName, y.FullName, StringComparison.Ordinal);
+    public void HandleType(Type currentType, XmlDoc xdoc) {
+      if (!currentType.IsPublic) return;
+      var typeFullName = currentType.FullName;
+      if (!this.docs.ContainsKey(typeFullName)) {
+        var docVisitor = new TypeLinkAndBuilder(currentType);
+        this.docs[typeFullName] = docVisitor;
+      }
+      var summary = xdoc.GetSummary("T:" + typeFullName);
+      if (summary == null) {
+        Console.WriteLine("no summary for " + typeFullName);
+      } else {
+        this.docs[typeFullName].Builder.Append(summary)
+            .Append("\r\n");
+      }
     }
   }
 }
