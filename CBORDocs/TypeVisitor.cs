@@ -9,6 +9,7 @@ at: http://peteroupc.github.io/
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using NuDoq;
 
@@ -19,11 +20,7 @@ namespace PeterO.DocGen {
     private readonly Dictionary<string, string> typeIDs;
     private readonly string directory;
 
-    // TODO: constructor arg, not property
-    public XmlDoc XmlDoc { get; set; }
-
     public TypeVisitor(string directory) {
-      this.XmlDoc = null;
       this.docs = new SortedDictionary<string, DocVisitor>();
       this.memSummaries = new Dictionary<string, MemberSummaryVisitor>();
       this.typeIDs = new Dictionary<string, string>();
@@ -47,33 +44,16 @@ namespace PeterO.DocGen {
       }
     }
 
-    public override void VisitMember(Member member) {
-      Type currentType;
-      if (member.Info is Type) {
-        currentType = (Type)member.Info;
-      } else {
-        if (member.Info == null) {
-          return;
-        }
-        currentType = member.Info.ReflectedType;
-      }
-if (currentType == null || !currentType.IsPublic) {
-return;
-}
-      var typeFullName = currentType.FullName;
-      if (!this.docs.ContainsKey(typeFullName)) {
-        var docVisitor = new DocVisitor();
-        this.docs[typeFullName] = docVisitor;
-        this.typeIDs[typeFullName] = DocVisitor.GetTypeID(currentType);
-        this.memSummaries[typeFullName] = new MemberSummaryVisitor();
+    public void HandleTypeAndMembers(Type currentType, XmlDoc xmldoc) {
+       this.HandleMember(currentType, xmldoc);
         foreach (var m in currentType.GetFields()) {
           if (m.IsSpecialName) {
  continue;
 }
-          this.memSummaries[typeFullName].HandleMember(m, this.XmlDoc);
+          this.HandleMember(m, xmldoc);
         }
         foreach (var m in currentType.GetConstructors()) {
-          this.memSummaries[typeFullName].HandleMember(m, this.XmlDoc);
+          this.HandleMember(m, xmldoc);
         }
         foreach (var m in currentType.GetMethods()) {
           if (!m.DeclaringType.Equals(currentType)) {
@@ -88,7 +68,7 @@ return;
             m.Name.IndexOf("set_", StringComparison.Ordinal) == 0)) {
             continue;
           }
-          this.memSummaries[typeFullName].HandleMember(m, this.XmlDoc);
+          this.HandleMember(m, xmldoc);
         }
         foreach (var m in currentType.GetProperties()) {
           if (!m.DeclaringType.Equals(currentType)) {
@@ -98,14 +78,32 @@ return;
             }
             continue;
           }
-          this.memSummaries[typeFullName].HandleMember(m, this.XmlDoc);
+          this.HandleMember(m, xmldoc);
         }
-        foreach (var m in currentType.GetNestedTypes()) {
-          this.memSummaries[typeFullName].HandleMember(m, this.XmlDoc);
+    }
+
+    public void HandleMember(MemberInfo info, XmlDoc xmldoc) {
+      Type currentType;
+      if (info is Type) {
+        currentType = (Type)info;
+      } else {
+        if (info == null) {
+          return;
         }
+        currentType = info.ReflectedType;
       }
-      this.docs[typeFullName].VisitMember(member);
-      base.VisitMember(member);
+      if (currentType == null || !currentType.IsPublic) {
+        return;
+      }
+      var typeFullName = currentType.FullName;
+      if (!this.docs.ContainsKey(typeFullName)) {
+        var docVisitor = new DocVisitor();
+        this.docs[typeFullName] = docVisitor;
+        this.typeIDs[typeFullName] = DocVisitor.GetTypeID(currentType);
+        this.memSummaries[typeFullName] = new MemberSummaryVisitor();
+      }
+      this.docs[typeFullName].HandleMember(info, xmldoc);
+      this.memSummaries[typeFullName].HandleMember(info, xmldoc);
     }
   }
 }

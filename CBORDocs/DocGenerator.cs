@@ -1,15 +1,10 @@
 using System;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Xml;
-using NuDoq;
 
 namespace PeterO.DocGen {
-  /// <summary>A documentation generator.</summary>
+    /// <summary>A documentation generator.</summary>
   public static class DocGenerator {
-    // TODO: Make indexers ("this[]") show in documentation
     public static void Generate(string assemblyFile, string docdir) {
       if (assemblyFile == null) {
         throw new ArgumentNullException(nameof(assemblyFile));
@@ -40,15 +35,15 @@ namespace PeterO.DocGen {
       Directory.CreateDirectory(directory);
       try {
         var xmldoc = new XmlDoc(assemblyXml);
-        var members = DocReader.Read(asm);
         var oldWriter = Console.Out;
         var visitor = new TypeVisitor(directory);
-        visitor.XmlDoc = xmldoc;
-        members.Accept(visitor);
+        foreach (var t in asm.GetTypes()) {
+          visitor.HandleTypeAndMembers(t, xmldoc);
+        }
         visitor.Finish();
         var visitor2 = new SummaryVisitor(
             Path.Combine(directory, "APIDocs.md"
-  ));
+));
         foreach (var t in asm.GetTypes()) {
           visitor2.HandleType(t, xmldoc);
         }

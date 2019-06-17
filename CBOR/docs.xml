@@ -1360,6 +1360,7 @@
         control of the application. If the plain-old-data type references other
         data types, those types should likewise meet either criterion above.
       </para>
+       .
     </param>
     <returns>A CBOR object corresponding to the given object. Returns CBORObject.Null
       if the object is null.
@@ -1381,6 +1382,7 @@
         control of the application. If the plain-old-data type references other
         data types, those types should likewise meet either criterion above.
       </para>
+       .
     </param>
     <param name='mapper'>An object containing optional converters to convert objects of certain
       types to CBOR objects.
@@ -1563,6 +1565,7 @@
         control of the application. If the plain-old-data type references other
         data types, those types should likewise meet either criterion above.
       </para>
+       .
     </param>
     <param name='mapper'>An object containing optional converters to convert objects of certain
       types to CBOR objects.
@@ -1594,6 +1597,7 @@
         control of the application. If the plain-old-data type references other
         data types, those types should likewise meet either criterion above.
       </para>
+       .
     </param>
     <param name='options'>An object containing options to control how certain objects are converted
       to CBOR objects.

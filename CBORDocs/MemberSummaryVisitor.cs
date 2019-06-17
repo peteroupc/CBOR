@@ -33,8 +33,8 @@ namespace PeterO.DocGen {
         ((MethodInfo)obj).Name : ((obj is PropertyInfo) ?
         ((PropertyInfo)obj).Name : ((obj is FieldInfo) ?
 
-        ((FieldInfo)obj).Name : (obj.ToString())))); }
-    public static string MemberAnchor(object obj) {
+        ((FieldInfo)obj).Name : (obj.ToString())))); } public static string
+          MemberAnchor(object obj) {
       string anchor = String.Empty;
       if (obj is Type) {
         anchor = ((Type)obj).FullName;
@@ -76,64 +76,6 @@ namespace PeterO.DocGen {
         string m = DocVisitor.FormatField((FieldInfo)obj);
         m = Regex.Replace(m, "\\s+", " ");
         m = m.Trim();
-        return m;
-      }
-      return obj.ToString();
-    }
-
-    public static string XmlDocMemberName(object obj) {
-      if (obj is Type) {
-        return "T:" + ((Type)obj).FullName;
-      }
-      if (obj is MethodInfo) {
-        var mi = obj as MethodInfo;
-        var msb = new StringBuilder()
-          .Append("M:").Append(mi.DeclaringType.FullName)
-          .Append(".").Append(mi.Name);
-        var gga = mi.GetGenericArguments().Length;
-        if (gga > 0) {
-          msb.Append("``");
-          var ggastr = Convert.ToString(
-            gga,
-            System.Globalization.CultureInfo.InvariantCulture);
-          msb.Append(ggastr);
-        }
-        if (mi.GetParameters().Length > 0) {
-          msb.Append("(");
-          var first = true;
-          foreach (var p in mi.GetParameters()) {
-            if (!first) {
- msb.Append(",");
-}
-            msb.Append(p.ParameterType.FullName);
-            first = false;
-          }
-          msb.Append(")");
-        }
-        return msb.ToString();
-      }
-      if (obj is PropertyInfo) {
-        var pi = obj as PropertyInfo;
-        var msb = new StringBuilder().Append("P:")
-          .Append(pi.DeclaringType.FullName).Append(".")
-          .Append(pi.Name);
-        if (pi.GetIndexParameters().Length > 0) {
-          msb.Append("(");
-          var first = true;
-          foreach (var p in pi.GetIndexParameters()) {
-            if (!first) {
- msb.Append(",");
-}
-            msb.Append(p.ParameterType.FullName);
-            first = false;
-          }
-          msb.Append(")");
-        }
-        return msb.ToString();
-      }
-      if (obj is FieldInfo) {
-        string m = "F:" + ((FieldInfo)obj).DeclaringType.FullName +
-           "." + ((FieldInfo)obj).Name;
         return m;
       }
       return obj.ToString();
@@ -192,7 +134,7 @@ namespace PeterO.DocGen {
         var docVisitor = new StringBuilder();
         this.docs[memberAnchor] = docVisitor;
       }
-      string memberFullName = XmlDocMemberName(info);
+      string memberFullName = TypeNameUtil.XmlDocMemberName(info);
       var summary = xmldoc?.GetSummary(memberFullName);
       if (summary == null) {
         Console.WriteLine("no summary for " + memberFullName);

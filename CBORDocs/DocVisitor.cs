@@ -12,11 +12,10 @@ using System.Globalization;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using NuDoq;
 
 namespace PeterO.DocGen {
     /// <summary>A documentation visitor.</summary>
-  internal class DocVisitor : Visitor {
+  internal class DocVisitor : XmlDoc.IVisitor {
     private const string FourSpaces = " " + " " + " " + " ";
 
     private static readonly IDictionary<string, string> ValueOperators =
@@ -152,7 +151,8 @@ namespace PeterO.DocGen {
           }
           if (method.IsFinal) {
             builder.Append("sealed ");
-     } else if (method is MethodInfo && IsMethodOverride((MethodInfo)method)) {
+     } else if (method is MethodInfo &&
+            IsMethodOverride((MethodInfo)method)) {
             builder.Append("override ");
           } else if (method.IsVirtual) {
             builder.Append("virtual ");
@@ -178,7 +178,7 @@ namespace PeterO.DocGen {
           builder.Append(ValueOperators[method.Name]);
         } else {
           if (!shortform) {
-          builder.Append(FormatType(methodInfo.ReturnType));
+            builder.Append(FormatType(methodInfo.ReturnType));
           }
           builder.Append(" ");
           builder.Append(method.Name);
@@ -235,47 +235,47 @@ namespace PeterO.DocGen {
     }
 
     public static string FormatProperty(PropertyInfo property) {
-     return FormatProperty(property, false);
+      return FormatProperty(property, false);
     }
 
     public static string FormatProperty(PropertyInfo property, bool shortform) {
       var builder = new StringBuilder();
       var getter = property.GetGetMethod();
       var setter = property.GetSetMethod();
-    if (!shortform) {
-      builder.Append(FourSpaces);
-      if (!property.ReflectedType.IsInterface) {
-        if ((getter != null && getter.IsPublic) ||
-            (setter != null && setter.IsPublic)) {
-          builder.Append("public ");
-        } else if ((getter != null && getter.IsAssembly) ||
-                   (setter != null && setter.IsAssembly)) {
-          builder.Append("internal ");
-        } else if ((getter != null && getter.IsFamily) ||
-                   (setter != null && setter.IsFamily)) {
-          builder.Append("protected ");
+      if (!shortform) {
+        builder.Append(FourSpaces);
+        if (!property.ReflectedType.IsInterface) {
+          if ((getter != null && getter.IsPublic) ||
+              (setter != null && setter.IsPublic)) {
+            builder.Append("public ");
+          } else if ((getter != null && getter.IsAssembly) ||
+                    (setter != null && setter.IsAssembly)) {
+            builder.Append("internal ");
+          } else if ((getter != null && getter.IsFamily) ||
+                    (setter != null && setter.IsFamily)) {
+            builder.Append("protected ");
+          }
+          if ((getter != null && getter.IsStatic) ||
+              (setter != null && setter.IsStatic)) {
+            builder.Append("static ");
+          }
+          if ((getter != null && getter.IsAbstract) ||
+              (setter != null && setter.IsAbstract)) {
+            builder.Append("abstract ");
+          }
+          if ((getter != null && getter.IsFinal) ||
+              (setter != null && setter.IsFinal)) {
+            builder.Append("sealed ");
+          } else if (IsMethodOverride(getter)) {
+            builder.Append("override ");
+          } else if ((getter != null && getter.IsVirtual) ||
+                    (setter != null && setter.IsVirtual)) {
+            builder.Append("virtual ");
+          }
         }
-        if ((getter != null && getter.IsStatic) ||
-            (setter != null && setter.IsStatic)) {
-          builder.Append("static ");
-        }
-        if ((getter != null && getter.IsAbstract) ||
-            (setter != null && setter.IsAbstract)) {
-          builder.Append("abstract ");
-        }
-        if ((getter != null && getter.IsFinal) ||
-            (setter != null && setter.IsFinal)) {
-          builder.Append("sealed ");
-        } else if (IsMethodOverride(getter)) {
-          builder.Append("override ");
-        } else if ((getter != null && getter.IsVirtual) ||
-                   (setter != null && setter.IsVirtual)) {
-          builder.Append("virtual ");
-        }
+        builder.Append(FormatType(property.PropertyType));
+        builder.Append(" ");
       }
-      builder.Append(FormatType(property.PropertyType));
-      builder.Append(" ");
-    }
       bool first;
       var indexParams = property.GetIndexParameters();
       if (indexParams.Length > 0) {
@@ -296,25 +296,25 @@ namespace PeterO.DocGen {
           builder.Append("params ");
         }
         builder.Append(FormatType(param.ParameterType));
-   if (!shortform) {
-        builder.Append(" ");
-        builder.Append(param.Name);
-   }
+        if (!shortform) {
+          builder.Append(" ");
+          builder.Append(param.Name);
+        }
         first = false;
       }
       if (indexParams.Length > 0) {
         builder.Append("]");
       }
-    if (!shortform) {
-      builder.Append(" { ");
-      if (getter != null && !getter.IsPrivate) {
-        builder.Append("get; ");
+      if (!shortform) {
+        builder.Append(" { ");
+        if (getter != null && !getter.IsPrivate) {
+          builder.Append("get; ");
+        }
+        if (setter != null && !setter.IsPrivate) {
+          builder.Append("set; ");
+        }
+        builder.Append("}");
       }
-      if (setter != null && !setter.IsPrivate) {
-        builder.Append("set; ");
-      }
-      builder.Append("}");
-    }
       return builder.ToString();
     }
 
@@ -481,98 +481,135 @@ namespace PeterO.DocGen {
       }
       return b.ToString();
     }
-
-    public override void VisitC(C code) {
-      this.Write(" `" + code.Content + "` ");
-      base.VisitC(code);
-    }
-
-    public override void VisitCode(Code code) {
-      this.WriteLine("\r\n\r\n");
-      foreach (var line in code.Content.Split('\n')) {
-        this.WriteLine(FourSpaces + line.TrimEnd());
-      }
-      this.WriteLine("\r\n\r\n");
-      base.VisitCode(code);
-    }
-
-    public override void VisitExample(Example example) {
-      base.VisitExample(example);
-      this.WriteLine("\r\n\r\n");
-    }
-
-    public override void VisitException(NuDoq.Exception exception) {
-      using (var ch = this.Change(this.exceptionStr)) {
-        var cref = exception.Cref;
-        if (cref.StartsWith("T:", StringComparison.Ordinal)) {
-          cref = cref.Substring(2);
-        }
-        this.WriteLine(" * " + cref + ": ");
-        base.VisitException(exception);
-        this.WriteLine("\r\n\r\n");
-      }
-    }
-
-    public override void VisitUnknownElement(UnknownElement element) {
-      string xmlName = element.Xml.Name.ToString()
-        .ToLowerInvariant();
-      if (xmlName.Equals("b") ||
+    public void VisitNode(XmlDoc.INode node) {
+      if (String.IsNullOrEmpty(node.LocalName)) {
+        var t = node.GetContent();
+        // Collapse multiple spaces into a single space
+        t = Regex.Replace(t, @"\s+", " ");
+        this.Write(t);
+        XmlDoc.VisitInnerNode(node, this);
+      } else {
+        var xmlName = node.LocalName.ToLowerInvariant();
+        if (xmlName.Equals("c")) {
+ VisitC(node);
+  } else if (xmlName.Equals("code")) {
+ VisitCode(node);
+  } else if (xmlName.Equals("example")) {
+ VisitExample(node);
+  } else if (xmlName.Equals("exception")) {
+ VisitException(node);
+  } else if (xmlName.Equals("see")) {
+ VisitSee(node);
+  } else if (xmlName.Equals("item")) {
+ VisitItem(node);
+  } else if (xmlName.Equals("list")) {
+ VisitList(node);
+  } else if (xmlName.Equals("para")) {
+ VisitPara(node);
+  } else if (xmlName.Equals("param")) {
+ VisitParam(node);
+  } else if (xmlName.Equals("paramref")) {
+ VisitParamRef(node);
+  } else if (xmlName.Equals("remarks") || node.Equals("summary")) {
+          this.WriteLine("\r\n\r\n");
+          XmlDoc.VisitInnerNode(node, this);
+        } else if (xmlName.Equals("returns")) {
+ VisitReturns(node);
+  } else if (xmlName.Equals("typeparam")) {
+ VisitTypeParam(node);
+  } else if (xmlName.Equals("value")) {
+ VisitValue(node);
+  } else if (xmlName.Equals("b") ||
 xmlName.Equals("strong") ||
 xmlName.Equals("i") ||
 xmlName.Equals("a") ||
 xmlName.Equals("sup") ||
 xmlName.Equals("em")) {
-        var sb = new StringBuilder();
-        sb.Append("<" + xmlName);
-        foreach (var attr in element.Xml.Attributes()) {
-          sb.Append(" " + attr.Name.ToString() + "=");
-          sb.Append("\"" + DocGenUtil.HtmlEscape(attr.Value) + "\"");
-        }
-        sb.Append(">");
-        this.Write(sb.ToString());
-        base.VisitUnknownElement(element);
-        this.Write("</" + xmlName + ">");
-      } else {
-        base.VisitUnknownElement(element);
+          var sb = new StringBuilder();
+          sb.Append("<" + xmlName);
+          foreach (var attr in node.GetAttributes()) {
+            sb.Append(" " + attr + "=");
+            sb.Append("\"" + DocGenUtil.HtmlEscape(
+              node.GetAttribute(attr)) + "\"");
+          }
+          sb.Append(">");
+          this.Write(sb.ToString());
+          XmlDoc.VisitInnerNode(node, this);
+          this.Write("</" + xmlName + ">");
+        } else {
+ XmlDoc.VisitInnerNode(node, this);
+}
       }
     }
 
-    public override void VisitSee(See see) {
-      string cref = see.Cref;
+    public void VisitC(XmlDoc.INode node) {
+      this.Write(" `" + node.GetContent() + "` ");
+      XmlDoc.VisitInnerNode(node, this);
+    }
+
+    public void VisitCode(XmlDoc.INode node) {
+      this.WriteLine("\r\n\r\n");
+      foreach (var line in node.GetContent().Split('\n')) {
+        this.WriteLine(FourSpaces + line.TrimEnd());
+      }
+      this.WriteLine("\r\n\r\n");
+      XmlDoc.VisitInnerNode(node, this);
+    }
+
+    public void VisitExample(XmlDoc.INode node) {
+      XmlDoc.VisitInnerNode(node, this);
+      this.WriteLine("\r\n\r\n");
+    }
+
+    public void VisitException(XmlDoc.INode node) {
+      using (var ch = this.Change(exceptionStr)) {
+        var cref = node.GetAttribute("cref");
+        if (cref.StartsWith("T:", StringComparison.Ordinal)) {
+          cref = cref.Substring(2);
+        }
+        this.WriteLine(" * " + cref + ": ");
+        XmlDoc.VisitInnerNode(node, this);
+        this.WriteLine("\r\n\r\n");
+      }
+    }
+
+    public void VisitSee(XmlDoc.INode see) {
+      string cref = see.GetAttribute("cref");
       if (cref.Substring(0, 2).Equals("T:")) {
         string typeName = TypeNameUtil.UndecorateTypeName(cref.Substring(2));
-        string content = DocGenUtil.HtmlEscape(see.Content);
+        string content = DocGenUtil.HtmlEscape(see.GetContent());
         if (String.IsNullOrEmpty(content)) {
-          content = DocGenUtil.HtmlEscape(see.ToText());
-        }
+ content = typeName;
+}
         this.Write("[" + content + "]");
         this.Write("(" + typeName + ".md)");
-        base.VisitSee(see);
+        XmlDoc.VisitInnerNode(see, this);
       } else if (cref.Substring(0, 2).Equals("M:")) {
-        string content = DocGenUtil.HtmlEscape(see.Content);
+        string content = DocGenUtil.HtmlEscape(see.GetContent());
         if (String.IsNullOrEmpty(content)) {
-          content = DocGenUtil.HtmlEscape(see.ToText());
-        }
+ content = cref;
+}
         this.Write("**" + content + "**");
       } else {
-        base.VisitSee(see);
+        XmlDoc.VisitInnerNode(see, this);
       }
     }
 
-    public override void VisitItem(Item item) {
+    public void VisitItem(XmlDoc.INode node) {
       this.Write(" * ");
-      base.VisitItem(item);
+      XmlDoc.VisitInnerNode(node, this);
       this.WriteLine("\r\n\r\n");
     }
 
-    public override void VisitList(List list) {
+    public void VisitList(XmlDoc.INode node) {
       this.WriteLine("\r\n\r\n");
-      base.VisitList(list);
+      XmlDoc.VisitInnerNode(node, this);
     }
 
-    public override void VisitMember(Member member) {
-      var info = member.Info;
+    public void HandleMember(MemberInfo info, XmlDoc xmldoc) {
       var signature = String.Empty;
+      var mnu = TypeNameUtil.XmlDocMemberName(info);
+      var mnm = xmldoc.GetMemberNode(mnu);
       if (info is MethodBase) {
         var method = (MethodBase)info;
         if (!method.IsPublic && !method.IsFamily) {
@@ -580,10 +617,14 @@ xmlName.Equals("em")) {
           // methods
           return;
         }
+        if (mnm == null) {
+          Console.WriteLine("member info not found: " + mnu);
+          return;
+        }
         using (var ch = this.AddMember(info)) {
           signature = FormatMethod(method, false);
-  this.WriteLine("<a id=\""
-            +MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
+          this.WriteLine("<a id=\""+
+                    MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
           this.WriteLine("### " + Heading(info) +
                     "\r\n\r\n" + signature + "\r\n\r\n");
           var attr = method.GetCustomAttribute(typeof(ObsoleteAttribute)) as
@@ -594,7 +635,7 @@ xmlName.Equals("em")) {
           this.paramStr.Clear();
           this.returnStr.Clear();
           this.exceptionStr.Clear();
-          base.VisitMember(member);
+          XmlDoc.VisitInnerNode(mnm, this);
           if (this.paramStr.Length > 0) {
             this.Write("<b>Parameters:</b>\r\n\r\n");
             var paramString = this.paramStr.ToString();
@@ -614,6 +655,10 @@ xmlName.Equals("em")) {
           // Ignore nonpublic types
           return;
         }
+        if (mnm == null) {
+          Console.WriteLine("member info not found: " + mnu);
+          return;
+        }
         using (var ch = this.AddMember(info)) {
           this.WriteLine("## " + Heading(type) + "\r\n\r\n");
           this.WriteLine(FormatTypeSig(type) + "\r\n\r\n");
@@ -623,9 +668,8 @@ xmlName.Equals("em")) {
             this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
           }
           this.paramStr.Clear();
-          // Console.WriteLine("Visiting type " + member);
-          base.VisitMember(member);
-          // Console.WriteLine("Visited type " + member);
+          XmlDoc.VisitInnerNode(mnm, this);
+
           this.WriteLine("<<<MEMBER_SUMMARY>>>");
           if (this.paramStr.Length > 0) {
             this.Write("<b>Parameters:</b>\r\n\r\n");
@@ -642,10 +686,14 @@ xmlName.Equals("em")) {
           // methods
           return;
         }
+        if (mnm == null) {
+          Console.WriteLine("member info not found: " + mnu);
+          return;
+        }
         using (var ch = this.AddMember(info)) {
           signature = FormatProperty(property);
-  this.WriteLine("<a id=\""
-            +MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
+          this.WriteLine("<a id=\""+
+                    MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
           this.WriteLine("### " + property.Name + "\r\n\r\n" + signature +
                     "\r\n\r\n");
           var attr = property.GetCustomAttribute(typeof(ObsoleteAttribute)) as
@@ -656,7 +704,7 @@ xmlName.Equals("em")) {
           this.paramStr.Clear();
           this.returnStr.Clear();
           this.exceptionStr.Clear();
-          base.VisitMember(member);
+          XmlDoc.VisitInnerNode(mnm, this);
           if (this.paramStr.Length > 0) {
             this.Write("<b>Parameters:</b>\r\n\r\n");
             this.Write(this.paramStr.ToString());
@@ -673,73 +721,59 @@ xmlName.Equals("em")) {
           // Ignore nonpublic, nonprotected fields
           return;
         }
+        if (mnm == null) {
+          Console.WriteLine("member info not found: " + mnu);
+          return;
+        }
         using (var ch = this.AddMember(info)) {
           signature = FormatField(field);
-  this.WriteLine("<a id=\""
-            +MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
+          this.WriteLine("<a id=\""+
+                    MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
           this.WriteLine("### " + field.Name + "\r\n\r\n" + signature +
                     "\r\n\r\n");
-          base.VisitMember(member);
+          XmlDoc.VisitInnerNode(mnm, this);
         }
       }
     }
 
-    public override void VisitPara(Para para) {
-      base.VisitPara(para);
+    public void VisitPara(XmlDoc.INode node) {
+      XmlDoc.VisitInnerNode(node, this);
       this.WriteLine("\r\n\r\n");
     }
 
-    public override void VisitParam(Param param) {
+    public void VisitParam(XmlDoc.INode node) {
       using (var ch = this.Change(this.paramStr)) {
-        this.Write(" * <i>" + param.Name + "</i>: ");
-        base.VisitParam(param);
+        this.Write(" * <i>" + node.GetAttribute("name") + "</i>: ");
+        XmlDoc.VisitInnerNode(node, this);
         this.WriteLine("\r\n\r\n");
       }
     }
 
-    public override void VisitParamRef(ParamRef paramRef) {
-      this.WriteLine(" <i>" + paramRef.Name + "</i>");
-      base.VisitParamRef(paramRef);
+    public void VisitParamRef(XmlDoc.INode node) {
+      this.WriteLine(" <i>" + node.GetAttribute("name") + "</i>");
+      XmlDoc.VisitInnerNode(node, this);
     }
 
-    public override void VisitRemarks(Remarks remarks) {
-      base.VisitRemarks(remarks);
-      this.WriteLine("\r\n\r\n");
-    }
-
-    public override void VisitReturns(Returns returns) {
+    public void VisitReturns(XmlDoc.INode node) {
       using (var ch = this.Change(this.returnStr)) {
         this.WriteLine("<b>Return Value:</b>\r\n");
-        base.VisitReturns(returns);
+        XmlDoc.VisitInnerNode(node, this);
         this.WriteLine("\r\n\r\n");
       }
     }
 
-    public override void VisitSummary(Summary summary) {
-      base.VisitSummary(summary);
-      this.WriteLine("\r\n\r\n");
-    }
-
-    public override void VisitText(Text text) {
-      var t = text.Content;
-      // Collapse multiple spaces into a single space
-      t = Regex.Replace(t, @"\s+", " ");
-      this.Write(t);
-      base.VisitText(text);
-    }
-
-    public override void VisitTypeParam(TypeParam typeParam) {
+    public void VisitTypeParam(XmlDoc.INode node) {
       using (var ch = this.Change(this.paramStr)) {
-        this.Write(" * &lt;" + typeParam.Name + "&gt;: ");
-        base.VisitTypeParam(typeParam);
+        this.Write(" * &lt;" + node.GetAttribute("name") + "&gt;: ");
+        XmlDoc.VisitInnerNode(node, this);
         this.WriteLine("\r\n\r\n");
       }
     }
 
-    public override void VisitValue(Value value) {
+    public void VisitValue(XmlDoc.INode node) {
       using (var ch = this.Change(this.returnStr)) {
         this.WriteLine("<b>Returns:</b>\r\n");
-        base.VisitValue(value);
+        XmlDoc.VisitInnerNode(node, this);
         this.WriteLine("\r\n\r\n");
       }
     }
@@ -834,10 +868,10 @@ xmlName.Equals("em")) {
     }
 
     private IDisposable AddMember(MemberInfo member) {
-      var buffer = new StringBuilder();
+      var builder = new StringBuilder();
       var heading = HeadingUnambiguous(member);
-      this.members[heading] = buffer;
-      return new BufferChanger(this, buffer);
+      this.members[heading] = builder;
+      return new BufferChanger(this, builder);
     }
 
     private IDisposable Change(StringBuilder builder) {

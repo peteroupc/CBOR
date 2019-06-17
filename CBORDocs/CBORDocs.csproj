@@ -47,9 +47,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="NuDoq, Version=1.2.0.0, Culture=neutral, PublicKeyToken=197ef17e56afcdb9">
-      <HintPath>..\packages\NuDoq.1.2.5\lib\net35\NuDoq.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\CBOR\PeterO\DataUtilities.cs">
@@ -68,7 +65,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
