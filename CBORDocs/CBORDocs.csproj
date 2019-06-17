@@ -64,6 +64,7 @@
     <Compile Include="TypeVisitor.cs" />
     <Compile Include="MemberSummaryVisitor.cs" />
     <Compile Include="XmlDoc.cs" />
+    <Compile Include="DocGenUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

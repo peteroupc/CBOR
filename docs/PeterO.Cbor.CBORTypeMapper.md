@@ -5,10 +5,10 @@
 Holds converters to customize the serialization and deserialization behavior of `CBORObject.FromObject`  and `CBORObject#ToObject`  , as well as type filters for `ToObject`
 
 ### Member Summary
-* <code>[AddConverter_T_System_Type_PeterO_Cbor_ICBORConverter_T](#AddConverter_T_System_Type_PeterO_Cbor_ICBORConverter_T)</code> - Registers an object that converts objects of a given type to CBOR objects (called a CBOR converter).
-* <code>[AddTypeName_string](#AddTypeName_string)</code> - Adds the fully qualified name of a Java or .
-* <code>[AddTypePrefix_string](#AddTypePrefix_string)</code> - Adds a prefix of a Java or .
-* <code>[FilterTypeName_string](#FilterTypeName_string)</code> - Returns whether the given Java or .
+* <code>[AddConverter&lt;T&gt;(System.Type, PeterO.Cbor.ICBORConverter&lt;T&gt;)](#AddConverter_T_System_Type_PeterO_Cbor_ICBORConverter_T)</code> -
+* <code>[AddTypeName(string)](#AddTypeName_string)</code> - Adds the fully qualified name of a Java or .
+* <code>[AddTypePrefix(string)](#AddTypePrefix_string)</code> - Adds a prefix of a Java or .
+* <code>[FilterTypeName(string)](#FilterTypeName_string)</code> - Returns whether the given Java or .
 
 <a id="Void_ctor"></a>
 ### CBORTypeMapper Constructor

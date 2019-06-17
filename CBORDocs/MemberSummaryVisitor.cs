@@ -16,6 +16,7 @@ using NuDoq;
 namespace PeterO.DocGen {
   internal class MemberSummaryVisitor : Visitor {
     private readonly SortedDictionary<string, StringBuilder> docs;
+    private readonly Dictionary<string, string> memberFormats;
     private string summaryString;
 
     public override string ToString() {
@@ -24,6 +25,7 @@ namespace PeterO.DocGen {
 
     public MemberSummaryVisitor() {
       this.docs = new SortedDictionary<string, StringBuilder>();
+      this.memberFormats = new Dictionary<string, string>();
       this.summaryString = String.Empty;
     }
 
@@ -32,8 +34,8 @@ namespace PeterO.DocGen {
         ((MethodInfo)obj).Name : ((obj is PropertyInfo) ?
         ((PropertyInfo)obj).Name : ((obj is FieldInfo) ?
 
-        ((FieldInfo)obj).Name : (obj.ToString())))); 
-    } 
+        ((FieldInfo)obj).Name : (obj.ToString())))); }
+
     public static string MemberAnchor(object obj) {
       string anchor = String.Empty;
       if (obj is Type) {
@@ -42,9 +44,10 @@ namespace PeterO.DocGen {
         anchor = (((MethodInfo)obj).Name.IndexOf(
           "op_",
           StringComparison.Ordinal) == 0) ? ((MethodInfo)obj).Name :
-            DocVisitor.FormatMethod((MethodInfo)obj, true); } else {
+            DocVisitor.FormatMethod((MethodInfo)obj, true);
+ } else {
  anchor = (obj is PropertyInfo) ?
-   DocVisitor.FormatProperty((PropertyInfo)obj, true) : 
+   DocVisitor.FormatProperty((PropertyInfo)obj, true) :
              ((obj is FieldInfo) ?
      ((FieldInfo)obj).Name : obj.ToString());
 }
@@ -80,17 +83,75 @@ namespace PeterO.DocGen {
       return obj.ToString();
     }
 
+    public static string XmlDocMemberName(object obj) {
+      if (obj is Type) {
+        return "T:"+((Type)obj).FullName;
+      }
+      if (obj is MethodInfo) {
+        MethodInfo mi = obj as MethodInfo;
+        var msb = new StringBuilder()
+          .Append("M:")
+          .Append(mi.DeclaringType.FullName)
+          .Append(".")
+          .Append(mi.Name);
+        var gga = mi.GetGenericArguments().Length;
+        if (gga > 0) {
+          msb.Append("``");
+          var ggastr = Convert.ToString(
+            gga, System.Globalization.CultureInfo.InvariantCulture);
+          msb.Append(ggastr);
+        }
+        if (mi.GetParameters().Length > 0) {
+          msb.Append("(");
+          var first = true;
+          foreach (var p in mi.GetParameters()) {
+            if (!first) msb.Append(",");
+            msb.Append(p.ParameterType.FullName);
+            first = false;
+          }
+          msb.Append(")");
+        }
+        return msb.ToString();
+      }
+      if (obj is PropertyInfo) {
+        var pi = obj as PropertyInfo;
+        var msb = new StringBuilder()
+          .Append("P:")
+          .Append(pi.DeclaringType.FullName)
+          .Append(".")
+          .Append(pi.Name);
+        if (pi.GetIndexParameters().Length > 0) {
+          msb.Append("(");
+          var first = true;
+          foreach (var p in pi.GetIndexParameters()) {
+            if (!first) msb.Append(",");
+            msb.Append(p.ParameterType.FullName);
+            first = false;
+          }
+          msb.Append(")");
+        }
+        return msb.ToString();
+      }
+      if (obj is FieldInfo) {
+        string m = "F:" + 
+          ((FieldInfo)obj).DeclaringType.FullName +
+           "." + ((FieldInfo)obj).Name;
+        return m;
+      }
+      return obj.ToString();
+    }
+
     public void Finish() {
       var sb = new StringBuilder();
       string finalString;
       sb.Append("### Member Summary\n");
       foreach (var key in this.docs.Keys) {
         finalString = this.docs[key].ToString();
-        var typeName = FormatMember(key);
+        var typeName = this.memberFormats[key];
         typeName = typeName.Replace("&", "&amp;");
         typeName = typeName.Replace("<", "&lt;");
         typeName = typeName.Replace(">", "&gt;");
-        typeName = "[" + typeName + "](#" + MemberAnchor(key) + ")";
+        typeName = "[" + typeName + "](#" + key + ")";
         finalString = Regex.Replace(finalString, "\\s+", " ");
         if (finalString.IndexOf(".", StringComparison.Ordinal) >= 0) {
           finalString = finalString.Substring(
@@ -100,9 +161,49 @@ namespace PeterO.DocGen {
         sb.Append("* <code>" + typeName + "</code> - ");
         sb.Append(finalString + "\n");
       }
-      finalString = TypeVisitor.NormalizeLines(sb.ToString());
+      finalString = DocGenUtil.NormalizeLines(sb.ToString());
       this.summaryString = finalString;
     }
+
+    public void HandleMember(object info, XmlDoc xmldoc) {
+      var isPublicOrProtected = false;
+      var typeInfo = info as Type;
+      var methodInfo = info as MethodInfo;
+      var propertyInfo = info as PropertyInfo;
+      var fieldInfo = info as FieldInfo;
+      if (methodInfo != null) {
+        isPublicOrProtected = methodInfo.IsPublic || methodInfo.IsFamily;
+      }
+      if (propertyInfo != null) {
+        isPublicOrProtected = (propertyInfo.CanRead &&
+                    propertyInfo.GetGetMethod().IsPublic ||
+                    propertyInfo.GetGetMethod().IsFamily) ||
+                    (propertyInfo.CanWrite &&
+                    propertyInfo.GetSetMethod().IsPublic ||
+                    propertyInfo.GetSetMethod().IsFamily);
+      }
+      if (fieldInfo != null) {
+        isPublicOrProtected = fieldInfo.IsPublic || fieldInfo.IsFamily;
+      }
+      if (!isPublicOrProtected) {
+        return;
+      }
+      string memberAnchor = MemberAnchor(info);
+      this.memberFormats[memberAnchor] = FormatMember(info);
+      if (!this.docs.ContainsKey(memberAnchor)) {
+        var docVisitor = new StringBuilder();
+        this.docs[memberAnchor] = docVisitor;
+      }
+      string memberFullName = XmlDocMemberName(info);
+      var summary = xmldoc?.GetSummary(memberFullName);
+      if (summary == null) {
+        Console.WriteLine("no summary for " + memberFullName);
+      } else {
+        this.docs[memberAnchor].Append(summary)
+            .Append("\r\n");
+      }
+    }
+
 
     public override void VisitMember(Member member) {
       object info = member.Info;
@@ -130,6 +231,7 @@ namespace PeterO.DocGen {
         return;
       }
       string memberAnchor = MemberAnchor(info);
+this.memberFormats[memberAnchor]=FormatMember(info);
       if (!this.docs.ContainsKey(memberAnchor)) {
         var docVisitor = new StringBuilder();
         this.docs[memberAnchor] = docVisitor;
@@ -137,12 +239,10 @@ namespace PeterO.DocGen {
       foreach (var element in member.Elements) {
         if (element is Summary) {
           var text = element.ToText();
-          this.docs[memberAnchor].Append(text)
-              .Append("\r\n");
+          this.docs[memberAnchor].Append(text).Append("\r\n");
         }
       }
       base.VisitMember(member);
     }
-
   }
 }

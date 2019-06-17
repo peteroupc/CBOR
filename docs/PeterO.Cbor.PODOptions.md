@@ -5,8 +5,8 @@
 Options for converting "plain old data" objects (better known as POCOs in .NET or POJOs in Java) to CBOR objects.
 
 ### Member Summary
-* <code>[Default](#Default)</code> - The default settings for "plain old data" options.
-* <code>[UseCamelCase](#UseCamelCase)</code> -  Gets a value indicating whether property names are converted to camel case before they are used as keys.
+* <code>[public static readonly PeterO.Cbor.PODOptions Default;](#Default)</code> - The default settings for "plain old data" options.
+* <code>[UseCamelCase](#UseCamelCase)</code> - Gets a value indicating whether property names are converted to camel case before they are used as keys.
 
 <a id="Void_ctor_Boolean_Boolean"></a>
 ### PODOptions Constructor

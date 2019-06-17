@@ -9,8 +9,6 @@ at: http://peteroupc.github.io/
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using NuDoq;
 
@@ -21,35 +19,14 @@ namespace PeterO.DocGen {
     private readonly Dictionary<string, string> typeIDs;
     private readonly string directory;
 
+    public XmlDoc XmlDoc { get; set; }
+
     public TypeVisitor(string directory) {
+      this.XmlDoc = null;
       this.docs = new SortedDictionary<string, DocVisitor>();
       this.memSummaries = new Dictionary<string, MemberSummaryVisitor>();
       this.typeIDs = new Dictionary<string, string>();
       this.directory = directory;
-    }
-
-    public static string NormalizeLines(string x) {
-      if (String.IsNullOrEmpty(x)) {
- return x;
-}
-      x = Regex.Replace(x, @"[ \t]+(?=[\r\n]|$)", String.Empty);
-      x = Regex.Replace(x, @"\r?\n(\r?\n)+", "\n\n");
-      x = Regex.Replace(x, @"\r?\n", "\n");
-      x = Regex.Replace(x, @"^\s*", String.Empty);
-      x = Regex.Replace(x, @"\s+$", String.Empty);
-      return x + "\n";
-    }
-
-    public static void FileEdit(string filename, string newString) {
-      string oldString = null;
-      try {
-           oldString = File.ReadAllText(filename);
-      } catch (IOException) {
-           oldString = null;
-      }
-      if (oldString == null || !oldString.Equals(newString)) {
-             File.WriteAllText(filename, newString);
-      }
     }
 
     public void Finish() {
@@ -60,12 +37,12 @@ namespace PeterO.DocGen {
         var filename = Path.Combine(
   this.directory,
   this.typeIDs[key] + ".md");
-        finalString = NormalizeLines(finalString);
+        finalString = DocGenUtil.NormalizeLines(finalString);
         finalString = Regex.Replace(
             finalString,
             "<<<MEMBER_SUMMARY>>>",
             memSummaryString);
-        FileEdit(filename, finalString);
+        DocGenUtil.FileEdit(filename, finalString);
       }
     }
 
@@ -88,11 +65,47 @@ return;
         this.docs[typeFullName] = docVisitor;
         this.typeIDs[typeFullName] = DocVisitor.GetTypeID(currentType);
         this.memSummaries[typeFullName] = new MemberSummaryVisitor();
+        foreach (var m in currentType.GetFields()) {
+          if (m.IsSpecialName) continue;
+          this.memSummaries[typeFullName].HandleMember(m, this.XmlDoc);
+        }
+        foreach (var m in currentType.GetConstructors()) {
+          this.memSummaries[typeFullName].HandleMember(m, this.XmlDoc);
+        }
+        foreach (var m in currentType.GetMethods()) {
+          if (!m.DeclaringType.Equals(currentType)) {
+            var dtfn = m.DeclaringType.FullName;
+            if (dtfn.IndexOf("System.", StringComparison.Ordinal) != 0) {
+              Console.WriteLine("not declared: " + m);
+            }
+            continue;
+          }
+          if (m.IsSpecialName && (
+            m.Name.IndexOf("get_", StringComparison.Ordinal) == 0 ||
+            m.Name.IndexOf("set_", StringComparison.Ordinal) == 0)) {
+            continue;
+          }
+          this.memSummaries[typeFullName].HandleMember(m, this.XmlDoc);
+        }
+        foreach (var m in currentType.GetProperties()) {
+          if (!m.DeclaringType.Equals(currentType)) {
+            var dtfn = m.DeclaringType.FullName;
+            if (dtfn.IndexOf("System.", StringComparison.Ordinal) != 0) {
+              Console.WriteLine("not declared: " + m);
+            }
+            continue;
+          }
+          this.memSummaries[typeFullName].HandleMember(m, this.XmlDoc);
+        }
+        foreach (var m in currentType.GetNestedTypes()) {
+          this.memSummaries[typeFullName].HandleMember(m, this.XmlDoc);
+        }
       }
       this.docs[typeFullName].VisitMember(member);
-      this.memSummaries[typeFullName].VisitMember(member);
+      if(this.XmlDoc==null){
+        this.memSummaries[typeFullName].VisitMember(member);
+      }
       base.VisitMember(member);
     }
-
   }
 }

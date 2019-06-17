@@ -8,11 +8,7 @@ at: http://peteroupc.github.io/
  */
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
-using NuDoq;
 
 namespace PeterO.DocGen {
   internal class SummaryVisitor {
@@ -22,12 +18,13 @@ namespace PeterO.DocGen {
         typeName = typeName.Replace("&", "&amp;");
         typeName = typeName.Replace("<", "&lt;");
         typeName = typeName.Replace(">", "&gt;");
-        typeName = "[" + typeName + "](" +
-          DocVisitor.GetTypeID(type) + ".md)";
+        typeName = "[" + typeName + "](" + DocVisitor.GetTypeID(type) + ".md)";
         this.TypeLink = typeName;
         this.Builder = new StringBuilder();
       }
+
       public string TypeLink { get; }
+
       public StringBuilder Builder { get; }
     }
 
@@ -38,7 +35,6 @@ namespace PeterO.DocGen {
       this.docs = new SortedDictionary<string, TypeLinkAndBuilder>();
       this.filename = filename;
     }
-
 
     public void Finish() {
       var sb = new StringBuilder();
@@ -54,29 +50,15 @@ namespace PeterO.DocGen {
         sb.Append(" * " + this.docs[key].TypeLink + " - ");
         sb.Append(finalString + "\n");
       }
-      finalString = TypeVisitor.NormalizeLines(
+      finalString = DocGenUtil.NormalizeLines(
               sb.ToString());
-      TypeVisitor.FileEdit(this.filename, finalString);
-    }
-
-    private void HandleType(Type currentType, Member member) {
-      if (!currentType.IsPublic) return;
-      var typeFullName = currentType.FullName;
-      if (!this.docs.ContainsKey(typeFullName)) {
-        var docVisitor = new TypeLinkAndBuilder(currentType);
-        this.docs[typeFullName] = docVisitor;
-      }
-      foreach (var element in member.Elements) {
-        if (element is Summary) {
-          var text = element.ToText();
-          this.docs[typeFullName].Builder.Append(text)
-              .Append("\r\n");
-        }
-      }
+      DocGenUtil.FileEdit(this.filename, finalString);
     }
 
     public void HandleType(Type currentType, XmlDoc xdoc) {
-      if (!currentType.IsPublic) return;
+      if (!currentType.IsPublic) {
+ return;
+}
       var typeFullName = currentType.FullName;
       if (!this.docs.ContainsKey(typeFullName)) {
         var docVisitor = new TypeLinkAndBuilder(currentType);

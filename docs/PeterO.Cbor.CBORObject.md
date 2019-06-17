@@ -49,95 +49,95 @@ The DecodeFromBytes and Read methods can only read objects with a limited maximu
 The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 
 ### Member Summary
-* <code>[Abs](#Abs)</code> - Gets this object's absolute value.
-* <code>[Add_object](#Add_object)</code> -  Converts an object to a CBOR object and adds it to the end of this array.
-* <code>[Add_object_object](#Add_object_object)</code> -  Adds a new key and its value to this CBOR map, or adds the value if the key doesn't exist.
-* <code>[Add_PeterO_Cbor_CBORObject](#Add_PeterO_Cbor_CBORObject)</code> -  Adds a new object to the end of this array.
-* <code>[Addition_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject](#Addition_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject)</code> - Finds the sum of two CBOR numbers.
-* <code>[AsBoolean](#AsBoolean)</code> - Returns false if this object is False, Null, or Undefined; otherwise,true.
-* <code>[AsByte](#AsByte)</code> - Converts this object to a byte (0 to 255).
-* <code>[AsDecimal](#AsDecimal)</code> - Converts this object to a .
-* <code>[AsDouble](#AsDouble)</code> - Converts this object to a 64-bit floating point number.
-* <code>[AsEDecimal](#AsEDecimal)</code> - Converts this object to a decimal number.
-* <code>[AsEFloat](#AsEFloat)</code> - Converts this object to an arbitrary-precision binary floating point number.
-* <code>[AsEInteger](#AsEInteger)</code> - Converts this object to an arbitrary-precision integer.
-* <code>[AsERational](#AsERational)</code> - Converts this object to a rational number.
-* <code>[AsInt16](#AsInt16)</code> - Converts this object to a 16-bit signed integer.
-* <code>[AsInt32](#AsInt32)</code> - Converts this object to a 32-bit signed integer.
-* <code>[AsInt64](#AsInt64)</code> - Converts this object to a 64-bit signed integer.
-* <code>[AsSByte](#AsSByte)</code> - Converts this object to an 8-bit signed integer.
-* <code>[AsSingle](#AsSingle)</code> - Converts this object to a 32-bit floating point number.
-* <code>[AsString](#AsString)</code> - Gets the value of this object as a text string.
-* <code>[AsUInt16](#AsUInt16)</code> - Converts this object to a 16-bit unsigned integer.
-* <code>[AsUInt32](#AsUInt32)</code> - Converts this object to a 32-bit unsigned integer.
-* <code>[AsUInt64](#AsUInt64)</code> - Converts this object to a 64-bit unsigned integer.
-* <code>[CanFitInDouble](#CanFitInDouble)</code> - Returns whether this object's value can be converted to a 64-bit floating point number without its value being rounded to another numerical value.
-* <code>[CanFitInInt32](#CanFitInInt32)</code> - Returns whether this object's numerical value is an integer, is -(2^31) or greater, and is less than 2^31.
-* <code>[CanFitInInt64](#CanFitInInt64)</code> - Returns whether this object's numerical value is an integer, is -(2^63) or greater, and is less than 2^63.
-* <code>[CanFitInSingle](#CanFitInSingle)</code> - Returns whether this object's value can be converted to a 32-bit floating point number without its value being rounded to another numerical value.
-* <code>[CanTruncatedIntFitInInt32](#CanTruncatedIntFitInInt32)</code> - Returns whether this object's value, truncated to an integer, would be -(2^31) or greater, and less than 2^31.
-* <code>[CanTruncatedIntFitInInt64](#CanTruncatedIntFitInInt64)</code> - Returns whether this object's value, truncated to an integer, would be -(2^63) or greater, and less than 2^63.
-* <code>[Clear](#Clear)</code> - Removes all items from this CBOR array or all keys and values from this CBOR map.
-* <code>[CompareTo_PeterO_Cbor_CBORObject](#CompareTo_PeterO_Cbor_CBORObject)</code> - Compares two CBOR objects.
-* <code>[CompareToIgnoreTags_PeterO_Cbor_CBORObject](#CompareToIgnoreTags_PeterO_Cbor_CBORObject)</code> - Compares this object and another CBOR object, ignoring the tags they have, if any.
-* <code>[ContainsKey_object](#ContainsKey_object)</code> - Determines whether a value of the given key exists in this object.
-* <code>[ContainsKey_PeterO_Cbor_CBORObject](#ContainsKey_PeterO_Cbor_CBORObject)</code> - Determines whether a value of the given key exists in this object.
-* <code>[ContainsKey_string](#ContainsKey_string)</code> - Determines whether a value of the given key exists in this object.
+* <code>[Abs()](#Abs)</code> - Gets this object's absolute value.
+* <code>[Add(object)](#Add_object)</code> - Converts an object to a CBOR object and adds it to the end of this array.
+* <code>[Add(object, object)](#Add_object_object)</code> - Adds a new key and its value to this CBOR map, or adds the value if the key doesn't exist.
+* <code>[Add(PeterO.Cbor.CBORObject)](#Add_PeterO_Cbor_CBORObject)</code> - Adds a new object to the end of this array.
+* <code>[Addition(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#Addition_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject)</code> - Finds the sum of two CBOR numbers.
+* <code>[AsBoolean()](#AsBoolean)</code> - Returns false if this object is False, Null, or Undefined; otherwise,true.
+* <code>[AsByte()](#AsByte)</code> - Converts this object to a byte (0 to 255).
+* <code>[AsDecimal()](#AsDecimal)</code> - Converts this object to a .
+* <code>[AsDouble()](#AsDouble)</code> - Converts this object to a 64-bit floating point number.
+* <code>[AsEDecimal()](#AsEDecimal)</code> - Converts this object to a decimal number.
+* <code>[AsEFloat()](#AsEFloat)</code> - Converts this object to an arbitrary-precision binary floating point number.
+* <code>[AsEInteger()](#AsEInteger)</code> - Converts this object to an arbitrary-precision integer.
+* <code>[AsERational()](#AsERational)</code> - Converts this object to a rational number.
+* <code>[AsInt16()](#AsInt16)</code> - Converts this object to a 16-bit signed integer.
+* <code>[AsInt32()](#AsInt32)</code> - Converts this object to a 32-bit signed integer.
+* <code>[AsInt64()](#AsInt64)</code> - Converts this object to a 64-bit signed integer.
+* <code>[AsSByte()](#AsSByte)</code> - Converts this object to an 8-bit signed integer.
+* <code>[AsSingle()](#AsSingle)</code> - Converts this object to a 32-bit floating point number.
+* <code>[AsString()](#AsString)</code> - Gets the value of this object as a text string.
+* <code>[AsUInt16()](#AsUInt16)</code> - Converts this object to a 16-bit unsigned integer.
+* <code>[AsUInt32()](#AsUInt32)</code> - Converts this object to a 32-bit unsigned integer.
+* <code>[AsUInt64()](#AsUInt64)</code> - Converts this object to a 64-bit unsigned integer.
+* <code>[CanFitInDouble()](#CanFitInDouble)</code> - Returns whether this object's value can be converted to a 64-bit floating point number without its value being rounded to another numerical value.
+* <code>[CanFitInInt32()](#CanFitInInt32)</code> - Returns whether this object's numerical value is an integer, is -(2^31) or greater, and is less than 2^31.
+* <code>[CanFitInInt64()](#CanFitInInt64)</code> - Returns whether this object's numerical value is an integer, is -(2^63) or greater, and is less than 2^63.
+* <code>[CanFitInSingle()](#CanFitInSingle)</code> - Returns whether this object's value can be converted to a 32-bit floating point number without its value being rounded to another numerical value.
+* <code>[CanTruncatedIntFitInInt32()](#CanTruncatedIntFitInInt32)</code> - Returns whether this object's value, truncated to an integer, would be -(2^31) or greater, and less than 2^31.
+* <code>[CanTruncatedIntFitInInt64()](#CanTruncatedIntFitInInt64)</code> - Returns whether this object's value, truncated to an integer, would be -(2^63) or greater, and less than 2^63.
+* <code>[Clear()](#Clear)</code> - Removes all items from this CBOR array or all keys and values from this CBOR map.
+* <code>[CompareTo(PeterO.Cbor.CBORObject)](#CompareTo_PeterO_Cbor_CBORObject)</code> - Compares two CBOR objects.
+* <code>[CompareToIgnoreTags(PeterO.Cbor.CBORObject)](#CompareToIgnoreTags_PeterO_Cbor_CBORObject)</code> - Compares this object and another CBOR object, ignoring the tags they have, if any.
+* <code>[ContainsKey(object)](#ContainsKey_object)</code> - Determines whether a value of the given key exists in this object.
+* <code>[ContainsKey(PeterO.Cbor.CBORObject)](#ContainsKey_PeterO_Cbor_CBORObject)</code> - Determines whether a value of the given key exists in this object.
+* <code>[ContainsKey(string)](#ContainsKey_string)</code> - Determines whether a value of the given key exists in this object.
 * <code>[Count](#Count)</code> - Gets the number of keys in this map, or the number of items in this array, or 0 if this item is neither an array nor a map.
-* <code>[DecodeFromBytes_byte](#DecodeFromBytes_byte)</code> -  Generates a CBOR object from an array of CBOR-encoded bytes.
-* <code>[DecodeFromBytes_byte_PeterO_Cbor_CBOREncodeOptions](#DecodeFromBytes_byte_PeterO_Cbor_CBOREncodeOptions)</code> - Generates a CBOR object from an array of CBOR-encoded bytes, using the givenCBOREncodeOptions object to control the decoding process.
-* <code>[Divide_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject](#Divide_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject)</code> - Divides a CBORObject object by the value of a CBORObject object.
-* <code>[EncodeToBytes](#EncodeToBytes)</code> -  Writes the binary representation of this CBOR object and returns a byte array of that representation.
-* <code>[EncodeToBytes_PeterO_Cbor_CBOREncodeOptions](#EncodeToBytes_PeterO_Cbor_CBOREncodeOptions)</code> - Writes the binary representation of this CBOR object and returns a byte array of that representation, using the specified options for encoding the object to CBOR format.
-* <code>[Equals_object](#Equals_object)</code> - Determines whether this object and another object are equal and have the same type.
-* <code>[Equals_PeterO_Cbor_CBORObject](#Equals_PeterO_Cbor_CBORObject)</code> - Compares the equality of two CBOR objects.
-* <code>[False](#False)</code> - Represents the value false.
-* <code>[FromJSONString_string](#FromJSONString_string)</code> -  Generates a CBOR object from a text string in JavaScript Object Notation (JSON) format.
-* <code>[FromJSONString_string_PeterO_Cbor_CBOREncodeOptions](#FromJSONString_string_PeterO_Cbor_CBOREncodeOptions)</code> - Generates a CBOR object from a text string in JavaScript Object Notation (JSON) format, using the specified options to control the decoding process.
-* <code>[FromObject_bool](#FromObject_bool)</code> - Returns the CBOR true value or false value, depending on "value".
-* <code>[FromObject_byte](#FromObject_byte)</code> - Generates a CBOR object from a byte (0 to 255).
-* <code>[FromObject_double](#FromObject_double)</code> - Generates a CBOR object from a 64-bit floating-point number.
-* <code>[FromObject_float](#FromObject_float)</code> - Generates a CBOR object from a 32-bit floating-point number.
-* <code>[FromObject_int](#FromObject_int)</code> - Generates a CBOR object from a 32-bit signed integer.
-* <code>[FromObject_long](#FromObject_long)</code> - Generates a CBOR object from a 64-bit signed integer.
-* <code>[FromObject_object](#FromObject_object)</code> - Generates a CBORObject from an arbitrary object.
-* <code>[FromObject_object_PeterO_Cbor_CBORTypeMapper](#FromObject_object_PeterO_Cbor_CBORTypeMapper)</code> - Generates a CBORObject from an arbitrary object.
-* <code>[FromObject_object_PeterO_Cbor_CBORTypeMapper_PeterO_Cbor_PODOptions](#FromObject_object_PeterO_Cbor_CBORTypeMapper_PeterO_Cbor_PODOptions)</code> -  Generates a CBORObject from an arbitrary object, using the given options to control how certain objects are converted to CBOR objects.
-* <code>[FromObject_object_PeterO_Cbor_PODOptions](#FromObject_object_PeterO_Cbor_PODOptions)</code> - Generates a CBORObject from an arbitrary object.
-* <code>[FromObject_PeterO_Cbor_CBORObject](#FromObject_PeterO_Cbor_CBORObject)</code> - Generates a CBOR object from a CBOR object.
-* <code>[FromObject_PeterO_Numbers_EDecimal](#FromObject_PeterO_Numbers_EDecimal)</code> - Generates a CBOR object from a decimal number.
-* <code>[FromObject_PeterO_Numbers_EFloat](#FromObject_PeterO_Numbers_EFloat)</code> - Generates a CBOR object from an arbitrary-precision binary floating-point number.
-* <code>[FromObject_PeterO_Numbers_EInteger](#FromObject_PeterO_Numbers_EInteger)</code> - Generates a CBOR object from an arbitrary-precision integer.
-* <code>[FromObject_PeterO_Numbers_ERational](#FromObject_PeterO_Numbers_ERational)</code> - Generates a CBOR object from a rational number.
-* <code>[FromObject_sbyte](#FromObject_sbyte)</code> - Converts a signed 8-bit integer to a CBOR object.
-* <code>[FromObject_short](#FromObject_short)</code> - Generates a CBOR object from a 16-bit signed integer.
-* <code>[FromObject_string](#FromObject_string)</code> - Generates a CBOR object from a text string.
-* <code>[FromObject_System_Decimal](#FromObject_System_Decimal)</code> - Converts a .
-* <code>[FromObject_uint](#FromObject_uint)</code> - Converts a 32-bit unsigned integer to a CBOR object.
-* <code>[FromObject_ulong](#FromObject_ulong)</code> - Converts a 64-bit unsigned integer to a CBOR object.
-* <code>[FromObject_ushort](#FromObject_ushort)</code> - Converts a 16-bit unsigned integer to a CBOR object.
-* <code>[FromObjectAndTag_object_int](#FromObjectAndTag_object_int)</code> - Generates a CBOR object from an arbitrary object and gives the resulting object a tag.
-* <code>[FromObjectAndTag_object_PeterO_Numbers_EInteger](#FromObjectAndTag_object_PeterO_Numbers_EInteger)</code> - Generates a CBOR object from an arbitrary object and gives the resulting object a tag.
-* <code>[FromObjectAndTag_object_ulong](#FromObjectAndTag_object_ulong)</code> - Generates a CBOR object from an arbitrary object and gives the resulting object a tag.
-* <code>[FromSimpleValue_int](#FromSimpleValue_int)</code> - Creates a CBOR object from a simple value number.
-* <code>[GetAllTags](#GetAllTags)</code> - Gets a list of all tags, from outermost to innermost.
-* <code>[GetByteString](#GetByteString)</code> - Gets the backing byte array used in this CBOR object, if this object is a byte string, without copying the data to a new byte array.
-* <code>[GetHashCode](#GetHashCode)</code> - Calculates the hash code of this object.
-* <code>[GetOrDefault_object_PeterO_Cbor_CBORObject](#GetOrDefault_object_PeterO_Cbor_CBORObject)</code> - Gets the value of a CBOR object by integer index in this array or by CBOR object key in this map, or a default value if that value is not found.
-* <code>[HasMostOuterTag_int](#HasMostOuterTag_int)</code> - Returns whether this object has an outermost tag and that tag is of the given number.
-* <code>[HasMostOuterTag_PeterO_Numbers_EInteger](#HasMostOuterTag_PeterO_Numbers_EInteger)</code> - Returns whether this object has an outermost tag and that tag is of the given number.
-* <code>[HasTag_int](#HasTag_int)</code> - Returns whether this object has a tag of the given number.
-* <code>[HasTag_PeterO_Numbers_EInteger](#HasTag_PeterO_Numbers_EInteger)</code> - Returns whether this object has a tag of the given number.
-* <code>[Insert_int_object](#Insert_int_object)</code> - Inserts an object at the specified position in this CBOR array.
+* <code>[DecodeFromBytes(byte[])](#DecodeFromBytes_byte)</code> - Generates a CBOR object from an array of CBOR-encoded bytes.
+* <code>[DecodeFromBytes(byte[], PeterO.Cbor.CBOREncodeOptions)](#DecodeFromBytes_byte_PeterO_Cbor_CBOREncodeOptions)</code> - Generates a CBOR object from an array of CBOR-encoded bytes, using the given CBOREncodeOptions object to control the decoding process.
+* <code>[Divide(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#Divide_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject)</code> - Divides a CBORObject object by the value of a CBORObject object.
+* <code>[EncodeToBytes()](#EncodeToBytes)</code> - Writes the binary representation of this CBOR object and returns a byte array of that representation.
+* <code>[EncodeToBytes(PeterO.Cbor.CBOREncodeOptions)](#EncodeToBytes_PeterO_Cbor_CBOREncodeOptions)</code> - Writes the binary representation of this CBOR object and returns a byte array of that representation, using the specified options for encoding the object to CBOR format.
+* <code>[Equals(object)](#Equals_object)</code> - Determines whether this object and another object are equal and have the same type.
+* <code>[Equals(PeterO.Cbor.CBORObject)](#Equals_PeterO_Cbor_CBORObject)</code> - Compares the equality of two CBOR objects.
+* <code>[public static readonly PeterO.Cbor.CBORObject False;](#False)</code> - Represents the value false.
+* <code>[FromJSONString(string)](#FromJSONString_string)</code> - Generates a CBOR object from a text string in JavaScript Object Notation (JSON) format.
+* <code>[FromJSONString(string, PeterO.Cbor.CBOREncodeOptions)](#FromJSONString_string_PeterO_Cbor_CBOREncodeOptions)</code> - Generates a CBOR object from a text string in JavaScript Object Notation (JSON) format, using the specified options to control the decoding process.
+* <code>[FromObject(bool)](#FromObject_bool)</code> - Returns the CBOR true value or false value, depending on "value".
+* <code>[FromObject(byte[])](#FromObject_byte)</code> - Generates a CBOR object from a byte (0 to 255).
+* <code>[FromObject(double)](#FromObject_double)</code> - Generates a CBOR object from a 64-bit floating-point number.
+* <code>[FromObject(float)](#FromObject_float)</code> - Generates a CBOR object from a 32-bit floating-point number.
+* <code>[FromObject(int[])](#FromObject_int)</code> - Generates a CBOR object from a 32-bit signed integer.
+* <code>[FromObject(long[])](#FromObject_long)</code> - Generates a CBOR object from a 64-bit signed integer.
+* <code>[FromObject(object)](#FromObject_object)</code> - Generates a CBORObject from an arbitrary object.
+* <code>[FromObject(object, PeterO.Cbor.CBORTypeMapper)](#FromObject_object_PeterO_Cbor_CBORTypeMapper)</code> - Generates a CBORObject from an arbitrary object.
+* <code>[FromObject(object, PeterO.Cbor.CBORTypeMapper, PeterO.Cbor.PODOptions)](#FromObject_object_PeterO_Cbor_CBORTypeMapper_PeterO_Cbor_PODOptions)</code> - Generates a CBORObject from an arbitrary object, using the given options to control how certain objects are converted to CBOR objects.
+* <code>[FromObject(object, PeterO.Cbor.PODOptions)](#FromObject_object_PeterO_Cbor_PODOptions)</code> - Generates a CBORObject from an arbitrary object.
+* <code>[FromObject(PeterO.Cbor.CBORObject[])](#FromObject_PeterO_Cbor_CBORObject)</code> - Generates a CBOR object from a CBOR object.
+* <code>[FromObject(PeterO.Numbers.EDecimal)](#FromObject_PeterO_Numbers_EDecimal)</code> - Generates a CBOR object from a decimal number.
+* <code>[FromObject(PeterO.Numbers.EFloat)](#FromObject_PeterO_Numbers_EFloat)</code> - Generates a CBOR object from an arbitrary-precision binary floating-point number.
+* <code>[FromObject(PeterO.Numbers.EInteger)](#FromObject_PeterO_Numbers_EInteger)</code> - Generates a CBOR object from an arbitrary-precision integer.
+* <code>[FromObject(PeterO.Numbers.ERational)](#FromObject_PeterO_Numbers_ERational)</code> - Generates a CBOR object from a rational number.
+* <code>[FromObject(sbyte)](#FromObject_sbyte)</code> - Converts a signed 8-bit integer to a CBOR object.
+* <code>[FromObject(short)](#FromObject_short)</code> - Generates a CBOR object from a 16-bit signed integer.
+* <code>[FromObject(string)](#FromObject_string)</code> - Generates a CBOR object from a text string.
+* <code>[FromObject(System.Decimal)](#FromObject_System_Decimal)</code> - Converts a .
+* <code>[FromObject(uint)](#FromObject_uint)</code> - Converts a 32-bit unsigned integer to a CBOR object.
+* <code>[FromObject(ulong)](#FromObject_ulong)</code> - Converts a 64-bit unsigned integer to a CBOR object.
+* <code>[FromObject(ushort)](#FromObject_ushort)</code> - Converts a 16-bit unsigned integer to a CBOR object.
+* <code>[FromObjectAndTag(object, int)](#FromObjectAndTag_object_int)</code> - Generates a CBOR object from an arbitrary object and gives the resulting object a tag.
+* <code>[FromObjectAndTag(object, PeterO.Numbers.EInteger)](#FromObjectAndTag_object_PeterO_Numbers_EInteger)</code> - Generates a CBOR object from an arbitrary object and gives the resulting object a tag.
+* <code>[FromObjectAndTag(object, ulong)](#FromObjectAndTag_object_ulong)</code> - Generates a CBOR object from an arbitrary object and gives the resulting object a tag.
+* <code>[FromSimpleValue(int)](#FromSimpleValue_int)</code> - Creates a CBOR object from a simple value number.
+* <code>[GetAllTags()](#GetAllTags)</code> - Gets a list of all tags, from outermost to innermost.
+* <code>[GetByteString()](#GetByteString)</code> - Gets the backing byte array used in this CBOR object, if this object is a byte string, without copying the data to a new byte array.
+* <code>[GetHashCode()](#GetHashCode)</code> - Calculates the hash code of this object.
+* <code>[GetOrDefault(object, PeterO.Cbor.CBORObject)](#GetOrDefault_object_PeterO_Cbor_CBORObject)</code> - Gets the value of a CBOR object by integer index in this array or by CBOR object key in this map, or a default value if that value is not found.
+* <code>[HasMostOuterTag(int)](#HasMostOuterTag_int)</code> - Returns whether this object has an outermost tag and that tag is of the given number.
+* <code>[HasMostOuterTag(PeterO.Numbers.EInteger)](#HasMostOuterTag_PeterO_Numbers_EInteger)</code> - Returns whether this object has an outermost tag and that tag is of the given number.
+* <code>[HasTag(int)](#HasTag_int)</code> - Returns whether this object has a tag of the given number.
+* <code>[HasTag(PeterO.Numbers.EInteger)](#HasTag_PeterO_Numbers_EInteger)</code> - Returns whether this object has a tag of the given number.
+* <code>[Insert(int, object)](#Insert_int_object)</code> - Inserts an object at the specified position in this CBOR array.
 * <code>[IsFalse](#IsFalse)</code> - Gets a value indicating whether this value is a CBOR false value.
 * <code>[IsFinite](#IsFinite)</code> - Gets a value indicating whether this CBOR object represents a finite number.
-* <code>[IsInfinity](#IsInfinity)</code> - Gets a value indicating whether this CBOR object represents infinity.
+* <code>[IsInfinity()](#IsInfinity)</code> - Gets a value indicating whether this CBOR object represents infinity.
 * <code>[IsIntegral](#IsIntegral)</code> - Gets a value indicating whether this object represents an integer number, that is, a number without a fractional part.
-* <code>[IsNaN](#IsNaN)</code> - Gets a value indicating whether this CBOR object represents a not-a-number value (as opposed to whether this object's type is not a number type).
+* <code>[IsNaN()](#IsNaN)</code> - Gets a value indicating whether this CBOR object represents a not-a-number value (as opposed to whether this object's type is not a number type).
 * <code>[IsNegative](#IsNegative)</code> - Gets a value indicating whether this object is a negative number.
-* <code>[IsNegativeInfinity](#IsNegativeInfinity)</code> - Gets a value indicating whether this CBOR object represents negative infinity.
+* <code>[IsNegativeInfinity()](#IsNegativeInfinity)</code> - Gets a value indicating whether this CBOR object represents negative infinity.
 * <code>[IsNull](#IsNull)</code> - Gets a value indicating whether this value is a CBOR null value.
-* <code>[IsPositiveInfinity](#IsPositiveInfinity)</code> - Gets a value indicating whether this CBOR object represents positive infinity.
+* <code>[IsPositiveInfinity()](#IsPositiveInfinity)</code> - Gets a value indicating whether this CBOR object represents positive infinity.
 * <code>[IsTagged](#IsTagged)</code> - Gets a value indicating whether this data item has at least one tag.
 * <code>[IsTrue](#IsTrue)</code> - Gets a value indicating whether this value is a CBOR true value.
 * <code>[IsUndefined](#IsUndefined)</code> - Gets a value indicating whether this value is a CBOR undefined value.
@@ -145,79 +145,82 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[Keys](#Keys)</code> - Gets a collection of the keys of this CBOR object in an undefined order.
 * <code>[MostInnerTag](#MostInnerTag)</code> - Gets the last defined tag for this CBOR data item, or -1 if the item is untagged.
 * <code>[MostOuterTag](#MostOuterTag)</code> - Gets the outermost tag for this CBOR data item, or -1 if the item is untagged.
-* <code>[Multiply_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject](#Multiply_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject)</code> - Multiplies two CBOR numbers.
-* <code>[NaN](#NaN)</code> - A not-a-number value.
-* <code>[Negate](#Negate)</code> - Gets this object's value with the sign reversed.
-* <code>[NegativeInfinity](#NegativeInfinity)</code> - The value negative infinity.
-* <code>[NewArray](#NewArray)</code> - Creates a new empty CBOR array.
-* <code>[NewMap](#NewMap)</code> - Creates a new empty CBOR map.
-* <code>[Null](#Null)</code> - Represents the value null.
-* <code>[op_Addition](#op_Addition)</code> - Adds two CBOR objects and returns their result.
-* <code>[op_Division](#op_Division)</code> - Divides a CBORObject object by the value of a CBORObject object.
-* <code>[op_Modulus](#op_Modulus)</code> - Finds the remainder that results when a CBORObject object is divided by the value of a CBORObject object.
-* <code>[op_Multiply](#op_Multiply)</code> - Multiplies a CBORObject object by the value of a CBORObject object.
-* <code>[op_Subtraction](#op_Subtraction)</code> - Subtracts a CBORObject object from a CBORObject object.
-* <code>[PositiveInfinity](#PositiveInfinity)</code> - The value positive infinity.
-* <code>[Read_System_IO_Stream](#Read_System_IO_Stream)</code> -  Reads an object in CBOR format from a data stream.
-* <code>[Read_System_IO_Stream_PeterO_Cbor_CBOREncodeOptions](#Read_System_IO_Stream_PeterO_Cbor_CBOREncodeOptions)</code> - Reads an object in CBOR format from a data stream, using the specified options to control the decoding process.
-* <code>[ReadJSON_System_IO_Stream](#ReadJSON_System_IO_Stream)</code> - Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format.
-* <code>[ReadJSON_System_IO_Stream_PeterO_Cbor_CBOREncodeOptions](#ReadJSON_System_IO_Stream_PeterO_Cbor_CBOREncodeOptions)</code> - Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format, using the specified options to control the decoding process.
-* <code>[Remainder_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject](#Remainder_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject)</code> - Finds the remainder that results when a CBORObject object is divided by the value of a CBORObject object.
-* <code>[Remove_object](#Remove_object)</code> - If this object is an array, removes the first instance of the specified item (once converted to a CBOR object) from the array.
-* <code>[Remove_PeterO_Cbor_CBORObject](#Remove_PeterO_Cbor_CBORObject)</code> - If this object is an array, removes the first instance of the specified item from the array.
-* <code>[RemoveAt_int](#RemoveAt_int)</code> - Removes the item at the given index of this CBOR array.
-* <code>[Set_object_object](#Set_object_object)</code> - Maps an object to a key in this CBOR map, or adds the value if the key doesn't exist.
+* <code>[Multiply(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#Multiply_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject)</code> - Multiplies two CBOR numbers.
+* <code>[public static readonly PeterO.Cbor.CBORObject NaN;](#NaN)</code> - A not-a-number value.
+* <code>[Negate()](#Negate)</code> - Gets this object's value with the sign reversed.
+* <code>[public static readonly PeterO.Cbor.CBORObject NegativeInfinity;](#NegativeInfinity)</code> - The value negative infinity.
+* <code>[NewArray()](#NewArray)</code> - Creates a new empty CBOR array.
+* <code>[NewMap()](#NewMap)</code> - Creates a new empty CBOR map.
+* <code>[public static readonly PeterO.Cbor.CBORObject Null;](#Null)</code> - Represents the value null.
+* <code>[PeterO.Cbor.CBORObject operator +(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#op_Addition)</code> - Adds two CBOR objects and returns their result.
+* <code>[PeterO.Cbor.CBORObject operator /(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#op_Division)</code> - Divides a CBORObject object by the value of a CBORObject object.
+* <code>[PeterO.Cbor.CBORObject operator %(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#op_Modulus)</code> - Finds the remainder that results when a CBORObject object is divided by the value of a CBORObject object.
+* <code>[PeterO.Cbor.CBORObject operator *(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#op_Multiply)</code> - Multiplies a CBORObject object by the value of a CBORObject object.
+* <code>[PeterO.Cbor.CBORObject operator -(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#op_Subtraction)</code> - Subtracts a CBORObject object from a CBORObject object.
+* <code>[public static readonly PeterO.Cbor.CBORObject PositiveInfinity;](#PositiveInfinity)</code> - The value positive infinity.
+* <code>[Read(System.IO.Stream)](#Read_System_IO_Stream)</code> - Reads an object in CBOR format from a data stream.
+* <code>[Read(System.IO.Stream, PeterO.Cbor.CBOREncodeOptions)](#Read_System_IO_Stream_PeterO_Cbor_CBOREncodeOptions)</code> - Reads an object in CBOR format from a data stream, using the specified options to control the decoding process.
+* <code>[ReadJSON(System.IO.Stream)](#ReadJSON_System_IO_Stream)</code> - Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format.
+* <code>[ReadJSON(System.IO.Stream, PeterO.Cbor.CBOREncodeOptions)](#ReadJSON_System_IO_Stream_PeterO_Cbor_CBOREncodeOptions)</code> - Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format, using the specified options to control the decoding process.
+* <code>[Remainder(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#Remainder_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject)</code> - Finds the remainder that results when a CBORObject object is divided by the value of a CBORObject object.
+* <code>[Remove(object)](#Remove_object)</code> - If this object is an array, removes the first instance of the specified item (once converted to a CBOR object) from the array.
+* <code>[Remove(PeterO.Cbor.CBORObject)](#Remove_PeterO_Cbor_CBORObject)</code> - If this object is an array, removes the first instance of the specified item from the array.
+* <code>[RemoveAt(int)](#RemoveAt_int)</code> - Removes the item at the given index of this CBOR array.
+* <code>[Set(object, object)](#Set_object_object)</code> - Maps an object to a key in this CBOR map, or adds the value if the key doesn't exist.
 * <code>[Sign](#Sign)</code> - Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
 * <code>[SimpleValue](#SimpleValue)</code> - Gets the simple value ID of this object, or -1 if this object is not a simple value (including if the value is a floating-point number).
-* <code>[Subtract_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject](#Subtract_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject)</code> - Finds the difference between two CBOR number objects.
-* <code>[ToJSONString](#ToJSONString)</code> - Converts this object to a string in JavaScript Object Notation (JSON) format.
-* <code>[ToJSONString_PeterO_Cbor_JSONOptions](#ToJSONString_PeterO_Cbor_JSONOptions)</code> - Converts this object to a string in JavaScript Object Notation (JSON) format, using the specified options to control the encoding process.
-* <code>[ToObject_System_Type](#ToObject_System_Type)</code> - Converts this CBOR object to an object of an arbitrary type.
-* <code>[ToObject_System_Type_PeterO_Cbor_CBORTypeMapper](#ToObject_System_Type_PeterO_Cbor_CBORTypeMapper)</code> - Converts this CBOR object to an object of an arbitrary type.
-* <code>[ToObject_System_Type_PeterO_Cbor_CBORTypeMapper_PeterO_Cbor_PODOptions](#ToObject_System_Type_PeterO_Cbor_CBORTypeMapper_PeterO_Cbor_PODOptions)</code> -  Converts this CBOR object to an object of an arbitrary type.
-* <code>[ToObject_System_Type_PeterO_Cbor_PODOptions](#ToObject_System_Type_PeterO_Cbor_PODOptions)</code> - Converts this CBOR object to an object of an arbitrary type.
-* <code>[ToObject_T](#ToObject_T)</code> -  Converts this CBOR object to an object of an arbitrary type.
-* <code>[ToObject_T_PeterO_Cbor_CBORTypeMapper](#ToObject_T_PeterO_Cbor_CBORTypeMapper)</code> -  Converts this CBOR object to an object of an arbitrary type.
-* <code>[ToObject_T_PeterO_Cbor_CBORTypeMapper_PeterO_Cbor_PODOptions](#ToObject_T_PeterO_Cbor_CBORTypeMapper_PeterO_Cbor_PODOptions)</code> -  Converts this CBOR object to an object of an arbitrary type.
-* <code>[ToObject_T_PeterO_Cbor_PODOptions](#ToObject_T_PeterO_Cbor_PODOptions)</code> -  Converts this CBOR object to an object of an arbitrary type.
-* <code>[ToString](#ToString)</code> - Returns this CBOR object in string form.
-* <code>[True](#True)</code> - Represents the value true.
+* <code>[Subtract(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#Subtract_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject)</code> - Finds the difference between two CBOR number objects.
+* <code>[this[int]](#this_int)</code> - Gets the value of a CBOR object by integer index in this array or by integer key in this map.
+* <code>[this[PeterO.Cbor.CBORObject]](#this_PeterO_Cbor_CBORObject)</code> - Gets the value of a CBOR object by integer index in this array or by CBOR object key in this map.
+* <code>[this[string]](#this_string)</code> - Gets the value of a CBOR object in this map, using a string as the key.
+* <code>[ToJSONString()](#ToJSONString)</code> - Converts this object to a string in JavaScript Object Notation (JSON) format.
+* <code>[ToJSONString(PeterO.Cbor.JSONOptions)](#ToJSONString_PeterO_Cbor_JSONOptions)</code> - Converts this object to a string in JavaScript Object Notation (JSON) format, using the specified options to control the encoding process.
+* <code>[ToObject(System.Type)](#ToObject_System_Type)</code> - Converts this CBOR object to an object of an arbitrary type.
+* <code>[ToObject(System.Type, PeterO.Cbor.CBORTypeMapper)](#ToObject_System_Type_PeterO_Cbor_CBORTypeMapper)</code> - Converts this CBOR object to an object of an arbitrary type.
+* <code>[ToObject(System.Type, PeterO.Cbor.CBORTypeMapper, PeterO.Cbor.PODOptions)](#ToObject_System_Type_PeterO_Cbor_CBORTypeMapper_PeterO_Cbor_PODOptions)</code> - Converts this CBOR object to an object of an arbitrary type.
+* <code>[ToObject(System.Type, PeterO.Cbor.PODOptions)](#ToObject_System_Type_PeterO_Cbor_PODOptions)</code> - Converts this CBOR object to an object of an arbitrary type.
+* <code>[ToObject&lt;T&gt;()](#ToObject_T)</code> - Converts this CBOR object to an object of an arbitrary type.
+* <code>[ToObject&lt;T&gt;(PeterO.Cbor.CBORTypeMapper)](#ToObject_T_PeterO_Cbor_CBORTypeMapper)</code> - Converts this CBOR object to an object of an arbitrary type.
+* <code>[ToObject&lt;T&gt;(PeterO.Cbor.CBORTypeMapper, PeterO.Cbor.PODOptions)](#ToObject_T_PeterO_Cbor_CBORTypeMapper_PeterO_Cbor_PODOptions)</code> - Converts this CBOR object to an object of an arbitrary type.
+* <code>[ToObject&lt;T&gt;(PeterO.Cbor.PODOptions)](#ToObject_T_PeterO_Cbor_PODOptions)</code> - Converts this CBOR object to an object of an arbitrary type.
+* <code>[ToString()](#ToString)</code> - Returns this CBOR object in string form.
+* <code>[public static readonly PeterO.Cbor.CBORObject True;](#True)</code> - Represents the value true.
 * <code>[Type](#Type)</code> - Gets the general data type of this CBOR object.
-* <code>[Undefined](#Undefined)</code> - Represents the value undefined.
-* <code>[Untag](#Untag)</code> - Gets an object with the same value as this one but without the tags it has, if any.
-* <code>[UntagOne](#UntagOne)</code> - Gets an object with the same value as this one but without this object's outermost tag, if any.
+* <code>[public static readonly PeterO.Cbor.CBORObject Undefined;](#Undefined)</code> - Represents the value undefined.
+* <code>[Untag()](#Untag)</code> - Gets an object with the same value as this one but without the tags it has, if any.
+* <code>[UntagOne()](#UntagOne)</code> - Gets an object with the same value as this one but without this object's outermost tag, if any.
 * <code>[Values](#Values)</code> - Gets a collection of the values of this CBOR object, if it's a map or an array.
-* <code>[Write_bool_System_IO_Stream](#Write_bool_System_IO_Stream)</code> - Writes a Boolean value in CBOR format to a data stream.
-* <code>[Write_byte_System_IO_Stream](#Write_byte_System_IO_Stream)</code> - Writes a byte (0 to 255) in CBOR format to a data stream.
-* <code>[Write_double_System_IO_Stream](#Write_double_System_IO_Stream)</code> - Writes a 64-bit floating-point number in CBOR format to a data stream.
-* <code>[Write_float_System_IO_Stream](#Write_float_System_IO_Stream)</code> - Writes a 32-bit floating-point number in CBOR format to a data stream.
-* <code>[Write_int_System_IO_Stream](#Write_int_System_IO_Stream)</code> - Writes a 32-bit signed integer in CBOR format to a data stream.
-* <code>[Write_long_System_IO_Stream](#Write_long_System_IO_Stream)</code> - Writes a 64-bit signed integer in CBOR format to a data stream.
-* <code>[Write_object_System_IO_Stream](#Write_object_System_IO_Stream)</code> -  Writes a CBOR object to a CBOR data stream.
-* <code>[Write_object_System_IO_Stream_PeterO_Cbor_CBOREncodeOptions](#Write_object_System_IO_Stream_PeterO_Cbor_CBOREncodeOptions)</code> - Writes an arbitrary object to a CBOR data stream, using the specified options for controlling how the object is encoded to CBOR data format.
-* <code>[Write_PeterO_Cbor_CBORObject_System_IO_Stream](#Write_PeterO_Cbor_CBORObject_System_IO_Stream)</code> - Writes a CBOR object to a CBOR data stream.
-* <code>[Write_PeterO_Numbers_EDecimal_System_IO_Stream](#Write_PeterO_Numbers_EDecimal_System_IO_Stream)</code> - Writes a decimal floating-point number in CBOR format to a data stream, as follows:If the value is null, writes the byte 0xF6.
-* <code>[Write_PeterO_Numbers_EFloat_System_IO_Stream](#Write_PeterO_Numbers_EFloat_System_IO_Stream)</code> - Writes a binary floating-point number in CBOR format to a data stream as follows:If the value is null, writes the byte 0xF6.
-* <code>[Write_PeterO_Numbers_EInteger_System_IO_Stream](#Write_PeterO_Numbers_EInteger_System_IO_Stream)</code> - Writes a big integer in CBOR format to a data stream.
-* <code>[Write_PeterO_Numbers_ERational_System_IO_Stream](#Write_PeterO_Numbers_ERational_System_IO_Stream)</code> - Writes a rational number in CBOR format to a data stream.
-* <code>[Write_sbyte_System_IO_Stream](#Write_sbyte_System_IO_Stream)</code> - Writes an 8-bit signed integer in CBOR format to a data stream.
-* <code>[Write_short_System_IO_Stream](#Write_short_System_IO_Stream)</code> - Writes a 16-bit signed integer in CBOR format to a data stream.
-* <code>[Write_string_System_IO_Stream](#Write_string_System_IO_Stream)</code> -  Writes a string in CBOR format to a data stream.
-* <code>[Write_string_System_IO_Stream_PeterO_Cbor_CBOREncodeOptions](#Write_string_System_IO_Stream_PeterO_Cbor_CBOREncodeOptions)</code> - Writes a string in CBOR format to a data stream, using the given options to control the encoding process.
-* <code>[Write_uint_System_IO_Stream](#Write_uint_System_IO_Stream)</code> - Writes a 32-bit unsigned integer in CBOR format to a data stream.
-* <code>[Write_ulong_System_IO_Stream](#Write_ulong_System_IO_Stream)</code> - Writes a 64-bit unsigned integer in CBOR format to a data stream.
-* <code>[Write_ushort_System_IO_Stream](#Write_ushort_System_IO_Stream)</code> - Writes a 16-bit unsigned integer in CBOR format to a data stream.
-* <code>[WriteJSON_object_System_IO_Stream](#WriteJSON_object_System_IO_Stream)</code> - Converts an arbitrary object to a string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8.
-* <code>[WriteJSONTo_System_IO_Stream](#WriteJSONTo_System_IO_Stream)</code> - Converts this object to a string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8.
-* <code>[WriteJSONTo_System_IO_Stream_PeterO_Cbor_JSONOptions](#WriteJSONTo_System_IO_Stream_PeterO_Cbor_JSONOptions)</code> - Converts this object to a string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8, using the given JSON options to control the encoding process.
-* <code>[WriteTo_System_IO_Stream](#WriteTo_System_IO_Stream)</code> -  Writes this CBOR object to a data stream.
-* <code>[WriteTo_System_IO_Stream_PeterO_Cbor_CBOREncodeOptions](#WriteTo_System_IO_Stream_PeterO_Cbor_CBOREncodeOptions)</code> - Writes this CBOR object to a data stream, using the specified options for encoding the data to CBOR format.
-* <code>[WriteValue_System_IO_Stream_int_int](#WriteValue_System_IO_Stream_int_int)</code> - Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as a 32-bit signed integer.
-* <code>[WriteValue_System_IO_Stream_int_long](#WriteValue_System_IO_Stream_int_long)</code> - Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as a 64-bit signed integer.
-* <code>[WriteValue_System_IO_Stream_int_PeterO_Numbers_EInteger](#WriteValue_System_IO_Stream_int_PeterO_Numbers_EInteger)</code> - Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as an arbitrary-precision integer.
-* <code>[WriteValue_System_IO_Stream_int_uint](#WriteValue_System_IO_Stream_int_uint)</code> - Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as a 32-bit unsigned integer.
-* <code>[WriteValue_System_IO_Stream_int_ulong](#WriteValue_System_IO_Stream_int_ulong)</code> - Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as a 64-bit unsigned integer.
-* <code>[Zero](#Zero)</code> - Gets a CBOR object for the number zero.
+* <code>[Write(bool, System.IO.Stream)](#Write_bool_System_IO_Stream)</code> - Writes a Boolean value in CBOR format to a data stream.
+* <code>[Write(byte, System.IO.Stream)](#Write_byte_System_IO_Stream)</code> - Writes a byte (0 to 255) in CBOR format to a data stream.
+* <code>[Write(double, System.IO.Stream)](#Write_double_System_IO_Stream)</code> - Writes a 64-bit floating-point number in CBOR format to a data stream.
+* <code>[Write(float, System.IO.Stream)](#Write_float_System_IO_Stream)</code> - Writes a 32-bit floating-point number in CBOR format to a data stream.
+* <code>[Write(int, System.IO.Stream)](#Write_int_System_IO_Stream)</code> - Writes a 32-bit signed integer in CBOR format to a data stream.
+* <code>[Write(long, System.IO.Stream)](#Write_long_System_IO_Stream)</code> - Writes a 64-bit signed integer in CBOR format to a data stream.
+* <code>[Write(object, System.IO.Stream)](#Write_object_System_IO_Stream)</code> - Writes a CBOR object to a CBOR data stream.
+* <code>[Write(object, System.IO.Stream, PeterO.Cbor.CBOREncodeOptions)](#Write_object_System_IO_Stream_PeterO_Cbor_CBOREncodeOptions)</code> - Writes an arbitrary object to a CBOR data stream, using the specified options for controlling how the object is encoded to CBOR data format.
+* <code>[Write(PeterO.Cbor.CBORObject, System.IO.Stream)](#Write_PeterO_Cbor_CBORObject_System_IO_Stream)</code> - Writes a CBOR object to a CBOR data stream.
+* <code>[Write(PeterO.Numbers.EDecimal, System.IO.Stream)](#Write_PeterO_Numbers_EDecimal_System_IO_Stream)</code> - Writes a decimal floating-point number in CBOR format to a data stream, as follows: If the value is null, writes the byte 0xF6.
+* <code>[Write(PeterO.Numbers.EFloat, System.IO.Stream)](#Write_PeterO_Numbers_EFloat_System_IO_Stream)</code> - Writes a binary floating-point number in CBOR format to a data stream as follows: If the value is null, writes the byte 0xF6.
+* <code>[Write(PeterO.Numbers.EInteger, System.IO.Stream)](#Write_PeterO_Numbers_EInteger_System_IO_Stream)</code> - Writes a big integer in CBOR format to a data stream.
+* <code>[Write(PeterO.Numbers.ERational, System.IO.Stream)](#Write_PeterO_Numbers_ERational_System_IO_Stream)</code> - Writes a rational number in CBOR format to a data stream.
+* <code>[Write(sbyte, System.IO.Stream)](#Write_sbyte_System_IO_Stream)</code> - Writes an 8-bit signed integer in CBOR format to a data stream.
+* <code>[Write(short, System.IO.Stream)](#Write_short_System_IO_Stream)</code> - Writes a 16-bit signed integer in CBOR format to a data stream.
+* <code>[Write(string, System.IO.Stream)](#Write_string_System_IO_Stream)</code> - Writes a string in CBOR format to a data stream.
+* <code>[Write(string, System.IO.Stream, PeterO.Cbor.CBOREncodeOptions)](#Write_string_System_IO_Stream_PeterO_Cbor_CBOREncodeOptions)</code> - Writes a string in CBOR format to a data stream, using the given options to control the encoding process.
+* <code>[Write(uint, System.IO.Stream)](#Write_uint_System_IO_Stream)</code> - Writes a 32-bit unsigned integer in CBOR format to a data stream.
+* <code>[Write(ulong, System.IO.Stream)](#Write_ulong_System_IO_Stream)</code> - Writes a 64-bit unsigned integer in CBOR format to a data stream.
+* <code>[Write(ushort, System.IO.Stream)](#Write_ushort_System_IO_Stream)</code> - Writes a 16-bit unsigned integer in CBOR format to a data stream.
+* <code>[WriteJSON(object, System.IO.Stream)](#WriteJSON_object_System_IO_Stream)</code> - Converts an arbitrary object to a string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8.
+* <code>[WriteJSONTo(System.IO.Stream)](#WriteJSONTo_System_IO_Stream)</code> - Converts this object to a string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8.
+* <code>[WriteJSONTo(System.IO.Stream, PeterO.Cbor.JSONOptions)](#WriteJSONTo_System_IO_Stream_PeterO_Cbor_JSONOptions)</code> - Converts this object to a string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8, using the given JSON options to control the encoding process.
+* <code>[WriteTo(System.IO.Stream)](#WriteTo_System_IO_Stream)</code> - Writes this CBOR object to a data stream.
+* <code>[WriteTo(System.IO.Stream, PeterO.Cbor.CBOREncodeOptions)](#WriteTo_System_IO_Stream_PeterO_Cbor_CBOREncodeOptions)</code> - Writes this CBOR object to a data stream, using the specified options for encoding the data to CBOR format.
+* <code>[WriteValue(System.IO.Stream, int, int)](#WriteValue_System_IO_Stream_int_int)</code> - Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as a 32-bit signed integer.
+* <code>[WriteValue(System.IO.Stream, int, long)](#WriteValue_System_IO_Stream_int_long)</code> - Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as a 64-bit signed integer.
+* <code>[WriteValue(System.IO.Stream, int, PeterO.Numbers.EInteger)](#WriteValue_System_IO_Stream_int_PeterO_Numbers_EInteger)</code> - Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as an arbitrary-precision integer.
+* <code>[WriteValue(System.IO.Stream, int, uint)](#WriteValue_System_IO_Stream_int_uint)</code> - Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as a 32-bit unsigned integer.
+* <code>[WriteValue(System.IO.Stream, int, ulong)](#WriteValue_System_IO_Stream_int_ulong)</code> - Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as a 64-bit unsigned integer.
+* <code>[public static readonly PeterO.Cbor.CBORObject Zero;](#Zero)</code> - Gets a CBOR object for the number zero.
 
 <a id="False"></a>
 ### False

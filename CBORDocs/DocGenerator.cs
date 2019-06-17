@@ -2,8 +2,8 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Xml;
 using System.Text;
+using System.Xml;
 using NuDoq;
 
 namespace PeterO.DocGen {
@@ -33,15 +33,17 @@ if (docdir.Length == 0) {
       }
       if (!File.Exists(assemblyXml)) {
         // Exit early, not found
-        throw new ArgumentException("XML documentation not found: " + assemblyXml);
+    throw new ArgumentException("XML documentation not found: " +
+          assemblyXml);
       }
       var asm = Assembly.LoadFrom(assemblyFile);
       Directory.CreateDirectory(directory);
       try {
-        var xmldoc=new XmlDoc(assemblyXml);
+        var xmldoc = new XmlDoc(assemblyXml);
         var members = DocReader.Read(asm);
         var oldWriter = Console.Out;
       var visitor = new TypeVisitor(directory);
+        visitor.XmlDoc = xmldoc;
       members.Accept(visitor);
       visitor.Finish();
       var visitor2 = new SummaryVisitor(
@@ -50,7 +52,7 @@ if (docdir.Length == 0) {
         foreach (var t in asm.GetTypes()) {
           visitor2.HandleType(t, xmldoc);
         }
-        //members.Accept(visitor2);
+        // members.Accept(visitor2);
         visitor2.Finish();
       } catch (IOException ex) {
         Console.WriteLine(ex.Message);
