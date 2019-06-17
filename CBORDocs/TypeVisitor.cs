@@ -19,6 +19,7 @@ namespace PeterO.DocGen {
     private readonly Dictionary<string, string> typeIDs;
     private readonly string directory;
 
+    // TODO: constructor arg, not property
     public XmlDoc XmlDoc { get; set; }
 
     public TypeVisitor(string directory) {
@@ -66,7 +67,9 @@ return;
         this.typeIDs[typeFullName] = DocVisitor.GetTypeID(currentType);
         this.memSummaries[typeFullName] = new MemberSummaryVisitor();
         foreach (var m in currentType.GetFields()) {
-          if (m.IsSpecialName) continue;
+          if (m.IsSpecialName) {
+ continue;
+}
           this.memSummaries[typeFullName].HandleMember(m, this.XmlDoc);
         }
         foreach (var m in currentType.GetConstructors()) {
@@ -102,9 +105,6 @@ return;
         }
       }
       this.docs[typeFullName].VisitMember(member);
-      if(this.XmlDoc==null){
-        this.memSummaries[typeFullName].VisitMember(member);
-      }
       base.VisitMember(member);
     }
   }

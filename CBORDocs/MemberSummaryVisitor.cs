@@ -11,10 +11,9 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using NuDoq;
 
 namespace PeterO.DocGen {
-  internal class MemberSummaryVisitor : Visitor {
+  internal class MemberSummaryVisitor {
     private readonly SortedDictionary<string, StringBuilder> docs;
     private readonly Dictionary<string, string> memberFormats;
     private string summaryString;
@@ -35,7 +34,6 @@ namespace PeterO.DocGen {
         ((PropertyInfo)obj).Name : ((obj is FieldInfo) ?
 
         ((FieldInfo)obj).Name : (obj.ToString())))); }
-
     public static string MemberAnchor(object obj) {
       string anchor = String.Empty;
       if (obj is Type) {
@@ -85,27 +83,28 @@ namespace PeterO.DocGen {
 
     public static string XmlDocMemberName(object obj) {
       if (obj is Type) {
-        return "T:"+((Type)obj).FullName;
+        return "T:" + ((Type)obj).FullName;
       }
       if (obj is MethodInfo) {
-        MethodInfo mi = obj as MethodInfo;
+        var mi = obj as MethodInfo;
         var msb = new StringBuilder()
-          .Append("M:")
-          .Append(mi.DeclaringType.FullName)
-          .Append(".")
-          .Append(mi.Name);
+          .Append("M:").Append(mi.DeclaringType.FullName)
+          .Append(".").Append(mi.Name);
         var gga = mi.GetGenericArguments().Length;
         if (gga > 0) {
           msb.Append("``");
           var ggastr = Convert.ToString(
-            gga, System.Globalization.CultureInfo.InvariantCulture);
+            gga,
+            System.Globalization.CultureInfo.InvariantCulture);
           msb.Append(ggastr);
         }
         if (mi.GetParameters().Length > 0) {
           msb.Append("(");
           var first = true;
           foreach (var p in mi.GetParameters()) {
-            if (!first) msb.Append(",");
+            if (!first) {
+ msb.Append(",");
+}
             msb.Append(p.ParameterType.FullName);
             first = false;
           }
@@ -115,16 +114,16 @@ namespace PeterO.DocGen {
       }
       if (obj is PropertyInfo) {
         var pi = obj as PropertyInfo;
-        var msb = new StringBuilder()
-          .Append("P:")
-          .Append(pi.DeclaringType.FullName)
-          .Append(".")
+        var msb = new StringBuilder().Append("P:")
+          .Append(pi.DeclaringType.FullName).Append(".")
           .Append(pi.Name);
         if (pi.GetIndexParameters().Length > 0) {
           msb.Append("(");
           var first = true;
           foreach (var p in pi.GetIndexParameters()) {
-            if (!first) msb.Append(",");
+            if (!first) {
+ msb.Append(",");
+}
             msb.Append(p.ParameterType.FullName);
             first = false;
           }
@@ -133,8 +132,7 @@ namespace PeterO.DocGen {
         return msb.ToString();
       }
       if (obj is FieldInfo) {
-        string m = "F:" + 
-          ((FieldInfo)obj).DeclaringType.FullName +
+        string m = "F:" + ((FieldInfo)obj).DeclaringType.FullName +
            "." + ((FieldInfo)obj).Name;
         return m;
       }
@@ -202,47 +200,6 @@ namespace PeterO.DocGen {
         this.docs[memberAnchor].Append(summary)
             .Append("\r\n");
       }
-    }
-
-
-    public override void VisitMember(Member member) {
-      object info = member.Info;
-      var isPublicOrProtected = false;
-      var typeInfo = info as Type;
-      var methodInfo = info as MethodInfo;
-      var propertyInfo = info as PropertyInfo;
-      var fieldInfo = info as FieldInfo;
-      if (methodInfo != null) {
-        isPublicOrProtected = methodInfo.IsPublic || methodInfo.IsFamily;
-      }
-      if (propertyInfo != null) {
-        isPublicOrProtected = (propertyInfo.CanRead &&
-                    propertyInfo.GetGetMethod().IsPublic ||
-                    propertyInfo.GetGetMethod().IsFamily) ||
-                    (propertyInfo.CanWrite &&
-                    propertyInfo.GetSetMethod().IsPublic ||
-                    propertyInfo.GetSetMethod().IsFamily);
-      }
-      if (fieldInfo != null) {
-        isPublicOrProtected = fieldInfo.IsPublic || fieldInfo.IsFamily;
-      }
-      if (!isPublicOrProtected) {
-        base.VisitMember(member);
-        return;
-      }
-      string memberAnchor = MemberAnchor(info);
-this.memberFormats[memberAnchor]=FormatMember(info);
-      if (!this.docs.ContainsKey(memberAnchor)) {
-        var docVisitor = new StringBuilder();
-        this.docs[memberAnchor] = docVisitor;
-      }
-      foreach (var element in member.Elements) {
-        if (element is Summary) {
-          var text = element.ToText();
-          this.docs[memberAnchor].Append(text).Append("\r\n");
-        }
-      }
-      base.VisitMember(member);
     }
   }
 }

@@ -513,18 +513,6 @@ namespace PeterO.DocGen {
       }
     }
 
-    private static string HtmlEscape(string str) {
-      if (str == null) {
-        return str;
-      }
-      str = str.Replace("&", "&amp;");
-      str = str.Replace("<", "&lt;");
-      str = str.Replace(">", "&gt;");
-      str = str.Replace("*", "&#x2a;");
-      str = str.Replace("\"", "&#x22;");
-      return str;
-    }
-
     public override void VisitUnknownElement(UnknownElement element) {
       string xmlName = element.Xml.Name.ToString()
         .ToLowerInvariant();
@@ -538,7 +526,7 @@ xmlName.Equals("em")) {
         sb.Append("<" + xmlName);
         foreach (var attr in element.Xml.Attributes()) {
           sb.Append(" " + attr.Name.ToString() + "=");
-          sb.Append("\"" + HtmlEscape(attr.Value) + "\"");
+          sb.Append("\"" + DocGenUtil.HtmlEscape(attr.Value) + "\"");
         }
         sb.Append(">");
         this.Write(sb.ToString());
@@ -553,17 +541,17 @@ xmlName.Equals("em")) {
       string cref = see.Cref;
       if (cref.Substring(0, 2).Equals("T:")) {
         string typeName = TypeNameUtil.UndecorateTypeName(cref.Substring(2));
-        string content = HtmlEscape(see.Content);
+        string content = DocGenUtil.HtmlEscape(see.Content);
         if (String.IsNullOrEmpty(content)) {
-          content = HtmlEscape(see.ToText());
+          content = DocGenUtil.HtmlEscape(see.ToText());
         }
         this.Write("[" + content + "]");
         this.Write("(" + typeName + ".md)");
         base.VisitSee(see);
       } else if (cref.Substring(0, 2).Equals("M:")) {
-        string content = HtmlEscape(see.Content);
+        string content = DocGenUtil.HtmlEscape(see.Content);
         if (String.IsNullOrEmpty(content)) {
-          content = HtmlEscape(see.ToText());
+          content = DocGenUtil.HtmlEscape(see.ToText());
         }
         this.Write("**" + content + "**");
       } else {

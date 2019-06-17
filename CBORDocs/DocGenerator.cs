@@ -7,22 +7,22 @@ using System.Xml;
 using NuDoq;
 
 namespace PeterO.DocGen {
-/// <summary>A documentation generator.</summary>
-public static class DocGenerator {
-// TODO: Make indexers ("this[]") show in documentation
+  /// <summary>A documentation generator.</summary>
+  public static class DocGenerator {
+    // TODO: Make indexers ("this[]") show in documentation
     public static void Generate(string assemblyFile, string docdir) {
       if (assemblyFile == null) {
-  throw new ArgumentNullException(nameof(assemblyFile));
-}
-if (assemblyFile.Length == 0) {
-  throw new ArgumentException("assemblyFile is empty.");
-}
+        throw new ArgumentNullException(nameof(assemblyFile));
+      }
+      if (assemblyFile.Length == 0) {
+        throw new ArgumentException("assemblyFile is empty.");
+      }
       if (docdir == null) {
-  throw new ArgumentNullException(nameof(docdir));
-}
-if (docdir.Length == 0) {
-  throw new ArgumentException("docdir is empty.");
-}
+        throw new ArgumentNullException(nameof(docdir));
+      }
+      if (docdir.Length == 0) {
+        throw new ArgumentException("docdir is empty.");
+      }
       var directory = Path.GetFullPath(docdir);
       assemblyFile = Path.GetFullPath(assemblyFile);
       var assemblyXml = Path.ChangeExtension(assemblyFile, ".xml");
@@ -33,8 +33,8 @@ if (docdir.Length == 0) {
       }
       if (!File.Exists(assemblyXml)) {
         // Exit early, not found
-    throw new ArgumentException("XML documentation not found: " +
-          assemblyXml);
+        throw new ArgumentException("XML documentation not found: " +
+              assemblyXml);
       }
       var asm = Assembly.LoadFrom(assemblyFile);
       Directory.CreateDirectory(directory);
@@ -42,25 +42,21 @@ if (docdir.Length == 0) {
         var xmldoc = new XmlDoc(assemblyXml);
         var members = DocReader.Read(asm);
         var oldWriter = Console.Out;
-      var visitor = new TypeVisitor(directory);
+        var visitor = new TypeVisitor(directory);
         visitor.XmlDoc = xmldoc;
-      members.Accept(visitor);
-      visitor.Finish();
-      var visitor2 = new SummaryVisitor(
-          Path.Combine(directory, "APIDocs.md"
-));
+        members.Accept(visitor);
+        visitor.Finish();
+        var visitor2 = new SummaryVisitor(
+            Path.Combine(directory, "APIDocs.md"
+  ));
         foreach (var t in asm.GetTypes()) {
           visitor2.HandleType(t, xmldoc);
         }
-        // members.Accept(visitor2);
         visitor2.Finish();
       } catch (IOException ex) {
         Console.WriteLine(ex.Message);
         return;
-      } catch (System.Exception ex) {
-      Console.WriteLine(ex.Message);
-      return;
-    }
+      }
     }
   }
 }
