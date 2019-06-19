@@ -1,3 +1,4 @@
+#pragma warning disable SA1118
 /*
 Written by Peter O. in 2013.
 Any copyright is dedicated to the Public Domain.
@@ -7,7 +8,9 @@ at: http://peteroupc.github.io/
  */
 using System;
 using System.Collections.Generic;
+#if !NET20
 using System.Linq;
+#endif
 using NUnit.Framework;
 using PeterO;
 using PeterO.Cbor;
@@ -50,21 +53,21 @@ namespace Test {
           CBORTestCommon.AssertRoundTrip(obj);
           decimal decimalOther = 0m;
           try {
- decimalOther = obj.AsDecimal();
-} catch (Exception ex) {
-               Assert.Fail(ex.ToString() + "\r\n" +
-                    CBORTest.ObjectMessage(obj));
-throw new InvalidOperationException(String.Empty, ex);
-}
-                    Assert.AreEqual(d, decimalOther);
+            decimalOther = obj.AsDecimal();
+          } catch (Exception ex) {
+            Assert.Fail(ex.ToString() + "\r\n" +
+                 CBORTest.ObjectMessage(obj));
+            throw new InvalidOperationException(String.Empty, ex);
+          }
+          Assert.AreEqual(d, decimalOther);
         }
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(EDecimal.NaN).AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
       }
@@ -72,28 +75,28 @@ throw new InvalidOperationException(String.Empty, ex);
 ToObjectTest.TestToFromObjectRoundTrip(EDecimal.SignalingNaN).AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
       }
       try {
-ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecPosInf)
-          .AsDecimal();
+        ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecPosInf)
+                  .AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
       }
       try {
-ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecNegInf)
-          .AsDecimal();
+        ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecNegInf)
+                  .AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
       }
@@ -101,8 +104,8 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecNegInf)
         ToObjectTest.TestToFromObjectRoundTrip(EFloat.NaN).AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
       }
@@ -110,28 +113,28 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecNegInf)
         ToObjectTest.TestToFromObjectRoundTrip(EFloat.SignalingNaN).AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
       }
       try {
-ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatPosInf)
-          .AsDecimal();
+        ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatPosInf)
+                  .AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
       }
       try {
-ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf)
-          .AsDecimal();
+        ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf)
+                  .AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
       }
@@ -176,7 +179,7 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf)
       B
     }
 
-public sealed class CPOD2 {
+    public sealed class CPOD2 {
       public string Aa { get; set; }
 
       public bool IsAa { get; set; }
@@ -191,91 +194,96 @@ public sealed class CPOD2 {
       Assert.IsFalse(cbor.ContainsKey("aa"), cbor.ToString());
       Assert.IsFalse(cbor.ContainsKey("Aa"), cbor.ToString());
     }
+
     [Test]
-    [Timeout(5000)] public void TestPODOptions() {
-            var ao = new { PropA = 0, PropB = 0, IsPropC = false };
-            var valueCcTF = new PODOptions(true, false);
-            var valueCcFF = new PODOptions(false, false);
-            var valueCcFT = new PODOptions(false, true);
-            var valueCcTT = new PODOptions(true, true);
-            CBORObjectTest.CheckPropertyNames(ao);
-            var arrao = new[] { ao, ao };
-            var co = CBORObject.FromObject(arrao, valueCcTF);
-            CBORObjectTest.CheckArrayPropertyNames(
+    [Timeout(5000)]
+    public void TestPODOptions() {
+      var ao = new { PropA = 0, PropB = 0, IsPropC = false };
+      var valueCcTF = new PODOptions(true, false);
+      var valueCcFF = new PODOptions(false, false);
+      var valueCcFT = new PODOptions(false, true);
+      var valueCcTT = new PODOptions(true, true);
+      CBORObjectTest.CheckPropertyNames(ao);
+      var arrao = new[] { ao, ao };
+      var co = CBORObject.FromObject(arrao, valueCcTF);
+      CBORObjectTest.CheckArrayPropertyNames(
   CBORObject.FromObject(arrao, valueCcTF),
-                 2,
+           2,
   "PropA",
   "PropB",
   "IsPropC");
-            CBORObjectTest.CheckArrayPropertyNames(
+      CBORObjectTest.CheckArrayPropertyNames(
   CBORObject.FromObject(arrao, valueCcFF),
-                 2,
+           2,
   "PropA",
   "PropB",
   "IsPropC");
-            CBORObjectTest.CheckArrayPropertyNames(
+      CBORObjectTest.CheckArrayPropertyNames(
   CBORObject.FromObject(arrao, valueCcFT),
-                 2,
+           2,
   "propA",
   "propB",
   "propC");
-            CBORObjectTest.CheckArrayPropertyNames(
+      CBORObjectTest.CheckArrayPropertyNames(
   CBORObject.FromObject(arrao, valueCcTT),
-                 2,
+           2,
   "propA",
   "propB",
   "propC");
-            var queryao =
+#if !NET20
+      var queryao =
 from x in arrao select x;
-            co = CBORObject.FromObject(queryao, valueCcTF);
-            CBORObjectTest.CheckArrayPropertyNames(
+      co = CBORObject.FromObject(queryao, valueCcTF);
+      CBORObjectTest.CheckArrayPropertyNames(
   CBORObject.FromObject(queryao, valueCcTF),
-                 2,
+           2,
   "PropA",
   "PropB",
   "IsPropC");
-            CBORObjectTest.CheckArrayPropertyNames(
+      CBORObjectTest.CheckArrayPropertyNames(
   CBORObject.FromObject(queryao, valueCcFF),
-                 2,
+           2,
   "PropA",
   "PropB",
   "IsPropC");
-            CBORObjectTest.CheckArrayPropertyNames(
+      CBORObjectTest.CheckArrayPropertyNames(
   CBORObject.FromObject(queryao, valueCcFT),
-                 2,
+           2,
   "propA",
   "propB",
   "propC");
-            CBORObjectTest.CheckArrayPropertyNames(
+      CBORObjectTest.CheckArrayPropertyNames(
   CBORObject.FromObject(queryao, valueCcTT),
-                 2,
+           2,
   "propA",
   "propB",
   "propC");
-   var ao2 = new { PropValue = new { PropA = 0, PropB = 0, IsPropC = false }
-              };
-            CBORObjectTest.CheckPODPropertyNames(
+#endif
+      var ao2 = new {
+        PropValue = new { PropA = 0, PropB = 0, IsPropC = false }
+      };
+      CBORObjectTest.CheckPODPropertyNames(
   CBORObject.FromObject(ao2, valueCcTF),
- valueCcTF,
-                 "PropA",
+  valueCcTF,
+           "PropA",
   "PropB",
   "IsPropC");
-            CBORObjectTest.CheckPODPropertyNames(
+      CBORObjectTest.CheckPODPropertyNames(
   CBORObject.FromObject(ao2, valueCcFF),
- valueCcFF,
-                 "PropA",
+  valueCcFF,
+           "PropA",
   "PropB",
   "IsPropC");
-            CBORObjectTest.CheckPODPropertyNames(
+      CBORObjectTest.CheckPODPropertyNames(
   CBORObject.FromObject(ao2, valueCcFT),
- valueCcFT,
-                 "propA",
+  valueCcFT,
+           "propA",
   "propB",
   "propC");
-            CBORObjectTest.CheckPODPropertyNames(
+      CBORObjectTest.CheckPODPropertyNames(
   CBORObject.FromObject(ao2, valueCcTT),
- valueCcTT,
-                 "propA",
+  valueCcTT,
+           "propA",
   "propB",
   "propC");
       var aodict = new Dictionary<string, object> {
@@ -286,40 +294,42 @@ from x in arrao select x;
   "PropA",
   "PropB",
   "IsPropC");
-            CBORObjectTest.CheckPODInDictPropertyNames(
+      CBORObjectTest.CheckPODInDictPropertyNames(
   CBORObject.FromObject(aodict, valueCcFF),
   "PropA",
   "PropB",
   "IsPropC");
-            CBORObjectTest.CheckPODInDictPropertyNames(
+      CBORObjectTest.CheckPODInDictPropertyNames(
   CBORObject.FromObject(aodict, valueCcFT),
   "propA",
   "propB",
   "propC");
-            CBORObjectTest.CheckPODInDictPropertyNames(
+      CBORObjectTest.CheckPODInDictPropertyNames(
   CBORObject.FromObject(aodict, valueCcTT),
   "propA",
   "propB",
   "propC");
-        }
+    }
 
     [Test]
     public void TestArbitraryTypes() {
-      CBORObject obj = CBORObject.FromObject(new { AByte.A,
-        B = AInt.A, C = AULong.A });
+      CBORObject obj = CBORObject.FromObject(new {
+        AByte.A,
+        B = AInt.A,
+        C = AULong.A });
       if (obj == null) {
- Assert.Fail();
- }
+        Assert.Fail();
+      }
       if (obj["a"] == null) {
- Assert.Fail();
- }
-            if (obj["b"] == null) {
- Assert.Fail();
- }
-            if (obj["c"] == null) {
- Assert.Fail();
- }
-    Assert.AreEqual(254, obj["a"].AsInt32());
+        Assert.Fail();
+      }
+      if (obj["b"] == null) {
+        Assert.Fail();
+      }
+      if (obj["c"] == null) {
+        Assert.Fail();
+      }
+      Assert.AreEqual(254, obj["a"].AsInt32());
       Assert.AreEqual(256, obj["b"].AsInt32());
       Assert.AreEqual(999999, obj["c"].AsInt32());
       obj = CBORObject.FromObject(new { A = "a", B = "b" });
@@ -362,6 +372,7 @@ from x in arrao select x;
       Assert.AreEqual(0, obj[0].AsInt32());
       Assert.AreEqual(1, obj[1].AsInt32());
       CBORTestCommon.AssertRoundTrip(obj);
+#if !NET20
       // Select all even numbers
       var query =
 from i in RangeExclusive(0, 10)
@@ -382,6 +393,7 @@ select new { A = i, B = i + 1 };
       Assert.AreEqual(0, obj[0]["a"].AsInt32());
       Assert.AreEqual(3, obj[1]["b"].AsInt32());
       CBORTestCommon.AssertRoundTrip(obj);
+#endif
     }
 
     [Test]

@@ -64,7 +64,7 @@ namespace PeterO.Cbor {
               case 't':
                 this.sb.Append('\t');
                 break;
-                case 'u': {  // Unicode escape
+                case 'u': { // Unicode escape
                   c = 0;
                   // Consists of 4 hex digits
                   for (var i = 0; i < 4; ++i) {

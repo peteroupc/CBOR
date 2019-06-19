@@ -9,80 +9,93 @@ namespace PeterO.DocGen {
   public class XmlDoc {
     public interface INode {
       string LocalName { get; }
+
       string GetContent();
+
       IEnumerable<string> GetAttributes();
+
       string GetAttribute(string str);
+
       IEnumerable<INode> GetChildren();
     }
+
     public interface IVisitor {
       void VisitNode(INode node);
     }
 
     private sealed class Node : INode {
       public string LocalName { get; private set; }
+
       private readonly bool element;
       private readonly string content;
       private readonly IDictionary<string, string> attributes;
       private readonly IList<Node> children;
+
       public IEnumerable<INode> GetChildren() {
-        if (children != null) {
-          foreach (var c in children) {
+        if (this.children != null) {
+          foreach (var c in this.children) {
             yield return c;
           }
         }
       }
+
       public IEnumerable<string> GetAttributes() {
-        if (attributes != null) {
-          foreach (var c in attributes.Keys) {
+        if (this.attributes != null) {
+          foreach (var c in this.attributes.Keys) {
             yield return c;
           }
         }
       }
+
       internal void AppendChild(Node child) {
-        if ((child) == null) {
+        if (child == null) {
   throw new ArgumentNullException(nameof(child));
 }
-        if (children != null) {
- children.Add(child);
+        if (this.children != null) {
+ this.children.Add(child);
 }
       }
+
       internal void SetAttribute(string name, string value) {
-        if (attributes != null) {
-          attributes[name] = value;
+        if (this.attributes != null) {
+          this.attributes[name] = value;
         }
       }
+
       public string GetAttribute(string str) {
-        return (attributes == null || !attributes.ContainsKey(str)) ? (null):
-          (attributes[str]);
+ return (this.attributes == null || !this.attributes.ContainsKey(str)) ?
+          null : this.attributes[str];
       }
+
       public string GetContent() {
-        if (!element) {
- return content;
+        if (!this.element) {
+ return this.content;
 }
         var sb = new StringBuilder();
-        foreach (var c in children) {
+        foreach (var c in this.children) {
           sb.Append(c.GetContent());
         }
         return sb.ToString();
       }
+
       public Node(string localName, bool element, string content) {
         this.element = element;
         this.content = content;
         if (this.element) {
-          attributes = new Dictionary<string, string>();
-          children = new List<Node>();
+          this.attributes = new Dictionary<string, string>();
+          this.children = new List<Node>();
           this.LocalName = localName;
         } else {
           this.LocalName = String.Empty;
-          children = null;
-          attributes = null;
+          this.children = null;
+          this.attributes = null;
         }
       }
     }
 
     public static void VisitInnerNode(INode node, IVisitor vis) {
       foreach (var child in node.GetChildren()) {
-        vis.VisitNode(node);
+        vis.VisitNode(child);
       }
     }
 
@@ -116,7 +129,7 @@ namespace PeterO.DocGen {
           --depth;
         } else if (reader.NodeType == XmlNodeType.Element) {
           emptyElement = reader.IsEmptyElement;
-          var childNode = new Node(reader.LocalName, true, "");
+          var childNode = new Node(reader.LocalName, true, String.Empty);
           if (reader.HasAttributes) {
             while (reader.MoveToNextAttribute()) {
               childNode.SetAttribute(reader.Name, reader.Value);
@@ -142,7 +155,7 @@ namespace PeterO.DocGen {
           }
           doread = false;
           nodeStack[nodeStack.Count - 1].AppendChild(
-           new Node("", false, sb.ToString()));
+           new Node(String.Empty, false, sb.ToString()));
         }
       }
       return node;
@@ -150,37 +163,41 @@ namespace PeterO.DocGen {
 
     private sealed class SummaryVisitor : IVisitor {
       private readonly StringBuilder sb;
+
       public SummaryVisitor() {
-        sb = new StringBuilder();
+        this.sb = new StringBuilder();
       }
+
       public void VisitNode(INode node) {
         if (String.IsNullOrEmpty(node.LocalName)) {
-          sb.Append(node.GetContent());
+          this.sb.Append(node.GetContent());
         } else {
           var c = node.GetAttribute("cref");
           var n = node.GetAttribute("name");
           if (c != null) {
- sb.Append(c);
+ this.sb.Append(c);
   } else if (n != null) {
- sb.Append(n);
+ this.sb.Append(n);
 }
         }
         XmlDoc.VisitInnerNode(node, this);
       }
+
       public override string ToString() {
-        var summary = sb.ToString();
+        var summary = this.sb.ToString();
         summary = Regex.Replace(summary, @"^\s+|\s+$", String.Empty);
         summary = Regex.Replace(summary, @"\s+", " ");
         return summary;
       }
     }
+
     private readonly IDictionary<string, INode> memberNodes;
 
     public INode GetMemberNode(string memberID) {
       if (!this.memberNodes.ContainsKey(memberID)) {
         return null;
       } else {
-        return memberNodes[memberID];
+        return this.memberNodes[memberID];
       }
     }
 
@@ -188,13 +205,13 @@ namespace PeterO.DocGen {
       if (!this.memberNodes.ContainsKey(memberID)) {
         return null;
       } else {
-        var mn = memberNodes[memberID];
+        var mn = this.memberNodes[memberID];
         var sb = new StringBuilder();
         foreach (var c in mn.GetChildren()) {
           if (c.LocalName.Equals("summary")) {
             var sv = new SummaryVisitor();
             sv.VisitNode(c);
-            sb.Append(sv.ToString()) .Append("\r\n\r\n");
+            sb.Append(sv.ToString()).Append("\r\n\r\n");
           }
         }
         var summary = sb.ToString();

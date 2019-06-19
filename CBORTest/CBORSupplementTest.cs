@@ -6,10 +6,7 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/
  */
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
 using PeterO;
 using PeterO.Cbor;

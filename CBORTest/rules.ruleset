@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<RuleSet Name='Rules for PeterO projects' Description='Code analysis rules for PeterO projects.' ToolsVersion='14.0'>
+  <Rules AnalyzerId='StyleCop.Analyzers' RuleNamespace='StyleCop.Analyzers'>
+    <Rule Id='SA1003' Action='None'/>
+    <Rule Id='SA1025' Action='None'/>
+    <Rule Id='SA1107' Action='None'/>
+    <Rule Id='SA1116' Action='None'/>
+    <Rule Id='SA1119' Action='None'/>
+<!--SA1121 disabled because writing String.IsNullOrEmpty, Int32.Parse, etc. is
+  part of the code style -->
+    <Rule Id='SA1121' Action='None'/>
+<!--SA1124 is DoNotUseRegions-->
+    <Rule Id='SA1124' Action='None'/>
+    <Rule Id='SA1127' Action='None'/>
+    <Rule Id='SA1128' Action='None'/>
+    <Rule Id='SA1137' Action='Warning'/>
+    <Rule Id='SA1139' Action='Warning'/>
+    <Rule Id='SA1200' Action='None'/>
+    <Rule Id='SA1201' Action='None'/>
+    <Rule Id='SA1202' Action='None'/>
+    <Rule Id='SA1204' Action='None'/>
+    <Rule Id='SA1214' Action='None'/>
+    <Rule Id='SA1412' Action='None'/>
+    <Rule Id='SA1413' Action='Warning'/>
+    <Rule Id='SA1500' Action='None'/>
+    <Rule Id='SA1509' Action='Warning'/>
+    <Rule Id='SA1513' Action='Warning'/>
+    <Rule Id='SA1515' Action='None'/>
+    <Rule Id='SA1516' Action='None'/>
+    <Rule Id='SA1600' Action='None'/>
+    <Rule Id='SA1601' Action='None'/>
+    <Rule Id='SA1625' Action='Warning'/>
+    <Rule Id='SA1629' Action='None'/>
+    <Rule Id='SA1633' Action='None'/>
+    <Rule Id='SA1642' Action='None'/>
+    <Rule Id='SX1101' Action='None'/>
+    <Rule Id='SX1309' Action='None'/>
+    <Rule Id='SX1309S' Action='None'/>
+  </Rules>
+</RuleSet>

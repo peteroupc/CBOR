@@ -11,10 +11,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using NuDoq;
 
 namespace PeterO.DocGen {
-  internal class TypeVisitor : Visitor {
+  internal class TypeVisitor {
     private readonly SortedDictionary<string, DocVisitor> docs;
     private readonly Dictionary<string, MemberSummaryVisitor> memSummaries;
     private readonly Dictionary<string, string> typeIDs;

@@ -151,8 +151,7 @@ namespace PeterO.DocGen {
           }
           if (method.IsFinal) {
             builder.Append("sealed ");
-     } else if (method is MethodInfo &&
-            IsMethodOverride((MethodInfo)method)) {
+     } else if (method is MethodInfo && IsMethodOverride((MethodInfo)method)) {
             builder.Append("override ");
           } else if (method.IsVirtual) {
             builder.Append("virtual ");
@@ -481,44 +480,45 @@ namespace PeterO.DocGen {
       }
       return b.ToString();
     }
+
     public void VisitNode(XmlDoc.INode node) {
       if (String.IsNullOrEmpty(node.LocalName)) {
         var t = node.GetContent();
         // Collapse multiple spaces into a single space
         t = Regex.Replace(t, @"\s+", " ");
         this.Write(t);
-        XmlDoc.VisitInnerNode(node, this);
+   XmlDoc.VisitInnerNode(node, this);
       } else {
         var xmlName = node.LocalName.ToLowerInvariant();
         if (xmlName.Equals("c")) {
- VisitC(node);
+ this.VisitC(node);
   } else if (xmlName.Equals("code")) {
- VisitCode(node);
+ this.VisitCode(node);
   } else if (xmlName.Equals("example")) {
- VisitExample(node);
+ this.VisitExample(node);
   } else if (xmlName.Equals("exception")) {
- VisitException(node);
+ this.VisitException(node);
   } else if (xmlName.Equals("see")) {
- VisitSee(node);
+ this.VisitSee(node);
   } else if (xmlName.Equals("item")) {
- VisitItem(node);
+ this.VisitItem(node);
   } else if (xmlName.Equals("list")) {
- VisitList(node);
+ this.VisitList(node);
   } else if (xmlName.Equals("para")) {
- VisitPara(node);
+ this.VisitPara(node);
   } else if (xmlName.Equals("param")) {
- VisitParam(node);
+ this.VisitParam(node);
   } else if (xmlName.Equals("paramref")) {
- VisitParamRef(node);
+ this.VisitParamRef(node);
   } else if (xmlName.Equals("remarks") || node.Equals("summary")) {
           this.WriteLine("\r\n\r\n");
           XmlDoc.VisitInnerNode(node, this);
         } else if (xmlName.Equals("returns")) {
- VisitReturns(node);
+ this.VisitReturns(node);
   } else if (xmlName.Equals("typeparam")) {
- VisitTypeParam(node);
+ this.VisitTypeParam(node);
   } else if (xmlName.Equals("value")) {
- VisitValue(node);
+ this.VisitValue(node);
   } else if (xmlName.Equals("b") ||
 xmlName.Equals("strong") ||
 xmlName.Equals("i") ||
@@ -562,7 +562,7 @@ xmlName.Equals("em")) {
     }
 
     public void VisitException(XmlDoc.INode node) {
-      using (var ch = this.Change(exceptionStr)) {
+      using (var ch = this.Change(this.exceptionStr)) {
         var cref = node.GetAttribute("cref");
         if (cref.StartsWith("T:", StringComparison.Ordinal)) {
           cref = cref.Substring(2);
@@ -623,7 +623,7 @@ xmlName.Equals("em")) {
         }
         using (var ch = this.AddMember(info)) {
           signature = FormatMethod(method, false);
-          this.WriteLine("<a id=\""+
+          this.WriteLine("<a id=\"" +
                     MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
           this.WriteLine("### " + Heading(info) +
                     "\r\n\r\n" + signature + "\r\n\r\n");
@@ -692,7 +692,7 @@ xmlName.Equals("em")) {
         }
         using (var ch = this.AddMember(info)) {
           signature = FormatProperty(property);
-          this.WriteLine("<a id=\""+
+          this.WriteLine("<a id=\"" +
                     MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
           this.WriteLine("### " + property.Name + "\r\n\r\n" + signature +
                     "\r\n\r\n");
@@ -727,7 +727,7 @@ xmlName.Equals("em")) {
         }
         using (var ch = this.AddMember(info)) {
           signature = FormatField(field);
-          this.WriteLine("<a id=\""+
+          this.WriteLine("<a id=\"" +
                     MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
           this.WriteLine("### " + field.Name + "\r\n\r\n" + signature +
                     "\r\n\r\n");
