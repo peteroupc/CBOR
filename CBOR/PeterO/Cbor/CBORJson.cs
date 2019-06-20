@@ -136,7 +136,7 @@ namespace PeterO.Cbor {
               } else {
               this.sb.Append((char)((((c - 0x10000) >> 10) & 0x3ff) +
                   0xd800));
-                this.sb.Append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
+                  this.sb.Append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
               }
               break;
             }
@@ -505,7 +505,7 @@ namespace PeterO.Cbor {
             sb.WriteString(str, 0, i);
           }
 // Replace unpaired surrogate with U + FFFD
-     c = (char)0xfffd;
+c = (char)0xfffd;
 } else {
             throw new CBORException("Unpaired surrogate in string");
 }
@@ -616,7 +616,7 @@ Double.IsNaN(f)) {
             writer.WriteString(flo.ToString());
             return;
           }
-        case CBORObject.CBORObjectTypeByteString:
+          case CBORObject.CBORObjectTypeByteString:
           {
             var byteArray = (byte[])thisItem;
             if (byteArray.Length == 0) {
@@ -723,7 +723,7 @@ Double.IsNaN(f)) {
               foreach (KeyValuePair<CBORObject, CBORObject> entry in objMap) {
                 CBORObject key = entry.Key;
                 CBORObject value = entry.Value;
-           string str = (key.ItemType == CBORObject.CBORObjectTypeTextString) ?
+                string str = (key.ItemType == CBORObject.CBORObjectTypeTextString) ?
                   ((string)key.ThisItem) : key.ToJSONString();
                 if (stringMap.ContainsKey(str)) {
       throw new
@@ -750,7 +750,7 @@ Double.IsNaN(f)) {
             }
             break;
           }
-        default: throw new InvalidOperationException("Unexpected item type");
+          default: throw new InvalidOperationException("Unexpected item type");
       }
     }
   }

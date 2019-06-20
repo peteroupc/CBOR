@@ -35,7 +35,7 @@ namespace PeterO.Cbor {
 
     // <include file='../../docs.xml'
     // path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.String,System.Boolean,System.Boolean)"]/*'/>
-  public CharacterReader(
+    public CharacterReader(
   string str,
   bool skipByteOrderMark,
   bool errorThrow) {
@@ -227,9 +227,9 @@ if (str.Length - offset < length) {
   this.stream,
   bigEndian,
   this.errorThrow);
-            newReader.Unget(c3, c4);
-            this.reader = newReader;
-            return newReader.ReadChar();
+  newReader.Unget(c3, c4);
+  this.reader = newReader;
+  return newReader.ReadChar();
           }
         }
         // Assume UTF-8 here, so the 0xff or 0xfe is invalid
@@ -273,15 +273,15 @@ if (str.Length - offset < length) {
   this.stream,
   false,
   this.errorThrow);
-              return c1;
+  return c1;
             } else {
           var newReader = new Utf16Reader(
   this.stream,
   false,
   this.errorThrow);
-              newReader.Unget(c3, c4);
-              this.reader = newReader;
-              return c1;
+  newReader.Unget(c3, c4);
+  this.reader = newReader;
+  return c1;
             }
           } else {
             // NZA NZ, so UTF-8
@@ -342,8 +342,8 @@ if (str.Length - offset < length) {
   this.stream,
   bigEndian,
   this.errorThrow);
-          this.reader = newReader;
-          return newReader.ReadChar();
+  this.reader = newReader;
+  return newReader.ReadChar();
         }
         // Assume UTF-8 here, so the 0xff or 0xfe is invalid
         if (this.errorThrow) {
@@ -364,7 +364,7 @@ if (str.Length - offset < length) {
   this.stream,
   false,
   this.errorThrow);
-            this.reader = newReader;
+  this.reader = newReader;
           } else {
             // NZA NZ
             var utf8reader = new Utf8Reader(this.stream, this.errorThrow);

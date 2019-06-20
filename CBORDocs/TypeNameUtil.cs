@@ -8,6 +8,25 @@ namespace PeterO.DocGen {
       if (obj is Type) {
         return "T:" + ((Type)obj).FullName;
       }
+      if (obj is ConstructorInfo) {
+        var cons = obj as ConstructorInfo;
+        var msb = new StringBuilder()
+          .Append("M:").Append(cons.DeclaringType.FullName)
+          .Append(cons.IsStatic ? ".#cctor" : ".#ctor");
+        if (cons.GetParameters().Length > 0) {
+          msb.Append("(");
+          var first = true;
+          foreach (var p in cons.GetParameters()) {
+            if (!first) {
+              msb.Append(",");
+            }
+            msb.Append(p.ParameterType.FullName);
+            first = false;
+          }
+          msb.Append(")");
+        }
+        return msb.ToString();
+      }
       if (obj is MethodInfo) {
         var mi = obj as MethodInfo;
         var msb = new StringBuilder()
@@ -32,6 +51,13 @@ namespace PeterO.DocGen {
             first = false;
           }
           msb.Append(")");
+        }
+        if (mi.Name.Equals("op_Explicit") ||
+           mi.Name.Equals("op_Implicit")) {
+          var rt = mi.ReturnType;
+          if (rt != null) {
+            msb.Append("~").Append(rt.FullName);
+          }
         }
         return msb.ToString();
       }

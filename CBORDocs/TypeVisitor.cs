@@ -52,13 +52,16 @@ namespace PeterO.DocGen {
           this.HandleMember(m, xmldoc);
         }
         foreach (var m in currentType.GetConstructors()) {
+          if (!m.DeclaringType.Equals(currentType)) {
+            continue;
+          }
           this.HandleMember(m, xmldoc);
         }
         foreach (var m in currentType.GetMethods()) {
           if (!m.DeclaringType.Equals(currentType)) {
             var dtfn = m.DeclaringType.FullName;
             if (dtfn.IndexOf("System.", StringComparison.Ordinal) != 0) {
-              Console.WriteLine("not declared: " + m);
+              //Console.WriteLine("not declared: " + m);
             }
             continue;
           }

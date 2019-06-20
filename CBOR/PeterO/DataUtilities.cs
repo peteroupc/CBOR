@@ -36,7 +36,7 @@ namespace PeterO {
       }
       var i = 0;
       var count = 0;
-     while (i < str.Length) {
+      while (i < str.Length) {
        int c = CodePointAt(str, i);
        ++count;
        i += (c >= 0x10000) ? 2 : 1;
@@ -83,7 +83,7 @@ namespace PeterO {
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.DataUtilities.GetUtf8Bytes(System.String,System.Boolean)"]/*'/>
-        public static byte[] GetUtf8Bytes(string str, bool replace) {
+    public static byte[] GetUtf8Bytes(string str, bool replace) {
           return GetUtf8Bytes(str, replace, false);
         }
 
@@ -109,11 +109,11 @@ namespace PeterO {
           return new byte[] { (byte)c };
         } else if (c <= 0x7ff) {
           return new byte[] { (byte)(0xc0 | ((c >> 6) & 0x1f)),
-            (byte)(0x80 | (c & 0x3f)) };
+            (byte)(0x80 | (c & 0x3f)), };
         } else {
           return new byte[] { (byte)(0xe0 | ((c >> 12) & 0x0f)),
             (byte)(0x80 | ((c >> 6) & 0x3f)),
-            (byte)(0x80 | (c & 0x3f)) };
+            (byte)(0x80 | (c & 0x3f)), };
         }
       } else if (str.Length == 2) {
         int c = str[0];
@@ -123,7 +123,7 @@ namespace PeterO {
           return new byte[] { (byte)(0xf0 | ((c >> 18) & 0x07)),
             (byte)(0x80 | ((c >> 12) & 0x3f)),
             (byte)(0x80 | ((c >> 6) & 0x3f)),
-            (byte)(0x80 | (c & 0x3f)) };
+            (byte)(0x80 | (c & 0x3f)), };
         } else if (!lenientLineBreaks && c <= 0x80 && c2 <= 0x80) {
           return new byte[] { (byte)c, (byte)c2 };
         }
@@ -325,7 +325,7 @@ namespace PeterO {
       for (var i = 0; i < len; ++i) {
          ca = strA[i];
          cb = strB[i];
-        if (ca == cb) {
+         if (ca == cb) {
           // normal code units and illegal surrogates
           // are treated as single code points
           if ((ca & 0xf800) != 0xd800) {
@@ -416,10 +416,10 @@ namespace PeterO {
       var retval = 0;
       bytes = new byte[StreamedStringBufferLength];
       var byteIndex = 0;
-       endIndex = offset + length;
+      endIndex = offset + length;
       for (int index = offset; index < endIndex; ++index) {
          c = str[index];
-        if (c <= 0x7f) {
+         if (c <= 0x7f) {
           if (lenientLineBreaks) {
             if (c == 0x0d && (index + 1 >= endIndex || str[index + 1] !=
                     0x0a)) {
@@ -559,12 +559,12 @@ namespace PeterO {
       var lower = 0x80;
       var upper = 0xbf;
       int pointer, endpointer, b;
-       pointer = offset;
-       endpointer = offset + bytesCount;
+      pointer = offset;
+      endpointer = offset + bytesCount;
       while (pointer < endpointer) {
          b = data[pointer] & (int)0xff;
-        ++pointer;
-        if (bytesNeeded == 0) {
+         ++pointer;
+         if (bytesNeeded == 0) {
           if ((b & 0x7f) == b) {
             builder.Append((char)b);
           } else if (b >= 0xc2 && b <= 0xdf) {
@@ -608,7 +608,7 @@ namespace PeterO {
             continue;
           }
           int ret, ch, lead, trail;
-           ret = cp;
+          ret = cp;
           cp = 0;
           bytesSeen = 0;
           bytesNeeded = 0;
@@ -618,8 +618,8 @@ namespace PeterO {
              ch = ret - 0x10000;
              lead = (ch >> 10) + 0xd800;
              trail = (ch & 0x3ff) + 0xdc00;
-            builder.Append((char)lead);
-            builder.Append((char)trail);
+             builder.Append((char)lead);
+             builder.Append((char)trail);
           }
         }
       }
@@ -768,8 +768,8 @@ namespace PeterO {
              ch = ret - 0x10000;
              lead = (ch >> 10) + 0xd800;
              trail = (ch & 0x3ff) + 0xdc00;
-            builder.Append((char)lead);
-            builder.Append((char)trail);
+             builder.Append((char)lead);
+             builder.Append((char)trail);
           }
         }
       }

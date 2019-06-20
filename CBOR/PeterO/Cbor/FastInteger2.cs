@@ -175,7 +175,7 @@ namespace PeterO.Cbor {
      throw new ArgumentException("other (" + other + ") is less than " +
             "0 ");
         }
-      if (other != 0) {
+        if (other != 0) {
           unchecked {
             // Ensure a length of at least 1
             if (this.wordCount == 0) {
@@ -379,7 +379,7 @@ namespace PeterO.Cbor {
                 this.largeValue *= (EInteger)val;
               }
             } else {
-              smallValue *= val;
+              this.smallValue *= val;
             }
             break;
           case 1:
@@ -388,7 +388,7 @@ namespace PeterO.Cbor {
               this.largeValue = this.mnum.ToEInteger();
               this.largeValue *= (EInteger)val;
             } else {
-              mnum.Multiply(val);
+              this.mnum.Multiply(val);
             }
             break;
           case 2:
@@ -418,10 +418,10 @@ namespace PeterO.Cbor {
               this.smallValue -= vsv;
             }
           } else {
-            integerMode = 2;
-            largeValue = (EInteger)smallValue;
+            this.integerMode = 2;
+            this.largeValue = (EInteger)this.smallValue;
             valValue = val.AsBigInteger();
-            largeValue -= (EInteger)valValue;
+            this.largeValue -= (EInteger)valValue;
           }
           break;
         case 1:
@@ -430,12 +430,12 @@ namespace PeterO.Cbor {
             // currently always zero or positive
             this.mnum.Subtract(val.mnum);
           } else if (val.integerMode == 0 && val.smallValue >= 0) {
-            mnum.SubtractInt(val.smallValue);
+            this.mnum.SubtractInt(val.smallValue);
           } else {
-            integerMode = 2;
-            largeValue = mnum.ToEInteger();
+            this.integerMode = 2;
+            this.largeValue = this.mnum.ToEInteger();
             valValue = val.AsBigInteger();
-            largeValue -= (EInteger)valValue;
+            this.largeValue -= (EInteger)valValue;
           }
           break;
         case 2:
@@ -491,20 +491,20 @@ namespace PeterO.Cbor {
               this.smallValue += val.smallValue;
             }
           } else {
-            integerMode = 2;
-            largeValue = (EInteger)smallValue;
+            this.integerMode = 2;
+            this.largeValue = (EInteger)this.smallValue;
             valValue = val.AsBigInteger();
-            largeValue += (EInteger)valValue;
+            this.largeValue += (EInteger)valValue;
           }
           break;
         case 1:
           if (val.integerMode == 0 && val.smallValue >= 0) {
             this.mnum.Add(val.smallValue);
           } else {
-            integerMode = 2;
-            largeValue = mnum.ToEInteger();
+            this.integerMode = 2;
+            this.largeValue = this.mnum.ToEInteger();
             valValue = val.AsBigInteger();
-            largeValue += (EInteger)valValue;
+            this.largeValue += (EInteger)valValue;
           }
           break;
         case 2:
@@ -534,17 +534,17 @@ namespace PeterO.Cbor {
               this.largeValue += (EInteger)val;
             }
           } else {
-            smallValue += val;
+            this.smallValue += val;
           }
           break;
         case 1:
           if (val >= 0) {
             this.mnum.Add(val);
           } else {
-            integerMode = 2;
-            largeValue = mnum.ToEInteger();
+            this.integerMode = 2;
+            this.largeValue = this.mnum.ToEInteger();
             valValue = (EInteger)val;
-            largeValue += (EInteger)valValue;
+            this.largeValue += (EInteger)valValue;
           }
           break;
         case 2:
@@ -579,9 +579,9 @@ namespace PeterO.Cbor {
           return (this.smallValue == 0) ? 0 : ((this.smallValue < 0) ? -1 :
               1);
           case 1:
-            return this.mnum.Sign;
+          return this.mnum.Sign;
           case 2:
-            return this.largeValue.Sign;
+          return this.largeValue.Sign;
           default: return 0;
         }
       }

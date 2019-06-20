@@ -8,7 +8,12 @@
 * <code>[AddTypePrefix(string)](#AddTypePrefix_string)</code> - Adds a prefix of a Java or .
 * <code>[FilterTypeName(string)](#FilterTypeName_string)</code> - Returns whether the given Java or .
 
-<a id="AddTypeName_string"></a>
+<a id="Void_ctor"></a>
+### CBORTypeMapper Constructor
+
+    public CBORTypeMapper();
+
+ Initializes a new instance of the [PeterO.Cbor.CBORTypeMapper](PeterO.Cbor.CBORTypeMapper.md) class.  <a id="AddTypeName_string"></a>
 ### AddTypeName
 
     public PeterO.Cbor.CBORTypeMapper AddTypeName(

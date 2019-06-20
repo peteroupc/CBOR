@@ -50,27 +50,27 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,System.UInt32)"]/*'/>
     [CLSCompliant(false)]
-  public static int WriteValue(
+    public static int WriteValue(
   Stream outputStream,
   int majorType,
   uint value) {
    if (outputStream == null) {
   throw new ArgumentNullException(nameof(outputStream));
 }
-      return WriteValue(outputStream, majorType, (long)value);
+return WriteValue(outputStream, majorType, (long)value);
     }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,System.UInt64)"]/*'/>
     [CLSCompliant(false)]
- public static int WriteValue(
+    public static int WriteValue(
   Stream outputStream,
   int majorType,
   ulong value) {
    if (outputStream == null) {
   throw new ArgumentNullException(nameof(outputStream));
 }
-      if (value <= Int64.MaxValue) {
+if (value <= Int64.MaxValue) {
         return WriteValue(outputStream, majorType, (long)value);
       } else {
         if (majorType < 0) {
@@ -89,7 +89,7 @@ if (majorType > 7) {
         (byte)((value >> 48) & 0xff), (byte)((value >> 40) & 0xff),
         (byte)((value >> 32) & 0xff), (byte)((value >> 24) & 0xff),
         (byte)((value >> 16) & 0xff), (byte)((value >> 8) & 0xff),
-        (byte)(value & 0xff) };
+        (byte)(value & 0xff), };
         outputStream.Write(bytes, 0, bytes.Length);
         return bytes.Length;
       }
@@ -132,7 +132,7 @@ if (majorType > 7) {
       if (bigint.Sign < 0 || bigint.GetSignedBitLength() > 64) {
         throw new OverflowException("This object's value is out of range");
       }
-             return (ulong)bigint;
+      return (ulong)bigint;
     }
 
     /// <include file='../../docs.xml'

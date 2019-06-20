@@ -9,7 +9,41 @@
 * <code>[public static readonly PeterO.Cbor.CBOREncodeOptions DefaultCtap2Canonical;](#DefaultCtap2Canonical)</code> - Default options for CBOR objects serialized using the CTAP2 canonicalization (used in Web Authentication, among other specifications).
 * <code>[UseIndefLengthStrings](#UseIndefLengthStrings)</code> - Gets a value indicating whether to encode strings with an indefinite-length encoding under certain circumstances.
 
-<a id="Default"></a>
+<a id="Void_ctor_Boolean_Boolean"></a>
+### CBOREncodeOptions Constructor
+
+    public CBOREncodeOptions(
+        bool useIndefLengthStrings,
+        bool allowDuplicateKeys);
+
+ Initializes a new instance of the [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) class.  <b>Parameters:</b>
+
+ * <i>useIndefLengthStrings</i>: A value indicating whether to always encode strings with a definite-length encoding.
+
+ * <i>allowDuplicateKeys</i>: A value indicating whether to disallow duplicate keys when reading CBOR objects from a data stream.
+
+<a id="Void_ctor_Boolean_Boolean_Boolean"></a>
+### CBOREncodeOptions Constructor
+
+    public CBOREncodeOptions(
+        bool useIndefLengthStrings,
+        bool allowDuplicateKeys,
+        bool ctap2Canonical);
+
+ Initializes a new instance of the [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) class.  <b>Parameters:</b>
+
+ * <i>useIndefLengthStrings</i>: A value indicating whether to encode strings with a definite-length encoding in certain cases.
+
+ * <i>allowDuplicateKeys</i>: A value indicating whether to allow duplicate keys when reading CBOR objects from a data stream.
+
+ * <i>ctap2Canonical</i>: A value indicating whether CBOR objects are written out using the CTAP2 canonical CBOR encoding form, which is useful for implementing Web Authentication.
+
+<a id="Void_ctor"></a>
+### CBOREncodeOptions Constructor
+
+    public CBOREncodeOptions();
+
+ Initializes a new instance of the [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) class.  <a id="Default"></a>
 ### Default
 
     public static readonly PeterO.Cbor.CBOREncodeOptions Default;

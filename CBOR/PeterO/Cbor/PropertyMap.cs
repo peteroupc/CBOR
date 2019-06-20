@@ -179,7 +179,7 @@ namespace PeterO.Cbor {
               }
               PropertyData pd = new PropertyMap.PropertyData() {
                 Name = pi.Name,
-                Prop = pi
+                Prop = pi,
               };
               ret.Add(pd);
             }
@@ -359,7 +359,7 @@ namespace PeterO.Cbor {
   mapper,
   options,
   depth + 1);
-          arr.SetValue(item, i);
+  arr.SetValue(item, i);
         }
         return arr;
       }
@@ -690,9 +690,9 @@ Type elementType = t.GetElementType();
           isDict = (td.Equals(typeof(Dictionary<,>)) ||
   td.Equals(typeof(IDictionary<,>)));
         }
-        //DebugUtility.Log("list=" + isDict);
+        // DebugUtility.Log("list=" + isDict);
         isDict = (isDict && t.GenericTypeArguments.Length == 2);
-        //DebugUtility.Log("list=" + isDict);
+        // DebugUtility.Log("list=" + isDict);
         if (isDict) {
           keyType = t.GenericTypeArguments[0];
           valueType = t.GenericTypeArguments[1];
@@ -739,7 +739,7 @@ Type elementType = t.GetElementType();
           }
         }
         var values = new List<KeyValuePair<string, CBORObject>>();
-var propNames = PropertyMap.GetPropertyNames(
+        var propNames = PropertyMap.GetPropertyNames(
                    t,
                    options != null ? options.UseCamelCase : true);
         foreach (string key in propNames) {
@@ -765,9 +765,9 @@ var propNames = PropertyMap.GetPropertyNames(
     public static object ObjectWithProperties(
          Type t,
          IEnumerable<KeyValuePair<string, CBORObject>> keysValues,
-       CBORTypeMapper mapper,
-       PODOptions options,
- int depth) {
+         CBORTypeMapper mapper,
+         PODOptions options,
+         int depth) {
       object o = Activator.CreateInstance(t);
       var dict = new Dictionary<string, CBORObject>();
       foreach (var kv in keysValues) {
@@ -780,7 +780,7 @@ var propNames = PropertyMap.GetPropertyNames(
           // a getter to be eligible for setting
           continue;
         }
-   var name = key.GetAdjustedName(options != null ? options.UseCamelCase :
+        var name = key.GetAdjustedName(options != null ? options.UseCamelCase :
           true);
         if (dict.ContainsKey(name)) {
           object dobj = dict[name].ToObject(

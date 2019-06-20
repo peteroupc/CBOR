@@ -311,7 +311,7 @@ namespace PeterO.Cbor {
         }
         EInteger bigrem;
         EInteger bigquo;
-{
+        {
 EInteger[] divrem = b1.DivRem(b2);
 bigquo = divrem[0];
 bigrem = divrem[1]; }

@@ -12,7 +12,7 @@ namespace PeterO.Cbor {
 
     URILenient,
 
-    IRISurrogateLenient
+    IRISurrogateLenient,
     }
 
     private const string HexChars = "0123456789ABCDEF";
@@ -343,7 +343,7 @@ namespace PeterO.Cbor {
  } else {
               retString.Append((char)((((ret - 0x10000) >> 10) &
                     0x3ff) + 0xd800));
-                  retString.Append((char)(((ret - 0x10000) & 0x3ff) + 0xdc00));
+                    retString.Append((char)(((ret - 0x10000) & 0x3ff) + 0xdc00));
                 }
                 continue;
               }
@@ -392,7 +392,7 @@ var builder = new StringBuilder();
         if (c >= 0x10000) {
  ++index;
 }
-    if ((c & 0x7F) == c && ((c >= 'A' && c <= 'Z') ||
+if ((c & 0x7F) == c && ((c >= 'A' && c <= 'Z') ||
         (c >= 'a' && c <= 'z') ||
             (c >= '0' && c <= '9') || "-_.~".IndexOf((char)c) >= 0)) {
           builder.Append((char)c);
@@ -402,7 +402,7 @@ var builder = new StringBuilder();
           ++index;
         }
       }
-return builder.ToString();
+      return builder.ToString();
     }
 
     private static bool isIfragmentChar(int c) {
@@ -576,8 +576,8 @@ public static string BuildIRI(
 }
       builder.Append('#');
     }
-      var index = 0;
-      while (index < s.Length) {
+    var index = 0;
+    while (index < s.Length) {
         int c = s[index];
         if ((c & 0xfc00) == 0xd800 && index + 1 < s.Length &&
             (s[index + 1] & 0xfc00) == 0xdc00) {
@@ -789,7 +789,7 @@ public static string BuildIRI(
       if (s[index] == ':' ||
           isHexChar(s[index])) {
      int startIndex = index;
-while (index < endOffset && ((s[index] >= 65 && s[index] <= 70) ||
+     while (index < endOffset && ((s[index] >= 65 && s[index] <= 70) ||
   (s[index] >= 97 && s[index] <= 102) || (s[index] >= 48 && s[index]
   <= 58) || (s[index] == 46))) {
  ++index;
@@ -812,7 +812,7 @@ for (var part = 0; part < 8; ++part) {
   doubleColon = true;
   doubleColonPos = part;
   index += 2;
-            if (index == ipEndIndex) {
+  if (index == ipEndIndex) {
  break;
 }
  }
@@ -864,14 +864,14 @@ if (index < ipEndIndex && s[index] == '.') {
  return -1;
 }
     }
-if (index + 1 < ipEndIndex && s[index] == '0' &&
+    if (index + 1 < ipEndIndex && s[index] == '0' &&
  (s[index + 1] >= '0' && s[index + 1] <= '9')) {
  return -1;
 }
- var dec = 0;
- var haveDec = false;
- int curindex = index;
- for (var i = 0; i < 4; ++i) {
+var dec = 0;
+var haveDec = false;
+int curindex = index;
+for (var i = 0; i < 4; ++i) {
 if (s[index] >= '0' && s[index] <= '9') {
  dec = (dec * 10) + ((int)s[index] - '0');
  haveDec = true;
@@ -890,14 +890,14 @@ ipparts[part] = dec;
 }
   addressParts[totalParts] = (ipparts[0] << 8) | ipparts[1];
   addressParts[totalParts + 1] = (ipparts[2] << 8) | ipparts[3];
-totalParts += 2;
+  totalParts += 2;
   if (!doubleColon && totalParts != 8) {
  return -1;
 }
  }
  if (doubleColon) {
   int resid = 8 - totalParts;
-            if (resid == 0) {
+  if (resid == 0) {
               // Purported IPv6 address contains
               // 8 parts and a double colon
               return -1;
@@ -919,7 +919,7 @@ totalParts += 2;
   // addressParts[0], addressParts[1], addressParts[2],
   // addressParts[3], addressParts[4], addressParts[5],
   // addressParts[6], addressParts[7]);
-        if (s[index] == '%') {
+  if (s[index] == '%') {
           if (index + 2 < endOffset && s[index + 1] == '2' &&
               s[index + 2] == '5' && (addressParts[0] & 0xFFC0) == 0xFE80) {
             // Zone identifier in an IPv6 address
@@ -1110,7 +1110,7 @@ totalParts += 2;
 
     public static string[] splitIRIToStrings(string s) {
       int[] indexes = splitIRI(s);
-if (indexes == null) {
+      if (indexes == null) {
  return null;
 }
 return new string[] {
@@ -1121,7 +1121,7 @@ return new string[] {
  indexes[2] < 0 ? null : s.Substring(indexes[2], indexes[3] - indexes[2]),
  indexes[4] < 0 ? null : s.Substring(indexes[4], indexes[5] - indexes[4]),
  indexes[6] < 0 ? null : s.Substring(indexes[6], indexes[7] - indexes[6]),
- indexes[8] < 0 ? null : s.Substring(indexes[8], indexes[9] - indexes[8])
+ indexes[8] < 0 ? null : s.Substring(indexes[8], indexes[9] - indexes[8]),
 };
     }
 
@@ -1376,7 +1376,7 @@ if (s.Length - offset < length) {
         }
       }
       if (strict && fullyRelative && colon && !segment) {
-        return null;  // ex. "x@y:z"
+        return null; // ex. "x@y:z"
       }
       return retval;
     }
@@ -1488,8 +1488,8 @@ if (s.Length - offset < length) {
   if (rel == null) {
  return null;
 }
- string relpath = uriPath(refValue, ParseMode.IRIStrict);
- if (pathHasDotComponent(relpath)) {
+string relpath = uriPath(refValue, ParseMode.IRIStrict);
+if (pathHasDotComponent(relpath)) {
   // Resolved path has a dot component in it (usually
   // because that component is percent-encoded)
   return null;

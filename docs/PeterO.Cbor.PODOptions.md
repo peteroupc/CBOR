@@ -6,7 +6,25 @@
 * <code>[public static readonly PeterO.Cbor.PODOptions Default;](#Default)</code> - The default settings for "plain old data" options.
 * <code>[UseCamelCase](#UseCamelCase)</code> - Gets a value indicating whether property names are converted to camel case before they are used as keys.
 
-<a id="Default"></a>
+<a id="Void_ctor_Boolean_Boolean"></a>
+### PODOptions Constructor
+
+    public PODOptions(
+        bool removeIsPrefix,
+        bool useCamelCase);
+
+ Initializes a new instance of the [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) class.  <b>Parameters:</b>
+
+ * <i>removeIsPrefix</i>: If set to  `true` true remove is prefix.
+
+ * <i>useCamelCase</i>: If set to  `true` true use camel case.
+
+<a id="Void_ctor"></a>
+### PODOptions Constructor
+
+    public PODOptions();
+
+ Initializes a new instance of the [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) class.  <a id="Default"></a>
 ### Default
 
     public static readonly PeterO.Cbor.PODOptions Default;

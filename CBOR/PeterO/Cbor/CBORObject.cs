@@ -117,7 +117,7 @@ namespace PeterO.Cbor {
       new CBORInteger(), new CBOREInteger(), null, null,
       null, null, null, new CBORSingle(),
       new CBORDouble(), new CBORExtendedDecimal(),
-      null, new CBORExtendedFloat(), new CBORExtendedRational()
+      null, new CBORExtendedFloat(), new CBORExtendedRational(),
     };
 
     private static readonly EInteger UInt64MaxValue =
@@ -143,16 +143,16 @@ namespace PeterO.Cbor {
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  // major type 6
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, -1, -1,
       1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  // major type 7
-      1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 5, 9, -1, -1, -1, -1 };
+      1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 5, 9, -1, -1, -1, -1, };
 
     private static readonly byte[] ValueFalseBytes = { 0x66, 0x61, 0x6c,
-      0x73, 0x65 };
+      0x73, 0x65, };
 
     private static readonly byte[] ValueNullBytes = { 0x6e, 0x75, 0x6c, 0x6c };
 
     private static readonly int[] ValueNumberTypeOrder = { 0, 0, 2, 3, 4, 5,
       1, 0, 0,
-      0, 0, 0, 0 };
+      0, 0, 0, 0, };
 
     private static readonly byte[] ValueTrueBytes = { 0x74, 0x72, 0x75, 0x65 };
 
@@ -466,16 +466,16 @@ if (key is int) {
   index = (int)key;
 } else {
   CBORObject cborkey = CBORObject.FromObject(key);
-    if (!cborkey.IsIntegral) {
+  if (!cborkey.IsIntegral) {
 return defaultValue;
 }
-    if (!cborkey.CanTruncatedIntFitInInt32()) {
+if (!cborkey.CanTruncatedIntFitInInt32()) {
 return defaultValue;
 }
-          index = cborkey.AsInt32();
+index = cborkey.AsInt32();
 }
-          IList<CBORObject> list = this.AsList();
-    return (index < 0 || index >= list.Count) ? defaultValue :
+IList<CBORObject> list = this.AsList();
+return (index < 0 || index >= list.Count) ? defaultValue :
             list[index];
         }
         if (this.ItemType == CBORObjectTypeMap) {
@@ -504,12 +504,12 @@ return defaultValue;
     if (!key.CanTruncatedIntFitInInt32()) {
  throw new ArgumentOutOfRangeException("index");
 }
-          IList<CBORObject> list = this.AsList();
-          int index = key.AsInt32();
-          if (index < 0 || index >= list.Count) {
+IList<CBORObject> list = this.AsList();
+int index = key.AsInt32();
+if (index < 0 || index >= list.Count) {
  throw new ArgumentOutOfRangeException("index");
 }
-          return list[index];
+return list[index];
         }
         throw new InvalidOperationException("Not an array or map");
       }
@@ -533,13 +533,13 @@ return defaultValue;
     if (!key.CanTruncatedIntFitInInt32()) {
  throw new ArgumentOutOfRangeException("index");
 }
-          IList<CBORObject> list = this.AsList();
-          int index = key.AsInt32();
-          if (index < 0 || index >= list.Count) {
+IList<CBORObject> list = this.AsList();
+int index = key.AsInt32();
+if (index < 0 || index >= list.Count) {
  throw new ArgumentOutOfRangeException("index");
 }
-          list[index] = value;
-          return;
+list[index] = value;
+return;
         }
         throw new InvalidOperationException("Not an array or map");
       }
@@ -715,7 +715,7 @@ depth++;
 if (depth > 100) {
  throw new CBORException("Depth level too high");
 }
-      if (t == null) {
+if (t == null) {
         throw new ArgumentNullException(nameof(t));
       }
       if (t.Equals(typeof(CBORObject))) {
@@ -975,7 +975,7 @@ if (depth > 100) {
       if (options == null) {
         throw new ArgumentNullException(nameof(options));
       }
-   if (depth >= 100) {
+      if (depth >= 100) {
     throw new CBORException("Nesting depth too high");
    }
       if (obj == null) {
@@ -1061,12 +1061,12 @@ if (depth > 100) {
         foreach (object keyPair in (System.Collections.IDictionary)objdic) {
           System.Collections.DictionaryEntry
             kvp = (System.Collections.DictionaryEntry)keyPair;
-    CBORObject objKey = CBORObject.FromObject(
+            CBORObject objKey = CBORObject.FromObject(
   kvp.Key,
   options,
   mapper,
   depth + 1);
- objret[objKey] = CBORObject.FromObject(
+  objret[objKey] = CBORObject.FromObject(
   kvp.Value,
   options,
   mapper,
@@ -1544,12 +1544,12 @@ objret[key.Key] = CBORObject.FromObject(
         stream.Write(bytes, 0, 2);
       } else if (value <= 0xffff) {
         byte[] bytes = { (byte)(25 | type), (byte)((value >> 8) & 0xff),
-          (byte)(value & 0xff) };
+          (byte)(value & 0xff), };
         stream.Write(bytes, 0, 3);
       } else {
         byte[] bytes = { (byte)(26 | type), (byte)((value >> 24) & 0xff),
           (byte)((value >> 16) & 0xff), (byte)((value >> 8) & 0xff),
-          (byte)(value & 0xff) };
+          (byte)(value & 0xff), };
         stream.Write(bytes, 0, 5);
       }
     }
@@ -1592,7 +1592,7 @@ objret[key.Key] = CBORObject.FromObject(
       int bits = BitConverter.ToInt32(BitConverter.GetBytes((float)value), 0);
       byte[] data = { (byte)0xfa, (byte)((bits >> 24) & 0xff),
         (byte)((bits >> 16) & 0xff), (byte)((bits >> 8) & 0xff),
-        (byte)(bits & 0xff) };
+        (byte)(bits & 0xff), };
       s.Write(data, 0, 5);
     }
 
@@ -1610,7 +1610,7 @@ objret[key.Key] = CBORObject.FromObject(
         (byte)((bits >> 56) & 0xff), (byte)((bits >> 48) & 0xff),
         (byte)((bits >> 40) & 0xff), (byte)((bits >> 32) & 0xff),
         (byte)((bits >> 24) & 0xff), (byte)((bits >> 16) & 0xff),
-        (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff) };
+        (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff), };
       stream.Write(data, 0, 9);
     }
 
@@ -2170,8 +2170,8 @@ objret[key.Key] = CBORObject.FromObject(
       if (this.ItemType == CBORObjectTypeMap) {
 CBORObject ckey = key == null ? CBORObject.Null :
           CBORObject.FromObject(key);
-        IDictionary<CBORObject, CBORObject> map = this.AsMap();
-        return map.ContainsKey(ckey);
+          IDictionary<CBORObject, CBORObject> map = this.AsMap();
+          return map.ContainsKey(ckey);
       }
       return false;
     }
@@ -2269,10 +2269,10 @@ CBORObject ckey = key == null ? CBORObject.Null :
               int bits = BitConverter.ToInt32(BitConverter.GetBytes(value), 0);
               return tagged ? new[] { tagbyte, (byte)0xfa,
                 (byte)((bits >> 24) & 0xff), (byte)((bits >> 16) & 0xff),
-                (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff) } :
+                (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff), } :
                 new[] { (byte)0xfa, (byte)((bits >> 24) & 0xff),
                 (byte)((bits >> 16) & 0xff), (byte)((bits >> 8) & 0xff),
-                (byte)(bits & 0xff) };
+                (byte)(bits & 0xff), };
             }
           case CBORObjectTypeDouble: {
               var value = (double)this.ThisItem;
@@ -2281,12 +2281,12 @@ CBORObject ckey = key == null ? CBORObject.Null :
                 (byte)((bits >> 56) & 0xff), (byte)((bits >> 48) & 0xff),
                 (byte)((bits >> 40) & 0xff), (byte)((bits >> 32) & 0xff),
                 (byte)((bits >> 24) & 0xff), (byte)((bits >> 16) & 0xff),
-                (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff) } :
+                (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff), } :
                 new[] { (byte)0xfb, (byte)((bits >> 56) & 0xff),
                 (byte)((bits >> 48) & 0xff), (byte)((bits >> 40) & 0xff),
                 (byte)((bits >> 32) & 0xff), (byte)((bits >> 24) & 0xff),
                 (byte)((bits >> 16) & 0xff), (byte)((bits >> 8) & 0xff),
-                (byte)(bits & 0xff) };
+                (byte)(bits & 0xff), };
             }
         }
       }
@@ -2434,25 +2434,25 @@ CBORObject ckey = key == null ? CBORObject.Null :
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasMostOuterTag(System.Int32)"]/*'/>
- public bool HasMostOuterTag(int tagValue) {
+    public bool HasMostOuterTag(int tagValue) {
       if (tagValue < 0) {
         throw new ArgumentException("tagValue (" + tagValue +
                     ") is less than 0");
       }
- return this.IsTagged && this.tagHigh == 0 && this.tagLow == tagValue;
+      return this.IsTagged && this.tagHigh == 0 && this.tagLow == tagValue;
  }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasMostOuterTag(PeterO.Numbers.EInteger)"]/*'/>
- public bool HasMostOuterTag(EInteger bigTagValue) {
+    public bool HasMostOuterTag(EInteger bigTagValue) {
     if (bigTagValue == null) {
   throw new ArgumentNullException(nameof(bigTagValue));
 }
-      if (bigTagValue.Sign < 0) {
+if (bigTagValue.Sign < 0) {
         throw new ArgumentException("bigTagValue (" + bigTagValue +
                     ") is less than 0");
       }
- return (!this.IsTagged) ? false : this.MostOuterTag.Equals(bigTagValue);
+      return (!this.IsTagged) ? false : this.MostOuterTag.Equals(bigTagValue);
  }
 
     /// <include file='../../docs.xml'
@@ -2653,7 +2653,7 @@ CBORObject ckey = key == null ? CBORObject.Null :
         if (key is int) {
         IList<CBORObject> list = this.AsList();
         var index = (int)key;
-if (index < 0 || index >= this.Count) {
+        if (index < 0 || index >= this.Count) {
  throw new ArgumentOutOfRangeException("key");
 }
         CBORObject mapValue;
@@ -3043,7 +3043,7 @@ if (index < 0 || index >= this.Count) {
         (byte)((longVal >> 48) & 0xff), (byte)((longVal >> 40) & 0xff),
         (byte)((longVal >> 32) & 0xff), (byte)((longVal >> 24) & 0xff),
         (byte)((longVal >> 16) & 0xff), (byte)((longVal >> 8) & 0xff),
-        (byte)(longVal & 0xff) };
+        (byte)(longVal & 0xff), };
       outputStream.Write(bytes, 0, bytes.Length);
       return bytes.Length;
     }
@@ -3190,24 +3190,24 @@ if (index < 0 || index >= this.Count) {
             uadditional = (int)(data[1] & (int)0xff);
             break;
           case 25:
-            uadditional = ((long)(data[1] & (long)0xff)) << 8;
-            uadditional |= (long)(data[2] & (long)0xff);
+            uadditional = (data[1] & (0xffL)) << 8;
+            uadditional |= (long)(data[2] & 0xffL);
             break;
           case 26:
-            uadditional = ((long)(data[1] & (long)0xff)) << 24;
-            uadditional |= ((long)(data[2] & (long)0xff)) << 16;
-            uadditional |= ((long)(data[3] & (long)0xff)) << 8;
-            uadditional |= (long)(data[4] & (long)0xff);
+            uadditional = (data[1] & (0xffL)) << 24;
+            uadditional |= (data[2] & (0xffL)) << 16;
+            uadditional |= (data[3] & (0xffL)) << 8;
+            uadditional |= (long)(data[4] & 0xffL);
             break;
           case 27:
-            uadditional = ((long)(data[1] & (long)0xff)) << 56;
-            uadditional |= ((long)(data[2] & (long)0xff)) << 48;
-            uadditional |= ((long)(data[3] & (long)0xff)) << 40;
-            uadditional |= ((long)(data[4] & (long)0xff)) << 32;
-            uadditional |= ((long)(data[5] & (long)0xff)) << 24;
-            uadditional |= ((long)(data[6] & (long)0xff)) << 16;
-            uadditional |= ((long)(data[7] & (long)0xff)) << 8;
-            uadditional |= (long)(data[8] & (long)0xff);
+            uadditional = (data[1] & (0xffL)) << 56;
+            uadditional |= (data[2] & (0xffL)) << 48;
+            uadditional |= (data[3] & (0xffL)) << 40;
+            uadditional |= (data[4] & (0xffL)) << 32;
+            uadditional |= (data[5] & (0xffL)) << 24;
+            uadditional |= (data[6] & (0xffL)) << 16;
+            uadditional |= (data[7] & (0xffL)) << 8;
+            uadditional |= (long)(data[8] & 0xffL);
             break;
           default:
             throw new CBORException("Unexpected data encountered");
@@ -3240,7 +3240,7 @@ if (index < 0 || index >= this.Count) {
             if (firstbyte == 0xf9) {
               return new CBORObject(
                 CBORObjectTypeSingle,
-             CBORUtilities.HalfPrecisionToSingle(unchecked((int)uadditional)));
+                CBORUtilities.HalfPrecisionToSingle(unchecked((int)uadditional)));
             }
             if (firstbyte == 0xfa) {
               float flt = BitConverter.ToSingle(
@@ -3519,25 +3519,25 @@ if (index < 0 || index >= this.Count) {
         return new[] { (byte)((byte)value | (byte)(type << 5)) };
       }
       if (value <= 0xffL) {
-        return new[] { (byte)(24 | (type << 5)), (byte)(value & 0xff)
+        return new[] { (byte)(24 | (type << 5)), (byte)(value & 0xff),
         };
       }
       if (value <= 0xffffL) {
         return new[] { (byte)(25 | (type << 5)),
-          (byte)((value >> 8) & 0xff), (byte)(value & 0xff)
+          (byte)((value >> 8) & 0xff), (byte)(value & 0xff),
         };
       }
       if (value <= 0xffffffffL) {
         return new[] { (byte)(26 | (type << 5)),
           (byte)((value >> 24) & 0xff), (byte)((value >> 16) & 0xff),
-          (byte)((value >> 8) & 0xff), (byte)(value & 0xff)
+          (byte)((value >> 8) & 0xff), (byte)(value & 0xff),
         };
       }
       return new[] { (byte)(27 | (type << 5)), (byte)((value >> 56) & 0xff),
         (byte)((value >> 48) & 0xff), (byte)((value >> 40) & 0xff),
         (byte)((value >> 32) & 0xff), (byte)((value >> 24) & 0xff),
         (byte)((value >> 16) & 0xff), (byte)((value >> 8) & 0xff),
-        (byte)(value & 0xff) };
+        (byte)(value & 0xff), };
     }
 
     private static byte[] GetPositiveIntBytes(int type, int value) {
@@ -3549,17 +3549,17 @@ if (index < 0 || index >= this.Count) {
         return new[] { (byte)((byte)value | (byte)(type << 5)) };
       }
       if (value <= 0xff) {
-        return new[] { (byte)(24 | (type << 5)), (byte)(value & 0xff)
+        return new[] { (byte)(24 | (type << 5)), (byte)(value & 0xff),
         };
       }
       if (value <= 0xffff) {
         return new[] { (byte)(25 | (type << 5)),
-          (byte)((value >> 8) & 0xff), (byte)(value & 0xff)
+          (byte)((value >> 8) & 0xff), (byte)(value & 0xff),
         };
       }
       return new[] { (byte)(26 | (type << 5)), (byte)((value >> 24) & 0xff),
         (byte)((value >> 16) & 0xff), (byte)((value >> 8) & 0xff),
-        (byte)(value & 0xff) };
+        (byte)(value & 0xff), };
     }
 
     private static int GetSignInternal(int type, object obj) {
@@ -3967,7 +3967,7 @@ if (index < 0 || index >= this.Count) {
             (byte)((high >> 24) & 0xff), (byte)((high >> 16) & 0xff),
             (byte)((high >> 8) & 0xff), (byte)(high & 0xff),
             (byte)((low >> 24) & 0xff), (byte)((low >> 16) & 0xff),
-            (byte)((low >> 8) & 0xff), (byte)(low & 0xff) };
+            (byte)((low >> 8) & 0xff), (byte)(low & 0xff), };
           s.Write(arrayToWrite, 0, 9);
         }
         curobject = (CBORObject)curobject.itemValue;

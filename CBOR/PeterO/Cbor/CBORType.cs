@@ -37,6 +37,6 @@ namespace PeterO.Cbor {
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="F:PeterO.Cbor.CBORType.Map"]/*'/>
-    Map
+    Map,
   }
 }
