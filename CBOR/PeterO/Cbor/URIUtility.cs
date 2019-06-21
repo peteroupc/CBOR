@@ -17,7 +17,7 @@ namespace PeterO.Cbor {
 
     private const string HexChars = "0123456789ABCDEF";
 
-    private static void appendAuthority(
+    private static void ValueAppendAuthority(
   StringBuilder builder,
   string refValue,
   int[] segments) {
@@ -30,7 +30,7 @@ namespace PeterO.Cbor {
       }
     }
 
-    private static void appendFragment(
+    private static void ValueAppendFragment(
   StringBuilder builder,
   string refValue,
   int[] segments) {
@@ -43,12 +43,12 @@ namespace PeterO.Cbor {
       }
     }
 
-    private static void appendNormalizedPath(
+    private static void ValueAppendNormalizedPath(
       StringBuilder builder,
       string refValue,
       int[] segments) {
       builder.Append(
-        normalizePath(
+        ValueNormalizePath(
   refValue.Substring(
   segments[4],
   segments[5] - segments[4])));
@@ -64,7 +64,7 @@ namespace PeterO.Cbor {
   segments[5] - segments[4]));
     }
 
-    private static void appendQuery(
+    private static void ValueAppendQuery(
   StringBuilder builder,
   string refValue,
   int[] segments) {
@@ -77,7 +77,7 @@ namespace PeterO.Cbor {
       }
     }
 
-    private static void appendScheme(
+    private static void ValueAppendScheme(
   StringBuilder builder,
   string refValue,
   int[] segments) {
@@ -90,14 +90,14 @@ namespace PeterO.Cbor {
       }
     }
 
-    public static string escapeURI(string s, int mode) {
+    public static string ValueEscapeURI(string s, int mode) {
       if (s == null) {
         return null;
       }
       int[] components = null;
       if (mode == 1) {
         components = (
-          s == null) ? null : splitIRI(
+          s == null) ? null : ValueSplitIRI(
   s,
   0,
   s.Length,
@@ -106,7 +106,7 @@ namespace PeterO.Cbor {
           return null;
         }
       } else {
-        components = (s == null) ? null : splitIRI(
+        components = (s == null) ? null : ValueSplitIRI(
   s,
   0,
   s.Length,
@@ -128,9 +128,9 @@ namespace PeterO.Cbor {
         if (mode == 0 || mode == 3) {
           if (c == '%' && mode == 3) {
             // Check for illegal percent encoding
-            if (index + 2 >= valueSLength || !isHexChar(s[index + 1]) ||
-                !isHexChar(s[index + 2])) {
-              percentEncodeUtf8(builder, c);
+            if (index + 2 >= valueSLength || !ValueIsHexChar(s[index + 1]) ||
+                !ValueIsHexChar(s[index + 2])) {
+              ValuePercentEncodeUtf8(builder, c);
             } else {
               if (c <= 0xffff) {
                 builder.Append((char)c);
@@ -145,7 +145,7 @@ namespace PeterO.Cbor {
           }
           if (c >= 0x7f || c <= 0x20 ||
               ((c & 0x7f) == c && "{}|^\\`<>\"".IndexOf((char)c) >= 0)) {
-            percentEncodeUtf8(builder, c);
+            ValuePercentEncodeUtf8(builder, c);
           } else if (c == '[' || c == ']') {
             if (components != null && index >= components[2] && index <
                 components[3]) {
@@ -159,7 +159,7 @@ namespace PeterO.Cbor {
               }
             } else {
               // percent encode
-              percentEncodeUtf8(builder, c);
+              ValuePercentEncodeUtf8(builder, c);
             }
           } else {
             if (c <= 0xffff) {
@@ -171,7 +171,7 @@ namespace PeterO.Cbor {
           }
         } else if (mode == 1 || mode == 2) {
           if (c >= 0x80) {
-            percentEncodeUtf8(builder, c);
+            ValuePercentEncodeUtf8(builder, c);
           } else if (c == '[' || c == ']') {
             if (components != null && index >= components[2] && index <
                 components[3]) {
@@ -185,7 +185,7 @@ namespace PeterO.Cbor {
               }
             } else {
               // percent encode
-              percentEncodeUtf8(builder, c);
+              ValuePercentEncodeUtf8(builder, c);
             }
           } else {
             if (c <= 0xffff) {
@@ -201,8 +201,8 @@ namespace PeterO.Cbor {
       return builder.ToString();
     }
 
-    public static bool hasScheme(string refValue) {
-      int[] segments = (refValue == null) ? null : splitIRI(
+    public static bool ValueHasScheme(string refValue) {
+      int[] segments = (refValue == null) ? null : ValueSplitIRI(
         refValue,
         0,
         refValue.Length,
@@ -210,8 +210,8 @@ namespace PeterO.Cbor {
       return segments != null && segments[0] >= 0;
     }
 
-    public static bool hasSchemeForURI(string refValue) {
-      int[] segments = (refValue == null) ? null : splitIRI(
+    public static bool ValueHasSchemeForURI(string refValue) {
+      int[] segments = (refValue == null) ? null : ValueSplitIRI(
         refValue,
         0,
         refValue.Length,
@@ -219,7 +219,7 @@ namespace PeterO.Cbor {
       return segments != null && segments[0] >= 0;
     }
 
-    private static bool isHexChar(char c) {
+    private static bool ValueIsHexChar(char c) {
       return (c >= 'a' && c <= 'f') ||
         (c >= 'A' && c <= 'F') || (c >= '0' && c <= '9');
     }
@@ -398,14 +398,14 @@ if ((c & 0x7F) == c && ((c >= 'A' && c <= 'Z') ||
           builder.Append((char)c);
           ++index;
         } else {
-          percentEncodeUtf8(builder, c);
+          ValuePercentEncodeUtf8(builder, c);
           ++index;
         }
       }
       return builder.ToString();
     }
 
-    private static bool isIfragmentChar(int c) {
+    private static bool ValueIsIfragmentChar(int c) {
       // '%' omitted
       return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
         (c >= '0' && c <= '9') ||
@@ -416,7 +416,7 @@ if ((c & 0x7F) == c && ((c >= 'A' && c <= 'Z') ||
           0xfffe) != 0xfffe);
     }
 
-    private static bool isIpchar(int c) {
+    private static bool ValueIsIpchar(int c) {
       // '%' omitted
       return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
         (c >= '0' && c <= '9') ||
@@ -427,7 +427,7 @@ if ((c & 0x7F) == c && ((c >= 'A' && c <= 'Z') ||
           0xfffe) != 0xfffe);
     }
 
-    private static bool isIqueryChar(int c) {
+    private static bool ValueIsIqueryChar(int c) {
       // '%' omitted
       return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
         (c >= '0' && c <= '9') ||
@@ -438,7 +438,7 @@ if ((c & 0x7F) == c && ((c >= 'A' && c <= 'Z') ||
            !(c >= 0xe0000 && c <= 0xe0fff));
     }
 
-    private static bool isIRegNameChar(int c) {
+    private static bool ValueIsIRegNameChar(int c) {
       // '%' omitted
       return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
         (c >= '0' && c <= '9') ||
@@ -449,7 +449,7 @@ if ((c & 0x7F) == c && ((c >= 'A' && c <= 'Z') ||
           0xfffe) != 0xfffe);
     }
 
-    private static bool isIUserInfoChar(int c) {
+    private static bool ValueIsIUserInfoChar(int c) {
       // '%' omitted
       return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
         (c >= '0' && c <= '9') ||
@@ -460,7 +460,7 @@ if ((c & 0x7F) == c && ((c >= 'A' && c <= 'Z') ||
           0xfffe) != 0xfffe);
     }
 
-    public static bool isValidCurieReference(string s, int offset, int length) {
+    public static bool ValueIsValidCurieReference(string s, int offset, int length) {
       if (s == null) {
         return false;
       }
@@ -510,8 +510,8 @@ if ((c & 0x7F) == c && ((c >= 'A' && c <= 'Z') ||
         }
         if (c == '%') {
           // Percent encoded character
-          if (index + 2 < valueSLength && isHexChar(s[index + 1]) &&
-              isHexChar(s[index + 2])) {
+          if (index + 2 < valueSLength && ValueIsHexChar(s[index + 1]) &&
+              ValueIsHexChar(s[index + 2])) {
             index += 3;
             continue;
           }
@@ -522,19 +522,19 @@ if ((c & 0x7F) == c && ((c >= 'A' && c <= 'Z') ||
             state = 1;  // move to query state
           } else if (c == '#') {
             state = 2;  // move to fragment state
-          } else if (!isIpchar(c)) {
+          } else if (!ValueIsIpchar(c)) {
             return false;
           }
           ++index;
         } else if (state == 1) {  // Query
           if (c == '#') {
             state = 2;  // move to fragment state
-          } else if (!isIqueryChar(c)) {
+          } else if (!ValueIsIqueryChar(c)) {
             return false;
           }
           ++index;
         } else if (state == 2) {  // Fragment
-          if (!isIfragmentChar(c)) {
+          if (!ValueIsIfragmentChar(c)) {
             return false;
           }
           ++index;
@@ -550,7 +550,7 @@ public static string BuildIRI(
   string fragment) {
   var builder = new StringBuilder();
   if (!String.IsNullOrEmpty(schemeAndAuthority)) {
-    int[] irisplit = splitIRI(schemeAndAuthority);
+    int[] irisplit = ValueSplitIRI(schemeAndAuthority);
      // NOTE: Path component is always present in URIs;
      // we check here whether path component is empty
     if (irisplit == null || (irisplit[0] < 0 && irisplit[2] < 0) ||
@@ -590,8 +590,8 @@ public static string BuildIRI(
  ++index;
 }
         if (c == '%') {
-          if (index + 2 < s.Length && isHexChar(s[index + 1]) &&
-            isHexChar(s[index + 2])) {
+          if (index + 2 < s.Length && ValueIsHexChar(s[index + 1]) &&
+            ValueIsHexChar(s[index + 2])) {
             builder.Append('%');
             builder.Append(s[index + 1]);
             builder.Append(s[index + 2]);
@@ -609,30 +609,30 @@ public static string BuildIRI(
           builder.Append((char)c);
           ++index;
         } else {
-          percentEncodeUtf8(builder, c);
+          ValuePercentEncodeUtf8(builder, c);
           ++index;
         }
       }
   }
   string ret = builder.ToString();
-  if (splitIRI(ret) == null) {
+  if (ValueSplitIRI(ret) == null) {
  throw new ArgumentException();
 }
   return ret;
 }
 
-    public static bool isValidIRI(string s) {
+    public static bool ValueIsValidIRI(string s) {
       return ((s == null) ?
-  null : splitIRI(
+  null : ValueSplitIRI(
   s,
   0,
   s.Length,
   ParseMode.IRIStrict)) != null;
     }
 
-    public static bool isValidIRI(string s, ParseMode mode) {
+    public static bool ValueIsValidIRI(string s, ParseMode mode) {
       return ((s == null) ?
-  null : splitIRI(
+  null : ValueSplitIRI(
   s,
   0,
   s.Length,
@@ -642,7 +642,7 @@ public static string BuildIRI(
     private const string ValueDotSlash = "." + "/";
     private const string ValueSlashDot = "/" + ".";
 
-    private static string normalizePath(string path) {
+    private static string ValueNormalizePath(string path) {
       int len = path.Length;
       if (len == 0 || path.Equals("..") || path.Equals(".")) {
         return String.Empty;
@@ -738,7 +738,7 @@ public static string BuildIRI(
       return builder.ToString();
     }
 
-    private static int parseIPLiteral(string s, int offset, int endOffset) {
+    private static int ValueParseIPLiteral(string s, int offset, int endOffset) {
       int index = offset;
       if (offset == endOffset) {
         return -1;
@@ -751,7 +751,7 @@ public static string BuildIRI(
         var hex = false;
         while (index < endOffset) {
           char c = s[index];
-          if (isHexChar(c)) {
+          if (ValueIsHexChar(c)) {
             hex = true;
           } else {
             break;
@@ -787,7 +787,7 @@ public static string BuildIRI(
         return index;
       }
       if (s[index] == ':' ||
-          isHexChar(s[index])) {
+          ValueIsHexChar(s[index])) {
      int startIndex = index;
      while (index < endOffset && ((s[index] >= 65 && s[index] <= 70) ||
   (s[index] >= 97 && s[index] <= 102) || (s[index] >= 48 && s[index]
@@ -820,7 +820,7 @@ for (var part = 0; part < 8; ++part) {
  var haveHex = false;
  int curindex = index;
  for (var i = 0; i < 4; ++i) {
-if (isHexChar(s[index])) {
+if (ValueIsHexChar(s[index])) {
  hex = (hex << 4) | ToHex(s[index]);
  haveHex = true;
  ++index;
@@ -933,8 +933,8 @@ ipparts[part] = dec;
                 return haveChar ? index + 1 : -1;
               }
               if (c == '%') {
-                if (index + 2 < endOffset && isHexChar(s[index + 1]) &&
-                    isHexChar(s[index + 2])) {
+                if (index + 2 < endOffset && ValueIsHexChar(s[index + 1]) &&
+                    ValueIsHexChar(s[index + 2])) {
                   index += 3;
                   haveChar = true;
                   continue;
@@ -961,7 +961,7 @@ ipparts[part] = dec;
       return -1;
     }
 
-    private static string pathParent(
+    private static string ValuePathParent(
   string refValue,
   int startIndex,
   int endIndex) {
@@ -978,41 +978,41 @@ ipparts[part] = dec;
       return String.Empty;
     }
 
-    private static void percentEncode(StringBuilder buffer, int b) {
+    private static void ValuePercentEncode(StringBuilder buffer, int b) {
       buffer.Append('%');
       buffer.Append(HexChars[(b >> 4) & 0x0f]);
       buffer.Append(HexChars[b & 0x0f]);
     }
 
-    private static void percentEncodeUtf8(StringBuilder buffer, int cp) {
+    private static void ValuePercentEncodeUtf8(StringBuilder buffer, int cp) {
       if (cp <= 0x7f) {
         buffer.Append('%');
         buffer.Append(HexChars[(cp >> 4) & 0x0f]);
         buffer.Append(HexChars[cp & 0x0f]);
       } else if (cp <= 0x7ff) {
-        percentEncode(buffer, 0xc0 | ((cp >> 6) & 0x1f));
-        percentEncode(buffer, 0x80 | (cp & 0x3f));
+        ValuePercentEncode(buffer, 0xc0 | ((cp >> 6) & 0x1f));
+        ValuePercentEncode(buffer, 0x80 | (cp & 0x3f));
       } else if (cp <= 0xffff) {
-        percentEncode(buffer, 0xe0 | ((cp >> 12) & 0x0f));
-        percentEncode(buffer, 0x80 | ((cp >> 6) & 0x3f));
-        percentEncode(buffer, 0x80 | (cp & 0x3f));
+        ValuePercentEncode(buffer, 0xe0 | ((cp >> 12) & 0x0f));
+        ValuePercentEncode(buffer, 0x80 | ((cp >> 6) & 0x3f));
+        ValuePercentEncode(buffer, 0x80 | (cp & 0x3f));
       } else {
-        percentEncode(buffer, 0xf0 | ((cp >> 18) & 0x07));
-        percentEncode(buffer, 0x80 | ((cp >> 12) & 0x3f));
-        percentEncode(buffer, 0x80 | ((cp >> 6) & 0x3f));
-        percentEncode(buffer, 0x80 | (cp & 0x3f));
+        ValuePercentEncode(buffer, 0xf0 | ((cp >> 18) & 0x07));
+        ValuePercentEncode(buffer, 0x80 | ((cp >> 12) & 0x3f));
+        ValuePercentEncode(buffer, 0x80 | ((cp >> 6) & 0x3f));
+        ValuePercentEncode(buffer, 0x80 | (cp & 0x3f));
       }
     }
 
-    public static string relativeResolve(string refValue, string baseURI) {
-      return relativeResolve(refValue, baseURI, ParseMode.IRIStrict);
+    public static string ValueRelativeResolve(string refValue, string baseURI) {
+      return ValueRelativeResolve(refValue, baseURI, ParseMode.IRIStrict);
     }
 
-    public static string relativeResolve(
+    public static string ValueRelativeResolve(
   string refValue,
   string baseURI,
   ParseMode parseMode) {
-      int[] segments = (refValue == null) ? null : splitIRI(
+      int[] segments = (refValue == null) ? null : ValueSplitIRI(
         refValue,
         0,
         refValue.Length,
@@ -1021,7 +1021,7 @@ ipparts[part] = dec;
         return null;
       }
       int[] segmentsBase = (
-        baseURI == null) ? null : splitIRI(
+        baseURI == null) ? null : ValueSplitIRI(
   baseURI,
   0,
   baseURI.Length,
@@ -1031,50 +1031,50 @@ ipparts[part] = dec;
       }
       var builder = new StringBuilder();
       if (segments[0] >= 0) {  // scheme present
-        appendScheme(builder, refValue, segments);
-        appendAuthority(builder, refValue, segments);
-        appendNormalizedPath(builder, refValue, segments);
-        appendQuery(builder, refValue, segments);
-        appendFragment(builder, refValue, segments);
+        ValueAppendScheme(builder, refValue, segments);
+        ValueAppendAuthority(builder, refValue, segments);
+        ValueAppendNormalizedPath(builder, refValue, segments);
+        ValueAppendQuery(builder, refValue, segments);
+        ValueAppendFragment(builder, refValue, segments);
       } else if (segments[2] >= 0) {  // authority present
-        appendScheme(builder, baseURI, segmentsBase);
-        appendAuthority(builder, refValue, segments);
-        appendNormalizedPath(builder, refValue, segments);
-        appendQuery(builder, refValue, segments);
-        appendFragment(builder, refValue, segments);
+        ValueAppendScheme(builder, baseURI, segmentsBase);
+        ValueAppendAuthority(builder, refValue, segments);
+        ValueAppendNormalizedPath(builder, refValue, segments);
+        ValueAppendQuery(builder, refValue, segments);
+        ValueAppendFragment(builder, refValue, segments);
       } else if (segments[4] == segments[5]) {
-        appendScheme(builder, baseURI, segmentsBase);
-        appendAuthority(builder, baseURI, segmentsBase);
+        ValueAppendScheme(builder, baseURI, segmentsBase);
+        ValueAppendAuthority(builder, baseURI, segmentsBase);
         AppendPath(builder, baseURI, segmentsBase);
         if (segments[6] >= 0) {
-          appendQuery(builder, refValue, segments);
+          ValueAppendQuery(builder, refValue, segments);
         } else {
-          appendQuery(builder, baseURI, segmentsBase);
+          ValueAppendQuery(builder, baseURI, segmentsBase);
         }
-        appendFragment(builder, refValue, segments);
+        ValueAppendFragment(builder, refValue, segments);
       } else {
-        appendScheme(builder, baseURI, segmentsBase);
-        appendAuthority(builder, baseURI, segmentsBase);
+        ValueAppendScheme(builder, baseURI, segmentsBase);
+        ValueAppendAuthority(builder, baseURI, segmentsBase);
         if (segments[4] < segments[5] && refValue[segments[4]] == '/') {
-          appendNormalizedPath(builder, refValue, segments);
+          ValueAppendNormalizedPath(builder, refValue, segments);
         } else {
           var merged = new StringBuilder();
           if (segmentsBase[2] >= 0 && segmentsBase[4] == segmentsBase[5]) {
             merged.Append('/');
             AppendPath(merged, refValue, segments);
-            builder.Append(normalizePath(merged.ToString()));
+            builder.Append(ValueNormalizePath(merged.ToString()));
           } else {
             merged.Append(
-              pathParent(
+              ValuePathParent(
   baseURI,
   segmentsBase[4],
   segmentsBase[5]));
             AppendPath(merged, refValue, segments);
-            builder.Append(normalizePath(merged.ToString()));
+            builder.Append(ValueNormalizePath(merged.ToString()));
           }
         }
-        appendQuery(builder, refValue, segments);
-        appendFragment(builder, refValue, segments);
+        ValueAppendQuery(builder, refValue, segments);
+        ValueAppendFragment(builder, refValue, segments);
       }
       return builder.ToString();
     }
@@ -1108,8 +1108,8 @@ ipparts[part] = dec;
       return builder.ToString();
     }
 
-    public static string[] splitIRIToStrings(string s) {
-      int[] indexes = splitIRI(s);
+    public static string[] ValueSplitIRIToStrings(string s) {
+      int[] indexes = ValueSplitIRI(s);
       if (indexes == null) {
  return null;
 }
@@ -1125,11 +1125,11 @@ return new string[] {
 };
     }
 
-    public static int[] splitIRI(string s) {
-      return (s == null) ? null : splitIRI(s, 0, s.Length, ParseMode.IRIStrict);
+    public static int[] ValueSplitIRI(string s) {
+      return (s == null) ? null : ValueSplitIRI(s, 0, s.Length, ParseMode.IRIStrict);
     }
 
-    public static int[] splitIRI(
+    public static int[] ValueSplitIRI(
   string s,
   int offset,
   int length,
@@ -1229,8 +1229,8 @@ if (s.Length - offset < length) {
           }
           if (c == '%' && (state == 0 || state == 1) && strict) {
             // Percent encoded character (except in port)
-            if (index + 2 < valueSLength && isHexChar(s[index + 1]) &&
-                isHexChar(s[index + 2])) {
+            if (index + 2 < valueSLength && ValueIsHexChar(s[index + 1]) &&
+                ValueIsHexChar(s[index + 2])) {
               index += 3;
               continue;
             }
@@ -1249,7 +1249,7 @@ if (s.Length - offset < length) {
               state = 1;
               continue;
             }
-            if (strict && isIUserInfoChar(c)) {
+            if (strict && ValueIsIUserInfoChar(c)) {
               ++index;
               if (index == valueSLength) {
                 // not user info
@@ -1273,7 +1273,7 @@ if (s.Length - offset < length) {
               ++index;
             } else if (c == '[') {
               ++index;
-              index = parseIPLiteral(s, index, valueSLength);
+              index = ValueParseIPLiteral(s, index, valueSLength);
               if (index < 0) {
                 return null;
               }
@@ -1282,7 +1282,7 @@ if (s.Length - offset < length) {
               // port
               state = 2;
               ++index;
-            } else if (isIRegNameChar(c)) {
+            } else if (ValueIsIRegNameChar(c)) {
               // is valid host name char
               // (note: IPv4 addresses included
               // in ireg-name)
@@ -1327,8 +1327,8 @@ if (s.Length - offset < length) {
         }
         if (c == '%' && strict) {
           // Percent encoded character
-          if (index + 2 < valueSLength && isHexChar(s[index + 1]) &&
-              isHexChar(s[index + 2])) {
+          if (index + 2 < valueSLength && ValueIsHexChar(s[index + 1]) &&
+              ValueIsHexChar(s[index + 2])) {
             index += 3;
             continue;
           }
@@ -1354,7 +1354,7 @@ if (s.Length - offset < length) {
             retval[8] = index + 1;
             retval[9] = valueSLength;
             state = 2;  // move to fragment state
-          } else if (strict && !isIpchar(c)) {
+          } else if (strict && !ValueIsIpchar(c)) {
             return null;
           }
           ++index;
@@ -1364,12 +1364,12 @@ if (s.Length - offset < length) {
             retval[8] = index + 1;
             retval[9] = valueSLength;
             state = 2;  // move to fragment state
-          } else if (strict && !isIqueryChar(c)) {
+          } else if (strict && !ValueIsIqueryChar(c)) {
             return null;
           }
           ++index;
         } else if (state == 2) {  // Fragment
-          if (strict && !isIfragmentChar(c)) {
+          if (strict && !ValueIsIfragmentChar(c)) {
             return null;
           }
           ++index;
@@ -1381,11 +1381,11 @@ if (s.Length - offset < length) {
       return retval;
     }
 
-    public static int[] splitIRI(string s, ParseMode parseMode) {
-      return (s == null) ? null : splitIRI(s, 0, s.Length, parseMode);
+    public static int[] ValueSplitIRI(string s, ParseMode parseMode) {
+      return (s == null) ? null : ValueSplitIRI(s, 0, s.Length, parseMode);
     }
 
- private static bool pathHasDotComponent(string path) {
+ private static bool ValuePathHasDotComponent(string path) {
   if (path == null || path.Length == 0) {
  return false;
 }
@@ -1450,20 +1450,20 @@ if (s.Length - offset < length) {
       return false;
  }
 
- private static string uriPath(string uri, ParseMode parseMode) {
- int[] indexes = splitIRI(uri, parseMode);
+ private static string ValueUriPath(string uri, ParseMode parseMode) {
+ int[] indexes = ValueSplitIRI(uri, parseMode);
  return (
   indexes == null) ? null : uri.Substring(
   indexes[4],
   indexes[5] - indexes[4]);
  }
 
- public static string directoryPath(string uri) {
- return directoryPath(uri, ParseMode.IRIStrict);
+ public static string ValueDirectoryPath(string uri) {
+ return ValueDirectoryPath(uri, ParseMode.IRIStrict);
 }
 
- public static string directoryPath(string uri, ParseMode parseMode) {
- int[] indexes = splitIRI(uri, parseMode);
+ public static string ValueDirectoryPath(string uri, ParseMode parseMode) {
+ int[] indexes = ValueSplitIRI(uri, parseMode);
  if (indexes == null) {
   return null;
  }
@@ -1481,20 +1481,20 @@ if (s.Length - offset < length) {
  }
 }
 
- public static string relativeResolveWithinBaseURI(
+ public static string ValueRelativeResolveWithinBaseURI(
   string refValue,
   string absoluteBaseURI) {
-  string rel = relativeResolve(refValue, absoluteBaseURI);
+  string rel = ValueRelativeResolve(refValue, absoluteBaseURI);
   if (rel == null) {
  return null;
 }
-string relpath = uriPath(refValue, ParseMode.IRIStrict);
-if (pathHasDotComponent(relpath)) {
+string relpath = ValueUriPath(refValue, ParseMode.IRIStrict);
+if (ValuePathHasDotComponent(relpath)) {
   // Resolved path has a dot component in it (usually
   // because that component is percent-encoded)
   return null;
  }
-  string absuri = directoryPath(absoluteBaseURI);
-  string reluri = directoryPath(rel);
+  string absuri = ValueDirectoryPath(absoluteBaseURI);
+  string reluri = ValueDirectoryPath(rel);
   return (absuri == null || reluri == null ||
      !absuri.Equals(reluri)) ? null : rel; } } }

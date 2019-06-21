@@ -24,7 +24,7 @@ namespace PeterO.DocGen {
       }
       else if (t.IsByRef) {
         sb.Append(XmlDocTypeName(t.GetElementType(), param, genericMethod))
-          .Append("&");
+          .Append("@");
       }
       else if (t.IsGenericParameter) {
         var ggastr = Convert.ToString(
@@ -153,7 +153,7 @@ namespace PeterO.DocGen {
       if (idx >= 0) {
         name = name.Substring(0, idx);
       }
-      idx = name.IndexOf('&');
+      idx = name.IndexOf('@');
       if (idx >= 0) {
         name = name.Substring(0, idx);
       }
