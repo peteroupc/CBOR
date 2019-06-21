@@ -511,8 +511,8 @@ namespace PeterO.DocGen {
   } else if (xmlName.Equals("paramref")) {
  this.VisitParamRef(node);
   } else if (xmlName.Equals("remarks") || node.Equals("summary")) {
-          this.WriteLine("\r\n\r\n");
           XmlDoc.VisitInnerNode(node, this);
+          this.WriteLine("\r\n\r\n");
         } else if (xmlName.Equals("returns")) {
  this.VisitReturns(node);
   } else if (xmlName.Equals("typeparam")) {
@@ -544,7 +544,6 @@ xmlName.Equals("em")) {
 
     public void VisitC(XmlDoc.INode node) {
       this.Write(" `" + node.GetContent() + "` ");
-      XmlDoc.VisitInnerNode(node, this);
     }
 
     public void VisitCode(XmlDoc.INode node) {
@@ -553,7 +552,6 @@ xmlName.Equals("em")) {
         this.WriteLine(FourSpaces + line.TrimEnd());
       }
       this.WriteLine("\r\n\r\n");
-      XmlDoc.VisitInnerNode(node, this);
     }
 
     public void VisitExample(XmlDoc.INode node) {
