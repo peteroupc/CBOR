@@ -11,8 +11,11 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="T:PeterO.Cbor.CBORUtilities"]/*'/>
+   ///
+  /// <summary>Contains utility methods that may have use outside of the CBORObject
+  /// class.
+  /// </summary>
+  ///
   internal static class CBORUtilities {
     private const string HexAlphabet = "0123456789ABCDEF";
 
@@ -111,7 +114,7 @@ namespace PeterO.Cbor {
         return (EInteger)mantissa;
       }
       if (fpexponent > 0) {
-        // Value is an integer
+       // Value is an integer
         var bigmantissa = (EInteger)mantissa;
         bigmantissa <<= fpexponent;
         if (neg) {
@@ -119,7 +122,7 @@ namespace PeterO.Cbor {
         }
         return bigmantissa;
       } else {
-        // Value has a fractional part
+       // Value has a fractional part
         int exp = -fpexponent;
         for (var i = 0; i < exp && mantissa != 0; ++i) {
           mantissa >>= 1;
@@ -229,7 +232,7 @@ namespace PeterO.Cbor {
           int month,
           EInteger day,
           EInteger[] dest) {
-      // NOTE: This method assumes month is 1 to 12
+     // NOTE: This method assumes month is 1 to 12
       if (month <= 0 || month > 12) {
         throw new ArgumentOutOfRangeException(nameof(month));
       }
@@ -279,21 +282,21 @@ namespace PeterO.Cbor {
     }
 
     /*
-        // Example: Apple Time is a 32-bit unsigned integer
-        // of the number of seconds since the start of 1904.
-        // EInteger appleTime = GetNumberOfDaysProlepticGregorian(
-        // year,  // month
-        //,
+       // Example: Apple Time is a 32-bit unsigned integer
+       // of the number of seconds since the start of 1904.
+       // EInteger appleTime = GetNumberOfDaysProlepticGregorian(
+       // year, // month
+       //,
         day)
-        // .Subtract(GetNumberOfDaysProlepticGregorian(
-        // EInteger.FromInt32(1904),
+       // .Subtract(GetNumberOfDaysProlepticGregorian(
+       // EInteger.FromInt32(1904),
         1 //,
         s1));*/
     public static EInteger GetNumberOfDaysProlepticGregorian(
          EInteger year,
          int month,
          int mday) {
-      // NOTE: month = 1 is January, year = 1 is year 1
+     // NOTE: month = 1 is January, year = 1 is year 1
       if (month <= 0 || month > 12) {
         throw new ArgumentException();
       }
@@ -639,7 +642,7 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
       if (floatExponent == 2047) {
         throw new OverflowException("Value is infinity or NaN");
       }
-      value1 &= 0xfffff;  // Mask out the exponent and sign
+      value1 &= 0xfffff; // Mask out the exponent and sign
       if (floatExponent == 0) {
         ++floatExponent;
       } else {
@@ -674,14 +677,14 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
         return bigmantissa;
       }
       if (floatExponent > 0) {
-        // Value is an integer
+       // Value is an integer
         bigmantissa <<= floatExponent;
         if (neg) {
           bigmantissa = -(EInteger)bigmantissa;
         }
         return bigmantissa;
       } else {
-        // Value has a fractional part
+       // Value has a fractional part
         int exp = -floatExponent;
         bigmantissa >>= exp;
         if (neg) {
@@ -712,7 +715,7 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
   BitConverter.GetBytes(value),
   0);
       } else {
-        // denormalized
+       // denormalized
         int m = value & 0x3ff;
         value = 0x1c400;
         while ((m >> 10) == 0) {

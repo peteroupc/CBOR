@@ -30,26 +30,27 @@ namespace PeterO.Cbor {
     }
 
     public static CBORObject ConvertToNativeObject(CBORObject o) {
-     if (o.HasMostOuterTag(2)) {
- return ConvertToBigNum(o, false);
-}
-     if (o.HasMostOuterTag(3)) {
- return ConvertToBigNum(o, true);
-}
-     if (o.HasMostOuterTag(4)) {
- return ConvertToDecimalFrac(o, true, false);
-}
-     if (o.HasMostOuterTag(5)) {
- return ConvertToDecimalFrac(o, false, false);
-}
-     if (o.HasMostOuterTag(30)) {
- return ConvertToRationalNumber(o);
-}
-     if (o.HasMostOuterTag(264)) {
- return ConvertToDecimalFrac(o, true, true);
-}
-return o.HasMostOuterTag(265) ? ConvertToDecimalFrac(o, false, true) :
-       o;
+      if (o.HasMostOuterTag(2)) {
+        return ConvertToBigNum(o, false);
+      }
+      if (o.HasMostOuterTag(3)) {
+        return ConvertToBigNum(o, true);
+      }
+      if (o.HasMostOuterTag(4)) {
+        return ConvertToDecimalFrac(o, true, false);
+      }
+      if (o.HasMostOuterTag(5)) {
+        return ConvertToDecimalFrac(o, false, false);
+      }
+      if (o.HasMostOuterTag(30)) {
+        return ConvertToRationalNumber(o);
+      }
+      if (o.HasMostOuterTag(264)) {
+        return ConvertToDecimalFrac(o, true, true);
+      }
+      return o.HasMostOuterTag(265) ?
+              ConvertToDecimalFrac(o, false, true) :
+             o;
     }
 
     private static CBORObject ConvertToDecimalFrac(
@@ -70,7 +71,7 @@ return o.HasMostOuterTag(265) ? ConvertToDecimalFrac(o, false, true) :
       }
       EInteger exponent = o[0].AsEInteger();
       EInteger mantissa = o[1].AsEInteger();
-      if (exponent.GetSignedBitLength() > 64 && !extended) {
+      if (!exponent.CanFitInInt64() && !extended) {
         throw new CBORException("Exponent is too big");
       }
       if (exponent.IsZero) {
@@ -120,7 +121,7 @@ return o.HasMostOuterTag(265) ? ConvertToDecimalFrac(o, false, true) :
         }
       }
       if (extended) {
-          bytes[bytes.Length - 1] = negative ? (byte)0xff : (byte)0;
+        bytes[bytes.Length - 1] = negative ? (byte)0xff : (byte)0;
       }
       bi = EInteger.FromBytes(bytes, true);
       // NOTE: Here, any tags are discarded; when called from
@@ -148,7 +149,7 @@ return o.HasMostOuterTag(265) ? ConvertToDecimalFrac(o, false, true) :
         throw new CBORException("Rational number requires integer denominator");
       }
       if (second.Sign <= 0) {
-throw new CBORException("Rational number requires denominator greater than 0");
+        throw new CBORException("Rational number requires denominator greater than 0");
       }
       EInteger denom = second.AsEInteger();
       // NOTE: Discards tags.

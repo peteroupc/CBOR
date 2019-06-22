@@ -1,4 +1,4 @@
-/*
+﻿/*
 Written by Peter O. in 2014-2016.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -11,7 +11,7 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace Test {
-    /// <summary>Description of RandomObjects.</summary>
+   /// <summary>Description of RandomObjects.</summary>
   public static class RandomObjects {
     public static byte[] RandomByteString(RandomGenerator rand) {
       int x = rand.UniformInt(0x2000);
@@ -46,19 +46,19 @@ namespace Test {
       for (var i = 0; i < length; ++i) {
         int x = rand.UniformInt(100);
         if (x < 95) {
-          // ASCII
+         // ASCII
           sb.Append((char)(0x20 + rand.UniformInt(0x60)));
         } else if (x < 98) {
-          // Supplementary character
+         // Supplementary character
           x = rand.UniformInt(0x400) + 0xd800;
           sb.Append((char)x);
           x = rand.UniformInt(0x400) + 0xdc00;
           sb.Append((char)x);
         } else {
-          // BMP character
+         // BMP character
           x = 0x20 + rand.UniformInt(0xffe0);
           if (x >= 0xd800 && x < 0xe000) {
-            // surrogate code unit, generate ASCII instead
+           // surrogate code unit, generate ASCII instead
             x = 0x20 + rand.UniformInt(0x60);
           }
           sb.Append((char)x);
@@ -91,8 +91,8 @@ namespace Test {
           r |= ((long)rand.UniformInt(0x10000)) << 48;
         }
       }
-      r &= ~0x7ff0000000000000L;  // clear exponent
-      r |= ((long)exponent) << 52;  // set exponent
+      r &= ~0x7ff0000000000000L; // clear exponent
+      r |= ((long)exponent) << 52; // set exponent
       return BitConverter.ToDouble(BitConverter.GetBytes((long)r), 0);
     }
 
@@ -104,8 +104,8 @@ namespace Test {
       if (rand.UniformInt(2) == 0) {
         r |= ((int)rand.UniformInt(0x10000)) << 16;
       }
-      r &= ~0x7f800000;  // clear exponent
-      r |= ((int)exponent) << 23;  // set exponent
+      r &= ~0x7f800000; // clear exponent
+      r |= ((int)exponent) << 23; // set exponent
       return BitConverter.ToSingle(BitConverter.GetBytes((int)r), 0);
     }
 
@@ -121,8 +121,8 @@ namespace Test {
         if (x == 2) {
           return EDecimal.NaN;
         }
-        // Signaling NaN currently not generated because
-        // it doesn't round-trip as well
+       // Signaling NaN currently not generated because
+       // it doesn't round-trip as well
       }
       string str = RandomDecimalString(r);
       return EDecimal.FromString(str);

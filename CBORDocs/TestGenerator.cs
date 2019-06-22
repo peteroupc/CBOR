@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -59,13 +59,13 @@ namespace PeterO.DocGen {
         methods.Add(methodName);
       }
       if (methods.Count == 0) {
-        // no tests to write
+       // no tests to write
         return;
       }
       if (methods.Contains("Constructor")) {
         builder.Append("    [TestMethod]\n");
         builder.Append("    public void TestConstructor() {\n");
-        builder.Append("  // not implemented yet\n");
+        builder.Append(" // not implemented yet\n");
         builder.Append("    }\n");
       }
       foreach (var methodName in methods) {
@@ -74,7 +74,7 @@ namespace PeterO.DocGen {
         }
         builder.Append("    [TestMethod]\n");
         builder.Append("    public void Test" + methodName + "() {\n");
-        builder.Append("  // not implemented yet\n");
+        builder.Append(" // not implemented yet\n");
         builder.Append("    }\n");
       }
       builder.Append("  }\n");

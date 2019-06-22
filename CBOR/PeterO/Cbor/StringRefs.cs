@@ -11,8 +11,10 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="T:PeterO.Cbor.StringRefs"]/*'/>
+   ///
+  /// <summary>Implements CBOR string references, described at
+  /// <c>http://cbor.schmorp.de/stringref</c> </summary>
+  ///
   internal class StringRefs {
     private readonly List<List<CBORObject>> stack;
 
@@ -62,11 +64,11 @@ namespace PeterO.Cbor {
       } else if (lastList.Count < 65536) {
         addStr |= lengthHint >= 5;
       } else {
-        // NOTE: lastList's size can't be higher than (2^64)-1
+       // NOTE: lastList's size can't be higher than (2^64)-1
         addStr |= lengthHint >= 7;
       }
-      // NOTE: An additional branch, with lengthHint >= 11, would
-      // be needed if the size could be higher than (2^64)-1
+     // NOTE: An additional branch, with lengthHint >= 11, would
+     // be needed if the size could be higher than (2^64)-1
       if (addStr) {
         lastList.Add(str);
       }
@@ -86,7 +88,7 @@ namespace PeterO.Cbor {
         throw new CBORException("Index " + index + " is not valid");
       }
       CBORObject ret = lastList[index];
-      // Byte strings are mutable, so make a copy
+     // Byte strings are mutable, so make a copy
       return (ret.Type == CBORType.ByteString) ?
         CBORObject.FromObject(ret.GetByteString()) : ret;
     }
@@ -105,7 +107,7 @@ namespace PeterO.Cbor {
         throw new CBORException("Index " + index + " is not valid");
       }
       CBORObject ret = lastList[index];
-      // Byte strings are mutable, so make a copy
+     // Byte strings are mutable, so make a copy
       return (ret.Type == CBORType.ByteString) ?
         CBORObject.FromObject(ret.GetByteString()) : ret;
     }

@@ -1,4 +1,4 @@
-/*
+﻿/*
 Written in 2013 by Peter Occil.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -49,19 +49,19 @@ namespace Test {
     }
 
     public static CBORObject patch(CBORObject o, CBORObject patch) {
-      // clone the object in case of failure
+     // clone the object in case of failure
       o = cloneCbor(o);
       for (int i = 0; i < patch.Count; ++i) {
         CBORObject patchOp = patch[i];
-        // NOTE: This algorithm requires "op" to exist
-        // only once; the CBORObject, however, does not
-        // allow duplicates
+       // NOTE: This algorithm requires "op" to exist
+       // only once; the CBORObject, however, does not
+       // allow duplicates
         string valueOpStr = getString(patchOp, "op");
         if (valueOpStr == null) {
           throw new ArgumentException("patch");
         }
         if ("add".Equals(valueOpStr)) {
-          // operation
+         // operation
           CBORObject value = null;
           if (!patchOp.ContainsKey("value")) {
 throw new ArgumentException("patch " + valueOpStr + " value");
@@ -69,7 +69,7 @@ throw new ArgumentException("patch " + valueOpStr + " value");
             value = patchOp["value"];
           o = addOperation(o, valueOpStr, getString(patchOp, "path"), value);
         } else if ("replace".Equals(valueOpStr)) {
-          // operation
+         // operation
           CBORObject value = null;
           if (!patchOp.ContainsKey("value")) {
 throw new ArgumentException("patch " + valueOpStr + " value");
@@ -81,7 +81,7 @@ throw new ArgumentException("patch " + valueOpStr + " value");
   getString(patchOp, "path"),
   value);
         } else if ("remove".Equals(valueOpStr)) {
-          // Remove operation
+         // Remove operation
           string path = patchOp["path"].AsString();
           if (path == null) {
             throw new ArgumentException("patch " + valueOpStr + " path");

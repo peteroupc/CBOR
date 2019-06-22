@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -19,7 +19,7 @@ namespace Test {
         CBORObject.True.ToObject(typeof(EInteger));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -28,7 +28,7 @@ namespace Test {
         CBORObject.False.ToObject(typeof(EInteger));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -37,7 +37,7 @@ namespace Test {
         CBORObject.Undefined.ToObject(typeof(EInteger));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -46,7 +46,7 @@ namespace Test {
         CBORObject.NewArray().ToObject(typeof(EInteger));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -55,7 +55,7 @@ namespace Test {
         CBORObject.NewMap().ToObject(typeof(EInteger));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -75,7 +75,7 @@ namespace Test {
             cbornumber.ToObject(typeof(EInteger));
             Assert.Fail("Should have failed");
           } catch (OverflowException) {
-            // NOTE: Intentionally empty
+           // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -200,7 +200,7 @@ ToObjectTest.TestToFromObjectRoundTrip((double)328323)
                   .ToObject(typeof(EInteger));
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -210,7 +210,7 @@ ToObjectTest.TestToFromObjectRoundTrip((double)328323)
                   .ToObject(typeof(EInteger));
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -220,7 +220,7 @@ ToObjectTest.TestToFromObjectRoundTrip((double)328323)
                   .ToObject(typeof(EInteger));
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -230,7 +230,7 @@ ToObjectTest.TestToFromObjectRoundTrip((double)328323)
                   .ToObject(typeof(EInteger));
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -240,7 +240,7 @@ ToObjectTest.TestToFromObjectRoundTrip((double)328323)
                   .ToObject(typeof(EInteger));
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -250,7 +250,7 @@ ToObjectTest.TestToFromObjectRoundTrip((double)328323)
                   .ToObject(typeof(EInteger));
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -291,7 +291,7 @@ Assert.AreEqual(objectTemp, objectTemp2);
         CBORObject.NewArray().ToObject(typeof(byte));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -300,7 +300,7 @@ Assert.AreEqual(objectTemp, objectTemp2);
         CBORObject.NewMap().ToObject(typeof(byte));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -309,7 +309,7 @@ Assert.AreEqual(objectTemp, objectTemp2);
         CBORObject.True.ToObject(typeof(byte));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -318,7 +318,7 @@ Assert.AreEqual(objectTemp, objectTemp2);
         CBORObject.False.ToObject(typeof(byte));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -327,7 +327,7 @@ Assert.AreEqual(objectTemp, objectTemp2);
         CBORObject.Undefined.ToObject(typeof(byte));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -337,7 +337,7 @@ Assert.AreEqual(objectTemp, objectTemp2);
                   .ToObject(typeof(byte));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -357,7 +357,7 @@ Assert.AreEqual(objectTemp, objectTemp2);
             cbornumber.ToObject(typeof(byte));
             Assert.Fail("Should have failed " + cbornumber);
           } catch (OverflowException) {
-            // NOTE: Intentionally empty
+           // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString() + cbornumber);
             throw new InvalidOperationException(String.Empty, ex);
@@ -373,7 +373,7 @@ Assert.AreEqual(objectTemp, objectTemp2);
         try {
           ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
         } catch (OverflowException) {
-          // NOTE: Intentionally empty
+         // NOTE: Intentionally empty
         } catch (Exception ex) {
           Assert.Fail(ex.ToString()); throw new
             InvalidOperationException(String.Empty, ex);
@@ -383,7 +383,7 @@ Assert.AreEqual(objectTemp, objectTemp2);
         try {
           ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
         } catch (OverflowException) {
-          // NOTE: Intentionally empty
+         // NOTE: Intentionally empty
         } catch (Exception ex) {
           Assert.Fail(ex.ToString()); throw new
             InvalidOperationException(String.Empty, ex);
@@ -397,7 +397,7 @@ Assert.AreEqual(objectTemp, objectTemp2);
         CBORObject.NewArray().ToObject(typeof(double));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -406,7 +406,7 @@ Assert.AreEqual(objectTemp, objectTemp2);
         CBORObject.NewMap().ToObject(typeof(double));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -415,7 +415,7 @@ Assert.AreEqual(objectTemp, objectTemp2);
         CBORObject.True.ToObject(typeof(double));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -424,7 +424,7 @@ Assert.AreEqual(objectTemp, objectTemp2);
         CBORObject.False.ToObject(typeof(double));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -433,7 +433,7 @@ Assert.AreEqual(objectTemp, objectTemp2);
         CBORObject.Undefined.ToObject(typeof(double));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -443,7 +443,7 @@ Assert.AreEqual(objectTemp, objectTemp2);
                   .ToObject(typeof(double));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -509,7 +509,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
         CBORObject.NewArray().ToObject(typeof(EDecimal));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -518,7 +518,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
         CBORObject.NewMap().ToObject(typeof(EDecimal));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -527,7 +527,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
         CBORObject.True.ToObject(typeof(EDecimal));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -536,7 +536,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
         CBORObject.False.ToObject(typeof(EDecimal));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -545,7 +545,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
         CBORObject.Undefined.ToObject(typeof(EDecimal));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -555,7 +555,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
                   .ToObject(typeof(EDecimal));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -641,7 +641,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
         CBORObject.NewArray().ToObject(typeof(short));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -650,7 +650,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
         CBORObject.NewMap().ToObject(typeof(short));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -659,7 +659,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
         CBORObject.True.ToObject(typeof(short));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -668,7 +668,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
         CBORObject.False.ToObject(typeof(short));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -677,7 +677,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
         CBORObject.Undefined.ToObject(typeof(short));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -687,7 +687,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
                   .ToObject(typeof(short));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -707,7 +707,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
             cbornumber.ToObject(typeof(short));
             Assert.Fail("Should have failed " + cbornumber);
           } catch (OverflowException) {
-            // NOTE: Intentionally empty
+           // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString() + cbornumber);
             throw new InvalidOperationException(String.Empty, ex);
@@ -722,7 +722,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
         CBORObject.NewArray().ToObject(typeof(int));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -731,7 +731,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
         CBORObject.NewMap().ToObject(typeof(int));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -740,7 +740,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
         CBORObject.True.ToObject(typeof(int));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -749,7 +749,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
         CBORObject.False.ToObject(typeof(int));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -758,7 +758,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
         CBORObject.Undefined.ToObject(typeof(int));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -767,7 +767,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
 ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -804,7 +804,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
             Console.WriteLine(cbornumber.ToObject(typeof(int)));
             Assert.Fail("Should have failed " + cbornumber);
           } catch (OverflowException) {
-            // NOTE: Intentionally empty
+           // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString() + cbornumber);
             throw new InvalidOperationException(String.Empty, ex);
@@ -814,7 +814,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
               cbornumberdouble.ToObject(typeof(int));
               Assert.Fail("Should have failed");
             } catch (OverflowException) {
-              // NOTE: Intentionally empty
+             // NOTE: Intentionally empty
             } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
@@ -825,7 +825,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
               cbornumbersingle.ToObject(typeof(int));
               Assert.Fail("Should have failed");
             } catch (OverflowException) {
-              // NOTE: Intentionally empty
+             // NOTE: Intentionally empty
             } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
@@ -840,7 +840,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
         CBORObject.NewArray().ToObject(typeof(long));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -849,7 +849,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
         CBORObject.NewMap().ToObject(typeof(long));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -858,7 +858,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
         CBORObject.True.ToObject(typeof(long));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -867,7 +867,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
         CBORObject.False.ToObject(typeof(long));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -876,7 +876,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
         CBORObject.Undefined.ToObject(typeof(long));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -886,7 +886,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
                   .ToObject(typeof(long));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -922,7 +922,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
             cbornumber.ToObject(typeof(long));
             Assert.Fail("Should have failed " + cbornumber);
           } catch (OverflowException) {
-            // NOTE: Intentionally empty
+           // NOTE: Intentionally empty
           } catch (Exception ex) {
             Assert.Fail(ex.ToString() + cbornumber);
             throw new InvalidOperationException(String.Empty, ex);
@@ -932,7 +932,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
               cbornumberdouble.ToObject(typeof(long));
               Assert.Fail("Should have failed");
             } catch (OverflowException) {
-              // NOTE: Intentionally empty
+             // NOTE: Intentionally empty
             } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
@@ -943,7 +943,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
               cbornumbersingle.ToObject(typeof(long));
               Assert.Fail("Should have failed");
             } catch (OverflowException) {
-              // NOTE: Intentionally empty
+             // NOTE: Intentionally empty
             } catch (Exception ex) {
               Assert.Fail(ex.ToString());
               throw new InvalidOperationException(String.Empty, ex);
@@ -958,7 +958,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
         CBORObject.NewArray().ToObject(typeof(float));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -967,7 +967,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
         CBORObject.NewMap().ToObject(typeof(float));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -976,7 +976,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
         CBORObject.True.ToObject(typeof(float));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -985,7 +985,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
         CBORObject.False.ToObject(typeof(float));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -994,7 +994,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
         CBORObject.Undefined.ToObject(typeof(float));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1004,7 +1004,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
                   .ToObject(typeof(float));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1040,7 +1040,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
         ToObjectTest.TestToFromObjectRoundTrip(true).ToObject(typeof(string));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1049,7 +1049,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
         ToObjectTest.TestToFromObjectRoundTrip(false).ToObject(typeof(string));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1058,7 +1058,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
         ToObjectTest.TestToFromObjectRoundTrip(5).ToObject(typeof(string));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1067,7 +1067,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
         CBORObject.NewArray().ToObject(typeof(string));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1076,7 +1076,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
         CBORObject.NewMap().ToObject(typeof(string));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1099,7 +1099,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
       co["stringProp"] = ToObjectTest.TestToFromObjectRoundTrip("stringProp");
       co["stringArray"] = CBORObject.NewArray().Add("a").Add("b");
       ao = (PODClass)co.ToObject(typeof(PODClass));
-      // Check whether ToObject ignores private setters
+     // Check whether ToObject ignores private setters
       Assert.IsTrue(ao.HasGoodPrivateProp());
       Assert.AreEqual(999, ao.PropA);
       if (ao.FloatProp != (float)3.5) {

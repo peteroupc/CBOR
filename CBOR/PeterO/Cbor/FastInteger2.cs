@@ -76,11 +76,11 @@ namespace PeterO.Cbor {
               int y0 = multiplicand;
               x0 &= 65535;
               x1 = (x1 >> 16) & 65535;
-              int temp = unchecked(x0 * y0);  // a * c
+              int temp = unchecked(x0 * y0); // a * c
               result1 = (temp >> 16) & 65535;
               result0 = temp & 65535;
               result2 = 0;
-              temp = unchecked(x1 * y0);  // b * c
+              temp = unchecked(x1 * y0); // b * c
               result2 += (temp >> 16) & 65535;
               result1 += temp & 65535;
               result2 += (result1 >> 16) & 65535;
@@ -109,22 +109,22 @@ namespace PeterO.Cbor {
               y0 &= 65535;
               x1 = (x1 >> 16) & 65535;
               y1 = (y1 >> 16) & 65535;
-              int temp = unchecked(x0 * y0);  // a * c
+              int temp = unchecked(x0 * y0); // a * c
               result1 = (temp >> 16) & 65535;
               result0 = temp & 65535;
-              temp = unchecked(x0 * y1);  // a * d
+              temp = unchecked(x0 * y1); // a * d
               result2 = (temp >> 16) & 65535;
               result1 += temp & 65535;
               result2 += (result1 >> 16) & 65535;
               result1 &= 65535;
-              temp = unchecked(x1 * y0);  // b * c
+              temp = unchecked(x1 * y0); // b * c
               result2 += (temp >> 16) & 65535;
               result1 += temp & 65535;
               result2 += (result1 >> 16) & 65535;
               result1 &= 65535;
               result3 = (result2 >> 16) & 65535;
               result2 &= 65535;
-              temp = unchecked(x1 * y1);  // b * d
+              temp = unchecked(x1 * y1); // b * d
               result3 += (temp >> 16) & 65535;
               result2 += temp & 65535;
               result3 += (result2 >> 16) & 65535;
@@ -172,8 +172,8 @@ namespace PeterO.Cbor {
 
       internal MutableNumber SubtractInt(int other) {
         if (other < 0) {
-     throw new ArgumentException("other (" + other + ") is less than " +
-            "0 ");
+          throw new ArgumentException("other (" + other + ") is less than " +
+                 "0 ");
         }
         if (other != 0) {
           unchecked {
@@ -214,8 +214,8 @@ namespace PeterO.Cbor {
       internal MutableNumber Subtract(MutableNumber other) {
         unchecked {
           {
-       // Console.WriteLine("" + this.data.Length + " " +
-             // (other.data.Length));
+            // Console.WriteLine("" + this.data.Length + " " +
+            // (other.data.Length));
             int neededSize = (this.wordCount > other.wordCount) ?
             this.wordCount : other.wordCount;
             if (this.data.Length < neededSize) {
@@ -256,57 +256,57 @@ namespace PeterO.Cbor {
         }
       }
 
-       internal MutableNumber Add(int augend) {
+      internal MutableNumber Add(int augend) {
         if (augend < 0) {
-   throw new ArgumentException("augend (" + augend + ") is less than " +
-            "0 ");
+          throw new ArgumentException("augend (" + augend + ") is less than " +
+                   "0 ");
         }
         unchecked {
-        if (augend != 0) {
-          var carry = 0;
-          // Ensure a length of at least 1
-          if (this.wordCount == 0) {
-            if (this.data.Length == 0) {
-              this.data = new int[4];
+          if (augend != 0) {
+            var carry = 0;
+            // Ensure a length of at least 1
+            if (this.wordCount == 0) {
+              if (this.data.Length == 0) {
+                this.data = new int[4];
+              }
+              this.data[0] = 0;
+              this.wordCount = 1;
             }
-            this.data[0] = 0;
-            this.wordCount = 1;
-          }
-          for (var i = 0; i < this.wordCount; ++i) {
-            int u;
-            int a = this.data[i];
-            u = (a + augend) + carry;
-            carry = ((((u >> 31) == (a >> 31)) ? ((u & Int32.MaxValue) < (a &
-            Int32.MaxValue)) :
-                    ((u >> 31) == 0)) || (u == a && augend != 0)) ? 1 : 0;
-            this.data[i] = u;
-            if (carry == 0) {
-              return this;
+            for (var i = 0; i < this.wordCount; ++i) {
+              int u;
+              int a = this.data[i];
+              u = (a + augend) + carry;
+              carry = ((((u >> 31) == (a >> 31)) ? ((u & Int32.MaxValue) < (a &
+              Int32.MaxValue)) :
+                      ((u >> 31) == 0)) || (u == a && augend != 0)) ? 1 : 0;
+              this.data[i] = u;
+              if (carry == 0) {
+                return this;
+              }
+              augend = 0;
             }
-            augend = 0;
-          }
-          if (carry != 0) {
-            if (this.wordCount >= this.data.Length) {
-              var newdata = new int[this.wordCount + 20];
-              Array.Copy(this.data, 0, newdata, 0, this.data.Length);
-              this.data = newdata;
+            if (carry != 0) {
+              if (this.wordCount >= this.data.Length) {
+                var newdata = new int[this.wordCount + 20];
+                Array.Copy(this.data, 0, newdata, 0, this.data.Length);
+                this.data = newdata;
+              }
+              this.data[this.wordCount] = carry;
+              ++this.wordCount;
             }
-            this.data[this.wordCount] = carry;
-            ++this.wordCount;
           }
+          // Calculate the correct data length
+          while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
+            --this.wordCount;
+          }
+          return this;
         }
-        // Calculate the correct data length
-        while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
-          --this.wordCount;
-        }
-        return this;
       }
     }
-    }
 
-    private int smallValue;  // if integerMode is 0
-    private MutableNumber mnum;  // if integerMode is 1
-    private EInteger largeValue;  // if integerMode is 2
+    private int smallValue; // if integerMode is 0
+    private MutableNumber mnum; // if integerMode is 1
+    private EInteger largeValue; // if integerMode is 2
     private int integerMode;
 
     internal FastInteger2(int value) {
@@ -347,8 +347,14 @@ namespace PeterO.Cbor {
       return this;
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.FastInteger2.Multiply(System.Int32)"]/*'/>
+    ///
+  /// <summary>Internal API.
+  /// </summary><param name='val'>The parameter
+  /// <paramref name='val'/>
+  /// is an internal parameter.
+  /// </param><returns>A FastInteger2 object.
+  /// </returns>
+  ///
     internal FastInteger2 Multiply(int val) {
       if (val == 0) {
         this.smallValue = 0;
@@ -400,8 +406,14 @@ namespace PeterO.Cbor {
       return this;
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.FastInteger2.Subtract(PeterO.Cbor.FastInteger2)"]/*'/>
+    ///
+  /// <summary>Internal API.
+  /// </summary><param name='val'>The parameter
+  /// <paramref name='val'/>
+  /// is an internal parameter.
+  /// </param><returns>A FastInteger2 object.
+  /// </returns>
+  ///
     internal FastInteger2 Subtract(FastInteger2 val) {
       EInteger valValue;
       switch (this.integerMode) {
@@ -447,8 +459,14 @@ namespace PeterO.Cbor {
       return this;
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.FastInteger2.SubtractInt(System.Int32)"]/*'/>
+    ///
+  /// <summary>Internal API.
+  /// </summary><param name='val'>The parameter
+  /// <paramref name='val'/>
+  /// is an internal parameter.
+  /// </param><returns>A FastInteger2 object.
+  /// </returns>
+  ///
     internal FastInteger2 SubtractInt(int val) {
       if (val == Int32.MinValue) {
         return this.AddInt(Int32.MaxValue).AddInt(1);
@@ -562,7 +580,7 @@ namespace PeterO.Cbor {
           return true;
         case 1:
           return this.mnum.CanFitInInt32();
-          case 2: {
+        case 2: {
             return this.largeValue.CanFitInInt32();
           }
         default:
@@ -570,18 +588,21 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Cbor.FastInteger2.Sign"]/*'/>
+    ///
+  /// <summary>This is an internal API.
+  /// </summary><value>Internal API value.
+  /// </value>
+  ///
     internal int Sign {
       get {
         switch (this.integerMode) {
           case 0:
-          return (this.smallValue == 0) ? 0 : ((this.smallValue < 0) ? -1 :
-              1);
+            return (this.smallValue == 0) ? 0 : ((this.smallValue < 0) ? -1 :
+                1);
           case 1:
-          return this.mnum.Sign;
+            return this.mnum.Sign;
           case 2:
-          return this.largeValue.Sign;
+            return this.largeValue.Sign;
           default: return 0;
         }
       }

@@ -1,4 +1,4 @@
-/*
+﻿/*
 Written by Peter O. in 2014.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -9,8 +9,8 @@ using System;
 using System.IO;
 
 namespace Test {
-    /// <summary>Contains lightweight methods for reading and writing CBOR
-    /// data.</summary>
+   /// <summary>Contains lightweight methods for reading and writing CBOR
+   /// data.</summary>
   public static class MiniCBOR {
     private static float ToSingle(int value) {
       return BitConverter.ToSingle(BitConverter.GetBytes(value), 0);
@@ -32,7 +32,7 @@ namespace Test {
       if ((value & 0x400) == value) {
         return ToSingle((int)((value == 0) ? 0 : 0x38800000) | negvalue);
       } else {
-        // denormalized
+       // denormalized
         int m = value & 0x3ff;
         value = 0x1c400;
         while ((m >> 10) == 0) {
@@ -56,7 +56,7 @@ namespace Test {
         return true;
       }
       while ((b >> 5) == 6) {
-        // Skip tags until a tag character is no longer read
+       // Skip tags until a tag character is no longer read
         if (b == 0xd8) {
           stream.ReadByte();
         } else if (b == 0xd9) {
@@ -191,7 +191,7 @@ private static long ReadInteger(
     private static double ReadFP(Stream stream, int headByte) {
       int b;
       if (headByte == 0xf9) {
-        // Half-precision
+       // Half-precision
         var bytes = new byte[2];
         if (stream.Read(bytes, 0, bytes.Length) != bytes.Length) {
           throw new IOException("Premature end of stream");
@@ -241,14 +241,14 @@ private static long ReadInteger(
       throw new IOException("Not a valid headbyte for ReadFP");
     }
 
-    /// <summary>Reads a double-precision floating point number in CBOR
-    /// format from a data stream.</summary>
-    /// <param name='stream'>A data stream.</param>
-    /// <returns>A 64-bit floating-point number.</returns>
-    /// <exception cref='System.IO.IOException'>The end of the stream was
-    /// reached, or the object read isn't a number.</exception>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='stream'/> is null.</exception>
+   /// <summary>Reads a double-precision floating point number in CBOR
+   /// format from a data stream.</summary>
+   /// <param name='stream'>A data stream.</param>
+   /// <returns>A 64-bit floating-point number.</returns>
+   /// <exception cref='System.IO.IOException'>The end of the stream was
+   /// reached, or the object read isn't a number.</exception>
+   /// <exception cref='ArgumentNullException'>The parameter <paramref
+   /// name='stream'/> is null.</exception>
     public static double ReadDouble(Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException(nameof(stream));
@@ -261,7 +261,7 @@ private static long ReadInteger(
         return (double)(-1 - b);
       }
       while ((b >> 5) == 6) {
-        // Skip tags until a tag character is no longer read
+       // Skip tags until a tag character is no longer read
         if (b == 0xd8) {
           stream.ReadByte();
         } else if (b == 0xd9) {
@@ -282,26 +282,26 @@ private static long ReadInteger(
         return (double)(-1 - b);
       }
       if (b == 0xf9 || b == 0xfa || b == 0xfb) {
-        // Read a floating-point number
+       // Read a floating-point number
         return ReadFP(stream, b);
       }
       if (b == 0x18 || b == 0x19 || b == 0x1a || b == 0x38 ||
-          b == 0x39 || b == 0x3a) {  // covers headbytes 0x18-0x1a and 0x38-0x3A
+          b == 0x39 || b == 0x3a) { // covers headbytes 0x18-0x1a and 0x38-0x3A
         return (double)ReadInteger(stream, b, false);
       }
       throw new IOException("Not a double");
     }
 
-    /// <summary>Reads a 32-bit integer in CBOR format from a data stream.
-    /// If the object read is a floating-point number, it is truncated to
-    /// an integer.</summary>
-    /// <param name='stream'>A data stream.</param>
-    /// <returns>A 32-bit signed integer.</returns>
-    /// <exception cref='System.IO.IOException'>The end of the stream was
-    /// reached, or the object read isn't a number, or can't fit a 32-bit
-    /// integer.</exception>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='stream'/> is null.</exception>
+   /// <summary>Reads a 32-bit integer in CBOR format from a data stream.
+   /// If the object read is a floating-point number, it is truncated to
+   /// an integer.</summary>
+   /// <param name='stream'>A data stream.</param>
+   /// <returns>A 32-bit signed integer.</returns>
+   /// <exception cref='System.IO.IOException'>The end of the stream was
+   /// reached, or the object read isn't a number, or can't fit a 32-bit
+   /// integer.</exception>
+   /// <exception cref='ArgumentNullException'>The parameter <paramref
+   /// name='stream'/> is null.</exception>
     public static int ReadInt32(Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException(nameof(stream));
@@ -314,7 +314,7 @@ private static long ReadInteger(
         return -1 - b;
       }
       while ((b >> 5) == 6) {
-        // Skip tags until a tag character is no longer read
+       // Skip tags until a tag character is no longer read
         if (b == 0xd8) {
           stream.ReadByte();
         } else if (b == 0xd9) {
@@ -335,9 +335,9 @@ private static long ReadInteger(
         return -1 - b;
       }
       if (b == 0xf9 || b == 0xfa || b == 0xfb) {
-        // Read a floating-point number
+       // Read a floating-point number
         double dbl = ReadFP(stream, b);
-        // Truncate to a 32-bit integer
+       // Truncate to a 32-bit integer
         if (Double.IsInfinity(dbl) || Double.IsNaN(dbl)) {
           throw new IOException("Not a 32-bit integer");
         }
@@ -347,7 +347,7 @@ private static long ReadInteger(
         }
         return (int)dbl;
       }
-      if ((b & 0xdc) == 0x18) {  // covers headbytes 0x18-0x1b and 0x38-0x3B
+      if ((b & 0xdc) == 0x18) { // covers headbytes 0x18-0x1b and 0x38-0x3B
         return (int)ReadInteger(stream, b, true);
       }
       throw new IOException("Not a 32-bit integer");

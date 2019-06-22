@@ -1,4 +1,4 @@
-/*
+﻿/*
 Written by Peter O. in 2014.
 
 Any copyright is dedicated to the Public Domain.
@@ -61,7 +61,7 @@ namespace PeterO.DocGen {
           if (!m.DeclaringType.Equals(currentType)) {
             var dtfn = m.DeclaringType.FullName;
             if (dtfn.IndexOf("System.", StringComparison.Ordinal) != 0) {
-              //Console.WriteLine("not declared: " + m);
+             //Console.WriteLine("not declared: " + m);
             }
             continue;
           }

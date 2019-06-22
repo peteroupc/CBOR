@@ -1,4 +1,4 @@
-/*
+﻿/*
 Written in 2013 by Peter Occil.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -14,13 +14,13 @@ using PeterO.Cbor;
 using PeterO.Numbers;
 
 namespace PeterO {
-    /// <summary>Contains methods for reading and writing objects
-    /// represented in BEncode, a serialization format used in the
-    /// BitTorrent protocol. For more information, see:
-    /// http://wiki.theory.org/BitTorrentSpecification This class accepts
-    /// BEncoded strings in UTF-8, and outputs BEncoded strings in UTF-8.
-    /// This class also demonstrates how CBORObject supports predefined
-    /// serialization formats.</summary>
+   /// <summary>Contains methods for reading and writing objects
+   /// represented in BEncode, a serialization format used in the
+   /// BitTorrent protocol. For more information, see:
+   /// http://wiki.theory.org/BitTorrentSpecification This class accepts
+   /// BEncoded strings in UTF-8, and outputs BEncoded strings in UTF-8.
+   /// This class also demonstrates how CBORObject supports predefined
+   /// serialization formats.</summary>
   public static class BEncoding {
     private static void writeUtf8(string s, Stream stream) {
       if (DataUtilities.WriteUtf8(s, stream, false) != 0) {
@@ -73,7 +73,7 @@ namespace PeterO {
       while (true) {
         CBORObject o = readObject(stream, true);
         if (o == null) {
-          break;  // 'e' was read
+          break; // 'e' was read
         }
         obj.Add(o);
       }
@@ -240,9 +240,9 @@ namespace PeterO {
         }
         if (hasNonStringKeys) {
           var valueSMap = new Dictionary<String, CBORObject>();
-          // Copy to a map with String keys, since
-          // some keys could be duplicates
-          // when serialized to strings
+         // Copy to a map with String keys, since
+         // some keys could be duplicates
+         // when serialized to strings
           foreach (CBORObject key in obj.Keys) {
             CBORObject value = obj[key];
             string str = (key.Type == CBORType.TextString) ?

@@ -61,7 +61,7 @@ namespace PeterO.Cbor {
       var ef = (ERational)obj;
       if (ef.IsFinite) {
         EInteger bi = ef.ToEInteger();
-        if (bi.GetSignedBitLength() <= 63) {
+        if (bi.CanFitInInt64()) {
           return (long)bi;
         }
       }
@@ -94,7 +94,7 @@ namespace PeterO.Cbor {
         return false;
       }
       EInteger bi = ef.ToEInteger();
-      return bi.GetSignedBitLength() <= 63;
+      return bi.CanFitInInt64();
     }
 
     public bool CanTruncatedIntFitInInt32(object obj) {
@@ -124,8 +124,8 @@ namespace PeterO.Cbor {
       if (ef.Denominator.Equals(EInteger.One)) {
         return true;
       }
-      // A rational number is integral if the remainder
-      // of the numerator divided by the denominator is 0
+     // A rational number is integral if the remainder
+     // of the numerator divided by the denominator is 0
       EInteger denom = ef.Denominator;
       EInteger rem = ef.Numerator % (EInteger)denom;
       return rem.IsZero;

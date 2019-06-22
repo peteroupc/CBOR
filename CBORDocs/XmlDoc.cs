@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -227,7 +227,7 @@ namespace PeterO.DocGen {
         reader.Read();
         reader.ReadStartElement("doc");
         while (reader.IsStartElement()) {
-          // Console.WriteLine(reader.LocalName);
+         // Console.WriteLine(reader.LocalName);
           if (reader.LocalName.Equals("members")) {
             reader.Read();
             while (reader.IsStartElement()) {

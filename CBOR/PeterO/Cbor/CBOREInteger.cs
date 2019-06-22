@@ -78,7 +78,7 @@ namespace PeterO.Cbor {
 
     public bool CanFitInInt64(object obj) {
       var bi = (EInteger)obj;
-      return bi.GetSignedBitLength() <= 63;
+      return bi.CanFitInInt64();
     }
 
     public bool CanTruncatedIntFitInInt64(object obj) {

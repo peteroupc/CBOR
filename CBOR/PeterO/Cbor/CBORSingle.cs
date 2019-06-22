@@ -97,8 +97,8 @@ namespace PeterO.Cbor {
       }
       float fltItem2 = (fltItem < 0) ? (float)Math.Ceiling(fltItem) :
         (float)Math.Floor(fltItem);
-      // Convert float to double to avoid precision loss when
-      // converting Int32.MinValue/MaxValue to float
+     // Convert float to double to avoid precision loss when
+     // converting Int32.MinValue/MaxValue to float
       return (double)fltItem2 >= Int32.MinValue && (double)fltItem2 <=
         Int32.MaxValue;
     }
@@ -110,8 +110,8 @@ namespace PeterO.Cbor {
       }
       fltItem = (fltItem < 0) ? (float)Math.Ceiling(fltItem) :
         (float)Math.Floor(fltItem);
-      // Convert float to double to avoid precision loss when
-      // converting Int32.MinValue/MaxValue to float
+     // Convert float to double to avoid precision loss when
+     // converting Int32.MinValue/MaxValue to float
       if ((double)fltItem >= Int32.MinValue && (double)fltItem <=
           Int32.MaxValue) {
         var ret = (int)fltItem;

@@ -1,9 +1,9 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Reflection;
 
 namespace PeterO.DocGen {
-    /// <summary>A documentation generator.</summary>
+   /// <summary>A documentation generator.</summary>
   public static class DocGenerator {
     public static void Generate(string assemblyFile, string docdir) {
       if (assemblyFile == null) {
@@ -23,11 +23,11 @@ namespace PeterO.DocGen {
       var assemblyXml = Path.ChangeExtension(assemblyFile, ".xml");
       Directory.SetCurrentDirectory(Path.GetDirectoryName(assemblyFile));
       if (!File.Exists(assemblyFile)) {
-        // Exit early, not found
+       // Exit early, not found
         throw new ArgumentException("Assembly file not found: " + assemblyFile);
       }
       if (!File.Exists(assemblyXml)) {
-        // Exit early, not found
+       // Exit early, not found
         throw new ArgumentException("XML documentation not found: " +
               assemblyXml);
       }

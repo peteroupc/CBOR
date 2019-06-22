@@ -1,4 +1,4 @@
-#pragma warning disable SA1118
+﻿#pragma warning disable SA1118
 /*
 Written by Peter O. in 2013.
 Any copyright is dedicated to the Public Domain.
@@ -45,8 +45,8 @@ namespace Test {
     public void TestCBORObjectDecimal() {
       var rand = new RandomGenerator();
       for (var i = 0; i <= 28; ++i) {
-        // Try a random decimal with a given
-        // exponent
+       // Try a random decimal with a given
+       // exponent
         for (int j = 0; j < 8; ++j) {
           decimal d = RandomDecimal(rand, i);
           CBORObject obj = ToObjectTest.TestToFromObjectRoundTrip(d);
@@ -66,7 +66,7 @@ namespace Test {
         ToObjectTest.TestToFromObjectRoundTrip(EDecimal.NaN).AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -75,7 +75,7 @@ namespace Test {
 ToObjectTest.TestToFromObjectRoundTrip(EDecimal.SignalingNaN).AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -85,7 +85,7 @@ ToObjectTest.TestToFromObjectRoundTrip(EDecimal.SignalingNaN).AsDecimal();
                   .AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -95,7 +95,7 @@ ToObjectTest.TestToFromObjectRoundTrip(EDecimal.SignalingNaN).AsDecimal();
                   .AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -104,7 +104,7 @@ ToObjectTest.TestToFromObjectRoundTrip(EDecimal.SignalingNaN).AsDecimal();
         ToObjectTest.TestToFromObjectRoundTrip(EFloat.NaN).AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -113,7 +113,7 @@ ToObjectTest.TestToFromObjectRoundTrip(EDecimal.SignalingNaN).AsDecimal();
         ToObjectTest.TestToFromObjectRoundTrip(EFloat.SignalingNaN).AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -123,7 +123,7 @@ ToObjectTest.TestToFromObjectRoundTrip(EDecimal.SignalingNaN).AsDecimal();
                   .AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -133,7 +133,7 @@ ToObjectTest.TestToFromObjectRoundTrip(EDecimal.SignalingNaN).AsDecimal();
                   .AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-        // NOTE: Intentionally empty
+       // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new
           InvalidOperationException(String.Empty, ex);
@@ -156,26 +156,26 @@ ToObjectTest.TestToFromObjectRoundTrip(EDecimal.SignalingNaN).AsDecimal();
     }
 
     private enum AByte : byte {
-    /// <summary>An arbitrary value.</summary>
+   /// <summary>An arbitrary value.</summary>
       A = 254,
 
-    /// <summary>An arbitrary value.</summary>
+   /// <summary>An arbitrary value.</summary>
       B
     }
 
     private enum AInt {
-    /// <summary>An arbitrary value.</summary>
+   /// <summary>An arbitrary value.</summary>
       A = 256,
 
-    /// <summary>An arbitrary value.</summary>
+   /// <summary>An arbitrary value.</summary>
       B
     }
 
     private enum AULong : ulong {
-    /// <summary>An arbitrary value.</summary>
+   /// <summary>An arbitrary value.</summary>
       A = 999999,
 
-    /// <summary>An arbitrary value.</summary>
+   /// <summary>An arbitrary value.</summary>
       B
     }
 
@@ -190,7 +190,7 @@ ToObjectTest.TestToFromObjectRoundTrip(EDecimal.SignalingNaN).AsDecimal();
       m.Aa = "Test";
       m.IsAa = false;
       CBORObject cbor = CBORObject.FromObject(m);
-      // ambiguous properties
+     // ambiguous properties
       Assert.IsFalse(cbor.ContainsKey("aa"), cbor.ToString());
       Assert.IsFalse(cbor.ContainsKey("Aa"), cbor.ToString());
     }
@@ -373,7 +373,7 @@ from x in arrao select x;
       Assert.AreEqual(1, obj[1].AsInt32());
       CBORTestCommon.AssertRoundTrip(obj);
 #if !NET20
-      // Select all even numbers
+     // Select all even numbers
       var query =
 from i in RangeExclusive(0, 10)
 where i % 2 == 0
@@ -383,7 +383,7 @@ select i;
       Assert.AreEqual(0, obj[0].AsInt32());
       Assert.AreEqual(2, obj[1].AsInt32());
       CBORTestCommon.AssertRoundTrip(obj);
-      // Select all even numbers
+     // Select all even numbers
       var query2 =
 from i in RangeExclusive(0, 10)
 where i % 2 == 0
@@ -4795,7 +4795,7 @@ ToObjectTest.TestToFromObjectRoundTrip(1.844674407370955E19d).AsUInt16();
                     31) & 1))));
         dividendLow <<= 1;
         t |= dividendHigh;
-        // unsigned greater-than-or-equal check
+       // unsigned greater-than-or-equal check
         if (((t >> 31) != 0) || (t >= intDivisor)) {
           unchecked {
             dividendHigh -= intDivisor;
@@ -4811,7 +4811,7 @@ ToObjectTest.TestToFromObjectRoundTrip(1.844674407370955E19d).AsUInt16();
       unchecked {
         int iy = ((int)y) & 0xffff;
         if ((x >> 31) == 0) {
-          // x is already nonnegative
+         // x is already nonnegative
           return (short)(((int)x / iy) & 0xffff);
         }
         return Divide32By16(x, y, false);

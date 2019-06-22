@@ -25,7 +25,11 @@ namespace PeterO.Cbor {
     }
 
     internal enum CBORDuplicatePolicy {
-      Overwrite, Disallow,
+      ///
+      Overwrite,
+
+      ///
+      Disallow,
     }
 
     public CBORDuplicatePolicy DuplicatePolicy {
@@ -102,22 +106,22 @@ namespace PeterO.Cbor {
       int type = (firstbyte >> 5) & 0x07;
       int additional = firstbyte & 0x1f;
       int expectedLength = CBORObject.GetExpectedLength(firstbyte);
-      // Data checks
+     // Data checks
       if (expectedLength == -1) {
-        // if the head byte is invalid
+       // if the head byte is invalid
         throw new CBORException("Unexpected data encountered");
       }
-      // Check if this represents a fixed object
+     // Check if this represents a fixed object
       CBORObject fixedObject = CBORObject.GetFixedObject(firstbyte);
       if (fixedObject != null) {
         return fixedObject;
       }
-      // Read fixed-length data
+     // Read fixed-length data
       byte[] data = null;
       if (expectedLength != 0) {
         data = new byte[expectedLength];
-        // include the first byte because GetFixedLengthObject
-        // will assume it exists for some head bytes
+       // include the first byte because GetFixedLengthObject
+       // will assume it exists for some head bytes
         data[0] = unchecked((byte)firstbyte);
         if (expectedLength > 1 &&
             this.stream.Read(data, 1, expectedLength - 1) != expectedLength
@@ -130,7 +134,7 @@ namespace PeterO.Cbor {
         }
         return cbor;
       }
-      // Special check: Decimal fraction or bigfloat
+     // Special check: Decimal fraction or bigfloat
       if (firstbyte == 0xc4 || firstbyte == 0xc5) {
         int nextbyte = this.stream.ReadByte();
         if (nextbyte != 0x82 && nextbyte != 0x9f) {
@@ -195,7 +199,7 @@ namespace PeterO.Cbor {
               throw new CBORException("Premature end of data");
             }
             if ((((int)data[0]) & 0x80) != 0) {
-              // Won't fit in a signed 64-bit number
+             // Won't fit in a signed 64-bit number
               var uabytes = new byte[9];
               uabytes[0] = data[7];
               uabytes[1] = data[6];
@@ -221,18 +225,18 @@ namespace PeterO.Cbor {
             break;
           }
       }
-      // The following doesn't check for major types 0 and 1,
-      // since all of them are fixed-length types and are
-      // handled in the call to GetFixedLengthObject.
-      if (type == 2) {  // Byte string
+     // The following doesn't check for major types 0 and 1,
+     // since all of them are fixed-length types and are
+     // handled in the call to GetFixedLengthObject.
+      if (type == 2) { // Byte string
         if (additional == 31) {
-          // Streaming byte string
+         // Streaming byte string
           using (var ms = new MemoryStream()) {
-            // Requires same type as this one
+           // Requires same type as this one
             while (true) {
               int nextByte = this.stream.ReadByte();
               if (nextByte == 0xff) {
-                // break if the "break" code was read
+               // break if the "break" code was read
                 break;
               }
               long len = ReadDataLength(this.stream, nextByte, 2);
@@ -241,7 +245,7 @@ namespace PeterO.Cbor {
                   " is bigger than supported ");
               }
               if (nextByte != 0x40) {
-  // NOTE: 0x40 means the empty byte string
+ // NOTE: 0x40 means the empty byte string
                 ReadByteData(this.stream, len, ms);
               }
             }
@@ -274,14 +278,14 @@ namespace PeterO.Cbor {
           return cbor;
         }
       }
-      if (type == 3) {  // Text string
+      if (type == 3) { // Text string
         if (additional == 31) {
-          // Streaming text string
+         // Streaming text string
           var builder = new StringBuilder();
           while (true) {
             int nextByte = this.stream.ReadByte();
             if (nextByte == 0xff) {
-              // break if the "break" code was read
+             // break if the "break" code was read
               break;
             }
             long len = ReadDataLength(this.stream, nextByte, 3);
@@ -290,7 +294,7 @@ namespace PeterO.Cbor {
                 " is bigger than supported");
             }
             if (nextByte != 0x60) {
-  // NOTE: 0x60 means the empty string
+ // NOTE: 0x60 means the empty string
               if (PropertyMap.ExceedsKnownLength(this.stream, len)) {
                 throw new CBORException("Premature end of data");
               }
@@ -346,18 +350,18 @@ namespace PeterO.Cbor {
           return cbor;
         }
       }
-      if (type == 4) {  // Array
+      if (type == 4) { // Array
         CBORObject cbor = CBORObject.NewArray();
         if (additional == 31) {
           var vtindex = 0;
-          // Indefinite-length array
+         // Indefinite-length array
           while (true) {
             int headByte = this.stream.ReadByte();
             if (headByte < 0) {
               throw new CBORException("Premature end of data");
             }
             if (headByte == 0xff) {
-              // Break code was read
+             // Break code was read
               break;
             }
             ++this.depth;
@@ -389,17 +393,17 @@ namespace PeterO.Cbor {
         --this.depth;
         return cbor;
       }
-      if (type == 5) {  // Map, type 5
+      if (type == 5) { // Map, type 5
         CBORObject cbor = CBORObject.NewMap();
         if (additional == 31) {
-          // Indefinite-length map
+         // Indefinite-length map
           while (true) {
             int headByte = this.stream.ReadByte();
             if (headByte < 0) {
               throw new CBORException("Premature end of data");
             }
             if (headByte == 0xff) {
-              // Break code was read
+             // Break code was read
               break;
             }
             ++this.depth;
@@ -441,7 +445,7 @@ namespace PeterO.Cbor {
         }
         return cbor;
       }
-      if (type == 6) {  // Tagged item
+      if (type == 6) { // Tagged item
         var haveFirstByte = false;
         var newFirstByte = -1;
         if (!hasBigAdditional) {
@@ -449,12 +453,12 @@ namespace PeterO.Cbor {
             (int)uadditional);
             switch (uad) {
             case 256:
-              // Tag 256: String namespace
+             // Tag 256: String namespace
               this.stringRefs = this.stringRefs ?? (new StringRefs());
               this.stringRefs.Push();
               break;
             case 25:
-              // String reference
+             // String reference
               if (this.stringRefs == null) {
                 throw new CBORException("No stringref namespace");
               }
@@ -477,11 +481,11 @@ namespace PeterO.Cbor {
             (int)uadditional);
           switch (uaddl) {
             case 256:
-              // string tag
+             // string tag
               this.stringRefs.Pop();
               break;
             case 25:
-              // stringref tag
+             // stringref tag
               return this.stringRefs.GetString(o.AsEInteger());
           }
 
@@ -508,7 +512,7 @@ namespace PeterO.Cbor {
         throw new CBORException("Premature end of stream");
       }
       if (uadditional <= 0x10000) {
-        // Simple case: small size
+       // Simple case: small size
         var data = new byte[(int)uadditional];
         if (stream.Read(data, 0, data.Length) != data.Length) {
           throw new CBORException("Premature end of stream");
@@ -591,7 +595,7 @@ namespace PeterO.Cbor {
             if (stream.Read(data, 0, 8) != 8) {
               throw new CBORException("Premature end of data");
             }
-            // Treat return value as an unsigned integer
+           // Treat return value as an unsigned integer
             long uadditional = ((long)(data[0] & 0xffL)) << 56;
             uadditional |= ((long)(data[1] & 0xffL)) << 48;
             uadditional |= ((long)(data[2] & 0xffL)) << 40;

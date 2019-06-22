@@ -1,4 +1,4 @@
-/*
+﻿/*
 Written by Peter O. in 2014.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -173,7 +173,7 @@ namespace PeterO.Cbor {
             if (PropertyData.HasUsableGetter(pi) ||
                 PropertyData.HasUsableSetter(pi)) {
               var pn = RemoveIsPrefix(pi.Name);
-              // Ignore ambiguous properties
+             // Ignore ambiguous properties
               if (names.ContainsKey(pn) && names[pn] > 1) {
                 continue;
               }
@@ -282,7 +282,7 @@ namespace PeterO.Cbor {
       }
       CBORObject obj = null;
       if (rank == 1) {
-        // Most common case: the array is one-dimensional
+       // Most common case: the array is one-dimensional
         obj = CBORObject.NewArray();
         int len = arr.GetLength(0);
         for (var i = 0; i < len; ++i) {
@@ -388,14 +388,14 @@ namespace PeterO.Cbor {
       if (obj.Type != CBORType.Array) {
         throw new CBORException();
       }
-      // Common cases
+     // Common cases
       if (obj.Count == 0) {
         return new int[] { 0 };
       }
       if (obj[0].Type != CBORType.Array) {
         return new int[] { obj.Count };
       }
-      // Complex cases
+     // Complex cases
       var list = new List<int>();
       list.Add(obj.Count);
       while (obj.Type == CBORType.Array &&
@@ -463,7 +463,7 @@ namespace PeterO.Cbor {
       var bytes2 = new byte[16];
       var bytes = guid.ToByteArray();
       Array.Copy(bytes, bytes2, 16);
-      // Swap the bytes to conform with the UUID RFC
+     // Swap the bytes to conform with the UUID RFC
       bytes2[0] = bytes[3];
       bytes2[1] = bytes[2];
       bytes2[2] = bytes[1];
@@ -672,9 +672,9 @@ Type elementType = t.GetElementType();
           isDict = td.Equals(typeof(Dictionary<,>)) ||
             td.Equals(typeof(IDictionary<,>));
         }
-        // DebugUtility.Log("list=" + isDict);
+       // DebugUtility.Log("list=" + isDict);
         isDict = isDict && t.GetGenericArguments().Length == 2;
-        // DebugUtility.Log("list=" + isDict);
+       // DebugUtility.Log("list=" + isDict);
         if (isDict) {
           keyType = t.GetGenericArguments()[0];
           valueType = t.GetGenericArguments()[1];
@@ -690,9 +690,9 @@ Type elementType = t.GetElementType();
           isDict = (td.Equals(typeof(Dictionary<,>)) ||
   td.Equals(typeof(IDictionary<,>)));
         }
-        // DebugUtility.Log("list=" + isDict);
+       // DebugUtility.Log("list=" + isDict);
         isDict = (isDict && t.GenericTypeArguments.Length == 2);
-        // DebugUtility.Log("list=" + isDict);
+       // DebugUtility.Log("list=" + isDict);
         if (isDict) {
           keyType = t.GenericTypeArguments[0];
           valueType = t.GenericTypeArguments[1];
@@ -776,8 +776,8 @@ Type elementType = t.GetElementType();
       }
       foreach (PropertyData key in GetPropertyList(o.GetType())) {
         if (!key.HasUsableSetter() || !key.HasUsableGetter()) {
-          // Require properties to have both a setter and
-          // a getter to be eligible for setting
+         // Require properties to have both a setter and
+         // a getter to be eligible for setting
           continue;
         }
         var name = key.GetAdjustedName(options != null ? options.UseCamelCase :
@@ -833,7 +833,7 @@ Type elementType = t.GetElementType();
       lf[2] = dt.Hour;
       lf[3] = dt.Minute;
       lf[4] = dt.Second;
-      // lf[5] is the number of nanoseconds
+     // lf[5] is the number of nanoseconds
       lf[5] = (int)(dt.Ticks % 10000000L) * 100;
     }
 

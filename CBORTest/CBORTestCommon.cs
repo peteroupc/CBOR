@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
@@ -117,7 +117,7 @@ return
       }
       for (var i = 0; i < 15; ++i) {
         CBORObject o;
-        // Console.WriteLine("tag "+tag+" "+i);
+       // Console.WriteLine("tag "+tag+" "+i);
         if (tag == 0 || tag == 1 || tag == 28 || tag == 29) {
           tag = 999;
         }
@@ -142,13 +142,13 @@ return
         }
         try {
           o = CBORObject.FromObjectAndTag(o, tag);
-          // Console.WriteLine("done");
+         // Console.WriteLine("done");
           return o;
         } catch (Exception) {
           continue;
         }
       }
-      // Console.WriteLine("Failed "+tag);
+     // Console.WriteLine("Failed "+tag);
       return CBORObject.Null;
     }
 
@@ -205,7 +205,7 @@ return
           o.AsByte();
           Assert.Fail("Should have failed");
         } catch (OverflowException) {
-          // NOTE: Intentionally empty
+         // NOTE: Intentionally empty
         } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex); throw new
             InvalidOperationException(String.Empty, ex);
@@ -214,7 +214,7 @@ return
           o.AsInt16();
           Assert.Fail("Should have failed");
         } catch (OverflowException) {
-          // NOTE: Intentionally empty
+         // NOTE: Intentionally empty
         } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex); throw new
             InvalidOperationException(String.Empty, ex);
@@ -223,7 +223,7 @@ return
           o.AsInt32();
           Assert.Fail("Should have failed");
         } catch (OverflowException) {
-          // NOTE: Intentionally empty
+         // NOTE: Intentionally empty
         } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex); throw new
             InvalidOperationException(String.Empty, ex);
@@ -232,7 +232,7 @@ return
           o.AsInt64();
           Assert.Fail("Should have failed");
         } catch (OverflowException) {
-          // NOTE: Intentionally empty
+         // NOTE: Intentionally empty
         } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex); throw new
             InvalidOperationException(String.Empty, ex);
@@ -253,7 +253,7 @@ return
           o.AsEInteger();
           Assert.Fail("Should have failed");
         } catch (OverflowException) {
-          // NOTE: Intentionally empty
+         // NOTE: Intentionally empty
         } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex); throw new
             InvalidOperationException(String.Empty, ex);
@@ -285,7 +285,7 @@ return
       if (!s.Equals(o.ToJSONString())) {
         Assert.AreEqual(s, o.ToJSONString(), "o is not equal to s");
       }
-      // Test round-tripping
+     // Test round-tripping
       CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());
       if (!s.Equals(o2.ToJSONString())) {
         Assert.AreEqual(s, o2.ToJSONString(), "o2 is not equal to s");
@@ -294,7 +294,7 @@ return
       TestCommon.AssertEqualsHashCode(o, o2);
     }
 
-    // Tests the equivalence of the DecodeFromBytes and Read methods.
+   // Tests the equivalence of the DecodeFromBytes and Read methods.
     public static CBORObject FromBytesTestAB(byte[] b) {
       CBORObject oa = FromBytesA(b);
       CBORObject ob = FromBytesB(b);

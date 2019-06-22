@@ -10,8 +10,10 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="T:PeterO.Cbor.CBORObjectMath"]/*'/>
+   ///
+  /// <summary>Implements arithmetic operations with CBOR objects.
+  /// </summary>
+  ///
   internal static class CBORObjectMath {
     public static CBORObject Addition(CBORObject a, CBORObject b) {
       if (a == null) {
@@ -38,7 +40,7 @@ namespace PeterO.Cbor {
         var valueB = (long)objB;
         if ((valueA < 0 && valueB < Int64.MinValue - valueA) ||
                 (valueA > 0 && valueB > Int64.MaxValue - valueA)) {
-          // would overflow, convert to EInteger
+         // would overflow, convert to EInteger
           return CBORObject.FromObject(((EInteger)valueA) +
           (EInteger)valueB);
         }
@@ -102,7 +104,7 @@ namespace PeterO.Cbor {
         var valueB = (long)objB;
         if ((valueB < 0 && Int64.MaxValue + valueB < valueA) ||
                 (valueB > 0 && Int64.MinValue + valueB > valueA)) {
-          // would overflow, convert to EInteger
+         // would overflow, convert to EInteger
           return CBORObject.FromObject(((EInteger)valueA) -
           (EInteger)valueB);
         }
@@ -172,7 +174,7 @@ namespace PeterO.Cbor {
           (!apos && ((!bpos && valueA != 0L &&
           (Int64.MaxValue / valueA) > valueB) ||
           (bpos && valueA < (Int64.MinValue / valueB))))) {
-          // would overflow, convert to EInteger
+         // would overflow, convert to EInteger
           var bvalueA = (EInteger)valueA;
           var bvalueB = (EInteger)valueB;
           return CBORObject.FromObject(bvalueA * (EInteger)bvalueB);
@@ -268,8 +270,8 @@ namespace PeterO.Cbor {
           return CBORObject.NaN;
         }
         EDecimal eret = e1.Divide(e2, null);
-        // If either operand is infinity or NaN, the result
-        // is already exact. Likewise if the result is a finite number.
+       // If either operand is infinity or NaN, the result
+       // is already exact. Likewise if the result is a finite number.
         if (!e1.IsFinite || !e2.IsFinite || eret.IsFinite) {
           return CBORObject.FromObject(eret);
         }
@@ -292,8 +294,8 @@ namespace PeterO.Cbor {
           return CBORObject.NaN;
         }
         EFloat eret = e1.Divide(e2, null);
-        // If either operand is infinity or NaN, the result
-        // is already exact. Likewise if the result is a finite number.
+       // If either operand is infinity or NaN, the result
+       // is already exact. Likewise if the result is a finite number.
         if (!e1.IsFinite || !e2.IsFinite || eret.IsFinite) {
           return CBORObject.FromObject(eret);
         }

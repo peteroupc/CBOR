@@ -38,7 +38,7 @@ namespace PeterO.Cbor {
                   dec,
                   year,
                   lesserFields);
-                  return PropertyMap.BuildUpDateTime(year[0], lesserFields);
+        return PropertyMap.BuildUpDateTime(year[0], lesserFields);
       }
       throw new CBORException("Not tag 0 or 1");
     }

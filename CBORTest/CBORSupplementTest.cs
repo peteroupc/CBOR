@@ -1,4 +1,4 @@
-/*
+﻿/*
 Written by Peter O. in 2014.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -18,7 +18,7 @@ namespace Test {
     [Test]
     public void IncorrectDecimalFrac() {
       byte[] bytes;
-      // string instead of array
+     // string instead of array
       bytes = new byte[] { 0xc4, 0x61, 0x41 };
       try {
         CBORObject.DecodeFromBytes(bytes);
@@ -29,7 +29,7 @@ namespace Test {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      // number instead of array
+     // number instead of array
       bytes = new byte[] { 0xc4, 0x00 };
       try {
         CBORObject.DecodeFromBytes(bytes);
@@ -85,7 +85,7 @@ namespace Test {
     [Test]
     public void IncorrectBigFloat() {
       byte[] bytes;
-      // string instead of array
+     // string instead of array
       bytes = new byte[] { 0xc5, 0x61, 0x41 };
       try {
         CBORObject.DecodeFromBytes(bytes);
@@ -96,7 +96,7 @@ namespace Test {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      // number instead of array
+     // number instead of array
       bytes = new byte[] { 0xc5, 0x00 };
       try {
         CBORObject.DecodeFromBytes(bytes);
@@ -285,7 +285,7 @@ Assert.AreEqual(
 
     [Test]
     public void TestIncompleteIndefLengthMap() {
-      // Premature end after value
+     // Premature end after value
       byte[] bytes = { 0xbf, 0x61, 0x41, 0, 0x61, 0x42, 0 };
       try {
         CBORObject.DecodeFromBytes(bytes);
@@ -296,7 +296,7 @@ Assert.AreEqual(
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      // Premature end after key
+     // Premature end after key
       bytes = new byte[] { 0xbf, 0x61, 0x41, 0, 0x61, 0x42 };
       try {
         CBORObject.DecodeFromBytes(bytes);
@@ -341,15 +341,15 @@ Assert.AreEqual(
         {
         using (var ms = new MemoryStream()) {
           for (var i = 0; i < 2000; ++i) {
-            // Write beginning of indefinite-length array
+           // Write beginning of indefinite-length array
             ms.WriteByte((byte)0x9f);
           }
           for (var i = 0; i < 2000; ++i) {
-            // Write end of indefinite-length array
+           // Write end of indefinite-length array
             ms.WriteByte((byte)0xff);
           }
-          // Assert throwing CBOR exception for reaching maximum
-          // nesting depth
+         // Assert throwing CBOR exception for reaching maximum
+         // nesting depth
           try {
             CBORObject.DecodeFromBytes(ms.ToArray());
             Assert.Fail("Should have failed");
@@ -364,14 +364,14 @@ Assert.AreEqual(
         {
           using (var ms = new MemoryStream()) {
           for (var i = 0; i < 495; ++i) {
-            // Write beginning of indefinite-length array
+           // Write beginning of indefinite-length array
             ms.WriteByte((byte)0x9f);
           }
           for (var i = 0; i < 495; ++i) {
-            // Write end of indefinite-length array
+           // Write end of indefinite-length array
             ms.WriteByte((byte)0xff);
           }
-          // Maximum nesting depth not reached, so shouldn't throw
+         // Maximum nesting depth not reached, so shouldn't throw
           try {
             CBORObject.DecodeFromBytes(ms.ToArray());
           } catch (Exception ex) {
@@ -466,13 +466,13 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff };
       cbor = CBORObject.DecodeFromBytes(bytes);
       expected = "[[1],[1],3,3,[1]]";
       Assert.AreEqual(expected, cbor.ToJSONString());
-      // Checks if both objects are the same reference, not just equal
+     // Checks if both objects are the same reference, not just equal
       Assert.IsTrue(cbor[0] == cbor[1], "cbor[0] not same as cbor[1]");
       Assert.IsTrue(cbor[0] == cbor[4], "cbor[0] not same as cbor[4]");
       bytes = new byte[] { 0xd8, 28, 0x82, 1, 0xd8, 29, 0 };
       cbor = CBORObject.DecodeFromBytes(bytes);
       Assert.AreEqual(2, cbor.Count);
-      // Checks if both objects are the same reference, not just equal
+     // Checks if both objects are the same reference, not just equal
       Assert.IsTrue(cbor == cbor[1], "objects not the same");
     }
 
@@ -844,7 +844,7 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff };
       Assert.AreEqual((byte)0xff, bytes[15]);
     }
 
-    // [Test]
+   // [Test]
     public static void TestMiniCBOR() {
       byte[] bytes;
       bytes = new byte[] { 0x19, 2 };

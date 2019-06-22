@@ -1,4 +1,4 @@
-/*
+﻿/*
 Written by Peter O. in 2013.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -10,7 +10,7 @@ using System.Reflection;
 using NUnit.Framework;
 
 namespace PeterO {
-    /// <summary>Description of Runner.</summary>
+   /// <summary>Description of Runner.</summary>
   public class Runner {
     private static bool HasAttribute(Type mi, Type t) {
       foreach (object a in mi.GetCustomAttributes(t, false)) {
@@ -32,7 +32,7 @@ namespace PeterO {
 
     public static void Main() {
       const String ValueParam = "TestSlowCompareTo";
-      // Run all the tests in this assembly
+     // Run all the tests in this assembly
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
         if (!HasAttribute(type, typeof(TestFixtureAttribute))) {
           continue;

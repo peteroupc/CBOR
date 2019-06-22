@@ -1,4 +1,4 @@
-/*
+﻿/*
 Written in 2013-2018 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -100,7 +100,7 @@ namespace Test {
 
     public static void AssertEquals(Object o, Object o2) {
       if (!o.Equals(o2)) {
-         Assert.AreEqual(o, o2);
+        Assert.AreEqual(o, o2);
       }
     }
 
@@ -272,9 +272,9 @@ namespace Test {
       }
     }
 
-public static void CompareTestGreaterEqual<T>(T o1, T o2, string msg) where
-      T :
-        IComparable<T> {
+    public static void CompareTestGreaterEqual<T>(T o1, T o2, string msg) where
+          T :
+            IComparable<T> {
       if (CompareTestReciprocal(o1, o2) < 0) {
         string str = msg + "\r\n" + ObjectMessages(
           o1,
@@ -408,25 +408,25 @@ public static void CompareTestGreaterEqual<T>(T o1, T o2, string msg) where
         }
         while (intlongValue > 43698) {
           int intdivValue = intlongValue / 10;
-        char digit = ValueDigits[(int)(intlongValue - (intdivValue * 10))];
-        chars[count--] = digit;
-        intlongValue = intdivValue;
-      }
-      while (intlongValue > 9) {
-        int intdivValue = (intlongValue * 26215) >> 18;
-        char digit = ValueDigits[(int)(intlongValue - (intdivValue * 10))];
-        chars[count--] = digit;
-        intlongValue = intdivValue;
-      }
-      if (intlongValue != 0) {
-        chars[count--] = ValueDigits[(int)intlongValue];
-      }
-      if (neg) {
-        chars[count] = '-';
-      } else {
-        ++count;
-      }
-      return new String(chars, count, 12 - count);
+          char digit = ValueDigits[(int)(intlongValue - (intdivValue * 10))];
+          chars[count--] = digit;
+          intlongValue = intdivValue;
+        }
+        while (intlongValue > 9) {
+          int intdivValue = (intlongValue * 26215) >> 18;
+          char digit = ValueDigits[(int)(intlongValue - (intdivValue * 10))];
+          chars[count--] = digit;
+          intlongValue = intdivValue;
+        }
+        if (intlongValue != 0) {
+          chars[count--] = ValueDigits[(int)intlongValue];
+        }
+        if (neg) {
+          chars[count] = '-';
+        } else {
+          ++count;
+        }
+        return new String(chars, count, 12 - count);
       } else {
         chars = new char[24];
         count = 23;
@@ -435,25 +435,25 @@ public static void CompareTestGreaterEqual<T>(T o1, T o2, string msg) where
         }
         while (longValue > 43698) {
           long divValue = longValue / 10;
-        char digit = ValueDigits[(int)(longValue - (divValue * 10))];
-        chars[count--] = digit;
-        longValue = divValue;
-      }
-      while (longValue > 9) {
-        long divValue = (longValue * 26215) >> 18;
-        char digit = ValueDigits[(int)(longValue - (divValue * 10))];
-        chars[count--] = digit;
-        longValue = divValue;
-      }
-      if (longValue != 0) {
-        chars[count--] = ValueDigits[(int)longValue];
-      }
-      if (neg) {
-        chars[count] = '-';
-      } else {
-        ++count;
-      }
-      return new String(chars, count, 24 - count);
+          char digit = ValueDigits[(int)(longValue - (divValue * 10))];
+          chars[count--] = digit;
+          longValue = divValue;
+        }
+        while (longValue > 9) {
+          long divValue = (longValue * 26215) >> 18;
+          char digit = ValueDigits[(int)(longValue - (divValue * 10))];
+          chars[count--] = digit;
+          longValue = divValue;
+        }
+        if (longValue != 0) {
+          chars[count--] = ValueDigits[(int)longValue];
+        }
+        if (neg) {
+          chars[count] = '-';
+        } else {
+          ++count;
+        }
+        return new String(chars, count, 24 - count);
       }
     }
 
@@ -497,7 +497,8 @@ public static void CompareTestGreaterEqual<T>(T o1, T o2, string msg) where
       sb.Append("new byte[] { ");
       for (var i = 0; i < bytes.Length; ++i) {
         if (i > 0) {
-          sb.Append(","); }
+          sb.Append(",");
+        }
         if ((bytes[i] & 0x80) != 0) {
           sb.Append("(byte)0x");
         } else {
