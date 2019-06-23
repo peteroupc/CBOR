@@ -26,8 +26,14 @@ namespace PeterO.Cbor {
 
     internal enum CBORDuplicatePolicy {
       ///
+      /// <summary>Not documented yet.
+      /// </summary>
+      ///
       Overwrite,
 
+      ///
+      /// <summary>Not documented yet.
+      /// </summary>
       ///
       Disallow,
     }
@@ -451,7 +457,7 @@ namespace PeterO.Cbor {
         if (!hasBigAdditional) {
           int uad = uadditional >= 257 ? 257 : (uadditional < 0 ? 0 :
             (int)uadditional);
-            switch (uad) {
+          switch (uad) {
             case 256:
              // Tag 256: String namespace
               this.stringRefs = this.stringRefs ?? (new StringRefs());
@@ -463,8 +469,8 @@ namespace PeterO.Cbor {
                 throw new CBORException("No stringref namespace");
               }
               break;
-              case 28:
-              case 29:
+            case 28:
+            case 29:
               this.hasSharableObjects = true;
               break;
           }

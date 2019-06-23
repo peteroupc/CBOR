@@ -173,7 +173,7 @@ namespace PeterO.Cbor {
             if (PropertyData.HasUsableGetter(pi) ||
                 PropertyData.HasUsableSetter(pi)) {
               var pn = RemoveIsPrefix(pi.Name);
-             // Ignore ambiguous properties
+              // Ignore ambiguous properties
               if (names.ContainsKey(pn) && names[pn] > 1) {
                 continue;
               }
@@ -282,7 +282,7 @@ namespace PeterO.Cbor {
       }
       CBORObject obj = null;
       if (rank == 1) {
-       // Most common case: the array is one-dimensional
+        // Most common case: the array is one-dimensional
         obj = CBORObject.NewArray();
         int len = arr.GetLength(0);
         for (var i = 0; i < len; ++i) {
@@ -354,12 +354,12 @@ namespace PeterO.Cbor {
       if (rank == 1) {
         int len = arr.GetLength(0);
         for (var i = 0; i < len; ++i) {
-       object item = cbor[i].ToObject(
-  elementType,
-  mapper,
-  options,
-  depth + 1);
-  arr.SetValue(item, i);
+          object item = cbor[i].ToObject(
+             elementType,
+             mapper,
+             options,
+             depth + 1);
+          arr.SetValue(item, i);
         }
         return arr;
       }
@@ -388,14 +388,14 @@ namespace PeterO.Cbor {
       if (obj.Type != CBORType.Array) {
         throw new CBORException();
       }
-     // Common cases
+      // Common cases
       if (obj.Count == 0) {
         return new int[] { 0 };
       }
       if (obj[0].Type != CBORType.Array) {
         return new int[] { obj.Count };
       }
-     // Complex cases
+      // Complex cases
       var list = new List<int>();
       list.Add(obj.Count);
       while (obj.Type == CBORType.Array &&
@@ -463,7 +463,7 @@ namespace PeterO.Cbor {
       var bytes2 = new byte[16];
       var bytes = guid.ToByteArray();
       Array.Copy(bytes, bytes2, 16);
-     // Swap the bytes to conform with the UUID RFC
+      // Swap the bytes to conform with the UUID RFC
       bytes2[0] = bytes[3];
       bytes2[1] = bytes[2];
       bytes2[2] = bytes[1];
@@ -551,21 +551,21 @@ namespace PeterO.Cbor {
         return objThis.AsBoolean();
       }
       if (t.Equals(typeof(char))) {
-if (objThis.Type == CBORType.TextString) {
-  string s = objThis.AsString();
-  if (s.Length != 1) {
- throw new CBORException("Can't convert to char");
-}
-  return s[0];
-}
-if (objThis.IsIntegral && objThis.CanTruncatedIntFitInInt32()) {
-  int c = objThis.AsInt32();
-  if (c < 0 || c >= 0x10000) {
- throw new CBORException("Can't convert to char");
-}
-  return (char)c;
-}
-throw new CBORException("Can't convert to char");
+        if (objThis.Type == CBORType.TextString) {
+          string s = objThis.AsString();
+          if (s.Length != 1) {
+            throw new CBORException("Can't convert to char");
+          }
+          return s[0];
+        }
+        if (objThis.IsIntegral && objThis.CanTruncatedIntFitInInt32()) {
+          int c = objThis.AsInt32();
+          if (c < 0 || c >= 0x10000) {
+            throw new CBORException("Can't convert to char");
+          }
+          return (char)c;
+        }
+        throw new CBORException("Can't convert to char");
       }
       if (t.Equals(typeof(DateTime))) {
         return new CBORDateConverter().FromCBORObject(objThis);
@@ -690,9 +690,9 @@ Type elementType = t.GetElementType();
           isDict = (td.Equals(typeof(Dictionary<,>)) ||
   td.Equals(typeof(IDictionary<,>)));
         }
-       // DebugUtility.Log("list=" + isDict);
+        // DebugUtility.Log("list=" + isDict);
         isDict = (isDict && t.GenericTypeArguments.Length == 2);
-       // DebugUtility.Log("list=" + isDict);
+        // DebugUtility.Log("list=" + isDict);
         if (isDict) {
           keyType = t.GenericTypeArguments[0];
           valueType = t.GenericTypeArguments[1];
@@ -726,7 +726,7 @@ Type elementType = t.GetElementType();
                   " not supported");
           }
         } else {
-       if (t.FullName != null && (
+          if (t.FullName != null && (
              StartsWith(t.FullName, "Microsoft.Win32.") ||
              StartsWith(t.FullName, "System.IO."))) {
             throw new CBORException("Type " + t.FullName +
@@ -776,8 +776,8 @@ Type elementType = t.GetElementType();
       }
       foreach (PropertyData key in GetPropertyList(o.GetType())) {
         if (!key.HasUsableSetter() || !key.HasUsableGetter()) {
-         // Require properties to have both a setter and
-         // a getter to be eligible for setting
+          // Require properties to have both a setter and
+          // a getter to be eligible for setting
           continue;
         }
         var name = key.GetAdjustedName(options != null ? options.UseCamelCase :
@@ -833,19 +833,20 @@ Type elementType = t.GetElementType();
       lf[2] = dt.Hour;
       lf[3] = dt.Minute;
       lf[4] = dt.Second;
-     // lf[5] is the number of nanoseconds
+      // lf[5] is the number of nanoseconds
       lf[5] = (int)(dt.Ticks % 10000000L) * 100;
     }
 
     public static DateTime BuildUpDateTime(EInteger year, int[] dt) {
       return new DateTime(
-  year.ToInt32Checked(),
-  dt[0],
-  dt[1],
-  dt[2],
-  dt[3],
-  dt[4],
-  DateTimeKind.Utc).AddMinutes(-dt[6]).AddTicks((long)(dt[5] / 100));
+        year.ToInt32Checked(),
+        dt[0],
+        dt[1],
+        dt[2],
+        dt[3],
+        dt[4],
+        DateTimeKind.Utc)
+        .AddMinutes(-dt[6]).AddTicks((long)(dt[5] / 100));
     }
   }
 }

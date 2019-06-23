@@ -29,8 +29,8 @@ namespace PeterO.Cbor {
 
     // <include file='../../docs.xml'
     // path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.String,System.Boolean)"]/*'/>
-    public CharacterReader(string str, bool skipByteOrderMark) :
-      this(str, skipByteOrderMark, false) {
+    public CharacterReader(string str, bool skipByteOrderMark)
+      : this(str, skipByteOrderMark, false) {
     }
 
     // <include file='../../docs.xml'
@@ -54,8 +54,8 @@ namespace PeterO.Cbor {
 
     // <include file='../../docs.xml'
     // path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.String,System.Int32,System.Int32)"]/*'/>
-    public CharacterReader(string str, int offset, int length) :
-      this(str, offset, length, false, false) {
+    public CharacterReader(string str, int offset, int length)
+      : this(str, offset, length, false, false) {
     }
 
     // <include file='../../docs.xml'
@@ -106,14 +106,14 @@ if (str.Length - offset < length) {
 
     // <include file='../../docs.xml'
     // path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.IO.Stream,System.Int32,System.Boolean)"]/*'/>
-    public CharacterReader(Stream stream, int mode, bool errorThrow) :
-      this(stream, mode, errorThrow, false) {
+    public CharacterReader(Stream stream, int mode, bool errorThrow)
+      : this(stream, mode, errorThrow, false) {
     }
 
     // <include file='../../docs.xml'
     // path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.IO.Stream,System.Int32)"]/*'/>
-    public CharacterReader(Stream stream, int mode) :
-      this(stream, mode, false, false) {
+    public CharacterReader(Stream stream, int mode)
+      : this(stream, mode, false, false) {
     }
 
     // <include file='../../docs.xml'

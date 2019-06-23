@@ -832,7 +832,7 @@
     <summary>Removes all items from this CBOR array or all keys and values from this
       CBOR map.
     </summary>
-    <exception cref='InvalidOperationException'>This object is not a CBOR array or CBOR map.
+    <exception cref='T:System.InvalidOperationException'>This object is not a CBOR array or CBOR map.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.CompareTo(PeterO.Cbor.CBORObject)'>
@@ -2394,7 +2394,7 @@
       index is less than 0, or is at least as high as the number of items in the
       array.
     </returns>
-    <exception cref='InvalidOperationException'>This object is not a CBOR array.
+    <exception cref='T:System.InvalidOperationException'>This object is not a CBOR array.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.Set(System.Object,System.Object)'>
@@ -3889,6 +3889,14 @@
   </doc>
   <doc name='T:PeterO.Cbor.CBORObjectMath'>
     <summary>Implements arithmetic operations with CBOR objects.
+    </summary>
+  </doc>
+  <doc name='F:PeterO.Cbor.CBORReader.CBORDuplicatePolicy.Disallow'>
+    <summary>Not documented yet.
+    </summary>
+  </doc>
+  <doc name='F:PeterO.Cbor.CBORReader.CBORDuplicatePolicy.Overwrite'>
+    <summary>Not documented yet.
     </summary>
   </doc>
   <doc name='T:PeterO.Cbor.CBORTag3'>

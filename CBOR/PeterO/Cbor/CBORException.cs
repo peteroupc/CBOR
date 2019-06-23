@@ -7,39 +7,22 @@ at: http://peteroupc.github.io/
 using System;
 
 namespace PeterO.Cbor {
-  ///
-  /// <summary>Exception thrown for errors involving CBOR data.
-  /// </summary>
-  ///
+  /// <include file='../../docs.xml'
+  /// path='docs/doc[@name="T:PeterO.Cbor.CBORException"]/*'/>
   public class CBORException : Exception {
-    ///
-  /// <summary>Initializes a new instance of the <see cref='T:PeterO.Cbor.CBORException'/> class.
-  /// </summary>
-  ///
+    /// <include file='../../docs.xml'
+  /// path='docs/doc[@name="M:PeterO.Cbor.CBORException.#ctor"]/*'/>
     public CBORException() {
     }
 
-    ///
-  /// <summary>Initializes a new instance of the <see cref='T:PeterO.Cbor.CBORException'/> class.
-  /// </summary><param name='message'>The parameter
-  /// <paramref name='message'/>
-  /// is a text string.
-  /// </param>
-  ///
+    /// <include file='../../docs.xml'
+  /// path='docs/doc[@name="M:PeterO.Cbor.CBORException.#ctor(System.String)"]/*'/>
     public CBORException(string message)
       : base(message) {
     }
 
-    ///
-  /// <summary>Initializes a new instance of the <see cref='T:PeterO.Cbor.CBORException'/> class. Uses the given message and inner exception.
-  /// </summary><param name='message'>The parameter
-  /// <paramref name='message'/>
-  /// is a text string.
-  /// </param><param name='innerException'>The parameter
-  /// <paramref name='innerException'/>
-  /// is an Exception object.
-  /// </param>
-  ///
+    /// <include file='../../docs.xml'
+  /// path='docs/doc[@name="M:PeterO.Cbor.CBORException.#ctor(System.String,System.Exception)"]/*'/>
     public CBORException(string message, Exception innerException)
       : base(message, innerException) {
     }

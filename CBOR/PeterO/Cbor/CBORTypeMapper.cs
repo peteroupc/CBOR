@@ -2,48 +2,24 @@ using System;
 using System.Collections.Generic;
 
 namespace PeterO.Cbor {
-   ///
-  /// <summary>Holds converters to customize the serialization and deserialization
-  /// behavior of
-  /// <c>CBORObject.FromObject</c> and
-  /// <c>CBORObject#ToObject</c> , as well as type filters for
-  /// <c>ToObject</c> </summary>
-  ///
+   /// <include file='../../docs.xml'
+  /// path='docs/doc[@name="T:PeterO.Cbor.CBORTypeMapper"]/*'/>
   public sealed class CBORTypeMapper {
     private readonly IList<string> typePrefixes;
     private readonly IList<string> typeNames;
     private readonly IDictionary<Object, ConverterInfo>
       converters;
 
-   /// <summary>
-  /// Initializes a new instance of the
-  /// <see cref='CBORTypeMapper'/>
-  /// class.
-  /// </summary>
+   /// <include file='../../docs.xml'
+  /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.#ctor"]/*'/>
     public CBORTypeMapper() {
       this.typePrefixes = new List<string>();
       this.typeNames = new List<string>();
       this.converters = new Dictionary<Object, ConverterInfo>();
     }
 
-   ///
-  /// <summary>Registers an object that converts objects of a given type to CBOR objects
-  /// (called a CBOR converter).
-  /// </summary><param name='type'>A Type object specifying the type that the converter converts to CBOR
-  /// objects.
-  /// </param><param name='converter'>The parameter
-  /// <paramref name='converter'/>
-  /// is an ICBORConverter object.
-  /// </param><typeparam name='T'>Must be the same as the "type" parameter.
-  /// </typeparam><returns>This object.
-  /// </returns><exception cref='T:System.ArgumentNullException'>The parameter
-  /// <paramref name='type'/>
-  /// or
-  /// <paramref name='converter'/>
-  /// is null.
-  /// </exception><exception cref='T:System.ArgumentException'>Converter doesn't contain a proper ToCBORObject method".
-  /// </exception>
-  ///
+   /// <include file='../../docs.xml'
+  /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.AddConverter``1(System.Type,PeterO.Cbor.ICBORConverter{``0})"]/*'/>
     public CBORTypeMapper AddConverter<T>(
       Type type,
       ICBORConverter<T> converter) {
@@ -109,18 +85,8 @@ namespace PeterO.Cbor {
         obj);
     }
 
-   ///
-  /// <summary>Returns whether the given Java or .NET type name fits the filters given in
-  /// this mapper.
-  /// </summary><param name='typeName'>The fully qualified name of a Java or .NET class (e.g.,
-  /// <c>java.math.BigInteger</c> or
-  /// <c>System.Globalization.CultureInfo</c> ).
-  /// </param><returns>Either
-  /// <c>true</c> if the given Java or .NET type name fits the filters given in this
-  /// mapper, or
-  /// <c>false</c> otherwise.
-  /// </returns>
-  ///
+   /// <include file='../../docs.xml'
+  /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.FilterTypeName(System.String)"]/*'/>
     public bool FilterTypeName(string typeName) {
       if (String.IsNullOrEmpty(typeName)) {
         return false;
@@ -139,21 +105,8 @@ namespace PeterO.Cbor {
       return false;
     }
 
-   ///
-  /// <summary>Adds a prefix of a Java or .NET type for use in type matching. A type
-  /// matches a prefix if its fully qualified name is or begins with that
-  /// prefix, using codepoint-by-codepoint (case-sensitive) matching.
-  /// </summary><param name='prefix'>The prefix of a Java or .NET type (e.g., `java.math.` or
-  /// `System.Globalization`).
-  /// </param><returns>This object.
-  /// </returns><exception cref='T:System.ArgumentNullException'>The parameter
-  /// <paramref name='prefix'/>
-  /// is null.
-  /// </exception><exception cref='T:System.ArgumentException'>The parameter
-  /// <paramref name='prefix'/>
-  /// is empty.
-  /// </exception>
-  ///
+   /// <include file='../../docs.xml'
+  /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.AddTypePrefix(System.String)"]/*'/>
     public CBORTypeMapper AddTypePrefix(string prefix) {
       if (prefix == null) {
         throw new ArgumentNullException(nameof(prefix));
@@ -165,21 +118,8 @@ namespace PeterO.Cbor {
       return this;
     }
 
-   ///
-  /// <summary>Adds the fully qualified name of a Java or .NET type for use in type
-  /// matching.
-  /// </summary><param name='name'>The fully qualified name of a Java or .NET class (e.g.,
-  /// <c>java.math.BigInteger</c> or
-  /// <c>System.Globalization.CultureInfo</c> ).
-  /// </param><returns>This object.
-  /// </returns><exception cref='T:System.ArgumentNullException'>The parameter
-  /// <paramref name='name'/>
-  /// is null.
-  /// </exception><exception cref='T:System.ArgumentException'>The parameter
-  /// <paramref name='name'/>
-  /// is empty.
-  /// </exception>
-  ///
+   /// <include file='../../docs.xml'
+  /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.AddTypeName(System.String)"]/*'/>
     public CBORTypeMapper AddTypeName(string name) {
       if (name == null) {
         throw new ArgumentNullException(nameof(name));
