@@ -9,8 +9,8 @@ using System;
 using System.IO;
 
 namespace PeterO.Cbor {
-    // <include file='../../docs.xml'
-    // path='docs/doc[@name="T:PeterO.Cbor.CharacterReader"]/*'/>
+  // <include file='../../docs.xml'
+  // path='docs/doc[@name="T:PeterO.Cbor.CharacterReader"]/*'/>
   internal sealed class CharacterReader : ICharacterInput {
     private readonly int mode;
     private readonly bool errorThrow;
@@ -22,19 +22,69 @@ namespace PeterO.Cbor {
     private int offset;
     private ICharacterInput reader;
 
-    // <include file='../../docs.xml'
-    // path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.String)"]/*'/>
+    // <summary>Initializes a new instance of the <see cref='CharacterReader'/> class.</summary>
+    // <param name='str'>
+    // The parameter
+    // <paramref name='str'/>
+    // is a text string.
+    // </param>
     public CharacterReader(string str) : this(str, false, false) {
     }
 
-    // <include file='../../docs.xml'
-    // path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.String,System.Boolean)"]/*'/>
+    // <summary>Initializes a new instance of the <see cref='CharacterReader'/> class.</summary>
+    // <param name='str'>
+    // The parameter
+    // <paramref name='str'/>
+    // is a text string.
+    // </param>
+    // <param name='skipByteOrderMark'>
+    // Either
+    // <c>
+    // true
+    // </c>
+    // or
+    // <c>
+    // false
+    // </c>
+    // .
+    // </param>
     public CharacterReader(string str, bool skipByteOrderMark)
       : this(str, skipByteOrderMark, false) {
     }
 
-    // <include file='../../docs.xml'
-    // path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.String,System.Boolean,System.Boolean)"]/*'/>
+    // <summary>Initializes a new instance of the <see cref='CharacterReader'/> class.</summary>
+    // <param name='str'>
+    // The parameter
+    // <paramref name='str'/>
+    // is a text string.
+    // </param>
+    // <param name='skipByteOrderMark'>
+    // Either
+    // <c>
+    // true
+    // </c>
+    // or
+    // <c>
+    // false
+    // </c>
+    // .
+    // </param>
+    // <param name='errorThrow'>
+    // Either
+    // <c>
+    // true
+    // </c>
+    // or
+    // <c>
+    // false
+    // </c>
+    // .
+    // </param>
+    // <exception cref='T:System.ArgumentNullException'>
+    // The parameter
+    // <paramref name='str'/>
+    // is null.
+    // </exception>
     public CharacterReader(
   string str,
   bool skipByteOrderMark,
@@ -52,14 +102,69 @@ namespace PeterO.Cbor {
       this.stream = null;
     }
 
-    // <include file='../../docs.xml'
-    // path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.String,System.Int32,System.Int32)"]/*'/>
+    // <summary>Initializes a new instance of the <see cref='CharacterReader'/> class.</summary>
+    // <param name='str'>
+    // The parameter
+    // <paramref name='str'/>
+    // is a text string.
+    // </param>
+    // <param name='offset'>
+    // The parameter
+    // <paramref name='offset'/>
+    // is a 32-bit signed integer.
+    // </param>
+    // <param name='length'>
+    // The parameter
+    // <paramref name='length'/>
+    // is a 32-bit signed integer.
+    // </param>
     public CharacterReader(string str, int offset, int length)
       : this(str, offset, length, false, false) {
     }
 
-    // <include file='../../docs.xml'
-    // path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.String,System.Int32,System.Int32,System.Boolean,System.Boolean)"]/*'/>
+    // <summary>Initializes a new instance of the <see cref='CharacterReader'/> class.</summary>
+    // <param name='str'>
+    // The parameter
+    // <paramref name='str'/>
+    // is a text string.
+    // </param>
+    // <param name='offset'>
+    // The parameter
+    // <paramref name='offset'/>
+    // is a 32-bit signed integer.
+    // </param>
+    // <param name='length'>
+    // The parameter
+    // <paramref name='length'/>
+    // is a 32-bit signed integer.
+    // </param>
+    // <param name='skipByteOrderMark'>
+    // Either
+    // <c>
+    // true
+    // </c>
+    // or
+    // <c>
+    // false
+    // </c>
+    // .
+    // </param>
+    // <param name='errorThrow'>
+    // Either
+    // <c>
+    // true
+    // </c>
+    // or
+    // <c>
+    // false
+    // </c>
+    // .
+    // </param>
+    // <exception cref='T:System.ArgumentNullException'>
+    // The parameter
+    // <paramref name='str'/>
+    // is null.
+    // </exception>
     public CharacterReader(
   string str,
   int offset,
@@ -67,28 +172,28 @@ namespace PeterO.Cbor {
   bool skipByteOrderMark,
   bool errorThrow) {
       if (str == null) {
-  throw new ArgumentNullException(nameof(str));
-}
-if (offset < 0) {
-  throw new ArgumentException("offset (" + offset +
-    ") is less than 0");
-}
-if (offset > str.Length) {
-  throw new ArgumentException("offset (" + offset +
-    ") is more than " + str.Length);
-}
-if (length < 0) {
-  throw new ArgumentException("length (" + length +
-    ") is less than 0");
-}
-if (length > str.Length) {
-  throw new ArgumentException("length (" + length +
-    ") is more than " + str.Length);
-}
-if (str.Length - offset < length) {
-  throw new ArgumentException("str's length minus " + offset + " (" +
-    (str.Length - offset) + ") is less than " + length);
-}
+        throw new ArgumentNullException(nameof(str));
+      }
+      if (offset < 0) {
+        throw new ArgumentException("offset (" + offset +
+          ") is less than 0");
+      }
+      if (offset > str.Length) {
+        throw new ArgumentException("offset (" + offset +
+          ") is more than " + str.Length);
+      }
+      if (length < 0) {
+        throw new ArgumentException("length (" + length +
+          ") is less than 0");
+      }
+      if (length > str.Length) {
+        throw new ArgumentException("length (" + length +
+          ") is more than " + str.Length);
+      }
+      if (str.Length - offset < length) {
+        throw new ArgumentException("str's length minus " + offset + " (" +
+          (str.Length - offset) + ") is less than " + length);
+      }
       this.strLength = length;
       this.offset = (skipByteOrderMark && length > 0 && str[offset] ==
         0xfeff) ? offset + 1 : 0;
@@ -99,25 +204,86 @@ if (str.Length - offset < length) {
       this.stream = null;
     }
 
-    // <include file='../../docs.xml'
-    // path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.IO.Stream)"]/*'/>
+    // <summary>Initializes a new instance of the <see cref='CharacterReader'/> class.</summary>
+    // <param name='stream'>
+    // A readable data stream.
+    // </param>
     public CharacterReader(Stream stream) : this(stream, 0, false) {
     }
 
-    // <include file='../../docs.xml'
-    // path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.IO.Stream,System.Int32,System.Boolean)"]/*'/>
+    // <summary>Initializes a new instance of the <see cref='CharacterReader'/> class.</summary>
+    // <param name='stream'>
+    // A readable data stream.
+    // </param>
+    // <param name='mode'>
+    // The parameter
+    // <paramref name='mode'/>
+    // is a 32-bit signed integer.
+    // </param>
+    // <param name='errorThrow'>
+    // Either
+    // <c>
+    // true
+    // </c>
+    // or
+    // <c>
+    // false
+    // </c>
+    // .
+    // </param>
     public CharacterReader(Stream stream, int mode, bool errorThrow)
       : this(stream, mode, errorThrow, false) {
     }
 
-    // <include file='../../docs.xml'
-    // path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.IO.Stream,System.Int32)"]/*'/>
+    // <summary>Initializes a new instance of the <see cref='CharacterReader'/> class.</summary>
+    // <param name='stream'>
+    // A readable data stream.
+    // </param>
+    // <param name='mode'>
+    // The parameter
+    // <paramref name='mode'/>
+    // is a 32-bit signed integer.
+    // </param>
     public CharacterReader(Stream stream, int mode)
       : this(stream, mode, false, false) {
     }
 
-    // <include file='../../docs.xml'
-    // path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.IO.Stream,System.Int32,System.Boolean,System.Boolean)"]/*'/>
+    // <summary>Initializes a new instance of the <see cref='CharacterReader'/> class.</summary>
+    // <param name='stream'>
+    // A readable data stream.
+    // </param>
+    // <param name='mode'>
+    // The parameter
+    // <paramref name='mode'/>
+    // is a 32-bit signed integer.
+    // </param>
+    // <param name='errorThrow'>
+    // Either
+    // <c>
+    // true
+    // </c>
+    // or
+    // <c>
+    // false
+    // </c>
+    // .
+    // </param>
+    // <param name='dontSkipUtf8Bom'>
+    // Either
+    // <c>
+    // true
+    // </c>
+    // or
+    // <c>
+    // false
+    // </c>
+    // .
+    // </param>
+    // <exception cref='T:System.ArgumentNullException'>
+    // The parameter
+    // <paramref name='stream'/>
+    // is null.
+    // </exception>
     public CharacterReader(
   Stream stream,
   int mode,
@@ -196,10 +362,10 @@ if (str.Length - offset < length) {
         } else if ((c & 0xf800) == 0xd800) {
           // unpaired surrogate
           if (this.errorThrow) {
- throw new InvalidOperationException("Unpaired surrogate code point");
-} else {
- c = 0xfffd;
-}
+            throw new InvalidOperationException("Unpaired surrogate code point");
+          } else {
+            c = 0xfffd;
+          }
         }
         ++this.offset;
         return c;
@@ -223,13 +389,13 @@ if (str.Length - offset < length) {
             this.reader = new Utf32Reader(this.stream, false, this.errorThrow);
             return this.reader.ReadChar();
           } else {
-      var newReader = new Utf16Reader(
-  this.stream,
-  bigEndian,
-  this.errorThrow);
-  newReader.Unget(c3, c4);
-  this.reader = newReader;
-  return newReader.ReadChar();
+            var newReader = new Utf16Reader(
+        this.stream,
+        bigEndian,
+        this.errorThrow);
+            newReader.Unget(c3, c4);
+            this.reader = newReader;
+            return newReader.ReadChar();
           }
         }
         // Assume UTF-8 here, so the 0xff or 0xfe is invalid
@@ -269,19 +435,19 @@ if (str.Length - offset < length) {
             c3 = this.stream.ReadByte();
             c4 = this.stream.ReadByte();
             if (c3 == 0 && c4 == 0) {
-            this.reader = new Utf32Reader(
-  this.stream,
-  false,
-  this.errorThrow);
-  return c1;
+              this.reader = new Utf32Reader(
+    this.stream,
+    false,
+    this.errorThrow);
+              return c1;
             } else {
-          var newReader = new Utf16Reader(
-  this.stream,
-  false,
-  this.errorThrow);
-  newReader.Unget(c3, c4);
-  this.reader = newReader;
-  return c1;
+              var newReader = new Utf16Reader(
+      this.stream,
+      false,
+      this.errorThrow);
+              newReader.Unget(c3, c4);
+              this.reader = newReader;
+              return c1;
             }
           } else {
             // NZA NZ, so UTF-8
@@ -338,12 +504,12 @@ if (str.Length - offset < length) {
         bool bigEndian = c1 == 0xfe;
         int otherbyte = bigEndian ? 0xff : 0xfe;
         if (c2 == otherbyte) {
-      var newReader = new Utf16Reader(
-  this.stream,
-  bigEndian,
-  this.errorThrow);
-  this.reader = newReader;
-  return newReader.ReadChar();
+          var newReader = new Utf16Reader(
+      this.stream,
+      bigEndian,
+      this.errorThrow);
+          this.reader = newReader;
+          return newReader.ReadChar();
         }
         // Assume UTF-8 here, so the 0xff or 0xfe is invalid
         if (this.errorThrow) {
@@ -360,11 +526,11 @@ if (str.Length - offset < length) {
           c2 = this.stream.ReadByte();
           if (c2 == 0) {
             // NZA 0, so UTF-16LE
-          var newReader = new Utf16Reader(
-  this.stream,
-  false,
-  this.errorThrow);
-  this.reader = newReader;
+            var newReader = new Utf16Reader(
+    this.stream,
+    false,
+    this.errorThrow);
+            this.reader = newReader;
           } else {
             // NZA NZ
             var utf8reader = new Utf8Reader(this.stream, this.errorThrow);
@@ -414,14 +580,14 @@ if (str.Length - offset < length) {
       } else if (mode == 1 || mode == 3) {
         c2 = this.DetectUtf8OrUtf16(c1);
         if (c2 >= -1) {
- return c2;
-}
+          return c2;
+        }
       } else if (mode == 2 || mode == 4) {
         // UTF-8, UTF-16, or UTF-32
         c2 = this.DetectUtf8Or16Or32(c1);
         if (c2 >= -1) {
- return c2;
-}
+          return c2;
+        }
       }
       // Default case: assume UTF-8
       utf8reader = new Utf8Reader(this.stream, this.errorThrow);
@@ -503,10 +669,10 @@ if (str.Length - offset < length) {
         if (c2 < 0) {
           this.state.AddOne(-1);
           if (this.errorThrow) {
- throw new InvalidOperationException("Invalid UTF-16");
-} else {
- return 0xfffd;
-}
+            throw new InvalidOperationException("Invalid UTF-16");
+          } else {
+            return 0xfffd;
+          }
         }
         c1 = this.bigEndian ? ((c1 << 8) | c2) : ((c2 << 8) | c1);
         int surr = c1 & 0xfc00;
@@ -517,10 +683,10 @@ if (str.Length - offset < length) {
           if (c1 < 0 || c2 < 0) {
             this.state.AddOne(-1);
             if (this.errorThrow) {
- throw new InvalidOperationException("Invalid UTF-16");
-} else {
- return 0xfffd;
-}
+              throw new InvalidOperationException("Invalid UTF-16");
+            } else {
+              return 0xfffd;
+            }
           }
           int unit2 = this.bigEndian ? ((c1 << 8) | c2) : ((c2 << 8) | c1);
           if ((unit2 & 0xfc00) == 0xdc00) {
@@ -528,17 +694,17 @@ if (str.Length - offset < length) {
           }
           this.Unget(c1, c2);
           if (this.errorThrow) {
- throw new InvalidOperationException("Invalid UTF-16");
-} else {
- return 0xfffd;
-}
+            throw new InvalidOperationException("Invalid UTF-16");
+          } else {
+            return 0xfffd;
+          }
         }
         if (surr == 0xdc00) {
           if (this.errorThrow) {
- throw new InvalidOperationException("Invalid UTF-16");
-} else {
- return 0xfffd;
-}
+            throw new InvalidOperationException("Invalid UTF-16");
+          } else {
+            return 0xfffd;
+          }
         }
         return c1;
       }
@@ -581,19 +747,19 @@ if (str.Length - offset < length) {
         if (c2 < 0 || c3 < 0 || c4 < 0) {
           this.state.AddOne(-1);
           if (this.errorThrow) {
- throw new InvalidOperationException("Invalid UTF-32");
-} else {
- return 0xfffd;
-}
+            throw new InvalidOperationException("Invalid UTF-32");
+          } else {
+            return 0xfffd;
+          }
         }
         c1 = this.bigEndian ? ((c1 << 24) | (c2 << 16) | (c3 << 8) | c4) :
           ((c4 << 24) | (c3 << 16) | (c2 << 8) | c1);
         if (c1 < 0 || c1 >= 0x110000 || (c1 & 0xfff800) == 0xd800) {
           if (this.errorThrow) {
- throw new InvalidOperationException("Invalid UTF-32");
-} else {
- return 0xfffd;
-}
+            throw new InvalidOperationException("Invalid UTF-32");
+          } else {
+            return 0xfffd;
+          }
         }
         return c1;
       }
@@ -651,10 +817,10 @@ if (str.Length - offset < length) {
             if (bytesNeeded != 0) {
               bytesNeeded = 0;
               if (this.errorThrow) {
- throw new InvalidOperationException("Invalid UTF-8");
-} else {
- return 0xfffd;
-}
+                throw new InvalidOperationException("Invalid UTF-8");
+              } else {
+                return 0xfffd;
+              }
             }
             return -1;
           }
@@ -679,10 +845,10 @@ if (str.Length - offset < length) {
               cp = (b - 0xf0) << 18;
             } else {
               if (this.errorThrow) {
- throw new InvalidOperationException("Invalid UTF-8");
-} else {
- return 0xfffd;
-}
+                throw new InvalidOperationException("Invalid UTF-8");
+              } else {
+                return 0xfffd;
+              }
             }
             continue;
           }
@@ -690,10 +856,10 @@ if (str.Length - offset < length) {
             cp = bytesNeeded = bytesSeen = 0;
             this.state.AddOne(b);
             if (this.errorThrow) {
- throw new InvalidOperationException("Invalid UTF-8");
-} else {
- return 0xfffd;
-}
+              throw new InvalidOperationException("Invalid UTF-8");
+            } else {
+              return 0xfffd;
+            }
           }
           lower = 0x80;
           upper = 0xbf;

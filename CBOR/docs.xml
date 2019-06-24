@@ -567,7 +567,6 @@
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.AsBoolean'>
     <summary>Returns false if this object is False, Null, or Undefined; otherwise,true.
-
     </summary>
     <returns>False if this object is False, Null, or Undefined; otherwise,true.
     </returns>

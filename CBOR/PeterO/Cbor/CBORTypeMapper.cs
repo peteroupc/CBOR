@@ -3,15 +3,16 @@ using System.Collections.Generic;
 
 namespace PeterO.Cbor {
    /// <include file='../../docs.xml'
-  /// path='docs/doc[@name="T:PeterO.Cbor.CBORTypeMapper"]/*'/>
+   /// path='docs/doc[@name="T:PeterO.Cbor.CBORTypeMapper"]/*'/>
   public sealed class CBORTypeMapper {
     private readonly IList<string> typePrefixes;
     private readonly IList<string> typeNames;
     private readonly IDictionary<Object, ConverterInfo>
       converters;
 
-   /// <include file='../../docs.xml'
-  /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.#ctor"]/*'/>
+   ///
+   /// <summary>Initializes a new instance of the <see cref='CBORTypeMapper'/> class.</summary>
+   ///
     public CBORTypeMapper() {
       this.typePrefixes = new List<string>();
       this.typeNames = new List<string>();
@@ -19,7 +20,7 @@ namespace PeterO.Cbor {
     }
 
    /// <include file='../../docs.xml'
-  /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.AddConverter``1(System.Type,PeterO.Cbor.ICBORConverter{``0})"]/*'/>
+   /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.AddConverter``1(System.Type,PeterO.Cbor.ICBORConverter{``0})"]/*'/>
     public CBORTypeMapper AddConverter<T>(
       Type type,
       ICBORConverter<T> converter) {
@@ -86,7 +87,7 @@ namespace PeterO.Cbor {
     }
 
    /// <include file='../../docs.xml'
-  /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.FilterTypeName(System.String)"]/*'/>
+   /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.FilterTypeName(System.String)"]/*'/>
     public bool FilterTypeName(string typeName) {
       if (String.IsNullOrEmpty(typeName)) {
         return false;
@@ -106,7 +107,7 @@ namespace PeterO.Cbor {
     }
 
    /// <include file='../../docs.xml'
-  /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.AddTypePrefix(System.String)"]/*'/>
+   /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.AddTypePrefix(System.String)"]/*'/>
     public CBORTypeMapper AddTypePrefix(string prefix) {
       if (prefix == null) {
         throw new ArgumentNullException(nameof(prefix));
@@ -119,7 +120,7 @@ namespace PeterO.Cbor {
     }
 
    /// <include file='../../docs.xml'
-  /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.AddTypeName(System.String)"]/*'/>
+   /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.AddTypeName(System.String)"]/*'/>
     public CBORTypeMapper AddTypeName(string name) {
       if (name == null) {
         throw new ArgumentNullException(nameof(name));
