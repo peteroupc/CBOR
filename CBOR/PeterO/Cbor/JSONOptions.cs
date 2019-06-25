@@ -6,21 +6,16 @@ namespace PeterO.Cbor {
   /// <include file='../../docs.xml'
   /// path='docs/doc[@name="T:PeterO.Cbor.JSONOptions"]/*'/>
   public sealed class JSONOptions {
-    ///
     /// <summary>Initializes a new instance of the <see cref='JSONOptions'/> class with default options.</summary>
-    ///
     public JSONOptions() : this(false) {
     }
 
-    ///
     /// <summary>Initializes a new instance of the <see cref='JSONOptions'/> class with the given value for the Base64Padding option.</summary><param name='base64Padding'>Whether padding is included when writing data in base64url or traditional
     /// base64 format to JSON.
     /// </param>
-    ///
     public JSONOptions(bool base64Padding) : this(base64Padding, false) {
     }
 
-    ///
     /// <summary>Initializes a new instance of the <see cref='JSONOptions'/> class with the given values for the options.</summary><param name='base64Padding'>Whether padding is included when writing data in base64url or traditional
     /// base64 format to JSON.
     /// </param><param name='replaceSurrogates'>Whether surrogate code points not part of a surrogate pair (which consists
@@ -29,7 +24,6 @@ namespace PeterO.Cbor {
     /// character (U+FFFD). The default is false; an exception is thrown when such
     /// code points are encountered.
     /// </param>
-    ///
 #pragma warning disable CS0618
     public JSONOptions(bool base64Padding, bool replaceSurrogates) {
       this.Base64Padding = base64Padding;

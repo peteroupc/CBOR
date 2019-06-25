@@ -16,26 +16,21 @@ namespace PeterO.Cbor {
     public static readonly CBOREncodeOptions DefaultCtap2Canonical =
       new CBOREncodeOptions(false, false, true);
 
-   ///
    /// <summary>Initializes a new instance of the <see cref='CBOREncodeOptions'/> class.</summary>
-   ///
     public CBOREncodeOptions() : this(false, false) {
 }
 
-   ///
    /// <summary>Initializes a new instance of the <see cref='CBOREncodeOptions'/> class.</summary><param name='useIndefLengthStrings'>A value indicating whether to always encode strings with a definite-length
    /// encoding.
    /// </param><param name='allowDuplicateKeys'>A value indicating whether to disallow duplicate keys when reading CBOR
    /// objects from a data stream.
    /// </param>
-   ///
     public CBOREncodeOptions(
   bool useIndefLengthStrings,
   bool allowDuplicateKeys)
         : this(useIndefLengthStrings, allowDuplicateKeys, false) {
     }
 
-   ///
    /// <summary>Initializes a new instance of the <see cref='CBOREncodeOptions'/> class.</summary><param name='useIndefLengthStrings'>A value indicating whether to encode strings with a definite-length
    /// encoding in certain cases.
    /// </param><param name='allowDuplicateKeys'>A value indicating whether to allow duplicate keys when reading CBOR
@@ -44,7 +39,6 @@ namespace PeterO.Cbor {
    /// canonical CBOR encoding form, which is useful for implementing Web
    /// Authentication.
    /// </param>
-   ///
     public CBOREncodeOptions(
   bool useIndefLengthStrings,
   bool allowDuplicateKeys,

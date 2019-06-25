@@ -13,7 +13,7 @@
 
     public CBORTypeMapper();
 
- Initializes a new instance of the [PeterO.Cbor.CBORTypeMapper](PeterO.Cbor.CBORTypeMapper.md) class.  <a id="AddConverter_T_System_Type_PeterO_Cbor_ICBORConverter_T"></a>
+  Initializes a new instance of the [PeterO.Cbor.CBORTypeMapper](PeterO.Cbor.CBORTypeMapper.md) class.  <a id="AddConverter_T_System_Type_PeterO_Cbor_ICBORConverter_T"></a>
 ### AddConverter
 
     public PeterO.Cbor.CBORTypeMapper AddConverter<T>(
