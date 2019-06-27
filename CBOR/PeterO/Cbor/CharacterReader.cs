@@ -38,16 +38,13 @@ namespace PeterO.Cbor {
     // is a text string.
     // </param>
     // <param name='skipByteOrderMark'>
-    // Either
-    // <c>
-    // true
-    // </c>
-    // or
-    // <c>
-    // false
-    // </c>
-    // .
+    // If true and the first character in the string is U+FEFF, skip that character.
     // </param>
+    // <exception cref='T:System.ArgumentNullException'>
+    // The parameter
+    // <paramref name='str'/>
+    // is null.
+    // </exception>
     public CharacterReader(string str, bool skipByteOrderMark)
       : this(str, skipByteOrderMark, false) {
     }
@@ -59,26 +56,12 @@ namespace PeterO.Cbor {
     // is a text string.
     // </param>
     // <param name='skipByteOrderMark'>
-    // Either
-    // <c>
-    // true
-    // </c>
-    // or
-    // <c>
-    // false
-    // </c>
-    // .
+    // If true and the first character in the string is U+FEFF, skip that character.
     // </param>
     // <param name='errorThrow'>
-    // Either
-    // <c>
-    // true
-    // </c>
-    // or
-    // <c>
-    // false
-    // </c>
-    // .
+    // When encountering invalid encoding, throw an exception if this
+    // parameter is true, or replace it with U+FFFD (replacement character)
+    // if this parameter is false.
     // </param>
     // <exception cref='T:System.ArgumentNullException'>
     // The parameter
@@ -139,26 +122,12 @@ namespace PeterO.Cbor {
     // is a 32-bit signed integer.
     // </param>
     // <param name='skipByteOrderMark'>
-    // Either
-    // <c>
-    // true
-    // </c>
-    // or
-    // <c>
-    // false
-    // </c>
-    // .
+    // If true and the first character in the string portion is U+FEFF, skip that character.
     // </param>
     // <param name='errorThrow'>
-    // Either
-    // <c>
-    // true
-    // </c>
-    // or
-    // <c>
-    // false
-    // </c>
-    // .
+    // When encountering invalid encoding, throw an exception if this
+    // parameter is true, or replace it with U+FFFD (replacement character)
+    // if this parameter is false.
     // </param>
     // <exception cref='T:System.ArgumentNullException'>
     // The parameter
@@ -204,80 +173,145 @@ namespace PeterO.Cbor {
       this.stream = null;
     }
 
-    // <summary>Initializes a new instance of the <see cref='CharacterReader'/> class.</summary>
+    // <summary>Initializes a new instance of the <see cref='CharacterReader'/> class; will read the stream as UTF-8, skip the byte-order mark (U+FEFF)
+    // if it appears first in the stream, and replace invalid byte sequences with
+    // replacement characters (U+FFFD).</summary>
     // <param name='stream'>
     // A readable data stream.
     // </param>
+    // <exception cref='T:System.ArgumentNullException'>
+    // The parameter
+    // <paramref name='stream'/>
+    // is null.
+    // </exception>
     public CharacterReader(Stream stream) : this(stream, 0, false) {
     }
 
-    // <summary>Initializes a new instance of the <see cref='CharacterReader'/> class.</summary>
+    // <summary>Initializes a new instance of the <see cref='CharacterReader'/> class; will skip the byte-order mark (U+FEFF) if it appears first in the
+    // stream and a UTF-8 stream is detected.</summary>
     // <param name='stream'>
     // A readable data stream.
     // </param>
     // <param name='mode'>
-    // The parameter
-    // <paramref name='mode'/>
-    // is a 32-bit signed integer.
+    // The method to use when detecting encodings other than UTF-8 in the byte
+    // stream. This usually involves checking whether the stream begins with a
+    // byte-order mark (BOM, U+FEFF) or a non-zero basic code point (U+0001
+    // to U+007F) before reading the rest of the stream. This value can be one of
+    // the following:
+    // <list>
+    // <item>
+    // 0: UTF-8 only.
+    // </item>
+    // <item>
+    // 1: Detect UTF-16 using BOM or non-zero basic code point, otherwise UTF-8.
+    // </item>
+    // <item>
+    // 2: Detect UTF-16/UTF-32 using BOM or non-zero basic code point, otherwise UTF-8. (Tries to
+    // detect UTF-32 first.)
+    // </item>
+    // <item>
+    // 3: Detect UTF-16 using BOM, otherwise UTF-8.
+    // </item>
+    // <item>
+    // 4: Detect UTF-16/UTF-32 using BOM, otherwise UTF-8. (Tries to detect
+    // UTF-32 first.)
+    // </item>
+    // </list>
+    // .
     // </param>
     // <param name='errorThrow'>
-    // Either
-    // <c>
-    // true
-    // </c>
-    // or
-    // <c>
-    // false
-    // </c>
-    // .
+    // When encountering invalid encoding, throw an exception if this
+    // parameter is true, or replace it with U+FFFD (replacement character)
+    // if this parameter is false.
     // </param>
     public CharacterReader(Stream stream, int mode, bool errorThrow)
       : this(stream, mode, errorThrow, false) {
     }
 
-    // <summary>Initializes a new instance of the <see cref='CharacterReader'/> class.</summary>
+    // <summary>Initializes a new instance of the <see cref='CharacterReader'/> class; will skip the byte-order mark (U+FEFF) if it appears first in the
+    // stream and replace invalid byte sequences with replacement characters
+    // (U+FFFD).</summary>
     // <param name='stream'>
-    // A readable data stream.
+    // A readable byte stream.
     // </param>
     // <param name='mode'>
-    // The parameter
-    // <paramref name='mode'/>
-    // is a 32-bit signed integer.
+    // The method to use when detecting encodings other than UTF-8 in the byte
+    // stream. This usually involves checking whether the stream begins with a
+    // byte-order mark (BOM, U+FEFF) or a non-zero basic code point (U+0001
+    // to U+007F) before reading the rest of the stream. This value can be one of
+    // the following:
+    // <list>
+    // <item>
+    // 0: UTF-8 only.
+    // </item>
+    // <item>
+    // 1: Detect UTF-16 using BOM or non-zero basic code point, otherwise UTF-8.
+    // </item>
+    // <item>
+    // 2: Detect UTF-16/UTF-32 using BOM or non-zero basic code point, otherwise UTF-8. (Tries to
+    // detect UTF-32 first.)
+    // </item>
+    // <item>
+    // 3: Detect UTF-16 using BOM, otherwise UTF-8.
+    // </item>
+    // <item>
+    // 4: Detect UTF-16/UTF-32 using BOM, otherwise UTF-8. (Tries to detect
+    // UTF-32 first.)
+    // </item>
+    // </list>
+    // .
     // </param>
+    // <exception cref='T:System.ArgumentNullException'>
+    // The parameter
+    // <paramref name='stream'/>
+    // is null.
+    // </exception>
     public CharacterReader(Stream stream, int mode)
-      : this(stream, mode, false, false) {
+  : this(stream, mode, false, false) {
     }
 
     // <summary>Initializes a new instance of the <see cref='CharacterReader'/> class.</summary>
     // <param name='stream'>
-    // A readable data stream.
+    // A readable byte stream.
     // </param>
     // <param name='mode'>
-    // The parameter
-    // <paramref name='mode'/>
-    // is a 32-bit signed integer.
+    // The method to use when detecting encodings other than UTF-8 in the byte
+    // stream. This usually involves checking whether the stream begins with a
+    // byte-order mark (BOM, U+FEFF) or a non-zero basic code point (U+0001
+    // to U+007F) before reading the rest of the stream. This value can be one of
+    // the following:
+    // <list>
+    // <item>
+    // 0: UTF-8 only.
+    // </item>
+    // <item>
+    // 1: Detect UTF-16 using BOM or non-zero basic code point, otherwise UTF-8.
+    // </item>
+    // <item>
+    // 2: Detect UTF-16/UTF-32 using BOM or non-zero basic code point, otherwise UTF-8. (Tries to
+    // detect UTF-32 first.)
+    // </item>
+    // <item>
+    // 3: Detect UTF-16 using BOM, otherwise UTF-8.
+    // </item>
+    // <item>
+    // 4: Detect UTF-16/UTF-32 using BOM, otherwise UTF-8. (Tries to detect
+    // UTF-32 first.)
+    // </item>
+    // </list>
+    // .
     // </param>
     // <param name='errorThrow'>
-    // Either
-    // <c>
-    // true
-    // </c>
-    // or
-    // <c>
-    // false
-    // </c>
-    // .
+    // If true, will throw an exception if invalid byte sequences (in the
+    // detected encoding) are found in the byte stream. If false, replaces those
+    // byte sequences with replacement characters (U+FFFD) as the stream is read.
     // </param>
     // <param name='dontSkipUtf8Bom'>
-    // Either
+    // If the stream is detected as UTF-8 and this parameter is
     // <c>
     // true
     // </c>
-    // or
-    // <c>
-    // false
-    // </c>
-    // .
+    // , won't skip the BOM character if it occurs at the start of the stream.
     // </param>
     // <exception cref='T:System.ArgumentNullException'>
     // The parameter
@@ -567,27 +601,32 @@ namespace PeterO.Cbor {
         return -1;
       }
       Utf8Reader utf8reader;
-      if (mode == 0) {
-        // UTF-8 only
-        utf8reader = new Utf8Reader(this.stream, this.errorThrow);
-        this.reader = utf8reader;
-        c1 = utf8reader.ReadChar();
-        if (c1 == 0xfeff) {
-          // Skip BOM
+      switch (mode) {
+        case 0:
+          // UTF-8 only
+          utf8reader = new Utf8Reader(this.stream, this.errorThrow);
+          this.reader = utf8reader;
           c1 = utf8reader.ReadChar();
-        }
-        return c1;
-      } else if (mode == 1 || mode == 3) {
-        c2 = this.DetectUtf8OrUtf16(c1);
-        if (c2 >= -1) {
-          return c2;
-        }
-      } else if (mode == 2 || mode == 4) {
-        // UTF-8, UTF-16, or UTF-32
-        c2 = this.DetectUtf8Or16Or32(c1);
-        if (c2 >= -1) {
-          return c2;
-        }
+          if (c1 == 0xfeff) {
+            // Skip BOM
+            c1 = utf8reader.ReadChar();
+          }
+          return c1;
+        case 1:
+        case 3:
+          c2 = this.DetectUtf8OrUtf16(c1);
+          if (c2 >= -1) {
+            return c2;
+          }
+          break;
+        case 2:
+        case 4:
+          // UTF-8, UTF-16, or UTF-32
+          c2 = this.DetectUtf8Or16Or32(c1);
+          if (c2 >= -1) {
+            return c2;
+          }
+          break;
       }
       // Default case: assume UTF-8
       utf8reader = new Utf8Reader(this.stream, this.errorThrow);

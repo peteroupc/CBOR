@@ -110,7 +110,7 @@ namespace PeterO.Cbor {
           if (haveDecimalPoint) {
             haveDigitsAfterDecimal = true;
             if (newScaleInt == Int32.MinValue) {
-newScale = newScale ?? (new FastInteger2(newScaleInt));
+newScale = newScale ?? new FastInteger2(newScaleInt);
 newScale.AddInt(-1);
             } else {
               --newScaleInt;
@@ -191,14 +191,14 @@ newScale.AddInt(-1);
         if (offset >= 0 && newScaleInt == 0 && newScale == null && exp == null) {
           newScaleInt = expInt;
         } else if (exp == null) {
-newScale = newScale ?? (new FastInteger2(newScaleInt));
+newScale = newScale ?? new FastInteger2(newScaleInt);
 if (offset < 0) {
             newScale.SubtractInt(expInt);
           } else if (expInt != 0) {
             newScale.AddInt(expInt);
           }
         } else {
-newScale = newScale ?? (new FastInteger2(newScaleInt));
+newScale = newScale ?? new FastInteger2(newScaleInt);
 if (offset < 0) {
             newScale.Subtract(exp);
           } else {

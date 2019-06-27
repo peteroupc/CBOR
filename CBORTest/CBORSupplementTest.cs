@@ -820,7 +820,7 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff };
     [Test]
     public void TestUUID() {
       CBORObject obj =
-        ToObjectTest.TestToFromObjectRoundTrip(Guid.Parse(
+        ToObjectTest.TestToFromObjectRoundTrip(new Guid(
           "00112233-4455-6677-8899-AABBCCDDEEFF"));
       Assert.AreEqual(CBORType.ByteString, obj.Type);
       Assert.AreEqual(EInteger.FromString("37"), obj.MostInnerTag);

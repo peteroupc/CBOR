@@ -1,4 +1,4 @@
-﻿/*
+/*
 Written by Peter O. in 2014.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -633,12 +633,9 @@ Type elementType = t.GetElementType();
         }
         if (t.GetTypeInfo().IsGenericType) {
           Type td = t.GetGenericTypeDefinition();
-          isList = (td.Equals(typeof(List<>)) ||
-  td.Equals(typeof(IList<>)) ||
-  td.Equals(typeof(ICollection<>)) ||
-  td.Equals(typeof(IEnumerable<>)));
+          isList = td.Equals(typeof(List<>)) || td.Equals(typeof(IList<>)) || td.Equals(typeof(ICollection<>)) || td.Equals(typeof(IEnumerable<>));
         }
-        isList = (isList && t.GenericTypeArguments.Length == 1);
+        isList = isList && t.GenericTypeArguments.Length == 1;
         if (isList) {
           objectType = t.GenericTypeArguments[0];
           Type listType = typeof(List<>).MakeGenericType(objectType);
@@ -684,14 +681,13 @@ Type elementType = t.GetElementType();
           dictObject = Activator.CreateInstance(listType);
         }
 #else
-        isDict = (t.GetTypeInfo().IsGenericType);
+        isDict = t.GetTypeInfo().IsGenericType;
         if (t.GetTypeInfo().IsGenericType) {
           Type td = t.GetGenericTypeDefinition();
-          isDict = (td.Equals(typeof(Dictionary<,>)) ||
-  td.Equals(typeof(IDictionary<,>)));
+          isDict = td.Equals(typeof(Dictionary<,>)) || td.Equals(typeof(IDictionary<,>));
         }
         // DebugUtility.Log("list=" + isDict);
-        isDict = (isDict && t.GenericTypeArguments.Length == 2);
+        isDict = isDict && t.GenericTypeArguments.Length == 2;
         // DebugUtility.Log("list=" + isDict);
         if (isDict) {
           keyType = t.GenericTypeArguments[0];

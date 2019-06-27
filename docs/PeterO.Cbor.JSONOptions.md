@@ -13,7 +13,7 @@
     public JSONOptions(
         bool base64Padding);
 
-  Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) class with the given value for the Base64Padding option.  <b>Parameters:</b>
+ Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) class with the given value for the Base64Padding option.  <b>Parameters:</b>
 
  * <i>base64Padding</i>: Whether padding is included when writing data in base64url or traditional base64 format to JSON.
 
@@ -24,7 +24,7 @@
         bool base64Padding,
         bool replaceSurrogates);
 
-  Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) class with the given values for the options.  <b>Parameters:</b>
+ Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) class with the given values for the options.  <b>Parameters:</b>
 
  * <i>base64Padding</i>: Whether padding is included when writing data in base64url or traditional base64 format to JSON.
 
@@ -35,7 +35,7 @@
 
     public JSONOptions();
 
-  Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) class with default options.  <a id="Default"></a>
+ Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) class with default options.  <a id="Default"></a>
 ### Default
 
     public static readonly PeterO.Cbor.JSONOptions Default;
@@ -45,7 +45,7 @@
 
     public bool Base64Padding { get; }
 
-<b>Deprecated.</b> This option may have no effect in the future. A future version may, by default, include necessary padding when writing traditional base64 to JSON and include no padding when writing base64url to JSON, in accordance with the revision of the CBOR specification.
+<b>Deprecated.</b> This option now has no effect. This library now includes necessary padding when writing traditional base64 to JSON and includes no padding when writing base64url to JSON, in accordance with the revision of the CBOR specification.
 
  Gets a value indicating whether padding is written out when writing base64url or traditional base64 to JSON.  The padding character is '='.
 

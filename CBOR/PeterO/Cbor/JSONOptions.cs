@@ -36,7 +36,7 @@ namespace PeterO.Cbor {
 
    /// <include file='../../docs.xml'
    /// path='docs/doc[@name="P:PeterO.Cbor.JSONOptions.Base64Padding"]/*'/>
-    [Obsolete("This option may have no effect in the future. A future version may, by default, include necessary padding when writing traditional base64 to JSON and include no padding when writing base64url to JSON, in accordance with the revision of the CBOR specification.")]
+    [Obsolete("This option now has no effect. This library now includes necessary padding when writing traditional base64 to JSON and includes no padding when writing base64url to JSON, in accordance with the revision of the CBOR specification.")]
     public bool Base64Padding { get; private set; }
 
    /// <include file='../../docs.xml'

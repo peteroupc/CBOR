@@ -153,16 +153,14 @@ namespace Test {
         new byte[] { 0x5f, 0x41, 0x20, 0x41, 0x20, 0xff });
     }
     [Test]
-    [ExpectedException(typeof(CBORException))]
     public void TestByteStringStreamNoIndefiniteWithinDefinite() {
-      CBORTestCommon.FromBytesTestAB(new byte[] { 0x5f, 0x41, 0x20, 0x5f, 0x41,
-        0x20, 0xff, 0xff });
+      Assert.Throws<CBORException>(()=>CBORTestCommon.FromBytesTestAB(new byte[] { 0x5f, 0x41, 0x20, 0x5f, 0x41,
+        0x20, 0xff, 0xff }));
     }
     [Test]
-    [ExpectedException(typeof(CBORException))]
     public void TestByteStringStreamNoTagsBeforeDefinite() {
-      CBORTestCommon.FromBytesTestAB(new byte[] { 0x5f, 0x41, 0x20, 0xc2, 0x41,
-        0x20, 0xff });
+      Assert.Throws<CBORException>(() => CBORTestCommon.FromBytesTestAB(new byte[] { 0x5f, 0x41, 0x20, 0xc2, 0x41,
+        0x20, 0xff }));
     }
 
     public static string ObjectMessage(CBORObject obj) {
@@ -513,23 +511,20 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
         new byte[] { 0xc4, 0x82, 0x3, 0x1a, 1, 2, 3, 4 });
     }
     [Test]
-    [ExpectedException(typeof(CBORException))]
     public void TestDecimalFracExactlyTwoElements() {
-      CBORTestCommon.FromBytesTestAB(new byte[] { 0xc4, 0x82, 0xc2, 0x41, 1 });
+      Assert.Throws<CBORException>(() => CBORTestCommon.FromBytesTestAB(new byte[] { 0xc4, 0x82, 0xc2, 0x41, 1 }));
     }
     [Test]
-    [ExpectedException(typeof(CBORException))]
     public void TestDecimalFracExponentMustNotBeBignum() {
-      CBORTestCommon.FromBytesTestAB(new byte[] { 0xc4, 0x82, 0xc2, 0x41, 1,
+      Assert.Throws<CBORException>(() => CBORTestCommon.FromBytesTestAB(new byte[] { 0xc4, 0x82, 0xc2, 0x41, 1,
         0x1a,
-        1, 2, 3, 4 });
+        1, 2, 3, 4 }));
     }
     [Test]
-    [ExpectedException(typeof(CBORException))]
     public void TestBigFloatExponentMustNotBeBignum() {
-      CBORTestCommon.FromBytesTestAB(new byte[] { 0xc5, 0x82, 0xc2, 0x41, 1,
+      Assert.Throws<CBORException>(() => CBORTestCommon.FromBytesTestAB(new byte[] { 0xc5, 0x82, 0xc2, 0x41, 1,
         0x1a,
-        1, 2, 3, 4 });
+        1, 2, 3, 4 }));
     }
 
     [Test]
@@ -1403,9 +1398,8 @@ if (jsonString.Length > 0) {
       CBORTestCommon.AssertRoundTrip(cbor);
     }
     [Test]
-    [ExpectedException(typeof(CBORException))]
     public void TestTagThenBreak() {
-      CBORTestCommon.FromBytesTestAB(new byte[] { 0xd1, 0xff });
+      Assert.Throws<CBORException>(() => CBORTestCommon.FromBytesTestAB(new byte[] { 0xd1, 0xff }));
     }
 
     [Test]
@@ -1424,16 +1418,14 @@ if (jsonString.Length > 0) {
       TestTextStringStreamOne(TestCommon.Repeat("\ud800\udc00", 200000));
     }
     [Test]
-    [ExpectedException(typeof(CBORException))]
     public void TestTextStringStreamNoIndefiniteWithinDefinite() {
-      CBORTestCommon.FromBytesTestAB(new byte[] { 0x7f, 0x61, 0x20, 0x7f, 0x61,
-        0x20, 0xff, 0xff });
+      Assert.Throws<CBORException>(() => CBORTestCommon.FromBytesTestAB(new byte[] { 0x7f, 0x61, 0x20, 0x7f, 0x61,
+        0x20, 0xff, 0xff }));
     }
     [Test]
-    [ExpectedException(typeof(CBORException))]
     public void TestTextStringStreamNoTagsBeforeDefinite() {
-      CBORTestCommon.FromBytesTestAB(new byte[] { 0x7f, 0x61, 0x20, 0xc0, 0x61,
-        0x20, 0xff });
+      Assert.Throws<CBORException>(() => CBORTestCommon.FromBytesTestAB(new byte[] { 0x7f, 0x61, 0x20, 0xc0, 0x61,
+        0x20, 0xff }));
     }
 
     private static EDecimal AsED(CBORObject obj) {

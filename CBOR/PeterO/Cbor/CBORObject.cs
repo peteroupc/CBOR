@@ -13,8 +13,8 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
- /// <include file='../../docs.xml'
- /// path='docs/doc[@name="T:PeterO.Cbor.CBORObject"]/*'/>
+  /// <include file='../../docs.xml'
+  /// path='docs/doc[@name="T:PeterO.Cbor.CBORObject"]/*'/>
   public sealed partial class CBORObject : IComparable<CBORObject>,
   IEquatable<CBORObject> {
     private static CBORObject ConstructSimpleValue(int v) {
@@ -25,7 +25,7 @@ namespace PeterO.Cbor {
       return new CBORObject(CBORObjectTypeInteger, (long)v);
     }
 
-   /// <summary>Represents the value false.</summary>
+    /// <summary>Represents the value false.</summary>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
@@ -36,14 +36,14 @@ namespace PeterO.Cbor {
     public static readonly CBORObject False =
       CBORObject.ConstructSimpleValue(20);
 
-   /// <summary>A not-a-number value.</summary>
+    /// <summary>A not-a-number value.</summary>
     public static readonly CBORObject NaN = CBORObject.FromObject(Double.NaN);
 
-   /// <summary>The value negative infinity.</summary>
+    /// <summary>The value negative infinity.</summary>
     public static readonly CBORObject NegativeInfinity =
       CBORObject.FromObject(Double.NegativeInfinity);
 
-   /// <summary>Represents the value null.</summary>
+    /// <summary>Represents the value null.</summary>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
@@ -54,11 +54,11 @@ namespace PeterO.Cbor {
     public static readonly CBORObject Null =
       CBORObject.ConstructSimpleValue(22);
 
-   /// <summary>The value positive infinity.</summary>
+    /// <summary>The value positive infinity.</summary>
     public static readonly CBORObject PositiveInfinity =
       CBORObject.FromObject(Double.PositiveInfinity);
 
-   /// <summary>Represents the value true.</summary>
+    /// <summary>Represents the value true.</summary>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
@@ -69,7 +69,7 @@ namespace PeterO.Cbor {
     public static readonly CBORObject True =
       CBORObject.ConstructSimpleValue(21);
 
-   /// <summary>Represents the value undefined.</summary>
+    /// <summary>Represents the value undefined.</summary>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
@@ -80,7 +80,7 @@ namespace PeterO.Cbor {
     public static readonly CBORObject Undefined =
       CBORObject.ConstructSimpleValue(23);
 
-   /// <summary>Gets a CBOR object for the number zero.</summary>
+    /// <summary>Gets a CBOR object for the number zero.</summary>
     public static readonly CBORObject Zero =
       CBORObject.ConstructIntegerValue(0);
 
@@ -116,8 +116,8 @@ namespace PeterO.Cbor {
       (EInteger.One << 64) - EInteger.One;
 
     private static readonly EInteger[] ValueEmptyTags = new EInteger[0];
-   // Expected lengths for each head byte.
-   // 0 means length varies. -1 means invalid.
+    // Expected lengths for each head byte.
+    // 0 means length varies. -1 means invalid.
     private static readonly int[] ValueExpectedLengths = { 1, 1, 1, 1, 1, 1,
       1, 1, 1,
       1, 1, 1, 1, 1, 1, 1, // major type 0
@@ -181,8 +181,8 @@ namespace PeterO.Cbor {
       this.tagHigh = 0;
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.Count"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.Count"]/*'/>
     public int Count {
       get {
         return (this.ItemType == CBORObjectTypeArray) ? this.AsList().Count :
@@ -190,8 +190,8 @@ namespace PeterO.Cbor {
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.MostInnerTag"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.MostInnerTag"]/*'/>
     public EInteger MostInnerTag {
       get {
         if (!this.IsTagged) {
@@ -213,8 +213,8 @@ namespace PeterO.Cbor {
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.IsFalse"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.IsFalse"]/*'/>
     public bool IsFalse {
       get {
         return this.ItemType == CBORObjectTypeSimpleValue && (int)this.ThisItem
@@ -222,8 +222,8 @@ namespace PeterO.Cbor {
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.IsFinite"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.IsFinite"]/*'/>
     public bool IsFinite {
       get {
         return this.Type == CBORType.Number && !this.IsInfinity() &&
@@ -231,8 +231,8 @@ namespace PeterO.Cbor {
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.IsIntegral"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.IsIntegral"]/*'/>
     public bool IsIntegral {
       get {
         ICBORNumber cn = NumberInterfaces[this.ItemType];
@@ -240,8 +240,8 @@ namespace PeterO.Cbor {
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.IsNull"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.IsNull"]/*'/>
     public bool IsNull {
       get {
         return this.ItemType == CBORObjectTypeSimpleValue && (int)this.ThisItem
@@ -249,16 +249,16 @@ namespace PeterO.Cbor {
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.IsTagged"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.IsTagged"]/*'/>
     public bool IsTagged {
       get {
         return this.itemtypeValue == CBORObjectTypeTagged;
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.IsTrue"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.IsTrue"]/*'/>
     public bool IsTrue {
       get {
         return this.ItemType == CBORObjectTypeSimpleValue && (int)this.ThisItem
@@ -266,8 +266,8 @@ namespace PeterO.Cbor {
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.IsUndefined"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.IsUndefined"]/*'/>
     public bool IsUndefined {
       get {
         return this.ItemType == CBORObjectTypeSimpleValue && (int)this.ThisItem
@@ -275,8 +275,8 @@ namespace PeterO.Cbor {
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.IsZero"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.IsZero"]/*'/>
     public bool IsZero {
       get {
         ICBORNumber cniface = NumberInterfaces[this.ItemType];
@@ -284,8 +284,8 @@ namespace PeterO.Cbor {
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.Keys"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.Keys"]/*'/>
     public ICollection<CBORObject> Keys {
       get {
         if (this.ItemType == CBORObjectTypeMap) {
@@ -296,8 +296,8 @@ namespace PeterO.Cbor {
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.IsNegative"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.IsNegative"]/*'/>
     public bool IsNegative {
       get {
         ICBORNumber cn = NumberInterfaces[this.ItemType];
@@ -305,8 +305,8 @@ namespace PeterO.Cbor {
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.MostOuterTag"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.MostOuterTag"]/*'/>
     public EInteger MostOuterTag {
       get {
         if (!this.IsTagged) {
@@ -322,8 +322,8 @@ namespace PeterO.Cbor {
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.Sign"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.Sign"]/*'/>
     public int Sign {
       get {
         int ret = GetSignInternal(this.ItemType, this.ThisItem);
@@ -334,8 +334,8 @@ namespace PeterO.Cbor {
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.SimpleValue"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.SimpleValue"]/*'/>
     public int SimpleValue {
       get {
         return (this.ItemType == CBORObjectTypeSimpleValue) ?
@@ -343,8 +343,8 @@ namespace PeterO.Cbor {
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.Type"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.Type"]/*'/>
     public CBORType Type {
       get {
         switch (this.ItemType) {
@@ -373,8 +373,8 @@ namespace PeterO.Cbor {
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.Values"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.Values"]/*'/>
     public ICollection<CBORObject> Values {
       get {
         if (this.ItemType == CBORObjectTypeMap) {
@@ -410,8 +410,8 @@ namespace PeterO.Cbor {
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.Item(System.Int32)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.Item(System.Int32)"]/*'/>
     public CBORObject this[int index] {
       get {
         if (this.ItemType == CBORObjectTypeArray) {
@@ -449,8 +449,8 @@ namespace PeterO.Cbor {
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.GetOrDefault(System.Object,PeterO.Cbor.CBORObject)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.GetOrDefault(System.Object,PeterO.Cbor.CBORObject)"]/*'/>
     public CBORObject GetOrDefault(object key, CBORObject defaultValue) {
       if (this.ItemType == CBORObjectTypeArray) {
         int index = 0;
@@ -478,8 +478,8 @@ namespace PeterO.Cbor {
       return defaultValue;
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.Item(PeterO.Cbor.CBORObject)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.Item(PeterO.Cbor.CBORObject)"]/*'/>
     public CBORObject this[CBORObject key] {
       get {
         if (key == null) {
@@ -537,8 +537,8 @@ namespace PeterO.Cbor {
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.Item(System.String)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.Item(System.String)"]/*'/>
     public CBORObject this[string key] {
       get {
         if (key == null) {
@@ -565,20 +565,20 @@ namespace PeterO.Cbor {
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Addition(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Addition(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]/*'/>
     public static CBORObject Addition(CBORObject first, CBORObject second) {
       return CBORObjectMath.Addition(first, second);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.DecodeFromBytes(System.Byte[])"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.DecodeFromBytes(System.Byte[])"]/*'/>
     public static CBORObject DecodeFromBytes(byte[] data) {
       return DecodeFromBytes(data, CBOREncodeOptions.Default);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.DecodeFromBytes(System.Byte[],PeterO.Cbor.CBOREncodeOptions)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.DecodeFromBytes(System.Byte[],PeterO.Cbor.CBOREncodeOptions)"]/*'/>
     public static CBORObject DecodeFromBytes(
   byte[] data,
   CBOREncodeOptions options) {
@@ -593,16 +593,16 @@ namespace PeterO.Cbor {
       }
       var firstbyte = (int)(data[0] & (int)0xff);
       int expectedLength = ValueExpectedLengths[firstbyte];
-     // if invalid
+      // if invalid
       if (expectedLength == -1) {
         throw new CBORException("Unexpected data encountered");
       }
       if (expectedLength != 0) {
-       // if fixed length
+        // if fixed length
         CheckCBORLength(expectedLength, data.Length);
       }
       if (firstbyte == 0xc0) {
-       // value with tag 0
+        // value with tag 0
         string s = GetOptimizedStringIfShortAscii(data, 1);
         if (s != null) {
           return new CBORObject(FromObject(s), 0, 0);
@@ -611,9 +611,9 @@ namespace PeterO.Cbor {
       if (expectedLength != 0) {
         return GetFixedLengthObject(firstbyte, data);
       }
-     // For objects with variable length,
-     // read the object as though
-     // the byte array were a stream
+      // For objects with variable length,
+      // read the object as though
+      // the byte array were a stream
       using (var ms = new MemoryStream(data)) {
         CBORObject o = Read(ms, options);
         CheckCBORLength((long)data.Length, (long)ms.Position);
@@ -621,20 +621,20 @@ namespace PeterO.Cbor {
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Divide(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Divide(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]/*'/>
     public static CBORObject Divide(CBORObject first, CBORObject second) {
       return CBORObjectMath.Divide(first, second);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromJSONString(System.String)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromJSONString(System.String)"]/*'/>
     public static CBORObject FromJSONString(string str) {
       return FromJSONString(str, CBOREncodeOptions.Default);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromJSONString(System.String,PeterO.Cbor.CBOREncodeOptions)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromJSONString(System.String,PeterO.Cbor.CBOREncodeOptions)"]/*'/>
     public static CBORObject FromJSONString(
   string str,
   CBOREncodeOptions options) {
@@ -662,14 +662,14 @@ namespace PeterO.Cbor {
       return obj;
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToObject(System.Type)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToObject(System.Type)"]/*'/>
     public object ToObject(Type t) {
       return this.ToObject(t, null, null, 0);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToObject(System.Type,PeterO.Cbor.CBORTypeMapper)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToObject(System.Type,PeterO.Cbor.CBORTypeMapper)"]/*'/>
     public object ToObject(Type t, CBORTypeMapper mapper) {
       if (mapper == null) {
         throw new ArgumentNullException(nameof(mapper));
@@ -677,8 +677,8 @@ namespace PeterO.Cbor {
       return this.ToObject(t, mapper, null, 0);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToObject(System.Type,PeterO.Cbor.PODOptions)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToObject(System.Type,PeterO.Cbor.PODOptions)"]/*'/>
     public object ToObject(Type t, PODOptions options) {
       if (options == null) {
         throw new ArgumentNullException(nameof(options));
@@ -686,8 +686,8 @@ namespace PeterO.Cbor {
       return this.ToObject(t, null, options, 0);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToObject(System.Type,PeterO.Cbor.CBORTypeMapper,PeterO.Cbor.PODOptions)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToObject(System.Type,PeterO.Cbor.CBORTypeMapper,PeterO.Cbor.PODOptions)"]/*'/>
     public object ToObject(Type t, CBORTypeMapper mapper, PODOptions options) {
       if (mapper == null) {
         throw new ArgumentNullException(nameof(mapper));
@@ -729,21 +729,21 @@ namespace PeterO.Cbor {
         PropertyMap.TypeToObject(this, t, mapper, options, depth);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Int64)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Int64)"]/*'/>
     public static CBORObject FromObject(long value) {
       return (value >= 0L && value < 24L) ? valueFixedObjects[(int)value] :
-        (new CBORObject(CBORObjectTypeInteger, value));
+        new CBORObject(CBORObjectTypeInteger, value);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Cbor.CBORObject)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Cbor.CBORObject)"]/*'/>
     public static CBORObject FromObject(CBORObject value) {
       return value ?? CBORObject.Null;
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Numbers.EInteger)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Numbers.EInteger)"]/*'/>
     public static CBORObject FromObject(EInteger bigintValue) {
       if ((object)bigintValue == (object)null) {
         return CBORObject.Null;
@@ -752,13 +752,12 @@ namespace PeterO.Cbor {
               bigintValue.CompareTo(Int64MaxValue) <= 0) ?
         new CBORObject(
           CBORObjectTypeInteger,
-          (long)(EInteger)bigintValue) : (new CBORObject(
-        CBORObjectTypeBigInteger,
-        bigintValue));
+          (long)(EInteger)bigintValue) :
+        new CBORObject(CBORObjectTypeBigInteger, bigintValue);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Numbers.EFloat)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Numbers.EFloat)"]/*'/>
     public static CBORObject FromObject(EFloat bigValue) {
       if ((object)bigValue == (object)null) {
         return CBORObject.Null;
@@ -779,8 +778,8 @@ namespace PeterO.Cbor {
           bigValue);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Numbers.ERational)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Numbers.ERational)"]/*'/>
     public static CBORObject FromObject(ERational bigValue) {
       if ((object)bigValue == (object)null) {
         return CBORObject.Null;
@@ -794,13 +793,11 @@ namespace PeterO.Cbor {
           bigValue);
       }
       return (bigValue.IsFinite && bigValue.Denominator.Equals(EInteger.One)) ?
-            FromObject(bigValue.Numerator) : (new CBORObject(
-              CBORObjectTypeExtendedRational,
-              bigValue));
+FromObject(bigValue.Numerator) : new CBORObject(CBORObjectTypeExtendedRational, bigValue);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Numbers.EDecimal)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Numbers.EDecimal)"]/*'/>
     public static CBORObject FromObject(EDecimal otherValue) {
       if ((object)otherValue == (object)null) {
         return CBORObject.Null;
@@ -821,8 +818,8 @@ namespace PeterO.Cbor {
           otherValue);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.String)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.String)"]/*'/>
     public static CBORObject FromObject(string strValue) {
       if (strValue == null) {
         return CBORObject.Null;
@@ -834,46 +831,46 @@ namespace PeterO.Cbor {
       return new CBORObject(CBORObjectTypeTextString, strValue);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Int32)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Int32)"]/*'/>
     public static CBORObject FromObject(int value) {
       return (value >= 0 && value < 24) ? valueFixedObjects[value] :
         FromObject((long)value);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Int16)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Int16)"]/*'/>
     public static CBORObject FromObject(short value) {
       return (value >= 0 && value < 24) ? valueFixedObjects[value] :
         FromObject((long)value);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Boolean)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Boolean)"]/*'/>
     public static CBORObject FromObject(bool value) {
       return value ? CBORObject.True : CBORObject.False;
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Byte)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Byte)"]/*'/>
     public static CBORObject FromObject(byte value) {
       return FromObject(((int)value) & 0xff);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Single)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Single)"]/*'/>
     public static CBORObject FromObject(float value) {
       return new CBORObject(CBORObjectTypeSingle, value);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Double)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Double)"]/*'/>
     public static CBORObject FromObject(double value) {
       return new CBORObject(CBORObjectTypeDouble, value);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Byte[])"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Byte[])"]/*'/>
     public static CBORObject FromObject(byte[] bytes) {
       if (bytes == null) {
         return CBORObject.Null;
@@ -883,8 +880,8 @@ namespace PeterO.Cbor {
       return new CBORObject(CBORObjectTypeByteString, bytes);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Cbor.CBORObject[])"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Cbor.CBORObject[])"]/*'/>
     public static CBORObject FromObject(CBORObject[] array) {
       if (array == null) {
         return CBORObject.Null;
@@ -896,8 +893,8 @@ namespace PeterO.Cbor {
       return cbor;
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Int32[])"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Int32[])"]/*'/>
     public static CBORObject FromObject(int[] array) {
       if (array == null) {
         return CBORObject.Null;
@@ -909,8 +906,8 @@ namespace PeterO.Cbor {
       return new CBORObject(CBORObjectTypeArray, list);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Int64[])"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Int64[])"]/*'/>
     public static CBORObject FromObject(long[] array) {
       if (array == null) {
         return CBORObject.Null;
@@ -922,22 +919,22 @@ namespace PeterO.Cbor {
       return new CBORObject(CBORObjectTypeArray, list);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Object)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Object)"]/*'/>
     public static CBORObject FromObject(object obj) {
       return FromObject(obj, PODOptions.Default);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Object,PeterO.Cbor.PODOptions)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Object,PeterO.Cbor.PODOptions)"]/*'/>
     public static CBORObject FromObject(
   object obj,
   PODOptions options) {
       return FromObject(obj, options, null, 0);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Object,PeterO.Cbor.CBORTypeMapper)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Object,PeterO.Cbor.CBORTypeMapper)"]/*'/>
     public static CBORObject FromObject(
   object obj,
   CBORTypeMapper mapper) {
@@ -947,8 +944,8 @@ namespace PeterO.Cbor {
       return FromObject(obj, PODOptions.Default, mapper, 0);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Object,PeterO.Cbor.CBORTypeMapper,PeterO.Cbor.PODOptions)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Object,PeterO.Cbor.CBORTypeMapper,PeterO.Cbor.PODOptions)"]/*'/>
     public static CBORObject FromObject(
   object obj,
   CBORTypeMapper mapper,
@@ -1046,7 +1043,7 @@ namespace PeterO.Cbor {
         return FromObject(bytearr);
       }
       if (obj is System.Collections.IDictionary) {
-       // IDictionary appears first because IDictionary includes IEnumerable
+        // IDictionary appears first because IDictionary includes IEnumerable
         objret = CBORObject.NewMap();
         System.Collections.IDictionary objdic =
           (System.Collections.IDictionary)obj;
@@ -1107,8 +1104,8 @@ depth + 1);
       return objret;
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObjectAndTag(System.Object,PeterO.Numbers.EInteger)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObjectAndTag(System.Object,PeterO.Numbers.EInteger)"]/*'/>
     public static CBORObject FromObjectAndTag(
       object valueOb,
       EInteger bigintTag) {
@@ -1125,7 +1122,7 @@ depth + 1);
       }
       CBORObject c = FromObject(valueOb);
       if (bigintTag.CanFitInInt32()) {
-       // Low-numbered, commonly used tags
+        // Low-numbered, commonly used tags
         return FromObjectAndTag(c, bigintTag.ToInt32Checked());
       } else {
         var tagLow = 0;
@@ -1144,8 +1141,8 @@ depth + 1);
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObjectAndTag(System.Object,System.Int32)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObjectAndTag(System.Object,System.Int32)"]/*'/>
     public static CBORObject FromObjectAndTag(
       object valueObValue,
       int smallTag) {
@@ -1161,8 +1158,8 @@ depth + 1);
       return c;
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromSimpleValue(System.Int32)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromSimpleValue(System.Int32)"]/*'/>
     public static CBORObject FromSimpleValue(int simpleValue) {
       if (simpleValue < 0) {
         throw new ArgumentException("simpleValue (" + simpleValue +
@@ -1184,28 +1181,28 @@ depth + 1);
         simpleValue);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Multiply(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Multiply(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]/*'/>
     public static CBORObject Multiply(CBORObject first, CBORObject second) {
       return CBORObjectMath.Multiply(first, second);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.NewArray"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.NewArray"]/*'/>
     public static CBORObject NewArray() {
       return new CBORObject(CBORObjectTypeArray, new List<CBORObject>());
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.NewMap"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.NewMap"]/*'/>
     public static CBORObject NewMap() {
       return new CBORObject(
         CBORObjectTypeMap,
         new Dictionary<CBORObject, CBORObject>());
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Read(System.IO.Stream)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Read(System.IO.Stream)"]/*'/>
     public static CBORObject Read(Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException(nameof(stream));
@@ -1218,8 +1215,8 @@ depth + 1);
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Read(System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Read(System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)"]/*'/>
     public static CBORObject Read(Stream stream, CBOREncodeOptions options) {
       if (options == null) {
         throw new ArgumentNullException(nameof(options));
@@ -1235,14 +1232,14 @@ depth + 1);
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ReadJSON(System.IO.Stream)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ReadJSON(System.IO.Stream)"]/*'/>
     public static CBORObject ReadJSON(Stream stream) {
       return ReadJSON(stream, CBOREncodeOptions.Default);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ReadJSON(System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ReadJSON(System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)"]/*'/>
     public static CBORObject ReadJSON(
   Stream stream,
   CBOREncodeOptions options) {
@@ -1274,26 +1271,26 @@ depth + 1);
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Remainder(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Remainder(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]/*'/>
     public static CBORObject Remainder(CBORObject first, CBORObject second) {
       return CBORObjectMath.Remainder(first, second);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Subtract(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Subtract(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]/*'/>
     public static CBORObject Subtract(CBORObject first, CBORObject second) {
       return CBORObjectMath.Subtract(first, second);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.String,System.IO.Stream)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.String,System.IO.Stream)"]/*'/>
     public static void Write(string str, Stream stream) {
       Write(str, stream, CBOREncodeOptions.Default);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.String,System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.String,System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)"]/*'/>
     public static void Write(
       string str,
       Stream stream,
@@ -1308,8 +1305,8 @@ depth + 1);
         stream.WriteByte(0xf6); // Write null instead of string
       } else {
         if (!options.UseIndefLengthStrings || options.Ctap2Canonical) {
-         // NOTE: Length of a String object won't be higher than the maximum
-         // allowed for definite-length strings
+          // NOTE: Length of a String object won't be higher than the maximum
+          // allowed for definite-length strings
           long codePointLength = DataUtilities.GetUtf8Length(str, true);
           WritePositiveInt64(3, codePointLength, stream);
           DataUtilities.WriteUtf8(str, stream, true);
@@ -1319,8 +1316,8 @@ depth + 1);
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.EFloat,System.IO.Stream)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.EFloat,System.IO.Stream)"]/*'/>
     public static void Write(EFloat bignum, Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException(nameof(stream));
@@ -1352,8 +1349,8 @@ depth + 1);
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.ERational,System.IO.Stream)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.ERational,System.IO.Stream)"]/*'/>
     public static void Write(ERational rational, Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException(nameof(stream));
@@ -1377,8 +1374,8 @@ depth + 1);
       Write(rational.Denominator, stream);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.EDecimal,System.IO.Stream)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.EDecimal,System.IO.Stream)"]/*'/>
     public static void Write(EDecimal bignum, Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException(nameof(stream));
@@ -1410,8 +1407,8 @@ depth + 1);
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.EInteger,System.IO.Stream)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.EInteger,System.IO.Stream)"]/*'/>
     public static void Write(EInteger bigint, Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException(nameof(stream));
@@ -1427,19 +1424,19 @@ depth + 1);
         bigint = -(EInteger)bigint;
       }
       if (bigint.CompareTo(Int64MaxValue) <= 0) {
-       // If the big integer is representable as a long and in
-       // major type 0 or 1, write that major type
-       // instead of as a bignum
+        // If the big integer is representable as a long and in
+        // major type 0 or 1, write that major type
+        // instead of as a bignum
         var ui = (long)(EInteger)bigint;
         WritePositiveInt64(datatype, ui, stream);
       } else {
-       // Get a byte array of the big integer's value,
-       // since shifting and doing AND operations is
-       // slow with large BigIntegers
+        // Get a byte array of the big integer's value,
+        // since shifting and doing AND operations is
+        // slow with large BigIntegers
         byte[] bytes = bigint.ToBytes(true);
         int byteCount = bytes.Length;
         while (byteCount > 0 && bytes[byteCount - 1] == 0) {
-         // Ignore trailing zero bytes
+          // Ignore trailing zero bytes
           --byteCount;
         }
         if (byteCount != 0) {
@@ -1503,8 +1500,8 @@ depth + 1);
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Int64,System.IO.Stream)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Int64,System.IO.Stream)"]/*'/>
     public static void Write(long value, Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException(nameof(stream));
@@ -1518,8 +1515,8 @@ depth + 1);
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Int32,System.IO.Stream)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Int32,System.IO.Stream)"]/*'/>
     public static void Write(int value, Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException(nameof(stream));
@@ -1547,14 +1544,14 @@ depth + 1);
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Int16,System.IO.Stream)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Int16,System.IO.Stream)"]/*'/>
     public static void Write(short value, Stream stream) {
       Write((long)value, stream);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Boolean,System.IO.Stream)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Boolean,System.IO.Stream)"]/*'/>
     public static void Write(bool value, Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException(nameof(stream));
@@ -1562,8 +1559,8 @@ depth + 1);
       stream.WriteByte(value ? (byte)0xf5 : (byte)0xf4);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Byte,System.IO.Stream)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Byte,System.IO.Stream)"]/*'/>
     public static void Write(byte value, Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException(nameof(stream));
@@ -1576,8 +1573,8 @@ depth + 1);
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Single,System.IO.Stream)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Single,System.IO.Stream)"]/*'/>
     public static void Write(float value, Stream s) {
       if (s == null) {
         throw new ArgumentNullException(nameof(s));
@@ -1589,8 +1586,8 @@ depth + 1);
       s.Write(data, 0, 5);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Double,System.IO.Stream)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Double,System.IO.Stream)"]/*'/>
     public static void Write(double value, Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException(nameof(stream));
@@ -1607,8 +1604,8 @@ depth + 1);
       stream.Write(data, 0, 9);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Cbor.CBORObject,System.IO.Stream)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Cbor.CBORObject,System.IO.Stream)"]/*'/>
     public static void Write(CBORObject value, Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException(nameof(stream));
@@ -1620,14 +1617,14 @@ depth + 1);
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Object,System.IO.Stream)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Object,System.IO.Stream)"]/*'/>
     public static void Write(object objValue, Stream stream) {
       Write(objValue, stream, CBOREncodeOptions.Default);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Object,System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Object,System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)"]/*'/>
     public static void Write(
       object objValue,
       Stream output,
@@ -1669,8 +1666,8 @@ depth + 1);
       FromObject(objValue).WriteTo(output, options);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteJSON(System.Object,System.IO.Stream)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteJSON(System.Object,System.IO.Stream)"]/*'/>
     public static void WriteJSON(object obj, Stream outputStream) {
       if (obj == null) {
         outputStream.Write(ValueNullBytes, 0, ValueNullBytes.Length);
@@ -1687,8 +1684,8 @@ depth + 1);
       CBORObject.FromObject(obj).WriteJSONTo(outputStream);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Abs"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Abs"]/*'/>
     public CBORObject Abs() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       if (cn == null) {
@@ -1713,8 +1710,8 @@ depth + 1);
           newItem) ? this : CBORObject.FromObject(newItem));
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Add(System.Object,System.Object)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Add(System.Object,System.Object)"]/*'/>
     public CBORObject Add(object key, object valueOb) {
       if (this.ItemType == CBORObjectTypeMap) {
         CBORObject mapKey;
@@ -1742,8 +1739,8 @@ depth + 1);
       return this;
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Add(PeterO.Cbor.CBORObject)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Add(PeterO.Cbor.CBORObject)"]/*'/>
     public CBORObject Add(CBORObject obj) {
       if (this.ItemType == CBORObjectTypeArray) {
         IList<CBORObject> list = this.AsList();
@@ -1753,8 +1750,8 @@ depth + 1);
       throw new InvalidOperationException("Not an array");
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Add(System.Object)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Add(System.Object)"]/*'/>
     public CBORObject Add(object obj) {
       if (this.ItemType == CBORObjectTypeArray) {
         IList<CBORObject> list = this.AsList();
@@ -1764,8 +1761,8 @@ depth + 1);
       throw new InvalidOperationException("Not an array");
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsEInteger"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsEInteger"]/*'/>
     public EInteger AsEInteger() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       if (cn == null) {
@@ -1774,20 +1771,20 @@ depth + 1);
       return cn.AsEInteger(this.ThisItem);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsBoolean"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsBoolean"]/*'/>
     public bool AsBoolean() {
       return !this.IsFalse && !this.IsNull && !this.IsUndefined;
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsByte"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsByte"]/*'/>
     public byte AsByte() {
       return (byte)this.AsInt32(0, 255);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsDouble"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsDouble"]/*'/>
     public double AsDouble() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       if (cn == null) {
@@ -1796,8 +1793,8 @@ depth + 1);
       return cn.AsDouble(this.ThisItem);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsEDecimal"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsEDecimal"]/*'/>
     public EDecimal AsEDecimal() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       if (cn == null) {
@@ -1806,8 +1803,8 @@ depth + 1);
       return cn.AsExtendedDecimal(this.ThisItem);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsEFloat"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsEFloat"]/*'/>
     public EFloat AsEFloat() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       if (cn == null) {
@@ -1816,8 +1813,8 @@ depth + 1);
       return cn.AsExtendedFloat(this.ThisItem);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsERational"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsERational"]/*'/>
     public ERational AsERational() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       if (cn == null) {
@@ -1826,20 +1823,20 @@ depth + 1);
       return cn.AsExtendedRational(this.ThisItem);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsInt16"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsInt16"]/*'/>
     public short AsInt16() {
       return (short)this.AsInt32(Int16.MinValue, Int16.MaxValue);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsInt32"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsInt32"]/*'/>
     public int AsInt32() {
       return this.AsInt32(Int32.MinValue, Int32.MaxValue);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsInt64"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsInt64"]/*'/>
     public long AsInt64() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       if (cn == null) {
@@ -1848,8 +1845,8 @@ depth + 1);
       return cn.AsInt64(this.ThisItem);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsSingle"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsSingle"]/*'/>
     public float AsSingle() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       if (cn == null) {
@@ -1858,8 +1855,8 @@ depth + 1);
       return cn.AsSingle(this.ThisItem);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsString"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsString"]/*'/>
     public string AsString() {
       int type = this.ItemType;
       switch (type) {
@@ -1870,15 +1867,15 @@ depth + 1);
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.CanFitInDouble"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.CanFitInDouble"]/*'/>
     public bool CanFitInDouble() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       return (cn != null) && cn.CanFitInDouble(this.ThisItem);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.CanFitInInt32"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.CanFitInInt32"]/*'/>
     public bool CanFitInInt32() {
       if (!this.CanFitInInt64()) {
         return false;
@@ -1887,36 +1884,36 @@ depth + 1);
       return v >= Int32.MinValue && v <= Int32.MaxValue;
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.CanFitInInt64"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.CanFitInInt64"]/*'/>
     public bool CanFitInInt64() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       return (cn != null) && cn.CanFitInInt64(this.ThisItem);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.CanFitInSingle"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.CanFitInSingle"]/*'/>
     public bool CanFitInSingle() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       return (cn != null) && cn.CanFitInSingle(this.ThisItem);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.CanTruncatedIntFitInInt32"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.CanTruncatedIntFitInInt32"]/*'/>
     public bool CanTruncatedIntFitInInt32() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       return (cn != null) && cn.CanTruncatedIntFitInInt32(this.ThisItem);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.CanTruncatedIntFitInInt64"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.CanTruncatedIntFitInInt64"]/*'/>
     public bool CanTruncatedIntFitInInt64() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       return cn != null && cn.CanTruncatedIntFitInInt64(this.ThisItem);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.CompareTo(PeterO.Cbor.CBORObject)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.CompareTo(PeterO.Cbor.CBORObject)"]/*'/>
     public int CompareTo(CBORObject other) {
       if (other == null) {
         return 1;
@@ -1973,7 +1970,7 @@ depth + 1);
           case CBORObjectTypeSingle: {
               var a = (float)objA;
               var b = (float)objB;
-             // Treat NaN as greater than all other numbers
+              // Treat NaN as greater than all other numbers
               cmp = Single.IsNaN(a) ? (Single.IsNaN(b) ? 0 : 1) :
                 (Single.IsNaN(b) ? (-1) : ((a == b) ? 0 : ((a < b) ? -1 :
                     1)));
@@ -1988,7 +1985,7 @@ depth + 1);
           case CBORObjectTypeDouble: {
               var a = (double)objA;
               var b = (double)objB;
-             // Treat NaN as greater than all other numbers
+              // Treat NaN as greater than all other numbers
               cmp = Double.IsNaN(a) ? (Double.IsNaN(b) ? 0 : 1) :
                 (Double.IsNaN(b) ? (-1) : ((a == b) ? 0 : ((a < b) ? -1 :
                     1)));
@@ -2041,12 +2038,12 @@ depth + 1);
       } else {
         int typeOrderA = ValueNumberTypeOrder[typeA];
         int typeOrderB = ValueNumberTypeOrder[typeB];
-       // Check whether general types are different
-       // (treating number types the same)
+        // Check whether general types are different
+        // (treating number types the same)
         if (typeOrderA != typeOrderB) {
           return (typeOrderA < typeOrderB) ? -1 : 1;
         }
-       // At this point, both types should be number types.
+        // At this point, both types should be number types.
 #if DEBUG
         if (typeOrderA != 0) {
           throw new ArgumentException("doesn't satisfy typeOrderA == 0");
@@ -2058,21 +2055,21 @@ depth + 1);
         int s1 = GetSignInternal(typeA, objA);
         int s2 = GetSignInternal(typeB, objB);
         if (s1 != s2 && s1 != 2 && s2 != 2) {
-         // if both types are numbers
-         // and their signs are different
+          // if both types are numbers
+          // and their signs are different
           return (s1 < s2) ? -1 : 1;
         }
         if (s1 == 2 && s2 == 2) {
-         // both are NaN
+          // both are NaN
           cmp = 0;
         } else if (s1 == 2) {
-         // first object is NaN
+          // first object is NaN
           return 1;
         } else if (s2 == 2) {
-         // second object is NaN
+          // second object is NaN
           return -1;
         } else {
-         // DebugUtility.Log("a=" + this + " b=" + other);
+          // DebugUtility.Log("a=" + this + " b=" + other);
           if (typeA == CBORObjectTypeExtendedRational) {
             ERational e1 = NumberInterfaces[typeA].AsExtendedRational(objA);
             if (typeB == CBORObjectTypeExtendedDecimal) {
@@ -2132,22 +2129,22 @@ depth + 1);
                     cmp;
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.CompareToIgnoreTags(PeterO.Cbor.CBORObject)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.CompareToIgnoreTags(PeterO.Cbor.CBORObject)"]/*'/>
     public int CompareToIgnoreTags(CBORObject other) {
       return (other == null) ? 1 : ((this == other) ? 0 :
                     this.Untag().CompareTo(other.Untag()));
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ContainsKey(System.Object)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ContainsKey(System.Object)"]/*'/>
     public bool ContainsKey(object objKey) {
       return (this.ItemType == CBORObjectTypeMap) ?
         this.ContainsKey(CBORObject.FromObject(objKey)) : false;
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ContainsKey(PeterO.Cbor.CBORObject)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ContainsKey(PeterO.Cbor.CBORObject)"]/*'/>
     public bool ContainsKey(CBORObject key) {
       key = key ?? CBORObject.Null;
       if (this.ItemType == CBORObjectTypeMap) {
@@ -2157,8 +2154,8 @@ depth + 1);
       return false;
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ContainsKey(System.String)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ContainsKey(System.String)"]/*'/>
     public bool ContainsKey(string key) {
       if (this.ItemType == CBORObjectTypeMap) {
         CBORObject ckey = key == null ? CBORObject.Null :
@@ -2169,14 +2166,14 @@ depth + 1);
       return false;
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.EncodeToBytes"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.EncodeToBytes"]/*'/>
     public byte[] EncodeToBytes() {
       return this.EncodeToBytes(CBOREncodeOptions.Default);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.EncodeToBytes(PeterO.Cbor.CBOREncodeOptions)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.EncodeToBytes(PeterO.Cbor.CBOREncodeOptions)"]/*'/>
     public byte[] EncodeToBytes(CBOREncodeOptions options) {
       if (options == null) {
         throw new ArgumentNullException(nameof(options));
@@ -2184,9 +2181,9 @@ depth + 1);
       if (options.Ctap2Canonical) {
         return CBORCanonical.CtapCanonicalEncode(this);
       }
-     // For some types, a memory stream is a lot of
-     // overhead since the amount of memory the types
-     // use is fixed and small
+      // For some types, a memory stream is a lot of
+      // overhead since the amount of memory the types
+      // use is fixed and small
       var hasComplexTag = false;
       byte tagbyte = 0;
       bool tagged = this.IsTagged;
@@ -2293,14 +2290,14 @@ depth + 1);
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Equals(System.Object)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Equals(System.Object)"]/*'/>
     public override bool Equals(object obj) {
       return this.Equals(obj as CBORObject);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Equals(PeterO.Cbor.CBORObject)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Equals(PeterO.Cbor.CBORObject)"]/*'/>
     public bool Equals(CBORObject other) {
       var otherValue = other as CBORObject;
       if (otherValue == null) {
@@ -2342,8 +2339,8 @@ depth + 1);
         this.tagLow == otherValue.tagLow && this.tagHigh == otherValue.tagHigh;
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.GetByteString"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.GetByteString"]/*'/>
     public byte[] GetByteString() {
       if (this.ItemType == CBORObjectTypeByteString) {
         return (byte[])this.ThisItem;
@@ -2351,8 +2348,8 @@ depth + 1);
       throw new InvalidOperationException("Not a byte string");
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.GetHashCode"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.GetHashCode"]/*'/>
     public override int GetHashCode() {
       var hashCode = 651869431;
       unchecked {
@@ -2392,7 +2389,7 @@ depth + 1);
               itemHashCode = unchecked((int)longValue);
               break;
             default:
-             // EInteger, EFloat, EDecimal, ERational, CBORObject
+              // EInteger, EFloat, EDecimal, ERational, CBORObject
               itemHashCode = this.itemValue.GetHashCode();
               break;
           }
@@ -2404,8 +2401,8 @@ depth + 1);
       return hashCode;
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.GetAllTags"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.GetAllTags"]/*'/>
     public EInteger[] GetAllTags() {
       if (!this.IsTagged) {
         return ValueEmptyTags;
@@ -2425,8 +2422,8 @@ depth + 1);
       return new[] { LowHighToEInteger(this.tagLow, this.tagHigh) };
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasMostOuterTag(System.Int32)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasMostOuterTag(System.Int32)"]/*'/>
     public bool HasMostOuterTag(int tagValue) {
       if (tagValue < 0) {
         throw new ArgumentException("tagValue (" + tagValue +
@@ -2435,8 +2432,8 @@ depth + 1);
       return this.IsTagged && this.tagHigh == 0 && this.tagLow == tagValue;
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasMostOuterTag(PeterO.Numbers.EInteger)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasMostOuterTag(PeterO.Numbers.EInteger)"]/*'/>
     public bool HasMostOuterTag(EInteger bigTagValue) {
       if (bigTagValue == null) {
         throw new ArgumentNullException(nameof(bigTagValue));
@@ -2448,8 +2445,8 @@ depth + 1);
       return (!this.IsTagged) ? false : this.MostOuterTag.Equals(bigTagValue);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasTag(System.Int32)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasTag(System.Int32)"]/*'/>
     public bool HasTag(int tagValue) {
       if (tagValue < 0) {
         throw new ArgumentException("tagValue (" + tagValue +
@@ -2472,8 +2469,8 @@ depth + 1);
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasTag(PeterO.Numbers.EInteger)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasTag(PeterO.Numbers.EInteger)"]/*'/>
     public bool HasTag(EInteger bigTagValue) {
       if (bigTagValue == null) {
         throw new ArgumentNullException(nameof(bigTagValue));
@@ -2490,8 +2487,8 @@ depth + 1);
       return false;
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Insert(System.Int32,System.Object)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Insert(System.Int32,System.Object)"]/*'/>
     public CBORObject Insert(int index, object valueOb) {
       if (this.ItemType == CBORObjectTypeArray) {
         CBORObject mapValue;
@@ -2512,36 +2509,36 @@ depth + 1);
       return this;
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.IsInfinity"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.IsInfinity"]/*'/>
     public bool IsInfinity() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       return cn != null && cn.IsInfinity(this.ThisItem);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.IsNaN"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.IsNaN"]/*'/>
     public bool IsNaN() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       return cn != null && cn.IsNaN(this.ThisItem);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.IsNegativeInfinity"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.IsNegativeInfinity"]/*'/>
     public bool IsNegativeInfinity() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       return cn != null && cn.IsNegativeInfinity(this.ThisItem);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.IsPositiveInfinity"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.IsPositiveInfinity"]/*'/>
     public bool IsPositiveInfinity() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       return cn != null && cn.IsPositiveInfinity(this.ThisItem);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Negate"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Negate"]/*'/>
     public CBORObject Negate() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       if (cn == null) {
@@ -2562,8 +2559,8 @@ depth + 1);
         CBORObject.FromObject(newItem);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Clear"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Clear"]/*'/>
     public void Clear() {
       if (this.ItemType == CBORObjectTypeArray) {
         IList<CBORObject> list = this.AsList();
@@ -2576,14 +2573,14 @@ depth + 1);
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Remove(System.Object)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Remove(System.Object)"]/*'/>
     public bool Remove(object obj) {
       return this.Remove(CBORObject.FromObject(obj));
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.RemoveAt(System.Int32)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.RemoveAt(System.Int32)"]/*'/>
     public bool RemoveAt(int index) {
       if (this.ItemType != CBORObjectTypeArray) {
         throw new InvalidOperationException("Not an array");
@@ -2596,8 +2593,8 @@ depth + 1);
       return true;
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Remove(PeterO.Cbor.CBORObject)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Remove(PeterO.Cbor.CBORObject)"]/*'/>
     public bool Remove(CBORObject obj) {
       if (obj == null) {
         throw new ArgumentNullException(nameof(obj));
@@ -2618,8 +2615,8 @@ depth + 1);
       throw new InvalidOperationException("Not a map or array");
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Set(System.Object,System.Object)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Set(System.Object,System.Object)"]/*'/>
     public CBORObject Set(object key, object valueOb) {
       if (this.ItemType == CBORObjectTypeMap) {
         CBORObject mapKey;
@@ -2666,14 +2663,14 @@ depth + 1);
       return this;
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToJSONString"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToJSONString"]/*'/>
     public string ToJSONString() {
       return this.ToJSONString(JSONOptions.Default);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)"]/*'/>
     public string ToJSONString(JSONOptions options) {
       if (options == null) {
         throw new ArgumentNullException(nameof(options));
@@ -2691,7 +2688,7 @@ depth + 1);
             try {
               CBORJson.WriteJSONToInternal(this, new StringOutput(sb), options);
             } catch (IOException ex) {
-             // This is truly exceptional
+              // This is truly exceptional
               throw new InvalidOperationException("Internal error", ex);
             }
             return sb.ToString();
@@ -2699,8 +2696,8 @@ depth + 1);
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToString"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToString"]/*'/>
     public override string ToString() {
       StringBuilder sb = null;
       string simvalue = null;
@@ -2708,9 +2705,9 @@ depth + 1);
       if (this.IsTagged) {
         if (sb == null) {
           if (type == CBORObjectTypeTextString) {
-           // The default capacity of StringBuilder may be too small
-           // for many strings, so set a suggested capacity
-           // explicitly
+            // The default capacity of StringBuilder may be too small
+            // for many strings, so set a suggested capacity
+            // explicitly
             string str = this.AsString();
             sb = new StringBuilder(Math.Min(str.Length, 4096) + 16);
           } else {
@@ -2746,7 +2743,7 @@ depth + 1);
               }
               sb.Append(simvalue);
             } else {
-              sb = sb ?? (new StringBuilder());
+              sb = sb ?? new StringBuilder();
               sb.Append("simple(");
               var thisItemInt = (int)this.ThisItem;
               sb.Append(
@@ -2804,7 +2801,7 @@ depth + 1);
             break;
           }
         case CBORObjectTypeByteString: {
-            sb = sb ?? (new StringBuilder());
+            sb = sb ?? new StringBuilder();
             sb.Append("h'");
             CBORUtilities.ToBase16(sb, (byte[])this.ThisItem);
             sb.Append("'");
@@ -2820,7 +2817,7 @@ depth + 1);
             break;
           }
         case CBORObjectTypeArray: {
-            sb = sb ?? (new StringBuilder());
+            sb = sb ?? new StringBuilder();
             var first = true;
             sb.Append("[");
             foreach (CBORObject i in this.AsList()) {
@@ -2834,7 +2831,7 @@ depth + 1);
             break;
           }
         case CBORObjectTypeMap: {
-            sb = sb ?? (new StringBuilder());
+            sb = sb ?? new StringBuilder();
             var first = true;
             sb.Append("{");
             IDictionary<CBORObject, CBORObject> map = this.AsMap();
@@ -2867,8 +2864,8 @@ depth + 1);
       return sb.ToString();
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Untag"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Untag"]/*'/>
     public CBORObject Untag() {
       CBORObject curobject = this;
       while (curobject.itemtypeValue == CBORObjectTypeTagged) {
@@ -2877,15 +2874,15 @@ depth + 1);
       return curobject;
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.UntagOne"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.UntagOne"]/*'/>
     public CBORObject UntagOne() {
       return (this.itemtypeValue == CBORObjectTypeTagged) ?
         ((CBORObject)this.itemValue) : this;
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteJSONTo(System.IO.Stream)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteJSONTo(System.IO.Stream)"]/*'/>
     public void WriteJSONTo(Stream outputStream) {
       if (outputStream == null) {
         throw new ArgumentNullException(nameof(outputStream));
@@ -2896,8 +2893,8 @@ depth + 1);
   JSONOptions.Default);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteJSONTo(System.IO.Stream,PeterO.Cbor.JSONOptions)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteJSONTo(System.IO.Stream,PeterO.Cbor.JSONOptions)"]/*'/>
     public void WriteJSONTo(Stream outputStream, JSONOptions options) {
       if (outputStream == null) {
         throw new ArgumentNullException(nameof(outputStream));
@@ -2911,8 +2908,8 @@ depth + 1);
   options);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,System.Int64)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,System.Int64)"]/*'/>
     public static int WriteValue(
      Stream outputStream,
      int majorType,
@@ -2952,8 +2949,8 @@ depth + 1);
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,System.Int32)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,System.Int32)"]/*'/>
     public static int WriteValue(
     Stream outputStream,
     int majorType,
@@ -2993,8 +2990,8 @@ depth + 1);
       }
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,PeterO.Numbers.EInteger)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,PeterO.Numbers.EInteger)"]/*'/>
     public static int WriteValue(
     Stream outputStream,
     int majorType,
@@ -3041,14 +3038,14 @@ depth + 1);
       return bytes.Length;
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)"]/*'/>
     public void WriteTo(Stream stream) {
       this.WriteTo(stream, CBOREncodeOptions.Default);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)"]/*'/>
     public void WriteTo(Stream stream, CBOREncodeOptions options) {
       if (stream == null) {
         throw new ArgumentNullException(nameof(stream));
@@ -3157,9 +3154,9 @@ depth + 1);
       return ValueExpectedLengths[value];
     }
 
-   // Generate a CBOR object for head bytes with fixed length.
-   // Note that this function assumes that the length of the data
-   // was already checked.
+    // Generate a CBOR object for head bytes with fixed length.
+    // Note that this function assumes that the length of the data
+    // was already checked.
     internal static CBORObject GetFixedLengthObject(
       int firstbyte,
       byte[] data) {
@@ -3169,37 +3166,37 @@ depth + 1);
       }
       int majortype = firstbyte >> 5;
       if (firstbyte >= 0x61 && firstbyte < 0x78) {
-       // text string length 1 to 23
+        // text string length 1 to 23
         string s = GetOptimizedStringIfShortAscii(data, 0);
         if (s != null) {
           return new CBORObject(CBORObjectTypeTextString, s);
         }
       }
       if ((firstbyte & 0x1c) == 0x18) {
-       // contains 1 to 8 extra bytes of additional information
+        // contains 1 to 8 extra bytes of additional information
         long uadditional = 0;
         switch (firstbyte & 0x1f) {
           case 24:
             uadditional = (int)(data[1] & (int)0xff);
             break;
           case 25:
-            uadditional = (data[1] & (0xffL)) << 8;
+            uadditional = (data[1] & 0xffL) << 8;
             uadditional |= (long)(data[2] & 0xffL);
             break;
           case 26:
-            uadditional = (data[1] & (0xffL)) << 24;
-            uadditional |= (data[2] & (0xffL)) << 16;
-            uadditional |= (data[3] & (0xffL)) << 8;
+            uadditional = (data[1] & 0xffL) << 24;
+            uadditional |= (data[2] & 0xffL) << 16;
+            uadditional |= (data[3] & 0xffL) << 8;
             uadditional |= (long)(data[4] & 0xffL);
             break;
           case 27:
-            uadditional = (data[1] & (0xffL)) << 56;
-            uadditional |= (data[2] & (0xffL)) << 48;
-            uadditional |= (data[3] & (0xffL)) << 40;
-            uadditional |= (data[4] & (0xffL)) << 32;
-            uadditional |= (data[5] & (0xffL)) << 24;
-            uadditional |= (data[6] & (0xffL)) << 16;
-            uadditional |= (data[7] & (0xffL)) << 8;
+            uadditional = (data[1] & 0xffL) << 56;
+            uadditional |= (data[2] & 0xffL) << 48;
+            uadditional |= (data[3] & 0xffL) << 40;
+            uadditional |= (data[4] & 0xffL) << 32;
+            uadditional |= (data[5] & 0xffL) << 24;
+            uadditional |= (data[6] & 0xffL) << 16;
+            uadditional |= (data[7] & 0xffL) << 8;
             uadditional |= (long)(data[8] & 0xffL);
             break;
           default:
@@ -3208,21 +3205,21 @@ depth + 1);
         switch (majortype) {
           case 0:
             if ((uadditional >> 63) == 0) {
-             // use only if additional's top bit isn't set
-             // (additional is a signed long)
+              // use only if additional's top bit isn't set
+              // (additional is a signed long)
               return new CBORObject(CBORObjectTypeInteger, uadditional);
             } else {
-              int low = unchecked((int)((uadditional) & 0xffffffffL));
+              int low = unchecked((int)(uadditional & 0xffffffffL));
               int high = unchecked((int)((uadditional >> 32) & 0xffffffffL));
               return FromObject(LowHighToEInteger(low, high));
             }
           case 1:
             if ((uadditional >> 63) == 0) {
-             // use only if additional's top bit isn't set
-             // (additional is a signed long)
+              // use only if additional's top bit isn't set
+              // (additional is a signed long)
               return new CBORObject(CBORObjectTypeInteger, -1 - uadditional);
             } else {
-              int low = unchecked((int)((uadditional) & 0xffffffffL));
+              int low = unchecked((int)(uadditional & 0xffffffffL));
               int high = unchecked((int)((uadditional >> 32) & 0xffffffffL));
               EInteger bigintAdditional = LowHighToEInteger(low, high);
               EInteger minusOne = -EInteger.One;
@@ -3274,11 +3271,11 @@ depth + 1);
         return new CBORObject(CBORObjectTypeTextString, ret.ToString());
       }
       if (firstbyte == 0x80) {
-       // empty array
+        // empty array
         return CBORObject.NewArray();
       }
       if (firstbyte == 0xa0) {
-       // empty map
+        // empty map
         return CBORObject.NewMap();
       }
       throw new CBORException("Unexpected data encountered");
@@ -3388,12 +3385,12 @@ depth + 1);
     }
 
     private static int CBORMapHashCode(IDictionary<CBORObject, CBORObject> a) {
-     // To simplify matters, we use just the count of
-     // the map as the basis for the hash code. More complicated
-     // hash code calculation would generally involve defining
-     // how CBORObjects ought to be compared (since a stable
-     // sort order is necessary for two equal maps to have the
-     // same hash code), which is much too difficult to do.
+      // To simplify matters, we use just the count of
+      // the map as the basis for the hash code. More complicated
+      // hash code calculation would generally involve defining
+      // how CBORObjects ought to be compared (since a stable
+      // sort order is necessary for two equal maps to have the
+      // same hash code), which is much too difficult to do.
       return unchecked(a.Count.GetHashCode() * 19);
     }
 
@@ -3420,8 +3417,8 @@ depth + 1);
     private static string ExtendedToString(EFloat ef) {
       if (ef.IsFinite && (ef.Exponent.CompareTo((EInteger)2500) > 0 ||
                     ef.Exponent.CompareTo((EInteger)(-2500)) < 0)) {
-       // It can take very long to convert a number with a very high
-       // or very low exponent to a decimal string, so do this instead
+        // It can take very long to convert a number with a very high
+        // or very low exponent to a decimal string, so do this instead
         return ef.Mantissa + "p" + ef.Exponent;
       }
       return ef.ToString();
@@ -3432,8 +3429,8 @@ depth + 1);
       int tagbyteInt) {
       byte[] bytes;
       if (str.Length <= 255) {
-       // The strings will usually be short ASCII strings, so
-       // use this optimization
+        // The strings will usually be short ASCII strings, so
+        // use this optimization
         var offset = 0;
         int length = str.Length;
         int extra = (length < 24) ? 1 : 2;
@@ -3477,18 +3474,18 @@ depth + 1);
         var nextbyte = (int)(data[offset] & (int)0xff);
         if (nextbyte >= 0x60 && nextbyte < 0x78) {
           int offsetp1 = 1 + offset;
-         // Check for type 3 string of short length
+          // Check for type 3 string of short length
           int rightLength = offsetp1 + (nextbyte - 0x60);
           CheckCBORLength(rightLength, length);
-         // Check for all ASCII text
+          // Check for all ASCII text
           for (int i = offsetp1; i < length; ++i) {
             if ((data[i] & ((byte)0x80)) != 0) {
               return null;
             }
           }
-         // All ASCII text, so convert to a string
-         // from a char array without having to
-         // convert from UTF-8 first
+          // All ASCII text, so convert to a string
+          // from a char array without having to
+          // convert from UTF-8 first
           var c = new char[length - offsetp1];
           for (int i = offsetp1; i < length; ++i) {
             c[i - offsetp1] = (char)(data[i] & (int)0xff);
@@ -3555,8 +3552,8 @@ depth + 1);
       ICBORNumber cn = NumberInterfaces[type];
       return cn == null ? 2 : cn.Sign(obj);
     }
-   // Initialize fixed values for certain
-   // head bytes
+    // Initialize fixed values for certain
+    // head bytes
     private static CBORObject[] InitializeFixedObjects() {
       valueFixedObjects = new CBORObject[256];
       for (var i = 0; i < 0x18; ++i) {
@@ -3657,7 +3654,7 @@ depth + 1);
       listACount = sortedASet.Count;
       listBCount = sortedBSet.Count;
       int minCount = Math.Min(listACount, listBCount);
-     // Compare the keys
+      // Compare the keys
       for (var i = 0; i < minCount; ++i) {
         CBORObject itemA = sortedASet[i];
         CBORObject itemB = sortedBSet[i];
@@ -3670,7 +3667,7 @@ depth + 1);
         }
       }
       if (listACount == listBCount) {
-       // Both maps have the same keys, so compare their values
+        // Both maps have the same keys, so compare their values
         for (var i = 0; i < minCount; ++i) {
           CBORObject keyA = sortedASet[i];
           CBORObject keyB = sortedBSet[i];
@@ -3825,7 +3822,7 @@ depth + 1);
         int c = str[index];
         if (c <= 0x7f) {
           if (byteIndex >= StreamedStringBufferLength) {
-           // Write bytes retrieved so far
+            // Write bytes retrieved so far
             if (!streaming) {
               stream.WriteByte((byte)0x7f);
             }
@@ -3837,9 +3834,9 @@ depth + 1);
           bytes[byteIndex++] = (byte)c;
         } else if (c <= 0x7ff) {
           if (byteIndex + 2 > StreamedStringBufferLength) {
-           // Write bytes retrieved so far - the next three bytes
-           // would exceed the length, and the CBOR spec forbids
-           // splitting characters when generating text strings
+            // Write bytes retrieved so far - the next three bytes
+            // would exceed the length, and the CBOR spec forbids
+            // splitting characters when generating text strings
             if (!streaming) {
               stream.WriteByte((byte)0x7f);
             }
@@ -3853,18 +3850,18 @@ depth + 1);
         } else {
           if ((c & 0xfc00) == 0xd800 && index + 1 < str.Length &&
               (str[index + 1] & 0xfc00) == 0xdc00) {
-           // Get the Unicode code point for the surrogate pair
+            // Get the Unicode code point for the surrogate pair
             c = 0x10000 + ((c - 0xd800) << 10) + (str[index + 1] - 0xdc00);
             ++index;
           } else if ((c & 0xf800) == 0xd800) {
-           // unpaired surrogate, write U + FFFD instead
+            // unpaired surrogate, write U + FFFD instead
             c = 0xfffd;
           }
           if (c <= 0xffff) {
             if (byteIndex + 3 > StreamedStringBufferLength) {
-             // Write bytes retrieved so far - the next three bytes
-             // would exceed the length, and the CBOR spec forbids
-             // splitting characters when generating text strings
+              // Write bytes retrieved so far - the next three bytes
+              // would exceed the length, and the CBOR spec forbids
+              // splitting characters when generating text strings
               if (!streaming) {
                 stream.WriteByte((byte)0x7f);
               }
@@ -3878,9 +3875,9 @@ depth + 1);
             bytes[byteIndex++] = (byte)(0x80 | (c & 0x3f));
           } else {
             if (byteIndex + 4 > StreamedStringBufferLength) {
-             // Write bytes retrieved so far - the next four bytes
-             // would exceed the length, and the CBOR spec forbids
-             // splitting characters when generating text strings
+              // Write bytes retrieved so far - the next four bytes
+              // would exceed the length, and the CBOR spec forbids
+              // splitting characters when generating text strings
               if (!streaming) {
                 stream.WriteByte((byte)0x7f);
               }
@@ -3903,7 +3900,7 @@ depth + 1);
       }
     }
 
-   //-----------------------------------------------------------
+    //-----------------------------------------------------------
     private void AppendClosingTags(StringBuilder sb) {
       CBORObject curobject = this;
       while (curobject.IsTagged) {

@@ -55,17 +55,10 @@ namespace PeterO {
             }
           }
           Console.WriteLine(method.Name);
-          Type exctype = null;
-          foreach (var a in method.GetCustomAttributes(false)) {
-            if (a is ExpectedExceptionAttribute) {
-              exctype = ((ExpectedExceptionAttribute)a).ExpectedException;
-              break;
-            }
-          }
           try {
             method.Invoke(test, new object[] { });
           } catch (TargetInvocationException e) {
-          if (exctype == null || !e.InnerException.GetType().Equals(exctype)) {
+            {
               Console.WriteLine(e.InnerException.GetType().FullName);
               string message = e.InnerException.Message;
               if (message.Length > 140) {

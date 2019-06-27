@@ -454,7 +454,7 @@ namespace PeterO.Cbor {
           switch (uad) {
             case 256:
              // Tag 256: String namespace
-              this.stringRefs = this.stringRefs ?? (new StringRefs());
+              this.stringRefs = this.stringRefs ?? new StringRefs();
               this.stringRefs.Push();
               break;
             case 25:

@@ -615,12 +615,13 @@ Double.IsNaN(f)) {
             }
             writer.WriteCodePoint((int)'\"');
             if (obj.HasTag(22)) {
+              // Base64 with padding
               Base64.WriteBase64(
                 writer,
                 byteArray,
                 0,
                 byteArray.Length,
-                options.Base64Padding);
+                true);
             } else if (obj.HasTag(23)) {
               // Write as base16
               for (int i = 0; i < byteArray.Length; ++i) {
@@ -628,12 +629,13 @@ Double.IsNaN(f)) {
                 writer.WriteCodePoint((int)Hex16[byteArray[i] & 15]);
               }
             } else {
+              // Base64url no padding
               Base64.WriteBase64URL(
                 writer,
                 byteArray,
                 0,
                 byteArray.Length,
-                options.Base64Padding);
+                false);
             }
             writer.WriteCodePoint((int)'\"');
             break;

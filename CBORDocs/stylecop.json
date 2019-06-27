@@ -1,1 +1,1 @@
-{"settings":{"documentationRules":{"documentInternalElements":false,"documentInterfaces":false}}}
+{"settings":{"documentationRules":{"documentInternalElements":false,"documentInterfaces":false},"orderingRules":{"usingDirectivesPlacement":"outsideNamespace"}}}

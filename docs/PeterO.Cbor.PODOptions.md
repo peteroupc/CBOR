@@ -13,7 +13,7 @@
         bool removeIsPrefix,
         bool useCamelCase);
 
-  Initializes a new instance of the [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) class.  <b>Parameters:</b>
+ Initializes a new instance of the [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) class.  <b>Parameters:</b>
 
  * <i>removeIsPrefix</i>: If set to  `true`  remove is prefix.
 
@@ -24,7 +24,7 @@
 
     public PODOptions();
 
-  Initializes a new instance of the [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) class.  <a id="Default"></a>
+ Initializes a new instance of the [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) class.  <a id="Default"></a>
 ### Default
 
     public static readonly PeterO.Cbor.PODOptions Default;
