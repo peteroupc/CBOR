@@ -4,11 +4,15 @@
     </summary>
   </doc>
   <doc name='M:PeterO.ArrayWriter.#ctor'>
-    <summary>Initializes a new instance of the <see cref='ArrayWriter'/> class with a default buffer size.
+    <summary>Initializes a new instance of the
+      <see cref='ArrayWriter'/>
+       class with a default buffer size.
     </summary>
   </doc>
   <doc name='M:PeterO.ArrayWriter.#ctor(System.Int32)'>
-    <summary>Initializes a new instance of the <see cref='ArrayWriter'/> class with the given initial buffer size.
+    <summary>Initializes a new instance of the
+      <see cref='ArrayWriter'/>
+       class with the given initial buffer size.
     </summary>
     <param name='initialSize'>The parameter
       <paramref name='initialSize'/>
@@ -135,11 +139,15 @@
     </summary>
   </doc>
   <doc name='M:PeterO.Cbor.CBOREncodeOptions.#ctor'>
-    <summary>Initializes a new instance of the <see cref='CBOREncodeOptions'/> class.
+    <summary>Initializes a new instance of the
+      <see cref='CBOREncodeOptions'/>
+       class.
     </summary>
   </doc>
   <doc name='M:PeterO.Cbor.CBOREncodeOptions.#ctor(System.Boolean,System.Boolean)'>
-    <summary>Initializes a new instance of the <see cref='CBOREncodeOptions'/> class.
+    <summary>Initializes a new instance of the
+      <see cref='CBOREncodeOptions'/>
+       class.
     </summary>
     <param name='useIndefLengthStrings'>A value indicating whether to always encode strings with a definite-length
       encoding.
@@ -149,7 +157,9 @@
     </param>
   </doc>
   <doc name='M:PeterO.Cbor.CBOREncodeOptions.#ctor(System.Boolean,System.Boolean,System.Boolean)'>
-    <summary>Initializes a new instance of the <see cref='CBOREncodeOptions'/> class.
+    <summary>Initializes a new instance of the
+      <see cref='CBOREncodeOptions'/>
+       class.
     </summary>
     <param name='useIndefLengthStrings'>A value indicating whether to encode strings with a definite-length
       encoding in certain cases.
@@ -249,11 +259,15 @@
     </summary>
   </doc>
   <doc name='M:PeterO.Cbor.CBORException.#ctor'>
-    <summary>Initializes a new instance of the <see cref='CBORException'/> class.
+    <summary>Initializes a new instance of the
+      <see cref='CBORException'/>
+       class.
     </summary>
   </doc>
   <doc name='M:PeterO.Cbor.CBORException.#ctor(System.String)'>
-    <summary>Initializes a new instance of the <see cref='CBORException'/> class.
+    <summary>Initializes a new instance of the
+      <see cref='CBORException'/>
+       class.
     </summary>
     <param name='message'>The parameter
       <paramref name='message'/>
@@ -261,7 +275,9 @@
     </param>
   </doc>
   <doc name='M:PeterO.Cbor.CBORException.#ctor(System.String,System.Exception)'>
-    <summary>Initializes a new instance of the <see cref='CBORException'/> class. Uses the given message and inner exception.
+    <summary>Initializes a new instance of the
+      <see cref='CBORException'/>
+       class. Uses the given message and inner exception.
     </summary>
     <param name='message'>The parameter
       <paramref name='message'/>
@@ -1526,7 +1542,8 @@
           or property name as each key, and with the corresponding value
           returned by that getter as that key's value. Before adding a key-value
           pair to the map, the key's name is adjusted according to the rules
-          described in the <see cref='T:PeterO.Cbor.PODOptions'/>
+          described in the
+          <see cref='T:PeterO.Cbor.PODOptions'/>
            documentation. Note that for security reasons, certain types are not
           supported even if they contain eligible getters.
         </item>
@@ -2798,7 +2815,8 @@
         <item>Then, the method creates an object of the given type and invokes each
           eligible setter with the corresponding value in the CBOR map, if any.
           Key names in the map are matched to eligible setters according to the
-          rules described in the <see cref='T:PeterO.Cbor.PODOptions'/>
+          rules described in the
+          <see cref='T:PeterO.Cbor.PODOptions'/>
            documentation. Note that for security reasons, certain types are not
           supported even if they contain eligible setters.
         </item>
@@ -3001,7 +3019,8 @@
       human-readable, not machine-readable, the format is not intended to be
       parsed, and the format may change at any time. The returned string is not
       necessarily in JavaScript Object Notation (JSON); to convert CBOR objects
-      to JSON strings, use the <see cref='M:PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)'/>
+      to JSON strings, use the
+      <see cref='M:PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)'/>
        method instead.
     </summary>
     <returns>A text representation of this object.
@@ -3956,7 +3975,9 @@
       <c>ToObject</c> </summary>
   </doc>
   <doc name='M:PeterO.Cbor.CBORTypeMapper.#ctor'>
-    <summary>Initializes a new instance of the <see cref='CBORTypeMapper'/> class.
+    <summary>Initializes a new instance of the
+      <see cref='CBORTypeMapper'/>
+       class.
     </summary>
   </doc>
   <doc name='M:PeterO.Cbor.CBORTypeMapper.AddConverter``1(System.Type,PeterO.Cbor.ICBORConverter{``0})'>
@@ -4188,18 +4209,24 @@
     </summary>
   </doc>
   <doc name='M:PeterO.Cbor.JSONOptions.#ctor'>
-    <summary>Initializes a new instance of the <see cref='JSONOptions'/> class with default options.
+    <summary>Initializes a new instance of the
+      <see cref='JSONOptions'/>
+       class with default options.
     </summary>
   </doc>
   <doc name='M:PeterO.Cbor.JSONOptions.#ctor(System.Boolean)'>
-    <summary>Initializes a new instance of the <see cref='JSONOptions'/> class with the given value for the Base64Padding option.
+    <summary>Initializes a new instance of the
+      <see cref='JSONOptions'/>
+       class with the given value for the Base64Padding option.
     </summary>
     <param name='base64Padding'>Whether padding is included when writing data in base64url or traditional
       base64 format to JSON.
     </param>
   </doc>
   <doc name='M:PeterO.Cbor.JSONOptions.#ctor(System.Boolean,System.Boolean)'>
-    <summary>Initializes a new instance of the <see cref='JSONOptions'/> class with the given values for the options.
+    <summary>Initializes a new instance of the
+      <see cref='JSONOptions'/>
+       class with the given values for the options.
     </summary>
     <param name='base64Padding'>Whether padding is included when writing data in base64url or traditional
       base64 format to JSON.
@@ -4243,11 +4270,15 @@
     </summary>
   </doc>
   <doc name='M:PeterO.Cbor.PODOptions.#ctor'>
-    <summary>Initializes a new instance of the <see cref='PODOptions'/> class.
+    <summary>Initializes a new instance of the
+      <see cref='PODOptions'/>
+       class.
     </summary>
   </doc>
   <doc name='M:PeterO.Cbor.PODOptions.#ctor(System.Boolean,System.Boolean)'>
-    <summary>Initializes a new instance of the <see cref='PODOptions'/> class.
+    <summary>Initializes a new instance of the
+      <see cref='PODOptions'/>
+       class.
     </summary>
     <param name='removeIsPrefix'>If set to
       <c>true</c> remove is prefix.
