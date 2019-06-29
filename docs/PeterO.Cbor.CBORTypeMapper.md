@@ -2,7 +2,7 @@
 
     public sealed class CBORTypeMapper
 
- Holds converters to customize the serialization and deserialization behavior of  `CBORObject.FromObject`  and  `CBORObject#ToObject`  , as well as type filters for  `ToObject`   ### Member Summary
+ Holds converters to customize the serialization and deserialization behavior of  `CBORObject.FromObject`  and  `CBORObject#ToObject`  , as well as type filters for  `ToObject`  .  ### Member Summary
 * <code>[AddConverter&lt;T&gt;(System.Type, PeterO.Cbor.ICBORConverter&lt;T&gt;)](#AddConverter_T_System_Type_PeterO_Cbor_ICBORConverter_T)</code> - Registers an object that converts objects of a given type to CBOR objects (called a CBOR converter).
 * <code>[AddTypeName(string)](#AddTypeName_string)</code> - Adds the fully qualified name of a Java or .
 * <code>[AddTypePrefix(string)](#AddTypePrefix_string)</code> - Adds a prefix of a Java or .

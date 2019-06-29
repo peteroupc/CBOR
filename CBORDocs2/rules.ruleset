@@ -1,9 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <RuleSet Name='Rules for PeterO projects' Description='Code analysis rules for PeterO projects.' ToolsVersion='14.0'>
   <Rules AnalyzerId='StyleCop.Analyzers' RuleNamespace='StyleCop.Analyzers'>
-    <Rule Id='SA1107' Action='Warning'/>
     <Rule Id='SA1116' Action='None'/>
-    <Rule Id='SA1119' Action='Warning'/>
     <!--SA1121 disabled because writing String.IsNullOrEmpty, Int32.Parse, etc. is
   part of the code style -->
     <Rule Id='SA1121' Action='None'/>
@@ -12,11 +10,9 @@
     <!--"... where T : ..." rule disabled -->
     <Rule Id='SA1127' Action='None'/>
     <Rule Id='SA1128' Action='None'/>
-    <Rule Id='SA1200' Action='Warning'/>
     <Rule Id='SA1201' Action='None'/>
     <Rule Id='SA1202' Action='None'/>
     <Rule Id='SA1204' Action='None'/>
-    <Rule Id='SA1214' Action='Warning'/>
     <!--Disabled because of BOM check -->
     <Rule Id='SA1412' Action='None'/>
     <Rule Id='SA1500' Action='None'/>
@@ -24,9 +20,9 @@
     <Rule Id='SA1513' Action='None'/>
     <Rule Id='SA1515' Action='None'/>
     <Rule Id='SA1516' Action='None'/>
-    <Rule Id='SA1600' Action='None'/>
+    <Rule Id='SA1600' Action='Warning'/>
     <Rule Id='SA1601' Action='None'/>
-    <Rule Id='SA1629' Action='None'/>
+    <Rule Id='SA1629' Action='Warning'/>
     <Rule Id='SA1633' Action='None'/>
     <Rule Id='SX1101' Action='None'/>
     <Rule Id='SX1309' Action='None'/>

@@ -42,6 +42,8 @@
             Console.WriteLine("codePoint:"+codePoint); if(codePoint >= 0x10000) {
             i++; /* Supplementary code point */ } }
 
+ .
+
  <b>Parameters:</b>
 
  * <i>str</i>: The parameter  <i>str</i>
@@ -74,6 +76,8 @@ The parameter  <i>str</i>
             DataUtilities.CodePointAt(str, i, 2); if(codePoint < 0) { break; /*
             Unpaired surrogate */ } Console.WriteLine("codePoint:"+codePoint);
             if(codePoint >= 0x10000) { i++; /* Supplementary code point */ } }
+
+ .
 
  <b>Parameters:</b>
 

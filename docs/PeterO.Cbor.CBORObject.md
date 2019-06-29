@@ -515,6 +515,8 @@ The parameter  <i>key</i>
     CBORObject obj = CBORObject.NewArray() .Add(CBORObject.False) .Add(5)
             .Add("text string") .Add(CBORObject.FromObjectAndTag(9999, 1));
 
+ .
+
  <b>Parameters:</b>
 
  * <i>obj</i>: A CBOR object (or an object convertible to a CBOR object) to add to this CBOR array.
@@ -547,6 +549,8 @@ The type of  <i>obj</i>
     CBORObject obj = CBORObject.NewArray() .Add(CBORObject.False)
             .Add(CBORObject.FromObject(5)) .Add(CBORObject.FromObject("text
             string")) .Add(CBORObject.FromObjectAndTag(9999, 1));
+
+ .
 
  <b>Parameters:</b>
 
@@ -731,6 +735,8 @@ This object's value exceeds the range of a 16-bit signed integer.
             handle the error Console.WriteLine("Not a 32-bit integer."); } else
             { Console.WriteLine("The value is " + obj.AsInt32()); }
 
+ .
+
  <b>Return Value:</b>
 
 The closest 32-bit signed integer to this object.
@@ -754,6 +760,8 @@ This object's value exceeds the range of a 32-bit signed integer.
             && obj.CanTruncatedIntFitInInt64()) { // Not an Int64;
             handle the error Console.WriteLine("Not a 64-bit integer."); } else
             { Console.WriteLine("The value is " + obj.AsInt64()); }
+
+ .
 
  <b>Return Value:</b>
 
@@ -1054,6 +1062,8 @@ The parameter  <i>data</i>
             CBORObject.DecodeFromBytes(bytes,
             CBOREncodeOptions.Default).AsString(); }
 
+ .
+
  <b>Parameters:</b>
 
  * <i>data</i>: A byte array in which a single CBOR object is encoded.
@@ -1100,7 +1110,7 @@ The quotient of the two objects.
     public byte[] EncodeToBytes(
         PeterO.Cbor.CBOREncodeOptions options);
 
- Writes the binary representation of this CBOR object and returns a byte array of that representation, using the specified options for encoding the object to CBOR format. For the CTAP2 canonical ordering, which is useful for implementing Web Authentication, call this method as follows:  `EncodeToBytes(new CBOREncodeOptions(false, false, true))`   <b>Parameters:</b>
+ Writes the binary representation of this CBOR object and returns a byte array of that representation, using the specified options for encoding the object to CBOR format. For the CTAP2 canonical ordering, which is useful for implementing Web Authentication, call this method as follows:  `EncodeToBytes(new CBOREncodeOptions(false, false, true))`  .  <b>Parameters:</b>
 
  * <i>options</i>: Options for encoding the data to CBOR.
 
@@ -1254,6 +1264,8 @@ A CBORObject object.
     /* true does character replacement of invalid UTF-8; false throws an
             exception on invalid UTF-8 */ byte[] bytes = DataUtilities.GetUtf8Bytes(
             textString, true); CBORObject cbor = CBORObject.FromBytes(bytes);
+
+ .
 
  <b>Parameters:</b>
 
@@ -2432,7 +2444,7 @@ Either or both operands are not numbers (as opposed to Not-a-Number, NaN).
             .ToJSONString()) .Append(":").Append(mapObj[key].ToJSONString());
             first=false; } } return builder.Append("}").ToString(); }
 
-  <b>Parameters:</b>
+ .  <b>Parameters:</b>
 
  * <i>options</i>: An object containing the options to control writing the CBOR object to JSON.
 
@@ -2476,6 +2488,8 @@ A text string.
 
     var array = (List<String>)cborArray.ToObject(
             typeof(List<String>));
+
+ .
 
  <b>Parameters:</b>
 
@@ -2602,6 +2616,8 @@ The given object's nesting is too deep, or another error occurred when serializi
 
     var array = (List<String>)cborArray.ToObject(
             typeof(List<String>));
+
+ .
 
  <b>Parameters:</b>
 
@@ -3328,6 +3344,8 @@ The parameter  <i>outputStream</i>
             CBORObject(item).WriteTo(outputStream); }
             outputStream.WriteByte((byte)0xff); }
 
+ .
+
  <b>Parameters:</b>
 
  * <i>stream</i>: A writable data stream.
@@ -3393,6 +3411,8 @@ Unexpected data type".
     string str = "hello world"; byte[] bytes =
             DataUtilities.GetUtf8Bytes(str, true); CBORObject.WriteValue(stream, 4,
             bytes.Length); stream.Write(bytes, 0, bytes.Length);
+
+ .
 
  <b>Parameters:</b>
 
