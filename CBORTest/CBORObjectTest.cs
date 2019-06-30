@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
@@ -2977,22 +2977,6 @@ throw new InvalidOperationException(String.Empty, ex);
      // Base64 tests
       CBORObject o;
       o = CBORObject.FromObjectAndTag(
-        new byte[] { 0x9a, 0xd6, 0xf0, 0xe8 }, 22);
-      {
-        string stringTemp = o.ToJSONString();
-        Assert.AreEqual(
-        "\"mtbw6A\"",
-        stringTemp);
-      }
-      o = ToObjectTest.TestToFromObjectRoundTrip(new byte[] { 0x9a, 0xd6,
-        0xf0, 0xe8 });
-      {
-        string stringTemp = o.ToJSONString();
-        Assert.AreEqual(
-        "\"mtbw6A\"",
-        stringTemp);
-      }
-      o = CBORObject.FromObjectAndTag(
         new byte[] { 0x9a, 0xd6, 0xf0, 0xe8 },
         23);
       {
@@ -3017,7 +3001,7 @@ throw new InvalidOperationException(String.Empty, ex);
       {
         string stringTemp = o.ToJSONString();
         Assert.AreEqual(
-        "\"mtb/6A\"",
+        "\"mtb/6A==\"",
         stringTemp);
       }
       var options = new JSONOptions(true); // base64 padding enabled
@@ -3027,7 +3011,7 @@ throw new InvalidOperationException(String.Empty, ex);
       {
         string stringTemp = o.ToJSONString(options);
         Assert.AreEqual(
-       "\"mtb_6A==\"",
+       "\"mtb_6A\"",
        stringTemp);
       }
       o = CBORObject.FromObjectAndTag(
@@ -5370,14 +5354,16 @@ throw new InvalidOperationException(String.Empty, ex);
         "\"mtbw6A==\"",
         stringTemp);
       }
+      // untagged, so base64url without padding
       o = ToObjectTest.TestToFromObjectRoundTrip(new byte[] { 0x9a, 0xd6,
         0xf0, 0xe8 });
       {
         string stringTemp = o.ToJSONString(options);
         Assert.AreEqual(
-          "\"mtbw6A==\"",
+          "\"mtbw6A\"",
           stringTemp);
       }
+      // tagged 23, so base16
       o = CBORObject.FromObjectAndTag(
        new byte[] { 0x9a, 0xd6, 0xf0, 0xe8 },
              23);
@@ -6210,6 +6196,31 @@ throw new InvalidOperationException(String.Empty, ex);
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
+    }
+
+    [Test]
+    public void TestWriteBigExponentNumber(){
+var exponents=new string[] {
+"15368525994429920286",
+"18446744073709551615",
+"-18446744073709551616",
+"18446744073709551616",
+"-18446744073709551617",
+"18446744073709551615",
+"-18446744073709551614",
+};
+foreach(string strexp in exponents){
+EInteger bigexp=EInteger.FromString(strexp);
+EDecimal ed=EDecimal.Create(EInteger.FromInt32(99),bigexp);
+TestWriteObj(ed);
+EFloat ef=EFloat.Create(EInteger.FromInt32(99),bigexp);
+TestWriteObj(ef);
+bigexp=bigexp.Negate();
+ed=EDecimal.Create(EInteger.FromInt32(99),bigexp);
+TestWriteObj(ed);
+ef=EFloat.Create(EInteger.FromInt32(99),bigexp);
+TestWriteObj(ef);
+}
     }
 
     private static void TestWriteObj(object obj) {

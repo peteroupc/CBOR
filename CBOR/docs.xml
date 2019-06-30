@@ -2536,11 +2536,8 @@
         </item>
         <item>Byte strings are converted to Base64 URL without whitespace or padding
           by default (see section 4.1 of RFC 7049). A byte string will instead
-          be converted to traditional base64 without whitespace or padding by
-          default if it has tag 22, or base16 for tag 23. Padding will be
-          included in the Base64 URL or traditional base64 form if
-          <b>Base64Padding</b> in the JSON options is set to
-          <b>true</b> . (To create a CBOR object with a given tag, call the
+          be converted to traditional base64 without whitespace and with padding if it 
+          has tag 22, or base16 for tag 23. (To create a CBOR object with a given tag, call the
           <c>CBORObject.FromObjectAndTag</c> method and pass the CBOR object and the desired tag number to that
           method.)
         </item>
@@ -4232,8 +4229,7 @@
       <see cref='JSONOptions'/>
        class with the given value for the Base64Padding option.
     </summary>
-    <param name='base64Padding'>Whether padding is included when writing data in base64url or traditional
-      base64 format to JSON.
+    <param name='base64Padding'>The value of the Base64Padding option, which has no effect.
     </param>
   </doc>
   <doc name='M:PeterO.Cbor.JSONOptions.#ctor(System.Boolean,System.Boolean)'>
@@ -4241,8 +4237,7 @@
       <see cref='JSONOptions'/>
        class with the given values for the options.
     </summary>
-    <param name='base64Padding'>Whether padding is included when writing data in base64url or traditional
-      base64 format to JSON.
+    <param name='base64Padding'>The value of the Base64Padding option, which has no effect.
     </param>
     <param name='replaceSurrogates'>Whether surrogate code points not part of a surrogate pair (which consists
       of two consecutive
@@ -4252,14 +4247,11 @@
     </param>
   </doc>
   <doc name='P:PeterO.Cbor.JSONOptions.Base64Padding'>
-    <summary>Gets a value indicating whether padding is written out when writing
+    <summary>Gets a value indicating whether the Base64Padding property is true.  This property
+    has no effect; in previous versions, this property meant that padding was written out when writing
       base64url or traditional base64 to JSON.
     </summary>
-    <value>The default is false, no padding.
-    </value>
-    <remarks>
-       The padding character is '='.
-    </remarks>
+    <value>A value indicating whether the Base64Padding property is true.</value>
   </doc>
   <doc name='F:PeterO.Cbor.JSONOptions.Default'>
     <summary>The default options for converting CBOR objects to JSON.

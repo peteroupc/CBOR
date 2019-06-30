@@ -26,7 +26,13 @@ namespace PeterO.Cbor {
 
     public DateTime FromCBORObject(CBORObject obj) {
       if (obj.HasMostOuterTag(0)) {
-        return StringToDateTime(obj.AsString());
+        try {
+          return StringToDateTime(obj.AsString());
+        } catch (OverflowException ex) {
+          throw new CBORException(ex.Message, ex);
+        } catch (ArgumentException ex) {
+          throw new CBORException(ex.Message, ex);
+        }
       } else if (obj.HasMostOuterTag(1)) {
         if (!obj.IsFinite) {
           throw new CBORException("Not a finite number");

@@ -71,7 +71,8 @@ namespace PeterO.Cbor {
       }
       EInteger exponent = o[0].AsEInteger();
       EInteger mantissa = o[1].AsEInteger();
-      if (!exponent.CanFitInInt64() && !extended) {
+      if (!extended &&
+         exponent.GetSignedBitLengthAsEInteger().CompareTo(64) > 0) {
         throw new CBORException("Exponent is too big");
       }
       if (exponent.IsZero) {

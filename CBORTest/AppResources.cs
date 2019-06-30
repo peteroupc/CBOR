@@ -8,11 +8,17 @@ namespace Test {
     private readonly ResourceManager mgr;
 
     public AppResources(string name) {
-      this.mgr = new ResourceManager(this.GetType());
+#if NET20 || NET40
+      this.mgr = new ResourceManager(
+          "Resources",
+          Assembly.GetExecutingAssembly());
+#else
+      this.mgr = new ResourceManager(typeof(AppResources));
+#endif
     }
 
     public CBORObject GetJSON(string name) {
-      return CBORObject.FromJSONString(this.mgr.GetString(name));
+      return CBORObject.FromJSONString(GetString(name));
     }
 
     public string GetString(string name) {
