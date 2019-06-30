@@ -129,7 +129,7 @@ namespace PeterO.Cbor {
         throw new InvalidOperationException("Not a number type");
       }
       EInteger bigint = cn.AsEInteger(this.ThisItem);
-      if (bigint.Sign < 0 || !bigint.CanFitInInt64()) {
+      if (bigint.Sign < 0 || bigint.GetUnsignedBitLengthAsEInteger().CompareTo(64) > 0) {
         throw new OverflowException("This object's value is out of range");
       }
       return (ulong)bigint;

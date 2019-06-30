@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
@@ -1502,15 +1502,53 @@ Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Double.NaN).AsEFloat()
     }
     [Test]
     public void TestCanFitInInt64() {
-      Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(0).CanFitInSingle());
-      Assert.IsFalse(CBORObject.True.CanFitInSingle());
+      Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(0).CanFitInInt64());
+      Assert.IsFalse(CBORObject.True.CanFitInInt64());
       Assert.IsFalse(ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
-              .CanFitInSingle());
-      Assert.IsFalse(CBORObject.NewArray().CanFitInSingle());
-      Assert.IsFalse(CBORObject.NewMap().CanFitInSingle());
-      Assert.IsFalse(CBORObject.False.CanFitInSingle());
-      Assert.IsFalse(CBORObject.Null.CanFitInSingle());
-      Assert.IsFalse(CBORObject.Undefined.CanFitInSingle());
+              .CanFitInInt64());
+      Assert.IsFalse(CBORObject.NewArray().CanFitInInt64());
+      Assert.IsFalse(CBORObject.NewMap().CanFitInInt64());
+      Assert.IsFalse(CBORObject.False.CanFitInInt64());
+      Assert.IsFalse(CBORObject.Null.CanFitInInt64());
+      Assert.IsFalse(CBORObject.Undefined.CanFitInInt64());
+
+
+      EInteger ei;
+      ei = EInteger.FromString("9223372036854775807");
+      Assert.IsTrue(CBORObject.FromObject(ei).CanFitInInt64(),ei.ToString());
+      ei = EInteger.FromString("9223372036854775808");
+      Assert.IsFalse(CBORObject.FromObject(ei).CanFitInInt64(), ei.ToString());
+      ei = EInteger.FromString("-9223372036854775807");
+      Assert.IsTrue(CBORObject.FromObject(ei).CanFitInInt64(), ei.ToString());
+      ei = EInteger.FromString("-9223372036854775808");
+      Assert.IsTrue(CBORObject.FromObject(ei).CanFitInInt64(), ei.ToString());
+      ei = EInteger.FromString("-9223372036854775809");
+      Assert.IsFalse(CBORObject.FromObject(ei).CanFitInInt64(), ei.ToString());
+      ei = EInteger.FromString("-9223373136366403584");
+      Assert.IsFalse(CBORObject.FromObject(ei).CanFitInInt64(), ei.ToString());
+      ei = EInteger.FromString("9223373136366403584");
+      Assert.IsFalse(CBORObject.FromObject(ei).CanFitInInt64(), ei.ToString());
+      var strings = new string[]{
+   "8000FFFFFFFF0000",
+   "8000AAAAAAAA0000",
+   "8000800080000000",
+   "8000000100010000",
+   "8000FFFF00000000",
+   "80000000FFFF0000",
+   "8000800000000000",
+   "8000000080000000",
+   "8000AAAA00000000",
+   "80000000AAAA0000",
+   "8000000100000000",
+   "8000000000010000",
+ };
+      foreach (var str in strings) {
+        ei = EInteger.FromRadixString(str, 16);
+        Assert.IsFalse(CBORObject.FromObject(ei).CanFitInInt64());
+        ei = ei.Negate();
+        Assert.IsFalse(CBORObject.FromObject(ei).CanFitInInt64());
+      }
+
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
@@ -1683,16 +1721,60 @@ Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Double.NaN).AsEFloat()
       Assert.IsFalse(CBORObject.False.CanTruncatedIntFitInInt64());
       Assert.IsFalse(CBORObject.Null.CanTruncatedIntFitInInt64());
       Assert.IsFalse(CBORObject.Undefined.CanTruncatedIntFitInInt64());
+
+
+      EInteger ei;
+      ei = EInteger.FromString("9223372036854775807");
+      Assert.IsTrue(CBORObject.FromObject(ei).CanTruncatedIntFitInInt64(),ei.ToString());
+      ei = EInteger.FromString("9223372036854775808");
+      Assert.IsFalse(CBORObject.FromObject(ei).CanTruncatedIntFitInInt64(), ei.ToString());
+      ei = EInteger.FromString("-9223372036854775807");
+      Assert.IsTrue(CBORObject.FromObject(ei).CanTruncatedIntFitInInt64(), ei.ToString());
+      ei = EInteger.FromString("-9223372036854775808");
+      Assert.IsTrue(CBORObject.FromObject(ei).CanTruncatedIntFitInInt64(), ei.ToString());
+      ei = EInteger.FromString("-9223372036854775809");
+      Assert.IsFalse(CBORObject.FromObject(ei).CanTruncatedIntFitInInt64(), ei.ToString());
+      ei = EInteger.FromString("-9223373136366403584");
+      Assert.IsFalse(CBORObject.FromObject(ei).CanTruncatedIntFitInInt64(), ei.ToString());
+      ei = EInteger.FromString("9223373136366403584");
+      Assert.IsFalse(CBORObject.FromObject(ei).CanTruncatedIntFitInInt64(), ei.ToString());
+      var strings = new string[]{
+   "8000FFFFFFFF0000",
+   "8000AAAAAAAA0000",
+   "8000800080000000",
+   "8000000100010000",
+   "8000FFFF00000000",
+   "80000000FFFF0000",
+   "8000800000000000",
+   "8000000080000000",
+   "8000AAAA00000000",
+   "80000000AAAA0000",
+   "8000000100000000",
+   "8000000000010000",
+ };
+      foreach (var str in strings) {
+        ei = EInteger.FromRadixString(str, 16);
+        Assert.IsFalse(CBORObject.FromObject(ei).CanTruncatedIntFitInInt64());
+        ei = ei.Negate();
+        Assert.IsFalse(CBORObject.FromObject(ei).CanTruncatedIntFitInInt64());
+      }
+
+
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
+        string numberString = numberinfo["number"].AsString();
         CBORObject cbornumber =
           ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(
-  numberinfo["number"].AsString()));
+  numberString));
         if (numberinfo["int64"].AsBoolean()) {
-          Assert.IsTrue(cbornumber.CanTruncatedIntFitInInt64());
+          Assert.IsTrue(
+            cbornumber.CanTruncatedIntFitInInt64(),
+            numberString);
         } else {
-          Assert.IsFalse(cbornumber.CanTruncatedIntFitInInt64());
+          Assert.IsFalse(
+            cbornumber.CanTruncatedIntFitInInt64(),
+          numberString);
         }
       }
     }

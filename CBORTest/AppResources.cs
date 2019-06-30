@@ -10,7 +10,7 @@ namespace Test {
     public AppResources(string name) {
 #if NET20 || NET40
       this.mgr = new ResourceManager(
-          "Resources",
+          name,
           Assembly.GetExecutingAssembly());
 #else
       this.mgr = new ResourceManager(typeof(AppResources));

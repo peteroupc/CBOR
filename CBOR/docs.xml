@@ -2536,7 +2536,7 @@
         </item>
         <item>Byte strings are converted to Base64 URL without whitespace or padding
           by default (see section 4.1 of RFC 7049). A byte string will instead
-          be converted to traditional base64 without whitespace and with padding if it 
+          be converted to traditional base64 without whitespace and with padding if it
           has tag 22, or base16 for tag 23. (To create a CBOR object with a given tag, call the
           <c>CBORObject.FromObjectAndTag</c> method and pass the CBOR object and the desired tag number to that
           method.)

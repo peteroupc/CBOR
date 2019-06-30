@@ -667,7 +667,7 @@ namespace PeterO.DocGen {
           }
           this.paramStr.Clear();
           XmlDoc.VisitInnerNode(mnm, this);
-
+          this.Write("\r\n\r\n");
           this.WriteLine("<<<MEMBER_SUMMARY>>>");
           if (this.paramStr.Length > 0) {
             this.Write("<b>Parameters:</b>\r\n\r\n");

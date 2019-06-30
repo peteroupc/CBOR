@@ -227,42 +227,42 @@
 
     public static readonly PeterO.Cbor.CBORObject False;
 
- Represents the value false.  <a id="NaN"></a>
+ Represents the value false. <a id="NaN"></a>
 ### NaN
 
     public static readonly PeterO.Cbor.CBORObject NaN;
 
- A not-a-number value.  <a id="NegativeInfinity"></a>
+ A not-a-number value. <a id="NegativeInfinity"></a>
 ### NegativeInfinity
 
     public static readonly PeterO.Cbor.CBORObject NegativeInfinity;
 
- The value negative infinity.  <a id="Null"></a>
+ The value negative infinity. <a id="Null"></a>
 ### Null
 
     public static readonly PeterO.Cbor.CBORObject Null;
 
- Represents the value null.  <a id="PositiveInfinity"></a>
+ Represents the value null. <a id="PositiveInfinity"></a>
 ### PositiveInfinity
 
     public static readonly PeterO.Cbor.CBORObject PositiveInfinity;
 
- The value positive infinity.  <a id="True"></a>
+ The value positive infinity. <a id="True"></a>
 ### True
 
     public static readonly PeterO.Cbor.CBORObject True;
 
- Represents the value true.  <a id="Undefined"></a>
+ Represents the value true. <a id="Undefined"></a>
 ### Undefined
 
     public static readonly PeterO.Cbor.CBORObject Undefined;
 
- Represents the value undefined.  <a id="Zero"></a>
+ Represents the value undefined. <a id="Zero"></a>
 ### Zero
 
     public static readonly PeterO.Cbor.CBORObject Zero;
 
- Gets a CBOR object for the number zero.  <a id="Count"></a>
+ Gets a CBOR object for the number zero. <a id="Count"></a>
 ### Count
 
     public int Count { get; }
