@@ -230,6 +230,10 @@ The following are some clarifications to RFC 7049.
 Release Notes
 -----------
 
+### Version 3.5.1
+
+- Update Numbers library used by this library.
+
 ### Version 3.5.0
 
 - Update Numbers library used by this library.
