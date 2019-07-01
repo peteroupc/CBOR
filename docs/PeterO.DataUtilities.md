@@ -2,11 +2,9 @@
 
     public static class DataUtilities
 
-Contains methods useful for reading and writing strings. It is designed to have no dependencies other than the basic runtime class library.Many of these methods work with text encoded in UTF-8, an encoding form of the Unicode Standard which uses one byte to encode the most basic characters and two to four bytes to encode other characters. For example, the `GetUtf8
-        ` method converts a text string to an array of bytes in UTF-8.
+Contains methods useful for reading and writing strings. It is designed to have no dependencies other than the basic runtime class library.Many of these methods work with text encoded in UTF-8, an encoding form of the Unicode Standard which uses one byte to encode the most basic characters and two to four bytes to encode other characters. For example, the `GetUtf8`  method converts a text string to an array of bytes in UTF-8.
 
-In C# and Java, text strings are represented as sequences of 16-bit values called `char
-        ` s. These sequences are well-formed under UTF-16, a 16-bit encoding form f Unicode, except if they contain unpaired surrogate code points. (A urrogate code point is used to encode supplementary characters, those ith code points U+10000 or higher, in UTF-16. A surrogate pair is a igh surrogate [U+D800 to U+DBFF] followed by a low surrogate [U+DC00 to +DFFF]. An unpaired surrogate code point is a surrogate not appearing n a surrogate pair.) Many of the methods in this class allow setting he behavior to follow when unpaired surrogate code points are found in ext strings, such as throwing an error or treating the unpaired urrogate as a replacement character (U+FFFD).
+In C# and Java, text strings are represented as sequences of 16-bit values called `char`  s. These sequences are well-formed under UTF-16, a 16-bit encoding form of Unicode, except if they contain unpaired surrogate code points. (A surrogate code point is used to encode supplementary characters, those with code points U+10000 or higher, in UTF-16. A surrogate pair is a high surrogate [U+D800 to U+DBFF] followed by a low surrogate [U+DC00 to U+DFFF]. An unpaired surrogate code point is a surrogate not appearing in a surrogate pair.) Many of the methods in this class allow setting the behavior to follow when unpaired surrogate code points are found in text strings, such as throwing an error or treating the unpaired surrogate as a replacement character (U+FFFD).
 
 ### Member Summary
 * <code>[CodePointAt(string, int)](#CodePointAt_string_int)</code> - Gets the Unicode code point at the given index of the string.
@@ -39,6 +37,15 @@ In C# and Java, text strings are represented as sequences of 16-bit values calle
 
 Gets the Unicode code point at the given index of the string.
 
+The following example shows how to iterate a text string code point by code point.
+
+    for(var i=0;i<str.Length;i++) { int codePoint =
+            DataUtilities.CodePointAt(str,i);
+            Console.WriteLine("codePoint:"+codePoint); if(codePoint >= 0x10000) {
+            i++; /* Supplementary code point */ } }
+
+ .
+
 <b>Parameters:</b>
 
  * <i>str</i>: The parameter <i>str</i>
@@ -49,7 +56,7 @@ is a text string.
 <b>Return Value:</b>
 
 The Unicode code point at the given position. Returns -1 if <i>index</i>
-is less than 0, or is the string's length or greater. Returns the eplacement character (U+FFFD) if the current character is an unpaired urrogate code point.
+is less than 0, or is the string's length or greater. Returns the eplacement character (U+FFFD) if the current character is an unpaired urrogate code point. If the return value is 65536 (0x10000) or greater, he code point takes up two UTF-16 code units.
 
 <b>Exceptions:</b>
 
@@ -67,6 +74,15 @@ is null.
 
 Gets the Unicode code point at the given index of the string.
 
+The following example shows how to iterate a text string code point by code point, terminating the loop when an unpaired surrogate is found.
+
+    for(var i=0;i<str.Length;i++) { int codePoint =
+            DataUtilities.CodePointAt(str, i, 2); if(codePoint < 0) { break; /*
+            Unpaired surrogate */ } Console.WriteLine("codePoint:"+codePoint);
+            if(codePoint >= 0x10000) { i++; /* Supplementary code point */ } }
+
+ .
+
 <b>Parameters:</b>
 
  * <i>str</i>: The parameter <i>str</i>
@@ -80,7 +96,7 @@ is a text string.
 
 The Unicode code point at the current position. Returns -1 if <i>index</i>
 is less than 0, or is the string's length or greater. Returns a value as pecified under <i>surrogateBehavior</i>
-if the previous character is an unpaired surrogate code point.
+if the previous character is an unpaired surrogate code point. If the eturn value is 65536 (0x10000) or greater, the code point takes up two TF-16 code units.
 
 <b>Exceptions:</b>
 
@@ -107,7 +123,7 @@ is a text string.
 <b>Return Value:</b>
 
 The Unicode code point at the previous position. Returns -1 if <i>index</i>
-is 0 or less, or is greater than the string's length. Returns the eplacement character (U+FFFD) if the previous character is an unpaired urrogate code point.
+is 0 or less, or is greater than the string's length. Returns the eplacement character (U+FFFD) if the previous character is an unpaired urrogate code point. If the return value is 65536 (0x10000) or greater, he code point takes up two UTF-16 code units.
 
 <b>Exceptions:</b>
 
@@ -138,7 +154,7 @@ is a text string.
 
 The Unicode code point at the previous position. Returns -1 if <i>index</i>
 is 0 or less, or is greater than the string's length. Returns a value as pecified under <i>surrogateBehavior</i>
-if the previous character is an unpaired surrogate code point.
+if the previous character is an unpaired surrogate code point. If the eturn value is 65536 (0x10000) or greater, the code point takes up two TF-16 code units.
 
 <b>Exceptions:</b>
 
@@ -197,10 +213,7 @@ is null.
 
 Encodes a string in UTF-8 as a byte array. This method does not insert a byte-order mark (U+FEFF) at the beginning of the encoded byte array.
 
-REMARK: It is not recommended to use `Encoding.UTF8.GetBytes
-        ` in .NET, or the `getBytes()
-        ` method in Java to do this. For instance, `getBytes()
-        ` encodes text strings in an unspecified character encoding. Both ehaviors can be undesirable.
+REMARK: It is not recommended to use `Encoding.UTF8.GetBytes`  in .NET, or the `getBytes()`  method in Java to do this. For instance, `getBytes()`  encodes text strings in a default (so not fixed) character encoding, which can be undesirable.
 
 <b>Parameters:</b>
 
@@ -233,10 +246,7 @@ is false, or an internal error occurred.
 
 Encodes a string in UTF-8 as a byte array. This method does not insert a byte-order mark (U+FEFF) at the beginning of the encoded byte array.
 
-REMARK: It is not recommended to use `Encoding.UTF8.GetBytes
-        ` in .NET, or the `getBytes()
-        ` method in Java to do this. For instance, `getBytes()
-        ` encodes text strings in an unspecified character encoding. Both ehaviors can be undesirable.
+REMARK: It is not recommended to use `Encoding.UTF8.GetBytes`  in .NET, or the `getBytes()`  method in Java to do this. For instance, `getBytes()`  encodes text strings in a default (so not fixed) character encoding, which can be undesirable.
 
 <b>Parameters:</b>
 

@@ -228,13 +228,13 @@
       <Link>PeterO/ExtendedDecimal.cs</Link>
     </Compile>
     <Compile Include="Properties/AssemblyInfo.cs" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Numbers, Version=1.3.1.0, Culture=neutral, PublicKeyToken=9cd62db60ea5554c">
-      <HintPath>../packages/PeterO.Numbers.1.3.1/lib/net20/Numbers.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
+    <Reference Include="Numbers">
+      <HintPath>..\packages\PeterO.Numbers.1.4.2\lib\net20\Numbers.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -5,7 +5,7 @@ http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/
  */
- #if DEBUG
+#if DEBUG
 using System;
 using System.Reflection;
 
@@ -28,9 +28,11 @@ namespace PeterO {
       Type type = Type.GetType("System.Console");
       var types = new[] { typeof(string) };
       var typeMethod = GetTypeMethod(type, "WriteLine", types);
-      if (typeMethod != null)typeMethod.Invoke(
+  if (typeMethod != null) {
+    typeMethod.Invoke(
         type,
         new object[] { str });
+  }
     }
 
     public static void Log(string format, params object[] args) {

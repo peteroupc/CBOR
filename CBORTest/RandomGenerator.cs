@@ -1,14 +1,14 @@
 using System;
 
 namespace PeterO {
-    /// <summary>A class that adapts a random byte generator to generate
-    /// random numbers in a variety of statistical distributions.
-    /// <para>The method descriptions in this class assume the underlying
-    /// random byte generator generates uniformly distributed numbers that
-    /// are independent of each other.</para>
-    /// <para><b>Thread safety:</b> The methods in this class are safe for
-    /// concurrent use by multiple threads, as long as the underlying
-    /// random byte generator is as well.</para></summary>
+  /// <summary>A class that adapts a random byte generator to generate
+  /// random numbers in a variety of statistical distributions.
+  /// <para>The method descriptions in this class assume the underlying
+  /// random byte generator generates uniformly distributed numbers that
+  /// are independent of each other.</para>
+  /// <para><b>Thread safety:</b> The methods in this class are safe for
+  /// concurrent use by multiple threads, as long as the underlying
+  /// random byte generator is as well.</para></summary>
   public sealed class RandomGenerator {
     private bool valueHaveLastNormal;
     private IRandomGen valueIrg;
@@ -151,9 +151,9 @@ namespace PeterO {
           x = this.Normal();
           v = Math.Pow((c * x) + 1, 3);
         } while (v <= 0);
-         u = 1.0 - this.Uniform();
-         x2 = x * x;
-  } while (u >= 1 - (0.0331 * x2 * x2) &&
+        u = 1.0 - this.Uniform();
+        x2 = x * x;
+      } while (u >= 1 - (0.0331 * x2 * x2) &&
                Math.Log(u) >= (0.5 * x2) + (d * (1 - v + Math.Log(v))));
       if (a < 1) {
         return d * v * Math.Exp(this.Exponential() / -a);
@@ -382,14 +382,14 @@ namespace PeterO {
     /// number from 0 and up, but less than 1.</summary>
     /// <returns>A 64-bit floating-point number.</returns>
     public double Uniform() {
-  return this.UniformLong(9007199254740992L) / 9007199254740992.0;
+      return this.UniformLong(9007199254740992L) / 9007199254740992.0;
     }
 
     /// <summary>Returns a uniformly-distributed 32-bit floating-point
     /// number from 0 and up, but less than 1.</summary>
     /// <returns>A 32-bit floating-point number.</returns>
     public double UniformSingle() {
-  return this.UniformInt(16777216) / 16777216.0f;
+      return this.UniformInt(16777216) / 16777216.0f;
     }
 
     /// <summary>Generates a random 32-bit signed integer within a given
@@ -399,14 +399,14 @@ namespace PeterO {
     /// <param name='maxExclusive'>One plus the largest possible value of
     /// the random number.</param>
     /// <returns>A 32-bit signed integer.</returns>
-        public int UniformInt(int minInclusive, int maxExclusive) {
+    public int UniformInt(int minInclusive, int maxExclusive) {
       if (minInclusive > maxExclusive) {
-  throw new ArgumentException("minInclusive (" + minInclusive +
-    ") is more than " + maxExclusive);
-}
-if (minInclusive == maxExclusive) {
- return minInclusive;
-}
+        throw new ArgumentException("minInclusive (" + minInclusive +
+          ") is more than " + maxExclusive);
+      }
+      if (minInclusive == maxExclusive) {
+        return minInclusive;
+      }
       if (minInclusive >= 0) {
         return minInclusive + this.UniformInt(maxExclusive - minInclusive);
       } else {
@@ -428,37 +428,37 @@ if (minInclusive == maxExclusive) {
     /// <returns>A 64-bit signed integer.</returns>
     public long UniformLong(long minInclusive, long maxExclusive) {
       if (minInclusive > maxExclusive) {
-  throw new ArgumentException("minInclusive (" + minInclusive +
-    ") is more than " + maxExclusive);
-}
-if (minInclusive == maxExclusive) {
- return minInclusive;
-}
+        throw new ArgumentException("minInclusive (" + minInclusive +
+          ") is more than " + maxExclusive);
+      }
+      if (minInclusive == maxExclusive) {
+        return minInclusive;
+      }
       if (minInclusive >= 0) {
         return minInclusive + this.UniformLong(maxExclusive - minInclusive);
       } else {
-      if ((maxExclusive < 0 && Int64.MaxValue + maxExclusive < minInclusive) ||
-          (maxExclusive > 0 && Int64.MinValue + maxExclusive > minInclusive) ||
-                minInclusive - maxExclusive < 0) {
-           // Difference is greater than MaxValue
-         long lb = 0;
-         var b = new byte[8];
-         while (true) {
-           this.valueIrg.GetBytes(b, 0, 8);
-           lb = b[0] & 0xffL;
-           lb |= (b[1] & 0xffL) << 8;
-           lb |= (b[2] & 0xffL) << 16;
-           lb |= (b[3] & 0xffL) << 24;
-           lb |= (b[4] & 0xffL) << 32;
-           lb |= (b[5] & 0xffL) << 40;
-           lb |= (b[6] & 0xffL) << 48;
-           lb |= (b[7] & 0x7fL) << 56;
-           if (lb >= minInclusive && lb < maxExclusive) {
-             return lb;
-           }
+        if ((maxExclusive < 0 && Int64.MaxValue + maxExclusive < minInclusive) ||
+            (maxExclusive > 0 && Int64.MinValue + maxExclusive > minInclusive) ||
+                  minInclusive - maxExclusive < 0) {
+          // Difference is greater than MaxValue
+          long lb = 0;
+          var b = new byte[8];
+          while (true) {
+            this.valueIrg.GetBytes(b, 0, 8);
+            lb = b[0] & 0xffL;
+            lb |= (b[1] & 0xffL) << 8;
+            lb |= (b[2] & 0xffL) << 16;
+            lb |= (b[3] & 0xffL) << 24;
+            lb |= (b[4] & 0xffL) << 32;
+            lb |= (b[5] & 0xffL) << 40;
+            lb |= (b[6] & 0xffL) << 48;
+            lb |= (b[7] & 0x7fL) << 56;
+            if (lb >= minInclusive && lb < maxExclusive) {
+              return lb;
+            }
           }
         } else {
-         return minInclusive + this.UniformLong(maxExclusive - minInclusive);
+          return minInclusive + this.UniformLong(maxExclusive - minInclusive);
         }
       }
     }
@@ -470,12 +470,12 @@ if (minInclusive == maxExclusive) {
     /// <returns>A 32-bit signed integer.</returns>
     public int UniformInt(int maxExclusive) {
       if (maxExclusive < 0) {
-  throw new ArgumentException("maxExclusive (" + maxExclusive +
-    ") is less than 0");
-}
+        throw new ArgumentException("maxExclusive (" + maxExclusive +
+          ") is less than 0");
+      }
       if (maxExclusive <= 1) {
- return 0;
-}
+        return 0;
+      }
       var b = new byte[4];
       switch (maxExclusive) {
         case 2: {
@@ -511,7 +511,7 @@ if (minInclusive == maxExclusive) {
                 ib |= (b[2] & 0xff) << 16;
                 ib |= (b[3] & 0x7f) << 24;
                 if (ib < maxexc) {
-                 return ib % maxExclusive;
+                  return ib % maxExclusive;
                 }
               }
             }
@@ -524,11 +524,11 @@ if (minInclusive == maxExclusive) {
     /// <param name='maxExclusive'>One plus the largest possible value of
     /// the random number.</param>
     /// <returns>A 64-bit signed integer.</returns>
-        public long UniformLong(long maxExclusive) {
+    public long UniformLong(long maxExclusive) {
       if (maxExclusive < 0) {
-  throw new ArgumentException("maxExclusive (" + maxExclusive +
-    ") is less than 0");
-}
+        throw new ArgumentException("maxExclusive (" + maxExclusive +
+          ") is less than 0");
+      }
       if (maxExclusive <= Int32.MaxValue) {
         return this.UniformInt((int)maxExclusive);
       }
