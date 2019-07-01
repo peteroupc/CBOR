@@ -65,10 +65,6 @@
     <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Numbers, Version=1.4.1.0, Culture=neutral, PublicKeyToken=9cd62db60ea5554c">
-      <HintPath>../packages/PeterO.Numbers.1.4.1/lib/net40/Numbers.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
@@ -92,7 +88,10 @@
       <HintPath>..\packages\NUnitTestAdapter.WithFramework.2.0.0\lib\NUnit.VisualStudio.TestAdapter.dll</HintPath>
       <Private>False</Private>
     </Reference>
-  <AdditionalFiles Include="stylecop.json" /></ItemGroup>
+  <AdditionalFiles Include="stylecop.json" />  <Reference Include="Numbers">
+    <HintPath>..\packages\PeterO.Numbers.1.4.2\lib\net40\Numbers.dll</HintPath>
+  </Reference>
+</ItemGroup>
   <ItemGroup>
     <Compile Include="AppResources.cs" />
     <Compile Include="BEncoding.cs" />

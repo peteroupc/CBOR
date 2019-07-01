@@ -2,7 +2,9 @@
 
     public static class CBORDataUtilities
 
- Contains methods useful for reading and writing data, with a focus on CBOR.  ### Member Summary
+ Contains methods useful for reading and writing data, with a focus on CBOR.
+
+### Member Summary
 * <code>[ParseJSONNumber(string)](#ParseJSONNumber_string)</code> - Parses a number whose format follows the JSON specification.
 * <code>[ParseJSONNumber(string, bool, bool)](#ParseJSONNumber_string_bool_bool)</code> - Parses a number whose format follows the JSON specification (RFC 8259).
 * <code>[ParseJSONNumber(string, bool, bool, bool)](#ParseJSONNumber_string_bool_bool_bool)</code> - Parses a number whose format follows the JSON specification (RFC 8259).

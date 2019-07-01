@@ -2,7 +2,9 @@
 
     public interface ICBORConverter<T>
 
- Interface implemented by classes that convert objects of arbitrary types to CBOR objects.  ### Member Summary
+ Interface implemented by classes that convert objects of arbitrary types to CBOR objects.
+
+### Member Summary
 * <code>[ToCBORObject(T)](#ToCBORObject_T)</code> - Converts an object to a CBOR object.
 
 <b>Parameters:</b>

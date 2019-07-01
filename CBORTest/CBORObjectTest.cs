@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
@@ -1512,7 +1512,6 @@ Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Double.NaN).AsEFloat()
       Assert.IsFalse(CBORObject.Null.CanFitInInt64());
       Assert.IsFalse(CBORObject.Undefined.CanFitInInt64());
 
-
       EInteger ei;
       ei = EInteger.FromString("9223372036854775807");
       Assert.IsTrue(CBORObject.FromObject(ei).CanFitInInt64(),ei.ToString());
@@ -1722,7 +1721,6 @@ Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Double.NaN).AsEFloat()
       Assert.IsFalse(CBORObject.Null.CanTruncatedIntFitInInt64());
       Assert.IsFalse(CBORObject.Undefined.CanTruncatedIntFitInInt64());
 
-
       EInteger ei;
       ei = EInteger.FromString("9223372036854775807");
       Assert.IsTrue(CBORObject.FromObject(ei).CanTruncatedIntFitInInt64(),ei.ToString());
@@ -1758,7 +1756,6 @@ Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Double.NaN).AsEFloat()
         ei = ei.Negate();
         Assert.IsFalse(CBORObject.FromObject(ei).CanTruncatedIntFitInInt64());
       }
-
 
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.Count; ++i) {

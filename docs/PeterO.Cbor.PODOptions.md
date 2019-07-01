@@ -2,7 +2,9 @@
 
     public class PODOptions
 
- Options for converting "plain old data" objects (better known as POCOs in .NET or POJOs in Java) to CBOR objects.  ### Member Summary
+ Options for converting "plain old data" objects (better known as POCOs in .NET or POJOs in Java) to CBOR objects.
+
+### Member Summary
 * <code>[public static readonly PeterO.Cbor.PODOptions Default;](#Default)</code> - The default settings for "plain old data" options.
 * <code>[UseCamelCase](#UseCamelCase)</code> - Gets a value indicating whether property names are converted to camel case before they are used as keys.
 
@@ -13,7 +15,7 @@
         bool removeIsPrefix,
         bool useCamelCase);
 
- Initializes a new instance of the [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) class. <b>Parameters:</b>
+ Initializes a new instance of the [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) class.  <b>Parameters:</b>
 
  * <i>removeIsPrefix</i>: If set to  `true`  remove is prefix.
 
@@ -24,12 +26,12 @@
 
     public PODOptions();
 
- Initializes a new instance of the [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) class. <a id="Default"></a>
+ Initializes a new instance of the [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) class.  <a id="Default"></a>
 ### Default
 
     public static readonly PeterO.Cbor.PODOptions Default;
 
- The default settings for "plain old data" options. <a id="UseCamelCase"></a>
+ The default settings for "plain old data" options.  <a id="UseCamelCase"></a>
 ### UseCamelCase
 
     public bool UseCamelCase { get; }

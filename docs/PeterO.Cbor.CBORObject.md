@@ -48,7 +48,7 @@
 
  The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 
- ### Member Summary
+### Member Summary
 * <code>[Abs()](#Abs)</code> - Gets this object's absolute value.
 * <code>[Add(object)](#Add_object)</code> - Converts an object to a CBOR object and adds it to the end of this array.
 * <code>[Add(object, object)](#Add_object_object)</code> - Adds a new key and its value to this CBOR map, or adds the value if the key doesn't exist.
@@ -227,42 +227,42 @@
 
     public static readonly PeterO.Cbor.CBORObject False;
 
- Represents the value false. <a id="NaN"></a>
+ Represents the value false.  <a id="NaN"></a>
 ### NaN
 
     public static readonly PeterO.Cbor.CBORObject NaN;
 
- A not-a-number value. <a id="NegativeInfinity"></a>
+ A not-a-number value.  <a id="NegativeInfinity"></a>
 ### NegativeInfinity
 
     public static readonly PeterO.Cbor.CBORObject NegativeInfinity;
 
- The value negative infinity. <a id="Null"></a>
+ The value negative infinity.  <a id="Null"></a>
 ### Null
 
     public static readonly PeterO.Cbor.CBORObject Null;
 
- Represents the value null. <a id="PositiveInfinity"></a>
+ Represents the value null.  <a id="PositiveInfinity"></a>
 ### PositiveInfinity
 
     public static readonly PeterO.Cbor.CBORObject PositiveInfinity;
 
- The value positive infinity. <a id="True"></a>
+ The value positive infinity.  <a id="True"></a>
 ### True
 
     public static readonly PeterO.Cbor.CBORObject True;
 
- Represents the value true. <a id="Undefined"></a>
+ Represents the value true.  <a id="Undefined"></a>
 ### Undefined
 
     public static readonly PeterO.Cbor.CBORObject Undefined;
 
- Represents the value undefined. <a id="Zero"></a>
+ Represents the value undefined.  <a id="Zero"></a>
 ### Zero
 
     public static readonly PeterO.Cbor.CBORObject Zero;
 
- Gets a CBOR object for the number zero. <a id="Count"></a>
+ Gets a CBOR object for the number zero.  <a id="Count"></a>
 ### Count
 
     public int Count { get; }
@@ -2419,7 +2419,7 @@ Either or both operands are not numbers (as opposed to Not-a-Number, NaN).
 
   * The string will not begin with a byte-order mark (U+FEFF); RFC 8259 (the JSON specification) forbids placing a byte-order mark at the beginning of a JSON string.
 
-  * Byte strings are converted to Base64 URL without whitespace or padding by default (see section 4.1 of RFC 7049). A byte string will instead be converted to traditional base64 without whitespace or padding by default if it has tag 22, or base16 for tag 23. Padding will be included in the Base64 URL or traditional base64 form if <b>Base64Padding</b> in the JSON options is set to <b>true</b> . (To create a CBOR object with a given tag, call the  `CBORObject.FromObjectAndTag`  method and pass the CBOR object and the desired tag number to that method.)
+  * Byte strings are converted to Base64 URL without whitespace or padding by default (see section 4.1 of RFC 7049). A byte string will instead be converted to traditional base64 without whitespace and with padding if it has tag 22, or base16 for tag 23. (To create a CBOR object with a given tag, call the  `CBORObject.FromObjectAndTag`  method and pass the CBOR object and the desired tag number to that method.)
 
   * Rational numbers will be converted to their exact form, if possible, otherwise to a high-precision approximation. (The resulting approximation could overflow to infinity, in which case the rational number is converted to null.)
 

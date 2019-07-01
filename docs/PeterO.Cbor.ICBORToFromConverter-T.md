@@ -3,7 +3,9 @@
     public interface ICBORToFromConverter<T> :
         PeterO.Cbor.ICBORConverter<T>
 
- Classes that implement this interface can support conversions from CBOR objects to a custom type and back.  ### Member Summary
+ Classes that implement this interface can support conversions from CBOR objects to a custom type and back.
+
+### Member Summary
 * <code>[FromCBORObject(PeterO.Cbor.CBORObject)](#FromCBORObject_PeterO_Cbor_CBORObject)</code> - Converts a CBOR object to a custom type.
 
 <b>Parameters:</b>
