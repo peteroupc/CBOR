@@ -233,7 +233,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="Numbers">
-      <HintPath>..\packages\PeterO.Numbers.1.4.2\lib\net20\Numbers.dll</HintPath>
+      <HintPath>..\packages\PeterO.Numbers.1.4.3\lib\net20\Numbers.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup />

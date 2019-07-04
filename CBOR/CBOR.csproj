@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.0</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>3.5.1</Version>
+    <Version>3.5.2</Version>
     <Owners>Peter Occil</Owners>
     <Description>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049.</Description>
     <Summary>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049. </Summary>
@@ -13,6 +13,10 @@
     <PackageLicenseUrl>http://creativecommons.org/publicdomain/zero/1.0/</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/peteroupc/CBOR</PackageProjectUrl>
     <PackageReleaseNotes>
+Version 3.5.2
+
+- Update Numbers library used by this library to a version that doesn't depend on StyleCop.Analyzers in the package.
+
 Version 3.5.1
 
 - Update Numbers library used by this library.
@@ -81,6 +85,6 @@ Version 3.4.0-alpha1:
     </CustomCommands>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="PeterO.Numbers" Version="1.4.2" />
+    <PackageReference Include="PeterO.Numbers" Version="1.4.3" />
   </ItemGroup>
 </Project>

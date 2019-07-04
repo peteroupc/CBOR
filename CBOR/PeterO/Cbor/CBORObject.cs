@@ -590,9 +590,9 @@ namespace PeterO.Cbor {
         throw new ArgumentException("bigintTag.Sign (" +
                     bigintTag.Sign + ") is less than 0");
       }
-      if (bigintTag.GetSignedBitLength() > 64) {
+      if (bigintTag.GetSignedBitLengthAsEInteger().CompareTo(64) > 0) {
         throw new ArgumentException("bigintTag.bitLength (" +
-                    (long)bigintTag.GetSignedBitLength() + ") is more than " +
+                    bigintTag.GetSignedBitLengthAsEInteger() + ") is more than " +
                     "64");
       }
       lock (ValueTagHandlers) {
@@ -1205,7 +1205,7 @@ if (depth > 100) {
           "tag more than 18446744073709551615 (" + bigintTag + ")");
       }
       CBORObject c = FromObject(valueOb);
-      if (bigintTag.GetSignedBitLength() <= 16) {
+      if (bigintTag.GetSignedBitLengthAsEInteger().CompareTo(16) <= 0) {
         // Low-numbered, commonly used tags
         return FromObjectAndTag(c, bigintTag.ToInt32Checked());
       } else {
@@ -3568,7 +3568,7 @@ if (depth > 100) {
     } */
 
     private static bool BigIntFits(EInteger bigint) {
-      return bigint.GetSignedBitLength() <= 64;
+      return bigint.GetSignedBitLengthAsEInteger().CompareTo(64) <= 0;
     }
 
     private static bool CBORArrayEquals(

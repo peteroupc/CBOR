@@ -61,7 +61,7 @@ namespace PeterO.Cbor {
       var ef = (ERational)obj;
       if (ef.IsFinite) {
         EInteger bi = ef.ToEInteger();
-        if (bi.GetSignedBitLength() <= 63) {
+        if (bi.GetSignedBitLengthAsEInteger().CompareTo(63) <= 0) {
           return (long)bi;
         }
       }
@@ -94,7 +94,7 @@ namespace PeterO.Cbor {
         return false;
       }
       EInteger bi = ef.ToEInteger();
-      return bi.GetSignedBitLength() <= 63;
+      return bi.GetSignedBitLengthAsEInteger().CompareTo(63) <= 0;
     }
 
     public bool CanTruncatedIntFitInInt32(object obj) {

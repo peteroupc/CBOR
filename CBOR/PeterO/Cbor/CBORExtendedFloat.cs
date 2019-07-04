@@ -98,7 +98,7 @@ namespace PeterO.Cbor {
         return false;
       }
       EInteger bi = ef.ToEInteger();
-      return bi.GetSignedBitLength() <= 63;
+      return bi.GetSignedBitLengthAsEInteger().CompareTo(63) <= 0;
     }
 
     public bool CanTruncatedIntFitInInt32(object obj) {
