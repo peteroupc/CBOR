@@ -1,4 +1,4 @@
-﻿#pragma warning disable SA1118
+#pragma warning disable SA1118
 /*
 Written by Peter O. in 2013.
 Any copyright is dedicated to the Public Domain.
@@ -156,26 +156,26 @@ ToObjectTest.TestToFromObjectRoundTrip(EDecimal.SignalingNaN).AsDecimal();
     }
 
     private enum AByte : byte {
-   /// <summary>An arbitrary value.</summary>
+    /// <summary>An arbitrary value.</summary>
       A = 254,
 
-   /// <summary>An arbitrary value.</summary>
+    /// <summary>An arbitrary value.</summary>
       B
     }
 
     private enum AInt {
-   /// <summary>An arbitrary value.</summary>
+    /// <summary>An arbitrary value.</summary>
       A = 256,
 
-   /// <summary>An arbitrary value.</summary>
+    /// <summary>An arbitrary value.</summary>
       B
     }
 
     private enum AULong : ulong {
-   /// <summary>An arbitrary value.</summary>
+    /// <summary>An arbitrary value.</summary>
       A = 999999,
 
-   /// <summary>An arbitrary value.</summary>
+    /// <summary>An arbitrary value.</summary>
       B
     }
 
@@ -4904,6 +4904,29 @@ CBORTestCommon.AssertJSONSer(objectTemp, objectTemp2);
           ToObjectTest.TestToFromObjectRoundTrip((UInt16)i),
           TestCommon.LongToString(i));
       }
+    }
+
+    [Test]
+    public void TestNullable() {
+       int? nvalue = 1;
+       CBORObject cbor = CBORObject.FromObject(nvalue);
+       Assert.AreEqual(CBORObject.FromObject(1), cbor);
+       nvalue = null;
+       cbor = CBORObject.FromObject(nvalue);
+       uint? unvalue = 1u;
+       cbor = CBORObject.FromObject(unvalue);
+       Assert.AreEqual(CBORObject.FromObject(1), cbor);
+       unvalue = null;
+       cbor = CBORObject.FromObject(unvalue);
+       Assert.AreEqual(CBORObject.Null, cbor);
+       Assert.AreEqual(null, CBORObject.Null.ToObject<int?>());
+       Assert.AreEqual(1, CBORObject.FromObject(1).ToObject<int?>());
+       Assert.AreEqual(null, CBORObject.Null.ToObject<uint?>());
+       Assert.AreEqual(1u, CBORObject.FromObject(1).ToObject<uint?>());
+       Assert.AreEqual(null, CBORObject.Null.ToObject<double?>());
+       if (3.5 != CBORObject.FromObject(3.5).ToObject<double?>()) {
+         Assert.Fail();
+       }
     }
 
     [Test]

@@ -2501,16 +2501,13 @@ The converted object.
 
 <b>Exceptions:</b>
 
- * System.NotSupportedException:
+ * System.CBORException:
 The given type  <i>t</i>
- , or this object's CBOR type, is not supported.
+ , or this object's CBOR type, is not supported, or the given object's nesting is too deep, or another error occurred when serializing the object.
 
  * System.ArgumentNullException:
 The parameter  <i>t</i>
  is null.
-
- * System.CBORException:
-The given object's nesting is too deep, or another error occurred when serializing the object.
 
 <a id="ToObject_System_Type_PeterO_Cbor_CBORTypeMapper"></a>
 ### ToObject
@@ -2521,7 +2518,7 @@ The given object's nesting is too deep, or another error occurred when serializi
 
  Converts this CBOR object to an object of an arbitrary type. See the documentation for the overload of this method taking a CBORTypeMapper and PODOptions parameters parameters for more information.  <b>Parameters:</b>
 
- * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as  `int`  or  `String`  ///) or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as  `int`  or  `String`  ) or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
 
  * <i>mapper</i>: This parameter controls which data types are eligible for Plain-Old-Data deserialization and includes custom converters from CBOR objects to certain data types.
 
@@ -2531,16 +2528,13 @@ The converted object.
 
 <b>Exceptions:</b>
 
- * System.NotSupportedException:
+ * System.CBORException:
 The given type  <i>t</i>
- , or this object's CBOR type, is not supported.
+ , or this object's CBOR type, is not supported, or the given object's nesting is too deep, or another error occurred when serializing the object.
 
  * System.ArgumentNullException:
 The parameter  <i>t</i>
  is null.
-
- * System.CBORException:
-The given object's nesting is too deep, or another error occurred when serializing the object.
 
 <a id="ToObject_System_Type_PeterO_Cbor_CBORTypeMapper_PeterO_Cbor_PODOptions"></a>
 ### ToObject
@@ -2571,7 +2565,7 @@ The given object's nesting is too deep, or another error occurred when serializi
 
   * If the type is  `EDecimal`  ,  `EFloat`  ,  `EInteger`  , or  `ERational`  in the <a href="https://www.nuget.org/packages/PeterO.Numbers">  `PeterO.Numbers`  </a> library (in .NET) or the <a href="https://github.com/peteroupc/numbers-java">  `com.github.peteroupc/numbers`  </a> artifact (in Java), returns the result of the corresponding As* method.
 
-  * If the type is an enumeration (  `Enum`  ///) type this CBOR object is a text string or an integer, returns the appropriate enumerated constant. (For example, if  `MyEnum`  includes an entry for  `MyValue`  , this method will return  `MyEnum.MyValue`  if the CBOR object represents  `"MyValue"`  or the underlying value for  `MyEnum.MyValue`  .) <b>Note:</b> If an integer is converted to a .NET Enum constant, and that integer is shared by more than one constant of the same type, it is undefined which constant from among them is returned. (For example, if  `MyEnum.Zero = 0`  and  `MyEnum.Null = 0`  , converting 0 to  `MyEnum`  may return either  `MyEnum.Zero`  or  `MyEnum.Null`  .) As a result, .NET Enum types with constants that share an underlying value should not be passed to this method.
+  * If the type is an enumeration (  `Enum`  ) type this CBOR object is a text string or an integer, returns the appropriate enumerated constant. (For example, if  `MyEnum`  includes an entry for  `MyValue`  , this method will return  `MyEnum.MyValue`  if the CBOR object represents  `"MyValue"`  or the underlying value for  `MyEnum.MyValue`  .) <b>Note:</b> If an integer is converted to a .NET Enum constant, and that integer is shared by more than one constant of the same type, it is undefined which constant from among them is returned. (For example, if  `MyEnum.Zero = 0`  and  `MyEnum.Null = 0`  , converting 0 to  `MyEnum`  may return either  `MyEnum.Zero`  or  `MyEnum.Null`  .) As a result, .NET Enum types with constants that share an underlying value should not be passed to this method.
 
   * If the type is  `byte[]`  (a one-dimensional byte array) and this CBOR object is a byte string, returns a byte array which this CBOR byte string's data will be copied to. (This method can't be used to encode CBOR data to a byte array; for that, use the EncodeToBytes method instead.)
 
@@ -2621,7 +2615,7 @@ The given object's nesting is too deep, or another error occurred when serializi
 
  <b>Parameters:</b>
 
- * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as  `int`  or  `String`  ///) or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as  `int`  or  `String`  ) or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
 
  * <i>mapper</i>: This parameter controls which data types are eligible for Plain-Old-Data deserialization and includes custom converters from CBOR objects to certain data types.
 
@@ -2633,16 +2627,13 @@ The converted object.
 
 <b>Exceptions:</b>
 
- * System.NotSupportedException:
+ * System.CBORException:
 The given type  <i>t</i>
- , or this object's CBOR type, is not supported.
+ , or this object's CBOR type, is not supported, or the given object's nesting is too deep, or another error occurred when serializing the object.
 
  * System.ArgumentNullException:
 The parameter  <i>t</i>
  is null.
-
- * System.CBORException:
-The given object's nesting is too deep, or another error occurred when serializing the object.
 
 <a id="ToObject_System_Type_PeterO_Cbor_PODOptions"></a>
 ### ToObject
@@ -2653,7 +2644,7 @@ The given object's nesting is too deep, or another error occurred when serializi
 
  Converts this CBOR object to an object of an arbitrary type. See the documentation for the overload of this method taking a CBORTypeMapper and PODOptions parameters for more information. This method (without a CBORTypeMapper parameter) allows all data types not otherwise handled to be eligible for Plain-Old-Data serialization.  <b>Parameters:</b>
 
- * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as  `int`  or  `String`  ///) or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as  `int`  or  `String`  ) or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
 
  * <i>options</i>: Specifies options for controlling deserialization of CBOR objects.
 

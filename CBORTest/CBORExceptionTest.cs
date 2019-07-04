@@ -7,7 +7,14 @@ namespace Test {
   public class CBORExceptionTest {
     [Test]
     public void TestConstructor() {
-      Assert.Throws<CBORException>(()=>throw new CBORException("Test exception"));
+      try {
+ throw new CBORException("Test exception");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
     }
   }
 }

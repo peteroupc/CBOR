@@ -2602,16 +2602,15 @@
     </param>
     <returns>The converted object.
     </returns>
-    <exception cref='T:System.NotSupportedException'>The given type
+    <exception cref='T:System.CBORException'>The given type
       <paramref name='t'/>
-       , or this object's CBOR type, is not supported.
+       , or this object's CBOR type, is not supported, or the given object's
+      nesting is too deep, or another error occurred when serializing the
+      object.
     </exception>
     <exception cref='T:System.ArgumentNullException'>The parameter
       <paramref name='t'/>
        is null.
-    </exception>
-    <exception cref='T:System.CBORException'>The given object's nesting is too deep, or another error occurred when
-      serializing the object.
     </exception>
     <example><para>Java offers no easy way to express a generic type, at least none as easy
         as C#'s
@@ -2641,9 +2640,9 @@
       parameter should be either a type specially handled by this method (such
       as
       <c>int</c> or
-      <c>String</c> ///) or a plain-old-data type (POCO or POJO type) within the control of
-      the application. If the plain-old-data type references other data types,
-      those types should likewise meet either criterion above.
+      <c>String</c> ) or a plain-old-data type (POCO or POJO type) within the control of the
+      application. If the plain-old-data type references other data types, those
+      types should likewise meet either criterion above.
     </param>
     <param name='mapper'>This parameter controls which data types are eligible for Plain-Old-Data
       deserialization and includes custom converters from CBOR objects to
@@ -2651,16 +2650,15 @@
     </param>
     <returns>The converted object.
     </returns>
-    <exception cref='T:System.NotSupportedException'>The given type
+    <exception cref='T:System.CBORException'>The given type
       <paramref name='t'/>
-       , or this object's CBOR type, is not supported.
+       , or this object's CBOR type, is not supported, or the given object's
+      nesting is too deep, or another error occurred when serializing the
+      object.
     </exception>
     <exception cref='T:System.ArgumentNullException'>The parameter
       <paramref name='t'/>
        is null.
-    </exception>
-    <exception cref='T:System.CBORException'>The given object's nesting is too deep, or another error occurred when
-      serializing the object.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.ToObject(System.Type,PeterO.Cbor.CBORTypeMapper,PeterO.Cbor.PODOptions)'>
@@ -2726,8 +2724,8 @@
           method.
         </item>
         <item>If the type is an enumeration (
-          <c>Enum</c> ///) type this CBOR object is a text string or an integer, returns
-          the appropriate enumerated constant. (For example, if
+          <c>Enum</c> ) type this CBOR object is a text string or an integer, returns the
+          appropriate enumerated constant. (For example, if
           <c>MyEnum</c> includes an entry for
           <c>MyValue</c> , this method will return
           <c>MyEnum.MyValue</c> if the CBOR object represents
@@ -2849,9 +2847,9 @@
       parameter should be either a type specially handled by this method (such
       as
       <c>int</c> or
-      <c>String</c> ///) or a plain-old-data type (POCO or POJO type) within the control of
-      the application. If the plain-old-data type references other data types,
-      those types should likewise meet either criterion above.
+      <c>String</c> ) or a plain-old-data type (POCO or POJO type) within the control of the
+      application. If the plain-old-data type references other data types, those
+      types should likewise meet either criterion above.
     </param>
     <param name='mapper'>This parameter controls which data types are eligible for Plain-Old-Data
       deserialization and includes custom converters from CBOR objects to
@@ -2861,16 +2859,15 @@
     </param>
     <returns>The converted object.
     </returns>
-    <exception cref='T:System.NotSupportedException'>The given type
+    <exception cref='T:System.CBORException'>The given type
       <paramref name='t'/>
-       , or this object's CBOR type, is not supported.
+       , or this object's CBOR type, is not supported, or the given object's
+      nesting is too deep, or another error occurred when serializing the
+      object.
     </exception>
     <exception cref='T:System.ArgumentNullException'>The parameter
       <paramref name='t'/>
        is null.
-    </exception>
-    <exception cref='T:System.CBORException'>The given object's nesting is too deep, or another error occurred when
-      serializing the object.
     </exception>
     <example><para>Java offers no easy way to express a generic type, at least none as easy
         as C#'s
@@ -2902,9 +2899,9 @@
       parameter should be either a type specially handled by this method (such
       as
       <c>int</c> or
-      <c>String</c> ///) or a plain-old-data type (POCO or POJO type) within the control of
-      the application. If the plain-old-data type references other data types,
-      those types should likewise meet either criterion above.
+      <c>String</c> ) or a plain-old-data type (POCO or POJO type) within the control of the
+      application. If the plain-old-data type references other data types, those
+      types should likewise meet either criterion above.
     </param>
     <param name='options'>Specifies options for controlling deserialization of CBOR objects.
     </param>

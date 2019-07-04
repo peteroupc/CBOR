@@ -1,67 +1,128 @@
 <Project DefaultTargets='Build' ToolsVersion='4.0' xmlns='http://schemas.microsoft.com/developer/msbuild/2003'>
   <PropertyGroup>
-    <ProjectGuid>{8FE63143-541E-448D-8337-A98D1FA51541}</ProjectGuid>
-    <Configuration Condition=' &apos;$(Configuration)&apos; == &apos;&apos; '>Debug</Configuration>
-    <Platform Condition=' &apos;$(Platform)&apos; == &apos;&apos; '>AnyCPU</Platform>
-    <OutputType>Exe</OutputType>
-    <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
-    <RootNamespace>CBORTest</RootNamespace>
+    <ProjectGuid>
+       {8FE63143-541E-448D-8337-A98D1FA51541}
+    </ProjectGuid>
+    <Configuration Condition=' &apos;$(Configuration)&apos; == &apos;&apos; '>
+       Debug
+    </Configuration>
+    <Platform Condition=' &apos;$(Platform)&apos; == &apos;&apos; '>
+       AnyCPU
+    </Platform>
+    <OutputType>
+       Exe
+    </OutputType>
+    <AutoGenerateBindingRedirects>
+       True
+    </AutoGenerateBindingRedirects>
+    <RootNamespace>
+       CBORTest
+    </RootNamespace>
     <AssemblyName>CBORTest</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>
+       v4.5
+    </TargetFrameworkVersion>
     <TargetFrameworkProfile/>
-    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RunCodeAnalysis>False</RunCodeAnalysis>
-    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
-    <NoStdLib>False</NoStdLib>
-    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRules>-Microsoft.Design#CA1017;-Microsoft.Globalization#CA1303;-Microsoft.Naming#CA1705;-Microsoft.Naming#CA1708;-Microsoft.Naming#CA1709;-Microsoft.Usage#CA2225</CodeAnalysisRules>
-    <SourceAnalysisOverrideSettingsFile>Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
-    <SignAssembly>False</SignAssembly>
+    <RunPostBuildEvent>
+       OnBuildSuccess
+    </RunPostBuildEvent>
+    <AppDesignerFolder>
+       Properties
+    </AppDesignerFolder>
+    <AllowUnsafeBlocks>
+       False
+    </AllowUnsafeBlocks>
+    <NoStdLib>
+       False
+    </NoStdLib>
+    <TreatWarningsAsErrors>
+       False
+    </TreatWarningsAsErrors>
+    <IntermediateOutputPath>
+       obj\$(Configuration)\
+    </IntermediateOutputPath>
+    <WarningLevel>
+       4
+    </WarningLevel>
+    <SourceAnalysisOverrideSettingsFile>
+       Settings.SourceAnalysis
+    </SourceAnalysisOverrideSettingsFile>
+    <SignAssembly>
+       False
+    </SignAssembly>
     <NuGetPackageImportStamp/>
     <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=' &apos;$(Platform)&apos; == &apos;AnyCPU&apos; '>
-    <PlatformTarget>x86</PlatformTarget>
-    <BaseAddress>4194304</BaseAddress>
-    <RegisterForComInterop>False</RegisterForComInterop>
-    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-    <FileAlignment>4096</FileAlignment>
     <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=' &apos;$(Configuration)&apos; == &apos;Debug&apos; '>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DebugSymbols>True</DebugSymbols>
-    <DebugType>Full</DebugType>
-    <Optimize>False</Optimize>
-    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
-    <StartAction>Project</StartAction>
-    <StartArguments>Test.</StartArguments>
+    <OutputPath>
+       bin\Debug\
+    </OutputPath>
+    <DebugSymbols>
+       True
+    </DebugSymbols>
+    <DebugType>
+       Full
+    </DebugType>
+    <Optimize>
+       False
+    </Optimize>
+    <CheckForOverflowUnderflow>
+       True
+    </CheckForOverflowUnderflow>
+    <DefineConstants>
+       DEBUG;TRACE
+    </DefineConstants>
+    <BaseIntermediateOutputPath>
+       obj\
+    </BaseIntermediateOutputPath>
+    <StartAction>
+       Project
+    </StartAction>
+    <StartArguments>
+       Test.
+    </StartArguments>
     <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=' &apos;$(Configuration)&apos; == &apos;Release&apos; '>
-    <OutputPath>bin\Release\</OutputPath>
-    <DebugSymbols>False</DebugSymbols>
-    <DebugType>None</DebugType>
-    <Optimize>True</Optimize>
-    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
-    <DefineConstants>TRACE</DefineConstants>
-    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
+    <OutputPath>
+       bin\Release\
+    </OutputPath>
+    <DebugSymbols>
+       False
+    </DebugSymbols>
+    <DebugType>
+       None
+    </DebugType>
+    <Optimize>
+       True
+    </Optimize>
+    <CheckForOverflowUnderflow>
+       False
+    </CheckForOverflowUnderflow>
+    <DefineConstants>
+       TRACE
+    </DefineConstants>
+    <BaseIntermediateOutputPath>
+       obj\
+    </BaseIntermediateOutputPath>
     <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition='&apos;$(Configuration)|$(Platform)&apos; == &apos;Debug|AnyCPU&apos;'>
-    <Prefer32Bit>false</Prefer32Bit>
+    <Prefer32Bit>
+       false
+    </Prefer32Bit>
     <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet>
-    <PlatformTarget>anycpu</PlatformTarget>
+    <PlatformTarget>
+       anycpu
+    </PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition='&apos;$(Configuration)|$(Platform)&apos; == &apos;Release|AnyCPU&apos;'>
-    <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>
+       false
+    </Prefer32Bit>
     <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
@@ -70,28 +131,53 @@
     <Reference Include='System.Numerics'/>
     <Reference Include='System.Xml'/>
     <Reference Include='nunit.core, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77'>
-      <HintPath>..\packages\NUnitTestAdapter.WithFramework.2.0.0\lib\nunit.core.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>
+         ..\packages\NUnitTestAdapter.WithFramework.2.0.0\lib\nunit.core.dll
+      </HintPath>
+      <Private>
+         False
+      </Private>
     </Reference>
     <Reference Include='nunit.core.interfaces, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77'>
-      <HintPath>..\packages\NUnitTestAdapter.WithFramework.2.0.0\lib\nunit.core.interfaces.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>
+
+        ..\packages\NUnitTestAdapter.WithFramework.2.0.0\lib\nunit.core.interfaces.dll
+      </HintPath>
+      <Private>
+         False
+      </Private>
     </Reference>
     <Reference Include='nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77'>
-      <HintPath>..\packages\NUnitTestAdapter.WithFramework.2.0.0\lib\nunit.framework.dll</HintPath>
+      <HintPath>
+
+        ..\packages\NUnitTestAdapter.WithFramework.2.0.0\lib\nunit.framework.dll
+
+      </HintPath>
     </Reference>
     <Reference Include='nunit.util, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77'>
-      <HintPath>..\packages\NUnitTestAdapter.WithFramework.2.0.0\lib\nunit.util.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>
+         ..\packages\NUnitTestAdapter.WithFramework.2.0.0\lib\nunit.util.dll
+      </HintPath>
+      <Private>
+         False
+      </Private>
     </Reference>
     <Reference Include='NUnit.VisualStudio.TestAdapter, Version=2.0.0.0, Culture=neutral, PublicKeyToken=4cb40d35494691ac'>
-      <HintPath>..\packages\NUnitTestAdapter.WithFramework.2.0.0\lib\NUnit.VisualStudio.TestAdapter.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>
+
+        ..\packages\NUnitTestAdapter.WithFramework.2.0.0\lib\NUnit.VisualStudio.TestAdapter.dll
+      </HintPath>
+      <Private>
+         False
+      </Private>
     </Reference>
-  <AdditionalFiles Include='stylecop.json'/>  <Reference Include='Numbers'>
-    <HintPath>..\packages\PeterO.Numbers.1.4.2\lib\net40\Numbers.dll</HintPath>
-  </Reference>
-</ItemGroup>
+    <AdditionalFiles Include='stylecop.json'/>
+    <Reference Include='Numbers'>
+      <HintPath>
+         ..\packages\PeterO.Numbers.1.4.2\lib\net40\Numbers.dll
+      </HintPath>
+    </Reference>
+  </ItemGroup>
   <ItemGroup>
     <Compile Include='AppResources.cs'/>
     <Compile Include='BEncoding.cs'/>
@@ -127,7 +213,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include='..\CBOR\CBOR.csproj'>
-      <Project>{44A061F7-B6A8-4FBD-993E-3746E8C42D6B}</Project>
+      <Project>
+         {44A061F7-B6A8-4FBD-993E-3746E8C42D6B}
+      </Project>
       <Name>CBORTest</Name>
     </ProjectReference>
   </ItemGroup>
@@ -136,7 +224,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include='Resources.resx'>
-      <LogicalName>Test.AppResources.resources</LogicalName>
+      <LogicalName>
+         Test.AppResources.resources
+      </LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project='$(MSBuildToolsPath)\Microsoft.CSharp.targets'/>
