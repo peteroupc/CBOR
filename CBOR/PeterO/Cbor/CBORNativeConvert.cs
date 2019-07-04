@@ -12,8 +12,8 @@ using PeterO.Numbers;
 namespace PeterO.Cbor {
   internal static class CBORNativeConvert {
     private static CBORObject FromObjectAndInnerTags(
-  object objectValue,
-  CBORObject objectWithTags) {
+      object objectValue,
+      CBORObject objectWithTags) {
       CBORObject newObject = CBORObject.FromObject(objectValue);
       if (!objectWithTags.IsTagged) {
         return newObject;
@@ -49,8 +49,7 @@ namespace PeterO.Cbor {
         return ConvertToDecimalFrac(o, true, true);
       }
       return o.HasMostOuterTag(265) ?
-              ConvertToDecimalFrac(o, false, true) :
-             o;
+              ConvertToDecimalFrac(o, false, true) : o;
     }
 
     private static CBORObject ConvertToDecimalFrac(
@@ -150,7 +149,8 @@ namespace PeterO.Cbor {
         throw new CBORException("Rational number requires integer denominator");
       }
       if (second.Sign <= 0) {
-        throw new CBORException("Rational number requires denominator greater than 0");
+throw new
+  CBORException("Rational number requires denominator greater than 0");
       }
       EInteger denom = second.AsEInteger();
       // NOTE: Discards tags.

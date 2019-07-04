@@ -603,8 +603,11 @@ namespace PeterO.Cbor {
           if (objThis.IsNull) {
             return Activator.CreateInstance(t);
           } else {
-object wrappedObj = objThis.ToObject(nullableType, mapper, options, depth +
-              1);
+              object wrappedObj = objThis.ToObject(
+                nullableType,
+                mapper,
+                options,
+                depth + 1);
               return Activator.CreateInstance(
                 t,
                 wrappedObj);
@@ -624,7 +627,7 @@ object wrappedObj = objThis.ToObject(nullableType, mapper, options, depth +
         var isList = false;
         object listObject = null;
 #if NET40 || NET20
-    if (IsAssignableFrom(typeof(Array), t)) {
+        if (IsAssignableFrom(typeof(Array), t)) {
 Type elementType = t.GetElementType();
           Array array = Array.CreateInstance(
         elementType,

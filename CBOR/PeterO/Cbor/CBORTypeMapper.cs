@@ -2,23 +2,26 @@ using System;
 using System.Collections.Generic;
 
 namespace PeterO.Cbor {
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="T:PeterO.Cbor.CBORTypeMapper"]/*'/>
+    /// <summary>Holds converters to customize the serialization and
+    /// deserialization behavior of <c>CBORObject.FromObject</c> and
+    /// <c>CBORObject#ToObject</c>, as well as type filters for
+    /// <c>ToObject</c>.</summary>
   public sealed class CBORTypeMapper {
     private readonly IList<string> typePrefixes;
     private readonly IList<string> typeNames;
     private readonly IDictionary<Object, ConverterInfo>
       converters;
 
-   /// <summary>Initializes a new instance of the <see cref='CBORTypeMapper'/> class.</summary>
+    /// <summary>Initializes a new instance of the
+    /// <see cref='CBORTypeMapper'/> class.</summary>
     public CBORTypeMapper() {
       this.typePrefixes = new List<string>();
       this.typeNames = new List<string>();
       this.converters = new Dictionary<Object, ConverterInfo>();
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.AddConverter``1(System.Type,PeterO.Cbor.ICBORConverter{``0})"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.AddConverter``1(System.Type,PeterO.Cbor.ICBORConverter{``0})"]/*'/>
     public CBORTypeMapper AddConverter<T>(
       Type type,
       ICBORConverter<T> converter) {
@@ -47,8 +50,8 @@ namespace PeterO.Cbor {
     }
 
     internal object ConvertBackWithConverter(
-        CBORObject cbor,
-        Type type) {
+      CBORObject cbor,
+      Type type) {
       ConverterInfo convinfo = null;
       if (this.converters.ContainsKey(type)) {
         convinfo = this.converters[type];
@@ -84,8 +87,8 @@ namespace PeterO.Cbor {
         obj);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.FilterTypeName(System.String)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.FilterTypeName(System.String)"]/*'/>
     public bool FilterTypeName(string typeName) {
       if (String.IsNullOrEmpty(typeName)) {
         return false;
@@ -104,8 +107,8 @@ namespace PeterO.Cbor {
       return false;
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.AddTypePrefix(System.String)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.AddTypePrefix(System.String)"]/*'/>
     public CBORTypeMapper AddTypePrefix(string prefix) {
       if (prefix == null) {
         throw new ArgumentNullException(nameof(prefix));
@@ -117,8 +120,8 @@ namespace PeterO.Cbor {
       return this;
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.AddTypeName(System.String)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeMapper.AddTypeName(System.String)"]/*'/>
     public CBORTypeMapper AddTypeName(string name) {
       if (name == null) {
         throw new ArgumentNullException(nameof(name));

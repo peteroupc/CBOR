@@ -1,4 +1,4 @@
-﻿/*
+/*
 Written by Peter O. in 2014-2016.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -11,7 +11,7 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace Test {
-   /// <summary>Description of RandomObjects.</summary>
+    /// <summary>Description of RandomObjects.</summary>
   public static class RandomObjects {
     public static byte[] RandomByteString(RandomGenerator rand) {
       int x = rand.UniformInt(0x2000);

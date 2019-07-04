@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
@@ -31,13 +31,13 @@ namespace Test {
         case 0:
 return ToObjectTest.TestToFromObjectRoundTrip(
   RandomObjects.RandomDouble(
-  rand,
-  Int32.MaxValue));
+    rand,
+    Int32.MaxValue));
         case 1:
 return ToObjectTest.TestToFromObjectRoundTrip(
   RandomObjects.RandomSingle(
-  rand,
-  Int32.MaxValue));
+    rand,
+    Int32.MaxValue));
         case 2:
           return
   ToObjectTest.TestToFromObjectRoundTrip(RandomObjects.RandomEInteger(rand));
@@ -59,13 +59,13 @@ return
         case 0:
 return ToObjectTest.TestToFromObjectRoundTrip(
   RandomObjects.RandomDouble(
-  rand,
-  Int32.MaxValue));
+    rand,
+    Int32.MaxValue));
         case 1:
 return ToObjectTest.TestToFromObjectRoundTrip(
   RandomObjects.RandomSingle(
-  rand,
-  Int32.MaxValue));
+    rand,
+    Int32.MaxValue));
         case 2:
           return
   ToObjectTest.TestToFromObjectRoundTrip(RandomObjects.RandomEInteger(rand));

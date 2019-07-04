@@ -1,4 +1,4 @@
-﻿/*
+/*
 Written in 2013 by Peter Occil.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -13,10 +13,10 @@ using PeterO.Cbor;
 namespace Test {
   public class JSONPatch {
     private static CBORObject addOperation(
-        CBORObject o,
-        string valueOpStr,
-        string path,
-        CBORObject value) {
+      CBORObject o,
+      string valueOpStr,
+      string path,
+      CBORObject value) {
       if (path == null) {
         throw new ArgumentException("patch " + valueOpStr);
       }
@@ -151,9 +151,9 @@ throw new ArgumentException("patch " + valueOpStr + " value");
     }
 
     private static CBORObject removeOperation(
-        CBORObject o,
-        string valueOpStr,
-        string path) {
+      CBORObject o,
+      string valueOpStr,
+      string path) {
       if (path == null) {
         throw new ArgumentException("patch " + valueOpStr);
       }
@@ -177,10 +177,10 @@ throw new ArgumentException("patch " + valueOpStr + " value");
     }
 
     private static CBORObject replaceOperation(
-        CBORObject o,
-        string valueOpStr,
-        string path,
-        CBORObject value) {
+      CBORObject o,
+      string valueOpStr,
+      string path,
+      CBORObject value) {
       if (path == null) {
         throw new ArgumentException("patch " + valueOpStr);
       }

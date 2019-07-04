@@ -1,4 +1,4 @@
-﻿/*
+/*
 Written by Peter O. in 2014.
 
 Any copyright is dedicated to the Public Domain.
@@ -32,8 +32,8 @@ namespace PeterO.DocGen {
         this.memSummaries[key].Finish();
         var memSummaryString = this.memSummaries[key].ToString();
         var filename = Path.Combine(
-  this.directory,
-  this.typeIDs[key] + ".md");
+          this.directory,
+          this.typeIDs[key] + ".md");
         finalString = DocGenUtil.NormalizeLines(finalString);
         finalString = Regex.Replace(
             finalString,

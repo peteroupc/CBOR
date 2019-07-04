@@ -1,4 +1,4 @@
-﻿/*
+/*
 Written in 2013-2018 by Peter Occil.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -69,8 +69,8 @@ namespace Test {
           }
           if (!tilde) {
             key = pointer.Substring(
-  oldIndex,
-  index - oldIndex);
+              oldIndex,
+              index - oldIndex);
           } else {
             index = oldIndex;
             var sb = new StringBuilder();
@@ -110,23 +110,23 @@ namespace Test {
       }
     }
 
-   /// <summary>Gets the JSON object referred to by a JSON Pointer
-   /// according to RFC6901. The syntax for pointers is:
-   /// <pre>'/' KEY '/' KEY [...]</pre> where KEY represents a key into
-   /// the JSON object or its sub-objects in the hierarchy. For example,
-   /// <pre>/foo/2/bar</pre> means the same as
-   /// <pre>obj['foo'][2]['bar']</pre> in JavaScript. If "~" and/or "/"
-   /// occurs in a key, it must be escaped with "~0" or "~1",
-   /// respectively, in a JSON pointer.</summary>
-   /// <param name='obj'>A CBOR object.</param>
-   /// <param name='pointer'>A JSON pointer according to RFC 6901.</param>
-   /// <returns>An object within the specified JSON object, or <paramref
-   /// name='obj'/> if pointer is the empty string, if the pointer is
-   /// null, if the pointer is invalid , if there is no JSON object at the
-   /// given pointer, or if <paramref name='obj'/> is not of type
-   /// CBORObject, unless pointer is the empty string.</returns>
-   /// <exception cref='ArgumentNullException'>The parameter <paramref
-   /// name='pointer'/> is null.</exception>
+    /// <summary>Gets the JSON object referred to by a JSON Pointer
+    /// according to RFC6901. The syntax for pointers is:
+    /// <pre>'/' KEY '/' KEY [...]</pre> where KEY represents a key into
+    /// the JSON object or its sub-objects in the hierarchy. For example,
+    /// <pre>/foo/2/bar</pre> means the same as
+    /// <pre>obj['foo'][2]['bar']</pre> in JavaScript. If "~" and/or "/"
+    /// occurs in a key, it must be escaped with "~0" or "~1",
+    /// respectively, in a JSON pointer.</summary>
+    /// <param name='obj'>A CBOR object.</param>
+    /// <param name='pointer'>A JSON pointer according to RFC 6901.</param>
+    /// <returns>An object within the specified JSON object, or <paramref
+    /// name='obj'/> if pointer is the empty string, if the pointer is
+    /// null, if the pointer is invalid , if there is no JSON object at the
+    /// given pointer, or if <paramref name='obj'/> is not of type
+    /// CBORObject, unless pointer is the empty string.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='pointer'/> is null.</exception>
     public static Object getObject(CBORObject obj, string pointer) {
       if (pointer == null) {
         throw new ArgumentNullException(nameof(pointer));
@@ -136,9 +136,9 @@ namespace Test {
     }
 
     private static int readPositiveInteger(
-        string str,
-        int index,
-        int[] result) {
+      string str,
+      int index,
+      int[] result) {
       var haveNumber = false;
       var haveZeros = false;
       int oldIndex = index;
@@ -210,10 +210,10 @@ if (!(refValue != null)) {
       }
     }
 
-   /// <summary>Gets an index into the specified object, if the object is
-   /// an array and is not greater than the array's length.</summary>
-   /// <returns>The index contained in this instance, or -1 if the object
-   /// isn't a JSON array or is greater than the array's length.</returns>
+    /// <summary>Gets an index into the specified object, if the object is
+    /// an array and is not greater than the array's length.</summary>
+    /// <returns>The index contained in this instance, or -1 if the object
+    /// isn't a JSON array or is greater than the array's length.</returns>
     public int getIndex() {
       if (this.jsonobj.Type == CBORType.Array) {
         if (this.refValue.Equals("-")) {
@@ -257,34 +257,34 @@ if (!(refValue != null)) {
       }
     }
 
-   /// <summary>Gets all children of the specified JSON object that
-   /// contain the specified key. The method will not remove matching
-   /// keys. As an example, consider this object:
-   /// <pre>[{"key":"value1","foo":"foovalue"},
-   /// {"key":"value2","bar":"barvalue"}, {"baz":"bazvalue"}]</pre> If
-   /// getPointersToKey is called on this object with a keyToFind called
-   /// "key", we get the following Map as the return value:
-   /// <pre>{ "/0" => "value1", // "/0" points to {"foo":"foovalue"} "/1"
-   /// => "value2" // "/1" points to {"bar":"barvalue"} }</pre> and the
-   /// JSON object will change to the following:
-   /// <pre>[{"foo":"foovalue"}, {"bar":"barvalue"},
-   /// {"baz","bazvalue"}]</pre> @param root object to search @param
-   /// keyToFind the key to search for. @return a map:
-   /// <list>
-   /// <item>The keys in the map are JSON Pointers to the objects within
-   /// <i>root</i> that contained a key named
-   /// <i>keyToFind</i>. To get the actual JSON object, call
-   /// JSONPointer.getObject, passing
-   /// <i>root</i> and the pointer as arguments.</item>
-   /// <item>The values in the map are the values of each of those keys
-   /// named
-   /// <i>keyToFind</i>.</item></list> The JSON Pointers are relative to
-   /// the root object.</summary>
-   /// <param name='root'>The parameter <paramref name='root'/> is not
-   /// documented yet.</param>
-   /// <param name='keyToFind'>The parameter <paramref name='keyToFind'/>
-   /// is not documented yet.</param>
-   /// <returns>An IDictionary(string, Object) object.</returns>
+    /// <summary>Gets all children of the specified JSON object that
+    /// contain the specified key. The method will not remove matching
+    /// keys. As an example, consider this object:
+    /// <pre>[{"key":"value1","foo":"foovalue"},
+    /// {"key":"value2","bar":"barvalue"}, {"baz":"bazvalue"}]</pre> If
+    /// getPointersToKey is called on this object with a keyToFind called
+    /// "key", we get the following Map as the return value:
+    /// <pre>{ "/0" => "value1", // "/0" points to {"foo":"foovalue"} "/1"
+    /// => "value2" // "/1" points to {"bar":"barvalue"} }</pre> and the
+    /// JSON object will change to the following:
+    /// <pre>[{"foo":"foovalue"}, {"bar":"barvalue"},
+    /// {"baz","bazvalue"}]</pre> @param root object to search @param
+    /// keyToFind the key to search for. @return a map:
+    /// <list>
+    /// <item>The keys in the map are JSON Pointers to the objects within
+    /// <i>root</i> that contained a key named
+    /// <i>keyToFind</i>. To get the actual JSON object, call
+    /// JSONPointer.getObject, passing
+    /// <i>root</i> and the pointer as arguments.</item>
+    /// <item>The values in the map are the values of each of those keys
+    /// named
+    /// <i>keyToFind</i>.</item></list> The JSON Pointers are relative to
+    /// the root object.</summary>
+    /// <param name='root'>The parameter <paramref name='root'/> is not
+    /// documented yet.</param>
+    /// <param name='keyToFind'>The parameter <paramref name='keyToFind'/>
+    /// is not documented yet.</param>
+    /// <returns>An IDictionary(string, Object) object.</returns>
     public static IDictionary<string, Object>
       getPointersWithKeyAndRemove(CBORObject root, string keyToFind) {
       IDictionary<string, Object> list = new Dictionary<string, Object>();
@@ -292,36 +292,36 @@ if (!(refValue != null)) {
       return list;
     }
 
-   /// <summary>Gets all children of the specified JSON object that
-   /// contain the specified key. The method will remove matching keys. As
-   /// an example, consider this object:
-   /// <pre>[{"key":"value1","foo":"foovalue"},
-   /// {"key":"value2","bar":"barvalue"}, {"baz":"bazvalue"}]</pre> If
-   /// getPointersToKey is called on this object with a keyToFind called
-   /// "key", we get the following Map as the return value:
-   /// <pre>{ "/0" => "value1", // "/0" points to
-   /// {"key":"value1","foo":"foovalue"} "/1" => "value2" // "/1" points
-   /// to {"key":"value2","bar":"barvalue"} }</pre> and the JSON object
-   /// will remain unchanged. @param root object to search @param
-   /// keyToFind the key to search for. @return a map:
-   /// <list>
-   /// <item>The keys in the map are JSON Pointers to the objects within
-   /// <i>root</i> that contained a key named
-   /// <i>keyToFind</i>. To get the actual JSON object, call
-   /// JSONPointer.getObject, passing
-   /// <i>root</i> and the pointer as arguments.</item>
-   /// <item>The values in the map are the values of each of those keys
-   /// named
-   /// <i>keyToFind</i>.</item></list> The JSON Pointers are relative to
-   /// the root object.</summary>
-   /// <param name='root'>The parameter <paramref name='root'/> is not
-   /// documented yet.</param>
-   /// <param name='keyToFind'>The parameter <paramref name='keyToFind'/>
-   /// is not documented yet.</param>
-   /// <returns>An IDictionary(string, Object) object.</returns>
+    /// <summary>Gets all children of the specified JSON object that
+    /// contain the specified key. The method will remove matching keys. As
+    /// an example, consider this object:
+    /// <pre>[{"key":"value1","foo":"foovalue"},
+    /// {"key":"value2","bar":"barvalue"}, {"baz":"bazvalue"}]</pre> If
+    /// getPointersToKey is called on this object with a keyToFind called
+    /// "key", we get the following Map as the return value:
+    /// <pre>{ "/0" => "value1", // "/0" points to
+    /// {"key":"value1","foo":"foovalue"} "/1" => "value2" // "/1" points
+    /// to {"key":"value2","bar":"barvalue"} }</pre> and the JSON object
+    /// will remain unchanged. @param root object to search @param
+    /// keyToFind the key to search for. @return a map:
+    /// <list>
+    /// <item>The keys in the map are JSON Pointers to the objects within
+    /// <i>root</i> that contained a key named
+    /// <i>keyToFind</i>. To get the actual JSON object, call
+    /// JSONPointer.getObject, passing
+    /// <i>root</i> and the pointer as arguments.</item>
+    /// <item>The values in the map are the values of each of those keys
+    /// named
+    /// <i>keyToFind</i>.</item></list> The JSON Pointers are relative to
+    /// the root object.</summary>
+    /// <param name='root'>The parameter <paramref name='root'/> is not
+    /// documented yet.</param>
+    /// <param name='keyToFind'>The parameter <paramref name='keyToFind'/>
+    /// is not documented yet.</param>
+    /// <returns>An IDictionary(string, Object) object.</returns>
     public static IDictionary<string, Object> getPointersWithKey(
-        CBORObject root,
-        string keyToFind) {
+      CBORObject root,
+      string keyToFind) {
       IDictionary<string, Object> list = new Dictionary<string, Object>();
       getPointersWithKey(root, keyToFind, String.Empty, list, false);
       return list;
@@ -352,21 +352,21 @@ if (!(refValue != null)) {
           ptrkey = ptrkey.Replace("~", "~0");
           ptrkey = ptrkey.Replace("/", "~1");
           getPointersWithKey(
-  rootObj[key],
-  keyToFind,
-  currentPointer + "/" + ptrkey,
-  pointerList,
-  remove);
+            rootObj[key],
+            keyToFind,
+            currentPointer + "/" + ptrkey,
+            pointerList,
+            remove);
         }
       } else if (root.Type == CBORType.Array) {
         for (int i = 0; i < root.Count; ++i) {
           string ptrkey = EInteger.FromInt32(i).ToString();
           getPointersWithKey(
-  root[i],
-  keyToFind,
-  currentPointer + "/" + ptrkey,
-  pointerList,
-  remove);
+            root[i],
+            keyToFind,
+            currentPointer + "/" + ptrkey,
+            pointerList,
+            remove);
         }
       }
     }

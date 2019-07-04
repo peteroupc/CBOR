@@ -53,11 +53,11 @@ namespace Test {
       CBOREncodeOptions(true, false);
 
     internal static void CheckPropertyNames(
-  object ao,
-  PODOptions cc,
-  string p1,
-  string p2,
-  string p3) {
+      object ao,
+      PODOptions cc,
+      string p1,
+      string p2,
+      string p3) {
       CBORObjectTest.CheckPropertyNames(
  CBORObject.FromObject(ao, cc),
  p1,
@@ -66,11 +66,11 @@ namespace Test {
     }
 
     internal static void CheckArrayPropertyNames(
-  CBORObject co,
-  int expectedCount,
-  string p1,
-  string p2,
-  string p3) {
+      CBORObject co,
+      int expectedCount,
+      string p1,
+      string p2,
+      string p3) {
       Assert.AreEqual(CBORType.Array, co.Type);
       Assert.AreEqual(expectedCount, co.Count);
       for (var i = 0; i < co.Count; ++i) {
@@ -80,11 +80,11 @@ namespace Test {
     }
 
     internal static void CheckPODPropertyNames(
-  CBORObject co,
-  PODOptions cc,
-  string p1,
-  string p2,
-  string p3) {
+      CBORObject co,
+      PODOptions cc,
+      string p1,
+      string p2,
+      string p3) {
       Assert.AreEqual(CBORType.Map, co.Type);
       string keyName = cc.UseCamelCase ? "propValue" : "PropValue";
       if (!co.ContainsKey(keyName)) {
@@ -94,10 +94,10 @@ namespace Test {
     }
 
     internal static void CheckPODInDictPropertyNames(
-  CBORObject co,
-  string p1,
-  string p2,
-  string p3) {
+      CBORObject co,
+      string p1,
+      string p2,
+      string p3) {
       Assert.AreEqual(CBORType.Map, co.Type);
       if (!co.ContainsKey("PropValue")) {
         Assert.Fail("Expected PropValue to exist: " + co.ToString());
@@ -133,30 +133,30 @@ namespace Test {
       var valueCcFT = new PODOptions(false, true);
       var valueCcTT = new PODOptions(true, true);
       CBORObjectTest.CheckPropertyNames(
-    ao,
-    valueCcTF,
-    "PropA",
-    "PropB",
-    "IsPropC");
+        ao,
+        valueCcTF,
+        "PropA",
+        "PropB",
+        "IsPropC");
      //--
       CBORObjectTest.CheckPropertyNames(
- ao,
- valueCcFF,
- "PropA",
- "PropB",
- "IsPropC");
+        ao,
+        valueCcFF,
+        "PropA",
+        "PropB",
+        "IsPropC");
       CBORObjectTest.CheckPropertyNames(
-  ao,
-  valueCcFT,
-  "propA",
-  "propB",
-  "propC");
+        ao,
+        valueCcFT,
+        "propA",
+        "propB",
+        "propC");
       CBORObjectTest.CheckPropertyNames(
-    ao,
-    valueCcTT,
-    "propA",
-    "propB",
-    "propC");
+        ao,
+        valueCcTT,
+        "propA",
+        "propB",
+        "propC");
     }
 
     public static CBORObject GetNumberData() {
@@ -212,8 +212,8 @@ namespace Test {
     }
 
     public static CBORObject TestSucceedingJSON(
-  string str,
-  CBOREncodeOptions options) {
+      string str,
+      CBOREncodeOptions options) {
       byte[] bytes = DataUtilities.GetUtf8Bytes(str, false);
       try {
         using (var ms = new MemoryStream(bytes)) {
@@ -455,112 +455,112 @@ namespace Test {
 ToObjectTest.TestToFromObjectRoundTrip((float)0.75).AsEInteger()
             .ToString();
         Assert.AreEqual(
-        "0",
-        stringTemp);
+          "0",
+          stringTemp);
       }
       {
         string stringTemp =
 ToObjectTest.TestToFromObjectRoundTrip((float)0.99).AsEInteger()
             .ToString();
         Assert.AreEqual(
-        "0",
-        stringTemp);
+          "0",
+          stringTemp);
       }
       {
         string stringTemp =
 ToObjectTest.TestToFromObjectRoundTrip((float)0.0000000000000001)
             .AsEInteger().ToString();
         Assert.AreEqual(
-        "0",
-        stringTemp);
+          "0",
+          stringTemp);
       }
       {
         string stringTemp =
 ToObjectTest.TestToFromObjectRoundTrip((float)0.5).AsEInteger()
             .ToString();
         Assert.AreEqual(
-        "0",
-        stringTemp);
+          "0",
+          stringTemp);
       }
       {
         string stringTemp =
 ToObjectTest.TestToFromObjectRoundTrip((float)1.5).AsEInteger()
             .ToString();
         Assert.AreEqual(
-        "1",
-        stringTemp);
+          "1",
+          stringTemp);
       }
       {
         string stringTemp =
 ToObjectTest.TestToFromObjectRoundTrip((float)2.5).AsEInteger()
             .ToString();
         Assert.AreEqual(
-        "2",
-        stringTemp);
+          "2",
+          stringTemp);
       }
       {
         string stringTemp =
 ToObjectTest.TestToFromObjectRoundTrip((float)328323f).AsEInteger()
             .ToString();
         Assert.AreEqual(
-        "328323",
-        stringTemp);
+          "328323",
+          stringTemp);
       }
       {
         string stringTemp =
 ToObjectTest.TestToFromObjectRoundTrip((double)0.75).AsEInteger()
             .ToString();
         Assert.AreEqual(
-        "0",
-        stringTemp);
+          "0",
+          stringTemp);
       }
       {
         string stringTemp =
 ToObjectTest.TestToFromObjectRoundTrip((double)0.99).AsEInteger()
             .ToString();
         Assert.AreEqual(
-        "0",
-        stringTemp);
+          "0",
+          stringTemp);
       }
       {
         string stringTemp =
 ToObjectTest.TestToFromObjectRoundTrip((double)0.0000000000000001)
             .AsEInteger().ToString();
         Assert.AreEqual(
-        "0",
-        stringTemp);
+          "0",
+          stringTemp);
       }
       {
         string stringTemp =
 ToObjectTest.TestToFromObjectRoundTrip((double)0.5).AsEInteger()
             .ToString();
         Assert.AreEqual(
-        "0",
-        stringTemp);
+          "0",
+          stringTemp);
       }
       {
         string stringTemp =
 ToObjectTest.TestToFromObjectRoundTrip((double)1.5).AsEInteger()
             .ToString();
         Assert.AreEqual(
-        "1",
-        stringTemp);
+          "1",
+          stringTemp);
       }
       {
         string stringTemp =
 ToObjectTest.TestToFromObjectRoundTrip((double)2.5).AsEInteger()
             .ToString();
         Assert.AreEqual(
-        "2",
-        stringTemp);
+          "2",
+          stringTemp);
       }
       {
         string stringTemp =
 ToObjectTest.TestToFromObjectRoundTrip((double)328323).AsEInteger()
             .ToString();
         Assert.AreEqual(
-        "328323",
-        stringTemp);
+          "328323",
+          stringTemp);
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(Single.PositiveInfinity)
@@ -827,8 +827,8 @@ ToObjectTest.TestToFromObjectRoundTrip((double)328323).AsEInteger()
 ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
             .ToString();
         Assert.AreEqual(
-        "NaN",
-        stringTemp);
+          "NaN",
+          stringTemp);
       }
       {
         object objectTemp = CBORTestCommon.DecPosInf;
@@ -1369,8 +1369,8 @@ Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Double.NaN).AsEFloat()
         string stringTemp = ToObjectTest.TestToFromObjectRoundTrip("test")
        .AsString();
         Assert.AreEqual(
-        "test",
-        stringTemp);
+          "test",
+          stringTemp);
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(CBORObject.Null).AsString();
@@ -1469,8 +1469,8 @@ Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Double.NaN).AsEFloat()
         Assert.IsTrue(
   ToObjectTest.TestToFromObjectRoundTrip(
   RandomObjects.RandomDouble(
-  rand,
-  i)).CanFitInDouble());
+    rand,
+    i)).CanFitInDouble());
       }
     }
     [Test]
@@ -1514,7 +1514,7 @@ Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Double.NaN).AsEFloat()
 
       EInteger ei;
       ei = EInteger.FromString("9223372036854775807");
-      Assert.IsTrue(CBORObject.FromObject(ei).CanFitInInt64(),ei.ToString());
+      Assert.IsTrue(CBORObject.FromObject(ei).CanFitInInt64(), ei.ToString());
       ei = EInteger.FromString("9223372036854775808");
       Assert.IsFalse(CBORObject.FromObject(ei).CanFitInInt64(), ei.ToString());
       ei = EInteger.FromString("-9223372036854775807");
@@ -1527,7 +1527,7 @@ Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Double.NaN).AsEFloat()
       Assert.IsFalse(CBORObject.FromObject(ei).CanFitInInt64(), ei.ToString());
       ei = EInteger.FromString("9223373136366403584");
       Assert.IsFalse(CBORObject.FromObject(ei).CanFitInInt64(), ei.ToString());
-      var strings = new string[]{
+      var strings = new string[] {
    "8000FFFFFFFF0000",
    "8000AAAAAAAA0000",
    "8000800080000000",
@@ -1595,8 +1595,8 @@ Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Double.NaN).AsEFloat()
         Assert.IsTrue(
   ToObjectTest.TestToFromObjectRoundTrip(
   RandomObjects.RandomSingle(
-  rand,
-  i)).CanFitInSingle());
+    rand,
+    i)).CanFitInSingle());
       }
     }
     [Test]
@@ -1723,20 +1723,27 @@ Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Double.NaN).AsEFloat()
 
       EInteger ei;
       ei = EInteger.FromString("9223372036854775807");
-      Assert.IsTrue(CBORObject.FromObject(ei).CanTruncatedIntFitInInt64(),ei.ToString());
+Assert.IsTrue(CBORObject.FromObject(ei)
+        .CanTruncatedIntFitInInt64(), ei.ToString());
       ei = EInteger.FromString("9223372036854775808");
-      Assert.IsFalse(CBORObject.FromObject(ei).CanTruncatedIntFitInInt64(), ei.ToString());
+      Assert.IsFalse(CBORObject.FromObject(ei).CanTruncatedIntFitInInt64(),
+        ei.ToString());
       ei = EInteger.FromString("-9223372036854775807");
-      Assert.IsTrue(CBORObject.FromObject(ei).CanTruncatedIntFitInInt64(), ei.ToString());
+      Assert.IsTrue(CBORObject.FromObject(ei).CanTruncatedIntFitInInt64(),
+        ei.ToString());
       ei = EInteger.FromString("-9223372036854775808");
-      Assert.IsTrue(CBORObject.FromObject(ei).CanTruncatedIntFitInInt64(), ei.ToString());
+      Assert.IsTrue(CBORObject.FromObject(ei).CanTruncatedIntFitInInt64(),
+        ei.ToString());
       ei = EInteger.FromString("-9223372036854775809");
-      Assert.IsFalse(CBORObject.FromObject(ei).CanTruncatedIntFitInInt64(), ei.ToString());
+      Assert.IsFalse(CBORObject.FromObject(ei).CanTruncatedIntFitInInt64(),
+        ei.ToString());
       ei = EInteger.FromString("-9223373136366403584");
-      Assert.IsFalse(CBORObject.FromObject(ei).CanTruncatedIntFitInInt64(), ei.ToString());
+      Assert.IsFalse(CBORObject.FromObject(ei).CanTruncatedIntFitInInt64(),
+        ei.ToString());
       ei = EInteger.FromString("9223373136366403584");
-      Assert.IsFalse(CBORObject.FromObject(ei).CanTruncatedIntFitInInt64(), ei.ToString());
-      var strings = new string[]{
+      Assert.IsFalse(CBORObject.FromObject(ei).CanTruncatedIntFitInInt64(),
+        ei.ToString());
+      var strings = new string[] {
    "8000FFFFFFFF0000",
    "8000AAAAAAAA0000",
    "8000800080000000",
@@ -1771,7 +1778,7 @@ Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Double.NaN).AsEFloat()
         } else {
           Assert.IsFalse(
             cbornumber.CanTruncatedIntFitInInt64(),
-          numberString);
+            numberString);
         }
       }
     }
@@ -2726,8 +2733,8 @@ throw new InvalidOperationException(String.Empty, ex);
       {
         string stringTemp = cbor.AsString();
         Assert.AreEqual(
-        "\t",
-        stringTemp);
+          "\t",
+          stringTemp);
       }
       Assert.AreEqual(CBORObject.True, TestSucceedingJSON("true"));
       Assert.AreEqual(CBORObject.False, TestSucceedingJSON("false"));
@@ -2736,18 +2743,18 @@ throw new InvalidOperationException(String.Empty, ex);
       {
         string stringTemp = TestSucceedingJSON("\"\\/\\b\"").AsString();
         Assert.AreEqual(
-        "/\b",
-        stringTemp);
+          "/\b",
+          stringTemp);
       }
       {
         string stringTemp = TestSucceedingJSON("\"\\/\\f\"").AsString();
         Assert.AreEqual(
-        "/\f",
-        stringTemp);
+          "/\f",
+          stringTemp);
       }
       string jsonTemp = TestCommon.Repeat(
-     "[",
-     2000) + TestCommon.Repeat(
+        "[",
+        2000) + TestCommon.Repeat(
      "]",
      2000);
       TestFailingJSON(jsonTemp);
@@ -2771,32 +2778,32 @@ throw new InvalidOperationException(String.Empty, ex);
       {
         string stringTemp = cbor.ToString();
         Assert.AreEqual(
-        "100",
-        stringTemp);
+          "100",
+          stringTemp);
       }
       cbor = ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString("200"));
       Assert.AreEqual(CBORType.Number, cbor.Type);
       {
         string stringTemp = cbor.ToString();
         Assert.AreEqual(
-        "200",
-        stringTemp);
+          "200",
+          stringTemp);
       }
       cbor = ToObjectTest.TestToFromObjectRoundTrip(EFloat.FromString("300"));
       Assert.AreEqual(CBORType.Number, cbor.Type);
       {
         string stringTemp = cbor.ToString();
         Assert.AreEqual(
-        "300",
-        stringTemp);
+          "300",
+          stringTemp);
       }
       cbor = ToObjectTest.TestToFromObjectRoundTrip(ERational.Create(1, 2));
       Assert.AreEqual(CBORType.Number, cbor.Type);
       {
         string stringTemp = cbor.ToString();
         Assert.AreEqual(
-        "1/2",
-        stringTemp);
+          "1/2",
+          stringTemp);
       }
     }
     [Test]
@@ -2918,13 +2925,13 @@ throw new InvalidOperationException(String.Empty, ex);
     }
 
     public enum EnumClass {
-   /// <summary>Internal API.</summary>
+    /// <summary>Internal API.</summary>
 Value1,
 
-   /// <summary>Internal API.</summary>
+    /// <summary>Internal API.</summary>
 Value2,
 
-   /// <summary>Internal API.</summary>
+    /// <summary>Internal API.</summary>
 Value3
   }
 
@@ -3061,8 +3068,8 @@ throw new InvalidOperationException(String.Empty, ex);
       {
         string stringTemp = o.ToJSONString();
         Assert.AreEqual(
-        "\"9AD6F0E8\"",
-        stringTemp);
+          "\"9AD6F0E8\"",
+          stringTemp);
       }
       o = ToObjectTest.TestToFromObjectRoundTrip(new byte[] { 0x9a, 0xd6,
         0xff, 0xe8 });
@@ -3070,8 +3077,8 @@ throw new InvalidOperationException(String.Empty, ex);
       {
         string stringTemp = o.ToJSONString();
         Assert.AreEqual(
-        "\"mtb_6A\"",
-        stringTemp);
+          "\"mtb_6A\"",
+          stringTemp);
       }
       o = CBORObject.FromObjectAndTag(
         new byte[] { 0x9a, 0xd6, 0xff, 0xe8 },
@@ -3080,8 +3087,8 @@ throw new InvalidOperationException(String.Empty, ex);
       {
         string stringTemp = o.ToJSONString();
         Assert.AreEqual(
-        "\"mtb/6A==\"",
-        stringTemp);
+          "\"mtb/6A==\"",
+          stringTemp);
       }
       var options = new JSONOptions(true); // base64 padding enabled
       o = ToObjectTest.TestToFromObjectRoundTrip(new byte[] { 0x9a, 0xd6,
@@ -3090,8 +3097,8 @@ throw new InvalidOperationException(String.Empty, ex);
       {
         string stringTemp = o.ToJSONString(options);
         Assert.AreEqual(
-       "\"mtb_6A\"",
-       stringTemp);
+          "\"mtb_6A\"",
+          stringTemp);
       }
       o = CBORObject.FromObjectAndTag(
       new byte[] { 0x9a, 0xd6, 0xff, 0xe8 },
@@ -3100,8 +3107,8 @@ throw new InvalidOperationException(String.Empty, ex);
       {
         string stringTemp = o.ToJSONString(options);
         Assert.AreEqual(
-        "\"mtb/6A==\"",
-        stringTemp);
+          "\"mtb/6A==\"",
+          stringTemp);
       }
     }
 
@@ -3457,19 +3464,19 @@ throw new InvalidOperationException(String.Empty, ex);
       Assert.IsFalse(CBORObject.NewMap().IsIntegral);
       cbor = ToObjectTest.TestToFromObjectRoundTrip(
   EInteger.FromRadixString(
-  "8000000000000000",
-  16));
+    "8000000000000000",
+    16));
       Assert.IsTrue(cbor.IsIntegral);
       cbor = ToObjectTest.TestToFromObjectRoundTrip(
       EInteger.FromRadixString(
-      "80000000000000000000",
-      16));
+        "80000000000000000000",
+        16));
       Assert.IsTrue(cbor.IsIntegral);
 
       cbor = ToObjectTest.TestToFromObjectRoundTrip(
     EInteger.FromRadixString(
-    "8000000000000000000000000",
-    16));
+      "8000000000000000000000000",
+      16));
       Assert.IsTrue(cbor.IsIntegral);
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(
         EDecimal.FromString("4444e+800")).IsIntegral);
@@ -3883,14 +3890,14 @@ Assert.AreEqual(CBORObject.Null, cbor.GetOrDefault("key2", CBORObject.Null));
       {
         string stringTemp = obj.ToJSONString();
         Assert.AreEqual(
-        "-1000000000",
-        stringTemp);
+          "-1000000000",
+          stringTemp);
       }
       {
         string stringTemp = obj.ToString();
         Assert.AreEqual(
-        "-1000000000",
-        stringTemp);
+          "-1000000000",
+          stringTemp);
       }
     }
 
@@ -4093,8 +4100,8 @@ Assert.AreEqual(CBORObject.Null, cbor.GetOrDefault("key2", CBORObject.Null));
           {
             string stringTemp = CBORObject.ReadJSON(msjson).AsString();
             Assert.AreEqual(
-            "\ud800\udc00",
-            stringTemp);
+              "\ud800\udc00",
+              stringTemp);
           }
         }
         using (var msjson = new MemoryStream(new byte[] { 0, 0, 0, 0x22, 0, 1,
@@ -4103,8 +4110,8 @@ Assert.AreEqual(CBORObject.Null, cbor.GetOrDefault("key2", CBORObject.Null));
           {
             string stringTemp = CBORObject.ReadJSON(msjson).AsString();
             Assert.AreEqual(
-            "\ud800\udc00",
-            stringTemp);
+              "\ud800\udc00",
+              stringTemp);
           }
         }
         using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0, 0,
@@ -4113,8 +4120,8 @@ Assert.AreEqual(CBORObject.Null, cbor.GetOrDefault("key2", CBORObject.Null));
           {
             string stringTemp = CBORObject.ReadJSON(msjson).AsString();
             Assert.AreEqual(
-            "\ud800\udc00",
-            stringTemp);
+              "\ud800\udc00",
+              stringTemp);
           }
         }
         using (var msjson = new MemoryStream(new byte[] { 0x22, 0, 0, 0, 0, 0,
@@ -4124,8 +4131,8 @@ Assert.AreEqual(CBORObject.Null, cbor.GetOrDefault("key2", CBORObject.Null));
           {
             string stringTemp = CBORObject.ReadJSON(msjson).AsString();
             Assert.AreEqual(
-            "\ud800\udc00",
-            stringTemp);
+              "\ud800\udc00",
+              stringTemp);
           }
         }
    using (var msjson = new MemoryStream(new byte[] { 0xfe, 0xff, 0, 0x22, 0xd8,
@@ -4134,8 +4141,8 @@ Assert.AreEqual(CBORObject.Null, cbor.GetOrDefault("key2", CBORObject.Null));
           {
             string stringTemp = CBORObject.ReadJSON(msjson).AsString();
             Assert.AreEqual(
-            "\ud800\udc00",
-            stringTemp);
+              "\ud800\udc00",
+              stringTemp);
           }
         }
         using (var msjson = new MemoryStream(new byte[] { 0, 0x22, 0xd8, 0,
@@ -4143,8 +4150,8 @@ Assert.AreEqual(CBORObject.Null, cbor.GetOrDefault("key2", CBORObject.Null));
           {
             string stringTemp = CBORObject.ReadJSON(msjson).AsString();
             Assert.AreEqual(
-            "\ud800\udc00",
-            stringTemp);
+              "\ud800\udc00",
+              stringTemp);
           }
         }
         using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x22, 0,
@@ -4153,8 +4160,8 @@ Assert.AreEqual(CBORObject.Null, cbor.GetOrDefault("key2", CBORObject.Null));
           {
             string stringTemp = CBORObject.ReadJSON(msjson).AsString();
             Assert.AreEqual(
-            "\ud800\udc00",
-            stringTemp);
+              "\ud800\udc00",
+              stringTemp);
           }
         }
         using (var msjson = new MemoryStream(new byte[] { 0x22, 0, 0, 0xd8, 0,
@@ -4162,8 +4169,8 @@ Assert.AreEqual(CBORObject.Null, cbor.GetOrDefault("key2", CBORObject.Null));
           {
             string stringTemp = CBORObject.ReadJSON(msjson).AsString();
             Assert.AreEqual(
-            "\ud800\udc00",
-            stringTemp);
+              "\ud800\udc00",
+              stringTemp);
           }
         }
         using (var msjson = new MemoryStream(new byte[] { 0, 0, 0xfe, 0xff, 0,
@@ -5113,79 +5120,79 @@ Assert.AreEqual(199, cbor[3].AsInt32());
         string stringTemp = ToObjectTest.TestToFromObjectRoundTrip(
         "\u2027\u2028\u2029\u202a\u0008\u000c").ToJSONString();
         Assert.AreEqual(
-        "\"\u2027\\u2028\\u2029\u202a\\b\\f\"",
-        stringTemp);
+          "\"\u2027\\u2028\\u2029\u202a\\b\\f\"",
+          stringTemp);
       }
       {
         string stringTemp = ToObjectTest.TestToFromObjectRoundTrip(
         "\u0085\ufeff\ufffe\uffff").ToJSONString();
         Assert.AreEqual(
-        "\"\\u0085\\uFEFF\\uFFFE\\uFFFF\"",
-        stringTemp);
+          "\"\\u0085\\uFEFF\\uFFFE\\uFFFF\"",
+          stringTemp);
       }
       {
         string stringTemp = CBORObject.True.ToJSONString();
         Assert.AreEqual(
-        "true",
-        stringTemp);
+          "true",
+          stringTemp);
       }
       {
         string stringTemp = CBORObject.False.ToJSONString();
         Assert.AreEqual(
-        "false",
-        stringTemp);
+          "false",
+          stringTemp);
       }
       {
         string stringTemp = CBORObject.Null.ToJSONString();
         Assert.AreEqual(
-        "null",
-        stringTemp);
+          "null",
+          stringTemp);
       }
       {
         string stringTemp =
 ToObjectTest.TestToFromObjectRoundTrip(Single.PositiveInfinity)
             .ToJSONString();
         Assert.AreEqual(
-        "null",
-        stringTemp);
+          "null",
+          stringTemp);
       }
       {
         string stringTemp =
 ToObjectTest.TestToFromObjectRoundTrip(Single.NegativeInfinity)
             .ToJSONString();
         Assert.AreEqual(
-        "null",
-        stringTemp);
+          "null",
+          stringTemp);
       }
       {
         string stringTemp =
           ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).ToJSONString();
         Assert.AreEqual(
-        "null",
-        stringTemp);
+          "null",
+          stringTemp);
       }
       {
         string stringTemp =
 ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity)
             .ToJSONString();
         Assert.AreEqual(
-        "null",
-        stringTemp);
+          "null",
+          stringTemp);
       }
       {
         string stringTemp =
 ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
             .ToJSONString();
         Assert.AreEqual(
-        "null",
-        stringTemp);
+          "null",
+          stringTemp);
       }
       {
         string stringTemp =
           ToObjectTest.TestToFromObjectRoundTrip(Double.NaN).ToJSONString();
         Assert.AreEqual(
-        "null",
-        stringTemp);
+          "null",
+          stringTemp);
       }
 
       CBORObject cbor = CBORObject.NewArray();
@@ -5430,8 +5437,8 @@ throw new InvalidOperationException(String.Empty, ex);
       {
         string stringTemp = o.ToJSONString(options);
         Assert.AreEqual(
-        "\"mtbw6A==\"",
-        stringTemp);
+          "\"mtbw6A==\"",
+          stringTemp);
       }
       // untagged, so base64url without padding
       o = ToObjectTest.TestToFromObjectRoundTrip(new byte[] { 0x9a, 0xd6,
@@ -5449,8 +5456,8 @@ throw new InvalidOperationException(String.Empty, ex);
       {
         string stringTemp = o.ToJSONString(options);
         Assert.AreEqual(
-        "\"9AD6F0E8\"",
-        stringTemp);
+          "\"9AD6F0E8\"",
+          stringTemp);
       }
       o = ToObjectTest.TestToFromObjectRoundTrip(new byte[] { 0x9a, 0xd6,
         0xff, 0xe8 });
@@ -5461,8 +5468,8 @@ throw new InvalidOperationException(String.Empty, ex);
       {
         string stringTemp = CBORObject.Undefined.ToString();
         Assert.AreEqual(
-        "undefined",
-        stringTemp);
+          "undefined",
+          stringTemp);
       }
       {
         string stringTemp = CBORObject.FromSimpleValue(50).ToString();
@@ -6177,8 +6184,8 @@ throw new InvalidOperationException(String.Empty, ex);
       {
         string stringTemp = CBORObject.Zero.ToString();
         Assert.AreEqual(
-        "0",
-        stringTemp);
+          "0",
+          stringTemp);
       }
       Assert.AreEqual(
   ToObjectTest.TestToFromObjectRoundTrip(0),
@@ -6278,26 +6285,26 @@ throw new InvalidOperationException(String.Empty, ex);
     }
 
     [Test]
-    public void TestWriteBigExponentNumber(){
-var exponents=new string[] {
+    public void TestWriteBigExponentNumber() {
+var exponents = new string[] {
 "15368525994429920286",
-"18446744073709551615",
-"-18446744073709551616",
-"18446744073709551616",
-"-18446744073709551617",
-"18446744073709551615",
-"-18446744073709551614",
-};
-foreach(string strexp in exponents){
-EInteger bigexp=EInteger.FromString(strexp);
-EDecimal ed=EDecimal.Create(EInteger.FromInt32(99),bigexp);
+  "18446744073709551615",
+  "-18446744073709551616",
+  "18446744073709551616",
+  "-18446744073709551617",
+  "18446744073709551615",
+  "-18446744073709551614",
+  };
+foreach (string strexp in exponents) {
+EInteger bigexp = EInteger.FromString(strexp);
+EDecimal ed = EDecimal.Create(EInteger.FromInt32(99), bigexp);
 TestWriteObj(ed);
-EFloat ef=EFloat.Create(EInteger.FromInt32(99),bigexp);
+EFloat ef = EFloat.Create(EInteger.FromInt32(99), bigexp);
 TestWriteObj(ef);
-bigexp=bigexp.Negate();
-ed=EDecimal.Create(EInteger.FromInt32(99),bigexp);
+bigexp = bigexp.Negate();
+ed = EDecimal.Create(EInteger.FromInt32(99), bigexp);
 TestWriteObj(ed);
-ef=EFloat.Create(EInteger.FromInt32(99),bigexp);
+ef = EFloat.Create(EInteger.FromInt32(99), bigexp);
 TestWriteObj(ef);
 }
     }
@@ -6558,13 +6565,13 @@ TestWriteObj(ef);
     }
 
     private static string DateTimeToString(
-  int year,
-  int month,
-  int day,
-  int hour,
-  int minute,
-  int second,
-  int millisecond) {
+      int year,
+      int month,
+      int day,
+      int hour,
+      int minute,
+      int second,
+      int millisecond) {
       var charbuf = new char[millisecond > 0 ? 24 : 20];
       charbuf[0] = (char)('0' + ((year / 1000) % 10));
       charbuf[1] = (char)('0' + ((year / 100) % 10));

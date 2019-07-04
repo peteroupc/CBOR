@@ -8,7 +8,7 @@ namespace PeterO.Cbor {
       public int Compare(CBORObject a, CBORObject b) {
         byte[] abs;
         byte[] bbs;
-        bool bothBytes = false;
+        var bothBytes = false;
         if (a.Type == CBORType.ByteString && b.Type == CBORType.ByteString) {
           abs = a.GetByteString();
           bbs = b.GetByteString();

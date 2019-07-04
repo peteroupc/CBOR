@@ -1,4 +1,4 @@
-﻿/*
+/*
 Written by Peter O. in 2014.
 
 Any copyright is dedicated to the Public Domain.
@@ -14,7 +14,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 namespace PeterO.DocGen {
- /// <summary>A documentation visitor.</summary>
+    /// <summary>A documentation visitor.</summary>
   internal class DocVisitor : XmlDoc.IVisitor {
     private const string FourSpaces = " " + " " + " " + " ";
 
@@ -32,8 +32,8 @@ namespace PeterO.DocGen {
     private StringBuilder currentBuffer;
 
     public static void AppendConstraints(
-  Type[] genericArguments,
-  StringBuilder builder) {
+      Type[] genericArguments,
+      StringBuilder builder) {
       foreach (var arg in genericArguments) {
         if (arg.IsGenericParameter) {
           var constraints = arg.GetGenericParameterConstraints();
@@ -128,8 +128,8 @@ namespace PeterO.DocGen {
     }
 
     public static string FormatMethod(
-       MethodBase method,
-       bool shortform) {
+      MethodBase method,
+      bool shortform) {
       var builder = new StringBuilder();
       if (!shortform) {
         builder.Append(FourSpaces);
@@ -151,7 +151,8 @@ namespace PeterO.DocGen {
           }
           if (method.IsFinal) {
             builder.Append("sealed ");
-          } else if (method is MethodInfo && IsMethodOverride((MethodInfo)method)) {
+     } else if (method is MethodInfo &&
+            IsMethodOverride((MethodInfo)method)) {
             builder.Append("override ");
           } else if (method.IsVirtual) {
             builder.Append("virtual ");
@@ -183,7 +184,7 @@ namespace PeterO.DocGen {
           builder.Append(method.Name);
         }
       } else {
-        builder.Append(TypeNameUtil.UndecorateTypeName(method.ReflectedType.Name));
+  builder.Append(TypeNameUtil.UndecorateTypeName(method.ReflectedType.Name));
       }
       bool first;
       if (method is MethodInfo && method.GetGenericArguments().Length > 0) {
@@ -520,11 +521,11 @@ namespace PeterO.DocGen {
         } else if (xmlName.Equals("value")) {
           this.VisitValue(node);
         } else if (xmlName.Equals("b") ||
-      xmlName.Equals("strong") ||
-      xmlName.Equals("i") ||
-      xmlName.Equals("a") ||
-      xmlName.Equals("sup") ||
-      xmlName.Equals("em")) {
+xmlName.Equals("strong") ||
+xmlName.Equals("i") ||
+xmlName.Equals("a") ||
+xmlName.Equals("sup") ||
+xmlName.Equals("em")) {
           var sb = new StringBuilder();
           sb.Append("<" + xmlName);
           foreach (var attr in node.GetAttributes()) {

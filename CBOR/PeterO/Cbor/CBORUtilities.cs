@@ -11,8 +11,8 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="T:PeterO.Cbor.CBORUtilities"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.Cbor.CBORUtilities"]/*'/>
   internal static class CBORUtilities {
     private const string HexAlphabet = "0123456789ABCDEF";
 
@@ -225,10 +225,10 @@ namespace PeterO.Cbor {
       0xd5, 0xf4, 0x112, 0x131, 0x14f, 0x16e, };
 
     public static void GetNormalizedPartProlepticGregorian(
-          EInteger year,
-          int month,
-          EInteger day,
-          EInteger[] dest) {
+      EInteger year,
+      int month,
+      EInteger day,
+      EInteger[] dest) {
      // NOTE: This method assumes month is 1 to 12
       if (month <= 0 || month > 12) {
         throw new ArgumentOutOfRangeException(nameof(month));
@@ -282,17 +282,17 @@ namespace PeterO.Cbor {
        // Example: Apple Time is a 32-bit unsigned integer
        // of the number of seconds since the start of 1904.
        // EInteger appleTime = GetNumberOfDaysProlepticGregorian(
-       // year, // month
-       //,
-        day)
+         // year, // month
+         //,
+         day)
        // .Subtract(GetNumberOfDaysProlepticGregorian(
        // EInteger.FromInt32(1904),
-        1 //,
-        s1));*/
+       1 //,
+       s1));*/
     public static EInteger GetNumberOfDaysProlepticGregorian(
-         EInteger year,
-         int month,
-         int mday) {
+      EInteger year,
+      int month,
+      int mday) {
      // NOTE: month = 1 is January, year = 1 is year 1
       if (month <= 0 || month > 12) {
         throw new ArgumentException();
@@ -469,9 +469,9 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
     }
 
     public static void ParseAtomDateTimeString(
-  string str,
-  EInteger[] bigYearArray,
-  int[] lf) {
+      string str,
+      EInteger[] bigYearArray,
+      int[] lf) {
       int[] d = ParseAtomDateTimeString(str);
       bigYearArray[0] = EInteger.FromInt32(d[0]);
       Array.Copy(d, 1, lf, 0, 7);

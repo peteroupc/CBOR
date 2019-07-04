@@ -13,8 +13,8 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-  /// <include file='../../docs.xml'
-  /// path='docs/doc[@name="T:PeterO.Cbor.CBORObject"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.Cbor.CBORObject"]/*'/>
   public sealed partial class CBORObject : IComparable<CBORObject>,
   IEquatable<CBORObject> {
     private static CBORObject ConstructSimpleValue(int v) {
@@ -453,7 +453,7 @@ namespace PeterO.Cbor {
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.GetOrDefault(System.Object,PeterO.Cbor.CBORObject)"]/*'/>
     public CBORObject GetOrDefault(object key, CBORObject defaultValue) {
       if (this.ItemType == CBORObjectTypeArray) {
-        int index = 0;
+        var index = 0;
         if (key is int) {
           index = (int)key;
         } else {
@@ -580,8 +580,8 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.DecodeFromBytes(System.Byte[],PeterO.Cbor.CBOREncodeOptions)"]/*'/>
     public static CBORObject DecodeFromBytes(
-  byte[] data,
-  CBOREncodeOptions options) {
+      byte[] data,
+      CBOREncodeOptions options) {
       if (data == null) {
         throw new ArgumentNullException(nameof(data));
       }
@@ -636,8 +636,8 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromJSONString(System.String,PeterO.Cbor.CBOREncodeOptions)"]/*'/>
     public static CBORObject FromJSONString(
-  string str,
-  CBOREncodeOptions options) {
+      string str,
+      CBOREncodeOptions options) {
       if (str == null) {
         throw new ArgumentNullException(nameof(str));
       }
@@ -652,10 +652,10 @@ namespace PeterO.Cbor {
         new CharacterReader(str, false, true));
       var nextchar = new int[1];
       CBORObject obj = CBORJson.ParseJSONValue(
-      reader,
-      !options.AllowDuplicateKeys,
-      false,
-      nextchar);
+        reader,
+        !options.AllowDuplicateKeys,
+        false,
+        nextchar);
       if (nextchar[0] != -1) {
         reader.RaiseError("End of string not reached");
       }
@@ -699,11 +699,11 @@ namespace PeterO.Cbor {
     }
 
     internal object ToObject(
-  Type t,
-  CBORTypeMapper mapper,
-  PODOptions options,
-  int depth) {
-      depth++;
+      Type t,
+      CBORTypeMapper mapper,
+      PODOptions options,
+      int depth) {
+      ++depth;
       if (depth > 100) {
         throw new CBORException("Depth level too high");
       }
@@ -793,7 +793,8 @@ namespace PeterO.Cbor {
           bigValue);
       }
       return (bigValue.IsFinite && bigValue.Denominator.Equals(EInteger.One)) ?
-FromObject(bigValue.Numerator) : new CBORObject(CBORObjectTypeExtendedRational, bigValue);
+FromObject(bigValue.Numerator) : new
+  CBORObject(CBORObjectTypeExtendedRational, bigValue);
     }
 
     /// <include file='../../docs.xml'
@@ -928,16 +929,16 @@ FromObject(bigValue.Numerator) : new CBORObject(CBORObjectTypeExtendedRational, 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Object,PeterO.Cbor.PODOptions)"]/*'/>
     public static CBORObject FromObject(
-  object obj,
-  PODOptions options) {
+      object obj,
+      PODOptions options) {
       return FromObject(obj, options, null, 0);
     }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Object,PeterO.Cbor.CBORTypeMapper)"]/*'/>
     public static CBORObject FromObject(
-  object obj,
-  CBORTypeMapper mapper) {
+      object obj,
+      CBORTypeMapper mapper) {
       if (mapper == null) {
         throw new ArgumentNullException(nameof(mapper));
       }
@@ -947,9 +948,9 @@ FromObject(bigValue.Numerator) : new CBORObject(CBORObjectTypeExtendedRational, 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Object,PeterO.Cbor.CBORTypeMapper,PeterO.Cbor.PODOptions)"]/*'/>
     public static CBORObject FromObject(
-  object obj,
-  CBORTypeMapper mapper,
-  PODOptions options) {
+      object obj,
+      CBORTypeMapper mapper,
+      PODOptions options) {
       if (mapper == null) {
         throw new ArgumentNullException(nameof(mapper));
       }
@@ -957,10 +958,10 @@ FromObject(bigValue.Numerator) : new CBORObject(CBORObjectTypeExtendedRational, 
     }
 
     internal static CBORObject FromObject(
-  object obj,
-  PODOptions options,
-  CBORTypeMapper mapper,
-  int depth) {
+      object obj,
+      PODOptions options,
+      CBORTypeMapper mapper,
+      int depth) {
       if (options == null) {
         throw new ArgumentNullException(nameof(options));
       }
@@ -1051,15 +1052,15 @@ FromObject(bigValue.Numerator) : new CBORObject(CBORObjectTypeExtendedRational, 
           System.Collections.DictionaryEntry
             kvp = (System.Collections.DictionaryEntry)keyPair;
           CBORObject objKey = CBORObject.FromObject(
-kvp.Key,
-options,
-mapper,
-depth + 1);
+            kvp.Key,
+            options,
+            mapper,
+            depth + 1);
           objret[objKey] = CBORObject.FromObject(
-          kvp.Value,
-          options,
-          mapper,
-          depth + 1);
+            kvp.Value,
+            options,
+            mapper,
+            depth + 1);
         }
         return objret;
       }
@@ -1071,10 +1072,10 @@ depth + 1);
         foreach (object element in (System.Collections.IEnumerable)obj) {
           objret.Add(
     CBORObject.FromObject(
-    element,
-    options,
-    mapper,
-    depth + 1));
+      element,
+      options,
+      mapper,
+      depth + 1));
         }
         return objret;
       }
@@ -1241,8 +1242,8 @@ depth + 1);
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ReadJSON(System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)"]/*'/>
     public static CBORObject ReadJSON(
-  Stream stream,
-  CBOREncodeOptions options) {
+      Stream stream,
+      CBOREncodeOptions options) {
       if (stream == null) {
         throw new ArgumentNullException(nameof(stream));
       }
@@ -1254,10 +1255,10 @@ depth + 1);
       try {
         var nextchar = new int[1];
         CBORObject obj = CBORJson.ParseJSONValue(
-     reader,
-     !options.AllowDuplicateKeys,
-     false,
-     nextchar);
+          reader,
+          !options.AllowDuplicateKeys,
+          false,
+          nextchar);
         if (nextchar[0] != -1) {
           reader.RaiseError("End of data stream not reached");
         }
@@ -1490,8 +1491,7 @@ depth + 1);
             stream.WriteByte((byte)((datatype << 5) | 27));
             stream.Write(bytes, 0, byteCount);
             break;
-          default:
-            stream.WriteByte((datatype == 0) ?
+          default: stream.WriteByte((datatype == 0) ?
 (byte)0xc2 : (byte)0xc3);
             WritePositiveInt(2, byteCount, stream);
             stream.Write(bytes, 0, byteCount);
@@ -2172,8 +2172,17 @@ depth + 1);
       return this.EncodeToBytes(CBOREncodeOptions.Default);
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.EncodeToBytes(PeterO.Cbor.CBOREncodeOptions)"]/*'/>
+    /// <summary>Writes the binary representation of this CBOR object and
+    /// returns a byte array of that representation, using the specified
+    /// options for encoding the object to CBOR format. For the CTAP2
+    /// canonical ordering, which is useful for implementing Web
+    /// Authentication, call this method as follows: <c>EncodeToBytes(new
+    /// CBOREncodeOptions(false, false, true))</c>.</summary>
+    /// <param name='options'>Options for encoding the data to
+    /// CBOR.</param>
+    /// <returns>A byte array in CBOR format.</returns>
+    /// <exception cref='T:System.ArgumentNullException'>The parameter
+    /// <paramref name='options'/> is null.</exception>
     public byte[] EncodeToBytes(CBOREncodeOptions options) {
       if (options == null) {
         throw new ArgumentNullException(nameof(options));
@@ -2669,8 +2678,82 @@ depth + 1);
       return this.ToJSONString(JSONOptions.Default);
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)"]/*'/>
+    /// <summary>
+    ///  Converts this object to a string in JavaScript Object
+    /// Notation (JSON) format, using the specified options to
+    /// control the encoding process. This function works not
+    /// only with arrays and maps, but also integers, strings,
+    /// byte arrays, and other JSON data types. Notes:
+    /// <list type=''><item>If this object contains maps with non-string
+    /// keys, the keys are converted to JSON strings before writing the map
+    /// as a JSON string.</item>
+    ///  <item>If the CBOR object contains CBOR
+    /// maps, or is a CBOR map itself, the keys to the map are written out
+    /// to the JSON string in an undefined order. Map keys other than
+    /// untagged text strings are converted to JSON strings before writing
+    /// them out (for example, <c>22("Test")</c>
+    ///  is converted to
+    /// <c>"Test"</c>
+    ///  and <c>true</c>
+    ///  is converted to <c>"true"</c>
+    ///  ///).
+    /// If, after such conversion, two or more map keys are identical, this
+    /// method throws a CBORException.</item>
+    ///  <item>If a number in the form
+    /// of an arbitrary-precision binary float has a very high binary
+    /// exponent, it will be converted to a double before being converted
+    /// to a JSON string. (The resulting double could overflow to infinity,
+    /// in which case the arbitrary-precision binary float is converted to
+    /// null.)</item>
+    ///  <item>The string will not begin with a byte-order
+    /// mark (U + FEFF); RFC 8259 (the JSON specification) forbids placing
+    /// a byte-order mark at the beginning of a JSON string.</item>
+    /// <item>Byte strings are converted to Base64 URL without whitespace
+    /// or padding by default (see section 4.1 of RFC 7049). A byte string
+    /// will instead be converted to traditional base64 without whitespace
+    /// and with padding if it has tag 22, or base16 for tag 23. (To create
+    /// a CBOR object with a given tag, call the
+    /// <c>CBORObject.FromObjectAndTag</c>
+    ///  method and pass the CBOR object
+    /// and the desired tag number to that method.)</item>
+    ///  <item>Rational
+    /// numbers will be converted to their exact form, if possible,
+    /// otherwise to a high-precision approximation. (The resulting
+    /// approximation could overflow to infinity, in which case the
+    /// rational number is converted to null.)</item>
+    ///  <item>Simple values
+    /// other than true and false will be converted to null. (This doesn't
+    /// include floating-point numbers.)</item>
+    ///  <item>Infinity and
+    /// not-a-number will be converted to null.</item>
+    ///  </list>
+    /// <para>The example code given below (originally written in C# for
+    /// the .NET version) can be used to write out certain keys of a CBOR
+    /// map in a given order to a JSON string.</para>
+    /// <code>/* Generates a JSON string of 'mapObj' whose keys are in the
+    /// order given
+    /// in 'keys' . Only keys found in 'keys' will be written if they exist in
+    /// 'mapObj'. */ private static string KeysToJSONMap&#x28;CBORObject mapObj,
+    /// IList&lt;CBORObject&gt; keys&#x29;&#x7b; if (mapObj == null) { throw new
+    /// ArgumentNullException&#x29;nameof(mapObj));}
+    /// if (keys == null) { throw
+    /// new ArgumentNullException&#x29;nameof(keys));}
+    /// if (obj.Type !=
+    /// CBORType.Map) { throw new ArgumentException("'obj' is not a map."); }
+    /// StringBuilder builder = new StringBuilder(); var first = true;
+    /// builder.Append("{"); for (CBORObject key in keys) { if
+    /// (mapObj.ContainsKey(key)) { if (!first) {builder.Append(", ");} var
+    /// keyString=(key.CBORType == CBORType.String) ? key.AsString() :
+    /// key.ToJSONString(); builder.Append(CBORObject.FromObject(keyString)
+    /// .ToJSONString()) .Append(":").Append(mapObj[key].ToJSONString());
+    /// first=false; } } return builder.Append("}").ToString(); }</code>
+    ///  .
+    /// </summary>
+    /// <param name='options'>An object containing the options to control
+    /// writing the CBOR object to JSON.</param>
+    /// <returns>A text string containing the converted object.</returns>
+    /// <exception cref='T:System.ArgumentNullException'>The parameter
+    /// <paramref name='options'/> is null.</exception>
     public string ToJSONString(JSONOptions options) {
       if (options == null) {
         throw new ArgumentNullException(nameof(options));
@@ -2911,9 +2994,9 @@ depth + 1);
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,System.Int64)"]/*'/>
     public static int WriteValue(
-     Stream outputStream,
-     int majorType,
-     long value) {
+      Stream outputStream,
+      int majorType,
+      long value) {
       if (outputStream == null) {
         throw new ArgumentNullException(nameof(outputStream));
       }
@@ -2938,7 +3021,7 @@ depth + 1);
           outputStream.WriteByte((byte)(0xe0 + (int)value));
           return 1;
         } else if (value < 32) {
-          throw new ArgumentException("value is from 24 to 31 and major type is 7");
+     throw new ArgumentException("value is from 24 to 31 and major type is 7");
         } else {
           outputStream.WriteByte((byte)0xf8);
           outputStream.WriteByte((byte)value);
@@ -2952,9 +3035,9 @@ depth + 1);
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,System.Int32)"]/*'/>
     public static int WriteValue(
-    Stream outputStream,
-    int majorType,
-    int value) {
+      Stream outputStream,
+      int majorType,
+      int value) {
       if (outputStream == null) {
         throw new ArgumentNullException(nameof(outputStream));
       }
@@ -2979,7 +3062,7 @@ depth + 1);
           outputStream.WriteByte((byte)(0xe0 + value));
           return 1;
         } else if (value < 32) {
-          throw new ArgumentException("value is from 24 to 31 and major type is 7");
+     throw new ArgumentException("value is from 24 to 31 and major type is 7");
         } else {
           outputStream.WriteByte((byte)0xf8);
           outputStream.WriteByte((byte)value);
@@ -2993,9 +3076,9 @@ depth + 1);
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,PeterO.Numbers.EInteger)"]/*'/>
     public static int WriteValue(
-    Stream outputStream,
-    int majorType,
-    EInteger bigintValue) {
+      Stream outputStream,
+      int majorType,
+      EInteger bigintValue) {
       if (outputStream == null) {
         throw new ArgumentNullException(nameof(outputStream));
       }
@@ -3027,7 +3110,7 @@ depth + 1);
           ") is more than 7");
       }
       if (majorType == 7) {
-        throw new ArgumentException("majorType is 7 and value is greater than 255");
+   throw new ArgumentException("majorType is 7 and value is greater than 255");
       }
       byte[] bytes = new[] { (byte)(27 | (majorType << 5)), (byte)highbyte,
         (byte)((longVal >> 48) & 0xff), (byte)((longVal >> 40) & 0xff),
@@ -3228,9 +3311,11 @@ depth + 1);
             }
           case 7:
             if (firstbyte == 0xf9) {
+              float flt = CBORUtilities.HalfPrecisionToSingle(
+                  unchecked((int)uadditional));
               return new CBORObject(
                 CBORObjectTypeSingle,
-                CBORUtilities.HalfPrecisionToSingle(unchecked((int)uadditional)));
+                flt);
             }
             if (firstbyte == 0xfa) {
               float flt = BitConverter.ToSingle(

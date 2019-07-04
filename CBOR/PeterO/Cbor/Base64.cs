@@ -17,30 +17,30 @@ namespace PeterO.Cbor {
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
     public static void WriteBase64(
-  StringOutput writer,
-  byte[] data,
-  int offset,
-  int count,
-  bool padding) {
+      StringOutput writer,
+      byte[] data,
+      int offset,
+      int count,
+      bool padding) {
       WriteBase64(writer, data, offset, count, true, padding);
     }
 
     public static void WriteBase64URL(
-  StringOutput writer,
-  byte[] data,
-  int offset,
-  int count,
-  bool padding) {
+      StringOutput writer,
+      byte[] data,
+      int offset,
+      int count,
+      bool padding) {
       WriteBase64(writer, data, offset, count, false, padding);
     }
 
     private static void WriteBase64(
-  StringOutput writer,
-  byte[] data,
-  int offset,
-  int count,
-  bool classic,
-  bool padding) {
+      StringOutput writer,
+      byte[] data,
+      int offset,
+      int count,
+      bool classic,
+      bool padding) {
       if (writer == null) {
         throw new ArgumentNullException(nameof(writer));
       }

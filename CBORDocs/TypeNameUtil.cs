@@ -4,29 +4,25 @@ using System.Text;
 
 namespace PeterO.DocGen {
   internal static class TypeNameUtil {
-
     public static string XmlDocTypeName(Type t) {
-
       return XmlDocTypeName(t, false);
     }
     public static string XmlDocTypeName(Type t, bool param) {
       return XmlDocTypeName(t, param, false);
     }
-      public static string XmlDocTypeName(Type t, bool param, bool genericMethod) {
+  public static string XmlDocTypeName(Type t, bool param, bool
+        genericMethod) {
       var sb = new StringBuilder();
       if (t.IsArray) {
         sb.Append(XmlDocTypeName(t.GetElementType(), param, genericMethod))
           .Append("[]");
-      }
-      else if (t.IsPointer) {
+      } else if (t.IsPointer) {
         sb.Append(XmlDocTypeName(t.GetElementType(), param, genericMethod))
           .Append("*");
-      }
-      else if (t.IsByRef) {
+      } else if (t.IsByRef) {
         sb.Append(XmlDocTypeName(t.GetElementType(), param, genericMethod))
           .Append("@");
-      }
-      else if (t.IsGenericParameter) {
+      } else if (t.IsGenericParameter) {
         var ggastr = Convert.ToString(
           t.GenericParameterPosition,
           System.Globalization.CultureInfo.InvariantCulture);
@@ -37,9 +33,11 @@ namespace PeterO.DocGen {
         if (t.GetGenericArguments().Length>0) {
           if (param) {
             sb.Append("{");
-            bool first=true;
-            foreach(var ga in t.GetGenericArguments()) {
-              if (!first) sb.Append(",");
+            bool first = true;
+            foreach (var ga in t.GetGenericArguments()) {
+if (!first) {
+                sb.Append(",");
+              }
               sb.Append(XmlDocTypeName(ga, false, genericMethod));
               first = false;
             }
@@ -71,7 +69,7 @@ namespace PeterO.DocGen {
             if (!first) {
               msb.Append(",");
             }
-            msb.Append(XmlDocTypeName(p.ParameterType,true));
+            msb.Append(XmlDocTypeName(p.ParameterType, true));
             first = false;
           }
           msb.Append(")");
@@ -104,8 +102,7 @@ namespace PeterO.DocGen {
           }
           msb.Append(")");
         }
-        if (mi.Name.Equals("op_Explicit") ||
-           mi.Name.Equals("op_Implicit")) {
+        if (mi.Name.Equals("op_Explicit") || mi.Name.Equals("op_Implicit")) {
           var rt = mi.ReturnType;
           if (rt != null) {
             msb.Append("~").Append(XmlDocTypeName(rt, true, genericMethod));

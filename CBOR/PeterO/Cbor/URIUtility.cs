@@ -4,60 +4,63 @@ using System.Text;
 namespace PeterO.Cbor {
   internal static class URIUtility {
     internal enum ParseMode {
-      /// <summary>The rules follow the syntax for parsing IRIs. In particular, many code
-      /// points outside the Basic Latin range (U+0000 to U+007F) are allowed.
-      /// Strings with unpaired surrogate code points are considered invalid.</summary>
+    /// <summary>The rules follow the syntax for parsing IRIs. In
+    /// particular, many code points outside the Basic Latin range (U +
+    /// 0000 to U + 007F) are allowed. Strings with unpaired surrogate code
+    /// points are considered invalid.</summary>
       IRIStrict,
 
-      /// <summary>The rules follow the syntax for parsing IRIs, except that code points
-      /// outside the Basic Latin range (U+0000 to U+007F) are not allowed.</summary>
+    /// <summary>The rules follow the syntax for parsing IRIs, except that
+    /// code points outside the Basic Latin range (U + 0000 to U + 007F)
+    /// are not allowed.</summary>
       URIStrict,
 
-      /// <summary>The rules only check for the appropriate delimiters when splitting the
-      /// path, without checking if all the characters in each component are valid.
-      /// Even with this mode, strings with unpaired surrogate code points are
-      /// considered invalid.</summary>
+    /// <summary>The rules only check for the appropriate delimiters when
+    /// splitting the path, without checking if all the characters in each
+    /// component are valid. Even with this mode, strings with unpaired
+    /// surrogate code points are considered invalid.</summary>
       IRILenient,
 
-      /// <summary>The rules only check for the appropriate delimiters when splitting the
-      /// path, without checking if all the characters in each component are valid.
-      /// Code points outside the Basic Latin range (U+0000 to U+007F) are not
-      /// allowed.</summary>
+    /// <summary>The rules only check for the appropriate delimiters when
+    /// splitting the path, without checking if all the characters in each
+    /// component are valid. Code points outside the Basic Latin range (U +
+    /// 0000 to U + 007F) are not allowed.</summary>
       URILenient,
 
-      /// <summary>The rules only check for the appropriate delimiters when splitting the
-      /// path, without checking if all the characters in each component are valid.
-      /// Unpaired surrogate code points are treated as though they were replacement
-      /// characters instead for the purposes of these rules, so that strings with
-      /// those code points are not considered invalid strings.</summary>
+    /// <summary>The rules only check for the appropriate delimiters when
+    /// splitting the path, without checking if all the characters in each
+    /// component are valid. Unpaired surrogate code points are treated as
+    /// though they were replacement characters instead for the purposes of
+    /// these rules, so that strings with those code points are not
+    /// considered invalid strings.</summary>
       IRISurrogateLenient,
     }
 
     private const string HexChars = "0123456789ABCDEF";
 
     private static void AppendAuthority(
-  StringBuilder builder,
-  string refValue,
-  int[] segments) {
+      StringBuilder builder,
+      string refValue,
+      int[] segments) {
       if (segments[2] >= 0) {
         builder.Append("//");
         builder.Append(
   refValue.Substring(
-  segments[2],
-  segments[3] - segments[2]));
+    segments[2],
+    segments[3] - segments[2]));
       }
     }
 
     private static void AppendFragment(
-  StringBuilder builder,
-  string refValue,
-  int[] segments) {
+      StringBuilder builder,
+      string refValue,
+      int[] segments) {
       if (segments[8] >= 0) {
         builder.Append('#');
         builder.Append(
   refValue.Substring(
-  segments[8],
-  segments[9] - segments[8]));
+    segments[8],
+    segments[9] - segments[8]));
       }
     }
 
@@ -68,42 +71,42 @@ namespace PeterO.Cbor {
       builder.Append(
         NormalizePath(
   refValue.Substring(
-  segments[4],
-  segments[5] - segments[4])));
+    segments[4],
+    segments[5] - segments[4])));
     }
 
     private static void AppendPath(
-  StringBuilder builder,
-  string refValue,
-  int[] segments) {
+      StringBuilder builder,
+      string refValue,
+      int[] segments) {
       builder.Append(
   refValue.Substring(
-  segments[4],
-  segments[5] - segments[4]));
+    segments[4],
+    segments[5] - segments[4]));
     }
 
     private static void AppendQuery(
-  StringBuilder builder,
-  string refValue,
-  int[] segments) {
+      StringBuilder builder,
+      string refValue,
+      int[] segments) {
       if (segments[6] >= 0) {
         builder.Append('?');
         builder.Append(
   refValue.Substring(
-  segments[6],
-  segments[7] - segments[6]));
+    segments[6],
+    segments[7] - segments[6]));
       }
     }
 
     private static void AppendScheme(
-  StringBuilder builder,
-  string refValue,
-  int[] segments) {
+      StringBuilder builder,
+      string refValue,
+      int[] segments) {
       if (segments[0] >= 0) {
         builder.Append(
           refValue.Substring(
-  segments[0],
-  segments[1] - segments[0]));
+            segments[0],
+            segments[1] - segments[0]));
         builder.Append(':');
       }
     }
@@ -125,10 +128,10 @@ namespace PeterO.Cbor {
         }
       } else {
         components = (s == null) ? null : SplitIRI(
-  s,
-  0,
-  s.Length,
-  ParseMode.IRISurrogateLenient);
+          s,
+          0,
+          s.Length,
+          ParseMode.IRISurrogateLenient);
       }
       var index = 0;
       int valueSLength = s.Length;
@@ -397,7 +400,7 @@ namespace PeterO.Cbor {
       if (s == null) {
         throw new ArgumentNullException(nameof(s));
       }
-      int index = 0;
+      var index = 0;
       var builder = new StringBuilder();
       while (index < s.Length) {
         int c = s[index];
@@ -643,19 +646,19 @@ namespace PeterO.Cbor {
     public static bool IsValidIRI(string s) {
       return ((s == null) ?
   null : SplitIRI(
-  s,
-  0,
-  s.Length,
-  ParseMode.IRIStrict)) != null;
+    s,
+    0,
+    s.Length,
+    ParseMode.IRIStrict)) != null;
     }
 
     public static bool IsValidIRI(string s, ParseMode mode) {
       return ((s == null) ?
   null : SplitIRI(
-  s,
-  0,
-  s.Length,
-  mode)) != null;
+    s,
+    0,
+    s.Length,
+    mode)) != null;
     }
 
     private const string ValueDotSlash = "." + "/";
@@ -668,8 +671,8 @@ namespace PeterO.Cbor {
       }
       if (path.IndexOf(ValueSlashDot, StringComparison.Ordinal) < 0 &&
           path.IndexOf(
-  ValueDotSlash,
-  StringComparison.Ordinal) < 0) {
+            ValueDotSlash,
+            StringComparison.Ordinal) < 0) {
         return path;
       }
       var builder = new StringBuilder();
@@ -817,7 +820,7 @@ namespace PeterO.Cbor {
           return -1;
         }
        // NOTE: Array is initialized to zeros
-        int[] addressParts = new int[8];
+        var addressParts = new int[8];
         int ipEndIndex = index;
         var doubleColon = false;
         var doubleColonPos = 0;
@@ -826,8 +829,9 @@ namespace PeterO.Cbor {
         index = startIndex;
        // DebugUtility.Log(s.Substring(startIndex, ipEndIndex-startIndex));
         for (var part = 0; part < 8; ++part) {
-          if (!doubleColon && ipEndIndex - index > 1 && s[index] == ':' && s[index +
-            1] == ':') {
+          if (!doubleColon &&
+            ipEndIndex - index > 1 && s[index] == ':' &&
+            s[index + 1] == ':') {
             doubleColon = true;
             doubleColonPos = part;
             index += 2;
@@ -863,9 +867,9 @@ namespace PeterO.Cbor {
           if (index == ipEndIndex && doubleColon) {
             break;
           }
-         // Skip single colon, but not double colon
-          if (index < ipEndIndex &&
-            (index + 1 >= ipEndIndex || s[index + 1] != ':')) {
+          // Skip single colon, but not double colon
+          if (index < ipEndIndex && (index + 1 >= ipEndIndex ||
+            s[index + 1] != ':')) {
             ++index;
           }
         }
@@ -924,17 +928,19 @@ namespace PeterO.Cbor {
             var newAddressParts = new int[8];
             Array.Copy(addressParts, newAddressParts, doubleColonPos);
             Array.Copy(
-            addressParts,
-            doubleColonPos,
-            newAddressParts,
-            doubleColonPos + resid,
-            totalParts - doubleColonPos);
+              addressParts,
+              doubleColonPos,
+              newAddressParts,
+              doubleColonPos + resid,
+              totalParts - doubleColonPos);
             Array.Copy(newAddressParts, addressParts, 8);
           }
         } else if (totalParts != 8) {
           return -1;
         }
-       // DebugUtility.Log("{0:X4}:{0:X4}:{0:X4}:{0:X4}:{0:X4}:{0:X4}:{0:X4}:{0:X4}",
+
+  // DebugUtility.Log("{0:X4}:{0:X4}:{0:X4}:{0:X4}:{0:X4}:{0:X4}:{0:X4}:{0:X4}"
+       // ,
        // addressParts[0], addressParts[1], addressParts[2],
        // addressParts[3], addressParts[4], addressParts[5],
        // addressParts[6], addressParts[7]);
@@ -981,9 +987,9 @@ namespace PeterO.Cbor {
     }
 
     private static string PathParent(
-  string refValue,
-  int startIndex,
-  int endIndex) {
+      string refValue,
+      int startIndex,
+      int endIndex) {
       if (startIndex > endIndex) {
         return String.Empty;
       }
@@ -1028,9 +1034,9 @@ namespace PeterO.Cbor {
     }
 
     public static string RelativeResolve(
-  string refValue,
-  string baseURI,
-  ParseMode parseMode) {
+      string refValue,
+      string baseURI,
+      ParseMode parseMode) {
       int[] segments = (refValue == null) ? null : SplitIRI(
         refValue,
         0,
@@ -1085,9 +1091,9 @@ namespace PeterO.Cbor {
           } else {
             merged.Append(
               PathParent(
-  baseURI,
-  segmentsBase[4],
-  segmentsBase[5]));
+                baseURI,
+                segmentsBase[4],
+                segmentsBase[5]));
             AppendPath(merged, refValue, segments);
             builder.Append(NormalizePath(merged.ToString()));
           }
@@ -1135,13 +1141,13 @@ namespace PeterO.Cbor {
       return new string[] {
  indexes[0] < 0 ? null : ToLowerCaseAscii(
   s.Substring(
-  indexes[0],
-  indexes[1] - indexes[0])),
+    indexes[0],
+    indexes[1] - indexes[0])),
  indexes[2] < 0 ? null : s.Substring(indexes[2], indexes[3] - indexes[2]),
  indexes[4] < 0 ? null : s.Substring(indexes[4], indexes[5] - indexes[4]),
  indexes[6] < 0 ? null : s.Substring(indexes[6], indexes[7] - indexes[6]),
  indexes[8] < 0 ? null : s.Substring(indexes[8], indexes[9] - indexes[8]),
-};
+  };
     }
 
     public static int[] SplitIRI(string s) {
@@ -1149,10 +1155,10 @@ namespace PeterO.Cbor {
     }
 
     public static int[] SplitIRI(
-  string s,
-  int offset,
-  int length,
-  ParseMode parseMode) {
+      string s,
+      int offset,
+      int length,
+      ParseMode parseMode) {
       if (s == null) {
         return null;
       }
@@ -1417,8 +1423,8 @@ namespace PeterO.Cbor {
       }
       if (path.IndexOf(ValueSlashDot, StringComparison.Ordinal) < 0 &&
               path.IndexOf(
-      ValueDotSlash,
-      StringComparison.Ordinal) < 0) {
+                ValueDotSlash,
+                StringComparison.Ordinal) < 0) {
         return false;
       }
       var index = 0;
@@ -1501,8 +1507,8 @@ namespace PeterO.Cbor {
     }
 
     public static string RelativeResolveWithinBaseURI(
-     string refValue,
-     string absoluteBaseURI) {
+      string refValue,
+      string absoluteBaseURI) {
       string rel = RelativeResolve(refValue, absoluteBaseURI);
       if (rel == null) {
         return null;

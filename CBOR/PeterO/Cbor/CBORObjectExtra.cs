@@ -51,9 +51,9 @@ namespace PeterO.Cbor {
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,System.UInt32)"]/*'/>
     [CLSCompliant(false)]
     public static int WriteValue(
-  Stream outputStream,
-  int majorType,
-  uint value) {
+      Stream outputStream,
+      int majorType,
+      uint value) {
       if (outputStream == null) {
         throw new ArgumentNullException(nameof(outputStream));
       }
@@ -64,9 +64,9 @@ namespace PeterO.Cbor {
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,System.UInt64)"]/*'/>
     [CLSCompliant(false)]
     public static int WriteValue(
-  Stream outputStream,
-  int majorType,
-  ulong value) {
+      Stream outputStream,
+      int majorType,
+      ulong value) {
       if (outputStream == null) {
         throw new ArgumentNullException(nameof(outputStream));
       }
@@ -82,7 +82,8 @@ namespace PeterO.Cbor {
             ") is more than 7");
         }
         if (majorType == 7) {
-          throw new ArgumentException("majorType is 7 and value is greater than 255");
+   throw new
+            ArgumentException("majorType is 7 and value is greater than 255");
         }
         byte[] bytes = { (byte)(27 | (majorType << 5)), (byte)((value >>
           56) & 0xff),
@@ -129,7 +130,8 @@ namespace PeterO.Cbor {
         throw new InvalidOperationException("Not a number type");
       }
       EInteger bigint = cn.AsEInteger(this.ThisItem);
-      if (bigint.Sign < 0 || bigint.GetUnsignedBitLengthAsEInteger().CompareTo(64) > 0) {
+      if (bigint.Sign < 0 ||
+        bigint.GetUnsignedBitLengthAsEInteger().CompareTo(64) > 0) {
         throw new OverflowException("This object's value is out of range");
       }
       return (ulong)bigint;

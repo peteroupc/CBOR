@@ -2723,6 +2723,9 @@
            artifact (in Java), returns the result of the corresponding As*
           method.
         </item>
+      <item>In the .NET version, if the type is a nullable (e.g., <c>Nullable&lt;int&gt;</c> or <c>int?</c>,
+         returns <c>null</c> if this CBOR object is null, or this object's value converted to
+         the nullable's underlying type (e.g., <c>int</c>).</item>
         <item>If the type is an enumeration (
           <c>Enum</c> ) type this CBOR object is a text string or an integer, returns the
           appropriate enumerated constant. (For example, if

@@ -52,11 +52,11 @@ namespace PeterO.Cbor {
         } else {
           if (
   DataUtilities.WriteUtf8(
-  str,
-  index,
-  length,
-  this.outputStream,
-  false) < 0) {
+    str,
+    index,
+    length,
+    this.outputStream,
+    false) < 0) {
             throw new ArgumentException("str has an unpaired surrogate");
           }
         }

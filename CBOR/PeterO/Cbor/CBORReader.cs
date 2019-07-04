@@ -25,10 +25,10 @@ namespace PeterO.Cbor {
     }
 
     internal enum CBORDuplicatePolicy {
-      /// <summary>Not documented yet.</summary>
+    /// <summary>Not documented yet.</summary>
       Overwrite,
 
-      /// <summary>Not documented yet.</summary>
+    /// <summary>Not documented yet.</summary>
       Disallow,
     }
 
@@ -51,8 +51,8 @@ namespace PeterO.Cbor {
     }
 
     private static CBORObject ResolveSharedRefs(
-  CBORObject obj,
-  SharedRefs sharedRefs) {
+      CBORObject obj,
+      SharedRefs sharedRefs) {
   int type = obj.ItemType;
   bool hasTag = obj.MostOuterTag.Equals((EInteger)29);
   if (hasTag) {
@@ -255,8 +255,8 @@ namespace PeterO.Cbor {
             }
             data = ms.ToArray();
             return new CBORObject(
-  CBORObject.CBORObjectTypeByteString,
-  data);
+              CBORObject.CBORObjectTypeByteString,
+              data);
           }
         } else {
           if (hasBigAdditional) {
@@ -501,9 +501,9 @@ namespace PeterO.Cbor {
     }
 
     private static byte[] ReadByteData(
-  Stream stream,
-  long uadditional,
-  Stream outputStream) {
+      Stream stream,
+      long uadditional,
+      Stream outputStream) {
       if ((uadditional >> 63) != 0 || uadditional > Int32.MaxValue) {
         throw new CBORException("Length" + ToUnsignedBigInteger(uadditional) +
           " is bigger than supported ");
@@ -551,9 +551,9 @@ namespace PeterO.Cbor {
     }
 
     private static long ReadDataLength(
-  Stream stream,
-  int headByte,
-  int expectedType) {
+      Stream stream,
+      int headByte,
+      int expectedType) {
       if (headByte < 0) {
         throw new CBORException("Unexpected data encountered");
       }

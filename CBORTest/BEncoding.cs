@@ -1,4 +1,4 @@
-﻿/*
+/*
 Written in 2013 by Peter Occil.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -14,13 +14,13 @@ using PeterO.Cbor;
 using PeterO.Numbers;
 
 namespace PeterO {
-   /// <summary>Contains methods for reading and writing objects
-   /// represented in BEncode, a serialization format used in the
-   /// BitTorrent protocol. For more information, see:
-   /// http://wiki.theory.org/BitTorrentSpecification This class accepts
-   /// BEncoded strings in UTF-8, and outputs BEncoded strings in UTF-8.
-   /// This class also demonstrates how CBORObject supports predefined
-   /// serialization formats.</summary>
+    /// <summary>Contains methods for reading and writing objects
+    /// represented in BEncode, a serialization format used in the
+    /// BitTorrent protocol. For more information, see:
+    /// http://wiki.theory.org/BitTorrentSpecification This class accepts
+    /// BEncoded strings in UTF-8, and outputs BEncoded strings in UTF-8.
+    /// This class also demonstrates how CBORObject supports predefined
+    /// serialization formats.</summary>
   public static class BEncoding {
     private static void writeUtf8(string s, Stream stream) {
       if (DataUtilities.WriteUtf8(s, stream, false) != 0) {
@@ -218,9 +218,9 @@ namespace PeterO {
 
     public static void Write(CBORObject obj, Stream stream) {
       if (obj.Type == CBORType.Number) {
-        stream.WriteByte(unchecked((byte)((byte)'i')));
+        stream.WriteByte(unchecked((byte)((byte)0x69)));
         writeUtf8(obj.AsEInteger().ToString(), stream);
-        stream.WriteByte(unchecked((byte)((byte)'e')));
+        stream.WriteByte(unchecked((byte)((byte)0x65)));
       } else if (obj.Type == CBORType.TextString) {
         string s = obj.AsString();
         long length = DataUtilities.GetUtf8Length(s, false);
@@ -249,7 +249,7 @@ namespace PeterO {
               key.AsString() : key.ToJSONString();
             valueSMap[str] = value;
           }
-          stream.WriteByte(unchecked((byte)((byte)'d')));
+          stream.WriteByte(unchecked((byte)((byte)0x64)));
           foreach (KeyValuePair<string, CBORObject> entry in valueSMap) {
             string key = entry.Key;
             CBORObject value = entry.Value;
@@ -264,9 +264,9 @@ namespace PeterO {
             writeUtf8(key, stream);
             Write(value, stream);
           }
-          stream.WriteByte(unchecked((byte)((byte)'e')));
+          stream.WriteByte(unchecked((byte)((byte)0x65)));
         } else {
-          stream.WriteByte(unchecked((byte)((byte)'d')));
+          stream.WriteByte(unchecked((byte)((byte)0x64)));
           foreach (CBORObject key in obj.Keys) {
             string str = key.AsString();
             long length = DataUtilities.GetUtf8Length(str, false);
@@ -278,14 +278,14 @@ namespace PeterO {
             writeUtf8(str, stream);
             Write(obj[key], stream);
           }
-          stream.WriteByte(unchecked((byte)((byte)'e')));
+          stream.WriteByte(unchecked((byte)((byte)0x65)));
         }
       } else if (obj.Type == CBORType.Array) {
-        stream.WriteByte(unchecked((byte)((byte)'l')));
+        stream.WriteByte(unchecked((byte)((byte)0x6C)));
         for (var i = 0; i < obj.Count; ++i) {
           Write(obj[i], stream);
         }
-        stream.WriteByte(unchecked((byte)((byte)'e')));
+        stream.WriteByte(unchecked((byte)((byte)0x65)));
       } else {
         string str = obj.ToJSONString();
         long length = DataUtilities.GetUtf8Length(str, false);

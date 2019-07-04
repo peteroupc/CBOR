@@ -192,29 +192,29 @@ namespace Test {
       {
         long numberTemp = Math.Sign(
           DataUtilities.CodePointCompare(
-  "\ud800\udc00",
-  "\ud800\udc00"));
+            "\ud800\udc00",
+            "\ud800\udc00"));
         Assert.AreEqual(0, numberTemp);
       }
       {
         long numberTemp = Math.Sign(
           DataUtilities.CodePointCompare(
-  "abc",
-  "\ud800\udc00"));
+            "abc",
+            "\ud800\udc00"));
         Assert.AreEqual(-1, numberTemp);
       }
       {
         long numberTemp = Math.Sign(
           DataUtilities.CodePointCompare(
-  "\uf000",
-  "\ud800\udc00"));
+            "\uf000",
+            "\ud800\udc00"));
         Assert.AreEqual(-1, numberTemp);
       }
       {
         long numberTemp = Math.Sign(
   DataUtilities.CodePointCompare(
-  "\uf000",
-  "\ud800"));
+    "\uf000",
+    "\ud800"));
         Assert.AreEqual(1, numberTemp);
       }
       Assert.IsTrue(DataUtilities.CodePointCompare("abc", "def") < 0);
@@ -699,11 +699,11 @@ namespace Test {
     }
 
     public static void DoTestReadUtf8(
-  byte[] bytes,
-  int expectedRet,
-  string expectedString,
-  int noReplaceRet,
-  string noReplaceString) {
+      byte[] bytes,
+      int expectedRet,
+      string expectedString,
+      int noReplaceRet,
+      string noReplaceString) {
       DoTestReadUtf8(
         bytes,
         bytes.Length,
@@ -730,7 +730,7 @@ namespace Test {
             Assert.AreEqual(expectedString, builder.ToString());
           }
           ms.Position = 0;
-          builder.Remove(0,builder.Length);
+          builder.Remove(0, builder.Length);
           ret = DataUtilities.ReadUtf8(ms, length, builder, false);
           Assert.AreEqual(noReplaceRet, ret);
           if (noReplaceRet == 0) {
@@ -738,7 +738,7 @@ namespace Test {
           }
         }
         if (bytes.Length >= length) {
-          builder.Remove(0,builder.Length);
+          builder.Remove(0, builder.Length);
           ret = DataUtilities.ReadUtf8FromBytes(
             bytes,
             0,
@@ -749,7 +749,7 @@ namespace Test {
           if (expectedRet == 0) {
             Assert.AreEqual(expectedString, builder.ToString());
           }
-          builder.Remove(0,builder.Length);
+          builder.Remove(0, builder.Length);
           ret = DataUtilities.ReadUtf8FromBytes(
             bytes,
             0,

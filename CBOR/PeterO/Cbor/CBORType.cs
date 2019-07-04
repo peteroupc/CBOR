@@ -8,30 +8,31 @@ at: http://peteroupc.github.io/
 using System;
 
 namespace PeterO.Cbor {
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="T:PeterO.Cbor.CBORType"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.Cbor.CBORType"]/*'/>
   public enum CBORType {
-   /// <summary>A number of any kind, including integers, big integers, floating point
-   /// numbers, and decimal numbers. The floating-point value Not-a-Number is
-   /// also included in the Number type.</summary>
+    /// <summary>A number of any kind, including integers, big integers,
+    /// floating point numbers, and decimal numbers. The floating-point
+    /// value Not-a-Number is also included in the Number type.</summary>
     Number,
 
-   /// <summary>The simple values true and false.</summary>
+    /// <summary>The simple values true and false.</summary>
     Boolean,
 
-   /// <summary>A "simple value" other than floating point values, true, and false.</summary>
+    /// <summary>A "simple value" other than floating point values, true,
+    /// and false.</summary>
     SimpleValue,
 
-   /// <summary>An array of bytes.</summary>
+    /// <summary>An array of bytes.</summary>
     ByteString,
 
-   /// <summary>A text string.</summary>
+    /// <summary>A text string.</summary>
     TextString,
 
-   /// <summary>An array of CBOR objects.</summary>
+    /// <summary>An array of CBOR objects.</summary>
     Array,
 
-   /// <summary>A map of CBOR objects.</summary>
+    /// <summary>A map of CBOR objects.</summary>
     Map,
   }
 }

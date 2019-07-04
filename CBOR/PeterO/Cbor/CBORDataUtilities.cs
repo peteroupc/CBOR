@@ -10,19 +10,19 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="T:PeterO.Cbor.CBORDataUtilities"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.Cbor.CBORDataUtilities"]/*'/>
   public static class CBORDataUtilities {
     private const int MaxSafeInt = 214748363;
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String)"]/*'/>
     public static CBORObject ParseJSONNumber(string str) {
       return ParseJSONNumber(str, false, false);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,System.Boolean,System.Boolean)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,System.Boolean,System.Boolean)"]/*'/>
     public static CBORObject ParseJSONNumber(
       string str,
       bool integersOnly,
@@ -30,8 +30,8 @@ namespace PeterO.Cbor {
       return ParseJSONNumber(str, integersOnly, positiveOnly, false);
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,System.Boolean,System.Boolean,System.Boolean)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,System.Boolean,System.Boolean,System.Boolean)"]/*'/>
     public static CBORObject ParseJSONNumber(
       string str,
       bool integersOnly,
@@ -188,7 +188,8 @@ newScale.AddInt(-1);
         if (exp != null && (expBufferMult != 1 || expBuffer != 0)) {
           exp.Multiply(expBufferMult).AddInt(expBuffer);
         }
-        if (offset >= 0 && newScaleInt == 0 && newScale == null && exp == null) {
+        if (offset >= 0 && newScaleInt == 0 && newScale == null && exp ==
+          null) {
           newScaleInt = expInt;
         } else if (exp == null) {
 newScale = newScale ?? new FastInteger2(newScaleInt);

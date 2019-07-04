@@ -1,4 +1,4 @@
-﻿/*
+/*
 Written in 2013-2018 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -188,9 +188,9 @@ namespace Test {
     }
 
     public static void CompareTestEqualAndConsistent<T>(
-  T o1,
-  T o2,
-  string msg) where T :
+      T o1,
+      T o2,
+      string msg) where T :
     IComparable<T> {
       if (CompareTestReciprocal(o1, o2) != 0) {
         msg = (msg == null ? String.Empty : (msg + "\r\n")) +
@@ -273,8 +273,7 @@ namespace Test {
     }
 
     public static void CompareTestGreaterEqual<T>(T o1, T o2, string msg) where
-          T :
-            IComparable<T> {
+          T : IComparable<T> {
       if (CompareTestReciprocal(o1, o2) < 0) {
         string str = msg + "\r\n" + ObjectMessages(
           o1,
@@ -497,8 +496,7 @@ namespace Test {
       sb.Append("new byte[] { ");
       for (var i = 0; i < bytes.Length; ++i) {
         if (i > 0) {
-          sb.Append(",");
-        }
+          sb.Append(","); }
         if ((bytes[i] & 0x80) != 0) {
           sb.Append("(byte)0x");
         } else {

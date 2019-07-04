@@ -21,8 +21,8 @@ namespace PeterO.Cbor {
       return obj;
     }
 
-   /// <include file='../../docs.xml'
-   /// path='docs/doc[@name="M:PeterO.Cbor.CBORUuidConverter.ToCBORObject(System.Guid)"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORUuidConverter.ToCBORObject(System.Guid)"]/*'/>
     public CBORObject ToCBORObject(Guid obj) {
       byte[] bytes = PropertyMap.UUIDToBytes(obj);
       return CBORObject.FromObjectAndTag(bytes, (int)37);

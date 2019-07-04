@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Reflection;
 
 namespace PeterO.DocGen {
-   /// <summary>A documentation generator.</summary>
+    /// <summary>A documentation generator.</summary>
   public static class DocGenerator {
     public static void Generate(string assemblyFile, string docdir) {
       if (assemblyFile == null) {
