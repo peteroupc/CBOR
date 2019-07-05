@@ -1110,7 +1110,8 @@ The quotient of the two objects.
     public byte[] EncodeToBytes(
         PeterO.Cbor.CBOREncodeOptions options);
 
- Writes the binary representation of this CBOR object and returns a byte array of that representation, using the specified options for encoding the object to CBOR format. For the CTAP2 canonical ordering, which is useful for implementing Web Authentication, call this method as follows:  `EncodeToBytes(new CBOREncodeOptions(false, false, true))`  .  <b>Parameters:</b>
+ Writes the binary representation of this CBOR object and returns a byte array of that representation, using the specified options for encoding the object to CBOR format. For the CTAP2 canonical ordering, which is useful for implementing Web Authentication, call this method as follows:  `EncodeToBytes(new
+            CBOREncodeOptions(false, false, true))` .     <b>Parameters:</b>
 
  * <i>options</i>: Options for encoding the data to CBOR.
 
@@ -2409,15 +2410,15 @@ Either or both operands are not numbers (as opposed to Not-a-Number, NaN).
     public string ToJSONString(
         PeterO.Cbor.JSONOptions options);
 
- Converts this object to a string in JavaScript Object Notation (JSON) format, using the specified options to control the encoding process. This function works not only with arrays and maps, but also integers, strings, byte arrays, and other JSON data types. Notes:
+  Converts this object to a string in JavaScript Object Notation (JSON) format, using the specified options to control the encoding process. This function works not only with arrays and maps, but also integers, strings, byte arrays, and other JSON data types. Notes:
 
-  * If this object contains maps with non-string keys, the keys are converted to JSON strings before writing the map as a JSON string.
+ * If this object contains maps with non-string keys, the keys are converted to JSON strings before writing the map as a JSON string.
 
-  * If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the JSON string in an undefined order. Map keys other than untagged text strings are converted to JSON strings before writing them out (for example,  `22("Test")`  is converted to  `"Test"`  and  `true`  is converted to  `"true"`  ). If, after such conversion, two or more map keys are identical, this method throws a CBORException.
+  * If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the JSON string in an undefined order. Map keys other than untagged text strings are converted to JSON strings before writing them out (for example,  `22("Test")`  is converted to  `"Test"`  and  `true`  is converted to  `"true"`  ///). If, after such conversion, two or more map keys are identical, this method throws a CBORException.
 
   * If a number in the form of an arbitrary-precision binary float has a very high binary exponent, it will be converted to a double before being converted to a JSON string. (The resulting double could overflow to infinity, in which case the arbitrary-precision binary float is converted to null.)
 
-  * The string will not begin with a byte-order mark (U+FEFF); RFC 8259 (the JSON specification) forbids placing a byte-order mark at the beginning of a JSON string.
+  * The string will not begin with a byte-order mark (U + FEFF); RFC 8259 (the JSON specification) forbids placing a byte-order mark at the beginning of a JSON string.
 
   * Byte strings are converted to Base64 URL without whitespace or padding by default (see section 4.1 of RFC 7049). A byte string will instead be converted to traditional base64 without whitespace and with padding if it has tag 22, or base16 for tag 23. (To create a CBOR object with a given tag, call the  `CBORObject.FromObjectAndTag`  method and pass the CBOR object and the desired tag number to that method.)
 
@@ -2429,22 +2430,25 @@ Either or both operands are not numbers (as opposed to Not-a-Number, NaN).
 
   The example code given below (originally written in C# for the .NET version) can be used to write out certain keys of a CBOR map in a given order to a JSON string.
 
-    /* Generates a JSON string of 'mapObj' whose keys are in the order given
-            in 'keys' . Only keys found in 'keys' will be written if they exist in
-            'mapObj'. */ private static string KeysToJSONMap(CBORObject mapObj,
-            IList<CBORObject> keys){ if (mapObj == null) { throw new
-            ArgumentNullException)nameof(mapObj));} if (keys == null) { throw
-            new ArgumentNullException)nameof(keys));} if (obj.Type !=
-            CBORType.Map) { throw new ArgumentException("'obj' is not a map."); }
-            StringBuilder builder = new StringBuilder(); var first = true;
-            builder.Append("{"); for (CBORObject key in keys) { if
-            (mapObj.ContainsKey(key)) { if (!first) {builder.Append(", ");} var
-            keyString=(key.CBORType == CBORType.String) ? key.AsString() :
-            key.ToJSONString(); builder.Append(CBORObject.FromObject(keyString)
-            .ToJSONString()) .Append(":").Append(mapObj[key].ToJSONString());
-            first=false; } } return builder.Append("}").ToString(); }
+    /* Generates a JSON string of 'mapObj' whose keys are in the
+                order given
+                in 'keys' . Only keys found in 'keys' will be written if they exist in
+                'mapObj'. */ private static string KeysToJSONMap(CBORObject mapObj,
+                IList<CBORObject> keys){ if (mapObj == null) { throw new
+                ArgumentNullException)nameof(mapObj));}
+                if (keys == null) { throw
+                new ArgumentNullException)nameof(keys));}
+                if (obj.Type !=
+                CBORType.Map) { throw new ArgumentException("'obj' is not a map."); }
+                StringBuilder builder = new StringBuilder(); var first = true;
+                builder.Append("{"); for (CBORObject key in keys) { if
+                (mapObj.ContainsKey(key)) { if (!first) {builder.Append(", ");} var
+                keyString=(key.CBORType == CBORType.String) ? key.AsString() :
+                key.ToJSONString(); builder.Append(CBORObject.FromObject(keyString)
+                .ToJSONString()) .Append(":").Append(mapObj[key].ToJSONString());
+                first=false; } } return builder.Append("}").ToString(); }
 
- .  <b>Parameters:</b>
+ .      <b>Parameters:</b>
 
  * <i>options</i>: An object containing the options to control writing the CBOR object to JSON.
 
@@ -2564,6 +2568,8 @@ The parameter  <i>t</i>
   * If the type is  `String`  , returns the result of AsString.
 
   * If the type is  `EDecimal`  ,  `EFloat`  ,  `EInteger`  , or  `ERational`  in the <a href="https://www.nuget.org/packages/PeterO.Numbers">  `PeterO.Numbers`  </a> library (in .NET) or the <a href="https://github.com/peteroupc/numbers-java">  `com.github.peteroupc/numbers`  </a> artifact (in Java), returns the result of the corresponding As* method.
+
+  * In the .NET version, if the type is a nullable (e.g.,  `Nullable<int>`  or  `int?` , returns  `null`  if this CBOR object is null, or this object's value converted to the nullable's underlying type (e.g.,  `int` ).
 
   * If the type is an enumeration (  `Enum`  ) type this CBOR object is a text string or an integer, returns the appropriate enumerated constant. (For example, if  `MyEnum`  includes an entry for  `MyValue`  , this method will return  `MyEnum.MyValue`  if the CBOR object represents  `"MyValue"`  or the underlying value for  `MyEnum.MyValue`  .) <b>Note:</b> If an integer is converted to a .NET Enum constant, and that integer is shared by more than one constant of the same type, it is undefined which constant from among them is returned. (For example, if  `MyEnum.Zero = 0`  and  `MyEnum.Null = 0`  , converting 0 to  `MyEnum`  may return either  `MyEnum.Zero`  or  `MyEnum.Null`  .) As a result, .NET Enum types with constants that share an underlying value should not be passed to this method.
 

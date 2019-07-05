@@ -189,10 +189,9 @@ namespace PeterO.Cbor {
           }
         case 'f': {
             // Parse false
-            if (this.reader.ReadChar() != 'a' || 
+            if (this.reader.ReadChar() != 'a' ||
               this.reader.ReadChar() != 'l' ||
-              this.reader.ReadChar() != 's' || 
-              this.reader.ReadChar() != 'e') {
+              this.reader.ReadChar() != 's' || this.reader.ReadChar() != 'e') {
               this.reader.RaiseError("Value can't be parsed.");
             }
             nextChar[0] = SkipWhitespaceJSON(this.reader);
@@ -200,7 +199,7 @@ namespace PeterO.Cbor {
           }
         case 'n': {
             // Parse null
-            if (this.reader.ReadChar() != 'u' || 
+            if (this.reader.ReadChar() != 'u' ||
               this.reader.ReadChar() != 'l' ||
               this.reader.ReadChar() != 'l') {
               this.reader.RaiseError("Value can't be parsed.");

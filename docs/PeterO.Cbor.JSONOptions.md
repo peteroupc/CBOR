@@ -15,7 +15,7 @@
     public JSONOptions(
         bool base64Padding);
 
- Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) class with the given value for the Base64Padding option.  <b>Parameters:</b>
+ Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) class with the given value for the Base64Padding option.   <b>Parameters:</b>
 
  * <i>base64Padding</i>: Whether padding is included when writing data in base64url or traditional base64 format to JSON.
 
@@ -26,11 +26,11 @@
         bool base64Padding,
         bool replaceSurrogates);
 
- Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) class with the given values for the options.  <b>Parameters:</b>
+ Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) class with the given values for the options.    <b>Parameters:</b>
 
  * <i>base64Padding</i>: Whether padding is included when writing data in base64url or traditional base64 format to JSON.
 
- * <i>replaceSurrogates</i>: Whether surrogate code points not part of a surrogate pair (which consists of two consecutive  `char`  s forming one Unicode code point) are each replaced with a replacement character (U+FFFD). The default is false; an exception is thrown when such code points are encountered.
+ * <i>replaceSurrogates</i>: Whether surrogate code points not part of a surrogate pair (which consists of two consecutive  `char`  s forming one Unicode code point) are each replaced with a replacement character (U + FFFD). The default is false; an exception is thrown when such code points are encountered.
 
 <a id="Void_ctor"></a>
 ### JSONOptions Constructor

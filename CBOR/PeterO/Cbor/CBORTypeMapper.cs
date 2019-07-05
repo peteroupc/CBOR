@@ -2,10 +2,8 @@ using System;
 using System.Collections.Generic;
 
 namespace PeterO.Cbor {
-    /// <summary>Holds converters to customize the serialization and
-    /// deserialization behavior of <c>CBORObject.FromObject</c> and
-    /// <c>CBORObject#ToObject</c>, as well as type filters for
-    /// <c>ToObject</c>.</summary>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.Cbor.CBORTypeMapper"]/*'/>
   public sealed class CBORTypeMapper {
     private readonly IList<string> typePrefixes;
     private readonly IList<string> typeNames;

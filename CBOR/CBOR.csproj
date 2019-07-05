@@ -13,6 +13,17 @@
     <PackageLicenseUrl>http://creativecommons.org/publicdomain/zero/1.0/</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/peteroupc/CBOR</PackageProjectUrl>
     <PackageReleaseNotes>
+Version 4.0.0-beta1:
+
+- Support nullable types in CBORObject.ToObject.
+- Update Numbers library to newer version
+- JSONOptions.Base64Padding now has no effect.  The library will now write padding as necessary when
+  writing traditional base64 to JSON and write no padding when writing base64url to JSON.
+- JSONOptions.ReplaceSurrogates property added.
+- Restrict valid shared reference indices to integers 0 or greater.
+- Reject writing JSON where CBOR maps have two keys with the same string equivalent.
+- Improve performance of CBOR object comparisons involving big floats.
+
 Version 4.0.0-alpha2:
 
 - Support CBOR tags for IRIs and IRI references.

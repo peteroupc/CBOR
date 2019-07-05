@@ -244,6 +244,17 @@ The following are some clarifications to RFC 7049.
 Release Notes
 -----------
 
+### Version 4.0.0-beta1:
+
+- Support nullable types in CBORObject.ToObject.
+- Update Numbers library to newer version
+- JSONOptions.Base64Padding now has no effect.  The library will now write padding as necessary when
+  writing traditional base64 to JSON and write no padding when writing base64url to JSON.
+- JSONOptions.ReplaceSurrogates property added.
+- Restrict valid shared reference indices to integers 0 or greater.
+- Reject writing JSON where CBOR maps have two keys with the same string equivalent.
+- Improve performance of CBOR object comparisons involving big floats.
+
 ### Version 4.0.0-alpha2:
 
 - Support CBOR tags for IRIs and IRI references.
@@ -263,6 +274,14 @@ Release Notes
 - Certain other changes in CBOR object reading and validation were
   made; they are largely compatible with previous versions but may be
   backwards-incompatible in certain rare cases
+
+### Version 3.5.2
+
+- Update Numbers library used by this library to a version that doesn't depend on StyleCop.Analyzers in the package.
+
+### Version 3.5.1
+
+- Update Numbers library used by this library.
 
 ### Version 3.5.0
 
