@@ -1474,6 +1474,11 @@
           <see cref='M:PeterO.Cbor.CBORObject.FromObject(System.Byte[])'/>
            .
         </item>
+        <item>In the .NET version, a nullable is converted to
+          <c>CBORObject.Null</c> if the nullable's value is
+          <c>null</c> , or converted according to the nullable's underlying type, if that
+          type is supported by this method.
+        </item>
         <item>A number of type
           <c>EDecimal</c> ,
           <c>EFloat</c> ,
@@ -3411,9 +3416,8 @@
         <item>Byte arrays, which will always be written as definite-length byte
           strings.
         </item>
-        <item>String objects, which will be written as indefinite-length text
-          strings if their size exceeds a certain threshold (this behavior may
-          change in future versions of this library).
+        <item>String objects. The strings will be encoded using definite-length
+          encoding regardless of their length.
         </item>
         <item>Any object accepted by the FromObject static methods.
         </item>
@@ -3460,9 +3464,7 @@
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.Write(System.String,System.IO.Stream)'>
     <summary><para>Writes a string in CBOR format to a data stream. The string will be
-        encoded using indefinite-length encoding if its length exceeds a certain
-        threshold (this behavior may change in future versions of this library).
-
+        encoded using definite-length encoding regardless of its length.
       </para>
     </summary>
     <param name='str'>The string to write. Can be null.
@@ -3929,22 +3931,6 @@
   </doc>
   <doc name='F:PeterO.Cbor.CBORReader.CBORDuplicatePolicy.Overwrite'>
     <summary>This is an internal API.
-    </summary>
-  </doc>
-  <doc name='T:PeterO.Cbor.CBORTag3'>
-    <summary>Implements CBOR tag 3.
-    </summary>
-  </doc>
-  <doc name='M:PeterO.Cbor.CBORTag37.ToCBORObject(System.Guid)'>
-    <summary>Converts a UUID to a CBOR object.
-    </summary>
-    <param name='obj'>A UUID.
-    </param>
-    <returns>A CBORObject object.
-    </returns>
-  </doc>
-  <doc name='T:PeterO.Cbor.CBORTagGenericString'>
-    <summary>A generic CBOR tag class for strings.
     </summary>
   </doc>
   <doc name='T:PeterO.Cbor.CBORType'>

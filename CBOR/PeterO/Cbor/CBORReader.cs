@@ -25,10 +25,10 @@ namespace PeterO.Cbor {
     }
 
     internal enum CBORDuplicatePolicy {
-    /// <summary>Not documented yet.</summary>
+      /// <summary>This is an internal API.</summary>
       Overwrite,
 
-    /// <summary>Not documented yet.</summary>
+      /// <summary>This is an internal API.</summary>
       Disallow,
     }
 

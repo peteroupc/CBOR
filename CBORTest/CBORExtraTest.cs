@@ -4906,6 +4906,13 @@ CBORTestCommon.AssertJSONSer(objectTemp, objectTemp2);
       }
     }
 
+    private struct ExoticStruct {
+       public readonly int pvalue;
+       public ExoticStruct(int pv) {
+         this.pvalue = pv;
+       }
+    }
+
     [Test]
     public void TestNullable() {
        int? nvalue = 1;
@@ -4927,6 +4934,9 @@ CBORTestCommon.AssertJSONSer(objectTemp, objectTemp2);
        if (3.5 != CBORObject.FromObject(3.5).ToObject<double?>()) {
          Assert.Fail();
        }
+       ExoticStruct? es = null;
+       cbor = CBORObject.FromObject(es);
+       Assert.AreEqual(CBORObject.Null, cbor);
     }
 
     [Test]

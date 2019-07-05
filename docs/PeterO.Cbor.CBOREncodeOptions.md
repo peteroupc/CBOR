@@ -18,7 +18,7 @@
         bool useIndefLengthStrings,
         bool allowDuplicateKeys);
 
- Initializes a new instance of the [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) class.    <b>Parameters:</b>
+ Initializes a new instance of the [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) class.   <b>Parameters:</b>
 
  * <i>useIndefLengthStrings</i>: A value indicating whether to always encode strings with a definite-length encoding.
 
@@ -32,7 +32,7 @@
         bool allowDuplicateKeys,
         bool ctap2Canonical);
 
- Initializes a new instance of the [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) class.     <b>Parameters:</b>
+ Initializes a new instance of the [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) class.    <b>Parameters:</b>
 
  * <i>useIndefLengthStrings</i>: A value indicating whether to encode strings with a definite-length encoding in certain cases.
 
@@ -45,17 +45,17 @@
 
     public CBOREncodeOptions();
 
- Initializes a new instance of the [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) class.  <a id="Default"></a>
+ Initializes a new instance of the [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) class. <a id="Default"></a>
 ### Default
 
     public static readonly PeterO.Cbor.CBOREncodeOptions Default;
 
- Default options for CBOR objects. Disallow duplicate keys, and always encode strings using definite-length encoding.  <a id="DefaultCtap2Canonical"></a>
+ Default options for CBOR objects. Disallow duplicate keys, and always encode strings using definite-length encoding. <a id="DefaultCtap2Canonical"></a>
 ### DefaultCtap2Canonical
 
     public static readonly PeterO.Cbor.CBOREncodeOptions DefaultCtap2Canonical;
 
- Default options for CBOR objects serialized using the CTAP2 canonicalization (used in Web Authentication, among other specifications). Disallow duplicate keys, and always encode strings using definite-length encoding.  <a id="AllowDuplicateKeys"></a>
+ Default options for CBOR objects serialized using the CTAP2 canonicalization (used in Web Authentication, among other specifications). Disallow duplicate keys, and always encode strings using definite-length encoding. <a id="AllowDuplicateKeys"></a>
 ### AllowDuplicateKeys
 
     public bool AllowDuplicateKeys { get; }

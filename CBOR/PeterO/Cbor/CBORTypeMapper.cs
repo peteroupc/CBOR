@@ -10,8 +10,7 @@ namespace PeterO.Cbor {
     private readonly IDictionary<Object, ConverterInfo>
       converters;
 
-    /// <summary>Initializes a new instance of the
-    /// <see cref='CBORTypeMapper'/> class.</summary>
+    /// <summary>Initializes a new instance of the <see cref='CBORTypeMapper'/> class.</summary>
     public CBORTypeMapper() {
       this.typePrefixes = new List<string>();
       this.typeNames = new List<string>();
