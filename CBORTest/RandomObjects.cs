@@ -138,7 +138,7 @@ namespace Test {
       StringAndBigInt sabi = StringAndBigInt.Generate(
   r,
   2 + r.UniformInt(35));
-        return sabi.BigIntValue;
+  return sabi.BigIntValue;
       } else {
         int count = r.UniformInt(60) + 1;
         var bytes = new byte[count];
@@ -221,7 +221,7 @@ namespace Test {
       }
       if (r.UniformInt(2) == 0) {
         sb.Append('E');
-     count = (r.UniformInt(100) < 10) ? r.UniformInt(5000) :
+        count = (r.UniformInt(100) < 10) ? r.UniformInt(5000) :
           r.UniformInt(20);
         if (count != 0) {
           sb.Append(r.UniformInt(2) == 0 ? '+' : '-');

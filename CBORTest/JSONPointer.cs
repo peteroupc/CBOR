@@ -14,7 +14,7 @@ using PeterO.Numbers;
 
 namespace Test {
   public sealed class JSONPointer {
-    public static JSONPointer fromPointer(CBORObject obj, string pointer) {
+    public static JSONPointer FromPointer(CBORObject obj, string pointer) {
       var index = 0;
       if (pointer == null) {
         throw new ArgumentNullException(nameof(pointer));
@@ -29,7 +29,7 @@ namespace Test {
           }
           ++index;
           var value = new int[] { 0 };
-          int newIndex = readPositiveInteger(pointer, index, value);
+          int newIndex = ReadPositiveInteger(pointer, index, value);
           if (value[0] < 0) {
             if (index < pointer.Length && pointer[index] == '-' &&
                 (index + 1 == pointer.Length || pointer[index + 1] == '/')) {
@@ -127,15 +127,15 @@ namespace Test {
     /// CBORObject, unless pointer is the empty string.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='pointer'/> is null.</exception>
-    public static Object getObject(CBORObject obj, string pointer) {
+    public static Object GetObject(CBORObject obj, string pointer) {
       if (pointer == null) {
         throw new ArgumentNullException(nameof(pointer));
       }
       return (pointer.Length == 0) ? obj :
-        JSONPointer.fromPointer(obj, pointer).getValue();
+        JSONPointer.FromPointer(obj, pointer).GetValue();
     }
 
-    private static int readPositiveInteger(
+    private static int ReadPositiveInteger(
       string str,
       int index,
       int[] result) {
@@ -190,11 +190,11 @@ if (!(refValue != null)) {
  throw new InvalidOperationException("doesn't satisfy refValue!=null");
 }
 #endif
-      this.jsonobj = jsonobj;
-      this.refValue = refValue;
+this.jsonobj = jsonobj;
+this.refValue = refValue;
     }
 
-    public bool exists() {
+    public bool Exists() {
       if (this.jsonobj.Type == CBORType.Array) {
         if (this.refValue.Equals("-")) {
           return false;
@@ -214,7 +214,7 @@ if (!(refValue != null)) {
     /// an array and is not greater than the array's length.</summary>
     /// <returns>The index contained in this instance, or -1 if the object
     /// isn't a JSON array or is greater than the array's length.</returns>
-    public int getIndex() {
+    public int GetIndex() {
       if (this.jsonobj.Type == CBORType.Array) {
         if (this.refValue.Equals("-")) {
           return ((CBORObject)this.jsonobj).Count;
@@ -228,30 +228,30 @@ if (!(refValue != null)) {
       }
     }
 
-    public string getKey() {
+    public string GetKey() {
       return this.refValue;
     }
 
-    public CBORObject getParent() {
+    public CBORObject GetParent() {
       return this.jsonobj;
     }
 
-    public CBORObject getValue() {
+    public CBORObject GetValue() {
       if (this.refValue.Length == 0) {
         return this.jsonobj;
       }
-  CBORObject tmpcbor = null;
+      CBORObject tmpcbor = null;
       if (this.jsonobj.Type == CBORType.Array) {
-        int index = this.getIndex();
+        int index = this.GetIndex();
         if (index >= 0 && index < ((CBORObject)this.jsonobj).Count) {
     tmpcbor = this.jsonobj;
-       return tmpcbor[index];
+    return tmpcbor[index];
         } else {
           return null;
         }
       } else if (this.jsonobj.Type == CBORType.Map) {
         tmpcbor = this.jsonobj;
-       return tmpcbor[this.refValue];
+        return tmpcbor[this.refValue];
       } else {
         return (this.refValue.Length == 0) ? this.jsonobj : null;
       }
@@ -274,7 +274,7 @@ if (!(refValue != null)) {
     /// <item>The keys in the map are JSON Pointers to the objects within
     /// <i>root</i> that contained a key named
     /// <i>keyToFind</i>. To get the actual JSON object, call
-    /// JSONPointer.getObject, passing
+    /// JSONPointer.GetObject, passing
     /// <i>root</i> and the pointer as arguments.</item>
     /// <item>The values in the map are the values of each of those keys
     /// named
@@ -286,9 +286,9 @@ if (!(refValue != null)) {
     /// is not documented yet.</param>
     /// <returns>An IDictionary(string, Object) object.</returns>
     public static IDictionary<string, Object>
-      getPointersWithKeyAndRemove(CBORObject root, string keyToFind) {
+      GetPointersWithKeyAndRemove(CBORObject root, string keyToFind) {
       IDictionary<string, Object> list = new Dictionary<string, Object>();
-      getPointersWithKey(root, keyToFind, String.Empty, list, true);
+      GetPointersWithKey(root, keyToFind, String.Empty, list, true);
       return list;
     }
 
@@ -308,7 +308,7 @@ if (!(refValue != null)) {
     /// <item>The keys in the map are JSON Pointers to the objects within
     /// <i>root</i> that contained a key named
     /// <i>keyToFind</i>. To get the actual JSON object, call
-    /// JSONPointer.getObject, passing
+    /// JSONPointer.GetObject, passing
     /// <i>root</i> and the pointer as arguments.</item>
     /// <item>The values in the map are the values of each of those keys
     /// named
@@ -319,15 +319,15 @@ if (!(refValue != null)) {
     /// <param name='keyToFind'>The parameter <paramref name='keyToFind'/>
     /// is not documented yet.</param>
     /// <returns>An IDictionary(string, Object) object.</returns>
-    public static IDictionary<string, Object> getPointersWithKey(
+    public static IDictionary<string, Object> GetPointersWithKey(
       CBORObject root,
       string keyToFind) {
       IDictionary<string, Object> list = new Dictionary<string, Object>();
-      getPointersWithKey(root, keyToFind, String.Empty, list, false);
+      GetPointersWithKey(root, keyToFind, String.Empty, list, false);
       return list;
     }
 
-    private static void getPointersWithKey(
+    private static void GetPointersWithKey(
         CBORObject root,
         string keyToFind,
         string currentPointer,
@@ -351,7 +351,7 @@ if (!(refValue != null)) {
           string ptrkey = key.AsString();
           ptrkey = ptrkey.Replace("~", "~0");
           ptrkey = ptrkey.Replace("/", "~1");
-          getPointersWithKey(
+          GetPointersWithKey(
             rootObj[key],
             keyToFind,
             currentPointer + "/" + ptrkey,
@@ -361,7 +361,7 @@ if (!(refValue != null)) {
       } else if (root.Type == CBORType.Array) {
         for (int i = 0; i < root.Count; ++i) {
           string ptrkey = EInteger.FromInt32(i).ToString();
-          getPointersWithKey(
+          GetPointersWithKey(
             root[i],
             keyToFind,
             currentPointer + "/" + ptrkey,

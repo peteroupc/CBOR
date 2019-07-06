@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -16,8 +16,8 @@ namespace PeterO.DocGen {
       builder.Append("using " + type.Namespace + ";\n");
       builder.Append("using Microsoft.VisualStudio.TestTools.UnitTesting;\n");
       builder.Append("namespace Test {\n");
-      builder.Append("  [TestClass]\n");
-      builder.Append("  public partial class " + name + "Test {\n");
+      builder.Append(" [TestClass]\n");
+      builder.Append(" public partial class " + name + "Test {\n");
       var methods = new SortedSet<string>();
       var hasPublicConstructor = false;
       foreach (var method in type.GetConstructors()) {
@@ -54,7 +54,7 @@ namespace PeterO.DocGen {
         if (methodName.Length == 0) {
           continue;
         }
-   methodName = methodName.Substring(0, 1).ToUpper() +
+        methodName = methodName.Substring(0, 1).ToUpper() +
           methodName.Substring(1);
         methods.Add(methodName);
       }
@@ -63,21 +63,21 @@ namespace PeterO.DocGen {
         return;
       }
       if (methods.Contains("Constructor")) {
-        builder.Append("    [TestMethod]\n");
-        builder.Append("    public void TestConstructor() {\n");
+        builder.Append(" [TestMethod]\n");
+        builder.Append(" public void TestConstructor() {\n");
         builder.Append(" // not implemented yet\n");
-        builder.Append("    }\n");
+        builder.Append(" }\n");
       }
       foreach (var methodName in methods) {
         if (methodName.Equals("Constructor")) {
           continue;
         }
-        builder.Append("    [TestMethod]\n");
-        builder.Append("    public void Test" + methodName + "() {\n");
+        builder.Append(" [TestMethod]\n");
+        builder.Append(" public void Test" + methodName + "() {\n");
         builder.Append(" // not implemented yet\n");
-        builder.Append("    }\n");
+        builder.Append(" }\n");
       }
-      builder.Append("  }\n");
+      builder.Append(" }\n");
       builder.Append("}");
       var filename = Path.Combine(directory, name + "Test.cs");
       if (!File.Exists(filename)) {

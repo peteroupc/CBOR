@@ -22,27 +22,27 @@ namespace PeterO {
     /// This class also demonstrates how CBORObject supports predefined
     /// serialization formats.</summary>
   public static class BEncoding {
-    private static void writeUtf8(string s, Stream stream) {
+    private static void WriteUtf8(string s, Stream stream) {
       if (DataUtilities.WriteUtf8(s, stream, false) != 0) {
         throw new CBORException("invalid surrogate");
       }
     }
 
-    private static CBORObject readDictionary(Stream stream) {
+    private static CBORObject ReadDictionary(Stream stream) {
       CBORObject obj = CBORObject.NewMap();
       while (true) {
         int c = stream.ReadByte();
         if (c == 'e') {
           break;
         }
-        CBORObject s = readString(stream, (char)c);
-        CBORObject o = readObject(stream, false);
+        CBORObject s = ReadString(stream, (char)c);
+        CBORObject o = ReadObject(stream, false);
         obj[s] = o;
       }
       return obj;
     }
 
-    private static CBORObject readInteger(Stream stream) {
+    private static CBORObject ReadInteger(Stream stream) {
       var builder = new StringBuilder();
       var start = true;
       while (true) {
@@ -68,10 +68,10 @@ namespace PeterO {
         false);
     }
 
-    private static CBORObject readList(Stream stream) {
+    private static CBORObject ReadList(Stream stream) {
       CBORObject obj = CBORObject.NewArray();
       while (true) {
-        CBORObject o = readObject(stream, true);
+        CBORObject o = ReadObject(stream, true);
         if (o == null) {
           break; // 'e' was read
         }
@@ -81,25 +81,25 @@ namespace PeterO {
     }
 
     public static CBORObject Read(Stream stream) {
-      return readObject(stream, false);
+      return ReadObject(stream, false);
     }
 
-    private static CBORObject readObject(Stream stream, bool allowEnd) {
+    private static CBORObject ReadObject(Stream stream, bool allowEnd) {
       int c = stream.ReadByte();
       if (c == 'd') {
-        return readDictionary(stream);
+        return ReadDictionary(stream);
       }
       if (c == 'l') {
-        return readList(stream);
+        return ReadList(stream);
       }
       if (allowEnd && c == 'e') {
         return null;
       }
       if (c == 'i') {
-        return readInteger(stream);
+        return ReadInteger(stream);
       }
       if (c >= '0' && c <= '9') {
-        return readString(stream, (char)c);
+        return ReadString(stream, (char)c);
       }
       throw new CBORException("Object expected");
     }
@@ -128,9 +128,9 @@ namespace PeterO {
         }
         while (intlongValue > 43698) {
           int intdivValue = intlongValue / 10;
-        char digit = ValueDigits[(int)(intlongValue - (intdivValue * 10))];
-        chars[count--] = digit;
-        intlongValue = intdivValue;
+          char digit = ValueDigits[(int)(intlongValue - (intdivValue * 10))];
+          chars[count--] = digit;
+          intlongValue = intdivValue;
       }
       while (intlongValue > 9) {
         int intdivValue = (intlongValue * 26215) >> 18;
@@ -155,9 +155,9 @@ namespace PeterO {
         }
         while (longValue > 43698) {
           long divValue = longValue / 10;
-        char digit = ValueDigits[(int)(longValue - (divValue * 10))];
-        chars[count--] = digit;
-        longValue = divValue;
+          char digit = ValueDigits[(int)(longValue - (divValue * 10))];
+          chars[count--] = digit;
+          longValue = divValue;
       }
       while (longValue > 9) {
         long divValue = (longValue * 26215) >> 18;
@@ -177,7 +177,7 @@ namespace PeterO {
       }
     }
 
-    private static CBORObject readString(Stream stream, char firstChar) {
+    private static CBORObject ReadString(Stream stream, char firstChar) {
       var builder = new StringBuilder();
       if (firstChar < (int)'0' && firstChar > (int)'9') {
         throw new CBORException("Invalid integer encoding");
@@ -219,7 +219,7 @@ namespace PeterO {
     public static void Write(CBORObject obj, Stream stream) {
       if (obj.Type == CBORType.Number) {
         stream.WriteByte(unchecked((byte)((byte)0x69)));
-        writeUtf8(obj.AsEInteger().ToString(), stream);
+        WriteUtf8(obj.AsEInteger().ToString(), stream);
         stream.WriteByte(unchecked((byte)((byte)0x65)));
       } else if (obj.Type == CBORType.TextString) {
         string s = obj.AsString();
@@ -227,9 +227,9 @@ namespace PeterO {
         if (length < 0) {
           throw new CBORException("invalid string");
         }
-        writeUtf8(LongToString(length), stream);
+        WriteUtf8(LongToString(length), stream);
         stream.WriteByte(unchecked((byte)((byte)':')));
-        writeUtf8(s, stream);
+        WriteUtf8(s, stream);
       } else if (obj.Type == CBORType.Map) {
         var hasNonStringKeys = false;
         foreach (CBORObject key in obj.Keys) {
@@ -257,11 +257,11 @@ namespace PeterO {
             if (length < 0) {
               throw new CBORException("invalid string");
             }
-            writeUtf8(
+            WriteUtf8(
   LongToString(length),
   stream);
             stream.WriteByte(unchecked((byte)((byte)':')));
-            writeUtf8(key, stream);
+            WriteUtf8(key, stream);
             Write(value, stream);
           }
           stream.WriteByte(unchecked((byte)((byte)0x65)));
@@ -273,15 +273,15 @@ namespace PeterO {
             if (length < 0) {
               throw new CBORException("invalid string");
             }
-            writeUtf8(LongToString(length), stream);
+            WriteUtf8(LongToString(length), stream);
             stream.WriteByte(unchecked((byte)((byte)':')));
-            writeUtf8(str, stream);
+            WriteUtf8(str, stream);
             Write(obj[key], stream);
           }
           stream.WriteByte(unchecked((byte)((byte)0x65)));
         }
       } else if (obj.Type == CBORType.Array) {
-        stream.WriteByte(unchecked((byte)((byte)0x6C)));
+        stream.WriteByte(unchecked((byte)((byte)0x6c)));
         for (var i = 0; i < obj.Count; ++i) {
           Write(obj[i], stream);
         }
@@ -292,9 +292,9 @@ namespace PeterO {
         if (length < 0) {
           throw new CBORException("invalid string");
         }
-        writeUtf8(LongToString(length), stream);
+        WriteUtf8(LongToString(length), stream);
         stream.WriteByte(unchecked((byte)((byte)':')));
-        writeUtf8(str, stream);
+        WriteUtf8(str, stream);
       }
     }
   }

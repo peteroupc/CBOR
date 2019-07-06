@@ -39,13 +39,13 @@ return ToObjectTest.TestToFromObjectRoundTrip(
     rand,
     Int32.MaxValue));
         case 2:
-          return
+        return
   ToObjectTest.TestToFromObjectRoundTrip(RandomObjects.RandomEInteger(rand));
         case 3:
-          return
+        return
   ToObjectTest.TestToFromObjectRoundTrip(RandomObjects.RandomEFloat(rand));
         case 4:
-       return
+        return
   ToObjectTest.TestToFromObjectRoundTrip(RandomObjects.RandomEDecimal(rand));
         case 5:
 return
@@ -67,19 +67,19 @@ return ToObjectTest.TestToFromObjectRoundTrip(
     rand,
     Int32.MaxValue));
         case 2:
-          return
+        return
   ToObjectTest.TestToFromObjectRoundTrip(RandomObjects.RandomEInteger(rand));
         case 3:
-          return
+        return
   ToObjectTest.TestToFromObjectRoundTrip(RandomObjects.RandomEFloat(rand));
         case 4:
-       return
+        return
   ToObjectTest.TestToFromObjectRoundTrip(RandomObjects.RandomEDecimal(rand));
         case 5:
 return
   ToObjectTest.TestToFromObjectRoundTrip(RandomObjects.RandomInt64(rand));
         case 6:
-          return
+        return
   ToObjectTest.TestToFromObjectRoundTrip(RandomObjects.RandomERational(rand));
         default: throw new ArgumentException();
       }
@@ -103,7 +103,7 @@ return
       var tag = 0;
       if (rand.UniformInt(2) == 0) {
         int[] tagselection = { 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 30, 30,
-          30, 0, 1, 25, 26, 27 };
+          30, 0, 1, 25, 26, 27, };
         tag = tagselection[rand.UniformInt(tagselection.Length)];
       } else {
         tag = rand.UniformInt(0x1000000);
@@ -207,8 +207,8 @@ return
         } catch (OverflowException) {
          // NOTE: Intentionally empty
         } catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex); throw new
-            InvalidOperationException(String.Empty, ex);
+          Assert.Fail("Object: " + o + ", " + ex);
+          throw new InvalidOperationException(String.Empty, ex);
         }
         try {
           o.AsInt16();
@@ -216,8 +216,8 @@ return
         } catch (OverflowException) {
          // NOTE: Intentionally empty
         } catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex); throw new
-            InvalidOperationException(String.Empty, ex);
+          Assert.Fail("Object: " + o + ", " + ex);
+          throw new InvalidOperationException(String.Empty, ex);
         }
         try {
           o.AsInt32();
@@ -225,8 +225,8 @@ return
         } catch (OverflowException) {
          // NOTE: Intentionally empty
         } catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex); throw new
-            InvalidOperationException(String.Empty, ex);
+          Assert.Fail("Object: " + o + ", " + ex);
+          throw new InvalidOperationException(String.Empty, ex);
         }
         try {
           o.AsInt64();
@@ -234,8 +234,8 @@ return
         } catch (OverflowException) {
          // NOTE: Intentionally empty
         } catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex); throw new
-            InvalidOperationException(String.Empty, ex);
+          Assert.Fail("Object: " + o + ", " + ex);
+          throw new InvalidOperationException(String.Empty, ex);
         }
         try {
           o.AsSingle();
@@ -255,21 +255,23 @@ return
         } catch (OverflowException) {
          // NOTE: Intentionally empty
         } catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex); throw new
-            InvalidOperationException(String.Empty, ex);
+          Assert.Fail("Object: " + o + ", " + ex);
+          throw new InvalidOperationException(String.Empty, ex);
         }
         return;
       }
       try {
         o.AsSingle();
       } catch (Exception ex) {
-        Assert.Fail("Object: " + o + ", " + ex); throw new
+        Assert.Fail("Object: " + o + ", " + ex);
+        throw new
           InvalidOperationException(String.Empty, ex);
       }
       try {
         o.AsDouble();
       } catch (Exception ex) {
-        Assert.Fail("Object: " + o + ", " + ex); throw new
+        Assert.Fail("Object: " + o + ", " + ex);
+        throw new
           InvalidOperationException(String.Empty, ex);
       }
     }

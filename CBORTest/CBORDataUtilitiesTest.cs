@@ -55,7 +55,7 @@ Assert.AreEqual(
     false,
     false,
     true));
- this.AssertNegative(
+    this.AssertNegative(
   CBORDataUtilities.ParseJSONNumber(
     "-0.0",
     false,
@@ -67,19 +67,19 @@ Assert.AreEqual(
     false,
     false,
     true));
- this.AssertNegative(
+    this.AssertNegative(
   CBORDataUtilities.ParseJSONNumber(
     "-0e0",
     false,
     false,
     true));
-this.AssertNegative(
+    this.AssertNegative(
   CBORDataUtilities.ParseJSONNumber(
     "-0e+1",
     false,
     false,
     true));
-this.AssertNegative(
+    this.AssertNegative(
   CBORDataUtilities.ParseJSONNumber(
     "-0e-1",
     false,
@@ -163,13 +163,13 @@ this.AssertNegative(
     false,
     false,
     true));
-  this.AssertNegative(
+    this.AssertNegative(
   CBORDataUtilities.ParseJSONNumber(
     "-0.000e+999999999999",
     false,
     false,
     true));
-  this.AssertNegative(
+    this.AssertNegative(
   CBORDataUtilities.ParseJSONNumber(
     "-0.000e-999999999999",
     false,
@@ -236,14 +236,14 @@ Assert.AreEqual(
       if (CBORDataUtilities.ParseJSONNumber("-100.", false, false) != null) {
  Assert.Fail();
  }
-    if (
+ if (
   CBORDataUtilities.ParseJSONNumber(
     "100.e+20",
     false,
     false) != null) {
  Assert.Fail();
  }
-    if (
+ if (
   CBORDataUtilities.ParseJSONNumber(
     "-100.e20",
     false,
@@ -328,14 +328,14 @@ Assert.AreEqual(
  }
       CBORObject cbor = CBORDataUtilities.ParseJSONNumber("2e-2147483648");
       CBORTestCommon.AssertJSONSer(cbor, "2E-2147483648");
-    if (
+      if (
   CBORDataUtilities.ParseJSONNumber(
     "0.5e+xyz",
     false,
     false) != null) {
  Assert.Fail();
  }
-  if (
+ if (
   CBORDataUtilities.ParseJSONNumber(
     "0.5e+88xyz",
     false,

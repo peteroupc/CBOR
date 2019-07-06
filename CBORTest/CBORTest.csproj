@@ -17,7 +17,7 @@
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <WarningLevel>4</WarningLevel>
-    
+
     <SignAssembly>False</SignAssembly>
     <NuGetPackageImportStamp/>
     <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet>
@@ -62,27 +62,14 @@
     <Reference Include='System.Core'/>
     <Reference Include='System.Numerics'/>
     <Reference Include='System.Xml'/>
-    <Reference Include='nunit.core, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77'>
-      <HintPath>..\packages\NUnitTestAdapter.WithFramework.2.0.0\lib\nunit.core.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include='nunit.core.interfaces, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77'>
-      <HintPath>..\packages\NUnitTestAdapter.WithFramework.2.0.0\lib\nunit.core.interfaces.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include='nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77'>
-      <HintPath>..\packages\NUnitTestAdapter.WithFramework.2.0.0\lib\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include='nunit.util, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77'>
-      <HintPath>..\packages\NUnitTestAdapter.WithFramework.2.0.0\lib\nunit.util.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include='NUnit.VisualStudio.TestAdapter, Version=2.0.0.0, Culture=neutral, PublicKeyToken=4cb40d35494691ac'>
-      <HintPath>..\packages\NUnitTestAdapter.WithFramework.2.0.0\lib\NUnit.VisualStudio.TestAdapter.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
+    <PackageReference Include='NUnit'>
+       <Version>2.6.3</Version>
+    </PackageReference>
     <AdditionalFiles Include='stylecop.json'/>
-  </ItemGroup>
+  <AdditionalFiles Include='rules.ruleset'/>  <PackageReference Include='StyleCop.Analyzers'>
+    <Version>1.1.118</Version>
+  </PackageReference>
+</ItemGroup>
   <ItemGroup>
     <Compile Include='AppResources.cs'/>
     <Compile Include='BEncoding.cs'/>
@@ -110,21 +97,19 @@
     <Compile Include='ToObjectTest.cs'/>
     <Compile Include='PODClass.cs'/>
     <Compile Include='CBORTypeMapperTest.cs'/>
-  </ItemGroup>
+</ItemGroup>
   <ItemGroup>
-    <None Include='app.config'/>
-    <None Include='CBOR.ruleset'/>
-    <None Include='packages.config'/>
+
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include='..\CBOR\CBOR.csproj'>
       <Project>{44A061F7-B6A8-4FBD-993E-3746E8C42D6B}</Project>
       <Name>CBORTest</Name>
     </ProjectReference>
-  </ItemGroup>
+</ItemGroup>
   <ItemGroup>
     <Service Include='{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}'/>
-  </ItemGroup>
+</ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include='Resources.resx'>
       <LogicalName>Test.AppResources.resources</LogicalName>

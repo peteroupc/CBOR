@@ -10,7 +10,7 @@ namespace PeterO.DocGen {
     public static string XmlDocTypeName(Type t, bool param) {
       return XmlDocTypeName(t, param, false);
     }
-  public static string XmlDocTypeName(Type t, bool param, bool
+    public static string XmlDocTypeName(Type t, bool param, bool
         genericMethod) {
       var sb = new StringBuilder();
       if (t.IsArray) {
@@ -30,10 +30,10 @@ namespace PeterO.DocGen {
       } else {
         sb.Append(t.Namespace).Append(".")
           .Append(UndecorateTypeName(t.Name));
-        if (t.GetGenericArguments().Length>0) {
+        if (t.GetGenericArguments().Length >0) {
           if (param) {
             sb.Append("{");
-            bool first = true;
+            var first = true;
             foreach (var ga in t.GetGenericArguments()) {
 if (!first) {
                 sb.Append(",");
@@ -50,7 +50,7 @@ if (!first) {
           }
         }
       }
-        return sb.ToString();
+      return sb.ToString();
     }
 
     public static string XmlDocMemberName(object obj) {
@@ -82,7 +82,7 @@ if (!first) {
           .Append("M:").Append(XmlDocTypeName(mi.DeclaringType))
           .Append(".").Append(mi.Name);
         var gga = mi.GetGenericArguments().Length;
-        bool genericMethod = (gga > 0);
+        bool genericMethod = gga > 0;
         if (genericMethod) {
           msb.Append("``");
           var ggastr = Convert.ToString(

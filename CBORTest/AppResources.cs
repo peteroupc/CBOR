@@ -18,7 +18,7 @@ namespace Test {
     }
 
     public CBORObject GetJSON(string name) {
-      return CBORObject.FromJSONString(GetString(name));
+      return CBORObject.FromJSONString(this.GetString(name));
     }
 
     public string GetString(string name) {

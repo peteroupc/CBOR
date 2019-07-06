@@ -22,32 +22,32 @@
 
     public static PeterO.Cbor.CBORType Array = 5;
 
- An array of CBOR objects. <a id="Boolean"></a>
+ An array of CBOR objects.  <a id="Boolean"></a>
 ### Boolean
 
     public static PeterO.Cbor.CBORType Boolean = 1;
 
- The simple values true and false. <a id="ByteString"></a>
+ The simple values true and false.  <a id="ByteString"></a>
 ### ByteString
 
     public static PeterO.Cbor.CBORType ByteString = 3;
 
- An array of bytes. <a id="Map"></a>
+ An array of bytes.  <a id="Map"></a>
 ### Map
 
     public static PeterO.Cbor.CBORType Map = 6;
 
- A map of CBOR objects. <a id="Number"></a>
+ A map of CBOR objects.  <a id="Number"></a>
 ### Number
 
     public static PeterO.Cbor.CBORType Number = 0;
 
- A number of any kind, including integers, big integers, floating point numbers, and decimal numbers. The floating-point value Not-a-Number is also included in the Number type. <a id="SimpleValue"></a>
+ A number of any kind, including integers, big integers, floating point numbers, and decimal numbers. The floating-point value Not-a-Number is also included in the Number type.  <a id="SimpleValue"></a>
 ### SimpleValue
 
     public static PeterO.Cbor.CBORType SimpleValue = 2;
 
- A "simple value" other than floating point values, true, and false. <a id="TextString"></a>
+ A "simple value" other than floating point values, true, and false.  <a id="TextString"></a>
 ### TextString
 
     public static PeterO.Cbor.CBORType TextString = 4;

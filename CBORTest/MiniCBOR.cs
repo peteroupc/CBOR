@@ -104,12 +104,12 @@ namespace Test {
         stream.Write(bytes, 0, 2);
       } else if (value <= 0xffff) {
         bytes = new[] { (byte)(25 | type), (byte)((value >> 8) & 0xff),
-          (byte)(value & 0xff) };
+          (byte)(value & 0xff), };
         stream.Write(bytes, 0, 3);
       } else {
         bytes = new[] { (byte)(26 | type), (byte)((value >> 24) & 0xff),
           (byte)((value >> 16) & 0xff), (byte)((value >> 8) & 0xff),
-          (byte)(value & 0xff) };
+          (byte)(value & 0xff), };
         stream.Write(bytes, 0, 5);
       }
     }

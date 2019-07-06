@@ -227,42 +227,42 @@
 
     public static readonly PeterO.Cbor.CBORObject False;
 
- Represents the value false. <a id="NaN"></a>
+ Represents the value false.  <a id="NaN"></a>
 ### NaN
 
     public static readonly PeterO.Cbor.CBORObject NaN;
 
- A not-a-number value. <a id="NegativeInfinity"></a>
+ A not-a-number value.  <a id="NegativeInfinity"></a>
 ### NegativeInfinity
 
     public static readonly PeterO.Cbor.CBORObject NegativeInfinity;
 
- The value negative infinity. <a id="Null"></a>
+ The value negative infinity.  <a id="Null"></a>
 ### Null
 
     public static readonly PeterO.Cbor.CBORObject Null;
 
- Represents the value null. <a id="PositiveInfinity"></a>
+ Represents the value null.  <a id="PositiveInfinity"></a>
 ### PositiveInfinity
 
     public static readonly PeterO.Cbor.CBORObject PositiveInfinity;
 
- The value positive infinity. <a id="True"></a>
+ The value positive infinity.  <a id="True"></a>
 ### True
 
     public static readonly PeterO.Cbor.CBORObject True;
 
- Represents the value true. <a id="Undefined"></a>
+ Represents the value true.  <a id="Undefined"></a>
 ### Undefined
 
     public static readonly PeterO.Cbor.CBORObject Undefined;
 
- Represents the value undefined. <a id="Zero"></a>
+ Represents the value undefined.  <a id="Zero"></a>
 ### Zero
 
     public static readonly PeterO.Cbor.CBORObject Zero;
 
- Gets a CBOR object for the number zero. <a id="Count"></a>
+ Gets a CBOR object for the number zero.  <a id="Count"></a>
 ### Count
 
     public int Count { get; }
@@ -1434,6 +1434,8 @@ The parameter  <i>mapper</i>
   * A primitive floating-point type (  `float`  ,  `double`  , as well as  `decimal`  in .NET) is converted to the corresponding CBOR number.
 
   * A  `String`  is converted to a CBOR text string. To create a CBOR byte string object from  `String`  , see the example given in **M:PeterO.Cbor.CBORObject.FromObject(System.Byte[])** .
+
+  * In the .NET version, a nullable is converted to  `CBORObject.Null`  if the nullable's value is  `null`  , or converted according to the nullable's underlying type, if that type is supported by this method.
 
   * A number of type  `EDecimal`  ,  `EFloat`  ,  `EInteger`  , and  `ERational`  in the <a href="https://www.nuget.org/packages/PeterO.Numbers">  `PeterO.Numbers`  </a> library (in .NET) or the <a href="https://github.com/peteroupc/numbers-java">  `com.github.peteroupc/numbers`  </a> artifact (in Java) is converted to the corresponding CBOR number.
 
@@ -2936,7 +2938,7 @@ An I/O error occurred.
 
   * Byte arrays, which will always be written as definite-length byte strings.
 
-  * String objects, which will be written as indefinite-length text strings if their size exceeds a certain threshold (this behavior may change in future versions of this library).
+  * String objects. The strings will be encoded using definite-length encoding regardless of their length.
 
   * Any object accepted by the FromObject static methods.
 
@@ -3144,7 +3146,7 @@ An I/O error occurred.
         string str,
         System.IO.Stream stream);
 
- Writes a string in CBOR format to a data stream. The string will be encoded using indefinite-length encoding if its length exceeds a certain threshold (this behavior may change in future versions of this library).
+ Writes a string in CBOR format to a data stream. The string will be encoded using definite-length encoding regardless of its length.
 
   <b>Parameters:</b>
 

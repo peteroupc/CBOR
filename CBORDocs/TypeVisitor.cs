@@ -45,7 +45,7 @@ namespace PeterO.DocGen {
 
     public void HandleTypeAndMembers(Type currentType, XmlDoc xmldoc) {
        this.HandleMember(currentType, xmldoc);
-        foreach (var m in currentType.GetFields()) {
+       foreach (var m in currentType.GetFields()) {
           if (m.IsSpecialName) {
  continue;
 }
@@ -61,7 +61,7 @@ namespace PeterO.DocGen {
           if (!m.DeclaringType.Equals(currentType)) {
             var dtfn = m.DeclaringType.FullName;
             if (dtfn.IndexOf("System.", StringComparison.Ordinal) != 0) {
-             //Console.WriteLine("not declared: " + m);
+             // Console.WriteLine("not declared: " + m);
             }
             continue;
           }
