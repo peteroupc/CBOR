@@ -42,8 +42,7 @@ namespace PeterO.DocGen {
         }
         visitor.Finish();
         var visitor2 = new SummaryVisitor(
-            Path.Combine(directory, "APIDocs.md"
-));
+            Path.Combine(directory, "APIDocs.md"));
         foreach (var t in asm.GetTypes()) {
           visitor2.HandleType(t, xmldoc);
         }

@@ -33,8 +33,10 @@ namespace PeterO.DocGen {
         ((MethodInfo)obj).Name : ((obj is PropertyInfo) ?
         ((PropertyInfo)obj).Name : ((obj is FieldInfo) ?
 
-        ((FieldInfo)obj).Name : (obj.ToString())))); } public static string
-          MemberAnchor(object obj) {
+        ((FieldInfo)obj).Name : obj.ToString())));
+    }
+
+    public static string MemberAnchor(object obj) {
       string anchor = String.Empty;
       if (obj is Type) {
         anchor = ((Type)obj).FullName;

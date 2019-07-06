@@ -32,7 +32,7 @@ namespace Test {
       if ((value & 0x400) == value) {
         return ToSingle((int)((value == 0) ? 0 : 0x38800000) | negvalue);
       } else {
-       // denormalized
+        // denormalized
         int m = value & 0x3ff;
         value = 0x1c400;
         while ((m >> 10) == 0) {
@@ -56,7 +56,7 @@ namespace Test {
         return true;
       }
       while ((b >> 5) == 6) {
-       // Skip tags until a tag character is no longer read
+        // Skip tags until a tag character is no longer read
         if (b == 0xd8) {
           stream.ReadByte();
         } else if (b == 0xd9) {
@@ -114,10 +114,10 @@ namespace Test {
       }
     }
 
-private static long ReadInteger(
-  Stream stream,
-  int headByte,
-  bool check32bit) {
+    private static long ReadInteger(
+      Stream stream,
+      int headByte,
+      bool check32bit) {
       int kind = headByte & 0x1f;
       if (kind == 0x18) {
         int b = stream.ReadByte();
@@ -191,7 +191,7 @@ private static long ReadInteger(
     private static double ReadFP(Stream stream, int headByte) {
       int b;
       if (headByte == 0xf9) {
-       // Half-precision
+        // Half-precision
         var bytes = new byte[2];
         if (stream.Read(bytes, 0, bytes.Length) != bytes.Length) {
           throw new IOException("Premature end of stream");
@@ -261,7 +261,7 @@ private static long ReadInteger(
         return (double)(-1 - b);
       }
       while ((b >> 5) == 6) {
-       // Skip tags until a tag character is no longer read
+        // Skip tags until a tag character is no longer read
         if (b == 0xd8) {
           stream.ReadByte();
         } else if (b == 0xd9) {
@@ -282,7 +282,7 @@ private static long ReadInteger(
         return (double)(-1 - b);
       }
       if (b == 0xf9 || b == 0xfa || b == 0xfb) {
-       // Read a floating-point number
+        // Read a floating-point number
         return ReadFP(stream, b);
       }
       if (b == 0x18 || b == 0x19 || b == 0x1a || b == 0x38 ||
@@ -314,7 +314,7 @@ private static long ReadInteger(
         return -1 - b;
       }
       while ((b >> 5) == 6) {
-       // Skip tags until a tag character is no longer read
+        // Skip tags until a tag character is no longer read
         if (b == 0xd8) {
           stream.ReadByte();
         } else if (b == 0xd9) {
@@ -335,9 +335,9 @@ private static long ReadInteger(
         return -1 - b;
       }
       if (b == 0xf9 || b == 0xfa || b == 0xfb) {
-       // Read a floating-point number
+        // Read a floating-point number
         double dbl = ReadFP(stream, b);
-       // Truncate to a 32-bit integer
+        // Truncate to a 32-bit integer
         if (Double.IsInfinity(dbl) || Double.IsNaN(dbl)) {
           throw new IOException("Not a 32-bit integer");
         }
@@ -368,8 +368,8 @@ private static long ReadInteger(
         int b1 = stream.ReadByte();
         int b2 = stream.ReadByte();
         if (b1 < 0 || b2 < 0) {
- throw new IOException();
-}
+          throw new IOException();
+        }
         int c = (b1 << 8) | b2;
         return (b == 0x18) ? c : -1 - c;
       }
@@ -377,15 +377,15 @@ private static long ReadInteger(
         if ((b & 0x1f) == 0x1a && (stream.ReadByte() != 0 ||
            stream.ReadByte() != 0 || stream.ReadByte() != 0 ||
            stream.ReadByte() != 0)) {
- throw new IOException();
-}
+          throw new IOException();
+        }
         int b1 = stream.ReadByte();
         int b2 = stream.ReadByte();
         int b3 = stream.ReadByte();
         int b4 = stream.ReadByte();
         if (b1 < 0 || b2 < 0 || b3 < 0 || b4 < 0 || b1 >= 0x80) {
- throw new IOException();
-}
+          throw new IOException();
+        }
         int c = (b1 << 24) | (b2 << 16) | (b3 << 8) | b4;
         return (b < 0x20) ? c : -1 - c;
       }

@@ -260,7 +260,7 @@ from x in arrao select x;
   "propC");
 #endif
       var ao2 = new {
-        PropValue = new { PropA = 0, PropB = 0, IsPropC = false, }
+        PropValue = new { PropA = 0, PropB = 0, IsPropC = false, , }
       };
       CBORObjectTest.CheckPODPropertyNames(
   CBORObject.FromObject(ao2, valueCcTF),
@@ -287,7 +287,7 @@ from x in arrao select x;
   "propB",
   "propC");
       var aodict = new Dictionary<string, object> {
-        ["PropValue"] = new { PropA = 0, PropB = 0, IsPropC = false, }
+        ["PropValue"] = new { PropA = 0, PropB = 0, IsPropC = false,, }
       };
       CBORObjectTest.CheckPODInDictPropertyNames(
   CBORObject.FromObject(aodict, valueCcTF),
@@ -408,7 +408,7 @@ select new { A = i, B = i + 1 };
       Assert.AreEqual(299, cbor[1][2].AsInt32());
       var arr2 = cbor.ToObject(typeof(int[,]));
       Assert.AreEqual(arr, arr2);
-      int[,,] arr3 = { { { 0, 1 }, { 99, 100 } }, { { 2, 3 }, { 299, 300 } }
+      int[,,] arr3 = { { { 0, 1, }, { 99, 100 } }, { { 2, 3 }, { 299, 300 } }
         };
       cbor = CBORObject.FromObject(arr3);
       Assert.AreEqual(0, cbor[0][0][0].AsInt32());
@@ -5627,9 +5627,9 @@ CBORTestCommon.AssertJSONSer(objectTemp, objectTemp2);
     }
 
     private struct ExoticStruct {
-       public readonly int pvalue;
+       public readonly int Pvalue;
        public ExoticStruct(int pv) {
-         this.pvalue = pv;
+         this.Pvalue = pv;
        }
     }
 

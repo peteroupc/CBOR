@@ -18,25 +18,25 @@ namespace Test {
     [Test]
     public void IncorrectDecimalFrac() {
       byte[] bytes;
-     // string instead of array
+      // string instead of array
       bytes = new byte[] { 0xc4, 0x61, 0x41 };
       try {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-     // number instead of array
+      // number instead of array
       bytes = new byte[] { 0xc4, 0x00 };
       try {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -45,8 +45,8 @@ namespace Test {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -55,8 +55,8 @@ namespace Test {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -65,8 +65,8 @@ namespace Test {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -75,8 +75,8 @@ namespace Test {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -85,25 +85,25 @@ namespace Test {
     [Test]
     public void IncorrectBigFloat() {
       byte[] bytes;
-     // string instead of array
+      // string instead of array
       bytes = new byte[] { 0xc5, 0x61, 0x41 };
       try {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-     // number instead of array
+      // number instead of array
       bytes = new byte[] { 0xc5, 0x00 };
       try {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -112,8 +112,8 @@ namespace Test {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -122,8 +122,8 @@ namespace Test {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -132,8 +132,8 @@ namespace Test {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -142,8 +142,8 @@ namespace Test {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -163,7 +163,7 @@ namespace Test {
       Assert.AreEqual(
         CBORObject.Null,
         ToObjectTest.TestToFromObjectRoundTrip((CBORObject[])null));
-        Assert.AreEqual(
+      Assert.AreEqual(
   CBORObject.True,
   ToObjectTest.TestToFromObjectRoundTrip(true));
       Assert.AreEqual(
@@ -177,8 +177,8 @@ namespace Test {
         CBORObject.True.Abs();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -186,8 +186,8 @@ namespace Test {
         CBORObject.False.Abs();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -195,8 +195,8 @@ namespace Test {
         CBORObject.NewArray().Abs();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -204,8 +204,8 @@ namespace Test {
         CBORObject.NewMap().Abs();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -213,8 +213,8 @@ namespace Test {
         CBORObject.True.AsERational();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -222,8 +222,8 @@ namespace Test {
         CBORObject.False.AsERational();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -231,8 +231,8 @@ namespace Test {
         CBORObject.NewArray().AsERational();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -240,8 +240,8 @@ namespace Test {
         CBORObject.NewMap().AsERational();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -254,8 +254,8 @@ namespace Test {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -269,8 +269,8 @@ namespace Test {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -285,25 +285,25 @@ namespace Test {
 
     [Test]
     public void TestIncompleteIndefLengthMap() {
-     // Premature end after value
+      // Premature end after value
       byte[] bytes = { 0xbf, 0x61, 0x41, 0, 0x61, 0x42, 0 };
       try {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-     // Premature end after key
+      // Premature end after key
       bytes = new byte[] { 0xbf, 0x61, 0x41, 0, 0x61, 0x42 };
       try {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -328,8 +328,8 @@ namespace Test {
         }
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -339,46 +339,46 @@ namespace Test {
     public void TestNestingDepth() {
       try {
         {
-        using (var ms = new MemoryStream()) {
-          for (var i = 0; i < 2000; ++i) {
-           // Write beginning of indefinite-length array
-            ms.WriteByte((byte)0x9f);
+          using (var ms = new MemoryStream()) {
+            for (var i = 0; i < 2000; ++i) {
+              // Write beginning of indefinite-length array
+              ms.WriteByte((byte)0x9f);
+            }
+            for (var i = 0; i < 2000; ++i) {
+              // Write end of indefinite-length array
+              ms.WriteByte((byte)0xff);
+            }
+            // Assert throwing CBOR exception for reaching maximum
+            // nesting depth
+            try {
+              CBORObject.DecodeFromBytes(ms.ToArray());
+              Assert.Fail("Should have failed");
+            } catch (CBORException) {
+              // NOTE: Intentionally empty
+            } catch (Exception ex) {
+              Assert.Fail(ex.ToString());
+              throw new InvalidOperationException(String.Empty, ex);
+            }
           }
-          for (var i = 0; i < 2000; ++i) {
-           // Write end of indefinite-length array
-            ms.WriteByte((byte)0xff);
-          }
-         // Assert throwing CBOR exception for reaching maximum
-         // nesting depth
-          try {
-            CBORObject.DecodeFromBytes(ms.ToArray());
-            Assert.Fail("Should have failed");
-          } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
-            Assert.Fail(ex.ToString());
-            throw new InvalidOperationException(String.Empty, ex);
-          }
-        }
         }
         {
           using (var ms = new MemoryStream()) {
-          for (var i = 0; i < 495; ++i) {
-           // Write beginning of indefinite-length array
-            ms.WriteByte((byte)0x9f);
+            for (var i = 0; i < 495; ++i) {
+              // Write beginning of indefinite-length array
+              ms.WriteByte((byte)0x9f);
+            }
+            for (var i = 0; i < 495; ++i) {
+              // Write end of indefinite-length array
+              ms.WriteByte((byte)0xff);
+            }
+            // Maximum nesting depth not reached, so shouldn't throw
+            try {
+              CBORObject.DecodeFromBytes(ms.ToArray());
+            } catch (Exception ex) {
+              Assert.Fail(ex.ToString());
+              throw new InvalidOperationException(String.Empty, ex);
+            }
           }
-          for (var i = 0; i < 495; ++i) {
-           // Write end of indefinite-length array
-            ms.WriteByte((byte)0xff);
-          }
-         // Maximum nesting depth not reached, so shouldn't throw
-          try {
-            CBORObject.DecodeFromBytes(ms.ToArray());
-          } catch (Exception ex) {
-            Assert.Fail(ex.ToString());
-            throw new InvalidOperationException(String.Empty, ex);
-          }
-        }
         }
       } catch (Exception ex) {
         throw new InvalidOperationException(ex.Message, ex);
@@ -392,8 +392,8 @@ namespace Test {
         ToObjectTest.TestToFromObjectRoundTrip(bi).AsInt64();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -401,8 +401,8 @@ namespace Test {
         ToObjectTest.TestToFromObjectRoundTrip(bi).AsInt32();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -411,8 +411,8 @@ namespace Test {
         ToObjectTest.TestToFromObjectRoundTrip(bi).AsInt64();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -420,8 +420,8 @@ namespace Test {
         ToObjectTest.TestToFromObjectRoundTrip(bi).AsInt32();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -430,8 +430,8 @@ namespace Test {
         ToObjectTest.TestToFromObjectRoundTrip(bi).AsInt32();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -467,13 +467,13 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
       cbor = CBORObject.DecodeFromBytes(bytes);
       expected = "[[1],[1],3,3,[1]]";
       Assert.AreEqual(expected, cbor.ToJSONString());
-     // Checks if both objects are the same reference, not just equal
+      // Checks if both objects are the same reference, not just equal
       Assert.IsTrue(cbor[0] == cbor[1], "cbor[0] not same as cbor[1]");
       Assert.IsTrue(cbor[0] == cbor[4], "cbor[0] not same as cbor[4]");
       bytes = new byte[] { 0xd8, 28, 0x82, 1, 0xd8, 29, 0 };
       cbor = CBORObject.DecodeFromBytes(bytes);
       Assert.AreEqual(2, cbor.Count);
-     // Checks if both objects are the same reference, not just equal
+      // Checks if both objects are the same reference, not just equal
       Assert.IsTrue(cbor == cbor[1], "objects not the same");
     }
 
@@ -483,8 +483,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0x00 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -492,8 +492,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0x20 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -501,8 +501,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0x60 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -510,8 +510,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0x80 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -519,8 +519,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0xa0 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -528,8 +528,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0xe0 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -538,8 +538,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x00 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -547,8 +547,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x20 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -556,8 +556,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x60 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -565,8 +565,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x80 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -574,8 +574,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0xa0 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -583,8 +583,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0xe0 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -593,8 +593,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x00 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -602,8 +602,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x20 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -611,8 +611,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x40 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -620,8 +620,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x60 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -629,13 +629,13 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x80 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
- CBORObject.DecodeFromBytes(new byte[] { 0xd8, 0x1e, 0x9f, 0x01, 0x01, 0xff });
+ CBORObject.DecodeFromBytes(new byte[] { 0xd8, 0x1e, 0x9f, 0x01, 0x01, 0xff, });
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -644,8 +644,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xd8, 0x1e, 0x9f, 0x01, 0xff });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -653,8 +653,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xd8, 0x1e, 0x9f, 0xff });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -674,8 +674,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x9f, 0x00, 0xff });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -683,8 +683,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x9f, 0x00, 0xff });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -692,8 +692,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x9f, 0xff });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -701,8 +701,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x9f, 0xff });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -710,8 +710,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x81, 0x00 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -719,8 +719,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0xa0 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -728,8 +728,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0xe0 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -738,8 +738,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x00 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -747,8 +747,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x20 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -756,8 +756,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x40 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -765,8 +765,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x60 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -774,8 +774,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x80 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -783,8 +783,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x81, 0x00 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -792,8 +792,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0xa0 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -801,8 +801,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0xe0 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -810,10 +810,12 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
       Assert.AreEqual(
         EInteger.Zero,
         CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0x40 }).AsEInteger());
-      Assert.AreEqual(
-        EInteger.FromString("-1"),
-     CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x41, 0x00
-          }).AsEInteger());
+      {
+object objectTemp = EInteger.FromString("-1");
+object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x41,
+  0x00, }).AsEInteger();
+Assert.AreEqual(objectTemp, objectTemp2);
+}
       Assert.AreEqual(
         EInteger.FromString("-1"),
         CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x40 }).AsEInteger());
@@ -846,7 +848,7 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
       Assert.AreEqual((byte)0xff, bytes[15]);
     }
 
-   // [Test]
+    // [Test]
     public static void TestMiniCBOR() {
       byte[] bytes;
       bytes = new byte[] { 0x19, 2 };
@@ -856,8 +858,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         }
         Assert.Fail("Should have failed");
       } catch (IOException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -868,8 +870,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         }
         Assert.Fail("Should have failed");
       } catch (IOException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -880,8 +882,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         }
         Assert.Fail("Should have failed");
       } catch (IOException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -892,8 +894,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
         }
         Assert.Fail("Should have failed");
       } catch (IOException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -903,7 +905,7 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
           MiniCBOR.ReadInt32(memoryStream);
         }
         Assert.Fail("Should have failed");
-} catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -946,51 +948,56 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff
   EInteger.FromString("-65537"),
   CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x43, 1, 0, 0 }).AsEInteger());
       {
-object objectTemp = EInteger.FromString("-16777217");
-object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x44, 1,
-  0, 0, 0, }).AsEInteger();
-Assert.AreEqual(objectTemp, objectTemp2);
-}
+        object objectTemp = EInteger.FromString("-16777217");
+        object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x44,
+          1,
+          0, 0, 0, }).AsEInteger();
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
       {
-object objectTemp = EInteger.FromString("-4294967297");
-object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x45, 1,
-  0, 0, 0, 0, }).AsEInteger();
-Assert.AreEqual(objectTemp, objectTemp2);
-}
+        object objectTemp = EInteger.FromString("-4294967297");
+        object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x45,
+          1,
+          0, 0, 0, 0, }).AsEInteger();
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
       {
-object objectTemp = EInteger.FromString("-1099511627777");
-object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x46, 1,
-  0, 0, 0, 0, 0, }).AsEInteger();
-Assert.AreEqual(objectTemp, objectTemp2);
-}
+        object objectTemp = EInteger.FromString("-1099511627777");
+        object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x46,
+          1,
+          0, 0, 0, 0, 0, }).AsEInteger();
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
       {
-object objectTemp = EInteger.FromString("-281474976710657");
-object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x47,
+        object objectTemp = EInteger.FromString("-281474976710657");
+        object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x47,
           1,
           0, 0, 0, 0,
-          0, 0 }).AsEInteger();
-Assert.AreEqual(objectTemp, objectTemp2);
-}
+          0, 0, }).AsEInteger();
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
       {
-object objectTemp = EInteger.FromString("-72057594037927937");
-object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x48,
+        object objectTemp = EInteger.FromString("-72057594037927937");
+        object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x48,
           1,
           0, 0, 0, 0,
-          0, 0, 0 }).AsEInteger();
-Assert.AreEqual(objectTemp, objectTemp2);
-}
+          0, 0, 0, }).AsEInteger();
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
       {
-object objectTemp = EInteger.FromString("-18446744073709551617");
-object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x49, 1,
-  0, 0, 0, 0, 0, 0, 0, 0, }).AsEInteger();
-Assert.AreEqual(objectTemp, objectTemp2);
-}
+        object objectTemp = EInteger.FromString("-18446744073709551617");
+        object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x49,
+          1,
+          0, 0, 0, 0, 0, 0, 0, 0, }).AsEInteger();
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
       {
-object objectTemp = EInteger.FromString("-4722366482869645213697");
-object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x4a, 1,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, }).AsEInteger();
-Assert.AreEqual(objectTemp, objectTemp2);
-}
+        object objectTemp = EInteger.FromString("-4722366482869645213697");
+        object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x4a,
+          1,
+          0, 0, 0, 0, 0, 0, 0, 0, 0, }).AsEInteger();
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
     }
 
     [Test]

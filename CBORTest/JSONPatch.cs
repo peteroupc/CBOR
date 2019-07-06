@@ -23,16 +23,16 @@ namespace Test {
       if (path.Length == 0) {
         o = value;
       } else {
-        JSONPointer pointer = JSONPointer.fromPointer(o, path);
-        if (pointer.getParent().Type == CBORType.Array) {
-          int index = pointer.getIndex();
+        JSONPointer pointer = JSONPointer.FromPointer(o, path);
+        if (pointer.GetParent().Type == CBORType.Array) {
+          int index = pointer.GetIndex();
           if (index < 0) {
             throw new ArgumentException("Patch " + valueOpStr + " path");
           }
-          ((CBORObject)pointer.getParent()).Insert(index, value);
-        } else if (pointer.getParent().Type == CBORType.Map) {
-          string key = pointer.getKey();
-          ((CBORObject)pointer.getParent()).Set(key, value);
+          ((CBORObject)pointer.GetParent()).Insert(index, value);
+        } else if (pointer.GetParent().Type == CBORType.Map) {
+          string key = pointer.GetKey();
+          ((CBORObject)pointer.GetParent()).Set(key, value);
         } else {
           throw new ArgumentException("Patch " + valueOpStr + " path");
         }
@@ -48,31 +48,31 @@ namespace Test {
       return o.ContainsKey(key) ? o[key].AsString() : null;
     }
 
-    public static CBORObject Patch(CBORObject o, CBORObject Patch) {
-     // clone the object in case of failure
+    public static CBORObject Patch(CBORObject o, CBORObject ptch) {
+      // clone the object in case of failure
       o = CloneCbor(o);
-      for (int i = 0; i < Patch.Count; ++i) {
-        CBORObject patchOp = Patch[i];
-       // NOTE: This algorithm requires "op" to exist
-       // only once; the CBORObject, however, does not
-       // allow duplicates
+      for (int i = 0; i < ptch.Count; ++i) {
+        CBORObject patchOp = ptch[i];
+        // NOTE: This algorithm requires "op" to exist
+        // only once; the CBORObject, however, does not
+        // allow duplicates
         string valueOpStr = GetString(patchOp, "op");
         if (valueOpStr == null) {
           throw new ArgumentException("Patch");
         }
         if ("add".Equals(valueOpStr)) {
-         // operation
+          // operation
           CBORObject value = null;
           if (!patchOp.ContainsKey("value")) {
-throw new ArgumentException("Patch " + valueOpStr + " value");
+            throw new ArgumentException("Patch " + valueOpStr + " value");
           }
           value = patchOp["value"];
           o = AddOperation(o, valueOpStr, GetString(patchOp, "path"), value);
         } else if ("replace".Equals(valueOpStr)) {
-         // operation
+          // operation
           CBORObject value = null;
           if (!patchOp.ContainsKey("value")) {
-throw new ArgumentException("Patch " + valueOpStr + " value");
+            throw new ArgumentException("Patch " + valueOpStr + " value");
           }
           value = patchOp["value"];
           o = ReplaceOperation(
@@ -81,7 +81,7 @@ throw new ArgumentException("Patch " + valueOpStr + " value");
   GetString(patchOp, "path"),
   value);
         } else if ("remove".Equals(valueOpStr)) {
-         // Remove operation
+          // Remove operation
           string path = patchOp["path"].AsString();
           if (path == null) {
             throw new ArgumentException("Patch " + valueOpStr + " path");
@@ -114,12 +114,12 @@ throw new ArgumentException("Patch " + valueOpStr + " value");
           if (fromPath == null) {
             throw new ArgumentException("Patch " + valueOpStr + " from");
           }
-          JSONPointer pointer = JSONPointer.fromPointer(o, path);
-          if (!pointer.exists()) {
+          JSONPointer pointer = JSONPointer.FromPointer(o, path);
+          if (!pointer.Exists()) {
             throw new KeyNotFoundException("Patch " +
               valueOpStr + " " + fromPath);
           }
-          CBORObject copiedObj = pointer.getValue();
+          CBORObject copiedObj = pointer.GetValue();
           o = AddOperation(
   o,
   valueOpStr,
@@ -132,15 +132,15 @@ throw new ArgumentException("Patch " + valueOpStr + " value");
           }
           CBORObject value = null;
           if (!patchOp.ContainsKey("value")) {
-throw new ArgumentException("Patch " + valueOpStr + " value");
+            throw new ArgumentException("Patch " + valueOpStr + " value");
           }
           value = patchOp["value"];
-          JSONPointer pointer = JSONPointer.fromPointer(o, path);
-          if (!pointer.exists()) {
+          JSONPointer pointer = JSONPointer.FromPointer(o, path);
+          if (!pointer.Exists()) {
             throw new ArgumentException("Patch " +
               valueOpStr + " " + path);
           }
-          Object testedObj = pointer.getValue();
+          Object testedObj = pointer.GetValue();
           if ((testedObj == null) ? (value != null) :
             !testedObj.Equals(value)) {
             throw new InvalidOperationException("Patch " + valueOpStr);
@@ -160,17 +160,17 @@ throw new ArgumentException("Patch " + valueOpStr + " value");
       if (path.Length == 0) {
         return o;
       } else {
-        JSONPointer pointer = JSONPointer.fromPointer(o, path);
-        if (!pointer.exists()) {
+        JSONPointer pointer = JSONPointer.FromPointer(o, path);
+        if (!pointer.Exists()) {
           throw new KeyNotFoundException("Patch " +
             valueOpStr + " " + path);
         }
-        o = pointer.getValue();
-        if (pointer.getParent().Type == CBORType.Array) {
-          ((CBORObject)pointer.getParent()).RemoveAt(pointer.getIndex());
-        } else if (pointer.getParent().Type == CBORType.Map) {
-          ((CBORObject)pointer.getParent()).Remove(
-              CBORObject.FromObject(pointer.getKey()));
+        o = pointer.GetValue();
+        if (pointer.GetParent().Type == CBORType.Array) {
+          ((CBORObject)pointer.GetParent()).RemoveAt(pointer.GetIndex());
+        } else if (pointer.GetParent().Type == CBORType.Map) {
+          ((CBORObject)pointer.GetParent()).Remove(
+              CBORObject.FromObject(pointer.GetKey()));
         }
         return o;
       }
@@ -187,20 +187,20 @@ throw new ArgumentException("Patch " + valueOpStr + " value");
       if (path.Length == 0) {
         o = value;
       } else {
-        JSONPointer pointer = JSONPointer.fromPointer(o, path);
-        if (!pointer.exists()) {
+        JSONPointer pointer = JSONPointer.FromPointer(o, path);
+        if (!pointer.Exists()) {
           throw new KeyNotFoundException("Patch " +
             valueOpStr + " " + path);
         }
-        if (pointer.getParent().Type == CBORType.Array) {
-          int index = pointer.getIndex();
+        if (pointer.GetParent().Type == CBORType.Array) {
+          int index = pointer.GetIndex();
           if (index < 0) {
             throw new ArgumentException("Patch " + valueOpStr + " path");
           }
-          ((CBORObject)pointer.getParent()).Set(index, value);
-        } else if (pointer.getParent().Type == CBORType.Map) {
-          string key = pointer.getKey();
-          ((CBORObject)pointer.getParent()).Set(key, value);
+          ((CBORObject)pointer.GetParent()).Set(index, value);
+        } else if (pointer.GetParent().Type == CBORType.Map) {
+          string key = pointer.GetKey();
+          ((CBORObject)pointer.GetParent()).Set(key, value);
         } else {
           throw new ArgumentException("Patch " + valueOpStr + " path");
         }

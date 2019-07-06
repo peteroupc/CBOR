@@ -30,7 +30,7 @@ namespace PeterO.DocGen {
       } else {
         sb.Append(t.Namespace).Append(".")
           .Append(UndecorateTypeName(t.Name));
-        if (t.GetGenericArguments().Length >0) {
+        if (t.GetGenericArguments().Length > 0) {
           if (param) {
             sb.Append("{");
             var first = true;

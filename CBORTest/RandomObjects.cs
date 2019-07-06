@@ -135,10 +135,10 @@ namespace Test {
         return sabi.BigIntValue;
       }
       if (selection < 50) {
-      StringAndBigInt sabi = StringAndBigInt.Generate(
-  r,
-  2 + r.UniformInt(35));
-  return sabi.BigIntValue;
+        StringAndBigInt sabi = StringAndBigInt.Generate(
+          r,
+          2 + r.UniformInt(35));
+        return sabi.BigIntValue;
       } else {
         int count = r.UniformInt(60) + 1;
         var bytes = new byte[count];

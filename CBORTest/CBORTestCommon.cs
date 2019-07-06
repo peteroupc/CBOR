@@ -39,11 +39,11 @@ return ToObjectTest.TestToFromObjectRoundTrip(
     rand,
     Int32.MaxValue));
         case 2:
-        return
-  ToObjectTest.TestToFromObjectRoundTrip(RandomObjects.RandomEInteger(rand));
+        return ToObjectTest.TestToFromObjectRoundTrip(
+              RandomObjects.RandomEInteger(rand));
         case 3:
-        return
-  ToObjectTest.TestToFromObjectRoundTrip(RandomObjects.RandomEFloat(rand));
+        return ToObjectTest.TestToFromObjectRoundTrip(
+              RandomObjects.RandomEFloat(rand));
         case 4:
         return
   ToObjectTest.TestToFromObjectRoundTrip(RandomObjects.RandomEDecimal(rand));
