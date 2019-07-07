@@ -260,7 +260,7 @@ from x in arrao select x;
   "propC");
 #endif
       var ao2 = new {
-        PropValue = new { PropA = 0, PropB = 0, IsPropC = false, , }
+        PropValue = new { PropA = 0, PropB = 0, IsPropC = false, },
       };
       CBORObjectTest.CheckPODPropertyNames(
   CBORObject.FromObject(ao2, valueCcTF),
@@ -287,7 +287,7 @@ from x in arrao select x;
   "propB",
   "propC");
       var aodict = new Dictionary<string, object> {
-        ["PropValue"] = new { PropA = 0, PropB = 0, IsPropC = false,, }
+        ["PropValue"] = new { PropA = 0, PropB = 0, IsPropC = false, },
       };
       CBORObjectTest.CheckPODInDictPropertyNames(
   CBORObject.FromObject(aodict, valueCcTF),
@@ -364,10 +364,8 @@ from x in arrao select x;
       Assert.AreEqual(10, obj.Count);
       Assert.AreEqual(0, obj[0].AsInt32());
       Assert.AreEqual(1, obj[1].AsInt32());
-      obj = CBORObject.FromObject((
-  object)RangeExclusive(
-  0,
-  10));
+      obj = CBORObject.FromObject(
+       (object)RangeExclusive(0, 10));
       Assert.AreEqual(10, obj.Count);
       Assert.AreEqual(0, obj[0].AsInt32());
       Assert.AreEqual(1, obj[1].AsInt32());
@@ -408,8 +406,15 @@ select new { A = i, B = i + 1 };
       Assert.AreEqual(299, cbor[1][2].AsInt32());
       var arr2 = cbor.ToObject(typeof(int[,]));
       Assert.AreEqual(arr, arr2);
-      int[,,] arr3 = { { { 0, 1, }, { 99, 100 } }, { { 2, 3 }, { 299, 300 } }
-        };
+      int[,,] arr3 = new int[2, 2, 2];
+      arr3[0, 0, 0] = 0;
+      arr3[0, 0, 1] = 1;
+      arr3[0, 1, 0] = 99;
+      arr3[0, 1, 1] = 100;
+      arr3[1, 0, 0] = 2;
+      arr3[1, 0, 1] = 3;
+      arr3[1, 1, 0] = 299;
+      arr3[1, 1, 1] = 300;
       cbor = CBORObject.FromObject(arr3);
       Assert.AreEqual(0, cbor[0][0][0].AsInt32());
       Assert.AreEqual(1, cbor[0][0][1].AsInt32());
@@ -5486,7 +5491,8 @@ ToObjectTest.TestToFromObjectRoundTrip(1.844674407370955E19d).AsUInt16();
       ulong[] ranges = {
         0, 65539, 0xfffff000UL, 0x100000400UL,
         0x7ffffffffffff000UL, 0x8000000000000400UL,
-        UInt64.MaxValue - 1000, UInt64.MaxValue, };
+        UInt64.MaxValue - 1000, UInt64.MaxValue,
+      };
       for (var i = 0; i < ranges.Length; i += 2) {
         ulong j = ranges[i];
         while (true) {
@@ -5540,17 +5546,14 @@ ToObjectTest.TestToFromObjectRoundTrip(1.844674407370955E19d).AsUInt16();
 
     [Test]
     public void TestOther() {
-    CBORObject cbor = CBORObject.FromObject(new int[2, 3,
-        2]);
-        {
-string stringTemp = cbor.ToJSONString();
-string str145009 = "[[[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0]]]";
-
-Assert.AreEqual(
-  str145009,
-  stringTemp);
-}
-CBORTestCommon.AssertRoundTrip(cbor);
+      int[,,] arr3 = new int[2, 3, 2];
+      CBORObject cbor = CBORObject.FromObject(arr3);
+      string stringTemp = cbor.ToJSONString();
+      string str145009 = "[[[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0]]]";
+      Assert.AreEqual(
+        str145009,
+        stringTemp);
+      CBORTestCommon.AssertRoundTrip(cbor);
     }
 
     [Test]
@@ -5577,8 +5580,10 @@ CBORTestCommon.AssertRoundTrip(cbor);
 
     [Test]
     public void TestUInt() {
-      uint[] ranges = { 0, 65539,
-        0x7ffff000U, 0x80000400U, UInt32.MaxValue - 1000, UInt32.MaxValue, };
+      uint[] ranges = {
+        0, 65539,
+        0x7ffff000U, 0x80000400U, UInt32.MaxValue - 1000, UInt32.MaxValue,
+      };
       for (var i = 0; i < ranges.Length; i += 2) {
         uint j = ranges[i];
         while (true) {
@@ -5651,7 +5656,7 @@ CBORTestCommon.AssertJSONSer(objectTemp, objectTemp2);
        Assert.AreEqual(null, CBORObject.Null.ToObject<uint?>());
        Assert.AreEqual(1u, CBORObject.FromObject(1).ToObject<uint?>());
        Assert.AreEqual(null, CBORObject.Null.ToObject<double?>());
-       if (3.5 != CBORObject.FromObject(3.5).ToObject<double?>()) {
+       if (CBORObject.FromObject(3.5).ToObject<double?>() != 3.5) {
          Assert.Fail();
        }
        ExoticStruct? es = null;

@@ -9,7 +9,7 @@ using PeterO.Numbers;
 namespace Test {
   internal static class CBORTestCommon {
     internal static readonly EDecimal DecPosInf =
-  EDecimal.PositiveInfinity;
+      EDecimal.PositiveInfinity;
 
     internal static readonly EDecimal DecNegInf =
       EDecimal.NegativeInfinity;
@@ -27,60 +27,62 @@ namespace Test {
       ERational.NegativeInfinity;
 
     public static CBORObject RandomNumber(RandomGenerator rand) {
+      object o = null;
       switch (rand.UniformInt(6)) {
         case 0:
-return ToObjectTest.TestToFromObjectRoundTrip(
-  RandomObjects.RandomDouble(
-    rand,
-    Int32.MaxValue));
+          o = RandomObjects.RandomDouble(
+            rand,
+            Int32.MaxValue);
+          return ToObjectTest.TestToFromObjectRoundTrip(o);
         case 1:
-return ToObjectTest.TestToFromObjectRoundTrip(
-  RandomObjects.RandomSingle(
-    rand,
-    Int32.MaxValue));
+          o = RandomObjects.RandomSingle(
+            rand,
+            Int32.MaxValue);
+          return ToObjectTest.TestToFromObjectRoundTrip(o);
         case 2:
-        return ToObjectTest.TestToFromObjectRoundTrip(
+          return ToObjectTest.TestToFromObjectRoundTrip(
               RandomObjects.RandomEInteger(rand));
         case 3:
-        return ToObjectTest.TestToFromObjectRoundTrip(
+          return ToObjectTest.TestToFromObjectRoundTrip(
               RandomObjects.RandomEFloat(rand));
         case 4:
-        return
-  ToObjectTest.TestToFromObjectRoundTrip(RandomObjects.RandomEDecimal(rand));
+          o = RandomObjects.RandomEDecimal(rand);
+          return ToObjectTest.TestToFromObjectRoundTrip(o);
         case 5:
-return
-  ToObjectTest.TestToFromObjectRoundTrip(RandomObjects.RandomInt64(rand));
+          o = RandomObjects.RandomInt64(rand);
+          return ToObjectTest.TestToFromObjectRoundTrip(o);
         default: throw new ArgumentException();
       }
     }
 
     public static CBORObject RandomNumberOrRational(RandomGenerator rand) {
+      object o = null;
       switch (rand.UniformInt(7)) {
         case 0:
-return ToObjectTest.TestToFromObjectRoundTrip(
-  RandomObjects.RandomDouble(
-    rand,
-    Int32.MaxValue));
+          o = RandomObjects.RandomDouble(
+            rand,
+            Int32.MaxValue);
+          return ToObjectTest.TestToFromObjectRoundTrip(o);
         case 1:
-return ToObjectTest.TestToFromObjectRoundTrip(
-  RandomObjects.RandomSingle(
-    rand,
-    Int32.MaxValue));
+          o = RandomObjects.RandomSingle(
+            rand,
+            Int32.MaxValue);
+          return ToObjectTest.TestToFromObjectRoundTrip(o);
         case 2:
-        return
-  ToObjectTest.TestToFromObjectRoundTrip(RandomObjects.RandomEInteger(rand));
+          return ToObjectTest.TestToFromObjectRoundTrip(
+              RandomObjects.RandomEInteger(rand));
         case 3:
-        return
-  ToObjectTest.TestToFromObjectRoundTrip(RandomObjects.RandomEFloat(rand));
+          return ToObjectTest.TestToFromObjectRoundTrip(
+              RandomObjects.RandomEFloat(rand));
         case 4:
-        return
-  ToObjectTest.TestToFromObjectRoundTrip(RandomObjects.RandomEDecimal(rand));
+          o = RandomObjects.RandomEDecimal(rand);
+          return ToObjectTest.TestToFromObjectRoundTrip(o);
         case 5:
-return
-  ToObjectTest.TestToFromObjectRoundTrip(RandomObjects.RandomInt64(rand));
+          o = RandomObjects.RandomInt64(rand);
+          return ToObjectTest.TestToFromObjectRoundTrip(o);
         case 6:
-        return
-  ToObjectTest.TestToFromObjectRoundTrip(RandomObjects.RandomERational(rand));
+          o = RandomObjects.RandomERational(rand);
+          return ToObjectTest.TestToFromObjectRoundTrip(o);
         default: throw new ArgumentException();
       }
     }
@@ -102,8 +104,10 @@ return
       int depth) {
       var tag = 0;
       if (rand.UniformInt(2) == 0) {
-        int[] tagselection = { 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 30, 30,
-          30, 0, 1, 25, 26, 27, };
+        int[] tagselection = {
+          2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 30, 30,
+          30, 0, 1, 25, 26, 27,
+        };
         tag = tagselection[rand.UniformInt(tagselection.Length)];
       } else {
         tag = rand.UniformInt(0x1000000);
@@ -112,38 +116,37 @@ return
         tag = 0;
       }
       if (tag == 30) {
-        return
-  ToObjectTest.TestToFromObjectRoundTrip(RandomObjects.RandomByteString(rand));
+        object o = RandomObjects.RandomByteString(rand);
+        return ToObjectTest.TestToFromObjectRoundTrip(o);
       }
       for (var i = 0; i < 15; ++i) {
-        CBORObject o;
+        CBORObject cbor;
        // Console.WriteLine("tag "+tag+" "+i);
         if (tag == 0 || tag == 1 || tag == 28 || tag == 29) {
           tag = 999;
         }
         if (tag == 2 || tag == 3) {
-          o =
-
-  ToObjectTest.TestToFromObjectRoundTrip(RandomObjects.RandomByteStringShort(rand));
+          object o = RandomObjects.RandomByteStringShort(rand);
+          cbor = ToObjectTest.TestToFromObjectRoundTrip(o);
         } else if (tag == 4 || tag == 5) {
-          o = CBORObject.NewArray();
-
-  o.Add(ToObjectTest.TestToFromObjectRoundTrip(RandomObjects.RandomSmallIntegral(rand)));
-
-  o.Add(ToObjectTest.TestToFromObjectRoundTrip(RandomObjects.RandomEInteger(rand)));
+          cbor = CBORObject.NewArray();
+          object o = RandomObjects.RandomSmallIntegral(rand);
+          cbor.Add(ToObjectTest.TestToFromObjectRoundTrip(o));
+          o = RandomObjects.RandomEInteger(rand);
+          cbor.Add(ToObjectTest.TestToFromObjectRoundTrip(o));
         } else if (tag == 30) {
-          o = CBORObject.NewArray();
-
-  o.Add(ToObjectTest.TestToFromObjectRoundTrip(RandomObjects.RandomSmallIntegral(rand)));
-
-  o.Add(ToObjectTest.TestToFromObjectRoundTrip(RandomObjects.RandomEInteger(rand)));
+          cbor = CBORObject.NewArray();
+          object o = RandomObjects.RandomSmallIntegral(rand);
+          cbor.Add(ToObjectTest.TestToFromObjectRoundTrip(o));
+          o = RandomObjects.RandomEInteger(rand);
+          cbor.Add(ToObjectTest.TestToFromObjectRoundTrip(o));
         } else {
-          o = RandomCBORObject(rand, depth + 1);
+          cbor = RandomCBORObject(rand, depth + 1);
         }
         try {
-          o = CBORObject.FromObjectAndTag(o, tag);
+          cbor = CBORObject.FromObjectAndTag(cbor, tag);
          // Console.WriteLine("done");
-          return o;
+          return cbor;
         } catch (Exception) {
           continue;
         }
@@ -180,11 +183,11 @@ return
           return rand.UniformInt(2) == 0 ? CBORObject.Null :
             CBORObject.Undefined;
         case 6:
-          return
-  ToObjectTest.TestToFromObjectRoundTrip(RandomObjects.RandomTextString(rand));
+          return ToObjectTest.TestToFromObjectRoundTrip(
+            RandomObjects.RandomTextString(rand));
         case 7:
-          return
-  ToObjectTest.TestToFromObjectRoundTrip(RandomObjects.RandomByteString(rand));
+          return ToObjectTest.TestToFromObjectRoundTrip(
+            RandomObjects.RandomByteString(rand));
         case 8:
           return RandomCBORArray(rand, depth);
         case 9:
