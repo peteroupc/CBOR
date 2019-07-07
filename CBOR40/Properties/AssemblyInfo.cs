@@ -1,6 +1,6 @@
 using System.Reflection;
 [assembly: System.CLSCompliant(true)]
-[assembly: AssemblyInformationalVersion("4.0.0-alpha2")]
+[assembly: AssemblyInformationalVersion("4.0.0-beta1")]
 [assembly: AssemblyVersion("4.0.0")]
 [assembly: AssemblyFileVersion("4.0.0.0")]
 [assembly: AssemblyProduct("CBOR (Concise Binary Object Representati" +

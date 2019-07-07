@@ -30,7 +30,7 @@ namespace PeterO.Cbor {
 
       private PropertyInfo prop;
 #if NET20 || NET40
-            public static bool HasUsableGetter(PropertyInfo pi) {
+      public static bool HasUsableGetter(PropertyInfo pi) {
         return pi != null && pi.CanRead && !pi.GetGetMethod().IsStatic &&
                     pi.GetGetMethod().IsPublic;
       }
@@ -628,11 +628,17 @@ namespace PeterO.Cbor {
         object listObject = null;
 #if NET40 || NET20
         if (IsAssignableFrom(typeof(Array), t)) {
-Type elementType = t.GetElementType();
+          Type elementType = t.GetElementType();
           Array array = Array.CreateInstance(
-        elementType,
-        GetDimensions(objThis));
-    return FillArray(array, elementType, objThis, mapper, options, depth);
+            elementType,
+            GetDimensions(objThis));
+          return FillArray(
+            array,
+            elementType,
+            objThis,
+            mapper,
+            options,
+            depth);
         }
         if (t.IsGenericType) {
           Type td = t.GetGenericTypeDefinition();

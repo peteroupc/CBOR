@@ -51,7 +51,7 @@ namespace PeterO {
           }
           if (!String.IsNullOrEmpty(ValueParam)) {
             if (!method.Name.Equals(ValueParam)) {
-              continue;
+              // continue;
             }
           }
           Console.WriteLine(method.Name);

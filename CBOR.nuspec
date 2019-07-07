@@ -1,5 +1,5 @@
 <package
-><metadata><version>4.0.0-alpha2</version><id>PeterO.Cbor</id><requireLicenseAcceptance>false</requireLicenseAcceptance><releaseNotes>Version 4.0.0-beta1:
+><metadata><version>4.0.0-beta1</version><id>PeterO.Cbor</id><requireLicenseAcceptance>false</requireLicenseAcceptance><releaseNotes>Version 4.0.0-beta1:
 
 - Support nullable types in CBORObject.ToObject.
 - Update Numbers library to newer version

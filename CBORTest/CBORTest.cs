@@ -165,9 +165,9 @@ namespace Test {
     public void TestByteStringStreamNoIndefiniteWithinDefinite() {
       try {
         CBORTestCommon.FromBytesTestAB(new byte[] {
-        0x5f, 0x41, 0x20, 0x5f,
-        0x41, 0x20, 0xff, 0xff,
-      });
+          0x5f, 0x41, 0x20, 0x5f,
+          0x41, 0x20, 0xff, 0xff,
+        });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
         // NOTE: Intentionally empty
@@ -180,9 +180,9 @@ namespace Test {
     public void TestByteStringStreamNoTagsBeforeDefinite() {
       try {
         CBORTestCommon.FromBytesTestAB(new byte[] {
-        0x5f, 0x41, 0x20, 0xc2,
-        0x41, 0x20, 0xff,
-      });
+          0x5f, 0x41, 0x20, 0xc2,
+          0x41, 0x20, 0xff,
+        });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
         // NOTE: Intentionally empty
@@ -443,18 +443,18 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
         ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf));
 
       bool bval = ToObjectTest.TestToFromObjectRoundTrip(
-           CBORTestCommon.FloatNegInf)
-                           .IsInfinity();
+           CBORTestCommon.FloatNegInf).IsInfinity();
       Assert.IsTrue(bval);
 
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(
-            CBORTestCommon.RatPosInf)
-                            .IsInfinity());
+            CBORTestCommon.RatPosInf).IsInfinity());
 
-      Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf)
+      Assert.IsTrue(
+        ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf)
                             .IsNegativeInfinity());
 
-      Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
+      Assert.IsTrue(
+        ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
                             .IsPositiveInfinity());
       Assert.IsTrue(CBORObject.PositiveInfinity.IsPositiveInfinity());
       Assert.IsTrue(CBORObject.NegativeInfinity.IsNegativeInfinity());
@@ -489,34 +489,31 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
     public void TestCompareB() {
       {
         string stringTemp = CBORObject.DecodeFromBytes(new byte[] {
-    (byte)0xfa,
-    0x7f, (byte)0x80, 0x00, 0x00,
-  }).AsERational().ToString();
+          (byte)0xfa, 0x7f, (byte)0x80, 0x00, 0x00,
+        }).AsERational().ToString();
         Assert.AreEqual(
           "Infinity",
           stringTemp);
       }
       {
         CBORObject objectTemp = CBORObject.DecodeFromBytes(new byte[] {
-      (byte)0xc5, (byte)0x82, 0x38, (byte)0xc7, 0x3b, 0x00, 0x00, 0x08,
-      (byte)0xbf, (byte)0xda, (byte)0xaf, 0x73, 0x46,
-    });
+          (byte)0xc5, (byte)0x82, 0x38, (byte)0xc7, 0x3b, 0x00, 0x00, 0x08,
+          (byte)0xbf, (byte)0xda, (byte)0xaf, 0x73, 0x46,
+        });
         CBORObject objectTemp2 = CBORObject.DecodeFromBytes(new byte[] {
-      0x3b,
-      0x5a, (byte)0x9b, (byte)0x9a, (byte)0x9c, (byte)0xb4, (byte)0x95,
-      (byte)0xbf, 0x71,
-    });
+          0x3b, 0x5a, (byte)0x9b, (byte)0x9a, (byte)0x9c, (byte)0xb4, (byte)0x95,
+          (byte)0xbf, 0x71,
+        });
         AddSubCompare(objectTemp, objectTemp2);
       }
       {
         CBORObject objectTemp = CBORObject.DecodeFromBytes(new byte[] {
-      (byte)0xfa, 0x1f, (byte)0x80, (byte)0xdb, (byte)0x9b,
-    });
+          (byte)0xfa, 0x1f, (byte)0x80, (byte)0xdb, (byte)0x9b,
+        });
         CBORObject objectTemp2 = CBORObject.DecodeFromBytes(new byte[] {
-      (byte)0xfb, 0x31, (byte)0x90, (byte)0xea, 0x16, (byte)0xbe,
-      (byte)0x80,
-      0x0b, 0x37,
-    });
+          (byte)0xfb, 0x31, (byte)0x90, (byte)0xea, 0x16, (byte)0xbe, (byte)0x80,
+          0x0b, 0x37,
+        });
         AddSubCompare(objectTemp, objectTemp2);
       }
       CBORObject cbor = CBORObject.FromObjectAndTag(
@@ -574,7 +571,10 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
     [Test]
     public void TestDecimalFracExactlyTwoElements() {
       try {
-        CBORTestCommon.FromBytesTestAB(new byte[] { 0xc4, 0x82, 0xc2, 0x41, 1, });
+        CBORTestCommon.FromBytesTestAB(new byte[] {
+          0xc4, 0x82, 0xc2, 0x41,
+          1,
+        });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
         // NOTE: Intentionally empty
@@ -665,10 +665,12 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
         Assert.Fail("Not positive infinity");
       }
 
-      Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity)
+      Assert.IsTrue(
+        ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity)
               .AsEDecimal().IsPositiveInfinity());
 
-      Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
+      Assert.IsTrue(
+        ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
               .AsEDecimal().IsNegativeInfinity());
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Double.NaN)
               .AsEDecimal().IsNaN());
@@ -711,7 +713,8 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
       CBORObject obj;
       obj = CBORObject.DecodeFromBytes(new byte[] {
         (byte)0xc4, (byte)0x82,
-        0x3a, 0x00, 0x1c, 0x2d, 0x0d, 0x1a, 0x13, 0x6c, (byte)0xa1, (byte)0x97,
+        0x3a, 0x00, 0x1c, 0x2d, 0x0d, 0x1a, 0x13, 0x6c, (byte)0xa1,
+        (byte)0x97,
       });
       CBORTestCommon.AssertRoundTrip(obj);
       obj = CBORObject.DecodeFromBytes(new byte[] {
@@ -732,10 +735,12 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
 
     [Test]
     public void TestFloat() {
-      Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Single.PositiveInfinity)
+      Assert.IsTrue(
+        ToObjectTest.TestToFromObjectRoundTrip(Single.PositiveInfinity)
               .AsEDecimal().IsPositiveInfinity());
 
-      Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Single.NegativeInfinity)
+      Assert.IsTrue(
+        ToObjectTest.TestToFromObjectRoundTrip(Single.NegativeInfinity)
               .AsEDecimal().IsNegativeInfinity());
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
           .AsEDecimal().IsNaN());
@@ -749,13 +754,19 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
     public void TestHalfPrecision() {
       CBORObject o = CBORObject.DecodeFromBytes(
         new byte[] { 0xf9, 0x7c, 0x00 });
-      Assert.AreEqual(Single.PositiveInfinity, o.AsSingle());
+      if (o.AsSingle() != Single.PositiveInfinity) {
+        Assert.Fail();
+      }
       o = CBORObject.DecodeFromBytes(
         new byte[] { 0xf9, 0x00, 0x00 });
-      Assert.AreEqual(0f, o.AsSingle());
+      if (o.AsSingle() != 0f) {
+        Assert.Fail();
+      }
       o = CBORObject.DecodeFromBytes(
         new byte[] { 0xf9, 0xfc, 0x00 });
-      Assert.AreEqual(Single.NegativeInfinity, o.AsSingle());
+      if (o.AsSingle() != Single.NegativeInfinity) {
+        Assert.Fail();
+      }
       o = CBORObject.DecodeFromBytes(
         new byte[] { 0xf9, 0x7e, 0x00 });
       Assert.IsTrue(Single.IsNaN(o.AsSingle()));
@@ -1537,9 +1548,9 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
     public void TestTextStringStreamNoIndefiniteWithinDefinite() {
       try {
         CBORTestCommon.FromBytesTestAB(new byte[] {
-        0x7f, 0x61, 0x20, 0x7f,
-        0x61, 0x20, 0xff, 0xff,
-      });
+          0x7f, 0x61, 0x20, 0x7f,
+          0x61, 0x20, 0xff, 0xff,
+        });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
         // NOTE: Intentionally empty
@@ -1552,9 +1563,9 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
     public void TestTextStringStreamNoTagsBeforeDefinite() {
       try {
         CBORTestCommon.FromBytesTestAB(new byte[] {
-        0x7f, 0x61, 0x20, 0xc0,
-        0x61, 0x20, 0xff,
-      });
+          0x7f, 0x61, 0x20, 0xc0,
+          0x61, 0x20, 0xff,
+        });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
         // NOTE: Intentionally empty
@@ -1580,7 +1591,8 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
     }
 
     private static void TestDecimalString(String r) {
-      CBORObject o = ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(r));
+      CBORObject o =
+ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(r));
       CBORObject o2 = CBORDataUtilities.ParseJSONNumber(r);
       TestCommon.CompareTestEqual(o, o2);
     }

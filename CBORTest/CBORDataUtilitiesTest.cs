@@ -192,9 +192,9 @@ namespace Test {
       CBORObject cbor = CBORDataUtilities.ParseJSONNumber("2e-2147483648");
       CBORTestCommon.AssertJSONSer(cbor, "2E-2147483648");
       if (CBORDataUtilities.ParseJSONNumber(
-    "0.5e+xyz",
-    false,
-    false) != null) {
+        "0.5e+xyz",
+        false,
+        false) != null) {
         Assert.Fail();
       }
       if (
