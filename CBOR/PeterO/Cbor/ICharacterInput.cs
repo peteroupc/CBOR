@@ -9,7 +9,7 @@ namespace PeterO.Cbor {
     int ReadChar();
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.ICharacterInput.Read(System.Int32[],System.Int32,System.Int32)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.Cbor.ICharacterInput.Read(System.Int32[],System.Int32,System.Int32)"]/*'/>
     int Read(int[] chars, int index, int length);
   }
 }

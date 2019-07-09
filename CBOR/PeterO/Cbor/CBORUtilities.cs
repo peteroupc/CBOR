@@ -208,21 +208,29 @@ namespace PeterO.Cbor {
       return a.Subtract(FloorDiv(a, n).Multiply(n));
     }
 
-    private static readonly int[] ValueNormalDays = { 0, 31, 28, 31, 30, 31, 30,
+    private static readonly int[] ValueNormalDays = {
+      0, 31, 28, 31, 30, 31, 30,
       31, 31, 30,
-      31, 30, 31, };
+      31, 30, 31,
+    };
 
-    private static readonly int[] ValueLeapDays = { 0, 31, 29, 31, 30, 31, 30,
+    private static readonly int[] ValueLeapDays = {
+      0, 31, 29, 31, 30, 31, 30,
       31, 31, 30,
-      31, 30, 31, };
+      31, 30, 31,
+    };
 
-    private static readonly int[] ValueNormalToMonth = { 0, 0x1f, 0x3b, 90, 120,
+    private static readonly int[] ValueNormalToMonth = {
+      0, 0x1f, 0x3b, 90, 120,
       0x97, 0xb5,
-      0xd4, 0xf3, 0x111, 0x130, 0x14e, 0x16d, };
+      0xd4, 0xf3, 0x111, 0x130, 0x14e, 0x16d,
+    };
 
-    private static readonly int[] ValueLeapToMonth = { 0, 0x1f, 60, 0x5b, 0x79,
+    private static readonly int[] ValueLeapToMonth = {
+      0, 0x1f, 60, 0x5b, 0x79,
       0x98, 0xb6,
-      0xd5, 0xf4, 0x112, 0x131, 0x14f, 0x16e, };
+      0xd5, 0xf4, 0x112, 0x131, 0x14f, 0x16e,
+    };
 
     public static void GetNormalizedPartProlepticGregorian(
       EInteger year,
@@ -287,7 +295,7 @@ namespace PeterO.Cbor {
          day)
        // .Subtract(GetNumberOfDaysProlepticGregorian(
        // EInteger.FromInt32(1904),
-       1 //,
+       1 // ,
        s1));*/
     public static EInteger GetNumberOfDaysProlepticGregorian(
       EInteger year,

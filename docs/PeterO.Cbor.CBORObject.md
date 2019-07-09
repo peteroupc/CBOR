@@ -456,7 +456,9 @@ This object is not a map or an array.
 
     public PeterO.Cbor.CBORObject Abs();
 
- Gets this object's absolute value.  <b>Return Value:</b>
+ Gets this object's absolute value.
+
+<b>Return Value:</b>
 
 This object's absolute without its negative sign.
 
@@ -476,7 +478,7 @@ This object's type is not a number type.
 
  NOTE: This method can't be used to add a tag to an existing CBOR object. To create a CBOR object with a given tag, call the  `CBORObject.FromObjectAndTag`  method and pass the CBOR object and the desired tag number to that method.
 
-  <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>key</i>: An object representing the key, which will be converted to a CBORObject. Can be null, in which case this value is converted to CBORObject.Null.
 
@@ -517,7 +519,7 @@ The parameter  <i>key</i>
 
  .
 
- <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>obj</i>: A CBOR object (or an object convertible to a CBOR object) to add to this CBOR array.
 
@@ -552,7 +554,7 @@ The type of  <i>obj</i>
 
  .
 
- <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>obj</i>: The parameter  <i>obj</i>
  is a CBOR object.
@@ -573,7 +575,9 @@ This object is not an array.
         PeterO.Cbor.CBORObject first,
         PeterO.Cbor.CBORObject second);
 
- Finds the sum of two CBOR numbers.  <b>Parameters:</b>
+ Finds the sum of two CBOR numbers.
+
+<b>Parameters:</b>
 
  * <i>first</i>: The parameter  <i>first</i>
  is a CBOR object.
@@ -595,7 +599,9 @@ Either or both operands are not numbers (as opposed to Not-a-Number, NaN).
 
     public bool AsBoolean();
 
- Returns false if this object is False, Null, or Undefined; otherwise,true.  <b>Return Value:</b>
+ Returns false if this object is False, Null, or Undefined; otherwise,true.
+
+<b>Return Value:</b>
 
 False if this object is False, Null, or Undefined; otherwise,true.
 
@@ -604,7 +610,9 @@ False if this object is False, Null, or Undefined; otherwise,true.
 
     public byte AsByte();
 
- Converts this object to a byte (0 to 255). Floating point values are truncated to an integer.  <b>Return Value:</b>
+ Converts this object to a byte (0 to 255). Floating point values are truncated to an integer.
+
+<b>Return Value:</b>
 
 The closest byte-sized integer to this object.
 
@@ -621,7 +629,9 @@ This object's value exceeds the range of a byte (would be less than 0 or greater
 
     public System.Decimal AsDecimal();
 
- Converts this object to a .NET decimal.  <b>Return Value:</b>
+ Converts this object to a .NET decimal.
+
+<b>Return Value:</b>
 
 The closest big integer to this object.
 
@@ -638,7 +648,9 @@ This object's value exceeds the range of a .NET decimal.
 
     public double AsDouble();
 
- Converts this object to a 64-bit floating point number.  <b>Return Value:</b>
+ Converts this object to a 64-bit floating point number.
+
+<b>Return Value:</b>
 
 The closest 64-bit floating point number to this object. The return value can be positive infinity or negative infinity if this value exceeds the range of a 64-bit floating point number.
 
@@ -652,7 +664,9 @@ This object's type is not a number type.
 
     public PeterO.Numbers.EDecimal AsEDecimal();
 
- Converts this object to a decimal number.  <b>Return Value:</b>
+ Converts this object to a decimal number.
+
+<b>Return Value:</b>
 
 A decimal number for this object's value. If this object is a rational number with a nonterminating decimal expansion, returns a decimal number rounded to 34 digits.
 
@@ -666,7 +680,9 @@ This object's type is not a number type, including if this object is CBORObject.
 
     public PeterO.Numbers.EFloat AsEFloat();
 
- Converts this object to an arbitrary-precision binary floating point number.  <b>Return Value:</b>
+ Converts this object to an arbitrary-precision binary floating point number.
+
+<b>Return Value:</b>
 
 An arbitrary-precision binary floating point number for this object's value. Note that if this object is a decimal number with a fractional part, the conversion may lose information depending on the number. If this object is a rational number with a nonterminating binary expansion, returns a binary floating-point number rounded to a high but limited precision.
 
@@ -680,7 +696,9 @@ This object's type is not a number type, including if this object is CBORObject.
 
     public PeterO.Numbers.EInteger AsEInteger();
 
- Converts this object to an arbitrary-precision integer. Fractional values are truncated to an integer.  <b>Return Value:</b>
+ Converts this object to an arbitrary-precision integer. Fractional values are truncated to an integer.
+
+<b>Return Value:</b>
 
 The closest big integer to this object.
 
@@ -697,7 +715,9 @@ This object's value is infinity or not-a-number (NaN).
 
     public PeterO.Numbers.ERational AsERational();
 
- Converts this object to a rational number.  <b>Return Value:</b>
+ Converts this object to a rational number.
+
+<b>Return Value:</b>
 
 A rational number for this object's value.
 
@@ -711,7 +731,9 @@ This object's type is not a number type, including if this object is CBORObject.
 
     public short AsInt16();
 
- Converts this object to a 16-bit signed integer. Floating point values are truncated to an integer.  <b>Return Value:</b>
+ Converts this object to a 16-bit signed integer. Floating point values are truncated to an integer.
+
+<b>Return Value:</b>
 
 The closest 16-bit signed integer to this object.
 
@@ -737,7 +759,7 @@ This object's value exceeds the range of a 16-bit signed integer.
 
  .
 
- <b>Return Value:</b>
+<b>Return Value:</b>
 
 The closest 32-bit signed integer to this object.
 
@@ -763,7 +785,7 @@ This object's value exceeds the range of a 32-bit signed integer.
 
  .
 
- <b>Return Value:</b>
+<b>Return Value:</b>
 
 The closest 64-bit signed integer to this object.
 
@@ -780,7 +802,9 @@ This object's value exceeds the range of a 64-bit signed integer.
 
     public sbyte AsSByte();
 
- Converts this object to an 8-bit signed integer.  <b>Return Value:</b>
+ Converts this object to an 8-bit signed integer.
+
+<b>Return Value:</b>
 
 An 8-bit signed integer.
 
@@ -789,7 +813,9 @@ An 8-bit signed integer.
 
     public float AsSingle();
 
- Converts this object to a 32-bit floating point number.  <b>Return Value:</b>
+ Converts this object to a 32-bit floating point number.
+
+<b>Return Value:</b>
 
 The closest 32-bit floating point number to this object. The return value can be positive infinity or negative infinity if this object's value exceeds the range of a 32-bit floating point number.
 
@@ -803,7 +829,9 @@ This object's type is not a number type.
 
     public string AsString();
 
- Gets the value of this object as a text string.  <b>Return Value:</b>
+ Gets the value of this object as a text string.
+
+<b>Return Value:</b>
 
 Gets this object's string.
 
@@ -817,7 +845,9 @@ This object's type is not a string, including if this object is CBORObject.Null.
 
     public ushort AsUInt16();
 
- Converts this object to a 16-bit unsigned integer. The return value will be truncated as necessary.  <b>Return Value:</b>
+ Converts this object to a 16-bit unsigned integer. The return value will be truncated as necessary.
+
+<b>Return Value:</b>
 
 A 16-bit unsigned integer.
 
@@ -831,7 +861,9 @@ This object's value is outside the range of a 16-bit unsigned integer.
 
     public uint AsUInt32();
 
- Converts this object to a 32-bit unsigned integer. The return value will be truncated as necessary.  <b>Return Value:</b>
+ Converts this object to a 32-bit unsigned integer. The return value will be truncated as necessary.
+
+<b>Return Value:</b>
 
 A 32-bit unsigned integer.
 
@@ -845,7 +877,9 @@ This object's value is outside the range of a 32-bit unsigned integer.
 
     public ulong AsUInt64();
 
- Converts this object to a 64-bit unsigned integer. Non-integer values are truncated to an integer.  <b>Return Value:</b>
+ Converts this object to a 64-bit unsigned integer. Non-integer values are truncated to an integer.
+
+<b>Return Value:</b>
 
 The closest big integer to this object.
 
@@ -862,7 +896,9 @@ This object's value exceeds the range of a 64-bit unsigned integer.
 
     public bool CanFitInDouble();
 
- Returns whether this object's value can be converted to a 64-bit floating point number without its value being rounded to another numerical value.  <b>Return Value:</b>
+ Returns whether this object's value can be converted to a 64-bit floating point number without its value being rounded to another numerical value.
+
+<b>Return Value:</b>
 
 Whether this object's value can be converted to a 64-bit floating point number without its value being rounded to another numerical value. Returns true if this is a not-a-number value, even if the value's diagnostic information can' t fit in a 64-bit floating point number.
 
@@ -871,7 +907,9 @@ Whether this object's value can be converted to a 64-bit floating point number w
 
     public bool CanFitInInt32();
 
- Returns whether this object's numerical value is an integer, is -(2^31) or greater, and is less than 2^31.  <b>Return Value:</b>
+ Returns whether this object's numerical value is an integer, is -(2^31) or greater, and is less than 2^31.
+
+<b>Return Value:</b>
 
  `true`  if this object's numerical value is an integer, is -(2^31) or greater, and is less than 2^31; otherwise,  `false`  .
 
@@ -880,7 +918,9 @@ Whether this object's value can be converted to a 64-bit floating point number w
 
     public bool CanFitInInt64();
 
- Returns whether this object's numerical value is an integer, is -(2^63) or greater, and is less than 2^63.  <b>Return Value:</b>
+ Returns whether this object's numerical value is an integer, is -(2^63) or greater, and is less than 2^63.
+
+<b>Return Value:</b>
 
  `true`  if this object's numerical value is an integer, is -(2^63) or greater, and is less than 2^63; otherwise,  `false`  .
 
@@ -889,7 +929,9 @@ Whether this object's value can be converted to a 64-bit floating point number w
 
     public bool CanFitInSingle();
 
- Returns whether this object's value can be converted to a 32-bit floating point number without its value being rounded to another numerical value.  <b>Return Value:</b>
+ Returns whether this object's value can be converted to a 32-bit floating point number without its value being rounded to another numerical value.
+
+<b>Return Value:</b>
 
 Whether this object's value can be converted to a 32-bit floating point number without its value being rounded to another numerical value. Returns true if this is a not-a-number value, even if the value's diagnostic information can' t fit in a 32-bit floating point number.
 
@@ -898,7 +940,9 @@ Whether this object's value can be converted to a 32-bit floating point number w
 
     public bool CanTruncatedIntFitInInt32();
 
- Returns whether this object's value, truncated to an integer, would be -(2^31) or greater, and less than 2^31.  <b>Return Value:</b>
+ Returns whether this object's value, truncated to an integer, would be -(2^31) or greater, and less than 2^31.
+
+<b>Return Value:</b>
 
  `true`  if this object's value, truncated to an integer, would be -(2^31) or greater, and less than 2^31; otherwise,  `false`  .
 
@@ -907,7 +951,9 @@ Whether this object's value can be converted to a 32-bit floating point number w
 
     public bool CanTruncatedIntFitInInt64();
 
- Returns whether this object's value, truncated to an integer, would be -(2^63) or greater, and less than 2^63.  <b>Return Value:</b>
+ Returns whether this object's value, truncated to an integer, would be -(2^63) or greater, and less than 2^63.
+
+<b>Return Value:</b>
 
  `true`  if this object's value, truncated to an integer, would be -(2^63) or greater, and less than 2^63; otherwise,  `false`  .
 
@@ -916,7 +962,9 @@ Whether this object's value can be converted to a 32-bit floating point number w
 
     public void Clear();
 
- Removes all items from this CBOR array or all keys and values from this CBOR map.  <b>Exceptions:</b>
+ Removes all items from this CBOR array or all keys and values from this CBOR map.
+
+<b>Exceptions:</b>
 
  * System.InvalidOperationException:
 This object is not a CBOR array or CBOR map.
@@ -949,7 +997,7 @@ This object is not a CBOR array or CBOR map.
 
   This method is not consistent with the Equals method.
 
-  <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>other</i>: A value to compare with.
 
@@ -968,7 +1016,9 @@ An internal error occurred.
     public int CompareToIgnoreTags(
         PeterO.Cbor.CBORObject other);
 
- Compares this object and another CBOR object, ignoring the tags they have, if any. See the CompareTo method for more information on the comparison function.  <b>Parameters:</b>
+ Compares this object and another CBOR object, ignoring the tags they have, if any. See the CompareTo method for more information on the comparison function.
+
+<b>Parameters:</b>
 
  * <i>other</i>: A value to compare with.
 
@@ -982,7 +1032,9 @@ Less than 0, if this value is less than the other object; or 0, if both values a
     public bool ContainsKey(
         object objKey);
 
- Determines whether a value of the given key exists in this object.  <b>Parameters:</b>
+ Determines whether a value of the given key exists in this object.
+
+<b>Parameters:</b>
 
  * <i>objKey</i>: The parameter  <i>objKey</i>
  is an arbitrary object.
@@ -997,7 +1049,9 @@ Less than 0, if this value is less than the other object; or 0, if both values a
     public bool ContainsKey(
         PeterO.Cbor.CBORObject key);
 
- Determines whether a value of the given key exists in this object.  <b>Parameters:</b>
+ Determines whether a value of the given key exists in this object.
+
+<b>Parameters:</b>
 
  * <i>key</i>: An object that serves as the key. If this is  `null`  , checks for  `CBORObject.Null`  .
 
@@ -1011,7 +1065,9 @@ Less than 0, if this value is less than the other object; or 0, if both values a
     public bool ContainsKey(
         string key);
 
- Determines whether a value of the given key exists in this object.  <b>Parameters:</b>
+ Determines whether a value of the given key exists in this object.
+
+<b>Parameters:</b>
 
  * <i>key</i>: A string that serves as the key. If this is  `null`  , checks for  `CBORObject.Null`  .
 
@@ -1027,7 +1083,7 @@ Less than 0, if this value is less than the other object; or 0, if both values a
 
  Generates a CBOR object from an array of CBOR-encoded bytes.
 
-  <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>data</i>: A byte array in which a single CBOR object is encoded.
 
@@ -1064,7 +1120,7 @@ The parameter  <i>data</i>
 
  .
 
- <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>data</i>: A byte array in which a single CBOR object is encoded.
 
@@ -1092,7 +1148,9 @@ The parameter  <i>data</i>
         PeterO.Cbor.CBORObject first,
         PeterO.Cbor.CBORObject second);
 
- Divides a CBORObject object by the value of a CBORObject object.  <b>Parameters:</b>
+ Divides a CBORObject object by the value of a CBORObject object.
+
+<b>Parameters:</b>
 
  * <i>first</i>: The parameter  <i>first</i>
  is a CBOR object.
@@ -1110,7 +1168,9 @@ The quotient of the two objects.
     public byte[] EncodeToBytes(
         PeterO.Cbor.CBOREncodeOptions options);
 
- Writes the binary representation of this CBOR object and returns a byte array of that representation, using the specified options for encoding the object to CBOR format. For the CTAP2 canonical ordering, which is useful for implementing Web Authentication, call this method as follows:  `EncodeToBytes(new CBOREncodeOptions(false, false, true))`  .  <b>Parameters:</b>
+ Writes the binary representation of this CBOR object and returns a byte array of that representation, using the specified options for encoding the object to CBOR format. For the CTAP2 canonical ordering, which is useful for implementing Web Authentication, call this method as follows:  `EncodeToBytes(new CBOREncodeOptions(false, false, true))`  .
+
+<b>Parameters:</b>
 
  * <i>options</i>: Options for encoding the data to CBOR.
 
@@ -1131,7 +1191,7 @@ The parameter  <i>options</i>
 
  Writes the binary representation of this CBOR object and returns a byte array of that representation. If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the byte array in an undefined order. The example code given in **M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)** can be used to write out certain keys of a CBOR map in a given order. For the CTAP2 canonical ordering, which is useful for implementing Web Authentication, call  `EncodeToBytes(new CBOREncodeOptions(false,false,true))`  rather than this method.
 
-  <b>Return Value:</b>
+<b>Return Value:</b>
 
 A byte array in CBOR format.
 
@@ -1141,7 +1201,9 @@ A byte array in CBOR format.
     public override bool Equals(
         object obj);
 
- Determines whether this object and another object are equal and have the same type. Not-a-number values can be considered equal by this method.  <b>Parameters:</b>
+ Determines whether this object and another object are equal and have the same type. Not-a-number values can be considered equal by this method.
+
+<b>Parameters:</b>
 
  * <i>obj</i>: The parameter  <i>obj</i>
  is an arbitrary object.
@@ -1156,7 +1218,9 @@ A byte array in CBOR format.
     public sealed bool Equals(
         PeterO.Cbor.CBORObject other);
 
- Compares the equality of two CBOR objects. Not-a-number values can be considered equal by this method.  <b>Parameters:</b>
+ Compares the equality of two CBOR objects. Not-a-number values can be considered equal by this method.
+
+<b>Parameters:</b>
 
  * <i>other</i>: The object to compare.
 
@@ -1176,7 +1240,7 @@ A byte array in CBOR format.
 
  Note that if a CBOR object is converted to JSON with  `ToJSONString`  , then the JSON is converted back to CBOR with this method, the new CBOR object will not necessarily be the same as the old CBOR object, especially if the old CBOR object uses data types not supported in JSON, such as integers in map keys.
 
-  <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>str</i>: A string in JSON format. The entire string must contain a single JSON object and not multiple objects. The string may not begin with a byte-order mark (U+FEFF).
 
@@ -1202,7 +1266,7 @@ The string is not in JSON format.
 
  Generates a CBOR object from a text string in JavaScript Object Notation (JSON) format, using the specified options to control the decoding process. Note that if a CBOR object is converted to JSON with  `ToJSONString`  , then the JSON is converted back to CBOR with this method, the new CBOR object will not necessarily be the same as the old CBOR object, especially if the old CBOR object uses data types not supported in JSON, such as integers in map keys.
 
-  <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>str</i>: A string in JSON format. The entire string must contain a single JSON object and not multiple objects. The string may not begin with a byte-order mark (U+FEFF).
 
@@ -1228,7 +1292,9 @@ The string is not in JSON format.
     public static PeterO.Cbor.CBORObject FromObject(
         bool value);
 
- Returns the CBOR true value or false value, depending on "value".  <b>Parameters:</b>
+ Returns the CBOR true value or false value, depending on "value".
+
+<b>Parameters:</b>
 
  * <i>value</i>: Either True or False.
 
@@ -1242,7 +1308,9 @@ CBORObject.True if value is true; otherwise CBORObject.False.
     public static PeterO.Cbor.CBORObject FromObject(
         byte value);
 
- Generates a CBOR object from a byte (0 to 255).  <b>Parameters:</b>
+ Generates a CBOR object from a byte (0 to 255).
+
+<b>Parameters:</b>
 
  * <i>value</i>: The parameter  <i>value</i>
  is a byte (from 0 to 255).
@@ -1267,7 +1335,7 @@ A CBORObject object.
 
  .
 
- <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>bytes</i>: A byte array. Can be null.
 
@@ -1281,7 +1349,9 @@ A CBOR byte string object where each byte of the given byte array is copied to a
     public static PeterO.Cbor.CBORObject FromObject(
         double value);
 
- Generates a CBOR object from a 64-bit floating-point number.  <b>Parameters:</b>
+ Generates a CBOR object from a 64-bit floating-point number.
+
+<b>Parameters:</b>
 
  * <i>value</i>: The parameter  <i>value</i>
  is a 64-bit floating-point number.
@@ -1296,7 +1366,9 @@ A CBORObject object.
     public static PeterO.Cbor.CBORObject FromObject(
         float value);
 
- Generates a CBOR object from a 32-bit floating-point number.  <b>Parameters:</b>
+ Generates a CBOR object from a 32-bit floating-point number.
+
+<b>Parameters:</b>
 
  * <i>value</i>: The parameter  <i>value</i>
  is a 32-bit floating-point number.
@@ -1311,7 +1383,9 @@ A CBORObject object.
     public static PeterO.Cbor.CBORObject FromObject(
         int value);
 
- Generates a CBOR object from a 32-bit signed integer.  <b>Parameters:</b>
+ Generates a CBOR object from a 32-bit signed integer.
+
+<b>Parameters:</b>
 
  * <i>value</i>: The parameter  <i>value</i>
  is a 32-bit signed integer.
@@ -1326,7 +1400,9 @@ A CBORObject object.
     public static PeterO.Cbor.CBORObject FromObject(
         int[] array);
 
- Generates a CBOR object from an array of 32-bit integers.  <b>Parameters:</b>
+ Generates a CBOR object from an array of 32-bit integers.
+
+<b>Parameters:</b>
 
  * <i>array</i>: An array of 32-bit integers.
 
@@ -1340,7 +1416,9 @@ A CBOR array object where each element of the given array is copied to a new arr
     public static PeterO.Cbor.CBORObject FromObject(
         long value);
 
- Generates a CBOR object from a 64-bit signed integer.  <b>Parameters:</b>
+ Generates a CBOR object from a 64-bit signed integer.
+
+<b>Parameters:</b>
 
  * <i>value</i>: The parameter  <i>value</i>
  is a 64-bit signed integer.
@@ -1355,7 +1433,9 @@ A CBORObject object.
     public static PeterO.Cbor.CBORObject FromObject(
         long[] array);
 
- Generates a CBOR object from an array of 64-bit integers.  <b>Parameters:</b>
+ Generates a CBOR object from an array of 64-bit integers.
+
+<b>Parameters:</b>
 
  * <i>array</i>: An array of 64-bit integers.
 
@@ -1369,7 +1449,9 @@ A CBOR array object where each element of the given array is copied to a new arr
     public static PeterO.Cbor.CBORObject FromObject(
         object obj);
 
- Generates a CBORObject from an arbitrary object. See the overload of this method that takes CBORTypeMapper and PODOptions arguments.  <b>Parameters:</b>
+ Generates a CBORObject from an arbitrary object. See the overload of this method that takes CBORTypeMapper and PODOptions arguments.
+
+<b>Parameters:</b>
 
  * <i>obj</i>: The parameter  <i>obj</i>
  is an arbitrary object. <b>NOTE:</b> For security reasons, whenever possible, an application should not base this parameter on user input or other externally supplied data unless the application limits this parameter's inputs to types specially handled by this method (such as  `int`  or  `String`  ) and/or to plain-old-data types (POCO or POJO types) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
@@ -1387,7 +1469,9 @@ A CBOR object corresponding to the given object. Returns CBORObject.Null if the 
         object obj,
         PeterO.Cbor.CBORTypeMapper mapper);
 
- Generates a CBORObject from an arbitrary object. See the overload of this method that takes CBORTypeMapper and PODOptions arguments.  <b>Parameters:</b>
+ Generates a CBORObject from an arbitrary object. See the overload of this method that takes CBORTypeMapper and PODOptions arguments.
+
+<b>Parameters:</b>
 
  * <i>obj</i>: The parameter  <i>obj</i>
  is an arbitrary object. <b>NOTE:</b> For security reasons, whenever possible, an application should not base this parameter on user input or other externally supplied data unless the application limits this parameter's inputs to types specially handled by this method (such as  `int`  or  `String`  ) and/or to plain-old-data types (POCO or POJO types) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
@@ -1468,7 +1552,7 @@ The parameter  <i>mapper</i>
 
   * both FromObject and ToObject will be better designed, in version 4.0, so that backward-compatible improvements are easier to make.
 
-   <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>obj</i>: An arbitrary object to convert to a CBOR object. <b>NOTE:</b> For security reasons, whenever possible, an application should not base this parameter on user input or other externally supplied data unless the application limits this parameter's inputs to types specially handled by this method (such as  `int`  or  `String`  ) and/or to plain-old-data types (POCO or POJO types) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
 
@@ -1495,7 +1579,9 @@ The parameter  <i>options</i>
         object obj,
         PeterO.Cbor.PODOptions options);
 
- Generates a CBORObject from an arbitrary object. See the overload of this method that takes CBORTypeMapper and PODOptions arguments.  <b>Parameters:</b>
+ Generates a CBORObject from an arbitrary object. See the overload of this method that takes CBORTypeMapper and PODOptions arguments.
+
+<b>Parameters:</b>
 
  * <i>obj</i>: The parameter  <i>obj</i>
  is an arbitrary object. <b>NOTE:</b> For security reasons, whenever possible, an application should not base this parameter on user input or other externally supplied data unless the application limits this parameter's inputs to types specially handled by this method (such as  `int`  or  `String`  ) and/or to plain-old-data types (POCO or POJO types) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
@@ -1520,7 +1606,9 @@ The parameter  <i>options</i>
     public static PeterO.Cbor.CBORObject FromObject(
         PeterO.Cbor.CBORObject value);
 
- Generates a CBOR object from a CBOR object.  <b>Parameters:</b>
+ Generates a CBOR object from a CBOR object.
+
+<b>Parameters:</b>
 
  * <i>value</i>: The parameter  <i>value</i>
  is a CBOR object.
@@ -1535,7 +1623,9 @@ Same as.
     public static PeterO.Cbor.CBORObject FromObject(
         PeterO.Cbor.CBORObject[] array);
 
- Generates a CBOR object from an array of CBOR objects.  <b>Parameters:</b>
+ Generates a CBOR object from an array of CBOR objects.
+
+<b>Parameters:</b>
 
  * <i>array</i>: An array of CBOR objects.
 
@@ -1549,7 +1639,9 @@ A CBOR object where each element of the given array is copied to a new array, or
     public static PeterO.Cbor.CBORObject FromObject(
         PeterO.Numbers.EDecimal otherValue);
 
- Generates a CBOR object from a decimal number.  <b>Parameters:</b>
+ Generates a CBOR object from a decimal number.
+
+<b>Parameters:</b>
 
  * <i>otherValue</i>: An arbitrary-precision decimal number.
 
@@ -1563,7 +1655,9 @@ A CBOR number.
     public static PeterO.Cbor.CBORObject FromObject(
         PeterO.Numbers.EFloat bigValue);
 
- Generates a CBOR object from an arbitrary-precision binary floating-point number.  <b>Parameters:</b>
+ Generates a CBOR object from an arbitrary-precision binary floating-point number.
+
+<b>Parameters:</b>
 
  * <i>bigValue</i>: An arbitrary-precision binary floating-point number.
 
@@ -1577,7 +1671,9 @@ A CBOR number.
     public static PeterO.Cbor.CBORObject FromObject(
         PeterO.Numbers.EInteger bigintValue);
 
- Generates a CBOR object from an arbitrary-precision integer.  <b>Parameters:</b>
+ Generates a CBOR object from an arbitrary-precision integer.
+
+<b>Parameters:</b>
 
  * <i>bigintValue</i>: An arbitrary-precision value.
 
@@ -1591,7 +1687,9 @@ A CBOR number.
     public static PeterO.Cbor.CBORObject FromObject(
         PeterO.Numbers.ERational bigValue);
 
- Generates a CBOR object from a rational number.  <b>Parameters:</b>
+ Generates a CBOR object from a rational number.
+
+<b>Parameters:</b>
 
  * <i>bigValue</i>: A rational number.
 
@@ -1605,7 +1703,9 @@ A CBOR number.
     public static PeterO.Cbor.CBORObject FromObject(
         sbyte value);
 
- Converts a signed 8-bit integer to a CBOR object.  <b>Parameters:</b>
+ Converts a signed 8-bit integer to a CBOR object.
+
+<b>Parameters:</b>
 
  * <i>value</i>: The parameter  <i>value</i>
  is an 8-bit signed integer.
@@ -1620,7 +1720,9 @@ A CBORObject object.
     public static PeterO.Cbor.CBORObject FromObject(
         short value);
 
- Generates a CBOR object from a 16-bit signed integer.  <b>Parameters:</b>
+ Generates a CBOR object from a 16-bit signed integer.
+
+<b>Parameters:</b>
 
  * <i>value</i>: The parameter  <i>value</i>
  is a 16-bit signed integer.
@@ -1635,7 +1737,9 @@ A CBORObject object.
     public static PeterO.Cbor.CBORObject FromObject(
         string strValue);
 
- Generates a CBOR object from a text string.  <b>Parameters:</b>
+ Generates a CBOR object from a text string.
+
+<b>Parameters:</b>
 
  * <i>strValue</i>: A string value. Can be null.
 
@@ -1654,7 +1758,9 @@ The string contains an unpaired surrogate code point.
     public static PeterO.Cbor.CBORObject FromObject(
         System.Decimal value);
 
- Converts a .NET decimal to a CBOR object.  <b>Parameters:</b>
+ Converts a .NET decimal to a CBOR object.
+
+<b>Parameters:</b>
 
  * <i>value</i>: The parameter  <i>value</i>
  is a Decimal object.
@@ -1669,7 +1775,9 @@ A CBORObject object with the same value as the .NET decimal.
     public static PeterO.Cbor.CBORObject FromObject(
         uint value);
 
- Converts a 32-bit unsigned integer to a CBOR object.  <b>Parameters:</b>
+ Converts a 32-bit unsigned integer to a CBOR object.
+
+<b>Parameters:</b>
 
  * <i>value</i>: A 32-bit unsigned integer.
 
@@ -1683,7 +1791,9 @@ A CBORObject object.
     public static PeterO.Cbor.CBORObject FromObject(
         ulong value);
 
- Converts a 64-bit unsigned integer to a CBOR object.  <b>Parameters:</b>
+ Converts a 64-bit unsigned integer to a CBOR object.
+
+<b>Parameters:</b>
 
  * <i>value</i>: A 64-bit unsigned integer.
 
@@ -1697,7 +1807,9 @@ A CBORObject object.
     public static PeterO.Cbor.CBORObject FromObject(
         ushort value);
 
- Converts a 16-bit unsigned integer to a CBOR object.  <b>Parameters:</b>
+ Converts a 16-bit unsigned integer to a CBOR object.
+
+<b>Parameters:</b>
 
  * <i>value</i>: A 16-bit unsigned integer.
 
@@ -1712,7 +1824,9 @@ A CBORObject object.
         object o,
         ulong tag);
 
- Generates a CBOR object from an arbitrary object and gives the resulting object a tag.  <b>Parameters:</b>
+ Generates a CBOR object from an arbitrary object and gives the resulting object a tag.
+
+<b>Parameters:</b>
 
  * <i>o</i>: The parameter  <i>o</i>
  is an arbitrary object.
@@ -1732,7 +1846,9 @@ A CBOR object where the object  <i>o</i>
         object valueOb,
         PeterO.Numbers.EInteger bigintTag);
 
- Generates a CBOR object from an arbitrary object and gives the resulting object a tag.  <b>Parameters:</b>
+ Generates a CBOR object from an arbitrary object and gives the resulting object a tag.
+
+<b>Parameters:</b>
 
  * <i>valueOb</i>: An arbitrary object. If the tag number is 2 or 3, this must be a byte string whose bytes represent an integer in little-endian byte order, and the value of the number is 1 minus the integer's value for tag 3. If the tag number is 4 or 5, this must be an array with two elements: the first must be an integer representing the exponent, and the second must be an integer representing a mantissa.
 
@@ -1762,7 +1878,9 @@ The parameter  <i>bigintTag</i>
         object valueObValue,
         int smallTag);
 
- Generates a CBOR object from an arbitrary object and gives the resulting object a tag.  <b>Parameters:</b>
+ Generates a CBOR object from an arbitrary object and gives the resulting object a tag.
+
+<b>Parameters:</b>
 
  * <i>valueObValue</i>: An arbitrary object. If the tag number is 2 or 3, this must be a byte string whose bytes represent an integer in little-endian byte order, and the value of the number is 1 minus the integer's value for tag 3. If the tag number is 4 or 5, this must be an array with two elements: the first must be an integer representing the exponent, and the second must be an integer representing a mantissa.
 
@@ -1787,7 +1905,9 @@ The parameter  <i>smallTag</i>
     public static PeterO.Cbor.CBORObject FromSimpleValue(
         int simpleValue);
 
- Creates a CBOR object from a simple value number.  <b>Parameters:</b>
+ Creates a CBOR object from a simple value number.
+
+<b>Parameters:</b>
 
  * <i>simpleValue</i>: The parameter  <i>simpleValue</i>
  is a 32-bit signed integer.
@@ -1807,7 +1927,9 @@ The parameter  <i>simpleValue</i>
 
     public PeterO.Numbers.EInteger[] GetAllTags();
 
- Gets a list of all tags, from outermost to innermost.  <b>Return Value:</b>
+ Gets a list of all tags, from outermost to innermost.
+
+<b>Return Value:</b>
 
 An array of tags, or the empty string if this object is untagged.
 
@@ -1816,7 +1938,9 @@ An array of tags, or the empty string if this object is untagged.
 
     public byte[] GetByteString();
 
- Gets the backing byte array used in this CBOR object, if this object is a byte string, without copying the data to a new byte array. Any changes in the returned array's contents will be reflected in this CBOR object. Note, though, that the array's length can't be changed.  <b>Return Value:</b>
+ Gets the backing byte array used in this CBOR object, if this object is a byte string, without copying the data to a new byte array. Any changes in the returned array's contents will be reflected in this CBOR object. Note, though, that the array's length can't be changed.
+
+<b>Return Value:</b>
 
 The byte array held by this CBOR object.
 
@@ -1830,7 +1954,9 @@ This object is not a byte string.
 
     public override int GetHashCode();
 
- Calculates the hash code of this object. No application or process IDs are used in the hash code calculation.  <b>Return Value:</b>
+ Calculates the hash code of this object. No application or process IDs are used in the hash code calculation.
+
+<b>Return Value:</b>
 
 A 32-bit hash code.
 
@@ -1841,7 +1967,9 @@ A 32-bit hash code.
         object key,
         PeterO.Cbor.CBORObject defaultValue);
 
- Gets the value of a CBOR object by integer index in this array or by CBOR object key in this map, or a default value if that value is not found.  <b>Parameters:</b>
+ Gets the value of a CBOR object by integer index in this array or by CBOR object key in this map, or a default value if that value is not found.
+
+<b>Parameters:</b>
 
  * <i>key</i>: An arbitrary object. If this is a CBOR map, this parameter is converted to a CBOR object serving as the key to the map or index to the array, and can be null. If this is a CBOR array, the key must be an integer 0 or greater and less than the size of the array, and may be any object convertible to a CBOR integer.
 
@@ -1857,7 +1985,9 @@ The CBOR object referred to by index or key in this array or map. If this is a C
     public bool HasMostOuterTag(
         int tagValue);
 
- Returns whether this object has an outermost tag and that tag is of the given number.  <b>Parameters:</b>
+ Returns whether this object has an outermost tag and that tag is of the given number.
+
+<b>Parameters:</b>
 
  * <i>tagValue</i>: The tag number.
 
@@ -1877,7 +2007,9 @@ The parameter  <i>tagValue</i>
     public bool HasMostOuterTag(
         PeterO.Numbers.EInteger bigTagValue);
 
- Returns whether this object has an outermost tag and that tag is of the given number.  <b>Parameters:</b>
+ Returns whether this object has an outermost tag and that tag is of the given number.
+
+<b>Parameters:</b>
 
  * <i>bigTagValue</i>: The tag number.
 
@@ -1901,7 +2033,9 @@ The parameter  <i>bigTagValue</i>
     public bool HasTag(
         int tagValue);
 
- Returns whether this object has a tag of the given number.  <b>Parameters:</b>
+ Returns whether this object has a tag of the given number.
+
+<b>Parameters:</b>
 
  * <i>tagValue</i>: The tag value to search for.
 
@@ -1925,7 +2059,9 @@ The parameter  <i>tagValue</i>
     public bool HasTag(
         PeterO.Numbers.EInteger bigTagValue);
 
- Returns whether this object has a tag of the given number.  <b>Parameters:</b>
+ Returns whether this object has a tag of the given number.
+
+<b>Parameters:</b>
 
  * <i>bigTagValue</i>: The tag value to search for.
 
@@ -1950,7 +2086,9 @@ The parameter  <i>bigTagValue</i>
         int index,
         object valueOb);
 
- Inserts an object at the specified position in this CBOR array.  <b>Parameters:</b>
+ Inserts an object at the specified position in this CBOR array.
+
+<b>Parameters:</b>
 
  * <i>index</i>: Zero-based index to insert at.
 
@@ -1975,7 +2113,9 @@ The parameter  <i>valueOb</i>
 
     public bool IsInfinity();
 
- Gets a value indicating whether this CBOR object represents infinity.  <b>Return Value:</b>
+ Gets a value indicating whether this CBOR object represents infinity.
+
+<b>Return Value:</b>
 
  `true`  if this CBOR object represents infinity; otherwise,  `false`  .
 
@@ -1984,7 +2124,9 @@ The parameter  <i>valueOb</i>
 
     public bool IsNaN();
 
- Gets a value indicating whether this CBOR object represents a not-a-number value (as opposed to whether this object's type is not a number type).  <b>Return Value:</b>
+ Gets a value indicating whether this CBOR object represents a not-a-number value (as opposed to whether this object's type is not a number type).
+
+<b>Return Value:</b>
 
  `true`  if this CBOR object represents a not-a-number value (as opposed to whether this object's type is not a number type); otherwise,  `false`  .
 
@@ -1993,7 +2135,9 @@ The parameter  <i>valueOb</i>
 
     public bool IsNegativeInfinity();
 
- Gets a value indicating whether this CBOR object represents negative infinity.  <b>Return Value:</b>
+ Gets a value indicating whether this CBOR object represents negative infinity.
+
+<b>Return Value:</b>
 
  `true`  if this CBOR object represents negative infinity; otherwise,  `false`  .
 
@@ -2002,7 +2146,9 @@ The parameter  <i>valueOb</i>
 
     public bool IsPositiveInfinity();
 
- Gets a value indicating whether this CBOR object represents positive infinity.  <b>Return Value:</b>
+ Gets a value indicating whether this CBOR object represents positive infinity.
+
+<b>Return Value:</b>
 
  `true`  if this CBOR object represents positive infinity; otherwise,  `false`  .
 
@@ -2013,7 +2159,9 @@ The parameter  <i>valueOb</i>
         PeterO.Cbor.CBORObject first,
         PeterO.Cbor.CBORObject second);
 
- Multiplies two CBOR numbers.  <b>Parameters:</b>
+ Multiplies two CBOR numbers.
+
+<b>Parameters:</b>
 
  * <i>first</i>: The parameter  <i>first</i>
  is a CBOR object.
@@ -2035,7 +2183,9 @@ Either or both operands are not numbers (as opposed to Not-a-Number, NaN).
 
     public PeterO.Cbor.CBORObject Negate();
 
- Gets this object's value with the sign reversed.  <b>Return Value:</b>
+ Gets this object's value with the sign reversed.
+
+<b>Return Value:</b>
 
 The reversed-sign form of this number.
 
@@ -2049,7 +2199,9 @@ This object's type is not a number type.
 
     public static PeterO.Cbor.CBORObject NewArray();
 
- Creates a new empty CBOR array.  <b>Return Value:</b>
+ Creates a new empty CBOR array.
+
+<b>Return Value:</b>
 
 A new CBOR array.
 
@@ -2058,7 +2210,9 @@ A new CBOR array.
 
     public static PeterO.Cbor.CBORObject NewMap();
 
- Creates a new empty CBOR map.  <b>Return Value:</b>
+ Creates a new empty CBOR map.
+
+<b>Return Value:</b>
 
 A new CBOR map.
 
@@ -2069,7 +2223,9 @@ A new CBOR map.
         PeterO.Cbor.CBORObject a,
         PeterO.Cbor.CBORObject b);
 
- Adds two CBOR objects and returns their result.  <b>Parameters:</b>
+ Adds two CBOR objects and returns their result.
+
+<b>Parameters:</b>
 
  * <i>a</i>: The parameter  <i>a</i>
  is a CBOR object.
@@ -2088,7 +2244,9 @@ The sum of the two objects.
         PeterO.Cbor.CBORObject a,
         PeterO.Cbor.CBORObject b);
 
- Divides a CBORObject object by the value of a CBORObject object.  <b>Parameters:</b>
+ Divides a CBORObject object by the value of a CBORObject object.
+
+<b>Parameters:</b>
 
  * <i>a</i>: The parameter  <i>a</i>
  is a CBOR object.
@@ -2107,7 +2265,9 @@ The quotient of the two objects.
         PeterO.Cbor.CBORObject a,
         PeterO.Cbor.CBORObject b);
 
- Finds the remainder that results when a CBORObject object is divided by the value of a CBORObject object.  <b>Parameters:</b>
+ Finds the remainder that results when a CBORObject object is divided by the value of a CBORObject object.
+
+<b>Parameters:</b>
 
  * <i>a</i>: The parameter  <i>a</i>
  is a CBOR object.
@@ -2126,7 +2286,9 @@ The remainder of the two numbers.
         PeterO.Cbor.CBORObject a,
         PeterO.Cbor.CBORObject b);
 
- Multiplies a CBORObject object by the value of a CBORObject object.  <b>Parameters:</b>
+ Multiplies a CBORObject object by the value of a CBORObject object.
+
+<b>Parameters:</b>
 
  * <i>a</i>: The parameter  <i>a</i>
  is a CBOR object.
@@ -2145,7 +2307,9 @@ The product of the two numbers.
         PeterO.Cbor.CBORObject a,
         PeterO.Cbor.CBORObject b);
 
- Subtracts a CBORObject object from a CBORObject object.  <b>Parameters:</b>
+ Subtracts a CBORObject object from a CBORObject object.
+
+<b>Parameters:</b>
 
  * <i>a</i>: The parameter  <i>a</i>
  is a CBOR object.
@@ -2165,7 +2329,7 @@ The difference of the two objects.
 
  Reads an object in CBOR format from a data stream. This method will read from the stream until the end of the CBOR object is reached or an error occurs, whichever happens first.
 
-  <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>stream</i>: A readable data stream.
 
@@ -2189,7 +2353,9 @@ There was an error in reading or parsing the data.
         System.IO.Stream stream,
         PeterO.Cbor.CBOREncodeOptions options);
 
- Reads an object in CBOR format from a data stream, using the specified options to control the decoding process. This method will read from the stream until the end of the CBOR object is reached or an error occurs, whichever happens first.  <b>Parameters:</b>
+ Reads an object in CBOR format from a data stream, using the specified options to control the decoding process. This method will read from the stream until the end of the CBOR object is reached or an error occurs, whichever happens first.
+
+<b>Parameters:</b>
 
  * <i>stream</i>: A readable data stream.
 
@@ -2217,7 +2383,7 @@ There was an error in reading or parsing the data.
 
  Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format. The JSON stream may begin with a byte-order mark (U+FEFF). Since version 2.0, the JSON stream can be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by assuming that the first character read must be a byte-order mark or a nonzero basic character (U+0001 to U+007F). (In previous versions, only UTF-8 was allowed.) If a JSON object has the same key, only the last given value will be used for each duplicated key.
 
-  <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>stream</i>: A readable data stream. The sequence of bytes read from the data stream must contain a single JSON object and not multiple objects.
 
@@ -2246,7 +2412,7 @@ The data stream contains invalid encoding or is not in JSON format.
 
  Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format, using the specified options to control the decoding process. The JSON stream may begin with a byte-order mark (U+FEFF). Since version 2.0, the JSON stream can be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by assuming that the first character read must be a byte-order mark or a nonzero basic character (U+0001 to U+007F). (In previous versions, only UTF-8 was allowed.) By default, if a JSON object has the same key, only the last given value will be used for each duplicated key.
 
-  <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>stream</i>: A readable data stream. The sequence of bytes read from the data stream must contain a single JSON object and not multiple objects.
 
@@ -2276,7 +2442,9 @@ The data stream contains invalid encoding or is not in JSON format.
         PeterO.Cbor.CBORObject first,
         PeterO.Cbor.CBORObject second);
 
- Finds the remainder that results when a CBORObject object is divided by the value of a CBORObject object.  <b>Parameters:</b>
+ Finds the remainder that results when a CBORObject object is divided by the value of a CBORObject object.
+
+<b>Parameters:</b>
 
  * <i>first</i>: The parameter  <i>first</i>
  is a CBOR object.
@@ -2294,7 +2462,9 @@ The remainder of the two numbers.
     public bool Remove(
         object obj);
 
- If this object is an array, removes the first instance of the specified item (once converted to a CBOR object) from the array. If this object is a map, removes the item with the given key (once converted to a CBOR object) from the map.  <b>Parameters:</b>
+ If this object is an array, removes the first instance of the specified item (once converted to a CBOR object) from the array. If this object is a map, removes the item with the given key (once converted to a CBOR object) from the map.
+
+<b>Parameters:</b>
 
  * <i>obj</i>: The item or key (once converted to a CBOR object) to remove.
 
@@ -2317,7 +2487,9 @@ The object is not an array or map.
     public bool Remove(
         PeterO.Cbor.CBORObject obj);
 
- If this object is an array, removes the first instance of the specified item from the array. If this object is a map, removes the item with the given key from the map.  <b>Parameters:</b>
+ If this object is an array, removes the first instance of the specified item from the array. If this object is a map, removes the item with the given key from the map.
+
+<b>Parameters:</b>
 
  * <i>obj</i>: The item or key to remove.
 
@@ -2340,7 +2512,9 @@ The object is not an array or map.
     public bool RemoveAt(
         int index);
 
- Removes the item at the given index of this CBOR array.  <b>Parameters:</b>
+ Removes the item at the given index of this CBOR array.
+
+<b>Parameters:</b>
 
  * <i>index</i>: The index, starting at 0, of the item to remove.
 
@@ -2360,7 +2534,9 @@ This object is not a CBOR array.
         object key,
         object valueOb);
 
- Maps an object to a key in this CBOR map, or adds the value if the key doesn't exist. If this is a CBOR array, instead sets the value at the given index to the given value.  <b>Parameters:</b>
+ Maps an object to a key in this CBOR map, or adds the value if the key doesn't exist. If this is a CBOR array, instead sets the value at the given index to the given value.
+
+<b>Parameters:</b>
 
  * <i>key</i>: If this instance is a CBOR map, this parameter is an object representing the key, which will be converted to a CBORObject; in this case, this parameter can be null, in which case this value is converted to CBORObject.Null. If this instance is a CBOR array, this parameter must be a 32-bit signed integer (  `int`  ) identifying the index (starting from 0) of the item to set in the array.
 
@@ -2388,7 +2564,9 @@ The parameter  <i>key</i>
         PeterO.Cbor.CBORObject first,
         PeterO.Cbor.CBORObject second);
 
- Finds the difference between two CBOR number objects.  <b>Parameters:</b>
+ Finds the difference between two CBOR number objects.
+
+<b>Parameters:</b>
 
  * <i>first</i>: The parameter  <i>first</i>
  is a CBOR object.
@@ -2446,7 +2624,9 @@ Either or both operands are not numbers (as opposed to Not-a-Number, NaN).
             .ToJSONString()) .Append(":").Append(mapObj[key].ToJSONString());
             first=false; } } return builder.Append("}").ToString(); }
 
- .  <b>Parameters:</b>
+ .
+
+<b>Parameters:</b>
 
  * <i>options</i>: An object containing the options to control writing the CBOR object to JSON.
 
@@ -2467,7 +2647,7 @@ The parameter  <i>options</i>
 
  Converts this object to a string in JavaScript Object Notation (JSON) format. See the overload to JSONString taking a JSONOptions argument for further information. If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the JSON string in an undefined order. Map keys other than untagged text strings are converted to JSON strings before writing them out (for example,  `22("Test")`  is converted to  `"Test"`  and  `true`  is converted to  `"true"`  ). If, after such conversion, two or more map keys are identical, this method throws a CBORException. The example code given in **M:PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)** can be used to write out certain keys of a CBOR map in a given order to a JSON string.
 
-  <b>Return Value:</b>
+<b>Return Value:</b>
 
 A text string.
 
@@ -2493,7 +2673,7 @@ A text string.
 
  .
 
- <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as  `int`  or  `String`  ) or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
 
@@ -2518,7 +2698,9 @@ The parameter  <i>t</i>
         System.Type t,
         PeterO.Cbor.CBORTypeMapper mapper);
 
- Converts this CBOR object to an object of an arbitrary type. See the documentation for the overload of this method taking a CBORTypeMapper and PODOptions parameters parameters for more information.  <b>Parameters:</b>
+ Converts this CBOR object to an object of an arbitrary type. See the documentation for the overload of this method taking a CBORTypeMapper and PODOptions parameters parameters for more information.
+
+<b>Parameters:</b>
 
  * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as  `int`  or  `String`  ) or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
 
@@ -2617,7 +2799,7 @@ The parameter  <i>t</i>
 
  .
 
- <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as  `int`  or  `String`  ) or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
 
@@ -2646,7 +2828,9 @@ The parameter  <i>t</i>
         System.Type t,
         PeterO.Cbor.PODOptions options);
 
- Converts this CBOR object to an object of an arbitrary type. See the documentation for the overload of this method taking a CBORTypeMapper and PODOptions parameters for more information. This method (without a CBORTypeMapper parameter) allows all data types not otherwise handled to be eligible for Plain-Old-Data serialization.  <b>Parameters:</b>
+ Converts this CBOR object to an object of an arbitrary type. See the documentation for the overload of this method taking a CBORTypeMapper and PODOptions parameters for more information. This method (without a CBORTypeMapper parameter) allows all data types not otherwise handled to be eligible for Plain-Old-Data serialization.
+
+<b>Parameters:</b>
 
  * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as  `int`  or  `String`  ) or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
 
@@ -2677,7 +2861,7 @@ The given object's nesting is too deep, or another error occurred when serializi
 
  Converts this CBOR object to an object of an arbitrary type. See **M:PeterO.Cbor.CBORObject.ToObject(System.Type)** for further information.
 
-  <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>mapper</i>: This parameter controls which data types are eligible for Plain-Old-Data deserialization and includes custom converters from CBOR objects to certain data types.
 
@@ -2701,7 +2885,7 @@ The given type "T", or this object's CBOR type, is not supported.
 
  Converts this CBOR object to an object of an arbitrary type. See **M:PeterO.Cbor.CBORObject.ToObject(System.Type)** for further information.
 
-  <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>mapper</i>: This parameter controls which data types are eligible for Plain-Old-Data deserialization and includes custom converters from CBOR objects to certain data types.
 
@@ -2726,7 +2910,7 @@ The given type "T", or this object's CBOR type, is not supported.
 
  Converts this CBOR object to an object of an arbitrary type. See **M:PeterO.Cbor.CBORObject.ToObject(System.Type)** for further information.
 
-  <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>options</i>: Specifies options for controlling deserialization of CBOR objects.
 
@@ -2748,7 +2932,7 @@ The given type "T", or this object's CBOR type, is not supported.
 
  Converts this CBOR object to an object of an arbitrary type. See **M:PeterO.Cbor.CBORObject.ToObject(System.Type)** for further information.
 
-  <b>Parameters:</b>
+<b>Parameters:</b>
 
  * &lt;T&gt;: The type, class, or interface that this method's return value will belong to. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as  `int`  or  `String`  ) or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
 
@@ -2766,7 +2950,9 @@ The given type "T", or this object's CBOR type, is not supported.
 
     public override string ToString();
 
- Returns this CBOR object in string form. The format is intended to be human-readable, not machine-readable, the format is not intended to be parsed, and the format may change at any time. The returned string is not necessarily in JavaScript Object Notation (JSON); to convert CBOR objects to JSON strings, use the **M:PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)** method instead.  <b>Return Value:</b>
+ Returns this CBOR object in string form. The format is intended to be human-readable, not machine-readable, the format is not intended to be parsed, and the format may change at any time. The returned string is not necessarily in JavaScript Object Notation (JSON); to convert CBOR objects to JSON strings, use the **M:PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)** method instead.
+
+<b>Return Value:</b>
 
 A text representation of this object.
 
@@ -2775,7 +2961,9 @@ A text representation of this object.
 
     public PeterO.Cbor.CBORObject Untag();
 
- Gets an object with the same value as this one but without the tags it has, if any. If this object is an array, map, or byte string, the data will not be copied to the returned object, so changes to the returned object will be reflected in this one.  <b>Return Value:</b>
+ Gets an object with the same value as this one but without the tags it has, if any. If this object is an array, map, or byte string, the data will not be copied to the returned object, so changes to the returned object will be reflected in this one.
+
+<b>Return Value:</b>
 
 A CBORObject object.
 
@@ -2784,7 +2972,9 @@ A CBORObject object.
 
     public PeterO.Cbor.CBORObject UntagOne();
 
- Gets an object with the same value as this one but without this object's outermost tag, if any. If this object is an array, map, or byte string, the data will not be copied to the returned object, so changes to the returned object will be reflected in this one.  <b>Return Value:</b>
+ Gets an object with the same value as this one but without this object's outermost tag, if any. If this object is an array, map, or byte string, the data will not be copied to the returned object, so changes to the returned object will be reflected in this one.
+
+<b>Return Value:</b>
 
 A CBORObject object.
 
@@ -2795,7 +2985,9 @@ A CBORObject object.
         bool value,
         System.IO.Stream stream);
 
- Writes a Boolean value in CBOR format to a data stream.  <b>Parameters:</b>
+ Writes a Boolean value in CBOR format to a data stream.
+
+<b>Parameters:</b>
 
  * <i>value</i>: The value to write.
 
@@ -2817,7 +3009,9 @@ An I/O error occurred.
         byte value,
         System.IO.Stream stream);
 
- Writes a byte (0 to 255) in CBOR format to a data stream. If the value is less than 24, writes that byte. If the value is 25 to 255, writes the byte 24, then this byte's value.  <b>Parameters:</b>
+ Writes a byte (0 to 255) in CBOR format to a data stream. If the value is less than 24, writes that byte. If the value is 25 to 255, writes the byte 24, then this byte's value.
+
+<b>Parameters:</b>
 
  * <i>value</i>: The value to write.
 
@@ -2839,7 +3033,9 @@ An I/O error occurred.
         double value,
         System.IO.Stream stream);
 
- Writes a 64-bit floating-point number in CBOR format to a data stream.  <b>Parameters:</b>
+ Writes a 64-bit floating-point number in CBOR format to a data stream.
+
+<b>Parameters:</b>
 
  * <i>value</i>: The value to write.
 
@@ -2861,7 +3057,9 @@ An I/O error occurred.
         float value,
         System.IO.Stream s);
 
- Writes a 32-bit floating-point number in CBOR format to a data stream.  <b>Parameters:</b>
+ Writes a 32-bit floating-point number in CBOR format to a data stream.
+
+<b>Parameters:</b>
 
  * <i>value</i>: The value to write.
 
@@ -2883,7 +3081,9 @@ An I/O error occurred.
         int value,
         System.IO.Stream stream);
 
- Writes a 32-bit signed integer in CBOR format to a data stream.  <b>Parameters:</b>
+ Writes a 32-bit signed integer in CBOR format to a data stream.
+
+<b>Parameters:</b>
 
  * <i>value</i>: The value to write.
 
@@ -2905,7 +3105,9 @@ An I/O error occurred.
         long value,
         System.IO.Stream stream);
 
- Writes a 64-bit signed integer in CBOR format to a data stream.  <b>Parameters:</b>
+ Writes a 64-bit signed integer in CBOR format to a data stream.
+
+<b>Parameters:</b>
 
  * <i>value</i>: The value to write.
 
@@ -2942,7 +3144,7 @@ An I/O error occurred.
 
   * Any object accepted by the FromObject static methods.
 
-   <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>objValue</i>: The arbitrary object to be serialized. Can be null.
 
@@ -2969,7 +3171,7 @@ The parameter  <i>options</i>
 
  Writes a CBOR object to a CBOR data stream. See the three-parameter Write method that takes a CBOREncodeOptions.
 
-  <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>objValue</i>: The parameter  <i>objValue</i>
  is an arbitrary object.
@@ -2983,7 +3185,9 @@ The parameter  <i>options</i>
         PeterO.Cbor.CBORObject value,
         System.IO.Stream stream);
 
- Writes a CBOR object to a CBOR data stream.  <b>Parameters:</b>
+ Writes a CBOR object to a CBOR data stream.
+
+<b>Parameters:</b>
 
  * <i>value</i>: The value to write. Can be null.
 
@@ -3012,7 +3216,7 @@ The parameter  <i>stream</i>
 
   * In all other cases, writes the value as a decimal number.
 
-   <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>bignum</i>: The arbitrary-precision decimal number to write. Can be null.
 
@@ -3044,7 +3248,7 @@ An I/O error occurred.
 
   * In all other cases, writes the value as a big float.
 
-   <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>bignum</i>: An arbitrary-precision binary float.
 
@@ -3066,7 +3270,9 @@ An I/O error occurred.
         PeterO.Numbers.EInteger bigint,
         System.IO.Stream stream);
 
- Writes a big integer in CBOR format to a data stream.  <b>Parameters:</b>
+ Writes a big integer in CBOR format to a data stream.
+
+<b>Parameters:</b>
 
  * <i>bigint</i>: Big integer to write. Can be null.
 
@@ -3088,7 +3294,9 @@ An I/O error occurred.
         PeterO.Numbers.ERational rational,
         System.IO.Stream stream);
 
- Writes a rational number in CBOR format to a data stream.  <b>Parameters:</b>
+ Writes a rational number in CBOR format to a data stream.
+
+<b>Parameters:</b>
 
  * <i>rational</i>: An arbitrary-precision rational number.
 
@@ -3110,7 +3318,9 @@ An I/O error occurred.
         sbyte value,
         System.IO.Stream stream);
 
- Writes an 8-bit signed integer in CBOR format to a data stream.  <b>Parameters:</b>
+ Writes an 8-bit signed integer in CBOR format to a data stream.
+
+<b>Parameters:</b>
 
  * <i>value</i>: The parameter  <i>value</i>
  is an 8-bit signed integer.
@@ -3124,7 +3334,9 @@ An I/O error occurred.
         short value,
         System.IO.Stream stream);
 
- Writes a 16-bit signed integer in CBOR format to a data stream.  <b>Parameters:</b>
+ Writes a 16-bit signed integer in CBOR format to a data stream.
+
+<b>Parameters:</b>
 
  * <i>value</i>: The value to write.
 
@@ -3148,7 +3360,7 @@ An I/O error occurred.
 
  Writes a string in CBOR format to a data stream. The string will be encoded using definite-length encoding regardless of its length.
 
-  <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>str</i>: The string to write. Can be null.
 
@@ -3171,7 +3383,9 @@ An I/O error occurred.
         System.IO.Stream stream,
         PeterO.Cbor.CBOREncodeOptions options);
 
- Writes a string in CBOR format to a data stream, using the given options to control the encoding process.  <b>Parameters:</b>
+ Writes a string in CBOR format to a data stream, using the given options to control the encoding process.
+
+<b>Parameters:</b>
 
  * <i>str</i>: The string to write. Can be null.
 
@@ -3195,7 +3409,9 @@ An I/O error occurred.
         uint value,
         System.IO.Stream stream);
 
- Writes a 32-bit unsigned integer in CBOR format to a data stream.  <b>Parameters:</b>
+ Writes a 32-bit unsigned integer in CBOR format to a data stream.
+
+<b>Parameters:</b>
 
  * <i>value</i>: A 32-bit unsigned integer.
 
@@ -3208,7 +3424,9 @@ An I/O error occurred.
         ulong value,
         System.IO.Stream stream);
 
- Writes a 64-bit unsigned integer in CBOR format to a data stream.  <b>Parameters:</b>
+ Writes a 64-bit unsigned integer in CBOR format to a data stream.
+
+<b>Parameters:</b>
 
  * <i>value</i>: A 64-bit unsigned integer.
 
@@ -3227,7 +3445,9 @@ The parameter  <i>stream</i>
         ushort value,
         System.IO.Stream stream);
 
- Writes a 16-bit unsigned integer in CBOR format to a data stream.  <b>Parameters:</b>
+ Writes a 16-bit unsigned integer in CBOR format to a data stream.
+
+<b>Parameters:</b>
 
  * <i>value</i>: A 16-bit unsigned integer.
 
@@ -3240,7 +3460,9 @@ The parameter  <i>stream</i>
         object obj,
         System.IO.Stream outputStream);
 
- Converts an arbitrary object to a string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8. If the object is convertible to a CBOR map, or to a CBOR object that contains CBOR maps, the keys to those maps are written out to the JSON string in an undefined order. The example code given in **M:PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)** can be used to write out certain keys of a CBOR map in a given order to a JSON string.  <b>Parameters:</b>
+ Converts an arbitrary object to a string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8. If the object is convertible to a CBOR map, or to a CBOR object that contains CBOR maps, the keys to those maps are written out to the JSON string in an undefined order. The example code given in **M:PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)** can be used to write out certain keys of a CBOR map in a given order to a JSON string.
+
+<b>Parameters:</b>
 
  * <i>obj</i>: The parameter  <i>obj</i>
  is an arbitrary object.
@@ -3253,7 +3475,9 @@ The parameter  <i>stream</i>
     public void WriteJSONTo(
         System.IO.Stream outputStream);
 
- Converts this object to a string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8. If the CBOR object contains CBOR maps, or is a CBOR map, the keys to the map are written out to the JSON string in an undefined order. The example code given in **M:PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)** can be used to write out certain keys of a CBOR map in a given order to a JSON string.  <b>Parameters:</b>
+ Converts this object to a string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8. If the CBOR object contains CBOR maps, or is a CBOR map, the keys to the map are written out to the JSON string in an undefined order. The example code given in **M:PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)** can be used to write out certain keys of a CBOR map in a given order to a JSON string.
+
+<b>Parameters:</b>
 
  * <i>outputStream</i>: A writable data stream.
 
@@ -3273,7 +3497,9 @@ The parameter  <i>outputStream</i>
         System.IO.Stream outputStream,
         PeterO.Cbor.JSONOptions options);
 
- Converts this object to a string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8, using the given JSON options to control the encoding process. If the CBOR object contains CBOR maps, or is a CBOR map, the keys to the map are written out to the JSON string in an undefined order. The example code given in **M:PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)** can be used to write out certain keys of a CBOR map in a given order to a JSON string.  <b>Parameters:</b>
+ Converts this object to a string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8, using the given JSON options to control the encoding process. If the CBOR object contains CBOR maps, or is a CBOR map, the keys to the map are written out to the JSON string in an undefined order. The example code given in **M:PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)** can be used to write out certain keys of a CBOR map in a given order to a JSON string.
+
+<b>Parameters:</b>
 
  * <i>outputStream</i>: A writable data stream.
 
@@ -3341,7 +3567,7 @@ The parameter  <i>outputStream</i>
 
  .
 
- <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>stream</i>: A writable data stream.
 
@@ -3361,7 +3587,9 @@ An I/O error occurred.
         System.IO.Stream stream,
         PeterO.Cbor.CBOREncodeOptions options);
 
- Writes this CBOR object to a data stream, using the specified options for encoding the data to CBOR format. If the CBOR object contains CBOR maps, or is a CBOR map, the keys to the map are written out to the data stream in an undefined order. The example code given in **M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)** can be used to write out certain keys of a CBOR map in a given order.  <b>Parameters:</b>
+ Writes this CBOR object to a data stream, using the specified options for encoding the data to CBOR format. If the CBOR object contains CBOR maps, or is a CBOR map, the keys to the map are written out to the data stream in an undefined order. The example code given in **M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)** can be used to write out certain keys of a CBOR map in a given order.
+
+<b>Parameters:</b>
 
  * <i>stream</i>: A writable data stream.
 
@@ -3409,7 +3637,7 @@ Unexpected data type".
 
  .
 
- <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>outputStream</i>: A writable data stream.
 
@@ -3438,7 +3666,9 @@ The parameter  <i>outputStream</i>
         int majorType,
         long value);
 
- Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as a 64-bit signed integer. This is a low-level method that is useful for implementing custom CBOR encoding methodologies. This method encodes the given major type and value in the shortest form allowed for the major type.  <b>Parameters:</b>
+ Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as a 64-bit signed integer. This is a low-level method that is useful for implementing custom CBOR encoding methodologies. This method encodes the given major type and value in the shortest form allowed for the major type.
+
+<b>Parameters:</b>
 
  * <i>outputStream</i>: A writable data stream.
 
@@ -3467,7 +3697,9 @@ The parameter  <i>outputStream</i>
         int majorType,
         PeterO.Numbers.EInteger bigintValue);
 
- Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as an arbitrary-precision integer. This is a low-level method that is useful for implementing custom CBOR encoding methodologies. This method encodes the given major type and value in the shortest form allowed for the major type.  <b>Parameters:</b>
+ Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as an arbitrary-precision integer. This is a low-level method that is useful for implementing custom CBOR encoding methodologies. This method encodes the given major type and value in the shortest form allowed for the major type.
+
+<b>Parameters:</b>
 
  * <i>outputStream</i>: A writable data stream.
 
@@ -3498,7 +3730,9 @@ The parameter  <i>outputStream</i>
         int majorType,
         uint value);
 
- Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as a 32-bit unsigned integer. This is a low-level method that is useful for implementing custom CBOR encoding methodologies. This method encodes the given major type and value in the shortest form allowed for the major type.  <b>Parameters:</b>
+ Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as a 32-bit unsigned integer. This is a low-level method that is useful for implementing custom CBOR encoding methodologies. This method encodes the given major type and value in the shortest form allowed for the major type.
+
+<b>Parameters:</b>
 
  * <i>outputStream</i>: A writable data stream.
 
@@ -3524,7 +3758,9 @@ The parameter  <i>outputStream</i>
         int majorType,
         ulong value);
 
- Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as a 64-bit unsigned integer. This is a low-level method that is useful for implementing custom CBOR encoding methodologies. This method encodes the given major type and value in the shortest form allowed for the major type.  <b>Parameters:</b>
+ Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as a 64-bit unsigned integer. This is a low-level method that is useful for implementing custom CBOR encoding methodologies. This method encodes the given major type and value in the shortest form allowed for the major type.
+
+<b>Parameters:</b>
 
  * <i>outputStream</i>: A writable data stream.
 

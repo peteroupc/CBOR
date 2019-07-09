@@ -15,7 +15,9 @@
     public JSONOptions(
         bool base64Padding);
 
- Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) class with the given value for the Base64Padding option.   <b>Parameters:</b>
+ Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) class with the given value for the Base64Padding option.
+
+<b>Parameters:</b>
 
  * <i>base64Padding</i>: Whether padding is included when writing data in base64url or traditional base64 format to JSON.
 
@@ -26,7 +28,9 @@
         bool base64Padding,
         bool replaceSurrogates);
 
- Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) class with the given values for the options.    <b>Parameters:</b>
+ Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) class with the given values for the options.
+
+<b>Parameters:</b>
 
  * <i>base64Padding</i>: Whether padding is included when writing data in base64url or traditional base64 format to JSON.
 
@@ -37,7 +41,9 @@
 
     public JSONOptions();
 
- Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) class with default options.  <a id="Default"></a>
+ Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) class with default options.
+
+<a id="Default"></a>
 ### Default
 
     public static readonly PeterO.Cbor.JSONOptions Default;

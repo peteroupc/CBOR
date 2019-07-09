@@ -151,8 +151,7 @@ namespace PeterO.DocGen {
           }
           if (method.IsFinal) {
             builder.Append("sealed ");
-     } else if (method is MethodInfo &&
-            IsMethodOverride((MethodInfo)method)) {
+     } else if (method is MethodInfo && IsMethodOverride((MethodInfo)method)) {
             builder.Append("override ");
           } else if (method.IsVirtual) {
             builder.Append("virtual ");
@@ -635,6 +634,7 @@ xmlName.Equals("em")) {
           this.returnStr.Clear();
           this.exceptionStr.Clear();
           XmlDoc.VisitInnerNode(mnm, this);
+          this.Write("\r\n\r\n");
           if (this.paramStr.Length > 0) {
             this.Write("<b>Parameters:</b>\r\n\r\n");
             var paramString = this.paramStr.ToString();

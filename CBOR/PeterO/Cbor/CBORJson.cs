@@ -135,9 +135,9 @@ namespace PeterO.Cbor {
               if ((c >> 16) == 0) {
                 this.sb.Append((char)c);
               } else {
-                this.sb.Append((char)((((c - 0x10000) >> 10) & 0x3ff) +
-                    0xd800));
-                this.sb.Append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
+                this.sb.Append((char)((((c - 0x10000) >> 10) & 0x3ff) |
+0xd800));
+                this.sb.Append((char)(((c - 0x10000) & 0x3ff) | 0xdc00));
               }
               break;
             }
@@ -348,7 +348,7 @@ namespace PeterO.Cbor {
         c = SkipWhitespaceJSON(this.reader);
         switch (c) {
           case -1:
-            this.reader.RaiseError("A JSONObject must end with '}'");
+            this.reader.RaiseError("A JSON object must end with '}'");
             break;
           case '}':
             if (seenComma) {

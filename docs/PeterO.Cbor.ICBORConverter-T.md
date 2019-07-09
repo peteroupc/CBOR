@@ -17,7 +17,9 @@
     PeterO.Cbor.CBORObject ToCBORObject(
         T obj);
 
- Converts an object to a CBOR object.  <b>Parameters:</b>
+ Converts an object to a CBOR object.
+
+<b>Parameters:</b>
 
  * <i>obj</i>: An object to convert to a CBOR object.
 

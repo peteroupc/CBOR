@@ -437,11 +437,9 @@ namespace PeterO {
       if (minInclusive >= 0) {
         return minInclusive + this.UniformLong(maxExclusive - minInclusive);
       } else {
-      if ((maxExclusive < 0 && Int64.MaxValue + maxExclusive < minInclusive)
-          ||
-          (maxExclusive > 0 && Int64.MinValue + maxExclusive > minInclusive)
-              ||
-                  minInclusive - maxExclusive < 0) {
+      if ((maxExclusive < 0 && Int64.MaxValue + maxExclusive < minInclusive) ||
+          (maxExclusive > 0 && Int64.MinValue + maxExclusive > minInclusive) ||
+              minInclusive - maxExclusive < 0) {
           // Difference is greater than MaxValue
           long lb = 0;
           var b = new byte[8];

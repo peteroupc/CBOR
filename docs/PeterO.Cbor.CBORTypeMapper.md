@@ -15,14 +15,18 @@
 
     public CBORTypeMapper();
 
- Initializes a new instance of the [PeterO.Cbor.CBORTypeMapper](PeterO.Cbor.CBORTypeMapper.md) class.  <a id="AddConverter_T_System_Type_PeterO_Cbor_ICBORConverter_T"></a>
+ Initializes a new instance of the [PeterO.Cbor.CBORTypeMapper](PeterO.Cbor.CBORTypeMapper.md) class.
+
+<a id="AddConverter_T_System_Type_PeterO_Cbor_ICBORConverter_T"></a>
 ### AddConverter
 
     public PeterO.Cbor.CBORTypeMapper AddConverter<T>(
         System.Type type,
         PeterO.Cbor.ICBORConverter<T> converter);
 
- Registers an object that converts objects of a given type to CBOR objects (called a CBOR converter).  <b>Parameters:</b>
+ Registers an object that converts objects of a given type to CBOR objects (called a CBOR converter).
+
+<b>Parameters:</b>
 
  * <i>type</i>: A Type object specifying the type that the converter converts to CBOR objects.
 
@@ -51,7 +55,9 @@ Converter doesn't contain a proper ToCBORObject method".
     public PeterO.Cbor.CBORTypeMapper AddTypeName(
         string name);
 
- Adds the fully qualified name of a Java or .NET type for use in type matching.  <b>Parameters:</b>
+ Adds the fully qualified name of a Java or .NET type for use in type matching.
+
+<b>Parameters:</b>
 
  * <i>name</i>: The fully qualified name of a Java or .NET class (e.g.,  `java.math.BigInteger`  or  `System.Globalization.CultureInfo`  ).
 
@@ -75,7 +81,9 @@ The parameter  <i>name</i>
     public PeterO.Cbor.CBORTypeMapper AddTypePrefix(
         string prefix);
 
- Adds a prefix of a Java or .NET type for use in type matching. A type matches a prefix if its fully qualified name is or begins with that prefix, using codepoint-by-codepoint (case-sensitive) matching.  <b>Parameters:</b>
+ Adds a prefix of a Java or .NET type for use in type matching. A type matches a prefix if its fully qualified name is or begins with that prefix, using codepoint-by-codepoint (case-sensitive) matching.
+
+<b>Parameters:</b>
 
  * <i>prefix</i>: The prefix of a Java or .NET type (e.g., `java.math.` or `System.Globalization`).
 
@@ -99,7 +107,9 @@ The parameter  <i>prefix</i>
     public bool FilterTypeName(
         string typeName);
 
- Returns whether the given Java or .NET type name fits the filters given in this mapper.  <b>Parameters:</b>
+ Returns whether the given Java or .NET type name fits the filters given in this mapper.
+
+<b>Parameters:</b>
 
  * <i>typeName</i>: The fully qualified name of a Java or .NET class (e.g.,  `java.math.BigInteger`  or  `System.Globalization.CultureInfo`  ).
 

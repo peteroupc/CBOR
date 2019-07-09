@@ -13,7 +13,7 @@ namespace PeterO.Cbor {
   public interface ICBORConverter<T>
   {
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.ICBORConverter`1.ToCBORObject(`0)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.Cbor.ICBORConverter`1.ToCBORObject(`0)"]/*'/>
     CBORObject ToCBORObject(T obj);
   }
 }

@@ -30,8 +30,8 @@ namespace PeterO.DocGen {
 
     public static string MemberName(object obj) {
       return (obj is Type) ? (((Type)obj).FullName) : ((obj is MethodInfo) ?
-        ((MethodInfo)obj).Name : ((obj is PropertyInfo) ?
-        ((PropertyInfo)obj).Name : ((obj is FieldInfo) ?
+((MethodInfo)obj).Name : ((obj is PropertyInfo) ? ((PropertyInfo)obj).Name :
+((obj is FieldInfo) ?
 
         ((FieldInfo)obj).Name : obj.ToString())));
     }
