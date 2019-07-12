@@ -8,6 +8,7 @@ at: http://peteroupc.github.io/
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using PeterO;
@@ -133,7 +134,7 @@ namespace PeterO.Cbor {
       Type t,
       string name) {
       foreach (var attr in t.GetTypeInfo().GetCustomAttributes()) {
-        if (attr.GetType().FullName.Equals(name)) {
+        if (attr.GetType().FullName.Equals(name, StringComparison.Ordinal)) {
           return true;
         }
       }
@@ -419,7 +420,7 @@ namespace PeterO.Cbor {
       } else if (obj.Type == CBORType.TextString) {
         var nameString = obj.AsString();
         foreach (var name in Enum.GetNames(enumType)) {
-          if (nameString.Equals(name)) {
+          if (nameString.Equals(name, StringComparison.Ordinal)) {
             return Enum.Parse(enumType, name);
           }
         }
@@ -437,12 +438,14 @@ namespace PeterO.Cbor {
     public static object EnumToObjectAsInteger(Enum value) {
       Type t = Enum.GetUnderlyingType(value.GetType());
       if (t.Equals(typeof(ulong))) {
-        ulong uvalue = Convert.ToUInt64(value);
+        ulong uvalue = Convert.ToUInt64(value, CultureInfo.InvariantCulture);
         return EInteger.FromUInt64(uvalue);
       }
-      return t.Equals(typeof(long)) ? Convert.ToInt64(value) :
-      (t.Equals(typeof(uint)) ? Convert.ToInt64(value) :
-      Convert.ToInt32(value));
+      return t.Equals(typeof(long)) ? Convert.ToInt64(value,
+  CultureInfo.InvariantCulture) :
+      (t.Equals(typeof(uint)) ? Convert.ToInt64(value,
+  CultureInfo.InvariantCulture) :
+      Convert.ToInt32(value, CultureInfo.InvariantCulture));
     }
 
     public static object FindOneArgumentMethod(
@@ -477,7 +480,7 @@ namespace PeterO.Cbor {
 
     private static bool StartsWith(string str, string pfx) {
       return str != null && str.Length >= pfx.Length &&
-        str.Substring(0, pfx.Length).Equals(pfx);
+        str.Substring(0, pfx.Length).Equals(pfx, StringComparison.Ordinal);
     }
 
     private static object TypeToIntegerObject(CBORObject objThis, Type t) {

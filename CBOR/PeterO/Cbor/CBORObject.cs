@@ -2275,12 +2275,11 @@ FromObject(bigValue.Numerator) : new
                 tagbyte, (byte)0xfa,
                 (byte)((bits >> 24) & 0xff), (byte)((bits >> 16) & 0xff),
                 (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff),
-              } :
-                new[] {
-                  (byte)0xfa, (byte)((bits >> 24) & 0xff),
-                  (byte)((bits >> 16) & 0xff), (byte)((bits >> 8) & 0xff),
-                  (byte)(bits & 0xff),
-                };
+              } : new[] {
+   (byte)0xfa, (byte)((bits >> 24) & 0xff),
+   (byte)((bits >> 16) & 0xff), (byte)((bits >> 8) & 0xff),
+   (byte)(bits & 0xff),
+ };
             }
           case CBORObjectTypeDouble: {
               var value = (double)this.ThisItem;
@@ -2291,14 +2290,13 @@ FromObject(bigValue.Numerator) : new
                 (byte)((bits >> 40) & 0xff), (byte)((bits >> 32) & 0xff),
                 (byte)((bits >> 24) & 0xff), (byte)((bits >> 16) & 0xff),
                 (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff),
-              } :
-                new[] {
-                  (byte)0xfb, (byte)((bits >> 56) & 0xff),
-                  (byte)((bits >> 48) & 0xff), (byte)((bits >> 40) & 0xff),
-                  (byte)((bits >> 32) & 0xff), (byte)((bits >> 24) & 0xff),
-                  (byte)((bits >> 16) & 0xff), (byte)((bits >> 8) & 0xff),
-                  (byte)(bits & 0xff),
-                };
+              } : new[] {
+   (byte)0xfb, (byte)((bits >> 56) & 0xff),
+   (byte)((bits >> 48) & 0xff), (byte)((bits >> 40) & 0xff),
+   (byte)((bits >> 32) & 0xff), (byte)((bits >> 24) & 0xff),
+   (byte)((bits >> 16) & 0xff), (byte)((bits >> 8) & 0xff),
+   (byte)(bits & 0xff),
+ };
             }
         }
       }
@@ -2666,7 +2664,7 @@ FromObject(bigValue.Numerator) : new
           IList<CBORObject> list = this.AsList();
           var index = (int)key;
           if (index < 0 || index >= this.Count) {
-            throw new ArgumentOutOfRangeException("key");
+            throw new ArgumentOutOfRangeException(nameof(key));
           }
           CBORObject mapValue;
           if (valueOb == null) {

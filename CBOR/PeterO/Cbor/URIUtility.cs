@@ -141,7 +141,7 @@ namespace PeterO.Cbor {
         if ((c & 0xfc00) == 0xd800 && index + 1 < valueSLength &&
             (s[index + 1] & 0xfc00) == 0xdc00) {
          // Get the Unicode code point for the surrogate pair
-          c = 0x10000 + ((c - 0xd800) << 10) + (s[index + 1] - 0xdc00);
+          c = 0x10000 + ((c & 0x3ff) << 10) + (s[index + 1] & 0x3ff);
           ++index;
         } else if ((c & 0xf800) == 0xd800) {
           c = 0xfffd;
@@ -156,9 +156,9 @@ namespace PeterO.Cbor {
               if (c <= 0xffff) {
                 builder.Append((char)c);
               } else if (c <= 0x10ffff) {
-                builder.Append((char)((((c - 0x10000) >> 10) & 0x3ff) +
-                    0xd800));
-                builder.Append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
+                builder.Append((char)((((c - 0x10000) >> 10) & 0x3ff) |
+0xd800));
+                builder.Append((char)(((c - 0x10000) & 0x3ff) | 0xdc00));
               }
             }
             ++index;
@@ -174,9 +174,9 @@ namespace PeterO.Cbor {
               if (c <= 0xffff) {
                 builder.Append((char)c);
               } else if (c <= 0x10ffff) {
-                builder.Append((char)((((c - 0x10000) >> 10) & 0x3ff) +
-                    0xd800));
-                builder.Append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
+                builder.Append((char)((((c - 0x10000) >> 10) & 0x3ff) |
+0xd800));
+                builder.Append((char)(((c - 0x10000) & 0x3ff) | 0xdc00));
               }
             } else {
              // percent encode
@@ -186,8 +186,8 @@ namespace PeterO.Cbor {
             if (c <= 0xffff) {
               builder.Append((char)c);
             } else if (c <= 0x10ffff) {
-              builder.Append((char)((((c - 0x10000) >> 10) & 0x3ff) + 0xd800));
-              builder.Append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
+              builder.Append((char)((((c - 0x10000) >> 10) & 0x3ff) | 0xd800));
+              builder.Append((char)(((c - 0x10000) & 0x3ff) | 0xdc00));
             }
           }
         } else if (mode == 1 || mode == 2) {
@@ -200,9 +200,9 @@ namespace PeterO.Cbor {
               if (c <= 0xffff) {
                 builder.Append((char)c);
               } else if (c <= 0x10ffff) {
-                builder.Append((char)((((c - 0x10000) >> 10) & 0x3ff) +
-                    0xd800));
-                builder.Append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
+                builder.Append((char)((((c - 0x10000) >> 10) & 0x3ff) |
+0xd800));
+                builder.Append((char)(((c - 0x10000) & 0x3ff) | 0xdc00));
               }
             } else {
              // percent encode
@@ -212,8 +212,8 @@ namespace PeterO.Cbor {
             if (c <= 0xffff) {
               builder.Append((char)c);
             } else if (c <= 0x10ffff) {
-              builder.Append((char)((((c - 0x10000) >> 10) & 0x3ff) + 0xd800));
-              builder.Append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
+              builder.Append((char)((((c - 0x10000) >> 10) & 0x3ff) | 0xd800));
+              builder.Append((char)(((c - 0x10000) & 0x3ff) | 0xdc00));
             }
           }
         }
@@ -290,7 +290,7 @@ namespace PeterO.Cbor {
         if ((c & 0xfc00) == 0xd800 && i + 1 < endIndex &&
             (str[i + 1] & 0xfc00) == 0xdc00) {
          // Get the Unicode code point for the surrogate pair
-          c = 0x10000 + ((c - 0xd800) << 10) + (str[i + 1] - 0xdc00);
+          c = 0x10000 + ((c & 0x3ff) << 10) + (str[i + 1] & 0x3ff);
           ++i;
         } else if ((c & 0xf800) == 0xd800) {
           c = 0xfffd;
@@ -362,9 +362,9 @@ namespace PeterO.Cbor {
                 if (ret <= 0xffff) {
                   retString.Append((char)ret);
                 } else {
-                  retString.Append((char)((((ret - 0x10000) >> 10) &
-                        0x3ff) + 0xd800));
-                  retString.Append((char)(((ret - 0x10000) & 0x3ff) + 0xdc00));
+                  retString.Append((char)((((ret - 0x10000) >> 10) & 0x3ff) |
+                     0xd800));
+                  retString.Append((char)(((ret - 0x10000) & 0x3ff) | 0xdc00));
                 }
                 continue;
               }
@@ -383,8 +383,8 @@ namespace PeterO.Cbor {
             retString.Append((char)c);
           }
         } else if (c <= 0x10ffff) {
-          retString.Append((char)((((c - 0x10000) >> 10) & 0x3ff) + 0xd800));
-          retString.Append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
+          retString.Append((char)((((c - 0x10000) >> 10) & 0x3ff) | 0xd800));
+          retString.Append((char)(((c - 0x10000) & 0x3ff) | 0xdc00));
         }
       }
       if (bytesNeeded > 0) {
@@ -407,7 +407,7 @@ namespace PeterO.Cbor {
         if ((c & 0xfc00) == 0xd800 && index + 1 < s.Length &&
             (s[index + 1] & 0xfc00) == 0xdc00) {
          // Get the Unicode code point for the surrogate pair
-          c = 0x10000 + ((c - 0xd800) << 10) + (s[index + 1] - 0xdc00);
+          c = 0x10000 + ((c & 0x3ff) << 10) + (s[index + 1] & 0x3ff);
         } else if ((c & 0xf800) == 0xd800) {
           c = 0xfffd;
         }
@@ -434,8 +434,8 @@ namespace PeterO.Cbor {
         ((c & 0x7F) == c && "/?-._~:@!$&'()*+,;=".IndexOf((char)c) >= 0) ||
         (c >= 0xa0 && c <= 0xd7ff) || (c >= 0xf900 && c <= 0xfdcf) ||
         (c >= 0xfdf0 && c <= 0xffef) ||
-        (c >= 0xe1000 && c <= 0xefffd) || (c >= 0x10000 && c <= 0xdfffd && (c &
-          0xfffe) != 0xfffe);
+        (c >= 0xe1000 && c <= 0xefffd) || (c >= 0x10000 && c <= 0xdfffd &&
+        (c & 0xfffe) != 0xfffe);
     }
 
     private static bool IsIpchar(int c) {
@@ -445,8 +445,8 @@ namespace PeterO.Cbor {
         ((c & 0x7F) == c && "/-._~:@!$&'()*+,;=".IndexOf((char)c) >= 0) ||
         (c >= 0xa0 && c <= 0xd7ff) || (c >= 0xf900 && c <= 0xfdcf) ||
         (c >= 0xfdf0 && c <= 0xffef) ||
-        (c >= 0xe1000 && c <= 0xefffd) || (c >= 0x10000 && c <= 0xdfffd && (c &
-          0xfffe) != 0xfffe);
+        (c >= 0xe1000 && c <= 0xefffd) || (c >= 0x10000 && c <= 0xdfffd &&
+        (c & 0xfffe) != 0xfffe);
     }
 
     private static bool IsIqueryChar(int c) {
@@ -467,8 +467,8 @@ namespace PeterO.Cbor {
         ((c & 0x7F) == c && "-._~!$&'()*+,;=".IndexOf((char)c) >= 0) ||
         (c >= 0xa0 && c <= 0xd7ff) || (c >= 0xf900 && c <= 0xfdcf) ||
         (c >= 0xfdf0 && c <= 0xffef) ||
-        (c >= 0xe1000 && c <= 0xefffd) || (c >= 0x10000 && c <= 0xdfffd && (c &
-          0xfffe) != 0xfffe);
+        (c >= 0xe1000 && c <= 0xefffd) || (c >= 0x10000 && c <= 0xdfffd &&
+        (c & 0xfffe) != 0xfffe);
     }
 
     private static bool IsIUserInfoChar(int c) {
@@ -478,8 +478,8 @@ namespace PeterO.Cbor {
         ((c & 0x7F) == c && "-._~:!$&'()*+,;=".IndexOf((char)c) >= 0) ||
         (c >= 0xa0 && c <= 0xd7ff) || (c >= 0xf900 && c <= 0xfdcf) ||
         (c >= 0xfdf0 && c <= 0xffef) ||
-        (c >= 0xe1000 && c <= 0xefffd) || (c >= 0x10000 && c <= 0xdfffd && (c &
-          0xfffe) != 0xfffe);
+        (c >= 0xe1000 && c <= 0xefffd) || (c >= 0x10000 && c <= 0xdfffd &&
+        (c & 0xfffe) != 0xfffe);
     }
 
     public static bool IsValidCurieReference(string s, int offset, int length) {
@@ -524,7 +524,7 @@ namespace PeterO.Cbor {
         if ((c & 0xfc00) == 0xd800 && index + 1 < valueSLength &&
             (s[index + 1] & 0xfc00) == 0xdc00) {
          // Get the Unicode code point for the surrogate pair
-          c = 0x10000 + ((c - 0xd800) << 10) + (s[index + 1] - 0xdc00);
+          c = 0x10000 + ((c & 0x3ff) << 10) + (s[index + 1] & 0x3ff);
           ++index;
         } else if ((c & 0xf800) == 0xd800) {
          // error
@@ -604,7 +604,7 @@ namespace PeterO.Cbor {
           if ((c & 0xfc00) == 0xd800 && index + 1 < s.Length &&
               (s[index + 1] & 0xfc00) == 0xdc00) {
            // Get the Unicode code point for the surrogate pair
-            c = 0x10000 + ((c - 0xd800) << 10) + (s[index + 1] - 0xdc00);
+            c = 0x10000 + ((c & 0x3ff) << 10) + (s[index + 1] & 0x3ff);
           } else if ((c & 0xf800) == 0xd800) {
             c = 0xfffd;
           }
@@ -638,7 +638,7 @@ namespace PeterO.Cbor {
       }
       string ret = builder.ToString();
       if (SplitIRI(ret) == null) {
-        throw new ArgumentException();
+        throw new ArgumentException("The arguments result in an invalid IRI.");
       }
       return ret;
     }
@@ -666,7 +666,8 @@ namespace PeterO.Cbor {
 
     private static string NormalizePath(string path) {
       int len = path.Length;
-      if (len == 0 || path.Equals("..") || path.Equals(".")) {
+      if (len == 0 || path.Equals("..", StringComparison.Ordinal) ||
+path.Equals(".", StringComparison.Ordinal)) {
         return String.Empty;
       }
       if (path.IndexOf(ValueSlashDot, StringComparison.Ordinal) < 0 &&
@@ -939,7 +940,8 @@ namespace PeterO.Cbor {
           return -1;
         }
 
-  // DebugUtility.Log("{0:X4}:{0:X4}:{0:X4}:{0:X4}:{0:X4}:{0:X4}:{0:X4}:{0:X4}"
+  // DebugUtility.Log("{0:X4}:{0:X4}:{0:X4}:{0:X4}:{0:X4}:" +
+  // "{0:X4}:{0:X4}:{0:X4}"
        // ,
        // addressParts[0], addressParts[1], addressParts[2],
        // addressParts[3], addressParts[4], addressParts[5],
@@ -1138,16 +1140,25 @@ namespace PeterO.Cbor {
       if (indexes == null) {
         return null;
       }
+      string s1 = indexes[0] < 0 ? null : s.Substring(
+        indexes[0],
+        indexes[1] - indexes[0]);
+      string s2 = indexes[2] < 0 ? null : s.Substring(
+        indexes[2],
+        indexes[3] - indexes[2]);
+      string s3 = indexes[4] < 0 ? null : s.Substring(
+        indexes[4],
+        indexes[5] - indexes[4]);
+      string s4 = indexes[6] < 0 ? null : s.Substring(
+        indexes[6],
+        indexes[7] - indexes[6]);
+      string s5 = indexes[8] < 0 ? null : s.Substring(
+        indexes[8],
+        indexes[9] - indexes[8]);
       return new string[] {
- indexes[0] < 0 ? null : ToLowerCaseAscii(
-  s.Substring(
-    indexes[0],
-    indexes[1] - indexes[0])),
- indexes[2] < 0 ? null : s.Substring(indexes[2], indexes[3] - indexes[2]),
- indexes[4] < 0 ? null : s.Substring(indexes[4], indexes[5] - indexes[4]),
- indexes[6] < 0 ? null : s.Substring(indexes[6], indexes[7] - indexes[6]),
- indexes[8] < 0 ? null : s.Substring(indexes[8], indexes[9] - indexes[8]),
-  };
+        s1 == null ? null : ToLowerCaseAscii(s1),
+        s2, s3, s4, s5,
+      };
     }
 
     public static int[] SplitIRI(string s) {
@@ -1243,7 +1254,7 @@ namespace PeterO.Cbor {
           if ((c & 0xfc00) == 0xd800 && index + 1 < valueSLength &&
               (s[index + 1] & 0xfc00) == 0xdc00) {
            // Get the Unicode code point for the surrogate pair
-            c = 0x10000 + ((c - 0xd800) << 10) + (s[index + 1] - 0xdc00);
+            c = 0x10000 + ((c & 0x3ff) << 10) + (s[index + 1] & 0x3ff);
             ++index;
           } else if ((c & 0xf800) == 0xd800) {
             if (parseMode == ParseMode.IRISurrogateLenient) {
@@ -1344,7 +1355,7 @@ namespace PeterO.Cbor {
         if ((c & 0xfc00) == 0xd800 && index + 1 < valueSLength &&
             (s[index + 1] & 0xfc00) == 0xdc00) {
          // Get the Unicode code point for the surrogate pair
-          c = 0x10000 + ((c - 0xd800) << 10) + (s[index + 1] - 0xdc00);
+          c = 0x10000 + ((c & 0x3ff) << 10) + (s[index + 1] & 0x3ff);
           ++index;
         } else if ((c & 0xf800) == 0xd800) {
          // error
@@ -1415,10 +1426,10 @@ namespace PeterO.Cbor {
         return false;
       }
       path = PercentDecode(path);
-      if (path.Equals("..")) {
+      if (path.Equals("..", StringComparison.Ordinal)) {
         return true;
       }
-      if (path.Equals(".")) {
+      if (path.Equals(".", StringComparison.Ordinal)) {
         return true;
       }
       if (path.IndexOf(ValueSlashDot, StringComparison.Ordinal) < 0 &&
@@ -1522,7 +1533,7 @@ namespace PeterO.Cbor {
       string absuri = DirectoryPath(absoluteBaseURI);
       string reluri = DirectoryPath(rel);
       return (absuri == null || reluri == null ||
-         !absuri.Equals(reluri)) ? null : rel;
+         !absuri.Equals(reluri, StringComparison.Ordinal)) ? null : rel;
     }
   }
 }

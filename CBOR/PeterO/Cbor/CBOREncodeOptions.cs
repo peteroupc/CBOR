@@ -16,11 +16,13 @@ namespace PeterO.Cbor {
     public static readonly CBOREncodeOptions DefaultCtap2Canonical =
       new CBOREncodeOptions(false, false, true);
 
-    /// <summary>Initializes a new instance of the <see cref='CBOREncodeOptions'/> class.</summary>
+    /// <summary>Initializes a new instance of the
+    /// <see cref='CBOREncodeOptions'/> class.</summary>
     public CBOREncodeOptions() : this(false, false) {
 }
 
-    /// <summary>Initializes a new instance of the <see cref='CBOREncodeOptions'/> class.</summary>
+    /// <summary>Initializes a new instance of the
+    /// <see cref='CBOREncodeOptions'/> class.</summary>
     /// <param name='useIndefLengthStrings'>A value indicating whether to
     /// always encode strings with a definite-length encoding.</param>
     /// <param name='allowDuplicateKeys'>A value indicating whether to
@@ -32,7 +34,8 @@ namespace PeterO.Cbor {
         : this(useIndefLengthStrings, allowDuplicateKeys, false) {
     }
 
-    /// <summary>Initializes a new instance of the <see cref='CBOREncodeOptions'/> class.</summary>
+    /// <summary>Initializes a new instance of the
+    /// <see cref='CBOREncodeOptions'/> class.</summary>
     /// <param name='useIndefLengthStrings'>A value indicating whether to
     /// encode strings with a definite-length encoding in certain
     /// cases.</param>
@@ -52,15 +55,15 @@ namespace PeterO.Cbor {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Cbor.CBOREncodeOptions.UseIndefLengthStrings"]/*'/>
+    ///   path='docs/doc[@name="P:PeterO.Cbor.CBOREncodeOptions.UseIndefLengthStrings"]/*'/>
     public bool UseIndefLengthStrings { get; private set; }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Cbor.CBOREncodeOptions.AllowDuplicateKeys"]/*'/>
+    ///   path='docs/doc[@name="P:PeterO.Cbor.CBOREncodeOptions.AllowDuplicateKeys"]/*'/>
     public bool AllowDuplicateKeys { get; private set; }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Cbor.CBOREncodeOptions.Ctap2Canonical"]/*'/>
+    ///   path='docs/doc[@name="P:PeterO.Cbor.CBOREncodeOptions.Ctap2Canonical"]/*'/>
     public bool Ctap2Canonical { get; private set; }
   }
 }

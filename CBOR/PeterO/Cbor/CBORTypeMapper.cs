@@ -10,8 +10,8 @@ namespace PeterO.Cbor {
     private readonly IDictionary<Object, ConverterInfo>
       converters;
 
-     /// <summary>Not documented yet.</summary>
-
+    /// <summary>Initializes a new instance of the
+    /// <see cref='CBORTypeMapper'/> class.</summary>
     public CBORTypeMapper() {
       this.typePrefixes = new List<string>();
       this.typeNames = new List<string>();
@@ -93,12 +93,13 @@ namespace PeterO.Cbor {
       }
       foreach (string prefix in this.typePrefixes) {
         if (typeName.Length >= prefix.Length &&
-          typeName.Substring(0, prefix.Length).Equals(prefix)) {
+          typeName.Substring(0, prefix.Length).Equals(prefix,
+  StringComparison.Ordinal)) {
           return true;
         }
       }
       foreach (string name in this.typeNames) {
-        if (typeName.Equals(name)) {
+        if (typeName.Equals(name, StringComparison.Ordinal)) {
           return true;
         }
       }

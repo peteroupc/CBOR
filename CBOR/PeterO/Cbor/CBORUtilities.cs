@@ -303,10 +303,10 @@ namespace PeterO.Cbor {
       int mday) {
      // NOTE: month = 1 is January, year = 1 is year 1
       if (month <= 0 || month > 12) {
-        throw new ArgumentException();
+        throw new ArgumentOutOfRangeException(nameof(month));
       }
       if (mday <= 0 || mday > 31) {
-        throw new ArgumentException();
+        throw new ArgumentOutOfRangeException(nameof(mday));
       }
       EInteger numDays = EInteger.Zero;
       var startYear = 1970;
@@ -414,8 +414,8 @@ namespace PeterO.Cbor {
 
     public static bool NameStartsWithWord(String name, String word) {
       int wl = word.Length;
-      return name.Length > wl && name.Substring(0, wl).Equals(word) &&
-              !(name[wl] >= 'a' && name[wl] <= 'z') &&
+      return name.Length > wl && name.Substring(0, wl).Equals(word,
+  StringComparison.Ordinal) && !(name[wl] >= 'a' && name[wl] <= 'z') &&
               !(name[wl] >= '0' && name[wl] <= '9');
     }
 
