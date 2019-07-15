@@ -341,7 +341,7 @@
         compare as equal under the CompareTo method might not be equal under the
         Equals method. This is important to consider especially if an
         application wants to compare numbers, since the CBOR number type
-        supports numbers of different formats, such as big integers, rational
+        supports numbers of different formats, such as arbitrary-precision integers, rational
         numbers, and arbitrary-precision decimal numbers.
       </para>
       <para>Another consideration is that two values that are otherwise equal may
@@ -575,7 +575,7 @@
     <summary>Converts this object to an arbitrary-precision integer. Fractional values
       are truncated to an integer.
     </summary>
-    <returns>The closest big integer to this object.
+    <returns>The closest arbitrary-precision integer to this object.
     </returns>
     <exception cref='T:System.InvalidOperationException'>This object's type is not a number type, including if this object is
       CBORObject.Null.
@@ -604,7 +604,7 @@
   <doc name='M:PeterO.Cbor.CBORObject.AsDecimal'>
     <summary>Converts this object to a .NET decimal.
     </summary>
-    <returns>The closest big integer to this object.
+    <returns>The closest arbitrary-precision integer to this object.
     </returns>
     <exception cref='T:System.InvalidOperationException'>This object's type is not a number type.
     </exception>
@@ -655,7 +655,7 @@
     <summary>Converts this object to an arbitrary-precision integer. Fractional values
       are truncated to an integer.
     </summary>
-    <returns>The closest big integer to this object.
+    <returns>The closest arbitrary-precision integer to this object.
     </returns>
     <exception cref='T:System.InvalidOperationException'>This object's type is not a number type, including if this object is
       CBORObject.Null. To check the CBOR object for null before conversion, use
@@ -784,7 +784,7 @@
     <summary>Converts this object to a 64-bit unsigned integer. Non-integer values are
       truncated to an integer.
     </summary>
-    <returns>The closest big integer to this object.
+    <returns>The closest arbitrary-precision integer to this object.
     </returns>
     <exception cref='T:System.InvalidOperationException'>This object's type is not a number type.
     </exception>
@@ -2526,7 +2526,7 @@
           <c>22("Test")</c> is converted to
           <c>"Test"</c> and
           <c>true</c> is converted to
-          <c>"true"</c> ///). If, after such conversion, two or more map keys are identical,
+          <c>"true"</c> ). If, after such conversion, two or more map keys are identical,
           this method throws a CBORException.
         </item>
         <item>If a number in the form of an arbitrary-precision binary float has a
@@ -3089,9 +3089,9 @@
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.Write(PeterO.BigInteger,System.IO.Stream)'>
-    <summary>Writes a big integer in CBOR format to a data stream.
+    <summary>Writes a arbitrary-precision integer in CBOR format to a data stream.
     </summary>
-    <param name='bigint'>Big integer to write. Can be null.
+    <param name='bigint'>arbitrary-precision integer to write. Can be null.
     </param>
     <param name='stream'>A writable data stream.
     </param>
@@ -3128,7 +3128,7 @@
         </item>
         <item>If the value has an exponent of zero, writes the value as an unsigned
           integer or signed integer if the number can fit either type or as a
-          big integer otherwise.
+          arbitrary-precision integer otherwise.
         </item>
         <item>In all other cases, writes the value as a decimal number.
         </item>
@@ -3159,7 +3159,7 @@
         </item>
         <item>If the value has an exponent of zero, writes the value as an unsigned
           integer or signed integer if the number can fit either type or as a
-          big integer otherwise.
+          arbitrary-precision integer otherwise.
         </item>
         <item>In all other cases, writes the value as a big float.
         </item>
@@ -3204,7 +3204,7 @@
         </item>
         <item>If the value has an exponent of zero, writes the value as an unsigned
           integer or signed integer if the number can fit either type or as a
-          big integer otherwise.
+          arbitrary-precision integer otherwise.
         </item>
         <item>In all other cases, writes the value as a decimal number.
         </item>
@@ -3235,7 +3235,7 @@
         </item>
         <item>If the value has an exponent of zero, writes the value as an unsigned
           integer or signed integer if the number can fit either type or as a
-          big integer otherwise.
+          arbitrary-precision integer otherwise.
         </item>
         <item>In all other cases, writes the value as a big float.
         </item>
@@ -3253,9 +3253,9 @@
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.EInteger,System.IO.Stream)'>
-    <summary>Writes a big integer in CBOR format to a data stream.
+    <summary>Writes a arbitrary-precision integer in CBOR format to a data stream.
     </summary>
-    <param name='bigint'>Big integer to write. Can be null.
+    <param name='bigint'>arbitrary-precision integer to write. Can be null.
     </param>
     <param name='stream'>A writable data stream.
     </param>
@@ -3954,7 +3954,7 @@
     </summary>
   </doc>
   <doc name='F:PeterO.Cbor.CBORType.Number'>
-    <summary>A number of any kind, including integers, big integers, floating point
+    <summary>A number of any kind, including integers, arbitrary-precision integers, floating point
       numbers, and decimal numbers. The floating-point value Not-a-Number is
       also included in the Number type.
     </summary>

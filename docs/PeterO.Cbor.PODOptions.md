@@ -17,7 +17,7 @@
 
  Initializes a new instance of the [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) class.
 
-<b>Parameters:</b>
+    <b>Parameters:</b>
 
  * <i>removeIsPrefix</i>: If set to  `true`  remove is prefix.
 
@@ -30,12 +30,14 @@
 
  Initializes a new instance of the [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) class.
 
-<a id="Default"></a>
+  <a id="Default"></a>
 ### Default
 
     public static readonly PeterO.Cbor.PODOptions Default;
 
- The default settings for "plain old data" options.  <a id="UseCamelCase"></a>
+ The default settings for "plain old data" options.
+
+  <a id="UseCamelCase"></a>
 ### UseCamelCase
 
     public bool UseCamelCase { get; }
@@ -54,6 +56,6 @@
 
   In the description above, a name "starts with" a word if that word begins the name and is followed by a character other than a basic digit or lower-case letter, that is, other than "a" to "z" or "0" to "9".
 
-  <b>Returns:</b>
+ <b>Returns:</b>
 
  `true`  If the names are converted to camel case; otherwise,  `false`  . This property is  `true`  by default.

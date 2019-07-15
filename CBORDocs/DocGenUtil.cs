@@ -35,7 +35,8 @@ namespace PeterO.DocGen {
       } catch (IOException) {
         oldString = null;
       }
-      if (oldString == null || !oldString.Equals(newString)) {
+      if (oldString == null || !oldString.Equals(newString,
+  StringComparison.Ordinal)) {
         File.WriteAllText(filename, newString);
       }
     }

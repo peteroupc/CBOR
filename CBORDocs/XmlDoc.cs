@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -49,11 +49,11 @@ namespace PeterO.DocGen {
 
       internal void AppendChild(Node child) {
         if (child == null) {
-  throw new ArgumentNullException(nameof(child));
-}
+          throw new ArgumentNullException(nameof(child));
+        }
         if (this.children != null) {
- this.children.Add(child);
-}
+          this.children.Add(child);
+        }
       }
 
       internal void SetAttribute(string name, string value) {
@@ -63,14 +63,14 @@ namespace PeterO.DocGen {
       }
 
       public string GetAttribute(string str) {
- return (this.attributes == null || !this.attributes.ContainsKey(str)) ?
-          null : this.attributes[str];
+         return (this.attributes == null ||
+            !this.attributes.ContainsKey(str)) ? null : this.attributes[str];
       }
 
       public string GetContent() {
         if (!this.element) {
- return this.content;
-}
+          return this.content;
+        }
         var sb = new StringBuilder();
         foreach (var c in this.children) {
           sb.Append(c.GetContent());
@@ -117,8 +117,8 @@ namespace PeterO.DocGen {
       nodeStack.Add(node);
       while (true) {
         if (doread) {
- reader.Read();
-}
+          reader.Read();
+        }
         doread = true;
         if (reader.NodeType == XmlNodeType.EndElement) {
           if (depth <= 0) {
@@ -208,7 +208,7 @@ namespace PeterO.DocGen {
         var mn = this.memberNodes[memberID];
         var sb = new StringBuilder();
         foreach (var c in mn.GetChildren()) {
-          if (c.LocalName.Equals("summary")) {
+          if (c.LocalName.Equals("summary", StringComparison.Ordinal)) {
             var sv = new SummaryVisitor();
             sv.VisitNode(c);
             sb.Append(sv.ToString()).Append("\r\n\r\n");
@@ -228,10 +228,10 @@ namespace PeterO.DocGen {
         reader.ReadStartElement("doc");
         while (reader.IsStartElement()) {
          // Console.WriteLine(reader.LocalName);
-          if (reader.LocalName.Equals("members")) {
+          if (reader.LocalName.Equals("members", StringComparison.Ordinal)) {
             reader.Read();
             while (reader.IsStartElement()) {
-              if (reader.LocalName.Equals("member")) {
+              if (reader.LocalName.Equals("member", StringComparison.Ordinal)) {
                 string memberName = reader.GetAttribute("name");
                 var node = this.ReadNode(reader);
                 this.memberNodes[memberName] = node;

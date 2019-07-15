@@ -22,30 +22,27 @@ namespace PeterO.Cbor {
     private int offset;
     private ICharacterInput reader;
 
-    // <xmlbegin id='0'/>
     // <summary>Initializes a new instance of the
-    // <see cref='CharacterReader'/>.</summary>
+    // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='str'>A string object.</param>
     public CharacterReader(string str) : this(str, false, false) {
     }
 
-    // <xmlbegin id='1'/>
     // <summary>Initializes a new instance of the
-    // <see cref='CharacterReader'/>.</summary>
+    // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='str'>A string object.</param>
     // <param name='skipByteOrderMark'>A Boolean object.</param>
     public CharacterReader(string str, bool skipByteOrderMark)
       : this(str, skipByteOrderMark, false) {
     }
 
-    // <xmlbegin id='2'/>
     // <summary>Initializes a new instance of the
-    // <see cref='CharacterReader'/>.</summary>
+    // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='str'>A string object.</param>
     // <param name='skipByteOrderMark'>A Boolean object.</param>
     // <param name='errorThrow'>Another Boolean object.</param>
-    // <exception cref='ArgumentNullException'>The parameter <paramref
-    // name='str'/> is null.</exception>
+    // <exception cref='System.ArgumentNullException'>The parameter
+    // <paramref name='str'/> is null.</exception>
     public CharacterReader(
       string str,
       bool skipByteOrderMark,
@@ -63,9 +60,8 @@ namespace PeterO.Cbor {
       this.stream = null;
     }
 
-    // <xmlbegin id='3'/>
     // <summary>Initializes a new instance of the
-    // <see cref='CharacterReader'/>.</summary>
+    // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='str'>A string object.</param>
     // <param name='offset'>A 32-bit signed integer.</param>
     // <param name='length'>Another 32-bit signed integer.</param>
@@ -73,16 +69,15 @@ namespace PeterO.Cbor {
       : this(str, offset, length, false, false) {
     }
 
-    // <xmlbegin id='4'/>
     // <summary>Initializes a new instance of the
-    // <see cref='CharacterReader'/>.</summary>
+    // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='str'>A string object.</param>
     // <param name='offset'>A 32-bit signed integer.</param>
     // <param name='length'>Another 32-bit signed integer.</param>
     // <param name='skipByteOrderMark'>A Boolean object.</param>
     // <param name='errorThrow'>Another Boolean object.</param>
-    // <exception cref='ArgumentNullException'>The parameter <paramref
-    // name='str'/> is null.</exception>
+    // <exception cref='System.ArgumentNullException'>The parameter
+    // <paramref name='str'/> is null.</exception>
     public CharacterReader(
       string str,
       int offset,
@@ -122,16 +117,14 @@ namespace PeterO.Cbor {
       this.stream = null;
     }
 
-    // <xmlbegin id='5'/>
     // <summary>Initializes a new instance of the
-    // <see cref='CharacterReader'/>.</summary>
+    // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='stream'>A readable data stream.</param>
     public CharacterReader(Stream stream) : this(stream, 0, false) {
     }
 
-    // <xmlbegin id='6'/>
     // <summary>Initializes a new instance of the
-    // <see cref='CharacterReader'/>.</summary>
+    // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='stream'>A readable data stream.</param>
     // <param name='mode'>A 32-bit signed integer.</param>
     // <param name='errorThrow'>A Boolean object.</param>
@@ -139,24 +132,22 @@ namespace PeterO.Cbor {
       : this(stream, mode, errorThrow, false) {
     }
 
-    // <xmlbegin id='7'/>
     // <summary>Initializes a new instance of the
-    // <see cref='CharacterReader'/>.</summary>
+    // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='stream'>A readable data stream.</param>
     // <param name='mode'>A 32-bit signed integer.</param>
     public CharacterReader(Stream stream, int mode)
   : this(stream, mode, false, false) {
     }
 
-    // <xmlbegin id='8'/>
     // <summary>Initializes a new instance of the
-    // <see cref='CharacterReader'/>.</summary>
+    // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='stream'>A readable data stream.</param>
     // <param name='mode'>A 32-bit signed integer.</param>
     // <param name='errorThrow'>A Boolean object.</param>
     // <param name='dontSkipUtf8Bom'>Another Boolean object.</param>
-    // <exception cref='ArgumentNullException'>The parameter <paramref
-    // name='stream'/> is null.</exception>
+    // <exception cref='System.ArgumentNullException'>The parameter
+    // <paramref name='stream'/> is null.</exception>
     public CharacterReader(
       Stream stream,
       int mode,

@@ -35,7 +35,9 @@
         string str,
         int index);
 
- Gets the Unicode code point at the given index of the string. The following example shows how to iterate a text string code point by code point.
+ Gets the Unicode code point at the given index of the string.
+
+The following example shows how to iterate a text string code point by code point.
 
     for(var i=0;i<str.Length;i++) { int codePoint =
             DataUtilities.CodePointAt(str,i);
@@ -44,7 +46,7 @@
 
  .
 
-<b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: The parameter  <i>str</i>
  is a text string.
@@ -70,7 +72,9 @@ The parameter  <i>str</i>
         int index,
         int surrogateBehavior);
 
- Gets the Unicode code point at the given index of the string. The following example shows how to iterate a text string code point by code point, terminating the loop when an unpaired surrogate is found.
+ Gets the Unicode code point at the given index of the string.
+
+The following example shows how to iterate a text string code point by code point, terminating the loop when an unpaired surrogate is found.
 
     for(var i=0;i<str.Length;i++) { int codePoint =
             DataUtilities.CodePointAt(str, i, 2); if(codePoint < 0) { break; /*
@@ -79,7 +83,7 @@ The parameter  <i>str</i>
 
  .
 
-<b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: The parameter  <i>str</i>
  is a text string.
@@ -109,7 +113,7 @@ The parameter  <i>str</i>
 
  Gets the Unicode code point just before the given index of the string.
 
-<b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: The parameter  <i>str</i>
  is a text string.
@@ -137,7 +141,7 @@ The parameter  <i>str</i>
 
  Gets the Unicode code point just before the given index of the string.
 
-<b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: The parameter  <i>str</i>
  is a text string.
@@ -167,7 +171,7 @@ The parameter  <i>str</i>
 
  Compares two strings in Unicode code point order. Unpaired surrogate code points are treated as individual code points.
 
-<b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>strA</i>: The first string. Can be null.
 
@@ -185,7 +189,7 @@ A value indicating which string is " less" or " greater" . 0: Both strings are e
 
  Finds the number of Unicode code points in the given text string. Unpaired surrogate code points increase this number by 1. This is not necessarily the length of the string in "char" s.
 
-<b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: The parameter  <i>str</i>
  is a text string.
@@ -211,7 +215,7 @@ The parameter  <i>str</i>
 
  REMARK: It is not recommended to use  `Encoding.UTF8.GetBytes`  in .NET, or the  `getBytes()`  method in Java to do this. For instance,  `getBytes()`  encodes text strings in a default (so not fixed) character encoding, which can be undesirable.
 
-<b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: The parameter  <i>str</i>
  is a text string.
@@ -244,7 +248,7 @@ The string contains an unpaired surrogate code point and  <i>replace</i>
 
  REMARK: It is not recommended to use  `Encoding.UTF8.GetBytes`  in .NET, or the  `getBytes()`  method in Java to do this. For instance,  `getBytes()`  encodes text strings in a default (so not fixed) character encoding, which can be undesirable.
 
-<b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: The parameter  <i>str</i>
  is a text string.
@@ -276,7 +280,7 @@ The string contains an unpaired surrogate code point and  <i>replace</i>
 
  Calculates the number of bytes needed to encode a string in UTF-8.
 
-<b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: The parameter  <i>str</i>
  is a text string.
@@ -303,7 +307,7 @@ The parameter  <i>str</i>
 
  Generates a text string from a UTF-8 byte array.
 
-<b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>bytes</i>: A byte array containing text encoded in UTF-8.
 
@@ -334,7 +338,7 @@ The string is not valid UTF-8 and  <i>replace</i>
 
  Generates a text string from a portion of a UTF-8 byte array.
 
-<b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>bytes</i>: A byte array containing text encoded in UTF-8.
 
@@ -374,7 +378,7 @@ The parameter  <i>offset</i>
 
  Reads a string in UTF-8 encoding from a data stream.
 
-<b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>stream</i>: A readable data stream.
 
@@ -412,7 +416,7 @@ The parameter  <i>stream</i>
 
  Reads a string in UTF-8 encoding from a byte array.
 
-<b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>data</i>: A byte array containing a UTF-8 text string.
 
@@ -450,7 +454,7 @@ The parameter  <i>offset</i>
 
  Reads a string in UTF-8 encoding from a data stream in full and returns that string. Replaces invalid encoding with the replacement character (U+FFFD).
 
-<b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>stream</i>: A readable data stream.
 
@@ -477,7 +481,7 @@ The parameter  <i>stream</i>
 
  Reads a string in UTF-8 encoding from a data stream and returns that string.
 
-<b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>stream</i>: A readable data stream.
 
@@ -507,7 +511,7 @@ The parameter  <i>stream</i>
 
  Returns a string with the basic upper-case letters A to Z (U+0041 to U+005A) converted to lower-case. Other characters remain unchanged.
 
-<b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: The parameter  <i>str</i>
  is a text string.
@@ -525,7 +529,7 @@ The converted string, or null if  <i>str</i>
 
  Returns a string with the basic lower-case letters A to Z (U+0061 to U+007A) converted to upper-case. Other characters remain unchanged.
 
-<b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: The parameter  <i>str</i>
  is a text string.
@@ -547,7 +551,7 @@ The converted string, or null if  <i>str</i>
 
  Writes a portion of a string in UTF-8 encoding to a data stream.
 
-<b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: A string to write.
 
@@ -594,7 +598,7 @@ An I/O error occurred.
 
  Writes a portion of a string in UTF-8 encoding to a data stream.
 
-<b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: A string to write.
 
@@ -640,7 +644,7 @@ An I/O error occurred.
 
  Writes a string in UTF-8 encoding to a data stream.
 
-<b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: A string to write.
 

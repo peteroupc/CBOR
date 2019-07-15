@@ -8,8 +8,7 @@ at: http://peteroupc.github.io/
 using System;
 
 namespace PeterO.Cbor {
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="T:PeterO.Cbor.CBORType"]/*'/>
+    /// <summary>Represents a type that a CBOR object can have.</summary>
   public enum CBORType {
     /// <summary>A number of any kind, including integers, big integers,
     /// floating point numbers, and decimal numbers. The floating-point

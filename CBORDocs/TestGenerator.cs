@@ -69,7 +69,7 @@ namespace PeterO.DocGen {
         builder.Append(" }\n");
       }
       foreach (var methodName in methods) {
-        if (methodName.Equals("Constructor")) {
+        if (methodName.Equals("Constructor", StringComparison.Ordinal)) {
           continue;
         }
         builder.Append(" [TestMethod]\n");

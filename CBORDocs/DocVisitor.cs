@@ -165,10 +165,11 @@ namespace PeterO.DocGen {
         attr = methodInfo.GetCustomAttribute(
           typeof(System.Runtime.CompilerServices.ExtensionAttribute));
         isExtension = attr != null;
-        if (method.Name.Equals("op_Explicit")) {
+        if (method.Name.Equals("op_Explicit", StringComparison.Ordinal)) {
           builder.Append("explicit operator ");
           builder.Append(FormatType(methodInfo.ReturnType));
-        } else if (method.Name.Equals("op_Implicit")) {
+        } else if (method.Name.Equals("op_Implicit",
+  StringComparison.Ordinal)) {
           builder.Append("implicit operator ");
           builder.Append(FormatType(methodInfo.ReturnType));
         } else if (ValueOperators.ContainsKey(method.Name)) {
@@ -350,20 +351,24 @@ namespace PeterO.DocGen {
         return name;
       }
       name = type.Namespace + "." + name;
-      return name.Equals("System.Int32") ? "int" :
-        (name.Equals("System.Int64") ? "long" :
-         (name.Equals("System.Int16") ? "short" :
-          (name.Equals("System.UInt32") ? "uint" :
-           (name.Equals("System.UInt64") ? "ulong" :
-            (name.Equals("System.UInt16") ? "ushort" :
-             (name.Equals("System.Char") ? "char" :
-              (name.Equals("System.Object") ? "object" :
-           (name.Equals("System.Void") ? "void" : (name.Equals("System.Byte") ?
+      return name.Equals("System.Int32", StringComparison.Ordinal) ? "int" :
+        (name.Equals("System.Int64", StringComparison.Ordinal) ? "long" :
+         (name.Equals("System.Int16", StringComparison.Ordinal) ? "short" :
+          (name.Equals("System.UInt32", StringComparison.Ordinal) ? "uint" :
+           (name.Equals("System.UInt64", StringComparison.Ordinal) ? "ulong" :
+            (name.Equals("System.UInt16", StringComparison.Ordinal) ? "ushort" :
+             (name.Equals("System.Char", StringComparison.Ordinal) ? "char" :
+              (name.Equals("System.Object", StringComparison.Ordinal) ?
+"object" :
+           (name.Equals("System.Void", StringComparison.Ordinal) ? "void" :
+(name.Equals("System.Byte", StringComparison.Ordinal) ?
                     "byte" :
-  (name.Equals("System.SByte") ? "sbyte" : (name.Equals("System.String") ?
-                "string" : (name.Equals("System.Boolean") ?
-  "bool" : (name.Equals("System.Single") ?
-  "float" : (name.Equals("System.Double") ? "double" :
+  (name.Equals("System.SByte", StringComparison.Ordinal) ? "sbyte" :
+(name.Equals("System.String", StringComparison.Ordinal) ?
+                "string" : (name.Equals("System.Boolean",
+  StringComparison.Ordinal) ?
+  "bool" : (name.Equals("System.Single", StringComparison.Ordinal) ?
+  "float" : (name.Equals("System.Double", StringComparison.Ordinal) ? "double" :
   name))))))))))))));
     }
 
@@ -490,41 +495,42 @@ namespace PeterO.DocGen {
         XmlDoc.VisitInnerNode(node, this);
       } else {
         var xmlName = node.LocalName.ToLowerInvariant();
-        if (xmlName.Equals("c")) {
+        if (xmlName.Equals("c", StringComparison.Ordinal)) {
           this.VisitC(node);
-        } else if (xmlName.Equals("code")) {
+        } else if (xmlName.Equals("code", StringComparison.Ordinal)) {
           this.VisitCode(node);
-        } else if (xmlName.Equals("example")) {
+        } else if (xmlName.Equals("example", StringComparison.Ordinal)) {
           this.VisitExample(node);
-        } else if (xmlName.Equals("exception")) {
+        } else if (xmlName.Equals("exception", StringComparison.Ordinal)) {
           this.VisitException(node);
-        } else if (xmlName.Equals("see")) {
+        } else if (xmlName.Equals("see", StringComparison.Ordinal)) {
           this.VisitSee(node);
-        } else if (xmlName.Equals("item")) {
+        } else if (xmlName.Equals("item", StringComparison.Ordinal)) {
           this.VisitItem(node);
-        } else if (xmlName.Equals("list")) {
+        } else if (xmlName.Equals("list", StringComparison.Ordinal)) {
           this.VisitList(node);
-        } else if (xmlName.Equals("para")) {
+        } else if (xmlName.Equals("para", StringComparison.Ordinal)) {
           this.VisitPara(node);
-        } else if (xmlName.Equals("param")) {
+        } else if (xmlName.Equals("param", StringComparison.Ordinal)) {
           this.VisitParam(node);
-        } else if (xmlName.Equals("paramref")) {
+        } else if (xmlName.Equals("paramref", StringComparison.Ordinal)) {
           this.VisitParamRef(node);
-        } else if (xmlName.Equals("remarks") || node.Equals("summary")) {
+        } else if (xmlName.Equals("remarks", StringComparison.Ordinal) ||
+                  xmlName.Equals("summary", StringComparison.Ordinal)) {
           XmlDoc.VisitInnerNode(node, this);
-          this.WriteLine("\r\n\r\n");
-        } else if (xmlName.Equals("returns")) {
+          this.Write("\r\n\r\n");
+        } else if (xmlName.Equals("returns", StringComparison.Ordinal)) {
           this.VisitReturns(node);
-        } else if (xmlName.Equals("typeparam")) {
+        } else if (xmlName.Equals("typeparam", StringComparison.Ordinal)) {
           this.VisitTypeParam(node);
-        } else if (xmlName.Equals("value")) {
+        } else if (xmlName.Equals("value", StringComparison.Ordinal)) {
           this.VisitValue(node);
-        } else if (xmlName.Equals("b") ||
-xmlName.Equals("strong") ||
-xmlName.Equals("i") ||
-xmlName.Equals("a") ||
-xmlName.Equals("sup") ||
-xmlName.Equals("em")) {
+        } else if (xmlName.Equals("b", StringComparison.Ordinal) ||
+xmlName.Equals("strong", StringComparison.Ordinal) ||
+xmlName.Equals("i", StringComparison.Ordinal) ||
+xmlName.Equals("a", StringComparison.Ordinal) ||
+xmlName.Equals("sup", StringComparison.Ordinal) ||
+xmlName.Equals("em", StringComparison.Ordinal)) {
           var sb = new StringBuilder();
           sb.Append("<" + xmlName);
           foreach (var attr in node.GetAttributes()) {
@@ -573,7 +579,7 @@ xmlName.Equals("em")) {
 
     public void VisitSee(XmlDoc.INode see) {
       string cref = see.GetAttribute("cref");
-      if (cref.Substring(0, 2).Equals("T:")) {
+      if (cref.Substring(0, 2).Equals("T:", StringComparison.Ordinal)) {
         string typeName = TypeNameUtil.UndecorateTypeName(cref.Substring(2));
         string content = DocGenUtil.HtmlEscape(see.GetContent());
         if (String.IsNullOrEmpty(content)) {
@@ -582,7 +588,7 @@ xmlName.Equals("em")) {
         this.Write("[" + content + "]");
         this.Write("(" + typeName + ".md)");
         XmlDoc.VisitInnerNode(see, this);
-      } else if (cref.Substring(0, 2).Equals("M:")) {
+      } else if (cref.Substring(0, 2).Equals("M:", StringComparison.Ordinal)) {
         string content = DocGenUtil.HtmlEscape(see.GetContent());
         if (String.IsNullOrEmpty(content)) {
           content = cref;
@@ -634,7 +640,6 @@ xmlName.Equals("em")) {
           this.returnStr.Clear();
           this.exceptionStr.Clear();
           XmlDoc.VisitInnerNode(mnm, this);
-          this.Write("\r\n\r\n");
           if (this.paramStr.Length > 0) {
             this.Write("<b>Parameters:</b>\r\n\r\n");
             var paramString = this.paramStr.ToString();
@@ -824,8 +829,10 @@ xmlName.Equals("em")) {
     private static string MethodNameHeading(string p) {
       return ValueOperators.ContainsKey(p) ? ("Operator `" +
         ValueOperators[p] + "`") :
-        (p.Equals("op_Explicit") ? "Explicit Operator" :
-         (p.Equals("op_Implicit") ? "Implicit Operator" : p));
+        (p.Equals("op_Explicit", StringComparison.Ordinal) ?
+          "Explicit Operator" :
+         (p.Equals("op_Implicit", StringComparison.Ordinal) ?
+          "Implicit Operator" : p));
     }
 
     private static IDictionary<string, string> OperatorList() {

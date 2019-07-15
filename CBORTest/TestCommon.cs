@@ -11,7 +11,7 @@ using NUnit.Framework;
 
 namespace Test {
   public static class TestCommon {
-    private static readonly string ValueDigits = "0123456789";
+    private const string ValueDigits = "0123456789";
 
     public static int StringToInt(string str) {
       var neg = false;

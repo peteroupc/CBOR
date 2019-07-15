@@ -17,7 +17,7 @@
 
  Initializes a new instance of the [PeterO.Cbor.CBORException](PeterO.Cbor.CBORException.md) class.
 
-<b>Parameters:</b>
+   <b>Parameters:</b>
 
  * <i>message</i>: The parameter  <i>message</i>
  is a text string.
@@ -31,7 +31,7 @@
 
  Initializes a new instance of the [PeterO.Cbor.CBORException](PeterO.Cbor.CBORException.md) class. Uses the given message and inner exception.
 
-<b>Parameters:</b>
+    <b>Parameters:</b>
 
  * <i>message</i>: The parameter  <i>message</i>
  is a text string.

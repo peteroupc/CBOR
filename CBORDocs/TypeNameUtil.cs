@@ -102,7 +102,8 @@ if (!first) {
           }
           msb.Append(")");
         }
-        if (mi.Name.Equals("op_Explicit") || mi.Name.Equals("op_Implicit")) {
+        if (mi.Name.Equals("op_Explicit", StringComparison.Ordinal) ||
+mi.Name.Equals("op_Implicit", StringComparison.Ordinal)) {
           var rt = mi.ReturnType;
           if (rt != null) {
             msb.Append("~").Append(XmlDocTypeName(rt, true, genericMethod));
