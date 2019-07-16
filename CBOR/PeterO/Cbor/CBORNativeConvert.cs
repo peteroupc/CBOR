@@ -43,7 +43,7 @@ namespace PeterO.Cbor {
         return ConvertToDecimalFrac(o, false, false);
       }
       if (o.HasMostOuterTag(30)) {
-        return ConvertToRationalNumber(o);
+        return CheckRationalNumber(o);
       }
       if (o.HasMostOuterTag(264)) {
         return ConvertToDecimalFrac(o, true, true);
@@ -133,9 +133,14 @@ namespace PeterO.Cbor {
       return CBORObject.FromObject(bi);
     }
 
-    private static CBORObject ConvertToRationalNumber(CBORObject obj) {
+    private static CBORObject CheckRationalNumber(CBORObject obj) {
       if (obj.Type != CBORType.Array) {
+#if DEBUG
+        throw new CBORException("Rational number must be an array\n" +
+          obj.ToString());
+#else
         throw new CBORException("Rational number must be an array");
+#endif
       }
       if (obj.Count != 2) {
         throw new CBORException("Rational number requires exactly 2 items");
@@ -149,17 +154,10 @@ namespace PeterO.Cbor {
         throw new CBORException("Rational number requires integer denominator");
       }
       if (second.Sign <= 0) {
-throw new
-  CBORException("Rational number requires denominator greater than 0");
+        throw new CBORException(
+           "Rational number requires denominator greater than 0");
       }
-      EInteger denom = second.AsEInteger();
-      // NOTE: Discards tags.
-      return denom.Equals(EInteger.One) ?
-      CBORObject.FromObject(first.AsEInteger()) :
-      CBORObject.FromObject(
-  ERational.Create(
-  first.AsEInteger(),
-  denom));
+      return obj;
     }
   }
 }

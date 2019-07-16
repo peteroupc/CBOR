@@ -10,38 +10,19 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-    /// <summary>Contains methods useful for reading and writing data, with a focus on
-    /// CBOR.</summary>
+  /// <include file='../../docs.xml'
+  /// path='docs/doc[@name="T:PeterO.Cbor.CBORDataUtilities"]/*'/>
   public static class CBORDataUtilities {
     private const int MaxSafeInt = 214748363;
 
-    /// <summary>Parses a number whose format follows the JSON specification. See
-    /// #ParseJSONNumber(String, integersOnly, parseOnly) for more information.</summary><param name='str'>A string to parse. The string is not allowed to contain white space
-    /// characters, including spaces.
-    /// </param><returns>A CBOR object that represents the parsed number. Returns positive zero if
-    /// the number is a zero that starts with a minus sign (such as "-0" or
-    /// "-0.0"). Returns null if the parsing fails, including if the string is
-    /// null or empty.
-    /// </returns>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String)"]/*'/>
     public static CBORObject ParseJSONNumber(string str) {
       return ParseJSONNumber(str, false, false);
     }
 
-    /// <summary>Parses a number whose format follows the JSON specification (RFC 8259).
-    /// Roughly speaking, a valid number consists of an optional minus sign, one
-    /// or more basic digits (starting with 1 to 9 unless the only digit is 0), an
-    /// optional decimal point (".", full stop) with one or more basic digits, and
-    /// an optional letter E or e with an optional plus or minus sign and one or
-    /// more basic digits (the exponent).</summary><param name='str'>A string to parse. The string is not allowed to contain white space
-    /// characters, including spaces.
-    /// </param><param name='integersOnly'>If true, no decimal points or exponents are allowed in the string.
-    /// </param><param name='positiveOnly'>If true, only positive numbers are allowed (the leading minus is
-    /// disallowed).
-    /// </param><returns>A CBOR object that represents the parsed number. Returns positive zero if
-    /// the number is a zero that starts with a minus sign (such as "-0" or
-    /// "-0.0"). Returns null if the parsing fails, including if the string is
-    /// null or empty.
-    /// </returns>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,System.Boolean,System.Boolean)"]/*'/>
     public static CBORObject ParseJSONNumber(
       string str,
       bool integersOnly,
@@ -49,22 +30,8 @@ namespace PeterO.Cbor {
       return ParseJSONNumber(str, integersOnly, positiveOnly, false);
     }
 
-    /// <summary>Parses a number whose format follows the JSON specification (RFC 8259).
-    /// Roughly speaking, a valid number consists of an optional minus sign, one
-    /// or more basic digits (starting with 1 to 9 unless the only digit is 0), an
-    /// optional decimal point (".", full stop) with one or more basic digits, and
-    /// an optional letter E or e with an optional plus or minus sign and one or
-    /// more basic digits (the exponent).</summary><param name='str'>A string to parse. The string is not allowed to contain white space
-    /// characters, including spaces.
-    /// </param><param name='integersOnly'>If true, no decimal points or exponents are allowed in the string.
-    /// </param><param name='positiveOnly'>If true, only positive numbers are allowed (the leading minus is
-    /// disallowed).
-    /// </param><param name='preserveNegativeZero'>If true, returns positive zero if the number is a zero that starts with a
-    /// minus sign (such as "-0" or "-0.0"). Otherwise, returns negative zero in
-    /// this case.
-    /// </param><returns>A CBOR object that represents the parsed number. Returns null if the
-    /// parsing fails, including if the string is null or empty.
-    /// </returns>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,System.Boolean,System.Boolean,System.Boolean)"]/*'/>
     public static CBORObject ParseJSONNumber(
       string str,
       bool integersOnly,
@@ -92,7 +59,7 @@ namespace PeterO.Cbor {
       var newScaleInt = 0;
       FastInteger2 newScale = null;
       int i = offset;
-     // Ordinary number
+      // Ordinary number
       if (i < str.Length && str[i] == '0') {
         ++i;
         haveDigits = true;
@@ -143,15 +110,16 @@ namespace PeterO.Cbor {
           if (haveDecimalPoint) {
             haveDigitsAfterDecimal = true;
             if (newScaleInt == Int32.MinValue) {
-newScale = newScale ?? new FastInteger2(newScaleInt);
-newScale.AddInt(-1);
+              newScale = newScale ??
+                              new FastInteger2(newScaleInt);
+              newScale.AddInt(-1);
             } else {
               --newScaleInt;
             }
           }
         } else if (!integersOnly && str[i] == '.') {
           if (!haveDigits) {
-           // no digits before the decimal point
+            // no digits before the decimal point
             return null;
           }
           if (haveDecimalPoint) {
@@ -201,7 +169,7 @@ newScale.AddInt(-1);
                   expBuffer = thisdigit;
                   expBufferMult = 10;
                 } else {
-                 // multiply expBufferMult and expBuffer each by 10
+                  // multiply expBufferMult and expBuffer each by 10
                   expBufferMult = (expBufferMult << 3) + (expBufferMult << 1);
                   expBuffer = (expBuffer << 3) + (expBuffer << 1);
                   expBuffer += thisdigit;
@@ -225,15 +193,15 @@ newScale.AddInt(-1);
           null) {
           newScaleInt = expInt;
         } else if (exp == null) {
-newScale = newScale ?? new FastInteger2(newScaleInt);
-if (offset < 0) {
+          newScale = newScale ?? new FastInteger2(newScaleInt);
+          if (offset < 0) {
             newScale.SubtractInt(expInt);
           } else if (expInt != 0) {
             newScale.AddInt(expInt);
           }
         } else {
-newScale = newScale ?? new FastInteger2(newScaleInt);
-if (offset < 0) {
+          newScale = newScale ?? new FastInteger2(newScaleInt);
+          if (offset < 0) {
             newScale.Subtract(exp);
           } else {
             newScale.Add(exp);
@@ -241,18 +209,18 @@ if (offset < 0) {
         }
       }
       if (i != str.Length) {
-       // End of the string wasn't reached, so isn't a number
+        // End of the string wasn't reached, so isn't a number
         return null;
       }
       if ((newScale == null && newScaleInt == 0) || (newScale != null &&
                     newScale.Sign == 0)) {
-       // No fractional part
+        // No fractional part
         if (mant != null && mant.CanFitInInt32()) {
           mantInt = mant.AsInt32();
           mant = null;
         }
         if (mant == null) {
-         // NOTE: mantInt can only be 0 or greater, so overflow is impossible
+          // NOTE: mantInt can only be 0 or greater, so overflow is impossible
 #if DEBUG
           if (mantInt < 0) {
             throw new ArgumentException("mantInt (" + mantInt +

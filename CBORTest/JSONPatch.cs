@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using PeterO.Cbor;
 
 namespace Test {
-  public class JSONPatch {
+  public static class JSONPatch {
     private static CBORObject AddOperation(
       CBORObject o,
       string valueOpStr,
