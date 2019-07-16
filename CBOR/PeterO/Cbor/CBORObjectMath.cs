@@ -10,9 +10,10 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="T:PeterO.Cbor.CBORObjectMath"]/*'/>
+    /// <summary>Implements arithmetic operations with CBOR
+    /// objects.</summary>
   internal static class CBORObjectMath {
+    // TODO: Move these methods to CBORNumber class
     public static CBORObject Addition(CBORObject a, CBORObject b) {
       if (a == null) {
         throw new ArgumentNullException(nameof(a));

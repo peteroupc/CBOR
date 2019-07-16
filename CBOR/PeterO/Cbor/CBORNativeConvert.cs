@@ -11,6 +11,8 @@ using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   internal static class CBORNativeConvert {
+    // TODO: Add TagCount and HasOneTag to CBORObject in 3.6 and later
+    // TODO: Deprecate CBORType.Number in 3.6
     private static CBORObject FromObjectAndInnerTags(
       object objectValue,
       CBORObject objectWithTags) {
@@ -30,11 +32,10 @@ namespace PeterO.Cbor {
     }
 
     public static CBORObject ConvertToNativeObject(CBORObject o) {
-      if (o.HasMostOuterTag(2)) {
-        return ConvertToBigNum(o, false);
-      }
-      if (o.HasMostOuterTag(3)) {
-        return ConvertToBigNum(o, true);
+      // TODO: Use something like HasOneTag rather than HasMostOuterTag,
+      // or preserve inner tags
+      if (o.HasMostOuterTag(2) || o.HasMostOuterTag(3)) {
+        return CheckEInteger(o);
       }
       if (o.HasMostOuterTag(4)) {
         return ConvertToDecimalFrac(o, true, false);
@@ -78,16 +79,25 @@ namespace PeterO.Cbor {
         // Exponent is 0, so return mantissa instead
         return CBORObject.FromObject(mantissa);
       }
-      // NOTE: Discards tags. See comment in CBORTag2.
+      // NOTE: Discards tags.
       return isDecimal ?
       CBORObject.FromObject(EDecimal.Create(mantissa, exponent)) :
       CBORObject.FromObject(EFloat.Create(mantissa, exponent));
     }
 
-    private static CBORObject ConvertToBigNum(CBORObject o, bool negative) {
+    private static CBORObject CheckEInteger(CBORObject o) {
+      if (o.GetAllTags().Count != 1) {
+        throw new CBORException("One tag expected");
+      }
       if (o.Type != CBORType.ByteString) {
         throw new CBORException("Byte array expected");
       }
+      return o;
+    }
+
+    internal static CBORNumber EIntegerObjectToCBORNumber(CBORObject o) {
+      CheckBigNum(o);
+      bool negative = o.HasMostOuterTag(3);
       byte[] data = o.GetByteString();
       if (data.Length <= 7) {
         long x = 0;
@@ -124,13 +134,11 @@ namespace PeterO.Cbor {
         bytes[bytes.Length - 1] = negative ? (byte)0xff : (byte)0;
       }
       bi = EInteger.FromBytes(bytes, true);
-      // NOTE: Here, any tags are discarded; when called from
-      // the Read method, "o" will have no tags anyway (beyond tag 2),
-      // and when called from FromObjectAndTag, we prefer
-      // flexibility over throwing an error if the input
-      // object contains other tags. The tag 2 is also discarded
-      // because we are returning a "natively" supported CBOR object.
-      return CBORObject.FromObject(bi);
+      if(bi.CanFitInInt64()){
+        return new CBORNumber(CBORNumber.Kind.Integer, bi.ToInt64Checked());
+      } else {
+        return new CBORNumber(CBORNumber.Kind.EInteger, bi);
+      }
     }
 
     private static CBORObject CheckRationalNumber(CBORObject obj) {

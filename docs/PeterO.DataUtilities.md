@@ -40,13 +40,13 @@
 The following example shows how to iterate a text string code point by code point.
 
     for (var i = 0;i<str.Length; ++i) { int codePoint =
-                DataUtilities.CodePointAt(str, i);
-                Console.WriteLine("codePoint:"+codePoint); if (codePoint >= 0x10000)
-                { i++; /* Supplementary code point */ } }
+            DataUtilities.CodePointAt(str, i);
+            Console.WriteLine("codePoint:"+codePoint); if (codePoint >= 0x10000)
+            { i++; /* Supplementary code point */ } }
 
  .
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: The parameter  <i>str</i>
  is a text string.
@@ -77,13 +77,13 @@ The parameter  <i>str</i>
 The following example shows how to iterate a text string code point by code point, terminating the loop when an unpaired surrogate is found.
 
     for (var i = 0;i<str.Length; ++i) { int codePoint =
-                DataUtilities.CodePointAt(str, i, 2); if (codePoint < 0) { break; /*
-                Unpaired surrogate */ } Console.WriteLine("codePoint:"+codePoint); if
-                (codePoint >= 0x10000) { i++; /* Supplementary code point */ } }
+            DataUtilities.CodePointAt(str, i, 2); if (codePoint < 0) { break; /*
+            Unpaired surrogate */ } Console.WriteLine("codePoint:"+codePoint); if
+            (codePoint >= 0x10000) { i++; /* Supplementary code point */ } }
 
  .
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: The parameter  <i>str</i>
  is a text string.
@@ -113,7 +113,7 @@ The parameter  <i>str</i>
 
  Gets the Unicode code point just before the given index of the string.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: The parameter  <i>str</i>
  is a text string.
@@ -141,7 +141,7 @@ The parameter  <i>str</i>
 
  Gets the Unicode code point just before the given index of the string.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: The parameter  <i>str</i>
  is a text string.
@@ -171,7 +171,7 @@ The parameter  <i>str</i>
 
  Compares two strings in Unicode code point order. Unpaired surrogate code points are treated as individual code points.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>strA</i>: The first string. Can be null.
 
@@ -189,7 +189,7 @@ A value indicating which string is " less" or " greater" . 0: Both strings are e
 
  Finds the number of Unicode code points in the given text string. Unpaired surrogate code points increase this number by 1. This is not necessarily the length of the string in "char" s.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: The parameter  <i>str</i>
  is a text string.
@@ -215,7 +215,7 @@ The parameter  <i>str</i>
 
  REMARK: It is not recommended to use  `Encoding.UTF8.GetBytes`  in.NET, or the  `getBytes()`  method in Java to do this. For instance,  `getBytes()`  encodes text strings in a default (so not fixed) character encoding, which can be undesirable.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: The parameter  <i>str</i>
  is a text string.
@@ -248,7 +248,7 @@ The string contains an unpaired surrogate code point and  <i>replace</i>
 
  REMARK: It is not recommended to use  `Encoding.UTF8.GetBytes`  in.NET, or the  `getBytes()`  method in Java to do this. For instance,  `getBytes()`  encodes text strings in a default (so not fixed) character encoding, which can be undesirable.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: The parameter  <i>str</i>
  is a text string.
@@ -280,7 +280,7 @@ The string contains an unpaired surrogate code point and  <i>replace</i>
 
  Calculates the number of bytes needed to encode a string in UTF-8.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: The parameter  <i>str</i>
  is a text string.
@@ -307,7 +307,7 @@ The parameter  <i>str</i>
 
  Generates a text string from a UTF-8 byte array.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>bytes</i>: A byte array containing text encoded in UTF-8.
 
@@ -338,7 +338,7 @@ The string is not valid UTF-8 and  <i>replace</i>
 
  Generates a text string from a portion of a UTF-8 byte array.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>bytes</i>: A byte array containing text encoded in UTF-8.
 
@@ -378,7 +378,7 @@ The parameter  <i>offset</i>
 
  Reads a string in UTF-8 encoding from a data stream.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>stream</i>: A readable data stream.
 
@@ -416,7 +416,7 @@ The parameter  <i>stream</i>
 
  Reads a string in UTF-8 encoding from a byte array.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>data</i>: A byte array containing a UTF-8 text string.
 
@@ -454,7 +454,7 @@ The parameter  <i>offset</i>
 
  Reads a string in UTF-8 encoding from a data stream in full and returns that string. Replaces invalid encoding with the replacement character (U+FFFD).
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>stream</i>: A readable data stream.
 
@@ -481,7 +481,7 @@ The parameter  <i>stream</i>
 
  Reads a string in UTF-8 encoding from a data stream and returns that string.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>stream</i>: A readable data stream.
 
@@ -511,7 +511,7 @@ The parameter  <i>stream</i>
 
  Returns a string with the basic upper-case letters A to Z (U+0041 to U+005A) converted to lower-case. Other characters remain unchanged.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: The parameter  <i>str</i>
  is a text string.
@@ -529,7 +529,7 @@ The converted string, or null if  <i>str</i>
 
  Returns a string with the basic lower-case letters A to Z (U+0061 to U+007A) converted to upper-case. Other characters remain unchanged.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: The parameter  <i>str</i>
  is a text string.
@@ -549,47 +549,47 @@ The converted string, or null if  <i>str</i>
         System.IO.Stream stream,
         bool replace);
 
-  Writes a portion of a string in UTF-8 encoding to a data stream.
+ Writes a portion of a string in UTF-8 encoding to a data stream.
 
-             <b>Parameters:</b>
+ <b>Parameters:</b>
 
- * <i>str</i>:  A string to write.
+ * <i>str</i>: A string to write.
 
- * <i>offset</i>:  The zero-based index where the string portion to write begins.
+ * <i>offset</i>: The zero-based index where the string portion to write begins.
 
- * <i>length</i>:  The length of the string portion to write.
+ * <i>length</i>: The length of the string portion to write.
 
- * <i>stream</i>:  A writable data stream.
+ * <i>stream</i>: A writable data stream.
 
- * <i>replace</i>:  If true, replaces unpaired surrogate code points with the replacement character (U+FFFD). If false, stops processing when an unpaired surrogate code point is seen.
+ * <i>replace</i>: If true, replaces unpaired surrogate code points with the replacement character (U+FFFD). If false, stops processing when an unpaired surrogate code point is seen.
 
 <b>Return Value:</b>
 
- 0 if the entire string portion was written; or -1 if the string portion contains an unpaired surrogate code point and  <i>replace</i>
+0 if the entire string portion was written; or -1 if the string portion contains an unpaired surrogate code point and  <i>replace</i>
  is false.
 
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
- The parameter  <i>str</i>
+The parameter  <i>str</i>
  is null or  <i>stream</i>
  is null.
 
  * System.ArgumentException:
- The parameter  <i>offset</i>
+The parameter  <i>offset</i>
  is less than 0,  <i>length</i>
  is less than 0, or  <i>offset</i>
  plus  <i>length</i>
  is greater than the string's length.
 
  * System.IO.IOException:
- An I/O error occurred.
+An I/O error occurred.
 
  * System.ArgumentException:
- Either "offset" or "length" is less than 0 or greater than "str"'s length, or "str"'s length minus "offset" is less than "length".
+Either "offset" or "length" is less than 0 or greater than "str"'s length, or "str"'s length minus "offset" is less than "length".
 
  * System.ArgumentNullException:
- The parameter  <i>str</i>
+The parameter  <i>str</i>
  is null.
 
 <a id="WriteUtf8_string_int_int_System_IO_Stream_bool_bool"></a>
@@ -603,49 +603,49 @@ The converted string, or null if  <i>str</i>
         bool replace,
         bool lenientLineBreaks);
 
-  Writes a portion of a string in UTF-8 encoding to a data stream.
+ Writes a portion of a string in UTF-8 encoding to a data stream.
 
-              <b>Parameters:</b>
+ <b>Parameters:</b>
 
- * <i>str</i>:  A string to write.
+ * <i>str</i>: A string to write.
 
- * <i>offset</i>:  The zero-based index where the string portion to write begins.
+ * <i>offset</i>: The zero-based index where the string portion to write begins.
 
- * <i>length</i>:  The length of the string portion to write.
+ * <i>length</i>: The length of the string portion to write.
 
- * <i>stream</i>:  A writable data stream.
+ * <i>stream</i>: A writable data stream.
 
- * <i>replace</i>:  If true, replaces unpaired surrogate code points with the replacement character (U+FFFD). If false, stops processing when an unpaired surrogate code point is seen.
+ * <i>replace</i>: If true, replaces unpaired surrogate code points with the replacement character (U+FFFD). If false, stops processing when an unpaired surrogate code point is seen.
 
- * <i>lenientLineBreaks</i>:  If true, replaces carriage return (CR) not followed by line feed (LF) and LF not preceded by CR with CR-LF pairs.
+ * <i>lenientLineBreaks</i>: If true, replaces carriage return (CR) not followed by line feed (LF) and LF not preceded by CR with CR-LF pairs.
 
 <b>Return Value:</b>
 
- 0 if the entire string portion was written; or -1 if the string portion contains an unpaired surrogate code point and  <i>replace</i>
+0 if the entire string portion was written; or -1 if the string portion contains an unpaired surrogate code point and  <i>replace</i>
  is false.
 
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
- The parameter  <i>str</i>
+The parameter  <i>str</i>
  is null or  <i>stream</i>
  is null.
 
  * System.ArgumentException:
- The parameter  <i>offset</i>
+The parameter  <i>offset</i>
  is less than 0,  <i>length</i>
  is less than 0, or  <i>offset</i>
  plus  <i>length</i>
  is greater than the string's length.
 
  * System.IO.IOException:
- An I/O error occurred.
+An I/O error occurred.
 
  * System.ArgumentException:
- Either "offset" or "length" is less than 0 or greater than "str"'s length, or "str"'s length minus "offset" is less than "length".
+Either "offset" or "length" is less than 0 or greater than "str"'s length, or "str"'s length minus "offset" is less than "length".
 
  * System.ArgumentNullException:
- The parameter  <i>str</i>
+The parameter  <i>str</i>
  is null.
 
 <a id="WriteUtf8_string_System_IO_Stream_bool"></a>
@@ -658,7 +658,7 @@ The converted string, or null if  <i>str</i>
 
  Writes a string in UTF-8 encoding to a data stream.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: A string to write.
 

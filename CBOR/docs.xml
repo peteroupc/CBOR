@@ -140,13 +140,13 @@
   </doc>
   <doc name='M:PeterO.Cbor.CBOREncodeOptions.#ctor'>
     <summary>Initializes a new instance of the
-      <see cref='CBOREncodeOptions'/>
+      <see cref='PeterO.Cbor.CBOREncodeOptions'/>
        class.
     </summary>
   </doc>
   <doc name='M:PeterO.Cbor.CBOREncodeOptions.#ctor(System.Boolean,System.Boolean)'>
     <summary>Initializes a new instance of the
-      <see cref='CBOREncodeOptions'/>
+      <see cref='PeterO.Cbor.CBOREncodeOptions'/>
        class.
     </summary>
     <param name='useIndefLengthStrings'>A value indicating whether to always encode strings with a definite-length
@@ -158,7 +158,7 @@
   </doc>
   <doc name='M:PeterO.Cbor.CBOREncodeOptions.#ctor(System.Boolean,System.Boolean,System.Boolean)'>
     <summary>Initializes a new instance of the
-      <see cref='CBOREncodeOptions'/>
+      <see cref='PeterO.Cbor.CBOREncodeOptions'/>
        class.
     </summary>
     <param name='useIndefLengthStrings'>A value indicating whether to encode strings with a definite-length
@@ -260,13 +260,13 @@
   </doc>
   <doc name='M:PeterO.Cbor.CBORException.#ctor'>
     <summary>Initializes a new instance of the
-      <see cref='CBORException'/>
+      <see cref='PeterO.Cbor.CBORException'/>
        class.
     </summary>
   </doc>
   <doc name='M:PeterO.Cbor.CBORException.#ctor(System.String)'>
     <summary>Initializes a new instance of the
-      <see cref='CBORException'/>
+      <see cref='PeterO.Cbor.CBORException'/>
        class.
     </summary>
     <param name='message'>The parameter
@@ -276,7 +276,7 @@
   </doc>
   <doc name='M:PeterO.Cbor.CBORException.#ctor(System.String,System.Exception)'>
     <summary>Initializes a new instance of the
-      <see cref='CBORException'/>
+      <see cref='PeterO.Cbor.CBORException'/>
        class. Uses the given message and inner exception.
     </summary>
     <param name='message'>The parameter
@@ -1458,7 +1458,7 @@
           object from
           <c>String</c> , see the example given in
           <see cref='M:PeterO.Cbor.CBORObject.FromObject(System.Byte[])'/>
-          .
+           .
         </item>
         <item>In the &#x2e;NET version, a nullable is converted to
           <c>CBORObject.Null</c> if the nullable's value is
@@ -3963,7 +3963,7 @@
   </doc>
   <doc name='M:PeterO.Cbor.CBORTypeMapper.#ctor'>
     <summary>Initializes a new instance of the
-      <see cref='CBORTypeMapper'/>
+      <see cref='PeterO.Cbor.CBORTypeMapper'/>
        class.
     </summary>
   </doc>
@@ -4197,13 +4197,13 @@
   </doc>
   <doc name='M:PeterO.Cbor.JSONOptions.#ctor'>
     <summary>Initializes a new instance of the
-      <see cref='JSONOptions'/>
+      <see cref='PeterO.Cbor.JSONOptions'/>
        class with default options.
     </summary>
   </doc>
   <doc name='M:PeterO.Cbor.JSONOptions.#ctor(System.Boolean)'>
     <summary>Initializes a new instance of the
-      <see cref='JSONOptions'/>
+      <see cref='PeterO.Cbor.JSONOptions'/>
        class with the given value for the Base64Padding option.
     </summary>
     <param name='base64Padding'>Whether padding is included when writing data in base64url or traditional
@@ -4212,7 +4212,7 @@
   </doc>
   <doc name='M:PeterO.Cbor.JSONOptions.#ctor(System.Boolean,System.Boolean)'>
     <summary>Initializes a new instance of the
-      <see cref='JSONOptions'/>
+      <see cref='PeterO.Cbor.JSONOptions'/>
        class with the given values for the options.
     </summary>
     <param name='base64Padding'>Whether padding is included when writing data in base64url or traditional
@@ -4257,13 +4257,13 @@
   </doc>
   <doc name='M:PeterO.Cbor.PODOptions.#ctor'>
     <summary>Initializes a new instance of the
-      <see cref='PODOptions'/>
+      <see cref='PeterO.Cbor.PODOptions'/>
        class.
     </summary>
   </doc>
   <doc name='M:PeterO.Cbor.PODOptions.#ctor(System.Boolean,System.Boolean)'>
     <summary>Initializes a new instance of the
-      <see cref='PODOptions'/>
+      <see cref='PeterO.Cbor.PODOptions'/>
        class.
     </summary>
     <param name='removeIsPrefix'>If set to

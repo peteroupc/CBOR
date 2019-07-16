@@ -56,6 +56,6 @@
 
   In the description above, a name "starts with" a word if that word begins the name and is followed by a character other than a basic digit or lower-case letter, that is, other than "a" to "z" or "0" to "9".
 
-  <b>Returns:</b>
+ <b>Returns:</b>
 
  `true`  If the names are converted to camel case; otherwise,  `false`  . This property is  `true`  by default.

@@ -20,7 +20,7 @@
 
  Converts a CBOR object to a custom type.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>obj</i>: A CBOR object to convert to the custom type.
 

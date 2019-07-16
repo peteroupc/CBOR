@@ -11,8 +11,8 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="T:PeterO.Cbor.StringRefs"]/*'/>
+    /// <summary>Implements CBOR string references, described at
+    /// <c>http://cbor.schmorp.de/stringref</c>.</summary>
   internal class StringRefs {
     private readonly List<List<CBORObject>> stack;
 
