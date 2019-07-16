@@ -104,7 +104,7 @@ namespace PeterO {
       throw new CBORException("Object expected");
     }
 
-    private static readonly string ValueDigits = "0123456789";
+    private const string ValueDigits = "0123456789";
 
     public static string LongToString(long longValue) {
       if (longValue == Int64.MinValue) {

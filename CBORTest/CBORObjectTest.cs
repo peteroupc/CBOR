@@ -2750,7 +2750,7 @@ ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes();
         } else {
           cbor = TestSucceedingJSON(str);
           string exp = this.CharString(i, false, charbuf);
-          if (!exp.Equals(cbor.AsString())) {
+          if (!exp.Equals(cbor.AsString(), StringComparison.Ordinal)) {
             Assert.AreEqual(exp, cbor.AsString());
           }
         }
@@ -5139,7 +5139,8 @@ ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes();
           }
         } else if (numberinfo["number"].AsString().IndexOf('-') == 0) {
           Assert.AreEqual(-1, cbornumber.Sign);
-        } else if (numberinfo["number"].AsString().Equals("0")) {
+        } else if (numberinfo["number"].AsString().Equals("0",
+  StringComparison.Ordinal)) {
           Assert.AreEqual(0, cbornumber.Sign);
         } else {
           Assert.AreEqual(1, cbornumber.Sign);

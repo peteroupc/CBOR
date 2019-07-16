@@ -9,8 +9,10 @@ using System;
 using System.IO;
 
 namespace PeterO.Cbor {
-    // <include file='../../docs.xml'
-    // path='docs/doc[@name="T:PeterO.Cbor.CharacterReader"]/*'/>
+    // <summary>A general-purpose character input for reading text from
+    // byte streams and text strings. When reading byte streams, this
+    // class supports the UTF-8 character encoding by default, but can be
+    // configured to support UTF-16 and UTF-32 as well.</summary>
   internal sealed class CharacterReader : ICharacterInput {
     private readonly int mode;
     private readonly bool errorThrow;
@@ -168,8 +170,32 @@ namespace PeterO.Cbor {
       int ReadByte();
     }
 
-    // <include file='../../docs.xml'
-    //   path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.Read(System.Int32[],System.Int32,System.Int32)"]/*'/>
+    // <summary>Reads a series of code points from a Unicode stream or a
+    // string.</summary>
+    // <param name='chars'>An array where the code points that were read
+    // will be stored.</param>
+    // <param name='index'>A zero-based index showing where the desired
+    // portion of <paramref name='chars'/> begins.</param>
+    // <param name='length'>The number of elements in the desired portion
+    // of <paramref name='chars'/> (but not more than <paramref
+    // name='chars'/> 's length).</param>
+    // <returns>The number of code points read from the stream. This can
+    // be less than the <paramref name='length'/> parameter if the end of
+    // the stream is reached.</returns>
+    // <exception cref='System.ArgumentNullException'>The parameter
+    // <paramref name='chars'/> is null.</exception>
+    // <exception cref='System.ArgumentException'>Either <paramref
+    // name='index'/> or <paramref name='length'/> is less than 0 or
+    // greater than <paramref name='chars'/> 's length, or <paramref
+    // name='chars'/> 's length minus <paramref name='index'/> is less
+    // than <paramref name='length'/>.</exception>
+    // <exception cref='ArgumentException'>Either &quot;index&quot; or
+    // &quot;length&quot; is less than 0 or greater than
+    // &quot;chars&quot;&apos;s length, or &quot;chars&quot;&apos;s length
+    // minus &quot;index&quot; is less than
+    // &quot;length&quot;.</exception>
+    // <exception cref='ArgumentNullException'>The parameter <paramref
+    // name='chars'/> is null.</exception>
     public int Read(int[] chars, int index, int length) {
       if (chars == null) {
         throw new ArgumentNullException(nameof(chars));
@@ -206,8 +232,10 @@ namespace PeterO.Cbor {
       return count;
     }
 
-    // <include file='../../docs.xml'
-    // path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.ReadChar"]/*'/>
+    // <summary>Reads the next character from a Unicode stream or a
+    // string.</summary>
+    // <returns>The next character, or -1 if the end of the string or
+    // stream was reached.</returns>
     public int ReadChar() {
       if (this.reader != null) {
         return this.reader.ReadChar();

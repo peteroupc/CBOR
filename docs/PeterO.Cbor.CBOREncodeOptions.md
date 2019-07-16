@@ -72,7 +72,7 @@
 
  Gets a value indicating whether to allow duplicate keys when reading CBOR objects from a data stream. Used only when decoding CBOR objects.
 
- <b>Returns:</b>
+  <b>Returns:</b>
 
 A value indicating whether to allow duplicate keys when reading CBOR objects from a data stream. The default is false.
 
@@ -83,7 +83,7 @@ A value indicating whether to allow duplicate keys when reading CBOR objects fro
 
  Gets a value indicating whether CBOR objects are written out using the CTAP2 canonical CBOR encoding form, which is useful for implementing Web Authentication. In this form, CBOR tags are not used, map keys are written out in a canonical order, and non-integer numbers and integers 2^63 or greater are written as 64-bit binary floating-point numbers.
 
- <b>Returns:</b>
+  <b>Returns:</b>
 
  `true`  if CBOR objects are written out using the CTAP2 canonical CBOR encoding form; otherwise,  `false`  .
 
@@ -94,6 +94,6 @@ A value indicating whether to allow duplicate keys when reading CBOR objects fro
 
  Gets a value indicating whether to encode strings with an indefinite-length encoding under certain circumstances.
 
- <b>Returns:</b>
+  <b>Returns:</b>
 
 A value indicating whether to encode strings with an indefinite-length encoding under certain circumstances. The default is false.

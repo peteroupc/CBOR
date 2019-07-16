@@ -6,9 +6,9 @@
 
 ### Member Summary
 * <code>[AddConverter&lt;T&gt;(System.Type, PeterO.Cbor.ICBORConverter&lt;T&gt;)](#AddConverter_T_System_Type_PeterO_Cbor_ICBORConverter_T)</code> - Registers an object that converts objects of a given type to CBOR objects (called a CBOR converter).
-* <code>[AddTypeName(string)](#AddTypeName_string)</code> - Adds the fully qualified name of a Java or .
-* <code>[AddTypePrefix(string)](#AddTypePrefix_string)</code> - Adds a prefix of a Java or .
-* <code>[FilterTypeName(string)](#FilterTypeName_string)</code> - Returns whether the given Java or .
+* <code>[AddTypeName(string)](#AddTypeName_string)</code> - Adds the fully qualified name of a Java or.
+* <code>[AddTypePrefix(string)](#AddTypePrefix_string)</code> - Adds a prefix of a Java or.
+* <code>[FilterTypeName(string)](#FilterTypeName_string)</code> - Returns whether the given Java or.
 
 <a id="Void_ctor"></a>
 ### CBORTypeMapper Constructor
@@ -26,7 +26,7 @@
 
  Registers an object that converts objects of a given type to CBOR objects (called a CBOR converter).
 
- <b>Parameters:</b>
+  <b>Parameters:</b>
 
  * <i>type</i>: A Type object specifying the type that the converter converts to CBOR objects.
 
@@ -55,11 +55,11 @@ Converter doesn't contain a proper ToCBORObject method".
     public PeterO.Cbor.CBORTypeMapper AddTypeName(
         string name);
 
- Adds the fully qualified name of a Java or .NET type for use in type matching.
+ Adds the fully qualified name of a Java or.NET type for use in type matching.
 
- <b>Parameters:</b>
+  <b>Parameters:</b>
 
- * <i>name</i>: The fully qualified name of a Java or .NET class (e.g.,  `java.math.BigInteger`  or  `System.Globalization.CultureInfo`  ).
+ * <i>name</i>: The fully qualified name of a Java or.NET class (e.g.,  `java.math.BigInteger`  or  `System.Globalization.CultureInfo`  ).
 
 <b>Return Value:</b>
 
@@ -81,11 +81,11 @@ The parameter  <i>name</i>
     public PeterO.Cbor.CBORTypeMapper AddTypePrefix(
         string prefix);
 
- Adds a prefix of a Java or .NET type for use in type matching. A type matches a prefix if its fully qualified name is or begins with that prefix, using codepoint-by-codepoint (case-sensitive) matching.
+ Adds a prefix of a Java or.NET type for use in type matching. A type matches a prefix if its fully qualified name is or begins with that prefix, using codepoint-by-codepoint (case-sensitive) matching.
 
- <b>Parameters:</b>
+  <b>Parameters:</b>
 
- * <i>prefix</i>: The prefix of a Java or .NET type (e.g., `java.math.` or `System.Globalization`).
+ * <i>prefix</i>: The prefix of a Java or.NET type (e.g., `java.math.` or `System.Globalization`).
 
 <b>Return Value:</b>
 
@@ -107,12 +107,12 @@ The parameter  <i>prefix</i>
     public bool FilterTypeName(
         string typeName);
 
- Returns whether the given Java or .NET type name fits the filters given in this mapper.
+ Returns whether the given Java or.NET type name fits the filters given in this mapper.
 
- <b>Parameters:</b>
+  <b>Parameters:</b>
 
- * <i>typeName</i>: The fully qualified name of a Java or .NET class (e.g.,  `java.math.BigInteger`  or  `System.Globalization.CultureInfo`  ).
+ * <i>typeName</i>: The fully qualified name of a Java or.NET class (e.g.,  `java.math.BigInteger`  or  `System.Globalization.CultureInfo`  ).
 
 <b>Return Value:</b>
 
-Either  `true`  if the given Java or .NET type name fits the filters given in this mapper, or  `false`  otherwise.
+Either  `true`  if the given Java or.NET type name fits the filters given in this mapper, or  `false`  otherwise.

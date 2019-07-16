@@ -341,8 +341,8 @@
         compare as equal under the CompareTo method might not be equal under the
         Equals method. This is important to consider especially if an
         application wants to compare numbers, since the CBOR number type
-        supports numbers of different formats, such as arbitrary-precision integers, rational
-        numbers, and arbitrary-precision decimal numbers.
+        supports numbers of different formats, such as arbitrary-precision
+        integers, rational numbers, and arbitrary-precision decimal numbers.
       </para>
       <para>Another consideration is that two values that are otherwise equal may
         have different tags. To strip the tags from a CBOR object before
@@ -584,9 +584,10 @@
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.AsBoolean'>
-    <summary>Returns false if this object is False, Null, or Undefined; otherwise,true.
+    <summary>Returns false if this object is False, Null, or Undefined; otherwise,
+      true.
     </summary>
-    <returns>False if this object is False, Null, or Undefined; otherwise,true.
+    <returns>False if this object is False, Null, or Undefined; otherwise, true.
     </returns>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.AsByte'>
@@ -602,13 +603,13 @@
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.AsDecimal'>
-    <summary>Converts this object to a .NET decimal.
+    <summary>Converts this object to a.NET decimal.
     </summary>
-    <returns>The closest arbitrary-precision integer to this object.
+    <returns>The closest big integer to this object.
     </returns>
     <exception cref='T:System.InvalidOperationException'>This object's type is not a number type.
     </exception>
-    <exception cref='T:System.OverflowException'>This object's value exceeds the range of a .NET decimal.
+    <exception cref='T:System.OverflowException'>This object's value exceeds the range of a.NET decimal.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.AsDouble'>
@@ -630,7 +631,7 @@
     </returns>
     <exception cref='T:System.InvalidOperationException'>This object's type is not a number type, including if this object is
       CBORObject.Null. To check the CBOR object for null before conversion, use
-      the following idiom (originally written in C# for the .NET version):
+      the following idiom (originally written in C# for the.NET version):
       <c>(cbor == null || cbor.IsNull) ? null : cbor.AsEDecimal()</c> .
     </exception>
   </doc>
@@ -647,7 +648,7 @@
     </returns>
     <exception cref='T:System.InvalidOperationException'>This object's type is not a number type, including if this object is
       CBORObject.Null. To check the CBOR object for null before conversion, use
-      the following idiom (originally written in C# for the .NET version):
+      the following idiom (originally written in C# for the.NET version):
       <c>(cbor == null || cbor.IsNull) ? null : cbor.AsEFloat()</c> .
     </exception>
   </doc>
@@ -659,7 +660,7 @@
     </returns>
     <exception cref='T:System.InvalidOperationException'>This object's type is not a number type, including if this object is
       CBORObject.Null. To check the CBOR object for null before conversion, use
-      the following idiom (originally written in C# for the .NET version):
+      the following idiom (originally written in C# for the.NET version):
       <c>(cbor == null || cbor.IsNull) ? null : cbor.AsEInteger()</c> .
     </exception>
     <exception cref='T:System.OverflowException'>This object's value is infinity or not-a-number (NaN).
@@ -672,7 +673,7 @@
     </returns>
     <exception cref='T:System.InvalidOperationException'>This object's type is not a number type, including if this object is
       CBORObject.Null. To check the CBOR object for null before conversion, use
-      the following idiom (originally written in C# for the .NET version):
+      the following idiom (originally written in C# for the.NET version):
       <c>(cbor == null || cbor.IsNull) ? null : cbor.AsERational()</c> .
     </exception>
   </doc>
@@ -701,7 +702,7 @@
     </exception>
     <exception cref='T:System.OverflowException'>This object's value exceeds the range of a 32-bit signed integer.
     </exception>
-    <example><para>The following example code (originally written in C# for the .NET
+    <example><para>The following example code (originally written in C# for the.NET
         Framework) shows a way to check whether a given CBOR object stores a
         32-bit signed integer before getting its value.
       </para>
@@ -725,7 +726,7 @@
     </exception>
     <exception cref='T:System.OverflowException'>This object's value exceeds the range of a 64-bit signed integer.
     </exception>
-    <example><para>The following example code (originally written in C# for the .NET
+    <example><para>The following example code (originally written in C# for the.NET
         Framework) shows a way to check whether a given CBOR object stores a
         64-bit signed integer before getting its value.
       </para>
@@ -758,7 +759,7 @@
     </returns>
     <exception cref='T:System.InvalidOperationException'>This object's type is not a string, including if this object is
       CBORObject.Null. To check the CBOR object for null before conversion, use
-      the following idiom (originally written in C# for the .NET version):
+      the following idiom (originally written in C# for the.NET version):
       <c>(cbor == null || cbor.IsNull) ? null : cbor.AsString()</c> .
     </exception>
   </doc>
@@ -784,7 +785,7 @@
     <summary>Converts this object to a 64-bit unsigned integer. Non-integer values are
       truncated to an integer.
     </summary>
-    <returns>The closest arbitrary-precision integer to this object.
+    <returns>The closest big integer to this object.
     </returns>
     <exception cref='T:System.InvalidOperationException'>This object's type is not a number type.
     </exception>
@@ -1015,7 +1016,7 @@
       <paramref name='data'/>
        is null.
     </exception>
-    <example><para>The following example (originally written in C# for the .NET version)
+    <example><para>The following example (originally written in C# for the.NET version)
         implements a method that decodes a text string from a CBOR byte array.
         It's successful only if the CBOR object contains an untagged text
         string.
@@ -1052,7 +1053,7 @@
          can be used to write out certain keys of a CBOR map in a given order.
         For the CTAP2 canonical ordering, which is useful for implementing Web
         Authentication, call
-        <c>EncodeToBytes(new CBOREncodeOptions(false,false,true))</c> rather than this method.
+        <c>EncodeToBytes(new CBOREncodeOptions(false, false, true))</c> rather than this method.
       </para>
     </summary>
     <returns>A byte array in CBOR format.
@@ -1260,29 +1261,14 @@
     </returns>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.FromObject(System.Byte[])'>
-    <summary><para>Generates a CBOR object from a byte array. The byte array is copied to a
-        new byte array. (This method can't be used to decode CBOR data from a
-        byte array; for that, use the DecodeFromBytes method instead.).
-      </para>
+    <summary>Not documented yet.
     </summary>
-    <param name='bytes'>A byte array. Can be null.
+    <param name='bytes'>The parameter
+      <paramref name='bytes'/>
+       is not documented yet.
     </param>
-    <returns>A CBOR byte string object where each byte of the given byte array is
-      copied to a new array, or CBORObject.Null if the value is null.
+    <returns>A CBORObject object.
     </returns>
-    <example><para>The following example encodes a text string to a UTF-8 byte array, then
-        uses the array to create a CBOR byte string object. It is not
-        recommended to use
-        <c>Encoding.UTF8.GetBytes</c> in .NET, or the
-        <c>getBytes()</c> method in Java to do this. For instance,
-        <c>getBytes()</c> encodes text strings in a default (so not fixed) character encoding,
-        which can be undesirable. Instead, use the
-        <c>DataUtilities.GetUtf8Bytes</c> method to convert text strings to UTF-8.
-      </para>
-      <code>/* true does character replacement of invalid UTF-8; false throws an
-        exception on invalid UTF-8 */ byte[] bytes = DataUtilities.GetUtf8Bytes(
-        textString, true); CBORObject cbor = CBORObject.FromBytes(bytes);</code> .
-    </example>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.FromObject(System.Char)'>
     <summary>Generates a CBOR string object from a Unicode character.
@@ -1299,13 +1285,13 @@
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.FromObject(System.Decimal)'>
-    <summary>Converts a .NET decimal to a CBOR object.
+    <summary>Converts a.NET decimal to a CBOR object.
     </summary>
     <param name='value'>The parameter
       <paramref name='value'/>
        is a Decimal object.
     </param>
-    <returns>A CBORObject object with the same value as the .NET decimal.
+    <returns>A CBORObject object with the same value as the.NET decimal.
     </returns>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.FromObject(System.Double)'>
@@ -1460,12 +1446,12 @@
           <c>sbyte</c> ,
           <c>ushort</c> ,
           <c>uint</c> , and
-          <c>ulong</c> in .NET) is converted to the corresponding CBOR integer.
+          <c>ulong</c> in.NET) is converted to the corresponding CBOR integer.
         </item>
         <item>A primitive floating-point type (
           <c>float</c> ,
           <c>double</c> , as well as
-          <c>decimal</c> in .NET) is converted to the corresponding CBOR number.
+          <c>decimal</c> in.NET) is converted to the corresponding CBOR number.
         </item>
         <item>A
           <c>String</c> is converted to a CBOR text string. To create a CBOR byte string
@@ -1474,7 +1460,7 @@
           <see cref='M:PeterO.Cbor.CBORObject.FromObject(System.Byte[])'/>
            .
         </item>
-        <item>In the .NET version, a nullable is converted to
+        <item>In the.NET version, a nullable is converted to
           <c>CBORObject.Null</c> if the nullable's value is
           <c>null</c> , or converted according to the nullable's underlying type, if that
           type is supported by this method.
@@ -1492,7 +1478,7 @@
            artifact (in Java) is converted to the corresponding CBOR number.
         </item>
         <item>An array other than
-          <c>byte[]</c> is converted to a CBOR array. In the .NET version, a multidimensional
+          <c>byte[]</c> is converted to a CBOR array. In the.NET version, a multidimensional
           array is converted to an array of arrays.
         </item>
         <item>A
@@ -1513,7 +1499,7 @@
           <i>
              underlying value
           </i>
-           in the .NET version, or the result of its
+           in the.NET version, or the result of its
           <c>ordinal()</c> method in the Java version.
         </item>
         <item>An object of type
@@ -1569,7 +1555,7 @@
         <c>Flags</c> attribute, and constants from the same Enum type that share an
         underlying value, should not be passed to this method.
       </para>
-      <para>REMARK: A certain consistency between .NET and Java and between
+      <para>REMARK: A certain consistency between.NET and Java and between
         FromObject and ToObject are sought for version 4.0. It is also hoped
         that--
       </para>
@@ -2040,7 +2026,7 @@
   <doc name='P:PeterO.Cbor.CBORObject.IsFalse'>
     <summary>Gets a value indicating whether this value is a CBOR false value.
     </summary>
-    <value><c>true</c> If this value is a CBOR false value; otherwise, .
+    <value><c>true</c> If this value is a CBOR false value; otherwise,
       <c>false</c> .
     </value>
   </doc>
@@ -2048,7 +2034,7 @@
     <summary>Gets a value indicating whether this CBOR object represents a finite
       number.
     </summary>
-    <value><c>true</c> If this CBOR object represents a finite number; otherwise, .
+    <value><c>true</c> If this CBOR object represents a finite number; otherwise,
       <c>false</c> .
     </value>
   </doc>
@@ -2065,7 +2051,7 @@
       not considered integers.
     </summary>
     <value><c>true</c> If this object represents an integer number, that is, a number without a
-      fractional part; otherwise, .
+      fractional part; otherwise,
       <c>false</c> .
     </value>
   </doc>
@@ -2081,7 +2067,7 @@
   <doc name='P:PeterO.Cbor.CBORObject.IsNegative'>
     <summary>Gets a value indicating whether this object is a negative number.
     </summary>
-    <value><c>true</c> If this object is a negative number; otherwise, .
+    <value><c>true</c> If this object is a negative number; otherwise,
       <c>false</c> .
     </value>
   </doc>
@@ -2096,7 +2082,7 @@
   <doc name='P:PeterO.Cbor.CBORObject.IsNull'>
     <summary>Gets a value indicating whether this value is a CBOR null value.
     </summary>
-    <value><c>true</c> If this value is a CBOR null value; otherwise, .
+    <value><c>true</c> If this value is a CBOR null value; otherwise,
       <c>false</c> .
     </value>
   </doc>
@@ -2111,28 +2097,28 @@
   <doc name='P:PeterO.Cbor.CBORObject.IsTagged'>
     <summary>Gets a value indicating whether this data item has at least one tag.
     </summary>
-    <value><c>true</c> If this data item has at least one tag; otherwise, .
+    <value><c>true</c> If this data item has at least one tag; otherwise,
       <c>false</c> .
     </value>
   </doc>
   <doc name='P:PeterO.Cbor.CBORObject.IsTrue'>
     <summary>Gets a value indicating whether this value is a CBOR true value.
     </summary>
-    <value><c>true</c> If this value is a CBOR true value; otherwise, .
+    <value><c>true</c> If this value is a CBOR true value; otherwise,
       <c>false</c> .
     </value>
   </doc>
   <doc name='P:PeterO.Cbor.CBORObject.IsUndefined'>
     <summary>Gets a value indicating whether this value is a CBOR undefined value.
     </summary>
-    <value><c>true</c> If this value is a CBOR undefined value; otherwise, .
+    <value><c>true</c> If this value is a CBOR undefined value; otherwise,
       <c>false</c> .
     </value>
   </doc>
   <doc name='P:PeterO.Cbor.CBORObject.IsZero'>
     <summary>Gets a value indicating whether this object's value equals 0.
     </summary>
-    <value><c>true</c> If this object&apos;s value equals 0; otherwise, .
+    <value><c>true</c> If this object&#x27;s value equals 0; otherwise,
       <c>false</c> .
     </value>
   </doc>
@@ -2558,7 +2544,7 @@
         <item>Infinity and not-a-number will be converted to null.
         </item>
       </list>
-      <para>The example code given below (originally written in C# for the .NET
+      <para>The example code given below (originally written in C# for the.NET
         version) can be used to write out certain keys of a CBOR map in a given
         order to a JSON string.
       </para>
@@ -2607,7 +2593,7 @@
     </param>
     <returns>The converted object.
     </returns>
-    <exception cref='T:System.CBORException'>The given type
+    <exception cref='!:System.CBORException'>The given type
       <paramref name='t'/>
        , or this object's CBOR type, is not supported, or the given object's
       nesting is too deep, or another error occurred when serializing the
@@ -2622,11 +2608,11 @@
         <c>typeof</c> operator. The following example, written in Java, is a way to specify
         that the return value will be an ArrayList of String objects.
       </para>
-      <code>Type arrayListString = new ParameterizedType(){ public Type[]
-        getActualTypeArguments(){ /* Contains one type parameter, String */
-        return new Type[]{ String.class }; } public Type getRawType(){ /* Raw
-        type is ArrayList */ return ArrayList.class; } public Type
-        getOwnerType(){ return null; } }; ArrayList&lt;String&gt; array =
+      <code>Type arrayListString = new ParameterizedType() { public Type[]
+        getActualTypeArguments() { // Contains one type parameter, String return
+        new Type[] { String.class }; } public Type getRawType() { /* Raw type is
+        ArrayList */ return ArrayList.class; } public Type getOwnerType() {
+        return null; } }; ArrayList&lt;String&gt; array =
         (ArrayList&lt;String&gt;) cborArray.ToObject(arrayListString);</code> <para>By comparison, the C# version is much shorter.
       </para>
       <code>var&#x20;array = (List&lt;String&gt;)cborArray.ToObject(
@@ -2655,7 +2641,7 @@
     </param>
     <returns>The converted object.
     </returns>
-    <exception cref='T:System.CBORException'>The given type
+    <exception cref='!:System.CBORException'>The given type
       <paramref name='t'/>
        , or this object's CBOR type, is not supported, or the given object's
       nesting is too deep, or another error occurred when serializing the
@@ -2707,10 +2693,10 @@
           <c>sbyte</c> ,
           <c>ushort</c> ,
           <c>uint</c> , and
-          <c>ulong</c> in .NET) or a primitive floating-point type (
+          <c>ulong</c> in.NET) or a primitive floating-point type (
           <c>float</c> ,
           <c>double</c> , as well as
-          <c>decimal</c> in .NET), returns the result of the corresponding As* method.
+          <c>decimal</c> in.NET), returns the result of the corresponding As* method.
         </item>
         <item>If the type is
           <c>String</c> , returns the result of AsString.
@@ -2838,7 +2824,7 @@
           supported even if they contain eligible setters.
         </item>
       </list>
-      <para>REMARK: A certain consistency between .NET and Java and between
+      <para>REMARK: A certain consistency between.NET and Java and between
         FromObject and ToObject are sought for version 4.0. It is also hoped
         that--
       </para>
@@ -2871,7 +2857,7 @@
     </param>
     <returns>The converted object.
     </returns>
-    <exception cref='T:System.CBORException'>The given type
+    <exception cref='!:System.CBORException'>The given type
       <paramref name='t'/>
        , or this object's CBOR type, is not supported, or the given object's
       nesting is too deep, or another error occurred when serializing the
@@ -2927,7 +2913,7 @@
       <paramref name='t'/>
        is null.
     </exception>
-    <exception cref='T:System.CBORException'>The given object's nesting is too deep, or another error occurred when
+    <exception cref='!:System.CBORException'>The given object's nesting is too deep, or another error occurred when
       serializing the object.
     </exception>
   </doc>
@@ -3255,7 +3241,7 @@
   <doc name='M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.EInteger,System.IO.Stream)'>
     <summary>Writes a arbitrary-precision integer in CBOR format to a data stream.
     </summary>
-    <param name='bigint'>arbitrary-precision integer to write. Can be null.
+    <param name='bigint'>Arbitrary-precision integer to write. Can be null.
     </param>
     <param name='stream'>A writable data stream.
     </param>
@@ -3586,7 +3572,7 @@
     <summary><para>Writes this CBOR object to a data stream. If the CBOR object contains
         CBOR maps, or is a CBOR map, the keys to the map are written out to the
         data stream in an undefined order. See the examples (written in C# for
-        the .NET version) for ways to write out certain keys of a CBOR map in a
+        the.NET version) for ways to write out certain keys of a CBOR map in a
         given order.
       </para>
     </summary>
@@ -3736,10 +3722,9 @@
     <example><para>In the following example, an array of three objects is written as CBOR
         to a data stream.
       </para>
-      <code>CBORObject.WriteValue(stream, 4, 3); /* array, length 3 */
-        CBORObject.Write("hello world", stream); /* item 1 */
-        CBORObject.Write(25, stream); /* item 2 */ CBORObject.Write(false,
-        stream); // item 3</code> <para>In the following example, a map consisting of two key-value pairs is
+      <code>CBORObject.WriteValue(stream, 4, 3); // array, length 3
+        CBORObject.Write("hello world", stream); // item 1 CBORObject.Write(25,
+        stream); /* item 2 */ CBORObject.Write(false, stream); // item 3</code> <para>In the following example, a map consisting of two key-value pairs is
         written as CBOR to a data stream.
       </para>
       <code>CBORObject.WriteValue(stream, 5, 2); // map, 2 pairs
@@ -3954,7 +3939,7 @@
     </summary>
   </doc>
   <doc name='F:PeterO.Cbor.CBORType.Number'>
-    <summary>A number of any kind, including integers, arbitrary-precision integers, floating point
+    <summary>A number of any kind, including integers, big integers, floating point
       numbers, and decimal numbers. The floating-point value Not-a-Number is
       also included in the Number type.
     </summary>
@@ -4006,10 +3991,10 @@
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORTypeMapper.AddTypeName(System.String)'>
-    <summary>Adds the fully qualified name of a Java or .NET type for use in type
+    <summary>Adds the fully qualified name of a Java or.NET type for use in type
       matching.
     </summary>
-    <param name='name'>The fully qualified name of a Java or .NET class (e.g.,
+    <param name='name'>The fully qualified name of a Java or.NET class (e.g.,
       <c>java.math.BigInteger</c> or
       <c>System.Globalization.CultureInfo</c> ).
     </param>
@@ -4025,11 +4010,11 @@
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORTypeMapper.AddTypePrefix(System.String)'>
-    <summary>Adds a prefix of a Java or .NET type for use in type matching. A type
+    <summary>Adds a prefix of a Java or.NET type for use in type matching. A type
       matches a prefix if its fully qualified name is or begins with that
       prefix, using codepoint-by-codepoint (case-sensitive) matching.
     </summary>
-    <param name='prefix'>The prefix of a Java or .NET type (e.g., `java.math.` or
+    <param name='prefix'>The prefix of a Java or.NET type (e.g., `java.math.` or
       `System.Globalization`).
     </param>
     <returns>This object.
@@ -4044,16 +4029,16 @@
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORTypeMapper.FilterTypeName(System.String)'>
-    <summary>Returns whether the given Java or .NET type name fits the filters given in
+    <summary>Returns whether the given Java or.NET type name fits the filters given in
       this mapper.
     </summary>
-    <param name='typeName'>The fully qualified name of a Java or .NET class (e.g.,
+    <param name='typeName'>The fully qualified name of a Java or.NET class (e.g.,
       <c>java.math.BigInteger</c> or
       <c>System.Globalization.CultureInfo</c> ).
     </param>
     <returns>Either
-      <c>true</c> if the given Java or .NET type name fits the filters given in this
-      mapper, or
+      <c>true</c> if the given Java or.NET type name fits the filters given in this mapper,
+      or
       <c>false</c> otherwise.
     </returns>
   </doc>
@@ -4725,10 +4710,10 @@
     <example><para>The following example shows how to iterate a text string code point by
         code point.
       </para>
-      <code>for(var i=0;i&lt;str.Length;i++) { int codePoint =
-        DataUtilities.CodePointAt(str,i);
-        Console.WriteLine("codePoint:"+codePoint); if(codePoint &gt;= 0x10000) {
-        i++; /* Supplementary code point */ } }</code> .
+      <code>for (var i = 0;i&lt;str.Length; ++i) { int codePoint =
+        DataUtilities.CodePointAt(str, i);
+        Console.WriteLine("codePoint:"+codePoint); if (codePoint &gt;= 0x10000)
+        { i++; /* Supplementary code point */ } }</code> .
     </example>
   </doc>
   <doc name='M:PeterO.DataUtilities.CodePointAt(System.String,System.Int32,System.Int32)'>
@@ -4761,10 +4746,10 @@
     <example><para>The following example shows how to iterate a text string code point by
         code point, terminating the loop when an unpaired surrogate is found.
       </para>
-      <code>for(var i=0;i&lt;str.Length;i++) { int codePoint =
-        DataUtilities.CodePointAt(str, i, 2); if(codePoint &lt; 0) { break; /*
-        Unpaired surrogate */ } Console.WriteLine("codePoint:"+codePoint);
-        if(codePoint &gt;= 0x10000) { i++; /* Supplementary code point */ } }</code> .
+      <code>for (var i = 0;i&lt;str.Length; ++i) { int codePoint =
+        DataUtilities.CodePointAt(str, i, 2); if (codePoint &lt; 0) { break; /*
+        Unpaired surrogate */ } Console.WriteLine("codePoint:"+codePoint); if
+        (codePoint &gt;= 0x10000) { i++; /* Supplementary code point */ } }</code> .
     </example>
   </doc>
   <doc name='M:PeterO.DataUtilities.CodePointBefore(System.String,System.Int32)'>
@@ -4853,7 +4838,7 @@
         byte-order mark (U+FEFF) at the beginning of the encoded byte array.
       </para>
       <para>REMARK: It is not recommended to use
-        <c>Encoding.UTF8.GetBytes</c> in .NET, or the
+        <c>Encoding.UTF8.GetBytes</c> in.NET, or the
         <c>getBytes()</c> method in Java to do this. For instance,
         <c>getBytes()</c> encodes text strings in a default (so not fixed) character encoding,
         which can be undesirable.
@@ -4883,7 +4868,7 @@
         byte-order mark (U+FEFF) at the beginning of the encoded byte array.
       </para>
       <para>REMARK: It is not recommended to use
-        <c>Encoding.UTF8.GetBytes</c> in .NET, or the
+        <c>Encoding.UTF8.GetBytes</c> in.NET, or the
         <c>getBytes()</c> method in Java to do this. For instance,
         <c>getBytes()</c> encodes text strings in a default (so not fixed) character encoding,
         which can be undesirable.
@@ -5174,6 +5159,14 @@
     </exception>
     <exception cref='T:System.IO.IOException'>An I/O error occurred.
     </exception>
+    <exception cref='T:System.ArgumentException'>Either &quot;offset&quot; or &quot;length&quot; is less than 0 or greater
+      than &quot;str&quot;&apos;s length, or &quot;str&quot;&apos;s length minus
+      &quot;offset&quot; is less than &quot;length&quot;.
+    </exception>
+    <exception cref='T:System.ArgumentNullException'>The parameter
+      <paramref name='str'/>
+       is null.
+    </exception>
   </doc>
   <doc name='M:PeterO.DataUtilities.WriteUtf8(System.String,System.Int32,System.Int32,System.IO.Stream,System.Boolean,System.Boolean)'>
     <summary>Writes a portion of a string in UTF-8 encoding to a data stream.
@@ -5215,6 +5208,14 @@
        is greater than the string's length.
     </exception>
     <exception cref='T:System.IO.IOException'>An I/O error occurred.
+    </exception>
+    <exception cref='T:System.ArgumentException'>Either &quot;offset&quot; or &quot;length&quot; is less than 0 or greater
+      than &quot;str&quot;&apos;s length, or &quot;str&quot;&apos;s length minus
+      &quot;offset&quot; is less than &quot;length&quot;.
+    </exception>
+    <exception cref='T:System.ArgumentNullException'>The parameter
+      <paramref name='str'/>
+       is null.
     </exception>
   </doc>
 </docs>

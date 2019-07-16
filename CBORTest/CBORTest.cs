@@ -1559,6 +1559,19 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
+
+    [Test]
+    public void TestZeroMap() {
+      CBORObject cbor = CBORObject.NewMap();
+      cbor.Set(0,CBORObject.FromObject("testpointzero"));
+      cbor.Set((double)0.0,CBORObject.FromObject("testzero"));
+      Console.WriteLine(cbor.ToString());
+      cbor = CBORObject.NewMap();
+      cbor.Set((double)0.0,CBORObject.FromObject("testzeropointzero"));
+      cbor.Set(0,CBORObject.FromObject("testzero"));
+      Console.WriteLine(cbor.ToString());
+    }
+
     [Test]
     public void TestTextStringStreamNoTagsBeforeDefinite() {
       try {

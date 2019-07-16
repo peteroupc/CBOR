@@ -50,7 +50,7 @@ namespace PeterO {
             continue;
           }
           if (!String.IsNullOrEmpty(ValueParam)) {
-            if (!method.Name.Equals(ValueParam)) {
+            if (!method.Name.Equals(ValueParam, StringComparison.Ordinal)) {
               // continue;
             }
           }

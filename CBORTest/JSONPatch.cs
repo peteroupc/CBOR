@@ -60,7 +60,7 @@ namespace Test {
         if (valueOpStr == null) {
           throw new ArgumentException("Patch");
         }
-        if ("add".Equals(valueOpStr)) {
+        if ("add".Equals(valueOpStr, StringComparison.Ordinal)) {
           // operation
           CBORObject value = null;
           if (!patchOp.ContainsKey("value")) {
@@ -68,7 +68,7 @@ namespace Test {
           }
           value = patchOp["value"];
           o = AddOperation(o, valueOpStr, GetString(patchOp, "path"), value);
-        } else if ("replace".Equals(valueOpStr)) {
+        } else if ("replace".Equals(valueOpStr, StringComparison.Ordinal)) {
           // operation
           CBORObject value = null;
           if (!patchOp.ContainsKey("value")) {
@@ -80,7 +80,7 @@ namespace Test {
   valueOpStr,
   GetString(patchOp, "path"),
   value);
-        } else if ("remove".Equals(valueOpStr)) {
+        } else if ("remove".Equals(valueOpStr, StringComparison.Ordinal)) {
           // Remove operation
           string path = patchOp["path"].AsString();
           if (path == null) {
@@ -91,7 +91,7 @@ namespace Test {
           } else {
             RemoveOperation(o, valueOpStr, GetString(patchOp, "path"));
           }
-        } else if ("move".Equals(valueOpStr)) {
+        } else if ("move".Equals(valueOpStr, StringComparison.Ordinal)) {
           string path = patchOp["path"].AsString();
           if (path == null) {
             throw new ArgumentException("Patch " + valueOpStr + " path");
@@ -105,7 +105,7 @@ namespace Test {
           }
           CBORObject movedObj = RemoveOperation(o, valueOpStr, fromPath);
           o = AddOperation(o, valueOpStr, path, CloneCbor(movedObj));
-        } else if ("copy".Equals(valueOpStr)) {
+        } else if ("copy".Equals(valueOpStr, StringComparison.Ordinal)) {
           string path = patchOp["path"].AsString();
           string fromPath = patchOp["from"].AsString();
           if (path == null) {
@@ -125,7 +125,7 @@ namespace Test {
   valueOpStr,
   path,
   CloneCbor(copiedObj));
-        } else if ("test".Equals(valueOpStr)) {
+        } else if ("test".Equals(valueOpStr, StringComparison.Ordinal)) {
           string path = patchOp["path"].AsString();
           if (path == null) {
             throw new ArgumentException("Patch " + valueOpStr + " path");

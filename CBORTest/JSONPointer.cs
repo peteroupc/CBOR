@@ -196,7 +196,7 @@ this.refValue = refValue;
 
     public bool Exists() {
       if (this.jsonobj.Type == CBORType.Array) {
-        if (this.refValue.Equals("-")) {
+        if (this.refValue.Equals("-", StringComparison.Ordinal)) {
           return false;
         }
         EInteger eivalue = EInteger.FromString(this.refValue);
@@ -216,7 +216,7 @@ this.refValue = refValue;
     /// isn't a JSON array or is greater than the array's length.</returns>
     public int GetIndex() {
       if (this.jsonobj.Type == CBORType.Array) {
-        if (this.refValue.Equals("-")) {
+        if (this.refValue.Equals("-", StringComparison.Ordinal)) {
           return ((CBORObject)this.jsonobj).Count;
         }
         EInteger value = EInteger.FromString(this.refValue);

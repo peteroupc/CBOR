@@ -287,12 +287,12 @@ namespace Test {
     }
 
     public static void AssertJSONSer(CBORObject o, String s) {
-      if (!s.Equals(o.ToJSONString())) {
+      if (!s.Equals(o.ToJSONString(), StringComparison.Ordinal)) {
         Assert.AreEqual(s, o.ToJSONString(), "o is not equal to s");
       }
      // Test round-tripping
       CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());
-      if (!s.Equals(o2.ToJSONString())) {
+      if (!s.Equals(o2.ToJSONString(), StringComparison.Ordinal)) {
         Assert.AreEqual(s, o2.ToJSONString(), "o2 is not equal to s");
       }
       TestNumber(o);
