@@ -33,7 +33,7 @@ namespace PeterO.Cbor {
 
     public static CBORObject ConvertToNativeObject(CBORObject o) {
       // TODO: Use something like HasOneTag rather than HasMostOuterTag,
-      // or preserve inner tags
+      // or preserve outer tags
       if (o.HasMostOuterTag(2) || o.HasMostOuterTag(3)) {
         return CheckEInteger(o);
       }
@@ -86,7 +86,7 @@ namespace PeterO.Cbor {
     }
 
     private static CBORObject CheckEInteger(CBORObject o) {
-      if (o.GetAllTags().Count != 1) {
+      if (o.GetAllTags().Length != 1) {
         throw new CBORException("One tag expected");
       }
       if (o.Type != CBORType.ByteString) {
@@ -96,8 +96,9 @@ namespace PeterO.Cbor {
     }
 
     internal static CBORNumber EIntegerObjectToCBORNumber(CBORObject o) {
-      CheckBigNum(o);
-      bool negative = o.HasMostOuterTag(3);
+      // TODO: Check for only one tag
+      CheckEInteger(o);
+      bool negative = o.HasMostInnerTag(3);
       byte[] data = o.GetByteString();
       if (data.Length <= 7) {
         long x = 0;
@@ -109,7 +110,7 @@ namespace PeterO.Cbor {
           x = -x;
           --x;
         }
-        return FromObjectAndInnerTags(x, o);
+        return new CBORNumber(CBORNumber.Kind.Integer, x);
       }
       int neededLength = data.Length;
       byte[] bytes;
@@ -134,7 +135,7 @@ namespace PeterO.Cbor {
         bytes[bytes.Length - 1] = negative ? (byte)0xff : (byte)0;
       }
       bi = EInteger.FromBytes(bytes, true);
-      if(bi.CanFitInInt64()){
+      if (bi.CanFitInInt64()) {
         return new CBORNumber(CBORNumber.Kind.Integer, bi.ToInt64Checked());
       } else {
         return new CBORNumber(CBORNumber.Kind.EInteger, bi);
@@ -147,7 +148,9 @@ namespace PeterO.Cbor {
         throw new CBORException("Rational number must be an array\n" +
           obj.ToString());
 #else
-        throw new CBORException("Rational number must be an array");
+{
+ throw new CBORException("Rational number must be an array");
+}
 #endif
       }
       if (obj.Count != 2) {

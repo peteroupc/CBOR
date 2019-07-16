@@ -202,7 +202,7 @@ namespace PeterO.Cbor {
       }
     }
 
-    public static bool FirstElement(int[] index, int[] dimensions) {
+    public static bool FirstElement(int[] dimensions) {
       foreach (var d in dimensions) {
         if (d == 0) {
           return false;
@@ -301,7 +301,7 @@ namespace PeterO.Cbor {
       for (var i = 0; i < rank; ++i) {
         dimensions[i] = arr.GetLength(i);
       }
-      if (!FirstElement(index, dimensions)) {
+      if (!FirstElement(dimensions)) {
         return obj;
       }
       obj = BuildCBORArray(dimensions);
@@ -369,7 +369,7 @@ namespace PeterO.Cbor {
       for (var i = 0; i < rank; ++i) {
         dimensions[i] = arr.GetLength(i);
       }
-      if (!FirstElement(index, dimensions)) {
+      if (!FirstElement(dimensions)) {
         return arr;
       }
       do {

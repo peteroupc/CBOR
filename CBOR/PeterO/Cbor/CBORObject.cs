@@ -186,6 +186,9 @@ namespace PeterO.Cbor {
     internal const int CBORObjectTypeInteger = 0; // -(2^63).. (2^63-1)
     internal const int CBORObjectTypeMap = 5;
     internal const int CBORObjectTypeSimpleValue = 6;
+    // TODO: Eliminate internal distinction between single and double,
+    // which doesn't exist in the generic CBOR data model
+    [Obsolete]
     internal const int CBORObjectTypeSingle = 7;
     internal const int CBORObjectTypeTagged = 10;
     internal const int CBORObjectTypeTextString = 3;
@@ -197,6 +200,7 @@ namespace PeterO.Cbor {
 
     private const int StreamedStringBufferLength = 4096;
 
+    // TODO: Move CBOR number interfaces to CBORNumber class
     private static readonly ICBORNumber[] NumberInterfaces = {
       new CBORInteger(), new CBOREInteger(), null, null,
       null, null, null, new CBORSingle(),
@@ -2810,7 +2814,7 @@ namespace PeterO.Cbor {
 
     private object GetNumber() {
       ERational ret = this.GetERational();
-      return (ret != null) ? ret : (tis.ThisItem;
+      return (ret != null) ? ret : this.ThisItem;
     }
 
     /// <summary>Gets this object's absolute value.</summary>
@@ -3077,14 +3081,15 @@ namespace PeterO.Cbor {
     }
 
     private ERational GetERational() {
-      return (this.HasTag(30) && this.Count == 2) ?
-ERational.Create(this[0].AsEInteger(), this[1].AsEInteger()) : (nll;
+      return (this.HasMostInnerTag(30) && this.Count == 2) ?
+         ERational.Create(this[0].AsEInteger(), this[1].AsEInteger()) :
+         null;
     }
 
     private ICBORNumber GetNumberInterface() {
       ERational ret = this.GetERational();
       return (ret != null) ? NumberInterfaces[12] :
-(NmberInterfaces[this.ItemType];
+         NumberInterfaces[this.ItemType];
     }
 
     /// <summary>Converts this object to a 16-bit signed integer. Floating
@@ -3880,6 +3885,45 @@ ERational.Create(this[0].AsEInteger(), this[1].AsEInteger()) : (nll;
         return (EInteger[])list.ToArray();
       }
       return new[] { LowHighToEInteger(this.tagLow, this.tagHigh) };
+    }
+
+    // TODO: Add HasMostInnerTag in 3.6
+
+    /// <summary>Returns whether this object has an innermost tag and that
+    /// tag is of the given number.</summary>
+    /// <param name='tagValue'>The tag number.</param>
+    /// <returns><c>true</c> if this object has an innermost tag and that
+    /// tag is of the given number; otherwise, <c>false</c>.</returns>
+    /// <exception cref='ArgumentException'>The parameter <paramref
+    /// name='tagValue'/> is less than 0.</exception>
+    public bool HasMostInnerTag(int tagValue) {
+      if (tagValue < 0) {
+        throw new ArgumentException("tagValue (" + tagValue +
+                    ") is less than 0");
+      }
+      return this.IsTagged && this.HasMostInnerTag(
+        EInteger.FromInt32(tagValue));
+    }
+
+    /// <summary>Returns whether this object has an innermost tag and that
+    /// tag is of the given number, expressed as an arbitrary-precision
+    /// number.</summary>
+    /// <param name='bigTagValue'>The tag number.</param>
+    /// <returns><c>true</c> if this object has an innermost tag and that
+    /// tag is of the given number; otherwise, <c>false</c>.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='bigTagValue'/> is null.</exception>
+    /// <exception cref='ArgumentException'>The parameter <paramref
+    /// name='bigTagValue'/> is less than 0.</exception>
+    public bool HasMostInnerTag(EInteger bigTagValue) {
+      if (bigTagValue == null) {
+        throw new ArgumentNullException(nameof(bigTagValue));
+      }
+      if (bigTagValue.Sign < 0) {
+        throw new ArgumentException("bigTagValue (" + bigTagValue +
+                    ") is less than 0");
+      }
+      return (!this.IsTagged) ? false : this.MostInnerTag.Equals(bigTagValue);
     }
 
     /// <summary>Returns whether this object has an outermost tag and that
@@ -5420,7 +5464,7 @@ ERational.Create(this[0].AsEInteger(), this[1].AsEInteger()) : (nll;
       };
     }
 
-    // TODO: Move to CBORNumber class
+    [Obsolete]
     internal static int GetSignInternal(int type, object obj) {
       ICBORNumber cn = GetNumberInterface(type);
       return cn == null ? 2 : cn.Sign(obj);

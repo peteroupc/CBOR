@@ -18,11 +18,13 @@ namespace Test {
     }
 
     public CBORObject GetJSON(string name) {
-      return CBORObject.FromJSONString(this.GetString(name));
+      return CBORObject.FromJSONString(
+          this.GetString(name));
     }
 
     public string GetString(string name) {
-      return this.mgr.GetString(name);
+      return this.mgr.GetString(name,
+         System.Globalization.CultureInfo.InvariantCulture);
     }
   }
 }

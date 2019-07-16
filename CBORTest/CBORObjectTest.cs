@@ -235,7 +235,7 @@ namespace Test {
       }
     }
 
-    public string CharString(int cp, bool quoted, char[] charbuf) {
+    public static string CharString(int cp, bool quoted, char[] charbuf) {
       var index = 0;
       if (quoted) {
         charbuf[index++] = (char)0x22;
