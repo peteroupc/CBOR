@@ -526,6 +526,10 @@ namespace PeterO.Cbor {
       JSONOptions options) {
       int type = obj.ItemType;
       object thisItem = obj.ThisItem;
+      if(obj.IsNumber){
+        writer.WriteString(CBORNumber.FromCBORObject(obj).ToJSONString());
+        return;
+      }
       switch (type) {
         case CBORObject.CBORObjectTypeSimpleValue: {
             if (obj.IsTrue) {
@@ -537,64 +541,6 @@ namespace PeterO.Cbor {
               return;
             }
             writer.WriteString("null");
-            return;
-          }
-        case CBORObject.CBORObjectTypeDouble: {
-            var f = (double)thisItem;
-            if (Double.IsNegativeInfinity(f) ||
-Double.IsPositiveInfinity(f) ||
-Double.IsNaN(f)) {
-              writer.WriteString("null");
-              return;
-            }
-            string dblString = CBORUtilities.DoubleToString(f);
-            writer.WriteString(
-              CBORObject.TrimDotZero(dblString));
-            return;
-          }
-        case CBORObject.CBORObjectTypeInteger: {
-            var longItem = (long)thisItem;
-            writer.WriteString(CBORUtilities.LongToString(longItem));
-            return;
-          }
-        case CBORObject.CBORObjectTypeBigInteger: {
-            writer.WriteString(((EInteger)thisItem).ToString());
-            return;
-          }
-        case CBORObject.CBORObjectTypeExtendedDecimal: {
-            var dec = (EDecimal)thisItem;
-            if (dec.IsInfinity() || dec.IsNaN()) {
-              writer.WriteString("null");
-            } else {
-              writer.WriteString(dec.ToString());
-            }
-            return;
-          }
-        case CBORObject.CBORObjectTypeExtendedFloat: {
-            var flo = (EFloat)thisItem;
-            if (flo.IsInfinity() || flo.IsNaN()) {
-              writer.WriteString("null");
-              return;
-            }
-            if (flo.IsFinite &&
-                flo.Exponent.Abs().CompareTo((EInteger)2500) > 0) {
-              // Too inefficient to convert to a decimal number
-              // from a bigfloat with a very high exponent,
-              // so convert to double instead
-              double f = flo.ToDouble();
-              if (Double.IsNegativeInfinity(f) ||
-Double.IsPositiveInfinity(f) ||
-Double.IsNaN(f)) {
-                writer.WriteString("null");
-                return;
-              }
-              string dblString =
-                  CBORUtilities.DoubleToString(f);
-              writer.WriteString(
-                CBORObject.TrimDotZero(dblString));
-              return;
-            }
-            writer.WriteString(flo.ToString());
             return;
           }
         case CBORObject.CBORObjectTypeByteString: {
@@ -652,17 +598,6 @@ Double.IsNaN(f)) {
               first = false;
             }
             writer.WriteCodePoint((int)']');
-            break;
-          }
-        case CBORObject.CBORObjectTypeExtendedRational: {
-            var dec = (ERational)thisItem;
-            EDecimal f = dec.ToEDecimalExactIfPossible(
-              EContext.Decimal128.WithUnlimitedExponents());
-            if (!f.IsFinite) {
-              writer.WriteString("null");
-            } else {
-              writer.WriteString(f.ToString());
-            }
             break;
           }
         case CBORObject.CBORObjectTypeMap: {

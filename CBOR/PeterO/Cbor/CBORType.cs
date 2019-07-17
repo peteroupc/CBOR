@@ -41,11 +41,12 @@ namespace PeterO.Cbor {
     /// <summary>A map of CBOR objects.</summary>
     Map,
 
-    /// <summary>An integer in the interval [-2^64, 2^64 - 1], or an integer of major
-    /// type 0 and 1.</summary>
+    /// <summary>An integer in the interval [-2^64, 2^64 - 1], or an
+    /// integer of major type 0 and 1.</summary>
     Integer,
 
-    /// <summary>A 16-, 32-, or 64-bit binary floating-point number.</summary>
+    /// <summary>A 16-, 32-, or 64-bit binary floating-point
+    /// number.</summary>
     FloatingPoint,
   }
 }

@@ -33,6 +33,5 @@ namespace PeterO.Cbor {
       }
       return newObject;
     }
-
   }
 }

@@ -59,10 +59,10 @@ namespace PeterO.Cbor {
     /// not consistent with the Equals method. This means that two values
     /// that compare as equal under the CompareTo method might not be equal
     /// under the Equals method. This is important to consider especially
-    /// if an application wants to compare numbers (Several CBOR tags
-    /// support numbers of different formats, such as
-    /// arbitrary-precision integers, rational numbers, and
-    /// arbitrary-precision decimal numbers.)</para>
+    /// if an application wants to compare numbers. (Several CBOR tags
+    /// support numbers of different formats, such as arbitrary-precision
+    /// integers, rational numbers, and arbitrary-precision decimal
+    /// numbers.)</para>
     /// <para>Another consideration is that two values that are otherwise
     /// equal may have different tags. To strip the tags from a CBOR object
     /// before comparing, use the <c>Untag</c> method.</para>
@@ -77,12 +77,14 @@ namespace PeterO.Cbor {
     /// returns TextString). This is because the natural ordering of these
     /// instances is consistent with the Equals method.</para>
     /// <para><b>Thread Safety:</b></para>
-    /// <para>Certain CBOR objects are immutable (their values can't be changed), so they are
-    /// inherently safe for use by multiple threads.</para>
-    /// <para>CBOR objects that are arrays, maps, and byte strings (including tagged objects
-    /// that represent numbers) are mutable, but this class doesn't attempt to synchronize reads and
-    /// writes to those objects by multiple threads, so those objects are
-    /// not thread safe without such synchronization.</para>
+    /// <para>Certain CBOR objects are immutable (their values can't be
+    /// changed), so they are inherently safe for use by multiple
+    /// threads.</para>
+    /// <para>CBOR objects that are arrays, maps, and byte strings
+    /// (including tagged objects that represent numbers) are mutable, but
+    /// this class doesn't attempt to synchronize reads and writes to those
+    /// objects by multiple threads, so those objects are not thread safe
+    /// without such synchronization.</para>
     /// <para>One kind of CBOR object is called a map, or a list of
     /// key-value pairs. Keys can be any kind of CBOR object, including
     /// numbers, strings, arrays, and maps. However, text strings are the
@@ -91,9 +93,10 @@ namespace PeterO.Cbor {
     /// them are not thread safe without synchronizing reads and writes to
     /// them.</para>
     /// <para>To find the type of a CBOR object, call its Type property (or
-    /// "getType()" in Java). The return value can be Integer, FloatingPoint, Boolean,
-    /// SimpleValue, or TextString for immutable CBOR objects, and Array,
-    /// Map, or ByteString for mutable CBOR objects.</para>
+    /// "getType()" in Java). The return value can be Integer,
+    /// FloatingPoint, Boolean, SimpleValue, or TextString for immutable
+    /// CBOR objects, and Array, Map, or ByteString for mutable CBOR
+    /// objects.</para>
     /// <para><b>Nesting Depth:</b></para>
     /// <para>The DecodeFromBytes and Read methods can only read objects
     /// with a limited maximum depth of arrays and maps nested within other
@@ -792,9 +795,15 @@ namespace PeterO.Cbor {
     /// numbers (as opposed to Not-a-Number, NaN).</exception>
     public static CBORObject Addition(CBORObject first, CBORObject second) {
       CBORNumber a = CBORNumber.FromCBORObject(first);
-      if(a==null)throw new ArgumentException(nameof(first) + "does not represent a number"));
+      if (a == null) {
+        throw new ArgumentException(nameof(first) + "does not represent a" +
+           "\u0020number");
+      }
       CBORNumber b = CBORNumber.FromCBORObject(second);
-      if(b==null)throw new ArgumentException(nameof(second) + "does not represent a number"));
+      if (b == null) {
+        throw new ArgumentException(nameof(second) + "does not represent a" +
+           "\u0020number");
+      }
       return a.Add(b).ToCBORObject();
     }
 
@@ -898,11 +907,16 @@ namespace PeterO.Cbor {
     /// <returns>The quotient of the two objects.</returns>
     public static CBORObject Divide(CBORObject first, CBORObject second) {
       CBORNumber a = CBORNumber.FromCBORObject(first);
-      if(a==null)throw new ArgumentException(nameof(first) + "does not represent a number"));
+      if (a == null) {
+        throw new ArgumentException(nameof(first) + "does not represent a" +
+           "\u0020number");
+      }
       CBORNumber b = CBORNumber.FromCBORObject(second);
-      if(b==null)throw new ArgumentException(nameof(second) + "does not represent a number"));
+      if (b == null) {
+        throw new ArgumentException(nameof(second) + "does not represent a" +
+           "\u0020number");
+      }
       return a.Divide(b).ToCBORObject();
-
     }
 
     /// <summary>
@@ -1393,13 +1407,20 @@ namespace PeterO.Cbor {
       if ((object)bigintValue == (object)null) {
         return CBORObject.Null;
       }
-      // TODO: Store as special value only if it fits in major type 0 or 1
-      return (bigintValue.CompareTo(Int64MinValue) >= 0 &&
-              bigintValue.CompareTo(Int64MaxValue) <= 0) ?
-        new CBORObject(
-          CBORObjectTypeInteger,
-          (long)(EInteger)bigintValue) :
-        new CBORObject(CBORObjectTypeBigInteger, bigintValue);
+      if (bigintValue.CanFitInInt64()) {
+        return CBORObject.FromObject(bigintValue.ToInt64Checked());
+      } else {
+         EInteger bitLength = bigintValue.UnsignedBitLengthAsEInteger();
+         if(bitLength.CompareTo(64)<=0){
+           // Fits in major type 0 or 1
+           return new CBORObject(CBORObjectTypeBigInteger, bigintValue);
+         } else {
+           int tag=(bigintValue.Sign < 0) ? 3 : 2;
+           return CBORObject.FromObjectAndTag(
+              EIntegerBytes(bigintValue),
+              tag);
+         }
+      }
     }
 
     /// <summary>Generates a CBOR object from an arbitrary-precision binary
@@ -1411,20 +1432,13 @@ namespace PeterO.Cbor {
       if ((object)bigValue == (object)null) {
         return CBORObject.Null;
       }
-      if (bigValue.IsInfinity()) {
+      // TODO: Change when tags 268-270 are registered
+      if (bigValue.IsInfinity() || bigValue.IsNaN()) {
         return CBORObject.FromObject(bigValue.ToDouble());
       }
-      if (bigValue.IsNaN()) {
-        return new CBORObject(
-          CBORObjectTypeExtendedFloat,
-          bigValue);
-      }
-      EInteger bigintExponent = bigValue.Exponent;
-      return (bigintExponent.IsZero && !(bigValue.IsZero &&
-                    bigValue.IsNegative)) ? FromObject(bigValue.Mantissa) :
-        new CBORObject(
-          CBORObjectTypeExtendedFloat,
-          bigValue);
+      CBORObject cbor = CBORObject.NewArray()
+            .Add(bigValue.Exponent).Add(bigValue.Mantissa);
+      return CBORObject.FromObjectAndTag(cbor, 5);
     }
 
     /// <summary>Generates a CBOR object from a rational number.</summary>
@@ -1434,6 +1448,7 @@ namespace PeterO.Cbor {
       if ((object)bigValue == (object)null) {
         return CBORObject.Null;
       }
+      // TODO: Change when tags 268-270 are registered
       if (bigValue.IsInfinity() || bigValue.IsNaN()) {
         return CBORObject.FromObject(bigValue.ToDouble());
       }
@@ -1450,20 +1465,18 @@ namespace PeterO.Cbor {
       if ((object)otherValue == (object)null) {
         return CBORObject.Null;
       }
-      if (otherValue.IsInfinity()) {
-        return CBORObject.FromObject(otherValue.ToDouble());
+      // TODO: Change when tags 268-270 are registered
+      if (bigValue.IsInfinity() || bigValue.IsNaN()) {
+        return CBORObject.FromObject(bigValue.ToDouble());
       }
       if (otherValue.IsNaN()) {
         return new CBORObject(
           CBORObjectTypeExtendedDecimal,
           otherValue);
       }
-      EInteger bigintExponent = otherValue.Exponent;
-      return (bigintExponent.IsZero && !(otherValue.IsZero &&
-                    otherValue.IsNegative)) ? FromObject(otherValue.Mantissa) :
-        new CBORObject(
-          CBORObjectTypeExtendedDecimal,
-          otherValue);
+      CBORObject cbor = CBORObject.NewArray()
+            .Add(bigValue.Exponent).Add(bigValue.Mantissa);
+      return CBORObject.FromObjectAndTag(cbor, 4);
     }
 
     /// <summary>Generates a CBOR object from a text string.</summary>
@@ -2092,11 +2105,16 @@ namespace PeterO.Cbor {
     /// numbers (as opposed to Not-a-Number, NaN).</exception>
     public static CBORObject Multiply(CBORObject first, CBORObject second) {
       CBORNumber a = CBORNumber.FromCBORObject(first);
-      if(a==null)throw new ArgumentException(nameof(first) + "does not represent a number"));
+if (a == null) {
+        throw new ArgumentException(nameof(first) + "does not represent a" +
+"\u0020number");
+      }
       CBORNumber b = CBORNumber.FromCBORObject(second);
-      if(b==null)throw new ArgumentException(nameof(second) + "does not represent a number"));
+if (b == null) {
+        throw new ArgumentException(nameof(second) + "does not represent a" +
+"\u0020number");
+      }
       return a.Multiply(b).ToCBORObject();
-
     }
 
     /// <summary>Creates a new empty CBOR array.</summary>
@@ -2248,11 +2266,16 @@ namespace PeterO.Cbor {
     /// <returns>The remainder of the two numbers.</returns>
     public static CBORObject Remainder(CBORObject first, CBORObject second) {
       CBORNumber a = CBORNumber.FromCBORObject(first);
-      if(a==null)throw new ArgumentException(nameof(first) + "does not represent a number"));
+     if (a == null) {
+        throw new ArgumentException(nameof(first) + "does not represent a" +
+          "\u0020number");
+      }
       CBORNumber b = CBORNumber.FromCBORObject(second);
-      if(b==null)throw new ArgumentException(nameof(second) + "does not represent a number"));
+if (b == null) {
+        throw new ArgumentException(nameof(second) + "does not represent a" +
+          "\u0020number");
+      }
       return a.Remainder(b).ToCBORObject();
-
     }
 
     /// <summary>Finds the difference between two CBOR number
@@ -2266,11 +2289,16 @@ namespace PeterO.Cbor {
     /// numbers (as opposed to Not-a-Number, NaN).</exception>
     public static CBORObject Subtract(CBORObject first, CBORObject second) {
       CBORNumber a = CBORNumber.FromCBORObject(first);
-      if(a==null)throw new ArgumentException(nameof(first) + "does not represent a number"));
+if (a == null) {
+        throw new ArgumentException(nameof(first) + "does not represent a" +
+"\u0020number");
+      }
       CBORNumber b = CBORNumber.FromCBORObject(second);
-      if(b==null)throw new ArgumentException(nameof(second) + "does not represent a number"));
+if (b == null) {
+        throw new ArgumentException(nameof(second) + "does not represent a" +
+"\u0020number");
+      }
       return a.Subtract(b).ToCBORObject();
-
     }
 
     /// <summary>
@@ -2453,6 +2481,24 @@ namespace PeterO.Cbor {
         Write(bignum.Exponent, stream);
         Write(bignum.Mantissa, stream);
       }
+    }
+
+    private static byte[] EIntegerBytes(EInteger ei) {
+        if(ei.IsZero)return new byte[] { 0 };
+        if (ei.Sign < 0) {
+          ei = ei.Add(1).Negate();
+        }
+        byte[] bytes = ei.ToBytes(false);
+        int index = 0;
+        while (index < bytes.Length && bytes[index] == 0) {
+          index++;
+        }
+        if(index>0){
+          byte[] ret = new byte[bytes.Length - index];
+          Array.Copy(bytes, index, ret, 0, ret.Length);
+          return ret;
+        }
+        return bytes;
     }
 
     /// <summary>Writes a arbitrary-precision integer in CBOR format to a
@@ -3470,8 +3516,7 @@ NumberInterfaces[12] :
         } else {
          // TODO: Confirm whether doubles will always be higher/lower
          // than integers, and update documentation accordingly
-         if (typeA == CBORObjectTypeDouble || 
-             typeB == CBORObjectTypeDouble) {
+         if (typeA == CBORObjectTypeDouble || typeB == CBORObjectTypeDouble) {
             EFloat e1 = NumberInterfaces[typeA].AsExtendedFloat(objA);
             EFloat e2 = NumberInterfaces[typeB].AsExtendedFloat(objB);
             cmp = e1.CompareTo(e2);
@@ -3552,8 +3597,8 @@ NumberInterfaces[12] :
                  return tagbyte != 0 ? new[] {
                    tagbyte, (byte)0xf9, (byte)0x7e, (byte)0,
                  } : new[] {
-                   (byte)0xf9, (byte)0x7e, (byte)0,
-                 };
+   (byte)0xf9, (byte)0x7e, (byte)0,
+ };
               }
               if (floatValue == value) {
                  // Encode as binary32
@@ -3822,7 +3867,7 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
               itemHashCode = unchecked((int)longValue);
               break;
             default:
-              // EInteger, EFloat, EDecimal, ERational, CBORObject
+              // EInteger, CBORObject
               itemHashCode = this.itemValue.GetHashCode();
               break;
           }
@@ -3858,34 +3903,39 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
     }
 
     /// <summary>Returns whether this object has only one tag.</summary>
-    /// <returns><c>true</c> if this object has only one tag; otherwise, <c>false</c>.</returns>
+    /// <returns><c>true</c> if this object has only one tag; otherwise,
+    /// <c>false</c>.</returns>
     public bool HasOneTag() {
       return this.IsTagged && !((CBORObject)this.itemValue).IsTagged;
     }
 
-    /// <summary>Returns whether this object has only one tag and that tag is the given number.</summary>
+    /// <summary>Returns whether this object has only one tag and that tag
+    /// is the given number.</summary>
     /// <param name='tagValue'>The tag number.</param>
-    /// <returns><c>true</c> if this object has only one tag and that tag is the given number; otherwise, <c>false</c>.</returns>
+    /// <returns><c>true</c> if this object has only one tag and that tag
+    /// is the given number; otherwise, <c>false</c>.</returns>
     /// <exception cref='ArgumentException'>The parameter <paramref
     /// name='tagValue'/> is less than 0.</exception>
     public bool HasOneTag(int tagValue) {
       return HasOneTag() && this.HasMostOuterTag(tagValue);
     }
 
-    /// <summary>Returns whether this object has only one tag and that tag is the given number, expressed as an arbitrary-precision integer.</summary>
-    /// <param name='tagValue'>The tag number.</param>
-    /// <returns><c>true</c> if this object has only one tag and that tag is the given number; otherwise, <c>false</c>.</returns>
+    /// <summary>Returns whether this object has only one tag and that tag
+    /// is the given number, expressed as an arbitrary-precision
+    /// integer.</summary>
+    /// <param name='bigTagValue'>An EInteger object.</param>
+    /// <returns><c>true</c> if this object has only one tag and that tag
+    /// is the given number; otherwise, <c>false</c>.</returns>
     /// <exception cref='ArgumentException'>The parameter <paramref
     /// name='tagValue'/> is less than 0.</exception>
     public bool HasOneTag(EInteger bigTagValue) {
       return HasOneTag() && this.HasMostOuterTag(bigTagValue);
     }
 
-
     public int TagCount {
       get {
       if (curitem.IsTagged) {
-        int count=0;
+        var count = 0;
         while (curitem.IsTagged) {
           checked { count++; }
           curitem = (CBORObject)curitem.itemValue;
@@ -4463,14 +4513,6 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
             sb.Append(simvalue);
             break;
           }
-        case CBORObjectTypeExtendedFloat: {
-            simvalue = ExtendedToString((EFloat)this.ThisItem);
-            if (sb == null) {
-              return simvalue;
-            }
-            sb.Append(simvalue);
-            break;
-          }
         case CBORObjectTypeInteger: {
             var v = (long)this.ThisItem;
             simvalue = CBORUtilities.LongToString(v);
@@ -4545,7 +4587,6 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
             break;
           }
       }
-
       if (this.IsTagged) {
         this.AppendClosingTags(sb);
       }
