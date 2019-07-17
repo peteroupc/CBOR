@@ -539,19 +539,6 @@ namespace PeterO.Cbor {
             writer.WriteString("null");
             return;
           }
-        case CBORObject.CBORObjectTypeSingle: {
-            var f = (float)thisItem;
-            if (Single.IsNegativeInfinity(f) ||
-Single.IsPositiveInfinity(f) ||
-Single.IsNaN(f)) {
-              writer.WriteString("null");
-              return;
-            }
-            writer.WriteString(
-              CBORObject.TrimDotZero(
-                CBORUtilities.SingleToString(f)));
-            return;
-          }
         case CBORObject.CBORObjectTypeDouble: {
             var f = (double)thisItem;
             if (Double.IsNegativeInfinity(f) ||

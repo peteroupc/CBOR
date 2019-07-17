@@ -699,6 +699,11 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
       }
     }
 
+    public static int HalfPrecisionFromSingle(float floatValue) {
+      // TODO
+      throw new NotImplementedException();
+    }
+
     public static float HalfPrecisionToSingle(int value) {
       int negvalue = (value >= 0x8000) ? (1 << 31) : 0;
       value &= 0x7fff;

@@ -2744,12 +2744,12 @@ ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes();
         if (i >= 0xd800 && i < 0xe000) {
           continue;
         }
-        string str = this.CharString(i, true, charbuf);
+        string str = CharString(i, true, charbuf);
         if (i < 0x20 || i == 0x22 || i == 0x5c) {
           TestFailingJSON(str);
         } else {
           cbor = TestSucceedingJSON(str);
-          string exp = this.CharString(i, false, charbuf);
+          string exp = CharString(i, false, charbuf);
           if (!exp.Equals(cbor.AsString(), StringComparison.Ordinal)) {
             Assert.AreEqual(exp, cbor.AsString());
           }

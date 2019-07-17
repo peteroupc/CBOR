@@ -186,10 +186,6 @@ namespace PeterO.Cbor {
     internal const int CBORObjectTypeInteger = 0; // -(2^63).. (2^63-1)
     internal const int CBORObjectTypeMap = 5;
     internal const int CBORObjectTypeSimpleValue = 6;
-    // TODO: Eliminate internal distinction between single and double,
-    // which doesn't exist in the generic CBOR data model
-    [Obsolete]
-    internal const int CBORObjectTypeSingle = 7;
     internal const int CBORObjectTypeTagged = 10;
     internal const int CBORObjectTypeTextString = 3;
     internal static readonly EInteger Int64MaxValue =
@@ -203,7 +199,7 @@ namespace PeterO.Cbor {
     // TODO: Move CBOR number interfaces to CBORNumber class
     private static readonly ICBORNumber[] NumberInterfaces = {
       new CBORInteger(), new CBOREInteger(), null, null,
-      null, null, null, new CBORSingle(),
+      null, null, null, null,
       new CBORDouble(), new CBORExtendedDecimal(),
       null, new CBORExtendedFloat(), new CBORExtendedRational(),
     };
@@ -493,11 +489,12 @@ namespace PeterO.Cbor {
         switch (this.ItemType) {
           case CBORObjectTypeInteger:
           case CBORObjectTypeBigInteger:
-          case CBORObjectTypeSingle:
           case CBORObjectTypeDouble:
           case CBORObjectTypeExtendedDecimal:
           case CBORObjectTypeExtendedFloat:
             return true;
+          case CBORObjectTypeByteString:
+            return this.HasTag(2) || this.HasTag(3);
           case CBORObjectTypeArray:
             return this.HasTag(30);
           default: return false;
@@ -512,7 +509,6 @@ namespace PeterO.Cbor {
         switch (this.ItemType) {
           case CBORObjectTypeInteger:
           case CBORObjectTypeBigInteger:
-          case CBORObjectTypeSingle:
           case CBORObjectTypeDouble:
           case CBORObjectTypeExtendedDecimal:
           case CBORObjectTypeExtendedFloat:
@@ -1516,7 +1512,7 @@ namespace PeterO.Cbor {
     /// 32-bit floating-point number.</param>
     /// <returns>A CBORObject object.</returns>
     public static CBORObject FromObject(float value) {
-      return new CBORObject(CBORObjectTypeSingle, value);
+      return FromObject((double)value);
     }
 
     /// <summary>Generates a CBOR object from a 64-bit floating-point
@@ -2640,29 +2636,30 @@ namespace PeterO.Cbor {
       }
     }
 
+    // TODO: Add API to support writing floating-point numbers
+    // to a fixed size (16, 32, or 64 bits)
+    // TODO: Warn of change in behavior w/ Write(double/float) in 3.6
+
     /// <summary>Writes a 32-bit floating-point number in CBOR format to a
-    /// data stream.</summary>
+    /// data stream.  The number is written using the shortest floating-point encoding
+    /// possible; this is a change from previous versions.</summary>
     /// <param name='value'>The value to write.</param>
-    /// <param name='s'>A writable data stream.</param>
+    /// <param name='stream'>A writable data stream.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='s'/> is null.</exception>
+    /// name='stream'/> is null.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error
     /// occurred.</exception>
-    public static void Write(float value, Stream s) {
-      if (s == null) {
-        throw new ArgumentNullException(nameof(s));
+    public static void Write(float value, Stream stream) {
+      if (stream == null) {
+        throw new ArgumentNullException(nameof(stream));
       }
-      int bits = BitConverter.ToInt32(BitConverter.GetBytes((float)value), 0);
-      byte[] data = {
-        (byte)0xfa, (byte)((bits >> 24) & 0xff),
-        (byte)((bits >> 16) & 0xff), (byte)((bits >> 8) & 0xff),
-        (byte)(bits & 0xff),
-      };
-      s.Write(data, 0, 5);
+      byte[] data = GetDoubleBytes((double)value, 0);
+      stream.Write(data, 0, data.Length);
     }
 
     /// <summary>Writes a 64-bit floating-point number in CBOR format to a
-    /// data stream.</summary>
+    /// data stream.  The number is written using the shortest floating-point encoding
+    /// possible; this is a change from previous versions.</summary>
     /// <param name='value'>The value to write.</param>
     /// <param name='stream'>A writable data stream.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -2673,18 +2670,8 @@ namespace PeterO.Cbor {
       if (stream == null) {
         throw new ArgumentNullException(nameof(stream));
       }
-      long bits =
-        BitConverter.ToInt64(
-          BitConverter.GetBytes((double)value),
-          0);
-      byte[] data = {
-        (byte)0xfb,
-        (byte)((bits >> 56) & 0xff), (byte)((bits >> 48) & 0xff),
-        (byte)((bits >> 40) & 0xff), (byte)((bits >> 32) & 0xff),
-        (byte)((bits >> 24) & 0xff), (byte)((bits >> 16) & 0xff),
-        (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff),
-      };
-      stream.Write(data, 0, 9);
+      byte[] data = GetDoubleBytes(value, 0);
+      stream.Write(data, 0, data.Length);
     }
 
     /// <summary>Writes a CBOR object to a CBOR data stream.</summary>
@@ -3087,8 +3074,12 @@ namespace PeterO.Cbor {
     }
 
     private ICBORNumber GetNumberInterface() {
+      if(this.HasMostInnerTag(2) ||
+         this.HasMostInnerTag(3)){
+         return NumberInterfaces[CBORObjectTypeBigInteger];
+      }
       ERational ret = this.GetERational();
-      return (ret != null) ? NumberInterfaces[12] :
+      return (this.HasMostInnerTag(30) && this.Count == 2) ? NumberInterfaces[12] :
          NumberInterfaces[this.ItemType];
     }
 
@@ -3370,15 +3361,6 @@ namespace PeterO.Cbor {
               cmp = (a == b) ? 0 : ((a < b) ? -1 : 1);
               break;
             }
-          case CBORObjectTypeSingle: {
-              var a = (float)objA;
-              var b = (float)objB;
-              // Treat NaN as greater than all other numbers
-              cmp = Single.IsNaN(a) ? (Single.IsNaN(b) ? 0 : 1) :
-                (Single.IsNaN(b) ? (-1) : ((a == b) ? 0 : ((a < b) ? -1 :
-                    1)));
-              break;
-            }
           case CBORObjectTypeBigInteger: {
               var bigintA = (EInteger)objA;
               var bigintB = (EInteger)objB;
@@ -3514,9 +3496,7 @@ namespace PeterO.Cbor {
           } else if (typeA == CBORObjectTypeExtendedFloat || typeB ==
                     CBORObjectTypeExtendedFloat ||
                     typeA == CBORObjectTypeDouble || typeB ==
-                    CBORObjectTypeDouble ||
-                    typeA == CBORObjectTypeSingle || typeB ==
-                    CBORObjectTypeSingle) {
+                    CBORObjectTypeDouble) {
             EFloat e1 = NumberInterfaces[typeA].AsExtendedFloat(objA);
             EFloat e2 = NumberInterfaces[typeB].AsExtendedFloat(objB);
             cmp = e1.CompareTo(e2);
@@ -3586,6 +3566,48 @@ namespace PeterO.Cbor {
         return map.ContainsKey(ckey);
       }
       return false;
+    }
+
+    private static byte[] GetDoubleBytes(double value, byte tagbyte) {
+              float floatValue = (float)value;
+              // TODO: Determine whether to encode as
+              // half-precision
+              if(Double.IsNaN(value)) {
+                 // TODO: Improve NaN writing for shortest forms
+                 return tagbyte != 0 ? new[] {
+                   tagbyte, (byte)0xf9, (byte)0x7e, (byte)0,
+                 } : new[] {
+                   (byte)0xf9, (byte)0x7e, (byte)0,
+                 };
+              } if(floatValue == value) {
+                 // Encode as binary32
+                 int bits = BitConverter.ToInt32(BitConverter.GetBytes(floatValue), 0);
+                 return tagbyte != 0  ? new[] {
+                   tagbyte, (byte)0xfa,
+                   (byte)((bits >> 24) & 0xff), (byte)((bits >> 16) & 0xff),
+                   (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff),
+                 } : new[] {
+                   (byte)0xfa, (byte)((bits >> 24) & 0xff),
+                   (byte)((bits >> 16) & 0xff), (byte)((bits >> 8) & 0xff),
+                   (byte)(bits & 0xff),
+                 };
+              } else {
+                // Encode as binary64
+                long bits = BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
+                return tagbyte != 0  ? new[] {
+                  tagbyte, (byte)0xfb,
+                  (byte)((bits >> 56) & 0xff), (byte)((bits >> 48) & 0xff),
+                  (byte)((bits >> 40) & 0xff), (byte)((bits >> 32) & 0xff),
+                  (byte)((bits >> 24) & 0xff), (byte)((bits >> 16) & 0xff),
+                  (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff),
+                } : new[] {
+                  (byte)0xfb, (byte)((bits >> 56) & 0xff),
+   (byte)((bits >> 48) & 0xff), (byte)((bits >> 40) & 0xff),
+   (byte)((bits >> 32) & 0xff), (byte)((bits >> 24) & 0xff),
+   (byte)((bits >> 16) & 0xff), (byte)((bits >> 8) & 0xff),
+   (byte)(bits & 0xff),
+ };
+             }
     }
 
     /// <summary>
@@ -3696,36 +3718,10 @@ namespace PeterO.Cbor {
               ret2[0] = tagbyte;
               return ret2;
             }
-          case CBORObjectTypeSingle: {
-              var value = (float)this.ThisItem;
-              int bits = BitConverter.ToInt32(BitConverter.GetBytes(value), 0);
-              return tagged ? new[] {
-                tagbyte, (byte)0xfa,
-                (byte)((bits >> 24) & 0xff), (byte)((bits >> 16) & 0xff),
-                (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff),
-              } : new[] {
-   (byte)0xfa, (byte)((bits >> 24) & 0xff),
-   (byte)((bits >> 16) & 0xff), (byte)((bits >> 8) & 0xff),
-   (byte)(bits & 0xff),
- };
-            }
           case CBORObjectTypeDouble: {
               var value = (double)this.ThisItem;
-              long bits = BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
-              return tagged ? new[] {
-                tagbyte, (byte)0xfb,
-                (byte)((bits >> 56) & 0xff), (byte)((bits >> 48) & 0xff),
-                (byte)((bits >> 40) & 0xff), (byte)((bits >> 32) & 0xff),
-                (byte)((bits >> 24) & 0xff), (byte)((bits >> 16) & 0xff),
-                (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff),
-              } : new[] {
-   (byte)0xfb, (byte)((bits >> 56) & 0xff),
-   (byte)((bits >> 48) & 0xff), (byte)((bits >> 40) & 0xff),
-   (byte)((bits >> 32) & 0xff), (byte)((bits >> 24) & 0xff),
-   (byte)((bits >> 16) & 0xff), (byte)((bits >> 8) & 0xff),
-   (byte)(bits & 0xff),
- };
-            }
+              return GetDoubleBytes(value, tagbyte);
+          }
         }
       }
       try {
@@ -3835,10 +3831,6 @@ namespace PeterO.Cbor {
               break;
             case CBORObjectTypeSimpleValue:
               itemHashCode = (int)this.itemValue;
-              break;
-            case CBORObjectTypeSingle:
-              itemHashCode =
-  BitConverter.ToInt32(BitConverter.GetBytes((float)this.itemValue), 0);
               break;
             case CBORObjectTypeDouble:
               longValue =
@@ -4445,17 +4437,6 @@ namespace PeterO.Cbor {
 
             break;
           }
-        case CBORObjectTypeSingle: {
-            var f = (float)this.ThisItem;
-            simvalue = Single.IsNegativeInfinity(f) ? "-Infinity" :
-              (Single.IsPositiveInfinity(f) ? "Infinity" : (Single.IsNaN(f) ?
-                    "NaN" : TrimDotZero(CBORUtilities.SingleToString(f))));
-            if (sb == null) {
-              return simvalue;
-            }
-            sb.Append(simvalue);
-            break;
-          }
         case CBORObjectTypeDouble: {
             var f = (double)this.ThisItem;
             simvalue = Double.IsNegativeInfinity(f) ? "-Infinity" :
@@ -5028,10 +5009,6 @@ namespace PeterO.Cbor {
 
             break;
           }
-        case CBORObjectTypeSingle: {
-            Write((float)this.ThisItem, stream);
-            break;
-          }
         case CBORObjectTypeDouble: {
             Write((double)this.ThisItem, stream);
             break;
@@ -5136,16 +5113,16 @@ namespace PeterO.Cbor {
               float flt = CBORUtilities.HalfPrecisionToSingle(
                   unchecked((int)uadditional));
               return new CBORObject(
-                CBORObjectTypeSingle,
-                flt);
+                CBORObjectTypeDouble,
+                (double)flt);
             }
             if (firstbyte == 0xfa) {
               float flt = BitConverter.ToSingle(
                 BitConverter.GetBytes((int)unchecked((int)uadditional)),
                 0);
               return new CBORObject(
-                CBORObjectTypeSingle,
-                flt);
+                CBORObjectTypeDouble,
+                (double)flt);
             }
             if (firstbyte == 0xfb) {
               double flt = BitConverter.ToDouble(

@@ -64,9 +64,7 @@ namespace PeterO.Cbor {
       if (typeA == CBORObject.CBORObjectTypeExtendedFloat || typeB ==
       CBORObject.CBORObjectTypeExtendedFloat ||
                typeA == CBORObject.CBORObjectTypeDouble || typeB ==
-               CBORObject.CBORObjectTypeDouble ||
-               typeA == CBORObject.CBORObjectTypeSingle || typeB ==
-               CBORObject.CBORObjectTypeSingle) {
+               CBORObject.CBORObjectTypeDouble) {
         EFloat e1 =
         CBORObject.GetNumberInterface(typeA).AsExtendedFloat(objA);
         EFloat e2 = CBORObject.GetNumberInterface(typeB).AsExtendedFloat(objB);
@@ -128,9 +126,7 @@ namespace PeterO.Cbor {
       if (typeA == CBORObject.CBORObjectTypeExtendedFloat || typeB ==
       CBORObject.CBORObjectTypeExtendedFloat ||
                typeA == CBORObject.CBORObjectTypeDouble || typeB ==
-               CBORObject.CBORObjectTypeDouble ||
-               typeA == CBORObject.CBORObjectTypeSingle || typeB ==
-               CBORObject.CBORObjectTypeSingle) {
+               CBORObject.CBORObjectTypeDouble) {
         EFloat e1 =
         CBORObject.GetNumberInterface(typeA).AsExtendedFloat(objA);
         EFloat e2 = CBORObject.GetNumberInterface(typeB).AsExtendedFloat(objB);
@@ -199,9 +195,7 @@ namespace PeterO.Cbor {
       if (typeA == CBORObject.CBORObjectTypeExtendedFloat || typeB ==
       CBORObject.CBORObjectTypeExtendedFloat ||
                typeA == CBORObject.CBORObjectTypeDouble || typeB ==
-               CBORObject.CBORObjectTypeDouble ||
-               typeA == CBORObject.CBORObjectTypeSingle || typeB ==
-               CBORObject.CBORObjectTypeSingle) {
+               CBORObject.CBORObjectTypeDouble) {
         EFloat e1 =
         CBORObject.GetNumberInterface(typeA).AsExtendedFloat(objA);
         EFloat e2 = CBORObject.GetNumberInterface(typeB).AsExtendedFloat(objB);
@@ -283,9 +277,7 @@ namespace PeterO.Cbor {
       if (typeA == CBORObject.CBORObjectTypeExtendedFloat || typeB ==
       CBORObject.CBORObjectTypeExtendedFloat ||
                typeA == CBORObject.CBORObjectTypeDouble || typeB ==
-               CBORObject.CBORObjectTypeDouble ||
-               typeA == CBORObject.CBORObjectTypeSingle || typeB ==
-               CBORObject.CBORObjectTypeSingle) {
+               CBORObject.CBORObjectTypeDouble) {
         EFloat e1 =
         CBORObject.GetNumberInterface(typeA).AsExtendedFloat(objA);
         EFloat e2 = CBORObject.GetNumberInterface(typeB).AsExtendedFloat(objB);
@@ -363,12 +355,10 @@ bigrem = divrem[1]; }
         CBORObject.GetNumberInterface(typeB).AsExtendedDecimal(objB);
         return CBORObject.FromObject(e1.Remainder(e2, null));
       }
-      if (typeA == CBORObject.CBORObjectTypeExtendedFloat || typeB ==
-      CBORObject.CBORObjectTypeExtendedFloat ||
+      if (typeA == CBORObject.CBORObjectTypeExtendedFloat || 
+               typeB == CBORObject.CBORObjectTypeExtendedFloat ||
                typeA == CBORObject.CBORObjectTypeDouble || typeB ==
-               CBORObject.CBORObjectTypeDouble ||
-               typeA == CBORObject.CBORObjectTypeSingle || typeB ==
-               CBORObject.CBORObjectTypeSingle) {
+               CBORObject.CBORObjectTypeDouble) {
         EFloat e1 =
         CBORObject.GetNumberInterface(typeA).AsExtendedFloat(objA);
         EFloat e2 = CBORObject.GetNumberInterface(typeB).AsExtendedFloat(objB);
