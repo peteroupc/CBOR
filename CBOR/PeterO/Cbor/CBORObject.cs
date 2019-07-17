@@ -491,9 +491,16 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
+    /// <summary>Gets a value indicating whether this CBOR object stores a 
+    /// number.  Currently, this is true if this item is untagged and has a CBORType
+    /// of Integer or FloatingPoint, or if this item has tags 2, 3, 4, 5, 30, 264, or
+    /// 265 with the right data type.</summary>
+    /// <value>A value indicating whether this CBOR object stores a 
+    /// number.</value>
     public bool IsNumber {
+      // TODO: Update this once tags 268-270 are registered
+      // TODO: Decide whether even tagged CBOR integers/floating-points
+      // are considered numbers as well by this property
       get {
         switch (this.ItemType) {
           case CBORObjectTypeInteger:
@@ -511,7 +518,8 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>Gets the general data type of this CBOR object.</summary>
+    /// <summary>Gets the general data type of this CBOR object.
+    /// This method disregards the tags this object has, if any.</summary>
     /// <value>The general data type of this CBOR object.</value>
     public CBORType Type {
       get {
@@ -1173,11 +1181,10 @@ namespace PeterO.Cbor {
     ///  , returns
     /// <c>null</c>
     ///  if this CBOR object is null, or this object's value
-    /// converted to the nullable's underlying type (e.g., <c>int</c>
-    /// ///).</item>
+    /// converted to the nullable's underlying type, e.g., <c>int</c>.</item>
     ///  <item>If the type is an enumeration ( <c>Enum</c>
     ///  ///)
-    /// type this CBOR object is a text string or an integer, returns the
+    /// type and this CBOR object is a text string or an integer, returns the
     /// appropriate enumerated constant. (For example, if <c>MyEnum</c>
     /// includes an entry for <c>MyValue</c>
     ///  , this method will return
@@ -1300,10 +1307,8 @@ namespace PeterO.Cbor {
     ///  For security reasons, an application
     /// should not base this parameter on user input or other externally
     /// supplied data. Whenever possible, this parameter should be either a
-    /// type specially handled by this method (such as <c>int</c>
-    ///  or
-    /// <c>String</c>
-    ///  ///) or a plain-old-data type (POCO or POJO type)
+    /// type specially handled by this method, such as <c>int</c>
+    ///  or <c>String</c>, or a plain-old-data type (POCO or POJO type)
     /// within the control of the application. If the plain-old-data type
     /// references other data types, those types should likewise meet
     /// either criterion above.</param>
@@ -1322,12 +1327,12 @@ namespace PeterO.Cbor {
     /// <example>
     /// <para>Java offers no easy way to express a generic type, at least
     /// none as easy as C#'s <c>typeof</c>
-    ///  operator. The following example,
+    /// operator. The following example,
     /// written in Java, is a way to specify that the return value will be
     /// an ArrayList of String objects.</para>
     /// <code>
     /// Type arrayListString = new ParameterizedType() { public Type[]
-    /// getActualTypeArguments() { // Contains one type parameter, String return
+    /// getActualTypeArguments() { /* Contains one type parameter, String */ return
     /// new Type[] { String.class }; } public Type getRawType() { /* Raw type is
     /// ArrayList */ return ArrayList.class; } public Type getOwnerType() {
     /// return null; } }; ArrayList&lt;String&gt; array =
@@ -1411,7 +1416,7 @@ namespace PeterO.Cbor {
         return CBORObject.FromObject(bigintValue.ToInt64Checked());
       } else {
          EInteger bitLength = bigintValue.UnsignedBitLengthAsEInteger();
-         if(bitLength.CompareTo(64)<=0){
+         if (bitLength.CompareTo(64) <= 0) {
            // Fits in major type 0 or 1
            return new CBORObject(CBORObjectTypeBigInteger, bigintValue);
          } else {
@@ -1436,9 +1441,11 @@ namespace PeterO.Cbor {
       if (bigValue.IsInfinity() || bigValue.IsNaN()) {
         return CBORObject.FromObject(bigValue.ToDouble());
       }
+      EInteger bitLength = bigValue.Exponent.UnsignedBitLengthAsEInteger();
+      int tag = bitLength.CompareTo(64) > 0 ? 265 : 5;
       CBORObject cbor = CBORObject.NewArray()
             .Add(bigValue.Exponent).Add(bigValue.Mantissa);
-      return CBORObject.FromObjectAndTag(cbor, 5);
+      return CBORObject.FromObjectAndTag(cbor, tag);
     }
 
     /// <summary>Generates a CBOR object from a rational number.</summary>
@@ -1469,14 +1476,11 @@ namespace PeterO.Cbor {
       if (bigValue.IsInfinity() || bigValue.IsNaN()) {
         return CBORObject.FromObject(bigValue.ToDouble());
       }
-      if (otherValue.IsNaN()) {
-        return new CBORObject(
-          CBORObjectTypeExtendedDecimal,
-          otherValue);
-      }
+      EInteger bitLength = bigValue.Exponent.UnsignedBitLengthAsEInteger();
+      int tag = bitLength.CompareTo(64) > 0 ? 264 : 5;
       CBORObject cbor = CBORObject.NewArray()
             .Add(bigValue.Exponent).Add(bigValue.Mantissa);
-      return CBORObject.FromObjectAndTag(cbor, 4);
+      return CBORObject.FromObjectAndTag(cbor, tag);
     }
 
     /// <summary>Generates a CBOR object from a text string.</summary>
@@ -1976,13 +1980,7 @@ namespace PeterO.Cbor {
 
     /// <summary>Generates a CBOR object from an arbitrary object and gives
     /// the resulting object a tag.</summary>
-    /// <param name='valueOb'>An arbitrary object. If the tag number is 2
-    /// or 3, this must be a byte string whose bytes represent an integer
-    /// in little-endian byte order, and the value of the number is 1 minus
-    /// the integer's value for tag 3. If the tag number is 4 or 5, this
-    /// must be an array with two elements: the first must be an integer
-    /// representing the exponent, and the second must be an integer
-    /// representing a mantissa.</param>
+    /// <param name='valueOb'>An arbitrary object.</param>
     /// <param name='bigintTag'>Tag number. The tag number 55799 can be
     /// used to mark a "self-described CBOR" object. This document does not
     /// attempt to list all CBOR tags and their meanings. An up-to-date
@@ -1993,8 +1991,7 @@ namespace PeterO.Cbor {
     /// is converted to a CBOR object and given the tag <paramref
     /// name='bigintTag'/>.</returns>
     /// <exception cref='ArgumentException'>The parameter <paramref
-    /// name='bigintTag'/> is less than 0 or greater than 2^64-1, or
-    /// <paramref name='valueOb'/> 's type is unsupported.</exception>
+    /// name='bigintTag'/> is less than 0 or greater than 2^64-1.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bigintTag'/> is null.</exception>
     public static CBORObject FromObjectAndTag(
@@ -2034,13 +2031,7 @@ namespace PeterO.Cbor {
 
     /// <summary>Generates a CBOR object from an arbitrary object and gives
     /// the resulting object a tag.</summary>
-    /// <param name='valueObValue'>An arbitrary object. If the tag number
-    /// is 2 or 3, this must be a byte string whose bytes represent an
-    /// integer in little-endian byte order, and the value of the number is
-    /// 1 minus the integer's value for tag 3. If the tag number is 4 or 5,
-    /// this must be an array with two elements: the first must be an
-    /// integer representing the exponent, and the second must be an
-    /// integer representing a mantissa.</param>
+    /// <param name='valueObValue'>An arbitrary object.</param>
     /// <param name='smallTag'>A 32-bit integer that specifies a tag
     /// number. The tag number 55799 can be used to mark a "self-described
     /// CBOR" object. This document does not attempt to list all CBOR tags
@@ -2052,8 +2043,7 @@ namespace PeterO.Cbor {
     /// name='valueObValue'/> is converted to a CBOR object and given the
     /// tag <paramref name='smallTag'/>.</returns>
     /// <exception cref='ArgumentException'>The parameter <paramref
-    /// name='smallTag'/> is less than 0 or <paramref name='valueObValue'/>
-    /// 's type is unsupported.</exception>
+    /// name='smallTag'/> is less than 0.</exception>
     public static CBORObject FromObjectAndTag(
       object valueObValue,
       int smallTag) {
@@ -2105,14 +2095,14 @@ namespace PeterO.Cbor {
     /// numbers (as opposed to Not-a-Number, NaN).</exception>
     public static CBORObject Multiply(CBORObject first, CBORObject second) {
       CBORNumber a = CBORNumber.FromCBORObject(first);
-if (a == null) {
+      if (a == null) {
         throw new ArgumentException(nameof(first) + "does not represent a" +
-"\u0020number");
+           "\u0020number");
       }
       CBORNumber b = CBORNumber.FromCBORObject(second);
-if (b == null) {
+      if (b == null) {
         throw new ArgumentException(nameof(second) + "does not represent a" +
-"\u0020number");
+            "\u0020number");
       }
       return a.Multiply(b).ToCBORObject();
     }
@@ -2484,17 +2474,19 @@ if (b == null) {
     }
 
     private static byte[] EIntegerBytes(EInteger ei) {
-        if(ei.IsZero)return new byte[] { 0 };
+if (ei.IsZero) {
+          return new byte[] { 0 };
+        }
         if (ei.Sign < 0) {
           ei = ei.Add(1).Negate();
         }
         byte[] bytes = ei.ToBytes(false);
-        int index = 0;
+        var index = 0;
         while (index < bytes.Length && bytes[index] == 0) {
-          index++;
+          ++index;
         }
-        if(index>0){
-          byte[] ret = new byte[bytes.Length - index];
+        if (index>0) {
+          var ret = new byte[bytes.Length - index];
           Array.Copy(bytes, index, ret, 0, ret.Length);
           return ret;
         }
@@ -3169,6 +3161,111 @@ NumberInterfaces[12] :
       return (short)this.AsInt32(Int16.MinValue, Int16.MaxValue);
     }
 
+
+    /// <summary>Converts this object to a 32-bit signed integer if this CBOR object's type is Integer. 
+    /// This method disregards the tags this object has, if any.</summary>
+    /// <returns>The 32-bit signed integer stored by this
+    /// object.</returns>
+    /// <exception cref='System.InvalidOperationException'>This object's
+    /// type is not <c>CBORType.Integer</c>.</exception>
+    /// <exception cref='System.OverflowException'>This object's value
+    /// exceeds the range of a 32-bit signed integer.</exception>
+    /// <example>
+    /// <para>The following example code (originally written in C# for the
+    /// &#x2e;NET Framework) shows a way to check whether a given CBOR
+    /// object stores a 32-bit signed integer before getting its
+    /// value.</para>
+    /// <code>
+    /// CBORObject obj = CBORObject.FromInt32(99999); if&#x28;obj.Type == CBORType.Integer
+    /// &amp;&amp; obj.CanTruncatedIntFitInInt32&#x28;)) &#x7b; /* Not an Int32;
+    /// handle the error */ Console.WriteLine("Not a 32-bit integer."); &#x7d; else
+    /// { Console.WriteLine("The value is " + obj.AsInt32Value()); }
+    /// </code>
+    ///  .
+    /// </example>
+    public long AsInt32Value() {
+      switch(this.ItemType){
+        case CBORObjectTypeInteger: {
+          long longValue = (long)this.ThisItem;
+          if(longValue < Int32.MinValue || longValue > Int32.MaxValue)
+             throw new OverflowException();
+          return checked((int)longValue);
+        }
+        case CBORObjectTypeBigInteger: {
+          EInteger ei=(EInteger)this.ThisItem;
+          return ei.ToInt32Checked();
+        }
+        default:
+          throw new InvalidOperationException("Not an integer type"); 
+      }
+    }
+
+    /// <summary>Converts this object to a 64-bit signed integer if this CBOR object's type is Integer. 
+    /// This method disregards the tags this object has, if any.</summary>
+    /// <returns>The 64-bit signed integer stored by this
+    /// object.</returns>
+    /// <exception cref='System.InvalidOperationException'>This object's
+    /// type is not <c>CBORType.Integer</c>.</exception>
+    /// <exception cref='System.OverflowException'>This object's value
+    /// exceeds the range of a 64-bit signed integer.</exception>
+    /// <example>
+    /// <para>The following example code (originally written in C# for the
+    /// &#x2e;NET Framework) shows a way to check whether a given CBOR
+    /// object stores a 64-bit signed integer before getting its
+    /// value.</para>
+    /// <code>
+    /// CBORObject obj = CBORObject.FromInt64(99999); if&#x28;obj.Type == CBORType.Integer
+    /// &amp;&amp; obj.CanTruncatedIntFitInInt64&#x28;)) &#x7b; /* Not an Int64;
+    /// handle the error */ Console.WriteLine("Not a 64-bit integer."); &#x7d; else
+    /// { Console.WriteLine("The value is " + obj.AsInt64Value()); }
+    /// </code>
+    ///  .
+    /// </example>
+    public long AsInt64Value() {
+      switch(this.ItemType){
+        case CBORObjectTypeInteger:
+          return (long)this.ThisItem;
+        case CBORObjectTypeBigInteger: {
+          EInteger ei=(EInteger)this.ThisItem;
+          return ei.ToInt64Checked();
+        }
+        default:
+          throw new InvalidOperationException("Not an integer type"); 
+      }
+    }
+
+    /// <summary>Converts this object to an arbitrary-precision integer if this CBOR object's type is Integer. 
+    /// This method disregards the tags this object has, if any.  (Note that CBOR stores untagged integers in at least -(2^64) and less than 2^64.)</summary>
+    /// <returns>The integer stored by this
+    /// object.</returns>
+    /// <exception cref='System.InvalidOperationException'>This object's
+    /// type is not <c>CBORType.Integer</c>.</exception>
+    public long AsEIntegerValue() {
+      switch(this.ItemType){
+        case CBORObjectTypeInteger:
+          return EInteger.FromInt64((long)this.ThisItem);
+        case CBORObjectTypeBigInteger:
+          return (EInteger)thisItem;
+        default:
+          throw new InvalidOperationException("Not an integer type"); 
+      }
+    }
+
+    /// <summary>Converts this object to a 64-bit floating-point number if this CBOR object's type is FloatingPoint.
+    /// This method disregards the tags this object has, if any.  </summary>
+    /// <returns>The 64-bit floating-point number stored by to this
+    /// object.</returns>
+    /// <exception cref='System.InvalidOperationException'>This object's
+    /// type is not <c>CBORType.FloatingPoint</c>.</exception>
+    public long AsDoubleValue() {
+      switch(this.ItemType){
+        case CBORObjectTypeDouble:
+          return (double)this.ThisItem;
+        default:
+          throw new InvalidOperationException("Not an integer type"); 
+      }
+    }
+
     /// <summary>Converts this object to a 32-bit signed integer.
     /// Non-integer number values are truncated to an integer. (NOTE: To
     /// determine whether this method call can succeed, call the
@@ -3829,8 +3926,10 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
       throw new InvalidOperationException("Not a byte string");
     }
 
-    /// <summary>Calculates the hash code of this object. No application or
-    /// process IDs are used in the hash code calculation.</summary>
+    /// <summary>Calculates the hash code of this object. The hash code for
+    /// a given instance of this class is not guaranteed to be the same
+    /// across versions of this class, and no application or process IDs
+    /// are used in the hash code calculation.</summary>
     /// <returns>A 32-bit hash code.</returns>
     public override int GetHashCode() {
       var hashCode = 651869431;

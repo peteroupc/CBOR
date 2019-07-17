@@ -54,14 +54,17 @@ namespace PeterO.Cbor {
       CBORObject obj,
       SharedRefs sharedRefs) {
   int type = obj.ItemType;
-  bool hasTag = obj.MostOuterTag.Equals((EInteger)29);
+  bool hasTag = obj.HasMostOuterTag(29);
   if (hasTag) {
-        if (!obj.IsIntegral || obj.IsNegative) {
-   throw new CBORException("Shared ref index must be an integer 0 or greater");
+    CBORObject untagged=obj.UntagOne();
+        if (untagged.IsTagged ||
+            untagged.Type != CBORType.Integer || untagged.IsNegative) {
+          throw new CBORException(
+            "Shared ref index must be an untagged integer 0 or greater");
         }
-        return sharedRefs.GetObject(obj.AsEInteger());
+        return sharedRefs.GetObject(untagged.AsEIntegerValue());
   }
-  hasTag = obj.MostOuterTag.Equals((EInteger)28);
+  hasTag = obj.HasMostOuterTag(28);
   if (hasTag) {
       obj = obj.UntagOne();
       sharedRefs.AddObject(obj);
@@ -486,7 +489,11 @@ namespace PeterO.Cbor {
               break;
             case 25:
              // stringref tag
-              return this.stringRefs.GetString(o.AsEInteger());
+             if (o.IsTagged ||
+                o.Type != CBORType.Integer) {
+               throw new CBORException("stringref must be an unsigned integer");
+             }
+             return this.stringRefs.GetString(o.AsEIntegerValue());
           }
 
           return CBORObject.FromObjectAndTag(

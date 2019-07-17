@@ -6,7 +6,7 @@ namespace PeterO.Cbor {
   internal sealed class CBORNumber {
     internal enum Kind {
       Integer,
-      IEEEBinary64,
+      Binary64,
       EInteger,
       EDecimal,
       EFloat,
@@ -25,7 +25,7 @@ namespace PeterO.Cbor {
           return CBORObject.GetNumberInterface(0);
         case Kind.EInteger:
           return CBORObject.GetNumberInterface(1);
-        case Kind.IEEEBinary64:
+        case Kind.Binary64:
           return CBORObject.GetNumberInterface(8);
         case Kind.EDecimal:
           return CBORObject.GetNumberInterface(10);
@@ -42,17 +42,26 @@ namespace PeterO.Cbor {
     }
 
     public static CBORNumber FromCBORObject(CBORObject o) {
-      // TODO: Include integers and floats
       if (o.HasOneTag(2) || o.HasOneTag(3)) {
         return CheckEInteger(o);
-      }
-      if (o.HasOneTag(4) ||
-             o.HasOneTag(5) ||
-             o.HasOneTag(264) ||
+      } else if (o.HasOneTag(4) ||
+             o.HasOneTag(5) || o.HasOneTag(264) ||
              o.HasOneTag(265)) {
-        return ConvertToDecimalFrac(o, o.MostOuterTag.ToInt32Checked());
+        return ConvertToDecimalFrac(o,
+           o.MostOuterTag.ToInt32Checked()));
+      } else if ((o.HasOneTag(30)) {
+         return CheckRationalNumber(o);
+      } else if (o.Type == CBORType.Integer) {
+         if (o.CanFitInInt64()) {
+           return new CBORNumber(Kind.Integer, o.AsInt64());
+         } else {
+           return new CBORNumber(Kind.EInteger, o.AsEInteger());
+         }
+      } else if (o.Type == CBORType.FloatingPoint) {
+        return new CBORNumber(Kind.Binary64, o.AsEInteger());
+      } else {
+        return null;
       }
-      return (o.HasOneTag(30)) ? (CheckRationalNumber(o)) : (null);
     }
 
     private static CBORNumber DecimalFracToNumber(
@@ -165,37 +174,36 @@ namespace PeterO.Cbor {
 
 public string ToJSONString() {
     switch(this.kind) {
-        case Kind.IEEEBinary64: {
+        case Kind.Binary64: {
             var f = (double)this.value;
             if (Double.IsNegativeInfinity(f) ||
 Double.IsPositiveInfinity(f) ||
 Double.IsNaN(f)) {
-              return ("null");
+              return "null";
             }
             string dblString = CBORUtilities.DoubleToString(f);
-            return (
-              CBORObject.TrimDotZero(dblString));
+            return CBORObject.TrimDotZero(dblString);
           }
         case Kind.Integer: {
             var longItem = (long)this.value;
-            return (CBORUtilities.LongToString(longItem));
+            return CBORUtilities.LongToString(longItem);
           }
         case Kind.EInteger: {
-            return (((EInteger)this.value).ToString());
+            return ((EInteger)this.value).ToString();
           }
         case Kind.EDecimal: {
             var dec = (EDecimal)this.value;
             if (dec.IsInfinity() || dec.IsNaN()) {
-              return ("null");
+              return "null";
             } else {
-              return (dec.ToString());
+              return dec.ToString();
             }
             return;
           }
         case Kind.EFloat: {
             var flo = (EFloat)this.value;
             if (flo.IsInfinity() || flo.IsNaN()) {
-              return ("null");
+              return "null";
               return;
             }
             if (flo.IsFinite &&
@@ -207,16 +215,16 @@ Double.IsNaN(f)) {
               if (Double.IsNegativeInfinity(f) ||
 Double.IsPositiveInfinity(f) ||
 Double.IsNaN(f)) {
-                return ("null");
+                return "null";
                 return;
               }
               string dblString =
                   CBORUtilities.DoubleToString(f);
-              return (
-                CBORObject.TrimDotZero(dblString));
+              return
+                CBORObject.TrimDotZero(dblString);
               return;
             }
-            return (flo.ToString());
+            return flo.ToString();
             return;
           }
         case Kind.ERational: {
@@ -224,9 +232,9 @@ Double.IsNaN(f)) {
             EDecimal f = dec.ToEDecimalExactIfPossible(
               EContext.Decimal128.WithUnlimitedExponents());
             if (!f.IsFinite) {
-              return ("null");
+              return "null";
             } else {
-              return (f.ToString());
+              return f.ToString();
             }
             break;
           }
@@ -269,7 +277,7 @@ Double.IsNaN(f)) {
         return new CBORNumber(Kind.EDecimal, e1.Add(e2));
       }
       if (typeA == Kind.EFloat || typeB == Kind.EFloat ||
-             typeA == Kind.IEEEBinary64 || typeB == Kind.IEEEBinary64) {
+             typeA == Kind.Binary64 || typeB == Kind.Binary64) {
         EFloat e1 = GetNumberInterface(typeA).AsExtendedFloat(objA);
         EFloat e2 = GetNumberInterface(typeB).AsExtendedFloat(objB);
         return new CBORNumber(Kind.EFloat, e1.Add(e2));
@@ -311,7 +319,7 @@ Double.IsNaN(f)) {
         return new CBORNumber(Kind.EDecimal, e1.Subtract(e2));
       }
       if (typeA == Kind.EFloat || typeB == Kind.EFloat ||
-               typeA == Kind.IEEEBinary64 || typeB == Kind.IEEEBinary64) {
+               typeA == Kind.Binary64 || typeB == Kind.Binary64) {
         EFloat e1 = GetNumberInterface(typeA).AsExtendedFloat(objA);
         EFloat e2 = GetNumberInterface(typeB).AsExtendedFloat(objB);
         return new CBORNumber(Kind.EFloat, e1.Subtract(e2));
@@ -361,7 +369,7 @@ Double.IsNaN(f)) {
               cmp = bigintA.CompareTo(bigintB);
               break;
             }
-          case Kind.IEEEBinary64: {
+          case Kind.Binary64: {
               var a = (double)objA;
               var b = (double)objB;
               // Treat NaN as greater than all other numbers
@@ -449,8 +457,8 @@ GetNumberInterface(typeB).AsExtendedDecimal(objB);
               cmp = e1.CompareTo(e2);
             }
           } else if (typeA == Kind.EFloat || typeB ==
-                Kind.EFloat || typeA == Kind.IEEEBinary64 || typeB ==
-                Kind.IEEEBinary64) {
+                Kind.EFloat || typeA == Kind.Binary64 || typeB ==
+                Kind.Binary64) {
             EFloat e1 =
             GetNumberInterface(typeA).AsExtendedFloat(objA);
             EFloat e2 = GetNumberInterface(typeB).AsExtendedFloat(objB);

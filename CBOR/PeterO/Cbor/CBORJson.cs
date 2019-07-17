@@ -526,7 +526,7 @@ namespace PeterO.Cbor {
       JSONOptions options) {
       int type = obj.ItemType;
       object thisItem = obj.ThisItem;
-      if(obj.IsNumber){
+      if (obj.IsNumber) {
         writer.WriteString(CBORNumber.FromCBORObject(obj).ToJSONString());
         return;
       }
