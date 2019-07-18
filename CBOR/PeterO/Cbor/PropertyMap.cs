@@ -410,7 +410,7 @@ namespace PeterO.Cbor {
     public static object ObjectToEnum(CBORObject obj, Type enumType) {
       Type utype = Enum.GetUnderlyingType(enumType);
       object ret = null;
-      if (obj.Type == CBORType.Number && obj.IsIntegral) {
+      if (obj.IsNumber && obj.IsIntegral) {
         ret = Enum.ToObject(enumType, TypeToIntegerObject(obj, utype));
         if (!Enum.IsDefined(enumType, ret)) {
           throw new CBORException("Unrecognized enum value: " +

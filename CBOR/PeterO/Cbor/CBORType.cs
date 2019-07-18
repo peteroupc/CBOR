@@ -14,10 +14,9 @@ namespace PeterO.Cbor {
     /// floating point numbers, and decimal numbers. The floating-point
     /// value Not-a-Number is also included in the Number type.</summary>
     [Obsolete("Use the IsNumber property of CBORObject to determine" +
-       "whether a CBOR object represents a number, or use the two " +
+       " whether a CBOR object represents a number, or use the two " +
        "new CBORType values instead.  CBORType.Integer " +
-       "covers CBOR objects representing integers of major type 0 and 1, " +
-       "without including tagged CBOR objects of such integers. " +
+       "covers CBOR objects representing integers of major type 0 and 1. " +
        "CBORType.FloatingPoint covers CBOR objects representing " +
        "16-, 32-, and 64-bit floating-point numbers.")]
     Number,

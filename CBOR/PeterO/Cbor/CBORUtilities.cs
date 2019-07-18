@@ -75,6 +75,12 @@ namespace PeterO.Cbor {
       return (a.Length != b.Length) ? ((a.Length < b.Length) ? -1 : 1) : 0;
     }
 
+    public static string TrimDotZero(string str) {
+      return (str.Length > 2 && str[str.Length - 1] == '0' && str[str.Length
+                    - 2] == '.') ? str.Substring(0, str.Length - 2) :
+        str;
+    }
+
     public static string DoubleToString(double dbl) {
       return EFloat.FromDouble(dbl).ToShortestString(EContext.Binary64);
     }

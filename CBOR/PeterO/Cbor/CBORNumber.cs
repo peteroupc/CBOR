@@ -20,7 +20,7 @@ namespace PeterO.Cbor {
     }
 
     private static ICBORNumber GetNumberInterface(Kind kind) {
-      switch(kind) {
+      switch (kind) {
         case Kind.Integer:
           return CBORObject.GetNumberInterface(0);
         case Kind.EInteger:
@@ -43,20 +43,21 @@ namespace PeterO.Cbor {
 
     public static CBORNumber FromCBORObject(CBORObject o) {
       if (o.HasOneTag(2) || o.HasOneTag(3)) {
-        return CheckEInteger(o);
+        return BignumToNumber(o);
       } else if (o.HasOneTag(4) ||
-             o.HasOneTag(5) || o.HasOneTag(264) ||
-             o.HasOneTag(265)) {
-        return ConvertToDecimalFrac(o,
-           o.MostOuterTag.ToInt32Checked()));
-      } else if ((o.HasOneTag(30)) {
-         return CheckRationalNumber(o);
+   o.HasOneTag(5) ||
+   o.HasOneTag(264) ||
+   o.HasOneTag(265)) {
+        return DecimalFracToNumber(o,
+           o.MostOuterTag.ToInt32Checked());
+      } else if (o.HasOneTag(30)) {
+        return RationalNumberToNumber(o);
       } else if (o.Type == CBORType.Integer) {
-         if (o.CanFitInInt64()) {
-           return new CBORNumber(Kind.Integer, o.AsInt64());
-         } else {
-           return new CBORNumber(Kind.EInteger, o.AsEInteger());
-         }
+        if (o.CanFitInInt64()) {
+          return new CBORNumber(Kind.Integer, o.AsInt64());
+        } else {
+          return new CBORNumber(Kind.EInteger, o.AsEInteger());
+        }
       } else if (o.Type == CBORType.FloatingPoint) {
         return new CBORNumber(Kind.Binary64, o.AsEInteger());
       } else {
@@ -89,7 +90,7 @@ namespace PeterO.Cbor {
       EInteger mantissa = o[1].AsEInteger();
       if (exponent.IsZero) {
         // Exponent is 0, so return mantissa instead
-        return CBORObject.FromObject(mantissa);
+        return CBORNumber.FromObject(mantissa);
       }
       return (tagName == 4 || tagName == 264) ? new CBORNumber(
           Kind.EDecimal,
@@ -147,7 +148,7 @@ namespace PeterO.Cbor {
       }
     }
 
-    private static CBORNumber CheckRationalNumber(CBORObject obj) {
+    private static CBORNumber RationalNumberToNumber(CBORObject obj) {
       if (obj.Type != CBORType.Array) {
         throw new CBORException("Rational number must be an array");
       }
@@ -172,8 +173,8 @@ namespace PeterO.Cbor {
         ERational.Create(first.AsEInteger(), second.AsEInteger()));
     }
 
-public string ToJSONString() {
-    switch(this.kind) {
+    public string ToJSONString() {
+      switch (this.kind) {
         case Kind.Binary64: {
             var f = (double)this.value;
             if (Double.IsNegativeInfinity(f) ||
@@ -182,7 +183,7 @@ Double.IsNaN(f)) {
               return "null";
             }
             string dblString = CBORUtilities.DoubleToString(f);
-            return CBORObject.TrimDotZero(dblString);
+            return CBORUtilities.TrimDotZero(dblString);
           }
         case Kind.Integer: {
             var longItem = (long)this.value;
@@ -198,13 +199,11 @@ Double.IsNaN(f)) {
             } else {
               return dec.ToString();
             }
-            return;
           }
         case Kind.EFloat: {
             var flo = (EFloat)this.value;
             if (flo.IsInfinity() || flo.IsNaN()) {
               return "null";
-              return;
             }
             if (flo.IsFinite &&
                 flo.Exponent.Abs().CompareTo((EInteger)2500) > 0) {
@@ -216,16 +215,11 @@ Double.IsNaN(f)) {
 Double.IsPositiveInfinity(f) ||
 Double.IsNaN(f)) {
                 return "null";
-                return;
               }
-              string dblString =
-                  CBORUtilities.DoubleToString(f);
-              return
-                CBORObject.TrimDotZero(dblString);
-              return;
+              string dblString = CBORUtilities.DoubleToString(f);
+              return CBORUtilities.TrimDotZero(dblString);
             }
             return flo.ToString();
-            return;
           }
         case Kind.ERational: {
             var dec = (ERational)this.value;
@@ -236,27 +230,48 @@ Double.IsNaN(f)) {
             } else {
               return f.ToString();
             }
-            break;
           }
-       default:
-          throw new InvalidOperationException();
+        default: throw new InvalidOperationException();
+      }
+    }
+
+    public static CBORNumber FromObject(int value) {
+      return new CBORNumber(Kind.Integer, (long)value);
+    }
+    public static CBORNumber FromObject(long value) {
+      return new CBORNumber(Kind.Integer, value);
+    }
+    public static CBORNumber FromObject(double value) {
+      return new CBORNumber(Kind.Binary64, value);
+    }
+    public static CBORNumber FromObject(EInteger value) {
+      return new CBORNumber(Kind.EInteger, value);
+    }
+    public static CBORNumber FromObject(EFloat value) {
+      return new CBORNumber(Kind.EFloat, value);
+    }
+    public static CBORNumber FromObject(EDecimal value) {
+      return new CBORNumber(Kind.EDecimal, value);
+    }
+    public static CBORNumber FromObject(ERational value) {
+      return new CBORNumber(Kind.ERational, value);
     }
 
     public CBORNumber Add(CBORObject b) {
-      if ((b) == null) {
+      if (b == null) {
         throw new ArgumentNullException(nameof(b));
       }
       CBORNumber a = this;
-      object objA = a.ThisItem;
-      object objB = b.ThisItem;
-      Kind typeA = a.Kind;
-      Kind typeB = b.Kind;
+      object objA = a.value;
+      object objB = b.value;
+      Kind typeA = a.kind;
+      Kind typeB = b.kind;
       if (typeA == Kind.Integer && typeB == Kind.Integer) {
         var valueA = (long)objA;
         var valueB = (long)objB;
         if ((valueA < 0 && valueB < Int64.MinValue - valueA) ||
                 (valueA > 0 && valueB > Int64.MaxValue - valueA)) {
-         // would overflow, convert to EInteger
+          // would overflow, convert to EInteger
           return new CBORNumber(Kind.EInteger, ((EInteger)valueA) +
           (EInteger)valueB);
         }
@@ -288,21 +303,21 @@ Double.IsNaN(f)) {
       }
     }
 
-    public CBORNumber Subtract(CBORObject b) {
-      if ((b) == null) {
+    public CBORNumber Subtract(CBORNumber b) {
+      if (b == null) {
         throw new ArgumentNullException(nameof(b));
       }
       CBORNumber a = this;
-      object objA = a.ThisItem;
-      object objB = b.ThisItem;
-      Kind typeA = a.Kind;
-      Kind typeB = b.Kind;
+      object objA = a.value;
+      object objB = b.value;
+      Kind typeA = a.kind;
+      Kind typeB = b.kind;
       if (typeA == Kind.Integer && typeB == Kind.Integer) {
         var valueA = (long)objA;
         var valueB = (long)objB;
         if ((valueB < 0 && Int64.MaxValue + valueB < valueA) ||
                 (valueB > 0 && Int64.MinValue + valueB > valueA)) {
-         // would overflow, convert to EInteger
+          // would overflow, convert to EInteger
           return new CBORNumber(Kind.EInteger, ((EInteger)valueA) -
           (EInteger)valueB);
         }
@@ -330,19 +345,165 @@ Double.IsNaN(f)) {
       }
     }
 
-/*
-    /// <summary>Compares two CBOR numbers. In this implementation, the two
-    /// numbers' mathematical values are compared. Here, NaN (not-a-number)
-    /// is considered greater than any number. This method is not
-    /// consistent with the Equals method.</summary>
-    /// <param name='other'>A value to compare with.</param>
-    /// <returns>Less than 0, if this value is less than the other object;
-    /// or 0, if both values are equal; or greater than 0, if this value is
-    /// less than the other object or if the other object is
-    /// null.</returns>
-    /// <exception cref='ArgumentException'>An internal error
-    /// occurred.</exception>
-*/
+    public CBORNumber Multiply(CBORNumber b) {
+      if (b == null) {
+        throw new ArgumentNullException(nameof(b));
+      }
+      CBORNumber a = this;
+      object objA = a.value;
+      object objB = b.value;
+      Kind typeA = a.kind;
+      Kind typeB = b.kind;
+      if (typeA == Kind.Integer && typeB == Kind.Integer) {
+        var valueA = (long)objA;
+        var valueB = (long)objB;
+        bool apos = valueA > 0L;
+        bool bpos = valueB > 0L;
+        if (
+          (apos && ((!bpos && (Int64.MinValue / valueA) > valueB) ||
+          (bpos && valueA > (Int64.MaxValue / valueB)))) ||
+          (!apos && ((!bpos && valueA != 0L &&
+          (Int64.MaxValue / valueA) > valueB) ||
+          (bpos && valueA < (Int64.MinValue / valueB))))) {
+          // would overflow, convert to EInteger
+          var bvalueA = (EInteger)valueA;
+          var bvalueB = (EInteger)valueB;
+          return CBORNumber.FromObject(bvalueA * (EInteger)bvalueB);
+        }
+        return CBORNumber.FromObject(valueA * valueB);
+      }
+      if (typeA == Kind.ERational ||
+             typeB == Kind.ERational) {
+        ERational e1 =
+        GetNumberInterface(typeA).AsExtendedRational(objA);
+        ERational e2 = GetNumberInterface(typeB).AsExtendedRational(objB);
+        return CBORNumber.FromObject(e1.Multiply(e2));
+      }
+      if (typeA == Kind.EDecimal ||
+             typeB == Kind.EDecimal) {
+        EDecimal e1 =
+        GetNumberInterface(typeA).AsExtendedDecimal(objA);
+        EDecimal e2 = GetNumberInterface(typeB).AsExtendedDecimal(objB);
+        return CBORNumber.FromObject(e1.Multiply(e2));
+      }
+      if (typeA == Kind.EFloat || typeB ==
+      Kind.EFloat || typeA == Kind.Binary64 || typeB ==
+               Kind.Binary64) {
+        EFloat e1 =
+        GetNumberInterface(typeA).AsExtendedFloat(objA);
+        EFloat e2 = GetNumberInterface(typeB).AsExtendedFloat(objB);
+        return new CBORNumber(Kind.EFloat, e1.Multiply(e2));
+      } else {
+        EInteger b1 = GetNumberInterface(typeA).AsEInteger(objA);
+        EInteger b2 = GetNumberInterface(typeB).AsEInteger(objB);
+        return new CBORNumber(Kind.EInteger, b1 * (EInteger)b2);
+      }
+    }
+
+    public CBORNumber Divide(CBORNumber b) {
+      if (b == null) {
+        throw new ArgumentNullException(nameof(b));
+      }
+      CBORNumber a = this;
+      object objA = a.value;
+      object objB = b.value;
+      Kind typeA = a.kind;
+      Kind typeB = b.kind;
+      if (typeA == Kind.Integer && typeB == Kind.Integer) {
+        var valueA = (long)objA;
+        var valueB = (long)objB;
+        if (valueB == 0) {
+          return (valueA == 0) ? CBORNumber.FromObject(EDecimal.NaN) :
+((valueA < 0) ?
+            CBORNumber.FromObject(EDecimal.NegativeInfinity) :
+CBORNumber.FromObject(EDecimal.PositiveInfinity));
+        }
+        if (valueA == Int64.MinValue && valueB == -1) {
+          return new CBORNumber(Kind.Integer, valueA).Negate();
+        }
+        long quo = valueA / valueB;
+        long rem = valueA - (quo * valueB);
+        return (rem == 0) ? new CBORNumber(Kind.Integer, quo) :
+        new CBORNumber(Kind.ERational,
+  ERational.Create(
+  (EInteger)valueA,
+  (EInteger)valueB));
+      }
+      if (typeA == Kind.ERational || typeB == Kind.ERational) {
+        ERational e1 = GetNumberInterface(typeA).AsExtendedRational(objA);
+        ERational e2 = GetNumberInterface(typeB).AsExtendedRational(objB);
+        return new CBORNumber(Kind.ERational, e1.Divide(e2));
+      }
+      if (typeA == Kind.EDecimal ||
+             typeB == Kind.EDecimal) {
+        EDecimal e1 =
+        GetNumberInterface(typeA).AsExtendedDecimal(objA);
+        EDecimal e2 = GetNumberInterface(typeB).AsExtendedDecimal(objB);
+        if (e1.IsZero && e2.IsZero) {
+          return new CBORNumber(Kind.EDecimal, EDecimal.NaN);
+        }
+        EDecimal eret = e1.Divide(e2, null);
+        // If either operand is infinity or NaN, the result
+        // is already exact. Likewise if the result is a finite number.
+        if (!e1.IsFinite || !e2.IsFinite || eret.IsFinite) {
+          return new CBORNumber(Kind.EDecimal, eret);
+        }
+        ERational er1 = GetNumberInterface(typeA).AsExtendedRational(objA);
+        ERational er2 = GetNumberInterface(typeB).AsExtendedRational(objB);
+        return new CBORNumber(Kind.ERational, er1.Divide(er2));
+      }
+      if (typeA == Kind.EFloat || typeB ==
+      Kind.EFloat || typeA == Kind.Binary64 || typeB ==
+               Kind.Binary64) {
+        EFloat e1 =
+        GetNumberInterface(typeA).AsExtendedFloat(objA);
+        EFloat e2 = GetNumberInterface(typeB).AsExtendedFloat(objB);
+        if (e1.IsZero && e2.IsZero) {
+          return CBORNumber.FromObject(EDecimal.NaN);
+        }
+        EFloat eret = e1.Divide(e2, null);
+        // If either operand is infinity or NaN, the result
+        // is already exact. Likewise if the result is a finite number.
+        if (!e1.IsFinite || !e2.IsFinite || eret.IsFinite) {
+          return CBORNumber.FromObject(eret);
+        }
+        ERational er1 = GetNumberInterface(typeA).AsExtendedRational(objA);
+        ERational er2 = GetNumberInterface(typeB).AsExtendedRational(objB);
+        return new CBORNumber(Kind.ERational, er1.Divide(er2));
+      } else {
+        EInteger b1 = GetNumberInterface(typeA).AsEInteger(objA);
+        EInteger b2 = GetNumberInterface(typeB).AsEInteger(objB);
+        if (b2.IsZero) {
+          return b1.IsZero ? CBORNumber.FromObject(EDecimal.NaN) : ((b1.Sign <
+0) ?
+            CBORNumber.FromObject(EDecimal.NegativeInfinity) :
+CBORNumber.FromObject(EDecimal.PositiveInfinity));
+        }
+        EInteger bigrem;
+        EInteger bigquo;
+        {
+          EInteger[] divrem = b1.DivRem(b2);
+          bigquo = divrem[0];
+          bigrem = divrem[1];
+        }
+        return bigrem.IsZero ? CBORNumber.FromObject(bigquo) :
+           new CBORNumber(Kind.ERational, ERational.Create(b1, b2));
+      }
+    }
+
+    /*
+        /// <summary>Compares two CBOR numbers. In this implementation, the two
+        /// numbers' mathematical values are compared. Here, NaN (not-a-number)
+        /// is considered greater than any number. This method is not
+        /// consistent with the Equals method.</summary>
+        /// <param name='other'>A value to compare with.</param>
+        /// <returns>Less than 0, if this value is less than the other object;
+        /// or 0, if both values are equal; or greater than 0, if this value is
+        /// less than the other object or if the other object is
+        /// null.</returns>
+        /// <exception cref='ArgumentException'>An internal error
+        /// occurred.</exception>
+    */
     public int CompareTo(CBORNumber other) {
       if (other == null) {
         return 1;
