@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace PeterO.Cbor {
-    /// <seealso cref='PeterO.Cbor.CBORObject.ToJSONString'/>
     /// <summary>Includes options to control how CBOR objects are converted
     /// to JSON.</summary>
   public sealed class JSONOptions {

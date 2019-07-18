@@ -51,7 +51,7 @@ namespace Test {
         case 5:
           o = RandomObjects.RandomInt64(rand);
           return ToObjectTest.TestToFromObjectRoundTrip(o);
-        default: throw new ArgumentException();
+        default: throw new InvalidOperationException();
       }
     }
 
@@ -83,7 +83,7 @@ namespace Test {
         case 6:
           o = RandomObjects.RandomERational(rand);
           return ToObjectTest.TestToFromObjectRoundTrip(o);
-        default: throw new ArgumentException();
+        default: throw new InvalidOperationException();
       }
     }
 

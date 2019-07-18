@@ -2832,7 +2832,7 @@ ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes();
     public void TestEI() {
       CBORObject cbor =
         ToObjectTest.TestToFromObjectRoundTrip(EInteger.FromString("100"));
-      Assert.AreEqual(CBORType.Number, cbor.Type);
+      Assert.IsTrue(cbor.IsNumber);
       {
         string stringTemp = cbor.ToString();
         Assert.AreEqual(
@@ -2840,7 +2840,7 @@ ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes();
           stringTemp);
       }
       cbor = ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString("200"));
-      Assert.AreEqual(CBORType.Number, cbor.Type);
+      Assert.IsTrue(cbor.IsNumber);
       {
         string stringTemp = cbor.ToString();
         Assert.AreEqual(
@@ -2848,7 +2848,7 @@ ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes();
           stringTemp);
       }
       cbor = ToObjectTest.TestToFromObjectRoundTrip(EFloat.FromString("300"));
-      Assert.AreEqual(CBORType.Number, cbor.Type);
+      Assert.IsTrue(cbor.IsNumber);
       {
         string stringTemp = cbor.ToString();
         Assert.AreEqual(
@@ -2856,7 +2856,7 @@ ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes();
           stringTemp);
       }
       cbor = ToObjectTest.TestToFromObjectRoundTrip(ERational.Create(1, 2));
-      Assert.AreEqual(CBORType.Number, cbor.Type);
+      Assert.IsTrue(cbor.IsNumber);
       {
         string stringTemp = cbor.ToString();
         Assert.AreEqual(

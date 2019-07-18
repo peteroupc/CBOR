@@ -394,6 +394,7 @@ select new { A = i, B = i + 1 };
 #endif
     }
 
+#pragma warning disable CA1814
     [Test]
     public void TestMultidimArray() {
       int[,] arr = { { 0, 1, 99 }, { 2, 3, 299 } };

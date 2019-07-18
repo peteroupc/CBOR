@@ -484,14 +484,14 @@ namespace PeterO.Cbor {
             (int)uadditional);
           switch (uaddl) {
             case 256:
-             // string tag
+              // string tag
               this.stringRefs.Pop();
               break;
             case 25:
-             // stringref tag
-             if (o.IsTagged || o.Type != CBORType.Integer) {
-               throw new CBORException("stringref must be an unsigned integer");
-             }
+              // stringref tag
+              if (o.IsTagged || o.Type != CBORType.Integer) {
+                throw new CBORException("stringref must be an unsigned integer");
+              }
              return this.stringRefs.GetString(o.AsEIntegerValue());
           }
 

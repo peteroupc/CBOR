@@ -1156,7 +1156,7 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
                 throw new InvalidOperationException(String.Empty, ex);
               }
             } catch (CBORException) {
-              new Object(); // Expected exception
+              // Expected exception
             } catch (Exception ex) {
               // if (!ex.Message.Equals("Not a number type")) {
               string failString = ex.ToString() +
@@ -1563,12 +1563,12 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
     [Test]
     public void TestZeroMap() {
       CBORObject cbor = CBORObject.NewMap();
-      cbor.Set(0,CBORObject.FromObject("testpointzero"));
-      cbor.Set((double)0.0,CBORObject.FromObject("testzero"));
+      cbor.Set(0, CBORObject.FromObject("testpointzero"));
+      cbor.Set((double)0.0, CBORObject.FromObject("testzero"));
       Console.WriteLine(cbor.ToString());
       cbor = CBORObject.NewMap();
-      cbor.Set((double)0.0,CBORObject.FromObject("testzeropointzero"));
-      cbor.Set(0,CBORObject.FromObject("testzero"));
+      cbor.Set((double)0.0, CBORObject.FromObject("testzeropointzero"));
+      cbor.Set(0, CBORObject.FromObject("testzero"));
       Console.WriteLine(cbor.ToString());
     }
 

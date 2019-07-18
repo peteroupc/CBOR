@@ -714,12 +714,12 @@ namespace PeterO.Cbor {
             throw new ArgumentException("Not an integer");
           }
           if (!key.CanTruncatedIntFitInInt32()) {
-            throw new ArgumentOutOfRangeException("index");
+            throw new ArgumentOutOfRangeException(nameof(key));
           }
           IList<CBORObject> list = this.AsList();
           int index = key.AsInt32();
           if (index < 0 || index >= list.Count) {
-            throw new ArgumentOutOfRangeException("index");
+            throw new ArgumentOutOfRangeException(nameof(key));
           }
           return list[index];
         }
@@ -743,12 +743,12 @@ namespace PeterO.Cbor {
             throw new ArgumentException("Not an integer");
           }
           if (!key.CanTruncatedIntFitInInt32()) {
-            throw new ArgumentOutOfRangeException("index");
+            throw new ArgumentOutOfRangeException(nameof(key));
           }
           IList<CBORObject> list = this.AsList();
           int index = key.AsInt32();
           if (index < 0 || index >= list.Count) {
-            throw new ArgumentOutOfRangeException("index");
+            throw new ArgumentOutOfRangeException(nameof(key));
           }
           list[index] = value;
           return;
@@ -1418,7 +1418,7 @@ namespace PeterO.Cbor {
       if (bigintValue.CanFitInInt64()) {
         return CBORObject.FromObject(bigintValue.ToInt64Checked());
       } else {
-        EInteger bitLength = bigintValue.UnsignedBitLengthAsEInteger();
+        EInteger bitLength = bigintValue.GetUnsignedBitLengthAsEInteger();
         if (bitLength.CompareTo(64) <= 0) {
           // Fits in major type 0 or 1
           return new CBORObject(CBORObjectTypeBigInteger, bigintValue);
@@ -1444,7 +1444,7 @@ namespace PeterO.Cbor {
       if (bigValue.IsInfinity() || bigValue.IsNaN()) {
         return CBORObject.FromObject(bigValue.ToDouble());
       }
-      EInteger bitLength = bigValue.Exponent.UnsignedBitLengthAsEInteger();
+      EInteger bitLength = bigValue.Exponent.GetUnsignedBitLengthAsEInteger();
       int tag = bitLength.CompareTo(64) > 0 ? 265 : 5;
       CBORObject cbor = CBORObject.NewArray()
             .Add(bigValue.Exponent).Add(bigValue.Mantissa);
@@ -1468,18 +1468,18 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Generates a CBOR object from a decimal number.</summary>
-    /// <param name='otherValue'>An arbitrary-precision decimal
+    /// <param name='bigValue'>An arbitrary-precision decimal
     /// number.</param>
     /// <returns>A CBOR number.</returns>
-    public static CBORObject FromObject(EDecimal otherValue) {
-      if ((object)otherValue == (object)null) {
+    public static CBORObject FromObject(EDecimal bigValue) {
+      if ((object)bigValue == (object)null) {
         return CBORObject.Null;
       }
       // TODO: Change when tags 268-270 are registered
       if (bigValue.IsInfinity() || bigValue.IsNaN()) {
         return CBORObject.FromObject(bigValue.ToDouble());
       }
-      EInteger bitLength = bigValue.Exponent.UnsignedBitLengthAsEInteger();
+      EInteger bitLength = bigValue.Exponent.GetUnsignedBitLengthAsEInteger();
       int tag = bitLength.CompareTo(64) > 0 ? 264 : 5;
       CBORObject cbor = CBORObject.NewArray()
             .Add(bigValue.Exponent).Add(bigValue.Mantissa);
@@ -2269,7 +2269,8 @@ namespace PeterO.Cbor {
         throw new ArgumentException(nameof(second) + "does not represent a" +
           "\u0020number");
       }
-      return a.Remainder(b).ToCBORObject();
+      throw new NotImplementedException();
+//      return a.Remainder(b).ToCBORObject();
     }
 
     /// <summary>Finds the difference between two CBOR number
@@ -3189,7 +3190,7 @@ NumberInterfaces[12] :
     /// </code>
     ///  .
     /// </example>
-    public long AsInt32Value() {
+    public int AsInt32Value() {
       switch (this.ItemType) {
         case CBORObjectTypeInteger: {
             var longValue = (long)this.ThisItem;
@@ -3248,7 +3249,7 @@ NumberInterfaces[12] :
     /// <returns>The integer stored by this object.</returns>
     /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not <c>CBORType.Integer</c>.</exception>
-    public long AsEIntegerValue() {
+    public EInteger AsEIntegerValue() {
       switch (this.ItemType) {
         case CBORObjectTypeInteger:
           return EInteger.FromInt64((long)this.ThisItem);
@@ -3265,7 +3266,7 @@ NumberInterfaces[12] :
     /// object.</returns>
     /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not <c>CBORType.FloatingPoint</c>.</exception>
-    public long AsDoubleValue() {
+    public double AsDoubleValue() {
       switch (this.ItemType) {
         case CBORObjectTypeDouble:
           return (double)this.ThisItem;
@@ -4040,15 +4041,13 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
 
     public int TagCount {
       get {
-        if (curitem.IsTagged) {
           var count = 0;
+          CBORObject curitem = this;
           while (curitem.IsTagged) {
             count = checked(count + 1);
             curitem = (CBORObject)curitem.itemValue;
           }
           return count;
-        }
-        return 0;
       }
     }
 
@@ -4550,8 +4549,7 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
     /// not intended to be parsed, and the format may change at any time.
     /// The returned string is not necessarily in JavaScript Object
     /// Notation (JSON); to convert CBOR objects to JSON strings, use the
-    /// <see cref='PeterO.Cbor.CBORObject.ToJSONString(
-    /// PeterO.Cbor.JSONOptions)'/> method instead.</summary>
+    /// <see cref='PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)'/> method instead.</summary>
     /// <returns>A text representation of this object.</returns>
     public override string ToString() {
       StringBuilder sb = null;
@@ -5013,7 +5011,9 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
     /// CBOR object contains CBOR maps, or is a CBOR map, the keys to the
     /// map are written out to the data stream in an undefined order. See
     /// the examples (written in C# for the &#x2e;NET version) for ways to
-    /// write out certain keys of a CBOR map in a given order.</para>
+    /// write out certain keys of a CBOR map in a given order.  In the case of CBOR objects of type FloatingPoint, the number is written using the shortest
+    /// floating-point encoding possible; this is a change from previous
+    /// versions.</para>
     /// </summary>
     /// <param name='stream'>A writable data stream.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -5090,7 +5090,9 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
     /// example code given in
     /// <see cref='PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)'/> can
     /// be used to write out certain keys of a CBOR map in a given
-    /// order.</summary>
+    /// order.  In the case of CBOR objects of type FloatingPoint, the number is written using the shortest
+    /// floating-point encoding possible; this is a change from previous
+    /// versions.</summary>
     /// <param name='stream'>A writable data stream.</param>
     /// <param name='options'>Options for encoding the data to
     /// CBOR.</param>

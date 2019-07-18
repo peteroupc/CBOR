@@ -257,7 +257,11 @@ Double.IsNaN(f)) {
       return new CBORNumber(Kind.ERational, value);
     }
 
-    public CBORNumber Add(CBORObject b) {
+    public CBORNumber Negate() {
+      throw new NotImplementedException();
+    }
+
+    public CBORNumber Add(CBORNumber b) {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
       }
@@ -272,8 +276,7 @@ Double.IsNaN(f)) {
         if ((valueA < 0 && valueB < Int64.MinValue - valueA) ||
                 (valueA > 0 && valueB > Int64.MaxValue - valueA)) {
           // would overflow, convert to EInteger
-          return new CBORNumber(Kind.EInteger, ((EInteger)valueA) +
-          (EInteger)valueB);
+          return CBORNumber.FromObject((EInteger)valueB);
         }
         return new CBORNumber(Kind.Integer, valueA + valueB);
       }
@@ -318,8 +321,7 @@ Double.IsNaN(f)) {
         if ((valueB < 0 && Int64.MaxValue + valueB < valueA) ||
                 (valueB > 0 && Int64.MinValue + valueB > valueA)) {
           // would overflow, convert to EInteger
-          return new CBORNumber(Kind.EInteger, ((EInteger)valueA) -
-          (EInteger)valueB);
+          return CBORNumber.FromObject((EInteger)valueB);
         }
         return new CBORNumber(Kind.Integer, valueA - valueB);
       }

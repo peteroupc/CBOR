@@ -11,7 +11,7 @@ using NUnit.Framework;
 
 namespace PeterO {
     /// <summary>Description of Runner.</summary>
-  public class Runner {
+  public static class Runner {
     private static bool HasAttribute(Type mi, Type t) {
       foreach (object a in mi.GetCustomAttributes(t, false)) {
         if (t.IsInstanceOfType(a)) {
