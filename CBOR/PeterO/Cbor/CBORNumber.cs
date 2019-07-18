@@ -12,6 +12,16 @@ namespace PeterO.Cbor {
       EFloat,
       ERational,
     }
+
+    private static readonly ICBORNumber[] NumberInterfaces = {
+      new CBORInteger(),
+      new CBORDouble(),
+      new CBOREInteger(),
+      new CBORExtendedDecimal(),
+      new CBORExtendedFloat(),
+      new CBORExtendedRational(),
+    };
+
     private readonly Kind kind;
     private readonly object value;
     public CBORNumber(Kind kind, object value) {
@@ -19,20 +29,32 @@ namespace PeterO.Cbor {
       this.value = value;
     }
 
-    private static ICBORNumber GetNumberInterface(Kind kind) {
+    internal ICBORNumber GetNumberInterface() {
+      return GetNumberInterface(this.kind);
+    }
+
+    internal static ICBORNumber GetNumberInterface(CBORObject obj) {
+      CBORNumber num = CBORNumber.FromCBORObject(obj);
+      return (num == null) ? null : (nm.GetNumberInterface();
+    }
+
+    internal object GetValue() {
+       return this.value;
+    }
+    internal static ICBORNumber GetNumberInterface(Kind kind) {
       switch (kind) {
         case Kind.Integer:
-          return CBORObject.GetNumberInterface(0);
-        case Kind.EInteger:
-          return CBORObject.GetNumberInterface(1);
+          return NumberInterfaces[0];
         case Kind.Binary64:
-          return CBORObject.GetNumberInterface(8);
+          return NumberInterfaces[1];
+        case Kind.EInteger:
+          return NumberInterfaces[2];
         case Kind.EDecimal:
-          return CBORObject.GetNumberInterface(10);
+          return NumberInterfaces[3];
         case Kind.EFloat:
-          return CBORObject.GetNumberInterface(11);
+          return NumberInterfaces[4];
         case Kind.ERational:
-          return CBORObject.GetNumberInterface(12);
+          return NumberInterfaces[5];
         default: return null;
       }
     }
@@ -42,16 +64,25 @@ namespace PeterO.Cbor {
     }
 
     public static CBORNumber FromCBORObject(CBORObject o) {
+      if (IsUntaggedInteger(o)) {
+        return CBORNumber.FromObject(o.AsEIntegerValue());
+      } else if (!o.IsTagged && o.Type == CBORType.FloatingPoint) {
+        return CBORNumber.FromObject(o.AsDoubleValue());
+      }
       if (o.HasOneTag(2) || o.HasOneTag(3)) {
         return BignumToNumber(o);
       } else if (o.HasOneTag(4) ||
    o.HasOneTag(5) ||
    o.HasOneTag(264) ||
-   o.HasOneTag(265)) {
-        return DecimalFracToNumber(o,
+   o.HasOneTag(265) ||
+   o.HasOneTag(268) ||
+   o.HasOneTag(269)) {
+        return BigFracToNumber(o,
            o.MostOuterTag.ToInt32Checked());
-      } else if (o.HasOneTag(30)) {
-        return RationalNumberToNumber(o);
+      } else if (o.HasOneTag(30) ||
+           o.HasOneTag(270)) {
+        return RationalNumberToNumber(o,
+              o.MostOuterTag.ToInt32Checked());
       } else if (o.Type == CBORType.Integer) {
         if (o.CanFitInInt64()) {
           return new CBORNumber(Kind.Integer, o.AsInt64());
@@ -65,39 +96,183 @@ namespace PeterO.Cbor {
       }
     }
 
-    private static CBORNumber DecimalFracToNumber(
+    private static bool IsUntaggedInteger(CBORObject o) {
+        return !o.IsTagged && o.Type == CBORType.Integer;
+    }
+
+    private static EInteger IntegerOrBignum(CBORObject o) {
+if (IsUntaggedInteger(o)) {
+         return o.AsEIntegerValue();
+       } else {
+         CBORNumber n = BignumToNumber(o);
+         return n.GetNumberInterface().AsEInteger(n.GetValue());
+       }
+    }
+
+    private static CBORNumber RationalNumberToNumber(
       CBORObject o,
       int tagName) {
       if (o.Type != CBORType.Array) {
         throw new CBORException("Big fraction must be an array");
       }
+      if (tagName == 270) {
+      if (o.Count != 3) {
+        throw new CBORException("Extended big fraction requires exactly 3" +
+"\u0020items");
+      }
+      if (IsUntaggedInteger(o[2])) {
+        throw new CBORException("Third item must be an integer");
+      }
+      } else {
       if (o.Count != 2) {
         throw new CBORException("Big fraction requires exactly 2 items");
       }
-      if (!o[0].IsIntegral) {
+      }
+      if (IsUntaggedInteger(o[0]) || o[0].HasOneTag(2)) {
+        throw new CBORException("Numerator is not an integer or bignum");
+      }
+      if (IsUntaggedInteger(o[1]) || o[1].HasOneTag(2)) {
+        throw new CBORException("Numerator is not an integer or bignum");
+      }
+      EInteger numerator = IntegerOrBignum(o[0]);
+      EInteger denominator = IntegerOrBignum(o[1]);
+      if (denominator.Sign < 0) {
+        throw new CBORException("Denominator may not be negative");
+      }
+      ERational erat = ERational.Create(numerator, denominator);
+      if (tagName == 270) {
+if (numerator.Sign < 0) {
+           throw new CBORException("Numerator may not be negative");
+         }
+         int options = o[2].AsInt32Value();
+         switch(options) {
+         case 0:
+            break;
+         case 1:
+            erat = erat.Negate();
+            break;
+         case 2:
+         if (!numerator.IsZero || denominator.CompareTo(1) != 0) {
+              throw new CBORException("invalid values");
+            }
+            erat = ERational.PositiveInfinity;
+            break;
+         case 3:
+         if (!numerator.IsZero || denominator.CompareTo(1) != 0) {
+              throw new CBORException("invalid values");
+            }
+            erat = ERational.NegativeInfinity;
+            break;
+         case 4:
+         case 5:
+         case 6:
+         case 7:
+         if (denominator.CompareTo(1) != 0) {
+              throw new CBORException("invalid values");
+            }
+            erat = ERational.CreateNaN(numerator, options > 6, options == 5 ||
+options == 7);
+            break;
+         default:throw new CBORException("Invalid options");
+         }
+      }
+      return CBORNumber.FromObject(erat);
+    }
+
+    private static CBORNumber BigFracToNumber(
+      CBORObject o,
+      int tagName) {
+      if (o.Type != CBORType.Array) {
+        throw new CBORException("Big fraction must be an array");
+      }
+      if (tagName == 268 || tagName == 269) {
+      if (o.Count != 3) {
+        throw new CBORException("Extended big fraction requires exactly 3" +
+"\u0020items");
+      }
+      if (IsUntaggedInteger(o[2])) {
+        throw new CBORException("Third item must be an integer");
+      }
+      } else {
+      if (o.Count != 2) {
+        throw new CBORException("Big fraction requires exactly 2 items");
+      }
+      }
+      if (tagName == 4 || tagName == 5) {
+      if (IsUntaggedInteger(o[0])) {
         throw new CBORException("Exponent is not an integer");
       }
-      if (!o[1].IsIntegral) {
-        throw new CBORException("Mantissa is not an integer");
+      } else {
+      if (IsUntaggedInteger(o[0]) || o[0].HasOneTag(2)) {
+        throw new CBORException("Exponent is not an integer or bignum");
       }
-      // TODO: Limit to integers and tag 2/3
-      EInteger exponent = o[0].AsEInteger();
-      if ((tagName == 4 || tagName == 5) &&
-         exponent.GetSignedBitLengthAsEInteger().CompareTo(64) > 0) {
-        throw new CBORException("Exponent is too big");
       }
-      // TODO: Limit to integers and tag 2/3
-      EInteger mantissa = o[1].AsEInteger();
-      if (exponent.IsZero) {
-        // Exponent is 0, so return mantissa instead
-        return CBORNumber.FromObject(mantissa);
+      if (IsUntaggedInteger(o[1]) || o[1].HasOneTag(2)) {
+        throw new CBORException("Mantissa is not an integer or bignum");
       }
-      return (tagName == 4 || tagName == 264) ? new CBORNumber(
-          Kind.EDecimal,
-          EDecimal.Create(mantissa, exponent)) :
-        new CBORNumber(
-          Kind.EFloat,
-          EFloat.Create(mantissa, exponent));
+      EInteger exponent = IntegerOrBignum(o[0]);
+      EInteger mantissa = IntegerOrBignum(o[1]);
+      bool isdec = tagName == 4 || tagName == 264 || tagName == 268;
+      EDecimal edec = isdec ? EDecimal.Create(mantissa, exponent) : null;
+      EFloat efloat = !isdec ? EFloat.Create(mantissa, exponent) : null;
+      if (tagName == 268 || tagName == 269) {
+if (mantissa.Sign < 0) {
+           throw new CBORException("Mantissa may not be negative");
+         }
+         int options = o[2].AsInt32Value();
+         switch(options) {
+         case 0:
+            break;
+         case 1:
+         if (isdec) {
+              edec = edec.Negate();
+            } else {
+ efloat = efloat.Negate();
+}
+            break;
+         case 2:
+         if (!exponent.IsZero || !mantissa.IsZero) {
+              throw new CBORException("invalid values");
+            }
+            if (isdec) {
+              edec = EDecimal.PositiveInfinity;
+            } else {
+ efloat = EFloat.PositiveInfinity;
+}
+            break;
+         case 3:
+         if (!exponent.IsZero || !mantissa.IsZero) {
+              throw new CBORException("invalid values");
+            }
+            if (isdec) {
+              edec = EDecimal.NegativeInfinity;
+            } else {
+ efloat = EFloat.NegativeInfinity;
+}
+            break;
+         case 4:
+         case 5:
+         case 6:
+         case 7:
+         if (!exponent.IsZero) {
+              throw new CBORException("invalid values");
+            }
+            if (isdec) {
+              edec = EDecimal.CreateNaN(mantissa, options > 6, options == 5 ||
+options == 7, null);
+            } else {
+ efloat = EFloat.CreateNaN(mantissa, options > 6, options == 5 || options ==
+7, null);
+}
+            break;
+         default:throw new CBORException("Invalid options");
+         }
+      }
+      if (isdec) {
+        return CBORNumber.FromObject(edec);
+      } else {
+ return CBORNumber.FromObject(efloat);
+}
     }
 
     private static CBORNumber BignumToNumber(CBORObject o) {
@@ -146,31 +321,6 @@ namespace PeterO.Cbor {
       } else {
         return new CBORNumber(Kind.EInteger, bi);
       }
-    }
-
-    private static CBORNumber RationalNumberToNumber(CBORObject obj) {
-      if (obj.Type != CBORType.Array) {
-        throw new CBORException("Rational number must be an array");
-      }
-      if (obj.Count != 2) {
-        throw new CBORException("Rational number requires exactly 2 items");
-      }
-      CBORObject first = obj[0];
-      CBORObject second = obj[1];
-      // TODO: Limit to integers and tag 2/3
-      if (!first.IsIntegral) {
-        throw new CBORException("Rational number requires integer numerator");
-      }
-      // TODO: Limit to integers and tag 2/3
-      if (!second.IsIntegral) {
-        throw new CBORException("Rational number requires integer denominator");
-      }
-      if (second.Sign <= 0) {
-        throw new CBORException(
-           "Rational number requires denominator greater than 0");
-      }
-      return new CBORNumber(Kind.ERational,
-        ERational.Create(first.AsEInteger(), second.AsEInteger()));
     }
 
     public string ToJSONString() {
@@ -258,7 +408,8 @@ Double.IsNaN(f)) {
     }
 
     public CBORNumber Negate() {
-      throw new NotImplementedException();
+      return new CBORNumber(this.kind,
+         this.GetNumberInterface().Negate(this.GetValue()));
     }
 
     public CBORNumber Add(CBORNumber b) {

@@ -199,14 +199,6 @@ namespace PeterO.Cbor {
 
     private const int StreamedStringBufferLength = 4096;
 
-    // TODO: Move CBOR number interfaces to CBORNumber class
-    private static readonly ICBORNumber[] NumberInterfaces = {
-      new CBORInteger(), new CBOREInteger(), null, null,
-      null, null, null, null,
-      new CBORDouble(), new CBORExtendedDecimal(),
-      null, new CBORExtendedFloat(), new CBORExtendedRational(),
-    };
-
     private static readonly EInteger UInt64MaxValue =
       (EInteger.One << 64) - EInteger.One;
 
@@ -356,8 +348,9 @@ namespace PeterO.Cbor {
     /// <c>false</c>.</value>
     public bool IsIntegral {
       get {
-        ICBORNumber cn = this.GetNumberInterface();
-        return (cn != null) && cn.IsIntegral(this.ThisItem);
+        CBORNumber cn = CBORNumber.FromCBORObject(this);
+        return (cn != null) &&
+cn.GetNumberInterface().IsIntegral(cn.GetValue());
       }
     }
 
@@ -410,8 +403,9 @@ namespace PeterO.Cbor {
     /// <c>false</c>.</value>
     public bool IsZero {
       get {
-        ICBORNumber cniface = this.GetNumberInterface();
-        return cniface != null && cniface.IsNumberZero(this.ThisItem);
+        CBORNumber cn = CBORNumber.FromCBORObject(this);
+        return cn != null &&
+cn.GetNumberInterface().IsNumberZero(cn.GetValue());
       }
     }
 
@@ -436,8 +430,9 @@ namespace PeterO.Cbor {
     /// <c>false</c>.</value>
     public bool IsNegative {
       get {
-        ICBORNumber cn = this.GetNumberInterface();
-        return (cn != null) && cn.IsNegative(this.ThisItem);
+        CBORNumber cn = CBORNumber.FromCBORObject(this);
+        return (cn != null) &&
+cn.GetNumberInterface().IsNegative(cn.GetValue());
       }
     }
 
@@ -469,7 +464,8 @@ namespace PeterO.Cbor {
     /// (NaN).</exception>
     public int Sign {
       get {
-        int ret = GetSignInternal(this.ItemType, this.ThisItem);
+        CBORNumber cn = CBORNumber.FromCBORObject(this);
+        int ret = cn == null ? 2 : cn.GetNumberInterface().Sign(cn.GetValue());
         if (ret == 2) {
           throw new InvalidOperationException("This object is not a number.");
         }
@@ -492,20 +488,18 @@ namespace PeterO.Cbor {
 
     /// <summary>Gets a value indicating whether this CBOR object stores a
     /// number. Currently, this is true if this item is untagged and has a
-    /// CBORType of Integer or FloatingPoint, or if this item has tags 2,
-    /// 3, 4, 5, 30, 264, or 265 with the right data type.</summary>
+    /// CBORType of Integer or FloatingPoint, or if this item has only one
+    /// tag and that tag is 2, 3, 4, 5, 30, 264, 265, 268, 269, or 270 with
+    /// the right data type.</summary>
     /// <value>A value indicating whether this CBOR object stores a
     /// number.</value>
     public bool IsNumber {
-      // TODO: Update this once tags 268-270 are registered
-      // TODO: Decide whether even tagged CBOR integers/floating-points
-      // are considered numbers as well by this property
       get {
         switch (this.ItemType) {
           case CBORObjectTypeInteger:
           case CBORObjectTypeBigInteger:
           case CBORObjectTypeDouble:
-            return true;
+            return !this.IsTagged;
           case CBORObjectTypeByteString:
             return this.HasOneTag(2) || this.HasOneTag(3);
           case CBORObjectTypeArray:
@@ -1409,8 +1403,11 @@ namespace PeterO.Cbor {
 
     /// <summary>Generates a CBOR object from an arbitrary-precision
     /// integer.</summary>
-    /// <param name='bigintValue'>An arbitrary-precision value.</param>
-    /// <returns>A CBOR number.</returns>
+    /// <param name='bigintValue'>An arbitrary-precision integer. Can be
+    /// null.</param>
+    /// <returns>The given number encoded as a CBOR object. Returns
+    /// CBORObject.Null if <paramref name='bigintValue'/> is
+    /// null.</returns>
     public static CBORObject FromObject(EInteger bigintValue) {
       if ((object)bigintValue == (object)null) {
         return CBORObject.Null;
@@ -1434,55 +1431,137 @@ namespace PeterO.Cbor {
     /// <summary>Generates a CBOR object from an arbitrary-precision binary
     /// floating-point number.</summary>
     /// <param name='bigValue'>An arbitrary-precision binary floating-point
-    /// number.</param>
-    /// <returns>A CBOR number.</returns>
+    /// number. Can be null.</param>
+    /// <returns>The given number encoded as a CBOR object. Returns
+    /// CBORObject.Null if <paramref name='bigValue'/> is null.</returns>
     public static CBORObject FromObject(EFloat bigValue) {
       if ((object)bigValue == (object)null) {
         return CBORObject.Null;
       }
-      // TODO: Change when tags 268-270 are registered
-      if (bigValue.IsInfinity() || bigValue.IsNaN()) {
-        return CBORObject.FromObject(bigValue.ToDouble());
-      }
-      EInteger bitLength = bigValue.Exponent.GetUnsignedBitLengthAsEInteger();
-      int tag = bitLength.CompareTo(64) > 0 ? 265 : 5;
-      CBORObject cbor = CBORObject.NewArray()
+      CBORObject cbor;
+      int tag;
+      if (bigValue.IsInfinity() || bigValue.IsNaN() ||
+         (bigValue.IsNegative && bigValue.IsZero)) {
+        int options = bigValue.IsNegative ? 1 : 0;
+        if (bigValue.IsInfinity()) {
+           { options += 2;
+        }
+}
+if (bigValue.IsQuietNaN()) {
+           { options += 4;
+        }
+}
+if (bigValue.IsSignalingNaN()) {
+           { options += 6;
+        }
+}
+        cbor = CBORObject.NewArray().Add(bigValue.Exponent)
+            .Add(bigValue.UnsignedMantissa).Add(options);
+        tag = 269;
+      } else {
+        EInteger bitLength = bigValue.Exponent.GetUnsignedBitLengthAsEInteger();
+        tag = bitLength.CompareTo(64) > 0 ? 265 : 5;
+        cbor = CBORObject.NewArray()
             .Add(bigValue.Exponent).Add(bigValue.Mantissa);
+      }
       return CBORObject.FromObjectAndTag(cbor, tag);
     }
 
-    /// <summary>Generates a CBOR object from a rational number.</summary>
-    /// <param name='bigValue'>A rational number.</param>
-    /// <returns>A CBOR number.</returns>
+    /// <summary>Generates a CBOR object from an arbitrary-precision
+    /// rational number.</summary>
+    /// <param name='bigValue'>An arbitrary-precision rational number. Can
+    /// be null.</param>
+    /// <returns>The given number encoded as a CBOR object. Returns
+    /// CBORObject.Null if <paramref name='bigValue'/> is null.</returns>
+    /// <exception cref='ArgumentException'>Doesn't satisfy
+    /// !bigValue.IsInfinity() || bigValue.UnsignedNumerator.IsZero;
+    /// doesn't satisfy !bigValue.IsInfinity() ||
+    /// bigValue.Denominator.CompareTo(1)==0; doesn't satisfy
+    /// !bigValue.IsNaN() || bigValue.Denominator.CompareTo(1) ==
+    /// 0.</exception>
     public static CBORObject FromObject(ERational bigValue) {
       if ((object)bigValue == (object)null) {
         return CBORObject.Null;
       }
-      // TODO: Change when tags 268-270 are registered
-      if (bigValue.IsInfinity() || bigValue.IsNaN()) {
-        return CBORObject.FromObject(bigValue.ToDouble());
-      }
-      CBORObject cbor = CBORObject.NewArray()
+      CBORObject cbor;
+      int tag;
+      if (bigValue.IsInfinity() || bigValue.IsNaN() ||
+         (bigValue.IsNegative && bigValue.IsZero)) {
+        int options = bigValue.IsNegative ? 1 : 0;
+        if (bigValue.IsInfinity()) {
+           { options += 2;
+        }
+}
+if (bigValue.IsQuietNaN()) {
+           { options += 4;
+        }
+}
+if (bigValue.IsSignalingNaN()) {
+           { options += 6;
+        }
+}
+#if DEBUG
+        if (!(!bigValue.IsInfinity() || bigValue.UnsignedNumerator.IsZero)) {
+          throw new ArgumentException("doesn't satisfy" +
+"\u0020!bigValue.IsInfinity() || bigValue.UnsignedNumerator.IsZero");
+        }
+        if (!(!bigValue.IsInfinity() || bigValue.Denominator.CompareTo(1) ==
+0)) {
+          throw new ArgumentException("doesn't satisfy" +
+"\u0020!bigValue.IsInfinity() || bigValue.Denominator.CompareTo(1)==0");
+        }
+        if (!(!bigValue.IsNaN() || bigValue.Denominator.CompareTo(1) == 0)) {
+          throw new ArgumentException("doesn't satisfy !bigValue.IsNaN() ||" +
+"\u0020bigValue.Denominator.CompareTo(1)==0");
+        }
+#endif
+
+        cbor = CBORObject.NewArray().Add(bigValue.UnsignedNumerator)
+            .Add(bigValue.Denominator).Add(options);
+        tag = 270;
+      } else {
+        tag = 30;
+        cbor = CBORObject.NewArray()
             .Add(bigValue.Numerator).Add(bigValue.Denominator);
-      return CBORObject.FromObjectAndTag(cbor, 30);
+      }
+      return CBORObject.FromObjectAndTag(cbor, tag);
     }
 
     /// <summary>Generates a CBOR object from a decimal number.</summary>
-    /// <param name='bigValue'>An arbitrary-precision decimal
-    /// number.</param>
-    /// <returns>A CBOR number.</returns>
+    /// <param name='bigValue'>An arbitrary-precision decimal number. Can
+    /// be null.</param>
+    /// <returns>The given number encoded as a CBOR object. Returns
+    /// CBORObject.Null if <paramref name='bigValue'/> is null.</returns>
     public static CBORObject FromObject(EDecimal bigValue) {
       if ((object)bigValue == (object)null) {
         return CBORObject.Null;
       }
-      // TODO: Change when tags 268-270 are registered
-      if (bigValue.IsInfinity() || bigValue.IsNaN()) {
-        return CBORObject.FromObject(bigValue.ToDouble());
-      }
-      EInteger bitLength = bigValue.Exponent.GetUnsignedBitLengthAsEInteger();
-      int tag = bitLength.CompareTo(64) > 0 ? 264 : 5;
-      CBORObject cbor = CBORObject.NewArray()
+      CBORObject cbor;
+      int tag;
+      if (bigValue.IsInfinity() || bigValue.IsNaN() ||
+         (bigValue.IsNegative && bigValue.IsZero)) {
+        int options = bigValue.IsNegative ? 1 : 0;
+        if (bigValue.IsInfinity()) {
+           { options += 2;
+        }
+}
+if (bigValue.IsQuietNaN()) {
+           { options += 4;
+        }
+}
+if (bigValue.IsSignalingNaN()) {
+           { options += 6;
+        }
+}
+        cbor = CBORObject.NewArray().Add(bigValue.Exponent)
+            .Add(bigValue.UnsignedMantissa).Add(options);
+        tag = 268;
+      } else {
+        EInteger bitLength = bigValue.Exponent.GetUnsignedBitLengthAsEInteger();
+        tag = bitLength.CompareTo(64) > 0 ? 264 : 4;
+        cbor = CBORObject.NewArray()
             .Add(bigValue.Exponent).Add(bigValue.Mantissa);
+      }
       return CBORObject.FromObjectAndTag(cbor, tag);
     }
 
@@ -2870,23 +2949,18 @@ namespace PeterO.Cbor {
       CBORObject.FromObject(obj).WriteJSONTo(outputStream);
     }
 
-    private object GetNumber() {
-      ERational ret = this.GetERational();
-      return (ret != null) ? ret : this.ThisItem;
-    }
-
     /// <summary>Gets this object's absolute value.</summary>
     /// <returns>This object's absolute without its negative
     /// sign.</returns>
     /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type.</exception>
     public CBORObject Abs() {
-      ICBORNumber cn = this.GetNumberInterface();
+      CBORNumber cn = CBORNumber.FromCBORObject(this);
       if (cn == null) {
         throw new InvalidOperationException("This object is not a number.");
       }
-      object oldItem = this.GetNumber();
-      object newItem = cn.Abs(oldItem);
+      object oldItem = cn.GetValue();
+      object newItem = cn.GetNumberInterface().Abs(oldItem);
       if (oldItem == newItem) {
         return this;
       }
@@ -3035,11 +3109,11 @@ namespace PeterO.Cbor {
     /// <exception cref='System.OverflowException'>This object's value is
     /// infinity or not-a-number (NaN).</exception>
     public EInteger AsEInteger() {
-      ICBORNumber cn = this.GetNumberInterface();
+      CBORNumber cn = CBORNumber.FromCBORObject(this);
       if (cn == null) {
         throw new InvalidOperationException("Not a number type");
       }
-      return cn.AsEInteger(this.GetNumber());
+      return cn.GetNumberInterface().AsEInteger(cn.GetValue());
     }
 
     /// <summary>Returns false if this object is False, Null, or Undefined;
@@ -3071,11 +3145,11 @@ namespace PeterO.Cbor {
     /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type.</exception>
     public double AsDouble() {
-      ICBORNumber cn = this.GetNumberInterface();
+      CBORNumber cn = CBORNumber.FromCBORObject(this);
       if (cn == null) {
         throw new InvalidOperationException("Not a number type");
       }
-      return cn.AsDouble(this.GetNumber());
+      return cn.GetNumberInterface().AsDouble(cn.GetValue());
     }
 
     /// <summary>Converts this object to a decimal number.</summary>
@@ -3089,11 +3163,11 @@ namespace PeterO.Cbor {
     /// the &#x2e;NET version): <c>(cbor == null || cbor.IsNull) ? null :
     /// cbor.AsEDecimal()</c>.</exception>
     public EDecimal AsEDecimal() {
-      ICBORNumber cn = this.GetNumberInterface();
+      CBORNumber cn = CBORNumber.FromCBORObject(this);
       if (cn == null) {
         throw new InvalidOperationException("Not a number type");
       }
-      return cn.AsExtendedDecimal(this.GetNumber());
+      return cn.GetNumberInterface().AsExtendedDecimal(cn.GetValue());
     }
 
     /// <summary>Converts this object to an arbitrary-precision binary
@@ -3111,11 +3185,11 @@ namespace PeterO.Cbor {
     /// the &#x2e;NET version): <c>(cbor == null || cbor.IsNull) ? null :
     /// cbor.AsEFloat()</c>.</exception>
     public EFloat AsEFloat() {
-      ICBORNumber cn = this.GetNumberInterface();
+      CBORNumber cn = CBORNumber.FromCBORObject(this);
       if (cn == null) {
         throw new InvalidOperationException("Not a number type");
       }
-      return cn.AsExtendedFloat(this.GetNumber());
+      return cn.GetNumberInterface().AsExtendedFloat(cn.GetValue());
     }
 
     /// <summary>Converts this object to a rational number.</summary>
@@ -3131,27 +3205,17 @@ namespace PeterO.Cbor {
       if (ret != null) {
         return ret;
       }
-      ICBORNumber cn = this.GetNumberInterface();
+      CBORNumber cn = CBORNumber.FromCBORObject(this);
       if (cn == null) {
         throw new InvalidOperationException("Not a number type");
       }
-      return cn.AsExtendedRational(this.GetNumber());
+      return cn.GetNumberInterface().AsExtendedRational(cn.GetValue());
     }
 
     private ERational GetERational() {
       return (this.HasMostInnerTag(30) && this.Count == 2) ?
          ERational.Create(this[0].AsEInteger(), this[1].AsEInteger()) :
          null;
-    }
-
-    private ICBORNumber GetNumberInterface() {
-      if (this.HasMostInnerTag(2) || this.HasMostInnerTag(3)) {
-        return NumberInterfaces[CBORObjectTypeBigInteger];
-      }
-      ERational ret = this.GetERational();
-      return (this.HasMostInnerTag(30) && this.Count == 2) ?
-NumberInterfaces[12] :
-         NumberInterfaces[this.ItemType];
     }
 
     /// <summary>Converts this object to a 16-bit signed integer. Floating
@@ -3332,11 +3396,11 @@ NumberInterfaces[12] :
     ///  .
     /// </example>
     public long AsInt64() {
-      ICBORNumber cn = this.GetNumberInterface();
+      CBORNumber cn = CBORNumber.FromCBORObject(this);
       if (cn == null) {
         throw new InvalidOperationException("Not a number type");
       }
-      return cn.AsInt64(this.GetNumber());
+      return cn.GetNumberInterface().AsInt64(cn.GetValue());
     }
 
     /// <summary>Converts this object to a 32-bit floating point
@@ -3348,11 +3412,11 @@ NumberInterfaces[12] :
     /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type.</exception>
     public float AsSingle() {
-      ICBORNumber cn = this.GetNumberInterface();
+      CBORNumber cn = CBORNumber.FromCBORObject(this);
       if (cn == null) {
         throw new InvalidOperationException("Not a number type");
       }
-      return cn.AsSingle(this.GetNumber());
+      return cn.GetNumberInterface().AsSingle(cn.GetValue());
     }
 
     /// <summary>Gets the value of this object as a text string.</summary>
@@ -3382,8 +3446,9 @@ NumberInterfaces[12] :
     /// if the value's diagnostic information can' t fit in a 64-bit
     /// floating point number.</returns>
     public bool CanFitInDouble() {
-      ICBORNumber cn = this.GetNumberInterface();
-      return (cn != null) && cn.CanFitInDouble(this.GetNumber());
+      CBORNumber cn = CBORNumber.FromCBORObject(this);
+      return (cn != null) &&
+cn.GetNumberInterface().CanFitInDouble(cn.GetValue());
     }
 
     /// <summary>Returns whether this object's numerical value is an
@@ -3405,8 +3470,9 @@ NumberInterfaces[12] :
     /// integer, is -(2^63) or greater, and is less than 2^63; otherwise,
     /// <c>false</c>.</returns>
     public bool CanFitInInt64() {
-      ICBORNumber cn = this.GetNumberInterface();
-      return (cn != null) && cn.CanFitInInt64(this.GetNumber());
+      CBORNumber cn = CBORNumber.FromCBORObject(this);
+      return (cn != null) &&
+cn.GetNumberInterface().CanFitInInt64(cn.GetValue());
     }
 
     /// <summary>Returns whether this object's value can be converted to a
@@ -3418,8 +3484,9 @@ NumberInterfaces[12] :
     /// if the value's diagnostic information can' t fit in a 32-bit
     /// floating point number.</returns>
     public bool CanFitInSingle() {
-      ICBORNumber cn = this.GetNumberInterface();
-      return (cn != null) && cn.CanFitInSingle(this.GetNumber());
+      CBORNumber cn = CBORNumber.FromCBORObject(this);
+      return (cn != null) &&
+cn.GetNumberInterface().CanFitInSingle(cn.GetValue());
     }
 
     /// <summary>Returns whether this object's value, truncated to an
@@ -3428,8 +3495,9 @@ NumberInterfaces[12] :
     /// integer, would be -(2^31) or greater, and less than 2^31;
     /// otherwise, <c>false</c>.</returns>
     public bool CanTruncatedIntFitInInt32() {
-      ICBORNumber cn = this.GetNumberInterface();
-      return (cn != null) && cn.CanTruncatedIntFitInInt32(this.GetNumber());
+      CBORNumber cn = CBORNumber.FromCBORObject(this);
+      return (cn != null) &&
+cn.GetNumberInterface().CanTruncatedIntFitInInt32(cn.GetValue());
     }
 
     /// <summary>Returns whether this object's value, truncated to an
@@ -3438,8 +3506,9 @@ NumberInterfaces[12] :
     /// integer, would be -(2^63) or greater, and less than 2^63;
     /// otherwise, <c>false</c>.</returns>
     public bool CanTruncatedIntFitInInt64() {
-      ICBORNumber cn = this.GetNumberInterface();
-      return cn != null && cn.CanTruncatedIntFitInInt64(this.GetNumber());
+      CBORNumber cn = CBORNumber.FromCBORObject(this);
+      return cn != null &&
+cn.GetNumberInterface().CanTruncatedIntFitInInt64(cn.GetValue());
     }
 
     /// <summary>Compares two CBOR objects.
@@ -3601,8 +3670,8 @@ NumberInterfaces[12] :
           throw new ArgumentException("doesn't satisfy typeOrderB == 0");
         }
 #endif
-        int s1 = GetSignInternal(typeA, objA);
-        int s2 = GetSignInternal(typeB, objB);
+        int s1 = this.Sign;
+        int s2 = other.Sign;
         if (s1 != s2 && s1 != 2 && s2 != 2) {
           // if both types are numbers
           // and their signs are different
@@ -3621,12 +3690,12 @@ NumberInterfaces[12] :
           // TODO: Confirm whether doubles will always be higher/lower
           // than integers, and update documentation accordingly
           if (typeA == CBORObjectTypeDouble || typeB == CBORObjectTypeDouble) {
-            EFloat e1 = NumberInterfaces[typeA].AsExtendedFloat(objA);
-            EFloat e2 = NumberInterfaces[typeB].AsExtendedFloat(objB);
-            cmp = e1.CompareTo(e2);
+            var d1 = (double)objA;
+            var d2 = (double)objB;
+            cmp = (d1 == d2) ? 0 : (d1 < d2 ? -1 : 1);
           } else {
-            EInteger b1 = NumberInterfaces[typeA].AsEInteger(objA);
-            EInteger b2 = NumberInterfaces[typeB].AsEInteger(objB);
+            EInteger b1 = this.AsEIntegerValue();
+            EInteger b2 = other.AsEIntegerValue();
             cmp = b1.CompareTo(b2);
           }
         }
@@ -3696,27 +3765,29 @@ NumberInterfaces[12] :
       var floatValue = (float)value;
       if (Double.IsNaN(value)) {
         long valueBits = BitConverter.ToInt32(
-             BitConverter.GetBytes((double)value), 0);
-        if((valueBits & 0x3ffffffffffL) == 0){
+             BitConverter.GetBytes((double)value),
+             0);
+        if ((valueBits & 0x3ffffffffffL) == 0) {
            // Encode NaN as half-precision
-           int bits=(int)(((valueBits>>48)&0x8000)+0x7c00+
-                 ((valueBits>>42)&0x3ff));
-        return tagbyte != 0 ? new[] {
-          tagbyte, (byte)0xf9,
-          (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff),
-        } : new[] {
+           var bits = (int)(((valueBits >> 48) & 0x8000)+0x7c00 +
+                 ((valueBits >> 42) & 0x3ff));
+                 return tagbyte != 0 ? new[] {
+                   tagbyte, (byte)0xf9,
+                   (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff),
+                 } : new[] {
    (byte)0xf9, (byte)((bits >> 8) & 0xff),
    (byte)(bits & 0xff),
  };
-        } else if((valueBits & 0x1fffffffL) == 0){
+        } else if ((valueBits & 0x1fffffffL) == 0) {
            // Encode NaN as single-precision
-           valueBits = (valueBits>>32) | 0x7f800000L |((valueBits>>42)&0x3ff);
-           int bits=unchecked((int)valueBits);
-        return tagbyte != 0 ? new[] {
-          tagbyte, (byte)0xfa,
-          (byte)((bits >> 24) & 0xff), (byte)((bits >> 16) & 0xff),
-          (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff),
-        } : new[] {
+           valueBits = (valueBits >> 32) | 0x7f800000L | ((valueBits >> 42) &
+0x3ff);
+           int bits = unchecked((int)valueBits);
+           return tagbyte != 0 ? new[] {
+             tagbyte, (byte)0xfa,
+             (byte)((bits >> 24) & 0xff), (byte)((bits >> 16) & 0xff),
+             (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff),
+           } : new[] {
    (byte)0xfa, (byte)((bits >> 24) & 0xff),
    (byte)((bits >> 16) & 0xff), (byte)((bits >> 8) & 0xff),
    (byte)(bits & 0xff),
@@ -3724,13 +3795,13 @@ NumberInterfaces[12] :
         } else {
            // Encode NaN as double precision
            long bits = valueBits;
-        return tagbyte != 0 ? new[] {
-          tagbyte, (byte)0xfb,
-          (byte)((bits >> 56) & 0xff), (byte)((bits >> 48) & 0xff),
-          (byte)((bits >> 40) & 0xff), (byte)((bits >> 32) & 0xff),
-          (byte)((bits >> 24) & 0xff), (byte)((bits >> 16) & 0xff),
-          (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff),
-        } : new[] {
+           return tagbyte != 0 ? new[] {
+             tagbyte, (byte)0xfb,
+             (byte)((bits >> 56) & 0xff), (byte)((bits >> 48) & 0xff),
+             (byte)((bits >> 40) & 0xff), (byte)((bits >> 32) & 0xff),
+             (byte)((bits >> 24) & 0xff), (byte)((bits >> 16) & 0xff),
+             (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff),
+           } : new[] {
    (byte)0xfb, (byte)((bits >> 56) & 0xff),
    (byte)((bits >> 48) & 0xff), (byte)((bits >> 40) & 0xff),
    (byte)((bits >> 32) & 0xff), (byte)((bits >> 24) & 0xff),
@@ -3741,7 +3812,7 @@ NumberInterfaces[12] :
       }
       if (floatValue == value) {
         int bits = CBORUtilities.SingleToHalfPrecisionIfSameValue(floatValue);
-        if(bits>=0){
+        if (bits >= 0) {
           // Encode as binary16
         return tagbyte != 0 ? new[] {
           tagbyte, (byte)0xf9,
@@ -4263,8 +4334,8 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
     /// <returns><c>true</c> if this CBOR object represents infinity;
     /// otherwise, <c>false</c>.</returns>
     public bool IsInfinity() {
-      ICBORNumber cn = this.GetNumberInterface();
-      return cn != null && cn.IsInfinity(this.ThisItem);
+      CBORNumber cn = CBORNumber.FromCBORObject(this);
+      return cn != null && cn.GetNumberInterface().IsInfinity(cn.GetValue());
     }
 
     /// <summary>Gets a value indicating whether this CBOR object
@@ -4274,8 +4345,8 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
     /// value (as opposed to whether this object's type is not a number
     /// type); otherwise, <c>false</c>.</returns>
     public bool IsNaN() {
-      ICBORNumber cn = this.GetNumberInterface();
-      return cn != null && cn.IsNaN(this.ThisItem);
+      CBORNumber cn = CBORNumber.FromCBORObject(this);
+      return cn != null && cn.GetNumberInterface().IsNaN(cn.GetValue());
     }
 
     /// <summary>Gets a value indicating whether this CBOR object
@@ -4283,8 +4354,9 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
     /// <returns><c>true</c> if this CBOR object represents negative
     /// infinity; otherwise, <c>false</c>.</returns>
     public bool IsNegativeInfinity() {
-      ICBORNumber cn = this.GetNumberInterface();
-      return cn != null && cn.IsNegativeInfinity(this.ThisItem);
+      CBORNumber cn = CBORNumber.FromCBORObject(this);
+      return cn != null &&
+cn.GetNumberInterface().IsNegativeInfinity(cn.GetValue());
     }
 
     /// <summary>Gets a value indicating whether this CBOR object
@@ -4292,8 +4364,9 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
     /// <returns><c>true</c> if this CBOR object represents positive
     /// infinity; otherwise, <c>false</c>.</returns>
     public bool IsPositiveInfinity() {
-      ICBORNumber cn = this.GetNumberInterface();
-      return cn != null && cn.IsPositiveInfinity(this.ThisItem);
+      CBORNumber cn = CBORNumber.FromCBORObject(this);
+      return cn != null &&
+cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     }
 
     /// <summary>Gets this object's value with the sign reversed.</summary>
@@ -4301,11 +4374,11 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
     /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type.</exception>
     public CBORObject Negate() {
-      ICBORNumber cn = this.GetNumberInterface();
+      CBORNumber cn = CBORNumber.FromCBORObject(this);
       if (cn == null) {
         throw new InvalidOperationException("This object is not a number.");
       }
-      object newItem = cn.Negate(this.ThisItem);
+      object newItem = cn.GetNumberInterface().Negate(cn.GetValue());
       if (newItem is EDecimal) {
         return CBORObject.FromObject((EDecimal)newItem);
       }
@@ -4490,7 +4563,7 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
     }
 
     /// <summary>
-    /// Converts this object to a string in JavaScript Object
+    ///  Converts this object to a string in JavaScript Object
     /// Notation (JSON) format, using the specified options to
     /// control the encoding process. This function works not
     /// only with arrays and maps, but also integers, strings,
@@ -5376,9 +5449,6 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
       return valueFixedObjects[value];
     }
 
-    internal static ICBORNumber GetNumberInterface(int type) {
-      return NumberInterfaces[type];
-    }
     internal IList<CBORObject> AsList() {
       return (IList<CBORObject>)this.ThisItem;
     }
@@ -5641,11 +5711,6 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
       };
     }
 
-    [Obsolete]
-    internal static int GetSignInternal(int type, object obj) {
-      ICBORNumber cn = GetNumberInterface(type);
-      return cn == null ? 2 : cn.Sign(obj);
-    }
     // Initialize fixed values for certain
     // head bytes
     private static CBORObject[] InitializeFixedObjects() {
@@ -6020,11 +6085,11 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
     }
 
     private int AsInt32(int minValue, int maxValue) {
-      ICBORNumber cn = this.GetNumberInterface();
+      CBORNumber cn = CBORNumber.FromCBORObject(this);
       if (cn == null) {
         throw new InvalidOperationException("not a number type");
       }
-      return cn.AsInt32(this.ThisItem, minValue, maxValue);
+      return cn.GetNumberInterface().AsInt32(cn.GetValue(), minValue, maxValue);
     }
 
     private void WriteTags(Stream s) {

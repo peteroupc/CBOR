@@ -187,11 +187,7 @@ namespace PeterO.Cbor {
     /// exceeds the range of a 64-bit unsigned integer.</exception>
     [CLSCompliant(false)]
     public ulong AsUInt64() {
-      ICBORNumber cn = NumberInterfaces[this.ItemType];
-      if (cn == null) {
-        throw new InvalidOperationException("Not a number type");
-      }
-      EInteger bigint = cn.AsEInteger(this.ThisItem);
+      EInteger bigint = this.AsEInteger();
       if (bigint.Sign < 0 ||
         bigint.GetUnsignedBitLengthAsEInteger().CompareTo(64) > 0) {
         throw new OverflowException("This object's value is out of range");

@@ -772,6 +772,70 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
       Assert.IsTrue(Single.IsNaN(o.AsSingle()));
     }
 
+[Test]
+public void TestTag268() {
+  CBORObject cbor;
+  CBORObject cbortag;
+  for (var tag = 268;tag <= 269; ++tag) {
+  cbor = CBORObject.NewArray().Add(-3).Add(99999).Add(0);
+  cbortag = CBORObject.FromObjectAndTag(cbor, tag);
+  Assert.IsFalse(cbortag.IsNegative);
+  cbor = CBORObject.NewArray().Add(-3).Add(99999);
+  cbortag = CBORObject.FromObjectAndTag(cbor, tag);
+  try {
+ Console.WriteLine(cbortag.IsNegative);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+  cbor = CBORObject.NewArray().Add(-3).Add(99999).Add(1);
+  cbortag = CBORObject.FromObjectAndTag(cbor, tag);
+  Assert.IsTrue(cbortag.IsNegative);
+  cbor = CBORObject.NewArray().Add(-3).Add(99999).Add(-1);
+  cbortag = CBORObject.FromObjectAndTag(cbor, tag);
+  try {
+ Console.WriteLine(cbortag.IsNegative);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+  cbor = CBORObject.NewArray().Add(-3).Add(99999).Add(2);
+  cbortag = CBORObject.FromObjectAndTag(cbor, tag);
+  try {
+ Console.WriteLine(cbortag.IsNegative);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+  cbor = CBORObject.NewArray().Add(0).Add(0).Add(2);
+  cbortag = CBORObject.FromObjectAndTag(cbor, tag);
+  Assert.IsFalse(cbortag.IsNegative);
+  cbor = CBORObject.NewArray().Add(0).Add(0).Add(3);
+  cbortag = CBORObject.FromObjectAndTag(cbor, tag);
+  Assert.IsTrue(cbortag.IsNegative);
+  cbor = CBORObject.NewArray().Add(-3).Add(99999).Add(8);
+  cbortag = CBORObject.FromObjectAndTag(cbor, tag);
+  try {
+ Console.WriteLine(cbortag.IsNegative);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+  }
+}
+
     [Test]
     public void TestJSON() {
       CBORObject o;
