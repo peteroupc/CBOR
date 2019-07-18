@@ -13,100 +13,100 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-  /// <summary>
-  /// <para>Represents an object in Concise Binary Object Representation
-  /// (CBOR) and contains methods for reading and writing CBOR data. CBOR
-  /// is defined in RFC 7049.</para></summary>
-  /// <remarks>
-  /// <para><b>Converting CBOR objects</b></para>
-  /// <para>There are many ways to get a CBOR object, including from
-  /// bytes, objects, streams and JSON, as described below.</para>
-  /// <para><b>To and from byte arrays:</b> The
-  /// CBORObject.DecodeFromBytes method converts a byte array in CBOR
-  /// format to a CBOR object. The EncodeToBytes method converts a CBOR
-  /// object to its corresponding byte array in CBOR format.</para>
-  /// <para><b>To and from data streams:</b> The CBORObject.Write methods
-  /// write many kinds of objects to a data stream, including numbers,
-  /// CBOR objects, strings, and arrays of numbers and strings. The
-  /// CBORObject.Read method reads a CBOR object from a data
-  /// stream.</para>
-  /// <para><b>To and from other objects:</b> The
-  /// <c>CBORObject.FromObject</c> method converts many kinds of objects
-  /// to a CBOR object, including numbers, strings, and arrays and maps
-  /// of numbers and strings. Methods like AsDouble, AsByte, and AsString
-  /// convert a CBOR object to different types of object. The
-  /// <c>CBORObject.ToObject</c> method converts a CBOR object to an
-  /// object of a given type; for example, a CBOR array to a native
-  /// <c>List</c> (or <c>ArrayList</c> in Java), or a CBOR integer to an
-  /// <c>int</c> or <c>long</c>.</para>
-  /// <para><b>To and from JSON:</b> This class also doubles as a reader
-  /// and writer of JavaScript Object Notation (JSON). The
-  /// CBORObject.FromJSONString method converts JSON to a CBOR object,
-  /// and the ToJSONString method converts a CBOR object to a JSON
-  /// string.</para>
-  /// <para>In addition, the CBORObject.WriteJSON method writes many
-  /// kinds of objects as JSON to a data stream, including numbers, CBOR
-  /// objects, strings, and arrays of numbers and strings. The
-  /// CBORObject.Read method reads a CBOR object from a JSON data
-  /// stream.</para>
-  /// <para><b>Comparison Considerations:</b></para>
-  /// <para>Instances of CBORObject should not be compared for equality
-  /// using the "==" operator; it's possible to create two CBOR objects
-  /// with the same value but not the same reference. (The "==" operator
-  /// might only check if each side of the operator is the same
-  /// instance.)</para>
-  /// <para>This class's natural ordering (under the CompareTo method) is
-  /// not consistent with the Equals method. This means that two values
-  /// that compare as equal under the CompareTo method might not be equal
-  /// under the Equals method. This is important to consider especially
-  /// if an application wants to compare numbers. (Several CBOR tags
-  /// support numbers of different formats, such as arbitrary-precision
-  /// integers, rational numbers, and arbitrary-precision decimal
-  /// numbers.)</para>
-  /// <para>Another consideration is that two values that are otherwise
-  /// equal may have different tags. To strip the tags from a CBOR object
-  /// before comparing, use the <c>Untag</c> method.</para>
-  /// <para>To compare two numbers, the CompareToIgnoreTags or CompareTo
-  /// method should be used. Which method to use depends on whether two
-  /// equal values should still be considered equal if they have
-  /// different tags.</para>
-  /// <para>Although this class is inconsistent with the Equals method,
-  /// it is safe to use CBORObject instances as hash keys as long as all
-  /// of the keys are untagged text strings (which means GetTags returns
-  /// an empty array and the Type property, or "getType()" in Java,
-  /// returns TextString). This is because the natural ordering of these
-  /// instances is consistent with the Equals method.</para>
-  /// <para><b>Thread Safety:</b></para>
-  /// <para>Certain CBOR objects are immutable (their values can't be
-  /// changed), so they are inherently safe for use by multiple
-  /// threads.</para>
-  /// <para>CBOR objects that are arrays, maps, and byte strings
-  /// (including tagged objects that represent numbers) are mutable, but
-  /// this class doesn't attempt to synchronize reads and writes to those
-  /// objects by multiple threads, so those objects are not thread safe
-  /// without such synchronization.</para>
-  /// <para>One kind of CBOR object is called a map, or a list of
-  /// key-value pairs. Keys can be any kind of CBOR object, including
-  /// numbers, strings, arrays, and maps. However, text strings are the
-  /// most suitable to use as keys; other kinds of CBOR object are much
-  /// better used as map values instead, keeping in mind that some of
-  /// them are not thread safe without synchronizing reads and writes to
-  /// them.</para>
-  /// <para>To find the type of a CBOR object, call its Type property (or
-  /// "getType()" in Java). The return value can be Integer,
-  /// FloatingPoint, Boolean, SimpleValue, or TextString for immutable
-  /// CBOR objects, and Array, Map, or ByteString for mutable CBOR
-  /// objects.</para>
-  /// <para><b>Nesting Depth:</b></para>
-  /// <para>The DecodeFromBytes and Read methods can only read objects
-  /// with a limited maximum depth of arrays and maps nested within other
-  /// arrays and maps. The code sets this maximum depth to 500 (allowing
-  /// more than enough nesting for most purposes), but it's possible that
-  /// stack overflows in some runtimes might lower the effective maximum
-  /// nesting depth. When the nesting depth goes above 500, the
-  /// DecodeFromBytes and Read methods throw a CBORException.</para>
-  /// <para>The ReadJSON and FromJSONString methods currently have
-  /// nesting depths of 1000.</para></remarks>
+    /// <summary>
+    /// <para>Represents an object in Concise Binary Object Representation
+    /// (CBOR) and contains methods for reading and writing CBOR data. CBOR
+    /// is defined in RFC 7049.</para></summary>
+    /// <remarks>
+    /// <para><b>Converting CBOR objects</b></para>
+    /// <para>There are many ways to get a CBOR object, including from
+    /// bytes, objects, streams and JSON, as described below.</para>
+    /// <para><b>To and from byte arrays:</b> The
+    /// CBORObject.DecodeFromBytes method converts a byte array in CBOR
+    /// format to a CBOR object. The EncodeToBytes method converts a CBOR
+    /// object to its corresponding byte array in CBOR format.</para>
+    /// <para><b>To and from data streams:</b> The CBORObject.Write methods
+    /// write many kinds of objects to a data stream, including numbers,
+    /// CBOR objects, strings, and arrays of numbers and strings. The
+    /// CBORObject.Read method reads a CBOR object from a data
+    /// stream.</para>
+    /// <para><b>To and from other objects:</b> The
+    /// <c>CBORObject.FromObject</c> method converts many kinds of objects
+    /// to a CBOR object, including numbers, strings, and arrays and maps
+    /// of numbers and strings. Methods like AsDouble, AsByte, and AsString
+    /// convert a CBOR object to different types of object. The
+    /// <c>CBORObject.ToObject</c> method converts a CBOR object to an
+    /// object of a given type; for example, a CBOR array to a native
+    /// <c>List</c> (or <c>ArrayList</c> in Java), or a CBOR integer to an
+    /// <c>int</c> or <c>long</c>.</para>
+    /// <para><b>To and from JSON:</b> This class also doubles as a reader
+    /// and writer of JavaScript Object Notation (JSON). The
+    /// CBORObject.FromJSONString method converts JSON to a CBOR object,
+    /// and the ToJSONString method converts a CBOR object to a JSON
+    /// string.</para>
+    /// <para>In addition, the CBORObject.WriteJSON method writes many
+    /// kinds of objects as JSON to a data stream, including numbers, CBOR
+    /// objects, strings, and arrays of numbers and strings. The
+    /// CBORObject.Read method reads a CBOR object from a JSON data
+    /// stream.</para>
+    /// <para><b>Comparison Considerations:</b></para>
+    /// <para>Instances of CBORObject should not be compared for equality
+    /// using the "==" operator; it's possible to create two CBOR objects
+    /// with the same value but not the same reference. (The "==" operator
+    /// might only check if each side of the operator is the same
+    /// instance.)</para>
+    /// <para>This class's natural ordering (under the CompareTo method) is
+    /// not consistent with the Equals method. This means that two values
+    /// that compare as equal under the CompareTo method might not be equal
+    /// under the Equals method. This is important to consider especially
+    /// if an application wants to compare numbers. (Several CBOR tags
+    /// support numbers of different formats, such as arbitrary-precision
+    /// integers, rational numbers, and arbitrary-precision decimal
+    /// numbers.)</para>
+    /// <para>Another consideration is that two values that are otherwise
+    /// equal may have different tags. To strip the tags from a CBOR object
+    /// before comparing, use the <c>Untag</c> method.</para>
+    /// <para>To compare two numbers, the CompareToIgnoreTags or CompareTo
+    /// method should be used. Which method to use depends on whether two
+    /// equal values should still be considered equal if they have
+    /// different tags.</para>
+    /// <para>Although this class is inconsistent with the Equals method,
+    /// it is safe to use CBORObject instances as hash keys as long as all
+    /// of the keys are untagged text strings (which means GetTags returns
+    /// an empty array and the Type property, or "getType()" in Java,
+    /// returns TextString). This is because the natural ordering of these
+    /// instances is consistent with the Equals method.</para>
+    /// <para><b>Thread Safety:</b></para>
+    /// <para>Certain CBOR objects are immutable (their values can't be
+    /// changed), so they are inherently safe for use by multiple
+    /// threads.</para>
+    /// <para>CBOR objects that are arrays, maps, and byte strings
+    /// (including tagged objects that represent numbers) are mutable, but
+    /// this class doesn't attempt to synchronize reads and writes to those
+    /// objects by multiple threads, so those objects are not thread safe
+    /// without such synchronization.</para>
+    /// <para>One kind of CBOR object is called a map, or a list of
+    /// key-value pairs. Keys can be any kind of CBOR object, including
+    /// numbers, strings, arrays, and maps. However, text strings are the
+    /// most suitable to use as keys; other kinds of CBOR object are much
+    /// better used as map values instead, keeping in mind that some of
+    /// them are not thread safe without synchronizing reads and writes to
+    /// them.</para>
+    /// <para>To find the type of a CBOR object, call its Type property (or
+    /// "getType()" in Java). The return value can be Integer,
+    /// FloatingPoint, Boolean, SimpleValue, or TextString for immutable
+    /// CBOR objects, and Array, Map, or ByteString for mutable CBOR
+    /// objects.</para>
+    /// <para><b>Nesting Depth:</b></para>
+    /// <para>The DecodeFromBytes and Read methods can only read objects
+    /// with a limited maximum depth of arrays and maps nested within other
+    /// arrays and maps. The code sets this maximum depth to 500 (allowing
+    /// more than enough nesting for most purposes), but it's possible that
+    /// stack overflows in some runtimes might lower the effective maximum
+    /// nesting depth. When the nesting depth goes above 500, the
+    /// DecodeFromBytes and Read methods throw a CBORException.</para>
+    /// <para>The ReadJSON and FromJSONString methods currently have
+    /// nesting depths of 1000.</para></remarks>
   public sealed partial class CBORObject : IComparable<CBORObject>,
   IEquatable<CBORObject> {
     private static CBORObject ConstructSimpleValue(int v) {
@@ -2270,7 +2270,7 @@ namespace PeterO.Cbor {
           "\u0020number");
       }
       throw new NotImplementedException();
-//      return a.Remainder(b).ToCBORObject();
+// return a.Remainder(b).ToCBORObject();
     }
 
     /// <summary>Finds the difference between two CBOR number
@@ -2588,8 +2588,7 @@ namespace PeterO.Cbor {
             stream.WriteByte((byte)((datatype << 5) | 27));
             stream.Write(bytes, 0, byteCount);
             break;
-          default:
-            stream.WriteByte((datatype == 0) ?
+          default: stream.WriteByte((datatype == 0) ?
        (byte)0xc2 : (byte)0xc3);
             WritePositiveInt(2, byteCount, stream);
             stream.Write(bytes, 0, byteCount);
@@ -3695,25 +3694,71 @@ NumberInterfaces[12] :
 
     private static byte[] GetDoubleBytes(double value, byte tagbyte) {
       var floatValue = (float)value;
-      // TODO: Determine whether to encode as
-      // half-precision
       if (Double.IsNaN(value)) {
-        // TODO: Improve NaN writing for shortest forms
+        long valueBits = BitConverter.ToInt32(
+             BitConverter.GetBytes((double)value), 0);
+        if((valueBits & 0x3ffffffffffL) == 0){
+           // Encode NaN as half-precision
+           int bits=(int)(((valueBits>>48)&0x8000)+0x7c00+
+                 ((valueBits>>42)&0x3ff));
         return tagbyte != 0 ? new[] {
-                   tagbyte, (byte)0xf9, (byte)0x7e, (byte)0,
-                 } : new[] {
-   (byte)0xf9, (byte)0x7e, (byte)0,
+          tagbyte, (byte)0xf9,
+          (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff),
+        } : new[] {
+   (byte)0xf9, (byte)((bits >> 8) & 0xff),
+   (byte)(bits & 0xff),
  };
+        } else if((valueBits & 0x1fffffffL) == 0){
+           // Encode NaN as single-precision
+           valueBits = (valueBits>>32) | 0x7f800000L |((valueBits>>42)&0x3ff);
+           int bits=unchecked((int)valueBits);
+        return tagbyte != 0 ? new[] {
+          tagbyte, (byte)0xfa,
+          (byte)((bits >> 24) & 0xff), (byte)((bits >> 16) & 0xff),
+          (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff),
+        } : new[] {
+   (byte)0xfa, (byte)((bits >> 24) & 0xff),
+   (byte)((bits >> 16) & 0xff), (byte)((bits >> 8) & 0xff),
+   (byte)(bits & 0xff),
+ };
+        } else {
+           // Encode NaN as double precision
+           long bits = valueBits;
+        return tagbyte != 0 ? new[] {
+          tagbyte, (byte)0xfb,
+          (byte)((bits >> 56) & 0xff), (byte)((bits >> 48) & 0xff),
+          (byte)((bits >> 40) & 0xff), (byte)((bits >> 32) & 0xff),
+          (byte)((bits >> 24) & 0xff), (byte)((bits >> 16) & 0xff),
+          (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff),
+        } : new[] {
+   (byte)0xfb, (byte)((bits >> 56) & 0xff),
+   (byte)((bits >> 48) & 0xff), (byte)((bits >> 40) & 0xff),
+   (byte)((bits >> 32) & 0xff), (byte)((bits >> 24) & 0xff),
+   (byte)((bits >> 16) & 0xff), (byte)((bits >> 8) & 0xff),
+   (byte)(bits & 0xff),
+ };
+        }
       }
       if (floatValue == value) {
+        int bits = CBORUtilities.SingleToHalfPrecisionIfSameValue(floatValue);
+        if(bits>=0){
+          // Encode as binary16
+        return tagbyte != 0 ? new[] {
+          tagbyte, (byte)0xf9,
+          (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff),
+        } : new[] {
+   (byte)0xf9, (byte)((bits >> 8) & 0xff),
+   (byte)(bits & 0xff),
+ };
+        }
         // Encode as binary32
-        int bits =
+        bits =
 BitConverter.ToInt32(BitConverter.GetBytes(floatValue), 0);
         return tagbyte != 0 ? new[] {
-                   tagbyte, (byte)0xfa,
-                   (byte)((bits >> 24) & 0xff), (byte)((bits >> 16) & 0xff),
-                   (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff),
-                 } : new[] {
+          tagbyte, (byte)0xfa,
+          (byte)((bits >> 24) & 0xff), (byte)((bits >> 16) & 0xff),
+          (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff),
+        } : new[] {
    (byte)0xfa, (byte)((bits >> 24) & 0xff),
    (byte)((bits >> 16) & 0xff), (byte)((bits >> 8) & 0xff),
    (byte)(bits & 0xff),
@@ -3723,12 +3768,12 @@ BitConverter.ToInt32(BitConverter.GetBytes(floatValue), 0);
         long bits =
 BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
         return tagbyte != 0 ? new[] {
-                  tagbyte, (byte)0xfb,
-                  (byte)((bits >> 56) & 0xff), (byte)((bits >> 48) & 0xff),
-                  (byte)((bits >> 40) & 0xff), (byte)((bits >> 32) & 0xff),
-                  (byte)((bits >> 24) & 0xff), (byte)((bits >> 16) & 0xff),
-                  (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff),
-                } : new[] {
+          tagbyte, (byte)0xfb,
+          (byte)((bits >> 56) & 0xff), (byte)((bits >> 48) & 0xff),
+          (byte)((bits >> 40) & 0xff), (byte)((bits >> 32) & 0xff),
+          (byte)((bits >> 24) & 0xff), (byte)((bits >> 16) & 0xff),
+          (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff),
+        } : new[] {
    (byte)0xfb, (byte)((bits >> 56) & 0xff),
    (byte)((bits >> 48) & 0xff), (byte)((bits >> 40) & 0xff),
    (byte)((bits >> 32) & 0xff), (byte)((bits >> 24) & 0xff),
@@ -4039,6 +4084,8 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
       return this.HasOneTag() && this.HasMostOuterTag(bigTagValue);
     }
 
+    /// <summary>Gets a value not documented yet.</summary>
+    /// <value>A value not documented yet.</value>
     public int TagCount {
       get {
           var count = 0;
@@ -4443,7 +4490,7 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
     }
 
     /// <summary>
-    ///  Converts this object to a string in JavaScript Object
+    /// Converts this object to a string in JavaScript Object
     /// Notation (JSON) format, using the specified options to
     /// control the encoding process. This function works not
     /// only with arrays and maps, but also integers, strings,
@@ -4549,7 +4596,8 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
     /// not intended to be parsed, and the format may change at any time.
     /// The returned string is not necessarily in JavaScript Object
     /// Notation (JSON); to convert CBOR objects to JSON strings, use the
-    /// <see cref='PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)'/> method instead.</summary>
+    /// <see cref='PeterO.Cbor.CBORObject.ToJSONString(
+    /// PeterO.Cbor.JSONOptions)'/> method instead.</summary>
     /// <returns>A text representation of this object.</returns>
     public override string ToString() {
       StringBuilder sb = null;
@@ -4829,7 +4877,8 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
           outputStream.WriteByte((byte)(0xe0 + (int)value));
           return 1;
         } else if (value < 32) {
-          throw new ArgumentException("value is from 24 to 31 and major type is 7");
+          throw new ArgumentException("value is from 24 to 31 and major type" +
+"\u0020is 7");
         } else {
           outputStream.WriteByte((byte)0xf8);
           outputStream.WriteByte((byte)value);
@@ -4920,7 +4969,8 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
           outputStream.WriteByte((byte)(0xe0 + value));
           return 1;
         } else if (value < 32) {
-          throw new ArgumentException("value is from 24 to 31 and major type is 7");
+          throw new ArgumentException("value is from 24 to 31 and major type" +
+"\u0020is 7");
         } else {
           outputStream.WriteByte((byte)0xf8);
           outputStream.WriteByte((byte)value);
@@ -4994,7 +5044,8 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
           ") is more than 7");
       }
       if (majorType == 7) {
-        throw new ArgumentException("majorType is 7 and value is greater than 255");
+        throw new ArgumentException("majorType is 7 and value is greater" +
+"\u0020than 255");
       }
       byte[] bytes = new[] {
         (byte)(27 | (majorType << 5)), (byte)highbyte,
@@ -5011,10 +5062,11 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
     /// CBOR object contains CBOR maps, or is a CBOR map, the keys to the
     /// map are written out to the data stream in an undefined order. See
     /// the examples (written in C# for the &#x2e;NET version) for ways to
-    /// write out certain keys of a CBOR map in a given order.  In the case of CBOR objects of type FloatingPoint, the number is written using the shortest
-    /// floating-point encoding possible; this is a change from previous
-    /// versions.</para>
-    /// </summary>
+    /// write out certain keys of a CBOR map in a given order. In the case
+    /// of CBOR // /objects of type FloatingPoint, the number is written
+    /// using the shortest floating-point encoding possible; this is a
+    /// change from previous versions.</para>
+    ///  </summary>
     /// <param name='stream'>A writable data stream.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='stream'/> is null.</exception>
@@ -5089,10 +5141,10 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
     /// are written out to the data stream in an undefined order. The
     /// example code given in
     /// <see cref='PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)'/> can
-    /// be used to write out certain keys of a CBOR map in a given
-    /// order.  In the case of CBOR objects of type FloatingPoint, the number is written using the shortest
-    /// floating-point encoding possible; this is a change from previous
-    /// versions.</summary>
+    /// be used to write out certain keys of a CBOR map in a given order.
+    /// In the case of CBOR objects of type FloatingPoint, the number is
+    /// written using the shortest floating-point encoding possible; this
+    /// is a change from previous versions.</summary>
     /// <param name='stream'>A writable data stream.</param>
     /// <param name='options'>Options for encoding the data to
     /// CBOR.</param>

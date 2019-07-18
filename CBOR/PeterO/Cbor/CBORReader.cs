@@ -490,9 +490,10 @@ namespace PeterO.Cbor {
             case 25:
               // stringref tag
               if (o.IsTagged || o.Type != CBORType.Integer) {
-                throw new CBORException("stringref must be an unsigned integer");
+                throw new CBORException("stringref must be an unsigned" +
+"\u0020integer");
               }
-             return this.stringRefs.GetString(o.AsEIntegerValue());
+              return this.stringRefs.GetString(o.AsEIntegerValue());
           }
 
           return CBORObject.FromObjectAndTag(

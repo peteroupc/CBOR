@@ -217,7 +217,7 @@ namespace PeterO {
     }
 
     public static void Write(CBORObject obj, Stream stream) {
-      if (obj.Type == CBORType.Number) {
+      if (obj.IsNumber) {
         stream.WriteByte(unchecked((byte)((byte)0x69)));
         WriteUtf8(obj.AsEInteger().ToString(), stream);
         stream.WriteByte(unchecked((byte)((byte)0x65)));

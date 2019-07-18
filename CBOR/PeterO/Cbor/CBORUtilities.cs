@@ -705,10 +705,26 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
       }
     }
 
-    public static int HalfPrecisionFromSingle(float floatValue) {
-      // TODO
-      throw new NotImplementedException();
-    }
+public static int SingleToHalfPrecisionIfSameValue(float f){
+  int bits = BitConverter.ToInt32(BitConverter.GetBytes(f), 0);
+  int exp=((bits>>23)&0xff);
+  int mant=bits&0x7FFFFF;
+  int sign=(bits>>16)&0x8000;
+  if(exp==255){ // Infinity and NaN
+    return (bits&0x1FFF)==0 ? sign+0x7c00+(mant>>13) : -1;
+  } else if(exp==0){ // Zero
+    return (bits&0x1FFF)==0 ? sign+(mant>>13) : -1;
+  }
+  int pexp = 127-exp;
+  if(exp<=102 || exp>=143){ // Overflow or underflow
+    return -1;
+  } else if(exp<=112){ // Subnormal
+    int shift=(126-exp);
+    return (bits&((1<<shift)-1))==0 ? sign+(1024>>(145-exp))+(mant>>shift) : -1;
+  } else {
+    return (bits&0x1FFF)==0 ? sign+((exp-112) << 10)+(mant>>13) : -1;
+  }
+}
 
     public static float HalfPrecisionToSingle(int value) {
       int negvalue = (value >= 0x8000) ? (1 << 31) : 0;
