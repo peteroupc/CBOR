@@ -120,7 +120,7 @@ if (IsUntaggedInteger(o)) {
         throw new CBORException("Extended big fraction requires exactly 3" +
 "\u0020items");
       }
-      if (IsUntaggedInteger(o[2])) {
+      if (!IsUntaggedInteger(o[2])) {
         throw new CBORException("Third item must be an integer");
       }
       } else {
@@ -128,10 +128,14 @@ if (IsUntaggedInteger(o)) {
         throw new CBORException("Big fraction requires exactly 2 items");
       }
       }
-      if (!IsUntaggedInteger(o[0]) && !o[0].HasOneTag(2) && !o[0].HasOneTag(2)) {
+      if (!IsUntaggedInteger(o[0]) &&
+        !o[0].HasOneTag(2) &&
+        !o[0].HasOneTag(2)) {
         throw new CBORException("Numerator is not an integer or bignum");
       }
-      if (!IsUntaggedInteger(o[1]) && !o[1].HasOneTag(2) && !o[1].HasOneTag(2)) {
+      if (!IsUntaggedInteger(o[1]) &&
+        !o[1].HasOneTag(2) &&
+        !o[1].HasOneTag(2)) {
         throw new CBORException("Denominator is not an integer or bignum");
       }
       EInteger numerator = IntegerOrBignum(o[0]);
@@ -145,7 +149,7 @@ if (numerator.Sign < 0) {
            throw new CBORException("Numerator may not be negative");
          }
          int options = o[2].AsInt32Value();
-         switch(options) {
+         switch (options) {
          case 0:
             break;
          case 1:
@@ -203,11 +207,15 @@ options == 7);
         throw new CBORException("Exponent is not an integer");
       }
       } else {
-      if (!IsUntaggedInteger(o[0]) && !o[0].HasOneTag(2) && !o[0].HasOneTag(3)) {
+      if (!IsUntaggedInteger(o[0]) &&
+        !o[0].HasOneTag(2) &&
+        !o[0].HasOneTag(3)) {
         throw new CBORException("Exponent is not an integer or bignum");
       }
       }
-      if (!IsUntaggedInteger(o[1]) && !o[1].HasOneTag(2) && !o[1].HasOneTag(3)) {
+      if (!IsUntaggedInteger(o[1]) &&
+        !o[1].HasOneTag(2) &&
+        !o[1].HasOneTag(3)) {
         throw new CBORException("Mantissa is not an integer or bignum");
       }
       EInteger exponent = IntegerOrBignum(o[0]);
@@ -220,7 +228,7 @@ if (mantissa.Sign < 0) {
            throw new CBORException("Mantissa may not be negative");
          }
          int options = o[2].AsInt32Value();
-         switch(options) {
+         switch (options) {
          case 0:
             break;
          case 1:

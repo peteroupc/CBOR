@@ -31,7 +31,7 @@ namespace PeterO {
     }
 
     public static void Main() {
-      const String ValueParam = "TestNegativeZero";
+      const String ValueParam = "TestCompareTo";
      // Run all the tests in this assembly
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
         if (!HasAttribute(type, typeof(TestFixtureAttribute))) {

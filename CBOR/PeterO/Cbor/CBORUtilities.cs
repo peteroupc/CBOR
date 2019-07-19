@@ -720,10 +720,10 @@ public static int SingleToHalfPrecisionIfSameValue(float f) {
     return -1;
   } else if (exp <= 112) { // Subnormal
     int shift = 126 - exp;
-    return (bits & ((1 << shift) -1)) == 0 ? sign+(1024>>(145-exp))+(mant >>
+    return (bits & ((1 << shift) - 1)) == 0 ? sign+(1024>>(145-exp))+(mant >>
 shift) : -1;
   } else {
-    return (bits & 0x1fff) == 0 ? sign+((exp-112) << 10) + (mant >> 13) : -1;
+    return (bits & 0x1fff) == 0 ? sign +((exp-112) << 10) + (mant >> 13) : -1;
   }
 }
 

@@ -1958,6 +1958,16 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
       Console.WriteLine(cbor2);
       TestCommon.CompareTestLess(cbor1, cbor2);
     }
+    private static string TrimStr(string str, int len) {
+     return str.Substring(0, Math.Min(len, str.Length));
+    }
+    [Test]
+    public void CompareLongDouble() {
+      CBORObject cbor1 = CBORObject.FromObject(3.5E-15);
+      CBORObject cbor2 = CBORObject.FromObject(281479271677953L);
+      TestCommon.CompareTestLess(cbor1, cbor2);
+    }
+
     [Test]
     [Timeout(300000)]
     public void TestCompareTo() {
@@ -1965,13 +1975,9 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
       const int CompareCount = 3000;
       var list = new List<CBORObject>();
       for (var i = 0; i < CompareCount; ++i) {
-Console.WriteLine(i);
         CBORObject o1 = CBORTestCommon.RandomCBORObject(r);
-Console.WriteLine(o1);
         CBORObject o2 = CBORTestCommon.RandomCBORObject(r);
-Console.WriteLine(o2);
         CBORObject o3 = CBORTestCommon.RandomCBORObject(r);
-Console.WriteLine(o3);
         TestCommon.CompareTestRelations(o1, o2, o3);
         if (list.Count < 400) {
           if (o1.Type == CBORType.Number) {

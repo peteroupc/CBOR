@@ -531,6 +531,11 @@ namespace PeterO.Cbor {
         return;
       }
       switch (type) {
+        case CBORObject.CBORObjectTypeInteger:
+        case CBORObject.CBORObjectTypeDouble:
+        case CBORObject.CBORObjectTypeBigInteger:
+            writer.WriteString(CBORNumber.FromCBORObject(obj).ToJSONString());
+            break;
         case CBORObject.CBORObjectTypeSimpleValue: {
             if (obj.IsTrue) {
               writer.WriteString("true");
@@ -606,7 +611,7 @@ namespace PeterO.Cbor {
             IDictionary<CBORObject, CBORObject> objMap = obj.AsMap();
             foreach (KeyValuePair<CBORObject, CBORObject> entry in objMap) {
               CBORObject key = entry.Key;
-              if (key.ItemType != CBORObject.CBORObjectTypeTextString ||
+              if (key.Type != CBORType.TextString ||
               key.IsTagged) {
                 // treat a non-text-string item or a tagged item
                 // as having non-string keys
@@ -640,8 +645,7 @@ namespace PeterO.Cbor {
               foreach (KeyValuePair<CBORObject, CBORObject> entry in objMap) {
                 CBORObject key = entry.Key;
                 CBORObject value = entry.Value;
-                string str = (key.ItemType ==
-                  CBORObject.CBORObjectTypeTextString) ?
+                string str = (key.Type == CBORType.TextString) ?
                   ((string)key.ThisItem) : key.ToJSONString();
                 if (stringMap.ContainsKey(str)) {
                   throw new

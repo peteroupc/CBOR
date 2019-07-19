@@ -234,8 +234,8 @@ namespace PeterO.Cbor {
     private static readonly byte[] ValueNullBytes = { 0x6e, 0x75, 0x6c, 0x6c };
 
     private static readonly int[] ValueNumberTypeOrder = {
-      0, 0, 2, 3, 4, 5,
-      1, 0, 0,
+      1, 1, 3, 4, 5, 6,
+      2, 0, 7,
       0, 0, 0, 0,
     };
 
@@ -794,7 +794,15 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// <returns>A CBORObject object.</returns>
     /// <exception cref='ArgumentException'>Either or both operands are not
     /// numbers (as opposed to Not-a-Number, NaN).</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='first'/> or <paramref name='second'/> is null.</exception>
     public static CBORObject Addition(CBORObject first, CBORObject second) {
+      if (first == null) {
+        throw new ArgumentNullException(nameof(first));
+      }
+      if (second == null) {
+        throw new ArgumentNullException(nameof(second));
+      }
       CBORNumber a = CBORNumber.FromCBORObject(first);
       if (a == null) {
         throw new ArgumentException(nameof(first) + "does not represent a" +
@@ -906,7 +914,15 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// <param name='second'>The parameter <paramref name='second'/> is a
     /// CBOR object.</param>
     /// <returns>The quotient of the two objects.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='first'/> or <paramref name='second'/> is null.</exception>
     public static CBORObject Divide(CBORObject first, CBORObject second) {
+      if (first == null) {
+        throw new ArgumentNullException(nameof(first));
+      }
+      if (second == null) {
+        throw new ArgumentNullException(nameof(second));
+      }
       CBORNumber a = CBORNumber.FromCBORObject(first);
       if (a == null) {
         throw new ArgumentException(nameof(first) + "does not represent a" +
@@ -2173,7 +2189,15 @@ if (bigValue.IsSignalingNaN()) {
     /// <returns>The product of the two numbers.</returns>
     /// <exception cref='ArgumentException'>Either or both operands are not
     /// numbers (as opposed to Not-a-Number, NaN).</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='first'/> or <paramref name='second'/> is null.</exception>
     public static CBORObject Multiply(CBORObject first, CBORObject second) {
+      if (first == null) {
+        throw new ArgumentNullException(nameof(first));
+      }
+      if (second == null) {
+        throw new ArgumentNullException(nameof(second));
+      }
       CBORNumber a = CBORNumber.FromCBORObject(first);
       if (a == null) {
         throw new ArgumentException(nameof(first) + "does not represent a" +
@@ -2334,7 +2358,15 @@ if (bigValue.IsSignalingNaN()) {
     /// <param name='second'>The parameter <paramref name='second'/> is a
     /// CBOR object.</param>
     /// <returns>The remainder of the two numbers.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='first'/> or <paramref name='second'/> is null.</exception>
     public static CBORObject Remainder(CBORObject first, CBORObject second) {
+      if (first == null) {
+        throw new ArgumentNullException(nameof(first));
+      }
+      if (second == null) {
+        throw new ArgumentNullException(nameof(second));
+      }
       CBORNumber a = CBORNumber.FromCBORObject(first);
       if (a == null) {
         throw new ArgumentException(nameof(first) + "does not represent a" +
@@ -2358,7 +2390,15 @@ if (bigValue.IsSignalingNaN()) {
     /// <returns>The difference of the two objects.</returns>
     /// <exception cref='ArgumentException'>Either or both operands are not
     /// numbers (as opposed to Not-a-Number, NaN).</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='first'/> or <paramref name='second'/> is null.</exception>
     public static CBORObject Subtract(CBORObject first, CBORObject second) {
+      if (first == null) {
+        throw new ArgumentNullException(nameof(first));
+      }
+      if (second == null) {
+        throw new ArgumentNullException(nameof(second));
+      }
       CBORNumber a = CBORNumber.FromCBORObject(first);
       if (a == null) {
         throw new ArgumentException(nameof(first) + "does not represent a" +
@@ -3518,8 +3558,12 @@ cn.GetNumberInterface().CanTruncatedIntFitInInt64(cn.GetValue());
     /// both objects have one of these four values, then undefined is less
     /// than CBORObject.Null, which is less than false, which is less than
     /// true.</item>
-    /// <item>If both objects are numbers, their mathematical values are
-    /// compared. Here, NaN (not-a-number) is considered greater than any
+    /// <item>If both objects are integers (CBORType.Integer), their values
+    /// are compared. Here, NaN (not-a-number) is considered greater than
+    /// any number.</item>
+    /// <item>If both objects are floating-point numbers
+    /// (CBORType.FloatingPoint), their mathematical values are compared.
+    /// Here, NaN (not-a-number) is considered greater than any
     /// number.</item>
     /// <item>If both objects are simple values other than true, false,
     /// CBORObject.Null, and the undefined value, the objects are compared
@@ -3536,8 +3580,8 @@ cn.GetNumberInterface().CanTruncatedIntFitInInt64(cn.GetValue());
     /// elements. If both maps have the same keys, their values are
     /// compared in the order of the sorted keys.</item>
     /// <item>If each object is a different type, then they are sorted by
-    /// their type number, in the order given for the CBORType
-    /// enumeration.</item>
+    /// their type in the following order: integer, byte string, text
+    /// string, array, map, simple value, floating point.</item>
     /// <item>If each object has different tags and both objects are
     /// otherwise equal under this method, each element is compared as
     /// though each were an array with that object's tags listed in order
@@ -3653,49 +3697,27 @@ cn.GetNumberInterface().CanTruncatedIntFitInInt64(cn.GetValue());
       } else {
         int typeOrderA = ValueNumberTypeOrder[typeA];
         int typeOrderB = ValueNumberTypeOrder[typeB];
-        // Check whether general types are different
-        // (treating number types the same)
+        // Check whether types are different
+        // (treating Integer/BigInteger the same)
         if (typeOrderA != typeOrderB) {
           return (typeOrderA < typeOrderB) ? -1 : 1;
         }
-        // At this point, both types should be number types.
 #if DEBUG
-        if (typeOrderA != 0) {
-          throw new ArgumentException("doesn't satisfy typeOrderA == 0");
+        if (!(typeB == CBORObjectTypeInteger || typeB ==
+CBORObjectTypeBigInteger)) {
+          throw new ArgumentException("doesn't satisfy typeB ==" +
+"\u0020CBORObjectTypeInteger || typeB == CBORObjectTypeBigInteger");
         }
-        if (typeOrderB != 0) {
-          throw new ArgumentException("doesn't satisfy typeOrderB == 0");
+        if (!(typeA == CBORObjectTypeInteger || typeA ==
+CBORObjectTypeBigInteger)) {
+          throw new ArgumentException("doesn't satisfy typeA ==" +
+"\u0020CBORObjectTypeInteger || typeA == CBORObjectTypeBigInteger");
         }
 #endif
-        int s1 = this.Sign;
-        int s2 = other.Sign;
-        if (s1 != s2 && s1 != 2 && s2 != 2) {
-          // if both types are numbers
-          // and their signs are different
-          return (s1 < s2) ? -1 : 1;
-        }
-        if (s1 == 2 && s2 == 2) {
-          // both are NaN
-          cmp = 0;
-        } else if (s1 == 2) {
-          // first object is NaN
-          return 1;
-        } else if (s2 == 2) {
-          // second object is NaN
-          return -1;
-        } else {
-          // TODO: Confirm whether doubles will always be higher/lower
-          // than integers, and update documentation accordingly
-          if (typeA == CBORObjectTypeDouble || typeB == CBORObjectTypeDouble) {
-            var d1 = (double)objA;
-            var d2 = (double)objB;
-            cmp = (d1 == d2) ? 0 : (d1 < d2 ? -1 : 1);
-          } else {
-            EInteger b1 = this.AsEIntegerValue();
-            EInteger b2 = other.AsEIntegerValue();
-            cmp = b1.CompareTo(b2);
-          }
-        }
+
+        EInteger b1 = this.AsEIntegerValue();
+        EInteger b2 = other.AsEIntegerValue();
+        cmp = b1.CompareTo(b2);
       }
       return (cmp == 0) ? ((!this.IsTagged && !other.IsTagged) ? 0 :
            TagsCompare(this.GetAllTags(), other.GetAllTags())) :
@@ -3719,8 +3741,8 @@ cn.GetNumberInterface().CanTruncatedIntFitInInt64(cn.GetValue());
     /// object.</summary>
     /// <param name='objKey'>The parameter <paramref name='objKey'/> is an
     /// arbitrary object.</param>
-    /// <returns><c>true</c> if the given key is found, or false if the
-    /// given key is not found or this object is not a map.</returns>
+    /// <returns><c>true</c> if the given key is found, or <c>false</c> if
+    /// the given key is not found or this object is not a map.</returns>
     public bool ContainsKey(object objKey) {
       return (this.ItemType == CBORObjectTypeMap) ?
         this.ContainsKey(CBORObject.FromObject(objKey)) : false;
@@ -3730,8 +3752,8 @@ cn.GetNumberInterface().CanTruncatedIntFitInInt64(cn.GetValue());
     /// object.</summary>
     /// <param name='key'>An object that serves as the key. If this is
     /// <c>null</c>, checks for <c>CBORObject.Null</c>.</param>
-    /// <returns><c>true</c> if the given key is found, or false if the
-    /// given key is not found or this object is not a map.</returns>
+    /// <returns><c>true</c> if the given key is found, or <c>false</c> if
+    /// the given key is not found or this object is not a map.</returns>
     public bool ContainsKey(CBORObject key) {
       key = key ?? CBORObject.Null;
       if (this.ItemType == CBORObjectTypeMap) {
@@ -3746,8 +3768,8 @@ cn.GetNumberInterface().CanTruncatedIntFitInInt64(cn.GetValue());
     /// <param name='key'>A string that serves as the key. If this is
     /// <c>null</c>, checks for <c>CBORObject.Null</c>.</param>
     /// <returns><c>true</c> if the given key (as a CBOR object) is found,
-    /// or false if the given key is not found or this object is not a
-    /// map.</returns>
+    /// or <c>false</c> if the given key is not found or this object is not
+    /// a map.</returns>
     public bool ContainsKey(string key) {
       if (this.ItemType == CBORObjectTypeMap) {
         CBORObject ckey = key == null ? CBORObject.Null :
@@ -3766,7 +3788,7 @@ cn.GetNumberInterface().CanTruncatedIntFitInInt64(cn.GetValue());
              0);
         if ((valueBits & 0x3ffffffffffL) == 0) {
            // Encode NaN as half-precision
-           var bits = (int)(((valueBits >> 48) & 0x8000)+0x7c00 +
+           var bits = (int)(((valueBits >> 48) & 0x8000) +0x7c00 +
                  ((valueBits >> 42) & 0x3ff));
                  return tagbyte != 0 ? new[] {
                    tagbyte, (byte)0xf9,
@@ -3999,37 +4021,29 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
       if (this == otherValue) {
         return true;
       }
+      if (this.itemtypeValue != otherValue.itemtypeValue) {
+        return false;
+      }
       switch (this.itemtypeValue) {
         case CBORObjectTypeByteString:
-          if (!CBORUtilities.ByteArrayEquals(
-            (byte[])this.ThisItem,
-            otherValue.itemValue as byte[])) {
-            return false;
-          }
-          break;
+          return CBORUtilities.ByteArrayEquals(
+            (byte[])this.itemValue,
+            otherValue.itemValue as byte[]);
         case CBORObjectTypeMap: {
             IDictionary<CBORObject, CBORObject> cbordict =
               otherValue.itemValue as IDictionary<CBORObject, CBORObject>;
-            if (!CBORMapEquals(this.AsMap(), cbordict)) {
-              return false;
-            }
-            break;
+            return CBORMapEquals(this.AsMap(), cbordict);
           }
         case CBORObjectTypeArray:
-          if (!CBORArrayEquals(
+          return CBORArrayEquals(
             this.AsList(),
-            otherValue.itemValue as IList<CBORObject>)) {
-            return false;
-          }
-          break;
-        default:
-          if (!Object.Equals(this.itemValue, otherValue.itemValue)) {
-            return false;
-          }
-          break;
+            otherValue.itemValue as IList<CBORObject>);
+        case CBORObjectTypeTagged:
+          return this.tagLow == otherValue.tagLow &&
+               this.tagHigh == otherValue.tagHigh &&
+               Object.Equals(this.itemValue, otherValue.itemValue);
+        default: return Object.Equals(this.itemValue, otherValue.itemValue);
       }
-      return this.itemtypeValue == otherValue.itemtypeValue &&
-        this.tagLow == otherValue.tagLow && this.tagHigh == otherValue.tagHigh;
     }
 
     /// <summary>Gets the backing byte array used in this CBOR object, if
@@ -4076,8 +4090,9 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
               itemHashCode = (int)this.itemValue;
               break;
             case CBORObjectTypeDouble:
-              longValue =
-  BitConverter.ToInt64(BitConverter.GetBytes((double)this.itemValue), 0);
+              longValue = BitConverter.ToInt64(
+                 BitConverter.GetBytes((double)this.itemValue),
+                 0);
               longValue |= longValue >> 32;
               itemHashCode = unchecked((int)longValue);
               break;
@@ -4086,6 +4101,10 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
               longValue |= longValue >> 32;
               itemHashCode = unchecked((int)longValue);
               break;
+            case CBORObjectTypeTagged:
+              itemHashCode = unchecked(this.tagLow + this.tagHigh);
+              itemHashCode += 651869483 * this.itemValue.GetHashCode();
+              break;
             default:
               // EInteger, CBORObject
               itemHashCode = this.itemValue.GetHashCode();
@@ -4093,8 +4112,6 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
           }
           hashCode += 651869479 * itemHashCode;
         }
-        hashCode += 651869483 * (this.itemtypeValue +
-                    this.tagLow + this.tagHigh);
       }
       return hashCode;
     }
@@ -4647,6 +4664,13 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
           }
         case CBORObjectTypeInteger: {
             return CBORUtilities.LongToString((long)this.ThisItem);
+          }
+        case CBORObjectTypeDouble: {
+            return CBORNumber.FromObject((double)this.ThisItem).ToJSONString();
+          }
+        case CBORObjectTypeBigInteger: {
+            return
+CBORNumber.FromObject((EInteger)this.ThisItem).ToJSONString();
           }
         default: {
             var sb = new StringBuilder();
