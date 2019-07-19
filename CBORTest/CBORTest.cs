@@ -139,16 +139,14 @@ string str1817 = "[0,1,2,3,4,5,6,7]";
         new byte[] { 0x5f, 0x41, 0x20, 0x41, 0x20, 0xff });
     }
     [Test]
-    [ExpectedException(typeof(CBORException))]
     public void TestByteStringStreamNoIndefiniteWithinDefinite() {
-      CBORTestCommon.FromBytesTestAB(new byte[] { 0x5f, 0x41, 0x20, 0x5f, 0x41,
-        0x20, 0xff, 0xff });
+      Assert.Throws(typeof(CBORException),()=>CBORTestCommon.FromBytesTestAB(new byte[] { 0x5f, 0x41, 0x20, 0x5f, 0x41,
+        0x20, 0xff, 0xff }));
     }
     [Test]
-    [ExpectedException(typeof(CBORException))]
     public void TestByteStringStreamNoTagsBeforeDefinite() {
-      CBORTestCommon.FromBytesTestAB(new byte[] { 0x5f, 0x41, 0x20, 0xc2, 0x41,
-        0x20, 0xff });
+      Assert.Throws(typeof(CBORException),()=>CBORTestCommon.FromBytesTestAB(new byte[] { 0x5f, 0x41, 0x20, 0xc2, 0x41,
+        0x20, 0xff }));
     }
 
     public static string ObjectMessage(CBORObject obj) {
@@ -485,16 +483,14 @@ string str1817 = "[0,1,2,3,4,5,6,7]";
         new byte[] { 0xc4, 0x82, 0x3, 0x1a, 1, 2, 3, 4 });
     }
     [Test]
-    [ExpectedException(typeof(CBORException))]
     public void TestDecimalFracExactlyTwoElements() {
-      CBORTestCommon.FromBytesTestAB(new byte[] { 0xc4, 0x82, 0xc2, 0x41, 1 });
+      Assert.Throws(typeof(CBORException),()=>CBORTestCommon.FromBytesTestAB(new byte[] { 0xc4, 0x82, 0xc2, 0x41, 1 }));
     }
     [Test]
-    [ExpectedException(typeof(CBORException))]
     public void TestDecimalFracExponentMustNotBeBignum() {
-      CBORTestCommon.FromBytesTestAB(new byte[] { 0xc4, 0x82, 0xc2, 0x41, 1,
+      Assert.Throws(typeof(CBORException),()=>CBORTestCommon.FromBytesTestAB(new byte[] { 0xc4, 0x82, 0xc2, 0x41, 1,
         0x1a,
-        1, 2, 3, 4 });
+        1, 2, 3, 4 }));
     }
 
     [Test]
@@ -1218,9 +1214,8 @@ throw new InvalidOperationException(String.Empty, ex);
       CBORTestCommon.AssertRoundTrip(cbor);
     }
     [Test]
-    [ExpectedException(typeof(CBORException))]
     public void TestTagThenBreak() {
-      CBORTestCommon.FromBytesTestAB(new byte[] { 0xd1, 0xff });
+      Assert.Throws(typeof(CBORException),()=>CBORTestCommon.FromBytesTestAB(new byte[] { 0xd1, 0xff }));
     }
 
     [Test]
@@ -1239,16 +1234,14 @@ throw new InvalidOperationException(String.Empty, ex);
       TestTextStringStreamOne(TestCommon.Repeat("\ud800\udc00", 200000));
     }
     [Test]
-    [ExpectedException(typeof(CBORException))]
     public void TestTextStringStreamNoIndefiniteWithinDefinite() {
-      CBORTestCommon.FromBytesTestAB(new byte[] { 0x7f, 0x61, 0x20, 0x7f, 0x61,
-        0x20, 0xff, 0xff });
+      Assert.Throws(typeof(CBORException),()=>CBORTestCommon.FromBytesTestAB(new byte[] { 0x7f, 0x61, 0x20, 0x7f, 0x61,
+        0x20, 0xff, 0xff }));
     }
     [Test]
-    [ExpectedException(typeof(CBORException))]
     public void TestTextStringStreamNoTagsBeforeDefinite() {
-      CBORTestCommon.FromBytesTestAB(new byte[] { 0x7f, 0x61, 0x20, 0xc0, 0x61,
-        0x20, 0xff });
+      Assert.Throws(typeof(CBORException),()=>CBORTestCommon.FromBytesTestAB(new byte[] { 0x7f, 0x61, 0x20, 0xc0, 0x61,
+        0x20, 0xff }));
     }
 
     private static EDecimal AsED(CBORObject obj) {
@@ -1287,6 +1280,38 @@ throw new InvalidOperationException(String.Empty, ex);
       }
       TestCommon.AssertEqualsHashCode(cbor, cbor2);
       Assert.AreEqual(longString, cbor2.AsString());
+    }
+
+
+    [Test]
+    public void TestIntegerFloatingEquivalence() {
+      CBORObject cbor;
+      // 0 versus 0.0
+      cbor = CBORObject.NewMap();
+      cbor.Set((int)0, CBORObject.FromObject("testzero"));
+      cbor.Set((double)0.0, CBORObject.FromObject("testpointzero"));
+      Assert.AreEqual(2,cbor.Count);
+      Assert.AreEqual("testzero",cbor[CBORObject.FromObject(0)].AsString());
+      Assert.AreEqual("testpointzero",cbor[CBORObject.FromObject((double)0.0)].AsString());
+      cbor = CBORObject.NewMap();
+      cbor.Set((double)0.0, CBORObject.FromObject("testpointzero"));
+      cbor.Set((int)0, CBORObject.FromObject("testzero"));
+      Assert.AreEqual(2,cbor.Count);
+      Assert.AreEqual("testzero",cbor[CBORObject.FromObject(0)].AsString());
+      Assert.AreEqual("testpointzero",cbor[CBORObject.FromObject((double)0.0)].AsString());
+      // 3 versus 3.0
+      cbor = CBORObject.NewMap();
+      cbor.Set((int)3, CBORObject.FromObject("testzero"));
+      cbor.Set((double)3.0, CBORObject.FromObject("testpointzero"));
+      Assert.AreEqual(2,cbor.Count);
+      Assert.AreEqual("testzero",cbor[CBORObject.FromObject(3)].AsString());
+      Assert.AreEqual("testpointzero",cbor[CBORObject.FromObject((double)3.0)].AsString());
+      cbor = CBORObject.NewMap();
+      cbor.Set((double)3.0, CBORObject.FromObject("testpointzero"));
+      cbor.Set((int)3, CBORObject.FromObject("testzero"));
+      Assert.AreEqual(2,cbor.Count);
+      Assert.AreEqual("testzero",cbor[CBORObject.FromObject(3)].AsString());
+      Assert.AreEqual("testpointzero",cbor[CBORObject.FromObject((double)3.0)].AsString());
     }
 
     private static void TestWriteToJSON(CBORObject obj) {

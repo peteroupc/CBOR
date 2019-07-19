@@ -6,9 +6,12 @@ namespace Test {
   [TestFixture]
   public class CBORExceptionTest {
     [Test]
-    [ExpectedException(typeof(CBORException))]
     public void TestConstructor() {
-      throw new CBORException("Test exception");
+     try {
+        throw new CBORException("Test exception"); 
+      } catch(CBORException){
+         // expected exception
+      }
     }
   }
 }

@@ -56,12 +56,6 @@ namespace PeterO {
             }
           }
           Type exctype = null;
-          foreach (var a in method.GetCustomAttributes(false)) {
-            if (a is ExpectedExceptionAttribute) {
-              exctype = ((ExpectedExceptionAttribute)a).ExpectedException;
-              break;
-            }
-          }
           try {
             method.Invoke(test, new object[] { });
           } catch (TargetInvocationException e) {
