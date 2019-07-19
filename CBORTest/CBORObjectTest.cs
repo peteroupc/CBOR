@@ -1965,9 +1965,13 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
       const int CompareCount = 3000;
       var list = new List<CBORObject>();
       for (var i = 0; i < CompareCount; ++i) {
+Console.WriteLine(i);
         CBORObject o1 = CBORTestCommon.RandomCBORObject(r);
+Console.WriteLine(o1);
         CBORObject o2 = CBORTestCommon.RandomCBORObject(r);
+Console.WriteLine(o2);
         CBORObject o3 = CBORTestCommon.RandomCBORObject(r);
+Console.WriteLine(o3);
         TestCommon.CompareTestRelations(o1, o2, o3);
         if (list.Count < 400) {
           if (o1.Type == CBORType.Number) {
@@ -1988,17 +1992,6 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
         for (; j < list.Count; ++j) {
           CBORObject o1 = list[i];
           CBORObject o2 = list[j];
-          // Console.WriteLine("// --");
-          //
-          //
-          //
-          // Console.WriteLine(
-          // TestCommon.ToByteArrayString(o1.EncodeToBytes()));
-          //
-          //
-          //
-          // Console.WriteLine(
-          // TestCommon.ToByteArrayString(o2.EncodeToBytes()));
           TestCommon.CompareTestReciprocal(o1, o2);
         }
       }

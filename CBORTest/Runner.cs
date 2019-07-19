@@ -31,7 +31,7 @@ namespace PeterO {
     }
 
     public static void Main() {
-      const String ValueParam = "TestNullable";
+      const String ValueParam = "TestNegativeZero";
      // Run all the tests in this assembly
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
         if (!HasAttribute(type, typeof(TestFixtureAttribute))) {
@@ -51,7 +51,7 @@ namespace PeterO {
           }
           if (!String.IsNullOrEmpty(ValueParam)) {
             if (!method.Name.Equals(ValueParam, StringComparison.Ordinal)) {
-              // continue;
+              //continue;
             }
           }
           Console.WriteLine(method.Name);

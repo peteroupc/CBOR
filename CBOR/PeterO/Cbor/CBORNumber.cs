@@ -35,7 +35,7 @@ namespace PeterO.Cbor {
 
     internal static ICBORNumber GetNumberInterface(CBORObject obj) {
       CBORNumber num = CBORNumber.FromCBORObject(obj);
-      return (num == null) ? null : (nm.GetNumberInterface();
+      return (num == null) ? null : num.GetNumberInterface();
     }
 
     internal object GetValue() {
@@ -128,11 +128,11 @@ if (IsUntaggedInteger(o)) {
         throw new CBORException("Big fraction requires exactly 2 items");
       }
       }
-      if (IsUntaggedInteger(o[0]) || o[0].HasOneTag(2)) {
+      if (!IsUntaggedInteger(o[0]) && !o[0].HasOneTag(2) && !o[0].HasOneTag(2)) {
         throw new CBORException("Numerator is not an integer or bignum");
       }
-      if (IsUntaggedInteger(o[1]) || o[1].HasOneTag(2)) {
-        throw new CBORException("Numerator is not an integer or bignum");
+      if (!IsUntaggedInteger(o[1]) && !o[1].HasOneTag(2) && !o[1].HasOneTag(2)) {
+        throw new CBORException("Denominator is not an integer or bignum");
       }
       EInteger numerator = IntegerOrBignum(o[0]);
       EInteger denominator = IntegerOrBignum(o[1]);
@@ -190,7 +190,7 @@ options == 7);
         throw new CBORException("Extended big fraction requires exactly 3" +
 "\u0020items");
       }
-      if (IsUntaggedInteger(o[2])) {
+      if (!IsUntaggedInteger(o[2])) {
         throw new CBORException("Third item must be an integer");
       }
       } else {
@@ -199,15 +199,15 @@ options == 7);
       }
       }
       if (tagName == 4 || tagName == 5) {
-      if (IsUntaggedInteger(o[0])) {
+      if (!IsUntaggedInteger(o[0])) {
         throw new CBORException("Exponent is not an integer");
       }
       } else {
-      if (IsUntaggedInteger(o[0]) || o[0].HasOneTag(2)) {
+      if (!IsUntaggedInteger(o[0]) && !o[0].HasOneTag(2) && !o[0].HasOneTag(3)) {
         throw new CBORException("Exponent is not an integer or bignum");
       }
       }
-      if (IsUntaggedInteger(o[1]) || o[1].HasOneTag(2)) {
+      if (!IsUntaggedInteger(o[1]) && !o[1].HasOneTag(2) && !o[1].HasOneTag(3)) {
         throw new CBORException("Mantissa is not an integer or bignum");
       }
       EInteger exponent = IntegerOrBignum(o[0]);

@@ -1444,16 +1444,13 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
          (bigValue.IsNegative && bigValue.IsZero)) {
         int options = bigValue.IsNegative ? 1 : 0;
         if (bigValue.IsInfinity()) {
-           { options += 2;
-        }
+           options += 2;
 }
 if (bigValue.IsQuietNaN()) {
-           { options += 4;
-        }
+           options += 4;
 }
 if (bigValue.IsSignalingNaN()) {
-           { options += 6;
-        }
+           options += 6;
 }
         cbor = CBORObject.NewArray().Add(bigValue.Exponent)
             .Add(bigValue.UnsignedMantissa).Add(options);
