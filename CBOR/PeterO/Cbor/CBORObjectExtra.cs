@@ -153,16 +153,6 @@ namespace PeterO.Cbor {
       return ((EDecimal)dec).ToEInteger();
     }
 
-    private static decimal ExtendedRationalToDecimal(ERational
-      extendedNumber) {
-      return (decimal)extendedNumber;
-    }
-
-    private static decimal ExtendedDecimalToDecimal(EDecimal
-      extendedNumber) {
-      return (decimal)extendedNumber;
-    }
-
     /// <summary>Converts this object to a.NET decimal.</summary>
     /// <returns>The closest big integer to this object.</returns>
     /// <exception cref='System.InvalidOperationException'>This object's
@@ -174,8 +164,8 @@ namespace PeterO.Cbor {
       return (this.ItemType == CBORObjectTypeInteger) ?
         ((decimal)(long)this.ThisItem) : ((this.ItemType ==
         CBORObjectTypeExtendedRational) ?
-        ExtendedRationalToDecimal((ERational)this.ThisItem) :
-        ExtendedDecimalToDecimal(this.AsEDecimal()));
+              (decimal)((ERational)this.ThisItem) :
+              (decimal)(this.AsEDecimal()));
     }
 
     /// <summary>Converts this object to a 64-bit unsigned integer.

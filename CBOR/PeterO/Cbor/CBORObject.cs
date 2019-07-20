@@ -181,10 +181,6 @@ namespace PeterO.Cbor {
     internal const int CBORObjectTypeByteString = 2;
     internal const int CBORObjectTypeDouble = 8;
     [Obsolete]
-    internal const int CBORObjectTypeExtendedDecimal = 9;
-    [Obsolete]
-    internal const int CBORObjectTypeExtendedFloat = 11;
-    [Obsolete]
     internal const int CBORObjectTypeExtendedRational = 12;
     internal const int CBORObjectTypeInteger = 0; // -(2^63).. (2^63-1)
     internal const int CBORObjectTypeMap = 5;
@@ -2377,8 +2373,7 @@ if (bigValue.IsSignalingNaN()) {
         throw new ArgumentException(nameof(second) + "does not represent a" +
           "\u0020number");
       }
-      throw new NotImplementedException();
-// return a.Remainder(b).ToCBORObject();
+      return a.Remainder(b).ToCBORObject();
     }
 
     /// <summary>Finds the difference between two CBOR number

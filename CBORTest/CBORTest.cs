@@ -439,7 +439,6 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
 
     [Test]
     public void TestCBORInfinityRoundTrip() {
-      {
       CBORTestCommon.AssertRoundTrip(
         ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf));
 

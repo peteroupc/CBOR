@@ -331,7 +331,7 @@ options == 7, null);
       }
     }
 
-    public string ToJSONString() {
+    internal string ToJSONString() {
       switch (this.kind) {
         case Kind.Binary64: {
             var f = (double)this.value;
@@ -649,6 +649,47 @@ CBORNumber.FromObject(EDecimal.PositiveInfinity));
         }
         return bigrem.IsZero ? CBORNumber.FromObject(bigquo) :
            new CBORNumber(Kind.ERational, ERational.Create(b1, b2));
+      }
+    }
+
+
+    public CBORNumber Remainder(CBORNumber b) {
+      // ArgumentAssert.NotNull(b);
+      object objA = this.value;
+      object objB = b.value;
+      Kind typeA = this.kind;
+      Kind typeB = b.kind;
+      if (typeA == Kind.Integer && typeB == Kind.Integer) {
+        var valueA = (long)objA;
+        var valueB = (long)objB;
+        return (valueA == Int64.MinValue && valueB == -1) ?
+        CBORNumber.FromObject(0) : CBORNumber.FromObject(valueA % valueB);
+      }
+      if (typeA == Kind.ERational ||
+             typeB == Kind.ERational) {
+        ERational e1 =
+        GetNumberInterface(typeA).AsExtendedRational(objA);
+        ERational e2 = GetNumberInterface(typeB).AsExtendedRational(objB);
+        return CBORNumber.FromObject(e1.Remainder(e2));
+      }
+      if (typeA == Kind.EDecimal ||
+             typeB == Kind.EDecimal) {
+        EDecimal e1 =
+        GetNumberInterface(typeA).AsExtendedDecimal(objA);
+        EDecimal e2 = GetNumberInterface(typeB).AsExtendedDecimal(objB);
+        return CBORNumber.FromObject(e1.Remainder(e2, null));
+      }
+      if (typeA == Kind.EFloat ||
+               typeB == Kind.EFloat || typeA == Kind.Binary64 || typeB ==
+               Kind.Binary64) {
+        EFloat e1 =
+        GetNumberInterface(typeA).AsExtendedFloat(objA);
+        EFloat e2 = GetNumberInterface(typeB).AsExtendedFloat(objB);
+        return CBORNumber.FromObject(e1.Remainder(e2, null));
+      } else {
+        EInteger b1 = GetNumberInterface(typeA).AsEInteger(objA);
+        EInteger b2 = GetNumberInterface(typeB).AsEInteger(objB);
+        return CBORNumber.FromObject(b1 % (EInteger)b2);
       }
     }
 
