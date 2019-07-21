@@ -31,7 +31,7 @@ namespace PeterO {
     }
 
     public static void Main() {
-      const String ValueParam = "TestCompareTo";
+      const String ValueParam = "TestLexOrder";
      // Run all the tests in this assembly
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
         if (!HasAttribute(type, typeof(TestFixtureAttribute))) {
@@ -50,8 +50,8 @@ namespace PeterO {
             continue;
           }
           if (!String.IsNullOrEmpty(ValueParam)) {
-            if (!method.Name.Equals(ValueParam, StringComparison.Ordinal)) {
-              //continue;
+            if (method.Name.IndexOf(ValueParam, StringComparison.Ordinal) < 0) {
+              continue;
             }
           }
           Console.WriteLine(method.Name);
@@ -61,9 +61,9 @@ namespace PeterO {
             {
               Console.WriteLine(e.InnerException.GetType().FullName);
               string message = e.InnerException.Message;
-              if (message.Length > 140) {
-                message = message.Substring(0, 140);
-              }
+              // if (message.Length > 140) {
+              // message = message.Substring(0, 140);
+              // }
               Console.WriteLine(message);
             }
           }

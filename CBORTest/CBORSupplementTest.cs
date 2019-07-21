@@ -442,8 +442,12 @@ namespace Test {
       CBORObject co, co2;
       co = ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecPosInf);
       co2 = ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity);
-      Assert.AreEqual(co.IsNegative && co.IsInfinity(), co2.IsNegative &&
-co2.IsInfinity());
+      {
+        object objectTemp = co.IsNegative && co.IsInfinity();
+        object objectTemp2 = co2.IsNegative &&
+co2.IsInfinity();
+Assert.AreEqual(objectTemp, objectTemp2);
+}
     }
 
     [Test]
@@ -590,11 +594,11 @@ throw new InvalidOperationException(String.Empty, ex);
         EInteger.Zero,
         CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0x40 }).AsEInteger());
       {
-object objectTemp = EInteger.FromString("-1");
-object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] {
-  0xc3, 0x41,
-  0x00,
-}).AsEInteger();
+        object objectTemp = EInteger.FromString("-1");
+        object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] {
+          0xc3, 0x41,
+          0x00,
+        }).AsEInteger();
 Assert.AreEqual(objectTemp, objectTemp2);
 }
       Assert.AreEqual(

@@ -65,7 +65,11 @@ namespace PeterO.Cbor {
 
     public static CBORNumber FromCBORObject(CBORObject o) {
       if (IsUntaggedInteger(o)) {
-        return CBORNumber.FromObject(o.AsEIntegerValue());
+        if (o.CanValueFitInInt64()) {
+          return new CBORNumber(Kind.Integer, o.AsInt64Value());
+        } else {
+          return new CBORNumber(Kind.EInteger, o.AsEIntegerValue());
+        }
       } else if (!o.IsTagged && o.Type == CBORType.FloatingPoint) {
         return CBORNumber.FromObject(o.AsDoubleValue());
       }
@@ -83,14 +87,6 @@ namespace PeterO.Cbor {
            o.HasOneTag(270)) {
         return RationalNumberToNumber(o,
               o.MostOuterTag.ToInt32Checked());
-      } else if (o.Type == CBORType.Integer) {
-        if (o.CanFitInInt64()) {
-          return new CBORNumber(Kind.Integer, o.AsInt64());
-        } else {
-          return new CBORNumber(Kind.EInteger, o.AsEInteger());
-        }
-      } else if (o.Type == CBORType.FloatingPoint) {
-        return new CBORNumber(Kind.Binary64, o.AsEInteger());
       } else {
         return null;
       }
@@ -652,9 +648,10 @@ CBORNumber.FromObject(EDecimal.PositiveInfinity));
       }
     }
 
-
     public CBORNumber Remainder(CBORNumber b) {
-      // ArgumentAssert.NotNull(b);
+      if (b == null) {
+        throw new ArgumentNullException(nameof(b));
+      }
       object objA = this.value;
       object objB = b.value;
       Kind typeA = this.kind;

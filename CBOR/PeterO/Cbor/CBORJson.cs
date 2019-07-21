@@ -533,9 +533,13 @@ namespace PeterO.Cbor {
       switch (type) {
         case CBORObject.CBORObjectTypeInteger:
         case CBORObject.CBORObjectTypeDouble:
-        case CBORObject.CBORObjectTypeBigInteger:
-            writer.WriteString(CBORNumber.FromCBORObject(obj).ToJSONString());
+        case CBORObject.CBORObjectTypeBigInteger: {
+            CBORObject untaggedObj = obj.Untag();
+
+            writer.WriteString(
+              CBORNumber.FromCBORObject(untaggedObj).ToJSONString());
             break;
+        }
         case CBORObject.CBORObjectTypeSimpleValue: {
             if (obj.IsTrue) {
               writer.WriteString("true");

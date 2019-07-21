@@ -75,10 +75,10 @@ namespace PeterO.Cbor {
         return cbor.EncodeToBytes(CBOREncodeOptions.Default);
       } else if (valueAType == CBORType.Integer ||
                  valueAType == CBORType.FloatingPoint) {
-        if (cbor.CanFitInInt64()) {
+        if (cbor.CanValueFitInInt64()) {
           return cbor.EncodeToBytes(CBOREncodeOptions.Default);
         } else {
-          cbor = CBORObject.FromObject(cbor.AsDouble());
+          cbor = CBORObject.FromObject(cbor.AsDoubleValue());
           return cbor.EncodeToBytes(CBOREncodeOptions.Default);
         }
       } else {

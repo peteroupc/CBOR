@@ -163,10 +163,8 @@ namespace PeterO.Cbor {
     public decimal AsDecimal() {
       return (this.ItemType == CBORObjectTypeInteger) ?
         ((decimal)(long)this.ThisItem) : ((this.ItemType ==
-        CBORObjectTypeExtendedRational) ?
-              (decimal)((ERational)this.ThisItem) :
-              (decimal)(this.AsEDecimal()));
-    }
+        CBORObjectTypeExtendedRational) ? (decimal)((ERational)this.ThisItem) :
+              (decimal)(this.AsEDecimal())); }
 
     /// <summary>Converts this object to a 64-bit unsigned integer.
     /// Non-integer values are truncated to an integer.</summary>

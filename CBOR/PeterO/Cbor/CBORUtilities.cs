@@ -16,6 +16,43 @@ namespace PeterO.Cbor {
   internal static class CBORUtilities {
     private const string HexAlphabet = "0123456789ABCDEF";
 
+    public static int FastPathStringCompare(string strA, string strB) {
+      if (strA == null) {
+        return (strB == null) ? 0 : -1;
+      }
+      if (strB == null) {
+        return 1;
+      }
+      if (strA.Length == 0) {
+        return strB.Length == 0 ? 0 : -1;
+      }
+      if (strB.Length == 0) {
+        return strA.Length == 0 ? 0 : 1;
+      }
+      if (strA.Length < 64 && strB.Length< 64) {
+        for (int i = 0; i < strA.Length; ++i) {
+          if ((strA[i] & ((byte)0x80)) != 0) {
+              return -2; // non-ASCII
+          }
+        }
+        for (int i = 0; i < strB.Length; ++i) {
+          if ((strB[i] & ((byte)0x80)) != 0) {
+              return -2; // non-ASCII
+          }
+        }
+        if (strA.Length != strB.Length) {
+          return strA.Length < strB.Length ? -1 : 1;
+        }
+        for (int i = 0; i < strA.Length; ++i) {
+if (strA[i] != strB[i]) {
+            return strA[i] < strB[i] ? -1 : 1;
+          }
+        }
+        return 0;
+      }
+      return -2; // not short enough
+    }
+
     public static void ToBase16(StringBuilder str, byte[] data) {
       if (data == null) {
         throw new ArgumentNullException(nameof(data));
@@ -75,10 +112,32 @@ namespace PeterO.Cbor {
       return (a.Length != b.Length) ? ((a.Length < b.Length) ? -1 : 1) : 0;
     }
 
+    public static int ByteArrayCompareLengthFirst(byte[] a, byte[] b) {
+      if (a == null) {
+        return (b == null) ? 0 : -1;
+      }
+      if (b == null) {
+        return 1;
+      }
+      if (a.Length != b.Length) {
+        return a.Length < b.Length ? -1 : 1;
+      }
+      for (var i = 0; i < a.Length; ++i) {
+        if (a[i] != b[i]) {
+          return (a[i] < b[i]) ? -1 : 1;
+        }
+      }
+      return 0;
+    }
+
     public static string TrimDotZero(string str) {
       return (str.Length > 2 && str[str.Length - 1] == '0' && str[str.Length
                     - 2] == '.') ? str.Substring(0, str.Length - 2) :
         str;
+    }
+
+    public static long DoubleToInt64Bits(double dbl) {
+        return BitConverter.ToInt64(BitConverter.GetBytes((double)dbl), 0);
     }
 
     public static string DoubleToString(double dbl) {
@@ -720,10 +779,10 @@ public static int SingleToHalfPrecisionIfSameValue(float f) {
     return -1;
   } else if (exp <= 112) { // Subnormal
     int shift = 126 - exp;
-    return (bits & ((1 << shift) - 1)) == 0 ? sign+(1024>>(145-exp))+(mant >>
+    return (bits & ((1 << shift) - 1)) == 0 ? sign+(1024>>(145-exp)) + (mant >>
 shift) : -1;
   } else {
-    return (bits & 0x1fff) == 0 ? sign +((exp-112) << 10) + (mant >> 13) : -1;
+    return (bits & 0x1fff) == 0 ? sign + ((exp -112) << 10) + (mant >> 13) : -1;
   }
 }
 

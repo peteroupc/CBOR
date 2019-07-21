@@ -39,7 +39,79 @@ namespace Test {
       Assert.AreEqual((int)3, cbor[cborone]);
     }
 
-    [Test]
+[Test]
+public void TestLexOrderSpecific3() {
+    var bytes1 = new byte[] {
+      165, 96, 27, 90, 227, 20, 176, 219, 65, 123,
+      131, 102, 74, 87, 102, 63, 96, 116, 68, 164, 164, 33, 232, 27, 49, 130, 0,
+      0, 174, 29, 116, 165, 59, 45, 201, 162, 189, 94, 104, 57, 117, 68,
+      159, 87,
+      88, 208, 25, 167, 246, 59, 18, 126, 209, 26, 195, 62, 36, 218, 67,
+      215, 84,
+      4,
+    };
+    var bytes2 = new byte[] {
+      165, 72, 62, 105, 209, 132, 163, 235, 172, 88,
+      101, 87, 80, 95, 73, 34, 25, 105, 180, 101, 93, 99, 53, 87, 59, 59,
+      66, 101,
+      190, 137, 0, 0, 55, 65, 74, 84, 143, 161, 159, 199, 185, 113, 49, 224,
+      254,
+      67, 7, 130, 35, 67, 76, 49, 135, 67, 136, 189, 130, 99, 80, 124, 81,
+    };
+    TestCommon.CompareTestGreater(CBORObject.DecodeFromBytes(bytes1),
+  CBORObject.DecodeFromBytes(bytes2));
+    // TestRandomSlightlyModifiedOne(bytes1, new RandomGenerator());
+    // TestRandomSlightlyModifiedOne(bytes2, new RandomGenerator());
+  }
+
+[Test]
+public void TestLexOrderSpecific1() {
+    var bytes1 = new byte[] {
+      163, 131, 59, 0, 0, 107, 30, 140, 92, 217, 46,
+      26, 126, 10, 218, 165, 27, 116, 216, 0, 0, 0, 0, 72, 77, 27, 31, 227,
+      0, 0,
+      0, 0, 13, 96, 27, 81, 245, 0, 0, 6, 194, 83, 202, 27, 20, 155, 0, 0, 159,
+      80, 238, 60, 72, 224, 250, 204, 75, 149, 47, 52, 136, 25, 169, 69,
+    };
+    var bytes2 = new byte[] {
+      163, 131, 59, 0, 0, 151, 34, 164, 97, 140, 36,
+      99, 51, 120, 70, 74, 137, 122, 89, 56, 65, 142, 34, 215, 210, 20, 101, 39,
+      96, 32, 32, 41, 59, 73, 73, 0, 0, 0, 0, 91, 112, 101, 51, 120, 76,
+      117, 101,
+      133, 27, 123, 204, 245, 44, 239, 121, 78, 131, 59, 106, 86, 0, 0, 0,
+      0, 176,
+      50, 59, 0, 0, 4, 216, 0, 0, 25, 61, 101, 86, 78, 86, 88, 117, 99, 34, 101,
+      90, 161, 105, 92, 90, 79, 87, 100, 77, 79, 81, 38, 59, 0, 0, 99, 201,
+      0, 0,
+      87, 202,
+    };
+    TestCommon.CompareTestLess(CBORObject.DecodeFromBytes(bytes1),
+  CBORObject.DecodeFromBytes(bytes2));
+  }
+
+[Test]
+public void TestLexOrderSpecific2() {
+    var bytes1 = new byte[] {
+      131, 165, 96, 27, 0, 0, 135, 142, 217, 94,
+      100, 145, 69, 140, 219, 69, 116, 36, 58, 5, 244, 51, 7, 101, 104, 64, 77,
+      68, 107, 101, 43, 108, 100, 38, 41, 101, 84, 115, 50, 82, 87, 69, 173,
+      230,
+      28, 0, 66, 101, 109, 80, 104, 101, 63, 59, 0, 0, 17, 68, 115, 18, 13, 187,
+      59, 121, 126, 0, 0, 0, 0, 94, 144, 69, 9, 177, 240, 124, 60,
+    };
+    var bytes2 = new byte[] {
+      131, 165, 96, 70, 180, 13, 141, 101, 134, 49,
+      27, 41, 185, 23, 89, 160, 147, 163, 215, 101, 46, 95, 78, 45, 60, 69, 245,
+      192, 25, 194, 24, 27, 0, 0, 190, 177, 0, 0, 240, 183, 70, 96, 82, 212, 36,
+      138, 24, 67, 156, 1, 245, 27, 48, 26, 129, 98, 13, 223, 237, 52, 27, 64,
+      239, 17, 71, 232, 193, 56, 117, 65, 187, 79, 225, 202, 50, 225, 216, 213,
+      219, 16, 145, 235, 253, 181, 5, 180, 30,
+    };
+    TestCommon.CompareTestLess(CBORObject.DecodeFromBytes(bytes1),
+  CBORObject.DecodeFromBytes(bytes2));
+  }
+
+[Test]
     public void TestArray() {
       CBORObject cbor = CBORObject.FromJSONString("[]");
       cbor.Add(ToObjectTest.TestToFromObjectRoundTrip(3));
@@ -573,11 +645,13 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
     }
     [Test]
     public void TestDecimalFracExactlyTwoElements() {
-      try {
-        CBORTestCommon.FromBytesTestAB(new byte[] {
-          0xc4, 0x82, 0xc2, 0x41,
-          1,
-        });
+CBORObject obj = CBORTestCommon.FromBytesTestAB(new byte[] {
+  0xc4, 0x82,
+  0xc2, 0x41,
+  1,
+});
+        try {
+        Console.WriteLine(obj.AsEDecimal());
         Assert.Fail("Should have failed");
       } catch (CBORException) {
         // NOTE: Intentionally empty
@@ -588,12 +662,14 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
     }
     [Test]
     public void TestDecimalFracExponentMustNotBeBignum() {
+      CBORObject obj = CBORObject.DecodeFromBytes(new byte[] {
+        0xc4, 0x82,
+        0xc2, 0x41, 1,
+        0x1a,
+        1, 2, 3, 4,
+      });
       try {
-        CBORTestCommon.FromBytesTestAB(new byte[] {
-          0xc4, 0x82, 0xc2, 0x41, 1,
-          0x1a,
-          1, 2, 3, 4,
-        });
+        Console.WriteLine(obj.AsEDecimal());
         Assert.Fail("Should have failed");
       } catch (CBORException) {
         // NOTE: Intentionally empty
@@ -780,7 +856,7 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
 public void TestTag268() {
   CBORObject cbor;
   CBORObject cbortag;
-  for (var tag = 268;tag <= 269; ++tag) {
+  for (var tag = 268; tag <= 269; ++tag) {
   cbor = CBORObject.NewArray().Add(-3).Add(99999).Add(0);
   cbortag = CBORObject.FromObjectAndTag(cbor, tag);
   Assert.IsFalse(cbortag.IsNegative);
@@ -788,12 +864,12 @@ public void TestTag268() {
   cbortag = CBORObject.FromObjectAndTag(cbor, tag);
   try {
  Console.WriteLine(cbortag.IsNegative);
-Assert.Fail("Should have failed");
+ Assert.Fail("Should have failed");
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
+ throw new InvalidOperationException(String.Empty, ex);
 }
   cbor = CBORObject.NewArray().Add(-3).Add(99999).Add(1);
   cbortag = CBORObject.FromObjectAndTag(cbor, tag);
@@ -802,23 +878,23 @@ throw new InvalidOperationException(String.Empty, ex);
   cbortag = CBORObject.FromObjectAndTag(cbor, tag);
   try {
  Console.WriteLine(cbortag.IsNegative);
-Assert.Fail("Should have failed");
+ Assert.Fail("Should have failed");
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
+ throw new InvalidOperationException(String.Empty, ex);
 }
   cbor = CBORObject.NewArray().Add(-3).Add(99999).Add(2);
   cbortag = CBORObject.FromObjectAndTag(cbor, tag);
   try {
  Console.WriteLine(cbortag.IsNegative);
-Assert.Fail("Should have failed");
+ Assert.Fail("Should have failed");
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
+ throw new InvalidOperationException(String.Empty, ex);
 }
   cbor = CBORObject.NewArray().Add(0).Add(0).Add(2);
   cbortag = CBORObject.FromObjectAndTag(cbor, tag);
@@ -830,12 +906,12 @@ throw new InvalidOperationException(String.Empty, ex);
   cbortag = CBORObject.FromObjectAndTag(cbor, tag);
   try {
  Console.WriteLine(cbortag.IsNegative);
-Assert.Fail("Should have failed");
+ Assert.Fail("Should have failed");
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
+ throw new InvalidOperationException(String.Empty, ex);
 }
   }
 }
@@ -1081,7 +1157,6 @@ throw new InvalidOperationException(String.Empty, ex);
     [Test]
     [Timeout(50000)]
     public void TestRandomData() {
-      // Assert.Ignore();
       var rand = new RandomGenerator();
       CBORObject obj;
       for (var i = 0; i < 1000; ++i) {
@@ -1169,7 +1244,6 @@ throw new InvalidOperationException(String.Empty, ex);
     [Test]
     [Timeout(500000)]
     public void TestRandomNonsense() {
-      Assert.Ignore(); // TODO: Temporary
       var rand = new RandomGenerator();
       for (var i = 0; i < 1000; ++i) {
         var array = new byte[rand.UniformInt(1000000) + 1];
@@ -1241,18 +1315,11 @@ throw new InvalidOperationException(String.Empty, ex);
       }
     }
 
-    [Test]
-    public void TestRandomSlightlyModified() {
-      Assert.Ignore(); // TODO: Temporary
-      var rand = new RandomGenerator();
-      // Test slightly modified objects
-      for (var i = 0; i < 2000; ++i) {
-        CBORObject originalObject = CBORTestCommon.RandomCBORObject(rand);
-        byte[] array = originalObject.EncodeToBytes();
+    private static void TestRandomSlightlyModifiedOne(byte[] array,
+  RandomGenerator rand) {
         if (array.Length > 50000) {
           Console.WriteLine(String.Empty + array.Length);
         }
-        // Console.WriteLine(originalObject);
         int count2 = rand.UniformInt(10) + 1;
         for (int j = 0; j < count2; ++j) {
           int index = rand.UniformInt(array.Length);
@@ -1312,6 +1379,16 @@ throw new InvalidOperationException(String.Empty, ex);
             }
           }
         }
+    }
+
+    [Test]
+    public void TestRandomSlightlyModified() {
+      var rand = new RandomGenerator();
+      // Test slightly modified objects
+      for (var i = 0; i < 2000; ++i) {
+        CBORObject originalObject = CBORTestCommon.RandomCBORObject(rand);
+        byte[] array = originalObject.EncodeToBytes();
+        TestRandomSlightlyModifiedOne(array, rand);
       }
     }
 
@@ -1448,7 +1525,6 @@ throw new InvalidOperationException(String.Empty, ex);
     [Test]
     [Timeout(10000)]
     public void TestTags() {
-      Assert.Ignore();
       EInteger maxuint = EInteger.FromString("18446744073709551615");
       EInteger[] ranges = {
         EInteger.FromString("37"),
@@ -1637,32 +1713,32 @@ throw new InvalidOperationException(String.Empty, ex);
       cbor.Set((double)0.0, CBORObject.FromObject("testpointzero"));
       Assert.AreEqual(2, cbor.Count);
       {
-string stringTemp = cbor[CBORObject.FromObject(0)].AsString();
-Assert.AreEqual(
-  "testzero",
-  stringTemp);
+        string stringTemp = cbor[CBORObject.FromObject(0)].AsString();
+        Assert.AreEqual(
+          "testzero",
+          stringTemp);
 }
       {
-string stringTemp = cbor[CBORObject.FromObject((double)0.0)].AsString();
-Assert.AreEqual(
-  "testpointzero",
-  stringTemp);
+        string stringTemp = cbor[CBORObject.FromObject((double)0.0)].AsString();
+        Assert.AreEqual(
+          "testpointzero",
+          stringTemp);
 }
       cbor = CBORObject.NewMap();
       cbor.Set((double)0.0, CBORObject.FromObject("testpointzero"));
       cbor.Set((int)0, CBORObject.FromObject("testzero"));
       Assert.AreEqual(2, cbor.Count);
       {
-string stringTemp = cbor[CBORObject.FromObject(0)].AsString();
-Assert.AreEqual(
-  "testzero",
-  stringTemp);
+        string stringTemp = cbor[CBORObject.FromObject(0)].AsString();
+        Assert.AreEqual(
+          "testzero",
+          stringTemp);
 }
       {
-string stringTemp = cbor[CBORObject.FromObject((double)0.0)].AsString();
-Assert.AreEqual(
-  "testpointzero",
-  stringTemp);
+        string stringTemp = cbor[CBORObject.FromObject((double)0.0)].AsString();
+        Assert.AreEqual(
+          "testpointzero",
+          stringTemp);
 }
       // 3 versus 3.0
       cbor = CBORObject.NewMap();
@@ -1670,32 +1746,32 @@ Assert.AreEqual(
       cbor.Set((double)3.0, CBORObject.FromObject("testpointzero"));
       Assert.AreEqual(2, cbor.Count);
       {
-string stringTemp = cbor[CBORObject.FromObject(3)].AsString();
-Assert.AreEqual(
-  "testzero",
-  stringTemp);
+        string stringTemp = cbor[CBORObject.FromObject(3)].AsString();
+        Assert.AreEqual(
+          "testzero",
+          stringTemp);
 }
       {
-string stringTemp = cbor[CBORObject.FromObject((double)3.0)].AsString();
-Assert.AreEqual(
-  "testpointzero",
-  stringTemp);
+        string stringTemp = cbor[CBORObject.FromObject((double)3.0)].AsString();
+        Assert.AreEqual(
+          "testpointzero",
+          stringTemp);
 }
       cbor = CBORObject.NewMap();
       cbor.Set((double)3.0, CBORObject.FromObject("testpointzero"));
       cbor.Set((int)3, CBORObject.FromObject("testzero"));
       Assert.AreEqual(2, cbor.Count);
       {
-string stringTemp = cbor[CBORObject.FromObject(3)].AsString();
-Assert.AreEqual(
-  "testzero",
-  stringTemp);
+        string stringTemp = cbor[CBORObject.FromObject(3)].AsString();
+        Assert.AreEqual(
+          "testzero",
+          stringTemp);
 }
       {
-string stringTemp = cbor[CBORObject.FromObject((double)3.0)].AsString();
-Assert.AreEqual(
-  "testpointzero",
-  stringTemp);
+        string stringTemp = cbor[CBORObject.FromObject((double)3.0)].AsString();
+        Assert.AreEqual(
+          "testpointzero",
+          stringTemp);
 }
     }
 

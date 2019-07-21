@@ -50,8 +50,7 @@ namespace PeterO.Cbor {
 
     public long AsInt64(object obj) {
       var bi = (EInteger)obj;
-      if (bi.CompareTo(CBORObject.Int64MaxValue) > 0 ||
-          bi.CompareTo(CBORObject.Int64MinValue) < 0) {
+      if (!bi.CanFitInInt64()) {
         throw new OverflowException("This object's value is out of range");
       }
       return (long)bi;

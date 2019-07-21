@@ -176,22 +176,17 @@ namespace PeterO.Cbor {
     public static readonly CBORObject Zero =
       CBORObject.ConstructIntegerValue(0);
 
-    internal const int CBORObjectTypeArray = 4;
+    internal const int CBORObjectTypeInteger = 0; // -(2^63).. (2^63-1)
     internal const int CBORObjectTypeBigInteger = 1; // all other integers
     internal const int CBORObjectTypeByteString = 2;
+    internal const int CBORObjectTypeTextString = 3;
+    internal const int CBORObjectTypeArray = 4;
+    internal const int CBORObjectTypeMap = 5;
+    internal const int CBORObjectTypeTagged = 6;
+    internal const int CBORObjectTypeSimpleValue = 7;
     internal const int CBORObjectTypeDouble = 8;
     [Obsolete]
-    internal const int CBORObjectTypeExtendedRational = 12;
-    internal const int CBORObjectTypeInteger = 0; // -(2^63).. (2^63-1)
-    internal const int CBORObjectTypeMap = 5;
-    internal const int CBORObjectTypeSimpleValue = 6;
-    internal const int CBORObjectTypeTagged = 10;
-    internal const int CBORObjectTypeTextString = 3;
-    internal static readonly EInteger Int64MaxValue =
-      (EInteger)Int64.MaxValue;
-
-    internal static readonly EInteger Int64MinValue =
-      (EInteger)Int64.MinValue;
+    internal const int CBORObjectTypeExtendedRational = 9;
 
     private const int StreamedStringBufferLength = 4096;
 
@@ -229,12 +224,6 @@ namespace PeterO.Cbor {
 
     private static readonly byte[] ValueNullBytes = { 0x6e, 0x75, 0x6c, 0x6c };
 
-    private static readonly int[] ValueNumberTypeOrder = {
-      1, 1, 3, 4, 5, 6,
-      2, 0, 7,
-      0, 0, 0, 0,
-    };
-
     private static readonly byte[] ValueTrueBytes = { 0x74, 0x72, 0x75, 0x65 };
 
     private static CBORObject[] valueFixedObjects = InitializeFixedObjects();
@@ -256,8 +245,7 @@ namespace PeterO.Cbor {
       // Check range in debug mode to ensure that Integer and EInteger
       // are unambiguous
       if ((type == CBORObjectTypeBigInteger) &&
-          ((EInteger)item).CompareTo(Int64MinValue) >= 0 &&
-          ((EInteger)item).CompareTo(Int64MaxValue) <= 0) {
+          ((EInteger)item).CanFitInInt64()) {
         throw new ArgumentException("arbitrary-precision integer is within" +
             "\u0020range for Integer");
       }
@@ -1551,16 +1539,13 @@ if (bigValue.IsSignalingNaN()) {
          (bigValue.IsNegative && bigValue.IsZero)) {
         int options = bigValue.IsNegative ? 1 : 0;
         if (bigValue.IsInfinity()) {
-           { options += 2;
-        }
+          options += 2;
 }
 if (bigValue.IsQuietNaN()) {
-           { options += 4;
-        }
+           options += 4;
 }
 if (bigValue.IsSignalingNaN()) {
-           { options += 6;
-        }
+           options += 6;
 }
         cbor = CBORObject.NewArray().Add(bigValue.Exponent)
             .Add(bigValue.UnsignedMantissa).Add(options);
@@ -2632,11 +2617,11 @@ if (bigValue.IsSignalingNaN()) {
         bigint = bigint.Add(EInteger.One);
         bigint = -(EInteger)bigint;
       }
-      if (bigint.CompareTo(Int64MaxValue) <= 0) {
+      if (bigint.CanFitInInt64()) {
         // If the arbitrary-precision integer is representable as a long and in
         // major type 0 or 1, write that major type
         // instead of as a bignum
-        var ui = (long)(EInteger)bigint;
+        var ui = bigint.ToInt64Checked();
         WritePositiveInt64(datatype, ui, stream);
       } else {
         // Get a byte array of the arbitrary-precision integer's value,
@@ -3263,8 +3248,8 @@ if (bigValue.IsSignalingNaN()) {
     }
 
     /// <summary>Converts this object to a 32-bit signed integer if this
-    /// CBOR ///object's type is Integer. This method disregards the tags
-    /// this object has, if any.</summary>
+    /// CBOR object's type is Integer. This method disregards the tags this
+    /// object has, if any.</summary>
     /// <returns>The 32-bit signed integer stored by this object.</returns>
     /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not <c>CBORType.Integer</c>
@@ -3279,7 +3264,7 @@ if (bigValue.IsSignalingNaN()) {
     /// <code>
     /// CBORObject obj = CBORObject.FromInt32(99999); if&#x28;obj.Type ==
     /// ///CBORType.Integer
-    /// &amp;&amp; obj.CanTruncatedIntFitInInt32&#x28;)) &#x7b; /* Not an Int32;
+    /// &amp;&amp; obj.CanValueFitInInt32&#x28;)) &#x7b; /* Not an Int32;
     /// handle the error */ Console.WriteLine("Not a 32-bit integer."); &#x7d; else
     /// { Console.WriteLine("The value is " + obj.AsInt32Value()); }
     /// </code>
@@ -3303,8 +3288,8 @@ if (bigValue.IsSignalingNaN()) {
     }
 
     /// <summary>Converts this object to a 64-bit signed integer if this
-    /// CBOR ///object's type is Integer. This method disregards the tags
-    /// this object has, if any.</summary>
+    /// CBOR object's type is Integer. This method disregards the tags this
+    /// object has, if any.</summary>
     /// <returns>The 64-bit signed integer stored by this object.</returns>
     /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not <c>CBORType.Integer</c>
@@ -3319,7 +3304,7 @@ if (bigValue.IsSignalingNaN()) {
     /// <code>
     /// CBORObject obj = CBORObject.FromInt64(99999); if&#x28;obj.Type ==
     /// ///CBORType.Integer
-    /// &amp;&amp; obj.CanTruncatedIntFitInInt64&#x28;)) &#x7b; /* Not an Int64;
+    /// &amp;&amp; obj.CanValueFitInInt64&#x28;)) &#x7b; /* Not an Int64;
     /// handle the error */ Console.WriteLine("Not a 64-bit integer."); &#x7d; else
     /// { Console.WriteLine("The value is " + obj.AsInt64Value()); }
     /// </code>
@@ -3334,6 +3319,44 @@ if (bigValue.IsSignalingNaN()) {
             return ei.ToInt64Checked();
           }
         default: throw new InvalidOperationException("Not an integer type");
+      }
+    }
+
+    /// <summary>Returns whether this CBOR object stores an integer
+    /// (CBORType.Integer) within the range of a 64-bit signed integer.
+    /// This method disregards the tags this object has, if any.</summary>
+    /// <returns>True if this CBOR object stores an integer
+    /// (CBORType.Integer) whose value is at least -(2^63) and less than
+    /// 2^63; otherwise, false.</returns>
+    public bool CanValueFitInInt64() {
+      switch (this.ItemType) {
+        case CBORObjectTypeInteger:
+          return true;
+        case CBORObjectTypeBigInteger: {
+            var ei = (EInteger)this.ThisItem;
+            return ei.CanFitInInt64();
+          }
+        default: return false;
+      }
+    }
+
+    /// <summary>Returns whether this CBOR object stores an integer
+    /// (CBORType.Integer) within the range of a 32-bit signed integer.
+    /// This method disregards the tags this object has, if any.</summary>
+    /// <returns>True if this CBOR object stores an integer
+    /// (CBORType.Integer) whose value is at least -(2^31) and less than
+    /// 2^31; otherwise, false.</returns>
+    public bool CanValueFitInInt32() {
+      switch (this.ItemType) {
+        case CBORObjectTypeInteger: {
+          var elong = (long)this.ThisItem;
+          return elong >= Int32.MinValue && elong <= Int32.MaxValue;
+        }
+        case CBORObjectTypeBigInteger: {
+            var ei = (EInteger)this.ThisItem;
+            return ei.CanFitInInt32();
+          }
+        default: return false;
       }
     }
 
@@ -3548,39 +3571,38 @@ cn.GetNumberInterface().CanTruncatedIntFitInInt64(cn.GetValue());
     /// <list type=''>
     /// <item>The null pointer (null reference) is considered less than any
     /// other object.</item>
-    /// <item>If either object is true, false, CBORObject.Null, or the
-    /// undefined value, it is treated as less than the other value. If
-    /// both objects have one of these four values, then undefined is less
-    /// than CBORObject.Null, which is less than false, which is less than
-    /// true.</item>
-    /// <item>If both objects are integers (CBORType.Integer), their values
-    /// are compared. Here, NaN (not-a-number) is considered greater than
-    /// any number.</item>
+    /// <item>If both objects are integers (CBORType.Integer) their CBOR
+    /// encodings (as though EncodeToBytes were called on each integer) are
+    /// compared as though by a byte-by-byte comparison.</item>
     /// <item>If both objects are floating-point numbers
-    /// (CBORType.FloatingPoint), their mathematical values are compared.
-    /// Here, NaN (not-a-number) is considered greater than any
-    /// number.</item>
-    /// <item>If both objects are simple values other than true, false,
-    /// CBORObject.Null, and the undefined value, the objects are compared
+    /// (CBORType.FloatingPoint), their CBOR encodings (as though
+    /// EncodeToBytes were called on each number) are compared as though by
+    /// a byte-by-byte comparison.</item>
+    /// <item>If both objects are simple values (including true, false,
+    /// CBORObject.Null, and the undefined value), the objects are compared
     /// according to their ordinal numbers.</item>
     /// <item>If both objects are arrays, each element is compared. If one
-    /// array is shorter than the other and the other array begins with
-    /// that array (for the purposes of comparison), the shorter array is
-    /// considered less than the longer array.</item>
-    /// <item>If both objects are strings, compares each string code-point
-    /// by code-point, as though by the DataUtilities.CodePointCompare
-    /// method.</item>
+    /// array has fewer elements than the other, it is sorted
+    /// earlier.</item>
+    /// <item>If both objects are byte strings, each one is compared byte
+    /// by byte. If one byte string has fewer bytes than the other, it is
+    /// sorted earlier.</item>
+    /// <item>If both objects are text strings, their CBOR encodings (as
+    /// though EncodeToBytes were called on each number) are compared as
+    /// though by a byte-by-byte comparison.</item>
     /// <item>If both objects are maps, compares each map as though each
     /// were an array with the sorted keys of that map as the array's
-    /// elements. If both maps have the same keys, their values are
-    /// compared in the order of the sorted keys.</item>
-    /// <item>If each object is a different type, then they are sorted by
-    /// their type in the following order: integer, byte string, text
-    /// string, array, map, simple value, floating point.</item>
-    /// <item>If each object has different tags and both objects are
-    /// otherwise equal under this method, each element is compared as
-    /// though each were an array with that object's tags listed in order
-    /// from outermost to innermost.</item></list>
+    /// elements, and with each such key followed immediately by the value
+    /// mapped to that key. If one map has fewer keys than the other, it is
+    /// sorted earlier.</item>
+    /// <item>If both objects each have a tag (tagged objects have a
+    /// separate type for the purposes of this method), their tags are
+    /// compared before comparing the objects associated with the
+    /// tags.</item></list>
+    /// <item>If each object is a different type, then the objects are
+    /// sorted by their type in the following order: integer, byte string,
+    /// text string, array, map, tagged item, simple value, floating
+    /// point.</item>
     /// <para>This method is not consistent with the Equals
     /// method.</para></summary>
     /// <param name='other'>A value to compare with.</param>
@@ -3598,75 +3620,56 @@ cn.GetNumberInterface().CanTruncatedIntFitInInt64(cn.GetValue());
       if (this == other) {
         return 0;
       }
-      int typeA = this.ItemType;
-      int typeB = other.ItemType;
-      object objA = this.ThisItem;
-      object objB = other.ThisItem;
-      var simpleValueA = -1;
-      var simpleValueB = -1;
-      if (typeA == CBORObjectTypeSimpleValue) {
-        if ((int)objA == 20) { // false
-          simpleValueA = 2;
-        } else if ((int)objA == 21) { // true
-          simpleValueA = 3;
-        } else if ((int)objA == 22) { // null
-          simpleValueA = 1;
-        } else if ((int)objA == 23) { // undefined
-          simpleValueA = 0;
-        }
-      }
-      if (typeB == CBORObjectTypeSimpleValue) {
-        if ((int)objB == 20) { // false
-          simpleValueB = 2;
-        } else if ((int)objB == 21) { // true
-          simpleValueB = 3;
-        } else if ((int)objB == 22) { // null
-          simpleValueB = 1;
-        } else if ((int)objB == 23) { // undefined
-          simpleValueB = 0;
-        }
-      }
-      var cmp = 0;
-      if (simpleValueA >= 0 || simpleValueB >= 0) {
-        if (simpleValueB < 0) {
-          return -1; // B is not true, false, null, or undefined, so A is less
-        }
-        if (simpleValueA < 0) {
-          return 1;
-        }
-        cmp = (simpleValueA == simpleValueB) ? 0 : ((simpleValueA <
-                    simpleValueB) ? -1 : 1);
-      } else if (typeA == typeB) {
+      int typeA = this.itemtypeValue;
+      int typeB = other.itemtypeValue;
+      object objA = this.itemValue;
+      object objB = other.itemValue;
+      int cmp;
+      if (typeA == typeB) {
         switch (typeA) {
           case CBORObjectTypeInteger: {
               var a = (long)objA;
               var b = (long)objB;
-              cmp = (a == b) ? 0 : ((a < b) ? -1 : 1);
+              if (a >= 0 && b >= 0) {
+                cmp = (a == b) ? 0 : ((a < b) ? -1 : 1);
+              } else if (a <= 0 && b <= 0) {
+                cmp = (a == b) ? 0 : ((a < b) ? 1 : -1);
+              } else if (a < 0 && b >= 0) {
+                // NOTE: Negative integers sort after
+                // nonnegative integers in the bytewise
+                // ordering of CBOR encodings
+                cmp = 1;
+              } else {
+#if DEBUG
+                if (!(a >= 0 && b < 0)) {
+                  throw new ArgumentException("doesn't satisfy a>= 0 && b<0");
+                }
+#endif
+
+                cmp = -1;
+              }
               break;
             }
           case CBORObjectTypeBigInteger: {
-              var bigintA = (EInteger)objA;
-              var bigintB = (EInteger)objB;
-              cmp = bigintA.CompareTo(bigintB);
-              break;
-            }
-          case CBORObjectTypeDouble: {
-              var a = (double)objA;
-              var b = (double)objB;
-              // Treat NaN as greater than all other numbers
-              cmp = Double.IsNaN(a) ? (Double.IsNaN(b) ? 0 : 1) :
-                (Double.IsNaN(b) ? (-1) : ((a == b) ? 0 : ((a < b) ? -1 :
-                    1)));
+              cmp = CBORUtilities.ByteArrayCompare(
+                    this.EncodeToBytes(),
+                    other.EncodeToBytes());
               break;
             }
           case CBORObjectTypeByteString: {
-              cmp = CBORUtilities.ByteArrayCompare((byte[])objA, (byte[])objB);
+              cmp = CBORUtilities.ByteArrayCompareLengthFirst((byte[])objA,
+  (byte[])objB);
               break;
             }
           case CBORObjectTypeTextString: {
-              cmp = DataUtilities.CodePointCompare(
-                (string)objA,
-                (string)objB);
+              cmp = CBORUtilities.FastPathStringCompare(
+                  (string)objA,
+                  (string)objB);
+              if (cmp < -1) {
+                cmp = CBORUtilities.ByteArrayCompare(
+                    this.EncodeToBytes(),
+                    other.EncodeToBytes());
+              }
               break;
             }
           case CBORObjectTypeArray: {
@@ -3675,48 +3678,49 @@ cn.GetNumberInterface().CanTruncatedIntFitInInt64(cn.GetValue());
                 (List<CBORObject>)objB);
               break;
             }
-          case CBORObjectTypeMap: {
+          case CBORObjectTypeMap:
               cmp = MapCompare(
                 (IDictionary<CBORObject, CBORObject>)objA,
                 (IDictionary<CBORObject, CBORObject>)objB);
               break;
-            }
+          case CBORObjectTypeTagged:
+              cmp = this.MostOuterTag.CompareTo(other.MostOuterTag);
+              if (cmp == 0) {
+                 cmp = ((CBORObject)objA).CompareTo((CBORObject)objB);
+              }
+              break;
           case CBORObjectTypeSimpleValue: {
               var valueA = (int)objA;
               var valueB = (int)objB;
               cmp = (valueA == valueB) ? 0 : ((valueA < valueB) ? -1 : 1);
               break;
             }
+          case CBORObjectTypeDouble: {
+              var a = (double)objA;
+              var b = (double)objB;
+              cmp = CBORUtilities.ByteArrayCompare(
+                GetDoubleBytes(a, 0),
+                GetDoubleBytes(b, 0));
+              break;
+            }
           default: throw new ArgumentException("Unexpected data type");
         }
+      } else if ((typeB == CBORObjectTypeInteger && typeA ==
+CBORObjectTypeBigInteger) ||
+                (typeA == CBORObjectTypeInteger && typeB ==
+CBORObjectTypeBigInteger)) {
+        cmp = CBORUtilities.ByteArrayCompare(
+                    this.EncodeToBytes(),
+                    other.EncodeToBytes());
       } else {
-        int typeOrderA = ValueNumberTypeOrder[typeA];
-        int typeOrderB = ValueNumberTypeOrder[typeB];
-        // Check whether types are different
-        // (treating Integer/BigInteger the same)
-        if (typeOrderA != typeOrderB) {
-          return (typeOrderA < typeOrderB) ? -1 : 1;
-        }
-#if DEBUG
-        if (!(typeB == CBORObjectTypeInteger || typeB ==
-CBORObjectTypeBigInteger)) {
-          throw new ArgumentException("doesn't satisfy typeB ==" +
-"\u0020CBORObjectTypeInteger || typeB == CBORObjectTypeBigInteger");
-        }
-        if (!(typeA == CBORObjectTypeInteger || typeA ==
-CBORObjectTypeBigInteger)) {
-          throw new ArgumentException("doesn't satisfy typeA ==" +
-"\u0020CBORObjectTypeInteger || typeA == CBORObjectTypeBigInteger");
-        }
-#endif
-
-        EInteger b1 = this.AsEIntegerValue();
-        EInteger b2 = other.AsEIntegerValue();
-        cmp = b1.CompareTo(b2);
+        /* NOTE: itemtypeValue numbers are ordered such that they
+        // correspond to the lexicographical order of their CBOR encodings
+        // (with the exception of Integer and BigInteger together, which
+        // are handled above) */
+        cmp = (typeA < typeB) ? -1 : 1;
       }
-      return (cmp == 0) ? ((!this.IsTagged && !other.IsTagged) ? 0 :
-           TagsCompare(this.GetAllTags(), other.GetAllTags())) :
-                    cmp;
+      // DebugUtility.Log("" + this + " " + other + " -> " + (cmp));
+      return cmp;
     }
 
     /// <summary>Compares this object and another CBOR object, ignoring the
@@ -3783,7 +3787,7 @@ CBORObjectTypeBigInteger)) {
              0);
         if ((valueBits & 0x3ffffffffffL) == 0) {
            // Encode NaN as half-precision
-           var bits = (int)(((valueBits >> 48) & 0x8000) +0x7c00 +
+           var bits = (int)(((valueBits >> 48) & 0x8000) + 0x7c00 +
                  ((valueBits >> 42) & 0x3ff));
                  return tagbyte != 0 ? new[] {
                    tagbyte, (byte)0xf9,
@@ -4037,6 +4041,9 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
           return this.tagLow == otherValue.tagLow &&
                this.tagHigh == otherValue.tagHigh &&
                Object.Equals(this.itemValue, otherValue.itemValue);
+        case CBORObjectTypeDouble:
+          return CBORUtilities.DoubleToInt64Bits((double)this.itemValue) ==
+              CBORUtilities.DoubleToInt64Bits((double)otherValue.itemValue);
         default: return Object.Equals(this.itemValue, otherValue.itemValue);
       }
     }
@@ -5116,7 +5123,7 @@ CBORNumber.FromObject((EInteger)this.ThisItem).ToJSONString();
         throw new ArgumentException(
           "tag more than 18446744073709551615 (" + bigintValue + ")");
       }
-      if (bigintValue.CompareTo(Int64MaxValue) <= 0) {
+      if (bigintValue.CanFitInInt64()) {
         return WriteValue(
     outputStream,
     majorType,
@@ -5527,6 +5534,22 @@ CBORNumber.FromObject((EInteger)this.ThisItem).ToJSONString();
       return ret;
     }
 
+    private static bool StringEquals(string str, string str2) {
+      if (str == str2) {
+        return true;
+      }
+      if (str.Length != str2.Length) {
+        return false;
+      }
+      int count = str.Length;
+      for (var i = 0; i < count; ++i) {
+if (str[i] != str2[i]) {
+            return false;
+          }
+        }
+      return true;
+    }
+
     private static bool CBORMapEquals(
       IDictionary<CBORObject, CBORObject> mapA,
       IDictionary<CBORObject, CBORObject> mapB) {
@@ -5761,15 +5784,18 @@ CBORNumber.FromObject((EInteger)this.ThisItem).ToJSONString();
       }
       int listACount = listA.Count;
       int listBCount = listB.Count;
-      int c = Math.Min(listACount, listBCount);
-      for (var i = 0; i < c; ++i) {
+      // NOTE: Compare list counts to conform
+      // to bytewise lexicographical ordering
+      if (listACount != listBCount) {
+         return listACount < listBCount ? -1 : 1;
+      }
+      for (var i = 0; i < listACount; ++i) {
         int cmp = listA[i].CompareTo(listB[i]);
         if (cmp != 0) {
           return cmp;
         }
       }
-      return (listACount != listBCount) ? ((listACount < listBCount) ? -1 : 1) :
-        0;
+      return 0;
     }
 
     private static EInteger LowHighToEInteger(int tagLow, int tagHigh) {
@@ -5822,38 +5848,39 @@ CBORNumber.FromObject((EInteger)this.ThisItem).ToJSONString();
       if (listBCount == 0) {
         return 1;
       }
+      // NOTE: Compare map key counts to conform
+      // to bytewise lexicographical ordering
+      if (listACount != listBCount) {
+         return listACount < listBCount ? -1 : 1;
+      }
       var sortedASet = new List<CBORObject>(mapA.Keys);
       var sortedBSet = new List<CBORObject>(mapB.Keys);
       sortedASet.Sort();
       sortedBSet.Sort();
       listACount = sortedASet.Count;
       listBCount = sortedBSet.Count;
-      int minCount = Math.Min(listACount, listBCount);
       // Compare the keys
-      for (var i = 0; i < minCount; ++i) {
+      for (var i = 0; i < listACount; ++i) {
         CBORObject itemA = sortedASet[i];
         CBORObject itemB = sortedBSet[i];
         if (itemA == null) {
           return -1;
         }
         int cmp = itemA.CompareTo(itemB);
+        // DebugUtility.Log("" + itemA + ", " + itemB + " -> cmp=" + (cmp));
         if (cmp != 0) {
           return cmp;
         }
-      }
-      if (listACount == listBCount) {
-        // Both maps have the same keys, so compare their values
-        for (var i = 0; i < minCount; ++i) {
-          CBORObject keyA = sortedASet[i];
-          CBORObject keyB = sortedBSet[i];
-          int cmp = mapA[keyA].CompareTo(mapB[keyB]);
-          if (cmp != 0) {
+        // Both maps have the same key, so compare
+        // the value under that key
+        cmp = mapA[itemA].CompareTo(mapB[itemB]);
+        // DebugUtility.Log("{0}, {1} -> {2}, {3} ->
+        // cmp={4}",itemA,itemB,mapA[itemA],mapB[itemB],cmp);
+        if (cmp != 0) {
             return cmp;
-          }
         }
-        return 0;
       }
-      return (listACount > listBCount) ? 1 : -1;
+      return 0;
     }
 
     private static IList<object> PushObject(

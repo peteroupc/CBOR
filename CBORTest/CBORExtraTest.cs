@@ -5612,10 +5612,11 @@ ToObjectTest.TestToFromObjectRoundTrip(1.844674407370955E19d).AsUInt16();
           ToObjectTest.TestToFromObjectRoundTrip((decimal)i),
           TestCommon.IntToString(i));
         {
-CBORObject objectTemp = ToObjectTest.TestToFromObjectRoundTrip((decimal)i +
+          CBORObject objectTemp =
+ToObjectTest.TestToFromObjectRoundTrip((decimal)i +
   0.1m);
-string objectTemp2 = ((EDecimal)((decimal)i + 0.1m)).ToString();
-CBORTestCommon.AssertJSONSer(objectTemp, objectTemp2);
+  string objectTemp2 = ((EDecimal)((decimal)i + 0.1m)).ToString();
+  CBORTestCommon.AssertJSONSer(objectTemp, objectTemp2);
 }
         CBORTestCommon.AssertJSONSer(
           ToObjectTest.TestToFromObjectRoundTrip((decimal)i + 0.1111m),
