@@ -1379,7 +1379,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// 64-bit signed integer.</param>
     /// <returns>A CBORObject object.</returns>
     public static CBORObject FromObject(long value) {
-      return (value >= 0L && value < 24L) ? valueFixedObjects[(int)value] :
+      return (value >= 0L && value < 24L) ? FixedObjects[(int)value] :
         new CBORObject(CBORObjectTypeInteger, value);
     }
 
@@ -1572,7 +1572,7 @@ if (bigValue.IsSignalingNaN()) {
     /// 32-bit signed integer.</param>
     /// <returns>A CBORObject object.</returns>
     public static CBORObject FromObject(int value) {
-      return (value >= 0 && value < 24) ? valueFixedObjects[value] :
+      return (value >= 0 && value < 24) ? FixedObjects[value] :
         FromObject((long)value);
     }
 
@@ -1582,7 +1582,7 @@ if (bigValue.IsSignalingNaN()) {
     /// 16-bit signed integer.</param>
     /// <returns>A CBORObject object.</returns>
     public static CBORObject FromObject(short value) {
-      return (value >= 0 && value < 24) ? valueFixedObjects[value] :
+      return (value >= 0 && value < 24) ? FixedObjects[value] :
         FromObject((long)value);
     }
 
@@ -2145,7 +2145,7 @@ if (bigValue.IsSignalingNaN()) {
                     simpleValue);
       }
       if (simpleValue < 32) {
-        return valueFixedObjects[0xe0 + simpleValue];
+        return FixedObjects[0xe0 + simpleValue];
       }
       return new CBORObject(
         CBORObjectTypeSimpleValue,
@@ -5347,7 +5347,7 @@ CBORNumber.FromObject((EInteger)this.ThisItem).ToJSONString();
     internal static CBORObject GetFixedLengthObject(
       int firstbyte,
       byte[] data) {
-      CBORObject fixedObj = valueFixedObjects[firstbyte];
+      CBORObject fixedObj = FixedObjects[firstbyte];
       if (fixedObj != null) {
         return fixedObj;
       }
@@ -5471,7 +5471,7 @@ CBORNumber.FromObject((EInteger)this.ThisItem).ToJSONString();
     }
 
     internal static CBORObject GetFixedObject(int value) {
-      return valueFixedObjects[value];
+      return FixedObjects[value];
     }
 
     internal IList<CBORObject> AsList() {
