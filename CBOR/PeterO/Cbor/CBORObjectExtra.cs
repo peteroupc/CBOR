@@ -164,15 +164,11 @@ namespace PeterO.Cbor {
       return (this.ItemType == CBORObjectTypeInteger) ?
         ((decimal)(long)this.ThisItem) : ((this.ItemType ==
         CBORObjectTypeExtendedRational) ? (decimal)((ERational)this.ThisItem) :
-              (decimal)(this.AsEDecimal())); }
+              (decimal)(this.AsEDecimal())); 
+    }
 
     /// <summary>Converts this object to a 64-bit unsigned integer.
-    /// Non-integer values are truncated to an integer.</summary>
-    /// <returns>The closest big integer to this object.</returns>
-    /// <exception cref='System.InvalidOperationException'>This object's
-    /// type is not a number type.</exception>
-    /// <exception cref='System.OverflowException'>This object's value
-    /// exceeds the range of a 64-bit unsigned integer.</exception>
+    /// <returns>A 64-bit unsigned integer.</returns>
     [CLSCompliant(false)]
     public ulong AsUInt64() {
       EInteger bigint = this.AsEInteger();

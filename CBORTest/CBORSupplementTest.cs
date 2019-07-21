@@ -596,8 +596,8 @@ throw new InvalidOperationException(String.Empty, ex);
       {
         object objectTemp = EInteger.FromString("-1");
         object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] {
-          0xc3, 0x41,
-          0x00,
+          0xc3,
+          0x41, 0x00,
         }).AsEInteger();
 Assert.AreEqual(objectTemp, objectTemp2);
 }

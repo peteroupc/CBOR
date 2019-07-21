@@ -15,6 +15,10 @@ namespace PeterO.Cbor {
     /// prefix.</param>
     /// <param name='useCamelCase'>If set to <c>true</c> use camel
     /// case.</param>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+      "Microsoft.Usage",
+      "CA1801",
+      Justification = "'removeIsPrefix' is present for backward compatibility.")]
     public PODOptions(bool removeIsPrefix, bool useCamelCase) {
       this.UseCamelCase = useCamelCase;
     }

@@ -525,22 +525,19 @@ namespace PeterO.Cbor {
       StringOutput writer,
       JSONOptions options) {
       int type = obj.ItemType;
-      object thisItem = obj.ThisItem;
       if (obj.IsNumber) {
         writer.WriteString(CBORNumber.FromCBORObject(obj).ToJSONString());
         return;
       }
-      switch (type) {
-        case CBORObject.CBORObjectTypeInteger:
-        case CBORObject.CBORObjectTypeDouble:
-        case CBORObject.CBORObjectTypeBigInteger: {
+      switch (obj.Type) {
+        case CBORType.Integer:
+        case CBORType.FloatingPoint: {
             CBORObject untaggedObj = obj.Untag();
-
             writer.WriteString(
               CBORNumber.FromCBORObject(untaggedObj).ToJSONString());
             break;
         }
-        case CBORObject.CBORObjectTypeSimpleValue: {
+        case CBORType.Boolean: {
             if (obj.IsTrue) {
               writer.WriteString("true");
               return;
@@ -549,11 +546,14 @@ namespace PeterO.Cbor {
               writer.WriteString("false");
               return;
             }
+            return;
+        }
+        case CBORType.SimpleValue: {
             writer.WriteString("null");
             return;
-          }
-        case CBORObject.CBORObjectTypeByteString: {
-            var byteArray = (byte[])thisItem;
+        }
+        case CBORType.ByteString: {
+            var byteArray = obj.GetByteString();
             if (byteArray.Length == 0) {
               writer.WriteString("\"\"");
               return;
@@ -585,8 +585,8 @@ namespace PeterO.Cbor {
             writer.WriteCodePoint((int)'\"');
             break;
           }
-        case CBORObject.CBORObjectTypeTextString: {
-            var thisString = (string)thisItem;
+        case CBORType.TextString: {
+            var thisString = obj.AsString();
             if (thisString.Length == 0) {
               writer.WriteString("\"\"");
               return;
@@ -596,7 +596,7 @@ namespace PeterO.Cbor {
             writer.WriteCodePoint((int)'\"');
             break;
           }
-        case CBORObject.CBORObjectTypeArray: {
+        case CBORType.Array: {
             var first = true;
             writer.WriteCodePoint((int)'[');
             foreach (CBORObject i in obj.AsList()) {
@@ -609,7 +609,7 @@ namespace PeterO.Cbor {
             writer.WriteCodePoint((int)']');
             break;
           }
-        case CBORObject.CBORObjectTypeMap: {
+        case CBORType.Map: {
             var first = true;
             var hasNonStringKeys = false;
             IDictionary<CBORObject, CBORObject> objMap = obj.AsMap();
@@ -632,7 +632,7 @@ namespace PeterO.Cbor {
                   writer.WriteCodePoint((int)',');
                 }
                 writer.WriteCodePoint((int)'\"');
-                WriteJSONStringUnquoted((string)key.ThisItem, writer, options);
+                WriteJSONStringUnquoted(key.AsString(), writer, options);
                 writer.WriteCodePoint((int)'\"');
                 writer.WriteCodePoint((int)':');
                 WriteJSONToInternal(value, writer, options);
@@ -650,7 +650,7 @@ namespace PeterO.Cbor {
                 CBORObject key = entry.Key;
                 CBORObject value = entry.Value;
                 string str = (key.Type == CBORType.TextString) ?
-                  ((string)key.ThisItem) : key.ToJSONString();
+                  key.AsString() : key.ToJSONString();
                 if (stringMap.ContainsKey(str)) {
                   throw new
               CBORException("Duplicate JSON string equivalents of map keys");

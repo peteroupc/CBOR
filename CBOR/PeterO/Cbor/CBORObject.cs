@@ -176,17 +176,18 @@ namespace PeterO.Cbor {
     public static readonly CBORObject Zero =
       CBORObject.ConstructIntegerValue(0);
 
-    internal const int CBORObjectTypeInteger = 0; // -(2^63).. (2^63-1)
-    internal const int CBORObjectTypeBigInteger = 1; // all other integers
+    private const int CBORObjectTypeInteger = 0; // -(2^63).. (2^63-1)
+    private const int CBORObjectTypeBigInteger = 1; // all other integers
+    // TODO: Remove use of these constants from CBORReader
     internal const int CBORObjectTypeByteString = 2;
     internal const int CBORObjectTypeTextString = 3;
     internal const int CBORObjectTypeArray = 4;
     internal const int CBORObjectTypeMap = 5;
-    internal const int CBORObjectTypeTagged = 6;
-    internal const int CBORObjectTypeSimpleValue = 7;
-    internal const int CBORObjectTypeDouble = 8;
+    private const int CBORObjectTypeTagged = 6;
+    private const int CBORObjectTypeSimpleValue = 7;
+    private const int CBORObjectTypeDouble = 8;
     [Obsolete]
-    internal const int CBORObjectTypeExtendedRational = 9;
+    private const int CBORObjectTypeExtendedRational = 9;
 
     private const int StreamedStringBufferLength = 4096;
 
@@ -226,7 +227,8 @@ namespace PeterO.Cbor {
 
     private static readonly byte[] ValueTrueBytes = { 0x74, 0x72, 0x75, 0x65 };
 
-    private static CBORObject[] valueFixedObjects = InitializeFixedObjects();
+    private static readonly CBORObject[] FixedObjects =
+       InitializeFixedObjects();
 
     private readonly int itemtypeValue;
     private readonly object itemValue;
@@ -479,19 +481,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// number.</value>
     public bool IsNumber {
       get {
-        switch (this.ItemType) {
-          case CBORObjectTypeInteger:
-          case CBORObjectTypeBigInteger:
-          case CBORObjectTypeDouble:
-            return !this.IsTagged;
-          case CBORObjectTypeByteString:
-            return this.HasOneTag(2) || this.HasOneTag(3);
-          case CBORObjectTypeArray:
-            return this.HasOneTag(30) || this.HasOneTag(4) ||
-                      this.HasOneTag(5) || this.HasOneTag(264) ||
-                      this.HasOneTag(265);
-          default: return false;
-        }
+        return CBORNumber.IsNumber(this);
       }
     }
 
@@ -2441,20 +2431,22 @@ if (bigValue.IsSignalingNaN()) {
       }
     }
 
+    // TODO: Warn of change in Write(EFloat/EDecimal/ERational) in older versions
+
     /// <summary>Writes a binary floating-point number in CBOR format to a
     /// data stream as follows:
     /// <list type=''>
     /// <item>If the value is null, writes the byte 0xF6.</item>
-    /// <item>If the value is negative zero, infinity, or NaN, converts the
-    /// number to a <c>double</c> and writes that <c>double</c>. If
-    /// negative zero should not be written this way, use the Plus method
-    /// to convert the value beforehand.</item>
+    /// <item>If the value is negative zero, infinity, or NaN, writes the
+    /// value as an extended bigfloat (tag 269). This is a change in
+    /// version 4.0.</item>
     /// <item>If the value has an exponent of zero, writes the value as an
     /// unsigned integer or signed integer if the number can fit either
     /// type or as a arbitrary-precision integer otherwise.</item>
     /// <item>In all other cases, writes the value as a big
     /// float.</item></list></summary>
-    /// <param name='bignum'>An arbitrary-precision binary float.</param>
+    /// <param name='bignum'>An arbitrary-precision binary floating-point
+    /// number. Can be null.</param>
     /// <param name='stream'>A writable data stream.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='stream'/> is null.</exception>
@@ -2470,7 +2462,7 @@ if (bigValue.IsSignalingNaN()) {
       }
       if ((bignum.IsZero && bignum.IsNegative) || bignum.IsInfinity() ||
           bignum.IsNaN()) {
-        Write(bignum.ToDouble(), stream);
+        Write(CBORObject.FromObject(bignum), stream);
         return;
       }
       EInteger exponent = bignum.Exponent;
@@ -2491,10 +2483,20 @@ if (bigValue.IsSignalingNaN()) {
       }
     }
 
-    /// <summary>Writes a rational number in CBOR format to a data
-    /// stream.</summary>
-    /// <param name='rational'>An arbitrary-precision rational
-    /// number.</param>
+    /// <summary>Writes a rational number in CBOR format to a data stream
+    /// as follows:
+    /// <list type=''>
+    /// <item>If the value is null, writes the byte 0xF6.</item>
+    /// <item>If the value is negative zero, infinity, or NaN, writes the
+    /// value as an extended rational number (tag 270). This is a change in
+    /// version 4.0.</item>
+    /// <item>If the value has a denominator of one, writes the value as an
+    /// unsigned integer or signed integer if the number can fit either
+    /// type or as an arbitrary-precision integer otherwise.</item>
+    /// <item>In all other cases, writes the value as a rational number
+    /// (tag 30).</item></list></summary>
+    /// <param name='rational'>An arbitrary-precision rational number. Can
+    /// be null.</param>
     /// <param name='stream'>A writable data stream.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='stream'/> is null.</exception>
@@ -2509,7 +2511,7 @@ if (bigValue.IsSignalingNaN()) {
         return;
       }
       if (!rational.IsFinite || (rational.IsNegative && rational.IsZero)) {
-        Write(rational.ToDouble(), stream);
+        Write(CBORObject.FromObject(rational), stream);
         return;
       }
       if (rational.Denominator.Equals(EInteger.One)) {
@@ -2527,15 +2529,14 @@ if (bigValue.IsSignalingNaN()) {
     /// data stream, as follows:
     /// <list type=''>
     /// <item>If the value is null, writes the byte 0xF6.</item>
-    /// <item>If the value is negative zero, infinity, or NaN, converts the
-    /// number to a <c>double</c> and writes that <c>double</c>. If
-    /// negative zero should not be written this way, use the Plus method
-    /// to convert the value beforehand.</item>
+    /// <item>If the value is negative zero, infinity, or NaN, writes the
+    /// value as an extended rational number (tag 268). This is a change in
+    /// version 4.0.</item>
     /// <item>If the value has an exponent of zero, writes the value as an
     /// unsigned integer or signed integer if the number can fit either
     /// type or as a arbitrary-precision integer otherwise.</item>
     /// <item>In all other cases, writes the value as a decimal
-    /// number.</item></list></summary>
+    /// fraction.</item></list></summary>
     /// <param name='bignum'>The arbitrary-precision decimal number to
     /// write. Can be null.</param>
     /// <param name='stream'>Stream to write to.</param>
@@ -2553,7 +2554,7 @@ if (bigValue.IsSignalingNaN()) {
       }
       if ((bignum.IsZero && bignum.IsNegative) || bignum.IsInfinity() ||
           bignum.IsNaN()) {
-        Write(bignum.ToDouble(), stream);
+        Write(CBORObject.FromObject(bignum), stream);
         return;
       }
       EInteger exponent = bignum.Exponent;
@@ -2861,8 +2862,8 @@ if (bigValue.IsSignalingNaN()) {
     /// <para>Writes a CBOR object to a CBOR data stream. See the
     /// three-parameter Write method that takes a
     /// CBOREncodeOptions.</para></summary>
-    /// <param name='objValue'>The parameter <paramref name='objValue'/> is
-    /// an arbitrary object.</param>
+    /// <param name='objValue'>The arbitrary object to be serialized. Can
+    /// be null.</param>
     /// <param name='stream'>A writable data stream.</param>
     public static void Write(object objValue, Stream stream) {
       Write(objValue, stream, CBOREncodeOptions.Default);
@@ -3189,12 +3190,13 @@ if (bigValue.IsSignalingNaN()) {
 
     /// <summary>Converts this object to an arbitrary-precision binary
     /// floating point number.</summary>
-    /// <returns>An arbitrary-precision binary floating point number for
-    /// this object's value. Note that if this object is a decimal number
-    /// with a fractional part, the conversion may lose information
-    /// depending on the number. If this object is a rational number with a
-    /// nonterminating binary expansion, returns a binary floating-point
-    /// number rounded to a high but limited precision.</returns>
+    /// <returns>An arbitrary-precision binary floating-point numbering
+    /// point number for this object's value. Note that if this object is a
+    /// decimal number with a fractional part, the conversion may lose
+    /// information depending on the number. If this object is a rational
+    /// number with a nonterminating binary expansion, returns a binary
+    /// floating-point number rounded to a high but limited
+    /// precision.</returns>
     /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type, including if this object is
     /// CBORObject.Null. To check the CBOR object for null before
@@ -4171,8 +4173,8 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
       return this.HasOneTag() && this.HasMostOuterTag(bigTagValue);
     }
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
+    /// <summary>Gets the number of tags this object has.</summary>
+    /// <value>The number of tags this object has.</value>
     public int TagCount {
       get {
           var count = 0;
@@ -4355,8 +4357,8 @@ BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
     }
 
     /// <summary>Gets a value indicating whether this CBOR object
-    /// represents a not-a-number value (as opposed to whether this
-    /// object's type is not a number type).</summary>
+    /// represents a not-a-number value (as opposed to whether this object
+    /// does not express a number).</summary>
     /// <returns><c>true</c> if this CBOR object represents a not-a-number
     /// value (as opposed to whether this object's type is not a number
     /// type); otherwise, <c>false</c>.</returns>
@@ -4600,30 +4602,30 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     /// If, after such conversion, two or more map keys are identical, this
     /// method throws a CBORException.</item>
     ///  <item>If a number in the form
-    /// of an arbitrary-precision binary float has a very high binary
-    /// exponent, it will be converted to a double before being converted
-    /// to a JSON string. (The resulting double could overflow to infinity,
-    /// in which case the arbitrary-precision binary float is converted to
-    /// null.)</item>
-    ///  <item>The string will not begin with a byte-order
-    /// mark (U + FEFF); RFC 8259 (the JSON specification) forbids placing
-    /// a byte-order mark at the beginning of a JSON string.</item>
-    /// <item>Byte strings are converted to Base64 URL without whitespace
-    /// or padding by default (see section 4.1 of RFC 7049). A byte string
-    /// will instead be converted to traditional base64 without whitespace
-    /// and with padding if it has tag 22, or base16 for tag 23. (To create
-    /// a CBOR object with a given tag, call the
-    /// <c>CBORObject.FromObjectAndTag</c>
-    ///  method and pass the CBOR object
-    /// and the desired tag number to that method.)</item>
-    ///  <item>Rational
-    /// numbers will be converted to their exact form, if possible,
-    /// otherwise to a high-precision approximation. (The resulting
-    /// approximation could overflow to infinity, in which case the
-    /// rational number is converted to null.)</item>
-    ///  <item>Simple values
-    /// other than true and false will be converted to null. (This doesn't
-    /// include floating-point numbers.)</item>
+    /// of an arbitrary-precision binary floating-point number has a very
+    /// high // /binary exponent, it will be converted to a double before
+    /// being converted to a JSON string. (The resulting double could
+    /// overflow to infinity, in which case the arbitrary-precision binary
+    /// floating-point number is // /converted to null.)</item>
+    ///  <item>The
+    /// string will not begin with a byte-order mark (U + FEFF); RFC 8259
+    /// (the JSON specification) forbids placing a byte-order mark at the
+    /// beginning of a JSON string.</item>
+    ///  <item>Byte strings are converted
+    /// to Base64 URL without whitespace or padding by default (see section
+    /// 4.1 of RFC 7049). A byte string will instead be converted to
+    /// traditional base64 without whitespace and with padding if it has
+    /// tag 22, or base16 for tag 23. (To create a CBOR object with a given
+    /// tag, call the <c>CBORObject.FromObjectAndTag</c>
+    ///  method and pass
+    /// the CBOR object and the desired tag number to that method.)</item>
+    /// <item>Rational numbers will be converted to their exact form, if
+    /// possible, otherwise to a high-precision approximation. (The
+    /// resulting approximation could overflow to infinity, in which case
+    /// the rational number is converted to null.)</item>
+    ///  <item>Simple
+    /// values other than true and false will be converted to null. (This
+    /// doesn't include floating-point numbers.)</item>
     ///  <item>Infinity and
     /// not-a-number will be converted to null.</item>
     ///  </list>
@@ -5753,24 +5755,24 @@ if (str[i] != str2[i]) {
     // Initialize fixed values for certain
     // head bytes
     private static CBORObject[] InitializeFixedObjects() {
-      valueFixedObjects = new CBORObject[256];
+      var fixedObjects = new CBORObject[256];
       for (var i = 0; i < 0x18; ++i) {
-        valueFixedObjects[i] = new CBORObject(CBORObjectTypeInteger, (long)i);
+        fixedObjects[i] = new CBORObject(CBORObjectTypeInteger, (long)i);
       }
       for (int i = 0x20; i < 0x38; ++i) {
-        valueFixedObjects[i] = new CBORObject(
+        fixedObjects[i] = new CBORObject(
           CBORObjectTypeInteger,
           (long)(-1 - (i - 0x20)));
       }
-      valueFixedObjects[0x60] = new CBORObject(
+      fixedObjects[0x60] = new CBORObject(
         CBORObjectTypeTextString,
         String.Empty);
       for (int i = 0xe0; i < 0xf8; ++i) {
-        valueFixedObjects[i] = new CBORObject(
+        fixedObjects[i] = new CBORObject(
           CBORObjectTypeSimpleValue,
           (int)(i - 0xe0));
       }
-      return valueFixedObjects;
+      return fixedObjects;
     }
 
     private static int ListCompare(

@@ -2,14 +2,14 @@
 
     public class CBORException :
         System.Exception,
-        System.Runtime.InteropServices._Exception,
-        System.Runtime.Serialization.ISerializable
+        System.Runtime.Serialization.ISerializable,
+        System.Runtime.InteropServices._Exception
 
  Exception thrown for errors involving CBOR data.
 
 ### Member Summary
 
-<a id="Void_ctor_String"></a>
+<a id="Void_ctor_System_String"></a>
 ### CBORException Constructor
 
     public CBORException(
@@ -22,7 +22,7 @@
  * <i>message</i>: The parameter  <i>message</i>
  is a text string.
 
-<a id="Void_ctor_String_Exception"></a>
+<a id="Void_ctor_System_String_System_Exception"></a>
 ### CBORException Constructor
 
     public CBORException(

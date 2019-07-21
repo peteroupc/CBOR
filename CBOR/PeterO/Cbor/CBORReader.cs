@@ -53,7 +53,7 @@ namespace PeterO.Cbor {
     private static CBORObject ResolveSharedRefs(
       CBORObject obj,
       SharedRefs sharedRefs) {
-  int type = obj.ItemType;
+  CBORType type = obj.Type;
   bool hasTag = obj.HasMostOuterTag(29);
   if (hasTag) {
     CBORObject untagged = obj.UntagOne();
@@ -69,7 +69,7 @@ namespace PeterO.Cbor {
       obj = obj.UntagOne();
       sharedRefs.AddObject(obj);
   }
-  if (type == CBORObject.CBORObjectTypeMap) {
+  if (type == CBORType.Map) {
     foreach (CBORObject key in obj.Keys) {
       CBORObject value = obj[key];
       CBORObject newvalue = ResolveSharedRefs(value, sharedRefs);
@@ -77,7 +77,7 @@ namespace PeterO.Cbor {
         obj[key] = newvalue;
       }
     }
-  } else if (type == CBORObject.CBORObjectTypeArray) {
+  } else if (type == CBORType.Array) {
     for (var i = 0; i < obj.Count; ++i) {
       obj[i] = ResolveSharedRefs(obj[i], sharedRefs);
     }
