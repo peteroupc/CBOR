@@ -826,7 +826,7 @@ CBORNumber.FromObject(EDecimal.PositiveInfinity));
     }
 
     /*
-    /// <summary>Compares two CBOR numbers. In this implementation, the two
+    /// <xmlbegin id="0"/><summary>Compares two CBOR numbers. In this implementation, the two
     /// numbers' mathematical values are compared. Here, NaN (not-a-number)
     /// is considered greater than any number. This method is not
     /// consistent with the Equals method.</summary>
@@ -837,6 +837,7 @@ CBORNumber.FromObject(EDecimal.PositiveInfinity));
     /// null.</returns>
     /// <exception cref='ArgumentException'>An internal error
     /// occurred.</exception>
+    ///
     */
     public int CompareTo(CBORNumber other) {
       if (other == null) {

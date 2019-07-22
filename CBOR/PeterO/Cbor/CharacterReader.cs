@@ -23,7 +23,7 @@ namespace PeterO.Cbor {
     private ICharacterInput reader;
 
     // <xmlbegin id='0'/>
-    // <xmlend/>
+    //
     // <summary>Initializes a new instance of the
     // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='str'>A string object.</param>
@@ -31,7 +31,7 @@ namespace PeterO.Cbor {
     }
 
     // <xmlbegin id='1'/>
-    // <xmlend/>
+    //
     // <summary>Initializes a new instance of the
     // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='str'>A string object.</param>
@@ -41,7 +41,7 @@ namespace PeterO.Cbor {
     }
 
     // <xmlbegin id='2'/>
-    // <xmlend/>
+    //
     // <summary>Initializes a new instance of the
     // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='str'>A string object.</param>
@@ -67,7 +67,7 @@ namespace PeterO.Cbor {
     }
 
     // <xmlbegin id='3'/>
-    // <xmlend/>
+    //
     // <summary>Initializes a new instance of the
     // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='str'>A string object.</param>
@@ -78,7 +78,7 @@ namespace PeterO.Cbor {
     }
 
     // <xmlbegin id='4'/>
-    // <xmlend/>
+    //
     // <summary>Initializes a new instance of the
     // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='str'>A string object.</param>
@@ -128,7 +128,7 @@ namespace PeterO.Cbor {
     }
 
     // <xmlbegin id='5'/>
-    // <xmlend/>
+    //
     // <summary>Initializes a new instance of the
     // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='stream'>A readable data stream.</param>
@@ -136,7 +136,7 @@ namespace PeterO.Cbor {
     }
 
     // <xmlbegin id='6'/>
-    // <xmlend/>
+    //
     // <summary>Initializes a new instance of the
     // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='stream'>A readable data stream.</param>
@@ -147,7 +147,7 @@ namespace PeterO.Cbor {
     }
 
     // <xmlbegin id='7'/>
-    // <xmlend/>
+    //
     // <summary>Initializes a new instance of the
     // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='stream'>A readable data stream.</param>
@@ -157,7 +157,7 @@ namespace PeterO.Cbor {
     }
 
     // <xmlbegin id='8'/>
-    // <xmlend/>
+    //
     // <summary>Initializes a new instance of the
     // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='stream'>A readable data stream.</param>

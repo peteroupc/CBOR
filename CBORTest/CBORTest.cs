@@ -15,6 +15,57 @@ using PeterO.Numbers;
 namespace Test {
   [TestFixture]
   public class CBORTest {
+
+
+[Test]
+  public void TestLexOrderSpecific1() {
+    byte[] bytes1 = new byte[] { 129, 165, 27, 0, 0, 65, 2, 0, 0, 144, 172, 71, 125, 0, 14, 204, 3, 19, 214, 67, 93, 67, 70, 101, 123, 121, 96, 44, 68, 69, 158, 1, 193, 250, 21, 59, 122, 166, 24, 16, 141, 232, 48, 145, 97, 72, 58, 134, 85, 244, 83, 100, 92, 115, 76, 82, 99, 80, 122, 94, };
+    byte[] bytes2 = new byte[] { 129, 165, 27, 0, 0, 127, 163, 0, 0, 137, 100, 69, 167, 15, 101, 37, 18, 69, 230, 236, 57, 241, 146, 101, 120, 80, 66, 115, 64, 98, 91, 105, 100, 102, 102, 78, 106, 101, 82, 117, 82, 46, 80, 69, 150, 80, 162, 211, 214, 105, 122, 59, 65, 32, 80, 70, 47, 90, 113, 66, 187, 69, };
+    byte[] bytes3 = new byte[] { 129, 165, 67, 93, 67, 70, 101, 123, 121, 96, 44, 68, 100, 92, 115, 76, 82, 99, 80, 122, 94, 27, 0, 0, 65, 2, 0, 0, 144, 172, 71, 125, 0, 14, 204, 3, 19, 214, 97, 72, 58, 134, 85, 244, 83, 69, 158, 1, 193, 250, 21, 59, 122, 166, 24, 16, 141, 232, 48, 145, };
+    byte[] bytes4 = new byte[] { 129, 165, 27, 0, 0, 127, 163, 0, 0, 137, 100, 69, 167, 15, 101, 37, 18, 98, 91, 105, 100, 102, 102, 78, 106, 69, 230, 236, 57, 241, 146, 101, 120, 80, 66, 115, 64, 105, 122, 59, 65, 32, 80, 70, 47, 90, 113, 66, 187, 69, 101, 82, 117, 82, 46, 80, 69, 150, 80, 162, 211, 214, };
+    CBORObject cbor1 = CBORObject.DecodeFromBytes(bytes1);
+    CBORObject cbor2 = CBORObject.DecodeFromBytes(bytes2);
+    CBORObject cbor3 = CBORObject.DecodeFromBytes(bytes3);
+    CBORObject cbor4 = CBORObject.DecodeFromBytes(bytes4);
+    TestCommon.CompareTestLess(cbor1, cbor2);
+    TestCommon.CompareTestLess(cbor1, cbor4);
+    TestCommon.CompareTestLess(cbor3, cbor2);
+    TestCommon.CompareTestLess(cbor3, cbor4);
+  }
+
+[Test]
+  public void TestLexOrderSpecific2() {
+    byte[] bytes1 = new byte[] { 129, 165, 59, 72, 110, 0, 0, 122, 250, 251, 131, 71, 22, 187, 235, 209, 143, 30, 146, 69, 36, 230, 134, 20, 97, 100, 78, 112, 92, 101, 70, 54, 136, 203, 227, 188, 120, 64, 72, 58, 42, 171, 177, 73, 245, 198, 139, 99, 36, 116, 76, 101, 99, 109, 60, 113, 107, 70, 219, 37, 80, 108, 40, 133, };
+    byte[] bytes2 = new byte[] { 129, 165, 67, 62, 217, 7, 69, 113, 188, 156, 26, 34, 69, 32, 101, 130, 188, 201, 27, 122, 228, 0, 0, 0, 0, 186, 9, 69, 70, 71, 152, 50, 17, 67, 231, 129, 240, 100, 79, 116, 84, 81, 69, 188, 114, 227, 101, 209, 244, 103, 91, 37, 62, 59, 78, 124, 95, };
+    byte[] bytes3 = new byte[] { 129, 165, 72, 58, 42, 171, 177, 73, 245, 198, 139, 99, 36, 116, 76, 69, 36, 230, 134, 20, 97, 100, 78, 112, 92, 101, 70, 54, 136, 203, 227, 188, 120, 64, 59, 72, 110, 0, 0, 122, 250, 251, 131, 71, 22, 187, 235, 209, 143, 30, 146, 101, 99, 109, 60, 113, 107, 70, 219, 37, 80, 108, 40, 133, };
+    byte[] bytes4 = new byte[] { 129, 165, 69, 70, 71, 152, 50, 17, 67, 231, 129, 240, 100, 79, 116, 84, 81, 69, 188, 114, 227, 101, 209, 67, 62, 217, 7, 69, 113, 188, 156, 26, 34, 244, 103, 91, 37, 62, 59, 78, 124, 95, 69, 32, 101, 130, 188, 201, 27, 122, 228, 0, 0, 0, 0, 186, 9, };
+    CBORObject cbor1 = CBORObject.DecodeFromBytes(bytes1);
+    CBORObject cbor2 = CBORObject.DecodeFromBytes(bytes2);
+    CBORObject cbor3 = CBORObject.DecodeFromBytes(bytes3);
+    CBORObject cbor4 = CBORObject.DecodeFromBytes(bytes4);
+    TestCommon.CompareTestLess(cbor1, cbor2);
+    TestCommon.CompareTestLess(cbor1, cbor4);
+    TestCommon.CompareTestLess(cbor3, cbor2);
+    TestCommon.CompareTestLess(cbor3, cbor4);
+  }
+
+[Test]
+  public void TestLexOrderSpecific3() {
+    byte[] bytes1 = new byte[] { 129, 165, 67, 62, 217, 7, 69, 113, 188, 156, 26, 34, 69, 32, 101, 130, 188, 201, 27, 122, 228, 0, 0, 0, 0, 186, 9, 69, 70, 71, 152, 50, 17, 67, 231, 129, 240, 100, 79, 116, 84, 81, 69, 188, 114, 227, 101, 209, 244, 103, 91, 37, 62, 59, 78, 124, 95, };
+    byte[] bytes2 = new byte[] { 129, 165, 67, 64, 196, 213, 217, 43, 37, 27, 37, 184, 58, 144, 176, 207, 252, 194, 68, 43, 68, 5, 219, 27, 0, 0, 126, 173, 36, 137, 166, 19, 69, 27, 99, 166, 37, 216, 101, 87, 91, 80, 79, 100, 69, 217, 77, 189, 138, 22, 101, 40, 93, 54, 59, 73, 97, 60, 99, 69, 35, 66, };
+    byte[] bytes3 = new byte[] { 129, 165, 69, 70, 71, 152, 50, 17, 67, 231, 129, 240, 100, 79, 116, 84, 81, 69, 188, 114, 227, 101, 209, 67, 62, 217, 7, 69, 113, 188, 156, 26, 34, 244, 103, 91, 37, 62, 59, 78, 124, 95, 69, 32, 101, 130, 188, 201, 27, 122, 228, 0, 0, 0, 0, 186, 9, };
+    byte[] bytes4 = new byte[] { 129, 165, 67, 64, 196, 213, 217, 43, 37, 27, 37, 184, 58, 144, 176, 207, 252, 194, 69, 27, 99, 166, 37, 216, 101, 87, 91, 80, 79, 100, 97, 60, 99, 69, 35, 66, 69, 217, 77, 189, 138, 22, 101, 40, 93, 54, 59, 73, 68, 43, 68, 5, 219, 27, 0, 0, 126, 173, 36, 137, 166, 19, };
+    CBORObject cbor1 = CBORObject.DecodeFromBytes(bytes1);
+    CBORObject cbor2 = CBORObject.DecodeFromBytes(bytes2);
+    CBORObject cbor3 = CBORObject.DecodeFromBytes(bytes3);
+    CBORObject cbor4 = CBORObject.DecodeFromBytes(bytes4);
+    TestCommon.CompareTestLess(cbor1, cbor2);
+    TestCommon.CompareTestLess(cbor1, cbor4);
+    TestCommon.CompareTestLess(cbor3, cbor2);
+    TestCommon.CompareTestLess(cbor3, cbor4);
+  }
+
+
     public static void TestCBORMapAdd() {
       CBORObject cbor = CBORObject.NewMap();
       cbor.Add(1, 2);

@@ -6,6 +6,8 @@
     </Rule>
     <Rule Id='CA1707' Action='None'>
     </Rule>
+    <Rule Id='CA1303' Action='None'>
+    </Rule>
   </Rules>
   <Rules AnalyzerId='StyleCop.Analyzers' RuleNamespace='StyleCop.Analyzers'>
     <Rule Action='None' Id='SA1116'/>
