@@ -11,8 +11,8 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-    /// <summary>Contains utility methods that may have use outside of the CBORObject
-    /// class.</summary>
+    /// <summary>Contains utility methods that may have use outside of the
+    /// CBORObject class.</summary>
   internal static class CBORUtilities {
     private const string HexAlphabet = "0123456789ABCDEF";
 
@@ -779,11 +779,11 @@ public static int SingleToHalfPrecisionIfSameValue(float f) {
     return -1;
   } else if (exp <= 112) { // Subnormal
     int shift = 126 - exp;
-    return (bits & ((1 << shift) - 1)) == 0 ? sign + (1024>>(145-exp)) +
+    return (bits & ((1 << shift) - 1)) == 0 ? sign + (1024 >> (145 - exp)) +
 (mant >>
 shift) : -1;
   } else {
-    return (bits & 0x1fff) == 0 ? sign + ((exp - 112) << 10) + (mant >> 13):
+    return (bits & 0x1fff) == 0 ? sign + ((exp - 112) << 10) + (mant >> 13) :
 -1;
   }
 }

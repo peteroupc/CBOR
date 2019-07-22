@@ -12,6 +12,8 @@
 * <code>[public static PeterO.Cbor.CBORType Array = 5;](#Array)</code> - An array of CBOR objects.
 * <code>[public static PeterO.Cbor.CBORType Boolean = 1;](#Boolean)</code> - The simple values true and false.
 * <code>[public static PeterO.Cbor.CBORType ByteString = 3;](#ByteString)</code> - An array of bytes.
+* <code>[public static PeterO.Cbor.CBORType FloatingPoint = 8;](#FloatingPoint)</code> - A 16-, 32-, or 64-bit binary floating-point number.
+* <code>[public static PeterO.Cbor.CBORType Integer = 7;](#Integer)</code> - An integer in the interval [-2^64, 2^64 - 1], or an integer of major type 0 and 1.
 * <code>[public static PeterO.Cbor.CBORType Map = 6;](#Map)</code> - A map of CBOR objects.
 * <code>[public static PeterO.Cbor.CBORType Number = 0;](#Number)</code> - A number of any kind, including integers, big integers, floating point numbers, and decimal numbers.
 * <code>[public static PeterO.Cbor.CBORType SimpleValue = 2;](#SimpleValue)</code> - A "simple value" other than floating point values, true, and false.
@@ -37,6 +39,20 @@
     public static PeterO.Cbor.CBORType ByteString = 3;
 
  An array of bytes.
+
+  <a id="FloatingPoint"></a>
+### FloatingPoint
+
+    public static PeterO.Cbor.CBORType FloatingPoint = 8;
+
+ A 16-, 32-, or 64-bit binary floating-point number.
+
+  <a id="Integer"></a>
+### Integer
+
+    public static PeterO.Cbor.CBORType Integer = 7;
+
+ An integer in the interval [-2^64, 2^64 - 1], or an integer of major type 0 and 1.
 
   <a id="Map"></a>
 ### Map

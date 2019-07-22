@@ -15,14 +15,39 @@ using PeterO.Numbers;
 namespace Test {
   [TestFixture]
   public class CBORTest {
-
-
-[Test]
+  [Test]
   public void TestLexOrderSpecific1() {
-    byte[] bytes1 = new byte[] { 129, 165, 27, 0, 0, 65, 2, 0, 0, 144, 172, 71, 125, 0, 14, 204, 3, 19, 214, 67, 93, 67, 70, 101, 123, 121, 96, 44, 68, 69, 158, 1, 193, 250, 21, 59, 122, 166, 24, 16, 141, 232, 48, 145, 97, 72, 58, 134, 85, 244, 83, 100, 92, 115, 76, 82, 99, 80, 122, 94, };
-    byte[] bytes2 = new byte[] { 129, 165, 27, 0, 0, 127, 163, 0, 0, 137, 100, 69, 167, 15, 101, 37, 18, 69, 230, 236, 57, 241, 146, 101, 120, 80, 66, 115, 64, 98, 91, 105, 100, 102, 102, 78, 106, 101, 82, 117, 82, 46, 80, 69, 150, 80, 162, 211, 214, 105, 122, 59, 65, 32, 80, 70, 47, 90, 113, 66, 187, 69, };
-    byte[] bytes3 = new byte[] { 129, 165, 67, 93, 67, 70, 101, 123, 121, 96, 44, 68, 100, 92, 115, 76, 82, 99, 80, 122, 94, 27, 0, 0, 65, 2, 0, 0, 144, 172, 71, 125, 0, 14, 204, 3, 19, 214, 97, 72, 58, 134, 85, 244, 83, 69, 158, 1, 193, 250, 21, 59, 122, 166, 24, 16, 141, 232, 48, 145, };
-    byte[] bytes4 = new byte[] { 129, 165, 27, 0, 0, 127, 163, 0, 0, 137, 100, 69, 167, 15, 101, 37, 18, 98, 91, 105, 100, 102, 102, 78, 106, 69, 230, 236, 57, 241, 146, 101, 120, 80, 66, 115, 64, 105, 122, 59, 65, 32, 80, 70, 47, 90, 113, 66, 187, 69, 101, 82, 117, 82, 46, 80, 69, 150, 80, 162, 211, 214, };
+    var bytes1 = new byte[] {
+      129, 165, 27, 0, 0, 65, 2, 0, 0, 144, 172, 71,
+      125, 0, 14, 204, 3, 19, 214, 67, 93, 67, 70, 101, 123, 121, 96, 44,
+      68, 69,
+      158, 1, 193, 250, 21, 59, 122, 166, 24, 16, 141, 232, 48, 145, 97, 72, 58,
+      134, 85, 244, 83, 100, 92, 115, 76, 82, 99, 80, 122, 94,
+    };
+    var bytes2 = new byte[] {
+      129, 165, 27, 0, 0, 127, 163, 0, 0, 137, 100,
+      69, 167, 15, 101, 37, 18, 69, 230, 236, 57, 241, 146, 101, 120, 80,
+      66, 115,
+      64, 98, 91, 105, 100, 102, 102, 78, 106, 101, 82, 117, 82, 46, 80, 69,
+      150,
+      80, 162, 211, 214, 105, 122, 59, 65, 32, 80, 70, 47, 90, 113, 66, 187,
+      69,
+    };
+    var bytes3 = new byte[] {
+      129, 165, 67, 93, 67, 70, 101, 123, 121, 96,
+      44, 68, 100, 92, 115, 76, 82, 99, 80, 122, 94, 27, 0, 0, 65, 2, 0, 0, 144,
+      172, 71, 125, 0, 14, 204, 3, 19, 214, 97, 72, 58, 134, 85, 244, 83,
+      69, 158,
+      1, 193, 250, 21, 59, 122, 166, 24, 16, 141, 232, 48, 145,
+    };
+    var bytes4 = new byte[] {
+      129, 165, 27, 0, 0, 127, 163, 0, 0, 137, 100,
+      69, 167, 15, 101, 37, 18, 98, 91, 105, 100, 102, 102, 78, 106, 69,
+      230, 236,
+      57, 241, 146, 101, 120, 80, 66, 115, 64, 105, 122, 59, 65, 32, 80, 70, 47,
+      90, 113, 66, 187, 69, 101, 82, 117, 82, 46, 80, 69, 150, 80, 162, 211,
+      214,
+    };
     CBORObject cbor1 = CBORObject.DecodeFromBytes(bytes1);
     CBORObject cbor2 = CBORObject.DecodeFromBytes(bytes2);
     CBORObject cbor3 = CBORObject.DecodeFromBytes(bytes3);
@@ -35,10 +60,38 @@ namespace Test {
 
 [Test]
   public void TestLexOrderSpecific2() {
-    byte[] bytes1 = new byte[] { 129, 165, 59, 72, 110, 0, 0, 122, 250, 251, 131, 71, 22, 187, 235, 209, 143, 30, 146, 69, 36, 230, 134, 20, 97, 100, 78, 112, 92, 101, 70, 54, 136, 203, 227, 188, 120, 64, 72, 58, 42, 171, 177, 73, 245, 198, 139, 99, 36, 116, 76, 101, 99, 109, 60, 113, 107, 70, 219, 37, 80, 108, 40, 133, };
-    byte[] bytes2 = new byte[] { 129, 165, 67, 62, 217, 7, 69, 113, 188, 156, 26, 34, 69, 32, 101, 130, 188, 201, 27, 122, 228, 0, 0, 0, 0, 186, 9, 69, 70, 71, 152, 50, 17, 67, 231, 129, 240, 100, 79, 116, 84, 81, 69, 188, 114, 227, 101, 209, 244, 103, 91, 37, 62, 59, 78, 124, 95, };
-    byte[] bytes3 = new byte[] { 129, 165, 72, 58, 42, 171, 177, 73, 245, 198, 139, 99, 36, 116, 76, 69, 36, 230, 134, 20, 97, 100, 78, 112, 92, 101, 70, 54, 136, 203, 227, 188, 120, 64, 59, 72, 110, 0, 0, 122, 250, 251, 131, 71, 22, 187, 235, 209, 143, 30, 146, 101, 99, 109, 60, 113, 107, 70, 219, 37, 80, 108, 40, 133, };
-    byte[] bytes4 = new byte[] { 129, 165, 69, 70, 71, 152, 50, 17, 67, 231, 129, 240, 100, 79, 116, 84, 81, 69, 188, 114, 227, 101, 209, 67, 62, 217, 7, 69, 113, 188, 156, 26, 34, 244, 103, 91, 37, 62, 59, 78, 124, 95, 69, 32, 101, 130, 188, 201, 27, 122, 228, 0, 0, 0, 0, 186, 9, };
+    var bytes1 = new byte[] {
+      129, 165, 59, 72, 110, 0, 0, 122, 250, 251,
+      131, 71, 22, 187, 235, 209, 143, 30, 146, 69, 36, 230, 134, 20, 97,
+      100, 78,
+      112, 92, 101, 70, 54, 136, 203, 227, 188, 120, 64, 72, 58, 42, 171,
+      177, 73,
+      245, 198, 139, 99, 36, 116, 76, 101, 99, 109, 60, 113, 107, 70, 219,
+      37, 80,
+      108, 40, 133,
+    };
+    var bytes2 = new byte[] {
+      129, 165, 67, 62, 217, 7, 69, 113, 188, 156,
+      26, 34, 69, 32, 101, 130, 188, 201, 27, 122, 228, 0, 0, 0, 0, 186, 9, 69,
+      70, 71, 152, 50, 17, 67, 231, 129, 240, 100, 79, 116, 84, 81, 69, 188,
+      114,
+      227, 101, 209, 244, 103, 91, 37, 62, 59, 78, 124, 95,
+    };
+    var bytes3 = new byte[] {
+      129, 165, 72, 58, 42, 171, 177, 73, 245, 198,
+      139, 99, 36, 116, 76, 69, 36, 230, 134, 20, 97, 100, 78, 112, 92, 101, 70,
+      54, 136, 203, 227, 188, 120, 64, 59, 72, 110, 0, 0, 122, 250, 251,
+      131, 71,
+      22, 187, 235, 209, 143, 30, 146, 101, 99, 109, 60, 113, 107, 70, 219, 37,
+      80, 108, 40, 133,
+    };
+    var bytes4 = new byte[] {
+      129, 165, 69, 70, 71, 152, 50, 17, 67, 231,
+      129, 240, 100, 79, 116, 84, 81, 69, 188, 114, 227, 101, 209, 67, 62,
+      217, 7,
+      69, 113, 188, 156, 26, 34, 244, 103, 91, 37, 62, 59, 78, 124, 95, 69, 32,
+      101, 130, 188, 201, 27, 122, 228, 0, 0, 0, 0, 186, 9,
+    };
     CBORObject cbor1 = CBORObject.DecodeFromBytes(bytes1);
     CBORObject cbor2 = CBORObject.DecodeFromBytes(bytes2);
     CBORObject cbor3 = CBORObject.DecodeFromBytes(bytes3);
@@ -51,10 +104,35 @@ namespace Test {
 
 [Test]
   public void TestLexOrderSpecific3() {
-    byte[] bytes1 = new byte[] { 129, 165, 67, 62, 217, 7, 69, 113, 188, 156, 26, 34, 69, 32, 101, 130, 188, 201, 27, 122, 228, 0, 0, 0, 0, 186, 9, 69, 70, 71, 152, 50, 17, 67, 231, 129, 240, 100, 79, 116, 84, 81, 69, 188, 114, 227, 101, 209, 244, 103, 91, 37, 62, 59, 78, 124, 95, };
-    byte[] bytes2 = new byte[] { 129, 165, 67, 64, 196, 213, 217, 43, 37, 27, 37, 184, 58, 144, 176, 207, 252, 194, 68, 43, 68, 5, 219, 27, 0, 0, 126, 173, 36, 137, 166, 19, 69, 27, 99, 166, 37, 216, 101, 87, 91, 80, 79, 100, 69, 217, 77, 189, 138, 22, 101, 40, 93, 54, 59, 73, 97, 60, 99, 69, 35, 66, };
-    byte[] bytes3 = new byte[] { 129, 165, 69, 70, 71, 152, 50, 17, 67, 231, 129, 240, 100, 79, 116, 84, 81, 69, 188, 114, 227, 101, 209, 67, 62, 217, 7, 69, 113, 188, 156, 26, 34, 244, 103, 91, 37, 62, 59, 78, 124, 95, 69, 32, 101, 130, 188, 201, 27, 122, 228, 0, 0, 0, 0, 186, 9, };
-    byte[] bytes4 = new byte[] { 129, 165, 67, 64, 196, 213, 217, 43, 37, 27, 37, 184, 58, 144, 176, 207, 252, 194, 69, 27, 99, 166, 37, 216, 101, 87, 91, 80, 79, 100, 97, 60, 99, 69, 35, 66, 69, 217, 77, 189, 138, 22, 101, 40, 93, 54, 59, 73, 68, 43, 68, 5, 219, 27, 0, 0, 126, 173, 36, 137, 166, 19, };
+    var bytes1 = new byte[] {
+      129, 165, 67, 62, 217, 7, 69, 113, 188, 156,
+      26, 34, 69, 32, 101, 130, 188, 201, 27, 122, 228, 0, 0, 0, 0, 186, 9, 69,
+      70, 71, 152, 50, 17, 67, 231, 129, 240, 100, 79, 116, 84, 81, 69, 188,
+      114,
+      227, 101, 209, 244, 103, 91, 37, 62, 59, 78, 124, 95,
+    };
+    var bytes2 = new byte[] {
+      129, 165, 67, 64, 196, 213, 217, 43, 37, 27,
+      37, 184, 58, 144, 176, 207, 252, 194, 68, 43, 68, 5, 219, 27, 0, 0, 126,
+      173, 36, 137, 166, 19, 69, 27, 99, 166, 37, 216, 101, 87, 91, 80, 79, 100,
+      69, 217, 77, 189, 138, 22, 101, 40, 93, 54, 59, 73, 97, 60, 99, 69,
+      35, 66,
+    };
+    var bytes3 = new byte[] {
+      129, 165, 69, 70, 71, 152, 50, 17, 67, 231,
+      129, 240, 100, 79, 116, 84, 81, 69, 188, 114, 227, 101, 209, 67, 62,
+      217, 7,
+      69, 113, 188, 156, 26, 34, 244, 103, 91, 37, 62, 59, 78, 124, 95, 69, 32,
+      101, 130, 188, 201, 27, 122, 228, 0, 0, 0, 0, 186, 9,
+    };
+    var bytes4 = new byte[] {
+      129, 165, 67, 64, 196, 213, 217, 43, 37, 27,
+      37, 184, 58, 144, 176, 207, 252, 194, 69, 27, 99, 166, 37, 216, 101,
+      87, 91,
+      80, 79, 100, 97, 60, 99, 69, 35, 66, 69, 217, 77, 189, 138, 22, 101,
+      40, 93,
+      54, 59, 73, 68, 43, 68, 5, 219, 27, 0, 0, 126, 173, 36, 137, 166, 19,
+    };
     CBORObject cbor1 = CBORObject.DecodeFromBytes(bytes1);
     CBORObject cbor2 = CBORObject.DecodeFromBytes(bytes2);
     CBORObject cbor3 = CBORObject.DecodeFromBytes(bytes3);
@@ -65,8 +143,7 @@ namespace Test {
     TestCommon.CompareTestLess(cbor3, cbor4);
   }
 
-
-    public static void TestCBORMapAdd() {
+public static void TestCBORMapAdd() {
       CBORObject cbor = CBORObject.NewMap();
       cbor.Add(1, 2);
       Assert.IsTrue(cbor.ContainsKey(
@@ -91,7 +168,7 @@ namespace Test {
     }
 
 [Test]
-    public void TestArray() {
+public void TestArray() {
       CBORObject cbor = CBORObject.FromJSONString("[]");
       cbor.Add(ToObjectTest.TestToFromObjectRoundTrip(3));
       cbor.Add(ToObjectTest.TestToFromObjectRoundTrip(4));
@@ -122,8 +199,8 @@ namespace Test {
       }
     }
 
-    [Test]
-    public void TestEInteger() {
+[Test]
+public void TestEInteger() {
       var r = new RandomGenerator();
       for (var i = 0; i < 500; ++i) {
         EInteger bi = RandomObjects.RandomEInteger(r);
@@ -161,8 +238,8 @@ namespace Test {
       }
     }
 
-    [Test]
-    public void TestBigNumBytes() {
+[Test]
+public void TestBigNumBytes() {
       CBORObject o = null;
       o = CBORTestCommon.FromBytesTestAB(new byte[] { 0xc2, 0x41, 0x88 });
       Assert.AreEqual(EInteger.FromRadixString("88", 16), o.AsEInteger());
@@ -186,8 +263,8 @@ namespace Test {
   o.AsEInteger());
     }
 
-    [Test]
-    public void TestByte() {
+[Test]
+public void TestByte() {
       for (var i = 0; i <= 255; ++i) {
         CBORTestCommon.AssertJSONSer(
           ToObjectTest.TestToFromObjectRoundTrip((byte)i),
@@ -195,8 +272,8 @@ namespace Test {
       }
     }
 
-    [Test]
-    public void TestByteArray() {
+[Test]
+public void TestByteArray() {
       CBORObject co = ToObjectTest.TestToFromObjectRoundTrip(
               new byte[] { 0x20, 0x78 });
       EInteger[] tags = co.GetAllTags();
@@ -207,8 +284,8 @@ namespace Test {
       Assert.AreEqual(0x78, bytes[1]);
     }
 
-    [Test]
-    public void TestByteStringStream() {
+[Test]
+public void TestByteStringStream() {
       CBORTestCommon.FromBytesTestAB(
         new byte[] { 0x5f, 0x41, 0x20, 0x41, 0x20, 0xff });
     }
@@ -243,15 +320,15 @@ namespace Test {
       }
     }
 
-    public static string ObjectMessage(CBORObject obj) {
+public static string ObjectMessage(CBORObject obj) {
       return new System.Text.StringBuilder()
         .Append("CBORObject.DecodeFromBytes(")
            .Append(TestCommon.ToByteArrayString(obj.EncodeToBytes()))
            .Append("); /").Append("/ ").Append(obj.ToJSONString()).ToString();
     }
 
-    [Test]
-    public void TestCanFitIn() {
+[Test]
+public void TestCanFitIn() {
       var r = new RandomGenerator();
       for (var i = 0; i < 5000; ++i) {
         CBORObject ed = CBORTestCommon.RandomNumber(r);
@@ -298,8 +375,8 @@ namespace Test {
       }
     }
 
-    [Test]
-    public void TestCanFitInSpecificCases() {
+[Test]
+public void TestCanFitInSpecificCases() {
       CBORObject cbor = CBORObject.DecodeFromBytes(new byte[] {
         (byte)0xfb,
         0x41, (byte)0xe0, (byte)0x85, 0x48, 0x2d, 0x14, 0x47, 0x7a,
@@ -328,8 +405,8 @@ namespace Test {
       Assert.IsTrue(cbor.CanTruncatedIntFitInInt32());
     }
 
-    [Test]
-    public void TestCBOREInteger() {
+[Test]
+public void TestCBOREInteger() {
       CBORObject o = CBORObject.DecodeFromBytes(new byte[] {
         0x3b, (byte)0xce,
         (byte)0xe2, 0x5a, 0x57, (byte)0xd8, 0x21, (byte)0xb9, (byte)0xa7,
@@ -339,8 +416,8 @@ namespace Test {
         o.AsEInteger());
     }
 
-    [Test]
-    public void TestCBORExceptions() {
+[Test]
+public void TestCBORExceptions() {
       try {
         CBORObject.NewArray().Remove(null);
         Assert.Fail("Should have failed");
@@ -458,8 +535,8 @@ namespace Test {
       }
     }
 
-    [Test]
-    public void TestCBORFromArray() {
+[Test]
+public void TestCBORFromArray() {
       CBORObject o = CBORObject.FromObject(new[] { 1, 2, 3 });
       Assert.AreEqual(3, o.Count);
       Assert.AreEqual(1, o[0].AsInt32());
@@ -468,8 +545,8 @@ namespace Test {
       CBORTestCommon.AssertRoundTrip(o);
     }
 
-    [Test]
-    public void TestCBORInfinity() {
+[Test]
+public void TestCBORInfinity() {
       {
         string stringTemp =
 ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf)
@@ -488,8 +565,8 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
       }
     }
 
-    [Test]
-    public void TestCBORInfinityRoundTrip() {
+[Test]
+public void TestCBORInfinityRoundTrip() {
       CBORTestCommon.AssertRoundTrip(
         ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf));
 
@@ -539,8 +616,8 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
             ToObjectTest.TestToFromObjectRoundTrip(Single.PositiveInfinity));
     }
 
-    [Test]
-    public void TestCompareB() {
+[Test]
+public void TestCompareB() {
       {
         string stringTemp = CBORObject.DecodeFromBytes(new byte[] {
           (byte)0xfa, 0x7f, (byte)0x80, 0x00, 0x00,
@@ -600,8 +677,8 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
       CBORTestCommon.AssertRoundTrip(cbor);
     }
 
-    [Test]
-    public void TestDecFracCompareIntegerVsBigFraction() {
+[Test]
+public void TestDecFracCompareIntegerVsBigFraction() {
       CBORObject o1 = null;
       CBORObject o2 = null;
       o1 = CBORObject.DecodeFromBytes(new byte[] {
@@ -617,8 +694,8 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
       AddSubCompare(o1, o2);
     }
 
-    [Test]
-    public void TestDecimalFrac() {
+[Test]
+public void TestDecimalFrac() {
       CBORTestCommon.FromBytesTestAB(
         new byte[] { 0xc4, 0x82, 0x3, 0x1a, 1, 2, 3, 4 });
     }
@@ -629,7 +706,7 @@ CBORObject obj = CBORTestCommon.FromBytesTestAB(new byte[] {
   0xc2, 0x41,
   1,
 });
-      try {
+try {
         Console.WriteLine(obj.AsEDecimal());
         Assert.Fail("Should have failed");
       } catch (CBORException) {
@@ -676,8 +753,8 @@ CBORObject obj = CBORTestCommon.FromBytesTestAB(new byte[] {
       }
     }
 
-    [Test]
-    public void TestDecimalFracMantissaMayBeBignum() {
+[Test]
+public void TestDecimalFracMantissaMayBeBignum() {
       CBORObject o = CBORTestCommon.FromBytesTestAB(
         new byte[] { 0xc4, 0x82, 0x3, 0xc2, 0x41, 1 });
       Assert.AreEqual(
@@ -685,8 +762,8 @@ CBORObject obj = CBORTestCommon.FromBytesTestAB(new byte[] {
         o.AsEDecimal());
     }
 
-    [Test]
-    public void TestBigFloatFracMantissaMayBeBignum() {
+[Test]
+public void TestBigFloatFracMantissaMayBeBignum() {
       CBORObject o = CBORTestCommon.FromBytesTestAB(
         new byte[] { 0xc5, 0x82, 0x3, 0xc2, 0x41, 1 });
       {
@@ -695,8 +772,8 @@ CBORObject obj = CBORTestCommon.FromBytesTestAB(new byte[] {
       }
     }
 
-    [Test]
-    public void TestDivide() {
+[Test]
+public void TestDivide() {
       var r = new RandomGenerator();
       for (var i = 0; i < 3000; ++i) {
         CBORObject o1 =
@@ -717,8 +794,8 @@ CBORObject obj = CBORTestCommon.FromBytesTestAB(new byte[] {
       }
     }
 
-    [Test]
-    public void TestDouble() {
+[Test]
+public void TestDouble() {
       if
 (!ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity)
           .IsPositiveInfinity()) {
@@ -750,8 +827,8 @@ CBORObject obj = CBORTestCommon.FromBytesTestAB(new byte[] {
       }
     }
 
-    [Test]
-    public void TestExample() {
+[Test]
+public void TestExample() {
       // The following creates a CBOR map and adds
       // several kinds of objects to it
       CBORObject cbor = CBORObject.NewMap().Add("item", "any string")
@@ -764,9 +841,9 @@ CBORObject obj = CBORTestCommon.FromBytesTestAB(new byte[] {
       cbor.ToJSONString();
     }
 
-    [Test]
-    [Timeout(5000)]
-    public void TestExtendedExtremeExponent() {
+[Test]
+[Timeout(5000)]
+public void TestExtendedExtremeExponent() {
       // Values with extremely high or extremely low exponents;
       // we just check whether this test method runs reasonably fast
       // for all these test cases
@@ -794,8 +871,8 @@ CBORObject obj = CBORTestCommon.FromBytesTestAB(new byte[] {
       Assert.AreEqual(1, actual);
     }
 
-    [Test]
-    public void TestFloat() {
+[Test]
+public void TestFloat() {
       Assert.IsTrue(
         ToObjectTest.TestToFromObjectRoundTrip(Single.PositiveInfinity)
               .AsEDecimal().IsPositiveInfinity());
@@ -897,8 +974,8 @@ public void TestTag268() {
   }
 }
 
-    [Test]
-    public void TestJSON() {
+[Test]
+public void TestJSON() {
       CBORObject o;
       o = CBORObject.FromJSONString("[1,2,null,true,false,\"\"]");
       Assert.AreEqual(6, o.Count);
@@ -1001,8 +1078,8 @@ public void TestTag268() {
       }
     }
 
-    [Test]
-    public void TestJSONEscapedChars() {
+[Test]
+public void TestJSONEscapedChars() {
       CBORObject o = CBORObject.FromJSONString(
         "[\"\\r\\n\\u0006\\u000E\\u001A\\\\\\\"\"]");
       Assert.AreEqual(1, o.Count);
@@ -1021,8 +1098,8 @@ public void TestTag268() {
       CBORTestCommon.AssertRoundTrip(o);
     }
 
-    [Test]
-    public void TestLong() {
+[Test]
+public void TestLong() {
       long[] ranges = {
         -65539, 65539, 0xfffff000L, 0x100000400L,
         Int64.MaxValue - 1000,
@@ -1057,8 +1134,8 @@ public void TestTag268() {
       }
     }
 
-    [Test]
-    public void TestMap() {
+[Test]
+public void TestMap() {
       CBORObject cbor = CBORObject.FromJSONString("{\"a\":2,\"b\":4}");
       Assert.AreEqual(2, cbor.Count);
       TestCommon.AssertEqualsHashCode(
@@ -1101,8 +1178,8 @@ public void TestTag268() {
       }
     }
 
-    [Test]
-    public void TestMapInMap() {
+[Test]
+public void TestMapInMap() {
       CBORObject oo;
       oo = CBORObject.NewArray().Add(CBORObject.NewMap()
                     .Add(
@@ -1126,8 +1203,8 @@ public void TestTag268() {
       CBORTestCommon.AssertRoundTrip(oo);
     }
 
-    [Test]
-    public void TestParseDecimalStrings() {
+[Test]
+public void TestParseDecimalStrings() {
       var rand = new RandomGenerator();
       for (var i = 0; i < 3000; ++i) {
         string r = RandomObjects.RandomDecimalString(rand);
@@ -1135,9 +1212,9 @@ public void TestTag268() {
       }
     }
 
-    [Test]
-    [Timeout(50000)]
-    public void TestRandomData() {
+[Test]
+[Timeout(50000)]
+public void TestRandomData() {
       var rand = new RandomGenerator();
       CBORObject obj;
       for (var i = 0; i < 1000; ++i) {
@@ -1156,8 +1233,8 @@ public void TestTag268() {
       }
     }
 
-    [Test]
-    public void TestSharedRefValidInteger() {
+[Test]
+public void TestSharedRefValidInteger() {
       byte[] bytes;
       // Shared ref is integer
       bytes = new byte[] { 0x82, 0xd8, 0x1c, 0x00, 0xd8, 0x1d, 0x00 };
@@ -1216,15 +1293,15 @@ public void TestTag268() {
       }
     }
 
-    private static string ToByteArrayStringFrom(byte[] array, int pos) {
+private static string ToByteArrayStringFrom(byte[] array, int pos) {
       var newArray = new byte[array.Length - pos];
       Array.Copy(array, pos, newArray, 0, newArray.Length);
       return TestCommon.ToByteArrayString(newArray);
     }
 
-    [Test]
-    [Timeout(500000)]
-    public void TestRandomNonsense() {
+[Test]
+[Timeout(500000)]
+public void TestRandomNonsense() {
       var rand = new RandomGenerator();
       for (var i = 0; i < 1000; ++i) {
         var array = new byte[rand.UniformInt(1000000) + 1];
@@ -1296,7 +1373,7 @@ public void TestTag268() {
       }
     }
 
-    private static void TestRandomSlightlyModifiedOne(byte[] array,
+private static void TestRandomSlightlyModifiedOne(byte[] array,
   RandomGenerator rand) {
         if (array.Length > 50000) {
           Console.WriteLine(String.Empty + array.Length);
@@ -1362,8 +1439,8 @@ public void TestTag268() {
         }
     }
 
-    [Test]
-    public void TestRandomSlightlyModified() {
+[Test]
+public void TestRandomSlightlyModified() {
       var rand = new RandomGenerator();
       // Test slightly modified objects
       for (var i = 0; i < 2000; ++i) {
@@ -1373,8 +1450,8 @@ public void TestTag268() {
       }
     }
 
-    [Test]
-    public void TestReadWriteInt() {
+[Test]
+public void TestReadWriteInt() {
       var r = new RandomGenerator();
       try {
         for (var i = 0; i < 100000; ++i) {
@@ -1401,8 +1478,8 @@ public void TestTag268() {
       }
     }
 
-    [Test]
-    public void TestShort() {
+[Test]
+public void TestShort() {
       for (int i = Int16.MinValue; i <= Int16.MaxValue; ++i) {
         CBORTestCommon.AssertJSONSer(
           ToObjectTest.TestToFromObjectRoundTrip((short)i),
@@ -1410,8 +1487,8 @@ public void TestTag268() {
       }
     }
 
-    [Test]
-    public void TestSimpleValues() {
+[Test]
+public void TestSimpleValues() {
       CBORTestCommon.AssertJSONSer(
         ToObjectTest.TestToFromObjectRoundTrip(true),
         "true");
@@ -1423,8 +1500,8 @@ public void TestTag268() {
         "null");
     }
 
-    [Test]
-    public void TestSubtract() {
+[Test]
+public void TestSubtract() {
       var r = new RandomGenerator();
       for (var i = 0; i < 3000; ++i) {
         CBORObject o1 = CBORTestCommon.RandomNumber(r);
@@ -1437,9 +1514,9 @@ public void TestTag268() {
       }
     }
 
-    [Test]
-    [Timeout(10000)]
-    public void TestTaggedUntagged() {
+[Test]
+[Timeout(10000)]
+public void TestTaggedUntagged() {
       for (int i = 200; i < 1000; ++i) {
         CBORObject o, o2;
         o = ToObjectTest.TestToFromObjectRoundTrip(0);
@@ -1503,9 +1580,9 @@ public void TestTag268() {
       }
     }
 
-    [Test]
-    [Timeout(10000)]
-    public void TestTags() {
+[Test]
+[Timeout(10000)]
+public void TestTags() {
       EInteger maxuint = EInteger.FromString("18446744073709551615");
       EInteger[] ranges = {
         EInteger.FromString("37"),
@@ -1609,8 +1686,8 @@ public void TestTag268() {
       }
     }
 
-    [Test]
-    public void TestOverlongSimpleValues() {
+[Test]
+public void TestOverlongSimpleValues() {
       for (var i = 0; i <= 0x1f; ++i) {
         var bytes = new byte[] { (byte)0xf8, (byte)i };
         try {
@@ -1625,8 +1702,8 @@ public void TestTag268() {
       }
     }
 
-    [Test]
-    public void TestTags264And265() {
+[Test]
+public void TestTags264And265() {
       CBORObject cbor;
       // Tag 264
       cbor = CBORObject.DecodeFromBytes(new byte[] {
@@ -1654,8 +1731,8 @@ public void TestTag268() {
       }
     }
 
-    [Test]
-    public void TestTextStringStream() {
+[Test]
+public void TestTextStringStream() {
       CBORObject cbor = CBORTestCommon.FromBytesTestAB(
         new byte[] { 0x7f, 0x61, 0x2e, 0x61, 0x2e, 0xff });
       {
@@ -1685,8 +1762,8 @@ public void TestTag268() {
       }
     }
 
-    [Test]
-    public void TestIntegerFloatingEquivalence() {
+[Test]
+public void TestIntegerFloatingEquivalence() {
       CBORObject cbor;
       // 0 versus 0.0
       cbor = CBORObject.NewMap();
@@ -1756,8 +1833,8 @@ public void TestTag268() {
 }
     }
 
-    [Test]
-    public void TestTextStringStreamNoTagsBeforeDefinite() {
+[Test]
+public void TestTextStringStreamNoTagsBeforeDefinite() {
       try {
         CBORTestCommon.FromBytesTestAB(new byte[] {
           0x7f, 0x61, 0x20, 0xc0,
@@ -1772,12 +1849,12 @@ public void TestTag268() {
       }
     }
 
-    private static EDecimal AsED(CBORObject obj) {
+private static EDecimal AsED(CBORObject obj) {
       return EDecimal.FromString(
         obj.AsEDecimal().ToString());
     }
 
-    private static void AddSubCompare(CBORObject o1, CBORObject o2) {
+private static void AddSubCompare(CBORObject o1, CBORObject o2) {
       EDecimal cmpDecFrac = AsED(o1).Add(AsED(o2));
       EDecimal cmpCobj = AsED(CBORObject.Addition(o1, o2));
       TestCommon.CompareTestEqual(cmpDecFrac, cmpCobj);
@@ -1787,14 +1864,14 @@ public void TestTag268() {
       CBORObjectTest.CompareDecimals(o1, o2);
     }
 
-    private static void TestDecimalString(String r) {
+private static void TestDecimalString(String r) {
       CBORObject o =
 ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(r));
       CBORObject o2 = CBORDataUtilities.ParseJSONNumber(r);
       TestCommon.CompareTestEqual(o, o2);
     }
 
-    private static void TestTextStringStreamOne(string longString) {
+private static void TestTextStringStreamOne(string longString) {
       CBORObject cbor, cbor2;
       cbor = ToObjectTest.TestToFromObjectRoundTrip(longString);
       cbor2 = CBORTestCommon.FromBytesTestAB(cbor.EncodeToBytes());
@@ -1811,7 +1888,7 @@ ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(r));
       Assert.AreEqual(longString, cbor2.AsString());
     }
 
-    private static void TestWriteToJSON(CBORObject obj) {
+private static void TestWriteToJSON(CBORObject obj) {
       CBORObject objA = null;
       string jsonString = String.Empty;
       using (var ms = new MemoryStream()) {

@@ -14,36 +14,23 @@ using PeterO.Numbers;
 namespace PeterO.Cbor {
   internal class CBORReader {
     private readonly Stream stream;
+    private readonly CBOREncodeOptions options;
     private int depth;
-    private CBORDuplicatePolicy policy;
     private StringRefs stringRefs;
     private bool hasSharableObjects;
 
-    public CBORReader(Stream inStream) {
+    public CBORReader(Stream inStream) : this(inStream,
+  CBOREncodeOptions.Default) {
+    }
+
+    public CBORReader(Stream inStream, CBOREncodeOptions options) {
       this.stream = inStream;
-      this.policy = CBORDuplicatePolicy.Overwrite;
+      this.options = options;
     }
 
-    internal enum CBORDuplicatePolicy {
-    /// <summary>This is an internal API.</summary>
-      Overwrite,
-
-    /// <summary>This is an internal API.</summary>
-      Disallow,
-    }
-
-    public CBORDuplicatePolicy DuplicatePolicy {
-      get {
-        return this.policy;
-      }
-
-      set {
-        this.policy = value;
-      }
-    }
-
-    public CBORObject ResolveSharedRefsIfNeeded(CBORObject obj) {
-      if (this.hasSharableObjects) {
+    public CBORObject Read() {
+      CBORObject obj = ReadInternal();
+      if (this.options.ResolveReferences && this.hasSharableObjects) {
         var sharedRefs = new SharedRefs();
         return ResolveSharedRefs(obj, sharedRefs);
       }
@@ -85,7 +72,7 @@ namespace PeterO.Cbor {
   return obj;
     }
 
-    public CBORObject Read() {
+    public CBORObject ReadInternal() {
       if (this.depth > 500) {
         throw new CBORException("Too deeply nested");
       }
@@ -271,7 +258,7 @@ namespace PeterO.Cbor {
                 " is bigger than supported");
             }
             if (nextByte != 0x60) {
- // NOTE: 0x60 means the empty string
+              // NOTE: 0x60 means the empty string
               if (PropertyMap.ExceedsKnownLength(this.stream, len)) {
                 throw new CBORException("Premature end of data");
               }
@@ -365,7 +352,7 @@ namespace PeterO.Cbor {
         ++this.depth;
         for (long i = 0; i < uadditional; ++i) {
           cbor.Add(
-            this.Read());
+            this.ReadInternal());
         }
         --this.depth;
         return cbor;
@@ -385,9 +372,9 @@ namespace PeterO.Cbor {
             }
             ++this.depth;
             CBORObject key = this.ReadForFirstByte(headByte);
-            CBORObject value = this.Read();
+            CBORObject value = this.ReadInternal();
             --this.depth;
-            if (this.policy == CBORDuplicatePolicy.Disallow) {
+            if (!this.options.AllowDuplicateKeys) {
               if (cbor.ContainsKey(key)) {
                 throw new CBORException("Duplicate key already exists: " + key);
               }
@@ -398,7 +385,7 @@ namespace PeterO.Cbor {
         }
         if (hasBigAdditional) {
           throw new CBORException("Length of " +
-  bigintAdditional.ToString() + " is bigger than supported");
+            bigintAdditional.ToString() + " is bigger than supported");
         }
         if (uadditional > Int32.MaxValue) {
           throw new CBORException("Length of " +
@@ -410,10 +397,10 @@ namespace PeterO.Cbor {
         }
         for (long i = 0; i < uadditional; ++i) {
           ++this.depth;
-          CBORObject key = this.Read();
-          CBORObject value = this.Read();
+          CBORObject key = this.ReadInternal();
+          CBORObject value = this.ReadInternal();
           --this.depth;
-          if (this.policy == CBORDuplicatePolicy.Disallow) {
+          if (!this.options.AllowDuplicateKeys) {
             if (cbor.ContainsKey(key)) {
               throw new CBORException("Duplicate key already exists: " + key);
             }
@@ -425,7 +412,7 @@ namespace PeterO.Cbor {
       if (type == 6) { // Tagged item
         var haveFirstByte = false;
         var newFirstByte = -1;
-        if (!hasBigAdditional) {
+        if (this.options.ResolveReferences && !hasBigAdditional) {
           int uad = uadditional >= 257 ? 257 : (uadditional < 0 ? 0 :
             (int)uadditional);
           switch (uad) {
@@ -448,12 +435,13 @@ namespace PeterO.Cbor {
         }
         ++this.depth;
         CBORObject o = haveFirstByte ? this.ReadForFirstByte(
-  newFirstByte) : this.Read();
+  newFirstByte) : this.ReadInternal();
         --this.depth;
         if (hasBigAdditional) {
           return CBORObject.FromObjectAndTag(o, bigintAdditional);
         }
         if (uadditional < 65536) {
+          if (this.options.ResolveReferences) {
           int uaddl = uadditional >= 257 ? 257 : (uadditional < 0 ? 0 :
             (int)uadditional);
           switch (uaddl) {
@@ -465,11 +453,11 @@ namespace PeterO.Cbor {
               // stringref tag
               if (o.IsTagged || o.Type != CBORType.Integer) {
                 throw new CBORException("stringref must be an unsigned" +
-"\u0020integer");
+                  "\u0020integer");
               }
               return this.stringRefs.GetString(o.AsEIntegerValue());
           }
-
+          }
           return CBORObject.FromObjectAndTag(
             o,
             (int)uadditional);

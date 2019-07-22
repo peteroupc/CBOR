@@ -599,7 +599,7 @@ throw new InvalidOperationException(String.Empty, ex);
           0xc3,
           0x41, 0x00,
         }).AsEInteger();
-Assert.AreEqual(objectTemp, objectTemp2);
+        Assert.AreEqual(objectTemp, objectTemp2);
 }
       Assert.AreEqual(
         EInteger.FromString("-1"),

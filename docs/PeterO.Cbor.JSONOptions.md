@@ -59,7 +59,7 @@
 
  Gets a value indicating whether the Base64Padding property is true. This property has no effect; in previous versions, this property meant that padding was written out when writing base64url or traditional base64 to JSON.
 
- <b>Returns:</b>
+  <b>Returns:</b>
 
 A value indicating whether the Base64Padding property is true.
 
@@ -70,6 +70,6 @@ A value indicating whether the Base64Padding property is true.
 
  Gets a value indicating whether surrogate code points not part of a surrogate pair (which consists of two consecutive  `char`  s forming one Unicode code point) are each replaced with a replacement character (U+FFFD). The default is false; an exception is thrown when such code points are encountered.
 
- <b>Returns:</b>
+  <b>Returns:</b>
 
 True, if surrogate code points not part of a surrogate pair are each replaced with a replacement character, or false if an exception is thrown when such code points are encountered.

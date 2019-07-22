@@ -172,6 +172,34 @@
       Authentication.
     </param>
   </doc>
+  <doc name='M:PeterO.Cbor.CBOREncodeOptions.#ctor(System.String)'>
+    <summary>Initializes a new instance of the
+      <see cref='PeterO.Cbor.CBOREncodeOptions'/>
+       class.
+    </summary>
+    <param name='paramString'>A string setting forth the options to use. This is a semicolon-separated
+      list of options, each of which has a key and a value separated by an equal
+      sign ("="). Whitespace and line separators are not allowed to appear
+      between the semicolons or between the equal signs, nor may the string
+      begin or end with whitespace. The following is an example of this
+      parameter:
+      <c>allowduplicatekeys=true;ctap2Canonical=true</c> . The key can be any one of the following in any combination of case:
+      <c>allowduplicatekeys</c> ,
+      <c>ctap2canonical</c> ,
+      <c>resolvereferences</c> ,
+      <c>useindeflengthstrings</c> . Keys other than these are ignored. If the same key appears more than
+      once, the value given for the last such key is used. The four keys just
+      given can have a value of
+      <c>1</c> ,
+      <c>true</c> ,
+      <c>yes</c> , or
+      <c>on</c> (in any combination of case), which means true, and any other value
+      meaning false. For example,
+      <c>allowduplicatekeys=Yes</c> and
+      <c>allowduplicatekeys=1</c> both set the
+      <c>AllowDuplicateKeys</c> property to true.
+    </param>
+  </doc>
   <doc name='P:PeterO.Cbor.CBOREncodeOptions.AllowDuplicateKeys'>
     <summary>Gets a value indicating whether to allow duplicate keys when reading CBOR
       objects from a data stream. Used only when decoding CBOR objects.
@@ -239,6 +267,32 @@
     </param>
     <returns>A new CBOREncodeOptions object.
     </returns>
+  </doc>
+  <doc name='P:PeterO.Cbor.CBOREncodeOptions.ResolveReferences'>
+    <summary>Gets a value indicating whether to resolve references to sharable objects
+      and sharable strings in the process of decoding a CBOR object.
+    </summary>
+    <value>A value indicating whether to resolve references to sharable objects and
+      sharable strings. The default is false.
+    </value>
+    <remarks>
+      <para>Sharable objects are marked with tag 28, and references to those objects
+        are marked with tag 29 (where a reference of 0 means the first sharable
+        object in the CBOR stream, a reference of 1 means the second, and so
+        on). Sharable strings (byte strings and text strings) appear within an
+        enclosing object marked with tag 256, and references to them are marked
+        with tag 25; in general, a string is sharable only if storing its
+        reference rather than the string would save space.
+      </para>
+      <para>Note that unlike most other tags, these tags generally care about the
+        relative order in which objects appear in a CBOR stream; thus they are
+        not interoperable with CBOR implementations that follow the generic CBOR
+        data model (since they may list map keys in an unspecified order).
+        Interoperability problems with these tags can be reduced by not using
+        them to mark keys or values of a map or to mark objects within those
+        keys or values.
+      </para>
+    </remarks>
   </doc>
   <doc name='P:PeterO.Cbor.CBOREncodeOptions.UseIndefLengthStrings'>
     <summary>Gets a value indicating whether to encode strings with an
@@ -401,7 +455,7 @@
     </summary>
     <returns>This object's absolute without its negative sign.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object's type is not a number type.
+    <exception cref='System.InvalidOperationException'>This object does not represent a number.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.Add(PeterO.Cbor.CBORObject)'>
@@ -602,7 +656,7 @@
     </summary>
     <returns>The closest byte-sized integer to this object.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object's type is not a number type.
+    <exception cref='System.InvalidOperationException'>This object does not represent a number.
     </exception>
     <exception cref='System.OverflowException'>This object's value exceeds the range of a byte (would be less than 0 or
       greater than 255 when truncated to an integer).
@@ -625,7 +679,7 @@
       can be positive infinity or negative infinity if this value exceeds the
       range of a 64-bit floating point number.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object's type is not a number type.
+    <exception cref='System.InvalidOperationException'>This object does not represent a number.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.AsDoubleValue'>
@@ -646,10 +700,10 @@
       number with a nonterminating decimal expansion, returns a decimal number
       rounded to 34 digits.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object's type is not a number type, including if this object is
+    <exception cref='System.InvalidOperationException'>This object does not represent a number, including if this object is
       CBORObject.Null. To check the CBOR object for null before conversion, use
       the following idiom (originally written in C# for the &#x2e;NET version):
-      <c>(cbor == null || cbor.IsNull) ? null : cbor.AsEDecimal()</c> .
+      <c>(cbor==null || cbor.IsNull) ? null : cbor.AsEDecimal()</c> .
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.AsEFloat'>
@@ -663,10 +717,10 @@
       expansion, returns a binary floating-point number rounded to a high but
       limited precision.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object's type is not a number type, including if this object is
+    <exception cref='System.InvalidOperationException'>This object does not represent a number, including if this object is
       CBORObject.Null. To check the CBOR object for null before conversion, use
       the following idiom (originally written in C# for the &#x2e;NET version):
-      <c>(cbor == null || cbor.IsNull) ? null : cbor.AsEFloat()</c> .
+      <c>(cbor==null || cbor.IsNull) ? null : cbor.AsEFloat()</c> .
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.AsEInteger'>
@@ -675,10 +729,10 @@
     </summary>
     <returns>The closest arbitrary-precision integer to this object.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object's type is not a number type, including if this object is
+    <exception cref='System.InvalidOperationException'>This object does not represent a number, including if this object is
       CBORObject.Null. To check the CBOR object for null before conversion, use
       the following idiom (originally written in C# for the &#x2e;NET version):
-      <c>(cbor == null || cbor.IsNull) ? null : cbor.AsEInteger()</c> .
+      <c>(cbor==null || cbor.IsNull) ? null : cbor.AsEInteger()</c> .
     </exception>
     <exception cref='System.OverflowException'>This object's value is infinity or not-a-number (NaN).
     </exception>
@@ -700,10 +754,10 @@
     </summary>
     <returns>A rational number for this object's value.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object's type is not a number type, including if this object is
+    <exception cref='System.InvalidOperationException'>This object does not represent a number, including if this object is
       CBORObject.Null. To check the CBOR object for null before conversion, use
       the following idiom (originally written in C# for the &#x2e;NET version):
-      <c>(cbor == null || cbor.IsNull) ? null : cbor.AsERational()</c> .
+      <c>(cbor==null || cbor.IsNull) ? null : cbor.AsERational()</c> .
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.AsInt16'>
@@ -712,7 +766,7 @@
     </summary>
     <returns>The closest 16-bit signed integer to this object.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object's type is not a number type.
+    <exception cref='System.InvalidOperationException'>This object does not represent a number.
     </exception>
     <exception cref='System.OverflowException'>This object's value exceeds the range of a 16-bit signed integer.
     </exception>
@@ -727,7 +781,7 @@
     </summary>
     <returns>The closest 32-bit signed integer to this object.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object's type is not a number type.
+    <exception cref='System.InvalidOperationException'>This object does not represent a number.
     </exception>
     <exception cref='System.OverflowException'>This object's value exceeds the range of a 32-bit signed integer.
     </exception>
@@ -773,7 +827,7 @@
     </summary>
     <returns>The closest 64-bit signed integer to this object.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object's type is not a number type.
+    <exception cref='System.InvalidOperationException'>This object does not represent a number.
     </exception>
     <exception cref='System.OverflowException'>This object's value exceeds the range of a 64-bit signed integer.
     </exception>
@@ -822,7 +876,7 @@
       can be positive infinity or negative infinity if this object's value
       exceeds the range of a 32-bit floating point number.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object's type is not a number type.
+    <exception cref='System.InvalidOperationException'>This object does not represent a number.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.AsString'>
@@ -833,7 +887,7 @@
     <exception cref='System.InvalidOperationException'>This object's type is not a string, including if this object is
       CBORObject.Null. To check the CBOR object for null before conversion, use
       the following idiom (originally written in C# for the &#x2e;NET version):
-      <c>(cbor == null || cbor.IsNull) ? null : cbor.AsString()</c> .
+      <c>(cbor==null || cbor.IsNull) ? null : cbor.AsString()</c> .
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.AsUInt16'>
@@ -857,6 +911,8 @@
   <doc name='M:PeterO.Cbor.CBORObject.AsUInt64'>
     <summary>Not documented yet.
     </summary>
+    <returns>A 64-bit unsigned integer.
+    </returns>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.CanFitInDouble'>
     <summary>Returns whether this object's value can be converted to a 64-bit floating
@@ -1204,8 +1260,8 @@
         a change in version 4.0.
       </para>
       <para>Note that if a CBOR object is converted to JSON with
-        <c>ToJSONString</c> , then the JSON is converted back to CBOR with this method, the new
-        CBOR object will not necessarily be the same as the old CBOR object,
+        <c>ToJSONString</c> , then the JSON is converted back to CBOR with this method, the new CBOR
+        object will not necessarily be the same as the old CBOR object,
         especially if the old CBOR object uses data types not supported in JSON,
         such as integers in map keys.
       </para>
@@ -1228,8 +1284,8 @@
       (JSON) format, using the specified options to control the decoding
       process.
       <para>Note that if a CBOR object is converted to JSON with
-        <c>ToJSONString</c> , then the JSON is converted back to CBOR with this method, the new
-        CBOR object will not necessarily be the same as the old CBOR object,
+        <c>ToJSONString</c> , then the JSON is converted back to CBOR with this method, the new CBOR
+        object will not necessarily be the same as the old CBOR object,
         especially if the old CBOR object uses data types not supported in JSON,
         such as integers in map keys.
       </para>
@@ -1476,7 +1532,7 @@
         control of the application. If the plain-old-data type references other
         data types, those types should likewise meet either criterion above.
       </para>
-       .
+      .
     </param>
     <returns>A CBOR object corresponding to the given object. Returns CBORObject.Null
       if the object is null.
@@ -1498,7 +1554,7 @@
         control of the application. If the plain-old-data type references other
         data types, those types should likewise meet either criterion above.
       </para>
-       .
+      .
     </param>
     <param name='mapper'>An object containing optional converters to convert objects of certain
       types to CBOR objects.
@@ -1566,7 +1622,7 @@
           object from
           <c>String</c> , see the example given in
           <see cref='PeterO.Cbor.CBORObject.FromObject(System.Byte[])'/>
-           .
+          .
         </item>
         <item>In the &#x2e;NET version, a nullable is converted to
           <c>CBORObject.Null</c> if the nullable's value is
@@ -1605,7 +1661,7 @@
         <item>An enumeration (
           <c>Enum</c> ) object is converted to its
           <i>
-             underlying value
+            underlying value
           </i>
            in the &#x2e;NET version, or the result of its
           <c>ordinal()</c> method in the Java version.
@@ -1656,8 +1712,8 @@
       </list>
       <para><b>REMARK:</b> &#x2e;NET enumeration (
         <c>Enum</c> ) constants could also have been converted to text strings with
-        <c>ToString()</c> , but that method will return multiple names if the given Enum object
-        is a combination of Enum objects (e.g. if the object is
+        <c>ToString()</c> , but that method will return multiple names if the given Enum object is
+        a combination of Enum objects (e.g. if the object is
         <c>FileAccess.Read | FileAccess.Write</c> ). More generally, if Enums are converted to text strings, constants
         from Enum types with the
         <c>Flags</c> attribute, and constants from the same Enum type that share an
@@ -1687,7 +1743,7 @@
         control of the application. If the plain-old-data type references other
         data types, those types should likewise meet either criterion above.
       </para>
-       .
+      .
     </param>
     <param name='mapper'>An object containing optional converters to convert objects of certain
       types to CBOR objects.
@@ -1719,7 +1775,7 @@
         control of the application. If the plain-old-data type references other
         data types, those types should likewise meet either criterion above.
       </para>
-       .
+      .
     </param>
     <param name='options'>An object containing options to control how certain objects are converted
       to CBOR objects.
@@ -1803,13 +1859,14 @@
         control of the application. If the plain-old-data type references other
         data types, those types should likewise meet either criterion above.
       </para>
+      .
     </param>
     <param name='bigintTag'>Tag number. The tag number 55799 can be used to mark a "self-described
       CBOR" object. This document does not attempt to list all CBOR tags and
       their meanings. An up-to-date list can be found at the CBOR Tags registry
       maintained by the Internet Assigned Numbers Authority (
       <i>
-         iana.org/assignments/cbor-tags
+        iana.org/assignments/cbor-tags
       </i>
        ).
     </param>
@@ -1817,8 +1874,9 @@
       <paramref name='valueOb'/>
        is converted to a CBOR object and given the tag
       <paramref name='bigintTag'/>
-       . If "valueOb" is null, returns a version of CBORObject.Null with the
-      given tag.
+      . If
+      <paramref name='valueOb'/>
+       is null, returns a version of CBORObject.Null with the given tag.
     </returns>
     <exception cref='System.ArgumentException'>The parameter
       <paramref name='bigintTag'/>
@@ -1845,6 +1903,7 @@
         control of the application. If the plain-old-data type references other
         data types, those types should likewise meet either criterion above.
       </para>
+      .
     </param>
     <param name='smallTag'>A 32-bit integer that specifies a tag number. The tag number 55799 can be
       used to mark a "self-described CBOR" object. This document does not
@@ -1852,7 +1911,7 @@
       be found at the CBOR Tags registry maintained by the Internet Assigned
       Numbers Authority (
       <i>
-         iana.org/assignments/cbor-tags
+        iana.org/assignments/cbor-tags
       </i>
        ).
     </param>
@@ -1860,7 +1919,7 @@
       <paramref name='valueObValue'/>
        is converted to a CBOR object and given the tag
       <paramref name='smallTag'/>
-       . If "valueOb" is null, returns a version of CBORObject.Null with the
+      . If "valueOb" is null, returns a version of CBORObject.Null with the
       given tag.
     </returns>
     <exception cref='System.ArgumentException'>The parameter
@@ -1884,6 +1943,7 @@
         control of the application. If the plain-old-data type references other
         data types, those types should likewise meet either criterion above.
       </para>
+      .
     </param>
     <param name='tag'>A 64-bit integer that specifies a tag number. The tag number 55799 can be
       used to mark a "self-described CBOR" object. This document does not
@@ -1891,7 +1951,7 @@
       be found at the CBOR Tags registry maintained by the Internet Assigned
       Numbers Authority (
       <i>
-         iana.org/assignments/cbor-tags
+        iana.org/assignments/cbor-tags
       </i>
        ).
     </param>
@@ -2360,7 +2420,7 @@
     </summary>
     <returns>The reversed-sign form of this number.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object's type is not a number type.
+    <exception cref='System.InvalidOperationException'>This object does not represent a number.
     </exception>
   </doc>
   <doc name='F:PeterO.Cbor.CBORObject.NegativeInfinity'>
@@ -2419,9 +2479,8 @@
     </summary>
     <param name='stream'>A readable data stream.
     </param>
-    <param name='options'>The parameter
-      <paramref name='options'/>
-       is a CBOREncodeOptions object.
+    <param name='options'>Specifies the options to use when decoding the CBOR data stream. See
+      CBOREncodeOptions for more information.
     </param>
     <returns>A CBOR object that was read.
     </returns>
@@ -2591,7 +2650,7 @@
     </summary>
     <value>This value&#x27;s sign: -1 if negative; 1 if positive; 0 if zero.
     </value>
-    <exception cref='System.InvalidOperationException'>This object's type is not a number type, including the special
+    <exception cref='System.InvalidOperationException'>This object does not represent a number, including the special
       not-a-number value (NaN).
     </exception>
   </doc>
@@ -2660,6 +2719,10 @@
       <list type=''>
         <item>If this object contains maps with non-string keys, the keys are
           converted to JSON strings before writing the map as a JSON string.
+        </item>
+        <item>If this object represents a number (the IsNumber property, or
+          isNumber() method in Java, returns true), then it is written out as a
+          number.
         </item>
         <item>If the CBOR object contains CBOR maps, or is a CBOR map itself, the
           keys to the map are written out to the JSON string in an undefined
@@ -2800,7 +2863,7 @@
     </returns>
     <exception cref='PeterO.Cbor.CBORException'>The given type
       <paramref name='t'/>
-       , or this object's CBOR type, is not supported, or the given object's
+      , or this object's CBOR type, is not supported, or the given object's
       nesting is too deep, or another error occurred when serializing the
       object.
     </exception>
@@ -2890,8 +2953,8 @@
           integer is shared by more than one constant of the same type, it is
           undefined which constant from among them is returned. (For example, if
 
-          <c>MyEnum.Zero = 0</c> and
-          <c>MyEnum.Null = 0</c> , converting 0 to
+          <c>MyEnum.Zero=0</c> and
+          <c>MyEnum.Null=0</c> , converting 0 to
           <c>MyEnum</c> may return either
           <c>MyEnum.Zero</c> or
           <c>MyEnum.Null</c> .) As a result, &#x2e;NET Enum types with constants that share an
@@ -3031,10 +3094,10 @@
         that the return value will be an ArrayList of String objects.
       </para>
       <code>Type arrayListString = new ParameterizedType() { public Type[]
-        getActualTypeArguments() { /* Contains one type parameter, String */
-        return new Type[] { String.class }; } public Type getRawType() { /* Raw
-        type is ArrayList */ return ArrayList.class; } public Type
-        getOwnerType() { return null; } }; ArrayList&lt;String&gt; array =
+        getActualTypeArguments() { // Contains one type parameter, String return
+        new Type[] { String.class }; } public Type getRawType() { /* Raw type is
+        ArrayList */ return ArrayList.class; } public Type getOwnerType() {
+        return null; } }; ArrayList&lt;String&gt; array =
         (ArrayList&lt;String&gt;) cborArray.ToObject(arrayListString);</code> <para>By comparison, the C# version is much shorter.
       </para>
       <code>var&#x20;array = (List&lt;String&gt;)cborArray.ToObject(
@@ -3065,7 +3128,7 @@
     </returns>
     <exception cref='System.NotSupportedException'>The given type
       <paramref name='t'/>
-       , or this object's CBOR type, is not supported.
+      , or this object's CBOR type, is not supported.
     </exception>
     <exception cref='System.ArgumentNullException'>The parameter
       <paramref name='t'/>
@@ -3578,6 +3641,16 @@
       </list>
     </summary>
     <param name='objValue'>The arbitrary object to be serialized. Can be null.
+      <para><b>NOTE:</b> For security reasons, whenever possible, an application should not base
+        this parameter on user input or other externally supplied data unless
+        the application limits this parameter's inputs to types specially
+        handled by this method (such as
+        <c>int</c> or
+        <c>String</c> ) and/or to plain-old-data types (POCO or POJO types) within the
+        control of the application. If the plain-old-data type references other
+        data types, those types should likewise meet either criterion above.
+      </para>
+      .
     </param>
     <param name='output'>A writable data stream.
     </param>
@@ -3691,10 +3764,24 @@
     </summary>
     <param name='obj'>The parameter
       <paramref name='obj'/>
-       is an arbitrary object.
+       is an arbitrary object. Can be null.
+      <para><b>NOTE:</b> For security reasons, whenever possible, an application should not base
+        this parameter on user input or other externally supplied data unless
+        the application limits this parameter's inputs to types specially
+        handled by this method (such as
+        <c>int</c> or
+        <c>String</c> ) and/or to plain-old-data types (POCO or POJO types) within the
+        control of the application. If the plain-old-data type references other
+        data types, those types should likewise meet either criterion above.
+      </para>
+      .
     </param>
     <param name='outputStream'>A writable data stream.
     </param>
+    <exception cref='System.ArgumentNullException'>The parameter
+      <paramref name='outputStream'/>
+       is null.
+    </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.WriteJSONTo(System.IO.Stream)'>
     <summary>Converts this object to a string in JavaScript Object Notation (JSON)
@@ -4407,6 +4494,32 @@
       code points are encountered.
     </param>
   </doc>
+  <doc name='M:PeterO.Cbor.JSONOptions.#ctor(System.String)'>
+    <summary>Initializes a new instance of the
+      <see cref='PeterO.Cbor.JSONOptions'/>
+       class.
+    </summary>
+    <param name='paramString'>A string setting forth the options to use. This is a semicolon-separated
+      list of options, each of which has a key and a value separated by an equal
+      sign ("="). Whitespace and line separators are not allowed to appear
+      between the semicolons or between the equal signs, nor may the string
+      begin or end with whitespace. The following is an example of this
+      parameter:
+      <c>base64padding=false;replacesurrogates=true</c> . The key can be any one of the following in any combination of case:
+      <c>base64padding</c> ,
+      <c>replacesurrogates</c> . Other keys are ignored. If the same key appears more than once, the
+      value given for the last such key is used. The two keys just given can
+      have a value of
+      <c>1</c> ,
+      <c>true</c> ,
+      <c>yes</c> , or
+      <c>on</c> (in any combination of case), which means true, and any other value
+      meaning false. For example,
+      <c>base64padding=Yes</c> and
+      <c>base64padding=1</c> both set the
+      <c>Base64Padding</c> property to true.
+    </param>
+  </doc>
   <doc name='P:PeterO.Cbor.JSONOptions.Base64Padding'>
     <summary>Gets a value indicating whether the Base64Padding property is true. This
       property has no effect; in previous versions, this property meant that
@@ -4448,11 +4561,34 @@
       <see cref='PeterO.Cbor.PODOptions'/>
        class.
     </summary>
-    <param name='removeIsPrefix'>If set to
-      <c>true</c> remove is prefix.
+    <param name='removeIsPrefix'>The parameter is not used.
     </param>
-    <param name='useCamelCase'>If set to
-      <c>true</c> use camel case.
+    <param name='useCamelCase'>The value of the "UseCamelCase" property.
+    </param>
+  </doc>
+  <doc name='M:PeterO.Cbor.PODOptions.#ctor(System.String)'>
+    <summary>Initializes a new instance of the
+      <see cref='PeterO.Cbor.PODOptions'/>
+       class.
+    </summary>
+    <param name='paramString'>A string setting forth the options to use. This is a semicolon-separated
+      list of options, each of which has a key and a value separated by an equal
+      sign ("="). Whitespace and line separators are not allowed to appear
+      between the semicolons or between the equal signs, nor may the string
+      begin or end with whitespace. The following is an example of this
+      parameter:
+      <c>usecamelcase=true</c> . The key can be any one of the following in any combination of case:
+      <c>usecamelcase</c> . Other keys are ignored. If the same key appears more than once, the
+      value given for the last such key is used. The key just given can have a
+      value of
+      <c>1</c> ,
+      <c>true</c> ,
+      <c>yes</c> , or
+      <c>on</c> (in any combination of case), which means true, and any other value
+      meaning false. For example,
+      <c>usecamelcase=Yes</c> and
+      <c>usecamelcase=1</c> both set the
+      <c>UseCamelCase</c> property to true.
     </param>
   </doc>
   <doc name='F:PeterO.Cbor.PODOptions.Default'>
@@ -4871,69 +5007,36 @@
     </summary>
   </doc>
   <doc name='M:PeterO.DataUtilities.CodePointAt(System.String,System.Int32)'>
-    <summary>Gets the Unicode code point at the given index of the string.
-    </summary>
     <param name='str'>The parameter
       <paramref name='str'/>
-       is a text string.
+       is not documented yet.
     </param>
-    <param name='index'>Index of the current position into the string.
-    </param>
-    <returns>The Unicode code point at the given position. Returns -1 if
+    <param name='index'>The parameter
       <paramref name='index'/>
-       is less than 0, or is the string's length or greater. Returns the
-      replacement character (U+FFFD) if the current character is an unpaired
-      surrogate code point. If the return value is 65536 (0x10000) or greater,
-      the code point takes up two UTF-16 code units.
+       is not documented yet.
+    </param>
+    <returns>A 32-bit signed integer.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
-      <paramref name='str'/>
-       is null.
-    </exception>
-    <example><para>The following example shows how to iterate a text string code point by
-        code point.
-      </para>
-      <code>for (var i = 0;i&lt;str.Length; ++i) { int codePoint =
-        DataUtilities.CodePointAt(str, i);
-        Console.WriteLine("codePoint:"+codePoint); if (codePoint &gt;= 0x10000)
-        { i++; /* Supplementary code point */ } }</code> .
-    </example>
   </doc>
   <doc name='M:PeterO.DataUtilities.CodePointAt(System.String,System.Int32,System.Int32)'>
-    <summary>Gets the Unicode code point at the given index of the string.
-    </summary>
     <param name='str'>The parameter
       <paramref name='str'/>
-       is a text string.
+       is not documented yet.
     </param>
-    <param name='index'>Index of the current position into the string.
-    </param>
-    <param name='surrogateBehavior'>Specifies what kind of value to return if the previous character is an
-      unpaired surrogate code point: if 0, return the replacement character
-      (U+FFFD); if 1, return the value of the surrogate code point; if neither 0
-      nor 1, return -1.
-    </param>
-    <returns>The Unicode code point at the current position. Returns -1 if
+    <param name='index'>The parameter
       <paramref name='index'/>
-       is less than 0, or is the string's length or greater. Returns a value as
-      specified under
+       is not documented yet.
+    </param>
+    <param name='surrogateBehavior'>The parameter
       <paramref name='surrogateBehavior'/>
-       if the previous character is an unpaired surrogate code point. If the
-      return value is 65536 (0x10000) or greater, the code point takes up two
-      UTF-16 code units.
+       is not documented yet.
+    </param>
+    <returns>A 32-bit signed integer.
     </returns>
     <exception cref='System.ArgumentNullException'>The parameter
       <paramref name='str'/>
        is null.
     </exception>
-    <example><para>The following example shows how to iterate a text string code point by
-        code point, terminating the loop when an unpaired surrogate is found.
-      </para>
-      <code>for (var i = 0;i&lt;str.Length; ++i) { int codePoint =
-        DataUtilities.CodePointAt(str, i, 2); if (codePoint &lt; 0) { break; /*
-        Unpaired surrogate */ } Console.WriteLine("codePoint:"+codePoint); if
-        (codePoint &gt;= 0x10000) { i++; /* Supplementary code point */ } }</code> .
-    </example>
   </doc>
   <doc name='M:PeterO.DataUtilities.CodePointBefore(System.String,System.Int32)'>
     <summary>Gets the Unicode code point just before the given index of the string.
@@ -5210,7 +5313,7 @@
       <paramref name='bytesCount'/>
        is less than 0, or offset plus bytesCount is greater than the length of
       <paramref name='data'/>
-       .
+      .
     </exception>
   </doc>
   <doc name='M:PeterO.DataUtilities.ReadUtf8ToString(System.IO.Stream)'>
@@ -5350,10 +5453,6 @@
       <paramref name='str'/>
        is null.
     </exception>
-    <exception cref='System.ArgumentException'>Either &quot;offset&quot; or &quot;length&quot; is less than 0 or greater
-      than &quot;str&quot;&apos;s length, or &quot;str&quot;&apos;s length minus
-      &quot;offset&quot; is less than &quot;length&quot;.
-    </exception>
   </doc>
   <doc name='M:PeterO.DataUtilities.WriteUtf8(System.String,System.Int32,System.Int32,System.IO.Stream,System.Boolean,System.Boolean)'>
     <summary>Writes a portion of a string in UTF-8 encoding to a data stream.
@@ -5403,10 +5502,6 @@
     <exception cref='System.ArgumentNullException'>The parameter
       <paramref name='str'/>
        is null.
-    </exception>
-    <exception cref='System.ArgumentException'>Either &quot;offset&quot; or &quot;length&quot; is less than 0 or greater
-      than &quot;str&quot;&apos;s length, or &quot;str&quot;&apos;s length minus
-      &quot;offset&quot; is less than &quot;length&quot;.
     </exception>
   </doc>
 </docs>

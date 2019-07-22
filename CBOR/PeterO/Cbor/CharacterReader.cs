@@ -9,8 +9,10 @@ using System;
 using System.IO;
 
 namespace PeterO.Cbor {
-    // <include file='../../docs.xml'
-    // path='docs/doc[@name="T:PeterO.Cbor.CharacterReader"]/*'/>
+    // <summary>A general-purpose character input for reading text from
+    // byte streams and text strings. When reading byte streams, this
+    // class supports the UTF-8 character encoding by default, but can be
+    // configured to support UTF-16 and UTF-32 as well.</summary>
   internal sealed class CharacterReader : ICharacterInput {
     private readonly int mode;
     private readonly bool errorThrow;
@@ -22,16 +24,12 @@ namespace PeterO.Cbor {
     private int offset;
     private ICharacterInput reader;
 
-    // <xmlbegin id='0'/>
-    //
     // <summary>Initializes a new instance of the
     // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='str'>A string object.</param>
     public CharacterReader(string str) : this(str, false, false) {
     }
 
-    // <xmlbegin id='1'/>
-    //
     // <summary>Initializes a new instance of the
     // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='str'>A string object.</param>
@@ -40,15 +38,13 @@ namespace PeterO.Cbor {
       : this(str, skipByteOrderMark, false) {
     }
 
-    // <xmlbegin id='2'/>
-    //
     // <summary>Initializes a new instance of the
     // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='str'>A string object.</param>
     // <param name='skipByteOrderMark'>A Boolean object.</param>
     // <param name='errorThrow'>Another Boolean object.</param>
-    // <exception cref='System.ArgumentNullException'>The parameter
-    // <paramref name='str'/> is null.</exception>
+    // <exception cref="ArgumentNullException">The parameter <paramref
+    // name='str'/> is null.</exception>
     public CharacterReader(
       string str,
       bool skipByteOrderMark,
@@ -66,8 +62,6 @@ namespace PeterO.Cbor {
       this.stream = null;
     }
 
-    // <xmlbegin id='3'/>
-    //
     // <summary>Initializes a new instance of the
     // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='str'>A string object.</param>
@@ -77,8 +71,6 @@ namespace PeterO.Cbor {
       : this(str, offset, length, false, false) {
     }
 
-    // <xmlbegin id='4'/>
-    //
     // <summary>Initializes a new instance of the
     // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='str'>A string object.</param>
@@ -86,8 +78,8 @@ namespace PeterO.Cbor {
     // <param name='length'>Another 32-bit signed integer.</param>
     // <param name='skipByteOrderMark'>A Boolean object.</param>
     // <param name='errorThrow'>Another Boolean object.</param>
-    // <exception cref='System.ArgumentNullException'>The parameter
-    // <paramref name='str'/> is null.</exception>
+    // <exception cref="ArgumentNullException">The parameter <paramref
+    // name='str'/> is null.</exception>
     public CharacterReader(
       string str,
       int offset,
@@ -127,16 +119,12 @@ namespace PeterO.Cbor {
       this.stream = null;
     }
 
-    // <xmlbegin id='5'/>
-    //
     // <summary>Initializes a new instance of the
     // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='stream'>A readable data stream.</param>
     public CharacterReader(Stream stream) : this(stream, 0, false) {
     }
 
-    // <xmlbegin id='6'/>
-    //
     // <summary>Initializes a new instance of the
     // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='stream'>A readable data stream.</param>
@@ -146,8 +134,6 @@ namespace PeterO.Cbor {
       : this(stream, mode, errorThrow, false) {
     }
 
-    // <xmlbegin id='7'/>
-    //
     // <summary>Initializes a new instance of the
     // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='stream'>A readable data stream.</param>
@@ -156,16 +142,14 @@ namespace PeterO.Cbor {
   : this(stream, mode, false, false) {
     }
 
-    // <xmlbegin id='8'/>
-    //
     // <summary>Initializes a new instance of the
     // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='stream'>A readable data stream.</param>
     // <param name='mode'>A 32-bit signed integer.</param>
     // <param name='errorThrow'>A Boolean object.</param>
     // <param name='dontSkipUtf8Bom'>Another Boolean object.</param>
-    // <exception cref='System.ArgumentNullException'>The parameter
-    // <paramref name='stream'/> is null.</exception>
+    // <exception cref="ArgumentNullException">The parameter <paramref
+    // name='stream'/> is null.</exception>
     public CharacterReader(
       Stream stream,
       int mode,
@@ -186,8 +170,32 @@ namespace PeterO.Cbor {
       int ReadByte();
     }
 
-    // <include file='../../docs.xml'
-    //   path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.Read(System.Int32[],System.Int32,System.Int32)"]/*'/>
+    // <summary>Reads a series of code points from a Unicode stream or a
+    // string.</summary>
+    // <param name='chars'>An array where the code points that were read
+    // will be stored.</param>
+    // <param name='index'>A zero-based index showing where the desired
+    // portion of <paramref name='chars'/> begins.</param>
+    // <param name='length'>The number of elements in the desired portion
+    // of <paramref name='chars'/> (but not more than <paramref
+    // name='chars'/> 's length).</param>
+    // <returns>The number of code points read from the stream. This can
+    // be less than the <paramref name='length'/> parameter if the end of
+    // the stream is reached.</returns>
+    // <exception cref="ArgumentNullException">The parameter <paramref
+    // name='chars'/> is null.</exception>
+    // <exception cref="ArgumentException">Either <paramref name='index'/>
+    // or <paramref name='length'/> is less than 0 or greater than
+    // <paramref name='chars'/> 's length, or <paramref name='chars'/> 's
+    // length minus <paramref name='index'/> is less than <paramref
+    // name='length'/>.</exception>
+    // <exception cref="ArgumentException">Either &#x22;index&#x22; or
+    // &#x22;length&#x22; is less than 0 or greater than
+    // &#x22;chars&#x22;&#x27;s length, or &#x22;chars&#x22;&#x27;s length
+    // minus &#x22;index&#x22; is less than
+    // &#x22;length&#x22;.</exception>
+    // <exception cref="ArgumentNullException">The parameter <paramref
+    // name='chars'/> is null.</exception>
     public int Read(int[] chars, int index, int length) {
       if (chars == null) {
         throw new ArgumentNullException(nameof(chars));
@@ -224,8 +232,10 @@ namespace PeterO.Cbor {
       return count;
     }
 
-    // <include file='../../docs.xml'
-    // path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.ReadChar"]/*'/>
+    // <summary>Reads the next character from a Unicode stream or a
+    // string.</summary>
+    // <returns>The next character, or -1 if the end of the string or
+    // stream was reached.</returns>
     public int ReadChar() {
       if (this.reader != null) {
         return this.reader.ReadChar();
