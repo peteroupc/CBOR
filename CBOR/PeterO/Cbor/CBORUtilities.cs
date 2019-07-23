@@ -11,8 +11,8 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-    /// <summary>Contains utility methods that may have use outside of the
-    /// CBORObject class.</summary>
+  /// <summary>Contains utility methods that may have use outside of the
+  /// CBORObject class.</summary>
   internal static class CBORUtilities {
     private const string HexAlphabet = "0123456789ABCDEF";
 
@@ -32,19 +32,19 @@ namespace PeterO.Cbor {
       if (strA.Length < 64 && strB.Length < 64) {
         for (int i = 0; i < strA.Length; ++i) {
           if ((strA[i] & ((byte)0x80)) != 0) {
-              return -2; // non-ASCII
+            return -2; // non-ASCII
           }
         }
         for (int i = 0; i < strB.Length; ++i) {
           if ((strB[i] & ((byte)0x80)) != 0) {
-              return -2; // non-ASCII
+            return -2; // non-ASCII
           }
         }
         if (strA.Length != strB.Length) {
           return strA.Length < strB.Length ? -1 : 1;
         }
         for (int i = 0; i < strA.Length; ++i) {
-if (strA[i] != strB[i]) {
+          if (strA[i] != strB[i]) {
             return strA[i] < strB[i] ? -1 : 1;
           }
         }
@@ -137,7 +137,7 @@ if (strA[i] != strB[i]) {
     }
 
     public static long DoubleToInt64Bits(double dbl) {
-        return BitConverter.ToInt64(BitConverter.GetBytes((double)dbl), 0);
+      return BitConverter.ToInt64(BitConverter.GetBytes((double)dbl), 0);
     }
 
     public static string DoubleToString(double dbl) {
@@ -176,7 +176,7 @@ if (strA[i] != strB[i]) {
         return (EInteger)mantissa;
       }
       if (fpexponent > 0) {
-       // Value is an integer
+        // Value is an integer
         var bigmantissa = (EInteger)mantissa;
         bigmantissa <<= fpexponent;
         if (neg) {
@@ -184,7 +184,7 @@ if (strA[i] != strB[i]) {
         }
         return bigmantissa;
       } else {
-       // Value has a fractional part
+        // Value has a fractional part
         int exp = -fpexponent;
         for (var i = 0; i < exp && mantissa != 0; ++i) {
           mantissa >>= 1;
@@ -302,7 +302,7 @@ if (strA[i] != strB[i]) {
       int month,
       EInteger day,
       EInteger[] dest) {
-     // NOTE: This method assumes month is 1 to 12
+      // NOTE: This method assumes month is 1 to 12
       if (month <= 0 || month > 12) {
         throw new ArgumentOutOfRangeException(nameof(month));
       }
@@ -366,7 +366,7 @@ if (strA[i] != strB[i]) {
       EInteger year,
       int month,
       int mday) {
-     // NOTE: month = 1 is January, year = 1 is year 1
+      // NOTE: month = 1 is January, year = 1 is year 1
       if (month <= 0 || month > 12) {
         throw new ArgumentOutOfRangeException(nameof(month));
       }
@@ -563,7 +563,8 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
         } else if (i == 10) {
           bad |= str[i] != 'T';
           /*lowercase t not used to separate date/time,
-    following RFC 4287 sec. 3.3*/ } else {
+    following RFC 4287 sec. 3.3*/
+        } else {
           bad |= str[i] < '0' || str[i] >
 '9';
         }
@@ -747,14 +748,14 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
         return bigmantissa;
       }
       if (floatExponent > 0) {
-       // Value is an integer
+        // Value is an integer
         bigmantissa <<= floatExponent;
         if (neg) {
           bigmantissa = -(EInteger)bigmantissa;
         }
         return bigmantissa;
       } else {
-       // Value has a fractional part
+        // Value has a fractional part
         int exp = -floatExponent;
         bigmantissa >>= exp;
         if (neg) {
@@ -764,29 +765,29 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
       }
     }
 
-public static int SingleToHalfPrecisionIfSameValue(float f) {
-  int bits = BitConverter.ToInt32(BitConverter.GetBytes(f), 0);
-  int exp = (bits >> 23) & 0xff;
-  int mant = bits & 0x7fffff;
-  int sign = (bits >> 16) & 0x8000;
-  if (exp == 255) { // Infinity and NaN
-    return (bits & 0x1fff) == 0 ? sign + 0x7c00 + (mant >> 13) : -1;
-  } else if (exp == 0) { // Zero
-    return (bits & 0x1fff) == 0 ? sign + (mant >> 13) : -1;
-  }
-  int pexp = 127 - exp;
-  if (exp <= 102 || exp >= 143) { // Overflow or underflow
-    return -1;
-  } else if (exp <= 112) { // Subnormal
-    int shift = 126 - exp;
-    return (bits & ((1 << shift) - 1)) == 0 ? sign + (1024 >> (145 - exp)) +
-(mant >>
-shift) : -1;
-  } else {
-    return (bits & 0x1fff) == 0 ? sign + ((exp - 112) << 10) + (mant >> 13) :
--1;
-  }
-}
+    public static int SingleToHalfPrecisionIfSameValue(float f) {
+      int bits = BitConverter.ToInt32(BitConverter.GetBytes(f), 0);
+      int exp = (bits >> 23) & 0xff;
+      int mant = bits & 0x7fffff;
+      int sign = (bits >> 16) & 0x8000;
+      if (exp == 255) { // Infinity and NaN
+        return (bits & 0x1fff) == 0 ? sign + 0x7c00 + (mant >> 13) : -1;
+      } else if (exp == 0) { // Zero
+        return (bits & 0x1fff) == 0 ? sign + (mant >> 13) : -1;
+      }
+      int pexp = 127 - exp;
+      if (exp <= 102 || exp >= 143) { // Overflow or underflow
+        return -1;
+      } else if (exp <= 112) { // Subnormal
+        int shift = 126 - exp;
+        return (bits & ((1 << shift) - 1)) == 0 ? sign + (1024 >> (145 - exp)) +
+    (mant >>
+    shift) : -1;
+      } else {
+        return (bits & 0x1fff) == 0 ? sign + ((exp - 112) << 10) + (mant >> 13) :
+    -1;
+      }
+    }
 
     public static float HalfPrecisionToSingle(int value) {
       int negvalue = (value >= 0x8000) ? (1 << 31) : 0;
@@ -809,7 +810,7 @@ shift) : -1;
   BitConverter.GetBytes(value),
   0);
       } else {
-       // denormalized
+        // denormalized
         int m = value & 0x3ff;
         value = 0x1c400;
         while ((m >> 10) == 0) {

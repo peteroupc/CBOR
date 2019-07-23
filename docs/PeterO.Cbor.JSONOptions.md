@@ -7,7 +7,8 @@
 ### Member Summary
 * <code>[Base64Padding](#Base64Padding)</code> - Gets a value indicating whether the Base64Padding property is true.
 * <code>[public static readonly PeterO.Cbor.JSONOptions Default;](#Default)</code> - The default options for converting CBOR objects to JSON.
-* <code>[ReplaceSurrogates](#ReplaceSurrogates)</code> - Gets a value indicating whether surrogate code points not part of a surrogate pair (which consists of two consecutive char s forming one Unicode code point) are each replaced with a replacement character (U+FFFD).
+* <code>[ReplaceSurrogates](#ReplaceSurrogates)</code> - Gets a value indicating whether surrogate code points not part of a surrogate pair (which consists of two consecutive char s forming one Unicode code point) are each replaced with a replacement character (U + FFFD).
+* <code>[ToString()](#ToString)</code> - Not documented yet.
 
 <a id="Void_ctor_Boolean"></a>
 ### JSONOptions Constructor
@@ -36,6 +37,19 @@
 
  * <i>replaceSurrogates</i>: Whether surrogate code points not part of a surrogate pair (which consists of two consecutive  `char`  s forming one Unicode code point) are each replaced with a replacement character (U + FFFD). The default is false; an exception is thrown when such code points are encountered.
 
+<a id="Void_ctor_System_String"></a>
+### JSONOptions Constructor
+
+    public JSONOptions(
+        string paramString);
+
+ Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) class.
+
+   <b>Parameters:</b>
+
+ * <i>paramString</i>: A string setting forth the options to use. This is a semicolon-separated list of options, each of which has a key and a value separated by an equal sign ("="). Whitespace and line separators are not allowed to appear between the semicolons or between the equal signs, nor may the string begin or end with whitespace. The following is an example of this parameter:  `base64padding = false;replacesurrogates = true` . The key can be any one of the following in any combination of case:  `base64padding` ,  `replacesurrogates` . Other keys are ignored. If the same key appears more than once, the value given for the last such key is used. The two keys just given can have a value of  `1` ,  `true` ,  `yes` , or  `on`  (in any combination of case), which means true, and any other value meaning false. For example,  `base64padding = Yes`  and  `base64padding
+            = 1`  both set the  `Base64Padding`  property to true.
+
 <a id="Void_ctor"></a>
 ### JSONOptions Constructor
 
@@ -59,7 +73,7 @@
 
  Gets a value indicating whether the Base64Padding property is true. This property has no effect; in previous versions, this property meant that padding was written out when writing base64url or traditional base64 to JSON.
 
-  <b>Returns:</b>
+   <b>Returns:</b>
 
 A value indicating whether the Base64Padding property is true.
 
@@ -68,8 +82,19 @@ A value indicating whether the Base64Padding property is true.
 
     public bool ReplaceSurrogates { get; }
 
- Gets a value indicating whether surrogate code points not part of a surrogate pair (which consists of two consecutive  `char`  s forming one Unicode code point) are each replaced with a replacement character (U+FFFD). The default is false; an exception is thrown when such code points are encountered.
+ Gets a value indicating whether surrogate code points not part of a surrogate pair (which consists of two consecutive  `char`  s forming one Unicode code point) are each replaced with a replacement character (U + FFFD). The default is false; an exception is thrown when such code points are encountered.
 
-  <b>Returns:</b>
+   <b>Returns:</b>
 
 True, if surrogate code points not part of a surrogate pair are each replaced with a replacement character, or false if an exception is thrown when such code points are encountered.
+
+<a id="ToString"></a>
+### ToString
+
+    public override string ToString();
+
+ Not documented yet.
+
+   <b>Return Value:</b>
+
+A string object.

@@ -50,7 +50,13 @@ namespace Test {
 
     public static CBORObject Patch(CBORObject o, CBORObject ptch) {
       // clone the object in case of failure
+      if (o == null) {
+        throw new ArgumentNullException(nameof(o));
+      }
       o = CloneCbor(o);
+      if (ptch == null) {
+        throw new ArgumentNullException(nameof(ptch));
+      }
       for (int i = 0; i < ptch.Count; ++i) {
         CBORObject patchOp = ptch[i];
         // NOTE: This algorithm requires "op" to exist

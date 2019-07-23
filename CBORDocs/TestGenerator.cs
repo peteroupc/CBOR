@@ -7,6 +7,9 @@ using System.Text;
 namespace PeterO.DocGen {
   public static class TestGenerator {
     public static void GenerateTests(Type type, string directory) {
+      if (type == null) {
+        throw new ArgumentNullException(nameof(type));
+      }
       var name = TypeNameUtil.UndecorateTypeName(type.Name);
       var builder = new StringBuilder();
       Directory.CreateDirectory(directory);
@@ -86,6 +89,9 @@ namespace PeterO.DocGen {
     }
 
     public static void GenerateTests(Assembly assembly, string directory) {
+      if (assembly == null) {
+        throw new ArgumentNullException(nameof(assembly));
+      }
       foreach (var type in assembly.GetTypes()) {
         if (!type.IsPublic || type.IsInterface) {
           continue;

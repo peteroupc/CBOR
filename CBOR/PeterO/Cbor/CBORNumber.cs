@@ -39,7 +39,7 @@ namespace PeterO.Cbor {
     }
 
     internal object GetValue() {
-       return this.value;
+      return this.value;
     }
     internal static ICBORNumber GetNumberInterface(Kind kind) {
       switch (kind) {
@@ -65,9 +65,9 @@ namespace PeterO.Cbor {
 
     internal static bool IsNumber(CBORObject o) {
       if (IsUntaggedInteger(o)) {
-         return true;
+        return true;
       } else if (!o.IsTagged && o.Type == CBORType.FloatingPoint) {
-         return true;
+        return true;
       } else if (o.HasOneTag(2) || o.HasOneTag(3)) {
         return o.Type == CBORType.ByteString;
       } else if (o.HasOneTag(4) ||
@@ -117,21 +117,21 @@ namespace PeterO.Cbor {
     }
 
     private static bool IsUntaggedInteger(CBORObject o) {
-        return !o.IsTagged && o.Type == CBORType.Integer;
+      return !o.IsTagged && o.Type == CBORType.Integer;
     }
 
     private static bool IsUntaggedIntegerOrBignum(CBORObject o) {
-        return IsUntaggedInteger(o) || ((o.HasOneTag(2) || o.HasOneTag(3)) &&
+      return IsUntaggedInteger(o) || ((o.HasOneTag(2) || o.HasOneTag(3)) &&
 o.Type == CBORType.ByteString);
     }
 
     private static EInteger IntegerOrBignum(CBORObject o) {
-if (IsUntaggedInteger(o)) {
-         return o.AsEIntegerValue();
-       } else {
-         CBORNumber n = BignumToNumber(o);
-         return n.GetNumberInterface().AsEInteger(n.GetValue());
-       }
+      if (IsUntaggedInteger(o)) {
+        return o.AsEIntegerValue();
+      } else {
+        CBORNumber n = BignumToNumber(o);
+        return n.GetNumberInterface().AsEInteger(n.GetValue());
+      }
     }
 
     private static CBORNumber RationalToNumber(
@@ -141,17 +141,17 @@ if (IsUntaggedInteger(o)) {
         throw new CBORException("Big fraction must be an array");
       }
       if (tagName == 270) {
-      if (o.Count != 3) {
-        throw new CBORException("Extended big fraction requires exactly 3" +
-"\u0020items");
-      }
-      if (!IsUntaggedInteger(o[2])) {
-        throw new CBORException("Third item must be an integer");
-      }
+        if (o.Count != 3) {
+          throw new CBORException("Extended big fraction requires exactly 3" +
+  "\u0020items");
+        }
+        if (!IsUntaggedInteger(o[2])) {
+          throw new CBORException("Third item must be an integer");
+        }
       } else {
-      if (o.Count != 2) {
-        throw new CBORException("Big fraction requires exactly 2 items");
-      }
+        if (o.Count != 2) {
+          throw new CBORException("Big fraction requires exactly 2 items");
+        }
       }
       if (!IsUntaggedIntegerOrBignum(o[0])) {
         throw new CBORException("Numerator is not an integer or bignum");
@@ -166,43 +166,43 @@ if (IsUntaggedInteger(o)) {
       }
       ERational erat = ERational.Create(numerator, denominator);
       if (tagName == 270) {
-if (numerator.Sign < 0) {
-           throw new CBORException("Numerator may not be negative");
-         }
-if (!o[2].CanValueFitInInt32()) {
-           throw new CBORException("Invalid options");
-         }
-         int options = o[2].AsInt32Value();
-         switch (options) {
-         case 0:
+        if (numerator.Sign < 0) {
+          throw new CBORException("Numerator may not be negative");
+        }
+        if (!o[2].CanValueFitInInt32()) {
+          throw new CBORException("Invalid options");
+        }
+        int options = o[2].AsInt32Value();
+        switch (options) {
+          case 0:
             break;
-         case 1:
+          case 1:
             erat = erat.Negate();
             break;
-         case 2:
-         if (!numerator.IsZero || denominator.CompareTo(1) != 0) {
+          case 2:
+            if (!numerator.IsZero || denominator.CompareTo(1) != 0) {
               throw new CBORException("invalid values");
             }
             erat = ERational.PositiveInfinity;
             break;
-         case 3:
-         if (!numerator.IsZero || denominator.CompareTo(1) != 0) {
+          case 3:
+            if (!numerator.IsZero || denominator.CompareTo(1) != 0) {
               throw new CBORException("invalid values");
             }
             erat = ERational.NegativeInfinity;
             break;
-         case 4:
-         case 5:
-         case 6:
-         case 7:
-         if (denominator.CompareTo(1) != 0) {
+          case 4:
+          case 5:
+          case 6:
+          case 7:
+            if (denominator.CompareTo(1) != 0) {
               throw new CBORException("invalid values");
             }
             erat = ERational.CreateNaN(numerator, options > 6, options == 5 ||
 options == 7);
             break;
-         default:throw new CBORException("Invalid options");
-         }
+          default: throw new CBORException("Invalid options");
+        }
       }
       return CBORNumber.FromObject(erat);
     }
@@ -214,16 +214,16 @@ options == 7);
         return false;
       }
       if (tagName == 270) {
-      if (o.Count != 3) {
-        return false;
-      }
-      if (!IsUntaggedInteger(o[2])) {
-        return false;
-      }
+        if (o.Count != 3) {
+          return false;
+        }
+        if (!IsUntaggedInteger(o[2])) {
+          return false;
+        }
       } else {
-      if (o.Count != 2) {
-              return false;
-      }
+        if (o.Count != 2) {
+          return false;
+        }
       }
       if (!IsUntaggedIntegerOrBignum(o[0])) {
         return false;
@@ -237,27 +237,27 @@ options == 7);
         return false;
       }
       if (tagName == 270) {
-         if (numerator.Sign < 0 || !o[2].CanValueFitInInt32()) {
-           return false;
-         }
-         int options = o[2].AsInt32Value();
-         switch (options) {
-         case 0:
-         case 1:
-           return true;
-         case 2:
-         case 3:
-           return numerator.IsZero && denominator.CompareTo(1) == 0;
-         case 4:
-         case 5:
-         case 6:
-         case 7:
-         return denominator.CompareTo(1) == 0;
-         default: return false;
-         }
+        if (numerator.Sign < 0 || !o[2].CanValueFitInInt32()) {
+          return false;
+        }
+        int options = o[2].AsInt32Value();
+        switch (options) {
+          case 0:
+          case 1:
+            return true;
+          case 2:
+          case 3:
+            return numerator.IsZero && denominator.CompareTo(1) == 0;
+          case 4:
+          case 5:
+          case 6:
+          case 7:
+            return denominator.CompareTo(1) == 0;
+          default: return false;
+        }
       }
       return false;
-   }
+    }
 
     private static bool CheckBigFracToNumber(
       CBORObject o,
@@ -266,54 +266,54 @@ options == 7);
         return false;
       }
       if (tagName == 268 || tagName == 269) {
-      if (o.Count != 3) {
-        return false;
-      }
-      if (!IsUntaggedInteger(o[2])) {
-        return false;
-      }
+        if (o.Count != 3) {
+          return false;
+        }
+        if (!IsUntaggedInteger(o[2])) {
+          return false;
+        }
       } else {
-      if (o.Count != 2) {
-              return false;
-      }
+        if (o.Count != 2) {
+          return false;
+        }
       }
       if (tagName == 4 || tagName == 5) {
-      if (!IsUntaggedInteger(o[0])) {
-        return false;
-      }
+        if (!IsUntaggedInteger(o[0])) {
+          return false;
+        }
       } else {
-      if (!IsUntaggedIntegerOrBignum(o[0])) {
-        return false;
-      }
+        if (!IsUntaggedIntegerOrBignum(o[0])) {
+          return false;
+        }
       }
       if (!IsUntaggedIntegerOrBignum(o[1])) {
         return false;
       }
       bool isdec = tagName == 4 || tagName == 264 || tagName == 268;
       if (tagName == 268 || tagName == 269) {
-         EInteger exponent = IntegerOrBignum(o[0]);
-         EInteger mantissa = IntegerOrBignum(o[1]);
-         if (mantissa.Sign < 0 || !o[2].CanValueFitInInt32()) {
-           return false;
-         }
-         int options = o[2].AsInt32Value();
-         switch (options) {
-         case 0:
-         case 1:
-           return true;
-         case 2:
-         case 3:
-           return exponent.IsZero && mantissa.IsZero;
-         case 4:
-         case 5:
-         case 6:
-         case 7:
-         return exponent.IsZero;
-         default: return false;
-         }
+        EInteger exponent = IntegerOrBignum(o[0]);
+        EInteger mantissa = IntegerOrBignum(o[1]);
+        if (mantissa.Sign < 0 || !o[2].CanValueFitInInt32()) {
+          return false;
+        }
+        int options = o[2].AsInt32Value();
+        switch (options) {
+          case 0:
+          case 1:
+            return true;
+          case 2:
+          case 3:
+            return exponent.IsZero && mantissa.IsZero;
+          case 4:
+          case 5:
+          case 6:
+          case 7:
+            return exponent.IsZero;
+          default: return false;
+        }
       }
       return false;
-   }
+    }
 
     private static CBORNumber BigFracToNumber(
       CBORObject o,
@@ -322,26 +322,26 @@ options == 7);
         throw new CBORException("Big fraction must be an array");
       }
       if (tagName == 268 || tagName == 269) {
-      if (o.Count != 3) {
-        throw new CBORException("Extended big fraction requires exactly 3" +
-"\u0020items");
-      }
-      if (!IsUntaggedInteger(o[2])) {
-        throw new CBORException("Third item must be an integer");
-      }
+        if (o.Count != 3) {
+          throw new CBORException("Extended big fraction requires exactly 3" +
+  "\u0020items");
+        }
+        if (!IsUntaggedInteger(o[2])) {
+          throw new CBORException("Third item must be an integer");
+        }
       } else {
-      if (o.Count != 2) {
-        throw new CBORException("Big fraction requires exactly 2 items");
-      }
+        if (o.Count != 2) {
+          throw new CBORException("Big fraction requires exactly 2 items");
+        }
       }
       if (tagName == 4 || tagName == 5) {
-      if (!IsUntaggedInteger(o[0])) {
-        throw new CBORException("Exponent is not an integer");
-      }
+        if (!IsUntaggedInteger(o[0])) {
+          throw new CBORException("Exponent is not an integer");
+        }
       } else {
-      if (!IsUntaggedIntegerOrBignum(o[0])) {
-        throw new CBORException("Exponent is not an integer or bignum");
-      }
+        if (!IsUntaggedIntegerOrBignum(o[0])) {
+          throw new CBORException("Exponent is not an integer or bignum");
+        }
       }
       if (!IsUntaggedIntegerOrBignum(o[1])) {
         throw new CBORException("Mantissa is not an integer or bignum");
@@ -352,66 +352,72 @@ options == 7);
       EDecimal edec = isdec ? EDecimal.Create(mantissa, exponent) : null;
       EFloat efloat = !isdec ? EFloat.Create(mantissa, exponent) : null;
       if (tagName == 268 || tagName == 269) {
-if (mantissa.Sign < 0) {
-           throw new CBORException("Mantissa may not be negative");
-         }
-if (!o[2].CanValueFitInInt32()) {
-           throw new CBORException("Invalid options");
-         }
-         int options = o[2].AsInt32Value();
-         switch (options) {
-         case 0:
+        if (mantissa.Sign < 0) {
+          throw new CBORException("Mantissa may not be negative");
+        }
+        if (!o[2].CanValueFitInInt32()) {
+          throw new CBORException("Invalid options");
+        }
+        int options = o[2].AsInt32Value();
+        switch (options) {
+          case 0:
             break;
-         case 1:
-         if (isdec) {
+          case 1:
+            if (isdec) {
               edec = edec.Negate();
             } else {
- efloat = efloat.Negate();
-}
+              efloat = efloat.Negate();
+            }
             break;
-         case 2:
-         if (!exponent.IsZero || !mantissa.IsZero) {
+          case 2:
+            if (!exponent.IsZero || !mantissa.IsZero) {
               throw new CBORException("invalid values");
             }
             if (isdec) {
               edec = EDecimal.PositiveInfinity;
             } else {
- efloat = EFloat.PositiveInfinity;
-}
+              efloat = EFloat.PositiveInfinity;
+            }
             break;
-         case 3:
-         if (!exponent.IsZero || !mantissa.IsZero) {
+          case 3:
+            if (!exponent.IsZero || !mantissa.IsZero) {
               throw new CBORException("invalid values");
             }
             if (isdec) {
               edec = EDecimal.NegativeInfinity;
             } else {
- efloat = EFloat.NegativeInfinity;
-}
+              efloat = EFloat.NegativeInfinity;
+            }
             break;
-         case 4:
-         case 5:
-         case 6:
-         case 7:
-         if (!exponent.IsZero) {
+          case 4:
+          case 5:
+          case 6:
+          case 7:
+            if (!exponent.IsZero) {
               throw new CBORException("invalid values");
             }
             if (isdec) {
-              edec = EDecimal.CreateNaN(mantissa, options > 6, options == 5 ||
-options == 7, null);
+              edec = EDecimal.CreateNaN(
+                mantissa,
+                options > 6,
+                options == 5 || options == 7,
+                null);
             } else {
- efloat = EFloat.CreateNaN(mantissa, options > 6, options == 5 || options ==
-7, null);
-}
+              efloat = EFloat.CreateNaN(
+                mantissa, 
+                options > 6, 
+                options == 5 || options == 7,
+                null);
+            }
             break;
-         default:throw new CBORException("Invalid options");
-         }
+          default: throw new CBORException("Invalid options");
+        }
       }
       if (isdec) {
         return CBORNumber.FromObject(edec);
       } else {
- return CBORNumber.FromObject(efloat);
-}
+        return CBORNumber.FromObject(efloat);
+      }
     }
 
     private static CBORNumber BignumToNumber(CBORObject o) {
@@ -826,17 +832,17 @@ CBORNumber.FromObject(EDecimal.PositiveInfinity));
     }
 
     public int CompareTo(CBORNumber other) {
-    // <summary>Compares two CBOR numbers. In this implementation, the two
-    // numbers' mathematical values are compared. Here, NaN (not-a-number)
-    // is considered greater than any number. This method is not
-    // consistent with the Equals method.</summary>
-    // <param name='other'>A value to compare with.</param>
-    // <returns>Less than 0, if this value is less than the other object;
-    // or 0, if both values are equal; or greater than 0, if this value is
-    // less than the other object or if the other object is
-    // null.</returns>
-    // <exception cref="ArgumentException">An internal error
-    // occurred.</exception>
+      // <summary>Compares two CBOR numbers. In this implementation, the two
+      // numbers' mathematical values are compared. Here, NaN (not-a-number)
+      // is considered greater than any number. This method is not
+      // consistent with the Equals method.</summary>
+      // <param name='other'>A value to compare with.</param>
+      // <returns>Less than 0, if this value is less than the other object;
+      // or 0, if both values are equal; or greater than 0, if this value is
+      // less than the other object or if the other object is
+      // null.</returns>
+      // <exception cref="ArgumentException">An internal error
+      // occurred.</exception>
       if (other == null) {
         return 1;
       }

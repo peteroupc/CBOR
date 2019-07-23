@@ -484,7 +484,6 @@ Assert.AreEqual(objectTemp, objectTemp2);
       // As of 4.0, nearly all tags are no longer converted to native objects; thus,
       // DecodeFromBytes no longer fails when such tags are encountered but
       // have the wrong format (though it can fail for other reasons)
-      // TODO: Exception is tags 28-29; consider dropping support by default?
       // Tag 2, bignums
       byte[] bytes;
       var secondbytes = new byte[] { 0, 0x20, 0x60, 0x80, 0xa0, 0xe0 };

@@ -23,6 +23,9 @@ namespace Test {
         return new JSONPointer(obj, pointer);
       }
       while (true) {
+        if (obj == null) {
+          throw new ArgumentNullException(nameof(obj));
+        }
         if (obj.Type == CBORType.Array) {
           if (index >= pointer.Length || pointer[index] != '/') {
             throw new ArgumentException(pointer);
@@ -285,9 +288,14 @@ this.refValue = refValue;
     /// <param name='keyToFind'>The parameter <paramref name='keyToFind'/>
     /// is not documented yet.</param>
     /// <returns>An IDictionary(string, Object) object.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='root'/> is null.</exception>
     public static IDictionary<string, Object>
       GetPointersWithKeyAndRemove(CBORObject root, string keyToFind) {
       IDictionary<string, Object> list = new Dictionary<string, Object>();
+      if (root == null) {
+        throw new ArgumentNullException(nameof(root));
+      }
       GetPointersWithKey(root, keyToFind, String.Empty, list, true);
       return list;
     }
@@ -319,10 +327,15 @@ this.refValue = refValue;
     /// <param name='keyToFind'>The parameter <paramref name='keyToFind'/>
     /// is not documented yet.</param>
     /// <returns>An IDictionary(string, Object) object.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='root'/> is null.</exception>
     public static IDictionary<string, Object> GetPointersWithKey(
       CBORObject root,
       string keyToFind) {
       IDictionary<string, Object> list = new Dictionary<string, Object>();
+      if (root == null) {
+        throw new ArgumentNullException(nameof(root));
+      }
       GetPointersWithKey(root, keyToFind, String.Empty, list, false);
       return list;
     }

@@ -16,6 +16,9 @@ namespace Test {
     public static int StringToInt(string str) {
       var neg = false;
       var i = 0;
+      if (str == null) {
+        throw new ArgumentNullException(nameof(str));
+      }
       if (str.Length > 0 && str[0] == '-') {
         neg = true;
         ++i;
@@ -55,6 +58,9 @@ namespace Test {
     public static long StringToLong(string str) {
       var neg = false;
       var i = 0;
+      if (str == null) {
+        throw new ArgumentNullException(nameof(str));
+      }
       if (str.Length > 0 && str[0] == '-') {
         neg = true;
         ++i;
@@ -99,13 +105,22 @@ namespace Test {
     }
 
     public static void AssertEquals(Object o, Object o2) {
+      if (o == null) {
+        throw new ArgumentNullException(nameof(o));
+      }
       if (!o.Equals(o2)) {
         Assert.AreEqual(o, o2);
       }
     }
 
     public static void AssertEqualsHashCode(Object o, Object o2) {
+      if (o == null) {
+        throw new ArgumentNullException(nameof(o));
+      }
       if (o.Equals(o2)) {
+        if (o2 == null) {
+          throw new ArgumentNullException(nameof(o2));
+        }
         if (!o2.Equals(o)) {
           Assert.Fail(
   String.Empty + o + " equals " + o2 + " but not vice versa");

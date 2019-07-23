@@ -1348,6 +1348,9 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty);
       string hex = "0123456789ABCDEF";
       var sb = new StringBuilder();
       for (var i = 0; i < 8; ++i) {
+        if (rand == null) {
+          throw new ArgumentNullException(nameof(rand));
+        }
         sb.Append(hex[rand.UniformInt(16)]);
       }
       sb.Append('-');

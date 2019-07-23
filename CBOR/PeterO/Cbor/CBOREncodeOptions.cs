@@ -74,7 +74,12 @@ namespace PeterO.Cbor {
     /// any other value meaning false. For example, <c>allowduplicatekeys =
     /// Yes</c> and <c>allowduplicatekeys = 1</c> both set the
     /// <c>AllowDuplicateKeys</c> property to true.</param>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='paramString'/> is null.</exception>
     public CBOREncodeOptions(string paramString) {
+      if (paramString == null) {
+        throw new ArgumentNullException(nameof(paramString));
+      }
       var parser = new OptionsParser(paramString);
       this.ResolveReferences = parser.GetBoolean("resolvereferences", false);
       this.UseIndefLengthStrings =
@@ -83,6 +88,8 @@ parser.GetBoolean("useindeflengthstrings", false);
       this.Ctap2Canonical = parser.GetBoolean("ctap2canonical", false);
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <returns>A text string.</returns>
     public override string ToString() {
       return new System.Text.StringBuilder()
            .Append("allowduplicatekeys=")

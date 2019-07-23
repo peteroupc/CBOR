@@ -704,6 +704,9 @@ namespace Test {
       string expectedString,
       int noReplaceRet,
       string noReplaceString) {
+      if (bytes == null) {
+        throw new ArgumentNullException(nameof(bytes));
+      }
       DoTestReadUtf8(
         bytes,
         bytes.Length,
@@ -736,6 +739,9 @@ namespace Test {
           if (noReplaceRet == 0) {
             Assert.AreEqual(noReplaceString, builder.ToString());
           }
+        }
+        if (bytes == null) {
+          throw new ArgumentNullException(nameof(bytes));
         }
         if (bytes.Length >= length) {
           builder.Remove(0, builder.Length);

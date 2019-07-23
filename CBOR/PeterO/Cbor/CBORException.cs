@@ -26,7 +26,8 @@ namespace PeterO.Cbor {
     /// message and inner exception.</summary>
     /// <param name='message'>The parameter <paramref name='message'/> is a
     /// text string.</param>
-    /// <param name='innerException'>The parameter <paramref name='innerException'/> is an Exception object.</param>
+    /// <param name='innerException'>The parameter <paramref
+    /// name='innerException'/> is an Exception object.</param>
     public CBORException(string message, Exception innerException)
       : base(message, innerException) {
     }

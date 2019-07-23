@@ -238,6 +238,9 @@ namespace Test {
     public static string CharString(int cp, bool quoted, char[] charbuf) {
       var index = 0;
       if (quoted) {
+        if (charbuf == null) {
+          throw new ArgumentNullException(nameof(charbuf));
+        }
         charbuf[index++] = (char)0x22;
       }
       if (cp < 0x10000) {
@@ -1980,13 +1983,13 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
         CBORObject o3 = CBORTestCommon.RandomCBORObject(r);
         TestCommon.CompareTestRelations(o1, o2, o3);
         if (list.Count < 400) {
-          if (o1.Type == CBORType.Number) {
+          if (o1.IsNumber) {
             list.Add(o1.Untag());
           }
-          if (o2.Type == CBORType.Number) {
+          if (o2.IsNumber) {
             list.Add(o2.Untag());
           }
-          if (o3.Type == CBORType.Number) {
+          if (o3.IsNumber) {
             list.Add(o3.Untag());
           }
         }
@@ -2626,7 +2629,7 @@ ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes();
       TestCommon.CompareTestEqualAndConsistent(cbor, cbor2);
       cbor2 = ToObjectTest.TestToFromObjectRoundTrip(cbor2);
       TestCommon.CompareTestEqualAndConsistent(cbor, cbor2);
-      this.TestWriteObj(erat, erat);
+      TestWriteObj(erat, erat);
       erat = ERational.Create(
   EInteger.Zero,
   EInteger.FromString("84170882933504200501581262010093"));
@@ -2638,8 +2641,8 @@ ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes();
       TestCommon.CompareTestEqualAndConsistent(cbor, cbor2);
       cbor2 = ToObjectTest.TestToFromObjectRoundTrip(cbor2);
       TestCommon.CompareTestEqualAndConsistent(cbor, cbor2);
-      this.TestWriteObj(cbor, cbor2);
-      this.TestWriteObj(erat, erat2);
+      TestWriteObj(cbor, cbor2);
+      TestWriteObj(erat, erat2);
     }
 
     [Test]
@@ -3054,13 +3057,16 @@ ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes();
       }
     }
 
-    public sealed class TestConverter : ICBORToFromConverter<string> {
+    private sealed class TestConverter : ICBORToFromConverter<string> {
       public CBORObject ToCBORObject(string strValue) {
         return CBORObject.FromObject(
           DataUtilities.ToLowerCaseAscii(strValue));
       }
 
       public string FromCBORObject(CBORObject cbor) {
+        if (cbor == null) {
+          throw new ArgumentNullException(nameof(cbor));
+        }
         if (cbor.Type == CBORType.TextString) {
           return DataUtilities.ToLowerCaseAscii(cbor.AsString());
         }
@@ -5599,7 +5605,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
         this.TestWrite2();
       }
       for (var i = 0; i < 40; ++i) {
-        this.TestWrite3();
+        TestWrite3();
       }
     }
 
@@ -5630,7 +5636,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
               ms.ToArray(),
               ToObjectTest.TestToFromObjectRoundTrip((object)null));
           }
-          this.TestWriteObj((object)str, null);
+          TestWriteObj((object)str, null);
         }
 
         {
@@ -5658,7 +5664,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
               AssertReadThree(ms.ToArray(), objectTemp2);
             }
           }
-          this.TestWriteObj((object)"test", "test");
+          TestWriteObj((object)"test", "test");
         }
 
         str = TestCommon.Repeat("test", 4000);
@@ -5685,7 +5691,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
           ms.ToArray(),
           ToObjectTest.TestToFromObjectRoundTrip(str));
           }
-          this.TestWriteObj((object)str, str);
+          TestWriteObj((object)str, str);
         }
 
         long[] values = {
@@ -5722,7 +5728,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
   ms.ToArray(),
   ToObjectTest.TestToFromObjectRoundTrip(values[i]));
             }
-            this.TestWriteObj((object)values[i], values[i]);
+            TestWriteObj((object)values[i], values[i]);
           }
 
           EInteger bigintVal = EInteger.FromInt64(values[i]);
@@ -5750,7 +5756,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
   ms.ToArray(),
   ToObjectTest.TestToFromObjectRoundTrip(bigintVal));
             }
-            this.TestWriteObj((object)bigintVal, bigintVal);
+            TestWriteObj((object)bigintVal, bigintVal);
           }
 
           if (values[i] >= (long)Int32.MinValue && values[i] <=
@@ -5780,7 +5786,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
                  ms.ToArray(),
                  ToObjectTest.TestToFromObjectRoundTrip(intval));
               }
-              this.TestWriteObj((object)intval, intval);
+              TestWriteObj((object)intval, intval);
             }
           }
           if (values[i] >= -32768L && values[i] <= 32767) {
@@ -5810,7 +5816,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
   ms.ToArray(),
   ToObjectTest.TestToFromObjectRoundTrip(shortval));
             }
-            this.TestWriteObj((object)shortval, shortval);
+            TestWriteObj((object)shortval, shortval);
           }
           if (values[i] >= 0L && values[i] <= 255) {
             var byteval = (byte)values[i];
@@ -5839,7 +5845,7 @@ ToObjectTest.TestToFromObjectRoundTrip(byteval);
                   ms.ToArray(),
                   ToObjectTest.TestToFromObjectRoundTrip(byteval));
               }
-              this.TestWriteObj((object)byteval, byteval);
+              TestWriteObj((object)byteval, byteval);
             }
           }
         }
@@ -5866,7 +5872,7 @@ ToObjectTest.TestToFromObjectRoundTrip(byteval);
            ms.ToArray(),
            ToObjectTest.TestToFromObjectRoundTrip(0.0f));
           }
-          this.TestWriteObj((object)0.0f, 0.0f);
+          TestWriteObj((object)0.0f, 0.0f);
         }
 
         {
@@ -5892,7 +5898,7 @@ ToObjectTest.TestToFromObjectRoundTrip(byteval);
           ms.ToArray(),
           ToObjectTest.TestToFromObjectRoundTrip(2.6));
           }
-          this.TestWriteObj((object)2.6, 2.6);
+          TestWriteObj((object)2.6, 2.6);
         }
 
         CBORObject cbor = null;
@@ -5919,7 +5925,7 @@ ToObjectTest.TestToFromObjectRoundTrip(byteval);
   ms.ToArray(),
   ToObjectTest.TestToFromObjectRoundTrip((object)null));
           }
-          this.TestWriteObj((object)cbor, null);
+          TestWriteObj((object)cbor, null);
         }
 
         object aobj = null;
@@ -5946,7 +5952,7 @@ ToObjectTest.TestToFromObjectRoundTrip(byteval);
   ms.ToArray(),
   ToObjectTest.TestToFromObjectRoundTrip((object)null));
           }
-          this.TestWriteObj((object)aobj, null);
+          TestWriteObj((object)aobj, null);
         }
       } catch (IOException ex) {
         Assert.Fail(ex.ToString());
@@ -5954,7 +5960,7 @@ ToObjectTest.TestToFromObjectRoundTrip(byteval);
       }
     }
 
-    public void TestWrite3() {
+    public static void TestWrite3() {
       EFloat ef = null;
       EDecimal ed = null;
       var fr = new RandomGenerator();
@@ -5993,7 +5999,7 @@ ToObjectTest.TestToFromObjectRoundTrip(byteval);
            ms.ToArray(),
            ToObjectTest.TestToFromObjectRoundTrip(ef));
             }
-            this.TestWriteObj((object)ef, ef);
+            TestWriteObj((object)ef, ef);
           }
 
           ef = EFloat.Create(
@@ -6026,7 +6032,7 @@ ToObjectTest.TestToFromObjectRoundTrip(byteval);
              ToObjectTest.TestToFromObjectRoundTrip(ef));
               }
             }
-            this.TestWriteObj((object)ef, ef);
+            TestWriteObj((object)ef, ef);
           }
         }
         for (var i = 0; i < 50; ++i) {
@@ -6059,7 +6065,7 @@ ToObjectTest.TestToFromObjectRoundTrip(byteval);
               }
             }
             if (!(cborTemp1.IsNegative && cborTemp1.IsZero)) {
-              this.TestWriteObj((object)ed, ed);
+              TestWriteObj((object)ed, ed);
             }
           }
 
@@ -6089,7 +6095,7 @@ ToObjectTest.TestToFromObjectRoundTrip(byteval);
            ms.ToArray(),
            ToObjectTest.TestToFromObjectRoundTrip(ed));
             }
-            this.TestWriteObj((object)ed, ed);
+            TestWriteObj((object)ed, ed);
           }
         }
       } catch (IOException ex) {
@@ -6127,7 +6133,7 @@ ToObjectTest.TestToFromObjectRoundTrip(byteval);
   ms.ToArray(),
   ToObjectTest.TestToFromObjectRoundTrip((object)null));
           }
-          this.TestWriteObj((object)ef, null);
+          TestWriteObj((object)ef, null);
         }
 
         ef = EFloat.FromString("20");
@@ -6154,7 +6160,7 @@ ToObjectTest.TestToFromObjectRoundTrip(byteval);
          ms.ToArray(),
          ToObjectTest.TestToFromObjectRoundTrip(ef));
           }
-          this.TestWriteObj((object)ef, ef);
+          TestWriteObj((object)ef, ef);
         }
 
         ERational er = null;
@@ -6181,7 +6187,7 @@ ToObjectTest.TestToFromObjectRoundTrip(byteval);
   ms.ToArray(),
   ToObjectTest.TestToFromObjectRoundTrip((object)null));
           }
-          this.TestWriteObj((object)er, null);
+          TestWriteObj((object)er, null);
         }
         do {
           er = RandomObjects.RandomERational(fr);
@@ -6213,7 +6219,7 @@ ToObjectTest.TestToFromObjectRoundTrip(byteval);
            ToObjectTest.TestToFromObjectRoundTrip(er));
             }
           }
-          this.TestWriteObj((object)er, er);
+          TestWriteObj((object)er, er);
         }
 
         EDecimal ed = null;
@@ -6240,7 +6246,7 @@ ToObjectTest.TestToFromObjectRoundTrip(byteval);
   ms.ToArray(),
   ToObjectTest.TestToFromObjectRoundTrip((object)null));
           }
-          this.TestWriteObj((object)ed, null);
+          TestWriteObj((object)ed, null);
         }
 
         EInteger bigint = null;
@@ -6267,7 +6273,7 @@ ToObjectTest.TestToFromObjectRoundTrip(byteval);
   ms.ToArray(),
   ToObjectTest.TestToFromObjectRoundTrip((object)null));
           }
-          this.TestWriteObj((object)bigint, null);
+          TestWriteObj((object)bigint, null);
         }
       } catch (IOException ex) {
         Assert.Fail(ex.ToString());
@@ -6451,7 +6457,7 @@ ToObjectTest.TestToFromObjectRoundTrip(byteval);
       byte[] bytes = cbor.EncodeToBytes();
     }
 
-    private void TestWriteObj(object obj, object objTest) {
+    private static void TestWriteObj(object obj, object objTest) {
       try {
         {
           CBORObject cborTemp1 = ToObjectTest.TestToFromObjectRoundTrip(obj);

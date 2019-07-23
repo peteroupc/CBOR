@@ -37,11 +37,18 @@ namespace PeterO.Cbor {
     /// combination of case), which means true, and any other value meaning
     /// false. For example, <c>usecamelcase = Yes</c> and <c>usecamelcase =
     /// 1</c> both set the <c>UseCamelCase</c> property to true.</param>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='paramString'/> is null.</exception>
     public PODOptions(string paramString) {
+      if (paramString == null) {
+        throw new ArgumentNullException(nameof(paramString));
+      }
       var parser = new OptionsParser(paramString);
       this.UseCamelCase = parser.GetBoolean("usecamelcase", true);
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <returns>A text string.</returns>
     public override string ToString() {
       return new System.Text.StringBuilder()
            .Append("usecamelcase=")

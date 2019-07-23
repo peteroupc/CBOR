@@ -81,6 +81,9 @@ namespace PeterO {
     }
 
     public static CBORObject Read(Stream stream) {
+      if (stream == null) {
+        throw new ArgumentNullException(nameof(stream));
+      }
       return ReadObject(stream, false);
     }
 
@@ -217,7 +220,13 @@ namespace PeterO {
     }
 
     public static void Write(CBORObject obj, Stream stream) {
+      if (obj == null) {
+        throw new ArgumentNullException(nameof(obj));
+      }
       if (obj.IsNumber) {
+        if (stream == null) {
+          throw new ArgumentNullException(nameof(stream));
+        }
         stream.WriteByte(unchecked((byte)((byte)0x69)));
         WriteUtf8(obj.AsEInteger().ToString(), stream);
         stream.WriteByte(unchecked((byte)((byte)0x65)));

@@ -14,6 +14,9 @@ namespace Test {
     /// <summary>Description of RandomObjects.</summary>
   public static class RandomObjects {
     public static byte[] RandomByteString(RandomGenerator rand) {
+      if (rand == null) {
+        throw new ArgumentNullException(nameof(rand));
+      }
       int x = rand.UniformInt(0x2000);
       var bytes = new byte[x];
       for (var i = 0; i < x; ++i) {
@@ -23,6 +26,9 @@ namespace Test {
     }
 
     public static byte[] RandomByteStringShort(RandomGenerator rand) {
+      if (rand == null) {
+        throw new ArgumentNullException(nameof(rand));
+      }
       int x = rand.UniformInt(50);
       var bytes = new byte[x];
       for (var i = 0; i < x; ++i) {
@@ -41,6 +47,9 @@ namespace Test {
     }
 
     public static string RandomTextString(RandomGenerator rand) {
+      if (rand == null) {
+        throw new ArgumentNullException(nameof(rand));
+      }
       int length = rand.UniformInt(0x2000);
       var sb = new StringBuilder();
       for (var i = 0; i < length; ++i) {
@@ -68,6 +77,9 @@ namespace Test {
     }
 
     public static long RandomInt64(RandomGenerator rand) {
+      if (rand == null) {
+        throw new ArgumentNullException(nameof(rand));
+      }
       long r = rand.UniformInt(0x10000);
       r |= ((long)rand.UniformInt(0x10000)) << 16;
       if (rand.UniformInt(2) == 0) {
@@ -81,6 +93,9 @@ namespace Test {
 
     public static double RandomDouble(RandomGenerator rand, int exponent) {
       if (exponent == Int32.MaxValue) {
+        if (rand == null) {
+          throw new ArgumentNullException(nameof(rand));
+        }
         exponent = rand.UniformInt(2047);
       }
       long r = rand.UniformInt(0x10000);
@@ -98,6 +113,9 @@ namespace Test {
 
     public static float RandomSingle(RandomGenerator rand, int exponent) {
       if (exponent == Int32.MaxValue) {
+        if (rand == null) {
+          throw new ArgumentNullException(nameof(rand));
+        }
         exponent = rand.UniformInt(255);
       }
       int r = rand.UniformInt(0x10000);
@@ -110,6 +128,9 @@ namespace Test {
     }
 
     public static EDecimal RandomEDecimal(RandomGenerator r) {
+      if (r == null) {
+        throw new ArgumentNullException(nameof(r));
+      }
       if (r.UniformInt(100) == 0) {
         int x = r.UniformInt(3);
         if (x == 0) {
@@ -129,6 +150,9 @@ namespace Test {
     }
 
     public static EInteger RandomEInteger(RandomGenerator r) {
+      if (r == null) {
+        throw new ArgumentNullException(nameof(r));
+      }
       int selection = r.UniformInt(100);
       if (selection < 40) {
         StringAndBigInt sabi = StringAndBigInt.Generate(r, 16);
@@ -150,6 +174,9 @@ namespace Test {
     }
 
     public static EFloat RandomEFloat(RandomGenerator r) {
+      if (r == null) {
+        throw new ArgumentNullException(nameof(r));
+      }
       if (r.UniformInt(100) == 0) {
         int x = r.UniformInt(3);
         if (x == 0) {
@@ -168,6 +195,9 @@ namespace Test {
     }
 
     public static String RandomBigIntString(RandomGenerator r) {
+      if (r == null) {
+        throw new ArgumentNullException(nameof(r));
+      }
       int count = r.UniformInt(50) + 1;
       var sb = new StringBuilder();
       if (r.UniformInt(2) == 0) {
@@ -184,6 +214,9 @@ namespace Test {
     }
 
     public static EInteger RandomSmallIntegral(RandomGenerator r) {
+      if (r == null) {
+        throw new ArgumentNullException(nameof(r));
+      }
       int count = r.UniformInt(20) + 1;
       var sb = new StringBuilder();
       if (r.UniformInt(2) == 0) {
@@ -200,6 +233,9 @@ namespace Test {
     }
 
     public static String RandomDecimalString(RandomGenerator r) {
+      if (r == null) {
+        throw new ArgumentNullException(nameof(r));
+      }
       int count = r.UniformInt(40) + 1;
       var sb = new StringBuilder();
       if (r.UniformInt(2) == 0) {

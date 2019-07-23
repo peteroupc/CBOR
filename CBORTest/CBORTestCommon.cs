@@ -199,7 +199,7 @@ namespace Test {
     }
 
     public static void TestNumber(CBORObject o) {
-      if (o.Type != CBORType.Number) {
+      if (!o.IsNumber) {
         return;
       }
       if (o.IsPositiveInfinity() || o.IsNegativeInfinity() ||

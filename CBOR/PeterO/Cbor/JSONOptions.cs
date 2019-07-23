@@ -56,12 +56,19 @@ namespace PeterO.Cbor {
     /// combination of case), which means true, and any other value meaning
     /// false. For example, <c>base64padding = Yes</c> and <c>base64padding
     /// = 1</c> both set the <c>Base64Padding</c> property to true.</param>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='paramString'/> is null.</exception>
     public JSONOptions(string paramString) {
+      if (paramString == null) {
+        throw new ArgumentNullException(nameof(paramString));
+      }
       var parser = new OptionsParser(paramString);
       this.Base64Padding = parser.GetBoolean("base64padding", true);
       this.ReplaceSurrogates = parser.GetBoolean("replacesurrogates", true);
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <returns>A text string.</returns>
     public override string ToString() {
       return new StringBuilder()
            .Append("base64padding=")

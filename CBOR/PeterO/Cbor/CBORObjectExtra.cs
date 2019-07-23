@@ -167,7 +167,6 @@ this.HasOneTag(270)) ?
               (decimal)(this.AsERational()) : (decimal)this.AsEDecimal()); }
 
 /// <summary>Not documented yet.</summary>
-    /// <summary>Not documented yet.</summary>
     /// <returns>A 64-bit unsigned integer.</returns>
     [CLSCompliant(false)]
     public ulong AsUInt64() {

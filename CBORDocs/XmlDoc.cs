@@ -94,7 +94,13 @@ namespace PeterO.DocGen {
     }
 
     public static void VisitInnerNode(INode node, IVisitor vis) {
+      if (node == null) {
+        throw new ArgumentNullException(nameof(node));
+      }
       foreach (var child in node.GetChildren()) {
+        if (vis == null) {
+          throw new ArgumentNullException(nameof(vis));
+        }
         vis.VisitNode(child);
       }
     }
