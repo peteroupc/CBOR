@@ -1355,18 +1355,30 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty);
       }
       sb.Append('-');
       for (var i = 0; i < 4; ++i) {
+        if (rand == null) {
+          throw new ArgumentNullException(nameof(rand));
+        }
         sb.Append(hex[rand.UniformInt(16)]);
       }
       sb.Append('-');
       for (var i = 0; i < 4; ++i) {
+        if (rand == null) {
+          throw new ArgumentNullException(nameof(rand));
+        }
         sb.Append(hex[rand.UniformInt(16)]);
       }
       sb.Append('-');
       for (var i = 0; i < 4; ++i) {
+        if (rand == null) {
+          throw new ArgumentNullException(nameof(rand));
+        }
         sb.Append(hex[rand.UniformInt(16)]);
       }
       sb.Append('-');
       for (var i = 0; i < 12; ++i) {
+        if (rand == null) {
+          throw new ArgumentNullException(nameof(rand));
+        }
         sb.Append(hex[rand.UniformInt(16)]);
       }
       return new Guid(sb.ToString());

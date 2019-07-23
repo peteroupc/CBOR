@@ -247,6 +247,9 @@ namespace Test {
         if (cp >= 0xd800 && cp < 0xe000) {
           return null;
         }
+        if (charbuf == null) {
+          throw new ArgumentNullException(nameof(charbuf));
+        }
         charbuf[index++] = (char)cp;
         if (quoted) {
           charbuf[index++] = (char)0x22;
@@ -254,6 +257,9 @@ namespace Test {
         return new String(charbuf, 0, index);
       } else {
         cp -= 0x10000;
+        if (charbuf == null) {
+          throw new ArgumentNullException(nameof(charbuf));
+        }
         charbuf[index++] = (char)((cp >> 10) + 0xd800);
         charbuf[index++] = (char)((cp & 0x3ff) | 0xdc00);
         if (quoted) {

@@ -12,7 +12,7 @@ using PeterO.Numbers;
 namespace PeterO.Cbor {
   // Contains extra methods placed separately
   // because they are not CLS-compliant or they
-  // are specific to the .NET framework.
+  // are specific to the .NET version of the library.
   public sealed partial class CBORObject {
     /// <summary>Converts this object to a 16-bit unsigned integer. The
     /// return value will be truncated as necessary.</summary>
@@ -154,12 +154,11 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Converts this object to a.NET decimal.</summary>
-    /// <returns>The closest big integer to this object.</returns>
+    /// <returns>The closest .NET decimal to this object.</returns>
     /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type.</exception>
     /// <exception cref='System.OverflowException'>This object's value
     /// exceeds the range of a.NET decimal.</exception>
-    [CLSCompliant(false)]
     public decimal AsDecimal() {
       return (this.ItemType == CBORObjectTypeInteger) ?
         ((decimal)(long)this.ThisItem) : ((this.HasOneTag(30) ||
@@ -167,6 +166,7 @@ this.HasOneTag(270)) ?
               (decimal)(this.AsERational()) : (decimal)this.AsEDecimal()); }
 
 /// <summary>Not documented yet.</summary>
+    /// <summary>Not documented yet.</summary>
     /// <returns>A 64-bit unsigned integer.</returns>
     [CLSCompliant(false)]
     public ulong AsUInt64() {

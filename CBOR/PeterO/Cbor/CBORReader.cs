@@ -218,9 +218,7 @@ namespace PeterO.Cbor {
   CBORException("Length of bytes to be streamed is bigger than supported ");
             }
             data = ms.ToArray();
-            return new CBORObject(
-              CBORObject.CBORObjectTypeByteString,
-              data);
+            return CBORObject.FromRaw(data);
           }
         } else {
           if (hasBigAdditional) {
@@ -233,7 +231,7 @@ namespace PeterO.Cbor {
               " is bigger than supported");
           }
           data = ReadByteData(this.stream, uadditional, null);
-          var cbor = new CBORObject(CBORObject.CBORObjectTypeByteString, data);
+          var cbor = CBORObject.FromRaw(data);
           if (this.stringRefs != null) {
             int hint = (uadditional > Int32.MaxValue || hasBigAdditional) ?
             Int32.MaxValue : (int)uadditional;
@@ -275,9 +273,7 @@ namespace PeterO.Cbor {
               }
             }
           }
-          return new CBORObject(
-            CBORObject.CBORObjectTypeTextString,
-            builder.ToString());
+          return CBORObject.FromRaw(builder.ToString());
         } else {
           if (hasBigAdditional) {
             throw new CBORException("Length of " +
@@ -303,9 +299,7 @@ namespace PeterO.Cbor {
             case -2:
               throw new CBORException("Premature end of data");
           }
-          var cbor = new CBORObject(
-  CBORObject.CBORObjectTypeTextString,
-  builder.ToString());
+          var cbor = CBORObject.FromRaw(builder.ToString());
           if (this.stringRefs != null) {
             int hint = (uadditional > Int32.MaxValue || hasBigAdditional) ?
             Int32.MaxValue : (int)uadditional;

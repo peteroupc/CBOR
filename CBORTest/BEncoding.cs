@@ -237,6 +237,9 @@ namespace PeterO {
           throw new CBORException("invalid string");
         }
         WriteUtf8(LongToString(length), stream);
+        if (stream == null) {
+          throw new ArgumentNullException(nameof(stream));
+        }
         stream.WriteByte(unchecked((byte)((byte)':')));
         WriteUtf8(s, stream);
       } else if (obj.Type == CBORType.Map) {
@@ -258,6 +261,9 @@ namespace PeterO {
               key.AsString() : key.ToJSONString();
             valueSMap[str] = value;
           }
+          if (stream == null) {
+            throw new ArgumentNullException(nameof(stream));
+          }
           stream.WriteByte(unchecked((byte)((byte)0x64)));
           foreach (KeyValuePair<string, CBORObject> entry in valueSMap) {
             string key = entry.Key;
@@ -275,6 +281,9 @@ namespace PeterO {
           }
           stream.WriteByte(unchecked((byte)((byte)0x65)));
         } else {
+          if (stream == null) {
+            throw new ArgumentNullException(nameof(stream));
+          }
           stream.WriteByte(unchecked((byte)((byte)0x64)));
           foreach (CBORObject key in obj.Keys) {
             string str = key.AsString();
@@ -290,6 +299,9 @@ namespace PeterO {
           stream.WriteByte(unchecked((byte)((byte)0x65)));
         }
       } else if (obj.Type == CBORType.Array) {
+        if (stream == null) {
+          throw new ArgumentNullException(nameof(stream));
+        }
         stream.WriteByte(unchecked((byte)((byte)0x6c)));
         for (var i = 0; i < obj.Count; ++i) {
           Write(obj[i], stream);
@@ -302,6 +314,9 @@ namespace PeterO {
           throw new CBORException("invalid string");
         }
         WriteUtf8(LongToString(length), stream);
+        if (stream == null) {
+          throw new ArgumentNullException(nameof(stream));
+        }
         stream.WriteByte(unchecked((byte)((byte)':')));
         WriteUtf8(str, stream);
       }

@@ -7,8 +7,8 @@
  In C# and Java, text strings are represented as sequences of 16-bit values called  `char`  s. These sequences are well-formed under UTF-16, a 16-bit encoding form of Unicode, except if they contain unpaired surrogate code points. (A surrogate code point is used to encode supplementary characters, those with code points U + 10000 or higher, in UTF-16. A surrogate pair is a high surrogate [U + D800 to U + DBFF] followed by a low surrogate [U + DC00 to U + DFFF]. An unpaired surrogate code point is a surrogate not appearing in a surrogate pair.) Many of the methods in this class allow setting the behavior to follow when unpaired surrogate code points are found in text strings, such as throwing an error or treating the unpaired surrogate as a replacement character (U + FFFD).
 
 ### Member Summary
-* <code>[CodePointAt(string, int)](#CodePointAt_string_int)</code> -
-* <code>[CodePointAt(string, int, int)](#CodePointAt_string_int_int)</code> -
+* <code>[CodePointAt(string, int)](#CodePointAt_string_int)</code> - Gets the Unicode code point at the given index of the string.
+* <code>[CodePointAt(string, int, int)](#CodePointAt_string_int_int)</code> - Gets the Unicode code point at the given index of the string.
 * <code>[CodePointBefore(string, int)](#CodePointBefore_string_int)</code> - Gets the Unicode code point just before the given index of the string.
 * <code>[CodePointBefore(string, int, int)](#CodePointBefore_string_int_int)</code> - Gets the Unicode code point just before the given index of the string.
 * <code>[CodePointCompare(string, string)](#CodePointCompare_string_string)</code> - Compares two strings in Unicode code point order.
@@ -35,15 +35,34 @@
         string str,
         int index);
 
-     <b>Parameters:</b>
+ Gets the Unicode code point at the given index of the string.
 
- * <i>str</i>: Not documented yet.
+     The following example shows how to iterate a text string code point by code point.
 
- * <i>index</i>: Not documented yet.
+    for (var i = 0;i<str.Length; ++i) { int codePoint =
+                         DataUtilities.CodePointAt(str, i);
+                        Console.WriteLine("codePoint:"+codePoint); if (codePoint >= 0x10000)
+                       { i++; /* Supplementary code point */ } }
+
+ .
+
+  <b>Parameters:</b>
+
+ * <i>str</i>: The parameter  <i>str</i>
+ is a text string.
+
+ * <i>index</i>: Index of the current position into the string.
 
 <b>Return Value:</b>
 
-A 32-bit signed integer.
+The Unicode code point at the given position. Returns -1 if  <i>index</i>
+ is less than 0, or is the string's length or greater. Returns the replacement character (U+FFFD) if the current character is an unpaired surrogate code point. If the return value is 65536 (0x10000) or greater, the code point takes up two UTF-16 code units.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter  <i>str</i>
+ is null.
 
 <a id="CodePointAt_string_int_int"></a>
 ### CodePointAt
@@ -53,17 +72,31 @@ A 32-bit signed integer.
         int index,
         int surrogateBehavior);
 
-       <b>Parameters:</b>
+ Gets the Unicode code point at the given index of the string.
 
- * <i>str</i>: Not documented yet.
+      The following example shows how to iterate a text string code point by code point, terminating the loop when an unpaired surrogate is found.
 
- * <i>index</i>: Not documented yet.
+    for (var i = 0;i<str.Length; ++i) { int codePoint =
+                     DataUtilities.CodePointAt(str, i, 2); if (codePoint < 0) { break; /*
+                     Unpaired surrogate */ } Console.WriteLine("codePoint:"+codePoint); if
+                     (codePoint >= 0x10000) { i++; /* Supplementary code point */ } }
 
- * <i>surrogateBehavior</i>: Not documented yet. (3).
+ .
+
+  <b>Parameters:</b>
+
+ * <i>str</i>: The parameter  <i>str</i>
+ is a text string.
+
+ * <i>index</i>: Index of the current position into the string.
+
+ * <i>surrogateBehavior</i>: Specifies what kind of value to return if the previous character is an unpaired surrogate code point: if 0, return the replacement character (U+FFFD); if 1, return the value of the surrogate code point; if neither 0 nor 1, return -1.
 
 <b>Return Value:</b>
 
-A 32-bit signed integer.
+The Unicode code point at the current position. Returns -1 if  <i>index</i>
+ is less than 0, or is the string's length or greater. Returns a value as specified under  <i>surrogateBehavior</i>
+ if the previous character is an unpaired surrogate code point. If the return value is 65536 (0x10000) or greater, the code point takes up two UTF-16 code units.
 
 <b>Exceptions:</b>
 
@@ -178,7 +211,7 @@ The parameter  <i>str</i>
         string str,
         bool replace);
 
-  Encodes a string in UTF-8 as a byte array. This method does not insert a byte-order mark (U + FEFF) at the beginning of the encoded byte array.
+ Encodes a string in UTF-8 as a byte array. This method does not insert a byte-order mark (U + FEFF) at the beginning of the encoded byte array.
 
  REMARK: It is not recommended to use  `Encoding.UTF8.GetBytes`  in.NET, or the  `getBytes()`  method in Java to do this. For instance,  `getBytes()`  encodes text strings in a default (so not fixed) character encoding, which can be undesirable.
 
@@ -211,7 +244,7 @@ The string contains an unpaired surrogate code point and  <i>replace</i>
         bool replace,
         bool lenientLineBreaks);
 
-  Encodes a string in UTF-8 as a byte array. This method does not insert a byte-order mark (U + FEFF) at the beginning of the encoded byte array.
+ Encodes a string in UTF-8 as a byte array. This method does not insert a byte-order mark (U + FEFF) at the beginning of the encoded byte array.
 
  REMARK: It is not recommended to use  `Encoding.UTF8.GetBytes`  in.NET, or the  `getBytes()`  method in Java to do this. For instance,  `getBytes()`  encodes text strings in a default (so not fixed) character encoding, which can be undesirable.
 
@@ -518,7 +551,7 @@ The converted string, or null if  <i>str</i>
 
  Writes a portion of a string in UTF-8 encoding to a data stream.
 
-               <b>Parameters:</b>
+             <b>Parameters:</b>
 
  * <i>str</i>: A string to write.
 
@@ -528,7 +561,7 @@ The converted string, or null if  <i>str</i>
 
  * <i>stream</i>: A writable data stream.
 
- * <i>replace</i>: If true, replaces unpaired surrogate code points with the replacement character (U + FFFD). If false, stops processing when an unpaired surrogate code point is seen.
+ * <i>replace</i>: If true, replaces unpaired surrogate code points with the replacement character (U+FFFD). If false, stops processing when an unpaired surrogate code point is seen.
 
 <b>Return Value:</b>
 
@@ -559,13 +592,6 @@ Either "offset" or "length" is less than 0 or greater than "str"'s length, or "s
 The parameter  <i>str</i>
  is null.
 
- * System.ArgumentException:
-Either "offset" or "length" is less than 0 or greater than "str"'s length, or "str"'s length minus "offset" is less than "length".
-
- * System.ArgumentNullException:
-The parameter  <i>str</i>
- is null.
-
 <a id="WriteUtf8_string_int_int_System_IO_Stream_bool_bool"></a>
 ### WriteUtf8
 
@@ -579,7 +605,7 @@ The parameter  <i>str</i>
 
  Writes a portion of a string in UTF-8 encoding to a data stream.
 
-                <b>Parameters:</b>
+              <b>Parameters:</b>
 
  * <i>str</i>: A string to write.
 
@@ -589,7 +615,7 @@ The parameter  <i>str</i>
 
  * <i>stream</i>: A writable data stream.
 
- * <i>replace</i>: If true, replaces unpaired surrogate code points with the replacement character (U + FFFD). If false, stops processing when an unpaired surrogate code point is seen.
+ * <i>replace</i>: If true, replaces unpaired surrogate code points with the replacement character (U+FFFD). If false, stops processing when an unpaired surrogate code point is seen.
 
  * <i>lenientLineBreaks</i>: If true, replaces carriage return (CR) not followed by line feed (LF) and LF not preceded by CR with CR-LF pairs.
 
@@ -614,13 +640,6 @@ The parameter  <i>offset</i>
 
  * System.IO.IOException:
 An I/O error occurred.
-
- * System.ArgumentException:
-Either "offset" or "length" is less than 0 or greater than "str"'s length, or "str"'s length minus "offset" is less than "length".
-
- * System.ArgumentNullException:
-The parameter  <i>str</i>
- is null.
 
  * System.ArgumentException:
 Either "offset" or "length" is less than 0 or greater than "str"'s length, or "str"'s length minus "offset" is less than "length".

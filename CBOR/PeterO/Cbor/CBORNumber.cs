@@ -404,8 +404,8 @@ options == 7);
                 null);
             } else {
               efloat = EFloat.CreateNaN(
-                mantissa, 
-                options > 6, 
+                mantissa,
+                options > 6,
                 options == 5 || options == 7,
                 null);
             }

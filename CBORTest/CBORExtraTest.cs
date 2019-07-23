@@ -72,7 +72,8 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(EDecimal.SignalingNaN).AsDecimal();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          EDecimal.SignalingNaN).AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         // NOTE: Intentionally empty
@@ -156,26 +157,26 @@ namespace Test {
     }
 
     private enum AByte : byte {
-      /// <summary>An arbitrary value.</summary>
+    /// <summary>An arbitrary value.</summary>
       A = 254,
 
-      /// <summary>An arbitrary value.</summary>
+    /// <summary>An arbitrary value.</summary>
       B,
     }
 
     private enum AInt {
-      /// <summary>An arbitrary value.</summary>
+    /// <summary>An arbitrary value.</summary>
       A = 256,
 
-      /// <summary>An arbitrary value.</summary>
+    /// <summary>An arbitrary value.</summary>
       B,
     }
 
     private enum AULong : ulong {
-      /// <summary>An arbitrary value.</summary>
+    /// <summary>An arbitrary value.</summary>
       A = 999999,
 
-      /// <summary>An arbitrary value.</summary>
+    /// <summary>An arbitrary value.</summary>
       B,
     }
 
@@ -459,19 +460,22 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.1474836470000002E9d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          2.1474836470000002E9d).AsUInt32();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.1474836470000002E9d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          2.1474836470000002E9d).AsUInt64();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.1474836470000002E9d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          2.1474836470000002E9d).AsUInt16();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -487,19 +491,22 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.1474836469999998E9d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          2.1474836469999998E9d).AsUInt32();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.1474836469999998E9d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          2.1474836469999998E9d).AsUInt64();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.1474836469999998E9d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          2.1474836469999998E9d).AsUInt16();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -543,19 +550,22 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.1474836480000005E9d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          2.1474836480000005E9d).AsUInt32();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.1474836480000005E9d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          2.1474836480000005E9d).AsUInt64();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.1474836480000005E9d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          2.1474836480000005E9d).AsUInt16();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -571,19 +581,22 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.1474836479999998E9d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          2.1474836479999998E9d).AsUInt32();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.1474836479999998E9d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          2.1474836479999998E9d).AsUInt64();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.1474836479999998E9d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          2.1474836479999998E9d).AsUInt16();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -627,19 +640,22 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.1474836460000002E9d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          2.1474836460000002E9d).AsUInt32();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.1474836460000002E9d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          2.1474836460000002E9d).AsUInt64();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.1474836460000002E9d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          2.1474836460000002E9d).AsUInt16();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -655,19 +671,22 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.1474836459999998E9d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          2.1474836459999998E9d).AsUInt32();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.1474836459999998E9d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          2.1474836459999998E9d).AsUInt64();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.1474836459999998E9d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          2.1474836459999998E9d).AsUInt16();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -715,7 +734,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.1474836479999998E9d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.1474836479999998E9d).AsUInt32();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -723,7 +743,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.1474836479999998E9d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.1474836479999998E9d).AsUInt64();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -731,7 +752,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.1474836479999998E9d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.1474836479999998E9d).AsUInt16();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -739,7 +761,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.1474836479999998E9d).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.1474836479999998E9d).AsSByte();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -747,7 +770,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.1474836480000005E9d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.1474836480000005E9d).AsUInt32();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -755,7 +779,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.1474836480000005E9d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.1474836480000005E9d).AsUInt64();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -763,7 +788,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.1474836480000005E9d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.1474836480000005E9d).AsUInt16();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -771,7 +797,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.1474836480000005E9d).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.1474836480000005E9d).AsSByte();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -811,7 +838,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.1474836469999998E9d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.1474836469999998E9d).AsUInt32();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -819,7 +847,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.1474836469999998E9d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.1474836469999998E9d).AsUInt64();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -827,7 +856,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.1474836469999998E9d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.1474836469999998E9d).AsUInt16();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -835,7 +865,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.1474836469999998E9d).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.1474836469999998E9d).AsSByte();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -843,7 +874,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.1474836470000002E9d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.1474836470000002E9d).AsUInt32();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -851,7 +883,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.1474836470000002E9d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.1474836470000002E9d).AsUInt64();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -859,7 +892,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.1474836470000002E9d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.1474836470000002E9d).AsUInt16();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -867,7 +901,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.1474836470000002E9d).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.1474836470000002E9d).AsSByte();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -907,7 +942,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.1474836489999995E9d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.1474836489999995E9d).AsUInt32();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -915,7 +951,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.1474836489999995E9d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.1474836489999995E9d).AsUInt64();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -923,7 +960,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.1474836489999995E9d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.1474836489999995E9d).AsUInt16();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -931,7 +969,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.1474836489999995E9d).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.1474836489999995E9d).AsSByte();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -939,7 +978,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.1474836490000005E9d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.1474836490000005E9d).AsUInt32();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -947,7 +987,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.1474836490000005E9d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.1474836490000005E9d).AsUInt64();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -955,7 +996,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.1474836490000005E9d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.1474836490000005E9d).AsUInt16();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -963,7 +1005,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.1474836490000005E9d).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.1474836490000005E9d).AsSByte();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -971,7 +1014,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(9.223372036854776E18d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          9.223372036854776E18d).AsUInt32();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -979,13 +1023,15 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(9.223372036854776E18d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          9.223372036854776E18d).AsUInt64();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(9.223372036854776E18d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          9.223372036854776E18d).AsUInt16();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -1001,7 +1047,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(9.223372036854778E18d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          9.223372036854778E18d).AsUInt32();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -1009,13 +1056,15 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(9.223372036854778E18d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          9.223372036854778E18d).AsUInt64();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(9.223372036854778E18d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          9.223372036854778E18d).AsUInt16();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -1031,7 +1080,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(9.2233720368547748E18d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          9.2233720368547748E18d).AsUInt32();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -1039,13 +1089,15 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(9.2233720368547748E18d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          9.2233720368547748E18d).AsUInt64();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(9.2233720368547748E18d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          9.2233720368547748E18d).AsUInt16();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -1053,7 +1105,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(9.2233720368547748E18d).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          9.2233720368547748E18d).AsSByte();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -1061,7 +1114,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-9.223372036854776E18d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -9.223372036854776E18d).AsUInt32();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -1069,7 +1123,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-9.223372036854776E18d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -9.223372036854776E18d).AsUInt64();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -1077,7 +1132,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-9.223372036854776E18d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -9.223372036854776E18d).AsUInt16();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -1085,7 +1141,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-9.223372036854776E18d).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -9.223372036854776E18d).AsSByte();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -1093,7 +1150,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-9.2233720368547748E18d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -9.2233720368547748E18d).AsUInt32();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -1101,7 +1159,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-9.2233720368547748E18d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -9.2233720368547748E18d).AsUInt64();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -1109,7 +1168,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-9.2233720368547748E18d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -9.2233720368547748E18d).AsUInt16();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -1117,7 +1177,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-9.2233720368547748E18d).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -9.2233720368547748E18d).AsSByte();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -1125,7 +1186,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-9.223372036854778E18d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -9.223372036854778E18d).AsUInt32();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -1133,7 +1195,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-9.223372036854778E18d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -9.223372036854778E18d).AsUInt64();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -1141,7 +1204,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-9.223372036854778E18d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -9.223372036854778E18d).AsUInt16();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -1149,7 +1213,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-9.223372036854778E18d).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -9.223372036854778E18d).AsSByte();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -3757,19 +3822,22 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.2949672950000005E9d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          4.2949672950000005E9d).AsUInt32();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.2949672950000005E9d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          4.2949672950000005E9d).AsUInt64();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.2949672950000005E9d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          4.2949672950000005E9d).AsUInt16();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -3785,19 +3853,22 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.2949672949999995E9d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          4.2949672949999995E9d).AsUInt32();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.2949672949999995E9d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          4.2949672949999995E9d).AsUInt64();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.2949672949999995E9d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          4.2949672949999995E9d).AsUInt16();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -3873,19 +3944,22 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.2949672959999995E9d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          4.2949672959999995E9d).AsUInt32();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.2949672959999995E9d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          4.2949672959999995E9d).AsUInt64();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.2949672959999995E9d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          4.2949672959999995E9d).AsUInt16();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -3929,19 +4003,22 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.2949672940000005E9d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          4.2949672940000005E9d).AsUInt32();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.2949672940000005E9d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          4.2949672940000005E9d).AsUInt64();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.2949672940000005E9d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          4.2949672940000005E9d).AsUInt16();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -3957,19 +4034,22 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.2949672939999995E9d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          4.2949672939999995E9d).AsUInt32();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.2949672939999995E9d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          4.2949672939999995E9d).AsUInt64();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.2949672939999995E9d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          4.2949672939999995E9d).AsUInt16();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -3985,7 +4065,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.8446744073709552E19d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          1.8446744073709552E19d).AsUInt32();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -3993,7 +4074,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.8446744073709552E19d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          1.8446744073709552E19d).AsUInt64();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4001,7 +4083,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.8446744073709552E19d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          1.8446744073709552E19d).AsUInt16();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4009,7 +4092,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.8446744073709552E19d).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          1.8446744073709552E19d).AsSByte();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4017,7 +4101,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.8446744073709556E19d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          1.8446744073709556E19d).AsUInt32();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4025,7 +4110,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.8446744073709556E19d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          1.8446744073709556E19d).AsUInt64();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4033,7 +4119,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.8446744073709556E19d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          1.8446744073709556E19d).AsUInt16();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4041,7 +4128,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.8446744073709556E19d).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          1.8446744073709556E19d).AsSByte();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4049,7 +4137,8 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.844674407370955E19d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          1.844674407370955E19d).AsUInt32();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4057,13 +4146,15 @@ select new { A = i, B = i + 1 };
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.844674407370955E19d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          1.844674407370955E19d).AsUInt64();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.844674407370955E19d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          1.844674407370955E19d).AsUInt16();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {

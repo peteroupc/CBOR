@@ -452,6 +452,7 @@ Assert.AreEqual(objectTemp, objectTemp2);
 
     [Test]
     public void TestSharedRefs() {
+      var encodeOptions = new CBOREncodeOptions("resolvereferences=true");
       byte[] bytes;
       CBORObject cbor;
       string expected;
@@ -459,21 +460,21 @@ Assert.AreEqual(objectTemp, objectTemp2);
         0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29,
         0, 0xff,
       };
-      cbor = CBORObject.DecodeFromBytes(bytes);
+      cbor = CBORObject.DecodeFromBytes(bytes, encodeOptions);
       expected = "[1,1,3,3,1]";
       Assert.AreEqual(expected, cbor.ToJSONString());
       bytes = new byte[] {
         0x9f, 0xd8, 28, 0x81, 1, 0xd8, 29, 0, 3, 3, 0xd8,
         29, 0, 0xff,
       };
-      cbor = CBORObject.DecodeFromBytes(bytes);
+      cbor = CBORObject.DecodeFromBytes(bytes, encodeOptions);
       expected = "[[1],[1],3,3,[1]]";
       Assert.AreEqual(expected, cbor.ToJSONString());
       // Checks if both objects are the same reference, not just equal
       Assert.IsTrue(cbor[0] == cbor[1], "cbor[0] not same as cbor[1]");
       Assert.IsTrue(cbor[0] == cbor[4], "cbor[0] not same as cbor[4]");
       bytes = new byte[] { 0xd8, 28, 0x82, 1, 0xd8, 29, 0 };
-      cbor = CBORObject.DecodeFromBytes(bytes);
+      cbor = CBORObject.DecodeFromBytes(bytes, encodeOptions);
       Assert.AreEqual(2, cbor.Count);
       // Checks if both objects are the same reference, not just equal
       Assert.IsTrue(cbor == cbor[1], "objects not the same");
@@ -488,108 +489,48 @@ Assert.AreEqual(objectTemp, objectTemp2);
       byte[] bytes;
       var secondbytes = new byte[] { 0, 0x20, 0x60, 0x80, 0xa0, 0xe0 };
       var firstbytes = new byte[] { 0xc2, 0xc3, 0xc4, 0xc5 };
+      CBORObject cbor;
       foreach (byte firstbyte in firstbytes) {
         foreach (byte secondbyte in secondbytes) {
       bytes = new byte[] { firstbyte, secondbyte };
-      try {
- CBORObject.DecodeFromBytes(bytes);
-} catch (Exception ex) {
-Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+      cbor = CBORObject.DecodeFromBytes(bytes);
+      Assert.IsFalse(cbor.IsNumber);
         }
       }
-      try {
- CBORObject.DecodeFromBytes(new byte[] { 0xd8, 0x1e, 0x9f, 0x01, 0x01, 0xff, });
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.DecodeFromBytes(new byte[] { 0xd8, 0x1e, 0x9f, 0x01, 0xff });
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.DecodeFromBytes(new byte[] { 0xd8, 0x1e, 0x9f, 0xff });
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x9f, 0x00, 0x00, 0xff });
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x9f, 0x00, 0x00, 0xff });
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x9f, 0x00, 0xff });
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x9f, 0x00, 0xff });
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x9f, 0xff });
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x9f, 0xff });
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x81, 0x00 });
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x81, 0x00 });
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      Assert.AreEqual(
+      cbor = CBORObject.DecodeFromBytes(new byte[] {
+        0xd8, 0x1e, 0x9f, 0x01,
+        0x01, 0xff,
+      });
+      Assert.IsFalse(cbor.IsNumber);
+      cbor = CBORObject.DecodeFromBytes(new byte[] {
+        0xd8, 0x1e, 0x9f, 0x01,
+        0xff,
+      });
+ Assert.IsFalse(cbor.IsNumber);
+ cbor = CBORObject.DecodeFromBytes(new byte[] { 0xd8, 0x1e, 0x9f, 0xff, });
+ Assert.IsFalse(cbor.IsNumber);
+ cbor = CBORObject.DecodeFromBytes(new byte[] {
+   0xc4, 0x9f, 0x00, 0x00,
+   0xff,
+ });
+ Assert.IsFalse(cbor.IsNumber);
+ cbor = CBORObject.DecodeFromBytes(new byte[] {
+   0xc5, 0x9f, 0x00, 0x00,
+   0xff,
+ });
+ Assert.IsFalse(cbor.IsNumber);
+ cbor = CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x9f, 0x00, 0xff, });
+ Assert.IsFalse(cbor.IsNumber);
+ cbor = CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x9f, 0x00, 0xff, });
+ Assert.IsFalse(cbor.IsNumber);
+ cbor = CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x9f, 0xff, });
+ Assert.IsFalse(cbor.IsNumber);
+ cbor = CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x9f, 0xff, });
+ Assert.IsFalse(cbor.IsNumber);
+ cbor = CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x81, 0x00, });
+ Assert.IsFalse(cbor.IsNumber);
+ cbor = CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x81, 0x00, });
+ Assert.AreEqual(
         EInteger.Zero,
         CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0x40 }).AsEInteger());
       {
@@ -602,7 +543,7 @@ throw new InvalidOperationException(String.Empty, ex);
 }
       Assert.AreEqual(
         EInteger.FromString("-1"),
-        CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x40 }).AsEInteger());
+        CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x40, }).AsEInteger());
     }
 
     [Test]
@@ -800,12 +741,14 @@ throw new InvalidOperationException(String.Empty, ex);
 
     [Test]
     public void TestStringRefs() {
+      var encodeOptions = new CBOREncodeOptions("resolvereferences=true");
       CBORObject cbor = CBORObject.DecodeFromBytes(
         new byte[] {
           0xd9, 1, 0, 0x9f, 0x64, 0x61, 0x62, 0x63, 0x64, 0xd8,
           0x19, 0x00, 0xd8, 0x19, 0x00, 0x64, 0x62, 0x62, 0x63, 0x64, 0xd8, 0x19,
           0x01, 0xd8, 0x19, 0x00, 0xd8, 0x19, 0x01, 0xff,
-        });
+        },
+        encodeOptions);
       string expected =
         "[\"abcd\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]";
       Assert.AreEqual(expected, cbor.ToJSONString());
@@ -815,7 +758,8 @@ throw new InvalidOperationException(String.Empty, ex);
         0x61, 0xd8, 0x19, 0x00, 0xd8, 0x19, 0x00, 0x64, 0x62,
         0x62, 0x63, 0x64, 0xd8, 0x19, 0x01, 0xd8, 0x19, 0x00,
         0xd8, 0x19, 0x01, 0xff,
-      });
+      },
+      encodeOptions);
       expected =
      "[\"abcd\",\"aa\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]";
       Assert.AreEqual(expected, cbor.ToJSONString());

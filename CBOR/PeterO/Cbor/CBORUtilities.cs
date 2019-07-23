@@ -11,8 +11,8 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-  /// <summary>Contains utility methods that may have use outside of the
-  /// CBORObject class.</summary>
+    /// <summary>Contains utility methods that may have use outside of the
+    /// CBORObject class.</summary>
   internal static class CBORUtilities {
     private const string HexAlphabet = "0123456789ABCDEF";
 
@@ -563,8 +563,7 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
         } else if (i == 10) {
           bad |= str[i] != 'T';
           /*lowercase t not used to separate date/time,
-    following RFC 4287 sec. 3.3*/
-        } else {
+    following RFC 4287 sec. 3.3*/ } else {
           bad |= str[i] < '0' || str[i] >
 '9';
         }
@@ -784,7 +783,8 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
     (mant >>
     shift) : -1;
       } else {
-        return (bits & 0x1fff) == 0 ? sign + ((exp - 112) << 10) + (mant >> 13) :
+        return (bits & 0x1fff) == 0 ? sign + ((exp - 112) << 10) + (mant >>
+13) :
     -1;
       }
     }

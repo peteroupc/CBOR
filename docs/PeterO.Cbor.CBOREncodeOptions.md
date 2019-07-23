@@ -56,8 +56,7 @@
 
    <b>Parameters:</b>
 
- * <i>paramString</i>: A string setting forth the options to use. This is a semicolon-separated list of options, each of which has a key and a value separated by an equal sign ("="). Whitespace and line separators are not allowed to appear between the semicolons or between the equal signs, nor may the string begin or end with whitespace. The following is an example of this parameter:  `allowduplicatekeys = true;ctap2Canonical = true` . The key can be any one of the following in any combination of case:  `allowduplicatekeys` ,  `ctap2canonical` ,  `resolvereferences` ,  `useindeflengthstrings` . Keys other than these are ignored. If the same key appears more than once, the value given for the last such key is used. The four keys just given can have a value of  `1` ,  `true` ,  `yes`  , or  `on`  (in any combination of case), which means true, and any other value meaning false. For example,  `allowduplicatekeys =
-            Yes`  and  `allowduplicatekeys = 1`  both set the  `AllowDuplicateKeys`  property to true.
+ * <i>paramString</i>: A string setting forth the options to use. This is a semicolon-separated list of options, each of which has a key and a value separated by an equal sign ("="). Whitespace and line separators are not allowed to appear between the semicolons or between the equal signs, nor may the string begin or end with whitespace. The following is an example of this parameter:  `allowduplicatekeys=true;ctap2Canonical=true`  . The key can be any one of the following in any combination of case:  `allowduplicatekeys`  ,  `ctap2canonical`  ,  `resolvereferences`  ,  `useindeflengthstrings`  . Keys other than these are ignored. If the same key appears more than once, the value given for the last such key is used. The four keys just given can have a value of  `1`  ,  `true`  ,  `yes`  , or  `on`  (in any combination of case), which means true, and any other value meaning false. For example,  `allowduplicatekeys=Yes`  and  `allowduplicatekeys=1`  both set the  `AllowDuplicateKeys`  property to true.
 
 <a id="Void_ctor"></a>
 ### CBOREncodeOptions Constructor
@@ -137,4 +136,4 @@ A value indicating whether to encode strings with an indefinite-length encoding 
 
    <b>Return Value:</b>
 
-A string object.
+A text string.

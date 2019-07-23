@@ -37,7 +37,6 @@ namespace PeterO.Cbor {
       this.Base64Padding = base64Padding;
       this.ReplaceSurrogates = replaceSurrogates;
     }
-#pragma warning restore CS0618
 
     /// <summary>Initializes a new instance of the
     /// <see cref='PeterO.Cbor.JSONOptions'/> class.</summary>
@@ -47,15 +46,15 @@ namespace PeterO.Cbor {
     /// and line separators are not allowed to appear between the
     /// semicolons or between the equal signs, nor may the string begin or
     /// end with whitespace. The following is an example of this parameter:
-    /// <c>base64padding = false;replacesurrogates = true</c>. The key can
-    /// be any one of the following in any combination of case:
+    /// <c>base64padding=false;replacesurrogates=true</c>. The key can be
+    /// any one of the following in any combination of case:
     /// <c>base64padding</c>, <c>replacesurrogates</c>. Other keys are
     /// ignored. If the same key appears more than once, the value given
     /// for the last such key is used. The two keys just given can have a
     /// value of <c>1</c>, <c>true</c>, <c>yes</c>, or <c>on</c> (in any
-    /// combination of case), which means true, and any other value meaning
-    /// false. For example, <c>base64padding = Yes</c> and <c>base64padding
-    /// = 1</c> both set the <c>Base64Padding</c> property to true.</param>
+    /// combination of case), which means true, or any other value meaning
+    /// false. For example, <c>base64padding=Yes</c> and <c>base64padding =
+    /// 1</c> both set the <c>Base64Padding</c> property to true.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='paramString'/> is null.</exception>
     public JSONOptions(string paramString) {
@@ -67,8 +66,11 @@ namespace PeterO.Cbor {
       this.ReplaceSurrogates = parser.GetBoolean("replacesurrogates", true);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A text string.</returns>
+    /// <summary>Gets the values of this options object's properties in
+    /// text form.</summary>
+    /// <returns>A text string containing the values of this options
+    /// object's properties. The format of the string is the same as the
+    /// one described in the String constructor for this class.</returns>
     public override string ToString() {
       return new StringBuilder()
            .Append("base64padding=")

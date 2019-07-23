@@ -134,6 +134,9 @@ namespace Test {
   String.Empty + o + " and " + o2 + " don't have equal hash codes");
         }
       } else {
+        if (o2 == null) {
+          throw new ArgumentNullException(nameof(o2));
+        }
         if (o2.Equals(o)) {
           Assert.Fail(String.Empty + o + " does not equal " + o2 +
             " but not vice versa");

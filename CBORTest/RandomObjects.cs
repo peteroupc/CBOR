@@ -98,6 +98,9 @@ namespace Test {
         }
         exponent = rand.UniformInt(2047);
       }
+      if (rand == null) {
+        throw new ArgumentNullException(nameof(rand));
+      }
       long r = rand.UniformInt(0x10000);
       r |= ((long)rand.UniformInt(0x10000)) << 16;
       if (rand.UniformInt(2) == 0) {
@@ -117,6 +120,9 @@ namespace Test {
           throw new ArgumentNullException(nameof(rand));
         }
         exponent = rand.UniformInt(255);
+      }
+      if (rand == null) {
+        throw new ArgumentNullException(nameof(rand));
       }
       int r = rand.UniformInt(0x10000);
       if (rand.UniformInt(2) == 0) {
