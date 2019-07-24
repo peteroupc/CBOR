@@ -6,7 +6,7 @@ using PeterO.Cbor;
 namespace Test {
   internal sealed class AppResources {
     private readonly ResourceManager mgr;
-
+#pragma warning disable CA1801 // name used in one circumstance
     public AppResources(string name) {
 #if NET20 || NET40
       this.mgr = new ResourceManager(
@@ -16,6 +16,7 @@ namespace Test {
       this.mgr = new ResourceManager(typeof(AppResources));
 #endif
     }
+#pragma warning restore CA1801
 
     public CBORObject GetJSON(string name) {
       return CBORObject.FromJSONString(

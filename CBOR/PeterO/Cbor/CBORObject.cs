@@ -36,7 +36,7 @@ namespace PeterO.Cbor {
     /// of numbers and strings. Methods like AsDouble, AsByte, and AsString
     /// convert a CBOR object to different types of object. The
     /// <c>CBORObject.ToObject</c> method converts a CBOR object to an
-    /// object of a given type; for example, a CBOR array to a native
+    /// object of a given type; for example, a CBOR array to a .NET
     /// <c>List</c> (or <c>ArrayList</c> in Java), or a CBOR integer to an
     /// <c>int</c> or <c>long</c>.</para>
     /// <para><b>To and from JSON:</b> This class also doubles as a reader
@@ -50,32 +50,18 @@ namespace PeterO.Cbor {
     /// CBORObject.Read method reads a CBOR object from a JSON data
     /// stream.</para>
     /// <para><b>Comparison Considerations:</b></para>
+    /// <para>This class's natural ordering (under the CompareTo method) is
+    /// consistent with the Equals method. This means that two values
+    /// that compare as equal under the CompareTo method will also be equal
+    /// under the Equals method (provided the value remains unchanged).</para>
     /// <para>Instances of CBORObject should not be compared for equality
     /// using the "==" operator; it's possible to create two CBOR objects
     /// with the same value but not the same reference. (The "==" operator
     /// might only check if each side of the operator is the same
     /// instance.)</para>
-    /// <para>This class's natural ordering (under the CompareTo method) is
-    /// not consistent with the Equals method. This means that two values
-    /// that compare as equal under the CompareTo method might not be equal
-    /// under the Equals method. This is important to consider especially
-    /// if an application wants to compare numbers. (Several CBOR tags
-    /// support numbers of different formats, such as arbitrary-precision
-    /// integers, rational numbers, and arbitrary-precision decimal
-    /// numbers.)</para>
     /// <para>Another consideration is that two values that are otherwise
     /// equal may have different tags. To strip the tags from a CBOR object
-    /// before comparing, use the <c>Untag</c> method.</para>
-    /// <para>To compare two numbers, the CompareToIgnoreTags or CompareTo
-    /// method should be used. Which method to use depends on whether two
-    /// equal values should still be considered equal if they have
-    /// different tags.</para>
-    /// <para>Although this class is inconsistent with the Equals method,
-    /// it is safe to use CBORObject instances as hash keys as long as all
-    /// of the keys are untagged text strings (which means GetTags returns
-    /// an empty array and the Type property, or "getType()" in Java,
-    /// returns TextString). This is because the natural ordering of these
-    /// instances is consistent with the Equals method.</para>
+    /// before comparing, use the <c>Untag</c> method. To compare CBOR objects without regard to what tags they have, use CompareToIgnoreTags rather than CompareTo.</para>
     /// <para><b>Thread Safety:</b></para>
     /// <para>Certain CBOR objects are immutable (their values can't be
     /// changed), so they are inherently safe for use by multiple
@@ -87,7 +73,9 @@ namespace PeterO.Cbor {
     /// without such synchronization.</para>
     /// <para>One kind of CBOR object is called a map, or a list of
     /// key-value pairs. Keys can be any kind of CBOR object, including
-    /// numbers, strings, arrays, and maps. However, text strings are the
+    /// numbers, strings, arrays, and maps. However, untagged text strings (those objects for which GetTags returns
+    /// an empty array and the Type property, or "getType()" in Java,
+    /// returns CBORType.TextString) are the
     /// most suitable to use as keys; other kinds of CBOR object are much
     /// better used as map values instead, keeping in mind that some of
     /// them are not thread safe without synchronizing reads and writes to
@@ -1435,14 +1423,14 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
          (bigValue.IsNegative && bigValue.IsZero)) {
         int options = bigValue.IsNegative ? 1 : 0;
         if (bigValue.IsInfinity()) {
-           options += 2;
-}
-if (bigValue.IsQuietNaN()) {
-           options += 4;
-}
-if (bigValue.IsSignalingNaN()) {
-           options += 6;
-}
+          options += 2;
+        }
+        if (bigValue.IsQuietNaN()) {
+          options += 4;
+        }
+        if (bigValue.IsSignalingNaN()) {
+          options += 6;
+        }
         cbor = CBORObject.NewArray().Add(bigValue.Exponent)
             .Add(bigValue.UnsignedMantissa).Add(options);
         tag = 269;
@@ -1531,13 +1519,13 @@ if (bigValue.IsSignalingNaN()) {
         int options = bigValue.IsNegative ? 1 : 0;
         if (bigValue.IsInfinity()) {
           options += 2;
-}
-if (bigValue.IsQuietNaN()) {
-           options += 4;
-}
-if (bigValue.IsSignalingNaN()) {
-           options += 6;
-}
+        }
+        if (bigValue.IsQuietNaN()) {
+          options += 4;
+        }
+        if (bigValue.IsSignalingNaN()) {
+          options += 6;
+        }
         cbor = CBORObject.NewArray().Add(bigValue.Exponent)
             .Add(bigValue.UnsignedMantissa).Add(options);
         tag = 268;
@@ -3675,7 +3663,7 @@ cn.GetNumberInterface().CanTruncatedIntFitInInt64(cn.GetValue());
                 cmp = (a == b) ? 0 : ((a < b) ? -1 : 1);
               } else if (a <= 0 && b <= 0) {
                 cmp = (a == b) ? 0 : ((a < b) ? 1 : -1);
-              } else if (a < 0 && b >= 0) {
+ } else if (a < 0 && b >= 0) {
                 // NOTE: Negative integers sort after
                 // nonnegative integers in the bytewise
                 // ordering of CBOR encodings
@@ -3727,7 +3715,7 @@ cn.GetNumberInterface().CanTruncatedIntFitInInt64(cn.GetValue());
           case CBORObjectTypeTagged:
               cmp = this.MostOuterTag.CompareTo(other.MostOuterTag);
               if (cmp == 0) {
-                 cmp = ((CBORObject)objA).CompareTo((CBORObject)objB);
+                cmp = ((CBORObject)objA).CompareTo((CBORObject)objB);
               }
               break;
           case CBORObjectTypeSimpleValue: {
@@ -5043,7 +5031,7 @@ CBORNumber.FromObject((EInteger)this.ThisItem).ToJSONString();
         throw new ArgumentNullException(nameof(outputStream));
       }
       if (byteCount != 2 && byteCount != 4 && byteCount != 8) {
-         throw new ArgumentOutOfRangeException(nameof(byteCount));
+        throw new ArgumentOutOfRangeException(nameof(byteCount));
       }
       throw new NotImplementedException();
     }
@@ -5689,8 +5677,8 @@ CBORNumber.FromObject((EInteger)this.ThisItem).ToJSONString();
       int count = str.Length;
       for (var i = 0; i < count; ++i) {
 if (str[i] != str2[i]) {
-            return false;
-          }
+  return false;
+}
         }
       return true;
     }
@@ -5932,7 +5920,7 @@ if (str[i] != str2[i]) {
       // NOTE: Compare list counts to conform
       // to bytewise lexicographical ordering
       if (listACount != listBCount) {
-         return listACount < listBCount ? -1 : 1;
+        return listACount < listBCount ? -1 : 1;
       }
       for (var i = 0; i < listACount; ++i) {
         int cmp = listA[i].CompareTo(listB[i]);
@@ -5996,7 +5984,7 @@ if (str[i] != str2[i]) {
       // NOTE: Compare map key counts to conform
       // to bytewise lexicographical ordering
       if (listACount != listBCount) {
-         return listACount < listBCount ? -1 : 1;
+        return listACount < listBCount ? -1 : 1;
       }
       var sortedASet = new List<CBORObject>(mapA.Keys);
       var sortedBSet = new List<CBORObject>(mapB.Keys);
@@ -6022,7 +6010,7 @@ if (str[i] != str2[i]) {
         // DebugUtility.Log("{0}, {1} -> {2}, {3} ->
         // cmp={4}",itemA,itemB,mapA[itemA],mapB[itemB],cmp);
         if (cmp != 0) {
-            return cmp;
+          return cmp;
         }
       }
       return 0;

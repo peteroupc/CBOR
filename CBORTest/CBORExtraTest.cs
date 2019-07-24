@@ -18,7 +18,7 @@ using PeterO.Numbers;
 
 namespace Test {
   [TestFixture]
-  public class CBORExtraTest {
+  public partial class CBORExtraTest {
     private static decimal RandomDecimal(RandomGenerator rand, int exponent) {
       var x = new int[4];
       int r = rand.UniformInt(0x10000);
@@ -178,12 +178,6 @@ namespace Test {
 
     /// <summary>An arbitrary value.</summary>
       B,
-    }
-
-    public sealed class CPOD2 {
-      public string Aa { get; set; }
-
-      public bool IsAa { get; set; }
     }
     [Test]
     public void TestCPOD2() {

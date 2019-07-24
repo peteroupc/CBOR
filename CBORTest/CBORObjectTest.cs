@@ -3119,6 +3119,9 @@ ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes();
       Assert.AreEqual("TestValue2", dict["TestKey2"]);
     }
 
+#pragma warning disable CA1034
+    // nesting a public type is needed
+    // here for testing purposes
     public sealed class NestedPODClass {
       public NestedPODClass() {
         this.PropValue = new PODClass();
@@ -3126,6 +3129,7 @@ ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes();
 
       public PODClass PropValue { get; private set; }
     }
+#pragma warning restore CA1034
 
     [Test]
     public void TestBase64Extras() {

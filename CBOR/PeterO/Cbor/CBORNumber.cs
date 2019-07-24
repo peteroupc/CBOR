@@ -68,9 +68,9 @@ namespace PeterO.Cbor {
         return true;
       } else if (!o.IsTagged && o.Type == CBORType.FloatingPoint) {
         return true;
-      } else if (o.HasOneTag(2) || o.HasOneTag(3)) {
-        return o.Type == CBORType.ByteString;
-      } else if (o.HasOneTag(4) ||
+ } else if (o.HasOneTag(2) || o.HasOneTag(3)) {
+   return o.Type == CBORType.ByteString;
+ } else if (o.HasOneTag(4) ||
    o.HasOneTag(5) ||
    o.HasOneTag(264) ||
    o.HasOneTag(265) ||

@@ -14,7 +14,7 @@ using PeterO.Numbers;
 
 namespace Test {
   [TestFixture]
-  public class CBORSupplementTest {
+  public partial class CBORSupplementTest {
     [Test]
     public void IncorrectDecimalFrac() {
       byte[] bytes;
@@ -148,13 +148,6 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
-
-    private sealed class FakeConverter : ICBORConverter<Uri> {
-      public CBORObject ToCBORObject(Uri obj) {
-        throw new InvalidOperationException();
-      }
-    }
-
     [Test]
     public void TestCBORObjectArgumentValidation() {
       Assert.AreEqual(
@@ -446,8 +439,8 @@ namespace Test {
         object objectTemp = co.IsNegative && co.IsInfinity();
         object objectTemp2 = co2.IsNegative &&
 co2.IsInfinity();
-Assert.AreEqual(objectTemp, objectTemp2);
-}
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
     }
 
     [Test]
@@ -492,9 +485,9 @@ Assert.AreEqual(objectTemp, objectTemp2);
       CBORObject cbor;
       foreach (byte firstbyte in firstbytes) {
         foreach (byte secondbyte in secondbytes) {
-      bytes = new byte[] { firstbyte, secondbyte };
-      cbor = CBORObject.DecodeFromBytes(bytes);
-      Assert.IsFalse(cbor.IsNumber);
+          bytes = new byte[] { firstbyte, secondbyte };
+          cbor = CBORObject.DecodeFromBytes(bytes);
+          Assert.IsFalse(cbor.IsNumber);
         }
       }
       cbor = CBORObject.DecodeFromBytes(new byte[] {
@@ -506,33 +499,34 @@ Assert.AreEqual(objectTemp, objectTemp2);
         0xd8, 0x1e, 0x9f, 0x01,
         0xff,
       });
- Assert.IsFalse(cbor.IsNumber);
- cbor = CBORObject.DecodeFromBytes(new byte[] { 0xd8, 0x1e, 0x9f, 0xff, });
- Assert.IsFalse(cbor.IsNumber);
- cbor = CBORObject.DecodeFromBytes(new byte[] {
-   0xc4, 0x9f, 0x00, 0x00,
-   0xff,
- });
- Assert.IsFalse(cbor.IsNumber);
- cbor = CBORObject.DecodeFromBytes(new byte[] {
+      Assert.IsFalse(cbor.IsNumber);
+      cbor = CBORObject.DecodeFromBytes(
+        new byte[] { 0xd8, 0x1e, 0x9f, 0xff, });
+      Assert.IsFalse(cbor.IsNumber);
+      cbor = CBORObject.DecodeFromBytes(new byte[] {
+        0xc4, 0x9f, 0x00, 0x00,
+        0xff,
+      });
+      Assert.IsFalse(cbor.IsNumber);
+      cbor = CBORObject.DecodeFromBytes(new byte[] {
    0xc5, 0x9f, 0x00, 0x00,
    0xff,
  });
- Assert.IsFalse(cbor.IsNumber);
- cbor = CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x9f, 0x00, 0xff, });
- Assert.IsFalse(cbor.IsNumber);
- cbor = CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x9f, 0x00, 0xff, });
- Assert.IsFalse(cbor.IsNumber);
- cbor = CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x9f, 0xff, });
- Assert.IsFalse(cbor.IsNumber);
- cbor = CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x9f, 0xff, });
- Assert.IsFalse(cbor.IsNumber);
- cbor = CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x81, 0x00, });
- Assert.IsFalse(cbor.IsNumber);
- cbor = CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x81, 0x00, });
- Assert.AreEqual(
-        EInteger.Zero,
-        CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0x40 }).AsEInteger());
+      Assert.IsFalse(cbor.IsNumber);
+      cbor = CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x9f, 0x00, 0xff, });
+      Assert.IsFalse(cbor.IsNumber);
+      cbor = CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x9f, 0x00, 0xff, });
+      Assert.IsFalse(cbor.IsNumber);
+      cbor = CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x9f, 0xff, });
+      Assert.IsFalse(cbor.IsNumber);
+      cbor = CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x9f, 0xff, });
+      Assert.IsFalse(cbor.IsNumber);
+      cbor = CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x81, 0x00, });
+      Assert.IsFalse(cbor.IsNumber);
+      cbor = CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x81, 0x00, });
+      Assert.AreEqual(
+             EInteger.Zero,
+             CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0x40 }).AsEInteger());
       {
         object objectTemp = EInteger.FromString("-1");
         object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] {
@@ -540,7 +534,7 @@ Assert.AreEqual(objectTemp, objectTemp2);
           0x41, 0x00,
         }).AsEInteger();
         Assert.AreEqual(objectTemp, objectTemp2);
-}
+      }
       Assert.AreEqual(
         EInteger.FromString("-1"),
         CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x40, }).AsEInteger());
@@ -763,12 +757,6 @@ Assert.AreEqual(objectTemp, objectTemp2);
       expected =
      "[\"abcd\",\"aa\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]";
       Assert.AreEqual(expected, cbor.ToJSONString());
-    }
-
-    public sealed class CPOD {
-      public string Aa { get; set; }
-
-      private string Bb { get; set; }
     }
     [Test]
     public void TestCPOD() {
