@@ -45,7 +45,7 @@ namespace PeterO.DocGen {
           "op_",
           StringComparison.Ordinal) == 0) ? ((MethodInfo)obj).Name :
             DocVisitor.FormatMethod((MethodInfo)obj, true);
- } else {
+          } else {
  anchor = (obj is PropertyInfo) ?
    DocVisitor.FormatProperty((PropertyInfo)obj, true) :
              ((obj is FieldInfo) ?

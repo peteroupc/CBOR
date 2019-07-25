@@ -454,7 +454,7 @@ namespace Test {
           Assert.AreEqual(
             numberinfo["integer"].AsString(),
             cbornumber.AsEInteger().ToString());
-        } else {
+          } else {
           try {
             cbornumber.AsEInteger();
             Assert.Fail("Should have failed");
@@ -717,7 +717,7 @@ ToObjectTest.TestToFromObjectRoundTrip((double)2.5).AsEInteger()
           Assert.AreEqual(
     TestCommon.StringToInt(numberinfo["integer"].AsString()),
     ((int)cbornumber.AsByte()) & 0xff);
-        } else {
+  } else {
           try {
             cbornumber.AsByte();
             Assert.Fail("Should have failed " + cbornumber);
@@ -1065,7 +1065,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
           Assert.AreEqual(
     TestCommon.StringToInt(numberinfo["integer"].AsString()),
     cbornumber.AsInt16());
-        } else {
+  } else {
           try {
             cbornumber.AsInt16();
             Assert.Fail("Should have failed " + cbornumber);
@@ -1516,7 +1516,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
           Assert.IsTrue(
             ToObjectTest.TestToFromObjectRoundTrip(cbornumber.AsInt32())
                                             .CanFitInInt32());
-        } else {
+                                          } else {
           Assert.IsFalse(cbornumber.CanFitInInt32());
         }
       }
@@ -1582,7 +1582,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
           Assert.IsTrue(
             ToObjectTest.TestToFromObjectRoundTrip(cbornumber.AsInt64())
                                             .CanFitInInt64());
-        } else {
+                                          } else {
           Assert.IsFalse(cbornumber.CanFitInInt64());
         }
       }
@@ -6687,6 +6687,85 @@ ToObjectTest.TestToFromObjectRoundTrip(byteval);
         throw new InvalidOperationException(ex.ToString(), ex);
       }
     }
+
+
+[Test]
+public void TestWriteFloatingPointValue() {
+  var r=new RandomGenerator();
+  var bytes=new byte[] {0,0,0};
+  for(var i=0;i<0x10000;i++){
+    bytes[0]=(byte)0xf9;
+    bytes[1]=(byte)((i>>8)&0xff);
+    bytes[2]=(byte)(i&0xff);
+    CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
+    if(!cbor.IsNaN()){
+      using(var ms=new MemoryStream()){
+        CBORObject.WriteFloatingPointValue(
+           ms,
+           cbor.AsDouble(), 2);
+        TestCommon.AssertByteArraysEqual(bytes, ms.ToArray());
+      }
+      using(var ms=new MemoryStream()){
+        CBORObject.WriteFloatingPointValue(
+           ms,
+           cbor.AsSingle(), 2);
+        TestCommon.AssertByteArraysEqual(bytes, ms.ToArray());
+      }
+    }
+  }
+  // 32-bit values
+  bytes = new byte[5];
+  for(var i=0;i<100000;i++){
+    bytes[0]=(byte)0xfa;
+    for(var j=1;j<=4;j++){
+      bytes[j]=(byte)r.UniformInt(256);
+    }
+    CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
+    if(!cbor.IsNaN()){
+      using(var ms=new MemoryStream()){
+        CBORObject.WriteFloatingPointValue(
+           ms,
+           cbor.AsDouble(), 4);
+        TestCommon.AssertByteArraysEqual(bytes, ms.ToArray());
+      }
+      using(var ms=new MemoryStream()){
+        CBORObject.WriteFloatingPointValue(
+           ms,
+           cbor.AsSingle(), 4);
+        TestCommon.AssertByteArraysEqual(bytes, ms.ToArray());
+      }
+    }
+  }
+  // 64-bit values
+  bytes = new byte[9];
+  for(var i=0;i<100000;i++){
+    bytes[0]=(byte)0xfb;
+    for(var j=1;j<=8;j++){
+      bytes[j]=(byte)r.UniformInt(256);
+    }
+    CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
+    if(!cbor.IsNaN()){
+      using(var ms=new MemoryStream()){
+        CBORObject.WriteFloatingPointValue(
+           ms,
+           cbor.AsDouble(), 8);
+        TestCommon.AssertByteArraysEqual(bytes, ms.ToArray());
+      }
+      using(var ms=new MemoryStream()){
+        CBORObject.WriteFloatingPointValue(
+           ms,
+           cbor.AsSingle(), 8);
+        TestCommon.AssertByteArraysEqual(bytes, ms.ToArray());
+      }
+      if(i==0){
+      using(var ms=new MemoryStream()){
+        Assert.Throws(typeof(ArgumentException), ()=>CBORObject.WriteFloatingPointValue(ms,cbor.AsSingle(), 5));
+        Assert.Throws(typeof(ArgumentNullException), ()=>CBORObject.WriteFloatingPointValue(null,cbor.AsSingle(), 4));
+      }
+      }
+    }
+  }
+}
 
     private static string DateTimeToString(
       int year,

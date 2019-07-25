@@ -295,9 +295,11 @@
     </remarks>
   </doc>
   <doc name='M:PeterO.Cbor.CBOREncodeOptions.ToString'>
-    <summary>Not documented yet.
+    <summary>Gets the values of this options object's properties in text form.
     </summary>
-    <returns>A text string.
+    <returns>A text string containing the values of this options object's properties.
+      The format of the string is the same as the one described in the String
+      constructor for this class.
     </returns>
   </doc>
   <doc name='P:PeterO.Cbor.CBOREncodeOptions.UseIndefLengthStrings'>
@@ -3758,6 +3760,72 @@
        is null.
     </exception>
   </doc>
+  <doc name='M:PeterO.Cbor.CBORObject.WriteFloatingPointBits(System.IO.Stream,System.Int64,System.Int32)'>
+    <summary>Writes the bits of a floating-point number in CBOR format to a data
+      stream.
+    </summary>
+    <param name='outputStream'>A writable data stream.
+    </param>
+    <param name='floatingBits'>The bits of a floating-point number number to write.
+    </param>
+    <param name='byteCount'>The number of bytes of the stored floating-point number; this also
+      specifies the format of the "floatingBits" parameter. This value can be 2
+      if "floatingBits"'s lower 16 bits identify the floating-point number in
+      IEEE 754r binary16 format; or 4 if "floatingBits"'s lower 32 bits identify
+      the floating-point number in IEEE 754r binary32 format; or 8 if
+      "floatingBits" identifies the floating point number in IEEE 754r binary64
+      format. Any other values for this parameter are invalid.
+    </param>
+    <returns>The number of 8-bit bytes ordered to be written to the data stream.
+    </returns>
+    <exception cref='System.ArgumentNullException'>The parameter
+      <paramref name='outputStream'/>
+       is null.
+    </exception>
+  </doc>
+  <doc name='M:PeterO.Cbor.CBORObject.WriteFloatingPointValue(System.IO.Stream,System.Double,System.Int32)'>
+    <summary>Writes a 64-bit binary floating-point number in CBOR format to a data
+      stream, either in its 64-bit form, or its rounded 32-bit or 16-bit
+      equivalent.
+    </summary>
+    <param name='outputStream'>A writable data stream.
+    </param>
+    <param name='doubleVal'>The double-precision floating-point number to write.
+    </param>
+    <param name='byteCount'>The number of 8-bit bytes of the stored number. This value can be 2 to
+      store the number in IEEE 754r binary16, rounded to nearest, ties to even;
+      or 4 to store the number in IEEE 754r binary32, rounded to nearest, ties
+      to even; or 8 to store the number in IEEE 754r binary64. Any other values
+      for this parameter are invalid.
+    </param>
+    <returns>The number of 8-bit bytes ordered to be written to the data stream.
+    </returns>
+    <exception cref='System.ArgumentNullException'>The parameter
+      <paramref name='outputStream'/>
+       is null.
+    </exception>
+  </doc>
+  <doc name='M:PeterO.Cbor.CBORObject.WriteFloatingPointValue(System.IO.Stream,System.Single,System.Int32)'>
+    <summary>Writes a 32-bit binary floating-point number in CBOR format to a data
+      stream, either in its 64- or 32-bit form, or its rounded 16-bit
+      equivalent.
+    </summary>
+    <param name='outputStream'>A writable data stream.
+    </param>
+    <param name='singleVal'>The single-precision floating-point number to write.
+    </param>
+    <param name='byteCount'>The number of 8-bit bytes of the stored number. This value can be 2 to
+      store the number in IEEE 754r binary16, rounded to nearest, ties to even;
+      or 4 to store the number in IEEE 754r binary32; or 8 to store the number
+      in IEEE 754r binary64. Any other values for this parameter are invalid.
+    </param>
+    <returns>The number of 8-bit bytes ordered to be written to the data stream.
+    </returns>
+    <exception cref='System.ArgumentNullException'>The parameter
+      <paramref name='outputStream'/>
+       is null.
+    </exception>
+  </doc>
   <doc name='M:PeterO.Cbor.CBORObject.WriteJSON(System.Object,System.IO.Stream)'>
     <summary>Converts an arbitrary object to a string in JavaScript Object Notation
       (JSON) format, as in the ToJSONString method, and writes that string to a
@@ -4552,9 +4620,11 @@
     </value>
   </doc>
   <doc name='M:PeterO.Cbor.JSONOptions.ToString'>
-    <summary>Not documented yet.
+    <summary>Gets the values of this options object's properties in text form.
     </summary>
-    <returns>A text string.
+    <returns>A text string containing the values of this options object's properties.
+      The format of the string is the same as the one described in the String
+      constructor for this class.
     </returns>
   </doc>
   <doc name='T:PeterO.Cbor.PODOptions'>
@@ -4616,9 +4686,11 @@
     </value>
   </doc>
   <doc name='M:PeterO.Cbor.PODOptions.ToString'>
-    <summary>Not documented yet.
+    <summary>Gets the values of this options object's properties in text form.
     </summary>
-    <returns>A text string.
+    <returns>A text string containing the values of this options object's properties.
+      The format of the string is the same as the one described in the String
+      constructor for this class.
     </returns>
   </doc>
   <doc name='P:PeterO.Cbor.PODOptions.UseCamelCase'>

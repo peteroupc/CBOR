@@ -2,8 +2,7 @@
 <RuleSet Description='Code analysis rules for PeterO projects.' Name='Rules for PeterO projects' ToolsVersion='14.0'>
   <Rules AnalyzerId='Microsoft.CodeAnalysis.FxCopAnalyzers' RuleNamespace='Microsoft.CodeAnalysis.FxCopAnalyzers'>
     <Rule Action='None' Id='CA1720'/>
-    <Rule Id='CA1303' Action='None'>
-    </Rule>
+    <Rule Id='CA1303' Action='None'/>
   </Rules>
   <Rules AnalyzerId='StyleCop.Analyzers' RuleNamespace='StyleCop.Analyzers'>
     <Rule Action='None' Id='SA1116'/>

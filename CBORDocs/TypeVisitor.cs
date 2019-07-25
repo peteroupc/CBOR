@@ -46,9 +46,9 @@ namespace PeterO.DocGen {
     public void HandleTypeAndMembers(Type currentType, XmlDoc xmldoc) {
        this.HandleMember(currentType, xmldoc);
        foreach (var m in currentType.GetFields()) {
-          if (m.IsSpecialName) {
- continue;
-}
+         if (m.IsSpecialName) {
+           continue;
+         }
           this.HandleMember(m, xmldoc);
         }
         foreach (var m in currentType.GetConstructors()) {

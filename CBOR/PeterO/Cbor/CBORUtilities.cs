@@ -764,28 +764,80 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
       }
     }
 
+    private static int RoundedShift(long mant, int shift){
+      long mask = (1L<<shift)-1;
+      long half = (1L<<(shift-1));
+      long shifted = mant >> shift;
+      long masked = mant & mask;
+      return (masked>half || (masked==half && (shifted&1L)!=0)) ?
+         unchecked((int)shifted) + 1 : unchecked((int)shifted);
+    }
+
+    // NOTE: Rounds to nearest, ties to even
+    public static int DoubleToRoundedHalfPrecision(long bits) {
+      int exp = unchecked((int)((bits >> 52) & 0x7ffL));
+      long mant = bits & 0xfffffffffffff;
+      int sign = unchecked((int)(bits >> 48)) & (1<<15);
+      int sexp = exp - 1008;
+      if (exp == 2047) { // Infinity and NaN
+        int newmant = unchecked((int)(mant >> 42));
+        return (mant != 0 && newmant == 0) ?
+           /* signaling NaN truncated to have mantissa 0 */
+           (sign | 0x7c01) :
+           (sign | 0x7c00 | newmant);
+      } else if (sexp >= 31) { /* overflow */
+        return sign | RoundedShift(mant,42);
+      } else if(sexp<-10) { /* underflow */
+        return sign;
+      } else if(sexp>0){ /* normal */
+        return sign | (sexp << 10) | RoundedShift(mant, 42);
+      } else { /* subnormal and zero */
+        return sign | RoundedShift(mant | (1L<<52), 42 - (sexp - 1));
+      }
+    }
+
+    // NOTE: Rounds to nearest, ties to even
+    public static int DoubleToRoundedSinglePrecision(long bits) {
+      int exp = unchecked((int)((bits >> 52) & 0x7ffL));
+      long mant = bits & 0xfffffffffffff;
+      int sign = unchecked((int)(bits >> 32)) & (1<<31);
+      int sexp = exp - 896;
+      if (exp == 2047) { // Infinity and NaN
+        int newmant = unchecked((int)(mant >> 29));
+        return (mant != 0 && newmant == 0) ?
+           /* signaling NaN truncated to have mantissa 0 */
+           (sign | 0x7f800001) :
+           (sign | 0x7f800000 | newmant);
+      } else if (sexp >= 255) { /* overflow */
+        return sign | RoundedShift(mant,29);
+      } else if(sexp<-23) { /* underflow */
+        return sign;
+      } else if(sexp>0){ /* normal */
+        return sign | (sexp << 23) | RoundedShift(mant, 29);
+      } else { /* subnormal and zero */
+        return sign | RoundedShift(mant | (1L<<52), 29 - (sexp - 1));
+      }
+    }
+
     public static int SingleToHalfPrecisionIfSameValue(float f) {
-      int bits = BitConverter.ToInt32(BitConverter.GetBytes(f), 0);
+      int bits = BitConverter.ToInt32(BitConverter.GetBytes((float)f), 0);
       int exp = (bits >> 23) & 0xff;
       int mant = bits & 0x7fffff;
       int sign = (bits >> 16) & 0x8000;
       if (exp == 255) { // Infinity and NaN
         return (bits & 0x1fff) == 0 ? sign + 0x7c00 + (mant >> 13) : -1;
-      } else if (exp == 0) { // Zero
+      } else if (exp == 0) { // Subnormal
         return (bits & 0x1fff) == 0 ? sign + (mant >> 13) : -1;
       }
-      int pexp = 127 - exp;
       if (exp <= 102 || exp >= 143) { // Overflow or underflow
         return -1;
       } else if (exp <= 112) { // Subnormal
         int shift = 126 - exp;
-        return (bits & ((1 << shift) - 1)) == 0 ? sign + (1024 >> (145 - exp)) +
-    (mant >>
-    shift) : -1;
+        return (bits & ((1 << shift) - 1)) == 0 ? sign +
+            (1024 >> (145 - exp)) + (mant >> shift) : -1;
       } else {
-        return (bits & 0x1fff) == 0 ? sign + ((exp - 112) << 10) + (mant >>
-13) :
-    -1;
+        return (bits & 0x1fff) == 0 ? sign + ((exp - 112) << 10) +
+            (mant >> 13) : -1;
       }
     }
 

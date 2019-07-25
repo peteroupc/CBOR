@@ -268,7 +268,7 @@ namespace PeterO.Cbor {
           if (this.errorThrow) {
           throw new
               InvalidOperationException("Unpaired surrogate code point");
-          } else {
+            } else {
             c = 0xfffd;
           }
         }

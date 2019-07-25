@@ -181,10 +181,10 @@ namespace PeterO.DocGen {
           var c = node.GetAttribute("cref");
           var n = node.GetAttribute("name");
           if (c != null) {
- this.sb.Append(c);
-  } else if (n != null) {
- this.sb.Append(n);
-}
+            this.sb.Append(c);
+          } else if (n != null) {
+            this.sb.Append(n);
+          }
         }
         XmlDoc.VisitInnerNode(node, this);
       }

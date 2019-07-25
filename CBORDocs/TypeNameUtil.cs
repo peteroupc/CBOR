@@ -16,13 +16,13 @@ namespace PeterO.DocGen {
       if (t.IsArray) {
         sb.Append(XmlDocTypeName(t.GetElementType(), param, genericMethod))
           .Append("[]");
-      } else if (t.IsPointer) {
+        } else if (t.IsPointer) {
         sb.Append(XmlDocTypeName(t.GetElementType(), param, genericMethod))
           .Append("*");
-      } else if (t.IsByRef) {
+        } else if (t.IsByRef) {
         sb.Append(XmlDocTypeName(t.GetElementType(), param, genericMethod))
           .Append("@");
-      } else if (t.IsGenericParameter) {
+        } else if (t.IsGenericParameter) {
         var ggastr = Convert.ToString(
           t.GenericParameterPosition,
           System.Globalization.CultureInfo.InvariantCulture);
@@ -35,7 +35,7 @@ namespace PeterO.DocGen {
             sb.Append("{");
             var first = true;
             foreach (var ga in t.GetGenericArguments()) {
-if (!first) {
+              if (!first) {
                 sb.Append(",");
               }
               sb.Append(XmlDocTypeName(ga, false, genericMethod));

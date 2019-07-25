@@ -509,9 +509,9 @@ co2.IsInfinity();
       });
       Assert.IsFalse(cbor.IsNumber);
       cbor = CBORObject.DecodeFromBytes(new byte[] {
-   0xc5, 0x9f, 0x00, 0x00,
-   0xff,
- });
+        0xc5, 0x9f, 0x00, 0x00,
+        0xff,
+      });
       Assert.IsFalse(cbor.IsNumber);
       cbor = CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x9f, 0x00, 0xff, });
       Assert.IsFalse(cbor.IsNumber);
@@ -524,9 +524,13 @@ co2.IsInfinity();
       cbor = CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x81, 0x00, });
       Assert.IsFalse(cbor.IsNumber);
       cbor = CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x81, 0x00, });
-      Assert.AreEqual(
-             EInteger.Zero,
-             CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0x40 }).AsEInteger());
+      {
+        object objectTemp = EInteger.Zero;
+object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] {
+  0xc2, 0x40,
+}).AsEInteger();
+Assert.AreEqual(objectTemp, objectTemp2);
+}
       {
         object objectTemp = EInteger.FromString("-1");
         object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] {

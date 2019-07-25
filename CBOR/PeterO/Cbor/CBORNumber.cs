@@ -68,8 +68,8 @@ namespace PeterO.Cbor {
         return true;
       } else if (!o.IsTagged && o.Type == CBORType.FloatingPoint) {
         return true;
- } else if (o.HasOneTag(2) || o.HasOneTag(3)) {
-   return o.Type == CBORType.ByteString;
+      } else if (o.HasOneTag(2) || o.HasOneTag(3)) {
+        return o.Type == CBORType.ByteString;
  } else if (o.HasOneTag(4) ||
    o.HasOneTag(5) ||
    o.HasOneTag(264) ||
@@ -78,11 +78,11 @@ namespace PeterO.Cbor {
    o.HasOneTag(269)) {
         return CheckBigFracToNumber(o,
            o.MostOuterTag.ToInt32Checked());
-      } else if (o.HasOneTag(30) ||
+         } else if (o.HasOneTag(30) ||
            o.HasOneTag(270)) {
         return CheckRationalToNumber(o,
               o.MostOuterTag.ToInt32Checked());
-      } else {
+            } else {
         return false;
       }
     }
@@ -107,11 +107,11 @@ namespace PeterO.Cbor {
    o.HasOneTag(269)) {
         return BigFracToNumber(o,
            o.MostOuterTag.ToInt32Checked());
-      } else if (o.HasOneTag(30) ||
+         } else if (o.HasOneTag(30) ||
            o.HasOneTag(270)) {
         return RationalToNumber(o,
               o.MostOuterTag.ToInt32Checked());
-      } else {
+            } else {
         return null;
       }
     }
@@ -198,8 +198,10 @@ o.Type == CBORType.ByteString);
             if (denominator.CompareTo(1) != 0) {
               throw new CBORException("invalid values");
             }
-            erat = ERational.CreateNaN(numerator, options > 6, options == 5 ||
-options == 7);
+            erat = ERational.CreateNaN(
+               numerator,
+               options > 6,
+               options == 5 || options == 7);
             break;
           default: throw new CBORException("Invalid options");
         }
