@@ -2,6 +2,7 @@ using System;
 using NUnit.Framework;
 using PeterO;
 using PeterO.Cbor;
+using PeterO.Numbers;
 
 namespace Test {
   [TestFixture]
@@ -15,35 +16,35 @@ namespace Test {
       CBORObject cbor;
       cbor = CBORDataUtilities.ParseJSONNumber("-0", false, false, true);
       {
-        string stringTemp = cbor.ToString();
+        string stringTemp = cbor.AsEDecimal().ToString();
         Assert.AreEqual(
           "-0",
           stringTemp);
       }
       cbor = CBORDataUtilities.ParseJSONNumber("-0e-1", false, false, true);
       {
-        string stringTemp = cbor.ToString();
+        string stringTemp = cbor.AsEDecimal().ToString();
         Assert.AreEqual(
           "-0.0",
           stringTemp);
       }
       cbor = CBORDataUtilities.ParseJSONNumber("-0e1", false, false, true);
       {
-        string stringTemp = cbor.ToString();
+        string stringTemp = cbor.AsEDecimal().ToString();
         Assert.AreEqual(
           "-0E+1",
           stringTemp);
       }
       cbor = CBORDataUtilities.ParseJSONNumber("-0.0e1", false, false, true);
       {
-        string stringTemp = cbor.ToString();
+        string stringTemp = cbor.AsEDecimal().ToString();
         Assert.AreEqual(
           "-0",
           stringTemp);
       }
       cbor = CBORDataUtilities.ParseJSONNumber("-0.0", false, false, true);
       {
-        string stringTemp = cbor.ToString();
+        string stringTemp = cbor.AsEDecimal().ToString();
         Assert.AreEqual(
           "-0.0",
           stringTemp);
@@ -84,11 +85,11 @@ namespace Test {
         "-0.00E-1", "0.000",
       };
       for (var i = 0; i < strings.Length; i += 2) {
-        string stringTemp = CBORDataUtilities
-                  .ParseJSONNumber(strings[i]).ToString();
+        EDecimal jsonDecimal = CBORDataUtilities
+                  .ParseJSONNumber(strings[i]).AsEDecimal();
         Assert.AreEqual(
           strings[i + 1],
-          stringTemp);
+          jsonDecimal.ToString());
       }
     }
 

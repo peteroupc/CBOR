@@ -32,16 +32,9 @@
 
  Initializes a new instance of the [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) class.
 
-    <b>Parameters:</b>
+   <b>Parameters:</b>
 
- * <i>paramString</i>: A string setting forth the options to use. This is a semicolon-separated list of options, each of which has a key and a value separated by an equal sign ("="). Whitespace and line separators are not allowed to appear between the semicolons or between the equal signs, nor may the string begin or end with whitespace. The following is an example of this parameter:  `usecamelcase=true` . The key can be any one of the following in any combination of case:  `usecamelcase` . Other keys are ignored. If the same key appears more than once, the value given for the last such key is used. The key just given can have a value of  `1` ,  `true` ,  `yes` , or  `on`  (in any combination of case), which means true, or any other value meaning false. For example,  `usecamelcase=Yes`  and  `usecamelcase =
-            1`  both set the  `UseCamelCase`  property to true.
-
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>paramString</i>
- is null.
+ * <i>paramString</i>: A string setting forth the options to use. This is a semicolon-separated list of options, each of which has a key and a value separated by an equal sign ("="). Whitespace and line separators are not allowed to appear between the semicolons or between the equal signs, nor may the string begin or end with whitespace. The following is an example of this parameter:  `usecamelcase=true`  . The key can be any one of the following in any combination of case:  `usecamelcase`  . Other keys are ignored. If the same key appears more than once, the value given for the last such key is used. The key just given can have a value of  `1`  ,  `true`  ,  `yes`  , or  `on`  (in any combination of case), which means true, and any other value meaning false. For example,  `usecamelcase=Yes`  and  `usecamelcase=1`  both set the  `UseCamelCase`  property to true.
 
 <a id="Void_ctor"></a>
 ### PODOptions Constructor
@@ -62,7 +55,7 @@ The parameter  <i>paramString</i>
 
     public bool UseCamelCase { get; }
 
-  Gets a value indicating whether property names are converted to camel case before they are used as keys. This option changes the behavior of key name serialization as follows. If "useCamelCase" is  `false`  :
+ Gets a value indicating whether property names are converted to camel case before they are used as keys. This option changes the behavior of key name serialization as follows. If "useCamelCase" is  `false`  :
 
   * In the .NET version, all key names are capitalized, meaning the first letter in the name is converted to upper case if it's a basic lower-case letter ("a" to "z"). (For example, "Name" and "IsName" both remain unchanged.)
 

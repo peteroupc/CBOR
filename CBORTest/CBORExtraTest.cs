@@ -63,7 +63,7 @@ namespace Test {
         }
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(EDecimal.NaN).AsDecimal();
+        CBORObject.FromObject(EDecimal.NaN).AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         // NOTE: Intentionally empty
@@ -72,7 +72,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        CBORObject.FromObject(
           EDecimal.SignalingNaN).AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
@@ -111,7 +111,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(EFloat.SignalingNaN).AsDecimal();
+        CBORObject.FromObject(EFloat.SignalingNaN).AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         // NOTE: Intentionally empty
@@ -5687,6 +5687,9 @@ select new { A = i, B = i + 1 };
 
     [Test]
     public void TestDecimal() {
+      CBORObject cbor = ToObjectTest.TestToFromObjectRoundTrip(
+         Decimal.MinValue);
+      Assert.IsTrue(cbor.IsNumber, cbor.ToString());
       CBORTestCommon.AssertJSONSer(
         ToObjectTest.TestToFromObjectRoundTrip(Decimal.MinValue),
         ((EDecimal)Decimal.MinValue).ToString());

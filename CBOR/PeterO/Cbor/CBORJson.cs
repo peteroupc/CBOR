@@ -233,7 +233,7 @@ namespace PeterO.Cbor {
               obj = cval == 0 ?
               CBORDataUtilities.ParseJSONNumber("-0", true, false, true) :
                 CBORObject.FromObject(cval);
-            } else {
+              } else {
               str = sb.ToString();
               obj = CBORDataUtilities.ParseJSONNumber(str);
               if (obj == null) {
@@ -524,7 +524,6 @@ namespace PeterO.Cbor {
       CBORObject obj,
       StringOutput writer,
       JSONOptions options) {
-      int type = obj.ItemType;
       if (obj.IsNumber) {
         writer.WriteString(CBORNumber.FromCBORObject(obj).ToJSONString());
         return;

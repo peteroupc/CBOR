@@ -49,7 +49,7 @@ namespace PeterO.DocGen {
          if (m.IsSpecialName) {
            continue;
          }
-          this.HandleMember(m, xmldoc);
+         this.HandleMember(m, xmldoc);
         }
         foreach (var m in currentType.GetConstructors()) {
           if (!m.DeclaringType.Equals(currentType)) {

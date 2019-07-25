@@ -559,26 +559,6 @@ namespace Test {
     }
 
     [Test]
-    public void TestCBORInfinity() {
-      {
-        string stringTemp =
-ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf)
-            .ToString();
-        Assert.AreEqual(
-          "-Infinity",
-          stringTemp);
-      }
-      {
-        string stringTemp =
-ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
-            .ToString();
-        Assert.AreEqual(
-          "Infinity",
-          stringTemp);
-      }
-    }
-
-    [Test]
     public void TestCBORInfinityRoundTrip() {
       CBORTestCommon.AssertRoundTrip(
         ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf));
@@ -600,6 +580,9 @@ ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
       Assert.IsTrue(
         ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
                             .IsPositiveInfinity());
+      Assert.IsTrue(
+        ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
+                            .IsInfinity());
       Assert.IsTrue(CBORObject.PositiveInfinity.IsPositiveInfinity());
       Assert.IsTrue(CBORObject.NegativeInfinity.IsNegativeInfinity());
       Assert.IsTrue(CBORObject.NaN.IsNaN());
@@ -1234,6 +1217,7 @@ throw new InvalidOperationException(String.Empty, ex);
     [Test]
     [Timeout(50000)]
     public void TestRandomData() {
+      
       var rand = new RandomGenerator();
       CBORObject obj;
       for (var i = 0; i < 1000; ++i) {
@@ -1322,6 +1306,7 @@ throw new InvalidOperationException(String.Empty, ex);
     [Test]
     [Timeout(500000)]
     public void TestRandomNonsense() {
+      
       var rand = new RandomGenerator();
       for (var i = 0; i < 1000; ++i) {
         var array = new byte[rand.UniformInt(1000000) + 1];
@@ -1461,6 +1446,7 @@ throw new InvalidOperationException(String.Empty, ex);
 
     [Test]
     public void TestRandomSlightlyModified() {
+      
       var rand = new RandomGenerator();
       // Test slightly modified objects
       for (var i = 0; i < 2000; ++i) {
@@ -1633,7 +1619,7 @@ throw new InvalidOperationException(String.Empty, ex);
               bigintTemp = bigintNext;
               continue;
             }
-            if (bc == 264 || bc == 265) {
+            if (bc >= 264 || bc <= 270) {
               bigintTemp = bigintNext;
               continue;
             }
@@ -1657,8 +1643,8 @@ throw new InvalidOperationException(String.Empty, ex);
           Assert.AreEqual(0, obj.AsInt32());
           if (!bigintTemp.Equals(maxuint)) {
             EInteger bigintNew = bigintNext;
-            if (bigintNew.Equals(EInteger.FromString("264")) ||
-                bigintNew.Equals(EInteger.FromString("265"))) {
+            if (bigintNew.Equals(EInteger.FromInt32(264)) ||
+                bigintNew.Equals(EInteger.FromInt32(265))) {
               bigintTemp = bigintNext;
               continue;
             }
@@ -1852,6 +1838,13 @@ throw new InvalidOperationException(String.Empty, ex);
           stringTemp);
       }
     }
+
+[Test]
+public void TestRoundTripESignalingNaN() {
+  ToObjectTest.TestToFromObjectRoundTrip(EDecimal.SignalingNaN);
+  ToObjectTest.TestToFromObjectRoundTrip(ERational.SignalingNaN);
+  ToObjectTest.TestToFromObjectRoundTrip(EFloat.SignalingNaN);
+}
 
     [Test]
     public void TestTextStringStreamNoTagsBeforeDefinite() {

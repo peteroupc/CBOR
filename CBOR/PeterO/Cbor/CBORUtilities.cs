@@ -329,7 +329,7 @@ namespace PeterO.Cbor {
                     year.Remainder(100).Sign == 0 &&
                     year.Remainder(400).Sign != 0)) ? ValueNormalDays :
               ValueLeapDays;
-          } else {
+            } else {
             ++month;
           }
         }
@@ -404,7 +404,7 @@ namespace PeterO.Cbor {
                     year.Remainder(400).Sign != 0)) {
           numDays = numDays.Subtract(365 - ValueNormalToMonth[month])
            .Subtract(ValueNormalDays[month] - mday + 1);
-        } else {
+         } else {
           numDays = numDays
             .Subtract(366 - ValueLeapToMonth[month])
             .Subtract(ValueLeapDays[month] - mday + 1);
@@ -764,58 +764,94 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
       }
     }
 
-    private static int RoundedShift(long mant, int shift){
-      long mask = (1L<<shift)-1;
-      long half = (1L<<(shift-1));
+    private static int RoundedShift(long mant, int shift) {
+      long mask = (1L << shift) - 1;
+      long half = 1L << (shift - 1);
       long shifted = mant >> shift;
       long masked = mant & mask;
-      return (masked>half || (masked==half && (shifted&1L)!=0)) ?
+      return (masked > half || (masked == half && (shifted & 1L) != 0)) ?
          unchecked((int)shifted) + 1 : unchecked((int)shifted);
+    }
+
+    public static int DoubleToHalfPrecisionIfSameValue(long bits) {
+      int exp = unchecked((int)((bits >> 52) & 0x7ffL));
+      long mant = bits & 0xfffffffffffffL;
+      int sign = unchecked((int)(bits >> 48)) & (1 << 15);
+      int sexp = exp - 1008;
+      if (exp == 2047) { // Infinity and NaN
+        int newmant = unchecked((int)(mant >> 42));
+        return ((mant & ((1 << 42) - 1)) == 0) ? (sign | 0x7c00 | newmant) : 1;
+      } else if (sexp >= 31) { // overflow
+        return ((mant & ((1 << 42) -1)) == 0) ? (sign | RoundedShift(mant,
+  42)) : -1;
+      } else if (sexp < -10) { // underflow
+        return -1;
+      } else if (sexp > 0) { // normal
+        return ((mant & ((1L << 42) - 1)) == 0) ?
+          (sign | (sexp << 10) | RoundedShift(mant, 42)) : -1;
+        } else { // subnormal and zero
+        return ((mant & ((1L << (42 - (sexp - 1))) -1)) == 0) ?
+          (sign | RoundedShift(mant | (1L << 52), 42 - (sexp - 1))) : -1;
+      }
+    }
+
+    public static bool DoubleRetainsSameValueInSingle(long bits) {
+      int exp = unchecked((int)((bits >> 52) & 0x7ffL));
+      long mant = bits & 0xfffffffffffffL;
+      int sign = unchecked((int)(bits >> 32)) & (1 << 31);
+      int sexp = exp - 896;
+      if (exp == 2047 || sexp >= 255) { // Infinity and NaN
+        return ((mant & ((1 << 29) - 1)) == 0);
+      } else if (sexp < -23) { // underflow
+        return false;
+      } else if (sexp > 0) { // normal
+        return ((mant & ((1L << 29) - 1)) == 0);
+      } else { // subnormal and zero
+        return ((mant & ((1L << (29 - (sexp - 1))) -1)) == 0);
+      }
     }
 
     // NOTE: Rounds to nearest, ties to even
     public static int DoubleToRoundedHalfPrecision(long bits) {
       int exp = unchecked((int)((bits >> 52) & 0x7ffL));
-      long mant = bits & 0xfffffffffffff;
-      int sign = unchecked((int)(bits >> 48)) & (1<<15);
+      long mant = bits & 0xfffffffffffffL;
+      int sign = unchecked((int)(bits >> 48)) & (1 << 15);
       int sexp = exp - 1008;
       if (exp == 2047) { // Infinity and NaN
         int newmant = unchecked((int)(mant >> 42));
         return (mant != 0 && newmant == 0) ?
-           /* signaling NaN truncated to have mantissa 0 */
-           (sign | 0x7c01) :
-           (sign | 0x7c00 | newmant);
-      } else if (sexp >= 31) { /* overflow */
-        return sign | RoundedShift(mant,42);
-      } else if(sexp<-10) { /* underflow */
+           // signaling NaN truncated to have mantissa 0
+           (sign | 0x7c01) : (sign | 0x7c00 | newmant);
+         } else if (sexp >= 31) { // overflow
+        return sign | RoundedShift(mant, 42);
+      } else if (sexp < -10) { // underflow
         return sign;
-      } else if(sexp>0){ /* normal */
+      } else if (sexp > 0) { // normal
         return sign | (sexp << 10) | RoundedShift(mant, 42);
-      } else { /* subnormal and zero */
-        return sign | RoundedShift(mant | (1L<<52), 42 - (sexp - 1));
+      } else { // subnormal and zero
+        return sign | RoundedShift(mant | (1L << 52), 42 - (sexp - 1));
       }
     }
 
     // NOTE: Rounds to nearest, ties to even
     public static int DoubleToRoundedSinglePrecision(long bits) {
       int exp = unchecked((int)((bits >> 52) & 0x7ffL));
-      long mant = bits & 0xfffffffffffff;
-      int sign = unchecked((int)(bits >> 32)) & (1<<31);
+      long mant = bits & 0xfffffffffffffL;
+      int sign = unchecked((int)(bits >> 32)) & (1 << 31);
       int sexp = exp - 896;
       if (exp == 2047) { // Infinity and NaN
         int newmant = unchecked((int)(mant >> 29));
         return (mant != 0 && newmant == 0) ?
-           /* signaling NaN truncated to have mantissa 0 */
-           (sign | 0x7f800001) :
-           (sign | 0x7f800000 | newmant);
-      } else if (sexp >= 255) { /* overflow */
-        return sign | RoundedShift(mant,29);
-      } else if(sexp<-23) { /* underflow */
+           // signaling NaN truncated to have mantissa 0
+           (sign | 0x7f800001) : (sign | 0x7f800000 | newmant);
+         } else if (sexp >= 255) { // overflow
+        return sign | RoundedShift(mant, 29);
+      } else if (sexp < -23) { // underflow
         return sign;
-      } else if(sexp>0){ /* normal */
+      } else if (sexp > 0) { // normal
         return sign | (sexp << 23) | RoundedShift(mant, 29);
-      } else { /* subnormal and zero */
-        return sign | RoundedShift(mant | (1L<<52), 29 - (sexp - 1));
+      } else { // subnormal and zero
+        return sign | RoundedShift(mant | (1L << 52), 29 - (sexp - 1));
       }
     }
 
@@ -835,7 +871,7 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
         int shift = 126 - exp;
         return (bits & ((1 << shift) - 1)) == 0 ? sign +
             (1024 >> (145 - exp)) + (mant >> shift) : -1;
-      } else {
+          } else {
         return (bits & 0x1fff) == 0 ? sign + ((exp - 112) << 10) +
             (mant >> 13) : -1;
       }

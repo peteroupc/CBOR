@@ -14,6 +14,19 @@ namespace PeterO.Cbor {
   // because they are not CLS-compliant or they
   // are specific to the .NET version of the library.
   public sealed partial class CBORObject {
+    public static bool explicit operator <(CBORObject a, CBORObject b) {
+      return a.CompareTo(b) < 0;
+    }
+    public static bool explicit operator <=(CBORObject a, CBORObject b) {
+      return a.CompareTo(b) <= 0;
+    }
+    public static bool explicit operator <(CBORObject a, CBORObject b) {
+      return a.CompareTo(b) > 0;
+    }
+    public static bool explicit operator <=(CBORObject a, CBORObject b) {
+      return a.CompareTo(b) >= 0;
+    }
+
     /// <summary>Converts this object to a 16-bit unsigned integer. The
     /// return value will be truncated as necessary.</summary>
     /// <returns>A 16-bit unsigned integer.</returns>
@@ -75,7 +88,8 @@ namespace PeterO.Cbor {
     /// interval [0, 23] or [32, 255].</param>
     /// <returns>The number of bytes ordered to be written to the data
     /// stream.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='outputStream'/> is null.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='outputStream'/> is null.</exception>
     [CLSCompliant(false)]
     public static int WriteValue(
       Stream outputStream,
@@ -109,8 +123,10 @@ namespace PeterO.Cbor {
     /// interval [0, 23] or [32, 255].</param>
     /// <returns>The number of bytes ordered to be written to the data
     /// stream.</returns>
-    /// <exception cref='System.ArgumentException'>The parameter <paramref name='majorType'/> is 7 and value is greater than 255.</exception>
-    /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='outputStream'/> is null.</exception>
+    /// <exception cref='ArgumentException'>The parameter <paramref
+    /// name='majorType'/> is 7 and value is greater than 255.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='outputStream'/> is null.</exception>
     [CLSCompliant(false)]
     public static int WriteValue(
       Stream outputStream,
@@ -163,10 +179,8 @@ this.HasOneTag(270)) ?
               (decimal)(this.AsERational()) : (decimal)this.AsEDecimal()); }
 
 /// <summary>Not documented yet.</summary>
-    /// <summary>Not documented yet.
-    /// </summary>
-    /// <returns>A 64-bit unsigned integer.
-    /// </returns>
+    /// <summary>Not documented yet.</summary>
+    /// <returns>A 64-bit unsigned integer.</returns>
     [CLSCompliant(false)]
     public ulong AsUInt64() {
       EInteger bigint = this.AsEInteger();
@@ -191,7 +205,8 @@ this.HasOneTag(270)) ?
     /// stream.</summary>
     /// <param name='value'>A 64-bit unsigned integer.</param>
     /// <param name='stream'>A writable data stream.</param>
-    /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='stream'/> is null.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='stream'/> is null.</exception>
     [CLSCompliant(false)]
     public static void Write(ulong value, Stream stream) {
       if (stream == null) {
@@ -318,7 +333,8 @@ this.HasOneTag(270)) ?
       return FromObjectAndTag(o, UInt64ToEInteger(tag));
     }
 
-    /// <summary><para>Converts this CBOR object to an object of an arbitrary type.
+    /// <summary>
+    /// <para>Converts this CBOR object to an object of an arbitrary type.
     /// See
     /// <see cref='PeterO.Cbor.CBORObject.ToObject(System.Type)'/> for
     /// further information.</para></summary>
@@ -338,7 +354,8 @@ this.HasOneTag(270)) ?
       return (T)this.ToObject(typeof(T));
     }
 
-    /// <summary><para>Converts this CBOR object to an object of an arbitrary type.
+    /// <summary>
+    /// <para>Converts this CBOR object to an object of an arbitrary type.
     /// See
     /// <see cref='PeterO.Cbor.CBORObject.ToObject(System.Type)'/> for
     /// further information.</para></summary>
@@ -361,7 +378,8 @@ this.HasOneTag(270)) ?
       return (T)this.ToObject(typeof(T), mapper);
     }
 
-    /// <summary><para>Converts this CBOR object to an object of an arbitrary type.
+    /// <summary>
+    /// <para>Converts this CBOR object to an object of an arbitrary type.
     /// See
     /// <see cref='PeterO.Cbor.CBORObject.ToObject(System.Type)'/> for
     /// further information.</para></summary>
@@ -383,7 +401,8 @@ this.HasOneTag(270)) ?
       return (T)this.ToObject(typeof(T), options);
     }
 
-    /// <summary><para>Converts this CBOR object to an object of an arbitrary type.
+    /// <summary>
+    /// <para>Converts this CBOR object to an object of an arbitrary type.
     /// See
     /// <see cref='PeterO.Cbor.CBORObject.ToObject(System.Type)'/> for
     /// further information.</para></summary>

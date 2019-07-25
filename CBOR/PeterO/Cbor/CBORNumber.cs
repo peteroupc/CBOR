@@ -70,7 +70,7 @@ namespace PeterO.Cbor {
         return true;
       } else if (o.HasOneTag(2) || o.HasOneTag(3)) {
         return o.Type == CBORType.ByteString;
- } else if (o.HasOneTag(4) ||
+      } else if (o.HasOneTag(4) ||
    o.HasOneTag(5) ||
    o.HasOneTag(264) ||
    o.HasOneTag(265) ||
@@ -258,7 +258,7 @@ o.Type == CBORType.ByteString);
           default: return false;
         }
       }
-      return false;
+      return true;
     }
 
     private static bool CheckBigFracToNumber(
@@ -291,7 +291,6 @@ o.Type == CBORType.ByteString);
       if (!IsUntaggedIntegerOrBignum(o[1])) {
         return false;
       }
-      bool isdec = tagName == 4 || tagName == 264 || tagName == 268;
       if (tagName == 268 || tagName == 269) {
         EInteger exponent = IntegerOrBignum(o[0]);
         EInteger mantissa = IntegerOrBignum(o[1]);
@@ -314,7 +313,7 @@ o.Type == CBORType.ByteString);
           default: return false;
         }
       }
-      return false;
+      return true;
     }
 
     private static CBORNumber BigFracToNumber(

@@ -73,13 +73,21 @@ namespace PeterO.Cbor {
        valueAType == CBORType.Boolean || valueAType == CBORType.ByteString ||
        valueAType == CBORType.TextString) {
         return cbor.EncodeToBytes(CBOREncodeOptions.Default);
-      } else if (valueAType == CBORType.Integer ||
-                 valueAType == CBORType.FloatingPoint) {
+      } else if (valueAType == CBORType.FloatingPoint) {
+        double dbl = cbor.AsDoubleValue();
+          using (var ms = new MemoryStream()) {
+            CBORObject.WriteFloatingPointValue(ms, dbl, 8);
+            return ms.ToArray();
+          }
+      } else if (valueAType == CBORType.Integer) {
         if (cbor.CanValueFitInInt64()) {
           return cbor.EncodeToBytes(CBOREncodeOptions.Default);
         } else {
-          cbor = CBORObject.FromObject(cbor.AsDoubleValue());
-          return cbor.EncodeToBytes(CBOREncodeOptions.Default);
+          double dbl = cbor.AsDouble();
+          using (var ms = new MemoryStream()) {
+            CBORObject.WriteFloatingPointValue(ms, dbl, 8);
+            return ms.ToArray();
+          }
         }
       } else {
         throw new ArgumentException("Invalid CBOR type.");

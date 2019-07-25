@@ -56,30 +56,26 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Initializes a new instance of the
-    /// <see cref='PeterO.Cbor.CBOREncodeOptions'/>
-    /// class.</summary>
-    /// <param name='paramString'>A string setting forth the options to use. This is a semicolon-separated
-    /// list of options, each of which has a key and a value separated by an equal
-    /// sign ("="). Whitespace and line separators are not allowed to appear
-    /// between the semicolons or between the equal signs, nor may the string
-    /// begin or end with whitespace. The following is an example of this
-    /// parameter:
-    /// <c>allowduplicatekeys=true;ctap2Canonical=true</c> . The key can be any one of the following in any combination of case:
-    /// <c>allowduplicatekeys</c> ,
-    /// <c>ctap2canonical</c> ,
-    /// <c>resolvereferences</c> ,
-    /// <c>useindeflengthstrings</c> . Keys other than these are ignored. If the same key appears more than
-    /// once, the value given for the last such key is used. The four keys just
-    /// given can have a value of
-    /// <c>1</c> ,
-    /// <c>true</c> ,
-    /// <c>yes</c> , or
-    /// <c>on</c> (in any combination of case), which means true, and any other value
-    /// meaning false. For example,
-    /// <c>allowduplicatekeys=Yes</c> and
-    /// <c>allowduplicatekeys=1</c> both set the
-    /// <c>AllowDuplicateKeys</c> property to true.
-    /// </param>
+    /// <see cref='PeterO.Cbor.CBOREncodeOptions'/> class.</summary>
+    /// <param name='paramString'>A string setting forth the options to
+    /// use. This is a semicolon-separated list of options, each of which
+    /// has a key and a value separated by an equal sign ("="). Whitespace
+    /// and line separators are not allowed to appear between the
+    /// semicolons or between the equal signs, nor may the string begin or
+    /// end with whitespace. The following is an example of this parameter:
+    /// <c>allowduplicatekeys=true;ctap2Canonical=true</c>. The key can be
+    /// any one of the following in any combination of case:
+    /// <c>allowduplicatekeys</c>, <c>ctap2canonical</c>,
+    /// <c>resolvereferences</c>, <c>useindeflengthstrings</c>. Keys
+    /// other than these are ignored. If the same key appears more than
+    /// once, the value given for the last such key is used. The four keys
+    /// just given can have a value of <c>1</c>, <c>true</c>, <c>yes</c>
+    /// , or <c>on</c> (in any combination of case), which means true, and
+    /// any other value meaning false. For example,
+    /// <c>allowduplicatekeys=Yes</c> and <c>allowduplicatekeys=1</c> both
+    /// set the <c>AllowDuplicateKeys</c> property to true.</param>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='paramString'/> is null.</exception>
     public CBOREncodeOptions(string paramString) {
       if (paramString == null) {
         throw new ArgumentNullException(nameof(paramString));
