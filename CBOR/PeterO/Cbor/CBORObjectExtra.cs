@@ -14,16 +14,16 @@ namespace PeterO.Cbor {
   // because they are not CLS-compliant or they
   // are specific to the .NET version of the library.
   public sealed partial class CBORObject {
-    public static bool explicit operator <(CBORObject a, CBORObject b) {
+    public static bool operator <(CBORObject a, CBORObject b) {
       return a.CompareTo(b) < 0;
     }
-    public static bool explicit operator <=(CBORObject a, CBORObject b) {
+    public static bool operator <=(CBORObject a, CBORObject b) {
       return a.CompareTo(b) <= 0;
     }
-    public static bool explicit operator <(CBORObject a, CBORObject b) {
+    public static bool operator >(CBORObject a, CBORObject b) {
       return a.CompareTo(b) > 0;
     }
-    public static bool explicit operator <=(CBORObject a, CBORObject b) {
+    public static bool operator >=(CBORObject a, CBORObject b) {
       return a.CompareTo(b) >= 0;
     }
 
