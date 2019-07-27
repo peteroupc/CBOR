@@ -31,22 +31,21 @@ namespace PeterO {
     }
 
     public static void Main() {
-new Test.CBORTest().TestFloat();
-new Test.CBORTest().TestDouble();
-//new Test.CBORTest().TestRoundTripESignalingNaN();
+new Test.CBORSupplementTest().TestBuiltInTags();
+// new Test.CBORTest().TestRoundTripESignalingNaN();
 return;
-      const String ValueParam = "TestLexOrder";
+const String ValueParam = "TestLexOrder";
      // Run all the tests in this assembly
-      foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
-        if (!HasAttribute(type, typeof(TestFixtureAttribute))) {
-          continue;
-        }
-        Console.WriteLine("-------");
-        Console.WriteLine(type.FullName);
-        Console.WriteLine("-------");
-        object test = Activator.CreateInstance(type);
-        var setup = type.GetMethod("SetUp");
-        if (setup != null) {
+     foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
+       if (!HasAttribute(type, typeof(TestFixtureAttribute))) {
+         continue;
+       }
+       Console.WriteLine("-------");
+       Console.WriteLine(type.FullName);
+       Console.WriteLine("-------");
+       object test = Activator.CreateInstance(type);
+       var setup = type.GetMethod("SetUp");
+       if (setup != null) {
           setup.Invoke(test, new object[] { });
         }
         foreach (var method in test.GetType().GetMethods()) {

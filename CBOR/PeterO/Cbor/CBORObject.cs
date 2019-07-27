@@ -557,9 +557,9 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
 
     /// <summary>Gets the value of a CBOR object by integer index in this
     /// array or by integer key in this map.</summary>
-    /// <param name='index'>Zero-based index of the element, or the integer
-    /// key to this map. (If this is a map, the given index can be any
-    /// 32-bit signed integer, even a negative one.).</param>
+    /// <param name='index'>Index starting at 0 of the element, or the
+    /// integer key to this map. (If this is a map, the given index can be
+    /// any 32-bit signed integer, even a negative one.).</param>
     /// <returns>The CBOR object referred to by index or key in this array
     /// or map. If this is a CBOR map, returns null if an item with the
     /// given key doesn't exist.</returns>
@@ -814,36 +814,11 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
       return DecodeFromBytes(data, CBOREncodeOptions.Default);
     }
 
-    /// <summary>Generates a CBOR object from an array of CBOR-encoded
-    /// bytes, using the given <c>CBOREncodeOptions</c>
-    ///  object to control
-    /// the decoding process.</summary>
-    /// <param name='data'>A byte array in which a single CBOR object is
-    /// encoded.</param>
-    /// <param name='options'>The parameter <paramref name='options'/> is a
-    /// CBOREncodeOptions object.</param>
-    /// <returns>A CBOR object decoded from the given byte array.</returns>
-    /// <exception cref='PeterO.Cbor.CBORException'>There was an error in
-    /// reading or parsing the data. This includes cases where not all of
-    /// the byte array represents a CBOR object. This exception is also
-    /// thrown if the parameter <paramref name='data'/> is
-    /// empty.</exception>
+    /// <param name='data'>Not documented yet.</param>
+    /// <param name='options'>Not documented yet.</param>
+    /// <returns>A CBORObject object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='data'/> is null.</exception>
-    /// <example>
-    /// <para>The following example (originally written in C# for the
-    /// &#x2e;NET version) implements a method that decodes a text string
-    /// from a CBOR byte array. It's successful only if the CBOR object
-    /// contains an untagged text string.</para>
-    /// <code>private static String DecodeTextString&#x28;byte[] bytes)&#x7b;
-    /// if&#x28;bytes == null)&#x7b; throw new
-    /// ArgumentNullException&#x28;nameof(mapObj));&#x7d; if&#x28;bytes.Length
-    /// == 0 || bytes[0]&lt;0x60 || bytes[0]&gt;0x7f)&#x7b;throw new
-    /// CBORException&#x28;);&#x7d; return
-    /// CBORObject.DecodeFromBytes&#x28;bytes,
-    /// CBOREncodeOptions.Default).AsString&#x28;); &#x7d;</code>
-    ///  .
-    /// </example>
+    /// name='data'/> or <paramref name='options'/> is null.</exception>
     public static CBORObject DecodeFromBytes(
       byte[] data,
       CBOREncodeOptions options) {
@@ -1280,15 +1255,9 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     ///  </list>
     /// <para>REMARK: A certain consistency between &#x2e;NET and Java and
     /// between FromObject and ToObject are sought for version 4.0. It is
-    /// also hoped that--</para>
-    ///  <list><item>the ToObject method will
-    /// support deserializing to objects consisting of fields and not
-    /// getters ("getX()" methods), both in &#x2e;NET and in Java,
-    /// and</item>
-    ///  <item>both FromObject and ToObject will be better
-    /// designed, in version 4.0, so that backward-compatible improvements
-    /// are easier to make.</item>
-    ///  </list>
+    /// also hoped that the ToObject method will support deserializing to
+    /// objects consisting of fields and not getters ("getX()" methods),
+    /// both in &#x2e;NET and in Java.</para>
     ///  </summary>
     /// <param name='t'>The type, class, or interface that this method's
     /// return value will belong to. To express a generic type in Java, see
@@ -1420,7 +1389,18 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     }
 
     /// <summary>Generates a CBOR object from an arbitrary-precision binary
-    /// floating-point number.</summary>
+    /// floating-point number. The CBOR object is generated as follows
+    /// (this is a change in version 4.0):
+    /// <list>
+    /// <item>If the number is null, returns CBORObject.Null.</item>
+    /// <item>Otherwise, if the number expresses infinity, not-a-number, or
+    /// negative zero, the CBOR object will have tag 269 and the
+    /// appropriate format.</item>
+    /// <item>Otherwise, if the number's exponent is greater than or equal
+    /// to 2^64 or less than -(2^64), the CBOR object will have tag 265 and
+    /// the appropriate format.</item>
+    /// <item>Otherwise, the CBOR object will have tag 5 and the
+    /// appropriate format.</item></list></summary>
     /// <param name='bigValue'>An arbitrary-precision binary floating-point
     /// number. Can be null.</param>
     /// <returns>The given number encoded as a CBOR object. Returns
@@ -1456,7 +1436,15 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     }
 
     /// <summary>Generates a CBOR object from an arbitrary-precision
-    /// rational number.</summary>
+    /// rational number. The CBOR object is generated as follows (this is a
+    /// change in version 4.0):
+    /// <list>
+    /// <item>If the number is null, returns CBORObject.Null.</item>
+    /// <item>Otherwise, if the number expresses infinity, not-a-number, or
+    /// negative zero, the CBOR object will have tag 270 and the
+    /// appropriate format.</item>
+    /// <item>Otherwise, the CBOR object will have tag 5 and the
+    /// appropriate format.</item></list></summary>
     /// <param name='bigValue'>An arbitrary-precision rational number. Can
     /// be null.</param>
     /// <returns>The given number encoded as a CBOR object. Returns
@@ -1512,7 +1500,18 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
       return CBORObject.FromObjectAndTag(cbor, tag);
     }
 
-    /// <summary>Generates a CBOR object from a decimal number.</summary>
+    /// <summary>Generates a CBOR object from a decimal number. The CBOR
+    /// object is generated as follows (this is a change in version 4.0):
+    /// <list>
+    /// <item>If the number is null, returns CBORObject.Null.</item>
+    /// <item>Otherwise, if the number expresses infinity, not-a-number, or
+    /// negative zero, the CBOR object will have tag 268 and the
+    /// appropriate format.</item>
+    /// <item>If the number's exponent is greater than or equal to 2^64 or
+    /// less than -(2^64), the CBOR object will have tag 264 and the
+    /// appropriate format.</item>
+    /// <item>Otherwise, the CBOR object will have tag 4 and the
+    /// appropriate format.</item></list></summary>
     /// <param name='bigValue'>An arbitrary-precision decimal number. Can
     /// be null.</param>
     /// <returns>The given number encoded as a CBOR object. Returns
@@ -1861,14 +1860,9 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// to this method.</para>
     /// <para>REMARK: A certain consistency between &#x2e;NET and Java and
     /// between FromObject and ToObject are sought for version 4.0. It is
-    /// also hoped that--</para>
-    /// <list>
-    /// <item>the ToObject method will support deserializing to objects
-    /// consisting of fields and not getters ("getX()" methods), both in
-    /// &#x2e;NET and in Java, and</item>
-    /// <item>both FromObject and ToObject will be better designed, in
-    /// version 4.0, so that backward-compatible improvements are easier to
-    /// make.</item></list></summary>
+    /// also hoped that the ToObject method will support deserializing to
+    /// objects consisting of fields and not getters ("getX()" methods),
+    /// both in &#x2e;NET and in Java.</para></summary>
     /// <param name='obj'>An arbitrary object to convert to a CBOR object.
     /// <para><b>NOTE:</b> For security reasons, whenever possible, an
     /// application should not base this parameter on user input or other
@@ -2449,20 +2443,12 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
       }
     }
 
-    // TODO: Warn of change in Write(EFloat/EDecimal/ERational) in older versions
+    // TODO: Warn of change in Write(EFloat/EDecimal/ERational) and
+    // FromObject(EFloat/EDecimal/ERational) in older versions
 
     /// <summary>Writes a binary floating-point number in CBOR format to a
-    /// data stream as follows:
-    /// <list type=''>
-    /// <item>If the value is null, writes the byte 0xF6.</item>
-    /// <item>If the value is negative zero, infinity, or NaN, writes the
-    /// value as an extended bigfloat (tag 269). This is a change in
-    /// version 4.0.</item>
-    /// <item>If the value has an exponent of zero, writes the value as an
-    /// unsigned integer or signed integer if the number can fit either
-    /// type or as a arbitrary-precision integer otherwise.</item>
-    /// <item>In all other cases, writes the value as a big
-    /// float.</item></list></summary>
+    /// data stream, as though it were converted to a CBOR object via
+    /// CBORObject.FromObject(EFloat) and then written out.</summary>
     /// <param name='bignum'>An arbitrary-precision binary floating-point
     /// number. Can be null.</param>
     /// <param name='stream'>A writable data stream.</param>
@@ -2484,10 +2470,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
         return;
       }
       EInteger exponent = bignum.Exponent;
-      if (exponent.IsZero) {
-        Write(bignum.Mantissa, stream);
-      } else {
-        if (exponent.GetSignedBitLengthAsEInteger().CompareTo(64) > 0) {
+      if (exponent.GetSignedBitLengthAsEInteger().CompareTo(64) > 0) {
           stream.WriteByte(0xd9); // tag 265
           stream.WriteByte(0x01);
           stream.WriteByte(0x09);
@@ -2498,21 +2481,11 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
         }
         Write(bignum.Exponent, stream);
         Write(bignum.Mantissa, stream);
-      }
     }
 
-    /// <summary>Writes a rational number in CBOR format to a data stream
-    /// as follows:
-    /// <list type=''>
-    /// <item>If the value is null, writes the byte 0xF6.</item>
-    /// <item>If the value is negative zero, infinity, or NaN, writes the
-    /// value as an extended rational number (tag 270). This is a change in
-    /// version 4.0.</item>
-    /// <item>If the value has a denominator of one, writes the value as an
-    /// unsigned integer or signed integer if the number can fit either
-    /// type or as an arbitrary-precision integer otherwise.</item>
-    /// <item>In all other cases, writes the value as a rational number
-    /// (tag 30).</item></list></summary>
+    /// <summary>Writes a rational number in CBOR format to a data stream,
+    /// as though it were converted to a CBOR object via
+    /// CBORObject.FromObject(ERational) and then written out.</summary>
     /// <param name='rational'>An arbitrary-precision rational number. Can
     /// be null.</param>
     /// <param name='stream'>A writable data stream.</param>
@@ -2532,10 +2505,6 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
         Write(CBORObject.FromObject(rational), stream);
         return;
       }
-      if (rational.Denominator.Equals(EInteger.One)) {
-        Write(rational.Numerator, stream);
-        return;
-      }
       stream.WriteByte(0xd8); // tag 30
       stream.WriteByte(0x1e);
       stream.WriteByte(0x82); // array, length 2
@@ -2544,17 +2513,8 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     }
 
     /// <summary>Writes a decimal floating-point number in CBOR format to a
-    /// data stream, as follows:
-    /// <list type=''>
-    /// <item>If the value is null, writes the byte 0xF6.</item>
-    /// <item>If the value is negative zero, infinity, or NaN, writes the
-    /// value as an extended rational number (tag 268). This is a change in
-    /// version 4.0.</item>
-    /// <item>If the value has an exponent of zero, writes the value as an
-    /// unsigned integer or signed integer if the number can fit either
-    /// type or as a arbitrary-precision integer otherwise.</item>
-    /// <item>In all other cases, writes the value as a decimal
-    /// fraction.</item></list></summary>
+    /// data stream, as though it were converted to a CBOR object via
+    /// CBORObject.FromObject(EDecimal) and then written out.</summary>
     /// <param name='bignum'>The arbitrary-precision decimal number to
     /// write. Can be null.</param>
     /// <param name='stream'>Stream to write to.</param>
@@ -2570,16 +2530,12 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
         stream.WriteByte(0xf6);
         return;
       }
-      if ((bignum.IsZero && bignum.IsNegative) || bignum.IsInfinity() ||
-          bignum.IsNaN()) {
+      if (!bignum.IsFinite || (bignum.IsNegative && bignum.IsZero)) {
         Write(CBORObject.FromObject(bignum), stream);
         return;
       }
       EInteger exponent = bignum.Exponent;
-      if (exponent.IsZero) {
-        Write(bignum.Mantissa, stream);
-      } else {
-        if (exponent.GetSignedBitLengthAsEInteger().CompareTo(64) > 0) {
+      if (exponent.GetSignedBitLengthAsEInteger().CompareTo(64) > 0) {
           stream.WriteByte(0xd9); // tag 264
           stream.WriteByte(0x01);
           stream.WriteByte(0x08);
@@ -2590,7 +2546,6 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
         }
         Write(bignum.Exponent, stream);
         Write(bignum.Mantissa, stream);
-      }
     }
 
     private static byte[] EIntegerBytes(EInteger ei) {
@@ -4298,7 +4253,7 @@ CBORObjectTypeEInteger)) {
 
     /// <summary>Inserts an object at the specified position in this CBOR
     /// array.</summary>
-    /// <param name='index'>Zero-based index to insert at.</param>
+    /// <param name='index'>Index starting at 0 to insert at.</param>
     /// <param name='valueOb'>An object representing the value, which will
     /// be converted to a CBORObject. Can be null, in which case this value
     /// is converted to CBORObject.Null.</param>
@@ -4423,7 +4378,6 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     public bool Remove(object obj) {
       return this.Remove(CBORObject.FromObject(obj));
     }
-
 
     /// <summary>Removes the item at the given index of this CBOR
     /// array.</summary>
@@ -4680,9 +4634,7 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     /// The returned string is not necessarily in JavaScript Object
     /// Notation (JSON); to convert CBOR objects to JSON strings, use the
     /// <see cref='PeterO.Cbor.CBORObject.ToJSONString(
-    /// PeterO.Cbor.JSONOptions)'/> method instead. This method can't be
-    /// used to get the value of a CBOR string object (CBORType.String);
-    /// for that, use the AsString method instead.</summary>
+    /// PeterO.Cbor.JSONOptions)'/> method instead.</summary>
     /// <returns>A text representation of this object.</returns>
     public override string ToString() {
       StringBuilder sb = null;
@@ -5011,7 +4963,7 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
           bits = BitConverter.ToInt64(
              BitConverter.GetBytes((double)doubleVal),
              0);
-          //DebugUtility.Log("dbl {0} -> {1}",doubleVal,bits);
+          // DebugUtility.Log("dbl " + doubleVal + " -> " + (bits));
           return WriteFloatingPointBits(outputStream, bits, 8);
         default: throw new ArgumentOutOfRangeException(nameof(byteCount));
       }
@@ -5053,7 +5005,7 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
           bits = BitConverter.ToInt32(
              BitConverter.GetBytes((float)singleVal),
              0);
-          longbits = ((long)bits)&0xffffffffL;
+          longbits = ((long)bits) & 0xffffffffL;
           return WriteFloatingPointBits(outputStream, longbits, 4);
         case 8:
           bits = BitConverter.ToInt32(
@@ -5295,73 +5247,7 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
       return bytes.Length;
     }
 
-    /// <summary><para>Writes this CBOR object to a data stream. If the
-    /// CBOR object contains CBOR maps, or is a CBOR map, the keys to the
-    /// map are written out to the data stream in an undefined order. See
-    /// the examples (written in C# for the &#x2e;NET version) for ways to
-    /// write out certain keys of a CBOR map in a given order. In the case
-    /// of CBOR objects of type FloatingPoint, the number is written using
-    /// the shortest floating-point encoding possible; this is a change
-    /// from previous versions.</para>
-    ///  </summary>
-    /// <param name='stream'>A writable data stream.</param>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='stream'/> is null.</exception>
-    /// <exception cref='System.IO.IOException'>An I/O error
-    /// occurred.</exception>
-    /// <example>
-    /// <para>The following example shows a method that writes each key of
-    /// 'mapObj' to 'outputStream', in the order given in 'keys', where
-    /// 'mapObj' is written out in the form of a CBOR <b>definite-length
-    /// map</b>
-    /// . Only keys found in 'keys' will be written if they exist
-    /// in 'mapObj'.</para>
-    /// <code>private static void WriteKeysToMap&#x28;CBORObject mapObj,
-    /// IList&lt;CBORObject&gt; keys, Stream outputStream)&#x7b; if&#x28;mapObj
-    /// == null)&#x7b; throw new
-    /// ArgumentNullException&#x28;nameof(mapObj));&#x7d; if&#x28;keys ==
-    /// null)&#x7b;throw new ArgumentNullException&#x28;nameof(keys));&#x7d;
-    /// if&#x28;outputStream == null)&#x7b;throw new
-    /// ArgumentNullException&#x28;nameof(outputStream));&#x7d;
-    /// if&#x28;obj.Type!=CBORType.Map)&#x7b; throw new ArgumentException("'obj'
-    /// is not a map."); &#x7d; int keyCount = 0; for (CBORObject key in keys)
-    /// &#x7b; if&#x28;mapObj.ContainsKey(key))&#x7b; keyCount++; &#x7d; &#x7d;
-    /// CBORObject.WriteValue(outputStream, 5, keyCount); for (CBORObject key in
-    /// keys) &#x7b; if&#x28;mapObj.ContainsKey(key))&#x7b;
-    /// key.WriteTo(outputStream); mapObj[key].WriteTo(outputStream); &#x7d;
-    /// &#x7d; &#x7d;</code>
-    /// <para>The following example shows a method that writes each key of
-    /// 'mapObj' to 'outputStream', in the order given in 'keys', where
-    /// 'mapObj' is written out in the form of a CBOR <b>indefinite-length
-    /// map</b>
-    /// . Only keys found in 'keys' will be written if they exist
-    /// in 'mapObj'.</para>
-    /// <code>private static void WriteKeysToIndefMap&#x28;CBORObject mapObj,
-    /// IList&lt;CBORObject&gt; keys, Stream outputStream)&#x7b; if&#x28;mapObj
-    /// == null)&#x7b; throw new
-    /// ArgumentNullException&#x28;nameof(mapObj));&#x7d; if&#x28;keys ==
-    /// null)&#x7b;throw new ArgumentNullException&#x28;nameof(keys));&#x7d;
-    /// if&#x28;outputStream == null)&#x7b;throw new
-    /// ArgumentNullException&#x28;nameof(outputStream));&#x7d;
-    /// if&#x28;obj.Type!=CBORType.Map)&#x7b; throw new ArgumentException("'obj'
-    /// is not a map."); &#x7d; outputStream.WriteByte((byte)0xBF); for
-    /// (CBORObject key in keys) &#x7b; if&#x28;mapObj.ContainsKey(key))&#x7b;
-    /// key.WriteTo(outputStream); mapObj[key].WriteTo(outputStream); &#x7d;
-    /// &#x7d; outputStream.WriteByte((byte)0xff); &#x7d;</code>
-    /// <para>The following example shows a method that writes out a list
-    /// of objects to 'outputStream' as an <b>indefinite-length CBOR
-    /// array</b>
-    /// .</para>
-    /// <code>private static void WriteToIndefArray&#x28; IList&lt;object&gt; list,
-    /// Stream outputStream)&#x7b; if&#x28;list == null)&#x7b; throw new
-    /// ArgumentNullException&#x28;nameof(list));&#x7d; if&#x28;outputStream ==
-    /// null)&#x7b;throw new
-    /// ArgumentNullException&#x28;nameof(outputStream));&#x7d;
-    /// outputStream.WriteByte((byte)0x9f); for (object item in list) &#x7b; new
-    /// CBORObject(item).WriteTo(outputStream); &#x7d;
-    /// outputStream.WriteByte((byte)0xff); &#x7d;</code>
-    ///  .
-    /// </example>
+    /// <param name='stream'>Not documented yet.</param>
     public void WriteTo(Stream stream) {
       this.WriteTo(stream, CBOREncodeOptions.Default);
     }

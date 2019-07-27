@@ -2346,8 +2346,8 @@
     <summary>Gets the value of a CBOR object by integer index in this array or by
       integer key in this map.
     </summary>
-    <param name='index'>Index starting at 0 of the element, or the integer key to this map. (If this
-      is a map, the given index can be any 32-bit signed integer, even a
+    <param name='index'>Index starting at 0 of the element, or the integer key to this map. (If
+      this is a map, the given index can be any 32-bit signed integer, even a
       negative one.).
     </param>
     <returns>The CBOR object referred to by index or key in this array or map. If this
@@ -4753,7 +4753,8 @@
         schemes can further restrict the syntax of the authority, path, and
         query component (see also RFC 7320). However, the syntax of fragment
         identifiers depends on the media type (also known as MIME type) of the
-        resource a URI references (see also RFC 3986 and RFC 7320). As of July 26, 2019, only the following media types specify a syntax for fragment
+        resource a URI references (see also RFC 3986 and RFC 7320). As of July
+        26, 2019, only the following media types specify a syntax for fragment
         identifiers:
       </para>
       <list>

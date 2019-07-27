@@ -293,10 +293,9 @@ namespace Test {
      // Test round-tripping
       CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());
       if (!s.Equals(o2.ToJSONString(), StringComparison.Ordinal)) {
-        string msg = "o2 is not equal to s:\no = " + 
-          TestCommon.ToByteArrayString(o.EncodeToBytes()) + 
-          "\no2 = " +
-          TestCommon.ToByteArrayString(o2.EncodeToBytes()) +
+        string msg = "o2 is not equal to s:\no = " +
+          TestCommon.ToByteArrayString(o.EncodeToBytes()) +
+          "\no2 = " + TestCommon.ToByteArrayString(o2.EncodeToBytes()) +
           "\no2string = " + o2.ToString();
         Assert.AreEqual(s, o2.ToJSONString(), msg);
       }

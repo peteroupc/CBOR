@@ -233,12 +233,12 @@ o.Type == CBORType.ByteString);
       if (!IsUntaggedIntegerOrBignum(o[1])) {
         return false;
       }
-      EInteger numerator = IntegerOrBignum(o[0]);
       EInteger denominator = IntegerOrBignum(o[1]);
       if (denominator.Sign <= 0) {
         return false;
       }
       if (tagName == 270) {
+        EInteger numerator = IntegerOrBignum(o[0]);
         if (numerator.Sign < 0 || !o[2].CanValueFitInInt32()) {
           return false;
         }

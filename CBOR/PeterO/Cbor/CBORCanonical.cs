@@ -75,7 +75,7 @@ namespace PeterO.Cbor {
         return cbor.EncodeToBytes(CBOREncodeOptions.Default);
       } else if (valueAType == CBORType.FloatingPoint) {
         double dbl = cbor.AsDoubleValue();
-          using (var ms = new MemoryStream()) {
+        using (var ms = new MemoryStream()) {
             CBORObject.WriteFloatingPointValue(ms, dbl, 8);
             return ms.ToArray();
           }

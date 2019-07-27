@@ -72,7 +72,7 @@ namespace Test {
           Assert.AreEqual(
             numberinfo["integer"].ToObject(typeof(string)),
             cbornumber.ToObject(typeof(EInteger)).ToString());
-        } else {
+          } else {
           try {
             cbornumber.ToObject(typeof(EInteger));
             Assert.Fail("Should have failed");
@@ -355,7 +355,7 @@ ToObjectTest.TestToFromObjectRoundTrip(dvalue)
           Assert.AreEqual(
   TestCommon.StringToInt((string)numberinfo["integer"].ToObject(typeof(string))),
   ((int)(Byte)cbornumber.ToObject(typeof(byte))) & 0xff);
-        } else {
+} else {
           try {
             cbornumber.ToObject(typeof(byte));
             Assert.Fail("Should have failed " + cbornumber);
@@ -711,7 +711,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
           Assert.AreEqual(
   (short)TestCommon.StringToInt((string)numberinfo["integer"].ToObject(typeof(string))),
   cbornumber.ToObject(typeof(short)));
-        } else {
+} else {
           try {
             cbornumber.ToObject(typeof(short));
             Assert.Fail("Should have failed " + cbornumber);
@@ -1399,8 +1399,8 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty);
             TestCommon.AssertByteArraysEqual(
               (byte[])obj,
               (byte[])obj2);
-          } else if (obj is string[]) {
-            Assert.AreEqual((string[])obj, (string[])obj2);
+            } else if (obj is string[]) {
+              Assert.AreEqual((string[])obj, (string[])obj2);
           } else {
             Assert.AreEqual(obj, obj2, cbor + "\n" + obj.GetType());
           }

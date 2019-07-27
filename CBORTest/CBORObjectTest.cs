@@ -2161,6 +2161,9 @@ ToObjectTest.TestToFromObjectRoundTrip(100).CompareTo(null);
       TestCommon.CompareTestLess(
         ToObjectTest.TestToFromObjectRoundTrip(0.0),
         ToObjectTest.TestToFromObjectRoundTrip(1.0));
+      TestCommon.CompareTestEqual(
+        CBORObject.FromObject(10),
+        CBORObject.FromObject(ERational.Create(10, 1)));
     }
     [Test]
     public void TestContainsKey() {
@@ -2416,16 +2419,16 @@ ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes();
           byte[] bytes = cbor.EncodeToBytes();
           if (bytes.Length != bigSizes[i / 2]) {
             Assert.AreEqual(
-                 bigSizes[i / 2], 
-                 bytes.Length, 
+                 bigSizes[i / 2],
+                 bytes.Length,
                  bj.ToString() + "\n" + TestCommon.ToByteArrayString(bytes));
           }
           bytes = ToObjectTest.TestToFromObjectRoundTrip(bj)
           .EncodeToBytes(new CBOREncodeOptions(false, false, true));
           if (bytes.Length != bigSizes[i / 2]) {
             Assert.AreEqual(
-                 bigSizes[i / 2], 
-                 bytes.Length, 
+                 bigSizes[i / 2],
+                 bytes.Length,
                  bj.ToString() + "\n" + TestCommon.ToByteArrayString(bytes));
           }
           bj += EInteger.One;
@@ -2850,7 +2853,7 @@ ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes();
         ToObjectTest.TestToFromObjectRoundTrip(EInteger.FromString("100"));
       Assert.IsTrue(cbor.IsNumber);
       {
-        string stringTemp = cbor.ToString();
+        string stringTemp = cbor.ToJSONString();
         Assert.AreEqual(
           "100",
           stringTemp);
@@ -2858,7 +2861,7 @@ ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes();
       cbor = ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString("200"));
       Assert.IsTrue(cbor.IsNumber);
       {
-        string stringTemp = cbor.ToString();
+        string stringTemp = cbor.ToJSONString();
         Assert.AreEqual(
           "200",
           stringTemp);
@@ -2866,19 +2869,13 @@ ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes();
       cbor = ToObjectTest.TestToFromObjectRoundTrip(EFloat.FromString("300"));
       Assert.IsTrue(cbor.IsNumber);
       {
-        string stringTemp = cbor.ToString();
+        string stringTemp = cbor.ToJSONString();
         Assert.AreEqual(
           "300",
           stringTemp);
       }
       cbor = ToObjectTest.TestToFromObjectRoundTrip(ERational.Create(1, 2));
       Assert.IsTrue(cbor.IsNumber);
-      {
-        string stringTemp = cbor.ToString();
-        Assert.AreEqual(
-          "1/2",
-          stringTemp);
-      }
     }
     [Test]
     public void TestFromObject() {
@@ -2907,9 +2904,6 @@ ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes();
       Assert.AreEqual(
         CBORObject.Null,
         CBORObject.FromObject((EDecimal)null));
-      Assert.AreEqual(
-        CBORObject.FromObject(10),
-        CBORObject.FromObject(ERational.Create(10, 1)));
       try {
         CBORObject.FromObject(ERational.Create(10, 2));
       } catch (Exception ex) {
@@ -6776,12 +6770,12 @@ public void TestWriteFloatingPointValue() {
         c2bytes = ms.ToArray();
         c2 = CBORObject.DecodeFromBytes(
            c2bytes);
-      } 
+      }
       using (var ms = new MemoryStream()) {
         CBORObject.WriteFloatingPointValue(
            ms,
            c2.AsSingle(),
-           8);  
+           8);
         TestCommon.AssertByteArraysEqual(c2bytes, ms.ToArray());
       }
       if (i == 0) {

@@ -14,16 +14,55 @@ namespace PeterO.Cbor {
   // because they are not CLS-compliant or they
   // are specific to the .NET version of the library.
   public sealed partial class CBORObject {
+    /// <summary>Not documented yet.</summary>
+    /// <param name='a'>Not documented yet.</param>
+    /// <param name='b'>Not documented yet.</param>
+    /// <returns>A Boolean object.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='a'/> is null.</exception>
     public static bool operator <(CBORObject a, CBORObject b) {
+      if (a == null) {
+        throw new ArgumentNullException(nameof(a));
+      }
       return a.CompareTo(b) < 0;
     }
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='a'>Not documented yet.</param>
+    /// <param name='b'>Not documented yet.</param>
+    /// <returns>A Boolean object.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='a'/> is null.</exception>
     public static bool operator <=(CBORObject a, CBORObject b) {
+      if (a == null) {
+        throw new ArgumentNullException(nameof(a));
+      }
       return a.CompareTo(b) <= 0;
     }
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='a'>Not documented yet.</param>
+    /// <param name='b'>Not documented yet.</param>
+    /// <returns>A Boolean object.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='a'/> is null.</exception>
     public static bool operator >(CBORObject a, CBORObject b) {
+      if (a == null) {
+        throw new ArgumentNullException(nameof(a));
+      }
       return a.CompareTo(b) > 0;
     }
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='a'>Not documented yet.</param>
+    /// <param name='b'>Not documented yet.</param>
+    /// <returns>A Boolean object.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='a'/> is null.</exception>
     public static bool operator >=(CBORObject a, CBORObject b) {
+      if (a == null) {
+        throw new ArgumentNullException(nameof(a));
+      }
       return a.CompareTo(b) >= 0;
     }
 

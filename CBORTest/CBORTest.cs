@@ -885,9 +885,6 @@ throw new InvalidOperationException(String.Empty, ex);
       TestCommon.CompareTestGreater(cbor1, cbor2);
     }
 
-
-
-
     [Test]
     public void TestFloat() {
       Assert.IsTrue(
@@ -900,8 +897,8 @@ throw new InvalidOperationException(String.Empty, ex);
           .AsEDecimal().IsNaN());
       for (int i = -65539; i <= 65539; ++i) {
         CBORObject o = ToObjectTest.TestToFromObjectRoundTrip((float)i);
-        //Console.Write("jsonser i={0} o={1} json={2} type={3}",
-          // i,o.ToString(),o.ToJSONString(),o.Type);
+        // Console.Write("jsonser i=" + (// i) + " o=" + (o.ToString()) + " json=" +
+        // (o.ToJSONString()) + " type=" + (o.Type));
         CBORTestCommon.AssertJSONSer(
           o,
           TestCommon.IntToString(i));
@@ -1234,7 +1231,6 @@ throw new InvalidOperationException(String.Empty, ex);
     [Test]
     [Timeout(50000)]
     public void TestRandomData() {
-      
       var rand = new RandomGenerator();
       CBORObject obj;
       for (var i = 0; i < 1000; ++i) {
@@ -1323,7 +1319,6 @@ throw new InvalidOperationException(String.Empty, ex);
     [Test]
     [Timeout(500000)]
     public void TestRandomNonsense() {
-      
       var rand = new RandomGenerator();
       for (var i = 0; i < 1000; ++i) {
         var array = new byte[rand.UniformInt(1000000) + 1];
@@ -1463,7 +1458,6 @@ throw new InvalidOperationException(String.Empty, ex);
 
     [Test]
     public void TestRandomSlightlyModified() {
-      
       var rand = new RandomGenerator();
       // Test slightly modified objects
       for (var i = 0; i < 2000; ++i) {
@@ -1873,69 +1867,92 @@ EInteger pastMaxCborInteger = EInteger.FromString("18446744073709551616");
 EInteger pastMaxInt64 = EInteger.FromString("9223372036854775808");
 EInteger pastMinCborInteger = EInteger.FromString("-18446744073709551617");
 EInteger pastMinInt64 = EInteger.FromString("-9223372036854775809");
-var eints = new EInteger[] { maxCborInteger, maxInt64, minCborInteger,
+var eints = new EInteger[] {
+  maxCborInteger, maxInt64, minCborInteger,
   minInt64, pastMaxCborInteger, pastMaxInt64, pastMinCborInteger,
-  pastMinInt64 };
-var isPastCbor = new bool[] { false, false, false, false, true, false, true, false };
-var isPastInt64 = new bool[] { false, false, false, false, true, true, true, true };
-for(var i=0;i<eints.Length;i++){
+  pastMinInt64,
+};
+var isPastCbor = new bool[] {
+  false, false, false, false, true, false, true,
+  false,
+};
+var isPastInt64 = new bool[] {
+  false, false, false, false, true, true, true,
+  true,
+};
+for (var i = 0; i < eints.Length; ++i) {
  CBORObject cbor;
  bool isNegative = eints[i].Sign < 0;
- cbor=CBORObject.FromObject(eints[i]);
+ cbor = CBORObject.FromObject(eints[i]);
  Assert.IsTrue(cbor.IsNumber, cbor.ToString());
- if(isPastCbor[i]){
-   if(isNegative)Assert.IsTrue(cbor.HasOneTag(3));
-   else Assert.IsTrue(cbor.HasOneTag(2));
+ if (isPastCbor[i]) {
+   if (isNegative) {
+     Assert.IsTrue(cbor.HasOneTag(3));
+   } else {
+ Assert.IsTrue(cbor.HasOneTag(2));
+}
  } else {
    Assert.AreEqual(CBORType.Integer, cbor.Type);
    Assert.AreEqual(0, cbor.TagCount);
  }
- EFloat ef=EFloat.Create(EInteger.One, eints[i]);
- cbor=CBORObject.FromObject(ef);
+ EFloat ef = EFloat.Create(EInteger.One, eints[i]);
+ cbor = CBORObject.FromObject(ef);
  Assert.IsTrue(cbor.IsNumber, cbor.ToString());
- if(isPastCbor[i]){
+ if (isPastCbor[i]) {
    Assert.IsTrue(cbor.HasOneTag(265));
-   if(isNegative)Assert.IsTrue(cbor[0].HasOneTag(3));
-   else Assert.IsTrue(cbor[0].HasOneTag(2));
+   if (isNegative) {
+     Assert.IsTrue(cbor[0].HasOneTag(3));
+   } else {
+ Assert.IsTrue(cbor[0].HasOneTag(2));
+}
  } else {
    Assert.IsTrue(cbor.HasOneTag(5));
    Assert.AreEqual(CBORType.Integer, cbor[0].Type);
    Assert.AreEqual(0, cbor[0].TagCount);
  }
- using(var ms=new MemoryStream()){
+ using (var ms = new MemoryStream()) {
    CBORObject.Write(ef, ms);
-   cbor=CBORObject.DecodeFromBytes(ms.ToArray());
- Assert.IsTrue(cbor.IsNumber, cbor.ToString());
- if(isPastCbor[i]){
+   cbor = CBORObject.DecodeFromBytes(ms.ToArray());
+   Assert.IsTrue(cbor.IsNumber, cbor.ToString());
+   if (isPastCbor[i]) {
    Assert.IsTrue(cbor.HasOneTag(265));
-   if(isNegative)Assert.IsTrue(cbor[0].HasOneTag(3));
-   else Assert.IsTrue(cbor[0].HasOneTag(2));
+   if (isNegative) {
+     Assert.IsTrue(cbor[0].HasOneTag(3));
+   } else {
+ Assert.IsTrue(cbor[0].HasOneTag(2));
+}
  } else {
    Assert.IsTrue(cbor.HasOneTag(5));
    Assert.AreEqual(CBORType.Integer, cbor[0].Type);
    Assert.AreEqual(0, cbor[0].TagCount);
  }
  }
- EDecimal ed=EDecimal.Create(EInteger.One, eints[i]);
- cbor=CBORObject.FromObject(ed);
+ EDecimal ed = EDecimal.Create(EInteger.One, eints[i]);
+ cbor = CBORObject.FromObject(ed);
  Assert.IsTrue(cbor.IsNumber, cbor.ToString());
- if(isPastCbor[i]){
+ if (isPastCbor[i]) {
    Assert.IsTrue(cbor.HasOneTag(264));
-   if(isNegative)Assert.IsTrue(cbor[0].HasOneTag(3));
-   else Assert.IsTrue(cbor[0].HasOneTag(2));
+   if (isNegative) {
+     Assert.IsTrue(cbor[0].HasOneTag(3));
+   } else {
+ Assert.IsTrue(cbor[0].HasOneTag(2));
+}
  } else {
    Assert.IsTrue(cbor.HasOneTag(4));
    Assert.AreEqual(CBORType.Integer, cbor[0].Type);
    Assert.AreEqual(0, cbor[0].TagCount);
  }
- using(var ms=new MemoryStream()){
+ using (var ms = new MemoryStream()) {
    CBORObject.Write(ed, ms);
-   cbor=CBORObject.DecodeFromBytes(ms.ToArray());
- Assert.IsTrue(cbor.IsNumber, cbor.ToString());
- if(isPastCbor[i]){
+   cbor = CBORObject.DecodeFromBytes(ms.ToArray());
+   Assert.IsTrue(cbor.IsNumber, cbor.ToString());
+   if (isPastCbor[i]) {
    Assert.IsTrue(cbor.HasOneTag(264));
-   if(isNegative)Assert.IsTrue(cbor[0].HasOneTag(3));
-   else Assert.IsTrue(cbor[0].HasOneTag(2));
+   if (isNegative) {
+     Assert.IsTrue(cbor[0].HasOneTag(3));
+   } else {
+ Assert.IsTrue(cbor[0].HasOneTag(2));
+}
  } else {
    Assert.IsTrue(cbor.HasOneTag(4));
    Assert.AreEqual(CBORType.Integer, cbor[0].Type);

@@ -354,7 +354,7 @@ namespace PeterO {
     }
 
     /// <summary>Gets the Unicode code point at the given index of the
-    /// ///string.</summary>
+    /// string.</summary>
     /// <param name='str'>The parameter <paramref name='str'/> is a text
     /// string.</param>
     /// <param name='index'>Index of the current position into the
@@ -381,7 +381,7 @@ namespace PeterO {
     }
 
     /// <summary>Gets the Unicode code point at the given index of the
-    /// ///string.</summary>
+    /// string.</summary>
     /// <param name='str'>The parameter <paramref name='str'/> is a text
     /// string.</param>
     /// <param name='index'>Index of the current position into the
@@ -575,8 +575,8 @@ namespace PeterO {
     /// <summary>Writes a portion of a string in UTF-8 encoding to a data
     /// stream.</summary>
     /// <param name='str'>A string to write.</param>
-    /// <param name='offset'>The zero-based index where the string portion
-    /// to write begins.</param>
+    /// <param name='offset'>The Index starting at 0 where the string
+    /// portion to write begins.</param>
     /// <param name='length'>The length of the string portion to
     /// write.</param>
     /// <param name='stream'>A writable data stream.</param>
@@ -614,8 +614,8 @@ namespace PeterO {
     /// <summary>Writes a portion of a string in UTF-8 encoding to a data
     /// stream.</summary>
     /// <param name='str'>A string to write.</param>
-    /// <param name='offset'>The zero-based index where the string portion
-    /// to write begins.</param>
+    /// <param name='offset'>The Index starting at 0 where the string
+    /// portion to write begins.</param>
     /// <param name='length'>The length of the string portion to
     /// write.</param>
     /// <param name='stream'>A writable data stream.</param>
