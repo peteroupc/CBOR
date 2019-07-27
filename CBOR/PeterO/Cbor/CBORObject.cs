@@ -249,7 +249,7 @@ namespace PeterO.Cbor {
             "\u0020range for Integer");
       }
       if ((type == CBORObjectTypeEInteger) &&
-          ((EInteger)item).GetUnsignedBitLengthAsEInteger().CompareTo(64) > 0) {
+          ((EInteger)item).GetSignedBitLengthAsEInteger().CompareTo(64) > 0) {
         throw new ArgumentException("arbitrary-precision integer does not " +
             "fit major type 0 or 1");
       }
@@ -1406,7 +1406,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
       if (bigintValue.CanFitInInt64()) {
         return CBORObject.FromObject(bigintValue.ToInt64Checked());
       } else {
-        EInteger bitLength = bigintValue.GetUnsignedBitLengthAsEInteger();
+        EInteger bitLength = bigintValue.GetSignedBitLengthAsEInteger();
         if (bitLength.CompareTo(64) <= 0) {
           // Fits in major type 0 or 1
           return new CBORObject(CBORObjectTypeEInteger, bigintValue);
@@ -1447,7 +1447,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
             .Add(bigValue.UnsignedMantissa).Add(options);
         tag = 269;
       } else {
-        EInteger bitLength = bigValue.Exponent.GetUnsignedBitLengthAsEInteger();
+        EInteger bitLength = bigValue.Exponent.GetSignedBitLengthAsEInteger();
         tag = bitLength.CompareTo(64) > 0 ? 265 : 5;
         cbor = CBORObject.NewArray()
             .Add(bigValue.Exponent).Add(bigValue.Mantissa);
@@ -1539,7 +1539,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
             .Add(bigValue.UnsignedMantissa).Add(options);
         tag = 268;
       } else {
-        EInteger bitLength = bigValue.Exponent.GetUnsignedBitLengthAsEInteger();
+        EInteger bitLength = bigValue.Exponent.GetSignedBitLengthAsEInteger();
         tag = bitLength.CompareTo(64) > 0 ? 264 : 4;
         cbor = CBORObject.NewArray()
             .Add(bigValue.Exponent).Add(bigValue.Mantissa);
@@ -2487,7 +2487,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
       if (exponent.IsZero) {
         Write(bignum.Mantissa, stream);
       } else {
-        if (exponent.GetUnsignedBitLengthAsEInteger().CompareTo(64) > 0) {
+        if (exponent.GetSignedBitLengthAsEInteger().CompareTo(64) > 0) {
           stream.WriteByte(0xd9); // tag 265
           stream.WriteByte(0x01);
           stream.WriteByte(0x09);
@@ -2579,7 +2579,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
       if (exponent.IsZero) {
         Write(bignum.Mantissa, stream);
       } else {
-        if (exponent.GetUnsignedBitLengthAsEInteger().CompareTo(64) > 0) {
+        if (exponent.GetSignedBitLengthAsEInteger().CompareTo(64) > 0) {
           stream.WriteByte(0xd9); // tag 264
           stream.WriteByte(0x01);
           stream.WriteByte(0x08);
@@ -4424,6 +4424,7 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
       return this.Remove(CBORObject.FromObject(obj));
     }
 
+
     /// <summary>Removes the item at the given index of this CBOR
     /// array.</summary>
     /// <param name='index'>The index, starting at 0, of the item to
@@ -5010,6 +5011,7 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
           bits = BitConverter.ToInt64(
              BitConverter.GetBytes((double)doubleVal),
              0);
+          //DebugUtility.Log("dbl {0} -> {1}",doubleVal,bits);
           return WriteFloatingPointBits(outputStream, bits, 8);
         default: throw new ArgumentOutOfRangeException(nameof(byteCount));
       }
@@ -5038,22 +5040,27 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
         throw new ArgumentNullException(nameof(outputStream));
       }
       var bits = 0;
+      long longbits = 0L;
       switch (byteCount) {
         case 2:
           bits = BitConverter.ToInt32(
              BitConverter.GetBytes((float)singleVal),
              0);
-          throw new NotImplementedException();
+          bits = CBORUtilities.SingleToRoundedHalfPrecision(bits);
+          bits &= 0xffff;
+          return WriteFloatingPointBits(outputStream, bits, 2);
         case 4:
           bits = BitConverter.ToInt32(
              BitConverter.GetBytes((float)singleVal),
              0);
-          return WriteFloatingPointBits(outputStream, bits, 4);
+          longbits = ((long)bits)&0xffffffffL;
+          return WriteFloatingPointBits(outputStream, longbits, 4);
         case 8:
           bits = BitConverter.ToInt32(
              BitConverter.GetBytes((float)singleVal),
              0);
-          throw new NotImplementedException();
+          longbits = CBORUtilities.SingleToDoublePrecision(bits);
+          return WriteFloatingPointBits(outputStream, longbits, 8);
         default: throw new ArgumentOutOfRangeException(nameof(byteCount));
       }
     }
@@ -5545,11 +5552,11 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
             }
           case 7:
             if (firstbyte == 0xf9) {
-              float flt = CBORUtilities.HalfPrecisionToSingle(
+              double dbl = CBORUtilities.HalfPrecisionToDouble(
                   unchecked((int)uadditional));
               return new CBORObject(
                 CBORObjectTypeDouble,
-                (double)flt);
+                dbl);
             }
             if (firstbyte == 0xfa) {
               float flt = BitConverter.ToSingle(

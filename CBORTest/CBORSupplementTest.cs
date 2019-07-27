@@ -22,7 +22,7 @@ namespace Test {
       // string instead of array
       bytes = new byte[] { 0xc4, 0x61, 0x41 };
 cbor = CBORObject.DecodeFromBytes(bytes);
-Assert.IsFalse(cbor.IsNumber);
+Assert.IsFalse(cbor.IsNumber, cbor.ToString());
 try {
  Console.WriteLine(cbor.AsEDecimal());
 Assert.Fail("Should have failed");
@@ -35,7 +35,7 @@ throw new InvalidOperationException(String.Empty, ex);
       // number instead of array
       bytes = new byte[] { 0xc4, 0x00 };
 cbor = CBORObject.DecodeFromBytes(bytes);
-Assert.IsFalse(cbor.IsNumber);
+Assert.IsFalse(cbor.IsNumber, cbor.ToString());
 try {
  Console.WriteLine(cbor.AsEDecimal());
 Assert.Fail("Should have failed");
@@ -47,7 +47,7 @@ throw new InvalidOperationException(String.Empty, ex);
 }
       bytes = new byte[] { 0xc4, 0x81, 0, };
 cbor = CBORObject.DecodeFromBytes(bytes);
-Assert.IsFalse(cbor.IsNumber);
+Assert.IsFalse(cbor.IsNumber, cbor.ToString());
 try {
  Console.WriteLine(cbor.AsEDecimal());
 Assert.Fail("Should have failed");
@@ -59,7 +59,7 @@ throw new InvalidOperationException(String.Empty, ex);
 }
       bytes = new byte[] { 0xc4, 0x82, 0, 0x61, 0x41 };
 cbor = CBORObject.DecodeFromBytes(bytes);
-Assert.IsFalse(cbor.IsNumber);
+Assert.IsFalse(cbor.IsNumber, cbor.ToString());
 try {
  Console.WriteLine(cbor.AsEDecimal());
 Assert.Fail("Should have failed");
@@ -71,7 +71,7 @@ throw new InvalidOperationException(String.Empty, ex);
 }
       bytes = new byte[] { 0xc4, 0x82, 0x61, 0x41, 0 };
 cbor = CBORObject.DecodeFromBytes(bytes);
-Assert.IsFalse(cbor.IsNumber);
+Assert.IsFalse(cbor.IsNumber, cbor.ToString());
 try {
  Console.WriteLine(cbor.AsEDecimal());
 Assert.Fail("Should have failed");
@@ -83,7 +83,7 @@ throw new InvalidOperationException(String.Empty, ex);
 }
       bytes = new byte[] { 0xc4, 0x83, 0, 0, 0 };
 cbor = CBORObject.DecodeFromBytes(bytes);
-Assert.IsFalse(cbor.IsNumber);
+Assert.IsFalse(cbor.IsNumber, cbor.ToString());
 try {
  Console.WriteLine(cbor.AsEDecimal());
 Assert.Fail("Should have failed");
@@ -102,7 +102,7 @@ CBORObject cbor;
       // string instead of array
       bytes = new byte[] { 0xc5, 0x61, 0x41 };
 cbor = CBORObject.DecodeFromBytes(bytes);
-Assert.IsFalse(cbor.IsNumber);
+Assert.IsFalse(cbor.IsNumber, cbor.ToString());
 try {
  Console.WriteLine(cbor.AsEFloat());
 Assert.Fail("Should have failed");
@@ -115,7 +115,7 @@ throw new InvalidOperationException(String.Empty, ex);
       // number instead of array
       bytes = new byte[] { 0xc5, 0x00 };
 cbor = CBORObject.DecodeFromBytes(bytes);
-Assert.IsFalse(cbor.IsNumber);
+Assert.IsFalse(cbor.IsNumber, cbor.ToString());
 try {
  Console.WriteLine(cbor.AsEFloat());
 Assert.Fail("Should have failed");
@@ -127,7 +127,7 @@ throw new InvalidOperationException(String.Empty, ex);
 }
       bytes = new byte[] { 0xc5, 0x81, 0, };
 cbor = CBORObject.DecodeFromBytes(bytes);
-Assert.IsFalse(cbor.IsNumber);
+Assert.IsFalse(cbor.IsNumber, cbor.ToString());
 try {
  Console.WriteLine(cbor.AsEFloat());
 Assert.Fail("Should have failed");
@@ -139,7 +139,7 @@ throw new InvalidOperationException(String.Empty, ex);
 }
       bytes = new byte[] { 0xc5, 0x82, 0, 0x61, 0x41 };
 cbor = CBORObject.DecodeFromBytes(bytes);
-Assert.IsFalse(cbor.IsNumber);
+Assert.IsFalse(cbor.IsNumber, cbor.ToString());
 try {
  Console.WriteLine(cbor.AsEFloat());
 Assert.Fail("Should have failed");
@@ -151,7 +151,7 @@ throw new InvalidOperationException(String.Empty, ex);
 }
       bytes = new byte[] { 0xc5, 0x82, 0x61, 0x41, 0 };
 cbor = CBORObject.DecodeFromBytes(bytes);
-Assert.IsFalse(cbor.IsNumber);
+Assert.IsFalse(cbor.IsNumber, cbor.ToString());
 try {
  Console.WriteLine(cbor.AsEFloat());
 Assert.Fail("Should have failed");
@@ -163,7 +163,7 @@ throw new InvalidOperationException(String.Empty, ex);
 }
       bytes = new byte[] { 0xc5, 0x83, 0, 0, 0 };
 cbor = CBORObject.DecodeFromBytes(bytes);
-Assert.IsFalse(cbor.IsNumber);
+Assert.IsFalse(cbor.IsNumber, cbor.ToString());
 try {
  Console.WriteLine(cbor.AsEFloat());
 Assert.Fail("Should have failed");
@@ -513,42 +513,42 @@ co2.IsInfinity();
         foreach (byte secondbyte in secondbytes) {
           bytes = new byte[] { firstbyte, secondbyte };
           cbor = CBORObject.DecodeFromBytes(bytes);
-          Assert.IsFalse(cbor.IsNumber);
+          Assert.IsFalse(cbor.IsNumber,cbor.ToString());
         }
       }
       cbor = CBORObject.DecodeFromBytes(new byte[] {
         0xd8, 0x1e, 0x9f, 0x01,
         0x01, 0xff,
       });
-      Assert.IsFalse(cbor.IsNumber);
+      Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       cbor = CBORObject.DecodeFromBytes(new byte[] {
         0xd8, 0x1e, 0x9f, 0x01,
         0xff,
       });
-      Assert.IsFalse(cbor.IsNumber);
+      Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       cbor = CBORObject.DecodeFromBytes(
         new byte[] { 0xd8, 0x1e, 0x9f, 0xff, });
-      Assert.IsFalse(cbor.IsNumber);
+      Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       cbor = CBORObject.DecodeFromBytes(new byte[] {
         0xc4, 0x9f, 0x00, 0x00,
         0xff,
       });
-      Assert.IsFalse(cbor.IsNumber);
+      Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       cbor = CBORObject.DecodeFromBytes(new byte[] {
         0xc5, 0x9f, 0x00, 0x00,
         0xff,
       });
-      Assert.IsFalse(cbor.IsNumber);
+      Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       cbor = CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x9f, 0x00, 0xff, });
-      Assert.IsFalse(cbor.IsNumber);
+      Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       cbor = CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x9f, 0x00, 0xff, });
-      Assert.IsFalse(cbor.IsNumber);
+      Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       cbor = CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x9f, 0xff, });
-      Assert.IsFalse(cbor.IsNumber);
+      Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       cbor = CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x9f, 0xff, });
-      Assert.IsFalse(cbor.IsNumber);
+      Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       cbor = CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x81, 0x00, });
-      Assert.IsFalse(cbor.IsNumber);
+      Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       cbor = CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x81, 0x00, });
       {
         object objectTemp = EInteger.Zero;

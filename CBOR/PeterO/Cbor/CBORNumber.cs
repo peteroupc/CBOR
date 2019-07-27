@@ -200,7 +200,7 @@ o.Type == CBORType.ByteString);
             }
             erat = ERational.CreateNaN(
                numerator,
-               options > 6,
+               options >= 6,
                options == 5 || options == 7);
             break;
           default: throw new CBORException("Invalid options");
@@ -400,13 +400,13 @@ o.Type == CBORType.ByteString);
             if (isdec) {
               edec = EDecimal.CreateNaN(
                 mantissa,
-                options > 6,
+                options >= 6,
                 options == 5 || options == 7,
                 null);
             } else {
               efloat = EFloat.CreateNaN(
                 mantissa,
-                options > 6,
+                options >= 6,
                 options == 5 || options == 7,
                 null);
             }

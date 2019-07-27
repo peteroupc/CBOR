@@ -1391,7 +1391,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty);
         try {
           obj2 = cbor.ToObject(obj.GetType());
         } catch (Exception ex) {
-          Assert.Fail(ex.ToString() + "\n" + cbor);
+          Assert.Fail(ex.ToString() + "\n" + cbor + "\n" + obj.GetType());
           throw new InvalidOperationException(String.Empty, ex);
         }
         if (!obj.Equals(obj2)) {
@@ -1402,7 +1402,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty);
           } else if (obj is string[]) {
             Assert.AreEqual((string[])obj, (string[])obj2);
           } else {
-            Assert.AreEqual(obj, obj2, cbor.ToString());
+            Assert.AreEqual(obj, obj2, cbor + "\n" + obj.GetType());
           }
         }
       }

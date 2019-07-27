@@ -34,7 +34,7 @@
     </summary>
     <param name='src'>Byte array containing the data to write.
     </param>
-    <param name='offset'>A zero-based index showing where the desired portion of
+    <param name='offset'>A Index starting at 0 showing where the desired portion of
       <paramref name='src'/>
        begins.
     </param>
@@ -2198,7 +2198,7 @@
   <doc name='M:PeterO.Cbor.CBORObject.Insert(System.Int32,System.Object)'>
     <summary>Inserts an object at the specified position in this CBOR array.
     </summary>
-    <param name='index'>Zero-based index to insert at.
+    <param name='index'>Index starting at 0 to insert at.
     </param>
     <param name='valueOb'>An object representing the value, which will be converted to a CBORObject.
       Can be null, in which case this value is converted to CBORObject.Null.
@@ -2346,7 +2346,7 @@
     <summary>Gets the value of a CBOR object by integer index in this array or by
       integer key in this map.
     </summary>
-    <param name='index'>Zero-based index of the element, or the integer key to this map. (If this
+    <param name='index'>Index starting at 0 of the element, or the integer key to this map. (If this
       is a map, the given index can be any 32-bit signed integer, even a
       negative one.).
     </param>
@@ -4753,8 +4753,7 @@
         schemes can further restrict the syntax of the authority, path, and
         query component (see also RFC 7320). However, the syntax of fragment
         identifiers depends on the media type (also known as MIME type) of the
-        resource a URI references (see also RFC 3986 and RFC 7320). As of May
-        18, 2019, only the following media types specify a syntax for fragment
+        resource a URI references (see also RFC 3986 and RFC 7320). As of July 26, 2019, only the following media types specify a syntax for fragment
         identifiers:
       </para>
       <list>
@@ -4767,7 +4766,7 @@
           vnd.shootproof+json
         </item>
         <item>The following image/* media types: avci, avcs, heic, heic-sequence,
-          heif, heif-sequence, hej2k, hsj2
+          heif, heif-sequence, hej2k, hsj2, jxra, jxrs, jxsi, jxss
         </item>
         <item>The XML media types: application/xml,
           application/xml-external-parsed-entity, text/xml,
@@ -4862,11 +4861,11 @@
     </summary>
     <param name='str'>A string a portion of which may contain percent encoding. May be null.
     </param>
-    <param name='index'>Zero-based index showing where the desired portion of
+    <param name='index'>Index starting at 0 showing where the desired portion of
       <paramref name='str'/>
        begins.
     </param>
-    <param name='endIndex'>Zero-based index showing where the desired portion of
+    <param name='endIndex'>Index starting at 0 showing where the desired portion of
       <paramref name='str'/>
        ends. The character before this index is the last character.
     </param>
@@ -4923,7 +4922,7 @@
     </summary>
     <param name='s'>A string containing a CURIE reference. Can be null.
     </param>
-    <param name='offset'>A zero-based index showing where the desired portion of "s" begins.
+    <param name='offset'>A Index starting at 0 showing where the desired portion of "s" begins.
     </param>
     <param name='length'>The number of elements in the desired portion of "s" (but not more than
       "s" 's length).
@@ -5036,7 +5035,7 @@
     </summary>
     <param name='s'>A string that contains an IRI. Can be null.
     </param>
-    <param name='offset'>A zero-based index showing where the desired portion of "s" begins.
+    <param name='offset'>A Index starting at 0 showing where the desired portion of "s" begins.
     </param>
     <param name='length'>The length of the desired portion of "s" (but not more than "s" 's
       length).
@@ -5535,7 +5534,7 @@
     </summary>
     <param name='str'>A string to write.
     </param>
-    <param name='offset'>The zero-based index where the string portion to write begins.
+    <param name='offset'>The Index starting at 0 where the string portion to write begins.
     </param>
     <param name='length'>The length of the string portion to write.
     </param>
@@ -5582,7 +5581,7 @@
     </summary>
     <param name='str'>A string to write.
     </param>
-    <param name='offset'>The zero-based index where the string portion to write begins.
+    <param name='offset'>The Index starting at 0 where the string portion to write begins.
     </param>
     <param name='length'>The length of the string portion to write.
     </param>

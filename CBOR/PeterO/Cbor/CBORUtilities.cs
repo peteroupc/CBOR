@@ -773,17 +773,26 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
          unchecked((int)shifted) + 1 : unchecked((int)shifted);
     }
 
+    private static int RoundedShift(int mant, int shift) {
+      int mask = (1 << shift) - 1;
+      int half = 1 << (shift - 1);
+      int shifted = mant >> shift;
+      int masked = mant & mask;
+      return (masked > half || (masked == half && (shifted & 1) != 0)) ?
+         unchecked((int)shifted) + 1 : unchecked((int)shifted);
+    }
+
     public static int DoubleToHalfPrecisionIfSameValue(long bits) {
       int exp = unchecked((int)((bits >> 52) & 0x7ffL));
       long mant = bits & 0xfffffffffffffL;
       int sign = unchecked((int)(bits >> 48)) & (1 << 15);
       int sexp = exp - 1008;
+      //DebugUtility.Log("bits={0:X8}, exp={1} sexp={2}",bits,exp,sexp);
       if (exp == 2047) { // Infinity and NaN
         int newmant = unchecked((int)(mant >> 42));
-        return ((mant & ((1 << 42) - 1)) == 0) ? (sign | 0x7c00 | newmant) : 1;
+        return ((mant & ((1L << 42) - 1)) == 0) ? (sign | 0x7c00 | newmant) : -1;
       } else if (sexp >= 31) { // overflow
-        return ((mant & ((1 << 42) -1)) == 0) ? (sign | RoundedShift(mant,
-  42)) : -1;
+        return -1;
       } else if (sexp < -10) { // underflow
         return -1;
       } else if (sexp > 0) { // normal
@@ -798,16 +807,38 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
     public static bool DoubleRetainsSameValueInSingle(long bits) {
       int exp = unchecked((int)((bits >> 52) & 0x7ffL));
       long mant = bits & 0xfffffffffffffL;
-      int sign = unchecked((int)(bits >> 32)) & (1 << 31);
       int sexp = exp - 896;
-      if (exp == 2047 || sexp >= 255) { // Infinity and NaN
-        return ((mant & ((1 << 29) - 1)) == 0);
-      } else if (sexp < -23) { // underflow
+      //DebugUtility.Log("sng mant={0:X8}, exp={1} sexp={2}",bits,exp,sexp);
+      if (exp == 2047) { // Infinity and NaN
+        return ((mant & ((1L << 29) - 1)) == 0);
+      } else if (sexp < -23 || sexp >= 255) { // underflow or overflow
         return false;
       } else if (sexp > 0) { // normal
         return ((mant & ((1L << 29) - 1)) == 0);
       } else { // subnormal and zero
         return ((mant & ((1L << (29 - (sexp - 1))) -1)) == 0);
+      }
+    }
+
+    // NOTE: Rounds to nearest, ties to even
+    public static int SingleToRoundedHalfPrecision(int bits) {
+      int exp = unchecked((int)((bits >> 23) & 0xff));
+      int mant = bits & 0x7fffff;
+      int sign = (bits >> 16) & (1 << 15);
+      int sexp = exp - 112;
+      if (exp == 255) { // Infinity and NaN
+        int newmant = unchecked((int)(mant >> 13));
+        return (mant != 0 && newmant == 0) ?
+           // signaling NaN truncated to have mantissa 0
+           (sign | 0x7c01) : (sign | 0x7c00 | newmant);
+      } else if (sexp >= 31) { // overflow
+        return sign | 0x7c00;
+      } else if (sexp < -10) { // underflow
+        return sign;
+      } else if (sexp > 0) { // normal
+        return sign | (sexp << 10) | RoundedShift(mant, 13);
+      } else { // subnormal and zero
+        return sign | RoundedShift(mant | (1 << 23), 13 - (sexp - 1));
       }
     }
 
@@ -823,7 +854,7 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
            // signaling NaN truncated to have mantissa 0
            (sign | 0x7c01) : (sign | 0x7c00 | newmant);
          } else if (sexp >= 31) { // overflow
-        return sign | RoundedShift(mant, 42);
+        return sign | 0x7c00;
       } else if (sexp < -10) { // underflow
         return sign;
       } else if (sexp > 0) { // normal
@@ -844,8 +875,8 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
         return (mant != 0 && newmant == 0) ?
            // signaling NaN truncated to have mantissa 0
            (sign | 0x7f800001) : (sign | 0x7f800000 | newmant);
-         } else if (sexp >= 255) { // overflow
-        return sign | RoundedShift(mant, 29);
+      } else if (sexp >= 255) { // overflow
+        return sign | 0x7f800000;
       } else if (sexp < -23) { // underflow
         return sign;
       } else if (sexp > 0) { // normal
@@ -877,37 +908,54 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
       }
     }
 
-    public static float HalfPrecisionToSingle(int value) {
-      int negvalue = (value >= 0x8000) ? (1 << 31) : 0;
-      value &= 0x7fff;
-      if (value >= 0x7c00) {
-        value = (int)(0x3fc00 | (value & 0x3ff)) << 13 | negvalue;
-        return BitConverter.ToSingle(
-  BitConverter.GetBytes(value),
-  0);
-      }
-      if (value > 0x400) {
-        value = (int)((value + 0x1c000) << 13) | negvalue;
-        return BitConverter.ToSingle(
-  BitConverter.GetBytes(value),
-  0);
-      }
-      if ((value & 0x400) == value) {
-        value = (int)((value == 0) ? 0 : 0x38800000) | negvalue;
-        return BitConverter.ToSingle(
-  BitConverter.GetBytes(value),
-  0);
-      } else {
-        // denormalized
-        int m = value & 0x3ff;
-        value = 0x1c400;
-        while ((m >> 10) == 0) {
-          value -= 0x400;
-          m <<= 1;
+    public static long SingleToDoublePrecision(int bits) {
+      long negvalue = (long)((bits >> 31) & 1) << 63;
+      int exp = (bits >> 23) & 0xff;
+      int mant = bits & 0x7fffff;
+      long value = 0;
+      if (exp==255) {
+        value = 0x7ff0000000000000 | ((long)mant << 29) | negvalue;
+      } else if(exp==0){
+        if(mant==0){
+         value=negvalue;
+        } else {
+         exp++;
+         while(mant<0x800000){
+           mant<<=1;
+           exp--;
+         }
+         value = ((long)(exp+896)<<52) | ((long)(mant & 0x7fffff) << 29) | negvalue;        
         }
-        value = ((value | (m & 0x3ff)) << 13) | negvalue;
-        return BitConverter.ToSingle(BitConverter.GetBytes((int)value), 0);
+      } else {
+         value = ((long)(exp+896)<<52) | ((long)(mant) << 29) | negvalue;
       }
+      return value;
+    }
+
+    public static double HalfPrecisionToDouble(int bits) {
+      long negvalue = (long)(bits & 0x8000) << 48;
+      int exp = ((bits>>10)&31);
+      int mant = bits&0x3ff;
+      long value = 0;
+      if (exp==31) {
+        value = 0x7ff0000000000000 | ((long)mant << 42) | negvalue;
+      } else if(exp==0){
+        if(mant==0){
+         value=negvalue;
+        } else {
+         exp++;
+         while(mant<0x400){
+           mant<<=1;
+           exp--;
+         }
+         value = ((long)(exp+1008)<<52) | ((long)(mant & 0x3ff) << 42) | negvalue;        
+        }
+      } else {
+         value = ((long)(exp+1008)<<52) | ((long)(mant) << 42) | negvalue;        
+      }
+        return BitConverter.ToDouble(
+  BitConverter.GetBytes(value),
+  0);
     }
   }
 }

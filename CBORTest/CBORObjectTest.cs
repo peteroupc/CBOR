@@ -2415,12 +2415,18 @@ ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes();
           CBORObject cbor = ToObjectTest.TestToFromObjectRoundTrip(bj);
           byte[] bytes = cbor.EncodeToBytes();
           if (bytes.Length != bigSizes[i / 2]) {
-            Assert.AreEqual(bigSizes[i / 2], bytes.Length, bj.ToString());
+            Assert.AreEqual(
+                 bigSizes[i / 2], 
+                 bytes.Length, 
+                 bj.ToString() + "\n" + TestCommon.ToByteArrayString(bytes));
           }
           bytes = ToObjectTest.TestToFromObjectRoundTrip(bj)
           .EncodeToBytes(new CBOREncodeOptions(false, false, true));
           if (bytes.Length != bigSizes[i / 2]) {
-            Assert.AreEqual(bigSizes[i / 2], bytes.Length, bj.ToString());
+            Assert.AreEqual(
+                 bigSizes[i / 2], 
+                 bytes.Length, 
+                 bj.ToString() + "\n" + TestCommon.ToByteArrayString(bytes));
           }
           bj += EInteger.One;
         }
@@ -6760,12 +6766,23 @@ public void TestWriteFloatingPointValue() {
            8);
         TestCommon.AssertByteArraysEqual(bytes, ms.ToArray());
       }
+      CBORObject c2 = null;
+      byte[] c2bytes = null;
       using (var ms = new MemoryStream()) {
         CBORObject.WriteFloatingPointValue(
            ms,
            cbor.AsSingle(),
            8);
-        TestCommon.AssertByteArraysEqual(bytes, ms.ToArray());
+        c2bytes = ms.ToArray();
+        c2 = CBORObject.DecodeFromBytes(
+           c2bytes);
+      } 
+      using (var ms = new MemoryStream()) {
+        CBORObject.WriteFloatingPointValue(
+           ms,
+           c2.AsSingle(),
+           8);  
+        TestCommon.AssertByteArraysEqual(c2bytes, ms.ToArray());
       }
       if (i == 0) {
       using (var ms = new MemoryStream()) {
