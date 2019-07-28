@@ -3381,14 +3381,27 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
       }
     }
 
+    /// <summary>Converts this object to a CBOR number. (NOTE: To determine
+    /// whether this method call can succeed, call the <b>IsNumber</b>
+    /// property (isNumber() method in Java) before calling this
+    /// method.).</summary>
+    /// <returns>The number represented by this object.</returns>
+    /// <exception cref='System.InvalidOperationException'>This object does
+    /// not represent a number.</exception>
+    public CBORNumber AsNumber() {
+       CBORNumber num = CBORNumber.FromCBORObject(this);
+       if (num == null) {
+          throw new InvalidOperationException("Not a number type");
+       }
+       return num;
+    }
+
     /// <summary>Converts this object to a 32-bit signed integer.
     /// Non-integer number values are truncated to an integer. (NOTE: To
     /// determine whether this method call can succeed, call the
     /// <b>CanTruncatedIntFitInInt32</b>
     ///  method before calling this method.
-    /// Checking whether this object's type is <c>CBORType.Number</c>
-    ///  is
-    /// not sufficient. See the example.).</summary>
+    /// See the example.).</summary>
     /// <returns>The closest 32-bit signed integer to this
     /// object.</returns>
     /// <exception cref='System.InvalidOperationException'>This object does
@@ -3417,9 +3430,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// determine whether this method call can succeed, call the
     /// <b>CanTruncatedIntFitInInt64</b>
     ///  method before calling this method.
-    /// Checking whether this object's type is <c>CBORType.Number</c>
-    ///  is
-    /// not sufficient. See the example.).</summary>
+    /// See the example.).</summary>
     /// <returns>The closest 64-bit signed integer to this
     /// object.</returns>
     /// <exception cref='System.InvalidOperationException'>This object does
@@ -3440,10 +3451,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     ///  .
     /// </example>
     public long AsInt64() {
-      CBORNumber cn = CBORNumber.FromCBORObject(this);
-      if (cn == null) {
-        throw new InvalidOperationException("Not a number type");
-      }
+      CBORNumber cn = this.AsNumber();
       return cn.GetNumberInterface().AsInt64(cn.GetValue());
     }
 
@@ -3456,10 +3464,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// <exception cref='System.InvalidOperationException'>This object does
     /// not represent a number.</exception>
     public float AsSingle() {
-      CBORNumber cn = CBORNumber.FromCBORObject(this);
-      if (cn == null) {
-        throw new InvalidOperationException("Not a number type");
-      }
+      CBORNumber cn = this.AsNumber();
       return cn.GetNumberInterface().AsSingle(cn.GetValue());
     }
 
@@ -3490,7 +3495,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// if the value's diagnostic information can' t fit in a 64-bit
     /// floating point number.</returns>
     public bool CanFitInDouble() {
-      CBORNumber cn = CBORNumber.FromCBORObject(this);
+      CBORNumber cn = this.AsNumber();
       return (cn != null) &&
 cn.GetNumberInterface().CanFitInDouble(cn.GetValue());
     }

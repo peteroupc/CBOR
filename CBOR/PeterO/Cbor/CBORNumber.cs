@@ -3,10 +3,11 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-  internal sealed class CBORNumber {
+    /// <summary>Not documented yet.</summary>
+  public sealed class CBORNumber : IComparable<CBORNumber> {
     internal enum Kind {
       Integer,
-      Binary64,
+      Double,
       EInteger,
       EDecimal,
       EFloat,
@@ -24,7 +25,7 @@ namespace PeterO.Cbor {
 
     private readonly Kind kind;
     private readonly object value;
-    public CBORNumber(Kind kind, object value) {
+    internal CBORNumber(Kind kind, object value) {
       this.kind = kind;
       this.value = value;
     }
@@ -41,11 +42,12 @@ namespace PeterO.Cbor {
     internal object GetValue() {
       return this.value;
     }
+
     internal static ICBORNumber GetNumberInterface(Kind kind) {
       switch (kind) {
         case Kind.Integer:
           return NumberInterfaces[0];
-        case Kind.Binary64:
+        case Kind.Double:
           return NumberInterfaces[1];
         case Kind.EInteger:
           return NumberInterfaces[2];
@@ -55,10 +57,12 @@ namespace PeterO.Cbor {
           return NumberInterfaces[4];
         case Kind.ERational:
           return NumberInterfaces[5];
-        default: return null;
+        default: throw new InvalidOperationException();
       }
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <returns>A CBORObject object.</returns>
     public CBORObject ToCBORObject() {
       return CBORObject.FromObject(this.value);
     }
@@ -87,7 +91,15 @@ namespace PeterO.Cbor {
       }
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <param name='o'>Not documented yet.</param>
+    /// <returns>A CBORNumber object.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='o'/> is null.</exception>
     public static CBORNumber FromCBORObject(CBORObject o) {
+      if (o == null) {
+        throw new ArgumentNullException(nameof(o));
+      }
       if (IsUntaggedInteger(o)) {
         if (o.CanValueFitInInt64()) {
           return new CBORNumber(Kind.Integer, o.AsInt64Value());
@@ -138,39 +150,38 @@ o.Type == CBORType.ByteString);
       CBORObject o,
       int tagName) {
       if (o.Type != CBORType.Array) {
-        throw new CBORException("Big fraction must be an array");
+        return null; // "Big fraction must be an array";
       }
       if (tagName == 270) {
         if (o.Count != 3) {
-          throw new CBORException("Extended big fraction requires exactly 3" +
-  "\u0020items");
+          return null; // "Extended big fraction requires exactly 3 items";
         }
         if (!IsUntaggedInteger(o[2])) {
-          throw new CBORException("Third item must be an integer");
+          return null; // "Third item must be an integer";
         }
       } else {
         if (o.Count != 2) {
-          throw new CBORException("Big fraction requires exactly 2 items");
+          return null; // "Big fraction requires exactly 2 items";
         }
       }
       if (!IsUntaggedIntegerOrBignum(o[0])) {
-        throw new CBORException("Numerator is not an integer or bignum");
+        return null; // "Numerator is not an integer or bignum";
       }
       if (!IsUntaggedIntegerOrBignum(o[1])) {
-        throw new CBORException("Denominator is not an integer or bignum");
+        return null; // "Denominator is not an integer or bignum");
       }
       EInteger numerator = IntegerOrBignum(o[0]);
       EInteger denominator = IntegerOrBignum(o[1]);
       if (denominator.Sign <= 0) {
-        throw new CBORException("Denominator may not be negative or zero");
+        return null; // "Denominator may not be negative or zero");
       }
       ERational erat = ERational.Create(numerator, denominator);
       if (tagName == 270) {
         if (numerator.Sign < 0) {
-          throw new CBORException("Numerator may not be negative");
+          return null; // "Numerator may not be negative");
         }
         if (!o[2].CanValueFitInInt32()) {
-          throw new CBORException("Invalid options");
+          return null; // "Invalid options";
         }
         int options = o[2].AsInt32Value();
         switch (options) {
@@ -181,13 +192,13 @@ o.Type == CBORType.ByteString);
             break;
           case 2:
             if (!numerator.IsZero || denominator.CompareTo(1) != 0) {
-              throw new CBORException("invalid values");
+              return null; // "invalid values");
             }
             erat = ERational.PositiveInfinity;
             break;
           case 3:
             if (!numerator.IsZero || denominator.CompareTo(1) != 0) {
-              throw new CBORException("invalid values");
+              return null; // "invalid values");
             }
             erat = ERational.NegativeInfinity;
             break;
@@ -196,14 +207,14 @@ o.Type == CBORType.ByteString);
           case 6:
           case 7:
             if (denominator.CompareTo(1) != 0) {
-              throw new CBORException("invalid values");
+              return null; // "invalid values");
             }
             erat = ERational.CreateNaN(
                numerator,
                options >= 6,
                options == 5 || options == 7);
             break;
-          default: throw new CBORException("Invalid options");
+          default: return null; // "Invalid options");
         }
       }
       return CBORNumber.FromObject(erat);
@@ -320,32 +331,31 @@ o.Type == CBORType.ByteString);
       CBORObject o,
       int tagName) {
       if (o.Type != CBORType.Array) {
-        throw new CBORException("Big fraction must be an array");
+        return null; // "Big fraction must be an array");
       }
       if (tagName == 268 || tagName == 269) {
         if (o.Count != 3) {
-          throw new CBORException("Extended big fraction requires exactly 3" +
-  "\u0020items");
+          return null; // "Extended big fraction requires exactly 3 items");
         }
         if (!IsUntaggedInteger(o[2])) {
-          throw new CBORException("Third item must be an integer");
+          return null; // "Third item must be an integer");
         }
       } else {
         if (o.Count != 2) {
-          throw new CBORException("Big fraction requires exactly 2 items");
+          return null; // "Big fraction requires exactly 2 items");
         }
       }
       if (tagName == 4 || tagName == 5) {
         if (!IsUntaggedInteger(o[0])) {
-          throw new CBORException("Exponent is not an integer");
+          return null; // "Exponent is not an integer");
         }
       } else {
         if (!IsUntaggedIntegerOrBignum(o[0])) {
-          throw new CBORException("Exponent is not an integer or bignum");
+          return null; // "Exponent is not an integer or bignum");
         }
       }
       if (!IsUntaggedIntegerOrBignum(o[1])) {
-        throw new CBORException("Mantissa is not an integer or bignum");
+        return null; // "Mantissa is not an integer or bignum");
       }
       EInteger exponent = IntegerOrBignum(o[0]);
       EInteger mantissa = IntegerOrBignum(o[1]);
@@ -354,10 +364,10 @@ o.Type == CBORType.ByteString);
       EFloat efloat = !isdec ? EFloat.Create(mantissa, exponent) : null;
       if (tagName == 268 || tagName == 269) {
         if (mantissa.Sign < 0) {
-          throw new CBORException("Mantissa may not be negative");
+          return null; // "Mantissa may not be negative");
         }
         if (!o[2].CanValueFitInInt32()) {
-          throw new CBORException("Invalid options");
+          return null; // "Invalid options");
         }
         int options = o[2].AsInt32Value();
         switch (options) {
@@ -372,7 +382,7 @@ o.Type == CBORType.ByteString);
             break;
           case 2:
             if (!exponent.IsZero || !mantissa.IsZero) {
-              throw new CBORException("invalid values");
+              return null; // "invalid values");
             }
             if (isdec) {
               edec = EDecimal.PositiveInfinity;
@@ -382,7 +392,7 @@ o.Type == CBORType.ByteString);
             break;
           case 3:
             if (!exponent.IsZero || !mantissa.IsZero) {
-              throw new CBORException("invalid values");
+              return null; // "invalid values");
             }
             if (isdec) {
               edec = EDecimal.NegativeInfinity;
@@ -395,7 +405,7 @@ o.Type == CBORType.ByteString);
           case 6:
           case 7:
             if (!exponent.IsZero) {
-              throw new CBORException("invalid values");
+              return null; // "invalid values");
             }
             if (isdec) {
               edec = EDecimal.CreateNaN(
@@ -411,7 +421,7 @@ o.Type == CBORType.ByteString);
                 null);
             }
             break;
-          default: throw new CBORException("Invalid options");
+          default: return null; // "Invalid options");
         }
       }
       if (isdec) {
@@ -423,7 +433,7 @@ o.Type == CBORType.ByteString);
 
     private static CBORNumber BignumToNumber(CBORObject o) {
       if (o.Type != CBORType.ByteString) {
-        throw new CBORException("Byte array expected");
+        return null; // "Byte array expected");
       }
       bool negative = o.HasMostInnerTag(3);
       byte[] data = o.GetByteString();
@@ -469,9 +479,22 @@ o.Type == CBORType.ByteString);
       }
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <returns>A string object.</returns>
+    public override string ToString() {
+      switch (this.kind) {
+        case Kind.Integer: {
+            var longItem = (long)this.value;
+            return CBORUtilities.LongToString(longItem);
+          }
+        default:
+return (this.value == null) ? String.Empty : (tis.value.ToString();
+      }
+    }
+
     internal string ToJSONString() {
       switch (this.kind) {
-        case Kind.Binary64: {
+        case Kind.Double: {
             var f = (double)this.value;
             if (Double.IsNegativeInfinity(f) ||
 Double.IsPositiveInfinity(f) ||
@@ -531,33 +554,40 @@ Double.IsNaN(f)) {
       }
     }
 
-    public static CBORNumber FromObject(int value) {
+    internal static CBORNumber FromObject(int value) {
       return new CBORNumber(Kind.Integer, (long)value);
     }
-    public static CBORNumber FromObject(long value) {
+    internal static CBORNumber FromObject(long value) {
       return new CBORNumber(Kind.Integer, value);
     }
-    public static CBORNumber FromObject(double value) {
-      return new CBORNumber(Kind.Binary64, value);
+    internal static CBORNumber FromObject(double value) {
+      return new CBORNumber(Kind.Double, value);
     }
-    public static CBORNumber FromObject(EInteger value) {
+    internal static CBORNumber FromObject(EInteger value) {
       return new CBORNumber(Kind.EInteger, value);
     }
-    public static CBORNumber FromObject(EFloat value) {
+    internal static CBORNumber FromObject(EFloat value) {
       return new CBORNumber(Kind.EFloat, value);
     }
-    public static CBORNumber FromObject(EDecimal value) {
+    internal static CBORNumber FromObject(EDecimal value) {
       return new CBORNumber(Kind.EDecimal, value);
     }
-    public static CBORNumber FromObject(ERational value) {
+    internal static CBORNumber FromObject(ERational value) {
       return new CBORNumber(Kind.ERational, value);
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <returns>A CBORNumber object.</returns>
     public CBORNumber Negate() {
       return new CBORNumber(this.kind,
          this.GetNumberInterface().Negate(this.GetValue()));
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <param name='b'>Not documented yet.</param>
+    /// <returns>A CBORNumber object.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='b'/> is null.</exception>
     public CBORNumber Add(CBORNumber b) {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
@@ -592,7 +622,7 @@ Double.IsNaN(f)) {
         return new CBORNumber(Kind.EDecimal, e1.Add(e2));
       }
       if (typeA == Kind.EFloat || typeB == Kind.EFloat ||
-             typeA == Kind.Binary64 || typeB == Kind.Binary64) {
+             typeA == Kind.Double || typeB == Kind.Double) {
         EFloat e1 = GetNumberInterface(typeA).AsExtendedFloat(objA);
         EFloat e2 = GetNumberInterface(typeB).AsExtendedFloat(objB);
         return new CBORNumber(Kind.EFloat, e1.Add(e2));
@@ -603,6 +633,11 @@ Double.IsNaN(f)) {
       }
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <param name='b'>Not documented yet.</param>
+    /// <returns>A CBORNumber object.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='b'/> is null.</exception>
     public CBORNumber Subtract(CBORNumber b) {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
@@ -633,7 +668,7 @@ Double.IsNaN(f)) {
         return new CBORNumber(Kind.EDecimal, e1.Subtract(e2));
       }
       if (typeA == Kind.EFloat || typeB == Kind.EFloat ||
-               typeA == Kind.Binary64 || typeB == Kind.Binary64) {
+               typeA == Kind.Double || typeB == Kind.Double) {
         EFloat e1 = GetNumberInterface(typeA).AsExtendedFloat(objA);
         EFloat e2 = GetNumberInterface(typeB).AsExtendedFloat(objB);
         return new CBORNumber(Kind.EFloat, e1.Subtract(e2));
@@ -644,6 +679,11 @@ Double.IsNaN(f)) {
       }
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <param name='b'>Not documented yet.</param>
+    /// <returns>A CBORNumber object.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='b'/> is null.</exception>
     public CBORNumber Multiply(CBORNumber b) {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
@@ -686,8 +726,8 @@ Double.IsNaN(f)) {
         return CBORNumber.FromObject(e1.Multiply(e2));
       }
       if (typeA == Kind.EFloat || typeB ==
-      Kind.EFloat || typeA == Kind.Binary64 || typeB ==
-               Kind.Binary64) {
+      Kind.EFloat || typeA == Kind.Double || typeB ==
+               Kind.Double) {
         EFloat e1 =
         GetNumberInterface(typeA).AsExtendedFloat(objA);
         EFloat e2 = GetNumberInterface(typeB).AsExtendedFloat(objB);
@@ -699,6 +739,11 @@ Double.IsNaN(f)) {
       }
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <param name='b'>Not documented yet.</param>
+    /// <returns>A CBORNumber object.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='b'/> is null.</exception>
     public CBORNumber Divide(CBORNumber b) {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
@@ -752,8 +797,8 @@ CBORNumber.FromObject(EDecimal.PositiveInfinity));
         return new CBORNumber(Kind.ERational, er1.Divide(er2));
       }
       if (typeA == Kind.EFloat || typeB ==
-      Kind.EFloat || typeA == Kind.Binary64 || typeB ==
-               Kind.Binary64) {
+      Kind.EFloat || typeA == Kind.Double || typeB ==
+               Kind.Double) {
         EFloat e1 =
         GetNumberInterface(typeA).AsExtendedFloat(objA);
         EFloat e2 = GetNumberInterface(typeB).AsExtendedFloat(objB);
@@ -790,6 +835,11 @@ CBORNumber.FromObject(EDecimal.PositiveInfinity));
       }
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <param name='b'>Not documented yet.</param>
+    /// <returns>A CBORNumber object.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='b'/> is null.</exception>
     public CBORNumber Remainder(CBORNumber b) {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
@@ -819,8 +869,8 @@ CBORNumber.FromObject(EDecimal.PositiveInfinity));
         return CBORNumber.FromObject(e1.Remainder(e2, null));
       }
       if (typeA == Kind.EFloat ||
-               typeB == Kind.EFloat || typeA == Kind.Binary64 || typeB ==
-               Kind.Binary64) {
+               typeB == Kind.EFloat || typeA == Kind.Double || typeB ==
+               Kind.Double) {
         EFloat e1 =
         GetNumberInterface(typeA).AsExtendedFloat(objA);
         EFloat e2 = GetNumberInterface(typeB).AsExtendedFloat(objB);
@@ -832,18 +882,17 @@ CBORNumber.FromObject(EDecimal.PositiveInfinity));
       }
     }
 
+    /// <summary>Compares two CBOR numbers. In this implementation, the two
+    /// numbers' mathematical values are compared. Here, NaN (not-a-number)
+    /// is considered greater than any number.</summary>
+    /// <param name='other'>A value to compare with. Can be null.</param>
+    /// <returns>Less than 0, if this value is less than the other object;
+    /// or 0, if both values are equal; or greater than 0, if this value is
+    /// less than the other object or if the other object is
+    /// null.</returns>
+    /// <exception cref='ArgumentException'>An internal error
+    /// occurred.</exception>
     public int CompareTo(CBORNumber other) {
-      // <summary>Compares two CBOR numbers. In this implementation, the two
-      // numbers' mathematical values are compared. Here, NaN (not-a-number)
-      // is considered greater than any number. This method is not
-      // consistent with the Equals method.</summary>
-      // <param name='other'>A value to compare with.</param>
-      // <returns>Less than 0, if this value is less than the other object;
-      // or 0, if both values are equal; or greater than 0, if this value is
-      // less than the other object or if the other object is
-      // null.</returns>
-      // <exception cref="ArgumentException">An internal error
-      // occurred.</exception>
       if (other == null) {
         return 1;
       }
@@ -869,7 +918,7 @@ CBORNumber.FromObject(EDecimal.PositiveInfinity));
               cmp = bigintA.CompareTo(bigintB);
               break;
             }
-          case Kind.Binary64: {
+          case Kind.Double: {
               var a = (double)objA;
               var b = (double)objB;
               // Treat NaN as greater than all other numbers
@@ -957,8 +1006,8 @@ GetNumberInterface(typeB).AsExtendedDecimal(objB);
               cmp = e1.CompareTo(e2);
             }
           } else if (typeA == Kind.EFloat || typeB ==
-                Kind.EFloat || typeA == Kind.Binary64 || typeB ==
-                Kind.Binary64) {
+                Kind.EFloat || typeA == Kind.Double || typeB ==
+                Kind.Double) {
             EFloat e1 =
             GetNumberInterface(typeA).AsExtendedFloat(objA);
             EFloat e2 = GetNumberInterface(typeB).AsExtendedFloat(objB);
