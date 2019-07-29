@@ -711,7 +711,7 @@ throw new InvalidOperationException(String.Empty, ex);
       try {
         Console.WriteLine(obj.AsEDecimal());
         Assert.Fail("Should have failed");
-      } catch (CBORException) {
+      } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -729,7 +729,7 @@ throw new InvalidOperationException(String.Empty, ex);
       try {
         Console.WriteLine(obj.AsEDecimal());
         Assert.Fail("Should have failed");
-      } catch (CBORException) {
+      } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -747,7 +747,7 @@ throw new InvalidOperationException(String.Empty, ex);
       try {
         Console.WriteLine(cbor.AsEFloat());
         Assert.Fail("Should have failed");
-      } catch (CBORException) {
+      } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -829,7 +829,7 @@ throw new InvalidOperationException(String.Empty, ex);
       for (int i = -65539; i <= 65539; ++i) {
         CBORObject o = ToObjectTest.TestToFromObjectRoundTrip((double)i);
         if (oldobj != null) {
-          TestCommon.CompareTestLess(oldobj, o);
+          TestCommon.CompareTestLess(oldobj.AsNumber(), o.AsNumber());
         }
         oldobj = o;
       }
@@ -875,14 +875,13 @@ throw new InvalidOperationException(String.Empty, ex);
     [Test]
     [Timeout(5000)]
     public void TestExtendedExtremeExponentCompare() {
-      // TODO: Test number conversion here again
       CBORObject cbor1 = ToObjectTest.TestToFromObjectRoundTrip(
         EDecimal.FromString("333333e-2"));
       CBORObject cbor2 = ToObjectTest.TestToFromObjectRoundTrip(
         EFloat.Create(
           EInteger.FromString("5234222"),
           EInteger.FromString("-24936668661488")));
-      TestCommon.CompareTestGreater(cbor1, cbor2);
+      TestCommon.CompareTestGreater(cbor1.AsNumber(), cbor2.AsNumber());
     }
 
     [Test]
@@ -937,9 +936,9 @@ throw new InvalidOperationException(String.Empty, ex);
         cbor = CBORObject.NewArray().Add(-3).Add(99999);
         cbortag = CBORObject.FromObjectAndTag(cbor, tag);
         try {
-          Console.WriteLine(cbortag.IsNegative);
-          Assert.Fail("Should have failed");
-        } catch (CBORException) {
+          Console.WriteLine(cbortag.AsEDecimal());
+          Assert.Fail("Should have failed", cbortag.ToString());
+        } catch (InvalidOperationException) {
           // NOTE: Intentionally empty
         } catch (Exception ex) {
           Assert.Fail(ex.ToString());
@@ -951,9 +950,9 @@ throw new InvalidOperationException(String.Empty, ex);
         cbor = CBORObject.NewArray().Add(-3).Add(99999).Add(-1);
         cbortag = CBORObject.FromObjectAndTag(cbor, tag);
         try {
-          Console.WriteLine(cbortag.IsNegative);
-          Assert.Fail("Should have failed");
-        } catch (CBORException) {
+          Console.WriteLine(cbortag.AsEDecimal());
+          Assert.Fail("Should have failed", cbortag.ToString());
+        } catch (InvalidOperationException) {
           // NOTE: Intentionally empty
         } catch (Exception ex) {
           Assert.Fail(ex.ToString());
@@ -962,9 +961,9 @@ throw new InvalidOperationException(String.Empty, ex);
         cbor = CBORObject.NewArray().Add(-3).Add(99999).Add(2);
         cbortag = CBORObject.FromObjectAndTag(cbor, tag);
         try {
-          Console.WriteLine(cbortag.IsNegative);
-          Assert.Fail("Should have failed");
-        } catch (CBORException) {
+          Console.WriteLine(cbortag.AsEDecimal());
+          Assert.Fail("Should have failed", cbortag.ToString());
+        } catch (InvalidOperationException) {
           // NOTE: Intentionally empty
         } catch (Exception ex) {
           Assert.Fail(ex.ToString());
@@ -979,9 +978,9 @@ throw new InvalidOperationException(String.Empty, ex);
         cbor = CBORObject.NewArray().Add(-3).Add(99999).Add(8);
         cbortag = CBORObject.FromObjectAndTag(cbor, tag);
         try {
-          Console.WriteLine(cbortag.IsNegative);
-          Assert.Fail("Should have failed");
-        } catch (CBORException) {
+          Console.WriteLine(cbortag.AsEDecimal());
+          Assert.Fail("Should have failed", cbortag.ToString());
+        } catch (InvalidOperationException) {
           // NOTE: Intentionally empty
         } catch (Exception ex) {
           Assert.Fail(ex.ToString());
@@ -1224,7 +1223,10 @@ throw new InvalidOperationException(String.Empty, ex);
       var rand = new RandomGenerator();
       for (var i = 0; i < 3000; ++i) {
         string r = RandomObjects.RandomDecimalString(rand);
-        TestDecimalString(r);
+        CBORObject o = ToObjectTest.TestToFromObjectRoundTrip(
+          EDecimal.FromString(r));
+        CBORObject o2 = CBORDataUtilities.ParseJSONNumber(r);
+        TestCommon.CompareTestEqual(o.AsNumber(), o2.AsNumber());
       }
     }
 
@@ -1517,6 +1519,45 @@ throw new InvalidOperationException(String.Empty, ex);
         "null");
     }
 
+    // TODO: Add TestAdd/TestSubtract/TestMultiply tests to 3.6
+    [Test]
+    public void TestMultiply() {
+      var r = new RandomGenerator();
+      for (var i = 0; i < 3000; ++i) {
+        CBORObject o1 = CBORTestCommon.RandomNumber(r);
+        CBORObject o2 = CBORTestCommon.RandomNumber(r);
+        EDecimal cmpDecFrac = AsED(o1).Multiply(AsED(o2));
+        EDecimal cmpCobj = AsED(CBORObject.Multiply(o1, o2));
+        if (cmpDecFrac.CompareTo(cmpCobj) != 0) {
+          string msg = "o1=" + o1.ToString() + ", o2=" +o2.ToString() +
+               ", "+AsED(o1)+", "+AsED(o2) + ", cmpCobj=" +cmpCobj.ToString() +
+               ", cmpDecFrac=" + cmpDecFrac.ToString();
+               TestCommon.CompareTestEqual(cmpDecFrac, cmpCobj, msg);
+        }
+        CBORTestCommon.AssertRoundTrip(o1);
+        CBORTestCommon.AssertRoundTrip(o2);
+      }
+    }
+
+    [Test]
+    public void TestAdd() {
+      var r = new RandomGenerator();
+      for (var i = 0; i < 3000; ++i) {
+        CBORObject o1 = CBORTestCommon.RandomNumber(r);
+        CBORObject o2 = CBORTestCommon.RandomNumber(r);
+        EDecimal cmpDecFrac = AsED(o1).Add(AsED(o2));
+        EDecimal cmpCobj = AsED(CBORObject.Addition(o1, o2));
+        if (cmpDecFrac.CompareTo(cmpCobj) != 0) {
+          string msg = "o1=" + o1.ToString() + ", o2=" +o2.ToString() +
+               ", "+AsED(o1)+", "+AsED(o2) + ", cmpCobj=" +cmpCobj.ToString() +
+               ", cmpDecFrac=" + cmpDecFrac.ToString();
+               TestCommon.CompareTestEqual(cmpDecFrac, cmpCobj, msg);
+        }
+        CBORTestCommon.AssertRoundTrip(o1);
+        CBORTestCommon.AssertRoundTrip(o2);
+      }
+    }
+
     [Test]
     public void TestSubtract() {
       var r = new RandomGenerator();
@@ -1525,7 +1566,12 @@ throw new InvalidOperationException(String.Empty, ex);
         CBORObject o2 = CBORTestCommon.RandomNumber(r);
         EDecimal cmpDecFrac = AsED(o1).Subtract(AsED(o2));
         EDecimal cmpCobj = AsED(CBORObject.Subtract(o1, o2));
-        TestCommon.CompareTestEqual(cmpDecFrac, cmpCobj);
+        if (cmpDecFrac.CompareTo(cmpCobj) != 0) {
+          string msg = "o1=" + o1.ToString() + ", o2=" +o2.ToString() +
+               ", "+AsED(o1)+", "+AsED(o2) + ", cmpCobj=" +cmpCobj.ToString() +
+               ", cmpDecFrac=" + cmpDecFrac.ToString();
+               TestCommon.CompareTestEqual(cmpDecFrac, cmpCobj, msg);
+        }
         CBORTestCommon.AssertRoundTrip(o1);
         CBORTestCommon.AssertRoundTrip(o2);
       }
@@ -1598,7 +1644,7 @@ throw new InvalidOperationException(String.Empty, ex);
     }
 
     [Test]
-    [Timeout(10000)]
+    [Timeout(100000)]
     public void TestTags() {
       EInteger maxuint = EInteger.FromString("18446744073709551615");
       EInteger[] ranges = {
@@ -1617,20 +1663,23 @@ throw new InvalidOperationException(String.Empty, ex);
         EInteger.FromString("-1"),
         trueObj.MostInnerTag);
       EInteger[] tagstmp = CBORObject.True.GetAllTags();
-      Assert.AreEqual(0, tagstmp.Length);
       for (var i = 0; i < ranges.Length; i += 2) {
         EInteger bigintTemp = ranges[i];
+        Console.WriteLine(String.Empty + ranges[i] " - " + (ranges[i+1]);
         while (true) {
           EInteger ei = bigintTemp;
           EInteger bigintNext = ei.Add(EInteger.One);
+          if (ei.Remainder(200).Sign == 0) {
+            Console.WriteLine(ei);
+          }
           if (bigintTemp.GetSignedBitLengthAsEInteger().ToInt32Checked() <=
             31) {
             int bc = ei.ToInt32Checked();
-            if (bc >= -1 && bc <= 37) {
+  if (bc >= -1 && bc <= 37) {
               bigintTemp = bigintNext;
               continue;
             }
-            if (bc >= 264 || bc <= 270) {
+            if (bc >= 264 && bc <= 270) {
               bigintTemp = bigintNext;
               continue;
             }
@@ -1651,7 +1700,7 @@ throw new InvalidOperationException(String.Empty, ex);
           Assert.AreEqual(1, tags.Length);
           Assert.AreEqual(bigintTemp, obj.MostOuterTag);
           Assert.AreEqual(bigintTemp, obj.MostInnerTag);
-          Assert.AreEqual(0, obj.AsInt32());
+          Assert.AreEqual(0, obj.AsInt32Value());
           if (!bigintTemp.Equals(maxuint)) {
             EInteger bigintNew = bigintNext;
             if (bigintNew.Equals(EInteger.FromInt32(264)) ||
@@ -1693,9 +1742,9 @@ throw new InvalidOperationException(String.Empty, ex);
             Assert.AreEqual(2, tags2.Length);
             Assert.AreEqual(bigintNext, obj2.MostOuterTag);
             Assert.AreEqual(bigintTemp, obj2.MostInnerTag);
-            Assert.AreEqual(0, obj2.AsInt32());
+            Assert.AreEqual(0, obj2.AsInt32Value());
           }
-          if (bigintTemp.Equals(ranges[i + 1])) {
+          if (bigintTemp.CompareTo(ranges[i + 1]) >= 0) {
             break;
           }
           bigintTemp = bigintNext;
@@ -1991,13 +2040,6 @@ for (var i = 0; i < eints.Length; ++i) {
       cmpCobj = AsED(CBORObject.Subtract(o1, o2));
       TestCommon.CompareTestEqual(cmpDecFrac, cmpCobj);
       CBORObjectTest.CompareDecimals(o1, o2);
-    }
-
-    private static void TestDecimalString(String r) {
-      CBORObject o = ToObjectTest.TestToFromObjectRoundTrip(
-        EDecimal.FromString(r));
-      CBORObject o2 = CBORDataUtilities.ParseJSONNumber(r);
-      TestCommon.CompareTestEqual(o, o2);
     }
 
     private static void TestTextStringStreamOne(string longString) {

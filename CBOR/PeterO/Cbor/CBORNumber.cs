@@ -480,7 +480,7 @@ o.Type == CBORType.ByteString);
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <returns>A string object.</returns>
+    /// <returns>A text string.</returns>
     public override string ToString() {
       switch (this.kind) {
         case Kind.Integer: {
@@ -488,7 +488,8 @@ o.Type == CBORType.ByteString);
             return CBORUtilities.LongToString(longItem);
           }
         default:
-return (this.value == null) ? String.Empty : (tis.value.ToString();
+           return (this.value == null) ? String.Empty :
+               this.value.ToString();
       }
     }
 
@@ -603,7 +604,8 @@ Double.IsNaN(f)) {
         if ((valueA < 0 && valueB < Int64.MinValue - valueA) ||
                 (valueA > 0 && valueB > Int64.MaxValue - valueA)) {
           // would overflow, convert to EInteger
-          return CBORNumber.FromObject((EInteger)valueB);
+          return CBORNumber.FromObject(
+            EInteger.FromInt64(valueA).Add(EInteger.FromInt64(valueB)));
         }
         return new CBORNumber(Kind.Integer, valueA + valueB);
       }
@@ -653,7 +655,8 @@ Double.IsNaN(f)) {
         if ((valueB < 0 && Int64.MaxValue + valueB < valueA) ||
                 (valueB > 0 && Int64.MinValue + valueB > valueA)) {
           // would overflow, convert to EInteger
-          return CBORNumber.FromObject((EInteger)valueB);
+          return CBORNumber.FromObject(
+            EInteger.FromInt64(valueA).Subtract(EInteger.FromInt64(valueB)));
         }
         return new CBORNumber(Kind.Integer, valueA - valueB);
       }

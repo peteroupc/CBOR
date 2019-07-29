@@ -31,8 +31,7 @@ namespace PeterO {
     }
 
     public static void Main() {
-new Test.CBORSupplementTest().TestBuiltInTags();
-// new Test.CBORTest().TestRoundTripESignalingNaN();
+new Test.CBORTest().TestTags();
 return;
 const String ValueParam = "TestLexOrder";
      // Run all the tests in this assembly

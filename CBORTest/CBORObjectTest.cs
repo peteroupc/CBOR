@@ -1974,7 +1974,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
     public void CompareLongDouble() {
       CBORObject cbor1 = CBORObject.FromObject(3.5E-15);
       CBORObject cbor2 = CBORObject.FromObject(281479271677953L);
-      TestCommon.CompareTestLess(cbor1, cbor2);
+      TestCommon.CompareTestLess(cbor1.AsDouble(), cbor2.AsDouble());
     }
 
     [Test]
@@ -2660,10 +2660,13 @@ ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes();
       TestWriteObj(erat, erat2);
     }
 
+private static void CompareTestNumber(CBORObject o1, CBORObject o2) {
+ TestCommon.CompareTestEqual(o1.AsNumber(), o2.AsNumber());
+}
+
     [Test]
     public void TestEquivalentNegativeInfinity() {
-      Assert.Ignore("Requires CBORNumber semantics");
-      TestCommon.CompareTestEqualAndConsistent(
+      CompareTestNumber(
       ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecNegInf),
       ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf));
       {
@@ -2671,42 +2674,41 @@ ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes();
           ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecNegInf);
         CBORObject objectTemp2 =
           ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf);
-        TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
+        CompareTestNumber(objectTemp, objectTemp2);
       }
       {
         CBORObject objectTemp =
           ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecNegInf);
         CBORObject objectTemp2 =
           ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity);
-        TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
+        CompareTestNumber(objectTemp, objectTemp2);
       }
       {
         CBORObject objectTemp =
           ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf);
         CBORObject objectTemp2 =
           ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity);
-        TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
+        CompareTestNumber(objectTemp, objectTemp2);
       }
       {
         CBORObject objectTemp =
           ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf);
         CBORObject objectTemp2 =
           ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity);
-        TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
+        CompareTestNumber(objectTemp, objectTemp2);
       }
       {
         CBORObject objectTemp =
           ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf);
         CBORObject objectTemp2 =
           ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf);
-        TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
+        CompareTestNumber(objectTemp, objectTemp2);
       }
     }
 
     [Test]
     public void TestEquivalentPositiveInfinity() {
-      Assert.Ignore("Requires CBORNumber semantics");
-      TestCommon.CompareTestEqualAndConsistent(
+      CompareTestNumber(
       ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecPosInf),
       ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatPosInf));
       {
@@ -2714,35 +2716,35 @@ ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes();
           ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecPosInf);
         CBORObject objectTemp2 =
           ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf);
-        TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
+        CompareTestNumber(objectTemp, objectTemp2);
       }
       {
         CBORObject objectTemp =
           ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecPosInf);
         CBORObject objectTemp2 =
           ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity);
-        TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
+        CompareTestNumber(objectTemp, objectTemp2);
       }
       {
         CBORObject objectTemp =
           ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatPosInf);
         CBORObject objectTemp2 =
           ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity);
-        TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
+        CompareTestNumber(objectTemp, objectTemp2);
       }
       {
         CBORObject objectTemp =
           ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf);
         CBORObject objectTemp2 =
           ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity);
-        TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
+        CompareTestNumber(objectTemp, objectTemp2);
       }
       {
         CBORObject objectTemp =
           ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatPosInf);
         CBORObject objectTemp2 =
           ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf);
-        TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
+        CompareTestNumber(objectTemp, objectTemp2);
       }
     }
 
@@ -6325,7 +6327,8 @@ ToObjectTest.TestToFromObjectRoundTrip(byteval);
       int cmpDecFrac = TestCommon.CompareTestReciprocal(
         o1.AsEDecimal(),
         o2.AsEDecimal());
-      int cmpCobj = TestCommon.CompareTestReciprocal(o1, o2);
+      int cmpCobj = TestCommon.CompareTestReciprocal(o1.AsNumber(),
+  o2.AsNumber());
       if (cmpDecFrac != cmpCobj) {
         Assert.AreEqual(
           cmpDecFrac,

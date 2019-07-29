@@ -350,6 +350,118 @@
        is an Exception object.
     </param>
   </doc>
+  <doc name='T:PeterO.Cbor.CBORNumber'>
+    <summary>Not documented yet.
+    </summary>
+  </doc>
+  <doc name='M:PeterO.Cbor.CBORNumber.Add(PeterO.Cbor.CBORNumber)'>
+    <summary>Not documented yet.
+    </summary>
+    <param name='b'>The parameter
+      <paramref name='b'/>
+       is not documented yet.
+    </param>
+    <returns>A CBORNumber object.
+    </returns>
+    <exception cref='System.ArgumentNullException'>The parameter
+      <paramref name='b'/>
+       is null.
+    </exception>
+  </doc>
+  <doc name='M:PeterO.Cbor.CBORNumber.CompareTo(PeterO.Cbor.CBORNumber)'>
+    <summary>Compares two CBOR numbers. In this implementation, the two numbers'
+      mathematical values are compared. Here, NaN (not-a-number) is considered
+      greater than any number.
+    </summary>
+    <param name='other'>A value to compare with. Can be null.
+    </param>
+    <returns>Less than 0, if this value is less than the other object; or 0, if both
+      values are equal; or greater than 0, if this value is less than the other
+      object or if the other object is null.
+    </returns>
+    <exception cref='System.ArgumentException'>An internal error occurred.
+    </exception>
+  </doc>
+  <doc name='M:PeterO.Cbor.CBORNumber.Divide(PeterO.Cbor.CBORNumber)'>
+    <summary>Not documented yet.
+    </summary>
+    <param name='b'>The parameter
+      <paramref name='b'/>
+       is not documented yet.
+    </param>
+    <returns>A CBORNumber object.
+    </returns>
+    <exception cref='System.ArgumentNullException'>The parameter
+      <paramref name='b'/>
+       is null.
+    </exception>
+  </doc>
+  <doc name='M:PeterO.Cbor.CBORNumber.FromCBORObject(PeterO.Cbor.CBORObject)'>
+    <summary>Not documented yet.
+    </summary>
+    <returns>A CBORNumber object.
+    </returns>
+  </doc>
+  <doc name='M:PeterO.Cbor.CBORNumber.Multiply(PeterO.Cbor.CBORNumber)'>
+    <summary>Not documented yet.
+    </summary>
+    <param name='b'>The parameter
+      <paramref name='b'/>
+       is not documented yet.
+    </param>
+    <returns>A CBORNumber object.
+    </returns>
+    <exception cref='System.ArgumentNullException'>The parameter
+      <paramref name='b'/>
+       is null.
+    </exception>
+  </doc>
+  <doc name='M:PeterO.Cbor.CBORNumber.Negate'>
+    <summary>Not documented yet.
+    </summary>
+    <returns>A CBORNumber object.
+    </returns>
+  </doc>
+  <doc name='M:PeterO.Cbor.CBORNumber.Remainder(PeterO.Cbor.CBORNumber)'>
+    <summary>Not documented yet.
+    </summary>
+    <param name='b'>The parameter
+      <paramref name='b'/>
+       is not documented yet.
+    </param>
+    <returns>A CBORNumber object.
+    </returns>
+    <exception cref='System.ArgumentNullException'>The parameter
+      <paramref name='b'/>
+       is null.
+    </exception>
+  </doc>
+  <doc name='M:PeterO.Cbor.CBORNumber.Subtract(PeterO.Cbor.CBORNumber)'>
+    <summary>Not documented yet.
+    </summary>
+    <param name='b'>The parameter
+      <paramref name='b'/>
+       is not documented yet.
+    </param>
+    <returns>A CBORNumber object.
+    </returns>
+    <exception cref='System.ArgumentNullException'>The parameter
+      <paramref name='b'/>
+       is null.
+    </exception>
+  </doc>
+  <doc name='M:PeterO.Cbor.CBORNumber.ToCBORObject'>
+    <summary>Not documented yet.
+    </summary>
+    <returns>A CBORObject object.
+    </returns>
+  </doc>
+  <doc name='M:PeterO.Cbor.CBORNumber.ToString'>
+    <summary>Not documented yet.
+    </summary>
+    <returns>A text string.
+    </returns>
+  </doc>
   <doc name='T:PeterO.Cbor.CBORObject'>
     <summary><para>Represents an object in Concise Binary Object Representation (CBOR) and
         contains methods for reading and writing CBOR data. CBOR is defined in
@@ -870,6 +982,16 @@
         integer."); &#x7d; else { Console.WriteLine("The value is " +
         obj.AsInt64Value()); }</code> .
     </example>
+  </doc>
+  <doc name='M:PeterO.Cbor.CBORObject.AsNumber'>
+    <summary>Converts this object to a CBOR number. (NOTE: To determine whether this
+      method call can succeed, call the
+      <b>IsNumber</b> property (isNumber() method in Java) before calling this method.).
+    </summary>
+    <returns>The number represented by this object.
+    </returns>
+    <exception cref='System.InvalidOperationException'>This object does not represent a number.
+    </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.AsSByte'>
     <summary>Converts this object to an 8-bit signed integer.
@@ -1630,7 +1752,7 @@
           object from
           <c>String</c> , see the example given in
           <see cref='PeterO.Cbor.CBORObject.FromObject(System.Byte[])'/>
-          .
+           .
         </item>
         <item>In the &#x2e;NET version, a nullable is converted to
           <c>CBORObject.Null</c> if the nullable's value is
@@ -1669,7 +1791,7 @@
         <item>An enumeration (
           <c>Enum</c> ) object is converted to its
           <i>
-            underlying value
+             underlying value
           </i>
            in the &#x2e;NET version, or the result of its
           <c>ordinal()</c> method in the Java version.
@@ -1720,8 +1842,8 @@
       </list>
       <para><b>REMARK:</b> &#x2e;NET enumeration (
         <c>Enum</c> ) constants could also have been converted to text strings with
-        <c>ToString()</c> , but that method will return multiple names if the given Enum object is
-        a combination of Enum objects (e.g. if the object is
+        <c>ToString()</c> , but that method will return multiple names if the given Enum object
+        is a combination of Enum objects (e.g. if the object is
         <c>FileAccess.Read | FileAccess.Write</c> ). More generally, if Enums are converted to text strings, constants
         from Enum types with the
         <c>Flags</c> attribute, and constants from the same Enum type that share an
@@ -1751,7 +1873,7 @@
         control of the application. If the plain-old-data type references other
         data types, those types should likewise meet either criterion above.
       </para>
-      .
+       .
     </param>
     <param name='mapper'>An object containing optional converters to convert objects of certain
       types to CBOR objects.
@@ -4198,6 +4320,86 @@
     </param>
     <returns>The quotient of the two objects.
     </returns>
+  </doc>
+  <doc name='M:PeterO.Cbor.CBORObject.op_GreaterThan(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)'>
+    <summary>Not documented yet.
+    </summary>
+    <param name='a'>The parameter
+      <paramref name='a'/>
+       is not documented yet.
+    </param>
+    <param name='b'>The parameter
+      <paramref name='b'/>
+       is not documented yet.
+    </param>
+    <returns>Either
+      <c>true</c> or
+      <c>false</c> .
+    </returns>
+    <exception cref='System.ArgumentNullException'>The parameter
+      <paramref name='a'/>
+       is null.
+    </exception>
+  </doc>
+  <doc name='M:PeterO.Cbor.CBORObject.op_GreaterThanOrEqual(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)'>
+    <summary>Not documented yet.
+    </summary>
+    <param name='a'>The parameter
+      <paramref name='a'/>
+       is not documented yet.
+    </param>
+    <param name='b'>The parameter
+      <paramref name='b'/>
+       is not documented yet.
+    </param>
+    <returns>Either
+      <c>true</c> or
+      <c>false</c> .
+    </returns>
+    <exception cref='System.ArgumentNullException'>The parameter
+      <paramref name='a'/>
+       is null.
+    </exception>
+  </doc>
+  <doc name='M:PeterO.Cbor.CBORObject.op_LessThan(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)'>
+    <summary>Not documented yet.
+    </summary>
+    <param name='a'>The parameter
+      <paramref name='a'/>
+       is not documented yet.
+    </param>
+    <param name='b'>The parameter
+      <paramref name='b'/>
+       is not documented yet.
+    </param>
+    <returns>Either
+      <c>true</c> or
+      <c>false</c> .
+    </returns>
+    <exception cref='System.ArgumentNullException'>The parameter
+      <paramref name='a'/>
+       is null.
+    </exception>
+  </doc>
+  <doc name='M:PeterO.Cbor.CBORObject.op_LessThanOrEqual(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)'>
+    <summary>Not documented yet.
+    </summary>
+    <param name='a'>The parameter
+      <paramref name='a'/>
+       is not documented yet.
+    </param>
+    <param name='b'>The parameter
+      <paramref name='b'/>
+       is not documented yet.
+    </param>
+    <returns>Either
+      <c>true</c> or
+      <c>false</c> .
+    </returns>
+    <exception cref='System.ArgumentNullException'>The parameter
+      <paramref name='a'/>
+       is null.
+    </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.op_Modulus(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)'>
     <summary>Finds the remainder that results when a CBORObject object is divided by

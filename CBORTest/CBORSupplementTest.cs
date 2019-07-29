@@ -26,7 +26,7 @@ namespace Test {
       try {
  Console.WriteLine(cbor.AsEDecimal());
  Assert.Fail("Should have failed");
-} catch (CBORException) {
+} catch (InvalidOperationException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
@@ -39,7 +39,7 @@ namespace Test {
       try {
  Console.WriteLine(cbor.AsEDecimal());
  Assert.Fail("Should have failed");
-} catch (CBORException) {
+} catch (InvalidOperationException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
@@ -51,7 +51,7 @@ namespace Test {
       try {
  Console.WriteLine(cbor.AsEDecimal());
  Assert.Fail("Should have failed");
-} catch (CBORException) {
+} catch (InvalidOperationException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
@@ -63,7 +63,7 @@ namespace Test {
       try {
  Console.WriteLine(cbor.AsEDecimal());
  Assert.Fail("Should have failed");
-} catch (CBORException) {
+} catch (InvalidOperationException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
@@ -75,7 +75,7 @@ namespace Test {
       try {
  Console.WriteLine(cbor.AsEDecimal());
  Assert.Fail("Should have failed");
-} catch (CBORException) {
+} catch (InvalidOperationException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
@@ -87,7 +87,7 @@ namespace Test {
       try {
  Console.WriteLine(cbor.AsEDecimal());
  Assert.Fail("Should have failed");
-} catch (CBORException) {
+} catch (InvalidOperationException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
@@ -106,7 +106,7 @@ namespace Test {
       try {
  Console.WriteLine(cbor.AsEFloat());
  Assert.Fail("Should have failed");
-} catch (CBORException) {
+} catch (InvalidOperationException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
@@ -119,7 +119,7 @@ namespace Test {
       try {
  Console.WriteLine(cbor.AsEFloat());
  Assert.Fail("Should have failed");
-} catch (CBORException) {
+} catch (InvalidOperationException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
@@ -131,7 +131,7 @@ namespace Test {
       try {
  Console.WriteLine(cbor.AsEFloat());
  Assert.Fail("Should have failed");
-} catch (CBORException) {
+} catch (InvalidOperationException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
@@ -143,7 +143,7 @@ namespace Test {
       try {
  Console.WriteLine(cbor.AsEFloat());
  Assert.Fail("Should have failed");
-} catch (CBORException) {
+} catch (InvalidOperationException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
@@ -155,7 +155,7 @@ namespace Test {
       try {
  Console.WriteLine(cbor.AsEFloat());
  Assert.Fail("Should have failed");
-} catch (CBORException) {
+} catch (InvalidOperationException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
@@ -167,7 +167,7 @@ namespace Test {
       try {
  Console.WriteLine(cbor.AsEFloat());
  Assert.Fail("Should have failed");
-} catch (CBORException) {
+} catch (InvalidOperationException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
