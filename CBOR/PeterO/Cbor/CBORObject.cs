@@ -1280,15 +1280,9 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     ///  </list>
     /// <para>REMARK: A certain consistency between &#x2e;NET and Java and
     /// between FromObject and ToObject are sought for version 4.0. It is
-    /// also hoped that--</para>
-    ///  <list><item>the ToObject method will
-    /// support deserializing to objects consisting of fields and not
-    /// getters ("getX()" methods), both in &#x2e;NET and in Java,
-    /// and</item>
-    ///  <item>both FromObject and ToObject will be better
-    /// designed, in version 4.0, so that backward-compatible improvements
-    /// are easier to make.</item>
-    ///  </list>
+    /// also hoped that the ToObject method will support deserializing to
+    /// objects consisting of fields and not getters ("getX()" methods),
+    /// both in &#x2e;NET and in Java.</para>
     ///  </summary>
     /// <param name='t'>The type, class, or interface that this method's
     /// return value will belong to. To express a generic type in Java, see
@@ -1420,7 +1414,18 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     }
 
     /// <summary>Generates a CBOR object from an arbitrary-precision binary
-    /// floating-point number.</summary>
+    /// floating-point number. The CBOR object is generated as follows
+    /// (this is a change in version 4.0):
+    /// <list>
+    /// <item>If the number is null, returns CBORObject.Null.</item>
+    /// <item>Otherwise, if the number expresses infinity, not-a-number, or
+    /// negative zero, the CBOR object will have tag 269 and the
+    /// appropriate format.</item>
+    /// <item>Otherwise, if the number's exponent is greater than or equal
+    /// to 2^64 or less than -(2^64), the CBOR object will have tag 265 and
+    /// the appropriate format.</item>
+    /// <item>Otherwise, the CBOR object will have tag 5 and the
+    /// appropriate format.</item></list></summary>
     /// <param name='bigValue'>An arbitrary-precision binary floating-point
     /// number. Can be null.</param>
     /// <returns>The given number encoded as a CBOR object. Returns
@@ -1456,7 +1461,15 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     }
 
     /// <summary>Generates a CBOR object from an arbitrary-precision
-    /// rational number.</summary>
+    /// rational number. The CBOR object is generated as follows (this is a
+    /// change in version 4.0):
+    /// <list>
+    /// <item>If the number is null, returns CBORObject.Null.</item>
+    /// <item>Otherwise, if the number expresses infinity, not-a-number, or
+    /// negative zero, the CBOR object will have tag 270 and the
+    /// appropriate format.</item>
+    /// <item>Otherwise, the CBOR object will have tag 5 and the
+    /// appropriate format.</item></list></summary>
     /// <param name='bigValue'>An arbitrary-precision rational number. Can
     /// be null.</param>
     /// <returns>The given number encoded as a CBOR object. Returns
@@ -1512,7 +1525,18 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
       return CBORObject.FromObjectAndTag(cbor, tag);
     }
 
-    /// <summary>Generates a CBOR object from a decimal number.</summary>
+    /// <summary>Generates a CBOR object from a decimal number. The CBOR
+    /// object is generated as follows (this is a change in version 4.0):
+    /// <list>
+    /// <item>If the number is null, returns CBORObject.Null.</item>
+    /// <item>Otherwise, if the number expresses infinity, not-a-number, or
+    /// negative zero, the CBOR object will have tag 268 and the
+    /// appropriate format.</item>
+    /// <item>If the number's exponent is greater than or equal to 2^64 or
+    /// less than -(2^64), the CBOR object will have tag 264 and the
+    /// appropriate format.</item>
+    /// <item>Otherwise, the CBOR object will have tag 4 and the
+    /// appropriate format.</item></list></summary>
     /// <param name='bigValue'>An arbitrary-precision decimal number. Can
     /// be null.</param>
     /// <returns>The given number encoded as a CBOR object. Returns
@@ -1861,14 +1885,9 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// to this method.</para>
     /// <para>REMARK: A certain consistency between &#x2e;NET and Java and
     /// between FromObject and ToObject are sought for version 4.0. It is
-    /// also hoped that--</para>
-    /// <list>
-    /// <item>the ToObject method will support deserializing to objects
-    /// consisting of fields and not getters ("getX()" methods), both in
-    /// &#x2e;NET and in Java, and</item>
-    /// <item>both FromObject and ToObject will be better designed, in
-    /// version 4.0, so that backward-compatible improvements are easier to
-    /// make.</item></list></summary>
+    /// also hoped that the ToObject method will support deserializing to
+    /// objects consisting of fields and not getters ("getX()" methods),
+    /// both in &#x2e;NET and in Java.</para></summary>
     /// <param name='obj'>An arbitrary object to convert to a CBOR object.
     /// <para><b>NOTE:</b> For security reasons, whenever possible, an
     /// application should not base this parameter on user input or other
@@ -2453,17 +2472,8 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     // FromObject(EFloat/EDecimal/ERational) in older versions
 
     /// <summary>Writes a binary floating-point number in CBOR format to a
-    /// data stream as follows:
-    /// <list type=''>
-    /// <item>If the value is null, writes the byte 0xF6.</item>
-    /// <item>If the value is negative zero, infinity, or NaN, writes the
-    /// value as an extended bigfloat (tag 269). This is a change in
-    /// version 4.0.</item>
-    /// <item>If the value has an exponent of zero, writes the value as an
-    /// unsigned integer or signed integer if the number can fit either
-    /// type or as a arbitrary-precision integer otherwise.</item>
-    /// <item>In all other cases, writes the value as a big
-    /// float.</item></list></summary>
+    /// data stream, as though it were converted to a CBOR object via
+    /// CBORObject.FromObject(EFloat) and then written out.</summary>
     /// <param name='bignum'>An arbitrary-precision binary floating-point
     /// number. Can be null.</param>
     /// <param name='stream'>A writable data stream.</param>
@@ -2498,18 +2508,9 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
         Write(bignum.Mantissa, stream);
     }
 
-    /// <summary>Writes a rational number in CBOR format to a data stream
-    /// as follows:
-    /// <list type=''>
-    /// <item>If the value is null, writes the byte 0xF6.</item>
-    /// <item>If the value is negative zero, infinity, or NaN, writes the
-    /// value as an extended rational number (tag 270). This is a change in
-    /// version 4.0.</item>
-    /// <item>If the value has a denominator of one, writes the value as an
-    /// unsigned integer or signed integer if the number can fit either
-    /// type or as an arbitrary-precision integer otherwise.</item>
-    /// <item>In all other cases, writes the value as a rational number
-    /// (tag 30).</item></list></summary>
+    /// <summary>Writes a rational number in CBOR format to a data stream,
+    /// as though it were converted to a CBOR object via
+    /// CBORObject.FromObject(ERational) and then written out.</summary>
     /// <param name='rational'>An arbitrary-precision rational number. Can
     /// be null.</param>
     /// <param name='stream'>A writable data stream.</param>
@@ -2537,17 +2538,8 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     }
 
     /// <summary>Writes a decimal floating-point number in CBOR format to a
-    /// data stream, as follows:
-    /// <list type=''>
-    /// <item>If the value is null, writes the byte 0xF6.</item>
-    /// <item>If the value is negative zero, infinity, or NaN, writes the
-    /// value as an extended rational number (tag 268). This is a change in
-    /// version 4.0.</item>
-    /// <item>If the value has an exponent of zero, writes the value as an
-    /// unsigned integer or signed integer if the number can fit either
-    /// type or as a arbitrary-precision integer otherwise.</item>
-    /// <item>In all other cases, writes the value as a decimal
-    /// fraction.</item></list></summary>
+    /// data stream, as though it were converted to a CBOR object via
+    /// CBORObject.FromObject(EDecimal) and then written out.</summary>
     /// <param name='bignum'>The arbitrary-precision decimal number to
     /// write. Can be null.</param>
     /// <param name='stream'>Stream to write to.</param>
@@ -3431,9 +3423,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// determine whether this method call can succeed, call the
     /// <b>CanTruncatedIntFitInInt32</b>
     ///  method before calling this method.
-    /// Checking whether this object's type is <c>CBORType.Number</c>
-    ///  is
-    /// not sufficient. See the example.).</summary>
+    /// See the example.).</summary>
     /// <returns>The closest 32-bit signed integer to this
     /// object.</returns>
     /// <exception cref='System.InvalidOperationException'>This object does
@@ -3460,9 +3450,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// determine whether this method call can succeed, call the
     /// <b>CanTruncatedIntFitInInt64</b>
     ///  method before calling this method.
-    /// Checking whether this object's type is <c>CBORType.Number</c>
-    ///  is
-    /// not sufficient. See the example.).</summary>
+    /// See the example.).</summary>
     /// <returns>The closest 64-bit signed integer to this
     /// object.</returns>
     /// <exception cref='System.InvalidOperationException'>This object does
