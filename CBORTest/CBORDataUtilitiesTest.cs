@@ -258,11 +258,11 @@ namespace Test {
       }
 
       TestCommon.CompareTestEqual(
-  ToObjectTest.TestToFromObjectRoundTrip(230),
-  CBORDataUtilities.ParseJSONNumber("23.0e01"));
+  ToObjectTest.TestToFromObjectRoundTrip(230).AsNumber(),
+  CBORDataUtilities.ParseJSONNumber("23.0e01").AsNumber());
       TestCommon.CompareTestEqual(
-  ToObjectTest.TestToFromObjectRoundTrip(23),
-  CBORDataUtilities.ParseJSONNumber("23.0e00"));
+  ToObjectTest.TestToFromObjectRoundTrip(23).AsNumber(),
+  CBORDataUtilities.ParseJSONNumber("23.0e00").AsNumber());
       cbor = CBORDataUtilities.ParseJSONNumber(
         "1e+99999999999999999999999999",
         false,

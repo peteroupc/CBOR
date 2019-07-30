@@ -56,8 +56,7 @@ namespace PeterO.Cbor {
     /// false. For example, <c>base64padding=Yes</c> and
     /// <c>base64padding=1</c> both set the <c>Base64Padding</c> property
     /// to true.</param>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='paramString'/> is null.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='paramString'/> is null.</exception>
     public JSONOptions(string paramString) {
       if (paramString == null) {
         throw new ArgumentNullException(nameof(paramString));

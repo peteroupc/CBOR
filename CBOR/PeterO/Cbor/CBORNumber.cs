@@ -94,8 +94,7 @@ namespace PeterO.Cbor {
     /// <summary>Not documented yet.</summary>
     /// <param name='o'>Not documented yet.</param>
     /// <returns>A CBORNumber object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='o'/> is null.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='o'/> is null.</exception>
     public static CBORNumber FromCBORObject(CBORObject o) {
       if (o == null) {
         throw new ArgumentNullException(nameof(o));
@@ -587,8 +586,7 @@ Double.IsNaN(f)) {
     /// <summary>Not documented yet.</summary>
     /// <param name='b'>Not documented yet.</param>
     /// <returns>A CBORNumber object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='b'/> is null.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='b'/> is null.</exception>
     public CBORNumber Add(CBORNumber b) {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
@@ -638,8 +636,7 @@ Double.IsNaN(f)) {
     /// <summary>Not documented yet.</summary>
     /// <param name='b'>Not documented yet.</param>
     /// <returns>A CBORNumber object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='b'/> is null.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='b'/> is null.</exception>
     public CBORNumber Subtract(CBORNumber b) {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
@@ -685,8 +682,7 @@ Double.IsNaN(f)) {
     /// <summary>Not documented yet.</summary>
     /// <param name='b'>Not documented yet.</param>
     /// <returns>A CBORNumber object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='b'/> is null.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='b'/> is null.</exception>
     public CBORNumber Multiply(CBORNumber b) {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
@@ -745,8 +741,7 @@ Double.IsNaN(f)) {
     /// <summary>Not documented yet.</summary>
     /// <param name='b'>Not documented yet.</param>
     /// <returns>A CBORNumber object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='b'/> is null.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='b'/> is null.</exception>
     public CBORNumber Divide(CBORNumber b) {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
@@ -841,8 +836,7 @@ CBORNumber.FromObject(EDecimal.PositiveInfinity));
     /// <summary>Not documented yet.</summary>
     /// <param name='b'>Not documented yet.</param>
     /// <returns>A CBORNumber object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='b'/> is null.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='b'/> is null.</exception>
     public CBORNumber Remainder(CBORNumber b) {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
@@ -893,7 +887,7 @@ CBORNumber.FromObject(EDecimal.PositiveInfinity));
     /// or 0, if both values are equal; or greater than 0, if this value is
     /// less than the other object or if the other object is
     /// null.</returns>
-    /// <exception cref='ArgumentException'>An internal error
+    /// <exception cref='System.ArgumentException'>An internal error
     /// occurred.</exception>
     public int CompareTo(CBORNumber other) {
       if (other == null) {

@@ -199,6 +199,10 @@
       <c>allowduplicatekeys=1</c> both set the
       <c>AllowDuplicateKeys</c> property to true.
     </param>
+    <exception cref='System.ArgumentNullException'>The parameter
+      <paramref name='paramString'/>
+       is null.
+    </exception>
   </doc>
   <doc name='P:PeterO.Cbor.CBOREncodeOptions.AllowDuplicateKeys'>
     <summary>Gets a value indicating whether to allow duplicate keys when reading CBOR
@@ -399,8 +403,16 @@
   <doc name='M:PeterO.Cbor.CBORNumber.FromCBORObject(PeterO.Cbor.CBORObject)'>
     <summary>Not documented yet.
     </summary>
+    <param name='o'>The parameter
+      <paramref name='o'/>
+       is not documented yet.
+    </param>
     <returns>A CBORNumber object.
     </returns>
+    <exception cref='System.ArgumentNullException'>The parameter
+      <paramref name='o'/>
+       is null.
+    </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORNumber.Multiply(PeterO.Cbor.CBORNumber)'>
     <summary>Not documented yet.
@@ -689,46 +701,6 @@
     <exception cref='System.ArgumentException'>Converter doesn't contain a proper ToCBORObject method".
     </exception>
   </doc>
-  <doc name='M:PeterO.Cbor.CBORObject.AddTagHandler(PeterO.BigInteger,PeterO.Cbor.ICBORTag)'>
-    <summary>Registers an object that validates CBOR objects with new tags.
-    </summary>
-    <param name='bigintTag'>An arbitrary-precision integer.
-    </param>
-    <param name='handler'>The parameter
-      <paramref name='handler'/>
-       is an ICBORTag object.
-    </param>
-    <exception cref='System.ArgumentNullException'>The parameter
-      <paramref name='bigintTag'/>
-       or
-      <paramref name='handler'/>
-       is null.
-    </exception>
-    <exception cref='System.ArgumentException'>The parameter
-      <paramref name='bigintTag'/>
-       is less than 0 or greater than (2^64-1).
-    </exception>
-  </doc>
-  <doc name='M:PeterO.Cbor.CBORObject.AddTagHandler(PeterO.Numbers.EInteger,PeterO.Cbor.ICBORTag)'>
-    <summary>Registers an object that validates CBOR objects with new tags.
-    </summary>
-    <param name='bigintTag'>An arbitrary-precision integer.
-    </param>
-    <param name='handler'>The parameter
-      <paramref name='handler'/>
-       is an ICBORTag object.
-    </param>
-    <exception cref='System.ArgumentNullException'>The parameter
-      <paramref name='bigintTag'/>
-       or
-      <paramref name='handler'/>
-       is null.
-    </exception>
-    <exception cref='System.ArgumentException'>The parameter
-      <paramref name='bigintTag'/>
-       is less than 0 or greater than (2^64-1).
-    </exception>
-  </doc>
   <doc name='M:PeterO.Cbor.CBORObject.Addition(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)'>
     <summary>Finds the sum of two CBOR numbers.
     </summary>
@@ -895,9 +867,7 @@
     <summary>Converts this object to a 32-bit signed integer. Non-integer number values
       are truncated to an integer. (NOTE: To determine whether this method call
       can succeed, call the
-      <b>CanTruncatedIntFitInInt32</b> method before calling this method. Checking whether this object's type is
-
-      <c>CBORType.Number</c> is not sufficient. See the example.).
+      <b>CanTruncatedIntFitInInt32</b> method before calling this method. See the example.).
     </summary>
     <returns>The closest 32-bit signed integer to this object.
     </returns>
@@ -941,9 +911,7 @@
     <summary>Converts this object to a 64-bit signed integer. Non-integer numbers are
       truncated to an integer. (NOTE: To determine whether this method call can
       succeed, call the
-      <b>CanTruncatedIntFitInInt64</b> method before calling this method. Checking whether this object's type is
-
-      <c>CBORType.Number</c> is not sufficient. See the example.).
+      <b>CanTruncatedIntFitInInt64</b> method before calling this method. See the example.).
     </summary>
     <returns>The closest 64-bit signed integer to this object.
     </returns>
@@ -1464,34 +1432,21 @@
       array, or CBORObject.Null if the value is null.
     </returns>
   </doc>
-  <doc name='M:PeterO.Cbor.CBORObject.FromObject(PeterO.ExtendedDecimal)'>
-    <summary>Generates a CBOR object from a decimal number.
-    </summary>
-    <param name='otherValue'>An arbitrary-precision decimal number.
-    </param>
-    <returns>A CBOR number.
-    </returns>
-  </doc>
-  <doc name='M:PeterO.Cbor.CBORObject.FromObject(PeterO.ExtendedFloat)'>
-    <summary>Generates a CBOR object from an arbitrary-precision binary floating-point
-      number.
-    </summary>
-    <param name='bigValue'>An arbitrary-precision binary floating-point number.
-    </param>
-    <returns>A CBOR number.
-    </returns>
-  </doc>
-  <doc name='M:PeterO.Cbor.CBORObject.FromObject(PeterO.ExtendedRational)'>
-    <summary>Generates a CBOR object from an arbitrary-precision binary floating-point
-      number.
-    </summary>
-    <param name='bigValue'>An arbitrary-precision binary floating-point number.
-    </param>
-    <returns>A CBOR number.
-    </returns>
-  </doc>
   <doc name='M:PeterO.Cbor.CBORObject.FromObject(PeterO.Numbers.EDecimal)'>
-    <summary>Generates a CBOR object from a decimal number.
+    <summary>Generates a CBOR object from a decimal number. The CBOR object is
+      generated as follows (this is a change in version 4.0):
+      <list>
+        <item>If the number is null, returns CBORObject.Null.
+        </item>
+        <item>Otherwise, if the number expresses infinity, not-a-number, or negative
+          zero, the CBOR object will have tag 268 and the appropriate format.
+        </item>
+        <item>If the number's exponent is at least 2^64 or less than -(2^64), the
+          CBOR object will have tag 264 and the appropriate format.
+        </item>
+        <item>Otherwise, the CBOR object will have tag 4 and the appropriate format.
+        </item>
+      </list>
     </summary>
     <param name='bigValue'>An arbitrary-precision decimal number. Can be null.
     </param>
@@ -1502,7 +1457,20 @@
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.FromObject(PeterO.Numbers.EFloat)'>
     <summary>Generates a CBOR object from an arbitrary-precision binary floating-point
-      number.
+      number. The CBOR object is generated as follows (this is a change in
+      version 4.0):
+      <list>
+        <item>If the number is null, returns CBORObject.Null.
+        </item>
+        <item>Otherwise, if the number expresses infinity, not-a-number, or negative
+          zero, the CBOR object will have tag 269 and the appropriate format.
+        </item>
+        <item>Otherwise, if the number's exponent is at least 2^64 or less than
+          -(2^64), the CBOR object will have tag 265 and the appropriate format.
+        </item>
+        <item>Otherwise, the CBOR object will have tag 5 and the appropriate format.
+        </item>
+      </list>
     </summary>
     <param name='bigValue'>An arbitrary-precision binary floating-point number. Can be null.
     </param>
@@ -1522,7 +1490,18 @@
     </returns>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.FromObject(PeterO.Numbers.ERational)'>
-    <summary>Generates a CBOR object from an arbitrary-precision rational number.
+    <summary>Generates a CBOR object from an arbitrary-precision rational number. The
+      CBOR object is generated as follows (this is a change in version 4.0):
+      <list>
+        <item>If the number is null, returns CBORObject.Null.
+        </item>
+        <item>Otherwise, if the number expresses infinity, not-a-number, or negative
+          zero, the CBOR object will have tag 270 and the appropriate format.
+        </item>
+        <item>Otherwise, the CBOR object will have tag 30 and the appropriate
+          format.
+        </item>
+      </list>
     </summary>
     <param name='bigValue'>An arbitrary-precision rational number. Can be null.
     </param>
@@ -1530,11 +1509,6 @@
       <paramref name='bigValue'/>
        is null.
     </returns>
-    <exception cref='System.ArgumentException'>Doesn't satisfy !bigValue.IsInfinity() ||
-      bigValue.UnsignedNumerator.IsZero; doesn't satisfy !bigValue.IsInfinity()
-      || bigValue.Denominator.CompareTo(1)==0; doesn't satisfy !bigValue.IsNaN()
-      || bigValue.Denominator.CompareTo(1) == 0.
-    </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.FromObject(System.Boolean)'>
     <summary>Returns the CBOR true value or false value, depending on "value".
@@ -1555,28 +1529,16 @@
     </returns>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.FromObject(System.Byte[])'>
-    <summary>Not documented yet.
+    <summary>Generates a CBOR object from an array of 8-bit bytes; the byte array is
+      copied to a new byte array in this process. (This method can't be used to
+      decode CBOR data from a byte array; for that, use the
+      <b>DecodeFromBytes</b> method instead.).
     </summary>
-    <param name='bytes'>The parameter
-      <paramref name='bytes'/>
-       is not documented yet.
+    <param name='bytes'>An array of 8-bit bytes; can be null.
     </param>
-    <returns>A CBORObject object.
+    <returns>A CBOR object where each element of the given byte array is copied to a
+      new array, or CBORObject.Null if the value is null.
     </returns>
-  </doc>
-  <doc name='M:PeterO.Cbor.CBORObject.FromObject(System.Char)'>
-    <summary>Generates a CBOR string object from a Unicode character.
-    </summary>
-    <param name='value'>The parameter
-      <paramref name='value'/>
-       is a char object.
-    </param>
-    <returns>A CBORObject object.
-    </returns>
-    <exception cref='System.ArgumentException'>The parameter
-      <paramref name='value'/>
-       is a surrogate code point.
-    </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.FromObject(System.Decimal)'>
     <summary>Converts a.NET decimal to a CBOR object.
@@ -1752,7 +1714,7 @@
           object from
           <c>String</c> , see the example given in
           <see cref='PeterO.Cbor.CBORObject.FromObject(System.Byte[])'/>
-           .
+          .
         </item>
         <item>In the &#x2e;NET version, a nullable is converted to
           <c>CBORObject.Null</c> if the nullable's value is
@@ -1791,7 +1753,7 @@
         <item>An enumeration (
           <c>Enum</c> ) object is converted to its
           <i>
-             underlying value
+            underlying value
           </i>
            in the &#x2e;NET version, or the result of its
           <c>ordinal()</c> method in the Java version.
@@ -1842,8 +1804,8 @@
       </list>
       <para><b>REMARK:</b> &#x2e;NET enumeration (
         <c>Enum</c> ) constants could also have been converted to text strings with
-        <c>ToString()</c> , but that method will return multiple names if the given Enum object
-        is a combination of Enum objects (e.g. if the object is
+        <c>ToString()</c> , but that method will return multiple names if the given Enum object is
+        a combination of Enum objects (e.g. if the object is
         <c>FileAccess.Read | FileAccess.Write</c> ). More generally, if Enums are converted to text strings, constants
         from Enum types with the
         <c>Flags</c> attribute, and constants from the same Enum type that share an
@@ -1851,17 +1813,10 @@
       </para>
       <para>REMARK: A certain consistency between &#x2e;NET and Java and between
         FromObject and ToObject are sought for version 4.0. It is also hoped
-        that--
+        that the ToObject method will support deserializing to objects
+        consisting of fields and not getters ("getX()" methods), both in
+        &#x2e;NET and in Java.
       </para>
-      <list>
-        <item>the ToObject method will support deserializing to objects consisting
-          of fields and not getters ("getX()" methods), both in &#x2e;NET and in
-          Java, and
-        </item>
-        <item>both FromObject and ToObject will be better designed, in version 4.0,
-          so that backward-compatible improvements are easier to make.
-        </item>
-      </list>
     </summary>
     <param name='obj'>An arbitrary object to convert to a CBOR object.
       <para><b>NOTE:</b> For security reasons, whenever possible, an application should not base
@@ -1873,7 +1828,7 @@
         control of the application. If the plain-old-data type references other
         data types, those types should likewise meet either criterion above.
       </para>
-       .
+      .
     </param>
     <param name='mapper'>An object containing optional converters to convert objects of certain
       types to CBOR objects.
@@ -2309,14 +2264,6 @@
        is null.
     </exception>
   </doc>
-  <doc name='P:PeterO.Cbor.CBORObject.InnermostTag'>
-    <summary>Gets the last defined tag for this CBOR data item, or -1 if the item is
-      untagged.
-    </summary>
-    <value>The last defined tag for this CBOR data item, or -1 if the item is
-      untagged.
-    </value>
-  </doc>
   <doc name='M:PeterO.Cbor.CBORObject.Insert(System.Int32,System.Object)'>
     <summary>Inserts an object at the specified position in this CBOR array.
     </summary>
@@ -2572,13 +2519,6 @@
   <doc name='F:PeterO.Cbor.CBORObject.Null'>
     <summary>Represents the value null.
     </summary>
-  </doc>
-  <doc name='P:PeterO.Cbor.CBORObject.OutermostTag'>
-    <summary>Gets the outermost tag for this CBOR data item, or -1 if the item is
-      untagged.
-    </summary>
-    <value>The outermost tag for this CBOR data item, or -1 if the item is untagged.
-    </value>
   </doc>
   <doc name='F:PeterO.Cbor.CBORObject.PositiveInfinity'>
     <summary>The value positive infinity.
@@ -3177,17 +3117,10 @@
       </list>
       <para>REMARK: A certain consistency between &#x2e;NET and Java and between
         FromObject and ToObject are sought for version 4.0. It is also hoped
-        that--
+        that the ToObject method will support deserializing to objects
+        consisting of fields and not getters ("getX()" methods), both in
+        &#x2e;NET and in Java.
       </para>
-      <list>
-        <item>the ToObject method will support deserializing to objects consisting
-          of fields and not getters ("getX()" methods), both in &#x2e;NET and in
-          Java, and
-        </item>
-        <item>both FromObject and ToObject will be better designed, in version 4.0,
-          so that backward-compatible improvements are easier to make.
-        </item>
-      </list>
     </summary>
     <param name='t'>The type, class, or interface that this method's return value will belong
       to. To express a generic type in Java, see the example.
@@ -3530,21 +3463,8 @@
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.EDecimal,System.IO.Stream)'>
     <summary>Writes a decimal floating-point number in CBOR format to a data stream, as
-      follows:
-      <list type=''>
-        <item>If the value is null, writes the byte 0xF6.
-        </item>
-        <item>If the value is negative zero, infinity, or NaN, writes the value as
-          an extended rational number (tag 268). This is a change in version
-          4.0.
-        </item>
-        <item>If the value has an exponent of zero, writes the value as an unsigned
-          integer or signed integer if the number can fit either type or as a
-          arbitrary-precision integer otherwise.
-        </item>
-        <item>In all other cases, writes the value as a decimal fraction.
-        </item>
-      </list>
+      though it were converted to a CBOR object via
+      CBORObject.FromObject(EDecimal) and then written out.
     </summary>
     <param name='bignum'>The arbitrary-precision decimal number to write. Can be null.
     </param>
@@ -3558,21 +3478,9 @@
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.EFloat,System.IO.Stream)'>
-    <summary>Writes a binary floating-point number in CBOR format to a data stream as
-      follows:
-      <list type=''>
-        <item>If the value is null, writes the byte 0xF6.
-        </item>
-        <item>If the value is negative zero, infinity, or NaN, writes the value as
-          an extended bigfloat (tag 269). This is a change in version 4.0.
-        </item>
-        <item>If the value has an exponent of zero, writes the value as an unsigned
-          integer or signed integer if the number can fit either type or as a
-          arbitrary-precision integer otherwise.
-        </item>
-        <item>In all other cases, writes the value as a big float.
-        </item>
-      </list>
+    <summary>Writes a binary floating-point number in CBOR format to a data stream, as
+      though it were converted to a CBOR object via
+      CBORObject.FromObject(EFloat) and then written out.
     </summary>
     <param name='bignum'>An arbitrary-precision binary floating-point number. Can be null.
     </param>
@@ -3600,21 +3508,9 @@
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.ERational,System.IO.Stream)'>
-    <summary>Writes a rational number in CBOR format to a data stream as follows:
-      <list type=''>
-        <item>If the value is null, writes the byte 0xF6.
-        </item>
-        <item>If the value is negative zero, infinity, or NaN, writes the value as
-          an extended rational number (tag 270). This is a change in version
-          4.0.
-        </item>
-        <item>If the value has a denominator of one, writes the value as an unsigned
-          integer or signed integer if the number can fit either type or as an
-          arbitrary-precision integer otherwise.
-        </item>
-        <item>In all other cases, writes the value as a rational number (tag 30).
-        </item>
-      </list>
+    <summary>Writes a rational number in CBOR format to a data stream, as though it
+      were converted to a CBOR object via CBORObject.FromObject(ERational) and
+      then written out.
     </summary>
     <param name='rational'>An arbitrary-precision rational number. Can be null.
     </param>
@@ -4795,6 +4691,10 @@
       <c>base64padding=1</c> both set the
       <c>Base64Padding</c> property to true.
     </param>
+    <exception cref='System.ArgumentNullException'>The parameter
+      <paramref name='paramString'/>
+       is null.
+    </exception>
   </doc>
   <doc name='P:PeterO.Cbor.JSONOptions.Base64Padding'>
     <summary>Gets a value indicating whether the Base64Padding property is true. This
@@ -4874,6 +4774,10 @@
       <c>usecamelcase=1</c> both set the
       <c>UseCamelCase</c> property to true.
     </param>
+    <exception cref='System.ArgumentNullException'>The parameter
+      <paramref name='paramString'/>
+       is null.
+    </exception>
   </doc>
   <doc name='F:PeterO.Cbor.PODOptions.Default'>
     <summary>The default settings for "plain old data" options.
@@ -5309,23 +5213,15 @@
     </param>
     <returns>The Unicode code point at the given position. Returns -1 if
       <paramref name='index'/>
-       is less than 0, or is the string's length or greater. Returns the
-      replacement character (U+FFFD) if the current character is an unpaired
-      surrogate code point. If the return value is 65536 (0x10000) or greater,
-      the code point takes up two UTF-16 code units.
+       is 0 or less, or is greater than the string's length. Returns the
+      replacement character (U+FFFD) if the code point at that position is an
+      unpaired surrogate code point. If the return value is 65536 (0x10000) or
+      greater, the code point takes up two UTF-16 code units.
     </returns>
     <exception cref='System.ArgumentNullException'>The parameter
       <paramref name='str'/>
        is null.
     </exception>
-    <example><para>The following example shows how to iterate a text string code point by
-        code point.
-      </para>
-      <code>for (var i = 0;i&lt;str.Length; ++i) { int codePoint =
-        DataUtilities.CodePointAt(str, i);
-        Console.WriteLine("codePoint:"+codePoint); if (codePoint &gt;= 0x10000)
-        { i++; /* Supplementary code point */ } }</code> .
-    </example>
   </doc>
   <doc name='M:PeterO.DataUtilities.CodePointAt(System.String,System.Int32,System.Int32)'>
     <summary>Gets the Unicode code point at the given index of the string.
@@ -5336,19 +5232,19 @@
     </param>
     <param name='index'>Index of the current position into the string.
     </param>
-    <param name='surrogateBehavior'>Specifies what kind of value to return if the previous character is an
-      unpaired surrogate code point: if 0, return the replacement character
-      (U+FFFD); if 1, return the value of the surrogate code point; if neither 0
-      nor 1, return -1.
+    <param name='surrogateBehavior'>Specifies what kind of value to return if the code point at the given
+      index is an unpaired surrogate code point: if 0, return the replacement
+      character (U+FFFD); if 1, return the value of the surrogate code point; if
+      neither 0 nor 1, return -1.
     </param>
-    <returns>The Unicode code point at the current position. Returns -1 if
+    <returns>The Unicode code point at the given position. Returns -1 if
       <paramref name='index'/>
-       is less than 0, or is the string's length or greater. Returns a value as
+       is 0 or less, or is greater than the string's length. Returns a value as
       specified under
       <paramref name='surrogateBehavior'/>
-       if the previous character is an unpaired surrogate code point. If the
-      return value is 65536 (0x10000) or greater, the code point takes up two
-      UTF-16 code units.
+       if the code point at that position is an unpaired surrogate code point.
+      If the return value is 65536 (0x10000) or greater, the code point takes up
+      two UTF-16 code units.
     </returns>
     <exception cref='System.ArgumentNullException'>The parameter
       <paramref name='str'/>
@@ -5375,9 +5271,9 @@
     <returns>The Unicode code point at the previous position. Returns -1 if
       <paramref name='index'/>
        is 0 or less, or is greater than the string's length. Returns the
-      replacement character (U+FFFD) if the previous character is an unpaired
-      surrogate code point. If the return value is 65536 (0x10000) or greater,
-      the code point takes up two UTF-16 code units.
+      replacement character (U+FFFD) if the code point at the previous position
+      is an unpaired surrogate code point. If the return value is 65536
+      (0x10000) or greater, the code point takes up two UTF-16 code units.
     </returns>
     <exception cref='System.ArgumentNullException'>The parameter
       <paramref name='str'/>
@@ -5393,7 +5289,7 @@
     </param>
     <param name='index'>Index of the current position into the string.
     </param>
-    <param name='surrogateBehavior'>Specifies what kind of value to return if the previous character is an
+    <param name='surrogateBehavior'>Specifies what kind of value to return if the previous code point is an
       unpaired surrogate code point: if 0, return the replacement character
       (U+FFFD); if 1, return the value of the surrogate code point; if neither 0
       nor 1, return -1.
@@ -5403,9 +5299,9 @@
        is 0 or less, or is greater than the string's length. Returns a value as
       specified under
       <paramref name='surrogateBehavior'/>
-       if the previous character is an unpaired surrogate code point. If the
-      return value is 65536 (0x10000) or greater, the code point takes up two
-      UTF-16 code units.
+       if the code point at the previous position is an unpaired surrogate code
+      point. If the return value is 65536 (0x10000) or greater, the code point
+      takes up two UTF-16 code units.
     </returns>
     <exception cref='System.ArgumentNullException'>The parameter
       <paramref name='str'/>

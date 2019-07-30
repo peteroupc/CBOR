@@ -39,8 +39,7 @@ namespace PeterO.Cbor {
     /// false. For example, <c>usecamelcase=Yes</c> and
     /// <c>usecamelcase=1</c> both set the <c>UseCamelCase</c> property to
     /// true.</param>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='paramString'/> is null.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='paramString'/> is null.</exception>
     public PODOptions(string paramString) {
       if (paramString == null) {
         throw new ArgumentNullException(nameof(paramString));
@@ -65,8 +64,7 @@ namespace PeterO.Cbor {
     /// options.</summary>
     public static readonly PODOptions Default = new PODOptions();
 
-    /// <summary>
-    /// <para>Gets a value indicating whether property names are converted
+    /// <summary><para>Gets a value indicating whether property names are converted
     /// to camel case before they are used as keys. This option changes the
     /// behavior of key name serialization as follows. If "useCamelCase" is
     /// <c>false</c> :</para>

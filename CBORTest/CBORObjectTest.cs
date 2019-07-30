@@ -1825,7 +1825,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
       });
       Console.WriteLine(cbor1);
       Console.WriteLine(cbor2);
-      TestCommon.CompareTestGreater(cbor1, cbor2);
+      TestCommon.CompareTestGreater(cbor1.AsNumber(), cbor2.AsNumber());
     }
 
     [Test]
@@ -1860,7 +1860,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
       });
       Console.WriteLine(cbor1);
       Console.WriteLine(cbor2);
-      TestCommon.CompareTestReciprocal(cbor1, cbor2);
+      TestCommon.CompareTestReciprocal(cbor1.AsNumber(), cbor2.AsNumber());
     }
     [Test]
     [Timeout(1000)]
@@ -1881,7 +1881,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
       });
       Console.WriteLine(cbor1);
       Console.WriteLine(cbor2);
-      TestCommon.CompareTestReciprocal(cbor1, cbor2);
+      TestCommon.CompareTestReciprocal(cbor1.AsNumber(), cbor2.AsNumber());
     }
 
     [Test]
@@ -1905,7 +1905,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
       });
       Console.WriteLine(cbor1);
       Console.WriteLine(cbor2);
-      TestCommon.CompareTestGreater(cbor1, cbor2);
+      TestCommon.CompareTestGreater(cbor1.AsNumber(), cbor2.AsNumber());
     }
 
     [Test]
@@ -1929,7 +1929,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
       });
       Console.WriteLine(cbor1);
       Console.WriteLine(cbor2);
-      TestCommon.CompareTestLess(cbor1, cbor2);
+      TestCommon.CompareTestLess(cbor1.AsNumber(), cbor2.AsNumber());
     }
 
     [Test]
@@ -1965,7 +1965,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
       });
       Console.WriteLine(cbor1);
       Console.WriteLine(cbor2);
-      TestCommon.CompareTestLess(cbor1, cbor2);
+      TestCommon.CompareTestLess(cbor1.AsNumber(), cbor2.AsNumber());
     }
     private static string TrimStr(string str, int len) {
      return str.Substring(0, Math.Min(len, str.Length));
@@ -1988,17 +1988,6 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
         CBORObject o2 = CBORTestCommon.RandomCBORObject(r);
         CBORObject o3 = CBORTestCommon.RandomCBORObject(r);
         TestCommon.CompareTestRelations(o1, o2, o3);
-        if (list.Count < 400) {
-          if (o1.IsNumber) {
-            list.Add(o1.Untag());
-          }
-          if (o2.IsNumber) {
-            list.Add(o2.Untag());
-          }
-          if (o3.IsNumber) {
-            list.Add(o3.Untag());
-          }
-        }
       }
       Console.WriteLine("Check compare");
       for (var i = 0; i < list.Count; ++i) {
@@ -2036,44 +2025,22 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
         if (o2.IsInfinity() || o2.IsNaN()) {
           continue;
         }
-        TestCommon.CompareTestLess(o1, o2);
+        TestCommon.CompareTestLess(o1.AsNumber(), o2.AsNumber());
         o1 = ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity);
-        TestCommon.CompareTestLess(o1, o2);
+        TestCommon.CompareTestLess(o1.AsNumber(), o2.AsNumber());
         o1 = ToObjectTest.TestToFromObjectRoundTrip(Single.PositiveInfinity);
-        TestCommon.CompareTestLess(o2, o1);
+        TestCommon.CompareTestGreater(o1.AsNumber(), o2.AsNumber());
         o1 = ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity);
-        TestCommon.CompareTestLess(o2, o1);
-        o1 = ToObjectTest.TestToFromObjectRoundTrip(Single.NaN);
-        TestCommon.CompareTestLess(o2, o1);
-        o1 = ToObjectTest.TestToFromObjectRoundTrip(Double.NaN);
-        TestCommon.CompareTestLess(o2, o1);
+        TestCommon.CompareTestGreater(o1.AsNumber(), o2.AsNumber());
       }
       byte[] bytes1 = { 0, 1 };
       byte[] bytes2 = { 0, 2 };
-      byte[] bytes3 = { 0, 2, 0 };
-      byte[] bytes4 = { 1, 1 };
-      byte[] bytes5 = { 1, 1, 4 };
-      byte[] bytes6 = { 1, 2 };
+      byte[] bytes3 = { 1, 1 };
+      byte[] bytes4 = { 1, 2 };
+      byte[] bytes5 = { 0, 2, 0 };
+      byte[] bytes6 = { 1, 1, 4 };
       byte[] bytes7 = { 1, 2, 6 };
       CBORObject[] sortedObjects = {
-        CBORObject.Undefined, CBORObject.Null,
-        CBORObject.False, CBORObject.True,
-        ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity),
-        ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString("-1E+5000")),
-        ToObjectTest.TestToFromObjectRoundTrip(Int64.MinValue),
-        ToObjectTest.TestToFromObjectRoundTrip(Int32.MinValue),
-        ToObjectTest.TestToFromObjectRoundTrip(-2),
-        ToObjectTest.TestToFromObjectRoundTrip(-1),
-        ToObjectTest.TestToFromObjectRoundTrip(0),
-        ToObjectTest.TestToFromObjectRoundTrip(1),
-        ToObjectTest.TestToFromObjectRoundTrip(2),
-        ToObjectTest.TestToFromObjectRoundTrip(Int64.MaxValue),
-        ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString("1E+5000")),
-        ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity),
-        ToObjectTest.TestToFromObjectRoundTrip(Double.NaN),
-        CBORObject.FromSimpleValue(0),
-        CBORObject.FromSimpleValue(19), CBORObject.FromSimpleValue(32),
-        CBORObject.FromSimpleValue(255),
         ToObjectTest.TestToFromObjectRoundTrip(bytes1),
         ToObjectTest.TestToFromObjectRoundTrip(bytes2),
         ToObjectTest.TestToFromObjectRoundTrip(bytes3),
@@ -2083,10 +2050,15 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
         ToObjectTest.TestToFromObjectRoundTrip(bytes7),
         ToObjectTest.TestToFromObjectRoundTrip("aa"),
         ToObjectTest.TestToFromObjectRoundTrip("ab"),
-        ToObjectTest.TestToFromObjectRoundTrip("abc"),
         ToObjectTest.TestToFromObjectRoundTrip("ba"),
+        ToObjectTest.TestToFromObjectRoundTrip("abc"),
         ToObjectTest.TestToFromObjectRoundTrip(CBORObject.NewArray()),
         ToObjectTest.TestToFromObjectRoundTrip(CBORObject.NewMap()),
+        CBORObject.FromSimpleValue(0),
+        CBORObject.FromSimpleValue(1),
+        CBORObject.FromSimpleValue(19), CBORObject.FromSimpleValue(32),
+        CBORObject.FromSimpleValue(255),
+        ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity),
       };
       for (var i = 0; i < sortedObjects.Length; ++i) {
         for (int j = i; j < sortedObjects.Length; ++j) {
@@ -2098,16 +2070,13 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
         }
         Assert.AreEqual(1, sortedObjects[i].CompareTo(null));
       }
-      CBORObject sp =
-        ToObjectTest.TestToFromObjectRoundTrip(Single.PositiveInfinity);
-      CBORObject sn =
-        ToObjectTest.TestToFromObjectRoundTrip(Single.NegativeInfinity);
-      CBORObject snan = ToObjectTest.TestToFromObjectRoundTrip(Single.NaN);
-      CBORObject dp =
-        ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity);
-      CBORObject dn =
-        ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity);
-      CBORObject dnan = ToObjectTest.TestToFromObjectRoundTrip(Double.NaN);
+      CBORNumber sp =
+        CBORObject.FromObject(Single.PositiveInfinity).AsNumber();
+      CBORNumber sn = CBORObject.FromObject(Single.NegativeInfinity).AsNumber();
+      CBORNumber snan = CBORObject.FromObject(Single.NaN).AsNumber();
+      CBORNumber dp = CBORObject.FromObject(Double.PositiveInfinity).AsNumber();
+      CBORNumber dn = CBORObject.FromObject(Double.NegativeInfinity).AsNumber();
+      CBORNumber dnan = CBORObject.FromObject(Double.NaN).AsNumber();
       TestCommon.CompareTestEqual(sp, sp);
       TestCommon.CompareTestEqual(sp, dp);
       TestCommon.CompareTestEqual(dp, dp);
@@ -2140,30 +2109,18 @@ ToObjectTest.TestToFromObjectRoundTrip(100).CompareTo(null);
           ToObjectTest.TestToFromObjectRoundTrip(Double.NaN).CompareTo(null);
         Assert.AreEqual(1, numberTemp);
       }
-      TestCommon.CompareTestLess(CBORObject.Undefined, CBORObject.Null);
-      TestCommon.CompareTestLess(CBORObject.Null, CBORObject.False);
-      TestCommon.CompareTestLess(CBORObject.False, CBORObject.True);
       TestCommon.CompareTestLess(
-  CBORObject.False,
-  ToObjectTest.TestToFromObjectRoundTrip(0));
+        ToObjectTest.TestToFromObjectRoundTrip(0).AsNumber(),
+        ToObjectTest.TestToFromObjectRoundTrip(1).AsNumber());
       TestCommon.CompareTestLess(
-   CBORObject.False,
-   CBORObject.FromSimpleValue(0));
+        ToObjectTest.TestToFromObjectRoundTrip(0.0f).AsNumber(),
+        ToObjectTest.TestToFromObjectRoundTrip(1.0f).AsNumber());
       TestCommon.CompareTestLess(
-        CBORObject.FromSimpleValue(0),
-        CBORObject.FromSimpleValue(1));
-      TestCommon.CompareTestLess(
-        ToObjectTest.TestToFromObjectRoundTrip(0),
-        ToObjectTest.TestToFromObjectRoundTrip(1));
-      TestCommon.CompareTestLess(
-        ToObjectTest.TestToFromObjectRoundTrip(0.0f),
-        ToObjectTest.TestToFromObjectRoundTrip(1.0f));
-      TestCommon.CompareTestLess(
-        ToObjectTest.TestToFromObjectRoundTrip(0.0),
-        ToObjectTest.TestToFromObjectRoundTrip(1.0));
+        ToObjectTest.TestToFromObjectRoundTrip(0.0).AsNumber(),
+        ToObjectTest.TestToFromObjectRoundTrip(1.0).AsNumber());
       TestCommon.CompareTestEqual(
-        CBORObject.FromObject(10),
-        CBORObject.FromObject(ERational.Create(10, 1)));
+        CBORObject.FromObject(10).AsNumber(),
+        CBORObject.FromObject(ERational.Create(10, 1)).AsNumber());
     }
     [Test]
     public void TestContainsKey() {
