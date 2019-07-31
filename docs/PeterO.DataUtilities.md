@@ -37,16 +37,7 @@
 
  Gets the Unicode code point at the given index of the string.
 
-      The following example shows how to iterate a text string ///code point by code point.
-
-    for (var i = 0;i<str.Length; ++i) { int codePoint =
-                DataUtilities.CodePointAt(str, i);
-                Console.WriteLine("codePoint:"+codePoint); if (codePoint >= 0x10000)
-                { i++; /* Supplementary code point */ } }
-
- .
-
-  <b>Parameters:</b>
+      <b>Parameters:</b>
 
  * <i>str</i>: The parameter  <i>str</i>
  is a text string.
@@ -56,7 +47,7 @@
 <b>Return Value:</b>
 
 The Unicode code point at the given position. Returns -1 if  <i>index</i>
- is less than 0, or is the string's length or greater. Returns the replacement character (U + FFFD) if the current character is an unpaired surrogate code point. If the return value is 65536 (0x10000) or greater, the code point takes up two UTF-16 code units.
+ is 0 or less, or is greater than the string's length. Returns the replacement character (U + FFFD) if the code point at that position is an unpaired surrogate code point. If the return value is 65536 (0x10000) or greater, the code point takes up two UTF-16 code units.
 
 <b>Exceptions:</b>
 
@@ -74,7 +65,7 @@ The parameter  <i>str</i>
 
  Gets the Unicode code point at the given index of the string.
 
-       The following example shows how to iterate a text string ///code point by code point, terminating the loop when an unpaired surrogate is found.
+       The following example shows how to iterate a text string code point by code point, terminating the loop when an unpaired surrogate is found.
 
     for (var i = 0;i<str.Length; ++i) { int codePoint =
                 DataUtilities.CodePointAt(str, i, 2); if (codePoint < 0) { break; /*
@@ -90,13 +81,13 @@ The parameter  <i>str</i>
 
  * <i>index</i>: Index of the current position into the string.
 
- * <i>surrogateBehavior</i>: Specifies what kind of value to return if ///the previous character is an unpaired surrogate code point: if 0, return the replacement character (U + FFFD); if 1, return the value of the surrogate code point; if neither 0 nor 1, return -1.
+ * <i>surrogateBehavior</i>: Specifies what kind of value to return if the code point at the given index is an unpaired surrogate code point: if 0, return the replacement character (U + FFFD); if 1, return the value of the surrogate code point; if neither 0 nor 1, return -1.
 
 <b>Return Value:</b>
 
-The Unicode code point at the current position. Returns -1 if  <i>index</i>
- is less than 0, or is the string's length or greater. Returns a value as specified under  <i>surrogateBehavior</i>
- if the previous character is an unpaired surrogate code point. If the return value is 65536 (0x10000) or greater, the code point takes up two UTF-16 code units.
+The Unicode code point at the given position. Returns -1 if  <i>index</i>
+ is 0 or less, or is greater than the string's length. Returns a value as specified under  <i>surrogateBehavior</i>
+ if the code point at that position is an unpaired surrogate code point. If the return value is 65536 (0x10000) or greater, the code point takes up two UTF-16 code units.
 
 <b>Exceptions:</b>
 
@@ -123,7 +114,7 @@ The parameter  <i>str</i>
 <b>Return Value:</b>
 
 The Unicode code point at the previous position. Returns -1 if  <i>index</i>
- is 0 or less, or is greater than the string's length. Returns the replacement character (U + FFFD) if the previous character is an unpaired surrogate code point. If the return value is 65536 (0x10000) or greater, the code point takes up two UTF-16 code units.
+ is 0 or less, or is greater than the string's length. Returns the replacement character (U + FFFD) if the code point at the previous position is an unpaired surrogate code point. If the return value is 65536 (0x10000) or greater, the code point takes up two UTF-16 code units.
 
 <b>Exceptions:</b>
 
@@ -148,13 +139,13 @@ The parameter  <i>str</i>
 
  * <i>index</i>: Index of the current position into the string.
 
- * <i>surrogateBehavior</i>: Specifies what kind of value to return if the previous character is an unpaired surrogate code point: if 0, return the replacement character (U + FFFD); if 1, return the value of the surrogate code point; if neither 0 nor 1, return -1.
+ * <i>surrogateBehavior</i>: Specifies what kind of value to return if the previous code point is an unpaired surrogate code point: if 0, return the replacement character (U + FFFD); if 1, return the value of the surrogate code point; if neither 0 nor 1, return -1.
 
 <b>Return Value:</b>
 
 The Unicode code point at the previous position. Returns -1 if  <i>index</i>
  is 0 or less, or is greater than the string's length. Returns a value as specified under  <i>surrogateBehavior</i>
- if the previous character is an unpaired surrogate code point. If the return value is 65536 (0x10000) or greater, the code point takes up two UTF-16 code units.
+ if the code point at the previous position is an unpaired surrogate code point. If the return value is 65536 (0x10000) or greater, the code point takes up two UTF-16 code units.
 
 <b>Exceptions:</b>
 

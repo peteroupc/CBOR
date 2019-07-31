@@ -99,7 +99,7 @@ namespace PeterO.Cbor {
     /// <summary>Gets a value indicating whether surrogate code points not
     /// part of a surrogate pair (which consists of two consecutive
     /// <c>char</c> s forming one Unicode code point) are each replaced
-    /// with a replacement character (U + FFFD). The default is false; an
+    /// with a replacement character (U+FFFD). The default is false; an
     /// exception is thrown when such code points are
     /// encountered.</summary>
     /// <value>True, if surrogate code points not part of a surrogate pair

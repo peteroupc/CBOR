@@ -779,7 +779,7 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
       int shifted = mant >> shift;
       int masked = mant & mask;
       return (masked > half || (masked == half && (shifted & 1) != 0)) ?
-         unchecked((int)shifted) + 1 : unchecked((int)shifted);
+         shifted + 1 : shifted;
     }
 
     public static int DoubleToHalfPrecisionIfSameValue(long bits) {
@@ -791,8 +791,8 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
       if (exp == 2047) { // Infinity and NaN
         int newmant = unchecked((int)(mant >> 42));
         return ((mant & ((1L << 42) - 1)) == 0) ? (sign | 0x7c00 | newmant) :
--1;
-      } else if (sexp >= 31) { // overflow
+          -1;
+        } else if (sexp >= 31) { // overflow
         return -1;
       } else if (sexp < -10) { // underflow
         return -1;
@@ -915,7 +915,7 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
       int mant = bits & 0x7fffff;
       long value = 0;
       if (exp == 255) {
-        value = 0x7ff0000000000000 | ((long)mant << 29) | negvalue;
+        value = 0x7ff0000000000000L | ((long)mant << 29) | negvalue;
       } else if (exp == 0) {
         if (mant == 0) {
           value = negvalue;
@@ -940,7 +940,7 @@ negvalue;
       int mant = bits & 0x3ff;
       long value = 0;
       if (exp == 31) {
-        value = 0x7ff0000000000000 | ((long)mant << 42) | negvalue;
+        value = 0x7ff0000000000000L | ((long)mant << 42) | negvalue;
       } else if (exp == 0) {
         if (mant == 0) {
           value = negvalue;

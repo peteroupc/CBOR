@@ -55,26 +55,10 @@ namespace PeterO.Cbor {
     /// might only check if each side of the operator is the same
     /// instance.)</para>
     /// <para>This class's natural ordering (under the CompareTo method) is
-    /// not consistent with the Equals method. This means that two values
-    /// that compare as equal under the CompareTo method might not be equal
-    /// under the Equals method. This is important to consider especially
-    /// if an application wants to compare numbers. (Several CBOR tags
-    /// support numbers of different formats, such as arbitrary-precision
-    /// integers, rational numbers, and arbitrary-precision decimal
-    /// numbers.)</para>
-    /// <para>Another consideration is that two values that are otherwise
-    /// equal may have different tags. To strip the tags from a CBOR object
+    /// consistent with the Equals method, meaning that two values
+    /// that compare as equal under the CompareTo method are also equal
+    /// under the Equals method; this is a change in version 4.0. Two otherwise equal objects with different tags are not treated as equal by both CompareTo and Equals.  To strip the tags from a CBOR object
     /// before comparing, use the <c>Untag</c> method.</para>
-    /// <para>To compare two numbers, the CompareToIgnoreTags or CompareTo
-    /// method should be used. Which method to use depends on whether two
-    /// equal values should still be considered equal if they have
-    /// different tags.</para>
-    /// <para>Although this class is inconsistent with the Equals method,
-    /// it is safe to use CBORObject instances as hash keys as long as all
-    /// of the keys are untagged text strings (which means GetTags returns
-    /// an empty array and the Type property, or "getType()" in Java,
-    /// returns TextString). This is because the natural ordering of these
-    /// instances is consistent with the Equals method.</para>
     /// <para><b>Thread Safety:</b></para>
     /// <para>Certain CBOR objects are immutable (their values can't be
     /// changed), so they are inherently safe for use by multiple
@@ -86,7 +70,9 @@ namespace PeterO.Cbor {
     /// without such synchronization.</para>
     /// <para>One kind of CBOR object is called a map, or a list of
     /// key-value pairs. Keys can be any kind of CBOR object, including
-    /// numbers, strings, arrays, and maps. However, text strings are the
+    /// numbers, strings, arrays, and maps. However, untagged text strings (which means GetTags returns
+    /// an empty array and the Type property, or "getType()" in Java,
+    /// returns TextString) are the
     /// most suitable to use as keys; other kinds of CBOR object are much
     /// better used as map values instead, keeping in mind that some of
     /// them are not thread safe without synchronizing reads and writes to
@@ -989,8 +975,8 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// type specially handled by this method (such as <c>int</c>
     /// or
     /// <c>String</c>
-    /// /// ) or a plain-old-data type (POCO or POJO type)
-    /// within the control of the application. If the plain-old-data type
+    /// ) or a plain-old-data type (POCO or POJO type) within
+    /// the control of the application. If the plain-old-data type
     /// references other data types, those types should likewise meet
     /// either criterion above.</param>
     /// <returns>The converted object.</returns>
@@ -998,7 +984,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// <paramref name='t'/> , or this object's CBOR type, is not
     /// supported, or the given object's nesting is too deep, or another
     /// error occurred when serializing the object.</exception>
-    /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='t'/> /// is null.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='t'/> is null.</exception>
     /// <example>
     /// <para>Java offers no easy way to express a generic type, at least
     /// none as easy as C#'s <c>typeof</c>
@@ -1158,9 +1144,9 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// converted to the nullable's underlying type, e.g., <c>int</c>
     /// .</item>
     /// <item>If the type is an enumeration ( <c>Enum</c>
-    /// /// )
-    /// type and this CBOR object is a text string or an integer, returns
-    /// the appropriate enumerated constant. (For example, if <c>MyEnum</c>
+    /// ) type
+    /// and this CBOR object is a text string or an integer, returns the
+    /// appropriate enumerated constant. (For example, if <c>MyEnum</c>
     /// includes an entry for <c>MyValue</c>
     /// , this method will return
     /// <c>MyEnum.MyValue</c>
@@ -1305,7 +1291,6 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// ArrayList */ return ArrayList.class; } public Type getOwnerType() {
     /// return null; } }; ArrayList&lt;String&gt; array =
     /// (ArrayList&lt;String&gt;) cborArray.ToObject(arrayListString);</code>
-    /// ///
     /// <para>By comparison, the C# version is much shorter.</para>
     /// <code>var&#x20;array = (List&lt;String&gt;)cborArray.ToObject(
     /// typeof&#x28;List&lt;String&gt;));</code>
@@ -2249,10 +2234,10 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
 
     /// <summary>Generates a CBOR object from a data stream in JavaScript
     /// Object Notation (JSON) format. The JSON stream may begin with a
-    /// byte-order mark (U + FEFF). Since version 2.0, the JSON stream can
+    /// byte-order mark (U+FEFF). Since version 2.0, the JSON stream can
     /// be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected
     /// by assuming that the first character read must be a byte-order mark
-    /// or a nonzero basic character (U + 0001 to U + 007F). (In previous
+    /// or a nonzero basic character (U+0001 to U+007F). (In previous
     /// versions, only UTF-8 was allowed.)
     /// <para>If a JSON object has the same key, only the last given value
     /// will be used for each duplicated key.</para></summary>
@@ -2272,10 +2257,10 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// <summary>Generates a CBOR object from a data stream in JavaScript
     /// Object Notation (JSON) format, using the specified options to
     /// control the decoding process. The JSON stream may begin with a
-    /// byte-order mark (U + FEFF). Since version 2.0, the JSON stream can
+    /// byte-order mark (U+FEFF). Since version 2.0, the JSON stream can
     /// be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected
     /// by assuming that the first character read must be a byte-order mark
-    /// or a nonzero basic character (U + 0001 to U + 007F). (In previous
+    /// or a nonzero basic character (U+0001 to U+007F). (In previous
     /// versions, only UTF-8 was allowed.)
     /// <para>By default, if a JSON object has the same key, only the last
     /// given value will be used for each duplicated key.</para></summary>
@@ -3043,7 +3028,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// <returns>This instance.</returns>
     /// <exception cref='System.InvalidOperationException'>This instance is
     /// not an array.</exception>
-    /// <exception cref='System.ArgumentException'>The type of <paramref name='obj'/> is /// not supported.</exception>
+    /// <exception cref='System.ArgumentException'>The type of <paramref name='obj'/> is not supported.</exception>
     /// <example>
     /// <para>The following example creates a CBOR array and adds several
     /// CBOR objects, one of which has a custom CBOR tag, to that array.
@@ -3513,44 +3498,22 @@ cn.GetNumberInterface().CanTruncatedIntFitInInt32(cn.GetValue());
 cn.GetNumberInterface().CanTruncatedIntFitInInt64(cn.GetValue());
     }
 
-    /// <summary>Compares two CBOR objects.
+    /// <summary>Compares two CBOR objects.  This implementation was changed in version 4.0.
     /// <para>In this implementation:</para>
     /// <list type=''>
     /// <item>The null pointer (null reference) is considered less than any
     /// other object.</item>
-    /// <item>If both objects are integers (CBORType.Integer) their CBOR
+    /// <item>If the two objects are both integers (CBORType.Integer) both floating-point values, both byte strings, both simple values, or both text strings,
+    /// their CBOR
     /// encodings (as though EncodeToBytes were called on each integer) are
-    /// compared as though by a byte-by-byte comparison.</item>
-    /// <item>If both objects are floating-point numbers
-    /// (CBORType.FloatingPoint), their CBOR encodings (as though
-    /// EncodeToBytes were called on each number) are compared as though by
-    /// a byte-by-byte comparison.</item>
-    /// <item>If both objects are simple values (including true, false,
-    /// CBORObject.Null, and the undefined value), the objects are compared
-    /// according to their ordinal numbers.</item>
-    /// <item>If both objects are arrays, each element is compared. If one
-    /// array has fewer elements than the other, it is sorted
-    /// earlier.</item>
-    /// <item>If both objects are byte strings, each one is compared byte
-    /// by byte. If one byte string has fewer bytes than the other, it is
-    /// sorted earlier.</item>
-    /// <item>If both objects are text strings, their CBOR encodings (as
-    /// though EncodeToBytes were called on each number) are compared as
-    /// though by a byte-by-byte comparison.</item>
-    /// <item>If both objects are maps, compares each map as though each
-    /// were an array with the sorted keys of that map as the array's
-    /// elements, and with each such key followed immediately by the value
-    /// mapped to that key. If one map has fewer keys than the other, it is
-    /// sorted earlier.</item>
-    /// <item>If both objects each have a tag (tagged objects have a
-    /// separate type for the purposes of this method), their tags are
-    /// compared before comparing the objects associated with the
-    /// tags.</item></list>
-    /// <item>If each object is a different type, then the objects are
-    /// sorted by their type in the following order: integer, byte string,
-    /// text string, array, map, tagged item, simple value, floating
-    /// point.</item>
-    /// <para>This method is not consistent with the Equals
+    /// compared as though by a byte-by-byte comparison.  (This means, for example, that positive integers sort before negative integers).</item>
+    /// <item>If both objects have a tag, they are compared first by the tag's value then by the associated item (which itself can have a tag).</item>
+    /// <item>If both objects are arrays, they are compared item by item.  In this case, if the arrays have different numbers of items, the array with more items is treated as greater than the other array.</item>
+    /// <item>If both objects are maps, their key-value pairs, sorted by key in accordance with this method, are compared, where each pair is compared first by key and then by value.
+    /// In this case, if the maps have different numbers of key-value pairs, the map with more pairs is treated as greater than the other map.</item>
+    /// <item>If the two objects have different types, the object whose type comes first in the order
+    /// of untagged integers, untagged byte strings, untagged text strings, untagged arrays, untagged maps, tagged objects, untagged simple values, untagged floating point values sorts before the other object..</item></list>
+    /// <para>This method is consistent with the Equals
     /// method.</para></summary>
     /// <param name='other'>A value to compare with.</param>
     /// <returns>Less than 0, if this value is less than the other object;
@@ -4475,7 +4438,7 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     /// and <c>true</c>
     /// is converted to
     /// <c>"true"</c>
-    /// /// ). If, after such conversion, two or more map keys
+    /// ). If, after such conversion, two or more map keys
     /// are identical, this method throws a CBORException.</item>
     /// <item>If
     /// a number in the form of an arbitrary-precision binary
@@ -4485,7 +4448,7 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     /// arbitrary-precision binary floating-point number is converted to
     /// null.)</item>
     /// <item>The string will not begin with a byte-order
-    /// mark (U + FEFF); RFC 8259 (the JSON specification) forbids placing
+    /// mark (U+FEFF); RFC 8259 (the JSON specification) forbids placing
     /// a byte-order mark at the beginning of a JSON string.</item>
     /// <item>Byte strings are converted to Base64 URL without whitespace
     /// or padding by default (see section 4.1 of RFC 7049). A byte string
@@ -5040,7 +5003,6 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     /// <code>CBORObject.WriteValue(stream, 4, 3); // array, length 3
     /// CBORObject.Write("hello world", stream); // item 1 CBORObject.Write(25,
     /// stream); /* item 2 */ CBORObject.Write(false, stream); // item 3</code>
-    /// ///
     /// <para>In the following example, a map consisting of two key-value
     /// pairs is written as CBOR to a data stream.</para>
     /// <code>CBORObject.WriteValue(stream, 5, 2); // map, 2 pairs

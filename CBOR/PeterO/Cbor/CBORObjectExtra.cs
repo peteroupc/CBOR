@@ -14,9 +14,9 @@ namespace PeterO.Cbor {
   // because they are not CLS-compliant or they
   // are specific to the .NET version of the library.
   public sealed partial class CBORObject {
-    /// <summary>Not documented yet.</summary>
-    /// <param name='a'>Not documented yet.</param>
-    /// <param name='b'>Not documented yet.</param>
+    /// <summary>Returns whether one object's value is less than another's.</summary>
+    /// <param name='a'>The left-hand side of the comparison.</param>
+    /// <param name='b'>The right-hand side of the comparison.</param>
     /// <returns>A Boolean object.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='a'/> is null.</exception>
     public static bool operator <(CBORObject a, CBORObject b) {
@@ -26,7 +26,7 @@ namespace PeterO.Cbor {
       return a.CompareTo(b) < 0;
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Returns whether one object's value is less than or equal to another's.</summary>
     /// <param name='a'>Not documented yet.</param>
     /// <param name='b'>Not documented yet.</param>
     /// <returns>A Boolean object.</returns>
@@ -38,9 +38,9 @@ namespace PeterO.Cbor {
       return a.CompareTo(b) <= 0;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='a'>Not documented yet.</param>
-    /// <param name='b'>Not documented yet.</param>
+    /// <summary>Returns whether one object's value is greater than another's.</summary>
+    /// <param name='a'>The left-hand side of the comparison.</param>
+    /// <param name='b'>The right-hand side of the comparison.</param>
     /// <returns>A Boolean object.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='a'/> is null.</exception>
     public static bool operator >(CBORObject a, CBORObject b) {
@@ -50,9 +50,9 @@ namespace PeterO.Cbor {
       return a.CompareTo(b) > 0;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='a'>Not documented yet.</param>
-    /// <param name='b'>Not documented yet.</param>
+    /// <summary>Returns whether one object's value is greater than or equal to another's.</summary>
+    /// <param name='a'>The left-hand side of the comparison.</param>
+    /// <param name='b'>The right-hand side of the comparison.</param>
     /// <returns>A Boolean object.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='a'/> is null.</exception>
     public static bool operator >=(CBORObject a, CBORObject b) {
@@ -211,10 +211,12 @@ this.HasOneTag(270)) ?
               (decimal)(this.AsERational()) : (decimal)this.AsEDecimal()); }
 
 /// <summary>Not documented yet.</summary>
-    /// <summary>Not documented yet.
-    /// </summary>
+    /// <summary>Converts this object to a 64-bit unsigned integer after discarding any fractional part, if any, from its value.</summary>
     /// <returns>A 64-bit unsigned integer.
     /// </returns>
+    /// <exception cref='System.InvalidOperationException'>This object does not represent a number.</exception>
+    /// <exception cref='System.OverflowException'>This object's value, if truncated to an integer, is outside the range of a 64-bit unsigned integer.
+    /// </exception>
     [CLSCompliant(false)]
     public ulong AsUInt64() {
       EInteger bigint = this.AsEInteger();

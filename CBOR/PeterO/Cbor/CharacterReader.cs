@@ -47,7 +47,7 @@ namespace PeterO.Cbor {
     // <param name='str'>A string object.</param>
     // <param name='skipByteOrderMark'>A Boolean object.</param>
     // <param name='errorThrow'>Another Boolean object.</param>
-    // <exception cref="ArgumentNullException">The parameter <paramref
+    // <exception cref='ArgumentNullException'>The parameter <paramref
     // name='str'/> is null.</exception>
     public CharacterReader(
       string str,
@@ -84,7 +84,7 @@ namespace PeterO.Cbor {
     // <param name='length'>Another 32-bit signed integer.</param>
     // <param name='skipByteOrderMark'>A Boolean object.</param>
     // <param name='errorThrow'>Another Boolean object.</param>
-    // <exception cref="ArgumentNullException">The parameter <paramref
+    // <exception cref='ArgumentNullException'>The parameter <paramref
     // name='str'/> is null.</exception>
     public CharacterReader(
       string str,
@@ -158,7 +158,7 @@ namespace PeterO.Cbor {
     // <param name='mode'>A 32-bit signed integer.</param>
     // <param name='errorThrow'>A Boolean object.</param>
     // <param name='dontSkipUtf8Bom'>Another Boolean object.</param>
-    // <exception cref="ArgumentNullException">The parameter <paramref
+    // <exception cref='ArgumentNullException'>The parameter <paramref
     // name='stream'/> is null.</exception>
     public CharacterReader(
       Stream stream,
@@ -193,19 +193,19 @@ namespace PeterO.Cbor {
     // <returns>The number of code points read from the stream. This can
     // be less than the <paramref name='length'/> parameter if the end of
     // the stream is reached.</returns>
-    // <exception cref="ArgumentNullException">The parameter <paramref
+    // <exception cref='ArgumentNullException'>The parameter <paramref
     // name='chars'/> is null.</exception>
-    // <exception cref="ArgumentException">Either <paramref name='index'/>
+    // <exception cref='ArgumentException'>Either <paramref name='index'/>
     // or <paramref name='length'/> is less than 0 or greater than
     // <paramref name='chars'/> 's length, or <paramref name='chars'/> 's
     // length minus <paramref name='index'/> is less than <paramref
     // name='length'/>.</exception>
-    // <exception cref="ArgumentException">Either &#x22;index&#x22; or
+    // <exception cref='ArgumentException'>Either &#x22;index&#x22; or
     // &#x22;length&#x22; is less than 0 or greater than
     // &#x22;chars&#x22;&#x27;s length, or &#x22;chars&#x22;&#x27;s length
     // minus &#x22;index&#x22; is less than
     // &#x22;length&#x22;.</exception>
-    // <exception cref="ArgumentNullException">The parameter <paramref
+    // <exception cref='ArgumentNullException'>The parameter <paramref
     // name='chars'/> is null.</exception>
     public int Read(int[] chars, int index, int length) {
       if (chars == null) {
