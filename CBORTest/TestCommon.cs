@@ -100,7 +100,7 @@ namespace Test {
 
     public static void AssertEquals(Object o, Object o2) {
       if (!o.Equals(o2)) {
-         Assert.AreEqual(o, o2);
+        Assert.AreEqual(o, o2);
       }
     }
 
@@ -188,9 +188,9 @@ namespace Test {
     }
 
     public static void CompareTestEqualAndConsistent<T>(
-  T o1,
-  T o2,
-  string msg) where T :
+      T o1,
+      T o2,
+      string msg) where T :
     IComparable<T> {
       if (CompareTestReciprocal(o1, o2) != 0) {
         msg = (msg == null ? String.Empty : (msg + "\r\n")) +
@@ -382,7 +382,7 @@ namespace Test {
         ++count;
       }
       return new String(chars, count, 12 - count);
-      } else {
+    } else {
         chars = new char[24];
         count = 23;
         if (neg) {

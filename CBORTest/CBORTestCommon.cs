@@ -31,13 +31,13 @@ namespace Test {
         case 0:
 return CBORObject.FromObject(
   RandomObjects.RandomDouble(
-  rand,
-  Int32.MaxValue));
+    rand,
+    Int32.MaxValue));
         case 1:
 return CBORObject.FromObject(
   RandomObjects.RandomSingle(
-  rand,
-  Int32.MaxValue));
+    rand,
+    Int32.MaxValue));
         case 2:
           return CBORObject.FromObject(RandomObjects.RandomEInteger(rand));
         case 3:
@@ -56,13 +56,13 @@ return CBORObject.FromObject(
         case 0:
 return CBORObject.FromObject(
   RandomObjects.RandomDouble(
-  rand,
-  Int32.MaxValue));
+    rand,
+    Int32.MaxValue));
         case 1:
 return CBORObject.FromObject(
   RandomObjects.RandomSingle(
-  rand,
-  Int32.MaxValue));
+    rand,
+    Int32.MaxValue));
         case 2:
           return CBORObject.FromObject(RandomObjects.RandomEInteger(rand));
         case 3:
@@ -95,8 +95,10 @@ return CBORObject.FromObject(
       int depth) {
       var tag = 0;
       if (rand.UniformInt(2) == 0) {
-        int[] tagselection = { 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 30, 30,
-          30, 0, 1, 25, 26, 27 };
+        int[] tagselection = {
+          2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 30, 30,
+          30, 0, 1, 25, 26, 27
+        };
         tag = tagselection[rand.UniformInt(tagselection.Length)];
       } else {
         tag = rand.UniformInt(0x1000000);

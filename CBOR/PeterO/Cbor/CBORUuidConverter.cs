@@ -22,7 +22,7 @@ namespace PeterO.Cbor {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORTag37.ToCBORObject(System.Guid)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.Cbor.CBORTag37.ToCBORObject(System.Guid)"]/*'/>
     public CBORObject ToCBORObject(Guid obj) {
       byte[] bytes = PropertyMap.UUIDToBytes(obj);
       return CBORObject.FromObjectAndTag(bytes, (int)37);
@@ -38,11 +38,11 @@ namespace PeterO.Cbor {
       string hex = "0123456789abcdef";
       var index = 0;
       for (var i = 0; i < 16; ++i) {
-       if (i == 4 || i == 6 || i == 8 || i == 10) {
-         guidChars[index++] = '-';
-       }
-       guidChars[index++] = hex[(int)(bytes[i] >> 4) & 15];
-       guidChars[index++] = hex[(int)bytes[i] & 15];
+        if (i == 4 || i == 6 || i == 8 || i == 10) {
+          guidChars[index++] = '-';
+        }
+        guidChars[index++] = hex[(int)(bytes[i] >> 4) & 15];
+        guidChars[index++] = hex[(int)bytes[i] & 15];
       }
       string guidString = new String(guidChars);
       return new Guid(guidString);

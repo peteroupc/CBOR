@@ -76,11 +76,11 @@ namespace PeterO.Cbor {
               int y0 = multiplicand;
               x0 &= 65535;
               x1 = (x1 >> 16) & 65535;
-              int temp = unchecked(x0 * y0);  // a * c
+              int temp = unchecked(x0 * y0); // a * c
               result1 = (temp >> 16) & 65535;
               result0 = temp & 65535;
               result2 = 0;
-              temp = unchecked(x1 * y0);  // b * c
+              temp = unchecked(x1 * y0); // b * c
               result2 += (temp >> 16) & 65535;
               result1 += temp & 65535;
               result2 += (result1 >> 16) & 65535;
@@ -109,22 +109,22 @@ namespace PeterO.Cbor {
               y0 &= 65535;
               x1 = (x1 >> 16) & 65535;
               y1 = (y1 >> 16) & 65535;
-              int temp = unchecked(x0 * y0);  // a * c
+              int temp = unchecked(x0 * y0); // a * c
               result1 = (temp >> 16) & 65535;
               result0 = temp & 65535;
-              temp = unchecked(x0 * y1);  // a * d
+              temp = unchecked(x0 * y1); // a * d
               result2 = (temp >> 16) & 65535;
               result1 += temp & 65535;
               result2 += (result1 >> 16) & 65535;
               result1 &= 65535;
-              temp = unchecked(x1 * y0);  // b * c
+              temp = unchecked(x1 * y0); // b * c
               result2 += (temp >> 16) & 65535;
               result1 += temp & 65535;
               result2 += (result1 >> 16) & 65535;
               result1 &= 65535;
               result3 = (result2 >> 16) & 65535;
               result2 &= 65535;
-              temp = unchecked(x1 * y1);  // b * d
+              temp = unchecked(x1 * y1); // b * d
               result3 += (temp >> 16) & 65535;
               result2 += temp & 65535;
               result3 += (result2 >> 16) & 65535;
@@ -175,7 +175,7 @@ namespace PeterO.Cbor {
      throw new ArgumentException("other (" + other + ") is less than " +
             "0 ");
         }
-      if (other != 0) {
+        if (other != 0) {
           unchecked {
             // Ensure a length of at least 1
             if (this.wordCount == 0) {
@@ -256,7 +256,7 @@ namespace PeterO.Cbor {
         }
       }
 
-       internal MutableNumber Add(int augend) {
+internal MutableNumber Add(int augend) {
         if (augend < 0) {
    throw new ArgumentException("augend (" + augend + ") is less than " +
             "0 ");
@@ -304,9 +304,9 @@ namespace PeterO.Cbor {
     }
     }
 
-    private int smallValue;  // if integerMode is 0
-    private MutableNumber mnum;  // if integerMode is 1
-    private EInteger largeValue;  // if integerMode is 2
+    private int smallValue; // if integerMode is 0
+    private MutableNumber mnum; // if integerMode is 1
+    private EInteger largeValue; // if integerMode is 2
     private int integerMode;
 
     internal FastInteger2(int value) {
@@ -348,7 +348,7 @@ namespace PeterO.Cbor {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.FastInteger2.Multiply(System.Int32)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.Cbor.FastInteger2.Multiply(System.Int32)"]/*'/>
     internal FastInteger2 Multiply(int val) {
       if (val == 0) {
         this.smallValue = 0;
@@ -379,7 +379,7 @@ namespace PeterO.Cbor {
                 this.largeValue *= (EInteger)val;
               }
             } else {
-              smallValue *= val;
+              this.smallValue *= val;
             }
             break;
           case 1:
@@ -388,7 +388,7 @@ namespace PeterO.Cbor {
               this.largeValue = this.mnum.ToEInteger();
               this.largeValue *= (EInteger)val;
             } else {
-              mnum.Multiply(val);
+              this.mnum.Multiply(val);
             }
             break;
           case 2:
@@ -401,7 +401,7 @@ namespace PeterO.Cbor {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.FastInteger2.Subtract(PeterO.Cbor.FastInteger2)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.Cbor.FastInteger2.Subtract(PeterO.Cbor.FastInteger2)"]/*'/>
     internal FastInteger2 Subtract(FastInteger2 val) {
       EInteger valValue;
       switch (this.integerMode) {
@@ -418,10 +418,10 @@ namespace PeterO.Cbor {
               this.smallValue -= vsv;
             }
           } else {
-            integerMode = 2;
-            largeValue = (EInteger)smallValue;
+            this.integerMode = 2;
+            this.largeValue = (EInteger)this.smallValue;
             valValue = val.AsBigInteger();
-            largeValue -= (EInteger)valValue;
+            this.largeValue -= (EInteger)valValue;
           }
           break;
         case 1:
@@ -430,12 +430,12 @@ namespace PeterO.Cbor {
             // currently always zero or positive
             this.mnum.Subtract(val.mnum);
           } else if (val.integerMode == 0 && val.smallValue >= 0) {
-            mnum.SubtractInt(val.smallValue);
+            this.mnum.SubtractInt(val.smallValue);
           } else {
-            integerMode = 2;
-            largeValue = mnum.ToEInteger();
+            this.integerMode = 2;
+            this.largeValue = this.mnum.ToEInteger();
             valValue = val.AsBigInteger();
-            largeValue -= (EInteger)valValue;
+            this.largeValue -= (EInteger)valValue;
           }
           break;
         case 2:
@@ -448,7 +448,7 @@ namespace PeterO.Cbor {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.FastInteger2.SubtractInt(System.Int32)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.Cbor.FastInteger2.SubtractInt(System.Int32)"]/*'/>
     internal FastInteger2 SubtractInt(int val) {
       if (val == Int32.MinValue) {
         return this.AddInt(Int32.MaxValue).AddInt(1);
@@ -491,20 +491,20 @@ namespace PeterO.Cbor {
               this.smallValue += val.smallValue;
             }
           } else {
-            integerMode = 2;
-            largeValue = (EInteger)smallValue;
+            this.integerMode = 2;
+            this.largeValue = (EInteger)this.smallValue;
             valValue = val.AsBigInteger();
-            largeValue += (EInteger)valValue;
+            this.largeValue += (EInteger)valValue;
           }
           break;
         case 1:
           if (val.integerMode == 0 && val.smallValue >= 0) {
             this.mnum.Add(val.smallValue);
           } else {
-            integerMode = 2;
-            largeValue = mnum.ToEInteger();
+            this.integerMode = 2;
+            this.largeValue = this.mnum.ToEInteger();
             valValue = val.AsBigInteger();
-            largeValue += (EInteger)valValue;
+            this.largeValue += (EInteger)valValue;
           }
           break;
         case 2:
@@ -534,17 +534,17 @@ namespace PeterO.Cbor {
               this.largeValue += (EInteger)val;
             }
           } else {
-            smallValue += val;
+            this.smallValue += val;
           }
           break;
         case 1:
           if (val >= 0) {
             this.mnum.Add(val);
           } else {
-            integerMode = 2;
-            largeValue = mnum.ToEInteger();
+            this.integerMode = 2;
+            this.largeValue = this.mnum.ToEInteger();
             valValue = (EInteger)val;
-            largeValue += (EInteger)valValue;
+            this.largeValue += (EInteger)valValue;
           }
           break;
         case 2:
@@ -579,9 +579,9 @@ namespace PeterO.Cbor {
           return (this.smallValue == 0) ? 0 : ((this.smallValue < 0) ? -1 :
               1);
           case 1:
-            return this.mnum.Sign;
+          return this.mnum.Sign;
           case 2:
-            return this.largeValue.Sign;
+          return this.largeValue.Sign;
           default: return 0;
         }
       }

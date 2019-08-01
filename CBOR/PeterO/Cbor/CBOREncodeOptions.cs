@@ -6,26 +6,37 @@ namespace PeterO.Cbor {
   public sealed class CBOREncodeOptions {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="F:PeterO.Cbor.CBOREncodeOptions.None"]/*'/>
-  [Obsolete("Use 'new CBOREncodeOptions(true,true)' instead. Option classes in this library will follow the form seen in JSONOptions in a later version; the approach used in this class is too complicated. 'CBOREncodeOptions.Default' contains recommended default options that may be adopted by certain CBORObject methods in the next major version.")]
+    [Obsolete("Use 'new CBOREncodeOptions(true,true)' instead. Option classes" +
+" in this library will follow a different form in a later" +
+" version -- the approach used in this class is too complicated. " +
+"'CBOREncodeOptions.Default' contains recommended default options that" +
+" may be adopted by certain CBORObject methods in the next major " +
+"version.")]
     public static readonly CBOREncodeOptions None =
-      new CBOREncodeOptions(0);
+ new CBOREncodeOptions(0);
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Cbor.CBOREncodeOptions.Default"]/*'/>
+    ///   path='docs/doc[@name="F:PeterO.Cbor.CBOREncodeOptions.Default"]/*'/>
     public static readonly CBOREncodeOptions Default =
       new CBOREncodeOptions(false, false);
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Cbor.CBOREncodeOptions.NoIndefLengthStrings"]/*'/>
-  [Obsolete("Use 'new CBOREncodeOptions(false,true)' instead. Option classes in this library will follow the form seen in JSONOptions in a later version; the approach used in this class is too complicated.")]
-    public static readonly CBOREncodeOptions NoIndefLengthStrings =
-      new CBOREncodeOptions(1);
+    ///   path='docs/doc[@name="F:PeterO.Cbor.CBOREncodeOptions.NoIndefLengthStrings"]/*'/>
+    [Obsolete("Use 'new CBOREncodeOptions(false,false)' instead. Option" +
+" classes" +
+"\u0020in this library will follow a different form in a later" +
+"\u0020version -- the approach used in this class is too complicated.")]
+public static readonly CBOREncodeOptions NoIndefLengthStrings =
+new CBOREncodeOptions(1);
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Cbor.CBOREncodeOptions.NoDuplicateKeys"]/*'/>
-  [Obsolete("Use 'new CBOREncodeOptions(true,false)' instead. Option classes in this library will follow the form seen in JSONOptions in a later version; the approach used in this class is too complicated.")]
-    public static readonly CBOREncodeOptions NoDuplicateKeys =
-      new CBOREncodeOptions(2);
+    ///   path='docs/doc[@name="F:PeterO.Cbor.CBOREncodeOptions.NoDuplicateKeys"]/*'/>
+    [Obsolete("Use 'new CBOREncodeOptions(true,false)' instead. Option" +
+" classes" +
+"\u0020in this library will follow a different form in a later" +
+"\u0020version -- the approach used in this class is too complicated.")]
+public static readonly CBOREncodeOptions NoDuplicateKeys =
+ new CBOREncodeOptions(2);
 
     private readonly int value;
 
@@ -35,19 +46,19 @@ namespace PeterO.Cbor {
 }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBOREncodeOptions.#ctor(System.Boolean,System.Boolean)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.Cbor.CBOREncodeOptions.#ctor(System.Boolean,System.Boolean)"]/*'/>
     public CBOREncodeOptions(
-  bool useIndefLengthStrings,
-  bool allowDuplicateKeys) :
-        this(useIndefLengthStrings, allowDuplicateKeys, false) {
+      bool useIndefLengthStrings,
+      bool allowDuplicateKeys)
+        : this(useIndefLengthStrings, allowDuplicateKeys, false) {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBOREncodeOptions.#ctor(System.Boolean,System.Boolean,System.Boolean)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.Cbor.CBOREncodeOptions.#ctor(System.Boolean,System.Boolean,System.Boolean)"]/*'/>
     public CBOREncodeOptions(
-  bool useIndefLengthStrings,
-  bool allowDuplicateKeys,
-  bool ctap2Canonical) {
+      bool useIndefLengthStrings,
+      bool allowDuplicateKeys,
+      bool ctap2Canonical) {
       var val = 0;
       if (!useIndefLengthStrings) {
         val |= 1;
@@ -60,7 +71,7 @@ namespace PeterO.Cbor {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Cbor.CBOREncodeOptions.UseIndefLengthStrings"]/*'/>
+    ///   path='docs/doc[@name="P:PeterO.Cbor.CBOREncodeOptions.UseIndefLengthStrings"]/*'/>
     public bool UseIndefLengthStrings {
       get {
         return (this.value & 1) == 0;
@@ -68,7 +79,7 @@ namespace PeterO.Cbor {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Cbor.CBOREncodeOptions.AllowDuplicateKeys"]/*'/>
+    ///   path='docs/doc[@name="P:PeterO.Cbor.CBOREncodeOptions.AllowDuplicateKeys"]/*'/>
     public bool AllowDuplicateKeys {
       get {
         return (this.value & 2) == 0;
@@ -76,33 +87,53 @@ namespace PeterO.Cbor {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Cbor.CBOREncodeOptions.Ctap2Canonical"]/*'/>
+    ///   path='docs/doc[@name="P:PeterO.Cbor.CBOREncodeOptions.Ctap2Canonical"]/*'/>
     public bool Ctap2Canonical { get; private set; }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="P:PeterO.Cbor.CBOREncodeOptions.Value"]/*'/>
-  [Obsolete("Option classes in this library will follow the form seen in JSONOptions in a later version; the approach used in this class is too complicated.")]
-    public int Value {
-      get {
-        return this.value;
-      }
+    [Obsolete("Option classes" +
+"\u0020in this library will follow a different form in a later" +
+"\u0020version -- the approach used in this class is too complicated.")]
+    public int Value { get {
+  return this.value;
+ } }
+
+    private CBOREncodeOptions(int value)
+    : this((value & 1) == 0, (value & 2) == 0) {
     }
 
-    private CBOREncodeOptions(int value) :
-    this((value & 1) == 0, (value & 2) == 0) {
-    }
-
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBOREncodeOptions.Or(PeterO.Cbor.CBOREncodeOptions)"]/*'/>
-  [Obsolete("May be removed in a later version. Option classes in this library will follow the form seen in JSONOptions in a later version; the approach used in this class is too complicated.")]
+    /// <summary>Returns an options object containing the combined flags of
+    /// this and another options object.</summary>
+    /// <param name='o'>The parameter <paramref name='o'/> is a
+    /// CBOREncodeOptions object.</param>
+    /// <returns>A new CBOREncodeOptions object.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='o'/> is null.</exception>
+    [Obsolete("May be removed in a later version. Option classes" +
+"\u0020in this library will follow a different form in a later" +
+"\u0020version -- the approach used in this class is too complicated.")]
     public CBOREncodeOptions Or(CBOREncodeOptions o) {
+      if (o == null) {
+        throw new ArgumentNullException(nameof(o));
+      }
       return new CBOREncodeOptions(this.value | o.value);
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBOREncodeOptions.And(PeterO.Cbor.CBOREncodeOptions)"]/*'/>
-  [Obsolete("May be removed in a later version. Option classes in this library will follow the form seen in JSONOptions in a later version; the approach used in this class is too complicated.")]
-    public CBOREncodeOptions And(CBOREncodeOptions o) {
+    /// <summary>Returns an options object containing the flags shared by
+    /// this and another options object.</summary>
+    /// <param name='o'>The parameter <paramref name='o'/> is a
+    /// CBOREncodeOptions object.</param>
+    /// <returns>A CBOREncodeOptions object.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='o'/> is null.</exception>
+    [Obsolete("May be removed in a later version. Option classes" +
+"\u0020in this library will follow a different form in a later" +
+"\u0020version -- the approach used in this class is too complicated.")]
+public CBOREncodeOptions And(CBOREncodeOptions o) {
+      if (o == null) {
+        throw new ArgumentNullException(nameof(o));
+      }
       return new CBOREncodeOptions(this.value & o.value);
     }
   }

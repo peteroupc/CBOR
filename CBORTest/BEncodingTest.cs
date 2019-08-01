@@ -65,14 +65,14 @@ namespace Test {
       Assert.AreEqual(4, beo.Count);
       Assert.AreEqual(1, beo[0].AsInt64());
       {
-string stringTemp = beo[1].AsString();
+        string stringTemp = beo[1].AsString();
 Assert.AreEqual(
   "two",
   stringTemp);
 }
       Assert.AreEqual(3, beo[2].AsInt64());
       {
-string stringTemp = beo[3].AsString();
+        string stringTemp = beo[3].AsString();
 Assert.AreEqual(
   "four",
   stringTemp);
@@ -82,14 +82,14 @@ Assert.AreEqual(
       Assert.AreEqual(4, beo.Count);
       Assert.AreEqual(1, beo[0].AsInt64());
       {
-string stringTemp = beo[1].AsString();
+        string stringTemp = beo[1].AsString();
 Assert.AreEqual(
   "two",
   stringTemp);
 }
       Assert.AreEqual(3, beo[2].AsInt64());
       {
-string stringTemp = beo[3].AsString();
+        string stringTemp = beo[3].AsString();
 Assert.AreEqual(
   "four",
   stringTemp);
@@ -106,14 +106,14 @@ Assert.AreEqual(
       Assert.AreEqual(4, beo.Count);
       Assert.AreEqual(1, beo["zero"].AsInt64());
       {
-string stringTemp = beo["one"].AsString();
+        string stringTemp = beo["one"].AsString();
 Assert.AreEqual(
   "two",
   stringTemp);
 }
       Assert.AreEqual(3, beo["two"].AsInt64());
       {
-string stringTemp = beo["three"].AsString();
+        string stringTemp = beo["three"].AsString();
 Assert.AreEqual(
   "four",
   stringTemp);
@@ -123,14 +123,14 @@ Assert.AreEqual(
       Assert.AreEqual(4, beo.Count);
       Assert.AreEqual(1, beo["zero"].AsInt64());
       {
-string stringTemp = beo["one"].AsString();
+        string stringTemp = beo["one"].AsString();
 Assert.AreEqual(
   "two",
   stringTemp);
 }
       Assert.AreEqual(3, beo["two"].AsInt64());
       {
-string stringTemp = beo["three"].AsString();
+        string stringTemp = beo["three"].AsString();
 Assert.AreEqual(
   "four",
   stringTemp);

@@ -9,45 +9,21 @@ at: http://peteroupc.github.io/
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
+using System.Reflection;
 using System.Text.RegularExpressions;
-using NuDoq;
 
 namespace PeterO.DocGen {
-  internal class TypeVisitor : Visitor, IComparer<Type> {
-    private readonly SortedDictionary<Type, DocVisitor> docs;
-    private readonly Dictionary<Type, MemberSummaryVisitor> memSummaries;
+  internal class TypeVisitor {
+    private readonly SortedDictionary<string, DocVisitor> docs;
+    private readonly Dictionary<string, MemberSummaryVisitor> memSummaries;
+    private readonly Dictionary<string, string> typeIDs;
     private readonly string directory;
 
     public TypeVisitor(string directory) {
-      this.docs = new SortedDictionary<Type, DocVisitor>(this);
-      this.memSummaries = new Dictionary<Type, MemberSummaryVisitor>();
+      this.docs = new SortedDictionary<string, DocVisitor>();
+      this.memSummaries = new Dictionary<string, MemberSummaryVisitor>();
+      this.typeIDs = new Dictionary<string, string>();
       this.directory = directory;
-    }
-
-    public static string NormalizeLines(string x) {
-      if (String.IsNullOrEmpty(x)) {
- return x;
-}
-      x = Regex.Replace(x, @"[ \t]+(?=[\r\n]|$)", String.Empty);
-      x = Regex.Replace(x, @"\r?\n(\r?\n)+", "\n\n");
-      x = Regex.Replace(x, @"\r?\n", "\n");
-      x = Regex.Replace(x, @"^\s*", String.Empty);
-      x = Regex.Replace(x, @"\s+$", String.Empty);
-      return x + "\n";
-    }
-
-    public static void FileEdit(string filename, string newString) {
-      string oldString = null;
-      try {
-           oldString = File.ReadAllText(filename);
-      } catch (IOException) {
-           oldString = null;
-      }
-      if (oldString == null || !oldString.Equals(newString)) {
-             File.WriteAllText(filename, newString);
-      }
     }
 
     public void Finish() {
@@ -56,50 +32,80 @@ namespace PeterO.DocGen {
         this.memSummaries[key].Finish();
         var memSummaryString = this.memSummaries[key].ToString();
         var filename = Path.Combine(
-  this.directory,
-  DocVisitor.GetTypeID(key) + ".md");
-        finalString = NormalizeLines(finalString);
+          this.directory,
+          this.typeIDs[key] + ".md");
+        finalString = DocGenUtil.NormalizeLines(finalString);
         finalString = Regex.Replace(
             finalString,
             "<<<MEMBER_SUMMARY>>>",
             memSummaryString);
-        FileEdit(filename, finalString);
+        DocGenUtil.FileEdit(filename, finalString);
       }
     }
 
-    public override void VisitMember(Member member) {
+    public void HandleTypeAndMembers(Type currentType, XmlDoc xmldoc) {
+       this.HandleMember(currentType, xmldoc);
+       foreach (var m in currentType.GetFields()) {
+         if (m.IsSpecialName) {
+           continue;
+         }
+         this.HandleMember(m, xmldoc);
+        }
+        foreach (var m in currentType.GetConstructors()) {
+          if (!m.DeclaringType.Equals(currentType)) {
+            continue;
+          }
+          this.HandleMember(m, xmldoc);
+        }
+        foreach (var m in currentType.GetMethods()) {
+          if (!m.DeclaringType.Equals(currentType)) {
+            var dtfn = m.DeclaringType.FullName;
+            if (dtfn.IndexOf("System.", StringComparison.Ordinal) != 0) {
+             // Console.WriteLine("not declared: " + m);
+            }
+            continue;
+          }
+          if (m.IsSpecialName && (
+            m.Name.IndexOf("get_", StringComparison.Ordinal) == 0 ||
+            m.Name.IndexOf("set_", StringComparison.Ordinal) == 0)) {
+            continue;
+          }
+          this.HandleMember(m, xmldoc);
+        }
+        foreach (var m in currentType.GetProperties()) {
+          if (!m.DeclaringType.Equals(currentType)) {
+            var dtfn = m.DeclaringType.FullName;
+            if (dtfn.IndexOf("System.", StringComparison.Ordinal) != 0) {
+              Console.WriteLine("not declared: " + m);
+            }
+            continue;
+          }
+          this.HandleMember(m, xmldoc);
+        }
+    }
+
+    public void HandleMember(MemberInfo info, XmlDoc xmldoc) {
       Type currentType;
-      if (member.Info is Type) {
-        currentType = (Type)member.Info;
+      if (info is Type) {
+        currentType = (Type)info;
       } else {
-        if (member.Info == null) {
+        if (info == null) {
           return;
         }
-        currentType = member.Info.ReflectedType;
+        currentType = info.ReflectedType;
       }
-if (currentType == null || !currentType.IsPublic) {
-return;
-}
-      if (!this.docs.ContainsKey(currentType)) {
+      if (currentType == null || !currentType.IsPublic) {
+        return;
+      }
+      var typeFullName = currentType.FullName;
+      if (!this.docs.ContainsKey(typeFullName)) {
         var docVisitor = new DocVisitor();
-        this.docs[currentType] = docVisitor;
-        this.memSummaries[currentType] = new MemberSummaryVisitor();
+        this.docs[typeFullName] = docVisitor;
+        this.typeIDs[typeFullName] = DocVisitor.GetTypeID(currentType);
+        this.memSummaries[typeFullName] = new MemberSummaryVisitor();
       }
-      this.docs[currentType].VisitMember(member);
-      this.memSummaries[currentType].VisitMember(member);
-      base.VisitMember(member);
-    }
-
-    /// <summary>Compares a Type object with a Type.</summary>
-    /// <param name='x'>The parameter <paramref name='x'/> is not
-    /// documented yet.</param>
-    /// <param name='y'>A Type object.</param>
-    /// <returns>Zero if both values are equal; a negative number if
-    /// <paramref name='x'/> is less than <paramref name='y'/>, or a
-    /// positive number if <paramref name='x'/> is greater than <paramref
-    /// name='y'/>.</returns>
-    public int Compare(Type x, Type y) {
-      return string.Compare(x.FullName, y.FullName, StringComparison.Ordinal);
+      this.docs[typeFullName].HandleMember(info, xmldoc);
+      this.memSummaries[typeFullName].HandleMember(info, xmldoc);
     }
   }
 }

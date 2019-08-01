@@ -12,8 +12,9 @@ using PeterO.Numbers;
 namespace PeterO {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="T:PeterO.ExtendedDecimal"]/*'/>
-[Obsolete(
-  "Use EDecimal from PeterO.Numbers/com.upokecenter.numbers and the output of this class's ToString method.")]
+    [Obsolete(
+  "Use EDecimal from PeterO.Numbers/com.upokecenter.numbers and the output" +
+"\u0020of this class's ToString method.")]
   public sealed class ExtendedDecimal : IComparable<ExtendedDecimal>,
   IEquatable<ExtendedDecimal> {
     /// <include file='../docs.xml'
@@ -25,7 +26,7 @@ namespace PeterO {
     }
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.ExtendedDecimal.UnsignedMantissa"]/*'/>
+    ///   path='docs/doc[@name="P:PeterO.ExtendedDecimal.UnsignedMantissa"]/*'/>
     public BigInteger UnsignedMantissa {
       get {
         return new BigInteger(this.Ed.UnsignedMantissa);
@@ -51,14 +52,14 @@ namespace PeterO {
     #region Equals and GetHashCode implementation
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.Equals(PeterO.ExtendedDecimal)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.ExtendedDecimal.Equals(PeterO.ExtendedDecimal)"]/*'/>
     [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public bool Equals(ExtendedDecimal other) {
       return (other == null) ? false : this.Ed.Equals(other.Ed);
     }
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.Equals(System.Object)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.ExtendedDecimal.Equals(System.Object)"]/*'/>
     public override bool Equals(object obj) {
       var bi = obj as ExtendedDecimal;
       return (bi == null) ? false : this.Ed.Equals(bi.Ed);
@@ -80,7 +81,7 @@ namespace PeterO {
     }
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.Create(PeterO.BigInteger,PeterO.BigInteger)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.ExtendedDecimal.Create(PeterO.BigInteger,PeterO.BigInteger)"]/*'/>
     public static ExtendedDecimal Create(
       BigInteger mantissa,
       BigInteger exponent) {
@@ -94,7 +95,7 @@ namespace PeterO {
     }
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.FromString(System.String)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.ExtendedDecimal.FromString(System.String)"]/*'/>
     public static ExtendedDecimal FromString(string str) {
       return new ExtendedDecimal(EDecimal.FromString(str));
     }
@@ -168,12 +169,12 @@ namespace PeterO {
       new ExtendedDecimal(EDecimal.SignalingNaN);
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="F:PeterO.ExtendedDecimal.PositiveInfinity"]/*'/>
+    ///   path='docs/doc[@name="F:PeterO.ExtendedDecimal.PositiveInfinity"]/*'/>
     public static readonly ExtendedDecimal PositiveInfinity =
       new ExtendedDecimal(EDecimal.PositiveInfinity);
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="F:PeterO.ExtendedDecimal.NegativeInfinity"]/*'/>
+    ///   path='docs/doc[@name="F:PeterO.ExtendedDecimal.NegativeInfinity"]/*'/>
     public static readonly ExtendedDecimal NegativeInfinity =
       new ExtendedDecimal(EDecimal.NegativeInfinity);
 
@@ -206,7 +207,7 @@ namespace PeterO {
     }
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.CompareTo(PeterO.ExtendedDecimal)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.ExtendedDecimal.CompareTo(PeterO.ExtendedDecimal)"]/*'/>
     public int CompareTo(ExtendedDecimal other) {
       return this.Ed.CompareTo(other == null ? null : other.Ed);
     }

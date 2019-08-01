@@ -47,14 +47,14 @@ namespace PeterO.Cbor {
         if (!obj.IsFinite) {
           throw new CBORException("Not a finite number");
         }
-          EDecimal dec = obj.AsEDecimal();
-          var lesserFields = new int[7];
-          var year = new EInteger[1];
-          CBORUtilities.BreakDownSecondsSinceEpoch(
-                  dec,
-                  year,
-                  lesserFields);
-          return PropertyMap.BuildUpDateTime(year[0], lesserFields);
+        EDecimal dec = obj.AsEDecimal();
+        var lesserFields = new int[7];
+        var year = new EInteger[1];
+        CBORUtilities.BreakDownSecondsSinceEpoch(
+          dec,
+          year,
+          lesserFields);
+            return PropertyMap.BuildUpDateTime(year[0], lesserFields);
       }
       throw new CBORException("Not tag 0 or 1");
     }

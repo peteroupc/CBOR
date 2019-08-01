@@ -14,7 +14,7 @@ namespace PeterO.Cbor {
       if (obj.Type != CBORType.TextString) {
         throw new CBORException("URI must be a text string");
       }
-      if (!URIUtility.isValidIRI(obj.AsString())) {
+      if (!URIUtility.IsValidIRI(obj.AsString())) {
         throw new CBORException("String is not a valid URI/IRI");
       }
       return obj;

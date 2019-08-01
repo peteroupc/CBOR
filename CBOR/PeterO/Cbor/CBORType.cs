@@ -13,6 +13,8 @@ namespace PeterO.Cbor {
   public enum CBORType {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="F:PeterO.Cbor.CBORType.Number"]/*'/>
+    [Obsolete("Use the IsNumber property of CBORObject to determine" +
+       " whether a CBOR object represents a number.")]
     Number,
 
     /// <include file='../../docs.xml'
@@ -37,6 +39,6 @@ namespace PeterO.Cbor {
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="F:PeterO.Cbor.CBORType.Map"]/*'/>
-    Map
+    Map,
   }
 }

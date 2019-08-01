@@ -91,8 +91,8 @@ namespace Test {
           r |= ((long)rand.UniformInt(0x10000)) << 48;
         }
       }
-      r &= ~0x7ff0000000000000L;  // clear exponent
-      r |= ((long)exponent) << 52;  // set exponent
+      r &= ~0x7ff0000000000000L; // clear exponent
+      r |= ((long)exponent) << 52; // set exponent
       return BitConverter.ToDouble(BitConverter.GetBytes((long)r), 0);
     }
 
@@ -104,8 +104,8 @@ namespace Test {
       if (rand.UniformInt(2) == 0) {
         r |= ((int)rand.UniformInt(0x10000)) << 16;
       }
-      r &= ~0x7f800000;  // clear exponent
-      r |= ((int)exponent) << 23;  // set exponent
+      r &= ~0x7f800000; // clear exponent
+      r |= ((int)exponent) << 23; // set exponent
       return BitConverter.ToSingle(BitConverter.GetBytes((int)r), 0);
     }
 

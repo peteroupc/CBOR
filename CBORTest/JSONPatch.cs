@@ -13,10 +13,10 @@ using PeterO.Cbor;
 namespace Test {
   public class JSONPatch {
     private static CBORObject addOperation(
-        CBORObject o,
-        string valueOpStr,
-        string path,
-        CBORObject value) {
+      CBORObject o,
+      string valueOpStr,
+      string path,
+      CBORObject value) {
       if (path == null) {
         throw new ArgumentException("patch " + valueOpStr);
       }
@@ -151,9 +151,9 @@ throw new ArgumentException("patch " + valueOpStr + " value");
     }
 
     private static CBORObject removeOperation(
-        CBORObject o,
-        string valueOpStr,
-        string path) {
+      CBORObject o,
+      string valueOpStr,
+      string path) {
       if (path == null) {
         throw new ArgumentException("patch " + valueOpStr);
       }
@@ -177,10 +177,10 @@ throw new ArgumentException("patch " + valueOpStr + " value");
     }
 
     private static CBORObject replaceOperation(
-        CBORObject o,
-        string valueOpStr,
-        string path,
-        CBORObject value) {
+      CBORObject o,
+      string valueOpStr,
+      string path,
+      CBORObject value) {
       if (path == null) {
         throw new ArgumentException("patch " + valueOpStr);
       }
@@ -198,8 +198,8 @@ throw new ArgumentException("patch " + valueOpStr + " value");
             throw new ArgumentException("patch " + valueOpStr + " path");
           }
         ((CBORObject)pointer.getParent()).Set(index, value);
-        } else if (pointer.getParent().Type == CBORType.Map) {
-          string key = pointer.getKey();
+      } else if (pointer.getParent().Type == CBORType.Map) {
+        string key = pointer.getKey();
           ((CBORObject)pointer.getParent()).Set(key, value);
         } else {
           throw new ArgumentException("patch " + valueOpStr + " path");

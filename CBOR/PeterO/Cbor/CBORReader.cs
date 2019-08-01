@@ -26,7 +26,7 @@ namespace PeterO.Cbor {
     }
 
     internal enum CBORDuplicatePolicy {
-      Overwrite, Disallow
+      Overwrite, Disallow,
     }
 
     public CBORDuplicatePolicy DuplicatePolicy {
@@ -48,8 +48,8 @@ namespace PeterO.Cbor {
     }
 
     private static CBORObject ResolveSharedRefs(
-  CBORObject obj,
-  SharedRefs sharedRefs) {
+      CBORObject obj,
+      SharedRefs sharedRefs) {
   int type = obj.ItemType;
   bool hasTag = obj.MostOuterTag.Equals((EInteger)29);
   if (hasTag) {
@@ -88,8 +88,8 @@ namespace PeterO.Cbor {
     }
 
     public CBORObject ReadForFirstByte(
-  int firstbyte,
-  CBORTypeFilter filter) {
+      int firstbyte,
+      CBORTypeFilter filter) {
       if (this.depth > 500) {
         throw new CBORException("Too deeply nested");
       }
@@ -170,10 +170,10 @@ namespace PeterO.Cbor {
             if (this.stream.Read(data, 0, 4) != 4) {
               throw new CBORException("Premature end of data");
             }
-            uadditional = ((long)(data[0] & (long)0xff)) << 24;
-            uadditional |= ((long)(data[1] & (long)0xff)) << 16;
-            uadditional |= ((long)(data[2] & (long)0xff)) << 8;
-            uadditional |= (long)(data[3] & (long)0xff);
+            uadditional = ((long)(data[0] & 0xffL)) << 24;
+            uadditional |= ((long)(data[1] & 0xffL)) << 16;
+            uadditional |= ((long)(data[2] & 0xffL)) << 8;
+            uadditional |= (long)(data[3] & 0xffL);
             break;
           }
         case 27: {
@@ -195,14 +195,14 @@ namespace PeterO.Cbor {
               hasBigAdditional = true;
               bigintAdditional = EInteger.FromBytes(uabytes, true);
             } else {
-              uadditional = ((long)(data[0] & (long)0xff)) << 56;
-              uadditional |= ((long)(data[1] & (long)0xff)) << 48;
-              uadditional |= ((long)(data[2] & (long)0xff)) << 40;
-              uadditional |= ((long)(data[3] & (long)0xff)) << 32;
-              uadditional |= ((long)(data[4] & (long)0xff)) << 24;
-              uadditional |= ((long)(data[5] & (long)0xff)) << 16;
-              uadditional |= ((long)(data[6] & (long)0xff)) << 8;
-              uadditional |= (long)(data[7] & (long)0xff);
+              uadditional = ((long)(data[0] & 0xffL)) << 56;
+              uadditional |= ((long)(data[1] & 0xffL)) << 48;
+              uadditional |= ((long)(data[2] & 0xffL)) << 40;
+              uadditional |= ((long)(data[3] & 0xffL)) << 32;
+              uadditional |= ((long)(data[4] & 0xffL)) << 24;
+              uadditional |= ((long)(data[5] & 0xffL)) << 16;
+              uadditional |= ((long)(data[6] & 0xffL)) << 8;
+              uadditional |= (long)(data[7] & 0xffL);
             }
             break;
           }
@@ -210,7 +210,7 @@ namespace PeterO.Cbor {
       // The following doesn't check for major types 0 and 1,
       // since all of them are fixed-length types and are
       // handled in the call to GetFixedLengthObject.
-      if (type == 2) {  // Byte string
+      if (type == 2) { // Byte string
         if (additional == 31) {
           // Streaming byte string
           using (var ms = new MemoryStream()) {
@@ -237,8 +237,8 @@ namespace PeterO.Cbor {
             }
             data = ms.ToArray();
             return new CBORObject(
-  CBORObject.CBORObjectTypeByteString,
-  data);
+              CBORObject.CBORObjectTypeByteString,
+              data);
           }
         } else {
           if (hasBigAdditional) {
@@ -260,7 +260,7 @@ namespace PeterO.Cbor {
           return cbor;
         }
       }
-      if (type == 3) {  // Text string
+      if (type == 3) { // Text string
         if (additional == 31) {
           // Streaming text string
           var builder = new StringBuilder();
@@ -332,7 +332,7 @@ namespace PeterO.Cbor {
           return cbor;
         }
       }
-      if (type == 4) {  // Array
+      if (type == 4) { // Array
         CBORObject cbor = CBORObject.NewArray();
         if (additional == 31) {
           var vtindex = 0;
@@ -382,7 +382,7 @@ namespace PeterO.Cbor {
         --this.depth;
         return cbor;
       }
-      if (type == 5) {  // Map, type 5
+      if (type == 5) { // Map, type 5
         CBORObject cbor = CBORObject.NewMap();
         if (additional == 31) {
           // Indefinite-length map
@@ -434,7 +434,7 @@ namespace PeterO.Cbor {
         }
         return cbor;
       }
-      if (type == 6) {  // Tagged item
+      if (type == 6) { // Tagged item
         ICBORTag taginfo = null;
         var haveFirstByte = false;
         var newFirstByte = -1;
@@ -445,10 +445,10 @@ namespace PeterO.Cbor {
           }
           int uad = uadditional >= 257 ? 257 : (uadditional < 0 ? 0 :
             (int)uadditional);
-    switch (uad) {
+            switch (uad) {
             case 256:
               // Tag 256: String namespace
-              this.stringRefs = this.stringRefs ?? (new StringRefs());
+              this.stringRefs = this.stringRefs ?? new StringRefs();
               this.stringRefs.Push();
               break;
             case 25:
@@ -457,10 +457,10 @@ namespace PeterO.Cbor {
                 throw new CBORException("No stringref namespace");
               }
               break;
-     case 28:
-     case 29:
-          this.hasSharableObjects = true;
-       break;
+              case 28:
+              case 29:
+              this.hasSharableObjects = true;
+              break;
           }
 
           taginfo = CBORObject.FindTagConverterLong(uadditional);
@@ -507,9 +507,9 @@ namespace PeterO.Cbor {
     }
 
     private static byte[] ReadByteData(
-  Stream stream,
-  long uadditional,
-  Stream outputStream) {
+      Stream stream,
+      long uadditional,
+      Stream outputStream) {
       if ((uadditional >> 63) != 0 || uadditional > Int32.MaxValue) {
         throw new CBORException("Length" + ToUnsignedBigInteger(uadditional) +
           " is bigger than supported ");
@@ -557,9 +557,9 @@ namespace PeterO.Cbor {
     }
 
     private static long ReadDataLength(
-  Stream stream,
-  int headByte,
-  int expectedType) {
+      Stream stream,
+      int headByte,
+      int expectedType) {
       if (headByte < 0) {
         throw new CBORException("Unexpected data encountered");
       }
@@ -591,10 +591,10 @@ namespace PeterO.Cbor {
             if (stream.Read(data, 0, 4) != 4) {
               throw new CBORException("Premature end of data");
             }
-            long uadditional = ((long)(data[0] & (long)0xff)) << 24;
-            uadditional |= ((long)(data[1] & (long)0xff)) << 16;
-            uadditional |= ((long)(data[2] & (long)0xff)) << 8;
-            uadditional |= (long)(data[3] & (long)0xff);
+            long uadditional = ((long)(data[0] & 0xffL)) << 24;
+            uadditional |= ((long)(data[1] & 0xffL)) << 16;
+            uadditional |= ((long)(data[2] & 0xffL)) << 8;
+            uadditional |= (long)(data[3] & 0xffL);
             return uadditional;
           }
         case 27: {
@@ -602,14 +602,14 @@ namespace PeterO.Cbor {
               throw new CBORException("Premature end of data");
             }
             // Treat return value as an unsigned integer
-            long uadditional = ((long)(data[0] & (long)0xff)) << 56;
-            uadditional |= ((long)(data[1] & (long)0xff)) << 48;
-            uadditional |= ((long)(data[2] & (long)0xff)) << 40;
-            uadditional |= ((long)(data[3] & (long)0xff)) << 32;
-            uadditional |= ((long)(data[4] & (long)0xff)) << 24;
-            uadditional |= ((long)(data[5] & (long)0xff)) << 16;
-            uadditional |= ((long)(data[6] & (long)0xff)) << 8;
-            uadditional |= (long)(data[7] & (long)0xff);
+            long uadditional = ((long)(data[0] & 0xffL)) << 56;
+            uadditional |= ((long)(data[1] & 0xffL)) << 48;
+            uadditional |= ((long)(data[2] & 0xffL)) << 40;
+            uadditional |= ((long)(data[3] & 0xffL)) << 32;
+            uadditional |= ((long)(data[4] & 0xffL)) << 24;
+            uadditional |= ((long)(data[5] & 0xffL)) << 16;
+            uadditional |= ((long)(data[6] & 0xffL)) << 8;
+            uadditional |= (long)(data[7] & 0xffL);
             return uadditional;
           }
         case 28:

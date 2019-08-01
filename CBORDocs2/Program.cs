@@ -15,7 +15,7 @@ namespace CBORDocs {
         Console.WriteLine("Usage: CBORDocs2 <dllfile> <docpath>");
         return;
       }
-     PeterO.DocGen.DocGenerator.Generate(args[0], args[1]);
+      PeterO.DocGen.DocGenerator.Generate(args[0], args[1]);
     }
   }
 }

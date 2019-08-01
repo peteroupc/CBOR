@@ -10,7 +10,7 @@ namespace PeterO.Cbor {
 }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.PODOptions.#ctor(System.Boolean,System.Boolean)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.Cbor.PODOptions.#ctor(System.Boolean,System.Boolean)"]/*'/>
     public PODOptions(bool removeIsPrefix, bool useCamelCase) {
         #pragma warning disable 618
       this.RemoveIsPrefix = removeIsPrefix;
@@ -23,9 +23,10 @@ namespace PeterO.Cbor {
     public static readonly PODOptions Default = new PODOptions();
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Cbor.PODOptions.RemoveIsPrefix"]/*'/>
-  [Obsolete("Property name conversion may change, making this property obsolete.")]
-        public bool RemoveIsPrefix { get; private set; }
+    ///   path='docs/doc[@name="P:PeterO.Cbor.PODOptions.RemoveIsPrefix"]/*'/>
+    [Obsolete("Property name conversion may change, making this property" +
+"\u0020obsolete.")]
+public bool RemoveIsPrefix { get; private set; }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="P:PeterO.Cbor.PODOptions.UseCamelCase"]/*'/>

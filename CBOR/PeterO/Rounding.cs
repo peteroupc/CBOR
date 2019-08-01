@@ -55,6 +55,6 @@ namespace PeterO {
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="F:PeterO.Rounding.OddOrZeroFiveUp"]/*'/>
-    OddOrZeroFiveUp
+    OddOrZeroFiveUp,
   }
 }

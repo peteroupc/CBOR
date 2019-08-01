@@ -290,17 +290,17 @@ from x in arrao select x;
       CBORObject obj = CBORObject.FromObject(new { AByte.A, B = AInt.A, C =
                     AULong.A });
       if (obj == null) {
- Assert.Fail();
- }
+        Assert.Fail();
+      }
       if (obj["a"] == null) {
- Assert.Fail();
- }
+        Assert.Fail();
+      }
             if (obj["b"] == null) {
- Assert.Fail();
- }
+              Assert.Fail();
+            }
             if (obj["c"] == null) {
- Assert.Fail();
- }
+              Assert.Fail();
+            }
     Assert.AreEqual(254, obj["a"].AsInt32());
       Assert.AreEqual(256, obj["b"].AsInt32());
       Assert.AreEqual(999999, obj["c"].AsInt32());
@@ -4770,7 +4770,8 @@ select new { A = i, B = i + 1 };
       ulong[] ranges = {
         0, 65539, 0xfffff000UL, 0x100000400UL,
         0x7ffffffffffff000UL, 0x8000000000000400UL,
-        UInt64.MaxValue - 1000, UInt64.MaxValue };
+        UInt64.MaxValue - 1000, UInt64.MaxValue
+      };
       for (var i = 0; i < ranges.Length; i += 2) {
         ulong j = ranges[i];
         while (true) {
@@ -4826,7 +4827,7 @@ select new { A = i, B = i + 1 };
     public void TestOther() {
       CBORObject cbor = CBORObject.FromObject(new int[2, 3, 2]);
       {
-string stringTemp = cbor.ToJSONString();
+        string stringTemp = cbor.ToJSONString();
 string str145009 = "[[[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0]]]";
 
 Assert.AreEqual(
@@ -4860,8 +4861,10 @@ Assert.AreEqual(
 
     [Test]
     public void TestUInt() {
-      uint[] ranges = { 0, 65539,
-        0x7ffff000U, 0x80000400U, UInt32.MaxValue - 1000, UInt32.MaxValue };
+      uint[] ranges = {
+        0, 65539,
+        0x7ffff000U, 0x80000400U, UInt32.MaxValue - 1000, UInt32.MaxValue
+      };
       for (var i = 0; i < ranges.Length; i += 2) {
         uint j = ranges[i];
         while (true) {
@@ -4889,7 +4892,7 @@ Assert.AreEqual(
           CBORObject.FromObject((decimal)i),
           TestCommon.IntToString(i));
         {
-CBORObject objectTemp = CBORObject.FromObject((decimal)i + 0.1m);
+          CBORObject objectTemp = CBORObject.FromObject((decimal)i + 0.1m);
 string objectTemp2 = ((EDecimal)((decimal)i + 0.1m)).ToString();
 CBORTestCommon.AssertSer(objectTemp, objectTemp2);
 }

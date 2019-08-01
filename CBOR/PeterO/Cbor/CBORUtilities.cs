@@ -150,9 +150,10 @@ namespace PeterO.Cbor {
         }
         while (intlongValue > 43698) {
           int intdivValue = intlongValue / 10;
-        char digit = HexAlphabet[(int)(intlongValue - (intdivValue * 10))];
-        chars[count--] = digit;
-        intlongValue = intdivValue;
+          char digit = HexAlphabet[(
+            int)(intlongValue - (intdivValue * 10))];
+          chars[count--] = digit;
+          intlongValue = intdivValue;
       }
       while (intlongValue > 9) {
         int intdivValue = (intlongValue * 26215) >> 18;
@@ -169,7 +170,7 @@ namespace PeterO.Cbor {
         ++count;
       }
       return new String(chars, count, 12 - count);
-      } else {
+    } else {
         chars = new char[24];
         count = 23;
         if (neg) {
@@ -177,9 +178,9 @@ namespace PeterO.Cbor {
         }
         while (longValue > 43698) {
           long divValue = longValue / 10;
-        char digit = HexAlphabet[(int)(longValue - (divValue * 10))];
-        chars[count--] = digit;
-        longValue = divValue;
+          char digit = HexAlphabet[(int)(longValue - (divValue * 10))];
+          chars[count--] = digit;
+          longValue = divValue;
       }
       while (longValue > 9) {
         long divValue = (longValue * 26215) >> 18;
@@ -208,27 +209,35 @@ namespace PeterO.Cbor {
       return a.Subtract(FloorDiv(a, n).Multiply(n));
     }
 
-    private static readonly int[] ValueNormalDays = { 0, 31, 28, 31, 30, 31, 30,
+    private static readonly int[] ValueNormalDays = {
+      0, 31, 28, 31, 30, 31, 30,
       31, 31, 30,
-      31, 30, 31 };
+      31, 30, 31,
+    };
 
-    private static readonly int[] ValueLeapDays = { 0, 31, 29, 31, 30, 31, 30,
+    private static readonly int[] ValueLeapDays = {
+      0, 31, 29, 31, 30, 31, 30,
       31, 31, 30,
-      31, 30, 31 };
+      31, 30, 31,
+    };
 
-    private static readonly int[] ValueNormalToMonth = { 0, 0x1f, 0x3b, 90, 120,
+    private static readonly int[] ValueNormalToMonth = {
+      0, 0x1f, 0x3b, 90, 120,
       0x97, 0xb5,
-      0xd4, 0xf3, 0x111, 0x130, 0x14e, 0x16d };
+      0xd4, 0xf3, 0x111, 0x130, 0x14e, 0x16d,
+    };
 
-    private static readonly int[] ValueLeapToMonth = { 0, 0x1f, 60, 0x5b, 0x79,
+    private static readonly int[] ValueLeapToMonth = {
+      0, 0x1f, 60, 0x5b, 0x79,
       0x98, 0xb6,
-      0xd5, 0xf4, 0x112, 0x131, 0x14f, 0x16e };
+      0xd5, 0xf4, 0x112, 0x131, 0x14f, 0x16e,
+    };
 
     public static void GetNormalizedPartProlepticGregorian(
-          EInteger year,
-          int month,
-          EInteger day,
-          EInteger[] dest) {
+      EInteger year,
+      int month,
+      EInteger day,
+      EInteger[] dest) {
       // NOTE: This method assumes month is 1 to 12
       if (month <= 0 || month > 12) {
         throw new ArgumentOutOfRangeException(nameof(month));
@@ -261,7 +270,7 @@ namespace PeterO.Cbor {
                     year.Remainder(num100).Sign == 0 &&
                     year.Remainder(num400).Sign != 0)) ? ValueNormalDays :
               ValueLeapDays;
-          } else {
+            } else {
             ++month;
           }
         }
@@ -282,16 +291,16 @@ namespace PeterO.Cbor {
     }
 
     public static EInteger GetNumberOfDaysProlepticGregorian(
-         EInteger year,
-         int month,
-         int mday) {
+      EInteger year,
+      int month,
+      int mday) {
       // NOTE: month = 1 is January, year = 1 is year 1
       if (month <= 0 || month > 12) {
- throw new ArgumentException();
-}
+        throw new ArgumentException();
+      }
       if (mday <= 0 || mday > 31) {
- throw new ArgumentException();
-}
+        throw new ArgumentException();
+      }
       EInteger num4 = EInteger.FromInt32(4);
       EInteger num100 = EInteger.FromInt32(100);
       EInteger num400 = EInteger.FromInt32(400);
@@ -356,7 +365,7 @@ namespace PeterO.Cbor {
       EInteger integerPart = edec.ToEInteger();
       EDecimal fractionalPart = edec.Abs()
         .Subtract(EDecimal.FromEInteger(integerPart).Abs());
-      int nanoseconds = fractionalPart .Multiply(EDecimal.FromInt32(1000000000))
+      int nanoseconds = fractionalPart.Multiply(EDecimal.FromInt32(1000000000))
        .ToInt32Checked();
       var normPart = new EInteger[3];
       EInteger days = FloorDiv(
@@ -382,7 +391,8 @@ namespace PeterO.Cbor {
 
     public static bool NameStartsWithWord(String name, String word) {
       int wl = word.Length;
-      return name.Length > wl && name.Substring(0, wl).Equals(word) &&
+      return name.Length > wl && name.Substring(0, wl).Equals(word,
+  StringComparison.Ordinal) &&
               !(name[wl] >= 'a' && name[wl] <= 'z') &&
               !(name[wl] >= '0' && name[wl] <= '9');
     }
@@ -445,12 +455,12 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
     }
 
     public static void ParseAtomDateTimeString(
-  string str,
-  EInteger[] bigYearArray,
-  int[] lf) {
+      string str,
+      EInteger[] bigYearArray,
+      int[] lf) {
   int[] d = ParseAtomDateTimeString(str);
-   bigYearArray[0] = EInteger.FromInt32(d[0]);
-   Array.Copy(d, 1, lf, 0, 7);
+  bigYearArray[0] = EInteger.FromInt32(d[0]);
+  Array.Copy(d, 1, lf, 0, 7);
     }
 
     private static int[] ParseAtomDateTimeString(string str) {
@@ -530,8 +540,10 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
       } else {
         throw new ArgumentException("Invalid date/time");
       }
-      int[] dt = new[] { year, month, day, hour, minute, second,
-        nanoSeconds, utcToLocal};
+      int[] dt = new[] {
+        year, month, day, hour, minute, second,
+        nanoSeconds, utcToLocal,
+      };
       if (!IsValidDateTime(dt)) {
         throw new ArgumentException("Invalid date/time");
       }
@@ -600,10 +612,10 @@ if (smallYear > 9999) {
       } else {
         if (fracSeconds > 0) {
           charbuf[19] = '.';
- ++charbufLength;
-int digitdiv = 100000000;
-int index = 20;
-while (digitdiv > 0 && fracSeconds != 0) {
+          ++charbufLength;
+          var digitdiv = 100000000;
+          var index = 20;
+          while (digitdiv > 0 && fracSeconds != 0) {
  int digit = (fracSeconds / digitdiv) % 10;
  fracSeconds -= digit * digitdiv;
  charbuf[index++] = (char)('0' + digit);
@@ -631,7 +643,7 @@ while (digitdiv > 0 && fracSeconds != 0) {
       if (floatExponent == 2047) {
         throw new OverflowException("Value is infinity or NaN");
       }
-      value1 &= 0xfffff;  // Mask out the exponent and sign
+      value1 &= 0xfffff; // Mask out the exponent and sign
       if (floatExponent == 0) {
         ++floatExponent;
       } else {

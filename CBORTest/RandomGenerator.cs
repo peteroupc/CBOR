@@ -1,14 +1,14 @@
 using System;
 
 namespace PeterO {
-  /// <summary>A class that adapts a random byte generator to generate
-  /// random numbers in a variety of statistical distributions.
-  /// <para>The method descriptions in this class assume the underlying
-  /// random byte generator generates uniformly distributed numbers that
-  /// are independent of each other.</para>
-  /// <para><b>Thread safety:</b> The methods in this class are safe for
-  /// concurrent use by multiple threads, as long as the underlying
-  /// random byte generator is as well.</para></summary>
+    /// <summary>A class that adapts a random byte generator to generate
+    /// random numbers in a variety of statistical distributions.
+    /// <para>The method descriptions in this class assume the underlying
+    /// random byte generator generates uniformly distributed numbers that
+    /// are independent of each other.</para>
+    /// <para><b>Thread safety:</b> The methods in this class are safe for
+    /// concurrent use by multiple threads, as long as the underlying
+    /// random byte generator is as well.</para></summary>
   public sealed class RandomGenerator {
     private bool valueHaveLastNormal;
     private IRandomGen valueIrg;
@@ -437,9 +437,9 @@ namespace PeterO {
       if (minInclusive >= 0) {
         return minInclusive + this.UniformLong(maxExclusive - minInclusive);
       } else {
-        if ((maxExclusive < 0 && Int64.MaxValue + maxExclusive < minInclusive) ||
-            (maxExclusive > 0 && Int64.MinValue + maxExclusive > minInclusive) ||
-                  minInclusive - maxExclusive < 0) {
+      if ((maxExclusive < 0 && Int64.MaxValue + maxExclusive < minInclusive) ||
+          (maxExclusive > 0 && Int64.MinValue + maxExclusive > minInclusive) ||
+              minInclusive - maxExclusive < 0) {
           // Difference is greater than MaxValue
           long lb = 0;
           var b = new byte[8];

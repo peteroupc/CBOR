@@ -6,6 +6,7 @@ http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/
  */
+#pragma warning disable SA1300
 using System;
 using PeterO.Numbers;
 
@@ -13,7 +14,8 @@ namespace PeterO {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="T:PeterO.BigInteger"]/*'/>
 [Obsolete(
-  "Use EInteger from PeterO.Numbers/com.upokecenter.numbers and the output of this class's ToString method.")]
+  "Use EInteger from PeterO.Numbers/com.upokecenter.numbers and the output" +
+"\u0020of this class's ToString method.")]
   public sealed partial class BigInteger : IComparable<BigInteger>,
     IEquatable<BigInteger> {
     /// <include file='../docs.xml'
@@ -35,8 +37,8 @@ namespace PeterO {
 
     internal BigInteger(EInteger ei) {
       if (ei == null) {
-  throw new ArgumentNullException(nameof(ei));
-}
+        throw new ArgumentNullException(nameof(ei));
+      }
       this.ei = ei;
     }
 
@@ -58,25 +60,25 @@ namespace PeterO {
     }
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.BigInteger.fromBytes(System.Byte[],System.Boolean)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.BigInteger.fromBytes(System.Byte[],System.Boolean)"]/*'/>
   public static BigInteger fromBytes(byte[] bytes, bool littleEndian) {
       return new BigInteger(EInteger.FromBytes(bytes, littleEndian));
     }
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.BigInteger.fromRadixString(System.String,System.Int32)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.BigInteger.fromRadixString(System.String,System.Int32)"]/*'/>
   public static BigInteger fromRadixString(string str, int radix) {
       return new BigInteger(EInteger.FromRadixString(str, radix));
     }
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.BigInteger.fromString(System.String)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.BigInteger.fromString(System.String)"]/*'/>
   public static BigInteger fromString(string str) {
 return new BigInteger(EInteger.FromString(str));
 }
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.BigInteger.valueOf(System.Int64)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.BigInteger.valueOf(System.Int64)"]/*'/>
   public static BigInteger valueOf(long longerValue) {
       return new BigInteger(EInteger.FromInt64(longerValue));
  }
@@ -88,7 +90,7 @@ return this.Ei.GetSignedBitLength();
  }
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.BigInteger.Equals(System.Object)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.BigInteger.Equals(System.Object)"]/*'/>
   public override bool Equals(object obj) {
       var bi = obj as BigInteger;
       return (bi == null) ? false : this.Ei.Equals(bi.Ei);
@@ -101,13 +103,13 @@ return this.Ei.GetSignedBitLength();
  }
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.BigInteger.toBytes(System.Boolean)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.BigInteger.toBytes(System.Boolean)"]/*'/>
   public byte[] toBytes(bool littleEndian) {
       return this.Ei.ToBytes(littleEndian);
  }
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.BigInteger.toRadixString(System.Int32)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.BigInteger.toRadixString(System.Int32)"]/*'/>
   public string toRadixString(int radix) {
       return this.Ei.ToRadixString(radix);
  }
@@ -119,7 +121,7 @@ return this.Ei.GetSignedBitLength();
     }
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.BigInteger.CompareTo(PeterO.BigInteger)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.BigInteger.CompareTo(PeterO.BigInteger)"]/*'/>
     public int CompareTo(BigInteger other) {
       return this.Ei.CompareTo(other == null ? null : other.Ei);
     }

@@ -16,14 +16,14 @@ namespace PeterO.Cbor {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORException.#ctor(System.String)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.Cbor.CBORException.#ctor(System.String)"]/*'/>
     public CBORException(string message) : base(message) {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORException.#ctor(System.String,System.Exception)"]/*'/>
-    public CBORException(string message, Exception innerException) :
-      base(message, innerException) {
+    ///   path='docs/doc[@name="M:PeterO.Cbor.CBORException.#ctor(System.String,System.Exception)"]/*'/>
+    public CBORException(string message, Exception innerException)
+      : base(message, innerException) {
     }
   }
 }

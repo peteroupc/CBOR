@@ -10,7 +10,9 @@ using System;
 namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="T:PeterO.Cbor.ICBORTag"]/*'/>
-  [Obsolete("May be removed in the future without replacement.  Not as useful as ICBORConverters and ICBORObjectConverters for FromObject and ToObject.")]
+  [Obsolete("May be removed in the future without replacement. Not as useful" +
+"\u0020as ICBORConverters and ICBORObjectConverters for FromObject and" +
+"\u0020ToObject.")]
   public interface ICBORTag
   {
     /// <include file='../../docs.xml'
@@ -18,7 +20,7 @@ namespace PeterO.Cbor {
     CBORTypeFilter GetTypeFilter();
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.ICBORTag.ValidateObject(PeterO.Cbor.CBORObject)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.Cbor.ICBORTag.ValidateObject(PeterO.Cbor.CBORObject)"]/*'/>
     CBORObject ValidateObject(CBORObject obj);
   }
 }

@@ -11,8 +11,9 @@ using PeterO.Numbers;
 namespace PeterO {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="T:PeterO.ExtendedFloat"]/*'/>
-[Obsolete(
-  "Use EFloat from PeterO.Numbers/com.upokecenter.numbers and the output of this class's ToString method.")]
+    [Obsolete(
+  "Use EFloat from PeterO.Numbers/com.upokecenter.numbers and the output of" +
+"\u0020this class's ToString method.")]
   public sealed class ExtendedFloat : IComparable<ExtendedFloat>,
  IEquatable<ExtendedFloat> {
     private readonly EFloat ef;
@@ -30,7 +31,7 @@ namespace PeterO {
     }
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.ExtendedFloat.UnsignedMantissa"]/*'/>
+    ///   path='docs/doc[@name="P:PeterO.ExtendedFloat.UnsignedMantissa"]/*'/>
     public BigInteger UnsignedMantissa {
       get {
         return new BigInteger(this.Ef.UnsignedMantissa);
@@ -54,8 +55,9 @@ namespace PeterO {
     }
 
     #region Equals and GetHashCode implementation
+
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.ExtendedFloat.EqualsInternal(PeterO.ExtendedFloat)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.ExtendedFloat.EqualsInternal(PeterO.ExtendedFloat)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public bool EqualsInternal(ExtendedFloat otherValue) {
       if (otherValue == null) {
@@ -65,7 +67,7 @@ namespace PeterO {
     }
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.ExtendedFloat.Equals(PeterO.ExtendedFloat)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.ExtendedFloat.Equals(PeterO.ExtendedFloat)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public bool Equals(ExtendedFloat other) {
       if (other == null) {
@@ -75,7 +77,7 @@ namespace PeterO {
     }
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.ExtendedFloat.Equals(System.Object)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.ExtendedFloat.Equals(System.Object)"]/*'/>
     public override bool Equals(object obj) {
       var bi = obj as ExtendedFloat;
       return (bi == null) ? false : this.Ef.Equals(bi.Ef);
@@ -89,16 +91,16 @@ namespace PeterO {
     #endregion
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.ExtendedFloat.Create(System.Int32,System.Int32)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.ExtendedFloat.Create(System.Int32,System.Int32)"]/*'/>
     public static ExtendedFloat Create(int mantissaSmall, int exponentSmall) {
       return new ExtendedFloat(EFloat.Create(mantissaSmall, exponentSmall));
     }
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.ExtendedFloat.Create(PeterO.BigInteger,PeterO.BigInteger)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.ExtendedFloat.Create(PeterO.BigInteger,PeterO.BigInteger)"]/*'/>
     public static ExtendedFloat Create(
-  BigInteger mantissa,
-  BigInteger exponent) {
+      BigInteger mantissa,
+      BigInteger exponent) {
       if (mantissa == null) {
         throw new ArgumentNullException(nameof(mantissa));
       }
@@ -109,27 +111,27 @@ namespace PeterO {
     }
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.ExtendedFloat.FromString(System.String,System.Int32,System.Int32,PeterO.PrecisionContext)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.ExtendedFloat.FromString(System.String,System.Int32,System.Int32,PeterO.PrecisionContext)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public static ExtendedFloat FromString(
-  string str,
-  int offset,
-  int length,
-  PrecisionContext ctx) {
+      string str,
+      int offset,
+      int length,
+      PrecisionContext ctx) {
       try {
         return new ExtendedFloat(
   EFloat.FromString(
-  str,
-  offset,
-  length,
-  ctx == null ? null : ctx.Ec));
+    str,
+    offset,
+    length,
+    ctx == null ? null : ctx.Ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
     }
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.ExtendedFloat.FromString(System.String)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.ExtendedFloat.FromString(System.String)"]/*'/>
     public static ExtendedFloat FromString(string str) {
       return new ExtendedFloat(EFloat.FromString(str));
     }
@@ -202,24 +204,24 @@ namespace PeterO {
      new ExtendedFloat(EFloat.SignalingNaN);
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="F:PeterO.ExtendedFloat.PositiveInfinity"]/*'/>
+    ///   path='docs/doc[@name="F:PeterO.ExtendedFloat.PositiveInfinity"]/*'/>
     public static readonly ExtendedFloat PositiveInfinity =
      new ExtendedFloat(EFloat.PositiveInfinity);
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="F:PeterO.ExtendedFloat.NegativeInfinity"]/*'/>
+    ///   path='docs/doc[@name="F:PeterO.ExtendedFloat.NegativeInfinity"]/*'/>
     public static readonly ExtendedFloat NegativeInfinity =
      new ExtendedFloat(EFloat.NegativeInfinity);
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.ExtendedFloat.IsNegativeInfinity"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.ExtendedFloat.IsNegativeInfinity"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public bool IsNegativeInfinity() {
       return this.Ef.IsNegativeInfinity();
     }
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.ExtendedFloat.IsPositiveInfinity"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.ExtendedFloat.IsPositiveInfinity"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public bool IsPositiveInfinity() {
       return this.Ef.IsPositiveInfinity();
@@ -261,7 +263,7 @@ namespace PeterO {
     }
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.ExtendedFloat.CompareTo(PeterO.ExtendedFloat)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.ExtendedFloat.CompareTo(PeterO.ExtendedFloat)"]/*'/>
     public int CompareTo(ExtendedFloat other) {
       return this.Ef.CompareTo(other == null ? null : other.Ef);
     }

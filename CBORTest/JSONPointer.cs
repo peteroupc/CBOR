@@ -69,8 +69,8 @@ namespace Test {
           }
           if (!tilde) {
             key = pointer.Substring(
-  oldIndex,
-  index - oldIndex);
+              oldIndex,
+              index - oldIndex);
           } else {
             index = oldIndex;
             var sb = new StringBuilder();
@@ -136,14 +136,14 @@ namespace Test {
     }
 
     private static int readPositiveInteger(
-        string str,
-        int index,
-        int[] result) {
+      string str,
+      int index,
+      int[] result) {
       var haveNumber = false;
       var haveZeros = false;
       int oldIndex = index;
       result[0] = -1;
-      while (index < str.Length) {  // skip zeros
+      while (index < str.Length) { // skip zeros
         int c = str[index++];
         if (c != '0') {
           --index;
@@ -203,8 +203,8 @@ if (!(refValue != null)) {
         int icount = ((CBORObject)this.jsonobj).Count;
         return eivalue.Sign >= 0 &&
                     eivalue.CompareTo(EInteger.FromInt32(icount)) < 0;
-      } else if (this.jsonobj.Type == CBORType.Map) {
-        return ((CBORObject)this.jsonobj).ContainsKey(this.refValue);
+                  } else if (this.jsonobj.Type == CBORType.Map) {
+                    return ((CBORObject)this.jsonobj).ContainsKey(this.refValue);
       } else {
         return this.refValue.Length == 0;
       }
@@ -246,13 +246,13 @@ if (!(refValue != null)) {
         if (index >= 0 && index < ((CBORObject)this.jsonobj).Count) {
     tmpcbor = this.jsonobj;
        return tmpcbor[index];
-        } else {
+     } else {
           return null;
         }
       } else if (this.jsonobj.Type == CBORType.Map) {
         tmpcbor = this.jsonobj;
        return tmpcbor[this.refValue];
-      } else {
+     } else {
         return (this.refValue.Length == 0) ? this.jsonobj : null;
       }
     }
@@ -320,8 +320,8 @@ if (!(refValue != null)) {
     /// is not documented yet.</param>
     /// <returns>An IDictionary(string, Object) object.</returns>
     public static IDictionary<string, Object> getPointersWithKey(
-        CBORObject root,
-        string keyToFind) {
+      CBORObject root,
+      string keyToFind) {
       IDictionary<string, Object> list = new Dictionary<string, Object>();
       getPointersWithKey(root, keyToFind, String.Empty, list, false);
       return list;
@@ -352,21 +352,21 @@ if (!(refValue != null)) {
           ptrkey = ptrkey.Replace("~", "~0");
           ptrkey = ptrkey.Replace("/", "~1");
           getPointersWithKey(
-  rootObj[key],
-  keyToFind,
-  currentPointer + "/" + ptrkey,
-  pointerList,
-  remove);
+            rootObj[key],
+            keyToFind,
+            currentPointer + "/" + ptrkey,
+            pointerList,
+            remove);
         }
       } else if (root.Type == CBORType.Array) {
         for (int i = 0; i < root.Count; ++i) {
           string ptrkey = EInteger.FromInt32(i).ToString();
           getPointersWithKey(
-  root[i],
-  keyToFind,
-  currentPointer + "/" + ptrkey,
-  pointerList,
-  remove);
+            root[i],
+            keyToFind,
+            currentPointer + "/" + ptrkey,
+            pointerList,
+            remove);
         }
       }
     }

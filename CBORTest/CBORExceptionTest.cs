@@ -8,8 +8,8 @@ namespace Test {
     [Test]
     public void TestConstructor() {
      try {
-        throw new CBORException("Test exception"); 
-      } catch(CBORException){
+        throw new CBORException("Test exception");
+      } catch (CBORException) {
          // expected exception
       }
     }

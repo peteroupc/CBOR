@@ -11,8 +11,9 @@ using PeterO.Numbers;
 namespace PeterO {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="T:PeterO.ExtendedRational"]/*'/>
-[Obsolete(
-  "Use ERational from PeterO.Numbers/com.upokecenter.numbers and the output of this class's ToString method.")]
+    [Obsolete(
+  "Use ERational from PeterO.Numbers/com.upokecenter.numbers and the output" +
+"\u0020of this class's ToString method.")]
   public sealed class ExtendedRational : IComparable<ExtendedRational>,
     IEquatable<ExtendedRational> {
     /// <include file='../docs.xml'
@@ -22,7 +23,7 @@ namespace PeterO {
       new ExtendedRational(ERational.NaN);
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="F:PeterO.ExtendedRational.NegativeInfinity"]/*'/>
+    ///   path='docs/doc[@name="F:PeterO.ExtendedRational.NegativeInfinity"]/*'/>
     public static readonly ExtendedRational NegativeInfinity = new
       ExtendedRational(ERational.NegativeInfinity);
 
@@ -37,7 +38,7 @@ namespace PeterO {
       FromBigIntegerInternal(BigInteger.One);
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="F:PeterO.ExtendedRational.PositiveInfinity"]/*'/>
+    ///   path='docs/doc[@name="F:PeterO.ExtendedRational.PositiveInfinity"]/*'/>
     public static readonly ExtendedRational PositiveInfinity = new
       ExtendedRational(ERational.PositiveInfinity);
 
@@ -60,8 +61,14 @@ namespace PeterO {
     private readonly ERational er;
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.ExtendedRational.#ctor(PeterO.BigInteger,PeterO.BigInteger)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.ExtendedRational.#ctor(PeterO.BigInteger,PeterO.BigInteger)"]/*'/>
     public ExtendedRational(BigInteger numerator, BigInteger denominator) {
+      if (denominator == null) {
+        throw new ArgumentNullException(nameof(denominator));
+      }
+      if (numerator == null) {
+        throw new ArgumentNullException(nameof(numerator));
+      }
       this.er = new ERational(numerator.Ei, denominator.Ei);
     }
 
@@ -124,7 +131,7 @@ namespace PeterO {
     }
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.ExtendedRational.UnsignedNumerator"]/*'/>
+    ///   path='docs/doc[@name="P:PeterO.ExtendedRational.UnsignedNumerator"]/*'/>
     public BigInteger UnsignedNumerator {
       get {
         return new BigInteger(this.Er.UnsignedNumerator);
@@ -138,21 +145,21 @@ namespace PeterO {
     }
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.ExtendedRational.Create(System.Int32,System.Int32)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.ExtendedRational.Create(System.Int32,System.Int32)"]/*'/>
     public static ExtendedRational Create(
-  int numeratorSmall,
-  int denominatorSmall) {
+      int numeratorSmall,
+      int denominatorSmall) {
       return new ExtendedRational(
   ERational.Create(
-  numeratorSmall,
-  denominatorSmall));
+    numeratorSmall,
+    denominatorSmall));
     }
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.ExtendedRational.Create(PeterO.BigInteger,PeterO.BigInteger)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.ExtendedRational.Create(PeterO.BigInteger,PeterO.BigInteger)"]/*'/>
     public static ExtendedRational Create(
-  BigInteger numerator,
-  BigInteger denominator) {
+      BigInteger numerator,
+      BigInteger denominator) {
       if (numerator == null) {
         throw new ArgumentNullException(nameof(numerator));
       }
@@ -161,8 +168,8 @@ namespace PeterO {
       }
       return new ExtendedRational(
   ERational.Create(
-  numerator.Ei,
-  denominator.Ei));
+    numerator.Ei,
+    denominator.Ei));
     }
 
     /// <include file='../docs.xml'
@@ -184,19 +191,19 @@ namespace PeterO {
     }
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.ExtendedRational.CompareTo(PeterO.ExtendedRational)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.ExtendedRational.CompareTo(PeterO.ExtendedRational)"]/*'/>
     public int CompareTo(ExtendedRational other) {
       return this.Er.CompareTo(other == null ? null : other.Er);
     }
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.ExtendedRational.Equals(PeterO.ExtendedRational)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.ExtendedRational.Equals(PeterO.ExtendedRational)"]/*'/>
     public bool Equals(ExtendedRational other) {
       return this.Er.Equals(other == null ? null : other.Er);
     }
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.ExtendedRational.Equals(System.Object)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.ExtendedRational.Equals(System.Object)"]/*'/>
     public override bool Equals(object obj) {
       var other = obj as ExtendedRational;
       return this.Er.Equals(other == null ? null : other.Er);

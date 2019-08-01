@@ -18,8 +18,8 @@ namespace PeterO.Cbor {
     }
 
     private static CBORObject FromObjectAndInnerTags(
-  object objectValue,
-  CBORObject objectWithTags) {
+      object objectValue,
+      CBORObject objectWithTags) {
       CBORObject newObject = CBORObject.FromObject(objectValue);
       if (!objectWithTags.IsTagged) {
         return newObject;
@@ -72,7 +72,7 @@ namespace PeterO.Cbor {
         }
       }
       if (extended) {
-          bytes[bytes.Length - 1] = negative ? (byte)0xff : (byte)0;
+        bytes[bytes.Length - 1] = negative ? (byte)0xff : (byte)0;
       }
       bi = EInteger.FromBytes(bytes, true);
       // NOTE: Here, any tags are discarded; when called from

@@ -8,16 +8,16 @@ namespace PeterO.Cbor {
       public int Compare(CBORObject a, CBORObject b) {
         byte[] abs;
         byte[] bbs;
-bool bothBytes = false;
+        var bothBytes = false;
         if (a.Type == CBORType.ByteString && b.Type == CBORType.ByteString) {
           abs = a.GetByteString();
           bbs = b.GetByteString();
-bothBytes = true;
+          bothBytes = true;
         } else {
           abs = CtapCanonicalEncode(a);
           bbs = CtapCanonicalEncode(b);
         }
-if (!bothBytes && (abs[0] & 0xe0) != (bbs[0] & 0xe0)) {
+        if (!bothBytes && (abs[0] & 0xe0) != (bbs[0] & 0xe0)) {
  // different major types
  return (abs[0] & 0xe0) < (bbs[0] & 0xe0) ? -1 : 1;
 }

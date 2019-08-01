@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk='Microsoft.NET.Sdk'>
 
   <PropertyGroup>
     <TargetFramework>netstandard1.0</TargetFramework>
@@ -53,9 +53,9 @@ Version 3.4.0-alpha1:
     <AssemblyOriginatorKeyFile>PeterO.snk</AssemblyOriginatorKeyFile>
     <Title>CBOR (Concise Binary Object Representation)</Title>
     <PackOnBuild>true</PackOnBuild>
-  </PropertyGroup>
+  <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet></PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=' &apos;$(Configuration)|$(Platform)&apos; == &apos;Debug|AnyCPU&apos; '>
     <DocumentationFile>bin\Debug\netstandard1.0\CBOR.xml</DocumentationFile>
     <CustomCommands>
       <CustomCommands>
@@ -68,9 +68,9 @@ Version 3.4.0-alpha1:
         </Command>
       </CustomCommands>
     </CustomCommands>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType></DebugType>
+  <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet></PropertyGroup>
+  <PropertyGroup Condition=' &apos;$(Configuration)|$(Platform)&apos; == &apos;Release|AnyCPU&apos; '>
+    <DebugType/>
     <DocumentationFile>bin\Release\netstandard1.0\CBOR.xml</DocumentationFile>
     <CustomCommands>
       <CustomCommands>
@@ -83,8 +83,8 @@ Version 3.4.0-alpha1:
         </Command>
       </CustomCommands>
     </CustomCommands>
-  </PropertyGroup>
+  <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet></PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="PeterO.Numbers" Version="1.4.3" />
-  </ItemGroup>
+    <PackageReference Include='PeterO.Numbers' Version='1.4.3'/>
+  <PackageReference Include='StyleCop.Analyzers' PrivateAssets='All' Version='1.1.118'></PackageReference><PackageReference Include='Microsoft.CodeAnalysis.FxCopAnalyzers' PrivateAssets='All' Version='2.9.3'></PackageReference><AdditionalFiles Include='stylecop.json'></AdditionalFiles><AdditionalFiles Include='rules.ruleset'></AdditionalFiles></ItemGroup>
 </Project>

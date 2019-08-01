@@ -15,7 +15,8 @@ namespace PeterO {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="P:PeterO.BigInteger.Zero"]/*'/>
     [CLSCompliant(false)] [Obsolete(
-  "Use EInteger from PeterO.Numbers/com.upokecenter.numbers and the output of this class's ToString method.")]
+  "Use EInteger from PeterO.Numbers/com.upokecenter.numbers and the output" +
+"\u0020of this class's ToString method.")]
         public static BigInteger Zero {
       get {
         return ValueZeroValue;
@@ -25,7 +26,8 @@ namespace PeterO {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="P:PeterO.BigInteger.One"]/*'/>
     [CLSCompliant(false)] [Obsolete(
-  "Use EInteger from PeterO.Numbers/com.upokecenter.numbers and the output of this class's ToString method.")]
+  "Use EInteger from PeterO.Numbers/com.upokecenter.numbers and the output" +
+"\u0020of this class's ToString method.")]
         public static BigInteger One {
       get {
         return ValueOneValue;
@@ -33,9 +35,10 @@ namespace PeterO {
     }
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.BigInteger.Equals(PeterO.BigInteger)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.BigInteger.Equals(PeterO.BigInteger)"]/*'/>
         [Obsolete(
-  "Use EInteger from PeterO.Numbers/com.upokecenter.numbers and the output of this class's ToString method.")]
+  "Use EInteger from PeterO.Numbers/com.upokecenter.numbers and the output" +
+"\u0020of this class's ToString method.")]
         public bool Equals(BigInteger other) {
       return this.Equals((object)other);
     }

@@ -73,7 +73,7 @@ namespace PeterO {
       while (true) {
         CBORObject o = readObject(stream, true);
         if (o == null) {
-          break;  // 'e' was read
+          break; // 'e' was read
         }
         obj.Add(o);
       }
@@ -147,7 +147,7 @@ namespace PeterO {
         ++count;
       }
       return new String(chars, count, 12 - count);
-      } else {
+    } else {
         chars = new char[24];
         count = 23;
         if (neg) {
@@ -218,9 +218,9 @@ namespace PeterO {
 
     public static void Write(CBORObject obj, Stream stream) {
       if (obj.Type == CBORType.Number) {
-        stream.WriteByte(unchecked((byte)((byte)'i')));
+        stream.WriteByte(unchecked((byte)((byte)0x69)));
         writeUtf8(obj.AsEInteger().ToString(), stream);
-        stream.WriteByte(unchecked((byte)((byte)'e')));
+        stream.WriteByte(unchecked((byte)((byte)0x65)));
       } else if (obj.Type == CBORType.TextString) {
         string s = obj.AsString();
         long length = DataUtilities.GetUtf8Length(s, false);
@@ -249,7 +249,7 @@ namespace PeterO {
               key.AsString() : key.ToJSONString();
             valueSMap[str] = value;
           }
-          stream.WriteByte(unchecked((byte)((byte)'d')));
+          stream.WriteByte(unchecked((byte)((byte)0x64)));
           foreach (KeyValuePair<string, CBORObject> entry in valueSMap) {
             string key = entry.Key;
             CBORObject value = entry.Value;
@@ -264,9 +264,9 @@ namespace PeterO {
             writeUtf8(key, stream);
             Write(value, stream);
           }
-          stream.WriteByte(unchecked((byte)((byte)'e')));
+          stream.WriteByte(unchecked((byte)((byte)0x65)));
         } else {
-          stream.WriteByte(unchecked((byte)((byte)'d')));
+          stream.WriteByte(unchecked((byte)((byte)0x64)));
           foreach (CBORObject key in obj.Keys) {
             string str = key.AsString();
             long length = DataUtilities.GetUtf8Length(str, false);
@@ -278,14 +278,14 @@ namespace PeterO {
             writeUtf8(str, stream);
             Write(obj[key], stream);
           }
-          stream.WriteByte(unchecked((byte)((byte)'e')));
+          stream.WriteByte(unchecked((byte)((byte)0x65)));
         }
       } else if (obj.Type == CBORType.Array) {
-        stream.WriteByte(unchecked((byte)((byte)'l')));
+        stream.WriteByte(unchecked((byte)((byte)0x6C)));
         for (var i = 0; i < obj.Count; ++i) {
           Write(obj[i], stream);
         }
-        stream.WriteByte(unchecked((byte)((byte)'e')));
+        stream.WriteByte(unchecked((byte)((byte)0x65)));
       } else {
         string str = obj.ToJSONString();
         long length = DataUtilities.GetUtf8Length(str, false);

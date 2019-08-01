@@ -93,15 +93,15 @@ namespace PeterO.Cbor {
     }
 
     private static MethodInfo GetTypeMethod(
-  Type t,
-  string name,
-  Type[] parameters) {
+      Type t,
+      string name,
+      Type[] parameters) {
       return t.GetMethod(name, parameters);
     }
 
     private static bool HasCustomAttribute(
-  Type t,
-  string name) {
+      Type t,
+      string name) {
 #if NET40 || NET20
       foreach (var attr in t.GetCustomAttributes(false)) {
 #else
@@ -123,17 +123,17 @@ namespace PeterO.Cbor {
     }
 
     private static MethodInfo GetTypeMethod(
-  Type t,
-  string name,
-  Type[] parameters) {
+      Type t,
+      string name,
+      Type[] parameters) {
       return t.GetRuntimeMethod(name, parameters);
     }
 
     private static bool HasCustomAttribute(
-  Type t,
-  string name) {
+      Type t,
+      string name) {
       foreach (var attr in t.GetTypeInfo().GetCustomAttributes()) {
-        if (attr.GetType().FullName.Equals(name)) {
+        if (attr.GetType().FullName.Equals(name, StringComparison.Ordinal)) {
           return true;
         }
       }
@@ -182,7 +182,7 @@ namespace PeterO.Cbor {
               }
               PropertyData pd = new PropertyMap2.PropertyData() {
                 Name = pi.Name,
-                Prop = pi
+                Prop = pi,
               };
               ret.Add(pd);
             }
@@ -282,9 +282,9 @@ namespace PeterO.Cbor {
     }
 
     private static void SetCBORObject(
-  CBORObject cbor,
-  int[] index,
-  CBORObject obj) {
+      CBORObject cbor,
+      int[] index,
+      CBORObject obj) {
       CBORObject ret = cbor;
       for (var i = 0; i < index.Length - 1; ++i) {
         ret = ret[index[i]];
@@ -299,12 +299,12 @@ namespace PeterO.Cbor {
     }
 
     public static Array FillArray(
-  Array arr,
-  Type elementType,
-  CBORObject cbor,
-  CBORTypeMapper mapper,
-  PODOptions options,
-  int depth) {
+      Array arr,
+      Type elementType,
+      CBORObject cbor,
+      CBORTypeMapper mapper,
+      PODOptions options,
+      int depth) {
       int rank = arr.Rank;
       if (rank == 0) {
         return arr;
@@ -313,11 +313,11 @@ namespace PeterO.Cbor {
         int len = arr.GetLength(0);
         for (var i = 0; i < len; ++i) {
        object item = cbor[i].ToObject(
-  elementType,
-  mapper,
-  options,
-  depth + 1);
-          arr.SetValue(item, i);
+         elementType,
+         mapper,
+         options,
+         depth + 1);
+         arr.SetValue(item, i);
         }
         return arr;
       }
@@ -331,8 +331,8 @@ namespace PeterO.Cbor {
       }
       do {
         object item = GetCBORObject(
-  cbor,
-  index).ToObject(
+          cbor,
+          index).ToObject(
   elementType,
   mapper,
   options,
@@ -377,7 +377,7 @@ namespace PeterO.Cbor {
       } else if (obj.Type == CBORType.TextString) {
         var nameString = obj.AsString();
         foreach (var name in Enum.GetNames(enumType)) {
-          if (nameString.Equals(name)) {
+          if (nameString.Equals(name, StringComparison.Ordinal)) {
             return Enum.Parse(enumType, name);
           }
         }
@@ -404,16 +404,16 @@ namespace PeterO.Cbor {
     }
 
     public static object FindOneArgumentMethod(
-  object obj,
-  string name,
-  Type argtype) {
+      object obj,
+      string name,
+      Type argtype) {
       return GetTypeMethod(obj.GetType(), name, new[] { argtype });
     }
 
     public static object InvokeOneArgumentMethod(
-  object methodInfo,
-  object obj,
-  object argument) {
+      object methodInfo,
+      object obj,
+      object argument) {
       return ((MethodInfo)methodInfo).Invoke(obj, new[] { argument });
     }
 
@@ -435,7 +435,7 @@ namespace PeterO.Cbor {
 
     private static bool StartsWith(string str, string pfx) {
       return str != null && str.Length >= pfx.Length &&
-        str.Substring(0, pfx.Length).Equals(pfx);
+        str.Substring(0, pfx.Length).Equals(pfx, StringComparison.Ordinal);
     }
 
     private static object TypeToIntegerObject(CBORObject objThis, Type t) {
@@ -467,11 +467,11 @@ namespace PeterO.Cbor {
     }
 
     public static object TypeToObject(
-         CBORObject objThis,
-         Type t,
-         CBORTypeMapper mapper,
-         PODOptions options,
-         int depth) {
+      CBORObject objThis,
+      Type t,
+      CBORTypeMapper mapper,
+      PODOptions options,
+      int depth) {
       if (t.Equals(typeof(int))) {
         return objThis.AsInt32();
       }
@@ -509,7 +509,7 @@ namespace PeterO.Cbor {
         return objThis.AsBoolean();
       }
       if (t.Equals(typeof(char))) {
-if (objThis.Type == CBORType.TextString) {
+        if (objThis.Type == CBORType.TextString) {
   string s = objThis.AsString();
   if (s.Length != 1) {
  throw new CBORException("Can't convert to char");
@@ -591,12 +591,11 @@ Type elementType = t.GetElementType();
         }
         if (t.GetTypeInfo().IsGenericType) {
           Type td = t.GetGenericTypeDefinition();
-          isList = (td.Equals(typeof(List<>)) ||
-  td.Equals(typeof(IList<>)) ||
-  td.Equals(typeof(ICollection<>)) ||
+          isList = (td.Equals(typeof(List<>)) || td.Equals(typeof(IList<>)) ||
+td.Equals(typeof(ICollection<>)) ||
   td.Equals(typeof(IEnumerable<>)));
         }
-        isList = (isList && t.GenericTypeArguments.Length == 1);
+        isList = isList && t.GenericTypeArguments.Length == 1;
         if (isList) {
           objectType = t.GenericTypeArguments[0];
           Type listType = typeof(List<>).MakeGenericType(objectType);
@@ -642,15 +641,15 @@ Type elementType = t.GetElementType();
           dictObject = Activator.CreateInstance(listType);
         }
 #else
-        isDict = (t.GetTypeInfo().IsGenericType);
+        isDict = t.GetTypeInfo().IsGenericType;
         if (t.GetTypeInfo().IsGenericType) {
           Type td = t.GetGenericTypeDefinition();
-          isDict = (td.Equals(typeof(Dictionary<,>)) ||
-  td.Equals(typeof(IDictionary<,>)));
+          isDict = td.Equals(typeof(Dictionary<,>)) ||
+td.Equals(typeof(IDictionary<,>));
         }
-        //DebugUtility.Log("list=" + isDict);
-        isDict = (isDict && t.GenericTypeArguments.Length == 2);
-        //DebugUtility.Log("list=" + isDict);
+        // DebugUtility.Log("list=" + isDict);
+        isDict = isDict && t.GenericTypeArguments.Length == 2;
+        // DebugUtility.Log("list=" + isDict);
         if (isDict) {
           keyType = t.GenericTypeArguments[0];
           valueType = t.GenericTypeArguments[1];
@@ -698,8 +697,8 @@ Type elementType = t.GetElementType();
         }
         var values = new List<KeyValuePair<string, CBORObject>>();
         foreach (string key in PropertyMap2.GetPropertyNames(
-                   t,
-                   options != null ? options.UseCamelCase : true)) {
+          t,
+          options != null ? options.UseCamelCase : true)) {
           if (objThis.ContainsKey(key)) {
             CBORObject cborValue = objThis[key];
             var dict = new KeyValuePair<string, CBORObject>(
@@ -709,11 +708,11 @@ Type elementType = t.GetElementType();
           }
         }
         return PropertyMap2.ObjectWithProperties(
-    t,
-    values,
-    mapper,
-    options,
-    depth);
+          t,
+          values,
+          mapper,
+          options,
+          depth);
       } else {
         throw new CBORException();
       }
@@ -722,9 +721,9 @@ Type elementType = t.GetElementType();
     public static object ObjectWithProperties(
          Type t,
          IEnumerable<KeyValuePair<string, CBORObject>> keysValues,
-       CBORTypeMapper mapper,
-       PODOptions options,
- int depth) {
+         CBORTypeMapper mapper,
+         PODOptions options,
+         int depth) {
       object o = Activator.CreateInstance(t);
       var dict = new Dictionary<string, CBORObject>();
       foreach (var kv in keysValues) {
@@ -737,14 +736,15 @@ Type elementType = t.GetElementType();
           // a getter to be eligible for setting
           continue;
         }
-   var name = key.GetAdjustedName(options != null ? options.UseCamelCase :
+        var name = key.GetAdjustedName(
+          options != null ? options.UseCamelCase :
           true);
         if (dict.ContainsKey(name)) {
           object dobj = dict[name].ToObject(
-  key.Prop.PropertyType,
-  mapper,
-  options,
-  depth + 1);
+            key.Prop.PropertyType,
+            mapper,
+            options,
+            depth + 1);
           key.Prop.SetValue(o, dobj, null);
         }
       }
@@ -776,9 +776,9 @@ Type elementType = t.GetElementType();
     }
 
     public static void BreakDownDateTime(
-  DateTime bi,
-  EInteger[] year,
-  int[] lf) {
+      DateTime bi,
+      EInteger[] year,
+      int[] lf) {
 #if NET20
       DateTime dt = bi.ToUniversalTime();
 #else

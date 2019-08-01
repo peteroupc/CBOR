@@ -26,13 +26,13 @@ namespace PeterO {
     }
 
     /// <include file='../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.PrecisionContext.#ctor(System.Int32,PeterO.Rounding,System.Int32,System.Int32,System.Boolean)"]/*'/>
+    ///   path='docs/doc[@name="M:PeterO.PrecisionContext.#ctor(System.Int32,PeterO.Rounding,System.Int32,System.Int32,System.Boolean)"]/*'/>
     public PrecisionContext(
- int precision,
- Rounding rounding,
- int exponentMinSmall,
- int exponentMaxSmall,
- bool clampNormalExponents) {
+      int precision,
+      Rounding rounding,
+      int exponentMinSmall,
+      int exponentMaxSmall,
+      bool clampNormalExponents) {
       throw new NotSupportedException("This class is now obsolete.");
     }
 
