@@ -1811,8 +1811,28 @@ cmpCobj.ToString() +
       }
     }
 
+private static void AssertEquals(int exp, int act){
+// Much less overhead than Assert alone if the 
+// two arguments are equal
+if(exp!=act)Assert.AreEqual(exp,act);
+}
+private static void AssertEquals(object oexp, object oact){
+// Much less overhead than Assert alone if the 
+// two arguments are equal
+if(oexp==null ? oact!=null : !oexp.Equals(oact)){
+ Assert.AreEqual(oexp,oact);
+}
+}
+private static void AssertEquals(object oexp, object oact, string str){
+// Much less overhead than Assert alone if the 
+// two arguments are equal
+if(oexp==null ? oact!=null : !oexp.Equals(oact)){
+ Assert.AreEqual(oexp,oact,str);
+}
+}
+
     [Test]
-    [Timeout(150000)]
+    [Timeout(15000)]
     public void TestTags() {
       EInteger maxuint = EInteger.FromString("18446744073709551615");
       EInteger[] ranges = {
@@ -1825,23 +1845,17 @@ cmpCobj.ToString() +
         EInteger.FromString("18446744073709551115"),
         EInteger.FromString("18446744073709551615"),
       };
-      // var sw = new System.Diagnostics.Stopwatch();sw.Start();
       Assert.IsFalse(CBORObject.True.IsTagged);
       CBORObject trueObj = CBORObject.True;
-      Assert.AreEqual(
+      AssertEquals(
         EInteger.FromString("-1"),
         trueObj.MostInnerTag);
       EInteger[] tagstmp = CBORObject.True.GetAllTags();
       for (var i = 0; i < ranges.Length; i += 2) {
         EInteger bigintTemp = ranges[i];
-        // Console.WriteLine(ranges[i] + " - " + ranges[i+1] + " - " +
-        // (sw.ElapsedMilliseconds/1000.0) + " s");
         while (true) {
           EInteger ei = bigintTemp;
           EInteger bigintNext = ei.Add(EInteger.One);
-          // if (ei.Remainder(200).Sign == 0) {
-          // Console.WriteLine(ei + " - " + (sw.ElapsedMilliseconds/1000.0) + " s");
-          // }
           if (bigintTemp.GetSignedBitLengthAsEInteger().ToInt32Checked() <=
             31) {
             int bc = ei.ToInt32Checked();
@@ -1855,22 +1869,22 @@ cmpCobj.ToString() +
             }
           }
           CBORObject obj = CBORObject.FromObjectAndTag(0, bigintTemp);
-          Assert.IsTrue(obj.IsTagged, "obj not tagged");
+          if(!obj.IsTagged)Assert.Fail("obj not tagged");
           EInteger[] tags = obj.GetAllTags();
-          Assert.AreEqual(1, tags.Length);
-          Assert.AreEqual(bigintTemp, tags[0]);
+          AssertEquals(1, tags.Length);
+          AssertEquals(bigintTemp, tags[0]);
           if (!obj.MostInnerTag.Equals(bigintTemp)) {
             string errmsg = "obj tag doesn't match: " + obj;
-            Assert.AreEqual(
+            AssertEquals(
               bigintTemp,
               obj.MostInnerTag,
               errmsg);
           }
           tags = obj.GetAllTags();
-          Assert.AreEqual(1, tags.Length);
-          Assert.AreEqual(bigintTemp, obj.MostOuterTag);
-          Assert.AreEqual(bigintTemp, obj.MostInnerTag);
-          Assert.AreEqual(0, obj.AsInt32Value());
+          AssertEquals(1, tags.Length);
+          AssertEquals(bigintTemp, obj.MostOuterTag);
+          AssertEquals(bigintTemp, obj.MostInnerTag);
+          AssertEquals(0, obj.AsInt32Value());
           if (!bigintTemp.Equals(maxuint)) {
             EInteger bigintNew = bigintNext;
             // Test multiple tags
@@ -1879,7 +1893,7 @@ cmpCobj.ToString() +
             if (bi.Length != 2) {
               {
                 string stringTemp = "Expected 2 tags: " + obj2;
-                Assert.AreEqual(
+                AssertEquals(
                   2,
                   bi.Length,
                   stringTemp);
@@ -1897,17 +1911,17 @@ cmpCobj.ToString() +
             if (!obj2.MostInnerTag.Equals((object)bigintTemp)) {
               {
                 string stringTemp = "Innermost tag doesn't match: " + obj2;
-                Assert.AreEqual(
+                AssertEquals(
                   bigintTemp,
                   obj2.MostInnerTag,
                   stringTemp);
               }
             }
             EInteger[] tags2 = obj2.GetAllTags();
-            Assert.AreEqual(2, tags2.Length);
-            Assert.AreEqual(bigintNext, obj2.MostOuterTag);
-            Assert.AreEqual(bigintTemp, obj2.MostInnerTag);
-            Assert.AreEqual(0, obj2.AsInt32Value());
+            AssertEquals(2, tags2.Length);
+            AssertEquals(bigintNext, obj2.MostOuterTag);
+            AssertEquals(bigintTemp, obj2.MostInnerTag);
+            AssertEquals(0, obj2.AsInt32Value());
           }
           if (bigintTemp.CompareTo(ranges[i + 1]) >= 0) {
             break;

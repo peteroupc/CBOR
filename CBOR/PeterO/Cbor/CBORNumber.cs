@@ -6,12 +6,12 @@ namespace PeterO.Cbor {
     /// <summary>An instance of a number that CBOR or certain CBOR tags can
     /// represent. For this purpose, infinities and not-a-number or NaN
     /// values are considered numbers. Currently, this class can store one
-    /// of the following kinds of numbers: 64-bit integers or binary
+    /// of the following kinds of numbers: 64-bit signed integers or binary
     /// floating-point numbers; or arbitrary-precision integers, decimal
     /// numbers, binary numbers, or rational numbers.</summary>
   public sealed class CBORNumber : IComparable<CBORNumber> {
     internal enum Kind {
-    /// <summary>A 64-bit unsigned integer.</summary>
+    /// <summary>A 64-bit signed integer.</summary>
       Integer,
 
     /// <summary>A 64-bit binary floating-point number.</summary>

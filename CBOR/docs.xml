@@ -366,13 +366,11 @@
     </summary>
   </doc>
   <doc name='M:PeterO.Cbor.CBORNumber.Multiply(PeterO.Cbor.CBORNumber)'>
-    <summary>Not documented yet.
+    <summary>Returns a CBOR number expressing the product of this number and the given number.
     </summary>
-    <param name='b'>The parameter
-      <paramref name='b'/>
-       is not documented yet.
+    <param name='b'>The second operand to the multiplication operation.
     </param>
-    <returns>A CBORNumber object.
+    <returns>A number expressing the product of this number and the given number.
     </returns>
     <exception cref='System.ArgumentNullException'>The parameter
       <paramref name='b'/>
@@ -399,13 +397,11 @@
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORNumber.Subtract(PeterO.Cbor.CBORNumber)'>
-    <summary>Not documented yet.
+    <summary>Returns a number that expresses this number minus another.
     </summary>
-    <param name='b'>The parameter
-      <paramref name='b'/>
-       is not documented yet.
+    <param name='b'>The second operand to the subtraction.
     </param>
-    <returns>A CBORNumber object.
+    <returns>A CBOR number that expresses this number minus the given number.
     </returns>
     <exception cref='System.ArgumentNullException'>The parameter
       <paramref name='b'/>
@@ -476,7 +472,7 @@
         with the Equals method, meaning that two values that compare as equal
         under the CompareTo method are also equal under the Equals method; this
         is a change in version 4.0. Two otherwise equal objects with different
-        tags are not treated as equal by both CompareTo and Equals. To strip the
+        tags are treated as unequal by both CompareTo and Equals. To strip the
         tags from a CBOR object before comparing, use the
         <c>Untag</c> method.
       </para>
@@ -617,28 +613,6 @@
        has an unsupported type.
     </exception>
   </doc>
-  <doc name='M:PeterO.Cbor.CBORObject.AddConverter``1(System.Type,PeterO.Cbor.ICBORConverter{``0})'>
-    <summary>Registers an object that converts objects of a given type to CBOR objects
-      (called a CBOR converter).
-    </summary>
-    <param name='type'>A Type object specifying the type that the converter converts to CBOR
-      objects.
-    </param>
-    <param name='converter'>The parameter
-      <paramref name='converter'/>
-       is an ICBORConverter object.
-    </param>
-    <typeparam name='T'>Must be the same as the "type" parameter.
-    </typeparam>
-    <exception cref='System.ArgumentNullException'>The parameter
-      <paramref name='type'/>
-       or
-      <paramref name='converter'/>
-       is null.
-    </exception>
-    <exception cref='System.ArgumentException'>Converter doesn't contain a proper ToCBORObject method".
-    </exception>
-  </doc>
   <doc name='M:PeterO.Cbor.CBORObject.Addition(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)'>
     <summary>Finds the sum of two CBOR numbers.
     </summary>
@@ -659,18 +633,6 @@
        or
       <paramref name='second'/>
        is null.
-    </exception>
-  </doc>
-  <doc name='M:PeterO.Cbor.CBORObject.AsBigInteger'>
-    <summary>Converts this object to an arbitrary-precision integer. Fractional values
-      are truncated to an integer.
-    </summary>
-    <returns>The closest arbitrary-precision integer to this object.
-    </returns>
-    <exception cref='System.InvalidOperationException'>This object's type is not a number type, including if this object is
-      CBORObject.Null.
-    </exception>
-    <exception cref='System.OverflowException'>This object's value is infinity or not-a-number (NaN).
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.AsBoolean'>
@@ -695,7 +657,7 @@
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.AsDecimal'>
-    <summary>Converts this object to a.NET decimal.
+    <summary>Converts this object to a DotNet decimal.
     </summary>
     <returns>The closest big integer to this object.
     </returns>
@@ -703,7 +665,7 @@
       not-a-number or NaN values, but not CBORObject.Null, are considered
       numbers).
     </exception>
-    <exception cref='System.OverflowException'>This object's value exceeds the range of a.NET decimal.
+    <exception cref='System.OverflowException'>This object's value exceeds the range of a DotNet decimal.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.AsDouble'>
@@ -828,8 +790,8 @@
         32-bit signed integer before getting its value.
       </para>
       <code>CBORObject obj = CBORObject.FromInt32(99999); if&#x28;obj.IsIntegral
-        &amp;&amp; obj.CanTruncatedIntFitInInt32&#x28;)) &#x7b; // Not an Int32;
-        handle the error Console.WriteLine("Not a 32-bit integer."); &#x7d; else
+        &amp;&amp; obj.CanTruncatedIntFitInInt32&#x28;)) &#x7b; /* Not an Int32;
+        handle the error */ Console.WriteLine("Not a 32-bit integer."); &#x7d; else
         { Console.WriteLine("The value is " + obj.AsInt32()); }</code> .
     </example>
   </doc>
@@ -1009,7 +971,7 @@
     <returns>Whether this object's value can be converted to a 32-bit floating point
       number without its value being rounded to another numerical value. Returns
       true if this is a not-a-number value, even if the value's diagnostic
-      information can' t fit in a 32-bit floating point number.
+      information can't fit in a 32-bit floating point number.
     </returns>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.CanTruncatedIntFitInInt32'>
@@ -1494,13 +1456,13 @@
     </returns>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.FromObject(System.Decimal)'>
-    <summary>Converts a.NET decimal to a CBOR object.
+    <summary>Converts a DotNet decimal to a CBOR object.
     </summary>
     <param name='value'>The parameter
       <paramref name='value'/>
        is a Decimal object.
     </param>
-    <returns>A CBORObject object with the same value as the.NET decimal.
+    <returns>A CBORObject object with the same value as the DotNet decimal.
     </returns>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.FromObject(System.Double)'>
