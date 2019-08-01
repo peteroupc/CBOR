@@ -1695,7 +1695,7 @@ throw new InvalidOperationException(String.Empty, ex);
         EDecimal cmpCobj = AsED(CBORObject.Multiply(o1, o2));
         if (cmpDecFrac.CompareTo(cmpCobj) != 0) {
           string msg = "o1=" + o1.ToString() + ", o2=" + o2.ToString() +
-               ", "+AsED(o1)+", " +AsED(o2) + ", cmpCobj=" +
+               ", "+AsED(o1) +", " + AsED(o2) + ", cmpCobj=" +
 cmpCobj.ToString() +
                ", cmpDecFrac=" + cmpDecFrac.ToString();
                TestCommon.CompareTestEqual(cmpDecFrac, cmpCobj, msg);
@@ -1715,7 +1715,7 @@ cmpCobj.ToString() +
         EDecimal cmpCobj = AsED(CBORObject.Addition(o1, o2));
         if (cmpDecFrac.CompareTo(cmpCobj) != 0) {
           string msg = "o1=" + o1.ToString() + ", o2=" + o2.ToString() +
-               ", "+AsED(o1)+", " +AsED(o2) + ", cmpCobj=" +
+               ", "+AsED(o1) +", " + AsED(o2) + ", cmpCobj=" +
 cmpCobj.ToString() +
                ", cmpDecFrac=" + cmpDecFrac.ToString();
                TestCommon.CompareTestEqual(cmpDecFrac, cmpCobj, msg);
@@ -1735,7 +1735,7 @@ cmpCobj.ToString() +
         EDecimal cmpCobj = AsED(CBORObject.Subtract(o1, o2));
         if (cmpDecFrac.CompareTo(cmpCobj) != 0) {
           string msg = "o1=" + o1.ToString() + ", o2=" + o2.ToString() +
-               ", "+AsED(o1)+", " +AsED(o2) + ", cmpCobj=" +
+               ", "+AsED(o1) +", " + AsED(o2) + ", cmpCobj=" +
 cmpCobj.ToString() +
                ", cmpDecFrac=" + cmpDecFrac.ToString();
                TestCommon.CompareTestEqual(cmpDecFrac, cmpCobj, msg);

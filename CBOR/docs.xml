@@ -284,17 +284,20 @@
     </param>
   </doc>
   <doc name='T:PeterO.Cbor.CBORNumber'>
-    <summary>Not documented yet.
+    <summary>An instance of a number that CBOR or certain CBOR tags can represent. For
+      this purpose, infinities and not-a-number or NaN values are considered
+      numbers. Currently, this class can store one of the following kinds of
+      numbers: 64-bit integers or binary floating-point numbers; or
+      arbitrary-precision integers, decimal numbers, binary numbers, or rational
+      numbers.
     </summary>
   </doc>
   <doc name='M:PeterO.Cbor.CBORNumber.Add(PeterO.Cbor.CBORNumber)'>
-    <summary>Not documented yet.
+    <summary>Returns the sum of this number and another number.
     </summary>
-    <param name='b'>The parameter
-      <paramref name='b'/>
-       is not documented yet.
+    <param name='b'>The number to add with this one.
     </param>
-    <returns>A CBORNumber object.
+    <returns>The sum of this number and another number.
     </returns>
     <exception cref='System.ArgumentNullException'>The parameter
       <paramref name='b'/>
@@ -316,13 +319,11 @@
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORNumber.Divide(PeterO.Cbor.CBORNumber)'>
-    <summary>Not documented yet.
+    <summary>Returns the quotient of this number and another number.
     </summary>
-    <param name='b'>The parameter
-      <paramref name='b'/>
-       is not documented yet.
+    <param name='b'>The right-hand side (divisor) to the division operation.
     </param>
-    <returns>A CBORNumber object.
+    <returns>The quotient of this number and another one.
     </returns>
     <exception cref='System.ArgumentNullException'>The parameter
       <paramref name='b'/>
@@ -330,18 +331,39 @@
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORNumber.FromCBORObject(PeterO.Cbor.CBORObject)'>
-    <summary>Not documented yet.
+    <summary>Creates a CBOR number object from a CBOR object representing a number
+      (that is, one for which the IsNumber property in .NET or the isNumber()
+      method in Java returns true).
     </summary>
-    <param name='o'>The parameter
-      <paramref name='o'/>
-       is not documented yet.
+    <param name='o'>The parameter is a CBOR object representing a number.
     </param>
-    <returns>A CBORNumber object.
+    <returns>A CBOR number object, or null if the given CBOR object is null or does not
+      represent a number.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
-      <paramref name='o'/>
-       is null.
-    </exception>
+  </doc>
+  <doc name='F:PeterO.Cbor.CBORNumber.Kind.Double'>
+    <summary>A 64-bit binary floating-point number.
+    </summary>
+  </doc>
+  <doc name='F:PeterO.Cbor.CBORNumber.Kind.EDecimal'>
+    <summary>An arbitrary-precision decimal number.
+    </summary>
+  </doc>
+  <doc name='F:PeterO.Cbor.CBORNumber.Kind.EFloat'>
+    <summary>An arbitrary-precision binary number.
+    </summary>
+  </doc>
+  <doc name='F:PeterO.Cbor.CBORNumber.Kind.EInteger'>
+    <summary>An arbitrary-precision integer.
+    </summary>
+  </doc>
+  <doc name='F:PeterO.Cbor.CBORNumber.Kind.ERational'>
+    <summary>An arbitrary-precision rational number.
+    </summary>
+  </doc>
+  <doc name='F:PeterO.Cbor.CBORNumber.Kind.Integer'>
+    <summary>A 64-bit unsigned integer.
+    </summary>
   </doc>
   <doc name='M:PeterO.Cbor.CBORNumber.Multiply(PeterO.Cbor.CBORNumber)'>
     <summary>Not documented yet.
@@ -358,19 +380,18 @@
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORNumber.Negate'>
-    <summary>Not documented yet.
+    <summary>Returns a CBOR number with the same value as this one but with the sign
+      reversed.
     </summary>
-    <returns>A CBORNumber object.
+    <returns>A CBOR number with the same value as this one but with the sign reversed.
     </returns>
   </doc>
   <doc name='M:PeterO.Cbor.CBORNumber.Remainder(PeterO.Cbor.CBORNumber)'>
-    <summary>Not documented yet.
+    <summary>Returns the remainder when this number is divided by another number.
     </summary>
-    <param name='b'>The parameter
-      <paramref name='b'/>
-       is not documented yet.
+    <param name='b'>The right-hand side (dividend) of the remainder operation.
     </param>
-    <returns>A CBORNumber object.
+    <returns>The remainder when this number is divided by the other number.
     </returns>
     <exception cref='System.ArgumentNullException'>The parameter
       <paramref name='b'/>
@@ -392,15 +413,15 @@
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORNumber.ToCBORObject'>
-    <summary>Not documented yet.
+    <summary>Converts this object's value to a CBOR object.
     </summary>
-    <returns>A CBORObject object.
+    <returns>A CBOR object that stores this object's value.
     </returns>
   </doc>
   <doc name='M:PeterO.Cbor.CBORNumber.ToString'>
-    <summary>Not documented yet.
+    <summary>Returns the value of this object in text form.
     </summary>
-    <returns>A text string.
+    <returns>A text string representing the value of this object.
     </returns>
   </doc>
   <doc name='T:PeterO.Cbor.CBORObject'>
@@ -502,8 +523,9 @@
     </summary>
     <returns>This object's absolute without its negative sign.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object does not represent a number (for this purpose, not-a-number or
-      NaN values, but not CBORObject.Null, are considered numbers).
+    <exception cref='System.InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
+      not-a-number or NaN values, but not CBORObject.Null, are considered
+      numbers).
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.Add(PeterO.Cbor.CBORObject)'>
@@ -664,8 +686,9 @@
     </summary>
     <returns>The closest byte-sized integer to this object.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object does not represent a number (for this purpose, not-a-number or
-      NaN values, but not CBORObject.Null, are considered numbers).
+    <exception cref='System.InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
+      not-a-number or NaN values, but not CBORObject.Null, are considered
+      numbers).
     </exception>
     <exception cref='System.OverflowException'>This object's value exceeds the range of a byte (would be less than 0 or
       greater than 255 when truncated to an integer).
@@ -676,7 +699,9 @@
     </summary>
     <returns>The closest big integer to this object.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object's type is not a number type.
+    <exception cref='System.InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
+      not-a-number or NaN values, but not CBORObject.Null, are considered
+      numbers).
     </exception>
     <exception cref='System.OverflowException'>This object's value exceeds the range of a.NET decimal.
     </exception>
@@ -688,8 +713,9 @@
       can be positive infinity or negative infinity if this value exceeds the
       range of a 64-bit floating point number.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object does not represent a number (for this purpose, not-a-number or
-      NaN values, but not CBORObject.Null, are considered numbers).
+    <exception cref='System.InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
+      not-a-number or NaN values, but not CBORObject.Null, are considered
+      numbers).
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.AsDoubleValue'>
@@ -776,8 +802,9 @@
     </summary>
     <returns>The closest 16-bit signed integer to this object.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object does not represent a number (for this purpose, not-a-number or
-      NaN values, but not CBORObject.Null, are considered numbers).
+    <exception cref='System.InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
+      not-a-number or NaN values, but not CBORObject.Null, are considered
+      numbers).
     </exception>
     <exception cref='System.OverflowException'>This object's value exceeds the range of a 16-bit signed integer.
     </exception>
@@ -790,8 +817,9 @@
     </summary>
     <returns>The closest 32-bit signed integer to this object.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object does not represent a number (for this purpose, not-a-number or
-      NaN values, but not CBORObject.Null, are considered numbers).
+    <exception cref='System.InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
+      not-a-number or NaN values, but not CBORObject.Null, are considered
+      numbers).
     </exception>
     <exception cref='System.OverflowException'>This object's value exceeds the range of a 32-bit signed integer.
     </exception>
@@ -835,8 +863,9 @@
     </summary>
     <returns>The closest 64-bit signed integer to this object.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object does not represent a number (for this purpose, not-a-number or
-      NaN values, but not CBORObject.Null, are considered numbers).
+    <exception cref='System.InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
+      not-a-number or NaN values, but not CBORObject.Null, are considered
+      numbers).
     </exception>
     <exception cref='System.OverflowException'>This object's value exceeds the range of a 64-bit signed integer.
     </exception>
@@ -879,8 +908,9 @@
     </summary>
     <returns>The number represented by this object.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object does not represent a number (for this purpose, not-a-number or
-      NaN values, but not CBORObject.Null, are considered numbers).
+    <exception cref='System.InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
+      not-a-number or NaN values, but not CBORObject.Null, are considered
+      numbers).
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.AsSByte'>
@@ -896,8 +926,9 @@
       can be positive infinity or negative infinity if this object's value
       exceeds the range of a 32-bit floating point number.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object does not represent a number (for this purpose, not-a-number or
-      NaN values, but not CBORObject.Null, are considered numbers).
+    <exception cref='System.InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
+      not-a-number or NaN values, but not CBORObject.Null, are considered
+      numbers).
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.AsString'>
@@ -935,8 +966,9 @@
     </summary>
     <returns>A 64-bit unsigned integer.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object does not represent a number (for this purpose, not-a-number or
-      NaN values, but not CBORObject.Null, are considered numbers).
+    <exception cref='System.InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
+      not-a-number or NaN values, but not CBORObject.Null, are considered
+      numbers).
     </exception>
     <exception cref='System.OverflowException'>This object's value, if truncated to an integer, is outside the range of a
       64-bit unsigned integer.
@@ -1035,11 +1067,11 @@
           object.
         </item>
         <item>If the two objects are both integers (CBORType.Integer) both
-          floating-point values, both byte strings, both simple values, or both
-          text strings, their CBOR encodings (as though EncodeToBytes were
-          called on each integer) are compared as though by a byte-by-byte
-          comparison. (This means, for example, that positive integers sort
-          before negative integers).
+          floating-point values, both byte strings, both simple values
+          (including True and False), or both text strings, their CBOR encodings
+          (as though EncodeToBytes were called on each integer) are compared as
+          though by a byte-by-byte comparison. (This means, for example, that
+          positive integers sort before negative integers).
         </item>
         <item>If both objects have a tag, they are compared first by the tag's value
           then by the associated item (which itself can have a tag).
@@ -1057,8 +1089,8 @@
         <item>If the two objects have different types, the object whose type comes
           first in the order of untagged integers, untagged byte strings,
           untagged text strings, untagged arrays, untagged maps, tagged objects,
-          untagged simple values, untagged floating point values sorts before
-          the other object..
+          untagged simple values (including True and False) and untagged
+          floating point values sorts before the other object.
         </item>
       </list>
       <para>This method is consistent with the Equals method.
@@ -2268,10 +2300,11 @@
     </value>
   </doc>
   <doc name='P:PeterO.Cbor.CBORObject.IsNumber'>
-    <summary>Gets a value indicating whether this CBOR object stores a number.
-      Currently, this is true if this item is untagged and has a CBORType of
-      Integer or FloatingPoint, or if this item has only one tag and that tag is
-      2, 3, 4, 5, 30, 264, 265, 268, 269, or 270 with the right data type.
+    <summary>Gets a value indicating whether this CBOR object stores a number
+      (including infinity or a not-a-number or NaN value). Currently, this is
+      true if this item is untagged and has a CBORType of Integer or
+      FloatingPoint, or if this item has only one tag and that tag is 2, 3, 4,
+      5, 30, 264, 265, 268, 269, or 270 with the right data type.
     </summary>
     <value>A value indicating whether this CBOR object stores a number.
     </value>
@@ -2418,8 +2451,9 @@
     </summary>
     <returns>The reversed-sign form of this number.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object does not represent a number (for this purpose, not-a-number or
-      NaN values, but not CBORObject.Null, are considered numbers).
+    <exception cref='System.InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
+      not-a-number or NaN values, but not CBORObject.Null, are considered
+      numbers).
     </exception>
   </doc>
   <doc name='F:PeterO.Cbor.CBORObject.NegativeInfinity'>
@@ -4190,13 +4224,9 @@
   <doc name='M:PeterO.Cbor.CBORObject.op_LessThanOrEqual(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)'>
     <summary>Returns whether one object's value is up to another's.
     </summary>
-    <param name='a'>The parameter
-      <paramref name='a'/>
-       is not documented yet.
+    <param name='a'>The left-hand side of the comparison.
     </param>
-    <param name='b'>The parameter
-      <paramref name='b'/>
-       is not documented yet.
+    <param name='b'>The right-hand side of the comparison.
     </param>
     <returns>Either
       <c>true</c> or

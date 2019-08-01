@@ -56,7 +56,8 @@ namespace PeterO.Cbor {
     /// false. For example, <c>base64padding=Yes</c> and
     /// <c>base64padding=1</c> both set the <c>Base64Padding</c> property
     /// to true.</param>
-    /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='paramString'/> is null.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='paramString'/> is null.</exception>
     public JSONOptions(string paramString) {
       if (paramString == null) {
         throw new ArgumentNullException(nameof(paramString));
@@ -99,7 +100,7 @@ namespace PeterO.Cbor {
     /// <summary>Gets a value indicating whether surrogate code points not
     /// part of a surrogate pair (which consists of two consecutive
     /// <c>char</c> s forming one Unicode code point) are each replaced
-    /// with a replacement character (U+FFFD). The default is false; an
+    /// with a replacement character (U + FFFD). The default is false; an
     /// exception is thrown when such code points are
     /// encountered.</summary>
     /// <value>True, if surrogate code points not part of a surrogate pair

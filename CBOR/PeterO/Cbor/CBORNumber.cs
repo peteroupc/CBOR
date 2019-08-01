@@ -3,14 +3,30 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-    /// <summary>Not documented yet.</summary>
+    /// <summary>An instance of a number that CBOR or certain CBOR tags can
+    /// represent. For this purpose, infinities and not-a-number or NaN
+    /// values are considered numbers. Currently, this class can store one
+    /// of the following kinds of numbers: 64-bit integers or binary
+    /// floating-point numbers; or arbitrary-precision integers, decimal
+    /// numbers, binary numbers, or rational numbers.</summary>
   public sealed class CBORNumber : IComparable<CBORNumber> {
     internal enum Kind {
+    /// <summary>A 64-bit unsigned integer.</summary>
       Integer,
+
+    /// <summary>A 64-bit binary floating-point number.</summary>
       Double,
+
+    /// <summary>An arbitrary-precision integer.</summary>
       EInteger,
+
+    /// <summary>An arbitrary-precision decimal number.</summary>
       EDecimal,
+
+    /// <summary>An arbitrary-precision binary number.</summary>
       EFloat,
+
+    /// <summary>An arbitrary-precision rational number.</summary>
       ERational,
     }
 
@@ -61,8 +77,8 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A CBORObject object.</returns>
+    /// <summary>Converts this object's value to a CBOR object.</summary>
+    /// <returns>A CBOR object that stores this object's value.</returns>
     public CBORObject ToCBORObject() {
       return CBORObject.FromObject(this.value);
     }
@@ -91,13 +107,16 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='o'>Not documented yet.</param>
-    /// <returns>A CBORNumber object.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='o'/> is null.</exception>
+    /// <summary>Creates a CBOR number object from a CBOR object
+    /// representing a number (that is, one for which the IsNumber property
+    /// in.NET or the isNumber() method in Java returns true).</summary>
+    /// <param name='o'>The parameter is a CBOR object representing a
+    /// number.</param>
+    /// <returns>A CBOR number object, or null if the given CBOR object is
+    /// null or does not represent a number.</returns>
     public static CBORNumber FromCBORObject(CBORObject o) {
       if (o == null) {
-        throw new ArgumentNullException(nameof(o));
+        return null;
       }
       if (IsUntaggedInteger(o)) {
         if (o.CanValueFitInInt64()) {
@@ -478,8 +497,9 @@ o.Type == CBORType.ByteString);
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A text string.</returns>
+    /// <summary>Returns the value of this object in text form.</summary>
+    /// <returns>A text string representing the value of this
+    /// object.</returns>
     public override string ToString() {
       switch (this.kind) {
         case Kind.Integer: {
@@ -576,17 +596,38 @@ Double.IsNaN(f)) {
       return new CBORNumber(Kind.ERational, value);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A CBORNumber object.</returns>
+    /// <summary>Returns a CBOR number with the same value as this one but
+    /// with the sign reversed.</summary>
+    /// <returns>A CBOR number with the same value as this one but with the
+    /// sign reversed.</returns>
     public CBORNumber Negate() {
-      return new CBORNumber(this.kind,
-         this.GetNumberInterface().Negate(this.GetValue()));
+      switch (this.kind) {
+        case Kind.Integer:
+          if ((long)this.value == 0) {
+            return FromObject(EDecimal.NegativeZero);
+          } else if ((long)this.value == Int64.MinValue) {
+            return FromObject(EInteger.FromInt64((long)this.value).Negate());
+          } else {
+            return new CBORNumber(this.kind, -(long)this.value);
+          }
+        case Kind.EInteger:
+          if ((long)this.value == 0) {
+            return FromObject(EDecimal.NegativeZero);
+          } else {
+            return FromObject(((EInteger)this.value).Negate());
+          }
+        default:
+          return new CBORNumber(this.kind,
+            this.GetNumberInterface().Negate(this.GetValue()));
+      }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='b'>Not documented yet.</param>
-    /// <returns>A CBORNumber object.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='b'/> is null.</exception>
+    /// <summary>Returns the sum of this number and another
+    /// number.</summary>
+    /// <param name='b'>The number to add with this one.</param>
+    /// <returns>The sum of this number and another number.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='b'/> is null.</exception>
     public CBORNumber Add(CBORNumber b) {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
@@ -636,7 +677,8 @@ Double.IsNaN(f)) {
     /// <summary>Not documented yet.</summary>
     /// <param name='b'>Not documented yet.</param>
     /// <returns>A CBORNumber object.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='b'/> is null.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='b'/> is null.</exception>
     public CBORNumber Subtract(CBORNumber b) {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
@@ -682,7 +724,8 @@ Double.IsNaN(f)) {
     /// <summary>Not documented yet.</summary>
     /// <param name='b'>Not documented yet.</param>
     /// <returns>A CBORNumber object.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='b'/> is null.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='b'/> is null.</exception>
     public CBORNumber Multiply(CBORNumber b) {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
@@ -738,10 +781,13 @@ Double.IsNaN(f)) {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='b'>Not documented yet.</param>
-    /// <returns>A CBORNumber object.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='b'/> is null.</exception>
+    /// <summary>Returns the quotient of this number and another
+    /// number.</summary>
+    /// <param name='b'>The right-hand side (divisor) to the division
+    /// operation.</param>
+    /// <returns>The quotient of this number and another one.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='b'/> is null.</exception>
     public CBORNumber Divide(CBORNumber b) {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
@@ -833,10 +879,14 @@ CBORNumber.FromObject(EDecimal.PositiveInfinity));
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='b'>Not documented yet.</param>
-    /// <returns>A CBORNumber object.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='b'/> is null.</exception>
+    /// <summary>Returns the remainder when this number is divided by
+    /// another number.</summary>
+    /// <param name='b'>The right-hand side (dividend) of the remainder
+    /// operation.</param>
+    /// <returns>The remainder when this number is divided by the other
+    /// number.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='b'/> is null.</exception>
     public CBORNumber Remainder(CBORNumber b) {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
@@ -887,7 +937,7 @@ CBORNumber.FromObject(EDecimal.PositiveInfinity));
     /// or 0, if both values are equal; or greater than 0, if this value is
     /// less than the other object or if the other object is
     /// null.</returns>
-    /// <exception cref='System.ArgumentException'>An internal error
+    /// <exception cref='ArgumentException'>An internal error
     /// occurred.</exception>
     public int CompareTo(CBORNumber other) {
       if (other == null) {

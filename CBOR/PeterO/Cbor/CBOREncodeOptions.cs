@@ -74,7 +74,8 @@ namespace PeterO.Cbor {
     /// any other value meaning false. For example,
     /// <c>allowduplicatekeys=Yes</c> and <c>allowduplicatekeys=1</c> both
     /// set the <c>AllowDuplicateKeys</c> property to true.</param>
-    /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='paramString'/> is null.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='paramString'/> is null.</exception>
     public CBOREncodeOptions(string paramString) {
       if (paramString == null) {
         throw new ArgumentNullException(nameof(paramString));

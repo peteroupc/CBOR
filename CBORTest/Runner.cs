@@ -8,6 +8,7 @@ at: http://peteroupc.github.io/
 using System;
 using System.Reflection;
 using NUnit.Framework;
+using PeterO.Cbor;
 
 namespace PeterO {
     /// <summary>Description of Runner.</summary>
