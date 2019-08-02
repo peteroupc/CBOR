@@ -110,13 +110,14 @@
       list of options, each of which has a key and a value separated by an equal
       sign ("="). Whitespace and line separators are not allowed to appear
       between the semicolons or between the equal signs, nor may the string
-      begin or end with whitespace. The following is an example of this
-      parameter:
+      begin or end with whitespace. The string can be empty, but cannot be null.
+      The following is an example of this parameter:
       <c>allowduplicatekeys=true;ctap2Canonical=true</c> . The key can be any one of the following in any combination of case:
       <c>allowduplicatekeys</c> ,
       <c>ctap2canonical</c> ,
       <c>resolvereferences</c> ,
-      <c>useindeflengthstrings</c> . Keys other than these are ignored. If the same key appears more than
+      <c>useindeflengthstrings</c> ,
+      <c>allowempty</c> . Keys other than these are ignored. If the same key appears more than
       once, the value given for the last such key is used. The four keys just
       given can have a value of
       <c>1</c> ,
@@ -139,6 +140,17 @@
     </summary>
     <value>A value indicating whether to allow duplicate keys when reading CBOR
       objects from a data stream. The default is false.
+    </value>
+  </doc>
+  <doc name='P:PeterO.Cbor.CBOREncodeOptions.AllowEmpty'>
+    <summary>Gets a value indicating whether decoding a CBOR object will return
+      <c>null</c> instead of a CBOR object if the stream has no content or the end of the
+      stream is reached before decoding begins. Used only when decoding CBOR
+      objects.
+    </summary>
+    <value>A value indicating whether decoding a CBOR object will return
+      <c>null</c> instead of a CBOR object if the stream has no content or the end of the
+      stream is reached before decoding begins. The default is false.
     </value>
   </doc>
   <doc name='M:PeterO.Cbor.CBOREncodeOptions.And(PeterO.Cbor.CBOREncodeOptions)'>
@@ -287,7 +299,7 @@
     <summary>An instance of a number that CBOR or certain CBOR tags can represent. For
       this purpose, infinities and not-a-number or NaN values are considered
       numbers. Currently, this class can store one of the following kinds of
-      numbers: 64-bit integers or binary floating-point numbers; or
+      numbers: 64-bit signed integers or binary floating-point numbers; or
       arbitrary-precision integers, decimal numbers, binary numbers, or rational
       numbers.
     </summary>
@@ -332,7 +344,7 @@
   </doc>
   <doc name='M:PeterO.Cbor.CBORNumber.FromCBORObject(PeterO.Cbor.CBORObject)'>
     <summary>Creates a CBOR number object from a CBOR object representing a number
-      (that is, one for which the IsNumber property in .NET or the isNumber()
+      (that is, one for which the IsNumber property in.NET or the isNumber()
       method in Java returns true).
     </summary>
     <param name='o'>The parameter is a CBOR object representing a number.
@@ -362,11 +374,12 @@
     </summary>
   </doc>
   <doc name='F:PeterO.Cbor.CBORNumber.Kind.Integer'>
-    <summary>A 64-bit unsigned integer.
+    <summary>A 64-bit signed integer.
     </summary>
   </doc>
   <doc name='M:PeterO.Cbor.CBORNumber.Multiply(PeterO.Cbor.CBORNumber)'>
-    <summary>Returns a CBOR number expressing the product of this number and the given number.
+    <summary>Returns a CBOR number expressing the product of this number and the given
+      number.
     </summary>
     <param name='b'>The second operand to the multiplication operation.
     </param>
@@ -472,7 +485,7 @@
         with the Equals method, meaning that two values that compare as equal
         under the CompareTo method are also equal under the Equals method; this
         is a change in version 4.0. Two otherwise equal objects with different
-        tags are treated as unequal by both CompareTo and Equals. To strip the
+        tags are not treated as equal by both CompareTo and Equals. To strip the
         tags from a CBOR object before comparing, use the
         <c>Untag</c> method.
       </para>
@@ -657,7 +670,7 @@
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.AsDecimal'>
-    <summary>Converts this object to a DotNet decimal.
+    <summary>Converts this object to a.NET decimal.
     </summary>
     <returns>The closest big integer to this object.
     </returns>
@@ -665,7 +678,7 @@
       not-a-number or NaN values, but not CBORObject.Null, are considered
       numbers).
     </exception>
-    <exception cref='System.OverflowException'>This object's value exceeds the range of a DotNet decimal.
+    <exception cref='System.OverflowException'>This object's value exceeds the range of a.NET decimal.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.AsDouble'>
@@ -790,8 +803,8 @@
         32-bit signed integer before getting its value.
       </para>
       <code>CBORObject obj = CBORObject.FromInt32(99999); if&#x28;obj.IsIntegral
-        &amp;&amp; obj.CanTruncatedIntFitInInt32&#x28;)) &#x7b; /* Not an Int32;
-        handle the error */ Console.WriteLine("Not a 32-bit integer."); &#x7d; else
+        &amp;&amp; obj.CanTruncatedIntFitInInt32&#x28;)) &#x7b; // Not an Int32;
+        handle the error Console.WriteLine("Not a 32-bit integer."); &#x7d; else
         { Console.WriteLine("The value is " + obj.AsInt32()); }</code> .
     </example>
   </doc>
@@ -971,7 +984,7 @@
     <returns>Whether this object's value can be converted to a 32-bit floating point
       number without its value being rounded to another numerical value. Returns
       true if this is a not-a-number value, even if the value's diagnostic
-      information can't fit in a 32-bit floating point number.
+      information can' t fit in a 32-bit floating point number.
     </returns>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.CanTruncatedIntFitInInt32'>
@@ -1158,21 +1171,24 @@
     </summary>
     <param name='data'>A byte array in which a single CBOR object is encoded.
     </param>
-    <param name='options'>The parameter
-      <paramref name='options'/>
-       is a CBOREncodeOptions object.
+    <param name='options'>Specifies options to control how the CBOR object is decoded. See
+      <see cref='PeterO.Cbor.CBOREncodeOptions'/>
+       for more information.
     </param>
-    <returns>A CBOR object decoded from the given byte array.
+    <returns>A CBOR object decoded from the given byte array. Returns null (as opposed
+      to CBORObject.Null) if "data" is empty and the AllowEmpty property is set
+      on the given options object.
     </returns>
     <exception cref='PeterO.Cbor.CBORException'>There was an error in reading or parsing the data. This includes cases
       where not all of the byte array represents a CBOR object. This exception
       is also thrown if the parameter
       <paramref name='data'/>
-       is empty.
+       is empty unless the AllowEmpty property is set on the given options
+      object.
     </exception>
     <exception cref='System.ArgumentNullException'>The parameter
       <paramref name='data'/>
-       is null.
+       is null, or the parameter "options" is null.
     </exception>
     <example><para>The following example (originally written in C# for the &#x2e;NET
         version) implements a method that decodes a text string from a CBOR byte
@@ -1187,6 +1203,49 @@
         CBORObject.DecodeFromBytes&#x28;bytes,
         CBOREncodeOptions.Default).AsString&#x28;); &#x7d;</code> .
     </example>
+  </doc>
+  <doc name='M:PeterO.Cbor.CBORObject.DecodeSequenceFromBytes(System.Byte[])'>
+    <summary><para>Generates a sequence of CBOR objects from an array of CBOR-encoded
+        bytes.
+      </para>
+    </summary>
+    <param name='data'>A byte array in which any number of CBOR objects (including zero) are
+      encoded, one after the other. Can be empty, but cannot be null.
+    </param>
+    <returns>An array of CBOR objects decoded from the given byte array. Returns an
+      empty array if "data" is empty.
+    </returns>
+    <exception cref='PeterO.Cbor.CBORException'>There was an error in reading or parsing the data. This includes cases
+      where the last CBOR object in the data was read only partly.
+    </exception>
+    <exception cref='System.ArgumentNullException'>The parameter
+      <paramref name='data'/>
+       is null.
+    </exception>
+  </doc>
+  <doc name='M:PeterO.Cbor.CBORObject.DecodeSequenceFromBytes(System.Byte[],PeterO.Cbor.CBOREncodeOptions)'>
+    <summary><para>Generates a sequence of CBOR objects from an array of CBOR-encoded
+        bytes.
+      </para>
+    </summary>
+    <param name='data'>A byte array in which any number of CBOR objects (including zero) are
+      encoded, one after the other. Can be empty, but cannot be null.
+    </param>
+    <param name='options'>Specifies options to control how the CBOR object is decoded. See
+      <see cref='PeterO.Cbor.CBOREncodeOptions'/>
+       for more information. In this method, the AllowEmpty property is treated
+      as always set regardless of that value as specified in this parameter.
+    </param>
+    <returns>An array of CBOR objects decoded from the given byte array. Returns an
+      empty array if "data" is empty.
+    </returns>
+    <exception cref='PeterO.Cbor.CBORException'>There was an error in reading or parsing the data. This includes cases
+      where the last CBOR object in the data was read only partly.
+    </exception>
+    <exception cref='System.ArgumentNullException'>The parameter
+      <paramref name='data'/>
+       is null, or the parameter "options" is null.
+    </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.Divide(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)'>
     <summary>Divides a CBORObject object by the value of a CBORObject object.
@@ -1456,13 +1515,13 @@
     </returns>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.FromObject(System.Decimal)'>
-    <summary>Converts a DotNet decimal to a CBOR object.
+    <summary>Converts a.NET decimal to a CBOR object.
     </summary>
     <param name='value'>The parameter
       <paramref name='value'/>
        is a Decimal object.
     </param>
-    <returns>A CBORObject object with the same value as the DotNet decimal.
+    <returns>A CBORObject object with the same value as the.NET decimal.
     </returns>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.FromObject(System.Double)'>
@@ -2532,6 +2591,49 @@
     <exception cref='System.IO.IOException'>An I/O error occurred.
     </exception>
     <exception cref='PeterO.Cbor.CBORException'>The data stream contains invalid encoding or is not in JSON format.
+    </exception>
+  </doc>
+  <doc name='M:PeterO.Cbor.CBORObject.ReadSequence(System.IO.Stream)'>
+    <summary><para>Reads a sequence of objects in CBOR format from a data stream. This
+        method will read CBOR objects from the stream until the end of the
+        stream is reached or an error occurs, whichever happens first.
+      </para>
+    </summary>
+    <param name='stream'>A readable data stream.
+    </param>
+    <returns>An array containing the CBOR objects that were read from the data stream.
+      Returns an empty array if there is no unread data in the stream.
+    </returns>
+    <exception cref='System.ArgumentNullException'>The parameter
+      <paramref name='stream'/>
+       is null, or the parameter "options" is null.
+    </exception>
+    <exception cref='PeterO.Cbor.CBORException'>There was an error in reading or parsing the data, including if the last
+      CBOR object was read only partially.
+    </exception>
+  </doc>
+  <doc name='M:PeterO.Cbor.CBORObject.ReadSequence(System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)'>
+    <summary><para>Reads a sequence of objects in CBOR format from a data stream. This
+        method will read CBOR objects from the stream until the end of the
+        stream is reached or an error occurs, whichever happens first.
+      </para>
+    </summary>
+    <param name='stream'>A readable data stream.
+    </param>
+    <param name='options'>Specifies the options to use when decoding the CBOR data stream. See
+      CBOREncodeOptions for more information. In this method, the AllowEmpty
+      property is treated as set regardless of the value of that property
+      specified in this parameter.
+    </param>
+    <returns>An array containing the CBOR objects that were read from the data stream.
+      Returns an empty array if there is no unread data in the stream.
+    </returns>
+    <exception cref='System.ArgumentNullException'>The parameter
+      <paramref name='stream'/>
+       is null, or the parameter "options" is null.
+    </exception>
+    <exception cref='PeterO.Cbor.CBORException'>There was an error in reading or parsing the data, including if the last
+      CBOR object was read only partially.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.Remainder(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)'>
@@ -4142,8 +4244,7 @@
     </param>
     <param name='b'>The right-hand side of the comparison.
     </param>
-    <returns>Either
-      <c>true</c> or
+    <returns><c>true</c> if one object's value is greater than another's; otherwise,
       <c>false</c> .
     </returns>
     <exception cref='System.ArgumentNullException'>The parameter
@@ -4158,8 +4259,7 @@
     </param>
     <param name='b'>The right-hand side of the comparison.
     </param>
-    <returns>Either
-      <c>true</c> or
+    <returns><c>true</c> if one object's value is at least another's; otherwise,
       <c>false</c> .
     </returns>
     <exception cref='System.ArgumentNullException'>The parameter
@@ -4174,8 +4274,7 @@
     </param>
     <param name='b'>The right-hand side of the comparison.
     </param>
-    <returns>Either
-      <c>true</c> or
+    <returns><c>true</c> if one object's value is less than another's; otherwise,
       <c>false</c> .
     </returns>
     <exception cref='System.ArgumentNullException'>The parameter
@@ -4190,8 +4289,7 @@
     </param>
     <param name='b'>The right-hand side of the comparison.
     </param>
-    <returns>Either
-      <c>true</c> or
+    <returns><c>true</c> if one object's value is up to another's; otherwise,
       <c>false</c> .
     </returns>
     <exception cref='System.ArgumentNullException'>The parameter
@@ -4577,8 +4675,8 @@
       list of options, each of which has a key and a value separated by an equal
       sign ("="). Whitespace and line separators are not allowed to appear
       between the semicolons or between the equal signs, nor may the string
-      begin or end with whitespace. The following is an example of this
-      parameter:
+      begin or end with whitespace. The string can be empty, but cannot be null.
+      The following is an example of this parameter:
       <c>base64padding=false;replacesurrogates=true</c> . The key can be any one of the following in any combination of case:
       <c>base64padding</c> ,
       <c>replacesurrogates</c> . Other keys are ignored. If the same key appears more than once, the
@@ -4661,8 +4759,8 @@
       list of options, each of which has a key and a value separated by an equal
       sign ("="). Whitespace and line separators are not allowed to appear
       between the semicolons or between the equal signs, nor may the string
-      begin or end with whitespace. The following is an example of this
-      parameter:
+      begin or end with whitespace. The string can be empty, but cannot be null.
+      The following is an example of this parameter:
       <c>usecamelcase=true</c> . The key can be any one of the following in any combination of case:
       <c>usecamelcase</c> . Other keys are ignored. If the same key appears more than once, the
       value given for the last such key is used. The key just given can have a

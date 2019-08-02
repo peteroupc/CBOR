@@ -2,11 +2,13 @@
 <RuleSet Description='Code analysis rules for PeterO projects.' Name='Rules for PeterO projects' ToolsVersion='14.0'>
   <Rules AnalyzerId='Microsoft.CodeAnalysis.FxCopAnalyzers' RuleNamespace='Microsoft.CodeAnalysis.FxCopAnalyzers'>
     <Rule Action='None' Id='CA1720'/>
+    <Rule Id='CA1303' Action='None'/>
     <Rule Id='CA1031' Action='None'/>
     <Rule Id='CA1707' Action='None'/>
-    <Rule Id='CA1303' Action='None'/>
   </Rules>
   <Rules AnalyzerId='StyleCop.Analyzers' RuleNamespace='StyleCop.Analyzers'>
+    <!--SA1009 disabled for now due to bug with cref attributes that end in closing parenthesis -->
+    <Rule Action='None' Id='SA1009'/>
     <Rule Action='None' Id='SA1116'/>
     <!--SA1121 disabled because writing String.IsNullOrEmpty, Int32.Parse, etc. is
   part of the code style -->
@@ -31,59 +33,6 @@
     <Rule Action='None' Id='SX1101'/>
     <Rule Action='None' Id='SX1309'/>
     <Rule Action='None' Id='SX1309S'/>
-    <Rule Action='None' Id='SA1600'/>
-    <Rule Action='None' Id='SA1601'/>
-    <Rule Action='None' Id='SA1602'/>
-    <Rule Action='None' Id='SA1603'/>
-    <Rule Action='None' Id='SA1604'/>
-    <Rule Action='None' Id='SA1605'/>
-    <Rule Action='None' Id='SA1606'/>
-    <Rule Action='None' Id='SA1607'/>
-    <Rule Action='None' Id='SA1608'/>
-    <Rule Action='None' Id='SA1609'/>
-    <Rule Action='None' Id='SA1610'/>
-    <Rule Action='None' Id='SA1611'/>
-    <Rule Action='None' Id='SA1612'/>
-    <Rule Action='None' Id='SA1613'/>
-    <Rule Action='None' Id='SA1614'/>
-    <Rule Action='None' Id='SA1615'/>
-    <Rule Action='None' Id='SA1616'/>
-    <Rule Action='None' Id='SA1617'/>
-    <Rule Action='None' Id='SA1618'/>
-    <Rule Action='None' Id='SA1619'/>
-    <Rule Action='None' Id='SA1620'/>
-    <Rule Action='None' Id='SA1621'/>
-    <Rule Action='None' Id='SA1622'/>
-    <Rule Action='None' Id='SA1623'/>
-    <Rule Action='None' Id='SA1624'/>
-    <Rule Action='None' Id='SA1625'/>
-    <Rule Action='None' Id='SA1626'/>
-    <Rule Action='None' Id='SA1627'/>
-    <Rule Action='None' Id='SA1628'/>
-    <Rule Action='None' Id='SA1629'/>
-    <Rule Action='None' Id='SA1630'/>
-    <Rule Action='None' Id='SA1631'/>
-    <Rule Action='None' Id='SA1632'/>
-    <Rule Action='None' Id='SA1633'/>
-    <Rule Action='None' Id='SA1634'/>
-    <Rule Action='None' Id='SA1635'/>
-    <Rule Action='None' Id='SA1636'/>
-    <Rule Action='None' Id='SA1637'/>
-    <Rule Action='None' Id='SA1638'/>
-    <Rule Action='None' Id='SA1639'/>
-    <Rule Action='None' Id='SA1640'/>
-    <Rule Action='None' Id='SA1641'/>
-    <Rule Action='None' Id='SA1642'/>
-    <Rule Action='None' Id='SA1643'/>
-    <Rule Action='None' Id='SA1644'/>
-    <Rule Action='None' Id='SA1645'/>
-    <Rule Action='None' Id='SA1646'/>
-    <Rule Action='None' Id='SA1647'/>
-    <Rule Action='None' Id='SA1648'/>
-    <Rule Action='None' Id='SA1649'/>
-    <Rule Action='None' Id='SA1650'/>
-    <Rule Action='None' Id='SA1651'/>
-    <Rule Action='None' Id='SA1652'/>
     <Rule Id='SA0001' Action='None'/>
   </Rules>
 </RuleSet>

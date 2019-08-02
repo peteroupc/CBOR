@@ -29,9 +29,8 @@ namespace PeterO.Cbor {
     /// <typeparam name='T'>Must be the same as the "type"
     /// parameter.</typeparam>
     /// <returns>This object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='type'/> or <paramref name='converter'/> is null.</exception>
-    /// <exception cref='ArgumentException'>Converter doesn't contain a
+    /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='type'/> or <paramref name='converter'/> is null.</exception>
+    /// <exception cref='System.ArgumentException'>Converter doesn't contain a
     /// proper ToCBORObject method".</exception>
     public CBORTypeMapper AddConverter<T>(
       Type type,
@@ -132,10 +131,8 @@ namespace PeterO.Cbor {
     /// <param name='prefix'>The prefix of a Java or.NET type (e.g.,
     /// `java.math.` or `System.Globalization`).</param>
     /// <returns>This object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='prefix'/> is null.</exception>
-    /// <exception cref='ArgumentException'>The parameter <paramref
-    /// name='prefix'/> is empty.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='prefix'/> is null.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref name='prefix'/> is empty.</exception>
     public CBORTypeMapper AddTypePrefix(string prefix) {
       if (prefix == null) {
         throw new ArgumentNullException(nameof(prefix));
@@ -153,10 +150,8 @@ namespace PeterO.Cbor {
     /// (e.g., <c>java.math.BigInteger</c> or
     /// <c>System.Globalization.CultureInfo</c> ).</param>
     /// <returns>This object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='name'/> is null.</exception>
-    /// <exception cref='ArgumentException'>The parameter <paramref
-    /// name='name'/> is empty.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='name'/> is null.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref name='name'/> is empty.</exception>
     public CBORTypeMapper AddTypeName(string name) {
       if (name == null) {
         throw new ArgumentNullException(nameof(name));

@@ -2190,6 +2190,25 @@ for (var i = 0; i < eints.Length; ++i) {
 }
 }
 
+[Test]
+public void TestAllowEmpty(){
+  CBOREncodeOptions options;
+  var bytes=new byte[0];
+  options=new CBOREncodeOptions("");
+  Assert.Throws(typeof(CBORException),()=>CBORObject.DecodeFromBytes(bytes, options));
+  options=new CBOREncodeOptions("allowempty=true");
+  Assert.AreEqual(null, CBORObject.DecodeFromBytes(bytes, options));
+  using(var ms=new MemoryStream(bytes)){
+    options=new CBOREncodeOptions("");
+    Assert.Throws(typeof(CBORException),()=>CBORObject.Read(ms, options));
+  }
+  using(var ms=new MemoryStream(bytes)){
+    options=new CBOREncodeOptions("allowempty=true");
+    Assert.AreEqual(null, CBORObject.Read(ms, options));
+  }
+}
+
+
     [Test]
     public void TestTextStringStreamNoTagsBeforeDefinite() {
       try {

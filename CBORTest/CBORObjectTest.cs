@@ -2271,6 +2271,83 @@ ToObjectTest.TestToFromObjectRoundTrip(100).CompareTo(null);
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
+
+[Test]
+public void TestDecodeSequenceFromBytes(){
+  CBORObject[] objs;
+  byte[] bytes;
+  bytes=new byte[] { 0 };
+  objs = CBORObject.DecodeSequenceFromBytes(bytes);
+  Assert.AreEqual(1,objs.Length);
+  Assert.AreEqual(CBORObject.FromObject(0), objs[0]);
+  bytes=new byte[] { 0, 1, 2 };
+  objs = CBORObject.DecodeSequenceFromBytes(bytes);
+  Assert.AreEqual(3,objs.Length);
+  Assert.AreEqual(CBORObject.FromObject(0), objs[0]);
+  Assert.AreEqual(CBORObject.FromObject(1), objs[1]);
+  Assert.AreEqual(CBORObject.FromObject(2), objs[2]);
+  bytes=new byte[] { 0, 1, 0x61 };
+  Assert.Throws(typeof(CBORException), ()=>CBORObject.DecodeSequenceFromBytes(bytes));
+  bytes=new byte[] { 0x61 };
+  Assert.Throws(typeof(CBORException), ()=>CBORObject.DecodeSequenceFromBytes(bytes));
+  bytes=new byte[] { 0, 1, 0x61, 0x41 };
+  objs = CBORObject.DecodeSequenceFromBytes(bytes);
+  Assert.AreEqual(3,objs.Length);
+  Assert.AreEqual(CBORObject.FromObject(0), objs[0]);
+  Assert.AreEqual(CBORObject.FromObject(1), objs[1]);
+  Assert.AreEqual(CBORObject.FromObject("a"), objs[2]);
+  bytes=new byte[] { };
+  objs = CBORObject.DecodeSequenceFromBytes(bytes);
+  Assert.AreEqual(0,objs.Length);
+  Assert.Throws(typeof(ArgumentNullException), ()=>CBORObject.DecodeSequenceFromBytes(null));
+  Assert.Throws(typeof(ArgumentNullException), ()=>CBORObject.DecodeSequenceFromBytes(bytes, null));
+}
+
+[Test]
+public void TestReadSequence(){
+  CBORObject[] objs;
+  byte[] bytes;
+  bytes=new byte[] { 0 };
+  using(var ms=new MemoryStream(bytes)){
+  objs = CBORObject.ReadSequence(ms);
+  }
+  Assert.AreEqual(1,objs.Length);
+  Assert.AreEqual(CBORObject.FromObject(0), objs[0]);
+  bytes=new byte[] { 0, 1, 2 };
+  using(var ms=new MemoryStream(bytes)){
+  objs = CBORObject.ReadSequence(ms);
+  }
+  Assert.AreEqual(3,objs.Length);
+  Assert.AreEqual(CBORObject.FromObject(0), objs[0]);
+  Assert.AreEqual(CBORObject.FromObject(1), objs[1]);
+  Assert.AreEqual(CBORObject.FromObject(2), objs[2]);
+  bytes=new byte[] { 0, 1, 0x61 };
+  using(var ms=new MemoryStream(bytes)){
+  Assert.Throws(typeof(CBORException), ()=>CBORObject.ReadSequence(ms));
+}
+  bytes=new byte[] { 0x61 };
+  using(var ms=new MemoryStream(bytes)){
+  Assert.Throws(typeof(CBORException), ()=>CBORObject.ReadSequence(ms));
+}
+  bytes=new byte[] { 0, 1, 0x61, 0x41 };
+  using(var ms=new MemoryStream(bytes)){
+  objs = CBORObject.ReadSequence(ms);
+  }
+  Assert.AreEqual(3,objs.Length);
+  Assert.AreEqual(CBORObject.FromObject(0), objs[0]);
+  Assert.AreEqual(CBORObject.FromObject(1), objs[1]);
+  Assert.AreEqual(CBORObject.FromObject("a"), objs[2]);
+  bytes=new byte[] { };
+  using(var ms=new MemoryStream(bytes)){
+  objs = CBORObject.ReadSequence(ms);
+  }
+  Assert.AreEqual(0,objs.Length);
+  Assert.Throws(typeof(ArgumentNullException), ()=>CBORObject.ReadSequence(null));
+  using(var ms=new MemoryStream(bytes)){
+   Assert.Throws(typeof(ArgumentNullException), ()=>CBORObject.ReadSequence(ms, null));
+  }
+}
+
     [Test]
     public void TestDivide() {
       try {

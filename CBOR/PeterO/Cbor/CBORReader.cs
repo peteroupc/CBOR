@@ -29,7 +29,9 @@ namespace PeterO.Cbor {
     }
 
     public CBORObject Read() {
-      CBORObject obj = this.ReadInternal();
+      CBORObject obj = (this.options.AllowEmpty) ?
+           this.ReadInternalOrEOF() :
+           this.ReadInternal();
       if (this.options.ResolveReferences && this.hasSharableObjects) {
         var sharedRefs = new SharedRefs();
         return ResolveSharedRefs(obj, sharedRefs);
@@ -40,6 +42,7 @@ namespace PeterO.Cbor {
     private static CBORObject ResolveSharedRefs(
       CBORObject obj,
       SharedRefs sharedRefs) {
+      if(obj==null)return null;
       CBORType type = obj.Type;
       bool hasTag = obj.HasMostOuterTag(29);
       if (hasTag) {
@@ -72,7 +75,19 @@ namespace PeterO.Cbor {
       return obj;
     }
 
-    public CBORObject ReadInternal() {
+    private CBORObject ReadInternalOrEOF() {
+      if (this.depth > 500) {
+        throw new CBORException("Too deeply nested");
+      }
+      int firstbyte = this.stream.ReadByte();
+      if (firstbyte < 0) {
+        // End of stream
+        return null;
+      }
+      return this.ReadForFirstByte(firstbyte);
+    }
+
+    private CBORObject ReadInternal() {
       if (this.depth > 500) {
         throw new CBORException("Too deeply nested");
       }

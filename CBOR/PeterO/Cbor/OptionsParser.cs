@@ -8,15 +8,18 @@ namespace PeterO.Cbor {
     private readonly IDictionary<string, string> dict = new
 Dictionary<string, string>();
     public OptionsParser(string options) {
-      string[] optionsArray = options.Split(';');
-      foreach (string opt in optionsArray) {
-        int index = opt.IndexOf('=');
-        if (index < 0) {
-          throw new ArgumentException("Invalid options string: " + options);
+      // ArgumentAssert.NotNull(options);
+      if(options.Length>0) {
+        string[] optionsArray = options.Split(';');
+        foreach (string opt in optionsArray) {
+          int index = opt.IndexOf('=');
+          if (index < 0) {
+            throw new ArgumentException("Invalid options string: " + options);
+          }
+          string key = DataUtilities.ToLowerCaseAscii(opt.Substring(0, index));
+          string value = opt.Substring(index + 1);
+          this.dict[key] = value;
         }
-        string key = DataUtilities.ToLowerCaseAscii(opt.Substring(0, index));
-        string value = opt.Substring(index + 1);
-        this.dict[key] = value;
       }
     }
 
