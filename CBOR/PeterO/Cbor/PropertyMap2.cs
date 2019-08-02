@@ -8,6 +8,7 @@ at: http://peteroupc.github.io/
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using PeterO;
@@ -395,7 +396,7 @@ namespace PeterO.Cbor {
     public static object EnumToObjectAsInteger(Enum value) {
       Type t = Enum.GetUnderlyingType(value.GetType());
       if (t.Equals(typeof(ulong))) {
-        ulong uvalue = Convert.ToUInt64(value);
+        ulong uvalue = Convert.ToUInt64(value, CultureInfo.InvariantCulture);
         return EInteger.FromUInt64(uvalue);
       }
       return t.Equals(typeof(long)) ? Convert.ToInt64(value) :

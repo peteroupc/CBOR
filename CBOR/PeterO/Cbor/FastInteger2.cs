@@ -347,8 +347,9 @@ internal MutableNumber Add(int augend) {
       return this;
     }
 
-    /// <include file='../../docs.xml'
-    ///   path='docs/doc[@name="M:PeterO.Cbor.FastInteger2.Multiply(System.Int32)"]/*'/>
+    /// <summary>Sets this object's value to the current value times another integer.</summary><param name='val'>The integer to multiply by.
+    /// </param><returns>This instance.
+    /// </returns>
     internal FastInteger2 Multiply(int val) {
       if (val == 0) {
         this.smallValue = 0;
@@ -400,8 +401,10 @@ internal MutableNumber Add(int augend) {
       return this;
     }
 
-    /// <include file='../../docs.xml'
-    ///   path='docs/doc[@name="M:PeterO.Cbor.FastInteger2.Subtract(PeterO.Cbor.FastInteger2)"]/*'/>
+    /// <summary>Sets this object's value to the current value minus the given FastInteger
+    /// value.</summary><param name='val'>The subtrahend.
+    /// </param><returns>This instance.
+    /// </returns>
     internal FastInteger2 Subtract(FastInteger2 val) {
       EInteger valValue;
       switch (this.integerMode) {
@@ -447,8 +450,9 @@ internal MutableNumber Add(int augend) {
       return this;
     }
 
-    /// <include file='../../docs.xml'
-    ///   path='docs/doc[@name="M:PeterO.Cbor.FastInteger2.SubtractInt(System.Int32)"]/*'/>
+    /// <summary>Sets this object's value to the current value minus the given integer.</summary><param name='val'>The subtrahend.
+    /// </param><returns>This instance.
+    /// </returns>
     internal FastInteger2 SubtractInt(int val) {
       if (val == Int32.MinValue) {
         return this.AddInt(Int32.MaxValue).AddInt(1);
@@ -570,8 +574,8 @@ internal MutableNumber Add(int augend) {
       }
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Cbor.FastInteger2.Sign"]/*'/>
+    /// <summary>Gets the sign of this object's value.</summary><value>1 if positive, -1 if negative, 0 if zero.
+    /// </value>
     internal int Sign {
       get {
         switch (this.integerMode) {

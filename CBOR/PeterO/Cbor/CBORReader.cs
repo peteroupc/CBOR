@@ -50,30 +50,30 @@ namespace PeterO.Cbor {
     private static CBORObject ResolveSharedRefs(
       CBORObject obj,
       SharedRefs sharedRefs) {
-  int type = obj.ItemType;
-  bool hasTag = obj.MostOuterTag.Equals((EInteger)29);
-  if (hasTag) {
-    return sharedRefs.GetObject(obj.AsEInteger());
-  }
-  hasTag = obj.MostOuterTag.Equals((EInteger)28);
-  if (hasTag) {
-      obj = obj.Untag();
-      sharedRefs.AddObject(obj);
-  }
-  if (type == CBORObject.CBORObjectTypeMap) {
-    foreach (CBORObject key in obj.Keys) {
-      CBORObject value = obj[key];
-      CBORObject newvalue = ResolveSharedRefs(value, sharedRefs);
-      if (value != newvalue) {
-        obj[key] = newvalue;
+      int type = obj.ItemType;
+      bool hasTag = obj.MostOuterTag.Equals((EInteger)29);
+      if (hasTag) {
+        return sharedRefs.GetObject(obj.AsEInteger());
       }
-    }
-  } else if (type == CBORObject.CBORObjectTypeArray) {
-    for (var i = 0; i < obj.Count; ++i) {
-      obj[i] = ResolveSharedRefs(obj[i], sharedRefs);
-    }
-  }
-  return obj;
+      hasTag = obj.MostOuterTag.Equals((EInteger)28);
+      if (hasTag) {
+        obj = obj.Untag();
+        sharedRefs.AddObject(obj);
+      }
+      if (type == CBORObject.CBORObjectTypeMap) {
+        foreach (CBORObject key in obj.Keys) {
+          CBORObject value = obj[key];
+          CBORObject newvalue = ResolveSharedRefs(value, sharedRefs);
+          if (value != newvalue) {
+            obj[key] = newvalue;
+          }
+        }
+      } else if (type == CBORObject.CBORObjectTypeArray) {
+        for (var i = 0; i < obj.Count; ++i) {
+          obj[i] = ResolveSharedRefs(obj[i], sharedRefs);
+        }
+      }
+      return obj;
     }
 
     public CBORObject Read(CBORTypeFilter filter) {
@@ -227,7 +227,7 @@ namespace PeterO.Cbor {
                   " is bigger than supported ");
               }
               if (nextByte != 0x40) {
-  // NOTE: 0x40 means the empty byte string
+                // NOTE: 0x40 means the empty byte string
                 ReadByteData(this.stream, len, ms);
               }
             }
@@ -276,7 +276,7 @@ namespace PeterO.Cbor {
                 " is bigger than supported");
             }
             if (nextByte != 0x60) {
-  // NOTE: 0x60 means the empty string
+              // NOTE: 0x60 means the empty string
               if (PropertyMap.ExceedsKnownLength(this.stream, len)) {
                 throw new CBORException("Premature end of data");
               }
@@ -418,7 +418,7 @@ namespace PeterO.Cbor {
             " is bigger than supported");
         }
         if (PropertyMap.ExceedsKnownLength(this.stream, uadditional)) {
-            throw new CBORException("Remaining data too small for map length");
+          throw new CBORException("Remaining data too small for map length");
         }
         for (long i = 0; i < uadditional; ++i) {
           ++this.depth;
@@ -445,7 +445,7 @@ namespace PeterO.Cbor {
           }
           int uad = uadditional >= 257 ? 257 : (uadditional < 0 ? 0 :
             (int)uadditional);
-            switch (uad) {
+          switch (uad) {
             case 256:
               // Tag 256: String namespace
               this.stringRefs = this.stringRefs ?? new StringRefs();
@@ -457,8 +457,8 @@ namespace PeterO.Cbor {
                 throw new CBORException("No stringref namespace");
               }
               break;
-              case 28:
-              case 29:
+            case 28:
+            case 29:
               this.hasSharableObjects = true;
               break;
           }
@@ -469,7 +469,7 @@ namespace PeterO.Cbor {
             throw new CBORException("Unexpected tag encountered: " +
                  uadditional);
           }
-          #pragma warning disable 618
+#pragma warning disable 618
 
           taginfo = CBORObject.FindTagConverter(bigintAdditional);
         }

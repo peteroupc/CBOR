@@ -64,22 +64,22 @@ namespace PeterO.Cbor {
               case 't':
                 this.sb.Append('\t');
                 break;
-                case 'u': { // Unicode escape
+              case 'u': { // Unicode escape
                   c = 0;
                   // Consists of 4 hex digits
                   for (var i = 0; i < 4; ++i) {
                     int ch = this.reader.ReadChar();
                     if (ch >= '0' && ch <= '9') {
-                    c <<= 4;
-                    c |= ch - '0';
-                  } else if (ch >= 'A' && ch <= 'F') {
-                    c <<= 4;
-                    c |= ch + 10 - 'A';
-                  } else if (ch >= 'a' && ch <= 'f') {
-                    c <<= 4;
-                    c |= ch + 10 - 'a';
-                  } else {
-                this.reader.RaiseError("Invalid Unicode escaped character");
+                      c <<= 4;
+                      c |= ch - '0';
+                    } else if (ch >= 'A' && ch <= 'F') {
+                      c <<= 4;
+                      c |= ch + 10 - 'A';
+                    } else if (ch >= 'a' && ch <= 'f') {
+                      c <<= 4;
+                      c |= ch + 10 - 'a';
+                    } else {
+                      this.reader.RaiseError("Invalid Unicode escaped character");
                     }
                   }
                   if ((c & 0xf800) != 0xd800) {
@@ -88,37 +88,36 @@ namespace PeterO.Cbor {
                   } else if ((c & 0xfc00) == 0xd800) {
                     int ch = this.reader.ReadChar();
                     if (ch != '\\' || this.reader.ReadChar() != 'u') {
-                    this.reader.RaiseError("Invalid escaped character");
+                      this.reader.RaiseError("Invalid escaped character");
                     }
                     var c2 = 0;
                     for (var i = 0; i < 4; ++i) {
-                    ch = this.reader.ReadChar();
-                    if (ch >= '0' && ch <= '9') {
-                    c2 <<= 4;
-                    c2 |= ch - '0';
-                  } else if (ch >= 'A' && ch <= 'F') {
-                    c2 <<= 4;
-                    c2 |= ch + 10 - 'A';
-                  } else if (ch >= 'a' && ch <= 'f') {
-                    c2 <<= 4;
-                    c2 |= ch + 10 - 'a';
-                  } else {
-                    this.reader.RaiseError("Invalid Unicode escaped character");
-                    }
+                      ch = this.reader.ReadChar();
+                      if (ch >= '0' && ch <= '9') {
+                        c2 <<= 4;
+                        c2 |= ch - '0';
+                      } else if (ch >= 'A' && ch <= 'F') {
+                        c2 <<= 4;
+                        c2 |= ch + 10 - 'A';
+                      } else if (ch >= 'a' && ch <= 'f') {
+                        c2 <<= 4;
+                        c2 |= ch + 10 - 'a';
+                      } else {
+                        this.reader.RaiseError("Invalid Unicode escaped character");
+                      }
                     }
                     if ((c2 & 0xfc00) != 0xdc00) {
-                    this.reader.RaiseError("Unpaired surrogate code point");
-                  } else {
-                    this.sb.Append((char)c);
-                    this.sb.Append((char)c2);
+                      this.reader.RaiseError("Unpaired surrogate code point");
+                    } else {
+                      this.sb.Append((char)c);
+                      this.sb.Append((char)c2);
                     }
                   } else {
                     this.reader.RaiseError("Unpaired surrogate code point");
                   }
                   break;
                 }
-              default:
-                {
+              default: {
                   this.reader.RaiseError("Invalid escaped character");
                   break;
                 }
@@ -134,8 +133,8 @@ namespace PeterO.Cbor {
               if ((c >> 16) == 0) {
                 this.sb.Append((char)c);
               } else {
-              this.sb.Append((char)((((c - 0x10000) >> 10) & 0x3ff) | 0xd800));
-              this.sb.Append((char)(((c - 0x10000) & 0x3ff) | 0xdc00));
+                this.sb.Append((char)((((c - 0x10000) >> 10) & 0x3ff) | 0xd800));
+                this.sb.Append((char)(((c - 0x10000) & 0x3ff) | 0xdc00));
               }
               break;
             }
@@ -154,8 +153,7 @@ namespace PeterO.Cbor {
         this.reader.RaiseError("Unexpected end of data");
       }
       switch (c) {
-        case '"':
-          {
+        case '"': {
             // Parse a string
             // The tokenizer already checked the string for invalid
             // surrogate pairs, so just call the CBORObject
@@ -164,52 +162,46 @@ namespace PeterO.Cbor {
             nextChar[0] = SkipWhitespaceJSON(this.reader);
             return obj;
           }
-        case '{':
-          {
+        case '{': {
             // Parse an object
             obj = this.ParseJSONObject(depth + 1);
             nextChar[0] = SkipWhitespaceJSON(this.reader);
             return obj;
           }
-        case '[':
-          {
+        case '[': {
             // Parse an array
             obj = this.ParseJSONArray(depth + 1);
             nextChar[0] = SkipWhitespaceJSON(this.reader);
             return obj;
           }
-        case 't':
-          {
+        case 't': {
             // Parse true
-          if (this.reader.ReadChar() != 'r' || this.reader.ReadChar() != 'u' ||
-              this.reader.ReadChar() != 'e') {
+            if (this.reader.ReadChar() != 'r' || this.reader.ReadChar() != 'u' ||
+                this.reader.ReadChar() != 'e') {
               this.reader.RaiseError("Value can't be parsed.");
             }
             nextChar[0] = SkipWhitespaceJSON(this.reader);
             return CBORObject.True;
           }
-        case 'f':
-          {
+        case 'f': {
             // Parse false
-          if (this.reader.ReadChar() != 'a' || this.reader.ReadChar() != 'l' ||
-              this.reader.ReadChar() != 's' || this.reader.ReadChar() != 'e') {
+            if (this.reader.ReadChar() != 'a' || this.reader.ReadChar() != 'l' ||
+                this.reader.ReadChar() != 's' || this.reader.ReadChar() != 'e') {
               this.reader.RaiseError("Value can't be parsed.");
             }
             nextChar[0] = SkipWhitespaceJSON(this.reader);
             return CBORObject.False;
           }
-        case 'n':
-          {
+        case 'n': {
             // Parse null
-          if (this.reader.ReadChar() != 'u' || this.reader.ReadChar() != 'l' ||
-              this.reader.ReadChar() != 'l') {
+            if (this.reader.ReadChar() != 'u' || this.reader.ReadChar() != 'l' ||
+                this.reader.ReadChar() != 'l') {
               this.reader.RaiseError("Value can't be parsed.");
             }
             nextChar[0] = SkipWhitespaceJSON(this.reader);
             return CBORObject.Null;
           }
-        case '-':
-          {
+        case '-': {
             // Parse a negative number
             var lengthTwo = true;
             c = this.reader.ReadChar();
@@ -235,7 +227,7 @@ namespace PeterO.Cbor {
               obj = cval == 0 ?
               CBORDataUtilities.ParseJSONNumber("-0", true, false, true) :
                 CBORObject.FromObject(cval);
-              } else {
+            } else {
               str = sb.ToString();
               obj = CBORDataUtilities.ParseJSONNumber(str);
               if (obj == null) {
@@ -258,8 +250,7 @@ namespace PeterO.Cbor {
         case '6':
         case '7':
         case '8':
-        case '9':
-          {
+        case '9': {
             // Parse a number
             var lengthOne = true;
             int cval = c - '0';
@@ -360,7 +351,7 @@ namespace PeterO.Cbor {
               return null;
             }
             return CBORObject.FromRaw(myHashMap);
-            default: {
+          default: {
               // Read the next string
               if (c < 0) {
                 this.reader.RaiseError("Unexpected end of data");
@@ -397,7 +388,8 @@ namespace PeterO.Cbor {
             break;
           case '}':
             return CBORObject.FromRaw(myHashMap);
-            default: this.reader.RaiseError("Expected a ',' or '}'");
+          default:
+            this.reader.RaiseError("Expected a ',' or '}'");
             break;
         }
       }
@@ -516,7 +508,7 @@ namespace PeterO.Cbor {
       int type = obj.ItemType;
       object thisItem = obj.ThisItem;
       switch (type) {
-          case CBORObject.CBORObjectTypeSimpleValue: {
+        case CBORObject.CBORObjectTypeSimpleValue: {
             if (obj.IsTrue) {
               writer.WriteString("true");
               return;
@@ -528,7 +520,7 @@ namespace PeterO.Cbor {
             writer.WriteString("null");
             return;
           }
-          case CBORObject.CBORObjectTypeSingle: {
+        case CBORObject.CBORObjectTypeSingle: {
             var f = (float)thisItem;
             if (Single.IsNegativeInfinity(f) ||
 Single.IsPositiveInfinity(f) ||
@@ -541,7 +533,7 @@ Single.IsNaN(f)) {
                 CBORUtilities.SingleToString(f)));
             return;
           }
-          case CBORObject.CBORObjectTypeDouble: {
+        case CBORObject.CBORObjectTypeDouble: {
             var f = (double)thisItem;
             if (Double.IsNegativeInfinity(f) ||
 Double.IsPositiveInfinity(f) ||
@@ -554,16 +546,16 @@ Double.IsNaN(f)) {
               CBORObject.TrimDotZero(dblString));
             return;
           }
-          case CBORObject.CBORObjectTypeInteger: {
+        case CBORObject.CBORObjectTypeInteger: {
             var longItem = (long)thisItem;
             writer.WriteString(CBORUtilities.LongToString(longItem));
             return;
           }
-          case CBORObject.CBORObjectTypeBigInteger: {
+        case CBORObject.CBORObjectTypeBigInteger: {
             writer.WriteString(((EInteger)thisItem).ToString());
             return;
           }
-          case CBORObject.CBORObjectTypeExtendedDecimal: {
+        case CBORObject.CBORObjectTypeExtendedDecimal: {
             var dec = (EDecimal)thisItem;
             if (dec.IsInfinity() || dec.IsNaN()) {
               writer.WriteString("null");
@@ -572,7 +564,7 @@ Double.IsNaN(f)) {
             }
             return;
           }
-          case CBORObject.CBORObjectTypeExtendedFloat: {
+        case CBORObject.CBORObjectTypeExtendedFloat: {
             var flo = (EFloat)thisItem;
             if (flo.IsInfinity() || flo.IsNaN()) {
               writer.WriteString("null");
@@ -599,8 +591,7 @@ Double.IsNaN(f)) {
             writer.WriteString(flo.ToString());
             return;
           }
-          case CBORObject.CBORObjectTypeByteString:
-          {
+        case CBORObject.CBORObjectTypeByteString: {
             var byteArray = (byte[])thisItem;
             if (byteArray.Length == 0) {
               writer.WriteString("\"\"");
@@ -631,7 +622,7 @@ Double.IsNaN(f)) {
             writer.WriteCodePoint((int)'\"');
             break;
           }
-          case CBORObject.CBORObjectTypeTextString: {
+        case CBORObject.CBORObjectTypeTextString: {
             var thisString = (string)thisItem;
             if (thisString.Length == 0) {
               writer.WriteString("\"\"");
@@ -642,7 +633,7 @@ Double.IsNaN(f)) {
             writer.WriteCodePoint((int)'\"');
             break;
           }
-          case CBORObject.CBORObjectTypeArray: {
+        case CBORObject.CBORObjectTypeArray: {
             var first = true;
             writer.WriteCodePoint((int)'[');
             foreach (CBORObject i in obj.AsList()) {
@@ -655,7 +646,7 @@ Double.IsNaN(f)) {
             writer.WriteCodePoint((int)']');
             break;
           }
-          case CBORObject.CBORObjectTypeExtendedRational: {
+        case CBORObject.CBORObjectTypeExtendedRational: {
             var dec = (ERational)thisItem;
             EDecimal f = dec.ToEDecimalExactIfPossible(
               EContext.Decimal128.WithUnlimitedExponents());
@@ -666,7 +657,7 @@ Double.IsNaN(f)) {
             }
             break;
           }
-          case CBORObject.CBORObjectTypeMap: {
+        case CBORObject.CBORObjectTypeMap: {
             var first = true;
             var hasNonStringKeys = false;
             IDictionary<CBORObject, CBORObject> objMap = obj.AsMap();
@@ -727,7 +718,7 @@ Double.IsNaN(f)) {
             }
             break;
           }
-          default: throw new InvalidOperationException("Unexpected item type");
+        default: throw new InvalidOperationException("Unexpected item type");
       }
     }
 #pragma warning restore CS0618

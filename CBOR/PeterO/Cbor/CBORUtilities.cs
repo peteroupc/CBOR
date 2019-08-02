@@ -11,8 +11,8 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="T:PeterO.Cbor.CBORUtilities"]/*'/>
+    /// <summary>Contains utility methods that may have use outside of the CBORObject
+    /// class.</summary>
   internal static class CBORUtilities {
     private const string HexAlphabet = "0123456789ABCDEF";
 
@@ -485,7 +485,7 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
         throw new ArgumentException("Invalid date/time");
       }
       int year = ((str[0] - '0') * 1000) + ((str[1] - '0') * 100) +
-        (str[2] - '0') * 10 + (str[3] - '0');
+        ((str[2] - '0') * 10) + (str[3] - '0');
       int month = ((str[5] - '0') * 10) + (str[6] - '0');
       int day = ((str[8] - '0') * 10) + (str[9] - '0');
       int hour = ((str[11] - '0') * 10) + (str[12] - '0');

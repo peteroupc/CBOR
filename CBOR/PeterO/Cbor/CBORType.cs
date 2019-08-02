@@ -8,37 +8,31 @@ at: http://peteroupc.github.io/
 using System;
 
 namespace PeterO.Cbor {
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="T:PeterO.Cbor.CBORType"]/*'/>
+    /// <summary>Represents a type that a CBOR object can have.</summary>
   public enum CBORType {
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Cbor.CBORType.Number"]/*'/>
+    /// <summary>A number of any kind, including integers, big integers, floating point
+    /// numbers, and decimal numbers. The floating-point value Not-a-Number is
+    /// also included in the Number type.</summary>
     [Obsolete("Use the IsNumber property of CBORObject to determine" +
        " whether a CBOR object represents a number.")]
     Number,
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Cbor.CBORType.Boolean"]/*'/>
+    /// <summary>The simple values true and false.</summary>
     Boolean,
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Cbor.CBORType.SimpleValue"]/*'/>
+    /// <summary>A "simple value" other than floating point values, true, and false.</summary>
     SimpleValue,
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Cbor.CBORType.ByteString"]/*'/>
+    /// <summary>An array of bytes.</summary>
     ByteString,
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Cbor.CBORType.TextString"]/*'/>
+    /// <summary>A text string.</summary>
     TextString,
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Cbor.CBORType.Array"]/*'/>
+    /// <summary>An array of CBOR objects.</summary>
     Array,
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Cbor.CBORType.Map"]/*'/>
+    /// <summary>A map of CBOR objects.</summary>
     Map,
   }
 }

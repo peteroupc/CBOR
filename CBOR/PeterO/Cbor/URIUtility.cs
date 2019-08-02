@@ -10,30 +10,86 @@ using System;
 using System.Text;
 
 namespace PeterO.Cbor {
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="T:PeterO.Cbor.URIUtility"]/*'/>
+    /// <summary>Contains utility methods for processing Uniform Resource Identifiers
+    /// (URIs) and Internationalized Resource Identifiers (IRIs) under RFC3986 and
+    /// RFC3987, respectively. In the following documentation, URIs and IRIs
+    /// include URI references and IRI references, for convenience.
+    /// <para>There are five components to a URI: scheme, authority, path, query, and
+    /// fragment identifier. The generic syntax to these components is defined
+    /// in RFC3986 and extended in RFC3987. According to RFC3986, different URI
+    /// schemes can further restrict the syntax of the authority, path, and
+    /// query component (see also RFC 7320). However, the syntax of fragment
+    /// identifiers depends on the media type (also known as MIME type) of the
+    /// resource a URI references (see also RFC 3986 and RFC 7320). As of Aug.
+    /// 24, 2018, only the following media types specify a syntax for fragment
+    /// identifiers:
+    /// </para>
+    /// <list>
+    /// <item>The following application/* media types: epub+zip, pdf, senml+cbor,
+    /// senml+json, senml-exi, sensml+cbor, sensml+json, sensml-exi, smil,
+    /// vnd.3gpp-v2x-local-service-information, vnd.3gpp.mcdata-signalling,
+    /// vnd.collection.doc+json, vnd.hc+json, vnd.hyper+json,
+    /// vnd.hyper-item+json, vnd.mason+json,
+    /// vnd.microsoft.portable-executable, vnd.oma.bcast.sgdu,
+    /// vnd.shootproof+json
+    /// </item>
+    /// <item>The following image/* media types: avci, avcs, heic, heic-sequence,
+    /// heif, heif-sequence
+    /// </item>
+    /// <item>The XML media types: application/xml,
+    /// application/xml-external-parsed-entity, text/xml,
+    /// text/xml-external-parsed-entity, application/xml-dtd
+    /// </item>
+    /// <item>All media types with subtypes ending in "+xml" (see RFC 7303) use
+    /// XPointer Framework syntax as fragment identifiers, except the
+    /// following application/* media types: dicom+xml, senml+xml, sensml+xml,
+    /// ttml+xml, xliff+xml, yang-data+xml
+    /// </item>
+    /// <item>font/collection
+    /// </item>
+    /// <item>multipart/x-mixed-replace
+    /// </item>
+    /// <item>text/plain
+    /// </item>
+    /// <item>text/csv
+    /// </item>
+    /// <item>text/html
+    /// </item>
+    /// <item>text/markdown
+    /// </item>
+    /// <item>text/vnd.a
+    /// </item>
+    /// </list></summary>
   internal static class URIUtility {
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="T:PeterO.Cbor.URIUtility.ParseMode"]/*'/>
+    /// <summary>Specifies whether certain characters are allowed when parsing IRIs and
+    /// URIs.</summary>
     internal enum ParseMode {
-    /// <include file='../../docs.xml'
-    ///   path='docs/doc[@name="F:PeterO.Cbor.URIUtility.ParseMode.IRIStrict"]/*'/>
+    /// <summary>The rules follow the syntax for parsing IRIs. In particular, many code
+    /// points outside the Basic Latin range (U+0000 to U+007F) are allowed.
+    /// Strings with unpaired surrogate code points are considered invalid.</summary>
       IRIStrict,
 
-    /// <include file='../../docs.xml'
-    ///   path='docs/doc[@name="F:PeterO.Cbor.URIUtility.ParseMode.URIStrict"]/*'/>
+    /// <summary>The rules follow the syntax for parsing IRIs, except that code points
+    /// outside the Basic Latin range (U+0000 to U+007F) are not allowed.</summary>
       URIStrict,
 
-    /// <include file='../../docs.xml'
-    ///   path='docs/doc[@name="F:PeterO.Cbor.URIUtility.ParseMode.IRILenient"]/*'/>
+    /// <summary>The rules only check for the appropriate delimiters when splitting the
+    /// path, without checking if all the characters in each component are valid.
+    /// Even with this mode, strings with unpaired surrogate code points are
+    /// considered invalid.</summary>
       IRILenient,
 
-    /// <include file='../../docs.xml'
-    ///   path='docs/doc[@name="F:PeterO.Cbor.URIUtility.ParseMode.URILenient"]/*'/>
+    /// <summary>The rules only check for the appropriate delimiters when splitting the
+    /// path, without checking if all the characters in each component are valid.
+    /// Code points outside the Basic Latin range (U+0000 to U+007F) are not
+    /// allowed.</summary>
       URILenient,
 
-    /// <include file='../../docs.xml'
-    ///   path='docs/doc[@name="F:PeterO.Cbor.URIUtility.ParseMode.IRISurrogateLenient"]/*'/>
+    /// <summary>The rules only check for the appropriate delimiters when splitting the
+    /// path, without checking if all the characters in each component are valid.
+    /// Unpaired surrogate code points are treated as though they were replacement
+    /// characters instead for the purposes of these rules, so that strings with
+    /// those code points are not considered invalid strings.</summary>
       IRISurrogateLenient,
     }
 
@@ -112,8 +168,6 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <include file='../../docs.xml'
-    ///   path='docs/doc[@name="M:PeterO.Cbor.URIUtility.EscapeURI(System.String,System.Int32)"]/*'/>
     public static string EscapeURI(string s, int mode) {
       if (s == null) {
         return null;
@@ -225,22 +279,20 @@ namespace PeterO.Cbor {
       return builder.ToString();
     }
 
-    /// <summary>
-    ///  Determines whether the string is a valid IRI with a
+    /// <summary>Determines whether the string is a valid IRI with a
     /// scheme component. This can be used to check for
     /// relative IRI references.
     /// <para>The following cases return true:</para>
     /// <code>xx-x:mm example:/ww
     /// </code>
-    ///  The following cases return false:
+    /// The following cases return false:
     /// <code>x@y:/z /x/y/z example.xyz
     /// </code>
-    ///  .
-    /// </summary>
+    /// .</summary>
     /// <param name='refValue'>A string representing an IRI to
     /// check.</param>
     /// <returns><c>true</c>
-    ///  if the string is a valid IRI with a scheme
+    /// if the string is a valid IRI with a scheme
     /// component; otherwise, <c>false</c>
     /// .</returns>
     public static bool HasScheme(string refValue) {
@@ -252,22 +304,20 @@ namespace PeterO.Cbor {
       return segments != null && segments[0] >= 0;
     }
 
-    /// <summary>
-    ///  Determines whether the string is a valid URI with a
+    /// <summary>Determines whether the string is a valid URI with a
     /// scheme component. This can be used to check for
     /// relative URI references. The following cases return
     /// true:
     /// <code>http://example/z xx-x:mm example:/ww
     /// </code>
-    ///  The following cases return false:
+    /// The following cases return false:
     /// <code>x@y:/z /x/y/z example.xyz
     /// </code>
-    ///  .
-    /// </summary>
+    /// .</summary>
     /// <param name='refValue'>A string representing an IRI to
     /// check.</param>
     /// <returns><c>true</c>
-    ///  if the string is a valid URI with a scheme
+    /// if the string is a valid URI with a scheme
     /// component; otherwise, <c>false</c>
     /// .</returns>
     public static bool HasSchemeForURI(string refValue) {
@@ -334,8 +384,6 @@ namespace PeterO.Cbor {
         (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
     }
 
-    /// <include file='../../docs.xml'
-    ///   path='docs/doc[@name="M:PeterO.Cbor.URIUtility.IsValidCurieReference(System.String,System.Int32,System.Int32)"]/*'/>
     public static bool IsValidCurieReference(string s, int offset, int length) {
       if (s == null) {
         return false;
@@ -814,14 +862,10 @@ path.Equals(".", StringComparison.Ordinal)) {
       }
     }
 
-    /// <include file='../../docs.xml'
-    ///   path='docs/doc[@name="M:PeterO.Cbor.URIUtility.RelativeResolve(System.String,System.String)"]/*'/>
     public static string RelativeResolve(string refValue, string baseURI) {
       return RelativeResolve(refValue, baseURI, ParseMode.IRIStrict);
     }
 
-    /// <include file='../../docs.xml'
-    ///   path='docs/doc[@name="M:PeterO.Cbor.URIUtility.RelativeResolve(System.String,System.String,PeterO.Cbor.URIUtility.ParseMode)"]/*'/>
     public static string RelativeResolve(
       string refValue,
       string baseURI,
@@ -893,14 +937,10 @@ path.Equals(".", StringComparison.Ordinal)) {
       return builder.ToString();
     }
 
-    /// <include file='../../docs.xml'
-    ///   path='docs/doc[@name="M:PeterO.Cbor.URIUtility.SplitIRI(System.String)"]/*'/>
     public static int[] SplitIRI(string s) {
       return (s == null) ? null : SplitIRI(s, 0, s.Length, ParseMode.IRIStrict);
     }
 
-    /// <include file='../../docs.xml'
-    ///   path='docs/doc[@name="M:PeterO.Cbor.URIUtility.SplitIRI(System.String,System.Int32,System.Int32,PeterO.Cbor.URIUtility.ParseMode)"]/*'/>
     public static int[] SplitIRI(
       string s,
       int offset,
@@ -1153,8 +1193,6 @@ if (s.Length - offset < length) {
       return retval;
     }
 
-    /// <include file='../../docs.xml'
-    ///   path='docs/doc[@name="M:PeterO.Cbor.URIUtility.SplitIRI(System.String,PeterO.Cbor.URIUtility.ParseMode)"]/*'/>
     public static int[] SplitIRI(string s, ParseMode parseMode) {
       return (s == null) ? null : SplitIRI(s, 0, s.Length, parseMode);
     }

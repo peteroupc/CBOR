@@ -1,4 +1,4 @@
-<Project Sdk='Microsoft.NET.Sdk'>
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard1.0</TargetFramework>
@@ -55,7 +55,7 @@ Version 3.4.0-alpha1:
     <PackOnBuild>true</PackOnBuild>
   <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet></PropertyGroup>
 
-  <PropertyGroup Condition=' &apos;$(Configuration)|$(Platform)&apos; == &apos;Debug|AnyCPU&apos; '>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DocumentationFile>bin\Debug\netstandard1.0\CBOR.xml</DocumentationFile>
     <CustomCommands>
       <CustomCommands>
@@ -69,8 +69,8 @@ Version 3.4.0-alpha1:
       </CustomCommands>
     </CustomCommands>
   <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet></PropertyGroup>
-  <PropertyGroup Condition=' &apos;$(Configuration)|$(Platform)&apos; == &apos;Release|AnyCPU&apos; '>
-    <DebugType/>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType />
     <DocumentationFile>bin\Release\netstandard1.0\CBOR.xml</DocumentationFile>
     <CustomCommands>
       <CustomCommands>
@@ -85,6 +85,9 @@ Version 3.4.0-alpha1:
     </CustomCommands>
   <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet></PropertyGroup>
   <ItemGroup>
-    <PackageReference Include='PeterO.Numbers' Version='1.4.3'/>
-  <PackageReference Include='StyleCop.Analyzers' PrivateAssets='All' Version='1.1.118'></PackageReference><PackageReference Include='Microsoft.CodeAnalysis.FxCopAnalyzers' PrivateAssets='All' Version='2.9.3'></PackageReference><AdditionalFiles Include='stylecop.json'></AdditionalFiles><AdditionalFiles Include='rules.ruleset'></AdditionalFiles></ItemGroup>
+    <PackageReference Include="PeterO.Numbers" Version="1.4.3" />
+  <PackageReference Include="StyleCop.Analyzers" PrivateAssets="All" Version="1.1.118"></PackageReference><PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" PrivateAssets="All" Version="2.9.3"></PackageReference><AdditionalFiles Include="stylecop.json"></AdditionalFiles><AdditionalFiles Include="rules.ruleset"></AdditionalFiles></ItemGroup>
+  <ItemGroup>
+    <Compile Remove="PeterO\Cbor\CBORTag27.cs" />
+  </ItemGroup>
 </Project>

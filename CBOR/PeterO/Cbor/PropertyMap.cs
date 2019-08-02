@@ -14,10 +14,10 @@ using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   internal static class PropertyMap {
-// TODO: Remove in next major version
-internal const bool DateTimeCompatHack = true;
+    // TODO: Remove in next major version
+    internal const bool DateTimeCompatHack = true;
 
-private sealed class PropertyData {
+    private sealed class PropertyData {
       private string name;
 
       public string Name {
@@ -95,30 +95,30 @@ private sealed class PropertyData {
       return t.GetRuntimeProperties();
     }
 
-private static MethodInfo GetTypeMethod(
-      Type t,
-      string name,
-      Type[] parameters) {
-       return t.GetRuntimeMethod(name, parameters);
+    private static MethodInfo GetTypeMethod(
+          Type t,
+          string name,
+          Type[] parameters) {
+      return t.GetRuntimeMethod(name, parameters);
     }
 
-private static bool HasCustomAttribute(
-          Type t,
-          string name) {
-       foreach (var attr in t.GetTypeInfo().GetCustomAttributes()) {
-         if (attr.GetType().FullName.Equals(name, StringComparison.Ordinal)) {
-           return true;
-         }
+    private static bool HasCustomAttribute(
+              Type t,
+              string name) {
+      foreach (var attr in t.GetTypeInfo().GetCustomAttributes()) {
+        if (attr.GetType().FullName.Equals(name, StringComparison.Ordinal)) {
+          return true;
+        }
       }
       return false;
-        }
+    }
 
 #endif
 
-private static readonly IDictionary<Type, IList<PropertyData>>
-      ValuePropertyLists = new Dictionary<Type, IList<PropertyData>>();
+    private static readonly IDictionary<Type, IList<PropertyData>>
+          ValuePropertyLists = new Dictionary<Type, IList<PropertyData>>();
 
-private static IList<PropertyData> GetPropertyList(Type t) {
+    private static IList<PropertyData> GetPropertyList(Type t) {
       lock (ValuePropertyLists) {
         if (
  ValuePropertyLists.TryGetValue(
@@ -145,12 +145,12 @@ private static IList<PropertyData> GetPropertyList(Type t) {
       }
     }
 
-public static bool ExceedsKnownLength(Stream inStream, long size) {
+    public static bool ExceedsKnownLength(Stream inStream, long size) {
       return (inStream is MemoryStream) && (size > (inStream.Length -
         inStream.Position));
     }
 
-public static void SkipStreamToEnd(Stream inStream) {
+    public static void SkipStreamToEnd(Stream inStream) {
       if (inStream is MemoryStream) {
         inStream.Position = inStream.Length;
       }
@@ -164,31 +164,31 @@ public static void SkipStreamToEnd(Stream inStream) {
       return BigInteger.ToLegacy(ei);
     }
 
-public static ExtendedDecimal ToLegacy(EDecimal ed) {
+    public static ExtendedDecimal ToLegacy(EDecimal ed) {
       return ExtendedDecimal.ToLegacy(ed);
     }
 
-public static ExtendedFloat ToLegacy(EFloat ef) {
+    public static ExtendedFloat ToLegacy(EFloat ef) {
       return ExtendedFloat.ToLegacy(ef);
     }
 
-public static ExtendedRational ToLegacy(ERational er) {
+    public static ExtendedRational ToLegacy(ERational er) {
       return ExtendedRational.ToLegacy(er);
     }
 
-public static EInteger FromLegacy(BigInteger ei) {
+    public static EInteger FromLegacy(BigInteger ei) {
       return BigInteger.FromLegacy(ei);
     }
 
-public static EDecimal FromLegacy(ExtendedDecimal ed) {
+    public static EDecimal FromLegacy(ExtendedDecimal ed) {
       return ExtendedDecimal.FromLegacy(ed);
     }
 
-public static EFloat FromLegacy(ExtendedFloat ef) {
+    public static EFloat FromLegacy(ExtendedFloat ef) {
       return ExtendedFloat.FromLegacy(ef);
     }
 
-public static ERational FromLegacy(ExtendedRational er) {
+    public static ERational FromLegacy(ExtendedRational er) {
       return ExtendedRational.FromLegacy(er);
     }
 #pragma warning restore 618
@@ -201,28 +201,29 @@ public static ERational FromLegacy(ExtendedRational er) {
       return true;
     }
 
-public static bool NextElement(int[] index, int[] dimensions) {
+    public static bool NextElement(int[] index, int[] dimensions) {
       for (var i = dimensions.Length - 1; i >= 0; --i) {
         if (dimensions[i] > 0) {
           ++index[i];
           if (index[i] >= dimensions[i]) {
             index[i] = 0;
           } else {
- return true;
-}
+            return true;
+          }
         }
       }
       return false;
     }
 
-public static CBORObject BuildCBORArray(int[] dimensions) {
+    public static CBORObject BuildCBORArray(int[] dimensions) {
       int zeroPos = dimensions.Length;
       for (var i = 0; i < dimensions.Length; ++i) {
         if (dimensions[i] == 0) {
-  {zeroPos = i;
-}
-break;
-}
+          {
+            zeroPos = i;
+          }
+          break;
+        }
       }
       int arraydims = zeroPos - 1;
       if (arraydims <= 0) {
@@ -254,15 +255,15 @@ break;
             ++index[stackpos - 1];
           }
         } else {
-           --stackpos;
+          --stackpos;
         }
       }
       return ret;
     }
 
-public static CBORObject FromArray(
-      Object arrObj,
-      PODOptions options) {
+    public static CBORObject FromArray(
+          Object arrObj,
+          PODOptions options) {
       var arr = (Array)arrObj;
       int rank = arr.Rank;
       if (rank == 0) {
@@ -274,56 +275,59 @@ public static CBORObject FromArray(
         obj = CBORObject.NewArray();
         int len = arr.GetLength(0);
         for (var i = 0; i < len; ++i) {
-    obj.Add(
-  CBORObject.FromObject(
-  arr.GetValue(i),
-  options));
+          obj.Add(
+        CBORObject.FromObject(
+        arr.GetValue(i),
+        options));
         }
         return obj;
       }
       var index = new int[rank];
       var dimensions = new int[rank];
-      for (var i = 0; i < rank; ++i) { dimensions[i] = arr.GetLength(i);
-}
+      for (var i = 0; i < rank; ++i) {
+        dimensions[i] = arr.GetLength(i);
+      }
       if (!FirstElement(index, dimensions)) {
-  return obj;
-}
+        return obj;
+      }
       obj = BuildCBORArray(dimensions);
       do {
-       CBORObject o = CBORObject.FromObject(
-        arr.GetValue(index),
-        options);
-       SetCBORObject(obj, index, o);
+        CBORObject o = CBORObject.FromObject(
+         arr.GetValue(index),
+         options);
+        SetCBORObject(obj, index, o);
       } while (NextElement(index, dimensions));
       return obj;
     }
 
-private static CBORObject GetCBORObject(CBORObject cbor, int[] index) {
+    private static CBORObject GetCBORObject(CBORObject cbor, int[] index) {
       CBORObject ret = cbor;
-      foreach (var i in index) { ret = ret[i];
-}
+      foreach (var i in index) {
+        ret = ret[i];
+      }
       return ret;
     }
 
-private static void SetCBORObject(
-      CBORObject cbor,
-      int[] index,
-      CBORObject obj) {
+    private static void SetCBORObject(
+          CBORObject cbor,
+          int[] index,
+          CBORObject obj) {
       CBORObject ret = cbor;
       for (var i = 0; i < index.Length - 1; ++i) {
         ret = ret[index[i]];
       }
       int ilen = index[index.Length - 1];
       while (ilen >= ret.Count) {
-  { ret.Add(CBORObject.Null);
-}
-}
+        {
+          ret.Add(CBORObject.Null);
+        }
+      }
       // TODO: Make Set(object, object) work with arrays
       // in next major version
       ret[ilen] = obj;
     }
 
-public static object EnumToObject(Enum value) {
+    public static object EnumToObject(Enum value) {
       Type t = Enum.GetUnderlyingType(value.GetType());
       if (t.Equals(typeof(ulong))) {
         var data = new byte[13];
@@ -344,21 +348,21 @@ public static object EnumToObject(Enum value) {
       Convert.ToInt32(value));
     }
 
-public static object FindOneArgumentMethod(
-      object obj,
-      string name,
-      Type argtype) {
+    public static object FindOneArgumentMethod(
+          object obj,
+          string name,
+          Type argtype) {
       return GetTypeMethod(obj.GetType(), name, new[] { argtype });
     }
 
-public static object InvokeOneArgumentMethod(
-      object methodInfo,
-      object obj,
-      object argument) {
+    public static object InvokeOneArgumentMethod(
+          object methodInfo,
+          object obj,
+          object argument) {
       return ((MethodInfo)methodInfo).Invoke(obj, new[] { argument });
     }
 
-public static byte[] UUIDToBytes(Guid guid) {
+    public static byte[] UUIDToBytes(Guid guid) {
       var bytes2 = new byte[16];
       var bytes = guid.ToByteArray();
       Array.Copy(bytes, bytes2, 16);
@@ -374,12 +378,12 @@ public static byte[] UUIDToBytes(Guid guid) {
       return bytes2;
     }
 
-private static bool StartsWith(string str, string pfx) {
-return str != null && str.Length >= pfx.Length &&
-  str.Substring(0, pfx.Length).Equals(pfx, StringComparison.Ordinal);
+    private static bool StartsWith(string str, string pfx) {
+      return str != null && str.Length >= pfx.Length &&
+        str.Substring(0, pfx.Length).Equals(pfx, StringComparison.Ordinal);
     }
 
-public static object TypeToObject(CBORObject objThis, Type t) {
+    public static object TypeToObject(CBORObject objThis, Type t) {
       if (t.Equals(typeof(DateTime))) {
         return new CBORTag0().FromCBORObject(objThis);
       }
@@ -402,11 +406,11 @@ public static object TypeToObject(CBORObject objThis, Type t) {
         return objThis.IsTrue;
       }
 
-if (t.FullName != null &&
-   (StartsWith(t.FullName, "System.Win32.") ||
-   StartsWith(t.FullName, "System.IO."))) {
-  throw new NotSupportedException("Type " + t.FullName + " not supported");
-}
+      if (t.FullName != null &&
+         (StartsWith(t.FullName, "System.Win32.") ||
+         StartsWith(t.FullName, "System.IO."))) {
+        throw new NotSupportedException("Type " + t.FullName + " not supported");
+      }
 
       if (objThis.Type == CBORType.ByteString) {
         if (t.Equals(typeof(byte[]))) {
@@ -441,7 +445,7 @@ if (t.FullName != null &&
           isList = (td.Equals(typeof(List<>)) || td.Equals(typeof(IList<>)) ||
 td.Equals(typeof(ICollection<>)) ||
   td.Equals(typeof(IEnumerable<>)));
-            } else {
+        } else {
           throw new NotImplementedException();
         }
         isList = isList && t.GenericTypeArguments.Length == 1;
@@ -535,17 +539,17 @@ td.Equals(typeof(IDictionary<,>));
       }
     }
 
-public static object ObjectWithProperties(
-      Type t,
-      IEnumerable<KeyValuePair<string, CBORObject>> keysValues) {
+    public static object ObjectWithProperties(
+          Type t,
+          IEnumerable<KeyValuePair<string, CBORObject>> keysValues) {
       return ObjectWithProperties(t, keysValues, true, true);
     }
 
-public static object ObjectWithProperties(
-         Type t,
-         IEnumerable<KeyValuePair<string, CBORObject>> keysValues,
-         bool removeIsPrefix,
-         bool useCamelCase) {
+    public static object ObjectWithProperties(
+             Type t,
+             IEnumerable<KeyValuePair<string, CBORObject>> keysValues,
+             bool removeIsPrefix,
+             bool useCamelCase) {
       object o = null;
 #if NET20 || NET40
       foreach (var ci in t.GetConstructors()) {
@@ -574,20 +578,20 @@ public static object ObjectWithProperties(
       return o;
     }
 
-public static IEnumerable<KeyValuePair<string, object>>
-    GetProperties(Object o) {
-         return GetProperties(o, true, true);
+    public static IEnumerable<KeyValuePair<string, object>>
+        GetProperties(Object o) {
+      return GetProperties(o, true, true);
     }
 
-public static IEnumerable<string>
-    GetPropertyNames(Type t, bool removeIsPrefix, bool useCamelCase) {
+    public static IEnumerable<string>
+        GetPropertyNames(Type t, bool removeIsPrefix, bool useCamelCase) {
       foreach (PropertyData key in GetPropertyList(t)) {
         yield return key.GetAdjustedName(removeIsPrefix, useCamelCase);
       }
     }
 
-public static IEnumerable<KeyValuePair<string, object>>
-    GetProperties(Object o, bool removeIsPrefix, bool useCamelCase) {
+    public static IEnumerable<KeyValuePair<string, object>>
+        GetProperties(Object o, bool removeIsPrefix, bool useCamelCase) {
       foreach (PropertyData key in GetPropertyList(o.GetType())) {
         yield return new KeyValuePair<string, object>(
   key.GetAdjustedName(removeIsPrefix, useCamelCase),
@@ -595,10 +599,10 @@ public static IEnumerable<KeyValuePair<string, object>>
       }
     }
 
-public static void BreakDownDateTime(
-      DateTime bi,
-      EInteger[] year,
-      int[] lf) {
+    public static void BreakDownDateTime(
+          DateTime bi,
+          EInteger[] year,
+          int[] lf) {
 #if NET20
       DateTime dt = bi.ToUniversalTime();
 #else
@@ -614,7 +618,7 @@ public static void BreakDownDateTime(
       lf[5] = (int)(dt.Ticks % 10000000L) * 100;
     }
 
-public static DateTime BuildUpDateTime(EInteger year, int[] dt) {
+    public static DateTime BuildUpDateTime(EInteger year, int[] dt) {
       return new DateTime(
   year.ToInt32Checked(),
   dt[0],

@@ -9,8 +9,7 @@ using System;
 
 #pragma warning disable 618
 namespace PeterO.Cbor {
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="T:PeterO.Cbor.CBORTagGenericString"]/*'/>
+    /// <summary>A generic CBOR tag class for strings.</summary>
   internal class CBORTagGenericString : ICBORTag
   {
     public CBORTypeFilter GetTypeFilter() {

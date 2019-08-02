@@ -10,8 +10,7 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="T:PeterO.Cbor.CBORObjectMath"]/*'/>
+    /// <summary>Implements arithmetic operations with CBOR objects.</summary>
   internal static class CBORObjectMath {
     public static CBORObject Addition(CBORObject a, CBORObject b) {
       if (a == null) {
@@ -20,13 +19,13 @@ namespace PeterO.Cbor {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
       }
-      if (a.Type != CBORType.Number) {
+      if (!a.IsNumber) {
         throw new ArgumentException("a.Type (" + a.Type +
-          ") is not equal to " + CBORType.Number);
+          ") does not indicate a number");
       }
-      if (b.Type != CBORType.Number) {
+      if (!b.IsNumber) {
         throw new ArgumentException("b.Type (" + b.Type +
-          ") is not equal to " + CBORType.Number);
+          ") does not indicate a number");
       }
       object objA = a.ThisItem;
       object objB = b.ThisItem;
@@ -84,13 +83,13 @@ namespace PeterO.Cbor {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
       }
-      if (a.Type != CBORType.Number) {
+      if (!a.IsNumber) {
         throw new ArgumentException("a.Type (" + a.Type +
-          ") is not equal to " + CBORType.Number);
+          ") does not indicate a number");
       }
-      if (b.Type != CBORType.Number) {
+      if (!b.IsNumber) {
         throw new ArgumentException("b.Type (" + b.Type +
-          ") is not equal to " + CBORType.Number);
+          ") does not indicate a number");
       }
       object objA = a.ThisItem;
       object objB = b.ThisItem;
@@ -148,13 +147,13 @@ namespace PeterO.Cbor {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
       }
-      if (a.Type != CBORType.Number) {
+      if (!a.IsNumber) {
         throw new ArgumentException("a.Type (" + a.Type +
-          ") is not equal to " + CBORType.Number);
+          ") does not indicate a number");
       }
-      if (b.Type != CBORType.Number) {
+      if (!b.IsNumber) {
         throw new ArgumentException("b.Type (" + b.Type +
-          ") is not equal to " + CBORType.Number);
+          ") does not indicate a number");
       }
       object objA = a.ThisItem;
       object objB = b.ThisItem;
@@ -219,13 +218,13 @@ namespace PeterO.Cbor {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
       }
-      if (a.Type != CBORType.Number) {
+      if (!a.IsNumber) {
         throw new ArgumentException("a.Type (" + a.Type +
-          ") is not equal to " + CBORType.Number);
+          ") does not indicate a number");
       }
-      if (b.Type != CBORType.Number) {
+      if (!b.IsNumber) {
         throw new ArgumentException("b.Type (" + b.Type +
-          ") is not equal to " + CBORType.Number);
+          ") does not indicate a number");
       }
       object objA = a.ThisItem;
       object objB = b.ThisItem;
@@ -327,13 +326,13 @@ bigrem = divrem[1]; }
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
       }
-      if (a.Type != CBORType.Number) {
+      if (!a.IsNumber) {
         throw new ArgumentException("a.Type (" + a.Type +
-          ") is not equal to " + CBORType.Number);
+          ") does not indicate a number");
       }
-      if (b.Type != CBORType.Number) {
+      if (!b.IsNumber) {
         throw new ArgumentException("b.Type (" + b.Type +
-          ") is not equal to " + CBORType.Number);
+          ") does not indicate a number");
       }
       object objA = a.ThisItem;
       object objB = b.ThisItem;
