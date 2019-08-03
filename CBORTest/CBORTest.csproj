@@ -115,7 +115,7 @@
 </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include='Resources.restext'>
-<LogicalName>Test.AppResources.resources</LogicalName>
+<LogicalName>Resources.resources</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project='$(MSBuildToolsPath)\Microsoft.CSharp.targets'/>

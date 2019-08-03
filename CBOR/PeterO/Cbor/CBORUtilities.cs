@@ -140,6 +140,22 @@ namespace PeterO.Cbor {
       return BitConverter.ToInt64(BitConverter.GetBytes((double)dbl), 0);
     }
 
+    public static int SingleToInt32Bits(float flt) {
+      return BitConverter.ToInt32(BitConverter.GetBytes((float)flt), 0);
+    }
+
+    public static double Int64BitsToDouble(long bits) {
+      return BitConverter.ToDouble(
+BitConverter.GetBytes(bits),
+0);
+    }
+
+    public static float Int32BitsToSingle(int bits) {
+      return BitConverter.ToSingle(
+BitConverter.GetBytes(bits),
+0);
+    }
+
     public static string DoubleToString(double dbl) {
       return EFloat.FromDouble(dbl).ToShortestString(EContext.Binary64);
     }
@@ -148,50 +164,6 @@ namespace PeterO.Cbor {
       return EFloat.FromSingle(sing).ToShortestString(EContext.Binary32);
     }
 
-    public static EInteger BigIntegerFromSingle(float flt) {
-      int value = BitConverter.ToInt32(BitConverter.GetBytes((float)flt), 0);
-      var fpexponent = (int)((value >> 23) & 0xff);
-      if (fpexponent == 255) {
-        throw new OverflowException("Value is infinity or NaN");
-      }
-      int mantissa = value & 0x7fffff;
-      if (fpexponent == 0) {
-        ++fpexponent;
-      } else {
-        mantissa |= 1 << 23;
-      }
-      if (mantissa == 0) {
-        return EInteger.Zero;
-      }
-      fpexponent -= 150;
-      while ((mantissa & 1) == 0) {
-        ++fpexponent;
-        mantissa >>= 1;
-      }
-      bool neg = (value >> 31) != 0;
-      if (fpexponent == 0) {
-        if (neg) {
-          mantissa = -mantissa;
-        }
-        return (EInteger)mantissa;
-      }
-      if (fpexponent > 0) {
-        // Value is an integer
-        var bigmantissa = (EInteger)mantissa;
-        bigmantissa <<= fpexponent;
-        if (neg) {
-          bigmantissa = -(EInteger)bigmantissa;
-        }
-        return bigmantissa;
-      } else {
-        // Value has a fractional part
-        int exp = -fpexponent;
-        for (var i = 0; i < exp && mantissa != 0; ++i) {
-          mantissa >>= 1;
-        }
-        return (EInteger)mantissa;
-      }
-    }
 
     public static string LongToString(long longValue) {
       if (longValue == Int64.MinValue) {
@@ -934,7 +906,7 @@ negvalue;
       return value;
     }
 
-    public static double HalfPrecisionToDouble(int bits) {
+    public static long HalfToDoublePrecision(int bits) {
       var negvalue = (long)(bits & 0x8000) << 48;
       int exp = (bits >> 10) & 31;
       int mant = bits & 0x3ff;
@@ -956,9 +928,7 @@ negvalue;
       } else {
          value = ((long)(exp + 1008) << 52) | ((long)mant << 42) | negvalue;
       }
-      return BitConverter.ToDouble(
-  BitConverter.GetBytes(value),
-  0);
+      return value;
     }
   }
 }

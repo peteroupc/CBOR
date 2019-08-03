@@ -228,6 +228,11 @@ namespace PeterO.Cbor {
 
     internal CBORObject(int type, object item) {
 #if DEBUG
+      if (type == CBORObjectTypeDouble) {
+         if(!(item is long)) {
+            throw new ArgumentException("expected long for item type");
+         }
+      }
       // Check range in debug mode to ensure that Integer and EInteger
       // are unambiguous
       if ((type == CBORObjectTypeEInteger) &&
@@ -1690,7 +1695,9 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// 32-bit floating-point number.</param>
     /// <returns>A CBORObject object.</returns>
     public static CBORObject FromObject(float value) {
-      return FromObject((double)value);
+      long doubleBits = CBORUtilities.SingleToDoublePrecision(
+          CBORUtilities.SingleToInt32Bits(value));
+      return new CBORObject(CBORObjectTypeDouble, doubleBits);
     }
 
     /// <summary>Generates a CBOR object from a 64-bit floating-point
@@ -1699,7 +1706,8 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// 64-bit floating-point number.</param>
     /// <returns>A CBORObject object.</returns>
     public static CBORObject FromObject(double value) {
-      return new CBORObject(CBORObjectTypeDouble, value);
+      long doubleBits = CBORUtilities.DoubleToInt64Bits(value);
+      return new CBORObject(CBORObjectTypeDouble, doubleBits);
     }
 
     /// <summary>Generates a CBOR object from an array of 8-bit bytes; the
@@ -2947,7 +2955,7 @@ options) {
       if (stream == null) {
         throw new ArgumentNullException(nameof(stream));
       }
-      byte[] data = GetDoubleBytes((double)value, 0);
+      byte[] data = GetDoubleBytes(value, 0);
       stream.Write(data, 0, data.Length);
     }
 
@@ -2965,7 +2973,8 @@ options) {
       if (stream == null) {
         throw new ArgumentNullException(nameof(stream));
       }
-      byte[] data = GetDoubleBytes(value, 0);
+      byte[] data = GetDoubleBytes(
+        CBORUtilities.DoubleToInt64Bits(value), 0);
       stream.Write(data, 0, data.Length);
     }
 
@@ -3514,7 +3523,7 @@ options) {
     /// <summary>Converts this object to an arbitrary-precision integer if
     /// this CBOR object's type is Integer. This method disregards the tags
     /// this object has, if any. (Note that CBOR stores untagged integers
-    /// in at least -(2^64) and less than 2^64.).</summary>
+    /// at least -(2^64) and less than 2^64.).</summary>
     /// <returns>The integer stored by this object.</returns>
     /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not <c>CBORType.Integer</c>.</exception>
@@ -3528,6 +3537,14 @@ options) {
       }
     }
 
+    private long AsDoubleBits() {
+      switch (this.Type) {
+        case CBORType.FloatingPoint:
+          return (long)this.ThisItem;
+        default: throw new InvalidOperationException("Not a floating-point type");
+      }
+    }
+
     /// <summary>Converts this object to a 64-bit floating-point number if
     /// this CBOR object's type is FloatingPoint. This method disregards
     /// the tags this object has, if any.</summary>
@@ -3536,10 +3553,10 @@ options) {
     /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not <c>CBORType.FloatingPoint</c>.</exception>
     public double AsDoubleValue() {
-      switch (this.ItemType) {
-        case CBORObjectTypeDouble:
-          return (double)this.ThisItem;
-        default: throw new InvalidOperationException("Not an integer type");
+      switch (this.Type) {
+        case CBORType.FloatingPoint:
+          return CBORUtilities.Int64BitsToDouble((long)this.ThisItem);
+        default: throw new InvalidOperationException("Not a floating-point type");
       }
     }
 
@@ -3764,8 +3781,6 @@ cn.GetNumberInterface().CanTruncatedIntFitInInt64(cn.GetValue());
     /// or 0, if both values are equal; or greater than 0, if this value is
     /// less than the other object or if the other object is
     /// null.</returns>
-    /// <exception cref='ArgumentException'>An internal error
-    /// occurred.</exception>
     public int CompareTo(CBORObject other) {
       if (other == null) {
         return 1;
@@ -3795,10 +3810,9 @@ cn.GetNumberInterface().CanTruncatedIntFitInInt64(cn.GetValue());
               } else {
 #if DEBUG
                 if (!(a >= 0 && b < 0)) {
-                  throw new ArgumentException("doesn't satisfy a>= 0 && b<0");
+                  throw new InvalidOperationException("doesn't satisfy a>= 0 && b<0");
                 }
 #endif
-
                 cmp = -1;
               }
               break;
@@ -3849,11 +3863,9 @@ cn.GetNumberInterface().CanTruncatedIntFitInInt64(cn.GetValue());
               break;
             }
           case CBORObjectTypeDouble: {
-              var a = (double)objA;
-              var b = (double)objB;
               cmp = CBORUtilities.ByteArrayCompare(
-                GetDoubleBytes(a, 0),
-                GetDoubleBytes(b, 0));
+                GetDoubleBytes(this.AsDoubleBits(), 0),
+                GetDoubleBytes(other.AsDoubleBits(), 0));
               break;
             }
           default: throw new ArgumentException("Unexpected data type");
@@ -3932,10 +3944,7 @@ CBORObjectTypeEInteger)) {
       return false;
     }
 
-    private static byte[] GetDoubleBytes(double value, byte tagbyte) {
-      long valueBits = BitConverter.ToInt64(
-             BitConverter.GetBytes((double)value),
-             0);
+    private static byte[] GetDoubleBytes(long valueBits, byte tagbyte) {
       int bits = CBORUtilities.DoubleToHalfPrecisionIfSameValue(valueBits);
       if (bits != -1) {
         return tagbyte != 0 ? new[] {
@@ -3973,6 +3982,30 @@ CBORObjectTypeEInteger)) {
    (byte)(valueBits & 0xff),
  };
     }
+
+    private static byte[] GetDoubleBytes(float value, byte tagbyte) {
+      int bits = CBORUtilities.SingleToHalfPrecisionIfSameValue(value);
+      if (bits != -1) {
+        return tagbyte != 0 ? new[] {
+          tagbyte, (byte)0xf9,
+          (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff),
+        } : new[] {
+   (byte)0xf9, (byte)((bits >> 8) & 0xff),
+   (byte)(bits & 0xff),
+ };
+      }
+      bits = CBORUtilities.SingleToInt32Bits(value);
+      return tagbyte != 0 ? new[] {
+          tagbyte, (byte)0xfa,
+          (byte)((bits >> 24) & 0xff), (byte)((bits >> 16) & 0xff),
+          (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff),
+        } : new[] {
+   (byte)0xfa, (byte)((bits >> 24) & 0xff),
+   (byte)((bits >> 16) & 0xff), (byte)((bits >> 8) & 0xff),
+   (byte)(bits & 0xff),
+ };
+    }
+
 
     /// <summary>
     /// <para>Writes the binary representation of this CBOR object and
@@ -4083,8 +4116,7 @@ CBORObjectTypeEInteger)) {
               return ret2;
             }
           case CBORObjectTypeDouble: {
-              var value = (double)this.ThisItem;
-              return GetDoubleBytes(value, tagbyte);
+              return GetDoubleBytes(this.AsDoubleBits(), tagbyte);
             }
         }
       }
@@ -4144,8 +4176,7 @@ CBORObjectTypeEInteger)) {
                this.tagHigh == otherValue.tagHigh &&
                Object.Equals(this.itemValue, otherValue.itemValue);
         case CBORObjectTypeDouble:
-          return CBORUtilities.DoubleToInt64Bits((double)this.itemValue) ==
-              CBORUtilities.DoubleToInt64Bits((double)otherValue.itemValue);
+          return this.AsDoubleBits() == otherValue.AsDoubleBits();
         default: return Object.Equals(this.itemValue, otherValue.itemValue);
       }
     }
@@ -4194,9 +4225,7 @@ CBORObjectTypeEInteger)) {
               itemHashCode = (int)this.itemValue;
               break;
             case CBORObjectTypeDouble:
-              longValue = BitConverter.ToInt64(
-                 BitConverter.GetBytes((double)this.itemValue),
-                 0);
+              longValue = this.AsDoubleBits();
               longValue |= longValue >> 32;
               itemHashCode = unchecked((int)longValue);
               break;
@@ -4768,20 +4797,16 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
       if (options == null) {
         throw new ArgumentNullException(nameof(options));
       }
-      int type = this.ItemType;
+      CBORType type = this.Type;
       switch (type) {
-        case CBORObjectTypeSimpleValue: {
+        case CBORType.SimpleValue: {
             return this.IsTrue ? "true" : (this.IsFalse ? "false" : "null");
           }
-        case CBORObjectTypeInteger: {
-            return CBORUtilities.LongToString((long)this.ThisItem);
+        case CBORType.Integer: {
+            return this.AsEIntegerValue().ToString();
           }
-        case CBORObjectTypeDouble: {
-            return CBORNumber.FromObject((double)this.ThisItem).ToJSONString();
-          }
-        case CBORObjectTypeEInteger: {
-            return CBORNumber.FromObject((EInteger)this.ThisItem)
-               .ToJSONString();
+        case CBORType.FloatingPoint: {
+            return CBORNumber.FromObject(AsDoubleValue()).ToJSONString();
           }
         default: {
             var sb = new StringBuilder();
@@ -4807,10 +4832,10 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     public override string ToString() {
       StringBuilder sb = null;
       string simvalue = null;
-      int type = this.ItemType;
+      CBORType type = this.Type;
       if (this.IsTagged) {
         if (sb == null) {
-          if (type == CBORObjectTypeTextString) {
+          if (type == CBORType.TextString) {
             // The default capacity of StringBuilder may be too small
             // for many strings, so set a suggested capacity
             // explicitly
@@ -4823,7 +4848,7 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
         this.AppendOpeningTags(sb);
       }
       switch (type) {
-        case CBORObjectTypeSimpleValue: {
+        case CBORType.SimpleValue: {
             if (this.IsTrue) {
               simvalue = "true";
               if (sb == null) {
@@ -4859,8 +4884,8 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
 
             break;
           }
-        case CBORObjectTypeDouble: {
-            var f = (double)this.ThisItem;
+        case CBORType.FloatingPoint: {
+            double f = AsDoubleValue();
             simvalue = Double.IsNegativeInfinity(f) ? "-Infinity" :
               (Double.IsPositiveInfinity(f) ? "Infinity" : (Double.IsNaN(f) ?
                     "NaN" : CBORUtilities.TrimDotZero(
@@ -4871,31 +4896,27 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
             sb.Append(simvalue);
             break;
           }
-        case CBORObjectTypeInteger: {
-            var v = (long)this.ThisItem;
-            simvalue = CBORUtilities.LongToString(v);
+        case CBORType.Integer: {
+            if(this.CanValueFitInInt64()) {
+              long v = AsInt64Value();
+              simvalue = CBORUtilities.LongToString(v);
+            } else {
+              simvalue = AsEIntegerValue().ToString();
+            }
             if (sb == null) {
               return simvalue;
             }
             sb.Append(simvalue);
             break;
           }
-        case CBORObjectTypeEInteger: {
-            simvalue = ((EInteger)this.ThisItem).ToString();
-            if (sb == null) {
-              return simvalue;
-            }
-            sb.Append(simvalue);
-            break;
-          }
-        case CBORObjectTypeByteString: {
+        case CBORType.ByteString: {
             sb = sb ?? new StringBuilder();
             sb.Append("h'");
             CBORUtilities.ToBase16(sb, (byte[])this.ThisItem);
             sb.Append("'");
             break;
           }
-        case CBORObjectTypeTextString: {
+        case CBORType.TextString: {
             if (sb == null) {
               return "\"" + this.AsString() + "\"";
             }
@@ -4904,7 +4925,7 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
             sb.Append('\"');
             break;
           }
-        case CBORObjectTypeArray: {
+        case CBORType.Array: {
             sb = sb ?? new StringBuilder();
             var first = true;
             sb.Append("[");
@@ -4918,7 +4939,7 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
             sb.Append("]");
             break;
           }
-        case CBORObjectTypeMap: {
+        case CBORType.Map: {
             sb = sb ?? new StringBuilder();
             var first = true;
             sb.Append("{");
@@ -5120,23 +5141,17 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
       long bits = 0;
       switch (byteCount) {
         case 2:
-          bits = BitConverter.ToInt64(
-             BitConverter.GetBytes((double)doubleVal),
-             0);
+          bits = CBORUtilities.DoubleToInt64Bits(doubleVal);
           bits = CBORUtilities.DoubleToRoundedHalfPrecision(bits);
           bits &= 0xffffL;
           return WriteFloatingPointBits(outputStream, bits, 2);
         case 4:
-          bits = BitConverter.ToInt64(
-             BitConverter.GetBytes((double)doubleVal),
-             0);
+          bits = CBORUtilities.DoubleToInt64Bits(doubleVal);
           bits = CBORUtilities.DoubleToRoundedSinglePrecision(bits);
           bits &= 0xffffffffL;
           return WriteFloatingPointBits(outputStream, bits, 4);
         case 8:
-          bits = BitConverter.ToInt64(
-             BitConverter.GetBytes((double)doubleVal),
-             0);
+          bits = CBORUtilities.DoubleToInt64Bits(doubleVal);
           // DebugUtility.Log("dbl " + doubleVal + " -> " + (bits));
           return WriteFloatingPointBits(outputStream, bits, 8);
         default: throw new ArgumentOutOfRangeException(nameof(byteCount));
@@ -5406,8 +5421,9 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
           ") is more than 7");
       }
       if (majorType == 7) {
-        throw new ArgumentException("majorType is 7 and value is greater" +
-"\u0020than 255");
+        throw new ArgumentException(
+          "majorType is 7 and value is greater" +
+           "\u0020than 255");
       }
       byte[] bytes = new[] {
         (byte)(27 | (majorType << 5)), (byte)highbyte,
@@ -5573,7 +5589,8 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
             break;
           }
         case CBORObjectTypeDouble: {
-            Write((double)this.ThisItem, stream);
+            byte[] data = GetDoubleBytes(AsDoubleBits(), 0);
+            stream.Write(data, 0, data.Length);
             break;
           }
         default: {
@@ -5676,28 +5693,18 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
               return FromObject(bigintAdditional);
             }
           case 7:
-            if (firstbyte == 0xf9) {
-              double dbl = CBORUtilities.HalfPrecisionToDouble(
+            if (firstbyte >= 0xf9 && firstbyte<=0xfb) {
+              long dblbits = (long)uadditional;
+              if(firstbyte==0xf9){
+                 dblbits=CBORUtilities.HalfToDoublePrecision(
                   unchecked((int)uadditional));
+              } else if(firstbyte==0xfa){
+                 dblbits=CBORUtilities.SingleToDoublePrecision(
+                  unchecked((int)uadditional));
+              }
               return new CBORObject(
                 CBORObjectTypeDouble,
-                dbl);
-            }
-            if (firstbyte == 0xfa) {
-              float flt = BitConverter.ToSingle(
-                BitConverter.GetBytes((int)unchecked((int)uadditional)),
-                0);
-              return new CBORObject(
-                CBORObjectTypeDouble,
-                (double)flt);
-            }
-            if (firstbyte == 0xfb) {
-              double flt = BitConverter.ToDouble(
-                BitConverter.GetBytes((long)uadditional),
-                0);
-              return new CBORObject(
-                CBORObjectTypeDouble,
-                flt);
+                dblbits);
             }
             if (firstbyte == 0xf8) {
               if ((int)uadditional < 32) {

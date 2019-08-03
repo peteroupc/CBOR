@@ -40,7 +40,7 @@ namespace PeterO.Cbor {
     /// <summary>A map of CBOR objects.</summary>
     Map,
 
-    /// <summary>An integer in the interval [-2^64, 2^64 - 1], or an
+    /// <summary>An integer in the interval [-(2^64), 2^64 - 1], or an
     /// integer of major type 0 and 1.</summary>
     Integer,
 
