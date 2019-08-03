@@ -811,13 +811,13 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
       int sexp = exp - 896;
       // DebugUtility.Log("sng mant={0:X8}, exp=" + exp + " sexp=" + (sexp));
       if (exp == 2047) { // Infinity and NaN
-        return ((mant & ((1L << 29) - 1)) == 0);
+        return (mant & ((1L << 29) - 1)) == 0;
       } else if (sexp < -23 || sexp >= 255) { // underflow or overflow
         return false;
       } else if (sexp > 0) { // normal
-        return ((mant & ((1L << 29) - 1)) == 0);
+        return (mant & ((1L << 29) - 1)) == 0;
       } else { // subnormal and zero
-        return ((mant & ((1L << (29 - (sexp - 1))) - 1)) == 0);
+        return (mant & ((1L << (29 - (sexp - 1))) - 1)) == 0;
       }
     }
 

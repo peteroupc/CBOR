@@ -29,7 +29,8 @@ namespace PeterO.Cbor {
     /// has a key and a value separated by an equal sign ("="). Whitespace
     /// and line separators are not allowed to appear between the
     /// semicolons or between the equal signs, nor may the string begin or
-    /// end with whitespace. The string can be empty, but cannot be null.  The following is an example of this parameter:
+    /// end with whitespace. The string can be empty, but cannot be null.
+    /// The following is an example of this parameter:
     /// <c>usecamelcase=true</c>. The key can be any one of the following
     /// in any combination of case: <c>usecamelcase</c>. Other keys are
     /// ignored. If the same key appears more than once, the value given
@@ -39,7 +40,8 @@ namespace PeterO.Cbor {
     /// false. For example, <c>usecamelcase=Yes</c> and
     /// <c>usecamelcase=1</c> both set the <c>UseCamelCase</c> property to
     /// true.</param>
-    /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='paramString'/> is null.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='paramString'/> is null.</exception>
     public PODOptions(string paramString) {
       if (paramString == null) {
         throw new ArgumentNullException(nameof(paramString));
@@ -64,7 +66,8 @@ namespace PeterO.Cbor {
     /// options.</summary>
     public static readonly PODOptions Default = new PODOptions();
 
-    /// <summary><para>Gets a value indicating whether property names are converted
+    /// <summary>
+    /// <para>Gets a value indicating whether property names are converted
     /// to camel case before they are used as keys. This option changes the
     /// behavior of key name serialization as follows. If "useCamelCase" is
     /// <c>false</c> :</para>

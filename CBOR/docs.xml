@@ -1176,8 +1176,9 @@
        for more information.
     </param>
     <returns>A CBOR object decoded from the given byte array. Returns null (as opposed
-      to CBORObject.Null) if "data" is empty and the AllowEmpty property is set
-      on the given options object.
+      to CBORObject.Null) if
+      <paramref name='data'/>
+       is empty and the AllowEmpty property is set on the given options object.
     </returns>
     <exception cref='PeterO.Cbor.CBORException'>There was an error in reading or parsing the data. This includes cases
       where not all of the byte array represents a CBOR object. This exception
@@ -1188,7 +1189,9 @@
     </exception>
     <exception cref='System.ArgumentNullException'>The parameter
       <paramref name='data'/>
-       is null, or the parameter "options" is null.
+       is null, or the parameter
+      <paramref name='options'/>
+       is null.
     </exception>
     <example><para>The following example (originally written in C# for the &#x2e;NET
         version) implements a method that decodes a text string from a CBOR byte
@@ -1213,7 +1216,9 @@
       encoded, one after the other. Can be empty, but cannot be null.
     </param>
     <returns>An array of CBOR objects decoded from the given byte array. Returns an
-      empty array if "data" is empty.
+      empty array if
+      <paramref name='data'/>
+       is empty.
     </returns>
     <exception cref='PeterO.Cbor.CBORException'>There was an error in reading or parsing the data. This includes cases
       where the last CBOR object in the data was read only partly.
@@ -1237,14 +1242,18 @@
       as always set regardless of that value as specified in this parameter.
     </param>
     <returns>An array of CBOR objects decoded from the given byte array. Returns an
-      empty array if "data" is empty.
+      empty array if
+      <paramref name='data'/>
+       is empty.
     </returns>
     <exception cref='PeterO.Cbor.CBORException'>There was an error in reading or parsing the data. This includes cases
       where the last CBOR object in the data was read only partly.
     </exception>
     <exception cref='System.ArgumentNullException'>The parameter
       <paramref name='data'/>
-       is null, or the parameter "options" is null.
+       is null, or the parameter
+      <paramref name='options'/>
+       is null.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.Divide(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)'>
@@ -2171,8 +2180,12 @@
       otherwise,
       <c>false</c> .
     </returns>
+    <exception cref='System.ArgumentNullException'>The parameter
+      <paramref name='bigTagValue'/>
+       is null.
+    </exception>
     <exception cref='System.ArgumentException'>The parameter
-      <paramref name='tagValue'/>
+      <paramref name='bigTagValue'/>
        is less than 0.
     </exception>
   </doc>
@@ -2630,7 +2643,9 @@
     </returns>
     <exception cref='System.ArgumentNullException'>The parameter
       <paramref name='stream'/>
-       is null, or the parameter "options" is null.
+       is null, or the parameter
+      <paramref name='options'/>
+       is null.
     </exception>
     <exception cref='PeterO.Cbor.CBORException'>There was an error in reading or parsing the data, including if the last
       CBOR object was read only partially.

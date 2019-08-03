@@ -9,7 +9,6 @@ using System;
 using System.IO;
 
 namespace PeterO.Cbor {
-    // <xmlbegin id='5'/>
     // <summary>A general-purpose character input for reading text from
     // byte streams and text strings. When reading byte streams, this
     // class supports the UTF-8 character encoding by default, but can be
@@ -25,14 +24,12 @@ namespace PeterO.Cbor {
     private int offset;
     private ICharacterInput reader;
 
-    // <xmlbegin id='6'/>
     // <summary>Initializes a new instance of the
     // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='str'>A string object.</param>
     public CharacterReader(string str) : this(str, false, false) {
     }
 
-    // <xmlbegin id='7'/>
     // <summary>Initializes a new instance of the
     // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='str'>A string object.</param>
@@ -41,7 +38,6 @@ namespace PeterO.Cbor {
       : this(str, skipByteOrderMark, false) {
     }
 
-    // <xmlbegin id='8'/>
     // <summary>Initializes a new instance of the
     // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='str'>A string object.</param>
@@ -66,7 +62,6 @@ namespace PeterO.Cbor {
       this.stream = null;
     }
 
-    // <xmlbegin id='9'/>
     // <summary>Initializes a new instance of the
     // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='str'>A string object.</param>
@@ -76,7 +71,6 @@ namespace PeterO.Cbor {
       : this(str, offset, length, false, false) {
     }
 
-    // <xmlbegin id='10'/>
     // <summary>Initializes a new instance of the
     // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='str'>A string object.</param>
@@ -125,14 +119,12 @@ namespace PeterO.Cbor {
       this.stream = null;
     }
 
-    // <xmlbegin id='11'/>
     // <summary>Initializes a new instance of the
     // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='stream'>A readable data stream.</param>
     public CharacterReader(Stream stream) : this(stream, 0, false) {
     }
 
-    // <xmlbegin id='12'/>
     // <summary>Initializes a new instance of the
     // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='stream'>A readable data stream.</param>
@@ -142,7 +134,6 @@ namespace PeterO.Cbor {
       : this(stream, mode, errorThrow, false) {
     }
 
-    // <xmlbegin id='13'/>
     // <summary>Initializes a new instance of the
     // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='stream'>A readable data stream.</param>
@@ -151,7 +142,6 @@ namespace PeterO.Cbor {
   : this(stream, mode, false, false) {
     }
 
-    // <xmlbegin id='14'/>
     // <summary>Initializes a new instance of the
     // <see cref='PeterO.Cbor.CharacterReader'/>.</summary>
     // <param name='stream'>A readable data stream.</param>
@@ -180,7 +170,6 @@ namespace PeterO.Cbor {
       int ReadByte();
     }
 
-    // <xmlbegin id='15'/>
     // <summary>Reads a series of code points from a Unicode stream or a
     // string.</summary>
     // <param name='chars'>An array where the code points that were read
@@ -243,7 +232,6 @@ namespace PeterO.Cbor {
       return count;
     }
 
-    // <xmlbegin id='16'/>
     // <summary>Reads the next character from a Unicode stream or a
     // string.</summary>
     // <returns>The next character, or -1 if the end of the string or

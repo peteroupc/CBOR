@@ -32,9 +32,7 @@ namespace PeterO {
     }
 
     public static void Main() {
-new Test.CBORTest().TestTags();
-return;
-const String ValueParam = "TestLexOrder";
+     const String ValueParam = "TestLexOrder";
      // Run all the tests in this assembly
      foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
        if (!HasAttribute(type, typeof(TestFixtureAttribute))) {

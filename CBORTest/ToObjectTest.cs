@@ -1401,7 +1401,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty);
               (byte[])obj2);
             } else if (obj is string[]) {
               Assert.AreEqual((string[])obj, (string[])obj2);
-          } else {
+            } else {
             Assert.AreEqual(obj, obj2, cbor + "\n" + obj.GetType());
           }
         }

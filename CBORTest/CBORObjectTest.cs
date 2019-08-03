@@ -454,7 +454,7 @@ namespace Test {
           Assert.AreEqual(
             numberinfo["integer"].AsString(),
             cbornumber.AsEInteger().ToString());
-          } else {
+        } else {
           try {
             cbornumber.AsEInteger();
             Assert.Fail("Should have failed");
@@ -717,7 +717,7 @@ ToObjectTest.TestToFromObjectRoundTrip((double)2.5).AsEInteger()
           Assert.AreEqual(
     TestCommon.StringToInt(numberinfo["integer"].AsString()),
     ((int)cbornumber.AsByte()) & 0xff);
-  } else {
+        } else {
           try {
             cbornumber.AsByte();
             Assert.Fail("Should have failed " + cbornumber);
@@ -1065,7 +1065,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
           Assert.AreEqual(
     TestCommon.StringToInt(numberinfo["integer"].AsString()),
     cbornumber.AsInt16());
-  } else {
+        } else {
           try {
             cbornumber.AsInt16();
             Assert.Fail("Should have failed " + cbornumber);
@@ -1516,7 +1516,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
           Assert.IsTrue(
             ToObjectTest.TestToFromObjectRoundTrip(cbornumber.AsInt32())
                                             .CanFitInInt32());
-                                          } else {
+        } else {
           Assert.IsFalse(cbornumber.CanFitInInt32());
         }
       }
@@ -1582,7 +1582,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
           Assert.IsTrue(
             ToObjectTest.TestToFromObjectRoundTrip(cbornumber.AsInt64())
                                             .CanFitInInt64());
-                                          } else {
+        } else {
           Assert.IsFalse(cbornumber.CanFitInInt64());
         }
       }
@@ -1968,7 +1968,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
       TestCommon.CompareTestLess(cbor1.AsNumber(), cbor2.AsNumber());
     }
     private static string TrimStr(string str, int len) {
-     return str.Substring(0, Math.Min(len, str.Length));
+      return str.Substring(0, Math.Min(len, str.Length));
     }
     [Test]
     public void CompareLongDouble() {
@@ -2272,81 +2272,145 @@ ToObjectTest.TestToFromObjectRoundTrip(100).CompareTo(null);
       }
     }
 
-[Test]
-public void TestDecodeSequenceFromBytes(){
-  CBORObject[] objs;
-  byte[] bytes;
-  bytes=new byte[] { 0 };
-  objs = CBORObject.DecodeSequenceFromBytes(bytes);
-  Assert.AreEqual(1,objs.Length);
-  Assert.AreEqual(CBORObject.FromObject(0), objs[0]);
-  bytes=new byte[] { 0, 1, 2 };
-  objs = CBORObject.DecodeSequenceFromBytes(bytes);
-  Assert.AreEqual(3,objs.Length);
-  Assert.AreEqual(CBORObject.FromObject(0), objs[0]);
-  Assert.AreEqual(CBORObject.FromObject(1), objs[1]);
-  Assert.AreEqual(CBORObject.FromObject(2), objs[2]);
-  bytes=new byte[] { 0, 1, 0x61 };
-  Assert.Throws(typeof(CBORException), ()=>CBORObject.DecodeSequenceFromBytes(bytes));
-  bytes=new byte[] { 0x61 };
-  Assert.Throws(typeof(CBORException), ()=>CBORObject.DecodeSequenceFromBytes(bytes));
-  bytes=new byte[] { 0, 1, 0x61, 0x41 };
-  objs = CBORObject.DecodeSequenceFromBytes(bytes);
-  Assert.AreEqual(3,objs.Length);
-  Assert.AreEqual(CBORObject.FromObject(0), objs[0]);
-  Assert.AreEqual(CBORObject.FromObject(1), objs[1]);
-  Assert.AreEqual(CBORObject.FromObject("a"), objs[2]);
-  bytes=new byte[] { };
-  objs = CBORObject.DecodeSequenceFromBytes(bytes);
-  Assert.AreEqual(0,objs.Length);
-  Assert.Throws(typeof(ArgumentNullException), ()=>CBORObject.DecodeSequenceFromBytes(null));
-  Assert.Throws(typeof(ArgumentNullException), ()=>CBORObject.DecodeSequenceFromBytes(bytes, null));
-}
+    [Test]
+    public void TestDecodeSequenceFromBytes() {
+      CBORObject[] objs;
+      byte[] bytes;
+      bytes = new byte[] { 0 };
+      objs = CBORObject.DecodeSequenceFromBytes(bytes);
+      Assert.AreEqual(1, objs.Length);
+      Assert.AreEqual(CBORObject.FromObject(0), objs[0]);
+      bytes = new byte[] { 0, 1, 2 };
+      objs = CBORObject.DecodeSequenceFromBytes(bytes);
+      Assert.AreEqual(3, objs.Length);
+      Assert.AreEqual(CBORObject.FromObject(0), objs[0]);
+      Assert.AreEqual(CBORObject.FromObject(1), objs[1]);
+      Assert.AreEqual(CBORObject.FromObject(2), objs[2]);
+      bytes = new byte[] { 0, 1, 0x61 };
+      try {
+        CBORObject.DecodeSequenceFromBytes(bytes);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      bytes = new byte[] { 0x61 };
+      try {
+        CBORObject.DecodeSequenceFromBytes(bytes);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      bytes = new byte[] { 0, 1, 0x61, 0x41 };
+      objs = CBORObject.DecodeSequenceFromBytes(bytes);
+      Assert.AreEqual(3, objs.Length);
+      Assert.AreEqual(CBORObject.FromObject(0), objs[0]);
+      Assert.AreEqual(CBORObject.FromObject(1), objs[1]);
+      Assert.AreEqual(CBORObject.FromObject("A"), objs[2]);
+      bytes = new byte[] { };
+      objs = CBORObject.DecodeSequenceFromBytes(bytes);
+      Assert.AreEqual(0, objs.Length);
+      try {
+        CBORObject.DecodeSequenceFromBytes(null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.DecodeSequenceFromBytes(bytes, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
 
-[Test]
-public void TestReadSequence(){
-  CBORObject[] objs;
-  byte[] bytes;
-  bytes=new byte[] { 0 };
-  using(var ms=new MemoryStream(bytes)){
-  objs = CBORObject.ReadSequence(ms);
-  }
-  Assert.AreEqual(1,objs.Length);
-  Assert.AreEqual(CBORObject.FromObject(0), objs[0]);
-  bytes=new byte[] { 0, 1, 2 };
-  using(var ms=new MemoryStream(bytes)){
-  objs = CBORObject.ReadSequence(ms);
-  }
-  Assert.AreEqual(3,objs.Length);
-  Assert.AreEqual(CBORObject.FromObject(0), objs[0]);
-  Assert.AreEqual(CBORObject.FromObject(1), objs[1]);
-  Assert.AreEqual(CBORObject.FromObject(2), objs[2]);
-  bytes=new byte[] { 0, 1, 0x61 };
-  using(var ms=new MemoryStream(bytes)){
-  Assert.Throws(typeof(CBORException), ()=>CBORObject.ReadSequence(ms));
-}
-  bytes=new byte[] { 0x61 };
-  using(var ms=new MemoryStream(bytes)){
-  Assert.Throws(typeof(CBORException), ()=>CBORObject.ReadSequence(ms));
-}
-  bytes=new byte[] { 0, 1, 0x61, 0x41 };
-  using(var ms=new MemoryStream(bytes)){
-  objs = CBORObject.ReadSequence(ms);
-  }
-  Assert.AreEqual(3,objs.Length);
-  Assert.AreEqual(CBORObject.FromObject(0), objs[0]);
-  Assert.AreEqual(CBORObject.FromObject(1), objs[1]);
-  Assert.AreEqual(CBORObject.FromObject("a"), objs[2]);
-  bytes=new byte[] { };
-  using(var ms=new MemoryStream(bytes)){
-  objs = CBORObject.ReadSequence(ms);
-  }
-  Assert.AreEqual(0,objs.Length);
-  Assert.Throws(typeof(ArgumentNullException), ()=>CBORObject.ReadSequence(null));
-  using(var ms=new MemoryStream(bytes)){
-   Assert.Throws(typeof(ArgumentNullException), ()=>CBORObject.ReadSequence(ms, null));
-  }
-}
+    [Test]
+    public void TestReadSequence() {
+      CBORObject[] objs;
+      byte[] bytes;
+      bytes = new byte[] { 0 };
+      using (var ms = new MemoryStream(bytes)) {
+        objs = CBORObject.ReadSequence(ms);
+      }
+      Assert.AreEqual(1, objs.Length);
+      Assert.AreEqual(CBORObject.FromObject(0), objs[0]);
+      bytes = new byte[] { 0, 1, 2 };
+      using (var ms = new MemoryStream(bytes)) {
+        objs = CBORObject.ReadSequence(ms);
+      }
+      Assert.AreEqual(3, objs.Length);
+      Assert.AreEqual(CBORObject.FromObject(0), objs[0]);
+      Assert.AreEqual(CBORObject.FromObject(1), objs[1]);
+      Assert.AreEqual(CBORObject.FromObject(2), objs[2]);
+      bytes = new byte[] { 0, 1, 0x61 };
+      using (var ms = new MemoryStream(bytes)) {
+        try {
+          CBORObject.ReadSequence(ms);
+          Assert.Fail("Should have failed");
+        } catch (CBORException) {
+          // NOTE: Intentionally empty
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
+        }
+      }
+      bytes = new byte[] { 0x61 };
+      using (var ms = new MemoryStream(bytes)) {
+        try {
+          CBORObject.ReadSequence(ms);
+          Assert.Fail("Should have failed");
+        } catch (CBORException) {
+          // NOTE: Intentionally empty
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
+        }
+      }
+      bytes = new byte[] { 0, 1, 0x61, 0x41 };
+      using (var ms = new MemoryStream(bytes)) {
+        objs = CBORObject.ReadSequence(ms);
+      }
+      Assert.AreEqual(3, objs.Length);
+      Assert.AreEqual(CBORObject.FromObject(0), objs[0]);
+      Assert.AreEqual(CBORObject.FromObject(1), objs[1]);
+      Assert.AreEqual(CBORObject.FromObject("A"), objs[2]);
+      bytes = new byte[] { };
+      using (var ms = new MemoryStream(bytes)) {
+        objs = CBORObject.ReadSequence(ms);
+      }
+      Assert.AreEqual(0, objs.Length);
+      try {
+        CBORObject.ReadSequence(null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      using (var ms = new MemoryStream(bytes)) {
+        try {
+          CBORObject.ReadSequence(ms, null);
+          Assert.Fail("Should have failed");
+        } catch (ArgumentNullException) {
+          // NOTE: Intentionally empty
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
+        }
+      }
+    }
 
     [Test]
     public void TestDivide() {
@@ -2694,9 +2758,9 @@ ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes();
       TestWriteObj(erat, erat2);
     }
 
-private static void CompareTestNumber(CBORObject o1, CBORObject o2) {
- TestCommon.CompareTestEqual(o1.AsNumber(), o2.AsNumber());
-}
+    private static void CompareTestNumber(CBORObject o1, CBORObject o2) {
+      TestCommon.CompareTestEqual(o1.AsNumber(), o2.AsNumber());
+    }
 
     [Test]
     public void TestEquivalentNegativeInfinity() {
@@ -3969,10 +4033,10 @@ private static void CompareTestNumber(CBORObject o1, CBORObject o2) {
           o1,
           o2));
         if (!cmpDecFrac.Equals(cmpCobj)) {
-         TestCommon.CompareTestEqual(
-           cmpDecFrac,
-           cmpCobj,
-           o1.ToString() + "\n" + o2.ToString());
+          TestCommon.CompareTestEqual(
+            cmpDecFrac,
+            cmpCobj,
+            o1.ToString() + "\n" + o2.ToString());
         }
         CBORTestCommon.AssertRoundTrip(o1);
         CBORTestCommon.AssertRoundTrip(o2);
@@ -4832,17 +4896,17 @@ private static void CompareTestNumber(CBORObject o1, CBORObject o2) {
       }
     }
     private static void ReadJsonFail(byte[] msbytes) {
-        using (var msjson = new MemoryStream(msbytes)) {
-          try {
-            CBORObject.ReadJSON(msjson);
-            Assert.Fail("Should have failed");
-          } catch (CBORException) {
-            // NOTE: Intentionally empty
-          } catch (Exception ex) {
-            Assert.Fail(ex.ToString());
-            throw new InvalidOperationException(String.Empty, ex);
-          }
+      using (var msjson = new MemoryStream(msbytes)) {
+        try {
+          CBORObject.ReadJSON(msjson);
+          Assert.Fail("Should have failed");
+        } catch (CBORException) {
+          // NOTE: Intentionally empty
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
         }
+      }
     }
 
     [Test]
@@ -6730,116 +6794,116 @@ ToObjectTest.TestToFromObjectRoundTrip(byteval);
       }
     }
 
-[Test]
-public void TestWriteFloatingPointValue() {
-  var r = new RandomGenerator();
-  var bytes = new byte[] { 0, 0, 0 };
-  for (var i = 0; i < 0x10000; ++i) {
-    bytes[0] = (byte)0xf9;
-    bytes[1] = (byte)((i >> 8) & 0xff);
-    bytes[2] = (byte)(i & 0xff);
-    CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
-    if (!cbor.IsNaN()) {
-      using (var ms = new MemoryStream()) {
-        CBORObject.WriteFloatingPointValue(
-           ms,
-           cbor.AsDouble(),
-           2);
-        TestCommon.AssertByteArraysEqual(bytes, ms.ToArray());
+    [Test]
+    public void TestWriteFloatingPointValue() {
+      var r = new RandomGenerator();
+      var bytes = new byte[] { 0, 0, 0 };
+      for (var i = 0; i < 0x10000; ++i) {
+        bytes[0] = (byte)0xf9;
+        bytes[1] = (byte)((i >> 8) & 0xff);
+        bytes[2] = (byte)(i & 0xff);
+        CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
+        if (!cbor.IsNaN()) {
+          using (var ms = new MemoryStream()) {
+            CBORObject.WriteFloatingPointValue(
+               ms,
+               cbor.AsDouble(),
+               2);
+            TestCommon.AssertByteArraysEqual(bytes, ms.ToArray());
+          }
+          using (var ms = new MemoryStream()) {
+            CBORObject.WriteFloatingPointValue(
+               ms,
+               cbor.AsSingle(),
+               2);
+            TestCommon.AssertByteArraysEqual(bytes, ms.ToArray());
+          }
+        }
       }
-      using (var ms = new MemoryStream()) {
-        CBORObject.WriteFloatingPointValue(
-           ms,
-           cbor.AsSingle(),
-           2);
-        TestCommon.AssertByteArraysEqual(bytes, ms.ToArray());
+      // 32-bit values
+      bytes = new byte[5];
+      for (var i = 0; i < 100000; ++i) {
+        bytes[0] = (byte)0xfa;
+        for (var j = 1; j <= 4; ++j) {
+          bytes[j] = (byte)r.UniformInt(256);
+        }
+        CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
+        if (!cbor.IsNaN()) {
+          using (var ms = new MemoryStream()) {
+            CBORObject.WriteFloatingPointValue(
+               ms,
+               cbor.AsDouble(),
+               4);
+            TestCommon.AssertByteArraysEqual(bytes, ms.ToArray());
+          }
+          using (var ms = new MemoryStream()) {
+            CBORObject.WriteFloatingPointValue(
+               ms,
+               cbor.AsSingle(),
+               4);
+            TestCommon.AssertByteArraysEqual(bytes, ms.ToArray());
+          }
+        }
+      }
+      // 64-bit values
+      bytes = new byte[9];
+      for (var i = 0; i < 100000; ++i) {
+        bytes[0] = (byte)0xfb;
+        for (var j = 1; j <= 8; ++j) {
+          bytes[j] = (byte)r.UniformInt(256);
+        }
+        CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
+        if (!cbor.IsNaN()) {
+          using (var ms = new MemoryStream()) {
+            CBORObject.WriteFloatingPointValue(
+               ms,
+               cbor.AsDouble(),
+               8);
+            TestCommon.AssertByteArraysEqual(bytes, ms.ToArray());
+          }
+          CBORObject c2 = null;
+          byte[] c2bytes = null;
+          using (var ms = new MemoryStream()) {
+            CBORObject.WriteFloatingPointValue(
+               ms,
+               cbor.AsSingle(),
+               8);
+            c2bytes = ms.ToArray();
+            c2 = CBORObject.DecodeFromBytes(
+               c2bytes);
+          }
+          using (var ms = new MemoryStream()) {
+            CBORObject.WriteFloatingPointValue(
+               ms,
+               c2.AsSingle(),
+               8);
+            TestCommon.AssertByteArraysEqual(c2bytes, ms.ToArray());
+          }
+          if (i == 0) {
+            using (var ms = new MemoryStream()) {
+              try {
+                CBORObject.WriteFloatingPointValue(ms, cbor.AsSingle(), 5);
+                Assert.Fail("Should have failed");
+              } catch (ArgumentException) {
+                // NOTE: Intentionally empty
+              } catch (Exception ex) {
+                Assert.Fail(ex.ToString());
+                throw new InvalidOperationException(String.Empty, ex);
+              }
+              try {
+                CBORObject.WriteFloatingPointValue(null, cbor.AsSingle(), 4);
+                Assert.Fail("Should have failed");
+              } catch (ArgumentNullException) {
+                // NOTE: Intentionally empty
+              } catch (Exception ex) {
+                Assert.Fail(ex.ToString());
+                throw new InvalidOperationException(String.Empty, ex);
+              }
+            }
+          }
+        }
       }
     }
-  }
-  // 32-bit values
-  bytes = new byte[5];
-  for (var i = 0; i < 100000; ++i) {
-    bytes[0] = (byte)0xfa;
-    for (var j = 1; j <= 4; ++j) {
-      bytes[j] = (byte)r.UniformInt(256);
-    }
-    CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
-    if (!cbor.IsNaN()) {
-      using (var ms = new MemoryStream()) {
-        CBORObject.WriteFloatingPointValue(
-           ms,
-           cbor.AsDouble(),
-           4);
-        TestCommon.AssertByteArraysEqual(bytes, ms.ToArray());
-      }
-      using (var ms = new MemoryStream()) {
-        CBORObject.WriteFloatingPointValue(
-           ms,
-           cbor.AsSingle(),
-           4);
-        TestCommon.AssertByteArraysEqual(bytes, ms.ToArray());
-      }
-    }
-  }
-  // 64-bit values
-  bytes = new byte[9];
-  for (var i = 0; i < 100000; ++i) {
-    bytes[0] = (byte)0xfb;
-    for (var j = 1; j <= 8; ++j) {
-      bytes[j] = (byte)r.UniformInt(256);
-    }
-    CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
-    if (!cbor.IsNaN()) {
-      using (var ms = new MemoryStream()) {
-        CBORObject.WriteFloatingPointValue(
-           ms,
-           cbor.AsDouble(),
-           8);
-        TestCommon.AssertByteArraysEqual(bytes, ms.ToArray());
-      }
-      CBORObject c2 = null;
-      byte[] c2bytes = null;
-      using (var ms = new MemoryStream()) {
-        CBORObject.WriteFloatingPointValue(
-           ms,
-           cbor.AsSingle(),
-           8);
-        c2bytes = ms.ToArray();
-        c2 = CBORObject.DecodeFromBytes(
-           c2bytes);
-      }
-      using (var ms = new MemoryStream()) {
-        CBORObject.WriteFloatingPointValue(
-           ms,
-           c2.AsSingle(),
-           8);
-        TestCommon.AssertByteArraysEqual(c2bytes, ms.ToArray());
-      }
-      if (i == 0) {
-      using (var ms = new MemoryStream()) {
-        try {
- CBORObject.WriteFloatingPointValue(ms, cbor.AsSingle(), 5);
- Assert.Fail("Should have failed");
-} catch (ArgumentException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-        try {
- CBORObject.WriteFloatingPointValue(null, cbor.AsSingle(), 4);
- Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-      }
-      }
-    }
-  }
-}
 
     private static string DateTimeToString(
       int year,

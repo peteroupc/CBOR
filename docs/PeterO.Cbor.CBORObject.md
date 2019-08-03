@@ -87,6 +87,8 @@
 * <code>[Count](#Count)</code> - Gets the number of keys in this map, or the number of items in this array, or 0 if this item is neither an array nor a map.
 * <code>[DecodeFromBytes(byte[])](#DecodeFromBytes_byte)</code> - Generates a CBOR object from an array of CBOR-encoded bytes.
 * <code>[DecodeFromBytes(byte[], PeterO.Cbor.CBOREncodeOptions)](#DecodeFromBytes_byte_PeterO_Cbor_CBOREncodeOptions)</code> - Generates a CBOR object from an array of CBOR-encoded bytes, using the given CBOREncodeOptions object to control the decoding process.
+* <code>[DecodeSequenceFromBytes(byte[])](#DecodeSequenceFromBytes_byte)</code> - Generates a sequence of CBOR objects from an array of CBOR-encoded bytes.
+* <code>[DecodeSequenceFromBytes(byte[], PeterO.Cbor.CBOREncodeOptions)](#DecodeSequenceFromBytes_byte_PeterO_Cbor_CBOREncodeOptions)</code> - Generates a sequence of CBOR objects from an array of CBOR-encoded bytes.
 * <code>[Divide(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#Divide_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject)</code> - Divides a CBORObject object by the value of a CBORObject object.
 * <code>[EncodeToBytes()](#EncodeToBytes)</code> - Writes the binary representation of this CBOR object and returns a byte array of that representation.
 * <code>[EncodeToBytes(PeterO.Cbor.CBOREncodeOptions)](#EncodeToBytes_PeterO_Cbor_CBOREncodeOptions)</code> - Writes the binary representation of this CBOR object and returns a byte array of that representation, using the specified options for encoding the object to CBOR format.
@@ -173,6 +175,8 @@
 * <code>[Read(System.IO.Stream, PeterO.Cbor.CBOREncodeOptions)](#Read_System_IO_Stream_PeterO_Cbor_CBOREncodeOptions)</code> - Reads an object in CBOR format from a data stream, using the specified options to control the decoding process.
 * <code>[ReadJSON(System.IO.Stream)](#ReadJSON_System_IO_Stream)</code> - Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format.
 * <code>[ReadJSON(System.IO.Stream, PeterO.Cbor.CBOREncodeOptions)](#ReadJSON_System_IO_Stream_PeterO_Cbor_CBOREncodeOptions)</code> - Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format, using the specified options to control the decoding process.
+* <code>[ReadSequence(System.IO.Stream)](#ReadSequence_System_IO_Stream)</code> - Reads a sequence of objects in CBOR format from a data stream.
+* <code>[ReadSequence(System.IO.Stream, PeterO.Cbor.CBOREncodeOptions)](#ReadSequence_System_IO_Stream_PeterO_Cbor_CBOREncodeOptions)</code> - Reads a sequence of objects in CBOR format from a data stream.
 * <code>[Remainder(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#Remainder_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject)</code> - Finds the remainder that results when a CBORObject object is divided by the value of a CBORObject object.
 * <code>[Remove(object)](#Remove_object)</code> - If this object is an array, removes the first instance of the specified item (once converted to a CBOR object) from the array.
 * <code>[Remove(PeterO.Cbor.CBORObject)](#Remove_PeterO_Cbor_CBORObject)</code> - If this object is an array, removes the first instance of the specified item from the array.
@@ -1353,21 +1357,78 @@ The parameter  <i>data</i>
 
  * <i>data</i>: A byte array in which a single CBOR object is encoded.
 
- * <i>options</i>: The parameter  <i>options</i>
- is a CBOREncodeOptions object.
+ * <i>options</i>: Specifies options to control how the CBOR object is decoded. See [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) for more information.
 
 <b>Return Value:</b>
 
-A CBOR object decoded from the given byte array.
+A CBOR object decoded from the given byte array. Returns null (as opposed to CBORObject.Null) if  <i>data</i>
+ is empty and the AllowEmpty property is set on the given options object.
 
 <b>Exceptions:</b>
 
  * PeterO.Cbor.CBORException:
 There was an error in reading or parsing the data. This includes cases where not all of the byte array represents a CBOR object. This exception is also thrown if the parameter  <i>data</i>
- is empty.
+ is empty unless the AllowEmpty property is set on the given options object.
 
  * System.ArgumentNullException:
 The parameter  <i>data</i>
+ is null, or the parameter  <i>options</i>
+ is null.
+
+<a id="DecodeSequenceFromBytes_byte"></a>
+### DecodeSequenceFromBytes
+
+    public static PeterO.Cbor.CBORObject[] DecodeSequenceFromBytes(
+        byte[] data);
+
+ Generates a sequence of CBOR objects from an array of CBOR-encoded bytes.
+
+      <b>Parameters:</b>
+
+ * <i>data</i>: A byte array in which any number of CBOR objects (including zero) are encoded, one after the other. Can be empty, but cannot be null.
+
+<b>Return Value:</b>
+
+An array of CBOR objects decoded from the given byte array. Returns an empty array if  <i>data</i>
+ is empty.
+
+<b>Exceptions:</b>
+
+ * PeterO.Cbor.CBORException:
+There was an error in reading or parsing the data. This includes cases where the last CBOR object in the data was read only partly.
+
+ * System.ArgumentNullException:
+The parameter  <i>data</i>
+ is null.
+
+<a id="DecodeSequenceFromBytes_byte_PeterO_Cbor_CBOREncodeOptions"></a>
+### DecodeSequenceFromBytes
+
+    public static PeterO.Cbor.CBORObject[] DecodeSequenceFromBytes(
+        byte[] data,
+        PeterO.Cbor.CBOREncodeOptions options);
+
+ Generates a sequence of CBOR objects from an array of CBOR-encoded bytes.
+
+       <b>Parameters:</b>
+
+ * <i>data</i>: A byte array in which any number of CBOR objects (including zero) are encoded, one after the other. Can be empty, but cannot be null.
+
+ * <i>options</i>: Specifies options to control how the CBOR object is decoded. See [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) for more information. In this method, the AllowEmpty property is treated as always set regardless of that value as specified in this parameter.
+
+<b>Return Value:</b>
+
+An array of CBOR objects decoded from the given byte array. Returns an empty array if  <i>data</i>
+ is empty.
+
+<b>Exceptions:</b>
+
+ * PeterO.Cbor.CBORException:
+There was an error in reading or parsing the data. This includes cases where the last CBOR object in the data was read only partly.
+
+ * System.ArgumentNullException:
+The parameter  <i>data</i>
+ is null, or the parameter  <i>options</i>
  is null.
 
 <a id="Divide_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject"></a>
@@ -2364,7 +2425,7 @@ The parameter  <i>tagValue</i>
 
  Returns whether this object has only one tag and that tag is the given number, expressed as an arbitrary-precision integer.
 
-     <b>Parameters:</b>
+      <b>Parameters:</b>
 
  * <i>bigTagValue</i>: An arbitrary-precision integer.
 
@@ -2374,8 +2435,12 @@ The parameter  <i>tagValue</i>
 
 <b>Exceptions:</b>
 
+ * System.ArgumentNullException:
+The parameter  <i>bigTagValue</i>
+ is null.
+
  * System.ArgumentException:
-The parameter  <i>tagValue</i>
+The parameter  <i>bigTagValue</i>
  is less than 0.
 
 <a id="HasOneTag"></a>
@@ -2642,7 +2707,7 @@ The quotient of the two objects.
 
 <b>Return Value:</b>
 
-A Boolean object.
+ `true`  if one object's value is greater than another's; otherwise,  `false` .
 
 <b>Exceptions:</b>
 
@@ -2667,7 +2732,7 @@ The parameter  <i>a</i>
 
 <b>Return Value:</b>
 
-A Boolean object.
+ `true`  if one object's value is greater than or equal to another's; otherwise,  `false` .
 
 <b>Exceptions:</b>
 
@@ -2692,7 +2757,7 @@ The parameter  <i>a</i>
 
 <b>Return Value:</b>
 
-A Boolean object.
+ `true`  if one object's value is less than another's; otherwise,  `false` .
 
 <b>Exceptions:</b>
 
@@ -2717,7 +2782,7 @@ The parameter  <i>a</i>
 
 <b>Return Value:</b>
 
-A Boolean object.
+ `true`  if one object's value is less than or equal to another's; otherwise,  `false` .
 
 <b>Exceptions:</b>
 
@@ -2900,6 +2965,60 @@ An I/O error occurred.
 
  * PeterO.Cbor.CBORException:
 The data stream contains invalid encoding or is not in JSON format.
+
+<a id="ReadSequence_System_IO_Stream"></a>
+### ReadSequence
+
+    public static PeterO.Cbor.CBORObject[] ReadSequence(
+        System.IO.Stream stream);
+
+ Reads a sequence of objects in CBOR format from a data stream. This method will read CBOR objects from the stream until the end of the stream is reached or an error occurs, whichever happens first.
+
+      <b>Parameters:</b>
+
+ * <i>stream</i>: A readable data stream.
+
+<b>Return Value:</b>
+
+An array containing the CBOR objects that were read from the data stream. Returns an empty array if there is no unread data in the stream.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter  <i>stream</i>
+ is null, or the parameter "options" is null.
+
+ * PeterO.Cbor.CBORException:
+There was an error in reading or parsing the data, including if the last CBOR object was read only partially.
+
+<a id="ReadSequence_System_IO_Stream_PeterO_Cbor_CBOREncodeOptions"></a>
+### ReadSequence
+
+    public static PeterO.Cbor.CBORObject[] ReadSequence(
+        System.IO.Stream stream,
+        PeterO.Cbor.CBOREncodeOptions options);
+
+ Reads a sequence of objects in CBOR format from a data stream. This method will read CBOR objects from the stream until the end of the stream is reached or an error occurs, whichever happens first.
+
+       <b>Parameters:</b>
+
+ * <i>stream</i>: A readable data stream.
+
+ * <i>options</i>: Specifies the options to use when decoding the CBOR data stream. See CBOREncodeOptions for more information. In this method, the AllowEmpty property is treated as set regardless of the value of that property specified in this parameter.
+
+<b>Return Value:</b>
+
+An array containing the CBOR objects that were read from the data stream. Returns an empty array if there is no unread data in the stream.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter  <i>stream</i>
+ is null, or the parameter  <i>options</i>
+ is null.
+
+ * PeterO.Cbor.CBORException:
+There was an error in reading or parsing the data, including if the last CBOR object was read only partially.
 
 <a id="Remainder_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject"></a>
 ### Remainder

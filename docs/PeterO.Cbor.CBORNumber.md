@@ -3,17 +3,17 @@
     public sealed class CBORNumber :
         System.IComparable
 
- An instance of a number that CBOR or certain CBOR tags can represent. For this purpose, infinities and not-a-number or NaN values are considered numbers. Currently, this class can store one of the following kinds of numbers: 64-bit integers or binary floating-point numbers; or arbitrary-precision integers, decimal numbers, binary numbers, or rational numbers.
+ An instance of a number that CBOR or certain CBOR tags can represent. For this purpose, infinities and not-a-number or NaN values are considered numbers. Currently, this class can store one of the following kinds of numbers: 64-bit signed integers or binary floating-point numbers; or arbitrary-precision integers, decimal numbers, binary numbers, or rational numbers.
 
 ### Member Summary
 * <code>[Add(PeterO.Cbor.CBORNumber)](#Add_PeterO_Cbor_CBORNumber)</code> - Returns the sum of this number and another number.
 * <code>[CompareTo(PeterO.Cbor.CBORNumber)](#CompareTo_PeterO_Cbor_CBORNumber)</code> - Compares two CBOR numbers.
 * <code>[Divide(PeterO.Cbor.CBORNumber)](#Divide_PeterO_Cbor_CBORNumber)</code> - Returns the quotient of this number and another number.
-* <code>[FromCBORObject(PeterO.Cbor.CBORObject)](#FromCBORObject_PeterO_Cbor_CBORObject)</code> - Creates a CBOR number object from a CBOR object representing a number (that is, one for which the IsNumber property in .
-* <code>[Multiply(PeterO.Cbor.CBORNumber)](#Multiply_PeterO_Cbor_CBORNumber)</code> - Not documented yet.
+* <code>[FromCBORObject(PeterO.Cbor.CBORObject)](#FromCBORObject_PeterO_Cbor_CBORObject)</code> - Creates a CBOR number object from a CBOR object representing a number (that is, one for which the IsNumber property in.
+* <code>[Multiply(PeterO.Cbor.CBORNumber)](#Multiply_PeterO_Cbor_CBORNumber)</code> - Returns a CBOR number expressing the product of this number and the given number.
 * <code>[Negate()](#Negate)</code> - Returns a CBOR number with the same value as this one but with the sign reversed.
 * <code>[Remainder(PeterO.Cbor.CBORNumber)](#Remainder_PeterO_Cbor_CBORNumber)</code> - Returns the remainder when this number is divided by another number.
-* <code>[Subtract(PeterO.Cbor.CBORNumber)](#Subtract_PeterO_Cbor_CBORNumber)</code> - Not documented yet.
+* <code>[Subtract(PeterO.Cbor.CBORNumber)](#Subtract_PeterO_Cbor_CBORNumber)</code> - Returns a number that expresses this number minus another.
 * <code>[ToCBORObject()](#ToCBORObject)</code> - Converts this object's value to a CBOR object.
 * <code>[ToString()](#ToString)</code> - Returns the value of this object in text form.
 
@@ -88,7 +88,7 @@ The parameter  <i>b</i>
     public static PeterO.Cbor.CBORNumber FromCBORObject(
         PeterO.Cbor.CBORObject o);
 
- Creates a CBOR number object from a CBOR object representing a number (that is, one for which the IsNumber property in .NET or the isNumber() method in Java returns true).
+ Creates a CBOR number object from a CBOR object representing a number (that is, one for which the IsNumber property in.NET or the isNumber() method in Java returns true).
 
     <b>Parameters:</b>
 
@@ -104,15 +104,15 @@ A CBOR number object, or null if the given CBOR object is null or does not repre
     public PeterO.Cbor.CBORNumber Multiply(
         PeterO.Cbor.CBORNumber b);
 
- Not documented yet.
+ Returns a CBOR number expressing the product of this number and the given number.
 
      <b>Parameters:</b>
 
- * <i>b</i>: Not documented yet.
+ * <i>b</i>: The second operand to the multiplication operation.
 
 <b>Return Value:</b>
 
-A CBORNumber object.
+A number expressing the product of this number and the given number.
 
 <b>Exceptions:</b>
 
@@ -159,15 +159,15 @@ The parameter  <i>b</i>
     public PeterO.Cbor.CBORNumber Subtract(
         PeterO.Cbor.CBORNumber b);
 
- Not documented yet.
+ Returns a number that expresses this number minus another.
 
      <b>Parameters:</b>
 
- * <i>b</i>: Not documented yet.
+ * <i>b</i>: The second operand to the subtraction.
 
 <b>Return Value:</b>
 
-A CBORNumber object.
+A CBOR number that expresses this number minus the given number.
 
 <b>Exceptions:</b>
 

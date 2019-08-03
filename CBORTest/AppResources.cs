@@ -8,13 +8,13 @@ namespace Test {
     private readonly ResourceManager mgr;
 #pragma warning disable CA1801 // name used in one circumstance
     public AppResources(string name) {
-#if NET20 || NET40
+      // #if NET20 || NET40
       this.mgr = new ResourceManager(
           name,
           Assembly.GetExecutingAssembly());
-#else
-      this.mgr = new ResourceManager(typeof(AppResources));
-#endif
+      // #else
+      // this.mgr = new ResourceManager(typeof(AppResources));
+      // #endif
     }
 #pragma warning restore CA1801
 

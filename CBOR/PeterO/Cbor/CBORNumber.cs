@@ -626,7 +626,8 @@ Double.IsNaN(f)) {
     /// number.</summary>
     /// <param name='b'>The number to add with this one.</param>
     /// <returns>The sum of this number and another number.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='b'/> is null.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='b'/> is null.</exception>
     public CBORNumber Add(CBORNumber b) {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
@@ -673,16 +674,13 @@ Double.IsNaN(f)) {
       }
     }
 
-    /// <summary>Returns a number that expresses this number minus another.
-    /// </summary>
-    /// <param name='b'>The second operand to the subtraction.
-    /// </param>
-    /// <returns>A CBOR number that expresses this number minus the given number.
-    /// </returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='b'/>
-    /// is null.
-    /// </exception>
+    /// <summary>Returns a number that expresses this number minus
+    /// another.</summary>
+    /// <param name='b'>The second operand to the subtraction.</param>
+    /// <returns>A CBOR number that expresses this number minus the given
+    /// number.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='b'/> is null.</exception>
     public CBORNumber Subtract(CBORNumber b) {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
@@ -725,16 +723,14 @@ Double.IsNaN(f)) {
       }
     }
 
-    /// <summary>Returns a CBOR number expressing the product of this number and the given number.
-    /// </summary>
-    /// <param name='b'>The second operand to the multiplication operation.
-    /// </param>
-    /// <returns>A number expressing the product of this number and the given number.
-    /// </returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='b'/>
-    /// is null.
-    /// </exception>
+    /// <summary>Returns a CBOR number expressing the product of this
+    /// number and the given number.</summary>
+    /// <param name='b'>The second operand to the multiplication
+    /// operation.</param>
+    /// <returns>A number expressing the product of this number and the
+    /// given number.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='b'/> is null.</exception>
     public CBORNumber Multiply(CBORNumber b) {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
@@ -795,7 +791,8 @@ Double.IsNaN(f)) {
     /// <param name='b'>The right-hand side (divisor) to the division
     /// operation.</param>
     /// <returns>The quotient of this number and another one.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='b'/> is null.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='b'/> is null.</exception>
     public CBORNumber Divide(CBORNumber b) {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
@@ -893,7 +890,8 @@ CBORNumber.FromObject(EDecimal.PositiveInfinity));
     /// operation.</param>
     /// <returns>The remainder when this number is divided by the other
     /// number.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='b'/> is null.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='b'/> is null.</exception>
     public CBORNumber Remainder(CBORNumber b) {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
@@ -944,7 +942,7 @@ CBORNumber.FromObject(EDecimal.PositiveInfinity));
     /// or 0, if both values are equal; or greater than 0, if this value is
     /// less than the other object or if the other object is
     /// null.</returns>
-    /// <exception cref='System.ArgumentException'>An internal error
+    /// <exception cref='ArgumentException'>An internal error
     /// occurred.</exception>
     public int CompareTo(CBORNumber other) {
       if (other == null) {

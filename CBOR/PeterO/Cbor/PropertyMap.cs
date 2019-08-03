@@ -108,7 +108,8 @@ namespace PeterO.Cbor {
 #else
     foreach (var attr in t.CustomAttributes) {
 #endif
-        if (attr.GetType().FullName.Equals(name)) {
+        if (attr.GetType().FullName.Equals(name,
+           StringComparison.Ordinal)) {
           return true;
         }
       }

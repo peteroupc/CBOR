@@ -576,8 +576,6 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>This is an internal API.</summary>
-    /// <value>Internal API value.</value>
     internal int Sign {
       get {
         switch (this.integerMode) {

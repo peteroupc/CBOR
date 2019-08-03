@@ -8,8 +8,10 @@ namespace PeterO.Cbor {
     private readonly IDictionary<string, string> dict = new
 Dictionary<string, string>();
     public OptionsParser(string options) {
-      // ArgumentAssert.NotNull(options);
-      if(options.Length>0) {
+      if (options == null) {
+        throw new ArgumentNullException(nameof(options));
+      }
+      if (options.Length > 0) {
         string[] optionsArray = options.Split(';');
         foreach (string opt in optionsArray) {
           int index = opt.IndexOf('=');

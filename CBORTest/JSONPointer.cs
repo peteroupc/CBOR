@@ -206,8 +206,8 @@ this.refValue = refValue;
         int icount = ((CBORObject)this.jsonobj).Count;
         return eivalue.Sign >= 0 &&
                     eivalue.CompareTo(EInteger.FromInt32(icount)) < 0;
-      } else if (this.jsonobj.Type == CBORType.Map) {
-        return ((CBORObject)this.jsonobj).ContainsKey(this.refValue);
+                  } else if (this.jsonobj.Type == CBORType.Map) {
+                    return ((CBORObject)this.jsonobj).ContainsKey(this.refValue);
       } else {
         return this.refValue.Length == 0;
       }
@@ -249,7 +249,7 @@ this.refValue = refValue;
         if (index >= 0 && index < ((CBORObject)this.jsonobj).Count) {
     tmpcbor = this.jsonobj;
     return tmpcbor[index];
-        } else {
+  } else {
           return null;
         }
       } else if (this.jsonobj.Type == CBORType.Map) {
