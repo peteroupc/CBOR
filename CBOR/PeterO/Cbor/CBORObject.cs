@@ -3537,7 +3537,15 @@ options) {
       }
     }
 
-    private long AsDoubleBits() {
+
+    /// <summary>Converts this object to the bits of a 64-bit floating-point number if
+    /// this CBOR object's type is FloatingPoint. This method disregards
+    /// the tags this object has, if any.</summary>
+    /// <returns>The bits of a 64-bit floating-point number stored by this
+    /// object.  The most significant bit is the sign (set means negative, clear means nonnegative); the next most significant 11 bits are the exponent area; and the remaining bits are the mantissa area.  If all the bits of the exponent area are set and the mantissa area is 0, this indicates infinity. If all the bits of the exponent area are set and the mantissa area is other than 0, this indicates not-a-number (NaN).</returns>
+    /// <exception cref='System.InvalidOperationException'>This object's
+    /// type is not <c>CBORType.FloatingPoint</c>.</exception>
+    public long AsDoubleBits() {
       switch (this.Type) {
         case CBORType.FloatingPoint:
           return (long)this.ThisItem;
@@ -3548,7 +3556,7 @@ options) {
     /// <summary>Converts this object to a 64-bit floating-point number if
     /// this CBOR object's type is FloatingPoint. This method disregards
     /// the tags this object has, if any.</summary>
-    /// <returns>The 64-bit floating-point number stored by to this
+    /// <returns>The 64-bit floating-point number stored by this
     /// object.</returns>
     /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not <c>CBORType.FloatingPoint</c>.</exception>
