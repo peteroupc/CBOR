@@ -8,11 +8,12 @@ at: http://peteroupc.github.io/
 using System;
 
 namespace PeterO.Cbor {
-    /// <summary>Represents a type that a CBOR object can have.</summary>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.Cbor.CBORType"]/*'/>
   public enum CBORType {
-    /// <summary>A number of any kind, including integers, big integers, floating point
-    /// numbers, and decimal numbers. The floating-point value Not-a-Number is
-    /// also included in the Number type.</summary>
+    /// <summary>A number of any kind, including integers, big integers,
+    /// floating point numbers, and decimal numbers. The floating-point
+    /// value Not-a-Number is also included in the Number type.</summary>
     [Obsolete("Use the IsNumber property of CBORObject to determine" +
        " whether a CBOR object represents a number.")]
     Number,
@@ -20,7 +21,8 @@ namespace PeterO.Cbor {
     /// <summary>The simple values true and false.</summary>
     Boolean,
 
-    /// <summary>A "simple value" other than floating point values, true, and false.</summary>
+    /// <summary>A "simple value" other than floating point values, true,
+    /// and false.</summary>
     SimpleValue,
 
     /// <summary>An array of bytes.</summary>

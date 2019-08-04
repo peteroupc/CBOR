@@ -8,7 +8,8 @@ at: http://peteroupc.github.io/
 using System;
 #pragma warning disable 618
 namespace PeterO.Cbor {
-    /// <summary>Implements CBOR tag 3.</summary>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.Cbor.CBORTag3"]/*'/>
   internal class CBORTag3 : ICBORTag
   {
     public CBORTypeFilter GetTypeFilter() {

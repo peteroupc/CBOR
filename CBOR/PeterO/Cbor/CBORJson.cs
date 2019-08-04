@@ -79,7 +79,8 @@ namespace PeterO.Cbor {
                       c <<= 4;
                       c |= ch + 10 - 'a';
                     } else {
-                      this.reader.RaiseError("Invalid Unicode escaped character");
+                      this.reader.RaiseError("Invalid Unicode escaped" +
+"\u0020character");
                     }
                   }
                   if ((c & 0xf800) != 0xd800) {
@@ -103,7 +104,8 @@ namespace PeterO.Cbor {
                         c2 <<= 4;
                         c2 |= ch + 10 - 'a';
                       } else {
-                        this.reader.RaiseError("Invalid Unicode escaped character");
+                        this.reader.RaiseError("Invalid Unicode escaped" +
+"\u0020character");
                       }
                     }
                     if ((c2 & 0xfc00) != 0xdc00) {
@@ -133,7 +135,8 @@ namespace PeterO.Cbor {
               if ((c >> 16) == 0) {
                 this.sb.Append((char)c);
               } else {
-                this.sb.Append((char)((((c - 0x10000) >> 10) & 0x3ff) | 0xd800));
+                this.sb.Append((char)((((c - 0x10000) >> 10) & 0x3ff) |
+0xd800));
                 this.sb.Append((char)(((c - 0x10000) & 0x3ff) | 0xdc00));
               }
               break;
@@ -176,7 +179,8 @@ namespace PeterO.Cbor {
           }
         case 't': {
             // Parse true
-            if (this.reader.ReadChar() != 'r' || this.reader.ReadChar() != 'u' ||
+            if (this.reader.ReadChar() != 'r' || this.reader.ReadChar() !=
+'u' ||
                 this.reader.ReadChar() != 'e') {
               this.reader.RaiseError("Value can't be parsed.");
             }
@@ -185,8 +189,10 @@ namespace PeterO.Cbor {
           }
         case 'f': {
             // Parse false
-            if (this.reader.ReadChar() != 'a' || this.reader.ReadChar() != 'l' ||
-                this.reader.ReadChar() != 's' || this.reader.ReadChar() != 'e') {
+            if (this.reader.ReadChar() != 'a' || this.reader.ReadChar() !=
+'l' ||
+                this.reader.ReadChar() != 's' || this.reader.ReadChar() !=
+'e') {
               this.reader.RaiseError("Value can't be parsed.");
             }
             nextChar[0] = SkipWhitespaceJSON(this.reader);
@@ -194,7 +200,8 @@ namespace PeterO.Cbor {
           }
         case 'n': {
             // Parse null
-            if (this.reader.ReadChar() != 'u' || this.reader.ReadChar() != 'l' ||
+            if (this.reader.ReadChar() != 'u' || this.reader.ReadChar() !=
+'l' ||
                 this.reader.ReadChar() != 'l') {
               this.reader.RaiseError("Value can't be parsed.");
             }
@@ -227,7 +234,7 @@ namespace PeterO.Cbor {
               obj = cval == 0 ?
               CBORDataUtilities.ParseJSONNumber("-0", true, false, true) :
                 CBORObject.FromObject(cval);
-            } else {
+              } else {
               str = sb.ToString();
               obj = CBORDataUtilities.ParseJSONNumber(str);
               if (obj == null) {
@@ -388,8 +395,7 @@ namespace PeterO.Cbor {
             break;
           case '}':
             return CBORObject.FromRaw(myHashMap);
-          default:
-            this.reader.RaiseError("Expected a ',' or '}'");
+          default: this.reader.RaiseError("Expected a ',' or '}'");
             break;
         }
       }

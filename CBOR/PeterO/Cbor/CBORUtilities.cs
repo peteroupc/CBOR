@@ -11,8 +11,8 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-    /// <summary>Contains utility methods that may have use outside of the CBORObject
-    /// class.</summary>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.Cbor.CBORUtilities"]/*'/>
   internal static class CBORUtilities {
     private const string HexAlphabet = "0123456789ABCDEF";
 
@@ -392,8 +392,7 @@ namespace PeterO.Cbor {
     public static bool NameStartsWithWord(String name, String word) {
       int wl = word.Length;
       return name.Length > wl && name.Substring(0, wl).Equals(word,
-  StringComparison.Ordinal) &&
-              !(name[wl] >= 'a' && name[wl] <= 'z') &&
+  StringComparison.Ordinal) && !(name[wl] >= 'a' && name[wl] <= 'z') &&
               !(name[wl] >= '0' && name[wl] <= '9');
     }
 

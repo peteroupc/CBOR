@@ -3220,8 +3220,8 @@ throw new InvalidOperationException(String.Empty, ex);
           }
         }
         using (var ms = new MemoryStream(new byte[] {
-          0xef, 0xbb, 0xbf, 0x7b,
-          0x7d
+          0xef, 0xbb, 0xbf,
+          0x7b, 0x7d
         })) {
           try {
             CBORObject.ReadJSON(ms);
@@ -3232,8 +3232,8 @@ throw new InvalidOperationException(String.Empty, ex);
         }
         // whitespace followed by BOM
         using (var ms2 = new MemoryStream(new byte[] {
-          0x20, 0xef, 0xbb, 0xbf,
-          0x7b, 0x7d
+          0x20, 0xef, 0xbb,
+          0xbf, 0x7b, 0x7d
         })) {
           try {
             CBORObject.ReadJSON(ms2);
@@ -3269,8 +3269,8 @@ throw new InvalidOperationException(String.Empty, ex);
         }
         // two BOMs
         using (var ms3 = new MemoryStream(new byte[] {
-          0xef, 0xbb, 0xbf, 0xef,
-          0xbb, 0xbf, 0x7b, 0x7d
+          0xef, 0xbb, 0xbf,
+          0xef, 0xbb, 0xbf, 0x7b, 0x7d
         })) {
           try {
             CBORObject.ReadJSON(ms3);
@@ -3344,8 +3344,7 @@ throw new InvalidOperationException(String.Empty, ex);
         }
         using (var msjson = new MemoryStream(new byte[] {
           0xef, 0xbb, 0xbf,
-          0x74, 0x72, 0x75,
-          0x65
+          0x74, 0x72, 0x75, 0x65
         })) {
           Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         }
@@ -4731,8 +4730,8 @@ throw new InvalidOperationException(String.Empty, ex);
           0, 1, 23, 24, -1, -23, -24, -25,
           0x7f, -128, 255, 256, 0x7fff, -32768, 0x7fff,
           -32768, -65536, -32769, -65537,
-          0x7fffff, 0x7fff7f, 0x7fff7fff, 0x7fff7fff7fL,
-          0x7fff7fff7fffL, 0x7fff7fff7fff7fL, 0x7fff7fff7fff7fffL,
+          0x7fffff, 0x7fff7f, 0x7fff7fff, 0x7fff7fff7fL, 0x7fff7fff7fffL,
+          0x7fff7fff7fff7fL, 0x7fff7fff7fff7fffL,
           Int64.MaxValue, Int64.MinValue, Int32.MinValue,
           Int32.MaxValue
         };

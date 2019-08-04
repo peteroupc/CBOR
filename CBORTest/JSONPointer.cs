@@ -204,7 +204,8 @@ if (!(refValue != null)) {
         return eivalue.Sign >= 0 &&
                     eivalue.CompareTo(EInteger.FromInt32(icount)) < 0;
                   } else if (this.jsonobj.Type == CBORType.Map) {
-                    return ((CBORObject)this.jsonobj).ContainsKey(this.refValue);
+                    return
+((CBORObject)this.jsonobj).ContainsKey(this.refValue);
       } else {
         return this.refValue.Length == 0;
       }

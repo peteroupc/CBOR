@@ -2759,7 +2759,7 @@
       <paramref name='t'/>
        is null.
     </exception>
-    <exception cref='System.CBORException'>The given object's nesting is too deep, or another error occurred when
+    <exception cref='PeterO.Cbor.CBORException'>The given object's nesting is too deep, or another error occurred when
       serializing the object.
     </exception>
     <example><para>Java offers no easy way to express a generic type, at least none as easy
@@ -2808,7 +2808,7 @@
       <paramref name='t'/>
        is null.
     </exception>
-    <exception cref='System.CBORException'>The given object's nesting is too deep, or another error occurred when
+    <exception cref='PeterO.Cbor.CBORException'>The given object's nesting is too deep, or another error occurred when
       serializing the object.
     </exception>
   </doc>
@@ -3009,7 +3009,7 @@
       <paramref name='t'/>
        is null.
     </exception>
-    <exception cref='System.CBORException'>The given object's nesting is too deep, or another error occurred when
+    <exception cref='PeterO.Cbor.CBORException'>The given object's nesting is too deep, or another error occurred when
       serializing the object.
     </exception>
     <example><para>Java offers no easy way to express a generic type, at least none as easy
@@ -3058,7 +3058,7 @@
       <paramref name='t'/>
        is null.
     </exception>
-    <exception cref='System.CBORException'>The given object's nesting is too deep, or another error occurred when
+    <exception cref='PeterO.Cbor.CBORException'>The given object's nesting is too deep, or another error occurred when
       serializing the object.
     </exception>
   </doc>

@@ -9,41 +9,8 @@ using System;
 using PeterO.Numbers;
 
 namespace PeterO {
-    /// <summary><para><b>This class is largely obsolete. It will be replaced by a new version
-    /// of this class in a different namespace/package and library, called
-    /// <c>PeterO.Numbers.ERational
-    /// </c>
-    /// in the
-    /// <a href='https://www.nuget.org/packages/PeterO.Numbers'>
-    /// <c>PeterO.Numbers
-    /// </c>
-    /// </a>
-    /// library (in .NET), or
-    /// <c>com.upokecenter.numbers.ERational
-    /// </c>
-    /// in the
-    /// <a href='https://github.com/peteroupc/numbers-java'>
-    /// <c>com.github.peteroupc/numbers
-    /// </c>
-    /// </a>
-    /// artifact (in Java). This new class can be used in the
-    /// <c>CBORObject.FromObject(object)
-    /// </c>
-    /// method (by including the new library in your code, among other
-    /// things).
-    /// </b>
-    /// </para>
-    /// Arbitrary-precision rational number. This class can't be inherited; this
-    /// is a change in version 2.0 from previous versions, where the class was
-    /// inadvertently left inheritable.
-    /// <para><b>Thread safety:
-    /// </b>
-    /// Instances of this class are immutable, so they are inherently safe for
-    /// use by multiple threads. Multiple instances of this object with the same
-    /// properties are interchangeable, so they should not be compared using the
-    /// "==" operator (which might only check if each side of the operator is
-    /// the same instance).
-    /// </para></summary>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.ExtendedRational"]/*'/>
     [Obsolete(
   "Use ERational from PeterO.Numbers/com.upokecenter.numbers and the output" +
 "\u0020of this class's ToString method.")]
@@ -66,7 +33,8 @@ namespace PeterO {
     public static readonly ExtendedRational One =
       FromBigIntegerInternal(BigInteger.One);
 
-    /// <summary>Positive infinity, greater than any other number.</summary>
+    /// <summary>Positive infinity, greater than any other
+    /// number.</summary>
     public static readonly ExtendedRational PositiveInfinity = new
       ExtendedRational(ERational.PositiveInfinity);
 
@@ -85,13 +53,14 @@ namespace PeterO {
 
     private readonly ERational er;
 
-    /// <summary>Initializes a new instance of the <see cref='PeterO.ExtendedRational'/> class.</summary><param name='numerator'>An arbitrary-precision integer.
-    /// </param><param name='denominator'>Another arbitrary-precision integer.
-    /// </param><exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='numerator'/>
-    /// or
-    /// <paramref name='denominator'/>
-    /// is null.</exception>
+    /// <summary>Initializes a new instance of the
+    /// <see cref='PeterO.ExtendedRational'/> class.</summary>
+    /// <param name='numerator'>An arbitrary-precision integer.</param>
+    /// <param name='denominator'>Another arbitrary-precision
+    /// integer.</param>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='numerator'/> or <paramref name='denominator'/> is
+    /// null.</exception>
     public ExtendedRational(BigInteger numerator, BigInteger denominator) {
       if (denominator == null) {
         throw new ArgumentNullException(nameof(denominator));
@@ -109,22 +78,16 @@ namespace PeterO {
       this.er = er;
     }
 
-    /// <summary>Gets this object's denominator.</summary><value>This object's denominator.
-    /// </value>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.ExtendedRational.Denominator"]/*'/>
     public BigInteger Denominator {
       get {
         return new BigInteger(this.Er.Denominator);
       }
     }
 
-    /// <summary>Gets a value indicating whether this object is finite (not infinity or
-    /// NaN).</summary><value><c>true
-    /// </c>
-    /// If this object is finite (not infinity or NaN); otherwise, .
-    /// <c>false
-    /// </c>
-    /// .
-    /// </value>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.ExtendedRational.IsFinite"]/*'/>
     [Obsolete("Use ERational from PeterO.Numbers/com.upokecenter.numbers.")]
     public bool IsFinite {
       get {
@@ -132,27 +95,16 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Gets a value indicating whether this object's value is negative (including
-    /// negative zero).</summary><value><c>true
-    /// </c>
-    /// If this object's value is negative; otherwise, .
-    /// <c>false
-    /// </c>
-    /// .
-    /// </value>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.ExtendedRational.IsNegative"]/*'/>
     public bool IsNegative {
       get {
         return this.Er.IsNegative;
       }
     }
 
-    /// <summary>Gets a value indicating whether this object's value equals 0.</summary><value><c>true
-    /// </c>
-    /// If this object's value equals 0; otherwise, .
-    /// <c>false
-    /// </c>
-    /// .
-    /// </value>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.ExtendedRational.IsZero"]/*'/>
     [Obsolete("Use ERational from PeterO.Numbers/com.upokecenter.numbers.")]
     public bool IsZero {
       get {
@@ -160,19 +112,16 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Gets this object's numerator.</summary><value>This object's numerator. If this object is a not-a-number value, returns
-    /// the diagnostic information (which will be negative if this object is
-    /// negative).
-    /// </value>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.ExtendedRational.Numerator"]/*'/>
     public BigInteger Numerator {
       get {
         return new BigInteger(this.Er.Numerator);
       }
     }
 
-    /// <summary>Gets the sign of this rational number.</summary><value>Zero if this value is zero or negative zero; -1 if this value is less than
-    /// 0; and 1 if this value is greater than 0.
-    /// </value>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.ExtendedRational.Sign"]/*'/>
     [Obsolete("Use ERational from PeterO.Numbers/com.upokecenter.numbers.")]
     public int Sign {
       get {
@@ -180,9 +129,8 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Gets this object's numerator with the sign removed.</summary><value>This object's numerator. If this object is a not-a-number value, returns
-    /// the diagnostic information.
-    /// </value>
+    /// <include file='../docs.xml'
+    ///   path='docs/doc[@name="P:PeterO.ExtendedRational.UnsignedNumerator"]/*'/>
     public BigInteger UnsignedNumerator {
       get {
         return new BigInteger(this.Er.UnsignedNumerator);
@@ -195,14 +143,8 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Creates a rational number with the given numerator and denominator.</summary><param name='numeratorSmall'>The parameter
-    /// <paramref name='numeratorSmall'/>
-    /// is a 32-bit signed integer.
-    /// </param><param name='denominatorSmall'>The parameter
-    /// <paramref name='denominatorSmall'/>
-    /// is a 32-bit signed integer.
-    /// </param><returns>An arbitrary-precision rational number.
-    /// </returns>
+    /// <include file='../docs.xml'
+    ///   path='docs/doc[@name="M:PeterO.ExtendedRational.Create(System.Int32,System.Int32)"]/*'/>
     public static ExtendedRational Create(
       int numeratorSmall,
       int denominatorSmall) {
@@ -212,14 +154,8 @@ namespace PeterO {
     denominatorSmall));
     }
 
-    /// <summary>Creates a rational number with the given numerator and denominator.</summary><param name='numerator'>An arbitrary-precision integer.
-    /// </param><param name='denominator'>Another arbitrary-precision integer.
-    /// </param><returns>An arbitrary-precision rational number.
-    /// </returns><exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='numerator'/>
-    /// or
-    /// <paramref name='denominator'/>
-    /// is null.</exception>
+    /// <include file='../docs.xml'
+    ///   path='docs/doc[@name="M:PeterO.ExtendedRational.Create(PeterO.BigInteger,PeterO.BigInteger)"]/*'/>
     public static ExtendedRational Create(
       BigInteger numerator,
       BigInteger denominator) {
@@ -235,10 +171,8 @@ namespace PeterO {
     denominator.Ei));
     }
 
-    /// <summary>Converts this object to a text string.</summary><returns>A string representation of this object. The result can be Infinity, NaN,
-    /// or sNaN (with a minus sign before it for negative values), or a number of
-    /// the following form: [-]numerator/denominator.
-    /// </returns>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.ExtendedRational.ToString"]/*'/>
     public override string ToString() {
       return this.Er.ToString();
     }
@@ -255,50 +189,27 @@ namespace PeterO {
       return new ExtendedRational(ERational.FromEInteger(bigint.Ei));
     }
 
-    /// <summary>Compares this value to another.</summary><param name='other'>The parameter
-    /// <paramref name='other'/>
-    /// is an ExtendedRational object.
-    /// </param><returns>Less than 0 if this value is less than, 0 if equal to, or greater than 0
-    /// if greater than the other value.
-    /// </returns>
+    /// <include file='../docs.xml'
+    ///   path='docs/doc[@name="M:PeterO.ExtendedRational.CompareTo(PeterO.ExtendedRational)"]/*'/>
     public int CompareTo(ExtendedRational other) {
       return this.Er.CompareTo(other == null ? null : other.Er);
     }
 
-    /// <summary>Checks whether this and another value are equal.</summary><param name='other'>The parameter
-    /// <paramref name='other'/>
-    /// is an ExtendedRational object.
-    /// </param><returns>Either
-    /// <c>true
-    /// </c>
-    /// or
-    /// <c>false
-    /// </c>
-    /// .
-    /// </returns>
+    /// <include file='../docs.xml'
+    ///   path='docs/doc[@name="M:PeterO.ExtendedRational.Equals(PeterO.ExtendedRational)"]/*'/>
     public bool Equals(ExtendedRational other) {
       return this.Er.Equals(other == null ? null : other.Er);
     }
 
-    /// <summary>Checks whether this and another value are equal.</summary><param name='obj'>The parameter
-    /// <paramref name='obj'/>
-    /// is an arbitrary object.
-    /// </param><returns>Either
-    /// <c>true
-    /// </c>
-    /// or
-    /// <c>false
-    /// </c>
-    /// .
-    /// </returns>
+    /// <include file='../docs.xml'
+    ///   path='docs/doc[@name="M:PeterO.ExtendedRational.Equals(System.Object)"]/*'/>
     public override bool Equals(object obj) {
       var other = obj as ExtendedRational;
       return this.Er.Equals(other == null ? null : other.Er);
     }
 
-    /// <summary>Calculates the hash code for this object. No application or process IDs
-    /// are used in the hash code calculation.</summary><returns>A 32-bit signed integer.
-    /// </returns>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.ExtendedRational.GetHashCode"]/*'/>
     public override int GetHashCode() {
       return this.Er.GetHashCode();
     }

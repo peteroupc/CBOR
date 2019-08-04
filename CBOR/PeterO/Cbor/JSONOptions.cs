@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace PeterO.Cbor {
-    /// <seealso cref='M:PeterO.Cbor.CBORObject.ToJSONString'/><summary>Includes options to control how CBOR objects are converted to JSON.</summary>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.Cbor.JSONOptions"]/*'/>
     public sealed class JSONOptions {
-    /// <summary>Initializes a new instance of the <see cref='PeterO.Cbor.JSONOptions'/> class with default options.</summary>
+    /// <summary>Initializes a new instance of the
+    /// <see cref='PeterO.Cbor.JSONOptions'/> class with default
+    /// options.</summary>
     public JSONOptions() : this(false) {
 }
 
@@ -26,14 +29,12 @@ namespace PeterO.Cbor {
     }
 #pragma warning restore CS0618
 
-    /// <summary>The default options for converting CBOR objects to JSON.</summary>
+    /// <summary>The default options for converting CBOR objects to
+    /// JSON.</summary>
     public static readonly JSONOptions Default = new JSONOptions();
 
-    /// <summary>Gets a value indicating whether padding is written out when writing
-    /// base64url or traditional base64 to JSON.</summary><value>The default is false, no padding.
-    /// </value><remarks>
-    /// The padding character is '='.
-    /// </remarks>
+    /// <include file='../../docs.xml'
+    ///   path='docs/doc[@name="P:PeterO.Cbor.JSONOptions.Base64Padding"]/*'/>
     [Obsolete("This option may have no effect in the future. A future version" +
 " may, by default, include necessary padding when writing traditional" +
 " base64" +

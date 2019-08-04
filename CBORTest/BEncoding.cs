@@ -281,7 +281,7 @@ namespace PeterO {
           stream.WriteByte(unchecked((byte)((byte)0x65)));
         }
       } else if (obj.Type == CBORType.Array) {
-        stream.WriteByte(unchecked((byte)((byte)0x6C)));
+        stream.WriteByte(unchecked((byte)((byte)0x6c)));
         for (var i = 0; i < obj.Count; ++i) {
           Write(obj[i], stream);
         }

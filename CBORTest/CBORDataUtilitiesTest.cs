@@ -185,43 +185,50 @@ Assert.AreEqual(
   stringTemp);
 }
       {
-        string stringTemp = CBORDataUtilities.ParseJSONNumber("-0E+0").ToString();
+        string stringTemp =
+CBORDataUtilities.ParseJSONNumber("-0E+0").ToString();
 Assert.AreEqual(
   "0",
   stringTemp);
 }
       {
-        string stringTemp = CBORDataUtilities.ParseJSONNumber("-0E-0").ToString();
+        string stringTemp =
+CBORDataUtilities.ParseJSONNumber("-0E-0").ToString();
 Assert.AreEqual(
   "0",
   stringTemp);
 }
       {
-        string stringTemp = CBORDataUtilities.ParseJSONNumber("-0E-1").ToString();
+        string stringTemp =
+CBORDataUtilities.ParseJSONNumber("-0E-1").ToString();
 Assert.AreEqual(
   "0.0",
   stringTemp);
 }
       {
-        string stringTemp = CBORDataUtilities.ParseJSONNumber("-0.00").ToString();
+        string stringTemp =
+CBORDataUtilities.ParseJSONNumber("-0.00").ToString();
 Assert.AreEqual(
   "0.00",
   stringTemp);
 }
       {
-        string stringTemp = CBORDataUtilities.ParseJSONNumber("-0.00E+0").ToString();
+        string stringTemp =
+CBORDataUtilities.ParseJSONNumber("-0.00E+0").ToString();
 Assert.AreEqual(
   "0.00",
   stringTemp);
 }
       {
-        string stringTemp = CBORDataUtilities.ParseJSONNumber("-0.00E-0").ToString();
+        string stringTemp =
+CBORDataUtilities.ParseJSONNumber("-0.00E-0").ToString();
 Assert.AreEqual(
   "0.00",
   stringTemp);
 }
       {
-        string stringTemp = CBORDataUtilities.ParseJSONNumber("-0.00E-1").ToString();
+        string stringTemp =
+CBORDataUtilities.ParseJSONNumber("-0.00E-1").ToString();
 Assert.AreEqual(
   "0.000",
   stringTemp);

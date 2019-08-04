@@ -1019,6 +1019,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
           ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(
   (string)numberinfo["number"].ToObject(typeof(string))));
   var f1 =
+
   (float)EDecimal.FromString((string)numberinfo["number"].ToObject(typeof(string))).ToSingle();
   Object f2 = cbornumber.ToObject(typeof(float));
   if (!((object)f1).Equals(f2)) {

@@ -2,9 +2,9 @@
 
     public interface ICBORTag
 
-<b>Deprecated.</b> May be removed in the future without replacement.  Not as useful as ICBORConverters and ICBORObjectConverters for FromObject and ToObject.
+<b>Deprecated.</b> May be removed in the future without replacement. Not as useful as ICBORConverters and ICBORObjectConverters for FromObject and ToObject.
 
-Implemented by classes that validate CBOR objects belonging to a specific tag.
+ Implemented by classes that validate CBOR objects belonging to a specific tag.
 
 ### Member Summary
 * <code>[GetTypeFilter()](#GetTypeFilter)</code> - Gets a type filter specifying what kinds of CBOR objects are supported by this tag.
@@ -15,9 +15,9 @@ Implemented by classes that validate CBOR objects belonging to a specific tag.
 
     PeterO.Cbor.CBORTypeFilter GetTypeFilter();
 
-Gets a type filter specifying what kinds of CBOR objects are supported by this tag.
+ Gets a type filter specifying what kinds of CBOR objects are supported by this tag.
 
-<b>Return Value:</b>
+  <b>Return Value:</b>
 
 A CBOR type filter.
 
@@ -27,9 +27,9 @@ A CBOR type filter.
     PeterO.Cbor.CBORObject ValidateObject(
         PeterO.Cbor.CBORObject obj);
 
-Generates a CBOR object based on the data of another object. If the data is not valid, should throw a CBORException.
+ Generates a CBOR object based on the data of another object. If the data is not valid, should throw a CBORException.
 
-<b>Parameters:</b>
+  <b>Parameters:</b>
 
  * <i>obj</i>: A CBOR object with the corresponding tag handled by the ICBORTag object.
 

@@ -10,7 +10,8 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-    /// <summary>Implements arithmetic operations with CBOR objects.</summary>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.Cbor.CBORObjectMath"]/*'/>
   internal static class CBORObjectMath {
     public static CBORObject Addition(CBORObject a, CBORObject b) {
       if (a == null) {
@@ -312,8 +313,8 @@ namespace PeterO.Cbor {
         EInteger bigquo;
         {
           EInteger[] divrem = b1.DivRem(b2);
-bigquo = divrem[0];
-bigrem = divrem[1]; }
+          bigquo = divrem[0];
+          bigrem = divrem[1]; }
         return bigrem.IsZero ? CBORObject.FromObject(bigquo) :
         CBORObject.FromObject(ERational.Create(b1, b2));
       }

@@ -96,15 +96,15 @@ namespace PeterO.Cbor {
     }
 
     private static MethodInfo GetTypeMethod(
-          Type t,
-          string name,
-          Type[] parameters) {
+      Type t,
+      string name,
+      Type[] parameters) {
       return t.GetRuntimeMethod(name, parameters);
     }
 
     private static bool HasCustomAttribute(
-              Type t,
-              string name) {
+      Type t,
+      string name) {
       foreach (var attr in t.GetTypeInfo().GetCustomAttributes()) {
         if (attr.GetType().FullName.Equals(name, StringComparison.Ordinal)) {
           return true;
@@ -262,8 +262,8 @@ namespace PeterO.Cbor {
     }
 
     public static CBORObject FromArray(
-          Object arrObj,
-          PODOptions options) {
+      Object arrObj,
+      PODOptions options) {
       var arr = (Array)arrObj;
       int rank = arr.Rank;
       if (rank == 0) {
@@ -309,9 +309,9 @@ namespace PeterO.Cbor {
     }
 
     private static void SetCBORObject(
-          CBORObject cbor,
-          int[] index,
-          CBORObject obj) {
+      CBORObject cbor,
+      int[] index,
+      CBORObject obj) {
       CBORObject ret = cbor;
       for (var i = 0; i < index.Length - 1; ++i) {
         ret = ret[index[i]];
@@ -349,16 +349,16 @@ namespace PeterO.Cbor {
     }
 
     public static object FindOneArgumentMethod(
-          object obj,
-          string name,
-          Type argtype) {
+      object obj,
+      string name,
+      Type argtype) {
       return GetTypeMethod(obj.GetType(), name, new[] { argtype });
     }
 
     public static object InvokeOneArgumentMethod(
-          object methodInfo,
-          object obj,
-          object argument) {
+      object methodInfo,
+      object obj,
+      object argument) {
       return ((MethodInfo)methodInfo).Invoke(obj, new[] { argument });
     }
 
@@ -406,10 +406,10 @@ namespace PeterO.Cbor {
         return objThis.IsTrue;
       }
 
-      if (t.FullName != null &&
-         (StartsWith(t.FullName, "System.Win32.") ||
+      if (t.FullName != null && (StartsWith(t.FullName, "System.Win32.") ||
          StartsWith(t.FullName, "System.IO."))) {
-        throw new NotSupportedException("Type " + t.FullName + " not supported");
+        throw new NotSupportedException("Type " + t.FullName + " not" +
+"\u0020supported");
       }
 
       if (objThis.Type == CBORType.ByteString) {
@@ -600,9 +600,9 @@ td.Equals(typeof(IDictionary<,>));
     }
 
     public static void BreakDownDateTime(
-          DateTime bi,
-          EInteger[] year,
-          int[] lf) {
+      DateTime bi,
+      EInteger[] year,
+      int[] lf) {
 #if NET20
       DateTime dt = bi.ToUniversalTime();
 #else

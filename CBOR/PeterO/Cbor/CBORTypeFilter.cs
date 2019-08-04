@@ -10,10 +10,8 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-    /// <summary>Specifies what kinds of CBOR objects a tag can be. This class is used when
-    /// a CBOR object is being read from a data stream. This class can't be
-    /// inherited; this is a change in version 2.0 from previous versions, where
-    /// the class was inadvertently left inheritable.</summary>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.Cbor.CBORTypeFilter"]/*'/>
   [Obsolete("May be removed without replacement.")]
   public sealed class CBORTypeFilter {
     /// <summary>A filter that allows any CBOR object.</summary>
@@ -47,16 +45,8 @@ namespace PeterO.Cbor {
     private EInteger[] tags;
     private int types;
 
-    /// <summary>Determines whether this type filter allows CBOR arrays and the given array
-    /// index is allowed under this type filter.</summary><param name='index'>An array index, starting from 0.
-    /// </param><returns><c>true
-    /// </c>
-    /// if this type filter allows CBOR arrays and the given array index is
-    /// allowed under this type filter; otherwise,
-    /// <c>false
-    /// </c>
-    /// .
-    /// </returns>
+    /// <include file='../../docs.xml'
+    ///   path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.ArrayIndexAllowed(System.Int32)"]/*'/>
     public bool ArrayIndexAllowed(int index) {
    return (this.types & (1 << 4)) != 0 && index >= 0 &&
         (this.anyArrayLength ||
@@ -64,47 +54,24 @@ namespace PeterO.Cbor {
                     0));
     }
 
-    /// <summary>Returns whether an array's length is allowed under this filter.</summary><param name='length'>The length of a CBOR array.
-    /// </param><returns><c>true
-    /// </c>
-    /// if this filter allows CBOR arrays and an array's length is allowed under
-    /// this filter; otherwise,
-    /// <c>false
-    /// </c>
-    /// .
-    /// </returns>
+    /// <include file='../../docs.xml'
+    ///   path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.ArrayLengthMatches(System.Int32)"]/*'/>
     public bool ArrayLengthMatches(int length) {
       return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
                 (this.arrayMinLength ? this.arrayLength >= length :
                 this.arrayLength == length));
     }
 
-    /// <summary>Returns whether an array's length is allowed under a filter.</summary><param name='length'>The length of a CBOR array.
-    /// </param><returns><c>true
-    /// </c>
-    /// if this filter allows CBOR arrays and an array's length is allowed under
-    /// a filter; otherwise,
-    /// <c>false
-    /// </c>
-    /// .
-    /// </returns>
+    /// <include file='../../docs.xml'
+    ///   path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.ArrayLengthMatches(System.Int64)"]/*'/>
     public bool ArrayLengthMatches(long length) {
       return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
                 (this.arrayMinLength ? this.arrayLength >= length :
                 this.arrayLength == length));
     }
 
-    /// <summary>Returns whether an array's length is allowed under a filter.</summary><param name='bigLength'>An arbitrary-precision integer.
-    /// </param><returns><c>true
-    /// </c>
-    /// if this filter allows CBOR arrays and an array's length is allowed under
-    /// a filter; otherwise,
-    /// <c>false
-    /// </c>
-    /// .
-    /// </returns><exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='bigLength'/>
-    /// is null.</exception>
+    /// <include file='../../docs.xml'
+    ///   path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.ArrayLengthMatches(PeterO.Numbers.EInteger)"]/*'/>
     public bool ArrayLengthMatches(EInteger bigLength) {
       if (bigLength == null) {
         throw new ArgumentNullException(nameof(bigLength));
@@ -116,11 +83,8 @@ namespace PeterO.Cbor {
         bigLength.CompareTo((EInteger)this.arrayLength) >= 0)));
     }
 
-    /// <summary>Gets the type filter for this array filter by its index.</summary><param name='index'>A zero-based index of the filter to retrieve.
-    /// </param><returns>Returns None if the index is out of range, or Any if this filter doesn't
-    /// filter an array. Returns the appropriate filter for the array index
-    /// otherwise.
-    /// </returns>
+    /// <include file='../../docs.xml'
+    ///   path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.GetSubFilter(System.Int32)"]/*'/>
     public CBORTypeFilter GetSubFilter(int index) {
       if (this.anyArrayLength || this.any) {
         return Any;
@@ -143,11 +107,8 @@ namespace PeterO.Cbor {
       return this.elements[index];
     }
 
-    /// <summary>Gets the type filter for this array filter by its index.</summary><param name='index'>A zero-based index of the filter to retrieve.
-    /// </param><returns>Returns None if the index is out of range, or Any if this filter doesn't
-    /// filter an array. Returns the appropriate filter for the array index
-    /// otherwise.
-    /// </returns>
+    /// <include file='../../docs.xml'
+    ///   path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.GetSubFilter(System.Int64)"]/*'/>
     public CBORTypeFilter GetSubFilter(long index) {
       if (this.anyArrayLength || this.any) {
         return Any;
@@ -172,16 +133,8 @@ namespace PeterO.Cbor {
       return this.elements[(int)index];
     }
 
-    /// <summary>Returns whether the given CBOR major type matches a major type allowed by
-    /// this filter.</summary><param name='type'>A CBOR major type from 0 to 7.
-    /// </param><returns><c>true
-    /// </c>
-    /// if the given CBOR major type matches a major type allowed by this filter;
-    /// otherwise,
-    /// <c>false
-    /// </c>
-    /// .
-    /// </returns>
+    /// <include file='../../docs.xml'
+    ///   path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.MajorTypeMatches(System.Int32)"]/*'/>
     public bool MajorTypeMatches(int type) {
 #if DEBUG
       if (type < 0) {
@@ -195,56 +148,26 @@ namespace PeterO.Cbor {
       return type >= 0 && type <= 7 && (this.types & (1 << type)) != 0;
     }
 
-    /// <summary>Returns whether this filter allows simple values that are not
-    /// floating-point numbers.</summary><returns><c>true
-    /// </c>
-    /// if this filter allows simple values that are not floating-point numbers;
-    /// otherwise,
-    /// <c>false
-    /// </c>
-    /// .
-    /// </returns>
+    /// <include file='../../docs.xml'
+    ///   path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.NonFPSimpleValueAllowed"]/*'/>
     public bool NonFPSimpleValueAllowed() {
       return this.MajorTypeMatches(7) && !this.floatingpoint;
     }
 
-    /// <summary>Gets a value indicating whether CBOR objects can have the given tag
-    /// number.</summary><param name='tag'>A tag number. Returns false if this is less than 0.
-    /// </param><returns><c>true
-    /// </c>
-    /// if CBOR objects can have the given tag number; otherwise,
-    /// <c>false
-    /// </c>
-    /// .
-    /// </returns>
+    /// <include file='../../docs.xml'
+    ///   path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.TagAllowed(System.Int32)"]/*'/>
     public bool TagAllowed(int tag) {
       return this.any || this.TagAllowed((EInteger)tag);
     }
 
-    /// <summary>Gets a value indicating whether CBOR objects can have the given tag
-    /// number.</summary><param name='longTag'>A tag number. Returns false if this is less than 0.
-    /// </param><returns><c>true
-    /// </c>
-    /// if CBOR objects can have the given tag number; otherwise,
-    /// <c>false
-    /// </c>
-    /// .
-    /// </returns>
+    /// <include file='../../docs.xml'
+    ///   path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.TagAllowed(System.Int64)"]/*'/>
     public bool TagAllowed(long longTag) {
       return this.any || this.TagAllowed((EInteger)longTag);
     }
 
-    /// <summary>Gets a value indicating whether CBOR objects can have the given tag
-    /// number.</summary><param name='bigTag'>A tag number. Returns false if this is less than 0.
-    /// </param><returns><c>true
-    /// </c>
-    /// if CBOR objects can have the given tag number; otherwise,
-    /// <c>false
-    /// </c>
-    /// .
-    /// </returns><exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='bigTag'/>
-    /// is null.</exception>
+    /// <include file='../../docs.xml'
+    ///   path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.TagAllowed(PeterO.Numbers.EInteger)"]/*'/>
     public bool TagAllowed(EInteger bigTag) {
       if (bigTag == null) {
         throw new ArgumentNullException(nameof(bigTag));
@@ -269,8 +192,8 @@ namespace PeterO.Cbor {
       return false;
     }
 
-    /// <summary>Copies this filter and includes arrays of any length in the new filter.</summary><returns>A CBORTypeFilter object.
-    /// </returns>
+    /// <include file='../../docs.xml'
+    ///   path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.WithArrayAnyLength"]/*'/>
     public CBORTypeFilter WithArrayAnyLength() {
       if (this.any) {
         return this;
@@ -289,13 +212,8 @@ namespace PeterO.Cbor {
       return filter;
     }
 
-    /// <summary>Copies this filter and includes CBOR arrays with an exact length to the
-    /// new filter.</summary><param name='arrayLength'>The desired maximum length of an array.
-    /// </param><param name='elements'>An array containing the allowed types for each element in the array. There
-    /// must be at least as many elements here as given in the arrayLength
-    /// parameter.
-    /// </param><returns>A CBORTypeFilter object.
-    /// </returns><exception cref='System.ArgumentException'>The parameter arrayLength is less than 0.</exception><exception cref='System.ArgumentNullException'>The parameter elements is null.</exception><exception cref='System.ArgumentException'>The parameter elements has fewer elements than specified in arrayLength.</exception>
+    /// <include file='../../docs.xml'
+    ///   path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.WithArrayExactLength(System.Int32,PeterO.Cbor.CBORTypeFilter[])"]/*'/>
     public CBORTypeFilter WithArrayExactLength(
       int arrayLength,
       params CBORTypeFilter[] elements) {
@@ -322,13 +240,8 @@ namespace PeterO.Cbor {
       return filter;
     }
 
-    /// <summary>Copies this filter and includes CBOR arrays with at least a given length
-    /// to the new filter.</summary><param name='arrayLength'>The desired minimum length of an array.
-    /// </param><param name='elements'>An array containing the allowed types for each element in the array. There
-    /// must be at least as many elements here as given in the arrayLength
-    /// parameter.
-    /// </param><returns>A CBORTypeFilter object.
-    /// </returns><exception cref='System.ArgumentException'>The parameter arrayLength is less than 0.</exception><exception cref='System.ArgumentNullException'>The parameter elements is null.</exception><exception cref='System.ArgumentException'>The parameter elements has fewer elements than specified in arrayLength.</exception>
+    /// <include file='../../docs.xml'
+    ///   path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.WithArrayMinLength(System.Int32,PeterO.Cbor.CBORTypeFilter[])"]/*'/>
     public CBORTypeFilter WithArrayMinLength(
       int arrayLength,
       params CBORTypeFilter[] elements) {
@@ -355,14 +268,14 @@ namespace PeterO.Cbor {
       return filter;
     }
 
-    /// <summary>Copies this filter and includes byte strings in the new filter.</summary><returns>A CBORTypeFilter object.
-    /// </returns>
+    /// <include file='../../docs.xml'
+    ///   path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.WithByteString"]/*'/>
     public CBORTypeFilter WithByteString() {
       return this.WithType(2).WithTags(25);
     }
 
-    /// <summary>Copies this filter and includes floating-point numbers in the new filter.</summary><returns>A CBORTypeFilter object.
-    /// </returns>
+    /// <include file='../../docs.xml'
+    ///   path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.WithFloatingPoint"]/*'/>
     public CBORTypeFilter WithFloatingPoint() {
       if (this.any) {
         return this;
@@ -373,24 +286,20 @@ namespace PeterO.Cbor {
       return filter;
     }
 
-    /// <summary>Copies this filter and includes maps in the new filter.</summary><returns>A CBORTypeFilter object.
-    /// </returns>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.WithMap"]/*'/>
     public CBORTypeFilter WithMap() {
       return this.WithType(5);
     }
 
-    /// <summary>Copies this filter and includes negative integers in the new filter.</summary><returns>A CBORTypeFilter object.
-    /// </returns>
+    /// <include file='../../docs.xml'
+    ///   path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.WithNegativeInteger"]/*'/>
     public CBORTypeFilter WithNegativeInteger() {
       return this.WithType(1);
     }
 
-    /// <summary>Copies this filter and includes a set of valid CBOR tags
-    /// in the new filter.</summary>
-    /// <param name='tags'>An array of the CBOR tags to add to the new
-    /// filter.</param>
-    /// <returns>A CBORTypeFilter object.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='tags'/> or <paramref name='tags'/> is null.</exception>
+    /// <include file='../../docs.xml'
+    ///   path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.WithTags(System.Int32[])"]/*'/>
     public CBORTypeFilter WithTags(params int[] tags) {
       if (this.any) {
         return this;
@@ -442,14 +351,14 @@ namespace PeterO.Cbor {
       return filter;
     }
 
-    /// <summary>Copies this filter and includes text strings in the new filter.</summary><returns>A CBORTypeFilter object.
-    /// </returns>
+    /// <include file='../../docs.xml'
+    ///   path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.WithTextString"]/*'/>
     public CBORTypeFilter WithTextString() {
       return this.WithType(3).WithTags(25);
     }
 
-    /// <summary>Copies this filter and includes unsigned integers in the new filter.</summary><returns>A CBORTypeFilter object.
-    /// </returns>
+    /// <include file='../../docs.xml'
+    ///   path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.WithUnsignedInteger"]/*'/>
     public CBORTypeFilter WithUnsignedInteger() {
       return this.WithType(0);
     }
