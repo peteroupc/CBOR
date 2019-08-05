@@ -331,8 +331,7 @@ namespace Test {
       try {
         CBORObject.DecodeFromBytes(new byte[] {
           0x5f, 0x5f, 0x42, 0x20,
-          0x20, 0xff,
-          0xff,
+          0x20, 0xff, 0xff,
         });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
@@ -344,8 +343,7 @@ namespace Test {
       try {
         CBORObject.DecodeFromBytes(new byte[] {
           0x5f, 0x42, 0x20, 0x20,
-          0x5f, 0x42,
-          0x20, 0x20, 0xff, 0xff,
+          0x5f, 0x42, 0x20, 0x20, 0xff, 0xff,
         });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
@@ -357,8 +355,7 @@ namespace Test {
       try {
         CBORObject.DecodeFromBytes(new byte[] {
           0x5f, 0x7f, 0x62, 0x20,
-          0x20, 0xff,
-          0xff,
+          0x20, 0xff, 0xff,
         });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
@@ -370,8 +367,7 @@ namespace Test {
       try {
         CBORObject.DecodeFromBytes(new byte[] {
           0x5f, 0x5f, 0x41, 0x20,
-          0xff, 0x41,
-          0x20, 0xff,
+          0xff, 0x41, 0x20, 0xff,
         });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
@@ -383,8 +379,7 @@ namespace Test {
       try {
         CBORObject.DecodeFromBytes(new byte[] {
           0x7f, 0x7f, 0x62, 0x20,
-          0x20, 0xff,
-          0xff,
+          0x20, 0xff, 0xff,
         });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
@@ -396,8 +391,7 @@ namespace Test {
       try {
         CBORObject.DecodeFromBytes(new byte[] {
           0x7f, 0x62, 0x20, 0x20,
-          0x7f, 0x62,
-          0x20, 0x20, 0xff, 0xff,
+          0x7f, 0x62, 0x20, 0x20, 0xff, 0xff,
         });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
@@ -409,8 +403,7 @@ namespace Test {
       try {
         CBORObject.DecodeFromBytes(new byte[] {
           0x7f, 0x5f, 0x42, 0x20,
-          0x20, 0xff,
-          0xff,
+          0x20, 0xff, 0xff,
         });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
@@ -422,8 +415,7 @@ namespace Test {
       try {
         CBORObject.DecodeFromBytes(new byte[] {
           0x7f, 0x7f, 0x61, 0x20,
-          0xff, 0x61,
-          0x20, 0xff,
+          0xff, 0x61, 0x20, 0xff,
         });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
@@ -968,6 +960,13 @@ namespace Test {
         }
       }
     }
+
+[Test]
+public void TestCBORCompareTo(){
+  Assert.Greater(0,CBORObject.FromObject(0).CompareTo(null));
+  Assert.Greater(0,CBORObject.FromObject(0).AsNumber().CompareTo(null));
+}
+
 
     [Test]
     public void TestDouble() {
@@ -1692,7 +1691,6 @@ namespace Test {
         "null");
     }
 
-    // TODO: Add TestAdd/TestSubtract/TestMultiply tests to 3.6
     [Test]
     public void TestMultiply() {
       var r = new RandomGenerator();

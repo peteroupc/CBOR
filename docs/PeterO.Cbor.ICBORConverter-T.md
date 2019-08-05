@@ -19,7 +19,7 @@
 
  Converts an object to a CBOR object.
 
-    <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>obj</i>: An object to convert to a CBOR object.
 

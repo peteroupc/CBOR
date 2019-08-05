@@ -221,7 +221,7 @@ namespace PeterO.Cbor {
               }
               long len = ReadDataLength(this.stream, nextByte, 2);
               if ((len >> 63) != 0 || len > Int32.MaxValue) {
-                throw new CBORException("Length" + ToUnsignedBigInteger(len) +
+                throw new CBORException("Length" + ToUnsignedEInteger(len) +
                   " is bigger than supported ");
               }
               if (nextByte != 0x40) {
@@ -247,7 +247,7 @@ namespace PeterO.Cbor {
               " is bigger than supported");
           }
           data = ReadByteData(this.stream, uadditional, null);
-          var cbor = CBORObject.FromRaw(data);
+          CBORObject cbor = CBORObject.FromRaw(data);
           if (this.stringRefs != null) {
             int hint = (uadditional > Int32.MaxValue || hasBigAdditional) ?
             Int32.MaxValue : (int)uadditional;
@@ -268,7 +268,7 @@ namespace PeterO.Cbor {
             }
             long len = ReadDataLength(this.stream, nextByte, 3);
             if ((len >> 63) != 0 || len > Int32.MaxValue) {
-              throw new CBORException("Length" + ToUnsignedBigInteger(len) +
+              throw new CBORException("Length" + ToUnsignedEInteger(len) +
                 " is bigger than supported");
             }
             if (nextByte != 0x60) {
@@ -315,7 +315,7 @@ namespace PeterO.Cbor {
             case -2:
               throw new CBORException("Premature end of data");
           }
-          var cbor = CBORObject.FromRaw(builder.ToString());
+          CBORObject cbor = CBORObject.FromRaw(builder.ToString());
           if (this.stringRefs != null) {
             int hint = (uadditional > Int32.MaxValue || hasBigAdditional) ?
             Int32.MaxValue : (int)uadditional;
@@ -484,7 +484,7 @@ namespace PeterO.Cbor {
       long uadditional,
       Stream outputStream) {
       if ((uadditional >> 63) != 0 || uadditional > Int32.MaxValue) {
-        throw new CBORException("Length" + ToUnsignedBigInteger(uadditional) +
+        throw new CBORException("Length" + ToUnsignedEInteger(uadditional) +
           " is bigger than supported ");
       }
       if (PropertyMap.ExceedsKnownLength(stream, uadditional)) {
@@ -595,7 +595,7 @@ namespace PeterO.Cbor {
       }
     }
 
-    private static EInteger ToUnsignedBigInteger(long val) {
+    private static EInteger ToUnsignedEInteger(long val) {
       var lval = (EInteger)(val & ~(1L << 63));
       if ((val >> 63) != 0) {
         EInteger bigintAdd = EInteger.One << 63;

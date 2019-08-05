@@ -93,7 +93,7 @@ The parameter  <i>paramString</i>
 
  Gets a value indicating whether to allow duplicate keys when reading CBOR objects from a data stream. Used only when decoding CBOR objects.
 
-   <b>Returns:</b>
+ <b>Returns:</b>
 
 A value indicating whether to allow duplicate keys when reading CBOR objects from a data stream. The default is false.
 
@@ -104,7 +104,7 @@ A value indicating whether to allow duplicate keys when reading CBOR objects fro
 
  Gets a value indicating whether decoding a CBOR object will return  `null`  instead of a CBOR object if the stream has no content or the end of the stream is reached before decoding begins. Used only when decoding CBOR objects.
 
-   <b>Returns:</b>
+ <b>Returns:</b>
 
 A value indicating whether decoding a CBOR object will return  `null`  instead of a CBOR object if the stream has no content or the end of the stream is reached before decoding begins. The default is false.
 
@@ -115,9 +115,9 @@ A value indicating whether decoding a CBOR object will return  `null`  instead o
 
  Gets a value indicating whether CBOR objects are written out using the CTAP2 canonical CBOR encoding form, which is useful for implementing Web Authentication. In this form, CBOR tags are not used, map keys are written out in a canonical order, and non-integer numbers and integers 2^63 or greater are written as 64-bit binary floating-point numbers.
 
-   <b>Returns:</b>
+ <b>Returns:</b>
 
- `true`  if CBOR objects are written out using the CTAP2 canonical CBOR encoding form; otherwise,  `false` .
+ `true`  if CBOR objects are written out using the CTAP2 canonical CBOR encoding form; otherwise,  `false`  .
 
 <a id="ResolveReferences"></a>
 ### ResolveReferences
@@ -126,11 +126,11 @@ A value indicating whether decoding a CBOR object will return  `null`  instead o
 
  Gets a value indicating whether to resolve references to sharable objects and sharable strings in the process of decoding a CBOR object.
 
-   Sharable objects are marked with tag 28, and references to those objects are marked with tag 29 (where a reference of 0 means the first sharable object in the CBOR stream, a reference of 1 means the second, and so on). Sharable strings (byte strings and text strings) appear within an enclosing object marked with tag 256, and references to them are marked with tag 25; in general, a string is sharable only if storing its reference rather than the string would save space.
+ Sharable objects are marked with tag 28, and references to those objects are marked with tag 29 (where a reference of 0 means the first sharable object in the CBOR stream, a reference of 1 means the second, and so on). Sharable strings (byte strings and text strings) appear within an enclosing object marked with tag 256, and references to them are marked with tag 25; in general, a string is sharable only if storing its reference rather than the string would save space.
 
  Note that unlike most other tags, these tags generally care about the relative order in which objects appear in a CBOR stream; thus they are not interoperable with CBOR implementations that follow the generic CBOR data model (since they may list map keys in an unspecified order). Interoperability problems with these tags can be reduced by not using them to mark keys or values of a map or to mark objects within those keys or values.
 
-  <b>Returns:</b>
+ <b>Returns:</b>
 
 A value indicating whether to resolve references to sharable objects and sharable strings. The default is false.
 
@@ -141,7 +141,7 @@ A value indicating whether to resolve references to sharable objects and sharabl
 
  Gets a value indicating whether to encode strings with an indefinite-length encoding under certain circumstances.
 
-   <b>Returns:</b>
+ <b>Returns:</b>
 
 A value indicating whether to encode strings with an indefinite-length encoding under certain circumstances. The default is false.
 
@@ -152,6 +152,6 @@ A value indicating whether to encode strings with an indefinite-length encoding 
 
  Gets the values of this options object's properties in text form.
 
-   <b>Return Value:</b>
+ <b>Return Value:</b>
 
 A text string containing the values of this options object's properties. The format of the string is the same as the one described in the String constructor for this class.

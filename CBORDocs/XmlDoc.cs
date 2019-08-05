@@ -6,23 +6,7 @@ using System.Text.RegularExpressions;
 using System.Xml;
 
 namespace PeterO.DocGen {
-  public class XmlDoc {
-    public interface INode {
-      string LocalName { get; }
-
-      string GetContent();
-
-      IEnumerable<string> GetAttributes();
-
-      string GetAttribute(string str);
-
-      IEnumerable<INode> GetChildren();
-    }
-
-    public interface IVisitor {
-      void VisitNode(INode node);
-    }
-
+  public partial class XmlDoc {
     private sealed class Node : INode {
       public string LocalName { get; private set; }
 
@@ -229,25 +213,27 @@ namespace PeterO.DocGen {
     public XmlDoc(string xmlFilename) {
       this.memberNodes = new Dictionary<string, INode>();
       using (var stream = new FileStream(xmlFilename, FileMode.Open)) {
-        var reader = XmlReader.Create(stream);
+        using (var reader = XmlReader.Create(stream)) {
         reader.Read();
         reader.ReadStartElement("doc");
-        while (reader.IsStartElement()) {
-         // Console.WriteLine(reader.LocalName);
-          if (reader.LocalName.Equals("members", StringComparison.Ordinal)) {
-            reader.Read();
-            while (reader.IsStartElement()) {
-              if (reader.LocalName.Equals("member", StringComparison.Ordinal)) {
-                string memberName = reader.GetAttribute("name");
-                var node = this.ReadNode(reader);
-                this.memberNodes[memberName] = node;
-              } else {
-                reader.Skip();
+          while (reader.IsStartElement()) {
+            // Console.WriteLine(reader.LocalName);
+            if (reader.LocalName.Equals("members", StringComparison.Ordinal)) {
+              reader.Read();
+              while (reader.IsStartElement()) {
+                if (reader.LocalName.Equals("member",
+  StringComparison.Ordinal)) {
+                  string memberName = reader.GetAttribute("name");
+                  var node = this.ReadNode(reader);
+                  this.memberNodes[memberName] = node;
+                } else {
+                  reader.Skip();
+                }
               }
+              reader.Skip();
+            } else {
+              reader.Skip();
             }
-            reader.Skip();
-          } else {
-            reader.Skip();
           }
         }
       }

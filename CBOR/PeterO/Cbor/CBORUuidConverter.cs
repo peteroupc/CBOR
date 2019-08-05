@@ -21,10 +21,11 @@ namespace PeterO.Cbor {
       return obj;
     }
 
-    /// <summary>Internal API.</summary>
-    /// <param name='obj'>The parameter <paramref name='obj'/> is an
-    /// internal parameter.</param>
-    /// <returns>A CBORObject object.</returns>
+    /// <summary>Internal API.</summary><param name='obj'>The parameter
+    /// <paramref name='obj'/>
+    /// is an internal parameter.
+    /// </param><returns>A CBORObject object.
+    /// </returns>
     public CBORObject ToCBORObject(Guid obj) {
       byte[] bytes = PropertyMap.UUIDToBytes(obj);
       return CBORObject.FromObjectAndTag(bytes, (int)37);

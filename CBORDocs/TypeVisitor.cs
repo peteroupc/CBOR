@@ -44,44 +44,44 @@ namespace PeterO.DocGen {
     }
 
     public void HandleTypeAndMembers(Type currentType, XmlDoc xmldoc) {
-       this.HandleMember(currentType, xmldoc);
-       foreach (var m in currentType.GetFields()) {
-         if (m.IsSpecialName) {
-           continue;
-         }
-         this.HandleMember(m, xmldoc);
+      this.HandleMember(currentType, xmldoc);
+      foreach (var m in currentType.GetFields()) {
+        if (m.IsSpecialName) {
+          continue;
         }
-        foreach (var m in currentType.GetConstructors()) {
-          if (!m.DeclaringType.Equals(currentType)) {
-            continue;
-          }
-          this.HandleMember(m, xmldoc);
+        this.HandleMember(m, xmldoc);
+      }
+      foreach (var m in currentType.GetConstructors()) {
+        if (!m.DeclaringType.Equals(currentType)) {
+          continue;
         }
-        foreach (var m in currentType.GetMethods()) {
-          if (!m.DeclaringType.Equals(currentType)) {
-            var dtfn = m.DeclaringType.FullName;
-            if (dtfn.IndexOf("System.", StringComparison.Ordinal) != 0) {
-             // Console.WriteLine("not declared: " + m);
-            }
-            continue;
+        this.HandleMember(m, xmldoc);
+      }
+      foreach (var m in currentType.GetMethods()) {
+        if (!m.DeclaringType.Equals(currentType)) {
+          var dtfn = m.DeclaringType.FullName;
+          if (dtfn.IndexOf("System.", StringComparison.Ordinal) != 0) {
+            // Console.WriteLine("not declared: " + m);
           }
-          if (m.IsSpecialName && (
-            m.Name.IndexOf("get_", StringComparison.Ordinal) == 0 ||
-            m.Name.IndexOf("set_", StringComparison.Ordinal) == 0)) {
-            continue;
-          }
-          this.HandleMember(m, xmldoc);
+          continue;
         }
-        foreach (var m in currentType.GetProperties()) {
-          if (!m.DeclaringType.Equals(currentType)) {
-            var dtfn = m.DeclaringType.FullName;
-            if (dtfn.IndexOf("System.", StringComparison.Ordinal) != 0) {
-              Console.WriteLine("not declared: " + m);
-            }
-            continue;
-          }
-          this.HandleMember(m, xmldoc);
+        if (m.IsSpecialName && (
+          m.Name.IndexOf("get_", StringComparison.Ordinal) == 0 ||
+          m.Name.IndexOf("set_", StringComparison.Ordinal) == 0)) {
+          continue;
         }
+        this.HandleMember(m, xmldoc);
+      }
+      foreach (var m in currentType.GetProperties()) {
+        if (!m.DeclaringType.Equals(currentType)) {
+          var dtfn = m.DeclaringType.FullName;
+          if (dtfn.IndexOf("System.", StringComparison.Ordinal) != 0) {
+            Console.WriteLine("not declared: " + m);
+          }
+          continue;
+        }
+        this.HandleMember(m, xmldoc);
+      }
     }
 
     public void HandleMember(MemberInfo info, XmlDoc xmldoc) {

@@ -347,10 +347,11 @@ namespace PeterO.Cbor {
       return this;
     }
 
-    /// <summary>Internal API.</summary>
-    /// <param name='val'>The parameter <paramref name='val'/> is an
-    /// internal parameter.</param>
-    /// <returns>A FastInteger2 object.</returns>
+    /// <summary>Internal API.</summary><param name='val'>The parameter
+    /// <paramref name='val'/>
+    /// is an internal parameter.
+    /// </param><returns>A FastInteger2 object.
+    /// </returns>
     internal FastInteger2 Multiply(int val) {
       if (val == 0) {
         this.smallValue = 0;
@@ -402,10 +403,11 @@ namespace PeterO.Cbor {
       return this;
     }
 
-    /// <summary>Internal API.</summary>
-    /// <param name='val'>The parameter <paramref name='val'/> is an
-    /// internal parameter.</param>
-    /// <returns>A FastInteger2 object.</returns>
+    /// <summary>Internal API.</summary><param name='val'>The parameter
+    /// <paramref name='val'/>
+    /// is an internal parameter.
+    /// </param><returns>A FastInteger2 object.
+    /// </returns>
     internal FastInteger2 Subtract(FastInteger2 val) {
       EInteger valValue;
       switch (this.integerMode) {
@@ -451,10 +453,11 @@ namespace PeterO.Cbor {
       return this;
     }
 
-    /// <summary>Internal API.</summary>
-    /// <param name='val'>The parameter <paramref name='val'/> is an
-    /// internal parameter.</param>
-    /// <returns>A FastInteger2 object.</returns>
+    /// <summary>Internal API.</summary><param name='val'>The parameter
+    /// <paramref name='val'/>
+    /// is an internal parameter.
+    /// </param><returns>A FastInteger2 object.
+    /// </returns>
     internal FastInteger2 SubtractInt(int val) {
       if (val == Int32.MinValue) {
         return this.AddInt(Int32.MaxValue).AddInt(1);

@@ -10,41 +10,39 @@ using System.IO;
 using System.Text;
 
 namespace PeterO {
-    /// <summary>Contains methods useful for reading and writing strings.
-    /// It is designed to have no dependencies other than the basic runtime
-    /// class library.
-    /// <para>Many of these methods work with text encoded in UTF-8, an
-    /// encoding form of the Unicode Standard which uses one byte to encode
-    /// the most basic characters and two to four bytes to encode other
-    /// characters. For example, the <c>GetUtf8</c> method converts a text
-    /// string to an array of bytes in UTF-8.</para>
-    /// <para>In C# and Java, text strings are represented as sequences of
-    /// 16-bit values called <c>char</c> s. These sequences are well-formed
-    /// under UTF-16, a 16-bit encoding form of Unicode, except if they
-    /// contain unpaired surrogate code points. (A surrogate code point is
-    /// used to encode supplementary characters, those with code points U +
-    /// 10000 or higher, in UTF-16. A surrogate pair is a high surrogate [U
-    /// + D800 to U + DBFF] followed by a low surrogate [U + DC00 to U +
-    /// DFFF]. An unpaired surrogate code point is a surrogate not
-    /// appearing in a surrogate pair.) Many of the methods in this class
-    /// allow setting the behavior to follow when unpaired surrogate code
-    /// points are found in text strings, such as throwing an error or
-    /// treating the unpaired surrogate as a replacement character (U +
-    /// FFFD).</para></summary>
+    /// <summary>Contains methods useful for reading and writing strings. It is designed to
+    /// have no dependencies other than the basic runtime class library.
+    /// <para>Many of these methods work with text encoded in UTF-8, an encoding form
+    /// of the Unicode Standard which uses one byte to encode the most basic
+    /// characters and two to four bytes to encode other characters. For
+    /// example, the
+    /// <c>GetUtf8</c> method converts a text string to an array of bytes in UTF-8.
+    /// </para>
+    /// <para>In C# and Java, text strings are represented as sequences of 16-bit
+    /// values called
+    /// <c>char</c> s. These sequences are well-formed under UTF-16, a 16-bit encoding form
+    /// of Unicode, except if they contain unpaired surrogate code points. (A
+    /// surrogate code point is used to encode supplementary characters, those
+    /// with code points U+10000 or higher, in UTF-16. A surrogate pair is a
+    /// high surrogate [U+D800 to U+DBFF] followed by a low surrogate [U+DC00 to
+    /// U+DFFF]. An unpaired surrogate code point is a surrogate not appearing
+    /// in a surrogate pair.) Many of the methods in this class allow setting
+    /// the behavior to follow when unpaired surrogate code points are found in
+    /// text strings, such as throwing an error or treating the unpaired
+    /// surrogate as a replacement character (U+FFFD).
+    /// </para></summary>
   public static class DataUtilities {
     private const int StreamedStringBufferLength = 4096;
 
-    /// <summary>Generates a text string from a UTF-8 byte array.</summary>
-    /// <param name='bytes'>A byte array containing text encoded in
-    /// UTF-8.</param>
-    /// <param name='replace'>If true, replaces invalid encoding with the
-    /// replacement character (U + FFFD). If false, stops processing when
-    /// invalid UTF-8 is seen.</param>
-    /// <returns>A string represented by the UTF-8 byte array.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='bytes'/> is null.</exception>
-    /// <exception cref='ArgumentException'>The string is not valid UTF-8
-    /// and <paramref name='replace'/> is false.</exception>
+    /// <summary>Generates a text string from a UTF-8 byte array.</summary><param name='bytes'>A byte array containing text encoded in UTF-8.
+    /// </param><param name='replace'>If true, replaces invalid encoding with the replacement character
+    /// (U+FFFD). If false, stops processing when invalid UTF-8 is seen.
+    /// </param><returns>A string represented by the UTF-8 byte array.
+    /// </returns><exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='bytes'/>
+    /// is null.</exception><exception cref='System.ArgumentException'>The string is not valid UTF-8 and
+    /// <paramref name='replace'/>
+    /// is false.</exception>
     public static string GetUtf8String(byte[] bytes, bool replace) {
       if (bytes == null) {
         throw new ArgumentNullException(nameof(bytes));
@@ -56,16 +54,15 @@ namespace PeterO {
       return b.ToString();
     }
 
-    /// <summary>Finds the number of Unicode code points in the given text
-    /// string. Unpaired surrogate code points increase this number by 1.
-    /// This is not necessarily the length of the string in "char"
-    /// s.</summary>
-    /// <param name='str'>The parameter <paramref name='str'/> is a text
-    /// string.</param>
-    /// <returns>The number of Unicode code points in the given
-    /// string.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='str'/> is null.</exception>
+    /// <summary>Finds the number of Unicode code points in the given text string. Unpaired
+    /// surrogate code points increase this number by 1. This is not necessarily
+    /// the length of the string in "char" s.</summary><param name='str'>The parameter
+    /// <paramref name='str'/>
+    /// is a text string.
+    /// </param><returns>The number of Unicode code points in the given string.
+    /// </returns><exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/>
+    /// is null.</exception>
     public static int CodePointLength(string str) {
       if (str == null) {
         throw new ArgumentNullException(nameof(str));
@@ -80,27 +77,22 @@ namespace PeterO {
       return count;
     }
 
-    /// <summary>Generates a text string from a portion of a UTF-8 byte
-    /// array.</summary>
-    /// <param name='bytes'>A byte array containing text encoded in
-    /// UTF-8.</param>
-    /// <param name='offset'>Offset into the byte array to start
-    /// reading.</param>
-    /// <param name='bytesCount'>Length, in bytes, of the UTF-8 text
-    /// string.</param>
-    /// <param name='replace'>If true, replaces invalid encoding with the
-    /// replacement character (U + FFFD). If false, stops processing when
-    /// invalid UTF-8 is seen.</param>
-    /// <returns>A string represented by the UTF-8 byte array.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='bytes'/> is null.</exception>
-    /// <exception cref='ArgumentException'>The portion of the byte array
-    /// is not valid UTF-8 and <paramref name='replace'/> is
-    /// false.</exception>
-    /// <exception cref='ArgumentException'>The parameter <paramref
-    /// name='offset'/> is less than 0, <paramref name='bytesCount'/> is
-    /// less than 0, or offset plus bytesCount is greater than the length
-    /// of "data" .</exception>
+    /// <summary>Generates a text string from a portion of a UTF-8 byte array.</summary><param name='bytes'>A byte array containing text encoded in UTF-8.
+    /// </param><param name='offset'>Offset into the byte array to start reading.
+    /// </param><param name='bytesCount'>Length, in bytes, of the UTF-8 text string.
+    /// </param><param name='replace'>If true, replaces invalid encoding with the replacement character
+    /// (U+FFFD). If false, stops processing when invalid UTF-8 is seen.
+    /// </param><returns>A string represented by the UTF-8 byte array.
+    /// </returns><exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='bytes'/>
+    /// is null.</exception><exception cref='System.ArgumentException'>The portion of the byte array is not valid UTF-8 and
+    /// <paramref name='replace'/>
+    /// is false.</exception><exception cref='System.ArgumentException'>The parameter
+    /// <paramref name='offset'/>
+    /// is less than 0,
+    /// <paramref name='bytesCount'/>
+    /// is less than 0, or offset plus bytesCount is greater than the length of
+    /// "data" .</exception>
     public static string GetUtf8String(
       byte[] bytes,
       int offset,
@@ -136,53 +128,52 @@ namespace PeterO {
       return b.ToString();
     }
 
-    /// <summary>
-    /// <para>Encodes a string in UTF-8 as a byte array. This method does
-    /// not insert a byte-order mark (U + FEFF) at the beginning of the
-    /// encoded byte array.</para>
+    /// <summary><para>Encodes a string in UTF-8 as a byte array. This method does not insert a
+    /// byte-order mark (U+FEFF) at the beginning of the encoded byte array.
+    /// </para>
     /// <para>REMARK: It is not recommended to use
-    /// <c>Encoding.UTF8.GetBytes</c> in.NET, or the <c>getBytes()</c>
-    /// method in Java to do this. For instance, <c>getBytes()</c> encodes
-    /// text strings in a default (so not fixed) character encoding, which
-    /// can be undesirable.</para></summary>
-    /// <param name='str'>The parameter <paramref name='str'/> is a text
-    /// string.</param>
-    /// <param name='replace'>If true, replaces unpaired surrogate code
-    /// points with the replacement character (U + FFFD). If false, stops
-    /// processing when an unpaired surrogate code point is seen.</param>
-    /// <returns>The string encoded in UTF-8.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='str'/> is null.</exception>
-    /// <exception cref='ArgumentException'>The string contains an unpaired
-    /// surrogate code point and <paramref name='replace'/> is false, or an
-    /// internal error occurred.</exception>
+    /// <c>Encoding.UTF8.GetBytes</c> in.NET, or the
+    /// <c>getBytes()</c> method in Java to do this. For instance,
+    /// <c>getBytes()</c> encodes text strings in a default (so not fixed) character encoding,
+    /// which can be undesirable.
+    /// </para></summary><param name='str'>The parameter
+    /// <paramref name='str'/>
+    /// is a text string.
+    /// </param><param name='replace'>If true, replaces unpaired surrogate code points with the replacement
+    /// character (U+FFFD). If false, stops processing when an unpaired surrogate
+    /// code point is seen.
+    /// </param><returns>The string encoded in UTF-8.
+    /// </returns><exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/>
+    /// is null.</exception><exception cref='System.ArgumentException'>The string contains an unpaired surrogate code point and
+    /// <paramref name='replace'/>
+    /// is false, or an internal error occurred.</exception>
     public static byte[] GetUtf8Bytes(string str, bool replace) {
       return GetUtf8Bytes(str, replace, false);
     }
 
-    /// <summary>
-    /// <para>Encodes a string in UTF-8 as a byte array. This method does
-    /// not insert a byte-order mark (U + FEFF) at the beginning of the
-    /// encoded byte array.</para>
+    /// <summary><para>Encodes a string in UTF-8 as a byte array. This method does not insert a
+    /// byte-order mark (U+FEFF) at the beginning of the encoded byte array.
+    /// </para>
     /// <para>REMARK: It is not recommended to use
-    /// <c>Encoding.UTF8.GetBytes</c> in.NET, or the <c>getBytes()</c>
-    /// method in Java to do this. For instance, <c>getBytes()</c> encodes
-    /// text strings in a default (so not fixed) character encoding, which
-    /// can be undesirable.</para></summary>
-    /// <param name='str'>The parameter <paramref name='str'/> is a text
-    /// string.</param>
-    /// <param name='replace'>If true, replaces unpaired surrogate code
-    /// points with the replacement character (U + FFFD). If false, stops
-    /// processing when an unpaired surrogate code point is seen.</param>
-    /// <param name='lenientLineBreaks'>If true, replaces carriage return
-    /// (CR) not followed by line feed (LF) and LF not preceded by CR with
-    /// CR-LF pairs.</param>
-    /// <returns>The string encoded in UTF-8.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='str'/> is null.</exception>
-    /// <exception cref='ArgumentException'>The string contains an unpaired
-    /// surrogate code point and <paramref name='replace'/> is false, or an
-    /// internal error occurred.</exception>
+    /// <c>Encoding.UTF8.GetBytes</c> in.NET, or the
+    /// <c>getBytes()</c> method in Java to do this. For instance,
+    /// <c>getBytes()</c> encodes text strings in a default (so not fixed) character encoding,
+    /// which can be undesirable.
+    /// </para></summary><param name='str'>The parameter
+    /// <paramref name='str'/>
+    /// is a text string.
+    /// </param><param name='replace'>If true, replaces unpaired surrogate code points with the replacement
+    /// character (U+FFFD). If false, stops processing when an unpaired surrogate
+    /// code point is seen.
+    /// </param><param name='lenientLineBreaks'>If true, replaces carriage return (CR) not followed by line feed (LF) and
+    /// LF not preceded by CR with CR-LF pairs.
+    /// </param><returns>The string encoded in UTF-8.
+    /// </returns><exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/>
+    /// is null.</exception><exception cref='System.ArgumentException'>The string contains an unpaired surrogate code point and
+    /// <paramref name='replace'/>
+    /// is false, or an internal error occurred.</exception>
     public static byte[] GetUtf8Bytes(
       string str,
       bool replace,
@@ -241,18 +232,18 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Calculates the number of bytes needed to encode a string
-    /// in UTF-8.</summary>
-    /// <param name='str'>The parameter <paramref name='str'/> is a text
-    /// string.</param>
-    /// <param name='replace'>If true, treats unpaired surrogate code
-    /// points as having 3 UTF-8 bytes (the UTF-8 length of the replacement
-    /// character U + FFFD).</param>
-    /// <returns>The number of bytes needed to encode the given string in
-    /// UTF-8, or -1 if the string contains an unpaired surrogate code
-    /// point and <paramref name='replace'/> is false.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='str'/> is null.</exception>
+    /// <summary>Calculates the number of bytes needed to encode a string in UTF-8.</summary><param name='str'>The parameter
+    /// <paramref name='str'/>
+    /// is a text string.
+    /// </param><param name='replace'>If true, treats unpaired surrogate code points as having 3 UTF-8 bytes
+    /// (the UTF-8 length of the replacement character U+FFFD).
+    /// </param><returns>The number of bytes needed to encode the given string in UTF-8, or -1 if
+    /// the string contains an unpaired surrogate code point and
+    /// <paramref name='replace'/>
+    /// is false.
+    /// </returns><exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/>
+    /// is null.</exception>
     public static long GetUtf8Length(string str, bool replace) {
       if (str == null) {
         throw new ArgumentNullException(nameof(str));
@@ -289,44 +280,42 @@ namespace PeterO {
       return size;
     }
 
-    /// <summary>Gets the Unicode code point just before the given index of
-    /// the string.</summary>
-    /// <param name='str'>The parameter <paramref name='str'/> is a text
-    /// string.</param>
-    /// <param name='index'>Index of the current position into the
-    /// string.</param>
-    /// <returns>The Unicode code point at the previous position. Returns
-    /// -1 if <paramref name='index'/> is 0 or less, or is greater than the
-    /// string's length. Returns the replacement character (U + FFFD) if
-    /// the code point at the previous position is an unpaired surrogate
-    /// code point. If the return value is 65536 (0x10000) or greater, the
-    /// code point takes up two UTF-16 code units.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='str'/> is null.</exception>
+    /// <summary>Gets the Unicode code point just before the given index of the string.</summary><param name='str'>The parameter
+    /// <paramref name='str'/>
+    /// is a text string.
+    /// </param><param name='index'>Index of the current position into the string.
+    /// </param><returns>The Unicode code point at the previous position. Returns -1 if
+    /// <paramref name='index'/>
+    /// is 0 or less, or is greater than the string's length. Returns the
+    /// replacement character (U+FFFD) if the code point at the previous position
+    /// is an unpaired surrogate code point. If the return value is 65536
+    /// (0x10000) or greater, the code point takes up two UTF-16 code units.
+    /// </returns><exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/>
+    /// is null.</exception>
     public static int CodePointBefore(string str, int index) {
       return CodePointBefore(str, index, 0);
     }
 
-    /// <summary>Gets the Unicode code point just before the given index of
-    /// the string.</summary>
-    /// <param name='str'>The parameter <paramref name='str'/> is a text
-    /// string.</param>
-    /// <param name='index'>Index of the current position into the
-    /// string.</param>
-    /// <param name='surrogateBehavior'>Specifies what kind of value to
-    /// return if the previous code point is an unpaired surrogate code
-    /// point: if 0, return the replacement character (U + FFFD); if 1,
-    /// return the value of the surrogate code point; if neither 0 nor 1,
-    /// return -1.</param>
-    /// <returns>The Unicode code point at the previous position. Returns
-    /// -1 if <paramref name='index'/> is 0 or less, or is greater than the
-    /// string's length. Returns a value as specified under <paramref
-    /// name='surrogateBehavior'/> if the code point at the previous
-    /// position is an unpaired surrogate code point. If the return value
-    /// is 65536 (0x10000) or greater, the code point takes up two UTF-16
-    /// code units.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='str'/> is null.</exception>
+    /// <summary>Gets the Unicode code point just before the given index of the string.</summary><param name='str'>The parameter
+    /// <paramref name='str'/>
+    /// is a text string.
+    /// </param><param name='index'>Index of the current position into the string.
+    /// </param><param name='surrogateBehavior'>Specifies what kind of value to return if the previous code point is an
+    /// unpaired surrogate code point: if 0, return the replacement character
+    /// (U+FFFD); if 1, return the value of the surrogate code point; if neither 0
+    /// nor 1, return -1.
+    /// </param><returns>The Unicode code point at the previous position. Returns -1 if
+    /// <paramref name='index'/>
+    /// is 0 or less, or is greater than the string's length. Returns a value as
+    /// specified under
+    /// <paramref name='surrogateBehavior'/>
+    /// if the code point at the previous position is an unpaired surrogate code
+    /// point. If the return value is 65536 (0x10000) or greater, the code point
+    /// takes up two UTF-16 code units.
+    /// </returns><exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/>
+    /// is null.</exception>
     public static int CodePointBefore(
       string str,
       int index,
@@ -354,53 +343,48 @@ namespace PeterO {
       return c;
     }
 
-    /// <summary>Gets the Unicode code point at the given index of the
-    /// string.</summary>
-    /// <param name='str'>The parameter <paramref name='str'/> is a text
-    /// string.</param>
-    /// <param name='index'>Index of the current position into the
-    /// string.</param>
-    /// <returns>The Unicode code point at the given position. Returns -1
-    /// if <paramref name='index'/> is 0 or less, or is greater than the
-    /// string's length. Returns the replacement character (U + FFFD) if
-    /// the code point at that position is an unpaired surrogate code
-    /// point. If the return value is 65536 (0x10000) or greater, the code
-    /// point takes up two UTF-16 code units.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='str'/> is null.</exception>
+    /// <summary>Gets the Unicode code point at the given index of the string.</summary><param name='str'>The parameter
+    /// <paramref name='str'/>
+    /// is a text string.
+    /// </param><param name='index'>Index of the current position into the string.
+    /// </param><returns>The Unicode code point at the given position. Returns -1 if
+    /// <paramref name='index'/>
+    /// is 0 or less, or is greater than the string's length. Returns the
+    /// replacement character (U+FFFD) if the code point at that position is an
+    /// unpaired surrogate code point. If the return value is 65536 (0x10000) or
+    /// greater, the code point takes up two UTF-16 code units.
+    /// </returns><exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/>
+    /// is null.</exception>
     public static int CodePointAt(string str, int index) {
       return CodePointAt(str, index, 0);
     }
 
-    /// <summary>Gets the Unicode code point at the given index of the
-    /// string.</summary>
-    /// <param name='str'>The parameter <paramref name='str'/> is a text
-    /// string.</param>
-    /// <param name='index'>Index of the current position into the
-    /// string.</param>
-    /// <param name='surrogateBehavior'>Specifies what kind of value to
-    /// return if the code point at the given index is an unpaired
-    /// surrogate code point: if 0, return the replacement character (U +
-    /// FFFD); if 1, return the value of the surrogate code point; if
-    /// neither 0 nor 1, return -1.</param>
-    /// <returns>The Unicode code point at the given position. Returns -1
-    /// if <paramref name='index'/> is 0 or less, or is greater than the
-    /// string's length. Returns a value as specified under <paramref
-    /// name='surrogateBehavior'/> if the code point at that position is an
-    /// unpaired surrogate code point. If the return value is 65536
-    /// (0x10000) or greater, the code point takes up two UTF-16 code
-    /// units.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='str'/> is null.</exception>
-    /// <example>
-    /// <para>The following example shows how to iterate a text string code
-    /// point by code point, terminating the loop when an unpaired
-    /// surrogate is found.</para>
+    /// <summary>Gets the Unicode code point at the given index of the string.</summary><param name='str'>The parameter
+    /// <paramref name='str'/>
+    /// is a text string.
+    /// </param><param name='index'>Index of the current position into the string.
+    /// </param><param name='surrogateBehavior'>Specifies what kind of value to return if the code point at the given
+    /// index is an unpaired surrogate code point: if 0, return the replacement
+    /// character (U+FFFD); if 1, return the value of the surrogate code point; if
+    /// neither 0 nor 1, return -1.
+    /// </param><returns>The Unicode code point at the given position. Returns -1 if
+    /// <paramref name='index'/>
+    /// is 0 or less, or is greater than the string's length. Returns a value as
+    /// specified under
+    /// <paramref name='surrogateBehavior'/>
+    /// if the code point at that position is an unpaired surrogate code point.
+    /// If the return value is 65536 (0x10000) or greater, the code point takes up
+    /// two UTF-16 code units.
+    /// </returns><exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/>
+    /// is null.</exception><example><para>The following example shows how to iterate a text string code point by
+    /// code point, terminating the loop when an unpaired surrogate is found.
+    /// </para>
     /// <code>for (var i = 0;i&lt;str.Length; ++i) { int codePoint =
     /// DataUtilities.CodePointAt(str, i, 2); if (codePoint &lt; 0) { break; /*
     /// Unpaired surrogate */ } Console.WriteLine("codePoint:"+codePoint); if
-    /// (codePoint &gt;= 0x10000) { i++; /* Supplementary code point */ } }</code>
-    ///  .
+    /// (codePoint &gt;= 0x10000) { i++; /* Supplementary code point */ } }</code> .
     /// </example>
     public static int CodePointAt(
       string str,
@@ -428,13 +412,14 @@ namespace PeterO {
       return c;
     }
 
-    /// <summary>Returns a string with the basic upper-case letters A to Z
-    /// (U + 0041 to U + 005A) converted to lower-case. Other characters
-    /// remain unchanged.</summary>
-    /// <param name='str'>The parameter <paramref name='str'/> is a text
-    /// string.</param>
-    /// <returns>The converted string, or null if <paramref name='str'/> is
-    /// null.</returns>
+    /// <summary>Returns a string with the basic upper-case letters A to Z (U+0041 to
+    /// U+005A) converted to lower-case. Other characters remain unchanged.</summary><param name='str'>The parameter
+    /// <paramref name='str'/>
+    /// is a text string.
+    /// </param><returns>The converted string, or null if
+    /// <paramref name='str'/>
+    /// is null.
+    /// </returns>
     public static string ToLowerCaseAscii(string str) {
       if (str == null) {
         return null;
@@ -464,13 +449,14 @@ namespace PeterO {
       return builder.ToString();
     }
 
-    /// <summary>Returns a string with the basic lower-case letters A to Z
-    /// (U + 0061 to U + 007A) converted to upper-case. Other characters
-    /// remain unchanged.</summary>
-    /// <param name='str'>The parameter <paramref name='str'/> is a text
-    /// string.</param>
-    /// <returns>The converted string, or null if <paramref name='str'/> is
-    /// null.</returns>
+    /// <summary>Returns a string with the basic lower-case letters A to Z (U+0061 to
+    /// U+007A) converted to upper-case. Other characters remain unchanged.</summary><param name='str'>The parameter
+    /// <paramref name='str'/>
+    /// is a text string.
+    /// </param><returns>The converted string, or null if
+    /// <paramref name='str'/>
+    /// is null.
+    /// </returns>
     public static string ToUpperCaseAscii(string str) {
       if (str == null) {
         return null;
@@ -500,18 +486,16 @@ namespace PeterO {
       return builder.ToString();
     }
 
-    /// <summary>Compares two strings in Unicode code point order. Unpaired
-    /// surrogate code points are treated as individual code
-    /// points.</summary>
-    /// <param name='strA'>The first string. Can be null.</param>
-    /// <param name='strB'>The second string. Can be null.</param>
-    /// <returns>A value indicating which string is " less" or " greater" .
-    /// 0: Both strings are equal or null. Less than 0: a is null and b
-    /// isn't; or the first code point that's different is less in A than
-    /// in B; or b starts with a and is longer than a. Greater than 0: b is
-    /// null and a isn't; or the first code point that's different is
-    /// greater in A than in B; or a starts with b and is longer than
-    /// b.</returns>
+    /// <summary>Compares two strings in Unicode code point order. Unpaired surrogate code
+    /// points are treated as individual code points.</summary><param name='strA'>The first string. Can be null.
+    /// </param><param name='strB'>The second string. Can be null.
+    /// </param><returns>A value indicating which string is " less" or " greater" . 0: Both strings
+    /// are equal or null. Less than 0: a is null and b isn't; or the first code
+    /// point that's different is less in A than in B; or b starts with a and is
+    /// longer than a. Greater than 0: b is null and a isn't; or the first code
+    /// point that's different is greater in A than in B; or a starts with b and
+    /// is longer than b.
+    /// </returns>
     public static int CodePointCompare(string strA, string strB) {
       if (strA == null) {
         return (strB == null) ? 0 : -1;
@@ -573,27 +557,30 @@ namespace PeterO {
     /// write.</param>
     /// <param name='stream'>A writable data stream.</param>
     /// <param name='replace'>If true, replaces unpaired surrogate code
-    /// points with the replacement character (U + FFFD). If false, stops
+    /// points with the replacement character (U+FFFD). If false, stops
     /// processing when an unpaired surrogate code point is seen.</param>
     /// <returns>0 if the entire string portion was written; or -1 if the
     /// string portion contains an unpaired surrogate code point and
     /// <paramref name='replace'/> is false.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='str'/> is null or <paramref name='stream'/> is
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/> is null or <paramref name='stream'/> is
     /// null.</exception>
-    /// <exception cref='ArgumentException'>The parameter <paramref
-    /// name='offset'/> is less than 0, <paramref name='length'/> is less
+    /// <exception cref='System.ArgumentException'>The parameter <paramref name='offset'/> is less than 0, <paramref name='length'/> is less
     /// than 0, or <paramref name='offset'/> plus <paramref name='length'/>
     /// is greater than the string's length.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error
     /// occurred.</exception>
-    /// <exception cref='ArgumentException'>Either &#x22;offset&#x22; or
-    /// &#x22;length&#x22; is less than 0 or greater than
-    /// &#x22;str&#x22;&#x27;s length, or &#x22;str&#x22;&#x27;s length
-    /// minus &#x22;offset&#x22; is less than
-    /// &#x22;length&#x22;.</exception>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='str'/> is null.</exception>
+    /// <exception cref='System.ArgumentException'>Either <paramref name='offset'/> or <paramref name='length'/> is less than 0 or
+    /// greater than <paramref name='str'/> 's length, or <paramref name='str'/> 's length minus <paramref name='offset'/> is less than
+    /// <paramref name='length'/>.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/> is null.</exception>
+    /// <exception cref='System.ArgumentException'>Either &quot;offset&quot; or
+    /// &quot;length&quot; is less than 0 or greater than
+    /// &quot;str&quot;&apos;s length, or &quot;str&quot;&apos;s length
+    /// minus &quot;offset&quot; is less than
+    /// &quot;length&quot;.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception>
     public static int WriteUtf8(
       string str,
       int offset,
@@ -612,7 +599,7 @@ namespace PeterO {
     /// write.</param>
     /// <param name='stream'>A writable data stream.</param>
     /// <param name='replace'>If true, replaces unpaired surrogate code
-    /// points with the replacement character (U + FFFD). If false, stops
+    /// points with the replacement character (U+FFFD). If false, stops
     /// processing when an unpaired surrogate code point is seen.</param>
     /// <param name='lenientLineBreaks'>If true, replaces carriage return
     /// (CR) not followed by line feed (LF) and LF not preceded by CR with
@@ -620,22 +607,25 @@ namespace PeterO {
     /// <returns>0 if the entire string portion was written; or -1 if the
     /// string portion contains an unpaired surrogate code point and
     /// <paramref name='replace'/> is false.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='str'/> is null or <paramref name='stream'/> is
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/> is null or <paramref name='stream'/> is
     /// null.</exception>
-    /// <exception cref='ArgumentException'>The parameter <paramref
-    /// name='offset'/> is less than 0, <paramref name='length'/> is less
+    /// <exception cref='System.ArgumentException'>The parameter <paramref name='offset'/> is less than 0, <paramref name='length'/> is less
     /// than 0, or <paramref name='offset'/> plus <paramref name='length'/>
     /// is greater than the string's length.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error
     /// occurred.</exception>
-    /// <exception cref='ArgumentException'>Either &#x22;offset&#x22; or
-    /// &#x22;length&#x22; is less than 0 or greater than
-    /// &#x22;str&#x22;&#x27;s length, or &#x22;str&#x22;&#x27;s length
-    /// minus &#x22;offset&#x22; is less than
-    /// &#x22;length&#x22;.</exception>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='str'/> is null.</exception>
+    /// <exception cref='System.ArgumentException'>Either <paramref name='offset'/> or <paramref name='length'/> is less than 0 or
+    /// greater than <paramref name='str'/> 's length, or <paramref name='str'/> 's length minus <paramref name='offset'/> is less than
+    /// <paramref name='length'/>.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/> is null.</exception>
+    /// <exception cref='System.ArgumentException'>Either &quot;offset&quot; or
+    /// &quot;length&quot; is less than 0 or greater than
+    /// &quot;str&quot;&apos;s length, or &quot;str&quot;&apos;s length
+    /// minus &quot;offset&quot; is less than
+    /// &quot;length&quot;.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception>
     public static int WriteUtf8(
       string str,
       int offset,
@@ -768,21 +758,20 @@ namespace PeterO {
       return retval;
     }
 
-    /// <summary>Writes a string in UTF-8 encoding to a data
-    /// stream.</summary>
-    /// <param name='str'>A string to write.</param>
-    /// <param name='stream'>A writable data stream.</param>
-    /// <param name='replace'>If true, replaces unpaired surrogate code
-    /// points with the replacement character (U + FFFD). If false, stops
-    /// processing when an unpaired surrogate code point is seen.</param>
-    /// <returns>0 if the entire string was written; or -1 if the string
-    /// contains an unpaired surrogate code point and <paramref
-    /// name='replace'/> is false.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='str'/> is null or <paramref name='stream'/> is
-    /// null.</exception>
-    /// <exception cref='System.IO.IOException'>An I/O error
-    /// occurred.</exception>
+    /// <summary>Writes a string in UTF-8 encoding to a data stream.</summary><param name='str'>A string to write.
+    /// </param><param name='stream'>A writable data stream.
+    /// </param><param name='replace'>If true, replaces unpaired surrogate code points with the replacement
+    /// character (U+FFFD). If false, stops processing when an unpaired surrogate
+    /// code point is seen.
+    /// </param><returns>0 if the entire string was written; or -1 if the string contains an
+    /// unpaired surrogate code point and
+    /// <paramref name='replace'/>
+    /// is false.
+    /// </returns><exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/>
+    /// is null or
+    /// <paramref name='stream'/>
+    /// is null.</exception><exception cref='System.IO.IOException'>An I/O error occurred.</exception>
     public static int WriteUtf8(string str, Stream stream, bool replace) {
       if (str == null) {
         throw new ArgumentNullException(nameof(str));
@@ -790,29 +779,27 @@ namespace PeterO {
       return WriteUtf8(str, 0, str.Length, stream, replace);
     }
 
-    /// <summary>Reads a string in UTF-8 encoding from a byte
-    /// array.</summary>
-    /// <param name='data'>A byte array containing a UTF-8 text
-    /// string.</param>
-    /// <param name='offset'>Offset into the byte array to start
-    /// reading.</param>
-    /// <param name='bytesCount'>Length, in bytes, of the UTF-8 text
-    /// string.</param>
-    /// <param name='builder'>A string builder object where the resulting
-    /// string will be stored.</param>
-    /// <param name='replace'>If true, replaces invalid encoding with the
-    /// replacement character (U + FFFD). If false, stops processing when
-    /// invalid UTF-8 is seen.</param>
-    /// <returns>0 if the entire string was read without errors, or -1 if
-    /// the string is not valid UTF-8 and <paramref name='replace'/> is
-    /// false.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='data'/> is null or <paramref name='builder'/> is
-    /// null.</exception>
-    /// <exception cref='ArgumentException'>The parameter <paramref
-    /// name='offset'/> is less than 0, <paramref name='bytesCount'/> is
-    /// less than 0, or offset plus bytesCount is greater than the length
-    /// of <paramref name='data'/>.</exception>
+    /// <summary>Reads a string in UTF-8 encoding from a byte array.</summary><param name='data'>A byte array containing a UTF-8 text string.
+    /// </param><param name='offset'>Offset into the byte array to start reading.
+    /// </param><param name='bytesCount'>Length, in bytes, of the UTF-8 text string.
+    /// </param><param name='builder'>A string builder object where the resulting string will be stored.
+    /// </param><param name='replace'>If true, replaces invalid encoding with the replacement character
+    /// (U+FFFD). If false, stops processing when invalid UTF-8 is seen.
+    /// </param><returns>0 if the entire string was read without errors, or -1 if the string is not
+    /// valid UTF-8 and
+    /// <paramref name='replace'/>
+    /// is false.
+    /// </returns><exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='data'/>
+    /// is null or
+    /// <paramref name='builder'/>
+    /// is null.</exception><exception cref='System.ArgumentException'>The parameter
+    /// <paramref name='offset'/>
+    /// is less than 0,
+    /// <paramref name='bytesCount'/>
+    /// is less than 0, or offset plus bytesCount is greater than the length of
+    /// <paramref name='data'/>
+    /// .</exception>
     public static int ReadUtf8FromBytes(
       byte[] data,
       int offset,
@@ -925,34 +912,30 @@ namespace PeterO {
       return 0;
     }
 
-    /// <summary>Reads a string in UTF-8 encoding from a data stream in
-    /// full and returns that string. Replaces invalid encoding with the
-    /// replacement character (U + FFFD).</summary>
-    /// <param name='stream'>A readable data stream.</param>
-    /// <returns>The string read.</returns>
-    /// <exception cref='System.IO.IOException'>An I/O error
-    /// occurred.</exception>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='stream'/> is null.</exception>
+    /// <summary>Reads a string in UTF-8 encoding from a data stream in full and returns
+    /// that string. Replaces invalid encoding with the replacement character
+    /// (U+FFFD).</summary><param name='stream'>A readable data stream.
+    /// </param><returns>The string read.
+    /// </returns><exception cref='System.IO.IOException'>An I/O error occurred.</exception><exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='stream'/>
+    /// is null.</exception>
     public static string ReadUtf8ToString(Stream stream) {
       return ReadUtf8ToString(stream, -1, true);
     }
 
-    /// <summary>Reads a string in UTF-8 encoding from a data stream and
-    /// returns that string.</summary>
-    /// <param name='stream'>A readable data stream.</param>
-    /// <param name='bytesCount'>The length, in bytes, of the string. If
-    /// this is less than 0, this function will read until the end of the
-    /// stream.</param>
-    /// <param name='replace'>If true, replaces invalid encoding with the
-    /// replacement character (U + FFFD). If false, throws an error if an
-    /// unpaired surrogate code point is seen.</param>
-    /// <returns>The string read.</returns>
-    /// <exception cref='System.IO.IOException'>An I/O error occurred; or,
-    /// the string is not valid UTF-8 and <paramref name='replace'/> is
-    /// false.</exception>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='stream'/> is null.</exception>
+    /// <summary>Reads a string in UTF-8 encoding from a data stream and returns that
+    /// string.</summary><param name='stream'>A readable data stream.
+    /// </param><param name='bytesCount'>The length, in bytes, of the string. If this is less than 0, this function
+    /// will read until the end of the stream.
+    /// </param><param name='replace'>If true, replaces invalid encoding with the replacement character
+    /// (U+FFFD). If false, throws an error if an unpaired surrogate code point is
+    /// seen.
+    /// </param><returns>The string read.
+    /// </returns><exception cref='System.IO.IOException'>An I/O error occurred; or, the string is not valid UTF-8 and
+    /// <paramref name='replace'/>
+    /// is false.</exception><exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='stream'/>
+    /// is null.</exception>
     public static string ReadUtf8ToString(
       Stream stream,
       int bytesCount,
@@ -966,27 +949,25 @@ namespace PeterO {
       return builder.ToString();
     }
 
-    /// <summary>Reads a string in UTF-8 encoding from a data
-    /// stream.</summary>
-    /// <param name='stream'>A readable data stream.</param>
-    /// <param name='bytesCount'>The length, in bytes, of the string. If
-    /// this is less than 0, this function will read until the end of the
-    /// stream.</param>
-    /// <param name='builder'>A string builder object where the resulting
-    /// string will be stored.</param>
-    /// <param name='replace'>If true, replaces invalid encoding with the
-    /// replacement character (U + FFFD). If false, stops processing when
-    /// an unpaired surrogate code point is seen.</param>
-    /// <returns>0 if the entire string was read without errors, -1 if the
-    /// string is not valid UTF-8 and <paramref name='replace'/> is false,
-    /// or -2 if the end of the stream was reached before the last
-    /// character was read completely (which is only the case if <paramref
-    /// name='bytesCount'/> is 0 or greater).</returns>
-    /// <exception cref='System.IO.IOException'>An I/O error
-    /// occurred.</exception>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='stream'/> is null or <paramref name='builder'/> is
-    /// null.</exception>
+    /// <summary>Reads a string in UTF-8 encoding from a data stream.</summary><param name='stream'>A readable data stream.
+    /// </param><param name='bytesCount'>The length, in bytes, of the string. If this is less than 0, this function
+    /// will read until the end of the stream.
+    /// </param><param name='builder'>A string builder object where the resulting string will be stored.
+    /// </param><param name='replace'>If true, replaces invalid encoding with the replacement character
+    /// (U+FFFD). If false, stops processing when an unpaired surrogate code point
+    /// is seen.
+    /// </param><returns>0 if the entire string was read without errors, -1 if the string is not
+    /// valid UTF-8 and
+    /// <paramref name='replace'/>
+    /// is false, or -2 if the end of the stream was reached before the last
+    /// character was read completely (which is only the case if
+    /// <paramref name='bytesCount'/>
+    /// is 0 or greater).
+    /// </returns><exception cref='System.IO.IOException'>An I/O error occurred.</exception><exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='stream'/>
+    /// is null or
+    /// <paramref name='builder'/>
+    /// is null.</exception>
     public static int ReadUtf8(
       Stream stream,
       int bytesCount,

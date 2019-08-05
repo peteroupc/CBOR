@@ -495,7 +495,7 @@ IsMethodOverride((MethodInfo)method)) {
         this.Write(t);
         XmlDoc.VisitInnerNode(node, this);
       } else {
-        var xmlName = node.LocalName.ToLowerInvariant();
+        var xmlName = PeterO.DataUtilities.ToLowerCaseAscii(node.LocalName);
         if (xmlName.Equals("c", StringComparison.Ordinal)) {
           this.VisitC(node);
         } else if (xmlName.Equals("code", StringComparison.Ordinal)) {

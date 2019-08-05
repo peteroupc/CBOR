@@ -29,7 +29,7 @@ namespace PeterO.DocGen {
     }
 
     public static string MemberName(object obj) {
-      return (obj is Type) ? (((Type)obj).FullName) : ((obj is MethodInfo) ?
+      return (obj is Type) ? ((Type)obj).FullName : ((obj is MethodInfo) ?
 ((MethodInfo)obj).Name : ((obj is PropertyInfo) ? ((PropertyInfo)obj).Name :
 ((obj is FieldInfo) ?
 
@@ -118,11 +118,11 @@ namespace PeterO.DocGen {
       }
       if (propertyInfo != null) {
         isPublicOrProtected = (propertyInfo.CanRead &&
-                    propertyInfo.GetGetMethod().IsPublic ||
-                    propertyInfo.GetGetMethod().IsFamily) ||
+                    (propertyInfo.GetGetMethod().IsPublic ||
+                     propertyInfo.GetGetMethod().IsFamily)) ||
                     (propertyInfo.CanWrite &&
-                    propertyInfo.GetSetMethod().IsPublic ||
-                    propertyInfo.GetSetMethod().IsFamily);
+                    (propertyInfo.GetSetMethod().IsPublic ||
+                     propertyInfo.GetSetMethod().IsFamily));
       }
       if (fieldInfo != null) {
         isPublicOrProtected = fieldInfo.IsPublic || fieldInfo.IsFamily;

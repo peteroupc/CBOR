@@ -4,12 +4,12 @@
 
 <b>Deprecated.</b> Use EContext from PeterO.Numbers/com.upokecenter.numbers.
 
-A precision context.
+ A precision context.
 
 ### Member Summary
 * <code>[ToString()](#ToString)</code> - Gets a string representation of this object.
 
-<a id="Void_ctor_Int32_Rounding_Int32_Int32_Boolean"></a>
+<a id="Void_ctor_Int32_PeterO_Rounding_Int32_Int32_Boolean"></a>
 ### PrecisionContext Constructor
 
     public PrecisionContext(
@@ -19,9 +19,9 @@ A precision context.
         int exponentMaxSmall,
         bool clampNormalExponents);
 
-Initializes a new instance of the [PeterO.PrecisionContext](PeterO.PrecisionContext.md) class. HasFlags will be set to false.
+ Initializes a new instance of the [PeterO.PrecisionContext](PeterO.PrecisionContext.md) class. HasFlags will be set to false.
 
-<b>Parameters:</b>
+  <b>Parameters:</b>
 
  * <i>precision</i>: The maximum number of digits a number can have, or 0 for an unlimited number of digits.
 
@@ -38,8 +38,8 @@ Initializes a new instance of the [PeterO.PrecisionContext](PeterO.PrecisionCont
 
     public override string ToString();
 
-Gets a string representation of this object. Note that the format is not intended to be parsed and may change at any time.
+ Gets a string representation of this object. Note that the format is not intended to be parsed and may change at any time.
 
-<b>Return Value:</b>
+  <b>Return Value:</b>
 
 A string representation of this object.

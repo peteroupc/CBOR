@@ -2,7 +2,7 @@
 
     public sealed class CBORTypeMapper
 
- Holds converters to customize the serialization and deserialization behavior of  `CBORObject.FromObject`  and  `CBORObject#ToObject` , as well as type filters for  `ToObject` .
+ Holds converters to customize the serialization and deserialization behavior of  `CBORObject.FromObject`  and  `CBORObject#ToObject`  , as well as type filters for  `ToObject`  .
 
 ### Member Summary
 * <code>[AddConverter&lt;T&gt;(System.Type, PeterO.Cbor.ICBORConverter&lt;T&gt;)](#AddConverter_T_System_Type_PeterO_Cbor_ICBORConverter_T)</code> - Registers an object that converts objects of a given type to CBOR objects (called a CBOR converter).
@@ -26,7 +26,7 @@
 
  Registers an object that converts objects of a given type to CBOR objects (called a CBOR converter).
 
-        <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>type</i>: A Type object specifying the type that the converter converts to CBOR objects.
 
@@ -57,7 +57,7 @@ Converter doesn't contain a proper ToCBORObject method".
 
  Adds the fully qualified name of a Java or.NET type for use in type matching.
 
-      <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>name</i>: The fully qualified name of a Java or.NET class (e.g.,  `java.math.BigInteger`  or  `System.Globalization.CultureInfo`  ).
 
@@ -83,7 +83,7 @@ The parameter  <i>name</i>
 
  Adds a prefix of a Java or.NET type for use in type matching. A type matches a prefix if its fully qualified name is or begins with that prefix, using codepoint-by-codepoint (case-sensitive) matching.
 
-      <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>prefix</i>: The prefix of a Java or.NET type (e.g., `java.math.` or `System.Globalization`).
 
@@ -109,7 +109,7 @@ The parameter  <i>prefix</i>
 
  Returns whether the given Java or.NET type name fits the filters given in this mapper.
 
-    <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>typeName</i>: The fully qualified name of a Java or.NET class (e.g.,  `java.math.BigInteger`  or  `System.Globalization.CultureInfo`  ).
 

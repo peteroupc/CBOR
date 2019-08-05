@@ -11,8 +11,8 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-    /// <summary>Contains utility methods that may have use outside of the
-    /// CBORObject class.</summary>
+    /// <summary>Contains utility methods that may have use outside of the CBORObject
+    /// class.</summary>
   internal static class CBORUtilities {
     private const string HexAlphabet = "0123456789ABCDEF";
 
@@ -146,14 +146,14 @@ namespace PeterO.Cbor {
 
     public static double Int64BitsToDouble(long bits) {
       return BitConverter.ToDouble(
-BitConverter.GetBytes(bits),
-0);
+  BitConverter.GetBytes(bits),
+  0);
     }
 
     public static float Int32BitsToSingle(int bits) {
       return BitConverter.ToSingle(
-BitConverter.GetBytes(bits),
-0);
+  BitConverter.GetBytes(bits),
+  0);
     }
 
     public static string DoubleToString(double dbl) {
@@ -163,7 +163,6 @@ BitConverter.GetBytes(bits),
     public static string SingleToString(float sing) {
       return EFloat.FromSingle(sing).ToShortestString(EContext.Binary32);
     }
-
 
     public static string LongToString(long longValue) {
       if (longValue == Int64.MinValue) {
