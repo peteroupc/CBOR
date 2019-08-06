@@ -10,13 +10,13 @@ using PeterO.Numbers;
 #pragma warning disable CA1036 // This class is obsolete
 
 namespace PeterO {
-  /// <include file='../docs.xml'
-  /// path='docs/doc[@name="T:PeterO.ExtendedDecimal"]/*'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.ExtendedDecimal"]/*'/>
   [Obsolete(
-"Use EDecimal from PeterO.Numbers/com.upokecenter.numbers and the output" +
+  "Use EDecimal from PeterO.Numbers/com.upokecenter.numbers and the output" +
 "\u0020of this class's ToString method.")]
   public sealed class ExtendedDecimal : IComparable<ExtendedDecimal>,
-IEquatable<ExtendedDecimal> {
+  IEquatable<ExtendedDecimal> {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="P:PeterO.ExtendedDecimal.Exponent"]/*'/>
     public BigInteger Exponent {

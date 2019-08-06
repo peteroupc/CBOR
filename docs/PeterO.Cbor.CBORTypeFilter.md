@@ -85,15 +85,13 @@
 
  Determines whether this type filter allows CBOR arrays and the given array index is allowed under this type filter.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>index</i>: An array index, starting from 0.
 
 <b>Return Value:</b>
 
- `true
-            `  if this type filter allows CBOR arrays and the given array index is allowed under this type filter; otherwise,  `false
-            `  .
+ `true`  if this type filter allows CBOR arrays and the given array index is allowed under this type filter; otherwise,  `false`  .
 
 <a id="ArrayLengthMatches_int"></a>
 ### ArrayLengthMatches
@@ -103,15 +101,13 @@
 
  Returns whether an array's length is allowed under this filter.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>length</i>: The length of a CBOR array.
 
 <b>Return Value:</b>
 
- `true
-            `  if this filter allows CBOR arrays and an array's length is allowed under this filter; otherwise,  `false
-            `  .
+ `true`  if this filter allows CBOR arrays and an array's length is allowed under this filter; otherwise,  `false`  .
 
 <a id="ArrayLengthMatches_long"></a>
 ### ArrayLengthMatches
@@ -121,15 +117,13 @@
 
  Returns whether an array's length is allowed under a filter.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>length</i>: The length of a CBOR array.
 
 <b>Return Value:</b>
 
- `true
-            `  if this filter allows CBOR arrays and an array's length is allowed under a filter; otherwise,  `false
-            `  .
+ `true`  if this filter allows CBOR arrays and an array's length is allowed under a filter; otherwise,  `false`  .
 
 <a id="ArrayLengthMatches_PeterO_Numbers_EInteger"></a>
 ### ArrayLengthMatches
@@ -139,15 +133,13 @@
 
  Returns whether an array's length is allowed under a filter.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>bigLength</i>: An arbitrary-precision integer.
 
 <b>Return Value:</b>
 
- `true
-            `  if this filter allows CBOR arrays and an array's length is allowed under a filter; otherwise,  `false
-            `  .
+ `true`  if this filter allows CBOR arrays and an array's length is allowed under a filter; otherwise,  `false`  .
 
 <b>Exceptions:</b>
 
@@ -163,7 +155,7 @@ The parameter  <i>bigLength</i>
 
  Gets the type filter for this array filter by its index.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>index</i>: A zero-based index of the filter to retrieve.
 
@@ -179,7 +171,7 @@ Returns None if the index is out of range, or Any if this filter doesn't filter 
 
  Gets the type filter for this array filter by its index.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>index</i>: A zero-based index of the filter to retrieve.
 
@@ -195,15 +187,13 @@ Returns None if the index is out of range, or Any if this filter doesn't filter 
 
  Returns whether the given CBOR major type matches a major type allowed by this filter.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>type</i>: A CBOR major type from 0 to 7.
 
 <b>Return Value:</b>
 
- `true
-            `  if the given CBOR major type matches a major type allowed by this filter; otherwise,  `false
-            `  .
+ `true`  if the given CBOR major type matches a major type allowed by this filter; otherwise,  `false`  .
 
 <a id="NonFPSimpleValueAllowed"></a>
 ### NonFPSimpleValueAllowed
@@ -212,11 +202,9 @@ Returns None if the index is out of range, or Any if this filter doesn't filter 
 
  Returns whether this filter allows simple values that are not floating-point numbers.
 
-  <b>Return Value:</b>
+ <b>Return Value:</b>
 
- `true
-            `  if this filter allows simple values that are not floating-point numbers; otherwise,  `false
-            `  .
+ `true`  if this filter allows simple values that are not floating-point numbers; otherwise,  `false`  .
 
 <a id="TagAllowed_int"></a>
 ### TagAllowed
@@ -226,15 +214,13 @@ Returns None if the index is out of range, or Any if this filter doesn't filter 
 
  Gets a value indicating whether CBOR objects can have the given tag number.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>tag</i>: A tag number. Returns false if this is less than 0.
 
 <b>Return Value:</b>
 
- `true
-            `  if CBOR objects can have the given tag number; otherwise,  `false
-            `  .
+ `true`  if CBOR objects can have the given tag number; otherwise,  `false`  .
 
 <a id="TagAllowed_long"></a>
 ### TagAllowed
@@ -244,15 +230,13 @@ Returns None if the index is out of range, or Any if this filter doesn't filter 
 
  Gets a value indicating whether CBOR objects can have the given tag number.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>longTag</i>: A tag number. Returns false if this is less than 0.
 
 <b>Return Value:</b>
 
- `true
-            `  if CBOR objects can have the given tag number; otherwise,  `false
-            `  .
+ `true`  if CBOR objects can have the given tag number; otherwise,  `false`  .
 
 <a id="TagAllowed_PeterO_Numbers_EInteger"></a>
 ### TagAllowed
@@ -262,15 +246,13 @@ Returns None if the index is out of range, or Any if this filter doesn't filter 
 
  Gets a value indicating whether CBOR objects can have the given tag number.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>bigTag</i>: A tag number. Returns false if this is less than 0.
 
 <b>Return Value:</b>
 
- `true
-            `  if CBOR objects can have the given tag number; otherwise,  `false
-            `  .
+ `true`  if CBOR objects can have the given tag number; otherwise,  `false`  .
 
 <b>Exceptions:</b>
 
@@ -285,7 +267,7 @@ The parameter  <i>bigTag</i>
 
  Copies this filter and includes arrays of any length in the new filter.
 
-  <b>Return Value:</b>
+ <b>Return Value:</b>
 
 A CBORTypeFilter object.
 
@@ -298,7 +280,7 @@ A CBORTypeFilter object.
 
  Copies this filter and includes CBOR arrays with an exact length to the new filter.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>arrayLength</i>: The desired maximum length of an array.
 
@@ -328,7 +310,7 @@ The parameter elements has fewer elements than specified in arrayLength.
 
  Copies this filter and includes CBOR arrays with at least a given length to the new filter.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>arrayLength</i>: The desired minimum length of an array.
 
@@ -356,7 +338,7 @@ The parameter elements has fewer elements than specified in arrayLength.
 
  Copies this filter and includes byte strings in the new filter.
 
-  <b>Return Value:</b>
+ <b>Return Value:</b>
 
 A CBORTypeFilter object.
 
@@ -367,7 +349,7 @@ A CBORTypeFilter object.
 
  Copies this filter and includes floating-point numbers in the new filter.
 
-  <b>Return Value:</b>
+ <b>Return Value:</b>
 
 A CBORTypeFilter object.
 
@@ -378,7 +360,7 @@ A CBORTypeFilter object.
 
  Copies this filter and includes maps in the new filter.
 
-  <b>Return Value:</b>
+ <b>Return Value:</b>
 
 A CBORTypeFilter object.
 
@@ -389,7 +371,7 @@ A CBORTypeFilter object.
 
  Copies this filter and includes negative integers in the new filter.
 
-  <b>Return Value:</b>
+ <b>Return Value:</b>
 
 A CBORTypeFilter object.
 
@@ -401,7 +383,7 @@ A CBORTypeFilter object.
 
  Copies this filter and includes a set of valid CBOR tags in the new filter.
 
-     <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>tags</i>: An array of the CBOR tags to add to the new filter.
 
@@ -423,7 +405,7 @@ The parameter  <i>tags</i>
 
  Copies this filter and includes text strings in the new filter.
 
-  <b>Return Value:</b>
+ <b>Return Value:</b>
 
 A CBORTypeFilter object.
 
@@ -434,6 +416,6 @@ A CBORTypeFilter object.
 
  Copies this filter and includes unsigned integers in the new filter.
 
-  <b>Return Value:</b>
+ <b>Return Value:</b>
 
 A CBORTypeFilter object.

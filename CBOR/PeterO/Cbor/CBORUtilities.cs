@@ -11,8 +11,8 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-  /// <include file='../../docs.xml'
-  /// path='docs/doc[@name="T:PeterO.Cbor.CBORUtilities"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.Cbor.CBORUtilities"]/*'/>
   internal static class CBORUtilities {
     private const string HexAlphabet = "0123456789ABCDEF";
 
@@ -269,7 +269,7 @@ namespace PeterO.Cbor {
                     year.Remainder(num100).Sign == 0 &&
                     year.Remainder(num400).Sign != 0)) ? ValueNormalDays :
               ValueLeapDays;
-          } else {
+            } else {
             ++month;
           }
         }
@@ -474,8 +474,7 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
         } else if (i == 10) {
           bad |= str[i] != 'T';
           /*lowercase t not used to separate date/time,
-    following RFC 4287 sec. 3.3*/
-        } else {
+    following RFC 4287 sec. 3.3*/ } else {
           bad |= str[i] < '0' || str[i] >
 '9';
         }

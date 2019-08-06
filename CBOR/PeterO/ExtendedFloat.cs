@@ -10,13 +10,13 @@ using PeterO.Numbers;
 
 #pragma warning disable CA1036 // This class is obsolete
 namespace PeterO {
-  /// <include file='../docs.xml'
-  /// path='docs/doc[@name="T:PeterO.ExtendedFloat"]/*'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.ExtendedFloat"]/*'/>
   [Obsolete(
-"Use EFloat from PeterO.Numbers/com.upokecenter.numbers and the output of" +
+  "Use EFloat from PeterO.Numbers/com.upokecenter.numbers and the output of" +
 "\u0020this class's ToString method.")]
   public sealed class ExtendedFloat : IComparable<ExtendedFloat>,
-IEquatable<ExtendedFloat> {
+  IEquatable<ExtendedFloat> {
     private readonly EFloat ef;
 
     internal ExtendedFloat(EFloat ef) {
@@ -71,7 +71,7 @@ IEquatable<ExtendedFloat> {
     ///   path='docs/doc[@name="M:PeterO.ExtendedFloat.Equals(PeterO.ExtendedFloat)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public bool Equals(ExtendedFloat other) {
-      return other!=null && this.Ef.Equals(other.Ef);
+      return other != null && this.Ef.Equals(other.Ef);
     }
 
     /// <include file='../docs.xml'
@@ -133,8 +133,8 @@ IEquatable<ExtendedFloat> {
     /// combination of upper and lower case.</para>
     /// <para>All characters mentioned above are the corresponding
     /// characters in the Basic Latin range. In particular, the digits must
-    /// be the basic digits 0 to 9 (U + 0030 to U + 0039). The string is
-    /// not allowed to contain white space characters, including
+    /// be the basic digits 0 to 9 (U+0030 to U+0039). The string is not
+    /// allowed to contain white space characters, including
     /// spaces.</para></summary>
     /// <param name='str'>The parameter <paramref name='str'/> is a text
     /// string.</param>
@@ -148,18 +148,25 @@ IEquatable<ExtendedFloat> {
     /// number. Can be null.</param>
     /// <returns>The parsed number, converted to arbitrary-precision binary
     /// float.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='str'/> is null.</exception>
-    /// <exception cref='ArgumentException'>Either <paramref
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/> is null.</exception>
+    /// <exception cref='System.ArgumentException'>Either <paramref
     /// name='offset'/> or <paramref name='length'/> is less than 0 or
     /// greater than <paramref name='str'/> 's length, or <paramref
     /// name='str'/> ' s length minus <paramref name='offset'/> is less
     /// than <paramref name='length'/>.</exception>
-    /// <exception cref='ArgumentException'>Either &#x22;offset&#x22; or
-    /// &#x22;length&#x22; is less than 0 or greater than
-    /// &#x22;str&#x22;&#x27;s length, or &#x22;str&#x22;&#x27;s length
-    /// minus &#x22;offset&#x22; is less than
-    /// &#x22;length&#x22;.</exception>
+    /// <exception cref='System.ArgumentException'>Either <paramref
+    /// name='offset'/> or <paramref name='length'/> is less than 0 or
+    /// greater than <paramref name='str'/> 's length, or <paramref
+    /// name='str'/> 's length minus <paramref name='offset'/> is less than
+    /// <paramref name='length'/>.</exception>
+    /// <exception cref='ArgumentException'>Either &quot;offset&quot; or
+    /// &quot;length&quot; is less than 0 or greater than
+    /// &quot;str&quot;&apos;s length, or &quot;str&quot;&apos;s length
+    /// minus &quot;offset&quot; is less than
+    /// &quot;length&quot;.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='str'/> is null.</exception>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public static ExtendedFloat FromString(
       string str,

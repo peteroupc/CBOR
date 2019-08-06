@@ -15,7 +15,8 @@ namespace PeterO.Cbor {
     /// floating point numbers, and decimal numbers. The floating-point
     /// value Not-a-Number is also included in the Number type.</summary>
     [Obsolete("Use the IsNumber property of CBORObject to determine" +
-       " whether a CBOR object represents a number.")]
+      " whether a CBOR object represents a number; however, IsNumber" +
+      " is narrower than CBORType.Number.")]
     Number,
 
     /// <summary>The simple values true and false.</summary>

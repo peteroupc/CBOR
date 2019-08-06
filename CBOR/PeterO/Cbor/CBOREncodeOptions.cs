@@ -1,8 +1,8 @@
 using System;
 
 namespace PeterO.Cbor {
-  /// <include file='../../docs.xml'
-  /// path='docs/doc[@name="T:PeterO.Cbor.CBOREncodeOptions"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.Cbor.CBOREncodeOptions"]/*'/>
   public sealed class CBOREncodeOptions {
     /// <summary>No special options for encoding/decoding. Value:
     /// 0.</summary>
@@ -68,21 +68,22 @@ new CBOREncodeOptions("useindeflengthstrings=0;allowduplicatekeys=1");
     /// <param name='allowDuplicateKeys'>A value indicating whether to
     /// disallow duplicate keys when reading CBOR objects from a data
     /// stream.</param>
-    /// <param name='ctap2Canonical'>A value indicating whether to encode CBOR objects in the CTAP2 canonical encoding form.</param>
+    /// <param name='ctap2Canonical'>A value indicating whether to encode
+    /// CBOR objects in the CTAP2 canonical encoding form.</param>
     public CBOREncodeOptions(
       bool useIndefLengthStrings,
       bool allowDuplicateKeys,
-      bool ctap2Canonical) : this(BuildString(useIndefLengthStrings, allowDuplicateKeys, ctap2Canonical)){
+      bool ctap2Canonical) : this(BuildString(useIndefLengthStrings,
+  allowDuplicateKeys, ctap2Canonical)) {
     }
 
     private static string BuildString(bool useIndefLengthStrings,
       bool allowDuplicateKeys,
-      bool ctap2Canonical){
-      return "useindeflengthstrings="+(useIndefLengthStrings ? "1" : "0")+
-         ";allowduplicatekeys="+(useIndefLengthStrings ? "1" : "0")+
-         ";ctap2canonical="+(useIndefLengthStrings ? "1" : "0");
+      bool ctap2Canonical) {
+      return "useindeflengthstrings=" + (useIndefLengthStrings ? "1" : "0") +
+         ";allowduplicatekeys=" + (allowDuplicateKeys ? "1" : "0") +
+         ";ctap2canonical=" + (ctap2Canonical ? "1" : "0");
     }
-
 
     /// <summary>Initializes a new instance of the
     /// <see cref='PeterO.Cbor.CBOREncodeOptions'/> class.</summary>
@@ -112,7 +113,7 @@ new CBOREncodeOptions("useindeflengthstrings=0;allowduplicatekeys=1");
         throw new ArgumentNullException(nameof(paramString));
       }
       var parser = new OptionsParser(paramString);
-      this.ResolveReferences = parser.GetBoolean("resolvereferences", false);
+      this.ResolveReferences = parser.GetBoolean("resolvereferences", true);
       this.UseIndefLengthStrings =
 parser.GetBoolean("useindeflengthstrings", true);
       this.AllowDuplicateKeys = parser.GetBoolean("allowduplicatekeys", true);
@@ -120,11 +121,8 @@ parser.GetBoolean("useindeflengthstrings", true);
       this.Ctap2Canonical = parser.GetBoolean("ctap2canonical", false);
     }
 
-    /// <summary>Gets the values of this options object's properties in
-    /// text form.</summary>
-    /// <returns>A text string containing the values of this options
-    /// object's properties. The format of the string is the same as the
-    /// one described in the String constructor for this class.</returns>
+    /// <include file='../../docs.xml'
+    ///   path='docs/doc[@name="M:PeterO.Cbor.CBOREncodeOptions.ToString"]/*'/>
     public override string ToString() {
       return new System.Text.StringBuilder()
            .Append("allowduplicatekeys=")
@@ -153,58 +151,25 @@ parser.GetBoolean("useindeflengthstrings", true);
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="P:PeterO.Cbor.CBOREncodeOptions.Value"]/*'/>
-    /// <remarks>The return value is 1 if UseIndefLengthStrings is false or 0 if true,
-    /// plus 2 if AllowDuplicateKeys is false or 0 if true.</remarks>
     [Obsolete("Use the ToString() method to get the values of " +
      "all this object's properties.")]
     public int Value {
       get {
-        return (this.UseIndefLengthStrings ? 0 : 1)+(this.AllowDuplicateKeys ? 0 : 2);
+        return (this.UseIndefLengthStrings ? 0 : 1) + (this.AllowDuplicateKeys ?
+0 : 2);
       }
     }
 
-
-    /// <summary>Gets a value indicating whether to resolve references to
-    /// sharable objects and sharable strings in the process of decoding a
-    /// CBOR object.</summary>
-    /// <value>A value indicating whether to resolve references to sharable
-    /// objects and sharable strings. The default is false.</value>
-    /// <remarks>
-    /// <para>Sharable objects are marked with tag 28, and references to
-    /// those objects are marked with tag 29 (where a reference of 0 means
-    /// the first sharable object in the CBOR stream, a reference of 1
-    /// means the second, and so on). Sharable strings (byte strings and
-    /// text strings) appear within an enclosing object marked with tag
-    /// 256, and references to them are marked with tag 25; in general, a
-    /// string is sharable only if storing its reference rather than the
-    /// string would save space.</para>
-    /// <para>Note that unlike most other tags, these tags generally care
-    /// about the relative order in which objects appear in a CBOR stream;
-    /// thus they are not interoperable with CBOR implementations that
-    /// follow the generic CBOR data model (since they may list map keys in
-    /// an unspecified order). Interoperability problems with these tags
-    /// can be reduced by not using them to mark keys or values of a map or
-    /// to mark objects within those keys or values.</para></remarks>
+    /// <include file='../../docs.xml'
+    ///   path='docs/doc[@name="P:PeterO.Cbor.CBOREncodeOptions.ResolveReferences"]/*'/>
     public bool ResolveReferences { get; private set; }
 
-    /// <summary>Gets a value indicating whether decoding a CBOR object
-    /// will return <c>null</c> instead of a CBOR object if the stream has
-    /// no content or the end of the stream is reached before decoding
-    /// begins. Used only when decoding CBOR objects.</summary>
-    /// <value>A value indicating whether decoding a CBOR object will
-    /// return <c>null</c> instead of a CBOR object if the stream has no
-    /// content or the end of the stream is reached before decoding begins.
-    /// The default is false.</value>
+    /// <include file='../../docs.xml'
+    ///   path='docs/doc[@name="P:PeterO.Cbor.CBOREncodeOptions.AllowEmpty"]/*'/>
     public bool AllowEmpty { get; private set; }
-
 
     /// <include file='../../docs.xml'
     ///   path='docs/doc[@name="M:PeterO.Cbor.CBOREncodeOptions.Or(PeterO.Cbor.CBOREncodeOptions)"]/*'/>
-     /// <remarks>For compatibility reasons, for the object returned by this method, the UseIndefLengthStrings property will be set to true
- /// if that property is true in <i>both</i> objects, the AllowDuplicateKeys property will
- /// be set to true if that property is true in <i>both</i> objects, and other properties
- /// will have their default values. (This class formerly used the inverse of both properties and
- /// Or works off of that.)</remarks>
     [Obsolete("May be removed in a later version. Option classes" +
 "\u0020in this library will follow a different form in a later" +
 "\u0020version -- the approach used in this class is too complicated.")]
@@ -214,20 +179,17 @@ parser.GetBoolean("useindeflengthstrings", true);
       }
       string str = new System.Text.StringBuilder()
            .Append("allowduplicatekeys=")
-           .Append((this.AllowDuplicateKeys && o.AllowDuplicateKeys) ? "true" : "false")
+           .Append((this.AllowDuplicateKeys && o.AllowDuplicateKeys) ?
+"true" : "false")
            .Append(";useindeflengthstrings=")
-           .Append((this.UseIndefLengthStrings && o.UseIndefLengthStrings) ? "true" : "false")
+           .Append((this.UseIndefLengthStrings && o.UseIndefLengthStrings) ?
+"true" : "false")
            .ToString();
       return new CBOREncodeOptions(str);
     }
 
     /// <include file='../../docs.xml'
     ///   path='docs/doc[@name="M:PeterO.Cbor.CBOREncodeOptions.And(PeterO.Cbor.CBOREncodeOptions)"]/*'/>
-     /// <remarks>For compatibility reasons, for the object returned by this method, the UseIndefLengthStrings property will be set to true
- /// if that property is true in <i>either or both</i> objects, the AllowDuplicateKeys property will
- /// be set to true if that property is true in <i>either or both</i> objects, and other properties
- /// will have their default values. (This class formerly used the inverse of both properties and
- /// And works off of that.)</remarks>
     [Obsolete("May be removed in a later version. Option classes" +
 "\u0020in this library will follow a different form in a later" +
 "\u0020version -- the approach used in this class is too complicated.")]
@@ -237,9 +199,11 @@ parser.GetBoolean("useindeflengthstrings", true);
       }
       string str = new System.Text.StringBuilder()
            .Append("allowduplicatekeys=")
-           .Append((this.AllowDuplicateKeys || o.AllowDuplicateKeys) ? "true" : "false")
+           .Append((this.AllowDuplicateKeys || o.AllowDuplicateKeys) ?
+"true" : "false")
            .Append(";useindeflengthstrings=")
-           .Append((this.UseIndefLengthStrings || o.UseIndefLengthStrings) ? "true" : "false")
+           .Append((this.UseIndefLengthStrings || o.UseIndefLengthStrings) ?
+"true" : "false")
            .ToString();
       return new CBOREncodeOptions(str);
     }

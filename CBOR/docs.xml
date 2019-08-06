@@ -109,44 +109,6 @@
         "Equals" method rather than the "==" operator.
       </para>
     </summary>
-    <summary><para><b>This class is largely obsolete. It will be replaced by a new version
-          of this class in a different namespace/package and library, called
-          <c>PeterO.Numbers.EInteger</c> in the
-          <a href='https://www.nuget.org/packages/PeterO.Numbers'>
-            <c>PeterO.Numbers</c> </a>
-           library (in .NET), or
-          <c>com.upokecenter.numbers.EInteger</c> in the
-          <a href='https://github.com/peteroupc/numbers-java'>
-            <c>com.github.peteroupc/numbers</c> </a>
-           artifact (in Java). This new class can be used in the
-          <c>CBORObject.FromObject(object)</c> method (by including the new library in your code, among other
-          things).</b> </para>
-       An arbitrary-precision integer.
-      <para><b>Thread safety:</b> Instances of this class are immutable, so they are inherently safe for
-        use by multiple threads. Multiple instances of this object with the same
-        value are interchangeable, but they should be compared using the
-        "Equals" method rather than the "==" operator.
-      </para>
-    </summary>
-    <summary><para><b>This class is largely obsolete. It will be replaced by a new version
-          of this class in a different namespace/package and library, called
-          <c>PeterO.Numbers.EInteger</c> in the
-          <a href='https://www.nuget.org/packages/PeterO.Numbers'>
-            <c>PeterO.Numbers</c> </a>
-           library (in .NET), or
-          <c>com.upokecenter.numbers.EInteger</c> in the
-          <a href='https://github.com/peteroupc/numbers-java'>
-            <c>com.github.peteroupc/numbers</c> </a>
-           artifact (in Java). This new class can be used in the
-          <c>CBORObject.FromObject(object)</c> method (by including the new library in your code, among other
-          things).</b> </para>
-       An arbitrary-precision integer.
-      <para><b>Thread safety:</b> Instances of this class are immutable, so they are inherently safe for
-        use by multiple threads. Multiple instances of this object with the same
-        value are interchangeable, but they should be compared using the
-        "Equals" method rather than the "==" operator.
-      </para>
-    </summary>
   </doc>
   <doc name='M:PeterO.BigInteger.CompareTo(PeterO.BigInteger)'>
     <summary>Compares this value to another.
@@ -428,10 +390,42 @@
     <param name='allowDuplicateKeys'>A value indicating whether to disallow duplicate keys when reading CBOR
       objects from a data stream.
     </param>
-    <param name='ctap2Canonical'>Either
-      <c>true</c> or
-      <c>false</c> .
+    <param name='ctap2Canonical'>A value indicating whether to encode CBOR objects in the CTAP2 canonical
+      encoding form.
     </param>
+  </doc>
+  <doc name='M:PeterO.Cbor.CBOREncodeOptions.#ctor(System.String)'>
+    <summary>Initializes a new instance of the
+      <see cref='PeterO.Cbor.CBOREncodeOptions'/>
+       class.
+    </summary>
+    <param name='paramString'>A string setting forth the options to use. This is a semicolon-separated
+      list of options, each of which has a key and a value separated by an equal
+      sign ("="). Whitespace and line separators are not allowed to appear
+      between the semicolons or between the equal signs, nor may the string
+      begin or end with whitespace. The string can be empty, but cannot be null.
+      The following is an example of this parameter:
+      <c>allowduplicatekeys=true;ctap2Canonical=true</c> . The key can be any one of the following in any combination of case:
+      <c>allowduplicatekeys</c> ,
+      <c>ctap2canonical</c> ,
+      <c>resolvereferences</c> ,
+      <c>useindeflengthstrings</c> ,
+      <c>allowempty</c> . Keys other than these are ignored. If the same key appears more than
+      once, the value given for the last such key is used. The four keys just
+      given can have a value of
+      <c>1</c> ,
+      <c>true</c> ,
+      <c>yes</c> , or
+      <c>on</c> (in any combination of case), which means true, and any other value
+      meaning false. For example,
+      <c>allowduplicatekeys=Yes</c> and
+      <c>allowduplicatekeys=1</c> both set the
+      <c>AllowDuplicateKeys</c> property to true.
+    </param>
+    <exception cref='System.ArgumentNullException'>The parameter
+      <paramref name='paramString'/>
+       is null.
+    </exception>
   </doc>
   <doc name='P:PeterO.Cbor.CBOREncodeOptions.AllowDuplicateKeys'>
     <summary>Gets a value indicating whether to disallow duplicate keys when reading
@@ -439,6 +433,17 @@
     </summary>
     <value>A value indicating whether to disallow duplicate keys when reading CBOR
       objects from a data stream.
+    </value>
+  </doc>
+  <doc name='P:PeterO.Cbor.CBOREncodeOptions.AllowEmpty'>
+    <summary>Gets a value indicating whether decoding a CBOR object will return
+      <c>null</c> instead of a CBOR object if the stream has no content or the end of the
+      stream is reached before decoding begins. Used only when decoding CBOR
+      objects.
+    </summary>
+    <value>A value indicating whether decoding a CBOR object will return
+      <c>null</c> instead of a CBOR object if the stream has no content or the end of the
+      stream is reached before decoding begins. The default is false.
     </value>
   </doc>
   <doc name='M:PeterO.Cbor.CBOREncodeOptions.And(PeterO.Cbor.CBOREncodeOptions)'>
@@ -455,6 +460,22 @@
       <paramref name='o'/>
        is null.
     </exception>
+    <remarks>
+       For compatibility reasons, for the object returned by this method, the
+      UseIndefLengthStrings property will be set to true if that property is
+      true in
+      <i>
+         either or both
+      </i>
+       objects, or false otherwise; the AllowDuplicateKeys property will be set
+      to true if that property is true in
+      <i>
+         either or both
+      </i>
+       objects, or false otherwise; and other properties will have their default
+      values. (This class formerly used the inverse of both properties and And
+      works off of that.)
+    </remarks>
   </doc>
   <doc name='P:PeterO.Cbor.CBOREncodeOptions.Ctap2Canonical'>
     <summary>Gets a value indicating whether CBOR objects are written out using the
@@ -505,6 +526,56 @@
       <paramref name='o'/>
        is null.
     </exception>
+    <remarks>
+       For compatibility reasons, for the object returned by this method, the
+      UseIndefLengthStrings property will be set to true if that property is
+      true in
+      <i>
+         both
+      </i>
+       objects, or false otherwise; the AllowDuplicateKeys property will be set
+      to true if that property is true in
+      <i>
+         both
+      </i>
+       objects, or false otherwise; and other properties will have their default
+      values. (This class formerly used the inverse of both properties and Or
+      works off of that.)
+    </remarks>
+  </doc>
+  <doc name='P:PeterO.Cbor.CBOREncodeOptions.ResolveReferences'>
+    <summary>Gets a value indicating whether to resolve references to sharable objects
+      and sharable strings in the process of decoding a CBOR object.
+    </summary>
+    <value>A value indicating whether to resolve references to sharable objects and
+      sharable strings. The default is false.
+    </value>
+    <remarks>
+      <para>Sharable objects are marked with tag 28, and references to those objects
+        are marked with tag 29 (where a reference of 0 means the first sharable
+        object in the CBOR stream, a reference of 1 means the second, and so
+        on). Sharable strings (byte strings and text strings) appear within an
+        enclosing object marked with tag 256, and references to them are marked
+        with tag 25; in general, a string is sharable only if storing its
+        reference rather than the string would save space.
+      </para>
+      <para>Note that unlike most other tags, these tags generally care about the
+        relative order in which objects appear in a CBOR stream; thus they are
+        not interoperable with CBOR implementations that follow the generic CBOR
+        data model (since they may list map keys in an unspecified order).
+        Interoperability problems with these tags can be reduced by not using
+        them to mark keys or values of a map or to mark objects within those
+        keys or values.
+      </para>
+    </remarks>
+  </doc>
+  <doc name='M:PeterO.Cbor.CBOREncodeOptions.ToString'>
+    <summary>Gets the values of this options object's properties in text form.
+    </summary>
+    <returns>A text string containing the values of this options object's properties.
+      The format of the string is the same as the one described in the String
+      constructor for this class.
+    </returns>
   </doc>
   <doc name='P:PeterO.Cbor.CBOREncodeOptions.UseIndefLengthStrings'>
     <summary>Gets a value indicating whether to always encode strings with a
@@ -519,6 +590,10 @@
     </summary>
     <value>This options object's value.
     </value>
+    <remarks>
+       The return value is 1 if UseIndefLengthStrings is false or 0 if true,
+      plus 2 if AllowDuplicateKeys is false or 0 if true.
+    </remarks>
   </doc>
   <doc name='T:PeterO.Cbor.CBORException'>
     <summary>Exception thrown for errors involving CBOR data.
@@ -868,8 +943,9 @@
     </summary>
     <returns>The closest big integer to this object.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object's type is not a number type, including if this object is
-      CBORObject.Null.
+    <exception cref='System.InvalidOperationException'>This object's type does not represent a number (for this purpose,
+      infinity, not-a-number or NaN, and number values with tags represent
+      numbers); this includes if this object is CBORObject.Null.
     </exception>
     <exception cref='System.OverflowException'>This object's value is infinity or not-a-number (NaN).
     </exception>
@@ -925,8 +1001,9 @@
       number with a nonterminating decimal expansion, returns a decimal number
       rounded to 34 digits.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object's type is not a number type, including if this object is
-      CBORObject.Null.
+    <exception cref='System.InvalidOperationException'>This object's type does not represent a number (for this purpose,
+      infinity, not-a-number or NaN, and number values with tags represent
+      numbers); this includes if this object is CBORObject.Null.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.AsEFloat'>
@@ -939,8 +1016,9 @@
       object is a rational number with a nonterminating binary expansion,
       returns a binary floating-point number rounded to 113 bits.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object's type is not a number type, including if this object is
-      CBORObject.Null.
+    <exception cref='System.InvalidOperationException'>This object's type does not represent a number (for this purpose,
+      infinity, not-a-number or NaN, and number values with tags represent
+      numbers); this includes if this object is CBORObject.Null.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.AsEInteger'>
@@ -949,8 +1027,9 @@
     </summary>
     <returns>The closest big integer to this object.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object's type is not a number type, including if this object is
-      CBORObject.Null.
+    <exception cref='System.InvalidOperationException'>This object's type does not represent a number (for this purpose,
+      infinity, not-a-number or NaN, and number values with tags represent
+      numbers); this includes if this object is CBORObject.Null.
     </exception>
     <exception cref='System.OverflowException'>This object's value is infinity or not-a-number (NaN).
     </exception>
@@ -960,8 +1039,9 @@
     </summary>
     <returns>A rational number for this object's value.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object's type is not a number type, including if this object is
-      CBORObject.Null.
+    <exception cref='System.InvalidOperationException'>This object's type does not represent a number (for this purpose,
+      infinity, not-a-number or NaN, and number values with tags represent
+      numbers); this includes if this object is CBORObject.Null.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.AsExtendedDecimal'>
@@ -971,8 +1051,9 @@
       number with a nonterminating decimal expansion, returns a decimal number
       rounded to 34 digits.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object's type is not a number type, including if this object is
-      CBORObject.Null.
+    <exception cref='System.InvalidOperationException'>This object's type does not represent a number (for this purpose,
+      infinity, not-a-number or NaN, and number values with tags represent
+      numbers); this includes if this object is CBORObject.Null.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.AsExtendedFloat'>
@@ -985,8 +1066,9 @@
       object is a rational number with a nonterminating binary expansion,
       returns a binary floating-point number rounded to 113 bits.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object's type is not a number type, including if this object is
-      CBORObject.Null.
+    <exception cref='System.InvalidOperationException'>This object's type does not represent a number (for this purpose,
+      infinity, not-a-number or NaN, and number values with tags represent
+      numbers); this includes if this object is CBORObject.Null.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.AsExtendedRational'>
@@ -994,8 +1076,9 @@
     </summary>
     <returns>A rational number for this object's value.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object's type is not a number type, including if this object is
-      CBORObject.Null.
+    <exception cref='System.InvalidOperationException'>This object's type does not represent a number (for this purpose,
+      infinity, not-a-number or NaN, and number values with tags represent
+      numbers); this includes if this object is CBORObject.Null.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.AsInt16'>
@@ -1246,7 +1329,7 @@
     <exception cref='System.ArgumentException'>An internal error occurred.
     </exception>
     <remarks>
-      NOTE: In version 4.0, the behavior of this method is likely to change
+       NOTE: In version 4.0, the behavior of this method is likely to change
       significantly. For example, it is likely that in most cases, numbers will
       be sorted not as their own group, but rather in terms of their CBOR
       equivalents.
@@ -1555,7 +1638,7 @@
     <returns>A CBOR number.
     </returns>
     <remarks>
-      NOTE: In version 4.0, the behavior of this method is likely to change,
+       NOTE: In version 4.0, the behavior of this method is likely to change,
       especially for not-a-number values, infinity, negative zeros, and
       zero-exponent numbers (many integers).
     </remarks>
@@ -1569,7 +1652,7 @@
     <returns>A CBOR number.
     </returns>
     <remarks>
-      NOTE: In version 4.0, the behavior of this method is likely to change,
+       NOTE: In version 4.0, the behavior of this method is likely to change,
       especially for not-a-number values, infinity, negative zeros, and
       zero-exponent numbers (many integers).
     </remarks>
@@ -1590,7 +1673,7 @@
     <returns>A CBOR number.
     </returns>
     <remarks>
-      NOTE: In version 4.0, the behavior of this method is likely to change,
+       NOTE: In version 4.0, the behavior of this method is likely to change,
       especially for not-a-number values, infinity, negative zeros, and
       denominator-one numbers (lowest-terms integers).
     </remarks>
@@ -2263,9 +2346,12 @@
     </value>
   </doc>
   <doc name='P:PeterO.Cbor.CBORObject.IsNumber'>
-    <summary>Gets a value not documented yet.
+    <summary>Gets a value indicating whether this value represents a number (including
+      infinity and not-a-number or NaN) and has no tags.
     </summary>
-    <value>A value not documented yet.
+    <value><c>true</c> if this value represents a number (including infinity and not-a-number or
+      NaN) and has no tags; otherwise,
+      <c>false</c> .
     </value>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.IsPositiveInfinity'>
@@ -2615,8 +2701,9 @@
     </summary>
     <value>This value's sign: -1 if negative; 1 if positive; 0 if zero.
     </value>
-    <exception cref='System.InvalidOperationException'>This object's type is not a number type, including the special
-      not-a-number value (NaN).
+    <exception cref='System.InvalidOperationException'>This object's type does not represent a number (for this purpose,
+      infinity, not-a-number or NaN, and number values with tags represent
+      numbers); this includes the special not-a-number value (NaN).
     </exception>
   </doc>
   <doc name='P:PeterO.Cbor.CBORObject.SimpleValue'>
@@ -2708,18 +2795,18 @@
       </para>
       <code>/* Generates a JSON string of 'mapObj' whose keys are in the order given
         in 'keys' . Only keys found in 'keys' will be written if they exist in
-        'mapObj'. */ private static string KeysToJSONMap&#x28;CBORObject mapObj,
-        IList&lt;CBORObject&gt; keys&#x29;&#x7b; if (mapObj == null) { throw new
-        ArgumentNullException&#x29;nameof(mapObj));} if (keys == null) { throw
-        new ArgumentNullException&#x29;nameof(keys));} if (obj.Type !=
-        CBORType.Map) { throw new ArgumentException("'obj' is not a map."); }
-        StringBuilder builder = new StringBuilder(); var first = true;
-        builder.Append("{"); for (CBORObject key in keys) { if
-        (mapObj.ContainsKey(key)) { if (!first) {builder.Append(", ");} var
-        keyString=(key.CBORType == CBORType.String) ? key.AsString() :
-        key.ToJSONString(); builder.Append(CBORObject.FromObject(keyString)
-        .ToJSONString()) .Append(":").Append(mapObj[key].ToJSONString());
-        first=false; } } return builder.Append("}").ToString(); }</code> .
+        'mapObj'. */ private static string KeysToJSONMap(CBORObject mapObj,
+        IList&lt;CBORObject&gt; keys){ if (mapObj == null) { throw new
+        ArgumentNullException)nameof(mapObj));} if (keys == null) { throw new
+        ArgumentNullException)nameof(keys));} if (obj.Type != CBORType.Map) {
+        throw new ArgumentException("'obj' is not a map."); } StringBuilder
+        builder = new StringBuilder(); var first = true; builder.Append("{");
+        for (CBORObject key in keys) { if (mapObj.ContainsKey(key)) { if
+        (!first) {builder.Append(", ");} var keyString=(key.CBORType ==
+        CBORType.String) ? key.AsString() : key.ToJSONString();
+        builder.Append(CBORObject.FromObject(keyString) .ToJSONString())
+        .Append(":").Append(mapObj[key].ToJSONString()); first=false; } } return
+        builder.Append("}").ToString(); }</code> .
     </summary>
     <param name='options'>An object containing the options to control writing the CBOR object to
       JSON.
@@ -3330,8 +3417,8 @@
         <item>If the value is negative zero, infinity, or NaN, converts the number
           to a
           <c>double</c> and writes that
-          <c>double</c> . If negative zero should not be written this way, use the Plus method
-          to convert the value beforehand.
+          <c>double</c> . If negative zero should not be written this way, use the Plus
+          method to convert the value beforehand.
         </item>
         <item>If the value has an exponent of zero, writes the value as an unsigned
           integer or signed integer if the number can fit either type or as a
@@ -3352,7 +3439,7 @@
     <exception cref='System.IO.IOException'>An I/O error occurred.
     </exception>
     <remarks>
-      NOTE: In version 4.0, the behavior of this method is likely to change,
+       NOTE: In version 4.0, the behavior of this method is likely to change,
       especially for not-a-number values, infinity, negative zeros, and
       zero-exponent numbers (many integers).
     </remarks>
@@ -3366,8 +3453,8 @@
         <item>If the value is negative zero, infinity, or NaN, converts the number
           to a
           <c>double</c> and writes that
-          <c>double</c> . If negative zero should not be written this way, use the Plus method
-          to convert the value beforehand.
+          <c>double</c> . If negative zero should not be written this way, use the Plus
+          method to convert the value beforehand.
         </item>
         <item>If the value has an exponent of zero, writes the value as an unsigned
           integer or signed integer if the number can fit either type or as a
@@ -3388,7 +3475,7 @@
     <exception cref='System.IO.IOException'>An I/O error occurred.
     </exception>
     <remarks>
-      NOTE: In version 4.0, the behavior of this method is likely to change,
+       NOTE: In version 4.0, the behavior of this method is likely to change,
       especially for not-a-number values, infinity, negative zeros, and
       zero-exponent numbers (many integers).
     </remarks>
@@ -3421,7 +3508,7 @@
     <exception cref='System.IO.IOException'>An I/O error occurred.
     </exception>
     <remarks>
-      NOTE: In version 4.0, the behavior of this method is likely to change,
+       NOTE: In version 4.0, the behavior of this method is likely to change,
       especially for not-a-number values, infinity, negative zeros, and
       zero-exponent numbers (lowest-terms integers).
     </remarks>
@@ -3493,7 +3580,7 @@
     <exception cref='System.IO.IOException'>An I/O error occurred.
     </exception>
     <remarks>
-      Currently, this method writes the floating-point number using the CBOR
+       Currently, this method writes the floating-point number using the CBOR
       64-bit encoding, but a later version may write that number in 32- or
       16-bit encoding instead depending on whether either encoding can represent
       that number.
@@ -3626,7 +3713,7 @@
     <exception cref='System.IO.IOException'>An I/O error occurred.
     </exception>
     <remarks>
-      Currently, this method writes the floating-point number using the CBOR
+       Currently, this method writes the floating-point number using the CBOR
       32-bit encoding, but a later version may write that number in 16-bit
       encoding instead depending on whether either encoding can represent that
       number.
@@ -4677,6 +4764,35 @@
       to JSON, in accordance with the revision of the CBOR specification.
     </remarks>
   </doc>
+  <doc name='M:PeterO.Cbor.JSONOptions.#ctor(System.String)'>
+    <summary>Initializes a new instance of the
+      <see cref='PeterO.Cbor.JSONOptions'/>
+       class.
+    </summary>
+    <param name='paramString'>A string setting forth the options to use. This is a semicolon-separated
+      list of options, each of which has a key and a value separated by an equal
+      sign ("="). Whitespace and line separators are not allowed to appear
+      between the semicolons or between the equal signs, nor may the string
+      begin or end with whitespace. The string can be empty, but cannot be null.
+      The following is an example of this parameter:
+      <c>base64padding=false</c> . The key can be any one of the following in any combination of case:
+      <c>base64padding</c> . Other keys are ignored. If the same key appears more than once, the
+      value given for the last such key is used. The two keys just given can
+      have a value of
+      <c>1</c> ,
+      <c>true</c> ,
+      <c>yes</c> , or
+      <c>on</c> (in any combination of case), which means true, and any other value
+      meaning false. For example,
+      <c>base64padding=Yes</c> and
+      <c>base64padding=1</c> both set the
+      <c>Base64Padding</c> property to true.
+    </param>
+    <exception cref='System.ArgumentNullException'>The parameter
+      <paramref name='paramString'/>
+       is null.
+    </exception>
+  </doc>
   <doc name='P:PeterO.Cbor.JSONOptions.Base64Padding'>
     <summary>Gets a value indicating whether padding is written out when writing
       base64url or traditional base64 to JSON.
@@ -4690,6 +4806,14 @@
   <doc name='F:PeterO.Cbor.JSONOptions.Default'>
     <summary>The default options for converting CBOR objects to JSON.
     </summary>
+  </doc>
+  <doc name='M:PeterO.Cbor.JSONOptions.ToString'>
+    <summary>Gets the values of this options object's properties in text form.
+    </summary>
+    <returns>A text string containing the values of this options object's properties.
+      The format of the string is the same as the one described in the String
+      constructor for this class.
+    </returns>
   </doc>
   <doc name='T:PeterO.Cbor.PODOptions'>
     <summary>Options for converting "plain old data" objects to CBOR objects.
@@ -4714,6 +4838,35 @@
       <c>true</c> use camel case.
     </param>
   </doc>
+  <doc name='M:PeterO.Cbor.PODOptions.#ctor(System.String)'>
+    <summary>Initializes a new instance of the
+      <see cref='PeterO.Cbor.PODOptions'/>
+       class.
+    </summary>
+    <param name='paramString'>A string setting forth the options to use. This is a semicolon-separated
+      list of options, each of which has a key and a value separated by an equal
+      sign ("="). Whitespace and line separators are not allowed to appear
+      between the semicolons or between the equal signs, nor may the string
+      begin or end with whitespace. The string can be empty, but cannot be null.
+      The following is an example of this parameter:
+      <c>usecamelcase=true</c> . The key can be any one of the following in any combination of case:
+      <c>usecamelcase</c> . Other keys are ignored. If the same key appears more than once, the
+      value given for the last such key is used. The key just given can have a
+      value of
+      <c>1</c> ,
+      <c>true</c> ,
+      <c>yes</c> , or
+      <c>on</c> (in any combination of case), which means true, and any other value
+      meaning false. For example,
+      <c>usecamelcase=Yes</c> and
+      <c>usecamelcase=1</c> both set the
+      <c>UseCamelCase</c> property to true.
+    </param>
+    <exception cref='System.ArgumentNullException'>The parameter
+      <paramref name='paramString'/>
+       is null.
+    </exception>
+  </doc>
   <doc name='F:PeterO.Cbor.PODOptions.Default'>
     <summary>The default settings for "plain old data" options.
     </summary>
@@ -4725,6 +4878,14 @@
     <value><c>true</c> If the prefix is removed; otherwise, .
       <c>false</c> .
     </value>
+  </doc>
+  <doc name='M:PeterO.Cbor.PODOptions.ToString'>
+    <summary>Gets the values of this options object's properties in text form.
+    </summary>
+    <returns>A text string containing the values of this options object's properties.
+      The format of the string is the same as the one described in the String
+      constructor for this class.
+    </returns>
   </doc>
   <doc name='P:PeterO.Cbor.PODOptions.UseCamelCase'>
     <summary>Gets a value indicating whether property names are converted to camel case
@@ -5570,6 +5731,13 @@
     </exception>
     <exception cref='System.IO.IOException'>An I/O error occurred.
     </exception>
+    <exception cref='System.ArgumentException'>Either "offset" or "length" is less than 0 or greater than "str"'s length,
+      or "str"'s length minus "offset" is less than "length".
+    </exception>
+    <exception cref='System.ArgumentNullException'>The parameter
+      <paramref name='str'/>
+       is null.
+    </exception>
   </doc>
   <doc name='M:PeterO.DataUtilities.WriteUtf8(System.String,System.Int32,System.Int32,System.IO.Stream,System.Boolean,System.Boolean)'>
     <summary>Writes a portion of a string in UTF-8 encoding to a data stream.
@@ -5611,6 +5779,13 @@
        is greater than the string's length.
     </exception>
     <exception cref='System.IO.IOException'>An I/O error occurred.
+    </exception>
+    <exception cref='System.ArgumentException'>Either "offset" or "length" is less than 0 or greater than "str"'s length,
+      or "str"'s length minus "offset" is less than "length".
+    </exception>
+    <exception cref='System.ArgumentNullException'>The parameter
+      <paramref name='str'/>
+       is null.
     </exception>
   </doc>
   <doc name='T:PeterO.ExtendedDecimal'>
@@ -6169,6 +6344,9 @@
        is less than
       <paramref name='length'/>
        .
+    </exception>
+    <exception cref='System.ArgumentException'>Either "offset" or "length" is less than 0 or greater than "str"'s length,
+      or "str"'s length minus "offset" is less than "length".
     </exception>
   </doc>
   <doc name='M:PeterO.ExtendedFloat.GetHashCode'>

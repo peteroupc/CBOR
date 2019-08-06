@@ -11,11 +11,14 @@ using NUnit.Framework;
 
 namespace Test {
   public static class TestCommon {
-    private static readonly string ValueDigits = "0123456789";
+    private const string ValueDigits = "0123456789";
 
     public static int StringToInt(string str) {
       var neg = false;
       var i = 0;
+      if (str == null) {
+        throw new ArgumentNullException(nameof(str));
+      }
       if (str.Length > 0 && str[0] == '-') {
         neg = true;
         ++i;
@@ -55,6 +58,9 @@ namespace Test {
     public static long StringToLong(string str) {
       var neg = false;
       var i = 0;
+      if (str == null) {
+        throw new ArgumentNullException(nameof(str));
+      }
       if (str.Length > 0 && str[0] == '-') {
         neg = true;
         ++i;
@@ -99,13 +105,22 @@ namespace Test {
     }
 
     public static void AssertEquals(Object o, Object o2) {
+      if (o == null) {
+        throw new ArgumentNullException(nameof(o));
+      }
       if (!o.Equals(o2)) {
         Assert.AreEqual(o, o2);
       }
     }
 
     public static void AssertEqualsHashCode(Object o, Object o2) {
+      if (o == null) {
+        throw new ArgumentNullException(nameof(o));
+      }
       if (o.Equals(o2)) {
+        if (o2 == null) {
+          throw new ArgumentNullException(nameof(o2));
+        }
         if (!o2.Equals(o)) {
           Assert.Fail(
   String.Empty + o + " equals " + o2 + " but not vice versa");
@@ -119,6 +134,9 @@ namespace Test {
   String.Empty + o + " and " + o2 + " don't have equal hash codes");
         }
       } else {
+        if (o2 == null) {
+          throw new ArgumentNullException(nameof(o2));
+        }
         if (o2.Equals(o)) {
           Assert.Fail(String.Empty + o + " does not equal " + o2 +
             " but not vice versa");
@@ -363,9 +381,10 @@ namespace Test {
         }
         while (intlongValue > 43698) {
           int intdivValue = intlongValue / 10;
-        char digit = ValueDigits[(int)(intlongValue - (intdivValue * 10))];
-        chars[count--] = digit;
-        intlongValue = intdivValue;
+          char digit = ValueDigits[(
+            int)(intlongValue - (intdivValue * 10))];
+          chars[count--] = digit;
+          intlongValue = intdivValue;
       }
       while (intlongValue > 9) {
         int intdivValue = (intlongValue * 26215) >> 18;
@@ -390,9 +409,9 @@ namespace Test {
         }
         while (longValue > 43698) {
           long divValue = longValue / 10;
-        char digit = ValueDigits[(int)(longValue - (divValue * 10))];
-        chars[count--] = digit;
-        longValue = divValue;
+          char digit = ValueDigits[(int)(longValue - (divValue * 10))];
+          chars[count--] = digit;
+          longValue = divValue;
       }
       while (longValue > 9) {
         long divValue = (longValue * 26215) >> 18;

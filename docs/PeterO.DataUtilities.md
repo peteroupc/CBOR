@@ -2,11 +2,9 @@
 
     public static class DataUtilities
 
- Contains methods useful for reading and writing strings. It is designed to have no dependencies other than the basic runtime class library. Many of these methods work with text encoded in UTF-8, an encoding form of the Unicode Standard which uses one byte to encode the most basic characters and two to four bytes to encode other characters. For example, the  `GetUtf8
-            `  method converts a text string to an array of bytes in UTF-8.
+ Contains methods useful for reading and writing strings. It is designed to have no dependencies other than the basic runtime class library. Many of these methods work with text encoded in UTF-8, an encoding form of the Unicode Standard which uses one byte to encode the most basic characters and two to four bytes to encode other characters. For example, the  `GetUtf8`  method converts a text string to an array of bytes in UTF-8.
 
- In C# and Java, text strings are represented as sequences of 16-bit values called  `char
-            `  s. These sequences are well-formed under UTF-16, a 16-bit encoding form of Unicode, except if they contain unpaired surrogate code points. (A surrogate code point is used to encode supplementary characters, those with code points U+10000 or higher, in UTF-16. A surrogate pair is a high surrogate [U+D800 to U+DBFF] followed by a low surrogate [U+DC00 to U+DFFF]. An unpaired surrogate code point is a surrogate not appearing in a surrogate pair.) Many of the methods in this class allow setting the behavior to follow when unpaired surrogate code points are found in text strings, such as throwing an error or treating the unpaired surrogate as a replacement character (U+FFFD).
+ In C# and Java, text strings are represented as sequences of 16-bit values called  `char`  s. These sequences are well-formed under UTF-16, a 16-bit encoding form of Unicode, except if they contain unpaired surrogate code points. (A surrogate code point is used to encode supplementary characters, those with code points U+10000 or higher, in UTF-16. A surrogate pair is a high surrogate [U+D800 to U+DBFF] followed by a low surrogate [U+DC00 to U+DFFF]. An unpaired surrogate code point is a surrogate not appearing in a surrogate pair.) Many of the methods in this class allow setting the behavior to follow when unpaired surrogate code points are found in text strings, such as throwing an error or treating the unpaired surrogate as a replacement character (U+FFFD).
 
 ### Member Summary
 * <code>[CodePointAt(string, int)](#CodePointAt_string_int)</code> - Gets the Unicode code point at the given index of the string.
@@ -39,7 +37,7 @@
 
  Gets the Unicode code point at the given index of the string.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: The parameter  <i>str</i>
  is a text string.
@@ -67,7 +65,7 @@ The parameter  <i>str</i>
 
  Gets the Unicode code point at the given index of the string.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: The parameter  <i>str</i>
  is a text string.
@@ -97,7 +95,7 @@ The parameter  <i>str</i>
 
  Gets the Unicode code point just before the given index of the string.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: The parameter  <i>str</i>
  is a text string.
@@ -125,7 +123,7 @@ The parameter  <i>str</i>
 
  Gets the Unicode code point just before the given index of the string.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: The parameter  <i>str</i>
  is a text string.
@@ -155,7 +153,7 @@ The parameter  <i>str</i>
 
  Compares two strings in Unicode code point order. Unpaired surrogate code points are treated as individual code points.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>strA</i>: The first string. Can be null.
 
@@ -173,7 +171,7 @@ A value indicating which string is " less" or " greater" . 0: Both strings are e
 
  Finds the number of Unicode code points in the given text string. Unpaired surrogate code points increase this number by 1. This is not necessarily the length of the string in "char" s.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: The parameter  <i>str</i>
  is a text string.
@@ -197,12 +195,9 @@ The parameter  <i>str</i>
 
  Encodes a string in UTF-8 as a byte array. This method does not insert a byte-order mark (U+FEFF) at the beginning of the encoded byte array.
 
- REMARK: It is not recommended to use  `Encoding.UTF8.GetBytes
-            `  in .NET, or the  `getBytes()
-            `  method in Java to do this. For instance,  `getBytes()
-            `  encodes text strings in an unspecified character encoding. Both behaviors can be undesirable.
+ REMARK: It is not recommended to use  `Encoding.UTF8.GetBytes`  in .NET, or the  `getBytes()`  method in Java to do this. For instance,  `getBytes()`  encodes text strings in an unspecified character encoding. Both behaviors can be undesirable.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: The parameter  <i>str</i>
  is a text string.
@@ -233,12 +228,9 @@ The string contains an unpaired surrogate code point and  <i>replace</i>
 
  Encodes a string in UTF-8 as a byte array. This method does not insert a byte-order mark (U+FEFF) at the beginning of the encoded byte array.
 
- REMARK: It is not recommended to use  `Encoding.UTF8.GetBytes
-            `  in .NET, or the  `getBytes()
-            `  method in Java to do this. For instance,  `getBytes()
-            `  encodes text strings in an unspecified character encoding. Both behaviors can be undesirable.
+ REMARK: It is not recommended to use  `Encoding.UTF8.GetBytes`  in .NET, or the  `getBytes()`  method in Java to do this. For instance,  `getBytes()`  encodes text strings in an unspecified character encoding. Both behaviors can be undesirable.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: The parameter  <i>str</i>
  is a text string.
@@ -270,7 +262,7 @@ The string contains an unpaired surrogate code point and  <i>replace</i>
 
  Calculates the number of bytes needed to encode a string in UTF-8.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: The parameter  <i>str</i>
  is a text string.
@@ -297,7 +289,7 @@ The parameter  <i>str</i>
 
  Generates a text string from a UTF-8 byte array.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>bytes</i>: A byte array containing text encoded in UTF-8.
 
@@ -328,7 +320,7 @@ The string is not valid UTF-8 and  <i>replace</i>
 
  Generates a text string from a portion of a UTF-8 byte array.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>bytes</i>: A byte array containing text encoded in UTF-8.
 
@@ -368,7 +360,7 @@ The parameter  <i>offset</i>
 
  Reads a string in UTF-8 encoding from a data stream.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>stream</i>: A readable data stream.
 
@@ -406,7 +398,7 @@ The parameter  <i>stream</i>
 
  Reads a string in UTF-8 encoding from a byte array.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>data</i>: A byte array containing a UTF-8 text string.
 
@@ -444,7 +436,7 @@ The parameter  <i>offset</i>
 
  Reads a string in UTF-8 encoding from a data stream in full and returns that string. Replaces invalid encoding with the replacement character (U+FFFD).
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>stream</i>: A readable data stream.
 
@@ -471,7 +463,7 @@ The parameter  <i>stream</i>
 
  Reads a string in UTF-8 encoding from a data stream and returns that string.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>stream</i>: A readable data stream.
 
@@ -501,7 +493,7 @@ The parameter  <i>stream</i>
 
  Returns a string with the basic upper-case letters A to Z (U+0041 to U+005A) converted to lower-case. Other characters remain unchanged.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: The parameter  <i>str</i>
  is a text string.
@@ -519,7 +511,7 @@ The converted string, or null if  <i>str</i>
 
  Returns a string with the basic lower-case letters A to Z (U+0061 to U+007A) converted to upper-case. Other characters remain unchanged.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: The parameter  <i>str</i>
  is a text string.
@@ -541,7 +533,7 @@ The converted string, or null if  <i>str</i>
 
  Writes a portion of a string in UTF-8 encoding to a data stream.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: A string to write.
 
@@ -575,6 +567,13 @@ The parameter  <i>offset</i>
  * System.IO.IOException:
 An I/O error occurred.
 
+ * System.ArgumentException:
+Either "offset" or "length" is less than 0 or greater than "str"'s length, or "str"'s length minus "offset" is less than "length".
+
+ * System.ArgumentNullException:
+The parameter  <i>str</i>
+ is null.
+
 <a id="WriteUtf8_string_int_int_System_IO_Stream_bool_bool"></a>
 ### WriteUtf8
 
@@ -588,7 +587,7 @@ An I/O error occurred.
 
  Writes a portion of a string in UTF-8 encoding to a data stream.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: A string to write.
 
@@ -624,6 +623,13 @@ The parameter  <i>offset</i>
  * System.IO.IOException:
 An I/O error occurred.
 
+ * System.ArgumentException:
+Either "offset" or "length" is less than 0 or greater than "str"'s length, or "str"'s length minus "offset" is less than "length".
+
+ * System.ArgumentNullException:
+The parameter  <i>str</i>
+ is null.
+
 <a id="WriteUtf8_string_System_IO_Stream_bool"></a>
 ### WriteUtf8
 
@@ -634,7 +640,7 @@ An I/O error occurred.
 
  Writes a string in UTF-8 encoding to a data stream.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>str</i>: A string to write.
 

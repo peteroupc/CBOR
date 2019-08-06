@@ -10,7 +10,7 @@
 
 <b>Parameters:</b>
 
- * &lt;T&gt;:  Type of objects that a class implementing this method can convert to and from CBOR objects.
+ * &lt;T&gt;: Type of objects that a class implementing this method can convert to and from CBOR objects.
 
 <a id="FromCBORObject_PeterO_Cbor_CBORObject"></a>
 ### FromCBORObject
@@ -20,7 +20,7 @@
 
  Converts a CBOR object to an object of a type supported by the implementing class.
 
-     <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>cbor</i>: A CBOR object to convert.
 

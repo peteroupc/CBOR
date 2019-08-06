@@ -16,6 +16,7 @@ namespace PeterO.Cbor {
   internal class CBORReader {
     private readonly Stream stream;
     private int depth;
+    private bool resolveReferences;
     private CBORDuplicatePolicy policy;
     private StringRefs stringRefs;
     private bool hasSharableObjects;
@@ -23,10 +24,11 @@ namespace PeterO.Cbor {
     public CBORReader(Stream inStream) {
       this.stream = inStream;
       this.policy = CBORDuplicatePolicy.Overwrite;
+      this.resolveReferences = false;
     }
 
     internal enum CBORDuplicatePolicy {
-      Overwrite, 
+      Overwrite,
       Disallow,
     }
 
@@ -40,40 +42,54 @@ namespace PeterO.Cbor {
       }
     }
 
+    public bool ResolveReferences {
+      get {
+        return this.resolveReferences;
+      }
+
+      set {
+        this.resolveReferences = value;
+      }
+    }
+
     public CBORObject ResolveSharedRefsIfNeeded(CBORObject obj) {
-      if(obj==null)return null;
-      if (this.hasSharableObjects) {
-        var sharedRefs = new SharedRefs();
-        return ResolveSharedRefs(obj, sharedRefs);
+if (obj == null || !this.ResolveReferences) {
+  return obj;
+}
+if (this.hasSharableObjects) {
+  var sharedRefs = new SharedRefs();
+  return this.ResolveSharedRefs(obj, sharedRefs);
       }
       return obj;
     }
 
-    private static CBORObject ResolveSharedRefs(
+    private CBORObject ResolveSharedRefs(
       CBORObject obj,
       SharedRefs sharedRefs) {
-      if(obj==null)return null;
-      int type = obj.ItemType;
-      bool hasTag = obj.MostOuterTag.Equals((EInteger)29);
-      if (hasTag) {
-        return sharedRefs.GetObject(obj.AsEInteger());
-      }
-      hasTag = obj.MostOuterTag.Equals((EInteger)28);
-      if (hasTag) {
+if (obj == null) {
+  return obj;
+}
+int type = obj.ItemType;
+bool hasTag = obj.MostOuterTag.Equals((EInteger)29);
+if (hasTag) {
+  return sharedRefs.GetObject(obj.AsEInteger());
+}
+hasTag = obj.MostOuterTag.Equals((EInteger)28);
+if (hasTag) {
         obj = obj.Untag();
         sharedRefs.AddObject(obj);
       }
       if (type == CBORObject.CBORObjectTypeMap) {
         foreach (CBORObject key in obj.Keys) {
           CBORObject value = obj[key];
-          CBORObject newvalue = ResolveSharedRefs(value, sharedRefs);
+          CBORObject newvalue = this.ResolveSharedRefs(value, sharedRefs);
           if (value != newvalue) {
             obj[key] = newvalue;
           }
         }
       } else if (type == CBORObject.CBORObjectTypeArray) {
         for (var i = 0; i < obj.Count; ++i) {
-          obj[i] = ResolveSharedRefs(obj[i], sharedRefs);
+          obj[i] = this.ResolveSharedRefs(obj[i], sharedRefs);
         }
       }
       return obj;
@@ -448,6 +464,7 @@ namespace PeterO.Cbor {
           }
           int uad = uadditional >= 257 ? 257 : (uadditional < 0 ? 0 :
             (int)uadditional);
+          if (this.ResolveReferences) {
           switch (uad) {
             case 256:
               // Tag 256: String namespace
@@ -465,7 +482,7 @@ namespace PeterO.Cbor {
               this.hasSharableObjects = true;
               break;
           }
-
+          }
           taginfo = CBORObject.FindTagConverterLong(uadditional);
         } else {
           if (filter != null && !filter.TagAllowed(bigintAdditional)) {
@@ -488,6 +505,7 @@ namespace PeterO.Cbor {
         if (uadditional < 65536) {
           int uaddl = uadditional >= 257 ? 257 : (uadditional < 0 ? 0 :
             (int)uadditional);
+          if (this.ResolveReferences) {
           switch (uaddl) {
             case 256:
               // string tag
@@ -497,7 +515,7 @@ namespace PeterO.Cbor {
               // stringref tag
               return this.stringRefs.GetString(o.AsEInteger());
           }
-
+          }
           return CBORObject.FromObjectAndTag(
             o,
             (int)uadditional);

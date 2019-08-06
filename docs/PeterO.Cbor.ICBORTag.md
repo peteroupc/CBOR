@@ -17,7 +17,7 @@
 
  Gets a type filter specifying what kinds of CBOR objects are supported by this tag.
 
-  <b>Return Value:</b>
+ <b>Return Value:</b>
 
 A CBOR type filter.
 
@@ -29,7 +29,7 @@ A CBOR type filter.
 
  Generates a CBOR object based on the data of another object. If the data is not valid, should throw a CBORException.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>obj</i>: A CBOR object with the corresponding tag handled by the ICBORTag object.
 

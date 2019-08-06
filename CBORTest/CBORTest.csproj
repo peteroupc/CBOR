@@ -91,8 +91,6 @@
     <Compile Include='StringAndBigInt.cs'/>
     <Compile Include='TestCommon.cs'/>
     <Compile Include='XorShift128Plus.cs'/>
-    <Compile Include='JSONPatch.cs'/>
-    <Compile Include='JSONPointer.cs'/>
     <Compile Include='DateTest.cs'/>
     <Compile Include='ToObjectTest.cs'/>
     <Compile Include='PODClass.cs'/>
@@ -111,7 +109,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include='Resources.resx'>
-      <LogicalName>Test.AppResources.resources</LogicalName>
+      <LogicalName>Resources.resources</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project='$(MSBuildToolsPath)\Microsoft.CSharp.targets'/>

@@ -80,7 +80,7 @@ if (radix > 36) {
         } else {
           builder.Append(ValueDigitsLower[digit4]);
         }
-      int digits = (((((digit * radix) + digit2) *
+        int digits = (((((digit * radix) + digit2) *
           radix) + digit3) * radix) + digit4;
         bv *= radixpow4;
         var bigintTmp = (EInteger)digits;

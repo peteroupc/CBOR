@@ -29,7 +29,7 @@ namespace Test {
       }
     }
 
-    public static void doTestLong(long value) {
+    public static void DoTestLong(long value) {
       String b = "i" + TestCommon.LongToString(value) + "e";
       CBORObject beo = EncodingFromBytes(DataUtilities.GetUtf8Bytes(b, false));
       Assert.AreEqual(value, beo.AsInt64());
@@ -37,7 +37,7 @@ namespace Test {
       Assert.AreEqual(b, newb);
     }
 
-    public static void doTestString(String value) {
+    public static void DoTestString(String value) {
       String b = DataUtilities.GetUtf8Length(value, false) + ":" + value;
       CBORObject beo = EncodingFromBytes(DataUtilities.GetUtf8Bytes(b, false));
       Assert.AreEqual(value, beo.AsString());
@@ -46,17 +46,17 @@ namespace Test {
     }
 
     [Test]
-    public void testLong() {
-      doTestLong(0);
-      doTestLong(-1);
-      doTestLong(Int32.MinValue);
-      doTestLong(Int32.MaxValue);
-      doTestLong(Int64.MinValue);
-      doTestLong(Int64.MaxValue);
+    public void TestLong() {
+      DoTestLong(0);
+      DoTestLong(-1);
+      DoTestLong(Int32.MinValue);
+      DoTestLong(Int32.MaxValue);
+      DoTestLong(Int64.MinValue);
+      DoTestLong(Int64.MaxValue);
     }
 
     [Test]
-    public void testList() {
+    public void TestList() {
       CBORObject beo = CBORObject.NewArray();
       beo.Add(CBORObject.FromObject(1));
       beo.Add(CBORObject.FromObject("two"));
@@ -66,16 +66,16 @@ namespace Test {
       Assert.AreEqual(1, beo[0].AsInt64());
       {
         string stringTemp = beo[1].AsString();
-Assert.AreEqual(
-  "two",
-  stringTemp);
+        Assert.AreEqual(
+          "two",
+          stringTemp);
 }
       Assert.AreEqual(3, beo[2].AsInt64());
       {
         string stringTemp = beo[3].AsString();
-Assert.AreEqual(
-  "four",
-  stringTemp);
+        Assert.AreEqual(
+          "four",
+          stringTemp);
 }
       byte[] b = EncodingToBytes(beo);
       beo = EncodingFromBytes(b);
@@ -83,21 +83,21 @@ Assert.AreEqual(
       Assert.AreEqual(1, beo[0].AsInt64());
       {
         string stringTemp = beo[1].AsString();
-Assert.AreEqual(
-  "two",
-  stringTemp);
+        Assert.AreEqual(
+          "two",
+          stringTemp);
 }
       Assert.AreEqual(3, beo[2].AsInt64());
       {
         string stringTemp = beo[3].AsString();
-Assert.AreEqual(
-  "four",
-  stringTemp);
+        Assert.AreEqual(
+          "four",
+          stringTemp);
 }
     }
 
     [Test]
-    public void testDictionary() {
+    public void TestDictionary() {
       CBORObject beo = CBORObject.NewMap();
       beo["zero"] = CBORObject.FromObject(1);
       beo["one"] = CBORObject.FromObject("two");
@@ -107,16 +107,16 @@ Assert.AreEqual(
       Assert.AreEqual(1, beo["zero"].AsInt64());
       {
         string stringTemp = beo["one"].AsString();
-Assert.AreEqual(
-  "two",
-  stringTemp);
+        Assert.AreEqual(
+          "two",
+          stringTemp);
 }
       Assert.AreEqual(3, beo["two"].AsInt64());
       {
         string stringTemp = beo["three"].AsString();
-Assert.AreEqual(
-  "four",
-  stringTemp);
+        Assert.AreEqual(
+          "four",
+          stringTemp);
 }
       byte[] b = EncodingToBytes(beo);
       beo = EncodingFromBytes(b);
@@ -124,38 +124,38 @@ Assert.AreEqual(
       Assert.AreEqual(1, beo["zero"].AsInt64());
       {
         string stringTemp = beo["one"].AsString();
-Assert.AreEqual(
-  "two",
-  stringTemp);
+        Assert.AreEqual(
+          "two",
+          stringTemp);
 }
       Assert.AreEqual(3, beo["two"].AsInt64());
       {
         string stringTemp = beo["three"].AsString();
-Assert.AreEqual(
-  "four",
-  stringTemp);
+        Assert.AreEqual(
+          "four",
+          stringTemp);
 }
     }
 
     [Test]
-    public void testString() {
-      doTestString(String.Empty);
-      doTestString(" ");
-      doTestString("test");
+    public void TestString() {
+      DoTestString(String.Empty);
+      DoTestString(" ");
+      DoTestString("test");
 
-  doTestString(TestCommon.Repeat("three", 15));
-      doTestString("te\u007fst");
-      doTestString("te\u0080st");
-      doTestString("te\u3000st");
-      doTestString("te\u07ffst");
-      doTestString("te\u0800st");
-      doTestString("te\uffffst");
-      doTestString("te\ud7ffst");
-      doTestString("te\ue000st");
-      doTestString("te\ud800\udc00st");
-      doTestString("te\udbff\udc00st");
-      doTestString("te\ud800\udfffst");
-      doTestString("te\udbff\udfffst");
+DoTestString(TestCommon.Repeat("three", 15));
+      DoTestString("te\u007fst");
+      DoTestString("te\u0080st");
+      DoTestString("te\u3000st");
+      DoTestString("te\u07ffst");
+      DoTestString("te\u0800st");
+      DoTestString("te\uffffst");
+      DoTestString("te\ud7ffst");
+      DoTestString("te\ue000st");
+      DoTestString("te\ud800\udc00st");
+      DoTestString("te\udbff\udc00st");
+      DoTestString("te\ud800\udfffst");
+      DoTestString("te\udbff\udfffst");
     }
   }
 }

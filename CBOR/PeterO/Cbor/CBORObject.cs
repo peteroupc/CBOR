@@ -13,8 +13,8 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-  /// <include file='../../docs.xml'
-  /// path='docs/doc[@name="T:PeterO.Cbor.CBORObject"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.Cbor.CBORObject"]/*'/>
   public sealed partial class CBORObject : IComparable<CBORObject>,
   IEquatable<CBORObject> {
     private static CBORObject ConstructSimpleValue(int v) {
@@ -261,7 +261,7 @@ namespace PeterO.Cbor {
     /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.IsFinite"]/*'/>
     public bool IsFinite {
       get {
-        return this.IsNumber && !this.IsInfinity() &&
+        return this.IsLegacyNumber && !this.IsInfinity() &&
           !this.IsNaN();
       }
     }
@@ -390,7 +390,24 @@ namespace PeterO.Cbor {
           case CBORObjectTypeExtendedDecimal:
           case CBORObjectTypeExtendedFloat:
           case CBORObjectTypeExtendedRational:
-            return this.MostOuterTag.Sign >= 0;
+            return this.MostOuterTag.Sign < 0;
+          default:
+            return false;
+        }
+      }
+    }
+
+    internal bool IsLegacyNumber {
+      get {
+        switch (this.ItemType) {
+          case CBORObjectTypeInteger:
+          case CBORObjectTypeBigInteger:
+          case CBORObjectTypeSingle:
+          case CBORObjectTypeDouble:
+          case CBORObjectTypeExtendedDecimal:
+          case CBORObjectTypeExtendedFloat:
+          case CBORObjectTypeExtendedRational:
+            return true;
           default:
             return false;
         }
@@ -590,8 +607,8 @@ namespace PeterO.Cbor {
 "\u0020to the" +
 "\u0020lifetime of the application.")]
     public static void AddTagHandler(
-       BigInteger bigintTag,
-       ICBORTag handler) {
+      BigInteger bigintTag,
+      ICBORTag handler) {
       if (bigintTag == null) {
         throw new ArgumentNullException(nameof(bigintTag));
       }
@@ -611,8 +628,8 @@ namespace PeterO.Cbor {
 "\u0020to the" +
 "\u0020lifetime of the application.")]
     public static void AddTagHandler(
-       EInteger bigintTag,
-       ICBORTag handler) {
+      EInteger bigintTag,
+      ICBORTag handler) {
       if (bigintTag == null) {
         throw new ArgumentNullException(nameof(bigintTag));
       }
@@ -648,7 +665,9 @@ namespace PeterO.Cbor {
         throw new ArgumentNullException(nameof(data));
       }
       if (data.Length == 0) {
-        if(options!=null && options.AllowEmpty)return null;
+        if (options != null && options.AllowEmpty) {
+          return null;
+        }
         throw new CBORException("data is empty.");
       }
       if (options == null) {
@@ -766,7 +785,7 @@ namespace PeterO.Cbor {
       CBORTypeMapper mapper,
       PODOptions options,
       int depth) {
-      depth++;
+      ++depth;
       if (depth > 100) {
         throw new CBORException("Depth level too high");
       }
@@ -1350,16 +1369,22 @@ CBORObject(CBORObjectTypeExtendedRational, bigValue);
         if (!options.AllowDuplicateKeys) {
           reader.DuplicatePolicy = CBORReader.CBORDuplicatePolicy.Disallow;
         }
+        reader.ResolveReferences = options.ResolveReferences;
         CBORObject obj;
         if (options.AllowEmpty) {
+          if (stream == null) {
+            throw new ArgumentNullException(nameof(stream));
+          }
           int firstbyte = stream.ReadByte();
-          if(firstbyte<0)return null;
+          if (firstbyte < 0) {
+            return null;
+          }
           obj = reader.ReadForFirstByte(firstbyte, null);
         } else {
           obj = reader.Read(null);
         }
         return options.ResolveReferences ?
-            reader.ResolveSharedRefsIfNeeded(obj) : obj; 
+            reader.ResolveSharedRefsIfNeeded(obj) : obj;
       } catch (IOException ex) {
         throw new CBORException("I/O error occurred.", ex);
       }
@@ -1683,8 +1708,7 @@ CBORObject(CBORObjectTypeExtendedRational, bigValue);
             stream.WriteByte((byte)((datatype << 5) | 27));
             stream.Write(bytes, 0, byteCount);
             break;
-          default:
-            stream.WriteByte((datatype == 0) ?
+          default: stream.WriteByte((datatype == 0) ?
 (byte)0xc2 : (byte)0xc3);
             WritePositiveInt(2, byteCount, stream);
             stream.Write(bytes, 0, byteCount);
@@ -3219,7 +3243,8 @@ CBORObject(CBORObjectTypeExtendedRational, bigValue);
           outputStream.WriteByte((byte)(0xe0 + (int)value));
           return 1;
         } else if (value < 32) {
-          throw new ArgumentException("value is from 24 to 31 and major type is 7");
+          throw new ArgumentException("value is from 24 to 31 and major type" +
+"\u0020is 7");
         } else {
           outputStream.WriteByte((byte)0xf8);
           outputStream.WriteByte((byte)value);
@@ -3260,7 +3285,8 @@ CBORObject(CBORObjectTypeExtendedRational, bigValue);
           outputStream.WriteByte((byte)(0xe0 + value));
           return 1;
         } else if (value < 32) {
-          throw new ArgumentException("value is from 24 to 31 and major type is 7");
+          throw new ArgumentException("value is from 24 to 31 and major type" +
+"\u0020is 7");
         } else {
           outputStream.WriteByte((byte)0xf8);
           outputStream.WriteByte((byte)value);
@@ -3308,7 +3334,8 @@ CBORObject(CBORObjectTypeExtendedRational, bigValue);
           ") is more than 7");
       }
       if (majorType == 7) {
-        throw new ArgumentException("majorType is 7 and value is greater than 255");
+        throw new ArgumentException("majorType is 7 and value is greater" +
+"\u0020than 255");
       }
       byte[] bytes = new[] {
         (byte)(27 | (majorType << 5)), (byte)highbyte,
@@ -4354,8 +4381,8 @@ CBORObject(CBORObjectTypeExtendedRational, bigValue);
     private sealed class ConverterInfo {
       private object toObject;
 
-      /// <include file='../../docs.xml'
-      ///   path='docs/doc[@name="P:PeterO.Cbor.CBORObject.ConverterInfo.ToObject"]/*'/>
+    /// <include file='../../docs.xml'
+    ///   path='docs/doc[@name="P:PeterO.Cbor.CBORObject.ConverterInfo.ToObject"]/*'/>
       public object ToObject {
         get {
           return this.toObject;
@@ -4368,8 +4395,8 @@ CBORObject(CBORObjectTypeExtendedRational, bigValue);
 
       private object converter;
 
-      /// <include file='../../docs.xml'
-      ///   path='docs/doc[@name="P:PeterO.Cbor.CBORObject.ConverterInfo.Converter"]/*'/>
+    /// <include file='../../docs.xml'
+    ///   path='docs/doc[@name="P:PeterO.Cbor.CBORObject.ConverterInfo.Converter"]/*'/>
       public object Converter {
         get {
           return this.converter;

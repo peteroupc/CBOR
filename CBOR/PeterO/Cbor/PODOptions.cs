@@ -51,11 +51,8 @@ namespace PeterO.Cbor {
       this.UseCamelCase = parser.GetBoolean("usecamelcase", true);
     }
 
-    /// <summary>Gets the values of this options object's properties in
-    /// text form.</summary>
-    /// <returns>A text string containing the values of this options
-    /// object's properties. The format of the string is the same as the
-    /// one described in the String constructor for this class.</returns>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.PODOptions.ToString"]/*'/>
     public override string ToString() {
       return new System.Text.StringBuilder()
            .Append("usecamelcase=")

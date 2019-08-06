@@ -6,14 +6,9 @@
 
 <b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers and the output of this class's ToString method.
 
- <b>This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.ERational
-            `  in the <a href="https://www.nuget.org/packages/PeterO.Numbers">  `PeterO.Numbers
-            `  </a> library (in .NET), or  `com.upokecenter.numbers.ERational
-            `  in the <a href="https://github.com/peteroupc/numbers-java">  `com.github.peteroupc/numbers
-            `  </a> artifact (in Java). This new class can be used in the  `CBORObject.FromObject(object)
-            `  method (by including the new library in your code, among other things). </b>
+ <b>This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.ERational`  in the <a href="https://www.nuget.org/packages/PeterO.Numbers">  `PeterO.Numbers`  </a> library (in .NET), or  `com.upokecenter.numbers.ERational`  in the <a href="https://github.com/peteroupc/numbers-java">  `com.github.peteroupc/numbers`  </a> artifact (in Java). This new class can be used in the  `CBORObject.FromObject(object)`  method (by including the new library in your code, among other things).</b>
 
- Arbitrary-precision rational number. This class can't be inherited; this is a change in version 2.0 from previous versions, where the class was inadvertently left inheritable. <b>Thread safety: </b> Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same properties are interchangeable, so they should not be compared using the "==" operator (which might only check if each side of the operator is the same instance).
+ Arbitrary-precision rational number. This class can't be inherited; this is a change in version 2.0 from previous versions, where the class was inadvertently left inheritable. <b>Thread safety:</b> Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same properties are interchangeable, so they should not be compared using the "==" operator (which might only check if each side of the operator is the same instance).
 
 ### Member Summary
 * <code>[CompareTo(PeterO.ExtendedRational)](#CompareTo_PeterO_ExtendedRational)</code> - Compares this value to another.
@@ -48,7 +43,7 @@
 
  Initializes a new instance of the [PeterO.ExtendedRational](PeterO.ExtendedRational.md) class.
 
-  <b>Parameters:</b>
+     <b>Parameters:</b>
 
  * <i>numerator</i>: An arbitrary-precision integer.
 
@@ -124,7 +119,7 @@ The parameter  <i>numerator</i>
 
  Gets this object's denominator.
 
-  <b>Returns:</b>
+ <b>Returns:</b>
 
 This object's denominator.
 
@@ -137,11 +132,9 @@ This object's denominator.
 
  Gets a value indicating whether this object is finite (not infinity or NaN).
 
-  <b>Returns:</b>
+ <b>Returns:</b>
 
- `true
-            `  If this object is finite (not infinity or NaN); otherwise, .  `false
-            `  .
+ `true`  If this object is finite (not infinity or NaN); otherwise, .  `false`  .
 
 <a id="IsNegative"></a>
 ### IsNegative
@@ -150,11 +143,9 @@ This object's denominator.
 
  Gets a value indicating whether this object's value is negative (including negative zero).
 
-  <b>Returns:</b>
+ <b>Returns:</b>
 
- `true
-            `  If this object's value is negative; otherwise, .  `false
-            `  .
+ `true`  If this object's value is negative; otherwise, .  `false`  .
 
 <a id="IsZero"></a>
 ### IsZero
@@ -165,11 +156,9 @@ This object's denominator.
 
  Gets a value indicating whether this object's value equals 0.
 
-  <b>Returns:</b>
+ <b>Returns:</b>
 
- `true
-            `  If this object's value equals 0; otherwise, .  `false
-            `  .
+ `true`  If this object's value equals 0; otherwise, .  `false`  .
 
 <a id="Numerator"></a>
 ### Numerator
@@ -178,7 +167,7 @@ This object's denominator.
 
  Gets this object's numerator.
 
-  <b>Returns:</b>
+ <b>Returns:</b>
 
 This object's numerator. If this object is a not-a-number value, returns the diagnostic information (which will be negative if this object is negative).
 
@@ -191,7 +180,7 @@ This object's numerator. If this object is a not-a-number value, returns the dia
 
  Gets the sign of this rational number.
 
-  <b>Returns:</b>
+ <b>Returns:</b>
 
 Zero if this value is zero or negative zero; -1 if this value is less than 0; and 1 if this value is greater than 0.
 
@@ -202,7 +191,7 @@ Zero if this value is zero or negative zero; -1 if this value is less than 0; an
 
  Gets this object's numerator with the sign removed.
 
-  <b>Returns:</b>
+ <b>Returns:</b>
 
 This object's numerator. If this object is a not-a-number value, returns the diagnostic information.
 
@@ -214,7 +203,7 @@ This object's numerator. If this object is a not-a-number value, returns the dia
 
  Compares this value to another.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>other</i>: The parameter  <i>other</i>
  is an ExtendedRational object.
@@ -232,7 +221,7 @@ Less than 0 if this value is less than, 0 if equal to, or greater than 0 if grea
 
  Creates a rational number with the given numerator and denominator.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>numeratorSmall</i>: The parameter  <i>numeratorSmall</i>
  is a 32-bit signed integer.
@@ -253,7 +242,7 @@ An arbitrary-precision rational number.
 
  Creates a rational number with the given numerator and denominator.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>numerator</i>: An arbitrary-precision integer.
 
@@ -278,16 +267,14 @@ The parameter  <i>numerator</i>
 
  Checks whether this and another value are equal.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>obj</i>: The parameter  <i>obj</i>
  is an arbitrary object.
 
 <b>Return Value:</b>
 
-Either  `true
-            `  or  `false
-            `  .
+Either  `true`  or  `false`  .
 
 <a id="Equals_PeterO_ExtendedRational"></a>
 ### Equals
@@ -297,16 +284,14 @@ Either  `true
 
  Checks whether this and another value are equal.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>other</i>: The parameter  <i>other</i>
  is an ExtendedRational object.
 
 <b>Return Value:</b>
 
-Either  `true
-            `  or  `false
-            `  .
+Either  `true`  or  `false`  .
 
 <a id="GetHashCode"></a>
 ### GetHashCode
@@ -315,7 +300,7 @@ Either  `true
 
  Calculates the hash code for this object. No application or process IDs are used in the hash code calculation.
 
-  <b>Return Value:</b>
+ <b>Return Value:</b>
 
 A 32-bit signed integer.
 
@@ -326,6 +311,6 @@ A 32-bit signed integer.
 
  Converts this object to a text string.
 
-  <b>Return Value:</b>
+ <b>Return Value:</b>
 
 A string representation of this object. The result can be Infinity, NaN, or sNaN (with a minus sign before it for negative values), or a number of the following form: [-]numerator/denominator.

@@ -7,6 +7,7 @@
 ### Member Summary
 * <code>[Base64Padding](#Base64Padding)</code> - Gets a value indicating whether padding is written out when writing base64url or traditional base64 to JSON.
 * <code>[public static readonly PeterO.Cbor.JSONOptions Default;](#Default)</code> - The default options for converting CBOR objects to JSON.
+* <code>[ToString()](#ToString)</code> - Gets the values of this options object's properties in text form.
 
 <a id="Void_ctor_Boolean"></a>
 ### JSONOptions Constructor
@@ -21,6 +22,24 @@
   <b>Parameters:</b>
 
  * <i>base64Padding</i>: Whether padding is included when writing data in base64url or traditional base64 format to JSON.
+
+<a id="Void_ctor_System_String"></a>
+### JSONOptions Constructor
+
+    public JSONOptions(
+        string paramString);
+
+ Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) class.
+
+    <b>Parameters:</b>
+
+ * <i>paramString</i>: A string setting forth the options to use. This is a semicolon-separated list of options, each of which has a key and a value separated by an equal sign ("="). Whitespace and line separators are not allowed to appear between the semicolons or between the equal signs, nor may the string begin or end with whitespace. The string can be empty, but cannot be null. The following is an example of this parameter:  `base64padding=false` . The key can be any one of the following in any combination of case:  `base64padding` . Other keys are ignored. If the same key appears more than once, the value given for the last such key is used. The two keys just given can have a value of  `1` ,  `true` ,  `yes` , or  `on`  (in any combination of case), which means true, and any other value meaning false. For example,  `base64padding=Yes`  and  `base64padding=1`  both set the  `Base64Padding`  property to true.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter  <i>paramString</i>
+ is null.
 
 <a id="Void_ctor"></a>
 ### JSONOptions Constructor
@@ -47,6 +66,17 @@
 
  The padding character is '='.
 
-  <b>Returns:</b>
+ <b>Returns:</b>
 
 The default is false, no padding.
+
+<a id="ToString"></a>
+### ToString
+
+    public override string ToString();
+
+ Gets the values of this options object's properties in text form.
+
+ <b>Return Value:</b>
+
+A text string containing the values of this options object's properties. The format of the string is the same as the one described in the String constructor for this class.

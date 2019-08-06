@@ -20,11 +20,11 @@ namespace PeterO.Cbor {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
       }
-      if (!a.IsNumber) {
+      if (!a.IsLegacyNumber) {
         throw new ArgumentException("a.Type (" + a.Type +
           ") does not indicate a number");
       }
-      if (!b.IsNumber) {
+      if (!b.IsLegacyNumber) {
         throw new ArgumentException("b.Type (" + b.Type +
           ") does not indicate a number");
       }
@@ -84,11 +84,11 @@ namespace PeterO.Cbor {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
       }
-      if (!a.IsNumber) {
+      if (!a.IsLegacyNumber) {
         throw new ArgumentException("a.Type (" + a.Type +
           ") does not indicate a number");
       }
-      if (!b.IsNumber) {
+      if (!b.IsLegacyNumber) {
         throw new ArgumentException("b.Type (" + b.Type +
           ") does not indicate a number");
       }
@@ -148,11 +148,11 @@ namespace PeterO.Cbor {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
       }
-      if (!a.IsNumber) {
+      if (!a.IsLegacyNumber) {
         throw new ArgumentException("a.Type (" + a.Type +
           ") does not indicate a number");
       }
-      if (!b.IsNumber) {
+      if (!b.IsLegacyNumber) {
         throw new ArgumentException("b.Type (" + b.Type +
           ") does not indicate a number");
       }
@@ -219,11 +219,11 @@ namespace PeterO.Cbor {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
       }
-      if (!a.IsNumber) {
+      if (!a.IsLegacyNumber) {
         throw new ArgumentException("a.Type (" + a.Type +
           ") does not indicate a number");
       }
-      if (!b.IsNumber) {
+      if (!b.IsLegacyNumber) {
         throw new ArgumentException("b.Type (" + b.Type +
           ") does not indicate a number");
       }
@@ -327,11 +327,11 @@ namespace PeterO.Cbor {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
       }
-      if (!a.IsNumber) {
+      if (!a.IsLegacyNumber) {
         throw new ArgumentException("a.Type (" + a.Type +
           ") does not indicate a number");
       }
-      if (!b.IsNumber) {
+      if (!b.IsLegacyNumber) {
         throw new ArgumentException("b.Type (" + b.Type +
           ") does not indicate a number");
       }

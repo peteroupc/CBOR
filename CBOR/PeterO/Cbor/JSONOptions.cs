@@ -29,7 +29,6 @@ namespace PeterO.Cbor {
     }
 #pragma warning restore CS0618
 
-
     /// <summary>Initializes a new instance of the
     /// <see cref='PeterO.Cbor.JSONOptions'/> class.</summary>
     /// <param name='paramString'>A string setting forth the options to
@@ -39,14 +38,13 @@ namespace PeterO.Cbor {
     /// semicolons or between the equal signs, nor may the string begin or
     /// end with whitespace. The string can be empty, but cannot be null.
     /// The following is an example of this parameter:
-    /// <c>base64padding=false</c>. The key can be
-    /// any one of the following in any combination of case:
-    /// <c>base64padding</c>. Other keys are
-    /// ignored. If the same key appears more than once, the value given
-    /// for the last such key is used. The two keys just given can have a
-    /// value of <c>1</c>, <c>true</c>, <c>yes</c>, or <c>on</c> (in any
-    /// combination of case), which means true, and any other value meaning
-    /// false. For example, <c>base64padding=Yes</c> and
+    /// <c>base64padding=false</c>. The key can be any one of the
+    /// following in any combination of case: <c>base64padding</c>. Other
+    /// keys are ignored. If the same key appears more than once, the value
+    /// given for the last such key is used. The two keys just given can
+    /// have a value of <c>1</c>, <c>true</c>, <c>yes</c>, or <c>on</c>
+    /// (in any combination of case), which means true, and any other value
+    /// meaning false. For example, <c>base64padding=Yes</c> and
     /// <c>base64padding=1</c> both set the <c>Base64Padding</c> property
     /// to true.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -59,11 +57,8 @@ namespace PeterO.Cbor {
       this.Base64Padding = parser.GetBoolean("base64padding", true);
     }
 
-    /// <summary>Gets the values of this options object's properties in
-    /// text form.</summary>
-    /// <returns>A text string containing the values of this options
-    /// object's properties. The format of the string is the same as the
-    /// one described in the String constructor for this class.</returns>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.JSONOptions.ToString"]/*'/>
     public override string ToString() {
       return new StringBuilder()
            .Append("base64padding=")

@@ -39,14 +39,14 @@ return CBORObject.FromObject(
     rand,
     Int32.MaxValue));
         case 2:
-          return CBORObject.FromObject(RandomObjects.RandomEInteger(rand));
+        return CBORObject.FromObject(RandomObjects.RandomEInteger(rand));
         case 3:
-          return CBORObject.FromObject(RandomObjects.RandomEFloat(rand));
+        return CBORObject.FromObject(RandomObjects.RandomEFloat(rand));
         case 4:
-       return
+        return
   CBORObject.FromObject(RandomObjects.RandomEDecimal(rand));
         case 5:
-          return CBORObject.FromObject(RandomObjects.RandomInt64(rand));
+        return CBORObject.FromObject(RandomObjects.RandomInt64(rand));
         default: throw new ArgumentException();
       }
     }
@@ -64,16 +64,16 @@ return CBORObject.FromObject(
     rand,
     Int32.MaxValue));
         case 2:
-          return CBORObject.FromObject(RandomObjects.RandomEInteger(rand));
+        return CBORObject.FromObject(RandomObjects.RandomEInteger(rand));
         case 3:
-          return CBORObject.FromObject(RandomObjects.RandomEFloat(rand));
+        return CBORObject.FromObject(RandomObjects.RandomEFloat(rand));
         case 4:
-       return
+        return
   CBORObject.FromObject(RandomObjects.RandomEDecimal(rand));
         case 5:
-          return CBORObject.FromObject(RandomObjects.RandomInt64(rand));
+        return CBORObject.FromObject(RandomObjects.RandomInt64(rand));
         case 6:
-          return CBORObject.FromObject(RandomObjects.RandomERational(rand));
+        return CBORObject.FromObject(RandomObjects.RandomERational(rand));
         default: throw new ArgumentException();
       }
     }
@@ -97,7 +97,7 @@ return CBORObject.FromObject(
       if (rand.UniformInt(2) == 0) {
         int[] tagselection = {
           2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 30, 30,
-          30, 0, 1, 25, 26, 27
+          30, 0, 1, 25, 26, 27,
         };
         tag = tagselection[rand.UniformInt(tagselection.Length)];
       } else {
@@ -182,9 +182,11 @@ return CBORObject.FromObject(
     }
 
     public static void TestNumber(CBORObject o) {
+#pragma warning disable CS0618
       if (o.Type != CBORType.Number) {
         return;
       }
+#pragma warning restore CS0618
       if (o.IsPositiveInfinity() || o.IsNegativeInfinity() ||
           o.IsNaN()) {
         try {
@@ -193,8 +195,8 @@ return CBORObject.FromObject(
         } catch (OverflowException) {
           // NOTE: Intentionally empty
         } catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex); throw new
-            InvalidOperationException(String.Empty, ex);
+          Assert.Fail("Object: " + o + ", " + ex);
+          throw new InvalidOperationException(String.Empty, ex);
         }
         try {
           o.AsInt16();
@@ -202,8 +204,8 @@ return CBORObject.FromObject(
         } catch (OverflowException) {
           // NOTE: Intentionally empty
         } catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex); throw new
-            InvalidOperationException(String.Empty, ex);
+          Assert.Fail("Object: " + o + ", " + ex);
+          throw new InvalidOperationException(String.Empty, ex);
         }
         try {
           o.AsInt32();
@@ -211,8 +213,8 @@ return CBORObject.FromObject(
         } catch (OverflowException) {
           // NOTE: Intentionally empty
         } catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex); throw new
-            InvalidOperationException(String.Empty, ex);
+          Assert.Fail("Object: " + o + ", " + ex);
+          throw new InvalidOperationException(String.Empty, ex);
         }
         try {
           o.AsInt64();
@@ -220,8 +222,8 @@ return CBORObject.FromObject(
         } catch (OverflowException) {
           // NOTE: Intentionally empty
         } catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex); throw new
-            InvalidOperationException(String.Empty, ex);
+          Assert.Fail("Object: " + o + ", " + ex);
+          throw new InvalidOperationException(String.Empty, ex);
         }
         try {
           o.AsSingle();
@@ -241,21 +243,23 @@ return CBORObject.FromObject(
         } catch (OverflowException) {
           // NOTE: Intentionally empty
         } catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex); throw new
-            InvalidOperationException(String.Empty, ex);
+          Assert.Fail("Object: " + o + ", " + ex);
+          throw new InvalidOperationException(String.Empty, ex);
         }
         return;
       }
       try {
         o.AsSingle();
       } catch (Exception ex) {
-        Assert.Fail("Object: " + o + ", " + ex); throw new
+        Assert.Fail("Object: " + o + ", " + ex);
+        throw new
           InvalidOperationException(String.Empty, ex);
       }
       try {
         o.AsDouble();
       } catch (Exception ex) {
-        Assert.Fail("Object: " + o + ", " + ex); throw new
+        Assert.Fail("Object: " + o + ", " + ex);
+        throw new
           InvalidOperationException(String.Empty, ex);
       }
     }
@@ -268,13 +272,16 @@ return CBORObject.FromObject(
     }
 
     public static void AssertSer(CBORObject o, String s) {
-      if (!s.Equals(o.ToString())) {
+      if (!s.Equals(o.ToString(), StringComparison.Ordinal)) {
         Assert.AreEqual(s, o.ToString(), "o is not equal to s");
       }
       // Test round-tripping
       CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());
-      if (!s.Equals(o2.ToString())) {
-        Assert.AreEqual(s, o2.ToString(), "o2 is not equal to s");
+      if (!s.Equals(o2.ToString(), StringComparison.Ordinal)) {
+        string message = "o2 is not equal to s\n" +
+          TestCommon.ToByteArrayString(o.EncodeToBytes()) +
+          "\n" + TestCommon.ToByteArrayString(o2.EncodeToBytes());
+        Assert.AreEqual(s, o2.ToString(), message);
       }
       TestNumber(o);
       TestCommon.AssertEqualsHashCode(o, o2);

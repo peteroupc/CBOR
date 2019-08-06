@@ -9,7 +9,7 @@
 
 <b>Parameters:</b>
 
- * &lt;T&gt;:  Type to convert to a CBOR object.
+ * &lt;T&gt;: Type to convert to a CBOR object.
 
 <a id="ToCBORObject_T"></a>
 ### ToCBORObject
@@ -19,7 +19,7 @@
 
  Converts an object to a CBOR object.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>obj</i>: An object to convert to a CBOR object.
 
