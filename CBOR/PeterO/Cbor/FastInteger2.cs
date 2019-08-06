@@ -172,8 +172,8 @@ namespace PeterO.Cbor {
 
       internal MutableNumber SubtractInt(int other) {
         if (other < 0) {
-     throw new ArgumentException("other (" + other + ") is less than " +
-            "0 ");
+          throw new ArgumentException("other (" + other + ") is less than " +
+                 "0 ");
         }
         if (other != 0) {
           unchecked {
@@ -214,8 +214,8 @@ namespace PeterO.Cbor {
       internal MutableNumber Subtract(MutableNumber other) {
         unchecked {
           {
-       // Console.WriteLine("" + this.data.Length + " " +
-             // (other.data.Length));
+            // Console.WriteLine("" + this.data.Length + " " +
+            // (other.data.Length));
             int neededSize = (this.wordCount > other.wordCount) ?
             this.wordCount : other.wordCount;
             if (this.data.Length < neededSize) {
@@ -256,52 +256,52 @@ namespace PeterO.Cbor {
         }
       }
 
-internal MutableNumber Add(int augend) {
+      internal MutableNumber Add(int augend) {
         if (augend < 0) {
-   throw new ArgumentException("augend (" + augend + ") is less than " +
-            "0 ");
+          throw new ArgumentException("augend (" + augend + ") is less than " +
+                   "0 ");
         }
         unchecked {
-        if (augend != 0) {
-          var carry = 0;
-          // Ensure a length of at least 1
-          if (this.wordCount == 0) {
-            if (this.data.Length == 0) {
-              this.data = new int[4];
+          if (augend != 0) {
+            var carry = 0;
+            // Ensure a length of at least 1
+            if (this.wordCount == 0) {
+              if (this.data.Length == 0) {
+                this.data = new int[4];
+              }
+              this.data[0] = 0;
+              this.wordCount = 1;
             }
-            this.data[0] = 0;
-            this.wordCount = 1;
-          }
-          for (var i = 0; i < this.wordCount; ++i) {
-            int u;
-            int a = this.data[i];
-            u = (a + augend) + carry;
-            carry = ((((u >> 31) == (a >> 31)) ? ((u & Int32.MaxValue) < (a &
-            Int32.MaxValue)) :
-                    ((u >> 31) == 0)) || (u == a && augend != 0)) ? 1 : 0;
-            this.data[i] = u;
-            if (carry == 0) {
-              return this;
+            for (var i = 0; i < this.wordCount; ++i) {
+              int u;
+              int a = this.data[i];
+              u = (a + augend) + carry;
+              carry = ((((u >> 31) == (a >> 31)) ? ((u & Int32.MaxValue) < (a &
+              Int32.MaxValue)) :
+                      ((u >> 31) == 0)) || (u == a && augend != 0)) ? 1 : 0;
+              this.data[i] = u;
+              if (carry == 0) {
+                return this;
+              }
+              augend = 0;
             }
-            augend = 0;
-          }
-          if (carry != 0) {
-            if (this.wordCount >= this.data.Length) {
-              var newdata = new int[this.wordCount + 20];
-              Array.Copy(this.data, 0, newdata, 0, this.data.Length);
-              this.data = newdata;
+            if (carry != 0) {
+              if (this.wordCount >= this.data.Length) {
+                var newdata = new int[this.wordCount + 20];
+                Array.Copy(this.data, 0, newdata, 0, this.data.Length);
+                this.data = newdata;
+              }
+              this.data[this.wordCount] = carry;
+              ++this.wordCount;
             }
-            this.data[this.wordCount] = carry;
-            ++this.wordCount;
           }
+          // Calculate the correct data length
+          while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
+            --this.wordCount;
+          }
+          return this;
         }
-        // Calculate the correct data length
-        while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
-          --this.wordCount;
-        }
-        return this;
       }
-    }
     }
 
     private int smallValue; // if integerMode is 0
@@ -562,7 +562,7 @@ internal MutableNumber Add(int augend) {
           return true;
         case 1:
           return this.mnum.CanFitInInt32();
-          case 2: {
+        case 2: {
             return this.largeValue.CanFitInInt32();
           }
         default:
@@ -576,12 +576,12 @@ internal MutableNumber Add(int augend) {
       get {
         switch (this.integerMode) {
           case 0:
-          return (this.smallValue == 0) ? 0 : ((this.smallValue < 0) ? -1 :
-              1);
+            return (this.smallValue == 0) ? 0 : ((this.smallValue < 0) ? -1 :
+                1);
           case 1:
-          return this.mnum.Sign;
+            return this.mnum.Sign;
           case 2:
-          return this.largeValue.Sign;
+            return this.largeValue.Sign;
           default: return 0;
         }
       }

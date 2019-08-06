@@ -592,9 +592,9 @@ Type elementType = t.GetElementType();
         }
         if (t.GetTypeInfo().IsGenericType) {
           Type td = t.GetGenericTypeDefinition();
-          isList = (td.Equals(typeof(List<>)) || td.Equals(typeof(IList<>)) ||
+          isList = td.Equals(typeof(List<>)) || td.Equals(typeof(IList<>)) ||
 td.Equals(typeof(ICollection<>)) ||
-  td.Equals(typeof(IEnumerable<>)));
+  td.Equals(typeof(IEnumerable<>));
         }
         isList = isList && t.GenericTypeArguments.Length == 1;
         if (isList) {

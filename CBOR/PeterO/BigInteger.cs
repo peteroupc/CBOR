@@ -7,6 +7,7 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/
  */
 #pragma warning disable SA1300
+#pragma warning disable CA1036 // This class is obsolete
 using System;
 using PeterO.Numbers;
 

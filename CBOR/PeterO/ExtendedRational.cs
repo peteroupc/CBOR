@@ -7,6 +7,7 @@ at: http://peteroupc.github.io/
  */
 using System;
 using PeterO.Numbers;
+#pragma warning disable CA1036 // This class is obsolete
 
 namespace PeterO {
     /// <include file='../docs.xml'

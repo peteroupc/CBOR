@@ -36,7 +36,8 @@ namespace PeterO {
     }
 
     public static void Log(string format, params object[] args) {
-      Log(String.Format(format, args));
+      Log(String.Format(System.Globalization.CultureInfo.InvariantCulture,
+                        format, args));
     }
   }
 }

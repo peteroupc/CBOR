@@ -23,6 +23,46 @@ namespace PeterO.Cbor {
       this.UseCamelCase = useCamelCase;
     }
 
+    /// <summary>Initializes a new instance of the
+    /// <see cref='PeterO.Cbor.PODOptions'/> class.</summary>
+    /// <param name='paramString'>A string setting forth the options to
+    /// use. This is a semicolon-separated list of options, each of which
+    /// has a key and a value separated by an equal sign ("="). Whitespace
+    /// and line separators are not allowed to appear between the
+    /// semicolons or between the equal signs, nor may the string begin or
+    /// end with whitespace. The string can be empty, but cannot be null.
+    /// The following is an example of this parameter:
+    /// <c>usecamelcase=true</c>. The key can be any one of the following
+    /// in any combination of case: <c>usecamelcase</c>. Other keys are
+    /// ignored. If the same key appears more than once, the value given
+    /// for the last such key is used. The key just given can have a value
+    /// of <c>1</c>, <c>true</c>, <c>yes</c>, or <c>on</c> (in any
+    /// combination of case), which means true, and any other value meaning
+    /// false. For example, <c>usecamelcase=Yes</c> and
+    /// <c>usecamelcase=1</c> both set the <c>UseCamelCase</c> property to
+    /// true.</param>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='paramString'/> is null.</exception>
+    public PODOptions(string paramString) {
+      if (paramString == null) {
+        throw new ArgumentNullException(nameof(paramString));
+      }
+      var parser = new OptionsParser(paramString);
+      this.UseCamelCase = parser.GetBoolean("usecamelcase", true);
+    }
+
+    /// <summary>Gets the values of this options object's properties in
+    /// text form.</summary>
+    /// <returns>A text string containing the values of this options
+    /// object's properties. The format of the string is the same as the
+    /// one described in the String constructor for this class.</returns>
+    public override string ToString() {
+      return new System.Text.StringBuilder()
+           .Append("usecamelcase=")
+           .Append(this.UseCamelCase ? "true" : "false")
+           .ToString();
+    }
+
     /// <summary>The default settings for "plain old data"
     /// options.</summary>
     public static readonly PODOptions Default = new PODOptions();

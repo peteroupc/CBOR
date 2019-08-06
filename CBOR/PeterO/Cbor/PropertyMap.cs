@@ -331,7 +331,7 @@ namespace PeterO.Cbor {
       Type t = Enum.GetUnderlyingType(value.GetType());
       if (t.Equals(typeof(ulong))) {
         var data = new byte[13];
-        ulong uvalue = Convert.ToUInt64(value);
+        ulong uvalue = Convert.ToUInt64(value, System.Globalization.CultureInfo.InvariantCulture);
         data[0] = (byte)(uvalue & 0xff);
         data[1] = (byte)((uvalue >> 8) & 0xff);
         data[2] = (byte)((uvalue >> 16) & 0xff);
@@ -343,9 +343,9 @@ namespace PeterO.Cbor {
         data[8] = (byte)0;
         return EInteger.FromBytes(data, true);
       }
-      return t.Equals(typeof(long)) ? Convert.ToInt64(value) :
-      (t.Equals(typeof(uint)) ? Convert.ToInt64(value) :
-      Convert.ToInt32(value));
+      return t.Equals(typeof(long)) ? Convert.ToInt64(value, System.Globalization.CultureInfo.InvariantCulture) :
+      (t.Equals(typeof(uint)) ? Convert.ToInt64(value, System.Globalization.CultureInfo.InvariantCulture) :
+      Convert.ToInt32(value, System.Globalization.CultureInfo.InvariantCulture));
     }
 
     public static object FindOneArgumentMethod(
@@ -442,9 +442,9 @@ namespace PeterO.Cbor {
 #else
         if (t.GetTypeInfo().IsGenericType) {
           Type td = t.GetGenericTypeDefinition();
-          isList = (td.Equals(typeof(List<>)) || td.Equals(typeof(IList<>)) ||
+          isList = td.Equals(typeof(List<>)) || td.Equals(typeof(IList<>)) ||
 td.Equals(typeof(ICollection<>)) ||
-  td.Equals(typeof(IEnumerable<>)));
+  td.Equals(typeof(IEnumerable<>));
         } else {
           throw new NotImplementedException();
         }

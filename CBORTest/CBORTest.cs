@@ -977,6 +977,41 @@ cmpCobj.ToString() +
       CBORTestCommon.AssertRoundTrip(oo);
     }
 
+
+    [Test]
+    public void TestAllowEmpty() {
+      CBOREncodeOptions options;
+      var bytes = new byte[0];
+      options = new CBOREncodeOptions(String.Empty);
+      try {
+        CBORObject.DecodeFromBytes(bytes, options);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      options = new CBOREncodeOptions("allowempty=true");
+      Assert.AreEqual(null, CBORObject.DecodeFromBytes(bytes, options));
+      using (var ms = new MemoryStream(bytes)) {
+        options = new CBOREncodeOptions(String.Empty);
+        try {
+          CBORObject.Read(ms, options);
+          Assert.Fail("Should have failed");
+        } catch (CBORException) {
+          // NOTE: Intentionally empty
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
+        }
+      }
+      using (var ms = new MemoryStream(bytes)) {
+        options = new CBOREncodeOptions("allowempty=true");
+        Assert.AreEqual(null, CBORObject.Read(ms, options));
+      }
+    }
+
     [Test]
     public void TestParseDecimalStrings() {
       var rand = new RandomGenerator();
@@ -1148,20 +1183,6 @@ cmpCobj.ToString() +
       CBORTestCommon.AssertSer(
         CBORObject.FromObject((object)null),
         "null");
-    }
-
-    [Test]
-    public void TestSubtract() {
-      var r = new RandomGenerator();
-      for (var i = 0; i < 3000; ++i) {
-        CBORObject o1 = CBORTestCommon.RandomNumber(r);
-        CBORObject o2 = CBORTestCommon.RandomNumber(r);
-        EDecimal cmpDecFrac = AsED(o1).Subtract(AsED(o2));
-        EDecimal cmpCobj = AsED(CBORObject.Subtract(o1, o2));
-        TestCommon.CompareTestEqual(cmpDecFrac, cmpCobj);
-        CBORTestCommon.AssertRoundTrip(o1);
-        CBORTestCommon.AssertRoundTrip(o2);
-      }
     }
 
     [Test]

@@ -13,8 +13,8 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="T:PeterO.Cbor.CBORObject"]/*'/>
+  /// <include file='../../docs.xml'
+  /// path='docs/doc[@name="T:PeterO.Cbor.CBORObject"]/*'/>
   public sealed partial class CBORObject : IComparable<CBORObject>,
   IEquatable<CBORObject> {
     private static CBORObject ConstructSimpleValue(int v) {
@@ -115,10 +115,10 @@ namespace PeterO.Cbor {
       null, new CBORExtendedFloat(), new CBORExtendedRational(),
     };
 
-        #pragma warning disable 618
+#pragma warning disable 618
     private static readonly IDictionary<EInteger, ICBORTag>
       ValueTagHandlers = new Dictionary<EInteger, ICBORTag>();
-        #pragma warning restore 618
+#pragma warning restore 618
 
     private static readonly EInteger UInt64MaxValue =
       (EInteger.One << 64) - EInteger.One;
@@ -261,7 +261,7 @@ namespace PeterO.Cbor {
     /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.IsFinite"]/*'/>
     public bool IsFinite {
       get {
-        return this.Type == CBORType.Number && !this.IsInfinity() &&
+        return this.IsNumber && !this.IsInfinity() &&
           !this.IsNaN();
       }
     }
@@ -589,16 +589,16 @@ namespace PeterO.Cbor {
 "\u0020Moreover, registering tag handlers as this method does may tie them" +
 "\u0020to the" +
 "\u0020lifetime of the application.")]
-public static void AddTagHandler(
+    public static void AddTagHandler(
        BigInteger bigintTag,
        ICBORTag handler) {
-       if (bigintTag == null) {
-         throw new ArgumentNullException(nameof(bigintTag));
-       }
-       if (handler == null) {
-         throw new ArgumentNullException(nameof(handler));
-       }
-       AddTagHandler(PropertyMap.FromLegacy(bigintTag), handler);
+      if (bigintTag == null) {
+        throw new ArgumentNullException(nameof(bigintTag));
+      }
+      if (handler == null) {
+        throw new ArgumentNullException(nameof(handler));
+      }
+      AddTagHandler(PropertyMap.FromLegacy(bigintTag), handler);
     }
 
     /// <include file='../../docs.xml'
@@ -610,16 +610,16 @@ public static void AddTagHandler(
 "\u0020Moreover, registering tag handlers as this method does may tie them" +
 "\u0020to the" +
 "\u0020lifetime of the application.")]
-public static void AddTagHandler(
+    public static void AddTagHandler(
        EInteger bigintTag,
        ICBORTag handler) {
-       if (bigintTag == null) {
-         throw new ArgumentNullException(nameof(bigintTag));
-       }
-       if (handler == null) {
-         throw new ArgumentNullException(nameof(handler));
-       }
-       if (bigintTag.Sign < 0) {
+      if (bigintTag == null) {
+        throw new ArgumentNullException(nameof(bigintTag));
+      }
+      if (handler == null) {
+        throw new ArgumentNullException(nameof(handler));
+      }
+      if (bigintTag.Sign < 0) {
         throw new ArgumentException("bigintTag.Sign (" +
                     bigintTag.Sign + ") is less than 0");
       }
@@ -648,6 +648,7 @@ public static void AddTagHandler(
         throw new ArgumentNullException(nameof(data));
       }
       if (data.Length == 0) {
+        if(options!=null && options.AllowEmpty)return null;
         throw new CBORException("data is empty.");
       }
       if (options == null) {
@@ -733,31 +734,31 @@ public static void AddTagHandler(
     /// <include file='../../docs.xml'
     ///   path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToObject(System.Type,PeterO.Cbor.CBORTypeMapper)"]/*'/>
     public object ToObject(Type t, CBORTypeMapper mapper) {
-if (mapper == null) {
-  throw new ArgumentNullException(nameof(mapper));
-}
-return this.ToObject(t, mapper, null, 0);
+      if (mapper == null) {
+        throw new ArgumentNullException(nameof(mapper));
+      }
+      return this.ToObject(t, mapper, null, 0);
     }
 
     /// <include file='../../docs.xml'
     ///   path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToObject(System.Type,PeterO.Cbor.PODOptions)"]/*'/>
     public object ToObject(Type t, PODOptions options) {
-if (options == null) {
-  throw new ArgumentNullException(nameof(options));
-}
-return this.ToObject(t, null, options, 0);
+      if (options == null) {
+        throw new ArgumentNullException(nameof(options));
+      }
+      return this.ToObject(t, null, options, 0);
     }
 
     /// <include file='../../docs.xml'
     ///   path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ToObject(System.Type,PeterO.Cbor.CBORTypeMapper,PeterO.Cbor.PODOptions)"]/*'/>
     public object ToObject(Type t, CBORTypeMapper mapper, PODOptions options) {
-if (mapper == null) {
-  throw new ArgumentNullException(nameof(mapper));
-}
-if (options == null) {
-  throw new ArgumentNullException(nameof(options));
-}
-return this.ToObject(t, mapper, options, 0);
+      if (mapper == null) {
+        throw new ArgumentNullException(nameof(mapper));
+      }
+      if (options == null) {
+        throw new ArgumentNullException(nameof(options));
+      }
+      return this.ToObject(t, mapper, options, 0);
     }
 
     internal object ToObject(
@@ -765,20 +766,20 @@ return this.ToObject(t, mapper, options, 0);
       CBORTypeMapper mapper,
       PODOptions options,
       int depth) {
-depth++;
-if (depth > 100) {
- throw new CBORException("Depth level too high");
-}
-if (t == null) {
-  throw new ArgumentNullException(nameof(t));
-}
-if (t.Equals(typeof(CBORObject))) {
-  return this;
-}
-if (this.IsNull) {
-  return null;
-}
-if (mapper != null) {
+      depth++;
+      if (depth > 100) {
+        throw new CBORException("Depth level too high");
+      }
+      if (t == null) {
+        throw new ArgumentNullException(nameof(t));
+      }
+      if (t.Equals(typeof(CBORObject))) {
+        return this;
+      }
+      if (this.IsNull) {
+        return null;
+      }
+      if (mapper != null) {
         object obj = mapper.ConvertBackWithConverter(this, t);
         if (obj != null) {
           return obj;
@@ -1197,7 +1198,7 @@ CBORObject(CBORObjectTypeExtendedRational, bigValue);
         return objret;
       }
       objret = CBORObject.NewMap();
-        #pragma warning disable 618
+#pragma warning disable 618
       foreach (KeyValuePair<string, object> key in
                PropertyMap.GetProperties(
                  obj,
@@ -1205,7 +1206,7 @@ CBORObject(CBORObjectTypeExtendedRational, bigValue);
                  options.UseCamelCase)) {
         objret[key.Key] = CBORObject.FromObject(key.Value, options);
       }
-        #pragma warning restore 618
+#pragma warning restore 618
       return objret;
     }
 
@@ -1254,9 +1255,9 @@ CBORObject(CBORObjectTypeExtendedRational, bigValue);
           tagHigh = unchecked(tagHigh | (((int)b) << (i * 8)));
         }
         var c2 = new CBORObject(c, tagLow, tagHigh);
-        #pragma warning disable 618
+#pragma warning disable 618
         ICBORTag tagconv = FindTagConverter(bigintTag);
-        #pragma warning restore 618
+#pragma warning restore 618
         if (tagconv != null) {
           c2 = tagconv.ValidateObject(c2);
         }
@@ -1264,8 +1265,8 @@ CBORObject(CBORObjectTypeExtendedRational, bigValue);
       }
     }
 
-      #pragma warning disable 612
-      #pragma warning disable 618
+#pragma warning disable 612
+#pragma warning disable 618
     /// <include file='../../docs.xml'
     ///   path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObjectAndTag(System.Object,System.Int32)"]/*'/>
     public static CBORObject FromObjectAndTag(
@@ -1280,8 +1281,8 @@ CBORObject(CBORObjectTypeExtendedRational, bigValue);
       c = new CBORObject(c, smallTag, 0);
       return (tagconv != null) ? tagconv.ValidateObject(c) : c;
     }
-      #pragma warning restore 618
-      #pragma warning restore 612
+#pragma warning restore 618
+#pragma warning restore 612
 
     /// <include file='../../docs.xml'
     ///   path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromSimpleValue(System.Int32)"]/*'/>
@@ -1349,7 +1350,16 @@ CBORObject(CBORObjectTypeExtendedRational, bigValue);
         if (!options.AllowDuplicateKeys) {
           reader.DuplicatePolicy = CBORReader.CBORDuplicatePolicy.Disallow;
         }
-        return reader.ResolveSharedRefsIfNeeded(reader.Read(null));
+        CBORObject obj;
+        if (options.AllowEmpty) {
+          int firstbyte = stream.ReadByte();
+          if(firstbyte<0)return null;
+          obj = reader.ReadForFirstByte(firstbyte, null);
+        } else {
+          obj = reader.Read(null);
+        }
+        return options.ResolveReferences ?
+            reader.ResolveSharedRefsIfNeeded(obj) : obj; 
       } catch (IOException ex) {
         throw new CBORException("I/O error occurred.", ex);
       }
@@ -1673,7 +1683,8 @@ CBORObject(CBORObjectTypeExtendedRational, bigValue);
             stream.WriteByte((byte)((datatype << 5) | 27));
             stream.Write(bytes, 0, byteCount);
             break;
-          default: stream.WriteByte((datatype == 0) ?
+          default:
+            stream.WriteByte((datatype == 0) ?
 (byte)0xc2 : (byte)0xc3);
             WritePositiveInt(2, byteCount, stream);
             stream.Write(bytes, 0, byteCount);
@@ -2701,21 +2712,21 @@ CBORObject(CBORObjectTypeExtendedRational, bigValue);
                     ") is less than 0");
       }
       return this.IsTagged && this.tagHigh == 0 && this.tagLow == tagValue;
- }
+    }
 
     /// <include file='../../docs.xml'
     ///   path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasMostOuterTag(PeterO.Numbers.EInteger)"]/*'/>
     public bool HasMostOuterTag(EInteger bigTagValue) {
-    if (bigTagValue == null) {
-      throw new ArgumentNullException(nameof(bigTagValue));
-    }
-    if (bigTagValue.Sign < 0) {
+      if (bigTagValue == null) {
+        throw new ArgumentNullException(nameof(bigTagValue));
+      }
+      if (bigTagValue.Sign < 0) {
         throw new ArgumentException("bigTagValue (" + bigTagValue +
                     ") is less than 0");
       }
       return (
         !this.IsTagged) ? false : this.MostOuterTag.Equals(bigTagValue);
- }
+    }
 
     /// <include file='../../docs.xml'
     ///   path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasTag(System.Int32)"]/*'/>
@@ -3208,8 +3219,8 @@ CBORObject(CBORObjectTypeExtendedRational, bigValue);
           outputStream.WriteByte((byte)(0xe0 + (int)value));
           return 1;
         } else if (value < 32) {
-     throw new ArgumentException("value is from 24 to 31 and major type is 7");
-   } else {
+          throw new ArgumentException("value is from 24 to 31 and major type is 7");
+        } else {
           outputStream.WriteByte((byte)0xf8);
           outputStream.WriteByte((byte)value);
           return 2;
@@ -3249,8 +3260,8 @@ CBORObject(CBORObjectTypeExtendedRational, bigValue);
           outputStream.WriteByte((byte)(0xe0 + value));
           return 1;
         } else if (value < 32) {
-     throw new ArgumentException("value is from 24 to 31 and major type is 7");
-   } else {
+          throw new ArgumentException("value is from 24 to 31 and major type is 7");
+        } else {
           outputStream.WriteByte((byte)0xf8);
           outputStream.WriteByte((byte)value);
           return 2;
@@ -3297,7 +3308,7 @@ CBORObject(CBORObjectTypeExtendedRational, bigValue);
           ") is more than 7");
       }
       if (majorType == 7) {
-   throw new ArgumentException("majorType is 7 and value is greater than 255");
+        throw new ArgumentException("majorType is 7 and value is greater than 255");
       }
       byte[] bytes = new[] {
         (byte)(27 | (majorType << 5)), (byte)highbyte,
@@ -3409,7 +3420,7 @@ CBORObject(CBORObjectTypeExtendedRational, bigValue);
       }
     }
 
-        #pragma warning disable 618
+#pragma warning disable 618
     internal static ICBORTag FindTagConverter(EInteger bigintTag) {
       if (TagHandlersEmpty()) {
         AddTagHandler((EInteger)2, new CBORTag2());
@@ -3446,7 +3457,7 @@ CBORObject(CBORObjectTypeExtendedRational, bigValue);
     internal static ICBORTag FindTagConverterLong(long tagLong) {
       return FindTagConverter((EInteger)tagLong);
     }
-        #pragma warning restore 618
+#pragma warning restore 618
 
     internal static CBORObject FromRaw(string str) {
       return new CBORObject(CBORObjectTypeTextString, str);
@@ -4068,13 +4079,13 @@ CBORObject(CBORObjectTypeExtendedRational, bigValue);
       return stack;
     }
 
-        #pragma warning disable 618
+#pragma warning disable 618
     private static bool TagHandlersEmpty() {
       lock (ValueTagHandlers) {
         return ValueTagHandlers.Count == 0;
       }
     }
-        #pragma warning restore 618
+#pragma warning restore 618
 
     private static int TagsCompare(EInteger[] tagsA, EInteger[] tagsB) {
       if (tagsA == null) {
@@ -4343,8 +4354,8 @@ CBORObject(CBORObjectTypeExtendedRational, bigValue);
     private sealed class ConverterInfo {
       private object toObject;
 
-    /// <include file='../../docs.xml'
-    ///   path='docs/doc[@name="P:PeterO.Cbor.CBORObject.ConverterInfo.ToObject"]/*'/>
+      /// <include file='../../docs.xml'
+      ///   path='docs/doc[@name="P:PeterO.Cbor.CBORObject.ConverterInfo.ToObject"]/*'/>
       public object ToObject {
         get {
           return this.toObject;
@@ -4357,8 +4368,8 @@ CBORObject(CBORObjectTypeExtendedRational, bigValue);
 
       private object converter;
 
-    /// <include file='../../docs.xml'
-    ///   path='docs/doc[@name="P:PeterO.Cbor.CBORObject.ConverterInfo.Converter"]/*'/>
+      /// <include file='../../docs.xml'
+      ///   path='docs/doc[@name="P:PeterO.Cbor.CBORObject.ConverterInfo.Converter"]/*'/>
       public object Converter {
         get {
           return this.converter;

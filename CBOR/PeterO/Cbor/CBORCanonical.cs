@@ -73,7 +73,7 @@ namespace PeterO.Cbor {
        valueAType == CBORType.Boolean || valueAType == CBORType.ByteString ||
        valueAType == CBORType.TextString) {
         return cbor.EncodeToBytes(CBOREncodeOptions.Default);
-      } else if (valueAType == CBORType.Number) {
+      } else if (cbor.IsNumber) {
         if (cbor.CanFitInInt64()) {
           return cbor.EncodeToBytes(CBOREncodeOptions.Default);
         } else {

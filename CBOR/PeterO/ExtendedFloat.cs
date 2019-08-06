@@ -8,14 +8,15 @@ at: http://peteroupc.github.io/
 using System;
 using PeterO.Numbers;
 
+#pragma warning disable CA1036 // This class is obsolete
 namespace PeterO {
-    /// <include file='../docs.xml'
-    /// path='docs/doc[@name="T:PeterO.ExtendedFloat"]/*'/>
-    [Obsolete(
-  "Use EFloat from PeterO.Numbers/com.upokecenter.numbers and the output of" +
+  /// <include file='../docs.xml'
+  /// path='docs/doc[@name="T:PeterO.ExtendedFloat"]/*'/>
+  [Obsolete(
+"Use EFloat from PeterO.Numbers/com.upokecenter.numbers and the output of" +
 "\u0020this class's ToString method.")]
   public sealed class ExtendedFloat : IComparable<ExtendedFloat>,
- IEquatable<ExtendedFloat> {
+IEquatable<ExtendedFloat> {
     private readonly EFloat ef;
 
     internal ExtendedFloat(EFloat ef) {
@@ -70,10 +71,7 @@ namespace PeterO {
     ///   path='docs/doc[@name="M:PeterO.ExtendedFloat.Equals(PeterO.ExtendedFloat)"]/*'/>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public bool Equals(ExtendedFloat other) {
-      if (other == null) {
-        throw new ArgumentNullException(nameof(other));
-      }
-      return this.Ef.Equals(other.Ef);
+      return other!=null && this.Ef.Equals(other.Ef);
     }
 
     /// <include file='../docs.xml'
@@ -162,8 +160,6 @@ namespace PeterO {
     /// &#x22;str&#x22;&#x27;s length, or &#x22;str&#x22;&#x27;s length
     /// minus &#x22;offset&#x22; is less than
     /// &#x22;length&#x22;.</exception>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='str'/> is null.</exception>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public static ExtendedFloat FromString(
       string str,

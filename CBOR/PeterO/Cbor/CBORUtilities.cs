@@ -11,8 +11,8 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="T:PeterO.Cbor.CBORUtilities"]/*'/>
+  /// <include file='../../docs.xml'
+  /// path='docs/doc[@name="T:PeterO.Cbor.CBORUtilities"]/*'/>
   internal static class CBORUtilities {
     private const string HexAlphabet = "0123456789ABCDEF";
 
@@ -150,27 +150,26 @@ namespace PeterO.Cbor {
         }
         while (intlongValue > 43698) {
           int intdivValue = intlongValue / 10;
-          char digit = HexAlphabet[(
-            int)(intlongValue - (intdivValue * 10))];
+          char digit = HexAlphabet[intlongValue - (intdivValue * 10)];
           chars[count--] = digit;
           intlongValue = intdivValue;
-      }
-      while (intlongValue > 9) {
-        int intdivValue = (intlongValue * 26215) >> 18;
-        char digit = HexAlphabet[(int)(intlongValue - (intdivValue * 10))];
-        chars[count--] = digit;
-        intlongValue = intdivValue;
-      }
-      if (intlongValue != 0) {
-        chars[count--] = HexAlphabet[(int)intlongValue];
-      }
-      if (neg) {
-        chars[count] = '-';
+        }
+        while (intlongValue > 9) {
+          int intdivValue = (intlongValue * 26215) >> 18;
+          char digit = HexAlphabet[(int)(intlongValue - (intdivValue * 10))];
+          chars[count--] = digit;
+          intlongValue = intdivValue;
+        }
+        if (intlongValue != 0) {
+          chars[count--] = HexAlphabet[(int)intlongValue];
+        }
+        if (neg) {
+          chars[count] = '-';
+        } else {
+          ++count;
+        }
+        return new String(chars, count, 12 - count);
       } else {
-        ++count;
-      }
-      return new String(chars, count, 12 - count);
-    } else {
         chars = new char[24];
         count = 23;
         if (neg) {
@@ -181,22 +180,22 @@ namespace PeterO.Cbor {
           char digit = HexAlphabet[(int)(longValue - (divValue * 10))];
           chars[count--] = digit;
           longValue = divValue;
-      }
-      while (longValue > 9) {
-        long divValue = (longValue * 26215) >> 18;
-        char digit = HexAlphabet[(int)(longValue - (divValue * 10))];
-        chars[count--] = digit;
-        longValue = divValue;
-      }
-      if (longValue != 0) {
-        chars[count--] = HexAlphabet[(int)longValue];
-      }
-      if (neg) {
-        chars[count] = '-';
-      } else {
-        ++count;
-      }
-      return new String(chars, count, 24 - count);
+        }
+        while (longValue > 9) {
+          long divValue = (longValue * 26215) >> 18;
+          char digit = HexAlphabet[(int)(longValue - (divValue * 10))];
+          chars[count--] = digit;
+          longValue = divValue;
+        }
+        if (longValue != 0) {
+          chars[count--] = HexAlphabet[(int)longValue];
+        }
+        if (neg) {
+          chars[count] = '-';
+        } else {
+          ++count;
+        }
+        return new String(chars, count, 24 - count);
       }
     }
 
@@ -270,7 +269,7 @@ namespace PeterO.Cbor {
                     year.Remainder(num100).Sign == 0 &&
                     year.Remainder(num400).Sign != 0)) ? ValueNormalDays :
               ValueLeapDays;
-            } else {
+          } else {
             ++month;
           }
         }
@@ -296,10 +295,10 @@ namespace PeterO.Cbor {
       int mday) {
       // NOTE: month = 1 is January, year = 1 is year 1
       if (month <= 0 || month > 12) {
-        throw new ArgumentException();
+        throw new ArgumentException("month is out of range");
       }
       if (mday <= 0 || mday > 31) {
-        throw new ArgumentException();
+        throw new ArgumentException("day of month is out of range");
       }
       EInteger num4 = EInteger.FromInt32(4);
       EInteger num100 = EInteger.FromInt32(100);
@@ -398,20 +397,20 @@ namespace PeterO.Cbor {
 
     public static String FirstCharLower(String name) {
       if (name.Length > 0 && name[0] >= 'A' && name[0] <= 'Z') {
-              var sb = new StringBuilder();
-              sb.Append((char)(name[0] + 0x20));
-              sb.Append(name.Substring(1));
-              return sb.ToString();
+        var sb = new StringBuilder();
+        sb.Append((char)(name[0] + 0x20));
+        sb.Append(name.Substring(1));
+        return sb.ToString();
       }
       return name;
     }
 
     public static String FirstCharUpper(String name) {
       if (name.Length > 0 && name[0] >= 'a' && name[0] <= 'z') {
-              var sb = new StringBuilder();
-              sb.Append((char)(name[0] - 0x20));
-              sb.Append(name.Substring(1));
-              return sb.ToString();
+        var sb = new StringBuilder();
+        sb.Append((char)(name[0] - 0x20));
+        sb.Append(name.Substring(1));
+        return sb.ToString();
       }
       return name;
     }
@@ -457,9 +456,9 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
       string str,
       EInteger[] bigYearArray,
       int[] lf) {
-  int[] d = ParseAtomDateTimeString(str);
-  bigYearArray[0] = EInteger.FromInt32(d[0]);
-  Array.Copy(d, 1, lf, 0, 7);
+      int[] d = ParseAtomDateTimeString(str);
+      bigYearArray[0] = EInteger.FromInt32(d[0]);
+      Array.Copy(d, 1, lf, 0, 7);
     }
 
     private static int[] ParseAtomDateTimeString(string str) {
@@ -475,7 +474,8 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
         } else if (i == 10) {
           bad |= str[i] != 'T';
           /*lowercase t not used to separate date/time,
-    following RFC 4287 sec. 3.3*/ } else {
+    following RFC 4287 sec. 3.3*/
+        } else {
           bad |= str[i] < '0' || str[i] >
 '9';
         }
@@ -500,7 +500,7 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
             break;
           }
           if (icount < 9) {
-            nanoSeconds = nanoSeconds * 10 + (str[index] - '0');
+            nanoSeconds = (nanoSeconds * 10) + (str[index] - '0');
             ++icount;
           }
           ++index;
@@ -535,7 +535,7 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
         if (tzminute >= 60) {
           throw new ArgumentException("Invalid date/time");
         }
-        utcToLocal = (neg ? -1 : 1) * (tzhour * 60) + tzminute;
+        utcToLocal = ((neg ? -1 : 1) * tzhour * 60) + tzminute;
       } else {
         throw new ArgumentException("Invalid date/time");
       }
@@ -561,13 +561,13 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
       }
       int smallYear = bigYear.ToInt32Checked();
       if (smallYear < 0) {
-  throw new ArgumentException("year (" + smallYear +
-    ") is not greater or equal to 0");
-}
-if (smallYear > 9999) {
-  throw new ArgumentException("year (" + smallYear +
-    ") is not less or equal to 9999");
-}
+        throw new ArgumentException("year (" + smallYear +
+          ") is not greater or equal to 0");
+      }
+      if (smallYear > 9999) {
+        throw new ArgumentException("year (" + smallYear +
+          ") is not less or equal to 9999");
+      }
       int month = lesserFields[0];
       int day = lesserFields[1];
       int hour = lesserFields[2];
@@ -596,8 +596,8 @@ if (smallYear > 9999) {
       charbuf[18] = (char)('0' + (second % 10));
       var charbufLength = 19;
       if (!fracIsNanoseconds) {
-         int milliseconds = fracSeconds / 1000000;
-         if (milliseconds > 0) {
+        int milliseconds = fracSeconds / 1000000;
+        if (milliseconds > 0) {
           charbuf[19] = '.';
           charbuf[20] = (char)('0' + ((milliseconds / 100) % 10));
           charbuf[21] = (char)('0' + ((milliseconds / 10) % 10));
@@ -615,12 +615,12 @@ if (smallYear > 9999) {
           var digitdiv = 100000000;
           var index = 20;
           while (digitdiv > 0 && fracSeconds != 0) {
- int digit = (fracSeconds / digitdiv) % 10;
- fracSeconds -= digit * digitdiv;
- charbuf[index++] = (char)('0' + digit);
- ++charbufLength;
- digitdiv /= 10;
-}
+            int digit = (fracSeconds / digitdiv) % 10;
+            fracSeconds -= digit * digitdiv;
+            charbuf[index++] = (char)('0' + digit);
+            ++charbufLength;
+            digitdiv /= 10;
+          }
           charbuf[index] = 'Z';
           ++charbufLength;
         } else {

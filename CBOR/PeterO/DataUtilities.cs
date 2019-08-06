@@ -10,8 +10,8 @@ using System.IO;
 using System.Text;
 
 namespace PeterO {
-    /// <include file='../docs.xml'
-    /// path='docs/doc[@name="T:PeterO.DataUtilities"]/*'/>
+  /// <include file='../docs.xml'
+  /// path='docs/doc[@name="T:PeterO.DataUtilities"]/*'/>
   public static class DataUtilities {
     private const int StreamedStringBufferLength = 4096;
 
@@ -37,12 +37,12 @@ namespace PeterO {
       var i = 0;
       var count = 0;
       while (i < str.Length) {
-       int c = CodePointAt(str, i);
-       ++count;
-       i += (c >= 0x10000) ? 2 : 1;
-     }
-     return count;
-}
+        int c = CodePointAt(str, i);
+        ++count;
+        i += (c >= 0x10000) ? 2 : 1;
+      }
+      return count;
+    }
 
     /// <include file='../docs.xml'
     ///   path='docs/doc[@name="M:PeterO.DataUtilities.GetUtf8String(System.Byte[],System.Int32,System.Int32,System.Boolean)"]/*'/>
@@ -84,8 +84,8 @@ namespace PeterO {
     /// <include file='../docs.xml'
     ///   path='docs/doc[@name="M:PeterO.DataUtilities.GetUtf8Bytes(System.String,System.Boolean)"]/*'/>
     public static byte[] GetUtf8Bytes(string str, bool replace) {
-          return GetUtf8Bytes(str, replace, false);
-        }
+      return GetUtf8Bytes(str, replace, false);
+    }
 
     /// <include file='../docs.xml'
     ///   path='docs/doc[@name="M:PeterO.DataUtilities.GetUtf8Bytes(System.String,System.Boolean,System.Boolean)"]/*'/>
@@ -102,8 +102,8 @@ namespace PeterO {
           if (replace) {
             c = 0xfffd;
           } else {
- throw new ArgumentException("Unpaired surrogate code point");
-}
+            throw new ArgumentException("Unpaired surrogate code point");
+          }
         }
         if (c <= 0x80) {
           return new byte[] { (byte)c };
@@ -329,9 +329,9 @@ namespace PeterO {
       int len, ca, cb;
       len = Math.Min(strA.Length, strB.Length);
       for (var i = 0; i < len; ++i) {
-         ca = strA[i];
-         cb = strB[i];
-         if (ca == cb) {
+        ca = strA[i];
+        cb = strB[i];
+        if (ca == cb) {
           // normal code units and illegal surrogates
           // are treated as single code points
           if ((ca & 0xf800) != 0xd800) {
@@ -483,9 +483,9 @@ namespace PeterO {
       var byteIndex = 0;
       endIndex = offset + length;
       for (int index = offset; index < endIndex; ++index) {
-         c = str[index];
-         if (c <= 0x7f) {
-           if (lenientLineBreaks) {
+        c = str[index];
+        if (c <= 0x7f) {
+          if (lenientLineBreaks) {
             if (c == 0x0d && (index + 1 >= endIndex || str[index + 1] !=
                     0x0a)) {
               // bare CR, convert to CRLF
@@ -627,25 +627,25 @@ namespace PeterO {
       pointer = offset;
       endpointer = offset + bytesCount;
       while (pointer < endpointer) {
-         b = data[pointer] & (int)0xff;
-         ++pointer;
-         if (bytesNeeded == 0) {
-           if ((b & 0x7f) == b) {
-             builder.Append((char)b);
-           } else if (b >= 0xc2 && b <= 0xdf) {
-             bytesNeeded = 1;
-             cp = (b - 0xc0) << 6;
-           } else if (b >= 0xe0 && b <= 0xef) {
-             lower = (b == 0xe0) ? 0xa0 : 0x80;
-             upper = (b == 0xed) ? 0x9f : 0xbf;
-             bytesNeeded = 2;
-             cp = (b - 0xe0) << 12;
-           } else if (b >= 0xf0 && b <= 0xf4) {
-             lower = (b == 0xf0) ? 0x90 : 0x80;
-             upper = (b == 0xf4) ? 0x8f : 0xbf;
-             bytesNeeded = 3;
-             cp = (b - 0xf0) << 18;
-           } else {
+        b = data[pointer] & (int)0xff;
+        ++pointer;
+        if (bytesNeeded == 0) {
+          if ((b & 0x7f) == b) {
+            builder.Append((char)b);
+          } else if (b >= 0xc2 && b <= 0xdf) {
+            bytesNeeded = 1;
+            cp = (b - 0xc0) << 6;
+          } else if (b >= 0xe0 && b <= 0xef) {
+            lower = (b == 0xe0) ? 0xa0 : 0x80;
+            upper = (b == 0xed) ? 0x9f : 0xbf;
+            bytesNeeded = 2;
+            cp = (b - 0xe0) << 12;
+          } else if (b >= 0xf0 && b <= 0xf4) {
+            lower = (b == 0xf0) ? 0x90 : 0x80;
+            upper = (b == 0xf4) ? 0x8f : 0xbf;
+            bytesNeeded = 3;
+            cp = (b - 0xf0) << 18;
+          } else {
             if (replace) {
               builder.Append((char)0xfffd);
             } else {
@@ -680,11 +680,11 @@ namespace PeterO {
           if (ret <= 0xffff) {
             builder.Append((char)ret);
           } else {
-             ch = ret - 0x10000;
-             lead = (ch >> 10) + 0xd800;
-             trail = (ch & 0x3ff) + 0xdc00;
-             builder.Append((char)lead);
-             builder.Append((char)trail);
+            ch = ret - 0x10000;
+            lead = (ch >> 10) + 0xd800;
+            trail = (ch & 0x3ff) + 0xdc00;
+            builder.Append((char)lead);
+            builder.Append((char)trail);
           }
         }
       }
@@ -830,11 +830,11 @@ namespace PeterO {
           if (ret <= 0xffff) {
             builder.Append((char)ret);
           } else {
-             ch = ret - 0x10000;
-             lead = (ch >> 10) + 0xd800;
-             trail = (ch & 0x3ff) + 0xdc00;
-             builder.Append((char)lead);
-             builder.Append((char)trail);
+            ch = ret - 0x10000;
+            lead = (ch >> 10) + 0xd800;
+            trail = (ch & 0x3ff) + 0xdc00;
+            builder.Append((char)lead);
+            builder.Append((char)trail);
           }
         }
       }

@@ -26,7 +26,8 @@ namespace PeterO.Cbor {
     }
 
     internal enum CBORDuplicatePolicy {
-      Overwrite, Disallow,
+      Overwrite, 
+      Disallow,
     }
 
     public CBORDuplicatePolicy DuplicatePolicy {
@@ -40,6 +41,7 @@ namespace PeterO.Cbor {
     }
 
     public CBORObject ResolveSharedRefsIfNeeded(CBORObject obj) {
+      if(obj==null)return null;
       if (this.hasSharableObjects) {
         var sharedRefs = new SharedRefs();
         return ResolveSharedRefs(obj, sharedRefs);
@@ -50,6 +52,7 @@ namespace PeterO.Cbor {
     private static CBORObject ResolveSharedRefs(
       CBORObject obj,
       SharedRefs sharedRefs) {
+      if(obj==null)return null;
       int type = obj.ItemType;
       bool hasTag = obj.MostOuterTag.Equals((EInteger)29);
       if (hasTag) {
