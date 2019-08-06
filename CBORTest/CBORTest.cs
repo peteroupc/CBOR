@@ -961,18 +961,16 @@ namespace Test {
       }
     }
 
-[Test]
-public void TestCBORCompareTo(){
-  Assert.Greater(0,CBORObject.FromObject(0).CompareTo(null));
-  Assert.Greater(0,CBORObject.FromObject(0).AsNumber().CompareTo(null));
-}
-
+    [Test]
+    public void TestCBORCompareTo() {
+      Assert.Greater(0, CBORObject.FromObject(0).CompareTo(null));
+      Assert.Greater(0, CBORObject.FromObject(0).AsNumber().CompareTo(null));
+    }
 
     [Test]
     public void TestDouble() {
-      if
-(!ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity)
-          .IsPositiveInfinity()) {
+      if (!ToObjectTest.TestToFromObjectRoundTrip(
+             Double.PositiveInfinity).IsPositiveInfinity()) {
         Assert.Fail("Not positive infinity");
       }
 

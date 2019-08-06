@@ -12,6 +12,10 @@
 * <code>[FromCBORObject(PeterO.Cbor.CBORObject)](#FromCBORObject_PeterO_Cbor_CBORObject)</code> - Creates a CBOR number object from a CBOR object representing a number (that is, one for which the IsNumber property in.
 * <code>[Multiply(PeterO.Cbor.CBORNumber)](#Multiply_PeterO_Cbor_CBORNumber)</code> - Returns a CBOR number expressing the product of this number and the given number.
 * <code>[Negate()](#Negate)</code> - Returns a CBOR number with the same value as this one but with the sign reversed.
+* <code>[bool operator &gt;(PeterO.Cbor.CBORNumber, PeterO.Cbor.CBORNumber)](#op_GreaterThan)</code> - Returns whether one object's value is greater than another's.
+* <code>[bool operator &gt;=(PeterO.Cbor.CBORNumber, PeterO.Cbor.CBORNumber)](#op_GreaterThanOrEqual)</code> - Returns whether one object's value is at least another's.
+* <code>[bool operator &lt;(PeterO.Cbor.CBORNumber, PeterO.Cbor.CBORNumber)](#op_LessThan)</code> - Returns whether one object's value is less than another's.
+* <code>[bool operator &lt;=(PeterO.Cbor.CBORNumber, PeterO.Cbor.CBORNumber)](#op_LessThanOrEqual)</code> - Returns whether one object's value is up to another's.
 * <code>[Remainder(PeterO.Cbor.CBORNumber)](#Remainder_PeterO_Cbor_CBORNumber)</code> - Returns the remainder when this number is divided by another number.
 * <code>[Subtract(PeterO.Cbor.CBORNumber)](#Subtract_PeterO_Cbor_CBORNumber)</code> - Returns a number that expresses this number minus another.
 * <code>[ToCBORObject()](#ToCBORObject)</code> - Converts this object's value to a CBOR object.
@@ -25,7 +29,7 @@
 
  Returns the sum of this number and another number.
 
- <b>Parameters:</b>
+  <b>Parameters:</b>
 
  * <i>b</i>: The number to add with this one.
 
@@ -47,18 +51,13 @@ The parameter  <i>b</i>
 
  Compares two CBOR numbers. In this implementation, the two numbers' mathematical values are compared. Here, NaN (not-a-number) is considered greater than any number.
 
- <b>Parameters:</b>
+  <b>Parameters:</b>
 
  * <i>other</i>: A value to compare with. Can be null.
 
 <b>Return Value:</b>
 
-Less than 0, if this value is less than the other object; or 0, if both values are equal; or greater than 0, if this value is less than the other object or if the other object is null.
-
-<b>Exceptions:</b>
-
- * System.ArgumentException:
-An internal error occurred.
+A negative number, if this value is less than the other object; or 0, if both values are equal; or a positive number, if this value is less than the other object or if the other object is null.This implementation returns a positive number if "other" is null, to conform to the .NET definition of CompareTo. This is the case even in the Java version of this library, for consistency's sake, even though implementations of  `Comparable.compareTo()`  in Java ought to throw an exception if they receive a null argument rather than treating null as less or greater than any object.
 
 <a id="Divide_PeterO_Cbor_CBORNumber"></a>
 ### Divide
@@ -68,7 +67,7 @@ An internal error occurred.
 
  Returns the quotient of this number and another number.
 
- <b>Parameters:</b>
+  <b>Parameters:</b>
 
  * <i>b</i>: The right-hand side (divisor) to the division operation.
 
@@ -90,7 +89,7 @@ The parameter  <i>b</i>
 
  Creates a CBOR number object from a CBOR object representing a number (that is, one for which the IsNumber property in.NET or the isNumber() method in Java returns true).
 
- <b>Parameters:</b>
+  <b>Parameters:</b>
 
  * <i>o</i>: The parameter is a CBOR object representing a number.
 
@@ -106,7 +105,7 @@ A CBOR number object, or null if the given CBOR object is null or does not repre
 
  Returns a CBOR number expressing the product of this number and the given number.
 
- <b>Parameters:</b>
+  <b>Parameters:</b>
 
  * <i>b</i>: The second operand to the multiplication operation.
 
@@ -127,9 +126,109 @@ The parameter  <i>b</i>
 
  Returns a CBOR number with the same value as this one but with the sign reversed.
 
- <b>Return Value:</b>
+  <b>Return Value:</b>
 
 A CBOR number with the same value as this one but with the sign reversed.
+
+<a id="op_GreaterThan"></a>
+### Operator `>`
+
+    public static bool operator >(
+        PeterO.Cbor.CBORNumber a,
+        PeterO.Cbor.CBORNumber b);
+
+ Returns whether one object's value is greater than another's.
+
+  <b>Parameters:</b>
+
+ * <i>a</i>: The left-hand side of the comparison.
+
+ * <i>b</i>: The right-hand side of the comparison.
+
+<b>Return Value:</b>
+
+ `true`  if one object's value is greater than another's; otherwise,  `false`  .
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter  <i>a</i>
+ is null.
+
+<a id="op_GreaterThanOrEqual"></a>
+### Operator `>=`
+
+    public static bool operator >=(
+        PeterO.Cbor.CBORNumber a,
+        PeterO.Cbor.CBORNumber b);
+
+ Returns whether one object's value is at least another's.
+
+  <b>Parameters:</b>
+
+ * <i>a</i>: The left-hand side of the comparison.
+
+ * <i>b</i>: The right-hand side of the comparison.
+
+<b>Return Value:</b>
+
+ `true`  if one object's value is at least another's; otherwise,  `false`  .
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter  <i>a</i>
+ is null.
+
+<a id="op_LessThan"></a>
+### Operator `<`
+
+    public static bool operator <(
+        PeterO.Cbor.CBORNumber a,
+        PeterO.Cbor.CBORNumber b);
+
+ Returns whether one object's value is less than another's.
+
+  <b>Parameters:</b>
+
+ * <i>a</i>: The left-hand side of the comparison.
+
+ * <i>b</i>: The right-hand side of the comparison.
+
+<b>Return Value:</b>
+
+ `true`  if one object's value is less than another's; otherwise,  `false`  .
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter  <i>a</i>
+ is null.
+
+<a id="op_LessThanOrEqual"></a>
+### Operator `<=`
+
+    public static bool operator <=(
+        PeterO.Cbor.CBORNumber a,
+        PeterO.Cbor.CBORNumber b);
+
+ Returns whether one object's value is up to another's.
+
+  <b>Parameters:</b>
+
+ * <i>a</i>: The left-hand side of the comparison.
+
+ * <i>b</i>: The right-hand side of the comparison.
+
+<b>Return Value:</b>
+
+ `true`  if one object's value is up to another's; otherwise,  `false`  .
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter  <i>a</i>
+ is null.
 
 <a id="Remainder_PeterO_Cbor_CBORNumber"></a>
 ### Remainder
@@ -139,7 +238,7 @@ A CBOR number with the same value as this one but with the sign reversed.
 
  Returns the remainder when this number is divided by another number.
 
- <b>Parameters:</b>
+  <b>Parameters:</b>
 
  * <i>b</i>: The right-hand side (dividend) of the remainder operation.
 
@@ -161,7 +260,7 @@ The parameter  <i>b</i>
 
  Returns a number that expresses this number minus another.
 
- <b>Parameters:</b>
+  <b>Parameters:</b>
 
  * <i>b</i>: The second operand to the subtraction.
 
@@ -182,7 +281,7 @@ The parameter  <i>b</i>
 
  Converts this object's value to a CBOR object.
 
- <b>Return Value:</b>
+  <b>Return Value:</b>
 
 A CBOR object that stores this object's value.
 
@@ -193,6 +292,6 @@ A CBOR object that stores this object's value.
 
  Returns the value of this object in text form.
 
- <b>Return Value:</b>
+  <b>Return Value:</b>
 
 A text string representing the value of this object.

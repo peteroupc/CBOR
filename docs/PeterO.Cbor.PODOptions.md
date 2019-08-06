@@ -75,7 +75,7 @@ The parameter  <i>paramString</i>
 
   In the description above, a name "starts with" a word if that word begins the name and is followed by a character other than a basic digit or lower-case letter, that is, other than "a" to "z" or "0" to "9".
 
- <b>Returns:</b>
+  <b>Returns:</b>
 
  `true`  If the names are converted to camel case; otherwise,  `false`  . This property is  `true`  by default.
 
@@ -86,6 +86,6 @@ The parameter  <i>paramString</i>
 
  Gets the values of this options object's properties in text form.
 
- <b>Return Value:</b>
+  <b>Return Value:</b>
 
 A text string containing the values of this options object's properties. The format of the string is the same as the one described in the String constructor for this class.

@@ -5,12 +5,13 @@ namespace PeterO.Cbor {
   internal static class URIUtility {
     internal enum ParseMode {
     /// <summary>The rules follow the syntax for parsing IRIs. In
-    /// particular, many code points outside the Basic Latin range (U+0000 to U+007F) are allowed. Strings with unpaired surrogate code
+    /// particular, many code points outside the Basic Latin range (U +
+    /// 0000 to U + 007F) are allowed. Strings with unpaired surrogate code
     /// points are considered invalid.</summary>
       IRIStrict,
 
     /// <summary>The rules follow the syntax for parsing IRIs, except that
-    /// code points outside the Basic Latin range (U+0000 to U+007F)
+    /// code points outside the Basic Latin range (U + 0000 to U + 007F)
     /// are not allowed.</summary>
       URIStrict,
 
@@ -22,7 +23,8 @@ namespace PeterO.Cbor {
 
     /// <summary>The rules only check for the appropriate delimiters when
     /// splitting the path, without checking if all the characters in each
-    /// component are valid. Code points outside the Basic Latin range (U+0000 to U+007F) are not allowed.</summary>
+    /// component are valid. Code points outside the Basic Latin range (U +
+    /// 0000 to U + 007F) are not allowed.</summary>
       URILenient,
 
     /// <summary>The rules only check for the appropriate delimiters when

@@ -29,20 +29,21 @@ public class CBORException : Exception {
     /// message and inner exception.</summary>
     /// <param name='message'>The parameter <paramref name='message'/> is a
     /// text string.</param>
-    /// <param name='innerException'>The parameter <paramref name='innerException'/> is an Exception object.</param>
+    /// <param name='innerException'>The parameter <paramref
+    /// name='innerException'/> is an Exception object.</param>
     public CBORException(string message, Exception innerException)
       : base(message, innerException) {
     }
 
 #if NET20 || NET40
-    /// <xmlbegin id="291"/><summary>Initializes a new instance of the
+    /// <xmlbegin id='291'/>
+    /// <summary>Initializes a new instance of the
     /// <see cref='PeterO.Cbor.CBORException'/> class. Uses the given
     /// serialization and streaming contexts.</summary>
     /// <param name='info'>A System.Runtime.Serialization.SerializationInfo
     /// object.</param>
     /// <param name='context'>A
     /// System.Runtime.Serialization.StreamingContext object.</param>
-    ///
       protected CBORException(
         System.Runtime.Serialization.SerializationInfo info,
         System.Runtime.Serialization.StreamingContext context)

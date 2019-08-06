@@ -1,7 +1,8 @@
 using System;
 
 namespace PeterO.Cbor {
-    /// <summary>Specifies options for encoding and decoding CBOR objects.</summary>
+    /// <summary>Specifies options for encoding and decoding CBOR
+    /// objects.</summary>
   public sealed class CBOREncodeOptions {
     /// <summary>Default options for CBOR objects. Disallow duplicate keys,
     /// and always encode strings using definite-length encoding.</summary>
@@ -76,7 +77,8 @@ namespace PeterO.Cbor {
     /// example, <c>allowduplicatekeys=Yes</c> and
     /// <c>allowduplicatekeys=1</c> both set the <c>AllowDuplicateKeys</c>
     /// property to true.</param>
-    /// <exception cref='System.ArgumentNullException'>The parameter <paramref name='paramString'/> is null.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='paramString'/> is null.</exception>
     public CBOREncodeOptions(string paramString) {
       if (paramString == null) {
         throw new ArgumentNullException(nameof(paramString));
@@ -90,10 +92,11 @@ parser.GetBoolean("useindeflengthstrings", false);
       this.Ctap2Canonical = parser.GetBoolean("ctap2canonical", false);
     }
 
-    /// <summary>Gets the values of this options object's properties in text form.</summary><returns>A text string containing the values of this options object's properties.
-    /// The format of the string is the same as the one described in the String
-    /// constructor for this class.
-    /// </returns>
+    /// <summary>Gets the values of this options object's properties in
+    /// text form.</summary>
+    /// <returns>A text string containing the values of this options
+    /// object's properties. The format of the string is the same as the
+    /// one described in the String constructor for this class.</returns>
     public override string ToString() {
       return new System.Text.StringBuilder()
            .Append("allowduplicatekeys=")
@@ -108,58 +111,62 @@ parser.GetBoolean("useindeflengthstrings", false);
            .ToString();
     }
 
-    /// <summary>Gets a value indicating whether to resolve references to sharable objects
-    /// and sharable strings in the process of decoding a CBOR object.</summary><value>A value indicating whether to resolve references to sharable objects and
-    /// sharable strings. The default is false.
-    /// </value><remarks>
-    /// <para>Sharable objects are marked with tag 28, and references to those objects
-    /// are marked with tag 29 (where a reference of 0 means the first sharable
-    /// object in the CBOR stream, a reference of 1 means the second, and so
-    /// on). Sharable strings (byte strings and text strings) appear within an
-    /// enclosing object marked with tag 256, and references to them are marked
-    /// with tag 25; in general, a string is sharable only if storing its
-    /// reference rather than the string would save space.
-    /// </para>
-    /// <para>Note that unlike most other tags, these tags generally care about the
-    /// relative order in which objects appear in a CBOR stream; thus they are
-    /// not interoperable with CBOR implementations that follow the generic CBOR
-    /// data model (since they may list map keys in an unspecified order).
-    /// Interoperability problems with these tags can be reduced by not using
-    /// them to mark keys or values of a map or to mark objects within those
-    /// keys or values.
-    /// </para>
-    /// </remarks>
+    /// <summary>Gets a value indicating whether to resolve references to
+    /// sharable objects and sharable strings in the process of decoding a
+    /// CBOR object.</summary>
+    /// <value>A value indicating whether to resolve references to sharable
+    /// objects and sharable strings. The default is false.</value>
+    /// <remarks>
+    /// <para>Sharable objects are marked with tag 28, and references to
+    /// those objects are marked with tag 29 (where a reference of 0 means
+    /// the first sharable object in the CBOR stream, a reference of 1
+    /// means the second, and so on). Sharable strings (byte strings and
+    /// text strings) appear within an enclosing object marked with tag
+    /// 256, and references to them are marked with tag 25; in general, a
+    /// string is sharable only if storing its reference rather than the
+    /// string would save space.</para>
+    /// <para>Note that unlike most other tags, these tags generally care
+    /// about the relative order in which objects appear in a CBOR stream;
+    /// thus they are not interoperable with CBOR implementations that
+    /// follow the generic CBOR data model (since they may list map keys in
+    /// an unspecified order). Interoperability problems with these tags
+    /// can be reduced by not using them to mark keys or values of a map or
+    /// to mark objects within those keys or values.</para></remarks>
     public bool ResolveReferences { get; private set; }
 
     /// <summary>Gets a value indicating whether to encode strings with an
-    /// indefinite-length encoding under certain circumstances.</summary><value>A value indicating whether to encode strings with an indefinite-length
-    /// encoding under certain circumstances. The default is false.
-    /// </value>
+    /// indefinite-length encoding under certain circumstances.</summary>
+    /// <value>A value indicating whether to encode strings with an
+    /// indefinite-length encoding under certain circumstances. The default
+    /// is false.</value>
     public bool UseIndefLengthStrings { get; private set; }
 
-    /// <summary>Gets a value indicating whether decoding a CBOR object will return
-    /// <c>null</c> instead of a CBOR object if the stream has no content or the end of the
-    /// stream is reached before decoding begins. Used only when decoding CBOR
-    /// objects.</summary><value>A value indicating whether decoding a CBOR object will return
-    /// <c>null</c> instead of a CBOR object if the stream has no content or the end of the
-    /// stream is reached before decoding begins. The default is false.
-    /// </value>
+    /// <summary>Gets a value indicating whether decoding a CBOR object
+    /// will return <c>null</c> instead of a CBOR object if the stream has
+    /// no content or the end of the stream is reached before decoding
+    /// begins. Used only when decoding CBOR objects.</summary>
+    /// <value>A value indicating whether decoding a CBOR object will
+    /// return <c>null</c> instead of a CBOR object if the stream has no
+    /// content or the end of the stream is reached before decoding begins.
+    /// The default is false.</value>
     public bool AllowEmpty { get; private set; }
 
-    /// <summary>Gets a value indicating whether to allow duplicate keys when reading CBOR
-    /// objects from a data stream. Used only when decoding CBOR objects.</summary><value>A value indicating whether to allow duplicate keys when reading CBOR
-    /// objects from a data stream. The default is false.
-    /// </value>
+    /// <summary>Gets a value indicating whether to allow duplicate keys
+    /// when reading CBOR objects from a data stream. Used only when
+    /// decoding CBOR objects.</summary>
+    /// <value>A value indicating whether to allow duplicate keys when
+    /// reading CBOR objects from a data stream. The default is
+    /// false.</value>
     public bool AllowDuplicateKeys { get; private set; }
 
-    /// <summary>Gets a value indicating whether CBOR objects are written out using the
-    /// CTAP2 canonical CBOR encoding form, which is useful for implementing Web
-    /// Authentication. In this form, CBOR tags are not used, map keys are written
-    /// out in a canonical order, and non-integer numbers and integers 2^63 or
-    /// greater are written as 64-bit binary floating-point numbers.</summary><value><c>true</c> if CBOR objects are written out using the CTAP2 canonical CBOR encoding
-    /// form; otherwise,
-    /// <c>false</c> .
-    /// </value>
+    /// <summary>Gets a value indicating whether CBOR objects are written
+    /// out using the CTAP2 canonical CBOR encoding form, which is useful
+    /// for implementing Web Authentication. In this form, CBOR tags are
+    /// not used, map keys are written out in a canonical order, and
+    /// non-integer numbers and integers 2^63 or greater are written as
+    /// 64-bit binary floating-point numbers.</summary>
+    /// <value><c>true</c> if CBOR objects are written out using the CTAP2
+    /// canonical CBOR encoding form; otherwise, <c>false</c>.</value>
     public bool Ctap2Canonical { get; private set; }
   }
 }

@@ -45,15 +45,15 @@ namespace PeterO {
        var setup = type.GetMethod("SetUp");
        if (setup != null) {
           setup.Invoke(test, new object[] { });
-        }
-        foreach (var method in test.GetType().GetMethods()) {
-          if (!HasAttribute(method, typeof(TestAttribute))) {
-            continue;
-          }
-          if (!String.IsNullOrEmpty(ValueParam)) {
-            if (method.Name.IndexOf(ValueParam, StringComparison.Ordinal) < 0) {
-              continue;
-            }
+       }
+       foreach (var method in test.GetType().GetMethods()) {
+         if (!HasAttribute(method, typeof(TestAttribute))) {
+           continue;
+         }
+         if (!String.IsNullOrEmpty(ValueParam)) {
+           if (method.Name.IndexOf(ValueParam, StringComparison.Ordinal) < 0) {
+             continue;
+           }
           }
           Console.WriteLine(method.Name);
           try {
