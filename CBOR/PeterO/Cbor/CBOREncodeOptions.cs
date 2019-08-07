@@ -41,8 +41,6 @@ new CBOREncodeOptions("useindeflengthstrings=0;allowduplicatekeys=1");
     public static readonly CBOREncodeOptions NoDuplicateKeys =
  new CBOREncodeOptions("useindeflengthstrings=1;allowduplicatekeys=0");
 
-    private readonly int value;
-
     /// <summary>Initializes a new instance of the
     /// <see cref='PeterO.Cbor.CBOREncodeOptions'/> class.</summary>
     public CBOREncodeOptions() : this(false, false) {
@@ -73,8 +71,10 @@ new CBOREncodeOptions("useindeflengthstrings=0;allowduplicatekeys=1");
     public CBOREncodeOptions(
       bool useIndefLengthStrings,
       bool allowDuplicateKeys,
-      bool ctap2Canonical) : this(BuildString(useIndefLengthStrings,
-  allowDuplicateKeys, ctap2Canonical)) {
+      bool ctap2Canonical) : this(BuildString(
+         useIndefLengthStrings,
+         allowDuplicateKeys, 
+         ctap2Canonical)) {
     }
 
     private static string BuildString(bool useIndefLengthStrings,

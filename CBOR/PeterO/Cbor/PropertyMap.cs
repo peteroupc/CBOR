@@ -192,7 +192,7 @@ namespace PeterO.Cbor {
       return ExtendedRational.FromLegacy(er);
     }
 #pragma warning restore 618
-    public static bool FirstElement(int[] index, int[] dimensions) {
+    public static bool FirstElement(int[] dimensions) {
       foreach (var d in dimensions) {
         if (d == 0) {
           return false;
@@ -287,7 +287,7 @@ namespace PeterO.Cbor {
       for (var i = 0; i < rank; ++i) {
         dimensions[i] = arr.GetLength(i);
       }
-      if (!FirstElement(index, dimensions)) {
+      if (!FirstElement(dimensions)) {
         return obj;
       }
       obj = BuildCBORArray(dimensions);

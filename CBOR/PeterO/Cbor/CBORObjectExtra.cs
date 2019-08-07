@@ -54,10 +54,10 @@ namespace PeterO.Cbor {
       Stream outputStream,
       int majorType,
       uint value) {
-   if (outputStream == null) {
-     throw new ArgumentNullException(nameof(outputStream));
-   }
-   return WriteValue(outputStream, majorType, (long)value);
+      if (outputStream == null) {
+        throw new ArgumentNullException(nameof(outputStream));
+      }
+      return WriteValue(outputStream, majorType, (long)value);
     }
 
     /// <include file='../../docs.xml'
@@ -67,22 +67,22 @@ namespace PeterO.Cbor {
       Stream outputStream,
       int majorType,
       ulong value) {
-   if (outputStream == null) {
-     throw new ArgumentNullException(nameof(outputStream));
-   }
-   if (value <= Int64.MaxValue) {
-     return WriteValue(outputStream, majorType, (long)value);
-   } else {
+      if (outputStream == null) {
+        throw new ArgumentNullException(nameof(outputStream));
+      }
+      if (value <= Int64.MaxValue) {
+        return WriteValue(outputStream, majorType, (long)value);
+      } else {
         if (majorType < 0) {
-  throw new ArgumentException("majorType (" + majorType +
-    ") is less than 0");
-}
-if (majorType > 7) {
-  throw new ArgumentException("majorType (" + majorType +
-    ") is more than 7");
-}
+          throw new ArgumentException("majorType (" + majorType +
+            ") is less than 0");
+        }
+        if (majorType > 7) {
+          throw new ArgumentException("majorType (" + majorType +
+            ") is more than 7");
+        }
         if (majorType == 7) {
-   throw new ArgumentException("majorType is 7 and value is greater than 255");
+          throw new ArgumentException("majorType is 7 and value is greater than 255");
         }
         byte[] bytes = {
           (byte)(27 | (majorType << 5)), (byte)((value >>
@@ -108,7 +108,7 @@ if (majorType > 7) {
 
     private static decimal ExtendedDecimalToDecimal(EDecimal
       extendedNumber) {
- return (decimal)extendedNumber;
+      return (decimal)extendedNumber;
     }
 
     /// <include file='../../docs.xml'

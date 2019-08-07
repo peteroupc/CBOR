@@ -4950,7 +4950,7 @@
         </item>
         <item>text/vnd.a
         </item>
-      </list>
+      </list>.
     </summary>
   </doc>
   <doc name='M:PeterO.Cbor.URIUtility.EncodeStringForURI(System.String)'>

@@ -23,6 +23,8 @@ namespace PeterO.Cbor {
       }
     }
 
+    private const string Hex16 = "0123456789ABCDEF";
+
     private CharacterInputWithCount reader;
     private StringBuilder sb;
 
@@ -441,8 +443,6 @@ namespace PeterO.Cbor {
         }
       }
     }
-
-    private const string Hex16 = "0123456789ABCDEF";
 
     internal static void WriteJSONStringUnquoted(
       string str,

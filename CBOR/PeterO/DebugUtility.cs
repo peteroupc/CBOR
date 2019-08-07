@@ -18,9 +18,9 @@ namespace PeterO {
 #if NET40 || NET20
       return t.GetMethod(name, parameters);
 #else
-{
+      {
         return t?.GetRuntimeMethod(name, parameters);
-}
+      }
 #endif
     }
 
@@ -29,15 +29,17 @@ namespace PeterO {
       var types = new[] { typeof(string) };
       var typeMethod = GetTypeMethod(type, "WriteLine", types);
       if (typeMethod != null) {
-    typeMethod.Invoke(
-        type,
-        new object[] { str });
-  }
+        typeMethod.Invoke(
+            type,
+            new object[] { str });
+      }
     }
 
     public static void Log(string format, params object[] args) {
-      Log(String.Format(System.Globalization.CultureInfo.InvariantCulture,
-                        format, args));
+      Log(String.Format(
+        System.Globalization.CultureInfo.InvariantCulture,
+        format,
+        args));
     }
   }
 }

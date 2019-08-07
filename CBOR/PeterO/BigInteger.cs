@@ -32,9 +32,9 @@ namespace PeterO {
     /// instances of this object with the same value are interchangeable,
     /// but they should be compared using the "Equals" method rather than
     /// the "==" operator.</para></summary>
-    [Obsolete(
-  "Use EInteger from PeterO.Numbers/com.upokecenter.numbers and the output" +
-"\u0020of this class's ToString method.")]
+  [Obsolete(
+    "Use EInteger from PeterO.Numbers/com.upokecenter.numbers and the output" +
+    "\u0020of this class's ToString method.")]
   public sealed partial class BigInteger : IComparable<BigInteger>,
     IEquatable<BigInteger> {
     /// <summary>BigInteger for the number one.</summary>
@@ -68,7 +68,7 @@ namespace PeterO {
       return bei.Ei;
     }
 
-private static readonly BigInteger ValueZeroValue = new
+    private static readonly BigInteger ValueZeroValue = new
       BigInteger(EInteger.Zero);
 
     internal EInteger Ei {

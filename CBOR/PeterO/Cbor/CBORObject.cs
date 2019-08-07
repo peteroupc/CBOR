@@ -12,6 +12,8 @@ using System.Text;
 using PeterO;
 using PeterO.Numbers;
 
+#pragma warning disable CA1036 // for backward compatibility
+
 namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="T:PeterO.Cbor.CBORObject"]/*'/>
@@ -416,6 +418,7 @@ namespace PeterO.Cbor {
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.Type"]/*'/>
+#pragma warning disable CS0618
     public CBORType Type {
       get {
         switch (this.ItemType) {
@@ -443,6 +446,7 @@ namespace PeterO.Cbor {
         }
       }
     }
+#pragma warning restore CS0618
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.Values"]/*'/>
@@ -510,6 +514,10 @@ namespace PeterO.Cbor {
 
     /// <include file='../../docs.xml'
     ///   path='docs/doc[@name="P:PeterO.Cbor.CBORObject.Item(PeterO.Cbor.CBORObject)"]/*'/>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+     "Microsoft.Usage",
+     "CA1043",
+     Justification = "Represents a logical data store")]
     public CBORObject this[CBORObject key] {
       get {
         if (key == null) {
@@ -842,10 +850,10 @@ namespace PeterO.Cbor {
               bigintValue.CompareTo(Int64MaxValue) <= 0) ?
         new CBORObject(
           CBORObjectTypeInteger,
-          (long)(EInteger)bigintValue) : (new
-CBORObject(CBORObjectTypeBigInteger,
-
-            bigintValue));
+          (long)(EInteger)bigintValue) : new
+             CBORObject(
+               CBORObjectTypeBigInteger,
+               bigintValue);
     }
 
     /// <include file='../../docs.xml'

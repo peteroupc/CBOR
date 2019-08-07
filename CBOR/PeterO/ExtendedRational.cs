@@ -10,13 +10,13 @@ using PeterO.Numbers;
 #pragma warning disable CA1036 // This class is obsolete
 
 namespace PeterO {
-    /// <include file='../docs.xml'
-    /// path='docs/doc[@name="T:PeterO.ExtendedRational"]/*'/>
-    [Obsolete(
-  "Use ERational from PeterO.Numbers/com.upokecenter.numbers and the output" +
+  /// <include file='../docs.xml'
+  /// path='docs/doc[@name="T:PeterO.ExtendedRational"]/*'/>
+  [Obsolete(
+"Use ERational from PeterO.Numbers/com.upokecenter.numbers and the output" +
 "\u0020of this class's ToString method.")]
   public sealed class ExtendedRational : IComparable<ExtendedRational>,
-    IEquatable<ExtendedRational> {
+  IEquatable<ExtendedRational> {
     /// <summary>A not-a-number value.</summary>
     [Obsolete("Use ERational from PeterO.Numbers/com.upokecenter.numbers.")]
     public static readonly ExtendedRational NaN =

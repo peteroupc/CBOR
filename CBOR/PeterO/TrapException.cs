@@ -13,6 +13,10 @@ namespace PeterO {
     /// path='docs/doc[@name="T:PeterO.TrapException"]/*'/>
   [Obsolete(
   "Use ETrapException from PeterO.Numbers/com.upokecenter.numbers.")]
+  [System.Diagnostics.CodeAnalysis.SuppressMessage(
+    "Microsoft.Design",
+    "CA1032",
+    "This class is obsolete.")]
   public class TrapException : ArithmeticException {
     private ETrapException ete;
 

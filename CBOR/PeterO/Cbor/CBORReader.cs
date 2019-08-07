@@ -53,12 +53,12 @@ namespace PeterO.Cbor {
     }
 
     public CBORObject ResolveSharedRefsIfNeeded(CBORObject obj) {
-if (obj == null || !this.ResolveReferences) {
-  return obj;
-}
-if (this.hasSharableObjects) {
-  var sharedRefs = new SharedRefs();
-  return this.ResolveSharedRefs(obj, sharedRefs);
+      if (obj == null || !this.ResolveReferences) {
+        return obj;
+      }
+      if (this.hasSharableObjects) {
+        var sharedRefs = new SharedRefs();
+        return this.ResolveSharedRefs(obj, sharedRefs);
       }
       return obj;
     }
@@ -66,16 +66,16 @@ if (this.hasSharableObjects) {
     private CBORObject ResolveSharedRefs(
       CBORObject obj,
       SharedRefs sharedRefs) {
-if (obj == null) {
-  return obj;
-}
-int type = obj.ItemType;
-bool hasTag = obj.MostOuterTag.Equals((EInteger)29);
-if (hasTag) {
-  return sharedRefs.GetObject(obj.AsEInteger());
-}
-hasTag = obj.MostOuterTag.Equals((EInteger)28);
-if (hasTag) {
+      if (obj == null) {
+        return obj;
+      }
+      int type = obj.ItemType;
+      bool hasTag = obj.MostOuterTag.Equals((EInteger)29);
+      if (hasTag) {
+        return sharedRefs.GetObject(obj.AsEInteger());
+      }
+      hasTag = obj.MostOuterTag.Equals((EInteger)28);
+      if (hasTag) {
         obj = obj.Untag();
         sharedRefs.AddObject(obj);
       }
@@ -465,23 +465,23 @@ if (hasTag) {
           int uad = uadditional >= 257 ? 257 : (uadditional < 0 ? 0 :
             (int)uadditional);
           if (this.ResolveReferences) {
-          switch (uad) {
-            case 256:
-              // Tag 256: String namespace
-              this.stringRefs = this.stringRefs ?? new StringRefs();
-              this.stringRefs.Push();
-              break;
-            case 25:
-              // String reference
-              if (this.stringRefs == null) {
-                throw new CBORException("No stringref namespace");
-              }
-              break;
-            case 28:
-            case 29:
-              this.hasSharableObjects = true;
-              break;
-          }
+            switch (uad) {
+              case 256:
+                // Tag 256: String namespace
+                this.stringRefs = this.stringRefs ?? new StringRefs();
+                this.stringRefs.Push();
+                break;
+              case 25:
+                // String reference
+                if (this.stringRefs == null) {
+                  throw new CBORException("No stringref namespace");
+                }
+                break;
+              case 28:
+              case 29:
+                this.hasSharableObjects = true;
+                break;
+            }
           }
           taginfo = CBORObject.FindTagConverterLong(uadditional);
         } else {
@@ -506,15 +506,15 @@ if (hasTag) {
           int uaddl = uadditional >= 257 ? 257 : (uadditional < 0 ? 0 :
             (int)uadditional);
           if (this.ResolveReferences) {
-          switch (uaddl) {
-            case 256:
-              // string tag
-              this.stringRefs.Pop();
-              break;
-            case 25:
-              // stringref tag
-              return this.stringRefs.GetString(o.AsEInteger());
-          }
+            switch (uaddl) {
+              case 256:
+                // string tag
+                this.stringRefs.Pop();
+                break;
+              case 25:
+                // stringref tag
+                return this.stringRefs.GetString(o.AsEInteger());
+            }
           }
           return CBORObject.FromObjectAndTag(
             o,

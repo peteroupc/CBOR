@@ -205,7 +205,7 @@ namespace PeterO.Cbor {
       }
     }
 
-    public static bool FirstElement(int[] index, int[] dimensions) {
+    public static bool FirstElement(int[] dimensions) {
       foreach (var d in dimensions) {
         if (d == 0) {
           return false;
@@ -313,11 +313,11 @@ namespace PeterO.Cbor {
       if (rank == 1) {
         int len = arr.GetLength(0);
         for (var i = 0; i < len; ++i) {
-       object item = cbor[i].ToObject(
-         elementType,
-         mapper,
-         options,
-         depth + 1);
+         object item = cbor[i].ToObject(
+           elementType,
+           mapper,
+           options,
+           depth + 1);
          arr.SetValue(item, i);
         }
         return arr;
@@ -327,7 +327,7 @@ namespace PeterO.Cbor {
       for (var i = 0; i < rank; ++i) {
         dimensions[i] = arr.GetLength(i);
       }
-      if (!FirstElement(index, dimensions)) {
+      if (!FirstElement(dimensions)) {
         return arr;
       }
       do {
@@ -368,7 +368,7 @@ namespace PeterO.Cbor {
     public static object ObjectToEnum(CBORObject obj, Type enumType) {
       Type utype = Enum.GetUnderlyingType(enumType);
       object ret = null;
-      if (obj.Type == CBORType.Number && obj.IsIntegral) {
+      if (obj.IsIntegral) {
         ret = Enum.ToObject(enumType, TypeToIntegerObject(obj, utype));
         if (!Enum.IsDefined(enumType, ret)) {
           throw new CBORException("Unrecognized enum value: " +
@@ -399,9 +399,15 @@ namespace PeterO.Cbor {
         ulong uvalue = Convert.ToUInt64(value, CultureInfo.InvariantCulture);
         return EInteger.FromUInt64(uvalue);
       }
-      return t.Equals(typeof(long)) ? Convert.ToInt64(value) :
-      (t.Equals(typeof(uint)) ? Convert.ToInt64(value) :
-      Convert.ToInt32(value));
+      return t.Equals(typeof(long)) ? Convert.ToInt64(
+              value,
+              CultureInfo.InvariantCulture) :
+      (t.Equals(typeof(uint)) ? Convert.ToInt64(
+              value,
+              CultureInfo.InvariantCulture) :
+      Convert.ToInt32(
+              value,
+              CultureInfo.InvariantCulture));
     }
 
     public static object FindOneArgumentMethod(
@@ -511,20 +517,20 @@ namespace PeterO.Cbor {
       }
       if (t.Equals(typeof(char))) {
         if (objThis.Type == CBORType.TextString) {
-  string s = objThis.AsString();
-  if (s.Length != 1) {
- throw new CBORException("Can't convert to char");
-}
-  return s[0];
-}
-if (objThis.IsIntegral && objThis.CanTruncatedIntFitInInt32()) {
-  int c = objThis.AsInt32();
-  if (c < 0 || c >= 0x10000) {
- throw new CBORException("Can't convert to char");
-}
-  return (char)c;
-}
-throw new CBORException("Can't convert to char");
+          string s = objThis.AsString();
+          if (s.Length != 1) {
+            throw new CBORException("Can't convert to char");
+          }
+          return s[0];
+        }
+        if (objThis.IsIntegral && objThis.CanTruncatedIntFitInInt32()) {
+          int c = objThis.AsInt32();
+          if (c < 0 || c >= 0x10000) {
+            throw new CBORException("Can't convert to char");
+          }
+          return (char)c;
+        }
+        throw new CBORException("Can't convert to char");
       }
       if (t.Equals(typeof(DateTime))) {
         return new CBORDateConverter().FromCBORObject(objThis);
@@ -563,12 +569,12 @@ throw new CBORException("Can't convert to char");
         var isList = false;
         object listObject = null;
 #if NET40 || NET20
-    if (IsAssignableFrom(typeof(Array), t)) {
-Type elementType = t.GetElementType();
+        if (IsAssignableFrom(typeof(Array), t)) {
+          Type elementType = t.GetElementType();
           Array array = Array.CreateInstance(
-        elementType,
-        GetDimensions(objThis));
-    return FillArray(array, elementType, objThis, mapper, options, depth);
+            elementType,
+            GetDimensions(objThis));
+          return FillArray(array, elementType, objThis, mapper, options, depth);
         }
         if (t.IsGenericType) {
           Type td = t.GetGenericTypeDefinition();
@@ -586,8 +592,8 @@ Type elementType = t.GetElementType();
         if (IsAssignableFrom(typeof(Array), t)) {
           Type elementType = t.GetElementType();
           Array array = Array.CreateInstance(
-        elementType,
-        GetDimensions(objThis));
+            elementType,
+            GetDimensions(objThis));
           return FillArray(array, elementType, objThis, mapper, options, depth);
         }
         if (t.GetTypeInfo().IsGenericType) {
@@ -684,8 +690,10 @@ td.Equals(typeof(IDictionary<,>));
                   " not supported");
           }
         } else {
-       if (t.FullName != null && (StartsWith(t.FullName, "Microsoft.Win32."
-) ||
+          if (t.FullName != null && (
+            StartsWith(
+              t.FullName,
+              "Microsoft.Win32.") ||
              StartsWith(t.FullName, "System.IO."))) {
             throw new CBORException("Type " + t.FullName +
                   " not supported");
