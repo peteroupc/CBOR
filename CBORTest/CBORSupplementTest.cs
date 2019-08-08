@@ -8,9 +8,6 @@ at: http://peteroupc.github.io/
 using System;
 using System.Collections.Generic;
 using System.IO;
-#if !NET20
-using System.Linq;
-#endif
 using System.Text;
 using NUnit.Framework;
 using PeterO;
@@ -867,7 +864,7 @@ namespace Test {
     [Test]
     public void TestUUID() {
       CBORObject obj =
-        CBORObject.FromObject(Guid.Parse(
+        CBORObject.FromObject(new Guid(
           "00112233-4455-6677-8899-AABBCCDDEEFF"));
       Assert.AreEqual(CBORType.ByteString, obj.Type);
       Assert.AreEqual(EInteger.FromString("37"), obj.MostInnerTag);

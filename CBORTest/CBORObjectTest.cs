@@ -2352,7 +2352,7 @@ CBORObject.FromObject(obj.GetAllTags()).ToJSONString();
     }
 
     [Test]
-    public void TestFromObject_Dictionary() {
+    public void TestFromObjectDictionary() {
       IDictionary<string, object> dict = new Dictionary<string, object>();
       dict["TestKey"] = "TestValue";
       dict["TestKey2"] = "TestValue2";
@@ -2448,7 +2448,7 @@ CBORObject.FromObject(obj.GetAllTags()).ToJSONString();
 
     [Test]
     [Timeout(5000)]
-    public void TestFromObject_PODOptions() {
+    public void TestFromObjectPODOptions() {
       var ao = new PODClass();
       var valueCcTF = new PODOptions(true, false);
       var valueCcFF = new PODOptions(false, false);

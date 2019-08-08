@@ -3,6 +3,8 @@
   <Rules AnalyzerId='Microsoft.CodeAnalysis.FxCopAnalyzers' RuleNamespace='Microsoft.CodeAnalysis.FxCopAnalyzers'>
     <Rule Action='None' Id='CA1720'/>
     <Rule Id='CA1303' Action='None'/>
+    <Rule Id='CA1031' Action='None'/>
+    <Rule Id='CA1707' Action='None'/>
   </Rules>
   <Rules AnalyzerId='StyleCop.Analyzers' RuleNamespace='StyleCop.Analyzers'>
     <!--SA1009 disabled for now due to bug with cref attributes that end in closing parenthesis -->
@@ -31,5 +33,6 @@
     <Rule Action='None' Id='SX1101'/>
     <Rule Action='None' Id='SX1309'/>
     <Rule Action='None' Id='SX1309S'/>
+    <Rule Id='SA0001' Action='None'/>
   </Rules>
 </RuleSet>

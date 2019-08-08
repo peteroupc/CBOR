@@ -119,7 +119,7 @@ namespace Test {
         object o = RandomObjects.RandomByteString(rand);
         return ToObjectTest.TestToFromObjectRoundTrip(o);
       }
-      for (var i = 0; i < 15; ++i) {
+      {
         CBORObject cbor;
        // Console.WriteLine("tag "+tag+" "+i);
         if (tag == 0 || tag == 1 || tag == 28 || tag == 29) {
@@ -148,11 +148,9 @@ namespace Test {
          // Console.WriteLine("done");
           return cbor;
         } catch (Exception) {
-          continue;
+          return CBORObject.FromObjectAndTag(cbor, 999);
         }
       }
-     // Console.WriteLine("Failed "+tag);
-      return CBORObject.Null;
     }
 
     public static CBORObject RandomCBORArray(RandomGenerator rand, int depth) {

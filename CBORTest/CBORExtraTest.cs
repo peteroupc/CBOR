@@ -7,7 +7,9 @@ at: http://peteroupc.github.io/
  */
 using System;
 using System.Collections.Generic;
+#if !NET20
 using System.Linq;
+#endif
 using NUnit.Framework;
 using PeterO;
 using PeterO.Cbor;
@@ -209,6 +211,7 @@ namespace Test {
   "propA",
   "propB",
   "propC");
+#if !NET20
       var queryao =
 from x in arrao select x;
       co = CBORObject.FromObject(queryao, valueCcTF);
@@ -236,6 +239,7 @@ from x in arrao select x;
   "propA",
   "propB",
   "propC");
+#endif
       var ao2 = new {
         PropValue = new {
           PropA = 0,
@@ -355,6 +359,7 @@ from x in arrao select x;
       Assert.AreEqual(0, obj[0].AsInt32());
       Assert.AreEqual(1, obj[1].AsInt32());
       CBORTestCommon.AssertRoundTrip(obj);
+#if !NET20
       // Select all even numbers
       var query =
 from i in RangeExclusive(0, 10)
@@ -375,6 +380,7 @@ select new { A = i, B = i + 1 };
       Assert.AreEqual(0, obj[0]["a"].AsInt32());
       Assert.AreEqual(3, obj[1]["b"].AsInt32());
       CBORTestCommon.AssertRoundTrip(obj);
+#endif
     }
 
     [Test]
@@ -400,7 +406,11 @@ select new { A = i, B = i + 1 };
     }
 
     private static string DateTimeToString(DateTime bi) {
+#if NET20
+      DateTime dt = bi.ToUniversalTime();
+#else
       DateTime dt = TimeZoneInfo.ConvertTime(bi, TimeZoneInfo.Utc);
+#endif
       int year = dt.Year;
       int month = dt.Month;
       int day = dt.Day;
