@@ -9,7 +9,7 @@ using PeterO.Numbers;
 namespace Test {
   internal static class CBORTestCommon {
     internal static readonly EDecimal DecPosInf =
-  EDecimal.PositiveInfinity;
+      EDecimal.PositiveInfinity;
 
     internal static readonly EDecimal DecNegInf =
       EDecimal.NegativeInfinity;
@@ -27,54 +27,63 @@ namespace Test {
       ERational.NegativeInfinity;
 
     public static CBORObject RandomNumber(RandomGenerator rand) {
+      object o = null;
       switch (rand.UniformInt(6)) {
         case 0:
-return CBORObject.FromObject(
-  RandomObjects.RandomDouble(
-    rand,
-    Int32.MaxValue));
+          o = RandomObjects.RandomDouble(
+            rand,
+            Int32.MaxValue);
+          return ToObjectTest.TestToFromObjectRoundTrip(o);
         case 1:
-return CBORObject.FromObject(
-  RandomObjects.RandomSingle(
-    rand,
-    Int32.MaxValue));
+          o = RandomObjects.RandomSingle(
+            rand,
+            Int32.MaxValue);
+          return ToObjectTest.TestToFromObjectRoundTrip(o);
         case 2:
-        return CBORObject.FromObject(RandomObjects.RandomEInteger(rand));
+          return ToObjectTest.TestToFromObjectRoundTrip(
+              RandomObjects.RandomEInteger(rand));
         case 3:
-        return CBORObject.FromObject(RandomObjects.RandomEFloat(rand));
+          return ToObjectTest.TestToFromObjectRoundTrip(
+              RandomObjects.RandomEFloat(rand));
         case 4:
-        return
-  CBORObject.FromObject(RandomObjects.RandomEDecimal(rand));
+          o = RandomObjects.RandomEDecimal(rand);
+          return ToObjectTest.TestToFromObjectRoundTrip(o);
         case 5:
-        return CBORObject.FromObject(RandomObjects.RandomInt64(rand));
-        default: throw new ArgumentException();
+          o = RandomObjects.RandomInt64(rand);
+          return ToObjectTest.TestToFromObjectRoundTrip(o);
+        default: throw new InvalidOperationException();
       }
     }
 
     public static CBORObject RandomNumberOrRational(RandomGenerator rand) {
+      object o = null;
       switch (rand.UniformInt(7)) {
         case 0:
-return CBORObject.FromObject(
-  RandomObjects.RandomDouble(
-    rand,
-    Int32.MaxValue));
+          o = RandomObjects.RandomDouble(
+            rand,
+            Int32.MaxValue);
+          return ToObjectTest.TestToFromObjectRoundTrip(o);
         case 1:
-return CBORObject.FromObject(
-  RandomObjects.RandomSingle(
-    rand,
-    Int32.MaxValue));
+          o = RandomObjects.RandomSingle(
+            rand,
+            Int32.MaxValue);
+          return ToObjectTest.TestToFromObjectRoundTrip(o);
         case 2:
-        return CBORObject.FromObject(RandomObjects.RandomEInteger(rand));
+          return ToObjectTest.TestToFromObjectRoundTrip(
+              RandomObjects.RandomEInteger(rand));
         case 3:
-        return CBORObject.FromObject(RandomObjects.RandomEFloat(rand));
+          return ToObjectTest.TestToFromObjectRoundTrip(
+              RandomObjects.RandomEFloat(rand));
         case 4:
-        return
-  CBORObject.FromObject(RandomObjects.RandomEDecimal(rand));
+          o = RandomObjects.RandomEDecimal(rand);
+          return ToObjectTest.TestToFromObjectRoundTrip(o);
         case 5:
-        return CBORObject.FromObject(RandomObjects.RandomInt64(rand));
+          o = RandomObjects.RandomInt64(rand);
+          return ToObjectTest.TestToFromObjectRoundTrip(o);
         case 6:
-        return CBORObject.FromObject(RandomObjects.RandomERational(rand));
-        default: throw new ArgumentException();
+          o = RandomObjects.RandomERational(rand);
+          return ToObjectTest.TestToFromObjectRoundTrip(o);
+        default: throw new InvalidOperationException();
       }
     }
 
@@ -107,36 +116,42 @@ return CBORObject.FromObject(
         tag = 0;
       }
       if (tag == 30) {
-        return CBORObject.FromObject(RandomObjects.RandomByteString(rand));
+        object o = RandomObjects.RandomByteString(rand);
+        return ToObjectTest.TestToFromObjectRoundTrip(o);
       }
       for (var i = 0; i < 15; ++i) {
-        CBORObject o;
-        // Console.WriteLine("tag "+tag+" "+i);
+        CBORObject cbor;
+       // Console.WriteLine("tag "+tag+" "+i);
         if (tag == 0 || tag == 1 || tag == 28 || tag == 29) {
           tag = 999;
         }
         if (tag == 2 || tag == 3) {
-          o = CBORObject.FromObject(RandomObjects.RandomByteStringShort(rand));
+          object o = RandomObjects.RandomByteStringShort(rand);
+          cbor = ToObjectTest.TestToFromObjectRoundTrip(o);
         } else if (tag == 4 || tag == 5) {
-          o = CBORObject.NewArray();
-          o.Add(CBORObject.FromObject(RandomObjects.RandomSmallIntegral(rand)));
-          o.Add(CBORObject.FromObject(RandomObjects.RandomEInteger(rand)));
+          cbor = CBORObject.NewArray();
+          object o = RandomObjects.RandomSmallIntegral(rand);
+          cbor.Add(ToObjectTest.TestToFromObjectRoundTrip(o));
+          o = RandomObjects.RandomEInteger(rand);
+          cbor.Add(ToObjectTest.TestToFromObjectRoundTrip(o));
         } else if (tag == 30) {
-          o = CBORObject.NewArray();
-          o.Add(CBORObject.FromObject(RandomObjects.RandomSmallIntegral(rand)));
-          o.Add(CBORObject.FromObject(RandomObjects.RandomEInteger(rand)));
+          cbor = CBORObject.NewArray();
+          object o = RandomObjects.RandomSmallIntegral(rand);
+          cbor.Add(ToObjectTest.TestToFromObjectRoundTrip(o));
+          o = RandomObjects.RandomEInteger(rand);
+          cbor.Add(ToObjectTest.TestToFromObjectRoundTrip(o));
         } else {
-          o = RandomCBORObject(rand, depth + 1);
+          cbor = RandomCBORObject(rand, depth + 1);
         }
         try {
-          o = CBORObject.FromObjectAndTag(o, tag);
-          // Console.WriteLine("done");
-          return o;
+          cbor = CBORObject.FromObjectAndTag(cbor, tag);
+         // Console.WriteLine("done");
+          return cbor;
         } catch (Exception) {
           continue;
         }
       }
-      // Console.WriteLine("Failed "+tag);
+     // Console.WriteLine("Failed "+tag);
       return CBORObject.Null;
     }
 
@@ -168,9 +183,11 @@ return CBORObject.FromObject(
           return rand.UniformInt(2) == 0 ? CBORObject.Null :
             CBORObject.Undefined;
         case 6:
-          return CBORObject.FromObject(RandomObjects.RandomTextString(rand));
+          return ToObjectTest.TestToFromObjectRoundTrip(
+            RandomObjects.RandomTextString(rand));
         case 7:
-          return CBORObject.FromObject(RandomObjects.RandomByteString(rand));
+          return ToObjectTest.TestToFromObjectRoundTrip(
+            RandomObjects.RandomByteString(rand));
         case 8:
           return RandomCBORArray(rand, depth);
         case 9:
@@ -241,7 +258,7 @@ return CBORObject.FromObject(
           o.AsEInteger();
           Assert.Fail("Should have failed");
         } catch (OverflowException) {
-          // NOTE: Intentionally empty
+         // NOTE: Intentionally empty
         } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex);
           throw new InvalidOperationException(String.Empty, ex);
@@ -271,23 +288,24 @@ return CBORObject.FromObject(
       TestCommon.AssertEqualsHashCode(o, o2);
     }
 
-    public static void AssertSer(CBORObject o, String s) {
-      if (!s.Equals(o.ToString(), StringComparison.Ordinal)) {
-        Assert.AreEqual(s, o.ToString(), "o is not equal to s");
+    public static void AssertJSONSer(CBORObject o, String s) {
+      if (!s.Equals(o.ToJSONString(), StringComparison.Ordinal)) {
+        Assert.AreEqual(s, o.ToJSONString(), "o is not equal to s");
       }
-      // Test round-tripping
+     // Test round-tripping
       CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());
-      if (!s.Equals(o2.ToString(), StringComparison.Ordinal)) {
-        string message = "o2 is not equal to s\n" +
+      if (!s.Equals(o2.ToJSONString(), StringComparison.Ordinal)) {
+        string msg = "o2 is not equal to s:\no = " +
           TestCommon.ToByteArrayString(o.EncodeToBytes()) +
-          "\n" + TestCommon.ToByteArrayString(o2.EncodeToBytes());
-        Assert.AreEqual(s, o2.ToString(), message);
+          "\no2 = " + TestCommon.ToByteArrayString(o2.EncodeToBytes()) +
+          "\no2string = " + o2.ToString();
+        Assert.AreEqual(s, o2.ToJSONString(), msg);
       }
       TestNumber(o);
       TestCommon.AssertEqualsHashCode(o, o2);
     }
 
-    // Tests the equivalence of the FromBytes and Read methods.
+   // Tests the equivalence of the DecodeFromBytes and Read methods.
     public static CBORObject FromBytesTestAB(byte[] b) {
       CBORObject oa = FromBytesA(b);
       CBORObject ob = FromBytesB(b);

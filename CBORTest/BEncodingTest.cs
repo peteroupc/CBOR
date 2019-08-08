@@ -117,7 +117,7 @@ namespace Test {
         Assert.AreEqual(
           "four",
           stringTemp);
-}
+      }
       byte[] b = EncodingToBytes(beo);
       beo = EncodingFromBytes(b);
       Assert.AreEqual(4, beo.Count);
@@ -127,14 +127,14 @@ namespace Test {
         Assert.AreEqual(
           "two",
           stringTemp);
-}
+      }
       Assert.AreEqual(3, beo["two"].AsInt64());
       {
         string stringTemp = beo["three"].AsString();
         Assert.AreEqual(
           "four",
           stringTemp);
-}
+      }
     }
 
     [Test]
@@ -142,8 +142,7 @@ namespace Test {
       DoTestString(String.Empty);
       DoTestString(" ");
       DoTestString("test");
-
-DoTestString(TestCommon.Repeat("three", 15));
+      DoTestString(TestCommon.Repeat("three", 15));
       DoTestString("te\u007fst");
       DoTestString("te\u0080st");
       DoTestString("te\u3000st");

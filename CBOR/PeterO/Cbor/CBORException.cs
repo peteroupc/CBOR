@@ -10,9 +10,9 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="T:PeterO.Cbor.CBORException"]/*'/>
 #if NET20 || NET40
-  [Serializable]
+[Serializable]
 #endif
-  public class CBORException : Exception {
+public class CBORException : Exception {
     /// <summary>Initializes a new instance of the
     /// <see cref='PeterO.Cbor.CBORException'/> class.</summary>
     public CBORException() {
@@ -37,7 +37,6 @@ namespace PeterO.Cbor {
     }
 
 #if NET20 || NET40
-    /// <xmlbegin id='291'/>
     /// <summary>Initializes a new instance of the
     /// <see cref='PeterO.Cbor.CBORException'/> class. Uses the given
     /// serialization and streaming contexts.</summary>

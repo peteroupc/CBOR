@@ -1,5 +1,8 @@
 using System;
 
+// PODClass is used for testing purposes
+#pragma warning disable CA1819
+
 namespace Test {
   public sealed class PODClass {
     public PODClass() {

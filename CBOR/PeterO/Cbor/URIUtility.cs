@@ -10,41 +10,41 @@ using System;
 using System.Text;
 
 namespace PeterO.Cbor {
-  /// <include file='../../docs.xml'
-  /// path='docs/doc[@name="T:PeterO.Cbor.URIUtility"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.Cbor.URIUtility"]/*'/>
   internal static class URIUtility {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="T:PeterO.Cbor.URIUtility.ParseMode"]/*'/>
     internal enum ParseMode {
-      /// <summary>The rules follow the syntax for parsing IRIs. In
-      /// particular, many code points outside the Basic Latin range (U +
-      /// 0000 to U + 007F) are allowed. Strings with unpaired surrogate code
-      /// points are considered invalid.</summary>
+    /// <summary>The rules follow the syntax for parsing IRIs. In
+    /// particular, many code points outside the Basic Latin range (U +
+    /// 0000 to U + 007F) are allowed. Strings with unpaired surrogate code
+    /// points are considered invalid.</summary>
       IRIStrict,
 
-      /// <summary>The rules follow the syntax for parsing IRIs, except that
-      /// code points outside the Basic Latin range (U + 0000 to U + 007F)
-      /// are not allowed.</summary>
+    /// <summary>The rules follow the syntax for parsing IRIs, except that
+    /// code points outside the Basic Latin range (U + 0000 to U + 007F)
+    /// are not allowed.</summary>
       URIStrict,
 
-      /// <summary>The rules only check for the appropriate delimiters when
-      /// splitting the path, without checking if all the characters in each
-      /// component are valid. Even with this mode, strings with unpaired
-      /// surrogate code points are considered invalid.</summary>
+    /// <summary>The rules only check for the appropriate delimiters when
+    /// splitting the path, without checking if all the characters in each
+    /// component are valid. Even with this mode, strings with unpaired
+    /// surrogate code points are considered invalid.</summary>
       IRILenient,
 
-      /// <summary>The rules only check for the appropriate delimiters when
-      /// splitting the path, without checking if all the characters in each
-      /// component are valid. Code points outside the Basic Latin range (U +
-      /// 0000 to U + 007F) are not allowed.</summary>
+    /// <summary>The rules only check for the appropriate delimiters when
+    /// splitting the path, without checking if all the characters in each
+    /// component are valid. Code points outside the Basic Latin range (U +
+    /// 0000 to U + 007F) are not allowed.</summary>
       URILenient,
 
-      /// <summary>The rules only check for the appropriate delimiters when
-      /// splitting the path, without checking if all the characters in each
-      /// component are valid. Unpaired surrogate code points are treated as
-      /// though they were replacement characters instead for the purposes of
-      /// these rules, so that strings with those code points are not
-      /// considered invalid strings.</summary>
+    /// <summary>The rules only check for the appropriate delimiters when
+    /// splitting the path, without checking if all the characters in each
+    /// component are valid. Unpaired surrogate code points are treated as
+    /// though they were replacement characters instead for the purposes of
+    /// these rules, so that strings with those code points are not
+    /// considered invalid strings.</summary>
       IRISurrogateLenient,
     }
 

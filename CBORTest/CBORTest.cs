@@ -66,7 +66,7 @@ namespace Test {
       var r = new RandomGenerator();
       for (var i = 0; i < 500; ++i) {
         EInteger bi = RandomObjects.RandomEInteger(r);
-        CBORTestCommon.AssertSer(
+        CBORTestCommon.AssertJSONSer(
           CBORObject.FromObject(bi),
           bi.ToString());
         Assert.IsTrue(CBORObject.FromObject(bi).IsIntegral);
@@ -87,7 +87,7 @@ namespace Test {
       for (var i = 0; i < ranges.Length; i += 2) {
         EInteger bigintTemp = ranges[i];
         while (true) {
-          CBORTestCommon.AssertSer(
+          CBORTestCommon.AssertJSONSer(
             CBORObject.FromObject(bigintTemp),
             bigintTemp.ToString());
           if (bigintTemp.Equals(ranges[i + 1])) {
@@ -126,7 +126,7 @@ namespace Test {
     [Test]
     public void TestByte() {
       for (var i = 0; i <= 255; ++i) {
-        CBORTestCommon.AssertSer(
+        CBORTestCommon.AssertJSONSer(
           CBORObject.FromObject((byte)i),
           TestCommon.IntToString(i));
       }
@@ -134,9 +134,14 @@ namespace Test {
 
     [Test]
     public void TestByteArray() {
-      CBORTestCommon.AssertSer(
-        CBORObject.FromObject(new byte[] { 0x20, 0x78 }),
-        "h'2078'");
+      {
+        string stringTemp = CBORObject.FromObject(new byte[] {
+          0x20, 0x78,
+        }).ToString();
+        Assert.AreEqual(
+          "h'2078'",
+          stringTemp);
+}
     }
 
     [Test]
@@ -147,42 +152,44 @@ namespace Test {
     [Test]
     public void TestByteStringStreamNoIndefiniteWithinDefinite() {
       try {
- CBORTestCommon.FromBytesTestAB(new byte[] {
-   0x5f, 0x41, 0x20, 0x5f, 0x41,
-   0x20, 0xff, 0xff,
- });
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORTestCommon.FromBytesTestAB(new byte[] {
+          0x5f, 0x41, 0x20, 0x5f,
+          0x41,
+          0x20, 0xff, 0xff,
+        });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
     [Test]
     public void TestByteStringStreamNoTagsBeforeDefinite() {
       try {
- CBORTestCommon.FromBytesTestAB(new byte[] {
-   0x5f, 0x41, 0x20, 0xc2, 0x41,
-   0x20, 0xff,
- });
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORTestCommon.FromBytesTestAB(new byte[] {
+          0x5f, 0x41, 0x20, 0xc2,
+          0x41,
+          0x20, 0xff,
+        });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
 
     public static string ObjectMessage(CBORObject obj) {
-           if (obj == null) {
-             throw new ArgumentNullException(nameof(obj));
-           }
-           return new System.Text.StringBuilder()
-        .Append("CBORObject.DecodeFromBytes(")
-           .Append(TestCommon.ToByteArrayString(obj.EncodeToBytes()))
-           .Append("); /").Append("/ ").Append(obj.ToJSONString()).ToString();
+      if (obj == null) {
+        throw new ArgumentNullException(nameof(obj));
+      }
+      return new System.Text.StringBuilder()
+   .Append("CBORObject.DecodeFromBytes(")
+      .Append(TestCommon.ToByteArrayString(obj.EncodeToBytes()))
+      .Append("); /").Append("/ ").Append(obj.ToJSONString()).ToString();
     }
 
     [Test]
@@ -420,11 +427,11 @@ ed.CanFitInInt64()) {
           stringTemp);
       }
 
-CBORTestCommon.AssertRoundTrip(
-    CBORObject.FromObject(CBORTestCommon.FloatNegInf));
+      CBORTestCommon.AssertRoundTrip(
+          CBORObject.FromObject(CBORTestCommon.FloatNegInf));
 
-CBORTestCommon.AssertRoundTrip(
-    CBORObject.FromObject(CBORTestCommon.RatPosInf));
+      CBORTestCommon.AssertRoundTrip(
+          CBORObject.FromObject(CBORTestCommon.RatPosInf));
       Assert.IsTrue(CBORObject.FromObject(CBORTestCommon.FloatNegInf)
                     .IsInfinity());
       Assert.IsTrue(CBORObject.FromObject(CBORTestCommon.RatPosInf)
@@ -437,66 +444,61 @@ CBORTestCommon.AssertRoundTrip(
       Assert.IsTrue(CBORObject.NegativeInfinity.IsNegativeInfinity());
       Assert.IsTrue(CBORObject.NaN.IsNaN());
 
-CBORTestCommon.AssertRoundTrip(
-    CBORObject.FromObject(CBORTestCommon.DecNegInf));
+      CBORTestCommon.AssertRoundTrip(
+          CBORObject.FromObject(CBORTestCommon.DecNegInf));
 
-CBORTestCommon.AssertRoundTrip(
-    CBORObject.FromObject(CBORTestCommon.FloatNegInf));
+      CBORTestCommon.AssertRoundTrip(
+          CBORObject.FromObject(CBORTestCommon.FloatNegInf));
 
-CBORTestCommon.AssertRoundTrip(
-    CBORObject.FromObject(Double.NegativeInfinity));
+      CBORTestCommon.AssertRoundTrip(
+          CBORObject.FromObject(Double.NegativeInfinity));
 
-CBORTestCommon.AssertRoundTrip(
-    CBORObject.FromObject(Single.NegativeInfinity));
+      CBORTestCommon.AssertRoundTrip(
+          CBORObject.FromObject(Single.NegativeInfinity));
 
-CBORTestCommon.AssertRoundTrip(
-    CBORObject.FromObject(CBORTestCommon.DecPosInf));
+      CBORTestCommon.AssertRoundTrip(
+          CBORObject.FromObject(CBORTestCommon.DecPosInf));
 
-CBORTestCommon.AssertRoundTrip(
-    CBORObject.FromObject(CBORTestCommon.FloatPosInf));
+      CBORTestCommon.AssertRoundTrip(
+          CBORObject.FromObject(CBORTestCommon.FloatPosInf));
 
-CBORTestCommon.AssertRoundTrip(
-    CBORObject.FromObject(Double.PositiveInfinity));
+      CBORTestCommon.AssertRoundTrip(
+          CBORObject.FromObject(Double.PositiveInfinity));
 
-CBORTestCommon.AssertRoundTrip(
-    CBORObject.FromObject(Single.PositiveInfinity));
+      CBORTestCommon.AssertRoundTrip(
+          CBORObject.FromObject(Single.PositiveInfinity));
     }
 
     [Test]
     public void TestCompareB() {
       {
-  string stringTemp = CBORObject.DecodeFromBytes(new byte[] {
-    (byte)0xfa, 0x7f,
-    (byte)0x80, 0x00, 0x00,
-  }).AsERational().ToString();
-  Assert.AreEqual(
-    "Infinity",
-    stringTemp);
+        string stringTemp = CBORObject.DecodeFromBytes(new byte[] {
+          (byte)0xfa, 0x7f, (byte)0x80, 0x00, 0x00,
+        }).AsERational().ToString();
+        Assert.AreEqual(
+          "Infinity",
+          stringTemp);
       }
       {
-    CBORObject objectTemp = CBORObject.DecodeFromBytes(new byte[] {
-      (byte)0xc5,
-      (byte)0x82, 0x38, (byte)0xc7, 0x3b, 0x00, 0x00, 0x08, (byte)0xbf,
-      (byte)0xda, (byte)0xaf, 0x73, 0x46,
-    });
-    CBORObject objectTemp2 = CBORObject.DecodeFromBytes(new byte[] {
-      0x3b, 0x5a,
-      (byte)0x9b, (byte)0x9a, (byte)0x9c, (byte)0xb4, (byte)0x95, (byte)0xbf,
-      0x71,
-    });
-    AddSubCompare(objectTemp, objectTemp2);
+        CBORObject objectTemp = CBORObject.DecodeFromBytes(new byte[] {
+          (byte)0xc5, (byte)0x82, 0x38, (byte)0xc7, 0x3b, 0x00, 0x00, 0x08,
+          (byte)0xbf, (byte)0xda, (byte)0xaf, 0x73, 0x46,
+        });
+        CBORObject objectTemp2 = CBORObject.DecodeFromBytes(new byte[] {
+          0x3b, 0x5a, (byte)0x9b, (byte)0x9a, (byte)0x9c, (byte)0xb4, (byte)0x95,
+          (byte)0xbf, 0x71,
+        });
+        AddSubCompare(objectTemp, objectTemp2);
       }
       {
-    CBORObject objectTemp = CBORObject.DecodeFromBytes(new byte[] {
-      (byte)0xfa,
-      0x1f, (byte)0x80, (byte)0xdb, (byte)0x9b,
-    });
-    CBORObject objectTemp2 = CBORObject.DecodeFromBytes(new byte[] {
-      (byte)0xfb,
-      0x31, (byte)0x90, (byte)0xea, 0x16, (byte)0xbe, (byte)0x80, 0x0b,
-      0x37,
-    });
-    AddSubCompare(objectTemp, objectTemp2);
+        CBORObject objectTemp = CBORObject.DecodeFromBytes(new byte[] {
+          (byte)0xfa, 0x1f, (byte)0x80, (byte)0xdb, (byte)0x9b,
+        });
+        CBORObject objectTemp2 = CBORObject.DecodeFromBytes(new byte[] {
+          (byte)0xfb, 0x31, (byte)0x90, (byte)0xea, 0x16, (byte)0xbe, (byte)0x80,
+          0x0b, 0x37,
+        });
+        AddSubCompare(objectTemp, objectTemp2);
       }
       CBORObject cbor = CBORObject.FromObjectAndTag(
         Double.NegativeInfinity,
@@ -553,30 +555,33 @@ CBORTestCommon.AssertRoundTrip(
     [Test]
     public void TestDecimalFracExactlyTwoElements() {
       try {
- CBORTestCommon.FromBytesTestAB(new byte[] { 0xc4, 0x82, 0xc2, 0x41, 1 });
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORTestCommon.FromBytesTestAB(new byte[] {
+          0xc4, 0x82, 0xc2, 0x41,
+          1,
+        });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
     [Test]
     public void TestDecimalFracExponentMustNotBeBignum() {
       try {
- CBORTestCommon.FromBytesTestAB(new byte[] {
-   0xc4, 0x82, 0xc2, 0x41, 1,
-   0x1a,
-   1, 2, 3, 4,
- });
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORTestCommon.FromBytesTestAB(new byte[] {
+          0xc4, 0x82, 0xc2, 0x41, 1,
+          0x1a,
+          1, 2, 3, 4,
+        });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
 
     [Test]
@@ -598,10 +603,10 @@ CBORTestCommon.AssertRoundTrip(
         EDecimal cmpCobj = AsED(CBORObject.Multiply(o1, o2));
         if (cmpDecFrac.CompareTo(cmpCobj) != 0) {
           string msg = "o1=" + o1.ToString() + ", o2=" + o2.ToString() +
-               ", " +AsED(o1) + ", " + AsED(o2) + ", cmpCobj=" +
+               ", " + AsED(o1) + ", " + AsED(o2) + ", cmpCobj=" +
 cmpCobj.ToString() +
                ", cmpDecFrac=" + cmpDecFrac.ToString();
-               TestCommon.CompareTestEqual(cmpDecFrac, cmpCobj, msg);
+          TestCommon.CompareTestEqual(cmpDecFrac, cmpCobj, msg);
         }
         CBORTestCommon.AssertRoundTrip(o1);
         CBORTestCommon.AssertRoundTrip(o2);
@@ -618,10 +623,10 @@ cmpCobj.ToString() +
         EDecimal cmpCobj = AsED(CBORObject.Addition(o1, o2));
         if (cmpDecFrac.CompareTo(cmpCobj) != 0) {
           string msg = "o1=" + o1.ToString() + ", o2=" + o2.ToString() +
-               ", " +AsED(o1) + ", " + AsED(o2) + ", cmpCobj=" +
+               ", " + AsED(o1) + ", " + AsED(o2) + ", cmpCobj=" +
 cmpCobj.ToString() +
                ", cmpDecFrac=" + cmpDecFrac.ToString();
-               TestCommon.CompareTestEqual(cmpDecFrac, cmpCobj, msg);
+          TestCommon.CompareTestEqual(cmpDecFrac, cmpCobj, msg);
         }
         CBORTestCommon.AssertRoundTrip(o1);
         CBORTestCommon.AssertRoundTrip(o2);
@@ -638,10 +643,10 @@ cmpCobj.ToString() +
         EDecimal cmpCobj = AsED(CBORObject.Subtract(o1, o2));
         if (cmpDecFrac.CompareTo(cmpCobj) != 0) {
           string msg = "o1=" + o1.ToString() + ", o2=" + o2.ToString() +
-               ", " +AsED(o1) + ", " + AsED(o2) + ", cmpCobj=" +
+               ", " + AsED(o1) + ", " + AsED(o2) + ", cmpCobj=" +
 cmpCobj.ToString() +
                ", cmpDecFrac=" + cmpDecFrac.ToString();
-               TestCommon.CompareTestEqual(cmpDecFrac, cmpCobj, msg);
+          TestCommon.CompareTestEqual(cmpDecFrac, cmpCobj, msg);
         }
         CBORTestCommon.AssertRoundTrip(o1);
         CBORTestCommon.AssertRoundTrip(o2);
@@ -654,8 +659,8 @@ cmpCobj.ToString() +
       for (var i = 0; i < 3000; ++i) {
         CBORObject o1 =
           CBORObject.FromObject(RandomObjects.RandomEInteger(r));
-          CBORObject o2 = CBORObject.FromObject(
-            RandomObjects.RandomEInteger(r));
+        CBORObject o2 = CBORObject.FromObject(
+          RandomObjects.RandomEInteger(r));
         if (o2.IsZero) {
           continue;
         }
@@ -676,13 +681,13 @@ cmpCobj.ToString() +
         (!CBORObject.FromObject(Double.PositiveInfinity).IsPositiveInfinity()) {
         Assert.Fail("Not positive infinity");
       }
-      CBORTestCommon.AssertSer(
+      AssertSer(
         CBORObject.FromObject(Double.PositiveInfinity),
         "Infinity");
-      CBORTestCommon.AssertSer(
+      AssertSer(
         CBORObject.FromObject(Double.NegativeInfinity),
         "-Infinity");
-      CBORTestCommon.AssertSer(
+      AssertSer(
         CBORObject.FromObject(Double.NaN),
         "NaN");
       CBORObject oldobj = null;
@@ -691,7 +696,7 @@ cmpCobj.ToString() +
         Assert.IsTrue(o.CanFitInDouble());
         Assert.IsTrue(o.CanFitInInt32());
         Assert.IsTrue(o.IsIntegral);
-        CBORTestCommon.AssertSer(
+        CBORTestCommon.AssertJSONSer(
           o,
           TestCommon.IntToString(i));
         if (oldobj != null) {
@@ -746,17 +751,17 @@ cmpCobj.ToString() +
 
     [Test]
     public void TestFloat() {
-      CBORTestCommon.AssertSer(
+      AssertSer(
         CBORObject.FromObject(Single.PositiveInfinity),
         "Infinity");
-      CBORTestCommon.AssertSer(
+      AssertSer(
         CBORObject.FromObject(Single.NegativeInfinity),
         "-Infinity");
-      CBORTestCommon.AssertSer(
+      AssertSer(
         CBORObject.FromObject(Single.NaN),
         "NaN");
       for (int i = -65539; i <= 65539; ++i) {
-        CBORTestCommon.AssertSer(
+        CBORTestCommon.AssertJSONSer(
           CBORObject.FromObject((float)i),
           TestCommon.IntToString(i));
       }
@@ -914,7 +919,7 @@ cmpCobj.ToString() +
           Assert.IsTrue(CBORObject.FromObject(j).IsIntegral);
           Assert.IsTrue(CBORObject.FromObject(j).CanFitInInt64());
           Assert.IsTrue(CBORObject.FromObject(j).CanTruncatedIntFitInInt64());
-          CBORTestCommon.AssertSer(
+          CBORTestCommon.AssertJSONSer(
             CBORObject.FromObject(j),
             TestCommon.LongToString(j));
           Assert.AreEqual(
@@ -922,7 +927,7 @@ cmpCobj.ToString() +
             CBORObject.FromObject(EInteger.FromInt64(j)));
           CBORObject obj = CBORObject.FromJSONString(
             "[" + TestCommon.LongToString(j) + "]");
-          CBORTestCommon.AssertSer(
+          CBORTestCommon.AssertJSONSer(
             obj,
             "[" + TestCommon.LongToString(j) + "]");
           if (j == ranges[i + 1]) {
@@ -1038,7 +1043,7 @@ cmpCobj.ToString() +
     }
 
     [Test]
-    [Timeout(50000)]
+    [Timeout(200000)]
     public void TestRandomNonsense() {
       var rand = new RandomGenerator();
       for (var i = 0; i < 200; ++i) {
@@ -1082,7 +1087,7 @@ cmpCobj.ToString() +
                 throw new InvalidOperationException(String.Empty, ex);
               }
             } catch (CBORException) {
-              new Object(); // Expected exception
+              // NOTE: Expected exception
             }
           }
         }
@@ -1170,7 +1175,7 @@ cmpCobj.ToString() +
     [Test]
     public void TestShort() {
       for (int i = Int16.MinValue; i <= Int16.MaxValue; ++i) {
-        CBORTestCommon.AssertSer(
+        CBORTestCommon.AssertJSONSer(
           CBORObject.FromObject((short)i),
           TestCommon.IntToString(i));
       }
@@ -1178,13 +1183,13 @@ cmpCobj.ToString() +
 
     [Test]
     public void TestSimpleValues() {
-      CBORTestCommon.AssertSer(
+      CBORTestCommon.AssertJSONSer(
         CBORObject.FromObject(true),
         "true");
-      CBORTestCommon.AssertSer(
+      CBORTestCommon.AssertJSONSer(
         CBORObject.FromObject(false),
         "false");
-      CBORTestCommon.AssertSer(
+      CBORTestCommon.AssertJSONSer(
         CBORObject.FromObject((object)null),
         "null");
     }
@@ -1308,7 +1313,7 @@ cmpCobj.ToString() +
               obj.MostInnerTag,
               errmsg);
           }
-          CBORTestCommon.AssertSer(
+          AssertSer(
             obj,
             bigintTemp.ToString() + "(0)");
           if (!bigintTemp.Equals(maxuint)) {
@@ -1350,7 +1355,7 @@ cmpCobj.ToString() +
             }
             String str = bigintNext.ToString() + "(" +
               bigintTemp.ToString() + "(0))";
-            CBORTestCommon.AssertSer(
+            AssertSer(
               obj2,
               str);
           }
@@ -1362,21 +1367,21 @@ cmpCobj.ToString() +
       }
     }
 
-[Test]
-public void TestOverlongSimpleValues() {
- for (var i = 0; i <= 0x1f; ++i) {
-  var bytes = new byte[] { (byte)0xf8, (byte)i };
-  try {
- CBORObject.DecodeFromBytes(bytes);
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
- }
-}
+    [Test]
+    public void TestOverlongSimpleValues() {
+      for (var i = 0; i <= 0x1f; ++i) {
+        var bytes = new byte[] { (byte)0xf8, (byte)i };
+        try {
+          CBORObject.DecodeFromBytes(bytes);
+          Assert.Fail("Should have failed");
+        } catch (CBORException) {
+          // NOTE: Intentionally empty
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
+        }
+      }
+    }
 
     [Test]
     public void TestTags264And265() {
@@ -1397,14 +1402,14 @@ public void TestOverlongSimpleValues() {
     [Test]
     public void TestTagThenBreak() {
       try {
- CBORTestCommon.FromBytesTestAB(new byte[] { 0xd1, 0xff });
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORTestCommon.FromBytesTestAB(new byte[] { 0xd1, 0xff });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
 
     [Test]
@@ -1425,32 +1430,34 @@ public void TestOverlongSimpleValues() {
     [Test]
     public void TestTextStringStreamNoIndefiniteWithinDefinite() {
       try {
- CBORTestCommon.FromBytesTestAB(new byte[] {
-   0x7f, 0x61, 0x20, 0x7f, 0x61,
-   0x20, 0xff, 0xff,
- });
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORTestCommon.FromBytesTestAB(new byte[] {
+          0x7f, 0x61, 0x20, 0x7f,
+          0x61,
+          0x20, 0xff, 0xff,
+        });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
     [Test]
     public void TestTextStringStreamNoTagsBeforeDefinite() {
       try {
- CBORTestCommon.FromBytesTestAB(new byte[] {
-   0x7f, 0x61, 0x20, 0xc0, 0x61,
-   0x20, 0xff,
- });
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORTestCommon.FromBytesTestAB(new byte[] {
+          0x7f, 0x61, 0x20, 0xc0,
+          0x61,
+          0x20, 0xff,
+        });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
 
     private static EDecimal AsED(CBORObject obj) {
@@ -1504,13 +1511,13 @@ public void TestOverlongSimpleValues() {
         Assert.AreEqual(
           "testzero",
           stringTemp);
-}
+      }
       {
         string stringTemp = cbor[CBORObject.FromObject((double)0.0)].AsString();
         Assert.AreEqual(
           "testpointzero",
           stringTemp);
-}
+      }
       cbor = CBORObject.NewMap();
       cbor.Set((double)0.0, CBORObject.FromObject("testpointzero"));
       cbor.Set((int)0, CBORObject.FromObject("testzero"));
@@ -1520,13 +1527,13 @@ public void TestOverlongSimpleValues() {
         Assert.AreEqual(
           "testzero",
           stringTemp);
-}
+      }
       {
         string stringTemp = cbor[CBORObject.FromObject((double)0.0)].AsString();
         Assert.AreEqual(
           "testpointzero",
           stringTemp);
-}
+      }
       // 3 versus 3.0
       cbor = CBORObject.NewMap();
       cbor.Set((int)3, CBORObject.FromObject("testzero"));
@@ -1537,13 +1544,13 @@ public void TestOverlongSimpleValues() {
         Assert.AreEqual(
           "testzero",
           stringTemp);
-}
+      }
       {
         string stringTemp = cbor[CBORObject.FromObject((double)3.0)].AsString();
         Assert.AreEqual(
           "testpointzero",
           stringTemp);
-}
+      }
       cbor = CBORObject.NewMap();
       cbor.Set((double)3.0, CBORObject.FromObject("testpointzero"));
       cbor.Set((int)3, CBORObject.FromObject("testzero"));
@@ -1553,13 +1560,37 @@ public void TestOverlongSimpleValues() {
         Assert.AreEqual(
           "testzero",
           stringTemp);
-}
+      }
       {
         string stringTemp = cbor[CBORObject.FromObject((double)3.0)].AsString();
         Assert.AreEqual(
           "testpointzero",
           stringTemp);
-}
+      }
+    }
+
+    public static void AssertSer(CBORObject o, String s) {
+      if (o == null) {
+        throw new ArgumentNullException(nameof(o));
+      }
+      if (s == null) {
+        throw new ArgumentNullException(nameof(s));
+      }
+      if (!s.Equals(o.ToString(), StringComparison.Ordinal)) {
+        Assert.AreEqual(s, o.ToString(), "o is not equal to s");
+      }
+     // Test round-tripping
+      CBORObject o2 = CBORTestCommon.FromBytesTestAB(
+        o.EncodeToBytes());
+      if (!s.Equals(o2.ToString(), StringComparison.Ordinal)) {
+        string msg = "o2 is not equal to s:\no = " +
+          TestCommon.ToByteArrayString(o.EncodeToBytes()) +
+          "\no2 = " + TestCommon.ToByteArrayString(o2.EncodeToBytes()) +
+          "\no2string = " + o2.ToString();
+        Assert.AreEqual(s, o2.ToString(), msg);
+      }
+      CBORTestCommon.TestNumber(o);
+      TestCommon.AssertEqualsHashCode(o, o2);
     }
 
     private static void TestWriteToJSON(CBORObject obj) {

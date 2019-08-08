@@ -26,7 +26,7 @@
 
  Initializes a new instance of the [PeterO.TrapException](PeterO.TrapException.md) class.
 
-     <b>Parameters:</b>
+    <b>Parameters:</b>
 
  * <i>flag</i>: A flag that specifies the kind of error (PrecisionContext.FlagXXX). This will only be one flag, such as FlagInexact or FlagSubnormal.
 

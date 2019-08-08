@@ -131,27 +131,28 @@ namespace PeterO {
         }
         while (intlongValue > 43698) {
           int intdivValue = intlongValue / 10;
-          char digit = ValueDigits[(
-            int)(intlongValue - (intdivValue * 10))];
+          char digit = ValueDigits[(int)(intlongValue -
+            (intdivValue * 10))];
           chars[count--] = digit;
           intlongValue = intdivValue;
-      }
-      while (intlongValue > 9) {
-        int intdivValue = (intlongValue * 26215) >> 18;
-        char digit = ValueDigits[(int)(intlongValue - (intdivValue * 10))];
-        chars[count--] = digit;
-        intlongValue = intdivValue;
-      }
-      if (intlongValue != 0) {
-        chars[count--] = ValueDigits[(int)intlongValue];
-      }
-      if (neg) {
-        chars[count] = '-';
+        }
+        while (intlongValue > 9) {
+          int intdivValue = (intlongValue * 26215) >> 18;
+          char digit = ValueDigits[(int)(intlongValue -
+            (intdivValue * 10))];
+          chars[count--] = digit;
+          intlongValue = intdivValue;
+        }
+        if (intlongValue != 0) {
+          chars[count--] = ValueDigits[(int)intlongValue];
+        }
+        if (neg) {
+          chars[count] = '-';
+        } else {
+          ++count;
+        }
+        return new String(chars, count, 12 - count);
       } else {
-        ++count;
-      }
-      return new String(chars, count, 12 - count);
-    } else {
         chars = new char[24];
         count = 23;
         if (neg) {
@@ -162,22 +163,22 @@ namespace PeterO {
           char digit = ValueDigits[(int)(longValue - (divValue * 10))];
           chars[count--] = digit;
           longValue = divValue;
-      }
-      while (longValue > 9) {
-        long divValue = (longValue * 26215) >> 18;
-        char digit = ValueDigits[(int)(longValue - (divValue * 10))];
-        chars[count--] = digit;
-        longValue = divValue;
-      }
-      if (longValue != 0) {
-        chars[count--] = ValueDigits[(int)longValue];
-      }
-      if (neg) {
-        chars[count] = '-';
-      } else {
-        ++count;
-      }
-      return new String(chars, count, 24 - count);
+        }
+        while (longValue > 9) {
+          long divValue = (longValue * 26215) >> 18;
+          char digit = ValueDigits[(int)(longValue - (divValue * 10))];
+          chars[count--] = digit;
+          longValue = divValue;
+        }
+        if (longValue != 0) {
+          chars[count--] = ValueDigits[(int)longValue];
+        }
+        if (neg) {
+          chars[count] = '-';
+        } else {
+          ++count;
+        }
+        return new String(chars, count, 24 - count);
       }
     }
 
@@ -224,10 +225,10 @@ namespace PeterO {
       if (obj == null) {
         throw new ArgumentNullException(nameof(obj));
       }
+      if (stream == null) {
+        throw new ArgumentNullException(nameof(stream));
+      }
       if (obj.IsNumber) {
-        if (stream == null) {
-          throw new ArgumentNullException(nameof(stream));
-        }
         stream.WriteByte(unchecked((byte)((byte)0x69)));
         WriteUtf8(obj.AsEInteger().ToString(), stream);
         stream.WriteByte(unchecked((byte)((byte)0x65)));
@@ -238,9 +239,6 @@ namespace PeterO {
           throw new CBORException("invalid string");
         }
         WriteUtf8(LongToString(length), stream);
-        if (stream == null) {
-          throw new ArgumentNullException(nameof(stream));
-        }
         stream.WriteByte(unchecked((byte)((byte)':')));
         WriteUtf8(s, stream);
       } else if (obj.Type == CBORType.Map) {
@@ -261,6 +259,9 @@ namespace PeterO {
             string str = (key.Type == CBORType.TextString) ?
               key.AsString() : key.ToJSONString();
             valueSMap[str] = value;
+          }
+          if (stream == null) {
+            throw new ArgumentNullException(nameof(stream));
           }
           stream.WriteByte(unchecked((byte)((byte)0x64)));
           foreach (KeyValuePair<string, CBORObject> entry in valueSMap) {

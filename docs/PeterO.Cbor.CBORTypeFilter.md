@@ -42,42 +42,42 @@
 
  A filter that allows any CBOR object.
 
-  <a id="ByteString"></a>
+ <a id="ByteString"></a>
 ### ByteString
 
     public static readonly PeterO.Cbor.CBORTypeFilter ByteString;
 
  A filter that allows byte strings.
 
-  <a id="NegativeInteger"></a>
+ <a id="NegativeInteger"></a>
 ### NegativeInteger
 
     public static readonly PeterO.Cbor.CBORTypeFilter NegativeInteger;
 
  A filter that allows negative integers.
 
-  <a id="None"></a>
+ <a id="None"></a>
 ### None
 
     public static readonly PeterO.Cbor.CBORTypeFilter None;
 
  A filter that allows no CBOR types.
 
-  <a id="TextString"></a>
+ <a id="TextString"></a>
 ### TextString
 
     public static readonly PeterO.Cbor.CBORTypeFilter TextString;
 
  A filter that allows text strings.
 
-  <a id="UnsignedInteger"></a>
+ <a id="UnsignedInteger"></a>
 ### UnsignedInteger
 
     public static readonly PeterO.Cbor.CBORTypeFilter UnsignedInteger;
 
  A filter that allows unsigned integers.
 
-  <a id="ArrayIndexAllowed_int"></a>
+ <a id="ArrayIndexAllowed_int"></a>
 ### ArrayIndexAllowed
 
     public bool ArrayIndexAllowed(

@@ -251,56 +251,56 @@
 
  Represents the value false.
 
-  <a id="NaN"></a>
+ <a id="NaN"></a>
 ### NaN
 
     public static readonly PeterO.Cbor.CBORObject NaN;
 
  A not-a-number value.
 
-  <a id="NegativeInfinity"></a>
+ <a id="NegativeInfinity"></a>
 ### NegativeInfinity
 
     public static readonly PeterO.Cbor.CBORObject NegativeInfinity;
 
  The value negative infinity.
 
-  <a id="Null"></a>
+ <a id="Null"></a>
 ### Null
 
     public static readonly PeterO.Cbor.CBORObject Null;
 
  Represents the value null.
 
-  <a id="PositiveInfinity"></a>
+ <a id="PositiveInfinity"></a>
 ### PositiveInfinity
 
     public static readonly PeterO.Cbor.CBORObject PositiveInfinity;
 
  The value positive infinity.
 
-  <a id="True"></a>
+ <a id="True"></a>
 ### True
 
     public static readonly PeterO.Cbor.CBORObject True;
 
  Represents the value true.
 
-  <a id="Undefined"></a>
+ <a id="Undefined"></a>
 ### Undefined
 
     public static readonly PeterO.Cbor.CBORObject Undefined;
 
  Represents the value undefined.
 
-  <a id="Zero"></a>
+ <a id="Zero"></a>
 ### Zero
 
     public static readonly PeterO.Cbor.CBORObject Zero;
 
  Gets a CBOR object for the number zero.
 
-  <a id="Count"></a>
+ <a id="Count"></a>
 ### Count
 
     public int Count { get; }
@@ -388,7 +388,7 @@ The last defined tag for this CBOR data item, or -1 if the item is untagged.
 
  <b>Returns:</b>
 
-True if this value represents a number (including infinity and not-a-number or NaN) and has no tags; otherwise, false.
+ `true`  if this value represents a number (including infinity and not-a-number or NaN) and has no tags; otherwise,  `false`  .
 
 <a id="IsTagged"></a>
 ### IsTagged

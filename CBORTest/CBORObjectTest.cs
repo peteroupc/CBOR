@@ -6,6 +6,8 @@ using PeterO;
 using PeterO.Cbor;
 using PeterO.Numbers;
 
+#pragma warning disable CA1034
+
 namespace Test {
   [TestFixture]
   public class CBORObjectTest {
@@ -226,7 +228,7 @@ a major version change.
       }
     }
 
-    public string CharString(int cp, bool quoted, char[] charbuf) {
+    public static string CharString(int cp, bool quoted, char[] charbuf) {
       var index = 0;
       if (quoted) {
         if (charbuf == null) {
@@ -248,6 +250,9 @@ a major version change.
         return new String(charbuf, 0, index);
       } else {
         cp -= 0x10000;
+        if (charbuf == null) {
+          throw new ArgumentNullException(nameof(charbuf));
+        }
         charbuf[index++] = (char)((cp >> 10) + 0xd800);
         charbuf[index++] = (char)((cp & 0x3ff) | 0xdc00);
         if (quoted) {
@@ -530,7 +535,7 @@ a major version change.
       }
       {
         string stringTemp =
-          CBORObject.FromObject((double)328323).AsEInteger().ToString();
+          CBORObject.FromObject(328323.0).AsEInteger().ToString();
         Assert.AreEqual(
           "328323",
           stringTemp);
@@ -1959,10 +1964,10 @@ a major version change.
       string veryLongString = TestCommon.Repeat("x", 10000);
       byte[] stringBytes = CBORObject.FromObject(veryLongString)
 .EncodeToBytes(new CBOREncodeOptions(false, false, true));
-Assert.AreEqual(10003, stringBytes.Length);
-stringBytes = CBORObject.FromObject(veryLongString)
-.EncodeToBytes(new CBOREncodeOptions(false, true));
-Assert.AreEqual(10003, stringBytes.Length);
+      Assert.AreEqual(10003, stringBytes.Length);
+      stringBytes = CBORObject.FromObject(veryLongString)
+      .EncodeToBytes(new CBOREncodeOptions(false, true));
+      Assert.AreEqual(10003, stringBytes.Length);
 
       for (int i = 0; i < bigRanges.Length; i += 2) {
         EInteger bj = EInteger.FromString(bigRanges[i]);
@@ -2004,7 +2009,7 @@ Assert.AreEqual(10003, stringBytes.Length);
       TestCommon.CompareTestEqualAndConsistent(cbor, cbor2);
       cbor2 = CBORObject.FromObject(cbor2);
       TestCommon.CompareTestEqualAndConsistent(cbor, cbor2);
-      this.TestWriteObj(erat, erat);
+      TestWriteObj(erat, erat);
       erat = ERational.Create(
   EInteger.Zero,
   EInteger.FromString("84170882933504200501581262010093"));
@@ -2016,8 +2021,8 @@ Assert.AreEqual(10003, stringBytes.Length);
       TestCommon.CompareTestEqualAndConsistent(cbor, cbor2);
       cbor2 = CBORObject.FromObject(cbor2);
       TestCommon.CompareTestEqualAndConsistent(cbor, cbor2);
-      this.TestWriteObj(cbor, cbor2);
-      this.TestWriteObj(erat, erat2);
+      TestWriteObj(cbor, cbor2);
+      TestWriteObj(erat, erat2);
     }
 
     [Test]
@@ -2038,10 +2043,11 @@ Assert.AreEqual(10003, stringBytes.Length);
         TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
       }
       {
-     CBORObject objectTemp = CBORObject.FromObject(CBORTestCommon.FloatNegInf);
-     CBORObject objectTemp2 = CBORObject.FromObject(
-       Double.NegativeInfinity);
-     TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
+        CBORObject objectTemp =
+CBORObject.FromObject(CBORTestCommon.FloatNegInf);
+        CBORObject objectTemp2 = CBORObject.FromObject(
+          Double.NegativeInfinity);
+        TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
       }
       {
         CBORObject objectTemp =
@@ -2050,9 +2056,11 @@ Assert.AreEqual(10003, stringBytes.Length);
         TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
       }
       {
-     CBORObject objectTemp = CBORObject.FromObject(CBORTestCommon.FloatNegInf);
-     CBORObject objectTemp2 = CBORObject.FromObject(CBORTestCommon.FloatNegInf);
-     TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
+        CBORObject objectTemp =
+CBORObject.FromObject(CBORTestCommon.FloatNegInf);
+        CBORObject objectTemp2 =
+CBORObject.FromObject(CBORTestCommon.FloatNegInf);
+        TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
       }
     }
 
@@ -2064,7 +2072,7 @@ Assert.AreEqual(10003, stringBytes.Length);
       {
         CBORObject objectTemp =
           CBORObject.FromObject(CBORTestCommon.DecPosInf);
-          CBORObject objectTemp2 = CBORObject.FromObject(
+        CBORObject objectTemp2 = CBORObject.FromObject(
             CBORTestCommon.RatPosInf);
         TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
       }
@@ -2074,10 +2082,11 @@ Assert.AreEqual(10003, stringBytes.Length);
         TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
       }
       {
-     CBORObject objectTemp = CBORObject.FromObject(CBORTestCommon.FloatPosInf);
-     CBORObject objectTemp2 = CBORObject.FromObject(
-       Double.PositiveInfinity);
-     TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
+        CBORObject objectTemp =
+CBORObject.FromObject(CBORTestCommon.FloatPosInf);
+        CBORObject objectTemp2 = CBORObject.FromObject(
+          Double.PositiveInfinity);
+        TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
       }
       {
         CBORObject objectTemp = CBORObject.FromObject(CBORTestCommon.RatPosInf);
@@ -2085,16 +2094,17 @@ Assert.AreEqual(10003, stringBytes.Length);
         TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
       }
       {
-     CBORObject objectTemp = CBORObject.FromObject(CBORTestCommon.FloatPosInf);
-     CBORObject objectTemp2 = CBORObject.FromObject(
-       CBORTestCommon.RatPosInf);
-     TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
+        CBORObject objectTemp =
+CBORObject.FromObject(CBORTestCommon.FloatPosInf);
+        CBORObject objectTemp2 = CBORObject.FromObject(
+          CBORTestCommon.RatPosInf);
+        TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
       }
     }
 
     [Test]
     public void TestFalse() {
-      CBORTestCommon.AssertSer(CBORObject.False, "false");
+      CBORTestCommon.AssertJSONSer(CBORObject.False, "false");
       Assert.AreEqual(CBORObject.False, CBORObject.FromObject(false));
     }
 
@@ -2107,12 +2117,12 @@ Assert.AreEqual(10003, stringBytes.Length);
         if (i >= 0xd800 && i < 0xe000) {
           continue;
         }
-        string str = this.CharString(i, true, charbuf);
+        string str = CharString(i, true, charbuf);
         if (i < 0x20 || i == 0x22 || i == 0x5c) {
           TestFailingJSON(str);
         } else {
           cbor = TestSucceedingJSON(str);
-          string exp = this.CharString(i, false, charbuf);
+          string exp = CharString(i, false, charbuf);
           if (!exp.Equals(cbor.AsString(), StringComparison.Ordinal)) {
             Assert.AreEqual(exp, cbor.AsString());
           }
@@ -2184,17 +2194,19 @@ Assert.AreEqual(10003, stringBytes.Length);
     public void TestTagArray() {
       CBORObject obj = CBORObject.FromObjectAndTag("test", 999);
       {
-    string stringTemp = CBORObject.FromObject(obj.GetAllTags()).ToJSONString();
-    Assert.AreEqual(
-      "[999]",
-      stringTemp);
+        string stringTemp =
+CBORObject.FromObject(obj.GetAllTags()).ToJSONString();
+        Assert.AreEqual(
+          "[999]",
+          stringTemp);
       }
       obj = CBORObject.FromObject("test");
       {
-    string stringTemp = CBORObject.FromObject(obj.GetAllTags()).ToJSONString();
-    Assert.AreEqual(
-      "[]",
-      stringTemp);
+        string stringTemp =
+CBORObject.FromObject(obj.GetAllTags()).ToJSONString();
+        Assert.AreEqual(
+          "[]",
+          stringTemp);
       }
     }
     [Test]
@@ -2403,13 +2415,15 @@ Assert.AreEqual(10003, stringBytes.Length);
       Assert.IsTrue(intDict.ContainsKey("a"));
       Assert.IsTrue(intDict.ContainsKey("b"));
       if (intDict["a"] != 1) {
-  { Assert.Fail();
-}
-}
-if (intDict["b"] != 2) {
-  { Assert.Fail();
-}
-}
+        {
+          Assert.Fail();
+        }
+      }
+      if (intDict["b"] != 2) {
+        {
+          Assert.Fail();
+        }
+      }
       IDictionary<string, int> iintDict = (IDictionary<string, int>)co.ToObject(
           typeof(IDictionary<string, int>));
       Assert.AreEqual(2, iintDict.Count);
@@ -2425,11 +2439,11 @@ if (intDict["b"] != 2) {
         "2000-01-01T00:00:00Z",
         0);
       try {
- co.ToObject(typeof(DateTime));
-} catch (Exception ex) {
-Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        co.ToObject(typeof(DateTime));
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
 
     [Test]
@@ -2978,57 +2992,57 @@ a major version change.
 
     [Test]
     public void TestKeys() {
-CBORObject co;
-try {
-co = CBORObject.True;
-this.Sink(co.Keys);
-Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-try {
+      CBORObject co;
+      try {
+        co = CBORObject.True;
+        this.Sink(co.Keys);
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
         this.Sink(CBORObject.FromObject(0).Keys);
         Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-try {
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
         this.Sink(CBORObject.FromObject("string").Keys);
         Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-try {
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
         this.Sink(CBORObject.NewArray().Keys);
         Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-try {
- this.Sink(CBORObject.FromObject(
-          new byte[] { 0 }).Keys);
-          Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-if (CBORObject.NewMap().Keys == null) {
-  Assert.Fail();
-}
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        this.Sink(CBORObject.FromObject(
+                 new byte[] { 0 }).Keys);
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      if (CBORObject.NewMap().Keys == null) {
+        Assert.Fail();
+      }
     }
     [Test]
     public void TestMultiply() {
@@ -3746,7 +3760,10 @@ if (CBORObject.NewMap().Keys == null) {
           }
         }
 
-using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8 })) {
+        using (var msjson = new MemoryStream(new byte[] {
+          0xff, 0xfe, 0x00,
+          0xd8,
+        })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -4650,7 +4667,7 @@ using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8 })) {
 
     [Test]
     public void TestTrue() {
-      CBORTestCommon.AssertSer(CBORObject.True, "true");
+      CBORTestCommon.AssertJSONSer(CBORObject.True, "true");
       Assert.AreEqual(CBORObject.True, CBORObject.FromObject(true));
     }
 
@@ -4680,7 +4697,7 @@ using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8 })) {
         this.TestWrite2();
       }
       for (var i = 0; i < 40; ++i) {
-        this.TestWrite3();
+        TestWrite3();
       }
     }
 
@@ -4708,7 +4725,7 @@ using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8 })) {
             cborTemp1.WriteTo(ms);
             AssertReadThree(ms.ToArray(), CBORObject.FromObject((object)null));
           }
-          this.TestWriteObj((object)str, null);
+          TestWriteObj((object)str, null);
         }
 
         {
@@ -4731,7 +4748,7 @@ using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8 })) {
             cborTemp1.WriteTo(ms);
             AssertReadThree(ms.ToArray(), CBORObject.FromObject("test"));
           }
-          this.TestWriteObj((object)"test", "test");
+          TestWriteObj((object)"test", "test");
         }
 
         str = TestCommon.Repeat("test", 4000);
@@ -4755,7 +4772,7 @@ using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8 })) {
             cborTemp1.WriteTo(ms);
             AssertReadThree(ms.ToArray(), CBORObject.FromObject(str));
           }
-          this.TestWriteObj((object)str, str);
+          TestWriteObj((object)str, str);
         }
 
         long[] values = {
@@ -4788,7 +4805,7 @@ using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8 })) {
               cborTemp1.WriteTo(ms);
               AssertReadThree(ms.ToArray(), CBORObject.FromObject(values[i]));
             }
-            this.TestWriteObj((object)values[i], values[i]);
+            TestWriteObj((object)values[i], values[i]);
           }
 
           EInteger bigintVal = EInteger.FromInt64(values[i]);
@@ -4812,7 +4829,7 @@ using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8 })) {
               cborTemp1.WriteTo(ms);
               AssertReadThree(ms.ToArray(), CBORObject.FromObject(bigintVal));
             }
-            this.TestWriteObj((object)bigintVal, bigintVal);
+            TestWriteObj((object)bigintVal, bigintVal);
           }
 
           if (values[i] >= (long)Int32.MinValue && values[i] <=
@@ -4838,7 +4855,7 @@ using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8 })) {
                 cborTemp1.WriteTo(ms);
                 AssertReadThree(ms.ToArray(), CBORObject.FromObject(intval));
               }
-              this.TestWriteObj((object)intval, intval);
+              TestWriteObj((object)intval, intval);
             }
           }
           if (values[i] >= -32768L && values[i] <= 32767) {
@@ -4863,7 +4880,7 @@ using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8 })) {
                 cborTemp1.WriteTo(ms);
                 AssertReadThree(ms.ToArray(), CBORObject.FromObject(shortval));
               }
-              this.TestWriteObj((object)shortval, shortval);
+              TestWriteObj((object)shortval, shortval);
             }
           }
           if (values[i] >= 0L && values[i] <= 255) {
@@ -4888,7 +4905,7 @@ using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8 })) {
                 cborTemp1.WriteTo(ms);
                 AssertReadThree(ms.ToArray(), CBORObject.FromObject(byteval));
               }
-              this.TestWriteObj((object)byteval, byteval);
+              TestWriteObj((object)byteval, byteval);
             }
           }
         }
@@ -4912,7 +4929,7 @@ using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8 })) {
             cborTemp1.WriteTo(ms);
             AssertReadThree(ms.ToArray(), CBORObject.FromObject(0.0f));
           }
-          this.TestWriteObj((object)0.0f, 0.0f);
+          TestWriteObj((object)0.0f, 0.0f);
         }
 
         {
@@ -4935,7 +4952,7 @@ using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8 })) {
             cborTemp1.WriteTo(ms);
             AssertReadThree(ms.ToArray(), CBORObject.FromObject(2.6));
           }
-          this.TestWriteObj((object)2.6, 2.6);
+          TestWriteObj((object)2.6, 2.6);
         }
 
         CBORObject cbor = null;
@@ -4959,7 +4976,7 @@ using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8 })) {
             cborTemp1.WriteTo(ms);
             AssertReadThree(ms.ToArray(), CBORObject.FromObject((object)null));
           }
-          this.TestWriteObj((object)cbor, null);
+          TestWriteObj((object)cbor, null);
         }
 
         object aobj = null;
@@ -4983,7 +5000,7 @@ using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8 })) {
             cborTemp1.WriteTo(ms);
             AssertReadThree(ms.ToArray(), CBORObject.FromObject((object)null));
           }
-          this.TestWriteObj((object)aobj, null);
+          TestWriteObj((object)aobj, null);
         }
       } catch (IOException ex) {
         Assert.Fail(ex.ToString());
@@ -4991,7 +5008,7 @@ using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8 })) {
       }
     }
 
-    public void TestWrite3() {
+    public static void TestWrite3() {
       EFloat ef = null;
       EDecimal ed = null;
       var fr = new RandomGenerator();
@@ -5018,7 +5035,7 @@ using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8 })) {
               cborTemp1.WriteTo(ms);
               AssertReadThree(ms.ToArray(), CBORObject.FromObject(ef));
             }
-            this.TestWriteObj((object)ef, ef);
+            TestWriteObj((object)ef, ef);
           }
 
           ef = EFloat.Create(
@@ -5048,7 +5065,7 @@ using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8 })) {
                 AssertReadThree(ms.ToArray(), CBORObject.FromObject(ef));
               }
             }
-            this.TestWriteObj((object)ef, ef);
+            TestWriteObj((object)ef, ef);
           }
         }
         for (var i = 0; i < 50; ++i) {
@@ -5078,7 +5095,7 @@ using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8 })) {
               }
             }
             if (!(cborTemp1.IsNegative && cborTemp1.IsZero)) {
-              this.TestWriteObj((object)ed, ed);
+              TestWriteObj((object)ed, ed);
             }
           }
 
@@ -5105,7 +5122,7 @@ using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8 })) {
               cborTemp1.WriteTo(ms);
               AssertReadThree(ms.ToArray(), CBORObject.FromObject(ed));
             }
-            this.TestWriteObj((object)ed, ed);
+            TestWriteObj((object)ed, ed);
           }
         }
       } catch (IOException ex) {
@@ -5140,7 +5157,7 @@ using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8 })) {
             cborTemp1.WriteTo(ms);
             AssertReadThree(ms.ToArray(), CBORObject.FromObject((object)null));
           }
-          this.TestWriteObj((object)ef, null);
+          TestWriteObj((object)ef, null);
         }
 
         ef = EFloat.FromString("20");
@@ -5164,7 +5181,7 @@ using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8 })) {
             cborTemp1.WriteTo(ms);
             AssertReadThree(ms.ToArray(), CBORObject.FromObject(ef));
           }
-          this.TestWriteObj((object)ef, ef);
+          TestWriteObj((object)ef, ef);
         }
 
         ERational er = null;
@@ -5188,7 +5205,7 @@ using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8 })) {
             cborTemp1.WriteTo(ms);
             AssertReadThree(ms.ToArray(), CBORObject.FromObject((object)null));
           }
-          this.TestWriteObj((object)er, null);
+          TestWriteObj((object)er, null);
         }
         do {
           er = RandomObjects.RandomERational(fr);
@@ -5217,7 +5234,7 @@ using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8 })) {
               AssertReadThree(ms.ToArray(), CBORObject.FromObject(er));
             }
           }
-          this.TestWriteObj((object)er, er);
+          TestWriteObj((object)er, er);
         }
 
         EDecimal ed = null;
@@ -5241,7 +5258,7 @@ using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8 })) {
             cborTemp1.WriteTo(ms);
             AssertReadThree(ms.ToArray(), CBORObject.FromObject((object)null));
           }
-          this.TestWriteObj((object)ed, null);
+          TestWriteObj((object)ed, null);
         }
 
         EInteger bigint = null;
@@ -5265,7 +5282,7 @@ using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8 })) {
             cborTemp1.WriteTo(ms);
             AssertReadThree(ms.ToArray(), CBORObject.FromObject((object)null));
           }
-          this.TestWriteObj((object)bigint, null);
+          TestWriteObj((object)bigint, null);
         }
       } catch (IOException ex) {
         Assert.Fail(ex.ToString());
@@ -5424,7 +5441,7 @@ using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8 })) {
       byte[] bytes = cbor.EncodeToBytes();
     }
 
-    private void TestWriteObj(object obj, object objTest) {
+    private static void TestWriteObj(object obj, object objTest) {
       try {
         {
           CBORObject cborTemp1 = CBORObject.FromObject(obj);
@@ -5565,7 +5582,7 @@ using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8 })) {
               throw new InvalidOperationException(String.Empty, ex);
             }
             try {
-              CBORObject.WriteValue(ms, i, (long)-1);
+              CBORObject.WriteValue(ms, i, -1L);
               Assert.Fail("Should have failed");
             } catch (ArgumentException) {
               // NOTE: Intentionally empty

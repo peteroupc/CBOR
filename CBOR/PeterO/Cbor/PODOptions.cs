@@ -1,8 +1,8 @@
 using System;
 
 namespace PeterO.Cbor {
-  /// <include file='../../docs.xml'
-  /// path='docs/doc[@name="T:PeterO.Cbor.PODOptions"]/*'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.Cbor.PODOptions"]/*'/>
   public class PODOptions {
     /// <summary>Initializes a new instance of the
     /// <see cref='PeterO.Cbor.PODOptions'/> class.</summary>

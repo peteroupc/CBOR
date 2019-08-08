@@ -12,7 +12,6 @@ using System;
 using PeterO.Numbers;
 
 namespace PeterO {
-    /// <xmlbegin id='59'/>
     /// <summary>
     /// <para><b>This class is largely obsolete. It will be replaced by a
     /// new version of this class in a different namespace/package and

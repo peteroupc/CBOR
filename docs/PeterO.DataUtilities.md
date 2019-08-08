@@ -568,11 +568,20 @@ The parameter  <i>offset</i>
 An I/O error occurred.
 
  * System.ArgumentException:
-Either "offset" or "length" is less than 0 or greater than "str"'s length, or "str"'s length minus "offset" is less than "length".
+Either  <i>offset</i>
+ or  <i>length</i>
+ is less than 0 or greater than  <i>str</i>
+ 's length, or  <i>str</i>
+ 's length minus  <i>offset</i>
+ is less than  <i>length</i>
+ .
 
  * System.ArgumentNullException:
 The parameter  <i>str</i>
  is null.
+
+ * System.ArgumentException:
+Either "offset" or "length" is less than 0 or greater than "str"'s length, or "str"'s length minus "offset" is less than "length".
 
 <a id="WriteUtf8_string_int_int_System_IO_Stream_bool_bool"></a>
 ### WriteUtf8
@@ -624,11 +633,20 @@ The parameter  <i>offset</i>
 An I/O error occurred.
 
  * System.ArgumentException:
-Either "offset" or "length" is less than 0 or greater than "str"'s length, or "str"'s length minus "offset" is less than "length".
+Either  <i>offset</i>
+ or  <i>length</i>
+ is less than 0 or greater than  <i>str</i>
+ 's length, or  <i>str</i>
+ 's length minus  <i>offset</i>
+ is less than  <i>length</i>
+ .
 
  * System.ArgumentNullException:
 The parameter  <i>str</i>
  is null.
+
+ * System.ArgumentException:
+Either "offset" or "length" is less than 0 or greater than "str"'s length, or "str"'s length minus "offset" is less than "length".
 
 <a id="WriteUtf8_string_System_IO_Stream_bool"></a>
 ### WriteUtf8

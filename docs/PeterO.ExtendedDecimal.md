@@ -86,56 +86,56 @@
 
  A not-a-number value.
 
-  <a id="NegativeInfinity"></a>
+ <a id="NegativeInfinity"></a>
 ### NegativeInfinity
 
     public static readonly PeterO.ExtendedDecimal NegativeInfinity;
 
  Negative infinity, less than any other number.
 
-  <a id="NegativeZero"></a>
+ <a id="NegativeZero"></a>
 ### NegativeZero
 
     public static readonly PeterO.ExtendedDecimal NegativeZero;
 
  Represents the number negative zero.
 
-  <a id="One"></a>
+ <a id="One"></a>
 ### One
 
     public static readonly PeterO.ExtendedDecimal One;
 
  Represents the number 1.
 
-  <a id="PositiveInfinity"></a>
+ <a id="PositiveInfinity"></a>
 ### PositiveInfinity
 
     public static readonly PeterO.ExtendedDecimal PositiveInfinity;
 
  Positive infinity, greater than any other number.
 
-  <a id="SignalingNaN"></a>
+ <a id="SignalingNaN"></a>
 ### SignalingNaN
 
     public static readonly PeterO.ExtendedDecimal SignalingNaN;
 
  A not-a-number value that signals an invalid operation flag when it's passed as an argument to any arithmetic operation in arbitrary-precision decimal.
 
-  <a id="Ten"></a>
+ <a id="Ten"></a>
 ### Ten
 
     public static readonly PeterO.ExtendedDecimal Ten;
 
  Represents the number 10.
 
-  <a id="Zero"></a>
+ <a id="Zero"></a>
 ### Zero
 
     public static readonly PeterO.ExtendedDecimal Zero;
 
  Represents the number 0.
 
-  <a id="Exponent"></a>
+ <a id="Exponent"></a>
 ### Exponent
 
     public PeterO.BigInteger Exponent { get; }

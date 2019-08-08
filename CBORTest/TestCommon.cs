@@ -257,6 +257,50 @@ namespace Test {
       }
     }
 
+    public static void CompareTestLess<T>(T o1, T o2, string msg) where T :
+        IComparable<T> {
+      if (CompareTestReciprocal(o1, o2) >= 0) {
+        string str = msg + "\r\n" + ObjectMessages(
+          o1,
+          o2,
+          "Not less: " + CompareTestReciprocal(o1, o2));
+        Assert.Fail(str);
+      }
+    }
+
+    public static void CompareTestLessEqual<T>(T o1, T o2, string msg) where T :
+        IComparable<T> {
+      if (CompareTestReciprocal(o1, o2) > 0) {
+        string str = msg + "\r\n" + ObjectMessages(
+          o1,
+          o2,
+          "Not less or equal: " + CompareTestReciprocal(o1, o2));
+        Assert.Fail(str);
+      }
+    }
+
+    public static void CompareTestGreater<T>(T o1, T o2, string msg) where T :
+        IComparable<T> {
+      if (CompareTestReciprocal(o1, o2) <= 0) {
+        string str = msg + "\r\n" + ObjectMessages(
+          o1,
+          o2,
+          "Not greater: " + CompareTestReciprocal(o1, o2));
+        Assert.Fail(str);
+      }
+    }
+
+    public static void CompareTestGreaterEqual<T>(T o1, T o2, string msg) where
+          T : IComparable<T> {
+      if (CompareTestReciprocal(o1, o2) < 0) {
+        string str = msg + "\r\n" + ObjectMessages(
+          o1,
+          o2,
+          "Not greater or equal: " + CompareTestReciprocal(o1, o2));
+        Assert.Fail(str);
+      }
+    }
+
     public static int CompareTestReciprocal<T>(T o1, T o2) where T :
       IComparable<T> {
       if (o1 == null) {
@@ -381,27 +425,26 @@ namespace Test {
         }
         while (intlongValue > 43698) {
           int intdivValue = intlongValue / 10;
-          char digit = ValueDigits[(
-            int)(intlongValue - (intdivValue * 10))];
+          char digit = ValueDigits[(int)(intlongValue - (intdivValue * 10))];
           chars[count--] = digit;
           intlongValue = intdivValue;
-      }
-      while (intlongValue > 9) {
-        int intdivValue = (intlongValue * 26215) >> 18;
-        char digit = ValueDigits[(int)(intlongValue - (intdivValue * 10))];
-        chars[count--] = digit;
-        intlongValue = intdivValue;
-      }
-      if (intlongValue != 0) {
-        chars[count--] = ValueDigits[(int)intlongValue];
-      }
-      if (neg) {
-        chars[count] = '-';
+        }
+        while (intlongValue > 9) {
+          int intdivValue = (intlongValue * 26215) >> 18;
+          char digit = ValueDigits[(int)(intlongValue - (intdivValue * 10))];
+          chars[count--] = digit;
+          intlongValue = intdivValue;
+        }
+        if (intlongValue != 0) {
+          chars[count--] = ValueDigits[(int)intlongValue];
+        }
+        if (neg) {
+          chars[count] = '-';
+        } else {
+          ++count;
+        }
+        return new String(chars, count, 12 - count);
       } else {
-        ++count;
-      }
-      return new String(chars, count, 12 - count);
-    } else {
         chars = new char[24];
         count = 23;
         if (neg) {
@@ -412,22 +455,22 @@ namespace Test {
           char digit = ValueDigits[(int)(longValue - (divValue * 10))];
           chars[count--] = digit;
           longValue = divValue;
-      }
-      while (longValue > 9) {
-        long divValue = (longValue * 26215) >> 18;
-        char digit = ValueDigits[(int)(longValue - (divValue * 10))];
-        chars[count--] = digit;
-        longValue = divValue;
-      }
-      if (longValue != 0) {
-        chars[count--] = ValueDigits[(int)longValue];
-      }
-      if (neg) {
-        chars[count] = '-';
-      } else {
-        ++count;
-      }
-      return new String(chars, count, 24 - count);
+        }
+        while (longValue > 9) {
+          long divValue = (longValue * 26215) >> 18;
+          char digit = ValueDigits[(int)(longValue - (divValue * 10))];
+          chars[count--] = digit;
+          longValue = divValue;
+        }
+        if (longValue != 0) {
+          chars[count--] = ValueDigits[(int)longValue];
+        }
+        if (neg) {
+          chars[count] = '-';
+        } else {
+          ++count;
+        }
+        return new String(chars, count, 24 - count);
       }
     }
 

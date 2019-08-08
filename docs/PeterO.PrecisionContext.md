@@ -21,7 +21,7 @@
 
  Initializes a new instance of the [PeterO.PrecisionContext](PeterO.PrecisionContext.md) class. HasFlags will be set to false.
 
-       <b>Parameters:</b>
+      <b>Parameters:</b>
 
  * <i>precision</i>: The maximum number of digits a number can have, or 0 for an unlimited number of digits.
 

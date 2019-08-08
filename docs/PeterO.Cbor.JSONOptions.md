@@ -19,7 +19,7 @@
 
   NOTE: The base64Padding parameter may have no effect in the future. A future version may, by default, include necessary padding when writing traditional base64 to JSON and include no padding when writing base64url to JSON, in accordance with the revision of the CBOR specification.
 
-  <b>Parameters:</b>
+ <b>Parameters:</b>
 
  * <i>base64Padding</i>: Whether padding is included when writing data in base64url or traditional base64 format to JSON.
 
@@ -31,7 +31,7 @@
 
  Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) class.
 
-    <b>Parameters:</b>
+   <b>Parameters:</b>
 
  * <i>paramString</i>: A string setting forth the options to use. This is a semicolon-separated list of options, each of which has a key and a value separated by an equal sign ("="). Whitespace and line separators are not allowed to appear between the semicolons or between the equal signs, nor may the string begin or end with whitespace. The string can be empty, but cannot be null. The following is an example of this parameter:  `base64padding=false` . The key can be any one of the following in any combination of case:  `base64padding` . Other keys are ignored. If the same key appears more than once, the value given for the last such key is used. The two keys just given can have a value of  `1` ,  `true` ,  `yes` , or  `on`  (in any combination of case), which means true, and any other value meaning false. For example,  `base64padding=Yes`  and  `base64padding=1`  both set the  `Base64Padding`  property to true.
 
@@ -48,14 +48,14 @@ The parameter  <i>paramString</i>
 
  Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) class with default options.
 
-  <a id="Default"></a>
+ <a id="Default"></a>
 ### Default
 
     public static readonly PeterO.Cbor.JSONOptions Default;
 
  The default options for converting CBOR objects to JSON.
 
-  <a id="Base64Padding"></a>
+ <a id="Base64Padding"></a>
 ### Base64Padding
 
     public bool Base64Padding { get; }

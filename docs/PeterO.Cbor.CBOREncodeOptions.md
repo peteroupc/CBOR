@@ -28,7 +28,7 @@
 
  Initializes a new instance of the [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) class.
 
-    <b>Parameters:</b>
+   <b>Parameters:</b>
 
  * <i>useIndefLengthStrings</i>: A value indicating whether to always encode strings with a definite-length encoding.
 
@@ -44,7 +44,7 @@
 
  Initializes a new instance of the [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) class.
 
-     <b>Parameters:</b>
+    <b>Parameters:</b>
 
  * <i>useIndefLengthStrings</i>: A value indicating whether to always encode strings with a definite-length encoding.
 
@@ -60,7 +60,7 @@
 
  Initializes a new instance of the [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) class.
 
-    <b>Parameters:</b>
+   <b>Parameters:</b>
 
  * <i>paramString</i>: A string setting forth the options to use. This is a semicolon-separated list of options, each of which has a key and a value separated by an equal sign ("="). Whitespace and line separators are not allowed to appear between the semicolons or between the equal signs, nor may the string begin or end with whitespace. The string can be empty, but cannot be null. The following is an example of this parameter:  `allowduplicatekeys=true;ctap2Canonical=true` . The key can be any one of the following in any combination of case:  `allowduplicatekeys` ,  `ctap2canonical` ,  `resolvereferences` ,  `useindeflengthstrings` ,  `allowempty` . Keys other than these are ignored. If the same key appears more than once, the value given for the last such key is used. The four keys just given can have a value of  `1` ,  `true` ,  `yes` , or  `on`  (in any combination of case), which means true, and any other value meaning false. For example,  `allowduplicatekeys=Yes`  and  `allowduplicatekeys=1`  both set the  `AllowDuplicateKeys`  property to true.
 
@@ -77,35 +77,35 @@ The parameter  <i>paramString</i>
 
  Initializes a new instance of the [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) class.
 
-  <a id="Default"></a>
+ <a id="Default"></a>
 ### Default
 
     public static readonly PeterO.Cbor.CBOREncodeOptions Default;
 
  Default options for CBOR objects. Disallow duplicate keys, and always encode strings using definite-length encoding. These are recommended settings for the options that may be adopted by certain CBORObject methods in the next major version.
 
-  <a id="NoDuplicateKeys"></a>
+ <a id="NoDuplicateKeys"></a>
 ### NoDuplicateKeys
 
     public static readonly PeterO.Cbor.CBOREncodeOptions NoDuplicateKeys;
 
  Disallow duplicate keys when reading CBOR objects from a data stream. Used only when decoding CBOR objects. Value: 2.
 
-  <a id="NoIndefLengthStrings"></a>
+ <a id="NoIndefLengthStrings"></a>
 ### NoIndefLengthStrings
 
     public static readonly PeterO.Cbor.CBOREncodeOptions NoIndefLengthStrings;
 
  Always encode strings with a definite-length encoding. Used only when encoding CBOR objects. Value: 1.
 
-  <a id="None"></a>
+ <a id="None"></a>
 ### None
 
     public static readonly PeterO.Cbor.CBOREncodeOptions None;
 
  No special options for encoding/decoding. Value: 0.
 
-  <a id="AllowDuplicateKeys"></a>
+ <a id="AllowDuplicateKeys"></a>
 ### AllowDuplicateKeys
 
     public bool AllowDuplicateKeys { get; }

@@ -380,32 +380,25 @@ namespace PeterO {
     /// write.</param>
     /// <param name='stream'>A writable data stream.</param>
     /// <param name='replace'>If true, replaces unpaired surrogate code
-    /// points with the replacement character (U+FFFD). If false, stops
+    /// points with the replacement character (U + FFFD). If false, stops
     /// processing when an unpaired surrogate code point is seen.</param>
     /// <returns>0 if the entire string portion was written; or -1 if the
     /// string portion contains an unpaired surrogate code point and
     /// <paramref name='replace'/> is false.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='str'/> is null or <paramref name='stream'/> is
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='str'/> is null or <paramref name='stream'/> is
     /// null.</exception>
-    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// <exception cref='ArgumentException'>The parameter <paramref
     /// name='offset'/> is less than 0, <paramref name='length'/> is less
     /// than 0, or <paramref name='offset'/> plus <paramref name='length'/>
     /// is greater than the string's length.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error
     /// occurred.</exception>
-    /// <exception cref='System.ArgumentException'>Either <paramref
+    /// <exception cref='ArgumentException'>Either <paramref
     /// name='offset'/> or <paramref name='length'/> is less than 0 or
     /// greater than <paramref name='str'/> 's length, or <paramref
     /// name='str'/> 's length minus <paramref name='offset'/> is less than
     /// <paramref name='length'/>.</exception>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='str'/> is null.</exception>
-    /// <exception cref='ArgumentException'>Either &quot;offset&quot; or
-    /// &quot;length&quot; is less than 0 or greater than
-    /// &quot;str&quot;&apos;s length, or &quot;str&quot;&apos;s length
-    /// minus &quot;offset&quot; is less than
-    /// &quot;length&quot;.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='str'/> is null.</exception>
     public static int WriteUtf8(
@@ -426,7 +419,7 @@ namespace PeterO {
     /// write.</param>
     /// <param name='stream'>A writable data stream.</param>
     /// <param name='replace'>If true, replaces unpaired surrogate code
-    /// points with the replacement character (U+FFFD). If false, stops
+    /// points with the replacement character (U + FFFD). If false, stops
     /// processing when an unpaired surrogate code point is seen.</param>
     /// <param name='lenientLineBreaks'>If true, replaces carriage return
     /// (CR) not followed by line feed (LF) and LF not preceded by CR with
@@ -434,27 +427,20 @@ namespace PeterO {
     /// <returns>0 if the entire string portion was written; or -1 if the
     /// string portion contains an unpaired surrogate code point and
     /// <paramref name='replace'/> is false.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='str'/> is null or <paramref name='stream'/> is
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='str'/> is null or <paramref name='stream'/> is
     /// null.</exception>
-    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// <exception cref='ArgumentException'>The parameter <paramref
     /// name='offset'/> is less than 0, <paramref name='length'/> is less
     /// than 0, or <paramref name='offset'/> plus <paramref name='length'/>
     /// is greater than the string's length.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error
     /// occurred.</exception>
-    /// <exception cref='System.ArgumentException'>Either <paramref
+    /// <exception cref='ArgumentException'>Either <paramref
     /// name='offset'/> or <paramref name='length'/> is less than 0 or
     /// greater than <paramref name='str'/> 's length, or <paramref
     /// name='str'/> 's length minus <paramref name='offset'/> is less than
     /// <paramref name='length'/>.</exception>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='str'/> is null.</exception>
-    /// <exception cref='ArgumentException'>Either &quot;offset&quot; or
-    /// &quot;length&quot; is less than 0 or greater than
-    /// &quot;str&quot;&apos;s length, or &quot;str&quot;&apos;s length
-    /// minus &quot;offset&quot; is less than
-    /// &quot;length&quot;.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='str'/> is null.</exception>
     public static int WriteUtf8(

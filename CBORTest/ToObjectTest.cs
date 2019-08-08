@@ -190,7 +190,7 @@ ToObjectTest.TestToFromObjectRoundTrip((double)2.5)
       }
       {
         string stringTemp =
-ToObjectTest.TestToFromObjectRoundTrip((double)328323)
+ToObjectTest.TestToFromObjectRoundTrip(328323.0)
             .ToObject(typeof(EInteger)).ToString();
         Assert.AreEqual(
           "328323",
@@ -262,18 +262,17 @@ ToObjectTest.TestToFromObjectRoundTrip((double)328323)
       Assert.AreEqual(true, CBORObject.True.ToObject(typeof(bool)));
       {
         object objectTemp = true;
-        object objectTemp2 = (
-          object)ToObjectTest.TestToFromObjectRoundTrip(0)
-              .ToObject(typeof(bool));
-              Assert.AreEqual(objectTemp, objectTemp2);
-}
+        var objectTemp2 = (object)ToObjectTest
+          .TestToFromObjectRoundTrip(0).ToObject(typeof(bool));
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
       {
         object objectTemp = true;
         var objectTemp2 =
 (object)ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
               .ToObject(typeof(bool));
-              Assert.AreEqual(objectTemp, objectTemp2);
-}
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
       Assert.AreEqual(false, CBORObject.False.ToObject(typeof(bool)));
       Assert.AreEqual(false, CBORObject.Undefined.ToObject(typeof(bool)));
       Assert.AreEqual(true, CBORObject.NewArray().ToObject(typeof(bool)));
@@ -617,10 +616,10 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
         Assert.AreEqual(objectTemp, objectTemp2);
       }
 
-Assert.IsTrue(
-    ToObjectTest.TestToFromObjectRoundTrip(
-    ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
-            .ToObject(typeof(ERational))).IsNaN());
+      Assert.IsTrue(
+          ToObjectTest.TestToFromObjectRoundTrip(
+          ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
+                  .ToObject(typeof(ERational))).IsNaN());
       {
         object objectTemp = CBORTestCommon.RatPosInf;
         object objectTemp2 =
@@ -769,8 +768,9 @@ Assert.IsTrue(
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-ToObjectTest.TestToFromObjectRoundTrip(String.Empty).ToObject(typeof(int));
-Assert.Fail("Should have failed");
+        ToObjectTest.TestToFromObjectRoundTrip(
+          String.Empty).ToObject(typeof(int));
+        Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -1024,13 +1024,13 @@ Assert.Fail("Should have failed");
         CBORObject cbornumber =
           ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(
   (string)numberinfo["number"].ToObject(typeof(string))));
-  var f1 =
+        var f1 =
 
   (float)EDecimal.FromString((string)numberinfo["number"].ToObject(typeof(string))).ToSingle();
-  Object f2 = cbornumber.ToObject(typeof(float));
-  if (!((object)f1).Equals(f2)) {
-    Assert.Fail();
-  }
+        Object f2 = cbornumber.ToObject(typeof(float));
+        if (!((object)f1).Equals(f2)) {
+          Assert.Fail();
+        }
       }
     }
     [Test]
@@ -1212,12 +1212,12 @@ Assert.Fail("Should have failed");
 
     [Test]
     public void TestUriRoundTrip() {
-     try {
-      var uri = new Uri("http://example.com/path/path2?query#fragment");
-      TestToFromObjectRoundTrip(uri);
-     } catch (Exception ex) {
-      throw new InvalidOperationException(String.Empty, ex);
-     }
+      try {
+        var uri = new Uri("http://example.com/path/path2?query#fragment");
+        TestToFromObjectRoundTrip(uri);
+      } catch (Exception ex) {
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
 
     [Test]
@@ -1234,20 +1234,25 @@ Assert.Fail("Should have failed");
       if (rand == null) {
         throw new ArgumentNullException(nameof(rand));
       }
-      for (var i = 0; i < 8; ++i) { sb.Append(hex[rand.UniformInt(16)]);
-}
+      for (var i = 0; i < 8; ++i) {
+        sb.Append(hex[rand.UniformInt(16)]);
+      }
       sb.Append('-');
-      for (var i = 0; i < 4; ++i) { sb.Append(hex[rand.UniformInt(16)]);
-}
+      for (var i = 0; i < 4; ++i) {
+        sb.Append(hex[rand.UniformInt(16)]);
+      }
       sb.Append('-');
-      for (var i = 0; i < 4; ++i) { sb.Append(hex[rand.UniformInt(16)]);
-}
+      for (var i = 0; i < 4; ++i) {
+        sb.Append(hex[rand.UniformInt(16)]);
+      }
       sb.Append('-');
-      for (var i = 0; i < 4; ++i) { sb.Append(hex[rand.UniformInt(16)]);
-}
+      for (var i = 0; i < 4; ++i) {
+        sb.Append(hex[rand.UniformInt(16)]);
+      }
       sb.Append('-');
-      for (var i = 0; i < 12; ++i) { sb.Append(hex[rand.UniformInt(16)]);
-}
+      for (var i = 0; i < 12; ++i) {
+        sb.Append(hex[rand.UniformInt(16)]);
+      }
       return new Guid(sb.ToString());
     }
 

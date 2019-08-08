@@ -4913,7 +4913,7 @@
         identifiers depends on the media type (also known as MIME type) of the
         resource a URI references (see also RFC 3986 and RFC 7320). As of Aug.
         24, 2018, only the following media types specify a syntax for fragment
-        identifiers:
+        identifiers.
       </para>
       <list>
         <item>The following application/* media types: epub+zip, pdf, senml+cbor,
@@ -4922,35 +4922,35 @@
           vnd.collection.doc+json, vnd.hc+json, vnd.hyper+json,
           vnd.hyper-item+json, vnd.mason+json,
           vnd.microsoft.portable-executable, vnd.oma.bcast.sgdu,
-          vnd.shootproof+json
+          vnd.shootproof+json.
         </item>
         <item>The following image/* media types: avci, avcs, heic, heic-sequence,
-          heif, heif-sequence
+          heif, heif-sequence.
         </item>
         <item>The XML media types: application/xml,
           application/xml-external-parsed-entity, text/xml,
-          text/xml-external-parsed-entity, application/xml-dtd
+          text/xml-external-parsed-entity, application/xml-dtd.
         </item>
         <item>All media types with subtypes ending in "+xml" (see RFC 7303) use
           XPointer Framework syntax as fragment identifiers, except the
           following application/* media types: dicom+xml, senml+xml, sensml+xml,
-          ttml+xml, xliff+xml, yang-data+xml
+          ttml+xml, xliff+xml, yang-data+xml.
         </item>
-        <item>font/collection
+        <item>font/collection.
         </item>
-        <item>multipart/x-mixed-replace
+        <item>multipart/x-mixed-replace.
         </item>
-        <item>text/plain
+        <item>text/plain.
         </item>
-        <item>text/csv
+        <item>text/csv.
         </item>
-        <item>text/html
+        <item>text/html.
         </item>
-        <item>text/markdown
+        <item>text/markdown.
         </item>
-        <item>text/vnd.a
+        <item>text/vnd.a.
         </item>
-      </list>.
+      </list>
     </summary>
   </doc>
   <doc name='M:PeterO.Cbor.URIUtility.EncodeStringForURI(System.String)'>
@@ -5731,12 +5731,26 @@
     </exception>
     <exception cref='System.IO.IOException'>An I/O error occurred.
     </exception>
-    <exception cref='System.ArgumentException'>Either "offset" or "length" is less than 0 or greater than "str"'s length,
-      or "str"'s length minus "offset" is less than "length".
+    <exception cref='System.ArgumentException'>Either
+      <paramref name='offset'/>
+       or
+      <paramref name='length'/>
+       is less than 0 or greater than
+      <paramref name='str'/>
+       's length, or
+      <paramref name='str'/>
+       's length minus
+      <paramref name='offset'/>
+       is less than
+      <paramref name='length'/>
+       .
     </exception>
     <exception cref='System.ArgumentNullException'>The parameter
       <paramref name='str'/>
        is null.
+    </exception>
+    <exception cref='System.ArgumentException'>Either "offset" or "length" is less than 0 or greater than "str"'s length,
+      or "str"'s length minus "offset" is less than "length".
     </exception>
   </doc>
   <doc name='M:PeterO.DataUtilities.WriteUtf8(System.String,System.Int32,System.Int32,System.IO.Stream,System.Boolean,System.Boolean)'>
@@ -5780,12 +5794,26 @@
     </exception>
     <exception cref='System.IO.IOException'>An I/O error occurred.
     </exception>
-    <exception cref='System.ArgumentException'>Either "offset" or "length" is less than 0 or greater than "str"'s length,
-      or "str"'s length minus "offset" is less than "length".
+    <exception cref='System.ArgumentException'>Either
+      <paramref name='offset'/>
+       or
+      <paramref name='length'/>
+       is less than 0 or greater than
+      <paramref name='str'/>
+       's length, or
+      <paramref name='str'/>
+       's length minus
+      <paramref name='offset'/>
+       is less than
+      <paramref name='length'/>
+       .
     </exception>
     <exception cref='System.ArgumentNullException'>The parameter
       <paramref name='str'/>
        is null.
+    </exception>
+    <exception cref='System.ArgumentException'>Either "offset" or "length" is less than 0 or greater than "str"'s length,
+      or "str"'s length minus "offset" is less than "length".
     </exception>
   </doc>
   <doc name='T:PeterO.ExtendedDecimal'>

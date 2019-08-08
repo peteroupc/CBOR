@@ -16,7 +16,7 @@ namespace PeterO {
   [System.Diagnostics.CodeAnalysis.SuppressMessage(
     "Microsoft.Design",
     "CA1032",
-    "This class is obsolete.")]
+    Justification = "This class is obsolete.")]
   public class TrapException : ArithmeticException {
     private ETrapException ete;
 

@@ -82,7 +82,8 @@ namespace PeterO.Cbor {
             ") is more than 7");
         }
         if (majorType == 7) {
-          throw new ArgumentException("majorType is 7 and value is greater than 255");
+          throw new ArgumentException("majorType is 7 and value is greater" +
+"\u0020than 255");
         }
         byte[] bytes = {
           (byte)(27 | (majorType << 5)), (byte)((value >>

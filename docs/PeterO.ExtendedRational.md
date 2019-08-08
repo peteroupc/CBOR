@@ -43,7 +43,7 @@
 
  Initializes a new instance of the [PeterO.ExtendedRational](PeterO.ExtendedRational.md) class.
 
-     <b>Parameters:</b>
+    <b>Parameters:</b>
 
  * <i>numerator</i>: An arbitrary-precision integer.
 
@@ -63,56 +63,56 @@ The parameter  <i>numerator</i>
 
  A not-a-number value.
 
-  <a id="NegativeInfinity"></a>
+ <a id="NegativeInfinity"></a>
 ### NegativeInfinity
 
     public static readonly PeterO.ExtendedRational NegativeInfinity;
 
  Negative infinity, less than any other number.
 
-  <a id="NegativeZero"></a>
+ <a id="NegativeZero"></a>
 ### NegativeZero
 
     public static readonly PeterO.ExtendedRational NegativeZero;
 
  A rational number for negative zero.
 
-  <a id="One"></a>
+ <a id="One"></a>
 ### One
 
     public static readonly PeterO.ExtendedRational One;
 
  The rational number one.
 
-  <a id="PositiveInfinity"></a>
+ <a id="PositiveInfinity"></a>
 ### PositiveInfinity
 
     public static readonly PeterO.ExtendedRational PositiveInfinity;
 
  Positive infinity, greater than any other number.
 
-  <a id="SignalingNaN"></a>
+ <a id="SignalingNaN"></a>
 ### SignalingNaN
 
     public static readonly PeterO.ExtendedRational SignalingNaN;
 
  A signaling not-a-number value.
 
-  <a id="Ten"></a>
+ <a id="Ten"></a>
 ### Ten
 
     public static readonly PeterO.ExtendedRational Ten;
 
  The rational number ten.
 
-  <a id="Zero"></a>
+ <a id="Zero"></a>
 ### Zero
 
     public static readonly PeterO.ExtendedRational Zero;
 
  A rational number for zero.
 
-  <a id="Denominator"></a>
+ <a id="Denominator"></a>
 ### Denominator
 
     public PeterO.BigInteger Denominator { get; }

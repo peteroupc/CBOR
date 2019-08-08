@@ -400,14 +400,14 @@ namespace PeterO.Cbor {
         return EInteger.FromUInt64(uvalue);
       }
       return t.Equals(typeof(long)) ? Convert.ToInt64(
-              value,
-              CultureInfo.InvariantCulture) :
+        value,
+        CultureInfo.InvariantCulture) :
       (t.Equals(typeof(uint)) ? Convert.ToInt64(
-              value,
-              CultureInfo.InvariantCulture) :
+        value,
+        CultureInfo.InvariantCulture) :
       Convert.ToInt32(
-              value,
-              CultureInfo.InvariantCulture));
+        value,
+        CultureInfo.InvariantCulture));
     }
 
     public static object FindOneArgumentMethod(
@@ -693,8 +693,7 @@ td.Equals(typeof(IDictionary<,>));
           if (t.FullName != null && (
             StartsWith(
               t.FullName,
-              "Microsoft.Win32.") ||
-             StartsWith(t.FullName, "System.IO."))) {
+              "Microsoft.Win32.") || StartsWith(t.FullName, "System.IO."))) {
             throw new CBORException("Type " + t.FullName +
                   " not supported");
           }

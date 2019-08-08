@@ -19,7 +19,7 @@
 
  Initializes a new instance of the [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) class.
 
-    <b>Parameters:</b>
+   <b>Parameters:</b>
 
  * <i>removeIsPrefix</i>: If set to  `true`  remove is prefix. NOTE: May be ignored in future versions of this library.
 
@@ -33,7 +33,7 @@
 
  Initializes a new instance of the [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) class.
 
-    <b>Parameters:</b>
+   <b>Parameters:</b>
 
  * <i>paramString</i>: A string setting forth the options to use. This is a semicolon-separated list of options, each of which has a key and a value separated by an equal sign ("="). Whitespace and line separators are not allowed to appear between the semicolons or between the equal signs, nor may the string begin or end with whitespace. The string can be empty, but cannot be null. The following is an example of this parameter:  `usecamelcase=true` . The key can be any one of the following in any combination of case:  `usecamelcase` . Other keys are ignored. If the same key appears more than once, the value given for the last such key is used. The key just given can have a value of  `1` ,  `true` ,  `yes` , or  `on`  (in any combination of case), which means true, and any other value meaning false. For example,  `usecamelcase=Yes`  and  `usecamelcase=1`  both set the  `UseCamelCase`  property to true.
 
@@ -50,14 +50,14 @@ The parameter  <i>paramString</i>
 
  Initializes a new instance of the [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) class.
 
-  <a id="Default"></a>
+ <a id="Default"></a>
 ### Default
 
     public static readonly PeterO.Cbor.PODOptions Default;
 
  The default settings for "plain old data" options.
 
-  <a id="RemoveIsPrefix"></a>
+ <a id="RemoveIsPrefix"></a>
 ### RemoveIsPrefix
 
     public bool RemoveIsPrefix { get; }

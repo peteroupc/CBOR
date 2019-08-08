@@ -73,7 +73,7 @@ new CBOREncodeOptions("useindeflengthstrings=0;allowduplicatekeys=1");
       bool allowDuplicateKeys,
       bool ctap2Canonical) : this(BuildString(
          useIndefLengthStrings,
-         allowDuplicateKeys, 
+         allowDuplicateKeys,
          ctap2Canonical)) {
     }
 

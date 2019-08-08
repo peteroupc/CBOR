@@ -160,13 +160,6 @@ namespace PeterO {
     /// greater than <paramref name='str'/> 's length, or <paramref
     /// name='str'/> 's length minus <paramref name='offset'/> is less than
     /// <paramref name='length'/>.</exception>
-    /// <exception cref='ArgumentException'>Either &quot;offset&quot; or
-    /// &quot;length&quot; is less than 0 or greater than
-    /// &quot;str&quot;&apos;s length, or &quot;str&quot;&apos;s length
-    /// minus &quot;offset&quot; is less than
-    /// &quot;length&quot;.</exception>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='str'/> is null.</exception>
     [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public static ExtendedFloat FromString(
       string str,
