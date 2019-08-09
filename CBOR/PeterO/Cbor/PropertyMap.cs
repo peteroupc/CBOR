@@ -79,12 +79,10 @@ namespace PeterO.Cbor {
     private static bool HasCustomAttribute(
       Type t,
       string name) {
-#if NET40 || NET20
       foreach (var attr in t.GetCustomAttributes(false)) {
-#else
-    foreach (var attr in t.CustomAttributes) {
-#endif
-        if (attr.GetType().FullName.Equals(name)) {
+        if (attr.GetType().FullName.Equals(
+          name,
+          StringComparison.Ordinal)) {
           return true;
         }
       }

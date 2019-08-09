@@ -770,13 +770,19 @@ cmpCobj.ToString() +
     public void TestHalfPrecision() {
       CBORObject o = CBORObject.DecodeFromBytes(
         new byte[] { 0xf9, 0x7c, 0x00 });
-      Assert.AreEqual(Single.PositiveInfinity, o.AsSingle());
+      if (o.AsSingle() != Single.PositiveInfinity) {
+        Assert.Fail();
+      }
       o = CBORObject.DecodeFromBytes(
         new byte[] { 0xf9, 0x00, 0x00 });
-      Assert.AreEqual(0f, o.AsSingle());
+      if (o.AsSingle() != 0f) {
+        Assert.Fail();
+      }
       o = CBORObject.DecodeFromBytes(
         new byte[] { 0xf9, 0xfc, 0x00 });
-      Assert.AreEqual(Single.NegativeInfinity, o.AsSingle());
+      if (o.AsSingle() != Single.NegativeInfinity) {
+        Assert.Fail();
+      }
       o = CBORObject.DecodeFromBytes(
         new byte[] { 0xf9, 0x7e, 0x00 });
       Assert.IsTrue(Single.IsNaN(o.AsSingle()));

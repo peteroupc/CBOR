@@ -44,11 +44,11 @@ public class CBORException : Exception {
     /// object.</param>
     /// <param name='context'>A
     /// System.Runtime.Serialization.StreamingContext object.</param>
-      protected CBORException(
+    protected CBORException(
         System.Runtime.Serialization.SerializationInfo info,
         System.Runtime.Serialization.StreamingContext context)
         : base(info, context) {
-      }
+    }
 #endif
   }
 }

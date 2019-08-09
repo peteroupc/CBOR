@@ -13,6 +13,10 @@ namespace PeterO.Cbor {
   // Contains extra methods placed separately
   // because they are not CLS-compliant or they
   // are specific to the .NET framework.
+  [System.Diagnostics.CodeAnalysis.SuppressMessage(
+     "Microsoft.Usage",
+     "CA1036",
+     Justification = "Backward compatibility reasons.")]
   public sealed partial class CBORObject {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsUInt16"]/*'/>

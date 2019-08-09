@@ -62,10 +62,10 @@ namespace Test {
       string p2,
       string p3) {
       CBORObjectTest.CheckPropertyNames(
- CBORObject.FromObject(ao, cc),
- p1,
- p2,
- p3);
+        CBORObject.FromObject(ao, cc),
+        p1,
+        p2,
+        p3);
     }
 
     internal static void CheckArrayPropertyNames(

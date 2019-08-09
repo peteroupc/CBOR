@@ -196,12 +196,11 @@ namespace Test {
       }
     }
 
-    public static void TestNumber(CBORObject o) {
 #pragma warning disable CS0618
+    public static void TestNumber(CBORObject o) {
       if (o.Type != CBORType.Number) {
         return;
       }
-#pragma warning restore CS0618
       if (o.IsPositiveInfinity() || o.IsNegativeInfinity() ||
           o.IsNaN()) {
         try {
@@ -278,6 +277,7 @@ namespace Test {
           InvalidOperationException(String.Empty, ex);
       }
     }
+#pragma warning restore CS0618
 
     public static void AssertRoundTrip(CBORObject o) {
       CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());

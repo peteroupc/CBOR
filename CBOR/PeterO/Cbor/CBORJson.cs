@@ -23,6 +23,20 @@ namespace PeterO.Cbor {
       }
     }
 
+    internal const int CBORObjectTypeArray = 4;
+    internal const int CBORObjectTypeBigInteger = 1; // all other integers
+    internal const int CBORObjectTypeByteString = 2;
+    internal const int CBORObjectTypeDouble = 8;
+    internal const int CBORObjectTypeExtendedDecimal = 9;
+    internal const int CBORObjectTypeExtendedFloat = 11;
+    internal const int CBORObjectTypeExtendedRational = 12;
+    internal const int CBORObjectTypeInteger = 0; // -(2^63).. (2^63-1)
+    internal const int CBORObjectTypeMap = 5;
+    internal const int CBORObjectTypeSimpleValue = 6;
+    internal const int CBORObjectTypeSingle = 7;
+    internal const int CBORObjectTypeTagged = 10;
+    internal const int CBORObjectTypeTextString = 3;
+
     private const string Hex16 = "0123456789ABCDEF";
 
     private CharacterInputWithCount reader;
@@ -82,7 +96,7 @@ namespace PeterO.Cbor {
                       c |= ch + 10 - 'a';
                     } else {
                       this.reader.RaiseError("Invalid Unicode escaped" +
-"\u0020character");
+                        "\u0020character");
                     }
                   }
                   if ((c & 0xf800) != 0xd800) {
@@ -513,20 +527,20 @@ namespace PeterO.Cbor {
       JSONOptions options) {
       int type = obj.ItemType;
       object thisItem = obj.ThisItem;
+      if (obj.IsTrue) {
+        writer.WriteString("true");
+        return;
+      }
+      if (obj.IsFalse) {
+        writer.WriteString("false");
+        return;
+      }
       switch (type) {
-        case CBORObject.CBORObjectTypeSimpleValue: {
-            if (obj.IsTrue) {
-              writer.WriteString("true");
-              return;
-            }
-            if (obj.IsFalse) {
-              writer.WriteString("false");
-              return;
-            }
+        case CBORObjectTypeSimpleValue: {
             writer.WriteString("null");
             return;
           }
-        case CBORObject.CBORObjectTypeSingle: {
+        case CBORObjectTypeSingle: {
             var f = (float)thisItem;
             if (Single.IsNegativeInfinity(f) ||
 Single.IsPositiveInfinity(f) ||
@@ -539,7 +553,7 @@ Single.IsNaN(f)) {
                 CBORUtilities.SingleToString(f)));
             return;
           }
-        case CBORObject.CBORObjectTypeDouble: {
+        case CBORObjectTypeDouble: {
             var f = (double)thisItem;
             if (Double.IsNegativeInfinity(f) ||
 Double.IsPositiveInfinity(f) ||
@@ -552,16 +566,16 @@ Double.IsNaN(f)) {
               CBORObject.TrimDotZero(dblString));
             return;
           }
-        case CBORObject.CBORObjectTypeInteger: {
+        case CBORObjectTypeInteger: {
             var longItem = (long)thisItem;
             writer.WriteString(CBORUtilities.LongToString(longItem));
             return;
           }
-        case CBORObject.CBORObjectTypeBigInteger: {
+        case CBORObjectTypeBigInteger: {
             writer.WriteString(((EInteger)thisItem).ToString());
             return;
           }
-        case CBORObject.CBORObjectTypeExtendedDecimal: {
+        case CBORObjectTypeExtendedDecimal: {
             var dec = (EDecimal)thisItem;
             if (dec.IsInfinity() || dec.IsNaN()) {
               writer.WriteString("null");
@@ -570,7 +584,7 @@ Double.IsNaN(f)) {
             }
             return;
           }
-        case CBORObject.CBORObjectTypeExtendedFloat: {
+        case CBORObjectTypeExtendedFloat: {
             var flo = (EFloat)thisItem;
             if (flo.IsInfinity() || flo.IsNaN()) {
               writer.WriteString("null");
@@ -597,7 +611,18 @@ Double.IsNaN(f)) {
             writer.WriteString(flo.ToString());
             return;
           }
-        case CBORObject.CBORObjectTypeByteString: {
+        case CBORObjectTypeExtendedRational: {
+            var dec = (ERational)thisItem;
+            EDecimal f = dec.ToEDecimalExactIfPossible(
+              EContext.Decimal128.WithUnlimitedExponents());
+            if (!f.IsFinite) {
+              writer.WriteString("null");
+            } else {
+              writer.WriteString(f.ToString());
+            }
+            break;
+          }
+        case CBORObjectTypeByteString: {
             var byteArray = (byte[])thisItem;
             if (byteArray.Length == 0) {
               writer.WriteString("\"\"");
@@ -628,7 +653,7 @@ Double.IsNaN(f)) {
             writer.WriteCodePoint((int)'\"');
             break;
           }
-        case CBORObject.CBORObjectTypeTextString: {
+        case CBORObjectTypeTextString: {
             var thisString = (string)thisItem;
             if (thisString.Length == 0) {
               writer.WriteString("\"\"");
@@ -639,7 +664,7 @@ Double.IsNaN(f)) {
             writer.WriteCodePoint((int)'\"');
             break;
           }
-        case CBORObject.CBORObjectTypeArray: {
+        case CBORObjectTypeArray: {
             var first = true;
             writer.WriteCodePoint((int)'[');
             foreach (CBORObject i in obj.AsList()) {
@@ -652,24 +677,13 @@ Double.IsNaN(f)) {
             writer.WriteCodePoint((int)']');
             break;
           }
-        case CBORObject.CBORObjectTypeExtendedRational: {
-            var dec = (ERational)thisItem;
-            EDecimal f = dec.ToEDecimalExactIfPossible(
-              EContext.Decimal128.WithUnlimitedExponents());
-            if (!f.IsFinite) {
-              writer.WriteString("null");
-            } else {
-              writer.WriteString(f.ToString());
-            }
-            break;
-          }
-        case CBORObject.CBORObjectTypeMap: {
+        case CBORObjectTypeMap: {
             var first = true;
             var hasNonStringKeys = false;
             IDictionary<CBORObject, CBORObject> objMap = obj.AsMap();
             foreach (KeyValuePair<CBORObject, CBORObject> entry in objMap) {
               CBORObject key = entry.Key;
-              if (key.ItemType != CBORObject.CBORObjectTypeTextString) {
+              if (key.ItemType != CBORObjectTypeTextString) {
                 hasNonStringKeys = true;
                 break;
               }
@@ -701,7 +715,7 @@ Double.IsNaN(f)) {
                 CBORObject key = entry.Key;
                 CBORObject value = entry.Value;
                 string str = (
-                  key.ItemType == CBORObject.CBORObjectTypeTextString) ?
+                  key.ItemType == CBORObjectTypeTextString) ?
                   ((string)key.ThisItem) : key.ToJSONString();
                 stringMap[str] = value;
               }

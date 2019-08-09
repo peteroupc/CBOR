@@ -1,5 +1,7 @@
 using System;
 
+#pragma warning disable 618
+
 namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="T:PeterO.Cbor.PODOptions"]/*'/>
@@ -17,9 +19,7 @@ namespace PeterO.Cbor {
     /// <param name='useCamelCase'>If set to <c>true</c> use camel
     /// case.</param>
     public PODOptions(bool removeIsPrefix, bool useCamelCase) {
-#pragma warning disable 618
       this.RemoveIsPrefix = removeIsPrefix;
-#pragma warning restore 618
       this.UseCamelCase = useCamelCase;
     }
 
@@ -33,7 +33,8 @@ namespace PeterO.Cbor {
     /// end with whitespace. The string can be empty, but cannot be null.
     /// The following is an example of this parameter:
     /// <c>usecamelcase=true</c>. The key can be any one of the following
-    /// in any combination of case: <c>usecamelcase</c>. Other keys are
+    /// in any combination of case: <c>usecamelcase</c>,
+    /// <c>removeisprefix</c>. Other keys are
     /// ignored. If the same key appears more than once, the value given
     /// for the last such key is used. The key just given can have a value
     /// of <c>1</c>, <c>true</c>, <c>yes</c>, or <c>on</c> (in any
@@ -49,6 +50,7 @@ namespace PeterO.Cbor {
       }
       var parser = new OptionsParser(paramString);
       this.UseCamelCase = parser.GetBoolean("usecamelcase", true);
+      this.RemoveIsPrefix = parser.GetBoolean("removeisprefix", true);
     }
 
     /// <include file='../../docs.xml'
@@ -57,6 +59,8 @@ namespace PeterO.Cbor {
       return new System.Text.StringBuilder()
            .Append("usecamelcase=")
            .Append(this.UseCamelCase ? "true" : "false")
+           .Append(";removeisprefix=")
+           .Append(this.RemoveIsPrefix ? "true" : "false")
            .ToString();
     }
 

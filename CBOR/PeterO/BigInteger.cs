@@ -34,6 +34,10 @@ namespace PeterO {
   [Obsolete(
     "Use EInteger from PeterO.Numbers/com.upokecenter.numbers and the output" +
     "\u0020of this class's ToString method.")]
+  [System.Diagnostics.CodeAnalysis.SuppressMessage(
+    "Microsoft.Design",
+    "CA1036",
+    Justification = "This class is obsolete.")]
   public sealed partial class BigInteger : IComparable<BigInteger>,
     IEquatable<BigInteger> {
     /// <summary>BigInteger for the number one.</summary>
