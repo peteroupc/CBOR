@@ -47,8 +47,8 @@ namespace PeterO.DocGen {
       }
 
       public string GetAttribute(string str) {
-         return (this.attributes == null ||
-            !this.attributes.ContainsKey(str)) ? null : this.attributes[str];
+        return (this.attributes == null ||
+           !this.attributes.ContainsKey(str)) ? null : this.attributes[str];
       }
 
       public string GetContent() {
@@ -214,8 +214,8 @@ namespace PeterO.DocGen {
       this.memberNodes = new Dictionary<string, INode>();
       using (var stream = new FileStream(xmlFilename, FileMode.Open)) {
         using (var reader = XmlReader.Create(stream)) {
-        reader.Read();
-        reader.ReadStartElement("doc");
+          reader.Read();
+          reader.ReadStartElement("doc");
           while (reader.IsStartElement()) {
             // Console.WriteLine(reader.LocalName);
             if (reader.LocalName.Equals("members", StringComparison.Ordinal)) {

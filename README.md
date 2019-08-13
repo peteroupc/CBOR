@@ -81,7 +81,7 @@ var cbor = CBORObject.NewMap()
    .Add("foo", "another string")
    .Add("quux", "a third string");
 // The following converts the map to canonical CBOR
-byte[] bytes = cbor.EncodeToBytes(CBOREncodeOptions.Ctap2Canonical);
+byte[] bytes = cbor.EncodeToBytes(CBOREncodeOptions.DefaultCtap2Canonical);
 // The following converts the map to a dictionary
 var dict = cbor.ToObject<IDictionary<string,string>>();
 Console.WriteLine(dict.Count);

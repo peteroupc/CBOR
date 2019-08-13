@@ -6,6 +6,12 @@ namespace PeterO.Cbor {
   internal static class CBORCanonical {
     private sealed class CtapComparer : IComparer<CBORObject> {
       public int Compare(CBORObject a, CBORObject b) {
+if (a == null) {
+  return b == null ? 0 : -1;
+}
+if (b == null) {
+  return 1;
+}
         byte[] abs;
         byte[] bbs;
         var bothBytes = false;
@@ -18,13 +24,13 @@ namespace PeterO.Cbor {
           bbs = CtapCanonicalEncode(b);
         }
         if (!bothBytes && (abs[0] & 0xe0) != (bbs[0] & 0xe0)) {
- // different major types
- return (abs[0] & 0xe0) < (bbs[0] & 0xe0) ? -1 : 1;
-}
+          // different major types
+          return (abs[0] & 0xe0) < (bbs[0] & 0xe0) ? -1 : 1;
+        }
         if (abs.Length != bbs.Length) {
- // different lengths
- return abs.Length < bbs.Length ? -1 : 1;
-}
+          // different lengths
+          return abs.Length < bbs.Length ? -1 : 1;
+        }
         for (var i = 0; i < abs.Length; ++i) {
           if (abs[i] != bbs[i]) {
             int ai = ((int)abs[i]) & 0xff;
@@ -36,7 +42,15 @@ namespace PeterO.Cbor {
       }
     }
 
-    public static byte[] CtapCanonicalEncode(CBORObject a) {
+    private static bool IsArrayOrMap(CBORObject a) {
+       return a.Type == CBORType.Array || a.Type == CBORType.Map;
+    }
+
+    public static byte[] CtapCanonicalEncode(CBORObject a, int depth) {
+      return CtapCanonicalEncode(a, 0);
+    }
+
+    private static byte[] CtapCanonicalEncode(CBORObject a) {
       CBORObject cbor = a.Untag();
       CBORType valueAType = cbor.Type;
       try {
@@ -44,7 +58,10 @@ namespace PeterO.Cbor {
           using (var ms = new MemoryStream()) {
             CBORObject.WriteValue(ms, 4, cbor.Count);
             for (var i = 0; i < cbor.Count; ++i) {
-              byte[] bytes = CtapCanonicalEncode(cbor[i]);
+              if (depth >= 3 && IsArrayOrMap(cbor[i])) {
+                throw new CBORException("Nesting level too deep");
+              }
+              byte[] bytes = CtapCanonicalEncode(cbor[i], depth + 1);
               ms.Write(bytes, 0, bytes.Length);
             }
             return ms.ToArray();
@@ -52,15 +69,19 @@ namespace PeterO.Cbor {
         } else if (valueAType == CBORType.Map) {
           var sortedKeys = new List<CBORObject>();
           foreach (CBORObject key in cbor.Keys) {
+            if (depth >= 3 && (IsArrayOrMap(key) ||
+               IsArrayOrMap(cbor[key])) {
+              throw new CBORException("Nesting level too deep");
+            }
             sortedKeys.Add(key);
           }
           sortedKeys.Sort(new CtapComparer());
           using (var ms = new MemoryStream()) {
             CBORObject.WriteValue(ms, 5, cbor.Count);
             foreach (CBORObject key in sortedKeys) {
-              byte[] bytes = CtapCanonicalEncode(key);
+              byte[] bytes = CtapCanonicalEncode(key, depth + 1);
               ms.Write(bytes, 0, bytes.Length);
-              bytes = CtapCanonicalEncode(cbor[key]);
+              bytes = CtapCanonicalEncode(cbor[key], depth + 1);
               ms.Write(bytes, 0, bytes.Length);
             }
             return ms.ToArray();
@@ -74,21 +95,13 @@ namespace PeterO.Cbor {
        valueAType == CBORType.TextString) {
         return cbor.EncodeToBytes(CBOREncodeOptions.Default);
       } else if (valueAType == CBORType.FloatingPoint) {
-        double dbl = cbor.AsDoubleValue();
+        long bits = cbor.AsDoubleBits();
         using (var ms = new MemoryStream()) {
-            CBORObject.WriteFloatingPointValue(ms, dbl, 8);
-            return ms.ToArray();
-          }
-      } else if (valueAType == CBORType.Integer) {
-        if (cbor.CanValueFitInInt64()) {
-          return cbor.EncodeToBytes(CBOREncodeOptions.Default);
-        } else {
-          double dbl = cbor.AsDouble();
-          using (var ms = new MemoryStream()) {
-            CBORObject.WriteFloatingPointValue(ms, dbl, 8);
-            return ms.ToArray();
-          }
+          CBORObject.WriteFloatingPointBits(ms, bits, 8);
+          return ms.ToArray();
         }
+      } else if (valueAType == CBORType.Integer) {
+        return cbor.EncodeToBytes(CBOREncodeOptions.Default);
       } else {
         throw new ArgumentException("Invalid CBOR type.");
       }

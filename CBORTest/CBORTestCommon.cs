@@ -119,7 +119,7 @@ namespace Test {
         object o = RandomObjects.RandomByteString(rand);
         return ToObjectTest.TestToFromObjectRoundTrip(o);
       }
-      for (var i = 0; i < 15; ++i) {
+      {
         CBORObject cbor;
        // Console.WriteLine("tag "+tag+" "+i);
         if (tag == 0 || tag == 1 || tag == 28 || tag == 29) {
@@ -148,11 +148,9 @@ namespace Test {
          // Console.WriteLine("done");
           return cbor;
         } catch (Exception) {
-          continue;
+          return CBORObject.FromObjectAndTag(cbor, 999);
         }
       }
-     // Console.WriteLine("Failed "+tag);
-      return CBORObject.Null;
     }
 
     public static CBORObject RandomCBORArray(RandomGenerator rand, int depth) {
@@ -198,8 +196,9 @@ namespace Test {
       }
     }
 
+#pragma warning disable CS0618
     public static void TestNumber(CBORObject o) {
-      if (!o.IsNumber) {
+      if (o.Type != CBORType.Number) {
         return;
       }
       if (o.IsPositiveInfinity() || o.IsNegativeInfinity() ||
@@ -208,7 +207,7 @@ namespace Test {
           o.AsByte();
           Assert.Fail("Should have failed");
         } catch (OverflowException) {
-         // NOTE: Intentionally empty
+          // NOTE: Intentionally empty
         } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex);
           throw new InvalidOperationException(String.Empty, ex);
@@ -217,7 +216,7 @@ namespace Test {
           o.AsInt16();
           Assert.Fail("Should have failed");
         } catch (OverflowException) {
-         // NOTE: Intentionally empty
+          // NOTE: Intentionally empty
         } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex);
           throw new InvalidOperationException(String.Empty, ex);
@@ -226,7 +225,7 @@ namespace Test {
           o.AsInt32();
           Assert.Fail("Should have failed");
         } catch (OverflowException) {
-         // NOTE: Intentionally empty
+          // NOTE: Intentionally empty
         } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex);
           throw new InvalidOperationException(String.Empty, ex);
@@ -235,7 +234,7 @@ namespace Test {
           o.AsInt64();
           Assert.Fail("Should have failed");
         } catch (OverflowException) {
-         // NOTE: Intentionally empty
+          // NOTE: Intentionally empty
         } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex);
           throw new InvalidOperationException(String.Empty, ex);
@@ -278,6 +277,7 @@ namespace Test {
           InvalidOperationException(String.Empty, ex);
       }
     }
+#pragma warning restore CS0618
 
     public static void AssertRoundTrip(CBORObject o) {
       CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());

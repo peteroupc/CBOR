@@ -7,11 +7,12 @@ at: http://peteroupc.github.io/
 using System;
 
 namespace PeterO.Cbor {
-    /// <summary>Exception thrown for errors involving CBOR data.</summary>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.Cbor.CBORException"]/*'/>
 #if NET20 || NET40
 [Serializable]
 #endif
-public class CBORException : Exception {
+public sealed class CBORException : Exception {
     /// <summary>Initializes a new instance of the
     /// <see cref='PeterO.Cbor.CBORException'/> class.</summary>
     public CBORException() {
@@ -36,7 +37,6 @@ public class CBORException : Exception {
     }
 
 #if NET20 || NET40
-    /// <xmlbegin id='291'/>
     /// <summary>Initializes a new instance of the
     /// <see cref='PeterO.Cbor.CBORException'/> class. Uses the given
     /// serialization and streaming contexts.</summary>
@@ -44,7 +44,7 @@ public class CBORException : Exception {
     /// object.</param>
     /// <param name='context'>A
     /// System.Runtime.Serialization.StreamingContext object.</param>
-      protected CBORException(
+      private CBORException(
         System.Runtime.Serialization.SerializationInfo info,
         System.Runtime.Serialization.StreamingContext context)
         : base(info, context) {

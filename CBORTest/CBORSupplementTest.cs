@@ -24,75 +24,75 @@ namespace Test {
       cbor = CBORObject.DecodeFromBytes(bytes);
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       try {
- Console.WriteLine(cbor.AsEDecimal());
- Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        Console.WriteLine(cbor.AsEDecimal());
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       // number instead of array
       bytes = new byte[] { 0xc4, 0x00 };
       cbor = CBORObject.DecodeFromBytes(bytes);
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       try {
- Console.WriteLine(cbor.AsEDecimal());
- Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        Console.WriteLine(cbor.AsEDecimal());
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       bytes = new byte[] { 0xc4, 0x81, 0, };
       cbor = CBORObject.DecodeFromBytes(bytes);
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       try {
- Console.WriteLine(cbor.AsEDecimal());
- Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        Console.WriteLine(cbor.AsEDecimal());
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       bytes = new byte[] { 0xc4, 0x82, 0, 0x61, 0x41 };
       cbor = CBORObject.DecodeFromBytes(bytes);
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       try {
- Console.WriteLine(cbor.AsEDecimal());
- Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        Console.WriteLine(cbor.AsEDecimal());
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       bytes = new byte[] { 0xc4, 0x82, 0x61, 0x41, 0 };
       cbor = CBORObject.DecodeFromBytes(bytes);
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       try {
- Console.WriteLine(cbor.AsEDecimal());
- Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        Console.WriteLine(cbor.AsEDecimal());
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       bytes = new byte[] { 0xc4, 0x83, 0, 0, 0 };
       cbor = CBORObject.DecodeFromBytes(bytes);
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       try {
- Console.WriteLine(cbor.AsEDecimal());
- Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        Console.WriteLine(cbor.AsEDecimal());
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
 
     [Test]
@@ -104,75 +104,75 @@ namespace Test {
       cbor = CBORObject.DecodeFromBytes(bytes);
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       try {
- Console.WriteLine(cbor.AsEFloat());
- Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        Console.WriteLine(cbor.AsEFloat());
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       // number instead of array
       bytes = new byte[] { 0xc5, 0x00 };
       cbor = CBORObject.DecodeFromBytes(bytes);
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       try {
- Console.WriteLine(cbor.AsEFloat());
- Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        Console.WriteLine(cbor.AsEFloat());
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       bytes = new byte[] { 0xc5, 0x81, 0, };
       cbor = CBORObject.DecodeFromBytes(bytes);
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       try {
- Console.WriteLine(cbor.AsEFloat());
- Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        Console.WriteLine(cbor.AsEFloat());
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       bytes = new byte[] { 0xc5, 0x82, 0, 0x61, 0x41 };
       cbor = CBORObject.DecodeFromBytes(bytes);
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       try {
- Console.WriteLine(cbor.AsEFloat());
- Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        Console.WriteLine(cbor.AsEFloat());
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       bytes = new byte[] { 0xc5, 0x82, 0x61, 0x41, 0 };
       cbor = CBORObject.DecodeFromBytes(bytes);
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       try {
- Console.WriteLine(cbor.AsEFloat());
- Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        Console.WriteLine(cbor.AsEFloat());
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       bytes = new byte[] { 0xc5, 0x83, 0, 0, 0 };
       cbor = CBORObject.DecodeFromBytes(bytes);
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       try {
- Console.WriteLine(cbor.AsEFloat());
- Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        Console.WriteLine(cbor.AsEFloat());
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
     [Test]
     public void TestCBORObjectArgumentValidation() {
@@ -601,7 +601,7 @@ co2.IsInfinity();
           0x40,
         }).AsEInteger();
         Assert.AreEqual(objectTemp, objectTemp2);
-}
+      }
       {
         object objectTemp = EInteger.FromString("-1");
         object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] {

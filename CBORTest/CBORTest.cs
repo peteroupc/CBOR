@@ -15,7 +15,7 @@ using PeterO.Numbers;
 namespace Test {
   [TestFixture]
   public class CBORTest {
-    [Test]
+  [Test]
     public void TestLexOrderSpecific1() {
       var bytes1 = new byte[] {
         129, 165, 27, 0, 0, 65, 2, 0, 0, 144, 172, 71,
@@ -1688,6 +1688,96 @@ namespace Test {
         ToObjectTest.TestToFromObjectRoundTrip((object)null),
         "null");
     }
+
+[Test]
+public void TestCtap2NestingLevel() {
+ CBORObject o;
+ CBOREncodeOptions ctap=new CBOREncodeOptions("ctap2canonical=true");
+ // 1 nesting level
+ o=CBORObject.FromJSONString("[]");
+ if ((o.EncodeToBytes(ctap)) == null) {
+   Assert.Fail();
+ }
+ // 1 nesting level
+ o=CBORObject.FromJSONString("[0]");
+ if ((o.EncodeToBytes(ctap)) == null) {
+   Assert.Fail();
+ }
+ // 3 nesting levels
+ o=CBORObject.FromJSONString("[[[]]]");
+ if ((o.EncodeToBytes(ctap)) == null) {
+   Assert.Fail();
+ }
+ // 4 nesting levels
+ o=CBORObject.FromJSONString("[[[[]]]]");
+ if ((o.EncodeToBytes(ctap)) == null) {
+   Assert.Fail();
+ }
+ // 5 nesting levels
+ o=CBORObject.FromJSONString("[[[[[]]]]]");
+ try {
+ o.EncodeToBytes(ctap);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+ // 4 nesting levels
+ o=CBORObject.FromJSONString("[[[[0]]]]");
+ try {
+ o.EncodeToBytes(ctap);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+ // 1 nesting level
+ o=CBORObject.FromJSONString("[]");
+ if ((o.EncodeToBytes(ctap)) == null) {
+   Assert.Fail();
+ }
+ // 3 nesting levels
+ o=CBORObject.FromJSONString("[[[]]]");
+ if ((o.EncodeToBytes(ctap)) == null) {
+   Assert.Fail();
+ }
+ // 4 nesting levels
+ o=CBORObject.FromJSONString("[[{\"x\": []}]]");
+ if ((o.EncodeToBytes(ctap)) == null) {
+   Assert.Fail();
+ }
+ // 5 nesting levels
+ o=CBORObject.FromJSONString("[[[{\"x\": []}]]]");
+ try {
+ o.EncodeToBytes(ctap);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+ // 4 nesting levels
+ o=CBORObject.FromJSONString("[[[{\"x\": 0}]]]");
+ if ((o.EncodeToBytes(ctap)) == null) {
+   Assert.Fail();
+ }
+ // 5 nesting levels
+ o=CBORObject.FromJSONString("[[[[{\"x\": 0}]]]]");
+ try {
+ o.EncodeToBytes(ctap);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+}
 
     [Test]
     public void TestMultiply() {
