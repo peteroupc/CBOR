@@ -3,8 +3,12 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="T:PeterO.Cbor.CBORNumber"]/*'/>
+    /// <summary>An instance of a number that CBOR or certain CBOR tags can
+    /// represent. For this purpose, infinities and not-a-number or NaN
+    /// values are considered numbers. Currently, this class can store one
+    /// of the following kinds of numbers: 64-bit signed integers or binary
+    /// floating-point numbers; or arbitrary-precision integers, decimal
+    /// numbers, binary numbers, or rational numbers.</summary>
   public sealed partial class CBORNumber : IComparable<CBORNumber> {
     internal enum Kind {
     /// <summary>A 64-bit signed integer.</summary>
@@ -73,8 +77,8 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORNumber.ToCBORObject"]/*'/>
+    /// <summary>Converts this object's value to a CBOR object.</summary>
+    /// <returns>A CBOR object that stores this object's value.</returns>
     public CBORObject ToCBORObject() {
       return CBORObject.FromObject(this.value);
     }
@@ -103,8 +107,13 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <include file='../../docs.xml'
-    ///   path='docs/doc[@name="M:PeterO.Cbor.CBORNumber.FromCBORObject(PeterO.Cbor.CBORObject)"]/*'/>
+    /// <summary>Creates a CBOR number object from a CBOR object
+    /// representing a number (that is, one for which the IsNumber property
+    /// in.NET or the isNumber() method in Java returns true).</summary>
+    /// <param name='o'>The parameter is a CBOR object representing a
+    /// number.</param>
+    /// <returns>A CBOR number object, or null if the given CBOR object is
+    /// null or does not represent a number.</returns>
     public static CBORNumber FromCBORObject(CBORObject o) {
       if (o == null) {
         return null;
@@ -488,8 +497,9 @@ o.Type == CBORType.ByteString);
       }
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORNumber.ToString"]/*'/>
+    /// <summary>Returns the value of this object in text form.</summary>
+    /// <returns>A text string representing the value of this
+    /// object.</returns>
     public override string ToString() {
       switch (this.kind) {
         case Kind.Integer: {
@@ -586,8 +596,10 @@ Double.IsNaN(f)) {
       return new CBORNumber(Kind.ERational, value);
     }
 
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORNumber.Negate"]/*'/>
+    /// <summary>Returns a CBOR number with the same value as this one but
+    /// with the sign reversed.</summary>
+    /// <returns>A CBOR number with the same value as this one but with the
+    /// sign reversed.</returns>
     public CBORNumber Negate() {
       switch (this.kind) {
         case Kind.Integer:
@@ -610,8 +622,12 @@ Double.IsNaN(f)) {
       }
     }
 
-    /// <include file='../../docs.xml'
-    ///   path='docs/doc[@name="M:PeterO.Cbor.CBORNumber.Add(PeterO.Cbor.CBORNumber)"]/*'/>
+    /// <summary>Returns the sum of this number and another
+    /// number.</summary>
+    /// <param name='b'>The number to add with this one.</param>
+    /// <returns>The sum of this number and another number.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='b'/> is null.</exception>
     public CBORNumber Add(CBORNumber b) {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
@@ -658,8 +674,13 @@ Double.IsNaN(f)) {
       }
     }
 
-    /// <include file='../../docs.xml'
-    ///   path='docs/doc[@name="M:PeterO.Cbor.CBORNumber.Subtract(PeterO.Cbor.CBORNumber)"]/*'/>
+    /// <summary>Returns a number that expresses this number minus
+    /// another.</summary>
+    /// <param name='b'>The second operand to the subtraction.</param>
+    /// <returns>A CBOR number that expresses this number minus the given
+    /// number.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='b'/> is null.</exception>
     public CBORNumber Subtract(CBORNumber b) {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
@@ -702,8 +723,14 @@ Double.IsNaN(f)) {
       }
     }
 
-    /// <include file='../../docs.xml'
-    ///   path='docs/doc[@name="M:PeterO.Cbor.CBORNumber.Multiply(PeterO.Cbor.CBORNumber)"]/*'/>
+    /// <summary>Returns a CBOR number expressing the product of this
+    /// number and the given number.</summary>
+    /// <param name='b'>The second operand to the multiplication
+    /// operation.</param>
+    /// <returns>A number expressing the product of this number and the
+    /// given number.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='b'/> is null.</exception>
     public CBORNumber Multiply(CBORNumber b) {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
@@ -759,8 +786,13 @@ Double.IsNaN(f)) {
       }
     }
 
-    /// <include file='../../docs.xml'
-    ///   path='docs/doc[@name="M:PeterO.Cbor.CBORNumber.Divide(PeterO.Cbor.CBORNumber)"]/*'/>
+    /// <summary>Returns the quotient of this number and another
+    /// number.</summary>
+    /// <param name='b'>The right-hand side (divisor) to the division
+    /// operation.</param>
+    /// <returns>The quotient of this number and another one.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='b'/> is null.</exception>
     public CBORNumber Divide(CBORNumber b) {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
@@ -852,8 +884,14 @@ CBORNumber.FromObject(EDecimal.PositiveInfinity));
       }
     }
 
-    /// <include file='../../docs.xml'
-    ///   path='docs/doc[@name="M:PeterO.Cbor.CBORNumber.Remainder(PeterO.Cbor.CBORNumber)"]/*'/>
+    /// <summary>Returns the remainder when this number is divided by
+    /// another number.</summary>
+    /// <param name='b'>The right-hand side (dividend) of the remainder
+    /// operation.</param>
+    /// <returns>The remainder when this number is divided by the other
+    /// number.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='b'/> is null.</exception>
     public CBORNumber Remainder(CBORNumber b) {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
@@ -896,8 +934,21 @@ CBORNumber.FromObject(EDecimal.PositiveInfinity));
       }
     }
 
-    /// <include file='../../docs.xml'
-    ///   path='docs/doc[@name="M:PeterO.Cbor.CBORNumber.CompareTo(PeterO.Cbor.CBORNumber)"]/*'/>
+    /// <summary>Compares two CBOR numbers. In this implementation, the two
+    /// numbers' mathematical values are compared. Here, NaN (not-a-number)
+    /// is considered greater than any number.</summary>
+    /// <param name='other'>A value to compare with. Can be null.</param>
+    /// <returns>A negative number, if this value is less than the other
+    /// object; or 0, if both values are equal; or a positive number, if
+    /// this value is less than the other object or if the other object is
+    /// null.
+    /// <para>This implementation returns a positive number if <paramref
+    /// name='other'/> is null, to conform to the.NET definition of
+    /// CompareTo. This is the case even in the Java version of this
+    /// library, for consistency's sake, even though implementations of
+    /// <c>Comparable.compareTo()</c> in Java ought to throw an exception
+    /// if they receive a null argument rather than treating null as less
+    /// or greater than any object.</para>.</returns>
     public int CompareTo(CBORNumber other) {
       if (other == null) {
         return 1;

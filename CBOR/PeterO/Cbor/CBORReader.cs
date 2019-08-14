@@ -8,9 +8,6 @@ at: http://peteroupc.github.io/
 using System;
 using System.IO;
 using System.Text;
-#if !NET20 && !NET40
-using System.Threading.Tasks;
-#endif
 using PeterO;
 using PeterO.Numbers;
 
@@ -185,7 +182,7 @@ namespace PeterO.Cbor {
       EInteger bigintAdditional = EInteger.Zero;
       var hasBigAdditional = false;
       int expectedType = (firstbyte >> 5) & 0x07;
-      uadditional = ReadDataLength(stream, firstbyte, expectedType);
+      uadditional = ReadDataLength(this.stream, firstbyte, expectedType);
       if ((uadditional >> 63) == 0) {
         hasBigAdditional = true;
         bigintAdditional = ToUnsignedEInteger(uadditional);

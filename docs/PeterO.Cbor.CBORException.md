@@ -1,6 +1,6 @@
 ## PeterO.Cbor.CBORException
 
-    public class CBORException :
+    public sealed class CBORException :
         System.Exception,
         System.Runtime.Serialization.ISerializable,
         System.Runtime.InteropServices._Exception

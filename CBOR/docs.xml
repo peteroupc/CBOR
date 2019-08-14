@@ -129,7 +129,7 @@
       <c>allowduplicatekeys=1</c> both set the
       <c>AllowDuplicateKeys</c> property to true.
     </param>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='paramString'/>
        is null.
     </exception>
@@ -168,8 +168,10 @@
     <summary>Gets a value indicating whether CBOR objects are written out using the
       CTAP2 canonical CBOR encoding form, which is useful for implementing Web
       Authentication. In this form, CBOR tags are not used, map keys are written
-      out in a canonical order, and floating-point numbers are written out in their 64-bit encoding form
-      regardless of whether their value can be encoded without loss in a smaller form.</summary>
+      out in a canonical order, and floating-point numbers are written out in
+      their 64-bit encoding form regardless of whether their value can be
+      encoded without loss in a smaller form.
+    </summary>
     <value><c>true</c> if CBOR objects are written out using the CTAP2 canonical CBOR encoding
       form; otherwise,
       <c>false</c> .
@@ -310,7 +312,7 @@
     </param>
     <returns>The sum of this number and another number.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='b'/>
        is null.
     </exception>
@@ -343,7 +345,7 @@
     </param>
     <returns>The quotient of this number and another one.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='b'/>
        is null.
     </exception>
@@ -391,7 +393,7 @@
     </param>
     <returns>A number expressing the product of this number and the given number.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='b'/>
        is null.
     </exception>
@@ -410,7 +412,7 @@
     </param>
     <returns>The remainder when this number is divided by the other number.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='b'/>
        is null.
     </exception>
@@ -422,7 +424,7 @@
     </param>
     <returns>A CBOR number that expresses this number minus the given number.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='b'/>
        is null.
     </exception>
@@ -449,7 +451,7 @@
     <returns><c>true</c> if one object's value is greater than another's; otherwise,
       <c>false</c> .
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='a'/>
        is null.
     </exception>
@@ -464,7 +466,7 @@
     <returns><c>true</c> if one object's value is at least another's; otherwise,
       <c>false</c> .
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='a'/>
        is null.
     </exception>
@@ -479,7 +481,7 @@
     <returns><c>true</c> if one object's value is less than another's; otherwise,
       <c>false</c> .
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='a'/>
        is null.
     </exception>
@@ -494,7 +496,7 @@
     <returns><c>true</c> if one object's value is up to another's; otherwise,
       <c>false</c> .
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='a'/>
        is null.
     </exception>
@@ -598,7 +600,7 @@
     </summary>
     <returns>This object's absolute without its negative sign.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
+    <exception cref='InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
       not-a-number or NaN values, but not CBORObject.Null, are considered
       numbers).
     </exception>
@@ -621,7 +623,7 @@
     </param>
     <returns>This instance.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object is not an array.
+    <exception cref='InvalidOperationException'>This object is not an array.
     </exception>
     <example><para>The following example creates a CBOR array and adds several CBOR
         objects, one of which has a custom CBOR tag, to that array. Note the
@@ -647,9 +649,9 @@
     </param>
     <returns>This instance.
     </returns>
-    <exception cref='System.InvalidOperationException'>This instance is not an array.
+    <exception cref='InvalidOperationException'>This instance is not an array.
     </exception>
-    <exception cref='System.ArgumentException'>The type of
+    <exception cref='ArgumentException'>The type of
       <paramref name='obj'/>
        is not supported.
     </exception>
@@ -679,13 +681,13 @@
     </param>
     <returns>This instance.
     </returns>
-    <exception cref='System.ArgumentException'>The parameter
+    <exception cref='ArgumentException'>The parameter
       <paramref name='key'/>
        already exists in this map.
     </exception>
-    <exception cref='System.InvalidOperationException'>This object is not a map.
+    <exception cref='InvalidOperationException'>This object is not a map.
     </exception>
-    <exception cref='System.ArgumentException'>The parameter
+    <exception cref='ArgumentException'>The parameter
       <paramref name='key'/>
        or
       <paramref name='valueOb'/>
@@ -705,9 +707,9 @@
     </param>
     <returns>A CBORObject object.
     </returns>
-    <exception cref='System.ArgumentException'>Either or both operands are not numbers (as opposed to Not-a-Number, NaN).
+    <exception cref='ArgumentException'>Either or both operands are not numbers (as opposed to Not-a-Number, NaN).
     </exception>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='first'/>
        or
       <paramref name='second'/>
@@ -727,11 +729,11 @@
     </summary>
     <returns>The closest byte-sized integer to this object.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
+    <exception cref='InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
       not-a-number or NaN values, but not CBORObject.Null, are considered
       numbers).
     </exception>
-    <exception cref='System.OverflowException'>This object's value exceeds the range of a byte (would be less than 0 or
+    <exception cref='OverflowException'>This object's value exceeds the range of a byte (would be less than 0 or
       greater than 255 when truncated to an integer).
     </exception>
   </doc>
@@ -740,11 +742,11 @@
     </summary>
     <returns>The closest big integer to this object.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
+    <exception cref='InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
       not-a-number or NaN values, but not CBORObject.Null, are considered
       numbers).
     </exception>
-    <exception cref='System.OverflowException'>This object's value exceeds the range of a.NET decimal.
+    <exception cref='OverflowException'>This object's value exceeds the range of a.NET decimal.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.AsDouble'>
@@ -754,7 +756,7 @@
       can be positive infinity or negative infinity if this value exceeds the
       range of a 64-bit floating point number.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
+    <exception cref='InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
       not-a-number or NaN values, but not CBORObject.Null, are considered
       numbers).
     </exception>
@@ -772,7 +774,7 @@
       the exponent area are set and the mantissa area is other than 0, this
       indicates not-a-number (NaN).
     </returns>
-    <exception cref='System.InvalidOperationException'>This object's type is not
+    <exception cref='InvalidOperationException'>This object's type is not
       <c>CBORType.FloatingPoint</c> .
     </exception>
   </doc>
@@ -783,7 +785,7 @@
     </summary>
     <returns>The 64-bit floating-point number stored by this object.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object's type is not
+    <exception cref='InvalidOperationException'>This object's type is not
       <c>CBORType.FloatingPoint</c> .
     </exception>
   </doc>
@@ -794,7 +796,7 @@
       number with a nonterminating decimal expansion, returns a decimal number
       rounded to 34 digits.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object does not represent a number, including if this object is
+    <exception cref='InvalidOperationException'>This object does not represent a number, including if this object is
       CBORObject.Null. To check the CBOR object for null before conversion, use
       the following idiom (originally written in C# for the.NET version):
       <c>(cbor==null || cbor.IsNull) ? null : cbor.AsEDecimal()</c> .
@@ -811,7 +813,7 @@
       expansion, returns a binary floating-point number rounded to a high but
       limited precision.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object does not represent a number, including if this object is
+    <exception cref='InvalidOperationException'>This object does not represent a number, including if this object is
       CBORObject.Null. To check the CBOR object for null before conversion, use
       the following idiom (originally written in C# for the.NET version):
       <c>(cbor==null || cbor.IsNull) ? null : cbor.AsEFloat()</c> .
@@ -823,12 +825,12 @@
     </summary>
     <returns>The closest arbitrary-precision integer to this object.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object does not represent a number, including if this object is
+    <exception cref='InvalidOperationException'>This object does not represent a number, including if this object is
       CBORObject.Null. To check the CBOR object for null before conversion, use
       the following idiom (originally written in C# for the.NET version):
       <c>(cbor==null || cbor.IsNull) ? null : cbor.AsEInteger()</c> .
     </exception>
-    <exception cref='System.OverflowException'>This object's value is infinity or not-a-number (NaN).
+    <exception cref='OverflowException'>This object's value is infinity or not-a-number (NaN).
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.AsEIntegerValue'>
@@ -839,7 +841,7 @@
     </summary>
     <returns>The integer stored by this object.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object's type is not
+    <exception cref='InvalidOperationException'>This object's type is not
       <c>CBORType.Integer</c> .
     </exception>
   </doc>
@@ -848,7 +850,7 @@
     </summary>
     <returns>A rational number for this object's value.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object does not represent a number, including if this object is
+    <exception cref='InvalidOperationException'>This object does not represent a number, including if this object is
       CBORObject.Null. To check the CBOR object for null before conversion, use
       the following idiom (originally written in C# for the.NET version):
       <c>(cbor==null || cbor.IsNull) ? null : cbor.AsERational()</c> .
@@ -860,11 +862,11 @@
     </summary>
     <returns>The closest 16-bit signed integer to this object.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
+    <exception cref='InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
       not-a-number or NaN values, but not CBORObject.Null, are considered
       numbers).
     </exception>
-    <exception cref='System.OverflowException'>This object's value exceeds the range of a 16-bit signed integer.
+    <exception cref='OverflowException'>This object's value exceeds the range of a 16-bit signed integer.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.AsInt32'>
@@ -875,11 +877,11 @@
     </summary>
     <returns>The closest 32-bit signed integer to this object.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
+    <exception cref='InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
       not-a-number or NaN values, but not CBORObject.Null, are considered
       numbers).
     </exception>
-    <exception cref='System.OverflowException'>This object's value exceeds the range of a 32-bit signed integer.
+    <exception cref='OverflowException'>This object's value exceeds the range of a 32-bit signed integer.
     </exception>
     <example><para>The following example code (originally written in C# for the.NET
         Framework) shows a way to check whether a given CBOR object stores a
@@ -897,10 +899,10 @@
     </summary>
     <returns>The 32-bit signed integer stored by this object.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object's type is not
+    <exception cref='InvalidOperationException'>This object's type is not
       <c>CBORType.Integer</c> .
     </exception>
-    <exception cref='System.OverflowException'>This object's value exceeds the range of a 32-bit signed integer.
+    <exception cref='OverflowException'>This object's value exceeds the range of a 32-bit signed integer.
     </exception>
     <example><para>The following example code (originally written in C# for the.NET
         Framework) shows a way to check whether a given CBOR object stores a
@@ -920,11 +922,11 @@
     </summary>
     <returns>The closest 64-bit signed integer to this object.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
+    <exception cref='InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
       not-a-number or NaN values, but not CBORObject.Null, are considered
       numbers).
     </exception>
-    <exception cref='System.OverflowException'>This object's value exceeds the range of a 64-bit signed integer.
+    <exception cref='OverflowException'>This object's value exceeds the range of a 64-bit signed integer.
     </exception>
     <example><para>The following example code (originally written in C# for the.NET
         Framework) shows a way to check whether a given CBOR object stores a
@@ -942,10 +944,10 @@
     </summary>
     <returns>The 64-bit signed integer stored by this object.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object's type is not
+    <exception cref='InvalidOperationException'>This object's type is not
       <c>CBORType.Integer</c> .
     </exception>
-    <exception cref='System.OverflowException'>This object's value exceeds the range of a 64-bit signed integer.
+    <exception cref='OverflowException'>This object's value exceeds the range of a 64-bit signed integer.
     </exception>
     <example><para>The following example code (originally written in C# for the.NET
         Framework) shows a way to check whether a given CBOR object stores a
@@ -964,7 +966,7 @@
     </summary>
     <returns>The number represented by this object.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
+    <exception cref='InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
       not-a-number or NaN values, but not CBORObject.Null, are considered
       numbers).
     </exception>
@@ -982,7 +984,7 @@
       can be positive infinity or negative infinity if this object's value
       exceeds the range of a 32-bit floating point number.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
+    <exception cref='InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
       not-a-number or NaN values, but not CBORObject.Null, are considered
       numbers).
     </exception>
@@ -992,7 +994,7 @@
     </summary>
     <returns>Gets this object's string.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object's type is not a string, including if this object is
+    <exception cref='InvalidOperationException'>This object's type is not a string, including if this object is
       CBORObject.Null. To check the CBOR object for null before conversion, use
       the following idiom (originally written in C# for the.NET version):
       <c>(cbor==null || cbor.IsNull) ? null : cbor.AsString()</c> .
@@ -1004,7 +1006,7 @@
     </summary>
     <returns>A 16-bit unsigned integer.
     </returns>
-    <exception cref='System.OverflowException'>This object's value is outside the range of a 16-bit unsigned integer.
+    <exception cref='OverflowException'>This object's value is outside the range of a 16-bit unsigned integer.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.AsUInt32'>
@@ -1013,20 +1015,23 @@
     </summary>
     <returns>A 32-bit unsigned integer.
     </returns>
-    <exception cref='System.OverflowException'>This object's value is outside the range of a 32-bit unsigned integer.
+    <exception cref='OverflowException'>This object's value is outside the range of a 32-bit unsigned integer.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.AsUInt64'>
     <summary>Converts this object to a 64-bit unsigned integer after discarding any
       fractional part, if any, from its value.
     </summary>
+    <summary>Converts this object to a 64-bit unsigned integer after discarding any
+      fractional part, if any, from its value.
+    </summary>
     <returns>A 64-bit unsigned integer.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
+    <exception cref='InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
       not-a-number or NaN values, but not CBORObject.Null, are considered
       numbers).
     </exception>
-    <exception cref='System.OverflowException'>This object's value, if truncated to an integer, is outside the range of a
+    <exception cref='OverflowException'>This object's value, if truncated to an integer, is outside the range of a
       64-bit unsigned integer.
     </exception>
   </doc>
@@ -1110,7 +1115,7 @@
     <summary>Removes all items from this CBOR array or all keys and values from this
       CBOR map.
     </summary>
-    <exception cref='System.InvalidOperationException'>This object is not a CBOR array or CBOR map.
+    <exception cref='InvalidOperationException'>This object is not a CBOR array or CBOR map.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.CompareTo(PeterO.Cbor.CBORObject)'>
@@ -1247,7 +1252,7 @@
       <paramref name='data'/>
        is empty.
     </exception>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='data'/>
        is null.
     </exception>
@@ -1275,7 +1280,7 @@
        is empty unless the AllowEmpty property is set on the given options
       object.
     </exception>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='data'/>
        is null, or the parameter
       <paramref name='options'/>
@@ -1309,7 +1314,7 @@
     <exception cref='PeterO.Cbor.CBORException'>There was an error in reading or parsing the data. This includes cases
       where the last CBOR object in the data was read only partly.
     </exception>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='data'/>
        is null.
     </exception>
@@ -1335,7 +1340,7 @@
     <exception cref='PeterO.Cbor.CBORException'>There was an error in reading or parsing the data. This includes cases
       where the last CBOR object in the data was read only partly.
     </exception>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='data'/>
        is null, or the parameter
       <paramref name='options'/>
@@ -1355,7 +1360,7 @@
     </param>
     <returns>The quotient of the two objects.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='first'/>
        or
       <paramref name='second'/>
@@ -1388,7 +1393,7 @@
     </param>
     <returns>A byte array in CBOR format.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='options'/>
        is null.
     </exception>
@@ -1439,7 +1444,7 @@
     </param>
     <returns>A CBOR object.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='str'/>
        is null.
     </exception>
@@ -1465,7 +1470,7 @@
     </param>
     <returns>A CBORObject object.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='str'/>
        or
       <paramref name='options'/>
@@ -1723,7 +1728,7 @@
     <returns>A CBOR object corresponding to the given object. Returns CBORObject.Null
       if the object is null.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='mapper'/>
        is null.
     </exception>
@@ -1908,7 +1913,7 @@
     <returns>A CBOR object corresponding to the given object. Returns CBORObject.Null
       if the object is null.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='options'/>
        is null.
     </exception>
@@ -1937,7 +1942,7 @@
     <returns>A CBOR object corresponding to the given object. Returns CBORObject.Null
       if the object is null.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='options'/>
        is null.
     </exception>
@@ -1970,7 +1975,7 @@
     <returns>A CBOR object representing the string, or CBORObject.Null if stringValue
       is null.
     </returns>
-    <exception cref='System.ArgumentException'>The string contains an unpaired surrogate code point.
+    <exception cref='ArgumentException'>The string contains an unpaired surrogate code point.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.FromObject(System.UInt16)'>
@@ -2032,11 +2037,11 @@
       <paramref name='valueOb'/>
        is null, returns a version of CBORObject.Null with the given tag.
     </returns>
-    <exception cref='System.ArgumentException'>The parameter
+    <exception cref='ArgumentException'>The parameter
       <paramref name='bigintTag'/>
        is less than 0 or greater than 2^64-1.
     </exception>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='bigintTag'/>
        is null.
     </exception>
@@ -2076,7 +2081,7 @@
       . If "valueOb" is null, returns a version of CBORObject.Null with the
       given tag.
     </returns>
-    <exception cref='System.ArgumentException'>The parameter
+    <exception cref='ArgumentException'>The parameter
       <paramref name='smallTag'/>
        is less than 0.
     </exception>
@@ -2126,7 +2131,7 @@
     </param>
     <returns>A CBORObject object.
     </returns>
-    <exception cref='System.ArgumentException'>The parameter
+    <exception cref='ArgumentException'>The parameter
       <paramref name='simpleValue'/>
        is less than 0, greater than 255, or from 24 through 31.
     </exception>
@@ -2145,7 +2150,7 @@
     </summary>
     <returns>The byte array held by this CBOR object.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object is not a byte string.
+    <exception cref='InvalidOperationException'>This object is not a byte string.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.GetHashCode'>
@@ -2191,11 +2196,11 @@
       otherwise,
       <c>false</c> .
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='bigTagValue'/>
        is null.
     </exception>
-    <exception cref='System.ArgumentException'>The parameter
+    <exception cref='ArgumentException'>The parameter
       <paramref name='bigTagValue'/>
        is less than 0.
     </exception>
@@ -2210,7 +2215,7 @@
       otherwise,
       <c>false</c> .
     </returns>
-    <exception cref='System.ArgumentException'>The parameter
+    <exception cref='ArgumentException'>The parameter
       <paramref name='tagValue'/>
        is less than 0.
     </exception>
@@ -2225,11 +2230,11 @@
       otherwise,
       <c>false</c> .
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='bigTagValue'/>
        is null.
     </exception>
-    <exception cref='System.ArgumentException'>The parameter
+    <exception cref='ArgumentException'>The parameter
       <paramref name='bigTagValue'/>
        is less than 0.
     </exception>
@@ -2244,7 +2249,7 @@
       otherwise,
       <c>false</c> .
     </returns>
-    <exception cref='System.ArgumentException'>The parameter
+    <exception cref='ArgumentException'>The parameter
       <paramref name='tagValue'/>
        is less than 0.
     </exception>
@@ -2266,11 +2271,11 @@
       otherwise,
       <c>false</c> .
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='bigTagValue'/>
        is null.
     </exception>
-    <exception cref='System.ArgumentException'>The parameter
+    <exception cref='ArgumentException'>The parameter
       <paramref name='bigTagValue'/>
        is less than 0.
     </exception>
@@ -2285,7 +2290,7 @@
       otherwise,
       <c>false</c> .
     </returns>
-    <exception cref='System.ArgumentException'>The parameter
+    <exception cref='ArgumentException'>The parameter
       <paramref name='tagValue'/>
        is less than 0.
     </exception>
@@ -2298,9 +2303,9 @@
     <returns><c>true</c> if this object has a tag of the given number; otherwise,
       <c>false</c> .
     </returns>
-    <exception cref='System.ArgumentNullException'>bigTagValue" is null.
+    <exception cref='ArgumentNullException'>bigTagValue" is null.
     </exception>
-    <exception cref='System.ArgumentException'>bigTagValue" is less than 0.
+    <exception cref='ArgumentException'>bigTagValue" is less than 0.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.HasTag(PeterO.Numbers.EInteger)'>
@@ -2311,11 +2316,11 @@
     <returns><c>true</c> if this object has a tag of the given number; otherwise,
       <c>false</c> .
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='bigTagValue'/>
        is null.
     </exception>
-    <exception cref='System.ArgumentException'>The parameter
+    <exception cref='ArgumentException'>The parameter
       <paramref name='bigTagValue'/>
        is less than 0.
     </exception>
@@ -2328,11 +2333,11 @@
     <returns><c>true</c> if this object has a tag of the given number; otherwise,
       <c>false</c> .
     </returns>
-    <exception cref='System.ArgumentException'>The parameter
+    <exception cref='ArgumentException'>The parameter
       <paramref name='tagValue'/>
        is less than 0.
     </exception>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='tagValue'/>
        is null.
     </exception>
@@ -2347,9 +2352,9 @@
     </param>
     <returns>This instance.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object is not an array.
+    <exception cref='InvalidOperationException'>This object is not an array.
     </exception>
-    <exception cref='System.ArgumentException'>The parameter
+    <exception cref='ArgumentException'>The parameter
       <paramref name='valueOb'/>
        has an unsupported type; or
       <paramref name='index'/>
@@ -2476,13 +2481,13 @@
     <returns>The CBOR object referred to by index or key in this array or map. If this
       is a CBOR map, returns null if an item with the given key doesn't exist.
     </returns>
-    <exception cref='System.ArgumentNullException'>The key is null (as opposed to CBORObject.Null); or the set method is
+    <exception cref='ArgumentNullException'>The key is null (as opposed to CBORObject.Null); or the set method is
       called and the value is null.
     </exception>
-    <exception cref='System.ArgumentException'>This CBOR object is an array and the key is not an integer 0 or greater
+    <exception cref='ArgumentException'>This CBOR object is an array and the key is not an integer 0 or greater
       and less than the size of the array.
     </exception>
-    <exception cref='System.InvalidOperationException'>This object is not a map or an array.
+    <exception cref='InvalidOperationException'>This object is not a map or an array.
     </exception>
   </doc>
   <doc name='P:PeterO.Cbor.CBORObject.Item(System.Int32)'>
@@ -2496,12 +2501,12 @@
     <returns>The CBOR object referred to by index or key in this array or map. If this
       is a CBOR map, returns null if an item with the given key doesn't exist.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object is not an array or map.
+    <exception cref='InvalidOperationException'>This object is not an array or map.
     </exception>
-    <exception cref='System.ArgumentException'>This object is an array and the index is less than 0 or at least the size
+    <exception cref='ArgumentException'>This object is an array and the index is less than 0 or at least the size
       of the array.
     </exception>
-    <exception cref='System.ArgumentNullException'>The parameter "value" is null (as opposed to CBORObject.Null).
+    <exception cref='ArgumentNullException'>The parameter "value" is null (as opposed to CBORObject.Null).
     </exception>
   </doc>
   <doc name='P:PeterO.Cbor.CBORObject.Item(System.String)'>
@@ -2512,9 +2517,9 @@
     <returns>The CBOR object referred to by key in this map. Returns
       <c>null</c> if an item with the given key doesn't exist.
     </returns>
-    <exception cref='System.ArgumentNullException'>The key is null.
+    <exception cref='ArgumentNullException'>The key is null.
     </exception>
-    <exception cref='System.InvalidOperationException'>This object is not a map.
+    <exception cref='InvalidOperationException'>This object is not a map.
     </exception>
   </doc>
   <doc name='P:PeterO.Cbor.CBORObject.Keys'>
@@ -2522,7 +2527,7 @@
     </summary>
     <value>A collection of the keys of this CBOR object.
     </value>
-    <exception cref='System.InvalidOperationException'>This object is not a map.
+    <exception cref='InvalidOperationException'>This object is not a map.
     </exception>
   </doc>
   <doc name='P:PeterO.Cbor.CBORObject.MostInnerTag'>
@@ -2553,9 +2558,9 @@
     </param>
     <returns>The product of the two numbers.
     </returns>
-    <exception cref='System.ArgumentException'>Either or both operands are not numbers (as opposed to Not-a-Number, NaN).
+    <exception cref='ArgumentException'>Either or both operands are not numbers (as opposed to Not-a-Number, NaN).
     </exception>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='first'/>
        or
       <paramref name='second'/>
@@ -2571,7 +2576,7 @@
     </summary>
     <returns>The reversed-sign form of this number.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
+    <exception cref='InvalidOperationException'>This object does not represent a number (for this purpose, infinities and
       not-a-number or NaN values, but not CBORObject.Null, are considered
       numbers).
     </exception>
@@ -2610,7 +2615,7 @@
     </param>
     <returns>A CBOR object that was read.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='stream'/>
        is null.
     </exception>
@@ -2630,7 +2635,7 @@
     </param>
     <returns>A CBOR object that was read.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='stream'/>
        is null.
     </exception>
@@ -2653,7 +2658,7 @@
     </param>
     <returns>A CBORObject object.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='stream'/>
        is null.
     </exception>
@@ -2683,7 +2688,7 @@
     </param>
     <returns>A CBORObject object.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='stream'/>
        is null.
     </exception>
@@ -2703,7 +2708,7 @@
     <returns>An array containing the CBOR objects that were read from the data stream.
       Returns an empty array if there is no unread data in the stream.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='stream'/>
        is null, or the parameter "options" is null.
     </exception>
@@ -2727,7 +2732,7 @@
     <returns>An array containing the CBOR objects that were read from the data stream.
       Returns an empty array if there is no unread data in the stream.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='stream'/>
        is null, or the parameter
       <paramref name='options'/>
@@ -2751,7 +2756,7 @@
     </param>
     <returns>The remainder of the two numbers.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='first'/>
        or
       <paramref name='second'/>
@@ -2768,11 +2773,11 @@
     <returns><c>true</c> if the item was removed; otherwise,
       <c>false</c> .
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='obj'/>
        is null (as opposed to CBORObject.Null).
     </exception>
-    <exception cref='System.InvalidOperationException'>The object is not an array or map.
+    <exception cref='InvalidOperationException'>The object is not an array or map.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.Remove(System.Object)'>
@@ -2786,11 +2791,11 @@
     <returns><c>true</c> if the item was removed; otherwise,
       <c>false</c> .
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='obj'/>
        is null (as opposed to CBORObject.Null).
     </exception>
-    <exception cref='System.InvalidOperationException'>The object is not an array or map.
+    <exception cref='InvalidOperationException'>The object is not an array or map.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.RemoveAt(System.Int32)'>
@@ -2802,7 +2807,7 @@
       index is less than 0, or is at least as high as the number of items in the
       array.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object is not a CBOR array.
+    <exception cref='InvalidOperationException'>This object is not a CBOR array.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.Set(System.Object,System.Object)'>
@@ -2823,9 +2828,9 @@
     </param>
     <returns>This instance.
     </returns>
-    <exception cref='System.InvalidOperationException'>This object is not a map or an array.
+    <exception cref='InvalidOperationException'>This object is not a map or an array.
     </exception>
-    <exception cref='System.ArgumentException'>The parameter
+    <exception cref='ArgumentException'>The parameter
       <paramref name='key'/>
        or
       <paramref name='valueOb'/>
@@ -2841,7 +2846,7 @@
     </summary>
     <value>This value's sign: -1 if negative; 1 if positive; 0 if zero.
     </value>
-    <exception cref='System.InvalidOperationException'>This object does not represent a number, including the special
+    <exception cref='InvalidOperationException'>This object does not represent a number, including the special
       not-a-number value (NaN).
     </exception>
   </doc>
@@ -2866,9 +2871,9 @@
     </param>
     <returns>The difference of the two objects.
     </returns>
-    <exception cref='System.ArgumentException'>Either or both operands are not numbers (as opposed to Not-a-Number, NaN).
+    <exception cref='ArgumentException'>Either or both operands are not numbers (as opposed to Not-a-Number, NaN).
     </exception>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='first'/>
        or
       <paramref name='second'/>
@@ -2979,7 +2984,7 @@
     </param>
     <returns>A text string containing the converted object.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='options'/>
        is null.
     </exception>
@@ -3010,7 +3015,7 @@
       nesting is too deep, or another error occurred when serializing the
       object.
     </exception>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='t'/>
        is null.
     </exception>
@@ -3058,7 +3063,7 @@
       nesting is too deep, or another error occurred when serializing the
       object.
     </exception>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='t'/>
        is null.
     </exception>
@@ -3267,7 +3272,7 @@
       nesting is too deep, or another error occurred when serializing the
       object.
     </exception>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='t'/>
        is null.
     </exception>
@@ -3309,11 +3314,11 @@
     </param>
     <returns>The converted object.
     </returns>
-    <exception cref='System.NotSupportedException'>The given type
+    <exception cref='NotSupportedException'>The given type
       <paramref name='t'/>
       , or this object's CBOR type, is not supported.
     </exception>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='t'/>
        is null.
     </exception>
@@ -3340,7 +3345,7 @@
     </typeparam>
     <returns>The converted object.
     </returns>
-    <exception cref='System.NotSupportedException'>The given type "T", or this object's CBOR type, is not supported.
+    <exception cref='NotSupportedException'>The given type "T", or this object's CBOR type, is not supported.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.ToObject``1(PeterO.Cbor.CBORTypeMapper)'>
@@ -3366,7 +3371,7 @@
     </typeparam>
     <returns>The converted object.
     </returns>
-    <exception cref='System.NotSupportedException'>The given type "T", or this object's CBOR type, is not supported.
+    <exception cref='NotSupportedException'>The given type "T", or this object's CBOR type, is not supported.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.ToObject``1(PeterO.Cbor.CBORTypeMapper,PeterO.Cbor.PODOptions)'>
@@ -3394,7 +3399,7 @@
     </typeparam>
     <returns>The converted object.
     </returns>
-    <exception cref='System.NotSupportedException'>The given type "T", or this object's CBOR type, is not supported.
+    <exception cref='NotSupportedException'>The given type "T", or this object's CBOR type, is not supported.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.ToObject``1(PeterO.Cbor.PODOptions)'>
@@ -3418,7 +3423,7 @@
     </typeparam>
     <returns>The converted object.
     </returns>
-    <exception cref='System.NotSupportedException'>The given type "T", or this object's CBOR type, is not supported.
+    <exception cref='NotSupportedException'>The given type "T", or this object's CBOR type, is not supported.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.ToString'>
@@ -3476,7 +3481,7 @@
     </summary>
     <value>A collection of the values of this CBOR map or array.
     </value>
-    <exception cref='System.InvalidOperationException'>This object is not a map or an array.
+    <exception cref='InvalidOperationException'>This object is not a map or an array.
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.Write(PeterO.BigInteger,System.IO.Stream)'>
@@ -3486,7 +3491,7 @@
     </param>
     <param name='stream'>A writable data stream.
     </param>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='stream'/>
        is null.
     </exception>
@@ -3500,7 +3505,7 @@
     </param>
     <param name='stream'>A writable data stream.
     </param>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='stream'/>
        is null.
     </exception>
@@ -3529,7 +3534,7 @@
     </param>
     <param name='stream'>Stream to write to.
     </param>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='stream'/>
        is null.
     </exception>
@@ -3560,7 +3565,7 @@
     </param>
     <param name='stream'>A writable data stream.
     </param>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='stream'/>
        is null.
     </exception>
@@ -3574,7 +3579,7 @@
     </param>
     <param name='stream'>A writable data stream.
     </param>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='stream'/>
        is null.
     </exception>
@@ -3590,7 +3595,7 @@
     </param>
     <param name='stream'>Stream to write to.
     </param>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='stream'/>
        is null.
     </exception>
@@ -3606,7 +3611,7 @@
     </param>
     <param name='stream'>A writable data stream.
     </param>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='stream'/>
        is null.
     </exception>
@@ -3620,7 +3625,7 @@
     </param>
     <param name='stream'>A writable data stream.
     </param>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='stream'/>
        is null.
     </exception>
@@ -3636,7 +3641,7 @@
     </param>
     <param name='stream'>A writable data stream.
     </param>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='stream'/>
        is null.
     </exception>
@@ -3650,7 +3655,7 @@
     </param>
     <param name='stream'>A writable data stream.
     </param>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='stream'/>
        is null.
     </exception>
@@ -3666,7 +3671,7 @@
     </param>
     <param name='stream'>A writable data stream.
     </param>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='stream'/>
        is null.
     </exception>
@@ -3680,11 +3685,11 @@
     </param>
     <param name='stream'>A writable data stream.
     </param>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='stream'/>
        is null.
     </exception>
-    <exception cref='System.ArgumentException'>The parameter
+    <exception cref='ArgumentException'>The parameter
       <paramref name='value'/>
        is a surrogate code point.
     </exception>
@@ -3700,7 +3705,7 @@
     </param>
     <param name='stream'>A writable data stream.
     </param>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='stream'/>
        is null.
     </exception>
@@ -3714,7 +3719,7 @@
     </param>
     <param name='stream'>A writable data stream.
     </param>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='stream'/>
        is null.
     </exception>
@@ -3728,7 +3733,7 @@
     </param>
     <param name='stream'>A writable data stream.
     </param>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='stream'/>
        is null.
     </exception>
@@ -3742,7 +3747,7 @@
     </param>
     <param name='stream'>A writable data stream.
     </param>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='stream'/>
        is null.
     </exception>
@@ -3802,9 +3807,9 @@
     </param>
     <param name='options'>CBOR options for encoding the CBOR object to bytes.
     </param>
-    <exception cref='System.ArgumentException'>The object's type is not supported.
+    <exception cref='ArgumentException'>The object's type is not supported.
     </exception>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='options'/>
        or
       <paramref name='output'/>
@@ -3830,7 +3835,7 @@
     </param>
     <param name='stream'>A writable data stream.
     </param>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='stream'/>
        is null.
     </exception>
@@ -3846,7 +3851,7 @@
     </param>
     <param name='stream'>A writable data stream.
     </param>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='stream'/>
        is null.
     </exception>
@@ -3863,7 +3868,7 @@
     </param>
     <param name='options'>Options for encoding the data to CBOR.
     </param>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='stream'/>
        is null.
     </exception>
@@ -3893,7 +3898,7 @@
     </param>
     <param name='stream'>A writable data stream.
     </param>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='stream'/>
        is null.
     </exception>
@@ -3916,7 +3921,7 @@
     </param>
     <returns>The number of 8-bit bytes ordered to be written to the data stream.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='outputStream'/>
        is null.
     </exception>
@@ -3938,7 +3943,7 @@
     </param>
     <returns>The number of 8-bit bytes ordered to be written to the data stream.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='outputStream'/>
        is null.
     </exception>
@@ -3959,7 +3964,7 @@
     </param>
     <returns>The number of 8-bit bytes ordered to be written to the data stream.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='outputStream'/>
        is null.
     </exception>
@@ -3990,7 +3995,7 @@
     </param>
     <param name='outputStream'>A writable data stream.
     </param>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='outputStream'/>
        is null.
     </exception>
@@ -4009,7 +4014,7 @@
     </param>
     <exception cref='System.IO.IOException'>An I/O error occurred.
     </exception>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='outputStream'/>
        is null.
     </exception>
@@ -4032,7 +4037,7 @@
     </param>
     <exception cref='System.IO.IOException'>An I/O error occurred.
     </exception>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='outputStream'/>
        is null.
     </exception>
@@ -4049,7 +4054,7 @@
     </summary>
     <param name='stream'>A writable data stream.
     </param>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='stream'/>
        is null.
     </exception>
@@ -4112,13 +4117,13 @@
     </param>
     <param name='options'>Options for encoding the data to CBOR.
     </param>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='stream'/>
        is null.
     </exception>
     <exception cref='System.IO.IOException'>An I/O error occurred.
     </exception>
-    <exception cref='System.ArgumentException'>Unexpected data type".
+    <exception cref='ArgumentException'>Unexpected data type".
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,PeterO.Numbers.EInteger)'>
@@ -4146,11 +4151,11 @@
     </param>
     <returns>The number of bytes ordered to be written to the data stream.
     </returns>
-    <exception cref='System.ArgumentException'>The parameter
+    <exception cref='ArgumentException'>The parameter
       <paramref name='majorType'/>
        is 7 and value is greater than 255.
     </exception>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='outputStream'/>
        or
       <paramref name='bigintValue'/>
@@ -4181,9 +4186,9 @@
     </param>
     <returns>The number of bytes ordered to be written to the data stream.
     </returns>
-    <exception cref='System.ArgumentException'>Value is from 24 to 31 and major type is 7.
+    <exception cref='ArgumentException'>Value is from 24 to 31 and major type is 7.
     </exception>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='outputStream'/>
        is null.
     </exception>
@@ -4230,9 +4235,9 @@
     </param>
     <returns>The number of bytes ordered to be written to the data stream.
     </returns>
-    <exception cref='System.ArgumentException'>Value is from 24 to 31 and major type is 7.
+    <exception cref='ArgumentException'>Value is from 24 to 31 and major type is 7.
     </exception>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='outputStream'/>
        is null.
     </exception>
@@ -4261,7 +4266,7 @@
     </param>
     <returns>The number of bytes ordered to be written to the data stream.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='outputStream'/>
        is null.
     </exception>
@@ -4290,11 +4295,11 @@
     </param>
     <returns>The number of bytes ordered to be written to the data stream.
     </returns>
-    <exception cref='System.ArgumentException'>The parameter
+    <exception cref='ArgumentException'>The parameter
       <paramref name='majorType'/>
        is 7 and value is greater than 255.
     </exception>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='outputStream'/>
        is null.
     </exception>
@@ -4341,7 +4346,7 @@
     <returns><c>true</c> if one object's value is greater than another's; otherwise,
       <c>false</c> .
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='a'/>
        is null.
     </exception>
@@ -4356,7 +4361,7 @@
     <returns><c>true</c> if one object's value is at least another's; otherwise,
       <c>false</c> .
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='a'/>
        is null.
     </exception>
@@ -4371,7 +4376,7 @@
     <returns><c>true</c> if one object's value is less than another's; otherwise,
       <c>false</c> .
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='a'/>
        is null.
     </exception>
@@ -4386,7 +4391,7 @@
     <returns><c>true</c> if one object's value is up to another's; otherwise,
       <c>false</c> .
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='a'/>
        is null.
     </exception>
@@ -4518,13 +4523,13 @@
     </typeparam>
     <returns>This object.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='type'/>
        or
       <paramref name='converter'/>
        is null.
     </exception>
-    <exception cref='System.ArgumentException'>Converter doesn't contain a proper ToCBORObject method".
+    <exception cref='ArgumentException'>Converter doesn't contain a proper ToCBORObject method".
     </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORTypeMapper.AddTypeName(System.String)'>
@@ -4537,11 +4542,11 @@
     </param>
     <returns>This object.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='name'/>
        is null.
     </exception>
-    <exception cref='System.ArgumentException'>The parameter
+    <exception cref='ArgumentException'>The parameter
       <paramref name='name'/>
        is empty.
     </exception>
@@ -4556,11 +4561,11 @@
     </param>
     <returns>This object.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='prefix'/>
        is null.
     </exception>
-    <exception cref='System.ArgumentException'>The parameter
+    <exception cref='ArgumentException'>The parameter
       <paramref name='prefix'/>
        is empty.
     </exception>
@@ -4785,7 +4790,7 @@
       <c>base64padding=1</c> both set the
       <c>Base64Padding</c> property to true.
     </param>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='paramString'/>
        is null.
     </exception>
@@ -4868,7 +4873,7 @@
       <c>usecamelcase=1</c> both set the
       <c>UseCamelCase</c> property to true.
     </param>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='paramString'/>
        is null.
     </exception>
@@ -5002,7 +5007,7 @@
     </param>
     <returns>The encoded string.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='s'/>
        is null.
     </exception>
@@ -5133,7 +5138,7 @@
       <paramref name='s'/>
        is null.
     </returns>
-    <exception cref='System.ArgumentException'>Either
+    <exception cref='ArgumentException'>Either
       <paramref name='offset'/>
        or
       <paramref name='length'/>
@@ -5147,7 +5152,7 @@
       <paramref name='length'/>
        .
     </exception>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='s'/>
        is null.
     </exception>
@@ -5253,7 +5258,7 @@
       pair will be -1 (an index won't be less than 0 in any other case). If the
       string is null or is not a valid IRI, returns null.
     </returns>
-    <exception cref='System.ArgumentException'>Either
+    <exception cref='ArgumentException'>Either
       <paramref name='offset'/>
        or
       <paramref name='length'/>
@@ -5267,7 +5272,7 @@
       <paramref name='length'/>
        .
     </exception>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='s'/>
        is null.
     </exception>
@@ -5312,7 +5317,7 @@
       unpaired surrogate code point. If the return value is 65536 (0x10000) or
       greater, the code point takes up two UTF-16 code units.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='str'/>
        is null.
     </exception>
@@ -5340,7 +5345,7 @@
       If the return value is 65536 (0x10000) or greater, the code point takes up
       two UTF-16 code units.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='str'/>
        is null.
     </exception>
@@ -5369,7 +5374,7 @@
       is an unpaired surrogate code point. If the return value is 65536
       (0x10000) or greater, the code point takes up two UTF-16 code units.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='str'/>
        is null.
     </exception>
@@ -5397,7 +5402,7 @@
       point. If the return value is 65536 (0x10000) or greater, the code point
       takes up two UTF-16 code units.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='str'/>
        is null.
     </exception>
@@ -5429,7 +5434,7 @@
     </param>
     <returns>The number of Unicode code points in the given string.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='str'/>
        is null.
     </exception>
@@ -5455,11 +5460,11 @@
     </param>
     <returns>The string encoded in UTF-8.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='str'/>
        is null.
     </exception>
-    <exception cref='System.ArgumentException'>The string contains an unpaired surrogate code point and
+    <exception cref='ArgumentException'>The string contains an unpaired surrogate code point and
       <paramref name='replace'/>
        is false, or an internal error occurred.
     </exception>
@@ -5488,11 +5493,11 @@
     </param>
     <returns>The string encoded in UTF-8.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='str'/>
        is null.
     </exception>
-    <exception cref='System.ArgumentException'>The string contains an unpaired surrogate code point and
+    <exception cref='ArgumentException'>The string contains an unpaired surrogate code point and
       <paramref name='replace'/>
        is false, or an internal error occurred.
     </exception>
@@ -5512,7 +5517,7 @@
       <paramref name='replace'/>
        is false.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='str'/>
        is null.
     </exception>
@@ -5527,11 +5532,11 @@
     </param>
     <returns>A string represented by the UTF-8 byte array.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='bytes'/>
        is null.
     </exception>
-    <exception cref='System.ArgumentException'>The string is not valid UTF-8 and
+    <exception cref='ArgumentException'>The string is not valid UTF-8 and
       <paramref name='replace'/>
        is false.
     </exception>
@@ -5550,15 +5555,15 @@
     </param>
     <returns>A string represented by the UTF-8 byte array.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='bytes'/>
        is null.
     </exception>
-    <exception cref='System.ArgumentException'>The portion of the byte array is not valid UTF-8 and
+    <exception cref='ArgumentException'>The portion of the byte array is not valid UTF-8 and
       <paramref name='replace'/>
        is false.
     </exception>
-    <exception cref='System.ArgumentException'>The parameter
+    <exception cref='ArgumentException'>The parameter
       <paramref name='offset'/>
        is less than 0,
       <paramref name='bytesCount'/>
@@ -5590,7 +5595,7 @@
     </returns>
     <exception cref='System.IO.IOException'>An I/O error occurred.
     </exception>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='stream'/>
        is null or
       <paramref name='builder'/>
@@ -5616,13 +5621,13 @@
       <paramref name='replace'/>
        is false.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='data'/>
        is null or
       <paramref name='builder'/>
        is null.
     </exception>
-    <exception cref='System.ArgumentException'>The parameter
+    <exception cref='ArgumentException'>The parameter
       <paramref name='offset'/>
        is less than 0,
       <paramref name='bytesCount'/>
@@ -5642,7 +5647,7 @@
     </returns>
     <exception cref='System.IO.IOException'>An I/O error occurred.
     </exception>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='stream'/>
        is null.
     </exception>
@@ -5666,7 +5671,7 @@
       <paramref name='replace'/>
        is false.
     </exception>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='stream'/>
        is null.
     </exception>
@@ -5713,7 +5718,7 @@
       <paramref name='replace'/>
        is false.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='str'/>
        is null or
       <paramref name='stream'/>
@@ -5742,7 +5747,7 @@
       <paramref name='replace'/>
        is false.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='str'/>
        is null or
       <paramref name='stream'/>
@@ -5750,7 +5755,7 @@
     </exception>
     <exception cref='System.IO.IOException'>An I/O error occurred.
     </exception>
-    <exception cref='System.ArgumentException'>Either
+    <exception cref='ArgumentException'>Either
       <paramref name='offset'/>
        or
       <paramref name='length'/>
@@ -5788,13 +5793,13 @@
       <paramref name='replace'/>
        is false.
     </returns>
-    <exception cref='System.ArgumentNullException'>The parameter
+    <exception cref='ArgumentNullException'>The parameter
       <paramref name='str'/>
        is null or
       <paramref name='stream'/>
        is null.
     </exception>
-    <exception cref='System.ArgumentException'>The parameter
+    <exception cref='ArgumentException'>The parameter
       <paramref name='offset'/>
        is less than 0,
       <paramref name='length'/>

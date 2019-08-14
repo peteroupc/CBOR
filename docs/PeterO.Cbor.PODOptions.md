@@ -67,17 +67,17 @@ The parameter  <i>paramString</i>
 
   * In the Java version, for each eligible method name, the word "get" or "set" is removed from the name if the name starts with that word, then the name is capitalized. (For example, "getName" and "setName" both become "Name", and "isName" becomes "IsName".)
 
-  If "useCamelCase" is  `true`  :
+ If "useCamelCase" is  `true`  :
 
   * In the .NET version, for each eligible property name, the word "Is" is removed from the name if the name starts with that word, then the name is converted to camel case, meaning the first letter in the name is converted to lower case if it's a basic upper-case letter ("A" to "Z"). (For example, "Name" and "IsName" both become "name".)
 
   * In the Java version, for each eligible method name, the word "get", "set", or "is" is removed from the name if the name starts with that word, then the name is converted to camel case. (For example, "getName", "setName", and "isName" all become "name".)
 
-  In the description above, a name "starts with" a word if that word begins the name and is followed by a character other than a basic digit or lower-case letter, that is, other than "a" to "z" or "0" to "9".
+ In the description above, a name "starts with" a word if that word begins the name and is followed by a character other than a basic digit or lower-case letter, that is, other than "a" to "z" or "0" to "9".
 
-  <b>Returns:</b>
+   <b>Returns:</b>
 
- `true`  If the names are converted to camel case; otherwise,  `false`  . This property is  `true`  by default.
+ `true`  If the names are converted to camel case; otherwise,  `false` . This property is  `true`  by default.
 
 <a id="ToString"></a>
 ### ToString
@@ -86,6 +86,6 @@ The parameter  <i>paramString</i>
 
  Gets the values of this options object's properties in text form.
 
-  <b>Return Value:</b>
+   <b>Return Value:</b>
 
 A text string containing the values of this options object's properties. The format of the string is the same as the one described in the String constructor for this class.

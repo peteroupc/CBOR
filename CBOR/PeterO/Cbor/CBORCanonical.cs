@@ -6,12 +6,12 @@ namespace PeterO.Cbor {
   internal static class CBORCanonical {
     private sealed class CtapComparer : IComparer<CBORObject> {
       public int Compare(CBORObject a, CBORObject b) {
-if (a == null) {
-  return b == null ? 0 : -1;
-}
-if (b == null) {
-  return 1;
-}
+        if (a == null) {
+          return b == null ? 0 : -1;
+        }
+        if (b == null) {
+          return 1;
+        }
         byte[] abs;
         byte[] bbs;
         var bothBytes = false;
@@ -46,11 +46,11 @@ if (b == null) {
        return a.Type == CBORType.Array || a.Type == CBORType.Map;
     }
 
-    public static byte[] CtapCanonicalEncode(CBORObject a, int depth) {
+    public static byte[] CtapCanonicalEncode(CBORObject a) {
       return CtapCanonicalEncode(a, 0);
     }
 
-    private static byte[] CtapCanonicalEncode(CBORObject a) {
+    private static byte[] CtapCanonicalEncode(CBORObject a, int depth) {
       CBORObject cbor = a.Untag();
       CBORType valueAType = cbor.Type;
       try {
@@ -70,7 +70,7 @@ if (b == null) {
           var sortedKeys = new List<CBORObject>();
           foreach (CBORObject key in cbor.Keys) {
             if (depth >= 3 && (IsArrayOrMap(key) ||
-               IsArrayOrMap(cbor[key])) {
+               IsArrayOrMap(cbor[key]))) {
               throw new CBORException("Nesting level too deep");
             }
             sortedKeys.Add(key);
