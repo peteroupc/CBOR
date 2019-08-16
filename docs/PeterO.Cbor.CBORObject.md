@@ -1105,8 +1105,6 @@ This object's value is outside the range of a 32-bit unsigned integer.
 
  Converts this object to a 64-bit unsigned integer after discarding any fractional part, if any, from its value.
 
- Converts this object to a 64-bit unsigned integer after discarding any fractional part, if any, from its value.
-
      <b>Return Value:</b>
 
 A 64-bit unsigned integer.

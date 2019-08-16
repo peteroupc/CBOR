@@ -11,4 +11,4 @@
  * [PeterO.Cbor.ICBORToFromConverter&lt;T&gt;](PeterO.Cbor.ICBORToFromConverter-T.md) - Classes that implement this interface can support conversions from CBOR objects to a custom type and back.
  * [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) - Includes options to control how CBOR objects are converted to JSON.
  * [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) - Options for converting "plain old data" objects (better known as POCOs in .
- * [PeterO.DataUtilities](PeterO.DataUtilities.md) - Contains methods useful for reading and writing strings.
+ * [PeterO.DataUtilities](PeterO.DataUtilities.md) - Contains methods useful for reading and writing text strings.
