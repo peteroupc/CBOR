@@ -61,7 +61,7 @@ The parameter  <i>paramString</i>
 
     public bool UseCamelCase { get; }
 
- Gets a value indicating whether property names are converted to camel case before they are used as keys. This option changes the behavior of key name serialization as follows. If "useCamelCase" is  `false`  :
+  Gets a value indicating whether property names are converted to camel case before they are used as keys. This option changes the behavior of key name serialization as follows. If "useCamelCase" is  `false`  :
 
   * In the .NET version, all key names are capitalized, meaning the first letter in the name is converted to upper case if it's a basic lower-case letter ("a" to "z"). (For example, "Name" and "IsName" both remain unchanged.)
 
