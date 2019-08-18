@@ -117,9 +117,13 @@
       <c>ctap2canonical</c> ,
       <c>resolvereferences</c> ,
       <c>useindeflengthstrings</c> ,
-      <c>allowempty</c> . Keys other than these are ignored. If the same key appears more than
-      once, the value given for the last such key is used. The four keys just
-      given can have a value of
+      <c>allowempty</c> . Keys other than these are ignored. (Keys are compared using a basic
+      case-insensitive comparison, in which two strings are equal if they match
+      after converting the basic upper-case letters A to Z (U+0041 to U+005A) in
+      both strings to basic lower-case letters.) If two or more key/value pairs
+      have equal keys (in a basic case-insensitive comparison), the value given
+      for the last such key is used. The four keys just given can have a value
+      of
       <c>1</c> ,
       <c>true</c> ,
       <c>yes</c> , or
@@ -4775,9 +4779,13 @@
       The following is an example of this parameter:
       <c>base64padding=false;replacesurrogates=true</c> . The key can be any one of the following in any combination of case:
       <c>base64padding</c> ,
-      <c>replacesurrogates</c> . Other keys are ignored. If the same key appears more than once, the
-      value given for the last such key is used. The two keys just given can
-      have a value of
+      <c>replacesurrogates</c> . Other keys are ignored. (Keys are compared using a basic
+      case-insensitive comparison, in which two strings are equal if they match
+      after converting the basic upper-case letters A to Z (U+0041 to U+005A) in
+      both strings to basic lower-case letters.) If two or more key/value pairs
+      have equal keys (in a basic case-insensitive comparison), the value given
+      for the last such key is used. The two keys just given can have a value of
+
       <c>1</c> ,
       <c>true</c> ,
       <c>yes</c> , or
@@ -4858,9 +4866,12 @@
       begin or end with whitespace. The string can be empty, but cannot be null.
       The following is an example of this parameter:
       <c>usecamelcase=true</c> . The key can be any one of the following in any combination of case:
-      <c>usecamelcase</c> . Other keys are ignored. If the same key appears more than once, the
-      value given for the last such key is used. The key just given can have a
-      value of
+      <c>usecamelcase</c> . Other keys are ignored. (Keys are compared using a basic
+      case-insensitive comparison, in which two strings are equal if they match
+      after converting the basic upper-case letters A to Z (U+0041 to U+005A) in
+      both strings to basic lower-case letters.) If two or more key/value pairs
+      have equal keys (in a basic case-insensitive comparison), the value given
+      for the last such key is used. The key just given can have a value of
       <c>1</c> ,
       <c>true</c> ,
       <c>yes</c> , or
@@ -4903,9 +4914,9 @@
       </para>
       <list>
         <item>In the .NET version, all key names are capitalized, meaning the first
-          letter in the name is converted to upper case if it's a basic
-          lower-case letter ("a" to "z"). (For example, "Name" and "IsName" both
-          remain unchanged.)
+          letter in the name is converted to a basic upper-case letter if it's a
+          basic lower-case letter ("a" to "z"). (For example, "Name" and
+          "IsName" both remain unchanged.)
         </item>
         <item>In the Java version, for each eligible method name, the word "get" or
           "set" is removed from the name if the name starts with that word, then
@@ -4920,8 +4931,9 @@
         <item>In the .NET version, for each eligible property name, the word "Is" is
           removed from the name if the name starts with that word, then the name
           is converted to camel case, meaning the first letter in the name is
-          converted to lower case if it's a basic upper-case letter ("A" to
-          "Z"). (For example, "Name" and "IsName" both become "name".)
+          converted to a basic lower-case letter if it's a basic upper-case
+          letter ("A" to "Z"). (For example, "Name" and "IsName" both become
+          "name".)
         </item>
         <item>In the Java version, for each eligible method name, the word "get",
           "set", or "is" is removed from the name if the name starts with that
@@ -4931,7 +4943,8 @@
       </list>
       <para>In the description above, a name "starts with" a word if that word
         begins the name and is followed by a character other than a basic digit
-        or lower-case letter, that is, other than "a" to "z" or "0" to "9".
+        or basic lower-case letter, that is, other than "a" to "z" or "0" to
+        "9".
       </para>
     </summary>
     <value><c>true</c> If the names are converted to camel case; otherwise,

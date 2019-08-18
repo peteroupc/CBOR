@@ -50,13 +50,17 @@ namespace PeterO.Cbor {
     /// <c>base64padding=false;replacesurrogates=true</c>. The key can be
     /// any one of the following in any combination of case:
     /// <c>base64padding</c>, <c>replacesurrogates</c>. Other keys are
-    /// ignored. If the same key appears more than once, the value given
-    /// for the last such key is used. The two keys just given can have a
-    /// value of <c>1</c>, <c>true</c>, <c>yes</c>, or <c>on</c> (in any
-    /// combination of case), which means true, and any other value meaning
-    /// false. For example, <c>base64padding=Yes</c> and
-    /// <c>base64padding=1</c> both set the <c>Base64Padding</c> property
-    /// to true.</param>
+    /// ignored. (Keys are compared using a basic case-insensitive
+    /// comparison, in which two strings are equal if they match after
+    /// converting the basic upper-case letters A to Z (U + 0041 to U +
+    /// 005A) in both strings to basic lower-case letters.) If two or more
+    /// key/value pairs have equal keys (in a basic case-insensitive
+    /// comparison), the value given for the last such key is used. The two
+    /// keys just given can have a value of <c>1</c>, <c>true</c>,
+    /// <c>yes</c>, or <c>on</c> (in any combination of case), which means
+    /// true, and any other value meaning false. For example,
+    /// <c>base64padding=Yes</c> and <c>base64padding=1</c> both set the
+    /// <c>Base64Padding</c> property to true.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='paramString'/> is null.</exception>
     public JSONOptions(string paramString) {

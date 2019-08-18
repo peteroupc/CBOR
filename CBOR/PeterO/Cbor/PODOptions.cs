@@ -33,13 +33,17 @@ namespace PeterO.Cbor {
     /// The following is an example of this parameter:
     /// <c>usecamelcase=true</c>. The key can be any one of the following
     /// in any combination of case: <c>usecamelcase</c>. Other keys are
-    /// ignored. If the same key appears more than once, the value given
-    /// for the last such key is used. The key just given can have a value
-    /// of <c>1</c>, <c>true</c>, <c>yes</c>, or <c>on</c> (in any
-    /// combination of case), which means true, and any other value meaning
-    /// false. For example, <c>usecamelcase=Yes</c> and
-    /// <c>usecamelcase=1</c> both set the <c>UseCamelCase</c> property to
-    /// true.</param>
+    /// ignored. (Keys are compared using a basic case-insensitive
+    /// comparison, in which two strings are equal if they match after
+    /// converting the basic upper-case letters A to Z (U + 0041 to U +
+    /// 005A) in both strings to basic lower-case letters.) If two or more
+    /// key/value pairs have equal keys (in a basic case-insensitive
+    /// comparison), the value given for the last such key is used. The key
+    /// just given can have a value of <c>1</c>, <c>true</c>, <c>yes</c>
+    /// , or <c>on</c> (in any combination of case), which means true, and
+    /// any other value meaning false. For example, <c>usecamelcase=Yes</c>
+    /// and <c>usecamelcase=1</c> both set the <c>UseCamelCase</c> property
+    /// to true.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='paramString'/> is null.</exception>
     public PODOptions(string paramString) {
@@ -73,9 +77,9 @@ namespace PeterO.Cbor {
     /// <c>false</c> :</para>
     /// <list>
     /// <item>In the .NET version, all key names are capitalized, meaning
-    /// the first letter in the name is converted to upper case if it's a
-    /// basic lower-case letter ("a" to "z"). (For example, "Name" and
-    /// "IsName" both remain unchanged.)</item>
+    /// the first letter in the name is converted to a basic upper-case
+    /// letter if it's a basic lower-case letter ("a" to "z"). (For
+    /// example, "Name" and "IsName" both remain unchanged.)</item>
     /// <item>In the Java version, for each eligible method name, the word
     /// "get" or "set" is removed from the name if the name starts with
     /// that word, then the name is capitalized. (For example, "getName"
@@ -86,9 +90,9 @@ namespace PeterO.Cbor {
     /// <item>In the .NET version, for each eligible property name, the
     /// word "Is" is removed from the name if the name starts with that
     /// word, then the name is converted to camel case, meaning the first
-    /// letter in the name is converted to lower case if it's a basic
-    /// upper-case letter ("A" to "Z"). (For example, "Name" and "IsName"
-    /// both become "name".)</item>
+    /// letter in the name is converted to a basic lower-case letter if
+    /// it's a basic upper-case letter ("A" to "Z"). (For example, "Name"
+    /// and "IsName" both become "name".)</item>
     /// <item>In the Java version, for each eligible method name, the word
     /// "get", "set", or "is" is removed from the name if the name starts
     /// with that word, then the name is converted to camel case. (For
@@ -96,8 +100,8 @@ namespace PeterO.Cbor {
     /// "name".)</item></list>
     /// <para>In the description above, a name "starts with" a word if that
     /// word begins the name and is followed by a character other than a
-    /// basic digit or lower-case letter, that is, other than "a" to "z" or
-    /// "0" to "9".</para></summary>
+    /// basic digit or basic lower-case letter, that is, other than "a" to
+    /// "z" or "0" to "9".</para></summary>
     /// <value><c>true</c> If the names are converted to camel case;
     /// otherwise, <c>false</c>. This property is <c>true</c> by
     /// default.</value>

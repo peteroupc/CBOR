@@ -69,12 +69,16 @@ namespace PeterO.Cbor {
     /// any one of the following in any combination of case:
     /// <c>allowduplicatekeys</c>, <c>ctap2canonical</c>,
     /// <c>resolvereferences</c>, <c>useindeflengthstrings</c>,
-    /// <c>allowempty</c>. Keys other than these are ignored. If the same
-    /// key appears more than once, the value given for the last such key
-    /// is used. The four keys just given can have a value of <c>1</c>,
-    /// <c>true</c>, <c>yes</c>, or <c>on</c> (in any combination of
-    /// case), which means true, and any other value meaning false. For
-    /// example, <c>allowduplicatekeys=Yes</c> and
+    /// <c>allowempty</c>. Keys other than these are ignored. (Keys are
+    /// compared using a basic case-insensitive comparison, in which two
+    /// strings are equal if they match after converting the basic
+    /// upper-case letters A to Z (U + 0041 to U + 005A) in both strings to
+    /// basic lower-case letters.) If two or more key/value pairs have
+    /// equal keys (in a basic case-insensitive comparison), the value
+    /// given for the last such key is used. The four keys just given can
+    /// have a value of <c>1</c>, <c>true</c>, <c>yes</c>, or <c>on</c>
+    /// (in any combination of case), which means true, and any other value
+    /// meaning false. For example, <c>allowduplicatekeys=Yes</c> and
     /// <c>allowduplicatekeys=1</c> both set the <c>AllowDuplicateKeys</c>
     /// property to true.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref

@@ -15,7 +15,7 @@ using System.Text.RegularExpressions;
 
 namespace PeterO.DocGen {
     /// <summary>A documentation visitor.</summary>
-  internal class DocVisitor : XmlDoc.IVisitor {
+  internal class DocVisitor : IVisitor {
     private const string FourSpaces = " " + " " + " " + " ";
 
     private static readonly IDictionary<string, string> ValueOperators =
@@ -487,7 +487,7 @@ IsMethodOverride((MethodInfo)method)) {
       return b.ToString();
     }
 
-    public void VisitNode(XmlDoc.INode node) {
+    public void VisitNode(INode node) {
       if (String.IsNullOrEmpty(node.LocalName)) {
         var t = node.GetContent();
        // Collapse multiple spaces into a single space
@@ -549,11 +549,11 @@ xmlName.Equals("em", StringComparison.Ordinal)) {
       }
     }
 
-    public void VisitC(XmlDoc.INode node) {
+    public void VisitC(INode node) {
       this.Write(" `" + node.GetContent() + "` ");
     }
 
-    public void VisitCode(XmlDoc.INode node) {
+    public void VisitCode(INode node) {
       this.WriteLine("\r\n\r\n");
       foreach (var line in node.GetContent().Split('\n')) {
         this.WriteLine(FourSpaces + line.TrimEnd());
@@ -561,12 +561,12 @@ xmlName.Equals("em", StringComparison.Ordinal)) {
       this.WriteLine("\r\n\r\n");
     }
 
-    public void VisitExample(XmlDoc.INode node) {
+    public void VisitExample(INode node) {
       XmlDoc.VisitInnerNode(node, this);
       this.WriteLine("\r\n\r\n");
     }
 
-    public void VisitException(XmlDoc.INode node) {
+    public void VisitException(INode node) {
       using (var ch = this.Change(this.exceptionStr)) {
         var cref = node.GetAttribute("cref");
         if (cref.StartsWith("T:", StringComparison.Ordinal)) {
@@ -578,7 +578,7 @@ xmlName.Equals("em", StringComparison.Ordinal)) {
       }
     }
 
-    public void VisitSee(XmlDoc.INode see) {
+    public void VisitSee(INode see) {
       string cref = see.GetAttribute("cref");
       if (cref.Substring(0, 2).Equals("T:", StringComparison.Ordinal)) {
         string typeName = TypeNameUtil.UndecorateTypeName(cref.Substring(2));
@@ -600,13 +600,13 @@ xmlName.Equals("em", StringComparison.Ordinal)) {
       }
     }
 
-    public void VisitItem(XmlDoc.INode node) {
+    public void VisitItem(INode node) {
       this.Write(" * ");
       XmlDoc.VisitInnerNode(node, this);
       this.WriteLine("\r\n\r\n");
     }
 
-    public void VisitList(XmlDoc.INode node) {
+    public void VisitList(INode node) {
       this.WriteLine("\r\n\r\n");
       XmlDoc.VisitInnerNode(node, this);
     }
@@ -741,12 +741,12 @@ xmlName.Equals("em", StringComparison.Ordinal)) {
       }
     }
 
-    public void VisitPara(XmlDoc.INode node) {
+    public void VisitPara(INode node) {
       XmlDoc.VisitInnerNode(node, this);
       this.WriteLine("\r\n\r\n");
     }
 
-    public void VisitParam(XmlDoc.INode node) {
+    public void VisitParam(INode node) {
       using (var ch = this.Change(this.paramStr)) {
         this.Write(" * <i>" + node.GetAttribute("name") + "</i>: ");
         XmlDoc.VisitInnerNode(node, this);
@@ -754,12 +754,12 @@ xmlName.Equals("em", StringComparison.Ordinal)) {
       }
     }
 
-    public void VisitParamRef(XmlDoc.INode node) {
+    public void VisitParamRef(INode node) {
       this.WriteLine(" <i>" + node.GetAttribute("name") + "</i>");
       XmlDoc.VisitInnerNode(node, this);
     }
 
-    public void VisitReturns(XmlDoc.INode node) {
+    public void VisitReturns(INode node) {
       using (var ch = this.Change(this.returnStr)) {
         this.WriteLine("<b>Return Value:</b>\r\n");
         XmlDoc.VisitInnerNode(node, this);
@@ -767,7 +767,7 @@ xmlName.Equals("em", StringComparison.Ordinal)) {
       }
     }
 
-    public void VisitTypeParam(XmlDoc.INode node) {
+    public void VisitTypeParam(INode node) {
       using (var ch = this.Change(this.paramStr)) {
         this.Write(" * &lt;" + node.GetAttribute("name") + "&gt;: ");
         XmlDoc.VisitInnerNode(node, this);
@@ -775,7 +775,7 @@ xmlName.Equals("em", StringComparison.Ordinal)) {
       }
     }
 
-    public void VisitValue(XmlDoc.INode node) {
+    public void VisitValue(INode node) {
       using (var ch = this.Change(this.returnStr)) {
         this.WriteLine("<b>Returns:</b>\r\n");
         XmlDoc.VisitInnerNode(node, this);
