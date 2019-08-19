@@ -4,7 +4,7 @@
         System.IEquatable,
         System.IComparable
 
-  Represents an object in Concise Binary Object Representation (CBOR) and contains methods for reading and writing CBOR data. CBOR is defined in RFC 7049.
+ Represents an object in Concise Binary Object Representation (CBOR) and contains methods for reading and writing CBOR data. CBOR is defined in RFC 7049.
 
   <b>Converting CBOR objects</b>
 
@@ -568,7 +568,7 @@ This object does not represent a number (for this purpose, infinities and not-a-
         object key,
         object valueOb);
 
-  Adds a new key and its value to this CBOR map, or adds the value if the key doesn't exist.
+ Adds a new key and its value to this CBOR map, or adds the value if the key doesn't exist.
 
  NOTE: This method can't be used to add a tag to an existing CBOR object. To create a CBOR object with a given tag, call the  `CBORObject.FromObjectAndTag`  method and pass the CBOR object and the desired tag number to that method.
 
@@ -1061,7 +1061,7 @@ Gets this object's string.
 <b>Exceptions:</b>
 
  * System.InvalidOperationException:
-This object's type is not a string, including if this object is CBORObject.Null. To check the CBOR object for null before conversion, use the following idiom (originally written in C# for the.NET version):  `(cbor == null ||
+This object's type is not a string, including if this object is CBORObject.Null. To check the CBOR object for null before conversion, use the following idiom (originally written in C# for the.NET version):  `(cbor==null ||
             cbor.IsNull) ? null : cbor.AsString()` .
 
 <a id="AsUInt16"></a>
@@ -1321,7 +1321,7 @@ Less than 0, if this value is less than the other object; or 0, if both values a
     public static PeterO.Cbor.CBORObject DecodeFromBytes(
         byte[] data);
 
-  Generates a CBOR object from an array of CBOR-encoded bytes.
+ Generates a CBOR object from an array of CBOR-encoded bytes.
 
       <b>Parameters:</b>
 
@@ -1389,7 +1389,7 @@ The parameter  <i>data</i>
     public static PeterO.Cbor.CBORObject[] DecodeSequenceFromBytes(
         byte[] data);
 
-  Generates a sequence of CBOR objects from an array of CBOR-encoded bytes.
+ Generates a sequence of CBOR objects from an array of CBOR-encoded bytes.
 
       <b>Parameters:</b>
 
@@ -1416,7 +1416,7 @@ The parameter  <i>data</i>
         byte[] data,
         PeterO.Cbor.CBOREncodeOptions options);
 
-  Generates a sequence of CBOR objects from an array of CBOR-encoded bytes.
+ Generates a sequence of CBOR objects from an array of CBOR-encoded bytes.
 
        <b>Parameters:</b>
 
@@ -1495,7 +1495,7 @@ The parameter  <i>options</i>
 
     public byte[] EncodeToBytes();
 
-  Writes the binary representation of this CBOR object and returns a byte array of that representation. If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the byte array in an undefined order. The example code given in **M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)** can be used to write out certain keys of a CBOR map in a given order. For the CTAP2 canonical ordering, which is useful for implementing Web Authentication, call  `EncodeToBytes(new
+ Writes the binary representation of this CBOR object and returns a byte array of that representation. If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the byte array in an undefined order. The example code given in **M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)** can be used to write out certain keys of a CBOR map in a given order. For the CTAP2 canonical ordering, which is useful for implementing Web Authentication, call  `EncodeToBytes(new
             CBOREncodeOptions(false, false, true))`  rather than this method.
 
    <b>Return Value:</b>
@@ -1541,7 +1541,7 @@ A byte array in CBOR format.
     public static PeterO.Cbor.CBORObject FromJSONString(
         string str);
 
-  Generates a CBOR object from a text string in JavaScript Object Notation (JSON) format.
+ Generates a CBOR object from a text string in JavaScript Object Notation (JSON) format.
 
  If a JSON object has duplicate keys, a CBORException is thrown. This is a change in version 4.0.
 
@@ -1797,7 +1797,7 @@ The parameter  <i>mapper</i>
         PeterO.Cbor.CBORTypeMapper mapper,
         PeterO.Cbor.PODOptions options);
 
-  Generates a CBORObject from an arbitrary object, using the given options to control how certain objects are converted to CBOR objects. The following cases are checked in the logical order given (rather than the strict order in which they are implemented by this library):
+ Generates a CBORObject from an arbitrary object, using the given options to control how certain objects are converted to CBOR objects. The following cases are checked in the logical order given (rather than the strict order in which they are implemented by this library):
 
   *  `null`  is converted to  `CBORObject.Null` .
 
@@ -2867,7 +2867,7 @@ The difference of the two objects.
     public static PeterO.Cbor.CBORObject Read(
         System.IO.Stream stream);
 
-  Reads an object in CBOR format from a data stream. This method will read from the stream until the end of the CBOR object is reached or an error occurs, whichever happens first.
+ Reads an object in CBOR format from a data stream. This method will read from the stream until the end of the CBOR object is reached or an error occurs, whichever happens first.
 
       <b>Parameters:</b>
 
@@ -2920,7 +2920,7 @@ There was an error in reading or parsing the data.
     public static PeterO.Cbor.CBORObject ReadJSON(
         System.IO.Stream stream);
 
- Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format. The JSON stream may begin with a byte-order mark (U + FEFF). Since version 2.0, the JSON stream can be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by assuming that the first character read must be a byte-order mark or a nonzero basic character (U + 0001 to U + 007F). (In previous versions, only UTF-8 was allowed.) If a JSON object has the same key, only the last given value will be used for each duplicated key.
+ Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format. The JSON stream may begin with a byte-order mark (U+FEFF). Since version 2.0, the JSON stream can be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by assuming that the first character read must be a byte-order mark or a nonzero basic character (U+0001 to U+007F). (In previous versions, only UTF-8 was allowed.) If a JSON object has the same key, only the last given value will be used for each duplicated key.
 
        <b>Parameters:</b>
 
@@ -2949,7 +2949,7 @@ The data stream contains invalid encoding or is not in JSON format.
         System.IO.Stream stream,
         PeterO.Cbor.CBOREncodeOptions options);
 
- Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format, using the specified options to control the decoding process. The JSON stream may begin with a byte-order mark (U + FEFF). Since version 2.0, the JSON stream can be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by assuming that the first character read must be a byte-order mark or a nonzero basic character (U + 0001 to U + 007F). (In previous versions, only UTF-8 was allowed.) By default, if a JSON object has the same key, only the last given value will be used for each duplicated key.
+ Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format, using the specified options to control the decoding process. The JSON stream may begin with a byte-order mark (U+FEFF). Since version 2.0, the JSON stream can be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by assuming that the first character read must be a byte-order mark or a nonzero basic character (U+0001 to U+007F). (In previous versions, only UTF-8 was allowed.) By default, if a JSON object has the same key, only the last given value will be used for each duplicated key.
 
         <b>Parameters:</b>
 
@@ -2980,7 +2980,7 @@ The data stream contains invalid encoding or is not in JSON format.
     public static PeterO.Cbor.CBORObject[] ReadSequence(
         System.IO.Stream stream);
 
-  Reads a sequence of objects in CBOR format from a data stream. This method will read CBOR objects from the stream until the end of the stream is reached or an error occurs, whichever happens first.
+ Reads a sequence of objects in CBOR format from a data stream. This method will read CBOR objects from the stream until the end of the stream is reached or an error occurs, whichever happens first.
 
       <b>Parameters:</b>
 
@@ -3006,7 +3006,7 @@ There was an error in reading or parsing the data, including if the last CBOR ob
         System.IO.Stream stream,
         PeterO.Cbor.CBOREncodeOptions options);
 
-  Reads a sequence of objects in CBOR format from a data stream. This method will read CBOR objects from the stream until the end of the stream is reached or an error occurs, whichever happens first.
+ Reads a sequence of objects in CBOR format from a data stream. This method will read CBOR objects from the stream until the end of the stream is reached or an error occurs, whichever happens first.
 
        <b>Parameters:</b>
 
@@ -3194,7 +3194,7 @@ The parameter  <i>first</i>
     public string ToJSONString(
         PeterO.Cbor.JSONOptions options);
 
-  Converts this object to a string in JavaScript Object Notation (JSON) format, using the specified options to control the encoding process. This function works not only with arrays and maps, but also integers, strings, byte arrays, and other JSON data types. Notes:
+ Converts this object to a string in JavaScript Object Notation (JSON) format, using the specified options to control the encoding process. This function works not only with arrays and maps, but also integers, strings, byte arrays, and other JSON data types. Notes:
 
  * If this object contains maps with non-string keys, the keys are converted to JSON strings before writing the map as a JSON string.
 
@@ -3204,7 +3204,7 @@ The parameter  <i>first</i>
 
   * If a number in the form of an arbitrary-precision binary floating-point number has a very high binary exponent, it will be converted to a double before being converted to a JSON string. (The resulting double could overflow to infinity, in which case the arbitrary-precision binary floating-point number is converted to null.)
 
-  * The string will not begin with a byte-order mark (U + FEFF); RFC 8259 (the JSON specification) forbids placing a byte-order mark at the beginning of a JSON string.
+  * The string will not begin with a byte-order mark (U+FEFF); RFC 8259 (the JSON specification) forbids placing a byte-order mark at the beginning of a JSON string.
 
   * Byte strings are converted to Base64 URL without whitespace or padding by default (see section 4.1 of RFC 7049). A byte string will instead be converted to traditional base64 without whitespace and with padding if it has tag 22, or base16 for tag 23. (To create a CBOR object with a given tag, call the  `CBORObject.FromObjectAndTag`  method and pass the CBOR object and the desired tag number to that method.)
 
@@ -3466,7 +3466,7 @@ The given object's nesting is too deep, or another error occurred when serializi
     public T ToObject<T>(
         PeterO.Cbor.CBORTypeMapper mapper);
 
-  Converts this CBOR object to an object of an arbitrary type. See **M:PeterO.Cbor.CBORObject.ToObject(System.Type)** for further information.
+ Converts this CBOR object to an object of an arbitrary type. See **M:PeterO.Cbor.CBORObject.ToObject(System.Type)** for further information.
 
       <b>Parameters:</b>
 
@@ -3490,7 +3490,7 @@ The given type "T", or this object's CBOR type, is not supported.
         PeterO.Cbor.CBORTypeMapper mapper,
         PeterO.Cbor.PODOptions options);
 
-  Converts this CBOR object to an object of an arbitrary type. See **M:PeterO.Cbor.CBORObject.ToObject(System.Type)** for further information.
+ Converts this CBOR object to an object of an arbitrary type. See **M:PeterO.Cbor.CBORObject.ToObject(System.Type)** for further information.
 
        <b>Parameters:</b>
 
@@ -3515,7 +3515,7 @@ The given type "T", or this object's CBOR type, is not supported.
     public T ToObject<T>(
         PeterO.Cbor.PODOptions options);
 
-  Converts this CBOR object to an object of an arbitrary type. See **M:PeterO.Cbor.CBORObject.ToObject(System.Type)** for further information.
+ Converts this CBOR object to an object of an arbitrary type. See **M:PeterO.Cbor.CBORObject.ToObject(System.Type)** for further information.
 
       <b>Parameters:</b>
 
@@ -3537,7 +3537,7 @@ The given type "T", or this object's CBOR type, is not supported.
 
     public T ToObject<T>();
 
-  Converts this CBOR object to an object of an arbitrary type. See **M:PeterO.Cbor.CBORObject.ToObject(System.Type)** for further information.
+ Converts this CBOR object to an object of an arbitrary type. See **M:PeterO.Cbor.CBORObject.ToObject(System.Type)** for further information.
 
      <b>Parameters:</b>
 
@@ -3778,7 +3778,7 @@ The parameter  <i>options</i>
         object objValue,
         System.IO.Stream stream);
 
-  Writes a CBOR object to a CBOR data stream. See the three-parameter Write method that takes a CBOREncodeOptions.
+ Writes a CBOR object to a CBOR data stream. See the three-parameter Write method that takes a CBOREncodeOptions.
 
     <b>Parameters:</b>
 
@@ -3950,7 +3950,7 @@ An I/O error occurred.
         string str,
         System.IO.Stream stream);
 
-  Writes a string in CBOR format to a data stream. The string will be encoded using definite-length encoding regardless of its length.
+ Writes a string in CBOR format to a data stream. The string will be encoded using definite-length encoding regardless of its length.
 
       <b>Parameters:</b>
 

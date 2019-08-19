@@ -7,7 +7,7 @@
 ### Member Summary
 * <code>[Base64Padding](#Base64Padding)</code> - Gets a value indicating whether the Base64Padding property is true.
 * <code>[public static readonly PeterO.Cbor.JSONOptions Default;](#Default)</code> - The default options for converting CBOR objects to JSON.
-* <code>[ReplaceSurrogates](#ReplaceSurrogates)</code> - Gets a value indicating whether surrogate code points not part of a surrogate pair (which consists of two consecutive char s forming one Unicode code point) are each replaced with a replacement character (U + FFFD).
+* <code>[ReplaceSurrogates](#ReplaceSurrogates)</code> - Gets a value indicating whether surrogate code points not part of a surrogate pair (which consists of two consecutive char s forming one Unicode code point) are each replaced with a replacement character (U+FFFD).
 * <code>[ToString()](#ToString)</code> - Gets the values of this options object's properties in text form.
 
 <a id="Void_ctor_Boolean"></a>
@@ -87,7 +87,7 @@ A value indicating whether the Base64Padding property is true.
 
     public bool ReplaceSurrogates { get; }
 
- Gets a value indicating whether surrogate code points not part of a surrogate pair (which consists of two consecutive  `char`  s forming one Unicode code point) are each replaced with a replacement character (U + FFFD). The default is false; an exception is thrown when such code points are encountered.
+ Gets a value indicating whether surrogate code points not part of a surrogate pair (which consists of two consecutive  `char`  s forming one Unicode code point) are each replaced with a replacement character (U+FFFD). The default is false; an exception is thrown when such code points are encountered.
 
    <b>Returns:</b>
 

@@ -4,7 +4,7 @@
 
  Contains methods useful for reading and writing text strings. It is designed to have no dependencies other than the basic runtime class library. Many of these methods work with text encoded in UTF-8, an encoding form of the Unicode Standard which uses one byte to encode the most basic characters and two to four bytes to encode other characters. For example, the  `GetUtf8`  method converts a text string to an array of bytes in UTF-8.
 
- In C# and Java, text strings are represented as sequences of 16-bit values called  `char`  s. These sequences are well-formed under UTF-16, a 16-bit encoding form of Unicode, except if they contain unpaired surrogate code points. (A surrogate code point is used to encode supplementary characters, those with code points U + 10000 or higher, in UTF-16. A surrogate pair is a high surrogate, U + D800 to U + DBFF, followed by a low surrogate, U + DC00 to U + DFFF. An unpaired surrogate code point is a surrogate not appearing in a surrogate pair.) Many of the methods in this class allow setting the behavior to follow when unpaired surrogate code points are found in text strings, such as throwing an error or treating the unpaired surrogate as a replacement character (U + FFFD).
+ In C# and Java, text strings are represented as sequences of 16-bit values called  `char`  s. These sequences are well-formed under UTF-16, a 16-bit encoding form of Unicode, except if they contain unpaired surrogate code points. (A surrogate code point is used to encode supplementary characters, those with code points U+10000 or higher, in UTF-16. A surrogate pair is a high surrogate, U+D800 to U+DBFF, followed by a low surrogate, U+DC00 to U+DFFF. An unpaired surrogate code point is a surrogate not appearing in a surrogate pair.) Many of the methods in this class allow setting the behavior to follow when unpaired surrogate code points are found in text strings, such as throwing an error or treating the unpaired surrogate as a replacement character (U+FFFD).
 
 ### Member Summary
 * <code>[CodePointAt(string, int)](#CodePointAt_string_int)</code> - Gets the Unicode code point at the given index of the string.
@@ -22,8 +22,8 @@
 * <code>[ReadUtf8FromBytes(byte[], int, int, System.Text.StringBuilder, bool)](#ReadUtf8FromBytes_byte_int_int_System_Text_StringBuilder_bool)</code> - Reads a string in UTF-8 encoding from a byte array.
 * <code>[ReadUtf8ToString(System.IO.Stream)](#ReadUtf8ToString_System_IO_Stream)</code> - Reads a string in UTF-8 encoding from a data stream in full and returns that string.
 * <code>[ReadUtf8ToString(System.IO.Stream, int, bool)](#ReadUtf8ToString_System_IO_Stream_int_bool)</code> - Reads a string in UTF-8 encoding from a data stream and returns that string.
-* <code>[ToLowerCaseAscii(string)](#ToLowerCaseAscii_string)</code> - Returns a string with the basic upper-case letters A to Z (U + 0041 to U + 005A) converted to lower-case.
-* <code>[ToUpperCaseAscii(string)](#ToUpperCaseAscii_string)</code> - Returns a string with the basic lower-case letters A to Z (U + 0061 to U + 007A) converted to upper-case.
+* <code>[ToLowerCaseAscii(string)](#ToLowerCaseAscii_string)</code> - Returns a string with the basic upper-case letters A to Z (U+0041 to U+005A) converted to lower-case.
+* <code>[ToUpperCaseAscii(string)](#ToUpperCaseAscii_string)</code> - Returns a string with the basic lower-case letters A to Z (U+0061 to U+007A) converted to upper-case.
 * <code>[WriteUtf8(string, int, int, System.IO.Stream, bool)](#WriteUtf8_string_int_int_System_IO_Stream_bool)</code> - Writes a portion of a string in UTF-8 encoding to a data stream.
 * <code>[WriteUtf8(string, int, int, System.IO.Stream, bool, bool)](#WriteUtf8_string_int_int_System_IO_Stream_bool_bool)</code> - Writes a portion of a string in UTF-8 encoding to a data stream.
 * <code>[WriteUtf8(string, System.IO.Stream, bool)](#WriteUtf8_string_System_IO_Stream_bool)</code> - Writes a string in UTF-8 encoding to a data stream.
@@ -202,7 +202,7 @@ The parameter  <i>str</i>
         string str,
         bool replace);
 
-  Encodes a string in UTF-8 as a byte array. This method does not insert a byte-order mark (U + FEFF) at the beginning of the encoded byte array.
+ Encodes a string in UTF-8 as a byte array. This method does not insert a byte-order mark (U+FEFF) at the beginning of the encoded byte array.
 
  REMARK: It is not recommended to use  `Encoding.UTF8.GetBytes`  in.NET, or the  `getBytes()`  method in Java to do this. For instance,  `getBytes()`  encodes text strings in a default (so not fixed) character encoding, which can be undesirable.
 
@@ -235,7 +235,7 @@ The string contains an unpaired surrogate code point and  <i>replace</i>
         bool replace,
         bool lenientLineBreaks);
 
-  Encodes a string in UTF-8 as a byte array. This method does not insert a byte-order mark (U + FEFF) at the beginning of the encoded byte array.
+ Encodes a string in UTF-8 as a byte array. This method does not insert a byte-order mark (U+FEFF) at the beginning of the encoded byte array.
 
  REMARK: It is not recommended to use  `Encoding.UTF8.GetBytes`  in.NET, or the  `getBytes()`  method in Java to do this. For instance,  `getBytes()`  encodes text strings in a default (so not fixed) character encoding, which can be undesirable.
 
@@ -443,7 +443,7 @@ The parameter  <i>offset</i>
     public static string ReadUtf8ToString(
         System.IO.Stream stream);
 
- Reads a string in UTF-8 encoding from a data stream in full and returns that string. Replaces invalid encoding with the replacement character (U + FFFD).
+ Reads a string in UTF-8 encoding from a data stream in full and returns that string. Replaces invalid encoding with the replacement character (U+FFFD).
 
       <b>Parameters:</b>
 
@@ -500,7 +500,7 @@ The parameter  <i>stream</i>
     public static string ToLowerCaseAscii(
         string str);
 
- Returns a string with the basic upper-case letters A to Z (U + 0041 to U + 005A) converted to lower-case. Other characters remain unchanged.
+ Returns a string with the basic upper-case letters A to Z (U+0041 to U+005A) converted to lower-case. Other characters remain unchanged.
 
     <b>Parameters:</b>
 
@@ -518,7 +518,7 @@ The converted string, or null if  <i>str</i>
     public static string ToUpperCaseAscii(
         string str);
 
- Returns a string with the basic lower-case letters A to Z (U + 0061 to U + 007A) converted to upper-case. Other characters remain unchanged.
+ Returns a string with the basic lower-case letters A to Z (U+0061 to U+007A) converted to upper-case. Other characters remain unchanged.
 
     <b>Parameters:</b>
 

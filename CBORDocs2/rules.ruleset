@@ -3,6 +3,10 @@
   <Rules AnalyzerId='Microsoft.CodeAnalysis.FxCopAnalyzers' RuleNamespace='Microsoft.CodeAnalysis.FxCopAnalyzers'>
     <Rule Action='None' Id='CA1720'/>
     <Rule Id='CA1303' Action='None'/>
+    <!--"Modify X to call Y(Uri) rather than Y(String)" rule disabled -->
+    <Rule Action='None' Id='CA2234'/>
+    <!--Return value of Uri methods rule disabled; these are often breaking changes -->
+    <Rule Action='None' Id='CA1055'/>
   </Rules>
   <Rules AnalyzerId='StyleCop.Analyzers' RuleNamespace='StyleCop.Analyzers'>
     <!--SA1009 disabled for now due to bug with cref attributes that end in closing parenthesis -->

@@ -492,7 +492,10 @@ IsMethodOverride((MethodInfo)method)) {
         var t = node.GetContent();
        // Collapse multiple spaces into a single space
         t = Regex.Replace(t, @"\s+", " ");
-        this.Write(t);
+        if (t.Length!=1 || t[0]!=' ') {
+          // Don't write if result is a single space
+          this.Write(t);
+        }
         XmlDoc.VisitInnerNode(node, this);
       } else {
         var xmlName = PeterO.DataUtilities.ToLowerCaseAscii(node.LocalName);
