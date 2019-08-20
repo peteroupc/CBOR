@@ -5,7 +5,7 @@
         System.Runtime.Serialization.ISerializable,
         System.Runtime.InteropServices._Exception
 
- Exception thrown for errors involving CBOR data.
+Exception thrown for errors involving CBOR data.
 
 ### Member Summary
 
@@ -15,9 +15,9 @@
     public CBORException(
         string message);
 
- Initializes a new instance of the [PeterO.Cbor.CBORException](PeterO.Cbor.CBORException.md) class.
+Initializes a new instance of the [PeterO.Cbor.CBORException](PeterO.Cbor.CBORException.md) class.
 
-   <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>message</i>: The parameter  <i>message</i>
  is a text string.
@@ -29,9 +29,9 @@
         string message,
         System.Exception innerException);
 
- Initializes a new instance of the [PeterO.Cbor.CBORException](PeterO.Cbor.CBORException.md) class. Uses the given message and inner exception.
+Initializes a new instance of the [PeterO.Cbor.CBORException](PeterO.Cbor.CBORException.md) class. Uses the given message and inner exception.
 
-    <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>message</i>: The parameter  <i>message</i>
  is a text string.
@@ -44,4 +44,4 @@
 
     public CBORException();
 
- Initializes a new instance of the [PeterO.Cbor.CBORException](PeterO.Cbor.CBORException.md) class.
+Initializes a new instance of the [PeterO.Cbor.CBORException](PeterO.Cbor.CBORException.md) class.

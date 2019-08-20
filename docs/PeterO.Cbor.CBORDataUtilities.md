@@ -2,7 +2,7 @@
 
     public static class CBORDataUtilities
 
- Contains methods useful for reading and writing data, with a focus on CBOR.
+Contains methods useful for reading and writing data, with a focus on CBOR.
 
 ### Member Summary
 * <code>[ParseJSONNumber(string)](#ParseJSONNumber_string)</code> - Parses a number whose format follows the JSON specification.
@@ -15,9 +15,9 @@
     public static PeterO.Cbor.CBORObject ParseJSONNumber(
         string str);
 
- Parses a number whose format follows the JSON specification. See #ParseJSONNumber(String, integersOnly, parseOnly) for more information.
+Parses a number whose format follows the JSON specification. See #ParseJSONNumber(String, integersOnly, parseOnly) for more information.
 
-    <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>str</i>: A string to parse. The string is not allowed to contain white space characters, including spaces.
 
@@ -33,9 +33,9 @@ A CBOR object that represents the parsed number. Returns positive zero if the nu
         bool integersOnly,
         bool positiveOnly);
 
- Parses a number whose format follows the JSON specification (RFC 8259). Roughly speaking, a valid number consists of an optional minus sign, one or more basic digits (starting with 1 to 9 unless the only digit is 0), an optional decimal point (".", full stop) with one or more basic digits, and an optional letter E or e with an optional plus or minus sign and one or more basic digits (the exponent).
+Parses a number whose format follows the JSON specification (RFC 8259). Roughly speaking, a valid number consists of an optional minus sign, one or more basic digits (starting with 1 to 9 unless the only digit is 0), an optional decimal point (".", full stop) with one or more basic digits, and an optional letter E or e with an optional plus or minus sign and one or more basic digits (the exponent).
 
-      <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>str</i>: A string to parse. The string is not allowed to contain white space characters, including spaces.
 
@@ -56,9 +56,9 @@ A CBOR object that represents the parsed number. Returns positive zero if the nu
         bool positiveOnly,
         bool preserveNegativeZero);
 
- Parses a number whose format follows the JSON specification (RFC 8259). Roughly speaking, a valid number consists of an optional minus sign, one or more basic digits (starting with 1 to 9 unless the only digit is 0), an optional decimal point (".", full stop) with one or more basic digits, and an optional letter E or e with an optional plus or minus sign and one or more basic digits (the exponent).
+Parses a number whose format follows the JSON specification (RFC 8259). Roughly speaking, a valid number consists of an optional minus sign, one or more basic digits (starting with 1 to 9 unless the only digit is 0), an optional decimal point (".", full stop) with one or more basic digits, and an optional letter E or e with an optional plus or minus sign and one or more basic digits (the exponent).
 
-       <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>str</i>: A string to parse. The string is not allowed to contain white space characters, including spaces.
 

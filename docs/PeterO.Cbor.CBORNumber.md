@@ -3,7 +3,7 @@
     public sealed class CBORNumber :
         System.IComparable
 
- An instance of a number that CBOR or certain CBOR tags can represent. For this purpose, infinities and not-a-number or NaN values are considered numbers. Currently, this class can store one of the following kinds of numbers: 64-bit signed integers or binary floating-point numbers; or arbitrary-precision integers, decimal numbers, binary numbers, or rational numbers.
+An instance of a number that CBOR or certain CBOR tags can represent. For this purpose, infinities and not-a-number or NaN values are considered numbers. Currently, this class can store one of the following kinds of numbers: 64-bit signed integers or binary floating-point numbers; or arbitrary-precision integers, decimal numbers, binary numbers, or rational numbers.
 
 ### Member Summary
 * <code>[Add(PeterO.Cbor.CBORNumber)](#Add_PeterO_Cbor_CBORNumber)</code> - Returns the sum of this number and another number.
@@ -27,9 +27,9 @@
     public PeterO.Cbor.CBORNumber Add(
         PeterO.Cbor.CBORNumber b);
 
- Returns the sum of this number and another number.
+Returns the sum of this number and another number.
 
-     <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>b</i>: The number to add with this one.
 
@@ -49,9 +49,9 @@ The parameter  <i>b</i>
     public sealed int CompareTo(
         PeterO.Cbor.CBORNumber other);
 
- Compares two CBOR numbers. In this implementation, the two numbers' mathematical values are compared. Here, NaN (not-a-number) is considered greater than any number.
+Compares two CBOR numbers. In this implementation, the two numbers' mathematical values are compared. Here, NaN (not-a-number) is considered greater than any number.
 
-    <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>other</i>: A value to compare with. Can be null.
 
@@ -68,9 +68,9 @@ A negative number, if this value is less than the other object; or 0, if both va
     public PeterO.Cbor.CBORNumber Divide(
         PeterO.Cbor.CBORNumber b);
 
- Returns the quotient of this number and another number.
+Returns the quotient of this number and another number.
 
-     <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>b</i>: The right-hand side (divisor) to the division operation.
 
@@ -90,9 +90,9 @@ The parameter  <i>b</i>
     public static PeterO.Cbor.CBORNumber FromCBORObject(
         PeterO.Cbor.CBORObject o);
 
- Creates a CBOR number object from a CBOR object representing a number (that is, one for which the IsNumber property in.NET or the isNumber() method in Java returns true).
+Creates a CBOR number object from a CBOR object representing a number (that is, one for which the IsNumber property in.NET or the isNumber() method in Java returns true).
 
-    <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>o</i>: The parameter is a CBOR object representing a number.
 
@@ -106,9 +106,9 @@ A CBOR number object, or null if the given CBOR object is null or does not repre
     public PeterO.Cbor.CBORNumber Multiply(
         PeterO.Cbor.CBORNumber b);
 
- Returns a CBOR number expressing the product of this number and the given number.
+Returns a CBOR number expressing the product of this number and the given number.
 
-     <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>b</i>: The second operand to the multiplication operation.
 
@@ -127,9 +127,9 @@ The parameter  <i>b</i>
 
     public PeterO.Cbor.CBORNumber Negate();
 
- Returns a CBOR number with the same value as this one but with the sign reversed.
+Returns a CBOR number with the same value as this one but with the sign reversed.
 
-   <b>Return Value:</b>
+<b>Return Value:</b>
 
 A CBOR number with the same value as this one but with the sign reversed.
 
@@ -140,9 +140,9 @@ A CBOR number with the same value as this one but with the sign reversed.
         PeterO.Cbor.CBORNumber a,
         PeterO.Cbor.CBORNumber b);
 
- Returns whether one object's value is greater than another's.
+Returns whether one object's value is greater than another's.
 
-      <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>a</i>: The left-hand side of the comparison.
 
@@ -165,9 +165,9 @@ The parameter  <i>a</i>
         PeterO.Cbor.CBORNumber a,
         PeterO.Cbor.CBORNumber b);
 
- Returns whether one object's value is at least another's.
+Returns whether one object's value is at least another's.
 
-      <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>a</i>: The left-hand side of the comparison.
 
@@ -190,9 +190,9 @@ The parameter  <i>a</i>
         PeterO.Cbor.CBORNumber a,
         PeterO.Cbor.CBORNumber b);
 
- Returns whether one object's value is less than another's.
+Returns whether one object's value is less than another's.
 
-      <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>a</i>: The left-hand side of the comparison.
 
@@ -215,9 +215,9 @@ The parameter  <i>a</i>
         PeterO.Cbor.CBORNumber a,
         PeterO.Cbor.CBORNumber b);
 
- Returns whether one object's value is up to another's.
+Returns whether one object's value is up to another's.
 
-      <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>a</i>: The left-hand side of the comparison.
 
@@ -239,9 +239,9 @@ The parameter  <i>a</i>
     public PeterO.Cbor.CBORNumber Remainder(
         PeterO.Cbor.CBORNumber b);
 
- Returns the remainder when this number is divided by another number.
+Returns the remainder when this number is divided by another number.
 
-     <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>b</i>: The right-hand side (dividend) of the remainder operation.
 
@@ -261,9 +261,9 @@ The parameter  <i>b</i>
     public PeterO.Cbor.CBORNumber Subtract(
         PeterO.Cbor.CBORNumber b);
 
- Returns a number that expresses this number minus another.
+Returns a number that expresses this number minus another.
 
-     <b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>b</i>: The second operand to the subtraction.
 
@@ -282,9 +282,9 @@ The parameter  <i>b</i>
 
     public PeterO.Cbor.CBORObject ToCBORObject();
 
- Converts this object's value to a CBOR object.
+Converts this object's value to a CBOR object.
 
-   <b>Return Value:</b>
+<b>Return Value:</b>
 
 A CBOR object that stores this object's value.
 
@@ -293,8 +293,8 @@ A CBOR object that stores this object's value.
 
     public override string ToString();
 
- Returns the value of this object in text form.
+Returns the value of this object in text form.
 
-   <b>Return Value:</b>
+<b>Return Value:</b>
 
 A text string representing the value of this object.
