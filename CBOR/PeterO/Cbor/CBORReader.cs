@@ -178,20 +178,12 @@ namespace PeterO.Cbor {
         }
         return cbor;
       }
-      var uadditional = (long)additional;
-      EInteger bigintAdditional = EInteger.Zero;
-      var hasBigAdditional = false;
-      int expectedType = (firstbyte >> 5) & 0x07;
-      uadditional = ReadDataLength(this.stream, firstbyte, expectedType);
-      if ((uadditional >> 63) == 0) {
-        hasBigAdditional = true;
-        bigintAdditional = ToUnsignedEInteger(uadditional);
-      }
-      // The following doesn't check for major types 0 and 1,
-      // since all of them are fixed-length types and are
-      // handled in the call to GetFixedLengthObject.
-      if (type == 2) { // Byte string
-        if (additional == 31) {
+      if (additional == 31) {
+         // Indefinite-length for major types 2 to 5 (other major
+         // types were already handled in the call to
+         // GetFixedLengthObject).
+         switch (type) {
+            case 2: {
           // Streaming byte string
           using (var ms = new MemoryStream()) {
             // Requires same type as this one
@@ -218,24 +210,8 @@ namespace PeterO.Cbor {
             data = ms.ToArray();
             return CBORObject.FromRaw(data);
           }
-        } else {
-          if (hasBigAdditional) {
-            throw new CBORException("Length of " +
-                    bigintAdditional.ToString() + " is bigger than supported");
-          }
-          if (uadditional > Int32.MaxValue) {
-            throw new CBORException("Length of " +
-              CBORUtilities.LongToString(uadditional) +
-              " is bigger than supported");
-          }
-          int hint = (uadditional > Int32.MaxValue || hasBigAdditional) ?
-            Int32.MaxValue : (int)uadditional;
-          data = ReadByteData(this.stream, uadditional, null);
-          return this.ObjectFromByteArray(data, hint);
-        }
-      }
-      if (type == 3) { // Text string
-        if (additional == 31) {
+           }
+            case 3: {
           // Streaming text string
           var builder = new StringBuilder();
           while (true) {
@@ -268,7 +244,84 @@ namespace PeterO.Cbor {
             }
           }
           return CBORObject.FromRaw(builder.ToString());
-        } else {
+        }
+            case 4: {
+        CBORObject cbor = CBORObject.NewArray();
+        var vtindex = 0;
+          // Indefinite-length array
+          while (true) {
+            int headByte = this.stream.ReadByte();
+            if (headByte < 0) {
+              throw new CBORException("Premature end of data");
+            }
+            if (headByte == 0xff) {
+              // Break code was read
+              break;
+            }
+            ++this.depth;
+            CBORObject o = this.ReadForFirstByte(
+  headByte);
+            --this.depth;
+            cbor.Add(o);
+            ++vtindex;
+          }
+          return cbor;
+        }
+            case 5: {
+        CBORObject cbor = CBORObject.NewMap();
+          // Indefinite-length map
+          while (true) {
+            int headByte = this.stream.ReadByte();
+            if (headByte < 0) {
+              throw new CBORException("Premature end of data");
+            }
+            if (headByte == 0xff) {
+              // Break code was read
+              break;
+            }
+            ++this.depth;
+            CBORObject key = this.ReadForFirstByte(headByte);
+            CBORObject value = this.ReadInternal();
+            --this.depth;
+            if (!this.options.AllowDuplicateKeys) {
+              if (cbor.ContainsKey(key)) {
+                throw new CBORException("Duplicate key already exists: " + key);
+              }
+            }
+            cbor[key] = value;
+          }
+          return cbor;
+        }
+            default: throw new CBORException("Unexpected data encountered");
+         }
+      }
+      var uadditional = (long)additional;
+      EInteger bigintAdditional = EInteger.Zero;
+      var hasBigAdditional = false;
+      uadditional = ReadDataLength(this.stream, firstbyte, type);
+      if ((uadditional >> 63) != 0) {
+        hasBigAdditional = true;
+        bigintAdditional = ToUnsignedEInteger(uadditional);
+      }
+      // The following doesn't check for major types 0 and 1,
+      // since all of them are fixed-length types and are
+      // handled in the call to GetFixedLengthObject.
+      if (type == 2) { // Byte string
+          if (hasBigAdditional) {
+            throw new CBORException("Length of " +
+                    bigintAdditional.ToString() + " is bigger than supported");
+          }
+          if (uadditional > Int32.MaxValue) {
+            throw new CBORException("Length of " +
+              CBORUtilities.LongToString(uadditional) +
+              " is bigger than supported");
+          }
+          int hint = (uadditional > Int32.MaxValue || hasBigAdditional) ?
+            Int32.MaxValue : (int)uadditional;
+          data = ReadByteData(this.stream, uadditional, null);
+          return this.ObjectFromByteArray(data, hint);
+      }
+      if (type == 3) { // Text string
           if (hasBigAdditional) {
             throw new CBORException("Length of " +
                     bigintAdditional.ToString() + " is bigger than supported");
@@ -300,31 +353,9 @@ namespace PeterO.Cbor {
             this.stringRefs.AddStringIfNeeded(cbor, hint);
           }
           return cbor;
-        }
       }
       if (type == 4) { // Array
         CBORObject cbor = CBORObject.NewArray();
-        if (additional == 31) {
-          var vtindex = 0;
-          // Indefinite-length array
-          while (true) {
-            int headByte = this.stream.ReadByte();
-            if (headByte < 0) {
-              throw new CBORException("Premature end of data");
-            }
-            if (headByte == 0xff) {
-              // Break code was read
-              break;
-            }
-            ++this.depth;
-            CBORObject o = this.ReadForFirstByte(
-  headByte);
-            --this.depth;
-            cbor.Add(o);
-            ++vtindex;
-          }
-          return cbor;
-        }
         if (hasBigAdditional) {
           throw new CBORException("Length of " +
   bigintAdditional.ToString() + " is bigger than supported");
@@ -347,30 +378,6 @@ namespace PeterO.Cbor {
       }
       if (type == 5) { // Map, type 5
         CBORObject cbor = CBORObject.NewMap();
-        if (additional == 31) {
-          // Indefinite-length map
-          while (true) {
-            int headByte = this.stream.ReadByte();
-            if (headByte < 0) {
-              throw new CBORException("Premature end of data");
-            }
-            if (headByte == 0xff) {
-              // Break code was read
-              break;
-            }
-            ++this.depth;
-            CBORObject key = this.ReadForFirstByte(headByte);
-            CBORObject value = this.ReadInternal();
-            --this.depth;
-            if (!this.options.AllowDuplicateKeys) {
-              if (cbor.ContainsKey(key)) {
-                throw new CBORException("Duplicate key already exists: " + key);
-              }
-            }
-            cbor[key] = value;
-          }
-          return cbor;
-        }
         if (hasBigAdditional) {
           throw new CBORException("Length of " +
             bigintAdditional.ToString() + " is bigger than supported");

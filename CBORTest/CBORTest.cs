@@ -963,8 +963,14 @@ namespace Test {
 
     [Test]
     public void TestCBORCompareTo() {
-      Assert.Greater(0, CBORObject.FromObject(0).CompareTo(null));
-      Assert.Greater(0, CBORObject.FromObject(0).AsNumber().CompareTo(null));
+      int cmp = CBORObject.FromObject(0).CompareTo(null);
+      if (cmp <= 0) {
+        Assert.Fail();
+      }
+      cmp = CBORObject.FromObject(0).AsNumber().CompareTo(null);
+      if (cmp <= 0) {
+        Assert.Fail();
+      }
     }
 
     [Test]
@@ -1726,15 +1732,9 @@ public void TestCtap2NestingLevel() {
 }
  // 4 nesting levels
  o = CBORObject.FromJSONString("[[[[0]]]]");
- try {
- o.EncodeToBytes(ctap);
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+ if (o.EncodeToBytes(ctap) == null) {
+   Assert.Fail();
+ }
  // 1 nesting level
  o = CBORObject.FromJSONString("[]");
  if (o.EncodeToBytes(ctap) == null) {

@@ -32,7 +32,9 @@ namespace PeterO {
     }
 
     public static void Main() {
-     const String ValueParam = "TestLexOrder";
+new Test.CBORTest().TestCtap2NestingLevel();
+new Test.CBORTest().TestCBORCompareTo();
+const String ValueParam = null;
      // Run all the tests in this assembly
      foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
        if (!HasAttribute(type, typeof(TestFixtureAttribute))) {
