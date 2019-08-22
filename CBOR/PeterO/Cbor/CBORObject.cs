@@ -936,8 +936,8 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
         // if fixed length
         CheckCBORLength(expectedLength, data.Length);
         if (!options.Ctap2Canonical ||
-           (firstbyte >= 0x00 && firstbyte <= 0x18) ||
-           (firstbyte >= 0x20 && firstbyte <= 0x38)) {
+           (firstbyte >= 0x00 && firstbyte < 0x18) ||
+           (firstbyte >= 0x20 && firstbyte < 0x38)) {
           return GetFixedLengthObject(firstbyte, data);
         }
       }
@@ -1452,7 +1452,17 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     }
 
     /// <summary>Generates a CBOR object from an arbitrary-precision
-    /// integer.</summary>
+    /// integer.The CBOR object is generated as follows:
+    /// <list>
+    /// <item>If the number is null, returns CBORObject.Null.</item>
+    /// <item>Otherwise, if the number expresses infinity, not-a-number, or
+    /// negative zero, the CBOR object will have tag 269 and the
+    /// appropriate format.</item>
+    /// <item>Otherwise, if the number is less than -(2^64) and greater
+    /// than or equal to 2^64, the CBOR object will have the object type
+    /// Integer and the appropriate value.</item>
+    /// <item>Otherwise, the CBOR object will have tag 2 (zero or positive)
+    /// or 3 (negative) and the appropriate value.</item></list></summary>
     /// <param name='bigintValue'>An arbitrary-precision integer. Can be
     /// null.</param>
     /// <returns>The given number encoded as a CBOR object. Returns
@@ -5070,8 +5080,6 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     /// invalid.</param>
     /// <returns>A CBOR object storing the given floating-point
     /// number.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='outputStream'/> is null.</exception>
     /// <exception cref='ArgumentException'>The parameter <paramref
     /// name='byteCount'/> is other than 2, 4, or 8.</exception>
     public static CBORObject FromFloatingPointBits(

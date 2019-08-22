@@ -178,14 +178,14 @@
           encoding form.
         </item>
       </list>
-      In this form, CBOR tags are not used, map keys are written out in a
+       In this form, CBOR tags are not used, map keys are written out in a
       canonical order, a maximum depth of four levels of arrays and/or maps is
-      allowed, and floating-point numbers are written out in their 64-bit
-      encoding form regardless of whether their value can be encoded without
-      loss in a smaller form. This implementation allows CBOR objects whose
-      canonical form exceeds 1024 bytes, the default maximum size for CBOR
-      objects in that form according to the FIDO Client-to-Authenticator
-      Protocol 2 specification.
+      allowed, duplicate map keys are not allowed when decoding, and
+      floating-point numbers are written out in their 64-bit encoding form
+      regardless of whether their value can be encoded without loss in a smaller
+      form. This implementation allows CBOR objects whose canonical form exceeds
+      1024 bytes, the default maximum size for CBOR objects in that form
+      according to the FIDO Client-to-Authenticator Protocol 2 specification.
     </summary>
     <value><c>true</c> if CBOR objects are written out using the CTAP2 canonical CBOR encoding
       form; otherwise,
@@ -1452,10 +1452,6 @@
     </param>
     <returns>A CBOR object storing the given floating-point number.
     </returns>
-    <exception cref='ArgumentNullException'>The parameter
-      <paramref name='outputStream'/>
-       is null.
-    </exception>
     <exception cref='ArgumentException'>The parameter
       <paramref name='byteCount'/>
        is other than 2, 4, or 8.
@@ -1591,7 +1587,22 @@
     </returns>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.FromObject(PeterO.Numbers.EInteger)'>
-    <summary>Generates a CBOR object from an arbitrary-precision integer.
+    <summary>Generates a CBOR object from an arbitrary-precision integer.The CBOR
+      object is generated as follows:
+      <list>
+        <item>If the number is null, returns CBORObject.Null.
+        </item>
+        <item>Otherwise, if the number expresses infinity, not-a-number, or negative
+          zero, the CBOR object will have tag 269 and the appropriate format.
+        </item>
+        <item>Otherwise, if the number is less than -(2^64) and at least 2^64, the
+          CBOR object will have the object type Integer and the appropriate
+          value.
+        </item>
+        <item>Otherwise, the CBOR object will have tag 2 (zero or positive) or 3
+          (negative) and the appropriate value.
+        </item>
+      </list>
     </summary>
     <param name='bigintValue'>An arbitrary-precision integer. Can be null.
     </param>

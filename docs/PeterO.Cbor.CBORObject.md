@@ -1557,10 +1557,6 @@ A CBOR object storing the given floating-point number.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException:
-The parameter  <i>outputStream</i>
- is null.
-
  * System.ArgumentException:
 The parameter  <i>byteCount</i>
  is other than 2, 4, or 8.
@@ -2014,7 +2010,15 @@ The given number encoded as a CBOR object. Returns CBORObject.Null if  <i>bigVal
     public static PeterO.Cbor.CBORObject FromObject(
         PeterO.Numbers.EInteger bigintValue);
 
-Generates a CBOR object from an arbitrary-precision integer.
+Generates a CBOR object from an arbitrary-precision integer.The CBOR object is generated as follows:
+
+ * If the number is null, returns CBORObject.Null.
+
+ * Otherwise, if the number expresses infinity, not-a-number, or negative zero, the CBOR object will have tag 269 and the appropriate format.
+
+ * Otherwise, if the number is less than -(2^64) and greater than or equal to 2^64, the CBOR object will have the object type Integer and the appropriate value.
+
+ * Otherwise, the CBOR object will have tag 2 (zero or positive) or 3 (negative) and the appropriate value.
 
 <b>Parameters:</b>
 

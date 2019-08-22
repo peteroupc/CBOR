@@ -119,7 +119,7 @@ Gets a value indicating whether CBOR objects:
 
  * When decoding, are checked for compliance with the CTAP2 canonical encoding form.
 
-In this form, CBOR tags are not used, map keys are written out in a canonical order, a maximum depth of four levels of arrays and/or maps is allowed, and floating-point numbers are written out in their 64-bit encoding form regardless of whether their value can be encoded without loss in a smaller form. This implementation allows CBOR objects whose canonical form exceeds 1024 bytes, the default maximum size for CBOR objects in that form according to the FIDO Client-to-Authenticator Protocol 2 specification.
+ In this form, CBOR tags are not used, map keys are written out in a canonical order, a maximum depth of four levels of arrays and/or maps is allowed, duplicate map keys are not allowed when decoding, and floating-point numbers are written out in their 64-bit encoding form regardless of whether their value can be encoded without loss in a smaller form. This implementation allows CBOR objects whose canonical form exceeds 1024 bytes, the default maximum size for CBOR objects in that form according to the FIDO Client-to-Authenticator Protocol 2 specification.
 
 <b>Returns:</b>
 
