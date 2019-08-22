@@ -7,7 +7,7 @@ Specifies options for encoding and decoding CBOR objects.
 ### Member Summary
 * <code>[AllowDuplicateKeys](#AllowDuplicateKeys)</code> - Gets a value indicating whether to allow duplicate keys when reading CBOR objects from a data stream.
 * <code>[AllowEmpty](#AllowEmpty)</code> - Gets a value indicating whether decoding a CBOR object will return null instead of a CBOR object if the stream has no content or the end of the stream is reached before decoding begins.
-* <code>[Ctap2Canonical](#Ctap2Canonical)</code> - Gets a value indicating whether CBOR objects are written out using the CTAP2 canonical CBOR encoding form, which is useful for implementing Web Authentication.
+* <code>[Ctap2Canonical](#Ctap2Canonical)</code> - Gets a value indicating whether CBOR objects: When encoding, are written out using the CTAP2 canonical CBOR encoding form, which is useful for implementing Web Authentication.
 * <code>[public static readonly PeterO.Cbor.CBOREncodeOptions Default;](#Default)</code> - Default options for CBOR objects.
 * <code>[public static readonly PeterO.Cbor.CBOREncodeOptions DefaultCtap2Canonical;](#DefaultCtap2Canonical)</code> - Default options for CBOR objects serialized using the CTAP2 canonicalization (used in Web Authentication, among other specifications).
 * <code>[ResolveReferences](#ResolveReferences)</code> - Gets a value indicating whether to resolve references to sharable objects and sharable strings in the process of decoding a CBOR object.
@@ -113,7 +113,13 @@ A value indicating whether decoding a CBOR object will return  `null`  instead o
 
     public bool Ctap2Canonical { get; }
 
-Gets a value indicating whether CBOR objects are written out using the CTAP2 canonical CBOR encoding form, which is useful for implementing Web Authentication. In this form, CBOR tags are not used, map keys are written out in a canonical order, and floating-point numbers are written out in their 64-bit encoding form regardless of whether their value can be encoded without loss in a smaller form.
+Gets a value indicating whether CBOR objects:
+
+ * When encoding, are written out using the CTAP2 canonical CBOR encoding form, which is useful for implementing Web Authentication.
+
+ * When decoding, are checked for compliance with the CTAP2 canonical encoding form.
+
+In this form, CBOR tags are not used, map keys are written out in a canonical order, a maximum depth of four levels of arrays and/or maps is allowed, and floating-point numbers are written out in their 64-bit encoding form regardless of whether their value can be encoded without loss in a smaller form. This implementation allows CBOR objects whose canonical form exceeds 1024 bytes, the default maximum size for CBOR objects in that form according to the FIDO Client-to-Authenticator Protocol 2 specification.
 
 <b>Returns:</b>
 

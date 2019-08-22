@@ -164,15 +164,21 @@ namespace PeterO.Cbor {
     /// false.</value>
     public bool AllowDuplicateKeys { get; private set; }
 
-    // TODO: Support rejection of canonical CBOR in decoding
-
-    /// <summary>Gets a value indicating whether CBOR objects are written
-    /// out using the CTAP2 canonical CBOR encoding form, which is useful
-    /// for implementing Web Authentication. In this form, CBOR tags are
-    /// not used, map keys are written out in a canonical order, and
+    /// <summary>Gets a value indicating whether CBOR objects:
+    /// <list>
+    /// <item>When encoding, are written out using the CTAP2 canonical CBOR
+    /// encoding form, which is useful for implementing Web
+    /// Authentication.</item>
+    /// <item>When decoding, are checked for compliance with the CTAP2
+    /// canonical encoding form.</item></list> In this form, CBOR tags are
+    /// not used, map keys are written out in a canonical order, a maximum
+    /// depth of four levels of arrays and/or maps is allowed, and
     /// floating-point numbers are written out in their 64-bit encoding
     /// form regardless of whether their value can be encoded without loss
-    /// in a smaller form.</summary>
+    /// in a smaller form. This implementation allows CBOR objects whose
+    /// canonical form exceeds 1024 bytes, the default maximum size for
+    /// CBOR objects in that form according to the FIDO
+    /// Client-to-Authenticator Protocol 2 specification.</summary>
     /// <value><c>true</c> if CBOR objects are written out using the CTAP2
     /// canonical CBOR encoding form; otherwise, <c>false</c>.</value>
     public bool Ctap2Canonical { get; private set; }

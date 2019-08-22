@@ -96,6 +96,7 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[Equals(object)](#Equals_object)</code> - Determines whether this object and another object are equal and have the same type.
 * <code>[Equals(PeterO.Cbor.CBORObject)](#Equals_PeterO_Cbor_CBORObject)</code> - Compares the equality of two CBOR objects.
 * <code>[public static readonly PeterO.Cbor.CBORObject False;](#False)</code> - Represents the value false.
+* <code>[FromFloatingPointBits(long, int)](#FromFloatingPointBits_long_int)</code> - Generates a CBOR object from a floating-point number represented by its bits.
 * <code>[FromJSONString(string)](#FromJSONString_string)</code> - Generates a CBOR object from a text string in JavaScript Object Notation (JSON) format.
 * <code>[FromJSONString(string, PeterO.Cbor.CBOREncodeOptions)](#FromJSONString_string_PeterO_Cbor_CBOREncodeOptions)</code> - Generates a CBOR object from a text string in JavaScript Object Notation (JSON) format, using the specified options to control the decoding process.
 * <code>[FromObject(bool)](#FromObject_bool)</code> - Returns the CBOR true value or false value, depending on "value".
@@ -1534,6 +1535,35 @@ Compares the equality of two CBOR objects. Not-a-number values can be considered
 <b>Return Value:</b>
 
  `true`  if the objects are equal; otherwise,  `false` .
+
+<a id="FromFloatingPointBits_long_int"></a>
+### FromFloatingPointBits
+
+    public static PeterO.Cbor.CBORObject FromFloatingPointBits(
+        long floatingBits,
+        int byteCount);
+
+Generates a CBOR object from a floating-point number represented by its bits.
+
+<b>Parameters:</b>
+
+ * <i>floatingBits</i>: The bits of a floating-point number number to write.
+
+ * <i>byteCount</i>: The number of bytes of the stored floating-point number; this also specifies the format of the "floatingBits" parameter. This value can be 2 if "floatingBits"'s lower 16 bits identify the floating-point number in IEEE 754r binary16 format; or 4 if "floatingBits"'s lower 32 bits identify the floating-point number in IEEE 754r binary32 format; or 8 if "floatingBits" identifies the floating point number in IEEE 754r binary64 format. Any other values for this parameter are invalid.
+
+<b>Return Value:</b>
+
+A CBOR object storing the given floating-point number.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter  <i>outputStream</i>
+ is null.
+
+ * System.ArgumentException:
+The parameter  <i>byteCount</i>
+ is other than 2, 4, or 8.
 
 <a id="FromJSONString_string"></a>
 ### FromJSONString
@@ -4069,6 +4099,10 @@ The number of 8-bit bytes ordered to be written to the data stream.
 
 <b>Exceptions:</b>
 
+ * System.ArgumentException:
+The parameter  <i>byteCount</i>
+ is other than 2, 4, or 8.
+
  * System.ArgumentNullException:
 The parameter  <i>outputStream</i>
  is null.
@@ -4097,6 +4131,10 @@ The number of 8-bit bytes ordered to be written to the data stream.
 
 <b>Exceptions:</b>
 
+ * System.ArgumentException:
+The parameter  <i>byteCount</i>
+ is other than 2, 4, or 8.
+
  * System.ArgumentNullException:
 The parameter  <i>outputStream</i>
  is null.
@@ -4124,6 +4162,10 @@ Writes a 32-bit binary floating-point number in CBOR format to a data stream, ei
 The number of 8-bit bytes ordered to be written to the data stream.
 
 <b>Exceptions:</b>
+
+ * System.ArgumentException:
+The parameter  <i>byteCount</i>
+ is other than 2, 4, or 8.
 
  * System.ArgumentNullException:
 The parameter  <i>outputStream</i>

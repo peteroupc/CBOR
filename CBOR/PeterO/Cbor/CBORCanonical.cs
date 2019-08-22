@@ -4,6 +4,9 @@ using System.IO;
 
 namespace PeterO.Cbor {
   internal static class CBORCanonical {
+    internal static readonly IComparer<CBORObject> Comparer =
+      new CtapComparer();
+
     private sealed class CtapComparer : IComparer<CBORObject> {
       public int Compare(CBORObject a, CBORObject b) {
         if (a == null) {
@@ -75,7 +78,7 @@ namespace PeterO.Cbor {
             }
             sortedKeys.Add(key);
           }
-          sortedKeys.Sort(new CtapComparer());
+          sortedKeys.Sort(Comparer);
           using (var ms = new MemoryStream()) {
             CBORObject.WriteValue(ms, 5, cbor.Count);
             foreach (CBORObject key in sortedKeys) {

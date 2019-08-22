@@ -169,12 +169,23 @@
     </returns>
   </doc>
   <doc name='P:PeterO.Cbor.CBOREncodeOptions.Ctap2Canonical'>
-    <summary>Gets a value indicating whether CBOR objects are written out using the
-      CTAP2 canonical CBOR encoding form, which is useful for implementing Web
-      Authentication. In this form, CBOR tags are not used, map keys are written
-      out in a canonical order, and floating-point numbers are written out in
-      their 64-bit encoding form regardless of whether their value can be
-      encoded without loss in a smaller form.
+    <summary>Gets a value indicating whether CBOR objects:
+      <list>
+        <item>When encoding, are written out using the CTAP2 canonical CBOR encoding
+          form, which is useful for implementing Web Authentication.
+        </item>
+        <item>When decoding, are checked for compliance with the CTAP2 canonical
+          encoding form.
+        </item>
+      </list>
+      In this form, CBOR tags are not used, map keys are written out in a
+      canonical order, a maximum depth of four levels of arrays and/or maps is
+      allowed, and floating-point numbers are written out in their 64-bit
+      encoding form regardless of whether their value can be encoded without
+      loss in a smaller form. This implementation allows CBOR objects whose
+      canonical form exceeds 1024 bytes, the default maximum size for CBOR
+      objects in that form according to the FIDO Client-to-Authenticator
+      Protocol 2 specification.
     </summary>
     <value><c>true</c> if CBOR objects are written out using the CTAP2 canonical CBOR encoding
       form; otherwise,
@@ -1424,6 +1435,31 @@
   <doc name='F:PeterO.Cbor.CBORObject.False'>
     <summary>Represents the value false.
     </summary>
+  </doc>
+  <doc name='M:PeterO.Cbor.CBORObject.FromFloatingPointBits(System.Int64,System.Int32)'>
+    <summary>Generates a CBOR object from a floating-point number represented by its
+      bits.
+    </summary>
+    <param name='floatingBits'>The bits of a floating-point number number to write.
+    </param>
+    <param name='byteCount'>The number of bytes of the stored floating-point number; this also
+      specifies the format of the "floatingBits" parameter. This value can be 2
+      if "floatingBits"'s lower 16 bits identify the floating-point number in
+      IEEE 754r binary16 format; or 4 if "floatingBits"'s lower 32 bits identify
+      the floating-point number in IEEE 754r binary32 format; or 8 if
+      "floatingBits" identifies the floating point number in IEEE 754r binary64
+      format. Any other values for this parameter are invalid.
+    </param>
+    <returns>A CBOR object storing the given floating-point number.
+    </returns>
+    <exception cref='ArgumentNullException'>The parameter
+      <paramref name='outputStream'/>
+       is null.
+    </exception>
+    <exception cref='ArgumentException'>The parameter
+      <paramref name='byteCount'/>
+       is other than 2, 4, or 8.
+    </exception>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.FromJSONString(System.String)'>
     <summary><para>Generates a CBOR object from a text string in JavaScript Object Notation
@@ -3922,6 +3958,10 @@
     </param>
     <returns>The number of 8-bit bytes ordered to be written to the data stream.
     </returns>
+    <exception cref='ArgumentException'>The parameter
+      <paramref name='byteCount'/>
+       is other than 2, 4, or 8.
+    </exception>
     <exception cref='ArgumentNullException'>The parameter
       <paramref name='outputStream'/>
        is null.
@@ -3944,6 +3984,10 @@
     </param>
     <returns>The number of 8-bit bytes ordered to be written to the data stream.
     </returns>
+    <exception cref='ArgumentException'>The parameter
+      <paramref name='byteCount'/>
+       is other than 2, 4, or 8.
+    </exception>
     <exception cref='ArgumentNullException'>The parameter
       <paramref name='outputStream'/>
        is null.
@@ -3965,6 +4009,10 @@
     </param>
     <returns>The number of 8-bit bytes ordered to be written to the data stream.
     </returns>
+    <exception cref='ArgumentException'>The parameter
+      <paramref name='byteCount'/>
+       is other than 2, 4, or 8.
+    </exception>
     <exception cref='ArgumentNullException'>The parameter
       <paramref name='outputStream'/>
        is null.

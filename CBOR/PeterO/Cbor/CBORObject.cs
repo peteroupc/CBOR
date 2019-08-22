@@ -935,16 +935,18 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
       if (expectedLength != 0) {
         // if fixed length
         CheckCBORLength(expectedLength, data.Length);
+        if (!options.Ctap2Canonical ||
+           (firstbyte >= 0x00 && firstbyte <= 0x18) ||
+           (firstbyte >= 0x20 && firstbyte <= 0x38)) {
+          return GetFixedLengthObject(firstbyte, data);
+        }
       }
-      if (firstbyte == 0xc0) {
+      if (firstbyte == 0xc0 && !options.Ctap2Canonical) {
         // value with tag 0
         string s = GetOptimizedStringIfShortAscii(data, 1);
         if (s != null) {
           return new CBORObject(FromObject(s), 0, 0);
         }
-      }
-      if (expectedLength != 0) {
-        return GetFixedLengthObject(firstbyte, data);
       }
       // For objects with variable length,
       // read the object as though
@@ -5053,6 +5055,48 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
   options);
     }
 
+    /// <summary>Generates a CBOR object from a floating-point number
+    /// represented by its bits.</summary>
+    /// <param name='floatingBits'>The bits of a floating-point number
+    /// number to write.</param>
+    /// <param name='byteCount'>The number of bytes of the stored
+    /// floating-point number; this also specifies the format of the
+    /// "floatingBits" parameter. This value can be 2 if "floatingBits"'s
+    /// lower 16 bits identify the floating-point number in IEEE 754r
+    /// binary16 format; or 4 if "floatingBits"'s lower 32 bits identify
+    /// the floating-point number in IEEE 754r binary32 format; or 8 if
+    /// "floatingBits" identifies the floating point number in IEEE 754r
+    /// binary64 format. Any other values for this parameter are
+    /// invalid.</param>
+    /// <returns>A CBOR object storing the given floating-point
+    /// number.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='outputStream'/> is null.</exception>
+    /// <exception cref='ArgumentException'>The parameter <paramref
+    /// name='byteCount'/> is other than 2, 4, or 8.</exception>
+    public static CBORObject FromFloatingPointBits(
+      long floatingBits,
+      int byteCount) {
+      long value;
+      switch (byteCount) {
+        case 2:
+
+          value = CBORUtilities.HalfToDoublePrecision(
+            unchecked((int)(floatingBits &
+0xffffL)));
+          return new CBORObject(CBORObjectTypeDouble, value);
+        case 4:
+
+          value = CBORUtilities.SingleToDoublePrecision(
+            unchecked((int)(floatingBits &
+0xffffL)));
+          return new CBORObject(CBORObjectTypeDouble, value);
+        case 8:
+          return new CBORObject(CBORObjectTypeDouble, floatingBits);
+        default: throw new ArgumentOutOfRangeException(nameof(byteCount));
+      }
+    }
+
     /// <summary>Writes the bits of a floating-point number in CBOR format
     /// to a data stream.</summary>
     /// <param name='outputStream'>A writable data stream.</param>
@@ -5069,6 +5113,8 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     /// invalid.</param>
     /// <returns>The number of 8-bit bytes ordered to be written to the
     /// data stream.</returns>
+    /// <exception cref='ArgumentException'>The parameter <paramref
+    /// name='byteCount'/> is other than 2, 4, or 8.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='outputStream'/> is null.</exception>
     public static int WriteFloatingPointBits(
@@ -5131,6 +5177,8 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     /// this parameter are invalid.</param>
     /// <returns>The number of 8-bit bytes ordered to be written to the
     /// data stream.</returns>
+    /// <exception cref='ArgumentException'>The parameter <paramref
+    /// name='byteCount'/> is other than 2, 4, or 8.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='outputStream'/> is null.</exception>
     public static int WriteFloatingPointValue(
@@ -5173,6 +5221,8 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     /// binary64. Any other values for this parameter are invalid.</param>
     /// <returns>The number of 8-bit bytes ordered to be written to the
     /// data stream.</returns>
+    /// <exception cref='ArgumentException'>The parameter <paramref
+    /// name='byteCount'/> is other than 2, 4, or 8.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='outputStream'/> is null.</exception>
     public static int WriteFloatingPointValue(
