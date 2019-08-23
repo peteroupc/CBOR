@@ -7,7 +7,7 @@ at: http://peteroupc.github.io/
 using System;
 
 namespace PeterO.Cbor {
-    /// <summary>Exception thrown for errors involving CBOR data.</summary>
+  /// <summary>Exception thrown for errors involving CBOR data.</summary>
 #if NET20 || NET40
 [Serializable]
 #endif
@@ -43,11 +43,11 @@ public sealed class CBORException : Exception {
     /// object.</param>
     /// <param name='context'>A
     /// System.Runtime.Serialization.StreamingContext object.</param>
-      private CBORException(
-        System.Runtime.Serialization.SerializationInfo info,
-        System.Runtime.Serialization.StreamingContext context)
+    private CBORException(
+      System.Runtime.Serialization.SerializationInfo info,
+      System.Runtime.Serialization.StreamingContext context)
         : base(info, context) {
-      }
+ }
 #endif
   }
 }

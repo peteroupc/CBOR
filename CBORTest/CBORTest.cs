@@ -306,7 +306,8 @@ namespace Test {
       cbor = CBORObject.DecodeFromBytes(new byte[] { 0x5f, 0xff });
       Assert.AreEqual(0, cbor.GetByteString().Length);
       cbor = CBORObject.DecodeFromBytes(new byte[] { 0x7f, 0xff });
-      Assert.AreEqual(0, cbor.AsString().Length);
+      string str = cbor.AsString();
+      Assert.AreEqual(0, str.Length);
       cbor = CBORObject.DecodeFromBytes(new byte[] { 0x9f, 0xff });
       Assert.AreEqual(CBORType.Array, cbor.Type);
       Assert.AreEqual(0, cbor.Count);
@@ -2344,111 +2345,111 @@ cmpCobj.ToString() +
       // Floating Point Numbers
       bytes = new byte[] { 0xf9, 8, 8 };
       try {
- CBORObject.DecodeFromBytes(bytes, options);
-} catch (Exception ex) {
-Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(bytes, options);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       bytes = new byte[] { 0xfa, 8, 8, 8, 8 };
       try {
- CBORObject.DecodeFromBytes(bytes, options);
-} catch (Exception ex) {
-Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(bytes, options);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       bytes = new byte[] { 0xfb, 8, 8, 8, 8, 8, 8, 8, 8 };
       try {
- CBORObject.DecodeFromBytes(bytes, options);
-} catch (Exception ex) {
-Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(bytes, options);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       // Map Key Ordering
       bytes = new byte[] { 0xa2, 0, 0, 1, 0 };
       try {
- CBORObject.DecodeFromBytes(bytes, options);
-} catch (Exception ex) {
-Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(bytes, options);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       bytes = new byte[] { 0xa2, 1, 0, 0, 0 };
       try {
- CBORObject.DecodeFromBytes(bytes, options);
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(bytes, options);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       bytes = new byte[] { 0xa2, 0, 0, 0x20, 0 };
       try {
- CBORObject.DecodeFromBytes(bytes, options);
-} catch (Exception ex) {
-Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(bytes, options);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       bytes = new byte[] { 0xa2, 0x20, 0, 0, 0 };
       try {
- CBORObject.DecodeFromBytes(bytes, options);
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(bytes, options);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       bytes = new byte[] { 0xa2, 0, 0, 0x38, 0xff, 0 };
       try {
- CBORObject.DecodeFromBytes(bytes, options);
-} catch (Exception ex) {
-Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(bytes, options);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       bytes = new byte[] { 0xa2, 0x38, 0xff, 0, 0, 0 };
       try {
- CBORObject.DecodeFromBytes(bytes, options);
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(bytes, options);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       bytes = new byte[] { 0xa2, 0x41, 0xff, 0, 0x42, 0, 0, 0 };
       try {
- CBORObject.DecodeFromBytes(bytes, options);
-} catch (Exception ex) {
-Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(bytes, options);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       bytes = new byte[] { 0xa2, 0x42, 0, 0, 0, 0x41, 0xff, 0 };
       try {
- CBORObject.DecodeFromBytes(bytes, options);
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(bytes, options);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       bytes = new byte[] { 0xa2, 0x61, 0x7f, 0, 0x62, 0, 0, 0 };
       try {
- CBORObject.DecodeFromBytes(bytes, options);
-} catch (Exception ex) {
-Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(bytes, options);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       bytes = new byte[] { 0xa2, 0x62, 0, 0, 0, 0x61, 0x7f, 0 };
       try {
- CBORObject.DecodeFromBytes(bytes, options);
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(bytes, options);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
 
     [Test]
@@ -2643,41 +2644,26 @@ EInteger.FromString("-18446744073709551617");
           Assert.AreEqual(CBORType.Integer, cbor[0].Type);
           Assert.AreEqual(0, cbor[0].TagCount);
         }
-        using (var ms = new MemoryStream()) {
-          CBORObject.Write(ef, ms);
-          cbor = CBORObject.DecodeFromBytes(ms.ToArray());
-          Assert.IsTrue(cbor.IsNumber, cbor.ToString());
-          if (isPastCbor[i]) {
-            Assert.IsTrue(cbor.HasOneTag(265));
-            if (isNegative) {
-              Assert.IsTrue(cbor[0].HasOneTag(3));
+        try {
+          using (var ms = new MemoryStream()) {
+            CBORObject.Write(ef, ms);
+            cbor = CBORObject.DecodeFromBytes(ms.ToArray());
+            Assert.IsTrue(cbor.IsNumber, cbor.ToString());
+            if (isPastCbor[i]) {
+              Assert.IsTrue(cbor.HasOneTag(265));
+              if (isNegative) {
+                Assert.IsTrue(cbor[0].HasOneTag(3));
+              } else {
+                Assert.IsTrue(cbor[0].HasOneTag(2));
+              }
             } else {
-              Assert.IsTrue(cbor[0].HasOneTag(2));
+              Assert.IsTrue(cbor.HasOneTag(5));
+              Assert.AreEqual(CBORType.Integer, cbor[0].Type);
+              Assert.AreEqual(0, cbor[0].TagCount);
             }
-          } else {
-            Assert.IsTrue(cbor.HasOneTag(5));
-            Assert.AreEqual(CBORType.Integer, cbor[0].Type);
-            Assert.AreEqual(0, cbor[0].TagCount);
           }
-        }
-        EDecimal ed = EDecimal.Create(EInteger.One, eints[i]);
-        cbor = CBORObject.FromObject(ed);
-        Assert.IsTrue(cbor.IsNumber, cbor.ToString());
-        if (isPastCbor[i]) {
-          Assert.IsTrue(cbor.HasOneTag(264));
-          if (isNegative) {
-            Assert.IsTrue(cbor[0].HasOneTag(3));
-          } else {
-            Assert.IsTrue(cbor[0].HasOneTag(2));
-          }
-        } else {
-          Assert.IsTrue(cbor.HasOneTag(4));
-          Assert.AreEqual(CBORType.Integer, cbor[0].Type);
-          Assert.AreEqual(0, cbor[0].TagCount);
-        }
-        using (var ms2 = new MemoryStream()) {
-          CBORObject.Write(ed, ms);
-          cbor = CBORObject.DecodeFromBytes(ms2.ToArray());
+          EDecimal ed = EDecimal.Create(EInteger.One, eints[i]);
+          cbor = CBORObject.FromObject(ed);
           Assert.IsTrue(cbor.IsNumber, cbor.ToString());
           if (isPastCbor[i]) {
             Assert.IsTrue(cbor.HasOneTag(264));
@@ -2691,6 +2677,25 @@ EInteger.FromString("-18446744073709551617");
             Assert.AreEqual(CBORType.Integer, cbor[0].Type);
             Assert.AreEqual(0, cbor[0].TagCount);
           }
+          using (var ms2 = new MemoryStream()) {
+            CBORObject.Write(ed, ms2);
+            cbor = CBORObject.DecodeFromBytes(ms2.ToArray());
+            Assert.IsTrue(cbor.IsNumber, cbor.ToString());
+            if (isPastCbor[i]) {
+              Assert.IsTrue(cbor.HasOneTag(264));
+              if (isNegative) {
+                Assert.IsTrue(cbor[0].HasOneTag(3));
+              } else {
+                Assert.IsTrue(cbor[0].HasOneTag(2));
+              }
+            } else {
+              Assert.IsTrue(cbor.HasOneTag(4));
+              Assert.AreEqual(CBORType.Integer, cbor[0].Type);
+              Assert.AreEqual(0, cbor[0].TagCount);
+            }
+          }
+        } catch (IOException ioe) {
+          throw new InvalidOperationException(ioe.Message, ioe);
         }
       }
     }
