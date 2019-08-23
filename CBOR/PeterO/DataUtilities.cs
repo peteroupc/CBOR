@@ -22,15 +22,15 @@ namespace PeterO {
     /// 16-bit values called <c>char</c> s. These sequences are well-formed
     /// under UTF-16, a 16-bit encoding form of Unicode, except if they
     /// contain unpaired surrogate code points. (A surrogate code point is
-    /// used to encode supplementary characters, those with code points U +
-    /// 10000 or higher, in UTF-16. A surrogate pair is a high surrogate, U
-    /// + D800 to U + DBFF, followed by a low surrogate, U + DC00 to U +
-    /// DFFF. An unpaired surrogate code point is a surrogate not appearing
-    /// in a surrogate pair.) Many of the methods in this class allow
-    /// setting the behavior to follow when unpaired surrogate code points
-    /// are found in text strings, such as throwing an error or treating
-    /// the unpaired surrogate as a replacement character (U +
-    /// FFFD).</para></summary>
+    /// used to encode supplementary characters, those with code points
+    /// U+10000 or higher, in UTF-16. A surrogate pair is a high surrogate,
+    /// U+D800 to U+DBFF, followed by a low surrogate, U+DC00 to U+DFFF. An
+    /// unpaired surrogate code point is a surrogate not appearing in a
+    /// surrogate pair.) Many of the methods in this class allow setting
+    /// the behavior to follow when unpaired surrogate code points are
+    /// found in text strings, such as throwing an error or treating the
+    /// unpaired surrogate as a replacement character
+    /// (U+FFFD).</para></summary>
   public static class DataUtilities {
     private const int StreamedStringBufferLength = 4096;
 
@@ -38,7 +38,7 @@ namespace PeterO {
     /// <param name='bytes'>A byte array containing text encoded in
     /// UTF-8.</param>
     /// <param name='replace'>If true, replaces invalid encoding with the
-    /// replacement character (U + FFFD). If false, stops processing when
+    /// replacement character (U+FFFD). If false, stops processing when
     /// invalid UTF-8 is seen.</param>
     /// <returns>A string represented by the UTF-8 byte array.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -89,7 +89,7 @@ namespace PeterO {
     /// <param name='bytesCount'>Length, in bytes, of the UTF-8 text
     /// string.</param>
     /// <param name='replace'>If true, replaces invalid encoding with the
-    /// replacement character (U + FFFD). If false, stops processing when
+    /// replacement character (U+FFFD). If false, stops processing when
     /// invalid UTF-8 is seen.</param>
     /// <returns>A string represented by the UTF-8 byte array.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -138,7 +138,7 @@ namespace PeterO {
 
     /// <summary>
     /// <para>Encodes a string in UTF-8 as a byte array. This method does
-    /// not insert a byte-order mark (U + FEFF) at the beginning of the
+    /// not insert a byte-order mark (U+FEFF) at the beginning of the
     /// encoded byte array.</para>
     /// <para>REMARK: It is not recommended to use
     /// <c>Encoding.UTF8.GetBytes</c> in.NET, or the <c>getBytes()</c>
@@ -148,7 +148,7 @@ namespace PeterO {
     /// <param name='str'>The parameter <paramref name='str'/> is a text
     /// string.</param>
     /// <param name='replace'>If true, replaces unpaired surrogate code
-    /// points with the replacement character (U + FFFD). If false, stops
+    /// points with the replacement character (U+FFFD). If false, stops
     /// processing when an unpaired surrogate code point is seen.</param>
     /// <returns>The string encoded in UTF-8.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -162,7 +162,7 @@ namespace PeterO {
 
     /// <summary>
     /// <para>Encodes a string in UTF-8 as a byte array. This method does
-    /// not insert a byte-order mark (U + FEFF) at the beginning of the
+    /// not insert a byte-order mark (U+FEFF) at the beginning of the
     /// encoded byte array.</para>
     /// <para>REMARK: It is not recommended to use
     /// <c>Encoding.UTF8.GetBytes</c> in.NET, or the <c>getBytes()</c>
@@ -172,7 +172,7 @@ namespace PeterO {
     /// <param name='str'>The parameter <paramref name='str'/> is a text
     /// string.</param>
     /// <param name='replace'>If true, replaces unpaired surrogate code
-    /// points with the replacement character (U + FFFD). If false, stops
+    /// points with the replacement character (U+FFFD). If false, stops
     /// processing when an unpaired surrogate code point is seen.</param>
     /// <param name='lenientLineBreaks'>If true, replaces carriage return
     /// (CR) not followed by line feed (LF) and LF not preceded by CR with
@@ -247,7 +247,7 @@ namespace PeterO {
     /// string.</param>
     /// <param name='replace'>If true, treats unpaired surrogate code
     /// points as having 3 UTF-8 bytes (the UTF-8 length of the replacement
-    /// character U + FFFD).</param>
+    /// character U+FFFD).</param>
     /// <returns>The number of bytes needed to encode the given string in
     /// UTF-8, or -1 if the string contains an unpaired surrogate code
     /// point and <paramref name='replace'/> is false.</returns>
@@ -297,10 +297,10 @@ namespace PeterO {
     /// string.</param>
     /// <returns>The Unicode code point at the previous position. Returns
     /// -1 if <paramref name='index'/> is 0 or less, or is greater than the
-    /// string's length. Returns the replacement character (U + FFFD) if
-    /// the code point at the previous position is an unpaired surrogate
-    /// code point. If the return value is 65536 (0x10000) or greater, the
-    /// code point takes up two UTF-16 code units.</returns>
+    /// string's length. Returns the replacement character (U+FFFD) if the
+    /// code point at the previous position is an unpaired surrogate code
+    /// point. If the return value is 65536 (0x10000) or greater, the code
+    /// point takes up two UTF-16 code units.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='str'/> is null.</exception>
     public static int CodePointBefore(string str, int index) {
@@ -315,7 +315,7 @@ namespace PeterO {
     /// string.</param>
     /// <param name='surrogateBehavior'>Specifies what kind of value to
     /// return if the previous code point is an unpaired surrogate code
-    /// point: if 0, return the replacement character (U + FFFD); if 1,
+    /// point: if 0, return the replacement character (U+FFFD); if 1,
     /// return the value of the surrogate code point; if neither 0 nor 1,
     /// return -1.</param>
     /// <returns>The Unicode code point at the previous position. Returns
@@ -362,10 +362,10 @@ namespace PeterO {
     /// string.</param>
     /// <returns>The Unicode code point at the given position. Returns -1
     /// if <paramref name='index'/> is 0 or less, or is greater than the
-    /// string's length. Returns the replacement character (U + FFFD) if
-    /// the code point at that position is an unpaired surrogate code
-    /// point. If the return value is 65536 (0x10000) or greater, the code
-    /// point takes up two UTF-16 code units.</returns>
+    /// string's length. Returns the replacement character (U+FFFD) if the
+    /// code point at that position is an unpaired surrogate code point. If
+    /// the return value is 65536 (0x10000) or greater, the code point
+    /// takes up two UTF-16 code units.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='str'/> is null.</exception>
     public static int CodePointAt(string str, int index) {
@@ -429,8 +429,8 @@ namespace PeterO {
     }
 
     /// <summary>Returns a string with the basic upper-case letters A to Z
-    /// (U + 0041 to U + 005A) converted to lower-case. Other characters
-    /// remain unchanged.</summary>
+    /// (U+0041 to U+005A) converted to lower-case. Other characters remain
+    /// unchanged.</summary>
     /// <param name='str'>The parameter <paramref name='str'/> is a text
     /// string.</param>
     /// <returns>The converted string, or null if <paramref name='str'/> is
@@ -465,8 +465,8 @@ namespace PeterO {
     }
 
     /// <summary>Returns a string with the basic lower-case letters A to Z
-    /// (U + 0061 to U + 007A) converted to upper-case. Other characters
-    /// remain unchanged.</summary>
+    /// (U+0061 to U+007A) converted to upper-case. Other characters remain
+    /// unchanged.</summary>
     /// <param name='str'>The parameter <paramref name='str'/> is a text
     /// string.</param>
     /// <returns>The converted string, or null if <paramref name='str'/> is
@@ -573,7 +573,7 @@ namespace PeterO {
     /// write.</param>
     /// <param name='stream'>A writable data stream.</param>
     /// <param name='replace'>If true, replaces unpaired surrogate code
-    /// points with the replacement character (U + FFFD). If false, stops
+    /// points with the replacement character (U+FFFD). If false, stops
     /// processing when an unpaired surrogate code point is seen.</param>
     /// <returns>0 if the entire string portion was written; or -1 if the
     /// string portion contains an unpaired surrogate code point and
@@ -606,7 +606,7 @@ namespace PeterO {
     /// write.</param>
     /// <param name='stream'>A writable data stream.</param>
     /// <param name='replace'>If true, replaces unpaired surrogate code
-    /// points with the replacement character (U + FFFD). If false, stops
+    /// points with the replacement character (U+FFFD). If false, stops
     /// processing when an unpaired surrogate code point is seen.</param>
     /// <param name='lenientLineBreaks'>If true, replaces carriage return
     /// (CR) not followed by line feed (LF) and LF not preceded by CR with
@@ -760,7 +760,7 @@ namespace PeterO {
     /// <param name='str'>A string to write.</param>
     /// <param name='stream'>A writable data stream.</param>
     /// <param name='replace'>If true, replaces unpaired surrogate code
-    /// points with the replacement character (U + FFFD). If false, stops
+    /// points with the replacement character (U+FFFD). If false, stops
     /// processing when an unpaired surrogate code point is seen.</param>
     /// <returns>0 if the entire string was written; or -1 if the string
     /// contains an unpaired surrogate code point and <paramref
@@ -788,7 +788,7 @@ namespace PeterO {
     /// <param name='builder'>A string builder object where the resulting
     /// string will be stored.</param>
     /// <param name='replace'>If true, replaces invalid encoding with the
-    /// replacement character (U + FFFD). If false, stops processing when
+    /// replacement character (U+FFFD). If false, stops processing when
     /// invalid UTF-8 is seen.</param>
     /// <returns>0 if the entire string was read without errors, or -1 if
     /// the string is not valid UTF-8 and <paramref name='replace'/> is
@@ -914,7 +914,7 @@ namespace PeterO {
 
     /// <summary>Reads a string in UTF-8 encoding from a data stream in
     /// full and returns that string. Replaces invalid encoding with the
-    /// replacement character (U + FFFD).</summary>
+    /// replacement character (U+FFFD).</summary>
     /// <param name='stream'>A readable data stream.</param>
     /// <returns>The string read.</returns>
     /// <exception cref='System.IO.IOException'>An I/O error
@@ -932,7 +932,7 @@ namespace PeterO {
     /// this is less than 0, this function will read until the end of the
     /// stream.</param>
     /// <param name='replace'>If true, replaces invalid encoding with the
-    /// replacement character (U + FFFD). If false, throws an error if an
+    /// replacement character (U+FFFD). If false, throws an error if an
     /// unpaired surrogate code point is seen.</param>
     /// <returns>The string read.</returns>
     /// <exception cref='System.IO.IOException'>An I/O error occurred; or,
@@ -962,8 +962,8 @@ namespace PeterO {
     /// <param name='builder'>A string builder object where the resulting
     /// string will be stored.</param>
     /// <param name='replace'>If true, replaces invalid encoding with the
-    /// replacement character (U + FFFD). If false, stops processing when
-    /// an unpaired surrogate code point is seen.</param>
+    /// replacement character (U+FFFD). If false, stops processing when an
+    /// unpaired surrogate code point is seen.</param>
     /// <returns>0 if the entire string was read without errors, -1 if the
     /// string is not valid UTF-8 and <paramref name='replace'/> is false,
     /// or -2 if the end of the stream was reached before the last

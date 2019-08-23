@@ -94,6 +94,10 @@ namespace PeterO.Cbor {
     /// DecodeFromBytes and Read methods throw a CBORException.</para>
     /// <para>The ReadJSON and FromJSONString methods currently have
     /// nesting depths of 1000.</para></remarks>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage(
+      "Microsoft.Design",
+      "CA1036",
+      Justification = "Mutable in some cases, and arbitrary size.")]
   public sealed partial class CBORObject : IComparable<CBORObject>,
   IEquatable<CBORObject> {
     private static CBORObject ConstructSimpleValue(int v) {
@@ -778,8 +782,8 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
       if (second == null) {
         throw new ArgumentNullException(nameof(second));
       }
-      CBORNumber a = CBORNumber.FromCBORObject(first);
-      if (a == null) {
+      CBORNumber numberA = CBORNumber.FromCBORObject(first);
+      if (numberA == null) {
         throw new ArgumentException(nameof(first) + "does not represent a" +
            "\u0020number");
       }
@@ -788,7 +792,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
         throw new ArgumentException(nameof(second) + "does not represent a" +
            "\u0020number");
       }
-      return a.Add(b).ToCBORObject();
+      return numberA.Add(b).ToCBORObject();
     }
 
     /// <summary>
@@ -1000,7 +1004,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// keys.</para></summary>
     /// <param name='str'>A string in JSON format. The entire string must
     /// contain a single JSON object and not multiple objects. The string
-    /// may not begin with a byte-order mark (U + FEFF).</param>
+    /// may not begin with a byte-order mark (U+FEFF).</param>
     /// <returns>A CBOR object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='str'/> is null.</exception>
@@ -1021,7 +1025,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// keys.</para></summary>
     /// <param name='str'>A string in JSON format. The entire string must
     /// contain a single JSON object and not multiple objects. The string
-    /// may not begin with a byte-order mark (U + FEFF).</param>
+    /// may not begin with a byte-order mark (U+FEFF).</param>
     /// <param name='options'>Specifies options to control the decoding
     /// process.</param>
     /// <returns>A CBORObject object.</returns>
@@ -1452,14 +1456,11 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     }
 
     /// <summary>Generates a CBOR object from an arbitrary-precision
-    /// integer.The CBOR object is generated as follows:
+    /// integer. The CBOR object is generated as follows:
     /// <list>
     /// <item>If the number is null, returns CBORObject.Null.</item>
-    /// <item>Otherwise, if the number expresses infinity, not-a-number, or
-    /// negative zero, the CBOR object will have tag 269 and the
-    /// appropriate format.</item>
-    /// <item>Otherwise, if the number is less than -(2^64) and greater
-    /// than or equal to 2^64, the CBOR object will have the object type
+    /// <item>Otherwise, if the number is greater than or equal to -(2^64)
+    /// and less than 2^64, the CBOR object will have the object type
     /// Integer and the appropriate value.</item>
     /// <item>Otherwise, the CBOR object will have tag 2 (zero or positive)
     /// or 3 (negative) and the appropriate value.</item></list></summary>
@@ -2435,10 +2436,10 @@ options) {
 
     /// <summary>Generates a CBOR object from a data stream in JavaScript
     /// Object Notation (JSON) format. The JSON stream may begin with a
-    /// byte-order mark (U + FEFF). Since version 2.0, the JSON stream can
-    /// be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected
-    /// by assuming that the first character read must be a byte-order mark
-    /// or a nonzero basic character (U + 0001 to U + 007F). (In previous
+    /// byte-order mark (U+FEFF). Since version 2.0, the JSON stream can be
+    /// in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by
+    /// assuming that the first character read must be a byte-order mark or
+    /// a nonzero basic character (U+0001 to U+007F). (In previous
     /// versions, only UTF-8 was allowed.)
     /// <para>If a JSON object has the same key, only the last given value
     /// will be used for each duplicated key.</para></summary>
@@ -2459,10 +2460,10 @@ options) {
     /// <summary>Generates a CBOR object from a data stream in JavaScript
     /// Object Notation (JSON) format, using the specified options to
     /// control the decoding process. The JSON stream may begin with a
-    /// byte-order mark (U + FEFF). Since version 2.0, the JSON stream can
-    /// be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected
-    /// by assuming that the first character read must be a byte-order mark
-    /// or a nonzero basic character (U + 0001 to U + 007F). (In previous
+    /// byte-order mark (U+FEFF). Since version 2.0, the JSON stream can be
+    /// in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by
+    /// assuming that the first character read must be a byte-order mark or
+    /// a nonzero basic character (U+0001 to U+007F). (In previous
     /// versions, only UTF-8 was allowed.)
     /// <para>By default, if a JSON object has the same key, only the last
     /// given value will be used for each duplicated key.</para></summary>
@@ -2733,9 +2734,9 @@ options) {
         ++index;
       }
       if (index > 0) {
-        var ret = new byte[bytes.Length - index];
-        Array.Copy(bytes, index, ret, 0, ret.Length);
-        return ret;
+        var newBytes = new byte[bytes.Length - index];
+        Array.Copy(bytes, index, newBytes, 0, newBytes.Length);
+        return newBytes;
       }
       return bytes;
     }
@@ -2767,8 +2768,7 @@ options) {
         // If the arbitrary-precision integer is representable as a long and in
         // major type 0 or 1, write that major type
         // instead of as a bignum
-        var ui = bigint.ToInt64Checked();
-        WritePositiveInt64(datatype, ui, stream);
+        WritePositiveInt64(datatype, bigint.ToInt64Checked(), stream);
       } else {
         // Get a byte array of the arbitrary-precision integer's value,
         // since shifting and doing AND operations is
@@ -4084,17 +4084,22 @@ CBORObjectTypeEInteger)) {
             }
           case CBORObjectTypeSimpleValue: {
               if (tagged) {
+                var simpleBytes = new byte[] { tagbyte, (byte)0xf4 };
                 if (this.IsFalse) {
-                  return new[] { tagbyte, (byte)0xf4 };
+                  simpleBytes[1] = (byte)0xf4;
+                  return simpleBytes;
                 }
                 if (this.IsTrue) {
-                  return new[] { tagbyte, (byte)0xf5 };
+                  simpleBytes[1] = (byte)0xf5;
+                  return simpleBytes;
                 }
                 if (this.IsNull) {
-                  return new[] { tagbyte, (byte)0xf6 };
+                  simpleBytes[1] = (byte)0xf6;
+                  return simpleBytes;
                 }
                 if (this.IsUndefined) {
-                  return new[] { tagbyte, (byte)0xf7 };
+                  simpleBytes[1] = (byte)0xf7;
+                  return simpleBytes;
                 }
               } else {
                 if (this.IsFalse) {
@@ -4762,8 +4767,8 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     /// arbitrary-precision binary floating-point number is converted to
     /// null.)</item>
     ///  <item>The string will not begin with a byte-order
-    /// mark (U + FEFF); RFC 8259 (the JSON specification) forbids placing
-    /// a byte-order mark at the beginning of a JSON string.</item>
+    /// mark (U+FEFF); RFC 8259 (the JSON specification) forbids placing a
+    /// byte-order mark at the beginning of a JSON string.</item>
     /// <item>Byte strings are converted to Base64 URL without whitespace
     /// or padding by default (see section 4.1 of RFC 7049). A byte string
     /// will instead be converted to traditional base64 without whitespace
@@ -6387,7 +6392,7 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
             c = 0x10000 + ((c & 0x3ff) << 10) + (str[index + 1] & 0x3ff);
             ++index;
           } else if ((c & 0xf800) == 0xd800) {
-            // unpaired surrogate, write U + FFFD instead
+            // unpaired surrogate, write U+FFFD instead
             c = 0xfffd;
           }
           if (c <= 0xffff) {

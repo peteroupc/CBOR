@@ -36,7 +36,7 @@ namespace PeterO.Cbor {
     // <param name='str'>The parameter <paramref name='str'/> is a text
     // string.</param>
     // <param name='skipByteOrderMark'>If true and the first character in
-    // the string is U + FEFF, skip that character.</param>
+    // the string is U+FEFF, skip that character.</param>
     // <exception cref='ArgumentNullException'>The parameter <paramref
     // name='str'/> is null.</exception>
     public CharacterReader(string str, bool skipByteOrderMark)
@@ -48,9 +48,9 @@ namespace PeterO.Cbor {
     // <param name='str'>The parameter <paramref name='str'/> is a text
     // string.</param>
     // <param name='skipByteOrderMark'>If true and the first character in
-    // the string is U + FEFF, skip that character.</param>
+    // the string is U+FEFF, skip that character.</param>
     // <param name='errorThrow'>When encountering invalid encoding, throw
-    // an exception if this parameter is true, or replace it with U + FFFD
+    // an exception if this parameter is true, or replace it with U+FFFD
     // (replacement character) if this parameter is false.</param>
     // <exception cref='ArgumentNullException'>The parameter <paramref
     // name='str'/> is null.</exception>
@@ -75,10 +75,18 @@ namespace PeterO.Cbor {
     // <see cref='PeterO.Cbor.CharacterReader'/> class.</summary>
     // <param name='str'>The parameter <paramref name='str'/> is a text
     // string.</param>
-    // <param name='offset'>The parameter <paramref name='offset'/> is a
-    // 32-bit signed integer.</param>
-    // <param name='length'>The parameter <paramref name='length'/> is a
-    // 32-bit signed integer.</param>
+    // <param name='offset'>An index, starting at 0, showing where the
+    // desired portion of <paramref name='str'/> begins.</param>
+    // <param name='length'>The length, in code units, of the desired
+    // portion of <paramref name='str'/> (but not more than <paramref
+    // name='str'/> 's length).</param>
+    // <exception cref='ArgumentException'>Either &#x22;offset&#x22; or
+    // &#x22;length&#x22; is less than 0 or greater than
+    // &#x22;str&#x22;&#x27;s length, or &#x22;str&#x22;&#x27;s length
+    // minus &#x22;offset&#x22; is less than
+    // &#x22;length&#x22;.</exception>
+    // <exception cref='ArgumentNullException'>The parameter <paramref
+    // name='str'/> is null.</exception>
     public CharacterReader(string str, int offset, int length)
       : this(str, offset, length, false, false) {
     }
@@ -92,9 +100,9 @@ namespace PeterO.Cbor {
     // <param name='length'>The parameter <paramref name='length'/> is a
     // 32-bit signed integer.</param>
     // <param name='skipByteOrderMark'>If true and the first character in
-    // the string portion is U + FEFF, skip that character.</param>
+    // the string portion is U+FEFF, skip that character.</param>
     // <param name='errorThrow'>When encountering invalid encoding, throw
-    // an exception if this parameter is true, or replace it with U + FFFD
+    // an exception if this parameter is true, or replace it with U+FFFD
     // (replacement character) if this parameter is false.</param>
     // <exception cref='ArgumentNullException'>The parameter <paramref
     // name='str'/> is null.</exception>
@@ -139,9 +147,9 @@ namespace PeterO.Cbor {
 
     // <summary>Initializes a new instance of the
     // <see cref='PeterO.Cbor.CharacterReader'/> class; will read the
-    // stream as UTF-8, skip the byte-order mark (U + FEFF) if it appears
+    // stream as UTF-8, skip the byte-order mark (U+FEFF) if it appears
     // first in the stream, and replace invalid byte sequences with
-    // replacement characters (U + FFFD).</summary>
+    // replacement characters (U+FFFD).</summary>
     // <param name='stream'>A readable data stream.</param>
     // <exception cref='ArgumentNullException'>The parameter <paramref
     // name='stream'/> is null.</exception>
@@ -150,14 +158,14 @@ namespace PeterO.Cbor {
 
     // <summary>Initializes a new instance of the
     // <see cref='PeterO.Cbor.CharacterReader'/> class; will skip the
-    // byte-order mark (U + FEFF) if it appears first in the stream and a
+    // byte-order mark (U+FEFF) if it appears first in the stream and a
     // UTF-8 stream is detected.</summary>
     // <param name='stream'>A readable data stream.</param>
     // <param name='mode'>The method to use when detecting encodings other
     // than UTF-8 in the byte stream. This usually involves checking
-    // whether the stream begins with a byte-order mark (BOM, U + FEFF) or
-    // a non-zero basic code point (U + 0001 to U + 007F) before reading
-    // the rest of the stream. This value can be one of the following:
+    // whether the stream begins with a byte-order mark (BOM, U+FEFF) or a
+    // non-zero basic code point (U+0001 to U+007F) before reading the
+    // rest of the stream. This value can be one of the following:
     // <list>
     // <item>0: UTF-8 only.</item>
     // <item>1: Detect UTF-16 using BOM or non-zero basic code point,
@@ -168,7 +176,7 @@ namespace PeterO.Cbor {
     // <item>4: Detect UTF-16/UTF-32 using BOM, otherwise UTF-8. (Tries to
     // detect UTF-32 first.)</item></list>.</param>
     // <param name='errorThrow'>When encountering invalid encoding, throw
-    // an exception if this parameter is true, or replace it with U + FFFD
+    // an exception if this parameter is true, or replace it with U+FFFD
     // (replacement character) if this parameter is false.</param>
     public CharacterReader(Stream stream, int mode, bool errorThrow)
       : this(stream, mode, errorThrow, false) {
@@ -176,15 +184,15 @@ namespace PeterO.Cbor {
 
     // <summary>Initializes a new instance of the
     // <see cref='PeterO.Cbor.CharacterReader'/> class; will skip the
-    // byte-order mark (U + FEFF) if it appears first in the stream and
-    // replace invalid byte sequences with replacement characters (U +
-    // FFFD).</summary>
+    // byte-order mark (U+FEFF) if it appears first in the stream and
+    // replace invalid byte sequences with replacement characters
+    // (U+FFFD).</summary>
     // <param name='stream'>A readable byte stream.</param>
     // <param name='mode'>The method to use when detecting encodings other
     // than UTF-8 in the byte stream. This usually involves checking
-    // whether the stream begins with a byte-order mark (BOM, U + FEFF) or
-    // a non-zero basic code point (U + 0001 to U + 007F) before reading
-    // the rest of the stream. This value can be one of the following:
+    // whether the stream begins with a byte-order mark (BOM, U+FEFF) or a
+    // non-zero basic code point (U+0001 to U+007F) before reading the
+    // rest of the stream. This value can be one of the following:
     // <list>
     // <item>0: UTF-8 only.</item>
     // <item>1: Detect UTF-16 using BOM or non-zero basic code point,
@@ -205,9 +213,9 @@ namespace PeterO.Cbor {
     // <param name='stream'>A readable byte stream.</param>
     // <param name='mode'>The method to use when detecting encodings other
     // than UTF-8 in the byte stream. This usually involves checking
-    // whether the stream begins with a byte-order mark (BOM, U + FEFF) or
-    // a non-zero basic code point (U + 0001 to U + 007F) before reading
-    // the rest of the stream. This value can be one of the following:
+    // whether the stream begins with a byte-order mark (BOM, U+FEFF) or a
+    // non-zero basic code point (U+0001 to U+007F) before reading the
+    // rest of the stream. This value can be one of the following:
     // <list>
     // <item>0: UTF-8 only.</item>
     // <item>1: Detect UTF-16 using BOM or non-zero basic code point,
@@ -220,7 +228,7 @@ namespace PeterO.Cbor {
     // <param name='errorThrow'>If true, will throw an exception if
     // invalid byte sequences (in the detected encoding) are found in the
     // byte stream. If false, replaces those byte sequences with
-    // replacement characters (U + FFFD) as the stream is read.</param>
+    // replacement characters (U+FFFD) as the stream is read.</param>
     // <param name='dontSkipUtf8Bom'>If the stream is detected as UTF-8
     // and this parameter is <c>true</c>, won't skip the BOM character if
     // it occurs at the start of the stream.</param>
@@ -250,8 +258,8 @@ namespace PeterO.Cbor {
     // string.</summary>
     // <param name='chars'>An array where the code points that were read
     // will be stored.</param>
-    // <param name='index'>A zero-based index showing where the desired
-    // portion of <paramref name='chars'/> begins.</param>
+    // <param name='index'>An index starting at 0 showing where the
+    // desired portion of <paramref name='chars'/> begins.</param>
     // <param name='length'>The number of elements in the desired portion
     // of <paramref name='chars'/> (but not more than <paramref
     // name='chars'/> 's length).</param>

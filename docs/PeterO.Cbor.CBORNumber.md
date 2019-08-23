@@ -200,7 +200,7 @@ Returns whether one object's value is less than another's.
 
 <b>Return Value:</b>
 
- `true`  if one object's value is less than another's; otherwise,  `false` .
+ `true`  if the first object's value is less than the other's; otherwise,  `false` .
 
 <b>Exceptions:</b>
 

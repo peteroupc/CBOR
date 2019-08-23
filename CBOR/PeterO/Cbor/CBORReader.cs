@@ -141,32 +141,21 @@ namespace PeterO.Cbor {
     private CBORObject ReadStringArrayMap(int type, long uadditional) {
       bool canonical = this.options.Ctap2Canonical;
       if (type == 2) { // Byte string
-        if ((uadditional >> 63) != 0) {
+        if ((uadditional >> 31) != 0) {
           throw new CBORException("Length of " +
                   ToUnsignedEInteger(uadditional).ToString() + " is bigger" +
-"\u0020than supported");
+                         "\u0020than supported");
         }
-        if (uadditional > Int32.MaxValue) {
-          throw new CBORException("Length of " +
-            CBORUtilities.LongToString(uadditional) +
-            " is bigger than supported");
-        }
-        int hint = (uadditional > Int32.MaxValue || (uadditional >> 63) !=
-0) ?
-          Int32.MaxValue : (int)uadditional;
+        int hint = (uadditional > Int32.MaxValue ||
+             (uadditional >> 63) != 0) ? Int32.MaxValue : (int)uadditional;
         byte[] data = ReadByteData(this.stream, uadditional, null);
         return this.ObjectFromByteArray(data, hint);
       }
       if (type == 3) { // Text string
-        if ((uadditional >> 63) != 0) {
+        if ((uadditional >> 31) != 0) {
           throw new CBORException("Length of " +
                   ToUnsignedEInteger(uadditional).ToString() + " is bigger" +
 "\u0020than supported");
-        }
-        if (uadditional > Int32.MaxValue) {
-          throw new CBORException("Length of " +
-            CBORUtilities.LongToString(uadditional) +
-            " is bigger than supported");
         }
         if (PropertyMap.ExceedsKnownLength(this.stream, uadditional)) {
           throw new CBORException("Premature end of data");
@@ -197,14 +186,9 @@ namespace PeterO.Cbor {
           throw new CBORException("Depth too high in canonical CBOR");
         }
         CBORObject cbor = CBORObject.NewArray();
-        if ((uadditional >> 63) != 0) {
+        if ((uadditional >> 31) != 0) {
           throw new CBORException("Length of " +
   ToUnsignedEInteger(uadditional).ToString() + " is bigger than supported");
-        }
-        if (uadditional > Int32.MaxValue) {
-          throw new CBORException("Length of " +
-            CBORUtilities.LongToString(uadditional) +
-            " is bigger than supported");
         }
         if (PropertyMap.ExceedsKnownLength(this.stream, uadditional)) {
           throw new CBORException("Remaining data too small for array length");
@@ -222,15 +206,10 @@ namespace PeterO.Cbor {
           throw new CBORException("Depth too high in canonical CBOR");
         }
         CBORObject cbor = CBORObject.NewMap();
-        if ((uadditional >> 63) != 0) {
+        if ((uadditional >> 31) != 0) {
           throw new CBORException("Length of " +
             ToUnsignedEInteger(uadditional).ToString() + " is bigger than" +
 "\u0020supported");
-        }
-        if (uadditional > Int32.MaxValue) {
-          throw new CBORException("Length of " +
-            CBORUtilities.LongToString(uadditional) +
-            " is bigger than supported");
         }
         if (PropertyMap.ExceedsKnownLength(this.stream, uadditional)) {
           throw new CBORException("Remaining data too small for map length");

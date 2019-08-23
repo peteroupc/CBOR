@@ -9,6 +9,10 @@ namespace PeterO.Cbor {
     /// of the following kinds of numbers: 64-bit signed integers or binary
     /// floating-point numbers; or arbitrary-precision integers, decimal
     /// numbers, binary numbers, or rational numbers.</summary>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage(
+    "Microsoft.Design",
+    "CA1036",
+    Justification = "Arbitrary size.")]
   public sealed partial class CBORNumber : IComparable<CBORNumber> {
     internal enum Kind {
     /// <summary>A 64-bit signed integer.</summary>
@@ -529,7 +533,8 @@ Double.IsNaN(f)) {
             return CBORUtilities.LongToString(longItem);
           }
         case Kind.EInteger: {
-            return ((EInteger)this.value).ToString();
+            object eiobj = this.value;
+            return ((EInteger)eiobj).ToString();
           }
         case Kind.EDecimal: {
             var dec = (EDecimal)this.value;
@@ -574,17 +579,17 @@ Double.IsNaN(f)) {
       }
     }
 
-    internal static CBORNumber FromObject(int value) {
-      return new CBORNumber(Kind.Integer, (long)value);
+    internal static CBORNumber FromObject(int intValue) {
+      return new CBORNumber(Kind.Integer, (long)intValue);
     }
-    internal static CBORNumber FromObject(long value) {
-      return new CBORNumber(Kind.Integer, value);
+    internal static CBORNumber FromObject(long longValue) {
+      return new CBORNumber(Kind.Integer, longValue);
     }
-    internal static CBORNumber FromObject(double value) {
-      return new CBORNumber(Kind.Double, value);
+    internal static CBORNumber FromObject(double doubleValue) {
+      return new CBORNumber(Kind.Double, doubleValue);
     }
-    internal static CBORNumber FromObject(EInteger value) {
-      return new CBORNumber(Kind.EInteger, value);
+    internal static CBORNumber FromObject(EInteger eivalue) {
+      return new CBORNumber(Kind.EInteger, eivalue);
     }
     internal static CBORNumber FromObject(EFloat value) {
       return new CBORNumber(Kind.EFloat, value);

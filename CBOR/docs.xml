@@ -493,7 +493,7 @@
     </param>
     <param name='b'>The right-hand side of the comparison.
     </param>
-    <returns><c>true</c> if one object's value is less than another's; otherwise,
+    <returns><c>true</c> if the first object's value is less than the other's; otherwise,
       <c>false</c> .
     </returns>
     <exception cref='ArgumentNullException'>The parameter
@@ -1587,15 +1587,12 @@
     </returns>
   </doc>
   <doc name='M:PeterO.Cbor.CBORObject.FromObject(PeterO.Numbers.EInteger)'>
-    <summary>Generates a CBOR object from an arbitrary-precision integer.The CBOR
+    <summary>Generates a CBOR object from an arbitrary-precision integer. The CBOR
       object is generated as follows:
       <list>
         <item>If the number is null, returns CBORObject.Null.
         </item>
-        <item>Otherwise, if the number expresses infinity, not-a-number, or negative
-          zero, the CBOR object will have tag 269 and the appropriate format.
-        </item>
-        <item>Otherwise, if the number is less than -(2^64) and at least 2^64, the
+        <item>Otherwise, if the number is at least -(2^64) and less than 2^64, the
           CBOR object will have the object type Integer and the appropriate
           value.
         </item>
@@ -4783,6 +4780,14 @@
     <returns>Either a Unicode code point (from 0-0xd7ff or from 0xe000 to 0x10ffff), or
       the value -1 indicating the end of the source.
     </returns>
+    <exception cref='ArgumentException'>Either &quot;index&quot; or &quot;length&quot; is less than 0 or greater
+      than &quot;chars&quot;&apos;s length, or &quot;chars&quot;&apos;s length
+      minus &quot;index&quot; is less than &quot;length&quot;.
+    </exception>
+    <exception cref='ArgumentNullException'>The parameter
+      <paramref name='chars'/>
+       is null.
+    </exception>
   </doc>
   <doc name='M:PeterO.Cbor.ICharacterInput.ReadChar'>
     <summary>Reads a Unicode character from a data source.

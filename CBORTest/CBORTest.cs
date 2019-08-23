@@ -1113,7 +1113,7 @@ namespace Test {
         cbortag = CBORObject.FromObjectAndTag(cbor, tag);
         try {
           Console.WriteLine(cbortag.AsEDecimal());
-          Assert.Fail("Should have failed", cbortag.ToString());
+          Assert.Fail("Should have failed " + cbortag.ToString());
         } catch (InvalidOperationException) {
           // NOTE: Intentionally empty
         } catch (Exception ex) {
@@ -1127,7 +1127,7 @@ namespace Test {
         cbortag = CBORObject.FromObjectAndTag(cbor, tag);
         try {
           Console.WriteLine(cbortag.AsEDecimal());
-          Assert.Fail("Should have failed", cbortag.ToString());
+          Assert.Fail("Should have failed " + cbortag.ToString());
         } catch (InvalidOperationException) {
           // NOTE: Intentionally empty
         } catch (Exception ex) {
@@ -1138,7 +1138,7 @@ namespace Test {
         cbortag = CBORObject.FromObjectAndTag(cbor, tag);
         try {
           Console.WriteLine(cbortag.AsEDecimal());
-          Assert.Fail("Should have failed", cbortag.ToString());
+          Assert.Fail("Should have failed " + cbortag.ToString());
         } catch (InvalidOperationException) {
           // NOTE: Intentionally empty
         } catch (Exception ex) {
@@ -1155,7 +1155,7 @@ namespace Test {
         cbortag = CBORObject.FromObjectAndTag(cbor, tag);
         try {
           Console.WriteLine(cbortag.AsEDecimal());
-          Assert.Fail("Should have failed", cbortag.ToString());
+          Assert.Fail("Should have failed " + cbortag.ToString());
         } catch (InvalidOperationException) {
           // NOTE: Intentionally empty
         } catch (Exception ex) {
@@ -2675,9 +2675,9 @@ EInteger.FromString("-18446744073709551617");
           Assert.AreEqual(CBORType.Integer, cbor[0].Type);
           Assert.AreEqual(0, cbor[0].TagCount);
         }
-        using (var ms = new MemoryStream()) {
+        using (var ms2 = new MemoryStream()) {
           CBORObject.Write(ed, ms);
-          cbor = CBORObject.DecodeFromBytes(ms.ToArray());
+          cbor = CBORObject.DecodeFromBytes(ms2.ToArray());
           Assert.IsTrue(cbor.IsNumber, cbor.ToString());
           if (isPastCbor[i]) {
             Assert.IsTrue(cbor.HasOneTag(264));

@@ -99,10 +99,17 @@ namespace PeterO.Cbor {
         return cbor.EncodeToBytes(CBOREncodeOptions.Default);
       } else if (valueAType == CBORType.FloatingPoint) {
         long bits = cbor.AsDoubleBits();
-        using (var ms = new MemoryStream()) {
-          CBORObject.WriteFloatingPointBits(ms, bits, 8);
-          return ms.ToArray();
-        }
+        return new byte[] {
+          (byte)0xfb,
+          (byte)((bits >> 56) & 0xffL),
+          (byte)((bits >> 48) & 0xffL),
+          (byte)((bits >> 40) & 0xffL),
+          (byte)((bits >> 32) & 0xffL),
+          (byte)((bits >> 24) & 0xffL),
+          (byte)((bits >> 16) & 0xffL),
+          (byte)((bits >> 8) & 0xffL),
+          (byte)(bits & 0xffL),
+        };
       } else if (valueAType == CBORType.Integer) {
         return cbor.EncodeToBytes(CBOREncodeOptions.Default);
       } else {

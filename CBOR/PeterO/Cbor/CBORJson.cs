@@ -552,7 +552,7 @@ namespace PeterO.Cbor {
             return;
         }
         case CBORType.ByteString: {
-            var byteArray = obj.GetByteString();
+            byte[] byteArray = obj.GetByteString();
             if (byteArray.Length == 0) {
               writer.WriteString("\"\"");
               return;
@@ -585,7 +585,7 @@ namespace PeterO.Cbor {
             break;
           }
         case CBORType.TextString: {
-            var thisString = obj.AsString();
+            string thisString = obj.AsString();
             if (thisString.Length == 0) {
               writer.WriteString("\"\"");
               return;

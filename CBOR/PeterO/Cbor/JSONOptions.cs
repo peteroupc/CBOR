@@ -30,7 +30,7 @@ namespace PeterO.Cbor {
     /// <param name='replaceSurrogates'>Whether surrogate code points not
     /// part of a surrogate pair (which consists of two consecutive
     /// <c>char</c> s forming one Unicode code point) are each replaced
-    /// with a replacement character (U + FFFD). The default is false; an
+    /// with a replacement character (U+FFFD). The default is false; an
     /// exception is thrown when such code points are encountered.</param>
 #pragma warning disable CS0618
     public JSONOptions(bool base64Padding, bool replaceSurrogates) {
@@ -52,8 +52,8 @@ namespace PeterO.Cbor {
     /// <c>base64padding</c>, <c>replacesurrogates</c>. Other keys are
     /// ignored. (Keys are compared using a basic case-insensitive
     /// comparison, in which two strings are equal if they match after
-    /// converting the basic upper-case letters A to Z (U + 0041 to U +
-    /// 005A) in both strings to basic lower-case letters.) If two or more
+    /// converting the basic upper-case letters A to Z (U+0041 to U + 005A)
+    /// in both strings to basic lower-case letters.) If two or more
     /// key/value pairs have equal keys (in a basic case-insensitive
     /// comparison), the value given for the last such key is used. The two
     /// keys just given can have a value of <c>1</c>, <c>true</c>,
@@ -105,7 +105,7 @@ namespace PeterO.Cbor {
     /// <summary>Gets a value indicating whether surrogate code points not
     /// part of a surrogate pair (which consists of two consecutive
     /// <c>char</c> s forming one Unicode code point) are each replaced
-    /// with a replacement character (U + FFFD). The default is false; an
+    /// with a replacement character (U+FFFD). The default is false; an
     /// exception is thrown when such code points are
     /// encountered.</summary>
     /// <value>True, if surrogate code points not part of a surrogate pair

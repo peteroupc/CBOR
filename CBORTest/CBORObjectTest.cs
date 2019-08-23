@@ -6827,6 +6827,7 @@ ToObjectTest.TestToFromObjectRoundTrip(byteval);
         for (var j = 1; j <= 4; ++j) {
           bytes[j] = (byte)r.UniformInt(256);
         }
+
         CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
         if (!cbor.IsNaN()) {
           using (var ms = new MemoryStream()) {

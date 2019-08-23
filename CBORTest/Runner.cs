@@ -54,19 +54,17 @@ namespace PeterO {
            if (method.Name.IndexOf(ValueParam, StringComparison.Ordinal) < 0) {
              continue;
            }
-          }
-          Console.WriteLine(method.Name);
-          try {
+         }
+         Console.WriteLine(method.Name);
+         try {
             method.Invoke(test, new object[] { });
-          } catch (TargetInvocationException e) {
-            {
+         } catch (TargetInvocationException e) {
               Console.WriteLine(e.InnerException.GetType().FullName);
               string message = e.InnerException.Message;
               // if (message.Length > 140) {
               // message = message.Substring(0, 140);
               // }
               Console.WriteLine(message);
-            }
           }
         }
       }
