@@ -496,6 +496,9 @@ namespace PeterO.Cbor {
       Stream stream,
       long uadditional,
       Stream outputStream) {
+      if (uadditional == 0) {
+        return new byte[0];
+      }
       if ((uadditional >> 63) != 0 || uadditional > Int32.MaxValue) {
         throw new CBORException("Length" + ToUnsignedEInteger(uadditional) +
           " is bigger than supported ");

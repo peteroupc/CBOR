@@ -833,7 +833,7 @@ namespace PeterO.Cbor {
     public static object CallFromObject(
       CBORTypeMapper.ConverterInfo convinfo,
       CBORObject obj) {
-      return (CBORObject)PropertyMap.InvokeOneArgumentMethod(
+      return (object)PropertyMap.InvokeOneArgumentMethod(
         convinfo.FromObject,
         convinfo.Converter,
         obj);

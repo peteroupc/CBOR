@@ -1,6 +1,6 @@
 using System.Reflection;
 [assembly: System.CLSCompliant(true)]
-[assembly: AssemblyInformationalVersion("4.0.0-beta1")]
+[assembly: AssemblyInformationalVersion("4.0.0-beta2")]
 [assembly: AssemblyVersion("4.0.0")]
 [assembly: AssemblyFileVersion("4.0.0.0")]
 [assembly: AssemblyProduct("CBOR (Concise Binary Object Representati" +
@@ -12,5 +12,4 @@ using System.Reflection;
 "rpose binary data format defined in RFC " +
 "7049.")]
 [assembly: AssemblyCompany("Peter Occil")]
-[assembly: AssemblyCopyright("http://creativecommons.org/publicdomain/" +
-"zero/1.0/")]
+[assembly: AssemblyCopyright("CC0-1.0")]
