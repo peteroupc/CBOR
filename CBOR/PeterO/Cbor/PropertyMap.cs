@@ -103,11 +103,7 @@ namespace PeterO.Cbor {
     private static bool HasCustomAttribute(
       Type t,
       string name) {
-#if NET40 || NET20
       foreach (var attr in t.GetCustomAttributes(false)) {
-#else
-    foreach (var attr in t.CustomAttributes) {
-#endif
         if (attr.GetType().FullName.Equals(name,
            StringComparison.Ordinal)) {
           return true;
@@ -141,7 +137,6 @@ namespace PeterO.Cbor {
       }
       return false;
     }
-
 #endif
 
     private static readonly IDictionary<Type, IList<PropertyData>>
@@ -824,6 +819,24 @@ namespace PeterO.Cbor {
         }
       }
       return o;
+    }
+
+    public static CBORObject CallToObject(
+      CBORTypeMapper.ConverterInfo convinfo,
+      object obj) {
+      return (CBORObject)PropertyMap.InvokeOneArgumentMethod(
+        convinfo.ToObject,
+        convinfo.Converter,
+        obj);
+    }
+
+    public static object CallFromObject(
+      CBORTypeMapper.ConverterInfo convinfo,
+      CBORObject obj) {
+      return (CBORObject)PropertyMap.InvokeOneArgumentMethod(
+        convinfo.FromObject,
+        convinfo.Converter,
+        obj);
     }
 
     public static IEnumerable<KeyValuePair<string, object>>

@@ -2181,7 +2181,7 @@ cmpCobj.ToString() +
         }
       }
       for (var i = 2; i <= 5; ++i) {
-        int eb = (byte)(0x20 * i);
+        int eb = 0x20 * i;
         bytes = new byte[] { (byte)eb };
         try {
           CBORObject.DecodeFromBytes(bytes, options);

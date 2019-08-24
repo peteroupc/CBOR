@@ -72,13 +72,8 @@ namespace PeterO.Cbor {
       if (convinfo == null) {
         return null;
       }
-      if (convinfo.FromObject == null) {
-        return null;
-      }
-      return PropertyMap.InvokeOneArgumentMethod(
-        convinfo.FromObject,
-        convinfo.Converter,
-        cbor);
+      return (convinfo.FromObject == null) ? null :
+        PropertyMap.CallFromObject(convinfo, cbor);
     }
 
     internal CBORObject ConvertWithConverter(object obj) {
@@ -89,13 +84,8 @@ namespace PeterO.Cbor {
       } else {
         return null;
       }
-      if (convinfo == null) {
-        return null;
-      }
-      return (CBORObject)PropertyMap.InvokeOneArgumentMethod(
-        convinfo.ToObject,
-        convinfo.Converter,
-        obj);
+      return (convinfo == null) ? null :
+        PropertyMap.CallToObject(convinfo, obj);
     }
 
     /// <summary>Returns whether the given Java or.NET type name fits the
