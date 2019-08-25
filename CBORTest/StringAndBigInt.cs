@@ -27,6 +27,11 @@ namespace Test {
     }
 
     public static StringAndBigInt Generate(RandomGenerator rand, int radix) {
+       return Generate(rand, radix, 50);
+    }
+
+    public static StringAndBigInt Generate(RandomGenerator rand, int radix,
+  int maxNumDigits) {
       if (radix < 2) {
         throw new ArgumentException("radix (" + radix +
           ") is less than 2");
@@ -37,7 +42,7 @@ namespace Test {
       }
       EInteger bv = EInteger.Zero;
       var sabi = new StringAndBigInt();
-      int numDigits = 1 + rand.UniformInt(400);
+      int numDigits = 1 + rand.UniformInt(maxNumDigits);
       var negative = false;
       var builder = new StringBuilder();
       if (rand.UniformInt(2) == 0) {

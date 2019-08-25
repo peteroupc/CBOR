@@ -593,7 +593,7 @@ namespace PeterO.Cbor {
 #if NET40 || NET20
       if (t.IsGenericType) {
 #else
-      if (t.GetTypeInfo().IsGenericType) {
+        if (t.GetTypeInfo().IsGenericType) {
 #endif
         Type td = t.GetGenericTypeDefinition();
         // Nullable types

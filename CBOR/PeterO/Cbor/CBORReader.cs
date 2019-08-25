@@ -255,10 +255,17 @@ namespace PeterO.Cbor {
       int type = (firstbyte >> 5) & 0x07;
       int additional = firstbyte & 0x1f;
       long uadditional;
+      CBORObject fixedObject;
       if (this.options.Ctap2Canonical) {
         if (additional >= 0x1c) {
           // NOTE: Includes stop byte and indefinite length data items
           throw new CBORException("Invalid canonical CBOR encountered");
+        }
+        // Check if this represents a fixed object (NOTE: All fixed objects
+        // comply with CTAP2 canonical CBOR).
+        fixedObject = CBORObject.GetFixedObject(firstbyte);
+        if (fixedObject != null) {
+          return fixedObject;
         }
         if (type == 6) {
           throw new CBORException("Tags not allowed in canonical CBOR");
@@ -269,11 +276,8 @@ namespace PeterO.Cbor {
               CBORObject.FromObject(ToUnsignedEInteger(uadditional)) :
               CBORObject.FromObject(uadditional);
             } else if (type == 1) {
-          return (uadditional >> 63) != 0 ?
-
-              CBORObject.FromObject(
-                ToUnsignedEInteger(uadditional).Add(1).Negate())
-:
+          return (uadditional >> 63) != 0 ? CBORObject.FromObject(
+                ToUnsignedEInteger(uadditional).Add(1).Negate()) :
               CBORObject.FromObject((-uadditional) - 1L);
             } else if (type == 7) {
           if (additional < 24) {
@@ -301,7 +305,7 @@ namespace PeterO.Cbor {
         throw new CBORException("Unexpected data encountered");
       }
       // Check if this represents a fixed object
-      CBORObject fixedObject = CBORObject.GetFixedObject(firstbyte);
+      fixedObject = CBORObject.GetFixedObject(firstbyte);
       if (fixedObject != null) {
         return fixedObject;
       }
@@ -643,7 +647,7 @@ namespace PeterO.Cbor {
         return bytes[0];
       }
     }
-   */
+ */
 #endif
   }
 }

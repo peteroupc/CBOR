@@ -7,7 +7,76 @@ namespace PeterO.Cbor {
     internal static readonly IComparer<CBORObject> Comparer =
       new CtapComparer();
 
+    private static readonly IComparer<KeyValuePair<byte[], byte[]>>
+         ByteComparer = new CtapByteComparer();
+
+    private sealed class CtapByteComparer : IComparer<KeyValuePair<byte[],
+  byte[]>> {
+      public int Compare(
+         KeyValuePair<byte[], byte[]> kva,
+         KeyValuePair<byte[], byte[]> kvb) {
+        byte[] bytesA = kva.Key;
+        byte[] bytesB = kvb.Key;
+        if (bytesA == null) {
+          return bytesB == null ? 0 : -1;
+        }
+        if (bytesB == null) {
+          return 1;
+        }
+        if (bytesA.Length == 0) {
+          return bytesB.Length == 0 ? 0 : -1;
+        }
+        if (bytesB.Length == 0) {
+          return 1;
+        }
+        if (bytesA == bytesB) {
+          // NOTE: Assumes reference equality of CBORObjects
+          return 0;
+        }
+        // check major types
+        if (((int)bytesA[0] & 0xe0) != ((int)bytesB[0] & 0xe0)) {
+          return ((int)bytesA[0] & 0xe0) < ((int)bytesB[0] & 0xe0) ? -1 : 1;
+        }
+        // check lengths
+        if (bytesA.Length != bytesB.Length) {
+          return bytesA.Length < bytesB.Length ? -1 : 1;
+        }
+        // check bytes
+        for (var i = 0; i < bytesA.Length; ++i) {
+          if (bytesA[i] != bytesB[i]) {
+            int ai = ((int)bytesA[i]) & 0xff;
+            int bi = ((int)bytesB[i]) & 0xff;
+            return (ai < bi) ? -1 : 1;
+          }
+        }
+        return 0;
+      }
+    }
+
     private sealed class CtapComparer : IComparer<CBORObject> {
+      private static int MajorType(CBORObject a) {
+        if (a.IsTagged) {
+          return 6;
+        }
+        switch (a.Type) {
+          case CBORType.Integer:
+            return a.IsNegative ? 1 : 0;
+          case CBORType.SimpleValue:
+          case CBORType.Boolean:
+          case CBORType.FloatingPoint:
+            return 7;
+          case CBORType.ByteString:
+            return 2;
+          case CBORType.TextString:
+            return 3;
+          case CBORType.Array:
+            return 4;
+          case CBORType.Map:
+            return 5;
+          default: throw new InvalidOperationException();
+        }
+      }
+
       public int Compare(CBORObject a, CBORObject b) {
         if (a == null) {
           return b == null ? 0 : -1;
@@ -15,20 +84,31 @@ namespace PeterO.Cbor {
         if (b == null) {
           return 1;
         }
+        if (a == b) {
+          // NOTE: Assumes reference equality of CBORObjects
+          return 0;
+        }
+        a = a.Untag();
+        b = b.Untag();
         byte[] abs;
         byte[] bbs;
-        var bothBytes = false;
-        if (a.Type == CBORType.ByteString && b.Type == CBORType.ByteString) {
+        int amt = MajorType(a);
+        int bmt = MajorType(b);
+        if (amt != bmt) {
+          return amt < bmt ? -1 : 1;
+        }
+        // DebugUtility.Log("a="+a);
+        // DebugUtility.Log("b="+b);
+        if (amt == 2) {
+          // Both objects are byte strings
           abs = a.GetByteString();
           bbs = b.GetByteString();
-          bothBytes = true;
         } else {
+          // Might store arrays or maps, where
+          // canonical encoding can fail due to too-deep
+          // nesting
           abs = CtapCanonicalEncode(a);
           bbs = CtapCanonicalEncode(b);
-        }
-        if (!bothBytes && (abs[0] & 0xe0) != (bbs[0] & 0xe0)) {
-          // different major types
-          return (abs[0] & 0xe0) < (bbs[0] & 0xe0) ? -1 : 1;
         }
         if (abs.Length != bbs.Length) {
           // different lengths
@@ -53,6 +133,24 @@ namespace PeterO.Cbor {
       return CtapCanonicalEncode(a, 0);
     }
 
+    private static bool ByteArraysEqual(byte[] bytesA, byte[] bytesB) {
+if (bytesA == bytesB) {
+  return true;
+}
+if (bytesA == null || bytesB == null) {
+  return false;
+}
+if (bytesA.Length == bytesB.Length) {
+  for (var j = 0; j < bytesA.Length; ++j) {
+          if (bytesA[j] != bytesB[j]) {
+            return false;
+          }
+        }
+        return true;
+      }
+      return false;
+    }
+
     private static byte[] CtapCanonicalEncode(CBORObject a, int depth) {
       CBORObject cbor = a.Untag();
       CBORType valueAType = cbor.Type;
@@ -70,21 +168,31 @@ namespace PeterO.Cbor {
             return ms.ToArray();
           }
         } else if (valueAType == CBORType.Map) {
-          var sortedKeys = new List<CBORObject>();
+          var sortedKeys = new List<KeyValuePair<byte[], byte[]>>();
           foreach (CBORObject key in cbor.Keys) {
             if (depth >= 3 && (IsArrayOrMap(key) ||
                IsArrayOrMap(cbor[key]))) {
               throw new CBORException("Nesting level too deep");
             }
-            sortedKeys.Add(key);
+            // Check if key and value can be canonically encoded
+            // (will throw an exception if they cannot)
+            var kv = new KeyValuePair<byte[], byte[]>(
+              CtapCanonicalEncode(key, depth + 1),
+              CtapCanonicalEncode(cbor[key], depth + 1));
+            sortedKeys.Add(kv);
           }
-          sortedKeys.Sort(Comparer);
+          sortedKeys.Sort(ByteComparer);
           using (var ms = new MemoryStream()) {
             CBORObject.WriteValue(ms, 5, cbor.Count);
-            foreach (CBORObject key in sortedKeys) {
-              byte[] bytes = CtapCanonicalEncode(key, depth + 1);
+            byte[] lastKey = null;
+            foreach (KeyValuePair<byte[], byte[]> kv in sortedKeys) {
+              byte[] bytes = kv.Key;
+              if (lastKey != null && ByteArraysEqual(bytes, lastKey)) {
+                throw new CBORException("duplicate canonical CBOR key");
+              }
+              lastKey = bytes;
               ms.Write(bytes, 0, bytes.Length);
-              bytes = CtapCanonicalEncode(cbor[key], depth + 1);
+              bytes = kv.Value;
               ms.Write(bytes, 0, bytes.Length);
             }
             return ms.ToArray();

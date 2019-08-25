@@ -13,11 +13,17 @@ using PeterO.Numbers;
 namespace Test {
     /// <summary>Description of RandomObjects.</summary>
   public static class RandomObjects {
+    private const int MaxExclusiveStringLength = 0x2000;
+    private const int MaxExclusiveExponentLength = 0x2000;
+    private const int MaxExclusiveShortStringLength = 50;
+    private const int MaxShortNumberLength = 40;
+    private const int MaxStringNumDigits = 50;
+
     public static byte[] RandomByteString(RandomGenerator rand) {
       if (rand == null) {
         throw new ArgumentNullException(nameof(rand));
       }
-      int x = rand.UniformInt(0x2000);
+      int x = rand.UniformInt(MaxExclusiveStringLength);
       var bytes = new byte[x];
       for (var i = 0; i < x; ++i) {
         bytes[i] = unchecked((byte)rand.UniformInt(256));
@@ -29,7 +35,7 @@ namespace Test {
       if (rand == null) {
         throw new ArgumentNullException(nameof(rand));
       }
-      int x = rand.UniformInt(50);
+      int x = rand.UniformInt(MaxExclusiveShortStringLength);
       var bytes = new byte[x];
       for (var i = 0; i < x; ++i) {
         bytes[i] = unchecked((byte)rand.UniformInt(256));
@@ -50,7 +56,7 @@ namespace Test {
       if (rand == null) {
         throw new ArgumentNullException(nameof(rand));
       }
-      int length = rand.UniformInt(0x2000);
+      int length = rand.UniformInt(MaxExclusiveStringLength);
       var sb = new StringBuilder();
       for (var i = 0; i < length; ++i) {
         int x = rand.UniformInt(100);
@@ -161,16 +167,20 @@ namespace Test {
       }
       int selection = r.UniformInt(100);
       if (selection < 40) {
-        StringAndBigInt sabi = StringAndBigInt.Generate(r, 16);
+        StringAndBigInt sabi = StringAndBigInt.Generate(
+          r,
+          16,
+          MaxStringNumDigits);
         return sabi.BigIntValue;
       }
       if (selection < 50) {
         StringAndBigInt sabi = StringAndBigInt.Generate(
           r,
-          2 + r.UniformInt(35));
+          2 + r.UniformInt(35),
+          MaxStringNumDigits);
         return sabi.BigIntValue;
       } else {
-        int count = r.UniformInt(60) + 1;
+        int count = r.UniformInt(MaxShortNumberLength) + 1;
         var bytes = new byte[count];
         for (var i = 0; i < count; ++i) {
           bytes[i] = (byte)((int)r.UniformInt(256));
@@ -204,7 +214,7 @@ namespace Test {
       if (r == null) {
         throw new ArgumentNullException(nameof(r));
       }
-      int count = r.UniformInt(50) + 1;
+      int count = r.UniformInt(MaxShortNumberLength) + 1;
       var sb = new StringBuilder();
       if (r.UniformInt(2) == 0) {
         sb.Append('-');
@@ -223,7 +233,7 @@ namespace Test {
       if (r == null) {
         throw new ArgumentNullException(nameof(r));
       }
-      int count = r.UniformInt(20) + 1;
+      int count = r.UniformInt(MaxShortNumberLength / 2) + 1;
       var sb = new StringBuilder();
       if (r.UniformInt(2) == 0) {
         sb.Append('-');
@@ -242,7 +252,7 @@ namespace Test {
       if (r == null) {
         throw new ArgumentNullException(nameof(r));
       }
-      int count = r.UniformInt(40) + 1;
+      int count = r.UniformInt(MaxShortNumberLength) + 1;
       var sb = new StringBuilder();
       if (r.UniformInt(2) == 0) {
         sb.Append('-');
@@ -263,8 +273,9 @@ namespace Test {
       }
       if (r.UniformInt(2) == 0) {
         sb.Append('E');
-        count = (r.UniformInt(100) < 10) ? r.UniformInt(5000) :
-          r.UniformInt(20);
+        count = (r.UniformInt(100) < 10) ?
+r.UniformInt(MaxExclusiveExponentLength) :
+          r.UniformInt(10);
         if (count != 0) {
           sb.Append(r.UniformInt(2) == 0 ? '+' : '-');
         }

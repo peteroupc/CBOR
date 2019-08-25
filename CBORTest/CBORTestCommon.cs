@@ -99,6 +99,27 @@ namespace Test {
       return cborRet;
     }
 
+    public static EInteger RandomEIntegerMajorType0(RandomGenerator rand) {
+       int v = rand.UniformInt(0x10000);
+       EInteger ei = EInteger.FromInt32(v);
+       ei = ei.ShiftLeft(16).Add(rand.UniformInt(0x10000));
+       ei = ei.ShiftLeft(16).Add(rand.UniformInt(0x10000));
+       ei = ei.ShiftLeft(16).Add(rand.UniformInt(0x10000));
+       return ei;
+    }
+
+    public static EInteger RandomEIntegerMajorType0Or1(RandomGenerator rand) {
+       int v = rand.UniformInt(0x10000);
+       EInteger ei = EInteger.FromInt32(v);
+       ei = ei.ShiftLeft(16).Add(rand.UniformInt(0x10000));
+       ei = ei.ShiftLeft(16).Add(rand.UniformInt(0x10000));
+       ei = ei.ShiftLeft(16).Add(rand.UniformInt(0x10000));
+       if (rand.UniformInt(2) == 0) {
+         ei = ei.Add(1).Negate();
+       }
+       return ei;
+    }
+
     public static CBORObject RandomCBORTaggedObject(
       RandomGenerator rand,
       int depth) {
@@ -109,8 +130,14 @@ namespace Test {
           30, 0, 1, 25, 26, 27,
         };
         tag = tagselection[rand.UniformInt(tagselection.Length)];
+      } else if (rand.UniformInt(100) < 90) {
+        return CBORObject.FromObjectAndTag(
+           RandomCBORObject(rand, depth + 1),
+           rand.UniformInt(0x100000));
       } else {
-        tag = rand.UniformInt(0x1000000);
+        return CBORObject.FromObjectAndTag(
+           RandomCBORObject(rand, depth + 1),
+           RandomEIntegerMajorType0(rand));
       }
       if (tag == 25) {
         tag = 0;
@@ -143,13 +170,7 @@ namespace Test {
         } else {
           cbor = RandomCBORObject(rand, depth + 1);
         }
-        try {
-          cbor = CBORObject.FromObjectAndTag(cbor, tag);
-         // Console.WriteLine("done");
-          return cbor;
-        } catch (Exception) {
-          return CBORObject.FromObjectAndTag(cbor, 999);
-        }
+        return CBORObject.FromObjectAndTag(cbor, tag);
       }
     }
 

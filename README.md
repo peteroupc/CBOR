@@ -289,6 +289,12 @@ The features in this version include:
   made; they are largely compatible with previous versions but may be
   backwards-incompatible in certain rare cases
 
+### Version 3.6.0
+
+- Add new string constructors to CBOREncodeOptions, JSONOptions, and PODOptions
+- Implement options to disable resolving shared references and allow empty streams when decoding CBOR objects
+- Add IsNumber property to CBORObject to check whether a CBOR object stores a number; CBORType.Number is deprecated
+
 ### Version 3.5.2
 
 - Update Numbers library used by this library to a version that doesn't depend on StyleCop.Analyzers in the package.

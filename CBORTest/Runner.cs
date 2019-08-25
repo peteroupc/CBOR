@@ -32,15 +32,12 @@ namespace PeterO {
     }
 
     public static void Main() {
-     const String ValueParam = null;
+     const String ValueParam = "TestCtap2Canonical";
      // Run all the tests in this assembly
      foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
        if (!HasAttribute(type, typeof(TestFixtureAttribute))) {
          continue;
        }
-       Console.WriteLine("-------");
-       Console.WriteLine(type.FullName);
-       Console.WriteLine("-------");
        object test = Activator.CreateInstance(type);
        var setup = type.GetMethod("SetUp");
        if (setup != null) {
@@ -55,16 +52,15 @@ namespace PeterO {
              continue;
            }
          }
-         Console.WriteLine(method.Name);
+         Console.WriteLine("::: " + type.FullName + "." + method.Name);
          try {
             method.Invoke(test, new object[] { });
          } catch (TargetInvocationException e) {
               Console.WriteLine(e.InnerException.GetType().FullName);
               string message = e.InnerException.Message;
-              // if (message.Length > 140) {
-              // message = message.Substring(0, 140);
-              // }
               Console.WriteLine(message);
+              Console.WriteLine(e.StackTrace);
+              Console.WriteLine(e.InnerException.StackTrace);
           }
         }
       }
