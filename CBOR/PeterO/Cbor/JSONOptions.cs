@@ -52,7 +52,7 @@ namespace PeterO.Cbor {
     /// <c>base64padding</c>, <c>replacesurrogates</c>. Other keys are
     /// ignored. (Keys are compared using a basic case-insensitive
     /// comparison, in which two strings are equal if they match after
-    /// converting the basic upper-case letters A to Z (U+0041 to U + 005A)
+    /// converting the basic upper-case letters A to Z (U+0041 to U+005A)
     /// in both strings to basic lower-case letters.) If two or more
     /// key/value pairs have equal keys (in a basic case-insensitive
     /// comparison), the value given for the last such key is used. The two

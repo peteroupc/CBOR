@@ -113,9 +113,8 @@ namespace PeterO.Cbor {
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
-      Justification = "This CBORObject is immutable")]
+    Justification = "This CBORObject is immutable")]
 #endif
-
     public static readonly CBORObject False =
       CBORObject.ConstructSimpleValue(20);
 
@@ -131,9 +130,8 @@ namespace PeterO.Cbor {
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
-      Justification = "This CBORObject is immutable")]
+    Justification = "This CBORObject is immutable")]
 #endif
-
     public static readonly CBORObject Null =
       CBORObject.ConstructSimpleValue(22);
 
@@ -146,9 +144,8 @@ namespace PeterO.Cbor {
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
-      Justification = "This CBORObject is immutable")]
+    Justification = "This CBORObject is immutable")]
 #endif
-
     public static readonly CBORObject True =
       CBORObject.ConstructSimpleValue(21);
 
@@ -157,9 +154,8 @@ namespace PeterO.Cbor {
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
-      Justification = "This CBORObject is immutable")]
+    Justification = "This CBORObject is immutable")]
 #endif
-
     public static readonly CBORObject Undefined =
       CBORObject.ConstructSimpleValue(23);
 
@@ -4438,7 +4434,7 @@ CBORObjectTypeEInteger)) {
 #if DEBUG
         if (obj == null) {
           throw new ArgumentNullException(nameof(tagValue));
-        }
+     }
 #endif
       }
     }
@@ -4736,7 +4732,7 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     }
 
     /// <summary>
-    ///  Converts this object to a string in JavaScript Object
+    /// Converts this object to a string in JavaScript Object
     /// Notation (JSON) format, using the specified options to
     /// control the encoding process. This function works not
     /// only with arrays and maps, but also integers, strings,
