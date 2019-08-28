@@ -1100,6 +1100,33 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty);
       }
     }
 
+    private sealed class FieldClass {
+       public int PublicFieldA;
+       public readonly int ReadonlyFieldA;
+       private int PrivateFieldA;
+       private readonly int PrivateFieldB;
+       private static int StaticFieldA;
+    }
+
+    [Test]
+    public void TestToObjectFieldClass() {
+      var fc = new FieldClass();
+      CBORObject co = CBORObject.FromObject(fc);
+      Assert.IsFalse(co.ContainsKey("PrivateFieldA"));
+      Assert.IsFalse(co.ContainsKey("privateFieldA"));
+      Assert.IsFalse(co.ContainsKey("PrivateFieldB"));
+      Assert.IsFalse(co.ContainsKey("privateFieldB"));
+      Assert.IsFalse(co.ContainsKey("staticFieldA"));
+      Assert.IsFalse(co.ContainsKey("StaticFieldA"));
+      Assert.IsFalse(co.ContainsKey("readonlyFieldA"));
+      Assert.IsFalse(co.ContainsKey("ReadonlyFieldA"));
+      Assert.IsTrue(co.ContainsKey("publicFieldA"));
+      co["privateFieldA"] = ToObjectTest.TestToFromObjectRoundTrip(999);
+      co["publicFieldA"] = ToObjectTest.TestToFromObjectRoundTrip(999);
+      fc = (FieldClass)co.ToObject(typeof(FieldClass));
+      Assert.AreEqual(999, fc.PublicFieldA);
+    }
+
     [Test]
     [Timeout(5000)]
     public void TestToObject() {

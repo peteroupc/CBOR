@@ -1318,10 +1318,9 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// type for eligible setters as follows:</item>
     ///  <item>(*) In the .NET
     /// version, eligible setters are the public, nonstatic setters of
-    /// properties with a public, nonstatic getter. If a class has two
-    /// properties of the form "X" and "IsX", where "X" is any name, or has
-    /// multiple properties with the same name, those properties are
-    /// ignored.</item>
+    /// properties with a public, nonstatic getter. Eligible setters also include public, nonstatic, non-<c>readonly</c> fields.  If a class has two
+    /// properties and/or fields of the form "X" and "IsX", where "X" is any name, or has
+    /// multiple properties and/or fields with the same name, those properties and fields are ignored.</item>
     ///  <item>(*) In the Java version, eligible setters are
     /// public, nonstatic methods starting with "set" followed by a
     /// character other than a basic digit or lower-case letter, that is,
@@ -1343,12 +1342,6 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// security reasons, certain types are not supported even if they
     /// contain eligible setters.</item>
     ///  </list>
-    ///  <para>REMARK: A certain
-    /// consistency between .NET and Java and between FromObject and
-    /// ToObject are sought for version 4.0. It is also hoped that the
-    /// ToObject method will support deserializing to objects consisting of
-    /// fields and not getters ("getX()" methods), both in .NET and in
-    /// Java.</para>
     ///  </summary>
     /// <param name='t'>The type, class, or interface that this method's
     /// return value will belong to. To express a generic type in Java, see
@@ -1927,10 +1920,10 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// getters as follows:</item>
     /// <item>(*) In the .NET version, eligible getters are the public,
     /// nonstatic getters of read/write properties (and also those of
-    /// read-only properties in the case of a compiler-generated type). If
-    /// a class has two properties of the form "X" and "IsX", where "X" is
-    /// any name, or has multiple properties with the same name, those
-    /// properties are ignored.</item>
+    /// read-only properties in the case of a compiler-generated type). Eligible getters also include public, nonstatic, non-<c>readonly</c> fields.  If
+    /// a class has two properties and/or fields of the form "X" and "IsX", where "X" is
+    /// any name, or has multiple properties and/or fields with the same name, those
+    /// properties and fields are ignored.</item>
     /// <item>(*) In the Java version, eligible getters are public,
     /// nonstatic methods starting with "get" or "is" (either word followed
     /// by a character other than a basic digit or lower-case letter, that
@@ -1956,12 +1949,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// generally, if Enums are converted to text strings, constants from
     /// Enum types with the <c>Flags</c> attribute, and constants from the
     /// same Enum type that share an underlying value, should not be passed
-    /// to this method.</para>
-    /// <para>REMARK: A certain consistency between .NET and Java and
-    /// between FromObject and ToObject are sought for version 4.0. It is
-    /// also hoped that the ToObject method will support deserializing to
-    /// objects consisting of fields and not getters ("getX()" methods),
-    /// both in .NET and in Java.</para></summary>
+    /// to this method.</para></summary>
     /// <param name='obj'>An arbitrary object to convert to a CBOR object.
     /// <para><b>NOTE:</b> For security reasons, whenever possible, an
     /// application should not base this parameter on user input or other
@@ -4026,9 +4014,9 @@ CBORObjectTypeEInteger)) {
     /// example code given in
     /// <see cref='PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)'/> can
     /// be used to write out certain keys of a CBOR map in a given order.
-    /// For the CTAP2 canonical ordering, which is useful for implementing
+    /// For the CTAP2 (FIDO Client-to-Authenticator Protocol 2) canonical ordering, which is useful for implementing
     /// Web Authentication, call <c>EncodeToBytes(new
-    /// CBOREncodeOptions(false, false, true))</c> rather than this
+    /// CBOREncodeOptions("ctap2canonical=true"))</c> rather than this
     /// method.</para></summary>
     /// <returns>A byte array in CBOR format.</returns>
     public byte[] EncodeToBytes() {
@@ -4037,10 +4025,10 @@ CBORObjectTypeEInteger)) {
 
     /// <summary>Writes the binary representation of this CBOR object and
     /// returns a byte array of that representation, using the specified
-    /// options for encoding the object to CBOR format. For the CTAP2
+    /// options for encoding the object to CBOR format. For the CTAP2 (FIDO Client-to-Authenticator Protocol 2)
     /// canonical ordering, which is useful for implementing Web
     /// Authentication, call this method as follows: <c>EncodeToBytes(new
-    /// CBOREncodeOptions(false, false, true))</c>.</summary>
+    /// CBOREncodeOptions("ctap2canonical=true"))</c>.</summary>
     /// <param name='options'>Options for encoding the data to
     /// CBOR.</param>
     /// <returns>A byte array in CBOR format.</returns>

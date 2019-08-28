@@ -2737,11 +2737,9 @@ EInteger.FromString("-18446744073709551617");
 [Test]
 public void TestCtap2CanonicalDecodeEncodeSpecific1() {
   var bytes = new byte[] {
-    (byte)0xa2, (
-    byte)0x82, (
-    byte)0xf6, (
-    byte)0x82, (
-    byte)0xfb, 0x3c, (
+    (byte)0xa2, (byte)0x82, (byte)0xf6, (
+    byte)0x82,
+    (byte)0xfb, 0x3c, (
     byte)0xf0, 0x03, 0x42, (
     byte)0xcb, 0x54, 0x6c, (
     byte)0x85, (

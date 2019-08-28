@@ -32,7 +32,7 @@ namespace PeterO {
     }
 
     public static void Main() {
-     const String ValueParam = "TestCtap2Canonical";
+     const String ValueParam = "FieldClass";
      // Run all the tests in this assembly
      foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
        if (!HasAttribute(type, typeof(TestFixtureAttribute))) {

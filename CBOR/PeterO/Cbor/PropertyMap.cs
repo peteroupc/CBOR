@@ -15,6 +15,7 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
+  // TODO: Document new field serialization in CBORObject.FromObject/ToObject
   internal static class PropertyMap {
     private sealed class PropertyData {
       private string name;
@@ -29,7 +30,39 @@ namespace PeterO.Cbor {
         }
       }
 
-      private PropertyInfo prop;
+      private MemberInfo prop;
+
+      public Type PropertyType {
+get {
+        var pr = this.prop as PropertyInfo;
+        if (pr != null) {
+          return pr.PropertyType;
+        }
+        var fi = this.prop as FieldInfo;
+        return (fi != null) ? fi.FieldType : null;
+}
+      }
+
+      public object GetValue(object obj) {
+        var pr = this.prop as PropertyInfo;
+        if (pr != null) {
+          return pr.GetValue(obj, null);
+        }
+        var fi = this.prop as FieldInfo;
+        return (fi != null) ? fi.GetValue(obj) : null;
+      }
+
+      public void SetValue(object obj, object value) {
+        var pr = this.prop as PropertyInfo;
+        if (pr != null) {
+          pr.SetValue(obj, value, null);
+        }
+        var fi = this.prop as FieldInfo;
+        if (fi != null) {
+          fi.SetValue(obj, value);
+        }
+      }
+
 #if NET20 || NET40
       public static bool HasUsableGetter(PropertyInfo pi) {
         return pi != null && pi.CanRead && !pi.GetGetMethod().IsStatic &&
@@ -52,11 +85,23 @@ namespace PeterO.Cbor {
       }
 #endif
       public bool HasUsableGetter() {
-        return HasUsableGetter(this.prop);
+        var pr = this.prop as PropertyInfo;
+        if (pr != null) {
+          return HasUsableGetter(pr);
+        }
+        var fi = this.prop as FieldInfo;
+        return (fi != null) ? (fi.IsPublic && !fi.IsStatic && !fi.IsInitOnly) :
+false;
       }
 
       public bool HasUsableSetter() {
-        return HasUsableSetter(this.prop);
+        var pr = this.prop as PropertyInfo;
+        if (pr != null) {
+          return HasUsableSetter(pr);
+        }
+        var fi = this.prop as FieldInfo;
+        return (fi != null) ? (fi.IsPublic && !fi.IsStatic && !fi.IsInitOnly) :
+false;
       }
 
       public string GetAdjustedName(bool useCamelCase) {
@@ -72,7 +117,7 @@ namespace PeterO.Cbor {
         return thisName;
       }
 
-      public PropertyInfo Prop {
+      public MemberInfo Prop {
         get {
           return this.prop;
         }
@@ -87,6 +132,10 @@ namespace PeterO.Cbor {
     private static IEnumerable<PropertyInfo> GetTypeProperties(Type t) {
       return t.GetProperties(BindingFlags.Public |
         BindingFlags.Instance);
+    }
+
+    private static IEnumerable<FieldInfo> GetTypeFields(Type t) {
+      return t.GetFields(BindingFlags.Public | BindingFlags.Instance);
     }
 
     private static bool IsAssignableFrom(Type superType, Type subType) {
@@ -118,6 +167,10 @@ namespace PeterO.Cbor {
 
     private static IEnumerable<PropertyInfo> GetTypeProperties(Type t) {
       return t.GetRuntimeProperties();
+    }
+
+    private static IEnumerable<FieldInfo> GetTypeFields(Type t) {
+      return t.GetRuntimeFields();
     }
 
     private static MethodInfo GetTypeMethod(
@@ -162,6 +215,28 @@ namespace PeterO.Cbor {
             ++names[pn];
           } else {
             names[pn] = 1;
+          }
+        }
+        foreach (FieldInfo pi in GetTypeFields(t)) {
+          var pn = RemoveIsPrefix(pi.Name);
+          if (names.ContainsKey(pn)) {
+            ++names[pn];
+          } else {
+            names[pn] = 1;
+          }
+        }
+        foreach (FieldInfo fi in GetTypeFields(t)) {
+          PropertyData pd = new PropertyMap.PropertyData() {
+                Name = fi.Name,
+                Prop = fi,
+          };
+          if (pd.HasUsableGetter() || pd.HasUsableSetter()) {
+            var pn = RemoveIsPrefix(pd.Name);
+            // Ignore ambiguous properties
+            if (names.ContainsKey(pn) && names[pn] > 1) {
+              continue;
+            }
+            ret.Add(pd);
           }
         }
         foreach (PropertyInfo pi in GetTypeProperties(t)) {
@@ -811,11 +886,11 @@ namespace PeterO.Cbor {
           true);
         if (dict.ContainsKey(name)) {
           object dobj = dict[name].ToObject(
-            key.Prop.PropertyType,
+            key.PropertyType,
             mapper,
             options,
             depth + 1);
-          key.Prop.SetValue(o, dobj, null);
+          key.SetValue(o, dobj);
         }
       }
       return o;
@@ -859,7 +934,7 @@ namespace PeterO.Cbor {
         }
         yield return new KeyValuePair<string, object>(
   key.GetAdjustedName(useCamelCase),
-  key.Prop.GetValue(o, null));
+  key.GetValue(o));
       }
     }
 
