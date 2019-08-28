@@ -15,7 +15,6 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-  // TODO: Document new field serialization in CBORObject.FromObject/ToObject
   internal static class PropertyMap {
     private sealed class PropertyData {
       private string name;

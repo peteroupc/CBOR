@@ -168,7 +168,9 @@ if (bytesA.Length == bytesB.Length) {
             return ms.ToArray();
           }
         } else if (valueAType == CBORType.Map) {
-          var sortedKeys = new List<KeyValuePair<byte[], byte[]>>();
+          KeyValuePair<byte[], byte[]> kv;
+          List<KeyValuePair<byte[], byte[]>> sortedKeys;
+          sortedKeys = new List<KeyValuePair<byte[], byte[]>>();
           foreach (CBORObject key in cbor.Keys) {
             if (depth >= 3 && (IsArrayOrMap(key) ||
                IsArrayOrMap(cbor[key]))) {
@@ -176,7 +178,7 @@ if (bytesA.Length == bytesB.Length) {
             }
             // Check if key and value can be canonically encoded
             // (will throw an exception if they cannot)
-            var kv = new KeyValuePair<byte[], byte[]>(
+            kv = new KeyValuePair<byte[], byte[]>(
               CtapCanonicalEncode(key, depth + 1),
               CtapCanonicalEncode(cbor[key], depth + 1));
             sortedKeys.Add(kv);

@@ -1318,21 +1318,25 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// type for eligible setters as follows:</item>
     ///  <item>(*) In the .NET
     /// version, eligible setters are the public, nonstatic setters of
-    /// properties with a public, nonstatic getter. Eligible setters also include public, nonstatic, non-<c>readonly</c> fields.  If a class has two
-    /// properties and/or fields of the form "X" and "IsX", where "X" is any name, or has
-    /// multiple properties and/or fields with the same name, those properties and fields are ignored.</item>
-    ///  <item>(*) In the Java version, eligible setters are
-    /// public, nonstatic methods starting with "set" followed by a
-    /// character other than a basic digit or lower-case letter, that is,
-    /// other than "a" to "z" or "0" to "9", that take one parameter. The
-    /// class containing an eligible setter must have a public, nonstatic
-    /// method with the same name, but starting with "get" or "is" rather
-    /// than "set", that takes no parameters and does not return void. (For
-    /// example, if a class has "public setValue(String)" and "public
-    /// getValue()", "setValue" is an eligible setter. However,
-    /// "setValue()" and "setValue(String, int)" are not eligible setters.)
-    /// If a class has two or more otherwise eligible setters with the same
-    /// name, but different parameter type, they are not eligible
+    /// properties with a public, nonstatic getter. Eligible setters also
+    /// include public, nonstatic, non- <c>readonly</c>
+    ///  fields. If a class
+    /// has two properties and/or fields of the form "X" and "IsX", where
+    /// "X" is any name, or has multiple properties and/or fields with the
+    /// same name, those properties and fields are ignored.</item>
+    /// <item>(*) In the Java version, eligible setters are public,
+    /// nonstatic methods starting with "set" followed by a character other
+    /// than a basic digit or lower-case letter, that is, other than "a" to
+    /// "z" or "0" to "9", that take one parameter. The class containing an
+    /// eligible setter must have a public, nonstatic method with the same
+    /// name, but starting with "get" or "is" rather than "set", that takes
+    /// no parameters and does not return void. (For example, if a class
+    /// has "public setValue(String)" and "public getValue()", "setValue"
+    /// is an eligible setter. However, "setValue()" and "setValue(String,
+    /// int)" are not eligible setters.) In addition, public, nonstatic,
+    /// nonfinal fields are also eligible setters. If a class has two or
+    /// more otherwise eligible setters (methods and/or fields) with the
+    /// same name, but different parameter type, they are not eligible
     /// setters.</item>
     ///  <item>Then, the method creates an object of the
     /// given type and invokes each eligible setter with the corresponding
@@ -1920,19 +1924,23 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// getters as follows:</item>
     /// <item>(*) In the .NET version, eligible getters are the public,
     /// nonstatic getters of read/write properties (and also those of
-    /// read-only properties in the case of a compiler-generated type). Eligible getters also include public, nonstatic, non-<c>readonly</c> fields.  If
-    /// a class has two properties and/or fields of the form "X" and "IsX", where "X" is
-    /// any name, or has multiple properties and/or fields with the same name, those
-    /// properties and fields are ignored.</item>
+    /// read-only properties in the case of a compiler-generated type).
+    /// Eligible getters also include public, nonstatic, non-
+    /// <c>readonly</c> fields. If a class has two properties and/or fields
+    /// of the form "X" and "IsX", where "X" is any name, or has multiple
+    /// properties and/or fields with the same name, those properties and
+    /// fields are ignored.</item>
     /// <item>(*) In the Java version, eligible getters are public,
     /// nonstatic methods starting with "get" or "is" (either word followed
     /// by a character other than a basic digit or lower-case letter, that
     /// is, other than "a" to "z" or "0" to "9"), that take no parameters
     /// and do not return void, except that methods named "getClass" are
-    /// not eligible getters. If a class has two otherwise eligible getters
-    /// of the form "isX" and "getX", where "X" is the same in both, or two
-    /// such getters with the same name but different return type, they are
-    /// not eligible getters.</item>
+    /// not eligible getters. In addition, public, nonstatic, nonfinal
+    /// fields are also eligible getters. If a class has two otherwise
+    /// eligible getters (methods and/or fields) of the form "isX" and
+    /// "getX", where "X" is the same in both, or two such getters with the
+    /// same name but different return type, they are not eligible
+    /// getters.</item>
     /// <item>Then, the method returns a CBOR map with each eligible
     /// getter's name or property name as each key, and with the
     /// corresponding value returned by that getter as that key's value.
@@ -4014,10 +4022,10 @@ CBORObjectTypeEInteger)) {
     /// example code given in
     /// <see cref='PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)'/> can
     /// be used to write out certain keys of a CBOR map in a given order.
-    /// For the CTAP2 (FIDO Client-to-Authenticator Protocol 2) canonical ordering, which is useful for implementing
-    /// Web Authentication, call <c>EncodeToBytes(new
-    /// CBOREncodeOptions("ctap2canonical=true"))</c> rather than this
-    /// method.</para></summary>
+    /// For the CTAP2 (FIDO Client-to-Authenticator Protocol 2) canonical
+    /// ordering, which is useful for implementing Web Authentication, call
+    /// <c>EncodeToBytes(new CBOREncodeOptions("ctap2canonical=true"))</c>
+    /// rather than this method.</para></summary>
     /// <returns>A byte array in CBOR format.</returns>
     public byte[] EncodeToBytes() {
       return this.EncodeToBytes(CBOREncodeOptions.Default);
@@ -4025,9 +4033,10 @@ CBORObjectTypeEInteger)) {
 
     /// <summary>Writes the binary representation of this CBOR object and
     /// returns a byte array of that representation, using the specified
-    /// options for encoding the object to CBOR format. For the CTAP2 (FIDO Client-to-Authenticator Protocol 2)
-    /// canonical ordering, which is useful for implementing Web
-    /// Authentication, call this method as follows: <c>EncodeToBytes(new
+    /// options for encoding the object to CBOR format. For the CTAP2 (FIDO
+    /// Client-to-Authenticator Protocol 2) canonical ordering, which is
+    /// useful for implementing Web Authentication, call this method as
+    /// follows: <c>EncodeToBytes(new
     /// CBOREncodeOptions("ctap2canonical=true"))</c>.</summary>
     /// <param name='options'>Options for encoding the data to
     /// CBOR.</param>
@@ -4720,7 +4729,7 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     }
 
     /// <summary>
-    /// Converts this object to a string in JavaScript Object
+    ///  Converts this object to a string in JavaScript Object
     /// Notation (JSON) format, using the specified options to
     /// control the encoding process. This function works not
     /// only with arrays and maps, but also integers, strings,

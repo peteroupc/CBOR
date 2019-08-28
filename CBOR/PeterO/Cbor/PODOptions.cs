@@ -71,32 +71,35 @@ namespace PeterO.Cbor {
     public static readonly PODOptions Default = new PODOptions();
 
     /// <summary>
-    /// <para>Gets a value indicating whether property, field, and method names are converted
-    /// to camel case before they are used as keys. This option changes the
-    /// behavior of key name serialization as follows. If "useCamelCase" is
-    /// <c>false</c> :</para>
+    /// <para>Gets a value indicating whether property, field, and method
+    /// names are converted to camel case before they are used as keys.
+    /// This option changes the behavior of key name serialization as
+    /// follows. If "useCamelCase" is <c>false</c> :</para>
     /// <list>
     /// <item>In the .NET version, all key names are capitalized, meaning
     /// the first letter in the name is converted to a basic upper-case
     /// letter if it's a basic lower-case letter ("a" to "z"). (For
     /// example, "Name" and "IsName" both remain unchanged.)</item>
-    /// <item>In the Java version, for each eligible method or field name, the word
-    /// "get" or "set" is removed from the name if the name starts with
-    /// that word, then the name is capitalized. (For example, "getName"
-    /// and "setName" both become "Name", and "isName" becomes
-    /// "IsName".)</item></list>
+    /// <item>In the Java version, all field names are capitalized, and for
+    /// each eligible method name, the word "get" or "set" is removed from
+    /// the name if the name starts with that word, then the name is
+    /// capitalized. (For example, "getName" and "setName" both become
+    /// "Name", and "isName" becomes "IsName".)</item></list>
     /// <para>If "useCamelCase" is <c>true</c> :</para>
     /// <list>
-    /// <item>In the .NET version, for each eligible property or field name, the
-    /// word "Is" is removed from the name if the name starts with that
-    /// word, then the name is converted to camel case, meaning the first
-    /// letter in the name is converted to a basic lower-case letter if
-    /// it's a basic upper-case letter ("A" to "Z"). (For example, "Name"
-    /// and "IsName" both become "name".)</item>
-    /// <item>In the Java version, for each eligible method or field name, the word
+    /// <item>In the .NET version, for each eligible property or field
+    /// name, the word "Is" is removed from the name if the name starts
+    /// with that word, then the name is converted to camel case, meaning
+    /// the first letter in the name is converted to a basic lower-case
+    /// letter if it's a basic upper-case letter ("A" to "Z"). (For
+    /// example, "Name" and "IsName" both become "name".)</item>
+    /// <item>In the Java version: For each eligible method name, the word
     /// "get", "set", or "is" is removed from the name if the name starts
     /// with that word, then the name is converted to camel case. (For
-    /// example, "getName", "setName", and "isName" all become
+    /// example, "getName", "setName", and "isName" all become "name".) For
+    /// each eligible field name, the word "is" is removed from the name if
+    /// the name starts with that word, then the name is converted to camel
+    /// case. (For example, "name" and "isName" both become
     /// "name".)</item></list>
     /// <para>In the description above, a name "starts with" a word if that
     /// word begins the name and is followed by a character other than a
