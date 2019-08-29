@@ -168,7 +168,7 @@ if (bytesA.Length == bytesB.Length) {
             return ms.ToArray();
           }
         } else if (valueAType == CBORType.Map) {
-          KeyValuePair<byte[], byte[]> kv;
+          KeyValuePair<byte[], byte[]> kv1;
           List<KeyValuePair<byte[], byte[]>> sortedKeys;
           sortedKeys = new List<KeyValuePair<byte[], byte[]>>();
           foreach (CBORObject key in cbor.Keys) {
@@ -178,23 +178,24 @@ if (bytesA.Length == bytesB.Length) {
             }
             // Check if key and value can be canonically encoded
             // (will throw an exception if they cannot)
-            kv = new KeyValuePair<byte[], byte[]>(
+            kv1 = new KeyValuePair<byte[], byte[]>(
               CtapCanonicalEncode(key, depth + 1),
               CtapCanonicalEncode(cbor[key], depth + 1));
-            sortedKeys.Add(kv);
+            sortedKeys.Add(kv1);
           }
           sortedKeys.Sort(ByteComparer);
           using (var ms = new MemoryStream()) {
             CBORObject.WriteValue(ms, 5, cbor.Count);
             byte[] lastKey = null;
-            foreach (KeyValuePair<byte[], byte[]> kv in sortedKeys) {
-              byte[] bytes = kv.Key;
+            for (var i = 0; i < sortedKeys.Count; ++i) {
+              kv1 = sortedKeys[i];
+              byte[] bytes = kv1.Key;
               if (lastKey != null && ByteArraysEqual(bytes, lastKey)) {
                 throw new CBORException("duplicate canonical CBOR key");
               }
               lastKey = bytes;
               ms.Write(bytes, 0, bytes.Length);
-              bytes = kv.Value;
+              bytes = kv1.Value;
               ms.Write(bytes, 0, bytes.Length);
             }
             return ms.ToArray();

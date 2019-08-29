@@ -435,14 +435,15 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// <value>This value's sign: -1 if negative; 1 if positive; 0 if
     /// zero.</value>
     /// <exception cref='InvalidOperationException'>This object does not
-    /// represent a number, including the special not-a-number value
-    /// (NaN).</exception>
+    /// represent a number, or this object is a not-a-number (NaN)
+    /// value.</exception>
     public int Sign {
       get {
         CBORNumber cn = CBORNumber.FromCBORObject(this);
         int ret = cn == null ? 2 : cn.GetNumberInterface().Sign(cn.GetValue());
         if (ret == 2) {
-          throw new InvalidOperationException("This object is not a number.");
+          throw new InvalidOperationException(
+            "This object is not a number.");
         }
         return ret;
       }
@@ -1311,15 +1312,15 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// <c>UUID</c>
     ///  in Java), returns a UUID object if possible.</item>
     /// <item>Plain-Old-Data deserialization: If the object is a type not
-    /// specially handled above, the type includes a zero-argument
+    /// specially handled above, the type includes a zero-parameter
     /// constructor (default or not), this CBOR object is a CBOR map, and
-    /// the "mapper" parameter allows this type to be eligible for
+    /// the "mapper" parameter (if any) allows this type to be eligible for
     /// Plain-Old-Data deserialization, then this method checks the given
     /// type for eligible setters as follows:</item>
     ///  <item>(*) In the .NET
     /// version, eligible setters are the public, nonstatic setters of
     /// properties with a public, nonstatic getter. Eligible setters also
-    /// include public, nonstatic, non- <c>readonly</c>
+    /// include public, nonstatic, non-<c>const</c>, non- <c>readonly</c>
     ///  fields. If a class
     /// has two properties and/or fields of the form "X" and "IsX", where
     /// "X" is any name, or has multiple properties and/or fields with the
@@ -1344,9 +1345,10 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// eligible setters according to the rules described in the <see
     /// cref='PeterO.Cbor.PODOptions'/> documentation. Note that for
     /// security reasons, certain types are not supported even if they
-    /// contain eligible setters.</item>
+    /// contain eligible setters. For the Java version, the object creation
+    /// may fail in the case of a nested nonstatic class.</item>
     ///  </list>
-    ///  </summary>
+    /// </summary>
     /// <param name='t'>The type, class, or interface that this method's
     /// return value will belong to. To express a generic type in Java, see
     /// the example. <b>Note:</b>
@@ -1362,7 +1364,8 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// either criterion above.</param>
     /// <param name='mapper'>This parameter controls which data types are
     /// eligible for Plain-Old-Data deserialization and includes custom
-    /// converters from CBOR objects to certain data types.</param>
+    /// converters from CBOR objects to certain data types. Can be
+    /// null.</param>
     /// <param name='options'>Specifies options for controlling
     /// deserialization of CBOR objects.</param>
     /// <returns>The converted object.</returns>
@@ -1371,7 +1374,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// supported, or the given object's nesting is too deep, or another
     /// error occurred when serializing the object.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='t'/> is null.</exception>
+    /// name='t'/> or <paramref name='options'/> is null.</exception>
     /// <example>
     /// <para>Java offers no easy way to express a generic type, at least
     /// none as easy as C#'s <c>typeof</c>
@@ -1390,9 +1393,6 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     ///  .
     /// </example>
     public object ToObject(Type t, CBORTypeMapper mapper, PODOptions options) {
-      if (mapper == null) {
-        throw new ArgumentNullException(nameof(mapper));
-      }
       if (options == null) {
         throw new ArgumentNullException(nameof(options));
       }
@@ -1925,7 +1925,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// <item>(*) In the .NET version, eligible getters are the public,
     /// nonstatic getters of read/write properties (and also those of
     /// read-only properties in the case of a compiler-generated type).
-    /// Eligible getters also include public, nonstatic, non-
+    /// Eligible getters also include public, nonstatic, non-<c>const</c>, non-
     /// <c>readonly</c> fields. If a class has two properties and/or fields
     /// of the form "X" and "IsX", where "X" is any name, or has multiple
     /// properties and/or fields with the same name, those properties and
@@ -1968,13 +1968,16 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// plain-old-data type references other data types, those types should
     /// likewise meet either criterion above.</para>.</param>
     /// <param name='mapper'>An object containing optional converters to
-    /// convert objects of certain types to CBOR objects.</param>
+    /// convert objects of certain types to CBOR objects. Can be
+    /// null.</param>
     /// <param name='options'>An object containing options to control how
     /// certain objects are converted to CBOR objects.</param>
     /// <returns>A CBOR object corresponding to the given object. Returns
     /// CBORObject.Null if the object is null.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='options'/> is null.</exception>
+    /// <exception cref='PeterO.Cbor.CBORException'>An error occurred while
+    /// converting the given object to a CBOR object.</exception>
     public static CBORObject FromObject(
       object obj,
       CBORTypeMapper mapper,
@@ -4729,7 +4732,7 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     }
 
     /// <summary>
-    ///  Converts this object to a string in JavaScript Object
+    /// Converts this object to a string in JavaScript Object
     /// Notation (JSON) format, using the specified options to
     /// control the encoding process. This function works not
     /// only with arrays and maps, but also integers, strings,

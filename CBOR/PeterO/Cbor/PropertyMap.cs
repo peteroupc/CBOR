@@ -89,8 +89,9 @@ get {
           return HasUsableGetter(pr);
         }
         var fi = this.prop as FieldInfo;
-        return (fi != null) ? (fi.IsPublic && !fi.IsStatic && !fi.IsInitOnly) :
-false;
+        return fi != null && fi.IsPublic && !fi.IsStatic && 
+             !fi.IsInitOnly &&
+             !fi.IsLiteral;
       }
 
       public bool HasUsableSetter() {
@@ -99,8 +100,9 @@ false;
           return HasUsableSetter(pr);
         }
         var fi = this.prop as FieldInfo;
-        return (fi != null) ? (fi.IsPublic && !fi.IsStatic && !fi.IsInitOnly) :
-false;
+        return fi != null && fi.IsPublic && !fi.IsStatic && 
+             !fi.IsInitOnly &&
+             !fi.IsLiteral;
       }
 
       public string GetAdjustedName(bool useCamelCase) {
@@ -869,6 +871,7 @@ false;
          CBORTypeMapper mapper,
          PODOptions options,
          int depth) {
+      try {
       object o = Activator.CreateInstance(t);
       var dict = new Dictionary<string, CBORObject>();
       foreach (var kv in keysValues) {
@@ -893,6 +896,9 @@ false;
         }
       }
       return o;
+      } catch (Exception ex) {
+        throw new CBORException(ex.Message, ex);
+      }
     }
 
     public static CBORObject CallToObject(
