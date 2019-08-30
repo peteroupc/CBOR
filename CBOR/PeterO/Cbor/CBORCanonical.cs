@@ -126,7 +126,7 @@ namespace PeterO.Cbor {
     }
 
     private static bool IsArrayOrMap(CBORObject a) {
-       return a.Type == CBORType.Array || a.Type == CBORType.Map;
+      return a.Type == CBORType.Array || a.Type == CBORType.Map;
     }
 
     public static byte[] CtapCanonicalEncode(CBORObject a) {
@@ -134,14 +134,14 @@ namespace PeterO.Cbor {
     }
 
     private static bool ByteArraysEqual(byte[] bytesA, byte[] bytesB) {
-if (bytesA == bytesB) {
-  return true;
-}
-if (bytesA == null || bytesB == null) {
-  return false;
-}
-if (bytesA.Length == bytesB.Length) {
-  for (var j = 0; j < bytesA.Length; ++j) {
+      if (bytesA == bytesB) {
+        return true;
+      }
+      if (bytesA == null || bytesB == null) {
+        return false;
+      }
+      if (bytesA.Length == bytesB.Length) {
+        for (var j = 0; j < bytesA.Length; ++j) {
           if (bytesA[j] != bytesB[j]) {
             return false;
           }

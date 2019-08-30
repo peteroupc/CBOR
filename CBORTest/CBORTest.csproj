@@ -100,6 +100,7 @@
     <Compile Include='CBORTypeMapperTest.cs'/>
     <Compile Include='CPOD2.cs'/>
     <Compile Include='CPOD.cs'/>
+    <Compile Include='FieldClass.cs'/>
 </ItemGroup>
   <ItemGroup>
 

@@ -32,14 +32,14 @@ namespace PeterO.Cbor {
       private MemberInfo prop;
 
       public Type PropertyType {
-get {
-        var pr = this.prop as PropertyInfo;
-        if (pr != null) {
-          return pr.PropertyType;
+        get {
+          var pr = this.prop as PropertyInfo;
+          if (pr != null) {
+            return pr.PropertyType;
+          }
+          var fi = this.prop as FieldInfo;
+          return (fi != null) ? fi.FieldType : null;
         }
-        var fi = this.prop as FieldInfo;
-        return (fi != null) ? fi.FieldType : null;
-}
       }
 
       public object GetValue(object obj) {
@@ -89,9 +89,8 @@ get {
           return HasUsableGetter(pr);
         }
         var fi = this.prop as FieldInfo;
-        return fi != null && fi.IsPublic && !fi.IsStatic && 
-             !fi.IsInitOnly &&
-             !fi.IsLiteral;
+        return fi != null && fi.IsPublic && !fi.IsStatic &&
+             !fi.IsInitOnly && !fi.IsLiteral;
       }
 
       public bool HasUsableSetter() {
@@ -100,9 +99,8 @@ get {
           return HasUsableSetter(pr);
         }
         var fi = this.prop as FieldInfo;
-        return fi != null && fi.IsPublic && !fi.IsStatic && 
-             !fi.IsInitOnly &&
-             !fi.IsLiteral;
+        return fi != null && fi.IsPublic && !fi.IsStatic &&
+             !fi.IsInitOnly && !fi.IsLiteral;
       }
 
       public string GetAdjustedName(bool useCamelCase) {
@@ -228,8 +226,8 @@ get {
         }
         foreach (FieldInfo fi in GetTypeFields(t)) {
           PropertyData pd = new PropertyMap.PropertyData() {
-                Name = fi.Name,
-                Prop = fi,
+            Name = fi.Name,
+            Prop = fi,
           };
           if (pd.HasUsableGetter() || pd.HasUsableSetter()) {
             var pn = RemoveIsPrefix(pd.Name);
@@ -678,14 +676,14 @@ get {
           if (objThis.IsNull) {
             return Activator.CreateInstance(t);
           } else {
-              object wrappedObj = objThis.ToObject(
-                nullableType,
-                mapper,
-                options,
-                depth + 1);
-              return Activator.CreateInstance(
-                t,
-                wrappedObj);
+            object wrappedObj = objThis.ToObject(
+              nullableType,
+              mapper,
+              options,
+              depth + 1);
+            return Activator.CreateInstance(
+              t,
+              wrappedObj);
           }
         }
       }
@@ -872,30 +870,31 @@ get {
          PODOptions options,
          int depth) {
       try {
-      object o = Activator.CreateInstance(t);
-      var dict = new Dictionary<string, CBORObject>();
-      foreach (var kv in keysValues) {
-        var name = kv.Key;
-        dict[name] = kv.Value;
-      }
-      foreach (PropertyData key in GetPropertyList(o.GetType())) {
-        if (!key.HasUsableSetter() || !key.HasUsableGetter()) {
-          // Require properties to have both a setter and
-          // a getter to be eligible for setting
-          continue;
+        object o = Activator.CreateInstance(t);
+        var dict = new Dictionary<string, CBORObject>();
+        foreach (var kv in keysValues) {
+          var name = kv.Key;
+          dict[name] = kv.Value;
         }
-        var name = key.GetAdjustedName(options != null ? options.UseCamelCase :
-          true);
-        if (dict.ContainsKey(name)) {
-          object dobj = dict[name].ToObject(
-            key.PropertyType,
-            mapper,
-            options,
-            depth + 1);
-          key.SetValue(o, dobj);
+        foreach (PropertyData key in GetPropertyList(o.GetType())) {
+          if (!key.HasUsableSetter() || !key.HasUsableGetter()) {
+            // Require properties to have both a setter and
+            // a getter to be eligible for setting
+            continue;
+          }
+          var name = key.GetAdjustedName(options != null ?
+options.UseCamelCase :
+            true);
+          if (dict.ContainsKey(name)) {
+            object dobj = dict[name].ToObject(
+              key.PropertyType,
+              mapper,
+              options,
+              depth + 1);
+            key.SetValue(o, dobj);
+          }
         }
-      }
-      return o;
+        return o;
       } catch (Exception ex) {
         throw new CBORException(ex.Message, ex);
       }

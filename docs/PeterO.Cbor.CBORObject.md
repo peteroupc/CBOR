@@ -1062,7 +1062,7 @@ Gets this object's string.
 <b>Exceptions:</b>
 
  * System.InvalidOperationException:
-This object's type is not a string, including if this object is CBORObject.Null. To check the CBOR object for null before conversion, use the following idiom (originally written in C# for the.NET version):  `(cbor==null ||
+This object's type is not a string, including if this object is CBORObject.Null. To check the CBOR object for null before conversion, use the following idiom (originally written in C# for the.NET version):  `(cbor == null ||
             cbor.IsNull) ? null : cbor.AsString()` .
 
 <a id="AsUInt16"></a>
@@ -1862,7 +1862,7 @@ Generates a CBORObject from an arbitrary object, using the given options to cont
  * If the object is a type not specially handled above, this method checks the  <i>obj</i>
  parameter for eligible getters as follows:
 
- * (*) In the .NET version, eligible getters are the public, nonstatic getters of read/write properties (and also those of read-only properties in the case of a compiler-generated type). Eligible getters also include public, nonstatic, non-  `readonly`  fields. If a class has two properties and/or fields of the form "X" and "IsX", where "X" is any name, or has multiple properties and/or fields with the same name, those properties and fields are ignored.
+ * (*) In the .NET version, eligible getters are the public, nonstatic getters of read/write properties (and also those of read-only properties in the case of a compiler-generated type). Eligible getters also include public, nonstatic, non- `const` , non-  `readonly`  fields. If a class has two properties and/or fields of the form "X" and "IsX", where "X" is any name, or has multiple properties and/or fields with the same name, those properties and fields are ignored.
 
  * (*) In the Java version, eligible getters are public, nonstatic methods starting with "get" or "is" (either word followed by a character other than a basic digit or lower-case letter, that is, other than "a" to "z" or "0" to "9"), that take no parameters and do not return void, except that methods named "getClass" are not eligible getters. In addition, public, nonstatic, nonfinal fields are also eligible getters. If a class has two otherwise eligible getters (methods and/or fields) of the form "isX" and "getX", where "X" is the same in both, or two such getters with the same name but different return type, they are not eligible getters.
 
@@ -3226,7 +3226,7 @@ The parameter  <i>first</i>
     public string ToJSONString(
         PeterO.Cbor.JSONOptions options);
 
-Converts this object to a string in JavaScript Object Notation (JSON) format, using the specified options to control the encoding process. This function works not only with arrays and maps, but also integers, strings, byte arrays, and other JSON data types. Notes:
+ Converts this object to a string in JavaScript Object Notation (JSON) format, using the specified options to control the encoding process. This function works not only with arrays and maps, but also integers, strings, byte arrays, and other JSON data types. Notes:
 
  * If this object contains maps with non-string keys, the keys are converted to JSON strings before writing the map as a JSON string.
 
@@ -3303,7 +3303,7 @@ Converts this CBOR object to an object of an arbitrary type. See the documentati
 Java offers no easy way to express a generic type, at least none as easy as C#'s  `typeof`  operator. The following example, written in Java, is a way to specify that the return value will be an ArrayList of String objects.
 
     Type arrayListString = new ParameterizedType() { public Type[]
-                getActualTypeArguments() { // Contains one type parameter, String return
+                getActualTypeArguments() { /* Contains one type parameter, String */ return
                 new Type[] { String.class }; } public Type getRawType() { /* Raw type is
                 ArrayList */ return ArrayList.class; } public Type getOwnerType() {
                 return null; } }; ArrayList<String> array =
@@ -3414,7 +3414,7 @@ Converts this CBOR object to an object of an arbitrary type. The following cases
 
  * Plain-Old-Data deserialization: If the object is a type not specially handled above, the type includes a zero-parameter constructor (default or not), this CBOR object is a CBOR map, and the "mapper" parameter (if any) allows this type to be eligible for Plain-Old-Data deserialization, then this method checks the given type for eligible setters as follows:
 
- * (*) In the .NET version, eligible setters are the public, nonstatic setters of properties with a public, nonstatic getter. Eligible setters also include public, nonstatic, non-  `readonly`  fields. If a class has two properties and/or fields of the form "X" and "IsX", where "X" is any name, or has multiple properties and/or fields with the same name, those properties and fields are ignored.
+ * (*) In the .NET version, eligible setters are the public, nonstatic setters of properties with a public, nonstatic getter. Eligible setters also include public, nonstatic, non- `const` , non-  `readonly`  fields. If a class has two properties and/or fields of the form "X" and "IsX", where "X" is any name, or has multiple properties and/or fields with the same name, those properties and fields are ignored.
 
  * (*) In the Java version, eligible setters are public, nonstatic methods starting with "set" followed by a character other than a basic digit or lower-case letter, that is, other than "a" to "z" or "0" to "9", that take one parameter. The class containing an eligible setter must have a public, nonstatic method with the same name, but starting with "get" or "is" rather than "set", that takes no parameters and does not return void. (For example, if a class has "public setValue(String)" and "public getValue()", "setValue" is an eligible setter. However, "setValue()" and "setValue(String, int)" are not eligible setters.) In addition, public, nonstatic, nonfinal fields are also eligible setters. If a class has two or more otherwise eligible setters (methods and/or fields) with the same name, but different parameter type, they are not eligible setters.
 
@@ -3423,7 +3423,7 @@ Converts this CBOR object to an object of an arbitrary type. The following cases
 Java offers no easy way to express a generic type, at least none as easy as C#'s  `typeof`  operator. The following example, written in Java, is a way to specify that the return value will be an ArrayList of String objects.
 
     Type arrayListString = new ParameterizedType() { public Type[]
-                getActualTypeArguments() { // Contains one type parameter, String return
+                getActualTypeArguments() { /* Contains one type parameter, String */ return
                 new Type[] { String.class }; } public Type getRawType() { /* Raw type is
                 ArrayList */ return ArrayList.class; } public Type getOwnerType() {
                 return null; } }; ArrayList<String> array =
