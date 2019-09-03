@@ -128,6 +128,10 @@ namespace PeterO.Cbor {
     }
 
 #if NET40 || NET20
+    private static bool IsGenericType(Type type) {
+      return type.IsGenericType;
+    }
+
     private static IEnumerable<PropertyInfo> GetTypeProperties(Type t) {
       return t.GetProperties(BindingFlags.Public |
         BindingFlags.Instance);
@@ -160,6 +164,10 @@ namespace PeterO.Cbor {
       return false;
     }
 #else
+    private static bool IsGenericType(Type type) {
+      return type.GetTypeInfo().IsGenericType;
+    }
+
     private static bool IsAssignableFrom(Type superType, Type subType) {
       return superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
     }
@@ -664,11 +672,7 @@ namespace PeterO.Cbor {
       if (IsAssignableFrom(typeof(Enum), t)) {
         return ObjectToEnum(objThis, t);
       }
-#if NET40 || NET20
-      if (t.IsGenericType) {
-#else
-        if (t.GetTypeInfo().IsGenericType) {
-#endif
+      if (IsGenericType(t)) {
         Type td = t.GetGenericTypeDefinition();
         // Nullable types
         if (td.Equals(typeof(Nullable<>))) {

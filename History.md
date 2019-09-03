@@ -1,6 +1,53 @@
 Older versions release notes
 ---------------------
 
+### Version 3.6.0
+
+- Add new string constructors to CBOREncodeOptions, JSONOptions, and PODOptions
+- Implement options to disable resolving shared references and allow empty streams when decoding CBOR objects
+- Add IsNumber property to CBORObject to check whether a CBOR object stores a number; CBORType.Number is deprecated
+
+### Version 3.5.2
+
+- Update Numbers library used by this library to a version that doesn't depend on StyleCop.Analyzers in the package.
+
+### Version 3.5.1
+
+- Update Numbers library used by this library.
+
+### Version 3.5.0
+
+- Update Numbers library used by this library.
+- Deprecate Base64Padding property of JSONOptions.
+
+### Version 3.4.0
+
+No significant changes from beta1.
+
+### Version 3.4.0-beta1
+
+- Improved implementation of new ToObject method.
+- Bugs in multidimensional array serialization by FromObject were fixed.
+- URI parsing restored to 3.0 version for backward compatibility.
+- Remove method disallows null for backward compatibility.
+- ICBORObjectConverter renamed to ICBORToFromConverter.
+- Several APIs were obsoleted.
+
+### Version 3.4.0-alpha1
+
+- Add ToObject method for deserializing CBOR objects.
+- Add ICBORObjectConverter interface.
+- Add HasMostOuterTag method to CBORObject class.
+- Add CTAP2 canonicalization support to CBOR object encoding.
+- Added examples in several places in documentation.
+
+### Version 3.3
+
+- Added Clear, RemoveAt and Remove(object) methods to CBORObject class.  Formerly, it was very hard with existing methods to remove items from CBOR maps and arrays.
+- Added CodePointLength and ToUpperCaseAscii methods to DataUtilities class.
+- Added WriteValue family of methods to CBORObject class.  This can be used for lower-level encoding of CBOR objects.  Examples on its use were included in the documentation.
+- Bug fixes.
+
 ### Version 3.2.1
 
 - Add .NET Framework 4.0 targeted assembly to avoid compiler warnings that can appear when this package is added to a project that targets .NET Framework 4.0 or later.

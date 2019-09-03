@@ -258,6 +258,25 @@ The features in this version include:
 - New CBORNumber class for storing numbers representable in CBOR.  The new CBORObject.IsNumber property checks whether a CBOR object represents a number.
 - Bug fixes
 
+### Version 4.0.0:
+
+- Fix issues with CTAP2 Canonical CBOR form
+- Support field serialization and deserialization in ToObject and FromObject
+
+### Version 4.0.0-beta2:
+
+The features in this version include:
+
+- The CBOR library no longer stores numbers in a special form beyond the CBOR data model, which represents all "65-bit" signed integers and all "double" values.  This means the CBOR library no longer stores certain numbers as EDecimal, EInteger, EFloat, etc., rather than as tagged CBOR objects.
+- CBORObject.CompareTo now compares objects using the default deterministic encoding comparison in the draft revision of the CBOR specification, and no longer treats numbers (objects with the former type CBORType.Number) as a special class.
+- CBORType.Number is deprecated; CBORObjects no longer have this type.  In its place, certain numbers now have new CBORTypes Integer or FloatingPoint.
+- CBORObject now stores floating-point numbers internally as the bits that make them up, rather than as `double`s, to avoid data loss in conversions.
+- Methods were added to CBORObject to read and write floating-point numbers in terms of their bit patterns rather than as `double`s or `float`s.
+- Ctap2Canonical was made more strict and now works when decoding CBOR objects.
+- Added ReadSequence and DecodeSequence to CBORObject for reading CBOR sequences.
+- New CBORNumber class for storing numbers representable in CBOR.  The new CBORObject.IsNumber property checks whether a CBOR object represents a number.
+- Bug fixes
+
 ### Version 4.0.0-beta1:
 
 - Support nullable types in CBORObject.ToObject.
@@ -288,53 +307,6 @@ The features in this version include:
 - Certain other changes in CBOR object reading and validation were
   made; they are largely compatible with previous versions but may be
   backwards-incompatible in certain rare cases
-
-### Version 3.6.0
-
-- Add new string constructors to CBOREncodeOptions, JSONOptions, and PODOptions
-- Implement options to disable resolving shared references and allow empty streams when decoding CBOR objects
-- Add IsNumber property to CBORObject to check whether a CBOR object stores a number; CBORType.Number is deprecated
-
-### Version 3.5.2
-
-- Update Numbers library used by this library to a version that doesn't depend on StyleCop.Analyzers in the package.
-
-### Version 3.5.1
-
-- Update Numbers library used by this library.
-
-### Version 3.5.0
-
-- Update Numbers library used by this library.
-- Deprecate Base64Padding property of JSONOptions.
-
-### Version 3.4.0
-
-No significant changes from beta1.
-
-### Version 3.4.0-beta1
-
-- Improved implementation of new ToObject method.
-- Bugs in multidimensional array serialization by FromObject were fixed.
-- URI parsing restored to 3.0 version for backward compatibility.
-- Remove method disallows null for backward compatibility.
-- ICBORObjectConverter renamed to ICBORToFromConverter.
-- Several APIs were obsoleted.
-
-### Version 3.4.0-alpha1
-
-- Add ToObject method for deserializing CBOR objects.
-- Add ICBORObjectConverter interface.
-- Add HasMostOuterTag method to CBORObject class.
-- Add CTAP2 canonicalization support to CBOR object encoding.
-- Added examples in several places in documentation.
-
-### Version 3.3
-
-- Added Clear, RemoveAt and Remove(object) methods to CBORObject class.  Formerly, it was very hard with existing methods to remove items from CBOR maps and arrays.
-- Added CodePointLength and ToUpperCaseAscii methods to DataUtilities class.
-- Added WriteValue family of methods to CBORObject class.  This can be used for lower-level encoding of CBOR objects.  Examples on its use were included in the documentation.
-- Bug fixes.
 
 See [History.md](https://github.com/peteroupc/CBOR/tree/master/History.md)
 for release notes for older versions.

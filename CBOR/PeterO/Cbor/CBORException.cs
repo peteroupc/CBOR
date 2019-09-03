@@ -36,13 +36,6 @@ public sealed class CBORException : Exception {
     }
 
 #if NET20 || NET40
-    /// <summary>Initializes a new instance of the
-    /// <see cref='PeterO.Cbor.CBORException'/> class. Uses the given
-    /// serialization and streaming contexts.</summary>
-    /// <param name='info'>A System.Runtime.Serialization.SerializationInfo
-    /// object.</param>
-    /// <param name='context'>A
-    /// System.Runtime.Serialization.StreamingContext object.</param>
     private CBORException(
       System.Runtime.Serialization.SerializationInfo info,
       System.Runtime.Serialization.StreamingContext context)

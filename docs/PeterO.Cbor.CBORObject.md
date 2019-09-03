@@ -139,7 +139,7 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[HasTag(int)](#HasTag_int)</code> - Returns whether this object has a tag of the given number.
 * <code>[HasTag(PeterO.Numbers.EInteger)](#HasTag_PeterO_Numbers_EInteger)</code> - Returns whether this object has a tag of the given number.
 * <code>[Insert(int, object)](#Insert_int_object)</code> - Inserts an object at the specified position in this CBOR array.
-* <code>[IsFalse](#IsFalse)</code> - Gets a value indicating whether this value is a CBOR false value.
+* <code>[IsFalse](#IsFalse)</code> - Gets a value indicating whether this value is a CBOR false value, whether tagged or not.
 * <code>[IsFinite](#IsFinite)</code> - Gets a value indicating whether this CBOR object represents a finite number.
 * <code>[IsInfinity()](#IsInfinity)</code> - Gets a value indicating whether this CBOR object represents infinity.
 * <code>[IsIntegral](#IsIntegral)</code> - Gets a value indicating whether this object represents an integer number, that is, a number without a fractional part.
@@ -150,7 +150,7 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[IsNumber](#IsNumber)</code> - Gets a value indicating whether this CBOR object stores a number (including infinity or a not-a-number or NaN value).
 * <code>[IsPositiveInfinity()](#IsPositiveInfinity)</code> - Gets a value indicating whether this CBOR object represents positive infinity.
 * <code>[IsTagged](#IsTagged)</code> - Gets a value indicating whether this data item has at least one tag.
-* <code>[IsTrue](#IsTrue)</code> - Gets a value indicating whether this value is a CBOR true value.
+* <code>[IsTrue](#IsTrue)</code> - Gets a value indicating whether this value is a CBOR true value, whether tagged or not.
 * <code>[IsUndefined](#IsUndefined)</code> - Gets a value indicating whether this value is a CBOR undefined value.
 * <code>[IsZero](#IsZero)</code> - Gets a value indicating whether this object's value equals 0.
 * <code>[Keys](#Keys)</code> - Gets a collection of the keys of this CBOR object in an undefined order.
@@ -315,11 +315,11 @@ The number of keys in this map, or the number of items in this array, or 0 if th
 
     public bool IsFalse { get; }
 
-Gets a value indicating whether this value is a CBOR false value.
+Gets a value indicating whether this value is a CBOR false value, whether tagged or not.
 
 <b>Returns:</b>
 
- `true`  If this value is a CBOR false value; otherwise,  `false` .
+ `true`  if this value is a CBOR false value; otherwise,  `false` .
 
 <a id="IsFinite"></a>
 ### IsFinite
@@ -330,7 +330,7 @@ Gets a value indicating whether this CBOR object represents a finite number.
 
 <b>Returns:</b>
 
- `true`  If this CBOR object represents a finite number; otherwise,  `false` .
+ `true`  if this CBOR object represents a finite number; otherwise,  `false` .
 
 <a id="IsIntegral"></a>
 ### IsIntegral
@@ -341,7 +341,7 @@ Gets a value indicating whether this object represents an integer number, that i
 
 <b>Returns:</b>
 
- `true`  If this object represents an integer number, that is, a number without a fractional part; otherwise,  `false` .
+ `true`  if this object represents an integer number, that is, a number without a fractional part; otherwise,  `false` .
 
 <a id="IsNegative"></a>
 ### IsNegative
@@ -352,7 +352,7 @@ Gets a value indicating whether this object is a negative number.
 
 <b>Returns:</b>
 
- `true`  If this object is a negative number; otherwise,  `false` .
+ `true`  if this object is a negative number; otherwise,  `false` .
 
 <a id="IsNull"></a>
 ### IsNull
@@ -363,7 +363,7 @@ Gets a value indicating whether this value is a CBOR null value.
 
 <b>Returns:</b>
 
- `true`  If this value is a CBOR null value; otherwise,  `false` .
+ `true`  if this value is a CBOR null value; otherwise,  `false` .
 
 <a id="IsNumber"></a>
 ### IsNumber
@@ -385,18 +385,18 @@ Gets a value indicating whether this data item has at least one tag.
 
 <b>Returns:</b>
 
- `true`  If this data item has at least one tag; otherwise,  `false` .
+ `true`  if this data item has at least one tag; otherwise,  `false` .
 
 <a id="IsTrue"></a>
 ### IsTrue
 
     public bool IsTrue { get; }
 
-Gets a value indicating whether this value is a CBOR true value.
+Gets a value indicating whether this value is a CBOR true value, whether tagged or not.
 
 <b>Returns:</b>
 
- `true`  If this value is a CBOR true value; otherwise,  `false` .
+ `true`  if this value is a CBOR true value; otherwise,  `false` .
 
 <a id="IsUndefined"></a>
 ### IsUndefined
@@ -407,7 +407,7 @@ Gets a value indicating whether this value is a CBOR undefined value.
 
 <b>Returns:</b>
 
- `true`  If this value is a CBOR undefined value; otherwise,  `false` .
+ `true`  if this value is a CBOR undefined value; otherwise,  `false` .
 
 <a id="IsZero"></a>
 ### IsZero
@@ -418,7 +418,7 @@ Gets a value indicating whether this object's value equals 0.
 
 <b>Returns:</b>
 
- `true`  If this object's value equals 0; otherwise,  `false` .
+ `true`  if this object's value equals 0; otherwise,  `false` .
 
 <a id="this_string"></a>
 ### Item
@@ -1862,7 +1862,7 @@ Generates a CBORObject from an arbitrary object, using the given options to cont
  * If the object is a type not specially handled above, this method checks the  <i>obj</i>
  parameter for eligible getters as follows:
 
- * (*) In the .NET version, eligible getters are the public, nonstatic getters of read/write properties (and also those of read-only properties in the case of a compiler-generated type). Eligible getters also include public, nonstatic, non- `const` , non-  `readonly`  fields. If a class has two properties and/or fields of the form "X" and "IsX", where "X" is any name, or has multiple properties and/or fields with the same name, those properties and fields are ignored.
+ * (*) In the .NET version, eligible getters are the public, nonstatic getters of read/write properties (and also those of read-only properties in the case of a compiler-generated type). Eligible getters also include public, nonstatic, non-  `const`  , non-  `readonly`  fields. If a class has two properties and/or fields of the form "X" and "IsX", where "X" is any name, or has multiple properties and/or fields with the same name, those properties and fields are ignored.
 
  * (*) In the Java version, eligible getters are public, nonstatic methods starting with "get" or "is" (either word followed by a character other than a basic digit or lower-case letter, that is, other than "a" to "z" or "0" to "9"), that take no parameters and do not return void, except that methods named "getClass" are not eligible getters. In addition, public, nonstatic, nonfinal fields are also eligible getters. If a class has two otherwise eligible getters (methods and/or fields) of the form "isX" and "getX", where "X" is the same in both, or two such getters with the same name but different return type, they are not eligible getters.
 
@@ -3286,7 +3286,7 @@ The parameter  <i>options</i>
 
     public string ToJSONString();
 
-Converts this object to a string in JavaScript Object Notation (JSON) format. See the overload to JSONString taking a JSONOptions argument for further information. If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the JSON string in an undefined order. Map keys other than untagged text strings are converted to JSON strings before writing them out (for example,  `22("Test")`  is converted to  `"Test"`  and  `true`  is converted to  `"true"`  ). If, after such conversion, two or more map keys are identical, this method throws a CBORException. The example code given in **M:PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)** can be used to write out certain keys of a CBOR map in a given order to a JSON string.
+Converts this object to a string in JavaScript Object Notation (JSON) format. See the overload to JSONString taking a JSONOptions argument for further information. If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the JSON string in an undefined order. Map keys other than untagged text strings are converted to JSON strings before writing them out (for example,  `22("Test")`  is converted to  `"Test"`  and  `true`  is converted to  `"true"`  ). If, after such conversion, two or more map keys are identical, this method throws a CBORException. The example code given in <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b> can be used to write out certain keys of a CBOR map in a given order to a JSON string.
 
 <b>Return Value:</b>
 
@@ -3414,7 +3414,7 @@ Converts this CBOR object to an object of an arbitrary type. The following cases
 
  * Plain-Old-Data deserialization: If the object is a type not specially handled above, the type includes a zero-parameter constructor (default or not), this CBOR object is a CBOR map, and the "mapper" parameter (if any) allows this type to be eligible for Plain-Old-Data deserialization, then this method checks the given type for eligible setters as follows:
 
- * (*) In the .NET version, eligible setters are the public, nonstatic setters of properties with a public, nonstatic getter. Eligible setters also include public, nonstatic, non- `const` , non-  `readonly`  fields. If a class has two properties and/or fields of the form "X" and "IsX", where "X" is any name, or has multiple properties and/or fields with the same name, those properties and fields are ignored.
+ * (*) In the .NET version, eligible setters are the public, nonstatic setters of properties with a public, nonstatic getter. Eligible setters also include public, nonstatic, non-  `const`  , non-  `readonly`  fields. If a class has two properties and/or fields of the form "X" and "IsX", where "X" is any name, or has multiple properties and/or fields with the same name, those properties and fields are ignored.
 
  * (*) In the Java version, eligible setters are public, nonstatic methods starting with "set" followed by a character other than a basic digit or lower-case letter, that is, other than "a" to "z" or "0" to "9", that take one parameter. The class containing an eligible setter must have a public, nonstatic method with the same name, but starting with "get" or "is" rather than "set", that takes no parameters and does not return void. (For example, if a class has "public setValue(String)" and "public getValue()", "setValue" is an eligible setter. However, "setValue()" and "setValue(String, int)" are not eligible setters.) In addition, public, nonstatic, nonfinal fields are also eligible setters. If a class has two or more otherwise eligible setters (methods and/or fields) with the same name, but different parameter type, they are not eligible setters.
 
@@ -3588,7 +3588,7 @@ The given type "T", or this object's CBOR type, is not supported.
 
     public override string ToString();
 
-Returns this CBOR object in string form. The format is intended to be human-readable, not machine-readable, the format is not intended to be parsed, and the format may change at any time. The returned string is not necessarily in JavaScript Object Notation (JSON); to convert CBOR objects to JSON strings, use the **M:PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)** method instead.
+Returns this CBOR object in string form. The format is intended to be human-readable, not machine-readable, the format is not intended to be parsed, and the format may change at any time. The returned string is not necessarily in JavaScript Object Notation (JSON); to convert CBOR objects to JSON strings, use the <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b> method instead.
 
 <b>Return Value:</b>
 
@@ -4179,7 +4179,7 @@ The parameter  <i>outputStream</i>
         object obj,
         System.IO.Stream outputStream);
 
-Converts an arbitrary object to a string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8. If the object is convertible to a CBOR map, or to a CBOR object that contains CBOR maps, the keys to those maps are written out to the JSON string in an undefined order. The example code given in **M:PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)** can be used to write out certain keys of a CBOR map in a given order to a JSON string.
+Converts an arbitrary object to a string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8. If the object is convertible to a CBOR map, or to a CBOR object that contains CBOR maps, the keys to those maps are written out to the JSON string in an undefined order. The example code given in <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b> can be used to write out certain keys of a CBOR map in a given order to a JSON string.
 
 <b>Parameters:</b>
 
@@ -4202,7 +4202,7 @@ The parameter  <i>outputStream</i>
     public void WriteJSONTo(
         System.IO.Stream outputStream);
 
-Converts this object to a string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8. If the CBOR object contains CBOR maps, or is a CBOR map, the keys to the map are written out to the JSON string in an undefined order. The example code given in **M:PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)** can be used to write out certain keys of a CBOR map in a given order to a JSON string.
+Converts this object to a string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8. If the CBOR object contains CBOR maps, or is a CBOR map, the keys to the map are written out to the JSON string in an undefined order. The example code given in <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b> can be used to write out certain keys of a CBOR map in a given order to a JSON string.
 
 <b>Parameters:</b>
 
@@ -4224,7 +4224,7 @@ The parameter  <i>outputStream</i>
         System.IO.Stream outputStream,
         PeterO.Cbor.JSONOptions options);
 
-Converts this object to a string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8, using the given JSON options to control the encoding process. If the CBOR object contains CBOR maps, or is a CBOR map, the keys to the map are written out to the JSON string in an undefined order. The example code given in **M:PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)** can be used to write out certain keys of a CBOR map in a given order to a JSON string.
+Converts this object to a string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8, using the given JSON options to control the encoding process. If the CBOR object contains CBOR maps, or is a CBOR map, the keys to the map are written out to the JSON string in an undefined order. The example code given in <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b> can be used to write out certain keys of a CBOR map in a given order to a JSON string.
 
 <b>Parameters:</b>
 
