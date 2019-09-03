@@ -1,5 +1,10 @@
 <package
-><metadata><version>4.0.0-beta2</version><id>PeterO.Cbor</id><requireLicenseAcceptance>false</requireLicenseAcceptance><releaseNotes>Version 4.0.0-beta2:
+><metadata><version>4.0.0</version><id>PeterO.Cbor</id><requireLicenseAcceptance>false</requireLicenseAcceptance><releaseNotes>Version 4.0.0:
+
+- Fix issues with CTAP2 Canonical CBOR form
+- Support field serialization and deserialization in ToObject and FromObject
+
+Version 4.0.0-beta2:
 
 The features in this version include:
 
@@ -11,5 +16,36 @@ The features in this version include:
 - Ctap2Canonical was made more strict and now works when decoding CBOR objects.
 - Added ReadSequence and DecodeSequence to CBORObject for reading CBOR sequences.
 - New CBORNumber class for storing numbers representable in CBOR.  The new CBORObject.IsNumber property checks whether a CBOR object represents a number.
-- Bug fixes</releaseNotes><summary></summary><license type='expression'>CC0-1.0</license><projectUrl>https://github.com/peteroupc/CBOR</projectUrl><authors>Peter Occil</authors><description>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049.</description><owners>Peter Occil</owners><title>CBOR (Concise Binary Object Representation)</title><tags>cbor data serialization binary json</tags><dependencies><group><dependency id='PeterO.Numbers' version='1.4.3' /></group></dependencies></metadata><files><file src='CBOR/bin/Release/netstandard1.0/CBOR.dll' target='/lib/netstandard1.0' /><file src='CBOR/bin/Release/netstandard1.0/CBOR.xml' target='/lib/netstandard1.0' /><file src='CBOR20/bin/Release/CBOR.dll' target='/lib/net20' /><file src='CBOR20/bin/Release/CBOR.xml' target='/lib/net20' /><file src='CBOR40/bin/Release/CBOR.dll' target='/lib/net40' /><file src='CBOR40/bin/Release/CBOR.xml' target='/lib/net40' /></files></package
+- Bug fixes
+
+Version 4.0.0-beta1:
+
+- Support nullable types in CBORObject.ToObject.
+- Update Numbers library to newer version
+- JSONOptions.Base64Padding now has no effect.  The library will now write padding as necessary when
+  writing traditional base64 to JSON and write no padding when writing base64url to JSON.
+- JSONOptions.ReplaceSurrogates property added.
+- Restrict valid shared reference indices to integers 0 or greater.
+- Reject writing JSON where CBOR maps have two keys with the same string equivalent.
+- Improve performance of CBOR object comparisons involving big floats.
+
+Version 4.0.0-alpha2:
+
+- Support CBOR tags for IRIs and IRI references.
+- Add CBOREncodeOptions.DefaultCtap2Canonical field.
+
+Version 4.0.0-alpha1:
+
+- Remove all APIs obsoleted since version 3.4.  This
+  includes the BigInteger, ExtendedDecimal, and ExtendedFloat APIs,
+  which were renamed and moved to a different library, as well as the
+  ICBORTag and CBORTypeFilter APIs.
+- Changed implementation of FromObject, including imposing a nesting depth
+  limit and supporting a CBORTypeMapper parameter.
+- Property name conversion rules (in PODOptions) were changed
+  in this version with respect to FromObject.  In this sense,
+  PODOptions.RemoveIsPrefix was removed.
+- Certain other changes in CBOR object reading and validation were
+  made; they are largely compatible with previous versions but may be
+  backwards-incompatible in certain rare cases</releaseNotes><summary></summary><license type='expression'>CC0-1.0</license><projectUrl>https://github.com/peteroupc/CBOR</projectUrl><authors>Peter Occil</authors><description>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049.</description><owners>Peter Occil</owners><title>CBOR (Concise Binary Object Representation)</title><tags>cbor data serialization binary json</tags><dependencies><group><dependency id='PeterO.Numbers' version='1.4.3' /></group></dependencies></metadata><files><file src='CBOR/bin/Release/netstandard1.0/CBOR.dll' target='/lib/netstandard1.0' /><file src='CBOR/bin/Release/netstandard1.0/CBOR.xml' target='/lib/netstandard1.0' /><file src='CBOR20/bin/Release/CBOR.dll' target='/lib/net20' /><file src='CBOR20/bin/Release/CBOR.xml' target='/lib/net20' /><file src='CBOR40/bin/Release/CBOR.dll' target='/lib/net40' /><file src='CBOR40/bin/Release/CBOR.xml' target='/lib/net40' /></files></package
 >
