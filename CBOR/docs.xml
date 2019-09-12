@@ -947,8 +947,8 @@
             if (obj.Type ==
             CBORType.Integer &amp;&amp; obj.CanValueFitInInt64()) {
             &#x2f;&#x2a; Not an Int64; handle the error&#x2a;&#x2f;
-              Console.WriteLine("Not a 64-bit integer."); } else {
-              Console.WriteLine("The value is " + obj.AsInt64Value()); }</code> .
+            Console.WriteLine("Not a 64-bit integer."); } else {
+            Console.WriteLine("The value is " + obj.AsInt64Value()); }</code> .
             </example>
 
 </doc>
@@ -3592,7 +3592,7 @@
             <exception cref='System.IO.IOException'>An I/O error
             occurred.</exception>
             <exception cref='ArgumentNullException'>The parameter <paramref name='outputStream'/> is null.</exception>
-            <example><para>The following example (written in C# for the.NET version)
+            <example><para>The following example (originally written in C# for the.NET version)
             shows how to use the <c>LimitedMemoryStream</c> class (implemented
             in <i>LimitedMemoryStream.cs</i>
              in the peteroupc/CBOR open-source
@@ -3626,7 +3626,7 @@
             size++; out.write(b);
             }
             });
-            byte[] bytes = ba.toByteArray();</code> <para>The following example (written in C# for the.NET version)
+            byte[] bytes = ba.toByteArray();</code> <para>The following example (originally written in C# for the.NET version)
             shows how to use a.NET MemoryStream to limit the size of supported
             JSON serializations of CBOR objects. The disadvantage is that the
             extra memory needed to do so can be wasteful, especially if the
@@ -3673,7 +3673,7 @@
             <summary><para>Writes this CBOR object to a data stream. If the
             CBOR object contains CBOR maps, or is a CBOR map, the keys to the
             map are written out to the data stream in an undefined order. See
-            the examples (written in C# for the.NET version) for ways to write
+            the examples (originally written in C# for the.NET version) for ways to write
             out certain keys of a CBOR map in a given order. In the case of
             CBOR objects of type FloatingPoint, the number is written using the
             shortest floating-point encoding possible; this is a change from
@@ -3728,7 +3728,7 @@
             new ArgumentNullException(nameof(outputStream));}
             outputStream.WriteByte((byte)0x9f); for (object item in list) { new
             CBORObject(item).WriteTo(outputStream); }
-            outputStream.WriteByte((byte)0xff); }</code> <para>The following example (written in C# for the.NET version)
+            outputStream.WriteByte((byte)0xff); }</code> <para>The following example (originally written in C# for the.NET version)
             shows how to use the <c>LimitedMemoryStream</c> class (implemented
             in <i>LimitedMemoryStream.cs</i>
              in the peteroupc/CBOR open-source
@@ -3762,7 +3762,7 @@
             size++; out.write(b);
             }
             });
-            byte[] bytes = ba.toByteArray();</code> <para>The following example (written in C# for the.NET version)
+            byte[] bytes = ba.toByteArray();</code> <para>The following example (originally written in C# for the.NET version)
             shows how to use a.NET MemoryStream to limit the size of supported
             CBOR serializations. The disadvantage is that the extra memory
             needed to do so can be wasteful, especially if the average
@@ -4647,45 +4647,35 @@
     </summary>
 </doc>
 <doc name="F:PeterO.Cbor.URIUtility.ParseMode.IRILenient">
-
-            <summary>The rules only check for the appropriate delimiters when
+<summary>The rules only check for the appropriate delimiters when
             splitting the path, without checking if all the characters in each
             component are valid. Even with this mode, strings with unpaired
             surrogate code points are considered invalid.</summary>
-
 </doc>
 <doc name="F:PeterO.Cbor.URIUtility.ParseMode.IRIStrict">
-
-            <summary>The rules follow the syntax for parsing IRIs. In
+<summary>The rules follow the syntax for parsing IRIs. In
             particular, many code points outside the Basic Latin range (U+0000
             to U+007F) are allowed. Strings with unpaired surrogate code points
             are considered invalid.</summary>
-
 </doc>
 <doc name="F:PeterO.Cbor.URIUtility.ParseMode.IRISurrogateLenient">
-
-            <summary>The rules only check for the appropriate delimiters when
+<summary>The rules only check for the appropriate delimiters when
             splitting the path, without checking if all the characters in each
             component are valid. Unpaired surrogate code points are treated as
             though they were replacement characters instead for the purposes of
             these rules, so that strings with those code points are not
             considered invalid strings.</summary>
-
 </doc>
 <doc name="F:PeterO.Cbor.URIUtility.ParseMode.URILenient">
-
-            <summary>The rules only check for the appropriate delimiters when
+<summary>The rules only check for the appropriate delimiters when
             splitting the path, without checking if all the characters in each
             component are valid. Code points outside the Basic Latin range
             (U+0000 to U+007F) are not allowed.</summary>
-
 </doc>
 <doc name="F:PeterO.Cbor.URIUtility.ParseMode.URIStrict">
-
-            <summary>The rules follow the syntax for parsing IRIs, except that
+<summary>The rules follow the syntax for parsing IRIs, except that
             code points outside the Basic Latin range (U+0000 to U+007F) are
             not allowed.</summary>
-
 </doc>
 <doc name="M:PeterO.Cbor.URIUtility.PercentDecode(System.String)">
 <summary>Decodes percent-encoding (of the form "%XX" where X is a hexadecimal

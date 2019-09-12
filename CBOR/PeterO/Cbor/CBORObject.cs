@@ -334,7 +334,7 @@ cn.GetNumberInterface().IsIntegral(cn.GetValue());
     }
 
     /// <summary>Gets a value indicating whether this value is a CBOR null
-    /// value.</summary>
+    /// value, whether tagged or not.</summary>
     /// <value><c>true</c> if this value is a CBOR null value; otherwise,
     /// <c>false</c>.</value>
     public bool IsNull {
@@ -5060,13 +5060,13 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='outputStream'/> is null.</exception>
     /// <example>
-    /// <para>The following example (written in C# for the.NET version)
-    /// shows how to use the <c>LimitedMemoryStream</c>
-    ///  class (implemented
-    /// in <i>LimitedMemoryStream.cs</i>
-    ///  in the peteroupc/CBOR open-source
-    /// repository) to limit the size of supported JSON serializations of
-    /// CBOR objects.</para>
+    /// <para>The following example (originally written in C# for the.NET
+    /// version) shows how to use the <c>LimitedMemoryStream</c>
+    ///  class
+    /// (implemented in <i>LimitedMemoryStream.cs</i>
+    ///  in the peteroupc/CBOR
+    /// open-source repository) to limit the size of supported JSON
+    /// serializations of CBOR objects.</para>
     /// <code>
     /// &#x2f;&#x2a; maximum supported JSON size in bytes&#x2a;&#x2f;
     /// var maxSize = 20000;
@@ -5103,13 +5103,13 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     /// });
     /// byte[] bytes = ba.toByteArray();
     /// </code>
-    /// <para>The following example (written in C# for the.NET version)
-    /// shows how to use a.NET MemoryStream to limit the size of supported
-    /// JSON serializations of CBOR objects. The disadvantage is that the
-    /// extra memory needed to do so can be wasteful, especially if the
-    /// average serialized object is much smaller than the maximum size
-    /// given (for example, if the maximum size is 20000 bytes, but the
-    /// average serialized object has a size of 50 bytes).</para>
+    /// <para>The following example (originally written in C# for the.NET
+    /// version) shows how to use a.NET MemoryStream to limit the size of
+    /// supported JSON serializations of CBOR objects. The disadvantage is
+    /// that the extra memory needed to do so can be wasteful, especially
+    /// if the average serialized object is much smaller than the maximum
+    /// size given (for example, if the maximum size is 20000 bytes, but
+    /// the average serialized object has a size of 50 bytes).</para>
     /// <code>
     /// var backing = new byte[20000]; &#x2f;&#x2a; maximum supported JSON size in bytes&#x2a;&#x2f;
     /// byte[] bytes1, bytes2;
@@ -5604,11 +5604,11 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     /// <summary><para>Writes this CBOR object to a data stream. If the
     /// CBOR object contains CBOR maps, or is a CBOR map, the keys to the
     /// map are written out to the data stream in an undefined order. See
-    /// the examples (written in C# for the.NET version) for ways to write
-    /// out certain keys of a CBOR map in a given order. In the case of
-    /// CBOR objects of type FloatingPoint, the number is written using the
-    /// shortest floating-point encoding possible; this is a change from
-    /// previous versions.</para>
+    /// the examples (originally written in C# for the.NET version) for
+    /// ways to write out certain keys of a CBOR map in a given order. In
+    /// the case of CBOR objects of type FloatingPoint, the number is
+    /// written using the shortest floating-point encoding possible; this
+    /// is a change from previous versions.</para>
     ///  </summary>
     /// <param name='stream'>A writable data stream.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -5667,12 +5667,12 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     /// outputStream.WriteByte((byte)0x9f); for (object item in list) { new
     /// CBORObject(item).WriteTo(outputStream); }
     /// outputStream.WriteByte((byte)0xff); }</code>
-    /// <para>The following example (written in C# for the.NET version)
-    /// shows how to use the <c>LimitedMemoryStream</c>
-    ///  class (implemented
-    /// in <i>LimitedMemoryStream.cs</i>
-    ///  in the peteroupc/CBOR open-source
-    /// repository) to limit the size of supported CBOR
+    /// <para>The following example (originally written in C# for the.NET
+    /// version) shows how to use the <c>LimitedMemoryStream</c>
+    ///  class
+    /// (implemented in <i>LimitedMemoryStream.cs</i>
+    ///  in the peteroupc/CBOR
+    /// open-source repository) to limit the size of supported CBOR
     /// serializations.</para>
     /// <code>
     /// &#x2f;&#x2a; maximum supported CBOR size in bytes&#x2a;&#x2f;
@@ -5710,10 +5710,10 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     /// });
     /// byte[] bytes = ba.toByteArray();
     /// </code>
-    /// <para>The following example (written in C# for the.NET version)
-    /// shows how to use a.NET MemoryStream to limit the size of supported
-    /// CBOR serializations. The disadvantage is that the extra memory
-    /// needed to do so can be wasteful, especially if the average
+    /// <para>The following example (originally written in C# for the.NET
+    /// version) shows how to use a.NET MemoryStream to limit the size of
+    /// supported CBOR serializations. The disadvantage is that the extra
+    /// memory needed to do so can be wasteful, especially if the average
     /// serialized object is much smaller than the maximum size given (for
     /// example, if the maximum size is 20000 bytes, but the average
     /// serialized object has a size of 50 bytes).</para>

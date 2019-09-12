@@ -1442,7 +1442,8 @@ cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked();
       for (var i = 0; i <= 50; ++i) {
         refobj = CBORObject.FromObjectAndTag(i, 29);
         arr = CBORObject.FromObject(new CBORObject[] {
-          refobj, refobj, refobj, refobj, refobj, refobj, refobj, refobj, refobj,
+          refobj, refobj, refobj, refobj, refobj, refobj, refobj, refobj,
+          refobj,
         });
         arr = CBORObject.FromObjectAndTag(arr, 28);
         root.Add(arr);
