@@ -121,4 +121,4 @@
     </EmbeddedResource>
   </ItemGroup>
   <Import Project='$(MSBuildToolsPath)\Microsoft.CSharp.targets'/>
-<PropertyGroup/><PropertyGroup/>   </Project>
+<PropertyGroup/><PropertyGroup/></Project>
