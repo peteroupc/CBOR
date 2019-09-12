@@ -80,7 +80,8 @@ namespace PeterO.Cbor {
     /// (in any combination of case), which means true, and any other value
     /// meaning false. For example, <c>allowduplicatekeys=Yes</c> and
     /// <c>allowduplicatekeys=1</c> both set the <c>AllowDuplicateKeys</c>
-    /// property to true.</param>
+    /// property to true. In the future, this class may allow other keys to
+    /// store other kinds of values, not just true or false.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='paramString'/> is null.</exception>
     public CBOREncodeOptions(string paramString) {

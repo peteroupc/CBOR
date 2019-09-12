@@ -53,7 +53,7 @@ Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOpti
 
  * System.ArgumentNullException:
 The parameter  <i>paramString</i>
- is null.
+ is null. In the future, this class may allow other keys to store other kinds of values, not just true or false.
 
 <a id="Void_ctor"></a>
 ### JSONOptions Constructor

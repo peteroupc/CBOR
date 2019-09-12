@@ -124,7 +124,8 @@
             given for the last such key is used. The four keys just given can
             have a value of <c>1</c>, <c>true</c>, <c>yes</c>, or <c>on</c> (in any combination of case), which means true, and any other value
             meaning false. For example, <c>allowduplicatekeys=Yes</c> and
-            <c>allowduplicatekeys=1</c> both set the <c>AllowDuplicateKeys</c> property to true.</param>
+            <c>allowduplicatekeys=1</c> both set the <c>AllowDuplicateKeys</c> property to true. In the future, this class may allow other keys to
+            store other kinds of values, not just true or false.</param>
             <exception cref='ArgumentNullException'>The parameter <paramref name='paramString'/> is null.</exception>
 
 </doc>
@@ -2580,8 +2581,8 @@
             converted to <c>"true"</c> ). If, after such conversion, two or
             more map keys are identical, this method throws a CBORException.
             The example code given in
-            <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b> can be used to write out certain keys
-            of a CBOR map in a given order to a JSON string.</para></summary>
+            <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b> can be used to write out certain keys of a CBOR map in a given
+            order to a JSON string.</para></summary>
             <returns>A text string.</returns>
 
 </doc>
@@ -3501,8 +3502,8 @@
             convertible to a CBOR map, or to a CBOR object that contains CBOR
             maps, the keys to those maps are written out to the JSON string in
             an undefined order. The example code given in
-            <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b> can be used to write out certain keys
-            of a CBOR map in a given order to a JSON string.</summary>
+            <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b> can be used to write out certain keys of a CBOR map in a given
+            order to a JSON string.</summary>
             <param name='obj'>The parameter <paramref name='obj'/> is an
             arbitrary object. Can be null.
             <para><b>NOTE:</b> For security reasons, whenever possible, an
@@ -3524,8 +3525,8 @@
             that string to a data stream in UTF-8. If the CBOR object contains
             CBOR maps, or is a CBOR map, the keys to the map are written out to
             the JSON string in an undefined order. The example code given in
-            <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b> can be used to write out certain keys
-            of a CBOR map in a given order to a JSON string.</summary>
+            <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b> can be used to write out certain keys of a CBOR map in a given
+            order to a JSON string.</summary>
             <param name='outputStream'>A writable data stream.</param>
             <exception cref='System.IO.IOException'>An I/O error
             occurred.</exception>
@@ -3540,8 +3541,8 @@
             to control the encoding process. If the CBOR object contains CBOR
             maps, or is a CBOR map, the keys to the map are written out to the
             JSON string in an undefined order. The example code given in
-            <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b> can be used to write out certain keys
-            of a CBOR map in a given order to a JSON string.</summary>
+            <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b> can be used to write out certain keys of a CBOR map in a given
+            order to a JSON string.</summary>
             <param name='outputStream'>A writable data stream.</param>
             <param name='options'>An object containing the options to control
             writing the CBOR object to JSON.</param>
@@ -4241,7 +4242,9 @@
             true, and any other value meaning false. For example,
             <c>base64padding=Yes</c> and <c>base64padding=1</c> both set the
             <c>Base64Padding</c> property to true.</param>
-            <exception cref='ArgumentNullException'>The parameter <paramref name='paramString'/> is null.</exception>
+            <exception cref='ArgumentNullException'>The parameter <paramref name='paramString'/> is null. In the future, this class may allow
+            other keys to store other kinds of values, not just true or
+            false.</exception>
 
 </doc>
 <doc name="P:PeterO.Cbor.JSONOptions.Base64Padding">
@@ -4324,7 +4327,8 @@
             comparison), the value given for the last such key is used. The key
             just given can have a value of <c>1</c>, <c>true</c>, <c>yes</c> , or <c>on</c> (in any combination of case), which means true, and
             any other value meaning false. For example, <c>usecamelcase=Yes</c> and <c>usecamelcase=1</c> both set the <c>UseCamelCase</c> property
-            to true.</param>
+            to true. In the future, this class may allow other keys to store
+            other kinds of values, not just true or false.</param>
             <exception cref='ArgumentNullException'>The parameter <paramref name='paramString'/> is null.</exception>
 
 </doc>
@@ -4468,45 +4472,35 @@
     </summary>
 </doc>
 <doc name="F:PeterO.Cbor.URIUtility.ParseMode.IRILenient">
-
-            <summary>The rules only check for the appropriate delimiters when
+<summary>The rules only check for the appropriate delimiters when
             splitting the path, without checking if all the characters in each
             component are valid. Even with this mode, strings with unpaired
             surrogate code points are considered invalid.</summary>
-
 </doc>
 <doc name="F:PeterO.Cbor.URIUtility.ParseMode.IRIStrict">
-
-            <summary>The rules follow the syntax for parsing IRIs. In
+<summary>The rules follow the syntax for parsing IRIs. In
             particular, many code points outside the Basic Latin range (U+0000
             to U+007F) are allowed. Strings with unpaired surrogate code points
             are considered invalid.</summary>
-
 </doc>
 <doc name="F:PeterO.Cbor.URIUtility.ParseMode.IRISurrogateLenient">
-
-            <summary>The rules only check for the appropriate delimiters when
+<summary>The rules only check for the appropriate delimiters when
             splitting the path, without checking if all the characters in each
             component are valid. Unpaired surrogate code points are treated as
             though they were replacement characters instead for the purposes of
             these rules, so that strings with those code points are not
             considered invalid strings.</summary>
-
 </doc>
 <doc name="F:PeterO.Cbor.URIUtility.ParseMode.URILenient">
-
-            <summary>The rules only check for the appropriate delimiters when
+<summary>The rules only check for the appropriate delimiters when
             splitting the path, without checking if all the characters in each
             component are valid. Code points outside the Basic Latin range
             (U+0000 to U+007F) are not allowed.</summary>
-
 </doc>
 <doc name="F:PeterO.Cbor.URIUtility.ParseMode.URIStrict">
-
-            <summary>The rules follow the syntax for parsing IRIs, except that
+<summary>The rules follow the syntax for parsing IRIs, except that
             code points outside the Basic Latin range (U+0000 to U+007F) are
             not allowed.</summary>
-
 </doc>
 <doc name="M:PeterO.Cbor.URIUtility.PercentDecode(System.String)">
 <summary>Decodes percent-encoding (of the form "%XX" where X is a hexadecimal

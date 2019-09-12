@@ -43,7 +43,8 @@ namespace PeterO.Cbor {
     /// , or <c>on</c> (in any combination of case), which means true, and
     /// any other value meaning false. For example, <c>usecamelcase=Yes</c>
     /// and <c>usecamelcase=1</c> both set the <c>UseCamelCase</c> property
-    /// to true.</param>
+    /// to true. In the future, this class may allow other keys to store
+    /// other kinds of values, not just true or false.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='paramString'/> is null.</exception>
     public PODOptions(string paramString) {
