@@ -43,7 +43,10 @@ namespace PeterO.Cbor {
     /// and writer of JavaScript Object Notation (JSON). The
     /// CBORObject.FromJSONString method converts JSON to a CBOR object,
     /// and the ToJSONString method converts a CBOR object to a JSON
-    /// string.</para>
+    /// string. (Note that the conversion from CBOR to JSON is not always
+    /// without loss and may not always recover the original object when
+    /// converting the JSON back to CBOR. See the ToJSONString
+    /// documentation.)</para>
     /// <para>In addition, the CBORObject.WriteJSON method writes many
     /// kinds of objects as JSON to a data stream, including numbers, CBOR
     /// objects, strings, and arrays of numbers and strings. The
@@ -4714,6 +4717,16 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
       return this;
     }
 
+    /// <para><b>Warning:</b> In general, if this CBOR object contains
+    /// integer map keys or uses other features not supported in JSON, and
+    /// the application converts this CBOR object to JSON and back to CBOR,
+    /// the application
+    /// <i>should not</i> expect the new CBOR object to be exactly the same
+    /// as the original. This is because the conversion in many cases may
+    /// have to convert unsupported features in JSON to supported features
+    /// which correspond to a different feature in CBOR (such as converting
+    /// integer map keys, which are supported in CBOR but not JSON to text
+    /// strings, which are supported in both).</para>
     /// <summary>Converts this object to a string in JavaScript Object
     /// Notation (JSON) format. See the overload to JSONString taking a
     /// JSONOptions argument for further information.
@@ -4786,6 +4799,17 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     ///  <item>Infinity and
     /// not-a-number will be converted to null.</item>
     ///  </list>
+    /// <para><b>Warning:</b>
+    ///  In general, if this CBOR object contains
+    /// integer map keys or uses other features not supported in JSON, and
+    /// the application converts this CBOR object to JSON and back to CBOR,
+    /// the application <i>should not</i>
+    ///  expect the new CBOR object to be
+    /// exactly the same as the original. This is because the conversion in
+    /// many cases may have to convert unsupported features in JSON to
+    /// supported features which correspond to a different feature in CBOR
+    /// (such as converting integer map keys, which are supported in CBOR
+    /// but not JSON to text strings, which are supported in both).</para>
     /// <para>The example code given below (originally written in C# for
     /// the.NET version) can be used to write out certain keys of a CBOR
     /// map in a given order to a JSON string.</para>
