@@ -44,8 +44,8 @@ namespace PeterO.Cbor {
     /// CBORObject.FromJSONString method converts JSON to a CBOR object,
     /// and the ToJSONString method converts a CBOR object to a JSON
     /// string. (Note that the conversion from CBOR to JSON is not always
-    /// without loss and may not always recover the original object when
-    /// converting the JSON back to CBOR. See the ToJSONString
+    /// without loss and may make it impossible to recover the original
+    /// object when converting the JSON back to CBOR. See the ToJSONString
     /// documentation.)</para>
     /// <para>In addition, the CBORObject.WriteJSON method writes many
     /// kinds of objects as JSON to a data stream, including numbers, CBOR
@@ -4725,7 +4725,7 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     /// as the original. This is because the conversion in many cases may
     /// have to convert unsupported features in JSON to supported features
     /// which correspond to a different feature in CBOR (such as converting
-    /// integer map keys, which are supported in CBOR but not JSON to text
+    /// integer map keys, which are supported in CBOR but not JSON, to text
     /// strings, which are supported in both).</para>
     /// <summary>Converts this object to a string in JavaScript Object
     /// Notation (JSON) format. See the overload to JSONString taking a
@@ -4809,7 +4809,7 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     /// many cases may have to convert unsupported features in JSON to
     /// supported features which correspond to a different feature in CBOR
     /// (such as converting integer map keys, which are supported in CBOR
-    /// but not JSON to text strings, which are supported in both).</para>
+    /// but not JSON, to text strings, which are supported in both).</para>
     /// <para>The example code given below (originally written in C# for
     /// the.NET version) can be used to write out certain keys of a CBOR
     /// map in a given order to a JSON string.</para>
