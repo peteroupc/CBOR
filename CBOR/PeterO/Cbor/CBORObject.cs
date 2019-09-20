@@ -4717,16 +4717,6 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
       return this;
     }
 
-    /// <para><b>Warning:</b> In general, if this CBOR object contains
-    /// integer map keys or uses other features not supported in JSON, and
-    /// the application converts this CBOR object to JSON and back to CBOR,
-    /// the application
-    /// <i>should not</i> expect the new CBOR object to be exactly the same
-    /// as the original. This is because the conversion in many cases may
-    /// have to convert unsupported features in JSON to supported features
-    /// which correspond to a different feature in CBOR (such as converting
-    /// integer map keys, which are supported in CBOR but not JSON, to text
-    /// strings, which are supported in both).</para>
     /// <summary>Converts this object to a string in JavaScript Object
     /// Notation (JSON) format. See the overload to JSONString taking a
     /// JSONOptions argument for further information.
@@ -4740,7 +4730,17 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     /// The example code given in
     /// <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b>
     /// can be used to write out certain keys of a CBOR map in a given
-    /// order to a JSON string.</para></summary>
+    /// order to a JSON string.</para>
+    /// <para><b>Warning:</b> In general, if this CBOR object contains
+    /// integer map keys or uses other features not supported in JSON, and
+    /// the application converts this CBOR object to JSON and back to CBOR,
+    /// the application
+    /// <i>should not</i> expect the new CBOR object to be exactly the same
+    /// as the original. This is because the conversion in many cases may
+    /// have to convert unsupported features in JSON to supported features
+    /// which correspond to a different feature in CBOR (such as converting
+    /// integer map keys, which are supported in CBOR but not JSON, to text
+    /// strings, which are supported in both).</para></summary>
     /// <returns>A text string.</returns>
     public string ToJSONString() {
       return this.ToJSONString(JSONOptions.Default);
@@ -5099,12 +5099,12 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     /// <param name='byteCount'>The number of bytes of the stored
     /// floating-point number; this also specifies the format of the
     /// "floatingBits" parameter. This value can be 2 if "floatingBits"'s
-    /// lower 16 bits identify the floating-point number in IEEE 754r
-    /// binary16 format; or 4 if "floatingBits"'s lower 32 bits identify
-    /// the floating-point number in IEEE 754r binary32 format; or 8 if
-    /// "floatingBits" identifies the floating point number in IEEE 754r
-    /// binary64 format. Any other values for this parameter are
-    /// invalid.</param>
+    /// lowest (least significant) 16 bits identify the floating-point
+    /// number in IEEE 754r binary16 format; or 4 if "floatingBits"'s
+    /// lowest (least significant) 32 bits identify the floating-point
+    /// number in IEEE 754r binary32 format; or 8 if "floatingBits"
+    /// identifies the floating point number in IEEE 754r binary64 format.
+    /// Any other values for this parameter are invalid.</param>
     /// <returns>A CBOR object storing the given floating-point
     /// number.</returns>
     /// <exception cref='ArgumentException'>The parameter <paramref
@@ -5140,12 +5140,12 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     /// <param name='byteCount'>The number of bytes of the stored
     /// floating-point number; this also specifies the format of the
     /// "floatingBits" parameter. This value can be 2 if "floatingBits"'s
-    /// lower 16 bits identify the floating-point number in IEEE 754r
-    /// binary16 format; or 4 if "floatingBits"'s lower 32 bits identify
-    /// the floating-point number in IEEE 754r binary32 format; or 8 if
-    /// "floatingBits" identifies the floating point number in IEEE 754r
-    /// binary64 format. Any other values for this parameter are
-    /// invalid.</param>
+    /// lowest (least significant) 16 bits identify the floating-point
+    /// number in IEEE 754r binary16 format; or 4 if "floatingBits"'s
+    /// lowest (least significant) 32 bits identify the floating-point
+    /// number in IEEE 754r binary32 format; or 8 if "floatingBits"
+    /// identifies the floating point number in IEEE 754r binary64 format.
+    /// Any other values for this parameter are invalid.</param>
     /// <returns>The number of 8-bit bytes ordered to be written to the
     /// data stream.</returns>
     /// <exception cref='ArgumentException'>The parameter <paramref
