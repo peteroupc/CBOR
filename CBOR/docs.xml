@@ -227,7 +227,7 @@
 
             <summary>Gets a value indicating whether to resolve references to
             sharable objects and sharable strings in the process of decoding a
-            CBOR object.</summary>
+            CBOR object.<para><b>Security Note:</b> When this property is enabled and a decoded CBOR object contains references to sharable CBOR objects within it, those references will be replaced with the sharable objects they refer to (but without making a copy of those objects).  However, a security problem can happen if shared references refer to objects that themselves contain shared references to other objects that in turn contain shared references, and so on.  With a sufficient level of nesting, nested references can resolve to CBOR objects that are orders of magnitude bigger than if shared references weren't resolved, and this can cause a denial of service when the decoded CBOR object is encoded to a byte array or converted to a string (as with <c>EncodeToBytes()</c>, <c>ToString()</c>, or <c>ToJSONString()</c>), because object references are expanded in the process.  For example, the following object in CBOR diagnostic notation, <c>[28(["xxx", "yyy"]), 28([29(0), 29(0), 29(0)]), 28([29(1), 29(1)]), 28([29(2), 29(2)]), 28([29(3), 29(3)]), 28([29(4), 29(4)]), 28([29(5), 29(5)])]</c>, expands to a CBOR object with a serialized size of about 1831 bytes when this property is enabled, as opposed to about 69 bytes when this property is disabled.</para></summary>
             <value>A value indicating whether to resolve references to sharable
             objects and sharable strings. The default is false.</value>
             <remarks>
@@ -516,8 +516,8 @@
             CBORObject.FromJSONString method converts JSON to a CBOR object,
             and the ToJSONString method converts a CBOR object to a JSON
             string. (Note that the conversion from CBOR to JSON is not always
-            without loss and may not always recover the original object when
-            converting the JSON back to CBOR. See the ToJSONString
+            without loss and may make it impossible to recover the original
+            object when converting the JSON back to CBOR. See the ToJSONString
             documentation.)</para>
             <para>In addition, the CBORObject.WriteJSON method writes many
             kinds of objects as JSON to a data stream, including numbers, CBOR
@@ -1347,12 +1347,12 @@
             <param name='byteCount'>The number of bytes of the stored
             floating-point number; this also specifies the format of the
             "floatingBits" parameter. This value can be 2 if "floatingBits"'s
-            lower 16 bits identify the floating-point number in IEEE 754r
-            binary16 format; or 4 if "floatingBits"'s lower 32 bits identify
-            the floating-point number in IEEE 754r binary32 format; or 8 if
-            "floatingBits" identifies the floating point number in IEEE 754r
-            binary64 format. Any other values for this parameter are
-            invalid.</param>
+            lowest (least significant) 16 bits identify the floating-point
+            number in IEEE 754r binary16 format; or 4 if "floatingBits"'s
+            lowest (least significant) 32 bits identify the floating-point
+            number in IEEE 754r binary32 format; or 8 if "floatingBits"
+            identifies the floating point number in IEEE 754r binary64 format.
+            Any other values for this parameter are invalid.</param>
             <returns>A CBOR object storing the given floating-point
             number.</returns>
             <exception cref='ArgumentException'>The parameter <paramref name='byteCount'/> is other than 2, 4, or 8.</exception>
@@ -2573,16 +2573,6 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.ToJSONString">
 
-            <para><b>Warning:</b> In general, if this CBOR object contains
-            integer map keys or uses other features not supported in JSON, and
-            the application converts this CBOR object to JSON and back to CBOR,
-            the application
-            <i>should not</i> expect the new CBOR object to be exactly the same
-            as the original. This is because the conversion in many cases may
-            have to convert unsupported features in JSON to supported features
-            which correspond to a different feature in CBOR (such as converting
-            integer map keys, which are supported in CBOR but not JSON to text
-            strings, which are supported in both).</para>
             <summary>Converts this object to a string in JavaScript Object
             Notation (JSON) format. See the overload to JSONString taking a
             JSONOptions argument for further information.
@@ -2595,7 +2585,17 @@
             more map keys are identical, this method throws a CBORException.
             The example code given in
             <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b> can be used to write out certain keys of a CBOR map in a given
-            order to a JSON string.</para></summary>
+            order to a JSON string.</para>
+            <para><b>Warning:</b> In general, if this CBOR object contains
+            integer map keys or uses other features not supported in JSON, and
+            the application converts this CBOR object to JSON and back to CBOR,
+            the application
+            <i>should not</i> expect the new CBOR object to be exactly the same
+            as the original. This is because the conversion in many cases may
+            have to convert unsupported features in JSON to supported features
+            which correspond to a different feature in CBOR (such as converting
+            integer map keys, which are supported in CBOR but not JSON, to text
+            strings, which are supported in both).</para></summary>
             <returns>A text string.</returns>
 
 </doc>
@@ -2657,7 +2657,7 @@
             many cases may have to convert unsupported features in JSON to
             supported features which correspond to a different feature in CBOR
             (such as converting integer map keys, which are supported in CBOR
-            but not JSON to text strings, which are supported in both).</para>
+            but not JSON, to text strings, which are supported in both).</para>
             <para>The example code given below (originally written in C# for
             the.NET version) can be used to write out certain keys of a CBOR
             map in a given order to a JSON string.</para>
@@ -3466,12 +3466,12 @@
             <param name='byteCount'>The number of bytes of the stored
             floating-point number; this also specifies the format of the
             "floatingBits" parameter. This value can be 2 if "floatingBits"'s
-            lower 16 bits identify the floating-point number in IEEE 754r
-            binary16 format; or 4 if "floatingBits"'s lower 32 bits identify
-            the floating-point number in IEEE 754r binary32 format; or 8 if
-            "floatingBits" identifies the floating point number in IEEE 754r
-            binary64 format. Any other values for this parameter are
-            invalid.</param>
+            lowest (least significant) 16 bits identify the floating-point
+            number in IEEE 754r binary16 format; or 4 if "floatingBits"'s
+            lowest (least significant) 32 bits identify the floating-point
+            number in IEEE 754r binary32 format; or 8 if "floatingBits"
+            identifies the floating point number in IEEE 754r binary64 format.
+            Any other values for this parameter are invalid.</param>
             <returns>The number of 8-bit bytes ordered to be written to the
             data stream.</returns>
             <exception cref='ArgumentException'>The parameter <paramref name='byteCount'/> is other than 2, 4, or 8.</exception>

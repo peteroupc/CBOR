@@ -12,6 +12,7 @@ using System.Text;
 using PeterO;
 using PeterO.Numbers;
 
+// TODO: Add method that finds estimated byte size of CBOR objects
 namespace PeterO.Cbor {
     /// <summary>
     /// <para>Represents an object in Concise Binary Object Representation

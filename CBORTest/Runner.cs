@@ -32,7 +32,7 @@ namespace PeterO {
     }
 
     public static void Main() {
-     const String ValueParam = "FieldClass";
+     const String ValueParam = "NoRecursive";
      // Run all the tests in this assembly
      foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
        if (!HasAttribute(type, typeof(TestFixtureAttribute))) {
