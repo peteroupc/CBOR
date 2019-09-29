@@ -1431,9 +1431,7 @@ Assert.AreEqual(52, numberTemp);
       }
     }
 
-[Test]
-[Timeout(1000)]
-public void TestNoRecursiveExpansion() {
+public static CBORObject ReferenceTestObject() {
 CBORObject root = CBORObject.NewArray();
 CBORObject arr = CBORObject.NewArray().Add("xxx").Add("yyy");
 arr.Add("zzz")
@@ -1441,7 +1439,7 @@ arr.Add("zzz")
 arr = CBORObject.FromObjectAndTag(arr, 28);
 root.Add(arr);
 CBORObject refobj;
-for (var i = 0; i <= 8; ++i) {
+for (var i = 0; i <= 50; ++i) {
  refobj = CBORObject.FromObjectAndTag(i, 29);
  arr = CBORObject.FromObject(new CBORObject[] {
    refobj, refobj, refobj, refobj, refobj, refobj, refobj, refobj, refobj,
@@ -1449,6 +1447,13 @@ for (var i = 0; i <= 8; ++i) {
  arr = CBORObject.FromObjectAndTag(arr, 28);
  root.Add(arr);
 }
+return root;
+}
+
+[Test]
+[Timeout(1000)]
+public void TestNoRecursiveExpansion() {
+CBORObject root = ReferenceTestObject();
 byte[] bytes = root.EncodeToBytes();
 var encodeOptions = new CBOREncodeOptions("resolvereferences=false");
 root = CBORObject.DecodeFromBytes(bytes, encodeOptions);
