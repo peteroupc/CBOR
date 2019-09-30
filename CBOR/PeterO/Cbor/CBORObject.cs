@@ -5054,6 +5054,75 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     /// occurred.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='outputStream'/> is null.</exception>
+    /// <example>
+    /// <para>The following example (written in C# for the.NET version)
+    /// shows how to use the <c>LimitedMemoryStream</c>
+    ///  class (implemented
+    /// in <i>LimitedMemoryStream.cs</i>
+    ///  in the peteroupc/CBOR open-source
+    /// repository) to limit the size of supported JSON serializations of
+    /// CBOR objects.</para>
+    /// <code>
+    /// // maximum supported JSON size in bytes
+    /// var maxSize = 20000;
+    /// using (var ms = new LimitedMemoryStream(maxSize)) {
+    /// cborObject.WriteJSONTo(ms);
+    /// var bytes = ms.ToArray();
+    /// }
+    /// </code>
+    /// <para>The following example (written in Java for the Java version)
+    /// shows how to use a subclassed <c>OutputStream</c>
+    ///  together with a
+    /// <c>ByteArrayOutputStream</c>
+    ///  to limit the size of supported JSON
+    /// serializations of CBOR objects.</para>
+    /// <code>
+    /// // maximum supported JSON size in bytes
+    /// final int maxSize = 20000;
+    /// ByteArrayOutputStream ba = new ByteArrayOutputStream();
+    /// // throws UnsupportedOperationException if too big
+    /// cborObject.WriteJSONTo(new FilterOutputStream(ba) {
+    /// private int size = 0;
+    /// public void write(byte[] b, int off, int len) throws IOException {
+    /// if (len>(maxSize-size)) {
+    /// throw new UnsupportedOperationException();
+    /// }
+    /// size+=len; out.write(b, off, len);
+    /// }
+    /// public void write(byte b) throws IOException {
+    /// if (size >= maxSize) {
+    /// throw new UnsupportedOperationException();
+    /// }
+    /// size++; out.write(b);
+    /// }
+    /// });
+    /// byte[] bytes = ba.toByteArray();
+    /// </code>
+    /// <para>The following example (written in C# for the.NET version)
+    /// shows how to use a.NET MemoryStream to limit the size of supported
+    /// JSON serializations of CBOR objects. The disadvantage is that the
+    /// extra memory needed to do so can be wasteful, especially if the
+    /// average serialized object is much smaller than the maximum size
+    /// given (for example, if the maximum size is 20000 bytes, but the
+    /// average serialized object has a size of 50 bytes).</para>
+    /// <code>
+    /// var backing = new byte[20000]; // maximum supported JSON size in bytes
+    /// byte[] bytes1, bytes2;
+    /// using (var ms = new MemoryStream(backing)) {
+    /// // throws NotSupportedException if too big
+    /// cborObject.WriteJSONTo(ms);
+    /// bytes1 = new byte[ms.Position];
+    /// // Copy serialized data if successful
+    /// System.ArrayCopy(backing, 0, bytes1, 0, (int)ms.Position);
+    /// // Reset memory stream
+    /// ms.Position = 0;
+    /// cborObject2.WriteJSONTo(ms);
+    /// bytes2 = new byte[ms.Position];
+    /// // Copy serialized data if successful
+    /// System.ArrayCopy(backing, 0, bytes2, 0, (int)ms.Position);
+    /// }
+    /// </code>
+    /// </example>
     public void WriteJSONTo(Stream outputStream) {
       if (outputStream == null) {
         throw new ArgumentNullException(nameof(outputStream));
@@ -5589,7 +5658,73 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     /// outputStream.WriteByte((byte)0x9f); for (object item in list) { new
     /// CBORObject(item).WriteTo(outputStream); }
     /// outputStream.WriteByte((byte)0xff); }</code>
-    ///  .
+    /// <para>The following example (written in C# for the.NET version)
+    /// shows how to use the <c>LimitedMemoryStream</c>
+    ///  class (implemented
+    /// in <i>LimitedMemoryStream.cs</i>
+    ///  in the peteroupc/CBOR open-source
+    /// repository) to limit the size of supported CBOR
+    /// serializations.</para>
+    /// <code>
+    /// // maximum supported CBOR size in bytes
+    /// var maxSize = 20000;
+    /// using (var ms = new LimitedMemoryStream(maxSize)) {
+    /// cborObject.WriteTo(ms);
+    /// var bytes = ms.ToArray();
+    /// }
+    /// </code>
+    /// <para>The following example (written in Java for the Java version)
+    /// shows how to use a subclassed <c>OutputStream</c>
+    ///  together with a
+    /// <c>ByteArrayOutputStream</c>
+    ///  to limit the size of supported CBOR
+    /// serializations.</para>
+    /// <code>
+    /// // maximum supported CBOR size in bytes
+    /// final int maxSize = 20000;
+    /// ByteArrayOutputStream ba = new ByteArrayOutputStream();
+    /// // throws UnsupportedOperationException if too big
+    /// cborObject.WriteTo(new FilterOutputStream(ba) {
+    /// private int size = 0;
+    /// public void write(byte[] b, int off, int len) throws IOException {
+    /// if (len>(maxSize-size)) {
+    /// throw new UnsupportedOperationException();
+    /// }
+    /// size+=len; out.write(b, off, len);
+    /// }
+    /// public void write(byte b) throws IOException {
+    /// if (size >= maxSize) {
+    /// throw new UnsupportedOperationException();
+    /// }
+    /// size++; out.write(b);
+    /// }
+    /// });
+    /// byte[] bytes = ba.toByteArray();
+    /// </code>
+    /// <para>The following example (written in C# for the.NET version)
+    /// shows how to use a.NET MemoryStream to limit the size of supported
+    /// CBOR serializations. The disadvantage is that the extra memory
+    /// needed to do so can be wasteful, especially if the average
+    /// serialized object is much smaller than the maximum size given (for
+    /// example, if the maximum size is 20000 bytes, but the average
+    /// serialized object has a size of 50 bytes).</para>
+    /// <code>
+    /// var backing = new byte[20000]; // maximum supported CBOR size in bytes
+    /// byte[] bytes1, bytes2;
+    /// using (var ms = new MemoryStream(backing)) {
+    /// // throws NotSupportedException if too big
+    /// cborObject.WriteTo(ms);
+    /// bytes1 = new byte[ms.Position];
+    /// // Copy serialized data if successful
+    /// System.ArrayCopy(backing, 0, bytes1, 0, (int)ms.Position);
+    /// // Reset memory stream
+    /// ms.Position = 0;
+    /// cborObject2.WriteTo(ms);
+    /// bytes2 = new byte[ms.Position];
+    /// // Copy serialized data if successful
+    /// System.ArrayCopy(backing, 0, bytes2, 0, (int)ms.Position);
+    /// }
+    /// </code>
     /// </example>
     public void WriteTo(Stream stream) {
       this.WriteTo(stream, CBOREncodeOptions.Default);
