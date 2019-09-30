@@ -573,8 +573,8 @@ namespace Test {
       {
         long numberTemp =
 cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked();
-Assert.AreEqual(52, numberTemp);
-}
+        Assert.AreEqual(52, numberTemp);
+      }
       Assert.IsTrue(cbor.CanFitInInt64());
       Assert.IsFalse(ToObjectTest.TestToFromObjectRoundTrip(2554895343L)
               .CanFitInSingle());
@@ -1431,40 +1431,81 @@ Assert.AreEqual(52, numberTemp);
       }
     }
 
-public static CBORObject ReferenceTestObject() {
-CBORObject root = CBORObject.NewArray();
-CBORObject arr = CBORObject.NewArray().Add("xxx").Add("yyy");
-arr.Add("zzz")
-   .Add("wwww").Add("iiiiiii").Add("aaa").Add("bbb").Add("ccc");
-arr = CBORObject.FromObjectAndTag(arr, 28);
-root.Add(arr);
-CBORObject refobj;
-for (var i = 0; i <= 50; ++i) {
- refobj = CBORObject.FromObjectAndTag(i, 29);
- arr = CBORObject.FromObject(new CBORObject[] {
-   refobj, refobj, refobj, refobj, refobj, refobj, refobj, refobj, refobj,
- });
- arr = CBORObject.FromObjectAndTag(arr, 28);
- root.Add(arr);
-}
-return root;
-}
+    public static CBORObject ReferenceTestObject() {
+      CBORObject root = CBORObject.NewArray();
+      CBORObject arr = CBORObject.NewArray().Add("xxx").Add("yyy");
+      arr.Add("zzz")
+         .Add("wwww").Add("iiiiiii").Add("aaa").Add("bbb").Add("ccc");
+      arr = CBORObject.FromObjectAndTag(arr, 28);
+      root.Add(arr);
+      CBORObject refobj;
+      for (var i = 0; i <= 50; ++i) {
+        refobj = CBORObject.FromObjectAndTag(i, 29);
+        arr = CBORObject.FromObject(new CBORObject[] {
+          refobj, refobj, refobj, refobj, refobj, refobj, refobj, refobj, refobj,
+        });
+        arr = CBORObject.FromObjectAndTag(arr, 28);
+        root.Add(arr);
+      }
+      return root;
+    }
 
-[Test]
-[Timeout(1000)]
-public void TestNoRecursiveExpansion() {
-CBORObject root = ReferenceTestObject();
-byte[] bytes = root.EncodeToBytes();
-var encodeOptions = new CBOREncodeOptions("resolvereferences=false");
-root = CBORObject.DecodeFromBytes(bytes, encodeOptions);
-Console.WriteLine(root.ToString());
-Console.WriteLine(root.EncodeToBytes().Length);
-encodeOptions = new CBOREncodeOptions("resolvereferences=true");
-root = CBORObject.DecodeFromBytes(bytes, encodeOptions);
-if (root == null) {
-  Assert.Fail();
-}
-}
+    [Test]
+    [Timeout(2000)]
+    public void TestNoRecursiveExpansion() {
+      CBORObject root = ReferenceTestObject();
+      byte[] bytes = root.EncodeToBytes();
+      var encodeOptions = new CBOREncodeOptions("resolvereferences=false");
+      root = CBORObject.DecodeFromBytes(bytes, encodeOptions);
+      Console.WriteLine(root.ToString());
+      Console.WriteLine(root.EncodeToBytes().Length);
+      encodeOptions = new CBOREncodeOptions("resolvereferences=true");
+      root = CBORObject.DecodeFromBytes(bytes, encodeOptions);
+      if (root == null) {
+        Assert.Fail();
+      }
+      // Test a mitigation for wild recursive-reference expansions
+      root = CBORTest.ReferenceTestObject();
+      CBORObject origroot = root;
+      encodeOptions = new CBOREncodeOptions("resolvereferences=true");
+      root = CBORObject.DecodeFromBytes(bytes, encodeOptions);
+      if (root == null) {
+        Assert.Fail();
+      }
+      try {
+        using (var lms = new LimitedMemoryStream(100000)) {
+          root.WriteTo(lms);
+          Assert.Fail("Should have failed");
+        }
+      } catch (NotSupportedException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        using (var lms = new LimitedMemoryStream(100000)) {
+          root.WriteJSONTo(lms);
+          Assert.Fail("Should have failed");
+        }
+      } catch (NotSupportedException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        using (var lms = new LimitedMemoryStream(100000)) {
+          origroot.WriteTo(lms);
+        }
+        using (var lms = new LimitedMemoryStream(100000)) {
+          origroot.WriteJSONTo(lms);
+        }
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
 
     [Test]
     public void TestSharedRefValidInteger() {

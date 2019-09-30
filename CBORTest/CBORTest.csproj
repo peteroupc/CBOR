@@ -101,6 +101,7 @@
     <Compile Include='CPOD2.cs'/>
     <Compile Include='CPOD.cs'/>
     <Compile Include='FieldClass.cs'/>
+    <Compile Include='LimitedMemoryStream.cs'/>
 </ItemGroup>
   <ItemGroup>
 
