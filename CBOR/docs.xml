@@ -227,30 +227,12 @@
 
             <summary>Gets a value indicating whether to resolve references to
             sharable objects and sharable strings in the process of decoding a
-            CBOR object.
-            <para><b>Security Note:</b> When this property is enabled and a
-            decoded CBOR object contains references to sharable CBOR objects
-            within it, those references will be replaced with the sharable
-            objects they refer to (but without making a copy of those objects).
-            However, a security problem can happen if shared references refer
-            to objects that themselves contain shared references to other
-            objects that in turn contain shared references, and so on. With a
-            sufficient level of nesting, nested references can resolve to CBOR
-            objects that are orders of magnitude bigger than if shared
-            references weren't resolved, and this can cause a denial of service
-            when the decoded CBOR object is encoded to a byte array or
-            converted to a string (as with <c>EncodeToBytes()</c>,
-            <c>ToString()</c>, or <c>ToJSONString()</c> ), because object
-            references are expanded in the process. For example, the following
-            object in CBOR diagnostic notation, <c>[28(["xxx", "yyy"]),
-            28([29(0), 29(0), 29(0)]), 28([29(1), 29(1)]), 28([29(2), 29(2)]),
-            28([29(3), 29(3)]), 28([29(4), 29(4)]), 28([29(5), 29(5)])]</c>,
-            expands to a CBOR object with a serialized size of about 1831 bytes
-            when this property is enabled, as opposed to about 69 bytes when
-            this property is disabled.</para></summary>
+            CBOR object. Enabling this property, however, can cause a security
+            risk if a decoded CBOR object is then re-encoded.</summary>
             <value>A value indicating whether to resolve references to sharable
             objects and sharable strings. The default is false.</value>
             <remarks>
+            <para>About sharable objects and references</para>
             <para>Sharable objects are marked with tag 28, and references to
             those objects are marked with tag 29 (where a reference of 0 means
             the first sharable object in the CBOR stream, a reference of 1
@@ -265,7 +247,39 @@
             follow the generic CBOR data model (since they may list map keys in
             an unspecified order). Interoperability problems with these tags
             can be reduced by not using them to mark keys or values of a map or
-            to mark objects within those keys or values.</para></remarks>
+            to mark objects within those keys or values.</para>
+            <para><b>Security Note</b></para>
+            <para>When this property is enabled and a decoded CBOR object
+            contains references to sharable CBOR objects within it, those
+            references will be replaced with the sharable objects they refer to
+            (but without making a copy of those objects). However, if shared
+            references are deeply nested and used multiple times, these
+            references can result in a CBOR object that is orders of magnitude
+            bigger than if shared references weren't resolved, and this can
+            cause a denial of service when the decoded CBOR object is then
+            serialized (e.g., with <c>EncodeToBytes()</c>, <c>ToString()</c>,
+            <c>ToJSONString()</c>, or <c>WriteTo</c> ), because object
+            references are expanded in the process.</para>
+            <para>For example, the following object in CBOR diagnostic
+            notation, <c>[28(["xxx", "yyy"]), 28([29(0), 29(0), 29(0)]),
+            28([29(1), 29(1)]), 28([29(2), 29(2)]), 28([29(3), 29(3)]),
+            28([29(4), 29(4)]), 28([29(5), 29(5)])]</c>, expands to a CBOR
+            object with a serialized size of about 1831 bytes when this
+            property is enabled, as opposed to about 69 bytes when this
+            property is disabled.</para>
+            <para>One way to mitigate security issues with this property is to
+            limit the maximum supported size a CBORObject can have once
+            serialized to CBOR or JSON. This can be done by passing a so-called
+            "limited memory stream" to the <c>WriteTo</c> or <c>WriteJSONTo</c> methods when serializing the object to JSON or CBOR. A "limited
+            memory stream" is a <c>Stream</c> (or <c>OutputStream</c> in Java)
+            that throws an exception if it would write more bytes than a given
+            maximum size or would seek past that size. (See the documentation
+            for <c>CBORObject.WriteTo</c> or <c>CBORObject.WriteJSONTo</c> for
+            example code.) Another mitigation is to check the CBOR object's
+            type before serializing it, since only arrays and maps can have the
+            security problem described here, or to check the maximum nesting
+            depth of a CBOR array or map before serializing
+            it.</para></remarks>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBOREncodeOptions.ToString">
@@ -3574,6 +3588,62 @@
             <exception cref='System.IO.IOException'>An I/O error
             occurred.</exception>
             <exception cref='ArgumentNullException'>The parameter <paramref name='outputStream'/> is null.</exception>
+            <example><para>The following example (written in C# for the.NET version)
+            shows how to use the <c>LimitedMemoryStream</c> class (implemented
+            in <i>LimitedMemoryStream.cs</i>
+             in the peteroupc/CBOR open-source
+            repository) to limit the size of supported JSON serializations of
+            CBOR objects.</para>
+            <code>// maximum supported JSON size in bytes
+            var maxSize = 20000;
+            using (var ms = new LimitedMemoryStream(maxSize)) {
+            cborObject.WriteJSONTo(ms);
+            var bytes = ms.ToArray();
+            }</code> <para>The following example (written in Java for the Java version)
+            shows how to use a subclassed <c>OutputStream</c> together with a
+            <c>ByteArrayOutputStream</c> to limit the size of supported JSON
+            serializations of CBOR objects.</para>
+            <code>// maximum supported JSON size in bytes
+            final int maxSize = 20000;
+            ByteArrayOutputStream ba = new ByteArrayOutputStream();
+            // throws UnsupportedOperationException if too big
+            cborObject.WriteJSONTo(new FilterOutputStream(ba) {
+            private int size = 0;
+            public void write(byte[] b, int off, int len) throws IOException {
+            if (len>(maxSize-size)) {
+            throw new UnsupportedOperationException();
+            }
+            size+=len; out.write(b, off, len);
+            }
+            public void write(byte b) throws IOException {
+            if (size >= maxSize) {
+            throw new UnsupportedOperationException();
+            }
+            size++; out.write(b);
+            }
+            });
+            byte[] bytes = ba.toByteArray();</code> <para>The following example (written in C# for the.NET version)
+            shows how to use a.NET MemoryStream to limit the size of supported
+            JSON serializations of CBOR objects. The disadvantage is that the
+            extra memory needed to do so can be wasteful, especially if the
+            average serialized object is much smaller than the maximum size
+            given (for example, if the maximum size is 20000 bytes, but the
+            average serialized object has a size of 50 bytes).</para>
+            <code>var backing = new byte[20000]; // maximum supported JSON size in bytes
+            byte[] bytes1, bytes2;
+            using (var ms = new MemoryStream(backing)) {
+            // throws NotSupportedException if too big
+            cborObject.WriteJSONTo(ms);
+            bytes1 = new byte[ms.Position];
+            // Copy serialized data if successful
+            System.ArrayCopy(backing, 0, bytes1, 0, (int)ms.Position);
+            // Reset memory stream
+            ms.Position = 0;
+            cborObject2.WriteJSONTo(ms);
+            bytes2 = new byte[ms.Position];
+            // Copy serialized data if successful
+            System.ArrayCopy(backing, 0, bytes2, 0, (int)ms.Position);
+            }</code>.</example>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.WriteJSONTo(System.IO.Stream,PeterO.Cbor.JSONOptions)">
@@ -3654,8 +3724,62 @@
             new ArgumentNullException(nameof(outputStream));}
             outputStream.WriteByte((byte)0x9f); for (object item in list) { new
             CBORObject(item).WriteTo(outputStream); }
-            outputStream.WriteByte((byte)0xff); }</code> .
-            </example>
+            outputStream.WriteByte((byte)0xff); }</code> <para>The following example (written in C# for the.NET version)
+            shows how to use the <c>LimitedMemoryStream</c> class (implemented
+            in <i>LimitedMemoryStream.cs</i>
+             in the peteroupc/CBOR open-source
+            repository) to limit the size of supported CBOR
+            serializations.</para>
+            <code>// maximum supported CBOR size in bytes
+            var maxSize = 20000;
+            using (var ms = new LimitedMemoryStream(maxSize)) {
+            cborObject.WriteTo(ms);
+            var bytes = ms.ToArray();
+            }</code> <para>The following example (written in Java for the Java version)
+            shows how to use a subclassed <c>OutputStream</c> together with a
+            <c>ByteArrayOutputStream</c> to limit the size of supported CBOR
+            serializations.</para>
+            <code>// maximum supported CBOR size in bytes
+            final int maxSize = 20000;
+            ByteArrayOutputStream ba = new ByteArrayOutputStream();
+            // throws UnsupportedOperationException if too big
+            cborObject.WriteTo(new FilterOutputStream(ba) {
+            private int size = 0;
+            public void write(byte[] b, int off, int len) throws IOException {
+            if (len>(maxSize-size)) {
+            throw new UnsupportedOperationException();
+            }
+            size+=len; out.write(b, off, len);
+            }
+            public void write(byte b) throws IOException {
+            if (size >= maxSize) {
+            throw new UnsupportedOperationException();
+            }
+            size++; out.write(b);
+            }
+            });
+            byte[] bytes = ba.toByteArray();</code> <para>The following example (written in C# for the.NET version)
+            shows how to use a.NET MemoryStream to limit the size of supported
+            CBOR serializations. The disadvantage is that the extra memory
+            needed to do so can be wasteful, especially if the average
+            serialized object is much smaller than the maximum size given (for
+            example, if the maximum size is 20000 bytes, but the average
+            serialized object has a size of 50 bytes).</para>
+            <code>var backing = new byte[20000]; // maximum supported CBOR size in bytes
+            byte[] bytes1, bytes2;
+            using (var ms = new MemoryStream(backing)) {
+            // throws NotSupportedException if too big
+            cborObject.WriteTo(ms);
+            bytes1 = new byte[ms.Position];
+            // Copy serialized data if successful
+            System.ArrayCopy(backing, 0, bytes1, 0, (int)ms.Position);
+            // Reset memory stream
+            ms.Position = 0;
+            cborObject2.WriteTo(ms);
+            bytes2 = new byte[ms.Position];
+            // Copy serialized data if successful
+            System.ArrayCopy(backing, 0, bytes2, 0, (int)ms.Position);
+            }</code>.</example>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)">

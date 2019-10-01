@@ -130,13 +130,23 @@ Gets a value indicating whether CBOR objects:
 
     public bool ResolveReferences { get; }
 
-Gets a value indicating whether to resolve references to sharable objects and sharable strings in the process of decoding a CBOR object. <b>Security Note:</b> When this property is enabled and a decoded CBOR object contains references to sharable CBOR objects within it, those references will be replaced with the sharable objects they refer to (but without making a copy of those objects). However, a security problem can happen if shared references refer to objects that themselves contain shared references to other objects that in turn contain shared references, and so on. With a sufficient level of nesting, nested references can resolve to CBOR objects that are orders of magnitude bigger than if shared references weren't resolved, and this can cause a denial of service when the decoded CBOR object is encoded to a byte array or converted to a string (as with  `EncodeToBytes()` ,  `ToString()` , or  `ToJSONString()`  ), because object references are expanded in the process. For example, the following object in CBOR diagnostic notation,  `[28(["xxx", "yyy"]),
-            28([29(0), 29(0), 29(0)]), 28([29(1), 29(1)]), 28([29(2), 29(2)]),
-            28([29(3), 29(3)]), 28([29(4), 29(4)]), 28([29(5), 29(5)])]` , expands to a CBOR object with a serialized size of about 1831 bytes when this property is enabled, as opposed to about 69 bytes when this property is disabled.
+Gets a value indicating whether to resolve references to sharable objects and sharable strings in the process of decoding a CBOR object. Enabling this property, however, can cause a security risk if a decoded CBOR object is then re-encoded.
+
+About sharable objects and references
 
 Sharable objects are marked with tag 28, and references to those objects are marked with tag 29 (where a reference of 0 means the first sharable object in the CBOR stream, a reference of 1 means the second, and so on). Sharable strings (byte strings and text strings) appear within an enclosing object marked with tag 256, and references to them are marked with tag 25; in general, a string is sharable only if storing its reference rather than the string would save space.
 
 Note that unlike most other tags, these tags generally care about the relative order in which objects appear in a CBOR stream; thus they are not interoperable with CBOR implementations that follow the generic CBOR data model (since they may list map keys in an unspecified order). Interoperability problems with these tags can be reduced by not using them to mark keys or values of a map or to mark objects within those keys or values.
+
+<b>Security Note</b>
+
+When this property is enabled and a decoded CBOR object contains references to sharable CBOR objects within it, those references will be replaced with the sharable objects they refer to (but without making a copy of those objects). However, if shared references are deeply nested and used multiple times, these references can result in a CBOR object that is orders of magnitude bigger than if shared references weren't resolved, and this can cause a denial of service when the decoded CBOR object is then serialized (e.g., with  `EncodeToBytes()` ,  `ToString()` ,  `ToJSONString()` , or  `WriteTo`  ), because object references are expanded in the process.
+
+For example, the following object in CBOR diagnostic notation,  `[28(["xxx", "yyy"]), 28([29(0), 29(0), 29(0)]),
+            28([29(1), 29(1)]), 28([29(2), 29(2)]), 28([29(3), 29(3)]),
+            28([29(4), 29(4)]), 28([29(5), 29(5)])]` , expands to a CBOR object with a serialized size of about 1831 bytes when this property is enabled, as opposed to about 69 bytes when this property is disabled.
+
+One way to mitigate security issues with this property is to limit the maximum supported size a CBORObject can have once serialized to CBOR or JSON. This can be done by passing a so-called "limited memory stream" to the  `WriteTo`  or  `WriteJSONTo`  methods when serializing the object to JSON or CBOR. A "limited memory stream" is a  `Stream`  (or  `OutputStream`  in Java) that throws an exception if it would write more bytes than a given maximum size or would seek past that size. (See the documentation for  `CBORObject.WriteTo`  or  `CBORObject.WriteJSONTo`  for example code.) Another mitigation is to check the CBOR object's type before serializing it, since only arrays and maps can have the security problem described here, or to check the maximum nesting depth of a CBOR array or map before serializing it.
 
 <b>Returns:</b>
 

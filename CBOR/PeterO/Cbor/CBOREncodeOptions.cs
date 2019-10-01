@@ -124,7 +124,7 @@ namespace PeterO.Cbor {
     /// <value>A value indicating whether to resolve references to sharable
     /// objects and sharable strings. The default is false.</value>
     /// <remarks>
-    /// <para>About sharable objects and references</para>
+    /// <para><b>About sharable objects and references</b></para>
     /// <para>Sharable objects are marked with tag 28, and references to
     /// those objects are marked with tag 29 (where a reference of 0 means
     /// the first sharable object in the CBOR stream, a reference of 1
