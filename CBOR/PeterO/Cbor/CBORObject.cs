@@ -3607,7 +3607,7 @@ options) {
     /// the.NET Framework) shows a way to check whether a given CBOR object
     /// stores a 32-bit signed integer before getting its value.</para>
     /// <code>CBORObject obj = CBORObject.FromInt32(99999); if (obj.IsIntegral
-    /// &amp;&amp; obj.CanTruncatedIntFitInInt32()) { // Not an Int32; handle
+    /// &amp;&amp; obj.CanTruncatedIntFitInInt32()) { &#x2f;&#x2a; Not an Int32; handle&#x2a;&#x2f;
     /// the error Console.WriteLine("Not a 32-bit integer."); } else {
     /// Console.WriteLine("The value is " + obj.AsInt32()); }</code>
     ///  .
@@ -3635,7 +3635,7 @@ options) {
     /// the.NET Framework) shows a way to check whether a given CBOR object
     /// stores a 64-bit signed integer before getting its value.</para>
     /// <code>CBORObject obj = CBORObject.FromInt64(99999); if (obj.IsIntegral
-    /// &amp;&amp; obj.CanTruncatedIntFitInInt64()) { // Not an Int64; handle
+    /// &amp;&amp; obj.CanTruncatedIntFitInInt64()) { &#x2f;&#x2a; Not an Int64; handle&#x2a;&#x2f;
     /// the error Console.WriteLine("Not a 64-bit integer."); } else {
     /// Console.WriteLine("The value is " + obj.AsInt64()); }</code>
     ///  .
@@ -4843,6 +4843,7 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
       }
       CBORType type = this.Type;
       switch (type) {
+        case CBORType.Boolean:
         case CBORType.SimpleValue: {
             return this.IsTrue ? "true" : (this.IsFalse ? "false" : "null");
           }
@@ -4892,6 +4893,7 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
         this.AppendOpeningTags(sb);
       }
       switch (type) {
+        case CBORType.Boolean:
         case CBORType.SimpleValue: {
             if (this.IsTrue) {
               simvalue = "true";
@@ -5063,7 +5065,7 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     /// repository) to limit the size of supported JSON serializations of
     /// CBOR objects.</para>
     /// <code>
-    /// // maximum supported JSON size in bytes
+    /// &#x2f;&#x2a; maximum supported JSON size in bytes&#x2a;&#x2f;
     /// var maxSize = 20000;
     /// using (var ms = new LimitedMemoryStream(maxSize)) {
     /// cborObject.WriteJSONTo(ms);
@@ -5077,10 +5079,10 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     ///  to limit the size of supported JSON
     /// serializations of CBOR objects.</para>
     /// <code>
-    /// // maximum supported JSON size in bytes
+    /// &#x2f;&#x2a; maximum supported JSON size in bytes&#x2a;&#x2f;
     /// final int maxSize = 20000;
     /// ByteArrayOutputStream ba = new ByteArrayOutputStream();
-    /// // throws UnsupportedOperationException if too big
+    /// &#x2f;&#x2a; throws UnsupportedOperationException if too big&#x2a;&#x2f;
     /// cborObject.WriteJSONTo(new FilterOutputStream(ba) {
     /// private int size = 0;
     /// public void write(byte[] b, int off, int len) throws IOException {
@@ -5106,19 +5108,19 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     /// given (for example, if the maximum size is 20000 bytes, but the
     /// average serialized object has a size of 50 bytes).</para>
     /// <code>
-    /// var backing = new byte[20000]; // maximum supported JSON size in bytes
+    /// var backing = new byte[20000]; &#x2f;&#x2a; maximum supported JSON size in bytes&#x2a;&#x2f;
     /// byte[] bytes1, bytes2;
     /// using (var ms = new MemoryStream(backing)) {
-    /// // throws NotSupportedException if too big
+    /// &#x2f;&#x2a; throws NotSupportedException if too big&#x2a;&#x2f;
     /// cborObject.WriteJSONTo(ms);
     /// bytes1 = new byte[ms.Position];
-    /// // Copy serialized data if successful
+    /// &#x2f;&#x2a; Copy serialized data if successful&#x2a;&#x2f;
     /// System.ArrayCopy(backing, 0, bytes1, 0, (int)ms.Position);
-    /// // Reset memory stream
+    /// &#x2f;&#x2a; Reset memory stream&#x2a;&#x2f;
     /// ms.Position = 0;
     /// cborObject2.WriteJSONTo(ms);
     /// bytes2 = new byte[ms.Position];
-    /// // Copy serialized data if successful
+    /// &#x2f;&#x2a; Copy serialized data if successful&#x2a;&#x2f;
     /// System.ArrayCopy(backing, 0, bytes2, 0, (int)ms.Position);
     /// }
     /// </code>
@@ -5458,15 +5460,15 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     /// <example>
     /// <para>In the following example, an array of three objects is
     /// written as CBOR to a data stream.</para>
-    /// <code>CBORObject.WriteValue(stream, 4, 3); // array, length 3
-    /// CBORObject.Write("hello world", stream); // item 1 CBORObject.Write(25,
-    /// stream); /* item 2 */ CBORObject.Write(false, stream); // item 3</code>
+    /// <code>CBORObject.WriteValue(stream, 4, 3); &#x2f;&#x2a; array, length 3&#x2a;&#x2f;
+    /// CBORObject.Write("hello world", stream); &#x2f;&#x2a; item 1 CBORObject.Write(25, &#x2a;&#x2f;
+    /// stream); /* item 2 */ CBORObject.Write(false, stream); &#x2f;&#x2a; item 3&#x2a;&#x2f;</code>
     /// <para>In the following example, a map consisting of two key-value
     /// pairs is written as CBOR to a data stream.</para>
-    /// <code>CBORObject.WriteValue(stream, 5, 2); // map, 2 pairs
-    /// CBORObject.Write("number", stream); // key 1 CBORObject.Write(25,
-    /// stream); // value 1 CBORObject.Write("string", stream); // key 2
-    /// CBORObject.Write("hello", stream); // value 2</code>
+    /// <code>CBORObject.WriteValue(stream, 5, 2); &#x2f;&#x2a; map, 2 pairs&#x2a;&#x2f;
+    /// CBORObject.Write("number", stream); &#x2f;&#x2a; key 1 CBORObject.Write(25, &#x2a;&#x2f;
+    /// stream); &#x2f;&#x2a; value 1 CBORObject.Write("string", stream); &#x2f;&#x2a; key 2&#x2a;&#x2f;&#x2a;&#x2f;
+    /// CBORObject.Write("hello", stream); &#x2f;&#x2a; value 2&#x2a;&#x2f;</code>
     /// <para>In the following example (originally written in C# for
     /// the.NET Framework version), a text string is written as CBOR to a
     /// data stream.</para>
@@ -5666,7 +5668,7 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     /// repository) to limit the size of supported CBOR
     /// serializations.</para>
     /// <code>
-    /// // maximum supported CBOR size in bytes
+    /// &#x2f;&#x2a; maximum supported CBOR size in bytes&#x2a;&#x2f;
     /// var maxSize = 20000;
     /// using (var ms = new LimitedMemoryStream(maxSize)) {
     /// cborObject.WriteTo(ms);
@@ -5680,10 +5682,10 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     ///  to limit the size of supported CBOR
     /// serializations.</para>
     /// <code>
-    /// // maximum supported CBOR size in bytes
+    /// &#x2f;&#x2a; maximum supported CBOR size in bytes&#x2a;&#x2f;
     /// final int maxSize = 20000;
     /// ByteArrayOutputStream ba = new ByteArrayOutputStream();
-    /// // throws UnsupportedOperationException if too big
+    /// &#x2f;&#x2a; throws UnsupportedOperationException if too big&#x2a;&#x2f;
     /// cborObject.WriteTo(new FilterOutputStream(ba) {
     /// private int size = 0;
     /// public void write(byte[] b, int off, int len) throws IOException {
@@ -5709,19 +5711,19 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     /// example, if the maximum size is 20000 bytes, but the average
     /// serialized object has a size of 50 bytes).</para>
     /// <code>
-    /// var backing = new byte[20000]; // maximum supported CBOR size in bytes
+    /// var backing = new byte[20000]; &#x2f;&#x2a; maximum supported CBOR size in bytes&#x2a;&#x2f;
     /// byte[] bytes1, bytes2;
     /// using (var ms = new MemoryStream(backing)) {
-    /// // throws NotSupportedException if too big
+    /// &#x2f;&#x2a; throws NotSupportedException if too big&#x2a;&#x2f;
     /// cborObject.WriteTo(ms);
     /// bytes1 = new byte[ms.Position];
-    /// // Copy serialized data if successful
+    /// &#x2f;&#x2a; Copy serialized data if successful&#x2a;&#x2f;
     /// System.ArrayCopy(backing, 0, bytes1, 0, (int)ms.Position);
-    /// // Reset memory stream
+    /// &#x2f;&#x2a; Reset memory stream&#x2a;&#x2f;
     /// ms.Position = 0;
     /// cborObject2.WriteTo(ms);
     /// bytes2 = new byte[ms.Position];
-    /// // Copy serialized data if successful
+    /// &#x2f;&#x2a; Copy serialized data if successful&#x2a;&#x2f;
     /// System.ArrayCopy(backing, 0, bytes2, 0, (int)ms.Position);
     /// }
     /// </code>

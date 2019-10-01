@@ -5702,12 +5702,36 @@ ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
           "undefined",
           stringTemp);
       }
+      CBORObject cbor = CBORObject.True;
+      Assert.AreNotEqual("21", cbor.ToString());
+      Assert.AreNotEqual("simple(21)", cbor.ToString());
+      cbor = CBORObject.False;
+      Assert.AreNotEqual("20", cbor.ToString());
+      Assert.AreNotEqual("simple(20)", cbor.ToString());
+      cbor = CBORObject.Null;
+      Assert.AreNotEqual("22", cbor.ToString());
+      Assert.AreNotEqual("simple(22)", cbor.ToString());
+      cbor = CBORObject.Undefined;
+      Assert.AreNotEqual("23", cbor.ToString());
+      Assert.AreNotEqual("simple(23)", cbor.ToString());
       {
         string stringTemp = CBORObject.FromSimpleValue(50).ToString();
         Assert.AreEqual(
         "simple(50)",
         stringTemp);
       }
+    }
+
+    [Test]
+    public void TestSimpleValuesNotIntegers() {
+      CBORObject cbor = CBORObject.True;
+      Assert.AreNotEqual(CBORObject.FromObject(21), cbor);
+      cbor = CBORObject.False;
+      Assert.AreNotEqual(CBORObject.FromObject(20), cbor);
+      cbor = CBORObject.Null;
+      Assert.AreNotEqual(CBORObject.FromObject(22), cbor);
+      cbor = CBORObject.Undefined;
+      Assert.AreNotEqual(CBORObject.FromObject(23), cbor);
     }
 
     [Test]
@@ -5720,7 +5744,34 @@ ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
 
     [Test]
     public void TestType() {
-      // not implemented yet
+      CBORObject cbor = CBORObject.True;
+      Assert.AreEqual(
+        CBORType.Boolean,
+        cbor.Type);
+      cbor = CBORObject.FromObjectAndTag(CBORObject.True, 999);
+      Assert.AreEqual(
+        CBORType.Boolean,
+        cbor.Type);
+      cbor = CBORObject.False;
+      Assert.AreEqual(
+        CBORType.Boolean,
+        cbor.Type);
+      cbor = CBORObject.Null;
+      Assert.AreEqual(
+        CBORType.SimpleValue,
+        cbor.Type);
+      cbor = CBORObject.Null;
+      Assert.AreEqual(
+        CBORType.Undefined,
+        cbor.Type);
+      cbor = CBORObject.FromSimpleValue(99);
+      Assert.AreEqual(
+        CBORType.SimpleValue,
+        cbor.Type);
+      cbor = CBORObject.FromSimpleValue(21);
+      Assert.AreEqual(
+        CBORType.SimpleValue,
+        cbor.Type);
     }
     [Test]
     public void TestUntag() {
@@ -6422,6 +6473,35 @@ ToObjectTest.TestToFromObjectRoundTrip(byteval);
     [Test]
     public void TestWriteJSON() {
       // not implemented yet
+      try {
+        using (var ms = new MemoryStream()) {
+          CBORObject.WriteJSON(CBORObject.True, ms);
+          byte[] bytes = ms.ToArray();
+          string str = DataUtilities.GetUtf8String(bytes, false);
+          Assert.AreEqual("true", str);
+        }
+        using (var ms = new MemoryStream()) {
+          CBORObject.True.WriteJSONTo(ms);
+          byte[] bytes = ms.ToArray();
+          string str = DataUtilities.GetUtf8String(bytes, false);
+          Assert.AreEqual("true", str);
+        }
+        using (var ms = new MemoryStream()) {
+          CBORObject.WriteJSON(CBORObject.False, ms);
+          byte[] bytes = ms.ToArray();
+          string str = DataUtilities.GetUtf8String(bytes, false);
+          Assert.AreEqual("false", str);
+        }
+        using (var ms = new MemoryStream()) {
+          CBORObject.False.WriteJSONTo(ms);
+          byte[] bytes = ms.ToArray();
+          string str = DataUtilities.GetUtf8String(bytes, false);
+          Assert.AreEqual("false", str);
+        }
+      } catch (IOException ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(ex.ToString(), ex);
+      }
     }
     [Test]
     public void TestWriteJSONTo() {

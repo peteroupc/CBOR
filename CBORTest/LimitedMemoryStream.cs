@@ -23,6 +23,9 @@ namespace Test {
         return this.ms.Length;
       }
     }
+    public override long Seek(long pos, SeekOrigin origin) {
+      throw new NotSupportedException();
+    }
     public override void SetLength(long len) {
       if (len > this.maxSize) {
         throw new NotSupportedException();
@@ -34,10 +37,7 @@ namespace Test {
         return this.ms.Position;
       }
       set {
-        if (value > this.maxSize) {
-          throw new NotSupportedException();
-        }
-        this.ms.Position = value;
+        throw new NotSupportedException();
       }
     }
     public override bool CanRead {

@@ -123,7 +123,7 @@ Gets a value indicating whether CBOR objects:
 
 <b>Returns:</b>
 
- `true`  if CBOR objects are written out using the CTAP2 canonical CBOR encoding form; otherwise,  `false` .
+ `true`  if CBOR objects are written out using the CTAP2 canonical CBOR encoding form; otherwise,  `false` . The default is  `false` .
 
 <a id="ResolveReferences"></a>
 ### ResolveReferences
@@ -132,7 +132,7 @@ Gets a value indicating whether CBOR objects:
 
 Gets a value indicating whether to resolve references to sharable objects and sharable strings in the process of decoding a CBOR object. Enabling this property, however, can cause a security risk if a decoded CBOR object is then re-encoded.
 
-About sharable objects and references
+<b>About sharable objects and references</b>
 
 Sharable objects are marked with tag 28, and references to those objects are marked with tag 29 (where a reference of 0 means the first sharable object in the CBOR stream, a reference of 1 means the second, and so on). Sharable strings (byte strings and text strings) appear within an enclosing object marked with tag 256, and references to them are marked with tag 25; in general, a string is sharable only if storing its reference rather than the string would save space.
 

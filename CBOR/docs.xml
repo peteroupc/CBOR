@@ -181,7 +181,7 @@
             according to the FIDO Client-to-Authenticator Protocol 2
             specification.</summary>
             <value><c>true</c> if CBOR objects are written out using the CTAP2
-            canonical CBOR encoding form; otherwise, <c>false</c>.</value>
+            canonical CBOR encoding form; otherwise, <c>false</c>.  The default is <c>false</c>.</value>
 
 </doc>
 <doc name="F:PeterO.Cbor.CBOREncodeOptions.Default">
@@ -232,7 +232,7 @@
             <value>A value indicating whether to resolve references to sharable
             objects and sharable strings. The default is false.</value>
             <remarks>
-            <para>About sharable objects and references</para>
+            <para><b>About sharable objects and references</b></para>
             <para>Sharable objects are marked with tag 28, and references to
             those objects are marked with tag 29 (where a reference of 0 means
             the first sharable object in the CBOR stream, a reference of 1
@@ -877,7 +877,7 @@
             the.NET Framework) shows a way to check whether a given CBOR object
             stores a 32-bit signed integer before getting its value.</para>
             <code>CBORObject obj = CBORObject.FromInt32(99999); if (obj.IsIntegral
-            &amp;&amp; obj.CanTruncatedIntFitInInt32()) { // Not an Int32; handle
+            &amp;&amp; obj.CanTruncatedIntFitInInt32()) { &#x2f;&#x2a; Not an Int32; handle&#x2a;&#x2f;
             the error Console.WriteLine("Not a 32-bit integer."); } else {
             Console.WriteLine("The value is " + obj.AsInt32()); }</code> .
             </example>
@@ -922,7 +922,7 @@
             the.NET Framework) shows a way to check whether a given CBOR object
             stores a 64-bit signed integer before getting its value.</para>
             <code>CBORObject obj = CBORObject.FromInt64(99999); if (obj.IsIntegral
-            &amp;&amp; obj.CanTruncatedIntFitInInt64()) { // Not an Int64; handle
+            &amp;&amp; obj.CanTruncatedIntFitInInt64()) { &#x2f;&#x2a; Not an Int64; handle&#x2a;&#x2f;
             the error Console.WriteLine("Not a 64-bit integer."); } else {
             Console.WriteLine("The value is " + obj.AsInt64()); }</code> .
             </example>
@@ -3591,10 +3591,10 @@
             <example><para>The following example (written in C# for the.NET version)
             shows how to use the <c>LimitedMemoryStream</c> class (implemented
             in <i>LimitedMemoryStream.cs</i>
-             in the peteroupc/CBOR open-source
+            in the peteroupc/CBOR open-source
             repository) to limit the size of supported JSON serializations of
             CBOR objects.</para>
-            <code>// maximum supported JSON size in bytes
+            <code>&#x2f;&#x2a; maximum supported JSON size in bytes&#x2a;&#x2f;
             var maxSize = 20000;
             using (var ms = new LimitedMemoryStream(maxSize)) {
             cborObject.WriteJSONTo(ms);
@@ -3603,10 +3603,10 @@
             shows how to use a subclassed <c>OutputStream</c> together with a
             <c>ByteArrayOutputStream</c> to limit the size of supported JSON
             serializations of CBOR objects.</para>
-            <code>// maximum supported JSON size in bytes
+            <code>&#x2f;&#x2a; maximum supported JSON size in bytes&#x2a;&#x2f;
             final int maxSize = 20000;
             ByteArrayOutputStream ba = new ByteArrayOutputStream();
-            // throws UnsupportedOperationException if too big
+            &#x2f;&#x2a; throws UnsupportedOperationException if too big&#x2a;&#x2f;
             cborObject.WriteJSONTo(new FilterOutputStream(ba) {
             private int size = 0;
             public void write(byte[] b, int off, int len) throws IOException {
@@ -3629,19 +3629,19 @@
             average serialized object is much smaller than the maximum size
             given (for example, if the maximum size is 20000 bytes, but the
             average serialized object has a size of 50 bytes).</para>
-            <code>var backing = new byte[20000]; // maximum supported JSON size in bytes
+            <code>var backing = new byte[20000]; &#x2f;&#x2a; maximum supported JSON size in bytes&#x2a;&#x2f;
             byte[] bytes1, bytes2;
             using (var ms = new MemoryStream(backing)) {
-            // throws NotSupportedException if too big
+            &#x2f;&#x2a; throws NotSupportedException if too big&#x2a;&#x2f;
             cborObject.WriteJSONTo(ms);
             bytes1 = new byte[ms.Position];
-            // Copy serialized data if successful
+            &#x2f;&#x2a; Copy serialized data if successful&#x2a;&#x2f;
             System.ArrayCopy(backing, 0, bytes1, 0, (int)ms.Position);
-            // Reset memory stream
+            &#x2f;&#x2a; Reset memory stream&#x2a;&#x2f;
             ms.Position = 0;
             cborObject2.WriteJSONTo(ms);
             bytes2 = new byte[ms.Position];
-            // Copy serialized data if successful
+            &#x2f;&#x2a; Copy serialized data if successful&#x2a;&#x2f;
             System.ArrayCopy(backing, 0, bytes2, 0, (int)ms.Position);
             }</code>.</example>
 
@@ -3673,8 +3673,7 @@
             out certain keys of a CBOR map in a given order. In the case of
             CBOR objects of type FloatingPoint, the number is written using the
             shortest floating-point encoding possible; this is a change from
-            previous versions.</para>
-             </summary>
+            previous versions.</para></summary>
             <param name='stream'>A writable data stream.</param>
             <exception cref='ArgumentNullException'>The parameter <paramref name='stream'/> is null.</exception>
             <exception cref='System.IO.IOException'>An I/O error
@@ -3727,10 +3726,10 @@
             outputStream.WriteByte((byte)0xff); }</code> <para>The following example (written in C# for the.NET version)
             shows how to use the <c>LimitedMemoryStream</c> class (implemented
             in <i>LimitedMemoryStream.cs</i>
-             in the peteroupc/CBOR open-source
+            in the peteroupc/CBOR open-source
             repository) to limit the size of supported CBOR
             serializations.</para>
-            <code>// maximum supported CBOR size in bytes
+            <code>&#x2f;&#x2a; maximum supported CBOR size in bytes&#x2a;&#x2f;
             var maxSize = 20000;
             using (var ms = new LimitedMemoryStream(maxSize)) {
             cborObject.WriteTo(ms);
@@ -3739,10 +3738,10 @@
             shows how to use a subclassed <c>OutputStream</c> together with a
             <c>ByteArrayOutputStream</c> to limit the size of supported CBOR
             serializations.</para>
-            <code>// maximum supported CBOR size in bytes
+            <code>&#x2f;&#x2a; maximum supported CBOR size in bytes&#x2a;&#x2f;
             final int maxSize = 20000;
             ByteArrayOutputStream ba = new ByteArrayOutputStream();
-            // throws UnsupportedOperationException if too big
+            &#x2f;&#x2a; throws UnsupportedOperationException if too big&#x2a;&#x2f;
             cborObject.WriteTo(new FilterOutputStream(ba) {
             private int size = 0;
             public void write(byte[] b, int off, int len) throws IOException {
@@ -3765,19 +3764,19 @@
             serialized object is much smaller than the maximum size given (for
             example, if the maximum size is 20000 bytes, but the average
             serialized object has a size of 50 bytes).</para>
-            <code>var backing = new byte[20000]; // maximum supported CBOR size in bytes
+            <code>var backing = new byte[20000]; &#x2f;&#x2a; maximum supported CBOR size in bytes&#x2a;&#x2f;
             byte[] bytes1, bytes2;
             using (var ms = new MemoryStream(backing)) {
-            // throws NotSupportedException if too big
+            &#x2f;&#x2a; throws NotSupportedException if too big&#x2a;&#x2f;
             cborObject.WriteTo(ms);
             bytes1 = new byte[ms.Position];
-            // Copy serialized data if successful
+            &#x2f;&#x2a; Copy serialized data if successful&#x2a;&#x2f;
             System.ArrayCopy(backing, 0, bytes1, 0, (int)ms.Position);
-            // Reset memory stream
+            &#x2f;&#x2a; Reset memory stream&#x2a;&#x2f;
             ms.Position = 0;
             cborObject2.WriteTo(ms);
             bytes2 = new byte[ms.Position];
-            // Copy serialized data if successful
+            &#x2f;&#x2a; Copy serialized data if successful&#x2a;&#x2f;
             System.ArrayCopy(backing, 0, bytes2, 0, (int)ms.Position);
             }</code>.</example>
 
@@ -3863,14 +3862,14 @@
             <exception cref='ArgumentNullException'>The parameter <paramref name='outputStream'/> is null.</exception>
             <example><para>In the following example, an array of three objects is
             written as CBOR to a data stream.</para>
-            <code>CBORObject.WriteValue(stream, 4, 3); // array, length 3
-            CBORObject.Write("hello world", stream); // item 1 CBORObject.Write(25,
-            stream); /* item 2 */ CBORObject.Write(false, stream); // item 3</code> <para>In the following example, a map consisting of two key-value
+            <code>CBORObject.WriteValue(stream, 4, 3); &#x2f;&#x2a; array, length 3&#x2a;&#x2f;
+            CBORObject.Write("hello world", stream); &#x2f;&#x2a; item 1 CBORObject.Write(25,&#x2a;&#x2f;
+            stream); /* item 2 */ CBORObject.Write(false, stream); &#x2f;&#x2a; item 3&#x2a;&#x2f;</code> <para>In the following example, a map consisting of two key-value
             pairs is written as CBOR to a data stream.</para>
-            <code>CBORObject.WriteValue(stream, 5, 2); // map, 2 pairs
-            CBORObject.Write("number", stream); // key 1 CBORObject.Write(25,
-            stream); // value 1 CBORObject.Write("string", stream); // key 2
-            CBORObject.Write("hello", stream); // value 2</code> <para>In the following example (originally written in C# for
+            <code>CBORObject.WriteValue(stream, 5, 2); &#x2f;&#x2a; map, 2 pairs&#x2a;&#x2f;
+            CBORObject.Write("number", stream); &#x2f;&#x2a; key 1 CBORObject.Write(25,&#x2a;&#x2f;
+            stream); &#x2f;&#x2a; value 1 CBORObject.Write("string", stream); &#x2f;&#x2a; key 2&#x2a;&#x2f;&#x2a;&#x2f;
+            CBORObject.Write("hello", stream); &#x2f;&#x2a; value 2&#x2a;&#x2f;</code> <para>In the following example (originally written in C# for
             the.NET Framework version), a text string is written as CBOR to a
             data stream.</para>
             <code>string str = "hello world"; byte[] bytes =

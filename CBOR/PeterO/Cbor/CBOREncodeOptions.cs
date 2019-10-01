@@ -217,7 +217,8 @@ namespace PeterO.Cbor {
     /// according to the FIDO Client-to-Authenticator Protocol 2
     /// specification.</summary>
     /// <value><c>true</c> if CBOR objects are written out using the CTAP2
-    /// canonical CBOR encoding form; otherwise, <c>false</c>.</value>
+    /// canonical CBOR encoding form; otherwise, <c>false</c>. The default
+    /// is <c>false</c>.</value>
     public bool Ctap2Canonical { get; private set; }
   }
 }
