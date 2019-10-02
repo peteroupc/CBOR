@@ -492,7 +492,7 @@ IsMethodOverride((MethodInfo)method)) {
         var t = node.GetContent();
        // Collapse multiple spaces into a single space
         t = Regex.Replace(t, @"\s+", " ");
-        if (t.Length!=1 || t[0]!=' ') {
+        if (t.Length != 1 || t[0] != ' ') {
           // Don't write if result is a single space
           this.Write(t);
         }

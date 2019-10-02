@@ -1,6 +1,10 @@
 Release notes
 ---------------------
 
+### Version 4.0.1:
+
+- Fix issue with unexpected CBORObject#ToString result for True and False.
+
 ### Version 4.0.0:
 
 - Fix issues with CTAP2 Canonical CBOR form

@@ -3463,9 +3463,9 @@ options) {
     /// <code>CBORObject obj = CBORObject.FromInt64(99999);
     /// if (obj.Type ==
     /// CBORType.Integer &amp;&amp; obj.CanValueFitInInt64()) {
-    /// // Not an Int64; handle the error
-    ///   Console.WriteLine("Not a 64-bit integer."); } else {
-    ///   Console.WriteLine("The value is " + obj.AsInt64Value()); }</code>
+    /// &#x2f;&#x2a; Not an Int64; handle the error&#x2a;&#x2f;
+    /// Console.WriteLine("Not a 64-bit integer."); } else {
+    /// Console.WriteLine("The value is " + obj.AsInt64Value()); }</code>
     ///  .
     /// </example>
     public long AsInt64Value() {
@@ -5467,7 +5467,7 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     /// CBORObject.WriteValue(stream, 4, 3);
     /// &#x2f;&#x2a; item 1 */
     /// CBORObject.Write("hello world", stream);
-    /// CBORObject.Write(25, stream); // item 2
+    /// CBORObject.Write(25, stream); &#x2f;&#x2a; item 2&#x2a;&#x2f;
     /// CBORObject.Write(false, stream); &#x2f;&#x2a; item 3&#x2a;&#x2f;</code>
     /// <para>In the following example, a map consisting of two key-value
     /// pairs is written as CBOR to a data stream.</para>

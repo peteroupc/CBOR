@@ -902,9 +902,10 @@ Converts this object to a 32-bit signed integer. Non-integer number values are t
 
 The following example code (originally written in C# for the.NET Framework) shows a way to check whether a given CBOR object stores a 32-bit signed integer before getting its value.
 
-    CBORObject obj = CBORObject.FromInt32(99999); if (obj.IsIntegral
-                && obj.CanTruncatedIntFitInInt32()) { /* Not an Int32; handle*/
-                the error Console.WriteLine("Not a 32-bit integer."); } else {
+    CBORObject obj = CBORObject.FromInt32(99999);
+                if (obj.IsIntegral && obj.CanTruncatedIntFitInInt32()) {
+                /* Not an Int32; handle the error */
+                Console.WriteLine("Not a 32-bit integer."); } else {
                 Console.WriteLine("The value is " + obj.AsInt32()); }
 
  .
@@ -986,9 +987,11 @@ Converts this object to a 64-bit signed integer if this CBOR object's type is In
 
 The following example code (originally written in C# for the.NET Framework) shows a way to check whether a given CBOR object stores a 64-bit signed integer before getting its value.
 
-    CBORObject obj = CBORObject.FromInt64(99999); if (obj.Type ==
-                CBORType.Integer && obj.CanValueFitInInt64()) { /* Not an Int64;
-                handle the error */ Console.WriteLine("Not a 64-bit integer."); } else {
+    CBORObject obj = CBORObject.FromInt64(99999);
+                if (obj.Type ==
+                CBORType.Integer && obj.CanValueFitInInt64()) {
+                /* Not an Int64; handle the error*/
+                Console.WriteLine("Not a 64-bit integer."); } else {
                 Console.WriteLine("The value is " + obj.AsInt64Value()); }
 
  .
@@ -4449,15 +4452,19 @@ Writes a CBOR major type number and an integer 0 or greater associated with it t
 
 In the following example, an array of three objects is written as CBOR to a data stream.
 
-    CBORObject.WriteValue(stream, 4, 3); /* array, length 3*/
-                CBORObject.Write("hello world", stream); /* item 1 CBORObject.Write(25,*/
-                stream); /* item 2 */ CBORObject.Write(false, stream); /* item 3*/
+    /* array, length 3*/
+                CBORObject.WriteValue(stream, 4, 3);
+                /* item 1 */
+                CBORObject.Write("hello world", stream);
+                CBORObject.Write(25, stream); /* item 2*/
+                CBORObject.Write(false, stream); /* item 3*/
 
 In the following example, a map consisting of two key-value pairs is written as CBOR to a data stream.
 
     CBORObject.WriteValue(stream, 5, 2); /* map, 2 pairs*/
-                CBORObject.Write("number", stream); /* key 1 CBORObject.Write(25,*/
-                stream); /* value 1 CBORObject.Write("string", stream); // key 2*/
+                CBORObject.Write("number", stream); /* key 1 */
+                CBORObject.Write(25, stream); /* value 1 */
+                CBORObject.Write("string", stream); /* key 2*/
                 CBORObject.Write("hello", stream); /* value 2*/
 
 In the following example (originally written in C# for the.NET Framework version), a text string is written as CBOR to a data stream.

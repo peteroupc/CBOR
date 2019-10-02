@@ -1451,7 +1451,7 @@ cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked();
     }
 
     [Test]
-    [Timeout(2000)]
+    [Timeout(5000)]
     public void TestNoRecursiveExpansion() {
       CBORObject root = ReferenceTestObject();
       byte[] bytes = root.EncodeToBytes();

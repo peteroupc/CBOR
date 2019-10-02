@@ -5703,17 +5703,17 @@ ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
           stringTemp);
       }
       CBORObject cbor = CBORObject.True;
-      Assert.AreNotEqual("21", cbor.ToString());
-      Assert.AreNotEqual("simple(21)", cbor.ToString());
+      TestCommon.AssertNotEqual("21", cbor.ToString());
+      TestCommon.AssertNotEqual("simple(21)", cbor.ToString());
       cbor = CBORObject.False;
-      Assert.AreNotEqual("20", cbor.ToString());
-      Assert.AreNotEqual("simple(20)", cbor.ToString());
+      TestCommon.AssertNotEqual("20", cbor.ToString());
+      TestCommon.AssertNotEqual("simple(20)", cbor.ToString());
       cbor = CBORObject.Null;
-      Assert.AreNotEqual("22", cbor.ToString());
-      Assert.AreNotEqual("simple(22)", cbor.ToString());
+      TestCommon.AssertNotEqual("22", cbor.ToString());
+      TestCommon.AssertNotEqual("simple(22)", cbor.ToString());
       cbor = CBORObject.Undefined;
-      Assert.AreNotEqual("23", cbor.ToString());
-      Assert.AreNotEqual("simple(23)", cbor.ToString());
+      TestCommon.AssertNotEqual("23", cbor.ToString());
+      TestCommon.AssertNotEqual("simple(23)", cbor.ToString());
       {
         string stringTemp = CBORObject.FromSimpleValue(50).ToString();
         Assert.AreEqual(
@@ -5725,13 +5725,13 @@ ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
     [Test]
     public void TestSimpleValuesNotIntegers() {
       CBORObject cbor = CBORObject.True;
-      Assert.AreNotEqual(CBORObject.FromObject(21), cbor);
+      TestCommon.AssertNotEqual(CBORObject.FromObject(21), cbor);
       cbor = CBORObject.False;
-      Assert.AreNotEqual(CBORObject.FromObject(20), cbor);
+      TestCommon.AssertNotEqual(CBORObject.FromObject(20), cbor);
       cbor = CBORObject.Null;
-      Assert.AreNotEqual(CBORObject.FromObject(22), cbor);
+      TestCommon.AssertNotEqual(CBORObject.FromObject(22), cbor);
       cbor = CBORObject.Undefined;
-      Assert.AreNotEqual(CBORObject.FromObject(23), cbor);
+      TestCommon.AssertNotEqual(CBORObject.FromObject(23), cbor);
     }
 
     [Test]

@@ -104,6 +104,41 @@ namespace Test {
       }
     }
 
+    public static void AssertNotEqual(object o, object o2, string msg) {
+      if (o == null) {
+        throw new ArgumentNullException(nameof(o));
+      }
+      if (o.Equals(o2)) {
+        string str = msg + "\r\n" + ObjectMessages(
+          o,
+          o2,
+          "Unexpectedly equal");
+        Assert.Fail(str);
+      }
+    }
+
+    public static void AssertEquals(object o, object o2, string msg) {
+      if (o == null) {
+        throw new ArgumentNullException(nameof(o));
+      }
+      if (!o.Equals(o2)) {
+        Assert.AreEqual(o, o2, msg);
+      }
+    }
+
+    public static void AssertNotEqual(Object o, Object o2) {
+      if (o == null) {
+        throw new ArgumentNullException(nameof(o));
+      }
+      if (o.Equals(o2)) {
+        string str = ObjectMessages(
+          o,
+          o2,
+          "Unexpectedly equal");
+        Assert.Fail(str);
+      }
+    }
+
     public static void AssertEquals(Object o, Object o2) {
       if (o == null) {
         throw new ArgumentNullException(nameof(o));
@@ -177,6 +212,27 @@ namespace Test {
       Assert.AreEqual(cmp2 == 0, o3.Equals(o2));
       Assert.AreEqual(cmp3 == 0, o1.Equals(o3));
       Assert.AreEqual(cmp3 == 0, o3.Equals(o1));
+    }
+
+    public static void CompareTestNotEqual<T>(T o1, T o2) where T :
+        IComparable<T> {
+      if (CompareTestReciprocal(o1, o2) == 0) {
+        Assert.Fail(ObjectMessages(
+          o1,
+          o2,
+          "Unexpectedly equal: " + CompareTestReciprocal(o1, o2)));
+      }
+    }
+
+    public static void CompareTestNotEqual<T>(T o1, T o2, string msg) where T :
+        IComparable<T> {
+      if (CompareTestReciprocal(o1, o2) == 0) {
+        string str = msg + "\r\n" + ObjectMessages(
+          o1,
+          o2,
+          "Unexpectedly equal: " + CompareTestReciprocal(o1, o2));
+        Assert.Fail(str);
+      }
     }
 
     public static void CompareTestEqual<T>(T o1, T o2) where T :
