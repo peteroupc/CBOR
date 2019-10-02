@@ -5760,9 +5760,9 @@ ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
       Assert.AreEqual(
         CBORType.SimpleValue,
         cbor.Type);
-      cbor = CBORObject.Null;
+      cbor = CBORObject.Undefined;
       Assert.AreEqual(
-        CBORType.Undefined,
+        CBORType.SimpleValue,
         cbor.Type);
       cbor = CBORObject.FromSimpleValue(99);
       Assert.AreEqual(
