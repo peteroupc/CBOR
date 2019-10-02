@@ -5748,6 +5748,11 @@ ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
       Assert.AreEqual(
         CBORType.Boolean,
         cbor.Type);
+      // Simple value for true
+      cbor = CBORObject.FromSimpleValue(21);
+      Assert.AreEqual(
+        CBORType.Boolean,
+        cbor.Type);
       cbor = CBORObject.FromObjectAndTag(CBORObject.True, 999);
       Assert.AreEqual(
         CBORType.Boolean,
@@ -5765,10 +5770,6 @@ ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
         CBORType.SimpleValue,
         cbor.Type);
       cbor = CBORObject.FromSimpleValue(99);
-      Assert.AreEqual(
-        CBORType.SimpleValue,
-        cbor.Type);
-      cbor = CBORObject.FromSimpleValue(21);
       Assert.AreEqual(
         CBORType.SimpleValue,
         cbor.Type);

@@ -3460,10 +3460,12 @@ options) {
     /// <para>The following example code (originally written in C# for
     /// the.NET Framework) shows a way to check whether a given CBOR object
     /// stores a 64-bit signed integer before getting its value.</para>
-    /// <code>CBORObject obj = CBORObject.FromInt64(99999); if (obj.Type ==
-    /// CBORType.Integer &amp;&amp; obj.CanValueFitInInt64()) { /* Not an Int64;
-    /// handle the error */ Console.WriteLine("Not a 64-bit integer."); } else {
-    /// Console.WriteLine("The value is " + obj.AsInt64Value()); }</code>
+    /// <code>CBORObject obj = CBORObject.FromInt64(99999);
+    /// if (obj.Type ==
+    /// CBORType.Integer &amp;&amp; obj.CanValueFitInInt64()) {
+    /// // Not an Int64; handle the error
+    ///   Console.WriteLine("Not a 64-bit integer."); } else {
+    ///   Console.WriteLine("The value is " + obj.AsInt64Value()); }</code>
     ///  .
     /// </example>
     public long AsInt64Value() {
@@ -3606,9 +3608,10 @@ options) {
     /// <para>The following example code (originally written in C# for
     /// the.NET Framework) shows a way to check whether a given CBOR object
     /// stores a 32-bit signed integer before getting its value.</para>
-    /// <code>CBORObject obj = CBORObject.FromInt32(99999); if (obj.IsIntegral
-    /// &amp;&amp; obj.CanTruncatedIntFitInInt32()) { &#x2f;&#x2a; Not an Int32; handle&#x2a;&#x2f;
-    /// the error Console.WriteLine("Not a 32-bit integer."); } else {
+    /// <code>CBORObject obj = CBORObject.FromInt32(99999);
+    /// if (obj.IsIntegral &amp;&amp; obj.CanTruncatedIntFitInInt32()) {
+    /// &#x2f;&#x2a; Not an Int32; handle the error &#x2a;&#x2f;
+    /// Console.WriteLine("Not a 32-bit integer."); } else {
     /// Console.WriteLine("The value is " + obj.AsInt32()); }</code>
     ///  .
     /// </example>
@@ -3712,7 +3715,7 @@ cn.GetNumberInterface().CanFitInDouble(cn.GetValue());
     public bool CanFitInInt64() {
       CBORNumber cn = CBORNumber.FromCBORObject(this);
       return (cn != null) &&
-cn.GetNumberInterface().CanFitInInt64(cn.GetValue());
+        cn.GetNumberInterface().CanFitInInt64(cn.GetValue());
     }
 
     /// <summary>Returns whether this object's value can be converted to a
@@ -5460,14 +5463,18 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     /// <example>
     /// <para>In the following example, an array of three objects is
     /// written as CBOR to a data stream.</para>
-    /// <code>CBORObject.WriteValue(stream, 4, 3); &#x2f;&#x2a; array, length 3&#x2a;&#x2f;
-    /// CBORObject.Write("hello world", stream); &#x2f;&#x2a; item 1 CBORObject.Write(25, &#x2a;&#x2f;
-    /// stream); /* item 2 */ CBORObject.Write(false, stream); &#x2f;&#x2a; item 3&#x2a;&#x2f;</code>
+    /// <code>&#x2f;&#x2a; array, length 3&#x2a;&#x2f;
+    /// CBORObject.WriteValue(stream, 4, 3);
+    /// &#x2f;&#x2a; item 1 */
+    /// CBORObject.Write("hello world", stream);
+    /// CBORObject.Write(25, stream); // item 2
+    /// CBORObject.Write(false, stream); &#x2f;&#x2a; item 3&#x2a;&#x2f;</code>
     /// <para>In the following example, a map consisting of two key-value
     /// pairs is written as CBOR to a data stream.</para>
     /// <code>CBORObject.WriteValue(stream, 5, 2); &#x2f;&#x2a; map, 2 pairs&#x2a;&#x2f;
-    /// CBORObject.Write("number", stream); &#x2f;&#x2a; key 1 CBORObject.Write(25, &#x2a;&#x2f;
-    /// stream); &#x2f;&#x2a; value 1 CBORObject.Write("string", stream); &#x2f;&#x2a; key 2&#x2a;&#x2f;&#x2a;&#x2f;
+    /// CBORObject.Write("number", stream); &#x2f;&#x2a; key 1 */
+    /// CBORObject.Write(25, stream); &#x2f;&#x2a; value 1 */
+    /// CBORObject.Write("string", stream); &#x2f;&#x2a; key 2&#x2a;&#x2f;
     /// CBORObject.Write("hello", stream); &#x2f;&#x2a; value 2&#x2a;&#x2f;</code>
     /// <para>In the following example (originally written in C# for
     /// the.NET Framework version), a text string is written as CBOR to a
