@@ -333,8 +333,8 @@ cn.GetNumberInterface().IsIntegral(cn.GetValue());
       }
     }
 
-    /// <summary>Gets a value indicating whether this value is a CBOR null
-    /// value, whether tagged or not.</summary>
+    /// <summary>Gets a value indicating whether this CBOR object is a CBOR
+    /// null value, whether tagged or not.</summary>
     /// <value><c>true</c> if this value is a CBOR null value; otherwise,
     /// <c>false</c>.</value>
     public bool IsNull {
