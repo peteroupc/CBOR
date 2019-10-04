@@ -498,7 +498,7 @@ namespace PeterO.Cbor {
                   first = false;
                   sb.WriteString(str, 0, i);
                 }
-                // Replace unpaired surrogate with U + FFFD
+                // Replace unpaired surrogate with U+FFFD
                 c = (char)0xfffd;
               } else {
                 throw new CBORException("Unpaired surrogate in string");

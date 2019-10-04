@@ -4237,7 +4237,7 @@ CBORObjectTypeEInteger)) {
           switch (this.itemtypeValue) {
             case CBORObjectTypeByteString:
               itemHashCode =
-                CBORUtilities.ByteArrayHashCode((byte[])this.ThisItem);
+                CBORUtilities.ByteArrayHashCode(this.GetByteString());
               break;
             case CBORObjectTypeMap:
               itemHashCode = CBORMapHashCode(this.AsMap());
@@ -4878,147 +4878,7 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     /// method instead.</summary>
     /// <returns>A text representation of this object.</returns>
     public override string ToString() {
-      StringBuilder sb = null;
-      string simvalue = null;
-      CBORType type = this.Type;
-      if (this.IsTagged) {
-        if (sb == null) {
-          if (type == CBORType.TextString) {
-            // The default capacity of StringBuilder may be too small
-            // for many strings, so set a suggested capacity
-            // explicitly
-            string str = this.AsString();
-            sb = new StringBuilder(Math.Min(str.Length, 4096) + 16);
-          } else {
-            sb = new StringBuilder();
-          }
-        }
-        this.AppendOpeningTags(sb);
-      }
-      switch (type) {
-        case CBORType.Boolean:
-        case CBORType.SimpleValue: {
-            if (this.IsTrue) {
-              simvalue = "true";
-              if (sb == null) {
-                return simvalue;
-              }
-              sb.Append(simvalue);
-            } else if (this.IsFalse) {
-              simvalue = "false";
-              if (sb == null) {
-                return simvalue;
-              }
-              sb.Append(simvalue);
-            } else if (this.IsNull) {
-              simvalue = "null";
-              if (sb == null) {
-                return simvalue;
-              }
-              sb.Append(simvalue);
-            } else if (this.IsUndefined) {
-              simvalue = "undefined";
-              if (sb == null) {
-                return simvalue;
-              }
-              sb.Append(simvalue);
-            } else {
-              sb = sb ?? new StringBuilder();
-              sb.Append("simple(");
-              var thisItemInt = (int)this.ThisItem;
-              sb.Append(
-                CBORUtilities.LongToString(thisItemInt));
-              sb.Append(")");
-            }
-
-            break;
-          }
-        case CBORType.FloatingPoint: {
-            double f = this.AsDoubleValue();
-            simvalue = Double.IsNegativeInfinity(f) ? "-Infinity" :
-              (Double.IsPositiveInfinity(f) ? "Infinity" : (Double.IsNaN(f) ?
-                    "NaN" : CBORUtilities.TrimDotZero(
-                       CBORUtilities.DoubleToString(f))));
-            if (sb == null) {
-              return simvalue;
-            }
-            sb.Append(simvalue);
-            break;
-          }
-        case CBORType.Integer: {
-            if (this.CanValueFitInInt64()) {
-              long v = this.AsInt64Value();
-              simvalue = CBORUtilities.LongToString(v);
-            } else {
-              simvalue = this.AsEIntegerValue().ToString();
-            }
-            if (sb == null) {
-              return simvalue;
-            }
-            sb.Append(simvalue);
-            break;
-          }
-        case CBORType.ByteString: {
-            sb = sb ?? new StringBuilder();
-            sb.Append("h'");
-            CBORUtilities.ToBase16(sb, (byte[])this.ThisItem);
-            sb.Append("'");
-            break;
-          }
-        case CBORType.TextString: {
-            if (sb == null) {
-              return "\"" + this.AsString() + "\"";
-            }
-            sb.Append('\"');
-            sb.Append(this.AsString());
-            sb.Append('\"');
-            break;
-          }
-        case CBORType.Array: {
-            sb = sb ?? new StringBuilder();
-            var first = true;
-            sb.Append("[");
-            foreach (CBORObject i in this.AsList()) {
-              if (!first) {
-                sb.Append(", ");
-              }
-              sb.Append(i.ToString());
-              first = false;
-            }
-            sb.Append("]");
-            break;
-          }
-        case CBORType.Map: {
-            sb = sb ?? new StringBuilder();
-            var first = true;
-            sb.Append("{");
-            IDictionary<CBORObject, CBORObject> map = this.AsMap();
-            foreach (KeyValuePair<CBORObject, CBORObject> entry in map) {
-              CBORObject key = entry.Key;
-              CBORObject value = entry.Value;
-              if (!first) {
-                sb.Append(", ");
-              }
-              sb.Append(key.ToString());
-              sb.Append(": ");
-              sb.Append(value.ToString());
-              first = false;
-            }
-            sb.Append("}");
-            break;
-          }
-        default: {
-            if (sb == null) {
-              return this.ThisItem.ToString();
-            }
-            sb.Append(this.ThisItem.ToString());
-            break;
-          }
-      }
-      if (this.IsTagged) {
-        this.AppendClosingTags(sb);
-      }
-      return sb.ToString();
+      return CBORDataUtilities.ToStringHelper(this, 0);
     }
 
     /// <summary>Gets an object with the same value as this one but without
@@ -5782,9 +5642,9 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
             break;
           }
         case CBORObjectTypeByteString: {
-            var arr = (byte[])this.ThisItem;
+            byte[] arr = this.GetByteString();
             WritePositiveInt(
-              (this.ItemType == CBORObjectTypeByteString) ? 2 : 3,
+              (this.Type == CBORType.ByteString) ? 2 : 3,
               arr.Length,
               stream);
             stream.Write(arr, 0, arr.Length);
@@ -5803,7 +5663,7 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
             break;
           }
         case CBORObjectTypeSimpleValue: {
-            var value = (int)this.ThisItem;
+            int value = this.SimpleValue;
             if (value < 24) {
               stream.WriteByte((byte)(0xe0 + value));
             } else {
@@ -6602,31 +6462,6 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
       stream.Write(bytes, 0, byteIndex);
       if (streaming) {
         stream.WriteByte((byte)0xff);
-      }
-    }
-
-    //-----------------------------------------------------------
-    private void AppendClosingTags(StringBuilder sb) {
-      CBORObject curobject = this;
-      while (curobject.IsTagged) {
-        sb.Append(')');
-        curobject = (CBORObject)curobject.itemValue;
-      }
-    }
-
-    private void AppendOpeningTags(StringBuilder sb) {
-      CBORObject curobject = this;
-      while (curobject.IsTagged) {
-        int low = curobject.tagLow;
-        int high = curobject.tagHigh;
-        if (high == 0 && (low >> 16) == 0) {
-          sb.Append(CBORUtilities.LongToString(low));
-        } else {
-          EInteger bi = LowHighToEInteger(low, high);
-          sb.Append(bi.ToString());
-        }
-        sb.Append('(');
-        curobject = (CBORObject)curobject.itemValue;
       }
     }
 

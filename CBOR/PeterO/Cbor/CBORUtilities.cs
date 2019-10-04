@@ -53,17 +53,6 @@ namespace PeterO.Cbor {
       return -2; // not short enough
     }
 
-    public static void ToBase16(StringBuilder str, byte[] data) {
-      if (data == null) {
-        throw new ArgumentNullException(nameof(data));
-      }
-      int length = data.Length;
-      for (var i = 0; i < length; ++i) {
-        str.Append(HexAlphabet[(data[i] >> 4) & 15]);
-        str.Append(HexAlphabet[data[i] & 15]);
-      }
-    }
-
     public static bool ByteArrayEquals(byte[] a, byte[] b) {
       if (a == null) {
         return b == null;

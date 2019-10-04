@@ -6,6 +6,8 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/
  */
 using System;
+using System.Collections.Generic;
+using System.Text;
 using PeterO;
 using PeterO.Numbers;
 
@@ -13,6 +15,158 @@ namespace PeterO.Cbor {
     /// <summary>Contains methods useful for reading and writing data, with
     /// a focus on CBOR.</summary>
   public static class CBORDataUtilities {
+    private const string HexAlphabet = "0123456789ABCDEF";
+
+    internal static string ToStringHelper(CBORObject obj, int depth) {
+      StringBuilder sb = null;
+      string simvalue = null;
+      CBORType type = obj.Type;
+      CBORObject curobject;
+      if (obj.IsTagged) {
+        if (sb == null) {
+          if (type == CBORType.TextString) {
+            // The default capacity of StringBuilder may be too small
+            // for many strings, so set a suggested capacity
+            // explicitly
+            string str = obj.AsString();
+            sb = new StringBuilder(Math.Min(str.Length, 4096) + 16);
+          } else {
+            sb = new StringBuilder();
+          }
+        }
+        // Append opening tags if needed
+        curobject = obj;
+        while (curobject.IsTagged) {
+          EInteger ei = curobject.MostOuterTag;
+          sb.Append(ei.ToString());
+          sb.Append('(');
+          curobject = obj.UntagOne();
+        }
+      }
+      switch (type) {
+        case CBORType.SimpleValue:
+          sb = sb ?? new StringBuilder();
+          if (obj.IsUndefined) {
+            sb.Append("undefined");
+          } else if (obj.IsNull) {
+            sb.Append("null");
+          } else {
+            sb.Append("simple(");
+            int thisItemInt = obj.SimpleValue;
+            char c;
+            if (thisItemInt >= 100) {
+              // NOTE: '0'-'9' have ASCII code 0x30-0x39
+              c = (char)(0x30 + ((thisItemInt / 100) % 10));
+              sb.Append(c);
+            }
+            if (thisItemInt >= 10) {
+              c = (char)(0x30 + ((thisItemInt / 10) % 10));
+              sb.Append(c);
+              c = (char)(0x30 + (thisItemInt % 10));
+            } else {
+              c = (char)(0x30 + thisItemInt);
+            }
+            sb.Append(c);
+            sb.Append(")");
+          }
+          break;
+        case CBORType.Boolean:
+        case CBORType.Integer:
+          simvalue = obj.Untag().ToJSONString();
+          if (sb == null) {
+            return simvalue;
+          }
+          sb.Append(simvalue);
+          break;
+        case CBORType.FloatingPoint: {
+          double f = obj.AsDoubleValue();
+          simvalue = Double.IsNegativeInfinity(f) ? "-Infinity" :
+              (Double.IsPositiveInfinity(f) ? "Infinity" : (Double.IsNaN(f) ?
+                    "NaN" : obj.Untag().ToJSONString()));
+          if (sb == null) {
+            return simvalue;
+          }
+          sb.Append(simvalue);
+          break;
+        }
+        case CBORType.ByteString: {
+            sb = sb ?? new StringBuilder();
+            sb.Append("h'");
+            byte[] data = obj.GetByteString();
+            int length = data.Length;
+            for (var i = 0; i < length; ++i) {
+             sb.Append(HexAlphabet[(data[i] >> 4) & 15]);
+             sb.Append(HexAlphabet[data[i] & 15]);
+            }
+            sb.Append("'");
+            break;
+          }
+        case CBORType.TextString: {
+            if (sb == null) {
+              return "\"" + obj.AsString() + "\"";
+            }
+            sb.Append('\"');
+            sb.Append(obj.AsString());
+            sb.Append('\"');
+            break;
+          }
+        case CBORType.Array: {
+            sb = sb ?? new StringBuilder();
+            var first = true;
+            sb.Append("[");
+            if (depth >= 50) {
+            sb.Append("...");
+          } else {
+            for (var i = 0; i < obj.Count; ++i) {
+              if (!first) {
+                sb.Append(", ");
+              }
+              sb.Append(ToStringHelper(obj[i], depth + 1));
+              first = false;
+            }
+            }
+            sb.Append("]");
+            break;
+          }
+        case CBORType.Map: {
+            sb = sb ?? new StringBuilder();
+            var first = true;
+            sb.Append("{");
+            if (depth >= 50) {
+              sb.Append("...");
+            } else {
+              // TODO: Avoid use of internal method AsMap
+              IDictionary<CBORObject, CBORObject> map = obj.AsMap();
+              foreach (KeyValuePair<CBORObject, CBORObject> entry in map) {
+                CBORObject key = entry.Key;
+                CBORObject value = entry.Value;
+                if (!first) {
+                  sb.Append(", ");
+                }
+                sb.Append(ToStringHelper(key, depth + 1));
+                sb.Append(": ");
+                sb.Append(ToStringHelper(value, depth + 1));
+                first = false;
+              }
+            }
+            sb.Append("}");
+            break;
+          }
+        default: {
+            sb = sb ?? new StringBuilder();
+            sb.Append("???");
+            break;
+        }
+      }
+      // Append closing tags if needed
+      curobject = obj;
+      while (curobject.IsTagged) {
+        sb.Append(')');
+        curobject = obj.UntagOne();
+      }
+      return sb.ToString();
+    }
+
     private const int MaxSafeInt = 214748363;
 
     /// <summary>Parses a number whose format follows the JSON

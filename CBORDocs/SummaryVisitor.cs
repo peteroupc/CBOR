@@ -57,8 +57,8 @@ namespace PeterO.DocGen {
 
     public void HandleType(Type currentType, XmlDoc xdoc) {
       if (!currentType.IsPublic) {
- return;
-}
+        return;
+      }
       var typeFullName = currentType.FullName;
       if (!this.docs.ContainsKey(typeFullName)) {
         var docVisitor = new TypeLinkAndBuilder(currentType);
