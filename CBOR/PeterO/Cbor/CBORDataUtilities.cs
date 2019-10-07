@@ -40,7 +40,7 @@ namespace PeterO.Cbor {
           EInteger ei = curobject.MostOuterTag;
           sb.Append(ei.ToString());
           sb.Append('(');
-          curobject = obj.UntagOne();
+          curobject = curobject.UntagOne();
         }
       }
       switch (type) {
@@ -135,9 +135,10 @@ namespace PeterO.Cbor {
             if (depth >= 50) {
               sb.Append("...");
             } else {
-              // TODO: Avoid use of internal method AsMap
-              IDictionary<CBORObject, CBORObject> map = obj.AsMap();
-              foreach (KeyValuePair<CBORObject, CBORObject> entry in map) {
+              ICollection<KeyValuePair<CBORObject, CBORObject>> entries =
+                obj.Entries;
+              foreach (KeyValuePair<CBORObject, CBORObject> entry
+                    in entries) {
                 CBORObject key = entry.Key;
                 CBORObject value = entry.Value;
                 if (!first) {
@@ -162,7 +163,7 @@ namespace PeterO.Cbor {
       curobject = obj;
       while (curobject.IsTagged) {
         sb.Append(')');
-        curobject = obj.UntagOne();
+        curobject = curobject.UntagOne();
       }
       return sb.ToString();
     }

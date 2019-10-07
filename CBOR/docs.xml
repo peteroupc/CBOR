@@ -576,11 +576,11 @@
             <para>Certain CBOR objects are immutable (their values can't be
             changed), so they are inherently safe for use by multiple
             threads.</para>
-            <para>CBOR objects that are arrays, maps, and byte strings
-            (including tagged objects that represent numbers) are mutable, but
-            this class doesn't attempt to synchronize reads and writes to those
-            objects by multiple threads, so those objects are not thread safe
-            without such synchronization.</para>
+            <para>CBOR objects that are arrays, maps, and byte strings (whether
+            or not they are tagged) are mutable, but this class doesn't attempt
+            to synchronize reads and writes to those objects by multiple
+            threads, so those objects are not thread safe without such
+            synchronization.</para>
             <para>One kind of CBOR object is called a map, or a list of
             key-value pairs. Keys can be any kind of CBOR object, including
             numbers, strings, arrays, and maps. However, untagged text strings
@@ -703,8 +703,8 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsBoolean">
 
-            <summary>Returns false if this object is False, Null, or Undefined;
-            otherwise, true.</summary>
+            <summary>Returns false if this object is False, Null, or Undefined
+            (whether or not the object has tags); otherwise, true.</summary>
             <returns>False if this object is False, Null, or Undefined;
             otherwise, true.</returns>
 
@@ -2011,8 +2011,9 @@
             key is not an integer 0 or greater and less than the size of the
             array.</param>
             <returns>The CBOR object referred to by index or key in this array
-            or map. If this is a CBOR map, returns null if an item with the
-            given key doesn't exist.</returns>
+            or map. If this is a CBOR map, returns <c>null</c> (not
+            <c>CBORObject.Null</c> ) if an item with the given key doesn't
+            exist.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.GetTags">
@@ -2256,8 +2257,9 @@
             index to the array. If this is a CBOR array, the key must be an
             integer 0 or greater and less than the size of the array.</param>
             <returns>The CBOR object referred to by index or key in this array
-            or map. If this is a CBOR map, returns null if an item with the
-            given key doesn't exist.</returns>
+            or map. If this is a CBOR map, returns <c>null</c> (not
+            <c>CBORObject.Null</c> ) if an item with the given key doesn't
+            exist.</returns>
             <exception cref='ArgumentNullException'>The key is null (as opposed
             to CBORObject.Null); or the set method is called and the value is
             null.</exception>
@@ -2276,8 +2278,9 @@
             integer key to this map. (If this is a map, the given index can be
             any 32-bit signed integer, even a negative one.).</param>
             <returns>The CBOR object referred to by index or key in this array
-            or map. If this is a CBOR map, returns null if an item with the
-            given key doesn't exist.</returns>
+            or map. If this is a CBOR map, returns <c>null</c> (not
+            <c>CBORObject.Null</c> ) if an item with the given key doesn't
+            exist.</returns>
             <exception cref='InvalidOperationException'>This object is not an
             array or map.</exception>
             <exception cref='ArgumentException'>This object is an array and the
@@ -2581,12 +2584,12 @@
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.SimpleValue">
 
-            <summary>Gets the simple value ID of this object, or -1 if this
-            object is not a simple value (including if the value is a
-            floating-point number).</summary>
-            <value>The simple value ID of this object, or -1 if this object is
-            not a simple value (including if the value is a floating-point
-            number).</value>
+            <summary>Gets the simple value ID of this CBOR object, or -1 if the
+            object is not a simple value. In this method, objects with a CBOR
+            type of Boolean or SimpleValue are simple values, whether they are
+            tagged or not.</summary>
+            <value>The simple value ID of this object if it's a simple value,
+            or -1 if this object is not a simple value.</value>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Subtract(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">

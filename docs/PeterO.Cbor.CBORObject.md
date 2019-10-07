@@ -30,7 +30,7 @@ This class's natural ordering (under the CompareTo method) is consistent with th
 
 Certain CBOR objects are immutable (their values can't be changed), so they are inherently safe for use by multiple threads.
 
-CBOR objects that are arrays, maps, and byte strings (including tagged objects that represent numbers) are mutable, but this class doesn't attempt to synchronize reads and writes to those objects by multiple threads, so those objects are not thread safe without such synchronization.
+CBOR objects that are arrays, maps, and byte strings (whether or not they are tagged) are mutable, but this class doesn't attempt to synchronize reads and writes to those objects by multiple threads, so those objects are not thread safe without such synchronization.
 
 One kind of CBOR object is called a map, or a list of key-value pairs. Keys can be any kind of CBOR object, including numbers, strings, arrays, and maps. However, untagged text strings (which means GetTags returns an empty array and the Type property, or "getType()" in Java, returns TextString) are the most suitable to use as keys; other kinds of CBOR object are much better used as map values instead, keeping in mind that some of them are not thread safe without synchronizing reads and writes to them.
 
@@ -48,7 +48,7 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[Add(object, object)](#Add_object_object)</code> - Adds a new key and its value to this CBOR map, or adds the value if the key doesn't exist.
 * <code>[Add(PeterO.Cbor.CBORObject)](#Add_PeterO_Cbor_CBORObject)</code> - Adds a new object to the end of this array.
 * <code>[Addition(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#Addition_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject)</code> - Finds the sum of two CBOR numbers.
-* <code>[AsBoolean()](#AsBoolean)</code> - Returns false if this object is False, Null, or Undefined; otherwise, true.
+* <code>[AsBoolean()](#AsBoolean)</code> - Returns false if this object is False, Null, or Undefined (whether or not the object has tags); otherwise, true.
 * <code>[AsByte()](#AsByte)</code> - Converts this object to a byte (0 to 255).
 * <code>[AsDecimal()](#AsDecimal)</code> - Converts this object to a.
 * <code>[AsDouble()](#AsDouble)</code> - Converts this object to a 64-bit floating point number.
@@ -146,7 +146,7 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[IsNaN()](#IsNaN)</code> - Gets a value indicating whether this CBOR object represents a not-a-number value (as opposed to whether this object does not express a number).
 * <code>[IsNegative](#IsNegative)</code> - Gets a value indicating whether this object is a negative number.
 * <code>[IsNegativeInfinity()](#IsNegativeInfinity)</code> - Gets a value indicating whether this CBOR object represents negative infinity.
-* <code>[IsNull](#IsNull)</code> - Gets a value indicating whether this value is a CBOR null value.
+* <code>[IsNull](#IsNull)</code> - Gets a value indicating whether this CBOR object is a CBOR null value, whether tagged or not.
 * <code>[IsNumber](#IsNumber)</code> - Gets a value indicating whether this CBOR object stores a number (including infinity or a not-a-number or NaN value).
 * <code>[IsPositiveInfinity()](#IsPositiveInfinity)</code> - Gets a value indicating whether this CBOR object represents positive infinity.
 * <code>[IsTagged](#IsTagged)</code> - Gets a value indicating whether this data item has at least one tag.
@@ -185,7 +185,7 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[RemoveAt(int)](#RemoveAt_int)</code> - Removes the item at the given index of this CBOR array.
 * <code>[Set(object, object)](#Set_object_object)</code> - Maps an object to a key in this CBOR map, or adds the value if the key doesn't exist.
 * <code>[Sign](#Sign)</code> - Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
-* <code>[SimpleValue](#SimpleValue)</code> - Gets the simple value ID of this object, or -1 if this object is not a simple value (including if the value is a floating-point number).
+* <code>[SimpleValue](#SimpleValue)</code> - Gets the simple value ID of this CBOR object, or -1 if the object is not a simple value.
 * <code>[Subtract(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#Subtract_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject)</code> - Finds the difference between two CBOR number objects.
 * <code>[TagCount](#TagCount)</code> - Gets the number of tags this object has.
 * <code>[this[int]](#this_int)</code> - Gets the value of a CBOR object by integer index in this array or by integer key in this map.
@@ -359,7 +359,7 @@ Gets a value indicating whether this object is a negative number.
 
     public bool IsNull { get; }
 
-Gets a value indicating whether this value is a CBOR null value.
+Gets a value indicating whether this CBOR object is a CBOR null value, whether tagged or not.
 
 <b>Returns:</b>
 
@@ -502,11 +502,11 @@ This object does not represent a number, or this object is a not-a-number (NaN) 
 
     public int SimpleValue { get; }
 
-Gets the simple value ID of this object, or -1 if this object is not a simple value (including if the value is a floating-point number).
+Gets the simple value ID of this CBOR object, or -1 if the object is not a simple value. In this method, objects with a CBOR type of Boolean or SimpleValue are simple values, whether they are tagged or not.
 
 <b>Returns:</b>
 
-The simple value ID of this object, or -1 if this object is not a simple value (including if the value is a floating-point number).
+The simple value ID of this object if it's a simple value, or -1 if this object is not a simple value.
 
 <a id="TagCount"></a>
 ### TagCount
@@ -699,7 +699,7 @@ The parameter  <i>first</i>
 
     public bool AsBoolean();
 
-Returns false if this object is False, Null, or Undefined; otherwise, true.
+Returns false if this object is False, Null, or Undefined (whether or not the object has tags); otherwise, true.
 
 <b>Return Value:</b>
 
@@ -2340,7 +2340,7 @@ Gets the value of a CBOR object by integer index in this array or by CBOR object
 
 <b>Return Value:</b>
 
-The CBOR object referred to by index or key in this array or map. If this is a CBOR map, returns null if an item with the given key doesn't exist.
+The CBOR object referred to by index or key in this array or map. If this is a CBOR map, returns  `null`  (not  `CBORObject.Null`  ) if an item with the given key doesn't exist.
 
 <a id="HasMostInnerTag_int"></a>
 ### HasMostInnerTag

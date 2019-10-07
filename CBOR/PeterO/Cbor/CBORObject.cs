@@ -13,6 +13,7 @@ using PeterO;
 using PeterO.Numbers;
 
 // TODO: Add method that finds estimated byte size of CBOR objects
+// TODO: Consider deprecating most number conversion/checking methods here
 namespace PeterO.Cbor {
     /// <summary>
     /// <para>Represents an object in Concise Binary Object Representation
@@ -70,11 +71,11 @@ namespace PeterO.Cbor {
     /// <para>Certain CBOR objects are immutable (their values can't be
     /// changed), so they are inherently safe for use by multiple
     /// threads.</para>
-    /// <para>CBOR objects that are arrays, maps, and byte strings
-    /// (including tagged objects that represent numbers) are mutable, but
-    /// this class doesn't attempt to synchronize reads and writes to those
-    /// objects by multiple threads, so those objects are not thread safe
-    /// without such synchronization.</para>
+    /// <para>CBOR objects that are arrays, maps, and byte strings (whether
+    /// or not they are tagged) are mutable, but this class doesn't attempt
+    /// to synchronize reads and writes to those objects by multiple
+    /// threads, so those objects are not thread safe without such
+    /// synchronization.</para>
     /// <para>One kind of CBOR object is called a map, or a list of
     /// key-value pairs. Keys can be any kind of CBOR object, including
     /// numbers, strings, arrays, and maps. However, untagged text strings
@@ -267,8 +268,8 @@ namespace PeterO.Cbor {
     /// map.</value>
     public int Count {
       get {
-        return (this.ItemType == CBORObjectTypeArray) ? this.AsList().Count :
-          ((this.ItemType == CBORObjectTypeMap) ? this.AsMap().Count : 0);
+        return (this.Type == CBORType.Array) ? this.AsList().Count :
+          ((this.Type == CBORType.Map) ? this.AsMap().Count : 0);
       }
     }
 
@@ -390,12 +391,14 @@ cn.GetNumberInterface().IsNumberZero(cn.GetValue());
 
     /// <summary>Gets a collection of the keys of this CBOR object in an
     /// undefined order.</summary>
-    /// <value>A collection of the keys of this CBOR object.</value>
+    /// <value>A collection of the keys of this CBOR object. To avoid
+    /// potential problems, the calling code should not modify the CBOR map
+    /// while iterating over the returned collection.</value>
     /// <exception cref='InvalidOperationException'>This object is not a
     /// map.</exception>
     public ICollection<CBORObject> Keys {
       get {
-        if (this.ItemType == CBORObjectTypeMap) {
+        if (this.Type == CBORType.Map) {
           IDictionary<CBORObject, CBORObject> dict = this.AsMap();
           return dict.Keys;
         }
@@ -453,16 +456,16 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
       }
     }
 
-    /// <summary>Gets the simple value ID of this object, or -1 if this
-    /// object is not a simple value (including if the value is a
-    /// floating-point number).</summary>
-    /// <value>The simple value ID of this object, or -1 if this object is
-    /// not a simple value (including if the value is a floating-point
-    /// number).</value>
+    /// <summary>Gets the simple value ID of this CBOR object, or -1 if the
+    /// object is not a simple value. In this method, objects with a CBOR
+    /// type of Boolean or SimpleValue are simple values, whether they are
+    /// tagged or not.</summary>
+    /// <value>The simple value ID of this object if it's a simple value,
+    /// or -1 if this object is not a simple value.</value>
     public int SimpleValue {
       get {
         return (this.ItemType == CBORObjectTypeSimpleValue) ?
-          ((int)this.ThisItem) : (-1);
+          ((int)this.ThisItem) : -1;
       }
     }
 
@@ -508,23 +511,43 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
       }
     }
 
+    /// <summary>Gets a collection of the key/value pairs stored in this
+    /// CBOR object, if it's a map. Returns one entry for each key/value
+    /// pair in the map in an undefined order.</summary>
+    /// <value>A collection of the key/value pairs stored in this CBOR map.
+    /// To avoid potential problems, the calling code should not modify the
+    /// CBOR map while iterating over the returned collection.</value>
+    /// <exception cref='InvalidOperationException'>This object is not a
+    /// map.</exception>
+    public ICollection<KeyValuePair<CBORObject, CBORObject>> Entries {
+      get {
+        if (this.Type == CBORType.Map) {
+          IDictionary<CBORObject, CBORObject> dict = this.AsMap();
+          return (ICollection<KeyValuePair<CBORObject, CBORObject>>)dict;
+        }
+        throw new InvalidOperationException("Not a map");
+      }
+    }
+
     /// <summary>Gets a collection of the values of this CBOR object, if
     /// it's a map or an array. If this object is a map, returns one value
     /// for each key in the map in an undefined order. If this is an array,
     /// returns all the values of the array in the order they are listed.
     /// (This method can't be used to get the bytes in a CBOR byte string;
     /// for that, use the GetByteString method instead.).</summary>
-    /// <value>A collection of the values of this CBOR map or
-    /// array.</value>
+    /// <value>A collection of the values of this CBOR map or array. To
+    /// avoid potential problems, the calling code should not modify the
+    /// CBOR map or array while iterating over the returned
+    /// collection.</value>
     /// <exception cref='InvalidOperationException'>This object is not a
     /// map or an array.</exception>
     public ICollection<CBORObject> Values {
       get {
-        if (this.ItemType == CBORObjectTypeMap) {
+        if (this.Type == CBORType.Map) {
           IDictionary<CBORObject, CBORObject> dict = this.AsMap();
           return dict.Values;
         }
-        if (this.ItemType == CBORObjectTypeArray) {
+        if (this.Type == CBORType.Array) {
           IList<CBORObject> list = this.AsList();
           return new
             System.Collections.ObjectModel.ReadOnlyCollection<CBORObject>(list);
@@ -559,8 +582,9 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// integer key to this map. (If this is a map, the given index can be
     /// any 32-bit signed integer, even a negative one.).</param>
     /// <returns>The CBOR object referred to by index or key in this array
-    /// or map. If this is a CBOR map, returns null if an item with the
-    /// given key doesn't exist.</returns>
+    /// or map. If this is a CBOR map, returns <c>null</c> (not
+    /// <c>CBORObject.Null</c> ) if an item with the given key doesn't
+    /// exist.</returns>
     /// <exception cref='InvalidOperationException'>This object is not an
     /// array or map.</exception>
     /// <exception cref='ArgumentException'>This object is an array and the
@@ -569,14 +593,14 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// null (as opposed to CBORObject.Null).</exception>
     public CBORObject this[int index] {
       get {
-        if (this.ItemType == CBORObjectTypeArray) {
+        if (this.Type == CBORType.Array) {
           IList<CBORObject> list = this.AsList();
           if (index < 0 || index >= list.Count) {
             throw new ArgumentOutOfRangeException(nameof(index));
           }
           return list[index];
         }
-        if (this.ItemType == CBORObjectTypeMap) {
+        if (this.Type == CBORType.Map) {
           IDictionary<CBORObject, CBORObject> map = this.AsMap();
           CBORObject key = CBORObject.FromObject(index);
           return (!map.ContainsKey(key)) ? null : map[key];
@@ -585,7 +609,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
       }
 
       set {
-        if (this.ItemType == CBORObjectTypeArray) {
+        if (this.Type == CBORType.Array) {
           if (value == null) {
             throw new ArgumentNullException(nameof(value));
           }
@@ -594,7 +618,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
             throw new ArgumentOutOfRangeException(nameof(index));
           }
           list[index] = value;
-        } else if (this.ItemType == CBORObjectTypeMap) {
+        } else if (this.Type == CBORType.Map) {
           IDictionary<CBORObject, CBORObject> map = this.AsMap();
           CBORObject key = CBORObject.FromObject(index);
           map[key] = value;
@@ -618,10 +642,11 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// key is not an integer 0 or greater and less than the size of the
     /// array.</param>
     /// <returns>The CBOR object referred to by index or key in this array
-    /// or map. If this is a CBOR map, returns null if an item with the
-    /// given key doesn't exist.</returns>
+    /// or map. If this is a CBOR map, returns <c>null</c> (not
+    /// <c>CBORObject.Null</c> ) if an item with the given key doesn't
+    /// exist.</returns>
     public CBORObject GetOrDefault(object key, CBORObject defaultValue) {
-      if (this.ItemType == CBORObjectTypeArray) {
+      if (this.Type == CBORType.Array) {
         var index = 0;
         if (key is int) {
           index = (int)key;
@@ -639,7 +664,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
         return (index < 0 || index >= list.Count) ? defaultValue :
                     list[index];
       }
-      if (this.ItemType == CBORObjectTypeMap) {
+      if (this.Type == CBORType.Map) {
         IDictionary<CBORObject, CBORObject> map = this.AsMap();
         CBORObject ckey = CBORObject.FromObject(key);
         return (!map.ContainsKey(ckey)) ? defaultValue : map[ckey];
@@ -653,8 +678,9 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// index to the array. If this is a CBOR array, the key must be an
     /// integer 0 or greater and less than the size of the array.</param>
     /// <returns>The CBOR object referred to by index or key in this array
-    /// or map. If this is a CBOR map, returns null if an item with the
-    /// given key doesn't exist.</returns>
+    /// or map. If this is a CBOR map, returns <c>null</c> (not
+    /// <c>CBORObject.Null</c> ) if an item with the given key doesn't
+    /// exist.</returns>
     /// <exception cref='ArgumentNullException'>The key is null (as opposed
     /// to CBORObject.Null); or the set method is called and the value is
     /// null.</exception>
@@ -679,11 +705,11 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
         if (key == null) {
           throw new ArgumentNullException(nameof(key));
         }
-        if (this.ItemType == CBORObjectTypeMap) {
+        if (this.Type == CBORType.Map) {
           IDictionary<CBORObject, CBORObject> map = this.AsMap();
           return (!map.ContainsKey(key)) ? null : map[key];
         }
-        if (this.ItemType == CBORObjectTypeArray) {
+        if (this.Type == CBORType.Array) {
           if (!key.IsIntegral) {
             throw new ArgumentException("Not an integer");
           }
@@ -707,12 +733,12 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
         if (value == null) {
           throw new ArgumentNullException(nameof(value));
         }
-        if (this.ItemType == CBORObjectTypeMap) {
+        if (this.Type == CBORType.Map) {
           IDictionary<CBORObject, CBORObject> map = this.AsMap();
           map[key] = value;
           return;
         }
-        if (this.ItemType == CBORObjectTypeArray) {
+        if (this.Type == CBORType.Array) {
           if (!key.IsIntegral) {
             throw new ArgumentException("Not an integer");
           }
@@ -757,7 +783,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
           throw new ArgumentNullException(nameof(value));
         }
         CBORObject objkey = CBORObject.FromObject(key);
-        if (this.ItemType == CBORObjectTypeMap) {
+        if (this.Type == CBORType.Map) {
           IDictionary<CBORObject, CBORObject> map = this.AsMap();
           map[objkey] = value;
         } else {
@@ -3185,7 +3211,7 @@ options) {
     /// name='key'/> or <paramref name='valueOb'/> has an unsupported
     /// type.</exception>
     public CBORObject Add(object key, object valueOb) {
-      if (this.ItemType == CBORObjectTypeMap) {
+      if (this.Type == CBORType.Map) {
         CBORObject mapKey;
         CBORObject mapValue;
         if (key == null) {
@@ -3237,7 +3263,7 @@ options) {
     ///  .
     /// </example>
     public CBORObject Add(CBORObject obj) {
-      if (this.ItemType == CBORObjectTypeArray) {
+      if (this.Type == CBORType.Array) {
         IList<CBORObject> list = this.AsList();
         list.Add(obj);
         return this;
@@ -3269,7 +3295,7 @@ options) {
     ///  .
     /// </example>
     public CBORObject Add(object obj) {
-      if (this.ItemType == CBORObjectTypeArray) {
+      if (this.Type == CBORType.Array) {
         IList<CBORObject> list = this.AsList();
         list.Add(CBORObject.FromObject(obj));
         return this;
@@ -3296,8 +3322,8 @@ options) {
       return cn.GetNumberInterface().AsEInteger(cn.GetValue());
     }
 
-    /// <summary>Returns false if this object is False, Null, or Undefined;
-    /// otherwise, true.</summary>
+    /// <summary>Returns false if this object is False, Null, or Undefined
+    /// (whether or not the object has tags); otherwise, true.</summary>
     /// <returns>False if this object is False, Null, or Undefined;
     /// otherwise, true.</returns>
     public bool AsBoolean() {
@@ -3928,7 +3954,7 @@ CBORObjectTypeEInteger)) {
     /// <returns><c>true</c> if the given key is found, or <c>false</c> if
     /// the given key is not found or this object is not a map.</returns>
     public bool ContainsKey(object objKey) {
-      return (this.ItemType == CBORObjectTypeMap) ?
+      return (this.Type == CBORType.Map) ?
         this.ContainsKey(CBORObject.FromObject(objKey)) : false;
     }
 
@@ -3940,7 +3966,7 @@ CBORObjectTypeEInteger)) {
     /// the given key is not found or this object is not a map.</returns>
     public bool ContainsKey(CBORObject key) {
       key = key ?? CBORObject.Null;
-      if (this.ItemType == CBORObjectTypeMap) {
+      if (this.Type == CBORType.Map) {
         IDictionary<CBORObject, CBORObject> map = this.AsMap();
         return map.ContainsKey(key);
       }
@@ -3955,7 +3981,7 @@ CBORObjectTypeEInteger)) {
     /// or <c>false</c> if the given key is not found or this object is not
     /// a map.</returns>
     public bool ContainsKey(string key) {
-      if (this.ItemType == CBORObjectTypeMap) {
+      if (this.Type == CBORType.Map) {
         CBORObject ckey = key == null ? CBORObject.Null :
                   CBORObject.FromObject(key);
         IDictionary<CBORObject, CBORObject> map = this.AsMap();
@@ -4486,7 +4512,7 @@ CBORObjectTypeEInteger)) {
     /// name='valueOb'/> has an unsupported type; or <paramref
     /// name='index'/> is not a valid index into this array.</exception>
     public CBORObject Insert(int index, object valueOb) {
-      if (this.ItemType == CBORObjectTypeArray) {
+      if (this.Type == CBORType.Array) {
         CBORObject mapValue;
         IList<CBORObject> list = this.AsList();
         if (index < 0 || index > list.Count) {
@@ -4576,10 +4602,10 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     /// <exception cref='InvalidOperationException'>This object is not a
     /// CBOR array or CBOR map.</exception>
     public void Clear() {
-      if (this.ItemType == CBORObjectTypeArray) {
+      if (this.Type == CBORType.Array) {
         IList<CBORObject> list = this.AsList();
         list.Clear();
-      } else if (this.ItemType == CBORObjectTypeMap) {
+      } else if (this.Type == CBORType.Map) {
         IDictionary<CBORObject, CBORObject> dict = this.AsMap();
         dict.Clear();
       } else {
@@ -4638,7 +4664,7 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
       if (obj == null) {
         throw new ArgumentNullException(nameof(obj));
       }
-      if (this.ItemType == CBORObjectTypeMap) {
+      if (this.Type == CBORType.Map) {
         IDictionary<CBORObject, CBORObject> dict = this.AsMap();
         bool hasKey = dict.ContainsKey(obj);
         if (hasKey) {
@@ -4647,7 +4673,7 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
         }
         return false;
       }
-      if (this.ItemType == CBORObjectTypeArray) {
+      if (this.Type == CBORType.Array) {
         IList<CBORObject> list = this.AsList();
         return list.Remove(obj);
       }
@@ -4676,7 +4702,7 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     /// than 0, is the size of this array or greater, or is not a 32-bit
     /// signed integer ( <c>int</c> ).</exception>
     public CBORObject Set(object key, object valueOb) {
-      if (this.ItemType == CBORObjectTypeMap) {
+      if (this.Type == CBORType.Map) {
         CBORObject mapKey;
         CBORObject mapValue;
         if (key == null) {
@@ -4697,7 +4723,7 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
         } else {
           map.Add(mapKey, mapValue);
         }
-      } else if (this.ItemType == CBORObjectTypeArray) {
+      } else if (this.Type == CBORType.Array) {
         if (key is int) {
           IList<CBORObject> list = this.AsList();
           var index = (int)key;
@@ -5835,11 +5861,11 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
       return FixedObjects[value];
     }
 
-    internal IList<CBORObject> AsList() {
+    private IList<CBORObject> AsList() {
       return (IList<CBORObject>)this.ThisItem;
     }
 
-    internal IDictionary<CBORObject, CBORObject> AsMap() {
+    private IDictionary<CBORObject, CBORObject> AsMap() {
       return (IDictionary<CBORObject, CBORObject>)this.ThisItem;
     }
 

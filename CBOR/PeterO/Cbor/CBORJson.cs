@@ -596,14 +596,12 @@ namespace PeterO.Cbor {
             break;
           }
         case CBORType.Array: {
-            var first = true;
             writer.WriteCodePoint((int)'[');
-            foreach (CBORObject i in obj.AsList()) {
-              if (!first) {
+            for (var i = 0; i < obj.Count; ++i) {
+              if (i > 0) {
                 writer.WriteCodePoint((int)',');
               }
-              WriteJSONToInternal(i, writer, options);
-              first = false;
+              WriteJSONToInternal(obj[i], writer, options);
             }
             writer.WriteCodePoint((int)']');
             break;
@@ -611,8 +609,9 @@ namespace PeterO.Cbor {
         case CBORType.Map: {
             var first = true;
             var hasNonStringKeys = false;
-            IDictionary<CBORObject, CBORObject> objMap = obj.AsMap();
-            foreach (KeyValuePair<CBORObject, CBORObject> entry in objMap) {
+            ICollection<KeyValuePair<CBORObject, CBORObject>> entries =
+               obj.Entries;
+            foreach (KeyValuePair<CBORObject, CBORObject> entry in entries) {
               CBORObject key = entry.Key;
               if (key.Type != CBORType.TextString ||
               key.IsTagged) {
@@ -624,7 +623,7 @@ namespace PeterO.Cbor {
             }
             if (!hasNonStringKeys) {
               writer.WriteCodePoint((int)'{');
-              foreach (KeyValuePair<CBORObject, CBORObject> entry in objMap) {
+              foreach (KeyValuePair<CBORObject, CBORObject> entry in entries) {
                 CBORObject key = entry.Key;
                 CBORObject value = entry.Value;
                 if (!first) {
@@ -645,7 +644,8 @@ namespace PeterO.Cbor {
               // Copy to a map with String keys, since
               // some keys could be duplicates
               // when serialized to strings
-              foreach (KeyValuePair<CBORObject, CBORObject> entry in objMap) {
+              foreach (KeyValuePair<CBORObject, CBORObject> entry
+                  in entries) {
                 CBORObject key = entry.Key;
                 CBORObject value = entry.Value;
                 string str = (key.Type == CBORType.TextString) ?
