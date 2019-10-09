@@ -625,6 +625,22 @@ Double.IsNaN(f)) {
       return this.GetNumberInterface().CanFitInInt64(this.GetValue());
     }
 
+    /// <summary>Gets a value indicating whether this object represents
+    /// infinity.</summary>
+    /// <returns><c>true</c> if this object represents infinity; otherwise,
+    /// <c>false</c>.</returns>
+    public bool IsInfinity() {
+      return this.GetNumberInterface().IsInfinity(this.GetValue());
+    }
+
+    /// <summary>Gets a value indicating whether this object represents a
+    /// not-a-number value.</summary>
+    /// <returns><c>true</c> if this object represents a not-a-number
+    /// value; otherwise, <c>false</c>.</returns>
+    public bool IsNaN() {
+      return this.GetNumberInterface().IsNaN(this.GetValue());
+    }
+
     /// <summary>Returns a CBOR number with the same value as this one but
     /// with the sign reversed.</summary>
     /// <returns>A CBOR number with the same value as this one but with the

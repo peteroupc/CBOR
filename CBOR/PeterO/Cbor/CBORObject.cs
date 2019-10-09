@@ -315,8 +315,12 @@ namespace PeterO.Cbor {
     /// otherwise, <c>false</c>.</value>
     public bool IsFinite {
       get {
-        return this.IsNumber && !this.IsInfinity() &&
-          !this.IsNaN();
+        if (this.IsNumber) {
+          CBORNumber cn = this.AsNumber();
+          return !cn.IsInfinity() && !this.IsNaN();
+        } else {
+          return false;
+        }
       }
     }
 
@@ -1481,6 +1485,83 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// <returns>Same as.</returns>
     public static CBORObject FromObject(CBORObject value) {
       return value ?? CBORObject.Null;
+    }
+
+    private int IntegerByteLength(int intValue) {
+if (intValue < 0) {
+  intValue = -(intValue + 1);
+}
+if (intValue > 0xffff) {
+  return 5;
+} else if (intValue > 0xff) {
+  return 3;
+} else {
+ return (intValue > 23) ? 2 : 1;
+}
+    }
+
+    private int IntegerByteLength(long longValue) {
+if (longValue < 0) {
+  longValue = -(longValue + 1);
+}
+if (longValue > 0xffffffffL) {
+  return 9;
+} else if (longValue > 0xffffL) {
+  return 5;
+} else if (longValue > 0xffL) {
+  return 3;
+} else {
+ return (longValue > 23L) ? 2 : 1;
+}
+    }
+
+    private long CalcByteLength() {
+       long size = 0L;
+       CBORObject cbor = this;
+       if (cbor.IsTagged) {
+          EInteger etag = cbor.MostOuterTag;
+          if (etag.CanFitInInt64()) {
+             long tag = etag.ToInt64Checked();
+             size = checked(size + this.IntegerByteLength(tag));
+           } else {
+             size = checked(size + 9);
+          }
+          cbor = cbor.UntagOne();
+       }
+       switch (cbor.Type) {
+         case CBORType.Integer: {
+           if (cbor.CanValueFitInInt64()) {
+             long tag = cbor.AsInt64Value();
+             size = checked(size + this.IntegerByteLength(tag));
+             return size;
+           } else {
+             return checked(size + 9);
+           }
+         }
+         case CBORType.FloatingPoint:
+            return checked(size + 9);
+         case CBORType.Array:
+            size += this.IntegerByteLength(cbor.Count);
+            for (var i = 0; i < cbor.Count; ++i) {
+               // TODO: Implement depth
+               size = checked(size + cbor.CalcByteLength());
+            }
+            return size;
+         case CBORType.Map:
+            throw new NotImplementedException();
+         case CBORType.TextString:
+            throw new NotImplementedException();
+         case CBORType.ByteString: {
+            byte[] bytes = cbor.GetByteString();
+            size = checked(size + this.IntegerByteLength(bytes.Length));
+            return checked(size + bytes.Length);
+         }
+         case CBORType.Boolean:
+            return checked(size + 1);
+         case CBORType.SimpleValue:
+            return checked(size + (cbor.SimpleValue >= 24 ? 2 : 1));
+         default: throw new InvalidOperationException();
+       }
     }
 
     /// <summary>Generates a CBOR object from an arbitrary-precision
@@ -2802,7 +2883,7 @@ options) {
       } else {
         // Get a byte array of the arbitrary-precision integer's value,
         // since shifting and doing AND operations is
-        // slow with large BigIntegers
+        // slow with large EIntegers
         byte[] bytes = bigint.ToBytes(true);
         int byteCount = bytes.Length;
         while (byteCount > 0 && bytes[byteCount - 1] == 0) {
@@ -3307,14 +3388,17 @@ options) {
     }
 
     /// <summary>Converts this object to an arbitrary-precision integer.
-    /// Fractional values are truncated to an integer.</summary>
+    /// Fractional values are converted to an integer by discarding their
+    /// fractional parts.</summary>
     /// <returns>The closest arbitrary-precision integer to this
     /// object.</returns>
     /// <exception cref='InvalidOperationException'>This object does not
-    /// represent a number, including if this object is CBORObject.Null. To
-    /// check the CBOR object for null before conversion, use the following
-    /// idiom (originally written in C# for the.NET version):
-    /// <c>(cbor==null || cbor.IsNull) ? null : cbor.AsEInteger()</c>.</exception>
+    /// represent a number (for the purposes of this method, infinity and
+    /// not-a-number values, but not <c>CBORObject.Null</c>, are
+    /// considered numbers). To check the CBOR object for null before
+    /// conversion, use the following idiom (originally written in C# for
+    /// the.NET version): <c>(cbor == null || cbor.IsNull) ? null :
+    /// cbor.AsEInteger()</c>.</exception>
     /// <exception cref='OverflowException'>This object's value is infinity
     /// or not-a-number (NaN).</exception>
     public EInteger AsEInteger() {
@@ -3334,7 +3418,8 @@ options) {
     }
 
     /// <summary>Converts this object to a byte (0 to 255). Floating point
-    /// values are truncated to an integer.</summary>
+    /// values are converted to an integer by discarding their fractional
+    /// parts.</summary>
     /// <returns>The closest byte-sized integer to this object.</returns>
     /// <exception cref='InvalidOperationException'>This object does not
     /// represent a number (for this purpose, infinities and not-a-number
@@ -3370,10 +3455,12 @@ options) {
     /// is a rational number with a nonterminating decimal expansion,
     /// returns a decimal number rounded to 34 digits.</returns>
     /// <exception cref='InvalidOperationException'>This object does not
-    /// represent a number, including if this object is CBORObject.Null. To
-    /// check the CBOR object for null before conversion, use the following
-    /// idiom (originally written in C# for the.NET version):
-    /// <c>(cbor==null || cbor.IsNull) ? null : cbor.AsEDecimal()</c>.</exception>
+    /// represent a number (for the purposes of this method, infinity and
+    /// not-a-number values, but not <c>CBORObject.Null</c>, are
+    /// considered numbers). To check the CBOR object for null before
+    /// conversion, use the following idiom (originally written in C# for
+    /// the.NET version): <c>(cbor == null || cbor.IsNull) ? null :
+    /// cbor.AsEDecimal()</c>.</exception>
     public EDecimal AsEDecimal() {
       CBORNumber cn = this.AsNumber();
       return cn.GetNumberInterface().AsExtendedDecimal(cn.GetValue());
@@ -3389,10 +3476,12 @@ options) {
     /// floating-point number rounded to a high but limited
     /// precision.</returns>
     /// <exception cref='InvalidOperationException'>This object does not
-    /// represent a number, including if this object is CBORObject.Null. To
-    /// check the CBOR object for null before conversion, use the following
-    /// idiom (originally written in C# for the.NET version):
-    /// <c>(cbor==null || cbor.IsNull) ? null : cbor.AsEFloat()</c>.</exception>
+    /// represent a number (for the purposes of this method, infinity and
+    /// not-a-number values, but not <c>CBORObject.Null</c>, are
+    /// considered numbers). To check the CBOR object for null before
+    /// conversion, use the following idiom (originally written in C# for
+    /// the.NET version): <c>(cbor == null || cbor.IsNull) ? null :
+    /// cbor.AsEFloat()</c>.</exception>
     public EFloat AsEFloat() {
       CBORNumber cn = CBORNumber.FromCBORObject(this);
       if (cn == null) {
@@ -3404,10 +3493,12 @@ options) {
     /// <summary>Converts this object to a rational number.</summary>
     /// <returns>A rational number for this object's value.</returns>
     /// <exception cref='InvalidOperationException'>This object does not
-    /// represent a number, including if this object is CBORObject.Null. To
-    /// check the CBOR object for null before conversion, use the following
-    /// idiom (originally written in C# for the.NET version):
-    /// <c>(cbor==null || cbor.IsNull) ? null : cbor.AsERational()</c>.</exception>
+    /// represent a number (for the purposes of this method, infinity and
+    /// not-a-number values, but not <c>CBORObject.Null</c>, are
+    /// considered numbers). To check the CBOR object for null before
+    /// conversion, use the following idiom (originally written in C# for
+    /// the.NET version): <c>(cbor == null || cbor.IsNull) ? null :
+    /// cbor.AsERational()</c>.</exception>
     public ERational AsERational() {
       ERational ret = this.GetERational();
       if (ret != null) {
@@ -3427,7 +3518,8 @@ options) {
     }
 
     /// <summary>Converts this object to a 16-bit signed integer. Floating
-    /// point values are truncated to an integer.</summary>
+    /// point values are converted to an integer by discarding their
+    /// fractional parts.</summary>
     /// <returns>The closest 16-bit signed integer to this
     /// object.</returns>
     /// <exception cref='InvalidOperationException'>This object does not
@@ -3621,11 +3713,11 @@ options) {
     }
 
     /// <summary>Converts this object to a 32-bit signed integer.
-    /// Non-integer number values are truncated to an integer. (NOTE: To
-    /// determine whether this method call can succeed, call the
-    /// <b>CanTruncatedIntFitInInt32</b>
-    ///  method before calling this method.
-    /// See the example.).</summary>
+    /// Non-integer number values are converted to an integer by discarding
+    /// their fractional parts. (NOTE: To determine whether this method
+    /// call can succeed, call the <b>CanTruncatedIntFitInInt32</b>
+    ///  method
+    /// before calling this method. See the example.).</summary>
     /// <returns>The closest 32-bit signed integer to this
     /// object.</returns>
     /// <exception cref='InvalidOperationException'>This object does not
@@ -3650,11 +3742,11 @@ options) {
     }
 
     /// <summary>Converts this object to a 64-bit signed integer.
-    /// Non-integer numbers are truncated to an integer. (NOTE: To
-    /// determine whether this method call can succeed, call the
-    /// <b>CanTruncatedIntFitInInt64</b>
-    ///  method before calling this method.
-    /// See the example.).</summary>
+    /// Non-integer numbers are converted to an integer by discarding their
+    /// fractional parts. (NOTE: To determine whether this method call can
+    /// succeed, call the <b>CanTruncatedIntFitInInt64</b>
+    ///  method before
+    /// calling this method. See the example.).</summary>
     /// <returns>The closest 64-bit signed integer to this
     /// object.</returns>
     /// <exception cref='InvalidOperationException'>This object does not
@@ -3697,10 +3789,12 @@ options) {
     /// <summary>Gets the value of this object as a text string.</summary>
     /// <returns>Gets this object's string.</returns>
     /// <exception cref='InvalidOperationException'>This object's type is
-    /// not a string, including if this object is CBORObject.Null. To check
-    /// the CBOR object for null before conversion, use the following idiom
-    /// (originally written in C# for the.NET version): <c>(cbor == null ||
-    /// cbor.IsNull) ? null : cbor.AsString()</c>.</exception>
+    /// not a string (for the purposes of this method, infinity and
+    /// not-a-number values, but not <c>CBORObject.Null</c>, are
+    /// considered numbers). To check the CBOR object for null before
+    /// conversion, use the following idiom (originally written in C# for
+    /// the.NET version): <c>(cbor == null || cbor.IsNull) ? null :
+    /// cbor.AsString()</c>.</exception>
     public string AsString() {
       int type = this.ItemType;
       switch (type) {
@@ -3773,22 +3867,24 @@ cn.GetNumberInterface().CanFitInDouble(cn.GetValue());
 cn.GetNumberInterface().CanFitInSingle(cn.GetValue());
     }
 
-    /// <summary>Returns whether this object's value, truncated to an
-    /// integer, would be -(2^31) or greater, and less than 2^31.</summary>
-    /// <returns><c>true</c> if this object's value, truncated to an
-    /// integer, would be -(2^31) or greater, and less than 2^31;
-    /// otherwise, <c>false</c>.</returns>
+    /// <summary>Returns whether this object's value, converted to an
+    /// integer by discarding its fractional part, would be -(2^31) or
+    /// greater, and less than 2^31.</summary>
+    /// <returns><c>true</c> if this object's value, converted to an
+    /// integer by discarding its fractional part, would be -(2^31) or
+    /// greater, and less than 2^31; otherwise, <c>false</c>.</returns>
     public bool CanTruncatedIntFitInInt32() {
       CBORNumber cn = CBORNumber.FromCBORObject(this);
       return (cn != null) &&
 cn.GetNumberInterface().CanTruncatedIntFitInInt32(cn.GetValue());
     }
 
-    /// <summary>Returns whether this object's value, truncated to an
-    /// integer, would be -(2^63) or greater, and less than 2^63.</summary>
-    /// <returns><c>true</c> if this object's value, truncated to an
-    /// integer, would be -(2^63) or greater, and less than 2^63;
-    /// otherwise, <c>false</c>.</returns>
+    /// <summary>Returns whether this object's value, converted to an
+    /// integer by discarding its fractional part, would be -(2^63) or
+    /// greater, and less than 2^63.</summary>
+    /// <returns><c>true</c> if this object's value, converted to an
+    /// integer by discarding its fractional part, would be -(2^63) or
+    /// greater, and less than 2^63; otherwise, <c>false</c>.</returns>
     public bool CanTruncatedIntFitInInt64() {
       CBORNumber cn = CBORNumber.FromCBORObject(this);
       return cn != null &&
@@ -3941,7 +4037,7 @@ CBORObjectTypeEInteger)) {
       } else {
         /* NOTE: itemtypeValue numbers are ordered such that they
         // correspond to the lexicographical order of their CBOR encodings
-        // (with the exception of Integer and BigInteger together, which
+        // (with the exception of Integer and EInteger together, which
         // are handled above) */
         cmp = (typeA < typeB) ? -1 : 1;
       }
@@ -4550,7 +4646,10 @@ CBORObjectTypeEInteger)) {
     /// represents infinity.</summary>
     /// <returns><c>true</c> if this CBOR object represents infinity;
     /// otherwise, <c>false</c>.</returns>
+    [Obsolete("Use the following instead: \u0028cbor.IsNumber &&" +
+"\u0020cbor.AsNumber().IsInfinity()).")]
     public bool IsInfinity() {
+      // TODO: Add CBORNumber#IsInfinity
       CBORNumber cn = CBORNumber.FromCBORObject(this);
       return cn != null && cn.GetNumberInterface().IsInfinity(cn.GetValue());
     }
@@ -4559,9 +4658,13 @@ CBORObjectTypeEInteger)) {
     /// represents a not-a-number value (as opposed to whether this object
     /// does not express a number).</summary>
     /// <returns><c>true</c> if this CBOR object represents a not-a-number
-    /// value (as opposed to whether this object's type is not a number
-    /// type); otherwise, <c>false</c>.</returns>
+    /// value (as opposed to whether this object does not represent a
+    /// number as defined by the IsNumber property or <c>isNumber()</c>
+    /// method in Java); otherwise, <c>false</c>.</returns>
+    [Obsolete("Use the following instead: \u0028cbor.IsNumber &&" +
+"\u0020cbor.AsNumber().IsNaN()).")]
     public bool IsNaN() {
+      // TODO: Add CBORNumber#IsNaN
       CBORNumber cn = CBORNumber.FromCBORObject(this);
       return cn != null && cn.GetNumberInterface().IsNaN(cn.GetValue());
     }
@@ -4573,7 +4676,7 @@ CBORObjectTypeEInteger)) {
     public bool IsNegativeInfinity() {
       CBORNumber cn = CBORNumber.FromCBORObject(this);
       return cn != null &&
-cn.GetNumberInterface().IsNegativeInfinity(cn.GetValue());
+         cn.GetNumberInterface().IsNegativeInfinity(cn.GetValue());
     }
 
     /// <summary>Gets a value indicating whether this CBOR object
@@ -4583,7 +4686,7 @@ cn.GetNumberInterface().IsNegativeInfinity(cn.GetValue());
     public bool IsPositiveInfinity() {
       CBORNumber cn = CBORNumber.FromCBORObject(this);
       return cn != null &&
-cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
+        cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
     }
 
     /// <summary>Gets this object's value with the sign reversed.</summary>
@@ -5091,16 +5194,13 @@ cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
       long value;
       switch (byteCount) {
         case 2:
-
           value = CBORUtilities.HalfToDoublePrecision(
-            unchecked((int)(floatingBits &
-0xffffL)));
+            unchecked((int)(floatingBits & 0xffffL)));
           return new CBORObject(CBORObjectTypeDouble, value);
         case 4:
 
           value = CBORUtilities.SingleToDoublePrecision(
-            unchecked((int)(floatingBits &
-0xffffL)));
+            unchecked((int)(floatingBits & 0xffffL)));
           return new CBORObject(CBORObjectTypeDouble, value);
         case 8:
           return new CBORObject(CBORObjectTypeDouble, floatingBits);

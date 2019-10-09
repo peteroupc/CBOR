@@ -7,9 +7,13 @@ An instance of a number that CBOR or certain CBOR tags can represent. For this p
 
 ### Member Summary
 * <code>[Add(PeterO.Cbor.CBORNumber)](#Add_PeterO_Cbor_CBORNumber)</code> - Returns the sum of this number and another number.
+* <code>[CanFitInInt32()](#CanFitInInt32)</code> - Returns whether this object's numerical value is an integer, is -(2^31) or greater, and is less than 2^31.
+* <code>[CanFitInInt64()](#CanFitInInt64)</code> - Returns whether this object's numerical value is an integer, is -(2^63) or greater, and is less than 2^63.
 * <code>[CompareTo(PeterO.Cbor.CBORNumber)](#CompareTo_PeterO_Cbor_CBORNumber)</code> - Compares two CBOR numbers.
 * <code>[Divide(PeterO.Cbor.CBORNumber)](#Divide_PeterO_Cbor_CBORNumber)</code> - Returns the quotient of this number and another number.
 * <code>[FromCBORObject(PeterO.Cbor.CBORObject)](#FromCBORObject_PeterO_Cbor_CBORObject)</code> - Creates a CBOR number object from a CBOR object representing a number (that is, one for which the IsNumber property in.
+* <code>[IsInfinity()](#IsInfinity)</code> - Gets a value indicating whether this object represents infinity.
+* <code>[IsNaN()](#IsNaN)</code> - Gets a value indicating whether this object represents a not-a-number value.
 * <code>[Multiply(PeterO.Cbor.CBORNumber)](#Multiply_PeterO_Cbor_CBORNumber)</code> - Returns a CBOR number expressing the product of this number and the given number.
 * <code>[Negate()](#Negate)</code> - Returns a CBOR number with the same value as this one but with the sign reversed.
 * <code>[bool operator &gt;(PeterO.Cbor.CBORNumber, PeterO.Cbor.CBORNumber)](#op_GreaterThan)</code> - Returns whether one object's value is greater than another's.
@@ -42,6 +46,28 @@ The sum of this number and another number.
  * System.ArgumentNullException:
 The parameter  <i>b</i>
  is null.
+
+<a id="CanFitInInt32"></a>
+### CanFitInInt32
+
+    public bool CanFitInInt32();
+
+Returns whether this object's numerical value is an integer, is -(2^31) or greater, and is less than 2^31.
+
+<b>Return Value:</b>
+
+ `true`  if this object's numerical value is an integer, is -(2^31) or greater, and is less than 2^31; otherwise,  `false` .
+
+<a id="CanFitInInt64"></a>
+### CanFitInInt64
+
+    public bool CanFitInInt64();
+
+Returns whether this object's numerical value is an integer, is -(2^63) or greater, and is less than 2^63.
+
+<b>Return Value:</b>
+
+ `true`  if this object's numerical value is an integer, is -(2^63) or greater, and is less than 2^63; otherwise,  `false` .
 
 <a id="CompareTo_PeterO_Cbor_CBORNumber"></a>
 ### CompareTo
@@ -99,6 +125,28 @@ Creates a CBOR number object from a CBOR object representing a number (that is, 
 <b>Return Value:</b>
 
 A CBOR number object, or null if the given CBOR object is null or does not represent a number.
+
+<a id="IsInfinity"></a>
+### IsInfinity
+
+    public bool IsInfinity();
+
+Gets a value indicating whether this object represents infinity.
+
+<b>Return Value:</b>
+
+ `true`  if this object represents infinity; otherwise,  `false` .
+
+<a id="IsNaN"></a>
+### IsNaN
+
+    public bool IsNaN();
+
+Gets a value indicating whether this object represents a not-a-number value.
+
+<b>Return Value:</b>
+
+ `true`  if this object represents a not-a-number value; otherwise,  `false` .
 
 <a id="Multiply_PeterO_Cbor_CBORNumber"></a>
 ### Multiply
