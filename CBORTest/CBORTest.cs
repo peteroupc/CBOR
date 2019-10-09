@@ -532,7 +532,7 @@ namespace Test {
           EInteger bi = ed.AsEInteger();
           if (ed.IsIntegral) {
             if ((bi.GetSignedBitLengthAsEInteger().ToInt32Checked() <= 31) !=
-              ed.CanFitInInt32()) {
+              ed.AsNumber().CanFitInInt32()) {
               Assert.Fail(ObjectMessage(ed));
             }
           }
@@ -542,7 +542,7 @@ namespace Test {
           }
           if (ed.IsIntegral) {
             if ((bi.GetSignedBitLengthAsEInteger().ToInt32Checked() <= 63) !=
-              ed.CanFitInInt64()) {
+              ed.AsNumber().CanFitInInt64()) {
               Assert.Fail(ObjectMessage(ed));
             }
           }
@@ -575,7 +575,7 @@ namespace Test {
 cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked();
         Assert.AreEqual(52, numberTemp);
       }
-      Assert.IsTrue(cbor.CanFitInInt64());
+      Assert.IsTrue(cbor.AsNumber().CanFitInInt64());
       Assert.IsFalse(ToObjectTest.TestToFromObjectRoundTrip(2554895343L)
               .CanFitInSingle());
       cbor = CBORObject.DecodeFromBytes(new byte[] {
@@ -996,7 +996,7 @@ cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked();
       for (int i = -65539; i <= 65539; ++i) {
         CBORObject o = ToObjectTest.TestToFromObjectRoundTrip((double)i);
         Assert.IsTrue(o.CanFitInDouble());
-        Assert.IsTrue(o.CanFitInInt32());
+        Assert.IsTrue(o.AsNumber().CanFitInInt32());
         Assert.IsTrue(o.IsIntegral);
         CBORTestCommon.AssertJSONSer(
           o,
@@ -1307,7 +1307,7 @@ cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked();
         while (true) {
           Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(j).IsIntegral);
           Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(j)
-            .CanFitInInt64());
+            .AsNumber().CanFitInInt64());
           Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(j)
                     .CanTruncatedIntFitInInt64());
           CBORTestCommon.AssertJSONSer(

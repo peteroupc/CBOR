@@ -601,6 +601,30 @@ Double.IsNaN(f)) {
       return new CBORNumber(Kind.ERational, value);
     }
 
+    /// <summary>Returns whether this object's numerical value is an
+    /// integer, is -(2^31) or greater, and is less than 2^31.</summary>
+    /// <returns><c>true</c> if this object's numerical value is an
+    /// integer, is -(2^31) or greater, and is less than 2^31; otherwise,
+    /// <c>false</c>.</returns>
+    public bool CanFitInInt32() {
+      ICBORNumber icn = this.GetNumberInterface();
+      object gv = this.GetValue();
+      if (!icn.CanFitInInt64(gv)) {
+        return false;
+      }
+      long v = icn.AsInt64(gv);
+      return v >= Int32.MinValue && v <= Int32.MaxValue;
+    }
+
+    /// <summary>Returns whether this object's numerical value is an
+    /// integer, is -(2^63) or greater, and is less than 2^63.</summary>
+    /// <returns><c>true</c> if this object's numerical value is an
+    /// integer, is -(2^63) or greater, and is less than 2^63; otherwise,
+    /// <c>false</c>.</returns>
+    public bool CanFitInInt64() {
+      return this.GetNumberInterface().CanFitInInt64(this.GetValue());
+    }
+
     /// <summary>Returns a CBOR number with the same value as this one but
     /// with the sign reversed.</summary>
     /// <returns>A CBOR number with the same value as this one but with the

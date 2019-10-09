@@ -1494,15 +1494,15 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
     }
     [Test]
     public void TestCanFitInInt32() {
-      Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(0).CanFitInInt32());
-      Assert.IsFalse(CBORObject.True.CanFitInInt32());
-      Assert.IsFalse(ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
-              .CanFitInInt32());
-      Assert.IsFalse(CBORObject.NewArray().CanFitInInt32());
-      Assert.IsFalse(CBORObject.NewMap().CanFitInInt32());
-      Assert.IsFalse(CBORObject.False.CanFitInInt32());
-      Assert.IsFalse(CBORObject.Null.CanFitInInt32());
-      Assert.IsFalse(CBORObject.Undefined.CanFitInInt32());
+      Assert.IsTrue(CInt32(ToObjectTest.TestToFromObjectRoundTrip(0)));
+      Assert.IsFalse(CInt32(CBORObject.True));
+      Assert.IsFalse(CInt32(ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
+));
+      Assert.IsFalse(CInt32(CBORObject.NewArray()));
+      Assert.IsFalse(CInt32(CBORObject.NewMap()));
+      Assert.IsFalse(CInt32(CBORObject.False));
+      Assert.IsFalse(CInt32(CBORObject.Null));
+      Assert.IsFalse(CInt32(CBORObject.Undefined));
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
@@ -1511,43 +1511,50 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
   numberinfo["number"].AsString()));
         if (numberinfo["int32"].AsBoolean() &&
   numberinfo["isintegral"].AsBoolean()) {
-          Assert.IsTrue(cbornumber.CanFitInInt32());
+          Assert.IsTrue(CInt32(cbornumber));
 
           Assert.IsTrue(
-            ToObjectTest.TestToFromObjectRoundTrip(cbornumber.AsInt32())
-                                            .CanFitInInt32());
+            CInt32(ToObjectTest.TestToFromObjectRoundTrip(cbornumber.AsInt32())
+));
         } else {
-          Assert.IsFalse(cbornumber.CanFitInInt32());
+          Assert.IsFalse(CInt32(cbornumber));
         }
       }
     }
+    private static bool CInt64(CBORObject cbor) {
+   return cbor.IsNumber && cbor.AsNumber().CanFitInInt64();
+}
+
+private static bool CInt32(CBORObject cbor) {
+   return cbor.IsNumber && cbor.AsNumber().CanFitInInt32();
+}
     [Test]
     public void TestCanFitInInt64() {
-      Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(0).CanFitInInt64());
-      Assert.IsFalse(CBORObject.True.CanFitInInt64());
-      Assert.IsFalse(ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
-              .CanFitInInt64());
-      Assert.IsFalse(CBORObject.NewArray().CanFitInInt64());
-      Assert.IsFalse(CBORObject.NewMap().CanFitInInt64());
-      Assert.IsFalse(CBORObject.False.CanFitInInt64());
-      Assert.IsFalse(CBORObject.Null.CanFitInInt64());
-      Assert.IsFalse(CBORObject.Undefined.CanFitInInt64());
+      Assert.IsTrue(CInt64(ToObjectTest.TestToFromObjectRoundTrip(0)));
+      Assert.IsFalse(CInt64(CBORObject.True));
+      Assert.IsFalse(CInt64(ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
+));
+      Assert.IsFalse(CInt64(CBORObject.NewArray()));
+      Assert.IsFalse(CInt64(CBORObject.NewMap()));
+      Assert.IsFalse(CInt64(CBORObject.False));
+      Assert.IsFalse(CInt64(CBORObject.Null));
+      Assert.IsFalse(CInt64(CBORObject.Undefined));
 
       EInteger ei;
       ei = EInteger.FromString("9223372036854775807");
-      Assert.IsTrue(CBORObject.FromObject(ei).CanFitInInt64(), ei.ToString());
+      Assert.IsTrue(CInt64(CBORObject.FromObject(ei)), ei.ToString());
       ei = EInteger.FromString("9223372036854775808");
-      Assert.IsFalse(CBORObject.FromObject(ei).CanFitInInt64(), ei.ToString());
+      Assert.IsFalse(CInt64(CBORObject.FromObject(ei)), ei.ToString());
       ei = EInteger.FromString("-9223372036854775807");
-      Assert.IsTrue(CBORObject.FromObject(ei).CanFitInInt64(), ei.ToString());
+      Assert.IsTrue(CInt64(CBORObject.FromObject(ei)), ei.ToString());
       ei = EInteger.FromString("-9223372036854775808");
-      Assert.IsTrue(CBORObject.FromObject(ei).CanFitInInt64(), ei.ToString());
+      Assert.IsTrue(CInt64(CBORObject.FromObject(ei)), ei.ToString());
       ei = EInteger.FromString("-9223372036854775809");
-      Assert.IsFalse(CBORObject.FromObject(ei).CanFitInInt64(), ei.ToString());
+      Assert.IsFalse(CInt64(CBORObject.FromObject(ei)), ei.ToString());
       ei = EInteger.FromString("-9223373136366403584");
-      Assert.IsFalse(CBORObject.FromObject(ei).CanFitInInt64(), ei.ToString());
+      Assert.IsFalse(CInt64(CBORObject.FromObject(ei)), ei.ToString());
       ei = EInteger.FromString("9223373136366403584");
-      Assert.IsFalse(CBORObject.FromObject(ei).CanFitInInt64(), ei.ToString());
+      Assert.IsFalse(CInt64(CBORObject.FromObject(ei)), ei.ToString());
       var strings = new string[] {
         "8000FFFFFFFF0000",
         "8000AAAAAAAA0000",
@@ -1564,9 +1571,9 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
       };
       foreach (var str in strings) {
         ei = EInteger.FromRadixString(str, 16);
-        Assert.IsFalse(CBORObject.FromObject(ei).CanFitInInt64());
+        Assert.IsFalse(CInt64(CBORObject.FromObject(ei)));
         ei = ei.Negate();
-        Assert.IsFalse(CBORObject.FromObject(ei).CanFitInInt64());
+        Assert.IsFalse(CInt64(CBORObject.FromObject(ei)));
       }
 
       CBORObject numbers = GetNumberData();
@@ -1577,13 +1584,13 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
   numberinfo["number"].AsString()));
         if (numberinfo["int64"].AsBoolean() &&
   numberinfo["isintegral"].AsBoolean()) {
-          Assert.IsTrue(cbornumber.CanFitInInt64());
+          Assert.IsTrue(CInt64(cbornumber));
 
           Assert.IsTrue(
-            ToObjectTest.TestToFromObjectRoundTrip(cbornumber.AsInt64())
-                                            .CanFitInInt64());
+            CInt64(ToObjectTest.TestToFromObjectRoundTrip(cbornumber.AsInt64())
+));
         } else {
-          Assert.IsFalse(cbornumber.CanFitInInt64());
+          Assert.IsFalse(CInt64(cbornumber));
         }
       }
     }

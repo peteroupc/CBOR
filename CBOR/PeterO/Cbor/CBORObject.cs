@@ -1119,11 +1119,14 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// written in Java, is a way to specify that the return value will be
     /// an ArrayList of String objects.</para>
     /// <code>Type arrayListString = new ParameterizedType() { public Type[]
-    /// getActualTypeArguments() { /* Contains one type parameter, String */ return
-    /// new Type[] { String.class }; } public Type getRawType() { /* Raw type is
-    /// ArrayList */ return ArrayList.class; } public Type getOwnerType() {
-    /// return null; } }; ArrayList&lt;String&gt; array =
-    /// (ArrayList&lt;String&gt;) cborArray.ToObject(arrayListString);</code>
+    /// getActualTypeArguments() { // Contains one type parameter, String
+    /// return new Type[] { String.class }; }
+    /// public Type getRawType() { /* Raw type is
+    /// ArrayList */ return ArrayList.class; }
+    /// public Type getOwnerType() {
+    /// return null; } };
+    /// ArrayList&lt;String&gt; array = (ArrayList&lt;String&gt;)
+    /// cborArray.ToObject(arrayListString);</code>
     /// <para>By comparison, the C# version is much shorter.</para>
     /// <code>var array = (List&lt;String&gt;)cborArray.ToObject(
     /// typeof(List&lt;String&gt;));</code>
@@ -1698,7 +1701,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// integer.</summary>
     /// <param name='value'>The parameter <paramref name='value'/> is a
     /// 16-bit signed integer.</param>
-    /// <returns>A CBORObject object.</returns>
+    /// <returns>A CBOR object generated from the given integer.</returns>
     public static CBORObject FromObject(short value) {
       return (value >= 0 && value < 24) ? FixedObjects[value] :
         FromObject((long)value);
@@ -1706,7 +1709,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
 
     /// <summary>Returns the CBOR true value or false value, depending on
     /// "value".</summary>
-    /// <param name='value'>Either True or False.</param>
+    /// <param name='value'>Either <c>true</c> or <c>false</c>.</param>
     /// <returns>CBORObject.True if value is true; otherwise
     /// CBORObject.False.</returns>
     public static CBORObject FromObject(bool value) {
@@ -1716,7 +1719,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// <summary>Generates a CBOR object from a byte (0 to 255).</summary>
     /// <param name='value'>The parameter <paramref name='value'/> is a
     /// byte (from 0 to 255).</param>
-    /// <returns>A CBORObject object.</returns>
+    /// <returns>A CBOR object generated from the given integer.</returns>
     public static CBORObject FromObject(byte value) {
       return FromObject(((int)value) & 0xff);
     }
@@ -1725,7 +1728,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// number.</summary>
     /// <param name='value'>The parameter <paramref name='value'/> is a
     /// 32-bit floating-point number.</param>
-    /// <returns>A CBORObject object.</returns>
+    /// <returns>A CBOR object generated from the given number.</returns>
     public static CBORObject FromObject(float value) {
       long doubleBits = CBORUtilities.SingleToDoublePrecision(
           CBORUtilities.SingleToInt32Bits(value));
@@ -1736,7 +1739,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// number.</summary>
     /// <param name='value'>The parameter <paramref name='value'/> is a
     /// 64-bit floating-point number.</param>
-    /// <returns>A CBORObject object.</returns>
+    /// <returns>A CBOR object generated from the given number.</returns>
     public static CBORObject FromObject(double value) {
       long doubleBits = CBORUtilities.DoubleToInt64Bits(value);
       return new CBORObject(CBORObjectTypeDouble, doubleBits);
@@ -3450,8 +3453,9 @@ options) {
     /// <para>The following example code (originally written in C# for
     /// the.NET Framework) shows a way to check whether a given CBOR object
     /// stores a 32-bit signed integer before getting its value.</para>
-    /// <code>CBORObject obj = CBORObject.FromInt32(99999); if (obj.Type ==
-    /// CBORType.Integer &amp;&amp; obj.CanValueFitInInt32()) { /* Not an Int32;
+    /// <code>CBORObject obj = CBORObject.FromInt32(99999);
+    /// if (obj.Type == CBORType.Integer &amp;&amp;
+    /// obj.CanValueFitInInt32()) { /* Not an Int32;
     /// handle the error */ Console.WriteLine("Not a 32-bit integer."); } else {
     /// Console.WriteLine("The value is " + obj.AsInt32Value()); }</code>
     ///  .
@@ -3635,7 +3639,7 @@ options) {
     /// the.NET Framework) shows a way to check whether a given CBOR object
     /// stores a 32-bit signed integer before getting its value.</para>
     /// <code>CBORObject obj = CBORObject.FromInt32(99999);
-    /// if (obj.IsIntegral &amp;&amp; obj.CanTruncatedIntFitInInt32()) {
+    /// if (obj.IsIntegral &amp;&amp; obj.AsNumber().CanFitInInt32()) {
     /// &#x2f;&#x2a; Not an Int32; handle the error &#x2a;&#x2f;
     /// Console.WriteLine("Not a 32-bit integer."); } else {
     /// Console.WriteLine("The value is " + obj.AsInt32()); }</code>
@@ -3663,9 +3667,10 @@ options) {
     /// <para>The following example code (originally written in C# for
     /// the.NET Framework) shows a way to check whether a given CBOR object
     /// stores a 64-bit signed integer before getting its value.</para>
-    /// <code>CBORObject obj = CBORObject.FromInt64(99999); if (obj.IsIntegral
-    /// &amp;&amp; obj.CanTruncatedIntFitInInt64()) { &#x2f;&#x2a; Not an Int64; handle&#x2a;&#x2f;
-    /// the error Console.WriteLine("Not a 64-bit integer."); } else {
+    /// <code>CBORObject obj = CBORObject.FromInt64(99999);
+    /// if (obj.IsIntegral &amp;&amp; obj.AsNumber().CanFitInInt64()) {
+    /// &#x2f;&#x2a; Not an Int64; handle the error &#x2a;&#x2f;
+    /// Console.WriteLine("Not a 64-bit integer."); } else {
     /// Console.WriteLine("The value is " + obj.AsInt64()); }</code>
     ///  .
     /// </example>
@@ -3709,11 +3714,11 @@ options) {
     /// <summary>Returns whether this object's value can be converted to a
     /// 64-bit floating point number without its value being rounded to
     /// another numerical value.</summary>
-    /// <returns>Whether this object's value can be converted to a 64-bit
-    /// floating point number without its value being rounded to another
-    /// numerical value. Returns true if this is a not-a-number value, even
-    /// if the value's diagnostic information can' t fit in a 64-bit
-    /// floating point number.</returns>
+    /// <returns><c>true</c> if this object's value can be converted to a
+    /// 64-bit floating point number without its value being rounded to
+    /// another numerical value, or if this is a not-a-number value, even
+    /// if the value's diagnostic information can't fit in a 64-bit
+    /// floating point number; otherwise, <c>false</c>.</returns>
     public bool CanFitInDouble() {
       CBORNumber cn = CBORNumber.FromCBORObject(this);
       return (cn != null) &&
@@ -3725,6 +3730,11 @@ cn.GetNumberInterface().CanFitInDouble(cn.GetValue());
     /// <returns><c>true</c> if this object's numerical value is an
     /// integer, is -(2^31) or greater, and is less than 2^31; otherwise,
     /// <c>false</c>.</returns>
+    [Obsolete("Instead, use CanValueFitInInt32(), if the application allows" +
+"\u0020only CBOR integers, or \u0028cbor.IsNumber &&" +
+"cbor.AsNumber().CanFitInInt32())," +
+"\u0020 if the application allows any CBOR object convertible to an " +
+"integer.")]
     public bool CanFitInInt32() {
       if (!this.CanFitInInt64()) {
         return false;
@@ -3738,6 +3748,11 @@ cn.GetNumberInterface().CanFitInDouble(cn.GetValue());
     /// <returns><c>true</c> if this object's numerical value is an
     /// integer, is -(2^63) or greater, and is less than 2^63; otherwise,
     /// <c>false</c>.</returns>
+    [Obsolete("Instead, use CanValueFitInInt64(), if the application allows" +
+"\u0020only CBOR integers, or \u0028cbor.IsNumber &&" +
+"cbor.AsNumber().CanFitInInt64())," +
+"\u0020 if the application allows any CBOR object convertible to an " +
+"integer.")]
     public bool CanFitInInt64() {
       CBORNumber cn = CBORNumber.FromCBORObject(this);
       return (cn != null) &&
@@ -3747,11 +3762,11 @@ cn.GetNumberInterface().CanFitInDouble(cn.GetValue());
     /// <summary>Returns whether this object's value can be converted to a
     /// 32-bit floating point number without its value being rounded to
     /// another numerical value.</summary>
-    /// <returns>Whether this object's value can be converted to a 32-bit
-    /// floating point number without its value being rounded to another
-    /// numerical value. Returns true if this is a not-a-number value, even
+    /// <returns><c>true</c> if this object's value can be converted to a
+    /// 32-bit floating point number without its value being rounded to
+    /// another numerical value, or if this is a not-a-number value, even
     /// if the value's diagnostic information can' t fit in a 32-bit
-    /// floating point number.</returns>
+    /// floating point number; otherwise, <c>false</c>.</returns>
     public bool CanFitInSingle() {
       CBORNumber cn = CBORNumber.FromCBORObject(this);
       return (cn != null) &&

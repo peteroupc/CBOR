@@ -148,13 +148,14 @@ using (var stream = new FileStream("object.cbor", FileMode.Create)) {
 }
 ```
 
-Writing multiple objects to a file, including arbitrary objects:
+Writing multiple objects to a file, including arbitrary objects (the resulting
+file is also called a _CBOR sequence_):
 
 ```c#
 // C#
-// This example writes different kinds of objects in CBOR
+// This example writes a sequence of objects in CBOR
 // format to the same file.
-using (var stream = new FileStream("object.cbor", FileMode.Create)) {
+using (var stream = new FileStream("object.cborseq", FileMode.Create)) {
    CBORObject.Write(true, stream);
    CBORObject.Write(422.5, stream);
    CBORObject.Write("some string", stream);
@@ -211,6 +212,34 @@ using (var stream = new FileStream("object6.json", FileMode.Create)) {
 }
 ```
 
+There are several ways to check whether a CBOR object is a 32-bit integer.  Which
+one to use depends on the application's needs.  Some of them follow (written in C#).
+
+```
+/* Accept any untagged CBOR integer
+  that can fit the Int32 range */
+if(!cbor.IsTagged && cbor.Type==CBORType.Integer &&
+   cbor.CanValueFitInInt32()) {
+  return cbor.AsInt32();
+}
+/* Accept any CBOR integer, tagged or not, that
+ can fit the Int32 range */
+if(cbor.Type==CBORType.Integer && cbor.CanValueFitInInt32()) {
+  return cbor.AsInt32();
+}
+/* Accept any CBOR integer or floating-point number,
+ tagged or not, that is an integer within the Int32 range */
+if((cbor.Type==CBORType.Integer || cborType==CBORType.FloatingPoint) ||
+   cbor.Untag().AsNumber().CanValueFitInInt32()) {
+  return cbor.AsInt32();
+}
+/* Accept any CBOR object representing an integer number
+   that can fit the Int32 range */
+if(cbor.IsNumber && cbor.AsNumber().CanValueFitInInt32()) {
+  return cbor.AsInt32();
+}
+```
+
 NOTE: All code samples in this section are released to the Public Domain,
 as explained in <http://creativecommons.org/publicdomain/zero/1.0/>.
 
@@ -231,16 +260,6 @@ Any copyright is dedicated to the Public Domain.
 If you like this, you should donate to Peter O.
 at: [http://peteroupc.github.io/CBOR/](http://peteroupc.github.io/CBOR/)
 
-Clarifications
-------------------
-
-The following are some clarifications to RFC 7049.
-
-* Section 2.4.2 doesn't specify what happens if a bignum's byte
-  string has a length of 0.  This implementation treats a positive
-  bignum with length 0 as having a value of 0 and a negative
-  bignum with length 0 as having a value of -1.
-
 Release Notes
 -----------
 
@@ -249,8 +268,7 @@ for release notes.
 
 Specifications
 -----------
-Here are specifications by this implementation's author on proposed
-CBOR tags:
+Here are specifications by this implementation's author on certain CBOR tags:
 
 * Tag 30: [Rational numbers](http://peteroupc.github.io/CBOR/rational.html)
 * Tag 257: [Binary MIME messages](http://peteroupc.github.io/CBOR/binarymime.html)
