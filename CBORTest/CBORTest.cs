@@ -521,14 +521,13 @@ namespace Test {
         if ((AsED(ed).CompareTo(ed2) == 0) != ed.CanFitInSingle()) {
           Assert.Fail(ObjectMessage(ed));
         }
-        if (!ed.IsInfinity() && !ed.IsNaN()) {
-          ed2 = EDecimal.FromEInteger(AsED(ed)
-                    .ToEInteger());
+        if (!ed.AsNumber().IsInfinity() && !ed.AsNumber().IsNaN()) {
+          ed2 = EDecimal.FromEInteger(AsED(ed).ToEInteger());
           if ((AsED(ed).CompareTo(ed2) == 0) != ed.IsIntegral) {
             Assert.Fail(ObjectMessage(ed));
           }
         }
-        if (!ed.IsInfinity() && !ed.IsNaN()) {
+        if (!ed.AsNumber().IsInfinity() && !ed.AsNumber().IsNaN()) {
           EInteger bi = ed.AsEInteger();
           if (ed.IsIntegral) {
             if ((bi.GetSignedBitLengthAsEInteger().ToInt32Checked() <= 31) !=
@@ -736,11 +735,11 @@ cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked();
         ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf));
 
       bool bval = ToObjectTest.TestToFromObjectRoundTrip(
-           CBORTestCommon.FloatNegInf).IsInfinity();
+           CBORTestCommon.FloatNegInf).AsNumber().IsInfinity();
       Assert.IsTrue(bval);
 
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(
-            CBORTestCommon.RatPosInf).IsInfinity());
+            CBORTestCommon.RatPosInf).AsNumber().IsInfinity());
 
       Assert.IsTrue(
         ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf)
@@ -751,10 +750,10 @@ cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked();
                             .IsPositiveInfinity());
       Assert.IsTrue(
         ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
-                            .IsInfinity());
+                            .AsNumber().IsInfinity());
       Assert.IsTrue(CBORObject.PositiveInfinity.IsPositiveInfinity());
       Assert.IsTrue(CBORObject.NegativeInfinity.IsNegativeInfinity());
-      Assert.IsTrue(CBORObject.NaN.IsNaN());
+      Assert.IsTrue(CBORObject.NaN.AsNumber().IsNaN());
 
       CBORTestCommon.AssertRoundTrip(
   ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecNegInf));

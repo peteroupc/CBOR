@@ -1257,10 +1257,8 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     ///  , returns the
     /// result of AsString.</item>
     ///  <item>If the type is <c>EDecimal</c>
-    ///  ,
-    /// <c>EFloat</c>
-    ///  , <c>EInteger</c>
-    ///  , or <c>ERational</c>
+    ///  or
+    /// <c>EInteger</c>
     ///  in the <a
     /// href='https://www.nuget.org/packages/PeterO.Numbers'><c>PeterO.Numbers</c>
     /// </a>
@@ -1269,13 +1267,32 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// </a>
     ///  artifact (in Java), returns the result of the corresponding
     /// As* method.</item>
-    ///  <item>In the.NET version, if the type is a
-    /// nullable (e.g., <c>Nullable&lt;int&gt;</c>
+    ///  <item>If the type is <c>EFloat</c>
+    ///  or
+    /// <c>ERational</c>
+    ///  in the PeterO.Numbers or numbers library, converts
+    /// the given object to a number of the corresponding type and throws
+    /// an exception if the object does not represent a number (for this
+    /// purpose, infinity and not-a-number values, but not
+    /// <c>CBORObject.Null</c>
+    ///  , are considered numbers). Currently, this
+    /// is equivalent to the result of <c>AsEFloat()</c>
+    ///  or
+    /// <c>AsERational()</c>
+    ///  , respectively, but may change slightly in the
+    /// next major version. Note that in the case of <c>EFloat</c>
+    ///  , if
+    /// this object represents a decimal number with a fractional part, the
+    /// conversion may lose information depending on the number, and if the
+    /// object is a rational number with a nonterminating binary expansion,
+    /// the number returned is a binary floating-point number rounded to a
+    /// high but limited precision.</item>
+    ///  <item>In the.NET version, if the
+    /// type is a nullable (e.g., <c>Nullable&lt;int&gt;</c>
     ///  or <c>int?</c>
-    ///  , returns
-    /// <c>null</c>
-    ///  if this CBOR object is null, or this object's value
-    /// converted to the nullable's underlying type, e.g., <c>int</c>
+    /// , returns <c>null</c>
+    ///  if this CBOR object is null, or this object's
+    /// value converted to the nullable's underlying type, e.g., <c>int</c>
     /// .</item>
     ///  <item>If the type is an enumeration ( <c>Enum</c>
     ///  ) type
@@ -3482,6 +3499,8 @@ options) {
     /// conversion, use the following idiom (originally written in C# for
     /// the.NET version): <c>(cbor == null || cbor.IsNull) ? null :
     /// cbor.AsEFloat()</c>.</exception>
+    [Obsolete("Instead, use .ToObject<PeterO.Numbers.EFloat>\u0028) in C# or" +
+"\u0020.ToObject\u0028com.upokecenter.numbers.EFloat.class) in Java.")]
     public EFloat AsEFloat() {
       CBORNumber cn = CBORNumber.FromCBORObject(this);
       if (cn == null) {
@@ -3499,8 +3518,16 @@ options) {
     /// conversion, use the following idiom (originally written in C# for
     /// the.NET version): <c>(cbor == null || cbor.IsNull) ? null :
     /// cbor.AsERational()</c>.</exception>
+    [Obsolete("Instead, use .ToObject<PeterO.Numbers.ERational>\u0028) in C#" +
+"\u0020or .ToObject\u0028com.upokecenter.numbers.ERational.class) in Java.")]
     public ERational AsERational() {
-      ERational ret = this.GetERational();
+      return this.AsLegacyERational();
+    }
+
+    internal ERational AsLegacyERational() {
+      ERational ret = (this.HasMostInnerTag(30) && this.Count == 2) ?
+         ERational.Create(this[0].AsEInteger(), this[1].AsEInteger()) :
+         null;
       if (ret != null) {
         return ret;
       }
@@ -4649,9 +4676,7 @@ CBORObjectTypeEInteger)) {
     [Obsolete("Use the following instead: \u0028cbor.IsNumber &&" +
 "\u0020cbor.AsNumber().IsInfinity()).")]
     public bool IsInfinity() {
-      // TODO: Add CBORNumber#IsInfinity
-      CBORNumber cn = CBORNumber.FromCBORObject(this);
-      return cn != null && cn.GetNumberInterface().IsInfinity(cn.GetValue());
+      return this.IsNumber && this.AsNumber().IsInfinity();
     }
 
     /// <summary>Gets a value indicating whether this CBOR object
@@ -4664,9 +4689,7 @@ CBORObjectTypeEInteger)) {
     [Obsolete("Use the following instead: \u0028cbor.IsNumber &&" +
 "\u0020cbor.AsNumber().IsNaN()).")]
     public bool IsNaN() {
-      // TODO: Add CBORNumber#IsNaN
-      CBORNumber cn = CBORNumber.FromCBORObject(this);
-      return cn != null && cn.GetNumberInterface().IsNaN(cn.GetValue());
+      return this.IsNumber && this.AsNumber().IsNaN();
     }
 
     /// <summary>Gets a value indicating whether this CBOR object

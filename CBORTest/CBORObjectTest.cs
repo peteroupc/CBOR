@@ -941,7 +941,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
-        .AsEFloat().IsNaN());
+        .AsNumber().IsNaN());
       {
         object objectTemp = CBORTestCommon.FloatPosInf;
         object objectTemp2 =
@@ -957,7 +957,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Double.NaN)
-        .AsEFloat().IsNaN());
+        .AsNumber().IsNaN());
     }
     [Test]
     public void TestAsERational() {
@@ -979,7 +979,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
       Assert.IsTrue(
         ToObjectTest.TestToFromObjectRoundTrip(
         ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
-                        .AsERational()).IsNaN());
+                        .AsERational()).AsNumber().IsNaN());
       {
         object objectTemp = CBORTestCommon.RatPosInf;
         object objectTemp2 =
@@ -997,7 +997,7 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
       Assert.IsTrue(
   ToObjectTest.TestToFromObjectRoundTrip(
     ToObjectTest.TestToFromObjectRoundTrip(Double.NaN)
-          .AsERational()).IsNaN());
+          .AsERational()).AsNumber().IsNaN());
     }
     [Test]
     public void TestAsInt16() {
@@ -2029,7 +2029,7 @@ private static bool CInt32(CBORObject cbor) {
         CBORObject o1 =
           ToObjectTest.TestToFromObjectRoundTrip(Single.NegativeInfinity);
         CBORObject o2 = CBORTestCommon.RandomNumberOrRational(r);
-        if (o2.IsInfinity() || o2.IsNaN()) {
+        if (o2.AsNumber().IsInfinity() || o2.AsNumber().IsNaN()) {
           continue;
         }
         TestCommon.CompareTestLess(o1.AsNumber(), o2.AsNumber());
@@ -3657,12 +3657,12 @@ ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes();
     }
     [Test]
     public void TestIsInfinity() {
-      Assert.IsTrue(CBORObject.PositiveInfinity.IsInfinity());
-      Assert.IsTrue(CBORObject.NegativeInfinity.IsInfinity());
+      Assert.IsTrue(CBORObject.PositiveInfinity.AsNumber().IsInfinity());
+      Assert.IsTrue(CBORObject.NegativeInfinity.AsNumber().IsInfinity());
       Assert.IsTrue(CBORObject.DecodeFromBytes(new byte[] {
         (byte)0xfa, 0x7f,
         (byte)0x80, 0x00, 0x00,
-      }).IsInfinity());
+      }).AsNumber().IsInfinity());
     }
 
     [Test]
@@ -3730,7 +3730,7 @@ ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes();
           Assert.IsTrue(cbornumber.IsIntegral);
           Assert.IsFalse(cbornumber.IsPositiveInfinity());
           Assert.IsFalse(cbornumber.IsNegativeInfinity());
-          Assert.IsFalse(cbornumber.IsNaN());
+          Assert.IsFalse(cbornumber.AsNumber().IsNaN());
           Assert.IsFalse(cbornumber.IsNull);
         } else {
           Assert.IsFalse(cbornumber.IsIntegral);
@@ -3739,17 +3739,17 @@ ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes();
     }
     [Test]
     public void TestIsNaN() {
-      Assert.IsFalse(CBORObject.True.IsNaN());
+      Assert.IsFalse(CBORObject.True.AsNumber().IsNaN());
       Assert.IsFalse(ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
-              .IsNaN());
-      Assert.IsFalse(CBORObject.NewArray().IsNaN());
-      Assert.IsFalse(CBORObject.NewMap().IsNaN());
-      Assert.IsFalse(CBORObject.False.IsNaN());
-      Assert.IsFalse(CBORObject.Null.IsNaN());
-      Assert.IsFalse(CBORObject.Undefined.IsNaN());
-      Assert.IsFalse(CBORObject.PositiveInfinity.IsNaN());
-      Assert.IsFalse(CBORObject.NegativeInfinity.IsNaN());
-      Assert.IsTrue(CBORObject.NaN.IsNaN());
+              .AsNumber().IsNaN());
+      Assert.IsFalse(CBORObject.NewArray().AsNumber().IsNaN());
+      Assert.IsFalse(CBORObject.NewMap().AsNumber().IsNaN());
+      Assert.IsFalse(CBORObject.False.AsNumber().IsNaN());
+      Assert.IsFalse(CBORObject.Null.AsNumber().IsNaN());
+      Assert.IsFalse(CBORObject.Undefined.AsNumber().IsNaN());
+      Assert.IsFalse(CBORObject.PositiveInfinity.AsNumber().IsNaN());
+      Assert.IsFalse(CBORObject.NegativeInfinity.AsNumber().IsNaN());
+      Assert.IsTrue(CBORObject.NaN.AsNumber().IsNaN());
     }
     [Test]
     public void TestIsNegativeInfinity() {
@@ -5278,7 +5278,7 @@ ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes();
         CBORObject cbornumber =
           ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(
   numberinfo["number"].AsString()));
-        if (cbornumber.IsNaN()) {
+        if (cbornumber.AsNumber().IsNaN()) {
           try {
             Assert.Fail(String.Empty + cbornumber.Sign);
             Assert.Fail("Should have failed");
@@ -6933,7 +6933,7 @@ ToObjectTest.TestToFromObjectRoundTrip(byteval);
           bytes[1] = (byte)((i >> 8) & 0xff);
           bytes[2] = (byte)(i & 0xff);
           CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
-          if (!cbor.IsNaN()) {
+          if (!cbor.AsNumber().IsNaN()) {
             using (var ms = new MemoryStream()) {
               CBORObject.WriteFloatingPointValue(
                  ms,
@@ -6959,7 +6959,7 @@ ToObjectTest.TestToFromObjectRoundTrip(byteval);
           }
 
           CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
-          if (!cbor.IsNaN()) {
+          if (!cbor.AsNumber().IsNaN()) {
             using (var ms = new MemoryStream()) {
               CBORObject.WriteFloatingPointValue(
                  ms,
@@ -6984,7 +6984,7 @@ ToObjectTest.TestToFromObjectRoundTrip(byteval);
             bytes[j] = (byte)r.UniformInt(256);
           }
           CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
-          if (!cbor.IsNaN()) {
+          if (!cbor.AsNumber().IsNaN()) {
             using (var ms = new MemoryStream()) {
               CBORObject.WriteFloatingPointValue(
                  ms,

@@ -104,7 +104,7 @@ namespace Test {
       cbor = CBORObject.DecodeFromBytes(bytes);
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       try {
-        Console.WriteLine(cbor.AsEFloat());
+        Console.WriteLine(String.Empty + cbor.ToObject(typeof(EFloat)));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -117,7 +117,7 @@ namespace Test {
       cbor = CBORObject.DecodeFromBytes(bytes);
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       try {
-        Console.WriteLine(cbor.AsEFloat());
+        Console.WriteLine(String.Empty + cbor.ToObject(typeof(EFloat)));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -129,7 +129,7 @@ namespace Test {
       cbor = CBORObject.DecodeFromBytes(bytes);
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       try {
-        Console.WriteLine(cbor.AsEFloat());
+        Console.WriteLine(String.Empty + cbor.ToObject(typeof(EFloat)));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -141,7 +141,7 @@ namespace Test {
       cbor = CBORObject.DecodeFromBytes(bytes);
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       try {
-        Console.WriteLine(cbor.AsEFloat());
+        Console.WriteLine(String.Empty + cbor.ToObject(typeof(EFloat)));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -153,7 +153,7 @@ namespace Test {
       cbor = CBORObject.DecodeFromBytes(bytes);
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       try {
-        Console.WriteLine(cbor.AsEFloat());
+        Console.WriteLine(String.Empty + cbor.ToObject(typeof(EFloat)));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -165,7 +165,7 @@ namespace Test {
       cbor = CBORObject.DecodeFromBytes(bytes);
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       try {
-        Console.WriteLine(cbor.AsEFloat());
+        Console.WriteLine(String.Empty + cbor.ToObject(typeof(EFloat)));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
