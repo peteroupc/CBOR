@@ -661,7 +661,7 @@ cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked();
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.NewArray().AsEFloat();
+        CBORObject.NewArray().ToObject(typeof(EFloat));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -670,7 +670,7 @@ cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked();
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.NewMap().AsEFloat();
+        CBORObject.NewMap().ToObject(typeof(EFloat));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -679,7 +679,7 @@ cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked();
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.True.AsEFloat();
+        CBORObject.True.ToObject(typeof(EFloat));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -688,7 +688,7 @@ cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked();
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.False.AsEFloat();
+        CBORObject.False.ToObject(typeof(EFloat));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -697,7 +697,7 @@ cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked();
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.Undefined.AsEFloat();
+        CBORObject.Undefined.ToObject(typeof(EFloat));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -706,7 +706,8 @@ cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked();
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(String.Empty).AsEFloat();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          String.Empty).ToObject(typeof(EFloat));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -785,7 +786,7 @@ cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked();
       {
         string stringTemp = CBORObject.DecodeFromBytes(new byte[] {
           (byte)0xfa, 0x7f, (byte)0x80, 0x00, 0x00,
-        }).AsERational().ToString();
+        }).ToObject(typeof(ERational)).ToString();
         Assert.AreEqual(
           "Infinity",
           stringTemp);
@@ -913,7 +914,7 @@ cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked();
         1, 2, 3, 4,
       });
       try {
-        Console.WriteLine(cbor.AsEFloat());
+        Console.WriteLine(cbor.ToObject(typeof(EFloat)));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -937,7 +938,8 @@ cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked();
       CBORObject o = CBORTestCommon.FromBytesTestAB(
         new byte[] { 0xc5, 0x82, 0x3, 0xc2, 0x41, 1 });
       {
-        long numberTemp = EFloat.FromString("8").CompareTo(o.AsEFloat());
+        long numberTemp = EFloat.FromString("8").CompareTo(
+               (EFloat)o.ToObject(typeof(EFloat)));
         Assert.AreEqual(0, numberTemp);
       }
     }
@@ -956,9 +958,10 @@ cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked();
         ERational er = ERational.Create(o1.AsEInteger(), o2.AsEInteger());
         {
           ERational objectTemp = er;
-          ERational objectTemp2 = CBORObject.Divide(
+          ERational objectTemp2;
+          objectTemp2 = (ERational)CBORObject.Divide(
             o1,
-            o2).AsERational();
+            o2).ToObject(typeof(ERational));
           TestCommon.CompareTestEqual(objectTemp, objectTemp2);
         }
       }

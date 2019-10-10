@@ -1123,7 +1123,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// written in Java, is a way to specify that the return value will be
     /// an ArrayList of String objects.</para>
     /// <code>Type arrayListString = new ParameterizedType() { public Type[]
-    /// getActualTypeArguments() { // Contains one type parameter, String
+    /// getActualTypeArguments() { &#x2f;&#x2a; Contains one type parameter, String&#x2a;&#x2f;
     /// return new Type[] { String.class }; }
     /// public Type getRawType() { /* Raw type is
     /// ArrayList */ return ArrayList.class; }
@@ -3405,7 +3405,7 @@ options) {
     }
 
     /// <summary>Converts this object to an arbitrary-precision integer.
-    /// Fractional values are converted to an integer by discarding their
+    /// Fractional values are converted to integers by discarding their
     /// fractional parts.</summary>
     /// <returns>The closest arbitrary-precision integer to this
     /// object.</returns>
@@ -3435,7 +3435,7 @@ options) {
     }
 
     /// <summary>Converts this object to a byte (0 to 255). Floating point
-    /// values are converted to an integer by discarding their fractional
+    /// values are converted to integers by discarding their fractional
     /// parts.</summary>
     /// <returns>The closest byte-sized integer to this object.</returns>
     /// <exception cref='InvalidOperationException'>This object does not
@@ -3444,7 +3444,8 @@ options) {
     /// numbers).</exception>
     /// <exception cref='OverflowException'>This object's value exceeds the
     /// range of a byte (would be less than 0 or greater than 255 when
-    /// truncated to an integer).</exception>
+    /// converted to an integer by discarding its fractional
+    /// part).</exception>
     public byte AsByte() {
       return (byte)this.AsInt32(0, 255);
     }
@@ -3499,8 +3500,8 @@ options) {
     /// conversion, use the following idiom (originally written in C# for
     /// the.NET version): <c>(cbor == null || cbor.IsNull) ? null :
     /// cbor.AsEFloat()</c>.</exception>
-    [Obsolete("Instead, use .ToObject<PeterO.Numbers.EFloat>\u0028) in C# or" +
-"\u0020.ToObject\u0028com.upokecenter.numbers.EFloat.class) in Java.")]
+    [Obsolete("Instead, use .ToObject<PeterO.Numbers.EFloat>\u0028) in .NET" +
+" or \u0020.ToObject\u0028com.upokecenter.numbers.EFloat.class) in Java.")]
     public EFloat AsEFloat() {
       CBORNumber cn = CBORNumber.FromCBORObject(this);
       if (cn == null) {
@@ -3518,7 +3519,8 @@ options) {
     /// conversion, use the following idiom (originally written in C# for
     /// the.NET version): <c>(cbor == null || cbor.IsNull) ? null :
     /// cbor.AsERational()</c>.</exception>
-    [Obsolete("Instead, use .ToObject<PeterO.Numbers.ERational>\u0028) in C#" +
+    [Obsolete("Instead, use .ToObject<PeterO.Numbers.ERational>" +
+"\u0028) in .NET" +
 "\u0020or .ToObject\u0028com.upokecenter.numbers.ERational.class) in Java.")]
     public ERational AsERational() {
       return this.AsLegacyERational();
@@ -3545,7 +3547,7 @@ options) {
     }
 
     /// <summary>Converts this object to a 16-bit signed integer. Floating
-    /// point values are converted to an integer by discarding their
+    /// point values are converted to integers by discarding their
     /// fractional parts.</summary>
     /// <returns>The closest 16-bit signed integer to this
     /// object.</returns>
@@ -3740,7 +3742,7 @@ options) {
     }
 
     /// <summary>Converts this object to a 32-bit signed integer.
-    /// Non-integer number values are converted to an integer by discarding
+    /// Non-integer number values are converted to integers by discarding
     /// their fractional parts. (NOTE: To determine whether this method
     /// call can succeed, call the <b>CanTruncatedIntFitInInt32</b>
     ///  method
@@ -3769,7 +3771,7 @@ options) {
     }
 
     /// <summary>Converts this object to a 64-bit signed integer.
-    /// Non-integer numbers are converted to an integer by discarding their
+    /// Non-integer numbers are converted to integers by discarding their
     /// fractional parts. (NOTE: To determine whether this method call can
     /// succeed, call the <b>CanTruncatedIntFitInInt64</b>
     ///  method before

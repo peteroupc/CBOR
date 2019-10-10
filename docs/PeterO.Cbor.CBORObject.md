@@ -830,6 +830,8 @@ This object does not represent a number (for the purposes of this method, infini
 
     public PeterO.Numbers.EFloat AsEFloat();
 
+<b>Deprecated.</b> Instead, use .ToObject<PeterO.Numbers.EFloat>() in .NET or  .ToObject(com.upokecenter.numbers.EFloat.class) in Java.
+
 Converts this object to an arbitrary-precision binary floating point number.
 
 <b>Return Value:</b>
@@ -882,6 +884,8 @@ This object's type is not  `CBORType.Integer` .
 ### AsERational
 
     public PeterO.Numbers.ERational AsERational();
+
+<b>Deprecated.</b> Instead, use .ToObject<PeterO.Numbers.ERational>() in .NET or .ToObject(com.upokecenter.numbers.ERational.class) in Java.
 
 Converts this object to a rational number.
 
@@ -3341,7 +3345,7 @@ Converts this CBOR object to an object of an arbitrary type. See the documentati
 Java offers no easy way to express a generic type, at least none as easy as C#'s  `typeof`  operator. The following example, written in Java, is a way to specify that the return value will be an ArrayList of String objects.
 
     Type arrayListString = new ParameterizedType() { public Type[]
-                getActualTypeArguments() { // Contains one type parameter, String
+                getActualTypeArguments() { /* Contains one type parameter, String*/
                 return new Type[] { String.class }; }
                 public Type getRawType() { /* Raw type is
                 ArrayList */ return ArrayList.class; }
@@ -3431,7 +3435,9 @@ Converts this CBOR object to an object of an arbitrary type. The following cases
 
  * If the type is  `String`  , returns the result of AsString.
 
- * If the type is  `EDecimal`  ,  `EFloat`  ,  `EInteger`  , or  `ERational`  in the <a href="https://www.nuget.org/packages/PeterO.Numbers"> `PeterO.Numbers` </a> library (in .NET) or the <a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers` </a> artifact (in Java), returns the result of the corresponding As* method.
+ * If the type is  `EDecimal`  or  `EInteger`  in the <a href="https://www.nuget.org/packages/PeterO.Numbers"> `PeterO.Numbers` </a> library (in .NET) or the <a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers` </a> artifact (in Java), returns the result of the corresponding As* method.
+
+ * If the type is  `EFloat`  or  `ERational`  in the PeterO.Numbers or numbers library, converts the given object to a number of the corresponding type and throws an exception if the object does not represent a number (for this purpose, infinity and not-a-number values, but not  `CBORObject.Null`  , are considered numbers). Currently, this is equivalent to the result of  `AsEFloat()`  or  `AsERational()`  , respectively, but may change slightly in the next major version. Note that in the case of  `EFloat`  , if this object represents a decimal number with a fractional part, the conversion may lose information depending on the number, and if the object is a rational number with a nonterminating binary expansion, the number returned is a binary floating-point number rounded to a high but limited precision.
 
  * In the.NET version, if the type is a nullable (e.g.,  `Nullable<int>`  or  `int?`  , returns  `null`  if this CBOR object is null, or this object's value converted to the nullable's underlying type, e.g.,  `int`  .
 

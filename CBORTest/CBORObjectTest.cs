@@ -930,14 +930,14 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
         object objectTemp = CBORTestCommon.FloatPosInf;
         object objectTemp2 =
           ToObjectTest.TestToFromObjectRoundTrip(Single.PositiveInfinity)
-                  .AsEFloat();
+                  .ToObject(typeof(EFloat));
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       {
         object objectTemp = CBORTestCommon.FloatNegInf;
         object objectTemp2 =
           ToObjectTest.TestToFromObjectRoundTrip(Single.NegativeInfinity)
-                  .AsEFloat();
+                  .ToObject(typeof(EFloat));
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
@@ -946,14 +946,14 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
         object objectTemp = CBORTestCommon.FloatPosInf;
         object objectTemp2 =
           ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity)
-                  .AsEFloat();
+                  .ToObject(typeof(EFloat));
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       {
         object objectTemp = CBORTestCommon.FloatNegInf;
         object objectTemp2 =
           ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
-                  .AsEFloat();
+                  .ToObject(typeof(EFloat));
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Double.NaN)
@@ -965,39 +965,39 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN).AsEDecimal()
         object objectTemp = CBORTestCommon.RatPosInf;
         object objectTemp2 =
           ToObjectTest.TestToFromObjectRoundTrip(Single.PositiveInfinity)
-                  .AsERational();
+                  .ToObject(typeof(ERational));
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       {
         object objectTemp = CBORTestCommon.RatNegInf;
         object objectTemp2 =
           ToObjectTest.TestToFromObjectRoundTrip(Single.NegativeInfinity)
-                  .AsERational();
+                  .ToObject(typeof(ERational));
         Assert.AreEqual(objectTemp, objectTemp2);
       }
 
       Assert.IsTrue(
         ToObjectTest.TestToFromObjectRoundTrip(
         ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
-                        .AsERational()).AsNumber().IsNaN());
+                        .ToObject(typeof(ERational))).AsNumber().IsNaN());
       {
         object objectTemp = CBORTestCommon.RatPosInf;
         object objectTemp2 =
           ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity)
-                  .AsERational();
+                  .ToObject(typeof(ERational));
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       {
         object objectTemp = CBORTestCommon.RatNegInf;
         object objectTemp2 =
           ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
-                  .AsERational();
+                  .ToObject(typeof(ERational));
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       Assert.IsTrue(
   ToObjectTest.TestToFromObjectRoundTrip(
     ToObjectTest.TestToFromObjectRoundTrip(Double.NaN)
-          .AsERational()).AsNumber().IsNaN());
+          .ToObject(typeof(ERational))).AsNumber().IsNaN());
     }
     [Test]
     public void TestAsInt16() {
@@ -3738,18 +3738,70 @@ ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes();
       }
     }
     [Test]
-    public void TestIsNaN() {
-      Assert.IsFalse(CBORObject.True.AsNumber().IsNaN());
-      Assert.IsFalse(ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
-              .AsNumber().IsNaN());
-      Assert.IsFalse(CBORObject.NewArray().AsNumber().IsNaN());
-      Assert.IsFalse(CBORObject.NewMap().AsNumber().IsNaN());
-      Assert.IsFalse(CBORObject.False.AsNumber().IsNaN());
-      Assert.IsFalse(CBORObject.Null.AsNumber().IsNaN());
-      Assert.IsFalse(CBORObject.Undefined.AsNumber().IsNaN());
-      Assert.IsFalse(CBORObject.PositiveInfinity.AsNumber().IsNaN());
-      Assert.IsFalse(CBORObject.NegativeInfinity.AsNumber().IsNaN());
-      Assert.IsTrue(CBORObject.NaN.AsNumber().IsNaN());
+    public void TestAsNumber() {
+      try {
+ CBORObject.True.AsNumber();
+ Assert.Fail("Should have failed");
+} catch (InvalidOperationException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).AsNumber();
+ Assert.Fail("Should have failed");
+} catch (InvalidOperationException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.NewArray().AsNumber();
+ Assert.Fail("Should have failed");
+} catch (InvalidOperationException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.NewMap().AsNumber();
+ Assert.Fail("Should have failed");
+} catch (InvalidOperationException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.False.AsNumber();
+ Assert.Fail("Should have failed");
+} catch (InvalidOperationException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.Null.AsNumber();
+ Assert.Fail("Should have failed");
+} catch (InvalidOperationException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.Undefined.AsNumber();
+ Assert.Fail("Should have failed");
+} catch (InvalidOperationException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
     }
     [Test]
     public void TestIsNegativeInfinity() {

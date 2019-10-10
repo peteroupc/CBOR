@@ -236,8 +236,8 @@ this.HasOneTag(270)) ?
     /// or NaN values, but not CBORObject.Null, are considered
     /// numbers).</exception>
     /// <exception cref='OverflowException'>This object's value, if
-    /// truncated to an integer, is outside the range of a 64-bit unsigned
-    /// integer.</exception>
+    /// converted to an integer by discarding its fractional part, is
+    /// outside the range of a 64-bit unsigned integer.</exception>
     [CLSCompliant(false)]
     public ulong AsUInt64() {
       EInteger bigint = this.AsEInteger();
