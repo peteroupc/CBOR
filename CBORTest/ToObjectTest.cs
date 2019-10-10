@@ -618,12 +618,9 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
         Assert.AreEqual(objectTemp, objectTemp2);
       }
 
-      bool
-
-  bnan = ToObjectTest.TestToFromObjectRoundTrip(
+      bool bnan = ToObjectTest.TestToFromObjectRoundTrip(
         ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
-        .ToObject(typeof(ERational)))
-    .IsNaN();
+        .ToObject(typeof(ERational))).AsNumber().IsNaN();
       Assert.IsTrue(bnan);
       {
         object objectTemp = CBORTestCommon.RatPosInf;
@@ -640,9 +637,9 @@ ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       Assert.IsTrue(
-  ToObjectTest.TestToFromObjectRoundTrip(
+     ToObjectTest.TestToFromObjectRoundTrip(
     ToObjectTest.TestToFromObjectRoundTrip(Double.NaN)
-          .ToObject(typeof(ERational))).IsNaN());
+          .ToObject(typeof(ERational))).AsNumber().IsNaN());
     }
     [Test]
     public void TestAsInt16() {

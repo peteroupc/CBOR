@@ -37,12 +37,12 @@ namespace PeterO.Cbor {
       return ef.ToDouble();
     }
 
-    public EDecimal AsExtendedDecimal(object obj) {
+    public EDecimal AsEDecimal(object obj) {
       var ef = (EFloat)obj;
       return ef.ToEDecimal();
     }
 
-    public EFloat AsExtendedFloat(object obj) {
+    public EFloat AsEFloat(object obj) {
       var ef = (EFloat)obj;
       return ef;
     }
@@ -160,7 +160,7 @@ namespace PeterO.Cbor {
       return ed.Abs();
     }
 
-    public ERational AsExtendedRational(object obj) {
+    public ERational AsERational(object obj) {
       return ERational.FromEFloat((EFloat)obj);
     }
 

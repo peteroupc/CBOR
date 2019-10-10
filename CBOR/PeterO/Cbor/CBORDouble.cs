@@ -32,11 +32,11 @@ namespace PeterO.Cbor {
       return (double)obj;
     }
 
-    public EDecimal AsExtendedDecimal(object obj) {
+    public EDecimal AsEDecimal(object obj) {
       return EDecimal.FromDouble((double)obj);
     }
 
-    public EFloat AsExtendedFloat(object obj) {
+    public EFloat AsEFloat(object obj) {
       return EFloat.FromDouble((double)obj);
     }
 
@@ -146,7 +146,7 @@ namespace PeterO.Cbor {
       return (val < 0) ? -val : obj;
     }
 
-    public ERational AsExtendedRational(object obj) {
+    public ERational AsERational(object obj) {
       return ERational.FromDouble((double)obj);
     }
 

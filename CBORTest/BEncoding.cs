@@ -228,7 +228,7 @@ namespace PeterO {
           throw new ArgumentNullException(nameof(stream));
         }
         stream.WriteByte(unchecked((byte)((byte)0x69)));
-        WriteUtf8(obj.AsEInteger().ToString(), stream);
+        WriteUtf8(obj.ToObject(typeof(EInteger)).ToString(), stream);
         stream.WriteByte(unchecked((byte)((byte)0x65)));
       } else if (obj.Type == CBORType.TextString) {
         string s = obj.AsString();

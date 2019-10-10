@@ -24,7 +24,7 @@ namespace Test {
       cbor = CBORObject.DecodeFromBytes(bytes);
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       try {
-        Console.WriteLine(cbor.AsEDecimal());
+        Console.WriteLine(String.Empty + cbor.ToObject(typeof(EDecimal)));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -37,7 +37,7 @@ namespace Test {
       cbor = CBORObject.DecodeFromBytes(bytes);
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       try {
-        Console.WriteLine(cbor.AsEDecimal());
+        Console.WriteLine(String.Empty + cbor.ToObject(typeof(EDecimal)));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -49,7 +49,7 @@ namespace Test {
       cbor = CBORObject.DecodeFromBytes(bytes);
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       try {
-        Console.WriteLine(cbor.AsEDecimal());
+        Console.WriteLine(String.Empty + cbor.ToObject(typeof(EDecimal)));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -61,7 +61,7 @@ namespace Test {
       cbor = CBORObject.DecodeFromBytes(bytes);
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       try {
-        Console.WriteLine(cbor.AsEDecimal());
+        Console.WriteLine(String.Empty + cbor.ToObject(typeof(EDecimal)));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -73,7 +73,7 @@ namespace Test {
       cbor = CBORObject.DecodeFromBytes(bytes);
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       try {
-        Console.WriteLine(cbor.AsEDecimal());
+        Console.WriteLine(String.Empty + cbor.ToObject(typeof(EDecimal)));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -85,7 +85,7 @@ namespace Test {
       cbor = CBORObject.DecodeFromBytes(bytes);
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       try {
-        Console.WriteLine(cbor.AsEDecimal());
+        Console.WriteLine(String.Empty + cbor.ToObject(typeof(EDecimal)));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -229,7 +229,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.True.AsERational();
+        CBORObject.True.ToObject(typeof(ERational));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -238,7 +238,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.False.AsERational();
+        CBORObject.False.ToObject(typeof(ERational));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -247,7 +247,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.NewArray().AsERational();
+        CBORObject.NewArray().ToObject(typeof(ERational));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -256,7 +256,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.NewMap().AsERational();
+        CBORObject.NewMap().ToObject(typeof(ERational));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -462,10 +462,9 @@ namespace Test {
       co = ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecPosInf);
       co2 = ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity);
       {
-        object objectTemp = co.IsNegative && co.IsInfinity();
-        object objectTemp2 = co2.IsNegative &&
-co2.IsInfinity();
-        Assert.AreEqual(objectTemp, objectTemp2);
+        bool boolTemp = co.IsNegative && co.AsNumber().IsInfinity();
+        bool boolTemp2 = co2.IsNegative && co2.AsNumber().IsInfinity();
+        Assert.AreEqual(boolTemp, boolTemp2);
       }
     }
 
@@ -599,7 +598,7 @@ co2.IsInfinity();
         object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] {
           0xc2,
           0x40,
-        }).AsEInteger();
+        }).ToObject(typeof(EInteger));
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       {
@@ -607,12 +606,16 @@ co2.IsInfinity();
         object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] {
           0xc3,
           0x41, 0x00,
-        }).AsEInteger();
+        }).ToObject(typeof(EInteger));
         Assert.AreEqual(objectTemp, objectTemp2);
       }
-      Assert.AreEqual(
-        EInteger.FromString("-1"),
-        CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x40, }).AsEInteger());
+      {
+        object objectTemp = EInteger.FromString("-1");
+object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] {
+  0xc3, 0x40,
+}).ToObject(typeof(EInteger));
+Assert.AreEqual(objectTemp, objectTemp2);
+}
     }
 
     [Test]
@@ -735,19 +738,29 @@ co2.IsInfinity();
 
     [Test]
     public void TestNegativeBigInts() {
-      Assert.AreEqual(
-  EInteger.FromString("-257"),
-  CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x42, 1, 0 }).AsEInteger());
-      Assert.AreEqual(
-  EInteger.FromString("-65537"),
-  CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x43, 1, 0, 0 }).AsEInteger());
+      {
+        object objectTemp = EInteger.FromString("-257");
+object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] {
+  0xc3, 0x42, 1,
+  0,
+}).ToObject(typeof(EInteger));
+Assert.AreEqual(objectTemp, objectTemp2);
+}
+      {
+        object objectTemp = EInteger.FromString("-65537");
+object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] {
+  0xc3, 0x43, 1,
+  0, 0,
+}).ToObject(typeof(EInteger));
+Assert.AreEqual(objectTemp, objectTemp2);
+}
       {
         object objectTemp = EInteger.FromString("-16777217");
         object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] {
           0xc3, 0x44,
           1,
           0, 0, 0,
-        }).AsEInteger();
+        }).ToObject(typeof(EInteger));
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       {
@@ -756,7 +769,7 @@ co2.IsInfinity();
           0xc3, 0x45,
           1,
           0, 0, 0, 0,
-        }).AsEInteger();
+        }).ToObject(typeof(EInteger));
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       {
@@ -765,7 +778,7 @@ co2.IsInfinity();
           0xc3, 0x46,
           1,
           0, 0, 0, 0, 0,
-        }).AsEInteger();
+        }).ToObject(typeof(EInteger));
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       {
@@ -775,7 +788,7 @@ co2.IsInfinity();
           1,
           0, 0, 0, 0,
           0, 0,
-        }).AsEInteger();
+        }).ToObject(typeof(EInteger));
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       {
@@ -785,7 +798,7 @@ co2.IsInfinity();
           1,
           0, 0, 0, 0,
           0, 0, 0,
-        }).AsEInteger();
+        }).ToObject(typeof(EInteger));
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       {
@@ -794,7 +807,7 @@ co2.IsInfinity();
           0xc3, 0x49,
           1,
           0, 0, 0, 0, 0, 0, 0, 0,
-        }).AsEInteger();
+        }).ToObject(typeof(EInteger));
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       {
@@ -803,7 +816,7 @@ co2.IsInfinity();
           0xc3, 0x4a,
           1,
           0, 0, 0, 0, 0, 0, 0, 0, 0,
-        }).AsEInteger();
+        }).ToObject(typeof(EInteger));
         Assert.AreEqual(objectTemp, objectTemp2);
       }
     }

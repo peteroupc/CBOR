@@ -1,7 +1,7 @@
 using System;
 using NUnit.Framework;
 using PeterO.Cbor;
-namespace CBORTest {
+namespace Test {
 [TestFixture]
 public class CBORNumberTest {
 [Test]

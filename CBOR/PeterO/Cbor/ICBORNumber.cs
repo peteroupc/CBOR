@@ -28,11 +28,11 @@ namespace PeterO.Cbor {
 
     object Abs(Object obj);
 
-    EDecimal AsExtendedDecimal(Object obj);
+    EDecimal AsEDecimal(Object obj);
 
-    EFloat AsExtendedFloat(Object obj);
+    EFloat AsEFloat(Object obj);
 
-    ERational AsExtendedRational(Object obj);
+    ERational AsERational(Object obj);
 
     float AsSingle(Object obj);
 

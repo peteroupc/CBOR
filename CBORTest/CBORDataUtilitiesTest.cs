@@ -16,35 +16,35 @@ namespace Test {
       CBORObject cbor;
       cbor = CBORDataUtilities.ParseJSONNumber("-0", false, false, true);
       {
-        string stringTemp = cbor.AsEDecimal().ToString();
+        string stringTemp = cbor.ToObject(typeof(EDecimal)).ToString();
         Assert.AreEqual(
           "-0",
           stringTemp);
       }
       cbor = CBORDataUtilities.ParseJSONNumber("-0e-1", false, false, true);
       {
-        string stringTemp = cbor.AsEDecimal().ToString();
+        string stringTemp = cbor.ToObject(typeof(EDecimal)).ToString();
         Assert.AreEqual(
           "-0.0",
           stringTemp);
       }
       cbor = CBORDataUtilities.ParseJSONNumber("-0e1", false, false, true);
       {
-        string stringTemp = cbor.AsEDecimal().ToString();
+        string stringTemp = cbor.ToObject(typeof(EDecimal)).ToString();
         Assert.AreEqual(
           "-0E+1",
           stringTemp);
       }
       cbor = CBORDataUtilities.ParseJSONNumber("-0.0e1", false, false, true);
       {
-        string stringTemp = cbor.AsEDecimal().ToString();
+        string stringTemp = cbor.ToObject(typeof(EDecimal)).ToString();
         Assert.AreEqual(
           "-0",
           stringTemp);
       }
       cbor = CBORDataUtilities.ParseJSONNumber("-0.0", false, false, true);
       {
-        string stringTemp = cbor.AsEDecimal().ToString();
+        string stringTemp = cbor.ToObject(typeof(EDecimal)).ToString();
         Assert.AreEqual(
           "-0.0",
           stringTemp);
@@ -85,8 +85,8 @@ namespace Test {
         "-0.00E-1", "0.000",
       };
       for (var i = 0; i < strings.Length; i += 2) {
-        EDecimal jsonDecimal = CBORDataUtilities
-                  .ParseJSONNumber(strings[i]).AsEDecimal();
+        var jsonDecimal = (EDecimal)CBORDataUtilities
+                  .ParseJSONNumber(strings[i]).ToObject(typeof(EDecimal));
         Assert.AreEqual(
           strings[i + 1],
           jsonDecimal.ToString());

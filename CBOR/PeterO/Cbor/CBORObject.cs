@@ -3418,6 +3418,8 @@ options) {
     /// cbor.AsEInteger()</c>.</exception>
     /// <exception cref='OverflowException'>This object's value is infinity
     /// or not-a-number (NaN).</exception>
+    [Obsolete("Instead, use .ToObject<PeterO.Numbers.EInteger>\u0028) in .NET" +
+" or \u0020.ToObject\u0028com.upokecenter.numbers.EInteger.class) in Java.")]
     public EInteger AsEInteger() {
       CBORNumber cn = CBORNumber.FromCBORObject(this);
       if (cn == null) {
@@ -3479,9 +3481,11 @@ options) {
     /// conversion, use the following idiom (originally written in C# for
     /// the.NET version): <c>(cbor == null || cbor.IsNull) ? null :
     /// cbor.AsEDecimal()</c>.</exception>
+    [Obsolete("Instead, use .ToObject<PeterO.Numbers.EDecimal>\u0028) in .NET" +
+" or \u0020.ToObject\u0028com.upokecenter.numbers.EDecimal.class) in Java.")]
     public EDecimal AsEDecimal() {
       CBORNumber cn = this.AsNumber();
-      return cn.GetNumberInterface().AsExtendedDecimal(cn.GetValue());
+      return cn.GetNumberInterface().AsEDecimal(cn.GetValue());
     }
 
     /// <summary>Converts this object to an arbitrary-precision binary
@@ -3507,7 +3511,7 @@ options) {
       if (cn == null) {
         throw new InvalidOperationException("Not a number type");
       }
-      return cn.GetNumberInterface().AsExtendedFloat(cn.GetValue());
+      return cn.GetNumberInterface().AsEFloat(cn.GetValue());
     }
 
     /// <summary>Converts this object to a rational number.</summary>
@@ -3537,7 +3541,7 @@ options) {
       if (cn == null) {
         throw new InvalidOperationException("Not a number type");
       }
-      return cn.GetNumberInterface().AsExtendedRational(cn.GetValue());
+      return cn.GetNumberInterface().AsERational(cn.GetValue());
     }
 
     private ERational GetERational() {

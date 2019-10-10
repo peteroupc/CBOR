@@ -25,15 +25,15 @@ namespace PeterO.Cbor {
       return (double)(long)obj;
     }
 
-    public EDecimal AsExtendedDecimal(object obj) {
+    public EDecimal AsEDecimal(object obj) {
       return EDecimal.FromInt64((long)obj);
     }
 
-    public EFloat AsExtendedFloat(object obj) {
+    public EFloat AsEFloat(object obj) {
       return EFloat.FromInt64((long)obj);
     }
 
-    public ERational AsExtendedRational(object obj) {
+    public ERational AsERational(object obj) {
       return ERational.FromInt64((long)obj);
     }
 

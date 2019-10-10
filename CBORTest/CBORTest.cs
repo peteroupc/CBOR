@@ -252,9 +252,11 @@ namespace Test {
     public void TestBigNumBytes() {
       CBORObject o = null;
       o = CBORTestCommon.FromBytesTestAB(new byte[] { 0xc2, 0x41, 0x88 });
-      Assert.AreEqual(EInteger.FromRadixString("88", 16), o.AsEInteger());
+      Assert.AreEqual(EInteger.FromRadixString("88", 16),
+  o.ToObject(typeof(EInteger)));
       o = CBORTestCommon.FromBytesTestAB(new byte[] { 0xc2, 0x42, 0x88, 0x77 });
-      Assert.AreEqual(EInteger.FromRadixString("8877", 16), o.AsEInteger());
+      Assert.AreEqual(EInteger.FromRadixString("8877", 16),
+  o.ToObject(typeof(EInteger)));
       o = CBORTestCommon.FromBytesTestAB(new byte[] {
         0xc2, 0x44, 0x88, 0x77,
         0x66,
@@ -262,7 +264,7 @@ namespace Test {
       });
       Assert.AreEqual(
   EInteger.FromRadixString("88776655", 16),
-  o.AsEInteger());
+  o.ToObject(typeof(EInteger)));
       o = CBORTestCommon.FromBytesTestAB(new byte[] {
         0xc2, 0x47, 0x88, 0x77,
         0x66,
@@ -270,7 +272,7 @@ namespace Test {
       });
       Assert.AreEqual(
   EInteger.FromRadixString("88776655443322", 16),
-  o.AsEInteger());
+  o.ToObject(typeof(EInteger)));
     }
 
     [Test]
@@ -528,7 +530,7 @@ namespace Test {
           }
         }
         if (!ed.AsNumber().IsInfinity() && !ed.AsNumber().IsNaN()) {
-          EInteger bi = ed.AsEInteger();
+          var bi = (EInteger)ed.ToObject(typeof(EInteger));
           if (ed.IsIntegral) {
             if ((bi.GetSignedBitLengthAsEInteger().ToInt32Checked() <= 31) !=
               ed.AsNumber().CanFitInInt32()) {
@@ -561,18 +563,18 @@ namespace Test {
       }); // 2217361768.63373
       Assert.AreEqual(
   EInteger.FromString("2217361768"),
-  cbor.AsEInteger());
-      Assert.IsFalse(cbor.AsEInteger().GetSignedBitLengthAsEInteger()
-            .ToInt32Checked() <= 31);
+  cbor.ToObject(typeof(EInteger)));
+      Assert.IsFalse(((EInteger)cbor.ToObject(typeof(EInteger)))
+            .GetSignedBitLengthAsEInteger().ToInt32Checked() <= 31);
       Assert.IsFalse(cbor.CanTruncatedIntFitInInt32());
       cbor = CBORObject.DecodeFromBytes(new byte[] {
         (byte)0xc5, (byte)0x82,
         0x18, 0x2f, 0x32,
       }); // -2674012278751232
       {
-        long numberTemp =
-cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked();
-        Assert.AreEqual(52, numberTemp);
+        int intTemp = ((EInteger)cbor.ToObject(typeof(EInteger)))
+            .GetSignedBitLengthAsEInteger().ToInt32Checked();
+        Assert.AreEqual(52, intTemp);
       }
       Assert.IsTrue(cbor.AsNumber().CanFitInInt64());
       Assert.IsFalse(ToObjectTest.TestToFromObjectRoundTrip(2554895343L)
@@ -581,7 +583,8 @@ cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked();
         (byte)0xc5, (byte)0x82,
         0x10, 0x38, 0x64,
       }); // -6619136
-      Assert.AreEqual(EInteger.FromString("-6619136"), cbor.AsEInteger());
+      Assert.AreEqual(EInteger.FromString("-6619136"),
+  cbor.ToObject(typeof(EInteger)));
       Assert.AreEqual(-6619136, cbor.AsInt32());
       Assert.IsTrue(cbor.CanTruncatedIntFitInInt32());
     }
@@ -594,7 +597,7 @@ cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked();
       });
       Assert.AreEqual(
         EInteger.FromString("-14907577049884506536"),
-        o.AsEInteger());
+        o.ToObject(typeof(EInteger)));
     }
 
     [Test]
@@ -864,7 +867,7 @@ cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked();
       CBORObject obj = CBORTestCommon.FromBytesTestAB(
         new byte[] { 0xc4, 0x82, 0x3, 0x1a, 1, 2, 3, 4 });
       try {
-        Console.WriteLine(obj.AsEDecimal());
+        Console.WriteLine(obj.ToObject(typeof(EDecimal)));
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -878,7 +881,7 @@ cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked();
         1,
       });
       try {
-        Console.WriteLine(obj.AsEDecimal());
+        Console.WriteLine(obj.ToObject(typeof(EDecimal)));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -896,7 +899,7 @@ cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked();
         1, 2, 3, 4,
       });
       try {
-        Console.WriteLine(obj.AsEDecimal());
+        Console.WriteLine(obj.ToObject(typeof(EDecimal)));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -930,7 +933,7 @@ cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked();
         new byte[] { 0xc4, 0x82, 0x3, 0xc2, 0x41, 1 });
       Assert.AreEqual(
         EDecimal.FromString("1e3"),
-        o.AsEDecimal());
+        o.ToObject(typeof(EDecimal)));
     }
 
     [Test]
@@ -955,7 +958,9 @@ cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked();
         if (o2.IsZero) {
           continue;
         }
-        ERational er = ERational.Create(o1.AsEInteger(), o2.AsEInteger());
+        ERational er = ERational.Create(
+            (EInteger)o1.ToObject(typeof(EInteger)),
+            (EInteger)o2.ToObject(typeof(EInteger)));
         {
           ERational objectTemp = er;
           ERational objectTemp2;
@@ -987,14 +992,19 @@ cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked();
       }
 
       Assert.IsTrue(
-        ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity)
-              .AsEDecimal().IsPositiveInfinity());
+        (
+          (EDecimal)ToObjectTest.TestToFromObjectRoundTrip(
+          Double.PositiveInfinity)
+              .ToObject(typeof(EDecimal))).IsPositiveInfinity());
 
       Assert.IsTrue(
-        ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
-              .AsEDecimal().IsNegativeInfinity());
-      Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Double.NaN)
-              .AsEDecimal().IsNaN());
+        (
+          (EDecimal)ToObjectTest.TestToFromObjectRoundTrip(
+          Double.NegativeInfinity)
+              .ToObject(typeof(EDecimal))).IsNegativeInfinity());
+      Assert.IsTrue(
+        ((EDecimal)ToObjectTest.TestToFromObjectRoundTrip(Double.NaN)
+              .ToObject(typeof(EDecimal))).IsNaN());
       for (int i = -65539; i <= 65539; ++i) {
         CBORObject o = ToObjectTest.TestToFromObjectRoundTrip((double)i);
         Assert.IsTrue(o.CanFitInDouble());
@@ -1069,13 +1079,18 @@ cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked();
     [Test]
     public void TestFloat() {
       Assert.IsTrue(
-        ToObjectTest.TestToFromObjectRoundTrip(Single.PositiveInfinity)
-              .AsEDecimal().IsPositiveInfinity());
+        (
+          (EDecimal)ToObjectTest.TestToFromObjectRoundTrip(
+          Single.PositiveInfinity)
+              .ToObject(typeof(EDecimal))).IsPositiveInfinity());
       Assert.IsTrue(
-        ToObjectTest.TestToFromObjectRoundTrip(Single.NegativeInfinity)
-              .AsEDecimal().IsNegativeInfinity());
-      Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
-          .AsEDecimal().IsNaN());
+        (
+          (EDecimal)ToObjectTest.TestToFromObjectRoundTrip(
+          Single.NegativeInfinity)
+              .ToObject(typeof(EDecimal))).IsNegativeInfinity());
+      Assert.IsTrue(
+        ((EDecimal)ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
+          .ToObject(typeof(EDecimal))).IsNaN());
       for (int i = -65539; i <= 65539; ++i) {
         CBORObject o = ToObjectTest.TestToFromObjectRoundTrip((float)i);
         // Console.Write("jsonser i=" + (// i) + " o=" + (o.ToString()) + " json=" +
@@ -1118,7 +1133,7 @@ cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked();
         cbor = CBORObject.NewArray().Add(-3).Add(99999);
         cbortag = CBORObject.FromObjectAndTag(cbor, tag);
         try {
-          Console.WriteLine(cbortag.AsEDecimal());
+          Console.WriteLine(cbortag.ToObject(typeof(EDecimal)));
           Assert.Fail("Should have failed " + cbortag.ToString());
         } catch (InvalidOperationException) {
           // NOTE: Intentionally empty
@@ -1132,7 +1147,7 @@ cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked();
         cbor = CBORObject.NewArray().Add(-3).Add(99999).Add(-1);
         cbortag = CBORObject.FromObjectAndTag(cbor, tag);
         try {
-          Console.WriteLine(cbortag.AsEDecimal());
+          Console.WriteLine(cbortag.ToObject(typeof(EDecimal)));
           Assert.Fail("Should have failed " + cbortag.ToString());
         } catch (InvalidOperationException) {
           // NOTE: Intentionally empty
@@ -1143,7 +1158,7 @@ cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked();
         cbor = CBORObject.NewArray().Add(-3).Add(99999).Add(2);
         cbortag = CBORObject.FromObjectAndTag(cbor, tag);
         try {
-          Console.WriteLine(cbortag.AsEDecimal());
+          Console.WriteLine(cbortag.ToObject(typeof(EDecimal)));
           Assert.Fail("Should have failed " + cbortag.ToString());
         } catch (InvalidOperationException) {
           // NOTE: Intentionally empty
@@ -1160,7 +1175,7 @@ cbor.AsEInteger().GetSignedBitLengthAsEInteger().ToInt32Checked();
         cbor = CBORObject.NewArray().Add(-3).Add(99999).Add(8);
         cbortag = CBORObject.FromObjectAndTag(cbor, tag);
         try {
-          Console.WriteLine(cbortag.AsEDecimal());
+          Console.WriteLine(cbortag.ToObject(typeof(EDecimal)));
           Assert.Fail("Should have failed " + cbortag.ToString());
         } catch (InvalidOperationException) {
           // NOTE: Intentionally empty
@@ -3091,7 +3106,7 @@ EInteger.FromString("-18446744073709551617");
 
     private static EDecimal AsED(CBORObject obj) {
       return EDecimal.FromString(
-        obj.AsEDecimal().ToString());
+        obj.ToObject(typeof(EDecimal)).ToString());
     }
 
     private static void AddSubCompare(CBORObject o1, CBORObject o2) {

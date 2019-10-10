@@ -33,14 +33,14 @@ namespace PeterO.Cbor {
       return er.ToDouble();
     }
 
-    public EDecimal AsExtendedDecimal(object obj) {
+    public EDecimal AsEDecimal(object obj) {
       var er = (ERational)obj;
       return
 
   er.ToEDecimalExactIfPossible(EContext.Decimal128.WithUnlimitedExponents());
     }
 
-    public EFloat AsExtendedFloat(object obj) {
+    public EFloat AsEFloat(object obj) {
       var er = (ERational)obj;
       return
 
@@ -155,7 +155,7 @@ namespace PeterO.Cbor {
       return ed.Abs();
     }
 
-    public ERational AsExtendedRational(object obj) {
+    public ERational AsERational(object obj) {
       return (ERational)obj;
     }
 
