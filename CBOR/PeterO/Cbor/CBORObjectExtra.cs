@@ -225,7 +225,8 @@ comparing
       return (this.ItemType == CBORObjectTypeInteger) ?
         ((decimal)(long)this.ThisItem) : ((this.HasOneTag(30) ||
 this.HasOneTag(270)) ?
-              (decimal)this.AsERational() : (decimal)this.AsEDecimal()); }
+              (decimal)this.ToObject<ERational>() :
+(decimal)this.ToObject<EDecimal>()); }
 
 /// <summary>Not documented yet.</summary>
     /// <summary>Converts this object to a 64-bit unsigned integer after
@@ -240,7 +241,7 @@ this.HasOneTag(270)) ?
     /// outside the range of a 64-bit unsigned integer.</exception>
     [CLSCompliant(false)]
     public ulong AsUInt64() {
-      EInteger bigint = this.AsEInteger();
+      EInteger bigint = this.ToObject<EInteger>();
       if (bigint.Sign < 0 ||
         bigint.GetUnsignedBitLengthAsEInteger().CompareTo(64) > 0) {
         throw new OverflowException("This object's value is out of range");

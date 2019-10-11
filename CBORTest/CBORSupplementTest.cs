@@ -611,9 +611,10 @@ namespace Test {
       }
       {
         object objectTemp = EInteger.FromString("-1");
-object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] {
-  0xc3, 0x40,
-}).ToObject(typeof(EInteger));
+        object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] {
+          0xc3,
+          0x40,
+        }).ToObject(typeof(EInteger));
 Assert.AreEqual(objectTemp, objectTemp2);
 }
     }
@@ -740,18 +741,20 @@ Assert.AreEqual(objectTemp, objectTemp2);
     public void TestNegativeBigInts() {
       {
         object objectTemp = EInteger.FromString("-257");
-object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] {
-  0xc3, 0x42, 1,
-  0,
-}).ToObject(typeof(EInteger));
+        object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] {
+          0xc3,
+          0x42, 1,
+          0,
+        }).ToObject(typeof(EInteger));
 Assert.AreEqual(objectTemp, objectTemp2);
 }
       {
         object objectTemp = EInteger.FromString("-65537");
-object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] {
-  0xc3, 0x43, 1,
-  0, 0,
-}).ToObject(typeof(EInteger));
+        object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] {
+          0xc3,
+          0x43, 1,
+          0, 0,
+        }).ToObject(typeof(EInteger));
 Assert.AreEqual(objectTemp, objectTemp2);
 }
       {

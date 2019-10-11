@@ -657,18 +657,6 @@ namespace PeterO.Cbor {
       if (t.Equals(typeof(Uri))) {
         return new CBORUriConverter().FromCBORObject(objThis);
       }
-      if (t.Equals(typeof(EDecimal))) {
-        return objThis.AsEDecimal();
-      }
-      if (t.Equals(typeof(EFloat))) {
-        return objThis.AsEFloat();
-      }
-      if (t.Equals(typeof(EInteger))) {
-        return objThis.AsEInteger();
-      }
-      if (t.Equals(typeof(ERational))) {
-        return objThis.AsERational();
-      }
       if (IsAssignableFrom(typeof(Enum), t)) {
         return ObjectToEnum(objThis, t);
       }

@@ -37,7 +37,8 @@ namespace PeterO.Cbor {
         if (!obj.IsFinite) {
           throw new CBORException("Not a finite number");
         }
-        EDecimal dec = obj.AsEDecimal();
+        EDecimal dec;
+        dec = (EDecimal)obj.ToObject(typeof(EDecimal));
         var lesserFields = new int[7];
         var year = new EInteger[1];
         CBORUtilities.BreakDownSecondsSinceEpoch(

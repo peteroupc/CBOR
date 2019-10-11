@@ -317,7 +317,7 @@ namespace PeterO.Cbor {
       get {
         if (this.IsNumber) {
           CBORNumber cn = this.AsNumber();
-          return !cn.IsInfinity() && !this.IsNaN();
+          return !cn.IsInfinity() && !cn.IsNaN();
         } else {
           return false;
         }
@@ -1256,67 +1256,84 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     ///  <item>If the type is <c>String</c>
     ///  , returns the
     /// result of AsString.</item>
-    ///  <item>If the type is <c>EDecimal</c>
-    ///  or
-    /// <c>EInteger</c>
+    ///  <item>If the type is <c>EFloat</c>
+    ///  ,
+    /// <c>EDecimal</c>
+    ///  , <c>EInteger</c>
+    ///  , or <c>ERational</c>
     ///  in the <a
     /// href='https://www.nuget.org/packages/PeterO.Numbers'><c>PeterO.Numbers</c>
     /// </a>
     ///  library (in .NET) or the <a
     /// href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c>
     /// </a>
-    ///  artifact (in Java), returns the result of the corresponding
-    /// As* method.</item>
-    ///  <item>If the type is <c>EFloat</c>
-    ///  or
-    /// <c>ERational</c>
-    ///  in the PeterO.Numbers or numbers library, converts
-    /// the given object to a number of the corresponding type and throws
-    /// an exception if the object does not represent a number (for this
-    /// purpose, infinity and not-a-number values, but not
+    ///  artifact (in Java), converts the given object to a number of
+    /// the corresponding type and throws an exception (currently
+    /// InvalidOperationException) if the object does not represent a
+    /// number (for this purpose, infinity and not-a-number values, but not
     /// <c>CBORObject.Null</c>
     ///  , are considered numbers). Currently, this
     /// is equivalent to the result of <c>AsEFloat()</c>
-    ///  or
-    /// <c>AsERational()</c>
-    ///  , respectively, but may change slightly in the
-    /// next major version. Note that in the case of <c>EFloat</c>
-    ///  , if
-    /// this object represents a decimal number with a fractional part, the
-    /// conversion may lose information depending on the number, and if the
-    /// object is a rational number with a nonterminating binary expansion,
-    /// the number returned is a binary floating-point number rounded to a
-    /// high but limited precision.</item>
-    ///  <item>In the.NET version, if the
-    /// type is a nullable (e.g., <c>Nullable&lt;int&gt;</c>
-    ///  or <c>int?</c>
-    /// , returns <c>null</c>
-    ///  if this CBOR object is null, or this object's
-    /// value converted to the nullable's underlying type, e.g., <c>int</c>
-    /// .</item>
-    ///  <item>If the type is an enumeration ( <c>Enum</c>
-    ///  ) type
-    /// and this CBOR object is a text string or an integer, returns the
-    /// appropriate enumerated constant. (For example, if <c>MyEnum</c>
-    /// includes an entry for <c>MyValue</c>
-    ///  , this method will return
-    /// <c>MyEnum.MyValue</c>
-    ///  if the CBOR object represents
-    /// <c>"MyValue"</c>
-    ///  or the underlying value for <c>MyEnum.MyValue</c>
-    /// .) <b>Note:</b>
-    ///  If an integer is converted to a.NET Enum constant,
-    /// and that integer is shared by more than one constant of the same
-    /// type, it is undefined which constant from among them is returned.
-    /// (For example, if <c>MyEnum.Zero=0</c>
-    ///  and <c>MyEnum.Null=0</c>
     ///  ,
-    /// converting 0 to <c>MyEnum</c>
+    /// <c>AsEDecimal()</c>
+    ///  , <c>AsEInteger</c>
+    ///  , or <c>AsERational()</c>
+    ///  ,
+    /// respectively, but may change slightly in the next major version.
+    /// Note that in the case of <c>EFloat</c>
+    ///  , if this object represents
+    /// a decimal number with a fractional part, the conversion may lose
+    /// information depending on the number, and if the object is a
+    /// rational number with a nonterminating binary expansion, the number
+    /// returned is a binary floating-point number rounded to a high but
+    /// limited precision. In the case of <c>EDecimal</c>
+    ///  , if this object
+    /// expresses a rational number with a nonterminating decimal
+    /// expansion, returns a decimal number rounded to 34 digits of
+    /// precision. In the case of <c>EInteger</c>
+    ///  , if this CBOR object
+    /// expresses a floating-point number, it is converted to an integer by
+    /// discarding its fractional part, and if this CBOR object expresses a
+    /// rational number, it is converted to an integer by dividing the
+    /// numerator by the denominator and discarding the fractional part of
+    /// the result, and this method throws an exception (currently
+    /// OverflowException, but may change in the next major version) if
+    /// this object expresses infinity or a not-a-number value.</item>
+    /// <item>In the.NET version, if the type is a nullable (e.g.,
+    /// <c>Nullable&lt;int&gt;</c>
+    ///  or <c>int?</c>
+    ///  , returns <c>null</c>
+    ///  if
+    /// this CBOR object is null, or this object's value converted to the
+    /// nullable's underlying type, e.g., <c>int</c>
+    ///  .</item>
+    ///  <item>If the
+    /// type is an enumeration ( <c>Enum</c>
+    ///  ) type and this CBOR object is
+    /// a text string or an integer, returns the appropriate enumerated
+    /// constant. (For example, if <c>MyEnum</c>
+    ///  includes an entry for
+    /// <c>MyValue</c>
+    ///  , this method will return <c>MyEnum.MyValue</c>
+    ///  if
+    /// the CBOR object represents <c>"MyValue"</c>
+    ///  or the underlying value
+    /// for <c>MyEnum.MyValue</c>
+    ///  .) <b>Note:</b>
+    ///  If an integer is
+    /// converted to a.NET Enum constant, and that integer is shared by
+    /// more than one constant of the same type, it is undefined which
+    /// constant from among them is returned. (For example, if
+    /// <c>MyEnum.Zero=0</c>
+    ///  and <c>MyEnum.Null=0</c>
+    ///  , converting 0 to
+    /// <c>MyEnum</c>
     ///  may return either <c>MyEnum.Zero</c>
-    /// or <c>MyEnum.Null</c>
-    ///  .) As a result, .NET Enum types with
-    /// constants that share an underlying value should not be passed to
-    /// this method.</item>
+    ///  or
+    /// <c>MyEnum.Null</c>
+    ///  .) As a result, .NET Enum types with constants
+    /// that share an underlying value should not be passed to this
+    /// method.</item>
     ///  <item>If the type is <c>byte[]</c>
     ///  (a
     /// one-dimensional byte array) and this CBOR object is a byte string,
@@ -1438,8 +1455,9 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// written in Java, is a way to specify that the return value will be
     /// an ArrayList of String objects.</para>
     /// <code>Type arrayListString = new ParameterizedType() { public Type[]
-    /// getActualTypeArguments() { /* Contains one type parameter, String */ return
-    /// new Type[] { String.class }; } public Type getRawType() { /* Raw type is
+    /// getActualTypeArguments() { // Contains one type parameter, String
+    /// return new Type[] { String.class }; }
+    /// public Type getRawType() { /* Raw type is
     /// ArrayList */ return ArrayList.class; } public Type getOwnerType() {
     /// return null; } }; ArrayList&lt;String&gt; array =
     /// (ArrayList&lt;String&gt;) cborArray.ToObject(arrayListString);</code>
@@ -1481,6 +1499,43 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
       }
       if (t.Equals(typeof(object))) {
         return this;
+      }
+      // TODO: Address inconsistent implementations for EDecimal,
+      // EInteger, EFloat, and ERational in next major version (perhaps
+      // by using EDecimal implementation). Also, these operations
+      // might throw InvalidOperationException rather than CBORException.
+      // Make them throw CBORException in next major version.
+      if (t.Equals(typeof(EDecimal))) {
+        CBORNumber cn = this.AsNumber();
+        return cn.GetNumberInterface().AsEDecimal(cn.GetValue());
+      }
+      if (t.Equals(typeof(EFloat))) {
+        CBORNumber cn = CBORNumber.FromCBORObject(this);
+        if (cn == null) {
+          throw new InvalidOperationException("Not a number type");
+        }
+        return cn.GetNumberInterface().AsEFloat(cn.GetValue());
+      }
+      if (t.Equals(typeof(EInteger))) {
+        CBORNumber cn = CBORNumber.FromCBORObject(this);
+        if (cn == null) {
+          throw new InvalidOperationException("Not a number type");
+        }
+        return cn.GetNumberInterface().AsEInteger(cn.GetValue());
+      }
+      if (t.Equals(typeof(ERational))) {
+        // NOTE: Will likely be simplified in version 5.0 and later
+        if (this.HasMostInnerTag(30) && this.Count != 2) {
+          EInteger num, den;
+          num = (EInteger)this[0].ToObject(typeof(EInteger));
+          den = (EInteger)this[1].ToObject(typeof(EInteger));
+          return ERational.Create(num, den);
+        }
+        CBORNumber cn = CBORNumber.FromCBORObject(this);
+        if (cn == null) {
+          throw new InvalidOperationException("Not a number type");
+        }
+        return cn.GetNumberInterface().AsERational(cn.GetValue());
       }
       return t.Equals(typeof(string)) ? this.AsString() :
         PropertyMap.TypeToObject(this, t, mapper, options, depth);
@@ -3405,27 +3460,20 @@ options) {
     }
 
     /// <summary>Converts this object to an arbitrary-precision integer.
-    /// Fractional values are converted to integers by discarding their
-    /// fractional parts.</summary>
+    /// See the ToObject overload taking a type for more
+    /// information.</summary>
     /// <returns>The closest arbitrary-precision integer to this
     /// object.</returns>
     /// <exception cref='InvalidOperationException'>This object does not
     /// represent a number (for the purposes of this method, infinity and
     /// not-a-number values, but not <c>CBORObject.Null</c>, are
-    /// considered numbers). To check the CBOR object for null before
-    /// conversion, use the following idiom (originally written in C# for
-    /// the.NET version): <c>(cbor == null || cbor.IsNull) ? null :
-    /// cbor.AsEInteger()</c>.</exception>
+    /// considered numbers).</exception>
     /// <exception cref='OverflowException'>This object's value is infinity
     /// or not-a-number (NaN).</exception>
     [Obsolete("Instead, use .ToObject<PeterO.Numbers.EInteger>\u0028) in .NET" +
 " or \u0020.ToObject\u0028com.upokecenter.numbers.EInteger.class) in Java.")]
     public EInteger AsEInteger() {
-      CBORNumber cn = CBORNumber.FromCBORObject(this);
-      if (cn == null) {
-        throw new InvalidOperationException("Not a number type");
-      }
-      return cn.GetNumberInterface().AsEInteger(cn.GetValue());
+      return (EInteger)this.ToObject(typeof(EInteger));
     }
 
     /// <summary>Returns false if this object is False, Null, or Undefined
@@ -3471,83 +3519,44 @@ options) {
     }
 
     /// <summary>Converts this object to a decimal number.</summary>
-    /// <returns>A decimal number for this object's value. If this object
-    /// is a rational number with a nonterminating decimal expansion,
-    /// returns a decimal number rounded to 34 digits.</returns>
+    /// <returns>A decimal number for this object's value.</returns>
     /// <exception cref='InvalidOperationException'>This object does not
     /// represent a number (for the purposes of this method, infinity and
     /// not-a-number values, but not <c>CBORObject.Null</c>, are
-    /// considered numbers). To check the CBOR object for null before
-    /// conversion, use the following idiom (originally written in C# for
-    /// the.NET version): <c>(cbor == null || cbor.IsNull) ? null :
-    /// cbor.AsEDecimal()</c>.</exception>
+    /// considered numbers).</exception>
     [Obsolete("Instead, use .ToObject<PeterO.Numbers.EDecimal>\u0028) in .NET" +
 " or \u0020.ToObject\u0028com.upokecenter.numbers.EDecimal.class) in Java.")]
     public EDecimal AsEDecimal() {
-      CBORNumber cn = this.AsNumber();
-      return cn.GetNumberInterface().AsEDecimal(cn.GetValue());
+      return (EDecimal)this.ToObject(typeof(EDecimal));
     }
 
     /// <summary>Converts this object to an arbitrary-precision binary
-    /// floating point number.</summary>
-    /// <returns>An arbitrary-precision binary floating-point numbering
-    /// point number for this object's value. Note that if this object is a
-    /// decimal number with a fractional part, the conversion may lose
-    /// information depending on the number. If this object is a rational
-    /// number with a nonterminating binary expansion, returns a binary
-    /// floating-point number rounded to a high but limited
-    /// precision.</returns>
+    /// floating point number. See the ToObject overload taking a type for
+    /// more information.</summary>
+    /// <returns>An arbitrary-precision binary floating-point number for
+    /// this object's value.</returns>
     /// <exception cref='InvalidOperationException'>This object does not
     /// represent a number (for the purposes of this method, infinity and
     /// not-a-number values, but not <c>CBORObject.Null</c>, are
-    /// considered numbers). To check the CBOR object for null before
-    /// conversion, use the following idiom (originally written in C# for
-    /// the.NET version): <c>(cbor == null || cbor.IsNull) ? null :
-    /// cbor.AsEFloat()</c>.</exception>
+    /// considered numbers).</exception>
     [Obsolete("Instead, use .ToObject<PeterO.Numbers.EFloat>\u0028) in .NET" +
 " or \u0020.ToObject\u0028com.upokecenter.numbers.EFloat.class) in Java.")]
     public EFloat AsEFloat() {
-      CBORNumber cn = CBORNumber.FromCBORObject(this);
-      if (cn == null) {
-        throw new InvalidOperationException("Not a number type");
-      }
-      return cn.GetNumberInterface().AsEFloat(cn.GetValue());
+      return (EFloat)this.ToObject(typeof(EFloat));
     }
 
-    /// <summary>Converts this object to a rational number.</summary>
+    /// <summary>Converts this object to a rational number. See the
+    /// ToObject overload taking a type for more information.</summary>
     /// <returns>A rational number for this object's value.</returns>
     /// <exception cref='InvalidOperationException'>This object does not
     /// represent a number (for the purposes of this method, infinity and
     /// not-a-number values, but not <c>CBORObject.Null</c>, are
-    /// considered numbers). To check the CBOR object for null before
-    /// conversion, use the following idiom (originally written in C# for
-    /// the.NET version): <c>(cbor == null || cbor.IsNull) ? null :
-    /// cbor.AsERational()</c>.</exception>
+    /// considered numbers).</exception>
     [Obsolete("Instead, use .ToObject<PeterO.Numbers.ERational>" +
 "\u0028) in .NET" +
 "\u0020or .ToObject\u0028com.upokecenter.numbers.ERational.class) in Java.")]
     public ERational AsERational() {
-      return this.AsLegacyERational();
-    }
-
-    internal ERational AsLegacyERational() {
-      ERational ret = (this.HasMostInnerTag(30) && this.Count == 2) ?
-         ERational.Create(this[0].AsEInteger(), this[1].AsEInteger()) :
-         null;
-      if (ret != null) {
-        return ret;
-      }
-      CBORNumber cn = CBORNumber.FromCBORObject(this);
-      if (cn == null) {
-        throw new InvalidOperationException("Not a number type");
-      }
-      return cn.GetNumberInterface().AsERational(cn.GetValue());
-    }
-
-    private ERational GetERational() {
-      return (this.HasMostInnerTag(30) && this.Count == 2) ?
-         ERational.Create(this[0].AsEInteger(), this[1].AsEInteger()) :
-         null;
+      return (ERational)this.ToObject(typeof(ERational));
     }
 
     /// <summary>Converts this object to a 16-bit signed integer. Floating
