@@ -229,7 +229,7 @@ namespace PeterO.Cbor {
               sb.Append((char)c);
               c = this.reader.ReadChar();
             }
-            if (this.numbersToDoubles) {
+            if (this.options.NumbersToDoubles) {
               str = sb.ToString();
               double dbl = CBORDataUtilities.ParseJSONDouble(str, true);
               if (Double.IsNaN(dbl)) {
@@ -281,7 +281,7 @@ namespace PeterO.Cbor {
               sb.Append((char)c);
               c = this.reader.ReadChar();
             }
-            if (this.numbersToDoubles) {
+            if (this.options.NumbersToDoubles) {
               str = sb.ToString();
               double dbl = CBORDataUtilities.ParseJSONDouble(str, true);
               if (Double.IsNaN(dbl)) {
@@ -311,19 +311,12 @@ namespace PeterO.Cbor {
       return null;
     }
 
-    private readonly bool noDuplicates;
-    private readonly bool numbersToDoubles;
+    private readonly JSONOptions options;
 
-    public CBORJson(CharacterInputWithCount reader,
-          bool noDuplicates) : this(reader, noDuplicates, false) {
-    }
-
-    public CBORJson(CharacterInputWithCount reader,
-          bool noDuplicates, bool numbersToDoubles) {
+    public CBORJson(CharacterInputWithCount reader, JSONOptions options) {
       this.reader = reader;
       this.sb = null;
-      this.noDuplicates = noDuplicates;
-      this.numbersToDoubles = numbersToDoubles;
+      this.options = options;
     }
 
     public CBORObject ParseJSON(bool objectOrArrayOnly, int[] nextchar) {
@@ -348,10 +341,10 @@ namespace PeterO.Cbor {
 
     internal static CBORObject ParseJSONValue(
       CharacterInputWithCount reader,
-      bool noDuplicates,
+      JSONOptions options,
       bool objectOrArrayOnly,
       int[] nextchar) {
-      var cj = new CBORJson(reader, noDuplicates);
+      var cj = new CBORJson(reader, options);
       return cj.ParseJSON(objectOrArrayOnly, nextchar);
     }
 
@@ -395,7 +388,8 @@ namespace PeterO.Cbor {
               // constructor directly
               obj = CBORObject.FromRaw(this.NextJSONString());
               key = obj;
-              if (this.noDuplicates && myHashMap.ContainsKey(obj)) {
+              if (!this.options.AllowDuplicateKeys &&
+myHashMap.ContainsKey(obj)) {
                 this.reader.RaiseError("Key already exists: " + key);
                 return null;
               }

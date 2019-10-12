@@ -118,7 +118,6 @@ string[] badNumbers = {
   "0x1", "0xf", "0x20","0x01",".2",".05",
   "-0x1", "-0xf", "-0x20","-0x01","-.2","-.05",
   "23.", "23.e-2", "23.e0","23.e1","0.",
-  "5.2", "5e+1", "-5.2","-5e+1"
 };
 foreach (var str in badNumbers) {
   if (CBORDataUtilities.ParseJSONNumber(str) != null) {
@@ -142,6 +141,33 @@ foreach (var str in badNumbers) {
 }
 CBORObject cbor = CBORDataUtilities.ParseJSONNumber("2e-2147483648");
 CBORTestCommon.AssertJSONSer(cbor, "2E-2147483648");
+string[] goodNumbers = {
+  "5.2", "5e+1", "-5.2","-5e+1",
+  "5.2", "5e+01", "-5.2","-5e+01",
+  "5.20000", "5.000e+01", "-5.2000","-5e+01",
+  "5.000e-01", "-5e-01",
+  "5.000e01", "-5e01",
+};
+foreach (var str in badNumbers) {
+  if (CBORDataUtilities.ParseJSONNumber(str) == null) {
+    Assert.Fail(str);
+  }
+  if (CBORDataUtilities.ParseJSONNumber(str, false, false) == null) {
+    Assert.Fail(str);
+  }
+  if (CBORDataUtilities.ParseJSONNumber(str, false, false, true) == null) {
+    Assert.Fail(str);
+  }
+ if (CBORDataUtilities.ParseJSONNumber(str, false, false, false) == null) {
+    Assert.Fail(str);
+  }
+ if (Double.IsNaN(CBORDataUtilities.ParseJSONDouble(str))) {
+   Assert.Fail(str);
+ }
+ if (Double.IsNaN(CBORDataUtilities.ParseJSONDouble(str, false))) {
+   Assert.Fail(str);
+ }
+}
 TestCommon.CompareTestEqual(
   ToObjectTest.TestToFromObjectRoundTrip(230).AsNumber(),
   CBORDataUtilities.ParseJSONNumber("23.0e01").AsNumber());

@@ -2402,7 +2402,16 @@ ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes();
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.FromJSONString("[]", null);
+        CBORObject.FromJSONString("[]", (CBOREncodeOptions)null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromJSONString("[]", (JSONOptions)null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
         // NOTE: Intentionally empty
@@ -3744,7 +3753,16 @@ ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes();
       try {
         using (var ms2 = new MemoryStream(new byte[] { 0x30 })) {
           try {
-            CBORObject.ReadJSON(ms2, null);
+            CBORObject.ReadJSON(ms2, (CBOREncodeOptions)null);
+            Assert.Fail("Should have failed");
+          } catch (ArgumentNullException) {
+            // NOTE: Intentionally empty
+          } catch (Exception ex) {
+            Assert.Fail(ex.ToString());
+            throw new InvalidOperationException(String.Empty, ex);
+          }
+          try {
+            CBORObject.ReadJSON(ms2, (JSONOptions)null);
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
             // NOTE: Intentionally empty

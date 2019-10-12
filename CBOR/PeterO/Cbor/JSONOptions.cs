@@ -49,8 +49,9 @@ namespace PeterO.Cbor {
     /// The following is an example of this parameter:
     /// <c>base64padding=false;replacesurrogates=true</c>. The key can be
     /// any one of the following in any combination of case:
-    /// <c>base64padding</c>, <c>replacesurrogates</c>. Other keys are
-    /// ignored. (Keys are compared using a basic case-insensitive
+    /// <c>base64padding</c>, <c>replacesurrogates</c>,
+    /// <c>numberstodoubles</c>, <c>allowduplicatekeys</c>. Other keys
+    /// are ignored. (Keys are compared using a basic case-insensitive
     /// comparison, in which two strings are equal if they match after
     /// converting the basic upper-case letters A to Z (U+0041 to U+005A)
     /// in both strings to basic lower-case letters.) If two or more
@@ -70,8 +71,12 @@ namespace PeterO.Cbor {
         throw new ArgumentNullException(nameof(paramString));
       }
       var parser = new OptionsParser(paramString);
+      this.NumbersToDoubles = parser.GetBoolean("numberstodoubles", false);
+      this.AllowDuplicateKeys = parser.GetBoolean("allowduplicatekeys", false);
       this.Base64Padding = parser.GetBoolean("base64padding", true);
-      this.ReplaceSurrogates = parser.GetBoolean("replacesurrogates", true);
+      // TODO: Note in release notes that JSONOptions string constructor
+      // inadvertently set ReplaceSurrogates to true by default
+      this.ReplaceSurrogates = parser.GetBoolean("replacesurrogates", false);
     }
 
     /// <summary>Gets the values of this options object's properties in
@@ -85,6 +90,10 @@ namespace PeterO.Cbor {
            .Append(this.Base64Padding ? "true" : "false")
            .Append(";replacesurrogates=")
            .Append(this.ReplaceSurrogates ? "true" : "false")
+           .Append(";numberstodoubles=")
+           .Append(this.NumbersToDoubles ? "true" : "false")
+           .Append(";allowduplicatekeys=")
+           .Append(this.AllowDuplicateKeys ? "true" : "false")
            .ToString();
     }
 
@@ -104,15 +113,30 @@ namespace PeterO.Cbor {
          "accordance with the revision of the CBOR specification.")]
     public bool Base64Padding { get; private set; }
 
+    /// <summary>Gets a value indicating whether JSON numbers are decoded
+    /// as their closest 64-bit binary floating-point numbers when decoding
+    /// JSON.</summary>
+    /// <value>True, if JSON numbers are decoded as their closest 64-bit
+    /// binary floating-point numbers, or false if such numbers are decoded
+    /// as arbitrary-precision integers or decimal numbers, as appropriate.
+    /// The default is false.</value>
+    public bool NumbersToDoubles { get; private set; }
+
+    /// <summary>Gets a value indicating whether to allow duplicate keys
+    /// when reading JSON. Used only when decoding JSON.</summary>
+    /// <value>A value indicating whether to allow duplicate keys when
+    /// reading JSON. The default is false.</value>
+    public bool AllowDuplicateKeys { get; private set; }
+
     /// <summary>Gets a value indicating whether surrogate code points not
     /// part of a surrogate pair (which consists of two consecutive
     /// <c>char</c> s forming one Unicode code point) are each replaced
-    /// with a replacement character (U+FFFD). The default is false; an
-    /// exception is thrown when such code points are
-    /// encountered.</summary>
+    /// with a replacement character (U+FFFD). If false, an exception is
+    /// thrown when such code points are encountered.</summary>
     /// <value>True, if surrogate code points not part of a surrogate pair
     /// are each replaced with a replacement character, or false if an
-    /// exception is thrown when such code points are encountered.</value>
+    /// exception is thrown when such code points are encountered. The
+    /// default is false.</value>
     public bool ReplaceSurrogates { get; private set; }
    }
 }

@@ -1049,7 +1049,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// <exception cref='PeterO.Cbor.CBORException'>The string is not in
     /// JSON format.</exception>
     public static CBORObject FromJSONString(string str) {
-      return FromJSONString(str, CBOREncodeOptions.Default);
+      return FromJSONString(str, JSONOptions.Default);
     }
 
     /// <summary>Generates a CBOR object from a text string in JavaScript
@@ -1065,12 +1065,17 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// contain a single JSON object and not multiple objects. The string
     /// may not begin with a byte-order mark (U+FEFF).</param>
     /// <param name='options'>Specifies options to control the decoding
-    /// process.</param>
-    /// <returns>A CBORObject object.</returns>
+    /// process. This method uses only the AllowDuplicateKeys property of
+    /// this object.</param>
+    /// <returns>A CBOR object containing the JSON data decoded.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='str'/> or <paramref name='options'/> is null.</exception>
     /// <exception cref='PeterO.Cbor.CBORException'>The string is not in
     /// JSON format.</exception>
+    [Obsolete("Instead, use .FromJSONString\u0028str, new" +
+"\u0020JSONOptions\u0028\"allowduplicatekeys=true\")) or
+.FromJSONString\u0028str," +
+"\u0020 new JSONOptions\u0028\"allowduplicatekeys=false\")), as appropriate.")]
     public static CBORObject FromJSONString(
       string str,
       CBOREncodeOptions options) {
@@ -1079,6 +1084,39 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
       }
       if (options == null) {
         throw new ArgumentNullException(nameof(options));
+      }
+      var jsonoptions = new JSONOptions(options.AllowDuplicateKeys ?
+"allowduplicatekeys=1" : "allowduplicatekeys=0");
+      return FromJSONString(str, jsonoptions);
+    }
+
+    /// <summary>Generates a CBOR object from a text string in JavaScript
+    /// Object Notation (JSON) format, using the specified options to
+    /// control the decoding process.
+    /// <para>Note that if a CBOR object is converted to JSON with
+    /// <c>ToJSONString</c>, then the JSON is converted back to CBOR with
+    /// this method, the new CBOR object will not necessarily be the same
+    /// as the old CBOR object, especially if the old CBOR object uses data
+    /// types not supported in JSON, such as integers in map
+    /// keys.</para></summary>
+    /// <param name='str'>A string in JSON format. The entire string must
+    /// contain a single JSON object and not multiple objects. The string
+    /// may not begin with a byte-order mark (U+FEFF).</param>
+    /// <param name='jsonoptions'>Specifies options to control the JSON
+    /// decoding process.</param>
+    /// <returns>A CBOR object containing the JSON data decoded.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='str'/> or <paramref name='jsonoptions'/> is null.</exception>
+    /// <exception cref='PeterO.Cbor.CBORException'>The string is not in
+    /// JSON format.</exception>
+    public static CBORObject FromJSONString(
+      string str,
+      JSONOptions jsonoptions) {
+      if (str == null) {
+        throw new ArgumentNullException(nameof(str));
+      }
+      if (jsonoptions == null) {
+        throw new ArgumentNullException(nameof(jsonoptions));
       }
       if (str.Length > 0 && str[0] == 0xfeff) {
         throw new CBORException(
@@ -1089,7 +1127,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
       var nextchar = new int[1];
       CBORObject obj = CBORJson.ParseJSONValue(
         reader,
-        !options.AllowDuplicateKeys,
+        jsonoptions,
         false,
         nextchar);
       if (nextchar[0] != -1) {
@@ -2646,7 +2684,7 @@ options) {
     /// <exception cref='PeterO.Cbor.CBORException'>The data stream
     /// contains invalid encoding or is not in JSON format.</exception>
     public static CBORObject ReadJSON(Stream stream) {
-      return ReadJSON(stream, CBOREncodeOptions.Default);
+      return ReadJSON(stream, JSONOptions.Default);
     }
 
     /// <summary>Generates a CBOR object from a data stream in JavaScript
@@ -2662,15 +2700,20 @@ options) {
     /// <param name='stream'>A readable data stream. The sequence of bytes
     /// read from the data stream must contain a single JSON object and not
     /// multiple objects.</param>
-    /// <param name='options'>The parameter <paramref name='options'/> is a
-    /// CBOREncodeOptions object.</param>
-    /// <returns>A CBORObject object.</returns>
+    /// <param name='options'>Contains options to control the JSON decoding
+    /// process. This method uses only the AllowDuplicateKeys property of
+    /// this object.</param>
+    /// <returns>A CBOR object containing the JSON data decoded.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='stream'/> is null.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error
     /// occurred.</exception>
     /// <exception cref='PeterO.Cbor.CBORException'>The data stream
     /// contains invalid encoding or is not in JSON format.</exception>
+    [Obsolete("Instead, use .ReadJSON\u0028stream, new" +
+"\u0020JSONOptions\u0028\"allowduplicatekeys=true\")) or
+.ReadJSON\u0028stream, new" +
+"\u0020JSONOptions\u0028\"allowduplicatekeys=false\")), as appropriate.")]
     public static CBORObject ReadJSON(
       Stream stream,
       CBOREncodeOptions options) {
@@ -2680,13 +2723,48 @@ options) {
       if (options == null) {
         throw new ArgumentNullException(nameof(options));
       }
+      var jsonoptions = new JSONOptions(options.AllowDuplicateKeys ?
+"allowduplicatekeys=1" : "allowduplicatekeys=0");
+      return ReadJSON(stream, jsonoptions);
+    }
+
+    /// <summary>Generates a CBOR object from a data stream in JavaScript
+    /// Object Notation (JSON) format, using the specified options to
+    /// control the decoding process. The JSON stream may begin with a
+    /// byte-order mark (U+FEFF). Since version 2.0, the JSON stream can be
+    /// in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by
+    /// assuming that the first character read must be a byte-order mark or
+    /// a nonzero basic character (U+0001 to U+007F). (In previous
+    /// versions, only UTF-8 was allowed.)
+    /// <para>By default, if a JSON object has the same key, only the last
+    /// given value will be used for each duplicated key.</para></summary>
+    /// <param name='stream'>A readable data stream. The sequence of bytes
+    /// read from the data stream must contain a single JSON object and not
+    /// multiple objects.</param>
+    /// <param name='jsonoptions'/>
+    /// <returns>A CBOR object containing the JSON data decoded.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='stream'/> is null.</exception>
+    /// <exception cref='System.IO.IOException'>An I/O error
+    /// occurred.</exception>
+    /// <exception cref='PeterO.Cbor.CBORException'>The data stream
+    /// contains invalid encoding or is not in JSON format.</exception>
+    public static CBORObject ReadJSON(
+      Stream stream,
+      JSONOptions jsonoptions) {
+      if (stream == null) {
+        throw new ArgumentNullException(nameof(stream));
+      }
+      if (jsonoptions == null) {
+        throw new ArgumentNullException(nameof(jsonoptions));
+      }
       var reader = new CharacterInputWithCount(
         new CharacterReader(stream, 2, true));
       try {
         var nextchar = new int[1];
         CBORObject obj = CBORJson.ParseJSONValue(
           reader,
-          !options.AllowDuplicateKeys,
+          jsonoptions,
           false,
           nextchar);
         if (nextchar[0] != -1) {

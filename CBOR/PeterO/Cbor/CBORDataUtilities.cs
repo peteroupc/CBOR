@@ -272,7 +272,7 @@ EFloat.Zero.Negate().ToDouble() : 0.0;
           ++i;
         } else if (str[i] == 'E' || str[i] == 'e') {
           haveExponent = true;
-          } else {
+        } else {
             return Double.NaN;
         }
       }
