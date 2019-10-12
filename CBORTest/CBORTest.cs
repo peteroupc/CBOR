@@ -530,7 +530,7 @@ namespace Test {
           }
         }
         if (!ed.AsNumber().IsInfinity() && !ed.AsNumber().IsNaN()) {
-          var bi = (EInteger)ed.ToObject(typeof(EInteger));
+          EInteger bi = AsEI(ed);
           if (ed.IsIntegral) {
             if ((bi.GetSignedBitLengthAsEInteger().ToInt32Checked() <= 31) !=
               ed.AsNumber().CanFitInInt32()) {
@@ -564,16 +564,18 @@ namespace Test {
       Assert.AreEqual(
   EInteger.FromString("2217361768"),
   cbor.ToObject(typeof(EInteger)));
-      Assert.IsFalse(((EInteger)cbor.ToObject(typeof(EInteger)))
-            .GetSignedBitLengthAsEInteger().ToInt32Checked() <= 31);
+
+      Assert.IsFalse(
+        AsEI(cbor).GetSignedBitLengthAsEInteger().ToInt32Checked()
+          <= 31);
       Assert.IsFalse(cbor.CanTruncatedIntFitInInt32());
       cbor = CBORObject.DecodeFromBytes(new byte[] {
         (byte)0xc5, (byte)0x82,
         0x18, 0x2f, 0x32,
       }); // -2674012278751232
       {
-        int intTemp = ((EInteger)cbor.ToObject(typeof(EInteger)))
-            .GetSignedBitLengthAsEInteger().ToInt32Checked();
+        int intTemp = AsEI(cbor)
+          .GetSignedBitLengthAsEInteger().ToInt32Checked();
         Assert.AreEqual(52, intTemp);
       }
       Assert.IsTrue(cbor.AsNumber().CanFitInInt64());
@@ -958,9 +960,7 @@ namespace Test {
         if (o2.IsZero) {
           continue;
         }
-        ERational er = ERational.Create(
-            (EInteger)o1.ToObject(typeof(EInteger)),
-            (EInteger)o2.ToObject(typeof(EInteger)));
+        ERational er = ERational.Create(AsEI(o1), AsEI(o2));
         {
           ERational objectTemp = er;
           ERational objectTemp2;
@@ -3102,6 +3102,11 @@ EInteger.FromString("-18446744073709551617");
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
+    }
+
+    private static EInteger AsEI(CBORObject obj) {
+      object o = obj.ToObject(typeof(EInteger));
+      return (EInteger)o;
     }
 
     private static EDecimal AsED(CBORObject obj) {

@@ -5,7 +5,7 @@
 Includes options to control how CBOR objects are converted to JSON.
 
 ### Member Summary
-* <code>[Base64Padding](#Base64Padding)</code> - Gets a value indicating whether the Base64Padding property is true.
+* <code>[Base64Padding](#Base64Padding)</code> - <b>Deprecated:</b> This option now has no effect. This library now includes necessary padding when writing traditional base64 to JSON and includes no padding when writing base64url to JSON, in accordance with the revision of the CBOR specification.
 * <code>[public static readonly PeterO.Cbor.JSONOptions Default;](#Default)</code> - The default options for converting CBOR objects to JSON.
 * <code>[ReplaceSurrogates](#ReplaceSurrogates)</code> - Gets a value indicating whether surrogate code points not part of a surrogate pair (which consists of two consecutive char s forming one Unicode code point) are each replaced with a replacement character (U+FFFD).
 * <code>[ToString()](#ToString)</code> - Gets the values of this options object's properties in text form.

@@ -8,6 +8,7 @@ at: http://peteroupc.github.io/
  */
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 namespace PeterO.DocGen {
@@ -42,17 +43,28 @@ namespace PeterO.DocGen {
       sb.Append("## API Documentation\r\n\r\n");
       foreach (var key in this.docs.Keys) {
         finalString = this.docs[key].Builder.ToString();
-        if (finalString.IndexOf(".", StringComparison.Ordinal) >= 0) {
-          finalString = finalString.Substring(
-  0,
-  finalString.IndexOf(".", StringComparison.Ordinal) + 1);
-        }
         sb.Append(" * " + this.docs[key].TypeLink + " - ");
         sb.Append(finalString + "\n");
       }
       finalString = DocGenUtil.NormalizeLines(
               sb.ToString());
       DocGenUtil.FileEdit(this.filename, finalString);
+    }
+
+    internal static string GetSummary(MemberInfo info, XmlDoc xdoc, string
+memberName) {
+      string summary;
+      var attr = info?.GetCustomAttribute(typeof(ObsoleteAttribute)) as
+                  ObsoleteAttribute;
+      summary = (attr != null) ? ("<b>Deprecated:</b> " + attr.Message) :
+(xdoc?.GetSummary(memberName));
+      if (summary != null && attr == null &&
+          summary.IndexOf(".", StringComparison.Ordinal) >= 0) {
+          summary = summary.Substring(
+              0,
+              summary.IndexOf(".", StringComparison.Ordinal) + 1);
+        }
+        return summary;
     }
 
     public void HandleType(Type currentType, XmlDoc xdoc) {
@@ -64,7 +76,7 @@ namespace PeterO.DocGen {
         var docVisitor = new TypeLinkAndBuilder(currentType);
         this.docs[typeFullName] = docVisitor;
       }
-      var summary = xdoc.GetSummary("T:" + typeFullName);
+      var summary=GetSummary(currentType, xdoc, "T:" + typeFullName);
       if (summary == null) {
         Console.WriteLine("no summary for " + typeFullName);
       } else {

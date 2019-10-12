@@ -14,6 +14,7 @@ using PeterO.Numbers;
 
 // TODO: Add method that finds estimated byte size of CBOR objects
 // TODO: Consider deprecating most number conversion/checking methods here
+// TODO: Make .Keys, .Values, and .Entries read-only
 namespace PeterO.Cbor {
     /// <summary>
     /// <para>Represents an object in Concise Binary Object Representation
@@ -118,7 +119,7 @@ namespace PeterO.Cbor {
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
-    Justification = "This CBORObject is immutable")]
+      Justification = "This CBORObject is immutable")]
 #endif
     public static readonly CBORObject False =
       CBORObject.ConstructSimpleValue(20);
@@ -135,7 +136,7 @@ namespace PeterO.Cbor {
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
-    Justification = "This CBORObject is immutable")]
+      Justification = "This CBORObject is immutable")]
 #endif
     public static readonly CBORObject Null =
       CBORObject.ConstructSimpleValue(22);
@@ -149,7 +150,7 @@ namespace PeterO.Cbor {
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
-    Justification = "This CBORObject is immutable")]
+      Justification = "This CBORObject is immutable")]
 #endif
     public static readonly CBORObject True =
       CBORObject.ConstructSimpleValue(21);
@@ -159,7 +160,7 @@ namespace PeterO.Cbor {
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
-    Justification = "This CBORObject is immutable")]
+      Justification = "This CBORObject is immutable")]
 #endif
     public static readonly CBORObject Undefined =
       CBORObject.ConstructSimpleValue(23);
@@ -397,7 +398,8 @@ cn.GetNumberInterface().IsNumberZero(cn.GetValue());
     /// undefined order.</summary>
     /// <value>A collection of the keys of this CBOR object. To avoid
     /// potential problems, the calling code should not modify the CBOR map
-    /// while iterating over the returned collection.</value>
+    /// or the returned collection while iterating over the returned
+    /// collection.</value>
     /// <exception cref='InvalidOperationException'>This object is not a
     /// map.</exception>
     public ICollection<CBORObject> Keys {
@@ -520,7 +522,8 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// pair in the map in an undefined order.</summary>
     /// <value>A collection of the key/value pairs stored in this CBOR map.
     /// To avoid potential problems, the calling code should not modify the
-    /// CBOR map while iterating over the returned collection.</value>
+    /// CBOR map or the returned collection while iterating over the
+    /// returned collection.</value>
     /// <exception cref='InvalidOperationException'>This object is not a
     /// map.</exception>
     public ICollection<KeyValuePair<CBORObject, CBORObject>> Entries {
@@ -541,8 +544,8 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// for that, use the GetByteString method instead.).</summary>
     /// <value>A collection of the values of this CBOR map or array. To
     /// avoid potential problems, the calling code should not modify the
-    /// CBOR map or array while iterating over the returned
-    /// collection.</value>
+    /// CBOR map or array or the returned collection while iterating over
+    /// the returned collection.</value>
     /// <exception cref='InvalidOperationException'>This object is not a
     /// map or an array.</exception>
     public ICollection<CBORObject> Values {
@@ -1455,7 +1458,7 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// written in Java, is a way to specify that the return value will be
     /// an ArrayList of String objects.</para>
     /// <code>Type arrayListString = new ParameterizedType() { public Type[]
-    /// getActualTypeArguments() { // Contains one type parameter, String
+    /// getActualTypeArguments() { &#x2f;&#x2a; Contains one type parameter, String&#x2a;&#x2f;
     /// return new Type[] { String.class }; }
     /// public Type getRawType() { /* Raw type is
     /// ArrayList */ return ArrayList.class; } public Type getOwnerType() {
@@ -3321,6 +3324,8 @@ options) {
     /// represent a number (for this purpose, infinities and not-a-number
     /// or NaN values, but not CBORObject.Null, are considered
     /// numbers).</exception>
+    [Obsolete("Instead, convert this CBOR object to a number (with" +
+"\u0020.AsNumber()), and use that number's .Abs() method.")]
     public CBORObject Abs() {
       CBORNumber cn = CBORNumber.FromCBORObject(this);
       if (cn == null) {
@@ -4622,7 +4627,7 @@ CBORObjectTypeEInteger)) {
 #if DEBUG
         if (obj == null) {
           throw new ArgumentNullException(nameof(tagValue));
-     }
+        }
 #endif
       }
     }
@@ -4733,6 +4738,8 @@ CBORObjectTypeEInteger)) {
     /// represent a number (for this purpose, infinities and not-a-number
     /// or NaN values, but not CBORObject.Null, are considered
     /// numbers).</exception>
+    [Obsolete("Instead, convert this CBOR object to a number (with" +
+"\u0020.AsNumber()), and use that number's .Negate() method.")]
     public CBORObject Negate() {
       CBORNumber cn = CBORNumber.FromCBORObject(this);
       if (cn == null) {

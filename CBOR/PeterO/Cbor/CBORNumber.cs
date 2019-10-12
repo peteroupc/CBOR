@@ -641,20 +641,66 @@ Double.IsNaN(f)) {
       return this.GetNumberInterface().IsNaN(this.GetValue());
     }
 
+  /// <summary>Not documented yet.</summary>
+  /// <returns>The return value is not documented yet.</returns>
+    public EInteger AsEInteger() {
+      return this.GetNumberInterface().AsEInteger(this.GetValue());
+    }
+
+  /// <summary>Not documented yet.</summary>
+  /// <returns>The return value is not documented yet.</returns>
+    public EDecimal AsEDecimal() {
+      return this.GetNumberInterface().AsEDecimal(this.GetValue());
+    }
+
+  /// <summary>Not documented yet.</summary>
+  /// <returns>The return value is not documented yet.</returns>
+    public EFloat AsEFloat() {
+      return this.GetNumberInterface().AsEFloat(this.GetValue());
+    }
+
+  /// <summary>Not documented yet.</summary>
+  /// <returns>The return value is not documented yet.</returns>
+    public ERational AsERational() {
+      return this.GetNumberInterface().AsERational(this.GetValue());
+    }
+
+    /// <summary>Returns the absolute value of this CBOR number.</summary>
+    /// <returns>This object's absolute value without its negative
+    /// sign.</returns>
+    public CBORNumber Abs() {
+      switch (this.kind) {
+        case Kind.Integer: {
+          var longValue = (long)this.value;
+          if (longValue == Int64.MinValue) {
+            return FromObject(EInteger.FromInt64(longValue).Negate());
+          } else {
+            return new CBORNumber(this.kind, Math.Abs(longValue));
+          }
+        }
+        case Kind.EInteger:
+          return FromObject(((EInteger)this.value).Abs());
+        default: return new CBORNumber(this.kind,
+            this.GetNumberInterface().Abs(this.GetValue()));
+      }
+    }
+
     /// <summary>Returns a CBOR number with the same value as this one but
     /// with the sign reversed.</summary>
     /// <returns>A CBOR number with the same value as this one but with the
     /// sign reversed.</returns>
     public CBORNumber Negate() {
       switch (this.kind) {
-        case Kind.Integer:
-          if ((long)this.value == 0) {
+        case Kind.Integer: {
+          var longValue = (long)this.value;
+          if (longValue == 0) {
             return FromObject(EDecimal.NegativeZero);
-          } else if ((long)this.value == Int64.MinValue) {
-            return FromObject(EInteger.FromInt64((long)this.value).Negate());
+          } else if (longValue == Int64.MinValue) {
+            return FromObject(EInteger.FromInt64(longValue).Negate());
           } else {
-            return new CBORNumber(this.kind, -(long)this.value);
+            return new CBORNumber(this.kind, -longValue);
           }
+        }
         case Kind.EInteger:
           if ((long)this.value == 0) {
             return FromObject(EDecimal.NegativeZero);

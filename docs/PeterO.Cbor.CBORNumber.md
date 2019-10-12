@@ -6,7 +6,12 @@
 An instance of a number that CBOR or certain CBOR tags can represent. For this purpose, infinities and not-a-number or NaN values are considered numbers. Currently, this class can store one of the following kinds of numbers: 64-bit signed integers or binary floating-point numbers; or arbitrary-precision integers, decimal numbers, binary numbers, or rational numbers.
 
 ### Member Summary
+* <code>[Abs()](#Abs)</code> - Returns the absolute value of this CBOR number.
 * <code>[Add(PeterO.Cbor.CBORNumber)](#Add_PeterO_Cbor_CBORNumber)</code> - Returns the sum of this number and another number.
+* <code>[AsEDecimal()](#AsEDecimal)</code> - Not documented yet.
+* <code>[AsEFloat()](#AsEFloat)</code> - Not documented yet.
+* <code>[AsEInteger()](#AsEInteger)</code> - Not documented yet.
+* <code>[AsERational()](#AsERational)</code> - Not documented yet.
 * <code>[CanFitInInt32()](#CanFitInInt32)</code> - Returns whether this object's numerical value is an integer, is -(2^31) or greater, and is less than 2^31.
 * <code>[CanFitInInt64()](#CanFitInInt64)</code> - Returns whether this object's numerical value is an integer, is -(2^63) or greater, and is less than 2^63.
 * <code>[CompareTo(PeterO.Cbor.CBORNumber)](#CompareTo_PeterO_Cbor_CBORNumber)</code> - Compares two CBOR numbers.
@@ -24,6 +29,17 @@ An instance of a number that CBOR or certain CBOR tags can represent. For this p
 * <code>[Subtract(PeterO.Cbor.CBORNumber)](#Subtract_PeterO_Cbor_CBORNumber)</code> - Returns a number that expresses this number minus another.
 * <code>[ToCBORObject()](#ToCBORObject)</code> - Converts this object's value to a CBOR object.
 * <code>[ToString()](#ToString)</code> - Returns the value of this object in text form.
+
+<a id="Abs"></a>
+### Abs
+
+    public PeterO.Cbor.CBORNumber Abs();
+
+Returns the absolute value of this CBOR number.
+
+<b>Return Value:</b>
+
+This object's absolute value without its negative sign.
 
 <a id="Add_PeterO_Cbor_CBORNumber"></a>
 ### Add
@@ -46,6 +62,58 @@ The sum of this number and another number.
  * System.ArgumentNullException:
 The parameter  <i>b</i>
  is null.
+
+<a id="AsEDecimal"></a>
+### AsEDecimal
+
+    public PeterO.Numbers.EDecimal AsEDecimal();
+
+Not documented yet.
+
+Not documented yet.
+
+<b>Return Value:</b>
+
+The return value is not documented yet.
+
+<a id="AsEFloat"></a>
+### AsEFloat
+
+    public PeterO.Numbers.EFloat AsEFloat();
+
+Not documented yet.
+
+Not documented yet.
+
+<b>Return Value:</b>
+
+The return value is not documented yet.
+
+<a id="AsEInteger"></a>
+### AsEInteger
+
+    public PeterO.Numbers.EInteger AsEInteger();
+
+Not documented yet.
+
+Not documented yet.
+
+<b>Return Value:</b>
+
+The return value is not documented yet.
+
+<a id="AsERational"></a>
+### AsERational
+
+    public PeterO.Numbers.ERational AsERational();
+
+Not documented yet.
+
+Not documented yet.
+
+<b>Return Value:</b>
+
+The return value is not documented yet.
 
 <a id="CanFitInInt32"></a>
 ### CanFitInInt32

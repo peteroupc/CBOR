@@ -615,7 +615,7 @@ namespace Test {
           0xc3,
           0x40,
         }).ToObject(typeof(EInteger));
-Assert.AreEqual(objectTemp, objectTemp2);
+        Assert.AreEqual(objectTemp, objectTemp2);
 }
     }
 
@@ -746,7 +746,7 @@ Assert.AreEqual(objectTemp, objectTemp2);
           0x42, 1,
           0,
         }).ToObject(typeof(EInteger));
-Assert.AreEqual(objectTemp, objectTemp2);
+        Assert.AreEqual(objectTemp, objectTemp2);
 }
       {
         object objectTemp = EInteger.FromString("-65537");
@@ -755,7 +755,7 @@ Assert.AreEqual(objectTemp, objectTemp2);
           0x43, 1,
           0, 0,
         }).ToObject(typeof(EInteger));
-Assert.AreEqual(objectTemp, objectTemp2);
+        Assert.AreEqual(objectTemp, objectTemp2);
 }
       {
         object objectTemp = EInteger.FromString("-16777217");

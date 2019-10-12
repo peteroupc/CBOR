@@ -388,7 +388,7 @@ from i in RangeExclusive(0, 10)
       Assert.AreEqual(5, obj.Count);
       Assert.AreEqual(0, obj[0]["a"].AsInt32());
       Assert.AreEqual(3, obj[1]["b"].AsInt32());
-   CBORTestCommon.AssertRoundTrip(obj);
+      CBORTestCommon.AssertRoundTrip(obj);
 #endif
     }
 

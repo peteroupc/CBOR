@@ -95,11 +95,6 @@ namespace PeterO.DocGen {
         typeName = typeName.Replace(">", "&gt;");
         typeName = "[" + typeName + "](#" + key + ")";
         finalString = Regex.Replace(finalString, "\\s+", " ");
-        if (finalString.IndexOf(".", StringComparison.Ordinal) >= 0) {
-          finalString = finalString.Substring(
-  0,
-  finalString.IndexOf(".", StringComparison.Ordinal) + 1);
-        }
         sb.Append("* <code>" + typeName + "</code> - ");
         sb.Append(finalString + "\n");
       }
@@ -137,7 +132,8 @@ namespace PeterO.DocGen {
         this.docs[memberAnchor] = docVisitor;
       }
       string memberFullName = TypeNameUtil.XmlDocMemberName(info);
-      var summary = xmldoc?.GetSummary(memberFullName);
+      var summary = SummaryVisitor.GetSummary(info as MemberInfo, xmldoc,
+  memberFullName);
       if (summary == null) {
         Console.WriteLine("no summary for " + memberFullName);
       } else {

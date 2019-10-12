@@ -346,6 +346,10 @@
             numbers, binary numbers, or rational numbers.</summary>
 
 </doc>
+<doc name="M:PeterO.Cbor.CBORNumber.Abs">
+<summary>Returns the absolute value of this CBOR number.</summary>
+            <returns>This object's absolute value without its negative sign.</returns>
+</doc>
 <doc name="M:PeterO.Cbor.CBORNumber.Add(PeterO.Cbor.CBORNumber)">
 
             <summary>Returns the sum of this number and another
@@ -354,6 +358,18 @@
             <returns>The sum of this number and another number.</returns>
             <exception cref='ArgumentNullException'>The parameter <paramref name='b'/> is null.</exception>
 
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.AsEDecimal">
+<returns>The return value is not documented yet.</returns>
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.AsEFloat">
+<returns>The return value is not documented yet.</returns>
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.AsEInteger">
+<returns>The return value is not documented yet.</returns>
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.AsERational">
+<returns>The return value is not documented yet.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORNumber.CanFitInInt32">
 
@@ -752,7 +768,8 @@
             numbers).</exception>
             <exception cref='OverflowException'>This object's value exceeds the
             range of a byte (would be less than 0 or greater than 255 when
-            converted to an integer by discarding its fractional part).</exception>
+            converted to an integer by discarding its fractional
+            part).</exception>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsDecimal">
@@ -812,52 +829,37 @@
 <doc name="M:PeterO.Cbor.CBORObject.AsEDecimal">
 
             <summary>Converts this object to a decimal number.</summary>
-            <returns>A decimal number for this object's value. If this object
-            is a rational number with a nonterminating decimal expansion,
-            returns a decimal number rounded to 34 digits.</returns>
+            <returns>A decimal number for this object's value.</returns>
             <exception cref='InvalidOperationException'>This object does not
             represent a number (for the purposes of this method, infinity and
             not-a-number values, but not <c>CBORObject.Null</c>, are
-            considered numbers). To check the CBOR object for null before
-            conversion, use the following idiom (originally written in C# for
-            the.NET version): <c>(cbor == null || cbor.IsNull) ? null :
-            cbor.AsEDecimal()</c>.</exception>
+            considered numbers).</exception>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsEFloat">
 
             <summary>Converts this object to an arbitrary-precision binary
-            floating point number.</summary>
-            <returns>An arbitrary-precision binary floating-point numbering
-            point number for this object's value. Note that if this object is a
-            decimal number with a fractional part, the conversion may lose
-            information depending on the number. If this object is a rational
-            number with a nonterminating binary expansion, returns a binary
-            floating-point number rounded to a high but limited
-            precision.</returns>
+            floating point number. See the ToObject overload taking a type for
+            more information.</summary>
+            <returns>An arbitrary-precision binary floating-point number for
+            this object's value.</returns>
             <exception cref='InvalidOperationException'>This object does not
             represent a number (for the purposes of this method, infinity and
             not-a-number values, but not <c>CBORObject.Null</c>, are
-            considered numbers). To check the CBOR object for null before
-            conversion, use the following idiom (originally written in C# for
-            the.NET version): <c>(cbor == null || cbor.IsNull) ? null :
-            cbor.AsEFloat()</c>.</exception>
+            considered numbers).</exception>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsEInteger">
 
             <summary>Converts this object to an arbitrary-precision integer.
-            Fractional values are converted to integers by discarding their
-            fractional parts.</summary>
+            See the ToObject overload taking a type for more
+            information.</summary>
             <returns>The closest arbitrary-precision integer to this
             object.</returns>
             <exception cref='InvalidOperationException'>This object does not
             represent a number (for the purposes of this method, infinity and
             not-a-number values, but not <c>CBORObject.Null</c>, are
-            considered numbers). To check the CBOR object for null before
-            conversion, use the following idiom (originally written in C# for
-            the.NET version): <c>(cbor==null || cbor.IsNull) ? null :
-            cbor.AsEInteger()</c>.</exception>
+            considered numbers).</exception>
             <exception cref='OverflowException'>This object's value is infinity
             or not-a-number (NaN).</exception>
 
@@ -875,15 +877,13 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsERational">
 
-            <summary>Converts this object to a rational number.</summary>
+            <summary>Converts this object to a rational number. See the
+            ToObject overload taking a type for more information.</summary>
             <returns>A rational number for this object's value.</returns>
             <exception cref='InvalidOperationException'>This object does not
             represent a number (for the purposes of this method, infinity and
             not-a-number values, but not <c>CBORObject.Null</c>, are
-            considered numbers). To check the CBOR object for null before
-            conversion, use the following idiom (originally written in C# for
-            the.NET version): <c>(cbor == null || cbor.IsNull) ? null :
-            cbor.AsERational()</c>.</exception>
+            considered numbers).</exception>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsInt16">
@@ -1069,8 +1069,8 @@
             or NaN values, but not CBORObject.Null, are considered
             numbers).</exception>
             <exception cref='OverflowException'>This object's value, if
-            converted to an integer by discarding its fractional part, is outside the range of a 64-bit unsigned
-            integer.</exception>
+            converted to an integer by discarding its fractional part, is
+            outside the range of a 64-bit unsigned integer.</exception>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.CanFitInDouble">
@@ -1410,7 +1410,7 @@
             pair in the map in an undefined order.</summary>
             <value>A collection of the key/value pairs stored in this CBOR map.
             To avoid potential problems, the calling code should not modify the
-            CBOR map while iterating over the returned collection.</value>
+            CBOR map or the returned collection while iterating over the returned collection.</value>
             <exception cref='InvalidOperationException'>This object is not a
             map.</exception>
 
@@ -2370,7 +2370,7 @@
             undefined order.</summary>
             <value>A collection of the keys of this CBOR object. To avoid
             potential problems, the calling code should not modify the CBOR map
-            while iterating over the returned collection.</value>
+            or the returned collection while iterating over the returned collection.</value>
             <exception cref='InvalidOperationException'>This object is not a
             map.</exception>
 
@@ -2889,39 +2889,52 @@
             method.</item>
              <item>If the type is <c>String</c> , returns the
             result of AsString.</item>
-             <item>If the type is <c>EDecimal</c> or
-            <c>EInteger</c> in the <a href='https://www.nuget.org/packages/PeterO.Numbers'><c>PeterO.Numbers</c> </a>
+             <item>If the type is <c>EFloat</c> ,
+            <c>EDecimal</c> , <c>EInteger</c> , or <c>ERational</c> in the <a href='https://www.nuget.org/packages/PeterO.Numbers'><c>PeterO.Numbers</c> </a>
              library (in .NET) or the <a href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c> </a>
-             artifact (in Java), returns the result of the corresponding
-            As* method.</item>
-             <item>If the type is <c>EFloat</c> or
-            <c>ERational</c> in the PeterO.Numbers or numbers library, converts
-            the given object to a number of the corresponding type and throws
-            an exception if the object does not represent a number (for this
-            purpose, infinity and not-a-number values, but not
+             artifact (in Java), converts the given object to a number of
+            the corresponding type and throws an exception (currently
+            InvalidOperationException) if the object does not represent a
+            number (for this purpose, infinity and not-a-number values, but not
             <c>CBORObject.Null</c> , are considered numbers). Currently, this
-            is equivalent to the result of <c>AsEFloat()</c> or
-            <c>AsERational()</c> , respectively, but may change slightly in the
-            next major version. Note that in the case of <c>EFloat</c> , if
-            this object represents a decimal number with a fractional part, the
-            conversion may lose information depending on the number, and if the
-            object is a rational number with a nonterminating binary expansion,
-            the number returned is a binary floating-point number rounded to a
-            high but limited precision.</item>
-             <item>In the.NET version, if the
-            type is a nullable (e.g., <c>Nullable&lt;int&gt;</c> or <c>int?</c> , returns <c>null</c> if this CBOR object is null, or this object's
-            value converted to the nullable's underlying type, e.g., <c>int</c> .</item>
-             <item>If the type is an enumeration ( <c>Enum</c> ) type
-            and this CBOR object is a text string or an integer, returns the
-            appropriate enumerated constant. (For example, if <c>MyEnum</c> includes an entry for <c>MyValue</c> , this method will return
-            <c>MyEnum.MyValue</c> if the CBOR object represents
-            <c>"MyValue"</c> or the underlying value for <c>MyEnum.MyValue</c> .) <b>Note:</b> If an integer is converted to a.NET Enum constant,
-            and that integer is shared by more than one constant of the same
-            type, it is undefined which constant from among them is returned.
-            (For example, if <c>MyEnum.Zero=0</c> and <c>MyEnum.Null=0</c> ,
-            converting 0 to <c>MyEnum</c> may return either <c>MyEnum.Zero</c> or <c>MyEnum.Null</c> .) As a result, .NET Enum types with
-            constants that share an underlying value should not be passed to
-            this method.</item>
+            is equivalent to the result of <c>AsEFloat()</c> ,
+            <c>AsEDecimal()</c> , <c>AsEInteger</c> , or <c>AsERational()</c> ,
+            respectively, but may change slightly in the next major version.
+            Note that in the case of <c>EFloat</c> , if this object represents
+            a decimal number with a fractional part, the conversion may lose
+            information depending on the number, and if the object is a
+            rational number with a nonterminating binary expansion, the number
+            returned is a binary floating-point number rounded to a high but
+            limited precision. In the case of <c>EDecimal</c> , if this object
+            expresses a rational number with a nonterminating decimal
+            expansion, returns a decimal number rounded to 34 digits of
+            precision. In the case of <c>EInteger</c> , if this CBOR object
+            expresses a floating-point number, it is converted to an integer by
+            discarding its fractional part, and if this CBOR object expresses a
+            rational number, it is converted to an integer by dividing the
+            numerator by the denominator and discarding the fractional part of
+            the result, and this method throws an exception (currently
+            OverflowException, but may change in the next major version) if
+            this object expresses infinity or a not-a-number value.</item>
+            <item>In the.NET version, if the type is a nullable (e.g.,
+            <c>Nullable&lt;int&gt;</c> or <c>int?</c> , returns <c>null</c> if
+            this CBOR object is null, or this object's value converted to the
+            nullable's underlying type, e.g., <c>int</c> .</item>
+             <item>If the
+            type is an enumeration ( <c>Enum</c> ) type and this CBOR object is
+            a text string or an integer, returns the appropriate enumerated
+            constant. (For example, if <c>MyEnum</c> includes an entry for
+            <c>MyValue</c> , this method will return <c>MyEnum.MyValue</c> if
+            the CBOR object represents <c>"MyValue"</c> or the underlying value
+            for <c>MyEnum.MyValue</c> .) <b>Note:</b> If an integer is
+            converted to a.NET Enum constant, and that integer is shared by
+            more than one constant of the same type, it is undefined which
+            constant from among them is returned. (For example, if
+            <c>MyEnum.Zero=0</c> and <c>MyEnum.Null=0</c> , converting 0 to
+            <c>MyEnum</c> may return either <c>MyEnum.Zero</c> or
+            <c>MyEnum.Null</c> .) As a result, .NET Enum types with constants
+            that share an underlying value should not be passed to this
+            method.</item>
              <item>If the type is <c>byte[]</c> (a
             one-dimensional byte array) and this CBOR object is a byte string,
             returns a byte array which this CBOR byte string's data will be
@@ -3028,8 +3041,9 @@
             written in Java, is a way to specify that the return value will be
             an ArrayList of String objects.</para>
             <code>Type arrayListString = new ParameterizedType() { public Type[]
-            getActualTypeArguments() { /* Contains one type parameter, String */ return
-            new Type[] { String.class }; } public Type getRawType() { /* Raw type is
+            getActualTypeArguments() { &#x2f;&#x2a; Contains one type parameter, String&#x2a;&#x2f;
+            return new Type[] { String.class }; }
+            public Type getRawType() { /* Raw type is
             ArrayList */ return ArrayList.class; } public Type getOwnerType() {
             return null; } }; ArrayList&lt;String&gt; array =
             (ArrayList&lt;String&gt;) cborArray.ToObject(arrayListString);</code> <para>By comparison, the C# version is much shorter.</para>
@@ -3215,7 +3229,7 @@
             for that, use the GetByteString method instead.).</summary>
             <value>A collection of the values of this CBOR map or array. To
             avoid potential problems, the calling code should not modify the
-            CBOR map or array while iterating over the returned
+            CBOR map or array or the returned collection while iterating over the returned
             collection.</value>
             <exception cref='InvalidOperationException'>This object is not a
             map or an array.</exception>
