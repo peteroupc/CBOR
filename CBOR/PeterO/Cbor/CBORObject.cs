@@ -809,6 +809,8 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// numbers (as opposed to Not-a-Number, NaN).</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='first'/> or <paramref name='second'/> is null.</exception>
+    [Obsolete("Instead, convert both CBOR objects to numbers (with" +
+"\u0020.AsNumber()), and use the first number's .Add() method.")]
     public static CBORObject Addition(CBORObject first, CBORObject second) {
       if (first == null) {
         throw new ArgumentNullException(nameof(first));
@@ -1005,6 +1007,8 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// <returns>The quotient of the two objects.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='first'/> or <paramref name='second'/> is null.</exception>
+    [Obsolete("Instead, convert both CBOR objects to numbers (with" +
+"\u0020.AsNumber()), and use the first number's .Divide() method.")]
     public static CBORObject Divide(CBORObject first, CBORObject second) {
       if (first == null) {
         throw new ArgumentNullException(nameof(first));
@@ -2465,6 +2469,8 @@ if (longValue > 0xffffffffL) {
     /// numbers (as opposed to Not-a-Number, NaN).</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='first'/> or <paramref name='second'/> is null.</exception>
+    [Obsolete("Instead, convert both CBOR objects to numbers (with" +
+"\u0020.AsNumber()), and use the first number's .Multiply() method.")]
     public static CBORObject Multiply(CBORObject first, CBORObject second) {
       if (first == null) {
         throw new ArgumentNullException(nameof(first));
@@ -2705,6 +2711,8 @@ options) {
     /// <returns>The remainder of the two numbers.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='first'/> or <paramref name='second'/> is null.</exception>
+    [Obsolete("Instead, convert both CBOR objects to numbers (with" +
+"\u0020.AsNumber()), and use the first number's .Remainder() method.")]
     public static CBORObject Remainder(CBORObject first, CBORObject second) {
       if (first == null) {
         throw new ArgumentNullException(nameof(first));
@@ -2736,6 +2744,8 @@ options) {
     /// numbers (as opposed to Not-a-Number, NaN).</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='first'/> or <paramref name='second'/> is null.</exception>
+    [Obsolete("Instead, convert both CBOR objects to numbers (with" +
+"\u0020.AsNumber()), and use the first number's .Subtract() method.")]
     public static CBORObject Subtract(CBORObject first, CBORObject second) {
       if (first == null) {
         throw new ArgumentNullException(nameof(first));

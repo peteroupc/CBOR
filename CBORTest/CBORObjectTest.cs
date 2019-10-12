@@ -269,42 +269,6 @@ namespace Test {
       }
     }
     [Test]
-    public void TestAbs() {
-      Assert.AreEqual(
-        ToObjectTest.TestToFromObjectRoundTrip(2),
-        ToObjectTest.TestToFromObjectRoundTrip(-2).Abs());
-      Assert.AreEqual(
-        ToObjectTest.TestToFromObjectRoundTrip(2),
-        ToObjectTest.TestToFromObjectRoundTrip(2).Abs());
-      Assert.AreEqual(
-        ToObjectTest.TestToFromObjectRoundTrip(2.5),
-        ToObjectTest.TestToFromObjectRoundTrip(-2.5).Abs());
-      {
-        object objectTemp =
-          ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString("6.63"));
-        object objectTemp2 =
-          ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(
-          "-6.63")).Abs();
-        Assert.AreEqual(objectTemp, objectTemp2);
-      }
-      {
-        object objectTemp =
-          ToObjectTest.TestToFromObjectRoundTrip(EFloat.FromString("2.75"));
-        object objectTemp2 =
-                   ToObjectTest.TestToFromObjectRoundTrip(EFloat.FromString(
-                 "-2.75")).Abs();
-        Assert.AreEqual(objectTemp, objectTemp2);
-      }
-      {
-        object objectTemp =
-          ToObjectTest.TestToFromObjectRoundTrip(ERational.FromDouble(2.5));
-        object objectTemp2 =
-          ToObjectTest.TestToFromObjectRoundTrip(ERational.FromDouble(-2.5))
-                  .Abs();
-        Assert.AreEqual(objectTemp, objectTemp2);
-      }
-    }
-    [Test]
     public void TestAdd() {
       CBORObject cbor = CBORObject.NewMap();
       CBORObject cborNull = CBORObject.Null;
@@ -373,10 +337,6 @@ namespace Test {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-    }
-    [Test]
-    public void TestAddTagHandler() {
-      // not implemented yet
     }
 
     [Test]
@@ -2005,50 +1965,6 @@ ToObjectTest.TestToFromObjectRoundTrip(100).CompareTo(null);
           Assert.Fail(ex.ToString());
           throw new InvalidOperationException(String.Empty, ex);
         }
-      }
-    }
-
-    [Test]
-    public void TestDivide() {
-      try {
-        CBORObject.Divide(null, ToObjectTest.TestToFromObjectRoundTrip(2));
-        Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.Divide(ToObjectTest.TestToFromObjectRoundTrip(2), null);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.Divide(
-         CBORObject.Null,
-         ToObjectTest.TestToFromObjectRoundTrip(2));
-        Assert.Fail("Should have failed");
-      } catch (ArgumentException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.Divide(
-         ToObjectTest.TestToFromObjectRoundTrip(2),
-         CBORObject.Null);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
       }
     }
 
@@ -4554,50 +4470,6 @@ ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes();
           Assert.Fail(ex.ToString());
           throw new InvalidOperationException(String.Empty, ex);
         }
-      }
-    }
-
-    [Test]
-    public void TestRemainder() {
-      try {
-        CBORObject.Remainder(null, ToObjectTest.TestToFromObjectRoundTrip(2));
-        Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.Remainder(ToObjectTest.TestToFromObjectRoundTrip(2), null);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.Remainder(
-  CBORObject.Null,
-  ToObjectTest.TestToFromObjectRoundTrip(2));
-        Assert.Fail("Should have failed");
-      } catch (ArgumentException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.Remainder(
-  ToObjectTest.TestToFromObjectRoundTrip(2),
-  CBORObject.Null);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
       }
     }
 

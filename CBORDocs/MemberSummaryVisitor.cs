@@ -90,10 +90,7 @@ namespace PeterO.DocGen {
       foreach (var key in this.docs.Keys) {
         finalString = this.docs[key].ToString();
         var typeName = this.memberFormats[key];
-        typeName = typeName.Replace("&", "&amp;");
-        typeName = typeName.Replace("<", "&lt;");
-        typeName = typeName.Replace(">", "&gt;");
-        typeName = "[" + typeName + "](#" + key + ")";
+        typeName = "[" + DocGenUtil.HtmlEscape(typeName) + "](#" + key + ")";
         finalString = Regex.Replace(finalString, "\\s+", " ");
         sb.Append("* <code>" + typeName + "</code> - ");
         sb.Append(finalString + "\n");

@@ -16,10 +16,8 @@ namespace PeterO.DocGen {
     private sealed class TypeLinkAndBuilder {
       public TypeLinkAndBuilder(Type type) {
         var typeName = DocVisitor.FormatType(type);
-        typeName = typeName.Replace("&", "&amp;");
-        typeName = typeName.Replace("<", "&lt;");
-        typeName = typeName.Replace(">", "&gt;");
-        typeName = "[" + typeName + "](" + DocVisitor.GetTypeID(type) + ".md)";
+        typeName = "[" + DocGenUtil.HtmlEscape(typeName) + "](" +
+DocVisitor.GetTypeID(type) + ".md)";
         this.TypeLink = typeName;
         this.Builder = new StringBuilder();
       }
@@ -56,8 +54,9 @@ memberName) {
       string summary;
       var attr = info?.GetCustomAttribute(typeof(ObsoleteAttribute)) as
                   ObsoleteAttribute;
-      summary = (attr != null) ? ("<b>Deprecated:</b> " + attr.Message) :
-(xdoc?.GetSummary(memberName));
+      summary = (attr != null) ?
+         ("<b>Deprecated:</b> " + DocGenUtil.HtmlEscape(attr.Message)) :
+         xdoc?.GetSummary(memberName);
       if (summary != null && attr == null &&
           summary.IndexOf(".", StringComparison.Ordinal) >= 0) {
           summary = summary.Substring(
@@ -76,7 +75,7 @@ memberName) {
         var docVisitor = new TypeLinkAndBuilder(currentType);
         this.docs[typeFullName] = docVisitor;
       }
-      var summary=GetSummary(currentType, xdoc, "T:" + typeFullName);
+      var summary = GetSummary(currentType, xdoc, "T:" + typeFullName);
       if (summary == null) {
         Console.WriteLine("no summary for " + typeFullName);
       } else {

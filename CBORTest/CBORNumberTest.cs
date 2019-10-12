@@ -5,6 +5,38 @@ using PeterO.Numbers;
 namespace Test {
 [TestFixture]
 public class CBORNumberTest {
+private static CBORNumber ToCN(object o) {
+  return ToObjectTest.TestToFromObjectRoundTrip(o).AsNumber();
+}
+
+[Test]
+public void TestAbs() {
+      TestCommon.CompareTestEqual(
+        ToCN(2),
+        ToCN(-2).Abs());
+      TestCommon.CompareTestEqual(
+        ToCN(2),
+        ToCN(2).Abs());
+      TestCommon.CompareTestEqual(
+        ToCN(2.5),
+        ToCN(-2.5).Abs());
+      {
+        CBORNumber objectTemp = ToCN(EDecimal.FromString("6.63"));
+        CBORNumber objectTemp2 = ToCN(EDecimal.FromString(
+          "-6.63")).Abs();
+        TestCommon.CompareTestEqual(objectTemp, objectTemp2);
+      }
+      {
+        CBORNumber objectTemp = ToCN(EFloat.FromString("2.75"));
+        CBORNumber objectTemp2 = ToCN(EFloat.FromString("-2.75")).Abs();
+        TestCommon.CompareTestEqual(objectTemp, objectTemp2);
+      }
+      {
+        CBORNumber objectTemp = ToCN(ERational.FromDouble(2.5));
+        CBORNumber objectTemp2 = ToCN(ERational.FromDouble(-2.5)).Abs();
+        TestCommon.CompareTestEqual(objectTemp, objectTemp2);
+      }
+    }
 [Test]
 public void TestToCBORObject() {
 // not implemented yet
@@ -49,17 +81,60 @@ public void TestAdd() {
 public void TestSubtract() {
 // not implemented yet
 }
+
+private static EDecimal AsED(CBORObject obj) {
+      return (EDecimal)obj.ToObject(typeof(EDecimal));
+    }
 [Test]
 public void TestMultiply() {
-// not implemented yet
+      try {
+        ToCN(2).Multiply(null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      var r = new RandomGenerator();
+      for (var i = 0; i < 3000; ++i) {
+        CBORObject o1 = CBORTestCommon.RandomNumber(r);
+        CBORObject o2 = CBORTestCommon.RandomNumber(r);
+        EDecimal cmpDecFrac = AsED(o1).Multiply(AsED(o2));
+        EDecimal cmpCobj = AsED(AsCN(o1).Multiply(AsCN(o2)));
+        if (!cmpDecFrac.Equals(cmpCobj)) {
+          TestCommon.CompareTestEqual(
+            cmpDecFrac,
+            cmpCobj,
+            o1.ToString() + "\n" + o2.ToString());
+        }
+        CBORTestCommon.AssertRoundTrip(o1);
+        CBORTestCommon.AssertRoundTrip(o2);
+      }
 }
 [Test]
 public void TestDivide() {
-// not implemented yet
+      try {
+        ToCN(2).Divide(null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
 }
 [Test]
 public void TestRemainder() {
-// not implemented yet
+      try {
+        ToCN(2).Remainder(null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
 }
 [Test]
 public void TestCompareTo() {

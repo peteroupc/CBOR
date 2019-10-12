@@ -638,7 +638,8 @@ xmlName.Equals("em", StringComparison.Ordinal)) {
           var attr = method.GetCustomAttribute(typeof(ObsoleteAttribute)) as
             ObsoleteAttribute;
           if (attr != null) {
-            this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
+            this.WriteLine("<b>Deprecated.</b> " +
+DocGenUtil.HtmlEscape(attr.Message) + "\r\n\r\n");
           }
           this.paramStr.Clear();
           this.returnStr.Clear();
