@@ -229,6 +229,14 @@ namespace PeterO.Cbor {
               sb.Append((char)c);
               c = this.reader.ReadChar();
             }
+            if (this.numbersToDoubles) {
+              str = sb.ToString();
+              double dbl = CBORDataUtilities.ParseJSONDouble(str, true);
+              if (Double.IsNaN(dbl)) {
+                this.reader.RaiseError("JSON number can't be parsed. " + str);
+              }
+              return CBORObject.FromObject(dbl);
+            }
             if (lengthTwo) {
               obj = cval == 0 ?
               CBORDataUtilities.ParseJSONNumber("-0", true, false, true) :
@@ -273,7 +281,14 @@ namespace PeterO.Cbor {
               sb.Append((char)c);
               c = this.reader.ReadChar();
             }
-            if (lengthOne) {
+            if (this.numbersToDoubles) {
+              str = sb.ToString();
+              double dbl = CBORDataUtilities.ParseJSONDouble(str, true);
+              if (Double.IsNaN(dbl)) {
+                this.reader.RaiseError("JSON number can't be parsed. " + str);
+              }
+              return CBORObject.FromObject(dbl);
+            } else if (lengthOne) {
               obj = CBORObject.FromObject(cval);
             } else {
               str = sb.ToString();
@@ -296,12 +311,19 @@ namespace PeterO.Cbor {
       return null;
     }
 
-    private bool noDuplicates;
+    private readonly bool noDuplicates;
+    private readonly bool numbersToDoubles;
 
-    public CBORJson(CharacterInputWithCount reader, bool noDuplicates) {
+    public CBORJson(CharacterInputWithCount reader,
+          bool noDuplicates) : this(reader, noDuplicates, false) {
+    }
+
+    public CBORJson(CharacterInputWithCount reader,
+          bool noDuplicates, bool numbersToDoubles) {
       this.reader = reader;
       this.sb = null;
       this.noDuplicates = noDuplicates;
+      this.numbersToDoubles = numbersToDoubles;
     }
 
     public CBORObject ParseJSON(bool objectOrArrayOnly, int[] nextchar) {

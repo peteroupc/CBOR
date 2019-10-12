@@ -193,9 +193,10 @@ namespace PeterO.Cbor {
     /// <param name='str'>A string to parse. The string is not allowed to
     /// contain white space characters, including spaces.</param>
     /// <param name='integersOnly'>If true, no decimal points or exponents
-    /// are allowed in the string.</param>
+    /// are allowed in the string. The default is false.</param>
     /// <param name='positiveOnly'>If true, only positive numbers are
-    /// allowed (the leading minus is disallowed).</param>
+    /// allowed (the leading minus is disallowed). The default is
+    /// false.</param>
     /// <returns>A CBOR object that represents the parsed number. Returns
     /// positive zero if the number is a zero that starts with a minus sign
     /// (such as "-0" or "-0.0"). Returns null if the parsing fails,
@@ -208,6 +209,127 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Parses a number whose format follows the JSON
+    /// specification (RFC 8259), in the form of a 64-bit binary
+    /// floating-point number. See #ParseJSONDouble(String,
+    /// preserveNegativeZero) for more information.</summary>
+    /// <param name='str'>A string to parse. The string is not allowed to
+    /// contain white space characters, including spaces.</param>
+    /// <returns>A 64-bit binary floating-point number parsed from the
+    /// given string. Returns NaN if the parsing fails, including if the
+    /// string is null or empty. (To check for NaN, use
+    /// <c>Double.IsNaN()</c> in.NET or <c>Double.isNaN()</c> in
+    /// Java.)</returns>
+    public static double ParseJSONDouble(string str) {
+       return ParseJSONDouble(str, false);
+    }
+
+    /// <summary>Parses a number whose format follows the JSON
+    /// specification (RFC 8259), in the form of a 64-bit binary
+    /// floating-point number. Roughly speaking, a valid number consists of
+    /// an optional minus sign, one or more basic digits (starting with 1
+    /// to 9 unless the only digit is 0), an optional decimal point (".",
+    /// full stop) with one or more basic digits, and an optional letter E
+    /// or e with an optional plus or minus sign and one or more basic
+    /// digits (the exponent).</summary>
+    /// <param name='str'>A string to parse. The string is not allowed to
+    /// contain white space characters, including spaces.</param>
+    /// <param name='preserveNegativeZero'>If true, returns positive zero
+    /// if the number is a zero that starts with a minus sign (such as "-0"
+    /// or "-0.0"). Otherwise, returns negative zero in this case. The
+    /// default is false.</param>
+    /// <returns>A 64-bit binary floating-point number parsed from the
+    /// given string. Returns NaN if the parsing fails, including if the
+    /// string is null or empty. (To check for NaN, use
+    /// <c>Double.IsNaN()</c> in.NET or <c>Double.isNaN()</c> in
+    /// Java.)</returns>
+    public static double ParseJSONDouble(string str, bool
+preserveNegativeZero) {
+      if (String.IsNullOrEmpty(str)) {
+        return Double.NaN;
+      }
+      var offset = 0;
+      var havenonzero = false;
+      var negative = false;
+      var haveExponent = false;
+      var haveDecimalPoint = false;
+      var haveDigits = false;
+      var haveDigitsAfterDecimal = false;
+      if (str[0] == '-') {
+        negative = true;
+        ++offset;
+      }
+      int i = offset;
+      // Ordinary number
+      if (i < str.Length && str[i] == '0') {
+        ++i;
+        haveDigits = true;
+        if (i == str.Length) {
+          return (preserveNegativeZero && negative) ?
+EFloat.Zero.Negate().ToDouble() : 0.0;
+        }
+        if (str[i] == '.') {
+          haveDecimalPoint = true;
+          ++i;
+        } else if (str[i] == 'E' || str[i] == 'e') {
+          haveExponent = true;
+          } else {
+            return Double.NaN;
+        }
+      }
+      for (; i < str.Length; ++i) {
+        if (str[i] >= '0' && str[i] <= '9') {
+          haveDigits = true;
+          havenonzero = havenonzero && (str[i] != '0');
+          if (haveDecimalPoint) {
+            haveDigitsAfterDecimal = true;
+          }
+        } else if (str[i] == '.') {
+          if (!haveDigits) {
+            // no digits before the decimal point
+            return Double.NaN;
+          }
+          if (haveDecimalPoint) {
+            return Double.NaN;
+          }
+          haveDecimalPoint = true;
+        } else if (str[i] == 'E' || str[i] == 'e') {
+          haveExponent = true;
+          ++i;
+          break;
+        } else {
+          return Double.NaN;
+        }
+      }
+      if (!haveDigits || (haveDecimalPoint && !haveDigitsAfterDecimal)) {
+        return Double.NaN;
+      }
+      if (haveExponent) {
+        haveDigits = false;
+        if (i == str.Length) {
+          return Double.NaN;
+        }
+        if (str[i] == '+' || str[i] == '-') {
+          ++i;
+        }
+        for (; i < str.Length; ++i) {
+          if (str[i] >= '0' && str[i] <= '9') {
+            haveDigits = true;
+          } else {
+            return Double.NaN;
+          }
+        }
+        if (!haveDigits) {
+          return Double.NaN;
+        }
+      }
+      if (!havenonzero) {
+          return (preserveNegativeZero && negative) ?
+EFloat.Zero.Negate().ToDouble() : 0.0;
+      }
+      return EFloat.FromString(str, EContext.Binary64).ToDouble();
+    }
+
+    /// <summary>Parses a number whose format follows the JSON
     /// specification (RFC 8259). Roughly speaking, a valid number consists
     /// of an optional minus sign, one or more basic digits (starting with
     /// 1 to 9 unless the only digit is 0), an optional decimal point (".",
@@ -217,12 +339,14 @@ namespace PeterO.Cbor {
     /// <param name='str'>A string to parse. The string is not allowed to
     /// contain white space characters, including spaces.</param>
     /// <param name='integersOnly'>If true, no decimal points or exponents
-    /// are allowed in the string.</param>
+    /// are allowed in the string. The default is false.</param>
     /// <param name='positiveOnly'>If true, only positive numbers are
-    /// allowed (the leading minus is disallowed).</param>
+    /// allowed (the leading minus is disallowed). The default is
+    /// false.</param>
     /// <param name='preserveNegativeZero'>If true, returns positive zero
     /// if the number is a zero that starts with a minus sign (such as "-0"
-    /// or "-0.0"). Otherwise, returns negative zero in this case.</param>
+    /// or "-0.0"). Otherwise, returns negative zero in this case. The
+    /// default is false.</param>
     /// <returns>A CBOR object that represents the parsed number. Returns
     /// null if the parsing fails, including if the string is null or
     /// empty.</returns>
@@ -259,8 +383,11 @@ namespace PeterO.Cbor {
         haveDigits = true;
         if (i == str.Length) {
           if (preserveNegativeZero && negative) {
+            // Negative zero in floating-point format
+            // TODO: In next major version, return the following instead:
+            // return CBORObject.FromFloatingPointBits(0x8000, 2);
             return CBORObject.FromObject(
-             EDecimal.NegativeZero);
+               EDecimal.NegativeZero);
           }
           return CBORObject.FromObject(0);
         }
@@ -425,6 +552,8 @@ namespace PeterO.Cbor {
           if (negative) {
             mantInt = -mantInt;
             if (preserveNegativeZero && mantInt == 0) {
+              // TODO: In next major version, return the following instead:
+              // return CBORObject.FromFloatingPointBits(0x8000, 2);
               return CBORObject.FromObject(
                 EDecimal.NegativeZero);
             }

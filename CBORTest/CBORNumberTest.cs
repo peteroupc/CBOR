@@ -1,5 +1,6 @@
 using System;
 using NUnit.Framework;
+using PeterO;
 using PeterO.Cbor;
 using PeterO.Numbers;
 namespace Test {
@@ -101,7 +102,7 @@ public void TestMultiply() {
         CBORObject o1 = CBORTestCommon.RandomNumber(r);
         CBORObject o2 = CBORTestCommon.RandomNumber(r);
         EDecimal cmpDecFrac = AsED(o1).Multiply(AsED(o2));
-        EDecimal cmpCobj = AsED(AsCN(o1).Multiply(AsCN(o2)));
+        EDecimal cmpCobj = ToCN(o1).Multiply(ToCN(o2)).AsEDecimal();
         if (!cmpDecFrac.Equals(cmpCobj)) {
           TestCommon.CompareTestEqual(
             cmpDecFrac,
