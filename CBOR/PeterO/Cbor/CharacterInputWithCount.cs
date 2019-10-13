@@ -24,23 +24,23 @@ namespace PeterO.Cbor {
         throw new ArgumentNullException(nameof(chars));
       }
       if (index < 0) {
-        throw new ArgumentException("index (" + index +
+        throw new ArgumentException("index(" + index +
           ") is less than 0");
       }
       if (index > chars.Length) {
-        throw new ArgumentException("index (" + index +
+        throw new ArgumentException("index(" + index +
           ") is more than " + chars.Length);
       }
       if (length < 0) {
-        throw new ArgumentException("length (" + length +
+        throw new ArgumentException("length(" + length +
           ") is less than 0");
       }
       if (length > chars.Length) {
-        throw new ArgumentException("length (" + length +
+        throw new ArgumentException("length(" + length +
           ") is more than " + chars.Length);
       }
       if (chars.Length - index < length) {
-        throw new ArgumentException("chars's length minus " + index + " (" +
+        throw new ArgumentException("chars's length minus " + index + "(" +
           (chars.Length - index) + ") is less than " + length);
       }
       int ret = this.ci.Read(chars, index, length);
@@ -56,13 +56,13 @@ namespace PeterO.Cbor {
         c = this.ci.ReadChar();
       } catch (InvalidOperationException ex) {
         if (ex.InnerException == null) {
-          throw new CBORException(
-  this.NewErrorString(ex.Message),
-  ex);
+          throw new CBORException (
+            this.NewErrorString(ex.Message),
+            ex);
         } else {
-          throw new CBORException(
-  this.NewErrorString(ex.Message),
-  ex.InnerException);
+          throw new CBORException (
+            this.NewErrorString(ex.Message),
+            ex.InnerException);
         }
       }
       if (c >= 0) {

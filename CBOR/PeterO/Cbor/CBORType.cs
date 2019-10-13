@@ -8,17 +8,18 @@ at: http://peteroupc.github.io/
 using System;
 
 namespace PeterO.Cbor {
-    /// <summary>Represents a type that a CBOR object can have.</summary>
+  /// <summary>Represents a type that a CBOR object can have.</summary>
   public enum CBORType {
     /// <summary>A number of any kind, including integers, big integers,
     /// floating point numbers, and decimal numbers. The floating-point
     /// value Not-a-Number is also included in the Number type.</summary>
     [Obsolete("Use the IsNumber property of CBORObject to determine" +
-       " whether a CBOR object represents a number, or use the two " +
-       "new CBORType values instead.  CBORType.Integer " +
-       "covers CBOR objects representing integers of major type 0 and 1. " +
-       "CBORType.FloatingPoint covers CBOR objects representing " +
-       "16-, 32-, and 64-bit floating-point numbers.")]
+
+        " whether a CBOR object represents a number, or use the two " +
+        "new CBORType values instead. CBORType.Integer " +
+        "covers CBOR objects representing integers of major type 0 and 1. " +
+        "CBORType.FloatingPoint covers CBOR objects representing " +
+        "16-, 32-, and 64-bit floating-point numbers.")]
     Number,
 
     /// <summary>The simple values true and false.</summary>

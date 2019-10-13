@@ -11,8 +11,8 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-    /// <summary>Contains utility methods that may have use outside of the
-    /// CBORObject class.</summary>
+  /// <summary>Contains utility methods that may have use outside of the
+  /// CBORObject class.</summary>
   internal static class CBORUtilities {
     private const string HexAlphabet = "0123456789ABCDEF";
 
@@ -121,7 +121,7 @@ namespace PeterO.Cbor {
 
     public static string TrimDotZero(string str) {
       return (str.Length > 2 && str[str.Length - 1] == '0' && str[str.Length
-                    - 2] == '.') ? str.Substring(0, str.Length - 2) :
+            - 2] == '.') ? str.Substring(0, str.Length - 2) :
         str;
     }
 
@@ -134,15 +134,15 @@ namespace PeterO.Cbor {
     }
 
     public static double Int64BitsToDouble(long bits) {
-      return BitConverter.ToDouble(
-  BitConverter.GetBytes(bits),
-  0);
+      return BitConverter.ToDouble (
+          BitConverter.GetBytes(bits),
+          0);
     }
 
     public static float Int32BitsToSingle(int bits) {
-      return BitConverter.ToSingle(
-  BitConverter.GetBytes(bits),
-  0);
+      return BitConverter.ToSingle (
+          BitConverter.GetBytes(bits),
+          0);
     }
 
     public static string DoubleToString(double dbl) {
@@ -175,13 +175,15 @@ namespace PeterO.Cbor {
         }
         while (intlongValue > 43698) {
           int intdivValue = intlongValue / 10;
-          char digit = HexAlphabet[(int)(intlongValue - (intdivValue * 10))];
+          char digit = HexAlphabet[(int)(intlongValue - (intdivValue *
+                  10))];
           chars[count--] = digit;
           intlongValue = intdivValue;
         }
         while (intlongValue > 9) {
           int intdivValue = (intlongValue * 26215) >> 18;
-          char digit = HexAlphabet[(int)(intlongValue - (intdivValue * 10))];
+          char digit = HexAlphabet[(int)(intlongValue - (intdivValue *
+                  10))];
           chars[count--] = digit;
           intlongValue = intdivValue;
         }
@@ -226,7 +228,7 @@ namespace PeterO.Cbor {
 
     private static EInteger FloorDiv(EInteger a, EInteger n) {
       return a.Sign >= 0 ? a.Divide(n) : EInteger.FromInt32(-1).Subtract(
-                EInteger.FromInt32(-1).Subtract(a).Divide(n));
+          EInteger.FromInt32(-1).Subtract(a).Divide(n));
     }
 
     private static EInteger FloorMod(EInteger a, EInteger n) {
@@ -257,7 +259,7 @@ namespace PeterO.Cbor {
       0xd5, 0xf4, 0x112, 0x131, 0x14f, 0x16e,
     };
 
-    public static void GetNormalizedPartProlepticGregorian(
+    public static void GetNormalizedPartProlepticGregorian (
       EInteger year,
       int month,
       EInteger day,
@@ -267,9 +269,9 @@ namespace PeterO.Cbor {
         throw new ArgumentOutOfRangeException(nameof(month));
       }
       int[] dayArray = (year.Remainder(4).Sign != 0 || (
-                    year.Remainder(100).Sign == 0 &&
-                    year.Remainder(400).Sign != 0)) ?
-         ValueNormalDays : ValueLeapDays;
+            year.Remainder(100).Sign == 0 && year.Remainder(400).Sign !=
+0)) ?
+        ValueNormalDays : ValueLeapDays;
       if (day.CompareTo(101) > 0) {
         EInteger count = day.Subtract(100).Divide(146097);
         day = day.Subtract(count.Multiply(146097));
@@ -286,8 +288,8 @@ namespace PeterO.Cbor {
             month = 1;
             year = year.Add(1);
             dayArray = (year.Remainder(4).Sign != 0 || (
-                    year.Remainder(100).Sign == 0 &&
-                    year.Remainder(400).Sign != 0)) ? ValueNormalDays :
+                  year.Remainder(100).Sign == 0 &&
+                  year.Remainder(400).Sign != 0)) ? ValueNormalDays :
               ValueLeapDays;
             } else {
             ++month;
@@ -300,9 +302,9 @@ namespace PeterO.Cbor {
             month = 12;
           }
           dayArray = (year.Remainder(4).Sign != 0 || (
-                    year.Remainder(100).Sign == 0 &&
-             year.Remainder(400).Sign != 0)) ? ValueNormalDays :
-                    ValueLeapDays;
+                year.Remainder(100).Sign == 0 &&
+                year.Remainder(400).Sign != 0)) ? ValueNormalDays :
+            ValueLeapDays;
           day = day.Add(dayArray[month]);
         }
       }
@@ -322,7 +324,7 @@ namespace PeterO.Cbor {
        // EInteger.FromInt32(1904),
        1 // ,
        s1));*/
-    public static EInteger GetNumberOfDaysProlepticGregorian(
+    public static EInteger GetNumberOfDaysProlepticGregorian (
       EInteger year,
       int month,
       int mday) {
@@ -349,36 +351,37 @@ namespace PeterO.Cbor {
         numDays = numDays.Subtract(diff.Multiply(365));
         var decrement = 1;
         for (;
-             ei.CompareTo(year) > 0;
-             ei = ei.Subtract(decrement)) {
+          ei.CompareTo(year) > 0;
+          ei = ei.Subtract(decrement)) {
           if (decrement == 1 && ei.Remainder(4).Sign == 0) {
             decrement = 4;
           }
           if (!(ei.Remainder(4).Sign != 0 || (
-                ei.Remainder(100).Sign == 0 && ei.Remainder(400).Sign != 0))) {
+                ei.Remainder(100).Sign == 0 && ei.Remainder(400).Sign !=
+                0))) {
             numDays = numDays.Subtract(1);
           }
         }
         if (year.Remainder(4).Sign != 0 || (
-                    year.Remainder(100).Sign == 0 &&
-                    year.Remainder(400).Sign != 0)) {
+            year.Remainder(100).Sign == 0 && year.Remainder(400).Sign != 0)) {
           numDays = numDays.Subtract(365 - ValueNormalToMonth[month])
-           .Subtract(ValueNormalDays[month] - mday + 1);
-         } else {
+            .Subtract(ValueNormalDays[month] - mday + 1);
+          } else {
           numDays = numDays
             .Subtract(366 - ValueLeapToMonth[month])
             .Subtract(ValueLeapDays[month] - mday + 1);
         }
       } else {
         bool isNormalYear = year.Remainder(4).Sign != 0 ||
-        (year.Remainder(100).Sign == 0 && year.Remainder(400).Sign != 0);
+(year.Remainder(100).Sign == 0 && year.Remainder(400).Sign != 0);
+
         EInteger ei = EInteger.FromInt32(startYear);
         if (ei.Add(401).CompareTo(year) < 0) {
           EInteger y2 = year.Subtract(2);
-          numDays = numDays.Add(
-            y2.Subtract(startYear).Divide(400).Multiply(146097));
-          ei = y2.Subtract(
-            y2.Subtract(startYear).Remainder(400));
+          numDays = numDays.Add (
+              y2.Subtract(startYear).Divide(400).Multiply(146097));
+          ei = y2.Subtract (
+              y2.Subtract(startYear).Remainder(400));
         }
 
         EInteger diff = year.Subtract(ei);
@@ -400,12 +403,12 @@ namespace PeterO.Cbor {
         int yearToMonth = isNormalYear ? ValueNormalToMonth[month - 1] :
           ValueLeapToMonth[month - 1];
         numDays = numDays.Add(yearToMonth)
-             .Add(mday - 1);
+          .Add(mday - 1);
       }
       return numDays;
     }
 
-    public static void BreakDownSecondsSinceEpoch(
+    public static void BreakDownSecondsSinceEpoch (
       EDecimal edec,
       EInteger[] year,
       int[] lesserFields) {
@@ -414,19 +417,19 @@ namespace PeterO.Cbor {
       EDecimal fractionalPart = edec.Abs()
         .Subtract(EDecimal.FromEInteger(integerPart).Abs());
       int nanoseconds = fractionalPart.Multiply(1000000000)
-       .ToInt32Checked();
+        .ToInt32Checked();
       var normPart = new EInteger[3];
-      EInteger days = FloorDiv(
-  integerPart,
-  EInteger.FromInt32(86400)).Add(1);
-      int secondsInDay = FloorMod(
-  integerPart,
-  EInteger.FromInt32(86400)).ToInt32Checked();
-      GetNormalizedPartProlepticGregorian(
-     EInteger.FromInt32(1970),
-     1,
-     days,
-     normPart);
+      EInteger days = FloorDiv (
+          integerPart,
+          EInteger.FromInt32(86400)).Add(1);
+      int secondsInDay = FloorMod (
+          integerPart,
+          EInteger.FromInt32(86400)).ToInt32Checked();
+      GetNormalizedPartProlepticGregorian (
+        EInteger.FromInt32(1970),
+        1,
+        days,
+        normPart);
       lesserFields[0] = normPart[1].ToInt32Checked();
       lesserFields[1] = normPart[2].ToInt32Checked();
       lesserFields[2] = secondsInDay / 3600;
@@ -440,8 +443,9 @@ namespace PeterO.Cbor {
     public static bool NameStartsWithWord(String name, String word) {
       int wl = word.Length;
       return name.Length > wl && name.Substring(0, wl).Equals(word,
-  StringComparison.Ordinal) && !(name[wl] >= 'a' && name[wl] <= 'z') &&
-              !(name[wl] >= '0' && name[wl] <= '9');
+          StringComparison.Ordinal) && !(name[wl] >= 'a' && name[wl] <=
+'z') &&
+        !(name[wl] >= '0' && name[wl] <= '9');
     }
 
     public static String FirstCharLower(String name) {
@@ -487,10 +491,10 @@ namespace PeterO.Cbor {
         }
       }
       return !(dateTime[3] < 0 || dateTime[4] < 0 || dateTime[5] < 0 ||
-dateTime[3] >= 24 || dateTime[4] >= 60 || dateTime[5] >= 61 ||
-dateTime[6] < 0 ||
-dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
-        dateTime[7] >= 1440);
+          dateTime[3] >= 24 || dateTime[4] >= 60 || dateTime[5] >= 61 ||
+          dateTime[6] < 0 ||
+          dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
+          dateTime[7] >= 1440);
     }
 
     private static bool IsLeapYear(int yr) {
@@ -501,7 +505,7 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
       return (((yr % 4) == 0) && ((yr % 100) != 0)) || ((yr % 400) == 0);
     }
 
-    public static void ParseAtomDateTimeString(
+    public static void ParseAtomDateTimeString (
       string str,
       EInteger[] bigYearArray,
       int[] lf) {
@@ -523,9 +527,9 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
         } else if (i == 10) {
           bad |= str[i] != 'T';
           /*lowercase t not used to separate date/time,
-    following RFC 4287 sec. 3.3*/ } else {
+          following RFC 4287 sec. 3.3*/ } else {
           bad |= str[i] < '0' || str[i] >
-'9';
+            '9';
         }
       }
       if (bad) {
@@ -597,20 +601,20 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
       return dt;
     }
 
-    public static string ToAtomDateTimeString(
+    public static string ToAtomDateTimeString (
       EInteger bigYear,
       int[] lesserFields) {
       if (lesserFields[6] != 0) {
-        throw new NotSupportedException(
+        throw new NotSupportedException (
           "Local time offsets not supported");
       }
       int smallYear = bigYear.ToInt32Checked();
       if (smallYear < 0) {
-        throw new ArgumentException("year (" + smallYear +
+        throw new ArgumentException("year(" + smallYear +
           ") is not greater or equal to 0");
       }
       if (smallYear > 9999) {
-        throw new ArgumentException("year (" + smallYear +
+        throw new ArgumentException("year(" + smallYear +
           ") is not less or equal to 9999");
       }
       int month = lesserFields[0];
@@ -662,9 +666,9 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
     }
 
     public static EInteger BigIntegerFromDouble(double dbl) {
-      long lvalue = BitConverter.ToInt64(
-  BitConverter.GetBytes((double)dbl),
-  0);
+      long lvalue = BitConverter.ToInt64 (
+          BitConverter.GetBytes((double)dbl),
+          0);
       int value0 = unchecked((int)(lvalue & 0xffffffffL));
       int value1 = unchecked((int)((lvalue >> 32) & 0xffffffffL));
       var floatExponent = (int)((value1 >> 20) & 0x7ff);
@@ -730,7 +734,7 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
       long shifted = mant >> shift;
       long masked = mant & mask;
       return (masked > half || (masked == half && (shifted & 1L) != 0)) ?
-         unchecked((int)shifted) + 1 : unchecked((int)shifted);
+        unchecked((int)shifted) + 1 : unchecked((int)shifted);
     }
 
     private static int RoundedShift(int mant, int shift) {
@@ -739,7 +743,7 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
       int shifted = mant >> shift;
       int masked = mant & mask;
       return (masked > half || (masked == half && (shifted & 1) != 0)) ?
-         shifted + 1 : shifted;
+        shifted + 1 : shifted;
     }
 
     public static int DoubleToHalfPrecisionIfSameValue(long bits) {
@@ -757,11 +761,11 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
       } else if (sexp < -10) { // underflow
         return -1;
       } else if (sexp > 0) { // normal
-        return ((mant & ((1L << 42) - 1)) == 0) ?
-          (sign | (sexp << 10) | RoundedShift(mant, 42)) : -1;
-        } else { // subnormal and zero
-        return ((mant & ((1L << (42 - (sexp - 1))) - 1)) == 0) ?
-          (sign | RoundedShift(mant | (1L << 52), 42 - (sexp - 1))) : -1;
+        return ((mant & ((1L << 42) - 1)) == 0) ? (sign | (sexp << 10) |
+            RoundedShift(mant, 42)) : -1;
+      } else { // subnormal and zero
+        return ((mant & ((1L << (42 - (sexp - 1))) - 1)) == 0) ? (sign |
+            RoundedShift(mant | (1L << 52), 42 - (sexp - 1))) : -1;
       }
     }
 
@@ -790,9 +794,9 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
       if (exp == 255) { // Infinity and NaN
         int newmant = unchecked((int)(mant >> 13));
         return (mant != 0 && newmant == 0) ?
-           // signaling NaN truncated to have mantissa 0
-           (sign | 0x7c01) : (sign | 0x7c00 | newmant);
-         } else if (sexp >= 31) { // overflow
+          // signaling NaN truncated to have mantissa 0
+          (sign | 0x7c01) : (sign | 0x7c00 | newmant);
+        } else if (sexp >= 31) { // overflow
         return sign | 0x7c00;
       } else if (sexp < -10) { // underflow
         return sign;
@@ -812,9 +816,9 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
       if (exp == 2047) { // Infinity and NaN
         int newmant = unchecked((int)(mant >> 42));
         return (mant != 0 && newmant == 0) ?
-           // signaling NaN truncated to have mantissa 0
-           (sign | 0x7c01) : (sign | 0x7c00 | newmant);
-         } else if (sexp >= 31) { // overflow
+          // signaling NaN truncated to have mantissa 0
+          (sign | 0x7c01) : (sign | 0x7c00 | newmant);
+        } else if (sexp >= 31) { // overflow
         return sign | 0x7c00;
       } else if (sexp < -10) { // underflow
         return sign;
@@ -834,9 +838,9 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
       if (exp == 2047) { // Infinity and NaN
         int newmant = unchecked((int)(mant >> 29));
         return (mant != 0 && newmant == 0) ?
-           // signaling NaN truncated to have mantissa 0
-           (sign | 0x7f800001) : (sign | 0x7f800000 | newmant);
-         } else if (sexp >= 255) { // overflow
+          // signaling NaN truncated to have mantissa 0
+          (sign | 0x7f800001) : (sign | 0x7f800000 | newmant);
+        } else if (sexp >= 255) { // overflow
         return sign | 0x7f800000;
       } else if (sexp < -23) { // underflow
         return sign;
@@ -862,10 +866,10 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
       } else if (exp <= 112) { // Subnormal
         int shift = 126 - exp;
         return (bits & ((1 << shift) - 1)) == 0 ? sign +
-            (1024 >> (145 - exp)) + (mant >> shift) : -1;
-          } else {
+          (1024 >> (145 - exp)) + (mant >> shift) : -1;
+        } else {
         return (bits & 0x1fff) == 0 ? sign + ((exp - 112) << 10) +
-            (mant >> 13) : -1;
+          (mant >> 13) : -1;
       }
     }
 
@@ -880,16 +884,16 @@ dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
         if (mant == 0) {
           value = negvalue;
         } else {
-         ++exp;
-         while (mant < 0x800000) {
-           mant <<= 1;
-           --exp;
-         }
-         value = ((long)(exp + 896) << 52) | ((long)(mant & 0x7fffff) << 29) |
-negvalue;
+          ++exp;
+          while (mant < 0x800000) {
+            mant <<= 1;
+            --exp;
+          }
+          value = ((long)(exp + 896) << 52) | ((long)(mant & 0x7fffff) <<
+              29) | negvalue;
         }
       } else {
-         value = ((long)(exp + 896) << 52) | ((long)mant << 29) | negvalue;
+        value = ((long)(exp + 896) << 52) | ((long)mant << 29) | negvalue;
       }
       return value;
     }
@@ -905,16 +909,16 @@ negvalue;
         if (mant == 0) {
           value = negvalue;
         } else {
-         ++exp;
-         while (mant < 0x400) {
-           mant <<= 1;
-           --exp;
-         }
-         value = ((long)(exp + 1008) << 52) | ((long)(mant & 0x3ff) << 42) |
-negvalue;
+          ++exp;
+          while (mant < 0x400) {
+            mant <<= 1;
+            --exp;
+          }
+          value = ((long)(exp + 1008) << 52) | ((long)(mant & 0x3ff) << 42) |
+            negvalue;
         }
       } else {
-         value = ((long)(exp + 1008) << 52) | ((long)mant << 42) | negvalue;
+        value = ((long)(exp + 1008) << 52) | ((long)mant << 42) | negvalue;
       }
       return value;
     }

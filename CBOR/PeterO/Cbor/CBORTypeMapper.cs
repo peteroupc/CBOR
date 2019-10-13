@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 
 namespace PeterO.Cbor {
-    /// <summary>Holds converters to customize the serialization and
-    /// deserialization behavior of <c>CBORObject.FromObject</c> and
-    /// <c>CBORObject#ToObject</c>, as well as type filters for
-    /// <c>ToObject</c>.</summary>
+  /// <summary>Holds converters to customize the serialization and
+  /// deserialization behavior of <c>CBORObject.FromObject</c> and
+  /// <c>CBORObject#ToObject</c>, as well as type filters for
+  /// <c>ToObject</c>.</summary>
   public sealed class CBORTypeMapper {
     private readonly IList<string> typePrefixes;
     private readonly IList<string> typeNames;
     private readonly IDictionary<Object, ConverterInfo>
-      converters;
+    converters;
 
     /// <summary>Initializes a new instance of the
     /// <see cref='PeterO.Cbor.CBORTypeMapper'/> class.</summary>
@@ -44,23 +44,23 @@ namespace PeterO.Cbor {
       }
       var ci = new ConverterInfo();
       ci.Converter = converter;
-      ci.ToObject = PropertyMap.FindOneArgumentMethod(
+      ci.ToObject = PropertyMap.FindOneArgumentMethod (
         converter,
         "ToCBORObject",
         type);
       if (ci.ToObject == null) {
-        throw new ArgumentException(
+        throw new ArgumentException (
           "Converter doesn't contain a proper ToCBORObject method");
       }
-      ci.FromObject = PropertyMap.FindOneArgumentMethod(
-        converter,
-        "FromCBORObject",
-        typeof(CBORObject));
+      ci.FromObject = PropertyMap.FindOneArgumentMethod (
+          converter,
+          "FromCBORObject",
+          typeof(CBORObject));
       this.converters[type] = ci;
       return this;
     }
 
-    internal object ConvertBackWithConverter(
+    internal object ConvertBackWithConverter (
       CBORObject cbor,
       Type type) {
       ConverterInfo convinfo = null;
@@ -103,7 +103,7 @@ namespace PeterO.Cbor {
       foreach (string prefix in this.typePrefixes) {
         if (typeName.Length >= prefix.Length &&
           typeName.Substring(0, prefix.Length).Equals(prefix,
-  StringComparison.Ordinal)) {
+            StringComparison.Ordinal)) {
           return true;
         }
       }
@@ -159,11 +159,20 @@ namespace PeterO.Cbor {
     }
 
     internal sealed class ConverterInfo {
-      public object ToObject { get; set; }
+      public object ToObject {
+        get;
+        set;
+      }
 
-      public object FromObject { get; set; }
+      public object FromObject {
+        get;
+        set;
+      }
 
-      public object Converter { get; set; }
+      public object Converter {
+        get;
+        set;
+      }
     }
   }
 }

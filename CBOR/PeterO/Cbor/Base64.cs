@@ -16,7 +16,7 @@ namespace PeterO.Cbor {
     private const string Base64Classic =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-    public static void WriteBase64(
+    public static void WriteBase64 (
       StringOutput writer,
       byte[] data,
       int offset,
@@ -25,7 +25,7 @@ namespace PeterO.Cbor {
       WriteBase64(writer, data, offset, count, true, padding);
     }
 
-    public static void WriteBase64URL(
+    public static void WriteBase64URL (
       StringOutput writer,
       byte[] data,
       int offset,
@@ -34,7 +34,7 @@ namespace PeterO.Cbor {
       WriteBase64(writer, data, offset, count, false, padding);
     }
 
-    private static void WriteBase64(
+    private static void WriteBase64 (
       StringOutput writer,
       byte[] data,
       int offset,
@@ -45,24 +45,24 @@ namespace PeterO.Cbor {
         throw new ArgumentNullException(nameof(writer));
       }
       if (offset < 0) {
-        throw new ArgumentException("offset (" + offset + ") is less than " +
-                    "0 ");
+        throw new ArgumentException("offset(" + offset + ") is less than " +
+          "0 ");
       }
       if (offset > data.Length) {
-        throw new ArgumentException("offset (" + offset + ") is more than " +
-                    data.Length);
+        throw new ArgumentException("offset(" + offset + ") is more than " +
+          data.Length);
       }
       if (count < 0) {
-        throw new ArgumentException("count (" + count + ") is less than " +
-                    "0 ");
+        throw new ArgumentException("count(" + count + ") is less than " +
+          "0 ");
       }
       if (count > data.Length) {
-        throw new ArgumentException("count (" + count + ") is more than " +
-                    data.Length);
+        throw new ArgumentException("count(" + count + ") is more than " +
+          data.Length);
       }
       if (data.Length - offset < count) {
-        throw new ArgumentException("data's length minus " + offset + " (" +
-                (data.Length - offset) + ") is less than " + count);
+        throw new ArgumentException("data's length minus " + offset + "(" +
+          (data.Length - offset) + ") is less than " + count);
       }
       string alphabet = classic ? Base64Classic : Base64URL;
       int length = offset + count;
@@ -71,9 +71,9 @@ namespace PeterO.Cbor {
       for (i = offset; i < (length - 2); i += 3) {
         buffer[0] = (char)alphabet[(data[i] >> 2) & 63];
         buffer[1] = (char)alphabet[((data[i] & 3) << 4) +
-                ((data[i + 1] >> 4) & 15)];
+            ((data[i + 1] >> 4) & 15)];
         buffer[2] = (char)alphabet[((data[i + 1] & 15) << 2) + ((data[i +
-                2] >> 6) & 3)];
+                  2] >> 6) & 3)];
         buffer[3] = (char)alphabet[data[i + 2] & 63];
         writer.WriteCodePoint((int)buffer[0]);
         writer.WriteCodePoint((int)buffer[1]);
@@ -86,7 +86,7 @@ namespace PeterO.Cbor {
         buffer[0] = (char)alphabet[(data[i] >> 2) & 63];
         if (lenmod3 == 2) {
           buffer[1] = (char)alphabet[((data[i] & 3) << 4) + ((data[i + 1] >>
-                4) & 15)];
+                  4) & 15)];
           buffer[2] = (char)alphabet[(data[i + 1] & 15) << 2];
           writer.WriteCodePoint((int)buffer[0]);
           writer.WriteCodePoint((int)buffer[1]);

@@ -19,22 +19,48 @@ namespace Test {
       return ppa == 2;
     }
 
-    private int PrivatePropA { get; }
+    private int PrivatePropA {
+      get;
+    }
 
-    public static int StaticPropA { get; set; }
+    public static int StaticPropA {
+      get;
+      set;
+    }
 
-    public int PropA { get; set; }
+    public int PropA {
+      get;
+      set;
+    }
 
-    public int PropB { get; set; }
+    public int PropB {
+      get;
+      set;
+    }
 
-    public bool IsPropC { get; set; }
+    public bool IsPropC {
+      get;
+      set;
+    }
 
-    public float FloatProp { get; set; }
+    public float FloatProp {
+      get;
+      set;
+    }
 
-    public double DoubleProp { get; set; }
+    public double DoubleProp {
+      get;
+      set;
+    }
 
-    public string StringProp { get; set; }
+    public string StringProp {
+      get;
+      set;
+    }
 
-    public string[] StringArray { get; set; }
+    public string[] StringArray {
+      get;
+      set;
+    }
   }
 }

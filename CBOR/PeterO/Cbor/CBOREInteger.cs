@@ -1,4 +1,4 @@
-﻿/*
+/*
 Written by Peter O. in 2014.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -10,8 +10,7 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-  internal class CBOREInteger : ICBORNumber
-  {
+  internal class CBOREInteger : ICBORNumber {
     public bool IsPositiveInfinity(object obj) {
       return false;
     }

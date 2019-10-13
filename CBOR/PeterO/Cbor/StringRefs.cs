@@ -11,8 +11,8 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-    /// <summary>Implements CBOR string references, described at
-    /// <c>http://cbor.schmorp.de/stringref</c>.</summary>
+  /// <summary>Implements CBOR string references, described at
+  /// <c>http://cbor.schmorp.de/stringref</c>.</summary>
   internal class StringRefs {
     private readonly List<List<CBORObject>> stack;
 
@@ -30,8 +30,8 @@ namespace PeterO.Cbor {
     public void Pop() {
       #if DEBUG
       if (this.stack.Count <= 0) {
-        throw new ArgumentException("this.stack.Count (" + this.stack.Count +
-                    ") is not greater than " + "0 ");
+        throw new ArgumentException("this.stack.Count(" + this.stack.Count +
+          ") is not greater than " + "0 ");
       }
       #endif
       this.stack.RemoveAt(this.stack.Count - 1);
@@ -43,14 +43,14 @@ namespace PeterO.Cbor {
         throw new ArgumentNullException(nameof(str));
       }
       if (!(str.Type == CBORType.ByteString || str.Type ==
-            CBORType.TextString)) {
+          CBORType.TextString)) {
         throw new
-  ArgumentException(
-     "doesn't satisfy str.Type== ByteString or TextString");
+        ArgumentException (
+          "doesn't satisfy str.Type== ByteString or TextString");
       }
       if (lengthHint < 0) {
-        throw new ArgumentException("lengthHint (" + lengthHint +
-                    ") is less than " + "0 ");
+        throw new ArgumentException("lengthHint(" + lengthHint +
+          ") is less than " + "0 ");
       }
       #endif
       var addStr = false;
@@ -62,11 +62,11 @@ namespace PeterO.Cbor {
       } else if (lastList.Count < 65536) {
         addStr |= lengthHint >= 5;
       } else {
-       // NOTE: lastList's size can't be higher than (2^64)-1
+        // NOTE: lastList's size can't be higher than (2^64)-1
         addStr |= lengthHint >= 7;
       }
-     // NOTE: An additional branch, with lengthHint >= 11, would
-     // be needed if the size could be higher than (2^64)-1
+      // NOTE: An additional branch, with lengthHint >= 11, would
+      // be needed if the size could be higher than (2^64)-1
       if (addStr) {
         lastList.Add(str);
       }
@@ -77,7 +77,7 @@ namespace PeterO.Cbor {
         throw new CBORException("Unexpected index");
       }
       if (smallIndex > Int32.MaxValue) {
-  throw new CBORException("Index " + smallIndex +
+        throw new CBORException("Index " + smallIndex +
           " is bigger than supported ");
       }
       var index = (int)smallIndex;
@@ -86,7 +86,7 @@ namespace PeterO.Cbor {
         throw new CBORException("Index " + index + " is not valid");
       }
       CBORObject ret = lastList[index];
-     // Byte strings are mutable, so make a copy
+      // Byte strings are mutable, so make a copy
       return (ret.Type == CBORType.ByteString) ?
         CBORObject.FromObject(ret.GetByteString()) : ret;
     }
@@ -96,7 +96,7 @@ namespace PeterO.Cbor {
         throw new CBORException("Unexpected index");
       }
       if (!bigIndex.CanFitInInt32()) {
-    throw new CBORException("Index " + bigIndex +
+        throw new CBORException("Index " + bigIndex +
           " is bigger than supported ");
       }
       var index = (int)bigIndex;
@@ -105,7 +105,7 @@ namespace PeterO.Cbor {
         throw new CBORException("Index " + index + " is not valid");
       }
       CBORObject ret = lastList[index];
-     // Byte strings are mutable, so make a copy
+      // Byte strings are mutable, so make a copy
       return (ret.Type == CBORType.ByteString) ?
         CBORObject.FromObject(ret.GetByteString()) : ret;
     }

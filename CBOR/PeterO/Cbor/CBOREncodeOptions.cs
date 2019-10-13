@@ -1,8 +1,8 @@
 using System;
 
 namespace PeterO.Cbor {
-    /// <summary>Specifies options for encoding and decoding CBOR
-    /// objects.</summary>
+  /// <summary>Specifies options for encoding and decoding CBOR
+  /// objects.</summary>
   public sealed class CBOREncodeOptions {
     /// <summary>Default options for CBOR objects. Disallow duplicate keys,
     /// and always encode strings using definite-length encoding.</summary>
@@ -19,7 +19,7 @@ namespace PeterO.Cbor {
     /// <summary>Initializes a new instance of the
     /// <see cref='PeterO.Cbor.CBOREncodeOptions'/> class.</summary>
     public CBOREncodeOptions() : this(false, false) {
-}
+    }
 
     /// <summary>Initializes a new instance of the
     /// <see cref='PeterO.Cbor.CBOREncodeOptions'/> class.</summary>
@@ -28,10 +28,10 @@ namespace PeterO.Cbor {
     /// <param name='allowDuplicateKeys'>A value indicating whether to
     /// disallow duplicate keys when reading CBOR objects from a data
     /// stream.</param>
-    public CBOREncodeOptions(
+    public CBOREncodeOptions (
       bool useIndefLengthStrings,
       bool allowDuplicateKeys)
-        : this(useIndefLengthStrings, allowDuplicateKeys, false) {
+      : this(useIndefLengthStrings, allowDuplicateKeys, false) {
     }
 
     /// <summary>Initializes a new instance of the
@@ -45,7 +45,7 @@ namespace PeterO.Cbor {
     /// <param name='ctap2Canonical'>A value indicating whether CBOR
     /// objects are written out using the CTAP2 canonical CBOR encoding
     /// form, which is useful for implementing Web Authentication.</param>
-    public CBOREncodeOptions(
+    public CBOREncodeOptions (
       bool useIndefLengthStrings,
       bool allowDuplicateKeys,
       bool ctap2Canonical) {
@@ -89,11 +89,13 @@ namespace PeterO.Cbor {
         throw new ArgumentNullException(nameof(paramString));
       }
       var parser = new OptionsParser(paramString);
-      this.ResolveReferences = parser.GetBoolean("resolvereferences", false);
-      this.UseIndefLengthStrings = parser.GetBoolean(
+      this.ResolveReferences = parser.GetBoolean("resolvereferences",
+          false);
+      this.UseIndefLengthStrings = parser.GetBoolean (
         "useindeflengthstrings",
         false);
-      this.AllowDuplicateKeys = parser.GetBoolean("allowduplicatekeys", false);
+      this.AllowDuplicateKeys = parser.GetBoolean("allowduplicatekeys",
+          false);
       this.AllowEmpty = parser.GetBoolean("allowempty", false);
       this.Ctap2Canonical = parser.GetBoolean("ctap2canonical", false);
     }
@@ -105,16 +107,16 @@ namespace PeterO.Cbor {
     /// one described in the String constructor for this class.</returns>
     public override string ToString() {
       return new System.Text.StringBuilder()
-           .Append("allowduplicatekeys=")
-           .Append(this.AllowDuplicateKeys ? "true" : "false")
-           .Append(";useindeflengthstrings=")
-           .Append(this.UseIndefLengthStrings ? "true" : "false")
-           .Append(";ctap2canonical=")
-           .Append(this.Ctap2Canonical ? "true" : "false")
-           .Append(";resolvereferences=")
-           .Append(this.ResolveReferences ? "true" : "false")
-           .Append(";allowempty=").Append(this.AllowEmpty ? "true" : "false")
-           .ToString();
+        .Append("allowduplicatekeys=")
+        .Append(this.AllowDuplicateKeys ? "true" : "false")
+        .Append(";useindeflengthstrings=")
+        .Append(this.UseIndefLengthStrings ? "true" : "false")
+        .Append(";ctap2canonical=")
+        .Append(this.Ctap2Canonical ? "true" : "false")
+        .Append(";resolvereferences=")
+        .Append(this.ResolveReferences ? "true" : "false")
+        .Append(";allowempty=").Append(this.AllowEmpty ? "true" : "false")
+        .ToString();
     }
 
     /// <summary>Gets a value indicating whether to resolve references to
@@ -173,14 +175,20 @@ namespace PeterO.Cbor {
     /// security problem described here, or to check the maximum nesting
     /// depth of a CBOR array or map before serializing
     /// it.</para></remarks>
-    public bool ResolveReferences { get; private set; }
+    public bool ResolveReferences {
+      get;
+      private set;
+    }
 
     /// <summary>Gets a value indicating whether to encode strings with an
     /// indefinite-length encoding under certain circumstances.</summary>
     /// <value>A value indicating whether to encode strings with an
     /// indefinite-length encoding under certain circumstances. The default
     /// is false.</value>
-    public bool UseIndefLengthStrings { get; private set; }
+    public bool UseIndefLengthStrings {
+      get;
+      private set;
+    }
 
     /// <summary>Gets a value indicating whether decoding a CBOR object
     /// will return <c>null</c> instead of a CBOR object if the stream has
@@ -190,7 +198,10 @@ namespace PeterO.Cbor {
     /// return <c>null</c> instead of a CBOR object if the stream has no
     /// content or the end of the stream is reached before decoding begins.
     /// The default is false.</value>
-    public bool AllowEmpty { get; private set; }
+    public bool AllowEmpty {
+      get;
+      private set;
+    }
 
     /// <summary>Gets a value indicating whether to allow duplicate keys
     /// when reading CBOR objects from a data stream. Used only when
@@ -198,7 +209,10 @@ namespace PeterO.Cbor {
     /// <value>A value indicating whether to allow duplicate keys when
     /// reading CBOR objects from a data stream. The default is
     /// false.</value>
-    public bool AllowDuplicateKeys { get; private set; }
+    public bool AllowDuplicateKeys {
+      get;
+      private set;
+    }
 
     /// <summary>Gets a value indicating whether CBOR objects:
     /// <list>
@@ -219,6 +233,9 @@ namespace PeterO.Cbor {
     /// <value><c>true</c> if CBOR objects are written out using the CTAP2
     /// canonical CBOR encoding form; otherwise, <c>false</c>. The default
     /// is <c>false</c>.</value>
-    public bool Ctap2Canonical { get; private set; }
+    public bool Ctap2Canonical {
+      get;
+      private set;
+    }
   }
 }

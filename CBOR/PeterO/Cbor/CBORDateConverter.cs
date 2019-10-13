@@ -41,7 +41,7 @@ namespace PeterO.Cbor {
         dec = (EDecimal)obj.ToObject(typeof(EDecimal));
         var lesserFields = new int[7];
         var year = new EInteger[1];
-        CBORUtilities.BreakDownSecondsSinceEpoch(
+        CBORUtilities.BreakDownSecondsSinceEpoch (
           dec,
           year,
           lesserFields);

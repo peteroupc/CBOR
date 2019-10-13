@@ -8,8 +8,7 @@ at: http://peteroupc.github.io/
 using System;
 
 namespace PeterO.Cbor {
-  internal class CBORUuidConverter : ICBORToFromConverter<Guid>
-  {
+  internal class CBORUuidConverter : ICBORToFromConverter<Guid> {
     private CBORObject ValidateObject(CBORObject obj) {
       if (obj.Type != CBORType.ByteString) {
         throw new CBORException("UUID must be a byte string");

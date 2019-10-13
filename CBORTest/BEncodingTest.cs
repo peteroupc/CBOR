@@ -31,7 +31,8 @@ namespace Test {
 
     public static void DoTestLong(long value) {
       String b = "i" + TestCommon.LongToString(value) + "e";
-      CBORObject beo = EncodingFromBytes(DataUtilities.GetUtf8Bytes(b, false));
+      CBORObject beo = EncodingFromBytes(DataUtilities.GetUtf8Bytes(b,
+            false));
       Assert.AreEqual(value, beo.AsInt64());
       String newb = DataUtilities.GetUtf8String(EncodingToBytes(beo), false);
       Assert.AreEqual(b, newb);
@@ -39,7 +40,8 @@ namespace Test {
 
     public static void DoTestString(String value) {
       String b = DataUtilities.GetUtf8Length(value, false) + ":" + value;
-      CBORObject beo = EncodingFromBytes(DataUtilities.GetUtf8Bytes(b, false));
+      CBORObject beo = EncodingFromBytes(DataUtilities.GetUtf8Bytes(b,
+            false));
       Assert.AreEqual(value, beo.AsString());
       String newb = DataUtilities.GetUtf8String(EncodingToBytes(beo), false);
       Assert.AreEqual(b, newb);
@@ -66,14 +68,14 @@ namespace Test {
       Assert.AreEqual(1, beo[0].AsInt64());
       {
         string stringTemp = beo[1].AsString();
-        Assert.AreEqual(
+        Assert.AreEqual (
           "two",
           stringTemp);
       }
       Assert.AreEqual(3, beo[2].AsInt64());
       {
         string stringTemp = beo[3].AsString();
-        Assert.AreEqual(
+        Assert.AreEqual (
           "four",
           stringTemp);
       }
@@ -83,14 +85,14 @@ namespace Test {
       Assert.AreEqual(1, beo[0].AsInt64());
       {
         string stringTemp = beo[1].AsString();
-        Assert.AreEqual(
+        Assert.AreEqual (
           "two",
           stringTemp);
       }
       Assert.AreEqual(3, beo[2].AsInt64());
       {
         string stringTemp = beo[3].AsString();
-        Assert.AreEqual(
+        Assert.AreEqual (
           "four",
           stringTemp);
       }
@@ -107,14 +109,14 @@ namespace Test {
       Assert.AreEqual(1, beo["zero"].AsInt64());
       {
         string stringTemp = beo["one"].AsString();
-        Assert.AreEqual(
+        Assert.AreEqual (
           "two",
           stringTemp);
       }
       Assert.AreEqual(3, beo["two"].AsInt64());
       {
         string stringTemp = beo["three"].AsString();
-        Assert.AreEqual(
+        Assert.AreEqual (
           "four",
           stringTemp);
       }
@@ -124,14 +126,14 @@ namespace Test {
       Assert.AreEqual(1, beo["zero"].AsInt64());
       {
         string stringTemp = beo["one"].AsString();
-        Assert.AreEqual(
+        Assert.AreEqual (
           "two",
           stringTemp);
       }
       Assert.AreEqual(3, beo["two"].AsInt64());
       {
         string stringTemp = beo["three"].AsString();
-        Assert.AreEqual(
+        Assert.AreEqual (
           "four",
           stringTemp);
       }
@@ -143,8 +145,8 @@ namespace Test {
       DoTestString(" ");
       DoTestString("test");
 
-      DoTestString(
-            TestCommon.Repeat("three", 15));
+      DoTestString (
+        TestCommon.Repeat("three", 15));
       DoTestString("te\u007fst");
       DoTestString("te\u0080st");
       DoTestString("te\u3000st");

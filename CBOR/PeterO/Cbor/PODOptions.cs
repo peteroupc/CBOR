@@ -1,20 +1,20 @@
 using System;
 
 namespace PeterO.Cbor {
-    /// <summary>Options for converting "plain old data" objects (better
-    /// known as POCOs in .NET or POJOs in Java) to CBOR objects.</summary>
-    public class PODOptions {
+  /// <summary>Options for converting "plain old data" objects (better
+  /// known as POCOs in .NET or POJOs in Java) to CBOR objects.</summary>
+  public class PODOptions {
     /// <summary>Initializes a new instance of the
     /// <see cref='PeterO.Cbor.PODOptions'/> class.</summary>
     public PODOptions() : this(true, true) {
-}
+    }
 
     /// <summary>Initializes a new instance of the
     /// <see cref='PeterO.Cbor.PODOptions'/> class.</summary>
     /// <param name='removeIsPrefix'>The parameter is not used.</param>
     /// <param name='useCamelCase'>The value of the "UseCamelCase"
     /// property.</param>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+    [System.Diagnostics.CodeAnalysis.SuppressMessage (
       "Microsoft.Usage",
       "CA1801",
       Justification = "'removeIsPrefix' is present for backward compatibility.")]
@@ -62,9 +62,9 @@ namespace PeterO.Cbor {
     /// one described in the String constructor for this class.</returns>
     public override string ToString() {
       return new System.Text.StringBuilder()
-           .Append("usecamelcase=")
-           .Append(this.UseCamelCase ? "true" : "false")
-           .ToString();
+        .Append("usecamelcase=").Append(this.UseCamelCase ? "true" :
+"false")
+        .ToString();
     }
 
     /// <summary>The default settings for "plain old data"
@@ -109,6 +109,9 @@ namespace PeterO.Cbor {
     /// <value><c>true</c> If the names are converted to camel case;
     /// otherwise, <c>false</c>. This property is <c>true</c> by
     /// default.</value>
-    public bool UseCamelCase { get; private set; }
+    public bool UseCamelCase {
+      get;
+      private set;
     }
+  }
 }

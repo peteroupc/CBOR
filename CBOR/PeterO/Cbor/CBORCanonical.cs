@@ -8,13 +8,13 @@ namespace PeterO.Cbor {
       new CtapComparer();
 
     private static readonly IComparer<KeyValuePair<byte[], byte[]>>
-         ByteComparer = new CtapByteComparer();
+    ByteComparer = new CtapByteComparer();
 
     private sealed class CtapByteComparer : IComparer<KeyValuePair<byte[],
-  byte[]>> {
-      public int Compare(
-         KeyValuePair<byte[], byte[]> kva,
-         KeyValuePair<byte[], byte[]> kvb) {
+      byte[]>> {
+      public int Compare (
+        KeyValuePair<byte[], byte[]> kva,
+        KeyValuePair<byte[], byte[]> kvb) {
         byte[] bytesA = kva.Key;
         byte[] bytesB = kvb.Key;
         if (bytesA == null) {
@@ -173,7 +173,7 @@ namespace PeterO.Cbor {
           sortedKeys = new List<KeyValuePair<byte[], byte[]>>();
           foreach (CBORObject key in cbor.Keys) {
             if (depth >= 3 && (IsArrayOrMap(key) ||
-               IsArrayOrMap(cbor[key]))) {
+                IsArrayOrMap(cbor[key]))) {
               throw new CBORException("Nesting level too deep");
             }
             // Check if key and value can be canonically encoded
@@ -205,8 +205,8 @@ namespace PeterO.Cbor {
         throw new InvalidOperationException(ex.ToString(), ex);
       }
       if (valueAType == CBORType.SimpleValue ||
-       valueAType == CBORType.Boolean || valueAType == CBORType.ByteString ||
-       valueAType == CBORType.TextString) {
+        valueAType == CBORType.Boolean || valueAType == CBORType.ByteString ||
+        valueAType == CBORType.TextString) {
         return cbor.EncodeToBytes(CBOREncodeOptions.Default);
       } else if (valueAType == CBORType.FloatingPoint) {
         long bits = cbor.AsDoubleBits();

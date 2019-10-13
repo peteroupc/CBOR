@@ -1,4 +1,4 @@
-﻿/*
+/*
 Written by Peter O. in 2014.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -10,8 +10,7 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-  internal class CBORExtendedRational : ICBORNumber
-  {
+  internal class CBORExtendedRational : ICBORNumber {
     public bool IsPositiveInfinity(object obj) {
       return ((ERational)obj).IsPositiveInfinity();
     }
@@ -37,14 +36,16 @@ namespace PeterO.Cbor {
       var er = (ERational)obj;
       return
 
-  er.ToEDecimalExactIfPossible(EContext.Decimal128.WithUnlimitedExponents());
+        er.ToEDecimalExactIfPossible (
+          EContext.Decimal128.WithUnlimitedExponents());
     }
 
     public EFloat AsEFloat(object obj) {
       var er = (ERational)obj;
       return
 
-  er.ToEFloatExactIfPossible(EContext.Binary128.WithUnlimitedExponents());
+        er.ToEFloatExactIfPossible (
+          EContext.Binary128.WithUnlimitedExponents());
     }
 
     public float AsSingle(object obj) {
@@ -70,14 +71,14 @@ namespace PeterO.Cbor {
 
     public bool CanFitInSingle(object obj) {
       var ef = (ERational)obj;
-      return (!ef.IsFinite) ||
-      (ef.CompareTo(ERational.FromSingle(ef.ToSingle())) == 0);
+      return (!ef.IsFinite) || (ef.CompareTo(ERational.FromSingle(
+            ef.ToSingle())) == 0);
     }
 
     public bool CanFitInDouble(object obj) {
       var ef = (ERational)obj;
-      return (!ef.IsFinite) ||
-      (ef.CompareTo(ERational.FromDouble(ef.ToDouble())) == 0);
+      return (!ef.IsFinite) || (ef.CompareTo(ERational.FromDouble(
+            ef.ToDouble())) == 0);
     }
 
     public bool CanFitInInt32(object obj) {
@@ -124,8 +125,8 @@ namespace PeterO.Cbor {
       if (ef.Denominator.Equals(EInteger.One)) {
         return true;
       }
-     // A rational number is integral if the remainder
-     // of the numerator divided by the denominator is 0
+      // A rational number is integral if the remainder
+      // of the numerator divided by the denominator is 0
       EInteger denom = ef.Denominator;
       EInteger rem = ef.Numerator % (EInteger)denom;
       return rem.IsZero;

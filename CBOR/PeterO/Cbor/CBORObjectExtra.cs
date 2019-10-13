@@ -16,12 +16,10 @@ namespace PeterO.Cbor {
   public sealed partial class CBORObject {
     /* The "==" and "!=" operators are not overridden in the .NET version to be
       consistent with Equals, for two reasons: (1) This type is mutable in
-certain
-      cases, which can cause different results when comparing with another
+    certain cases, which can cause different results when comparing with another
       object. (2) Objects with this type can have arbitrary size (e.g., they
-can
-      be byte strings, text strings, arrays, or maps of arbitrary size), and
-comparing
+    can be byte strings, text strings, arrays, or maps of arbitrary size), and
+    comparing
       two of them for equality can be much more complicated and take much
       more time than the default behavior of reference equality.
     */
@@ -186,15 +184,17 @@ comparing
         return WriteValue(outputStream, majorType, (long)value);
       } else {
         if (majorType < 0) {
-          throw new ArgumentException("majorType (" + majorType +
+          throw new ArgumentException("majorType(" + majorType +
             ") is less than 0");
         }
         if (majorType > 7) {
-          throw new ArgumentException("majorType (" + majorType +
+          throw new ArgumentException("majorType(" + majorType +
             ") is more than 7");
         }
         if (majorType == 7) {
-   throw new ArgumentException("majorType is 7 and value is greater than 255");
+          throw new ArgumentException("majorType is 7 and value is greater"
++
+"\u0020than 255");
         }
         byte[] bytes = {
           (byte)(27 | (majorType << 5)), (byte)((value >>
@@ -223,12 +223,13 @@ comparing
     /// range of a.NET decimal.</exception>
     public decimal AsDecimal() {
       return (this.ItemType == CBORObjectTypeInteger) ?
-        ((decimal)(long)this.ThisItem) : ((this.HasOneTag(30) ||
-this.HasOneTag(270)) ?
-              (decimal)this.ToObject<ERational>() :
-(decimal)this.ToObject<EDecimal>()); }
+((decimal)(long)this.ThisItem) : ((this.HasOneTag(30) ||
 
-/// <summary>Not documented yet.</summary>
+            this.HasOneTag(270)) ? (decimal)this.ToObject<ERational>() :
+          (decimal)this.ToObject<EDecimal>());
+    }
+
+    /// <summary>Not documented yet.</summary>
     /// <summary>Converts this object to a 64-bit unsigned integer after
     /// discarding any fractional part, if any, from its value.</summary>
     /// <returns>A 64-bit unsigned integer.</returns>

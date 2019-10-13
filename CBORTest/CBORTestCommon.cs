@@ -30,20 +30,20 @@ namespace Test {
       object o = null;
       switch (rand.UniformInt(6)) {
         case 0:
-          o = RandomObjects.RandomDouble(
+          o = RandomObjects.RandomDouble (
             rand,
             Int32.MaxValue);
           return ToObjectTest.TestToFromObjectRoundTrip(o);
         case 1:
-          o = RandomObjects.RandomSingle(
+          o = RandomObjects.RandomSingle (
             rand,
             Int32.MaxValue);
           return ToObjectTest.TestToFromObjectRoundTrip(o);
         case 2:
-          return ToObjectTest.TestToFromObjectRoundTrip(
+          return ToObjectTest.TestToFromObjectRoundTrip (
               RandomObjects.RandomEInteger(rand));
         case 3:
-          return ToObjectTest.TestToFromObjectRoundTrip(
+          return ToObjectTest.TestToFromObjectRoundTrip (
               RandomObjects.RandomEFloat(rand));
         case 4:
           o = RandomObjects.RandomEDecimal(rand);
@@ -59,20 +59,20 @@ namespace Test {
       object o = null;
       switch (rand.UniformInt(7)) {
         case 0:
-          o = RandomObjects.RandomDouble(
+          o = RandomObjects.RandomDouble (
             rand,
             Int32.MaxValue);
           return ToObjectTest.TestToFromObjectRoundTrip(o);
         case 1:
-          o = RandomObjects.RandomSingle(
+          o = RandomObjects.RandomSingle (
             rand,
             Int32.MaxValue);
           return ToObjectTest.TestToFromObjectRoundTrip(o);
         case 2:
-          return ToObjectTest.TestToFromObjectRoundTrip(
+          return ToObjectTest.TestToFromObjectRoundTrip (
               RandomObjects.RandomEInteger(rand));
         case 3:
-          return ToObjectTest.TestToFromObjectRoundTrip(
+          return ToObjectTest.TestToFromObjectRoundTrip (
               RandomObjects.RandomEFloat(rand));
         case 4:
           o = RandomObjects.RandomEDecimal(rand);
@@ -100,27 +100,27 @@ namespace Test {
     }
 
     public static EInteger RandomEIntegerMajorType0(RandomGenerator rand) {
-       int v = rand.UniformInt(0x10000);
-       EInteger ei = EInteger.FromInt32(v);
-       ei = ei.ShiftLeft(16).Add(rand.UniformInt(0x10000));
-       ei = ei.ShiftLeft(16).Add(rand.UniformInt(0x10000));
-       ei = ei.ShiftLeft(16).Add(rand.UniformInt(0x10000));
-       return ei;
+      int v = rand.UniformInt(0x10000);
+      EInteger ei = EInteger.FromInt32(v);
+      ei = ei.ShiftLeft(16).Add(rand.UniformInt(0x10000));
+      ei = ei.ShiftLeft(16).Add(rand.UniformInt(0x10000));
+      ei = ei.ShiftLeft(16).Add(rand.UniformInt(0x10000));
+      return ei;
     }
 
     public static EInteger RandomEIntegerMajorType0Or1(RandomGenerator rand) {
-       int v = rand.UniformInt(0x10000);
-       EInteger ei = EInteger.FromInt32(v);
-       ei = ei.ShiftLeft(16).Add(rand.UniformInt(0x10000));
-       ei = ei.ShiftLeft(16).Add(rand.UniformInt(0x10000));
-       ei = ei.ShiftLeft(16).Add(rand.UniformInt(0x10000));
-       if (rand.UniformInt(2) == 0) {
-         ei = ei.Add(1).Negate();
-       }
-       return ei;
+      int v = rand.UniformInt(0x10000);
+      EInteger ei = EInteger.FromInt32(v);
+      ei = ei.ShiftLeft(16).Add(rand.UniformInt(0x10000));
+      ei = ei.ShiftLeft(16).Add(rand.UniformInt(0x10000));
+      ei = ei.ShiftLeft(16).Add(rand.UniformInt(0x10000));
+      if (rand.UniformInt(2) == 0) {
+        ei = ei.Add(1).Negate();
+      }
+      return ei;
     }
 
-    public static CBORObject RandomCBORTaggedObject(
+    public static CBORObject RandomCBORTaggedObject (
       RandomGenerator rand,
       int depth) {
       var tag = 0;
@@ -131,13 +131,13 @@ namespace Test {
         };
         tag = tagselection[rand.UniformInt(tagselection.Length)];
       } else if (rand.UniformInt(100) < 90) {
-        return CBORObject.FromObjectAndTag(
-           RandomCBORObject(rand, depth + 1),
-           rand.UniformInt(0x100000));
+        return CBORObject.FromObjectAndTag (
+            RandomCBORObject(rand, depth + 1),
+            rand.UniformInt(0x100000));
       } else {
-        return CBORObject.FromObjectAndTag(
-           RandomCBORObject(rand, depth + 1),
-           RandomEIntegerMajorType0(rand));
+        return CBORObject.FromObjectAndTag (
+            RandomCBORObject(rand, depth + 1),
+            RandomEIntegerMajorType0(rand));
       }
       if (tag == 25) {
         tag = 0;
@@ -148,7 +148,7 @@ namespace Test {
       }
       {
         CBORObject cbor;
-       // Console.WriteLine("tag "+tag+" "+i);
+        // Console.WriteLine("tag "+tag+" "+i);
         if (tag == 0 || tag == 1 || tag == 28 || tag == 29) {
           tag = 999;
         }
@@ -188,7 +188,8 @@ namespace Test {
       return RandomCBORObject(rand, 0);
     }
 
-    public static CBORObject RandomCBORObject(RandomGenerator rand, int depth) {
+    public static CBORObject RandomCBORObject(RandomGenerator rand, int
+      depth) {
       int nextval = rand.UniformInt(11);
       switch (nextval) {
         case 0:
@@ -202,11 +203,11 @@ namespace Test {
           return rand.UniformInt(2) == 0 ? CBORObject.Null :
             CBORObject.Undefined;
         case 6:
-          return ToObjectTest.TestToFromObjectRoundTrip(
-            RandomObjects.RandomTextString(rand));
+          return ToObjectTest.TestToFromObjectRoundTrip (
+              RandomObjects.RandomTextString(rand));
         case 7:
-          return ToObjectTest.TestToFromObjectRoundTrip(
-            RandomObjects.RandomByteString(rand));
+          return ToObjectTest.TestToFromObjectRoundTrip (
+              RandomObjects.RandomByteString(rand));
         case 8:
           return RandomCBORArray(rand, depth);
         case 9:
@@ -223,7 +224,7 @@ namespace Test {
         return;
       }
       if (o.IsPositiveInfinity() || o.IsNegativeInfinity() ||
-          o.IsNaN()) {
+        o.IsNaN()) {
         try {
           o.AsByte();
           Assert.Fail("Should have failed");
@@ -276,7 +277,7 @@ namespace Test {
           o.AsEInteger();
           Assert.Fail("Should have failed");
         } catch (OverflowException) {
-         // NOTE: Intentionally empty
+          // NOTE: Intentionally empty
         } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex);
           throw new InvalidOperationException(String.Empty, ex);
@@ -287,15 +288,13 @@ namespace Test {
         o.AsSingle();
       } catch (Exception ex) {
         Assert.Fail("Object: " + o + ", " + ex);
-        throw new
-          InvalidOperationException(String.Empty, ex);
+        throw new InvalidOperationException(String.Empty, ex);
       }
       try {
         o.AsDouble();
       } catch (Exception ex) {
         Assert.Fail("Object: " + o + ", " + ex);
-        throw new
-          InvalidOperationException(String.Empty, ex);
+        throw new InvalidOperationException(String.Empty, ex);
       }
     }
 #pragma warning restore CS0618
@@ -311,7 +310,7 @@ namespace Test {
       if (!s.Equals(o.ToJSONString(), StringComparison.Ordinal)) {
         Assert.AreEqual(s, o.ToJSONString(), "o is not equal to s");
       }
-     // Test round-tripping
+      // Test round-tripping
       CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());
       if (!s.Equals(o2.ToJSONString(), StringComparison.Ordinal)) {
         string msg = "o2 is not equal to s:\no = " +
@@ -324,7 +323,7 @@ namespace Test {
       TestCommon.AssertEqualsHashCode(o, o2);
     }
 
-   // Tests the equivalence of the DecodeFromBytes and Read methods.
+    // Tests the equivalence of the DecodeFromBytes and Read methods.
     public static CBORObject FromBytesTestAB(byte[] b) {
       CBORObject oa = FromBytesA(b);
       CBORObject ob = FromBytesB(b);

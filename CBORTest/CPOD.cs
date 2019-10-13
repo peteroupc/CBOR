@@ -7,9 +7,15 @@ at: http://peteroupc.github.io/
  */
 
 namespace Test {
-   public sealed class CPOD {
-      public string Aa { get; set; }
-
-      private string Bb { get; set; }
+  public sealed class CPOD {
+    public string Aa {
+      get;
+      set;
     }
+
+    private string Bb {
+      get;
+      set;
+    }
+  }
 }

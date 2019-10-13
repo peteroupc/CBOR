@@ -176,21 +176,21 @@ namespace Test {
     }
     [Test]
     public void TestCBORObjectArgumentValidation() {
-      Assert.AreEqual(
-  CBORObject.Null,
-  ToObjectTest.TestToFromObjectRoundTrip((byte[])null));
-      Assert.AreEqual(
+      Assert.AreEqual (
+        CBORObject.Null,
+        ToObjectTest.TestToFromObjectRoundTrip((byte[])null));
+      Assert.AreEqual (
         CBORObject.Null,
         ToObjectTest.TestToFromObjectRoundTrip((CBORObject[])null));
-      Assert.AreEqual(
-  CBORObject.True,
-  ToObjectTest.TestToFromObjectRoundTrip(true));
-      Assert.AreEqual(
-  CBORObject.False,
-  ToObjectTest.TestToFromObjectRoundTrip(false));
-      Assert.AreEqual(
-  ToObjectTest.TestToFromObjectRoundTrip(8),
-  ToObjectTest.TestToFromObjectRoundTrip((byte)8));
+      Assert.AreEqual (
+        CBORObject.True,
+        ToObjectTest.TestToFromObjectRoundTrip(true));
+      Assert.AreEqual (
+        CBORObject.False,
+        ToObjectTest.TestToFromObjectRoundTrip(false));
+      Assert.AreEqual (
+        ToObjectTest.TestToFromObjectRoundTrip(8),
+        ToObjectTest.TestToFromObjectRoundTrip((byte)8));
 
       try {
         CBORObject.True.Abs();
@@ -552,12 +552,12 @@ namespace Test {
       });
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
 
-      cbor = CBORObject.DecodeFromBytes(
-        new byte[] { 0xd8, 0x1e, 0x9f, 0xff, });
+      cbor = CBORObject.DecodeFromBytes (
+          new byte[] { 0xd8, 0x1e, 0x9f, 0xff, });
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
 
-      cbor = CBORObject.DecodeFromBytes(
-        new byte[] { 0xd9, 0x01, 0x0e, 0x9f, 0xff, });
+      cbor = CBORObject.DecodeFromBytes (
+          new byte[] { 0xd9, 0x01, 0x0e, 0x9f, 0xff, });
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       cbor = CBORObject.DecodeFromBytes(new byte[] {
         0xc4, 0x9f, 0x00, 0x00,
@@ -581,9 +581,15 @@ namespace Test {
         0xff,
       });
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
-      cbor = CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x9f, 0x00, 0xff, });
+      cbor = CBORObject.DecodeFromBytes(new byte[] {
+        0xc4, 0x9f, 0x00,
+        0xff,
+      });
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
-      cbor = CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x9f, 0x00, 0xff, });
+      cbor = CBORObject.DecodeFromBytes(new byte[] {
+        0xc5, 0x9f, 0x00,
+        0xff,
+      });
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       cbor = CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x9f, 0xff, });
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
@@ -616,14 +622,14 @@ namespace Test {
           0x40,
         }).ToObject(typeof(EInteger));
         Assert.AreEqual(objectTemp, objectTemp2);
-}
+      }
     }
 
     [Test]
     public void TestUUID() {
       CBORObject obj =
         ToObjectTest.TestToFromObjectRoundTrip(new Guid(
-          "00112233-4455-6677-8899-AABBCCDDEEFF"));
+            "00112233-4455-6677-8899-AABBCCDDEEFF"));
       Assert.AreEqual(CBORType.ByteString, obj.Type);
       Assert.AreEqual(EInteger.FromString("37"), obj.MostInnerTag);
       byte[] bytes = obj.GetByteString();
@@ -747,7 +753,7 @@ namespace Test {
           0,
         }).ToObject(typeof(EInteger));
         Assert.AreEqual(objectTemp, objectTemp2);
-}
+      }
       {
         object objectTemp = EInteger.FromString("-65537");
         object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] {
@@ -756,7 +762,7 @@ namespace Test {
           0, 0,
         }).ToObject(typeof(EInteger));
         Assert.AreEqual(objectTemp, objectTemp2);
-}
+      }
       {
         object objectTemp = EInteger.FromString("-16777217");
         object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] {
@@ -827,13 +833,13 @@ namespace Test {
     [Test]
     public void TestStringRefs() {
       var encodeOptions = new CBOREncodeOptions("resolvereferences=true");
-      CBORObject cbor = CBORObject.DecodeFromBytes(
-        new byte[] {
-          0xd9, 1, 0, 0x9f, 0x64, 0x61, 0x62, 0x63, 0x64, 0xd8,
-          0x19, 0x00, 0xd8, 0x19, 0x00, 0x64, 0x62, 0x62, 0x63, 0x64, 0xd8, 0x19,
-          0x01, 0xd8, 0x19, 0x00, 0xd8, 0x19, 0x01, 0xff,
-        },
-        encodeOptions);
+      CBORObject cbor = CBORObject.DecodeFromBytes (
+      new byte[] {
+        0xd9, 1, 0, 0x9f, 0x64, 0x61, 0x62, 0x63, 0x64, 0xd8,
+        0x19, 0x00, 0xd8, 0x19, 0x00, 0x64, 0x62, 0x62, 0x63, 0x64, 0xd8, 0x19,
+        0x01, 0xd8, 0x19, 0x00, 0xd8, 0x19, 0x01, 0xff,
+      },
+      encodeOptions);
       string expected =
         "[\"abcd\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]";
       Assert.AreEqual(expected, cbor.ToJSONString());
@@ -846,7 +852,7 @@ namespace Test {
       },
       encodeOptions);
       expected =
-     "[\"abcd\",\"aa\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]";
+  "[\"abcd\",\"aa\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]";
       Assert.AreEqual(expected, cbor.ToJSONString());
     }
     [Test]

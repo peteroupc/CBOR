@@ -9,8 +9,8 @@ namespace Test {
     private readonly int maxSize;
     public LimitedMemoryStream(int maxSize) {
       if (maxSize < 0) {
-        throw new ArgumentException(
-         "maxSize (" + maxSize + ") is not greater or equal to 0");
+        throw new ArgumentException (
+          "maxSize (" + maxSize + ") is not greater or equal to 0");
       }
       this.ms = new MemoryStream();
       this.maxSize = maxSize;

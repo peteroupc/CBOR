@@ -11,7 +11,7 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace Test {
-    /// <summary>Description of RandomObjects.</summary>
+  /// <summary>Description of RandomObjects.</summary>
   public static class RandomObjects {
     private const int MaxExclusiveStringLength = 0x2000;
     private const int MaxExclusiveExponentLength = 0x2000;
@@ -61,19 +61,19 @@ namespace Test {
       for (var i = 0; i < length; ++i) {
         int x = rand.UniformInt(100);
         if (x < 95) {
-         // ASCII
+          // ASCII
           sb.Append((char)(0x20 + rand.UniformInt(0x60)));
         } else if (x < 98) {
-         // Supplementary character
+          // Supplementary character
           x = rand.UniformInt(0x400) + 0xd800;
           sb.Append((char)x);
           x = rand.UniformInt(0x400) + 0xdc00;
           sb.Append((char)x);
         } else {
-         // BMP character
+          // BMP character
           x = 0x20 + rand.UniformInt(0xffe0);
           if (x >= 0xd800 && x < 0xe000) {
-           // surrogate code unit, generate ASCII instead
+            // surrogate code unit, generate ASCII instead
             x = 0x20 + rand.UniformInt(0x60);
           }
           sb.Append((char)x);
@@ -154,8 +154,8 @@ namespace Test {
         if (x == 2) {
           return EDecimal.NaN;
         }
-       // Signaling NaN currently not generated because
-       // it doesn't round-trip as well
+        // Signaling NaN currently not generated because
+        // it doesn't round-trip as well
       }
       string str = RandomDecimalString(r);
       return EDecimal.FromString(str);
@@ -174,10 +174,10 @@ namespace Test {
         return sabi.BigIntValue;
       }
       if (selection < 50) {
-        StringAndBigInt sabi = StringAndBigInt.Generate(
-          r,
-          2 + r.UniformInt(35),
-          MaxStringNumDigits);
+        StringAndBigInt sabi = StringAndBigInt.Generate (
+            r,
+            2 + r.UniformInt(35),
+            MaxStringNumDigits);
         return sabi.BigIntValue;
       } else {
         int count = r.UniformInt(MaxShortNumberLength) + 1;
@@ -205,9 +205,9 @@ namespace Test {
           return EFloat.NaN;
         }
       }
-      return EFloat.Create(
-  RandomEInteger(r),
-  (EInteger)(r.UniformInt(400) - 200));
+      return EFloat.Create (
+          RandomEInteger(r),
+          (EInteger)(r.UniformInt(400) - 200));
     }
 
     public static String RandomBigIntString(RandomGenerator r) {
@@ -274,7 +274,7 @@ namespace Test {
       if (r.UniformInt(2) == 0) {
         sb.Append('E');
         count = (r.UniformInt(100) < 10) ?
-r.UniformInt(MaxExclusiveExponentLength) :
+          r.UniformInt(MaxExclusiveExponentLength) :
           r.UniformInt(10);
         if (count != 0) {
           sb.Append(r.UniformInt(2) == 0 ? '+' : '-');

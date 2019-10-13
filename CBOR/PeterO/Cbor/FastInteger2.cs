@@ -17,7 +17,8 @@ namespace PeterO.Cbor {
 
       internal MutableNumber(int val) {
         if (val < 0) {
-          throw new ArgumentException("val (" + val + ") is less than " + "0 ");
+          throw new ArgumentException("val(" + val + ") is less than " +
+            "0 ");
         }
         this.data = new int[4];
         this.wordCount = (val == 0) ? 0 : 1;
@@ -47,7 +48,7 @@ namespace PeterO.Cbor {
 
       internal bool CanFitInInt32() {
         return this.wordCount == 0 || (this.wordCount == 1 && (this.data[0] >>
-        31) == 0);
+              31) == 0);
       }
 
       internal int ToInt32() {
@@ -56,7 +57,7 @@ namespace PeterO.Cbor {
 
       internal MutableNumber Multiply(int multiplicand) {
         if (multiplicand < 0) {
-          throw new ArgumentException("multiplicand (" + multiplicand +
+          throw new ArgumentException("multiplicand(" + multiplicand +
             ") is less than " + "0 ");
         }
         if (multiplicand != 0) {
@@ -92,7 +93,7 @@ namespace PeterO.Cbor {
               x1 = unchecked((int)(result2 | (result3 << 16)));
               int x2 = unchecked(x0 + carry);
               if (((x2 >> 31) == (x0 >> 31)) ? ((x2 & Int32.MaxValue) < (x0 &
-              Int32.MaxValue)) : ((x2 >> 31) == 0)) {
+                    Int32.MaxValue)) : ((x2 >> 31) == 0)) {
                 // Carry in addition
                 x1 = unchecked(x1 + 1);
               }
@@ -134,7 +135,7 @@ namespace PeterO.Cbor {
               x1 = unchecked((int)(result2 | (result3 << 16)));
               int x2 = unchecked(x0 + carry);
               if (((x2 >> 31) == (x0 >> 31)) ? ((x2 & Int32.MaxValue) < (x0 &
-              Int32.MaxValue)) : ((x2 >> 31) == 0)) {
+                    Int32.MaxValue)) : ((x2 >> 31) == 0)) {
                 // Carry in addition
                 x1 = unchecked(x1 + 1);
               }
@@ -172,8 +173,8 @@ namespace PeterO.Cbor {
 
       internal MutableNumber SubtractInt(int other) {
         if (other < 0) {
-          throw new ArgumentException("other (" + other + ") is less than " +
-                 "0 ");
+          throw new ArgumentException("other(" + other + ") is less than " +
+            "0 ");
         }
         if (other != 0) {
           unchecked {
@@ -190,14 +191,14 @@ namespace PeterO.Cbor {
             int a = this.data[0];
             u = a - other;
             borrow = ((((a >> 31) == (u >> 31)) ?
-                    ((a & Int32.MaxValue) < (u & Int32.MaxValue)) :
-                    ((a >> 31) == 0)) || (a == u && other != 0)) ? 1 : 0;
+                  ((a & Int32.MaxValue) < (u & Int32.MaxValue)) :
+                  ((a >> 31) == 0)) || (a == u && other != 0)) ? 1 : 0;
             this.data[0] = (int)u;
             if (borrow != 0) {
               for (int i = 1; i < this.wordCount; ++i) {
                 u = this.data[i] - borrow;
                 borrow = (((this.data[i] >> 31) == (u >> 31)) ?
-                ((this.data[i] & Int32.MaxValue) < (u & Int32.MaxValue)) :
+                    ((this.data[i] & Int32.MaxValue) < (u & Int32.MaxValue)) :
                     ((this.data[i] >> 31) == 0)) ? 1 : 0;
                 this.data[i] = (int)u;
               }
@@ -217,21 +218,21 @@ namespace PeterO.Cbor {
             // Console.WriteLine("" + this.data.Length + " " +
             // (other.data.Length));
             int neededSize = (this.wordCount > other.wordCount) ?
-            this.wordCount : other.wordCount;
+              this.wordCount : other.wordCount;
             if (this.data.Length < neededSize) {
               var newdata = new int[neededSize + 20];
               Array.Copy(this.data, 0, newdata, 0, this.data.Length);
               this.data = newdata;
             }
             neededSize = (this.wordCount < other.wordCount) ? this.wordCount :
-            other.wordCount;
+              other.wordCount;
             var u = 0;
             var borrow = 0;
             for (var i = 0; i < neededSize; ++i) {
               int a = this.data[i];
               u = (a - other.data[i]) - borrow;
               borrow = ((((a >> 31) == (u >> 31)) ? ((a & Int32.MaxValue) <
-              (u & Int32.MaxValue)) :
+                      (u & Int32.MaxValue)) :
                     ((a >> 31) == 0)) || (a == u && other.data[i] !=
                     0)) ? 1 : 0;
               this.data[i] = (int)u;
@@ -241,9 +242,9 @@ namespace PeterO.Cbor {
                 int a = this.data[i];
                 u = (a - other.data[i]) - borrow;
                 borrow = ((((a >> 31) == (u >> 31)) ? ((a & Int32.MaxValue) <
-                (u & Int32.MaxValue)) :
-                    ((a >> 31) == 0)) || (a == u && other.data[i] !=
-                    0)) ? 1 : 0;
+                        (u & Int32.MaxValue)) :
+                      ((a >> 31) == 0)) || (a == u && other.data[i] !=
+                      0)) ? 1 : 0;
                 this.data[i] = (int)u;
               }
             }
@@ -258,8 +259,9 @@ namespace PeterO.Cbor {
 
       internal MutableNumber Add(int augend) {
         if (augend < 0) {
-          throw new ArgumentException("augend (" + augend + ") is less than " +
-                   "0 ");
+          throw new ArgumentException("augend(" + augend + ") is less than" +
+"\u0020" +
+            "0 ");
         }
         unchecked {
           if (augend != 0) {
@@ -277,8 +279,8 @@ namespace PeterO.Cbor {
               int a = this.data[i];
               u = (a + augend) + carry;
               carry = ((((u >> 31) == (a >> 31)) ? ((u & Int32.MaxValue) < (a &
-              Int32.MaxValue)) :
-                      ((u >> 31) == 0)) || (u == a && augend != 0)) ? 1 : 0;
+                        Int32.MaxValue)) :
+                    ((u >> 31) == 0)) || (u == a && augend != 0)) ? 1 : 0;
               this.data[i] = u;
               if (carry == 0) {
                 return this;
@@ -362,10 +364,10 @@ namespace PeterO.Cbor {
             bool bpos = val > 0L;
             if (
               (apos && ((!bpos && (Int32.MinValue / this.smallValue) > val) ||
-                    (bpos && this.smallValue > (Int32.MaxValue / val)))) ||
+                  (bpos && this.smallValue > (Int32.MaxValue / val)))) ||
               (!apos && ((!bpos && this.smallValue != 0L &&
                     (Int32.MaxValue / this.smallValue) > val) ||
-                    (bpos && this.smallValue < (Int32.MinValue / val))))) {
+                  (bpos && this.smallValue < (Int32.MinValue / val))))) {
               // would overflow, convert to large
               if (apos && bpos) {
                 // if both operands are nonnegative
@@ -413,7 +415,7 @@ namespace PeterO.Cbor {
           if (val.integerMode == 0) {
             int vsv = val.smallValue;
             if ((vsv < 0 && Int32.MaxValue + vsv < this.smallValue) ||
-                (vsv > 0 && Int32.MinValue + vsv > this.smallValue)) {
+              (vsv > 0 && Int32.MinValue + vsv > this.smallValue)) {
               // would overflow, convert to large
               this.integerMode = 2;
               this.largeValue = (EInteger)this.smallValue;
@@ -461,7 +463,7 @@ namespace PeterO.Cbor {
       }
       if (this.integerMode == 0) {
         if ((val < 0 && Int32.MaxValue + val < this.smallValue) ||
-                (val > 0 && Int32.MinValue + val > this.smallValue)) {
+          (val > 0 && Int32.MinValue + val > this.smallValue)) {
           // would overflow, convert to large
           this.integerMode = 2;
           this.largeValue = (EInteger)this.smallValue;
@@ -480,8 +482,8 @@ namespace PeterO.Cbor {
         case 0:
           if (val.integerMode == 0) {
             if ((this.smallValue < 0 && (int)val.smallValue < Int32.MinValue
-            - this.smallValue) ||
-                (this.smallValue > 0 && (int)val.smallValue > Int32.MaxValue
+                - this.smallValue) ||
+              (this.smallValue > 0 && (int)val.smallValue > Int32.MaxValue
                 - this.smallValue)) {
               // would overflow
               if (val.smallValue >= 0) {
@@ -527,8 +529,8 @@ namespace PeterO.Cbor {
       switch (this.integerMode) {
         case 0:
           if ((this.smallValue < 0 && (int)val < Int32.MinValue -
-        this.smallValue) || (this.smallValue > 0 && (int)val >
-            Int32.MaxValue - this.smallValue)) {
+              this.smallValue) || (this.smallValue > 0 && (int)val >
+              Int32.MaxValue - this.smallValue)) {
             // would overflow
             if (val >= 0) {
               this.integerMode = 1;
@@ -569,8 +571,8 @@ namespace PeterO.Cbor {
         case 1:
           return this.mnum.CanFitInInt32();
         case 2: {
-            return this.largeValue.CanFitInInt32();
-          }
+          return this.largeValue.CanFitInInt32();
+        }
         default:
           throw new InvalidOperationException();
       }
@@ -586,7 +588,8 @@ namespace PeterO.Cbor {
             return this.mnum.Sign;
           case 2:
             return this.largeValue.Sign;
-          default: return 0;
+          default:
+            return 0;
         }
       }
     }

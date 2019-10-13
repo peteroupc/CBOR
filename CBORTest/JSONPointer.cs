@@ -35,8 +35,8 @@ namespace Test {
           int newIndex = ReadPositiveInteger(pointer, index, value);
           if (value[0] < 0) {
             if (index < pointer.Length && pointer[index] == '-' &&
-                (index + 1 == pointer.Length || pointer[index + 1] == '/')) {
-             // Index at the end of the array
+              (index + 1 == pointer.Length || pointer[index + 1] == '/')) {
+              // Index at the end of the array
               return new JSONPointer(obj, "-");
             }
             throw new ArgumentException(pointer);
@@ -188,13 +188,13 @@ namespace Test {
     private CBORObject jsonobj;
 
     private JSONPointer(CBORObject jsonobj, string refValue) {
-#if DEBUG
-if (!(refValue != null)) {
- throw new InvalidOperationException("doesn't satisfy refValue!=null");
-}
-#endif
-this.jsonobj = jsonobj;
-this.refValue = refValue;
+      #if DEBUG
+      if (!(refValue != null)) {
+        throw new InvalidOperationException("doesn't satisfy refValue!=null");
+      }
+      #endif
+      this.jsonobj = jsonobj;
+      this.refValue = refValue;
     }
 
     public bool Exists() {
@@ -205,11 +205,10 @@ this.refValue = refValue;
         EInteger eivalue = EInteger.FromString(this.refValue);
         int icount = ((CBORObject)this.jsonobj).Count;
         return eivalue.Sign >= 0 &&
-                    eivalue.CompareTo(EInteger.FromInt32(icount)) < 0;
-                  } else if (this.jsonobj.Type == CBORType.Map) {
-                    return
-((CBORObject)this.jsonobj).ContainsKey(this.refValue);
-      } else {
+          eivalue.CompareTo(EInteger.FromInt32(icount)) < 0;
+        } else if (this.jsonobj.Type == CBORType.Map) {
+          return ((CBORObject)this.jsonobj).ContainsKey(this.refValue);
+        } else {
         return this.refValue.Length == 0;
       }
     }
@@ -225,9 +224,11 @@ this.refValue = refValue;
         }
         EInteger value = EInteger.FromString(this.refValue);
         int icount = ((CBORObject)this.jsonobj).Count;
-        return (value.Sign < 0) ? (-1) :
-          ((value.CompareTo(EInteger.FromInt32(icount)) > 0) ? (-1) :
-           value.ToInt32Unchecked()); } else {
+        return (value.Sign < 0) ? (-1):
+((value.CompareTo(EInteger.FromInt32(icount)) > 0) ? (-1) :
+
+            value.ToInt32Unchecked());
+      } else {
         return -1;
       }
     }
@@ -248,9 +249,9 @@ this.refValue = refValue;
       if (this.jsonobj.Type == CBORType.Array) {
         int index = this.GetIndex();
         if (index >= 0 && index < ((CBORObject)this.jsonobj).Count) {
-    tmpcbor = this.jsonobj;
-    return tmpcbor[index];
-  } else {
+          tmpcbor = this.jsonobj;
+          return tmpcbor[index];
+        } else {
           return null;
         }
       } else if (this.jsonobj.Type == CBORType.Map) {
@@ -291,8 +292,9 @@ this.refValue = refValue;
     /// <returns>An IDictionary(string, Object) object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='root'/> is null.</exception>
-    public static IDictionary<string, Object>
-      GetPointersWithKeyAndRemove(CBORObject root, string keyToFind) {
+    public static IDictionary<string, Object> GetPointersWithKeyAndRemove(
+      CBORObject root,
+      string keyToFind) {
       IDictionary<string, Object> list = new Dictionary<string, Object>();
       if (root == null) {
         throw new ArgumentNullException(nameof(root));
@@ -341,26 +343,26 @@ this.refValue = refValue;
       return list;
     }
 
-    private static void GetPointersWithKey(
-        CBORObject root,
-        string keyToFind,
-        string currentPointer,
-        IDictionary<string, Object> pointerList,
-        bool remove) {
+    private static void GetPointersWithKey (
+      CBORObject root,
+      string keyToFind,
+      string currentPointer,
+      IDictionary<string, Object> pointerList,
+      bool remove) {
       if (root.Type == CBORType.Map) {
         var rootObj = (CBORObject)root;
         if (rootObj.ContainsKey(keyToFind)) {
-         // Key found in this object,
-         // add this object's JSON pointer
+          // Key found in this object,
+          // add this object's JSON pointer
           Object pointerKey = rootObj[keyToFind];
           pointerList.Add(currentPointer, pointerKey);
-         // and remove the key from the object
-         // if necessary
+          // and remove the key from the object
+          // if necessary
           if (remove) {
             rootObj.Remove(CBORObject.FromObject(keyToFind));
           }
         }
-       // Search the key's values
+        // Search the key's values
         foreach (CBORObject key in rootObj.Keys) {
           string ptrkey = key.AsString();
           ptrkey = ptrkey.Replace("~", "~0");

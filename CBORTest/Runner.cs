@@ -11,7 +11,7 @@ using NUnit.Framework;
 using PeterO.Cbor;
 
 namespace PeterO {
-    /// <summary>Description of Runner.</summary>
+  /// <summary>Description of Runner.</summary>
   public static class Runner {
     private static bool HasAttribute(Type mi, Type t) {
       foreach (object a in mi.GetCustomAttributes(t, false)) {
@@ -32,35 +32,36 @@ namespace PeterO {
     }
 
     public static void Main() {
-     const String ValueParam = "NoRecursive";
-     // Run all the tests in this assembly
-     foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
-       if (!HasAttribute(type, typeof(TestFixtureAttribute))) {
-         continue;
-       }
-       object test = Activator.CreateInstance(type);
-       var setup = type.GetMethod("SetUp");
-       if (setup != null) {
+      const String ValueParam = "NoRecursive";
+      // Run all the tests in this assembly
+      foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
+        if (!HasAttribute(type, typeof(TestFixtureAttribute))) {
+          continue;
+        }
+        object test = Activator.CreateInstance(type);
+        var setup = type.GetMethod("SetUp");
+        if (setup != null) {
           setup.Invoke(test, new object[] { });
-       }
-       foreach (var method in test.GetType().GetMethods()) {
-         if (!HasAttribute(method, typeof(TestAttribute))) {
-           continue;
-         }
-         if (!String.IsNullOrEmpty(ValueParam)) {
-           if (method.Name.IndexOf(ValueParam, StringComparison.Ordinal) < 0) {
-             continue;
-           }
-         }
-         Console.WriteLine("::: " + type.FullName + "." + method.Name);
-         try {
+        }
+        foreach (var method in test.GetType().GetMethods()) {
+          if (!HasAttribute(method, typeof(TestAttribute))) {
+            continue;
+          }
+          if (!String.IsNullOrEmpty(ValueParam)) {
+            if (method.Name.IndexOf(ValueParam, StringComparison.Ordinal) <
+              0) {
+              continue;
+            }
+          }
+          Console.WriteLine("::: " + type.FullName + "." + method.Name);
+          try {
             method.Invoke(test, new object[] { });
-         } catch (TargetInvocationException e) {
-              Console.WriteLine(e.InnerException.GetType().FullName);
-              string message = e.InnerException.Message;
-              Console.WriteLine(message);
-              Console.WriteLine(e.StackTrace);
-              Console.WriteLine(e.InnerException.StackTrace);
+          } catch (TargetInvocationException e) {
+            Console.WriteLine(e.InnerException.GetType().FullName);
+            string message = e.InnerException.Message;
+            Console.WriteLine(message);
+            Console.WriteLine(e.StackTrace);
+            Console.WriteLine(e.InnerException.StackTrace);
           }
         }
       }

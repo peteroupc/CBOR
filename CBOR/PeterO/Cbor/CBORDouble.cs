@@ -10,8 +10,7 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-  internal class CBORDouble : ICBORNumber
-  {
+  internal class CBORDouble : ICBORNumber {
     public bool IsPositiveInfinity(object obj) {
       return Double.IsPositiveInfinity((double)obj);
     }
@@ -55,7 +54,7 @@ namespace PeterO.Cbor {
       }
       fltItem = (fltItem < 0) ? Math.Ceiling(fltItem) : Math.Floor(fltItem);
       if (fltItem >= -9223372036854775808.0 && fltItem <
-      9223372036854775808.0) {
+        9223372036854775808.0) {
         return (long)fltItem;
       }
       throw new OverflowException("This object's value is out of range");
@@ -88,9 +87,9 @@ namespace PeterO.Cbor {
         return false;
       }
       double fltItem2 = (fltItem < 0) ? Math.Ceiling(fltItem) :
-      Math.Floor(fltItem);
+        Math.Floor(fltItem);
       return fltItem2 >= -9223372036854775808.0 && fltItem2 <
-      9223372036854775808.0;
+        9223372036854775808.0;
     }
 
     public bool CanTruncatedIntFitInInt32(object obj) {
@@ -99,7 +98,7 @@ namespace PeterO.Cbor {
         return false;
       }
       double fltItem2 = (fltItem < 0) ? Math.Ceiling(fltItem) :
-      Math.Floor(fltItem);
+        Math.Floor(fltItem);
       return fltItem2 >= Int32.MinValue && fltItem2 <= Int32.MaxValue;
     }
 
@@ -123,7 +122,7 @@ namespace PeterO.Cbor {
     public int Sign(object obj) {
       var flt = (double)obj;
       return Double.IsNaN(flt) ? 2 : ((double)flt == 0.0 ? 0 : (flt < 0.0f ?
-      -1 : 1));
+            -1 : 1));
     }
 
     public bool IsIntegral(object obj) {
@@ -132,7 +131,7 @@ namespace PeterO.Cbor {
         return false;
       }
       double fltItem2 = (fltItem < 0) ? Math.Ceiling(fltItem) :
-      Math.Floor(fltItem);
+        Math.Floor(fltItem);
       return fltItem == fltItem2;
     }
 
@@ -152,9 +151,9 @@ namespace PeterO.Cbor {
 
     public bool IsNegative(object obj) {
       var dbl = (double)obj;
-      long lvalue = BitConverter.ToInt64(
-  BitConverter.GetBytes((double)dbl),
-  0);
+      long lvalue = BitConverter.ToInt64 (
+          BitConverter.GetBytes((double)dbl),
+          0);
       return (lvalue >> 63) != 0;
     }
   }

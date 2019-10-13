@@ -1,8 +1,8 @@
 using System;
 
 namespace PeterO.Cbor {
-    /// <summary>An interface for reading Unicode characters from a data
-    /// source.</summary>
+  /// <summary>An interface for reading Unicode characters from a data
+  /// source.</summary>
   internal interface ICharacterInput {
     /// <summary>Reads a Unicode character from a data source.</summary>
     /// <returns>Either a Unicode code point (from 0-0xd7ff or from 0xe000

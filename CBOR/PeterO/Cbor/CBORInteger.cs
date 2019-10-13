@@ -1,4 +1,4 @@
-﻿/*
+/*
 Written by Peter O. in 2014.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -14,7 +14,7 @@ namespace PeterO.Cbor {
     public object Abs(object obj) {
       var val = (long)obj;
       return (val == Int32.MinValue) ? (EInteger.One << 63) : ((val < 0) ?
-      -val : obj);
+          -val : obj);
     }
 
     public EInteger AsEInteger(object obj) {
@@ -125,7 +125,7 @@ namespace PeterO.Cbor {
 
     public object Negate(object obj) {
       return (((long)obj) == Int64.MinValue) ? (EInteger.One << 63) :
-      (-((long)obj));
+(-((long)obj));
     }
 
     public int Sign(object obj) {

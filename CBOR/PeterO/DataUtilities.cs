@@ -10,27 +10,27 @@ using System.IO;
 using System.Text;
 
 namespace PeterO {
-    /// <summary>Contains methods useful for reading and writing text
-    /// strings. It is designed to have no dependencies other than the
-    /// basic runtime class library.
-    /// <para>Many of these methods work with text encoded in UTF-8, an
-    /// encoding form of the Unicode Standard which uses one byte to encode
-    /// the most basic characters and two to four bytes to encode other
-    /// characters. For example, the <c>GetUtf8</c> method converts a text
-    /// string to an array of bytes in UTF-8.</para>
-    /// <para>In C# and Java, text strings are represented as sequences of
-    /// 16-bit values called <c>char</c> s. These sequences are well-formed
-    /// under UTF-16, a 16-bit encoding form of Unicode, except if they
-    /// contain unpaired surrogate code points. (A surrogate code point is
-    /// used to encode supplementary characters, those with code points
-    /// U+10000 or higher, in UTF-16. A surrogate pair is a high surrogate,
-    /// U+D800 to U+DBFF, followed by a low surrogate, U+DC00 to U+DFFF. An
-    /// unpaired surrogate code point is a surrogate not appearing in a
-    /// surrogate pair.) Many of the methods in this class allow setting
-    /// the behavior to follow when unpaired surrogate code points are
-    /// found in text strings, such as throwing an error or treating the
-    /// unpaired surrogate as a replacement character
-    /// (U+FFFD).</para></summary>
+  /// <summary>Contains methods useful for reading and writing text
+  /// strings. It is designed to have no dependencies other than the
+  /// basic runtime class library.
+  /// <para>Many of these methods work with text encoded in UTF-8, an
+  /// encoding form of the Unicode Standard which uses one byte to encode
+  /// the most basic characters and two to four bytes to encode other
+  /// characters. For example, the <c>GetUtf8</c> method converts a text
+  /// string to an array of bytes in UTF-8.</para>
+  /// <para>In C# and Java, text strings are represented as sequences of
+  /// 16-bit values called <c>char</c> s. These sequences are well-formed
+  /// under UTF-16, a 16-bit encoding form of Unicode, except if they
+  /// contain unpaired surrogate code points. (A surrogate code point is
+  /// used to encode supplementary characters, those with code points
+  /// U+10000 or higher, in UTF-16. A surrogate pair is a high surrogate,
+  /// U+D800 to U+DBFF, followed by a low surrogate, U+DC00 to U+DFFF. An
+  /// unpaired surrogate code point is a surrogate not appearing in a
+  /// surrogate pair.) Many of the methods in this class allow setting
+  /// the behavior to follow when unpaired surrogate code points are
+  /// found in text strings, such as throwing an error or treating the
+  /// unpaired surrogate as a replacement character
+  /// (U+FFFD).</para></summary>
   public static class DataUtilities {
     private const int StreamedStringBufferLength = 4096;
 
@@ -101,7 +101,7 @@ namespace PeterO {
     /// name='offset'/> is less than 0, <paramref name='bytesCount'/> is
     /// less than 0, or offset plus bytesCount is greater than the length
     /// of "data" .</exception>
-    public static string GetUtf8String(
+    public static string GetUtf8String (
       byte[] bytes,
       int offset,
       int bytesCount,
@@ -110,24 +110,24 @@ namespace PeterO {
         throw new ArgumentNullException(nameof(bytes));
       }
       if (offset < 0) {
-        throw new ArgumentException("offset (" + offset + ") is less than " +
-                    "0");
+        throw new ArgumentException("offset(" + offset + ") is less than " +
+          "0");
       }
       if (offset > bytes.Length) {
-        throw new ArgumentException("offset (" + offset + ") is more than " +
-                    bytes.Length);
+        throw new ArgumentException("offset(" + offset + ") is more than " +
+          bytes.Length);
       }
       if (bytesCount < 0) {
-        throw new ArgumentException("bytesCount (" + bytesCount +
-                    ") is less than 0");
+        throw new ArgumentException("bytesCount(" + bytesCount +
+          ") is less than 0");
       }
       if (bytesCount > bytes.Length) {
-        throw new ArgumentException("bytesCount (" + bytesCount +
-                    ") is more than " + bytes.Length);
+        throw new ArgumentException("bytesCount(" + bytesCount +
+          ") is more than " + bytes.Length);
       }
       if (bytes.Length - offset < bytesCount) {
-        throw new ArgumentException("bytes's length minus " + offset + " (" +
-                (bytes.Length - offset) + ") is less than " + bytesCount);
+        throw new ArgumentException("bytes's length minus " + offset + "(" +
+          (bytes.Length - offset) + ") is less than " + bytesCount);
       }
       var b = new StringBuilder();
       if (ReadUtf8FromBytes(bytes, offset, bytesCount, b, replace) != 0) {
@@ -183,7 +183,7 @@ namespace PeterO {
     /// <exception cref='ArgumentException'>The string contains an unpaired
     /// surrogate code point and <paramref name='replace'/> is false, or an
     /// internal error occurred.</exception>
-    public static byte[] GetUtf8Bytes(
+    public static byte[] GetUtf8Bytes (
       string str,
       bool replace,
       bool lenientLineBreaks) {
@@ -231,7 +231,7 @@ namespace PeterO {
       try {
         using (var ms = new MemoryStream()) {
           if (WriteUtf8(str, 0, str.Length, ms, replace, lenientLineBreaks) !=
-               0) {
+            0) {
             throw new ArgumentException("Unpaired surrogate code point");
           }
           return ms.ToArray();
@@ -327,7 +327,7 @@ namespace PeterO {
     /// code units.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='str'/> is null.</exception>
-    public static int CodePointBefore(
+    public static int CodePointBefore (
       string str,
       int index,
       int surrogateBehavior) {
@@ -342,14 +342,14 @@ namespace PeterO {
       }
       int c = str[index - 1];
       if ((c & 0xfc00) == 0xdc00 && index - 2 >= 0 &&
-          (str[index - 2] & 0xfc00) == 0xd800) {
+        (str[index - 2] & 0xfc00) == 0xd800) {
         // Get the Unicode code point for the surrogate pair
         return 0x10000 + ((str[index - 2] & 0x3ff) << 10) + (c & 0x3ff);
       }
       // unpaired surrogate
       if ((c & 0xf800) == 0xd800) {
         return (surrogateBehavior == 0) ? 0xfffd : ((surrogateBehavior == 1) ?
-                    c : -1);
+            c : -1);
       }
       return c;
     }
@@ -402,7 +402,7 @@ namespace PeterO {
     /// (codePoint &gt;= 0x10000) { i++; /* Supplementary code point */ } }</code>
     ///  .
     /// </example>
-    public static int CodePointAt(
+    public static int CodePointAt (
       string str,
       int index,
       int surrogateBehavior) {
@@ -417,13 +417,13 @@ namespace PeterO {
       }
       int c = str[index];
       if ((c & 0xfc00) == 0xd800 && index + 1 < str.Length &&
-          (str[index + 1] & 0xfc00) == 0xdc00) {
+        (str[index + 1] & 0xfc00) == 0xdc00) {
         // Get the Unicode code point for the surrogate pair
         c = 0x10000 + ((c & 0x3ff) << 10) + (str[index + 1] & 0x3ff);
       } else if ((c & 0xf800) == 0xd800) {
         // unpaired surrogate
         return (surrogateBehavior == 0) ? 0xfffd : ((surrogateBehavior == 1) ?
-                    c : (-1));
+            c : (-1));
       }
       return c;
     }
@@ -550,18 +550,18 @@ namespace PeterO {
             return ca - cb;
           }
           if ((ca & 0xfc00) == 0xd800 && i + 1 < strA.Length &&
-              (strA[i + 1] & 0xfc00) == 0xdc00) {
+            (strA[i + 1] & 0xfc00) == 0xdc00) {
             ca = 0x10000 + ((ca & 0x3ff) << 10) + (strA[i + 1] & 0x3ff);
           }
           if ((cb & 0xfc00) == 0xd800 && i + 1 < strB.Length &&
-              (strB[i + 1] & 0xfc00) == 0xdc00) {
+            (strB[i + 1] & 0xfc00) == 0xdc00) {
             cb = 0x10000 + ((cb & 0x3ff) << 10) + (strB[i + 1] & 0x3ff);
           }
           return ca - cb;
         }
       }
       return (strA.Length == strB.Length) ? 0 : ((strA.Length < strB.Length) ?
-                    -1 : 1);
+          -1 : 1);
     }
 
     /// <summary>Writes a portion of a string in UTF-8 encoding to a data
@@ -588,7 +588,7 @@ namespace PeterO {
     /// greater than <paramref name='str'/> 's length, or <paramref
     /// name='str'/> 's length minus <paramref name='offset'/> is less than
     /// <paramref name='length'/>.</exception>
-    public static int WriteUtf8(
+    public static int WriteUtf8 (
       string str,
       int offset,
       int length,
@@ -623,7 +623,7 @@ namespace PeterO {
     /// is greater than the string's length.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error
     /// occurred.</exception>
-    public static int WriteUtf8(
+    public static int WriteUtf8 (
       string str,
       int offset,
       int length,
@@ -637,24 +637,24 @@ namespace PeterO {
         throw new ArgumentNullException(nameof(str));
       }
       if (offset < 0) {
-        throw new ArgumentException("offset (" + offset + ") is less than " +
-                    "0");
+        throw new ArgumentException("offset(" + offset + ") is less than " +
+          "0");
       }
       if (offset > str.Length) {
-        throw new ArgumentException("offset (" + offset + ") is more than " +
-                    str.Length);
+        throw new ArgumentException("offset(" + offset + ") is more than " +
+          str.Length);
       }
       if (length < 0) {
-        throw new ArgumentException("length (" + length + ") is less than " +
-                    "0");
+        throw new ArgumentException("length(" + length + ") is less than " +
+          "0");
       }
       if (length > str.Length) {
-        throw new ArgumentException("length (" + length + ") is more than " +
-                    str.Length);
+        throw new ArgumentException("length(" + length + ") is more than " +
+          str.Length);
       }
       if (str.Length - offset < length) {
-        throw new ArgumentException("str.Length minus offset (" +
-                (str.Length - offset) + ") is less than " + length);
+        throw new ArgumentException("str.Length minus offset(" +
+          (str.Length - offset) + ") is less than " + length);
       }
       int endIndex, c;
       byte[] bytes;
@@ -667,7 +667,7 @@ namespace PeterO {
         if (c <= 0x7f) {
           if (lenientLineBreaks) {
             if (c == 0x0d && (index + 1 >= endIndex || str[index + 1] !=
-                    0x0a)) {
+                0x0a)) {
               // bare CR, convert to CRLF
               if (byteIndex + 2 > StreamedStringBufferLength) {
                 // Write bytes retrieved so far
@@ -717,7 +717,7 @@ namespace PeterO {
           bytes[byteIndex++] = (byte)(0x80 | (c & 0x3f));
         } else {
           if ((c & 0xfc00) == 0xd800 && index + 1 < endIndex &&
-              (str[index + 1] & 0xfc00) == 0xdc00) {
+            (str[index + 1] & 0xfc00) == 0xdc00) {
             // Get the Unicode code point for the surrogate pair
             c = 0x10000 + ((c & 0x3ff) << 10) + (str[index + 1] & 0x3ff);
             ++index;
@@ -800,7 +800,7 @@ namespace PeterO {
     /// name='offset'/> is less than 0, <paramref name='bytesCount'/> is
     /// less than 0, or offset plus bytesCount is greater than the length
     /// of <paramref name='data'/>.</exception>
-    public static int ReadUtf8FromBytes(
+    public static int ReadUtf8FromBytes (
       byte[] data,
       int offset,
       int bytesCount,
@@ -810,24 +810,24 @@ namespace PeterO {
         throw new ArgumentNullException(nameof(data));
       }
       if (offset < 0) {
-        throw new ArgumentException("offset (" + offset + ") is less than " +
-                    "0");
+        throw new ArgumentException("offset(" + offset + ") is less than " +
+          "0");
       }
       if (offset > data.Length) {
-        throw new ArgumentException("offset (" + offset + ") is more than " +
-                    data.Length);
+        throw new ArgumentException("offset(" + offset + ") is more than " +
+          data.Length);
       }
       if (bytesCount < 0) {
-        throw new ArgumentException("bytesCount (" + bytesCount +
-                    ") is less than 0");
+        throw new ArgumentException("bytesCount(" + bytesCount +
+          ") is less than 0");
       }
       if (bytesCount > data.Length) {
-        throw new ArgumentException("bytesCount (" + bytesCount +
-                    ") is more than " + data.Length);
+        throw new ArgumentException("bytesCount(" + bytesCount +
+          ") is more than " + data.Length);
       }
       if (data.Length - offset < bytesCount) {
-        throw new ArgumentException("data.Length minus offset (" +
-                (data.Length - offset) + ") is less than " + bytesCount);
+        throw new ArgumentException("data.Length minus offset(" +
+          (data.Length - offset) + ") is less than " + bytesCount);
       }
       if (builder == null) {
         throw new ArgumentNullException(nameof(builder));
@@ -940,15 +940,15 @@ namespace PeterO {
     /// false.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='stream'/> is null.</exception>
-    public static string ReadUtf8ToString(
+    public static string ReadUtf8ToString (
       Stream stream,
       int bytesCount,
       bool replace) {
       var builder = new StringBuilder();
       if (DataUtilities.ReadUtf8(stream, bytesCount, builder, replace) == -1) {
-        throw new IOException(
-       "Unpaired surrogate code point found.",
-       new ArgumentException("Unpaired surrogate code point found."));
+        throw new IOException (
+          "Unpaired surrogate code point found.",
+          new ArgumentException("Unpaired surrogate code point found."));
       }
       return builder.ToString();
     }
@@ -974,7 +974,7 @@ namespace PeterO {
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='stream'/> is null or <paramref name='builder'/> is
     /// null.</exception>
-    public static int ReadUtf8(
+    public static int ReadUtf8 (
       Stream stream,
       int bytesCount,
       StringBuilder builder,

@@ -1,4 +1,4 @@
-﻿/*
+/*
 Written by Peter O. in 2014.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -16,22 +16,22 @@ namespace PeterO.Cbor {
       bool isiri = obj.HasMostOuterTag(266);
       bool isiriref = obj.HasMostOuterTag(267);
       if (
-  isiriref && !URIUtility.IsValidIRI(
-  obj.AsString(),
-  URIUtility.ParseMode.IRIStrict)) {
+        isiriref && !URIUtility.IsValidIRI (
+          obj.AsString(),
+          URIUtility.ParseMode.IRIStrict)) {
         throw new CBORException("String is not a valid IRI Reference");
       }
       if (
-        isiri && (!URIUtility.IsValidIRI(
-        obj.AsString(),
-        URIUtility.ParseMode.IRIStrict) ||
-         !URIUtility.HasScheme(obj.AsString()))) {
+        isiri && (!URIUtility.IsValidIRI (
+            obj.AsString(),
+            URIUtility.ParseMode.IRIStrict) ||
+          !URIUtility.HasScheme(obj.AsString()))) {
         throw new CBORException("String is not a valid IRI");
       }
-      if (!URIUtility.IsValidIRI(
-  obj.AsString(),
-  URIUtility.ParseMode.URIStrict) ||
-   !URIUtility.HasScheme(obj.AsString())) {
+      if (!URIUtility.IsValidIRI (
+          obj.AsString(),
+          URIUtility.ParseMode.URIStrict) ||
+        !URIUtility.HasScheme(obj.AsString())) {
         throw new CBORException("String is not a valid URI");
       }
       return obj;
@@ -39,8 +39,8 @@ namespace PeterO.Cbor {
 
     public Uri FromCBORObject(CBORObject obj) {
       if (obj.HasMostOuterTag(32) ||
-obj.HasMostOuterTag(266) ||
-obj.HasMostOuterTag(267)) {
+             obj.HasMostOuterTag(266) ||
+             obj.HasMostOuterTag(267)) {
         this.ValidateObject(obj);
         try {
           return new Uri(obj.AsString());

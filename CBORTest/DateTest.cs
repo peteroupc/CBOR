@@ -8,6 +8,6 @@ namespace Test {
   [TestFixture]
   public class DateTest {
     #region datetests
-#endregion
+    #endregion
   }
 }

@@ -1,4 +1,4 @@
-﻿/*
+/*
 Written by Peter O. in 2014.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -10,8 +10,7 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-  internal class CBORExtendedFloat : ICBORNumber
-  {
+  internal class CBORExtendedFloat : ICBORNumber {
     public bool IsPositiveInfinity(object obj) {
       var ef = (EFloat)obj;
       return ef.IsPositiveInfinity();
@@ -68,14 +67,14 @@ namespace PeterO.Cbor {
 
     public bool CanFitInSingle(object obj) {
       var ef = (EFloat)obj;
-      return (!ef.IsFinite) ||
-      (ef.CompareTo(EFloat.FromSingle(ef.ToSingle())) == 0);
+      return (!ef.IsFinite) || (ef.CompareTo(EFloat.FromSingle(
+            ef.ToSingle())) == 0);
     }
 
     public bool CanFitInDouble(object obj) {
       var ef = (EFloat)obj;
-      return (!ef.IsFinite) ||
-      (ef.CompareTo(EFloat.FromDouble(ef.ToDouble())) == 0);
+      return (!ef.IsFinite) || (ef.CompareTo(EFloat.FromDouble(
+            ef.ToDouble())) == 0);
     }
 
     public bool CanFitInInt32(object obj) {

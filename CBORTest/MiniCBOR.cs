@@ -9,8 +9,8 @@ using System;
 using System.IO;
 
 namespace Test {
-    /// <summary>Contains lightweight methods for reading and writing CBOR
-    /// data.</summary>
+  /// <summary>Contains lightweight methods for reading and writing CBOR
+  /// data.</summary>
   public static class MiniCBOR {
     private static float ToSingle(int value) {
       return BitConverter.ToSingle(BitConverter.GetBytes(value), 0);
@@ -164,7 +164,7 @@ namespace Test {
         }
         long b;
         if (check32bit && (bytes[0] != 0 || bytes[1] != 0 || bytes[2] != 0 ||
-          bytes[3] != 0)) {
+            bytes[3] != 0)) {
           throw new IOException("Not a 32-bit integer");
         }
         if (!check32bit) {
@@ -290,7 +290,7 @@ namespace Test {
         return ReadFP(stream, b);
       }
       if (b == 0x18 || b == 0x19 || b == 0x1a || b == 0x38 ||
-          b == 0x39 || b == 0x3a) { // covers headbytes 0x18-0x1a and 0x38-0x3A
+        b == 0x39 || b == 0x3a) { // covers headbytes 0x18-0x1a and 0x38-0x3A
         return (double)ReadInteger(stream, b, false);
       }
       throw new IOException("Not a double");
@@ -379,8 +379,8 @@ namespace Test {
       }
       if (b == 0x19 || b == 0x39 || b == 0x1a || b == 0x3a) {
         if ((b & 0x1f) == 0x1a && (stream.ReadByte() != 0 ||
-           stream.ReadByte() != 0 || stream.ReadByte() != 0 ||
-           stream.ReadByte() != 0)) {
+            stream.ReadByte() != 0 || stream.ReadByte() != 0 ||
+            stream.ReadByte() != 0)) {
           throw new IOException();
         }
         int b1 = stream.ReadByte();

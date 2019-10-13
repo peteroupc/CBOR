@@ -62,10 +62,10 @@ namespace PeterO {
           throw new CBORException("Invalid integer encoding");
         }
       }
-      return CBORDataUtilities.ParseJSONNumber(
-        builder.ToString(),
-        true,
-        false);
+      return CBORDataUtilities.ParseJSONNumber (
+          builder.ToString(),
+          true,
+          false);
     }
 
     private static CBORObject ReadList(Stream stream) {
@@ -131,13 +131,15 @@ namespace PeterO {
         }
         while (intlongValue > 43698) {
           int intdivValue = intlongValue / 10;
-          char digit = ValueDigits[(int)(intlongValue - (intdivValue * 10))];
+          char digit = ValueDigits[(int)(intlongValue - (intdivValue *
+10))];
           chars[count--] = digit;
           intlongValue = intdivValue;
         }
         while (intlongValue > 9) {
           int intdivValue = (intlongValue * 26215) >> 18;
-          char digit = ValueDigits[(int)(intlongValue - (intdivValue * 10))];
+          char digit = ValueDigits[(int)(intlongValue - (intdivValue *
+10))];
           chars[count--] = digit;
           intlongValue = intdivValue;
         }
@@ -199,10 +201,10 @@ namespace PeterO {
           throw new CBORException("Invalid integer encoding");
         }
       }
-      CBORObject number = CBORDataUtilities.ParseJSONNumber(
-        builder.ToString(),
-        true,
-        true);
+      CBORObject number = CBORDataUtilities.ParseJSONNumber (
+          builder.ToString(),
+          true,
+          true);
       var length = 0;
       try {
         length = number.AsInt32();
@@ -272,9 +274,9 @@ namespace PeterO {
             if (length < 0) {
               throw new CBORException("invalid string");
             }
-            WriteUtf8(
-  LongToString(length),
-  stream);
+            WriteUtf8 (
+              LongToString(length),
+              stream);
             stream.WriteByte(unchecked((byte)((byte)':')));
             WriteUtf8(key, stream);
             Write(value, stream);

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace PeterO.Cbor {
-    /// <summary>Includes options to control how CBOR objects are converted
-    /// to JSON.</summary>
+  /// <summary>Includes options to control how CBOR objects are converted
+  /// to JSON.</summary>
   public sealed class JSONOptions {
     /// <summary>Initializes a new instance of the
     /// <see cref='PeterO.Cbor.JSONOptions'/> class with default
@@ -71,12 +71,18 @@ namespace PeterO.Cbor {
         throw new ArgumentNullException(nameof(paramString));
       }
       var parser = new OptionsParser(paramString);
+      // TODO: Add similar option for converting JSON numbers
+      // to doubles, or to integers if the number is an integer in [-2^53+1, 2^53-1].
       this.NumbersToDoubles = parser.GetBoolean("numberstodoubles", false);
-      this.AllowDuplicateKeys = parser.GetBoolean("allowduplicatekeys", false);
+      this.AllowDuplicateKeys = parser.GetBoolean(
+        "allowduplicatekeys",
+        false);
       this.Base64Padding = parser.GetBoolean("base64padding", true);
       // TODO: Note in release notes that JSONOptions string constructor
       // inadvertently set ReplaceSurrogates to true by default
-      this.ReplaceSurrogates = parser.GetBoolean("replacesurrogates", false);
+      this.ReplaceSurrogates = parser.GetBoolean(
+        "replacesurrogates",
+        false);
     }
 
     /// <summary>Gets the values of this options object's properties in
@@ -86,15 +92,14 @@ namespace PeterO.Cbor {
     /// one described in the String constructor for this class.</returns>
     public override string ToString() {
       return new StringBuilder()
-           .Append("base64padding=")
-           .Append(this.Base64Padding ? "true" : "false")
-           .Append(";replacesurrogates=")
-           .Append(this.ReplaceSurrogates ? "true" : "false")
-           .Append(";numberstodoubles=")
-           .Append(this.NumbersToDoubles ? "true" : "false")
-           .Append(";allowduplicatekeys=")
-           .Append(this.AllowDuplicateKeys ? "true" : "false")
-           .ToString();
+        .Append("base64padding=").Append(this.Base64Padding ? "true" : "false")
+        .Append(";replacesurrogates=")
+        .Append(this.ReplaceSurrogates ? "true" : "false")
+        .Append(";numberstodoubles=")
+        .Append(this.NumbersToDoubles ? "true" : "false")
+        .Append(";allowduplicatekeys=")
+        .Append(this.AllowDuplicateKeys ? "true" : "false")
+        .ToString();
     }
 
     /// <summary>The default options for converting CBOR objects to
@@ -107,11 +112,14 @@ namespace PeterO.Cbor {
     /// or traditional base64 to JSON.</summary>
     /// <value>A value indicating whether the Base64Padding property is
     /// true.</value>
-    [Obsolete("This option now has no effect. This library now includes " +
-         "necessary padding when writing traditional base64 to JSON and" +
-         " includes no padding when writing base64url to JSON, in " +
-         "accordance with the revision of the CBOR specification.")]
-    public bool Base64Padding { get; private set; }
+    [Obsolete("This property now has no effect. This library now includes " +
+"\u0020necessary padding when writing traditional base64 to JSON and" +
+"\u0020includes no padding when writing base64url to JSON, in " +
+"\u0020accordance with the revision of the CBOR specification.")]
+    public bool Base64Padding {
+      get;
+      private set;
+    }
 
     /// <summary>Gets a value indicating whether JSON numbers are decoded
     /// as their closest 64-bit binary floating-point numbers when decoding
@@ -120,13 +128,19 @@ namespace PeterO.Cbor {
     /// binary floating-point numbers, or false if such numbers are decoded
     /// as arbitrary-precision integers or decimal numbers, as appropriate.
     /// The default is false.</value>
-    public bool NumbersToDoubles { get; private set; }
+    public bool NumbersToDoubles {
+      get;
+      private set;
+    }
 
     /// <summary>Gets a value indicating whether to allow duplicate keys
     /// when reading JSON. Used only when decoding JSON.</summary>
     /// <value>A value indicating whether to allow duplicate keys when
     /// reading JSON. The default is false.</value>
-    public bool AllowDuplicateKeys { get; private set; }
+    public bool AllowDuplicateKeys {
+      get;
+      private set;
+    }
 
     /// <summary>Gets a value indicating whether surrogate code points not
     /// part of a surrogate pair (which consists of two consecutive
@@ -137,6 +151,9 @@ namespace PeterO.Cbor {
     /// are each replaced with a replacement character, or false if an
     /// exception is thrown when such code points are encountered. The
     /// default is false.</value>
-    public bool ReplaceSurrogates { get; private set; }
-   }
+    public bool ReplaceSurrogates {
+      get;
+      private set;
+    }
+  }
 }

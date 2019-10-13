@@ -31,7 +31,7 @@ namespace PeterO.Cbor {
         if (str.Length == 1) {
           this.WriteCodePoint((int)str[0]);
         } else {
-          if (DataUtilities.WriteUtf8(
+          if (DataUtilities.WriteUtf8 (
             str,
             0,
             str.Length,
@@ -51,12 +51,12 @@ namespace PeterO.Cbor {
           this.WriteCodePoint((int)str[index]);
         } else {
           if (
-  DataUtilities.WriteUtf8(
-    str,
-    index,
-    length,
-    this.outputStream,
-    false) < 0) {
+            DataUtilities.WriteUtf8 (
+              str,
+              index,
+              length,
+              this.outputStream,
+              false) < 0) {
             throw new ArgumentException("str has an unpaired surrogate");
           }
         }
@@ -67,33 +67,36 @@ namespace PeterO.Cbor {
 
     public void WriteCodePoint(int codePoint) {
       if (codePoint < 0) {
-        throw new ArgumentException("codePoint (" + codePoint +
-                ") is less than 0");
+        throw new ArgumentException("codePoint(" + codePoint +
+          ") is less than 0");
       }
       if (codePoint > 0x10ffff) {
-        throw new ArgumentException("codePoint (" + codePoint +
-                ") is more than " + 0x10ffff);
+        throw new ArgumentException("codePoint(" + codePoint +
+          ") is more than " + 0x10ffff);
       }
       if (this.outputStream != null) {
         if (codePoint < 0x80) {
           this.outputStream.WriteByte((byte)codePoint);
         } else if (codePoint <= 0x7ff) {
-          this.outputStream.WriteByte((byte)(0xc0 | ((codePoint >> 6) & 0x1f)));
+          this.outputStream.WriteByte((byte)(0xc0 | ((codePoint >> 6) &
+                0x1f)));
           this.outputStream.WriteByte((byte)(0x80 | (codePoint & 0x3f)));
         } else if (codePoint <= 0xffff) {
           if ((codePoint & 0xf800) == 0xd800) {
             throw new ArgumentException("ch is a surrogate");
           }
           this.outputStream.WriteByte((byte)(0xe0 | ((codePoint >> 12) &
-                    0x0f)));
-          this.outputStream.WriteByte((byte)(0x80 | ((codePoint >> 6) & 0x3f)));
+                0x0f)));
+          this.outputStream.WriteByte((byte)(0x80 | ((codePoint >> 6) &
+                0x3f)));
           this.outputStream.WriteByte((byte)(0x80 | (codePoint & 0x3f)));
         } else {
           this.outputStream.WriteByte((byte)(0xf0 | ((codePoint >> 18) &
-                    0x08)));
+                0x08)));
           this.outputStream.WriteByte((byte)(0x80 | ((codePoint >> 12) &
-                    0x3f)));
-          this.outputStream.WriteByte((byte)(0x80 | ((codePoint >> 6) & 0x3f)));
+                0x3f)));
+          this.outputStream.WriteByte((byte)(0x80 | ((codePoint >> 6) &
+                0x3f)));
           this.outputStream.WriteByte((byte)(0x80 | (codePoint & 0x3f)));
         }
       } else {
@@ -105,8 +108,9 @@ namespace PeterO.Cbor {
           }
         } else if (codePoint <= 0x10ffff) {
           this.builder.Append((char)((((codePoint - 0x10000) >> 10) & 0x3ff) |
-0xd800));
-          this.builder.Append((char)(((codePoint - 0x10000) & 0x3ff) | 0xdc00));
+              0xd800));
+          this.builder.Append((char)(((codePoint - 0x10000) & 0x3ff) |
+              0xdc00));
         }
       }
     }

@@ -1,4 +1,4 @@
-﻿/*
+/*
 Written by Peter O. in 2014.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -10,8 +10,7 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-  internal class CBORExtendedDecimal : ICBORNumber
-  {
+  internal class CBORExtendedDecimal : ICBORNumber {
     public bool IsPositiveInfinity(object obj) {
       var ed = (EDecimal)obj;
       return ed.IsPositiveInfinity();
@@ -68,14 +67,14 @@ namespace PeterO.Cbor {
 
     public bool CanFitInSingle(object obj) {
       var ef = (EDecimal)obj;
-      return (!ef.IsFinite) ||
-      (ef.CompareTo(EDecimal.FromSingle(ef.ToSingle())) == 0);
+      return (!ef.IsFinite) || (ef.CompareTo(EDecimal.FromSingle(
+            ef.ToSingle())) == 0);
     }
 
     public bool CanFitInDouble(object obj) {
       var ef = (EDecimal)obj;
-      return (!ef.IsFinite) ||
-      (ef.CompareTo(EDecimal.FromDouble(ef.ToDouble())) == 0);
+      return (!ef.IsFinite) || (ef.CompareTo(EDecimal.FromDouble(
+            ef.ToDouble())) == 0);
     }
 
     public bool CanFitInInt32(object obj) {
@@ -129,8 +128,9 @@ namespace PeterO.Cbor {
     public bool IsIntegral(object obj) {
       var ed = (EDecimal)obj;
       return ed.IsFinite && ((ed.Exponent.Sign >= 0) ||
-      (ed.CompareTo(EDecimal.FromEInteger(ed.ToEInteger())) ==
-      0));
+(ed.CompareTo(EDecimal.FromEInteger(ed.ToEInteger())) ==
+
+            0));
     }
 
     public int AsInt32(object obj, int minValue, int maxValue) {
