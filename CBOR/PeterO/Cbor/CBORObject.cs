@@ -1073,8 +1073,8 @@ cn.GetNumberInterface().IsNegative(cn.GetValue());
     /// <exception cref='PeterO.Cbor.CBORException'>The string is not in
     /// JSON format.</exception>
     [Obsolete("Instead, use .FromJSONString\u0028str, new" +
-"\u0020JSONOptions\u0028\"allowduplicatekeys=true\")) or
-.FromJSONString\u0028str," +
+"\u0020JSONOptions\u0028\"allowduplicatekeys=true\")) or" +
+"\u0020.FromJSONString\u0028str," +
 "\u0020 new JSONOptions\u0028\"allowduplicatekeys=false\")), as appropriate.")]
     public static CBORObject FromJSONString(
       string str,
@@ -2711,8 +2711,8 @@ options) {
     /// <exception cref='PeterO.Cbor.CBORException'>The data stream
     /// contains invalid encoding or is not in JSON format.</exception>
     [Obsolete("Instead, use .ReadJSON\u0028stream, new" +
-"\u0020JSONOptions\u0028\"allowduplicatekeys=true\")) or
-.ReadJSON\u0028stream, new" +
+"\u0020JSONOptions\u0028\"allowduplicatekeys=true\")) or" +
+"\u0020.ReadJSON\u0028stream, new" +
 "\u0020JSONOptions\u0028\"allowduplicatekeys=false\")), as appropriate.")]
     public static CBORObject ReadJSON(
       Stream stream,
