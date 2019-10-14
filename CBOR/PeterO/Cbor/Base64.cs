@@ -16,7 +16,7 @@ namespace PeterO.Cbor {
     private const string Base64Classic =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-    public static void WriteBase64 (
+    public static void WriteBase64(
       StringOutput writer,
       byte[] data,
       int offset,
@@ -25,7 +25,7 @@ namespace PeterO.Cbor {
       WriteBase64(writer, data, offset, count, true, padding);
     }
 
-    public static void WriteBase64URL (
+    public static void WriteBase64URL(
       StringOutput writer,
       byte[] data,
       int offset,
@@ -34,7 +34,7 @@ namespace PeterO.Cbor {
       WriteBase64(writer, data, offset, count, false, padding);
     }
 
-    private static void WriteBase64 (
+    private static void WriteBase64(
       StringOutput writer,
       byte[] data,
       int offset,

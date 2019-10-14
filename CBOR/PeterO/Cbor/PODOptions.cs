@@ -14,7 +14,7 @@ namespace PeterO.Cbor {
     /// <param name='removeIsPrefix'>The parameter is not used.</param>
     /// <param name='useCamelCase'>The value of the "UseCamelCase"
     /// property.</param>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage (
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Usage",
       "CA1801",
       Justification = "'removeIsPrefix' is present for backward compatibility.")]

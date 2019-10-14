@@ -30,7 +30,7 @@ namespace Test {
       return Generate(rand, radix, 50);
     }
 
-    public static StringAndBigInt Generate (
+    public static StringAndBigInt Generate(
       RandomGenerator rand,
       int radix,
       int maxNumDigits) {

@@ -72,7 +72,8 @@ namespace PeterO.Cbor {
       }
       var parser = new OptionsParser(paramString);
       // TODO: Add similar option for converting JSON numbers
-      // to doubles, or to integers if the number is an integer in [-2^53+1, 2^53-1].
+      // to doubles, or to integers if the number is an integer in [-2^53 + 1,
+      // 2^53-1].
       this.NumbersToDoubles = parser.GetBoolean("numberstodoubles", false);
       this.AllowDuplicateKeys = parser.GetBoolean(
         "allowduplicatekeys",

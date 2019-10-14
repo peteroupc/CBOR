@@ -224,7 +224,7 @@ namespace Test {
         }
         EInteger value = EInteger.FromString(this.refValue);
         int icount = ((CBORObject)this.jsonobj).Count;
-        return (value.Sign < 0) ? (-1):
+        return (value.Sign < 0) ? (-1) :
 ((value.CompareTo(EInteger.FromInt32(icount)) > 0) ? (-1) :
 
             value.ToInt32Unchecked());

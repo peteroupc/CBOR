@@ -233,26 +233,23 @@ namespace Test {
     }
     [Test]
     public void TestCodePointCompare() {
+      int integerTemp3;
       {
         object objectTemp = -1;
         object objectTemp2 = Math.Sign(DataUtilities.CodePointCompare(null,
-            "A"));
-            Assert.AreEqual(objectTemp, objectTemp2);
+        "A"));
+        Assert.AreEqual(objectTemp, objectTemp2);
 }
-      {
-        int integerTemp2 = Math.Sign(DataUtilities.CodePointCompare("A",
+integerTemp3 = Math.Sign(DataUtilities.CodePointCompare("A",
   null));
-  Assert.AreEqual(objectTemp, objectTemp2);
-}
-      {
-        int integerTemp2 = Math.Sign(DataUtilities.CodePointCompare(null,
+  Assert.AreEqual(-1, integerTemp3);
+  integerTemp3 = Math.Sign(DataUtilities.CodePointCompare(null,
             null));
-            Assert.AreEqual(-1, integerTemp2);
-}
+            Assert.AreEqual(-1, integerTemp3);
       {
-        long numberTemp = Math.Sign (
+      long numberTemp = Math.Sign (
             DataUtilities.CodePointCompare("abc", "abc"));
-        Assert.AreEqual(0, numberTemp);
+            Assert.AreEqual(0, numberTemp);
       }
       {
         long numberTemp = Math.Sign (

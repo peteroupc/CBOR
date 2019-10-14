@@ -1,14 +1,14 @@
 using System;
 
 namespace PeterO {
-    /// <summary>A class that adapts a random byte generator to generate
-    /// random numbers in a variety of statistical distributions.
-    /// <para>The method descriptions in this class assume the underlying
-    /// random byte generator generates uniformly distributed numbers that
-    /// are independent of each other.</para>
-    /// <para><b>Thread safety:</b> The methods in this class are safe for
-    /// concurrent use by multiple threads, as long as the underlying
-    /// random byte generator is as well.</para></summary>
+  /// <summary>A class that adapts a random byte generator to generate
+  /// random numbers in a variety of statistical distributions.
+  /// <para>The method descriptions in this class assume the underlying
+  /// random byte generator generates uniformly distributed numbers that
+  /// are independent of each other.</para>
+  /// <para><b>Thread safety:</b> The methods in this class are safe for
+  /// concurrent use by multiple threads, as long as the underlying
+  /// random byte generator is as well.</para></summary>
   public sealed class RandomGenerator {
     private bool valueHaveLastNormal;
     private IRandomGen valueIrg;
@@ -34,10 +34,10 @@ namespace PeterO {
     /// <returns>A Boolean object.</returns>
     public bool Bernoulli(double p) {
       if (p < 0) {
-        throw new ArgumentException("p (" + p + ") is less than 0");
+        throw new ArgumentException("p(" + p + ") is less than 0");
       }
       if (p > 1) {
-        throw new ArgumentException("p (" + p + ") is more than 1");
+        throw new ArgumentException("p(" + p + ") is more than 1");
       }
       return this.Uniform() < p;
     }
@@ -70,14 +70,14 @@ namespace PeterO {
     /// trials.</returns>
     public int Binomial(int trials, double p) {
       if (p < 0) {
-        throw new ArgumentException("p (" + p + ") is less than 0");
+        throw new ArgumentException("p(" + p + ") is less than 0");
       }
       if (p > 1) {
-        throw new ArgumentException("p (" + p + ") is more than 1");
+        throw new ArgumentException("p(" + p + ") is more than 1");
       }
       if (trials <= -1) {
-        throw new ArgumentException("trials (" + trials +
-               ") is not greater than " + (-1));
+        throw new ArgumentException("trials(" + trials +
+          ") is not greater than " + (-1));
       }
       if (trials == 0 || p == 1.0) {
         return trials;
@@ -114,7 +114,7 @@ namespace PeterO {
     /// <returns>A 64-bit floating-point number.</returns>
     public double ChiSquared(int df) {
       if (df <= 0) {
-        throw new ArgumentException("df (" + df + ") is not greater than 0");
+        throw new ArgumentException("df(" + df + ") is not greater than 0");
       }
       return this.Gamma(df * 0.5, 2);
     }
@@ -131,7 +131,7 @@ namespace PeterO {
     /// <returns>A 64-bit floating-point number.</returns>
     public double Gamma(double a, double b) {
       if (b <= 0) {
-        throw new ArgumentException("b (" + b + ") is not greater than 0");
+        throw new ArgumentException("b(" + b + ") is not greater than 0");
       }
       return this.Gamma(a) * b;
     }
@@ -141,7 +141,7 @@ namespace PeterO {
     /// <returns>A 64-bit floating-point number.</returns>
     public double Gamma(double a) {
       if (a <= 0) {
-        throw new ArgumentException("a (" + a + ") is not greater than 0");
+        throw new ArgumentException("a(" + a + ") is not greater than 0");
       }
       double v, x, u, x2, d, c;
       d = (a < 1 ? 1 + a : a) - (1.0 / 3.0);
@@ -154,7 +154,7 @@ namespace PeterO {
         u = 1.0 - this.Uniform();
         x2 = x * x;
       } while (u >= 1 - (0.0331 * x2 * x2) &&
-               Math.Log(u) >= (0.5 * x2) + (d * (1 - v + Math.Log(v))));
+        Math.Log(u) >= (0.5 * x2) + (d * (1 - v + Math.Log(v))));
       if (a < 1) {
         return d * v * Math.Exp(this.Exponential() / -a);
       } else {
@@ -190,22 +190,22 @@ namespace PeterO {
     /// <returns>A 32-bit signed integer.</returns>
     public int Hypergeometric(int trials, int ones, int count) {
       if (ones < 0) {
-        throw new ArgumentException("ones (" + ones + ") is less than 0");
+        throw new ArgumentException("ones(" + ones + ") is less than 0");
       }
       if (ones > count) {
-        throw new ArgumentException("ones (" + ones + ") is more than " +
+        throw new ArgumentException("ones(" + ones + ") is more than " +
           count);
       }
       if (count < 0) {
-        throw new ArgumentException("count (" + count +
+        throw new ArgumentException("count(" + count +
           ") is less than 0");
       }
       if (trials < 0) {
-        throw new ArgumentException("trials (" + trials +
+        throw new ArgumentException("trials(" + trials +
           ") is less than 0");
       }
       if (trials > count) {
-        throw new ArgumentException("trials (" + trials +
+        throw new ArgumentException("trials(" + trials +
           ") is more than " + count);
       }
       var ret = 0;
@@ -239,14 +239,14 @@ namespace PeterO {
     /// <paramref name='p'/> is 0.</returns>
     public int NegativeBinomial(int trials, double p) {
       if (p < 0) {
-        throw new ArgumentException("p (" + p + ") is less than 0");
+        throw new ArgumentException("p(" + p + ") is less than 0");
       }
       if (p > 1) {
-        throw new ArgumentException("p (" + p + ") is more than 1");
+        throw new ArgumentException("p(" + p + ") is more than 1");
       }
       if (trials <= -1) {
-        throw new ArgumentException("trials (" + trials +
-               ") is not greater than " + (-1));
+        throw new ArgumentException("trials(" + trials +
+          ") is not greater than " + (-1));
       }
       if (trials == 0 || p == 1.0) {
         return 0;
@@ -340,7 +340,7 @@ namespace PeterO {
     /// <returns>A 32-bit signed integer.</returns>
     public int Poisson(double mean) {
       if (mean < 0) {
-        throw new ArgumentException("mean (" + mean +
+        throw new ArgumentException("mean(" + mean +
           ") is less than 0");
       }
       double l = Math.Exp(-mean);
@@ -363,8 +363,8 @@ namespace PeterO {
     /// <returns>A 64-bit floating-point number.</returns>
     public double Uniform(double min, double max) {
       if (min >= max) {
-        throw new ArgumentException("min (" + min + ") is not less than " +
-            max);
+        throw new ArgumentException("min(" + min + ") is not less than " +
+          max);
       }
       return min + ((max - min) * this.Uniform());
     }
@@ -401,7 +401,7 @@ namespace PeterO {
     /// <returns>A 32-bit signed integer.</returns>
     public int UniformInt(int minInclusive, int maxExclusive) {
       if (minInclusive > maxExclusive) {
-        throw new ArgumentException("minInclusive (" + minInclusive +
+        throw new ArgumentException("minInclusive(" + minInclusive +
           ") is more than " + maxExclusive);
       }
       if (minInclusive == maxExclusive) {
@@ -428,7 +428,7 @@ namespace PeterO {
     /// <returns>A 64-bit signed integer.</returns>
     public long UniformLong(long minInclusive, long maxExclusive) {
       if (minInclusive > maxExclusive) {
-        throw new ArgumentException("minInclusive (" + minInclusive +
+        throw new ArgumentException("minInclusive(" + minInclusive +
           ") is more than " + maxExclusive);
       }
       if (minInclusive == maxExclusive) {
@@ -437,9 +437,10 @@ namespace PeterO {
       if (minInclusive >= 0) {
         return minInclusive + this.UniformLong(maxExclusive - minInclusive);
       } else {
-      if ((maxExclusive < 0 && Int64.MaxValue + maxExclusive < minInclusive) ||
+        if ((maxExclusive < 0 && Int64.MaxValue + maxExclusive <
+minInclusive) ||
           (maxExclusive > 0 && Int64.MinValue + maxExclusive > minInclusive) ||
-              minInclusive - maxExclusive < 0) {
+          minInclusive - maxExclusive < 0) {
           // Difference is greater than MaxValue
           long lb = 0;
           var b = new byte[8];
@@ -470,7 +471,7 @@ namespace PeterO {
     /// <returns>A 32-bit signed integer.</returns>
     public int UniformInt(int maxExclusive) {
       if (maxExclusive < 0) {
-        throw new ArgumentException("maxExclusive (" + maxExclusive +
+        throw new ArgumentException("maxExclusive(" + maxExclusive +
           ") is less than 0");
       }
       if (maxExclusive <= 1) {
@@ -479,43 +480,43 @@ namespace PeterO {
       var b = new byte[4];
       switch (maxExclusive) {
         case 2: {
-            this.valueIrg.GetBytes(b, 0, 1);
-            return b[0] & 1;
-          }
+          this.valueIrg.GetBytes(b, 0, 1);
+          return b[0] & 1;
+        }
         case 256: {
-            this.valueIrg.GetBytes(b, 0, 1);
-            return (int)b[0] & 1;
-          }
+          this.valueIrg.GetBytes(b, 0, 1);
+          return (int)b[0] & 1;
+        }
         default: {
+          while (true) {
+            var ib = 0;
+            if (maxExclusive == 0x1000000) {
+              this.valueIrg.GetBytes(b, 0, 3);
+              ib = b[0] & 0xff;
+              ib |= (b[1] & 0xff) << 8;
+              ib |= (b[2] & 0xff) << 16;
+              return ib;
+            }
+            if (maxExclusive == 0x10000) {
+              this.valueIrg.GetBytes(b, 0, 2);
+              ib = b[0] & 0xff;
+              ib |= (b[1] & 0xff) << 8;
+              return ib;
+            }
+            int maxexc;
+            maxexc = (Int32.MaxValue / maxExclusive) * maxExclusive;
             while (true) {
-              var ib = 0;
-              if (maxExclusive == 0x1000000) {
-                this.valueIrg.GetBytes(b, 0, 3);
-                ib = b[0] & 0xff;
-                ib |= (b[1] & 0xff) << 8;
-                ib |= (b[2] & 0xff) << 16;
-                return ib;
-              }
-              if (maxExclusive == 0x10000) {
-                this.valueIrg.GetBytes(b, 0, 2);
-                ib = b[0] & 0xff;
-                ib |= (b[1] & 0xff) << 8;
-                return ib;
-              }
-              int maxexc;
-              maxexc = (Int32.MaxValue / maxExclusive) * maxExclusive;
-              while (true) {
-                this.valueIrg.GetBytes(b, 0, 4);
-                ib = b[0] & 0xff;
-                ib |= (b[1] & 0xff) << 8;
-                ib |= (b[2] & 0xff) << 16;
-                ib |= (b[3] & 0x7f) << 24;
-                if (ib < maxexc) {
-                  return ib % maxExclusive;
-                }
+              this.valueIrg.GetBytes(b, 0, 4);
+              ib = b[0] & 0xff;
+              ib |= (b[1] & 0xff) << 8;
+              ib |= (b[2] & 0xff) << 16;
+              ib |= (b[3] & 0x7f) << 24;
+              if (ib < maxexc) {
+                return ib % maxExclusive;
               }
             }
           }
+        }
       }
     }
 
@@ -526,7 +527,7 @@ namespace PeterO {
     /// <returns>A 64-bit signed integer.</returns>
     public long UniformLong(long maxExclusive) {
       if (maxExclusive < 0) {
-        throw new ArgumentException("maxExclusive (" + maxExclusive +
+        throw new ArgumentException("maxExclusive(" + maxExclusive +
           ") is less than 0");
       }
       if (maxExclusive <= Int32.MaxValue) {

@@ -11,7 +11,7 @@ using System.Reflection;
 
 namespace PeterO {
   internal static class DebugUtility {
-    private static MethodInfo GetTypeMethod (
+    private static MethodInfo GetTypeMethod(
       Type t,
       string name,
       Type[] parameters) {

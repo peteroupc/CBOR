@@ -146,7 +146,7 @@ namespace PeterO.Cbor {
       }
     }
 
-    private CBORObject NextJSONValue (
+    private CBORObject NextJSONValue(
       int firstChar,
       int[] nextChar,
       int depth) {
@@ -337,7 +337,7 @@ namespace PeterO.Cbor {
       return this.NextJSONValue(c, nextchar, 0);
     }
 
-    internal static CBORObject ParseJSONValue (
+    internal static CBORObject ParseJSONValue(
       CharacterInputWithCount reader,
       JSONOptions options,
       bool objectOrArrayOnly,
@@ -436,7 +436,7 @@ namespace PeterO.Cbor {
           this.reader.RaiseError("Empty array element");
         }
         myArrayList.Add (
-          this.NextJSONValue (
+          this.NextJSONValue(
             c,
             nextchar,
             depth));
@@ -454,7 +454,7 @@ namespace PeterO.Cbor {
       }
     }
 
-    internal static void WriteJSONStringUnquoted (
+    internal static void WriteJSONStringUnquoted(
       string str,
       StringOutput sb,
       JSONOptions options) {
@@ -534,7 +534,7 @@ namespace PeterO.Cbor {
       }
     }
 
-    internal static void WriteJSONToInternal (
+    internal static void WriteJSONToInternal(
       CBORObject obj,
       StringOutput writer,
       JSONOptions options) {
@@ -574,7 +574,7 @@ namespace PeterO.Cbor {
           writer.WriteCodePoint((int)'\"');
           if (obj.HasTag(22)) {
             // Base64 with padding
-            Base64.WriteBase64 (
+            Base64.WriteBase64(
               writer,
               byteArray,
               0,
@@ -588,7 +588,7 @@ namespace PeterO.Cbor {
             }
           } else {
             // Base64url no padding
-            Base64.WriteBase64URL (
+            Base64.WriteBase64URL(
               writer,
               byteArray,
               0,

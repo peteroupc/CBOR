@@ -17,35 +17,35 @@ namespace Test {
       cbor = CBORDataUtilities.ParseJSONNumber("-0", false, false, true);
       {
         string stringTemp = cbor.ToObject(typeof(EDecimal)).ToString();
-        Assert.AreEqual (
+        Assert.AreEqual(
           "-0",
           stringTemp);
       }
       cbor = CBORDataUtilities.ParseJSONNumber("-0e-1", false, false, true);
       {
         string stringTemp = cbor.ToObject(typeof(EDecimal)).ToString();
-        Assert.AreEqual (
+        Assert.AreEqual(
           "-0.0",
           stringTemp);
       }
       cbor = CBORDataUtilities.ParseJSONNumber("-0e1", false, false, true);
       {
         string stringTemp = cbor.ToObject(typeof(EDecimal)).ToString();
-        Assert.AreEqual (
+        Assert.AreEqual(
           "-0E+1",
           stringTemp);
       }
       cbor = CBORDataUtilities.ParseJSONNumber("-0.0e1", false, false, true);
       {
         string stringTemp = cbor.ToObject(typeof(EDecimal)).ToString();
-        Assert.AreEqual (
+        Assert.AreEqual(
           "-0",
           stringTemp);
       }
       cbor = CBORDataUtilities.ParseJSONNumber("-0.0", false, false, true);
       {
         string stringTemp = cbor.ToObject(typeof(EDecimal)).ToString();
-        Assert.AreEqual (
+        Assert.AreEqual(
           "-0.0",
           stringTemp);
       }
@@ -179,7 +179,7 @@ namespace Test {
       TestCommon.CompareTestEqual (
         ToObjectTest.TestToFromObjectRoundTrip(23).AsNumber(),
         CBORDataUtilities.ParseJSONNumber("23.0e00").AsNumber());
-      cbor = CBORDataUtilities.ParseJSONNumber (
+      cbor = CBORDataUtilities.ParseJSONNumber(
         "1e+99999999999999999999999999",
         false,
         false);

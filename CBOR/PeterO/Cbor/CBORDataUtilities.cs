@@ -202,7 +202,7 @@ namespace PeterO.Cbor {
     /// positive zero if the number is a zero that starts with a minus sign
     /// (such as "-0" or "-0.0"). Returns null if the parsing fails,
     /// including if the string is null or empty.</returns>
-    public static CBORObject ParseJSONNumber (
+    public static CBORObject ParseJSONNumber(
       string str,
       bool integersOnly,
       bool positiveOnly) {
@@ -351,7 +351,7 @@ namespace PeterO.Cbor {
     /// <returns>A CBOR object that represents the parsed number. Returns
     /// null if the parsing fails, including if the string is null or
     /// empty.</returns>
-    public static CBORObject ParseJSONNumber (
+    public static CBORObject ParseJSONNumber(
       string str,
       bool integersOnly,
       bool positiveOnly,
@@ -576,7 +576,7 @@ namespace PeterO.Cbor {
           bigmant = -(EInteger)bigmant;
         }
         EDecimal edec;
-        edec = EDecimal.Create (
+        edec = EDecimal.Create(
           bigmant,
           bigexp);
         if (negative && preserveNegativeZero && bigmant.IsZero) {

@@ -30,12 +30,12 @@ namespace Test {
       object o = null;
       switch (rand.UniformInt(6)) {
         case 0:
-          o = RandomObjects.RandomDouble (
+          o = RandomObjects.RandomDouble(
             rand,
             Int32.MaxValue);
           return ToObjectTest.TestToFromObjectRoundTrip(o);
         case 1:
-          o = RandomObjects.RandomSingle (
+          o = RandomObjects.RandomSingle(
             rand,
             Int32.MaxValue);
           return ToObjectTest.TestToFromObjectRoundTrip(o);
@@ -59,12 +59,12 @@ namespace Test {
       object o = null;
       switch (rand.UniformInt(7)) {
         case 0:
-          o = RandomObjects.RandomDouble (
+          o = RandomObjects.RandomDouble(
             rand,
             Int32.MaxValue);
           return ToObjectTest.TestToFromObjectRoundTrip(o);
         case 1:
-          o = RandomObjects.RandomSingle (
+          o = RandomObjects.RandomSingle(
             rand,
             Int32.MaxValue);
           return ToObjectTest.TestToFromObjectRoundTrip(o);
@@ -120,7 +120,7 @@ namespace Test {
       return ei;
     }
 
-    public static CBORObject RandomCBORTaggedObject (
+    public static CBORObject RandomCBORTaggedObject(
       RandomGenerator rand,
       int depth) {
       var tag = 0;

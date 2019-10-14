@@ -9,7 +9,7 @@ namespace PeterO.Cbor {
   /// of the following kinds of numbers: 64-bit signed integers or binary
   /// floating-point numbers; or arbitrary-precision integers, decimal
   /// numbers, binary numbers, or rational numbers.</summary>
-  [System.Diagnostics.CodeAnalysis.SuppressMessage (
+  [System.Diagnostics.CodeAnalysis.SuppressMessage(
     "Microsoft.Design",
     "CA1036",
     Justification = "Arbitrary size.")]
@@ -169,7 +169,7 @@ namespace PeterO.Cbor {
       }
     }
 
-    private static CBORNumber RationalToNumber (
+    private static CBORNumber RationalToNumber(
       CBORObject o,
       int tagName) {
       if (o.Type != CBORType.Array) {
@@ -243,7 +243,7 @@ namespace PeterO.Cbor {
       return CBORNumber.FromObject(erat);
     }
 
-    private static bool CheckRationalToNumber (
+    private static bool CheckRationalToNumber(
       CBORObject o,
       int tagName) {
       if (o.Type != CBORType.Array) {
@@ -296,7 +296,7 @@ namespace PeterO.Cbor {
       return true;
     }
 
-    private static bool CheckBigFracToNumber (
+    private static bool CheckBigFracToNumber(
       CBORObject o,
       int tagName) {
       if (o.Type != CBORType.Array) {
@@ -352,7 +352,7 @@ namespace PeterO.Cbor {
       return true;
     }
 
-    private static CBORNumber BigFracToNumber (
+    private static CBORNumber BigFracToNumber(
       CBORObject o,
       int tagName) {
       if (o.Type != CBORType.Array) {

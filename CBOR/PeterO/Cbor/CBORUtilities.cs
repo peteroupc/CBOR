@@ -259,7 +259,7 @@ namespace PeterO.Cbor {
       0xd5, 0xf4, 0x112, 0x131, 0x14f, 0x16e,
     };
 
-    public static void GetNormalizedPartProlepticGregorian (
+    public static void GetNormalizedPartProlepticGregorian(
       EInteger year,
       int month,
       EInteger day,
@@ -324,7 +324,7 @@ namespace PeterO.Cbor {
        // EInteger.FromInt32(1904),
        1 // ,
        s1));*/
-    public static EInteger GetNumberOfDaysProlepticGregorian (
+    public static EInteger GetNumberOfDaysProlepticGregorian(
       EInteger year,
       int month,
       int mday) {
@@ -408,7 +408,7 @@ namespace PeterO.Cbor {
       return numDays;
     }
 
-    public static void BreakDownSecondsSinceEpoch (
+    public static void BreakDownSecondsSinceEpoch(
       EDecimal edec,
       EInteger[] year,
       int[] lesserFields) {
@@ -505,7 +505,7 @@ namespace PeterO.Cbor {
       return (((yr % 4) == 0) && ((yr % 100) != 0)) || ((yr % 400) == 0);
     }
 
-    public static void ParseAtomDateTimeString (
+    public static void ParseAtomDateTimeString(
       string str,
       EInteger[] bigYearArray,
       int[] lf) {
@@ -601,7 +601,7 @@ namespace PeterO.Cbor {
       return dt;
     }
 
-    public static string ToAtomDateTimeString (
+    public static string ToAtomDateTimeString(
       EInteger bigYear,
       int[] lesserFields) {
       if (lesserFields[6] != 0) {

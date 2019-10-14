@@ -31,7 +31,7 @@ namespace PeterO.Cbor {
         if (str.Length == 1) {
           this.WriteCodePoint((int)str[0]);
         } else {
-          if (DataUtilities.WriteUtf8 (
+          if (DataUtilities.WriteUtf8(
             str,
             0,
             str.Length,
@@ -51,7 +51,7 @@ namespace PeterO.Cbor {
           this.WriteCodePoint((int)str[index]);
         } else {
           if (
-            DataUtilities.WriteUtf8 (
+            DataUtilities.WriteUtf8(
               str,
               index,
               length,

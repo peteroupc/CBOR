@@ -101,7 +101,7 @@ namespace PeterO {
     /// name='offset'/> is less than 0, <paramref name='bytesCount'/> is
     /// less than 0, or offset plus bytesCount is greater than the length
     /// of "data" .</exception>
-    public static string GetUtf8String (
+    public static string GetUtf8String(
       byte[] bytes,
       int offset,
       int bytesCount,
@@ -183,7 +183,7 @@ namespace PeterO {
     /// <exception cref='ArgumentException'>The string contains an unpaired
     /// surrogate code point and <paramref name='replace'/> is false, or an
     /// internal error occurred.</exception>
-    public static byte[] GetUtf8Bytes (
+    public static byte[] GetUtf8Bytes(
       string str,
       bool replace,
       bool lenientLineBreaks) {
@@ -327,7 +327,7 @@ namespace PeterO {
     /// code units.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='str'/> is null.</exception>
-    public static int CodePointBefore (
+    public static int CodePointBefore(
       string str,
       int index,
       int surrogateBehavior) {
@@ -402,7 +402,7 @@ namespace PeterO {
     /// (codePoint &gt;= 0x10000) { i++; /* Supplementary code point */ } }</code>
     ///  .
     /// </example>
-    public static int CodePointAt (
+    public static int CodePointAt(
       string str,
       int index,
       int surrogateBehavior) {
@@ -588,7 +588,7 @@ namespace PeterO {
     /// greater than <paramref name='str'/> 's length, or <paramref
     /// name='str'/> 's length minus <paramref name='offset'/> is less than
     /// <paramref name='length'/>.</exception>
-    public static int WriteUtf8 (
+    public static int WriteUtf8(
       string str,
       int offset,
       int length,
@@ -623,7 +623,7 @@ namespace PeterO {
     /// is greater than the string's length.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error
     /// occurred.</exception>
-    public static int WriteUtf8 (
+    public static int WriteUtf8(
       string str,
       int offset,
       int length,
@@ -800,7 +800,7 @@ namespace PeterO {
     /// name='offset'/> is less than 0, <paramref name='bytesCount'/> is
     /// less than 0, or offset plus bytesCount is greater than the length
     /// of <paramref name='data'/>.</exception>
-    public static int ReadUtf8FromBytes (
+    public static int ReadUtf8FromBytes(
       byte[] data,
       int offset,
       int bytesCount,
@@ -940,7 +940,7 @@ namespace PeterO {
     /// false.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='stream'/> is null.</exception>
-    public static string ReadUtf8ToString (
+    public static string ReadUtf8ToString(
       Stream stream,
       int bytesCount,
       bool replace) {
@@ -974,7 +974,7 @@ namespace PeterO {
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='stream'/> is null or <paramref name='builder'/> is
     /// null.</exception>
-    public static int ReadUtf8 (
+    public static int ReadUtf8(
       Stream stream,
       int bytesCount,
       StringBuilder builder,

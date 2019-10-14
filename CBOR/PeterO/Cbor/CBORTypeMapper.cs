@@ -44,7 +44,7 @@ namespace PeterO.Cbor {
       }
       var ci = new ConverterInfo();
       ci.Converter = converter;
-      ci.ToObject = PropertyMap.FindOneArgumentMethod (
+      ci.ToObject = PropertyMap.FindOneArgumentMethod(
         converter,
         "ToCBORObject",
         type);
@@ -60,7 +60,7 @@ namespace PeterO.Cbor {
       return this;
     }
 
-    internal object ConvertBackWithConverter (
+    internal object ConvertBackWithConverter(
       CBORObject cbor,
       Type type) {
       ConverterInfo convinfo = null;

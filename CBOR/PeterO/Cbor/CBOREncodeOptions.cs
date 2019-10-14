@@ -28,7 +28,7 @@ namespace PeterO.Cbor {
     /// <param name='allowDuplicateKeys'>A value indicating whether to
     /// disallow duplicate keys when reading CBOR objects from a data
     /// stream.</param>
-    public CBOREncodeOptions (
+    public CBOREncodeOptions(
       bool useIndefLengthStrings,
       bool allowDuplicateKeys)
       : this(useIndefLengthStrings, allowDuplicateKeys, false) {
@@ -45,7 +45,7 @@ namespace PeterO.Cbor {
     /// <param name='ctap2Canonical'>A value indicating whether CBOR
     /// objects are written out using the CTAP2 canonical CBOR encoding
     /// form, which is useful for implementing Web Authentication.</param>
-    public CBOREncodeOptions (
+    public CBOREncodeOptions(
       bool useIndefLengthStrings,
       bool allowDuplicateKeys,
       bool ctap2Canonical) {
@@ -91,7 +91,7 @@ namespace PeterO.Cbor {
       var parser = new OptionsParser(paramString);
       this.ResolveReferences = parser.GetBoolean("resolvereferences",
           false);
-      this.UseIndefLengthStrings = parser.GetBoolean (
+      this.UseIndefLengthStrings = parser.GetBoolean(
         "useindeflengthstrings",
         false);
       this.AllowDuplicateKeys = parser.GetBoolean("allowduplicatekeys",

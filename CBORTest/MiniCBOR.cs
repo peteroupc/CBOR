@@ -297,8 +297,9 @@ namespace Test {
     }
 
     /// <summary>Reads a 32-bit integer in CBOR format from a data stream.
-    /// If the object read is a floating-point number, it is truncated to
-    /// an integer.</summary>
+    /// If the object read is a floating-point number, it is converted to
+    /// an integer by discarding the fractional part of the result of
+    /// division.</summary>
     /// <param name='stream'>A data stream.</param>
     /// <returns>A 32-bit signed integer.</returns>
     /// <exception cref='System.IO.IOException'>The end of the stream was
