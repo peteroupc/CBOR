@@ -227,7 +227,9 @@ namespace PeterO.Cbor {
             sb.Append((char)c);
             c = this.reader.ReadChar();
           }
-          if (this.options.NumbersToDoubles) {
+          // TODO: Implement all number conversion options
+          if
+(this.options.NumberConversion == JSONOptions.ConversionKind.Double) {
             str = sb.ToString();
             double dbl = CBORDataUtilities.ParseJSONDouble(str, true);
             if (Double.IsNaN(dbl)) {
@@ -279,7 +281,9 @@ namespace PeterO.Cbor {
             sb.Append((char)c);
             c = this.reader.ReadChar();
           }
-          if (this.options.NumbersToDoubles) {
+          // TODO: Implement all number conversion options
+          if
+(this.options.NumberConversion == JSONOptions.ConversionKind.Double) {
             str = sb.ToString();
             double dbl = CBORDataUtilities.ParseJSONDouble(str, true);
             if (Double.IsNaN(dbl)) {

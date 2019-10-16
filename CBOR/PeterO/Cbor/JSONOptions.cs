@@ -6,6 +6,37 @@ namespace PeterO.Cbor {
   /// <summary>Includes options to control how CBOR objects are converted
   /// to JSON.</summary>
   public sealed class JSONOptions {
+    /// <summary>Specifies how JSON numbers are converted to CBOR when
+    /// decoding JSON.</summary>
+    public enum ConversionKind {
+       /// <summary>JSON numbers are decoded to CBOR using the full precision
+       /// given in the JSON text. This may involve numbers being converted to
+       /// arbitrary-precision integers or decimal numbers, where appropriate.
+       /// The distinction between positive and negative zero is
+       /// preserved.</summary>
+       Full,
+
+       /// <summary>JSON numbers are decoded to CBOR as their closest-rounded
+       /// approximation as 64-bit binary floating-point numbers. The
+       /// distinction between positive and negative zero is
+       /// preserved.</summary>
+       Double,
+
+       /// <summary>JSON numbers are decoded to CBOR either as CBOR integers
+       /// (major type 0 or 1) or as their closest-rounded approximation as
+       /// 64-bit binary floating-point numbers, where a JSON number is
+       /// treated as an integer or non-integer based on the full precision
+       /// given in the JSON text.</summary>
+       IntOrFloat,
+
+       /// <summary>JSON numbers are decoded to CBOR either as CBOR integers
+       /// (major type 0 or 1) or as their closest-rounded approximation as
+       /// 64-bit binary floating-point numbers, where a JSON number is
+       /// treated as an integer or non-integer based on its approximated
+       /// floating-point number.</summary>
+       IntOrFloatFromDouble,
+    };
+
     /// <summary>Initializes a new instance of the
     /// <see cref='PeterO.Cbor.JSONOptions'/> class with default
     /// options.</summary>
@@ -50,18 +81,24 @@ namespace PeterO.Cbor {
     /// <c>base64padding=false;replacesurrogates=true</c>. The key can be
     /// any one of the following in any combination of case:
     /// <c>base64padding</c>, <c>replacesurrogates</c>,
-    /// <c>numberstodoubles</c>, <c>allowduplicatekeys</c>. Other keys
+    /// <c>allowduplicatekeys</c>, <c>numberconversion</c>. Other keys
     /// are ignored. (Keys are compared using a basic case-insensitive
     /// comparison, in which two strings are equal if they match after
     /// converting the basic upper-case letters A to Z (U+0041 to U+005A)
     /// in both strings to basic lower-case letters.) If two or more
     /// key/value pairs have equal keys (in a basic case-insensitive
-    /// comparison), the value given for the last such key is used. The two
-    /// keys just given can have a value of <c>1</c>, <c>true</c>,
-    /// <c>yes</c>, or <c>on</c> (in any combination of case), which means
-    /// true, and any other value meaning false. For example,
-    /// <c>base64padding=Yes</c> and <c>base64padding=1</c> both set the
-    /// <c>Base64Padding</c> property to true.</param>
+    /// comparison), the value given for the last such key is used. The
+    /// first three keys just given can have a value of <c>1</c>,
+    /// <c>true</c>, <c>yes</c>, or <c>on</c> (in any combination of
+    /// case), which means true, and any other value meaning false. The
+    /// fourth key, <c>numberconversion</c>, can have a value of any name
+    /// given in the <c>JSONOptions.ConversionKind</c> enumeration (in any
+    /// combination of case), or any other value, which is treated the same
+    /// as <c>full</c>. For example, <c>base64padding=Yes</c> and
+    /// <c>base64padding=1</c> both set the <c>Base64Padding</c> property
+    /// to true, and <c>numberconversion=double</c> sets the
+    /// <c>NumberConversion</c> property to <c>ConversionKind.Double</c>
+    /// .</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='paramString'/> is null. In the future, this class may allow
     /// other keys to store other kinds of values, not just true or
@@ -71,10 +108,6 @@ namespace PeterO.Cbor {
         throw new ArgumentNullException(nameof(paramString));
       }
       var parser = new OptionsParser(paramString);
-      // TODO: Add similar option for converting JSON numbers
-      // to doubles, or to integers if the number is an integer in [-2^53 + 1,
-      // 2^53-1].
-      this.NumbersToDoubles = parser.GetBoolean("numberstodoubles", false);
       this.AllowDuplicateKeys = parser.GetBoolean(
         "allowduplicatekeys",
         false);
@@ -84,6 +117,9 @@ namespace PeterO.Cbor {
       this.ReplaceSurrogates = parser.GetBoolean(
         "replacesurrogates",
         false);
+      this.NumberConversion = ToNumberConversion(parser.GetLCString(
+        "numberconversion",
+        null));
     }
 
     /// <summary>Gets the values of this options object's properties in
@@ -96,8 +132,7 @@ namespace PeterO.Cbor {
         .Append("base64padding=").Append(this.Base64Padding ? "true" : "false")
         .Append(";replacesurrogates=")
         .Append(this.ReplaceSurrogates ? "true" : "false")
-        .Append(";numberstodoubles=")
-        .Append(this.NumbersToDoubles ? "true" : "false")
+        .Append(";numberconversion=").Append(this.FromNumberConversion())
         .Append(";allowduplicatekeys=")
         .Append(this.AllowDuplicateKeys ? "true" : "false")
         .ToString();
@@ -122,14 +157,44 @@ namespace PeterO.Cbor {
       private set;
     }
 
-    /// <summary>Gets a value indicating whether JSON numbers are decoded
-    /// as their closest 64-bit binary floating-point numbers when decoding
-    /// JSON.</summary>
-    /// <value>True, if JSON numbers are decoded as their closest 64-bit
-    /// binary floating-point numbers, or false if such numbers are decoded
-    /// as arbitrary-precision integers or decimal numbers, as appropriate.
-    /// The default is false.</value>
-    public bool NumbersToDoubles {
+    private string FromNumberConversion() {
+      ConversionKind kind = this.NumberConversion;
+      if (kind == ConversionKind.Full) {
+        return "full";
+      }
+      if (kind == ConversionKind.Double) {
+        return "double";
+      }
+      if (kind == ConversionKind.IntOrFloat) {
+        return "intorfloat";
+      }
+      return (kind == ConversionKind.IntOrFloatFromDouble) ?
+"intorfloatfromdouble" : "full";
+    }
+
+    private static ConversionKind ToNumberConversion(string str) {
+      if (str != null) {
+        if (str.Equals("full", StringComparison.Ordinal)) {
+          return ConversionKind.Full;
+        }
+        if (str.Equals("double", StringComparison.Ordinal)) {
+          return ConversionKind.Double;
+        }
+        if (str.Equals("intorfloat", StringComparison.Ordinal)) {
+          return ConversionKind.IntOrFloat;
+        }
+if (str.Equals("intorfloatfromdouble", StringComparison.Ordinal)) {
+          return ConversionKind.IntOrFloatFromDouble;
+        }
+      }
+      return ConversionKind.Full;
+    }
+
+    /// <summary>Gets a value indicating how JSON numbers are decoded to
+    /// CBOR integers.</summary>
+    /// <value>A value indicating how JSON numbers are decoded to CBOR
+    /// integers.</value>
+    public ConversionKind NumberConversion {
       get;
       private set;
     }

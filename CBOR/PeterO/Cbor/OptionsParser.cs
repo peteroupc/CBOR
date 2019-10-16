@@ -65,6 +65,15 @@ namespace PeterO.Cbor {
       }
     }
 
+    public string GetLCString(string key, string defaultValue) {
+      string lckey = DataUtilities.ToLowerCaseAscii(key);
+      if (this.dict.ContainsKey(lckey)) {
+        string lcvalue = DataUtilities.ToLowerCaseAscii(this.dict[lckey]);
+        return lcvalue;
+      }
+      return defaultValue;
+    }
+
     public bool GetBoolean(string key, bool defaultValue) {
       string lckey = DataUtilities.ToLowerCaseAscii(key);
       if (this.dict.ContainsKey(lckey)) {
