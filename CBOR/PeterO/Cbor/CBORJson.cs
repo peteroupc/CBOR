@@ -227,29 +227,17 @@ namespace PeterO.Cbor {
             sb.Append((char)c);
             c = this.reader.ReadChar();
           }
-          // TODO: Implement all number conversion options
-          if
-(this.options.NumberConversion == JSONOptions.ConversionKind.Double) {
-            str = sb.ToString();
-            double dbl = CBORDataUtilities.ParseJSONDouble(str, true);
-            if (Double.IsNaN(dbl)) {
-              this.reader.RaiseError("JSON number can't be parsed. " + str);
+          str = sb.ToString();
+          obj = CBORDataUtilities.ParseJSONNumber(str, 0, str.Length,
+  false, this.options);
+  if (obj == null) {
+              string errstr = (str.Length <= 100) ? str : (str.Substring(0,
+  100) +
+"...");
+              this.reader.RaiseError("JSON number can't be parsed. " + errstr);
             }
-            return CBORObject.FromObject(dbl);
-          }
-          if (lengthTwo) {
-            obj = cval == 0 ?
-              CBORDataUtilities.ParseJSONNumber("-0", true, false, true) :
-              CBORObject.FromObject(cval);
-            } else {
-            str = sb.ToString();
-            obj = CBORDataUtilities.ParseJSONNumber(str);
-            if (obj == null) {
-              this.reader.RaiseError("JSON number can't be parsed. " + str);
-            }
-          }
           if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)) {
-            nextChar[0] = c;
+              nextChar[0] = c;
           } else {
             nextChar[0] = SkipWhitespaceJSON(this.reader);
           }
@@ -281,26 +269,17 @@ namespace PeterO.Cbor {
             sb.Append((char)c);
             c = this.reader.ReadChar();
           }
-          // TODO: Implement all number conversion options
-          if
-(this.options.NumberConversion == JSONOptions.ConversionKind.Double) {
-            str = sb.ToString();
-            double dbl = CBORDataUtilities.ParseJSONDouble(str, true);
-            if (Double.IsNaN(dbl)) {
-              this.reader.RaiseError("JSON number can't be parsed. " + str);
+          str = sb.ToString();
+          obj = CBORDataUtilities.ParseJSONNumber(str, 0, str.Length,
+  false, this.options);
+  if (obj == null) {
+              string errstr = (str.Length <= 100) ? str : (str.Substring(0,
+  100) +
+"...");
+              this.reader.RaiseError("JSON number can't be parsed. " + errstr);
             }
-            return CBORObject.FromObject(dbl);
-          } else if (lengthOne) {
-            obj = CBORObject.FromObject(cval);
-          } else {
-            str = sb.ToString();
-            obj = CBORDataUtilities.ParseJSONNumber(str);
-            if (obj == null) {
-              this.reader.RaiseError("JSON number can't be parsed. " + str);
-            }
-          }
           if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)) {
-            nextChar[0] = c;
+              nextChar[0] = c;
           } else {
             nextChar[0] = SkipWhitespaceJSON(this.reader);
           }

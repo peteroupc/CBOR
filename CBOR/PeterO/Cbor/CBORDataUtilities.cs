@@ -170,6 +170,10 @@ namespace PeterO.Cbor {
     }
 
     private const int MaxSafeInt = 214748363;
+    private static readonly JSONOptions PreserveNegZeroNo =
+        new JSONOptions("preservenegativezero=0");
+    private static readonly JSONOptions PreserveNegZeroYes =
+        new JSONOptions("preservenegativezero=1");
 
     /// <summary>Parses a number whose format follows the JSON
     /// specification. See #ParseJSONNumber(String, integersOnly,
@@ -180,8 +184,8 @@ namespace PeterO.Cbor {
     /// (such as "-0" or "-0.0"). Returns null if the parsing fails,
     /// including if the string is null or empty.</returns>
     public static CBORObject ParseJSONNumber(string str) {
-      return String.IsNullOrEmpty(str) ? null : (ParseJSONNumber(str, 0,
-  str.Length, false, false));
+      return String.IsNullOrEmpty(str) ? null : ParseJSONNumber(str, 0,
+  str.Length, false, PreserveNegZeroNo);
     }
 
     /// <summary>Parses a number whose format follows the JSON
@@ -218,190 +222,13 @@ public static CBORObject ParseJSONNumber(
       if (String.IsNullOrEmpty(str)) {
         return null;
       }
-      return (
-        positiveOnly && str[0] == '-') ? (null) : (ParseJSONNumber(str, 0,
-  str.Length, integersOnly, false)); }
-
-    /// <summary>Parses a number whose format follows the JSON
-    /// specification (RFC 8259), in the form of a 64-bit binary
-    /// floating-point number. See #ParseJSONDouble(String,
-    /// preserveNegativeZero) for more information.</summary>
-    /// <param name='str'>A string to parse as a JSON number.</param>
-    /// <returns>A 64-bit binary floating-point number parsed from the
-    /// given string. Returns NaN if the parsing fails, including if the
-    /// string is null or empty. (To check for NaN, use
-    /// <c>Double.IsNaN()</c> in.NET or <c>Double.isNaN()</c> in
-    /// Java.).</returns>
-    public static double ParseJSONDouble(string str) {
-      return ParseJSONDouble(str, false);
-    }
-
-    /// <summary>Parses a number whose format follows the JSON
-    /// specification (RFC 8259), in the form of a 64-bit binary
-    /// floating-point number.</summary>
-    /// <param name='str'>A string to parse as a JSON number.</param>
-    /// <param name='preserveNegativeZero'>If true, returns positive zero
-    /// if the number is a zero that starts with a minus sign (such as "-0"
-    /// or "-0.0"). Otherwise, returns negative zero in this case. The
-    /// default is false.</param>
-    /// <returns>A 64-bit binary floating-point number parsed from the
-    /// given string. Returns NaN if the parsing fails, including if the
-    /// string is null or empty. (To check for NaN, use
-    /// <c>Double.IsNaN()</c> in.NET or <c>Double.isNaN()</c> in
-    /// Java.).</returns>
-    /// <remarks>Roughly speaking, a valid JSON number consists of an
-    /// optional minus sign, one or more basic digits (starting with 1 to 9
-    /// unless there is only one digit and that digit is 0), an optional
-    /// decimal point (".", full stop) with one or more basic digits, and
-    /// an optional letter E or e with an optional plus or minus sign and
-    /// one or more basic digits (the exponent). A string representing a
-    /// valid JSON number is not allowed to contain white space characters,
-    /// including spaces.</remarks>
-    public static double ParseJSONDouble(string str, bool
-      preserveNegativeZero) {
-      if (String.IsNullOrEmpty(str)) {
-        return Double.NaN;
-      }
-      var offset = 0;
-      var havenonzero = false;
-      var negative = false;
-      var haveExponent = false;
-      var haveDecimalPoint = false;
-      var haveDigits = false;
-      var haveDigitsAfterDecimal = false;
-      if (str[0] == '-') {
-        negative = true;
-        ++offset;
-      }
-      int i = offset;
-      // Ordinary number
-      if (i < str.Length && str[i] == '0') {
-        ++i;
-        haveDigits = true;
-        if (i == str.Length) {
-          return (preserveNegativeZero && negative) ?
-            EFloat.Zero.Negate().ToDouble() : 0.0;
-        }
-        if (str[i] == '.') {
-          haveDecimalPoint = true;
-          ++i;
-        } else if (str[i] == 'E' || str[i] == 'e') {
-          haveExponent = true;
-        } else {
-          return Double.NaN;
-        }
-      }
-      for (; i < str.Length; ++i) {
-        if (str[i] >= '0' && str[i] <= '9') {
-          haveDigits = true;
-          havenonzero = havenonzero && (str[i] != '0');
-          if (haveDecimalPoint) {
-            haveDigitsAfterDecimal = true;
-          }
-        } else if (str[i] == '.') {
-          if (!haveDigits) {
-            // no digits before the decimal point
-            return Double.NaN;
-          }
-          if (haveDecimalPoint) {
-            return Double.NaN;
-          }
-          haveDecimalPoint = true;
-        } else if (str[i] == 'E' || str[i] == 'e') {
-          haveExponent = true;
-          ++i;
-          break;
-        } else {
-          return Double.NaN;
-        }
-      }
-      if (!haveDigits || (haveDecimalPoint && !haveDigitsAfterDecimal)) {
-        return Double.NaN;
-      }
-      if (haveExponent) {
-        haveDigits = false;
-        if (i == str.Length) {
-          return Double.NaN;
-        }
-        if (str[i] == '+' || str[i] == '-') {
-          ++i;
-        }
-        for (; i < str.Length; ++i) {
-          if (str[i] >= '0' && str[i] <= '9') {
-            haveDigits = true;
-          } else {
-            return Double.NaN;
-          }
-        }
-        if (!haveDigits) {
-          return Double.NaN;
-        }
-      }
-      if (!havenonzero) {
-        return (preserveNegativeZero && negative) ?
-          EFloat.Zero.Negate().ToDouble() : 0.0;
-      }
-      return EFloat.FromString(str, EContext.Binary64).ToDouble();
-    }
-
-    /// <summary>Parses a number whose format follows the JSON
-    /// specification (RFC 8259), in the form of a CBOR integer if the
-    /// number represents an integer at least -(2^53) and less than or
-    /// equal to 2^53, or in the form of a CBOR (64-bit) floating-point
-    /// number otherwise.</summary>
-    /// <param name='str'>A string to parse as a JSON number.</param>
-    /// <param name='integersOnly'>If true, no decimal points or exponents
-    /// are allowed in the string. The default is false.</param>
-    /// <param name='positiveOnly'>If true, the leading minus is disallowed
-    /// in the string. The default is false.</param>
-    /// <param name='doubleApprox'>If true, treats a JSON number as an
-    /// integer or noninteger based on its closest approximation as a CBOR
-    /// (64-bit) floating-point number. If false, this treatment is based
-    /// on the full precision of the given JSON number string. For example,
-    /// given the string "0.99999999999999999999999999999999999", the
-    /// nearest representable CBOR floating-point number is 1.0, and if
-    /// this parameter is <c>true</c>, this string is treated as 1.0, an
-    /// integer, so that the result is the CBOR integer 1, and if this
-    /// parameter is <c>false</c>, this string is not treated as an
-    /// integer so that the result is the closest CBOR floating-point
-    /// approximation, 1.0.</param>
-    /// <returns>A CBOR object that represents the parsed number or its
-    /// closest approximation to it. Returns null if the parsing fails,
-    /// including if the string is null or empty.</returns>
-    /// <remarks>Roughly speaking, a valid JSON number consists of an
-    /// optional minus sign, one or more basic digits (starting with 1 to 9
-    /// unless there is only one digit and that digit is 0), an optional
-    /// decimal point (".", full stop) with one or more basic digits, and
-    /// an optional letter E or e with an optional plus or minus sign and
-    /// one or more basic digits (the exponent). A string representing a
-    /// valid JSON number is not allowed to contain white space characters,
-    /// including spaces.</remarks>
-    public static CBORObject ParseJSONNumberAsIntegerOrFloatingPoint(
-      string str,
-      bool integersOnly,
-      bool positiveOnly,
-      bool doubleApprox) {
-      if (String.IsNullOrEmpty(str)) {
-        return null;
-      }
-      CBORObject cbor = ParseJSONNumber(str, integersOnly, positiveOnly);
-      if (cbor == null) {
-        return null;
-      }
-      if (doubleApprox && cbor.Type != CBORType.FloatingPoint) {
-        cbor = CBORObject.FromObject(cbor.AsDouble());
-      }
-      CBORNumber cn = cbor.AsNumber();
-      if (cbor.IsIntegral && cn.CanFitInInt64()) {
-         long v = cbor.AsInt64();
-         if (v >= -(1 << 53) && v <= (1 << 53)) {
-           return CBORObject.FromObject(v);
-         } else {
-             return CBORObject.FromObject(cbor.AsDouble());
-         }
-      } else {
-         return CBORObject.FromObject(cbor.AsDouble());
-      }
+      return (positiveOnly && str[0] == '-') ? null :
+         ParseJSONNumber(
+           str,
+           0,
+           str.Length,
+           integersOnly,
+           PreserveNegZeroNo);
     }
 
     /// <summary>Parses a number whose format follows the JSON
@@ -436,27 +263,40 @@ public static CBORObject ParseJSONNumber(
       if (String.IsNullOrEmpty(str)) {
         return null;
       }
-      return (
-        positiveOnly && str[0] == '-') ? (null) : (ParseJSONNumber(str, 0,
-  str.Length, integersOnly, preserveNegativeZero)); }
+      JSONOptions jo = preserveNegativeZero ? PreserveNegZeroYes :
+         PreserveNegZeroNo;
+      return (positiveOnly && str[0] == '-') ? null :
+         ParseJSONNumber(str,
+           0,
+           str.Length,
+           integersOnly,
+           jo);
+    }
 
     /// <summary>Parses a number whose format follows the JSON
-    /// specification (RFC 8259).</summary>
+    /// specification (RFC 8259) and converts that number to a CBOR
+    /// object.</summary>
     /// <param name='str'>The parameter <paramref name='str'/> is a text
     /// string.</param>
-    /// <param name='offset'>The parameter <paramref name='offset'/> is a
-    /// 32-bit signed integer.</param>
-    /// <param name='count'>The parameter <paramref name='count'/> is a
-    /// 32-bit signed integer.</param>
+    /// <param name='offset'>An index, starting at 0, showing where the
+    /// desired portion of <paramref name='str'/> begins.</param>
+    /// <param name='count'>The length, in code units, of the desired
+    /// portion of <paramref name='str'/> (but not more than <paramref
+    /// name='str'/> 's length).</param>
     /// <param name='integersOnly'>The parameter <paramref
     /// name='integersOnly'/> is either <c>true</c> or <c>false</c>.</param>
-    /// <param name='preserveNegativeZero'>The parameter <paramref
-    /// name='preserveNegativeZero'/> is either <c>true</c> or <c>false</c>.</param>
+    /// <param name='options'>An object containing options to control how
+    /// JSON numbers are decoded to CBOR objects. Can be null.</param>
     /// <returns>A CBOR object that represents the parsed number. Returns
     /// null if the parsing fails, including if the string is null or empty
     /// or <paramref name='count'/> is 0 or less.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='str'/> is null.</exception>
+    /// <exception cref='ArgumentException'>Either <paramref
+    /// name='offset'/> or <paramref name='count'/> is less than 0 or
+    /// greater than <paramref name='str'/> 's length, or <paramref
+    /// name='str'/> 's length minus <paramref name='offset'/> is less than
+    /// <paramref name='count'/>.</exception>
     /// <remarks>Roughly speaking, a valid JSON number consists of an
     /// optional minus sign, one or more basic digits (starting with 1 to 9
     /// unless there is only one digit and that digit is 0), an optional
@@ -470,8 +310,9 @@ public static CBORObject ParseJSONNumber(
       int offset,
       int count,
       bool integersOnly,
-      bool preserveNegativeZero) {
-      // TODO: JSONOptions parameter
+      JSONOptions options) {
+      // TODO: Allow JSONOptions of null here
+      // TODO: Remove integersOnly parameter from this method
       if (String.IsNullOrEmpty(str) || count <= 0) {
         return null;
       }
@@ -480,6 +321,17 @@ public static CBORObject ParseJSONNumber(
       }
       if (count > str.Length || str.Length - offset < count) {
         return null;
+      }
+      // TODO: Create default JSONOptions here instead of
+      // hardcoding defaults here; for this purpose establish a JSONOptions.Default
+      // field
+      bool preserveNegativeZero = options == null ? true :
+options.PreserveNegativeZero;
+      JSONOptions.ConversionKind kind = options == null ?
+        JSONOptions.ConversionKind.Full : options.NumberConversion;
+      if (kind != JSONOptions.ConversionKind.Full &&
+         kind != JSONOptions.ConversionKind.Double) {
+        preserveNegativeZero = false;
       }
       var negative = false;
       if (str[0] == '-') {
@@ -506,12 +358,11 @@ public static CBORObject ParseJSONNumber(
         haveDigits = true;
         if (i == endPos) {
           if (preserveNegativeZero && negative) {
-            // Negative zero in floating-point format
-            // TODO: In next major version, return the following instead:
-            // return CBORObject.FromFloatingPointBits(0x8000, 2);
-            return CBORObject.FromObject (
-                EDecimal.NegativeZero);
-          }
+             // Negative zero in floating-point format
+             return (kind == JSONOptions.ConversionKind.Double) ?
+CBORObject.FromFloatingPointBits(0x8000, 2) :
+CBORObject.FromObject(EDecimal.NegativeZero);
+           }
           return CBORObject.FromObject(0);
         }
         if (!integersOnly) {
@@ -675,17 +526,41 @@ public static CBORObject ParseJSONNumber(
           if (negative) {
             mantInt = -mantInt;
             if (preserveNegativeZero && mantInt == 0) {
-              // TODO: In next major version, return the following instead:
-              // return CBORObject.FromFloatingPointBits(0x8000, 2);
+              if (kind == JSONOptions.ConversionKind.Double) {
+                return CBORObject.FromFloatingPointBits(0x8000, 2);
+              }
               return CBORObject.FromObject (
                   EDecimal.NegativeZero);
             }
           }
-          return CBORObject.FromObject(mantInt);
+          if (kind == JSONOptions.ConversionKind.Double) {
+            return CBORObject.FromObject((double)mantInt);
+          } else {
+            // mantInt is a 32-bit integer, write as CBOR integer in
+            // all current kinds other than Double
+            return CBORObject.FromObject(mantInt);
+          }
         } else {
           EInteger bigmant2 = mant.AsEInteger();
           if (negative) {
             bigmant2 = -(EInteger)bigmant2;
+          }
+          if (kind == JSONOptions.ConversionKind.Double) {
+            // An arbitrary-precision integer; convert to double
+            return CBORObject.FromObject(
+              EFloat.FromEInteger(bigmant2).ToDouble());
+          } else if (kind == JSONOptions.ConversionKind.IntOrFloat ||
+               kind == JSONOptions.ConversionKind.IntOrFloatFromDouble) {
+            if (bigmant2.CanFitInInt64()) {
+              long longmant2 = bigmant2.ToInt64Checked();
+              if (longmant2 >= -(1 << 53) && longmant2 <= (1 << 53)) {
+                // An arbitrary-precision integer that's "small enough";
+                // return a CBOR object of that integer
+                return CBORObject.FromObject(bigmant2);
+              }
+            }
+            return CBORObject.FromObject(
+              EFloat.FromEInteger(bigmant2).ToDouble());
           }
           return CBORObject.FromObject(bigmant2);
         }
@@ -702,9 +577,32 @@ public static CBORObject ParseJSONNumber(
           bigmant,
           bigexp);
         if (negative && preserveNegativeZero && bigmant.IsZero) {
+          if (kind == JSONOptions.ConversionKind.Double) {
+            return CBORObject.FromFloatingPointBits(0x8000, 2);
+          }
           EDecimal negzero = EDecimal.NegativeZero;
           negzero = negzero.Quantize(bigexp, null);
           edec = negzero.Subtract(edec);
+        }
+        // Converting the EDecimal to a CBOR object
+        if (kind == JSONOptions.ConversionKind.Double) {
+          return CBORObject.FromObject(edec.ToDouble());
+        } else if (kind == JSONOptions.ConversionKind.IntOrFloat ||
+              kind == JSONOptions.ConversionKind.IntOrFloatFromDouble) {
+            CBORObject cbor = (kind == JSONOptions.ConversionKind.IntOrFloat) ?
+               CBORObject.FromObject(edec) :
+               CBORObject.FromObject(edec.ToDouble());
+               CBORNumber cn = cbor.AsNumber();
+               if (cbor.IsIntegral && cn.CanFitInInt64()) {
+             long v = cbor.AsInt64();
+             if (v >= -(1 << 53) && v <= (1 << 53)) {
+               return CBORObject.FromObject(v);
+             } else {
+                return CBORObject.FromObject(cbor.AsDouble());
+            }
+          } else {
+            return CBORObject.FromObject(cbor.AsDouble());
+          }
         }
         return CBORObject.FromObject(edec);
       }

@@ -68,12 +68,12 @@
             including if the string is null or empty.</returns>
             <remarks>Roughly speaking, a valid JSON number consists of an
             optional minus sign, one or more basic digits (starting with 1 to 9
-            unless there is only one digit and that digit is 0), an optional decimal point (".", full
-            stop) with one or more basic digits, and an optional letter E or e
-            with an optional plus or minus sign and one or more basic digits
-            (the exponent). A string representing a valid JSON number is not
-            allowed to contain white space characters, including
-            spaces.</remarks>
+            unless there is only one digit and that digit is 0), an optional
+            decimal point (".", full stop) with one or more basic digits, and
+            an optional letter E or e with an optional plus or minus sign and
+            one or more basic digits (the exponent). A string representing a
+            valid JSON number is not allowed to contain white space characters,
+            including spaces.</remarks>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,System.Boolean,System.Boolean,System.Boolean)">
@@ -94,13 +94,39 @@
             empty.</returns>
             <remarks>Roughly speaking, a valid JSON number consists of an
             optional minus sign, one or more basic digits (starting with 1 to 9
-            unless there is only one digit and that digit is 0), an optional decimal point (".", full
-            stop) with one or more basic digits, and an optional letter E or e
-            with an optional plus or minus sign and one or more basic digits
-            (the exponent). A string representing a valid JSON number is not
-            allowed to contain white space characters, including
-            spaces.</remarks>
+            unless there is only one digit and that digit is 0), an optional
+            decimal point (".", full stop) with one or more basic digits, and
+            an optional letter E or e with an optional plus or minus sign and
+            one or more basic digits (the exponent). A string representing a
+            valid JSON number is not allowed to contain white space characters,
+            including spaces.</remarks>
 
+</doc>
+<doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,System.Int32,System.Int32,System.Boolean,PeterO.Cbor.JSONOptions)">
+<summary>Parses a number whose format follows the JSON
+            specification (RFC 8259) and converts that number to a CBOR
+            object.</summary>
+            <param name='str'>The parameter <paramref name='str'/> is a text
+            string.</param>
+            <param name='offset'>An index, starting at 0, showing where the desired portion of <paramref name='str'/> begins.</param>
+            <param name='count'>The length, in code units, of the desired portion of <paramref name='str'/> (but  not more than <paramref name='str'/>'s length).</param>
+            <param name='integersOnly'>The parameter <paramref name='integersOnly'/> is either <c>true</c> or <c>false</c>.</param>
+            <param name='options'>An object containing options to control how
+            JSON numbers are decoded to CBOR objects. Can be null.</param>
+            <returns>A CBOR object that represents the parsed number. Returns
+            null if the parsing fails, including if the string is null or empty
+            or <paramref name='count'/> is 0 or less.</returns>
+            <exception cref='ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception>
+            <remarks>Roughly speaking, a valid JSON number consists of an
+            optional minus sign, one or more basic digits (starting with 1 to 9
+            unless there is only one digit and that digit is 0), an optional
+            decimal point (".", full stop) with one or more basic digits, and
+            an optional letter E or e with an optional plus or minus sign and
+            one or more basic digits (the exponent). A string representing a
+            valid JSON number is not allowed to contain white space characters,
+            including spaces.</remarks>
+
+        <exception cref='ArgumentException'>Either <paramref name='offset'/> or <paramref name='count'/> is less than 0 or greater than <paramref name='str'/>'s length, or <paramref name='str'/>'s length minus <paramref name='offset'/> is less than <paramref name='count'/>.</exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,System.Int32,System.Int32,System.Boolean,System.Boolean)">
 <summary>Parses a number whose format follows the JSON
@@ -206,7 +232,8 @@
             end with whitespace. The string can be empty, but cannot be null.
             The following is an example of this parameter:
             <c>allowduplicatekeys=true;ctap2Canonical=true</c>. The key can be
-            any one of the following where the letters can be any combination of basic upper-case and/or basic lower-case letters:
+            any one of the following where the letters can be any combination
+            of basic upper-case and/or basic lower-case letters:
             <c>allowduplicatekeys</c>, <c>ctap2canonical</c>,
             <c>resolvereferences</c>, <c>useindeflengthstrings</c>,
             <c>allowempty</c>. Keys other than these are ignored. (Keys are
@@ -216,8 +243,9 @@
             basic lower-case letters.) If two or more key/value pairs have
             equal keys (in a basic case-insensitive comparison), the value
             given for the last such key is used. The four keys just given can
-            have a value of <c>1</c>, <c>true</c>, <c>yes</c>, or <c>on</c> (where the letters can be any combination of basic upper-case and/or basic lower-case letters), which means true, and any other value
-            meaning false. For example, <c>allowduplicatekeys=Yes</c> and
+            have a value of <c>1</c>, <c>true</c>, <c>yes</c>, or <c>on</c> (where the letters can be any combination of basic upper-case
+            and/or basic lower-case letters), which means true, and any other
+            value meaning false. For example, <c>allowduplicatekeys=Yes</c> and
             <c>allowduplicatekeys=1</c> both set the <c>AllowDuplicateKeys</c> property to true. In the future, this class may allow other keys to
             store other kinds of values, not just true or false.</param>
             <exception cref='ArgumentNullException'>The parameter <paramref name='paramString'/> is null.</exception>
@@ -551,14 +579,18 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORNumber.IsNegativeInfinity">
-<summary>Gets a value indicating whether this object represents
+
+            <summary>Gets a value indicating whether this object represents
             negative infinity.</summary>
             <returns><c>true</c> if this object represents negative infinity; otherwise, <c>false</c>.</returns>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORNumber.IsPositiveInfinity">
-<summary>Gets a value indicating whether this object represents
+
+            <summary>Gets a value indicating whether this object represents
             positive infinity.</summary>
             <returns><c>true</c> if this object represents positive infinity; otherwise, <c>false</c>.</returns>
+
 </doc>
 <doc name="F:PeterO.Cbor.CBORNumber.Kind.Double">
 
@@ -1623,7 +1655,8 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromJSONString(System.String,PeterO.Cbor.JSONOptions)">
-<summary>Generates a CBOR object from a text string in JavaScript
+
+            <summary>Generates a CBOR object from a text string in JavaScript
             Object Notation (JSON) format, using the specified options to
             control the decoding process.
             <para>Note that if a CBOR object is converted to JSON with
@@ -1641,6 +1674,7 @@
             <exception cref='ArgumentNullException'>The parameter <paramref name='str'/> or <paramref name='jsonoptions'/> is null.</exception>
             <exception cref='PeterO.Cbor.CBORException'>The string is not in
             JSON format.</exception>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.BigInteger)">
 <summary>Generates a CBOR object from an arbitrary-precision integer.
@@ -2666,7 +2700,8 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.ReadJSON(System.IO.Stream,PeterO.Cbor.JSONOptions)">
-<summary>Generates a CBOR object from a data stream in JavaScript
+
+            <summary>Generates a CBOR object from a data stream in JavaScript
             Object Notation (JSON) format, using the specified options to
             control the decoding process. The JSON stream may begin with a
             byte-order mark (U+FEFF). Since version 2.0, the JSON stream can be
@@ -2686,6 +2721,7 @@
             occurred.</exception>
             <exception cref='PeterO.Cbor.CBORException'>The data stream
             contains invalid encoding or is not in JSON format.</exception>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.ReadSequence(System.IO.Stream)">
 
@@ -4668,20 +4704,26 @@
             end with whitespace. The string can be empty, but cannot be null.
             The following is an example of this parameter:
             <c>base64padding=false;replacesurrogates=true</c>. The key can be
-            any one of the following where the letters can be any combination of basic upper-case and/or basic lower-case letters:
+            any one of the following where the letters can be any combination
+            of basic upper-case and/or basic lower-case letters:
             <c>base64padding</c>, <c>replacesurrogates</c>,
-            <c>allowduplicatekeys</c>, <c>numberconversion</c>. Other keys
-            are ignored. (Keys are compared using a basic case-insensitive
-            comparison, in which two strings are equal if they match after
-            converting the basic upper-case letters A to Z (U+0041 to U+005A)
-            in both strings to basic lower-case letters.) If two or more
-            key/value pairs have equal keys (in a basic case-insensitive
-            comparison), the value given for the last such key is used. The
-            first three keys just given can have a value of <c>1</c>,
-            <c>true</c>, <c>yes</c>, or <c>on</c> (where the letters can be any combination of basic upper-case and/or basic lower-case letters), which means true, and any other value meaning false. The
-            fourth key, <c>numberconversion</c>, can have a value of any name
-            given in the <c>JSONOptions.ConversionKind</c> enumeration (where the letters can be any combination of basic upper-case and/or basic lower-case letters), or any other value, which is treated the same
-            as <c>full</c>. For example, <c>base64padding=Yes</c> and
+            <c>allowduplicatekeys</c>, <c>preservenegativezero</c>,
+            <c>numberconversion</c>. Other keys are ignored. (Keys are
+            compared using a basic case-insensitive comparison, in which two
+            strings are equal if they match after converting the basic
+            upper-case letters A to Z (U+0041 to U+005A) in both strings to
+            basic lower-case letters.) If two or more key/value pairs have
+            equal keys (in a basic case-insensitive comparison), the value
+            given for the last such key is used. The first four keys just given
+            can have a value of <c>1</c>, <c>true</c>, <c>yes</c>, or
+            <c>on</c> (where the letters can be any combination of basic
+            upper-case and/or basic lower-case letters), which means true, and
+            any other value meaning false. The last key,
+            <c>numberconversion</c>, can have a value of any name given in the
+            <c>JSONOptions.ConversionKind</c> enumeration (where the letters
+            can be any combination of basic upper-case and/or basic lower-case
+            letters), or any other value, which is treated the same as
+            <c>full</c>. For example, <c>base64padding=Yes</c> and
             <c>base64padding=1</c> both set the <c>Base64Padding</c> property
             to true, and <c>numberconversion=double</c> sets the
             <c>NumberConversion</c> property to <c>ConversionKind.Double</c> .</param>
@@ -4691,10 +4733,12 @@
 
 </doc>
 <doc name="P:PeterO.Cbor.JSONOptions.AllowDuplicateKeys">
-<summary>Gets a value indicating whether to allow duplicate keys
+
+            <summary>Gets a value indicating whether to allow duplicate keys
             when reading JSON. Used only when decoding JSON.</summary>
             <value>A value indicating whether to allow duplicate keys when
             reading JSON. The default is false.</value>
+
 </doc>
 <doc name="P:PeterO.Cbor.JSONOptions.Base64Padding">
 
@@ -4707,35 +4751,54 @@
 
 </doc>
 <doc name="T:PeterO.Cbor.JSONOptions.ConversionKind">
-<summary>Specifies how JSON numbers are converted to CBOR when
+
+            <summary>Specifies how JSON numbers are converted to CBOR when
             decoding JSON.</summary>
+
 </doc>
 <doc name="F:PeterO.Cbor.JSONOptions.ConversionKind.Double">
-<summary>JSON numbers are decoded to CBOR as their closest-rounded
+
+            <summary>JSON numbers are decoded to CBOR as their closest-rounded
             approximation as 64-bit binary floating-point numbers. The
             distinction between positive and negative zero is
             preserved.</summary>
+
 </doc>
 <doc name="F:PeterO.Cbor.JSONOptions.ConversionKind.Full">
-<summary>JSON numbers are decoded to CBOR using the full precision
+
+            <summary>JSON numbers are decoded to CBOR using the full precision
             given in the JSON text. This may involve numbers being converted to
             arbitrary-precision integers or decimal numbers, where appropriate.
             The distinction between positive and negative zero is
             preserved.</summary>
+
 </doc>
 <doc name="F:PeterO.Cbor.JSONOptions.ConversionKind.IntOrFloat">
-<summary>JSON numbers are decoded to CBOR either as CBOR integers
-            (major type 0 or 1) or as their closest-rounded approximation as
-            64-bit binary floating-point numbers, where a JSON number is
-            treated as an integer or non-integer based on the full precision
-            given in the JSON text.</summary>
+
+            <summary>A JSON number is decoded to CBOR either as a CBOR integer
+            (major type 0 or 1) if the JSON number represents an integer at
+            least -(2^53) and up to 2^53, or as their
+            closest-rounded approximation as 64-bit binary floating-point
+            numbers otherwise, where a JSON number is treated as an integer or
+            non-integer based on the full precision given in the JSON text. For
+            example, the JSON number 0.99999999999999999999999999999999999 is
+            not an integer, so it's converted to its closest floating-point
+            approximation, namely 1.0.</summary>
+
 </doc>
 <doc name="F:PeterO.Cbor.JSONOptions.ConversionKind.IntOrFloatFromDouble">
-<summary>JSON numbers are decoded to CBOR either as CBOR integers
-            (major type 0 or 1) or as their closest-rounded approximation as
-            64-bit binary floating-point numbers, where a JSON number is
-            treated as an integer or non-integer based on its approximated
-            floating-point number.</summary>
+
+            <summary>A JSON number is decoded to CBOR either as a CBOR integer
+            (major type 0 or 1) if the number's closest-rounded approximation
+            as a 64-bit binary floating-point number represents an integer at
+            least -(2^53) and up to 2^53, or as that
+            approximation otherwise, where a JSON number is treated as an
+            integer or non-integer based on its approximated floating-point
+            number. For example, the JSON number
+            0.99999999999999999999999999999999999 is the integer 1 when rounded
+            to its closest floating-point approximation (1.0), so it's
+            converted to the CBOR integer 1 (major type 0).</summary>
+
 </doc>
 <doc name="F:PeterO.Cbor.JSONOptions.Default">
 
@@ -4744,10 +4807,25 @@
 
 </doc>
 <doc name="P:PeterO.Cbor.JSONOptions.NumberConversion">
-<summary>Gets a value indicating how JSON numbers are decoded to
+
+            <summary>Gets a value indicating how JSON numbers are decoded to
             CBOR integers.</summary>
             <value>A value indicating how JSON numbers are decoded to CBOR
-            integers.</value>
+            integers. The default is <c>ConversionKind.Full</c>.</value>
+
+</doc>
+<doc name="P:PeterO.Cbor.JSONOptions.PreserveNegativeZero">
+<summary>Gets a value indicating whether the JSON decoder should
+            preserve the distinction between positive zero and negative zero in
+            floating-point number formats when the decoder decodes JSON to
+            CBOR. For example the JSON number "-0.0" (which expresses negative
+            zero) is decoded to negative zero if this property is <c>true</c>,
+            and to positive zero if this property is <c>false</c>. This
+            property has no effect for number conversion kinds in which zeros
+            are always decoded as CBOR integers (such as the <c>IntOrFloat</c> and <c>IntOrFloatFromDouble</c> conversion kinds).</summary>
+            <value>A value indicating whether to preserve the distinction
+            between positive zero and negative zero. The default is
+            true.</value>
 </doc>
 <doc name="P:PeterO.Cbor.JSONOptions.ReplaceSurrogates">
 
@@ -4804,14 +4882,16 @@
             end with whitespace. The string can be empty, but cannot be null.
             The following is an example of this parameter:
             <c>usecamelcase=true</c>. The key can be any one of the following
-            where the letters can be any combination of basic upper-case and/or basic lower-case letters: <c>usecamelcase</c>. Other keys are
+            where the letters can be any combination of basic upper-case and/or
+            basic lower-case letters: <c>usecamelcase</c>. Other keys are
             ignored. (Keys are compared using a basic case-insensitive
             comparison, in which two strings are equal if they match after
             converting the basic upper-case letters A to Z (U+0041 to U+005A)
             in both strings to basic lower-case letters.) If two or more
             key/value pairs have equal keys (in a basic case-insensitive
             comparison), the value given for the last such key is used. The key
-            just given can have a value of <c>1</c>, <c>true</c>, <c>yes</c> , or <c>on</c> (where the letters can be any combination of basic upper-case and/or basic lower-case letters), which means true, and
+            just given can have a value of <c>1</c>, <c>true</c>, <c>yes</c> , or <c>on</c> (where the letters can be any combination of basic
+            upper-case and/or basic lower-case letters), which means true, and
             any other value meaning false. For example, <c>usecamelcase=Yes</c> and <c>usecamelcase=1</c> both set the <c>UseCamelCase</c> property
             to true. In the future, this class may allow other keys to store
             other kinds of values, not just true or false.</param>
