@@ -5,8 +5,10 @@
 Includes options to control how CBOR objects are converted to JSON.
 
 ### Member Summary
-* <code>[Base64Padding](#Base64Padding)</code> - <b>Deprecated:</b> This option now has no effect. This library now includes necessary padding when writing traditional base64 to JSON and includes no padding when writing base64url to JSON, in accordance with the revision of the CBOR specification.
+* <code>[AllowDuplicateKeys](#AllowDuplicateKeys)</code> - Gets a value indicating whether to allow duplicate keys when reading JSON.
+* <code>[Base64Padding](#Base64Padding)</code> - <b>Deprecated:</b> This property now has no effect. This library now includes necessary padding when writing traditional base64 to JSON and includes no padding when writing base64url to JSON, in accordance with the revision of the CBOR specification.
 * <code>[public static readonly PeterO.Cbor.JSONOptions Default;](#Default)</code> - The default options for converting CBOR objects to JSON.
+* <code>[NumberConversion](#NumberConversion)</code> - Gets a value indicating how JSON numbers are decoded to CBOR integers.
 * <code>[ReplaceSurrogates](#ReplaceSurrogates)</code> - Gets a value indicating whether surrogate code points not part of a surrogate pair (which consists of two consecutive char s forming one Unicode code point) are each replaced with a replacement character (U+FFFD).
 * <code>[ToString()](#ToString)</code> - Gets the values of this options object's properties in text form.
 
@@ -47,7 +49,7 @@ Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOpti
 
 <b>Parameters:</b>
 
- * <i>paramString</i>: A string setting forth the options to use. This is a semicolon-separated list of options, each of which has a key and a value separated by an equal sign ("="). Whitespace and line separators are not allowed to appear between the semicolons or between the equal signs, nor may the string begin or end with whitespace. The string can be empty, but cannot be null. The following is an example of this parameter:  `base64padding=false;replacesurrogates=true` . The key can be any one of the following in any combination of case:  `base64padding` ,  `replacesurrogates` . Other keys are ignored. (Keys are compared using a basic case-insensitive comparison, in which two strings are equal if they match after converting the basic upper-case letters A to Z (U+0041 to U+005A) in both strings to basic lower-case letters.) If two or more key/value pairs have equal keys (in a basic case-insensitive comparison), the value given for the last such key is used. The two keys just given can have a value of  `1` ,  `true` ,  `yes` , or  `on`  (in any combination of case), which means true, and any other value meaning false. For example,  `base64padding=Yes`  and  `base64padding=1`  both set the  `Base64Padding`  property to true.
+ * <i>paramString</i>: A string setting forth the options to use. This is a semicolon-separated list of options, each of which has a key and a value separated by an equal sign ("="). Whitespace and line separators are not allowed to appear between the semicolons or between the equal signs, nor may the string begin or end with whitespace. The string can be empty, but cannot be null. The following is an example of this parameter:  `base64padding=false;replacesurrogates=true` . The key can be any one of the following in any combination of case:  `base64padding` ,  `replacesurrogates` ,  `allowduplicatekeys` ,  `numberconversion` . Other keys are ignored. (Keys are compared using a basic case-insensitive comparison, in which two strings are equal if they match after converting the basic upper-case letters A to Z (U+0041 to U+005A) in both strings to basic lower-case letters.) If two or more key/value pairs have equal keys (in a basic case-insensitive comparison), the value given for the last such key is used. The first three keys just given can have a value of  `1` ,  `true` ,  `yes` , or  `on`  (in any combination of case), which means true, and any other value meaning false. The fourth key,  `numberconversion` , can have a value of any name given in the  `JSONOptions.ConversionKind`  enumeration (in any combination of case), or any other value, which is treated the same as  `full` . For example,  `base64padding=Yes`  and  `base64padding=1`  both set the  `Base64Padding`  property to true, and  `numberconversion=double`  sets the  `NumberConversion`  property to  `ConversionKind.Double`  .
 
 <b>Exceptions:</b>
 
@@ -69,12 +71,23 @@ Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOpti
 
 The default options for converting CBOR objects to JSON.
 
+<a id="AllowDuplicateKeys"></a>
+### AllowDuplicateKeys
+
+    public bool AllowDuplicateKeys { get; }
+
+Gets a value indicating whether to allow duplicate keys when reading JSON. Used only when decoding JSON.
+
+<b>Returns:</b>
+
+A value indicating whether to allow duplicate keys when reading JSON. The default is false.
+
 <a id="Base64Padding"></a>
 ### Base64Padding
 
     public bool Base64Padding { get; }
 
-<b>Deprecated.</b> This option now has no effect. This library now includes necessary padding when writing traditional base64 to JSON and includes no padding when writing base64url to JSON, in accordance with the revision of the CBOR specification.
+<b>Deprecated.</b> This property now has no effect. This library now includes  necessary padding when writing traditional base64 to JSON and includes no padding when writing base64url to JSON, in  accordance with the revision of the CBOR specification.
 
 Gets a value indicating whether the Base64Padding property is true. This property has no effect; in previous versions, this property meant that padding was written out when writing base64url or traditional base64 to JSON.
 
@@ -82,16 +95,27 @@ Gets a value indicating whether the Base64Padding property is true. This propert
 
 A value indicating whether the Base64Padding property is true.
 
+<a id="NumberConversion"></a>
+### NumberConversion
+
+    public PeterO.Cbor.ConversionKind NumberConversion { get; }
+
+Gets a value indicating how JSON numbers are decoded to CBOR integers.
+
+<b>Returns:</b>
+
+A value indicating how JSON numbers are decoded to CBOR integers.
+
 <a id="ReplaceSurrogates"></a>
 ### ReplaceSurrogates
 
     public bool ReplaceSurrogates { get; }
 
-Gets a value indicating whether surrogate code points not part of a surrogate pair (which consists of two consecutive  `char`  s forming one Unicode code point) are each replaced with a replacement character (U+FFFD). The default is false; an exception is thrown when such code points are encountered.
+Gets a value indicating whether surrogate code points not part of a surrogate pair (which consists of two consecutive  `char`  s forming one Unicode code point) are each replaced with a replacement character (U+FFFD). If false, an exception is thrown when such code points are encountered.
 
 <b>Returns:</b>
 
-True, if surrogate code points not part of a surrogate pair are each replaced with a replacement character, or false if an exception is thrown when such code points are encountered.
+True, if surrogate code points not part of a surrogate pair are each replaced with a replacement character, or false if an exception is thrown when such code points are encountered. The default is false.
 
 <a id="ToString"></a>
 ### ToString

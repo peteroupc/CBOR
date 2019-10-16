@@ -174,14 +174,14 @@ namespace PeterO.Cbor {
     /// <summary>Parses a number whose format follows the JSON
     /// specification. See #ParseJSONNumber(String, integersOnly,
     /// parseOnly) for more information.</summary>
-    /// <param name='str'>A string to parse. The string is not allowed to
-    /// contain white space characters, including spaces.</param>
+    /// <param name='str'>A string to parse as a JSON string.</param>
     /// <returns>A CBOR object that represents the parsed number. Returns
     /// positive zero if the number is a zero that starts with a minus sign
     /// (such as "-0" or "-0.0"). Returns null if the parsing fails,
     /// including if the string is null or empty.</returns>
     public static CBORObject ParseJSONNumber(string str) {
-      return ParseJSONNumber(str, false, false);
+      return String.IsNullOrEmpty(str) ? null : (ParseJSONNumber(str, 0,
+  str.Length, false, false));
     }
 
     /// <summary>Parses a number whose format follows the JSON
@@ -198,18 +198,29 @@ namespace PeterO.Cbor {
     /// including if the string is null or empty.</returns>
     /// <remarks>Roughly speaking, a valid JSON number consists of an
     /// optional minus sign, one or more basic digits (starting with 1 to 9
-    /// unless the only digit is 0), an optional decimal point (".", full
-    /// stop) with one or more basic digits, and an optional letter E or e
-    /// with an optional plus or minus sign and one or more basic digits
-    /// (the exponent). A string representing a valid JSON number is not
-    /// allowed to contain white space characters, including
-    /// spaces.</remarks>
-    public static CBORObject ParseJSONNumber(
-      string str,
-      bool integersOnly,
-      bool positiveOnly) {
-      return ParseJSONNumber(str, integersOnly, positiveOnly, false);
-    }
+    /// unless there is only one digit and that digit is 0), an optional
+    /// decimal point (".", full stop) with one or more basic digits, and
+    /// an optional letter E or e with an optional plus or minus sign and
+    /// one or more basic digits (the exponent). A string representing a
+    /// valid JSON number is not allowed to contain white space characters,
+    /// including spaces.</remarks>
+    [Obsolete("Call the one-argument version of this method instead. If this" +
+"\u0020method call used positiveOnly = true, check that the string does not" +
+"\u0020begin" +
+"\u0020with '-' before calling that version. If this method call used" +
+"\u0020integersOnly" +
+"\u0020= true, check that the string does not contain '.', 'E', or 'e' before" +
+"\u0020calling that version.")]
+public static CBORObject ParseJSONNumber(
+    string str,
+    bool integersOnly,
+    bool positiveOnly) {
+      if (String.IsNullOrEmpty(str)) {
+        return null;
+      }
+      return (
+        positiveOnly && str[0] == '-') ? (null) : (ParseJSONNumber(str, 0,
+  str.Length, integersOnly, false)); }
 
     /// <summary>Parses a number whose format follows the JSON
     /// specification (RFC 8259), in the form of a 64-bit binary
@@ -220,7 +231,7 @@ namespace PeterO.Cbor {
     /// given string. Returns NaN if the parsing fails, including if the
     /// string is null or empty. (To check for NaN, use
     /// <c>Double.IsNaN()</c> in.NET or <c>Double.isNaN()</c> in
-    /// Java.)</returns>
+    /// Java.).</returns>
     public static double ParseJSONDouble(string str) {
       return ParseJSONDouble(str, false);
     }
@@ -237,15 +248,15 @@ namespace PeterO.Cbor {
     /// given string. Returns NaN if the parsing fails, including if the
     /// string is null or empty. (To check for NaN, use
     /// <c>Double.IsNaN()</c> in.NET or <c>Double.isNaN()</c> in
-    /// Java.)</returns>
+    /// Java.).</returns>
     /// <remarks>Roughly speaking, a valid JSON number consists of an
     /// optional minus sign, one or more basic digits (starting with 1 to 9
-    /// unless the only digit is 0), an optional decimal point (".", full
-    /// stop) with one or more basic digits, and an optional letter E or e
-    /// with an optional plus or minus sign and one or more basic digits
-    /// (the exponent). A string representing a valid JSON number is not
-    /// allowed to contain white space characters, including
-    /// spaces.</remarks>
+    /// unless there is only one digit and that digit is 0), an optional
+    /// decimal point (".", full stop) with one or more basic digits, and
+    /// an optional letter E or e with an optional plus or minus sign and
+    /// one or more basic digits (the exponent). A string representing a
+    /// valid JSON number is not allowed to contain white space characters,
+    /// including spaces.</remarks>
     public static double ParseJSONDouble(string str, bool
       preserveNegativeZero) {
       if (String.IsNullOrEmpty(str)) {
@@ -344,7 +355,7 @@ namespace PeterO.Cbor {
     /// <param name='positiveOnly'>If true, the leading minus is disallowed
     /// in the string. The default is false.</param>
     /// <param name='doubleApprox'>If true, treats a JSON number as an
-    /// integer noninteger based on its closest approximation as a CBOR
+    /// integer or noninteger based on its closest approximation as a CBOR
     /// (64-bit) floating-point number. If false, this treatment is based
     /// on the full precision of the given JSON number string. For example,
     /// given the string "0.99999999999999999999999999999999999", the
@@ -359,12 +370,12 @@ namespace PeterO.Cbor {
     /// including if the string is null or empty.</returns>
     /// <remarks>Roughly speaking, a valid JSON number consists of an
     /// optional minus sign, one or more basic digits (starting with 1 to 9
-    /// unless the only digit is 0), an optional decimal point (".", full
-    /// stop) with one or more basic digits, and an optional letter E or e
-    /// with an optional plus or minus sign and one or more basic digits
-    /// (the exponent). A string representing a valid JSON number is not
-    /// allowed to contain white space characters, including
-    /// spaces.</remarks>
+    /// unless there is only one digit and that digit is 0), an optional
+    /// decimal point (".", full stop) with one or more basic digits, and
+    /// an optional letter E or e with an optional plus or minus sign and
+    /// one or more basic digits (the exponent). A string representing a
+    /// valid JSON number is not allowed to contain white space characters,
+    /// including spaces.</remarks>
     public static CBORObject ParseJSONNumberAsIntegerOrFloatingPoint(
       string str,
       bool integersOnly,
@@ -409,26 +420,69 @@ namespace PeterO.Cbor {
     /// empty.</returns>
     /// <remarks>Roughly speaking, a valid JSON number consists of an
     /// optional minus sign, one or more basic digits (starting with 1 to 9
-    /// unless the only digit is 0), an optional decimal point (".", full
-    /// stop) with one or more basic digits, and an optional letter E or e
-    /// with an optional plus or minus sign and one or more basic digits
-    /// (the exponent). A string representing a valid JSON number is not
-    /// allowed to contain white space characters, including
-    /// spaces.</remarks>
+    /// unless there is only one digit and that digit is 0), an optional
+    /// decimal point (".", full stop) with one or more basic digits, and
+    /// an optional letter E or e with an optional plus or minus sign and
+    /// one or more basic digits (the exponent). A string representing a
+    /// valid JSON number is not allowed to contain white space characters,
+    /// including spaces.</remarks>
     public static CBORObject ParseJSONNumber(
       string str,
       bool integersOnly,
       bool positiveOnly,
       bool preserveNegativeZero) {
+      // TODO: Deprecate integersOnly?
+      // TODO: Deprecate this method eventually?
       if (String.IsNullOrEmpty(str)) {
         return null;
       }
-      var offset = 0;
+      return (
+        positiveOnly && str[0] == '-') ? (null) : (ParseJSONNumber(str, 0,
+  str.Length, integersOnly, preserveNegativeZero)); }
+
+    /// <summary>Parses a number whose format follows the JSON
+    /// specification (RFC 8259).</summary>
+    /// <param name='str'>The parameter <paramref name='str'/> is a text
+    /// string.</param>
+    /// <param name='offset'>The parameter <paramref name='offset'/> is a
+    /// 32-bit signed integer.</param>
+    /// <param name='count'>The parameter <paramref name='count'/> is a
+    /// 32-bit signed integer.</param>
+    /// <param name='integersOnly'>The parameter <paramref
+    /// name='integersOnly'/> is either <c>true</c> or <c>false</c>.</param>
+    /// <param name='preserveNegativeZero'>The parameter <paramref
+    /// name='preserveNegativeZero'/> is either <c>true</c> or <c>false</c>.</param>
+    /// <returns>A CBOR object that represents the parsed number. Returns
+    /// null if the parsing fails, including if the string is null or empty
+    /// or <paramref name='count'/> is 0 or less.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='str'/> is null.</exception>
+    /// <remarks>Roughly speaking, a valid JSON number consists of an
+    /// optional minus sign, one or more basic digits (starting with 1 to 9
+    /// unless there is only one digit and that digit is 0), an optional
+    /// decimal point (".", full stop) with one or more basic digits, and
+    /// an optional letter E or e with an optional plus or minus sign and
+    /// one or more basic digits (the exponent). A string representing a
+    /// valid JSON number is not allowed to contain white space characters,
+    /// including spaces.</remarks>
+    public static CBORObject ParseJSONNumber(
+      string str,
+      int offset,
+      int count,
+      bool integersOnly,
+      bool preserveNegativeZero) {
+      // TODO: JSONOptions parameter
+      if (String.IsNullOrEmpty(str) || count <= 0) {
+        return null;
+      }
+      if (offset < 0 || offset > str.Length) {
+        return null;
+      }
+      if (count > str.Length || str.Length - offset < count) {
+        return null;
+      }
       var negative = false;
       if (str[0] == '-') {
-        if (positiveOnly) {
-          return null;
-        }
         negative = true;
         ++offset;
       }
@@ -445,11 +499,12 @@ namespace PeterO.Cbor {
       var newScaleInt = 0;
       FastInteger2 newScale = null;
       int i = offset;
+      int endPos = offset + count;
       // Ordinary number
-      if (i < str.Length && str[i] == '0') {
+      if (i < endPos && str[i] == '0') {
         ++i;
         haveDigits = true;
-        if (i == str.Length) {
+        if (i == endPos) {
           if (preserveNegativeZero && negative) {
             // Negative zero in floating-point format
             // TODO: In next major version, return the following instead:
@@ -472,7 +527,7 @@ namespace PeterO.Cbor {
           return null;
         }
       }
-      for (; i < str.Length; ++i) {
+      for (; i < endPos; ++i) {
         if (str[i] >= '0' && str[i] <= '9') {
           var thisdigit = (int)(str[i] - '0');
           if (mantInt > MaxSafeInt) {
@@ -534,7 +589,7 @@ namespace PeterO.Cbor {
         var expInt = 0;
         offset = 1;
         haveDigits = false;
-        if (i == str.Length) {
+        if (i == endPos) {
           return null;
         }
         if (str[i] == '+' || str[i] == '-') {
@@ -543,7 +598,7 @@ namespace PeterO.Cbor {
           }
           ++i;
         }
-        for (; i < str.Length; ++i) {
+        for (; i < endPos; ++i) {
           if (str[i] >= '0' && str[i] <= '9') {
             haveDigits = true;
             var thisdigit = (int)(str[i] - '0');
@@ -597,7 +652,7 @@ namespace PeterO.Cbor {
           }
         }
       }
-      if (i != str.Length) {
+      if (i != endPos) {
         // End of the string wasn't reached, so isn't a number
         return null;
       }
@@ -628,7 +683,7 @@ namespace PeterO.Cbor {
           }
           return CBORObject.FromObject(mantInt);
         } else {
-          EInteger bigmant2 = mant.AsBigInteger();
+          EInteger bigmant2 = mant.AsEInteger();
           if (negative) {
             bigmant2 = -(EInteger)bigmant2;
           }
@@ -636,9 +691,9 @@ namespace PeterO.Cbor {
         }
       } else {
         EInteger bigmant = (mant == null) ? ((EInteger)mantInt) :
-          mant.AsBigInteger();
+          mant.AsEInteger();
         EInteger bigexp = (newScale == null) ? ((EInteger)newScaleInt) :
-          newScale.AsBigInteger();
+          newScale.AsEInteger();
         if (negative) {
           bigmant = -(EInteger)bigmant;
         }

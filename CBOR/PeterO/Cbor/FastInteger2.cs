@@ -426,7 +426,7 @@ namespace PeterO.Cbor {
           } else {
             this.integerMode = 2;
             this.largeValue = (EInteger)this.smallValue;
-            valValue = val.AsBigInteger();
+            valValue = val.AsEInteger();
             this.largeValue -= (EInteger)valValue;
           }
           break;
@@ -440,12 +440,12 @@ namespace PeterO.Cbor {
           } else {
             this.integerMode = 2;
             this.largeValue = this.mnum.ToEInteger();
-            valValue = val.AsBigInteger();
+            valValue = val.AsEInteger();
             this.largeValue -= (EInteger)valValue;
           }
           break;
         case 2:
-          valValue = val.AsBigInteger();
+          valValue = val.AsEInteger();
           this.largeValue -= (EInteger)valValue;
           break;
         default: throw new InvalidOperationException();
@@ -501,7 +501,7 @@ namespace PeterO.Cbor {
           } else {
             this.integerMode = 2;
             this.largeValue = (EInteger)this.smallValue;
-            valValue = val.AsBigInteger();
+            valValue = val.AsEInteger();
             this.largeValue += (EInteger)valValue;
           }
           break;
@@ -511,12 +511,12 @@ namespace PeterO.Cbor {
           } else {
             this.integerMode = 2;
             this.largeValue = this.mnum.ToEInteger();
-            valValue = val.AsBigInteger();
+            valValue = val.AsEInteger();
             this.largeValue += (EInteger)valValue;
           }
           break;
         case 2:
-          valValue = val.AsBigInteger();
+          valValue = val.AsEInteger();
           this.largeValue += (EInteger)valValue;
           break;
         default: throw new InvalidOperationException();
@@ -594,7 +594,7 @@ namespace PeterO.Cbor {
       }
     }
 
-    internal EInteger AsBigInteger() {
+    internal EInteger AsEInteger() {
       switch (this.integerMode) {
         case 0:
           return EInteger.FromInt32(this.smallValue);

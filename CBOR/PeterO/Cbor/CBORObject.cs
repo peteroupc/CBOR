@@ -2756,7 +2756,8 @@ cn.GetNumberInterface().Sign(cn.GetValue());
     /// <param name='stream'>A readable data stream. The sequence of bytes
     /// read from the data stream must contain a single JSON object and not
     /// multiple objects.</param>
-    /// <param name='jsonoptions'/>
+    /// <param name='jsonoptions'>The parameter <paramref
+    /// name='jsonoptions'/> is a Cbor.JSONOptions object.</param>
     /// <returns>A CBOR object containing the JSON data decoded.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='stream'/> is null.</exception>

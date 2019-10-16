@@ -32,7 +32,8 @@ namespace PeterO.Cbor {
     /// end with whitespace. The string can be empty, but cannot be null.
     /// The following is an example of this parameter:
     /// <c>usecamelcase=true</c>. The key can be any one of the following
-    /// in any combination of case: <c>usecamelcase</c>. Other keys are
+    /// where the letters can be any combination of basic upper-case and/or
+    /// basic lower-case letters: <c>usecamelcase</c>. Other keys are
     /// ignored. (Keys are compared using a basic case-insensitive
     /// comparison, in which two strings are equal if they match after
     /// converting the basic upper-case letters A to Z (U+0041 to U+005A)
@@ -40,7 +41,8 @@ namespace PeterO.Cbor {
     /// key/value pairs have equal keys (in a basic case-insensitive
     /// comparison), the value given for the last such key is used. The key
     /// just given can have a value of <c>1</c>, <c>true</c>, <c>yes</c>
-    /// , or <c>on</c> (in any combination of case), which means true, and
+    /// , or <c>on</c> (where the letters can be any combination of basic
+    /// upper-case and/or basic lower-case letters), which means true, and
     /// any other value meaning false. For example, <c>usecamelcase=Yes</c>
     /// and <c>usecamelcase=1</c> both set the <c>UseCamelCase</c> property
     /// to true. In the future, this class may allow other keys to store

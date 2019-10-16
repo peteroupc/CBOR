@@ -153,8 +153,8 @@ namespace PeterO {
         } while (v <= 0);
         u = 1.0 - this.Uniform();
         x2 = x * x;
-      } while (u >= 1 - (0.0331 * x2 * x2) &&
-        Math.Log(u) >= (0.5 * x2) + (d * (1 - v + Math.Log(v))));
+      } while (u >= 1 - (0.0331 * x2 * x 2) &&
+        Math.Log(u) >= (0.5 * x2) + (d *(1 - v + Math.Log(v))));
       if (a < 1) {
         return d * v * Math.Exp(this.Exponential() / -a);
       } else {

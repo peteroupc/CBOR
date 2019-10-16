@@ -66,7 +66,8 @@ namespace PeterO.Cbor {
     /// end with whitespace. The string can be empty, but cannot be null.
     /// The following is an example of this parameter:
     /// <c>allowduplicatekeys=true;ctap2Canonical=true</c>. The key can be
-    /// any one of the following in any combination of case:
+    /// any one of the following where the letters can be any combination
+    /// of basic upper-case and/or basic lower-case letters:
     /// <c>allowduplicatekeys</c>, <c>ctap2canonical</c>,
     /// <c>resolvereferences</c>, <c>useindeflengthstrings</c>,
     /// <c>allowempty</c>. Keys other than these are ignored. (Keys are
@@ -77,8 +78,9 @@ namespace PeterO.Cbor {
     /// equal keys (in a basic case-insensitive comparison), the value
     /// given for the last such key is used. The four keys just given can
     /// have a value of <c>1</c>, <c>true</c>, <c>yes</c>, or <c>on</c>
-    /// (in any combination of case), which means true, and any other value
-    /// meaning false. For example, <c>allowduplicatekeys=Yes</c> and
+    /// (where the letters can be any combination of basic upper-case
+    /// and/or basic lower-case letters), which means true, and any other
+    /// value meaning false. For example, <c>allowduplicatekeys=Yes</c> and
     /// <c>allowduplicatekeys=1</c> both set the <c>AllowDuplicateKeys</c>
     /// property to true. In the future, this class may allow other keys to
     /// store other kinds of values, not just true or false.</param>

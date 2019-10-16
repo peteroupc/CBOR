@@ -62,10 +62,15 @@ namespace PeterO {
           throw new CBORException("Invalid integer encoding");
         }
       }
-      return CBORDataUtilities.ParseJSONNumber (
-          builder.ToString(),
-          true,
-          false);
+      string s = builder.ToString();
+      if (s.Length>= 2 && s[0]=='0' && s[1]=='0') {
+          throw new CBORException("Invalid integer encoding");
+      }
+      if (s.Length>= 3 && s[0]=='-' && s[1]=='0' && s[2]=='0') {
+          throw new CBORException("Invalid integer encoding");
+      }
+      return CBORObject.FromObject(
+          EInteger.FromString(s));
     }
 
     private static CBORObject ReadList(Stream stream) {
@@ -201,18 +206,17 @@ namespace PeterO {
           throw new CBORException("Invalid integer encoding");
         }
       }
-      CBORObject number = CBORDataUtilities.ParseJSONNumber (
-          builder.ToString(),
-          true,
-          true);
-      var length = 0;
-      try {
-        length = number.AsInt32();
-      } catch (ArithmeticException ex) {
+      string s = builder.ToString();
+      if (s.Length>= 2 && s[0]=='0' && s[1]=='0') {
+          throw new CBORException("Invalid integer encoding");
+      }
+      EInteger numlength = EInteger.FromString(s);
+      if (!numlength.CanFitInInt32()) {
         throw new CBORException("Length too long", ex);
       }
       builder = new StringBuilder();
-      switch (DataUtilities.ReadUtf8(stream, length, builder, false)) {
+      switch (DataUtilities.ReadUtf8(stream, numlength.ToInt32Checked(),
+  builder, false)) {
         case -2:
           throw new CBORException("Premature end of data");
         case -1:

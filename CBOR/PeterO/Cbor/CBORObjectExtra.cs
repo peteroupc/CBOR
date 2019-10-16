@@ -229,7 +229,6 @@ namespace PeterO.Cbor {
           (decimal)this.ToObject<EDecimal>());
     }
 
-    /// <summary>Not documented yet.</summary>
     /// <summary>Converts this object to a 64-bit unsigned integer after
     /// discarding any fractional part, if any, from its value.</summary>
     /// <returns>A 64-bit unsigned integer.</returns>

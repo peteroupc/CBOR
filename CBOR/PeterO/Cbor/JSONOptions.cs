@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+// TODO: PreserveNegativeZero property
 namespace PeterO.Cbor {
   /// <summary>Includes options to control how CBOR objects are converted
   /// to JSON.</summary>
@@ -79,7 +80,8 @@ namespace PeterO.Cbor {
     /// end with whitespace. The string can be empty, but cannot be null.
     /// The following is an example of this parameter:
     /// <c>base64padding=false;replacesurrogates=true</c>. The key can be
-    /// any one of the following in any combination of case:
+    /// any one of the following where the letters can be any combination
+    /// of basic upper-case and/or basic lower-case letters:
     /// <c>base64padding</c>, <c>replacesurrogates</c>,
     /// <c>allowduplicatekeys</c>, <c>numberconversion</c>. Other keys
     /// are ignored. (Keys are compared using a basic case-insensitive
@@ -89,11 +91,13 @@ namespace PeterO.Cbor {
     /// key/value pairs have equal keys (in a basic case-insensitive
     /// comparison), the value given for the last such key is used. The
     /// first three keys just given can have a value of <c>1</c>,
-    /// <c>true</c>, <c>yes</c>, or <c>on</c> (in any combination of
-    /// case), which means true, and any other value meaning false. The
+    /// <c>true</c>, <c>yes</c>, or <c>on</c> (where the letters can be
+    /// any combination of basic upper-case and/or basic lower-case
+    /// letters), which means true, and any other value meaning false. The
     /// fourth key, <c>numberconversion</c>, can have a value of any name
-    /// given in the <c>JSONOptions.ConversionKind</c> enumeration (in any
-    /// combination of case), or any other value, which is treated the same
+    /// given in the <c>JSONOptions.ConversionKind</c> enumeration (where
+    /// the letters can be any combination of basic upper-case and/or basic
+    /// lower-case letters), or any other value, which is treated the same
     /// as <c>full</c>. For example, <c>base64padding=Yes</c> and
     /// <c>base64padding=1</c> both set the <c>Base64Padding</c> property
     /// to true, and <c>numberconversion=double</c> sets the
@@ -183,7 +187,7 @@ namespace PeterO.Cbor {
         if (str.Equals("intorfloat", StringComparison.Ordinal)) {
           return ConversionKind.IntOrFloat;
         }
-if (str.Equals("intorfloatfromdouble", StringComparison.Ordinal)) {
+        if (str.Equals("intorfloatfromdouble", StringComparison.Ordinal)) {
           return ConversionKind.IntOrFloatFromDouble;
         }
       }
