@@ -32,7 +32,7 @@ namespace PeterO {
     }
 
     public static void Main() {
-      const String ValueParam = "NoRecursive";
+      const String ValueParam = "TestJSON";
       // Run all the tests in this assembly
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
         if (!HasAttribute(type, typeof(TestFixtureAttribute))) {
@@ -53,10 +53,10 @@ namespace PeterO {
               continue;
             }
           }
-          Console.WriteLine("::: " + type.FullName + "." + method.Name);
           try {
             method.Invoke(test, new object[] { });
           } catch (TargetInvocationException e) {
+            Console.WriteLine("::: " + type.FullName + "." + method.Name);
             Console.WriteLine(e.InnerException.GetType().FullName);
             string message = e.InnerException.Message;
             Console.WriteLine(message);

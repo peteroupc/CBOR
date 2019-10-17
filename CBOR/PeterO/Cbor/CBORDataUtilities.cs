@@ -170,27 +170,32 @@ namespace PeterO.Cbor {
     }
 
     private const int MaxSafeInt = 214748363;
+    private static readonly JSONOptions DefaultOptions =
+        new JSONOptions(String.Empty);
     private static readonly JSONOptions PreserveNegZeroNo =
         new JSONOptions("preservenegativezero=0");
     private static readonly JSONOptions PreserveNegZeroYes =
         new JSONOptions("preservenegativezero=1");
 
     /// <summary>Parses a number whose format follows the JSON
-    /// specification. See #ParseJSONNumber(String, integersOnly,
-    /// parseOnly) for more information.</summary>
-    /// <param name='str'>A string to parse as a JSON string.</param>
+    /// specification. The method uses a JSONOptions with all default
+    /// properties except for a PreserveNegativeZero property of
+    /// false.</summary>
+    /// <param name='str'>A text string to parse as a JSON string.</param>
     /// <returns>A CBOR object that represents the parsed number. Returns
     /// positive zero if the number is a zero that starts with a minus sign
     /// (such as "-0" or "-0.0"). Returns null if the parsing fails,
     /// including if the string is null or empty.</returns>
     public static CBORObject ParseJSONNumber(string str) {
-      return String.IsNullOrEmpty(str) ? null : ParseJSONNumber(str, 0,
-  str.Length, false, PreserveNegZeroNo);
+      // TODO: Preserve negative zeros in next major version
+      return ParseJSONNumber(str, PreserveNegZeroNo);
     }
 
     /// <summary>Parses a number whose format follows the JSON
-    /// specification (RFC 8259).</summary>
-    /// <param name='str'>A string to parse as a JSON number.</param>
+    /// specification (RFC 8259). The method uses a JSONOptions with all
+    /// default properties except for a PreserveNegativeZero property of
+    /// false.</summary>
+    /// <param name='str'>A text string to parse as a JSON number.</param>
     /// <param name='integersOnly'>If true, no decimal points or exponents
     /// are allowed in the string. The default is false.</param>
     /// <param name='positiveOnly'>If true, only positive numbers are
@@ -222,18 +227,24 @@ public static CBORObject ParseJSONNumber(
       if (String.IsNullOrEmpty(str)) {
         return null;
       }
+      if (integersOnly) {
+        for (var i = 0; i < str.Length; ++i) {
+if (str[i] >= '0' && str[i] <= '9' && (i > 0 || str[i] != '-')) {
+  return null;
+}
+}
+      }
       return (positiveOnly && str[0] == '-') ? null :
          ParseJSONNumber(
            str,
            0,
            str.Length,
-           integersOnly,
            PreserveNegZeroNo);
     }
 
     /// <summary>Parses a number whose format follows the JSON
     /// specification (RFC 8259).</summary>
-    /// <param name='str'>A string to parse as a JSON number.</param>
+    /// <param name='str'>A text string to parse as a JSON number.</param>
     /// <param name='integersOnly'>If true, no decimal points or exponents
     /// are allowed in the string. The default is false.</param>
     /// <param name='positiveOnly'>If true, the leading minus is disallowed
@@ -263,35 +274,67 @@ public static CBORObject ParseJSONNumber(
       if (String.IsNullOrEmpty(str)) {
         return null;
       }
+      if (integersOnly) {
+        for (var i = 0; i < str.Length; ++i) {
+if (str[i] >= '0' && str[i] <= '9' && (i > 0 || str[i] != '-')) {
+  return null;
+}
+}
+      }
       JSONOptions jo = preserveNegativeZero ? PreserveNegZeroYes :
          PreserveNegZeroNo;
       return (positiveOnly && str[0] == '-') ? null :
          ParseJSONNumber(str,
            0,
            str.Length,
-           integersOnly,
            jo);
     }
 
     /// <summary>Parses a number whose format follows the JSON
     /// specification (RFC 8259) and converts that number to a CBOR
     /// object.</summary>
-    /// <param name='str'>The parameter <paramref name='str'/> is a text
-    /// string.</param>
+    /// <param name='str'>A text string to parse as a JSON number.</param>
+    /// <param name='options'>An object containing options to control how
+    /// JSON numbers are decoded to CBOR objects. Can be null, in which
+    /// case a JSONOptions object with all default properties is used
+    /// instead.</param>
+    /// <returns>A CBOR object that represents the parsed number. Returns
+    /// null if the parsing fails, including if the string is null or
+    /// empty.</returns>
+    /// <remarks>Roughly speaking, a valid JSON number consists of an
+    /// optional minus sign, one or more basic digits (starting with 1 to 9
+    /// unless there is only one digit and that digit is 0), an optional
+    /// decimal point (".", full stop) with one or more basic digits, and
+    /// an optional letter E or e with an optional plus or minus sign and
+    /// one or more basic digits (the exponent). A string representing a
+    /// valid JSON number is not allowed to contain white space characters,
+    /// including spaces.</remarks>
+    public static CBORObject ParseJSONNumber(
+      string str,
+      JSONOptions options) {
+      return String.IsNullOrEmpty(str) ? null :
+         ParseJSONNumber(str,
+           0,
+           str.Length,
+           options);
+    }
+
+    /// <summary>Parses a number whose format follows the JSON
+    /// specification (RFC 8259) and converts that number to a CBOR
+    /// object.</summary>
+    /// <param name='str'>A text string to parse as a JSON number.</param>
     /// <param name='offset'>An index, starting at 0, showing where the
     /// desired portion of <paramref name='str'/> begins.</param>
     /// <param name='count'>The length, in code units, of the desired
     /// portion of <paramref name='str'/> (but not more than <paramref
     /// name='str'/> 's length).</param>
-    /// <param name='integersOnly'>The parameter <paramref
-    /// name='integersOnly'/> is either <c>true</c> or <c>false</c>.</param>
     /// <param name='options'>An object containing options to control how
-    /// JSON numbers are decoded to CBOR objects. Can be null.</param>
+    /// JSON numbers are decoded to CBOR objects. Can be null, in which
+    /// case a JSONOptions object with all default properties is used
+    /// instead.</param>
     /// <returns>A CBOR object that represents the parsed number. Returns
     /// null if the parsing fails, including if the string is null or empty
     /// or <paramref name='count'/> is 0 or less.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='str'/> is null.</exception>
     /// <exception cref='ArgumentException'>Either <paramref
     /// name='offset'/> or <paramref name='count'/> is less than 0 or
     /// greater than <paramref name='str'/> 's length, or <paramref
@@ -309,10 +352,7 @@ public static CBORObject ParseJSONNumber(
       string str,
       int offset,
       int count,
-      bool integersOnly,
       JSONOptions options) {
-      // TODO: Allow JSONOptions of null here
-      // TODO: Remove integersOnly parameter from this method
       if (String.IsNullOrEmpty(str) || count <= 0) {
         return null;
       }
@@ -322,17 +362,10 @@ public static CBORObject ParseJSONNumber(
       if (count > str.Length || str.Length - offset < count) {
         return null;
       }
-      // TODO: Create default JSONOptions here instead of
-      // hardcoding defaults here; for this purpose establish a JSONOptions.Default
-      // field
-      bool preserveNegativeZero = options == null ? true :
-options.PreserveNegativeZero;
-      JSONOptions.ConversionKind kind = options == null ?
-        JSONOptions.ConversionKind.Full : options.NumberConversion;
-      if (kind != JSONOptions.ConversionKind.Full &&
-         kind != JSONOptions.ConversionKind.Double) {
-        preserveNegativeZero = false;
-      }
+      JSONOptions opt = options ?? DefaultOptions;
+      bool preserveNegativeZero = options.PreserveNegativeZero;
+      JSONOptions.ConversionKind kind = options.NumberConversion;
+      int endPos = offset + count;
       var negative = false;
       if (str[0] == '-') {
         negative = true;
@@ -351,7 +384,12 @@ options.PreserveNegativeZero;
       var newScaleInt = 0;
       FastInteger2 newScale = null;
       int i = offset;
-      int endPos = offset + count;
+#if DEBUG
+      if (!(endPos <= str.Length)) {
+        throw new ArgumentException("doesn't satisfy endPos<= str.Length");
+      }
+#endif
+
       // Ordinary number
       if (i < endPos && str[i] == '0') {
         ++i;
@@ -365,18 +403,14 @@ CBORObject.FromObject(EDecimal.NegativeZero);
            }
           return CBORObject.FromObject(0);
         }
-        if (!integersOnly) {
-          if (str[i] == '.') {
-            haveDecimalPoint = true;
-            ++i;
-          } else if (str[i] == 'E' || str[i] == 'e') {
-            haveExponent = true;
-          } else {
+        if (str[i] == '.') {
+          haveDecimalPoint = true;
+          ++i;
+        } else if (str[i] == 'E' || str[i] == 'e') {
+          haveExponent = true;
+        } else {
             return null;
           }
-        } else {
-          return null;
-        }
       }
       for (; i < endPos; ++i) {
         if (str[i] >= '0' && str[i] <= '9') {
@@ -412,7 +446,7 @@ CBORObject.FromObject(EDecimal.NegativeZero);
               --newScaleInt;
             }
           }
-        } else if (!integersOnly && str[i] == '.') {
+        } else if (str[i] == '.') {
           if (!haveDigits) {
             // no digits before the decimal point
             return null;
@@ -421,7 +455,7 @@ CBORObject.FromObject(EDecimal.NegativeZero);
             return null;
           }
           haveDecimalPoint = true;
-        } else if (!integersOnly && (str[i] == 'E' || str[i] == 'e')) {
+        } else if (str[i] == 'E' || str[i] == 'e') {
           haveExponent = true;
           ++i;
           break;
@@ -450,6 +484,15 @@ CBORObject.FromObject(EDecimal.NegativeZero);
           ++i;
         }
         for (; i < endPos; ++i) {
+#if DEBUG
+          if (!(i >= 0)) {
+            throw new ArgumentException("doesn't satisfy i >= 0");
+          }
+          if (!(i < str.Length)) {
+            throw new ArgumentException("doesn't satisfy i < str.Length");
+          }
+#endif
+
           if (str[i] >= '0' && str[i] <= '9') {
             haveDigits = true;
             var thisdigit = (int)(str[i] - '0');
@@ -529,7 +572,7 @@ CBORObject.FromObject(EDecimal.NegativeZero);
               if (kind == JSONOptions.ConversionKind.Double) {
                 return CBORObject.FromFloatingPointBits(0x8000, 2);
               }
-              return CBORObject.FromObject (
+              return CBORObject.FromObject(
                   EDecimal.NegativeZero);
             }
           }
@@ -586,10 +629,15 @@ CBORObject.FromObject(EDecimal.NegativeZero);
         }
         // Converting the EDecimal to a CBOR object
         if (kind == JSONOptions.ConversionKind.Double) {
-          return CBORObject.FromObject(edec.ToDouble());
+          double dbl = edec.ToDouble();
+          if (preserveNegativeZero && dbl >= 0.0) {
+            dbl = Math.Abs(dbl);
+          }
+          return CBORObject.FromObject(dbl);
         } else if (kind == JSONOptions.ConversionKind.IntOrFloat ||
               kind == JSONOptions.ConversionKind.IntOrFloatFromDouble) {
-            CBORObject cbor = (kind == JSONOptions.ConversionKind.IntOrFloat) ?
+          double dbl;
+          CBORObject cbor = (kind == JSONOptions.ConversionKind.IntOrFloat) ?
                CBORObject.FromObject(edec) :
                CBORObject.FromObject(edec.ToDouble());
                CBORNumber cn = cbor.AsNumber();
@@ -598,11 +646,15 @@ CBORObject.FromObject(EDecimal.NegativeZero);
              if (v >= -(1 << 53) && v <= (1 << 53)) {
                return CBORObject.FromObject(v);
              } else {
-                return CBORObject.FromObject(cbor.AsDouble());
+               dbl = cbor.AsDouble();
             }
           } else {
-            return CBORObject.FromObject(cbor.AsDouble());
+            dbl = edec.ToDouble();
           }
+          if (preserveNegativeZero && dbl >= 0.0) {
+            dbl = Math.Abs(dbl);
+          }
+          return CBORObject.FromObject(dbl);
         }
         return CBORObject.FromObject(edec);
       }

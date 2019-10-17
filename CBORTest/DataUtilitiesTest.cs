@@ -242,10 +242,10 @@ namespace Test {
 }
 integerTemp3 = Math.Sign(DataUtilities.CodePointCompare("A",
   null));
-  Assert.AreEqual(-1, integerTemp3);
+  Assert.AreEqual(1, integerTemp3);
   integerTemp3 = Math.Sign(DataUtilities.CodePointCompare(null,
             null));
-            Assert.AreEqual(-1, integerTemp3);
+            Assert.AreEqual(0, integerTemp3);
       {
       long numberTemp = Math.Sign (
             DataUtilities.CodePointCompare("abc", "abc"));

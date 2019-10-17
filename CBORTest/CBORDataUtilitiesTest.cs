@@ -135,12 +135,6 @@ namespace Test {
           null) {
           Assert.Fail(str);
         }
-        if (!Double.IsNaN(CBORDataUtilities.ParseJSONDouble(str))) {
-          Assert.Fail(str);
-        }
-        if (!Double.IsNaN(CBORDataUtilities.ParseJSONDouble(str, false))) {
-          Assert.Fail(str);
-        }
       }
       CBORObject cbor = CBORDataUtilities.ParseJSONNumber("2e-2147483648");
       CBORTestCommon.AssertJSONSer(cbor, "2E-2147483648");
@@ -164,12 +158,6 @@ namespace Test {
         }
         if (CBORDataUtilities.ParseJSONNumber(str, false, false, false) ==
           null) {
-          Assert.Fail(str);
-        }
-        if (Double.IsNaN(CBORDataUtilities.ParseJSONDouble(str))) {
-          Assert.Fail(str);
-        }
-        if (Double.IsNaN(CBORDataUtilities.ParseJSONDouble(str, false))) {
           Assert.Fail(str);
         }
       }

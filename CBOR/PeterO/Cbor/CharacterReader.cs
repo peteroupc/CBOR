@@ -95,10 +95,11 @@ namespace PeterO.Cbor {
     // <see cref='PeterO.Cbor.CharacterReader'/> class.</summary>
     // <param name='str'>The parameter <paramref name='str'/> is a text
     // string.</param>
-    // <param name='offset'>The parameter <paramref name='offset'/> is a
-    // 32-bit signed integer.</param>
-    // <param name='length'>The parameter <paramref name='length'/> is a
-    // 32-bit signed integer.</param>
+    // <param name='offset'>An index, starting at 0, showing where the
+    // desired portion of <paramref name='str'/> begins.</param>
+    // <param name='length'>The length, in code units, of the desired
+    // portion of <paramref name='str'/> (but not more than <paramref
+    // name='str'/> 's length).</param>
     // <param name='skipByteOrderMark'>If true and the first character in
     // the string portion is U+FEFF, skip that character.</param>
     // <param name='errorThrow'>When encountering invalid encoding, throw
@@ -106,6 +107,11 @@ namespace PeterO.Cbor {
     // (replacement character) if this parameter is false.</param>
     // <exception cref="ArgumentNullException">The parameter <paramref
     // name='str'/> is null.</exception>
+    // <exception cref="ArgumentException">Either <paramref
+    // name='offset'/> or <paramref name='length'/> is less than 0 or
+    // greater than <paramref name='str'/> 's length, or <paramref
+    // name='str'/> 's length minus <paramref name='offset'/> is less than
+    // <paramref name='length'/>.</exception>
     public CharacterReader(
       string str,
       int offset,

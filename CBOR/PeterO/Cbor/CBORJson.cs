@@ -218,19 +218,22 @@ namespace PeterO.Cbor {
           c = this.reader.ReadChar();
           while (c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
             c == 'e' || c == 'E') {
-            if (lengthTwo) {
+            if (sb == null) {
               sb = new StringBuilder();
-              sb.Append((char)'-');
+              sb.Append('-');
               sb.Append((char)cstart);
-              lengthTwo = false;
             }
             sb.Append((char)c);
             c = this.reader.ReadChar();
           }
-          str = sb.ToString();
-          obj = CBORDataUtilities.ParseJSONNumber(str, 0, str.Length,
-  false, this.options);
-  if (obj == null) {
+          if (sb == null) {
+            // Single-digit number
+             str = new String(new char[] { '-', (char)cstart });
+           } else {
+            str = sb.ToString();
+          }
+          obj = CBORDataUtilities.ParseJSONNumber(str, this.options);
+          if (obj == null) {
               string errstr = (str.Length <= 100) ? str : (str.Substring(0,
   100) +
 "...");
@@ -261,18 +264,21 @@ namespace PeterO.Cbor {
           c = this.reader.ReadChar();
           while (c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
             c == 'e' || c == 'E') {
-            if (lengthOne) {
+            if (sb == null) {
               sb = new StringBuilder();
               sb.Append((char)cstart);
-              lengthOne = false;
             }
             sb.Append((char)c);
             c = this.reader.ReadChar();
           }
-          str = sb.ToString();
-          obj = CBORDataUtilities.ParseJSONNumber(str, 0, str.Length,
-  false, this.options);
-  if (obj == null) {
+          if (sb == null) {
+             // Single-digit number
+             str = new String(new char[] { (char)cstart });
+           } else {
+             str = sb.ToString();
+          }
+          obj = CBORDataUtilities.ParseJSONNumber(str, this.options);
+          if (obj == null) {
               string errstr = (str.Length <= 100) ? str : (str.Substring(0,
   100) +
 "...");

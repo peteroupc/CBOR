@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-// TODO: PreserveNegativeZero property
 namespace PeterO.Cbor {
   /// <summary>Includes options to control how CBOR objects are converted
   /// to JSON.</summary>
@@ -12,15 +11,15 @@ namespace PeterO.Cbor {
     public enum ConversionKind {
        /// <summary>JSON numbers are decoded to CBOR using the full precision
        /// given in the JSON text. This may involve numbers being converted to
-       /// arbitrary-precision integers or decimal numbers, where appropriate.
-       /// The distinction between positive and negative zero is
-       /// preserved.</summary>
+       /// arbitrary-precision integers or decimal numbers, where
+       /// appropriate.</summary>
        Full,
 
        /// <summary>JSON numbers are decoded to CBOR as their closest-rounded
-       /// approximation as 64-bit binary floating-point numbers. The
-       /// distinction between positive and negative zero is
-       /// preserved.</summary>
+       /// approximation as 64-bit binary floating-point numbers. (In some
+       /// cases, numbers extremely close to zero may underflow to positive or
+       /// negative zero, and numbers of extremely large magnitude may
+       /// overflow to infinity.).</summary>
        Double,
 
        /// <summary>A JSON number is decoded to CBOR either as a CBOR integer
@@ -31,7 +30,9 @@ namespace PeterO.Cbor {
        /// non-integer based on the full precision given in the JSON text. For
        /// example, the JSON number 0.99999999999999999999999999999999999 is
        /// not an integer, so it's converted to its closest floating-point
-       /// approximation, namely 1.0.</summary>
+       /// approximation, namely 1.0. (In some cases, numbers extremely close
+       /// to zero may underflow to positive or negative zero, and numbers of
+       /// extremely large magnitude may overflow to infinity.).</summary>
        IntOrFloat,
 
        /// <summary>A JSON number is decoded to CBOR either as a CBOR integer
@@ -43,7 +44,9 @@ namespace PeterO.Cbor {
        /// number. For example, the JSON number
        /// 0.99999999999999999999999999999999999 is the integer 1 when rounded
        /// to its closest floating-point approximation (1.0), so it's
-       /// converted to the CBOR integer 1 (major type 0).</summary>
+       /// converted to the CBOR integer 1 (major type 0). (In some cases,
+       /// numbers extremely close to zero may underflow to zero, and numbers
+       /// of extremely large magnitude may overflow to infinity.).</summary>
        IntOrFloatFromDouble,
     };
 
@@ -213,15 +216,15 @@ namespace PeterO.Cbor {
 
     /// <summary>Gets a value indicating whether the JSON decoder should
     /// preserve the distinction between positive zero and negative zero in
-    /// floating-point number formats when the decoder decodes JSON to
-    /// CBOR. For example the JSON number "-0.0" (which expresses negative
-    /// zero) is decoded to negative zero if this property is <c>true</c>,
-    /// and to positive zero if this property is <c>false</c>. This
-    /// property has no effect for number conversion kinds in which zeros
-    /// are always decoded as CBOR integers (such as the <c>IntOrFloat</c>
-    /// and <c>IntOrFloatFromDouble</c> conversion kinds).</summary>
+    /// when the decoder decodes JSON to a floating-point number format that makes
+    /// this distinction. For a value of <c>false</c>, if the result of parsing a
+    /// JSON string would be a floating-point negative zero, that result is a
+    /// positive zero instead. (Note that this property has no effect for
+    ///conversion
+    /// kind <c>IntOrFloatFromDouble</c>, where floating-point zeros are not
+    /// possible.).</item></summary>
     /// <value>A value indicating whether to preserve the distinction
-    /// between positive zero and negative zero. The default is
+    /// between positive zero and negative zero when decoding JSON. The default is
     /// true.</value>
     public bool PreserveNegativeZero {
       get;
