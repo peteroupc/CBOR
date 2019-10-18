@@ -207,7 +207,6 @@ namespace PeterO.Cbor {
         }
         case '-': {
           // Parse a negative number
-          var lengthTwo = true;
           c = this.reader.ReadChar();
           if (c < '0' || c > '9') {
             this.reader.RaiseError("JSON number can't be parsed.");
@@ -257,7 +256,6 @@ namespace PeterO.Cbor {
         case '8':
         case '9': {
           // Parse a number
-          var lengthOne = true;
           int cval = c - '0';
           int cstart = c;
           StringBuilder sb = null;

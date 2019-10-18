@@ -37,7 +37,7 @@ namespace PeterO.Cbor {
     // string.</param>
     // <param name='skipByteOrderMark'>If true and the first character in
     // the string is U+FEFF, skip that character.</param>
-    // <exception cref="ArgumentNullException">The parameter <paramref
+    // <exception cref='ArgumentNullException'>The parameter <paramref
     // name='str'/> is null.</exception>
     public CharacterReader(string str, bool skipByteOrderMark)
       : this(str, skipByteOrderMark, false) {
@@ -52,7 +52,7 @@ namespace PeterO.Cbor {
     // <param name='errorThrow'>When encountering invalid encoding, throw
     // an exception if this parameter is true, or replace it with U+FFFD
     // (replacement character) if this parameter is false.</param>
-    // <exception cref="ArgumentNullException">The parameter <paramref
+    // <exception cref='ArgumentNullException'>The parameter <paramref
     // name='str'/> is null.</exception>
     public CharacterReader(
       string str,
@@ -80,12 +80,12 @@ namespace PeterO.Cbor {
     // <param name='length'>The length, in code units, of the desired
     // portion of <paramref name='str'/> (but not more than <paramref
     // name='str'/> 's length).</param>
-    // <exception cref="ArgumentException">Either &#x22;offset&#x22; or
+    // <exception cref='ArgumentException'>Either &#x22;offset&#x22; or
     // &#x22;length&#x22; is less than 0 or greater than
     // &#x22;str&#x22;&#x27;s length, or &#x22;str&#x22;&#x27;s length
     // minus &#x22;offset&#x22; is less than
     // &#x22;length&#x22;.</exception>
-    // <exception cref="ArgumentNullException">The parameter <paramref
+    // <exception cref='ArgumentNullException'>The parameter <paramref
     // name='str'/> is null.</exception>
     public CharacterReader(string str, int offset, int length)
       : this(str, offset, length, false, false) {
@@ -105,9 +105,9 @@ namespace PeterO.Cbor {
     // <param name='errorThrow'>When encountering invalid encoding, throw
     // an exception if this parameter is true, or replace it with U+FFFD
     // (replacement character) if this parameter is false.</param>
-    // <exception cref="ArgumentNullException">The parameter <paramref
+    // <exception cref='ArgumentNullException'>The parameter <paramref
     // name='str'/> is null.</exception>
-    // <exception cref="ArgumentException">Either <paramref
+    // <exception cref='ArgumentException'>Either <paramref
     // name='offset'/> or <paramref name='length'/> is less than 0 or
     // greater than <paramref name='str'/> 's length, or <paramref
     // name='str'/> 's length minus <paramref name='offset'/> is less than
@@ -157,7 +157,7 @@ namespace PeterO.Cbor {
     // first in the stream, and replace invalid byte sequences with
     // replacement characters (U+FFFD).</summary>
     // <param name='stream'>A readable data stream.</param>
-    // <exception cref="ArgumentNullException">The parameter <paramref
+    // <exception cref='ArgumentNullException'>The parameter <paramref
     // name='stream'/> is null.</exception>
     public CharacterReader(Stream stream) : this(stream, 0, false) {
     }
@@ -208,7 +208,7 @@ namespace PeterO.Cbor {
     // <item>3: Detect UTF-16 using BOM, otherwise UTF-8.</item>
     // <item>4: Detect UTF-16/UTF-32 using BOM, otherwise UTF-8. (Tries to
     // detect UTF-32 first.)</item></list>.</param>
-    // <exception cref="ArgumentNullException">The parameter <paramref
+    // <exception cref='ArgumentNullException'>The parameter <paramref
     // name='stream'/> is null.</exception>
     public CharacterReader(Stream stream, int mode)
       : this(stream, mode, false, false) {
@@ -238,7 +238,7 @@ namespace PeterO.Cbor {
     // <param name='dontSkipUtf8Bom'>If the stream is detected as UTF-8
     // and this parameter is <c>true</c>, won't skip the BOM character if
     // it occurs at the start of the stream.</param>
-    // <exception cref="ArgumentNullException">The parameter <paramref
+    // <exception cref='ArgumentNullException'>The parameter <paramref
     // name='stream'/> is null.</exception>
     public CharacterReader(
       Stream stream,
@@ -272,9 +272,9 @@ namespace PeterO.Cbor {
     // <returns>The number of code points read from the stream. This can
     // be less than the <paramref name='length'/> parameter if the end of
     // the stream is reached.</returns>
-    // <exception cref="ArgumentNullException">The parameter <paramref
+    // <exception cref='ArgumentNullException'>The parameter <paramref
     // name='chars'/> is null.</exception>
-    // <exception cref="ArgumentException">Either <paramref name='index'/>
+    // <exception cref='ArgumentException'>Either <paramref name='index'/>
     // or <paramref name='length'/> is less than 0 or greater than
     // <paramref name='chars'/> 's length, or <paramref name='chars'/> 's
     // length minus <paramref name='index'/> is less than <paramref
@@ -437,8 +437,10 @@ namespace PeterO.Cbor {
           c2 = this.stream.ReadByte();
           if (c2 >= 0x01 && c2 <= 0x7f) {
             // 0 NZA, so UTF-16BE
-            var newReader = new Utf16Reader(this.stream, true,
-  this.errorThrow);
+            var newReader = new Utf16Reader(
+              this.stream,
+              true,
+              this.errorThrow);
             this.reader = newReader;
             return c2;
           } else if (c2 == 0) {
@@ -447,13 +449,17 @@ namespace PeterO.Cbor {
             c4 = this.stream.ReadByte();
             if (c3 == 0 && c4 >= 0x01 && c4 <= 0x7f) {
               // 0 0 0 NZA
-              this.reader = new Utf32Reader(this.stream, true,
-  this.errorThrow);
+              this.reader = new Utf32Reader(
+                this.stream,
+                true,
+                this.errorThrow);
               return c4;
             } else if (c3 == 0xfe && c4 == 0xff) {
               // 0 0 FE FF
-              this.reader = new Utf32Reader(this.stream, true,
-  this.errorThrow);
+              this.reader = new Utf32Reader(
+                this.stream,
+                true,
+                this.errorThrow);
               return this.reader.ReadChar();
             } else {
               // 0 0 ...
@@ -522,8 +528,10 @@ namespace PeterO.Cbor {
           c2 = this.stream.ReadByte();
           if (c2 >= 0x01 && c2 <= 0x7f) {
             // 0 NZA, so UTF-16BE
-            var newReader = new Utf16Reader(this.stream, true,
-  this.errorThrow);
+            var newReader = new Utf16Reader(
+              this.stream,
+              true,
+              this.errorThrow);
             this.reader = newReader;
             return c2;
           } else {

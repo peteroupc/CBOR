@@ -340,6 +340,8 @@ if (str[i] >= '0' && str[i] <= '9' && (i > 0 || str[i] != '-')) {
     /// greater than <paramref name='str'/> 's length, or <paramref
     /// name='str'/> 's length minus <paramref name='offset'/> is less than
     /// <paramref name='count'/>.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='str'/> is null.</exception>
     /// <remarks>Roughly speaking, a valid JSON number consists of an
     /// optional minus sign, one or more basic digits (starting with 1 to 9
     /// unless there is only one digit and that digit is 0), an optional
@@ -384,11 +386,6 @@ if (str[i] >= '0' && str[i] <= '9' && (i > 0 || str[i] != '-')) {
       var newScaleInt = 0;
       FastInteger2 newScale = null;
       int i = offset;
-#if DEBUG
-      if (!(endPos <= str.Length)) {
-        throw new ArgumentException("doesn't satisfy endPos<= str.Length");
-      }
-#endif
 
       // Ordinary number
       if (i < endPos && str[i] == '0') {
@@ -484,15 +481,6 @@ CBORObject.FromObject(EDecimal.NegativeZero);
           ++i;
         }
         for (; i < endPos; ++i) {
-#if DEBUG
-          if (!(i >= 0)) {
-            throw new ArgumentException("doesn't satisfy i >= 0");
-          }
-          if (!(i < str.Length)) {
-            throw new ArgumentException("doesn't satisfy i < str.Length");
-          }
-#endif
-
           if (str[i] >= '0' && str[i] <= '9') {
             haveDigits = true;
             var thisdigit = (int)(str[i] - '0');
@@ -638,10 +626,10 @@ CBORObject.FromObject(EDecimal.NegativeZero);
               kind == JSONOptions.ConversionKind.IntOrFloatFromDouble) {
           double dbl;
           CBORObject cbor = (kind == JSONOptions.ConversionKind.IntOrFloat) ?
-               CBORObject.FromObject(edec) :
-               CBORObject.FromObject(edec.ToDouble());
-               CBORNumber cn = cbor.AsNumber();
-               if (cbor.IsIntegral && cn.CanFitInInt64()) {
+            CBORObject.FromObject(edec) :
+            CBORObject.FromObject(edec.ToDouble());
+          CBORNumber cn = cbor.AsNumber();
+          if (cbor.IsIntegral && cn.CanFitInInt64()) {
              long v = cbor.AsInt64();
              if (v >= -(1 << 53) && v <= (1 << 53)) {
                return CBORObject.FromObject(v);

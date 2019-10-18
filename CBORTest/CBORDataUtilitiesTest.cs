@@ -124,9 +124,11 @@ namespace Test {
         if (CBORDataUtilities.ParseJSONNumber(str) != null) {
           Assert.Fail(str);
         }
+        #pragma warning disable CS0618
         if (CBORDataUtilities.ParseJSONNumber(str, false, false) != null) {
           Assert.Fail(str);
         }
+        #pragma warning restore CS0618
         if (CBORDataUtilities.ParseJSONNumber(str, false, false, true) !=
           null) {
           Assert.Fail(str);
@@ -145,13 +147,15 @@ namespace Test {
         "5.000e-01", "-5e-01",
         "5.000e01", "-5e01",
       };
-      foreach (var str in badNumbers) {
+      foreach (var str in goodNumbers) {
         if (CBORDataUtilities.ParseJSONNumber(str) == null) {
           Assert.Fail(str);
         }
+        #pragma warning disable CS0618
         if (CBORDataUtilities.ParseJSONNumber(str, false, false) == null) {
           Assert.Fail(str);
         }
+        #pragma warning restore CS0618
         if (CBORDataUtilities.ParseJSONNumber(str, false, false, true) ==
           null) {
           Assert.Fail(str);
@@ -161,16 +165,14 @@ namespace Test {
           Assert.Fail(str);
         }
       }
-      TestCommon.CompareTestEqual (
+      TestCommon.CompareTestEqual(
         ToObjectTest.TestToFromObjectRoundTrip(230).AsNumber(),
         CBORDataUtilities.ParseJSONNumber("23.0e01").AsNumber());
-      TestCommon.CompareTestEqual (
+      TestCommon.CompareTestEqual(
         ToObjectTest.TestToFromObjectRoundTrip(23).AsNumber(),
         CBORDataUtilities.ParseJSONNumber("23.0e00").AsNumber());
       cbor = CBORDataUtilities.ParseJSONNumber(
-        "1e+99999999999999999999999999",
-        false,
-        false);
+        "1e+99999999999999999999999999");
       Assert.IsTrue(cbor != null);
       Assert.IsFalse(cbor.CanFitInDouble());
       CBORTestCommon.AssertRoundTrip(cbor);

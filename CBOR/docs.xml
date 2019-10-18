@@ -43,20 +43,44 @@
 <doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String)">
 
             <summary>Parses a number whose format follows the JSON
-            specification. See #ParseJSONNumber(String, integersOnly,
-            parseOnly) for more information.</summary>
-            <param name='str'>A string to parse as a JSON string.</param>
+            specification. The method uses a JSONOptions with all default
+            properties except for a PreserveNegativeZero property of
+            false.</summary>
+            <param name='str'>A text string to parse as a JSON string.</param>
             <returns>A CBOR object that represents the parsed number. Returns
             positive zero if the number is a zero that starts with a minus sign
             (such as "-0" or "-0.0"). Returns null if the parsing fails,
             including if the string is null or empty.</returns>
 
 </doc>
+<doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,PeterO.Cbor.JSONOptions)">
+<summary>Parses a number whose format follows the JSON
+            specification (RFC 8259) and converts that number to a CBOR
+            object.</summary>
+            <param name='str'>A text string to parse as a JSON number.</param>
+            <param name='options'>An object containing options to control how
+            JSON numbers are decoded to CBOR objects. Can be null, in which
+            case a JSONOptions object with all default properties is used
+            instead.</param>
+            <returns>A CBOR object that represents the parsed number. Returns
+            null if the parsing fails, including if the string is null or
+            empty.</returns>
+            <remarks>Roughly speaking, a valid JSON number consists of an
+            optional minus sign, one or more basic digits (starting with 1 to 9
+            unless there is only one digit and that digit is 0), an optional
+            decimal point (".", full stop) with one or more basic digits, and
+            an optional letter E or e with an optional plus or minus sign and
+            one or more basic digits (the exponent). A string representing a
+            valid JSON number is not allowed to contain white space characters,
+            including spaces.</remarks>
+</doc>
 <doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,System.Boolean,System.Boolean)">
 
             <summary>Parses a number whose format follows the JSON
-            specification (RFC 8259).</summary>
-            <param name='str'>A string to parse as a JSON number.</param>
+            specification (RFC 8259). The method uses a JSONOptions with all
+            default properties except for a PreserveNegativeZero property of
+            false.</summary>
+            <param name='str'>A text string to parse as a JSON number.</param>
             <param name='integersOnly'>If true, no decimal points or exponents
             are allowed in the string. The default is false.</param>
             <param name='positiveOnly'>If true, only positive numbers are
@@ -80,7 +104,7 @@
 
             <summary>Parses a number whose format follows the JSON
             specification (RFC 8259).</summary>
-            <param name='str'>A string to parse as a JSON number.</param>
+            <param name='str'>A text string to parse as a JSON number.</param>
             <param name='integersOnly'>If true, no decimal points or exponents
             are allowed in the string. The default is false.</param>
             <param name='positiveOnly'>If true, the leading minus is disallowed
@@ -101,6 +125,36 @@
             valid JSON number is not allowed to contain white space characters,
             including spaces.</remarks>
 
+</doc>
+<doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,System.Int32,System.Int32,PeterO.Cbor.JSONOptions)">
+<summary>Parses a number whose format follows the JSON
+            specification (RFC 8259) and converts that number to a CBOR
+            object.</summary>
+            <param name='str'>A text string to parse as a JSON number.</param>
+            <param name='offset'>An index, starting at 0, showing where the
+            desired portion of <paramref name='str'/> begins.</param>
+            <param name='count'>The length, in code units, of the desired
+            portion of <paramref name='str'/> (but not more than <paramref name='str'/> 's length).</param>
+            <param name='options'>An object containing options to control how
+            JSON numbers are decoded to CBOR objects. Can be null, in which
+            case a JSONOptions object with all default properties is used
+            instead.</param>
+            <returns>A CBOR object that represents the parsed number. Returns
+            null if the parsing fails, including if the string is null or empty
+            or <paramref name='count'/> is 0 or less.</returns>
+            <exception cref='ArgumentException'>Either <paramref name='offset'/> or <paramref name='count'/> is less than 0 or
+            greater than <paramref name='str'/> 's length, or <paramref name='str'/> 's length minus <paramref name='offset'/> is less than
+            <paramref name='count'/>.</exception>
+            <remarks>Roughly speaking, a valid JSON number consists of an
+            optional minus sign, one or more basic digits (starting with 1 to 9
+            unless there is only one digit and that digit is 0), an optional
+            decimal point (".", full stop) with one or more basic digits, and
+            an optional letter E or e with an optional plus or minus sign and
+            one or more basic digits (the exponent). A string representing a
+            valid JSON number is not allowed to contain white space characters,
+            including spaces.</remarks>
+
+        <exception cref='ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,System.Int32,System.Int32,System.Boolean,PeterO.Cbor.JSONOptions)">
 <summary>Parses a number whose format follows the JSON
@@ -957,10 +1011,10 @@
             <returns>The bits of a 64-bit floating-point number stored by this
             object. The most significant bit is the sign (set means negative,
             clear means nonnegative); the next most significant 11 bits are the
-            exponent area; and the remaining bits are the mantissa area. If all
-            the bits of the exponent area are set and the mantissa area is 0,
+            exponent area; and the remaining bits are the significand area. If all
+            the bits of the exponent area are set and the significand area is 0,
             this indicates infinity. If all the bits of the exponent area are
-            set and the mantissa area is other than 0, this indicates
+            set and the significand area is other than 0, this indicates
             not-a-number (NaN).</returns>
             <exception cref='InvalidOperationException'>This object's type is
             not <c>CBORType.FloatingPoint</c>.</exception>
@@ -1223,6 +1277,9 @@
             converted to an integer by discarding its fractional part, is
             outside the range of a 64-bit unsigned integer.</exception>
 
+</doc>
+<doc name="M:PeterO.Cbor.CBORObject.CalcByteLength">
+<returns>The return value is not documented yet.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.CanFitInDouble">
 
@@ -4759,18 +4816,18 @@
 <doc name="F:PeterO.Cbor.JSONOptions.ConversionKind.Double">
 
             <summary>JSON numbers are decoded to CBOR as their closest-rounded
-            approximation as 64-bit binary floating-point numbers. The
-            distinction between positive and negative zero is
-            preserved.</summary>
+            approximation as 64-bit binary floating-point numbers. (In some
+            cases, numbers extremely close to zero may underflow to positive or
+            negative zero, and numbers of extremely large magnitude may
+            overflow to infinity.).</summary>
 
 </doc>
 <doc name="F:PeterO.Cbor.JSONOptions.ConversionKind.Full">
 
             <summary>JSON numbers are decoded to CBOR using the full precision
             given in the JSON text. This may involve numbers being converted to
-            arbitrary-precision integers or decimal numbers, where appropriate.
-            The distinction between positive and negative zero is
-            preserved.</summary>
+            arbitrary-precision integers or decimal numbers, where
+            appropriate.</summary>
 
 </doc>
 <doc name="F:PeterO.Cbor.JSONOptions.ConversionKind.IntOrFloat">
@@ -4783,7 +4840,9 @@
             non-integer based on the full precision given in the JSON text. For
             example, the JSON number 0.99999999999999999999999999999999999 is
             not an integer, so it's converted to its closest floating-point
-            approximation, namely 1.0.</summary>
+            approximation, namely 1.0. (In some cases, numbers extremely close
+            to zero may underflow to positive or negative zero, and numbers of
+            extremely large magnitude may overflow to infinity.).</summary>
 
 </doc>
 <doc name="F:PeterO.Cbor.JSONOptions.ConversionKind.IntOrFloatFromDouble">
@@ -4797,7 +4856,9 @@
             number. For example, the JSON number
             0.99999999999999999999999999999999999 is the integer 1 when rounded
             to its closest floating-point approximation (1.0), so it's
-            converted to the CBOR integer 1 (major type 0).</summary>
+            converted to the CBOR integer 1 (major type 0). (In some cases,
+            numbers extremely close to zero may underflow to zero, and numbers
+            of extremely large magnitude may overflow to infinity.).</summary>
 
 </doc>
 <doc name="F:PeterO.Cbor.JSONOptions.Default">
@@ -4815,17 +4876,20 @@
 
 </doc>
 <doc name="P:PeterO.Cbor.JSONOptions.PreserveNegativeZero">
-<summary>Gets a value indicating whether the JSON decoder should
+
+            <summary>Gets a value indicating whether the JSON decoder should
             preserve the distinction between positive zero and negative zero in
-            floating-point number formats when the decoder decodes JSON to
-            CBOR. For example the JSON number "-0.0" (which expresses negative
-            zero) is decoded to negative zero if this property is <c>true</c>,
-            and to positive zero if this property is <c>false</c>. This
-            property has no effect for number conversion kinds in which zeros
-            are always decoded as CBOR integers (such as the <c>IntOrFloat</c> and <c>IntOrFloatFromDouble</c> conversion kinds).</summary>
+            when the decoder decodes JSON to a floating-point number format
+            that makes this distinction. For a value of <c>false</c>, if the
+            result of parsing a JSON string would be a floating-point negative
+            zero, that result is a positive zero instead. (Note that this
+            property has no effect for conversion kind
+            <c>IntOrFloatFromDouble</c>, where floating-point zeros are not
+            possible.).</summary>
             <value>A value indicating whether to preserve the distinction
-            between positive zero and negative zero. The default is
-            true.</value>
+            between positive zero and negative zero when decoding JSON. The
+            default is true.</value>
+
 </doc>
 <doc name="P:PeterO.Cbor.JSONOptions.ReplaceSurrogates">
 

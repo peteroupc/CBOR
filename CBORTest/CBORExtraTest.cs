@@ -5795,12 +5795,12 @@ from i in RangeExclusive(0, 10)
       unvalue = null;
       cbor = CBORObject.FromObject(unvalue);
       Assert.AreEqual(CBORObject.Null, cbor);
-      Assert.AreEqual(null, CBORObject.Null.ToObject < int?>());
-      Assert.AreEqual(1, CBORObject.FromObject(1).ToObject < int?>());
-      Assert.AreEqual(null, CBORObject.Null.ToObject < uint?>());
-      Assert.AreEqual(1u, CBORObject.FromObject(1).ToObject < uint?>());
-      Assert.AreEqual(null, CBORObject.Null.ToObject < double?>());
-      if (CBORObject.FromObject(3.5).ToObject < double?>() != 3.5) {
+      Assert.AreEqual(null, CBORObject.Null.ToObject<int?>());
+      Assert.AreEqual(1, CBORObject.FromObject(1).ToObject<int?>());
+      Assert.AreEqual(null, CBORObject.Null.ToObject<uint?>());
+      Assert.AreEqual(1u, CBORObject.FromObject(1).ToObject<uint?>());
+      Assert.AreEqual(null, CBORObject.Null.ToObject<double?>());
+      if (CBORObject.FromObject(3.5).ToObject<double?>() != 3.5) {
         Assert.Fail();
       }
       ExoticStruct? es = null;

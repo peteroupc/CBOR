@@ -71,6 +71,7 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[AsUInt16()](#AsUInt16)</code> - Converts this object to a 16-bit unsigned integer.
 * <code>[AsUInt32()](#AsUInt32)</code> - Converts this object to a 32-bit unsigned integer.
 * <code>[AsUInt64()](#AsUInt64)</code> - Converts this object to a 64-bit unsigned integer after discarding any fractional part, if any, from its value.
+* <code>[CalcByteLength()](#CalcByteLength)</code> - Not documented yet.
 * <code>[CanFitInDouble()](#CanFitInDouble)</code> - Returns whether this object's value can be converted to a 64-bit floating point number without its value being rounded to another numerical value.
 * <code>[CanFitInInt32()](#CanFitInInt32)</code> - <b>Deprecated:</b> Instead, use .CanValueFitInInt32(), if the application allows only CBOR integers, or (cbor.IsNumber &amp;&amp;cbor.AsNumber().CanFitInInt32()), if the application allows any CBOR object convertible to an integer.
 * <code>[CanFitInInt64()](#CanFitInInt64)</code> - <b>Deprecated:</b> Instead, use CanValueFitInInt64(), if the application allows only CBOR integers, or (cbor.IsNumber &amp;&amp;cbor.AsNumber().CanFitInInt64()), if the application allows any CBOR object convertible to an integer.
@@ -1151,6 +1152,19 @@ This object does not represent a number (for this purpose, infinities and not-a-
 
  * System.OverflowException:
 This object's value, if converted to an integer by discarding its fractional part, is outside the range of a 64-bit unsigned integer.
+
+<a id="CalcByteLength"></a>
+### CalcByteLength
+
+    public long CalcByteLength();
+
+Not documented yet.
+
+Not documented yet.
+
+<b>Return Value:</b>
+
+The return value is not documented yet.
 
 <a id="CanFitInDouble"></a>
 ### CanFitInDouble

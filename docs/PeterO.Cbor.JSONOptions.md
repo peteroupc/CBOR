@@ -9,7 +9,7 @@ Includes options to control how CBOR objects are converted to JSON.
 * <code>[Base64Padding](#Base64Padding)</code> - <b>Deprecated:</b> This property now has no effect. This library now includes necessary padding when writing traditional base64 to JSON and includes no padding when writing base64url to JSON, in accordance with the revision of the CBOR specification.
 * <code>[public static readonly PeterO.Cbor.JSONOptions Default;](#Default)</code> - The default options for converting CBOR objects to JSON.
 * <code>[NumberConversion](#NumberConversion)</code> - Gets a value indicating how JSON numbers are decoded to CBOR integers.
-* <code>[PreserveNegativeZero](#PreserveNegativeZero)</code> - Gets a value indicating whether the JSON decoder should preserve the distinction between positive zero and negative zero in floating-point number formats when the decoder decodes JSON to CBOR.
+* <code>[PreserveNegativeZero](#PreserveNegativeZero)</code> - Gets a value indicating whether the JSON decoder should preserve the distinction between positive zero and negative zero in when the decoder decodes JSON to a floating-point number format that makes this distinction.
 * <code>[ReplaceSurrogates](#ReplaceSurrogates)</code> - Gets a value indicating whether surrogate code points not part of a surrogate pair (which consists of two consecutive char s forming one Unicode code point) are each replaced with a replacement character (U+FFFD).
 * <code>[ToString()](#ToString)</code> - Gets the values of this options object's properties in text form.
 
@@ -116,11 +116,11 @@ A value indicating how JSON numbers are decoded to CBOR integers. The default is
 
     public bool PreserveNegativeZero { get; }
 
-Gets a value indicating whether the JSON decoder should preserve the distinction between positive zero and negative zero in floating-point number formats when the decoder decodes JSON to CBOR. For example the JSON number "-0.0" (which expresses negative zero) is decoded to negative zero if this property is  `true` , and to positive zero if this property is  `false` . This property has no effect for number conversion kinds in which zeros are always decoded as CBOR integers (such as the  `IntOrFloat`  and  `IntOrFloatFromDouble`  conversion kinds).
+Gets a value indicating whether the JSON decoder should preserve the distinction between positive zero and negative zero in when the decoder decodes JSON to a floating-point number format that makes this distinction. For a value of  `false` , if the result of parsing a JSON string would be a floating-point negative zero, that result is a positive zero instead. (Note that this property has no effect for conversion kind  `IntOrFloatFromDouble` , where floating-point zeros are not possible.).
 
 <b>Returns:</b>
 
-A value indicating whether to preserve the distinction between positive zero and negative zero. The default is true.
+A value indicating whether to preserve the distinction between positive zero and negative zero when decoding JSON. The default is true.
 
 <a id="ReplaceSurrogates"></a>
 ### ReplaceSurrogates

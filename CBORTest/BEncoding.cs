@@ -63,10 +63,10 @@ namespace PeterO {
         }
       }
       string s = builder.ToString();
-      if (s.Length >= 2 && s[0] == '0' && s[1]=='0') {
+      if (s.Length >= 2 && s[0] == '0' && s[1] == '0') {
           throw new CBORException("Invalid integer encoding");
       }
-      if (s.Length >= 3 && s[0] == '-' && s[1]=='0' && s[2]=='0') {
+      if (s.Length >= 3 && s[0] == '-' && s[1] == '0' && s[2] == '0') {
           throw new CBORException("Invalid integer encoding");
       }
       return CBORObject.FromObject(
@@ -207,7 +207,7 @@ namespace PeterO {
         }
       }
       string s = builder.ToString();
-      if (s.Length >= 2 && s[0] == '0' && s[1]=='0') {
+      if (s.Length >= 2 && s[0] == '0' && s[1] == '0') {
           throw new CBORException("Invalid integer encoding");
       }
       EInteger numlength = EInteger.FromString(s);

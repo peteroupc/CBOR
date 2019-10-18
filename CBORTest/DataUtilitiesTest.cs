@@ -97,15 +97,19 @@ namespace Test {
       Assert.AreEqual(0xfffd, DataUtilities.CodePointAt("\udc00X", 0, 0));
       {
         object objectTemp = 0xfffd;
-        object objectTemp2 = DataUtilities.CodePointAt("\ud800\ud800", 0,
-  0);
-  Assert.AreEqual(objectTemp, objectTemp2);
+        object objectTemp2 = DataUtilities.CodePointAt(
+          "\ud800\ud800",
+          0,
+          0);
+        Assert.AreEqual(objectTemp, objectTemp2);
 }
       {
         object objectTemp = 0xfffd;
-        object objectTemp2 = DataUtilities.CodePointAt("\udc00\ud800", 0,
-  0);
-  Assert.AreEqual(objectTemp, objectTemp2);
+        object objectTemp2 = DataUtilities.CodePointAt(
+          "\udc00\ud800",
+          0,
+          0);
+        Assert.AreEqual(objectTemp, objectTemp2);
 }
       Assert.AreEqual (
         0xfffd,
@@ -115,15 +119,19 @@ namespace Test {
         DataUtilities.CodePointAt("\udc00\ud800\udc00", 0, 0));
       {
         object objectTemp = 0xfffd;
-        object objectTemp2 = DataUtilities.CodePointAt("\udc00\udc00", 0,
-  0);
-  Assert.AreEqual(objectTemp, objectTemp2);
+        object objectTemp2 = DataUtilities.CodePointAt(
+          "\udc00\udc00",
+          0,
+          0);
+        Assert.AreEqual(objectTemp, objectTemp2);
 }
       {
         object objectTemp = 0x10000;
-        object objectTemp2 = DataUtilities.CodePointAt("\ud800\udc00",
-  0, 0);
-  Assert.AreEqual(objectTemp, objectTemp2);
+        object objectTemp2 = DataUtilities.CodePointAt(
+          "\ud800\udc00",
+          0,
+          0);
+        Assert.AreEqual(objectTemp, objectTemp2);
 }
 
       Assert.AreEqual(0xd800, DataUtilities.CodePointAt("\ud800", 0, 1));
@@ -132,33 +140,41 @@ namespace Test {
       Assert.AreEqual(0xdc00, DataUtilities.CodePointAt("\udc00X", 0, 1));
       {
         object objectTemp = 0xd800;
-        object objectTemp2 = DataUtilities.CodePointAt("\ud800\ud800", 0,
-  1);
-  Assert.AreEqual(objectTemp, objectTemp2);
+        object objectTemp2 = DataUtilities.CodePointAt(
+          "\ud800\ud800",
+          0,
+          1);
+        Assert.AreEqual(objectTemp, objectTemp2);
 }
       Assert.AreEqual (
         0xd800,
         DataUtilities.CodePointAt("\ud800\ud800\udc00", 0, 1));
       {
         object objectTemp = 0xdc00;
-        object objectTemp2 = DataUtilities.CodePointAt("\udc00\ud800", 0,
-  1);
-  Assert.AreEqual(objectTemp, objectTemp2);
+        object objectTemp2 = DataUtilities.CodePointAt(
+          "\udc00\ud800",
+          0,
+          1);
+        Assert.AreEqual(objectTemp, objectTemp2);
 }
       Assert.AreEqual (
         0xdc00,
         DataUtilities.CodePointAt("\udc00\ud800\udc00", 0, 1));
       {
         object objectTemp = 0xdc00;
-        object objectTemp2 = DataUtilities.CodePointAt("\udc00\udc00", 0,
-  1);
-  Assert.AreEqual(objectTemp, objectTemp2);
+        object objectTemp2 = DataUtilities.CodePointAt(
+          "\udc00\udc00",
+          0,
+          1);
+        Assert.AreEqual(objectTemp, objectTemp2);
 }
       {
         object objectTemp = 0x10000;
-        object objectTemp2 = DataUtilities.CodePointAt("\ud800\udc00",
-  0, 1);
-  Assert.AreEqual(objectTemp, objectTemp2);
+        object objectTemp2 = DataUtilities.CodePointAt(
+          "\ud800\udc00",
+          0,
+          1);
+        Assert.AreEqual(objectTemp, objectTemp2);
 }
 
       Assert.AreEqual(-1, DataUtilities.CodePointAt("\ud800", 0, 2));
@@ -167,22 +183,28 @@ namespace Test {
       Assert.AreEqual(-1, DataUtilities.CodePointAt("\udc00X", 0, 2));
       Assert.AreEqual(-1, DataUtilities.CodePointAt("\ud800\ud800", 0, 2));
       {
-        long numberTemp = DataUtilities.CodePointAt("\ud800\ud800\udc00",
-  0, 2);
+        long numberTemp = DataUtilities.CodePointAt(
+          "\ud800\ud800\udc00",
+          0,
+          2);
         Assert.AreEqual(-1, numberTemp);
       }
       Assert.AreEqual(-1, DataUtilities.CodePointAt("\udc00\ud800", 0, 2));
       {
-        long numberTemp = DataUtilities.CodePointAt("\udc00\ud800\udc00",
-  0, 2);
+        long numberTemp = DataUtilities.CodePointAt(
+          "\udc00\ud800\udc00",
+          0,
+          2);
         Assert.AreEqual(-1, numberTemp);
       }
       Assert.AreEqual(-1, DataUtilities.CodePointAt("\udc00\udc00", 0, 2));
       {
         object objectTemp = 0x10000;
-        object objectTemp2 = DataUtilities.CodePointAt("\ud800\udc00",
-  0, 2);
-  Assert.AreEqual(objectTemp, objectTemp2);
+        object objectTemp2 = DataUtilities.CodePointAt(
+          "\ud800\udc00",
+          0,
+          2);
+        Assert.AreEqual(objectTemp, objectTemp2);
 }
     }
     [Test]
@@ -225,9 +247,11 @@ namespace Test {
       Assert.AreEqual(0xfffd, DataUtilities.CodePointBefore("A\udc00B", 2));
       {
         object objectTemp = 0xdc00;
-        object objectTemp2 = DataUtilities.CodePointBefore("A\udc00B", 2,
-  1);
-  Assert.AreEqual(objectTemp, objectTemp2);
+        object objectTemp2 = DataUtilities.CodePointBefore(
+          "A\udc00B",
+          2,
+          1);
+        Assert.AreEqual(objectTemp, objectTemp2);
 }
       Assert.AreEqual(-1, DataUtilities.CodePointBefore("A\udc00B", 2, 2));
     }
@@ -245,35 +269,35 @@ integerTemp3 = Math.Sign(DataUtilities.CodePointCompare("A",
   Assert.AreEqual(1, integerTemp3);
   integerTemp3 = Math.Sign(DataUtilities.CodePointCompare(null,
             null));
-            Assert.AreEqual(0, integerTemp3);
+          Assert.AreEqual(0, integerTemp3);
       {
-      long numberTemp = Math.Sign (
+      long numberTemp = Math.Sign(
             DataUtilities.CodePointCompare("abc", "abc"));
-            Assert.AreEqual(0, numberTemp);
+          Assert.AreEqual(0, numberTemp);
       }
       {
-        long numberTemp = Math.Sign (
+        long numberTemp = Math.Sign(
             DataUtilities.CodePointCompare(
               "\ud800\udc00",
               "\ud800\udc00"));
         Assert.AreEqual(0, numberTemp);
       }
       {
-        long numberTemp = Math.Sign (
+        long numberTemp = Math.Sign(
             DataUtilities.CodePointCompare(
               "abc",
               "\ud800\udc00"));
         Assert.AreEqual(-1, numberTemp);
       }
       {
-        long numberTemp = Math.Sign (
+        long numberTemp = Math.Sign(
             DataUtilities.CodePointCompare(
               "\uf000",
               "\ud800\udc00"));
         Assert.AreEqual(-1, numberTemp);
       }
       {
-        long numberTemp = Math.Sign (
+        long numberTemp = Math.Sign(
             DataUtilities.CodePointCompare(
               "\uf000",
               "\ud800"));
@@ -328,7 +352,7 @@ integerTemp3 = Math.Sign(DataUtilities.CodePointCompare("A",
         object objectTemp2 = DataUtilities.GetUtf8String(
           DataUtilities.GetUtf8Bytes(str, true),
           true);
-          Assert.AreEqual(objectTemp, objectTemp2);
+        Assert.AreEqual(objectTemp, objectTemp2);
 }
     }
 

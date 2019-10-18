@@ -216,16 +216,16 @@ namespace PeterO.Cbor {
 
     /// <summary>Gets a value indicating whether the JSON decoder should
     /// preserve the distinction between positive zero and negative zero in
-    /// when the decoder decodes JSON to a floating-point number format that makes
-    /// this distinction. For a value of <c>false</c>, if the result of parsing a
-    /// JSON string would be a floating-point negative zero, that result is a
-    /// positive zero instead. (Note that this property has no effect for
-    ///conversion
-    /// kind <c>IntOrFloatFromDouble</c>, where floating-point zeros are not
-    /// possible.).</item></summary>
+    /// when the decoder decodes JSON to a floating-point number format
+    /// that makes this distinction. For a value of <c>false</c>, if the
+    /// result of parsing a JSON string would be a floating-point negative
+    /// zero, that result is a positive zero instead. (Note that this
+    /// property has no effect for conversion kind
+    /// <c>IntOrFloatFromDouble</c>, where floating-point zeros are not
+    /// possible.).</summary>
     /// <value>A value indicating whether to preserve the distinction
-    /// between positive zero and negative zero when decoding JSON. The default is
-    /// true.</value>
+    /// between positive zero and negative zero when decoding JSON. The
+    /// default is true.</value>
     public bool PreserveNegativeZero {
       get;
       private set;

@@ -266,7 +266,9 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
             }
           }
         }
-        ValuePropertyLists.Add(t, ret);
+        ValuePropertyLists.Add(
+          t,
+          ret);
         return ret;
       }
     }
@@ -440,7 +442,9 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
             mapper,
             options,
             depth + 1);
-          arr.SetValue(item, i);
+          arr.SetValue(
+            item,
+            i);
         }
         return arr;
       }
@@ -460,7 +464,9 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
             mapper,
             options,
             depth + 1);
-        arr.SetValue(item, index);
+        arr.SetValue(
+          item,
+          index);
       } while (NextElement(index, dimensions));
       return arr;
     }
@@ -727,8 +733,13 @@ td.Equals (typeof(ICollection<>)) ||
           Array array = Array.CreateInstance (
               elementType,
               GetDimensions(objThis));
-          return FillArray(array, elementType, objThis, mapper, options,
-              depth);
+          return FillArray(
+            array,
+            elementType,
+            objThis,
+            mapper,
+            options,
+            depth);
         }
         if (t.GetTypeInfo().IsGenericType) {
           Type td = t.GetGenericTypeDefinition();
@@ -888,7 +899,9 @@ td.Equals(typeof(ICollection<>)) ||
               mapper,
               options,
               depth + 1);
-            key.SetValue(o, dobj);
+            key.SetValue(
+              o,
+              dobj);
           }
         }
         return o;

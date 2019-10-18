@@ -23,8 +23,10 @@ namespace PeterO.Cbor {
       List<string> strings = null;
       int delimLength = delimiter.Length;
       while (true) {
-        int index2 = str.IndexOf(delimiter, index,
-            StringComparison.Ordinal);
+        int index2 = str.IndexOf(
+          delimiter,
+          index,
+          StringComparison.Ordinal);
         if (index2 < 0) {
           if (first) {
             var strret = new string[1];

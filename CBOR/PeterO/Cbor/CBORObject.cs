@@ -1000,7 +1000,9 @@ cn.GetNumberInterface().Sign(cn.GetValue());
       // the byte array were a stream
       using (var ms = new MemoryStream(data)) {
         CBORObject o = Read(ms, options);
-        CheckCBORLength((long)data.Length, (long)ms.Position);
+        CheckCBORLength(
+          (long)data.Length,
+          (long)ms.Position);
         return o;
       }
     }
@@ -1555,8 +1557,9 @@ cn.GetNumberInterface().Sign(cn.GetValue());
       if (t.Equals(typeof(object))) {
         return this;
       }
-      // TODO: Address inconsistent implementations for EDecimal,
-      // EInteger, EFloat, and ERational in next major version (perhaps
+      // TODO: In next major version, address inconsistent
+      // implementations for EDecimal, EInteger, EFloat,
+      // and ERational (perhaps
       // by using EDecimal implementation). Also, these operations
       // might throw InvalidOperationException rather than CBORException.
       // Make them throw CBORException in next major version.
@@ -1614,7 +1617,7 @@ cn.GetNumberInterface().Sign(cn.GetValue());
       return value ?? CBORObject.Null;
     }
 
-    private int IntegerByteLength(int intValue) {
+    private static int IntegerByteLength(int intValue) {
       if (intValue < 0) {
         intValue = -(intValue + 1);
       }
@@ -1627,7 +1630,7 @@ cn.GetNumberInterface().Sign(cn.GetValue());
       }
     }
 
-    private int IntegerByteLength(long longValue) {
+    private static int IntegerByteLength(long longValue) {
       if (longValue < 0) {
         longValue = -(longValue + 1);
       }
@@ -1642,14 +1645,23 @@ cn.GetNumberInterface().Sign(cn.GetValue());
       }
     }
 
-    private long CalcByteLength() {
+  /// <summary>Not documented yet.</summary>
+  /// <returns>The return value is not documented yet.</returns>
+    public long CalcByteLength() {
+       return this.CalcByteLength(0);
+    }
+
+    private long CalcByteLength(int depth) {
+if (depth > 1000) {
+        throw new CBORException("Too deeply nested");
+      }
       long size = 0L;
       CBORObject cbor = this;
       if (cbor.IsTagged) {
         EInteger etag = cbor.MostOuterTag;
         if (etag.CanFitInInt64()) {
           long tag = etag.ToInt64Checked();
-          size = checked(size + this.IntegerByteLength(tag));
+          size = checked(size + IntegerByteLength(tag));
         } else {
           size = checked(size + 9);
         }
@@ -1659,7 +1671,7 @@ cn.GetNumberInterface().Sign(cn.GetValue());
         case CBORType.Integer: {
           if (cbor.CanValueFitInInt64()) {
             long tag = cbor.AsInt64Value();
-            size = checked(size + this.IntegerByteLength(tag));
+            size = checked(size + IntegerByteLength(tag));
             return size;
           } else {
             return checked(size + 9);
@@ -1668,19 +1680,31 @@ cn.GetNumberInterface().Sign(cn.GetValue());
         case CBORType.FloatingPoint:
           return checked(size + 9);
         case CBORType.Array:
-          size += this.IntegerByteLength(cbor.Count);
+          size = checked(size + IntegerByteLength(cbor.Count));
           for (var i = 0; i < cbor.Count; ++i) {
-            // TODO: Implement depth
-            size = checked(size + cbor.CalcByteLength());
+            size = checked(size + cbor[i].CalcByteLength(depth + 1));
           }
           return size;
-        case CBORType.Map:
-          throw new NotImplementedException();
-        case CBORType.TextString:
-          throw new NotImplementedException();
+        case CBORType.Map: {
+          ICollection<KeyValuePair<CBORObject, CBORObject>> entries =
+             this.Entries;
+          size = checked(size + IntegerByteLength(entries.Count));
+          foreach (KeyValuePair<CBORObject, CBORObject> entry in entries) {
+            CBORObject key = entry.Key;
+            CBORObject value = entry.Value;
+            size = checked(size + key.CalcByteLength(depth + 1));
+            size = checked(size + value.CalcByteLength(depth + 1));
+          }
+          return size;
+        }
+        case CBORType.TextString: {
+          long ulength = DataUtilities.GetUtf8Length(this.AsString(), false);
+          size = checked(size + IntegerByteLength(ulength));
+          return checked(size + ulength);
+        }
         case CBORType.ByteString: {
           byte[] bytes = cbor.GetByteString();
-          size = checked(size + this.IntegerByteLength(bytes.Length));
+          size = checked(size + IntegerByteLength(bytes.Length));
           return checked(size + bytes.Length);
         }
         case CBORType.Boolean:
@@ -2944,7 +2968,9 @@ cn.GetNumberInterface().Sign(cn.GetValue());
         stream.WriteByte(0xc5); // tag 5
         stream.WriteByte(0x82); // array, length 2
       }
-      Write(bignum.Exponent, stream);
+      Write(
+        bignum.Exponent,
+        stream);
       Write(bignum.Mantissa, stream);
     }
 
@@ -2974,7 +3000,9 @@ cn.GetNumberInterface().Sign(cn.GetValue());
       stream.WriteByte(0x1e);
       stream.WriteByte(0x82); // array, length 2
       Write(rational.Numerator, stream);
-      Write(rational.Denominator, stream);
+      Write(
+        rational.Denominator,
+        stream);
     }
 
     /// <summary>Writes a decimal floating-point number in CBOR format to a
@@ -3009,7 +3037,9 @@ cn.GetNumberInterface().Sign(cn.GetValue());
         stream.WriteByte(0xc4); // tag 4
         stream.WriteByte(0x82); // array, length 2
       }
-      Write(bignum.Exponent, stream);
+      Write(
+        bignum.Exponent,
+        stream);
       Write(bignum.Mantissa, stream);
     }
 
@@ -3497,7 +3527,9 @@ cn.GetNumberInterface().Sign(cn.GetValue());
         if (map.ContainsKey(mapKey)) {
           throw new ArgumentException("Key already exists");
         }
-        map.Add(mapKey, mapValue);
+        map.Add(
+          mapKey,
+          mapValue);
       } else {
         throw new InvalidOperationException("Not a map");
       }
@@ -3826,10 +3858,10 @@ cn.GetNumberInterface().Sign(cn.GetValue());
     /// <returns>The bits of a 64-bit floating-point number stored by this
     /// object. The most significant bit is the sign (set means negative,
     /// clear means nonnegative); the next most significant 11 bits are the
-    /// exponent area; and the remaining bits are the mantissa area. If all
-    /// the bits of the exponent area are set and the mantissa area is 0,
-    /// this indicates infinity. If all the bits of the exponent area are
-    /// set and the mantissa area is other than 0, this indicates
+    /// exponent area; and the remaining bits are the significand area. If
+    /// all the bits of the exponent area are set and the significand area
+    /// is 0, this indicates infinity. If all the bits of the exponent area
+    /// are set and the significand area is other than 0, this indicates
     /// not-a-number (NaN).</returns>
     /// <exception cref='InvalidOperationException'>This object's type is
     /// not <c>CBORType.FloatingPoint</c>.</exception>
@@ -4804,7 +4836,9 @@ this.MostOuterTag.Equals(bigTagValue);
           mapValue = valueOb as CBORObject;
           mapValue = mapValue ?? CBORObject.FromObject(valueOb);
         }
-        list.Insert(index, mapValue);
+        list.Insert(
+          index,
+          mapValue);
       } else {
         throw new InvalidOperationException("Not an array");
       }
@@ -6136,7 +6170,11 @@ this.MostOuterTag.Equals(bigTagValue);
       }
       if (majortype == 3) { // short text string
         var ret = new StringBuilder(firstbyte - 0x60);
-        DataUtilities.ReadUtf8FromBytes(data, 1, firstbyte - 0x60, ret,
+        DataUtilities.ReadUtf8FromBytes(
+          data,
+          1,
+          firstbyte - 0x60,
+          ret,
           false);
         return new CBORObject(CBORObjectTypeTextString, ret.ToString());
       }
@@ -6354,7 +6392,9 @@ this.MostOuterTag.Equals(bigTagValue);
           int offsetp1 = 1 + offset;
           // Check for type 3 string of short length
           int rightLength = offsetp1 + (nextbyte - 0x60);
-          CheckCBORLength(rightLength, length);
+          CheckCBORLength(
+            rightLength,
+            length);
           // Check for all ASCII text
           for (int i = offsetp1; i < length; ++i) {
             if ((data[i] & ((byte)0x80)) != 0) {
