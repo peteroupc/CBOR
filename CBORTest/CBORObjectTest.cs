@@ -489,10 +489,10 @@ namespace Test {
           ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(
               numberinfo["number"].AsString()));
         {
-          object objectTemp =
+          var dtemp =
 (double)EDecimal.FromString(numberinfo["number"].AsString()).ToDouble();
-          object objectTemp2 = cbornumber.AsDouble();
-          AreEqualExact(objectTemp, objectTemp2);
+          double dtemp2 = cbornumber.AsDouble();
+          AreEqualExact(dtemp, dtemp2);
 }
       }
     }
@@ -878,10 +878,10 @@ namespace Test {
           ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(
               numberinfo["number"].AsString()));
         {
-          object objectTemp =
+          var ftemp =
 (float)EDecimal.FromString(numberinfo["number"].AsString()).ToSingle();
-          object objectTemp2 = cbornumber.AsSingle();
-          AreEqualExact(objectTemp, objectTemp2);
+          float ftemp2 = cbornumber.AsSingle();
+          AreEqualExact(ftemp, ftemp2);
 }
       }
     }
