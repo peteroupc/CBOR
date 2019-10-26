@@ -446,15 +446,17 @@ namespace Test {
       }
       CBORObject numbers = CBORObjectTest.GetNumberData();
       for (int i = 0; i < numbers.Count; ++i) {
+        double dbl;
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
           ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(
   (string)numberinfo["number"].ToObject(typeof(string))));
-
-        CBORObjectTest.AreEqualExact((double)EDecimal.FromString(
-  (string)numberinfo["number"].ToObject(
-            typeof(string))).ToDouble(), (Double)cbornumber.ToObject(
-  typeof(double)));
+        dbl = (double)EDecimal.FromString(
+          (string)numberinfo["number"].ToObject(typeof(string)))
+          .ToDouble();
+        CBORObjectTest.AreEqualExact(
+          dbl,
+          (double)cbornumber.ToObject(typeof(double)));
       }
     }
 
@@ -700,10 +702,10 @@ namespace Test {
             EDecimal.FromString((string)numberinfo["number"].ToObject(
               typeof(string))));
         if ((bool)numberinfo["int16"].AsBoolean()) {
+          var sh = (short)TestCommon.StringToInt(
+             (string)numberinfo["integer"].ToObject(typeof(string)));
           Assert.AreEqual (
-            (short)TestCommon.StringToInt(
-  (string)numberinfo["integer"].ToObject(typeof(string))),
-
+            sh,
             cbornumber.ToObject(typeof(short)));
         } else {
           try {
@@ -923,17 +925,17 @@ namespace Test {
               typeof(string))),
             cbornumber.ToObject(typeof(long)));
           if (isdouble) {
+            long strlong = TestCommon.StringToLong(
+                (string)numberinfo["integer"].ToObject(typeof(string)));
             Assert.AreEqual (
-              TestCommon.StringToLong(
-  (string)numberinfo["integer"].ToObject(typeof(string))),
-
+              strlong,
               cbornumberdouble.ToObject(typeof(long)));
           }
           if (issingle) {
+            long strlong = TestCommon.StringToLong(
+                (string)numberinfo["integer"].ToObject(typeof(string)));
             Assert.AreEqual (
-              TestCommon.StringToLong(
-  (string)numberinfo["integer"].ToObject(typeof(string))),
-
+              strlong,
               cbornumbersingle.ToObject(typeof(long)));
           }
         } else {

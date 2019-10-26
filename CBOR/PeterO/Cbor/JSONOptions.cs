@@ -48,7 +48,7 @@ namespace PeterO.Cbor {
        /// numbers extremely close to zero may underflow to zero, and numbers
        /// of extremely large magnitude may overflow to infinity.).</summary>
        IntOrFloatFromDouble,
-    };
+    }
 
     /// <summary>Initializes a new instance of the
     /// <see cref='PeterO.Cbor.JSONOptions'/> class with default

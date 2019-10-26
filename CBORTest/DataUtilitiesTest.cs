@@ -263,17 +263,17 @@ namespace Test {
         object objectTemp2 = Math.Sign(DataUtilities.CodePointCompare(null,
         "A"));
         Assert.AreEqual(objectTemp, objectTemp2);
-}
-integerTemp3 = Math.Sign(DataUtilities.CodePointCompare("A",
-  null));
-  Assert.AreEqual(1, integerTemp3);
-  integerTemp3 = Math.Sign(DataUtilities.CodePointCompare(null,
-            null));
-          Assert.AreEqual(0, integerTemp3);
+      }
+      integerTemp3 = Math.Sign(
+        DataUtilities.CodePointCompare("A", null));
+      Assert.AreEqual(1, integerTemp3);
+      integerTemp3 = Math.Sign(
+        DataUtilities.CodePointCompare(null, null));
+      Assert.AreEqual(0, integerTemp3);
       {
-      long numberTemp = Math.Sign(
-            DataUtilities.CodePointCompare("abc", "abc"));
-          Assert.AreEqual(0, numberTemp);
+        long numberTemp = Math.Sign(
+          DataUtilities.CodePointCompare("abc", "abc"));
+        Assert.AreEqual(0, numberTemp);
       }
       {
         long numberTemp = Math.Sign(
@@ -353,7 +353,7 @@ integerTemp3 = Math.Sign(DataUtilities.CodePointCompare("A",
           DataUtilities.GetUtf8Bytes(str, true),
           true);
         Assert.AreEqual(objectTemp, objectTemp2);
-}
+      }
     }
 
     [Test]

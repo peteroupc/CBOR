@@ -153,16 +153,18 @@ namespace Test {
       TestCommon.CompareTestLess(cbor3, cbor4);
     }
 
-    public static void TestCBORMapAdd() {
+    [Test]
+    public void TestCBORMapAdd() {
       CBORObject cbor = CBORObject.NewMap();
       cbor.Add(1, 2);
       Assert.IsTrue(cbor.ContainsKey(
           ToObjectTest.TestToFromObjectRoundTrip(1)));
       {
         int varintTemp2 = cbor[
-  ToObjectTest.TestToFromObjectRoundTrip(1)].AsInt32();
-  Assert.AreEqual(2, varintTemp2);
-}
+          ToObjectTest.TestToFromObjectRoundTrip(1)]
+          .AsInt32();
+        Assert.AreEqual(CBORObject.FromObject(2), varintTemp2);
+      }
       {
         string stringTemp = cbor.ToJSONString();
         Assert.AreEqual(
@@ -186,7 +188,7 @@ namespace Test {
       CBORObject cbor = CBORObject.FromJSONString("[]");
       cbor.Add(ToObjectTest.TestToFromObjectRoundTrip(3));
       cbor.Add(ToObjectTest.TestToFromObjectRoundTrip(4));
-      byte[] bytes = cbor.EncodeToBytes();
+      byte[] bytes = CBORTestCommon.CheckEncodeToBytes(cbor);
       TestCommon.AssertByteArraysEqual (
         new byte[] { (byte)((byte)0x80 | 2), 3, 4 },
         bytes);
@@ -1059,7 +1061,7 @@ namespace Test {
         .Add("array", CBORObject.NewArray().Add(999f).Add("xyz"))
         .Add("bytes", new byte[] { 0, 1, 2 });
       // The following converts the map to CBOR
-      cbor.EncodeToBytes();
+      CBORTestCommon.CheckEncodeToBytes(cbor);
       // The following converts the map to JSON
       cbor.ToJSONString();
     }
@@ -2929,7 +2931,8 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.DecodeFromBytes(cbor.EncodeToBytes(), options);
+        CBORObject.DecodeFromBytes(CBORTestCommon.CheckEncodeToBytes(cbor),
+  options);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
         // NOTE: Intentionally empty
@@ -2972,7 +2975,8 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.DecodeFromBytes(cbor.EncodeToBytes(), options);
+        CBORObject.DecodeFromBytes(CBORTestCommon.CheckEncodeToBytes(cbor),
+  options);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
         // NOTE: Intentionally empty
@@ -3018,7 +3022,8 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.DecodeFromBytes(cbor.EncodeToBytes(), options);
+        CBORObject.DecodeFromBytes(CBORTestCommon.CheckEncodeToBytes(cbor),
+  options);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
         // NOTE: Intentionally empty
@@ -3059,7 +3064,8 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.DecodeFromBytes(cbor.EncodeToBytes(), options);
+        CBORObject.DecodeFromBytes(CBORTestCommon.CheckEncodeToBytes(cbor),
+  options);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
         // NOTE: Intentionally empty
@@ -3098,7 +3104,8 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.DecodeFromBytes(cbor.EncodeToBytes(), options);
+        CBORObject.DecodeFromBytes(CBORTestCommon.CheckEncodeToBytes(cbor),
+  options);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
         // NOTE: Intentionally empty
@@ -3115,7 +3122,7 @@ namespace Test {
       var options = new CBOREncodeOptions("ctap2canonical=true");
       for (var i = 0; i < 3000; ++i) {
         CBORObject cbor = CBORTestCommon.RandomCBORObject(r);
-        byte[] e2bytes = cbor.EncodeToBytes();
+        byte[] e2bytes = CBORTestCommon.CheckEncodeToBytes(cbor);
         byte[] bytes = e2bytes;
         cbor = CBORObject.DecodeFromBytes(bytes);
         CBORObject cbor2 = null;
@@ -3131,7 +3138,7 @@ namespace Test {
           TestCommon.AssertByteArraysEqual(bytes, bytes2);
         } catch (CBORException ex4) {
           // Canonical encoding failed, so DecodeFromBytes must fail
-          bytes = cbor.EncodeToBytes();
+          bytes = CBORTestCommon.CheckEncodeToBytes(cbor);
           try {
             CBORObject.DecodeFromBytes(bytes, options);
             Assert.Fail("Should have failed");
@@ -3184,10 +3191,15 @@ namespace Test {
     private static void TestTextStringStreamOne(string longString) {
       CBORObject cbor, cbor2;
       cbor = ToObjectTest.TestToFromObjectRoundTrip(longString);
-      cbor2 = CBORTestCommon.FromBytesTestAB(cbor.EncodeToBytes());
-      Assert.AreEqual (
-        longString,
-        CBORObject.DecodeFromBytes(cbor.EncodeToBytes()).AsString());
+      cbor2 =
+CBORTestCommon.FromBytesTestAB(CBORTestCommon.CheckEncodeToBytes(cbor));
+      {
+        object objectTemp = longString;
+        object objectTemp2 =
+CBORObject.DecodeFromBytes(
+  CBORTestCommon.CheckEncodeToBytes(cbor)).AsString();
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
       {
         object objectTemp = longString;
         object objectTemp2 = CBORObject.DecodeFromBytes(cbor.EncodeToBytes(

@@ -12,7 +12,6 @@ using System.Text;
 using PeterO;
 using PeterO.Numbers;
 
-// TODO: Add method that finds estimated byte size of CBOR objects
 // TODO: Consider deprecating most number conversion/checking methods here
 // TODO: Make .Keys, .Values, and .Entries read-only
 namespace PeterO.Cbor {
@@ -1645,19 +1644,26 @@ cn.GetNumberInterface().Sign(cn.GetValue());
       }
     }
 
-  /// <summary>Not documented yet.</summary>
+  /// <summary>Calculates the number of bytes this CBOR object takes when
+  /// serialized as a byte array using the <c>EncodeToBytes()</c> method.
+  /// This calculation assumes that integers, lengths of maps and arrays,
+  /// lengths of text and byte strings, and tag numbers are encoded in
+  /// their shortest form; that floating-point numbers are encoded in
+  /// their shortest value-preserving form; and that no indefinite-length
+  /// encodings are used.</summary>
   /// <returns>The return value is not documented yet.</returns>
-    public long CalcByteLength() {
-       return this.CalcByteLength(0);
+    public long CalcEncodedSize() {
+       return this.CalcEncodedSize(0);
     }
 
-    private long CalcByteLength(int depth) {
+    private long CalcEncodedSize(int depth) {
+      // TODO: Check circular references
 if (depth > 1000) {
         throw new CBORException("Too deeply nested");
       }
       long size = 0L;
       CBORObject cbor = this;
-      if (cbor.IsTagged) {
+      while (cbor.IsTagged) {
         EInteger etag = cbor.MostOuterTag;
         if (etag.CanFitInInt64()) {
           long tag = etag.ToInt64Checked();
@@ -1677,12 +1683,19 @@ if (depth > 1000) {
             return checked(size + 9);
           }
         }
-        case CBORType.FloatingPoint:
-          return checked(size + 9);
+        case CBORType.FloatingPoint: {
+          long valueBits = cbor.AsDoubleBits();
+          int bits = CBORUtilities.DoubleToHalfPrecisionIfSameValue(valueBits);
+          if (bits != -1) {
+            return checked(size + 3);
+          }
+          return CBORUtilities.DoubleRetainsSameValueInSingle(valueBits) ?
+checked(size + 5) : checked(size + 9);
+        }
         case CBORType.Array:
           size = checked(size + IntegerByteLength(cbor.Count));
           for (var i = 0; i < cbor.Count; ++i) {
-            size = checked(size + cbor[i].CalcByteLength(depth + 1));
+            size = checked(size + cbor[i].CalcEncodedSize(depth + 1));
           }
           return size;
         case CBORType.Map: {
@@ -1692,8 +1705,8 @@ if (depth > 1000) {
           foreach (KeyValuePair<CBORObject, CBORObject> entry in entries) {
             CBORObject key = entry.Key;
             CBORObject value = entry.Value;
-            size = checked(size + key.CalcByteLength(depth + 1));
-            size = checked(size + value.CalcByteLength(depth + 1));
+            size = checked(size + key.CalcEncodedSize(depth + 1));
+            size = checked(size + value.CalcEncodedSize(depth + 1));
           }
           return size;
         }

@@ -299,8 +299,18 @@ namespace Test {
     }
 #pragma warning restore CS0618
 
+    public static byte[] CheckEncodeToBytes(CBORObject o) {
+      byte[] bytes = o.EncodeToBytes();
+      if (bytes.Length != o.CalcEncodedSize()) {
+        string msg = "encoded size doesn't match:\no = " +
+          TestCommon.ToByteArrayString(bytes) + "\nostring = " + o.ToString();
+        Assert.AreEqual(bytes.Length, o.CalcEncodedSize(), msg);
+      }
+      return bytes;
+    }
+
     public static void AssertRoundTrip(CBORObject o) {
-      CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());
+      CBORObject o2 = FromBytesTestAB(CheckEncodeToBytes(o));
       TestCommon.CompareTestEqual(o, o2);
       TestNumber(o);
       TestCommon.AssertEqualsHashCode(o, o2);
@@ -310,11 +320,12 @@ namespace Test {
       if (!s.Equals(o.ToJSONString(), StringComparison.Ordinal)) {
         Assert.AreEqual(s, o.ToJSONString(), "o is not equal to s");
       }
+      byte[] bytes = CheckEncodeToBytes(o);
       // Test round-tripping
-      CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());
+      CBORObject o2 = FromBytesTestAB(bytes);
       if (!s.Equals(o2.ToJSONString(), StringComparison.Ordinal)) {
         string msg = "o2 is not equal to s:\no = " +
-          TestCommon.ToByteArrayString(o.EncodeToBytes()) +
+          TestCommon.ToByteArrayString(bytes) +
           "\no2 = " + TestCommon.ToByteArrayString(o2.EncodeToBytes()) +
           "\no2string = " + o2.ToString();
         Assert.AreEqual(s, o2.ToJSONString(), msg);
