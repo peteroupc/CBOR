@@ -32,7 +32,7 @@ namespace PeterO {
     }
 
     public static void Main() {
-      const String ValueParam = "TestJSON";
+      const String ValueParam = "TestNoRecur";
       // Run all the tests in this assembly
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
         if (!HasAttribute(type, typeof(TestFixtureAttribute))) {

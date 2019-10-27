@@ -151,6 +151,26 @@ namespace PeterO.Cbor {
       return false;
     }
 
+    private static void CheckDepth(CBORObject cbor, int depth) {
+        if (cbor.Type == CBORType.Array) {
+          for (var i = 0; i < cbor.Count; ++i) {
+              if (depth >= 3 && IsArrayOrMap(cbor[i])) {
+                throw new CBORException("Nesting level too deep");
+              }
+              CheckDepth(cbor[i], depth + 1);
+            }
+        } else if (cbor.Type == CBORType.Map) {
+          foreach (CBORObject key in cbor.Keys) {
+            if (depth >= 3 && (IsArrayOrMap(key) ||
+                IsArrayOrMap(cbor[key]))) {
+              throw new CBORException("Nesting level too deep");
+            }
+            CheckDepth(key, depth + 1);
+            CheckDepth(cbor[key], depth + 1);
+          }
+        }
+    }
+
     private static byte[] CtapCanonicalEncode(CBORObject a, int depth) {
       CBORObject cbor = a.Untag();
       CBORType valueAType = cbor.Type;
@@ -176,6 +196,8 @@ namespace PeterO.Cbor {
                 IsArrayOrMap(cbor[key]))) {
               throw new CBORException("Nesting level too deep");
             }
+            CheckDepth(key, depth + 1);
+            CheckDepth(cbor[key], depth + 1);
             // Check if key and value can be canonically encoded
             // (will throw an exception if they cannot)
             kv1 = new KeyValuePair<byte[], byte[]>(

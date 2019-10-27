@@ -5239,7 +5239,7 @@ public void TestCalcEncodedBytesSpecific() {
 
  cbor = CBORObject.DecodeFromBytes(new byte[] {
    (byte)0xfa, 0x56, 0x00,
-   0x69, 0x2a
+   0x69, 0x2a,
  });
  CBORTestCommon.CheckEncodeToBytes(cbor);
  cbor = CBORObject.DecodeFromBytes(new byte[] { (byte)0xf9, (byte)0xfc, 0x00 });

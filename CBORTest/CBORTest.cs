@@ -176,11 +176,11 @@ namespace Test {
 
       Assert.IsTrue(cbor.ContainsKey(ToObjectTest.TestToFromObjectRoundTrip(
             "hello")));
-      Assert.AreEqual((int)2, cbor["hello"]);
+      Assert.AreEqual((int)2, cbor["hello"].AsInt32Value());
       cbor.Set(1, 3);
       CBORObject cborone = ToObjectTest.TestToFromObjectRoundTrip(1);
       Assert.IsTrue(cbor.ContainsKey(cborone));
-      Assert.AreEqual((int)3, cbor[cborone]);
+      Assert.AreEqual((int)3, cbor[cborone].AsInt32Value());
     }
 
     [Test]
@@ -1473,8 +1473,10 @@ namespace Test {
         }
       }
     }
-
     public static CBORObject ReferenceTestObject() {
+      return ReferenceTestObject(50);
+    }
+    public static CBORObject ReferenceTestObject(int nests) {
       CBORObject root = CBORObject.NewArray();
       CBORObject arr = CBORObject.NewArray().Add("xxx").Add("yyy");
       arr.Add("zzz")
@@ -1482,7 +1484,7 @@ namespace Test {
       arr = CBORObject.FromObjectAndTag(arr, 28);
       root.Add(arr);
       CBORObject refobj;
-      for (var i = 0; i <= 50; ++i) {
+      for (var i = 0; i <= nests; ++i) {
         refobj = CBORObject.FromObjectAndTag(i, 29);
         arr = CBORObject.FromObject(new CBORObject[] {
           refobj, refobj, refobj, refobj, refobj, refobj, refobj, refobj,
@@ -1496,13 +1498,55 @@ namespace Test {
 
     [Test]
     [Timeout(5000)]
-    public void TestNoRecursiveExpansion() {
-      CBORObject root = ReferenceTestObject();
+    public void TestCtap2CanonicalReferenceTest() {
+       for (var i = 4; i <= 60; ++i) {
+           // has high recursive reference depths, higher than
+           // Ctap2Canonical supports, which is 4
+           TestCtap2CanonicalReferenceTestOne(ReferenceTestObject(i));
+       }
+    }
+    public static void TestCtap2CanonicalReferenceTestOne(CBORObject root) {
+      if (root == null) {
+        throw new ArgumentNullException(nameof(root));
+      }
       byte[] bytes = root.EncodeToBytes();
+      // NOTE: root has a nesting depth of more than four, so
+      // encoding it should fail with Ctap2Canonical
+      CBORObject origroot = root;
+      var encodeOptions = new CBOREncodeOptions("resolvereferences=true");
+      root = CBORObject.DecodeFromBytes(bytes, encodeOptions);
+      encodeOptions = new CBOREncodeOptions("ctap2canonical=true");
+      if (root == null) {
+        Assert.Fail();
+      }
+      try {
+        using (var lms = new MemoryStream()) {
+          root.WriteTo(lms, encodeOptions);
+          Assert.Fail("Should have failed");
+        }
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
+
+    [Test]
+    [Timeout(50000)]
+    public void TestNoRecursiveExpansion() {
+       for (var i = 5; i <= 60; ++i) {
+           // has high recursive reference depths
+           TestNoRecursiveExpansionOne(ReferenceTestObject(i));
+       }
+    }
+    public static void TestNoRecursiveExpansionOne(CBORObject root) {
+      if (root == null) {
+        throw new ArgumentNullException(nameof(root));
+      }
+      byte[] bytes = CBORTestCommon.CheckEncodeToBytes(root);
       var encodeOptions = new CBOREncodeOptions("resolvereferences=false");
       root = CBORObject.DecodeFromBytes(bytes, encodeOptions);
-      Console.WriteLine(root.ToString());
-      Console.WriteLine(root.EncodeToBytes().Length);
       encodeOptions = new CBOREncodeOptions("resolvereferences=true");
       root = CBORObject.DecodeFromBytes(bytes, encodeOptions);
       if (root == null) {
