@@ -1544,6 +1544,7 @@ namespace Test {
       if (root == null) {
         throw new ArgumentNullException(nameof(root));
       }
+      CBORObject origroot = root;
       byte[] bytes = CBORTestCommon.CheckEncodeToBytes(root);
       var encodeOptions = new CBOREncodeOptions("resolvereferences=false");
       root = CBORObject.DecodeFromBytes(bytes, encodeOptions);
@@ -1553,8 +1554,6 @@ namespace Test {
         Assert.Fail();
       }
       // Test a mitigation for wild recursive-reference expansions
-      root = CBORTest.ReferenceTestObject();
-      CBORObject origroot = root;
       encodeOptions = new CBOREncodeOptions("resolvereferences=true");
       root = CBORObject.DecodeFromBytes(bytes, encodeOptions);
       if (root == null) {

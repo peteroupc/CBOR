@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard1.0</TargetFrameworks>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>4.0.1</Version>
+    <Version>4.1.0</Version>
     <Owners>Peter Occil</Owners>
     <Description>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049.</Description>
     <Summary>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049. </Summary>
@@ -13,9 +13,9 @@
     <PackageLicenseExpression>CC0-1.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/peteroupc/CBOR</PackageProjectUrl>
     <PackageReleaseNotes>
-Version 4.0.1:
+Version 4.1:
 
-- Fix issue with unexpected CBORObject#ToString result for True and False.
+- JSONOptions string constructor now sets ReplaceSurrogates to false by default (previously, it was inadvertently true).
 
 </PackageReleaseNotes>
     <PackageTags>cbor data serialization binary json</PackageTags>

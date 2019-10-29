@@ -135,8 +135,6 @@ namespace PeterO.Cbor {
         "allowduplicatekeys",
         false);
       this.Base64Padding = parser.GetBoolean("base64padding", true);
-      // TODO: Note in release notes that JSONOptions string constructor
-      // inadvertently set ReplaceSurrogates to true by default
       this.ReplaceSurrogates = parser.GetBoolean(
         "replacesurrogates",
         false);

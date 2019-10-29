@@ -3558,64 +3558,19 @@ CBOREncodeOptions("allowduplicatekeys=0"));
       }
     }
     [Test]
-    public void TestMultiply() {
-      try {
-        CBORObject.Multiply(null, ToObjectTest.TestToFromObjectRoundTrip(2));
-        Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.Multiply(ToObjectTest.TestToFromObjectRoundTrip(2), null);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.Multiply (
-          CBORObject.Null,
-          ToObjectTest.TestToFromObjectRoundTrip(2));
-        Assert.Fail("Should have failed");
-      } catch (ArgumentException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.Multiply (
-          ToObjectTest.TestToFromObjectRoundTrip(2),
-          CBORObject.Null);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-
+    public void TestAsNumberMultiply() {
       var r = new RandomGenerator();
       for (var i = 0; i < 3000; ++i) {
         CBORObject o1 = CBORTestCommon.RandomNumber(r);
         CBORObject o2 = CBORTestCommon.RandomNumber(r);
         EDecimal cmpDecFrac = AsED(o1).Multiply(AsED(o2));
-        EDecimal cmpCobj = AsED(CBORObject.Multiply(
-          o1,
-          o2));
+        EDecimal cmpCobj = o1.AsNumber().Multiply(o2.AsNumber()).AsEDecimal();
         if (!cmpDecFrac.Equals(cmpCobj)) {
           TestCommon.CompareTestEqual (
             cmpDecFrac,
             cmpCobj,
             o1.ToString() + "\n" + o2.ToString());
         }
-        CBORTestCommon.AssertRoundTrip(o1);
-        CBORTestCommon.AssertRoundTrip(o2);
       }
     }
     [Test]
