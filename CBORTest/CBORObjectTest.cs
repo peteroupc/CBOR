@@ -4417,6 +4417,148 @@ CBOREncodeOptions("allowduplicatekeys=0"));
       }
     }
 
+// TODO: In next major version, consider using CBORException
+// for circular refs in EncodeToBytes
+[Test]
+public void TestEncodeToBytesCircularRefs() {
+  CBORObject cbor = CBORObject.NewArray().Add(1).Add(2);
+  cbor.Add(cbor);
+  try {
+ cbor.EncodeToBytes();
+ Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+  cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
+  cbor.Add(cbor, "test");
+  try {
+ cbor.EncodeToBytes();
+ Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+  cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
+  cbor.Add("test", cbor);
+  try {
+ cbor.EncodeToBytes();
+ Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+  cbor = CBORObject.NewArray().Add(1).Add(2);
+  cbor.Add(CBORObject.NewArray().Add(cbor));
+  try {
+ cbor.EncodeToBytes();
+ Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+  cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
+  cbor.Add(CBORObject.NewArray().Add(cbor), "test");
+  try {
+ cbor.EncodeToBytes();
+ Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+  cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
+  cbor.Add("test", CBORObject.NewArray().Add(cbor));
+  try {
+ cbor.EncodeToBytes();
+ Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+}
+
+[Test]
+public void TestCalcEncodedSizeCircularRefs() {
+  CBORObject cbor = CBORObject.NewArray().Add(1).Add(2);
+  cbor.Add(cbor);
+  try {
+ cbor.CalcEncodedSize();
+ Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+  cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
+  cbor.Add(cbor, "test");
+  try {
+ cbor.CalcEncodedSize();
+ Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+  cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
+  cbor.Add("test", cbor);
+  try {
+ cbor.CalcEncodedSize();
+ Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+  cbor = CBORObject.NewArray().Add(1).Add(2);
+  cbor.Add(CBORObject.NewArray().Add(cbor));
+  try {
+ cbor.CalcEncodedSize();
+ Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+  cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
+  cbor.Add(CBORObject.NewArray().Add(cbor), "test");
+  try {
+ cbor.CalcEncodedSize();
+ Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+  cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
+  cbor.Add("test", CBORObject.NewArray().Add(cbor));
+  try {
+ cbor.CalcEncodedSize();
+ Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+}
+
     [Test]
     public void TestClear() {
       CBORObject cbor;

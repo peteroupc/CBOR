@@ -1651,14 +1651,17 @@ cn.GetNumberInterface().Sign(cn.GetValue());
   /// their shortest form; that floating-point numbers are encoded in
   /// their shortest value-preserving form; and that no indefinite-length
   /// encodings are used.</summary>
-  /// <returns>The return value is not documented yet.</returns>
+  /// <returns>The number of bytes this CBOR object takes when serialized
+  /// as a byte array using the <c>EncodeToBytes()</c> method.</returns>
+  /// <exception type='CBORException'>The CBOR object has an extremely
+  /// deep level of nesting, including if the CBOR object is or has an
+  /// array or map that includes itself.</exception>
     public long CalcEncodedSize() {
        return this.CalcEncodedSize(0);
     }
 
     private long CalcEncodedSize(int depth) {
-      // TODO: Check circular references
-if (depth > 1000) {
+      if (depth > 1000) {
         throw new CBORException("Too deeply nested");
       }
       long size = 0L;
@@ -1695,7 +1698,8 @@ checked(size + 5) : checked(size + 9);
         case CBORType.Array:
           size = checked(size + IntegerByteLength(cbor.Count));
           for (var i = 0; i < cbor.Count; ++i) {
-            size = checked(size + cbor[i].CalcEncodedSize(depth + 1));
+            long newsize = cbor[i].CalcEncodedSize(depth + 1);
+            size = checked(size + newsize);
           }
           return size;
         case CBORType.Map: {

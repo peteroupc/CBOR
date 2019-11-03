@@ -525,6 +525,47 @@ namespace PeterO.Cbor {
       CBORObject obj,
       StringOutput writer,
       JSONOptions options) {
+      if (obj.Type == CBORType.Array || obj.Type == CBORType.Map) {
+        var stack = new List<CBORObject>();
+        WriteJSONToInternal(obj, writer, options, stack);
+      } else {
+        WriteJSONToInternal(obj, writer, options, null);
+      }
+    }
+
+    private static void PopRefIfNeeded(IList<CBORObject> stack, bool pop) {
+        if (pop && stack != null) {
+          stack.RemoveAt(stack.Count - 1);
+        }
+    }
+
+    private static bool CheckCircularRef(
+      IList<CBORObject> stack,
+      CBORObject parent,
+      CBORObject child) {
+       if (child.Type != CBORType.Array && child.Type != CBORType.Map) {
+         return false;
+       }
+       CBORObject childUntag = child.Untag();
+       if (parent.Untag() == childUntag) {
+          throw new CBORException("Circular reference in CBOR object");
+       }
+       if (stack != null) {
+         foreach (CBORObject o in stack) {
+             if (o.Untag() == childUntag) {
+                throw new CBORException("Circular reference in CBOR object");
+             }
+          }
+       }
+       stack.Add(child);
+       return true;
+    }
+
+    internal static void WriteJSONToInternal(
+      CBORObject obj,
+      StringOutput writer,
+      JSONOptions options,
+      IList<CBORObject> stack) {
       if (obj.IsNumber) {
         writer.WriteString(CBORNumber.FromCBORObject(obj).ToJSONString());
         return;
@@ -602,7 +643,9 @@ namespace PeterO.Cbor {
             if (i > 0) {
               writer.WriteCodePoint((int)',');
             }
-            WriteJSONToInternal(obj[i], writer, options);
+            bool pop = CheckCircularRef(stack, obj, obj[i]);
+            WriteJSONToInternal(obj[i], writer, options, stack);
+            PopRefIfNeeded(stack, pop);
           }
           writer.WriteCodePoint((int)']');
           break;
@@ -634,7 +677,9 @@ namespace PeterO.Cbor {
               WriteJSONStringUnquoted(key.AsString(), writer, options);
               writer.WriteCodePoint((int)'\"');
               writer.WriteCodePoint((int)':');
-              WriteJSONToInternal(value, writer, options);
+              bool pop = CheckCircularRef(stack, obj, value);
+              WriteJSONToInternal(value, writer, options, stack);
+              PopRefIfNeeded(stack, pop);
               first = false;
             }
             writer.WriteCodePoint((int)'}');
@@ -649,12 +694,28 @@ namespace PeterO.Cbor {
               in entries) {
               CBORObject key = entry.Key;
               CBORObject value = entry.Value;
-              string str = (key.Type == CBORType.TextString) ?
-                key.AsString() : key.ToJSONString();
+              string str = null;
+              switch (key.Type) {
+                case CBORType.TextString:
+                   str = key.AsString();
+                   break;
+                case CBORType.Array:
+                case CBORType.Map: {
+                   var sb = new StringBuilder();
+                   var sw = new StringOutput(sb);
+                   bool pop = CheckCircularRef(stack, obj, key);
+                   WriteJSONToInternal(key, sw, options, stack);
+                   PopRefIfNeeded(stack, pop);
+                   str = sb.ToString();
+                   break;
+                }
+                default: str = key.ToJSONString(options);
+                   break;
+              }
               if (stringMap.ContainsKey(str)) {
-                throw new
-                CBORException("Duplicate JSON string equivalents of map" +
-"\u0020keys");
+                throw new CBORException(
+                   "Duplicate JSON string equivalents of map" +
+                   "\u0020keys");
               }
               stringMap[str] = value;
             }
@@ -670,7 +731,9 @@ namespace PeterO.Cbor {
               WriteJSONStringUnquoted((string)key, writer, options);
               writer.WriteCodePoint((int)'\"');
               writer.WriteCodePoint((int)':');
-              WriteJSONToInternal(value, writer, options);
+              bool pop = CheckCircularRef(stack, obj, value);
+              WriteJSONToInternal(value, writer, options, stack);
+              PopRefIfNeeded(stack, pop);
               first = false;
             }
             writer.WriteCodePoint((int)'}');

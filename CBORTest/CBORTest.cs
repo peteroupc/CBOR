@@ -1537,9 +1537,25 @@ namespace Test {
     public void TestNoRecursiveExpansion() {
        for (var i = 5; i <= 60; ++i) {
            // has high recursive reference depths
+// var sw = new System.Diagnostics.Stopwatch();sw.Start();
+// Console.WriteLine("depth = "+i);
            TestNoRecursiveExpansionOne(ReferenceTestObject(i));
+// Console.WriteLine("elapsed=" + sw.ElapsedMilliseconds + " ms");
        }
     }
+
+    [Test]
+    [Timeout(50000)]
+    public void TestNoRecursiveExpansionJSON() {
+       for (var i = 5; i <= 60; ++i) {
+           // has high recursive reference depths
+// var sw = new System.Diagnostics.Stopwatch();sw.Start();
+// Console.WriteLine("depth = "+i);
+           TestNoRecursiveExpansionJSONOne(ReferenceTestObject(i));
+// Console.WriteLine("elapsed=" + sw.ElapsedMilliseconds + " ms");
+       }
+    }
+
     public static void TestNoRecursiveExpansionOne(CBORObject root) {
       if (root == null) {
         throw new ArgumentNullException(nameof(root));
@@ -1572,6 +1588,35 @@ namespace Test {
       }
       try {
         using (var lms = new LimitedMemoryStream(100000)) {
+          origroot.WriteTo(lms);
+        }
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
+
+    public static void TestNoRecursiveExpansionJSONOne(CBORObject root) {
+      if (root == null) {
+        throw new ArgumentNullException(nameof(root));
+      }
+      CBORObject origroot = root;
+      byte[] bytes = CBORTestCommon.CheckEncodeToBytes(root);
+      var encodeOptions = new CBOREncodeOptions("resolvereferences=false");
+      root = CBORObject.DecodeFromBytes(bytes, encodeOptions);
+      encodeOptions = new CBOREncodeOptions("resolvereferences=true");
+      root = CBORObject.DecodeFromBytes(bytes, encodeOptions);
+      if (root == null) {
+        Assert.Fail();
+      }
+      // Test a mitigation for wild recursive-reference expansions
+      encodeOptions = new CBOREncodeOptions("resolvereferences=true");
+      root = CBORObject.DecodeFromBytes(bytes, encodeOptions);
+      if (root == null) {
+        Assert.Fail();
+      }
+      try {
+        using (var lms = new LimitedMemoryStream(100000)) {
           root.WriteJSONTo(lms);
           Assert.Fail("Should have failed");
         }
@@ -1582,9 +1627,6 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        using (var lms = new LimitedMemoryStream(100000)) {
-          origroot.WriteTo(lms);
-        }
         using (var lms = new LimitedMemoryStream(100000)) {
           origroot.WriteJSONTo(lms);
         }
