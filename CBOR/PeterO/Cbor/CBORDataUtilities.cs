@@ -214,16 +214,18 @@ namespace PeterO.Cbor {
     /// valid JSON number is not allowed to contain white space characters,
     /// including spaces.</remarks>
     [Obsolete("Call the one-argument version of this method instead. If this" +
-"\u0020method call used positiveOnly = true, check that the string does not" +
-"\u0020begin" +
-"\u0020with '-' before calling that version. If this method call used" +
-"\u0020integersOnly" +
-"\u0020= true, check that the string does not contain '.', 'E', or 'e' before" +
-"\u0020calling that version.")]
-public static CBORObject ParseJSONNumber(
-    string str,
-    bool integersOnly,
-    bool positiveOnly) {
+      "\u0020method call used positiveOnly = true, check that the string" +
+"\u0020does not" +
+      "\u0020begin" +
+      "\u0020with '-' before calling that version. If this method call used" +
+      "\u0020integersOnly" +
+      "\u0020= true, check that the string does not contain '.', 'E', or 'e'" +
+"\u0020before" +
+      "\u0020calling that version.")]
+    public static CBORObject ParseJSONNumber(
+      string str,
+      bool integersOnly,
+      bool positiveOnly) {
       if (String.IsNullOrEmpty(str)) {
         return null;
       }

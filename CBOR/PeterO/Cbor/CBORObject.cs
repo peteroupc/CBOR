@@ -5229,7 +5229,9 @@ this.MostOuterTag.Equals(bigTagValue);
         default: {
           var sb = new StringBuilder();
           try {
-            CBORJson.WriteJSONToInternal(this, new StringOutput(sb),
+            CBORJson.WriteJSONToInternal(
+              this,
+              new StringOutput(sb),
               options);
           } catch (IOException ex) {
             // This is truly exceptional
@@ -6144,8 +6146,9 @@ this.MostOuterTag.Equals(bigTagValue);
             if ((uadditional >> 63) == 0) {
               // use only if additional's top bit isn't set
               // (additional is a signed long)
-              return new CBORObject(CBORObjectTypeInteger, -1 -
-                  uadditional);
+              return new CBORObject(
+                  CBORObjectTypeInteger,
+                  -1 - uadditional);
             } else {
               int low = unchecked((int)(uadditional & 0xffffffffL));
               int high = unchecked((int)((uadditional >> 32) & 0xffffffffL));
@@ -6850,7 +6853,9 @@ this.MostOuterTag.Equals(bigTagValue);
       if (cn == null) {
         throw new InvalidOperationException("not a number type");
       }
-      return cn.GetNumberInterface().AsInt32(cn.GetValue(), minValue,
+      return cn.GetNumberInterface().AsInt32(
+          cn.GetValue(),
+          minValue,
           maxValue);
     }
 

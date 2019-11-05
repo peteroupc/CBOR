@@ -163,7 +163,7 @@ namespace Test {
         int varintTemp2 = cbor[
           ToObjectTest.TestToFromObjectRoundTrip(1)]
           .AsInt32();
-        Assert.AreEqual(CBORObject.FromObject(2), varintTemp2);
+        Assert.AreEqual(2, varintTemp2);
       }
       {
         string stringTemp = cbor.ToJSONString();
@@ -765,16 +765,20 @@ namespace Test {
 
       Assert.IsTrue (
         ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf)
-        .IsNegativeInfinity());
+        .AsNumber().IsNegativeInfinity());
 
       Assert.IsTrue (
         ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
-        .IsPositiveInfinity());
+        .AsNumber().IsPositiveInfinity());
       Assert.IsTrue (
         ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.RatPosInf)
         .AsNumber().IsInfinity());
-      Assert.IsTrue(CBORObject.PositiveInfinity.IsPositiveInfinity());
-      Assert.IsTrue(CBORObject.NegativeInfinity.IsNegativeInfinity());
+
+      Assert.IsTrue(
+        CBORObject.PositiveInfinity.AsNumber().IsPositiveInfinity());
+
+      Assert.IsTrue(
+        CBORObject.NegativeInfinity.AsNumber().IsNegativeInfinity());
       Assert.IsTrue(CBORObject.NaN.AsNumber().IsNaN());
 
       CBORTestCommon.AssertRoundTrip (
@@ -2027,7 +2031,7 @@ namespace Test {
         CBORObject o1 = CBORTestCommon.RandomNumber(r);
         CBORObject o2 = CBORTestCommon.RandomNumber(r);
         EDecimal cmpDecFrac = AsED(o1).Add(AsED(o2));
-        EDecimal cmpCobj = AsED(CBORObject.Addition(o1, o2));
+        EDecimal cmpCobj = o1.AsNumber().Add(o2.AsNumber()).AsEDecimal();
         if (cmpDecFrac.CompareTo(cmpCobj) != 0) {
           string msg = "o1=" + o1.ToString() + ", o2=" + o2.ToString() +
             ", " + AsED(o1) + ", " + AsED(o2) + ", cmpCobj=" +
@@ -2046,7 +2050,7 @@ namespace Test {
         CBORObject o1 = CBORTestCommon.RandomNumber(r);
         CBORObject o2 = CBORTestCommon.RandomNumber(r);
         EDecimal cmpDecFrac = AsED(o1).Subtract(AsED(o2));
-        EDecimal cmpCobj = AsED(CBORObject.Subtract(o1, o2));
+        EDecimal cmpCobj = o1.AsNumber().Subtract(o2.AsNumber()).AsEDecimal();
         if (cmpDecFrac.CompareTo(cmpCobj) != 0) {
           string msg = "o1=" + o1.ToString() + ", o2=" + o2.ToString() +
             ", " + AsED(o1) + ", " + AsED(o2) + ", cmpCobj=" +

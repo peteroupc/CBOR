@@ -2,9 +2,9 @@
 
     public sealed struct CBORType :
         System.Enum,
+        System.IComparable,
         System.IConvertible,
-        System.IFormattable,
-        System.IComparable
+        System.IFormattable
 
 Represents a type that a CBOR object can have.
 

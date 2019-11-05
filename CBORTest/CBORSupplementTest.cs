@@ -193,42 +193,6 @@ namespace Test {
         ToObjectTest.TestToFromObjectRoundTrip((byte)8));
 
       try {
-        CBORObject.True.Abs();
-        Assert.Fail("Should have failed");
-      } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.False.Abs();
-        Assert.Fail("Should have failed");
-      } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.NewArray().Abs();
-        Assert.Fail("Should have failed");
-      } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.NewMap().Abs();
-        Assert.Fail("Should have failed");
-      } catch (InvalidOperationException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
         CBORObject.True.ToObject(typeof(ERational));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
@@ -279,6 +243,48 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
+
+    #pragma warning disable CS0618
+    [Test]
+    public void TestObsoleteAbs() {
+      try {
+        CBORObject.True.Abs();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.False.Abs();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.NewArray().Abs();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.NewMap().Abs();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
+    #pragma warning restore CS0618
 
     [Test]
     public void TestIncompleteIndefLengthArray() {

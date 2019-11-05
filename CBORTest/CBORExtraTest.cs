@@ -5783,6 +5783,13 @@ from i in RangeExclusive(0, 10)
     }
 
     [Test]
+    public void TestToObjectNull() {
+       CBORObject cbor = CBORObject.Null;
+       Assert.AreEqual(null, (string)cbor.ToObject(typeof(string)));
+       Assert.AreEqual(null, cbor.ToObject<string>());
+    }
+
+    [Test]
     public void TestNullable() {
       int? nvalue = 1;
       CBORObject cbor = CBORObject.FromObject(nvalue);

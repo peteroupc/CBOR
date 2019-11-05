@@ -491,6 +491,8 @@ namespace PeterO.Cbor {
     /// <param name='b'>The parameter <paramref name='b'/> is a CBOR
     /// object.</param>
     /// <returns>The sum of the two objects.</returns>
+    [Obsolete("May be removed in the next major version. Consider converting" +
+"\u0020the objects to CBOR numbers and performing the operation there.")]
     public static CBORObject operator +(CBORObject a, CBORObject b) {
       return Addition(a, b);
     }
@@ -502,6 +504,8 @@ namespace PeterO.Cbor {
     /// <param name='b'>The parameter <paramref name='b'/> is a CBOR
     /// object.</param>
     /// <returns>The difference of the two objects.</returns>
+    [Obsolete("May be removed in the next major version. Consider converting" +
+"\u0020the objects to CBOR numbers and performing the operation there.")]
     public static CBORObject operator -(CBORObject a, CBORObject b) {
       return Subtract(a, b);
     }
@@ -513,6 +517,8 @@ namespace PeterO.Cbor {
     /// <param name='b'>The parameter <paramref name='b'/> is a CBOR
     /// object.</param>
     /// <returns>The product of the two numbers.</returns>
+    [Obsolete("May be removed in the next major version. Consider converting" +
+"\u0020the objects to CBOR numbers and performing the operation there.")]
     public static CBORObject operator *(CBORObject a, CBORObject b) {
       return Multiply(a, b);
     }
@@ -524,6 +530,8 @@ namespace PeterO.Cbor {
     /// <param name='b'>The parameter <paramref name='b'/> is a CBOR
     /// object.</param>
     /// <returns>The quotient of the two objects.</returns>
+    [Obsolete("May be removed in the next major version. Consider converting" +
+"\u0020the objects to CBOR numbers and performing the operation there.")]
     public static CBORObject operator /(CBORObject a, CBORObject b) {
       return Divide(a, b);
     }
@@ -535,6 +543,8 @@ namespace PeterO.Cbor {
     /// <param name='b'>The parameter <paramref name='b'/> is a CBOR
     /// object.</param>
     /// <returns>The remainder of the two numbers.</returns>
+    [Obsolete("May be removed in the next major version. Consider converting" +
+"\u0020the objects to CBOR numbers and performing the operation there.")]
     public static CBORObject operator %(CBORObject a, CBORObject b) {
       return Remainder(a, b);
     }

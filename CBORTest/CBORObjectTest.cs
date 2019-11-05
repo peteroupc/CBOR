@@ -8,6 +8,7 @@ using PeterO.Numbers;
 
 namespace Test {
   [TestFixture]
+  #pragma warning disable CS0618
   public class CBORObjectTest {
     private static readonly string[] ValueJsonFails = {
       "\"\\uxxxx\"",
@@ -2389,9 +2390,7 @@ CBOREncodeOptions("allowduplicatekeys=0"));
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        #pragma warning disable CS0618
         CBORObject.FromJSONString("[]", (CBOREncodeOptions)null);
-        #pragma warning restore CS0618
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
         // NOTE: Intentionally empty
@@ -3675,9 +3674,7 @@ CBOREncodeOptions("allowduplicatekeys=0"));
       try {
         using (var ms2 = new MemoryStream(new byte[] { 0x30 })) {
           try {
-           #pragma warning disable CS0618
             CBORObject.ReadJSON(ms2, (CBOREncodeOptions)null);
-           #pragma warning restore CS0618
             Assert.Fail("Should have failed");
           } catch (ArgumentNullException) {
             // NOTE: Intentionally empty

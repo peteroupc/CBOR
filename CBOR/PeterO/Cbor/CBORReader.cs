@@ -272,8 +272,11 @@ namespace PeterO.Cbor {
         if (type == 6) {
           throw new CBORException("Tags not allowed in canonical CBOR");
         }
-        uadditional = ReadDataLength(this.stream, firstbyte, type, type ==
-7);
+        uadditional = ReadDataLength(
+          this.stream,
+          firstbyte,
+          type,
+          type == 7);
         if (type == 0) {
           return (uadditional >> 63) != 0 ?
             CBORObject.FromObject(ToUnsignedEInteger(uadditional)) :

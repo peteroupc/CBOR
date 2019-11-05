@@ -531,7 +531,6 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
       return t.Equals(typeof(long)) ? Convert.ToInt64(value,
           CultureInfo.InvariantCulture) : (t.Equals(typeof(uint)) ?
           Convert.ToInt64(value,
-
             CultureInfo.InvariantCulture) :
           Convert.ToInt32(value, CultureInfo.InvariantCulture));
     }
