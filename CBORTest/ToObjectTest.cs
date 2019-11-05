@@ -69,7 +69,7 @@ namespace Test {
           ToObjectTest.TestToFromObjectRoundTrip (
             EDecimal.FromString(numberString));
         if (!numberinfo["integer"].Equals(CBORObject.Null)) {
-          Assert.AreEqual (
+          Assert.AreEqual(
             numberinfo["integer"].ToObject(typeof(string)),
             cbornumber.ToObject(typeof(EInteger)).ToString());
         } else {
@@ -344,7 +344,7 @@ namespace Test {
   (string)numberinfo["number"].ToObject(typeof(string))));
 
         if ((bool)numberinfo["byte"].AsBoolean()) {
-          Assert.AreEqual (
+          Assert.AreEqual(
             TestCommon.StringToInt((string)numberinfo["integer"].ToObject(
               typeof(string))), ((int)(Byte)cbornumber.ToObject(
   typeof(byte))) & 0xff);
@@ -361,7 +361,7 @@ namespace Test {
         }
       }
       for (var i = 0; i < 255; ++i) {
-        Assert.AreEqual (
+        Assert.AreEqual(
           (byte)i,
           ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte)));
       }
@@ -704,7 +704,7 @@ namespace Test {
         if ((bool)numberinfo["int16"].AsBoolean()) {
           var sh = (short)TestCommon.StringToInt(
              (string)numberinfo["integer"].ToObject(typeof(string)));
-          Assert.AreEqual (
+          Assert.AreEqual(
             sh,
             cbornumber.ToObject(typeof(short)));
         } else {
@@ -795,18 +795,18 @@ namespace Test {
         CBORObject cbornumbersingle =
           ToObjectTest.TestToFromObjectRoundTrip(edec.ToSingle());
         if ((bool)numberinfo["int32"].AsBoolean()) {
-          Assert.AreEqual (
+          Assert.AreEqual(
             TestCommon.StringToInt((string)numberinfo["integer"].ToObject(
               typeof(string))),
             cbornumber.ToObject(typeof(int)));
           if (isdouble) {
-            Assert.AreEqual (
+            Assert.AreEqual(
               TestCommon.StringToInt((string)numberinfo["integer"].ToObject(
                 typeof(string))),
               cbornumberdouble.ToObject(typeof(int)));
           }
           if (issingle) {
-            Assert.AreEqual (
+            Assert.AreEqual(
               TestCommon.StringToInt((string)numberinfo["integer"].ToObject(
                 typeof(string))),
               cbornumbersingle.ToObject(typeof(int)));
@@ -920,21 +920,21 @@ namespace Test {
         CBORObject cbornumbersingle =
           ToObjectTest.TestToFromObjectRoundTrip(edec.ToSingle());
         if ((bool)numberinfo["int64"].AsBoolean()) {
-          Assert.AreEqual (
+          Assert.AreEqual(
             TestCommon.StringToLong((string)numberinfo["integer"].ToObject(
               typeof(string))),
             cbornumber.ToObject(typeof(long)));
           if (isdouble) {
             long strlong = TestCommon.StringToLong(
                 (string)numberinfo["integer"].ToObject(typeof(string)));
-            Assert.AreEqual (
+            Assert.AreEqual(
               strlong,
               cbornumberdouble.ToObject(typeof(long)));
           }
           if (issingle) {
             long strlong = TestCommon.StringToLong(
                 (string)numberinfo["integer"].ToObject(typeof(string)));
-            Assert.AreEqual (
+            Assert.AreEqual(
               strlong,
               cbornumbersingle.ToObject(typeof(long)));
           }

@@ -2016,18 +2016,14 @@ CBOREncodeOptions("allowduplicatekeys=0"));
           CBORObject cbor = ToObjectTest.TestToFromObjectRoundTrip(bj);
           byte[] bytes = CBORTestCommon.CheckEncodeToBytes(cbor);
           if (bytes.Length != bigSizes[i / 2]) {
-            Assert.AreEqual (
-              bigSizes[i / 2],
-              bytes.Length,
-              bj.ToString() + "\n" + TestCommon.ToByteArrayString(bytes));
+            Assert.Fail(bj.ToString() + "\n" +
+TestCommon.ToByteArrayString(bytes));
           }
           bytes = ToObjectTest.TestToFromObjectRoundTrip(bj)
             .EncodeToBytes(new CBOREncodeOptions(false, false, true));
           if (bytes.Length != bigSizes[i / 2]) {
-            Assert.AreEqual (
-              bigSizes[i / 2],
-              bytes.Length,
-              bj.ToString() + "\n" + TestCommon.ToByteArrayString(bytes));
+            Assert.Fail(bj.ToString() + "\n" +
+TestCommon.ToByteArrayString(bytes));
           }
           bj += EInteger.One;
         }
@@ -6218,10 +6214,8 @@ public void TestCalcEncodedBytesSpecific() {
       int cmpCobj = TestCommon.CompareTestReciprocal(o1.AsNumber(),
           o2.AsNumber());
       if (cmpDecFrac != cmpCobj) {
-        Assert.AreEqual (
-          cmpDecFrac,
-          cmpCobj,
-          TestCommon.ObjectMessages(o1, o2, "Compare: Results don't match"));
+        Assert.Fail(TestCommon.ObjectMessages(o1, o2, "Compare: Results" +
+"\u0020don't match"));
       }
       CBORTestCommon.AssertRoundTrip(o1);
       CBORTestCommon.AssertRoundTrip(o2);
