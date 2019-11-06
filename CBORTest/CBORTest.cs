@@ -1871,32 +1871,43 @@ namespace Test {
       }
     }
 
-    [Test]
-    public void TestReadWriteInt() {
-      var r = new RandomGenerator();
+    private static void TestReadWriteIntOne(int val) {
       try {
-        for (var i = 0; i < 100000; ++i) {
-          int val = unchecked((int)RandomObjects.RandomInt64(r));
           {
             using (var ms = new MemoryStream()) {
               MiniCBOR.WriteInt32(val, ms);
-              using (var ms2 = new MemoryStream(ms.ToArray())) {
-                Assert.AreEqual(val, MiniCBOR.ReadInt32(ms2));
+              byte[] msarray = ms.ToArray();
+              using (var ms2 = new MemoryStream(msarray)) {
+                Assert.AreEqual(val, MiniCBOR.ReadInt32(ms2),
+                   TestCommon.ToByteArrayString(msarray));
               }
             }
           }
           {
             using (var ms = new MemoryStream()) {
               CBORObject.Write(val, ms);
-              using (var ms2 = new MemoryStream(ms.ToArray())) {
-                Assert.AreEqual(val, MiniCBOR.ReadInt32(ms2));
+              byte[] msarray = ms.ToArray();
+              using (var ms2 = new MemoryStream(msarray)) {
+                Assert.AreEqual(val, MiniCBOR.ReadInt32(ms2),
+                   TestCommon.ToByteArrayString(msarray));
               }
             }
           }
-        }
       } catch (IOException ioex) {
         Assert.Fail(ioex.Message);
       }
+    }
+
+    [Test]
+    public void TestReadWriteInt() {
+      var r = new RandomGenerator();
+      for (var i = -70000; i < 70000; ++i) {
+        TestReadWriteIntOne(i);
+      }
+        for (var i = 0; i < 100000; ++i) {
+          int val = unchecked((int)RandomObjects.RandomInt64(r));
+          TestReadWriteIntOne(val);
+        }
     }
 
     [Test]

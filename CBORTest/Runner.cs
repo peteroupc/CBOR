@@ -32,7 +32,7 @@ namespace PeterO {
     }
 
     public static void Main() {
-      const String ValueParam = "TestNoRecur";
+      const String ValueParam = "TestReadWriteInt";
       // Run all the tests in this assembly
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
         if (!HasAttribute(type, typeof(TestFixtureAttribute))) {

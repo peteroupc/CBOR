@@ -454,9 +454,10 @@ namespace Test {
         dbl = (double)EDecimal.FromString(
           (string)numberinfo["number"].ToObject(typeof(string)))
           .ToDouble();
+        object dblobj = cbornumber.ToObject(typeof(double));
         CBORObjectTest.AreEqualExact(
           dbl,
-          (double)cbornumber.ToObject(typeof(double)));
+          (double)dblobj);
       }
     }
 
