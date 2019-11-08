@@ -129,8 +129,10 @@ namespace PeterO.DocGen {
         this.docs[memberAnchor] = docVisitor;
       }
       string memberFullName = TypeNameUtil.XmlDocMemberName(info);
-      var summary = SummaryVisitor.GetSummary(info as MemberInfo, xmldoc,
-  memberFullName);
+      var summary = SummaryVisitor.GetSummary(
+        info as MemberInfo,
+        xmldoc,
+        memberFullName);
       if (summary == null) {
         Console.WriteLine("no summary for " + memberFullName);
       } else {

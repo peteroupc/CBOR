@@ -572,6 +572,10 @@ xmlName.Equals("em", StringComparison.Ordinal)) {
     public void VisitException(INode node) {
       using (var ch = this.Change(this.exceptionStr)) {
         var cref = node.GetAttribute("cref");
+        if (cref == null) {
+          cref = String.Empty;
+          Console.WriteLine("Warning: cref attribute absent in <exception>");
+        }
         if (cref.StartsWith("T:", StringComparison.Ordinal)) {
           cref = cref.Substring(2);
         }
@@ -583,6 +587,10 @@ xmlName.Equals("em", StringComparison.Ordinal)) {
 
     public void VisitSee(INode see) {
       string cref = see.GetAttribute("cref");
+      if (cref == null) {
+        cref = String.Empty;
+        Console.WriteLine("Warning: cref attribute absent in <see>");
+      }
       if (cref.Substring(0, 2).Equals("T:", StringComparison.Ordinal)) {
         string typeName = TypeNameUtil.UndecorateTypeName(cref.Substring(2));
         string content = DocGenUtil.HtmlEscape(see.GetContent());

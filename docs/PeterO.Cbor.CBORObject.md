@@ -71,7 +71,7 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[AsUInt16()](#AsUInt16)</code> - Converts this object to a 16-bit unsigned integer.
 * <code>[AsUInt32()](#AsUInt32)</code> - Converts this object to a 32-bit unsigned integer.
 * <code>[AsUInt64()](#AsUInt64)</code> - Converts this object to a 64-bit unsigned integer after discarding any fractional part, if any, from its value.
-* <code>[CalcByteLength()](#CalcByteLength)</code> - Not documented yet.
+* <code>[CalcEncodedSize()](#CalcEncodedSize)</code> - Calculates the number of bytes this CBOR object takes when serialized as a byte array using the EncodeToBytes() method.
 * <code>[CanFitInDouble()](#CanFitInDouble)</code> - Returns whether this object's value can be converted to a 64-bit floating point number without its value being rounded to another numerical value.
 * <code>[CanFitInInt32()](#CanFitInInt32)</code> - <b>Deprecated:</b> Instead, use .CanValueFitInInt32(), if the application allows only CBOR integers, or (cbor.IsNumber &amp;&amp;cbor.AsNumber().CanFitInInt32()), if the application allows any CBOR object convertible to an integer.
 * <code>[CanFitInInt64()](#CanFitInInt64)</code> - <b>Deprecated:</b> Instead, use CanValueFitInInt64(), if the application allows only CBOR integers, or (cbor.IsNumber &amp;&amp;cbor.AsNumber().CanFitInInt64()), if the application allows any CBOR object convertible to an integer.
@@ -166,15 +166,15 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[NewArray()](#NewArray)</code> - Creates a new empty CBOR array.
 * <code>[NewMap()](#NewMap)</code> - Creates a new empty CBOR map.
 * <code>[public static readonly PeterO.Cbor.CBORObject Null;](#Null)</code> - Represents the value null.
-* <code>[PeterO.Cbor.CBORObject operator +(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#op_Addition)</code> - Adds two CBOR objects and returns their result.
-* <code>[PeterO.Cbor.CBORObject operator /(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#op_Division)</code> - Divides a CBORObject object by the value of a CBORObject object.
+* <code>[PeterO.Cbor.CBORObject operator +(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#op_Addition)</code> - <b>Deprecated:</b> May be removed in the next major version. Consider converting the objects to CBOR numbers and performing the operation there.
+* <code>[PeterO.Cbor.CBORObject operator /(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#op_Division)</code> - <b>Deprecated:</b> May be removed in the next major version. Consider converting the objects to CBOR numbers and performing the operation there.
 * <code>[bool operator &gt;(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#op_GreaterThan)</code> - Returns whether one object's value is greater than another's.
 * <code>[bool operator &gt;=(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#op_GreaterThanOrEqual)</code> - Returns whether one object's value is at least another's.
 * <code>[bool operator &lt;(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#op_LessThan)</code> - Returns whether one object's value is less than another's.
 * <code>[bool operator &lt;=(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#op_LessThanOrEqual)</code> - Returns whether one object's value is up to another's.
-* <code>[PeterO.Cbor.CBORObject operator %(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#op_Modulus)</code> - Finds the remainder that results when a CBORObject object is divided by the value of a CBORObject object.
-* <code>[PeterO.Cbor.CBORObject operator &#x2a;(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#op_Multiply)</code> - Multiplies a CBORObject object by the value of a CBORObject object.
-* <code>[PeterO.Cbor.CBORObject operator -(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#op_Subtraction)</code> - Subtracts a CBORObject object from a CBORObject object.
+* <code>[PeterO.Cbor.CBORObject operator %(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#op_Modulus)</code> - <b>Deprecated:</b> May be removed in the next major version. Consider converting the objects to CBOR numbers and performing the operation there.
+* <code>[PeterO.Cbor.CBORObject operator &#x2a;(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#op_Multiply)</code> - <b>Deprecated:</b> May be removed in the next major version. Consider converting the objects to CBOR numbers and performing the operation there.
+* <code>[PeterO.Cbor.CBORObject operator -(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#op_Subtraction)</code> - <b>Deprecated:</b> May be removed in the next major version. Consider converting the objects to CBOR numbers and performing the operation there.
 * <code>[public static readonly PeterO.Cbor.CBORObject PositiveInfinity;](#PositiveInfinity)</code> - The value positive infinity.
 * <code>[Read(System.IO.Stream)](#Read_System_IO_Stream)</code> - Reads an object in CBOR format from a data stream.
 * <code>[Read(System.IO.Stream, PeterO.Cbor.CBOREncodeOptions)](#Read_System_IO_Stream_PeterO_Cbor_CBOREncodeOptions)</code> - Reads an object in CBOR format from a data stream, using the specified options to control the decoding process.
@@ -792,7 +792,7 @@ Converts this object to the bits of a 64-bit floating-point number if this CBOR 
 
 <b>Return Value:</b>
 
-The bits of a 64-bit floating-point number stored by this object. The most significant bit is the sign (set means negative, clear means nonnegative); the next most significant 11 bits are the exponent area; and the remaining bits are the mantissa area. If all the bits of the exponent area are set and the mantissa area is 0, this indicates infinity. If all the bits of the exponent area are set and the mantissa area is other than 0, this indicates not-a-number (NaN).
+The bits of a 64-bit floating-point number stored by this object. The most significant bit is the sign (set means negative, clear means nonnegative); the next most significant 11 bits are the exponent area; and the remaining bits are the significand area. If all the bits of the exponent area are set and the significand area is 0, this indicates infinity. If all the bits of the exponent area are set and the significand area is other than 0, this indicates not-a-number (NaN).
 
 <b>Exceptions:</b>
 
@@ -1153,18 +1153,21 @@ This object does not represent a number (for this purpose, infinities and not-a-
  * System.OverflowException:
 This object's value, if converted to an integer by discarding its fractional part, is outside the range of a 64-bit unsigned integer.
 
-<a id="CalcByteLength"></a>
-### CalcByteLength
+<a id="CalcEncodedSize"></a>
+### CalcEncodedSize
 
-    public long CalcByteLength();
+    public long CalcEncodedSize();
 
-Not documented yet.
-
-Not documented yet.
+Calculates the number of bytes this CBOR object takes when serialized as a byte array using the  `EncodeToBytes()`  method. This calculation assumes that integers, lengths of maps and arrays, lengths of text and byte strings, and tag numbers are encoded in their shortest form; that floating-point numbers are encoded in their shortest value-preserving form; and that no indefinite-length encodings are used.
 
 <b>Return Value:</b>
 
-The return value is not documented yet.
+The number of bytes this CBOR object takes when serialized as a byte array using the  `EncodeToBytes()`  method.
+
+<b>Exceptions:</b>
+
+ * :
+The CBOR object has an extremely deep level of nesting, including if the CBOR object is or has an array or map that includes itself.
 
 <a id="CanFitInDouble"></a>
 ### CanFitInDouble
@@ -2792,6 +2795,8 @@ A new CBOR map.
         PeterO.Cbor.CBORObject a,
         PeterO.Cbor.CBORObject b);
 
+<b>Deprecated.</b> May be removed in the next major version. Consider converting the objects to CBOR numbers and performing the operation there.
+
 Adds two CBOR objects and returns their result.
 
 <b>Parameters:</b>
@@ -2812,6 +2817,8 @@ The sum of the two objects.
     public static PeterO.Cbor.CBORObject operator /(
         PeterO.Cbor.CBORObject a,
         PeterO.Cbor.CBORObject b);
+
+<b>Deprecated.</b> May be removed in the next major version. Consider converting the objects to CBOR numbers and performing the operation there.
 
 Divides a CBORObject object by the value of a CBORObject object.
 
@@ -2934,6 +2941,8 @@ The parameter  <i>a</i>
         PeterO.Cbor.CBORObject a,
         PeterO.Cbor.CBORObject b);
 
+<b>Deprecated.</b> May be removed in the next major version. Consider converting the objects to CBOR numbers and performing the operation there.
+
 Finds the remainder that results when a CBORObject object is divided by the value of a CBORObject object.
 
 <b>Parameters:</b>
@@ -2955,6 +2964,8 @@ The remainder of the two numbers.
         PeterO.Cbor.CBORObject a,
         PeterO.Cbor.CBORObject b);
 
+<b>Deprecated.</b> May be removed in the next major version. Consider converting the objects to CBOR numbers and performing the operation there.
+
 Multiplies a CBORObject object by the value of a CBORObject object.
 
 <b>Parameters:</b>
@@ -2975,6 +2986,8 @@ The product of the two numbers.
     public static PeterO.Cbor.CBORObject operator -(
         PeterO.Cbor.CBORObject a,
         PeterO.Cbor.CBORObject b);
+
+<b>Deprecated.</b> May be removed in the next major version. Consider converting the objects to CBOR numbers and performing the operation there.
 
 Subtracts a CBORObject object from a CBORObject object.
 

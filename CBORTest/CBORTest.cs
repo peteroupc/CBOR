@@ -1904,7 +1904,7 @@ namespace Test {
       for (var i = -70000; i < 70000; ++i) {
         TestReadWriteIntOne(i);
       }
-        for (var i = 0; i < 100000; ++i) {
+      for (var i = 0; i < 100000; ++i) {
           int val = unchecked((int)RandomObjects.RandomInt64(r));
           TestReadWriteIntOne(val);
         }

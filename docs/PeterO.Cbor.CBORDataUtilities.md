@@ -122,6 +122,10 @@ Either  <i>offset</i>
  is less than  <i>count</i>
 .
 
+ * System.ArgumentNullException:
+The parameter  <i>str</i>
+ is null.
+
 <a id="ParseJSONNumber_string_PeterO_Cbor_JSONOptions"></a>
 ### ParseJSONNumber
 

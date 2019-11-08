@@ -1653,7 +1653,7 @@ cn.GetNumberInterface().Sign(cn.GetValue());
   /// encodings are used.</summary>
   /// <returns>The number of bytes this CBOR object takes when serialized
   /// as a byte array using the <c>EncodeToBytes()</c> method.</returns>
-  /// <exception type='CBORException'>The CBOR object has an extremely
+  /// <exception cref='CBORException'>The CBOR object has an extremely
   /// deep level of nesting, including if the CBOR object is or has an
   /// array or map that includes itself.</exception>
     public long CalcEncodedSize() {
