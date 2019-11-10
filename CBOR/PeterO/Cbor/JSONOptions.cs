@@ -213,7 +213,7 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Gets a value indicating whether the JSON decoder should
-    /// preserve the distinction between positive zero and negative zero in
+    /// preserve the distinction between positive zero and negative zero
     /// when the decoder decodes JSON to a floating-point number format
     /// that makes this distinction. For a value of <c>false</c>, if the
     /// result of parsing a JSON string would be a floating-point negative
@@ -230,9 +230,9 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Gets a value indicating how JSON numbers are decoded to
-    /// CBOR integers.</summary>
-    /// <value>A value indicating how JSON numbers are decoded to CBOR
-    /// integers. The default is <c>ConversionKind.Full</c>.</value>
+    /// CBOR.</summary>
+    /// <value>A value indicating how JSON numbers are decoded to CBOR. The
+    /// default is <c>ConversionKind.Full</c>.</value>
     public ConversionKind NumberConversion {
       get;
       private set;

@@ -54,7 +54,8 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,PeterO.Cbor.JSONOptions)">
-<summary>Parses a number whose format follows the JSON
+
+            <summary>Parses a number whose format follows the JSON
             specification (RFC 8259) and converts that number to a CBOR
             object.</summary>
             <param name='str'>A text string to parse as a JSON number.</param>
@@ -73,6 +74,7 @@
             one or more basic digits (the exponent). A string representing a
             valid JSON number is not allowed to contain white space characters,
             including spaces.</remarks>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,System.Boolean,System.Boolean)">
 
@@ -127,7 +129,8 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,System.Int32,System.Int32,PeterO.Cbor.JSONOptions)">
-<summary>Parses a number whose format follows the JSON
+
+            <summary>Parses a number whose format follows the JSON
             specification (RFC 8259) and converts that number to a CBOR
             object.</summary>
             <param name='str'>A text string to parse as a JSON number.</param>
@@ -145,6 +148,7 @@
             <exception cref='ArgumentException'>Either <paramref name='offset'/> or <paramref name='count'/> is less than 0 or
             greater than <paramref name='str'/> 's length, or <paramref name='str'/> 's length minus <paramref name='offset'/> is less than
             <paramref name='count'/>.</exception>
+            <exception cref='ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception>
             <remarks>Roughly speaking, a valid JSON number consists of an
             optional minus sign, one or more basic digits (starting with 1 to 9
             unless there is only one digit and that digit is 0), an optional
@@ -154,7 +158,6 @@
             valid JSON number is not allowed to contain white space characters,
             including spaces.</remarks>
 
-        <exception cref='ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,System.Int32,System.Int32,System.Boolean,PeterO.Cbor.JSONOptions)">
 <summary>Parses a number whose format follows the JSON
@@ -562,6 +565,12 @@
             <returns>The return value is not documented yet.</returns>
 
 </doc>
+<doc name="M:PeterO.Cbor.CBORNumber.CanFitInDouble">
+
+            <summary>Not documented yet.</summary>
+            <returns>The return value is not documented yet.</returns>
+
+</doc>
 <doc name="M:PeterO.Cbor.CBORNumber.CanFitInInt32">
 
             <summary>Returns whether this object's numerical value is an
@@ -576,6 +585,24 @@
             integer, is -(2^63) or greater, and is less than 2^63.</summary>
             <returns><c>true</c> if this object's numerical value is an
             integer, is -(2^63) or greater, and is less than 2^63; otherwise, <c>false</c>.</returns>
+
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.CanFitInSingle">
+
+            <summary>Not documented yet.</summary>
+            <returns>The return value is not documented yet.</returns>
+
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.CanTruncatedIntFitInInt32">
+
+            <summary>Not documented yet.</summary>
+            <returns>The return value is not documented yet.</returns>
+
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.CanTruncatedIntFitInInt64">
+
+            <summary>Not documented yet.</summary>
+            <returns>The return value is not documented yet.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORNumber.CompareTo(PeterO.Cbor.CBORNumber)">
@@ -606,6 +633,16 @@
             <exception cref='ArgumentNullException'>The parameter <paramref name='b'/> is null.</exception>
 
 </doc>
+<doc name="M:PeterO.Cbor.CBORNumber.FromByte(System.Byte)">
+
+            <summary>Converts a byte (from 0 to 255) to an arbitrary-precision
+            decimal number.</summary>
+            <param name='inputByte'>The number to convert as a byte (from 0 to
+            255).</param>
+            <returns>This number's value as an arbitrary-precision decimal
+            number.</returns>
+
+</doc>
 <doc name="M:PeterO.Cbor.CBORNumber.FromCBORObject(PeterO.Cbor.CBORObject)">
 
             <summary>Creates a CBOR number object from a CBOR object
@@ -617,11 +654,33 @@
             null or does not represent a number.</returns>
 
 </doc>
+<doc name="M:PeterO.Cbor.CBORNumber.FromInt16(System.Int16)">
+
+            <summary>Converts a 16-bit signed integer to an arbitrary-precision
+            decimal number.</summary>
+            <param name='inputInt16'>The number to convert as a 16-bit signed
+            integer.</param>
+            <returns>This number's value as an arbitrary-precision decimal
+            number.</returns>
+
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.IsFinite">
+
+            <summary>Not documented yet.</summary>
+            <returns>The return value is not documented yet.</returns>
+
+</doc>
 <doc name="M:PeterO.Cbor.CBORNumber.IsInfinity">
 
             <summary>Gets a value indicating whether this object represents
             infinity.</summary>
             <returns><c>true</c> if this object represents infinity; otherwise, <c>false</c>.</returns>
+
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.IsInteger">
+
+            <summary>Not documented yet.</summary>
+            <returns>The return value is not documented yet.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORNumber.IsNaN">
@@ -630,6 +689,12 @@
             not-a-number value.</summary>
             <returns><c>true</c> if this object represents a not-a-number
             value; otherwise, <c>false</c>.</returns>
+
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.IsNegative">
+
+            <summary>Not documented yet.</summary>
+            <returns>The return value is not documented yet.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORNumber.IsNegativeInfinity">
@@ -644,6 +709,12 @@
             <summary>Gets a value indicating whether this object represents
             positive infinity.</summary>
             <returns><c>true</c> if this object represents positive infinity; otherwise, <c>false</c>.</returns>
+
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.IsZero">
+
+            <summary>Not documented yet.</summary>
+            <returns>The return value is not documented yet.</returns>
 
 </doc>
 <doc name="F:PeterO.Cbor.CBORNumber.Kind.Double">
@@ -716,10 +787,154 @@
             <exception cref='ArgumentNullException'>The parameter <paramref name='b'/> is null.</exception>
 
 </doc>
+<doc name="M:PeterO.Cbor.CBORNumber.ToByteChecked">
+
+            <summary>Converts this number's value to a byte (from 0 to 255) if
+            it can fit in a byte (from 0 to 255) after truncating to an
+            integer.</summary>
+            <returns>This number's value, truncated to a byte (from 0 to
+            255).</returns>
+            <exception cref='OverflowException'>This value is infinity or
+            not-a-number, or the truncated integer is less than 0 or greater
+            than 255.</exception>
+
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.ToByteIfExact">
+
+            <summary>Converts this number's value to a byte (from 0 to 255) if
+            it can fit in a byte (from 0 to 255) without rounding to a
+            different numerical value.</summary>
+            <returns>This number's value as a byte (from 0 to 255).</returns>
+            <exception cref='ArithmeticException'>This value is infinity or
+            not-a-number, is not an exact integer, or is less than 0 or greater
+            than 255.</exception>
+
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.ToByteUnchecked">
+
+            <summary>Truncates this number's value to an integer and returns
+            the least-significant bits of its two's-complement form as a byte
+            (from 0 to 255).</summary>
+            <returns>This number, converted to a byte (from 0 to 255). Returns
+            0 if this value is infinity or not-a-number.</returns>
+
+</doc>
 <doc name="M:PeterO.Cbor.CBORNumber.ToCBORObject">
 
             <summary>Converts this object's value to a CBOR object.</summary>
             <returns>A CBOR object that stores this object's value.</returns>
+
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.ToEInteger">
+
+            <summary>Not documented yet.</summary>
+            <exception cref='ArithmeticException'>This value is infinity or
+            not-a-number.</exception>
+
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.ToEIntegerIfExact">
+
+            <summary>Not documented yet.</summary>
+            <exception cref='ArithmeticException'>This value is infinity or
+            not-a-number or is not an exact integer.</exception>
+
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.ToInt16Checked">
+
+            <summary>Converts this number's value to a 16-bit signed integer if
+            it can fit in a 16-bit signed integer after truncating to an
+            integer.</summary>
+            <returns>This number's value, truncated to a 16-bit signed
+            integer.</returns>
+            <exception cref='OverflowException'>This value is infinity or
+            not-a-number, or the truncated integer is less than -32768 or
+            greater than 32767.</exception>
+
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.ToInt16IfExact">
+
+            <summary>Converts this number's value to a 16-bit signed integer if
+            it can fit in a 16-bit signed integer without rounding to a
+            different numerical value.</summary>
+            <returns>This number's value as a 16-bit signed integer.</returns>
+            <exception cref='ArithmeticException'>This value is infinity or
+            not-a-number, is not an exact integer, or is less than -32768 or
+            greater than 32767.</exception>
+
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.ToInt16Unchecked">
+
+            <summary>Truncates this number's value to an integer and returns
+            the least-significant bits of its two's-complement form as a 16-bit
+            signed integer.</summary>
+            <returns>This number, converted to a 16-bit signed integer. Returns
+            0 if this value is infinity or not-a-number.</returns>
+
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.ToInt32Checked">
+
+            <summary>Converts this number's value to a 32-bit signed integer if
+            it can fit in a 32-bit signed integer after truncating to an
+            integer.</summary>
+            <returns>This number's value, truncated to a 32-bit signed
+            integer.</returns>
+            <exception cref='OverflowException'>This value is infinity or
+            not-a-number, or the truncated integer is less than -2147483648 or
+            greater than 2147483647.</exception>
+
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.ToInt32IfExact">
+
+            <summary>Converts this number's value to a 32-bit signed integer if
+            it can fit in a 32-bit signed integer without rounding to a
+            different numerical value.</summary>
+            <returns>This number's value as a 32-bit signed integer.</returns>
+            <exception cref='ArithmeticException'>This value is infinity or
+            not-a-number, is not an exact integer, or is less than -2147483648
+            or greater than 2147483647.</exception>
+
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.ToInt32Unchecked">
+
+            <summary>Truncates this number's value to an integer and returns
+            the least-significant bits of its two's-complement form as a 32-bit
+            signed integer.</summary>
+            <returns>This number, converted to a 32-bit signed integer. Returns
+            0 if this value is infinity or not-a-number.</returns>
+
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.ToInt64Checked">
+
+            <summary>Converts this number's value to a 64-bit signed integer if
+            it can fit in a 64-bit signed integer after truncating to an
+            integer.</summary>
+            <returns>This number's value, truncated to a 64-bit signed
+            integer.</returns>
+            <exception cref='OverflowException'>This value is infinity or
+            not-a-number, or the truncated integer is less than
+            -9223372036854775808 or greater than
+            9223372036854775807.</exception>
+
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.ToInt64IfExact">
+
+            <summary>Converts this number's value to a 64-bit signed integer if
+            it can fit in a 64-bit signed integer without rounding to a
+            different numerical value.</summary>
+            <returns>This number's value as a 64-bit signed integer.</returns>
+            <exception cref='ArithmeticException'>This value is infinity or
+            not-a-number, is not an exact integer, or is less than
+            -9223372036854775808 or greater than
+            9223372036854775807.</exception>
+
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.ToInt64Unchecked">
+
+            <summary>Truncates this number's value to an integer and returns
+            the least-significant bits of its two's-complement form as a 64-bit
+            signed integer.</summary>
+            <returns>This number, converted to a 64-bit signed integer. Returns
+            0 if this value is infinity or not-a-number.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORNumber.ToString">
@@ -1011,10 +1226,10 @@
             <returns>The bits of a 64-bit floating-point number stored by this
             object. The most significant bit is the sign (set means negative,
             clear means nonnegative); the next most significant 11 bits are the
-            exponent area; and the remaining bits are the significand area. If all
-            the bits of the exponent area are set and the significand area is 0,
-            this indicates infinity. If all the bits of the exponent area are
-            set and the significand area is other than 0, this indicates
+            exponent area; and the remaining bits are the significand area. If
+            all the bits of the exponent area are set and the significand area
+            is 0, this indicates infinity. If all the bits of the exponent area
+            are set and the significand area is other than 0, this indicates
             not-a-number (NaN).</returns>
             <exception cref='InvalidOperationException'>This object's type is
             not <c>CBORType.FloatingPoint</c>.</exception>
@@ -1112,7 +1327,8 @@
             Non-integer number values are converted to integers by discarding
             their fractional parts. (NOTE: To determine whether this method
             call can succeed, call the <b>CanTruncatedIntFitInInt32</b> method
-            before calling this method. See the example.).</summary>
+            before calling this method. See the example. [TODO: Specify
+            alternative.]).</summary>
             <returns>The closest 32-bit signed integer to this
             object.</returns>
             <exception cref='InvalidOperationException'>This object does not
@@ -1146,8 +1362,7 @@
             the.NET Framework) shows a way to check whether a given CBOR object
             stores a 32-bit signed integer before getting its value.</para>
             <code>CBORObject obj = CBORObject.FromInt32(99999);
-            if (obj.Type == CBORType.Integer &amp;&amp;
-            obj.CanValueFitInInt32()) { /* Not an Int32;
+            if (obj.CanValueFitInInt32()) { /* Not an Int32;
             handle the error */ Console.WriteLine("Not a 32-bit integer."); } else {
             Console.WriteLine("The value is " + obj.AsInt32Value()); }</code> .
             </example>
@@ -1159,7 +1374,8 @@
             Non-integer numbers are converted to integers by discarding their
             fractional parts. (NOTE: To determine whether this method call can
             succeed, call the <b>CanTruncatedIntFitInInt64</b> method before
-            calling this method. See the example.).</summary>
+            calling this method. See the example. [TODO: Specify
+            alternative.]).</summary>
             <returns>The closest 64-bit signed integer to this
             object.</returns>
             <exception cref='InvalidOperationException'>This object does not
@@ -1193,8 +1409,7 @@
             the.NET Framework) shows a way to check whether a given CBOR object
             stores a 64-bit signed integer before getting its value.</para>
             <code>CBORObject obj = CBORObject.FromInt64(99999);
-            if (obj.Type ==
-            CBORType.Integer &amp;&amp; obj.CanValueFitInInt64()) {
+            if (obj.CanValueFitInInt64()) {
             &#x2f;&#x2a; Not an Int64; handle the error&#x2a;&#x2f;
             Console.WriteLine("Not a 64-bit integer."); } else {
             Console.WriteLine("The value is " + obj.AsInt64Value()); }</code> .
@@ -1280,6 +1495,22 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.CalcByteLength">
 <returns>The return value is not documented yet.</returns>
+</doc>
+<doc name="M:PeterO.Cbor.CBORObject.CalcEncodedSize">
+
+            <summary>Calculates the number of bytes this CBOR object takes when
+            serialized as a byte array using the <c>EncodeToBytes()</c> method.
+            This calculation assumes that integers, lengths of maps and arrays,
+            lengths of text and byte strings, and tag numbers are encoded in
+            their shortest form; that floating-point numbers are encoded in
+            their shortest value-preserving form; and that no indefinite-length
+            encodings are used.</summary>
+            <returns>The number of bytes this CBOR object takes when serialized
+            as a byte array using the <c>EncodeToBytes()</c> method.</returns>
+            <exception cref='PeterO.Cbor.CBORException'>The CBOR object has an extremely
+            deep level of nesting, including if the CBOR object is or has an
+            array or map that includes itself.</exception>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.CanFitInDouble">
 
@@ -2532,7 +2763,7 @@
 <doc name="P:PeterO.Cbor.CBORObject.IsUndefined">
 
             <summary>Gets a value indicating whether this value is a CBOR
-            undefined value.</summary>
+            undefined value, whether tagged or not.</summary>
             <value><c>true</c> if this value is a CBOR undefined value; otherwise, <c>false</c>.</value>
 
 </doc>
@@ -3144,9 +3375,9 @@
             <c>uint</c> , and <c>ulong</c> in.NET) or a primitive
             floating-point type ( <c>float</c> , <c>double</c> , as well as
             <c>decimal</c> in.NET), returns the result of the corresponding As*
-            method.</item>
-             <item>If the type is <c>String</c> , returns the
-            result of AsString.</item>
+            method. [TODO: Move info on deprecated As* methods here.]</item>
+            <item>If the type is <c>String</c> , returns the result of
+            AsString.</item>
              <item>If the type is <c>EFloat</c> ,
             <c>EDecimal</c> , <c>EInteger</c> , or <c>ERational</c> in the <a href='https://www.nuget.org/packages/PeterO.Numbers'><c>PeterO.Numbers</c> </a>
              library (in .NET) or the <a href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c> </a>
@@ -4834,15 +5065,15 @@
 
             <summary>A JSON number is decoded to CBOR either as a CBOR integer
             (major type 0 or 1) if the JSON number represents an integer at
-            least -(2^53) and up to 2^53, or as their
-            closest-rounded approximation as 64-bit binary floating-point
-            numbers otherwise, where a JSON number is treated as an integer or
-            non-integer based on the full precision given in the JSON text. For
-            example, the JSON number 0.99999999999999999999999999999999999 is
-            not an integer, so it's converted to its closest floating-point
-            approximation, namely 1.0. (In some cases, numbers extremely close
-            to zero may underflow to positive or negative zero, and numbers of
-            extremely large magnitude may overflow to infinity.).</summary>
+            least -(2^53)+1 and less than 2^53, or as their closest-rounded
+            approximation as 64-bit binary floating-point numbers otherwise,
+            where a JSON number is treated as an integer or non-integer based
+            on the full precision given in the JSON text. For example, the JSON
+            number 0.99999999999999999999999999999999999 is not an integer, so
+            it's converted to its closest floating-point approximation, namely
+            1.0. (In some cases, numbers extremely close to zero may underflow
+            to positive or negative zero, and numbers of extremely large
+            magnitude may overflow to infinity.).</summary>
 
 </doc>
 <doc name="F:PeterO.Cbor.JSONOptions.ConversionKind.IntOrFloatFromDouble">
@@ -4850,15 +5081,15 @@
             <summary>A JSON number is decoded to CBOR either as a CBOR integer
             (major type 0 or 1) if the number's closest-rounded approximation
             as a 64-bit binary floating-point number represents an integer at
-            least -(2^53) and up to 2^53, or as that
-            approximation otherwise, where a JSON number is treated as an
-            integer or non-integer based on its approximated floating-point
-            number. For example, the JSON number
-            0.99999999999999999999999999999999999 is the integer 1 when rounded
-            to its closest floating-point approximation (1.0), so it's
-            converted to the CBOR integer 1 (major type 0). (In some cases,
-            numbers extremely close to zero may underflow to zero, and numbers
-            of extremely large magnitude may overflow to infinity.).</summary>
+            least -(2^53)+1 and less than 2^53, or as that approximation
+            otherwise, where a JSON number is treated as an integer or
+            non-integer based on its approximated floating-point number. For
+            example, the JSON number 0.99999999999999999999999999999999999 is
+            the integer 1 when rounded to its closest floating-point
+            approximation (1.0), so it's converted to the CBOR integer 1 (major
+            type 0). (In some cases, numbers extremely close to zero may
+            underflow to zero, and numbers of extremely large magnitude may
+            overflow to infinity.).</summary>
 
 </doc>
 <doc name="F:PeterO.Cbor.JSONOptions.Default">
@@ -4870,15 +5101,15 @@
 <doc name="P:PeterO.Cbor.JSONOptions.NumberConversion">
 
             <summary>Gets a value indicating how JSON numbers are decoded to
-            CBOR integers.</summary>
-            <value>A value indicating how JSON numbers are decoded to CBOR
-            integers. The default is <c>ConversionKind.Full</c>.</value>
+            CBOR.</summary>
+            <value>A value indicating how JSON numbers are decoded to CBOR.
+            The default is <c>ConversionKind.Full</c>.</value>
 
 </doc>
 <doc name="P:PeterO.Cbor.JSONOptions.PreserveNegativeZero">
 
             <summary>Gets a value indicating whether the JSON decoder should
-            preserve the distinction between positive zero and negative zero in
+            preserve the distinction between positive zero and negative zero
             when the decoder decodes JSON to a floating-point number format
             that makes this distinction. For a value of <c>false</c>, if the
             result of parsing a JSON string would be a floating-point negative

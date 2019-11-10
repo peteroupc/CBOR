@@ -422,6 +422,8 @@ CBORObject.FromObject(Double.NaN);
     /// number.</summary>
     /// <value><c>true</c> if this object is a negative number; otherwise,
     /// <c>false</c>.</value>
+    [Obsolete("Instead, use \u0028cbor.IsNumber() &&" +
+"\u0020cbor.AsNumber().IsNegative()).")]
     public bool IsNegative {
       get {
         CBORNumber cn = CBORNumber.FromCBORObject(this);
@@ -1659,9 +1661,9 @@ cn.GetNumberInterface().Sign(cn.GetValue());
   /// encodings are used.</summary>
   /// <returns>The number of bytes this CBOR object takes when serialized
   /// as a byte array using the <c>EncodeToBytes()</c> method.</returns>
-  /// <exception cref='CBORException'>The CBOR object has an extremely
-  /// deep level of nesting, including if the CBOR object is or has an
-  /// array or map that includes itself.</exception>
+  /// <exception cref='PeterO.Cbor.CBORException'>The CBOR object has an
+  /// extremely deep level of nesting, including if the CBOR object is or
+  /// has an array or map that includes itself.</exception>
     public long CalcEncodedSize() {
        return this.CalcEncodedSize(0);
     }
@@ -2567,7 +2569,6 @@ checked(size + 5) : checked(size + 9);
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='first'/> or <paramref name='second'/> is null.</exception>
     [Obsolete("Instead, convert both CBOR objects to numbers (with" +
-
         "\u0020.AsNumber()), and use the first number's .Multiply() method.")]
     public static CBORObject Multiply(CBORObject first, CBORObject second) {
       if (first == null) {
@@ -3765,8 +3766,7 @@ checked(size + 5) : checked(size + 9);
     /// the.NET Framework) shows a way to check whether a given CBOR object
     /// stores a 32-bit signed integer before getting its value.</para>
     /// <code>CBORObject obj = CBORObject.FromInt32(99999);
-    /// if (obj.Type == CBORType.Integer &amp;&amp;
-    /// obj.CanValueFitInInt32()) { /* Not an Int32;
+    /// if (obj.CanValueFitInInt32()) { /* Not an Int32;
     /// handle the error */ Console.WriteLine("Not a 32-bit integer."); } else {
     /// Console.WriteLine("The value is " + obj.AsInt32Value()); }</code>
     ///  .
@@ -3802,8 +3802,7 @@ checked(size + 5) : checked(size + 9);
     /// the.NET Framework) shows a way to check whether a given CBOR object
     /// stores a 64-bit signed integer before getting its value.</para>
     /// <code>CBORObject obj = CBORObject.FromInt64(99999);
-    /// if (obj.Type ==
-    /// CBORType.Integer &amp;&amp; obj.CanValueFitInInt64()) {
+    /// if (obj.CanValueFitInInt64()) {
     /// &#x2f;&#x2a; Not an Int64; handle the error&#x2a;&#x2f;
     /// Console.WriteLine("Not a 64-bit integer."); } else {
     /// Console.WriteLine("The value is " + obj.AsInt64Value()); }</code>

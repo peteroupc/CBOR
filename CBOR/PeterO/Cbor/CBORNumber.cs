@@ -460,61 +460,93 @@ namespace PeterO.Cbor {
  /// <summary>Not documented yet.</summary>
  /// <returns>The return value is not documented yet.</returns>
  public bool CanTruncatedIntFitInInt32() {
-  throw new NotImplementedException();
+          return
+this.GetNumberInterface().CanTruncatedIntFitInInt32(this.GetValue());
  }
 
  /// <summary>Not documented yet.</summary>
  /// <returns>The return value is not documented yet.</returns>
  public bool CanTruncatedIntFitInInt64() {
-  throw new NotImplementedException();
+      switch (this.kind) {
+        case Kind.Integer:
+          return true;
+        default:
+          return
+
+              this.GetNumberInterface()
+.CanTruncatedIntFitInInt64(this.GetValue());
+      }
  }
 
  /// <summary>Not documented yet.</summary>
  /// <returns>The return value is not documented yet.</returns>
  public bool CanFitInSingle() {
-  throw new NotImplementedException();
+          return this.GetNumberInterface().CanFitInSingle(this.GetValue());
  }
 
  /// <summary>Not documented yet.</summary>
  /// <returns>The return value is not documented yet.</returns>
  public bool CanFitInDouble() {
-  throw new NotImplementedException();
+          return this.GetNumberInterface().CanFitInDouble(this.GetValue());
  }
 
  /// <summary>Not documented yet.</summary>
  /// <returns>The return value is not documented yet.</returns>
  public bool IsFinite() {
-  throw new NotImplementedException();
+      switch (this.kind) {
+        case Kind.Integer:
+        case Kind.EInteger:
+          return true;
+        default:
+          return !this.IsInfinity() && !this.IsNaN();
+      }
  }
 
  /// <summary>Not documented yet.</summary>
  /// <returns>The return value is not documented yet.</returns>
  public bool IsInteger() {
-  throw new NotImplementedException();
+      switch (this.kind) {
+        case Kind.Integer:
+        case Kind.EInteger:
+          return true;
+        default:
+          return this.GetNumberInterface().IsIntegral(this.GetValue());
+      }
  }
 
  /// <summary>Not documented yet.</summary>
  /// <returns>The return value is not documented yet.</returns>
  public bool IsNegative() {
-  throw new NotImplementedException();
+          return this.GetNumberInterface().IsNegative(this.GetValue());
  }
 
  /// <summary>Not documented yet.</summary>
  /// <returns>The return value is not documented yet.</returns>
  public bool IsZero() {
-  throw new NotImplementedException();
+      switch (this.kind) {
+        case Kind.Integer:
+          return ((long)this.GetValue()) == 0;
+        default: return this.GetNumberInterface().IsNumberZero(this.GetValue());
+      }
  }
 
  /// <summary>Not documented yet.</summary>
  /// <returns>The return value is not documented yet.</returns>
+ /// <exception cref='ArithmeticException'>This value is infinity or
+ /// not-a-number.</exception>
  public EInteger ToEInteger() {
-  throw new NotImplementedException();
+          return this.GetNumberInterface().AsEInteger(this.GetValue());
  }
 
  /// <summary>Not documented yet.</summary>
  /// <returns>The return value is not documented yet.</returns>
+ /// <exception cref='ArithmeticException'>This value is infinity or
+ /// not-a-number or is not an exact integer.</exception>
  public EInteger ToEIntegerIfExact() {
-  throw new NotImplementedException();
+  if (!this.IsInteger()) {
+    throw new ArithmeticException("Not an integer");
+  }
+  return this.ToEInteger();
  }
 
     // Begin integer conversions

@@ -756,6 +756,11 @@ DocGenUtil.HtmlEscape(attr.Message) + "\r\n\r\n");
                     MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
           this.WriteLine("### " + field.Name + "\r\n\r\n" + signature +
                     "\r\n\r\n");
+          var attr = field.GetCustomAttribute(typeof(ObsoleteAttribute)) as
+            ObsoleteAttribute;
+          if (attr != null) {
+            this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
+          }
           XmlDoc.VisitInnerNode(mnm, this);
         }
       }

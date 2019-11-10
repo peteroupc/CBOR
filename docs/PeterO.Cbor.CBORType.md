@@ -66,6 +66,8 @@ A map of CBOR objects.
 
     public static PeterO.Cbor.CBORType Number = 0;
 
+<b>Deprecated.</b> Use the IsNumber property of CBORObject to determine whether a CBOR object represents a number, or use the two new CBORType values instead. CBORType.Integer covers CBOR objects representing integers of major type 0 and 1. CBORType.FloatingPoint covers CBOR objects representing 16-, 32-, and 64-bit floating-point numbers.
+
 A number of any kind, including integers, big integers, floating point numbers, and decimal numbers. The floating-point value Not-a-Number is also included in the Number type.
 
 <a id="SimpleValue"></a>
