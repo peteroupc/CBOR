@@ -457,6 +457,253 @@ namespace PeterO.Cbor {
       }
     }
 
+ /// <summary>Not documented yet.</summary>
+ /// <returns>The return value is not documented yet.</returns>
+ public bool CanTruncatedIntFitInInt32() {
+  throw new NotImplementedException();
+ }
+
+ /// <summary>Not documented yet.</summary>
+ /// <returns>The return value is not documented yet.</returns>
+ public bool CanTruncatedIntFitInInt64() {
+  throw new NotImplementedException();
+ }
+
+ /// <summary>Not documented yet.</summary>
+ /// <returns>The return value is not documented yet.</returns>
+ public bool CanFitInSingle() {
+  throw new NotImplementedException();
+ }
+
+ /// <summary>Not documented yet.</summary>
+ /// <returns>The return value is not documented yet.</returns>
+ public bool CanFitInDouble() {
+  throw new NotImplementedException();
+ }
+
+ /// <summary>Not documented yet.</summary>
+ /// <returns>The return value is not documented yet.</returns>
+ public bool IsFinite() {
+  throw new NotImplementedException();
+ }
+
+ /// <summary>Not documented yet.</summary>
+ /// <returns>The return value is not documented yet.</returns>
+ public bool IsInteger() {
+  throw new NotImplementedException();
+ }
+
+ /// <summary>Not documented yet.</summary>
+ /// <returns>The return value is not documented yet.</returns>
+ public bool IsNegative() {
+  throw new NotImplementedException();
+ }
+
+ /// <summary>Not documented yet.</summary>
+ /// <returns>The return value is not documented yet.</returns>
+ public bool IsZero() {
+  throw new NotImplementedException();
+ }
+
+ /// <summary>Not documented yet.</summary>
+ /// <returns>The return value is not documented yet.</returns>
+ public EInteger ToEInteger() {
+  throw new NotImplementedException();
+ }
+
+ /// <summary>Not documented yet.</summary>
+ /// <returns>The return value is not documented yet.</returns>
+ public EInteger ToEIntegerIfExact() {
+  throw new NotImplementedException();
+ }
+
+    // Begin integer conversions
+
+    /// <summary>Converts this number's value to a byte (from 0 to 255) if
+    /// it can fit in a byte (from 0 to 255) after truncating to an
+    /// integer.</summary>
+    /// <returns>This number's value, truncated to a byte (from 0 to
+    /// 255).</returns>
+    /// <exception cref='OverflowException'>This value is infinity or
+    /// not-a-number, or the truncated integer is less than 0 or greater
+    /// than 255.</exception>
+    public byte ToByteChecked() {
+      if (!this.IsFinite()) {
+        throw new OverflowException("Value is infinity or NaN");
+      }
+      return this.ToEInteger().ToByteChecked();
+    }
+
+    /// <summary>Truncates this number's value to an integer and returns
+    /// the least-significant bits of its two's-complement form as a byte
+    /// (from 0 to 255).</summary>
+    /// <returns>This number, converted to a byte (from 0 to 255). Returns
+    /// 0 if this value is infinity or not-a-number.</returns>
+    public byte ToByteUnchecked() {
+      return this.IsFinite() ? this.ToEInteger().ToByteUnchecked() : (byte)0;
+    }
+
+    /// <summary>Converts this number's value to a byte (from 0 to 255) if
+    /// it can fit in a byte (from 0 to 255) without rounding to a
+    /// different numerical value.</summary>
+    /// <returns>This number's value as a byte (from 0 to 255).</returns>
+    /// <exception cref='ArithmeticException'>This value is infinity or
+    /// not-a-number, is not an exact integer, or is less than 0 or greater
+    /// than 255.</exception>
+    public byte ToByteIfExact() {
+      if (!this.IsFinite()) {
+        throw new OverflowException("Value is infinity or NaN");
+      }
+      if (this.IsZero()) {
+        return (byte)0;
+      }
+      if (this.IsNegative()) {
+        throw new OverflowException("Value out of range");
+      }
+      return this.ToEIntegerIfExact().ToByteChecked();
+    }
+
+    /// <summary>Converts a byte (from 0 to 255) to an arbitrary-precision
+    /// decimal number.</summary>
+    /// <param name='inputByte'>The number to convert as a byte (from 0 to
+    /// 255).</param>
+    /// <returns>This number's value as an arbitrary-precision decimal
+    /// number.</returns>
+    public static CBORNumber FromByte(byte inputByte) {
+      int val = ((int)inputByte) & 0xff;
+      return FromObject((long)val);
+    }
+
+    /// <summary>Converts this number's value to a 16-bit signed integer if
+    /// it can fit in a 16-bit signed integer after truncating to an
+    /// integer.</summary>
+    /// <returns>This number's value, truncated to a 16-bit signed
+    /// integer.</returns>
+    /// <exception cref='OverflowException'>This value is infinity or
+    /// not-a-number, or the truncated integer is less than -32768 or
+    /// greater than 32767.</exception>
+    public short ToInt16Checked() {
+      if (!this.IsFinite()) {
+        throw new OverflowException("Value is infinity or NaN");
+      }
+      return this.ToEInteger().ToInt16Checked();
+    }
+
+    /// <summary>Truncates this number's value to an integer and returns
+    /// the least-significant bits of its two's-complement form as a 16-bit
+    /// signed integer.</summary>
+    /// <returns>This number, converted to a 16-bit signed integer. Returns
+    /// 0 if this value is infinity or not-a-number.</returns>
+    public short ToInt16Unchecked() {
+      return this.IsFinite() ? this.ToEInteger().ToInt16Unchecked() : (short)0;
+    }
+
+    /// <summary>Converts this number's value to a 16-bit signed integer if
+    /// it can fit in a 16-bit signed integer without rounding to a
+    /// different numerical value.</summary>
+    /// <returns>This number's value as a 16-bit signed integer.</returns>
+    /// <exception cref='ArithmeticException'>This value is infinity or
+    /// not-a-number, is not an exact integer, or is less than -32768 or
+    /// greater than 32767.</exception>
+    public short ToInt16IfExact() {
+      if (!this.IsFinite()) {
+        throw new OverflowException("Value is infinity or NaN");
+      }
+      return this.IsZero() ? ((short)0) :
+this.ToEIntegerIfExact().ToInt16Checked();
+    }
+
+    /// <summary>Converts a 16-bit signed integer to an arbitrary-precision
+    /// decimal number.</summary>
+    /// <param name='inputInt16'>The number to convert as a 16-bit signed
+    /// integer.</param>
+    /// <returns>This number's value as an arbitrary-precision decimal
+    /// number.</returns>
+    public static CBORNumber FromInt16(short inputInt16) {
+      var val = (int)inputInt16;
+      return FromObject((long)val);
+    }
+
+    /// <summary>Converts this number's value to a 32-bit signed integer if
+    /// it can fit in a 32-bit signed integer after truncating to an
+    /// integer.</summary>
+    /// <returns>This number's value, truncated to a 32-bit signed
+    /// integer.</returns>
+    /// <exception cref='OverflowException'>This value is infinity or
+    /// not-a-number, or the truncated integer is less than -2147483648 or
+    /// greater than 2147483647.</exception>
+    public int ToInt32Checked() {
+      if (!this.IsFinite()) {
+        throw new OverflowException("Value is infinity or NaN");
+      }
+      return this.ToEInteger().ToInt32Checked();
+    }
+
+    /// <summary>Truncates this number's value to an integer and returns
+    /// the least-significant bits of its two's-complement form as a 32-bit
+    /// signed integer.</summary>
+    /// <returns>This number, converted to a 32-bit signed integer. Returns
+    /// 0 if this value is infinity or not-a-number.</returns>
+    public int ToInt32Unchecked() {
+      return this.IsFinite() ? this.ToEInteger().ToInt32Unchecked() : (int)0;
+    }
+
+    /// <summary>Converts this number's value to a 32-bit signed integer if
+    /// it can fit in a 32-bit signed integer without rounding to a
+    /// different numerical value.</summary>
+    /// <returns>This number's value as a 32-bit signed integer.</returns>
+    /// <exception cref='ArithmeticException'>This value is infinity or
+    /// not-a-number, is not an exact integer, or is less than -2147483648
+    /// or greater than 2147483647.</exception>
+    public int ToInt32IfExact() {
+      if (!this.IsFinite()) {
+        throw new OverflowException("Value is infinity or NaN");
+      }
+      return this.IsZero() ? ((int)0) :
+this.ToEIntegerIfExact().ToInt32Checked();
+    }
+
+    /// <summary>Converts this number's value to a 64-bit signed integer if
+    /// it can fit in a 64-bit signed integer after truncating to an
+    /// integer.</summary>
+    /// <returns>This number's value, truncated to a 64-bit signed
+    /// integer.</returns>
+    /// <exception cref='OverflowException'>This value is infinity or
+    /// not-a-number, or the truncated integer is less than
+    /// -9223372036854775808 or greater than
+    /// 9223372036854775807.</exception>
+    public long ToInt64Checked() {
+      if (!this.IsFinite()) {
+        throw new OverflowException("Value is infinity or NaN");
+      }
+      return this.ToEInteger().ToInt64Checked();
+    }
+
+    /// <summary>Truncates this number's value to an integer and returns
+    /// the least-significant bits of its two's-complement form as a 64-bit
+    /// signed integer.</summary>
+    /// <returns>This number, converted to a 64-bit signed integer. Returns
+    /// 0 if this value is infinity or not-a-number.</returns>
+    public long ToInt64Unchecked() {
+      return this.IsFinite() ? this.ToEInteger().ToInt64Unchecked() : 0L;
+    }
+
+    /// <summary>Converts this number's value to a 64-bit signed integer if
+    /// it can fit in a 64-bit signed integer without rounding to a
+    /// different numerical value.</summary>
+    /// <returns>This number's value as a 64-bit signed integer.</returns>
+    /// <exception cref='ArithmeticException'>This value is infinity or
+    /// not-a-number, is not an exact integer, or is less than
+    /// -9223372036854775808 or greater than
+    /// 9223372036854775807.</exception>
+    public long ToInt64IfExact() {
+      if (!this.IsFinite()) {
+        throw new OverflowException("Value is infinity or NaN");
+      }
+      return this.IsZero() ? 0L :
+this.ToEIntegerIfExact().ToInt64Checked();
+    }
+    // End integer conversions
     private static CBORNumber BignumToNumber(CBORObject o) {
       if (o.Type != CBORType.ByteString) {
         return null; // "Byte array expected");

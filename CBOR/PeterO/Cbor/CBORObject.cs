@@ -314,6 +314,8 @@ CBORObject.FromObject(Double.NaN);
     /// represents a finite number.</summary>
     /// <value><c>true</c> if this CBOR object represents a finite number;
     /// otherwise, <c>false</c>.</value>
+    [Obsolete("Instead, use the following: \u0028cbor.IsNumber &&" +
+        "\u0020cbor.AsNumber().IsFinite()).")]
     public bool IsFinite {
       get {
         if (this.IsNumber) {
@@ -331,6 +333,8 @@ CBORObject.FromObject(Double.NaN);
     /// <value><c>true</c> if this object represents an integer number,
     /// that is, a number without a fractional part; otherwise,
     /// <c>false</c>.</value>
+    [Obsolete("Instead, use the following: \u0028cbor.IsNumber &&" +
+        "\u0020cbor.AsNumber().IsInteger()).")]
     public bool IsIntegral {
       get {
         CBORNumber cn = CBORNumber.FromCBORObject(this);
@@ -372,7 +376,7 @@ CBORObject.FromObject(Double.NaN);
     }
 
     /// <summary>Gets a value indicating whether this value is a CBOR
-    /// undefined value.</summary>
+    /// undefined value, whether tagged or not.</summary>
     /// <value><c>true</c> if this value is a CBOR undefined value;
     /// otherwise, <c>false</c>.</value>
     public bool IsUndefined {
@@ -386,6 +390,8 @@ CBORObject.FromObject(Double.NaN);
     /// 0.</summary>
     /// <value><c>true</c> if this object's value equals 0; otherwise,
     /// <c>false</c>.</value>
+    [Obsolete("Instead, use the following: \u0028cbor.IsNumber &&" +
+        "\u0020cbor.AsNumber().IsZero()).")]
     public bool IsZero {
       get {
         CBORNumber cn = CBORNumber.FromCBORObject(this);
@@ -1307,10 +1313,10 @@ cn.GetNumberInterface().Sign(cn.GetValue());
     ///  , as well as
     /// <c>decimal</c>
     ///  in.NET), returns the result of the corresponding As*
-    /// method.</item>
-    ///  <item>If the type is <c>String</c>
-    ///  , returns the
-    /// result of AsString.</item>
+    /// method. [TODO: Move info on deprecated As* methods here.]</item>
+    /// <item>If the type is <c>String</c>
+    ///  , returns the result of
+    /// AsString.</item>
     ///  <item>If the type is <c>EFloat</c>
     ///  ,
     /// <c>EDecimal</c>
@@ -3739,6 +3745,8 @@ checked(size + 5) : checked(size + 9);
     /// numbers).</exception>
     /// <exception cref='OverflowException'>This object's value exceeds the
     /// range of a 16-bit signed integer.</exception>
+    [Obsolete("Instead, use the following:" +
+"\u0020\u0028cbor.AsNumber().ToInt16Checked()).")]
     public short AsInt16() {
       return (short)this.AsInt32(Int16.MinValue, Int16.MaxValue);
     }
@@ -3929,7 +3937,8 @@ checked(size + 5) : checked(size + 9);
     /// their fractional parts. (NOTE: To determine whether this method
     /// call can succeed, call the <b>CanTruncatedIntFitInInt32</b>
     ///  method
-    /// before calling this method. See the example.).</summary>
+    /// before calling this method. See the example. [TODO: Specify
+    /// alternative.]).</summary>
     /// <returns>The closest 32-bit signed integer to this
     /// object.</returns>
     /// <exception cref='InvalidOperationException'>This object does not
@@ -3958,7 +3967,8 @@ checked(size + 5) : checked(size + 9);
     /// fractional parts. (NOTE: To determine whether this method call can
     /// succeed, call the <b>CanTruncatedIntFitInInt64</b>
     ///  method before
-    /// calling this method. See the example.).</summary>
+    /// calling this method. See the example. [TODO: Specify
+    /// alternative.]).</summary>
     /// <returns>The closest 64-bit signed integer to this
     /// object.</returns>
     /// <exception cref='InvalidOperationException'>This object does not
@@ -3978,6 +3988,8 @@ checked(size + 5) : checked(size + 9);
     /// Console.WriteLine("The value is " + obj.AsInt64()); }</code>
     ///  .
     /// </example>
+    [Obsolete("Instead, use the following:" +
+"\u0020\u0028cbor.AsNumber().ToInt64Checked()).")]
     public long AsInt64() {
       CBORNumber cn = this.AsNumber();
       return cn.GetNumberInterface().AsInt64(cn.GetValue());
@@ -4025,6 +4037,8 @@ checked(size + 5) : checked(size + 9);
     /// another numerical value, or if this is a not-a-number value, even
     /// if the value's diagnostic information can't fit in a 64-bit
     /// floating point number; otherwise, <c>false</c>.</returns>
+    [Obsolete("Instead, use the following: \u0028cbor.IsNumber &&" +
+        "\u0020cbor.AsNumber().CanFitInDouble()).")]
     public bool CanFitInDouble() {
       CBORNumber cn = CBORNumber.FromCBORObject(this);
       return (cn != null) &&
@@ -4077,6 +4091,8 @@ checked(size + 5) : checked(size + 9);
     /// another numerical value, or if this is a not-a-number value, even
     /// if the value's diagnostic information can' t fit in a 32-bit
     /// floating point number; otherwise, <c>false</c>.</returns>
+    [Obsolete("Instead, use the following: \u0028cbor.IsNumber &&" +
+        "\u0020cbor.AsNumber().CanFitInSingle()).")]
     public bool CanFitInSingle() {
       CBORNumber cn = CBORNumber.FromCBORObject(this);
       return (cn != null) &&
@@ -4089,6 +4105,9 @@ checked(size + 5) : checked(size + 9);
     /// <returns><c>true</c> if this object's value, converted to an
     /// integer by discarding its fractional part, would be -(2^31) or
     /// greater, and less than 2^31; otherwise, <c>false</c>.</returns>
+    [Obsolete("Instead, use the following: \u0028cbor.CanValueFitInInt32()" +
+"\u0020if only integers of any tag are allowed, or \u0028cbor.IsNumber &&" +
+        "\u0020cbor.AsNumber().CanTruncatedIntFitInInt32()).")]
     public bool CanTruncatedIntFitInInt32() {
       CBORNumber cn = CBORNumber.FromCBORObject(this);
       return (cn != null) &&
@@ -4101,6 +4120,9 @@ checked(size + 5) : checked(size + 9);
     /// <returns><c>true</c> if this object's value, converted to an
     /// integer by discarding its fractional part, would be -(2^63) or
     /// greater, and less than 2^63; otherwise, <c>false</c>.</returns>
+    [Obsolete("Instead, use the following: \u0028cbor.CanValueFitInInt64()" +
+"\u0020if only integers of any tag are allowed, or \u0028cbor.IsNumber &&" +
+        "\u0020cbor.AsNumber().CanTruncatedIntFitInInt64()).")]
     public bool CanTruncatedIntFitInInt64() {
       CBORNumber cn = CBORNumber.FromCBORObject(this);
       return cn != null &&

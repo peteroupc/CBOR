@@ -423,11 +423,19 @@ IsMethodOverride((MethodInfo)method)) {
           first = false;
         }
         if (ifaces.Length > 0) {
+          // Sort interface names to ensure they are
+          // displayed in a consistent order. Apparently, GetInterfaces
+          // can return such interfaces in an unspecified order.
+          var ifacenames = new List<string>();
           foreach (var iface in ifaces) {
+            ifacenames.Add(FormatType(iface));
+          }
+          ifacenames.Sort();
+          foreach (var ifacename in ifacenames) {
             if (!first) {
               builder.Append(",\r\n" + FourSpaces);
             }
-            builder.Append(FourSpaces + FormatType(iface));
+            builder.Append(FourSpaces + ifacename);
             first = false;
           }
         }
