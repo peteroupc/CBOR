@@ -34,7 +34,7 @@ namespace PeterO.Cbor {
           throw new CBORException(ex.Message, ex);
         }
       } else if (obj.HasMostOuterTag(1)) {
-        if (!obj.IsFinite) {
+        if (!obj.IsNumber || !obj.AsNumber().IsFinite()) {
           throw new CBORException("Not a finite number");
         }
         EDecimal dec;

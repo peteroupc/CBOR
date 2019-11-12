@@ -33,7 +33,7 @@ namespace Test {
       String b = "i" + TestCommon.LongToString(value) + "e";
       CBORObject beo = EncodingFromBytes(DataUtilities.GetUtf8Bytes(b,
             false));
-      Assert.AreEqual(value, beo.AsInt64());
+      Assert.AreEqual(value, beo.AsNumber().ToInt64Checked());
       String newb = DataUtilities.GetUtf8String(EncodingToBytes(beo), false);
       Assert.AreEqual(b, newb);
     }
@@ -65,14 +65,14 @@ namespace Test {
       beo.Add(ToObjectTest.TestToFromObjectRoundTrip(3));
       beo.Add(ToObjectTest.TestToFromObjectRoundTrip("four"));
       Assert.AreEqual(4, beo.Count);
-      Assert.AreEqual(1, beo[0].AsInt64());
+      Assert.AreEqual(1, beo[0].AsNumber().ToInt64Checked());
       {
         string stringTemp = beo[1].AsString();
         Assert.AreEqual(
           "two",
           stringTemp);
       }
-      Assert.AreEqual(3, beo[2].AsInt64());
+      Assert.AreEqual(3, beo[2].AsNumber().ToInt64Checked());
       {
         string stringTemp = beo[3].AsString();
         Assert.AreEqual(
@@ -82,14 +82,14 @@ namespace Test {
       byte[] b = EncodingToBytes(beo);
       beo = EncodingFromBytes(b);
       Assert.AreEqual(4, beo.Count);
-      Assert.AreEqual(1, beo[0].AsInt64());
+      Assert.AreEqual(1, beo[0].AsNumber().ToInt64Checked());
       {
         string stringTemp = beo[1].AsString();
         Assert.AreEqual(
           "two",
           stringTemp);
       }
-      Assert.AreEqual(3, beo[2].AsInt64());
+      Assert.AreEqual(3, beo[2].AsNumber().ToInt64Checked());
       {
         string stringTemp = beo[3].AsString();
         Assert.AreEqual(
@@ -106,14 +106,14 @@ namespace Test {
       beo["two"] = ToObjectTest.TestToFromObjectRoundTrip(3);
       beo["three"] = ToObjectTest.TestToFromObjectRoundTrip("four");
       Assert.AreEqual(4, beo.Count);
-      Assert.AreEqual(1, beo["zero"].AsInt64());
+      Assert.AreEqual(1, beo["zero"].AsNumber().ToInt64Checked());
       {
         string stringTemp = beo["one"].AsString();
         Assert.AreEqual(
           "two",
           stringTemp);
       }
-      Assert.AreEqual(3, beo["two"].AsInt64());
+      Assert.AreEqual(3, beo["two"].AsNumber().ToInt64Checked());
       {
         string stringTemp = beo["three"].AsString();
         Assert.AreEqual(
@@ -123,14 +123,14 @@ namespace Test {
       byte[] b = EncodingToBytes(beo);
       beo = EncodingFromBytes(b);
       Assert.AreEqual(4, beo.Count);
-      Assert.AreEqual(1, beo["zero"].AsInt64());
+      Assert.AreEqual(1, beo["zero"].AsNumber().ToInt64Checked());
       {
         string stringTemp = beo["one"].AsString();
         Assert.AreEqual(
           "two",
           stringTemp);
       }
-      Assert.AreEqual(3, beo["two"].AsInt64());
+      Assert.AreEqual(3, beo["two"].AsNumber().ToInt64Checked());
       {
         string stringTemp = beo["three"].AsString();
         Assert.AreEqual(

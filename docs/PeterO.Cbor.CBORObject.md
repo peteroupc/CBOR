@@ -59,10 +59,10 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[AsEInteger()](#AsEInteger)</code> - <b>Deprecated:</b> Instead, use .ToObject&lt;PeterO.Numbers.EInteger&gt;() in .NET or .ToObject(com.upokecenter.numbers.EInteger.class) in Java.
 * <code>[AsEIntegerValue()](#AsEIntegerValue)</code> - Converts this object to an arbitrary-precision integer if this CBOR object's type is Integer.
 * <code>[AsERational()](#AsERational)</code> - <b>Deprecated:</b> Instead, use .ToObject&lt;PeterO.Numbers.ERational&gt;() in .NET or .ToObject(com.upokecenter.numbers.ERational.class) in Java.
-* <code>[AsInt16()](#AsInt16)</code> - <b>Deprecated:</b> Instead, use the following: (cbor.AsNumber().ToInt16Checked()).
+* <code>[AsInt16()](#AsInt16)</code> - <b>Deprecated:</b> Instead, use the following: (cbor.AsNumber().ToInt16Checked()), or .ToObject&lt;short&gt;() in .NET.
 * <code>[AsInt32()](#AsInt32)</code> - Converts this object to a 32-bit signed integer.
 * <code>[AsInt32Value()](#AsInt32Value)</code> - Converts this object to a 32-bit signed integer if this CBOR object's type is Integer.
-* <code>[AsInt64()](#AsInt64)</code> - <b>Deprecated:</b> Instead, use the following: (cbor.AsNumber().ToInt64Checked()).
+* <code>[AsInt64()](#AsInt64)</code> - <b>Deprecated:</b> Instead, use the following: (cbor.AsNumber().ToInt64Checked()), or .ToObject&lt;long&gt;() in .NET.
 * <code>[AsInt64Value()](#AsInt64Value)</code> - Converts this object to a 64-bit signed integer if this CBOR object's type is Integer.
 * <code>[AsNumber()](#AsNumber)</code> - Converts this object to a CBOR number.
 * <code>[AsSByte()](#AsSByte)</code> - Converts this object to an 8-bit signed integer.
@@ -104,6 +104,7 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[FromJSONString(string, PeterO.Cbor.JSONOptions)](#FromJSONString_string_PeterO_Cbor_JSONOptions)</code> - Generates a CBOR object from a text string in JavaScript Object Notation (JSON) format, using the specified options to control the decoding process.
 * <code>[FromObject(bool)](#FromObject_bool)</code> - Returns the CBOR true value or false value, depending on "value".
 * <code>[FromObject(byte[])](#FromObject_byte)</code> - Generates a CBOR object from a byte (0 to 255). Generates a CBOR object from an array of 8-bit bytes; the byte array is copied to a new byte array in this process.
+* <code>[FromObject(decimal)](#FromObject_decimal)</code> - Converts a.
 * <code>[FromObject(double)](#FromObject_double)</code> - Generates a CBOR object from a 64-bit floating-point number.
 * <code>[FromObject(float)](#FromObject_float)</code> - Generates a CBOR object from a 32-bit floating-point number.
 * <code>[FromObject(int[])](#FromObject_int)</code> - Generates a CBOR object from a 32-bit signed integer. Generates a CBOR object from an array of 32-bit integers.
@@ -120,7 +121,6 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[FromObject(sbyte)](#FromObject_sbyte)</code> - Converts a signed 8-bit integer to a CBOR object.
 * <code>[FromObject(short)](#FromObject_short)</code> - Generates a CBOR object from a 16-bit signed integer.
 * <code>[FromObject(string)](#FromObject_string)</code> - Generates a CBOR object from a text string.
-* <code>[FromObject(System.Decimal)](#FromObject_System_Decimal)</code> - Converts a.
 * <code>[FromObject(uint)](#FromObject_uint)</code> - Converts a 32-bit unsigned integer to a CBOR object.
 * <code>[FromObject(ulong)](#FromObject_ulong)</code> - Converts a 64-bit unsigned integer to a CBOR object.
 * <code>[FromObject(ushort)](#FromObject_ushort)</code> - Converts a 16-bit unsigned integer to a CBOR object.
@@ -759,7 +759,7 @@ This object's value exceeds the range of a byte (would be less than 0 or greater
 <a id="AsDecimal"></a>
 ### AsDecimal
 
-    public System.Decimal AsDecimal();
+    public decimal AsDecimal();
 
 Converts this object to a.NET decimal.
 
@@ -919,7 +919,7 @@ This object does not represent a number (for the purposes of this method, infini
 
     public short AsInt16();
 
-<b>Deprecated.</b> Instead, use the following: (cbor.AsNumber().ToInt16Checked()).
+<b>Deprecated.</b> Instead, use the following: (cbor.AsNumber().ToInt16Checked()), or .ToObject&lt;short&gt;() in .NET.
 
 Converts this object to a 16-bit signed integer. Floating point values are converted to integers by discarding their fractional parts.
 
@@ -997,7 +997,7 @@ This object's value exceeds the range of a 32-bit signed integer.
 
     public long AsInt64();
 
-<b>Deprecated.</b> Instead, use the following: (cbor.AsNumber().ToInt64Checked()).
+<b>Deprecated.</b> Instead, use the following: (cbor.AsNumber().ToInt64Checked()), or .ToObject&lt;long&gt;() in .NET.
 
 Converts this object to a 64-bit signed integer. Non-integer numbers are converted to integers by discarding their fractional parts. (NOTE: To determine whether this method call can succeed, call the <b>CanTruncatedIntFitInInt64</b> method before calling this method. See the example. [TODO: Specify alternative.]).
 
@@ -1773,6 +1773,23 @@ Generates a CBOR object from an array of 8-bit bytes; the byte array is copied t
 
 A CBOR object where each element of the given byte array is copied to a new array, or CBORObject.Null if the value is null.
 
+<a id="FromObject_decimal"></a>
+### FromObject
+
+    public static PeterO.Cbor.CBORObject FromObject(
+        decimal value);
+
+Converts a.NET decimal to a CBOR object.
+
+<b>Parameters:</b>
+
+ * <i>value</i>: The parameter  <i>value</i>
+ is a Decimal object.
+
+<b>Return Value:</b>
+
+A CBORObject object with the same value as the.NET decimal.
+
 <a id="FromObject_double"></a>
 ### FromObject
 
@@ -2210,23 +2227,6 @@ A CBOR object representing the string, or CBORObject.Null if stringValue is null
 
  * System.ArgumentException:
 The string contains an unpaired surrogate code point.
-
-<a id="FromObject_System_Decimal"></a>
-### FromObject
-
-    public static PeterO.Cbor.CBORObject FromObject(
-        System.Decimal value);
-
-Converts a.NET decimal to a CBOR object.
-
-<b>Parameters:</b>
-
- * <i>value</i>: The parameter  <i>value</i>
- is a Decimal object.
-
-<b>Return Value:</b>
-
-A CBORObject object with the same value as the.NET decimal.
 
 <a id="FromObject_uint"></a>
 ### FromObject
@@ -3558,7 +3558,11 @@ Converts this CBOR object to an object of an arbitrary type. The following cases
 
  * If the type is  `bool`  (  `boolean`  in Java), returns the result of AsBoolean.
 
- * If the type is a primitive integer type (  `byte`  ,  `int`  ,  `short`  ,  `long`  , as well as  `sbyte`  ,  `ushort`  ,  `uint`  , and  `ulong`  in.NET) or a primitive floating-point type (  `float`  ,  `double`  , as well as  `decimal`  in.NET), returns the result of the corresponding As* method. [TODO: Move info on deprecated As* methods here.]
+ * If the type is  `short` , returns this number as a 16-bit signed integer after converting its value to an integer by discarding its fractional part, and throws an exception if this object's value is infinity or a not-a-number value, or does not represent a number (currently InvalidOperationException, but may change in the next major version), or if the value, once converted to an integer by discarding its fractional part, is less than -32768 or greater than 32767 (currently OverflowException, but may change in the next major version).
+
+ * If the type is  `long` , returns this number as a 64-bit signed integer after converting its value to an integer by discarding its fractional part, and throws an exception if this object's value is infinity or a not-a-number value, or does not represent a number (currently InvalidOperationException, but may change in the next major version), or if the value, once converted to an integer by discarding its fractional part, is less than -2^63 or greater than 2^63-1 (currently OverflowException, but may change in the next major version).
+
+ * If the type is a primitive integer type (  `byte`  ,  `int`  , as well as  `sbyte`  ,  `ushort`  ,  `uint`  , and  `ulong`  in.NET) or a primitive floating-point type (  `float`  ,  `double`  , as well as  `decimal`  in.NET), returns the result of the corresponding As* method. [TODO: Move info on deprecated As* methods here.]
 
  * If the type is  `String`  , returns the result of AsString.
 

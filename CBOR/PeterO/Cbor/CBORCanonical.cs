@@ -60,7 +60,7 @@ namespace PeterO.Cbor {
         }
         switch (a.Type) {
           case CBORType.Integer:
-            return a.IsNegative ? 1 : 0;
+            return a.AsNumber().IsNegative() ? 1 : 0;
           case CBORType.SimpleValue:
           case CBORType.Boolean:
           case CBORType.FloatingPoint:

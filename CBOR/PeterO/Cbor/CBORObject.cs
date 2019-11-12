@@ -669,13 +669,10 @@ cn.GetNumberInterface().Sign(cn.GetValue());
           index = (int)key;
         } else {
           CBORObject cborkey = CBORObject.FromObject(key);
-          if (!cborkey.IsIntegral) {
+          if (!cborkey.IsNumber || !cborkey.AsNumber().CanFitInInt32()) {
             return defaultValue;
           }
-          if (!cborkey.CanTruncatedIntFitInInt32()) {
-            return defaultValue;
-          }
-          index = cborkey.AsInt32();
+          index = cborkey.AsNumber().ToInt32Checked();
         }
         IList<CBORObject> list = this.AsList();
         return (index < 0 || index >= list.Count) ? defaultValue :
@@ -717,7 +714,7 @@ cn.GetNumberInterface().Sign(cn.GetValue());
         for " +
         "CBOR map keys to be anything other than text strings or integers; " +
         "including an Object indexer would introduce the security issues
-        present " + "in the FromObject method because of the need to convert to
+        present in the FromObject method because of the need to convert to
         CBORObject;" +
         " and this CBORObject indexer is included here because any CBOR
         object " +
@@ -730,14 +727,14 @@ cn.GetNumberInterface().Sign(cn.GetValue());
           return (!map.ContainsKey(key)) ? null : map[key];
         }
         if (this.Type == CBORType.Array) {
-          if (!key.IsIntegral) {
+          if (!key.IsNumber || !key.AsNumber().IsInteger()) {
             throw new ArgumentException("Not an integer");
           }
-          if (!key.CanTruncatedIntFitInInt32()) {
+          if (!key.AsNumber().CanFitInInt32()) {
             throw new ArgumentOutOfRangeException(nameof(key));
           }
           IList<CBORObject> list = this.AsList();
-          int index = key.AsInt32();
+          int index = key.AsNumber().ToInt32Checked();
           if (index < 0 || index >= list.Count) {
             throw new ArgumentOutOfRangeException(nameof(key));
           }
@@ -759,14 +756,14 @@ cn.GetNumberInterface().Sign(cn.GetValue());
           return;
         }
         if (this.Type == CBORType.Array) {
-          if (!key.IsIntegral) {
+          if (!key.IsNumber || !key.AsNumber().IsInteger()) {
             throw new ArgumentException("Not an integer");
           }
-          if (!key.CanTruncatedIntFitInInt32()) {
+          if (!key.AsNumber().CanFitInInt32()) {
             throw new ArgumentOutOfRangeException(nameof(key));
           }
           IList<CBORObject> list = this.AsList();
-          int index = key.AsInt32();
+          int index = key.AsNumber().ToInt32Checked();
           if (index < 0 || index >= list.Count) {
             throw new ArgumentOutOfRangeException(nameof(key));
           }
@@ -1300,25 +1297,46 @@ cn.GetNumberInterface().Sign(cn.GetValue());
     ///  in
     /// Java), returns the result of AsBoolean.</item>
     ///  <item>If the type is
-    /// a primitive integer type ( <c>byte</c>
+    /// <c>short</c>
+    ///  , returns this number as a 16-bit signed integer after
+    /// converting its value to an integer by discarding its fractional
+    /// part, and throws an exception if this object's value is infinity or
+    /// a not-a-number value, or does not represent a number (currently
+    /// InvalidOperationException, but may change in the next major
+    /// version), or if the value, once converted to an integer by
+    /// discarding its fractional part, is less than -32768 or greater than
+    /// 32767 (currently OverflowException, but may change in the next
+    /// major version).</item>
+    ///  <item>If the type is <c>long</c>
+    ///  , returns
+    /// this number as a 64-bit signed integer after converting its value
+    /// to an integer by discarding its fractional part, and throws an
+    /// exception if this object's value is infinity or a not-a-number
+    /// value, or does not represent a number (currently
+    /// InvalidOperationException, but may change in the next major
+    /// version), or if the value, once converted to an integer by
+    /// discarding its fractional part, is less than -2^63 or greater than
+    /// 2^63-1 (currently OverflowException, but may change in the next
+    /// major version).</item>
+    ///  <item>If the type is a primitive integer
+    /// type ( <c>byte</c>
     ///  , <c>int</c>
-    ///  , <c>short</c>
-    /// , <c>long</c>
     ///  , as well as <c>sbyte</c>
-    ///  , <c>ushort</c>
     ///  ,
-    /// <c>uint</c>
+    /// <c>ushort</c>
+    ///  , <c>uint</c>
     ///  , and <c>ulong</c>
-    ///  in.NET) or a primitive
-    /// floating-point type ( <c>float</c>
+    ///  in.NET) or a
+    /// primitive floating-point type ( <c>float</c>
     ///  , <c>double</c>
-    ///  , as well as
-    /// <c>decimal</c>
-    ///  in.NET), returns the result of the corresponding As*
-    /// method. [TODO: Move info on deprecated As* methods here.]</item>
-    /// <item>If the type is <c>String</c>
-    ///  , returns the result of
-    /// AsString.</item>
+    ///  , as
+    /// well as <c>decimal</c>
+    ///  in.NET), returns the result of the
+    /// corresponding As* method. [TODO: Move info on deprecated As*
+    /// methods here.]</item>
+    ///  <item>If the type is <c>String</c>
+    ///  , returns
+    /// the result of AsString.</item>
     ///  <item>If the type is <c>EFloat</c>
     ///  ,
     /// <c>EDecimal</c>
@@ -3747,7 +3765,8 @@ checked(size + 5) : checked(size + 9);
     /// <exception cref='OverflowException'>This object's value exceeds the
     /// range of a 16-bit signed integer.</exception>
     [Obsolete("Instead, use the following:" +
-"\u0020\u0028cbor.AsNumber().ToInt16Checked()).")]
+"\u0020\u0028cbor.AsNumber().ToInt16Checked()), or .ToObject<short>() in" +
+"\u0020.NET.")]
     public short AsInt16() {
       return (short)this.AsInt32(Int16.MinValue, Int16.MaxValue);
     }
@@ -3988,7 +4007,7 @@ checked(size + 5) : checked(size + 9);
     ///  .
     /// </example>
     [Obsolete("Instead, use the following:" +
-"\u0020\u0028cbor.AsNumber().ToInt64Checked()).")]
+"\u0020\u0028cbor.AsNumber().ToInt64Checked()), or .ToObject<long>() in .NET.")]
     public long AsInt64() {
       CBORNumber cn = this.AsNumber();
       return cn.GetNumberInterface().AsInt64(cn.GetValue());

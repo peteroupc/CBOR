@@ -631,8 +631,8 @@ CBORObject.FromObject(EDecimal.NegativeZero);
             CBORObject.FromObject(edec) :
             CBORObject.FromObject(edec.ToDouble());
           CBORNumber cn = cbor.AsNumber();
-          if (cbor.IsIntegral && cn.CanFitInInt64()) {
-             long v = cbor.AsInt64();
+          if (cn.IsInteger() && cn.CanFitInInt64()) {
+             long v = cn.ToInt64Checked();
              if (v >= (-(1 << 53)) + 1 && v <= (1 << 53) - 1) {
                return CBORObject.FromObject(v);
              } else {

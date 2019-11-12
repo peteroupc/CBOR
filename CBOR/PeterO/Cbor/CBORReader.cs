@@ -78,7 +78,8 @@ namespace PeterO.Cbor {
       if (hasTag) {
         CBORObject untagged = obj.UntagOne();
         if (untagged.IsTagged ||
-          untagged.Type != CBORType.Integer || untagged.IsNegative) {
+          untagged.Type != CBORType.Integer ||
+untagged.AsNumber().IsNegative()) {
           throw new CBORException (
             "Shared ref index must be an untagged integer 0 or greater");
         }

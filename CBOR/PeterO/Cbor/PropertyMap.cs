@@ -156,7 +156,7 @@ namespace PeterO.Cbor {
       Type t,
       string name) {
       foreach (var attr in t.GetCustomAttributes (false)) {
-        if (attr.GetType().FullName.Equals (name,
+        if (attr.GetType().FullName.Equals(name,
             StringComparison.Ordinal)) {
           return true;
         }
@@ -496,7 +496,7 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
     public static object ObjectToEnum(CBORObject obj, Type enumType) {
       Type utype = Enum.GetUnderlyingType(enumType);
       object ret = null;
-      if (obj.IsNumber && obj.IsIntegral) {
+      if (obj.IsNumber && obj.AsNumber().IsInteger()) {
         ret = Enum.ToObject(enumType, TypeToIntegerObject(obj, utype));
         if (!Enum.IsDefined(enumType, ret)) {
           throw new CBORException("Unrecognized enum value: " +
@@ -575,7 +575,7 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
         return objThis.AsInt32();
       }
       if (t.Equals(typeof(short))) {
-        return objThis.AsInt16();
+        return objThis.AsNumber().ToInt16Checked();
       }
       if (t.Equals(typeof(ushort))) {
         return objThis.AsUInt16();
@@ -587,7 +587,7 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
         return objThis.AsSByte();
       }
       if (t.Equals(typeof(long))) {
-        return objThis.AsInt64();
+        return objThis.AsNumber().ToInt64Checked();
       }
       if (t.Equals(typeof(uint))) {
         return objThis.AsUInt32();
@@ -608,7 +608,7 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
         return objThis.AsInt32();
       }
       if (t.Equals(typeof(short))) {
-        return objThis.AsInt16();
+        return objThis.AsNumber().ToInt16Checked();
       }
       if (t.Equals(typeof(ushort))) {
         return objThis.AsUInt16();
@@ -620,7 +620,7 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
         return objThis.AsSByte();
       }
       if (t.Equals(typeof(long))) {
-        return objThis.AsInt64();
+        return objThis.AsNumber().ToInt64Checked();
       }
       if (t.Equals(typeof(uint))) {
         return objThis.AsUInt32();
@@ -648,8 +648,8 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
           }
           return s[0];
         }
-        if (objThis.IsIntegral && objThis.CanTruncatedIntFitInInt32()) {
-          int c = objThis.AsInt32();
+        if (objThis.IsNumber && objThis.AsNumber().CanFitInInt32()) {
+          int c = objThis.AsNumber().ToInt32IfExact();
           if (c < 0 || c >= 0x10000) {
             throw new CBORException("Can't convert to char");
           }
@@ -716,9 +716,9 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
         }
         if (t.IsGenericType) {
           Type td = t.GetGenericTypeDefinition();
-          isList = td.Equals (typeof(List<>)) || td.Equals (typeof(IList<>)) ||
-td.Equals (typeof(ICollection<>)) ||
-            td.Equals (typeof(IEnumerable<>));
+          isList = td.Equals(typeof(List<>)) || td.Equals(typeof(IList<>)) ||
+            td.Equals(typeof(ICollection<>)) ||
+            td.Equals(typeof(IEnumerable<>));
         }
         isList = isList && t.GetGenericArguments().Length == 1;
         if (isList) {
@@ -778,8 +778,8 @@ td.Equals(typeof(ICollection<>)) ||
         isDict = t.IsGenericType;
         if (t.IsGenericType) {
           Type td = t.GetGenericTypeDefinition();
-          isDict = td.Equals (typeof(Dictionary<,>)) ||
-            td.Equals (typeof(IDictionary<,>));
+          isDict = td.Equals(typeof(Dictionary<,>)) ||
+            td.Equals(typeof(IDictionary<,>));
         }
         // DebugUtility.Log("list=" + isDict);
         isDict = isDict && t.GetGenericArguments().Length == 2;

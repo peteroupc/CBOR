@@ -8,7 +8,7 @@ using PeterO.Numbers;
 
 namespace Test {
   [TestFixture]
-  #pragma warning disable CS0618
+#pragma warning disable CS0618
   public class CBORObjectTest {
     private static readonly string[] ValueJsonFails = {
       "\"\\uxxxx\"",
@@ -62,7 +62,7 @@ namespace Test {
       string p1,
       string p2,
       string p3) {
-      CBORObjectTest.CheckPropertyNames (
+      CBORObjectTest.CheckPropertyNames(
         CBORObject.FromObject(ao, cc),
         p1,
         p2,
@@ -385,7 +385,7 @@ namespace Test {
           ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(
               numberinfo["number"].AsString()));
         if (numberinfo["byte"].AsBoolean()) {
-          Assert.AreEqual (
+          Assert.AreEqual(
             TestCommon.StringToInt(numberinfo["integer"].AsString()),
             ((int)cbornumber.AsByte()) & 0xff);
         } else {
@@ -401,7 +401,7 @@ namespace Test {
         }
       }
       for (var i = 0; i < 255; ++i) {
-        Assert.AreEqual (
+        Assert.AreEqual(
           (byte)i,
           ToObjectTest.TestToFromObjectRoundTrip(i).AsByte());
       }
@@ -494,7 +494,7 @@ namespace Test {
 (double)EDecimal.FromString(numberinfo["number"].AsString()).ToDouble();
           double dtemp2 = cbornumber.AsDouble();
           AreEqualExact(dtemp, dtemp2);
-}
+        }
       }
     }
 
@@ -558,10 +558,10 @@ namespace Test {
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
-          ToObjectTest.TestToFromObjectRoundTrip (
+          ToObjectTest.TestToFromObjectRoundTrip(
             EDecimal.FromString(numberinfo["number"].AsString()));
         if (numberinfo["int16"].AsBoolean()) {
-          Assert.AreEqual (
+          Assert.AreEqual(
             TestCommon.StringToInt(numberinfo["integer"].AsString()),
             cbornumber.AsInt16());
         } else {
@@ -647,16 +647,16 @@ namespace Test {
         CBORObject cbornumbersingle =
           ToObjectTest.TestToFromObjectRoundTrip(edec.ToSingle());
         if (numberinfo["int32"].AsBoolean()) {
-          Assert.AreEqual (
+          Assert.AreEqual(
             TestCommon.StringToInt(numberinfo["integer"].AsString()),
             cbornumber.AsInt32());
           if (isdouble) {
-            Assert.AreEqual (
+            Assert.AreEqual(
               TestCommon.StringToInt(numberinfo["integer"].AsString()),
               cbornumberdouble.AsInt32());
           }
           if (issingle) {
-            Assert.AreEqual (
+            Assert.AreEqual(
               TestCommon.StringToInt(numberinfo["integer"].AsString()),
               cbornumbersingle.AsInt32());
           }
@@ -764,16 +764,16 @@ namespace Test {
         CBORObject cbornumbersingle =
           ToObjectTest.TestToFromObjectRoundTrip(edec.ToSingle());
         if (numberinfo["int64"].AsBoolean()) {
-          Assert.AreEqual (
+          Assert.AreEqual(
             TestCommon.StringToLong(numberinfo["integer"].AsString()),
             cbornumber.AsInt64());
           if (isdouble) {
-            Assert.AreEqual (
+            Assert.AreEqual(
               TestCommon.StringToLong(numberinfo["integer"].AsString()),
               cbornumberdouble.AsInt64());
           }
           if (issingle) {
-            Assert.AreEqual (
+            Assert.AreEqual(
               TestCommon.StringToLong(numberinfo["integer"].AsString()),
               cbornumbersingle.AsInt64());
           }
@@ -883,7 +883,7 @@ namespace Test {
 (float)EDecimal.FromString(numberinfo["number"].AsString()).ToSingle();
           float ftemp2 = cbornumber.AsSingle();
           AreEqualExact(ftemp, ftemp2);
-}
+        }
       }
     }
     [Test]
@@ -1016,7 +1016,7 @@ namespace Test {
           numberinfo["isintegral"].AsBoolean()) {
           Assert.IsTrue(CInt32(cbornumber));
 
-          Assert.IsTrue (
+          Assert.IsTrue(
             CInt32(ToObjectTest.TestToFromObjectRoundTrip(
               cbornumber.AsInt32())));
         } else {
@@ -1089,7 +1089,7 @@ namespace Test {
           numberinfo["isintegral"].AsBoolean()) {
           Assert.IsTrue(CInt64(cbornumber));
 
-          Assert.IsTrue (
+          Assert.IsTrue(
             CInt64(ToObjectTest.TestToFromObjectRoundTrip(
               cbornumber.AsInt64())));
         } else {
@@ -1126,8 +1126,8 @@ namespace Test {
       for (var i = 0; i < 255; ++i) {
         // Try a random float with a given
         // exponent
-        Assert.IsTrue (
-          ToObjectTest.TestToFromObjectRoundTrip (
+        Assert.IsTrue(
+          ToObjectTest.TestToFromObjectRoundTrip(
             RandomObjects.RandomSingle(
               rand,
               i)).CanFitInSingle());
@@ -1176,7 +1176,7 @@ namespace Test {
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
-          ToObjectTest.TestToFromObjectRoundTrip (
+          ToObjectTest.TestToFromObjectRoundTrip(
             EDecimal.FromString(numberinfo["number"].AsString()));
         if (numberinfo["int32"].AsBoolean()) {
           Assert.IsTrue(cbornumber.CanTruncatedIntFitInInt32());
@@ -1306,11 +1306,11 @@ namespace Test {
           ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(
               numberString));
         if (numberinfo["int64"].AsBoolean()) {
-          Assert.IsTrue (
+          Assert.IsTrue(
             cbornumber.CanTruncatedIntFitInInt64(),
             numberString);
         } else {
-          Assert.IsFalse (
+          Assert.IsFalse(
             cbornumber.CanTruncatedIntFitInInt64(),
             numberString);
         }
@@ -1523,10 +1523,10 @@ namespace Test {
         CBORObject o2 = CBORTestCommon.RandomNumber(r);
         CompareDecimals(o1, o2);
       }
-      TestCommon.CompareTestEqual (
+      TestCommon.CompareTestEqual(
         ToObjectTest.TestToFromObjectRoundTrip(0.1),
         ToObjectTest.TestToFromObjectRoundTrip(0.1));
-      TestCommon.CompareTestEqual (
+      TestCommon.CompareTestEqual(
         ToObjectTest.TestToFromObjectRoundTrip(0.1f),
         ToObjectTest.TestToFromObjectRoundTrip(0.1f));
       for (var i = 0; i < 50; ++i) {
@@ -1623,16 +1623,16 @@ namespace Test {
           ToObjectTest.TestToFromObjectRoundTrip(Double.NaN).CompareTo(null);
         Assert.AreEqual(1, numberTemp);
       }
-      TestCommon.CompareTestLess (
+      TestCommon.CompareTestLess(
         ToObjectTest.TestToFromObjectRoundTrip(0).AsNumber(),
         ToObjectTest.TestToFromObjectRoundTrip(1).AsNumber());
-      TestCommon.CompareTestLess (
+      TestCommon.CompareTestLess(
         ToObjectTest.TestToFromObjectRoundTrip(0.0f).AsNumber(),
         ToObjectTest.TestToFromObjectRoundTrip(1.0f).AsNumber());
-      TestCommon.CompareTestLess (
+      TestCommon.CompareTestLess(
         ToObjectTest.TestToFromObjectRoundTrip(0.0).AsNumber(),
         ToObjectTest.TestToFromObjectRoundTrip(1.0).AsNumber());
-      TestCommon.CompareTestEqual (
+      TestCommon.CompareTestEqual(
         CBORObject.FromObject(10).AsNumber(),
         CBORObject.FromObject(ERational.Create(10, 1)).AsNumber());
     }
@@ -2239,11 +2239,11 @@ TestCommon.ToByteArrayString(bytes));
       cbor2 = ToObjectTest.TestToFromObjectRoundTrip(cbor2);
       TestCommon.CompareTestEqualAndConsistent(cbor, cbor2);
       TestWriteObj(erat, erat);
-      erat = ERational.Create (
+      erat = ERational.Create(
           EInteger.Zero,
           EInteger.FromString("84170882933504200501581262010093"));
       cbor = ToObjectTest.TestToFromObjectRoundTrip(erat);
-      ERational erat2 = ERational.Create (
+      ERational erat2 = ERational.Create(
           EInteger.Zero,
           EInteger.FromString("84170882933504200501581262010093"));
       cbor2 = ToObjectTest.TestToFromObjectRoundTrip(erat2);
@@ -2260,7 +2260,7 @@ TestCommon.ToByteArrayString(bytes));
 
     [Test]
     public void TestEquivalentNegativeInfinity() {
-      CompareTestNumber (
+      CompareTestNumber(
         ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecNegInf),
         ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf));
       {
@@ -2302,7 +2302,7 @@ TestCommon.ToByteArrayString(bytes));
 
     [Test]
     public void TestEquivalentPositiveInfinity() {
-      CompareTestNumber (
+      CompareTestNumber(
         ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecPosInf),
         ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatPosInf));
       {
@@ -2345,7 +2345,7 @@ TestCommon.ToByteArrayString(bytes));
     [Test]
     public void TestFalse() {
       CBORTestCommon.AssertJSONSer(CBORObject.False, "false");
-      Assert.AreEqual (
+      Assert.AreEqual(
         CBORObject.False,
         ToObjectTest.TestToFromObjectRoundTrip(false));
     }
@@ -2436,7 +2436,7 @@ TestCommon.ToByteArrayString(bytes));
       }
       string jsonTemp = TestCommon.Repeat(
         "[",
-        2000) + TestCommon.Repeat (
+        2000) + TestCommon.Repeat(
           "]",
           2000);
       TestFailingJSON(jsonTemp);
@@ -2493,7 +2493,7 @@ TestCommon.ToByteArrayString(bytes));
       Assert.AreEqual(CBORObject.False, cbor[0]);
       Assert.AreEqual(CBORObject.True, cbor[1]);
       CBORTestCommon.AssertRoundTrip(cbor);
-      Assert.AreEqual (
+      Assert.AreEqual(
         CBORObject.Null,
         CBORObject.FromObject((int[])null));
       long[] longarray = { 2, 3 };
@@ -2504,10 +2504,10 @@ TestCommon.ToByteArrayString(bytes));
       Assert.IsTrue(CBORObject.FromObject(3).CompareTo(cbor[1])
         == 0);
       CBORTestCommon.AssertRoundTrip(cbor);
-      Assert.AreEqual (
+      Assert.AreEqual(
         CBORObject.Null,
         CBORObject.FromObject((ERational)null));
-      Assert.AreEqual (
+      Assert.AreEqual(
         CBORObject.Null,
         CBORObject.FromObject((EDecimal)null));
       try {
@@ -2673,7 +2673,7 @@ TestCommon.ToByteArrayString(bytes));
 
     private sealed class TestConverter : ICBORToFromConverter<string> {
       public CBORObject ToCBORObject(string strValue) {
-        return CBORObject.FromObject (
+        return CBORObject.FromObject(
             DataUtilities.ToLowerCaseAscii(strValue));
       }
 
@@ -2718,7 +2718,7 @@ TestCommon.ToByteArrayString(bytes));
       CBORObject c = CBORObject.FromObject(dict);
       this.CheckKeyValue(c, "TestKey", "TestValue");
       this.CheckKeyValue(c, "TestKey2", "TestValue2");
-      dict = (IDictionary<string, string>)c.ToObject (
+      dict = (IDictionary<string, string>)c.ToObject(
           typeof(IDictionary<string, string>));
       Assert.AreEqual(2, dict.Keys.Count);
       Assert.IsTrue(dict.ContainsKey("TestKey"));
@@ -2746,7 +2746,7 @@ TestCommon.ToByteArrayString(bytes));
     public void TestBase64Extras() {
       // Base64 tests
       CBORObject o;
-      o = CBORObject.FromObjectAndTag (
+      o = CBORObject.FromObjectAndTag(
           new byte[] { 0x9a, 0xd6, 0xf0, 0xe8 },
           23);
       {
@@ -2766,7 +2766,7 @@ TestCommon.ToByteArrayString(bytes));
           "\"mtb_6A\"",
           stringTemp);
       }
-      o = CBORObject.FromObjectAndTag (
+      o = CBORObject.FromObjectAndTag(
           new byte[] { 0x9a, 0xd6, 0xff, 0xe8 },
           22);
       // Encode with Base64
@@ -2788,7 +2788,7 @@ TestCommon.ToByteArrayString(bytes));
           "\"mtb_6A\"",
           stringTemp);
       }
-      o = CBORObject.FromObjectAndTag (
+      o = CBORObject.FromObjectAndTag(
           new byte[] { 0x9a, 0xd6, 0xff, 0xe8 },
           22);
       // Encode with Base64
@@ -2811,38 +2811,38 @@ TestCommon.ToByteArrayString(bytes));
       CBORObjectTest.CheckPropertyNames(ao);
       var arrao = new PODClass[] { ao, ao };
       co = CBORObject.FromObject(arrao, valueCcTF);
-      CBORObjectTest.CheckArrayPropertyNames (
+      CBORObjectTest.CheckArrayPropertyNames(
         CBORObject.FromObject(arrao, valueCcTF),
         2,
         "PropA",
         "PropB",
         "IsPropC");
-      CBORObjectTest.CheckArrayPropertyNames (
+      CBORObjectTest.CheckArrayPropertyNames(
         CBORObject.FromObject(arrao, valueCcFT),
         2,
         "propA",
         "propB",
         "propC");
-      CBORObjectTest.CheckArrayPropertyNames (
+      CBORObjectTest.CheckArrayPropertyNames(
         CBORObject.FromObject(arrao, valueCcTT),
         2,
         "propA",
         "propB",
         "propC");
       var ao2 = new NestedPODClass();
-      CBORObjectTest.CheckPODPropertyNames (
+      CBORObjectTest.CheckPODPropertyNames(
         CBORObject.FromObject(ao2, valueCcTF),
         valueCcTF,
         "PropA",
         "PropB",
         "IsPropC");
-      CBORObjectTest.CheckPODPropertyNames (
+      CBORObjectTest.CheckPODPropertyNames(
         CBORObject.FromObject(ao2, valueCcFT),
         valueCcFT,
         "propA",
         "propB",
         "propC");
-      CBORObjectTest.CheckPODPropertyNames (
+      CBORObjectTest.CheckPODPropertyNames(
         CBORObject.FromObject(ao2, valueCcTT),
         valueCcTT,
         "propA",
@@ -2851,34 +2851,34 @@ TestCommon.ToByteArrayString(bytes));
       var aodict = new Dictionary<string, object>();
       aodict["PropValue"] = new PODClass();
 
-      CBORObjectTest.CheckPODInDictPropertyNames (
+      CBORObjectTest.CheckPODInDictPropertyNames(
         CBORObject.FromObject(aodict, valueCcTF),
         "PropA",
         "PropB",
         "IsPropC");
-      CBORObjectTest.CheckPODInDictPropertyNames (
+      CBORObjectTest.CheckPODInDictPropertyNames(
         CBORObject.FromObject(aodict, valueCcFT),
         "propA",
         "propB",
         "propC");
-      CBORObjectTest.CheckPODInDictPropertyNames (
+      CBORObjectTest.CheckPODInDictPropertyNames(
         CBORObject.FromObject(aodict, valueCcTT),
         "propA",
         "propB",
         "propC");
-      CBORObjectTest.CheckArrayPropertyNames (
+      CBORObjectTest.CheckArrayPropertyNames(
         CBORObject.FromObject(arrao, valueCcFF),
         2,
         "PropA",
         "PropB",
         "IsPropC");
-      CBORObjectTest.CheckPODPropertyNames (
+      CBORObjectTest.CheckPODPropertyNames(
         CBORObject.FromObject(ao2, valueCcFF),
         valueCcFF,
         "PropA",
         "PropB",
         "IsPropC");
-      CBORObjectTest.CheckPODInDictPropertyNames (
+      CBORObjectTest.CheckPODInDictPropertyNames(
         CBORObject.FromObject(aodict, valueCcFF),
         "PropA",
         "PropB",
@@ -3107,11 +3107,11 @@ TestCommon.ToByteArrayString(bytes));
       Assert.IsFalse(CBORObject.NewMap().IsFinite);
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(0).IsFinite);
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(2.5).IsFinite);
-      Assert.IsFalse (
+      Assert.IsFalse(
         ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity)
         .IsFinite);
 
-      Assert.IsFalse (
+      Assert.IsFalse(
         ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
         .IsFinite);
       Assert.IsFalse(ToObjectTest.TestToFromObjectRoundTrip(Double.NaN)
@@ -3151,17 +3151,17 @@ TestCommon.ToByteArrayString(bytes));
       Assert.IsFalse(cbor.IsIntegral);
       Assert.IsFalse(CBORObject.NewArray().IsIntegral);
       Assert.IsFalse(CBORObject.NewMap().IsIntegral);
-      cbor = ToObjectTest.TestToFromObjectRoundTrip (
+      cbor = ToObjectTest.TestToFromObjectRoundTrip(
           EInteger.FromRadixString(
             "8000000000000000",
             16));
       Assert.IsTrue(cbor.IsIntegral);
-      cbor = ToObjectTest.TestToFromObjectRoundTrip (
+      cbor = ToObjectTest.TestToFromObjectRoundTrip(
           EInteger.FromRadixString(
             "80000000000000000000",
             16));
       Assert.IsTrue(cbor.IsIntegral);
-      cbor = ToObjectTest.TestToFromObjectRoundTrip (
+      cbor = ToObjectTest.TestToFromObjectRoundTrip(
           EInteger.FromRadixString(
             "8000000000000000000000000",
             16));
@@ -3406,7 +3406,7 @@ TestCommon.ToByteArrayString(bytes));
         object objectTemp2 = cbor.GetOrDefault(-1,
           CBORObject.Null);
         Assert.AreEqual(objectTemp, objectTemp2);
-}
+      }
       {
         object objectTemp = CBORObject.FromObject(2);
         object objectTemp2 = cbor.GetOrDefault(
@@ -3414,7 +3414,7 @@ TestCommon.ToByteArrayString(bytes));
           CBORObject.Null);
         Assert.AreEqual(objectTemp, objectTemp2);
       }
-      Assert.AreEqual (
+      Assert.AreEqual(
         CBORObject.FromObject(2),
         cbor.GetOrDefault(CBORObject.FromObject(0), CBORObject.Null));
       {
@@ -3444,7 +3444,7 @@ TestCommon.ToByteArrayString(bytes));
         object objectTemp2 = cbor.GetOrDefault(-1,
           CBORObject.Null);
         Assert.AreEqual(objectTemp, objectTemp2);
-}
+      }
       Assert.AreEqual(CBORObject.Null, cbor.GetOrDefault(0, CBORObject.Null));
       {
         object objectTemp = CBORObject.FromObject(2);
@@ -3462,7 +3462,7 @@ TestCommon.ToByteArrayString(bytes));
           CBORObject.Null);
         Assert.AreEqual(objectTemp, objectTemp2);
       }
-      Assert.AreEqual (
+      Assert.AreEqual(
         CBORObject.FromObject("value"),
         cbor.GetOrDefault(CBORObject.FromObject("key"), CBORObject.Null));
       {
@@ -3477,7 +3477,7 @@ TestCommon.ToByteArrayString(bytes));
         object objectTemp2 = cbor.GetOrDefault(-1,
           CBORObject.Null);
         Assert.AreEqual(objectTemp, objectTemp2);
-}
+      }
       Assert.AreEqual(CBORObject.Null, cbor.GetOrDefault(0, CBORObject.Null));
       {
         object objectTemp = CBORObject.Null;
@@ -3561,7 +3561,7 @@ TestCommon.ToByteArrayString(bytes));
         EDecimal cmpDecFrac = AsED(o1).Multiply(AsED(o2));
         EDecimal cmpCobj = o1.AsNumber().Multiply(o2.AsNumber()).AsEDecimal();
         if (!cmpDecFrac.Equals(cmpCobj)) {
-          TestCommon.CompareTestEqual (
+          TestCommon.CompareTestEqual(
             cmpDecFrac,
             cmpCobj,
             o1.ToString() + "\n" + o2.ToString());
@@ -3597,7 +3597,7 @@ TestCommon.ToByteArrayString(bytes));
 
     [Test]
     public void TestNegativeZero() {
-      CBORObject negzero = ToObjectTest.TestToFromObjectRoundTrip (
+      CBORObject negzero = ToObjectTest.TestToFromObjectRoundTrip(
           EDecimal.FromString("-0"));
       CBORTestCommon.AssertRoundTrip(negzero);
     }
@@ -4410,147 +4410,147 @@ TestCommon.ToByteArrayString(bytes));
       }
     }
 
-// TODO: In next major version, consider using CBORException
-// for circular refs in EncodeToBytes
-[Test]
-public void TestEncodeToBytesCircularRefs() {
-  CBORObject cbor = CBORObject.NewArray().Add(1).Add(2);
-  cbor.Add(cbor);
-  try {
- cbor.EncodeToBytes();
- Assert.Fail("Should have failed");
-} catch (ArgumentException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-  cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
-  cbor.Add(cbor, "test");
-  try {
- cbor.EncodeToBytes();
- Assert.Fail("Should have failed");
-} catch (ArgumentException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-  cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
-  cbor.Add("test", cbor);
-  try {
- cbor.EncodeToBytes();
- Assert.Fail("Should have failed");
-} catch (ArgumentException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-  cbor = CBORObject.NewArray().Add(1).Add(2);
-  cbor.Add(CBORObject.NewArray().Add(cbor));
-  try {
- cbor.EncodeToBytes();
- Assert.Fail("Should have failed");
-} catch (ArgumentException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-  cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
-  cbor.Add(CBORObject.NewArray().Add(cbor), "test");
-  try {
- cbor.EncodeToBytes();
- Assert.Fail("Should have failed");
-} catch (ArgumentException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-  cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
-  cbor.Add("test", CBORObject.NewArray().Add(cbor));
-  try {
- cbor.EncodeToBytes();
- Assert.Fail("Should have failed");
-} catch (ArgumentException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-}
+    // TODO: In next major version, consider using CBORException
+    // for circular refs in EncodeToBytes
+    [Test]
+    public void TestEncodeToBytesCircularRefs() {
+      CBORObject cbor = CBORObject.NewArray().Add(1).Add(2);
+      cbor.Add(cbor);
+      try {
+        cbor.EncodeToBytes();
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
+      cbor.Add(cbor, "test");
+      try {
+        cbor.EncodeToBytes();
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
+      cbor.Add("test", cbor);
+      try {
+        cbor.EncodeToBytes();
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      cbor = CBORObject.NewArray().Add(1).Add(2);
+      cbor.Add(CBORObject.NewArray().Add(cbor));
+      try {
+        cbor.EncodeToBytes();
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
+      cbor.Add(CBORObject.NewArray().Add(cbor), "test");
+      try {
+        cbor.EncodeToBytes();
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
+      cbor.Add("test", CBORObject.NewArray().Add(cbor));
+      try {
+        cbor.EncodeToBytes();
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
 
-[Test]
-public void TestCalcEncodedSizeCircularRefs() {
-  CBORObject cbor = CBORObject.NewArray().Add(1).Add(2);
-  cbor.Add(cbor);
-  try {
- cbor.CalcEncodedSize();
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-  cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
-  cbor.Add(cbor, "test");
-  try {
- cbor.CalcEncodedSize();
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-  cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
-  cbor.Add("test", cbor);
-  try {
- cbor.CalcEncodedSize();
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-  cbor = CBORObject.NewArray().Add(1).Add(2);
-  cbor.Add(CBORObject.NewArray().Add(cbor));
-  try {
- cbor.CalcEncodedSize();
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-  cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
-  cbor.Add(CBORObject.NewArray().Add(cbor), "test");
-  try {
- cbor.CalcEncodedSize();
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-  cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
-  cbor.Add("test", CBORObject.NewArray().Add(cbor));
-  try {
- cbor.CalcEncodedSize();
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-}
+    [Test]
+    public void TestCalcEncodedSizeCircularRefs() {
+      CBORObject cbor = CBORObject.NewArray().Add(1).Add(2);
+      cbor.Add(cbor);
+      try {
+        cbor.CalcEncodedSize();
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
+      cbor.Add(cbor, "test");
+      try {
+        cbor.CalcEncodedSize();
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
+      cbor.Add("test", cbor);
+      try {
+        cbor.CalcEncodedSize();
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      cbor = CBORObject.NewArray().Add(1).Add(2);
+      cbor.Add(CBORObject.NewArray().Add(cbor));
+      try {
+        cbor.CalcEncodedSize();
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
+      cbor.Add(CBORObject.NewArray().Add(cbor), "test");
+      try {
+        cbor.CalcEncodedSize();
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
+      cbor.Add("test", CBORObject.NewArray().Add(cbor));
+      try {
+        cbor.CalcEncodedSize();
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
 
     [Test]
     public void TestClear() {
@@ -4886,14 +4886,14 @@ public void TestCalcEncodedSizeCircularRefs() {
     [Test]
     public void TestToJSONString() {
       {
-        string stringTemp = ToObjectTest.TestToFromObjectRoundTrip (
+        string stringTemp = ToObjectTest.TestToFromObjectRoundTrip(
             "\u2027\u2028\u2029\u202a\u0008\u000c").ToJSONString();
         Assert.AreEqual(
           "\"\u2027\\u2028\\u2029\u202a\\b\\f\"",
           stringTemp);
       }
       {
-        string stringTemp = ToObjectTest.TestToFromObjectRoundTrip (
+        string stringTemp = ToObjectTest.TestToFromObjectRoundTrip(
             "\u0085\ufeff\ufffe\uffff").ToJSONString();
         Assert.AreEqual(
           "\"\\u0085\\uFEFF\\uFFFE\\uFFFF\"",
@@ -5203,7 +5203,7 @@ public void TestCalcEncodedSizeCircularRefs() {
     public void TestToJSONString_ByteArray_Padding() {
       CBORObject o;
       var options = new JSONOptions(String.Empty);
-      o = CBORObject.FromObjectAndTag (
+      o = CBORObject.FromObjectAndTag(
           new byte[] { 0x9a, 0xd6, 0xf0, 0xe8 }, 22);
       {
         string stringTemp = o.ToJSONString(options);
@@ -5223,7 +5223,7 @@ public void TestCalcEncodedSizeCircularRefs() {
           stringTemp);
       }
       // tagged 23, so base16
-      o = CBORObject.FromObjectAndTag (
+      o = CBORObject.FromObjectAndTag(
           new byte[] { 0x9a, 0xd6, 0xf0, 0xe8 },
           23);
       {
@@ -5277,7 +5277,7 @@ public void TestCalcEncodedSizeCircularRefs() {
       TestCommon.AssertNotEqual("simple(23)", cborString);
       {
         string stringTemp = CBORObject.FromSimpleValue(50).ToString();
-        Assert.AreEqual (
+        Assert.AreEqual(
           "simple(50)",
           stringTemp);
       }
@@ -5298,128 +5298,136 @@ public void TestCalcEncodedSizeCircularRefs() {
     [Test]
     public void TestTrue() {
       CBORTestCommon.AssertJSONSer(CBORObject.True, "true");
-      Assert.AreEqual (
+      Assert.AreEqual(
         CBORObject.True,
         ToObjectTest.TestToFromObjectRoundTrip(true));
     }
 
-[Test]
-public void TestCalcEncodedBytesSpecific() {
- CBORObject cbor;
+    [Test]
+    public void TestCalcEncodedBytesSpecific() {
+      CBORObject cbor;
 
- cbor = CBORObject.DecodeFromBytes(new byte[] {
-   (byte)0xda, 0x00, 0x1d,
-   (byte)0xdb, 0x03, (byte)0xd9, 0x01, 0x0d, (byte)0x83, 0x00, 0x00, 0x03,
- });
- CBORTestCommon.CheckEncodeToBytes(cbor);
+      cbor = CBORObject.DecodeFromBytes(new byte[] {
+        (byte)0xda, 0x00, 0x1d,
+        (byte)0xdb, 0x03, (byte)0xd9, 0x01, 0x0d, (byte)0x83, 0x00, 0x00,
+        0x03,
+      });
+      CBORTestCommon.CheckEncodeToBytes(cbor);
 
- cbor = CBORObject.DecodeFromBytes(new byte[] {
-   (byte)0xda, 0x00, 0x14, 0x57,
-   (byte)0xce,
-   (byte)0xc5,
-   (byte)0x82, 0x1a, 0x46, 0x5a, 0x37,
-   (byte)0x87,
-   (byte)0xc3, 0x50, 0x5e,
-   (byte)0xec,
-   (byte)0xfd, 0x73, 0x50, 0x64,
-   (byte)0xa1, 0x1f, 0x10,
-   (byte)0xc4, (byte)0xff, (byte)0xf2, (byte)0xc4, (byte)0xc9, 0x65, 0x12,
- });
- CBORTestCommon.CheckEncodeToBytes(cbor);
+      cbor = CBORObject.DecodeFromBytes(new byte[] {
+        (byte)0xda, 0x00, 0x14,
+        0x57,
+        (byte)0xce,
+        (byte)0xc5,
+        (byte)0x82, 0x1a, 0x46, 0x5a, 0x37,
+        (byte)0x87,
+        (byte)0xc3, 0x50, 0x5e,
+        (byte)0xec,
+        (byte)0xfd, 0x73, 0x50, 0x64,
+        (byte)0xa1, 0x1f, 0x10,
+        (byte)0xc4, (byte)0xff, (byte)0xf2, (byte)0xc4, (byte)0xc9, 0x65,
+        0x12,
+      });
+      CBORTestCommon.CheckEncodeToBytes(cbor);
 
- cbor = CBORObject.DecodeFromBytes(new byte[] {
-   (byte)0xfa, 0x56, 0x00,
-   0x69, 0x2a,
- });
- CBORTestCommon.CheckEncodeToBytes(cbor);
- cbor = CBORObject.DecodeFromBytes(new byte[] { (byte)0xf9, (byte)0xfc, 0x00 });
- CBORTestCommon.CheckEncodeToBytes(cbor);
- cbor = CBORObject.DecodeFromBytes(new byte[] {
-   (byte)0xa2,
-   (byte)0x82,
-   (byte)0xf6,
-   (byte)0x82,
-   (byte)0xfb, 0x3c,
-   (byte)0xf0, 0x03, 0x42,
-   (byte)0xcb, 0x54, 0x6c,
-   (byte)0x85,
-   (byte)0x82,
-   (byte)0xc5,
-   (byte)0x82, 0x18,
-   (byte)0xba, 0x0a,
-   (byte)0xfa,
-   (byte)0x84,
-   (byte)0xa0, 0x57,
-   (byte)0x97, 0x42, 0x00, 0x01, 0x65, 0x62, 0x7d, 0x45, 0x20, 0x6c, 0x41,
-   0x00,
- });
- CBORTestCommon.CheckEncodeToBytes(cbor);
- cbor = CBORObject.DecodeFromBytes(new byte[] {
-   (byte)0x82,
-   (byte)0xfa,
-   (byte)0xe0,
-   (byte)0xa0,
-   (byte)0x9d,
-   (byte)0xba,
-   (byte)0x82,
-   (byte)0x82,
-   (byte)0xf7, (byte)0xa2, (byte)0xa0, (byte)0xf7, 0x60, 0x41, 0x00,
-   (byte)0xf4,
- });
- CBORTestCommon.CheckEncodeToBytes(cbor);
- cbor = CBORObject.DecodeFromBytes(new byte[] {
-   (byte)0xfa, (byte)0xc7,
-   (byte)0x80, 0x01, (byte)0x80,
- });
- CBORTestCommon.CheckEncodeToBytes(cbor);
- cbor = CBORObject.DecodeFromBytes(new byte[] {
-   (byte)0xa5, 0x64, 0x69,
-   0x74, 0x65, 0x6d, 0x6a, 0x61, 0x6e, 0x79, 0x20, 0x73, 0x74, 0x72, 0x69,
-   0x6e, 0x67, 0x66, 0x6e, 0x75, 0x6d, 0x62, 0x65, 0x72, 0x18, 0x2a, 0x63,
-   0x6d, 0x61, 0x70,
-   (byte)0xa1, 0x66, 0x6e, 0x75, 0x6d, 0x62, 0x65, 0x72, 0x18, 0x2a, 0x65,
-   0x61, 0x72, 0x72, 0x61, 0x79,
-   (byte)0x82,
-   (byte)0xf9, 0x63,
-   (byte)0xce, 0x63, 0x78, 0x79, 0x7a, 0x65, 0x62, 0x79, 0x74, 0x65, 0x73,
-   0x43, 0x00, 0x01, 0x02,
- });
- CBORTestCommon.CheckEncodeToBytes(cbor);
- cbor = CBORObject.DecodeFromBytes(new byte[] {
-   (byte)0xda, 0x00, 0x14, 0x57,
-   (byte)0xce,
-   (byte)0xc5,
-   (byte)0x82, 0x1a, 0x46, 0x5a, 0x37,
-   (byte)0x87,
-   (byte)0xc3, 0x50, 0x5e,
-   (byte)0xec,
-   (byte)0xfd, 0x73, 0x50, 0x64,
-   (byte)0xa1, 0x1f, 0x10,
-   (byte)0xc4, (byte)0xff, (byte)0xf2, (byte)0xc4, (byte)0xc9, 0x65, 0x12,
- });
- CBORTestCommon.CheckEncodeToBytes(cbor);
- cbor = CBORObject.DecodeFromBytes(new byte[] {
-   (byte)0xfa, (byte)0xc7,
-   (byte)0x80, 0x01, (byte)0x80,
- });
- CBORTestCommon.CheckEncodeToBytes(cbor);
- cbor = CBORObject.DecodeFromBytes(new byte[] {
-   (byte)0x82,
-   (byte)0xda, 0x00, 0x0a,
-   (byte)0xe8,
-   (byte)0xb6,
-   (byte)0xfb, 0x43,
-   (byte)0xc0, 0x00, 0x00,
-   (byte)0xd5, 0x42, 0x7f,
-   (byte)0xdc, (byte)0xfa, 0x71, (byte)0x80, (byte)0xd7, (byte)0xc8,
- });
- CBORTestCommon.CheckEncodeToBytes(cbor);
- cbor = CBORObject.DecodeFromBytes(new byte[] {
-   (byte)0xfa, 0x29, 0x0a,
-   0x4c, (byte)0x9e,
- });
- CBORTestCommon.CheckEncodeToBytes(cbor);
-}
+      cbor = CBORObject.DecodeFromBytes(new byte[] {
+        (byte)0xfa, 0x56, 0x00,
+        0x69, 0x2a,
+      });
+      CBORTestCommon.CheckEncodeToBytes(cbor);
+      cbor = CBORObject.DecodeFromBytes(new byte[] {
+        (byte)0xf9, (byte)0xfc,
+        0x00,
+      });
+      CBORTestCommon.CheckEncodeToBytes(cbor);
+      cbor = CBORObject.DecodeFromBytes(new byte[] {
+        (byte)0xa2,
+        (byte)0x82,
+        (byte)0xf6,
+        (byte)0x82,
+        (byte)0xfb, 0x3c,
+        (byte)0xf0, 0x03, 0x42,
+        (byte)0xcb, 0x54, 0x6c,
+        (byte)0x85,
+        (byte)0x82,
+        (byte)0xc5,
+        (byte)0x82, 0x18,
+        (byte)0xba, 0x0a,
+        (byte)0xfa,
+        (byte)0x84,
+        (byte)0xa0, 0x57,
+        (byte)0x97, 0x42, 0x00, 0x01, 0x65, 0x62, 0x7d, 0x45, 0x20, 0x6c, 0x41,
+        0x00,
+      });
+      CBORTestCommon.CheckEncodeToBytes(cbor);
+      cbor = CBORObject.DecodeFromBytes(new byte[] {
+        (byte)0x82,
+        (byte)0xfa,
+        (byte)0xe0,
+        (byte)0xa0,
+        (byte)0x9d,
+        (byte)0xba,
+        (byte)0x82,
+        (byte)0x82,
+        (byte)0xf7, (byte)0xa2, (byte)0xa0, (byte)0xf7, 0x60, 0x41, 0x00,
+        (byte)0xf4,
+      });
+      CBORTestCommon.CheckEncodeToBytes(cbor);
+      cbor = CBORObject.DecodeFromBytes(new byte[] {
+        (byte)0xfa, (byte)0xc7,
+        (byte)0x80, 0x01, (byte)0x80,
+      });
+      CBORTestCommon.CheckEncodeToBytes(cbor);
+      cbor = CBORObject.DecodeFromBytes(new byte[] {
+        (byte)0xa5, 0x64, 0x69,
+        0x74, 0x65, 0x6d, 0x6a, 0x61, 0x6e, 0x79, 0x20, 0x73, 0x74, 0x72, 0x69,
+        0x6e, 0x67, 0x66, 0x6e, 0x75, 0x6d, 0x62, 0x65, 0x72, 0x18, 0x2a, 0x63,
+        0x6d, 0x61, 0x70,
+        (byte)0xa1, 0x66, 0x6e, 0x75, 0x6d, 0x62, 0x65, 0x72, 0x18, 0x2a, 0x65,
+        0x61, 0x72, 0x72, 0x61, 0x79,
+        (byte)0x82,
+        (byte)0xf9, 0x63,
+        (byte)0xce, 0x63, 0x78, 0x79, 0x7a, 0x65, 0x62, 0x79, 0x74, 0x65, 0x73,
+        0x43, 0x00, 0x01, 0x02,
+      });
+      CBORTestCommon.CheckEncodeToBytes(cbor);
+      cbor = CBORObject.DecodeFromBytes(new byte[] {
+        (byte)0xda, 0x00, 0x14,
+        0x57,
+        (byte)0xce,
+        (byte)0xc5,
+        (byte)0x82, 0x1a, 0x46, 0x5a, 0x37,
+        (byte)0x87,
+        (byte)0xc3, 0x50, 0x5e,
+        (byte)0xec,
+        (byte)0xfd, 0x73, 0x50, 0x64,
+        (byte)0xa1, 0x1f, 0x10,
+        (byte)0xc4, (byte)0xff, (byte)0xf2, (byte)0xc4, (byte)0xc9, 0x65,
+        0x12,
+      });
+      CBORTestCommon.CheckEncodeToBytes(cbor);
+      cbor = CBORObject.DecodeFromBytes(new byte[] {
+        (byte)0xfa, (byte)0xc7,
+        (byte)0x80, 0x01, (byte)0x80,
+      });
+      CBORTestCommon.CheckEncodeToBytes(cbor);
+      cbor = CBORObject.DecodeFromBytes(new byte[] {
+        (byte)0x82,
+        (byte)0xda, 0x00, 0x0a,
+        (byte)0xe8,
+        (byte)0xb6,
+        (byte)0xfb, 0x43,
+        (byte)0xc0, 0x00, 0x00,
+        (byte)0xd5, 0x42, 0x7f,
+        (byte)0xdc, (byte)0xfa, 0x71, (byte)0x80, (byte)0xd7, (byte)0xc8,
+      });
+      CBORTestCommon.CheckEncodeToBytes(cbor);
+      cbor = CBORObject.DecodeFromBytes(new byte[] {
+        (byte)0xfa, 0x29, 0x0a,
+        0x4c, (byte)0x9e,
+      });
+      CBORTestCommon.CheckEncodeToBytes(cbor);
+    }
 
     [Test]
     public void TestType() {
@@ -5502,7 +5510,7 @@ public void TestCalcEncodedBytesSpecific() {
             CBORObject.Write(str, ms);
             CBORObject.Write(cborTemp1, ms);
             cborTemp1.WriteTo(ms);
-            AssertReadThree (
+            AssertReadThree(
               ms.ToArray(),
               ToObjectTest.TestToFromObjectRoundTrip((object)null));
           }
@@ -5530,7 +5538,7 @@ public void TestCalcEncodedBytesSpecific() {
             CBORObject.Write(cborTemp1, ms);
             cborTemp1.WriteTo(ms);
             {
-              CBORObject objectTemp2 = ToObjectTest.TestToFromObjectRoundTrip (
+              CBORObject objectTemp2 = ToObjectTest.TestToFromObjectRoundTrip(
                   "test");
               AssertReadThree(ms.ToArray(), objectTemp2);
             }
@@ -5558,7 +5566,7 @@ public void TestCalcEncodedBytesSpecific() {
             CBORObject.Write(str, ms);
             CBORObject.Write(cborTemp1, ms);
             cborTemp1.WriteTo(ms);
-            AssertReadThree (
+            AssertReadThree(
               ms.ToArray(),
               ToObjectTest.TestToFromObjectRoundTrip(str));
           }
@@ -5595,7 +5603,7 @@ public void TestCalcEncodedBytesSpecific() {
               CBORObject.Write(values[i], ms);
               CBORObject.Write(cborTemp1, ms);
               cborTemp1.WriteTo(ms);
-              AssertReadThree (
+              AssertReadThree(
                 ms.ToArray(),
                 ToObjectTest.TestToFromObjectRoundTrip(values[i]));
             }
@@ -5623,7 +5631,7 @@ public void TestCalcEncodedBytesSpecific() {
               CBORObject.Write(bigintVal, ms);
               CBORObject.Write(cborTemp1, ms);
               cborTemp1.WriteTo(ms);
-              AssertReadThree (
+              AssertReadThree(
                 ms.ToArray(),
                 ToObjectTest.TestToFromObjectRoundTrip(bigintVal));
             }
@@ -5653,7 +5661,7 @@ public void TestCalcEncodedBytesSpecific() {
                 CBORObject.Write(intval, ms);
                 CBORObject.Write(cborTemp1, ms);
                 cborTemp1.WriteTo(ms);
-                AssertReadThree (
+                AssertReadThree(
                   ms.ToArray(),
                   ToObjectTest.TestToFromObjectRoundTrip(intval));
               }
@@ -5683,7 +5691,7 @@ public void TestCalcEncodedBytesSpecific() {
               CBORObject.Write(shortval, ms);
               CBORObject.Write(cborTemp1, ms);
               cborTemp1.WriteTo(ms);
-              AssertReadThree (
+              AssertReadThree(
                 ms.ToArray(),
                 ToObjectTest.TestToFromObjectRoundTrip(shortval));
             }
@@ -5712,7 +5720,7 @@ public void TestCalcEncodedBytesSpecific() {
                 CBORObject.Write(byteval, ms);
                 CBORObject.Write(cborTemp1, ms);
                 cborTemp1.WriteTo(ms);
-                AssertReadThree (
+                AssertReadThree(
                   ms.ToArray(),
                   ToObjectTest.TestToFromObjectRoundTrip(byteval));
               }
@@ -5739,7 +5747,7 @@ public void TestCalcEncodedBytesSpecific() {
             CBORObject.Write(0.0f, ms);
             CBORObject.Write(cborTemp1, ms);
             cborTemp1.WriteTo(ms);
-            AssertReadThree (
+            AssertReadThree(
               ms.ToArray(),
               ToObjectTest.TestToFromObjectRoundTrip(0.0f));
           }
@@ -5765,7 +5773,7 @@ public void TestCalcEncodedBytesSpecific() {
             CBORObject.Write(2.6, ms);
             CBORObject.Write(cborTemp1, ms);
             cborTemp1.WriteTo(ms);
-            AssertReadThree (
+            AssertReadThree(
               ms.ToArray(),
               ToObjectTest.TestToFromObjectRoundTrip(2.6));
           }
@@ -5792,7 +5800,7 @@ public void TestCalcEncodedBytesSpecific() {
             CBORObject.Write(cbor, ms);
             CBORObject.Write(cborTemp1, ms);
             cborTemp1.WriteTo(ms);
-            AssertReadThree (
+            AssertReadThree(
               ms.ToArray(),
               ToObjectTest.TestToFromObjectRoundTrip((object)null));
           }
@@ -5819,7 +5827,7 @@ public void TestCalcEncodedBytesSpecific() {
             CBORObject.Write(aobj, ms);
             CBORObject.Write(cborTemp1, ms);
             cborTemp1.WriteTo(ms);
-            AssertReadThree (
+            AssertReadThree(
               ms.ToArray(),
               ToObjectTest.TestToFromObjectRoundTrip((object)null));
           }
@@ -5866,14 +5874,14 @@ public void TestCalcEncodedBytesSpecific() {
               CBORObject.Write(ef, ms);
               CBORObject.Write(cborTemp1, ms);
               cborTemp1.WriteTo(ms);
-              AssertReadThree (
+              AssertReadThree(
                 ms.ToArray(),
                 ToObjectTest.TestToFromObjectRoundTrip(ef));
             }
             TestWriteObj((object)ef, ef);
           }
 
-          ef = EFloat.Create (
+          ef = EFloat.Create(
               RandomObjects.RandomEInteger(fr),
               RandomObjects.RandomEInteger(fr));
           {
@@ -5898,7 +5906,7 @@ public void TestCalcEncodedBytesSpecific() {
               if (cborTemp1.IsNegative && cborTemp1.IsZero) {
                 AssertReadThree(ms.ToArray());
               } else {
-                AssertReadThree (
+                AssertReadThree(
                   ms.ToArray(),
                   ToObjectTest.TestToFromObjectRoundTrip(ef));
               }
@@ -5930,7 +5938,7 @@ public void TestCalcEncodedBytesSpecific() {
               if (cborTemp1.IsNegative && cborTemp1.IsZero) {
                 AssertReadThree(ms.ToArray());
               } else {
-                AssertReadThree (
+                AssertReadThree(
                   ms.ToArray(),
                   ToObjectTest.TestToFromObjectRoundTrip(ed));
               }
@@ -5940,7 +5948,7 @@ public void TestCalcEncodedBytesSpecific() {
             }
           }
 
-          ed = EDecimal.Create (
+          ed = EDecimal.Create(
               RandomObjects.RandomEInteger(fr),
               RandomObjects.RandomEInteger(fr));
           {
@@ -5962,7 +5970,7 @@ public void TestCalcEncodedBytesSpecific() {
               CBORObject.Write(ed, ms);
               CBORObject.Write(cborTemp1, ms);
               cborTemp1.WriteTo(ms);
-              AssertReadThree (
+              AssertReadThree(
                 ms.ToArray(),
                 ToObjectTest.TestToFromObjectRoundTrip(ed));
             }
@@ -6000,7 +6008,7 @@ public void TestCalcEncodedBytesSpecific() {
             CBORObject.Write(ef, ms);
             CBORObject.Write(cborTemp1, ms);
             cborTemp1.WriteTo(ms);
-            AssertReadThree (
+            AssertReadThree(
               ms.ToArray(),
               ToObjectTest.TestToFromObjectRoundTrip((object)null));
           }
@@ -6027,7 +6035,7 @@ public void TestCalcEncodedBytesSpecific() {
             CBORObject.Write(ef, ms);
             CBORObject.Write(cborTemp1, ms);
             cborTemp1.WriteTo(ms);
-            AssertReadThree (
+            AssertReadThree(
               ms.ToArray(),
               ToObjectTest.TestToFromObjectRoundTrip(ef));
           }
@@ -6054,7 +6062,7 @@ public void TestCalcEncodedBytesSpecific() {
             CBORObject.Write(er, ms);
             CBORObject.Write(cborTemp1, ms);
             cborTemp1.WriteTo(ms);
-            AssertReadThree (
+            AssertReadThree(
               ms.ToArray(),
               ToObjectTest.TestToFromObjectRoundTrip((object)null));
           }
@@ -6085,7 +6093,7 @@ public void TestCalcEncodedBytesSpecific() {
             if (cborTemp1.IsNegative && cborTemp1.IsZero) {
               AssertReadThree(ms.ToArray());
             } else {
-              AssertReadThree (
+              AssertReadThree(
                 ms.ToArray(),
                 ToObjectTest.TestToFromObjectRoundTrip(er));
             }
@@ -6113,7 +6121,7 @@ public void TestCalcEncodedBytesSpecific() {
             CBORObject.Write(ed, ms);
             CBORObject.Write(cborTemp1, ms);
             cborTemp1.WriteTo(ms);
-            AssertReadThree (
+            AssertReadThree(
               ms.ToArray(),
               ToObjectTest.TestToFromObjectRoundTrip((object)null));
           }
@@ -6141,7 +6149,7 @@ public void TestCalcEncodedBytesSpecific() {
             CBORObject.Write(bigint, ms);
             CBORObject.Write(cborTemp1, ms);
             cborTemp1.WriteTo(ms);
-            AssertReadThree (
+            AssertReadThree(
               ms.ToArray(),
               ToObjectTest.TestToFromObjectRoundTrip((object)null));
           }
@@ -6202,13 +6210,13 @@ public void TestCalcEncodedBytesSpecific() {
           "0",
           stringTemp);
       }
-      Assert.AreEqual (
+      Assert.AreEqual(
         ToObjectTest.TestToFromObjectRoundTrip(0),
         CBORObject.Zero);
     }
 
     internal static void CompareDecimals(CBORObject o1, CBORObject o2) {
-      int cmpDecFrac = TestCommon.CompareTestReciprocal (
+      int cmpDecFrac = TestCommon.CompareTestReciprocal(
           AsED(o1),
           AsED(o2));
       int cmpCobj = TestCommon.CompareTestReciprocal(o1.AsNumber(),
@@ -6375,7 +6383,7 @@ public void TestCalcEncodedBytesSpecific() {
             CBORObject.Write(obj, ms);
             CBORObject.Write(ToObjectTest.TestToFromObjectRoundTrip(obj), ms);
             ToObjectTest.TestToFromObjectRoundTrip(obj).WriteTo(ms);
-            AssertReadThree (
+            AssertReadThree(
               ms.ToArray(),
               ToObjectTest.TestToFromObjectRoundTrip(objTest));
           }
@@ -6590,14 +6598,14 @@ public void TestCalcEncodedBytesSpecific() {
           CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
           if (!cbor.AsNumber().IsNaN()) {
             using (var ms = new MemoryStream()) {
-              CBORObject.WriteFloatingPointValue (
+              CBORObject.WriteFloatingPointValue(
                 ms,
                 cbor.AsDouble(),
                 2);
               TestCommon.AssertByteArraysEqual(bytes, ms.ToArray());
             }
             using (var ms = new MemoryStream()) {
-              CBORObject.WriteFloatingPointValue (
+              CBORObject.WriteFloatingPointValue(
                 ms,
                 cbor.AsSingle(),
                 2);
@@ -6616,14 +6624,14 @@ public void TestCalcEncodedBytesSpecific() {
           CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
           if (!cbor.AsNumber().IsNaN()) {
             using (var ms = new MemoryStream()) {
-              CBORObject.WriteFloatingPointValue (
+              CBORObject.WriteFloatingPointValue(
                 ms,
                 cbor.AsDouble(),
                 4);
               TestCommon.AssertByteArraysEqual(bytes, ms.ToArray());
             }
             using (var ms = new MemoryStream()) {
-              CBORObject.WriteFloatingPointValue (
+              CBORObject.WriteFloatingPointValue(
                 ms,
                 cbor.AsSingle(),
                 4);
@@ -6641,7 +6649,7 @@ public void TestCalcEncodedBytesSpecific() {
           CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
           if (!cbor.AsNumber().IsNaN()) {
             using (var ms = new MemoryStream()) {
-              CBORObject.WriteFloatingPointValue (
+              CBORObject.WriteFloatingPointValue(
                 ms,
                 cbor.AsDouble(),
                 8);
@@ -6650,16 +6658,16 @@ public void TestCalcEncodedBytesSpecific() {
             CBORObject c2 = null;
             byte[] c2bytes = null;
             using (var ms = new MemoryStream()) {
-              CBORObject.WriteFloatingPointValue (
+              CBORObject.WriteFloatingPointValue(
                 ms,
                 cbor.AsSingle(),
                 8);
               c2bytes = ms.ToArray();
-              c2 = CBORObject.DecodeFromBytes (
+              c2 = CBORObject.DecodeFromBytes(
                   c2bytes);
             }
             using (var ms = new MemoryStream()) {
-              CBORObject.WriteFloatingPointValue (
+              CBORObject.WriteFloatingPointValue(
                 ms,
                 c2.AsSingle(),
                 8);
@@ -6742,7 +6750,7 @@ public void TestCalcEncodedBytesSpecific() {
       dateList.Add("1954-03-07T16:20:38.256Z");
       var rng = new RandomGenerator();
       for (var i = 0; i < 2000; ++i) {
-        string dtstr = DateTimeToString (
+        string dtstr = DateTimeToString(
             rng.UniformInt(9999) + 1,
             rng.UniformInt(12) + 1,
             rng.UniformInt(28) + 1,

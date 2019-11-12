@@ -224,7 +224,10 @@ namespace Test {
         CBORTestCommon.AssertJSONSer (
           ToObjectTest.TestToFromObjectRoundTrip(bi),
           bi.ToString());
-        Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(bi).IsIntegral);
+
+        Assert.IsTrue(
+          ToObjectTest.TestToFromObjectRoundTrip(
+          bi).AsNumber().IsInteger());
 
         CBORTestCommon.AssertRoundTrip (
           ToObjectTest.TestToFromObjectRoundTrip(bi));
@@ -541,13 +544,13 @@ namespace Test {
         }
         if (!ed.AsNumber().IsInfinity() && !ed.AsNumber().IsNaN()) {
           ed2 = EDecimal.FromEInteger(AsED(ed).ToEInteger());
-          if ((AsED(ed).CompareTo(ed2) == 0) != ed.IsIntegral) {
+          if ((AsED(ed).CompareTo(ed2) == 0) != ed.AsNumber().IsInteger()) {
             Assert.Fail(ObjectMessage(ed));
           }
         }
         if (!ed.AsNumber().IsInfinity() && !ed.AsNumber().IsNaN()) {
           EInteger bi = AsEI(ed);
-          if (ed.IsIntegral) {
+          if (ed.AsNumber().IsInteger()) {
             if ((bi.GetSignedBitLengthAsEInteger().ToInt32Checked() <= 31) !=
               ed.AsNumber().CanFitInInt32()) {
               Assert.Fail(ObjectMessage(ed));
@@ -557,7 +560,7 @@ namespace Test {
             ed.CanTruncatedIntFitInInt32()) {
             Assert.Fail(ObjectMessage(ed));
           }
-          if (ed.IsIntegral) {
+          if (ed.AsNumber().IsInteger()) {
             if ((bi.GetSignedBitLengthAsEInteger().ToInt32Checked() <= 63) !=
               ed.AsNumber().CanFitInInt64()) {
               Assert.Fail(ObjectMessage(ed));
@@ -1015,7 +1018,7 @@ namespace Test {
     [Test]
     public void TestDouble() {
       if (!ToObjectTest.TestToFromObjectRoundTrip (
-          Double.PositiveInfinity).IsPositiveInfinity()) {
+          Double.PositiveInfinity).AsNumber().IsPositiveInfinity()) {
         Assert.Fail("Not positive infinity");
       }
 
@@ -1038,7 +1041,7 @@ namespace Test {
         CBORObject o = ToObjectTest.TestToFromObjectRoundTrip((double)i);
         Assert.IsTrue(o.CanFitInDouble());
         Assert.IsTrue(o.AsNumber().CanFitInInt32());
-        Assert.IsTrue(o.IsIntegral);
+        Assert.IsTrue(o.AsNumber().IsInteger());
         CBORTestCommon.AssertJSONSer (
           o,
           TestCommon.IntToString(i));
@@ -1159,7 +1162,7 @@ namespace Test {
       for (var tag = 268; tag <= 269; ++tag) {
         cbor = CBORObject.NewArray().Add(-3).Add(99999).Add(0);
         cbortag = CBORObject.FromObjectAndTag(cbor, tag);
-        Assert.IsFalse(cbortag.IsNegative);
+        Assert.IsFalse(cbortag.AsNumber().IsNegative());
         cbor = CBORObject.NewArray().Add(-3).Add(99999);
         cbortag = CBORObject.FromObjectAndTag(cbor, tag);
         try {
@@ -1173,7 +1176,7 @@ namespace Test {
         }
         cbor = CBORObject.NewArray().Add(-3).Add(99999).Add(1);
         cbortag = CBORObject.FromObjectAndTag(cbor, tag);
-        Assert.IsTrue(cbortag.IsNegative);
+        Assert.IsTrue(cbortag.AsNumber().IsNegative());
         cbor = CBORObject.NewArray().Add(-3).Add(99999).Add(-1);
         cbortag = CBORObject.FromObjectAndTag(cbor, tag);
         try {
@@ -1198,10 +1201,10 @@ namespace Test {
         }
         cbor = CBORObject.NewArray().Add(0).Add(0).Add(2);
         cbortag = CBORObject.FromObjectAndTag(cbor, tag);
-        Assert.IsFalse(cbortag.IsNegative);
+        Assert.IsFalse(cbortag.AsNumber().IsNegative());
         cbor = CBORObject.NewArray().Add(0).Add(0).Add(3);
         cbortag = CBORObject.FromObjectAndTag(cbor, tag);
-        Assert.IsTrue(cbortag.IsNegative);
+        Assert.IsTrue(cbortag.AsNumber().IsNegative());
         cbor = CBORObject.NewArray().Add(-3).Add(99999).Add(8);
         cbortag = CBORObject.FromObjectAndTag(cbor, tag);
         try {
@@ -1352,11 +1355,10 @@ namespace Test {
       for (var i = 0; i < ranges.Length; i += 2) {
         long j = ranges[i];
         while (true) {
-          Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(j).IsIntegral);
-          Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(j)
-            .AsNumber().CanFitInInt64());
-          Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(j)
-            .CanTruncatedIntFitInInt64());
+          CBORNumber cn = ToObjectTest.TestToFromObjectRoundTrip(j).AsNumber();
+          Assert.IsTrue(cn.IsInteger());
+          Assert.IsTrue(cn.CanFitInInt64());
+          Assert.IsTrue(cn.CanTruncatedIntFitInInt64());
           CBORTestCommon.AssertJSONSer (
             ToObjectTest.TestToFromObjectRoundTrip(j),
             TestCommon.LongToString(j));

@@ -39,21 +39,21 @@ An instance of a number that CBOR or certain CBOR tags can represent. For this p
 * <code>[bool operator &lt;=(PeterO.Cbor.CBORNumber, PeterO.Cbor.CBORNumber)](#op_LessThanOrEqual)</code> - Returns whether one object's value is up to another's.
 * <code>[Remainder(PeterO.Cbor.CBORNumber)](#Remainder_PeterO_Cbor_CBORNumber)</code> - Returns the remainder when this number is divided by another number.
 * <code>[Subtract(PeterO.Cbor.CBORNumber)](#Subtract_PeterO_Cbor_CBORNumber)</code> - Returns a number that expresses this number minus another.
-* <code>[ToByteChecked()](#ToByteChecked)</code> - Converts this number's value to a byte (from 0 to 255) if it can fit in a byte (from 0 to 255) after truncating to an integer.
+* <code>[ToByteChecked()](#ToByteChecked)</code> - Converts this number's value to a byte (from 0 to 255) if it can fit in a byte (from 0 to 255) after converting it to an integer by discarding its fractional part.
 * <code>[ToByteIfExact()](#ToByteIfExact)</code> - Converts this number's value to a byte (from 0 to 255) if it can fit in a byte (from 0 to 255) without rounding to a different numerical value.
-* <code>[ToByteUnchecked()](#ToByteUnchecked)</code> - Truncates this number's value to an integer and returns the least-significant bits of its two's-complement form as a byte (from 0 to 255).
+* <code>[ToByteUnchecked()](#ToByteUnchecked)</code> - Converts this number's value to an integer by discarding its fractional part, and returns the least-significant bits of its two's-complement form as a byte (from 0 to 255).
 * <code>[ToCBORObject()](#ToCBORObject)</code> - Converts this object's value to a CBOR object.
 * <code>[ToEInteger()](#ToEInteger)</code> - Not documented yet.
 * <code>[ToEIntegerIfExact()](#ToEIntegerIfExact)</code> - Not documented yet.
-* <code>[ToInt16Checked()](#ToInt16Checked)</code> - Converts this number's value to a 16-bit signed integer if it can fit in a 16-bit signed integer after truncating to an integer.
+* <code>[ToInt16Checked()](#ToInt16Checked)</code> - Converts this number's value to a 16-bit signed integer if it can fit in a 16-bit signed integer after converting it to an integer by discarding its fractional part.
 * <code>[ToInt16IfExact()](#ToInt16IfExact)</code> - Converts this number's value to a 16-bit signed integer if it can fit in a 16-bit signed integer without rounding to a different numerical value.
-* <code>[ToInt16Unchecked()](#ToInt16Unchecked)</code> - Truncates this number's value to an integer and returns the least-significant bits of its two's-complement form as a 16-bit signed integer.
-* <code>[ToInt32Checked()](#ToInt32Checked)</code> - Converts this number's value to a 32-bit signed integer if it can fit in a 32-bit signed integer after truncating to an integer.
+* <code>[ToInt16Unchecked()](#ToInt16Unchecked)</code> - Converts this number's value to an integer by discarding its fractional part, and returns the least-significant bits of its two's-complement form as a 16-bit signed integer.
+* <code>[ToInt32Checked()](#ToInt32Checked)</code> - Converts this number's value to a 32-bit signed integer if it can fit in a 32-bit signed integer after converting it to an integer by discarding its fractional part.
 * <code>[ToInt32IfExact()](#ToInt32IfExact)</code> - Converts this number's value to a 32-bit signed integer if it can fit in a 32-bit signed integer without rounding to a different numerical value.
-* <code>[ToInt32Unchecked()](#ToInt32Unchecked)</code> - Truncates this number's value to an integer and returns the least-significant bits of its two's-complement form as a 32-bit signed integer.
-* <code>[ToInt64Checked()](#ToInt64Checked)</code> - Converts this number's value to a 64-bit signed integer if it can fit in a 64-bit signed integer after truncating to an integer.
+* <code>[ToInt32Unchecked()](#ToInt32Unchecked)</code> - Converts this number's value to an integer by discarding its fractional part, and returns the least-significant bits of its two's-complement form as a 32-bit signed integer.
+* <code>[ToInt64Checked()](#ToInt64Checked)</code> - Converts this number's value to a 64-bit signed integer if it can fit in a 64-bit signed integer after converting it to an integer by discarding its fractional part.
 * <code>[ToInt64IfExact()](#ToInt64IfExact)</code> - Converts this number's value to a 64-bit signed integer if it can fit in a 64-bit signed integer without rounding to a different numerical value.
-* <code>[ToInt64Unchecked()](#ToInt64Unchecked)</code> - Truncates this number's value to an integer and returns the least-significant bits of its two's-complement form as a 64-bit signed integer.
+* <code>[ToInt64Unchecked()](#ToInt64Unchecked)</code> - Converts this number's value to an integer by discarding its fractional part, and returns the least-significant bits of its two's-complement form as a 64-bit signed integer.
 * <code>[ToString()](#ToString)</code> - Returns the value of this object in text form.
 
 <a id="Abs"></a>
@@ -558,7 +558,7 @@ The parameter  <i>b</i>
 
     public byte ToByteChecked();
 
-Converts this number's value to a byte (from 0 to 255) if it can fit in a byte (from 0 to 255) after truncating to an integer.
+Converts this number's value to a byte (from 0 to 255) if it can fit in a byte (from 0 to 255) after converting it to an integer by discarding its fractional part.
 
 <b>Return Value:</b>
 
@@ -567,7 +567,7 @@ This number's value, truncated to a byte (from 0 to 255).
 <b>Exceptions:</b>
 
  * System.OverflowException:
-This value is infinity or not-a-number, or the truncated integer is less than 0 or greater than 255.
+This value is infinity or not-a-number, or the number, once converted to an integer by discarding its fractional part, is less than 0 or greater than 255.
 
 <a id="ToByteIfExact"></a>
 ### ToByteIfExact
@@ -590,7 +590,7 @@ This value is infinity or not-a-number, is not an exact integer, or is less than
 
     public byte ToByteUnchecked();
 
-Truncates this number's value to an integer and returns the least-significant bits of its two's-complement form as a byte (from 0 to 255).
+Converts this number's value to an integer by discarding its fractional part, and returns the least-significant bits of its two's-complement form as a byte (from 0 to 255).
 
 <b>Return Value:</b>
 
@@ -614,6 +614,10 @@ A CBOR object that stores this object's value.
 
 Not documented yet.
 
+<b>Return Value:</b>
+
+The return value is not documented yet.
+
 <b>Exceptions:</b>
 
  * System.ArithmeticException:
@@ -626,6 +630,10 @@ This value is infinity or not-a-number.
 
 Not documented yet.
 
+<b>Return Value:</b>
+
+The return value is not documented yet.
+
 <b>Exceptions:</b>
 
  * System.ArithmeticException:
@@ -636,7 +644,7 @@ This value is infinity or not-a-number or is not an exact integer.
 
     public short ToInt16Checked();
 
-Converts this number's value to a 16-bit signed integer if it can fit in a 16-bit signed integer after truncating to an integer.
+Converts this number's value to a 16-bit signed integer if it can fit in a 16-bit signed integer after converting it to an integer by discarding its fractional part.
 
 <b>Return Value:</b>
 
@@ -645,7 +653,7 @@ This number's value, truncated to a 16-bit signed integer.
 <b>Exceptions:</b>
 
  * System.OverflowException:
-This value is infinity or not-a-number, or the truncated integer is less than -32768 or greater than 32767.
+This value is infinity or not-a-number, or the number, once converted to an integer by discarding its fractional part, is less than -32768 or greater than 32767.
 
 <a id="ToInt16IfExact"></a>
 ### ToInt16IfExact
@@ -668,7 +676,7 @@ This value is infinity or not-a-number, is not an exact integer, or is less than
 
     public short ToInt16Unchecked();
 
-Truncates this number's value to an integer and returns the least-significant bits of its two's-complement form as a 16-bit signed integer.
+Converts this number's value to an integer by discarding its fractional part, and returns the least-significant bits of its two's-complement form as a 16-bit signed integer.
 
 <b>Return Value:</b>
 
@@ -679,7 +687,7 @@ This number, converted to a 16-bit signed integer. Returns 0 if this value is in
 
     public int ToInt32Checked();
 
-Converts this number's value to a 32-bit signed integer if it can fit in a 32-bit signed integer after truncating to an integer.
+Converts this number's value to a 32-bit signed integer if it can fit in a 32-bit signed integer after converting it to an integer by discarding its fractional part.
 
 <b>Return Value:</b>
 
@@ -688,7 +696,7 @@ This number's value, truncated to a 32-bit signed integer.
 <b>Exceptions:</b>
 
  * System.OverflowException:
-This value is infinity or not-a-number, or the truncated integer is less than -2147483648 or greater than 2147483647.
+This value is infinity or not-a-number, or the number, once converted to an integer by discarding its fractional part, is less than -2147483648 or greater than 2147483647.
 
 <a id="ToInt32IfExact"></a>
 ### ToInt32IfExact
@@ -711,7 +719,7 @@ This value is infinity or not-a-number, is not an exact integer, or is less than
 
     public int ToInt32Unchecked();
 
-Truncates this number's value to an integer and returns the least-significant bits of its two's-complement form as a 32-bit signed integer.
+Converts this number's value to an integer by discarding its fractional part, and returns the least-significant bits of its two's-complement form as a 32-bit signed integer.
 
 <b>Return Value:</b>
 
@@ -722,7 +730,7 @@ This number, converted to a 32-bit signed integer. Returns 0 if this value is in
 
     public long ToInt64Checked();
 
-Converts this number's value to a 64-bit signed integer if it can fit in a 64-bit signed integer after truncating to an integer.
+Converts this number's value to a 64-bit signed integer if it can fit in a 64-bit signed integer after converting it to an integer by discarding its fractional part.
 
 <b>Return Value:</b>
 
@@ -731,7 +739,7 @@ This number's value, truncated to a 64-bit signed integer.
 <b>Exceptions:</b>
 
  * System.OverflowException:
-This value is infinity or not-a-number, or the truncated integer is less than -9223372036854775808 or greater than 9223372036854775807.
+This value is infinity or not-a-number, or the number, once converted to an integer by discarding its fractional part, is less than -9223372036854775808 or greater than 9223372036854775807.
 
 <a id="ToInt64IfExact"></a>
 ### ToInt64IfExact
@@ -754,7 +762,7 @@ This value is infinity or not-a-number, is not an exact integer, or is less than
 
     public long ToInt64Unchecked();
 
-Truncates this number's value to an integer and returns the least-significant bits of its two's-complement form as a 64-bit signed integer.
+Converts this number's value to an integer by discarding its fractional part, and returns the least-significant bits of its two's-complement form as a 64-bit signed integer.
 
 <b>Return Value:</b>
 

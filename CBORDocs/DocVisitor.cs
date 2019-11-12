@@ -352,6 +352,9 @@ IsMethodOverride((MethodInfo)method)) {
         return name;
       }
       name = type.Namespace + "." + name;
+      if (name.Equals("System.Decimal", StringComparison.Ordinal)) {
+        return "decimal";
+      }
       return name.Equals("System.Int32", StringComparison.Ordinal) ? "int" :
         (name.Equals("System.Int64", StringComparison.Ordinal) ? "long" :
          (name.Equals("System.Int16", StringComparison.Ordinal) ? "short" :
