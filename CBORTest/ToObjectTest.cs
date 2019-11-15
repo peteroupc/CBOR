@@ -344,10 +344,10 @@ namespace Test {
   (string)numberinfo["number"].ToObject(typeof(string))));
 
         if ((bool)numberinfo["byte"].AsBoolean()) {
-          Assert.AreEqual(
-            TestCommon.StringToInt((string)numberinfo["integer"].ToObject(
-              typeof(string))), ((int)(Byte)cbornumber.ToObject(
-  typeof(byte))) & 0xff);
+          int i1 = TestCommon.StringToInt((string)numberinfo["integer"]
+              .ToObject(typeof(string)));
+          int i2 = ((int)(Byte)cbornumber.ToObject(typeof(byte))) & 0xff;
+          Assert.AreEqual(i1, i2);
         } else {
           try {
             cbornumber.ToObject(typeof(byte));

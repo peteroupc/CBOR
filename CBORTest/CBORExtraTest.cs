@@ -228,7 +228,8 @@ namespace Test {
         "propC");
       #if !NET20
       var queryao =
-from x in arrao select x;
+from x in arrao
+ select x;
       co = CBORObject.FromObject(queryao, valueCcTF);
       CBORObjectTest.CheckArrayPropertyNames (
         CBORObject.FromObject(queryao, valueCcTF),
@@ -373,7 +374,8 @@ from x in arrao select x;
       // Select all even numbers
       var query =
 from i in RangeExclusive(0, 10)
-        where i % 2 == 0 select i;
+        where i % 2 == 0
+ select i;
       obj = CBORObject.FromObject(query);
       Assert.AreEqual(5, obj.Count);
       Assert.AreEqual(0, obj[0].AsInt32());
@@ -382,7 +384,8 @@ from i in RangeExclusive(0, 10)
       // Select all even numbers
       var query2 =
 from i in RangeExclusive(0, 10)
-      where i % 2 == 0 select new {
+      where i % 2 == 0
+ select new {
         A = i, B = i + 1,
       };
       obj = CBORObject.FromObject(query2);

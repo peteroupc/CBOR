@@ -8,7 +8,7 @@ namespace Test {
   [TestFixture]
   public class CBORDataUtilitiesTest {
     private void AssertNegative(CBORObject obj) {
-      Assert.IsTrue(obj.IsNegative);
+      Assert.IsTrue(obj.AsNumber().IsNegative());
       CBORTestCommon.AssertRoundTrip(obj);
     }
     [Test]
@@ -180,7 +180,7 @@ namespace Test {
       cbor = CBORDataUtilities.ParseJSONNumber(
         "1e+99999999999999999999999999");
       Assert.IsTrue(cbor != null);
-      Assert.IsFalse(cbor.CanFitInDouble());
+      Assert.IsFalse(cbor.AsNumber().CanFitInDouble());
       CBORTestCommon.AssertRoundTrip(cbor);
     }
   }

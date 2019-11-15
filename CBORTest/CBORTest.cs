@@ -15,7 +15,7 @@ using PeterO.Numbers;
 namespace Test {
   [TestFixture]
   public class CBORTest {
-  [Test]
+    [Test]
     public void TestLexOrderSpecific1() {
       var bytes1 = new byte[] {
         129, 165, 27, 0, 0, 65, 2, 0, 0, 144, 172, 71,
@@ -535,11 +535,11 @@ namespace Test {
         EDecimal ed2;
 
         ed2 = EDecimal.FromDouble(AsED(ed).ToDouble());
-        if ((AsED(ed).CompareTo(ed2) == 0) != ed.CanFitInDouble()) {
+        if ((AsED(ed).CompareTo(ed2) == 0) != ed.AsNumber().CanFitInDouble()) {
           Assert.Fail(ObjectMessage(ed));
         }
         ed2 = EDecimal.FromSingle(AsED(ed).ToSingle());
-        if ((AsED(ed).CompareTo(ed2) == 0) != ed.CanFitInSingle()) {
+        if ((AsED(ed).CompareTo(ed2) == 0) != ed.AsNumber().CanFitInSingle()) {
           Assert.Fail(ObjectMessage(ed));
         }
         if (!ed.AsNumber().IsInfinity() && !ed.AsNumber().IsNaN()) {
@@ -557,7 +557,7 @@ namespace Test {
             }
           }
           if ((bi.GetSignedBitLengthAsEInteger().ToInt32Checked() <= 31) !=
-            ed.CanTruncatedIntFitInInt32()) {
+            ed.AsNumber().CanTruncatedIntFitInInt32()) {
             Assert.Fail(ObjectMessage(ed));
           }
           if (ed.AsNumber().IsInteger()) {
@@ -567,7 +567,7 @@ namespace Test {
             }
           }
           if ((bi.GetSignedBitLengthAsEInteger().ToInt32Checked() <= 63) !=
-            ed.CanTruncatedIntFitInInt64()) {
+            ed.AsNumber().CanTruncatedIntFitInInt64()) {
             Assert.Fail(ObjectMessage(ed));
           }
         }
@@ -587,7 +587,7 @@ namespace Test {
       Assert.IsFalse (
         AsEI(cbor).GetSignedBitLengthAsEInteger().ToInt32Checked()
         <= 31);
-      Assert.IsFalse(cbor.CanTruncatedIntFitInInt32());
+      Assert.IsFalse(cbor.AsNumber().CanTruncatedIntFitInInt32());
       cbor = CBORObject.DecodeFromBytes(new byte[] {
         (byte)0xc5, (byte)0x82,
         0x18, 0x2f, 0x32,
@@ -599,7 +599,7 @@ namespace Test {
       }
       Assert.IsTrue(cbor.AsNumber().CanFitInInt64());
       Assert.IsFalse(ToObjectTest.TestToFromObjectRoundTrip(2554895343L)
-        .CanFitInSingle());
+        .AsNumber().CanFitInSingle());
       cbor = CBORObject.DecodeFromBytes(new byte[] {
         (byte)0xc5, (byte)0x82,
         0x10, 0x38, 0x64,
@@ -607,7 +607,7 @@ namespace Test {
       Assert.AreEqual(EInteger.FromString("-6619136"),
         cbor.ToObject(typeof(EInteger)));
       Assert.AreEqual(-6619136, cbor.AsInt32());
-      Assert.IsTrue(cbor.CanTruncatedIntFitInInt32());
+      Assert.IsTrue(cbor.AsNumber().CanTruncatedIntFitInInt32());
     }
 
     [Test]
@@ -988,16 +988,16 @@ namespace Test {
         CBORObject o2 = ToObjectTest.TestToFromObjectRoundTrip(
   RandomObjects.RandomEInteger(r));
 
-        if (o2.IsZero) {
+        if (o2.AsNumber().IsZero()) {
           continue;
         }
         ERational er = ERational.Create(AsEI(o1), AsEI(o2));
         {
           ERational objectTemp = er;
           ERational objectTemp2;
-          objectTemp2 = (ERational)CBORObject.Divide(
-            o1,
-            o2).ToObject(typeof(ERational));
+          CBORNumber cn = CBORObject.FromObject(o1).AsNumber()
+             .Divide(CBORObject.FromObject(o2).AsNumber());
+          objectTemp2 = cn.ToERational();
           TestCommon.CompareTestEqual(objectTemp, objectTemp2);
         }
       }
@@ -1039,7 +1039,7 @@ namespace Test {
           .ToObject(typeof(EDecimal))).IsNaN());
       for (int i = -65539; i <= 65539; ++i) {
         CBORObject o = ToObjectTest.TestToFromObjectRoundTrip((double)i);
-        Assert.IsTrue(o.CanFitInDouble());
+        Assert.IsTrue(o.AsNumber().CanFitInDouble());
         Assert.IsTrue(o.AsNumber().CanFitInInt32());
         Assert.IsTrue(o.AsNumber().IsInteger());
         CBORTestCommon.AssertJSONSer (
@@ -1359,7 +1359,7 @@ namespace Test {
           Assert.IsTrue(cn.IsInteger());
           Assert.IsTrue(cn.CanFitInInt64());
           Assert.IsTrue(cn.CanTruncatedIntFitInInt64());
-          CBORTestCommon.AssertJSONSer (
+          CBORTestCommon.AssertJSONSer(
             ToObjectTest.TestToFromObjectRoundTrip(j),
             TestCommon.LongToString(j));
           Assert.AreEqual (
@@ -1367,7 +1367,7 @@ namespace Test {
             ToObjectTest.TestToFromObjectRoundTrip(EInteger.FromInt64(j)));
           CBORObject obj = CBORObject.FromJSONString (
               "[" + TestCommon.LongToString(j) + "]");
-          CBORTestCommon.AssertJSONSer (
+          CBORTestCommon.AssertJSONSer(
             obj,
             "[" + TestCommon.LongToString(j) + "]");
           if (j == ranges[i + 1]) {
@@ -1880,7 +1880,9 @@ namespace Test {
               MiniCBOR.WriteInt32(val, ms);
               byte[] msarray = ms.ToArray();
               using (var ms2 = new MemoryStream(msarray)) {
-                Assert.AreEqual(val, MiniCBOR.ReadInt32(ms2),
+                Assert.AreEqual(
+                   val,
+                   MiniCBOR.ReadInt32(ms2),
                    TestCommon.ToByteArrayString(msarray));
               }
             }
@@ -1890,7 +1892,9 @@ namespace Test {
               CBORObject.Write(val, ms);
               byte[] msarray = ms.ToArray();
               using (var ms2 = new MemoryStream(msarray)) {
-                Assert.AreEqual(val, MiniCBOR.ReadInt32(ms2),
+                Assert.AreEqual(
+                   val,
+                   MiniCBOR.ReadInt32(ms2),
                    TestCommon.ToByteArrayString(msarray));
               }
             }
@@ -2019,13 +2023,13 @@ namespace Test {
     }
 
     [Test]
-    public void TestMultiply() {
+    public void TestAsNumberMultiply() {
       var r = new RandomGenerator();
       for (var i = 0; i < 3000; ++i) {
         CBORObject o1 = CBORTestCommon.RandomNumber(r);
         CBORObject o2 = CBORTestCommon.RandomNumber(r);
         EDecimal cmpDecFrac = AsED(o1).Multiply(AsED(o2));
-        EDecimal cmpCobj = AsED(CBORObject.Multiply(o1, o2));
+        EDecimal cmpCobj = o1.AsNumber().Multiply(o2.AsNumber()).ToEDecimal();
         if (cmpDecFrac.CompareTo(cmpCobj) != 0) {
           string msg = "o1=" + o1.ToString() + ", o2=" + o2.ToString() +
             ", " + AsED(o1) + ", " + AsED(o2) + ", cmpCobj=" +
@@ -2038,13 +2042,13 @@ namespace Test {
     }
 
     [Test]
-    public void TestAdd() {
+    public void TestAsNumberAdd() {
       var r = new RandomGenerator();
       for (var i = 0; i < 3000; ++i) {
         CBORObject o1 = CBORTestCommon.RandomNumber(r);
         CBORObject o2 = CBORTestCommon.RandomNumber(r);
         EDecimal cmpDecFrac = AsED(o1).Add(AsED(o2));
-        EDecimal cmpCobj = o1.AsNumber().Add(o2.AsNumber()).AsEDecimal();
+        EDecimal cmpCobj = o1.AsNumber().Add(o2.AsNumber()).ToEDecimal();
         if (cmpDecFrac.CompareTo(cmpCobj) != 0) {
           string msg = "o1=" + o1.ToString() + ", o2=" + o2.ToString() +
             ", " + AsED(o1) + ", " + AsED(o2) + ", cmpCobj=" +
@@ -2057,13 +2061,13 @@ namespace Test {
     }
 
     [Test]
-    public void TestSubtract() {
+    public void TestAsNumberSubtract() {
       var r = new RandomGenerator();
       for (var i = 0; i < 3000; ++i) {
         CBORObject o1 = CBORTestCommon.RandomNumber(r);
         CBORObject o2 = CBORTestCommon.RandomNumber(r);
         EDecimal cmpDecFrac = AsED(o1).Subtract(AsED(o2));
-        EDecimal cmpCobj = o1.AsNumber().Subtract(o2.AsNumber()).AsEDecimal();
+        EDecimal cmpCobj = o1.AsNumber().Subtract(o2.AsNumber()).ToEDecimal();
         if (cmpDecFrac.CompareTo(cmpCobj) != 0) {
           string msg = "o1=" + o1.ToString() + ", o2=" + o2.ToString() +
             ", " + AsED(o1) + ", " + AsED(o2) + ", cmpCobj=" +
@@ -3282,10 +3286,10 @@ namespace Test {
 
     private static void AddSubCompare(CBORObject o1, CBORObject o2) {
       EDecimal cmpDecFrac = AsED(o1).Add(AsED(o2));
-      EDecimal cmpCobj = AsED(CBORObject.Addition(o1, o2));
+      EDecimal cmpCobj = o1.AsNumber().Add(o2.AsNumber()).ToEDecimal();
       TestCommon.CompareTestEqual(cmpDecFrac, cmpCobj);
       cmpDecFrac = AsED(o1).Subtract(AsED(o2));
-      cmpCobj = AsED(CBORObject.Subtract(o1, o2));
+      cmpCobj = o1.AsNumber().Subtract(o2.AsNumber()).ToEDecimal();
       TestCommon.CompareTestEqual(cmpDecFrac, cmpCobj);
       CBORObjectTest.CompareDecimals(o1, o2);
     }

@@ -294,7 +294,7 @@ namespace Test {
         CBORObject o1 = CBORTestCommon.RandomNumber(r);
         CBORObject o2 = CBORTestCommon.RandomNumber(r);
         EDecimal cmpDecFrac = AsED(o1).Add(AsED(o2));
-        EDecimal cmpCobj = o1.AsNumber().Add(o2.AsNumber()).AsEDecimal();
+        EDecimal cmpCobj = o1.AsNumber().Add(o2.AsNumber()).ToEDecimal();
         TestCommon.CompareTestEqual(cmpDecFrac, cmpCobj);
         CBORTestCommon.AssertRoundTrip(o1);
         CBORTestCommon.AssertRoundTrip(o2);
@@ -3559,7 +3559,7 @@ TestCommon.ToByteArrayString(bytes));
         CBORObject o1 = CBORTestCommon.RandomNumber(r);
         CBORObject o2 = CBORTestCommon.RandomNumber(r);
         EDecimal cmpDecFrac = AsED(o1).Multiply(AsED(o2));
-        EDecimal cmpCobj = o1.AsNumber().Multiply(o2.AsNumber()).AsEDecimal();
+        EDecimal cmpCobj = o1.AsNumber().Multiply(o2.AsNumber()).ToEDecimal();
         if (!cmpDecFrac.Equals(cmpCobj)) {
           TestCommon.CompareTestEqual(
             cmpDecFrac,
@@ -6222,8 +6222,10 @@ TestCommon.ToByteArrayString(bytes));
       int cmpCobj = TestCommon.CompareTestReciprocal(o1.AsNumber(),
           o2.AsNumber());
       if (cmpDecFrac != cmpCobj) {
-        Assert.Fail(TestCommon.ObjectMessages(o1, o2, "Compare: Results" +
-"\u0020don't match"));
+        Assert.Fail(TestCommon.ObjectMessages(
+          o1,
+          o2,
+          "Compare: Results\u0020don't match"));
       }
       CBORTestCommon.AssertRoundTrip(o1);
       CBORTestCommon.AssertRoundTrip(o2);

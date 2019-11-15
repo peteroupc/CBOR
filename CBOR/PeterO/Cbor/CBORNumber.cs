@@ -2,6 +2,7 @@ using System;
 using PeterO;
 using PeterO.Numbers;
 
+// TODO: Consider renaming As* methods here to To*
 namespace PeterO.Cbor {
   /// <summary>An instance of a number that CBOR or certain CBOR tags can
   /// represent. For this purpose, infinities and not-a-number or NaN
@@ -947,25 +948,19 @@ this.ToEIntegerIfExact().ToInt64Checked();
 
     /// <summary>Not documented yet.</summary>
     /// <returns>The return value is not documented yet.</returns>
-    public EInteger AsEInteger() {
-      return this.GetNumberInterface().AsEInteger(this.GetValue());
-    }
-
-    /// <summary>Not documented yet.</summary>
-    /// <returns>The return value is not documented yet.</returns>
-    public EDecimal AsEDecimal() {
+    public EDecimal ToEDecimal() {
       return this.GetNumberInterface().AsEDecimal(this.GetValue());
     }
 
     /// <summary>Not documented yet.</summary>
     /// <returns>The return value is not documented yet.</returns>
-    public EFloat AsEFloat() {
+    public EFloat ToEFloat() {
       return this.GetNumberInterface().AsEFloat(this.GetValue());
     }
 
     /// <summary>Not documented yet.</summary>
     /// <returns>The return value is not documented yet.</returns>
-    public ERational AsERational() {
+    public ERational ToERational() {
       return this.GetNumberInterface().AsERational(this.GetValue());
     }
 

@@ -38,8 +38,8 @@ public sealed class CBORException : Exception {
     #if NET20 || NET40
     private CBORException(
       System.Runtime.Serialization.SerializationInfo info,
-      System.Runtime.Serialization.StreamingContext context):
-      base (info, context) {
+      System.Runtime.Serialization.StreamingContext context)
+      : base(info, context) {
     }
     #endif
   }

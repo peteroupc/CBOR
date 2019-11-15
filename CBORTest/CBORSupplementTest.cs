@@ -414,7 +414,7 @@ namespace Test {
     public void TestCBOREInteger() {
       EInteger bi = EInteger.FromString("9223372036854775808");
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(bi).AsInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(bi).ToObject(typeof(long));
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         // NOTE: Intentionally empty
@@ -423,7 +423,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(bi).AsInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(bi).ToObject(typeof(int));
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         // NOTE: Intentionally empty
@@ -433,7 +433,7 @@ namespace Test {
       }
       bi = EInteger.FromString("-9223372036854775809");
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(bi).AsInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(bi).ToObject(typeof(long));
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         // NOTE: Intentionally empty
@@ -442,7 +442,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(bi).AsInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(bi).ToObject(typeof(int));
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         // NOTE: Intentionally empty
@@ -452,7 +452,7 @@ namespace Test {
       }
       bi = EInteger.FromString("-9223372036854775808");
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(bi).AsInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(bi).ToObject(typeof(int));
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         // NOTE: Intentionally empty
@@ -468,8 +468,10 @@ namespace Test {
       co = ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecPosInf);
       co2 = ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity);
       {
-        bool boolTemp = co.IsNegative && co.AsNumber().IsInfinity();
-        bool boolTemp2 = co2.IsNegative && co2.AsNumber().IsInfinity();
+        bool boolTemp = co.AsNumber().IsNegative() &&
+          co.AsNumber().IsInfinity();
+        bool boolTemp2 = co2.AsNumber().IsNegative() &&
+          co2.AsNumber().IsInfinity();
         Assert.AreEqual(boolTemp, boolTemp2);
       }
     }
@@ -508,7 +510,7 @@ namespace Test {
     public void TestBuiltInTags() {
       // As of 4.0, nearly all tags are no longer converted to native objects; thus,
       // DecodeFromBytes no longer fails when such tags are encountered but
-      // have the wrong format (though it can fail for other reasons)
+      // have the wrong format (though it can fail for other reasons).
       // Tag 2, bignums
       byte[] bytes;
       var secondbytes = new byte[] { 0, 0x20, 0x60, 0x80, 0xa0, 0xe0 };
