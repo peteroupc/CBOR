@@ -56,26 +56,26 @@ namespace PeterO.DocGen {
           nt = nt.DeclaringType;
         }
         for (var i = types.Count - 1; i >= 0; --i) {
-        sb.Append(".").Append(UndecorateTypeName(types[i].Name));
-        if (types[i].GetGenericArguments().Length > 0) {
-          if (param) {
-            sb.Append("{");
-            var first = true;
-            foreach (var ga in types[i].GetGenericArguments()) {
-              if (!first) {
-                sb.Append(",");
+          sb.Append(".").Append(UndecorateTypeName(types[i].Name));
+          if (types[i].GetGenericArguments().Length > 0) {
+            if (param) {
+              sb.Append("{");
+              var first = true;
+              foreach (var ga in types[i].GetGenericArguments()) {
+                if (!first) {
+                  sb.Append(",");
+                }
+                sb.Append(XmlDocTypeName(ga, false, genericMethod));
+                first = false;
               }
-              sb.Append(XmlDocTypeName(ga, false, genericMethod));
-              first = false;
+              sb.Append("}");
+            } else {
+              var ggastr = Convert.ToString(
+                types[i].GetGenericArguments().Length,
+                System.Globalization.CultureInfo.InvariantCulture);
+              sb.Append("`").Append(ggastr);
             }
-            sb.Append("}");
-          } else {
-            var ggastr = Convert.ToString(
-              types[i].GetGenericArguments().Length,
-              System.Globalization.CultureInfo.InvariantCulture);
-            sb.Append("`").Append(ggastr);
           }
-        }
         }
       }
       return sb.ToString();

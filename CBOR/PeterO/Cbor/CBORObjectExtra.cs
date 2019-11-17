@@ -84,7 +84,7 @@ namespace PeterO.Cbor {
     /// outside the range of a 16-bit unsigned integer.</exception>
     [CLSCompliant(false)]
     [Obsolete("Instead, use the following:" +
-"\u0020(cbor.AsNumber().ToUInt16Checked()), or .ToObject<ushort>() in .NET.")]
+"\u0020(cbor.AsNumber().ToUInt16Checked()), or .ToObject<ushort>().")]
     public ushort AsUInt16() {
       int v = this.AsInt32();
       if (v > UInt16.MaxValue || v < 0) {
@@ -105,7 +105,7 @@ namespace PeterO.Cbor {
     /// outside the range of a 32-bit unsigned integer.</exception>
     [CLSCompliant(false)]
     [Obsolete("Instead, use the following:" +
-"\u0020(cbor.AsNumber().ToUInt32Checked()), or .ToObject<uint>() in .NET.")]
+"\u0020(cbor.AsNumber().ToUInt32Checked()), or .ToObject<uint>().")]
     public uint AsUInt32() {
       ulong v = this.AsUInt64();
       if (v > UInt32.MaxValue) {
@@ -117,6 +117,8 @@ namespace PeterO.Cbor {
     /// <summary>Converts this object to an 8-bit signed integer.</summary>
     /// <returns>An 8-bit signed integer.</returns>
     [CLSCompliant(false)]
+    [Obsolete("Instead, use the following:" +
+"\u0020(cbor.AsNumber().ToSByteChecked()), or .ToObject<sbyte>().")]
     public sbyte AsSByte() {
       int v = this.AsInt32();
       if (v > SByte.MaxValue || v < SByte.MinValue) {
@@ -255,7 +257,7 @@ namespace PeterO.Cbor {
     /// outside the range of a 64-bit unsigned integer.</exception>
     [CLSCompliant(false)]
     [Obsolete("Instead, use the following:" +
-"\u0020(cbor.AsNumber().ToUInt64Checked()), or .ToObject<ulong>() in .NET.")]
+"\u0020(cbor.AsNumber().ToUInt64Checked()), or .ToObject<ulong>().")]
     public ulong AsUInt64() {
       EInteger bigint = this.ToObject<EInteger>();
       if (bigint.Sign < 0 ||

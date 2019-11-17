@@ -8,10 +8,6 @@ An instance of a number that CBOR or certain CBOR tags can represent. For this p
 ### Member Summary
 * <code>[Abs()](#Abs)</code> - Returns the absolute value of this CBOR number.
 * <code>[Add(PeterO.Cbor.CBORNumber)](#Add_PeterO_Cbor_CBORNumber)</code> - Returns the sum of this number and another number.
-* <code>[AsEDecimal()](#AsEDecimal)</code> - Not documented yet.
-* <code>[AsEFloat()](#AsEFloat)</code> - Not documented yet.
-* <code>[AsEInteger()](#AsEInteger)</code> - Not documented yet.
-* <code>[AsERational()](#AsERational)</code> - Not documented yet.
 * <code>[CanFitInDouble()](#CanFitInDouble)</code> - Not documented yet.
 * <code>[CanFitInInt32()](#CanFitInInt32)</code> - Returns whether this object's numerical value is an integer, is -(2^31) or greater, and is less than 2^31.
 * <code>[CanFitInInt64()](#CanFitInInt64)</code> - Returns whether this object's numerical value is an integer, is -(2^63) or greater, and is less than 2^63.
@@ -43,8 +39,11 @@ An instance of a number that CBOR or certain CBOR tags can represent. For this p
 * <code>[ToByteIfExact()](#ToByteIfExact)</code> - Converts this number's value to a byte (from 0 to 255) if it can fit in a byte (from 0 to 255) without rounding to a different numerical value.
 * <code>[ToByteUnchecked()](#ToByteUnchecked)</code> - Converts this number's value to an integer by discarding its fractional part, and returns the least-significant bits of its two's-complement form as a byte (from 0 to 255).
 * <code>[ToCBORObject()](#ToCBORObject)</code> - Converts this object's value to a CBOR object.
+* <code>[ToEDecimal()](#ToEDecimal)</code> - Not documented yet.
+* <code>[ToEFloat()](#ToEFloat)</code> - Not documented yet.
 * <code>[ToEInteger()](#ToEInteger)</code> - Not documented yet.
 * <code>[ToEIntegerIfExact()](#ToEIntegerIfExact)</code> - Not documented yet.
+* <code>[ToERational()](#ToERational)</code> - Not documented yet.
 * <code>[ToInt16Checked()](#ToInt16Checked)</code> - Converts this number's value to a 16-bit signed integer if it can fit in a 16-bit signed integer after converting it to an integer by discarding its fractional part.
 * <code>[ToInt16IfExact()](#ToInt16IfExact)</code> - Converts this number's value to a 16-bit signed integer if it can fit in a 16-bit signed integer without rounding to a different numerical value.
 * <code>[ToInt16Unchecked()](#ToInt16Unchecked)</code> - Converts this number's value to an integer by discarding its fractional part, and returns the least-significant bits of its two's-complement form as a 16-bit signed integer.
@@ -54,7 +53,19 @@ An instance of a number that CBOR or certain CBOR tags can represent. For this p
 * <code>[ToInt64Checked()](#ToInt64Checked)</code> - Converts this number's value to a 64-bit signed integer if it can fit in a 64-bit signed integer after converting it to an integer by discarding its fractional part.
 * <code>[ToInt64IfExact()](#ToInt64IfExact)</code> - Converts this number's value to a 64-bit signed integer if it can fit in a 64-bit signed integer without rounding to a different numerical value.
 * <code>[ToInt64Unchecked()](#ToInt64Unchecked)</code> - Converts this number's value to an integer by discarding its fractional part, and returns the least-significant bits of its two's-complement form as a 64-bit signed integer.
+* <code>[ToSByteChecked()](#ToSByteChecked)</code> - Converts this number's value to an 8-bit signed integer if it can fit in an 8-bit signed integer after converting it to an integer by discarding its fractional part.
+* <code>[ToSByteIfExact()](#ToSByteIfExact)</code> - Converts this number's value to an 8-bit signed integer if it can fit in an 8-bit signed integer without rounding to a different numerical value.
+* <code>[ToSByteUnchecked()](#ToSByteUnchecked)</code> - Converts this number's value to an integer by discarding its fractional part, and returns the least-significant bits of its two's-complement form as an 8-bit signed integer.
 * <code>[ToString()](#ToString)</code> - Returns the value of this object in text form.
+* <code>[ToUInt16Checked()](#ToUInt16Checked)</code> - Converts this number's value to a 16-bit unsigned integer if it can fit in a 16-bit unsigned integer after converting it to an integer by discarding its fractional part.
+* <code>[ToUInt16IfExact()](#ToUInt16IfExact)</code> - Converts this number's value to a 16-bit unsigned integer if it can fit in a 16-bit unsigned integer without rounding to a different numerical value.
+* <code>[ToUInt16Unchecked()](#ToUInt16Unchecked)</code> - Converts this number's value to an integer by discarding its fractional part, and returns the least-significant bits of its two's-complement form as a 16-bit unsigned integer.
+* <code>[ToUInt32Checked()](#ToUInt32Checked)</code> - Converts this number's value to a 32-bit signed integer if it can fit in a 32-bit signed integer after converting it to an integer by discarding its fractional part.
+* <code>[ToUInt32IfExact()](#ToUInt32IfExact)</code> - Converts this number's value to a 32-bit signed integer if it can fit in a 32-bit signed integer without rounding to a different numerical value.
+* <code>[ToUInt32Unchecked()](#ToUInt32Unchecked)</code> - Converts this number's value to an integer by discarding its fractional part, and returns the least-significant bits of its two's-complement form as a 32-bit signed integer.
+* <code>[ToUInt64Checked()](#ToUInt64Checked)</code> - Converts this number's value to a 64-bit unsigned integer if it can fit in a 64-bit unsigned integer after converting it to an integer by discarding its fractional part.
+* <code>[ToUInt64IfExact()](#ToUInt64IfExact)</code> - Converts this number's value to a 64-bit unsigned integer if it can fit in a 64-bit unsigned integer without rounding to a different numerical value.
+* <code>[ToUInt64Unchecked()](#ToUInt64Unchecked)</code> - Converts this number's value to an integer by discarding its fractional part, and returns the least-significant bits of its two's-complement form as a 64-bit unsigned integer.
 
 <a id="Abs"></a>
 ### Abs
@@ -88,50 +99,6 @@ The sum of this number and another number.
  * System.ArgumentNullException:
 The parameter  <i>b</i>
  is null.
-
-<a id="AsEDecimal"></a>
-### AsEDecimal
-
-    public PeterO.Numbers.EDecimal AsEDecimal();
-
-Not documented yet.
-
-<b>Return Value:</b>
-
-The return value is not documented yet.
-
-<a id="AsEFloat"></a>
-### AsEFloat
-
-    public PeterO.Numbers.EFloat AsEFloat();
-
-Not documented yet.
-
-<b>Return Value:</b>
-
-The return value is not documented yet.
-
-<a id="AsEInteger"></a>
-### AsEInteger
-
-    public PeterO.Numbers.EInteger AsEInteger();
-
-Not documented yet.
-
-<b>Return Value:</b>
-
-The return value is not documented yet.
-
-<a id="AsERational"></a>
-### AsERational
-
-    public PeterO.Numbers.ERational AsERational();
-
-Not documented yet.
-
-<b>Return Value:</b>
-
-The return value is not documented yet.
 
 <a id="CanFitInDouble"></a>
 ### CanFitInDouble
@@ -607,6 +574,28 @@ Converts this object's value to a CBOR object.
 
 A CBOR object that stores this object's value.
 
+<a id="ToEDecimal"></a>
+### ToEDecimal
+
+    public PeterO.Numbers.EDecimal ToEDecimal();
+
+Not documented yet.
+
+<b>Return Value:</b>
+
+The return value is not documented yet.
+
+<a id="ToEFloat"></a>
+### ToEFloat
+
+    public PeterO.Numbers.EFloat ToEFloat();
+
+Not documented yet.
+
+<b>Return Value:</b>
+
+The return value is not documented yet.
+
 <a id="ToEInteger"></a>
 ### ToEInteger
 
@@ -638,6 +627,17 @@ The return value is not documented yet.
 
  * System.ArithmeticException:
 This value is infinity or not-a-number or is not an exact integer.
+
+<a id="ToERational"></a>
+### ToERational
+
+    public PeterO.Numbers.ERational ToERational();
+
+Not documented yet.
+
+<b>Return Value:</b>
+
+The return value is not documented yet.
 
 <a id="ToInt16Checked"></a>
 ### ToInt16Checked
@@ -768,6 +768,55 @@ Converts this number's value to an integer by discarding its fractional part, an
 
 This number, converted to a 64-bit signed integer. Returns 0 if this value is infinity or not-a-number.
 
+<a id="ToSByteChecked"></a>
+### ToSByteChecked
+
+    public sbyte ToSByteChecked();
+
+<b>This API is not CLS-compliant.</b>
+
+Converts this number's value to an 8-bit signed integer if it can fit in an 8-bit signed integer after converting it to an integer by discarding its fractional part.
+
+<b>Return Value:</b>
+
+This number's value, truncated to an 8-bit signed integer.
+
+<b>Exceptions:</b>
+
+ * System.OverflowException:
+This value is infinity or not-a-number, or the number, once converted to an integer by discarding its fractional part, is less than -128 or greater than 127.
+
+<a id="ToSByteIfExact"></a>
+### ToSByteIfExact
+
+    public sbyte ToSByteIfExact();
+
+<b>This API is not CLS-compliant.</b>
+
+Converts this number's value to an 8-bit signed integer if it can fit in an 8-bit signed integer without rounding to a different numerical value.
+
+<b>Return Value:</b>
+
+This number's value as an 8-bit signed integer.
+
+<b>Exceptions:</b>
+
+ * System.ArithmeticException:
+This value is infinity or not-a-number, is not an exact integer, or is less than -128 or greater than 127.
+
+<a id="ToSByteUnchecked"></a>
+### ToSByteUnchecked
+
+    public sbyte ToSByteUnchecked();
+
+<b>This API is not CLS-compliant.</b>
+
+Converts this number's value to an integer by discarding its fractional part, and returns the least-significant bits of its two's-complement form as an 8-bit signed integer.
+
+<b>Return Value:</b>
+
+This number, converted to an 8-bit signed integer. Returns 0 if this value is infinity or not-a-number.
+
 <a id="ToString"></a>
 ### ToString
 
@@ -778,3 +827,150 @@ Returns the value of this object in text form.
 <b>Return Value:</b>
 
 A text string representing the value of this object.
+
+<a id="ToUInt16Checked"></a>
+### ToUInt16Checked
+
+    public ushort ToUInt16Checked();
+
+<b>This API is not CLS-compliant.</b>
+
+Converts this number's value to a 16-bit unsigned integer if it can fit in a 16-bit unsigned integer after converting it to an integer by discarding its fractional part.
+
+<b>Return Value:</b>
+
+This number's value, truncated to a 16-bit unsigned integer.
+
+<b>Exceptions:</b>
+
+ * System.OverflowException:
+This value is infinity or not-a-number, or the number, once converted to an integer by discarding its fractional part, is less than 0 or greater than 65535.
+
+<a id="ToUInt16IfExact"></a>
+### ToUInt16IfExact
+
+    public ushort ToUInt16IfExact();
+
+<b>This API is not CLS-compliant.</b>
+
+Converts this number's value to a 16-bit unsigned integer if it can fit in a 16-bit unsigned integer without rounding to a different numerical value.
+
+<b>Return Value:</b>
+
+This number's value as a 16-bit unsigned integer.
+
+<b>Exceptions:</b>
+
+ * System.ArithmeticException:
+This value is infinity or not-a-number, is not an exact integer, or is less than 0 or greater than 65535.
+
+<a id="ToUInt16Unchecked"></a>
+### ToUInt16Unchecked
+
+    public ushort ToUInt16Unchecked();
+
+<b>This API is not CLS-compliant.</b>
+
+Converts this number's value to an integer by discarding its fractional part, and returns the least-significant bits of its two's-complement form as a 16-bit unsigned integer.
+
+<b>Return Value:</b>
+
+This number, converted to a 16-bit unsigned integer. Returns 0 if this value is infinity or not-a-number.
+
+<a id="ToUInt32Checked"></a>
+### ToUInt32Checked
+
+    public uint ToUInt32Checked();
+
+<b>This API is not CLS-compliant.</b>
+
+Converts this number's value to a 32-bit signed integer if it can fit in a 32-bit signed integer after converting it to an integer by discarding its fractional part.
+
+<b>Return Value:</b>
+
+This number's value, truncated to a 32-bit signed integer.
+
+<b>Exceptions:</b>
+
+ * System.OverflowException:
+This value is infinity or not-a-number, or the number, once converted to an integer by discarding its fractional part, is less than 0 or greater than 4294967295.
+
+<a id="ToUInt32IfExact"></a>
+### ToUInt32IfExact
+
+    public uint ToUInt32IfExact();
+
+<b>This API is not CLS-compliant.</b>
+
+Converts this number's value to a 32-bit signed integer if it can fit in a 32-bit signed integer without rounding to a different numerical value.
+
+<b>Return Value:</b>
+
+This number's value as a 32-bit signed integer.
+
+<b>Exceptions:</b>
+
+ * System.ArithmeticException:
+This value is infinity or not-a-number, is not an exact integer, or is less than 0 or greater than 4294967295.
+
+<a id="ToUInt32Unchecked"></a>
+### ToUInt32Unchecked
+
+    public uint ToUInt32Unchecked();
+
+<b>This API is not CLS-compliant.</b>
+
+Converts this number's value to an integer by discarding its fractional part, and returns the least-significant bits of its two's-complement form as a 32-bit signed integer.
+
+<b>Return Value:</b>
+
+This number, converted to a 32-bit signed integer. Returns 0 if this value is infinity or not-a-number.
+
+<a id="ToUInt64Checked"></a>
+### ToUInt64Checked
+
+    public ulong ToUInt64Checked();
+
+<b>This API is not CLS-compliant.</b>
+
+Converts this number's value to a 64-bit unsigned integer if it can fit in a 64-bit unsigned integer after converting it to an integer by discarding its fractional part.
+
+<b>Return Value:</b>
+
+This number's value, truncated to a 64-bit unsigned integer.
+
+<b>Exceptions:</b>
+
+ * System.OverflowException:
+This value is infinity or not-a-number, or the number, once converted to an integer by discarding its fractional part, is less than 0 or greater than 18446744073709551615.
+
+<a id="ToUInt64IfExact"></a>
+### ToUInt64IfExact
+
+    public ulong ToUInt64IfExact();
+
+<b>This API is not CLS-compliant.</b>
+
+Converts this number's value to a 64-bit unsigned integer if it can fit in a 64-bit unsigned integer without rounding to a different numerical value.
+
+<b>Return Value:</b>
+
+This number's value as a 64-bit unsigned integer.
+
+<b>Exceptions:</b>
+
+ * System.ArithmeticException:
+This value is infinity or not-a-number, is not an exact integer, or is less than 0 or greater than 18446744073709551615.
+
+<a id="ToUInt64Unchecked"></a>
+### ToUInt64Unchecked
+
+    public ulong ToUInt64Unchecked();
+
+<b>This API is not CLS-compliant.</b>
+
+Converts this number's value to an integer by discarding its fractional part, and returns the least-significant bits of its two's-complement form as a 64-bit unsigned integer.
+
+<b>Return Value:</b>
+
+This number, converted to a 64-bit unsigned integer. Returns 0 if this value is infinity or not-a-number.

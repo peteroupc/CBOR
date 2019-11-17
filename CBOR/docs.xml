@@ -542,28 +542,20 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORNumber.AsEDecimal">
-
-            <summary>Not documented yet.</summary>
+<summary>Not documented yet.</summary>
             <returns>The return value is not documented yet.</returns>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORNumber.AsEFloat">
-
-            <summary>Not documented yet.</summary>
+<summary>Not documented yet.</summary>
             <returns>The return value is not documented yet.</returns>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORNumber.AsEInteger">
-
-            <summary>Not documented yet.</summary>
+<summary>Not documented yet.</summary>
             <returns>The return value is not documented yet.</returns>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORNumber.AsERational">
-
-            <summary>Not documented yet.</summary>
+<summary>Not documented yet.</summary>
             <returns>The return value is not documented yet.</returns>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORNumber.CanFitInDouble">
 
@@ -826,6 +818,14 @@
             <returns>A CBOR object that stores this object's value.</returns>
 
 </doc>
+<doc name="M:PeterO.Cbor.CBORNumber.ToEDecimal">
+<summary>Not documented yet.</summary>
+            <returns>The return value is not documented yet.</returns>
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.ToEFloat">
+<summary>Not documented yet.</summary>
+            <returns>The return value is not documented yet.</returns>
+</doc>
 <doc name="M:PeterO.Cbor.CBORNumber.ToEInteger">
 
             <summary>Not documented yet.</summary>
@@ -841,6 +841,10 @@
             <exception cref='ArithmeticException'>This value is infinity or
             not-a-number or is not an exact integer.</exception>
 
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.ToERational">
+<summary>Not documented yet.</summary>
+            <returns>The return value is not documented yet.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORNumber.ToInt16Checked">
 
@@ -942,12 +946,123 @@
             0 if this value is infinity or not-a-number.</returns>
 
 </doc>
+<doc name="M:PeterO.Cbor.CBORNumber.ToSByteChecked">
+<summary>Converts this number's value to an 8-bit signed integer
+            if it can fit in an 8-bit signed integer after converting it to
+            an integer by discarding its fractional part.</summary>
+            <returns>This number's value, truncated to an 8-bit signed
+            integer.</returns>
+            <exception cref='OverflowException'>This value is infinity or
+            not-a-number, or the number, once converted to an integer by
+            discarding its fractional part, is less than -128 or greater than
+            127.</exception>
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.ToSByteIfExact">
+<summary>Converts this number's value to an 8-bit signed integer
+            if it can fit in an 8-bit signed integer without rounding to a
+            different numerical value.</summary>
+            <returns>This number's value as an 8-bit signed
+            integer.</returns>
+            <exception cref='ArithmeticException'>This value is infinity or
+            not-a-number, is not an exact integer, or is less than -128 or greater
+            than 127.</exception>
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.ToSByteUnchecked">
+<summary>Converts this number's value to an integer by discarding
+            its fractional part, and returns the least-significant bits of its
+            two's-complement form as an 8-bit signed integer.</summary>
+            <returns>This number, converted to an 8-bit signed integer.
+            Returns 0 if this value is infinity or not-a-number.</returns>
+</doc>
 <doc name="M:PeterO.Cbor.CBORNumber.ToString">
 
             <summary>Returns the value of this object in text form.</summary>
             <returns>A text string representing the value of this
             object.</returns>
 
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.ToUInt16Checked">
+<summary>Converts this number's value to a 16-bit unsigned integer
+            if it can fit in a 16-bit unsigned integer after converting it to
+            an integer by discarding its fractional part.</summary>
+            <returns>This number's value, truncated to a 16-bit unsigned
+            integer.</returns>
+            <exception cref='OverflowException'>This value is infinity or
+            not-a-number, or the number, once converted to an integer by
+            discarding its fractional part, is less than 0 or greater than
+            65535.</exception>
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.ToUInt16IfExact">
+<summary>Converts this number's value to a 16-bit unsigned integer
+            if it can fit in a 16-bit unsigned integer without rounding to a
+            different numerical value.</summary>
+            <returns>This number's value as a 16-bit unsigned
+            integer.</returns>
+            <exception cref='ArithmeticException'>This value is infinity or
+            not-a-number, is not an exact integer, or is less than 0 or greater
+            than 65535.</exception>
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.ToUInt16Unchecked">
+<summary>Converts this number's value to an integer by discarding
+            its fractional part, and returns the least-significant bits of its
+            two's-complement form as a 16-bit unsigned integer.</summary>
+            <returns>This number, converted to a 16-bit unsigned integer.
+            Returns 0 if this value is infinity or not-a-number.</returns>
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.ToUInt32Checked">
+<summary>Converts this number's value to a 32-bit signed integer if
+            it can fit in a 32-bit signed integer after converting it to an
+            integer by discarding its fractional part.</summary>
+            <returns>This number's value, truncated to a 32-bit signed
+            integer.</returns>
+            <exception cref='OverflowException'>This value is infinity or
+            not-a-number, or the number, once converted to an integer by
+            discarding its fractional part, is less than 0 or greater than
+            4294967295.</exception>
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.ToUInt32IfExact">
+<summary>Converts this number's value to a 32-bit signed integer if
+            it can fit in a 32-bit signed integer without rounding to a
+            different numerical value.</summary>
+            <returns>This number's value as a 32-bit signed integer.</returns>
+            <exception cref='ArithmeticException'>This value is infinity or
+            not-a-number, is not an exact integer, or is less than 0 or greater
+            than 4294967295.</exception>
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.ToUInt32Unchecked">
+<summary>Converts this number's value to an integer by discarding
+            its fractional part, and returns the least-significant bits of its
+            two's-complement form as a 32-bit signed integer.</summary>
+            <returns>This number, converted to a 32-bit signed integer. Returns
+            0 if this value is infinity or not-a-number.</returns>
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.ToUInt64Checked">
+<summary>Converts this number's value to a 64-bit unsigned integer
+            if it can fit in a 64-bit unsigned integer after converting it to
+            an integer by discarding its fractional part.</summary>
+            <returns>This number's value, truncated to a 64-bit unsigned
+            integer.</returns>
+            <exception cref='OverflowException'>This value is infinity or
+            not-a-number, or the number, once converted to an integer by
+            discarding its fractional part, is less than 0 or greater than
+            18446744073709551615.</exception>
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.ToUInt64IfExact">
+<summary>Converts this number's value to a 64-bit unsigned integer
+            if it can fit in a 64-bit unsigned integer without rounding to a
+            different numerical value.</summary>
+            <returns>This number's value as a 64-bit unsigned
+            integer.</returns>
+            <exception cref='ArithmeticException'>This value is infinity or
+            not-a-number, is not an exact integer, or is less than 0 or greater
+            than 18446744073709551615.</exception>
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.ToUInt64Unchecked">
+<summary>Converts this number's value to an integer by discarding
+            its fractional part, and returns the least-significant bits of its
+            two's-complement form as a 64-bit unsigned integer.</summary>
+            <returns>This number, converted to a 64-bit unsigned integer.
+            Returns 0 if this value is infinity or not-a-number.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORNumber.op_GreaterThan(PeterO.Cbor.CBORNumber,PeterO.Cbor.CBORNumber)">
 
@@ -1468,20 +1583,30 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsUInt16">
 
-            <summary>Converts this object to a 16-bit unsigned integer. The
-            return value will be truncated as necessary.</summary>
+            <summary>Converts this object to a 16-bit unsigned integer after
+            discarding any fractional part, if any, from its value.</summary>
             <returns>A 16-bit unsigned integer.</returns>
-            <exception cref='OverflowException'>This object's value is outside
-            the range of a 16-bit unsigned integer.</exception>
+            <exception cref='InvalidOperationException'>This object does not
+            represent a number (for this purpose, infinities and not-a-number
+            or NaN values, but not CBORObject.Null, are considered
+            numbers).</exception>
+            <exception cref='OverflowException'>This object's value, if
+            converted to an integer by discarding its fractional part, is
+            outside the range of a 16-bit unsigned integer.</exception>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsUInt32">
 
-            <summary>Converts this object to a 32-bit unsigned integer. The
-            return value will be truncated as necessary.</summary>
+            <summary>Converts this object to a 32-bit unsigned integer after
+            discarding any fractional part, if any, from its value.</summary>
             <returns>A 32-bit unsigned integer.</returns>
-            <exception cref='OverflowException'>This object's value is outside
-            the range of a 32-bit unsigned integer.</exception>
+            <exception cref='InvalidOperationException'>This object does not
+            represent a number (for this purpose, infinities and not-a-number
+            or NaN values, but not CBORObject.Null, are considered
+            numbers).</exception>
+            <exception cref='OverflowException'>This object's value, if
+            converted to an integer by discarding its fractional part, is
+            outside the range of a 32-bit unsigned integer.</exception>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsUInt64">
@@ -5092,14 +5217,12 @@
             <summary>A JSON number is decoded to CBOR either as a CBOR integer
             (major type 0 or 1) if the JSON number represents an integer at
             least -(2^53)+1 and less than 2^53, or as their closest-rounded
-            approximation as 64-bit binary floating-point numbers otherwise,
-            where a JSON number is treated as an integer or non-integer based
-            on the full precision given in the JSON text. For example, the JSON
-            number 0.99999999999999999999999999999999999 is not an integer, so
-            it's converted to its closest floating-point approximation, namely
-            1.0. (In some cases, numbers extremely close to zero may underflow
-            to positive or negative zero, and numbers of extremely large
-            magnitude may overflow to infinity.).</summary>
+            approximation as 64-bit binary floating-point numbers otherwise.
+            For example, the JSON number 0.99999999999999999999999999999999999
+            is not an integer, so it's converted to its closest floating-point
+            approximation, namely 1.0. (In some cases, numbers extremely close
+            to zero may underflow to positive or negative zero, and numbers of
+            extremely large magnitude may overflow to infinity.).</summary>
 
 </doc>
 <doc name="F:PeterO.Cbor.JSONOptions.ConversionKind.IntOrFloatFromDouble">
@@ -5108,14 +5231,12 @@
             (major type 0 or 1) if the number's closest-rounded approximation
             as a 64-bit binary floating-point number represents an integer at
             least -(2^53)+1 and less than 2^53, or as that approximation
-            otherwise, where a JSON number is treated as an integer or
-            non-integer based on its approximated floating-point number. For
-            example, the JSON number 0.99999999999999999999999999999999999 is
-            the integer 1 when rounded to its closest floating-point
-            approximation (1.0), so it's converted to the CBOR integer 1 (major
-            type 0). (In some cases, numbers extremely close to zero may
-            underflow to zero, and numbers of extremely large magnitude may
-            overflow to infinity.).</summary>
+            otherwise. For example, the JSON number
+            0.99999999999999999999999999999999999 is the integer 1 when rounded
+            to its closest floating-point approximation (1.0), so it's
+            converted to the CBOR integer 1 (major type 0). (In some cases,
+            numbers extremely close to zero may underflow to zero, and numbers
+            of extremely large magnitude may overflow to infinity.).</summary>
 
 </doc>
 <doc name="F:PeterO.Cbor.JSONOptions.Default">
