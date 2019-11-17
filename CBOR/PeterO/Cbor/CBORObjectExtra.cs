@@ -72,11 +72,16 @@ namespace PeterO.Cbor {
       return a == null ? b == null : a.CompareTo(b) >= 0;
     }
 
-    /// <summary>Converts this object to a 16-bit unsigned integer. The
-    /// return value will be truncated as necessary.</summary>
+    /// <summary>Converts this object to a 16-bit unsigned integer after
+    /// discarding any fractional part, if any, from its value.</summary>
     /// <returns>A 16-bit unsigned integer.</returns>
-    /// <exception cref='OverflowException'>This object's value is outside
-    /// the range of a 16-bit unsigned integer.</exception>
+    /// <exception cref='InvalidOperationException'>This object does not
+    /// represent a number (for this purpose, infinities and not-a-number
+    /// or NaN values, but not CBORObject.Null, are considered
+    /// numbers).</exception>
+    /// <exception cref='OverflowException'>This object's value, if
+    /// converted to an integer by discarding its fractional part, is
+    /// outside the range of a 16-bit unsigned integer.</exception>
     [CLSCompliant(false)]
     [Obsolete("Instead, use the following:" +
 "\u0020(cbor.AsNumber().ToUInt16Checked()), or .ToObject<ushort>() in .NET.")]
@@ -88,11 +93,16 @@ namespace PeterO.Cbor {
       return (ushort)v;
     }
 
-    /// <summary>Converts this object to a 32-bit unsigned integer. The
-    /// return value will be truncated as necessary.</summary>
+    /// <summary>Converts this object to a 32-bit unsigned integer after
+    /// discarding any fractional part, if any, from its value.</summary>
     /// <returns>A 32-bit unsigned integer.</returns>
-    /// <exception cref='OverflowException'>This object's value is outside
-    /// the range of a 32-bit unsigned integer.</exception>
+    /// <exception cref='InvalidOperationException'>This object does not
+    /// represent a number (for this purpose, infinities and not-a-number
+    /// or NaN values, but not CBORObject.Null, are considered
+    /// numbers).</exception>
+    /// <exception cref='OverflowException'>This object's value, if
+    /// converted to an integer by discarding its fractional part, is
+    /// outside the range of a 32-bit unsigned integer.</exception>
     [CLSCompliant(false)]
     [Obsolete("Instead, use the following:" +
 "\u0020(cbor.AsNumber().ToUInt32Checked()), or .ToObject<uint>() in .NET.")]

@@ -25,28 +25,24 @@ namespace PeterO.Cbor {
        /// <summary>A JSON number is decoded to CBOR either as a CBOR integer
        /// (major type 0 or 1) if the JSON number represents an integer at
        /// least -(2^53)+1 and less than 2^53, or as their closest-rounded
-       /// approximation as 64-bit binary floating-point numbers otherwise,
-       /// where a JSON number is treated as an integer or non-integer based
-       /// on the full precision given in the JSON text. For example, the JSON
-       /// number 0.99999999999999999999999999999999999 is not an integer, so
-       /// it's converted to its closest floating-point approximation, namely
-       /// 1.0. (In some cases, numbers extremely close to zero may underflow
-       /// to positive or negative zero, and numbers of extremely large
-       /// magnitude may overflow to infinity.).</summary>
+       /// approximation as 64-bit binary floating-point numbers otherwise.
+       /// For example, the JSON number 0.99999999999999999999999999999999999
+       /// is not an integer, so it's converted to its closest floating-point
+       /// approximation, namely 1.0. (In some cases, numbers extremely close
+       /// to zero may underflow to positive or negative zero, and numbers of
+       /// extremely large magnitude may overflow to infinity.).</summary>
        IntOrFloat,
 
        /// <summary>A JSON number is decoded to CBOR either as a CBOR integer
        /// (major type 0 or 1) if the number's closest-rounded approximation
        /// as a 64-bit binary floating-point number represents an integer at
        /// least -(2^53)+1 and less than 2^53, or as that approximation
-       /// otherwise, where a JSON number is treated as an integer or
-       /// non-integer based on its approximated floating-point number. For
-       /// example, the JSON number 0.99999999999999999999999999999999999 is
-       /// the integer 1 when rounded to its closest floating-point
-       /// approximation (1.0), so it's converted to the CBOR integer 1 (major
-       /// type 0). (In some cases, numbers extremely close to zero may
-       /// underflow to zero, and numbers of extremely large magnitude may
-       /// overflow to infinity.).</summary>
+       /// otherwise. For example, the JSON number
+       /// 0.99999999999999999999999999999999999 is the integer 1 when rounded
+       /// to its closest floating-point approximation (1.0), so it's
+       /// converted to the CBOR integer 1 (major type 0). (In some cases,
+       /// numbers extremely close to zero may underflow to zero, and numbers
+       /// of extremely large magnitude may overflow to infinity.).</summary>
        IntOrFloatFromDouble,
     }
 
