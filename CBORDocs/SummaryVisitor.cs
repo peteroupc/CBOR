@@ -58,16 +58,17 @@ memberName) {
          ("<b>Deprecated:</b> " + DocGenUtil.HtmlEscape(attr.Message)) :
          xdoc?.GetSummary(memberName);
       if (summary != null && attr == null &&
-          summary.IndexOf(".", StringComparison.Ordinal) >= 0) {
-          summary = summary.Substring(
+        summary.IndexOf(".", StringComparison.Ordinal) >= 0) {
+        summary = summary.Substring(
               0,
               summary.IndexOf(".", StringComparison.Ordinal) + 1);
-        }
-        return summary;
+      }
+      return summary;
     }
 
     public void HandleType(Type currentType, XmlDoc xdoc) {
-      if (!currentType.IsPublic) {
+      if (!(currentType.IsNested ? currentType.IsNestedPublic :
+currentType.IsPublic)) {
         return;
       }
       var typeFullName = currentType.FullName;
@@ -75,7 +76,10 @@ memberName) {
         var docVisitor = new TypeLinkAndBuilder(currentType);
         this.docs[typeFullName] = docVisitor;
       }
-      var summary = GetSummary(currentType, xdoc, "T:" + typeFullName);
+      var summary = GetSummary(
+        currentType,
+        xdoc,
+        TypeNameUtil.XmlDocMemberName(currentType));
       if (summary == null) {
         Console.WriteLine("no summary for " + typeFullName);
       } else {

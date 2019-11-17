@@ -1,9 +1,28 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
 namespace PeterO.DocGen {
   internal static class TypeNameUtil {
+    public static string SimpleTypeName(Type t) {
+      if (!t.IsNested) {
+        return t.Namespace + "." + TypeNameUtil.UndecorateTypeName(t.Name);
+      } else {
+        Type nt = t;
+        var types = new List<Type>();
+        types.Add(t);
+        var sb = new StringBuilder().Append(t.Namespace);
+        while (nt != null && nt.IsNested) {
+          types.Add(nt.DeclaringType);
+          nt = nt.DeclaringType;
+        }
+        for (var i = types.Count - 1; i >= 0; --i) {
+          sb.Append(".").Append(UndecorateTypeName(types[i].Name));
+        }
+        return sb.ToString();
+      }
+    }
     public static string XmlDocTypeName(Type t) {
       return XmlDocTypeName(t, false);
     }
@@ -28,13 +47,21 @@ namespace PeterO.DocGen {
           System.Globalization.CultureInfo.InvariantCulture);
         sb.Append(genericMethod ? "``" : "`").Append(ggastr);
       } else {
-        sb.Append(t.Namespace).Append(".")
-          .Append(UndecorateTypeName(t.Name));
-        if (t.GetGenericArguments().Length > 0) {
+        sb.Append(t.Namespace);
+        Type nt = t;
+        var types = new List<Type>();
+        types.Add(t);
+        while (nt != null && nt.IsNested) {
+          types.Add(nt.DeclaringType);
+          nt = nt.DeclaringType;
+        }
+        for (var i = types.Count - 1; i >= 0; --i) {
+        sb.Append(".").Append(UndecorateTypeName(types[i].Name));
+        if (types[i].GetGenericArguments().Length > 0) {
           if (param) {
             sb.Append("{");
             var first = true;
-            foreach (var ga in t.GetGenericArguments()) {
+            foreach (var ga in types[i].GetGenericArguments()) {
               if (!first) {
                 sb.Append(",");
               }
@@ -44,10 +71,11 @@ namespace PeterO.DocGen {
             sb.Append("}");
           } else {
             var ggastr = Convert.ToString(
-              t.GetGenericArguments().Length,
+              types[i].GetGenericArguments().Length,
               System.Globalization.CultureInfo.InvariantCulture);
             sb.Append("`").Append(ggastr);
           }
+        }
         }
       }
       return sb.ToString();

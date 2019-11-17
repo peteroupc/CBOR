@@ -20,6 +20,8 @@
 
  * [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) - Includes options to control how CBOR objects are converted to JSON.
 
+ * [PeterO.Cbor.JSONOptions.ConversionKind](PeterO.Cbor.JSONOptions.ConversionKind.md) - Specifies how JSON numbers are converted to CBOR when decoding JSON.
+
  * [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) - Options for converting "plain old data" objects (better known as POCOs in .
 
  * [PeterO.DataUtilities](PeterO.DataUtilities.md) - Contains methods useful for reading and writing text strings.

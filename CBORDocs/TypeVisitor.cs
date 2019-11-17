@@ -94,7 +94,9 @@ namespace PeterO.DocGen {
         }
         currentType = info.ReflectedType;
       }
-      if (currentType == null || !currentType.IsPublic) {
+      if (currentType == null ||
+          !(currentType.IsNested ? currentType.IsNestedPublic :
+currentType.IsPublic)) {
         return;
       }
       var typeFullName = currentType.FullName;

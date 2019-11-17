@@ -78,6 +78,8 @@ namespace PeterO.Cbor {
     /// <exception cref='OverflowException'>This object's value is outside
     /// the range of a 16-bit unsigned integer.</exception>
     [CLSCompliant(false)]
+    [Obsolete("Instead, use the following:" +
+"\u0020(cbor.AsNumber().ToUInt16Checked()), or .ToObject<ushort>() in .NET.")]
     public ushort AsUInt16() {
       int v = this.AsInt32();
       if (v > UInt16.MaxValue || v < 0) {
@@ -92,6 +94,8 @@ namespace PeterO.Cbor {
     /// <exception cref='OverflowException'>This object's value is outside
     /// the range of a 32-bit unsigned integer.</exception>
     [CLSCompliant(false)]
+    [Obsolete("Instead, use the following:" +
+"\u0020(cbor.AsNumber().ToUInt32Checked()), or .ToObject<uint>() in .NET.")]
     public uint AsUInt32() {
       ulong v = this.AsUInt64();
       if (v > UInt32.MaxValue) {
@@ -240,6 +244,8 @@ namespace PeterO.Cbor {
     /// converted to an integer by discarding its fractional part, is
     /// outside the range of a 64-bit unsigned integer.</exception>
     [CLSCompliant(false)]
+    [Obsolete("Instead, use the following:" +
+"\u0020(cbor.AsNumber().ToUInt64Checked()), or .ToObject<ulong>() in .NET.")]
     public ulong AsUInt64() {
       EInteger bigint = this.ToObject<EInteger>();
       if (bigint.Sign < 0 ||

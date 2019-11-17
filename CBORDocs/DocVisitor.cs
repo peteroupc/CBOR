@@ -351,7 +351,7 @@ IsMethodOverride((MethodInfo)method)) {
       if (type.IsGenericParameter) {
         return name;
       }
-      name = type.Namespace + "." + name;
+      name = TypeNameUtil.SimpleTypeName(type);
       if (name.Equals("System.Decimal", StringComparison.Ordinal)) {
         return "decimal";
       }
@@ -379,7 +379,7 @@ IsMethodOverride((MethodInfo)method)) {
     public static string FormatTypeSig(Type typeInfo) {
       var builder = new StringBuilder();
       builder.Append(FourSpaces);
-      if (typeInfo.IsPublic) {
+      if (typeInfo.IsNested ? typeInfo.IsNestedPublic : typeInfo.IsPublic) {
         builder.Append("public ");
       } else {
         builder.Append("internal ");
@@ -660,6 +660,12 @@ xmlName.Equals("em", StringComparison.Ordinal)) {
             this.WriteLine("<b>Deprecated.</b> " +
 DocGenUtil.HtmlEscape(attr.Message) + "\r\n\r\n");
           }
+          var cattr =
+method.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
+            CLSCompliantAttribute;
+          if (cattr != null && !cattr.IsCompliant) {
+            this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
+          }
           this.paramStr.Clear();
           this.returnStr.Clear();
           this.exceptionStr.Clear();
@@ -679,7 +685,7 @@ DocGenUtil.HtmlEscape(attr.Message) + "\r\n\r\n");
         }
       } else if (info is Type) {
         var type = (Type)info;
-        if (!type.IsPublic) {
+        if (!(type.IsNested ? type.IsNestedPublic : type.IsPublic)) {
          // Ignore nonpublic types
           return;
         }
@@ -694,6 +700,11 @@ DocGenUtil.HtmlEscape(attr.Message) + "\r\n\r\n");
             ObsoleteAttribute;
           if (attr != null) {
             this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
+          }
+          var cattr = type.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
+            CLSCompliantAttribute;
+          if (cattr != null && !cattr.IsCompliant) {
+            this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
           }
           this.paramStr.Clear();
           XmlDoc.VisitInnerNode(mnm, this);
@@ -729,6 +740,12 @@ DocGenUtil.HtmlEscape(attr.Message) + "\r\n\r\n");
           if (attr != null) {
             this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
           }
+          var cattr =
+property.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
+            CLSCompliantAttribute;
+          if (cattr != null && !cattr.IsCompliant) {
+            this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
+          }
           this.paramStr.Clear();
           this.returnStr.Clear();
           this.exceptionStr.Clear();
@@ -763,6 +780,11 @@ DocGenUtil.HtmlEscape(attr.Message) + "\r\n\r\n");
             ObsoleteAttribute;
           if (attr != null) {
             this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
+          }
+          var cattr = field.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
+            CLSCompliantAttribute;
+          if (cattr != null && !cattr.IsCompliant) {
+            this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
           }
           XmlDoc.VisitInnerNode(mnm, this);
         }

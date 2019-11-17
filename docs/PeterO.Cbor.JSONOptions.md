@@ -103,7 +103,7 @@ A value indicating whether the Base64Padding property is true.
 <a id="NumberConversion"></a>
 ### NumberConversion
 
-    public PeterO.Cbor.ConversionKind NumberConversion { get; }
+    public PeterO.Cbor.JSONOptions.ConversionKind NumberConversion { get; }
 
 Gets a value indicating how JSON numbers are decoded to CBOR.
 

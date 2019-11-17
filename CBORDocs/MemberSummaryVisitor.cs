@@ -60,7 +60,11 @@ namespace PeterO.DocGen {
 
     public static string FormatMember(object obj) {
       if (obj is Type) {
-        return ((Type)obj).FullName;
+        string m = ((Type)obj).FullName;
+        m = Regex.Replace(m, "\\+", ".");
+        m = Regex.Replace(m, "\\s+", " ");
+        m = m.Trim();
+        return m;
       }
       if (obj is MethodInfo) {
         string m = DocVisitor.FormatMethod((MethodInfo)obj, true);

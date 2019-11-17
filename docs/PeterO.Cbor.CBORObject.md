@@ -1073,6 +1073,8 @@ This object does not represent a number (for this purpose, infinities and not-a-
 
     public sbyte AsSByte();
 
+<b>This API is not CLS-compliant.</b>
+
 Converts this object to an 8-bit signed integer.
 
 <b>Return Value:</b>
@@ -1117,6 +1119,8 @@ This object's type is not a string (for the purposes of this method, infinity an
 
     public ushort AsUInt16();
 
+<b>This API is not CLS-compliant.</b>
+
 Converts this object to a 16-bit unsigned integer. The return value will be truncated as necessary.
 
 <b>Return Value:</b>
@@ -1133,6 +1137,8 @@ This object's value is outside the range of a 16-bit unsigned integer.
 
     public uint AsUInt32();
 
+<b>This API is not CLS-compliant.</b>
+
 Converts this object to a 32-bit unsigned integer. The return value will be truncated as necessary.
 
 <b>Return Value:</b>
@@ -1148,6 +1154,8 @@ This object's value is outside the range of a 32-bit unsigned integer.
 ### AsUInt64
 
     public ulong AsUInt64();
+
+<b>This API is not CLS-compliant.</b>
 
 Converts this object to a 64-bit unsigned integer after discarding any fractional part, if any, from its value.
 
@@ -2179,6 +2187,8 @@ The given number encoded as a CBOR object. Returns CBORObject.Null if  <i>bigVal
     public static PeterO.Cbor.CBORObject FromObject(
         sbyte value);
 
+<b>This API is not CLS-compliant.</b>
+
 Converts a signed 8-bit integer to a CBOR object.
 
 <b>Parameters:</b>
@@ -2234,6 +2244,8 @@ The string contains an unpaired surrogate code point.
     public static PeterO.Cbor.CBORObject FromObject(
         uint value);
 
+<b>This API is not CLS-compliant.</b>
+
 Converts a 32-bit unsigned integer to a CBOR object.
 
 <b>Parameters:</b>
@@ -2249,6 +2261,8 @@ A CBORObject object.
 
     public static PeterO.Cbor.CBORObject FromObject(
         ulong value);
+
+<b>This API is not CLS-compliant.</b>
 
 Converts a 64-bit unsigned integer to a CBOR object.
 
@@ -2266,6 +2280,8 @@ A CBORObject object.
     public static PeterO.Cbor.CBORObject FromObject(
         ushort value);
 
+<b>This API is not CLS-compliant.</b>
+
 Converts a 16-bit unsigned integer to a CBOR object.
 
 <b>Parameters:</b>
@@ -2282,6 +2298,8 @@ A CBORObject object.
     public static PeterO.Cbor.CBORObject FromObjectAndTag(
         object o,
         ulong tag);
+
+<b>This API is not CLS-compliant.</b>
 
 Generates a CBOR object from an arbitrary object and gives the resulting object a tag.
 
@@ -4118,6 +4136,8 @@ An I/O error occurred.
         sbyte value,
         System.IO.Stream stream);
 
+<b>This API is not CLS-compliant.</b>
+
 Writes an 8-bit signed integer in CBOR format to a data stream.
 
 <b>Parameters:</b>
@@ -4209,6 +4229,8 @@ An I/O error occurred.
         uint value,
         System.IO.Stream stream);
 
+<b>This API is not CLS-compliant.</b>
+
 Writes a 32-bit unsigned integer in CBOR format to a data stream.
 
 <b>Parameters:</b>
@@ -4223,6 +4245,8 @@ Writes a 32-bit unsigned integer in CBOR format to a data stream.
     public static void Write(
         ulong value,
         System.IO.Stream stream);
+
+<b>This API is not CLS-compliant.</b>
 
 Writes a 64-bit unsigned integer in CBOR format to a data stream.
 
@@ -4244,6 +4268,8 @@ The parameter  <i>stream</i>
     public static void Write(
         ushort value,
         System.IO.Stream stream);
+
+<b>This API is not CLS-compliant.</b>
 
 Writes a 16-bit unsigned integer in CBOR format to a data stream.
 
@@ -4738,6 +4764,8 @@ The parameter  <i>outputStream</i>
         int majorType,
         uint value);
 
+<b>This API is not CLS-compliant.</b>
+
 Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as a 32-bit unsigned integer. This is a low-level method that is useful for implementing custom CBOR encoding methodologies. This method encodes the given major type and value in the shortest form allowed for the major type.
 
 <b>Parameters:</b>
@@ -4765,6 +4793,8 @@ The parameter  <i>outputStream</i>
         System.IO.Stream outputStream,
         int majorType,
         ulong value);
+
+<b>This API is not CLS-compliant.</b>
 
 Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as a 64-bit unsigned integer. This is a low-level method that is useful for implementing custom CBOR encoding methodologies. This method encodes the given major type and value in the shortest form allowed for the major type.
 

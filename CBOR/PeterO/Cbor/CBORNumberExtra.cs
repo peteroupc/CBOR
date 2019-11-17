@@ -58,5 +58,178 @@ namespace PeterO.Cbor {
     public static bool operator >=(CBORNumber a, CBORNumber b) {
       return a == null ? b == null : a.CompareTo(b) >= 0;
     }
+
+    /// <summary>Converts this number's value to a 16-bit unsigned integer
+    /// if it can fit in a 16-bit unsigned integer after converting it to
+    /// an integer by discarding its fractional part.</summary>
+    /// <returns>This number's value, truncated to a 16-bit unsigned
+    /// integer.</returns>
+    /// <exception cref='OverflowException'>This value is infinity or
+    /// not-a-number, or the number, once converted to an integer by
+    /// discarding its fractional part, is less than 0 or greater than
+    /// 65535.</exception>
+    [CLSCompliant(false)]
+    public ushort ToUInt16Checked() {
+      if (!this.IsFinite) {
+        throw new OverflowException("Value is infinity or NaN");
+      }
+      if (this.IsIntegerPartZero()) {
+        return (ushort)0;
+      }
+      if (this.exponent.CompareToInt(5) >= 0) {
+        throw new OverflowException("Value out of range");
+      }
+      return this.ToEInteger().ToUInt16Checked();
+    }
+
+    /// <summary>Converts this number's value to an integer by discarding
+    /// its fractional part, and returns the least-significant bits of its
+    /// two's-complement form as a 16-bit unsigned integer.</summary>
+    /// <returns>This number, converted to a 16-bit unsigned integer.
+    /// Returns 0 if this value is infinity or not-a-number.</returns>
+    [CLSCompliant(false)]
+    public ushort ToUInt16Unchecked() {
+      return this.IsFinite ? this.ToEInteger().ToUInt16Unchecked() : (ushort)0;
+    }
+
+    /// <summary>Converts this number's value to a 16-bit unsigned integer
+    /// if it can fit in a 16-bit unsigned integer without rounding to a
+    /// different numerical value.</summary>
+    /// <returns>This number's value as a 16-bit unsigned
+    /// integer.</returns>
+    /// <exception cref='ArithmeticException'>This value is infinity or
+    /// not-a-number, is not an exact integer, or is less than 0 or greater
+    /// than 65535.</exception>
+    [CLSCompliant(false)]
+    public ushort ToUInt16IfExact() {
+      if (!this.IsFinite) {
+        throw new OverflowException("Value is infinity or NaN");
+      }
+      if (this.IsZero) {
+        return (ushort)0;
+      }
+      if (this.IsNegative) {
+        throw new OverflowException("Value out of range");
+      }
+      if (this.exponent.CompareToInt(5) >= 0) {
+        throw new OverflowException("Value out of range");
+      }
+      return this.ToEIntegerIfExact().ToUInt16Checked();
+    }
+
+    /// <summary>Converts this number's value to a 32-bit signed integer if
+    /// it can fit in a 32-bit signed integer after converting it to an
+    /// integer by discarding its fractional part.</summary>
+    /// <returns>This number's value, truncated to a 32-bit signed
+    /// integer.</returns>
+    /// <exception cref='OverflowException'>This value is infinity or
+    /// not-a-number, or the number, once converted to an integer by
+    /// discarding its fractional part, is less than 0 or greater than
+    /// 4294967295.</exception>
+    [CLSCompliant(false)]
+    public uint ToUInt32Checked() {
+      if (!this.IsFinite) {
+        throw new OverflowException("Value is infinity or NaN");
+      }
+      if (this.IsIntegerPartZero()) {
+        return 0U;
+      }
+      if (this.exponent.CompareToInt(10) >= 0) {
+        throw new OverflowException("Value out of range");
+      }
+      return this.ToEInteger().ToUInt32Checked();
+    }
+
+    /// <summary>Converts this number's value to an integer by discarding
+    /// its fractional part, and returns the least-significant bits of its
+    /// two's-complement form as a 32-bit signed integer.</summary>
+    /// <returns>This number, converted to a 32-bit signed integer. Returns
+    /// 0 if this value is infinity or not-a-number.</returns>
+    [CLSCompliant(false)]
+    public uint ToUInt32Unchecked() {
+      return this.IsFinite ? this.ToEInteger().ToUInt32Unchecked() : 0U;
+    }
+
+    /// <summary>Converts this number's value to a 32-bit signed integer if
+    /// it can fit in a 32-bit signed integer without rounding to a
+    /// different numerical value.</summary>
+    /// <returns>This number's value as a 32-bit signed integer.</returns>
+    /// <exception cref='ArithmeticException'>This value is infinity or
+    /// not-a-number, is not an exact integer, or is less than 0 or greater
+    /// than 4294967295.</exception>
+    [CLSCompliant(false)]
+    public uint ToUInt32IfExact() {
+      if (!this.IsFinite) {
+        throw new OverflowException("Value is infinity or NaN");
+      }
+      if (this.IsZero) {
+        return 0U;
+      }
+      if (this.IsNegative) {
+        throw new OverflowException("Value out of range");
+      }
+      if (this.exponent.CompareToInt(10) >= 0) {
+        throw new OverflowException("Value out of range");
+      }
+      return this.ToEIntegerIfExact().ToUInt32Checked();
+    }
+
+    /// <summary>Converts this number's value to a 64-bit unsigned integer
+    /// if it can fit in a 64-bit unsigned integer after converting it to
+    /// an integer by discarding its fractional part.</summary>
+    /// <returns>This number's value, truncated to a 64-bit unsigned
+    /// integer.</returns>
+    /// <exception cref='OverflowException'>This value is infinity or
+    /// not-a-number, or the number, once converted to an integer by
+    /// discarding its fractional part, is less than 0 or greater than
+    /// 18446744073709551615.</exception>
+    [CLSCompliant(false)]
+    public ulong ToUInt64Checked() {
+      if (!this.IsFinite) {
+        throw new OverflowException("Value is infinity or NaN");
+      }
+      if (this.IsIntegerPartZero()) {
+        return 0UL;
+      }
+      if (this.exponent.CompareToInt(20) >= 0) {
+        throw new OverflowException("Value out of range");
+      }
+      return this.ToEInteger().ToUInt64Checked();
+    }
+
+    /// <summary>Converts this number's value to an integer by discarding
+    /// its fractional part, and returns the least-significant bits of its
+    /// two's-complement form as a 64-bit unsigned integer.</summary>
+    /// <returns>This number, converted to a 64-bit unsigned integer.
+    /// Returns 0 if this value is infinity or not-a-number.</returns>
+    [CLSCompliant(false)]
+    public ulong ToUInt64Unchecked() {
+      return this.IsFinite ? this.ToEInteger().ToUInt64Unchecked() : 0UL;
+    }
+
+    /// <summary>Converts this number's value to a 64-bit unsigned integer
+    /// if it can fit in a 64-bit unsigned integer without rounding to a
+    /// different numerical value.</summary>
+    /// <returns>This number's value as a 64-bit unsigned
+    /// integer.</returns>
+    /// <exception cref='ArithmeticException'>This value is infinity or
+    /// not-a-number, is not an exact integer, or is less than 0 or greater
+    /// than 18446744073709551615.</exception>
+    [CLSCompliant(false)]
+    public ulong ToUInt64IfExact() {
+      if (!this.IsFinite) {
+        throw new OverflowException("Value is infinity or NaN");
+      }
+      if (this.IsZero) {
+        return 0UL;
+      }
+      if (this.IsNegative) {
+        throw new OverflowException("Value out of range");
+      }
+      if (this.exponent.CompareToInt(20) >= 0) {
+        throw new OverflowException("Value out of range");
+      }
+      return this.ToEIntegerIfExact().ToUInt64Checked();
+    }
   }
 }
