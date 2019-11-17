@@ -8,7 +8,7 @@ namespace PeterO.Cbor {
   public sealed class JSONOptions {
     /// <summary>Specifies how JSON numbers are converted to CBOR when
     /// decoding JSON.</summary>
-    public enum ConversionKind {
+    public enum ConversionMode {
        /// <summary>JSON numbers are decoded to CBOR using the full precision
        /// given in the JSON text. This may involve numbers being converted to
        /// arbitrary-precision integers or decimal numbers, where
@@ -107,13 +107,13 @@ namespace PeterO.Cbor {
     /// upper-case and/or basic lower-case letters), which means true, and
     /// any other value meaning false. The last key,
     /// <c>numberconversion</c>, can have a value of any name given in the
-    /// <c>JSONOptions.ConversionKind</c> enumeration (where the letters
+    /// <c>JSONOptions.ConversionMode</c> enumeration (where the letters
     /// can be any combination of basic upper-case and/or basic lower-case
     /// letters), or any other value, which is treated the same as
     /// <c>full</c>. For example, <c>base64padding=Yes</c> and
     /// <c>base64padding=1</c> both set the <c>Base64Padding</c> property
     /// to true, and <c>numberconversion=double</c> sets the
-    /// <c>NumberConversion</c> property to <c>ConversionKind.Double</c>
+    /// <c>NumberConversion</c> property to <c>ConversionMode.Double</c>
     /// .</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='paramString'/> is null. In the future, this class may allow
@@ -176,36 +176,36 @@ namespace PeterO.Cbor {
     }
 
     private string FromNumberConversion() {
-      ConversionKind kind = this.NumberConversion;
-      if (kind == ConversionKind.Full) {
+      ConversionMode kind = this.NumberConversion;
+      if (kind == ConversionMode.Full) {
         return "full";
       }
-      if (kind == ConversionKind.Double) {
+      if (kind == ConversionMode.Double) {
         return "double";
       }
-      if (kind == ConversionKind.IntOrFloat) {
+      if (kind == ConversionMode.IntOrFloat) {
         return "intorfloat";
       }
-      return (kind == ConversionKind.IntOrFloatFromDouble) ?
+      return (kind == ConversionMode.IntOrFloatFromDouble) ?
 "intorfloatfromdouble" : "full";
     }
 
-    private static ConversionKind ToNumberConversion(string str) {
+    private static ConversionMode ToNumberConversion(string str) {
       if (str != null) {
         if (str.Equals("full", StringComparison.Ordinal)) {
-          return ConversionKind.Full;
+          return ConversionMode.Full;
         }
         if (str.Equals("double", StringComparison.Ordinal)) {
-          return ConversionKind.Double;
+          return ConversionMode.Double;
         }
         if (str.Equals("intorfloat", StringComparison.Ordinal)) {
-          return ConversionKind.IntOrFloat;
+          return ConversionMode.IntOrFloat;
         }
         if (str.Equals("intorfloatfromdouble", StringComparison.Ordinal)) {
-          return ConversionKind.IntOrFloatFromDouble;
+          return ConversionMode.IntOrFloatFromDouble;
         }
       }
-      return ConversionKind.Full;
+      return ConversionMode.Full;
     }
 
     /// <summary>Gets a value indicating whether the JSON decoder should
@@ -228,8 +228,8 @@ namespace PeterO.Cbor {
     /// <summary>Gets a value indicating how JSON numbers are decoded to
     /// CBOR.</summary>
     /// <value>A value indicating how JSON numbers are decoded to CBOR. The
-    /// default is <c>ConversionKind.Full</c>.</value>
-    public ConversionKind NumberConversion {
+    /// default is <c>ConversionMode.Full</c>.</value>
+    public ConversionMode NumberConversion {
       get;
       private set;
     }

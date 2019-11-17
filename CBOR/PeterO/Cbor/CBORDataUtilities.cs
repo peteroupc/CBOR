@@ -368,7 +368,7 @@ if (str[i] >= '0' && str[i] <= '9' && (i > 0 || str[i] != '-')) {
       }
       JSONOptions opt = options ?? DefaultOptions;
       bool preserveNegativeZero = options.PreserveNegativeZero;
-      JSONOptions.ConversionKind kind = options.NumberConversion;
+      JSONOptions.ConversionMode kind = options.NumberConversion;
       int endPos = offset + count;
       var negative = false;
       if (str[0] == '-') {
@@ -396,7 +396,7 @@ if (str[i] >= '0' && str[i] <= '9' && (i > 0 || str[i] != '-')) {
         if (i == endPos) {
           if (preserveNegativeZero && negative) {
              // Negative zero in floating-point format
-             return (kind == JSONOptions.ConversionKind.Double) ?
+             return (kind == JSONOptions.ConversionMode.Double) ?
 CBORObject.FromFloatingPointBits(0x8000, 2) :
 CBORObject.FromObject(EDecimal.NegativeZero);
            }
@@ -559,14 +559,14 @@ CBORObject.FromObject(EDecimal.NegativeZero);
           if (negative) {
             mantInt = -mantInt;
             if (preserveNegativeZero && mantInt == 0) {
-              if (kind == JSONOptions.ConversionKind.Double) {
+              if (kind == JSONOptions.ConversionMode.Double) {
                 return CBORObject.FromFloatingPointBits(0x8000, 2);
               }
               return CBORObject.FromObject(
                   EDecimal.NegativeZero);
             }
           }
-          if (kind == JSONOptions.ConversionKind.Double) {
+          if (kind == JSONOptions.ConversionMode.Double) {
             return CBORObject.FromObject((double)mantInt);
           } else {
             // mantInt is a 32-bit integer, write as CBOR integer in
@@ -578,12 +578,12 @@ CBORObject.FromObject(EDecimal.NegativeZero);
           if (negative) {
             bigmant2 = -(EInteger)bigmant2;
           }
-          if (kind == JSONOptions.ConversionKind.Double) {
+          if (kind == JSONOptions.ConversionMode.Double) {
             // An arbitrary-precision integer; convert to double
             return CBORObject.FromObject(
               EFloat.FromEInteger(bigmant2).ToDouble());
-          } else if (kind == JSONOptions.ConversionKind.IntOrFloat ||
-               kind == JSONOptions.ConversionKind.IntOrFloatFromDouble) {
+          } else if (kind == JSONOptions.ConversionMode.IntOrFloat ||
+               kind == JSONOptions.ConversionMode.IntOrFloatFromDouble) {
             if (bigmant2.CanFitInInt64()) {
               long longmant2 = bigmant2.ToInt64Checked();
               if (longmant2 >= (-(1 << 53)) + 1 && longmant2 <= (1 << 53) - 1) {
@@ -610,7 +610,7 @@ CBORObject.FromObject(EDecimal.NegativeZero);
           bigmant,
           bigexp);
         if (negative && preserveNegativeZero && bigmant.IsZero) {
-          if (kind == JSONOptions.ConversionKind.Double) {
+          if (kind == JSONOptions.ConversionMode.Double) {
             return CBORObject.FromFloatingPointBits(0x8000, 2);
           }
           EDecimal negzero = EDecimal.NegativeZero;
@@ -618,16 +618,16 @@ CBORObject.FromObject(EDecimal.NegativeZero);
           edec = negzero.Subtract(edec);
         }
         // Converting the EDecimal to a CBOR object
-        if (kind == JSONOptions.ConversionKind.Double) {
+        if (kind == JSONOptions.ConversionMode.Double) {
           double dbl = edec.ToDouble();
           if (preserveNegativeZero && dbl >= 0.0) {
             dbl = Math.Abs(dbl);
           }
           return CBORObject.FromObject(dbl);
-        } else if (kind == JSONOptions.ConversionKind.IntOrFloat ||
-              kind == JSONOptions.ConversionKind.IntOrFloatFromDouble) {
+        } else if (kind == JSONOptions.ConversionMode.IntOrFloat ||
+              kind == JSONOptions.ConversionMode.IntOrFloatFromDouble) {
           double dbl;
-          CBORObject cbor = (kind == JSONOptions.ConversionKind.IntOrFloat) ?
+          CBORObject cbor = (kind == JSONOptions.ConversionMode.IntOrFloat) ?
             CBORObject.FromObject(edec) :
             CBORObject.FromObject(edec.ToDouble());
           CBORNumber cn = cbor.AsNumber();
