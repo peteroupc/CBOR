@@ -89,6 +89,14 @@ namespace PeterO.Cbor {
       return CBORObject.FromObject(this.value);
     }
 
+    public int Sign {
+      get {
+        // TODO: Will return 2 if this is NaN; is this
+        // still desirable?
+        return GetNumberInterface().Sign(this.value);
+      }
+    }
+
     internal static bool IsNumber(CBORObject o) {
       if (IsUntaggedInteger(o)) {
         return true;
