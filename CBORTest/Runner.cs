@@ -32,7 +32,7 @@ namespace PeterO {
     }
 
     public static void Main() {
-      const String ValueParam = "TestReadWriteInt";
+      const String ValueParam = "TestFromJsonString";
       // Run all the tests in this assembly
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
         if (!HasAttribute(type, typeof(TestFixtureAttribute))) {

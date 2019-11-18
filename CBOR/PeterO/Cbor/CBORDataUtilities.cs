@@ -321,6 +321,48 @@ if (str[i] >= '0' && str[i] <= '9' && (i > 0 || str[i] != '-')) {
            options);
     }
 
+private static EInteger FastEIntegerFromString(string str, int index, int
+endIndex) {
+#if DEBUG
+  if (str == null) {
+    throw new ArgumentNullException(nameof(str));
+  }
+  if (index < 0) {
+    throw new ArgumentException("index (" + index + ") is not greater or" +
+"\u0020equal to 0");
+  }
+  if (index > str.Length) {
+    throw new ArgumentException("index (" + index + ") is not less or equal" +
+"\u0020to " + str.Length);
+  }
+  if (endIndex < 0) {
+    throw new ArgumentException(+" (" + endIndex + ") is not greater or" +
+"\u0020equal to 0");
+  }
+  if (endIndex > str.Length) {
+    throw new ArgumentException(+" (" + endIndex + ") is not less or equal" +
+"\u0020to " + str.Length);
+  }
+  if (str.Length - index < endIndex) {
+    throw new ArgumentException("str's length minus " + index + " (" +
+(str.Length - index) + ") is not greater or equal to " + endIndex);
+  }
+#endif
+
+  if (endIndex - index > 32) {
+    // DebugUtility.Log("FastEInteger " + index + " " + endIndex + " len=" +
+    //(endIndex -
+    // index));
+    int midIndex = index + (endIndex - index) / 2;
+    EInteger eia = FastEIntegerFromString(str, index, midIndex);
+    EInteger eib = FastEIntegerFromString(str, midIndex, endIndex);
+    EInteger mult = EInteger.FromInt32(10).Pow(endIndex - midIndex);
+    return eia.Multiply(mult).Add(eib);
+  } else {
+    return EInteger.FromSubstring(str, index, endIndex);
+  }
+}
+
     /// <summary>Parses a number whose format follows the JSON
     /// specification (RFC 8259) and converts that number to a CBOR
     /// object.</summary>
@@ -461,16 +503,19 @@ CBORObject.FromObject(EDecimal.NegativeZero);
             }
             ++k;
            }
-           for (; i < endPos; ++i) {
-             if (str[i] >= '0' && str[i] <= '9') {
+           for (; k < endPos; ++k) {
+             if (str[k] >= '0' && str[k] <= '9') {
                haveDigits = true;
              } else {
- return null;
-}
+               return null;
+             }
            }
            if (!haveDigits) {
              return null;
            }
+        }
+        if (k != endPos) {
+          return null;
         }
         if (kind == JSONOptions.ConversionMode.Double ||
            kind == JSONOptions.ConversionMode.IntOrFloat ||
@@ -479,16 +524,27 @@ CBORObject.FromObject(EDecimal.NegativeZero);
              return negative ? CBORObject.FromObject(Double.NegativeInfinity) :
                   CBORObject.FromObject(Double.PositiveInfinity);
           }
+          // TODO: Fast cases involving negative exponents
         }
         haveDigitsAfterDecimal = hdad;
         haveDigits = hd;
         haveDecimalPoint = hdp;
         haveExponent = hex;
       }
+      int digitStart = (haveDecimalPoint || haveExponent) ? -1 : i;
+      int digitEnd = (haveDecimalPoint || haveExponent) ? -1 : i;
+      int decimalDigitStart = haveDecimalPoint ? i : -1;
+      int decimalDigitEnd = haveDecimalPoint ? i : -1;
       for (; i < endPos; ++i) {
         if (str[i] >= '0' && str[i] <= '9') {
           var thisdigit = (int)(str[i] - '0');
+          if (haveDecimalPoint) {
+            decimalDigitEnd = i + 1;
+          } else {
+ digitEnd = i + 1;
+}
           if (mantInt > MaxSafeInt) {
+/*
             if (mant == null) {
               mant = new FastInteger2(mantInt);
               mantBuffer = thisdigit;
@@ -504,6 +560,7 @@ CBORObject.FromObject(EDecimal.NegativeZero);
                 mantBuffer += thisdigit;
               }
             }
+*/
           } else {
             mantInt *= 10;
             mantInt += thisdigit;
@@ -512,8 +569,7 @@ CBORObject.FromObject(EDecimal.NegativeZero);
           if (haveDecimalPoint) {
             haveDigitsAfterDecimal = true;
             if (newScaleInt == Int32.MinValue) {
-              newScale = newScale ??
-                new FastInteger2(newScaleInt);
+              newScale = newScale ?? new FastInteger2(newScaleInt);
               newScale.AddInt(-1);
             } else {
               --newScaleInt;
@@ -539,9 +595,35 @@ CBORObject.FromObject(EDecimal.NegativeZero);
       if (!haveDigits || (haveDecimalPoint && !haveDigitsAfterDecimal)) {
         return null;
       }
+      if (mantInt > MaxSafeInt) {
+        if (haveDecimalPoint) {
+  EInteger eidec = FastEIntegerFromString(
+    str,
+    decimalDigitStart,
+    decimalDigitEnd);
+  if (digitStart < 0) {
+    mant = new FastInteger2(eidec);
+  } else {
+    #if DEBUG
+    if (digitStart >= digitEnd) {
+      throw new InvalidOperationException();
+    }
+    #endif
+    EInteger eimant = FastEIntegerFromString(str, digitStart, digitEnd);
+    EInteger mult = EInteger.FromInt32(10).Pow(digitEnd - digitStart);
+    eimant = eimant.Multiply(mult).Add(eidec);
+    mant = new FastInteger2(eidec);
+  }
+} else {
+  EInteger eimant = FastEIntegerFromString(str, digitStart, digitEnd);
+  mant = new FastInteger2(eimant);
+}
+      }
+/*
       if (mant != null && (mantBufferMult != 1 || mantBuffer != 0)) {
         mant.Multiply(mantBufferMult).AddInt(mantBuffer);
       }
+*/
       if (haveExponent) {
         FastInteger2 exp = null;
         var expInt = 0;
@@ -561,6 +643,7 @@ CBORObject.FromObject(EDecimal.NegativeZero);
             haveDigits = true;
             var thisdigit = (int)(str[i] - '0');
             if (expInt > MaxSafeInt) {
+              // TODO: Use same optimization as in mant above
               if (exp == null) {
                 exp = new FastInteger2(expInt);
                 expBuffer = thisdigit;
@@ -622,10 +705,11 @@ CBORObject.FromObject(EDecimal.NegativeZero);
           mant = null;
         }
         if (mant == null) {
-          // NOTE: mantInt can only be 0 or greater, so overflow is impossible
+          // NOTE: mantInt can only be 0 or greater, so overflow is
+          // impossible with Int32.MinValue
           #if DEBUG
           if (mantInt < 0) {
-            throw new ArgumentException("mantInt(" + mantInt +
+            throw new InvalidOperationException("mantInt(" + mantInt +
               ") is less than 0");
           }
           #endif

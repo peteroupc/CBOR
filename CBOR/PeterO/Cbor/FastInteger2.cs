@@ -315,6 +315,11 @@ namespace PeterO.Cbor {
       this.smallValue = value;
     }
 
+    internal FastInteger2(EInteger largeValue) {
+      this.integerMode = 2;
+      this.largeValue = largeValue;
+    }
+
     internal int AsInt32() {
       switch (this.integerMode) {
         case 0:
