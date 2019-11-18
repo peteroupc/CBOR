@@ -89,11 +89,15 @@ namespace PeterO.Cbor {
       return CBORObject.FromObject(this.value);
     }
 
+  /// <summary>Gets a value not documented yet.</summary>
+  /// <summary>Gets a value not documented yet.</summary>
+  /// <summary>Gets a value not documented yet.</summary>
+  /// <value>A value not documented yet.</value>
     public int Sign {
       get {
         // TODO: Will return 2 if this is NaN; is this
         // still desirable?
-        return GetNumberInterface().Sign(this.value);
+        return this.GetNumberInterface().Sign(this.value);
       }
     }
 

@@ -408,8 +408,82 @@ CBORObject.FromObject(EDecimal.NegativeZero);
         } else if (str[i] == 'E' || str[i] == 'e') {
           haveExponent = true;
         } else {
+          return null;
+        }
+      }
+      if (endPos - i >= 400) {
+        // Check for certain fast cases
+        int k = i;
+        bool hdp = haveDecimalPoint;
+        bool hd = haveDigits;
+        bool hdad = haveDigitsAfterDecimal;
+        bool hex = haveExponent;
+        var haveManyDigits = false;
+        var eplus = true;
+        for (; k < endPos; ++k) {
+          if (str[k] >= '0' && str[k] <= '9') {
+            haveDigits = true;
+            if (k - i > 400 && !haveDecimalPoint) {
+               // Indicates that this value is bigger
+               // than a decimal can store
+               haveManyDigits = true;
+            }
+            if (haveDecimalPoint) {
+              haveDigitsAfterDecimal = true;
+            }
+          } else if (str[k] == '.') {
+            if (!haveDigits) {
+              // no digits before the decimal point
+              return null;
+            } else if (haveDecimalPoint) {
+              return null;
+            }
+            haveDecimalPoint = true;
+          } else if (str[k] == 'E' || str[k] == 'e') {
+            ++k;
+            haveExponent = true;
+            break;
+          } else {
             return null;
           }
+        }
+        if (!haveDigits || (haveDecimalPoint && !haveDigitsAfterDecimal)) {
+          return null;
+        }
+        if (haveExponent) {
+          haveDigits = false;
+          if (k == endPos) {
+            return null;
+          }
+          if (str[k] == '+' || str[k] == '-') {
+            if (str[k] == '-') {
+              eplus = false;
+            }
+            ++k;
+           }
+           for (; i < endPos; ++i) {
+             if (str[i] >= '0' && str[i] <= '9') {
+               haveDigits = true;
+             } else {
+ return null;
+}
+           }
+           if (!haveDigits) {
+             return null;
+           }
+        }
+        if (kind == JSONOptions.ConversionMode.Double ||
+           kind == JSONOptions.ConversionMode.IntOrFloat ||
+           kind == JSONOptions.ConversionMode.IntOrFloatFromDouble) {
+          if (haveManyDigits && (!haveExponent || eplus)) {
+             return negative ? CBORObject.FromObject(Double.NegativeInfinity) :
+                  CBORObject.FromObject(Double.PositiveInfinity);
+          }
+        }
+        haveDigitsAfterDecimal = hdad;
+        haveDigits = hd;
+        haveDecimalPoint = hdp;
+        haveExponent = hex;
       }
       for (; i < endPos; ++i) {
         if (str[i] >= '0' && str[i] <= '9') {

@@ -35,8 +35,8 @@ namespace PeterO.Cbor {
   /// <para><b>To and from other objects:</b> The
   /// <c>CBORObject.FromObject</c> method converts many kinds of objects
   /// to a CBOR object, including numbers, strings, and arrays and maps
-  /// of numbers and strings. Methods like AsNumber and AsString
-  /// convert a CBOR object to different types of object. The
+  /// of numbers and strings. Methods like AsNumber and AsString convert
+  /// a CBOR object to different types of object. The
   /// <c>CBORObject.ToObject</c> method converts a CBOR object to an
   /// object of a given type; for example, a CBOR array to a native
   /// <c>List</c> (or <c>ArrayList</c> in Java), or a CBOR integer to an
@@ -458,7 +458,8 @@ CBORObject.FromObject(Double.NaN);
     /// <exception cref='InvalidOperationException'>This object does not
     /// represent a number, or this object is a not-a-number (NaN)
     /// value.</exception>
-    [Obsolete("Instead, convert this object to a number with .AsNumber(), and use the Sign property in .NET or the signum method in Java.")]
+    [Obsolete("Instead, convert this object to a number with .AsNumber()," +
+"\u0020 and use the Sign property in .NET or the signum method in Java.")]
     public int Sign {
       get {
         CBORNumber cn = CBORNumber.FromCBORObject(this);
@@ -3664,10 +3665,11 @@ checked(size + 5) : checked(size + 9);
       return (EInteger)this.ToObject(typeof(EInteger));
     }
 
-    /// <summary>Returns false if this object is a CBOR false, null, or undefined value
-    /// (whether or not the object has tags); otherwise, true.</summary>
-    /// <returns>False if this object is a CBOR false, null, or undefined value;
-    /// otherwise, true.</returns>
+    /// <summary>Returns false if this object is a CBOR false, null, or
+    /// undefined value (whether or not the object has tags); otherwise,
+    /// true.</summary>
+    /// <returns>False if this object is a CBOR false, null, or undefined
+    /// value; otherwise, true.</returns>
     public bool AsBoolean() {
       return !this.IsFalse && !this.IsNull && !this.IsUndefined;
     }
@@ -3685,8 +3687,7 @@ checked(size + 5) : checked(size + 9);
     /// converted to an integer by discarding its fractional
     /// part).</exception>
     [Obsolete("Instead, use " + ".ToObject<byte>\u0028) in" +
-        "\u0020.NET" +
-        " or \u0020.ToObject\u0028Byte.class) in" +
+        "\u0020.NET" + " or \u0020.ToObject\u0028Byte.class) in" +
         "\u0020Java.")]
     public byte AsByte() {
       return (byte)this.AsInt32(0, 255);
