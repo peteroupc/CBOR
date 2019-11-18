@@ -6770,9 +6770,11 @@ TestCommon.ToByteArrayString(bytes));
     }
 
 private static CBORObject FromJSON(string json, JSONOptions jsonop) {
- var sw = new System.Diagnostics.Stopwatch(); sw.Start();
+ var sw = new System.Diagnostics.Stopwatch();
+ sw.Start();
  CBORObject cbor = CBORObject.FromJSONString(json, jsonop);
- sw.Stop(); Console.WriteLine("" + sw.ElapsedMilliseconds + " ms");
+ sw.Stop();
+ Console.WriteLine(String.Empty + sw.ElapsedMilliseconds + " ms");
  return cbor;
 }
 
@@ -6780,7 +6782,7 @@ private static CBORObject FromJSON(string json, JSONOptions jsonop) {
 [Timeout(10000)]
 public void TestFromJsonStringLongKindFull() {
 var jsonop = new JSONOptions("numberconversion=full");
-string json = TestCommon.Repeat("7", 1000000);
+string json = TestCommon.Repeat("7", 200000);
 CBORObject cbor = FromJSON(json, jsonop);
 Assert.IsTrue(cbor.IsTagged);
 }
@@ -6789,7 +6791,7 @@ Assert.IsTrue(cbor.IsTagged);
 [Timeout(10000)]
 public void TestFromJsonStringLongKindFull2() {
 var jsonop = new JSONOptions("numberconversion=full");
-string json = TestCommon.Repeat("7", 1000000) + ".0";
+string json = TestCommon.Repeat("7", 200000) + ".0";
 CBORObject cbor = FromJSON(json, jsonop);
 Assert.IsTrue(cbor.IsTagged);
 }
@@ -6797,6 +6799,7 @@ Assert.IsTrue(cbor.IsTagged);
 [Test]
 [Timeout(2000)]
 public void TestFromJsonStringLongKindFullBad() {
+Console.WriteLine("FullBad 1");
 var jsonop = new JSONOptions("numberconversion=full");
 string json = TestCommon.Repeat("7", 1000000) + "x";
 try {
@@ -6808,6 +6811,18 @@ try {
  Assert.Fail(ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
+Console.WriteLine("FullBad 1a");
+json = "7x" + TestCommon.Repeat("7", 1000000);
+try {
+ FromJSON(json, jsonop);
+ Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+Console.WriteLine("FullBad 2");
 json = TestCommon.Repeat("0", 1000000);
 try {
  FromJSON(json, jsonop);

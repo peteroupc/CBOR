@@ -336,23 +336,20 @@ endIndex) {
 "\u0020to " + str.Length);
   }
   if (endIndex < 0) {
-    throw new ArgumentException(+" (" + endIndex + ") is not greater or" +
+    throw new ArgumentException("endIndex plus 1 (" + endIndex + ") is not" +
+"\u0020greater or" +
 "\u0020equal to 0");
   }
   if (endIndex > str.Length) {
-    throw new ArgumentException(+" (" + endIndex + ") is not less or equal" +
+    throw new ArgumentException("endIndex plus 1 (" + endIndex + ") is not" +
+"\u0020less or equal" +
 "\u0020to " + str.Length);
-  }
-  if (str.Length - index < endIndex) {
-    throw new ArgumentException("str's length minus " + index + " (" +
-(str.Length - index) + ") is not greater or equal to " + endIndex);
   }
 #endif
 
   if (endIndex - index > 32) {
-    // DebugUtility.Log("FastEInteger " + index + " " + endIndex + " len=" +
-    //(endIndex -
-    // index));
+     // DebugUtility.Log("FastEInteger " + index + " " + endIndex + " len=" +
+    // (endIndex - index));
     int midIndex = index + (endIndex - index) / 2;
     EInteger eia = FastEIntegerFromString(str, index, midIndex);
     EInteger eib = FastEIntegerFromString(str, midIndex, endIndex);
@@ -543,27 +540,9 @@ CBORObject.FromObject(EDecimal.NegativeZero);
           } else {
  digitEnd = i + 1;
 }
-          if (mantInt > MaxSafeInt) {
-/*
-            if (mant == null) {
-              mant = new FastInteger2(mantInt);
-              mantBuffer = thisdigit;
-              mantBufferMult = 10;
-            } else {
-              if (mantBufferMult >= 1000000000) {
-                mant.Multiply(mantBufferMult).AddInt(mantBuffer);
-                mantBuffer = thisdigit;
-                mantBufferMult = 10;
-              } else {
-                mantBufferMult *= 10;
-                mantBuffer = (mantBuffer << 3) + (mantBuffer << 1);
-                mantBuffer += thisdigit;
-              }
-            }
-*/
-          } else {
-            mantInt *= 10;
-            mantInt += thisdigit;
+          if (mantInt <= MaxSafeInt) {
+  mantInt *= 10;
+  mantInt += thisdigit;
           }
           haveDigits = true;
           if (haveDecimalPoint) {
@@ -584,6 +563,8 @@ CBORObject.FromObject(EDecimal.NegativeZero);
             return null;
           }
           haveDecimalPoint = true;
+          decimalDigitStart = i + 1;
+          decimalDigitEnd = i + 1;
         } else if (str[i] == 'E' || str[i] == 'e') {
           haveExponent = true;
           ++i;
@@ -597,11 +578,11 @@ CBORObject.FromObject(EDecimal.NegativeZero);
       }
       if (mantInt > MaxSafeInt) {
         if (haveDecimalPoint) {
-  EInteger eidec = FastEIntegerFromString(
-    str,
-    decimalDigitStart,
-    decimalDigitEnd);
   if (digitStart < 0) {
+    EInteger eidec = FastEIntegerFromString(
+      str,
+      decimalDigitStart,
+      decimalDigitEnd);
     mant = new FastInteger2(eidec);
   } else {
     #if DEBUG
@@ -609,21 +590,18 @@ CBORObject.FromObject(EDecimal.NegativeZero);
       throw new InvalidOperationException();
     }
     #endif
-    EInteger eimant = FastEIntegerFromString(str, digitStart, digitEnd);
-    EInteger mult = EInteger.FromInt32(10).Pow(digitEnd - digitStart);
-    eimant = eimant.Multiply(mult).Add(eidec);
+    EInteger eidec;
+    string tmpstr = str.Substring(digitStart, digitEnd - digitStart) +
+              str.Substring(decimalDigitStart, decimalDigitEnd -
+decimalDigitStart);
+    eidec = FastEIntegerFromString(tmpstr, 0, tmpstr.Length);
     mant = new FastInteger2(eidec);
   }
-} else {
+} else if (digitStart >= 0) {
   EInteger eimant = FastEIntegerFromString(str, digitStart, digitEnd);
   mant = new FastInteger2(eimant);
 }
       }
-/*
-      if (mant != null && (mantBufferMult != 1 || mantBuffer != 0)) {
-        mant.Multiply(mantBufferMult).AddInt(mantBuffer);
-      }
-*/
       if (haveExponent) {
         FastInteger2 exp = null;
         var expInt = 0;

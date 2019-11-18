@@ -225,6 +225,11 @@ namespace PeterO.Cbor {
             sb.Append((char)c);
             c = this.reader.ReadChar();
           }
+          // check if character can validly appear after a JSON number
+          if (c != ',' && c != ']' && c != '}' && c != -1 &&
+              c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) {
+            this.reader.RaiseError("Invalid character after JSON number");
+          }
           if (sb == null) {
             // Single-digit number
              str = new String(new char[] { '-', (char)cstart });
@@ -268,6 +273,11 @@ namespace PeterO.Cbor {
             }
             sb.Append((char)c);
             c = this.reader.ReadChar();
+          }
+          // check if character can validly appear after a JSON number
+          if (c != ',' && c != ']' && c != '}' && c != -1 &&
+              c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) {
+            this.reader.RaiseError("Invalid character after JSON number");
           }
           if (sb == null) {
              // Single-digit number

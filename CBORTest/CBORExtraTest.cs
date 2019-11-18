@@ -432,50 +432,21 @@ from i in RangeExclusive(0, 10)
     [Test]
     public void TestFloatCloseToEdge() {
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.147483647E9d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(2.147483647E9d).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.147483647E9d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          2.147483647E9d).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.147483647E9d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.147483647E9d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          2.1474836470000002E9d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          2.1474836470000002E9d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          2.1474836470000002E9d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          2.147483647E9d).ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -484,7 +455,7 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(
-        2.1474836470000002E9d).AsSByte();
+          2.147483647E9d).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -493,81 +464,21 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip (
-          2.1474836469999998E9d).AsUInt32();
+          2.1474836470000002E9d).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip (
-          2.1474836469999998E9d).AsUInt64();
+          2.1474836470000002E9d).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip (
-          2.1474836469999998E9d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(
-        2.1474836469999998E9d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.147483648E9d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.147483648E9d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.147483648E9d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.147483648E9d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          2.1474836480000005E9d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          2.1474836480000005E9d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          2.1474836480000005E9d).AsUInt16();
+          2.1474836470000002E9d).ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -576,7 +487,7 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(
-        2.1474836480000005E9d).AsSByte();
+        2.1474836470000002E9d).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -585,81 +496,21 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip (
-          2.1474836479999998E9d).AsUInt32();
+          2.1474836469999998E9d).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip (
-          2.1474836479999998E9d).AsUInt64();
+          2.1474836469999998E9d).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip (
-          2.1474836479999998E9d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(
-        2.1474836479999998E9d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.147483646E9d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.147483646E9d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.147483646E9d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.147483646E9d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          2.1474836460000002E9d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          2.1474836460000002E9d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          2.1474836460000002E9d).AsUInt16();
+          2.1474836469999998E9d).ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -668,7 +519,7 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(
-        2.1474836460000002E9d).AsSByte();
+        2.1474836469999998E9d).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -676,22 +527,21 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          2.1474836459999998E9d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(2.147483648E9d).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          2.1474836459999998E9d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          2.147483648E9d).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          2.1474836459999998E9d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          2.147483648E9d).ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -700,39 +550,7 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(
-        2.1474836459999998E9d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.147483648E9d).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.147483648E9d).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.147483648E9d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.147483648E9d).AsSByte();
+          2.147483648E9d).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -741,303 +559,21 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip (
-          -2.1474836479999998E9d).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
+          2.1474836480000005E9d).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip (
-          -2.1474836479999998E9d).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
+          2.1474836480000005E9d).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip (
-          -2.1474836479999998E9d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -2.1474836479999998E9d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -2.1474836480000005E9d).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -2.1474836480000005E9d).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -2.1474836480000005E9d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -2.1474836480000005E9d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.147483647E9d).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.147483647E9d).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.147483647E9d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.147483647E9d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -2.1474836469999998E9d).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -2.1474836469999998E9d).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -2.1474836469999998E9d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -2.1474836469999998E9d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -2.1474836470000002E9d).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -2.1474836470000002E9d).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -2.1474836470000002E9d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -2.1474836470000002E9d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.147483649E9d).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.147483649E9d).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.147483649E9d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.147483649E9d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -2.1474836489999995E9d).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -2.1474836489999995E9d).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -2.1474836489999995E9d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -2.1474836489999995E9d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -2.1474836490000005E9d).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -2.1474836490000005E9d).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -2.1474836490000005E9d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -2.1474836490000005E9d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          9.223372036854776E18d).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          9.223372036854776E18d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          9.223372036854776E18d).AsUInt16();
+          2.1474836480000005E9d).ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -1046,7 +582,7 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(
-        9.223372036854776E18d).AsSByte();
+        2.1474836480000005E9d).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -1055,23 +591,21 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip (
-          9.223372036854778E18d).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
+          2.1474836479999998E9d).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip (
-          9.223372036854778E18d).AsUInt64();
+          2.1474836479999998E9d).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip (
-          9.223372036854778E18d).AsUInt16();
+          2.1474836479999998E9d).ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -1080,7 +614,7 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(
-        9.223372036854778E18d).AsSByte();
+        2.1474836479999998E9d).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -1088,407 +622,21 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          9.2233720368547748E18d).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
+        ToObjectTest.TestToFromObjectRoundTrip(2.147483646E9d).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          9.2233720368547748E18d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          2.147483646E9d).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          9.2233720368547748E18d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          9.2233720368547748E18d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -9.223372036854776E18d).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -9.223372036854776E18d).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -9.223372036854776E18d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -9.223372036854776E18d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -9.2233720368547748E18d).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -9.2233720368547748E18d).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -9.2233720368547748E18d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -9.2233720368547748E18d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -9.223372036854778E18d).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -9.223372036854778E18d).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -9.223372036854778E18d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          -9.223372036854778E18d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.0d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.0d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.0d).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.0d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.000000000004d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.000000000004d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.000000000004d).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.000000000004d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.999999999996d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.999999999996d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.999999999996d).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.999999999996d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32768.0d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32768.0d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32768.0d).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32768.0d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32768.00000000001d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32768.00000000001d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32768.00000000001d).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32768.00000000001d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.999999999996d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.999999999996d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.999999999996d).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.999999999996d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.0d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.0d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.0d).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.0d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.000000000004d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.000000000004d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.000000000004d).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.000000000004d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32765.999999999996d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32765.999999999996d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32765.999999999996d).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32765.999999999996d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.0d).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.0d).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.0d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.0d).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          2.147483646E9d).ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -1497,2347 +645,7 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(
-        -32767.999999999996d).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(
-        -32767.999999999996d).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(
-        -32767.999999999996d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.999999999996d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.00000000001d).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.00000000001d).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.00000000001d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.00000000001d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.0d).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.0d).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.0d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.0d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(
-        -32766.999999999996d).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(
-        -32766.999999999996d).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(
-        -32766.999999999996d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32766.999999999996d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(
-        -32767.000000000004d).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(
-        -32767.000000000004d).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(
-        -32767.000000000004d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.000000000004d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32769.0d).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32769.0d).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32769.0d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32769.0d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.99999999999d).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.99999999999d).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.99999999999d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.99999999999d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32769.00000000001d).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32769.00000000001d).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32769.00000000001d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32769.00000000001d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(0.0d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(0.0d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(0.0d).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(0.0d).AsSByte();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.9E-324d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.9E-324d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.9E-324d).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.9E-324d).AsSByte();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-4.9E-324d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-4.9E-324d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-4.9E-324d).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-4.9E-324d).AsSByte();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.0d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.0d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.0d).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.0d).AsSByte();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.0000000000000002d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.0000000000000002d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.0000000000000002d).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.0000000000000002d).AsSByte();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(0.9999999999999999d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(0.9999999999999999d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(0.9999999999999999d).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(0.9999999999999999d).AsSByte();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.0d).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.0d).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.0d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.0d).AsSByte();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(
-        -0.9999999999999999d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(
-        -0.9999999999999999d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(
-        -0.9999999999999999d).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-0.9999999999999999d).AsSByte();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(
-        -1.0000000000000002d).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(
-        -1.0000000000000002d).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(
-        -1.0000000000000002d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.0000000000000002d).AsSByte();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(255.0d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(255.0d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(255.0d).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(255.0d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(255.00000000000003d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(255.00000000000003d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(255.00000000000003d).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(255.00000000000003d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(254.99999999999997d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(254.99999999999997d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(254.99999999999997d).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(254.99999999999997d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(256.0d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(256.0d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(256.0d).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(256.0d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(256.00000000000006d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(256.00000000000006d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(256.00000000000006d).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(256.00000000000006d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(255.99999999999997d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(255.99999999999997d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(255.99999999999997d).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(255.99999999999997d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(254.0d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(254.0d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(254.0d).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(254.0d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(254.00000000000003d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(254.00000000000003d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(254.00000000000003d).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(254.00000000000003d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(253.99999999999997d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(253.99999999999997d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(253.99999999999997d).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(253.99999999999997d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.14748365E9f).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.14748365E9f).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.14748365E9f).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.14748365E9f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.1474839E9f).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.1474839E9f).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.1474839E9f).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.1474839E9f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.14748352E9f).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.14748352E9f).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.14748352E9f).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(2.14748352E9f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.14748365E9f).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.14748365E9f).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.14748365E9f).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.14748365E9f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.14748352E9f).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.14748352E9f).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.14748352E9f).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.14748352E9f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.1474839E9f).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.1474839E9f).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.1474839E9f).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.1474839E9f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(9.223372E18f).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(9.223372E18f).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(9.223372E18f).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(9.223372E18f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(9.223373E18f).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(9.223373E18f).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(9.223373E18f).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(9.223373E18f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(9.2233715E18f).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(9.2233715E18f).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(9.2233715E18f).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(9.2233715E18f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-9.223372E18f).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-9.223372E18f).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-9.223372E18f).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-9.223372E18f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-9.2233715E18f).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-9.2233715E18f).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-9.2233715E18f).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-9.2233715E18f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-9.223373E18f).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-9.223373E18f).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-9.223373E18f).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-9.223373E18f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.0f).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.0f).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.0f).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.0f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.002f).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.002f).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.002f).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.002f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.998f).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.998f).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.998f).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.998f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32768.0f).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32768.0f).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32768.0f).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32768.0f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32768.004f).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32768.004f).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32768.004f).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32768.004f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.998f).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.998f).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.998f).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.998f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.0f).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.0f).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.0f).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.0f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.002f).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.002f).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.002f).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.002f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32765.998f).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32765.998f).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32765.998f).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(32765.998f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.0f).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.0f).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.0f).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.0f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.998f).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.998f).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.998f).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.998f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.004f).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.004f).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.004f).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.004f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.0f).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.0f).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.0f).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.0f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32766.998f).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32766.998f).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32766.998f).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32766.998f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.002f).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.002f).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.002f).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.002f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32769.0f).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32769.0f).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32769.0f).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32769.0f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.996f).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.996f).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.996f).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.996f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32769.004f).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32769.004f).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32769.004f).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-32769.004f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(0.0f).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(0.0f).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(0.0f).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(0.0f).AsSByte();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.4E-45f).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.4E-45f).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.4E-45f).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.4E-45f).AsSByte();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.4E-45f).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.4E-45f).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.4E-45f).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.4E-45f).AsSByte();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.0f).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.0f).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.0f).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.0f).AsSByte();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.0000001f).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.0000001f).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.0000001f).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.0000001f).AsSByte();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(0.99999994f).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(0.99999994f).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(0.99999994f).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(0.99999994f).AsSByte();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.0f).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.0f).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.0f).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.0f).AsSByte();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-0.99999994f).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-0.99999994f).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-0.99999994f).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-0.99999994f).AsSByte();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.0000001f).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.0000001f).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.0000001f).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.0000001f).AsSByte();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(255.0f).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(255.0f).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(255.0f).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(255.0f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(255.00002f).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(255.00002f).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(255.00002f).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(255.00002f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(254.99998f).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(254.99998f).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(254.99998f).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(254.99998f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(256.0f).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(256.0f).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(256.0f).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(256.0f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(256.00003f).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(256.00003f).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(256.00003f).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(256.00003f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(255.99998f).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(255.99998f).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(255.99998f).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(255.99998f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(254.0f).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(254.0f).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(254.0f).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(254.0f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(254.00002f).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(254.00002f).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(254.00002f).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(254.00002f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(253.99998f).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(253.99998f).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(253.99998f).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(253.99998f).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.0d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.0d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.0d).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.0d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.00000000001d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.00000000001d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.00000000001d).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.00000000001d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.99999999999d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.99999999999d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.99999999999d).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.99999999999d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65536.0d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65536.0d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65536.0d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65536.0d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65536.00000000001d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65536.00000000001d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65536.00000000001d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65536.00000000001d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.99999999999d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.99999999999d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.99999999999d).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.99999999999d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.0d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.0d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.0d).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.0d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.00000000001d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.00000000001d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.00000000001d).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.00000000001d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65533.99999999999d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65533.99999999999d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65533.99999999999d).AsUInt16();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(65533.99999999999d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.294967295E9d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.294967295E9d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.294967295E9d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.294967295E9d).AsSByte();
+          2.147483646E9d).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -3846,21 +654,21 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip (
-          4.2949672950000005E9d).AsUInt32();
+          2.1474836460000002E9d).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip (
-          4.2949672950000005E9d).AsUInt64();
+          2.1474836460000002E9d).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip (
-          4.2949672950000005E9d).AsUInt16();
+          2.1474836460000002E9d).ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -3869,102 +677,7 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(
-        4.2949672950000005E9d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          4.2949672949999995E9d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          4.2949672949999995E9d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          4.2949672949999995E9d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(
-        4.2949672949999995E9d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.294967296E9d).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.294967296E9d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.294967296E9d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.294967296E9d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(
-        4.294967296000001E9d).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(
-        4.294967296000001E9d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(
-        4.294967296000001E9d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.294967296000001E9d).AsSByte();
+        2.1474836460000002E9d).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -3973,21 +686,21 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip (
-          4.2949672959999995E9d).AsUInt32();
+          2.1474836459999998E9d).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip (
-          4.2949672959999995E9d).AsUInt64();
+          2.1474836459999998E9d).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip (
-          4.2949672959999995E9d).AsUInt16();
+          2.1474836459999998E9d).ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -3996,58 +709,7 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(
-        4.2949672959999995E9d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.294967294E9d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.294967294E9d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.294967294E9d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.294967294E9d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          4.2949672940000005E9d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          4.2949672940000005E9d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          4.2949672940000005E9d).AsUInt16();
+        2.1474836459999998E9d).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4056,7 +718,34 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(
-        4.2949672940000005E9d).AsSByte();
+          -2.147483648E9d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.147483648E9d).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.147483648E9d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.147483648E9d).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4065,30 +754,7 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip (
-          4.2949672939999995E9d).AsUInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          4.2949672939999995E9d).AsUInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip (
-          4.2949672939999995E9d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(
-        4.2949672939999995E9d).AsSByte();
+          -2.1474836479999998E9d).ToObject<uint>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4097,7 +763,7 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip (
-          1.8446744073709552E19d).AsUInt32();
+          -2.1474836479999998E9d).ToObject<ulong>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4106,7 +772,7 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip (
-          1.8446744073709552E19d).AsUInt64();
+          -2.1474836479999998E9d).ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4115,7 +781,7 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip (
-          1.8446744073709552E19d).AsUInt16();
+          -2.1474836479999998E9d).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4124,7 +790,7 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip (
-          1.8446744073709552E19d).AsSByte();
+          -2.1474836480000005E9d).ToObject<uint>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4133,7 +799,7 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip (
-          1.8446744073709556E19d).AsUInt32();
+          -2.1474836480000005E9d).ToObject<ulong>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4142,7 +808,7 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip (
-          1.8446744073709556E19d).AsUInt64();
+          -2.1474836480000005E9d).ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4151,7 +817,43 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip (
-          1.8446744073709556E19d).AsUInt16();
+          -2.1474836480000005E9d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.147483647E9d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.147483647E9d).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.147483647E9d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.147483647E9d).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4160,7 +862,7 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip (
-          1.8446744073709556E19d).AsSByte();
+          -2.1474836469999998E9d).ToObject<uint>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4169,7 +871,7 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip (
-          1.844674407370955E19d).AsUInt32();
+          -2.1474836469999998E9d).ToObject<ulong>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4178,14 +880,52 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip (
-          1.844674407370955E19d).AsUInt64();
+          -2.1474836469999998E9d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip (
-          1.844674407370955E19d).AsUInt16();
+          -2.1474836469999998E9d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          -2.1474836470000002E9d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          -2.1474836470000002E9d).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          -2.1474836470000002E9d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          -2.1474836470000002E9d).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4194,46 +934,7 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(
-        1.844674407370955E19d).AsSByte();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.0d).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.0d).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.0d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.0d).AsSByte();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(
-        -127.99999999999999d).AsUInt32();
+          -2.147483649E9d).ToObject<uint>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4242,7 +943,7 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(
-        -127.99999999999999d).AsUInt64();
+          -2.147483649E9d).ToObject<ulong>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4251,22 +952,7 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(
-        -127.99999999999999d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.99999999999999d).AsSByte();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(
-        -128.00000000000003d).AsUInt32();
+          -2.147483649E9d).ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4275,7 +961,104 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(
-        -128.00000000000003d).AsUInt64();
+          -2.147483649E9d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          -2.1474836489999995E9d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          -2.1474836489999995E9d).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          -2.1474836489999995E9d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          -2.1474836489999995E9d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          -2.1474836490000005E9d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          -2.1474836490000005E9d).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          -2.1474836490000005E9d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          -2.1474836490000005E9d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          9.223372036854776E18d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          9.223372036854776E18d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          9.223372036854776E18d).ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4284,7 +1067,7 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(
-        -128.00000000000003d).AsUInt16();
+        9.223372036854776E18d).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4292,13 +1075,8 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.00000000000003d).AsSByte();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.0d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip (
+          9.223372036854778E18d).ToObject<uint>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4306,30 +1084,15 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.0d).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
+        ToObjectTest.TestToFromObjectRoundTrip (
+          9.223372036854778E18d).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.0d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.0d).AsSByte();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(
-        -126.99999999999999d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip (
+          9.223372036854778E18d).ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4338,7 +1101,175 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(
-        -126.99999999999999d).AsUInt64();
+        9.223372036854778E18d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          9.2233720368547748E18d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          9.2233720368547748E18d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          9.2233720368547748E18d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          9.2233720368547748E18d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          -9.223372036854776E18d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          -9.223372036854776E18d).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          -9.223372036854776E18d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          -9.223372036854776E18d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          -9.2233720368547748E18d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          -9.2233720368547748E18d).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          -9.2233720368547748E18d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          -9.2233720368547748E18d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          -9.223372036854778E18d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          -9.223372036854778E18d).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          -9.223372036854778E18d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          -9.223372036854778E18d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32767.0d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32767.0d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32767.0d).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32767.0d).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4347,31 +1278,28 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(
-        -126.99999999999999d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-126.99999999999999d).AsSByte();
+          32767.000000000004d).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(
-        -127.00000000000001d).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
+          32767.000000000004d).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(
-        -127.00000000000001d).AsUInt64();
+          32767.000000000004d).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          32767.000000000004d).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4380,7 +1308,28 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(
-        -127.00000000000001d).AsUInt16();
+          32766.999999999996d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          32766.999999999996d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          32766.999999999996d).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          32766.999999999996d).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4388,37 +1337,25 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.00000000000001d).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(32768.0d).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-129.0d).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
+        ToObjectTest.TestToFromObjectRoundTrip(32768.0d).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-129.0d).AsUInt64();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
+        ToObjectTest.TestToFromObjectRoundTrip(32768.0d).ToObject<ushort>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-129.0d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-129.0d).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(32768.0d).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4427,7 +1364,28 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(
-        -128.99999999999997d).AsUInt32();
+          32768.00000000001d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          32768.00000000001d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          32768.00000000001d).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          32768.00000000001d).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4436,7 +1394,54 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(
-        -128.99999999999997d).AsUInt64();
+          32767.999999999996d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          32767.999999999996d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          32767.999999999996d).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          32767.999999999996d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32766.0d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32766.0d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32766.0d).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32766.0d).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4445,31 +1450,28 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(
-        -128.99999999999997d).AsUInt16();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.99999999999997d).AsSByte();
+          32766.000000000004d).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(
-        -129.00000000000003d).AsUInt32();
-      } catch (OverflowException) {
-        // NOTE: Intentionally empty
+          32766.000000000004d).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(
-        -129.00000000000003d).AsUInt64();
+          32766.000000000004d).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          32766.000000000004d).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4478,7 +1480,3153 @@ from i in RangeExclusive(0, 10)
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(
-        -129.00000000000003d).AsUInt16();
+          32765.999999999996d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          32765.999999999996d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          32765.999999999996d).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          32765.999999999996d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32768.0d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32768.0d).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32768.0d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32768.0d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -32767.999999999996d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -32767.999999999996d).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -32767.999999999996d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -32767.999999999996d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -32768.00000000001d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -32768.00000000001d).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -32768.00000000001d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -32768.00000000001d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32767.0d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32767.0d).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32767.0d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32767.0d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -32766.999999999996d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -32766.999999999996d).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -32766.999999999996d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -32766.999999999996d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -32767.000000000004d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -32767.000000000004d).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -32767.000000000004d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -32767.000000000004d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32769.0d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32769.0d).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32769.0d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32769.0d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -32768.99999999999d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -32768.99999999999d).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -32768.99999999999d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -32768.99999999999d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -32769.00000000001d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -32769.00000000001d).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -32769.00000000001d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -32769.00000000001d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(0.0d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(0.0d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(0.0d).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(0.0d).ToObject<sbyte>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(4.9E-324d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(4.9E-324d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(4.9E-324d).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(4.9E-324d).ToObject<sbyte>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-4.9E-324d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-4.9E-324d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-4.9E-324d).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-4.9E-324d).ToObject<sbyte>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(1.0d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(1.0d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(1.0d).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(1.0d).ToObject<sbyte>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          1.0000000000000002d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          1.0000000000000002d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          1.0000000000000002d).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          1.0000000000000002d).ToObject<sbyte>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          0.9999999999999999d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          0.9999999999999999d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          0.9999999999999999d).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          0.9999999999999999d).ToObject<sbyte>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-1.0d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-1.0d).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-1.0d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-1.0d).ToObject<sbyte>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -0.9999999999999999d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -0.9999999999999999d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -0.9999999999999999d).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -0.9999999999999999d).ToObject<sbyte>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -1.0000000000000002d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -1.0000000000000002d).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -1.0000000000000002d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -1.0000000000000002d).ToObject<sbyte>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(255.0d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(255.0d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(255.0d).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(255.0d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          255.00000000000003d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          255.00000000000003d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          255.00000000000003d).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          255.00000000000003d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          254.99999999999997d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          254.99999999999997d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          254.99999999999997d).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          254.99999999999997d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(256.0d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(256.0d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(256.0d).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(256.0d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          256.00000000000006d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          256.00000000000006d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          256.00000000000006d).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          256.00000000000006d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          255.99999999999997d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          255.99999999999997d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          255.99999999999997d).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          255.99999999999997d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(254.0d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(254.0d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(254.0d).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(254.0d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          254.00000000000003d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          254.00000000000003d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          254.00000000000003d).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          254.00000000000003d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          253.99999999999997d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          253.99999999999997d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          253.99999999999997d).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          253.99999999999997d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(2.14748365E9f).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(2.14748365E9f).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          2.14748365E9f).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(2.14748365E9f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(2.1474839E9f).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(2.1474839E9f).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(2.1474839E9f).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(2.1474839E9f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(2.14748352E9f).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(2.14748352E9f).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          2.14748352E9f).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(2.14748352E9f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-2.14748365E9f).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.14748365E9f).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.14748365E9f).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.14748365E9f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-2.14748352E9f).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.14748352E9f).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.14748352E9f).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.14748352E9f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-2.1474839E9f).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-2.1474839E9f).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -2.1474839E9f).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-2.1474839E9f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(9.223372E18f).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(9.223372E18f).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(9.223372E18f).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(9.223372E18f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(9.223373E18f).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(9.223373E18f).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(9.223373E18f).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(9.223373E18f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(9.2233715E18f).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(9.2233715E18f).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          9.2233715E18f).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(9.2233715E18f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-9.223372E18f).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-9.223372E18f).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -9.223372E18f).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-9.223372E18f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-9.2233715E18f).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -9.2233715E18f).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -9.2233715E18f).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -9.2233715E18f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-9.223373E18f).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-9.223373E18f).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -9.223373E18f).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-9.223373E18f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32767.0f).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32767.0f).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32767.0f).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32767.0f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32767.002f).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32767.002f).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32767.002f).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32767.002f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32766.998f).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32766.998f).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32766.998f).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32766.998f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32768.0f).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32768.0f).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32768.0f).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32768.0f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32768.004f).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32768.004f).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32768.004f).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32768.004f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32767.998f).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32767.998f).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32767.998f).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32767.998f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32766.0f).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32766.0f).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32766.0f).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32766.0f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32766.002f).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32766.002f).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32766.002f).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32766.002f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32765.998f).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32765.998f).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32765.998f).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(32765.998f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32768.0f).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32768.0f).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32768.0f).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32768.0f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32767.998f).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32767.998f).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32767.998f).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32767.998f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32768.004f).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32768.004f).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32768.004f).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32768.004f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32767.0f).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32767.0f).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32767.0f).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32767.0f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32766.998f).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32766.998f).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32766.998f).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32766.998f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32767.002f).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32767.002f).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32767.002f).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32767.002f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32769.0f).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32769.0f).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32769.0f).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32769.0f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32768.996f).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32768.996f).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32768.996f).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32768.996f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32769.004f).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32769.004f).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32769.004f).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-32769.004f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(0.0f).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(0.0f).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(0.0f).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(0.0f).ToObject<sbyte>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(1.4E-45f).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(1.4E-45f).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(1.4E-45f).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(1.4E-45f).ToObject<sbyte>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-1.4E-45f).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-1.4E-45f).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-1.4E-45f).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-1.4E-45f).ToObject<sbyte>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(1.0f).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(1.0f).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(1.0f).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(1.0f).ToObject<sbyte>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(1.0000001f).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(1.0000001f).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(1.0000001f).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(1.0000001f).ToObject<sbyte>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(0.99999994f).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(0.99999994f).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(0.99999994f).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(0.99999994f).ToObject<sbyte>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-1.0f).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-1.0f).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-1.0f).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-1.0f).ToObject<sbyte>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-0.99999994f).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-0.99999994f).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-0.99999994f).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-0.99999994f).ToObject<sbyte>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-1.0000001f).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-1.0000001f).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-1.0000001f).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-1.0000001f).ToObject<sbyte>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(255.0f).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(255.0f).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(255.0f).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(255.0f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(255.00002f).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(255.00002f).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(255.00002f).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(255.00002f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(254.99998f).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(254.99998f).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(254.99998f).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(254.99998f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(256.0f).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(256.0f).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(256.0f).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(256.0f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(256.00003f).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(256.00003f).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(256.00003f).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(256.00003f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(255.99998f).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(255.99998f).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(255.99998f).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(255.99998f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(254.0f).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(254.0f).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(254.0f).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(254.0f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(254.00002f).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(254.00002f).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(254.00002f).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(254.00002f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(253.99998f).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(253.99998f).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(253.99998f).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(253.99998f).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(65535.0d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(65535.0d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(65535.0d).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(65535.0d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          65535.00000000001d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          65535.00000000001d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          65535.00000000001d).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          65535.00000000001d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          65534.99999999999d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          65534.99999999999d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          65534.99999999999d).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          65534.99999999999d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(65536.0d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(65536.0d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(65536.0d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(65536.0d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          65536.00000000001d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          65536.00000000001d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          65536.00000000001d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          65536.00000000001d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          65535.99999999999d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          65535.99999999999d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          65535.99999999999d).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          65535.99999999999d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(65534.0d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(65534.0d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(65534.0d).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(65534.0d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          65534.00000000001d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          65534.00000000001d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          65534.00000000001d).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          65534.00000000001d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          65533.99999999999d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          65533.99999999999d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          65533.99999999999d).ToObject<ushort>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          65533.99999999999d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(4.294967295E9d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          4.294967295E9d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          4.294967295E9d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          4.294967295E9d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          4.2949672950000005E9d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          4.2949672950000005E9d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          4.2949672950000005E9d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        4.2949672950000005E9d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          4.2949672949999995E9d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          4.2949672949999995E9d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          4.2949672949999995E9d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        4.2949672949999995E9d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(4.294967296E9d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          4.294967296E9d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          4.294967296E9d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          4.294967296E9d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        4.294967296000001E9d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        4.294967296000001E9d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        4.294967296000001E9d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          4.294967296000001E9d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          4.2949672959999995E9d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          4.2949672959999995E9d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          4.2949672959999995E9d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        4.2949672959999995E9d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(4.294967294E9d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          4.294967294E9d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          4.294967294E9d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          4.294967294E9d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          4.2949672940000005E9d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          4.2949672940000005E9d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          4.2949672940000005E9d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        4.2949672940000005E9d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          4.2949672939999995E9d).ToObject<uint>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          4.2949672939999995E9d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          4.2949672939999995E9d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        4.2949672939999995E9d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          1.8446744073709552E19d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          1.8446744073709552E19d).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          1.8446744073709552E19d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          1.8446744073709552E19d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          1.8446744073709556E19d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          1.8446744073709556E19d).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          1.8446744073709556E19d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          1.8446744073709556E19d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          1.844674407370955E19d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          1.844674407370955E19d).ToObject<ulong>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip (
+          1.844674407370955E19d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        1.844674407370955E19d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-128.0d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-128.0d).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-128.0d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-128.0d).ToObject<sbyte>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -127.99999999999999d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -127.99999999999999d).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -127.99999999999999d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -127.99999999999999d).ToObject<sbyte>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -128.00000000000003d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -128.00000000000003d).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -128.00000000000003d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -128.00000000000003d).ToObject<sbyte>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-127.0d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-127.0d).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-127.0d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-127.0d).ToObject<sbyte>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -126.99999999999999d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -126.99999999999999d).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -126.99999999999999d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -126.99999999999999d).ToObject<sbyte>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -127.00000000000001d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -127.00000000000001d).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -127.00000000000001d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -127.00000000000001d).ToObject<sbyte>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-129.0d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-129.0d).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-129.0d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(-129.0d).ToObject<sbyte>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -128.99999999999997d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -128.99999999999997d).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -128.99999999999997d).ToObject<ushort>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -128.99999999999997d).ToObject<sbyte>();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -129.00000000000003d).ToObject<uint>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -129.00000000000003d).ToObject<ulong>();
+      } catch (OverflowException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try {
+        ToObjectTest.TestToFromObjectRoundTrip(
+        -129.00000000000003d).ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4486,7 +4634,8 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-129.00000000000003d).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          -129.00000000000003d).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4494,97 +4643,105 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(127.0d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(127.0d).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(127.0d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(127.0d).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(127.0d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(127.0d).ToObject<ushort>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(127.0d).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(127.0d).ToObject<sbyte>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(127.00000000000001d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          127.00000000000001d).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(127.00000000000001d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          127.00000000000001d).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(127.00000000000001d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          127.00000000000001d).ToObject<ushort>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(127.00000000000001d).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          127.00000000000001d).ToObject<sbyte>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(126.99999999999999d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          126.99999999999999d).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(126.99999999999999d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          126.99999999999999d).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(126.99999999999999d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          126.99999999999999d).ToObject<ushort>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(126.99999999999999d).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          126.99999999999999d).ToObject<sbyte>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(128.0d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(128.0d).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(128.0d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(128.0d).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(128.0d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(128.0d).ToObject<ushort>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(128.0d).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(128.0d).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4592,25 +4749,29 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(128.00000000000003d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          128.00000000000003d).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(128.00000000000003d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          128.00000000000003d).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(128.00000000000003d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          128.00000000000003d).ToObject<ushort>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(128.00000000000003d).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          128.00000000000003d).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4618,121 +4779,133 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(127.99999999999999d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          127.99999999999999d).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(127.99999999999999d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          127.99999999999999d).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(127.99999999999999d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          127.99999999999999d).ToObject<ushort>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(127.99999999999999d).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          127.99999999999999d).ToObject<sbyte>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(126.0d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(126.0d).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(126.0d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(126.0d).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(126.0d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(126.0d).ToObject<ushort>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(126.0d).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(126.0d).ToObject<sbyte>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(126.00000000000001d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          126.00000000000001d).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(126.00000000000001d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          126.00000000000001d).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(126.00000000000001d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          126.00000000000001d).ToObject<ushort>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(126.00000000000001d).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          126.00000000000001d).ToObject<sbyte>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(125.99999999999999d).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          125.99999999999999d).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(125.99999999999999d).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          125.99999999999999d).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(125.99999999999999d).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          125.99999999999999d).ToObject<ushort>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(125.99999999999999d).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          125.99999999999999d).ToObject<sbyte>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.0f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(65535.0f).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.0f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(65535.0f).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.0f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(65535.0f).ToObject<ushort>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.0f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(65535.0f).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4740,25 +4913,25 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.004f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(65535.004f).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.004f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(65535.004f).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.004f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(65535.004f).ToObject<ushort>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.004f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(65535.004f).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4766,25 +4939,25 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.996f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(65534.996f).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.996f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(65534.996f).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.996f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(65534.996f).ToObject<ushort>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.996f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(65534.996f).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4792,19 +4965,19 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65536.0f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(65536.0f).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65536.0f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(65536.0f).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65536.0f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(65536.0f).ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4812,7 +4985,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65536.0f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(65536.0f).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4820,19 +4993,19 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65536.01f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(65536.01f).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65536.01f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(65536.01f).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65536.01f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(65536.01f).ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4840,7 +5013,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65536.01f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(65536.01f).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4848,25 +5021,25 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.996f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(65535.996f).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.996f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(65535.996f).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.996f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(65535.996f).ToObject<ushort>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.996f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(65535.996f).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4874,25 +5047,25 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.0f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(65534.0f).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.0f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(65534.0f).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.0f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(65534.0f).ToObject<ushort>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.0f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(65534.0f).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4900,25 +5073,25 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.004f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(65534.004f).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.004f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(65534.004f).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.004f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(65534.004f).ToObject<ushort>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.004f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(65534.004f).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4926,25 +5099,25 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65533.996f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(65533.996f).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65533.996f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(65533.996f).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65533.996f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(65533.996f).ToObject<ushort>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(65533.996f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(65533.996f).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4952,7 +5125,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.2949673E9f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(4.2949673E9f).ToObject<uint>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4960,13 +5133,13 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.2949673E9f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(4.2949673E9f).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.2949673E9f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(4.2949673E9f).ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4974,7 +5147,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.2949673E9f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(4.2949673E9f).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4982,7 +5155,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.2949678E9f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(4.2949678E9f).ToObject<uint>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -4990,13 +5163,13 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.2949678E9f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(4.2949678E9f).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.2949678E9f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(4.2949678E9f).ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5004,7 +5177,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.2949678E9f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(4.2949678E9f).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5012,19 +5185,20 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.29496704E9f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(4.29496704E9f).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.29496704E9f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(4.29496704E9f).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.29496704E9f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          4.29496704E9f).ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5032,7 +5206,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(4.29496704E9f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(4.29496704E9f).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5040,7 +5214,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.8446744E19f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(1.8446744E19f).ToObject<uint>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5048,7 +5222,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.8446744E19f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(1.8446744E19f).ToObject<ulong>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5056,7 +5230,8 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.8446744E19f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          1.8446744E19f).ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5064,7 +5239,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.8446744E19f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(1.8446744E19f).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5072,7 +5247,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.8446746E19f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(1.8446746E19f).ToObject<uint>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5080,7 +5255,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.8446746E19f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(1.8446746E19f).ToObject<ulong>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5088,7 +5263,8 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.8446746E19f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          1.8446746E19f).ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5096,7 +5272,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.8446746E19f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(1.8446746E19f).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5104,7 +5280,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.8446743E19f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(1.8446743E19f).ToObject<uint>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5112,13 +5288,14 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.8446743E19f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(1.8446743E19f).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.8446743E19f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(
+          1.8446743E19f).ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5126,7 +5303,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(1.8446743E19f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(1.8446743E19f).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5134,7 +5311,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.0f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(-128.0f).ToObject<uint>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5142,7 +5319,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.0f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(-128.0f).ToObject<ulong>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5150,7 +5327,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.0f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(-128.0f).ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5158,13 +5335,13 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.0f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(-128.0f).ToObject<sbyte>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.99999f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(-127.99999f).ToObject<uint>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5172,7 +5349,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.99999f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(-127.99999f).ToObject<ulong>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5180,7 +5357,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.99999f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(-127.99999f).ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5188,13 +5365,13 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.99999f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(-127.99999f).ToObject<sbyte>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.00002f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(-128.00002f).ToObject<uint>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5202,7 +5379,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.00002f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(-128.00002f).ToObject<ulong>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5210,7 +5387,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.00002f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(-128.00002f).ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5218,13 +5395,13 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.00002f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(-128.00002f).ToObject<sbyte>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.0f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(-127.0f).ToObject<uint>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5232,7 +5409,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.0f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(-127.0f).ToObject<ulong>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5240,7 +5417,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.0f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(-127.0f).ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5248,13 +5425,13 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.0f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(-127.0f).ToObject<sbyte>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-126.99999f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(-126.99999f).ToObject<uint>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5262,7 +5439,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-126.99999f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(-126.99999f).ToObject<ulong>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5270,7 +5447,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-126.99999f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(-126.99999f).ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5278,13 +5455,13 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-126.99999f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(-126.99999f).ToObject<sbyte>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.00001f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(-127.00001f).ToObject<uint>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5292,7 +5469,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.00001f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(-127.00001f).ToObject<ulong>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5300,7 +5477,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.00001f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(-127.00001f).ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5308,13 +5485,13 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.00001f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(-127.00001f).ToObject<sbyte>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-129.0f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(-129.0f).ToObject<uint>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5322,7 +5499,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-129.0f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(-129.0f).ToObject<ulong>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5330,7 +5507,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-129.0f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(-129.0f).ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5338,7 +5515,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-129.0f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(-129.0f).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5346,7 +5523,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.99998f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(-128.99998f).ToObject<uint>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5354,7 +5531,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.99998f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(-128.99998f).ToObject<ulong>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5362,7 +5539,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.99998f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(-128.99998f).ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5370,13 +5547,13 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.99998f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(-128.99998f).ToObject<sbyte>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-129.00002f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(-129.00002f).ToObject<uint>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5384,7 +5561,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-129.00002f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(-129.00002f).ToObject<ulong>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5392,7 +5569,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-129.00002f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(-129.00002f).ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5400,7 +5577,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(-129.00002f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(-129.00002f).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5408,97 +5585,97 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(127.0f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(127.0f).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(127.0f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(127.0f).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(127.0f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(127.0f).ToObject<ushort>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(127.0f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(127.0f).ToObject<sbyte>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(127.00001f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(127.00001f).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(127.00001f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(127.00001f).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(127.00001f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(127.00001f).ToObject<ushort>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(127.00001f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(127.00001f).ToObject<sbyte>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(126.99999f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(126.99999f).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(126.99999f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(126.99999f).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(126.99999f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(126.99999f).ToObject<ushort>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(126.99999f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(126.99999f).ToObject<sbyte>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(128.0f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(128.0f).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(128.0f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(128.0f).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(128.0f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(128.0f).ToObject<ushort>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(128.0f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(128.0f).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5506,25 +5683,25 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(128.00002f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(128.00002f).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(128.00002f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(128.00002f).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(128.00002f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(128.00002f).ToObject<ushort>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(128.00002f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(128.00002f).ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5532,97 +5709,97 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(127.99999f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(127.99999f).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(127.99999f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(127.99999f).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(127.99999f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(127.99999f).ToObject<ushort>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(127.99999f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(127.99999f).ToObject<sbyte>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(126.0f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(126.0f).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(126.0f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(126.0f).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(126.0f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(126.0f).ToObject<ushort>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(126.0f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(126.0f).ToObject<sbyte>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(126.00001f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(126.00001f).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(126.00001f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(126.00001f).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(126.00001f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(126.00001f).ToObject<ushort>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(126.00001f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(126.00001f).ToObject<sbyte>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(125.99999f).AsUInt32();
+        ToObjectTest.TestToFromObjectRoundTrip(125.99999f).ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(125.99999f).AsUInt64();
+        ToObjectTest.TestToFromObjectRoundTrip(125.99999f).ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(125.99999f).AsUInt16();
+        ToObjectTest.TestToFromObjectRoundTrip(125.99999f).ToObject<ushort>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(125.99999f).AsSByte();
+        ToObjectTest.TestToFromObjectRoundTrip(125.99999f).ToObject<sbyte>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
@@ -5825,7 +6002,7 @@ from i in RangeExclusive(0, 10)
       CBORObject dbl2 =
         ToObjectTest.TestToFromObjectRoundTrip((double)Int32.MaxValue);
       try {
-        dbl1.AsUInt16();
+        dbl1.ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5833,7 +6010,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        dbl1.AsSByte();
+        dbl1.ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5841,7 +6018,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        dbl1.AsUInt32();
+        dbl1.ToObject<uint>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5849,7 +6026,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        dbl1.AsUInt64();
+        dbl1.ToObject<ulong>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5857,7 +6034,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        dbl2.AsUInt16();
+        dbl2.ToObject<ushort>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5865,7 +6042,7 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        dbl2.AsSByte();
+        dbl2.ToObject<sbyte>();
       } catch (OverflowException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -5873,13 +6050,13 @@ from i in RangeExclusive(0, 10)
         throw;
       }
       try {
-        dbl2.AsUInt32();
+        dbl2.ToObject<uint>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
       }
       try {
-        dbl2.AsUInt64();
+        dbl2.ToObject<ulong>();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw;
