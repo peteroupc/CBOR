@@ -321,6 +321,8 @@ if (str[i] >= '0' && str[i] <= '9' && (i > 0 || str[i] != '-')) {
            options);
     }
 
+private static readonly Dictionary<int, EInteger> pows = new Dictionary<int, EInteger>();
+
 private static EInteger FastEIntegerFromString(string str, int index, int
 endIndex) {
 #if DEBUG
@@ -353,7 +355,19 @@ endIndex) {
     int midIndex = index + (endIndex - index) / 2;
     EInteger eia = FastEIntegerFromString(str, index, midIndex);
     EInteger eib = FastEIntegerFromString(str, midIndex, endIndex);
-    EInteger mult = EInteger.FromInt32(10).Pow(endIndex - midIndex);
+    EInteger mult = null;
+    int tenpow = endIndex - midIndex;
+    lock (pows) {
+      if (pows.ContainsKey(tenpow)) {
+        mult = pows[tenpow];
+      }
+    }
+    if (mult == null) {
+      mult = EInteger.FromInt32(10).Pow(endIndex - midIndex);
+      lock (pows) {
+        pows[tenpow] = mult;
+      }
+    }
     return eia.Multiply(mult).Add(eib);
   } else {
     return EInteger.FromSubstring(str, index, endIndex);
@@ -433,12 +447,17 @@ endIndex) {
         ++i;
         haveDigits = true;
         if (i == endPos) {
-          if (preserveNegativeZero && negative) {
+          if (preserveNegativeZero && negative &&
+             (kind == JSONOptions.ConversionMode.Double ||
+              kind == JSONOptions.ConversionMode.Full)) {
              // Negative zero in floating-point format
              return (kind == JSONOptions.ConversionMode.Double) ?
-CBORObject.FromFloatingPointBits(0x8000, 2) :
-CBORObject.FromObject(EDecimal.NegativeZero);
-           }
+               CBORObject.FromFloatingPointBits(0x8000, 2) :
+               CBORObject.FromObject(EDecimal.NegativeZero);
+          }
+          // In IntOrFloat*, since this is an integer within range,
+          // always decode to CBOR integer 0, regardless of
+          // PreserveNegativeZero setting
           return CBORObject.FromObject(0);
         }
         if (str[i] == '.') {
@@ -458,10 +477,18 @@ CBORObject.FromObject(EDecimal.NegativeZero);
         bool hdad = haveDigitsAfterDecimal;
         bool hex = haveExponent;
         var haveManyDigits = false;
+        var precision = 0;
+        var allZeros = true;
+        var expAllZeros = true;
+        var haveBigExponent = false;
         var eplus = true;
         for (; k < endPos; ++k) {
           if (str[k] >= '0' && str[k] <= '9') {
+if (str[k] != '0') {
+  allZeros = false;
+}
             haveDigits = true;
+            ++precision;
             if (k - i > 400 && !haveDecimalPoint) {
                // Indicates that this value is bigger
                // than a decimal can store
@@ -494,6 +521,7 @@ CBORObject.FromObject(EDecimal.NegativeZero);
           if (k == endPos) {
             return null;
           }
+          var firstNonZero = -1;
           if (str[k] == '+' || str[k] == '-') {
             if (str[k] == '-') {
               eplus = false;
@@ -502,6 +530,13 @@ CBORObject.FromObject(EDecimal.NegativeZero);
            }
            for (; k < endPos; ++k) {
              if (str[k] >= '0' && str[k] <= '9') {
+               if (str[k] != '0') {
+                 expAllZeros = false;
+                 if (firstNonZero < 0) {
+                   firstNonZero = k;
+                 }
+               }
+               var thisdigit = (int)(str[i] - '0');
                haveDigits = true;
              } else {
                return null;
@@ -510,6 +545,23 @@ CBORObject.FromObject(EDecimal.NegativeZero);
            if (!haveDigits) {
              return null;
            }
+           if (firstNonZero >= 0 && endPos - firstNonZero >= 12) {
+             // Exponent is at least 10^12, which can't be matched
+             // by the precision, which can't exceed Int32.MaxValue,
+             // and the difference will cause an underflow to 0
+             haveBigExponent = true;
+           } else if (firstNonZero >= 0 && !allZeros) {
+             EInteger eiexponent = FastEIntegerFromString(
+               str,
+               firstNonZero,
+               endPos);
+             EInteger eiprecision = EInteger.FromInt32(precision - 1);
+             eiexponent = eiexponent.Negate().Add(eiprecision);
+             if (eiexponent.CompareTo(-400) < 0) {
+                // Will underflow to 0 in double precision
+                haveBigExponent = true;
+             }
+           }
         }
         if (k != endPos) {
           return null;
@@ -517,11 +569,37 @@ CBORObject.FromObject(EDecimal.NegativeZero);
         if (kind == JSONOptions.ConversionMode.Double ||
            kind == JSONOptions.ConversionMode.IntOrFloat ||
            kind == JSONOptions.ConversionMode.IntOrFloatFromDouble) {
-          if (haveManyDigits && (!haveExponent || eplus)) {
+          if (allZeros) {
+              // All zeros, regardless of exponent
+if (kind == JSONOptions.ConversionMode.Double) {
+  return (preserveNegativeZero && negative) ?
+     CBORObject.FromFloatingPointBits(0x8000, 2) :
+     CBORObject.FromObject(0.0);
+   } else {
+  // In IntOrFloat*, since this is an integer within range,
+  // always decode to CBOR integer 0, regardless of
+  // PreserveNegativeZero setting
+  return CBORObject.FromObject(0);
+}
+          } else if (haveManyDigits && (!haveExponent || eplus ||
+expAllZeros)) {
+             // Many digits, and either no exponent, exponent zero, or positive exponent
              return negative ? CBORObject.FromObject(Double.NegativeInfinity) :
                   CBORObject.FromObject(Double.PositiveInfinity);
+                } else if (haveExponent && !eplus && haveBigExponent) {
+             // Negative exponent with magnitude much too big to be matched
+             // by the precision, and the difference will cause an underflow to 0
+             if (kind == JSONOptions.ConversionMode.IntOrFloatFromDouble) {
+                 // In IntOrFloatFromDouble, since underflows to 0
+                 // are treated as integer zeros,
+                 // always decode to CBOR integer 0, regardless of
+                 // PreserveNegativeZero setting
+                 return CBORObject.FromObject(0);
+             }
+             return (preserveNegativeZero && negative) ?
+               CBORObject.FromFloatingPointBits(0x8000, 2) :
+               CBORObject.FromObject(0.0);
           }
-          // TODO: Fast cases involving negative exponents
         }
         haveDigitsAfterDecimal = hdad;
         haveDigits = hd;

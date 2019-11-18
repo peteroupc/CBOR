@@ -6770,19 +6770,111 @@ TestCommon.ToByteArrayString(bytes));
     }
 
 private static CBORObject FromJSON(string json, JSONOptions jsonop) {
- var sw = new System.Diagnostics.Stopwatch();
- sw.Start();
+ // var sw = new System.Diagnostics.Stopwatch();
+ // sw.Start();
  CBORObject cbor = CBORObject.FromJSONString(json, jsonop);
- sw.Stop();
- Console.WriteLine(String.Empty + sw.ElapsedMilliseconds + " ms");
+ // sw.Stop();
+ // Console.WriteLine(String.Empty + sw.ElapsedMilliseconds + " ms");
  return cbor;
+}
+
+private static CBORObject FromJSON(string json, string numconv) {
+ return FromJSON(json, new JSONOptions("numberconversion=" + numconv));
+}
+
+private static void AssertJSONDouble(string json, string numconv, double dbl) {
+ CBORObject cbor = FromJSON(json, numconv);
+ Assert.AreEqual(CBORType.FloatingPoint, cbor.Type);
+ Assert.AreEqual(dbl, cbor.AsDoubleValue());
+}
+
+private static void AssertJSONInteger(string json, string numconv, int intval) {
+ CBORObject cbor = FromJSON(json, numconv);
+ Assert.AreEqual(CBORType.Integer, cbor.Type);
+ Assert.AreEqual(intval, cbor.AsInt32Value());
+}
+
+[Test]
+public void TestFromJsonStringFastCases() {
+AssertJSONDouble(
+  "0e-" + TestCommon.Repeat("0", 1000000),
+  "double",
+  0.0);
+AssertJSONDouble(
+  "0." + TestCommon.Repeat("0", 1000000),
+  "double",
+  0.0);
+AssertJSONDouble(
+  "0." + TestCommon.Repeat("0", 1000000) + "e-9999999999999",
+  "double",
+  0.0);
+AssertJSONDouble(
+  TestCommon.Repeat("3", 1000000) + "e-9999999999999",
+  "double",
+  0.0);
+AssertJSONDouble(
+  TestCommon.Repeat("3", 1000000) + "e-9999999999999",
+  "intorfloat",
+  0.0);
+AssertJSONInteger(
+  TestCommon.Repeat("3", 1000000) + "e-9999999999999",
+  "intorfloatfromdouble",
+  0);
+AssertJSONDouble(
+  "0." + TestCommon.Repeat("0", 1000000) + "e-99999999",
+  "double",
+  0.0);
+AssertJSONDouble(
+  TestCommon.Repeat("3", 1000000) + "e-99999999",
+  "double",
+  0.0);
+AssertJSONDouble(
+  TestCommon.Repeat("3", 1000000) + "e-99999999",
+  "intorfloat",
+  0.0);
+AssertJSONInteger(
+  TestCommon.Repeat("3", 1000000) + "e-99999999",
+  "intorfloatfromdouble",
+  0);
+AssertJSONInteger(
+  "0e-" + TestCommon.Repeat("0", 1000000),
+  "intorfloat",
+  0);
+AssertJSONInteger(
+  "0e-" + TestCommon.Repeat("0", 1000000),
+  "intorfloatfromdouble",
+  0);
+AssertJSONInteger(
+  "-0e-" + TestCommon.Repeat("0", 1000000),
+  "intorfloat",
+  0);
+AssertJSONInteger(
+  "-0e-" + TestCommon.Repeat("0", 1000000),
+  "intorfloatfromdouble",
+  0);
+AssertJSONInteger(
+  "0." + TestCommon.Repeat("0", 1000000),
+  "intorfloat",
+  0);
+AssertJSONInteger(
+  "0." + TestCommon.Repeat("0", 1000000),
+  "intorfloatfromdouble",
+  0);
+AssertJSONInteger(
+  "-0." + TestCommon.Repeat("0", 1000000),
+  "intorfloat",
+  0);
+AssertJSONInteger(
+  "-0." + TestCommon.Repeat("0", 1000000),
+  "intorfloatfromdouble",
+  0);
 }
 
 [Test]
 [Timeout(10000)]
 public void TestFromJsonStringLongKindFull() {
 var jsonop = new JSONOptions("numberconversion=full");
-string json = TestCommon.Repeat("7", 200000);
+string json = TestCommon.Repeat("7", 100000);
 CBORObject cbor = FromJSON(json, jsonop);
 Assert.IsTrue(cbor.IsTagged);
 }
@@ -6791,7 +6883,7 @@ Assert.IsTrue(cbor.IsTagged);
 [Timeout(10000)]
 public void TestFromJsonStringLongKindFull2() {
 var jsonop = new JSONOptions("numberconversion=full");
-string json = TestCommon.Repeat("7", 200000) + ".0";
+string json = TestCommon.Repeat("7", 100000) + ".0";
 CBORObject cbor = FromJSON(json, jsonop);
 Assert.IsTrue(cbor.IsTagged);
 }
@@ -6813,6 +6905,17 @@ try {
 }
 Console.WriteLine("FullBad 1a");
 json = "7x" + TestCommon.Repeat("7", 1000000);
+try {
+ FromJSON(json, jsonop);
+ Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+
+json = TestCommon.Repeat("7", 1000000) + "e0x";
 try {
  FromJSON(json, jsonop);
  Assert.Fail("Should have failed");
