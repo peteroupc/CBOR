@@ -1,4 +1,4 @@
-<Project Sdk='Microsoft.NET.Sdk'>
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard1.0</TargetFrameworks>
@@ -25,41 +25,24 @@ Version 4.1:
     <PackOnBuild>true</PackOnBuild>
   <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet><PackageLicenseExpression>CC0-1.0</PackageLicenseExpression></PropertyGroup>
 
-  <PropertyGroup Condition=' &apos;$(Configuration)|$(Platform)&apos; == &apos;Debug|AnyCPU&apos; '>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DocumentationFile>bin\Debug\netstandard1.0\CBOR.xml</DocumentationFile>
-    <CustomCommands>
-      <CustomCommands>
-        <Command>
-          <type>Custom</type>
-          <name>Signing Workaround</name>
-          <command>sn -R bin/Debug/netstandard1.0/CBOR.dll PeterO.snk</command>
-          <workingdir>${ProjectDir}</workingdir>
-          <externalConsole>True</externalConsole>
-        </Command>
-      </CustomCommands>
-    </CustomCommands>
+
   <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet></PropertyGroup>
-  <PropertyGroup Condition=' &apos;$(Configuration)|$(Platform)&apos; == &apos;Release|AnyCPU&apos; '>
-    <DebugType/>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType />
     <DocumentationFile>bin\Release\netstandard1.0\CBOR.xml</DocumentationFile>
-    <CustomCommands>
-      <CustomCommands>
-        <Command>
-          <type>Custom</type>
-          <name>Signing Workaround</name>
-          <command>sn -R bin/Release/netstandard1.0/CBOR.dll PeterO.snk</command>
-          <workingdir>${ProjectDir}</workingdir>
-          <externalConsole>True</externalConsole>
-        </Command>
-      </CustomCommands>
-    </CustomCommands>
+
   <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet></PropertyGroup>
   <ItemGroup>
 
-  <PackageReference Include='StyleCop.Analyzers' PrivateAssets='All' Version='1.1.118'/>
- <AdditionalFiles Include='stylecop.json'/>
-<PackageReference Include='PeterO.Numbers' Version='1.4.3'/>
-<AdditionalFiles Include='rules.ruleset'/><PackageReference Include='PeterO.URIUtility' Version='1.0.0'/>
-<PackageReference Include='Microsoft.CodeAnalysis.FxCopAnalyzers' PrivateAssets='All' Version='2.9.7'/>
+  <PackageReference Include="StyleCop.Analyzers" PrivateAssets="All" Version="1.1.118" />
+ <AdditionalFiles Include="stylecop.json" />
+<PackageReference Include="PeterO.Numbers" Version="1.4.3" />
+<AdditionalFiles Include="rules.ruleset" /><PackageReference Include="PeterO.URIUtility" Version="1.0.0" />
+<PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" PrivateAssets="All" Version="2.9.7" />
 </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="PeterO\Cbor\FastInteger2.cs" />
+  </ItemGroup>
    </Project>

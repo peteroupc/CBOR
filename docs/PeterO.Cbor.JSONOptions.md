@@ -54,7 +54,7 @@ Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOpti
 
 <b>Parameters:</b>
 
- * <i>paramString</i>: A string setting forth the options to use. This is a semicolon-separated list of options, each of which has a key and a value separated by an equal sign ("="). Whitespace and line separators are not allowed to appear between the semicolons or between the equal signs, nor may the string begin or end with whitespace. The string can be empty, but cannot be null. The following is an example of this parameter:  `base64padding=false;replacesurrogates=true` . The key can be any one of the following where the letters can be any combination of basic upper-case and/or basic lower-case letters:  `base64padding` ,  `replacesurrogates` ,  `allowduplicatekeys` ,  `preservenegativezero` ,  `numberconversion` . Other keys are ignored. (Keys are compared using a basic case-insensitive comparison, in which two strings are equal if they match after converting the basic upper-case letters A to Z (U+0041 to U+005A) in both strings to basic lower-case letters.) If two or more key/value pairs have equal keys (in a basic case-insensitive comparison), the value given for the last such key is used. The first four keys just given can have a value of  `1` ,  `true` ,  `yes` , or  `on`  (where the letters can be any combination of basic upper-case and/or basic lower-case letters), which means true, and any other value meaning false. The last key,  `numberconversion` , can have a value of any name given in the  `JSONOptions.ConversionKind`  enumeration (where the letters can be any combination of basic upper-case and/or basic lower-case letters), or any other value, which is treated the same as  `full` . For example,  `base64padding=Yes`  and  `base64padding=1`  both set the  `Base64Padding`  property to true, and  `numberconversion=double`  sets the  `NumberConversion`  property to  `ConversionKind.Double`  .
+ * <i>paramString</i>: A string setting forth the options to use. This is a semicolon-separated list of options, each of which has a key and a value separated by an equal sign ("="). Whitespace and line separators are not allowed to appear between the semicolons or between the equal signs, nor may the string begin or end with whitespace. The string can be empty, but cannot be null. The following is an example of this parameter:  `base64padding=false;replacesurrogates=true` . The key can be any one of the following where the letters can be any combination of basic upper-case and/or basic lower-case letters:  `base64padding` ,  `replacesurrogates` ,  `allowduplicatekeys` ,  `preservenegativezero` ,  `numberconversion` . Other keys are ignored. (Keys are compared using a basic case-insensitive comparison, in which two strings are equal if they match after converting the basic upper-case letters A to Z (U+0041 to U+005A) in both strings to basic lower-case letters.) If two or more key/value pairs have equal keys (in a basic case-insensitive comparison), the value given for the last such key is used. The first four keys just given can have a value of  `1` ,  `true` ,  `yes` , or  `on`  (where the letters can be any combination of basic upper-case and/or basic lower-case letters), which means true, and any other value meaning false. The last key,  `numberconversion` , can have a value of any name given in the  `JSONOptions.ConversionMode`  enumeration (where the letters can be any combination of basic upper-case and/or basic lower-case letters), or any other value, which is treated the same as  `full` . For example,  `base64padding=Yes`  and  `base64padding=1`  both set the  `Base64Padding`  property to true, and  `numberconversion=double`  sets the  `NumberConversion`  property to  `ConversionMode.Double`  .
 
 <b>Exceptions:</b>
 
@@ -103,13 +103,13 @@ A value indicating whether the Base64Padding property is true.
 <a id="NumberConversion"></a>
 ### NumberConversion
 
-    public PeterO.Cbor.JSONOptions.ConversionKind NumberConversion { get; }
+    public PeterO.Cbor.JSONOptions.ConversionMode NumberConversion { get; }
 
 Gets a value indicating how JSON numbers are decoded to CBOR.
 
 <b>Returns:</b>
 
-A value indicating how JSON numbers are decoded to CBOR. The default is  `ConversionKind.Full` .
+A value indicating how JSON numbers are decoded to CBOR. The default is  `ConversionMode.Full` .
 
 <a id="PreserveNegativeZero"></a>
 ### PreserveNegativeZero
