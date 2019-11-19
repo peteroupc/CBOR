@@ -4984,6 +4984,12 @@
             CBORObject class.</summary>
 
 </doc>
+<doc name="M:PeterO.Cbor.CBORUuidConverter.ToCBORObject(System.Guid)">
+<summary>Internal API.</summary>
+            <param name='obj'>The parameter <paramref name='obj'/> is an
+            internal parameter.</param>
+            <returns>A CBORObject object.</returns>
+</doc>
 <doc name="T:PeterO.Cbor.ICBORConverter`1">
 
             <summary>Interface implemented by classes that convert objects of

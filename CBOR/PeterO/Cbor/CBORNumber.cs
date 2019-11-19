@@ -91,6 +91,7 @@ namespace PeterO.Cbor {
 
   /// <summary>Gets a value not documented yet.</summary>
   /// <summary>Gets a value not documented yet.</summary>
+  /// <summary>Gets a value not documented yet.</summary>
   /// <value>A value not documented yet.</value>
     public int Sign {
       get {
