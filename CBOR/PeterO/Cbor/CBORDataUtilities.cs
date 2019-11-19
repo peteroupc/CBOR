@@ -321,7 +321,6 @@ namespace PeterO.Cbor {
            options);
     }
 
-
     // TODO: Remove once updated Numbers library is available
     private static readonly Dictionary<int, EInteger> pows = new
 Dictionary<int, EInteger>();
@@ -728,8 +727,8 @@ Dictionary<int, EInteger>();
           }
         } else {
           newScale = newScale ?? EInteger.FromInt32(newScaleInt);
-          newScale = (offset < 0) ? (newScale.Subtract(exp)) :
-(newScale.Add(exp));
+          newScale = (offset < 0) ? newScale.Subtract(exp) :
+newScale.Add(exp);
         }
       }
       if (i != endPos) {
