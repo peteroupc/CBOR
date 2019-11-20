@@ -4985,10 +4985,12 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORUuidConverter.ToCBORObject(System.Guid)">
-<summary>Internal API.</summary>
+
+            <summary>Internal API.</summary>
             <param name='obj'>The parameter <paramref name='obj'/> is an
             internal parameter.</param>
             <returns>A CBORObject object.</returns>
+
 </doc>
 <doc name="T:PeterO.Cbor.ICBORConverter`1">
 
