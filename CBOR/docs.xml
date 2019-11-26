@@ -312,7 +312,9 @@
 
             <summary>Gets a value indicating whether to allow duplicate keys
             when reading CBOR objects from a data stream. Used only when
-            decoding CBOR objects.</summary>
+            decoding CBOR objects. If this property is <c>true</c> and a CBOR
+            map has two or more values with the same key, the last value of
+            that key set forth in the CBOR map is taken.</summary>
             <value>A value indicating whether to allow duplicate keys when
             reading CBOR objects from a data stream. The default is
             false.</value>
@@ -5179,7 +5181,10 @@
 <doc name="P:PeterO.Cbor.JSONOptions.AllowDuplicateKeys">
 
             <summary>Gets a value indicating whether to allow duplicate keys
-            when reading JSON. Used only when decoding JSON.</summary>
+            when reading JSON. Used only when decoding JSON. If this property
+            is <c>true</c> and a JSON object has two or more values with the
+            same key, the last value of that key set forth in the JSON object
+            is taken.</summary>
             <value>A value indicating whether to allow duplicate keys when
             reading JSON. The default is false.</value>
 

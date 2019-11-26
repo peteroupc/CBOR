@@ -81,7 +81,7 @@ The default options for converting CBOR objects to JSON.
 
     public bool AllowDuplicateKeys { get; }
 
-Gets a value indicating whether to allow duplicate keys when reading JSON. Used only when decoding JSON.
+Gets a value indicating whether to allow duplicate keys when reading JSON. Used only when decoding JSON. If this property is  `true`  and a JSON object has two or more values with the same key, the last value of that key set forth in the JSON object is taken.
 
 <b>Returns:</b>
 
