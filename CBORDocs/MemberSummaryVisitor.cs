@@ -36,14 +36,19 @@ namespace PeterO.DocGen {
         ((FieldInfo)obj).Name : obj.ToString())));
     }
 
+    public static bool IsNonconversionOperator(string name) {
+      return name.IndexOf("op_", StringComparison.Ordinal) == 0 &&
+        !name.Equals("op_Explicit", StringComparison.Ordinal) &&
+!name.Equals("op_Implicit", StringComparison.Ordinal);
+    }
+
     public static string MemberAnchor(object obj) {
       string anchor = String.Empty;
       if (obj is Type) {
         anchor = ((Type)obj).FullName;
       } else if (obj is MethodInfo) {
-        anchor = (((MethodInfo)obj).Name.IndexOf(
-          "op_",
-          StringComparison.Ordinal) == 0) ? ((MethodInfo)obj).Name :
+        anchor = (IsNonconversionOperator(((MethodInfo)obj).Name)) ?
+            ((MethodInfo)obj).Name :
             DocVisitor.FormatMethod((MethodInfo)obj, true);
           } else {
  anchor = (obj is PropertyInfo) ?
