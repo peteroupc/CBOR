@@ -89,9 +89,12 @@ namespace PeterO.Cbor {
       return CBORObject.FromObject(this.value);
     }
 
+  /// <value/>
+  /// <summary>Not documented yet.</summary>
   /// <summary>Gets a value not documented yet.</summary>
   /// <summary>Gets a value not documented yet.</summary>
-  /// <value>A value not documented yet.</value>
+  /// <summary>Gets a value not documented yet.</summary>
+  /// <summary>Gets a value not documented yet.</summary>
     public int Sign {
       get {
         // TODO: Will return 2 if this is NaN; is this
@@ -1033,7 +1036,7 @@ this.ToEIntegerIfExact().ToInt64Checked();
     /// number.</summary>
     /// <param name='b'>The number to add with this one.</param>
     /// <returns>The sum of this number and another number.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// <exception cref="ArgumentNullException">The parameter <paramref
     /// name='b'/> is null.</exception>
     public CBORNumber Add(CBORNumber b) {
       if (b == null) {
@@ -1086,7 +1089,7 @@ this.ToEIntegerIfExact().ToInt64Checked();
     /// <param name='b'>The second operand to the subtraction.</param>
     /// <returns>A CBOR number that expresses this number minus the given
     /// number.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// <exception cref="ArgumentNullException">The parameter <paramref
     /// name='b'/> is null.</exception>
     public CBORNumber Subtract(CBORNumber b) {
       if (b == null) {
@@ -1137,7 +1140,7 @@ this.ToEIntegerIfExact().ToInt64Checked();
     /// operation.</param>
     /// <returns>A number expressing the product of this number and the
     /// given number.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// <exception cref="ArgumentNullException">The parameter <paramref
     /// name='b'/> is null.</exception>
     public CBORNumber Multiply(CBORNumber b) {
       if (b == null) {
@@ -1199,7 +1202,7 @@ this.ToEIntegerIfExact().ToInt64Checked();
     /// <param name='b'>The right-hand side (divisor) to the division
     /// operation.</param>
     /// <returns>The quotient of this number and another one.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// <exception cref="ArgumentNullException">The parameter <paramref
     /// name='b'/> is null.</exception>
     public CBORNumber Divide(CBORNumber b) {
       if (b == null) {
@@ -1297,7 +1300,7 @@ this.ToEIntegerIfExact().ToInt64Checked();
     /// operation.</param>
     /// <returns>The remainder when this number is divided by the other
     /// number.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// <exception cref="ArgumentNullException">The parameter <paramref
     /// name='b'/> is null.</exception>
     public CBORNumber Remainder(CBORNumber b) {
       if (b == null) {

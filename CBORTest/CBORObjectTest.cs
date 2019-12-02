@@ -54,7 +54,7 @@ namespace Test {
     };
 
     private static readonly JSONOptions ValueNoDuplicateKeys = new
-      JSONOptions("allowduplicatekeys=false");
+JSONOptions("allowduplicatekeys=false");
 
     internal static void CheckPropertyNames(
       object ao,
@@ -490,8 +490,8 @@ namespace Test {
           ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(
               numberinfo["number"].AsString()));
         {
-          var dtemp =
-(double)EDecimal.FromString(numberinfo["number"].AsString()).ToDouble();
+          var dtemp = (double)EDecimal.FromString(
+  numberinfo["number"].AsString()).ToDouble();
           double dtemp2 = cbornumber.AsDouble();
           AreEqualExact(dtemp, dtemp2);
         }
@@ -879,8 +879,8 @@ namespace Test {
           ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(
               numberinfo["number"].AsString()));
         {
-          var ftemp =
-(float)EDecimal.FromString(numberinfo["number"].AsString()).ToSingle();
+          var ftemp = (float)EDecimal.FromString(
+  numberinfo["number"].AsString()).ToSingle();
           float ftemp2 = cbornumber.AsSingle();
           AreEqualExact(ftemp, ftemp2);
         }
@@ -965,7 +965,7 @@ namespace Test {
     [Test]
     public void TestCanFitInDouble() {
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(
-        0).CanFitInDouble());
+          0).CanFitInDouble());
       Assert.IsFalse(CBORObject.True.CanFitInDouble());
       Assert.IsFalse(ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
         .CanFitInDouble());
@@ -1000,7 +1000,7 @@ namespace Test {
       Assert.IsTrue(CInt32(ToObjectTest.TestToFromObjectRoundTrip(0)));
       Assert.IsFalse(CInt32(CBORObject.True));
       Assert.IsFalse(CInt32(ToObjectTest.TestToFromObjectRoundTrip(
-          String.Empty)));
+            String.Empty)));
       Assert.IsFalse(CInt32(CBORObject.NewArray()));
       Assert.IsFalse(CInt32(CBORObject.NewMap()));
       Assert.IsFalse(CInt32(CBORObject.False));
@@ -1018,7 +1018,7 @@ namespace Test {
 
           Assert.IsTrue(
             CInt32(ToObjectTest.TestToFromObjectRoundTrip(
-              cbornumber.AsInt32())));
+                cbornumber.AsInt32())));
         } else {
           Assert.IsFalse(CInt32(cbornumber));
         }
@@ -1036,7 +1036,7 @@ namespace Test {
       Assert.IsTrue(CInt64(ToObjectTest.TestToFromObjectRoundTrip(0)));
       Assert.IsFalse(CInt64(CBORObject.True));
       Assert.IsFalse(CInt64(ToObjectTest.TestToFromObjectRoundTrip(
-          String.Empty)));
+            String.Empty)));
       Assert.IsFalse(CInt64(CBORObject.NewArray()));
       Assert.IsFalse(CInt64(CBORObject.NewMap()));
       Assert.IsFalse(CInt64(CBORObject.False));
@@ -1091,7 +1091,7 @@ namespace Test {
 
           Assert.IsTrue(
             CInt64(ToObjectTest.TestToFromObjectRoundTrip(
-              cbornumber.AsInt64())));
+                cbornumber.AsInt64())));
         } else {
           Assert.IsFalse(CInt64(cbornumber));
         }
@@ -1100,7 +1100,7 @@ namespace Test {
     [Test]
     public void TestCanFitInSingle() {
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(
-        0).CanFitInSingle());
+          0).CanFitInSingle());
       Assert.IsFalse(CBORObject.True.CanFitInSingle());
       Assert.IsFalse(ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
         .CanFitInSingle());
@@ -1136,32 +1136,32 @@ namespace Test {
     [Test]
     public void TestCanTruncatedIntFitInInt32() {
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(EFloat.Create(
-        -2,
-        11)).CanTruncatedIntFitInInt32());
+            -2,
+            11)).CanTruncatedIntFitInInt32());
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(EFloat.Create(
-        -2,
-        12)).CanTruncatedIntFitInInt32());
+            -2,
+            12)).CanTruncatedIntFitInInt32());
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(EFloat.Create(
-        -2,
-        13)).CanTruncatedIntFitInInt32());
+            -2,
+            13)).CanTruncatedIntFitInInt32());
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(EFloat.Create(
-        -2,
-        14)).CanTruncatedIntFitInInt32());
+            -2,
+            14)).CanTruncatedIntFitInInt32());
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(EFloat.Create(
-        -2,
-        15)).CanTruncatedIntFitInInt32());
+            -2,
+            15)).CanTruncatedIntFitInInt32());
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(EFloat.Create(
-        -2,
-        16)).CanTruncatedIntFitInInt32());
+            -2,
+            16)).CanTruncatedIntFitInInt32());
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(EFloat.Create(
-        -2,
-        17)).CanTruncatedIntFitInInt32());
+            -2,
+            17)).CanTruncatedIntFitInInt32());
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(EFloat.Create(
-        -2,
-        18)).CanTruncatedIntFitInInt32());
+            -2,
+            18)).CanTruncatedIntFitInInt32());
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(EFloat.Create(
-        -2,
-        19)).CanTruncatedIntFitInInt32());
+            -2,
+            19)).CanTruncatedIntFitInInt32());
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(0)
         .CanTruncatedIntFitInInt32());
       Assert.IsFalse(CBORObject.True.CanTruncatedIntFitInInt32());
@@ -1215,32 +1215,32 @@ namespace Test {
     [Test]
     public void TestCanTruncatedIntFitInInt64() {
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(EFloat.Create(
-        -2,
-        11)).CanTruncatedIntFitInInt64());
+            -2,
+            11)).CanTruncatedIntFitInInt64());
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(EFloat.Create(
-        -2,
-        12)).CanTruncatedIntFitInInt64());
+            -2,
+            12)).CanTruncatedIntFitInInt64());
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(EFloat.Create(
-        -2,
-        13)).CanTruncatedIntFitInInt64());
+            -2,
+            13)).CanTruncatedIntFitInInt64());
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(EFloat.Create(
-        -2,
-        14)).CanTruncatedIntFitInInt64());
+            -2,
+            14)).CanTruncatedIntFitInInt64());
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(EFloat.Create(
-        -2,
-        15)).CanTruncatedIntFitInInt64());
+            -2,
+            15)).CanTruncatedIntFitInInt64());
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(EFloat.Create(
-        -2,
-        16)).CanTruncatedIntFitInInt64());
+            -2,
+            16)).CanTruncatedIntFitInInt64());
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(EFloat.Create(
-        -2,
-        17)).CanTruncatedIntFitInInt64());
+            -2,
+            17)).CanTruncatedIntFitInInt64());
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(EFloat.Create(
-        -2,
-        18)).CanTruncatedIntFitInInt64());
+            -2,
+            18)).CanTruncatedIntFitInInt64());
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(EFloat.Create(
-        -2,
-        19)).CanTruncatedIntFitInInt64());
+            -2,
+            19)).CanTruncatedIntFitInInt64());
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(0)
         .CanTruncatedIntFitInInt64());
       Assert.IsFalse(CBORObject.True.CanTruncatedIntFitInInt64());
@@ -1584,12 +1584,12 @@ namespace Test {
       CBORNumber sp =
         CBORObject.FromObject(Single.PositiveInfinity).AsNumber();
       CBORNumber sn = CBORObject.FromObject(
-        Single.NegativeInfinity).AsNumber();
+          Single.NegativeInfinity).AsNumber();
       CBORNumber snan = CBORObject.FromObject(Single.NaN).AsNumber();
       CBORNumber dp = CBORObject.FromObject(
-        Double.PositiveInfinity).AsNumber();
+          Double.PositiveInfinity).AsNumber();
       CBORNumber dn = CBORObject.FromObject(
-        Double.NegativeInfinity).AsNumber();
+          Double.NegativeInfinity).AsNumber();
       CBORNumber dnan = CBORObject.FromObject(Double.NaN).AsNumber();
       TestCommon.CompareTestEqual(sp, sp);
       TestCommon.CompareTestEqual(sp, dp);
@@ -1990,8 +1990,9 @@ CBOREncodeOptions("allowduplicatekeys=0"));
               bytes.Length,
               i2s);
           }
-          bytes = ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes(new
-              CBOREncodeOptions(false, false, true));
+          bytes =
+ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes(new
+CBOREncodeOptions(false, false, true));
           if (bytes.Length != ranges[i + 2]) {
             string i2s = TestCommon.IntToString(j);
             Assert.AreEqual(
@@ -2017,13 +2018,13 @@ CBOREncodeOptions("allowduplicatekeys=0"));
           byte[] bytes = CBORTestCommon.CheckEncodeToBytes(cbor);
           if (bytes.Length != bigSizes[i / 2]) {
             Assert.Fail(bj.ToString() + "\n" +
-TestCommon.ToByteArrayString(bytes));
+              TestCommon.ToByteArrayString(bytes));
           }
           bytes = ToObjectTest.TestToFromObjectRoundTrip(bj)
             .EncodeToBytes(new CBOREncodeOptions(false, false, true));
           if (bytes.Length != bigSizes[i / 2]) {
             Assert.Fail(bj.ToString() + "\n" +
-TestCommon.ToByteArrayString(bytes));
+              TestCommon.ToByteArrayString(bytes));
           }
           bj += EInteger.One;
         }
@@ -2435,8 +2436,8 @@ TestCommon.ToByteArrayString(bytes));
           stringTemp);
       }
       string jsonTemp = TestCommon.Repeat(
-        "[",
-        2000) + TestCommon.Repeat(
+          "[",
+          2000) + TestCommon.Repeat(
           "]",
           2000);
       TestFailingJSON(jsonTemp);
@@ -2464,7 +2465,7 @@ TestCommon.ToByteArrayString(bytes));
           stringTemp);
       }
       cbor = ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(
-          "200"));
+            "200"));
       Assert.IsTrue(cbor.IsNumber);
       {
         string stringTemp = cbor.ToJSONString();
@@ -3173,7 +3174,7 @@ TestCommon.ToByteArrayString(bytes));
           EDecimal.FromString("4444e-800")).IsIntegral);
       Assert.IsFalse(ToObjectTest.TestToFromObjectRoundTrip(2.5).IsIntegral);
       Assert.IsFalse(ToObjectTest.TestToFromObjectRoundTrip(
-        999.99).IsIntegral);
+          999.99).IsIntegral);
       cbor = ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity);
 
       Assert.IsFalse(cbor.IsIntegral);
@@ -3284,7 +3285,8 @@ TestCommon.ToByteArrayString(bytes));
     }
     [Test]
     public void TestAsNumberIsNegativeInfinity() {
-      Assert.IsFalse(CBORObject.FromObject(0).AsNumber().IsNegativeInfinity());
+      Assert.IsFalse(CBORObject.FromObject(
+  0).AsNumber().IsNegativeInfinity());
 
       Assert.IsFalse(
         CBORObject.PositiveInfinity.AsNumber().IsNegativeInfinity());
@@ -3309,7 +3311,8 @@ TestCommon.ToByteArrayString(bytes));
     }
     [Test]
     public void TestAsNumberIsPositiveInfinity() {
-      Assert.IsFalse(CBORObject.FromObject(0).AsNumber().IsPositiveInfinity());
+      Assert.IsFalse(CBORObject.FromObject(
+  0).AsNumber().IsPositiveInfinity());
 
       Assert.IsTrue(
         CBORObject.PositiveInfinity.AsNumber().IsPositiveInfinity());
@@ -3404,14 +3407,14 @@ TestCommon.ToByteArrayString(bytes));
       {
         object objectTemp = CBORObject.Null;
         object objectTemp2 = cbor.GetOrDefault(-1,
-          CBORObject.Null);
+            CBORObject.Null);
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       {
         object objectTemp = CBORObject.FromObject(2);
         object objectTemp2 = cbor.GetOrDefault(
-          0,
-          CBORObject.Null);
+            0,
+            CBORObject.Null);
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       Assert.AreEqual(
@@ -3420,15 +3423,15 @@ TestCommon.ToByteArrayString(bytes));
       {
         object objectTemp = CBORObject.FromObject(3);
         object objectTemp2 = cbor.GetOrDefault(
-          1,
-          CBORObject.Null);
+            1,
+            CBORObject.Null);
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       {
         object objectTemp = CBORObject.FromObject(7);
         object objectTemp2 = cbor.GetOrDefault(
-          2,
-          CBORObject.Null);
+            2,
+            CBORObject.Null);
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       Assert.AreEqual(CBORObject.Null, cbor.GetOrDefault(3, CBORObject.Null));
@@ -3442,15 +3445,15 @@ TestCommon.ToByteArrayString(bytes));
       {
         object objectTemp = CBORObject.Null;
         object objectTemp2 = cbor.GetOrDefault(-1,
-          CBORObject.Null);
+            CBORObject.Null);
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       Assert.AreEqual(CBORObject.Null, cbor.GetOrDefault(0, CBORObject.Null));
       {
         object objectTemp = CBORObject.FromObject(2);
         object objectTemp2 = cbor.GetOrDefault(
-          1,
-          CBORObject.Null);
+            1,
+            CBORObject.Null);
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       Assert.AreEqual(CBORObject.Null, cbor.GetOrDefault(2, CBORObject.Null));
@@ -3458,8 +3461,8 @@ TestCommon.ToByteArrayString(bytes));
       {
         object objectTemp = CBORObject.FromObject("value");
         object objectTemp2 = cbor.GetOrDefault(
-          "key",
-          CBORObject.Null);
+            "key",
+            CBORObject.Null);
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       Assert.AreEqual(
@@ -3475,7 +3478,7 @@ TestCommon.ToByteArrayString(bytes));
       {
         object objectTemp = CBORObject.Null;
         object objectTemp2 = cbor.GetOrDefault(-1,
-          CBORObject.Null);
+            CBORObject.Null);
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       Assert.AreEqual(CBORObject.Null, cbor.GetOrDefault(0, CBORObject.Null));
@@ -4599,9 +4602,9 @@ TestCommon.ToByteArrayString(bytes));
       cbor = CBORObject.NewArray().Add("a").Add("b").Add("c");
       Assert.AreEqual(3, cbor.Count);
       Assert.IsTrue(cbor.Remove(ToObjectTest.TestToFromObjectRoundTrip(
-          "b")));
+            "b")));
       Assert.IsFalse(cbor.Remove(ToObjectTest.TestToFromObjectRoundTrip(
-          "x")));
+            "x")));
       try {
         cbor.Remove((CBORObject)null);
         Assert.Fail("Should have failed");
@@ -4626,9 +4629,9 @@ TestCommon.ToByteArrayString(bytes));
       Assert.AreEqual(3, cbor.Count);
 
       Assert.IsTrue(cbor.Remove(ToObjectTest.TestToFromObjectRoundTrip(
-          "b")));
+            "b")));
       Assert.IsFalse(cbor.Remove(ToObjectTest.TestToFromObjectRoundTrip(
-          "x")));
+            "x")));
       try {
         cbor.Remove((CBORObject)null);
         Assert.Fail("Should have failed");
@@ -5519,7 +5522,7 @@ TestCommon.ToByteArrayString(bytes));
 
         {
           CBORObject cborTemp1 = ToObjectTest.TestToFromObjectRoundTrip(
-            "test");
+              "test");
           CBORObject cborTemp2 =
             ToObjectTest.TestToFromObjectRoundTrip((object)"test");
           TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
@@ -6131,7 +6134,7 @@ TestCommon.ToByteArrayString(bytes));
         EInteger bigint = null;
         {
           CBORObject cborTemp1 = ToObjectTest.TestToFromObjectRoundTrip(
-            bigint);
+              bigint);
           CBORObject cborTemp2 =
             ToObjectTest.TestToFromObjectRoundTrip((object)bigint);
           TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
@@ -6223,9 +6226,9 @@ TestCommon.ToByteArrayString(bytes));
           o2.AsNumber());
       if (cmpDecFrac != cmpCobj) {
         Assert.Fail(TestCommon.ObjectMessages(
-          o1,
-          o2,
-          "Compare: Results\u0020don't match"));
+            o1,
+            o2,
+            "Compare: Results\u0020don't match"));
       }
       CBORTestCommon.AssertRoundTrip(o1);
       CBORTestCommon.AssertRoundTrip(o2);
@@ -6769,280 +6772,286 @@ TestCommon.ToByteArrayString(bytes));
       }
     }
 
-private static CBORObject FromJSON(string json, JSONOptions jsonop) {
- // var sw = new System.Diagnostics.Stopwatch();
- // sw.Start();
- CBORObject cbor = CBORObject.FromJSONString(json, jsonop);
- // sw.Stop();
- // Console.WriteLine(String.Empty + sw.ElapsedMilliseconds + " ms");
- return cbor;
-}
+    private static CBORObject FromJSON(string json, JSONOptions jsonop) {
+      // var sw = new System.Diagnostics.Stopwatch();
+      // sw.Start();
+      CBORObject cbor = CBORObject.FromJSONString(json, jsonop);
+      // sw.Stop();
+      // Console.WriteLine(String.Empty + sw.ElapsedMilliseconds + " ms");
+      return cbor;
+    }
 
-private static CBORObject FromJSON(string json, string numconv) {
- return FromJSON(json, new JSONOptions("numberconversion=" + numconv));
-}
+    private static CBORObject FromJSON(string json, string numconv) {
+      return FromJSON(json, new JSONOptions("numberconversion=" + numconv));
+    }
 
-private static void AssertJSONDouble(string json, string numconv, double dbl) {
- CBORObject cbor = FromJSON(json, numconv);
- Assert.AreEqual(CBORType.FloatingPoint, cbor.Type);
- Assert.AreEqual(dbl, cbor.AsDoubleValue());
-}
+    private static void AssertJSONDouble(
+      string json,
+      string numconv,
+      double dbl) {
+      CBORObject cbor = FromJSON(json, numconv);
+      Assert.AreEqual(CBORType.FloatingPoint, cbor.Type);
+      Assert.AreEqual(dbl, cbor.AsDoubleValue());
+    }
 
-private static void AssertJSONInteger(string json, string numconv, int intval) {
- CBORObject cbor = FromJSON(json, numconv);
- Assert.AreEqual(CBORType.Integer, cbor.Type);
- Assert.AreEqual(intval, cbor.AsInt32Value());
-}
+    private static void AssertJSONInteger(
+      string json,
+      string numconv,
+      int intval) {
+      CBORObject cbor = FromJSON(json, numconv);
+      Assert.AreEqual(CBORType.Integer, cbor.Type);
+      Assert.AreEqual(intval, cbor.AsInt32Value());
+    }
 
-[Test]
-public void TestFromJsonStringFastCases() {
-AssertJSONDouble(
-  "0e-" + TestCommon.Repeat("0", 1000000),
-  "double",
-  0.0);
-AssertJSONDouble(
-  "0." + TestCommon.Repeat("0", 1000000),
-  "double",
-  0.0);
-AssertJSONDouble(
-  "0." + TestCommon.Repeat("0", 1000000) + "e-9999999999999",
-  "double",
-  0.0);
-AssertJSONDouble(
-  TestCommon.Repeat("3", 1000000) + "e-9999999999999",
-  "double",
-  0.0);
-AssertJSONDouble(
-  TestCommon.Repeat("3", 1000000) + "e-9999999999999",
-  "intorfloat",
-  0.0);
-AssertJSONInteger(
-  TestCommon.Repeat("3", 1000000) + "e-9999999999999",
-  "intorfloatfromdouble",
-  0);
-AssertJSONDouble(
-  "0." + TestCommon.Repeat("0", 1000000) + "e-99999999",
-  "double",
-  0.0);
-AssertJSONDouble(
-  TestCommon.Repeat("3", 1000000) + "e-99999999",
-  "double",
-  0.0);
-AssertJSONDouble(
-  TestCommon.Repeat("3", 1000000) + "e-99999999",
-  "intorfloat",
-  0.0);
-AssertJSONInteger(
-  TestCommon.Repeat("3", 1000000) + "e-99999999",
-  "intorfloatfromdouble",
-  0);
-AssertJSONInteger(
-  "0e-" + TestCommon.Repeat("0", 1000000),
-  "intorfloat",
-  0);
-AssertJSONInteger(
-  "0e-" + TestCommon.Repeat("0", 1000000),
-  "intorfloatfromdouble",
-  0);
-AssertJSONInteger(
-  "-0e-" + TestCommon.Repeat("0", 1000000),
-  "intorfloat",
-  0);
-AssertJSONInteger(
-  "-0e-" + TestCommon.Repeat("0", 1000000),
-  "intorfloatfromdouble",
-  0);
-AssertJSONInteger(
-  "0." + TestCommon.Repeat("0", 1000000),
-  "intorfloat",
-  0);
-AssertJSONInteger(
-  "0." + TestCommon.Repeat("0", 1000000),
-  "intorfloatfromdouble",
-  0);
-AssertJSONInteger(
-  "-0." + TestCommon.Repeat("0", 1000000),
-  "intorfloat",
-  0);
-AssertJSONInteger(
-  "-0." + TestCommon.Repeat("0", 1000000),
-  "intorfloatfromdouble",
-  0);
-}
+    [Test]
+    public void TestFromJsonStringFastCases() {
+      AssertJSONDouble(
+        "0e-" + TestCommon.Repeat("0", 1000000),
+        "double",
+        0.0);
+      AssertJSONDouble(
+        "0." + TestCommon.Repeat("0", 1000000),
+        "double",
+        0.0);
+      AssertJSONDouble(
+        "0." + TestCommon.Repeat("0", 1000000) + "e-9999999999999",
+        "double",
+        0.0);
+      AssertJSONDouble(
+        TestCommon.Repeat("3", 1000000) + "e-9999999999999",
+        "double",
+        0.0);
+      AssertJSONDouble(
+        TestCommon.Repeat("3", 1000000) + "e-9999999999999",
+        "intorfloat",
+        0.0);
+      AssertJSONInteger(
+        TestCommon.Repeat("3", 1000000) + "e-9999999999999",
+        "intorfloatfromdouble",
+        0);
+      AssertJSONDouble(
+        "0." + TestCommon.Repeat("0", 1000000) + "e-99999999",
+        "double",
+        0.0);
+      AssertJSONDouble(
+        TestCommon.Repeat("3", 1000000) + "e-99999999",
+        "double",
+        0.0);
+      AssertJSONDouble(
+        TestCommon.Repeat("3", 1000000) + "e-99999999",
+        "intorfloat",
+        0.0);
+      AssertJSONInteger(
+        TestCommon.Repeat("3", 1000000) + "e-99999999",
+        "intorfloatfromdouble",
+        0);
+      AssertJSONInteger(
+        "0e-" + TestCommon.Repeat("0", 1000000),
+        "intorfloat",
+        0);
+      AssertJSONInteger(
+        "0e-" + TestCommon.Repeat("0", 1000000),
+        "intorfloatfromdouble",
+        0);
+      AssertJSONInteger(
+        "-0e-" + TestCommon.Repeat("0", 1000000),
+        "intorfloat",
+        0);
+      AssertJSONInteger(
+        "-0e-" + TestCommon.Repeat("0", 1000000),
+        "intorfloatfromdouble",
+        0);
+      AssertJSONInteger(
+        "0." + TestCommon.Repeat("0", 1000000),
+        "intorfloat",
+        0);
+      AssertJSONInteger(
+        "0." + TestCommon.Repeat("0", 1000000),
+        "intorfloatfromdouble",
+        0);
+      AssertJSONInteger(
+        "-0." + TestCommon.Repeat("0", 1000000),
+        "intorfloat",
+        0);
+      AssertJSONInteger(
+        "-0." + TestCommon.Repeat("0", 1000000),
+        "intorfloatfromdouble",
+        0);
+    }
 
-[Test]
-[Timeout(10000)]
-public void TestFromJsonStringLongKindFull() {
-var jsonop = new JSONOptions("numberconversion=full");
-string json = TestCommon.Repeat("7", 100000);
-CBORObject cbor = FromJSON(json, jsonop);
-Assert.IsTrue(cbor.IsTagged);
-}
+    [Test]
+    [Timeout(10000)]
+    public void TestFromJsonStringLongKindFull() {
+      var jsonop = new JSONOptions("numberconversion=full");
+      string json = TestCommon.Repeat("7", 100000);
+      CBORObject cbor = FromJSON(json, jsonop);
+      Assert.IsTrue(cbor.IsTagged);
+    }
 
-[Test]
-[Timeout(10000)]
-public void TestFromJsonStringLongKindFull2() {
-var jsonop = new JSONOptions("numberconversion=full");
-string json = TestCommon.Repeat("7", 100000) + ".0";
-CBORObject cbor = FromJSON(json, jsonop);
-Assert.IsTrue(cbor.IsTagged);
-}
+    [Test]
+    [Timeout(10000)]
+    public void TestFromJsonStringLongKindFull2() {
+      var jsonop = new JSONOptions("numberconversion=full");
+      string json = TestCommon.Repeat("7", 100000) + ".0";
+      CBORObject cbor = FromJSON(json, jsonop);
+      Assert.IsTrue(cbor.IsTagged);
+    }
 
-[Test]
-[Timeout(2000)]
-public void TestFromJsonStringLongKindFullBad() {
-Console.WriteLine("FullBad 1");
-var jsonop = new JSONOptions("numberconversion=full");
-string json = TestCommon.Repeat("7", 1000000) + "x";
-try {
- FromJSON(json, jsonop);
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-Console.WriteLine("FullBad 1a");
-json = "7x" + TestCommon.Repeat("7", 1000000);
-try {
- FromJSON(json, jsonop);
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+    [Test]
+    [Timeout(2000)]
+    public void TestFromJsonStringLongKindFullBad() {
+      Console.WriteLine("FullBad 1");
+      var jsonop = new JSONOptions("numberconversion=full");
+      string json = TestCommon.Repeat("7", 1000000) + "x";
+      try {
+        FromJSON(json, jsonop);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      Console.WriteLine("FullBad 1a");
+      json = "7x" + TestCommon.Repeat("7", 1000000);
+      try {
+        FromJSON(json, jsonop);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
 
-json = TestCommon.Repeat("7", 1000000) + "e0x";
-try {
- FromJSON(json, jsonop);
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-Console.WriteLine("FullBad 2");
-json = TestCommon.Repeat("0", 1000000);
-try {
- FromJSON(json, jsonop);
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-}
+      json = TestCommon.Repeat("7", 1000000) + "e0x";
+      try {
+        FromJSON(json, jsonop);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      Console.WriteLine("FullBad 2");
+      json = TestCommon.Repeat("0", 1000000);
+      try {
+        FromJSON(json, jsonop);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
 
-[Test]
-[Timeout(2000)]
-public void TestFromJsonStringLongKindsBad() {
-JSONOptions jsonop;
-string json = TestCommon.Repeat("7", 1000000) + "x";
-jsonop = new JSONOptions("numberconversion=double");
-try {
- FromJSON(json, jsonop);
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-jsonop = new JSONOptions("numberconversion=intorfloatfromdouble");
-try {
- FromJSON(json, jsonop);
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-jsonop = new JSONOptions("numberconversion=intorfloat");
-try {
- FromJSON(json, jsonop);
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-json = TestCommon.Repeat("0", 1000000);
-jsonop = new JSONOptions("numberconversion=double");
-try {
- FromJSON(json, jsonop);
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-jsonop = new JSONOptions("numberconversion=intorfloatfromdouble");
-try {
- FromJSON(json, jsonop);
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-jsonop = new JSONOptions("numberconversion=intorfloat");
-try {
- FromJSON(json, jsonop);
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-}
+    [Test]
+    [Timeout(2000)]
+    public void TestFromJsonStringLongKindsBad() {
+      JSONOptions jsonop;
+      string json = TestCommon.Repeat("7", 1000000) + "x";
+      jsonop = new JSONOptions("numberconversion=double");
+      try {
+        FromJSON(json, jsonop);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      jsonop = new JSONOptions("numberconversion=intorfloatfromdouble");
+      try {
+        FromJSON(json, jsonop);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      jsonop = new JSONOptions("numberconversion=intorfloat");
+      try {
+        FromJSON(json, jsonop);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      json = TestCommon.Repeat("0", 1000000);
+      jsonop = new JSONOptions("numberconversion=double");
+      try {
+        FromJSON(json, jsonop);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      jsonop = new JSONOptions("numberconversion=intorfloatfromdouble");
+      try {
+        FromJSON(json, jsonop);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      jsonop = new JSONOptions("numberconversion=intorfloat");
+      try {
+        FromJSON(json, jsonop);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
 
-[Test]
-[Timeout(2000)]
-public void TestFromJsonStringLongKindIntOrFloatFromDouble() {
-var jsonop = new JSONOptions("numberconversion=intorfloatfromdouble");
-string json = TestCommon.Repeat("7", 1000000);
-CBORObject cbor = FromJSON(json, jsonop);
-Assert.AreEqual(CBORType.FloatingPoint, cbor.Type);
-Assert.AreEqual(Double.PositiveInfinity, cbor.AsDoubleValue());
-json = TestCommon.Repeat("7", 1000000) + "e+0";
-cbor = FromJSON(json, jsonop);
-Assert.AreEqual(CBORType.FloatingPoint, cbor.Type);
-Assert.AreEqual(Double.PositiveInfinity, cbor.AsDoubleValue());
-json = TestCommon.Repeat("7", 1000000) + "e0";
-cbor = FromJSON(json, jsonop);
-Assert.AreEqual(CBORType.FloatingPoint, cbor.Type);
-Assert.AreEqual(Double.PositiveInfinity, cbor.AsDoubleValue());
-}
+    [Test]
+    [Timeout(2000)]
+    public void TestFromJsonStringLongKindIntOrFloatFromDouble() {
+      var jsonop = new JSONOptions("numberconversion=intorfloatfromdouble");
+      string json = TestCommon.Repeat("7", 1000000);
+      CBORObject cbor = FromJSON(json, jsonop);
+      Assert.AreEqual(CBORType.FloatingPoint, cbor.Type);
+      Assert.AreEqual(Double.PositiveInfinity, cbor.AsDoubleValue());
+      json = TestCommon.Repeat("7", 1000000) + "e+0";
+      cbor = FromJSON(json, jsonop);
+      Assert.AreEqual(CBORType.FloatingPoint, cbor.Type);
+      Assert.AreEqual(Double.PositiveInfinity, cbor.AsDoubleValue());
+      json = TestCommon.Repeat("7", 1000000) + "e0";
+      cbor = FromJSON(json, jsonop);
+      Assert.AreEqual(CBORType.FloatingPoint, cbor.Type);
+      Assert.AreEqual(Double.PositiveInfinity, cbor.AsDoubleValue());
+    }
 
-[Test]
-[Timeout(2000)]
-public void TestFromJsonStringLongKindIntOrFloat() {
-var jsonop = new JSONOptions("numberconversion=intorfloat");
-string json = TestCommon.Repeat("7", 1000000);
-CBORObject cbor = FromJSON(json, jsonop);
-Assert.AreEqual(CBORType.FloatingPoint, cbor.Type);
-Assert.AreEqual(Double.PositiveInfinity, cbor.AsDoubleValue());
-}
+    [Test]
+    [Timeout(2000)]
+    public void TestFromJsonStringLongKindIntOrFloat() {
+      var jsonop = new JSONOptions("numberconversion=intorfloat");
+      string json = TestCommon.Repeat("7", 1000000);
+      CBORObject cbor = FromJSON(json, jsonop);
+      Assert.AreEqual(CBORType.FloatingPoint, cbor.Type);
+      Assert.AreEqual(Double.PositiveInfinity, cbor.AsDoubleValue());
+    }
 
-[Test]
-[Timeout(2000)]
-public void TestFromJsonStringLongKindIntOrFloat2() {
-var jsonop = new JSONOptions("numberconversion=intorfloat");
-string json = "-" + TestCommon.Repeat("7", 1000000);
-CBORObject cbor = FromJSON(json, jsonop);
-Assert.AreEqual(CBORType.FloatingPoint, cbor.Type);
-Assert.AreEqual(Double.NegativeInfinity, cbor.AsDoubleValue());
-}
+    [Test]
+    [Timeout(2000)]
+    public void TestFromJsonStringLongKindIntOrFloat2() {
+      var jsonop = new JSONOptions("numberconversion=intorfloat");
+      string json = "-" + TestCommon.Repeat("7", 1000000);
+      CBORObject cbor = FromJSON(json, jsonop);
+      Assert.AreEqual(CBORType.FloatingPoint, cbor.Type);
+      Assert.AreEqual(Double.NegativeInfinity, cbor.AsDoubleValue());
+    }
 
     [Test]
     public void TestToObject_TypeMapper() {

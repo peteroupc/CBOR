@@ -369,8 +369,8 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
         obj = CBORObject.NewArray();
         int len = arr.GetLength(0);
         for (var i = 0; i < len; ++i) {
-          obj.Add (
-            CBORObject.FromObject (
+          obj.Add(
+            CBORObject.FromObject(
               arr.GetValue(i),
               options,
               mapper,
@@ -388,7 +388,7 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
       }
       obj = BuildCBORArray(dimensions);
       do {
-        CBORObject o = CBORObject.FromObject (
+        CBORObject o = CBORObject.FromObject(
             arr.GetValue(index),
             options,
             mapper,
@@ -459,7 +459,7 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
       do {
         object item = GetCBORObject(
           cbor,
-          index).ToObject (
+          index).ToObject(
             elementType,
             mapper,
             options,
@@ -703,7 +703,7 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
         #if NET40 || NET20
         if (IsAssignableFrom(typeof(Array), t)) {
           Type elementType = t.GetElementType();
-          Array array = Array.CreateInstance (
+          Array array = Array.CreateInstance(
               elementType,
               GetDimensions(objThis));
           return FillArray(
@@ -729,7 +729,7 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
         #else
         if (IsAssignableFrom(typeof(Array), t)) {
           Type elementType = t.GetElementType();
-          Array array = Array.CreateInstance (
+          Array array = Array.CreateInstance(
               elementType,
               GetDimensions(objThis));
           return FillArray(
@@ -823,7 +823,7 @@ td.Equals(typeof(ICollection<>)) ||
             (System.Collections.IDictionary)dictObject;
           foreach (CBORObject key in objThis.Keys) {
             CBORObject value = objThis[key];
-            idic.Add (
+            idic.Add(
               key.ToObject(keyType, mapper, options, depth + 1),
               value.ToObject(valueType, mapper, options, depth + 1));
           }
@@ -871,7 +871,7 @@ td.Equals(typeof(ICollection<>)) ||
       }
     }
 
-    public static object ObjectWithProperties (
+    public static object ObjectWithProperties(
       Type t,
       IEnumerable<KeyValuePair<string, CBORObject>> keysValues,
       CBORTypeMapper mapper,
@@ -927,7 +927,7 @@ td.Equals(typeof(ICollection<>)) ||
         obj);
     }
 
-    public static IEnumerable<KeyValuePair<string, object>> GetProperties (
+    public static IEnumerable<KeyValuePair<string, object>> GetProperties(
       Object o) {
       return GetProperties(o, true);
     }
@@ -972,7 +972,7 @@ td.Equals(typeof(ICollection<>)) ||
     }
 
     public static DateTime BuildUpDateTime(EInteger year, int[] dt) {
-      return new DateTime (
+      return new DateTime(
           year.ToInt32Checked(),
           dt[0],
           dt[1],

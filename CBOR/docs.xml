@@ -2027,7 +2027,9 @@
             <summary>Compares the equality of two CBOR objects. Not-a-number
             values can be considered equal by this method.</summary>
             <param name='other'>The object to compare.</param>
-            <returns><c>true</c> if the objects are equal; otherwise, <c>false</c>.</returns>
+            <returns><c>true</c> if the objects are equal; otherwise, <c>false</c>. In this method, two objects are not equal if they
+            don't have the same type or if one is null and the other
+            isn't.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Equals(System.Object)">
@@ -2037,7 +2039,9 @@
             equal by this method.</summary>
             <param name='obj'>The parameter <paramref name='obj'/> is an
             arbitrary object.</param>
-            <returns><c>true</c> if the objects are equal; otherwise, <c>false</c>.</returns>
+            <returns><c>true</c> if the objects are equal; otherwise, <c>false</c>. In this method, two objects are not equal if they
+            don't have the same type or if one is null and the other
+            isn't.</returns>
 
 </doc>
 <doc name="F:PeterO.Cbor.CBORObject.False">
@@ -2586,7 +2590,7 @@
             used to mark a "self-described CBOR" object. This document does not
             attempt to list all CBOR tags and their meanings. An up-to-date
             list can be found at the CBOR Tags registry maintained by the
-            Internet Assigned Numbers Authority (
+            Internet Assigned Numbers Authority(
             <i>iana.org/assignments/cbor-tags</i> ).</param>
             <returns>A CBOR object where the object <paramref name='valueOb'/>
             is converted to a CBOR object and given the tag <paramref name='bigintTag'/>. If <paramref name='valueOb'/> is null, returns
@@ -3276,7 +3280,7 @@
             an object representing the key, which will be converted to a
             CBORObject; in this case, this parameter can be null, in which case
             this value is converted to CBORObject.Null. If this instance is a
-            CBOR array, this parameter must be a 32-bit signed integer (
+            CBOR array, this parameter must be a 32-bit signed integer(
             <c>int</c> ) identifying the index (starting from 0) of the item to
             set in the array.</param>
             <param name='valueOb'>An object representing the value, which will

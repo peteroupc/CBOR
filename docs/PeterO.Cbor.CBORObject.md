@@ -1618,7 +1618,7 @@ Determines whether this object and another object are equal and have the same ty
 
 <b>Return Value:</b>
 
- `true`  if the objects are equal; otherwise,  `false` .
+ `true`  if the objects are equal; otherwise,  `false` . In this method, two objects are not equal if they don't have the same type or if one is null and the other isn't.
 
 <a id="Equals_PeterO_Cbor_CBORObject"></a>
 ### Equals
@@ -1634,7 +1634,7 @@ Compares the equality of two CBOR objects. Not-a-number values can be considered
 
 <b>Return Value:</b>
 
- `true`  if the objects are equal; otherwise,  `false` .
+ `true`  if the objects are equal; otherwise,  `false` . In this method, two objects are not equal if they don't have the same type or if one is null and the other isn't.
 
 <a id="FromFloatingPointBits_long_int"></a>
 ### FromFloatingPointBits
@@ -2352,7 +2352,7 @@ Generates a CBOR object from an arbitrary object and gives the resulting object 
 
 .
 
- * <i>bigintTag</i>: Tag number. The tag number 55799 can be used to mark a "self-described CBOR" object. This document does not attempt to list all CBOR tags and their meanings. An up-to-date list can be found at the CBOR Tags registry maintained by the Internet Assigned Numbers Authority ( <i>iana.org/assignments/cbor-tags</i> ).
+ * <i>bigintTag</i>: Tag number. The tag number 55799 can be used to mark a "self-described CBOR" object. This document does not attempt to list all CBOR tags and their meanings. An up-to-date list can be found at the CBOR Tags registry maintained by the Internet Assigned Numbers Authority( <i>iana.org/assignments/cbor-tags</i> ).
 
 <b>Return Value:</b>
 
@@ -3369,7 +3369,7 @@ Maps an object to a key in this CBOR map, or adds the value if the key doesn't e
 
 <b>Parameters:</b>
 
- * <i>key</i>: If this instance is a CBOR map, this parameter is an object representing the key, which will be converted to a CBORObject; in this case, this parameter can be null, in which case this value is converted to CBORObject.Null. If this instance is a CBOR array, this parameter must be a 32-bit signed integer (  `int`  ) identifying the index (starting from 0) of the item to set in the array.
+ * <i>key</i>: If this instance is a CBOR map, this parameter is an object representing the key, which will be converted to a CBORObject; in this case, this parameter can be null, in which case this value is converted to CBORObject.Null. If this instance is a CBOR array, this parameter must be a 32-bit signed integer(  `int`  ) identifying the index (starting from 0) of the item to set in the array.
 
  * <i>valueOb</i>: An object representing the value, which will be converted to a CBORObject. Can be null, in which case this value is converted to CBORObject.Null.
 

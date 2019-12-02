@@ -99,7 +99,7 @@ namespace PeterO.Cbor {
   /// DecodeFromBytes and Read methods throw a CBORException.</para>
   /// <para>The ReadJSON and FromJSONString methods currently have
   /// nesting depths of 1000.</para></remarks>
-  [System.Diagnostics.CodeAnalysis.SuppressMessage (
+  [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Design",
       "CA1036",
       Justification = "Mutable in some cases, and arbitrary size.")]
@@ -466,7 +466,7 @@ CBORObject.FromObject(Double.NaN);
         int ret = cn == null ? 2 :
 cn.GetNumberInterface().Sign(cn.GetValue());
         if (ret == 2) {
-          throw new InvalidOperationException (
+          throw new InvalidOperationException(
             "This object is not a number.");
         }
         return ret;
@@ -1136,10 +1136,10 @@ cn.GetNumberInterface().Sign(cn.GetValue());
         throw new ArgumentNullException(nameof(jsonoptions));
       }
       if (str.Length > 0 && str[0] == 0xfeff) {
-        throw new CBORException (
+        throw new CBORException(
           "JSON object began with a byte order mark (U+FEFF) (offset 0)");
       }
-      var reader = new CharacterInputWithCount (
+      var reader = new CharacterInputWithCount(
         new CharacterReader(str, false, true));
       var nextchar = new int[1];
       CBORObject obj = CBORJson.ParseJSONValue(
@@ -1787,7 +1787,7 @@ checked(size + 5) : checked(size + 9);
           return new CBORObject(CBORObjectTypeEInteger, bigintValue);
         } else {
           int tag = (bigintValue.Sign < 0) ? 3 : 2;
-          return CBORObject.FromObjectAndTag (
+          return CBORObject.FromObjectAndTag(
               EIntegerBytes(bigintValue),
               tag);
         }
@@ -2009,7 +2009,7 @@ checked(size + 5) : checked(size + 9);
     /// 32-bit floating-point number.</param>
     /// <returns>A CBOR object generated from the given number.</returns>
     public static CBORObject FromObject(float value) {
-      long doubleBits = CBORUtilities.SingleToDoublePrecision (
+      long doubleBits = CBORUtilities.SingleToDoublePrecision(
           CBORUtilities.SingleToInt32Bits(value));
       return new CBORObject(CBORObjectTypeDouble, doubleBits);
     }
@@ -2415,7 +2415,7 @@ checked(size + 5) : checked(size + 9);
       if (obj is System.Collections.IEnumerable) {
         objret = CBORObject.NewArray();
         foreach (object element in (System.Collections.IEnumerable)obj) {
-          objret.Add (
+          objret.Add(
             CBORObject.FromObject(
               element,
               options,
@@ -2466,7 +2466,7 @@ checked(size + 5) : checked(size + 9);
     /// used to mark a "self-described CBOR" object. This document does not
     /// attempt to list all CBOR tags and their meanings. An up-to-date
     /// list can be found at the CBOR Tags registry maintained by the
-    /// Internet Assigned Numbers Authority (
+    /// Internet Assigned Numbers Authority(
     /// <i>iana.org/assignments/cbor-tags</i> ).</param>
     /// <returns>A CBOR object where the object <paramref name='valueOb'/>
     /// is converted to a CBOR object and given the tag <paramref
@@ -2488,7 +2488,7 @@ checked(size + 5) : checked(size + 9);
           ") is less than 0");
       }
       if (bigintTag.CompareTo(UInt64MaxValue) > 0) {
-        throw new ArgumentException (
+        throw new ArgumentException(
           "tag more than 18446744073709551615 (" + bigintTag + ")");
       }
       CBORObject c = FromObject(valueOb);
@@ -2619,7 +2619,7 @@ checked(size + 5) : checked(size + 9);
     /// <summary>Creates a new empty CBOR map.</summary>
     /// <returns>A new CBOR map.</returns>
     public static CBORObject NewMap() {
-      return new CBORObject (
+      return new CBORObject(
           CBORObjectTypeMap,
           new Dictionary<CBORObject, CBORObject>());
     }
@@ -2842,7 +2842,7 @@ checked(size + 5) : checked(size + 9);
       if (jsonoptions == null) {
         throw new ArgumentNullException(nameof(jsonoptions));
       }
-      var reader = new CharacterInputWithCount (
+      var reader = new CharacterInputWithCount(
         new CharacterReader(stream, 2, true));
       try {
         var nextchar = new int[1];
@@ -3345,7 +3345,7 @@ checked(size + 5) : checked(size + 9);
       if (stream == null) {
         throw new ArgumentNullException(nameof(stream));
       }
-      byte[] data = GetDoubleBytes (
+      byte[] data = GetDoubleBytes(
           CBORUtilities.DoubleToInt64Bits(value),
           0);
       stream.Write(data, 0, data.Length);
@@ -3440,14 +3440,14 @@ checked(size + 5) : checked(size + 9);
         return;
       }
       if (objValue is IList<CBORObject>) {
-        WriteObjectArray (
+        WriteObjectArray(
           (IList<CBORObject>)objValue,
           output,
           options);
         return;
       }
       if (objValue is IDictionary<CBORObject, CBORObject>) {
-        WriteObjectMap (
+        WriteObjectMap(
           (IDictionary<CBORObject, CBORObject>)objValue,
           output,
           options);
@@ -4227,7 +4227,7 @@ checked(size + 5) : checked(size + 9);
             } else {
               #if DEBUG
               if (!(a >= 0 && b < 0)) {
-                throw new InvalidOperationException (
+                throw new InvalidOperationException(
                   "doesn't satisfy a>= 0" +
                   "\u0020b<0");
               }
@@ -4237,7 +4237,7 @@ checked(size + 5) : checked(size + 9);
             break;
           }
           case CBORObjectTypeEInteger: {
-            cmp = CBORUtilities.ByteArrayCompare (
+            cmp = CBORUtilities.ByteArrayCompare(
                 this.EncodeToBytes(),
                 other.EncodeToBytes());
             break;
@@ -4248,24 +4248,24 @@ checked(size + 5) : checked(size + 9);
             break;
           }
           case CBORObjectTypeTextString: {
-            cmp = CBORUtilities.FastPathStringCompare (
+            cmp = CBORUtilities.FastPathStringCompare(
                 (string)objA,
                 (string)objB);
             if (cmp < -1) {
-              cmp = CBORUtilities.ByteArrayCompare (
+              cmp = CBORUtilities.ByteArrayCompare(
                   this.EncodeToBytes(),
                   other.EncodeToBytes());
             }
             break;
           }
           case CBORObjectTypeArray: {
-            cmp = ListCompare (
+            cmp = ListCompare(
                 (List<CBORObject>)objA,
                 (List<CBORObject>)objB);
             break;
           }
           case CBORObjectTypeMap:
-            cmp = MapCompare (
+            cmp = MapCompare(
                 (IDictionary<CBORObject, CBORObject>)objA,
                 (IDictionary<CBORObject, CBORObject>)objB);
             break;
@@ -4282,7 +4282,7 @@ checked(size + 5) : checked(size + 9);
             break;
           }
           case CBORObjectTypeDouble: {
-            cmp = CBORUtilities.ByteArrayCompare (
+            cmp = CBORUtilities.ByteArrayCompare(
                 GetDoubleBytes(this.AsDoubleBits(), 0),
                 GetDoubleBytes(other.AsDoubleBits(), 0));
             break;
@@ -4293,7 +4293,7 @@ checked(size + 5) : checked(size + 9);
       } else if ((typeB == CBORObjectTypeInteger && typeA ==
           CBORObjectTypeEInteger) || (typeA == CBORObjectTypeInteger && typeB ==
           CBORObjectTypeEInteger)) {
-        cmp = CBORUtilities.ByteArrayCompare (
+        cmp = CBORUtilities.ByteArrayCompare(
             this.EncodeToBytes(),
             other.EncodeToBytes());
       } else {
@@ -4479,7 +4479,7 @@ checked(size + 5) : checked(size + 9);
       if (!hasComplexTag) {
         switch (this.ItemType) {
           case CBORObjectTypeTextString: {
-            byte[] ret = GetOptimizedBytesIfShortAscii (
+            byte[] ret = GetOptimizedBytesIfShortAscii(
                 this.AsString(), tagged ? (((int)tagbyte) & 0xff) : -1);
             if (ret != null) {
               return ret;
@@ -4540,7 +4540,7 @@ checked(size + 5) : checked(size + 9);
             return ret2;
           }
           case CBORObjectTypeDouble: {
-            return GetDoubleBytes (
+            return GetDoubleBytes(
                 this.AsDoubleBits(),
                 ((int)tagbyte) & 0xff);
           }
@@ -4562,7 +4562,9 @@ checked(size + 5) : checked(size + 9);
     /// <param name='obj'>The parameter <paramref name='obj'/> is an
     /// arbitrary object.</param>
     /// <returns><c>true</c> if the objects are equal; otherwise,
-    /// <c>false</c>.</returns>
+    /// <c>false</c>. In this method, two objects are not equal if they
+    /// don't have the same type or if one is null and the other
+    /// isn't.</returns>
     public override bool Equals(object obj) {
       return this.Equals(obj as CBORObject);
     }
@@ -4571,7 +4573,9 @@ checked(size + 5) : checked(size + 9);
     /// values can be considered equal by this method.</summary>
     /// <param name='other'>The object to compare.</param>
     /// <returns><c>true</c> if the objects are equal; otherwise,
-    /// <c>false</c>.</returns>
+    /// <c>false</c>. In this method, two objects are not equal if they
+    /// don't have the same type or if one is null and the other
+    /// isn't.</returns>
     public bool Equals(CBORObject other) {
       var otherValue = other as CBORObject;
       if (otherValue == null) {
@@ -4585,7 +4589,7 @@ checked(size + 5) : checked(size + 9);
       }
       switch (this.itemtypeValue) {
         case CBORObjectTypeByteString:
-          return CBORUtilities.ByteArrayEquals (
+          return CBORUtilities.ByteArrayEquals(
               (byte[])this.itemValue,
               otherValue.itemValue as byte[]);
         case CBORObjectTypeMap: {
@@ -4594,7 +4598,7 @@ checked(size + 5) : checked(size + 9);
           return CBORMapEquals(this.AsMap(), cbordict);
         }
         case CBORObjectTypeArray:
-          return CBORArrayEquals (
+          return CBORArrayEquals(
               this.AsList(),
               otherValue.itemValue as IList<CBORObject>);
         case CBORObjectTypeTagged:
@@ -4687,7 +4691,7 @@ checked(size + 5) : checked(size + 9);
       if (curitem.IsTagged) {
         var list = new List<EInteger>();
         while (curitem.IsTagged) {
-          list.Add (
+          list.Add(
             LowHighToEInteger(
               curitem.tagLow,
               curitem.tagHigh));
@@ -4756,7 +4760,7 @@ checked(size + 5) : checked(size + 9);
         throw new ArgumentException("tagValue(" + tagValue +
           ") is less than 0");
       }
-      return this.IsTagged && this.HasMostInnerTag (
+      return this.IsTagged && this.HasMostInnerTag(
           EInteger.FromInt32(tagValue));
     }
 
@@ -5077,7 +5081,7 @@ this.MostOuterTag.Equals(bigTagValue);
     /// an object representing the key, which will be converted to a
     /// CBORObject; in this case, this parameter can be null, in which case
     /// this value is converted to CBORObject.Null. If this instance is a
-    /// CBOR array, this parameter must be a 32-bit signed integer (
+    /// CBOR array, this parameter must be a 32-bit signed integer(
     /// <c>int</c> ) identifying the index (starting from 0) of the item to
     /// set in the array.</param>
     /// <param name='valueOb'>An object representing the value, which will
@@ -5411,7 +5415,7 @@ this.MostOuterTag.Equals(bigTagValue);
       if (outputStream == null) {
         throw new ArgumentNullException(nameof(outputStream));
       }
-      CBORJson.WriteJSONToInternal (
+      CBORJson.WriteJSONToInternal(
         this,
         new StringOutput(outputStream),
         JSONOptions.Default);
@@ -5440,7 +5444,7 @@ this.MostOuterTag.Equals(bigTagValue);
       if (options == null) {
         throw new ArgumentNullException(nameof(options));
       }
-      CBORJson.WriteJSONToInternal (
+      CBORJson.WriteJSONToInternal(
         this,
         new StringOutput(outputStream),
         options);
@@ -5469,12 +5473,12 @@ this.MostOuterTag.Equals(bigTagValue);
       long value;
       switch (byteCount) {
         case 2:
-          value = CBORUtilities.HalfToDoublePrecision (
+          value = CBORUtilities.HalfToDoublePrecision(
               unchecked((int)(floatingBits & 0xffffL)));
           return new CBORObject(CBORObjectTypeDouble, value);
         case 4:
 
-          value = CBORUtilities.SingleToDoublePrecision (
+          value = CBORUtilities.SingleToDoublePrecision(
               unchecked((int)(floatingBits & 0xffffL)));
           return new CBORObject(CBORObjectTypeDouble, value);
         case 8:
@@ -5622,20 +5626,20 @@ this.MostOuterTag.Equals(bigTagValue);
       long longbits = 0L;
       switch (byteCount) {
         case 2:
-          bits = BitConverter.ToInt32 (
+          bits = BitConverter.ToInt32(
               BitConverter.GetBytes((float)singleVal),
               0);
           bits = CBORUtilities.SingleToRoundedHalfPrecision(bits);
           bits &= 0xffff;
           return WriteFloatingPointBits(outputStream, bits, 2);
         case 4:
-          bits = BitConverter.ToInt32 (
+          bits = BitConverter.ToInt32(
               BitConverter.GetBytes((float)singleVal),
               0);
           longbits = ((long)bits) & 0xffffffffL;
           return WriteFloatingPointBits(outputStream, longbits, 4);
         case 8:
-          bits = BitConverter.ToInt32 (
+          bits = BitConverter.ToInt32(
               BitConverter.GetBytes((float)singleVal),
               0);
           longbits = CBORUtilities.SingleToDoublePrecision(bits);
@@ -5844,11 +5848,11 @@ this.MostOuterTag.Equals(bigTagValue);
           ") is less than 0");
       }
       if (bigintValue.CompareTo(UInt64MaxValue) > 0) {
-        throw new ArgumentException (
+        throw new ArgumentException(
           "tag more than 18446744073709551615 (" + bigintValue + ")");
       }
       if (bigintValue.CanFitInInt64()) {
-        return WriteValue (
+        return WriteValue(
             outputStream,
             majorType,
             bigintValue.ToInt64Checked());
@@ -5864,7 +5868,7 @@ this.MostOuterTag.Equals(bigTagValue);
           ") is more than 7");
       }
       if (majorType == 7) {
-        throw new ArgumentException (
+        throw new ArgumentException(
           "majorType is 7 and value is greater" + "\u0020than 255");
       }
       byte[] bytes = new[] {
@@ -6060,7 +6064,7 @@ this.MostOuterTag.Equals(bigTagValue);
         }
         case CBORObjectTypeByteString: {
           byte[] arr = this.GetByteString();
-          WritePositiveInt (
+          WritePositiveInt(
             (this.Type == CBORType.ByteString) ? 2 : 3,
             arr.Length,
             stream);
@@ -6207,10 +6211,10 @@ this.MostOuterTag.Equals(bigTagValue);
             if (firstbyte >= 0xf9 && firstbyte <= 0xfb) {
               var dblbits = (long)uadditional;
               if (firstbyte == 0xf9) {
-                dblbits = CBORUtilities.HalfToDoublePrecision (
+                dblbits = CBORUtilities.HalfToDoublePrecision(
                     unchecked((int)uadditional));
               } else if (firstbyte == 0xfa) {
-                dblbits = CBORUtilities.SingleToDoublePrecision (
+                dblbits = CBORUtilities.SingleToDoublePrecision(
                     unchecked((int)uadditional));
               }
               return new CBORObject(
@@ -6221,7 +6225,7 @@ this.MostOuterTag.Equals(bigTagValue);
               if ((int)uadditional < 32) {
                 throw new CBORException("Invalid overlong simple value");
               }
-              return new CBORObject (
+              return new CBORObject(
                   CBORObjectTypeSimpleValue,
                   (int)uadditional);
             }
@@ -6267,7 +6271,7 @@ this.MostOuterTag.Equals(bigTagValue);
       return (IDictionary<CBORObject, CBORObject>)this.ThisItem;
     }
 
-    private static bool CBORArrayEquals (
+    private static bool CBORArrayEquals(
       IList<CBORObject> listA,
       IList<CBORObject> listB) {
       if (listA == null) {
@@ -6337,7 +6341,7 @@ this.MostOuterTag.Equals(bigTagValue);
       return true;
     }
 
-    private static bool CBORMapEquals (
+    private static bool CBORMapEquals(
       IDictionary<CBORObject, CBORObject> mapA,
       IDictionary<CBORObject, CBORObject> mapB) {
       if (mapA == null) {
@@ -6549,7 +6553,7 @@ this.MostOuterTag.Equals(bigTagValue);
         fixedObjects[i] = new CBORObject(CBORObjectTypeInteger, (long)i);
       }
       for (int i = 0x20; i < 0x38; ++i) {
-        fixedObjects[i] = new CBORObject (
+        fixedObjects[i] = new CBORObject(
           CBORObjectTypeInteger,
           (long)(-1 - (i - 0x20)));
       }
@@ -6557,14 +6561,14 @@ this.MostOuterTag.Equals(bigTagValue);
         CBORObjectTypeTextString,
         String.Empty);
       for (int i = 0xe0; i < 0xf8; ++i) {
-        fixedObjects[i] = new CBORObject (
+        fixedObjects[i] = new CBORObject(
           CBORObjectTypeSimpleValue,
           (int)(i - 0xe0));
       }
       return fixedObjects;
     }
 
-    private static int ListCompare (
+    private static int ListCompare(
       IList<CBORObject> listA,
       IList<CBORObject> listB) {
       if (listA == null) {
@@ -6616,7 +6620,7 @@ this.MostOuterTag.Equals(bigTagValue);
       return EInteger.Zero;
     }
 
-    private static int MapCompare (
+    private static int MapCompare(
       IDictionary<CBORObject, CBORObject> mapA,
       IDictionary<CBORObject, CBORObject> mapB) {
       if (mapA == null) {
@@ -6674,7 +6678,7 @@ this.MostOuterTag.Equals(bigTagValue);
       return 0;
     }
 
-    private static IList<object> PushObject (
+    private static IList<object> PushObject(
       IList<object> stack,
       object parent,
       object child) {
@@ -6712,7 +6716,7 @@ this.MostOuterTag.Equals(bigTagValue);
         0;
     }
 
-    private static IList<object> WriteChildObject (
+    private static IList<object> WriteChildObject(
       object parentThisItem,
       CBORObject child,
       Stream outputStream,
@@ -6739,14 +6743,14 @@ this.MostOuterTag.Equals(bigTagValue);
       return stack;
     }
 
-    private static void WriteObjectArray (
+    private static void WriteObjectArray(
       IList<CBORObject> list,
       Stream outputStream,
       CBOREncodeOptions options) {
       WriteObjectArray(list, outputStream, null, options);
     }
 
-    private static void WriteObjectArray (
+    private static void WriteObjectArray(
       IList<CBORObject> list,
       Stream outputStream,
       IList<object> stack,
@@ -6758,14 +6762,14 @@ this.MostOuterTag.Equals(bigTagValue);
       }
     }
 
-    private static void WriteObjectMap (
+    private static void WriteObjectMap(
       IDictionary<CBORObject, CBORObject> map,
       Stream outputStream,
       CBOREncodeOptions options) {
       WriteObjectMap(map, outputStream, null, options);
     }
 
-    private static void WriteObjectMap (
+    private static void WriteObjectMap(
       IDictionary<CBORObject, CBORObject> map,
       Stream outputStream,
       IList<object> stack,
