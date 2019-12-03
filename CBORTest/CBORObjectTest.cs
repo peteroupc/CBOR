@@ -6804,6 +6804,7 @@ CBOREncodeOptions(false, false, true));
     }
 
     [Test]
+    [Timeout(5000)]
     public void TestFromJsonStringFastCases() {
       AssertJSONDouble(
         "0e-" + TestCommon.Repeat("0", 1000000),
@@ -6902,9 +6903,17 @@ CBOREncodeOptions(false, false, true));
     public void TestFromJsonStringLongKindFullBad() {
       Console.WriteLine("FullBad 1");
       var jsonop = new JSONOptions("numberconversion=full");
-      string json = TestCommon.Repeat("7", 1000000) + "x";
+      string[] badjson = {
+        TestCommon.Repeat("7", 1000000) + "x",
+        "7x" + TestCommon.Repeat("7", 1000000),
+        TestCommon.Repeat("7", 1000000) + "e0x",
+        "-" + TestCommon.Repeat("7", 1000000) + "x",
+        "-7x" + TestCommon.Repeat("7", 1000000),
+        "-" + TestCommon.Repeat("7", 1000000) + "e0x",
+      };
+      foreach (string str in badjson) {
       try {
-        FromJSON(json, jsonop);
+        FromJSON(str, jsonop);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
         // NOTE: Intentionally empty
@@ -6912,30 +6921,9 @@ CBOREncodeOptions(false, false, true));
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      Console.WriteLine("FullBad 1a");
-      json = "7x" + TestCommon.Repeat("7", 1000000);
-      try {
-        FromJSON(json, jsonop);
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-
-      json = TestCommon.Repeat("7", 1000000) + "e0x";
-      try {
-        FromJSON(json, jsonop);
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
       }
       Console.WriteLine("FullBad 2");
-      json = TestCommon.Repeat("0", 1000000);
+      string json = TestCommon.Repeat("0", 1000000);
       try {
         FromJSON(json, jsonop);
         Assert.Fail("Should have failed");

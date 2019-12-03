@@ -80,7 +80,7 @@ namespace PeterO.Cbor {
                     c <<= 4;
                     c |= ch + 10 - 'a';
                   } else {
-                    this.reader.RaiseError (
+                    this.reader.RaiseError(
                       "Invalid Unicode escaped character");
                   }
                 }
@@ -105,8 +105,8 @@ namespace PeterO.Cbor {
                       c2 <<= 4;
                       c2 |= ch + 10 - 'a';
                     } else {
-                      this.reader.RaiseError("Invalid Unicode escaped" +
-"\u0020character");
+                      this.reader.RaiseError(
+                        "Invalid Unicode escaped character");
                     }
                   }
                   if ((c2 & 0xfc00) != 0xdc00) {
@@ -213,16 +213,14 @@ namespace PeterO.Cbor {
           }
           int cval = -(c - '0');
           int cstart = c;
-          StringBuilder sb = null;
           c = this.reader.ReadChar();
+          this.sb = sb ?? new StringBuilder();
+          this.sb.Remove(0, sb.Length);
+          this.sb.Append('-');
+          this.sb.Append((char)cstart);
           while (c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
             c == 'e' || c == 'E') {
-            if (sb == null) {
-              sb = new StringBuilder();
-              sb.Append('-');
-              sb.Append((char)cstart);
-            }
-            sb.Append((char)c);
+            this.sb.Append((char)c);
             c = this.reader.ReadChar();
           }
           // check if character can validly appear after a JSON number
@@ -230,17 +228,11 @@ namespace PeterO.Cbor {
               c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) {
             this.reader.RaiseError("Invalid character after JSON number");
           }
-          if (sb == null) {
-            // Single-digit number
-             str = new String(new char[] { '-', (char)cstart });
-           } else {
-            str = sb.ToString();
-          }
+          str = this.sb.ToString();
           obj = CBORDataUtilities.ParseJSONNumber(str, this.options);
           if (obj == null) {
               string errstr = (str.Length <= 100) ? str : (str.Substring(0,
-  100) +
-"...");
+  100) + "...");
               this.reader.RaiseError("JSON number can't be parsed. " + errstr);
             }
           if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)) {
@@ -260,40 +252,84 @@ namespace PeterO.Cbor {
         case '7':
         case '8':
         case '9': {
-          // Parse a number
+          // Parse a nonnegative number
           int cval = c - '0';
           int cstart = c;
-          StringBuilder sb = null;
+          var needObj = true;
           c = this.reader.ReadChar();
-          while (c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
-            c == 'e' || c == 'E') {
-            if (sb == null) {
-              sb = new StringBuilder();
-              sb.Append((char)cstart);
+          if (!(c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
+            c == 'e' || c == 'E')) {
+            // Optimize for common case where JSON number
+            // is a single digit without sign or exponent
+            obj = CBORDataUtilities.ParseSmallNumber(cval, this.options);
+            needObj = false;
+          } else if (c >= '0' && c <= '9') {
+            int csecond = c;
+            if (cstart == '0') {
+              // Leading zero followed by any digit is not allowed
+              this.reader.RaiseError("JSON number can't be parsed.");
             }
-            sb.Append((char)c);
+            cval = (cval * 10) + (int)(c - '0');
             c = this.reader.ReadChar();
+            if (c >= '0' && c <= '9') {
+              var digits = 2;
+              var ctmp = new int[10];
+              ctmp[0] = cstart;
+              ctmp[1] = csecond;
+              while (digits < 9 && (c >= '0' && c <= '9')) {
+                cval = (cval * 10) + (int)(c - '0');
+                ctmp[digits++] = c;
+                c = this.reader.ReadChar();
+              }
+              if (c =='e' || c=='E' || c=='.' || (c >= '0' && c <= '9')) {
+                // Not an all-digit number, or too long
+                this.sb = sb ?? new StringBuilder();
+                this.sb.Remove(0, sb.Length);
+                for (var vi = 0; vi < digits; ++vi) {
+                  this.sb.Append((char)ctmp[vi]);
+                }
+              } else {
+                obj = CBORDataUtilities.ParseSmallNumber(cval, this.options);
+                needObj = false;
+              }
+            } else if (!(c == '-' || c == '+' || c == '.' || c == 'e' || c
+== 'E')) {
+              // Optimize for common case where JSON number
+              // is two digits without sign, decimal point, or exponent
+              obj = CBORDataUtilities.ParseSmallNumber(cval, this.options);
+              needObj = false;
+            } else {
+              this.sb = sb ?? new StringBuilder();
+              this.sb.Remove(0, sb.Length);
+              this.sb.Append((char)cstart);
+              this.sb.Append((char)csecond);
+            }
+          } else {
+           this.sb = sb ?? new StringBuilder();
+           this.sb.Remove(0, sb.Length);
+           this.sb.Append((char)cstart);
           }
+          if (needObj) {
+            while (c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
+             c == 'e' || c == 'E') {
+             this.sb.Append((char)c);
+             c = this.reader.ReadChar();
+           }
           // check if character can validly appear after a JSON number
           if (c != ',' && c != ']' && c != '}' && c != -1 &&
               c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) {
             this.reader.RaiseError("Invalid character after JSON number");
           }
-          if (sb == null) {
-             // Single-digit number
-             str = new String(new char[] { (char)cstart });
-           } else {
-             str = sb.ToString();
-          }
+          str = this.sb.ToString();
           obj = CBORDataUtilities.ParseJSONNumber(str, this.options);
           if (obj == null) {
               string errstr = (str.Length <= 100) ? str : (str.Substring(0,
-  100) +
-"...");
+                     100) + "...");
               this.reader.RaiseError("JSON number can't be parsed. " + errstr);
             }
+          }
           if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)) {
-              nextChar[0] = c;
+            nextChar[0] = c;
           } else {
             nextChar[0] = SkipWhitespaceJSON(this.reader);
           }
@@ -395,7 +431,7 @@ namespace PeterO.Cbor {
           this.reader.RaiseError("Expected a ':' after a key");
         }
         // NOTE: Will overwrite existing value
-        myHashMap[key] = this.NextJSONValue (
+        myHashMap[key] = this.NextJSONValue(
             SkipWhitespaceJSON(this.reader),
             nextchar,
             depth);
@@ -432,7 +468,7 @@ namespace PeterO.Cbor {
           // Situation like '[,0,1,2]' or '[0,,1]'
           this.reader.RaiseError("Empty array element");
         }
-        myArrayList.Add (
+        myArrayList.Add(
           this.NextJSONValue(
             c,
             nextchar,
@@ -584,7 +620,7 @@ namespace PeterO.Cbor {
         case CBORType.Integer:
         case CBORType.FloatingPoint: {
           CBORObject untaggedObj = obj.Untag();
-          writer.WriteString (
+          writer.WriteString(
             CBORNumber.FromCBORObject(untaggedObj).ToJSONString());
           break;
         }

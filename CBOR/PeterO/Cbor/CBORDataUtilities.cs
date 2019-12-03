@@ -320,6 +320,24 @@ namespace PeterO.Cbor {
           options);
     }
 
+    internal static CBORObject ParseSmallNumber(int digit, JSONOptions
+options) {
+#if DEBUG
+       if (digit < 0) {
+         throw new ArgumentException("digit (" + digit + ") is not greater" +
+"\u0020or equal to 0");
+       }
+#endif
+
+       if (options != null && options.NumberConversion ==
+JSONOptions.ConversionMode.Double) {
+         return CBORObject.FromObject((double)digit);
+       } else {
+         // NOTE: Assumes digit is nonnegative, so PreserveNegativeZeros is irrelevant
+         return CBORObject.FromObject(digit);
+       }
+    }
+
     /// <summary>Parses a number whose format follows the JSON
     /// specification (RFC 8259) and converts that number to a CBOR
     /// object.</summary>
@@ -336,13 +354,6 @@ namespace PeterO.Cbor {
     /// <returns>A CBOR object that represents the parsed number. Returns
     /// null if the parsing fails, including if the string is null or empty
     /// or <paramref name='count'/> is 0 or less.</returns>
-    /// <exception cref="ArgumentException">Either <paramref
-    /// name='offset'/> or <paramref name='count'/> is less than 0 or
-    /// greater than <paramref name='str'/> 's length, or <paramref
-    /// name='str'/> 's length minus <paramref name='offset'/> is less than
-    /// <paramref name='count'/>.</exception>
-    /// <exception cref="ArgumentNullException">The parameter <paramref
-    /// name='str'/> is null.</exception>
     /// <remarks>Roughly speaking, a valid JSON number consists of an
     /// optional minus sign, one or more basic digits (starting with 1 to 9
     /// unless there is only one digit and that digit is 0), an optional
@@ -370,8 +381,10 @@ namespace PeterO.Cbor {
       JSONOptions.ConversionMode kind = options.NumberConversion;
       int endPos = offset + count;
       int initialOffset = offset;
-      if (str[0] == '-') {
+      var negative = false;
+      if (str[initialOffset] == '-') {
         ++offset;
+        negative = true;
       }
       var haveDecimalPoint = false;
       var haveDigits = false;
@@ -380,7 +393,8 @@ namespace PeterO.Cbor {
       int i = offset;
       // Check syntax
       int k = i;
-      if (endPos - 1 > k && str[k] == '0' && str[k + 1] == '0') {
+      if (endPos - 1 > k && str[k] == '0' && str[k + 1] >= '0' &&
+         str[k + 1] <= '9') {
         return null;
       }
       for (; k < endPos; ++k) {
@@ -427,10 +441,37 @@ namespace PeterO.Cbor {
           return null;
         }
       }
+      if (!haveExponent && !negative && !haveDecimalPoint &&
+         (endPos - initialOffset) < 10) {
+        // Very common case of all-digit JSON number strings
+        // of 9 digits or less
+        var v = 0;
+        for (var vi = initialOffset; vi < endPos; ++vi) {
+          v = v * 10 + (int)(str[vi] - '0');
+        }
+        if (kind == JSONOptions.ConversionMode.Double) {
+          return CBORObject.FromObject((double)v);
+        } else {
+          return CBORObject.FromObject(v);
+        }
+      }
       if (kind == JSONOptions.ConversionMode.Full) {
+        if (!haveDecimalPoint && !haveExponent) {
+          EInteger ei = EInteger.FromSubstring(str, initialOffset, endPos);
+          if (preserveNegativeZero && ei.IsZero && negative) {
+            // TODO: In next major version, change to EDecimal.NegativeZero
+            return CBORObject.FromFloatingPointBits(0x8000, 2);
+          }
+          return CBORObject.FromObject(ei);
+        }
         EDecimal ed = EDecimal.FromString(str, initialOffset, count);
-        if (!preserveNegativeZero && ed.IsZero && ed.IsNegative) {
-          ed = ed.Negate();
+        if (ed.IsZero && str[initialOffset] == '-') {
+          if (preserveNegativeZero && ed.Exponent.IsZero) {
+            // TODO: In next major version, use EDecimal
+            return CBORObject.FromFloatingPointBits(0x8000, 2);
+          } else if (!preserveNegativeZero) {
+            ed = ed.Negate();
+          }
         }
         return CBORObject.FromObject(ed);
       } else if (kind == JSONOptions.ConversionMode.Double) {
