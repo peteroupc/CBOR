@@ -111,21 +111,6 @@ Roughly speaking, a valid JSON number consists of an optional minus sign, one or
 A CBOR object that represents the parsed number. Returns null if the parsing fails, including if the string is null or empty or  <i>count</i>
  is 0 or less.
 
-<b>Exceptions:</b>
-
- * System.ArgumentException:
-Either  <i>offset</i>
- or  <i>count</i>
- is less than 0 or greater than  <i>str</i>
- 's length, or  <i>str</i>
- 's length minus  <i>offset</i>
- is less than  <i>count</i>
-.
-
- * System.ArgumentNullException:
-The parameter  <i>str</i>
- is null.
-
 <a id="ParseJSONNumber_string_PeterO_Cbor_JSONOptions"></a>
 ### ParseJSONNumber
 

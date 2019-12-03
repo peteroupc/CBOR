@@ -95,6 +95,7 @@ namespace PeterO.Cbor {
   /// <summary>Gets a value not documented yet.</summary>
   /// <summary>Gets a value not documented yet.</summary>
   /// <summary>Gets a value not documented yet.</summary>
+  /// <summary>Gets a value not documented yet.</summary>
     public int Sign {
       get {
         // TODO: Will return 2 if this is NaN; is this
