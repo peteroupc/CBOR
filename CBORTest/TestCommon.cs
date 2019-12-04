@@ -550,8 +550,8 @@ namespace Test {
 
     public static string Repeat(char c, int num) {
       if (num < 0) {
-        throw new ArgumentException("num (" + num + ") is not greater or" +
-"\u0020equal to 0");
+        throw new ArgumentException("num (" + num +
+           ") is not greater or equal to 0");
       }
       var sb = new StringBuilder(num);
       if (num > RepeatDivideThreshold) {
@@ -573,8 +573,8 @@ namespace Test {
 
     public static string Repeat(String str, int num) {
       if (num < 0) {
-        throw new ArgumentException("num (" + num + ") is not greater or" +
-"\u0020equal to 0");
+        throw new ArgumentException("num (" + num +
+           ") is not greater or equal to 0");
       }
       if (str == null) {
         throw new ArgumentNullException(nameof(str));

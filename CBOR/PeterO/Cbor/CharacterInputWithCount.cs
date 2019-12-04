@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using PeterO;
 using PeterO.Numbers;
 
@@ -17,6 +18,18 @@ namespace PeterO.Cbor {
 
     public void RaiseError(string str) {
       throw new CBORException(this.NewErrorString(str));
+    }
+
+    public void RaiseError(Exception ex) {
+      if (ex.InnerException == null) {
+        throw new CBORException(
+            this.NewErrorString(ex.Message),
+            ex);
+      } else {
+        throw new CBORException(
+            this.NewErrorString(ex.Message),
+            ex.InnerException);
+      }
     }
 
     public int Read(int[] chars, int index, int length) {
@@ -55,15 +68,7 @@ namespace PeterO.Cbor {
       try {
         c = this.ci.ReadChar();
       } catch (InvalidOperationException ex) {
-        if (ex.InnerException == null) {
-          throw new CBORException (
-            this.NewErrorString(ex.Message),
-            ex);
-        } else {
-          throw new CBORException (
-            this.NewErrorString(ex.Message),
-            ex.InnerException);
-        }
+        RaiseError(ex);
       }
       if (c >= 0) {
         ++this.offset;

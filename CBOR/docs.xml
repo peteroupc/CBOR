@@ -145,10 +145,6 @@
             <returns>A CBOR object that represents the parsed number. Returns
             null if the parsing fails, including if the string is null or empty
             or <paramref name='count'/> is 0 or less.</returns>
-            <exception cref='ArgumentException'>Either <paramref name='offset'/> or <paramref name='count'/> is less than 0 or
-            greater than <paramref name='str'/> 's length, or <paramref name='str'/> 's length minus <paramref name='offset'/> is less than
-            <paramref name='count'/>.</exception>
-            <exception cref='ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception>
             <remarks>Roughly speaking, a valid JSON number consists of an
             optional minus sign, one or more basic digits (starting with 1 to 9
             unless there is only one digit and that digit is 0), an optional
@@ -157,6 +153,7 @@
             one or more basic digits (the exponent). A string representing a
             valid JSON number is not allowed to contain white space characters,
             including spaces.</remarks>
+            <exception cref='ArgumentException'>Either <paramref name='offset'/> or <paramref name='count'/> is less than 0 or greater than <paramref name='str'/>'s length, or <paramref name='str'/>'s length minus <paramref name='offset'/> is less than <paramref name='count'/>.</exception><exception cref='ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,System.Int32,System.Int32,System.Boolean,PeterO.Cbor.JSONOptions)">
@@ -490,7 +487,7 @@
 </doc>
 <doc name="T:PeterO.Cbor.CBORException">
 
-            <summary>Exception thrown for errors involving CBOR data.</summary>
+            <summary>Exception thrown for errors involving CBOR data.<para>This library may throw exceptions of this type in certain cases, notably when errors occur, and may supply messages to those exceptions (accessible through the <c>Message</c> property in .NET or the <c>getMessage()</c> method in Java).  These messages are intended to be read by humans to help diagnose the error (or other cause of the exception); they are not intended to be parsed by computer programs, and the exact text of the messages may change at any time between versions of this library.</para></summary>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORException.#ctor">
@@ -773,7 +770,7 @@
 </doc>
 <doc name="P:PeterO.Cbor.CBORNumber.Sign">
 
-            <value>A value not documented yet.</value>
+            <value/>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORNumber.Subtract(PeterO.Cbor.CBORNumber)">
@@ -3118,9 +3115,7 @@
             in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by
             assuming that the first character read must be a byte-order mark or
             a nonzero basic character (U+0001 to U+007F). (In previous
-            versions, only UTF-8 was allowed.)
-            <para>If a JSON object has the same key, only the last given value
-            will be used for each duplicated key.</para></summary>
+            versions, only UTF-8 was allowed.)</summary>
             <param name='stream'>A readable data stream. The sequence of bytes
             read from the data stream must contain a single JSON object and not
             multiple objects.</param>
@@ -3141,9 +3136,7 @@
             in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by
             assuming that the first character read must be a byte-order mark or
             a nonzero basic character (U+0001 to U+007F). (In previous
-            versions, only UTF-8 was allowed.)
-            <para>By default, if a JSON object has the same key, only the last
-            given value will be used for each duplicated key.</para></summary>
+            versions, only UTF-8 was allowed.)</summary>
             <param name='stream'>A readable data stream. The sequence of bytes
             read from the data stream must contain a single JSON object and not
             multiple objects.</param>
@@ -3167,9 +3160,7 @@
             in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by
             assuming that the first character read must be a byte-order mark or
             a nonzero basic character (U+0001 to U+007F). (In previous
-            versions, only UTF-8 was allowed.)
-            <para>By default, if a JSON object has the same key, only the last
-            given value will be used for each duplicated key.</para></summary>
+            versions, only UTF-8 was allowed.)</summary>
             <param name='stream'>A readable data stream. The sequence of bytes
             read from the data stream must contain a single JSON object and not
             multiple objects.</param>
@@ -3854,12 +3845,10 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.ToString">
 
-            <summary>Returns this CBOR object in string form. The format is
-            intended to be human-readable, not machine-readable, the format is
-            not intended to be parsed, and the format may change at any time.
-            The returned string is not necessarily in JavaScript Object
+            <summary>Returns this CBOR object in a text form intended to be read by humans. The value returned by this method is not intended to be parsed by computer programs, and the exact text of the value may change at any time between versions of this library.
+            <para>The returned string is not necessarily in JavaScript Object
             Notation (JSON); to convert CBOR objects to JSON strings, use the
-            <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b> method instead.</summary>
+            <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b> method instead.  </para></summary>
             <returns>A text representation of this object.</returns>
 
 </doc>

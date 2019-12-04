@@ -345,8 +345,8 @@ JSONOptions.ConversionMode.Double) {
     /// <param name='offset'>An index, starting at 0, showing where the
     /// desired portion of <paramref name='str'/> begins.</param>
     /// <param name='count'>The length, in code units, of the desired
-    /// portion of <paramref name='str'/> (but not more than <paramref
-    /// name='str'/> 's length).</param>
+    /// portion of <paramref name='str'/> (but not more than <paramref name='str'/>
+    ///'s length).</param>
     /// <param name='options'>An object containing options to control how
     /// JSON numbers are decoded to CBOR objects. Can be null, in which
     /// case a JSONOptions object with all default properties is used
@@ -362,6 +362,12 @@ JSONOptions.ConversionMode.Double) {
     /// one or more basic digits (the exponent). A string representing a
     /// valid JSON number is not allowed to contain white space characters,
     /// including spaces.</remarks>
+    /// <exception cref="ArgumentException">Either <paramref name='offset'/> or
+    ///<paramref name='count'/> is less than 0 or greater than <paramref
+    ///name='str'/>'s length, or <paramref name='str'/>'s length minus <paramref
+    ///name='offset'/> is less than <paramref name='count'/>.</exception><exception
+    ///cref="ArgumentNullException">The parameter <paramref name='str'/> is
+    ///null.</exception>
     public static CBORObject ParseJSONNumber(
       string str,
       int offset,
