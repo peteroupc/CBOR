@@ -157,7 +157,7 @@ namespace Test {
           throw new ArgumentNullException(nameof(o2));
         }
         if (!o2.Equals(o)) {
-          Assert.Fail (
+          Assert.Fail(
             String.Empty + o + " equals " + o2 + " but not vice versa");
         }
         // Test for the guarantee that equal objects
@@ -165,7 +165,7 @@ namespace Test {
         if (o2.GetHashCode() != o.GetHashCode()) {
           // Don't use Assert.AreEqual directly because it has
           // quite a lot of overhead
-          Assert.Fail (
+          Assert.Fail(
             String.Empty + o + " and " + o2 + " don't have equal hash codes");
         }
       } else {
@@ -227,7 +227,7 @@ namespace Test {
     public static void CompareTestNotEqual<T>(T o1, T o2, string msg) where T :
       IComparable<T> {
       if (CompareTestReciprocal(o1, o2) == 0) {
-        string str = msg + "\r\n" + ObjectMessages (
+        string str = msg + "\r\n" + ObjectMessages(
           o1,
           o2,
           "Unexpectedly equal: " + CompareTestReciprocal(o1, o2));
@@ -248,7 +248,7 @@ namespace Test {
     public static void CompareTestEqual<T>(T o1, T o2, string msg) where T :
       IComparable<T> {
       if (CompareTestReciprocal(o1, o2) != 0) {
-        string str = msg + "\r\n" + ObjectMessages (
+        string str = msg + "\r\n" + ObjectMessages(
           o1,
           o2,
           "Not equal: " + CompareTestReciprocal(o1, o2));
@@ -316,7 +316,7 @@ namespace Test {
     public static void CompareTestLess<T>(T o1, T o2, string msg) where T :
       IComparable<T> {
       if (CompareTestReciprocal(o1, o2) >= 0) {
-        string str = msg + "\r\n" + ObjectMessages (
+        string str = msg + "\r\n" + ObjectMessages(
           o1,
           o2,
           "Not less: " + CompareTestReciprocal(o1, o2));
@@ -327,7 +327,7 @@ namespace Test {
     public static void CompareTestLessEqual<T>(T o1, T o2, string msg)
     where T : IComparable<T> {
       if (CompareTestReciprocal(o1, o2) > 0) {
-        string str = msg + "\r\n" + ObjectMessages (
+        string str = msg + "\r\n" + ObjectMessages(
           o1,
           o2,
           "Not less or equal: " + CompareTestReciprocal(o1, o2));
@@ -338,7 +338,7 @@ namespace Test {
     public static void CompareTestGreater<T>(T o1, T o2, string msg) where T :
       IComparable<T> {
       if (CompareTestReciprocal(o1, o2) <= 0) {
-        string str = msg + "\r\n" + ObjectMessages (
+        string str = msg + "\r\n" + ObjectMessages(
           o1,
           o2,
           "Not greater: " + CompareTestReciprocal(o1, o2));
@@ -349,7 +349,7 @@ namespace Test {
     public static void CompareTestGreaterEqual<T>(T o1, T o2, string msg) where
     T : IComparable<T> {
       if (CompareTestReciprocal(o1, o2) < 0) {
-        string str = msg + "\r\n" + ObjectMessages (
+        string str = msg + "\r\n" + ObjectMessages(
           o1,
           o2,
           "Not greater or equal: " + CompareTestReciprocal(o1, o2));
@@ -546,19 +546,45 @@ namespace Test {
       String s) {
       return s + ":\n" + o1 + " and\n" + o2 + " and\n" + o3;
     }
+    private const int RepeatDivideThreshold = 10000;
 
-    public static String Repeat(char c, int num) {
-      var sb = new StringBuilder();
-      for (var i = 0; i < num; ++i) {
-        sb.Append(c);
+    public static string Repeat(char c, int num) {
+      if (num < 0) {
+        throw new ArgumentException("num (" + num + ") is not greater or" +
+"\u0020equal to 0");
+      }
+      var sb = new StringBuilder(num);
+      if (num > RepeatDivideThreshold) {
+        var sb2 = Repeat(c, RepeatDivideThreshold);
+        var count = num / RepeatDivideThreshold;
+        var rem = num % RepeatDivideThreshold;
+        for (var i = 0; i < count; ++i) {
+          sb.Append(sb2);
+          num -= RepeatDivideThreshold;
+        }
+        sb.Append(Repeat(c, rem));
+      } else {
+        for (var i = 0; i < num; ++i) {
+          sb.Append(c);
+        }
       }
       return sb.ToString();
     }
 
-    public static String Repeat(String c, int num) {
-      var sb = new StringBuilder();
+    public static string Repeat(String str, int num) {
+      if (num < 0) {
+        throw new ArgumentException("num (" + num + ") is not greater or" +
+"\u0020equal to 0");
+      }
+      if (str == null) {
+        throw new ArgumentNullException(nameof(str));
+      }
+      if (str.Length == 1) {
+        return Repeat(str[0], num);
+      }
+      var sb = new StringBuilder(num * str.Length);
       for (var i = 0; i < num; ++i) {
-        sb.Append(c);
+        sb.Append(str);
       }
       return sb.ToString();
     }

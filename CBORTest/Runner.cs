@@ -32,8 +32,8 @@ namespace PeterO {
     }
 
     public static void Main() {
-new Test.CBORObjectTest().TestFromJsonStringFastCases();
-return;
+      new Test.CBORObjectTest().TestFromJsonStringFastCases();
+      return;
       const String ValueParam = "TestFromJsonString";
       // Run all the tests in this assembly
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {

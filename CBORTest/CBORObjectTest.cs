@@ -285,7 +285,7 @@ JSONOptions("allowduplicatekeys=false");
     }
 
     private static EDecimal AsED(CBORObject obj) {
-      return (EDecimal)obj.ToObject(typeof(EDecimal));
+      return(EDecimal)obj.ToObject(typeof(EDecimal));
     }
     [Test]
     public void TestAsNumberAdd() {
@@ -491,7 +491,7 @@ JSONOptions("allowduplicatekeys=false");
               numberinfo["number"].AsString()));
         {
           var dtemp = (double)EDecimal.FromString(
-  numberinfo["number"].AsString()).ToDouble();
+              numberinfo["number"].AsString()).ToDouble();
           double dtemp2 = cbornumber.AsDouble();
           AreEqualExact(dtemp, dtemp2);
         }
@@ -880,7 +880,7 @@ JSONOptions("allowduplicatekeys=false");
               numberinfo["number"].AsString()));
         {
           var ftemp = (float)EDecimal.FromString(
-  numberinfo["number"].AsString()).ToSingle();
+              numberinfo["number"].AsString()).ToSingle();
           float ftemp2 = cbornumber.AsSingle();
           AreEqualExact(ftemp, ftemp2);
         }
@@ -1991,7 +1991,7 @@ CBOREncodeOptions("allowduplicatekeys=0"));
               i2s);
           }
           bytes =
-ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes(new
+            ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes(new
 CBOREncodeOptions(false, false, true));
           if (bytes.Length != ranges[i + 2]) {
             string i2s = TestCommon.IntToString(j);
@@ -2387,7 +2387,7 @@ CBOREncodeOptions(false, false, true));
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.FromJSONString("[]", (CBOREncodeOptions)null);
+        CBORObject.FromJSONString("[]",(CBOREncodeOptions)null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
         // NOTE: Intentionally empty
@@ -2396,7 +2396,7 @@ CBOREncodeOptions(false, false, true));
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.FromJSONString("[]", (JSONOptions)null);
+        CBORObject.FromJSONString("[]",(JSONOptions)null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
         // NOTE: Intentionally empty
@@ -2626,13 +2626,13 @@ CBOREncodeOptions(false, false, true));
       CBORObject cbor;
       EnumClass ec;
       cbor = CBORObject.FromObject("Value1");
-      ec = (EnumClass)cbor.ToObject(typeof(EnumClass));
+      ec =(EnumClass)cbor.ToObject(typeof(EnumClass));
       Assert.AreEqual(EnumClass.Value1, ec);
       cbor = CBORObject.FromObject("Value2");
-      ec = (EnumClass)cbor.ToObject(typeof(EnumClass));
+      ec =(EnumClass)cbor.ToObject(typeof(EnumClass));
       Assert.AreEqual(EnumClass.Value2, ec);
       cbor = CBORObject.FromObject("Value3");
-      ec = (EnumClass)cbor.ToObject(typeof(EnumClass));
+      ec =(EnumClass)cbor.ToObject(typeof(EnumClass));
       Assert.AreEqual(EnumClass.Value3, ec);
       cbor = CBORObject.FromObject("ValueXYZ");
       try {
@@ -3286,7 +3286,7 @@ CBOREncodeOptions(false, false, true));
     [Test]
     public void TestAsNumberIsNegativeInfinity() {
       Assert.IsFalse(CBORObject.FromObject(
-  0).AsNumber().IsNegativeInfinity());
+          0).AsNumber().IsNegativeInfinity());
 
       Assert.IsFalse(
         CBORObject.PositiveInfinity.AsNumber().IsNegativeInfinity());
@@ -3312,7 +3312,7 @@ CBOREncodeOptions(false, false, true));
     [Test]
     public void TestAsNumberIsPositiveInfinity() {
       Assert.IsFalse(CBORObject.FromObject(
-  0).AsNumber().IsPositiveInfinity());
+          0).AsNumber().IsPositiveInfinity());
 
       Assert.IsTrue(
         CBORObject.PositiveInfinity.AsNumber().IsPositiveInfinity());
@@ -6623,7 +6623,7 @@ CBOREncodeOptions(false, false, true));
         for (var i = 0; i < 100000; ++i) {
           bytes[0] = (byte)0xfa;
           for (var j = 1; j <= 4; ++j) {
-            bytes[j] = (byte)r.UniformInt(256);
+            bytes[j] =(byte)r.UniformInt(256);
           }
 
           CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
@@ -6649,7 +6649,7 @@ CBOREncodeOptions(false, false, true));
         for (var i = 0; i < 100000; ++i) {
           bytes[0] = (byte)0xfb;
           for (var j = 1; j <= 8; ++j) {
-            bytes[j] = (byte)r.UniformInt(256);
+            bytes[j] =(byte)r.UniformInt(256);
           }
           CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
           if (!cbor.AsNumber().IsNaN()) {
@@ -6767,7 +6767,7 @@ CBOREncodeOptions(false, false, true));
       }
       foreach (string dtstr in dateList) {
         CBORObject cbor = CBORObject.FromObjectAndTag(dtstr, 0);
-        var dt = (DateTime)cbor.ToObject(typeof(DateTime));
+        var dt =(DateTime)cbor.ToObject(typeof(DateTime));
         ToObjectTest.TestToFromObjectRoundTrip(dt);
       }
     }
@@ -6806,78 +6806,106 @@ CBOREncodeOptions(false, false, true));
     [Test]
     [Timeout(5000)]
     public void TestFromJsonStringFastCases() {
+      var op = new JSONOptions("numberconversion=double");
+      Assert.AreEqual(
+        JSONOptions.ConversionMode.Double,
+        op.NumberConversion);
+      op = new JSONOptions("numberconversion=intorfloat");
+      Assert.AreEqual(
+        JSONOptions.ConversionMode.IntOrFloat,
+        op.NumberConversion);
+      // var sw = new System.Diagnostics.Stopwatch();
+      // sw.Start();
       AssertJSONDouble(
         "0e-" + TestCommon.Repeat("0", 1000000),
         "double",
         0.0);
+      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONDouble(
         "0." + TestCommon.Repeat("0", 1000000),
         "double",
         0.0);
+      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONDouble(
         "0." + TestCommon.Repeat("0", 1000000) + "e-9999999999999",
         "double",
         0.0);
+      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONDouble(
         TestCommon.Repeat("3", 1000000) + "e-9999999999999",
         "double",
         0.0);
+      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONDouble(
         TestCommon.Repeat("3", 1000000) + "e-9999999999999",
         "intorfloat",
         0.0);
+      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONInteger(
         TestCommon.Repeat("3", 1000000) + "e-9999999999999",
         "intorfloatfromdouble",
         0);
+      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONDouble(
         "0." + TestCommon.Repeat("0", 1000000) + "e-99999999",
         "double",
         0.0);
+      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONDouble(
         TestCommon.Repeat("3", 1000000) + "e-99999999",
         "double",
         0.0);
+      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONDouble(
         TestCommon.Repeat("3", 1000000) + "e-99999999",
         "intorfloat",
         0.0);
+      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONInteger(
         TestCommon.Repeat("3", 1000000) + "e-99999999",
         "intorfloatfromdouble",
         0);
+      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONInteger(
         "0e-" + TestCommon.Repeat("0", 1000000),
         "intorfloat",
         0);
+      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONInteger(
         "0e-" + TestCommon.Repeat("0", 1000000),
         "intorfloatfromdouble",
         0);
+      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONInteger(
         "-0e-" + TestCommon.Repeat("0", 1000000),
         "intorfloat",
         0);
+      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONInteger(
         "-0e-" + TestCommon.Repeat("0", 1000000),
         "intorfloatfromdouble",
         0);
+      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONInteger(
         "0." + TestCommon.Repeat("0", 1000000),
         "intorfloat",
         0);
+      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONInteger(
         "0." + TestCommon.Repeat("0", 1000000),
         "intorfloatfromdouble",
         0);
+      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONInteger(
         "-0." + TestCommon.Repeat("0", 1000000),
         "intorfloat",
         0);
+      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONInteger(
         "-0." + TestCommon.Repeat("0", 1000000),
         "intorfloatfromdouble",
         0);
+      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
     }
 
     [Test]
@@ -6912,15 +6940,15 @@ CBOREncodeOptions(false, false, true));
         "-" + TestCommon.Repeat("7", 1000000) + "e0x",
       };
       foreach (string str in badjson) {
-      try {
-        FromJSON(str, jsonop);
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
+        try {
+          FromJSON(str, jsonop);
+          Assert.Fail("Should have failed");
+        } catch (CBORException) {
+          // NOTE: Intentionally empty
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
+        }
       }
       Console.WriteLine("FullBad 2");
       string json = TestCommon.Repeat("0", 1000000);
@@ -7047,28 +7075,28 @@ CBOREncodeOptions(false, false, true));
       .AddConverter(typeof(string), new TestConverter());
       CBORObject cbor = CBORObject.FromObject("UpPeR");
       {
-        var stringTemp = (string)cbor.ToObject(typeof(string), mapper);
+        var stringTemp =(string)cbor.ToObject(typeof(string), mapper);
         Assert.AreEqual(
           "upper",
           stringTemp);
       }
       cbor = CBORObject.FromObject("TRUE");
       {
-        var stringTemp = (string)cbor.ToObject(typeof(string), mapper);
+        var stringTemp =(string)cbor.ToObject(typeof(string), mapper);
         Assert.AreEqual(
           "true",
           stringTemp);
       }
       cbor = CBORObject.FromObject("false");
       {
-        var stringTemp = (string)cbor.ToObject(typeof(string), mapper);
+        var stringTemp =(string)cbor.ToObject(typeof(string), mapper);
         Assert.AreEqual(
           "false",
           stringTemp);
       }
       cbor = CBORObject.FromObject("FALSE");
       {
-        var stringTemp = (string)cbor.ToObject(typeof(string), mapper);
+        var stringTemp =(string)cbor.ToObject(typeof(string), mapper);
         Assert.AreEqual(
           "false",
           stringTemp);

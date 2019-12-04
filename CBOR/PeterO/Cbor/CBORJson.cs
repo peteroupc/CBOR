@@ -214,8 +214,8 @@ namespace PeterO.Cbor {
           int cval = -(c - '0');
           int cstart = c;
           c = this.reader.ReadChar();
-          this.sb = sb ?? new StringBuilder();
-          this.sb.Remove(0, sb.Length);
+          this.sb = this.sb ?? new StringBuilder();
+          this.sb.Remove(0, this.sb.Length);
           this.sb.Append('-');
           this.sb.Append((char)cstart);
           while (c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
@@ -225,18 +225,18 @@ namespace PeterO.Cbor {
           }
           // check if character can validly appear after a JSON number
           if (c != ',' && c != ']' && c != '}' && c != -1 &&
-              c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) {
+            c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) {
             this.reader.RaiseError("Invalid character after JSON number");
           }
           str = this.sb.ToString();
           obj = CBORDataUtilities.ParseJSONNumber(str, this.options);
           if (obj == null) {
-              string errstr = (str.Length <= 100) ? str : (str.Substring(0,
-  100) + "...");
-              this.reader.RaiseError("JSON number can't be parsed. " + errstr);
-            }
+            string errstr = (str.Length <= 100) ? str : (str.Substring(0,
+                  100) + "...");
+            this.reader.RaiseError("JSON number can't be parsed. " + errstr);
+          }
           if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)) {
-              nextChar[0] = c;
+            nextChar[0] = c;
           } else {
             nextChar[0] = SkipWhitespaceJSON(this.reader);
           }
@@ -257,8 +257,8 @@ namespace PeterO.Cbor {
           int cstart = c;
           var needObj = true;
           c = this.reader.ReadChar();
-          if (!(c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
-            c == 'e' || c == 'E')) {
+          if (!(c == '-' || c == '+' || c == '.' ||(c >= '0' && c <= '9') ||
+              c == 'e' || c == 'E')) {
             // Optimize for common case where JSON number
             // is a single digit without sign or exponent
             obj = CBORDataUtilities.ParseSmallNumber(cval, this.options);
@@ -281,10 +281,10 @@ namespace PeterO.Cbor {
                 ctmp[digits++] = c;
                 c = this.reader.ReadChar();
               }
-              if (c =='e' || c=='E' || c=='.' || (c >= '0' && c <= '9')) {
+              if (c == 'e' || c == 'E' || c == '.' || (c >= '0' && c <= '9')) {
                 // Not an all-digit number, or too long
-                this.sb = sb ?? new StringBuilder();
-                this.sb.Remove(0, sb.Length);
+                this.sb = this.sb ?? new StringBuilder();
+                this.sb.Remove(0, this.sb.Length);
                 for (var vi = 0; vi < digits; ++vi) {
                   this.sb.Append((char)ctmp[vi]);
                 }
@@ -293,38 +293,38 @@ namespace PeterO.Cbor {
                 needObj = false;
               }
             } else if (!(c == '-' || c == '+' || c == '.' || c == 'e' || c
-== 'E')) {
+                == 'E')) {
               // Optimize for common case where JSON number
               // is two digits without sign, decimal point, or exponent
               obj = CBORDataUtilities.ParseSmallNumber(cval, this.options);
               needObj = false;
             } else {
-              this.sb = sb ?? new StringBuilder();
-              this.sb.Remove(0, sb.Length);
+              this.sb = this.sb ?? new StringBuilder();
+              this.sb.Remove(0, this.sb.Length);
               this.sb.Append((char)cstart);
               this.sb.Append((char)csecond);
             }
           } else {
-           this.sb = sb ?? new StringBuilder();
-           this.sb.Remove(0, sb.Length);
-           this.sb.Append((char)cstart);
+            this.sb = this.sb ?? new StringBuilder();
+            this.sb.Remove(0, this.sb.Length);
+            this.sb.Append((char)cstart);
           }
           if (needObj) {
             while (c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
-             c == 'e' || c == 'E') {
-             this.sb.Append((char)c);
-             c = this.reader.ReadChar();
-           }
-          // check if character can validly appear after a JSON number
-          if (c != ',' && c != ']' && c != '}' && c != -1 &&
+              c == 'e' || c == 'E') {
+              this.sb.Append((char)c);
+              c = this.reader.ReadChar();
+            }
+            // check if character can validly appear after a JSON number
+            if (c != ',' && c != ']' && c != '}' && c != -1 &&
               c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) {
-            this.reader.RaiseError("Invalid character after JSON number");
-          }
-          str = this.sb.ToString();
-          obj = CBORDataUtilities.ParseJSONNumber(str, this.options);
-          if (obj == null) {
+              this.reader.RaiseError("Invalid character after JSON number");
+            }
+            str = this.sb.ToString();
+            obj = CBORDataUtilities.ParseJSONNumber(str, this.options);
+            if (obj == null) {
               string errstr = (str.Length <= 100) ? str : (str.Substring(0,
-                     100) + "...");
+                    100) + "...");
               this.reader.RaiseError("JSON number can't be parsed. " + errstr);
             }
           }
@@ -580,31 +580,31 @@ namespace PeterO.Cbor {
     }
 
     private static void PopRefIfNeeded(IList<CBORObject> stack, bool pop) {
-        if (pop && stack != null) {
-          stack.RemoveAt(stack.Count - 1);
-        }
+      if (pop && stack != null) {
+        stack.RemoveAt(stack.Count - 1);
+      }
     }
 
     private static bool CheckCircularRef(
       IList<CBORObject> stack,
       CBORObject parent,
       CBORObject child) {
-       if (child.Type != CBORType.Array && child.Type != CBORType.Map) {
-         return false;
-       }
-       CBORObject childUntag = child.Untag();
-       if (parent.Untag() == childUntag) {
-          throw new CBORException("Circular reference in CBOR object");
-       }
-       if (stack != null) {
-         foreach (CBORObject o in stack) {
-             if (o.Untag() == childUntag) {
-                throw new CBORException("Circular reference in CBOR object");
-             }
+      if (child.Type != CBORType.Array && child.Type != CBORType.Map) {
+        return false;
+      }
+      CBORObject childUntag = child.Untag();
+      if (parent.Untag() == childUntag) {
+        throw new CBORException("Circular reference in CBOR object");
+      }
+      if (stack != null) {
+        foreach (CBORObject o in stack) {
+          if (o.Untag() == childUntag) {
+            throw new CBORException("Circular reference in CBOR object");
           }
-       }
-       stack.Add(child);
-       return true;
+        }
+      }
+      stack.Add(child);
+      return true;
     }
 
     internal static void WriteJSONToInternal(
@@ -743,25 +743,25 @@ namespace PeterO.Cbor {
               string str = null;
               switch (key.Type) {
                 case CBORType.TextString:
-                   str = key.AsString();
-                   break;
+                  str = key.AsString();
+                  break;
                 case CBORType.Array:
                 case CBORType.Map: {
-                   var sb = new StringBuilder();
-                   var sw = new StringOutput(sb);
-                   bool pop = CheckCircularRef(stack, obj, key);
-                   WriteJSONToInternal(key, sw, options, stack);
-                   PopRefIfNeeded(stack, pop);
-                   str = sb.ToString();
-                   break;
+                  var sb = new StringBuilder();
+                  var sw = new StringOutput(sb);
+                  bool pop = CheckCircularRef(stack, obj, key);
+                  WriteJSONToInternal(key, sw, options, stack);
+                  PopRefIfNeeded(stack, pop);
+                  str = sb.ToString();
+                  break;
                 }
                 default: str = key.ToJSONString(options);
-                   break;
+                  break;
               }
               if (stringMap.ContainsKey(str)) {
                 throw new CBORException(
-                   "Duplicate JSON string equivalents of map" +
-                   "\u0020keys");
+                  "Duplicate JSON string equivalents of map" +
+                  "\u0020keys");
               }
               stringMap[str] = value;
             }
@@ -786,8 +786,9 @@ namespace PeterO.Cbor {
           }
           break;
         }
-        default: throw new InvalidOperationException("Unexpected item" +
-"\u0020type");
+        default:
+          throw new InvalidOperationException("Unexpected item" +
+            "\u0020type");
       }
     }
   }
