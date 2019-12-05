@@ -89,7 +89,8 @@ namespace PeterO.Cbor {
       return CBORObject.FromObject(this.value);
     }
 
-  /// <value/>
+  /// <value>A value not documented yet.</value>
+  /// <summary>Gets a value not documented yet.</summary>
     public int Sign {
       get {
         // TODO: Will return 2 if this is NaN; is this

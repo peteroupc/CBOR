@@ -68,7 +68,7 @@ namespace PeterO.Cbor {
       try {
         c = this.ci.ReadChar();
       } catch (InvalidOperationException ex) {
-        RaiseError(ex);
+        this.RaiseError(ex);
       }
       if (c >= 0) {
         ++this.offset;

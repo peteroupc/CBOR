@@ -11,6 +11,8 @@ using System.Text;
 using PeterO;
 using PeterO.Numbers;
 
+// TODO: In JSONOptions, consider rejecting unknown conversion modes
+// TODO: In CBORObject, consider adding WithTag method
 namespace PeterO.Cbor {
   /// <summary>Contains methods useful for reading and writing data, with
   /// a focus on CBOR.</summary>
@@ -320,6 +322,26 @@ namespace PeterO.Cbor {
           options);
     }
 
+    internal static CBORObject ParseSmallNumberAsNegative(
+      int digit,
+      JSONOptions options) {
+#if DEBUG
+       if (digit <= 0) {
+         throw new ArgumentException("digit (" + digit + ") is not greater" +
+"\u0020than 0");
+       }
+#endif
+
+       if (options != null && options.NumberConversion ==
+             JSONOptions.ConversionMode.Double) {
+         return CBORObject.FromObject((double)(-digit));
+       } else {
+         // NOTE: Assumes digit is greater than zero, so PreserveNegativeZeros is
+         // irrelevant
+         return CBORObject.FromObject(-digit);
+       }
+    }
+
     internal static CBORObject ParseSmallNumber(int digit, JSONOptions
 options) {
 #if DEBUG
@@ -393,11 +415,13 @@ JSONOptions.ConversionMode.Double) {
         ++offset;
         negative = true;
       }
+      var numOffset = offset;
       var haveDecimalPoint = false;
       var haveDigits = false;
       var haveDigitsAfterDecimal = false;
       var haveExponent = false;
       int i = offset;
+      var decimalPointPos = -1;
       // Check syntax
       int k = i;
       if (endPos - 1 > k && str[k] == '0' && str[k + 1] >= '0' &&
@@ -407,17 +431,15 @@ JSONOptions.ConversionMode.Double) {
       for (; k < endPos; ++k) {
         if (str[k] >= '0' && str[k] <= '9') {
           haveDigits = true;
-          if (haveDecimalPoint) {
-            haveDigitsAfterDecimal = true;
-          }
+          haveDigitsAfterDecimal |= haveDecimalPoint;
         } else if (str[k] == '.') {
-          if (!haveDigits) {
-            // no digits before the decimal point
-            return null;
-          } else if (haveDecimalPoint) {
+          if (!haveDigits || haveDecimalPoint) {
+            // no digits before the decimal point,
+            // or decimal point already seen
             return null;
           }
           haveDecimalPoint = true;
+          decimalPointPos = k;
         } else if (str[k] == 'E' || str[k] == 'e') {
           ++k;
           haveExponent = true;
@@ -448,18 +470,23 @@ JSONOptions.ConversionMode.Double) {
           return null;
         }
       }
-      if (!haveExponent && !negative && !haveDecimalPoint &&
-         (endPos - initialOffset) < 10) {
+      if (!haveExponent && !haveDecimalPoint &&
+         (endPos - numOffset) <= 16) {
         // Very common case of all-digit JSON number strings
-        // of 9 digits or less
-        var v = 0;
-        for (var vi = initialOffset; vi < endPos; ++vi) {
+        // less than 2^53 (with or without number sign)
+        long v = 0L;
+        for (var vi = numOffset; vi < endPos; ++vi) {
           v = v * 10 + (int)(str[vi] - '0');
         }
-        if (kind == JSONOptions.ConversionMode.Double) {
-          return CBORObject.FromObject((double)v);
-        } else {
-          return CBORObject.FromObject(v);
+        if ((v != 0 || !negative) && v < (1L << 53) - 1) {
+          if (negative) {
+            v = -v;
+          }
+          if (kind == JSONOptions.ConversionMode.Double) {
+            return CBORObject.FromObject((double)v);
+          } else {
+            return CBORObject.FromObject(v);
+          }
         }
       }
       if (kind == JSONOptions.ConversionMode.Full) {
@@ -471,8 +498,28 @@ JSONOptions.ConversionMode.Double) {
           }
           return CBORObject.FromObject(ei);
         }
+        if (!haveExponent && haveDecimalPoint && (endPos - numOffset) <= 19) {
+          // No more than 18 digits plus one decimal point (which
+          // should fit a long)
+          long lv = 0L;
+          int expo = -(endPos - (decimalPointPos + 1));
+          for (var vi = numOffset; vi < decimalPointPos; ++vi) {
+            lv = checked(lv * 10 + (int)(str[vi] - '0'));
+          }
+          for (var vi = decimalPointPos + 1; vi < endPos; ++vi) {
+            lv = checked(lv * 10 + (int)(str[vi] - '0'));
+          }
+          if (negative) {
+            lv = -lv;
+          }
+          if (!negative || lv != 0) {
+            CBORObject cbor = CBORObject.NewArray()
+                .Add(lv).Add(expo);
+            return CBORObject.FromObjectAndTag(cbor, 4);
+          }
+        }
         EDecimal ed = EDecimal.FromString(str, initialOffset, count);
-        if (ed.IsZero && str[initialOffset] == '-') {
+        if (ed.IsZero && negative) {
           if (preserveNegativeZero && ed.Exponent.IsZero) {
             // TODO: In next major version, use EDecimal
             return CBORObject.FromFloatingPointBits(0x8000, 2);

@@ -32,7 +32,6 @@ namespace PeterO {
     }
 
     public static void Main() {
-return;
      const String ValueParam = "TestFromJsonString";
       // Run all the tests in this assembly
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {

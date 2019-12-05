@@ -247,7 +247,7 @@ namespace PeterO.Cbor {
         }
         case '-': {
           // Parse a negative number
-          return NextJSONNegativeNumber(nextChar);
+          return this.NextJSONNegativeNumber(nextChar);
         }
         case '0':
         case '1':
@@ -264,7 +264,7 @@ namespace PeterO.Cbor {
           int cstart = c;
           var needObj = true;
           c = this.reader.ReadChar();
-          if (!(c == '-' || c == '+' || c == '.' ||(c >= '0' && c <= '9') ||
+          if (!(c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
               c == 'e' || c == 'E')) {
             // Optimize for common case where JSON number
             // is a single digit without sign or exponent

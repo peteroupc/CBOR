@@ -1843,7 +1843,7 @@ checked(size + 5) : checked(size + 9);
         if (exponent.CanFitInInt64()) {
           tag = 5;
           cbor = CBORObject.NewArray()
-             .Add(exponent.ToInt64Checked()) .Add(bigValue.Mantissa);
+             .Add(exponent.ToInt64Checked()).Add(bigValue.Mantissa);
            } else {
           tag = (exponent.GetSignedBitLengthAsEInteger().CompareTo(64) > 0) ?
             265 : 5;
@@ -1958,7 +1958,7 @@ checked(size + 5) : checked(size + 9);
         if (exponent.CanFitInInt64()) {
           tag = 4;
           cbor = CBORObject.NewArray()
-             .Add(exponent.ToInt64Checked()) .Add(bigValue.Mantissa);
+             .Add(exponent.ToInt64Checked()).Add(bigValue.Mantissa);
            } else {
           tag = (exponent.GetSignedBitLengthAsEInteger().CompareTo(64) > 0) ?
             264 : 4;
@@ -1995,8 +1995,8 @@ checked(size + 5) : checked(size + 9);
 if (value >= 0 && value < 24) {
   return FixedObjects[value];
 } else {
- return (value >= -24 && value < 0) ? (FixedObjects[0x20 - (value + 1)]) :
-(FromObject((long)value));
+ return (value >= -24 && value < 0) ? FixedObjects[0x20 - (value + 1)] :
+FromObject((long)value);
 }
     }
 
@@ -2009,8 +2009,8 @@ if (value >= 0 && value < 24) {
 if (value >= 0 && value < 24) {
   return FixedObjects[value];
 } else {
- return (value >= -24 && value < 0) ? (FixedObjects[0x20 - (value + 1)]) :
-(FromObject((long)value));
+ return (value >= -24 && value < 0) ? FixedObjects[0x20 - (value + 1)] :
+FromObject((long)value);
 }
     }
 
@@ -2886,10 +2886,18 @@ if (value >= 0 && value < 24) {
       }
     }
 
+  /// <summary>Not documented yet.</summary>
+  /// <summary>Not documented yet.</summary>
+  /// <returns/>
+  /// <param name='bytes'>Not documented yet.</param>
+  /// <param name='jsonoptions'>Not documented yet.</param>
+  /// <exception cref='ArgumentNullException'>The parameter <paramref
+  /// name='bytes'/> or <paramref name='jsonoptions'/> is
+  /// null.</exception>
     public static CBORObject FromJSONBytes(
       byte[] bytes,
       JSONOptions jsonoptions) {
-      if ((bytes) == null) {
+      if (bytes == null) {
         throw new ArgumentNullException(nameof(bytes));
       }
       if (jsonoptions == null) {
@@ -5220,7 +5228,7 @@ this.MostOuterTag.Equals(bigTagValue);
     }
 
     /// <summary>
-    /// Converts this object to a string in JavaScript Object
+    ///  Converts this object to a string in JavaScript Object
     /// Notation (JSON) format, using the specified options to
     /// control the encoding process. This function works not
     /// only with arrays and maps, but also integers, strings,

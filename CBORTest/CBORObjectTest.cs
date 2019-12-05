@@ -285,7 +285,7 @@ JSONOptions("allowduplicatekeys=false");
     }
 
     private static EDecimal AsED(CBORObject obj) {
-      return(EDecimal)obj.ToObject(typeof(EDecimal));
+      return (EDecimal)obj.ToObject(typeof(EDecimal));
     }
     [Test]
     public void TestAsNumberAdd() {
@@ -2387,7 +2387,7 @@ CBOREncodeOptions(false, false, true));
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.FromJSONString("[]",(CBOREncodeOptions)null);
+        CBORObject.FromJSONString("[]", (CBOREncodeOptions)null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
         // NOTE: Intentionally empty
@@ -2396,7 +2396,7 @@ CBOREncodeOptions(false, false, true));
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.FromJSONString("[]",(JSONOptions)null);
+        CBORObject.FromJSONString("[]", (JSONOptions)null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
         // NOTE: Intentionally empty
@@ -2626,13 +2626,13 @@ CBOREncodeOptions(false, false, true));
       CBORObject cbor;
       EnumClass ec;
       cbor = CBORObject.FromObject("Value1");
-      ec =(EnumClass)cbor.ToObject(typeof(EnumClass));
+      ec = (EnumClass)cbor.ToObject(typeof(EnumClass));
       Assert.AreEqual(EnumClass.Value1, ec);
       cbor = CBORObject.FromObject("Value2");
-      ec =(EnumClass)cbor.ToObject(typeof(EnumClass));
+      ec = (EnumClass)cbor.ToObject(typeof(EnumClass));
       Assert.AreEqual(EnumClass.Value2, ec);
       cbor = CBORObject.FromObject("Value3");
-      ec =(EnumClass)cbor.ToObject(typeof(EnumClass));
+      ec = (EnumClass)cbor.ToObject(typeof(EnumClass));
       Assert.AreEqual(EnumClass.Value3, ec);
       cbor = CBORObject.FromObject("ValueXYZ");
       try {
@@ -6623,7 +6623,7 @@ CBOREncodeOptions(false, false, true));
         for (var i = 0; i < 100000; ++i) {
           bytes[0] = (byte)0xfa;
           for (var j = 1; j <= 4; ++j) {
-            bytes[j] =(byte)r.UniformInt(256);
+            bytes[j] = (byte)r.UniformInt(256);
           }
 
           CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
@@ -6649,7 +6649,7 @@ CBOREncodeOptions(false, false, true));
         for (var i = 0; i < 100000; ++i) {
           bytes[0] = (byte)0xfb;
           for (var j = 1; j <= 8; ++j) {
-            bytes[j] =(byte)r.UniformInt(256);
+            bytes[j] = (byte)r.UniformInt(256);
           }
           CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
           if (!cbor.AsNumber().IsNaN()) {
@@ -6767,7 +6767,7 @@ CBOREncodeOptions(false, false, true));
       }
       foreach (string dtstr in dateList) {
         CBORObject cbor = CBORObject.FromObjectAndTag(dtstr, 0);
-        var dt =(DateTime)cbor.ToObject(typeof(DateTime));
+        var dt = (DateTime)cbor.ToObject(typeof(DateTime));
         ToObjectTest.TestToFromObjectRoundTrip(dt);
       }
     }
@@ -7075,28 +7075,28 @@ CBOREncodeOptions(false, false, true));
       .AddConverter(typeof(string), new TestConverter());
       CBORObject cbor = CBORObject.FromObject("UpPeR");
       {
-        var stringTemp =(string)cbor.ToObject(typeof(string), mapper);
+        var stringTemp = (string)cbor.ToObject(typeof(string), mapper);
         Assert.AreEqual(
           "upper",
           stringTemp);
       }
       cbor = CBORObject.FromObject("TRUE");
       {
-        var stringTemp =(string)cbor.ToObject(typeof(string), mapper);
+        var stringTemp = (string)cbor.ToObject(typeof(string), mapper);
         Assert.AreEqual(
           "true",
           stringTemp);
       }
       cbor = CBORObject.FromObject("false");
       {
-        var stringTemp =(string)cbor.ToObject(typeof(string), mapper);
+        var stringTemp = (string)cbor.ToObject(typeof(string), mapper);
         Assert.AreEqual(
           "false",
           stringTemp);
       }
       cbor = CBORObject.FromObject("FALSE");
       {
-        var stringTemp =(string)cbor.ToObject(typeof(string), mapper);
+        var stringTemp = (string)cbor.ToObject(typeof(string), mapper);
         Assert.AreEqual(
           "false",
           stringTemp);
