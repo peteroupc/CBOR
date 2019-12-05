@@ -32,7 +32,23 @@ namespace PeterO {
     }
 
     public static void Main() {
-      const String ValueParam = "TestFromJsonString";
+var sw = new System.Diagnostics.Stopwatch();
+var bytes=System.IO.File.ReadAllBytes("/home/rooster/numbersbytes.json");
+//var bs = PeterO.DataUtilities.GetUtf8String(bytes, true);
+//bs = bs.Replace("\"","");
+//bytes = PeterO.DataUtilities.GetUtf8Bytes(bs, true);
+//System.IO.File.WriteAllBytes("/home/rooster/numbersbytes.json", bytes);
+sw.Start();
+//using (var ms = new System.IO.MemoryStream(bytes)) {
+// CBORObject.ReadJSON(ms);
+//}
+
+CBORObject.FromJSONBytes(bytes, JSONOptions.Default);
+sw.Stop();
+Console.WriteLine("time: "+sw.ElapsedMilliseconds);
+sw.Restart();
+return;
+     const String ValueParam = "TestFromJsonString";
       // Run all the tests in this assembly
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
         if (!HasAttribute(type, typeof(TestFixtureAttribute))) {
