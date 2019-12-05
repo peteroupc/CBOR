@@ -98,7 +98,7 @@ namespace PeterO.Cbor {
                   int ch = this.index < this.endPos ?
 ((int)this.bytes[this.index++]) & 0xff : -1;
                   if (ch != '\\' || (this.index < this.endPos ?
-((int)this.bytes[this.index++]) & 0xFF : -1) != 'u') {
+((int)this.bytes[this.index++]) & 0xff : -1) != 'u') {
                     this.RaiseError("Invalid escaped character");
                   }
                   var c2 = 0;
@@ -141,16 +141,49 @@ namespace PeterO.Cbor {
           default: {
             if (c <= 0x7f) {
               this.sb.Append((char)c);
-            } else {
-              // TODO: Decode UTF-8 here
-              if ((c >> 16) == 0) {
-                this.sb.Append((char)c);
-              } else {
-                this.sb.Append((char)((((c - 0x10000) >> 10) & 0x3ff) |
-                    0xd800));
-                this.sb.Append((char)(((c - 0x10000) & 0x3ff) | 0xdc00));
+            } else if (c >= 0xc2 && c <= 0xdf) {
+              int c1 = this.index < this.endPos ?
+((int)this.bytes[this.index++]) & 0xff : -1;
+if (c1<0x80 || c1>0xbf) {
+                this.RaiseError("Invalid encoding");
               }
-            }
+              c = ((c - 0xc0) << 6) | (c1 - 0x80);
+              this.sb.Append((char)c);
+            } else if (c >= 0xe0 && c <= 0xef) {
+              int c1 = this.index < this.endPos ?
+((int)this.bytes[this.index++]) & 0xff : -1;
+              int c2 = this.index < this.endPos ?
+((int)this.bytes[this.index++]) & 0xff : -1;
+              int lower = (c == 0xe0) ? 0xa0 : 0x80;
+              int upper = (c == 0xed) ? 0x9f : 0xbf;
+if (c1<lower || c1>upper || c2<0x80 || c2>0xbf) {
+                this.RaiseError("Invalid encoding");
+              }
+              c = ((c - 0xc0) << 12) | ((c1 - 0x80) << 6) | (c2 - 0x80);
+              this.sb.Append((char)c);
+            } else if (c >= 0xf0 && c <= 0xf4) {
+              int c1 = this.index < this.endPos ?
+((int)this.bytes[this.index++]) & 0xff : -1;
+              int c2 = this.index < this.endPos ?
+((int)this.bytes[this.index++]) & 0xff : -1;
+              int c3 = this.index < this.endPos ?
+((int)this.bytes[this.index++]) & 0xff : -1;
+              int lower = (c == 0xf0) ? 0x90 : 0x80;
+              int upper = (c == 0xf4) ? 0x8f : 0xbf;
+if (c1<lower || c1>upper || c2<0x80 || c2>0xbf ||
+                 c3<0x80 || c3>0xbf) {
+                this.RaiseError("Invalid encoding");
+              }
+              c = ((c - 0xc0) << 12) | ((c1 - 0x80) << 12) | ((c2 - 0x80) <<
+6) | (c3 - 0x80);
+              if (c <= 0xffff) { this.sb.Append((char)(c));
+} else if (c <= 0x10ffff) {
+  this.sb.Append((char)((((c - 0x10000) >> 10) & 0x3ff) | 0xd800));
+this.sb.Append((char)((((c - 0x10000)) & 0x3ff) | 0xdc00));
+}
+            } else {
+ this.RaiseError("Invalid encoding");
+}
             break;
           }
         }
@@ -162,7 +195,7 @@ namespace PeterO.Cbor {
           string str;
           CBORObject obj;
           int c = this.index < this.endPos ? ((int)this.bytes[this.index++])&
-0xff : -1;
+              0xff : -1;
           if (c < '0' || c > '9') {
             this.RaiseError("JSON number can't be parsed.");
           }
@@ -316,15 +349,8 @@ namespace PeterO.Cbor {
                 c = this.index < this.endPos ?
 ((int)this.bytes[this.index++]) & 0xff : -1;
               }
-              // TODO: Avoid creating string builder here
-              if (c == 'e' || c == 'E' || c == '.' || (c >= '0' && c <= '9')) {
-                // Not an all-digit number, or too long
-                this.sb = this.sb ?? new StringBuilder();
-                this.sb.Remove(0, this.sb.Length);
-                for (var vi = 0; vi < digits; ++vi) {
-                  this.sb.Append((char)ctmp[vi]);
-                }
-              } else {
+              if (!(c == 'e' || c == 'E' || c == '.' || (c >= '0' && c <=
+'9'))) {
                 // All-digit number that's short enough
                 obj = CBORDataUtilities.ParseSmallNumber(cval, this.options);
                 needObj = false;
@@ -335,32 +361,28 @@ namespace PeterO.Cbor {
               // is two digits without sign, decimal point, or exponent
               obj = CBORDataUtilities.ParseSmallNumber(cval, this.options);
               needObj = false;
-            } else {
-              // TODO: Avoid creating string builder here
-              this.sb = this.sb ?? new StringBuilder();
-              this.sb.Remove(0, this.sb.Length);
-              this.sb.Append((char)cstart);
-              this.sb.Append((char)csecond);
             }
-          } else {
-            // TODO: Avoid creating string builder here
-            this.sb = this.sb ?? new StringBuilder();
-            this.sb.Remove(0, this.sb.Length);
-            this.sb.Append((char)cstart);
           }
           if (needObj) {
             while (c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
               c == 'e' || c == 'E') {
-              this.sb.Append((char)c);
               c = this.index < this.endPos ? ((int)this.bytes[this.index++])&
-0xff : -1;
+                 0xff : -1;
             }
             // check if character can validly appear after a JSON number
             if (c != ',' && c != ']' && c != '}' && c != -1 &&
               c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) {
               this.RaiseError("Invalid character after JSON number");
             }
-            str = this.sb.ToString();
+            int numberEndIndex = this.index >= this.endPos ?
+               this.endPos : this.index - 1;
+            //str = String.Empty;
+            //obj = CBORObject.FromObject(0);
+            var ssb = new StringBuilder(numberEndIndex - startIndex);
+            for (var ki = startIndex; ki < numberEndIndex; ++ki) {
+              ssb.Append((char)(((int)this.bytes[ki]) & 0xff));
+            }
+            str = ssb.ToString();
             obj = CBORDataUtilities.ParseJSONNumber(str, this.options);
             if (obj == null) {
               string errstr = (str.Length <= 100) ? str : (str.Substring(0,
