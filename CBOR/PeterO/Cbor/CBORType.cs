@@ -10,16 +10,19 @@ using System;
 namespace PeterO.Cbor {
   /// <summary>Represents a type that a CBOR object can have.</summary>
   public enum CBORType {
-    /// <summary>A number of any kind, including integers, big integers,
-    /// floating point numbers, and decimal numbers. The floating-point
-    /// value Not-a-Number is also included in the Number type.</summary>
-    [Obsolete("Use the IsNumber property of CBORObject to determine" +
-
-        " whether a CBOR object represents a number, or use the two " +
-        "new CBORType values instead. CBORType.Integer " +
-        "covers CBOR objects representing integers of major type 0 and 1. " +
-        "CBORType.FloatingPoint covers CBOR objects representing " +
-        "16-, 32-, and 64-bit floating-point numbers.")]
+    /// <summary>This property is no longer used.</summary>
+    [Obsolete("Since version 4.0, CBORObject.Type no longer returns this" +
+"\u0020value for any CBOR object - this is a breaking change from " +
+"earlier versions." +
+"\u0020Instead, use the IsNumber property of CBORObject to determine" +
+" whether a CBOR object represents a number, or use the two " +
+"new CBORType values instead. CBORType.Integer " +
+"covers CBOR objects representing" +
+"\u0020integers of" +
+"\u0020major type 0 and 1. " +
+"CBORType.FloatingPoint covers CBOR objects representing " +
+"16-, 32-, and 64-bit floating-point numbers. CBORType.Number " +
+"may be removed in version 5.0 or later.")]
     Number,
 
     /// <summary>The simple values true and false.</summary>

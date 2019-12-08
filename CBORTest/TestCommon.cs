@@ -560,9 +560,10 @@ namespace Test {
         var rem = num % RepeatDivideThreshold;
         for (var i = 0; i < count; ++i) {
           sb.Append(sb2);
-          num -= RepeatDivideThreshold;
         }
-        sb.Append(Repeat(c, rem));
+        for (var i = 0; i < rem; ++i) {
+          sb.Append(c);
+        }
       } else {
         for (var i = 0; i < num; ++i) {
           sb.Append(c);

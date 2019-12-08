@@ -1637,8 +1637,8 @@ cn.GetNumberInterface().Sign(cn.GetValue());
 if (value >= 0L && value < 24L) {
   return FixedObjects[(int)value];
 } else {
- return (value >= -24L && value < 0L) ? (FixedObjects[0x20 - (int)(value +
-1L)]) : (new CBORObject(CBORObjectTypeInteger, value));
+ return (value >= -24L && value < 0L) ? FixedObjects[0x20 - (int)(value +
+1L)] : (new CBORObject(CBORObjectTypeInteger, value));
 }
     }
 
@@ -2888,7 +2888,7 @@ FromObject((long)value);
 
   /// <summary>Not documented yet.</summary>
   /// <summary>Not documented yet.</summary>
-  /// <returns/>
+  /// <returns>The return value is not documented yet.</returns>
   /// <param name='bytes'>Not documented yet.</param>
   /// <param name='jsonoptions'>Not documented yet.</param>
   /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -3057,7 +3057,7 @@ FromObject((long)value);
       }
       EInteger exponent = bignum.Exponent;
       if (exponent.CanFitInInt64()) {
-        stream.WriteByte(0xc4); // tag 4
+        stream.WriteByte(0xc5); // tag 5
         stream.WriteByte(0x82); // array, length 2
       } else if (exponent.GetSignedBitLengthAsEInteger().CompareTo(64) > 0) {
         stream.WriteByte(0xd9); // tag 265
