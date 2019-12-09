@@ -2,7 +2,6 @@ using System;
 using PeterO;
 using PeterO.Numbers;
 
-// TODO: Consider renaming As* methods here to To*
 namespace PeterO.Cbor {
   /// <summary>An instance of a number that CBOR or certain CBOR tags can
   /// represent. For this purpose, infinities and not-a-number or NaN
@@ -89,8 +88,8 @@ namespace PeterO.Cbor {
       return CBORObject.FromObject(this.value);
     }
 
-  /// <value>A value not documented yet.</value>
   /// <summary>Gets a value not documented yet.</summary>
+  /// <value>A value not documented yet.</value>
     public int Sign {
       get {
         // TODO: Will return 2 if this is NaN; is this

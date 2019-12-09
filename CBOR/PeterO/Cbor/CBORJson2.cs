@@ -156,7 +156,7 @@ if (c1 < 0x80 || c1 > 0xbf) {
 ((int)this.bytes[this.index++]) & 0xff : -1;
               int lower = (c == 0xe0) ? 0xa0 : 0x80;
               int upper = (c == 0xed) ? 0x9f : 0xbf;
-              if (c1 < lower || c1 > upper || c2 <0x80 || c2>0xbf) {
+              if (c1 < lower || c1 > upper || c2 < 0x80 || c2>0xbf) {
                 this.RaiseError("Invalid encoding");
               }
               c = ((c - 0xc0) << 12) | ((c1 - 0x80) << 6) | (c2 - 0x80);
@@ -170,7 +170,7 @@ if (c1 < 0x80 || c1 > 0xbf) {
 ((int)this.bytes[this.index++]) & 0xff : -1;
               int lower = (c == 0xf0) ? 0x90 : 0x80;
               int upper = (c == 0xf4) ? 0x8f : 0xbf;
-              if (c1 < lower || c1 > upper || c2 <0x80 || c2>0xbf ||
+              if (c1 < lower || c1 > upper || c2 < 0x80 || c2>0xbf ||
                  c3 < 0x80 || c3 > 0xbf) {
                 this.RaiseError("Invalid encoding");
               }
