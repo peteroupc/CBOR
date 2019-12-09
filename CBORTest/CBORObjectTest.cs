@@ -6773,12 +6773,12 @@ CBOREncodeOptions(false, false, true));
     }
 
     private static CBORObject FromJSON(string json, JSONOptions jsonop) {
-      // var sw = new System.Diagnostics.Stopwatch();
-      // sw.Start();
-      CBORObject cbor = CBORObject.FromJSONString(json, jsonop);
-      // sw.Stop();
-      // Console.WriteLine(String.Empty + sw.ElapsedMilliseconds + " ms");
-      return cbor;
+       var sw = new System.Diagnostics.Stopwatch();
+       sw.Start();
+     CBORObject cbor = CBORObject.FromJSONString(json, jsonop);
+       sw.Stop();
+       Console.WriteLine(String.Empty + sw.ElapsedMilliseconds + " ms");
+     return cbor;
     }
 
     private static CBORObject FromJSON(string json, string numconv) {
@@ -6799,7 +6799,9 @@ CBOREncodeOptions(false, false, true));
       string numconv,
       int intval) {
       CBORObject cbor = FromJSON(json, numconv);
-      Assert.AreEqual(CBORType.Integer, cbor.Type);
+      if (cbor.Type != CBORType.Integer) {
+        Assert.AreEqual(CBORType.Integer, cbor.Type);
+      }
       Assert.AreEqual(intval, cbor.AsInt32Value());
     }
 
@@ -6816,93 +6818,95 @@ CBOREncodeOptions(false, false, true));
         op.NumberConversion);
       // var sw = new System.Diagnostics.Stopwatch();
       // sw.Start();
+      string manyzeros = TestCommon.Repeat("0", 1000000);
+      string manythrees = TestCommon.Repeat("3", 1000000);
       AssertJSONDouble(
-        "0e-" + TestCommon.Repeat("0", 1000000),
+        "0e-" + manyzeros,
         "double",
         0.0);
       // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONDouble(
-        "0." + TestCommon.Repeat("0", 1000000),
+        "0." + manyzeros,
         "double",
         0.0);
       // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONDouble(
-        "0." + TestCommon.Repeat("0", 1000000) + "e-9999999999999",
+        "0." + manyzeros + "e-9999999999999",
         "double",
         0.0);
       // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONDouble(
-        TestCommon.Repeat("3", 1000000) + "e-9999999999999",
+        manythrees + "e-9999999999999",
         "double",
         0.0);
       // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONDouble(
-        TestCommon.Repeat("3", 1000000) + "e-9999999999999",
+        manythrees + "e-9999999999999",
         "intorfloat",
         0.0);
       // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONInteger(
-        TestCommon.Repeat("3", 1000000) + "e-9999999999999",
+        manythrees + "e-9999999999999",
         "intorfloatfromdouble",
         0);
       // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONDouble(
-        "0." + TestCommon.Repeat("0", 1000000) + "e-99999999",
+        "0." + manyzeros + "e-99999999",
         "double",
         0.0);
       // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONDouble(
-        TestCommon.Repeat("3", 1000000) + "e-99999999",
+        manythrees + "e-99999999",
         "double",
         0.0);
       // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONDouble(
-        TestCommon.Repeat("3", 1000000) + "e-99999999",
+        manythrees + "e-99999999",
         "intorfloat",
         0.0);
       // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONInteger(
-        TestCommon.Repeat("3", 1000000) + "e-99999999",
+        manythrees + "e-99999999",
         "intorfloatfromdouble",
         0);
       // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONInteger(
-        "0e-" + TestCommon.Repeat("0", 1000000),
+        "0e-" + manyzeros,
         "intorfloat",
         0);
       // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONInteger(
-        "0e-" + TestCommon.Repeat("0", 1000000),
+        "0e-" + manyzeros,
         "intorfloatfromdouble",
         0);
       // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONInteger(
-        "-0e-" + TestCommon.Repeat("0", 1000000),
+        "-0e-" + manyzeros,
         "intorfloat",
         0);
       // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONInteger(
-        "-0e-" + TestCommon.Repeat("0", 1000000),
+        "-0e-" + manyzeros,
         "intorfloatfromdouble",
         0);
       // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONInteger(
-        "0." + TestCommon.Repeat("0", 1000000),
+        "0." + manyzeros,
         "intorfloat",
         0);
       // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONInteger(
-        "0." + TestCommon.Repeat("0", 1000000),
+        "0." + manyzeros,
         "intorfloatfromdouble",
         0);
       // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONInteger(
-        "-0." + TestCommon.Repeat("0", 1000000),
+        "-0." + manyzeros,
         "intorfloat",
         0);
       // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONInteger(
-        "-0." + TestCommon.Repeat("0", 1000000),
+        "-0." + manyzeros,
         "intorfloatfromdouble",
         0);
       // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
@@ -6931,13 +6935,14 @@ CBOREncodeOptions(false, false, true));
     public void TestFromJsonStringLongKindFullBad() {
       Console.WriteLine("FullBad 1");
       var jsonop = new JSONOptions("numberconversion=full");
+      var manysevens = TestCommon.Repeat("7", 1000000);
       string[] badjson = {
-        TestCommon.Repeat("7", 1000000) + "x",
-        "7x" + TestCommon.Repeat("7", 1000000),
-        TestCommon.Repeat("7", 1000000) + "e0x",
-        "-" + TestCommon.Repeat("7", 1000000) + "x",
-        "-7x" + TestCommon.Repeat("7", 1000000),
-        "-" + TestCommon.Repeat("7", 1000000) + "e0x",
+        manysevens + "x",
+        "7x" + manysevens,
+        manysevens + "e0x",
+        "-" + manysevens + "x",
+        "-7x" + manysevens,
+        "-" + manysevens + "e0x",
       };
       foreach (string str in badjson) {
         try {

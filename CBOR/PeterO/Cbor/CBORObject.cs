@@ -1139,18 +1139,10 @@ cn.GetNumberInterface().Sign(cn.GetValue());
         throw new CBORException(
           "JSON object began with a byte order mark (U+FEFF) (offset 0)");
       }
-      var reader = new CharacterInputWithCount(
-        new CharacterReader(str, false, true));
-      var nextchar = new int[1];
-      CBORObject obj = CBORJson.ParseJSONValue(
-        reader,
-        jsonoptions,
-        false,
-        nextchar);
-      if (nextchar[0] != -1) {
-        reader.RaiseError("End of string not reached");
+      if (str.Length == 0) {
+        throw new CBORException("String is empty");
       }
-      return obj;
+      return CBORJson3.ParseJSONValue(str, 0, str.Length, jsonoptions);
     }
 
     /// <summary>Converts this CBOR object to an object of an arbitrary
@@ -1638,9 +1630,7 @@ if (value >= 0L && value < 24L) {
   return FixedObjects[(int)value];
 } else {
  return (value >= -24L && value < 0L) ? FixedObjects[0x20 - (int)(value +
-1L)] : (new CBORObject(CBORObjectTypeInteger, value));
-}
-    }
+1L)] : (new CBORObject(CBORObjectTypeInteger, value)); } }
 
     /// <summary>Generates a CBOR object from a CBOR object.</summary>
     /// <param name='value'>The parameter <paramref name='value'/> is a

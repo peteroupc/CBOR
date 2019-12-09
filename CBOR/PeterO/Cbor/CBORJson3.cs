@@ -11,12 +11,13 @@ using System.Text;
 using PeterO;
 using PeterO.Numbers;
 
+// NOTE: Certain differences from CBORJson2 are noted.
 namespace PeterO.Cbor {
-  internal sealed class CBORJson2 {
+  internal sealed class CBORJson3 {
     // JSON parsing method
     private int SkipWhitespaceJSON() {
       while (this.index < this.endPos) {
-        byte c = this.bytes[this.index++];
+        char c = this.jstring[this.index++];
         if (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) {
           return c;
         }
@@ -30,7 +31,8 @@ namespace PeterO.Cbor {
     }
 
     private StringBuilder sb;
-    private readonly byte[] bytes;
+    // NOTE: Differs from CBORJson2
+    private readonly string jstring;
     private int index;
     private int endPos;
     private readonly JSONOptions options;
@@ -40,14 +42,14 @@ namespace PeterO.Cbor {
       this.sb = this.sb ?? new StringBuilder();
       this.sb.Remove(0, this.sb.Length);
       while (true) {
-        c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
+        c = this.index < this.endPos ? ((int)this.jstring[this.index++]) &
 0xff : -1;
         if (c == -1 || c < 0x20) {
           this.RaiseError("Unterminated string");
         }
         switch (c) {
           case '\\':
-            c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
+            c = this.index < this.endPos ? ((int)this.jstring[this.index++]) &
 0xff : -1;
             switch (c) {
               case '\\':
@@ -76,7 +78,7 @@ namespace PeterO.Cbor {
                 // Consists of 4 hex digits
                 for (var i = 0; i < 4; ++i) {
                   int ch = this.index < this.endPos ?
-((int)this.bytes[this.index++]) & 0xff : -1;
+((int)this.jstring[this.index++]) & 0xffff : -1;
                   if (ch >= '0' && ch <= '9') {
                     c <<= 4;
                     c |= ch - '0';
@@ -96,15 +98,15 @@ namespace PeterO.Cbor {
                   this.sb.Append((char)c);
                 } else if ((c & 0xfc00) == 0xd800) {
                   int ch = this.index < this.endPos ?
-((int)this.bytes[this.index++]) & 0xff : -1;
+((int)this.jstring[this.index++]) & 0xffff : -1;
                   if (ch != '\\' || (this.index < this.endPos ?
-((int)this.bytes[this.index++]) & 0xff : -1) != 'u') {
+((int)this.jstring[this.index++]) & 0xffff : -1) != 'u') {
                     this.RaiseError("Invalid escaped character");
                   }
                   var c2 = 0;
                   for (var i = 0; i < 4; ++i) {
                     ch = this.index < this.endPos ?
-((int)this.bytes[this.index++]) & 0xff : -1;
+((int)this.jstring[this.index++]) & 0xffff : -1;
                     if (ch >= '0' && ch <= '9') {
                       c2 <<= 4;
                       c2 |= ch - '0';
@@ -139,53 +141,19 @@ namespace PeterO.Cbor {
           case 0x22: // double quote
             return this.sb.ToString();
           default: {
-            if (c <= 0x7f) {
-              this.sb.Append((char)c);
-            } else if (c >= 0xc2 && c <= 0xdf) {
-              int c1 = this.index < this.endPos ?
-((int)this.bytes[this.index++]) & 0xff : -1;
-if (c1 < 0x80 || c1 > 0xbf) {
-                this.RaiseError("Invalid encoding");
-              }
-              c = ((c - 0xc0) << 6) | (c1 - 0x80);
-              this.sb.Append((char)c);
-            } else if (c >= 0xe0 && c <= 0xef) {
-              int c1 = this.index < this.endPos ?
-((int)this.bytes[this.index++]) & 0xff : -1;
-              int c2 = this.index < this.endPos ?
-((int)this.bytes[this.index++]) & 0xff : -1;
-              int lower = (c == 0xe0) ? 0xa0 : 0x80;
-              int upper = (c == 0xed) ? 0x9f : 0xbf;
-              if (c1 < lower || c1 > upper || c2 <0x80 || c2>0xbf) {
-                this.RaiseError("Invalid encoding");
-              }
-              c = ((c - 0xc0) << 12) | ((c1 - 0x80) << 6) | (c2 - 0x80);
-              this.sb.Append((char)c);
-            } else if (c >= 0xf0 && c <= 0xf4) {
-              int c1 = this.index < this.endPos ?
-((int)this.bytes[this.index++]) & 0xff : -1;
-              int c2 = this.index < this.endPos ?
-((int)this.bytes[this.index++]) & 0xff : -1;
-              int c3 = this.index < this.endPos ?
-((int)this.bytes[this.index++]) & 0xff : -1;
-              int lower = (c == 0xf0) ? 0x90 : 0x80;
-              int upper = (c == 0xf4) ? 0x8f : 0xbf;
-              if (c1 < lower || c1 > upper || c2 <0x80 || c2>0xbf ||
-                 c3 < 0x80 || c3 > 0xbf) {
-                this.RaiseError("Invalid encoding");
-              }
-              c = ((c - 0xc0) << 12) | ((c1 - 0x80) << 12) | ((c2 - 0x80) <<
-6) | (c3 - 0x80);
-if (c <= 0xffff) {
-                 { this.sb.Append((char)c);
-              }
-} else if (c <= 0x10ffff) {
-  this.sb.Append((char)((((c - 0x10000) >> 10) & 0x3ff) | 0xd800));
-  this.sb.Append((char)(((c - 0x10000) & 0x3ff) | 0xdc00));
-}
-            } else {
- this.RaiseError("Invalid encoding");
-}
+            // NOTE: Differs from CBORJson2
+            if ((c & 0xf800) != 0xd800) {
+             // Non-surrogate
+             this.sb.Append((char)c);
+           } else if ((c & 0xfc00) != 0xd800 && this.index < this.endPos &&
+                   (this.jstring[this.index] & 0xfc00) == 0xd800) {
+             // Surrogate pair
+             this.sb.Append((char)c);
+             this.sb.Append(this.jstring[this.index]);
+             ++this.index;
+           } else {
+             this.RaiseError("Unpaired surrogate code point");
+            }
             break;
           }
         }
@@ -197,7 +165,7 @@ if (c <= 0xffff) {
           // Assumes the last character read was '-'
           CBORObject obj;
           int numberStartIndex = this.index - 1;
-          int c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
+          int c = this.index < this.endPos ? ((int)this.jstring[this.index++]) &
               0xff : -1;
           if (c < '0' || c > '9') {
             this.RaiseError("JSON number can't be parsed.");
@@ -206,7 +174,7 @@ if (c <= 0xffff) {
           int cstart = c;
           while (c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
             c == 'e' || c == 'E') {
-            c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
+            c = this.index < this.endPos ? ((int)this.jstring[this.index++]) &
               0xff : -1;
           }
           // check if character can validly appear after a JSON number
@@ -221,15 +189,19 @@ if (c <= 0xffff) {
             obj = CBORDataUtilities.ParseSmallNumberAsNegative(cstartval,
   this.options);
           } else {
-            var ssb = new StringBuilder(numberEndIndex - numberStartIndex);
-            for (var ki = numberStartIndex; ki < numberEndIndex; ++ki) {
-              ssb.Append((char)(((int)this.bytes[ki]) & 0xff));
-            }
-            string str = ssb.ToString();
-            obj = CBORDataUtilities.ParseJSONNumber(str, this.options);
+            // NOTE: Differs from CBORJson2
+            obj = CBORDataUtilities.ParseJSONNumber(
+              this.jstring,
+              numberStartIndex,
+              numberEndIndex - numberStartIndex,
+              this.options);
             if (obj == null) {
-              string errstr = (str.Length <= 100) ? str : (str.Substring(0,
-                    100) + "...");
+              int strlen = numberEndIndex - numberStartIndex;
+              string errstr = this.jstring.Substring(numberStartIndex,
+                    Math.Min(100, strlen));
+                  if (strlen > 100) {
+                errstr += "...";
+              }
               this.RaiseError("JSON number can't be parsed. " + errstr);
             }
           }
@@ -244,13 +216,12 @@ if (c <= 0xffff) {
     private CBORObject NextJSONNonnegativeNumber(int c, int[] nextChar) {
           // Assumes the last character read was a digit
           CBORObject obj = null;
-          string str;
           int cval = c - '0';
           int cstart = c;
           int startIndex = this.index - 1;
           var needObj = true;
           int numberStartIndex = this.index - 1;
-          c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
+          c = this.index < this.endPos ? ((int)this.jstring[this.index++]) &
 0xff : -1;
           if (!(c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
               c == 'e' || c == 'E')) {
@@ -265,14 +236,14 @@ if (c <= 0xffff) {
               this.RaiseError("JSON number can't be parsed.");
             }
             cval = (cval * 10) + (int)(c - '0');
-            c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
+            c = this.index < this.endPos ? ((int)this.jstring[this.index++]) &
 0xff : -1;
             if (c >= '0' && c <= '9') {
               var digits = 2;
               while (digits < 9 && (c >= '0' && c <= '9')) {
                 cval = (cval * 10) + (int)(c - '0');
                 c = this.index < this.endPos ?
-((int)this.bytes[this.index++]) & 0xff : -1;
+((int)this.jstring[this.index++]) & 0xffff : -1;
                 ++digits;
               }
               if (!(c == 'e' || c == 'E' || c == '.' || (c >= '0' && c <=
@@ -292,7 +263,7 @@ if (c <= 0xffff) {
           if (needObj) {
             while (c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
               c == 'e' || c == 'E') {
-              c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
+              c = this.index < this.endPos ? ((int)this.jstring[this.index++]) &
                  0xff : -1;
             }
             // check if character can validly appear after a JSON number
@@ -302,17 +273,19 @@ if (c <= 0xffff) {
             }
             int numberEndIndex = this.index >= this.endPos ?
                this.endPos : this.index - 1;
-            // str = String.Empty;
-            // obj = CBORObject.FromObject(0);
-            var ssb = new StringBuilder(numberEndIndex - startIndex);
-            for (var ki = startIndex; ki < numberEndIndex; ++ki) {
-              ssb.Append((char)(((int)this.bytes[ki]) & 0xff));
-            }
-            str = ssb.ToString();
-            obj = CBORDataUtilities.ParseJSONNumber(str, this.options);
+            // NOTE: Differs from CBORJson2
+            obj = CBORDataUtilities.ParseJSONNumber(
+              this.jstring,
+              numberStartIndex,
+              numberEndIndex - numberStartIndex,
+              this.options);
             if (obj == null) {
-              string errstr = (str.Length <= 100) ? str : (str.Substring(0,
-                    100) + "...");
+              int strlen = numberEndIndex - numberStartIndex;
+              string errstr = this.jstring.Substring(numberStartIndex,
+                    Math.Min(100, strlen));
+                  if (strlen > 100) {
+                errstr += "...";
+              }
               this.RaiseError("JSON number can't be parsed. " + errstr);
             }
           }
@@ -359,9 +332,9 @@ if (c <= 0xffff) {
         case 't': {
           // Parse true
           if (this.endPos - this.index <= 2 ||
-              (((int)this.bytes[this.index]) & 0xFF) != 'r' ||
-              (((int)this.bytes[this.index + 1]) & 0xFF) != 'u' ||
-              (((int)this.bytes[this.index + 2]) & 0xFF) != 'e') {
+              (((int)this.jstring[this.index]) & 0xFF) != 'r' ||
+              (((int)this.jstring[this.index + 1]) & 0xFF) != 'u' ||
+              (((int)this.jstring[this.index + 2]) & 0xFF) != 'e') {
             this.RaiseError("Value can't be parsed.");
           }
           this.index += 3;
@@ -371,10 +344,10 @@ if (c <= 0xffff) {
         case 'f': {
           // Parse false
           if (this.endPos - this.index <= 3 ||
-              (((int)this.bytes[this.index]) & 0xFF) != 'a' ||
-              (((int)this.bytes[this.index + 1]) & 0xFF) != 'l' ||
-              (((int)this.bytes[this.index + 2]) & 0xFF) != 's' ||
-              (((int)this.bytes[this.index + 3]) & 0xFF) != 'e') {
+              (((int)this.jstring[this.index]) & 0xFF) != 'a' ||
+              (((int)this.jstring[this.index + 1]) & 0xFF) != 'l' ||
+              (((int)this.jstring[this.index + 2]) & 0xFF) != 's' ||
+              (((int)this.jstring[this.index + 3]) & 0xFF) != 'e') {
             this.RaiseError("Value can't be parsed.");
           }
           this.index += 4;
@@ -384,9 +357,9 @@ if (c <= 0xffff) {
         case 'n': {
           // Parse null
           if (this.endPos - this.index <= 2 ||
-              (((int)this.bytes[this.index]) & 0xFF) != 'u' ||
-              (((int)this.bytes[this.index + 1]) & 0xFF) != 'l' ||
-              (((int)this.bytes[this.index + 2]) & 0xFF) != 'l') {
+              (((int)this.jstring[this.index]) & 0xFF) != 'u' ||
+              (((int)this.jstring[this.index + 1]) & 0xFF) != 'l' ||
+              (((int)this.jstring[this.index + 2]) & 0xFF) != 'l') {
             this.RaiseError("Value can't be parsed.");
           }
           this.index += 3;
@@ -416,26 +389,27 @@ if (c <= 0xffff) {
       return null;
     }
 
-    public CBORJson2(byte[] bytes, int index, int endPos, JSONOptions options) {
+    public CBORJson3(string jstring, int index, int endPos, JSONOptions
+options) {
 #if DEBUG
-      if (bytes == null) {
-        throw new ArgumentNullException(nameof(bytes));
+      if (jstring == null) {
+        throw new ArgumentNullException(nameof(jstring));
       }
       if (index < 0) {
         throw new ArgumentException("index (" + index + ") is not greater or" +
 "\u0020equal to 0");
       }
-      if (index > bytes.Length) {
+      if (index > jstring.Length) {
         throw new ArgumentException("index (" + index + ") is not less or" +
-"\u0020equal to " + bytes.Length);
+"\u0020equal to " + jstring.Length);
       }
       if (endPos < 0) {
         throw new ArgumentException("endPos (" + endPos + ") is not greater" +
 "\u0020or equal to 0");
       }
-      if (endPos > bytes.Length) {
+      if (endPos > jstring.Length) {
         throw new ArgumentException("endPos (" + endPos + ") is not less or" +
-"\u0020equal to " + bytes.Length);
+"\u0020equal to " + jstring.Length);
       }
       if (endPos < index) {
         throw new ArgumentException("endPos (" + endPos + ") is not greater" +
@@ -444,7 +418,7 @@ if (c <= 0xffff) {
 #endif
 
       this.sb = null;
-      this.bytes = bytes;
+      this.jstring = jstring;
       this.index = index;
       this.endPos = endPos;
       this.options = options;
@@ -468,44 +442,44 @@ if (c <= 0xffff) {
     }
 
     internal static CBORObject ParseJSONValue(
-      byte[] bytes,
+      string jstring,
       int index,
       int endPos,
       JSONOptions options) {
       var nextchar = new int[1];
-      var cj = new CBORJson2(bytes, index, endPos, options);
+      var cj = new CBORJson3(jstring, index, endPos, options);
       CBORObject obj = cj.ParseJSON(nextchar);
       if (nextchar[0] != -1) {
-        cj.RaiseError("End of bytes not reached");
+        cj.RaiseError("End of string not reached");
       }
       return obj;
     }
 
     internal static CBORObject ParseJSONValue(
-      byte[] bytes,
+      string jstring,
       int index,
       int endPos,
       JSONOptions options,
       int[] nextchar) {
 #if DEBUG
-      if (bytes == null) {
-        throw new ArgumentNullException(nameof(bytes));
+      if (jstring == null) {
+        throw new ArgumentNullException(nameof(jstring));
       }
       if (index < 0) {
         throw new ArgumentException("index (" + index + ") is not greater or" +
 "\u0020equal to 0");
       }
-      if (index > bytes.Length) {
+      if (index > jstring.Length) {
         throw new ArgumentException("index (" + index + ") is not less or" +
-"\u0020equal to " + bytes.Length);
+"\u0020equal to " + jstring.Length);
       }
       if (endPos < 0) {
         throw new ArgumentException("endPos (" + endPos + ") is not greater" +
 "\u0020or equal to 0");
       }
-      if (endPos > bytes.Length) {
+      if (endPos > jstring.Length) {
         throw new ArgumentException("endPos (" + endPos + ") is not less or" +
-"\u0020equal to " + bytes.Length);
+"\u0020equal to " + jstring.Length);
       }
       if (endPos < index) {
         throw new ArgumentException("endPos (" + endPos + ") is not greater" +
@@ -513,7 +487,7 @@ if (c <= 0xffff) {
       }
 #endif
 
-      var cj = new CBORJson2(bytes, index, endPos, options);
+      var cj = new CBORJson3(jstring, index, endPos, options);
       return cj.ParseJSON(nextchar);
     }
 

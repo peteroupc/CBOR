@@ -31,7 +31,15 @@ namespace PeterO {
       return false;
     }
 
+    public static bool Extra() {
+new Test.CBORObjectTest().TestFromJsonStringFastCases();
+return false;
+    }
+
     public static void Main() {
+if (!Extra()) {
+  return;
+}
      const String ValueParam = "TestFromJsonString";
       // Run all the tests in this assembly
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
@@ -54,6 +62,7 @@ namespace PeterO {
             }
           }
           try {
+            Console.WriteLine("::: " + type.FullName + "." + method.Name);
             method.Invoke(test, new object[] { });
           } catch (TargetInvocationException e) {
             Console.WriteLine("::: " + type.FullName + "." + method.Name);

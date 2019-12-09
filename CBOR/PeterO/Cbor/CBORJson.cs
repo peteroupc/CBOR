@@ -157,22 +157,36 @@ namespace PeterO.Cbor {
           int cval = -(c - '0');
           int cstart = c;
           c = this.reader.ReadChar();
+          var sw = new System.Diagnostics.Stopwatch();
+          sw.Start();
           this.sb = this.sb ?? new StringBuilder();
           this.sb.Remove(0, this.sb.Length);
           this.sb.Append('-');
           this.sb.Append((char)cstart);
+          var charbuf = new char[32];
+          var charbufptr = 0;
           while (c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
             c == 'e' || c == 'E') {
-            this.sb.Append((char)c);
+            charbuf[charbufptr++] = (char)c;
+            if (charbufptr >= 32) {
+              this.sb.Append(charbuf, 0, 32);
+              charbufptr = 0;
+            }
             c = this.reader.ReadChar();
           }
+          if (charbufptr > 0) {
+            this.sb.Append(charbuf, 0, charbufptr);
+          }
+// DebugUtility.Log("--nega=" + sw.ElapsedMilliseconds + " ms");
           // check if character can validly appear after a JSON number
           if (c != ',' && c != ']' && c != '}' && c != -1 &&
             c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) {
             this.RaiseError("Invalid character after JSON number");
           }
           str = this.sb.ToString();
+// DebugUtility.Log("negb=" + sw.ElapsedMilliseconds + " ms");
           obj = CBORDataUtilities.ParseJSONNumber(str, this.options);
+// DebugUtility.Log("negc=" + sw.ElapsedMilliseconds + " ms");
           if (obj == null) {
             string errstr = (str.Length <= 100) ? str : (str.Substring(0,
                   100) + "...");
@@ -317,11 +331,21 @@ namespace PeterO.Cbor {
             this.sb.Append((char)cstart);
           }
           if (needObj) {
-            while (c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
-              c == 'e' || c == 'E') {
-              this.sb.Append((char)c);
-              c = this.reader.ReadChar();
+            var charbuf = new char[32];
+            var charbufptr = 0;
+            while (
+              c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
+            c == 'e' || c == 'E') {
+            charbuf[charbufptr++] = (char)c;
+            if (charbufptr >= 32) {
+              this.sb.Append(charbuf, 0, 32);
+              charbufptr = 0;
             }
+            c = this.reader.ReadChar();
+          }
+          if (charbufptr > 0) {
+            this.sb.Append(charbuf, 0, charbufptr);
+          }
             // check if character can validly appear after a JSON number
             if (c != ',' && c != ']' && c != '}' && c != -1 &&
               c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) {
