@@ -216,7 +216,10 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
         }
         bool anonymous = HasCustomAttribute(
           t,
-          "System.Runtime.CompilerServices.CompilerGeneratedAttribute");
+          "System.Runtime.CompilerServices.CompilerGeneratedAttribute") ||
+         HasCustomAttribute(
+           t,
+           "Microsoft.FSharp.Core.CompilationMappingAttribute");
         var names = new Dictionary<string, int>();
         foreach (PropertyInfo pi in GetTypeProperties(t)) {
           var pn = RemoveIsPrefix(pi.Name);

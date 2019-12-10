@@ -32,8 +32,7 @@ namespace PeterO {
     }
 
     public static bool Extra() {
-new Test.CBORObjectTest().TestFromJsonStringFastCases();
-return false;
+return true;
     }
 
     public static void Main() {

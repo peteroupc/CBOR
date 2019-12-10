@@ -145,8 +145,8 @@ namespace PeterO.Cbor {
             if ((c & 0xf800) != 0xd800) {
              // Non-surrogate
              this.sb.Append((char)c);
-           } else if ((c & 0xfc00) != 0xd800 && this.index < this.endPos &&
-                   (this.jstring[this.index] & 0xfc00) == 0xd800) {
+           } else if ((c & 0xfc00) == 0xd800 && this.index < this.endPos &&
+                   (this.jstring[this.index] & 0xfc00) == 0xdc00) {
              // Surrogate pair
              this.sb.Append((char)c);
              this.sb.Append(this.jstring[this.index]);
@@ -301,7 +301,6 @@ namespace PeterO.Cbor {
       int firstChar,
       int[] nextChar,
       int depth) {
-      string str;
       int c = firstChar;
       CBORObject obj = null;
       if (c < 0) {
