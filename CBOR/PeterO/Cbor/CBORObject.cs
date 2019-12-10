@@ -3106,11 +3106,11 @@ count) {
 "\u0020equal to " + bytes.Length);
       }
       if (count < 0) {
-        throw new ArgumentException(+" (" + count + ") is not greater or" +
+        throw new ArgumentException("count (" + count + ") is not greater or" +
 "\u0020equal to 0");
       }
       if (count > bytes.Length) {
-        throw new ArgumentException(+" (" + count + ") is not less or" +
+        throw new ArgumentException("count (" + count + ") is not less or" +
 "\u0020equal to " + bytes.Length);
       }
       if (bytes.Length - offset < count) {
