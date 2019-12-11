@@ -12,7 +12,7 @@ using PeterO;
 using PeterO.Numbers;
 
 // NOTE: Certain differences from CBORJson2 are noted.
-// TODO: Support JSONSequences, and Decimal128 conversion mode
+// TODO: Support JSONSequences
 namespace PeterO.Cbor {
   internal sealed class CBORJson3 {
     // JSON parsing method
@@ -193,20 +193,15 @@ namespace PeterO.Cbor {
           } else {
             // DebugUtility.Log("pjn = " + (this.jstring.Substring(numberStartIndex,
             // numberEndIndex - numberStartIndex)));
-try {
             // NOTE: Differs from CBORJson2
             obj = CBORDataUtilities.ParseJSONNumber(
               this.jstring,
               numberStartIndex,
               numberEndIndex - numberStartIndex,
               this.options);
-} catch (FormatException exc) {
-throw new InvalidOperationException(this.jstring.Substring(numberStartIndex,
-                    numberEndIndex - numberStartIndex), exc);
-            }
             if (obj == null) {
               int strlen = numberEndIndex - numberStartIndex;
-  string errstr = this.jstring.Substring(numberStartIndex,
+              string errstr = this.jstring.Substring(numberStartIndex,
                     Math.Min(100, strlen));
                   if (strlen > 100) {
                 errstr += "...";

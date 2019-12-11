@@ -555,9 +555,9 @@ namespace Test {
       }
       var sb = new StringBuilder(num);
       if (num > RepeatDivideThreshold) {
-        var sb2 = Repeat(c, RepeatDivideThreshold);
-        var count = num / RepeatDivideThreshold;
-        var rem = num % RepeatDivideThreshold;
+        string sb2 = Repeat(c, RepeatDivideThreshold);
+        int count = num / RepeatDivideThreshold;
+        int rem = num % RepeatDivideThreshold;
         for (var i = 0; i < count; ++i) {
           sb.Append(sb2);
         }

@@ -9,10 +9,18 @@
 Specifies how JSON numbers are converted to CBOR when decoding JSON.
 
 ### Member Summary
+* <code>[public static PeterO.Cbor.JSONOptions.ConversionMode Decimal128 = 4;](#Decimal128)</code> - JSON numbers are decoded to CBOR as their closest-rounded approximation to an IEEE 854 decimal128 value, using the rules for the EDecimal form of that approximation as given in the CBORObject.
 * <code>[public static PeterO.Cbor.JSONOptions.ConversionMode Double = 1;](#Double)</code> - JSON numbers are decoded to CBOR as their closest-rounded approximation as 64-bit binary floating-point numbers.
 * <code>[public static PeterO.Cbor.JSONOptions.ConversionMode Full = 0;](#Full)</code> - JSON numbers are decoded to CBOR using the full precision given in the JSON text.
 * <code>[public static PeterO.Cbor.JSONOptions.ConversionMode IntOrFloat = 2;](#IntOrFloat)</code> - A JSON number is decoded to CBOR either as a CBOR integer (major type 0 or 1) if the JSON number represents an integer at least -(2^53)+1 and less than 2^53, or as their closest-rounded approximation as 64-bit binary floating-point numbers otherwise.
 * <code>[public static PeterO.Cbor.JSONOptions.ConversionMode IntOrFloatFromDouble = 3;](#IntOrFloatFromDouble)</code> - A JSON number is decoded to CBOR either as a CBOR integer (major type 0 or 1) if the number's closest-rounded approximation as a 64-bit binary floating-point number represents an integer at least -(2^53)+1 and less than 2^53, or as that approximation otherwise.
+
+<a id="Decimal128"></a>
+### Decimal128
+
+    public static PeterO.Cbor.JSONOptions.ConversionMode Decimal128 = 4;
+
+JSON numbers are decoded to CBOR as their closest-rounded approximation to an IEEE 854 decimal128 value, using the rules for the EDecimal form of that approximation as given in the  `CBORObject.FromObject(EDecimal) method` .
 
 <a id="Double"></a>
 ### Double

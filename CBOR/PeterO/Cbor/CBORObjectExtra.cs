@@ -382,6 +382,23 @@ namespace PeterO.Cbor {
       return FromObject((long)(Int64)value);
     }
 
+    /// <summary>Generates a CBOR object from this one, but gives the
+    /// resulting object a tag in addition to its existing tags (the new
+    /// tag is made the outermost tag).</summary>
+    /// <param name='tag'>A 64-bit integer that specifies a tag number. The
+    /// tag number 55799 can be used to mark a "self-described CBOR"
+    /// object. This document does not attempt to list all CBOR tags and
+    /// their meanings. An up-to-date list can be found at the CBOR Tags
+    /// registry maintained by the Internet Assigned Numbers Authority(
+    /// <i>iana.org/assignments/cbor-tags</i> ).</param>
+    /// <returns>A CBOR object with the same value as this one but given
+    /// the tag <paramref name='tag'/> in addition to its existing tags
+    /// (the new tag is made the outermost tag).</returns>
+    [CLSCompliant(false)]
+    public CBORObject WithTag(ulong tag) {
+      return FromObjectAndTag(this, UInt64ToEInteger(tag));
+    }
+
     /// <summary>Generates a CBOR object from an arbitrary object and gives
     /// the resulting object a tag.</summary>
     /// <param name='o'>The parameter <paramref name='o'/> is an arbitrary
@@ -398,7 +415,7 @@ namespace PeterO.Cbor {
     /// tag number 55799 can be used to mark a "self-described CBOR"
     /// object. This document does not attempt to list all CBOR tags and
     /// their meanings. An up-to-date list can be found at the CBOR Tags
-    /// registry maintained by the Internet Assigned Numbers Authority (
+    /// registry maintained by the Internet Assigned Numbers Authority(
     /// <i>iana.org/assignments/cbor-tags</i> ).</param>
     /// <returns>A CBOR object where the object <paramref name='o'/> is
     /// converted to a CBOR object and given the tag <paramref name='tag'/>

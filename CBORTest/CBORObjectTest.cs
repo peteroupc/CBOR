@@ -250,8 +250,7 @@ JSONOptions("allowduplicatekeys=false");
           obj3 = options == null ? CBORObject.FromJSONString(
             "xyzxyz" + str + "xyzxyz",
             6,
-            str.Length) :
-            CBORObject.FromJSONString(
+            str.Length) : CBORObject.FromJSONString(
               "xyzxyz" + str + "xyzxyz",
               6,
               str.Length,
@@ -3008,6 +3007,63 @@ CBOREncodeOptions(false, false, true));
           CBORObject cbor = CBORObject.FromSimpleValue(i);
           Assert.AreEqual(i, cbor.SimpleValue);
         }
+      }
+    }
+
+    [Test]
+    public void TestWithTag() {
+      EInteger bigvalue = EInteger.FromString("99999999999999999999999999999");
+      try {
+        CBORObject.FromObject(2).WithTag(bigvalue);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2).WithTag(-1);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(CBORObject.Null).WithTag(-1);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(CBORObject.Null).WithTag(999999);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      EInteger eintNull = null;
+      try {
+        CBORObject.FromObject(2).WithTag(eintNull);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2).WithTag(EInteger.FromString("-1"));
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
       }
     }
     [Test]

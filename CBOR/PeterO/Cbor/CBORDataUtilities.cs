@@ -12,7 +12,6 @@ using PeterO;
 using PeterO.Numbers;
 
 // TODO: In JSONOptions, consider rejecting unknown conversion modes
-// TODO: In CBORObject, consider adding WithTag method
 namespace PeterO.Cbor {
   /// <summary>Contains methods useful for reading and writing data, with
   /// a focus on CBOR.</summary>
@@ -322,6 +321,45 @@ namespace PeterO.Cbor {
           options);
     }
 
+    /// <summary>Parses a number whose format follows the JSON
+    /// specification (RFC 8259) from a portion of a text string, and
+    /// converts that number to a CBOR object.</summary>
+    /// <param name='str'>A text string containing the portion to parse as
+    /// a JSON number.</param>
+    /// <param name='offset'>An index, starting at 0, showing where the
+    /// desired portion of <paramref name='str'/> begins.</param>
+    /// <param name='count'>The length, in code units, of the desired
+    /// portion of <paramref name='str'/> (but not more than <paramref
+    /// name='str'/> 's length).</param>
+    /// <returns>A CBOR object that represents the parsed number. Returns
+    /// null if the parsing fails, including if the string is null or
+    /// empty.</returns>
+    /// <exception cref='ArgumentException'>Either <paramref
+    /// name='offset'/> or <paramref name='count'/> is less than 0 or
+    /// greater than <paramref name='str'/> 's length, or <paramref
+    /// name='str'/> 's length minus <paramref name='offset'/> is less than
+    /// <paramref name='count'/>.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='str'/> is null.</exception>
+    /// <remarks>Roughly speaking, a valid JSON number consists of an
+    /// optional minus sign, one or more basic digits (starting with 1 to 9
+    /// unless there is only one digit and that digit is 0), an optional
+    /// decimal point (".", full stop) with one or more basic digits, and
+    /// an optional letter E or e with an optional plus or minus sign and
+    /// one or more basic digits (the exponent). A string representing a
+    /// valid JSON number is not allowed to contain white space characters,
+    /// including spaces.</remarks>
+    public static CBORObject ParseJSONNumber(
+      string str,
+      int offset,
+      int count) {
+      return String.IsNullOrEmpty(str) ? null :
+        ParseJSONNumber(str,
+          offset,
+          count,
+          JSONOptions.Default);
+    }
+
     internal static CBORObject ParseSmallNumberAsNegative(
       int digit,
       JSONOptions options) {
@@ -376,13 +414,10 @@ JSONOptions.ConversionMode.Double) {
     /// <returns>A CBOR object that represents the parsed number. Returns
     /// null if the parsing fails, including if the string is null or empty
     /// or <paramref name='count'/> is 0 or less.</returns>
-    /// <exception cref='ArgumentException'>Either <paramref
-    /// name='offset'/> or <paramref name='count'/> is less than 0 or
-    /// greater than <paramref name='str'/> 's length, or <paramref
-    /// name='str'/> 's length minus <paramref name='offset'/> is less than
-    /// <paramref name='count'/>.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='str'/> is null.</exception>
+    /// <exception cref='ArgumentException'>Unsupported conversion
+    /// kind.</exception>
     /// <remarks>Roughly speaking, a valid JSON number consists of an
     /// optional minus sign, one or more basic digits (starting with 1 to 9
     /// unless there is only one digit and that digit is 0), an optional
@@ -484,6 +519,8 @@ JSONOptions.ConversionMode.Double) {
           }
           if (kind == JSONOptions.ConversionMode.Double) {
             return CBORObject.FromObject((double)v);
+          } else if (kind == JSONOptions.ConversionMode.Decimal128) {
+            return CBORObject.FromObject(EDecimal.FromInt64(v));
           } else {
             return CBORObject.FromObject(v);
           }
@@ -538,6 +575,16 @@ JSONOptions.ConversionMode.Double) {
           dbl = 0.0;
         }
         return CBORObject.FromObject(dbl);
+      } else if (kind == JSONOptions.ConversionMode.Decimal128) {
+        EDecimal ed = EDecimal.FromString(
+          str,
+          initialOffset,
+          count,
+          EContext.Decimal128);
+        if (!preserveNegativeZero && ed.IsNegative && ed.IsZero) {
+          ed = ed.Negate();
+        }
+        return CBORObject.FromObject(ed);
       } else if (kind == JSONOptions.ConversionMode.IntOrFloatFromDouble) {
         double dbl = EFloat.FromString(
           str,

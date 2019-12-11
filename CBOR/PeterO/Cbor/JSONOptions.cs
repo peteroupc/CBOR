@@ -44,6 +44,12 @@ namespace PeterO.Cbor {
        /// numbers extremely close to zero may underflow to zero, and numbers
        /// of extremely large magnitude may overflow to infinity.).</summary>
        IntOrFloatFromDouble,
+
+       /// <summary>JSON numbers are decoded to CBOR as their closest-rounded
+       /// approximation to an IEEE 854 decimal128 value, using the rules for
+       /// the EDecimal form of that approximation as given in the
+       /// <c>CBORObject.FromObject(EDecimal)</c> method.</summary>
+       Decimal128,
     }
 
     /// <summary>Initializes a new instance of the
@@ -183,6 +189,9 @@ namespace PeterO.Cbor {
       if (kind == ConversionMode.Double) {
         return "double";
       }
+      if (kind == ConversionMode.Decimal128) {
+        return "decimal128";
+      }
       if (kind == ConversionMode.IntOrFloat) {
         return "intorfloat";
       }
@@ -197,6 +206,9 @@ namespace PeterO.Cbor {
         }
         if (str.Equals("double", StringComparison.Ordinal)) {
           return ConversionMode.Double;
+        }
+        if (str.Equals("decimal128", StringComparison.Ordinal)) {
+          return ConversionMode.Decimal128;
         }
         if (str.Equals("intorfloat", StringComparison.Ordinal)) {
           return ConversionMode.IntOrFloat;

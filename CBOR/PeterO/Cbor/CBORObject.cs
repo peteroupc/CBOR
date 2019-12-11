@@ -1059,10 +1059,11 @@ cn.GetNumberInterface().Sign(cn.GetValue());
     /// <param name='str'>A text string in JSON format. The entire string
     /// must contain a single JSON object and not multiple objects. The
     /// string may not begin with a byte-order mark (U+FEFF).</param>
-    /// <param name='offset'>The parameter <paramref name='offset'/> is a
-    /// 32-bit signed integer.</param>
-    /// <param name='count'>The parameter <paramref name='count'/> is a
-    /// 32-bit signed integer.</param>
+    /// <param name='offset'>An index, starting at 0, showing where the
+    /// desired portion of <paramref name='str'/> begins.</param>
+    /// <param name='count'>The length, in code units, of the desired
+    /// portion of <paramref name='str'/> (but not more than <paramref
+    /// name='str'/> 's length).</param>
     /// <returns>A CBOR object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='str'/> is null.</exception>
@@ -1746,7 +1747,7 @@ if (value >= 0L && value < 24L) {
     /// <param name='value'>The parameter <paramref name='value'/> is a
     /// CBOR object.</param>
     /// <returns>Same as <paramref name='value'/>, or "CBORObject.Null" is
-    /// "value" is null.</returns>
+    /// <paramref name='value'/> is null.</returns>
     public static CBORObject FromObject(CBORObject value) {
       return value ?? CBORObject.Null;
     }
@@ -2579,8 +2580,30 @@ FromObject((long)value);
       return objret;
     }
 
+    /// <summary>Generates a CBOR object from this one, but gives the
+    /// resulting object a tag in addition to its existing tags (the new
+    /// tag is made the outermost tag).</summary>
+    /// <param name='bigintTag'>Tag number. The tag number 55799 can be
+    /// used to mark a "self-described CBOR" object. This document does not
+    /// attempt to list all CBOR tags and their meanings. An up-to-date
+    /// list can be found at the CBOR Tags registry maintained by the
+    /// Internet Assigned Numbers Authority(
+    /// <i>iana.org/assignments/cbor-tags</i> ).</param>
+    /// <returns>A CBOR object with the same value as this one but given
+    /// the tag <paramref name='bigintTag'/> in addition to its existing
+    /// tags (the new tag is made the outermost tag).</returns>
+    /// <exception cref='ArgumentException'>The parameter <paramref
+    /// name='bigintTag'/> is less than 0 or greater than
+    /// 2^64-1.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='bigintTag'/> is null.</exception>
+    public CBORObject WithTag(EInteger bigintTag) {
+     return FromObjectAndTag(this, bigintTag);
+    }
+
     /// <summary>Generates a CBOR object from an arbitrary object and gives
-    /// the resulting object a tag.</summary>
+    /// the resulting object a tag in addition to its existing tags (the
+    /// new tag is made the outermost tag).</summary>
     /// <param name='valueOb'>The parameter <paramref name='valueOb'/> is
     /// an arbitrary object, which can be null.
     /// <para><b>NOTE:</b> For security reasons, whenever possible, an
@@ -2642,7 +2665,27 @@ FromObject((long)value);
     }
 
     /// <summary>Generates a CBOR object from an arbitrary object and gives
-    /// the resulting object a tag.</summary>
+    /// the resulting object a tag in addition to its existing tags (the
+    /// new tag is made the outermost tag).</summary>
+    /// <param name='smallTag'>A 32-bit integer that specifies a tag
+    /// number. The tag number 55799 can be used to mark a "self-described
+    /// CBOR" object. This document does not attempt to list all CBOR tags
+    /// and their meanings. An up-to-date list can be found at the CBOR
+    /// Tags registry maintained by the Internet Assigned Numbers Authority
+    /// (
+    /// <i>iana.org/assignments/cbor-tags</i> ).</param>
+    /// <returns>A CBOR object with the same value as this one but given
+    /// the tag <paramref name='smallTag'/> in addition to its existing
+    /// tags (the new tag is made the outermost tag).</returns>
+    /// <exception cref='ArgumentException'>The parameter <paramref
+    /// name='smallTag'/> is less than 0.</exception>
+    public CBORObject WithTag(int smallTag) {
+     return FromObjectAndTag(this, smallTag);
+    }
+
+    /// <summary>Generates a CBOR object from an arbitrary object and gives
+    /// the resulting object a tag in addition to its existing tags (the
+    /// new tag is made the outermost tag).</summary>
     /// <param name='valueObValue'>The parameter <paramref
     /// name='valueObValue'/> is an arbitrary object, which can be null.
     /// <para><b>NOTE:</b> For security reasons, whenever possible, an
@@ -3073,10 +3116,11 @@ FromObject((long)value);
     /// UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by
     /// assuming that the first character read must be a byte-order mark or
     /// a nonzero basic character (U+0001 to U+007F).</param>
-    /// <param name='offset'>The parameter <paramref name='offset'/> is a
-    /// 32-bit signed integer.</param>
-    /// <param name='count'>The parameter <paramref name='count'/> is a
-    /// 32-bit signed integer.</param>
+    /// <param name='offset'>An index, starting at 0, showing where the
+    /// desired portion of <paramref name='bytes'/> begins.</param>
+    /// <param name='count'>The length, in bytes, of the desired portion of
+    /// <paramref name='bytes'/> (but not more than <paramref
+    /// name='bytes'/> 's length).</param>
     /// <returns>A CBOR object containing the JSON data decoded.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bytes'/> is null.</exception>
