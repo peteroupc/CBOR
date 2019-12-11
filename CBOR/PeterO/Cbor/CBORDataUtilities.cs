@@ -514,7 +514,7 @@ JSONOptions.ConversionMode.Double) {
           }
           if (!negative || lv != 0) {
             CBORObject cbor = CBORObject.NewArray()
-                .Add(lv).Add(expo);
+                .Add(expo).Add(lv);
             return CBORObject.FromObjectAndTag(cbor, 4);
           }
         }

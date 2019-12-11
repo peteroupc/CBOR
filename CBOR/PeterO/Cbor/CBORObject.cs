@@ -1219,7 +1219,7 @@ cn.GetNumberInterface().Sign(cn.GetValue());
       if (count == 0) {
         throw new CBORException("String is empty");
       }
-      return CBORJson3.ParseJSONValue(str, offset, count, jsonoptions);
+      return CBORJson3.ParseJSONValue(str, offset, offset + count, jsonoptions);
     }
 
     /// <summary>Converts this CBOR object to an object of an arbitrary
@@ -3165,7 +3165,11 @@ count) {
       }
       if (bytes[offset] >= 0x01 && bytes[offset] <= 0x7f) {
         // UTF-8 JSON bytes
-        return CBORJson2.ParseJSONValue(bytes, offset, count, jsonoptions);
+        return CBORJson2.ParseJSONValue(
+          bytes,
+          offset,
+          offset + count,
+          jsonoptions);
       } else {
         // Other than UTF-8 without byte order mark
         using (var ms = new MemoryStream(bytes, offset, count)) {

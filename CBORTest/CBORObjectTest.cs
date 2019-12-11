@@ -228,6 +228,37 @@ JSONOptions("allowduplicatekeys=false");
           TestCommon.CompareTestEqualAndConsistent(
             obj,
             obj2);
+          if (str == null) {
+            throw new ArgumentNullException(nameof(str));
+          }
+          CBORObject obj3 = options == null ? CBORObject.FromJSONString(
+            str,
+            0,
+            str.Length) :
+            CBORObject.FromJSONString(str, 0, str.Length, options);
+          TestCommon.CompareTestEqualAndConsistent(
+            obj,
+            obj3);
+          obj3 = options == null ? CBORObject.FromJSONString(
+            "xyzxyz" + str,
+            6,
+            str.Length) :
+            CBORObject.FromJSONString("xyzxyz" + str, 6, str.Length, options);
+          TestCommon.CompareTestEqualAndConsistent(
+            obj,
+            obj3);
+          obj3 = options == null ? CBORObject.FromJSONString(
+            "xyzxyz" + str + "xyzxyz",
+            6,
+            str.Length) :
+            CBORObject.FromJSONString(
+              "xyzxyz" + str + "xyzxyz",
+              6,
+              str.Length,
+              options);
+          TestCommon.CompareTestEqualAndConsistent(
+            obj,
+            obj3);
           CBORTestCommon.AssertRoundTrip(obj);
           return obj;
         }

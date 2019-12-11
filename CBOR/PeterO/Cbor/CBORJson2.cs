@@ -202,7 +202,6 @@ if (c <= 0xffff) {
           if (c < '0' || c > '9') {
             this.RaiseError("JSON number can't be parsed.");
           }
-          int cstartval = -(c - '0');
           int cstart = c;
           while (c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
             c == 'e' || c == 'E') {
@@ -214,11 +213,12 @@ if (c <= 0xffff) {
             c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) {
             this.RaiseError("Invalid character after JSON number");
           }
-          int numberEndIndex = this.index >= this.endPos ?
+          int numberEndIndex = c < 0 ?
                this.endPos : this.index - 1;
-          if (numberEndIndex - numberStartIndex == 2 && cstartval != 0) {
+          if (numberEndIndex - numberStartIndex == 2 && cstart != '0') {
             // Negative single digit other than negative zero
-            obj = CBORDataUtilities.ParseSmallNumberAsNegative(cstartval,
+            obj = CBORDataUtilities.ParseSmallNumberAsNegative((int)(cstart
+- '0'),
   this.options);
           } else {
             var ssb = new StringBuilder(numberEndIndex - numberStartIndex);
@@ -300,10 +300,7 @@ if (c <= 0xffff) {
               c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) {
               this.RaiseError("Invalid character after JSON number");
             }
-            int numberEndIndex = this.index >= this.endPos ?
-               this.endPos : this.index - 1;
-            // str = String.Empty;
-            // obj = CBORObject.FromObject(0);
+            int numberEndIndex = c < 0 ? this.endPos : this.index - 1;
             var ssb = new StringBuilder(numberEndIndex - startIndex);
             for (var ki = startIndex; ki < numberEndIndex; ++ki) {
               ssb.Append((char)(((int)this.bytes[ki]) & 0xff));
