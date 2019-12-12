@@ -951,13 +951,41 @@ CBORObject.FromObject(Double.NaN);
       return FromJSONSequenceBytes(bytes, JSONOptions.Default);
     }
 
+
+    /// <summary>Converts this object to a byte array in JavaScript Object
+    /// Notation (JSON) format. The JSON text will be written out in UTF-8 encoding, without a byte order mark, to the byte array.  See the overload to ToJSONString taking a
+    /// JSONOptions argument for further information.</summary>
+    /// <returns>A byte array containing the converted in JSON format.</returns>
+    public static byte[] ToJSONBytes() {
+      return ToJSONBytes(JSONOptions.Default);
+    }
+
+    /// <summary>Converts this object to a byte array in JavaScript Object
+    /// Notation (JSON) format.  The JSON text will be written out in UTF-8 encoding, without a byte order mark, to the byte array.  See the overload to ToJSONString taking a
+    /// JSONOptions argument for further information.</summary>
+    /// <param name='options'>Specifies options to control
+    /// writing the CBOR object to JSON.</param>
+    /// <returns>A byte array containing the converted object in JSON format.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='options'/> is null.</exception>
+    public static byte[] ToJSONBytes(JSONOptions jsonoptions) {
+      if (jsonoptions == null) {
+        throw new ArgumentNullException(nameof(jsonoptions));
+      }
+      using(var ms = new MemoryStream()) {
+        this.WriteJSONTo(ms);
+        return ms.ToBytes();
+      }
+    }
+
     /// <summary>Generates a list of CBOR objects from an array of bytes in
     /// JavaScript Object Notation (JSON) text sequence format (RFC 7464),
     /// using the specified options to control the decoding process. The
     /// byte array must be in UTF-8 encoding and may not begin with a
     /// byte-order mark (U+FEFF).</summary>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='stream'/> is null.</exception>
+    /// name='data'/> or <paramref
+    /// name='options'/> is null.</exception>
     /// <exception cref='PeterO.Cbor.CBORException'>The byte array is not
     /// empty and does not begin with a record separator byte (0x1e), or an
     /// I/O error occurred.</exception>
@@ -967,8 +995,11 @@ CBORObject.FromObject(Double.NaN);
     /// then write the line feed byte (0x0a). RFC 7464, however, uses a
     /// more liberal syntax for parsing JSON text sequences.</remarks>
     /// <returns>The return value is not documented yet.</returns>
-    /// <param name='data'>Not documented yet.</param>
-    /// <param name='options'>Not documented yet.</param>
+    /// <param name='data'>A byte array in which a JSON text sequence is
+    /// encoded.</param>
+    /// <param name='options'>Specifies options to control how the JSON
+    /// texts in the sequence are decoded to CBOR. See <see cref='PeterO.Cbor.JSONOptions'/>
+    /// for more information.</param>
     public static CBORObject[] FromJSONSequenceBytes(byte[] data,
       JSONOptions options) {
       if (data == null) {
@@ -3161,8 +3192,6 @@ jsonoptions) {
         throw;
       }
     }
-
-// TODO: Add ToJSONBytes
 
     /// <summary>
     /// <para>Generates a CBOR object from a byte array in JavaScript
@@ -5637,7 +5666,7 @@ this.MostOuterTag.Equals(bigTagValue);
     }
 
     /// <summary>Converts this object to a text string in JavaScript Object
-    /// Notation (JSON) format. See the overload to JSONString taking a
+    /// Notation (JSON) format. See the overload to ToJSONString taking a
     /// JSONOptions argument for further information.
     /// <para>If the CBOR object contains CBOR maps, or is a CBOR map
     /// itself, the keys to the map are written out to the JSON string in
@@ -5661,7 +5690,7 @@ this.MostOuterTag.Equals(bigTagValue);
     /// which correspond to a different feature in CBOR (such as converting
     /// integer map keys, which are supported in CBOR but not JSON, to text
     /// strings, which are supported in both).</para></summary>
-    /// <returns>A text string.</returns>
+    /// <returns>A text string containing the converted object in JSON format.</returns>
     public string ToJSONString() {
       return this.ToJSONString(JSONOptions.Default);
     }
@@ -5753,9 +5782,9 @@ this.MostOuterTag.Equals(bigTagValue);
     /// builder.Append("}").ToString(); }</code>
     ///  .
     /// </summary>
-    /// <param name='options'>An object containing the options to control
+    /// <param name='options'>Specifies options to control
     /// writing the CBOR object to JSON.</param>
-    /// <returns>A text string containing the converted object.</returns>
+    /// <returns>A text string containing the converted object in JSON format.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='options'/> is null.</exception>
     public string ToJSONString(JSONOptions options) {
