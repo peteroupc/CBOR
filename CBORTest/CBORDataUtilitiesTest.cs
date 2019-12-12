@@ -78,22 +78,22 @@ namespace Test {
       }
     }
 
-[Test]
-public void TestParseJSONNumberSubstring() {
-string tstr =
+    [Test]
+    public void TestParseJSONNumberSubstring() {
+      string tstr =
 
   "-3.00931381333368754713014659613049757554804012787921371662913692598770508705049030832574634419795955864174175076186656951904296875000E-49";
-try {
- CBORDataUtilities.ParseJSONNumber(
-   "xyzxyz" + tstr,
-   6,
-   tstr.Length,
-   JSONOptions.Default);
-} catch (Exception ex) {
-Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
-}
+      try {
+        CBORDataUtilities.ParseJSONNumber(
+          "xyzxyz" + tstr,
+          6,
+          tstr.Length,
+          JSONOptions.Default);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
 
     [Test]
     public void TestParseJSONNumberNegativeZero() {
@@ -142,7 +142,7 @@ throw new InvalidOperationException(String.Empty, ex);
       "-0x1", "-0xf", "-0x20", "-0x01", "-.2", "-.05",
       "23.", "23.e-2", "23.e0", "23.e1", "0.",
     };
-    #pragma warning disable CS0618
+#pragma warning disable CS0618
     [Test]
     public void TestParseJSONNumberObsolete() {
       foreach (var str in BadJsonNumbers) {
@@ -157,7 +157,7 @@ throw new InvalidOperationException(String.Empty, ex);
         }
       }
     }
-    #pragma warning restore CS0618
+#pragma warning restore CS0618
 
     [Test]
     public void TestParseJSONNumber() {
@@ -196,7 +196,7 @@ throw new InvalidOperationException(String.Empty, ex);
         ToObjectTest.TestToFromObjectRoundTrip(23).AsNumber(),
         CBORDataUtilities.ParseJSONNumber("23.0e00").AsNumber());
       cbor = CBORDataUtilities.ParseJSONNumber(
-        "1e+99999999999999999999999999");
+          "1e+99999999999999999999999999");
       Assert.IsTrue(cbor != null);
       Assert.IsFalse(cbor.AsNumber().CanFitInDouble());
       CBORTestCommon.AssertRoundTrip(cbor);

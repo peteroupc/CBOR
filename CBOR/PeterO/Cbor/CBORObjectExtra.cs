@@ -84,8 +84,11 @@ namespace PeterO.Cbor {
     /// outside the range of a 16-bit unsigned integer.</exception>
     [CLSCompliant(false)]
     [Obsolete("Instead, use the following:" +
-"\u0020(cbor.AsNumber().ToUInt16Checked()), or .ToObject<ushort>().")]
+        "\u0020(cbor.AsNumber().ToUInt16Checked()), or .ToObject<ushort>().")]
     public ushort AsUInt16() {
+      return this.AsUInt16Legacy();
+    }
+    internal ushort AsUInt16Legacy() {
       int v = this.AsInt32();
       if (v > UInt16.MaxValue || v < 0) {
         throw new OverflowException("This object's value is out of range");
@@ -105,9 +108,12 @@ namespace PeterO.Cbor {
     /// outside the range of a 32-bit unsigned integer.</exception>
     [CLSCompliant(false)]
     [Obsolete("Instead, use the following:" +
-"\u0020(cbor.AsNumber().ToUInt32Checked()), or .ToObject<uint>().")]
+        "\u0020(cbor.AsNumber().ToUInt32Checked()), or .ToObject<uint>().")]
     public uint AsUInt32() {
-      ulong v = this.AsUInt64();
+      return this.AsUInt32Legacy();
+    }
+    internal uint AsUInt32Legacy() {
+      ulong v = this.AsUInt64Legacy();
       if (v > UInt32.MaxValue) {
         throw new OverflowException("This object's value is out of range");
       }
@@ -118,8 +124,11 @@ namespace PeterO.Cbor {
     /// <returns>An 8-bit signed integer.</returns>
     [CLSCompliant(false)]
     [Obsolete("Instead, use the following:" +
-"\u0020(cbor.AsNumber().ToSByteChecked()), or .ToObject<sbyte>().")]
+        "\u0020(cbor.AsNumber().ToSByteChecked()), or .ToObject<sbyte>().")]
     public sbyte AsSByte() {
+      return this.AsSByteLegacy();
+    }
+    internal sbyte AsSByteLegacy() {
       int v = this.AsInt32();
       if (v > SByte.MaxValue || v < SByte.MinValue) {
         throw new OverflowException("This object's value is out of range");
@@ -208,9 +217,8 @@ namespace PeterO.Cbor {
             ") is more than 7");
         }
         if (majorType == 7) {
-          throw new ArgumentException("majorType is 7 and value is greater"
-+
-"\u0020than 255");
+          throw new ArgumentException("majorType is 7 and value is greater" +
+            "\u0020than 255");
         }
         byte[] bytes = {
           (byte)(27 | (majorType << 5)), (byte)((value >>
@@ -241,7 +249,7 @@ namespace PeterO.Cbor {
       return (this.ItemType == CBORObjectTypeInteger) ?
 ((decimal)(long)this.ThisItem) : ((this.HasOneTag(30) ||
 
-            this.HasOneTag(270)) ? (decimal)this.ToObject<ERational>() :
+            this.HasOneTag(270)) ?(decimal)this.ToObject<ERational>() :
           (decimal)this.ToObject<EDecimal>());
     }
 
@@ -257,8 +265,11 @@ namespace PeterO.Cbor {
     /// outside the range of a 64-bit unsigned integer.</exception>
     [CLSCompliant(false)]
     [Obsolete("Instead, use the following:" +
-"\u0020(cbor.AsNumber().ToUInt64Checked()), or .ToObject<ulong>().")]
+        "\u0020(cbor.AsNumber().ToUInt64Checked()), or .ToObject<ulong>().")]
     public ulong AsUInt64() {
+      return this.AsUInt64Legacy();
+    }
+    internal ulong AsUInt64Legacy() {
       EInteger bigint = this.ToObject<EInteger>();
       if (bigint.Sign < 0 ||
         bigint.GetUnsignedBitLengthAsEInteger().CompareTo(64) > 0) {
@@ -444,7 +455,7 @@ namespace PeterO.Cbor {
     /// <exception cref='NotSupportedException'>The given type "T", or this
     /// object's CBOR type, is not supported.</exception>
     public T ToObject<T>() {
-      return (T)this.ToObject(typeof(T));
+      return(T)this.ToObject(typeof(T));
     }
 
     /// <summary>
@@ -468,7 +479,7 @@ namespace PeterO.Cbor {
     /// <exception cref='NotSupportedException'>The given type "T", or this
     /// object's CBOR type, is not supported.</exception>
     public T ToObject<T>(CBORTypeMapper mapper) {
-      return (T)this.ToObject(typeof(T), mapper);
+      return(T)this.ToObject(typeof(T), mapper);
     }
 
     /// <summary>
@@ -491,7 +502,7 @@ namespace PeterO.Cbor {
     /// <exception cref='NotSupportedException'>The given type "T", or this
     /// object's CBOR type, is not supported.</exception>
     public T ToObject<T>(PODOptions options) {
-      return (T)this.ToObject(typeof(T), options);
+      return(T)this.ToObject(typeof(T), options);
     }
 
     /// <summary>
@@ -517,7 +528,7 @@ namespace PeterO.Cbor {
     /// <exception cref='NotSupportedException'>The given type "T", or this
     /// object's CBOR type, is not supported.</exception>
     public T ToObject<T>(CBORTypeMapper mapper, PODOptions options) {
-      return (T)this.ToObject(typeof(T), mapper, options);
+      return(T)this.ToObject(typeof(T), mapper, options);
     }
 
     /// <summary>Adds two CBOR objects and returns their result.</summary>
@@ -527,7 +538,8 @@ namespace PeterO.Cbor {
     /// object.</param>
     /// <returns>The sum of the two objects.</returns>
     [Obsolete("May be removed in the next major version. Consider converting" +
-"\u0020the objects to CBOR numbers and performing the operation there.")]
+        "\u0020the objects to CBOR numbers and performing the operation" +
+"\u0020there.")]
     public static CBORObject operator +(CBORObject a, CBORObject b) {
       return Addition(a, b);
     }
@@ -540,7 +552,8 @@ namespace PeterO.Cbor {
     /// object.</param>
     /// <returns>The difference of the two objects.</returns>
     [Obsolete("May be removed in the next major version. Consider converting" +
-"\u0020the objects to CBOR numbers and performing the operation there.")]
+        "\u0020the objects to CBOR numbers and performing the operation" +
+"\u0020there.")]
     public static CBORObject operator -(CBORObject a, CBORObject b) {
       return Subtract(a, b);
     }
@@ -553,7 +566,8 @@ namespace PeterO.Cbor {
     /// object.</param>
     /// <returns>The product of the two numbers.</returns>
     [Obsolete("May be removed in the next major version. Consider converting" +
-"\u0020the objects to CBOR numbers and performing the operation there.")]
+        "\u0020the objects to CBOR numbers and performing the operation" +
+"\u0020there.")]
     public static CBORObject operator *(CBORObject a, CBORObject b) {
       return Multiply(a, b);
     }
@@ -566,7 +580,8 @@ namespace PeterO.Cbor {
     /// object.</param>
     /// <returns>The quotient of the two objects.</returns>
     [Obsolete("May be removed in the next major version. Consider converting" +
-"\u0020the objects to CBOR numbers and performing the operation there.")]
+        "\u0020the objects to CBOR numbers and performing the operation" +
+"\u0020there.")]
     public static CBORObject operator /(CBORObject a, CBORObject b) {
       return Divide(a, b);
     }
@@ -579,7 +594,8 @@ namespace PeterO.Cbor {
     /// object.</param>
     /// <returns>The remainder of the two numbers.</returns>
     [Obsolete("May be removed in the next major version. Consider converting" +
-"\u0020the objects to CBOR numbers and performing the operation there.")]
+        "\u0020the objects to CBOR numbers and performing the operation" +
+"\u0020there.")]
     public static CBORObject operator %(CBORObject a, CBORObject b) {
       return Remainder(a, b);
     }

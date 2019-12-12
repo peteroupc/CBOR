@@ -934,11 +934,13 @@ cn.GetNumberInterface().Sign(cn.GetValue());
     /// JavaScript Object Notation (JSON) text sequence format (RFC 7464).
     /// The byte array must be in UTF-8 encoding and may not begin with a
     /// byte-order mark (U+FEFF).</summary>
+    /// <param name='bytes'>A byte array in which a JSON text sequence is
+    /// encoded.</param>
     /// <returns>A list of CBOR objects read from the JSON sequence.
     /// Objects that could not be parsed are replaced with <c>null</c> (as
     /// opposed to <c>CBORObject.Null</c> ) in the given list.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='stream'/> is null.</exception>
+    /// name='bytes'/> is null.</exception>
     /// <exception cref='PeterO.Cbor.CBORException'>The byte array is not
     /// empty and does not begin with a record separator byte (0x1e), or an
     /// I/O error occurred.</exception>
@@ -947,7 +949,6 @@ cn.GetNumberInterface().Sign(cn.GetValue());
     /// write the JSON text in UTF-8 (without a byte order mark, U+FEFF),
     /// then write the line feed byte (0x0a). RFC 7464, however, uses a
     /// more liberal syntax for parsing JSON text sequences.</remarks>
-    /// <param name='bytes'/>
     public static CBORObject[] FromJSONSequenceBytes(byte[] bytes) {
       return FromJSONSequenceBytes(bytes, JSONOptions.Default);
     }
@@ -4185,6 +4186,10 @@ bytes[offset + 1] != 0) {
         "\u0020.NET" + " or \u0020.ToObject\u0028Byte.class) in" +
         "\u0020Java.")]
     public byte AsByte() {
+      return (byte)this.AsInt32(0, 255);
+    }
+
+    internal byte AsByteLegacy() {
       return (byte)this.AsInt32(0, 255);
     }
 

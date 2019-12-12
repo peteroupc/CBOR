@@ -1838,16 +1838,16 @@ Generally, each JSON text in a JSON text sequence is written as follows: Write a
 
 <b>Parameters:</b>
 
- * <i>stream</i>: A byte array in which a JSON text sequence is encoded. The byte array must either be empty or begin with a record separator byte (0x1e).
+ * <i>bytes</i>: A byte array in which a JSON text sequence is encoded.
 
 <b>Return Value:</b>
 
-A list of CBOR objects read from the JSON sequence. Objects that could not be parsed are replaced with  `null`  (as opposed to  `CBORObject.Null` ) in the given list.
+A list of CBOR objects read from the JSON sequence. Objects that could not be parsed are replaced with  `null`  (as opposed to  `CBORObject.Null`  ) in the given list.
 
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>stream</i>
+The parameter  <i>bytes</i>
  is null.
 
  * PeterO.Cbor.CBORException:
@@ -3534,7 +3534,7 @@ Generally, each JSON text in a JSON text sequence is written as follows: Write a
 
 <b>Return Value:</b>
 
-A list of CBOR objects read from the JSON sequence. Objects that could not be parsed are replaced with  `null`  (as opposed to  `CBORObject.Null` ) in the given list.
+A list of CBOR objects read from the JSON sequence. Objects that could not be parsed are replaced with  `null`  (as opposed to  `CBORObject.Null`  ) in the given list.
 
 <b>Exceptions:</b>
 
@@ -3567,7 +3567,7 @@ Generally, each JSON text in a JSON text sequence is written as follows: Write a
 
 <b>Return Value:</b>
 
-A list of CBOR objects read from the JSON sequence. Objects that could not be parsed are replaced with  `null`  (as opposed to  `CBORObject.Null` ) in the given list.
+A list of CBOR objects read from the JSON sequence. Objects that could not be parsed are replaced with  `null`  (as opposed to  `CBORObject.Null`  ) in the given list.
 
 <b>Exceptions:</b>
 
@@ -4887,7 +4887,7 @@ The parameter  <i>outputStream</i>
 
 Converts this object to a text string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8. If the CBOR object contains CBOR maps, or is a CBOR map, the keys to the map are written out to the JSON string in an undefined order. The example code given in <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b> can be used to write out certain keys of a CBOR map in a given order to a JSON string.
 
-The following example (originally written in C# for the .NET version) writes out a CBOR object as part of a JSON text sequence (RFC 7464).
+The following example (originally written in C# for the.NET version) writes out a CBOR object as part of a JSON text sequence (RFC 7464).
 
                 stream.WriteByte(0x1e); /* RS */
                 cborObject.WriteJSONTo(stream); /* JSON */

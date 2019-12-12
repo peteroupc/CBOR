@@ -26,14 +26,14 @@ namespace PeterO.Cbor {
 
     internal void RaiseError(string str) {
       throw new CBORException(str + " (approx. offset: " +
-          Math.Max(0, this.index - 1) + ")");
+        Math.Max(0, this.index - 1) + ")");
     }
 
-    private StringBuilder sb;
     private readonly byte[] bytes;
+    private readonly JSONOptions options;
+    private StringBuilder sb;
     private int index;
     private int endPos;
-    private readonly JSONOptions options;
 
     private string NextJSONString() {
       int c;
@@ -41,14 +41,14 @@ namespace PeterO.Cbor {
       this.sb.Remove(0, this.sb.Length);
       while (true) {
         c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
-0xff : -1;
+          0xff : -1;
         if (c == -1 || c < 0x20) {
           this.RaiseError("Unterminated string");
         }
         switch (c) {
           case '\\':
             c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
-0xff : -1;
+              0xff : -1;
             switch (c) {
               case '\\':
               case '/':
@@ -76,7 +76,7 @@ namespace PeterO.Cbor {
                 // Consists of 4 hex digits
                 for (var i = 0; i < 4; ++i) {
                   int ch = this.index < this.endPos ?
-((int)this.bytes[this.index++]) & 0xff : -1;
+                    ((int)this.bytes[this.index++]) & 0xff : -1;
                   if (ch >= '0' && ch <= '9') {
                     c <<= 4;
                     c |= ch - '0';
@@ -96,15 +96,15 @@ namespace PeterO.Cbor {
                   this.sb.Append((char)c);
                 } else if ((c & 0xfc00) == 0xd800) {
                   int ch = this.index < this.endPos ?
-((int)this.bytes[this.index++]) & 0xff : -1;
+                    ((int)this.bytes[this.index++]) & 0xff : -1;
                   if (ch != '\\' || (this.index < this.endPos ?
-((int)this.bytes[this.index++]) & 0xff : -1) != 'u') {
+                      ((int)this.bytes[this.index++]) & 0xff : -1) != 'u') {
                     this.RaiseError("Invalid escaped character");
                   }
                   var c2 = 0;
                   for (var i = 0; i < 4; ++i) {
                     ch = this.index < this.endPos ?
-((int)this.bytes[this.index++]) & 0xff : -1;
+                      ((int)this.bytes[this.index++]) & 0xff : -1;
                     if (ch >= '0' && ch <= '9') {
                       c2 <<= 4;
                       c2 |= ch - '0';
@@ -143,17 +143,17 @@ namespace PeterO.Cbor {
               this.sb.Append((char)c);
             } else if (c >= 0xc2 && c <= 0xdf) {
               int c1 = this.index < this.endPos ?
-((int)this.bytes[this.index++]) & 0xff : -1;
-if (c1 < 0x80 || c1 > 0xbf) {
+                ((int)this.bytes[this.index++]) & 0xff : -1;
+              if (c1 < 0x80 || c1 > 0xbf) {
                 this.RaiseError("Invalid encoding");
               }
               c = ((c - 0xc0) << 6) | (c1 - 0x80);
               this.sb.Append((char)c);
             } else if (c >= 0xe0 && c <= 0xef) {
               int c1 = this.index < this.endPos ?
-((int)this.bytes[this.index++]) & 0xff : -1;
+                ((int)this.bytes[this.index++]) & 0xff : -1;
               int c2 = this.index < this.endPos ?
-((int)this.bytes[this.index++]) & 0xff : -1;
+                ((int)this.bytes[this.index++]) & 0xff : -1;
               int lower = (c == 0xe0) ? 0xa0 : 0x80;
               int upper = (c == 0xed) ? 0x9f : 0xbf;
               if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf) {
@@ -163,29 +163,30 @@ if (c1 < 0x80 || c1 > 0xbf) {
               this.sb.Append((char)c);
             } else if (c >= 0xf0 && c <= 0xf4) {
               int c1 = this.index < this.endPos ?
-((int)this.bytes[this.index++]) & 0xff : -1;
+                ((int)this.bytes[this.index++]) & 0xff : -1;
               int c2 = this.index < this.endPos ?
-((int)this.bytes[this.index++]) & 0xff : -1;
+                ((int)this.bytes[this.index++]) & 0xff : -1;
               int c3 = this.index < this.endPos ?
-((int)this.bytes[this.index++]) & 0xff : -1;
+                ((int)this.bytes[this.index++]) & 0xff : -1;
               int lower = (c == 0xf0) ? 0x90 : 0x80;
               int upper = (c == 0xf4) ? 0x8f : 0xbf;
               if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf ||
-                 c3 < 0x80 || c3 > 0xbf) {
+                c3 < 0x80 || c3 > 0xbf) {
                 this.RaiseError("Invalid encoding");
               }
               c = ((c - 0xc0) << 12) | ((c1 - 0x80) << 12) | ((c2 - 0x80) <<
-6) | (c3 - 0x80);
-if (c <= 0xffff) {
-                 { this.sb.Append((char)c);
+                  6) | (c3 - 0x80);
+              if (c <= 0xffff) {
+                { this.sb.Append((char)c);
+                }
+              } else if (c <= 0x10ffff) {
+                this.sb.Append((char)((((c - 0x10000) >> 10) & 0x3ff) |
+0xd800));
+                this.sb.Append((char)(((c - 0x10000) & 0x3ff) | 0xdc00));
               }
-} else if (c <= 0x10ffff) {
-  this.sb.Append((char)((((c - 0x10000) >> 10) & 0x3ff) | 0xd800));
-  this.sb.Append((char)(((c - 0x10000) & 0x3ff) | 0xdc00));
-}
             } else {
- this.RaiseError("Invalid encoding");
-}
+              this.RaiseError("Invalid encoding");
+            }
             break;
           }
         }
@@ -194,131 +195,131 @@ if (c <= 0xffff) {
 
     private CBORObject NextJSONNegativeNumber(
       int[] nextChar) {
-          // Assumes the last character read was '-'
-          CBORObject obj;
-          int numberStartIndex = this.index - 1;
-          int c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
-              0xff : -1;
-          if (c < '0' || c > '9') {
-            this.RaiseError("JSON number can't be parsed.");
-          }
-          int cstart = c;
-          while (c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
-            c == 'e' || c == 'E') {
-            c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
-              0xff : -1;
-          }
-          // check if character can validly appear after a JSON number
-          if (c != ',' && c != ']' && c != '}' && c != -1 &&
-            c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) {
-            this.RaiseError("Invalid character after JSON number");
-          }
-          int numberEndIndex = c < 0 ?
-               this.endPos : this.index - 1;
-          if (numberEndIndex - numberStartIndex == 2 && cstart != '0') {
-            // Negative single digit other than negative zero
-            obj = CBORDataUtilities.ParseSmallNumberAsNegative((int)(cstart
-- '0'),
-  this.options);
-          } else {
-            var ssb = new StringBuilder(numberEndIndex - numberStartIndex);
-            for (var ki = numberStartIndex; ki < numberEndIndex; ++ki) {
-              ssb.Append((char)(((int)this.bytes[ki]) & 0xff));
-            }
-            string str = ssb.ToString();
-            obj = CBORDataUtilities.ParseJSONNumber(str, this.options);
-            if (obj == null) {
-              string errstr = (str.Length <= 100) ? str : (str.Substring(0,
-                    100) + "...");
-              this.RaiseError("JSON number can't be parsed. " + errstr);
-            }
-          }
-          if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)) {
-            nextChar[0] = c;
-          } else {
-            nextChar[0] = this.SkipWhitespaceJSON();
-          }
-          return obj;
+      // Assumes the last character read was '-'
+      CBORObject obj;
+      int numberStartIndex = this.index - 1;
+      int c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
+        0xff : -1;
+      if (c < '0' || c > '9') {
+        this.RaiseError("JSON number can't be parsed.");
+      }
+      int cstart = c;
+      while (c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
+        c == 'e' || c == 'E') {
+        c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
+          0xff : -1;
+      }
+      // check if character can validly appear after a JSON number
+      if (c != ',' && c != ']' && c != '}' && c != -1 &&
+        c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) {
+        this.RaiseError("Invalid character after JSON number");
+      }
+      int numberEndIndex = c < 0 ?
+        this.endPos : this.index - 1;
+      if (numberEndIndex - numberStartIndex == 2 && cstart != '0') {
+        // Negative single digit other than negative zero
+        obj = CBORDataUtilities.ParseSmallNumberAsNegative((int)(cstart
+              - '0'),
+            this.options);
+      } else {
+        var ssb = new StringBuilder(numberEndIndex - numberStartIndex);
+        for (var ki = numberStartIndex; ki < numberEndIndex; ++ki) {
+          ssb.Append((char)(((int)this.bytes[ki]) & 0xff));
+        }
+        string str = ssb.ToString();
+        obj = CBORDataUtilities.ParseJSONNumber(str, this.options);
+        if (obj == null) {
+          string errstr =(str.Length <= 100) ? str :(str.Substring(0,
+                100) + "...");
+          this.RaiseError("JSON number can't be parsed. " + errstr);
+        }
+      }
+      if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)) {
+        nextChar[0] = c;
+      } else {
+        nextChar[0] = this.SkipWhitespaceJSON();
+      }
+      return obj;
     }
 
     private CBORObject NextJSONNonnegativeNumber(int c, int[] nextChar) {
-          // Assumes the last character read was a digit
-          CBORObject obj = null;
-          string str;
-          int cval = c - '0';
-          int cstart = c;
-          int startIndex = this.index - 1;
-          var needObj = true;
-          int numberStartIndex = this.index - 1;
-          c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
-0xff : -1;
-          if (!(c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
-              c == 'e' || c == 'E')) {
-            // Optimize for common case where JSON number
-            // is a single digit without sign or exponent
+      // Assumes the last character read was a digit
+      CBORObject obj = null;
+      string str;
+      int cval = c - '0';
+      int cstart = c;
+      int startIndex = this.index - 1;
+      var needObj = true;
+      int numberStartIndex = this.index - 1;
+      c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
+        0xff : -1;
+      if (!(c == '-' || c == '+' || c == '.' ||(c >= '0' && c <= '9') ||
+          c == 'e' || c == 'E')) {
+        // Optimize for common case where JSON number
+        // is a single digit without sign or exponent
+        obj = CBORDataUtilities.ParseSmallNumber(cval, this.options);
+        needObj = false;
+      } else if (c >= '0' && c <= '9') {
+        int csecond = c;
+        if (cstart == '0') {
+          // Leading zero followed by any digit is not allowed
+          this.RaiseError("JSON number can't be parsed.");
+        }
+        cval = (cval * 10) + (int)(c - '0');
+        c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
+          0xff : -1;
+        if (c >= '0' && c <= '9') {
+          var digits = 2;
+          while (digits < 9 && (c >= '0' && c <= '9')) {
+            cval = (cval * 10) + (int)(c - '0');
+            c = this.index < this.endPos ?
+              ((int)this.bytes[this.index++]) & 0xff : -1;
+            ++digits;
+          }
+          if (!(c == 'e' || c == 'E' || c == '.' ||(c >= '0' && c <=
+                '9'))) {
+            // All-digit number that's short enough
             obj = CBORDataUtilities.ParseSmallNumber(cval, this.options);
             needObj = false;
-          } else if (c >= '0' && c <= '9') {
-            int csecond = c;
-            if (cstart == '0') {
-              // Leading zero followed by any digit is not allowed
-              this.RaiseError("JSON number can't be parsed.");
-            }
-            cval = (cval * 10) + (int)(c - '0');
-            c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
-0xff : -1;
-            if (c >= '0' && c <= '9') {
-              var digits = 2;
-              while (digits < 9 && (c >= '0' && c <= '9')) {
-                cval = (cval * 10) + (int)(c - '0');
-                c = this.index < this.endPos ?
-((int)this.bytes[this.index++]) & 0xff : -1;
-                ++digits;
-              }
-              if (!(c == 'e' || c == 'E' || c == '.' || (c >= '0' && c <=
-'9'))) {
-                // All-digit number that's short enough
-                obj = CBORDataUtilities.ParseSmallNumber(cval, this.options);
-                needObj = false;
-              }
-            } else if (!(c == '-' || c == '+' || c == '.' || c == 'e' || c
-                == 'E')) {
-              // Optimize for common case where JSON number
-              // is two digits without sign, decimal point, or exponent
-              obj = CBORDataUtilities.ParseSmallNumber(cval, this.options);
-              needObj = false;
-            }
           }
-          if (needObj) {
-            while (c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
-              c == 'e' || c == 'E') {
-              c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
-                 0xff : -1;
-            }
-            // check if character can validly appear after a JSON number
-            if (c != ',' && c != ']' && c != '}' && c != -1 &&
-              c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) {
-              this.RaiseError("Invalid character after JSON number");
-            }
-            int numberEndIndex = c < 0 ? this.endPos : this.index - 1;
-            var ssb = new StringBuilder(numberEndIndex - startIndex);
-            for (var ki = startIndex; ki < numberEndIndex; ++ki) {
-              ssb.Append((char)(((int)this.bytes[ki]) & 0xff));
-            }
-            str = ssb.ToString();
-            obj = CBORDataUtilities.ParseJSONNumber(str, this.options);
-            if (obj == null) {
-              string errstr = (str.Length <= 100) ? str : (str.Substring(0,
-                    100) + "...");
-              this.RaiseError("JSON number can't be parsed. " + errstr);
-            }
-          }
-          if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)) {
-            nextChar[0] = c;
-          } else {
-            nextChar[0] = this.SkipWhitespaceJSON();
-          }
-          return obj;
+        } else if (!(c == '-' || c == '+' || c == '.' || c == 'e' || c
+            == 'E')) {
+          // Optimize for common case where JSON number
+          // is two digits without sign, decimal point, or exponent
+          obj = CBORDataUtilities.ParseSmallNumber(cval, this.options);
+          needObj = false;
+        }
+      }
+      if (needObj) {
+        while (c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
+          c == 'e' || c == 'E') {
+          c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
+            0xff : -1;
+        }
+        // check if character can validly appear after a JSON number
+        if (c != ',' && c != ']' && c != '}' && c != -1 &&
+          c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) {
+          this.RaiseError("Invalid character after JSON number");
+        }
+        int numberEndIndex = c < 0 ? this.endPos : this.index - 1;
+        var ssb = new StringBuilder(numberEndIndex - startIndex);
+        for (var ki = startIndex; ki < numberEndIndex; ++ki) {
+          ssb.Append((char)(((int)this.bytes[ki]) & 0xff));
+        }
+        str = ssb.ToString();
+        obj = CBORDataUtilities.ParseJSONNumber(str, this.options);
+        if (obj == null) {
+          string errstr =(str.Length <= 100) ? str :(str.Substring(0,
+                100) + "...");
+          this.RaiseError("JSON number can't be parsed. " + errstr);
+        }
+      }
+      if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)) {
+        nextChar[0] = c;
+      } else {
+        nextChar[0] = this.SkipWhitespaceJSON();
+      }
+      return obj;
     }
 
     private CBORObject NextJSONValue(
@@ -355,9 +356,9 @@ if (c <= 0xffff) {
         case 't': {
           // Parse true
           if (this.endPos - this.index <= 2 ||
-              (((int)this.bytes[this.index]) & 0xFF) != 'r' ||
-              (((int)this.bytes[this.index + 1]) & 0xFF) != 'u' ||
-              (((int)this.bytes[this.index + 2]) & 0xFF) != 'e') {
+            (((int)this.bytes[this.index]) & 0xFF) != 'r' ||
+            (((int)this.bytes[this.index + 1]) & 0xFF) != 'u' ||
+            (((int)this.bytes[this.index + 2]) & 0xFF) != 'e') {
             this.RaiseError("Value can't be parsed.");
           }
           this.index += 3;
@@ -367,10 +368,10 @@ if (c <= 0xffff) {
         case 'f': {
           // Parse false
           if (this.endPos - this.index <= 3 ||
-              (((int)this.bytes[this.index]) & 0xFF) != 'a' ||
-              (((int)this.bytes[this.index + 1]) & 0xFF) != 'l' ||
-              (((int)this.bytes[this.index + 2]) & 0xFF) != 's' ||
-              (((int)this.bytes[this.index + 3]) & 0xFF) != 'e') {
+            (((int)this.bytes[this.index]) & 0xFF) != 'a' ||
+            (((int)this.bytes[this.index + 1]) & 0xFF) != 'l' ||
+            (((int)this.bytes[this.index + 2]) & 0xFF) != 's' ||
+            (((int)this.bytes[this.index + 3]) & 0xFF) != 'e') {
             this.RaiseError("Value can't be parsed.");
           }
           this.index += 4;
@@ -380,9 +381,9 @@ if (c <= 0xffff) {
         case 'n': {
           // Parse null
           if (this.endPos - this.index <= 2 ||
-              (((int)this.bytes[this.index]) & 0xFF) != 'u' ||
-              (((int)this.bytes[this.index + 1]) & 0xFF) != 'l' ||
-              (((int)this.bytes[this.index + 2]) & 0xFF) != 'l') {
+            (((int)this.bytes[this.index]) & 0xFF) != 'u' ||
+            (((int)this.bytes[this.index + 1]) & 0xFF) != 'l' ||
+            (((int)this.bytes[this.index + 2]) & 0xFF) != 'l') {
             this.RaiseError("Value can't be parsed.");
           }
           this.index += 3;
@@ -406,38 +407,40 @@ if (c <= 0xffff) {
           // Parse a nonnegative number
           return this.NextJSONNonnegativeNumber(c, nextChar);
         }
-        default: this.RaiseError("Value can't be parsed.");
+        default:
+          this.RaiseError("Value can't be parsed.");
           break;
       }
       return null;
     }
 
-    public CBORJson2(byte[] bytes, int index, int endPos, JSONOptions options) {
-#if DEBUG
+    public CBORJson2(byte[] bytes, int index, int endPos, JSONOptions
+options) {
+      #if DEBUG
       if (bytes == null) {
         throw new ArgumentNullException(nameof(bytes));
       }
       if (index < 0) {
         throw new ArgumentException("index (" + index + ") is not greater or" +
-"\u0020equal to 0");
+          "\u0020equal to 0");
       }
       if (index > bytes.Length) {
         throw new ArgumentException("index (" + index + ") is not less or" +
-"\u0020equal to " + bytes.Length);
+          "\u0020equal to " + bytes.Length);
       }
       if (endPos < 0) {
         throw new ArgumentException("endPos (" + endPos + ") is not greater" +
-"\u0020or equal to 0");
+          "\u0020or equal to 0");
       }
       if (endPos > bytes.Length) {
         throw new ArgumentException("endPos (" + endPos + ") is not less or" +
-"\u0020equal to " + bytes.Length);
+          "\u0020equal to " + bytes.Length);
       }
       if (endPos < index) {
         throw new ArgumentException("endPos (" + endPos + ") is not greater" +
-"\u0020or equal to " + index);
+          "\u0020or equal to " + index);
       }
-#endif
+      #endif
 
       this.sb = null;
       this.bytes = bytes;
@@ -483,31 +486,31 @@ if (c <= 0xffff) {
       int endPos,
       JSONOptions options,
       int[] nextchar) {
-#if DEBUG
+      #if DEBUG
       if (bytes == null) {
         throw new ArgumentNullException(nameof(bytes));
       }
       if (index < 0) {
         throw new ArgumentException("index (" + index + ") is not greater or" +
-"\u0020equal to 0");
+          "\u0020equal to 0");
       }
       if (index > bytes.Length) {
         throw new ArgumentException("index (" + index + ") is not less or" +
-"\u0020equal to " + bytes.Length);
+          "\u0020equal to " + bytes.Length);
       }
       if (endPos < 0) {
         throw new ArgumentException("endPos (" + endPos + ") is not greater" +
-"\u0020or equal to 0");
+          "\u0020or equal to 0");
       }
       if (endPos > bytes.Length) {
         throw new ArgumentException("endPos (" + endPos + ") is not less or" +
-"\u0020equal to " + bytes.Length);
+          "\u0020equal to " + bytes.Length);
       }
       if (endPos < index) {
         throw new ArgumentException("endPos (" + endPos + ") is not greater" +
-"\u0020or equal to " + index);
+          "\u0020or equal to " + index);
       }
-#endif
+      #endif
 
       var cj = new CBORJson2(bytes, index, endPos, options);
       return cj.ParseJSON(nextchar);

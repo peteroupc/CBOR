@@ -236,8 +236,9 @@ namespace PeterO.Cbor {
     // byte stream. If false, replaces those byte sequences with
     // replacement characters (U+FFFD) as the stream is read.</param>
     // <param name='dontSkipUtf8Bom'>If the stream is detected as UTF-8
-    // and this parameter is <c>true</c>, won't skip the BOM character if
-    // it occurs at the start of the stream.</param>
+    // (including when "mode" is 0) and this parameter is <c>true</c>,
+    // won't skip the BOM character if it occurs at the start of the
+    // stream.</param>
     // <exception cref='ArgumentNullException'>The parameter <paramref
     // name='stream'/> is null.</exception>
     public CharacterReader(

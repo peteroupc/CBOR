@@ -88,8 +88,10 @@ namespace PeterO.Cbor {
       return CBORObject.FromObject(this.value);
     }
 
-  /// <summary>Gets a value not documented yet.</summary>
-  /// <value>A value not documented yet.</value>
+  /// <summary>Gets this value's sign: -1 if negative; 1 if positive; 0
+  /// if zero.</summary>
+  /// <value>This value's sign: -1 if negative; 1 if positive; 0 if
+  /// zero.</value>
     public int Sign {
       get {
         // TODO: Will return 2 if this is NaN; is this
@@ -467,15 +469,23 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>The return value is not documented yet.</returns>
+    /// <summary>Returns whether this object's value, converted to an
+    /// integer by discarding its fractional part, would be -(2^31) or
+    /// greater, and less than 2^31.</summary>
+    /// <returns><c>true</c> if this object's value, converted to an
+    /// integer by discarding its fractional part, would be -(2^31) or
+    /// greater, and less than 2^31; otherwise, <c>false</c>.</returns>
     public bool CanTruncatedIntFitInInt32() {
       return
 this.GetNumberInterface().CanTruncatedIntFitInInt32(this.GetValue());
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>The return value is not documented yet.</returns>
+    /// <summary>Returns whether this object's value, converted to an
+    /// integer by discarding its fractional part, would be -(2^63) or
+    /// greater, and less than 2^63.</summary>
+    /// <returns><c>true</c> if this object's value, converted to an
+    /// integer by discarding its fractional part, would be -(2^63) or
+    /// greater, and less than 2^63; otherwise, <c>false</c>.</returns>
     public bool CanTruncatedIntFitInInt64() {
       switch (this.kind) {
         case Kind.Integer:
@@ -488,20 +498,34 @@ this.GetNumberInterface().CanTruncatedIntFitInInt32(this.GetValue());
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>The return value is not documented yet.</returns>
+    /// <summary>Returns whether this object's value can be converted to a
+    /// 32-bit floating point number without its value being rounded to
+    /// another numerical value.</summary>
+    /// <returns><c>true</c> if this object's value can be converted to a
+    /// 32-bit floating point number without its value being rounded to
+    /// another numerical value, or if this is a not-a-number value, even
+    /// if the value's diagnostic information can' t fit in a 32-bit
+    /// floating point number; otherwise, <c>false</c>.</returns>
     public bool CanFitInSingle() {
       return this.GetNumberInterface().CanFitInSingle(this.GetValue());
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>The return value is not documented yet.</returns>
+    /// <summary>Returns whether this object's value can be converted to a
+    /// 64-bit floating point number without its value being rounded to
+    /// another numerical value.</summary>
+    /// <returns><c>true</c> if this object's value can be converted to a
+    /// 64-bit floating point number without its value being rounded to
+    /// another numerical value, or if this is a not-a-number value, even
+    /// if the value's diagnostic information can't fit in a 64-bit
+    /// floating point number; otherwise, <c>false</c>.</returns>
     public bool CanFitInDouble() {
       return this.GetNumberInterface().CanFitInDouble(this.GetValue());
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>The return value is not documented yet.</returns>
+    /// <summary>Gets a value indicating whether this CBOR object
+    /// represents a finite number.</summary>
+    /// <returns><c>true</c> if this CBOR object represents a finite
+    /// number; otherwise, <c>false</c>.</returns>
     public bool IsFinite() {
       switch (this.kind) {
         case Kind.Integer:
@@ -524,14 +548,18 @@ this.GetNumberInterface().CanTruncatedIntFitInInt32(this.GetValue());
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>The return value is not documented yet.</returns>
+    /// <summary>Gets a value indicating whether this object is a negative
+    /// number.</summary>
+    /// <returns><c>true</c> if this object is a negative number;
+    /// otherwise, <c>false</c>.</returns>
     public bool IsNegative() {
       return this.GetNumberInterface().IsNegative(this.GetValue());
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>The return value is not documented yet.</returns>
+    /// <summary>Gets a value indicating whether this object's value equals
+    /// 0.</summary>
+    /// <returns><c>true</c> if this object's value equals 0; otherwise,
+    /// <c>false</c>.</returns>
     public bool IsZero() {
       switch (this.kind) {
         case Kind.Integer: {
@@ -542,16 +570,20 @@ this.GetNumberInterface().CanTruncatedIntFitInInt32(this.GetValue());
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>The return value is not documented yet.</returns>
+    /// <summary>Converts this object to an arbitrary-precision integer.
+    /// See the ToObject overload taking a type for more
+    /// information.</summary>
+    /// <returns>The closest arbitrary-precision integer to this
+    /// object.</returns>
     /// <exception cref='ArithmeticException'>This value is infinity or
     /// not-a-number.</exception>
     public EInteger ToEInteger() {
       return this.GetNumberInterface().AsEInteger(this.GetValue());
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>The return value is not documented yet.</returns>
+    /// <summary>Converts this object to an arbitrary-precision integer if
+    /// its value is an integer.</summary>
+    /// <returns>The arbitrary-precision integer given by object.</returns>
     /// <exception cref='ArithmeticException'>This value is infinity or
     /// not-a-number or is not an exact integer.</exception>
     public EInteger ToEIntegerIfExact() {
@@ -955,20 +987,24 @@ this.ToEIntegerIfExact().ToInt64Checked();
       return this.GetNumberInterface().IsNaN(this.GetValue());
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>The return value is not documented yet.</returns>
+    /// <summary>Converts this object to a decimal number.</summary>
+    /// <returns>A decimal number for this object's value.</returns>
     public EDecimal ToEDecimal() {
       return this.GetNumberInterface().AsEDecimal(this.GetValue());
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>The return value is not documented yet.</returns>
+    /// <summary>Converts this object to an arbitrary-precision binary
+    /// floating point number. See the ToObject overload taking a type for
+    /// more information.</summary>
+    /// <returns>An arbitrary-precision binary floating-point number for
+    /// this object's value.</returns>
     public EFloat ToEFloat() {
       return this.GetNumberInterface().AsEFloat(this.GetValue());
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>The return value is not documented yet.</returns>
+    /// <summary>Converts this object to a rational number. See the
+    /// ToObject overload taking a type for more information.</summary>
+    /// <returns>A rational number for this object's value.</returns>
     public ERational ToERational() {
       return this.GetNumberInterface().AsERational(this.GetValue());
     }

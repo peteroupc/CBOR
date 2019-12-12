@@ -32,15 +32,15 @@ namespace PeterO {
     }
 
     public static bool Extra() {
-new Test.CBORObjectTest().TestJsonSequence();
-return true;
+      new Test.CBORObjectTest().TestJsonSequence();
+      return true;
     }
 
     public static void Main() {
-if (!Extra()) {
-  return;
-}
-     const String ValueParam = "TestLong";
+      if (!Extra()) {
+        return;
+      }
+      const String ValueParam = "TestLong";
       // Run all the tests in this assembly
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
         if (!HasAttribute(type, typeof(TestFixtureAttribute))) {

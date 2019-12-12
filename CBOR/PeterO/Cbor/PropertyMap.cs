@@ -573,6 +573,8 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
         str.Substring(0, pfx.Length).Equals(pfx, StringComparison.Ordinal);
     }
 
+    // TODO: Replace* Legacy with AsNumber methods
+    // in next major version
     private static object TypeToIntegerObject(CBORObject objThis, Type t) {
       if (t.Equals(typeof(int))) {
         return objThis.AsInt32();
@@ -581,22 +583,22 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
         return objThis.AsNumber().ToInt16Checked();
       }
       if (t.Equals(typeof(ushort))) {
-        return objThis.AsUInt16();
+        return objThis.AsUInt16Legacy();
       }
       if (t.Equals(typeof(byte))) {
-        return objThis.AsByte();
+        return objThis.AsByteLegacy();
       }
       if (t.Equals(typeof(sbyte))) {
-        return objThis.AsSByte();
+        return objThis.AsSByteLegacy();
       }
       if (t.Equals(typeof(long))) {
         return objThis.AsNumber().ToInt64Checked();
       }
       if (t.Equals(typeof(uint))) {
-        return objThis.AsUInt32();
+        return objThis.AsUInt32Legacy();
       }
       if (t.Equals(typeof(ulong))) {
-        return objThis.AsUInt64();
+        return objThis.AsUInt64Legacy();
       }
       throw new CBORException("Type not supported");
     }
@@ -614,22 +616,22 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
         return objThis.AsNumber().ToInt16Checked();
       }
       if (t.Equals(typeof(ushort))) {
-        return objThis.AsUInt16();
+        return objThis.AsUInt16Legacy();
       }
       if (t.Equals(typeof(byte))) {
-        return objThis.AsByte();
+        return objThis.AsByteLegacy();
       }
       if (t.Equals(typeof(sbyte))) {
-        return objThis.AsSByte();
+        return objThis.AsSByteLegacy();
       }
       if (t.Equals(typeof(long))) {
         return objThis.AsNumber().ToInt64Checked();
       }
       if (t.Equals(typeof(uint))) {
-        return objThis.AsUInt32();
+        return objThis.AsUInt32Legacy();
       }
       if (t.Equals(typeof(ulong))) {
-        return objThis.AsUInt64();
+        return objThis.AsUInt64Legacy();
       }
       if (t.Equals(typeof(double))) {
         return objThis.AsDouble();

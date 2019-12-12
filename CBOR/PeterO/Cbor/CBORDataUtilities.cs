@@ -170,7 +170,6 @@ namespace PeterO.Cbor {
       return sb.ToString();
     }
 
-    private const int MaxSafeInt = 214748363;
     private static readonly JSONOptions DefaultOptions =
       new JSONOptions(String.Empty);
     private static readonly JSONOptions PreserveNegZeroNo =

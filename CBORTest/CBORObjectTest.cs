@@ -232,25 +232,25 @@ JSONOptions("allowduplicatekeys=false");
             throw new ArgumentNullException(nameof(str));
           }
           CBORObject obj3 = options == null ? CBORObject.FromJSONString(
-            str,
-            0,
-            str.Length) :
+              str,
+              0,
+              str.Length) :
             CBORObject.FromJSONString(str, 0, str.Length, options);
           TestCommon.CompareTestEqualAndConsistent(
             obj,
             obj3);
           obj3 = options == null ? CBORObject.FromJSONString(
-            "xyzxyz" + str,
-            6,
-            str.Length) :
+              "xyzxyz" + str,
+              6,
+              str.Length) :
             CBORObject.FromJSONString("xyzxyz" + str, 6, str.Length, options);
           TestCommon.CompareTestEqualAndConsistent(
             obj,
             obj3);
           obj3 = options == null ? CBORObject.FromJSONString(
-            "xyzxyz" + str + "xyzxyz",
-            6,
-            str.Length) : CBORObject.FromJSONString(
+              "xyzxyz" + str + "xyzxyz",
+              6,
+              str.Length) : CBORObject.FromJSONString(
               "xyzxyz" + str + "xyzxyz",
               6,
               str.Length,
@@ -3756,157 +3756,170 @@ CBOREncodeOptions(false, false, true));
       }
     }
 
-public static void ExpectJsonSequenceError(byte[] bytes) {
- try {
-  using (var ms = new MemoryStream(bytes)) {
-    try {
- CBORObject.ReadJSONSequence(ms);
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-  }
- } catch (IOException ioe) {
-  throw new InvalidOperationException(ioe.Message, ioe);
- }
-}
+    public static void ExpectJsonSequenceError(byte[] bytes) {
+      try {
+        using (var ms = new MemoryStream(bytes)) {
+          try {
+            CBORObject.ReadJSONSequence(ms);
+            Assert.Fail("Should have failed");
+          } catch (CBORException) {
+            // NOTE: Intentionally empty
+          } catch (Exception ex) {
+            Assert.Fail(ex.ToString());
+            throw new InvalidOperationException(String.Empty, ex);
+          }
+        }
+      } catch (IOException ioe) {
+        throw new InvalidOperationException(ioe.Message, ioe);
+      }
+    }
 
-public static void ExpectJsonSequenceZero(byte[] bytes) {
- try {
-  using (var ms = new MemoryStream(bytes)) {
-    string ss = TestCommon.ToByteArrayString(bytes);
-    IList<CBORObject> list = CBORObject.ReadJSONSequence(ms);
-    Assert.AreEqual(0, list.Count, ss);
-  }
- } catch (IOException ioe) {
-  throw new InvalidOperationException(ioe.Message, ioe);
- }
-}
+    public static void ExpectJsonSequenceZero(byte[] bytes) {
+      try {
+        using (var ms = new MemoryStream(bytes)) {
+          string ss = TestCommon.ToByteArrayString(bytes);
+          IList<CBORObject> list = CBORObject.ReadJSONSequence(ms);
+          Assert.AreEqual(0, list.Count, ss);
+        }
+      } catch (IOException ioe) {
+        throw new InvalidOperationException(ioe.Message, ioe);
+      }
+    }
 
-public static void ExpectJsonSequenceOne(byte[] bytes, CBORObject o1) {
- try {
-  using (var ms = new MemoryStream(bytes)) {
-    string ss = TestCommon.ToByteArrayString(bytes);
-    IList<CBORObject> list = CBORObject.ReadJSONSequence(ms);
-    Assert.AreEqual(1, list.Count, ss);
-    Assert.AreEqual(o1, list[0], ss);
-  }
- } catch (IOException ioe) {
-  throw new InvalidOperationException(ioe.Message, ioe);
- }
-}
+    public static void ExpectJsonSequenceOne(byte[] bytes, CBORObject o1) {
+      try {
+        using (var ms = new MemoryStream(bytes)) {
+          string ss = TestCommon.ToByteArrayString(bytes);
+          IList<CBORObject> list = CBORObject.ReadJSONSequence(ms);
+          Assert.AreEqual(1, list.Count, ss);
+          Assert.AreEqual(o1, list[0], ss);
+        }
+      } catch (IOException ioe) {
+        throw new InvalidOperationException(ioe.Message, ioe);
+      }
+    }
 
-public static void ExpectJsonSequenceTwo(
-  byte[] bytes,
-  CBORObject o1,
-  CBORObject o2) {
- try {
-  using (var ms = new MemoryStream(bytes)) {
-    string ss = TestCommon.ToByteArrayString(bytes);
-    IList<CBORObject> list = CBORObject.ReadJSONSequence(ms);
-    Assert.AreEqual(2, list.Count, ss);
-    Assert.AreEqual(o1, list[0], ss);
-    Assert.AreEqual(o2, list[1], ss);
-  }
- } catch (IOException ioe) {
-  throw new InvalidOperationException(ioe.Message, ioe);
- }
-}
+    public static void ExpectJsonSequenceTwo(
+      byte[] bytes,
+      CBORObject o1,
+      CBORObject o2) {
+      try {
+        using (var ms = new MemoryStream(bytes)) {
+          string ss = TestCommon.ToByteArrayString(bytes);
+          IList<CBORObject> list = CBORObject.ReadJSONSequence(ms);
+          Assert.AreEqual(2, list.Count, ss);
+          Assert.AreEqual(o1, list[0], ss);
+          Assert.AreEqual(o2, list[1], ss);
+        }
+      } catch (IOException ioe) {
+        throw new InvalidOperationException(ioe.Message, ioe);
+      }
+    }
 
-[Test]
-public void TestJsonSequence() {
- byte[] bytes;
- bytes = new byte[] { };
- ExpectJsonSequenceZero(bytes);
- bytes = new byte[] { 0x1e, 0x22, 0x41, 0x22, 0x0a };
- ExpectJsonSequenceOne(bytes, CBORObject.FromObject("A"));
- bytes = new byte[] { 0x1e, 0x22, 0x41, 0x22, 0x20 };
- ExpectJsonSequenceOne(bytes, CBORObject.FromObject("A"));
- bytes = new byte[] { 0x1e, 0x22, 0x41, 0x22, 0x09 };
- ExpectJsonSequenceOne(bytes, CBORObject.FromObject("A"));
- bytes = new byte[] { 0x1e, 0x22, 0x41, 0x22, 0x0d };
- ExpectJsonSequenceOne(bytes, CBORObject.FromObject("A"));
- bytes = new byte[] {
-   0x1e, (byte)0x66, (byte)0x61, (byte)0x6c, (byte)0x73,
-   (byte)0x65, 0x0a,
- };
- ExpectJsonSequenceOne(bytes, CBORObject.False);
- bytes = new byte[] {
-   0x1e, (byte)0x66, (byte)0x61, (byte)0x6c, (byte)0x73,
-   (byte)0x65,
- };
- ExpectJsonSequenceOne(bytes, null);
- bytes = new byte[] {
-   0x1e, (byte)0x66, (byte)0x61, (byte)0x6c, (byte)0x73,
-   (byte)0x65, (byte)0x74, (byte)0x72, (byte)0x75, (byte)0x65, 0x0a,
- };
- ExpectJsonSequenceOne(bytes, null);
- bytes = new byte[] {
-   0x1e, (byte)0x74, (byte)0x72, (byte)0x75, (byte)0x65,
-   0x0a
- };
- ExpectJsonSequenceOne(bytes, CBORObject.True);
- bytes = new byte[] { 0x1e, (byte)0x74, (byte)0x72, (byte)0x75, (byte)0x65 };
- ExpectJsonSequenceOne(bytes, null);
- bytes = new byte[] {
-   0x1e, (byte)0x6e, (byte)0x75, (byte)0x6c, (byte)0x6c,
-   0x0a
- };
- ExpectJsonSequenceOne(bytes, CBORObject.Null);
- bytes = new byte[] { 0x1e, (byte)0x6e, (byte)0x75, (byte)0x6c, (byte)0x6c };
- ExpectJsonSequenceOne(bytes, null);
- bytes = new byte[] { 0x1e, 0x22, 0x41,0x22,0x1e, (byte)'[', (byte)']' };
- ExpectJsonSequenceTwo(bytes, CBORObject.FromObject("A"), CBORObject.NewArray());
- bytes = new byte[] { 0x1e, 0x22, 0x41,0x22,0x0a,0x1e, (byte)'[', (byte)']' };
- ExpectJsonSequenceTwo(bytes, CBORObject.FromObject("A"),
-  CBORObject.NewArray());
- bytes = new byte[] { 0x1e, 0x22, 0x41,0x22,0x41,0x1e, (byte)'[', (byte)']' };
- ExpectJsonSequenceTwo(bytes, null, CBORObject.NewArray());
- bytes = new byte[] { 0x1e, 0x1e, 0x22, 0x41, 0x22, 0x0a };
- ExpectJsonSequenceOne(bytes, CBORObject.FromObject("A"));
- bytes = new byte[] { 0x1e, 0x1e, 0x30, 0x0a };
- ExpectJsonSequenceOne(bytes, CBORObject.FromObject(0));
- bytes = new byte[] { 0x1e, 0x1e, 0xef, 0xbb, 0xbf, 0x30, 0x0a };
- ExpectJsonSequenceOne(bytes, null);
- bytes = new byte[] {
-   0x1e, 0x1e, 0xef, 0xbb, 0xbf, 0x30, 0x0a, 0x1e, 0x30,
-   0x0a
- };
- ExpectJsonSequenceTwo(bytes, null, CBORObject.FromObject(0));
- bytes = new byte[] { 0x22, 0x41, 0x22, 0x0a };
- ExpectJsonSequenceError(bytes);
- bytes = new byte[] { 0xef, 0xbb, 0xbf, 0x1e, 0x30, 0x0a };
- ExpectJsonSequenceError(bytes);
- bytes = new byte[] { 0xfe, 0xff, 0x00, 0x1e, 0, 0x30, 0, 0x0a };
- ExpectJsonSequenceError(bytes);
- bytes = new byte[] { 0xff, 0xfe, 0x1e, 0, 0x30, 0, 0x0a, 0 };
- ExpectJsonSequenceError(bytes);
- bytes = new byte[] { 0x1e, 0x22, 0x41, 0x22, 0x0a, 0x31, 0x31 };
- ExpectJsonSequenceOne(bytes, null);
- bytes = new byte[] { 0x1e, 0x22, 0x41, 0x22, 0x0a, 0x1e };
- ExpectJsonSequenceTwo(bytes, CBORObject.FromObject("A"), null);
- bytes = new byte[] { 0x1e, 0x22, 0x41, 0x22, 0x0a, 0x31, 0x31, 0x1e };
- ExpectJsonSequenceTwo(bytes, null, null);
- bytes = new byte[] { 0x1e };
- ExpectJsonSequenceOne(bytes, null);
- bytes = new byte[] { 0x1e, 0x1e };
- ExpectJsonSequenceOne(bytes, null);
-}
+    [Test]
+    public void TestJsonSequence() {
+      byte[] bytes;
+      bytes = new byte[] { };
+      ExpectJsonSequenceZero(bytes);
+      bytes = new byte[] { 0x1e, 0x22, 0x41, 0x22, 0x0a };
+      ExpectJsonSequenceOne(bytes, CBORObject.FromObject("A"));
+      bytes = new byte[] { 0x1e, 0x22, 0x41, 0x22, 0x20 };
+      ExpectJsonSequenceOne(bytes, CBORObject.FromObject("A"));
+      bytes = new byte[] { 0x1e, 0x22, 0x41, 0x22, 0x09 };
+      ExpectJsonSequenceOne(bytes, CBORObject.FromObject("A"));
+      bytes = new byte[] { 0x1e, 0x22, 0x41, 0x22, 0x0d };
+      ExpectJsonSequenceOne(bytes, CBORObject.FromObject("A"));
+      bytes = new byte[] {
+        0x1e, (byte)0x66, (byte)0x61, (byte)0x6c, (byte)0x73,
+        (byte)0x65, 0x0a,
+      };
+      ExpectJsonSequenceOne(bytes, CBORObject.False);
+      bytes = new byte[] {
+        0x1e, (byte)0x66, (byte)0x61, (byte)0x6c, (byte)0x73,
+        (byte)0x65,
+      };
+      ExpectJsonSequenceOne(bytes, null);
+      bytes = new byte[] {
+        0x1e, (byte)0x66, (byte)0x61, (byte)0x6c, (byte)0x73,
+        (byte)0x65, (byte)0x74, (byte)0x72, (byte)0x75, (byte)0x65, 0x0a,
+      };
+      ExpectJsonSequenceOne(bytes, null);
+      bytes = new byte[] {
+        0x1e, (byte)0x74, (byte)0x72, (byte)0x75, (byte)0x65,
+        0x0a,
+      };
+      ExpectJsonSequenceOne(bytes, CBORObject.True);
+      bytes = new byte[] {
+        0x1e, (byte)0x74, (byte)0x72, (byte)0x75,
+        (byte)0x65,
+      };
+      ExpectJsonSequenceOne(bytes, null);
+      bytes = new byte[] {
+        0x1e, (byte)0x6e, (byte)0x75, (byte)0x6c, (byte)0x6c,
+        0x0a,
+      };
+      ExpectJsonSequenceOne(bytes, CBORObject.Null);
+      bytes = new byte[] {
+        0x1e, (byte)0x6e, (byte)0x75, (byte)0x6c,
+        (byte)0x6c,
+      };
+      ExpectJsonSequenceOne(bytes, null);
+      bytes = new byte[] { 0x1e, 0x22, 0x41, 0x22, 0x1e, (byte)'[', (byte)']' };
+      ExpectJsonSequenceTwo(bytes, CBORObject.FromObject("A"),
+        CBORObject.NewArray());
+      bytes = new byte[] {
+        0x1e, 0x22, 0x41, 0x22, 0x0a, 0x1e, (byte)'[',
+        (byte)']',
+      };
+      ExpectJsonSequenceTwo(bytes, CBORObject.FromObject("A"),
+        CBORObject.NewArray());
+      bytes = new byte[] {
+        0x1e, 0x22, 0x41, 0x22, 0x41, 0x1e, (byte)'[',
+        (byte)']',
+      };
+      ExpectJsonSequenceTwo(bytes, null, CBORObject.NewArray());
+      bytes = new byte[] { 0x1e, 0x1e, 0x22, 0x41, 0x22, 0x0a };
+      ExpectJsonSequenceOne(bytes, CBORObject.FromObject("A"));
+      bytes = new byte[] { 0x1e, 0x1e, 0x30, 0x0a };
+      ExpectJsonSequenceOne(bytes, CBORObject.FromObject(0));
+      bytes = new byte[] { 0x1e, 0x1e, 0xef, 0xbb, 0xbf, 0x30, 0x0a };
+      ExpectJsonSequenceOne(bytes, null);
+      bytes = new byte[] {
+        0x1e, 0x1e, 0xef, 0xbb, 0xbf, 0x30, 0x0a, 0x1e, 0x30,
+        0x0a,
+      };
+      ExpectJsonSequenceTwo(bytes, null, CBORObject.FromObject(0));
+      bytes = new byte[] { 0x22, 0x41, 0x22, 0x0a };
+      ExpectJsonSequenceError(bytes);
+      bytes = new byte[] { 0xef, 0xbb, 0xbf, 0x1e, 0x30, 0x0a };
+      ExpectJsonSequenceError(bytes);
+      bytes = new byte[] { 0xfe, 0xff, 0x00, 0x1e, 0, 0x30, 0, 0x0a };
+      ExpectJsonSequenceError(bytes);
+      bytes = new byte[] { 0xff, 0xfe, 0x1e, 0, 0x30, 0, 0x0a, 0 };
+      ExpectJsonSequenceError(bytes);
+      bytes = new byte[] { 0x1e, 0x22, 0x41, 0x22, 0x0a, 0x31, 0x31 };
+      ExpectJsonSequenceOne(bytes, null);
+      bytes = new byte[] { 0x1e, 0x22, 0x41, 0x22, 0x0a, 0x1e };
+      ExpectJsonSequenceTwo(bytes, CBORObject.FromObject("A"), null);
+      bytes = new byte[] { 0x1e, 0x22, 0x41, 0x22, 0x0a, 0x31, 0x31, 0x1e };
+      ExpectJsonSequenceTwo(bytes, null, null);
+      bytes = new byte[] { 0x1e };
+      ExpectJsonSequenceOne(bytes, null);
+      bytes = new byte[] { 0x1e, 0x1e };
+      ExpectJsonSequenceOne(bytes, null);
+    }
 
-[Test]
-public void TestNonUtf8FromJSONBytes() {
-byte[] bytes;
-CBORObject cbor;
-bytes = new byte[] { 0x31, 0, 0x31, 0 };
-cbor = CBORObject.FromJSONBytes(bytes);
-Assert.AreEqual(CBORObject.FromObject(11), cbor);
-bytes = new byte[] { 0x31, 0, 0, 0, 0x31, 0, 0, 0 };
-cbor = CBORObject.FromJSONBytes(bytes);
-Assert.AreEqual(CBORObject.FromObject(11), cbor);
-}
+    [Test]
+    public void TestNonUtf8FromJSONBytes() {
+      byte[] bytes;
+      CBORObject cbor;
+      bytes = new byte[] { 0x31, 0, 0x31, 0 };
+      cbor = CBORObject.FromJSONBytes(bytes);
+      Assert.AreEqual(CBORObject.FromObject(11), cbor);
+      bytes = new byte[] { 0x31, 0, 0, 0, 0x31, 0, 0, 0 };
+      cbor = CBORObject.FromJSONBytes(bytes);
+      Assert.AreEqual(CBORObject.FromObject(11), cbor);
+    }
 
     [Test]
     public void TestReadJSON() {
@@ -7013,12 +7026,12 @@ Assert.AreEqual(CBORObject.FromObject(11), cbor);
     }
 
     private static CBORObject FromJSON(string json, JSONOptions jsonop) {
-       var sw = new System.Diagnostics.Stopwatch();
-       sw.Start();
-     CBORObject cbor = CBORObject.FromJSONString(json, jsonop);
-       sw.Stop();
-       Console.WriteLine(String.Empty + sw.ElapsedMilliseconds + " ms");
-     return cbor;
+      var sw = new System.Diagnostics.Stopwatch();
+      sw.Start();
+      CBORObject cbor = CBORObject.FromJSONString(json, jsonop);
+      sw.Stop();
+      Console.WriteLine(String.Empty + sw.ElapsedMilliseconds + " ms");
+      return cbor;
     }
 
     private static CBORObject FromJSON(string json, string numconv) {

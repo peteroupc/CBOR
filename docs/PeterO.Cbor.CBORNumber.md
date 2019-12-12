@@ -8,25 +8,25 @@ An instance of a number that CBOR or certain CBOR tags can represent. For this p
 ### Member Summary
 * <code>[Abs()](#Abs)</code> - Returns the absolute value of this CBOR number.
 * <code>[Add(PeterO.Cbor.CBORNumber)](#Add_PeterO_Cbor_CBORNumber)</code> - Returns the sum of this number and another number.
-* <code>[CanFitInDouble()](#CanFitInDouble)</code> - Not documented yet.
+* <code>[CanFitInDouble()](#CanFitInDouble)</code> - Returns whether this object's value can be converted to a 64-bit floating point number without its value being rounded to another numerical value.
 * <code>[CanFitInInt32()](#CanFitInInt32)</code> - Returns whether this object's numerical value is an integer, is -(2^31) or greater, and is less than 2^31.
 * <code>[CanFitInInt64()](#CanFitInInt64)</code> - Returns whether this object's numerical value is an integer, is -(2^63) or greater, and is less than 2^63.
-* <code>[CanFitInSingle()](#CanFitInSingle)</code> - Not documented yet.
-* <code>[CanTruncatedIntFitInInt32()](#CanTruncatedIntFitInInt32)</code> - Not documented yet.
-* <code>[CanTruncatedIntFitInInt64()](#CanTruncatedIntFitInInt64)</code> - Not documented yet.
+* <code>[CanFitInSingle()](#CanFitInSingle)</code> - Returns whether this object's value can be converted to a 32-bit floating point number without its value being rounded to another numerical value.
+* <code>[CanTruncatedIntFitInInt32()](#CanTruncatedIntFitInInt32)</code> - Returns whether this object's value, converted to an integer by discarding its fractional part, would be -(2^31) or greater, and less than 2^31.
+* <code>[CanTruncatedIntFitInInt64()](#CanTruncatedIntFitInInt64)</code> - Returns whether this object's value, converted to an integer by discarding its fractional part, would be -(2^63) or greater, and less than 2^63.
 * <code>[CompareTo(PeterO.Cbor.CBORNumber)](#CompareTo_PeterO_Cbor_CBORNumber)</code> - Compares two CBOR numbers.
 * <code>[Divide(PeterO.Cbor.CBORNumber)](#Divide_PeterO_Cbor_CBORNumber)</code> - Returns the quotient of this number and another number.
 * <code>[FromByte(byte)](#FromByte_byte)</code> - Converts a byte (from 0 to 255) to an arbitrary-precision decimal number.
 * <code>[FromCBORObject(PeterO.Cbor.CBORObject)](#FromCBORObject_PeterO_Cbor_CBORObject)</code> - Creates a CBOR number object from a CBOR object representing a number (that is, one for which the IsNumber property in.
 * <code>[FromInt16(short)](#FromInt16_short)</code> - Converts a 16-bit signed integer to an arbitrary-precision decimal number.
-* <code>[IsFinite()](#IsFinite)</code> - Not documented yet.
+* <code>[IsFinite()](#IsFinite)</code> - Gets a value indicating whether this CBOR object represents a finite number.
 * <code>[IsInfinity()](#IsInfinity)</code> - Gets a value indicating whether this object represents infinity.
 * <code>[IsInteger()](#IsInteger)</code> - Not documented yet.
 * <code>[IsNaN()](#IsNaN)</code> - Gets a value indicating whether this object represents a not-a-number value.
-* <code>[IsNegative()](#IsNegative)</code> - Not documented yet.
+* <code>[IsNegative()](#IsNegative)</code> - Gets a value indicating whether this object is a negative number.
 * <code>[IsNegativeInfinity()](#IsNegativeInfinity)</code> - Gets a value indicating whether this object represents negative infinity.
 * <code>[IsPositiveInfinity()](#IsPositiveInfinity)</code> - Gets a value indicating whether this object represents positive infinity.
-* <code>[IsZero()](#IsZero)</code> - Not documented yet.
+* <code>[IsZero()](#IsZero)</code> - Gets a value indicating whether this object's value equals 0.
 * <code>[Multiply(PeterO.Cbor.CBORNumber)](#Multiply_PeterO_Cbor_CBORNumber)</code> - Returns a CBOR number expressing the product of this number and the given number.
 * <code>[Negate()](#Negate)</code> - Returns a CBOR number with the same value as this one but with the sign reversed.
 * <code>[bool operator &gt;(PeterO.Cbor.CBORNumber, PeterO.Cbor.CBORNumber)](#op_GreaterThan)</code> - Returns whether one object's value is greater than another's.
@@ -34,17 +34,17 @@ An instance of a number that CBOR or certain CBOR tags can represent. For this p
 * <code>[bool operator &lt;(PeterO.Cbor.CBORNumber, PeterO.Cbor.CBORNumber)](#op_LessThan)</code> - Returns whether one object's value is less than another's.
 * <code>[bool operator &lt;=(PeterO.Cbor.CBORNumber, PeterO.Cbor.CBORNumber)](#op_LessThanOrEqual)</code> - Returns whether one object's value is up to another's.
 * <code>[Remainder(PeterO.Cbor.CBORNumber)](#Remainder_PeterO_Cbor_CBORNumber)</code> - Returns the remainder when this number is divided by another number.
-* <code>[Sign](#Sign)</code> - Gets a value not documented yet.
+* <code>[Sign](#Sign)</code> - Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
 * <code>[Subtract(PeterO.Cbor.CBORNumber)](#Subtract_PeterO_Cbor_CBORNumber)</code> - Returns a number that expresses this number minus another.
 * <code>[ToByteChecked()](#ToByteChecked)</code> - Converts this number's value to a byte (from 0 to 255) if it can fit in a byte (from 0 to 255) after converting it to an integer by discarding its fractional part.
 * <code>[ToByteIfExact()](#ToByteIfExact)</code> - Converts this number's value to a byte (from 0 to 255) if it can fit in a byte (from 0 to 255) without rounding to a different numerical value.
 * <code>[ToByteUnchecked()](#ToByteUnchecked)</code> - Converts this number's value to an integer by discarding its fractional part, and returns the least-significant bits of its two's-complement form as a byte (from 0 to 255).
 * <code>[ToCBORObject()](#ToCBORObject)</code> - Converts this object's value to a CBOR object.
-* <code>[ToEDecimal()](#ToEDecimal)</code> - Not documented yet.
-* <code>[ToEFloat()](#ToEFloat)</code> - Not documented yet.
-* <code>[ToEInteger()](#ToEInteger)</code> - Not documented yet.
-* <code>[ToEIntegerIfExact()](#ToEIntegerIfExact)</code> - Not documented yet.
-* <code>[ToERational()](#ToERational)</code> - Not documented yet.
+* <code>[ToEDecimal()](#ToEDecimal)</code> - Converts this object to a decimal number.
+* <code>[ToEFloat()](#ToEFloat)</code> - Converts this object to an arbitrary-precision binary floating point number.
+* <code>[ToEInteger()](#ToEInteger)</code> - Converts this object to an arbitrary-precision integer.
+* <code>[ToEIntegerIfExact()](#ToEIntegerIfExact)</code> - Converts this object to an arbitrary-precision integer if its value is an integer.
+* <code>[ToERational()](#ToERational)</code> - Converts this object to a rational number.
 * <code>[ToInt16Checked()](#ToInt16Checked)</code> - Converts this number's value to a 16-bit signed integer if it can fit in a 16-bit signed integer after converting it to an integer by discarding its fractional part.
 * <code>[ToInt16IfExact()](#ToInt16IfExact)</code> - Converts this number's value to a 16-bit signed integer if it can fit in a 16-bit signed integer without rounding to a different numerical value.
 * <code>[ToInt16Unchecked()](#ToInt16Unchecked)</code> - Converts this number's value to an integer by discarding its fractional part, and returns the least-significant bits of its two's-complement form as a 16-bit signed integer.
@@ -73,11 +73,11 @@ An instance of a number that CBOR or certain CBOR tags can represent. For this p
 
     public int Sign { get; }
 
-Gets a value not documented yet.
+Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
 
 <b>Returns:</b>
 
-A value not documented yet.
+This value's sign: -1 if negative; 1 if positive; 0 if zero.
 
 <a id="Abs"></a>
 ### Abs
@@ -117,11 +117,11 @@ The parameter  <i>b</i>
 
     public bool CanFitInDouble();
 
-Not documented yet.
+Returns whether this object's value can be converted to a 64-bit floating point number without its value being rounded to another numerical value.
 
 <b>Return Value:</b>
 
-The return value is not documented yet.
+ `true`  if this object's value can be converted to a 64-bit floating point number without its value being rounded to another numerical value, or if this is a not-a-number value, even if the value's diagnostic information can't fit in a 64-bit floating point number; otherwise,  `false` .
 
 <a id="CanFitInInt32"></a>
 ### CanFitInInt32
@@ -150,33 +150,33 @@ Returns whether this object's numerical value is an integer, is -(2^63) or great
 
     public bool CanFitInSingle();
 
-Not documented yet.
+Returns whether this object's value can be converted to a 32-bit floating point number without its value being rounded to another numerical value.
 
 <b>Return Value:</b>
 
-The return value is not documented yet.
+ `true`  if this object's value can be converted to a 32-bit floating point number without its value being rounded to another numerical value, or if this is a not-a-number value, even if the value's diagnostic information can' t fit in a 32-bit floating point number; otherwise,  `false` .
 
 <a id="CanTruncatedIntFitInInt32"></a>
 ### CanTruncatedIntFitInInt32
 
     public bool CanTruncatedIntFitInInt32();
 
-Not documented yet.
+Returns whether this object's value, converted to an integer by discarding its fractional part, would be -(2^31) or greater, and less than 2^31.
 
 <b>Return Value:</b>
 
-The return value is not documented yet.
+ `true`  if this object's value, converted to an integer by discarding its fractional part, would be -(2^31) or greater, and less than 2^31; otherwise,  `false` .
 
 <a id="CanTruncatedIntFitInInt64"></a>
 ### CanTruncatedIntFitInInt64
 
     public bool CanTruncatedIntFitInInt64();
 
-Not documented yet.
+Returns whether this object's value, converted to an integer by discarding its fractional part, would be -(2^63) or greater, and less than 2^63.
 
 <b>Return Value:</b>
 
-The return value is not documented yet.
+ `true`  if this object's value, converted to an integer by discarding its fractional part, would be -(2^63) or greater, and less than 2^63; otherwise,  `false` .
 
 <a id="CompareTo_PeterO_Cbor_CBORNumber"></a>
 ### CompareTo
@@ -272,11 +272,11 @@ This number's value as an arbitrary-precision decimal number.
 
     public bool IsFinite();
 
-Not documented yet.
+Gets a value indicating whether this CBOR object represents a finite number.
 
 <b>Return Value:</b>
 
-The return value is not documented yet.
+ `true`  if this CBOR object represents a finite number; otherwise,  `false` .
 
 <a id="IsInfinity"></a>
 ### IsInfinity
@@ -316,11 +316,11 @@ Gets a value indicating whether this object represents a not-a-number value.
 
     public bool IsNegative();
 
-Not documented yet.
+Gets a value indicating whether this object is a negative number.
 
 <b>Return Value:</b>
 
-The return value is not documented yet.
+ `true`  if this object is a negative number; otherwise,  `false` .
 
 <a id="IsNegativeInfinity"></a>
 ### IsNegativeInfinity
@@ -349,11 +349,11 @@ Gets a value indicating whether this object represents positive infinity.
 
     public bool IsZero();
 
-Not documented yet.
+Gets a value indicating whether this object's value equals 0.
 
 <b>Return Value:</b>
 
-The return value is not documented yet.
+ `true`  if this object's value equals 0; otherwise,  `false` .
 
 <a id="Multiply_PeterO_Cbor_CBORNumber"></a>
 ### Multiply
@@ -591,33 +591,33 @@ A CBOR object that stores this object's value.
 
     public PeterO.Numbers.EDecimal ToEDecimal();
 
-Not documented yet.
+Converts this object to a decimal number.
 
 <b>Return Value:</b>
 
-The return value is not documented yet.
+A decimal number for this object's value.
 
 <a id="ToEFloat"></a>
 ### ToEFloat
 
     public PeterO.Numbers.EFloat ToEFloat();
 
-Not documented yet.
+Converts this object to an arbitrary-precision binary floating point number. See the ToObject overload taking a type for more information.
 
 <b>Return Value:</b>
 
-The return value is not documented yet.
+An arbitrary-precision binary floating-point number for this object's value.
 
 <a id="ToEInteger"></a>
 ### ToEInteger
 
     public PeterO.Numbers.EInteger ToEInteger();
 
-Not documented yet.
+Converts this object to an arbitrary-precision integer. See the ToObject overload taking a type for more information.
 
 <b>Return Value:</b>
 
-The return value is not documented yet.
+The closest arbitrary-precision integer to this object.
 
 <b>Exceptions:</b>
 
@@ -629,11 +629,11 @@ This value is infinity or not-a-number.
 
     public PeterO.Numbers.EInteger ToEIntegerIfExact();
 
-Not documented yet.
+Converts this object to an arbitrary-precision integer if its value is an integer.
 
 <b>Return Value:</b>
 
-The return value is not documented yet.
+The arbitrary-precision integer given by object.
 
 <b>Exceptions:</b>
 
@@ -645,11 +645,11 @@ This value is infinity or not-a-number or is not an exact integer.
 
     public PeterO.Numbers.ERational ToERational();
 
-Not documented yet.
+Converts this object to a rational number. See the ToObject overload taking a type for more information.
 
 <b>Return Value:</b>
 
-The return value is not documented yet.
+A rational number for this object's value.
 
 <a id="ToInt16Checked"></a>
 ### ToInt16Checked
