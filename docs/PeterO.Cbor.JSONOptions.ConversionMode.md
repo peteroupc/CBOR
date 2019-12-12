@@ -20,7 +20,7 @@ Specifies how JSON numbers are converted to CBOR when decoding JSON.
 
     public static PeterO.Cbor.JSONOptions.ConversionMode Decimal128 = 4;
 
-JSON numbers are decoded to CBOR as their closest-rounded approximation to an IEEE 854 decimal128 value, using the rules for the EDecimal form of that approximation as given in the  `CBORObject.FromObject(EDecimal) method` .
+JSON numbers are decoded to CBOR as their closest-rounded approximation to an IEEE 854 decimal128 value, using the rules for the EDecimal form of that approximation as given in the  `CBORObject.FromObject(EDecimal)`  method.
 
 <a id="Double"></a>
 ### Double

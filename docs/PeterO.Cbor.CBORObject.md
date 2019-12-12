@@ -103,6 +103,8 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[FromJSONBytes(byte[], int, int)](#FromJSONBytes_byte_int_int)</code> - Generates a CBOR object from a byte array in JavaScript Object Notation (JSON) format.
 * <code>[FromJSONBytes(byte[], int, int, PeterO.Cbor.JSONOptions)](#FromJSONBytes_byte_int_int_PeterO_Cbor_JSONOptions)</code> - Generates a CBOR object from a byte array in JavaScript Object Notation (JSON) format, using the specified options to control the decoding process.
 * <code>[FromJSONBytes(byte[], PeterO.Cbor.JSONOptions)](#FromJSONBytes_byte_PeterO_Cbor_JSONOptions)</code> - Generates a CBOR object from a byte array in JavaScript Object Notation (JSON) format, using the specified options to control the decoding process.
+* <code>[FromJSONSequenceBytes(byte[])](#FromJSONSequenceBytes_byte)</code> - Generates a list of CBOR objects from an array of bytes in JavaScript Object Notation (JSON) text sequence format (RFC 7464).
+* <code>[FromJSONSequenceBytes(byte[], PeterO.Cbor.JSONOptions)](#FromJSONSequenceBytes_byte_PeterO_Cbor_JSONOptions)</code> - Generates a list of CBOR objects from an array of bytes in JavaScript Object Notation (JSON) text sequence format (RFC 7464), using the specified options to control the decoding process.
 * <code>[FromJSONString(string)](#FromJSONString_string)</code> - Generates a CBOR object from a text string in JavaScript Object Notation (JSON) format.
 * <code>[FromJSONString(string, int, int)](#FromJSONString_string_int_int)</code> - Generates a CBOR object from a text string in JavaScript Object Notation (JSON) format.
 * <code>[FromJSONString(string, int, int, PeterO.Cbor.JSONOptions)](#FromJSONString_string_int_int_PeterO_Cbor_JSONOptions)</code> - Generates a CBOR object from a text string in JavaScript Object Notation (JSON) format, using the specified options to control the decoding process.
@@ -187,6 +189,8 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[ReadJSON(System.IO.Stream)](#ReadJSON_System_IO_Stream)</code> - Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format.
 * <code>[ReadJSON(System.IO.Stream, PeterO.Cbor.CBOREncodeOptions)](#ReadJSON_System_IO_Stream_PeterO_Cbor_CBOREncodeOptions)</code> - <b>Deprecated:</b> Instead, use .ReadJSON(stream, new JSONOptions(&#x22;allowduplicatekeys=true&#x22;)) or .ReadJSON(stream, new JSONOptions(&#x22;allowduplicatekeys=false&#x22;)), as appropriate.
 * <code>[ReadJSON(System.IO.Stream, PeterO.Cbor.JSONOptions)](#ReadJSON_System_IO_Stream_PeterO_Cbor_JSONOptions)</code> - Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format, using the specified options to control the decoding process.
+* <code>[ReadJSONSequence(System.IO.Stream)](#ReadJSONSequence_System_IO_Stream)</code> - Generates a list of CBOR objects from a data stream in JavaScript Object Notation (JSON) text sequence format (RFC 7464).
+* <code>[ReadJSONSequence(System.IO.Stream, PeterO.Cbor.JSONOptions)](#ReadJSONSequence_System_IO_Stream_PeterO_Cbor_JSONOptions)</code> - Generates a list of CBOR objects from a data stream in JavaScript Object Notation (JSON) text sequence format (RFC 7464).
 * <code>[ReadSequence(System.IO.Stream)](#ReadSequence_System_IO_Stream)</code> - Reads a sequence of objects in CBOR format from a data stream.
 * <code>[ReadSequence(System.IO.Stream, PeterO.Cbor.CBOREncodeOptions)](#ReadSequence_System_IO_Stream_PeterO_Cbor_CBOREncodeOptions)</code> - Reads a sequence of objects in CBOR format from a data stream.
 * <code>[Remainder(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#Remainder_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject)</code> - <b>Deprecated:</b> Instead, convert both CBOR objects to numbers (with .AsNumber()), and use the first number's .Remainder() method.
@@ -1722,7 +1726,7 @@ Note that if a CBOR object is converted to JSON with  `ToJSONBytes` , then the J
 
  * <i>count</i>: The length, in bytes, of the desired portion of  <i>bytes</i>
  (but not more than  <i>bytes</i>
-'s length).
+ 's length).
 
 <b>Return Value:</b>
 
@@ -1822,6 +1826,59 @@ The parameter  <i>bytes</i>
  * PeterO.Cbor.CBORException:
 The byte array contains invalid encoding or is not in JSON format.
 
+<a id="FromJSONSequenceBytes_byte"></a>
+### FromJSONSequenceBytes
+
+    public static PeterO.Cbor.CBORObject[] FromJSONSequenceBytes(
+        byte[] bytes);
+
+Generates a list of CBOR objects from an array of bytes in JavaScript Object Notation (JSON) text sequence format (RFC 7464). The byte array must be in UTF-8 encoding and may not begin with a byte-order mark (U+FEFF).
+
+Generally, each JSON text in a JSON text sequence is written as follows: Write a record separator byte (0x1e), then write the JSON text in UTF-8 (without a byte order mark, U+FEFF), then write the line feed byte (0x0a). RFC 7464, however, uses a more liberal syntax for parsing JSON text sequences.
+
+<b>Parameters:</b>
+
+ * <i>stream</i>: A byte array in which a JSON text sequence is encoded. The byte array must either be empty or begin with a record separator byte (0x1e).
+
+<b>Return Value:</b>
+
+A list of CBOR objects read from the JSON sequence. Objects that could not be parsed are replaced with  `null`  (as opposed to  `CBORObject.Null` ) in the given list.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter  <i>stream</i>
+ is null.
+
+ * PeterO.Cbor.CBORException:
+The byte array is not empty and does not begin with a record separator byte (0x1e), or an I/O error occurred.
+
+<a id="FromJSONSequenceBytes_byte_PeterO_Cbor_JSONOptions"></a>
+### FromJSONSequenceBytes
+
+    public static PeterO.Cbor.CBORObject[] FromJSONSequenceBytes(
+        byte[] data,
+        PeterO.Cbor.JSONOptions options);
+
+Generates a list of CBOR objects from an array of bytes in JavaScript Object Notation (JSON) text sequence format (RFC 7464), using the specified options to control the decoding process. The byte array must be in UTF-8 encoding and may not begin with a byte-order mark (U+FEFF).
+
+Generally, each JSON text in a JSON text sequence is written as follows: Write a record separator byte (0x1e), then write the JSON text in UTF-8 (without a byte order mark, U+FEFF), then write the line feed byte (0x0a). RFC 7464, however, uses a more liberal syntax for parsing JSON text sequences.
+
+<b>Parameters:</b>
+
+ * <i>stream</i>: A byte array in which a JSON text sequence is encoded. The byte array must either be empty or begin with a record separator byte (0x1e).
+
+ * <i>options</i>: Specifies options to control how the JSON is decoded to CBOR. See [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) for more information.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter  <i>stream</i>
+ is null.
+
+ * PeterO.Cbor.CBORException:
+The byte array is not empty and does not begin with a record separator byte (0x1e), or an I/O error occurred.
+
 <a id="FromJSONString_string"></a>
 ### FromJSONString
 
@@ -1874,7 +1931,7 @@ Note that if a CBOR object is converted to JSON with  `ToJSONString` , then the 
 
  * <i>count</i>: The length, in code units, of the desired portion of  <i>str</i>
  (but not more than  <i>str</i>
-'s length).
+ 's length).
 
 <b>Return Value:</b>
 
@@ -2587,7 +2644,7 @@ Generates a CBOR object from an arbitrary object and gives the resulting object 
 
 .
 
- * <i>tag</i>: A 64-bit integer that specifies a tag number. The tag number 55799 can be used to mark a "self-described CBOR" object. This document does not attempt to list all CBOR tags and their meanings. An up-to-date list can be found at the CBOR Tags registry maintained by the Internet Assigned Numbers Authority ( <i>iana.org/assignments/cbor-tags</i> ).
+ * <i>tag</i>: A 64-bit integer that specifies a tag number. The tag number 55799 can be used to mark a "self-described CBOR" object. This document does not attempt to list all CBOR tags and their meanings. An up-to-date list can be found at the CBOR Tags registry maintained by the Internet Assigned Numbers Authority( <i>iana.org/assignments/cbor-tags</i> ).
 
 <b>Return Value:</b>
 
@@ -3461,6 +3518,69 @@ An I/O error occurred.
  * PeterO.Cbor.CBORException:
 The data stream contains invalid encoding or is not in JSON format.
 
+<a id="ReadJSONSequence_System_IO_Stream"></a>
+### ReadJSONSequence
+
+    public static PeterO.Cbor.CBORObject[] ReadJSONSequence(
+        System.IO.Stream stream);
+
+Generates a list of CBOR objects from a data stream in JavaScript Object Notation (JSON) text sequence format (RFC 7464). The data stream must be in UTF-8 encoding and may not begin with a byte-order mark (U+FEFF).
+
+Generally, each JSON text in a JSON text sequence is written as follows: Write a record separator byte (0x1e), then write the JSON text in UTF-8 (without a byte order mark, U+FEFF), then write the line feed byte (0x0a). RFC 7464, however, uses a more liberal syntax for parsing JSON text sequences.
+
+<b>Parameters:</b>
+
+ * <i>stream</i>: A readable data stream. The sequence of bytes read from the data stream must either be empty or begin with a record separator byte (0x1e).
+
+<b>Return Value:</b>
+
+A list of CBOR objects read from the JSON sequence. Objects that could not be parsed are replaced with  `null`  (as opposed to  `CBORObject.Null` ) in the given list.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter  <i>stream</i>
+ is null.
+
+ * System.IO.IOException:
+An I/O error occurred.
+
+ * PeterO.Cbor.CBORException:
+The data stream is not empty and does not begin with a record separator byte (0x1e).
+
+<a id="ReadJSONSequence_System_IO_Stream_PeterO_Cbor_JSONOptions"></a>
+### ReadJSONSequence
+
+    public static PeterO.Cbor.CBORObject[] ReadJSONSequence(
+        System.IO.Stream stream,
+        PeterO.Cbor.JSONOptions jsonoptions);
+
+Generates a list of CBOR objects from a data stream in JavaScript Object Notation (JSON) text sequence format (RFC 7464). The data stream must be in UTF-8 encoding and may not begin with a byte-order mark (U+FEFF).
+
+Generally, each JSON text in a JSON text sequence is written as follows: Write a record separator byte (0x1e), then write the JSON text in UTF-8 (without a byte order mark, U+FEFF), then write the line feed byte (0x0a). RFC 7464, however, uses a more liberal syntax for parsing JSON text sequences.
+
+<b>Parameters:</b>
+
+ * <i>stream</i>: A readable data stream. The sequence of bytes read from the data stream must either be empty or begin with a record separator byte (0x1e).
+
+ * <i>jsonoptions</i>: Specifies options to control how JSON texts in the stream are decoded to CBOR. See the JSONOptions class.
+
+<b>Return Value:</b>
+
+A list of CBOR objects read from the JSON sequence. Objects that could not be parsed are replaced with  `null`  (as opposed to  `CBORObject.Null` ) in the given list.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter  <i>stream</i>
+ is null.
+
+ * System.IO.IOException:
+An I/O error occurred.
+
+ * PeterO.Cbor.CBORException:
+The data stream is not empty and does not begin with a record separator byte (0x1e).
+
 <a id="ReadSequence_System_IO_Stream"></a>
 ### ReadSequence
 
@@ -3748,7 +3868,7 @@ The parameter  <i>options</i>
 
     public string ToJSONString();
 
-Converts this object to a text string in JavaScript Object Notation (JSON) format. See the overload to JSONString taking a JSONOptions argument for further information. If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the JSON string in an undefined order. Map keys other than untagged text strings are converted to JSON strings before writing them out (for example,  `22("Test")`  is converted to  `"Test"`  and  `true`  is converted to  `"true"`  ). If, after such conversion, two or more map keys are identical, this method throws a CBORException. The example code given in <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b> can be used to write out certain keys of a CBOR map in a given order to a JSON string.
+Converts this object to a text string in JavaScript Object Notation (JSON) format. See the overload to JSONString taking a JSONOptions argument for further information. If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the JSON string in an undefined order. Map keys other than untagged text strings are converted to JSON strings before writing them out (for example,  `22("Test")`  is converted to  `"Test"`  and  `true`  is converted to  `"true"`  ). If, after such conversion, two or more map keys are identical, this method throws a CBORException. The example code given in <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b> can be used to write out certain keys of a CBOR map in a given order to a JSON string, or to write out a CBOR object as part of a JSON text sequence.
 
 <b>Warning:</b> In general, if this CBOR object contains integer map keys or uses other features not supported in JSON, and the application converts this CBOR object to JSON and back to CBOR, the application <i>should not</i> expect the new CBOR object to be exactly the same as the original. This is because the conversion in many cases may have to convert unsupported features in JSON to supported features which correspond to a different feature in CBOR (such as converting integer map keys, which are supported in CBOR but not JSON, to text strings, which are supported in both).
 
@@ -4164,7 +4284,7 @@ Generates a CBOR object from this one, but gives the resulting object a tag in a
 
 <b>Parameters:</b>
 
- * <i>tag</i>: A 64-bit integer that specifies a tag number. The tag number 55799 can be used to mark a "self-described CBOR" object. This document does not attempt to list all CBOR tags and their meanings. An up-to-date list can be found at the CBOR Tags registry maintained by the Internet Assigned Numbers Authority ( <i>iana.org/assignments/cbor-tags</i> ).
+ * <i>tag</i>: A 64-bit integer that specifies a tag number. The tag number 55799 can be used to mark a "self-described CBOR" object. This document does not attempt to list all CBOR tags and their meanings. An up-to-date list can be found at the CBOR Tags registry maintained by the Internet Assigned Numbers Authority( <i>iana.org/assignments/cbor-tags</i> ).
 
 <b>Return Value:</b>
 
@@ -4766,6 +4886,12 @@ The parameter  <i>outputStream</i>
         System.IO.Stream outputStream);
 
 Converts this object to a text string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8. If the CBOR object contains CBOR maps, or is a CBOR map, the keys to the map are written out to the JSON string in an undefined order. The example code given in <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b> can be used to write out certain keys of a CBOR map in a given order to a JSON string.
+
+The following example (originally written in C# for the .NET version) writes out a CBOR object as part of a JSON text sequence (RFC 7464).
+
+                stream.WriteByte(0x1e); /* RS */
+                cborObject.WriteJSONTo(stream); /* JSON */
+                stream.WriteByte(0x0a); /* LF */
 
 The following example (originally written in C# for the.NET version) shows how to use the  `LimitedMemoryStream`  class (implemented in <i>LimitedMemoryStream.cs</i> in the peteroupc/CBOR open-source repository) to limit the size of supported JSON serializations of CBOR objects.
 

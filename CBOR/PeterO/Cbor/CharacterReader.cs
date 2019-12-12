@@ -560,8 +560,9 @@ namespace PeterO.Cbor {
           // UTF-8 only
           utf8reader = new Utf8Reader(this.stream, this.errorThrow);
           this.reader = utf8reader;
+          utf8reader.Unget(c1);
           c1 = utf8reader.ReadChar();
-          if (c1 == 0xfeff) {
+          if (c1 == 0xfeff && !this.dontSkipUtf8Bom) {
             // Skip BOM
             c1 = utf8reader.ReadChar();
           }

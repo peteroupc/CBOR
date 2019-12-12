@@ -32,6 +32,7 @@ namespace PeterO {
     }
 
     public static bool Extra() {
+new Test.CBORObjectTest().TestJsonSequence();
 return true;
     }
 

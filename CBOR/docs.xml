@@ -111,9 +111,13 @@
         <summary>Parses a number whose format follows the JSON
             specification (RFC 8259) from a portion of a text string, and
             converts that number to a CBOR object.</summary><param name='str'>A text string containing the portion to parse as
-            a JSON number.</param><param name='offset'>An index, starting at 0, showing where the desired portion of <paramref name='str'/> begins.</param><param name='count'>The length, in code units, of the desired portion of <paramref name='str'/> (but  not more than <paramref name='str'/>'s length).</param><returns>A CBOR object that represents the parsed number. Returns
+            a JSON number.</param><param name='offset'>An index, starting at 0, showing where the
+            desired portion of <paramref name='str'/> begins.</param><param name='count'>The length, in code units, of the desired
+            portion of <paramref name='str'/> (but not more than <paramref name='str'/> 's length).</param><returns>A CBOR object that represents the parsed number. Returns
             null if the parsing fails, including if the string is null or
-            empty.</returns><exception cref='ArgumentException'>Either <paramref name='offset'/> or <paramref name='count'/> is less than 0 or greater than <paramref name='str'/>'s length, or <paramref name='str'/>'s length minus <paramref name='offset'/> is less than <paramref name='count'/>.</exception><exception cref='ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception><remarks>Roughly speaking, a valid JSON number consists of an
+            empty.</returns><exception cref='ArgumentException'>Either <paramref name='offset'/> or <paramref name='count'/> is less than 0 or
+            greater than <paramref name='str'/> 's length, or <paramref name='str'/> 's length minus <paramref name='offset'/> is less than
+            <paramref name='count'/>.</exception><exception cref='ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception><remarks>Roughly speaking, a valid JSON number consists of an
             optional minus sign, one or more basic digits (starting with 1 to 9
             unless there is only one digit and that digit is 0), an optional
             decimal point (".", full stop) with one or more basic digits, and
@@ -1710,7 +1714,9 @@
             may begin with a byte-order mark (U+FEFF). The portion can be in
             UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by
             assuming that the first character read must be a byte-order mark or
-            a nonzero basic character (U+0001 to U+007F).</param><param name='offset'>An index, starting at 0, showing where the desired portion of <paramref name='bytes'/> begins.</param><param name='count'>The length, in bytes, of the desired portion of <paramref name='bytes'/> (but  not more than <paramref name='bytes'/>'s length).</param><returns>A CBOR object containing the JSON data decoded.</returns><exception cref='ArgumentNullException'>The parameter <paramref name='bytes'/> is null.</exception><exception cref='PeterO.Cbor.CBORException'>The byte array contains
+            a nonzero basic character (U+0001 to U+007F).</param><param name='offset'>An index, starting at 0, showing where the
+            desired portion of <paramref name='bytes'/> begins.</param><param name='count'>The length, in bytes, of the desired portion of
+            <paramref name='bytes'/> (but not more than <paramref name='bytes'/> 's length).</param><returns>A CBOR object containing the JSON data decoded.</returns><exception cref='ArgumentNullException'>The parameter <paramref name='bytes'/> is null.</exception><exception cref='PeterO.Cbor.CBORException'>The byte array contains
             invalid encoding or is not in JSON format.</exception><exception cref='ArgumentException'>Either <paramref name='offset'/> or <paramref name='count'/> is less than 0 or
             greater than <paramref name='bytes'/> 's length, or <paramref name='bytes'/> 's length minus <paramref name='offset'/> is less
             than <paramref name='count'/>.</exception>
@@ -1739,6 +1745,17 @@
             invalid encoding or is not in JSON format.</exception><exception cref='ArgumentException'>Either <paramref name='offset'/> or <paramref name='count'/> is less than 0 or
             greater than <paramref name='bytes'/> 's length, or <paramref name='bytes'/> 's length minus <paramref name='offset'/> is less
             than <paramref name='count'/>.</exception>
+</doc>
+<doc name="M:PeterO.Cbor.CBORObject.FromJSONSequenceBytes(System.Byte[])">
+<summary>Generates a list of CBOR objects from an array of bytes in JavaScript
+            Object Notation (JSON) text sequence format (RFC 7464). The byte array must be in UTF-8 encoding and may not begin with a byte-order mark (U+FEFF).</summary><param name='stream'>A byte array in which a JSON text sequence is encoded. The byte array must either be empty or begin with a record separator byte (0x1e).</param><returns>A list of CBOR objects read from the JSON sequence.  Objects that could not be parsed are replaced with <c>null</c> (as opposed to <c>CBORObject.Null</c>) in the given list.</returns><exception cref='ArgumentNullException'>The parameter <paramref name='stream'/> is null.</exception><exception cref='PeterO.Cbor.CBORException'>The byte array
+            is not empty and does not begin with a record separator byte (0x1e), or an I/O error occurred.</exception><remarks>Generally, each JSON text in a JSON text sequence is written as follows:  Write a record separator byte (0x1e), then write the JSON text in UTF-8 (without a byte order mark, U+FEFF), then write the line feed byte (0x0a).  RFC 7464, however, uses a more liberal syntax for parsing JSON text sequences.</remarks>
+</doc>
+<doc name="M:PeterO.Cbor.CBORObject.FromJSONSequenceBytes(System.Byte[],PeterO.Cbor.JSONOptions)">
+<summary>Generates a list of CBOR objects from an array of bytes in JavaScript
+            Object Notation (JSON) text sequence format (RFC 7464), using the specified options to control the decoding process. The byte array must be in UTF-8 encoding and may not begin with a byte-order mark (U+FEFF).</summary><param name='stream'>A byte array in which a JSON text sequence is encoded. The byte array must either be empty or begin with a record separator byte (0x1e).</param><param name='options'>Specifies options to control how the JSON is decoded to CBOR. See
+            <see cref='PeterO.Cbor.JSONOptions'/> for more information.</param><exception cref='ArgumentNullException'>The parameter <paramref name='stream'/> is null.</exception><exception cref='PeterO.Cbor.CBORException'>The byte array
+            is not empty and does not begin with a record separator byte (0x1e), or an I/O error occurred.</exception><remarks>Generally, each JSON text in a JSON text sequence is written as follows:  Write a record separator byte (0x1e), then write the JSON text in UTF-8 (without a byte order mark, U+FEFF), then write the line feed byte (0x0a).  RFC 7464, however, uses a more liberal syntax for parsing JSON text sequences.</remarks>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromJSONString(System.String)">
 
@@ -1802,7 +1819,9 @@
             types not supported in JSON, such as integers in map
             keys.</para></summary><param name='str'>A text string in JSON format. The entire string
             must contain a single JSON object and not multiple objects. The
-            string may not begin with a byte-order mark (U+FEFF).</param><param name='offset'>An index, starting at 0, showing where the desired portion of <paramref name='str'/> begins.</param><param name='count'>The length, in code units, of the desired portion of <paramref name='str'/> (but  not more than <paramref name='str'/>'s length).</param><returns>A CBOR object.</returns><exception cref='ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception><exception cref='PeterO.Cbor.CBORException'>The string is not in
+            string may not begin with a byte-order mark (U+FEFF).</param><param name='offset'>An index, starting at 0, showing where the
+            desired portion of <paramref name='str'/> begins.</param><param name='count'>The length, in code units, of the desired
+            portion of <paramref name='str'/> (but not more than <paramref name='str'/> 's length).</param><returns>A CBOR object.</returns><exception cref='ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception><exception cref='PeterO.Cbor.CBORException'>The string is not in
             JSON format.</exception><exception cref='ArgumentException'>Either <paramref name='offset'/> or <paramref name='count'/> is less than 0 or
             greater than <paramref name='str'/> 's length, or <paramref name='str'/> 's length minus <paramref name='offset'/> is less than
             <paramref name='count'/>.</exception>
@@ -2180,7 +2199,8 @@
 <doc name="M:PeterO.Cbor.CBORObject.FromObjectAndTag(System.Object,PeterO.Numbers.EInteger)">
 
         <summary>Generates a CBOR object from an arbitrary object and gives
-            the resulting object a tag in addition to its existing tags (the new tag is made the outermost tag).</summary><param name='valueOb'>The parameter <paramref name='valueOb'/> is
+            the resulting object a tag in addition to its existing tags (the
+            new tag is made the outermost tag).</summary><param name='valueOb'>The parameter <paramref name='valueOb'/> is
             an arbitrary object, which can be null.
             <para><b>NOTE:</b> For security reasons, whenever possible, an
             application should not base this parameter on user input or other
@@ -2202,7 +2222,8 @@
 <doc name="M:PeterO.Cbor.CBORObject.FromObjectAndTag(System.Object,System.Int32)">
 
         <summary>Generates a CBOR object from an arbitrary object and gives
-            the resulting object a tag in addition to its existing tags (the new tag is made the outermost tag).</summary><param name='valueObValue'>The parameter <paramref name='valueObValue'/> is an arbitrary object, which can be null.
+            the resulting object a tag in addition to its existing tags (the
+            new tag is made the outermost tag).</summary><param name='valueObValue'>The parameter <paramref name='valueObValue'/> is an arbitrary object, which can be null.
             <para><b>NOTE:</b> For security reasons, whenever possible, an
             application should not base this parameter on user input or other
             externally supplied data unless the application limits this
@@ -2236,7 +2257,7 @@
             tag number 55799 can be used to mark a "self-described CBOR"
             object. This document does not attempt to list all CBOR tags and
             their meanings. An up-to-date list can be found at the CBOR Tags
-            registry maintained by the Internet Assigned Numbers Authority (
+            registry maintained by the Internet Assigned Numbers Authority(
             <i>iana.org/assignments/cbor-tags</i> ).</param><returns>A CBOR object where the object <paramref name='o'/> is
             converted to a CBOR object and given the tag <paramref name='tag'/>
             . If "valueOb" is null, returns a version of CBORObject.Null with
@@ -2607,6 +2628,21 @@
             occurred.</exception><exception cref='PeterO.Cbor.CBORException'>The data stream
             contains invalid encoding or is not in JSON format.</exception>
 </doc>
+<doc name="M:PeterO.Cbor.CBORObject.ReadJSONSequence(System.IO.Stream)">
+<summary>Generates a list of CBOR objects from a data stream in JavaScript
+            Object Notation (JSON) text sequence format (RFC 7464). The data stream must be in UTF-8 encoding and may not begin with a byte-order mark (U+FEFF).</summary><param name='stream'>A readable data stream. The sequence of bytes
+            read from the data stream must either be empty or begin with a record separator byte (0x1e).</param><returns>A list of CBOR objects read from the JSON sequence.  Objects that could not be parsed are replaced with <c>null</c> (as opposed to <c>CBORObject.Null</c>) in the given list.</returns><exception cref='ArgumentNullException'>The parameter <paramref name='stream'/> is null.</exception><exception cref='System.IO.IOException'>An I/O error
+            occurred.</exception><exception cref='PeterO.Cbor.CBORException'>The data stream
+            is not empty and does not begin with a record separator byte (0x1e).</exception><remarks>Generally, each JSON text in a JSON text sequence is written as follows:  Write a record separator byte (0x1e), then write the JSON text in UTF-8 (without a byte order mark, U+FEFF), then write the line feed byte (0x0a).  RFC 7464, however, uses a more liberal syntax for parsing JSON text sequences.</remarks>
+</doc>
+<doc name="M:PeterO.Cbor.CBORObject.ReadJSONSequence(System.IO.Stream,PeterO.Cbor.JSONOptions)">
+<summary>Generates a list of CBOR objects from a data stream in JavaScript
+            Object Notation (JSON) text sequence format (RFC 7464). The data stream must be in UTF-8 encoding and may not begin with a byte-order mark (U+FEFF).</summary><param name='stream'>A readable data stream. The sequence of bytes
+            read from the data stream must either be empty or begin with a record separator byte (0x1e).</param><param name='jsonoptions'>Specifies options to control how JSON texts in the
+            stream are decoded to CBOR. See the JSONOptions class.</param><returns>A list of CBOR objects read from the JSON sequence.  Objects that could not be parsed are replaced with <c>null</c> (as opposed to <c>CBORObject.Null</c>) in the given list.</returns><exception cref='ArgumentNullException'>The parameter <paramref name='stream'/> is null.</exception><exception cref='System.IO.IOException'>An I/O error
+            occurred.</exception><exception cref='PeterO.Cbor.CBORException'>The data stream
+            is not empty and does not begin with a record separator byte (0x1e).</exception><remarks>Generally, each JSON text in a JSON text sequence is written as follows:  Write a record separator byte (0x1e), then write the JSON text in UTF-8 (without a byte order mark, U+FEFF), then write the line feed byte (0x0a).  RFC 7464, however, uses a more liberal syntax for parsing JSON text sequences.</remarks>
+</doc>
 <doc name="M:PeterO.Cbor.CBORObject.ReadSequence(System.IO.Stream)">
 
         <summary><para>Reads a sequence of objects in CBOR format from a data
@@ -2726,7 +2762,7 @@
             more map keys are identical, this method throws a CBORException.
             The example code given in
             <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b> can be used to write out certain keys of a CBOR map in a given
-            order to a JSON string.</para>
+            order to a JSON string, or to write out a CBOR object as part of a JSON text sequence.</para>
             <para><b>Warning:</b> In general, if this CBOR object contains
             integer map keys or uses other features not supported in JSON, and
             the application converts this CBOR object to JSON and back to CBOR,
@@ -3248,37 +3284,44 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.WithTag(PeterO.Numbers.EInteger)">
 
-        <summary>Generates a CBOR object from this one, but gives
-            the resulting object a tag in addition to its existing tags (the new tag is made the outermost tag).</summary><param name='bigintTag'>Tag number. The tag number 55799 can be
+        <summary>Generates a CBOR object from this one, but gives the
+            resulting object a tag in addition to its existing tags (the new
+            tag is made the outermost tag).</summary><param name='bigintTag'>Tag number. The tag number 55799 can be
             used to mark a "self-described CBOR" object. This document does not
             attempt to list all CBOR tags and their meanings. An up-to-date
             list can be found at the CBOR Tags registry maintained by the
             Internet Assigned Numbers Authority(
-            <i>iana.org/assignments/cbor-tags</i> ).</param><returns>A CBOR object with the same value as this one but given the
-            tag <paramref name='bigintTag'/> in addition to its existing tags (the new tag is made the outermost tag).</returns><exception cref='ArgumentException'>The parameter <paramref name='bigintTag'/> is less than 0 or greater than
+            <i>iana.org/assignments/cbor-tags</i> ).</param><returns>A CBOR object with the same value as this one but given
+            the tag <paramref name='bigintTag'/> in addition to its existing
+            tags (the new tag is made the outermost tag).</returns><exception cref='ArgumentException'>The parameter <paramref name='bigintTag'/> is less than 0 or greater than
             2^64-1.</exception><exception cref='ArgumentNullException'>The parameter <paramref name='bigintTag'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.WithTag(System.Int32)">
 
         <summary>Generates a CBOR object from an arbitrary object and gives
-            the resulting object a tag in addition to its existing tags (the new tag is made the outermost tag).</summary><param name='smallTag'>A 32-bit integer that specifies a tag
+            the resulting object a tag in addition to its existing tags (the
+            new tag is made the outermost tag).</summary><param name='smallTag'>A 32-bit integer that specifies a tag
             number. The tag number 55799 can be used to mark a "self-described
             CBOR" object. This document does not attempt to list all CBOR tags
             and their meanings. An up-to-date list can be found at the CBOR
             Tags registry maintained by the Internet Assigned Numbers Authority
             (
-            <i>iana.org/assignments/cbor-tags</i> ).</param><returns>A CBOR object with the same value as this one but given the
-            tag <paramref name='smallTag'/> in addition to its existing tags (the new tag is made the outermost tag).</returns><exception cref='ArgumentException'>The parameter <paramref name='smallTag'/> is less than 0.</exception>
+            <i>iana.org/assignments/cbor-tags</i> ).</param><returns>A CBOR object with the same value as this one but given
+            the tag <paramref name='smallTag'/> in addition to its existing
+            tags (the new tag is made the outermost tag).</returns><exception cref='ArgumentException'>The parameter <paramref name='smallTag'/> is less than 0.</exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.WithTag(System.UInt64)">
 
-        <summary>Generates a CBOR object from this one, but gives the resulting object a tag in addition to its existing tags (the new tag is made the outermost tag).</summary><param name='tag'>A 64-bit integer that specifies a tag number. The
+        <summary>Generates a CBOR object from this one, but gives the
+            resulting object a tag in addition to its existing tags (the new
+            tag is made the outermost tag).</summary><param name='tag'>A 64-bit integer that specifies a tag number. The
             tag number 55799 can be used to mark a "self-described CBOR"
             object. This document does not attempt to list all CBOR tags and
             their meanings. An up-to-date list can be found at the CBOR Tags
-            registry maintained by the Internet Assigned Numbers Authority (
-            <i>iana.org/assignments/cbor-tags</i> ).</param><returns>A CBOR object with the same value as this one but given the tag <paramref name='tag'/>
-            in addition to its existing tags (the new tag is made the outermost tag).</returns>
+            registry maintained by the Internet Assigned Numbers Authority(
+            <i>iana.org/assignments/cbor-tags</i> ).</param><returns>A CBOR object with the same value as this one but given
+            the tag <paramref name='tag'/> in addition to its existing tags
+            (the new tag is made the outermost tag).</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Write(PeterO.BigInteger,System.IO.Stream)">
 <summary>Writes a arbitrary-precision integer in CBOR format to a data stream.
@@ -3615,7 +3658,10 @@
             the JSON string in an undefined order. The example code given in
             <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b> can be used to write out certain keys of a CBOR map in a given
             order to a JSON string.</summary><param name='outputStream'>A writable data stream.</param><exception cref='System.IO.IOException'>An I/O error
-            occurred.</exception><exception cref='ArgumentNullException'>The parameter <paramref name='outputStream'/> is null.</exception><example><para>The following example (originally written in C# for the.NET
+            occurred.</exception><exception cref='ArgumentNullException'>The parameter <paramref name='outputStream'/> is null.</exception><example><para>The following example (originally written in C# for the .NET version) writes out a CBOR object as part of a JSON text sequence (RFC 7464).</para>
+            <code>stream.WriteByte(0x1e); &#x2f;&#x2a; RS &#x2a;&#x2f;
+            cborObject.WriteJSONTo(stream); &#x2f;&#x2a; JSON &#x2a;&#x2f;
+            stream.WriteByte(0x0a); &#x2f;&#x2a; LF &#x2a;&#x2f;</code> <para>The following example (originally written in C# for the.NET
             version) shows how to use the <c>LimitedMemoryStream</c> class
             (implemented in <i>LimitedMemoryStream.cs</i>
              in the peteroupc/CBOR
@@ -4331,7 +4377,10 @@
 </doc>
 <doc name="F:PeterO.Cbor.JSONOptions.ConversionMode.Decimal128">
 
-        <summary>JSON numbers are decoded to CBOR as their closest-rounded approximation to an IEEE 854 decimal128 value, using the rules for the EDecimal form of that approximation as given in the <c>CBORObject.FromObject(EDecimal) method</c>.</summary>
+        <summary>JSON numbers are decoded to CBOR as their closest-rounded
+            approximation to an IEEE 854 decimal128 value, using the rules for
+            the EDecimal form of that approximation as given in the
+            <c>CBORObject.FromObject(EDecimal)</c> method.</summary>
 </doc>
 <doc name="F:PeterO.Cbor.JSONOptions.ConversionMode.Double">
 

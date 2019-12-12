@@ -930,6 +930,59 @@ cn.GetNumberInterface().Sign(cn.GetValue());
       return (CBORObject[])cborList.ToArray();
     }
 
+    /// <summary>Generates a list of CBOR objects from an array of bytes in
+    /// JavaScript Object Notation (JSON) text sequence format (RFC 7464).
+    /// The byte array must be in UTF-8 encoding and may not begin with a
+    /// byte-order mark (U+FEFF).</summary>
+    /// <returns>A list of CBOR objects read from the JSON sequence.
+    /// Objects that could not be parsed are replaced with <c>null</c> (as
+    /// opposed to <c>CBORObject.Null</c> ) in the given list.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='stream'/> is null.</exception>
+    /// <exception cref='PeterO.Cbor.CBORException'>The byte array is not
+    /// empty and does not begin with a record separator byte (0x1e), or an
+    /// I/O error occurred.</exception>
+    /// <remarks>Generally, each JSON text in a JSON text sequence is
+    /// written as follows: Write a record separator byte (0x1e), then
+    /// write the JSON text in UTF-8 (without a byte order mark, U+FEFF),
+    /// then write the line feed byte (0x0a). RFC 7464, however, uses a
+    /// more liberal syntax for parsing JSON text sequences.</remarks>
+    /// <param name='bytes'/>
+    public static CBORObject[] FromJSONSequenceBytes(byte[] bytes) {
+      return FromJSONSequenceBytes(bytes, JSONOptions.Default);
+    }
+
+    /// <summary>Generates a list of CBOR objects from an array of bytes in
+    /// JavaScript Object Notation (JSON) text sequence format (RFC 7464),
+    /// using the specified options to control the decoding process. The
+    /// byte array must be in UTF-8 encoding and may not begin with a
+    /// byte-order mark (U+FEFF).</summary>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='stream'/> is null.</exception>
+    /// <exception cref='PeterO.Cbor.CBORException'>The byte array is not
+    /// empty and does not begin with a record separator byte (0x1e), or an
+    /// I/O error occurred.</exception>
+    /// <remarks>Generally, each JSON text in a JSON text sequence is
+    /// written as follows: Write a record separator byte (0x1e), then
+    /// write the JSON text in UTF-8 (without a byte order mark, U+FEFF),
+    /// then write the line feed byte (0x0a). RFC 7464, however, uses a
+    /// more liberal syntax for parsing JSON text sequences.</remarks>
+    /// <returns>The return value is not documented yet.</returns>
+    /// <param name='data'>Not documented yet.</param>
+    /// <param name='options'>Not documented yet.</param>
+    public static CBORObject[] FromJSONSequenceBytes(byte[] data,
+      JSONOptions options) {
+      if (data == null) {
+        throw new ArgumentNullException(nameof(data));
+      }
+      if (options == null) {
+        throw new ArgumentNullException(nameof(options));
+      }
+      using (var ms = new MemoryStream(data)) {
+        return ReadJSONSequence(ms, options);
+      }
+    }
+
     /// <summary>Generates a CBOR object from an array of CBOR-encoded
     /// bytes, using the given <c>CBOREncodeOptions</c>
     ///  object to control
@@ -2938,6 +2991,32 @@ FromObject((long)value);
       return ReadJSON(stream, JSONOptions.Default);
     }
 
+    /// <summary>Generates a list of CBOR objects from a data stream in
+    /// JavaScript Object Notation (JSON) text sequence format (RFC 7464).
+    /// The data stream must be in UTF-8 encoding and may not begin with a
+    /// byte-order mark (U+FEFF).</summary>
+    /// <param name='stream'>A readable data stream. The sequence of bytes
+    /// read from the data stream must either be empty or begin with a
+    /// record separator byte (0x1e).</param>
+    /// <returns>A list of CBOR objects read from the JSON sequence.
+    /// Objects that could not be parsed are replaced with <c>null</c> (as
+    /// opposed to <c>CBORObject.Null</c> ) in the given list.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='stream'/> is null.</exception>
+    /// <exception cref='System.IO.IOException'>An I/O error
+    /// occurred.</exception>
+    /// <exception cref='PeterO.Cbor.CBORException'>The data stream is not
+    /// empty and does not begin with a record separator byte
+    /// (0x1e).</exception>
+    /// <remarks>Generally, each JSON text in a JSON text sequence is
+    /// written as follows: Write a record separator byte (0x1e), then
+    /// write the JSON text in UTF-8 (without a byte order mark, U+FEFF),
+    /// then write the line feed byte (0x0a). RFC 7464, however, uses a
+    /// more liberal syntax for parsing JSON text sequences.</remarks>
+    public static CBORObject[] ReadJSONSequence(Stream stream) {
+      return ReadJSONSequence(stream, JSONOptions.Default);
+    }
+
     /// <summary>Generates a CBOR object from a data stream in JavaScript
     /// Object Notation (JSON) format, using the specified options to
     /// control the decoding process. The JSON stream may begin with a
@@ -2978,6 +3057,61 @@ FromObject((long)value);
       return ReadJSON(stream, jsonoptions);
     }
 
+    /// <summary>Generates a list of CBOR objects from a data stream in
+    /// JavaScript Object Notation (JSON) text sequence format (RFC 7464).
+    /// The data stream must be in UTF-8 encoding and may not begin with a
+    /// byte-order mark (U+FEFF).</summary>
+    /// <param name='stream'>A readable data stream. The sequence of bytes
+    /// read from the data stream must either be empty or begin with a
+    /// record separator byte (0x1e).</param>
+    /// <param name='jsonoptions'>Specifies options to control how JSON
+    /// texts in the stream are decoded to CBOR. See the JSONOptions
+    /// class.</param>
+    /// <returns>A list of CBOR objects read from the JSON sequence.
+    /// Objects that could not be parsed are replaced with <c>null</c> (as
+    /// opposed to <c>CBORObject.Null</c> ) in the given list.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='stream'/> is null.</exception>
+    /// <exception cref='System.IO.IOException'>An I/O error
+    /// occurred.</exception>
+    /// <exception cref='PeterO.Cbor.CBORException'>The data stream is not
+    /// empty and does not begin with a record separator byte
+    /// (0x1e).</exception>
+    /// <remarks>Generally, each JSON text in a JSON text sequence is
+    /// written as follows: Write a record separator byte (0x1e), then
+    /// write the JSON text in UTF-8 (without a byte order mark, U+FEFF),
+    /// then write the line feed byte (0x0a). RFC 7464, however, uses a
+    /// more liberal syntax for parsing JSON text sequences.</remarks>
+    public static CBORObject[] ReadJSONSequence(Stream stream, JSONOptions
+jsonoptions) {
+      if (stream == null) {
+        throw new ArgumentNullException(nameof(stream));
+      }
+      if (jsonoptions == null) {
+        throw new ArgumentNullException(nameof(jsonoptions));
+      }
+      CharacterInputWithCount reader;
+      reader = new CharacterInputWithCount(
+        new CharacterReader(stream, 0, true, true));
+      try {
+        var nextchar = new int[1];
+        CBORObject[] objlist = CBORJson.ParseJSONSequence(
+          reader,
+          jsonoptions,
+          nextchar);
+        if (nextchar[0] != -1) {
+          reader.RaiseError("End of data stream not reached");
+        }
+        return objlist;
+      } catch (CBORException ex) {
+        var ioex = ex.InnerException as IOException;
+        if (ioex != null) {
+          throw ioex;
+        }
+        throw;
+      }
+    }
+
     /// <summary>Generates a CBOR object from a data stream in JavaScript
     /// Object Notation (JSON) format, using the specified options to
     /// control the decoding process. The JSON stream may begin with a
@@ -3015,7 +3149,6 @@ FromObject((long)value);
         CBORObject obj = CBORJson.ParseJSONValue(
           reader,
           jsonoptions,
-          false,
           nextchar);
         if (nextchar[0] != -1) {
           reader.RaiseError("End of data stream not reached");
@@ -3207,7 +3340,8 @@ count) {
       if (count == 0) {
         throw new CBORException("Byte array is empty");
       }
-      if (bytes[offset] >= 0x01 && bytes[offset] <= 0x7f) {
+      if (bytes[offset] >= 0x01 && bytes[offset] <= 0x7f && count >= 2 &&
+bytes[offset + 1] != 0) {
         // UTF-8 JSON bytes
         return CBORJson2.ParseJSONValue(
           bytes,
@@ -5512,7 +5646,8 @@ this.MostOuterTag.Equals(bigTagValue);
     /// The example code given in
     /// <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b>
     /// can be used to write out certain keys of a CBOR map in a given
-    /// order to a JSON string.</para>
+    /// order to a JSON string, or to write out a CBOR object as part of a
+    /// JSON text sequence.</para>
     /// <para><b>Warning:</b> In general, if this CBOR object contains
     /// integer map keys or uses other features not supported in JSON, and
     /// the application converts this CBOR object to JSON and back to CBOR,
@@ -5704,6 +5839,14 @@ this.MostOuterTag.Equals(bigTagValue);
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='outputStream'/> is null.</exception>
     /// <example>
+    /// <para>The following example (originally written in C# for the.NET
+    /// version) writes out a CBOR object as part of a JSON text sequence
+    /// (RFC 7464).</para>
+    /// <code>
+    /// stream.WriteByte(0x1e); &#x2f;&#x2a; RS &#x2a;&#x2f;
+    /// cborObject.WriteJSONTo(stream); &#x2f;&#x2a; JSON &#x2a;&#x2f;
+    /// stream.WriteByte(0x0a); &#x2f;&#x2a; LF &#x2a;&#x2f;
+    /// </code>
     /// <para>The following example (originally written in C# for the.NET
     /// version) shows how to use the <c>LimitedMemoryStream</c>
     ///  class

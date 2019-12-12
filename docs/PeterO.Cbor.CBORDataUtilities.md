@@ -97,11 +97,12 @@ Roughly speaking, a valid JSON number consists of an optional minus sign, one or
 
  * <i>str</i>: A text string containing the portion to parse as a JSON number.
 
- * <i>offset</i>: The parameter  <i>offset</i>
- is a 32-bit signed integer.
+ * <i>offset</i>: An index, starting at 0, showing where the desired portion of  <i>str</i>
+ begins.
 
- * <i>count</i>: The parameter  <i>count</i>
- is a 32-bit signed integer.
+ * <i>count</i>: The length, in code units, of the desired portion of  <i>str</i>
+ (but not more than  <i>str</i>
+ 's length).
 
 <b>Return Value:</b>
 
@@ -113,8 +114,8 @@ A CBOR object that represents the parsed number. Returns null if the parsing fai
 Either  <i>offset</i>
  or  <i>count</i>
  is less than 0 or greater than  <i>str</i>
-'s length, or  <i>str</i>
-'s length minus  <i>offset</i>
+ 's length, or  <i>str</i>
+ 's length minus  <i>offset</i>
  is less than  <i>count</i>
 .
 
