@@ -115,8 +115,7 @@ namespace PeterO.Cbor {
     /// <c>numberconversion</c>, can have a value of any name given in the
     /// <c>JSONOptions.ConversionMode</c> enumeration (where the letters
     /// can be any combination of basic upper-case and/or basic lower-case
-    /// letters), or any other value, which is treated the same as
-    /// <c>full</c>. For example, <c>base64padding=Yes</c> and
+    /// letters), and any other value is unrecognized.  (If the <c>numberconversion</c> key is not given, its value is treated as <c>full</c>.  If that key is given, but has an unrecognized value, an exception is thrown.) For example, <c>base64padding=Yes</c> and
     /// <c>base64padding=1</c> both set the <c>Base64Padding</c> property
     /// to true, and <c>numberconversion=double</c> sets the
     /// <c>NumberConversion</c> property to <c>ConversionMode.Double</c>
@@ -125,6 +124,7 @@ namespace PeterO.Cbor {
     /// name='paramString'/> is null. In the future, this class may allow
     /// other keys to store other kinds of values, not just true or
     /// false.</exception>
+    /// <exception cref='ArgumentException'>An unrecognized value for <c>numberconversion</c> was given.</exception>
     public JSONOptions(string paramString) {
       if (paramString == null) {
         throw new ArgumentNullException(nameof(paramString));
@@ -216,8 +216,10 @@ namespace PeterO.Cbor {
         if (str.Equals("intorfloatfromdouble", StringComparison.Ordinal)) {
           return ConversionMode.IntOrFloatFromDouble;
         }
+      } else {
+        return ConversionMode.Full;
       }
-      return ConversionMode.Full;
+      throw new ArgumentException("Unrecognized conversion mode");
     }
 
     /// <summary>Gets a value indicating whether the JSON decoder should

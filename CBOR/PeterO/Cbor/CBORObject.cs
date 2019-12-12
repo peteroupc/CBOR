@@ -12,8 +12,7 @@ using System.Text;
 using PeterO;
 using PeterO.Numbers;
 
-// TODO: Consider deprecating most number conversion/checking methods here
-// TODO: Make .Keys, .Values, and .Entries read-only
+// TODO: In next major version, make .Keys, .Values, and .Entries read-only
 namespace PeterO.Cbor {
   /// <summary>
   /// <para>Represents an object in Concise Binary Object Representation
@@ -452,24 +451,23 @@ CBORObject.FromObject(Double.NaN);
     }
 
     /// <summary>Gets this value's sign: -1 if negative; 1 if positive; 0
-    /// if zero.</summary>
+    /// if zero.  Throws an exception if this is a not-a-number value.</summary>
     /// <value>This value's sign: -1 if negative; 1 if positive; 0 if
     /// zero.</value>
     /// <exception cref='InvalidOperationException'>This object does not
     /// represent a number, or this object is a not-a-number (NaN)
     /// value.</exception>
     [Obsolete("Instead, convert this object to a number with .AsNumber()," +
-"\u0020 and use the Sign property in .NET or the signum method in Java.")]
+"\u0020 and use the Sign property in .NET or the signum method in Java." +
+" Either will treat not-a-number (NaN) values differently than here.")]
     public int Sign {
       get {
         CBORNumber cn = CBORNumber.FromCBORObject(this);
-        int ret = cn == null ? 2 :
-cn.GetNumberInterface().Sign(cn.GetValue());
-        if (ret == 2) {
+        if (cn == null || cn.IsNaN()) {
           throw new InvalidOperationException(
             "This object is not a number.");
         }
-        return ret;
+        return cn.GetNumberInterface().Sign(cn.GetValue());
       }
     }
 

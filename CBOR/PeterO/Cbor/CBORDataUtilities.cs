@@ -11,7 +11,6 @@ using System.Text;
 using PeterO;
 using PeterO.Numbers;
 
-// TODO: In JSONOptions, consider rejecting unknown conversion modes
 namespace PeterO.Cbor {
   /// <summary>Contains methods useful for reading and writing data, with
   /// a focus on CBOR.</summary>
