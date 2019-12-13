@@ -193,8 +193,6 @@ namespace PeterO.Cbor {
       int cval = -(c - '0');
       int cstart = c;
       c = this.ReadChar();
-      var sw = new System.Diagnostics.Stopwatch();
-      sw.Start();
       this.sb = this.sb ?? new StringBuilder();
       this.sb.Remove(0, this.sb.Length);
       this.sb.Append('-');
@@ -224,7 +222,7 @@ namespace PeterO.Cbor {
       obj = CBORDataUtilities.ParseJSONNumber(str, this.options);
       // DebugUtility.Log("negc=" + sw.ElapsedMilliseconds + " ms");
       if (obj == null) {
-        string errstr =(str.Length <= 100) ? str :(str.Substring(0,
+        string errstr = (str.Length <= 100) ? str : (str.Substring(0,
               100) + "...");
         this.RaiseError("JSON number can't be parsed. " + errstr);
       }
@@ -345,7 +343,7 @@ namespace PeterO.Cbor {
           int cstart = c;
           var needObj = true;
           c = this.ReadChar();
-          if (!(c == '-' || c == '+' || c == '.' ||(c >= '0' && c <= '9') ||
+          if (!(c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
               c == 'e' || c == 'E')) {
             // Optimize for common case where JSON number
             // is a single digit without sign or exponent
@@ -421,7 +419,7 @@ namespace PeterO.Cbor {
             str = this.sb.ToString();
             obj = CBORDataUtilities.ParseJSONNumber(str, this.options);
             if (obj == null) {
-              string errstr =(str.Length <= 100) ? str :(str.Substring(0,
+              string errstr = (str.Length <= 100) ? str : (str.Substring(0,
                     100) + "...");
               this.RaiseError("JSON number can't be parsed. " + errstr);
             }

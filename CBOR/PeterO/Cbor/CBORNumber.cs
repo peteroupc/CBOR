@@ -14,7 +14,8 @@ namespace PeterO.Cbor {
     "CA1036",
     Justification = "Arbitrary size.")]
   public sealed partial class CBORNumber : IComparable<CBORNumber> {
-    /// <summary>Specifies the underlying form of this CBOR number object.</summary>
+    /// <summary>Specifies the underlying form of this CBOR number
+    /// object.</summary>
     public enum NumberKind {
       /// <summary>A 64-bit signed integer.</summary>
       Integer,
@@ -89,15 +90,15 @@ namespace PeterO.Cbor {
       return CBORObject.FromObject(this.value);
     }
 
-    /// <summary>Gets this value's sign: -1 if nonzero and negative; 1 if nonzero and positive; 0
-    /// if zero.  Not-a-number (NaN) values are positive or negative depending on what sign is stored in their underlying forms.</summary>
+    /// <summary>Gets this value's sign: -1 if nonzero and negative; 1 if
+    /// nonzero and positive; 0 if zero. Not-a-number (NaN) values are
+    /// positive or negative depending on what sign is stored in their
+    /// underlying forms.</summary>
     /// <value>This value's sign.</value>
     public int Sign {
       get {
-        if (this.IsNaN()) {
-          return this.IsNegative() ? -1 : 1;
-        }
-        return this.GetNumberInterface().Sign(this.value);
+        return this.IsNaN() ? (this.IsNegative() ? -1 : 1) :
+this.GetNumberInterface().Sign(this.value);
       }
     }
 
@@ -469,10 +470,14 @@ namespace PeterO.Cbor {
         return CBORNumber.FromObject(efloat);
       }
     }
-  
-    /// <summary>Gets the underlying form of this CBOR number object.</summary>
+
+    /// <summary>Gets the underlying form of this CBOR number
+    /// object.</summary>
+    /// <value>The underlying form of this CBOR number object.</value>
     public NumberKind Kind {
-      get { return this.kind; }
+      get {
+  return this.kind;
+ }
     }
 
     /// <summary>Returns whether this object's value, converted to an
@@ -1480,8 +1485,7 @@ this.ToEIntegerIfExact().ToInt64Checked();
               cmp = e1.CompareToBinary(e2);
             }
           } else if (typeB == NumberKind.ERational) {
-            ERational e2 =
-              GetNumberInterface(typeB).AsERational(objB);
+            ERational e2 = GetNumberInterface(typeB).AsERational(objB);
             if (typeA == NumberKind.EDecimal) {
               EDecimal e1 =
                 GetNumberInterface(typeA).AsEDecimal(objA);

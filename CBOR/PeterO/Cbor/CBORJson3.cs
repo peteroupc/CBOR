@@ -227,7 +227,7 @@ namespace PeterO.Cbor {
       // DebugUtility.Log("js=" + (jstring));
       c = this.index < this.endPos ? ((int)this.jstring[this.index++]) &
         0xffff : -1;
-      if (!(c == '-' || c == '+' || c == '.' ||(c >= '0' && c <= '9') ||
+      if (!(c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
           c == 'e' || c == 'E')) {
         // Optimize for common case where JSON number
         // is a single digit without sign or exponent
@@ -250,7 +250,7 @@ namespace PeterO.Cbor {
               ((int)this.jstring[this.index++]) & 0xffff : -1;
             ++digits;
           }
-          if (!(c == 'e' || c == 'E' || c == '.' ||(c >= '0' && c <=
+          if (!(c == 'e' || c == 'E' || c == '.' || (c >= '0' && c <=
                 '9'))) {
             // All-digit number that's short enough
             obj = CBORDataUtilities.ParseSmallNumber(cval, this.options);

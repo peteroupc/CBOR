@@ -218,8 +218,7 @@ namespace PeterO.Cbor {
         "\u0020with '-' before calling that version. If this method call used" +
         "\u0020integersOnly" +
         "\u0020= true, check that the string does not contain '.', 'E', or" +
-"\u0020'e'" +
-        "\u0020before" + "\u0020calling that version.")]
+        "\u0020'e'" + "\u0020before" + "\u0020calling that version.")]
     public static CBORObject ParseJSONNumber(
       string str,
       bool integersOnly,
@@ -264,13 +263,20 @@ namespace PeterO.Cbor {
     /// one or more basic digits (the exponent). A string representing a
     /// valid JSON number is not allowed to contain white space characters,
     /// including spaces.</remarks>
+    [Obsolete("Instead, call ParseJSONNumber(str, jsonoptions) with" +
+        "\u0020a JSONOptions that sets preserveNegativeZero to the" +
+        "\u0020desired value, either true or false. If this" +
+        "\u0020method call used positiveOnly = true, check that the string" +
+        "\u0020does not" + "\u0020begin" +
+        "\u0020with '-' before calling that version. If this method call used" +
+        "\u0020integersOnly" +
+        "\u0020= true, check that the string does not contain '.', 'E', or" +
+        "\u0020'e'" + "\u0020before" + "\u0020calling that version.")]
     public static CBORObject ParseJSONNumber(
       string str,
       bool integersOnly,
       bool positiveOnly,
       bool preserveNegativeZero) {
-      // TODO: Deprecate integersOnly?
-      // TODO: Deprecate this method eventually?
       if (String.IsNullOrEmpty(str)) {
         return null;
       }
@@ -448,7 +454,7 @@ JSONOptions.ConversionMode.Double) {
         ++offset;
         negative = true;
       }
-      var numOffset = offset;
+      int numOffset = offset;
       var haveDecimalPoint = false;
       var haveDigits = false;
       var haveDigitsAfterDecimal = false;
@@ -508,8 +514,9 @@ JSONOptions.ConversionMode.Double) {
         // Very common case of all-digit JSON number strings
         // less than 2^53 (with or without number sign)
         long v = 0L;
-        for (var vi = numOffset; vi < endPos; ++vi) {
-          v = v * 10 + (int)(str[vi] - '0');
+        int vi = numOffset;
+        for (; vi < endPos; ++vi) {
+          v = (v * 10) + (int)(str[vi] - '0');
         }
         if ((v != 0 || !negative) && v < (1L << 53) - 1) {
           if (negative) {
@@ -538,11 +545,12 @@ JSONOptions.ConversionMode.Double) {
           // should fit a long)
           long lv = 0L;
           int expo = -(endPos - (decimalPointPos + 1));
-          for (var vi = numOffset; vi < decimalPointPos; ++vi) {
-            lv = checked(lv * 10 + (int)(str[vi] - '0'));
+          int vi = numOffset;
+          for (; vi < decimalPointPos; ++vi) {
+            lv = checked((lv * 10) + (int)(str[vi] - '0'));
           }
-          for (var vi = decimalPointPos + 1; vi < endPos; ++vi) {
-            lv = checked(lv * 10 + (int)(str[vi] - '0'));
+          for (vi = decimalPointPos + 1; vi < endPos; ++vi) {
+            lv = checked((lv * 10) + (int)(str[vi] - '0'));
           }
           if (negative) {
             lv = -lv;

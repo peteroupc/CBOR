@@ -223,13 +223,14 @@ namespace PeterO.Cbor {
             this.options);
       } else {
         var ssb = new StringBuilder(numberEndIndex - numberStartIndex);
-        for (var ki = numberStartIndex; ki < numberEndIndex; ++ki) {
+        int ki;
+        for (ki = numberStartIndex; ki < numberEndIndex; ++ki) {
           ssb.Append((char)(((int)this.bytes[ki]) & 0xff));
         }
         string str = ssb.ToString();
         obj = CBORDataUtilities.ParseJSONNumber(str, this.options);
         if (obj == null) {
-          string errstr =(str.Length <= 100) ? str :(str.Substring(0,
+          string errstr = (str.Length <= 100) ? str : (str.Substring(0,
                 100) + "...");
           this.RaiseError("JSON number can't be parsed. " + errstr);
         }
@@ -253,7 +254,7 @@ namespace PeterO.Cbor {
       int numberStartIndex = this.index - 1;
       c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
         0xff : -1;
-      if (!(c == '-' || c == '+' || c == '.' ||(c >= '0' && c <= '9') ||
+      if (!(c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
           c == 'e' || c == 'E')) {
         // Optimize for common case where JSON number
         // is a single digit without sign or exponent
@@ -276,7 +277,7 @@ namespace PeterO.Cbor {
               ((int)this.bytes[this.index++]) & 0xff : -1;
             ++digits;
           }
-          if (!(c == 'e' || c == 'E' || c == '.' ||(c >= '0' && c <=
+          if (!(c == 'e' || c == 'E' || c == '.' || (c >= '0' && c <=
                 '9'))) {
             // All-digit number that's short enough
             obj = CBORDataUtilities.ParseSmallNumber(cval, this.options);
@@ -303,13 +304,14 @@ namespace PeterO.Cbor {
         }
         int numberEndIndex = c < 0 ? this.endPos : this.index - 1;
         var ssb = new StringBuilder(numberEndIndex - startIndex);
-        for (var ki = startIndex; ki < numberEndIndex; ++ki) {
+        int ki;
+        for (ki = startIndex; ki < numberEndIndex; ++ki) {
           ssb.Append((char)(((int)this.bytes[ki]) & 0xff));
         }
         str = ssb.ToString();
         obj = CBORDataUtilities.ParseJSONNumber(str, this.options);
         if (obj == null) {
-          string errstr =(str.Length <= 100) ? str :(str.Substring(0,
+          string errstr = (str.Length <= 100) ? str : (str.Substring(0,
                 100) + "...");
           this.RaiseError("JSON number can't be parsed. " + errstr);
         }

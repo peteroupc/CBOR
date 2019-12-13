@@ -249,7 +249,7 @@ namespace PeterO.Cbor {
       return (this.ItemType == CBORObjectTypeInteger) ?
 ((decimal)(long)this.ThisItem) : ((this.HasOneTag(30) ||
 
-            this.HasOneTag(270)) ?(decimal)this.ToObject<ERational>() :
+            this.HasOneTag(270)) ? (decimal)this.ToObject<ERational>() :
           (decimal)this.ToObject<EDecimal>());
     }
 
@@ -455,7 +455,7 @@ namespace PeterO.Cbor {
     /// <exception cref='NotSupportedException'>The given type "T", or this
     /// object's CBOR type, is not supported.</exception>
     public T ToObject<T>() {
-      return(T)this.ToObject(typeof(T));
+      return (T)this.ToObject(typeof(T));
     }
 
     /// <summary>
@@ -479,7 +479,7 @@ namespace PeterO.Cbor {
     /// <exception cref='NotSupportedException'>The given type "T", or this
     /// object's CBOR type, is not supported.</exception>
     public T ToObject<T>(CBORTypeMapper mapper) {
-      return(T)this.ToObject(typeof(T), mapper);
+      return (T)this.ToObject(typeof(T), mapper);
     }
 
     /// <summary>
@@ -502,7 +502,7 @@ namespace PeterO.Cbor {
     /// <exception cref='NotSupportedException'>The given type "T", or this
     /// object's CBOR type, is not supported.</exception>
     public T ToObject<T>(PODOptions options) {
-      return(T)this.ToObject(typeof(T), options);
+      return (T)this.ToObject(typeof(T), options);
     }
 
     /// <summary>
@@ -528,7 +528,7 @@ namespace PeterO.Cbor {
     /// <exception cref='NotSupportedException'>The given type "T", or this
     /// object's CBOR type, is not supported.</exception>
     public T ToObject<T>(CBORTypeMapper mapper, PODOptions options) {
-      return(T)this.ToObject(typeof(T), mapper, options);
+      return (T)this.ToObject(typeof(T), mapper, options);
     }
 
     /// <summary>Adds two CBOR objects and returns their result.</summary>

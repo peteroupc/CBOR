@@ -451,7 +451,8 @@ CBORObject.FromObject(Double.NaN);
     }
 
     /// <summary>Gets this value's sign: -1 if negative; 1 if positive; 0
-    /// if zero.  Throws an exception if this is a not-a-number value.</summary>
+    /// if zero. Throws an exception if this is a not-a-number
+    /// value.</summary>
     /// <value>This value's sign: -1 if negative; 1 if positive; 0 if
     /// zero.</value>
     /// <exception cref='InvalidOperationException'>This object does not
@@ -951,30 +952,35 @@ CBORObject.FromObject(Double.NaN);
       return FromJSONSequenceBytes(bytes, JSONOptions.Default);
     }
 
-
     /// <summary>Converts this object to a byte array in JavaScript Object
-    /// Notation (JSON) format. The JSON text will be written out in UTF-8 encoding, without a byte order mark, to the byte array.  See the overload to ToJSONString taking a
-    /// JSONOptions argument for further information.</summary>
-    /// <returns>A byte array containing the converted in JSON format.</returns>
-    public static byte[] ToJSONBytes() {
-      return ToJSONBytes(JSONOptions.Default);
+    /// Notation (JSON) format. The JSON text will be written out in UTF-8
+    /// encoding, without a byte order mark, to the byte array. See the
+    /// overload to ToJSONString taking a JSONOptions argument for further
+    /// information.</summary>
+    /// <returns>A byte array containing the converted in JSON
+    /// format.</returns>
+    public byte[] ToJSONBytes() {
+      return this.ToJSONBytes(JSONOptions.Default);
     }
 
     /// <summary>Converts this object to a byte array in JavaScript Object
-    /// Notation (JSON) format.  The JSON text will be written out in UTF-8 encoding, without a byte order mark, to the byte array.  See the overload to ToJSONString taking a
-    /// JSONOptions argument for further information.</summary>
-    /// <param name='options'>Specifies options to control
-    /// writing the CBOR object to JSON.</param>
-    /// <returns>A byte array containing the converted object in JSON format.</returns>
+    /// Notation (JSON) format. The JSON text will be written out in UTF-8
+    /// encoding, without a byte order mark, to the byte array. See the
+    /// overload to ToJSONString taking a JSONOptions argument for further
+    /// information.</summary>
+    /// <param name='jsonoptions'>Specifies options to control writing the
+    /// CBOR object to JSON.</param>
+    /// <returns>A byte array containing the converted object in JSON
+    /// format.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='options'/> is null.</exception>
-    public static byte[] ToJSONBytes(JSONOptions jsonoptions) {
+    /// name='jsonoptions'/> is null.</exception>
+    public byte[] ToJSONBytes(JSONOptions jsonoptions) {
       if (jsonoptions == null) {
         throw new ArgumentNullException(nameof(jsonoptions));
       }
-      using(var ms = new MemoryStream()) {
+      using (var ms = new MemoryStream()) {
         this.WriteJSONTo(ms);
-        return ms.ToBytes();
+        return ms.ToArray();
       }
     }
 
@@ -984,8 +990,7 @@ CBORObject.FromObject(Double.NaN);
     /// byte array must be in UTF-8 encoding and may not begin with a
     /// byte-order mark (U+FEFF).</summary>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='data'/> or <paramref
-    /// name='options'/> is null.</exception>
+    /// name='data'/> or <paramref name='options'/> is null.</exception>
     /// <exception cref='PeterO.Cbor.CBORException'>The byte array is not
     /// empty and does not begin with a record separator byte (0x1e), or an
     /// I/O error occurred.</exception>
@@ -998,8 +1003,8 @@ CBORObject.FromObject(Double.NaN);
     /// <param name='data'>A byte array in which a JSON text sequence is
     /// encoded.</param>
     /// <param name='options'>Specifies options to control how the JSON
-    /// texts in the sequence are decoded to CBOR. See <see cref='PeterO.Cbor.JSONOptions'/>
-    /// for more information.</param>
+    /// texts in the sequence are decoded to CBOR. See
+    /// <see cref='PeterO.Cbor.JSONOptions'/> for more information.</param>
     public static CBORObject[] FromJSONSequenceBytes(byte[] data,
       JSONOptions options) {
       if (data == null) {
@@ -5690,7 +5695,8 @@ this.MostOuterTag.Equals(bigTagValue);
     /// which correspond to a different feature in CBOR (such as converting
     /// integer map keys, which are supported in CBOR but not JSON, to text
     /// strings, which are supported in both).</para></summary>
-    /// <returns>A text string containing the converted object in JSON format.</returns>
+    /// <returns>A text string containing the converted object in JSON
+    /// format.</returns>
     public string ToJSONString() {
       return this.ToJSONString(JSONOptions.Default);
     }
@@ -5782,9 +5788,10 @@ this.MostOuterTag.Equals(bigTagValue);
     /// builder.Append("}").ToString(); }</code>
     ///  .
     /// </summary>
-    /// <param name='options'>Specifies options to control
-    /// writing the CBOR object to JSON.</param>
-    /// <returns>A text string containing the converted object in JSON format.</returns>
+    /// <param name='options'>Specifies options to control writing the CBOR
+    /// object to JSON.</param>
+    /// <returns>A text string containing the converted object in JSON
+    /// format.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='options'/> is null.</exception>
     public string ToJSONString(JSONOptions options) {
