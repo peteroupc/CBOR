@@ -21,7 +21,7 @@ An instance of a number that CBOR or certain CBOR tags can represent. For this p
 * <code>[FromInt16(short)](#FromInt16_short)</code> - Converts a 16-bit signed integer to an arbitrary-precision decimal number.
 * <code>[IsFinite()](#IsFinite)</code> - Gets a value indicating whether this CBOR object represents a finite number.
 * <code>[IsInfinity()](#IsInfinity)</code> - Gets a value indicating whether this object represents infinity.
-* <code>[IsInteger()](#IsInteger)</code> - Not documented yet.
+* <code>[IsInteger()](#IsInteger)</code> - Gets a value indicating whether this object represents an integer number, that is, a number without a fractional part.
 * <code>[IsNaN()](#IsNaN)</code> - Gets a value indicating whether this object represents a not-a-number value.
 * <code>[IsNegative()](#IsNegative)</code> - Gets a value indicating whether this object is a negative number.
 * <code>[IsNegativeInfinity()](#IsNegativeInfinity)</code> - Gets a value indicating whether this object represents negative infinity.
@@ -306,11 +306,11 @@ Gets a value indicating whether this object represents infinity.
 
     public bool IsInteger();
 
-Not documented yet.
+Gets a value indicating whether this object represents an integer number, that is, a number without a fractional part. Infinity and not-a-number are not considered integers.
 
 <b>Return Value:</b>
 
-The return value is not documented yet.
+ `true`  if this object represents an integer number, that is, a number without a fractional part; otherwise,  `false` .
 
 <a id="IsNaN"></a>
 ### IsNaN

@@ -978,9 +978,13 @@ CBORObject.FromObject(Double.NaN);
       if (jsonoptions == null) {
         throw new ArgumentNullException(nameof(jsonoptions));
       }
-      using (var ms = new MemoryStream()) {
-        this.WriteJSONTo(ms);
-        return ms.ToArray();
+      try {
+        using (var ms = new MemoryStream()) {
+          this.WriteJSONTo(ms);
+          return ms.ToArray();
+        }
+      } catch (IOException ex) {
+        throw new CBORException(ex.Message, ex);
       }
     }
 
@@ -989,8 +993,15 @@ CBORObject.FromObject(Double.NaN);
     /// using the specified options to control the decoding process. The
     /// byte array must be in UTF-8 encoding and may not begin with a
     /// byte-order mark (U+FEFF).</summary>
+    /// <param name='data'>A byte array in which a JSON text sequence is
+    /// encoded.</param>
+    /// <param name='options'>Specifies options to control the JSON
+    /// decoding process.</param>
+    /// <returns>A list of CBOR objects read from the JSON sequence.
+    /// Objects that could not be parsed are replaced with <c>null</c> (as
+    /// opposed to <c>CBORObject.Null</c> ) in the given list.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='stream'/> is null.</exception>
+    /// name='data'/> is null.</exception>
     /// <exception cref='PeterO.Cbor.CBORException'>The byte array is not
     /// empty and does not begin with a record separator byte (0x1e), or an
     /// I/O error occurred.</exception>
@@ -999,9 +1010,6 @@ CBORObject.FromObject(Double.NaN);
     /// write the JSON text in UTF-8 (without a byte order mark, U+FEFF),
     /// then write the line feed byte (0x0a). RFC 7464, however, uses a
     /// more liberal syntax for parsing JSON text sequences.</remarks>
-    /// <returns>The return value is not documented yet.</returns>
-    /// <param name='data'>Not documented yet.</param>
-    /// <param name='options'>Not documented yet.</param>
     public static CBORObject[] FromJSONSequenceBytes(byte[] data,
       JSONOptions options) {
       if (data == null) {
@@ -1010,8 +1018,12 @@ CBORObject.FromObject(Double.NaN);
       if (options == null) {
         throw new ArgumentNullException(nameof(options));
       }
-      using (var ms = new MemoryStream(data)) {
-        return ReadJSONSequence(ms, options);
+      try {
+        using (var ms = new MemoryStream(data)) {
+          return ReadJSONSequence(ms, options);
+        }
+      } catch (IOException ex) {
+        throw new CBORException(ex.Message, ex);
       }
     }
 
@@ -3380,14 +3392,18 @@ bytes[offset + 1] != 0) {
           jsonoptions);
       } else {
         // Other than UTF-8 without byte order mark
-        using (var ms = new MemoryStream(bytes, offset, count)) {
-          return ReadJSON(ms, jsonoptions);
+        try {
+          using (var ms = new MemoryStream(bytes, offset, count)) {
+            return ReadJSON(ms, jsonoptions);
+          }
+        } catch (IOException ex) {
+          throw new CBORException(ex.Message, ex);
         }
       }
     }
 
     /// <summary>Finds the remainder that results when a CBORObject object
-    /// is divided by the value of A CBOR object.</summary>
+    /// is divided by the value of a CBOR object.</summary>
     /// <param name='first'>The parameter <paramref name='first'/> is a
     /// CBOR object.</param>
     /// <param name='second'>The parameter <paramref name='second'/> is a

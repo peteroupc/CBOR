@@ -3757,20 +3757,16 @@ CBOREncodeOptions(false, false, true));
     }
 
     public static void ExpectJsonSequenceError(byte[] bytes) {
-      try {
-        using (var ms = new MemoryStream(bytes)) {
-          try {
-            CBORObject.ReadJSONSequence(ms);
-            Assert.Fail("Should have failed");
-          } catch (CBORException) {
-            // NOTE: Intentionally empty
-          } catch (Exception ex) {
-            Assert.Fail(ex.ToString());
-            throw new InvalidOperationException(String.Empty, ex);
-          }
+      using (var ms = new MemoryStream(bytes)) {
+        try {
+          CBORObject.ReadJSONSequence(ms);
+          Assert.Fail("Should have failed");
+        } catch (CBORException) {
+          // NOTE: Intentionally empty
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
         }
-      } catch (IOException ioe) {
-        throw new InvalidOperationException(ioe.Message, ioe);
       }
     }
 
@@ -3778,8 +3774,8 @@ CBOREncodeOptions(false, false, true));
       try {
         using (var ms = new MemoryStream(bytes)) {
           string ss = TestCommon.ToByteArrayString(bytes);
-          IList<CBORObject> list = CBORObject.ReadJSONSequence(ms);
-          Assert.AreEqual(0, list.Count, ss);
+          CBORObject[] array = CBORObject.ReadJSONSequence(ms);
+          Assert.AreEqual(0, array.Length, ss);
         }
       } catch (IOException ioe) {
         throw new InvalidOperationException(ioe.Message, ioe);
@@ -3790,9 +3786,9 @@ CBOREncodeOptions(false, false, true));
       try {
         using (var ms = new MemoryStream(bytes)) {
           string ss = TestCommon.ToByteArrayString(bytes);
-          IList<CBORObject> list = CBORObject.ReadJSONSequence(ms);
-          Assert.AreEqual(1, list.Count, ss);
-          Assert.AreEqual(o1, list[0], ss);
+          CBORObject[] array = CBORObject.ReadJSONSequence(ms);
+          Assert.AreEqual(1, array.Length, ss);
+          Assert.AreEqual(o1, array[0], ss);
         }
       } catch (IOException ioe) {
         throw new InvalidOperationException(ioe.Message, ioe);
@@ -3806,10 +3802,10 @@ CBOREncodeOptions(false, false, true));
       try {
         using (var ms = new MemoryStream(bytes)) {
           string ss = TestCommon.ToByteArrayString(bytes);
-          IList<CBORObject> list = CBORObject.ReadJSONSequence(ms);
-          Assert.AreEqual(2, list.Count, ss);
-          Assert.AreEqual(o1, list[0], ss);
-          Assert.AreEqual(o2, list[1], ss);
+          CBORObject[] array = CBORObject.ReadJSONSequence(ms);
+          Assert.AreEqual(2, array.Length, ss);
+          Assert.AreEqual(o1, array[0], ss);
+          Assert.AreEqual(o2, array[1], ss);
         }
       } catch (IOException ioe) {
         throw new InvalidOperationException(ioe.Message, ioe);
@@ -3865,13 +3861,17 @@ CBOREncodeOptions(false, false, true));
       };
       ExpectJsonSequenceOne(bytes, null);
       bytes = new byte[] { 0x1e, 0x22, 0x41, 0x22, 0x1e, (byte)'[', (byte)']' };
-      ExpectJsonSequenceTwo(bytes, CBORObject.FromObject("A"),
+      ExpectJsonSequenceTwo(
+        bytes,
+        CBORObject.FromObject("A"),
         CBORObject.NewArray());
       bytes = new byte[] {
         0x1e, 0x22, 0x41, 0x22, 0x0a, 0x1e, (byte)'[',
         (byte)']',
       };
-      ExpectJsonSequenceTwo(bytes, CBORObject.FromObject("A"),
+      ExpectJsonSequenceTwo(
+        bytes,
+        CBORObject.FromObject("A"),
         CBORObject.NewArray());
       bytes = new byte[] {
         0x1e, 0x22, 0x41, 0x22, 0x41, 0x1e, (byte)'[',
@@ -7026,11 +7026,11 @@ CBOREncodeOptions(false, false, true));
     }
 
     private static CBORObject FromJSON(string json, JSONOptions jsonop) {
-      var sw = new System.Diagnostics.Stopwatch();
-      sw.Start();
+      // var sw = new System.Diagnostics.Stopwatch();
+      // sw.Start();
       CBORObject cbor = CBORObject.FromJSONString(json, jsonop);
-      sw.Stop();
-      Console.WriteLine(String.Empty + sw.ElapsedMilliseconds + " ms");
+      // sw.Stop();
+      // Console.WriteLine(String.Empty + sw.ElapsedMilliseconds + " ms");
       return cbor;
     }
 
@@ -7044,7 +7044,10 @@ CBOREncodeOptions(false, false, true));
       double dbl) {
       CBORObject cbor = FromJSON(json, numconv);
       Assert.AreEqual(CBORType.FloatingPoint, cbor.Type);
-      Assert.AreEqual(dbl, cbor.AsDoubleValue());
+      double cbordbl = cbor.AsDoubleValue();
+      if (dbl != cbordbl) {
+        Assert.Fail("dbl = " + dbl + ", cbordbl = " + cbordbl);
+      }
     }
 
     private static void AssertJSONInteger(
@@ -7188,7 +7191,7 @@ CBOREncodeOptions(false, false, true));
     public void TestFromJsonStringLongKindFullBad() {
       Console.WriteLine("FullBad 1");
       var jsonop = new JSONOptions("numberconversion=full");
-      var manysevens = TestCommon.Repeat("7", 1000000);
+      string manysevens = TestCommon.Repeat("7", 1000000);
       string[] badjson = {
         manysevens + "x",
         "7x" + manysevens,
@@ -7293,18 +7296,19 @@ CBOREncodeOptions(false, false, true));
     [Timeout(2000)]
     public void TestFromJsonStringLongKindIntOrFloatFromDouble() {
       var jsonop = new JSONOptions("numberconversion=intorfloatfromdouble");
-      string json = TestCommon.Repeat("7", 1000000);
+      string manysevens = TestCommon.Repeat("7", 1000000);
+      string json = manysevens;
       CBORObject cbor = FromJSON(json, jsonop);
       Assert.AreEqual(CBORType.FloatingPoint, cbor.Type);
-      Assert.AreEqual(Double.PositiveInfinity, cbor.AsDoubleValue());
-      json = TestCommon.Repeat("7", 1000000) + "e+0";
+      Assert.IsTrue(cbor.AsDoubleValue() == Double.PositiveInfinity);
+      json = manysevens + "e+0";
       cbor = FromJSON(json, jsonop);
       Assert.AreEqual(CBORType.FloatingPoint, cbor.Type);
-      Assert.AreEqual(Double.PositiveInfinity, cbor.AsDoubleValue());
-      json = TestCommon.Repeat("7", 1000000) + "e0";
+      Assert.IsTrue(cbor.AsDoubleValue() == Double.PositiveInfinity);
+      json = manysevens + "e0";
       cbor = FromJSON(json, jsonop);
       Assert.AreEqual(CBORType.FloatingPoint, cbor.Type);
-      Assert.AreEqual(Double.PositiveInfinity, cbor.AsDoubleValue());
+      Assert.IsTrue(cbor.AsDoubleValue() == Double.PositiveInfinity);
     }
 
     [Test]
@@ -7314,7 +7318,7 @@ CBOREncodeOptions(false, false, true));
       string json = TestCommon.Repeat("7", 1000000);
       CBORObject cbor = FromJSON(json, jsonop);
       Assert.AreEqual(CBORType.FloatingPoint, cbor.Type);
-      Assert.AreEqual(Double.PositiveInfinity, cbor.AsDoubleValue());
+      Assert.IsTrue(cbor.AsDoubleValue() == Double.PositiveInfinity);
     }
 
     [Test]
@@ -7324,7 +7328,7 @@ CBOREncodeOptions(false, false, true));
       string json = "-" + TestCommon.Repeat("7", 1000000);
       CBORObject cbor = FromJSON(json, jsonop);
       Assert.AreEqual(CBORType.FloatingPoint, cbor.Type);
-      Assert.AreEqual(Double.NegativeInfinity, cbor.AsDoubleValue());
+      Assert.IsTrue(cbor.AsDoubleValue() == Double.NegativeInfinity);
     }
 
     [Test]
