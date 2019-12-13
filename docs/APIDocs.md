@@ -8,6 +8,8 @@
 
  * [PeterO.Cbor.CBORNumber](PeterO.Cbor.CBORNumber.md) - An instance of a number that CBOR or certain CBOR tags can represent.
 
+ * [PeterO.Cbor.CBORNumber.NumberKind](PeterO.Cbor.CBORNumber.NumberKind.md) - Specifies the underlying form of this CBOR number object.
+
  * [PeterO.Cbor.CBORObject](PeterO.Cbor.CBORObject.md) - Represents an object in Concise Binary Object Representation (CBOR) and contains methods for reading and writing CBOR data.
 
  * [PeterO.Cbor.CBORType](PeterO.Cbor.CBORType.md) - Represents a type that a CBOR object can have.

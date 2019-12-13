@@ -1,6 +1,22 @@
 Release notes
 ---------------------
 
+### Version 4.1
+
+- Added the following to the CBORObject class: Entries property; ToJSONBytes, CalcEncodedSize, WithTag, and FromJSONBytes methods.
+- Added overload to From JSONString, allowing only a portion of a string to be used
+- Added support for reading JSON text sequences (FromJSONSequenceBytes, ReadJSONSequence).
+- F# types are supported better by CBORObject.FromObject
+- JSON writer now checks circular references.
+- Improved performance when reading JSON numbers, thanks in part to an upgrade of the Numbers library used by the CBOR library.
+- Added number conversion options and PreserveNegativeZero property to JSONOptions.
+- Added ParseJSONDouble method, other methods, and additional ParseJSONNumber overloads to CBORDataUtilities
+- Deprecated some existing overloads of ParseJSONNumber
+- Deprecated many CBORObject properties and methods, including the following: CanFitInInt32, CanFitInInt64, IsInfinity, IsNaN, AsDecimal, AsEInteger, AsEFloat, AsERational, AsUInt16, AsUInt32, AsUInt64, AsSByte, AsByte, Abs, Negate, Sign, IsPositiveInfinity, IsNegativeInfinity, FromJSONString(string, CBOREncodeOptions)
+- Added several methods and properties to CBORNumber (including certain methods deprecated in CBORObject), and exposed the kind of number stored in the class.
+- JSONOptions string constructor now sets ReplaceSurrogates to false by default (previously, it was inadvertently true).
+- Bug fixes
+
 ### Version 4.0.1:
 
 - Fix issue with unexpected CBORObject#ToString result for True and False.

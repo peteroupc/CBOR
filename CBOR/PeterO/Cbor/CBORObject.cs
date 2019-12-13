@@ -12,7 +12,7 @@ using System.Text;
 using PeterO;
 using PeterO.Numbers;
 
-// TODO: In next major version, make .Keys, .Values, and .Entries read-only
+// TODO: In next major version, make .Keys and .Values read-only
 namespace PeterO.Cbor {
   /// <summary>
   /// <para>Represents an object in Concise Binary Object Representation
@@ -530,17 +530,17 @@ CBORObject.FromObject(Double.NaN);
     /// <summary>Gets a collection of the key/value pairs stored in this
     /// CBOR object, if it's a map. Returns one entry for each key/value
     /// pair in the map in an undefined order.</summary>
-    /// <value>A collection of the key/value pairs stored in this CBOR map.
-    /// To avoid potential problems, the calling code should not modify the
-    /// CBOR map or the returned collection while iterating over the
-    /// returned collection.</value>
+    /// <value>A collection of the key/value pairs stored in this CBOR map,
+    /// as a read-only view of those pairs. To avoid potential problems,
+    /// the calling code should not modify the CBOR map while iterating
+    /// over the returned collection.</value>
     /// <exception cref='InvalidOperationException'>This object is not a
     /// map.</exception>
     public ICollection<KeyValuePair<CBORObject, CBORObject>> Entries {
       get {
         if (this.Type == CBORType.Map) {
           IDictionary<CBORObject, CBORObject> dict = this.AsMap();
-          return (ICollection<KeyValuePair<CBORObject, CBORObject>>)dict;
+          return PropertyMap.GetEntries(dict);
         }
         throw new InvalidOperationException("Not a map");
       }
@@ -990,7 +990,7 @@ CBORObject.FromObject(Double.NaN);
     /// byte array must be in UTF-8 encoding and may not begin with a
     /// byte-order mark (U+FEFF).</summary>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='data'/> or <paramref name='options'/> is null.</exception>
+    /// name='stream'/> is null.</exception>
     /// <exception cref='PeterO.Cbor.CBORException'>The byte array is not
     /// empty and does not begin with a record separator byte (0x1e), or an
     /// I/O error occurred.</exception>
@@ -1000,11 +1000,8 @@ CBORObject.FromObject(Double.NaN);
     /// then write the line feed byte (0x0a). RFC 7464, however, uses a
     /// more liberal syntax for parsing JSON text sequences.</remarks>
     /// <returns>The return value is not documented yet.</returns>
-    /// <param name='data'>A byte array in which a JSON text sequence is
-    /// encoded.</param>
-    /// <param name='options'>Specifies options to control how the JSON
-    /// texts in the sequence are decoded to CBOR. See
-    /// <see cref='PeterO.Cbor.JSONOptions'/> for more information.</param>
+    /// <param name='data'>Not documented yet.</param>
+    /// <param name='options'>Not documented yet.</param>
     public static CBORObject[] FromJSONSequenceBytes(byte[] data,
       JSONOptions options) {
       if (data == null) {

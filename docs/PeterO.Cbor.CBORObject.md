@@ -198,13 +198,15 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[Remove(PeterO.Cbor.CBORObject)](#Remove_PeterO_Cbor_CBORObject)</code> - If this object is an array, removes the first instance of the specified item from the array.
 * <code>[RemoveAt(int)](#RemoveAt_int)</code> - Removes the item at the given index of this CBOR array.
 * <code>[Set(object, object)](#Set_object_object)</code> - Maps an object to a key in this CBOR map, or adds the value if the key doesn't exist.
-* <code>[Sign](#Sign)</code> - <b>Deprecated:</b> Instead, convert this object to a number with .AsNumber(), and use the Sign property in .NET or the signum method in Java.
+* <code>[Sign](#Sign)</code> - <b>Deprecated:</b> Instead, convert this object to a number with .AsNumber(), and use the Sign property in .NET or the signum method in Java. Either will treat not-a-number (NaN) values differently than here.
 * <code>[SimpleValue](#SimpleValue)</code> - Gets the simple value ID of this CBOR object, or -1 if the object is not a simple value.
 * <code>[Subtract(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#Subtract_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject)</code> - <b>Deprecated:</b> Instead, convert both CBOR objects to numbers (with .AsNumber()), and use the first number's .Subtract() method.
 * <code>[TagCount](#TagCount)</code> - Gets the number of tags this object has.
 * <code>[this[int]](#this_int)</code> - Gets the value of a CBOR object by integer index in this array or by integer key in this map.
 * <code>[this[PeterO.Cbor.CBORObject]](#this_PeterO_Cbor_CBORObject)</code> - Gets the value of a CBOR object by integer index in this array or by CBOR object key in this map.
 * <code>[this[string]](#this_string)</code> - Gets the value of a CBOR object in this map, using a string as the key.
+* <code>[ToJSONBytes()](#ToJSONBytes)</code> - Converts this object to a byte array in JavaScript Object Notation (JSON) format.
+* <code>[ToJSONBytes(PeterO.Cbor.JSONOptions)](#ToJSONBytes_PeterO_Cbor_JSONOptions)</code> - Converts this object to a byte array in JavaScript Object Notation (JSON) format.
 * <code>[ToJSONString()](#ToJSONString)</code> - Converts this object to a text string in JavaScript Object Notation (JSON) format.
 * <code>[ToJSONString(PeterO.Cbor.JSONOptions)](#ToJSONString_PeterO_Cbor_JSONOptions)</code> - Converts this object to a text string in JavaScript Object Notation (JSON) format, using the specified options to control the encoding process.
 * <code>[ToObject(System.Type)](#ToObject_System_Type)</code> - Converts this CBOR object to an object of an arbitrary type.
@@ -336,7 +338,7 @@ Gets a collection of the key/value pairs stored in this CBOR object, if it's a m
 
 <b>Returns:</b>
 
-A collection of the key/value pairs stored in this CBOR map. To avoid potential problems, the calling code should not modify the CBOR map or the returned collection while iterating over the returned collection.
+A collection of the key/value pairs stored in this CBOR map, as a read-only view of those pairs. To avoid potential problems, the calling code should not modify the CBOR map while iterating over the returned collection.
 
 <b>Exceptions:</b>
 
@@ -527,9 +529,9 @@ The outermost tag for this CBOR data item, or -1 if the item is untagged.
 
     public int Sign { get; }
 
-<b>Deprecated.</b> Instead, convert this object to a number with .AsNumber(),  and use the Sign property in .NET or the signum method in Java.
+<b>Deprecated.</b> Instead, convert this object to a number with .AsNumber(),  and use the Sign property in .NET or the signum method in Java. Either will treat not-a-number (NaN) values differently than here.
 
-Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
+Gets this value's sign: -1 if negative; 1 if positive; 0 if zero. Throws an exception if this is a not-a-number value.
 
 <b>Returns:</b>
 
@@ -1866,14 +1868,19 @@ Generally, each JSON text in a JSON text sequence is written as follows: Write a
 
 <b>Parameters:</b>
 
- * <i>stream</i>: A byte array in which a JSON text sequence is encoded. The byte array must either be empty or begin with a record separator byte (0x1e).
+ * <i>data</i>: A byte array in which a JSON text sequence is encoded.
 
- * <i>options</i>: Specifies options to control how the JSON is decoded to CBOR. See [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) for more information.
+ * <i>options</i>: Specifies options to control how the JSON texts in the sequence are decoded to CBOR. See [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) for more information.
+
+<b>Return Value:</b>
+
+The return value is not documented yet.
 
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>stream</i>
+The parameter  <i>data</i>
+ or  <i>options</i>
  is null.
 
  * PeterO.Cbor.CBORException:
@@ -3799,6 +3806,39 @@ The parameter  <i>first</i>
  or  <i>second</i>
  is null.
 
+<a id="ToJSONBytes_PeterO_Cbor_JSONOptions"></a>
+### ToJSONBytes
+
+    public byte[] ToJSONBytes(
+        PeterO.Cbor.JSONOptions jsonoptions);
+
+Converts this object to a byte array in JavaScript Object Notation (JSON) format. The JSON text will be written out in UTF-8 encoding, without a byte order mark, to the byte array. See the overload to ToJSONString taking a JSONOptions argument for further information.
+
+<b>Parameters:</b>
+
+ * <i>jsonoptions</i>: Specifies options to control writing the CBOR object to JSON.
+
+<b>Return Value:</b>
+
+A byte array containing the converted object in JSON format.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter  <i>jsonoptions</i>
+ is null.
+
+<a id="ToJSONBytes"></a>
+### ToJSONBytes
+
+    public byte[] ToJSONBytes();
+
+Converts this object to a byte array in JavaScript Object Notation (JSON) format. The JSON text will be written out in UTF-8 encoding, without a byte order mark, to the byte array. See the overload to ToJSONString taking a JSONOptions argument for further information.
+
+<b>Return Value:</b>
+
+A byte array containing the converted in JSON format.
+
 <a id="ToJSONString_PeterO_Cbor_JSONOptions"></a>
 ### ToJSONString
 
@@ -3851,11 +3891,11 @@ The example code given below (originally written in C# for the.NET version) can 
 
 <b>Parameters:</b>
 
- * <i>options</i>: An object containing the options to control writing the CBOR object to JSON.
+ * <i>options</i>: Specifies options to control writing the CBOR object to JSON.
 
 <b>Return Value:</b>
 
-A text string containing the converted object.
+A text string containing the converted object in JSON format.
 
 <b>Exceptions:</b>
 
@@ -3868,13 +3908,13 @@ The parameter  <i>options</i>
 
     public string ToJSONString();
 
-Converts this object to a text string in JavaScript Object Notation (JSON) format. See the overload to JSONString taking a JSONOptions argument for further information. If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the JSON string in an undefined order. Map keys other than untagged text strings are converted to JSON strings before writing them out (for example,  `22("Test")`  is converted to  `"Test"`  and  `true`  is converted to  `"true"`  ). If, after such conversion, two or more map keys are identical, this method throws a CBORException. The example code given in <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b> can be used to write out certain keys of a CBOR map in a given order to a JSON string, or to write out a CBOR object as part of a JSON text sequence.
+Converts this object to a text string in JavaScript Object Notation (JSON) format. See the overload to ToJSONString taking a JSONOptions argument for further information. If the CBOR object contains CBOR maps, or is a CBOR map itself, the keys to the map are written out to the JSON string in an undefined order. Map keys other than untagged text strings are converted to JSON strings before writing them out (for example,  `22("Test")`  is converted to  `"Test"`  and  `true`  is converted to  `"true"`  ). If, after such conversion, two or more map keys are identical, this method throws a CBORException. The example code given in <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b> can be used to write out certain keys of a CBOR map in a given order to a JSON string, or to write out a CBOR object as part of a JSON text sequence.
 
 <b>Warning:</b> In general, if this CBOR object contains integer map keys or uses other features not supported in JSON, and the application converts this CBOR object to JSON and back to CBOR, the application <i>should not</i> expect the new CBOR object to be exactly the same as the original. This is because the conversion in many cases may have to convert unsupported features in JSON to supported features which correspond to a different feature in CBOR (such as converting integer map keys, which are supported in CBOR but not JSON, to text strings, which are supported in both).
 
 <b>Return Value:</b>
 
-A text string.
+A text string containing the converted object in JSON format.
 
 <a id="ToObject_System_Type"></a>
 ### ToObject

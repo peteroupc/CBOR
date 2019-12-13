@@ -11,6 +11,8 @@ namespace Test {
       Assert.IsTrue(obj.AsNumber().IsNegative());
       CBORTestCommon.AssertRoundTrip(obj);
     }
+    // testing obsolete method
+    #pragma warning disable CS0618
     [Test]
     public void TestPreserveNegativeZero() {
       CBORObject cbor;
@@ -142,7 +144,7 @@ namespace Test {
       "-0x1", "-0xf", "-0x20", "-0x01", "-.2", "-.05",
       "23.", "23.e-2", "23.e0", "23.e1", "0.",
     };
-#pragma warning disable CS0618
+
     [Test]
     public void TestParseJSONNumberObsolete() {
       foreach (var str in BadJsonNumbers) {
@@ -157,7 +159,6 @@ namespace Test {
         }
       }
     }
-#pragma warning restore CS0618
 
     [Test]
     public void TestParseJSONNumber() {

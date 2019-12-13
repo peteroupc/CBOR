@@ -547,8 +547,12 @@ this.GetNumberInterface().CanTruncatedIntFitInInt32(this.GetValue());
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>The return value is not documented yet.</returns>
+    /// <summary>Gets a value indicating whether this object represents an
+    /// integer number, that is, a number without a fractional part.
+    /// Infinity and not-a-number are not considered integers.</summary>
+    /// <returns><c>true</c> if this object represents an integer number,
+    /// that is, a number without a fractional part; otherwise,
+    /// <c>false</c>.</returns>
     public bool IsInteger() {
       switch (this.kind) {
         case NumberKind.Integer:

@@ -16,6 +16,44 @@ using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   internal static class PropertyMap {
+    private sealed class ReadOnlyWrapper<T> : ICollection<T> {
+       private readonly ICollection<T> o;
+       public ReadOnlyWrapper(ICollection<T> o) {
+          this.o = o;
+       }
+       public void Add(T v) {
+         throw new NotSupportedException();
+       }
+       public void Clear() {
+         throw new NotSupportedException();
+       }
+       public void CopyTo(T[] a, int off) {
+         this.o.CopyTo(a, off);
+       }
+       public bool Remove(T v) {
+         throw new NotSupportedException();
+       }
+       public bool Contains(T v) {
+         return this.o.Contains(v);
+       }
+       public int Count {
+         get {
+           return this.o.Count;
+         }
+       }
+       public bool IsReadOnly {
+         get {
+           return true;
+         }
+       }
+       public IEnumerator<T> GetEnumerator() {
+         return this.o.GetEnumerator();
+       }
+       IEnumerator IEnumerable.GetEnumerator() {
+         return ((IEnumerable)this.o).GetEnumerator();
+       }
+    }
+
     private sealed class PropertyData {
       private string name;
 
@@ -536,6 +574,13 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
           Convert.ToInt64(value,
             CultureInfo.InvariantCulture) :
           Convert.ToInt32(value, CultureInfo.InvariantCulture));
+    }
+
+    public static ICollection<KeyValuePair<TKey, TValue>>
+         GetEntries<TKey, TValue>(
+      IDictionary<TKey, TValue> dict) {
+      var c = (ICollection<KeyValuePair<TKey, TValue>>)dict;
+      return new ReadOnlyWrapper<KeyValuePair<TKey, TValue>>(c);
     }
 
     public static object FindOneArgumentMethod(

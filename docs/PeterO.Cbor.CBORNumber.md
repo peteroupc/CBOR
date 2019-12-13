@@ -27,6 +27,7 @@ An instance of a number that CBOR or certain CBOR tags can represent. For this p
 * <code>[IsNegativeInfinity()](#IsNegativeInfinity)</code> - Gets a value indicating whether this object represents negative infinity.
 * <code>[IsPositiveInfinity()](#IsPositiveInfinity)</code> - Gets a value indicating whether this object represents positive infinity.
 * <code>[IsZero()](#IsZero)</code> - Gets a value indicating whether this object's value equals 0.
+* <code>[Kind](#Kind)</code> - Gets the underlying form of this CBOR number object.
 * <code>[Multiply(PeterO.Cbor.CBORNumber)](#Multiply_PeterO_Cbor_CBORNumber)</code> - Returns a CBOR number expressing the product of this number and the given number.
 * <code>[Negate()](#Negate)</code> - Returns a CBOR number with the same value as this one but with the sign reversed.
 * <code>[bool operator &gt;(PeterO.Cbor.CBORNumber, PeterO.Cbor.CBORNumber)](#op_GreaterThan)</code> - Returns whether one object's value is greater than another's.
@@ -34,7 +35,7 @@ An instance of a number that CBOR or certain CBOR tags can represent. For this p
 * <code>[bool operator &lt;(PeterO.Cbor.CBORNumber, PeterO.Cbor.CBORNumber)](#op_LessThan)</code> - Returns whether one object's value is less than another's.
 * <code>[bool operator &lt;=(PeterO.Cbor.CBORNumber, PeterO.Cbor.CBORNumber)](#op_LessThanOrEqual)</code> - Returns whether one object's value is up to another's.
 * <code>[Remainder(PeterO.Cbor.CBORNumber)](#Remainder_PeterO_Cbor_CBORNumber)</code> - Returns the remainder when this number is divided by another number.
-* <code>[Sign](#Sign)</code> - Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
+* <code>[Sign](#Sign)</code> - Gets this value's sign: -1 if nonzero and negative; 1 if nonzero and positive; 0 if zero.
 * <code>[Subtract(PeterO.Cbor.CBORNumber)](#Subtract_PeterO_Cbor_CBORNumber)</code> - Returns a number that expresses this number minus another.
 * <code>[ToByteChecked()](#ToByteChecked)</code> - Converts this number's value to a byte (from 0 to 255) if it can fit in a byte (from 0 to 255) after converting it to an integer by discarding its fractional part.
 * <code>[ToByteIfExact()](#ToByteIfExact)</code> - Converts this number's value to a byte (from 0 to 255) if it can fit in a byte (from 0 to 255) without rounding to a different numerical value.
@@ -68,16 +69,27 @@ An instance of a number that CBOR or certain CBOR tags can represent. For this p
 * <code>[ToUInt64IfExact()](#ToUInt64IfExact)</code> - Converts this number's value to a 64-bit unsigned integer if it can fit in a 64-bit unsigned integer without rounding to a different numerical value.
 * <code>[ToUInt64Unchecked()](#ToUInt64Unchecked)</code> - Converts this number's value to an integer by discarding its fractional part, and returns the least-significant bits of its two's-complement form as a 64-bit unsigned integer.
 
+<a id="Kind"></a>
+### Kind
+
+    public PeterO.Cbor.CBORNumber.NumberKind Kind { get; }
+
+Gets the underlying form of this CBOR number object.
+
+<b>Returns:</b>
+
+The underlying form of this CBOR number object.
+
 <a id="Sign"></a>
 ### Sign
 
     public int Sign { get; }
 
-Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
+Gets this value's sign: -1 if nonzero and negative; 1 if nonzero and positive; 0 if zero. Not-a-number (NaN) values are positive or negative depending on what sign is stored in their underlying forms.
 
 <b>Returns:</b>
 
-This value's sign: -1 if negative; 1 if positive; 0 if zero.
+This value's sign.
 
 <a id="Abs"></a>
 ### Abs
