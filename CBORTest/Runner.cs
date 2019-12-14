@@ -33,6 +33,10 @@ namespace PeterO {
     }
 
     public static bool Extra() {
+  new CBORDataUtilitiesTest().TestParseJSONNumber();
+  new CBORDataUtilitiesTest().TestParseJSONNumberObsolete();
+  new CBORObjectTest().TestFromJSONString();
+  new CBORObjectTest().TestFromJsonStringLongSpecific1();
   new CBORObjectTest().TestFromJsonStringLongKindIntOrFloat();
   new CBORObjectTest().TestFromJsonStringLongKindIntOrFloatFromDouble();
   new CBORObjectTest().TestFromJsonStringLongKindFullBad();
@@ -44,7 +48,7 @@ namespace PeterO {
       if (!Extra()) {
         return;
       }
-      const String ValueParam = "TestLong";
+      const String ValueParam = "TestFrom";
       // Run all the tests in this assembly
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
         if (!HasAttribute(type, typeof(TestFixtureAttribute))) {

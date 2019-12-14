@@ -521,13 +521,13 @@ JSONOptions.ConversionMode.Double) {
       }
       if (haveExponent) {
         haveDigits = false;
-        char c = str[k];
         if (k == endPos) {
           if (endOfNumber != null) {
             endOfNumber[0] = k;
           }
           return null;
         }
+        char c = str[k];
         if (c == '+' || c == '-') {
           ++k;
         }

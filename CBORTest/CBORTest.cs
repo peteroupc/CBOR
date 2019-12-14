@@ -1758,6 +1758,9 @@ namespace Test {
                   (ex.InnerException == null ? String.Empty : "\n" +
                     ex.InnerException.ToString()) +
                   "\n" + ToByteArrayStringFrom(array, objpos);
+                failString = failString.Substring(
+                  0,
+                  Math.Min(2000, failString.Length));
                 Assert.Fail(failString);
                 throw new InvalidOperationException(String.Empty, ex);
               }
@@ -1777,6 +1780,9 @@ namespace Test {
                   (ex.InnerException == null ? String.Empty : "\n" +
                     ex.InnerException.ToString()) +
                   "\n" + ToByteArrayStringFrom(o.EncodeToBytes(), 0);
+                failString = failString.Substring(
+                  0,
+                  Math.Min(2000, failString.Length));
                 Assert.Fail(failString);
                 throw new InvalidOperationException(String.Empty, ex);
               }
@@ -1788,6 +1794,9 @@ namespace Test {
                 (ex.InnerException == null ? String.Empty : "\n" +
                   ex.InnerException.ToString()) +
                 "\n" + ToByteArrayStringFrom(array, objpos);
+              failString = failString.Substring(
+                0,
+                Math.Min(2000, failString.Length));
               Assert.Fail(failString);
               throw new InvalidOperationException(String.Empty, ex);
               // }
@@ -1820,6 +1829,9 @@ namespace Test {
                 (ex.InnerException == null ? String.Empty : "\n" +
                   ex.InnerException.ToString());
               failString += "\n" + TestCommon.ToByteArrayString(array);
+              failString = failString.Substring(
+                0,
+                Math.Min(2000, failString.Length));
               Assert.Fail(failString);
               throw new InvalidOperationException(String.Empty, ex);
             }
@@ -1845,6 +1857,9 @@ namespace Test {
                 (ex.InnerException == null ? String.Empty : "\n" +
                   ex.InnerException.ToString());
               failString += "\n" + TestCommon.ToByteArrayString(array);
+              failString = failString.Substring(
+                0,
+                Math.Min(2000, failString.Length));
               Assert.Fail(failString);
               throw new InvalidOperationException(String.Empty, ex);
             }
@@ -1856,6 +1871,9 @@ namespace Test {
               (ex.InnerException == null ? String.Empty : "\n" +
                 ex.InnerException.ToString());
             failString += "\n" + TestCommon.ToByteArrayString(array);
+            failString = failString.Substring(
+              0,
+              Math.Min(2000, failString.Length));
             Assert.Fail(failString);
             throw new InvalidOperationException(String.Empty, ex);
           }

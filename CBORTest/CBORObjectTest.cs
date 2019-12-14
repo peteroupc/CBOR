@@ -2382,6 +2382,7 @@ CBOREncodeOptions(false, false, true));
     }
 
     [Test]
+    [Timeout(50000)]
     public void TestFromJSONString() {
       var charbuf = new char[4];
       CBORObject cbor;
@@ -7059,6 +7060,20 @@ CBOREncodeOptions(false, false, true));
         Assert.AreEqual(CBORType.Integer, cbor.Type);
       }
       Assert.AreEqual(intval, cbor.AsInt32Value());
+    }
+
+    [Test]
+    [Timeout(2000)]
+    public void TestFromJsonStringLongSpecific1() {
+      JSONOptions jsonop = JSONOptions.Default;
+      string json = "{\"x\":-9.2574033594381E-7962\u002c\"1\":" +
+        "-2.8131427974929237E+240}";
+      try {
+ FromJSON(json, jsonop);
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
     }
 
     [Test]

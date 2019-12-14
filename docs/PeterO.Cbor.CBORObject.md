@@ -1868,18 +1868,18 @@ Generally, each JSON text in a JSON text sequence is written as follows: Write a
 
 <b>Parameters:</b>
 
- * <i>data</i>: Not documented yet.
+ * <i>data</i>: A byte array in which a JSON text sequence is encoded.
 
- * <i>options</i>: Not documented yet.
+ * <i>options</i>: Specifies options to control the JSON decoding process.
 
 <b>Return Value:</b>
 
-The return value is not documented yet.
+A list of CBOR objects read from the JSON sequence. Objects that could not be parsed are replaced with  `null`  (as opposed to  `CBORObject.Null`  ) in the given list.
 
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>stream</i>
+The parameter  <i>data</i>
  is null.
 
  * PeterO.Cbor.CBORException:
@@ -3650,7 +3650,7 @@ There was an error in reading or parsing the data, including if the last CBOR ob
 
 <b>Deprecated.</b> Instead, convert both CBOR objects to numbers (with .AsNumber()), and use the first number's .Remainder() method.
 
-Finds the remainder that results when a CBORObject object is divided by the value of A CBOR object.
+Finds the remainder that results when a CBORObject object is divided by the value of a CBOR object.
 
 <b>Parameters:</b>
 

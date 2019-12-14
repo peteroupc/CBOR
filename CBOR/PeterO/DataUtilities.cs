@@ -656,10 +656,22 @@ namespace PeterO {
         throw new ArgumentException("str.Length minus offset(" +
           (str.Length - offset) + ") is less than " + length);
       }
+      if (length == 0) {
+        return 0;
+      }
       int endIndex, c;
       byte[] bytes;
       var retval = 0;
-      bytes = new byte[StreamedStringBufferLength];
+      // Take string portion's length into account when allocating
+      // stream buffer, in case it's much smaller than the usual stream
+      // string buffer length and to improve performance on small strings
+      int bufferLength = Math.Min(StreamedStringBufferLength, length);
+      if (bufferLength < StreamedStringBufferLength) {
+        bufferLength = Math.Min(
+          StreamedStringBufferLength,
+          bufferLength * 3);
+      }
+      bytes = new byte[bufferLength];
       var byteIndex = 0;
       endIndex = offset + length;
       for (int index = offset; index < endIndex; ++index) {
@@ -946,7 +958,7 @@ namespace PeterO {
       bool replace) {
       var builder = new StringBuilder();
       if (DataUtilities.ReadUtf8(stream, bytesCount, builder, replace) == -1) {
-        throw new IOException (
+        throw new IOException(
           "Unpaired surrogate code point found.",
           new ArgumentException("Unpaired surrogate code point found."));
       }

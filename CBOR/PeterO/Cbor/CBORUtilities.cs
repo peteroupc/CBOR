@@ -30,6 +30,18 @@ namespace PeterO.Cbor {
         return strA.Length == 0 ? 0 : 1;
       }
       if (strA.Length < 64 && strB.Length < 64) {
+        if (strA.Length == strB.Length) {
+          var equalStrings = true;
+          for (int i = 0; i < strA.Length; ++i) {
+            if (strA[i] != strB[i]) {
+              equalStrings = false;
+              break;
+            }
+          }
+          if (equalStrings) {
+            return 0;
+          }
+        }
         for (int i = 0; i < strA.Length; ++i) {
           if ((strA[i] & ((byte)0x80)) != 0) {
             return -2; // non-ASCII
@@ -134,13 +146,13 @@ namespace PeterO.Cbor {
     }
 
     public static double Int64BitsToDouble(long bits) {
-      return BitConverter.ToDouble (
+      return BitConverter.ToDouble(
           BitConverter.GetBytes(bits),
           0);
     }
 
     public static float Int32BitsToSingle(int bits) {
-      return BitConverter.ToSingle (
+      return BitConverter.ToSingle(
           BitConverter.GetBytes(bits),
           0);
     }
@@ -378,9 +390,9 @@ namespace PeterO.Cbor {
         EInteger ei = EInteger.FromInt32(startYear);
         if (ei.Add(401).CompareTo(year) < 0) {
           EInteger y2 = year.Subtract(2);
-          numDays = numDays.Add (
+          numDays = numDays.Add(
               y2.Subtract(startYear).Divide(400).Multiply(146097));
-          ei = y2.Subtract (
+          ei = y2.Subtract(
               y2.Subtract(startYear).Remainder(400));
         }
 
@@ -419,13 +431,13 @@ namespace PeterO.Cbor {
       int nanoseconds = fractionalPart.Multiply(1000000000)
         .ToInt32Checked();
       var normPart = new EInteger[3];
-      EInteger days = FloorDiv (
+      EInteger days = FloorDiv(
           integerPart,
           EInteger.FromInt32(86400)).Add(1);
-      int secondsInDay = FloorMod (
+      int secondsInDay = FloorMod(
           integerPart,
           EInteger.FromInt32(86400)).ToInt32Checked();
-      GetNormalizedPartProlepticGregorian (
+      GetNormalizedPartProlepticGregorian(
         EInteger.FromInt32(1970),
         1,
         days,
@@ -605,7 +617,7 @@ namespace PeterO.Cbor {
       EInteger bigYear,
       int[] lesserFields) {
       if (lesserFields[6] != 0) {
-        throw new NotSupportedException (
+        throw new NotSupportedException(
           "Local time offsets not supported");
       }
       int smallYear = bigYear.ToInt32Checked();
@@ -666,7 +678,7 @@ namespace PeterO.Cbor {
     }
 
     public static EInteger BigIntegerFromDouble(double dbl) {
-      long lvalue = BitConverter.ToInt64 (
+      long lvalue = BitConverter.ToInt64(
           BitConverter.GetBytes((double)dbl),
           0);
       int value0 = unchecked((int)(lvalue & 0xffffffffL));

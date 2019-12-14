@@ -4790,9 +4790,11 @@ bytes[offset + 1] != 0) {
             break;
           }
           case CBORObjectTypeTextString: {
+            var strA = (string)objA;
+            var strB = (string)objB;
             cmp = CBORUtilities.FastPathStringCompare(
-                (string)objA,
-                (string)objB);
+                strA,
+                strB);
             if (cmp < -1) {
               cmp = CBORUtilities.ByteArrayCompare(
                   this.EncodeToBytes(),
@@ -7373,7 +7375,16 @@ this.MostOuterTag.Equals(bigTagValue);
         stream.Write(bytes, 0, bytes.Length);
         return;
       }
-      bytes = new byte[StreamedStringBufferLength];
+      // Take string's length into account when allocating
+      // stream buffer, in case it's much smaller than the usual stream
+      // string buffer length and to improve performance on small strings
+      int bufferLength = Math.Min(StreamedStringBufferLength, str.Length);
+      if (bufferLength < StreamedStringBufferLength) {
+        bufferLength = Math.Min(
+          StreamedStringBufferLength,
+          bufferLength * 3);
+      }
+      bytes = new byte[bufferLength];
       var byteIndex = 0;
       var streaming = false;
       for (int index = 0; index < str.Length; ++index) {
