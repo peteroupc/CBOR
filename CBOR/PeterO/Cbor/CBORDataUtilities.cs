@@ -435,6 +435,14 @@ JSONOptions.ConversionMode.Double) {
       int offset,
       int count,
       JSONOptions options) {
+      return ParseJSONNumber(str, offset, count, options, null);
+    }
+    internal static CBORObject ParseJSONNumber(
+      string str,
+      int offset,
+      int count,
+      JSONOptions options,
+      int[] endOfNumber) {
       if (String.IsNullOrEmpty(str) || count <= 0) {
         return null;
       }
@@ -465,49 +473,91 @@ JSONOptions.ConversionMode.Double) {
       int k = i;
       if (endPos - 1 > k && str[k] == '0' && str[k + 1] >= '0' &&
          str[k + 1] <= '9') {
+        if (endOfNumber != null) {
+          endOfNumber[0] = k + 2;
+        }
         return null;
       }
       for (; k < endPos; ++k) {
-        if (str[k] >= '0' && str[k] <= '9') {
+        char c = str[k];
+        if (c >= '0' && c <= '9') {
           haveDigits = true;
           haveDigitsAfterDecimal |= haveDecimalPoint;
-        } else if (str[k] == '.') {
+        } else if (c == '.') {
           if (!haveDigits || haveDecimalPoint) {
             // no digits before the decimal point,
             // or decimal point already seen
+            if (endOfNumber != null) {
+              endOfNumber[0] = k;
+            }
             return null;
           }
           haveDecimalPoint = true;
           decimalPointPos = k;
-        } else if (str[k] == 'E' || str[k] == 'e') {
+        } else if (c == 'E' || c == 'e') {
           ++k;
           haveExponent = true;
           break;
         } else {
+          if (endOfNumber != null) {
+            endOfNumber[0] = k;
+            // Check if character can validly appear after a JSON number
+            if (c != ',' && c != ']' && c != '}' &&
+              c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) {
+               return null;
+             } else {
+              endPos = k;
+              break;
+            }
+          }
           return null;
         }
       }
       if (!haveDigits || (haveDecimalPoint && !haveDigitsAfterDecimal)) {
+        if (endOfNumber != null) {
+          endOfNumber[0] = k;
+        }
         return null;
       }
       if (haveExponent) {
         haveDigits = false;
+        char c = str[k];
         if (k == endPos) {
+          if (endOfNumber != null) {
+            endOfNumber[0] = k;
+          }
           return null;
         }
-        if (str[k] == '+' || str[k] == '-') {
+        if (c == '+' || c == '-') {
           ++k;
         }
         for (; k < endPos; ++k) {
-          if (str[k] >= '0' && str[k] <= '9') {
+          c = str[k];
+          if (c >= '0' && c <= '9') {
             haveDigits = true;
+          } else if (endOfNumber != null) {
+            endOfNumber[0] = k;
+            // Check if character can validly appear after a JSON number
+            if (c != ',' && c != ']' && c != '}' &&
+              c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) {
+               return null;
+             } else {
+               endPos = k;
+               break;
+            }
           } else {
             return null;
           }
         }
         if (!haveDigits) {
+          if (endOfNumber != null) {
+            endOfNumber[0] = k;
+          }
           return null;
         }
+      }
+      if (endOfNumber != null) {
+        endOfNumber[0] = endPos;
       }
       if (!haveExponent && !haveDecimalPoint &&
          (endPos - numOffset) <= 16) {
@@ -561,7 +611,10 @@ JSONOptions.ConversionMode.Double) {
             return CBORObject.FromObjectAndTag(cbor, 4);
           }
         }
-        EDecimal ed = EDecimal.FromString(str, initialOffset, count);
+        EDecimal ed = EDecimal.FromString(
+          str,
+          initialOffset,
+          endPos - initialOffset);
         if (ed.IsZero && negative) {
           if (preserveNegativeZero && ed.Exponent.IsZero) {
             // TODO: In next major version, use EDecimal
@@ -575,7 +628,7 @@ JSONOptions.ConversionMode.Double) {
         double dbl = EFloat.FromString(
           str,
           initialOffset,
-          count,
+          endPos - initialOffset,
           EContext.Binary64).ToDouble();
         if (!preserveNegativeZero && dbl == 0.0) {
           dbl = 0.0;
@@ -585,7 +638,7 @@ JSONOptions.ConversionMode.Double) {
         EDecimal ed = EDecimal.FromString(
           str,
           initialOffset,
-          count,
+          endPos - initialOffset,
           EContext.Decimal128);
         if (!preserveNegativeZero && ed.IsNegative && ed.IsZero) {
           ed = ed.Negate();
@@ -595,7 +648,7 @@ JSONOptions.ConversionMode.Double) {
         double dbl = EFloat.FromString(
           str,
           initialOffset,
-          count,
+          endPos - initialOffset,
           EContext.Binary64).ToDouble();
         if (!Double.IsNaN(dbl) && dbl >= -9007199254740991.0 &&
           dbl <= 9007199254740991.0 && Math.Floor(dbl) == dbl) {
@@ -608,7 +661,7 @@ JSONOptions.ConversionMode.Double) {
         double dbl = EFloat.FromString(
           str,
           initialOffset,
-          count,
+          endPos - initialOffset,
           ctx).ToDouble();
         if ((ctx.Flags & EContext.FlagInexact) != 0) {
           // Inexact conversion to double, meaning that the string doesn't

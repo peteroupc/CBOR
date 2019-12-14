@@ -9,6 +9,7 @@ using System;
 using System.Reflection;
 using NUnit.Framework;
 using PeterO.Cbor;
+using Test;
 
 namespace PeterO {
   /// <summary>Description of Runner.</summary>
@@ -32,8 +33,11 @@ namespace PeterO {
     }
 
     public static bool Extra() {
-      new Test.CBORObjectTest().TestJsonSequence();
-      return true;
+  new CBORObjectTest().TestFromJsonStringLongKindIntOrFloat();
+  new CBORObjectTest().TestFromJsonStringLongKindIntOrFloatFromDouble();
+  new CBORObjectTest().TestFromJsonStringLongKindFullBad();
+  new CBORObjectTest().TestFromJsonStringFastCases();
+  return false;
     }
 
     public static void Main() {

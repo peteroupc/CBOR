@@ -78,7 +78,7 @@ namespace PeterO.Cbor {
                 // Consists of 4 hex digits
                 for (var i = 0; i < 4; ++i) {
                   int ch = this.index < this.endPos ?
-                    ((int)this.jstring[this.index++]) & 0xffff : -1;
+                    ((int)this.jstring[this.index++]) : -1;
                   if (ch >= '0' && ch <= '9') {
                     c <<= 4;
                     c |= ch - '0';
@@ -98,15 +98,15 @@ namespace PeterO.Cbor {
                   this.sb.Append((char)c);
                 } else if ((c & 0xfc00) == 0xd800) {
                   int ch = this.index < this.endPos ?
-                    ((int)this.jstring[this.index++]) & 0xffff : -1;
+                    ((int)this.jstring[this.index++]) : -1;
                   if (ch != '\\' || (this.index < this.endPos ?
-                      ((int)this.jstring[this.index++]) & 0xffff : -1) != 'u') {
+                      ((int)this.jstring[this.index++]) : -1) != 'u') {
                     this.RaiseError("Invalid escaped character");
                   }
                   var c2 = 0;
                   for (var i = 0; i < 4; ++i) {
                     ch = this.index < this.endPos ?
-                      ((int)this.jstring[this.index++]) & 0xffff : -1;
+                      ((int)this.jstring[this.index++]) : -1;
                     if (ch >= '0' && ch <= '9') {
                       c2 <<= 4;
                       c2 |= ch - '0';
@@ -163,7 +163,6 @@ namespace PeterO.Cbor {
     private CBORObject NextJSONNegativeNumber(
       int[] nextChar) {
       // Assumes the last character read was '-'
-
       // DebugUtility.Log("js=" + (jstring));
       CBORObject obj;
       int numberStartIndex = this.index - 1;
@@ -172,41 +171,40 @@ namespace PeterO.Cbor {
       if (c < '0' || c > '9') {
         this.RaiseError("JSON number can't be parsed.");
       }
-      int cstart = c;
-      while (c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
-        c == 'e' || c == 'E') {
-        c = this.index < this.endPos ? ((int)this.jstring[this.index++]) &
-          0xffff : -1;
+      // NOTE: Differs from CBORJson2, notably because the whole
+      // rest of the string is checked whether the beginning of the rest
+      // is a JSON number
+      var endIndex = new int[1];
+      endIndex[0] = numberStartIndex;
+      obj = CBORDataUtilities.ParseJSONNumber(
+              this.jstring,
+              numberStartIndex,
+              this.jstring.Length - numberStartIndex,
+              this.options,
+              endIndex);
+      int numberEndIndex = endIndex[0];
+      this.index = numberEndIndex;
+      if (obj == null) {
+        int strlen = numberEndIndex - numberStartIndex;
+        string errstr = this.jstring.Substring(numberStartIndex,
+            Math.Min(100, strlen));
+        if (strlen > 100) {
+          errstr += "...";
+        }
+        this.RaiseError("JSON number can't be parsed. " + errstr);
       }
+#if DEBUG
+      if (numberEndIndex < numberStartIndex) {
+        throw new ArgumentException("numberEndIndex (" + numberEndIndex +
+") is not greater or equal to " + numberStartIndex);
+      }
+#endif
+      c = numberEndIndex >= this.jstring.Length ? -1 :
+this.jstring[numberEndIndex];
       // check if character can validly appear after a JSON number
       if (c != ',' && c != ']' && c != '}' && c != -1 &&
-        c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) {
+          c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) {
         this.RaiseError("Invalid character after JSON number");
-      }
-      int numberEndIndex = c < 0 ? this.endPos : this.index - 1;
-      if (numberEndIndex - numberStartIndex == 2 && cstart != '0') {
-        // Negative single digit other than negative zero
-        obj = CBORDataUtilities.ParseSmallNumberAsNegative((int)(cstart
-              - '0'),
-            this.options);
-      } else {
-        // DebugUtility.Log("pjn = " + (this.jstring.Substring(numberStartIndex,
-        // numberEndIndex - numberStartIndex)));
-        // NOTE: Differs from CBORJson2
-        obj = CBORDataUtilities.ParseJSONNumber(
-            this.jstring,
-            numberStartIndex,
-            numberEndIndex - numberStartIndex,
-            this.options);
-        if (obj == null) {
-          int strlen = numberEndIndex - numberStartIndex;
-          string errstr = this.jstring.Substring(numberStartIndex,
-              Math.Min(100, strlen));
-          if (strlen > 100) {
-            errstr += "...";
-          }
-          this.RaiseError("JSON number can't be parsed. " + errstr);
-        }
       }
       if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)) {
         nextChar[0] = c;
@@ -240,14 +238,13 @@ namespace PeterO.Cbor {
           this.RaiseError("JSON number can't be parsed.");
         }
         cval = (cval * 10) + (int)(c - '0');
-        c = this.index < this.endPos ? ((int)this.jstring[this.index++]) &
-          0xffff : -1;
+        c = this.index < this.endPos ? ((int)this.jstring[this.index++]) : -1;
         if (c >= '0' && c <= '9') {
           var digits = 2;
           while (digits < 9 && (c >= '0' && c <= '9')) {
             cval = (cval * 10) + (int)(c - '0');
             c = this.index < this.endPos ?
-              ((int)this.jstring[this.index++]) & 0xffff : -1;
+              ((int)this.jstring[this.index++]) : -1;
             ++digits;
           }
           if (!(c == 'e' || c == 'E' || c == '.' || (c >= '0' && c <=
@@ -265,32 +262,19 @@ namespace PeterO.Cbor {
         }
       }
       if (needObj) {
-        while (c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
-          c == 'e' || c == 'E') {
-          c = this.index < this.endPos ? ((int)this.jstring[this.index++]) &
-            0xffff : -1;
-        }
-        // check if character can validly appear after a JSON number
-        if (c != ',' && c != ']' && c != '}' && c != -1 &&
-          c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) {
-          this.RaiseError("Invalid character after JSON number");
-        }
-        int numberEndIndex = c < 0 ?
-          this.endPos : this.index - 1;
-        // DebugUtility.Log("pjn = " + (this.jstring.Substring(numberStartIndex,
-        // numberEndIndex - numberStartIndex)));
-        // NOTE: Differs from CBORJson2
-        try {
-          obj = CBORDataUtilities.ParseJSONNumber(
+        // NOTE: Differs from CBORJson2, notably because the whole
+        // rest of the string is checked whether the beginning of the rest
+        // is a JSON number
+        var endIndex = new int[1];
+        endIndex[0] = numberStartIndex;
+        obj = CBORDataUtilities.ParseJSONNumber(
               this.jstring,
               numberStartIndex,
-              numberEndIndex - numberStartIndex,
-              this.options);
-        } catch (FormatException exc) {
-          throw new InvalidOperationException(this.jstring.Substring(
-            numberStartIndex,
-            numberEndIndex - numberStartIndex), exc);
-        }
+              this.jstring.Length - numberStartIndex,
+              this.options,
+              endIndex);
+        int numberEndIndex = endIndex[0];
+        this.index = numberEndIndex;
         if (obj == null) {
           int strlen = numberEndIndex - numberStartIndex;
           string errstr = this.jstring.Substring(numberStartIndex,
@@ -299,6 +283,20 @@ namespace PeterO.Cbor {
             errstr += "...";
           }
           this.RaiseError("JSON number can't be parsed. " + errstr);
+        }
+#if DEBUG
+        if (numberEndIndex < numberStartIndex) {
+          throw new ArgumentException("numberEndIndex (" + numberEndIndex +
+") is not greater or equal to " + numberStartIndex);
+        }
+#endif
+
+        c = numberEndIndex >= this.jstring.Length ? -1 :
+this.jstring[numberEndIndex];
+        // check if character can validly appear after a JSON number
+        if (c != ',' && c != ']' && c != '}' && c != -1 &&
+          c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) {
+          this.RaiseError("Invalid character after JSON number");
         }
       }
       if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)) {
@@ -428,7 +426,6 @@ namespace PeterO.Cbor {
           "\u0020or equal to " + index);
       }
       #endif
-
       this.sb = null;
       this.jstring = jstring;
       this.index = index;
