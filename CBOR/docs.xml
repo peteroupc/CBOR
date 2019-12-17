@@ -714,10 +714,12 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORNumber.IsInteger">
 
-        <summary>Gets a value indicating whether this object represents an
+            <summary>Gets a value indicating whether this object represents an
             integer number, that is, a number without a fractional part.
-            Infinity and not-a-number are not considered integers.</summary><returns><c>true</c> if this object represents an integer number,
+            Infinity and not-a-number are not considered integers.</summary>
+            <returns><c>true</c> if this object represents an integer number,
             that is, a number without a fractional part; otherwise, <c>false</c>.</returns>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORNumber.IsNaN">
 
@@ -756,9 +758,11 @@
 
 </doc>
 <doc name="P:PeterO.Cbor.CBORNumber.Kind">
-<summary>Gets the underlying form of this CBOR number
+
+            <summary>Gets the underlying form of this CBOR number
             object.</summary>
             <value>The underlying form of this CBOR number object.</value>
+
 </doc>
 <doc name="F:PeterO.Cbor.CBORNumber.Kind.Double">
 <summary>A 64-bit binary floating-point number.</summary>
@@ -798,26 +802,40 @@
 
 </doc>
 <doc name="T:PeterO.Cbor.CBORNumber.NumberKind">
-<summary>Specifies the underlying form of this CBOR number
+
+            <summary>Specifies the underlying form of this CBOR number
             object.</summary>
+
 </doc>
 <doc name="F:PeterO.Cbor.CBORNumber.NumberKind.Double">
-<summary>A 64-bit binary floating-point number.</summary>
+
+            <summary>A 64-bit binary floating-point number.</summary>
+
 </doc>
 <doc name="F:PeterO.Cbor.CBORNumber.NumberKind.EDecimal">
-<summary>An arbitrary-precision decimal number.</summary>
+
+            <summary>An arbitrary-precision decimal number.</summary>
+
 </doc>
 <doc name="F:PeterO.Cbor.CBORNumber.NumberKind.EFloat">
-<summary>An arbitrary-precision binary number.</summary>
+
+            <summary>An arbitrary-precision binary number.</summary>
+
 </doc>
 <doc name="F:PeterO.Cbor.CBORNumber.NumberKind.EInteger">
-<summary>An arbitrary-precision integer.</summary>
+
+            <summary>An arbitrary-precision integer.</summary>
+
 </doc>
 <doc name="F:PeterO.Cbor.CBORNumber.NumberKind.ERational">
-<summary>An arbitrary-precision rational number.</summary>
+
+            <summary>An arbitrary-precision rational number.</summary>
+
 </doc>
 <doc name="F:PeterO.Cbor.CBORNumber.NumberKind.Integer">
-<summary>A 64-bit signed integer.</summary>
+
+            <summary>A 64-bit signed integer.</summary>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORNumber.Remainder(PeterO.Cbor.CBORNumber)">
 
@@ -2080,7 +2098,7 @@
             CBOR object, if it's a map. Returns one entry for each key/value
             pair in the map in an undefined order.</summary>
             <value>A collection of the key/value pairs stored in this CBOR map,
-            as a read-only view of those pairs.  To avoid potential problems,
+            as a read-only view of those pairs. To avoid potential problems,
             the calling code should not modify the CBOR map while iterating
             over the returned collection.</value>
             <exception cref='InvalidOperationException'>This object is not a
@@ -2275,10 +2293,29 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromJSONSequenceBytes(System.Byte[],PeterO.Cbor.JSONOptions)">
-<summary>Generates a list of CBOR objects from an array of bytes in JavaScript
-            Object Notation (JSON) text sequence format (RFC 7464), using the specified options to control the decoding process. The byte array must be in UTF-8 encoding and may not begin with a byte-order mark (U+FEFF).</summary><param name='stream'>A byte array in which a JSON text sequence is encoded. The byte array must either be empty or begin with a record separator byte (0x1e).</param><param name='options'>Specifies options to control how the JSON is decoded to CBOR. See
-            <see cref='PeterO.Cbor.JSONOptions'/> for more information.</param><exception cref='ArgumentNullException'>The parameter <paramref name='stream'/> is null.</exception><exception cref='PeterO.Cbor.CBORException'>The byte array
-            is not empty and does not begin with a record separator byte (0x1e), or an I/O error occurred.</exception><remarks>Generally, each JSON text in a JSON text sequence is written as follows:  Write a record separator byte (0x1e), then write the JSON text in UTF-8 (without a byte order mark, U+FEFF), then write the line feed byte (0x0a).  RFC 7464, however, uses a more liberal syntax for parsing JSON text sequences.</remarks>
+
+            <summary>Generates a list of CBOR objects from an array of bytes in
+            JavaScript Object Notation (JSON) text sequence format (RFC 7464),
+            using the specified options to control the decoding process. The
+            byte array must be in UTF-8 encoding and may not begin with a
+            byte-order mark (U+FEFF).</summary>
+            <param name='data'>A byte array in which a JSON text sequence is
+            encoded.</param>
+            <param name='options'>Specifies options to control the JSON
+            decoding process.</param>
+            <returns>A list of CBOR objects read from the JSON sequence.
+            Objects that could not be parsed are replaced with <c>null</c> (as
+            opposed to <c>CBORObject.Null</c> ) in the given list.</returns>
+            <exception cref='ArgumentNullException'>The parameter <paramref name='data'/> is null.</exception>
+            <exception cref='PeterO.Cbor.CBORException'>The byte array is not
+            empty and does not begin with a record separator byte (0x1e), or an
+            I/O error occurred.</exception>
+            <remarks>Generally, each JSON text in a JSON text sequence is
+            written as follows: Write a record separator byte (0x1e), then
+            write the JSON text in UTF-8 (without a byte order mark, U+FEFF),
+            then write the line feed byte (0x0a). RFC 7464, however, uses a
+            more liberal syntax for parsing JSON text sequences.</remarks>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromJSONString(System.String)">
 
@@ -3541,7 +3578,7 @@
 <doc name="M:PeterO.Cbor.CBORObject.Remainder(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
 
             <summary>Finds the remainder that results when a CBORObject object
-            is divided by the value of A CBOR object.</summary>
+            is divided by the value of a CBOR object.</summary>
             <param name='first'>The parameter <paramref name='first'/> is a
             CBOR object.</param>
             <param name='second'>The parameter <paramref name='second'/> is a
@@ -3656,16 +3693,19 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.ToJSONBytes">
-<summary>Converts this object to a byte array in JavaScript Object
+
+            <summary>Converts this object to a byte array in JavaScript Object
             Notation (JSON) format. The JSON text will be written out in UTF-8
             encoding, without a byte order mark, to the byte array. See the
             overload to ToJSONString taking a JSONOptions argument for further
             information.</summary>
             <returns>A byte array containing the converted in JSON
             format.</returns>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.ToJSONBytes(PeterO.Cbor.JSONOptions)">
-<summary>Converts this object to a byte array in JavaScript Object
+
+            <summary>Converts this object to a byte array in JavaScript Object
             Notation (JSON) format. The JSON text will be written out in UTF-8
             encoding, without a byte order mark, to the byte array. See the
             overload to ToJSONString taking a JSONOptions argument for further
@@ -3675,6 +3715,7 @@
             <returns>A byte array containing the converted object in JSON
             format.</returns>
             <exception cref='ArgumentNullException'>The parameter <paramref name='jsonoptions'/> is null.</exception>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.ToJSONString">
 
