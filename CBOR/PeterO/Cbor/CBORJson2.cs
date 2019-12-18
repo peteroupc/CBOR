@@ -37,13 +37,40 @@ namespace PeterO.Cbor {
 
     private string NextJSONString() {
       int c;
+      int startIndex = this.index;
+      for (var i = 0; i < 64; ++i) {
+        if (this.index >= this.endPos) {
+          this.RaiseError("Unterminated string");
+        }
+        c = (int)this.bytes[this.index++];
+        if (c < 0x20) {
+          this.RaiseError("Invalid character in string literal");
+        }
+        if (c == '\\' || c >= 0x80) {
+          break;
+        }
+        if (c == 0x22) {
+          if (i == 0) {
+            return String.Empty;
+          }
+          var buf = new char[i];
+          for (var j = 0; j < i; ++j) {
+            buf[j] = (char)this.bytes[startIndex + j];
+          }
+          return new String(buf, 0, buf.Length);
+        }
+      }
+      this.index = startIndex;
       this.sb = this.sb ?? new StringBuilder();
       this.sb.Remove(0, this.sb.Length);
       while (true) {
         c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
           0xff : -1;
-        if (c == -1 || c < 0x20) {
+          if (c == -1) {
           this.RaiseError("Unterminated string");
+        }
+        if (c < 0x20) {
+          this.RaiseError("Invalid character in string literal");
         }
         switch (c) {
           case '\\':
@@ -358,9 +385,9 @@ namespace PeterO.Cbor {
         case 't': {
           // Parse true
           if (this.endPos - this.index <= 2 ||
-            (((int)this.bytes[this.index]) & 0xFF) != 'r' ||
-            (((int)this.bytes[this.index + 1]) & 0xFF) != 'u' ||
-            (((int)this.bytes[this.index + 2]) & 0xFF) != 'e') {
+            this.bytes[this.index] != (byte)0x72 ||
+            this.bytes[this.index + 1] != (byte)0x75 ||
+            this.bytes[this.index + 2] != (byte)0x65) {
             this.RaiseError("Value can't be parsed.");
           }
           this.index += 3;
@@ -370,10 +397,10 @@ namespace PeterO.Cbor {
         case 'f': {
           // Parse false
           if (this.endPos - this.index <= 3 ||
-            (((int)this.bytes[this.index]) & 0xFF) != 'a' ||
-            (((int)this.bytes[this.index + 1]) & 0xFF) != 'l' ||
-            (((int)this.bytes[this.index + 2]) & 0xFF) != 's' ||
-            (((int)this.bytes[this.index + 3]) & 0xFF) != 'e') {
+            this.bytes[this.index] != (byte)0x61 ||
+            this.bytes[this.index + 1] != (byte)0x6c ||
+            this.bytes[this.index + 2] != (byte)0x73 ||
+            this.bytes[this.index + 3] != (byte)0x65) {
             this.RaiseError("Value can't be parsed.");
           }
           this.index += 4;
@@ -383,9 +410,9 @@ namespace PeterO.Cbor {
         case 'n': {
           // Parse null
           if (this.endPos - this.index <= 2 ||
-            (((int)this.bytes[this.index]) & 0xFF) != 'u' ||
-            (((int)this.bytes[this.index + 1]) & 0xFF) != 'l' ||
-            (((int)this.bytes[this.index + 2]) & 0xFF) != 'l') {
+            this.bytes[this.index] != (byte)0x75 ||
+            this.bytes[this.index + 1] != (byte)0x6c ||
+            this.bytes[this.index + 2] != (byte)0x6c) {
             this.RaiseError("Value can't be parsed.");
           }
           this.index += 3;
