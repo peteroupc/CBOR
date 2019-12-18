@@ -2041,16 +2041,18 @@ checked(size + 5) : checked(size + 9);
         EInteger exponent = bigValue.Exponent;
         if (exponent.CanFitInInt64()) {
           tag = 5;
-          cbor = CBORObject.NewArray()
-             .Add(exponent.ToInt64Checked()).Add(bigValue.Mantissa);
+          cbor = CBORObject.NewArray(
+                CBORObject.FromObject(exponent.ToInt64Checked()),
+                CBORObject.FromObject(bigValue.Mantissa));
            } else {
           tag = (exponent.GetSignedBitLengthAsEInteger().CompareTo(64) > 0) ?
             265 : 5;
-          cbor = CBORObject.NewArray()
-            .Add(exponent).Add(bigValue.Mantissa);
+          cbor = CBORObject.NewArray(
+                CBORObject.FromObject(exponent),
+                CBORObject.FromObject(bigValue.Mantissa));
         }
       }
-      return CBORObject.FromObjectAndTag(cbor, tag);
+      return cbor.WithTag(tag);
     }
 
     /// <summary>Generates a CBOR object from an arbitrary-precision
@@ -2109,10 +2111,11 @@ checked(size + 5) : checked(size + 9);
         tag = 270;
       } else {
         tag = 30;
-        cbor = CBORObject.NewArray()
-          .Add(bigValue.Numerator).Add(bigValue.Denominator);
+        cbor = CBORObject.NewArray(
+          CBORObject.FromObject(bigValue.Numerator),
+          CBORObject.FromObject(bigValue.Denominator));
       }
-      return CBORObject.FromObjectAndTag(cbor, tag);
+      return cbor.WithTag(tag);
     }
 
     /// <summary>Generates a CBOR object from a decimal number. The CBOR
@@ -2156,16 +2159,18 @@ checked(size + 5) : checked(size + 9);
         EInteger exponent = bigValue.Exponent;
         if (exponent.CanFitInInt64()) {
           tag = 4;
-          cbor = CBORObject.NewArray()
-             .Add(exponent.ToInt64Checked()).Add(bigValue.Mantissa);
+          cbor = CBORObject.NewArray(
+             CBORObject.FromObject(exponent.ToInt64Checked()),
+             CBORObject.FromObject(bigValue.Mantissa));
            } else {
           tag = (exponent.GetSignedBitLengthAsEInteger().CompareTo(64) > 0) ?
             264 : 4;
-          cbor = CBORObject.NewArray()
-            .Add(exponent).Add(bigValue.Mantissa);
+          cbor = CBORObject.NewArray(
+             CBORObject.FromObject(exponent),
+             CBORObject.FromObject(bigValue.Mantissa));
         }
       }
-      return CBORObject.FromObjectAndTag(cbor, tag);
+      return cbor.WithTag(tag);
     }
 
     /// <summary>Generates a CBOR object from a text string.</summary>
@@ -2278,11 +2283,11 @@ FromObject((long)value);
       if (array == null) {
         return CBORObject.Null;
       }
-      CBORObject cbor = CBORObject.NewArray();
-      foreach (CBORObject i in array) {
-        cbor.Add(i);
+      IList<CBORObject> list = new List<CBORObject>(array.Length);
+      foreach (CBORObject cbor in array) {
+        list.Add(cbor);
       }
-      return cbor;
+      return new CBORObject(CBORObjectTypeArray, list);
     }
 
     /// <summary>Generates a CBOR object from an array of 32-bit
@@ -2295,7 +2300,7 @@ FromObject((long)value);
       if (array == null) {
         return CBORObject.Null;
       }
-      IList<CBORObject> list = new List<CBORObject>();
+      IList<CBORObject> list = new List<CBORObject>(array.Length);
       foreach (int i in array) {
         list.Add(FromObject(i));
       }
@@ -2312,7 +2317,7 @@ FromObject((long)value);
       if (array == null) {
         return CBORObject.Null;
       }
-      IList<CBORObject> list = new List<CBORObject>();
+      IList<CBORObject> list = new List<CBORObject>(array.Length);
       foreach (long i in array) {
         list.Add(FromObject(i));
       }
@@ -2695,7 +2700,34 @@ FromObject((long)value);
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bigintTag'/> is null.</exception>
     public CBORObject WithTag(EInteger bigintTag) {
-     return FromObjectAndTag(this, bigintTag);
+      if (bigintTag == null) {
+        throw new ArgumentNullException(nameof(bigintTag));
+      }
+      if (bigintTag.Sign < 0) {
+        throw new ArgumentException("tagEInt's sign(" + bigintTag.Sign +
+          ") is less than 0");
+      }
+      if (bigintTag.CanFitInInt32()) {
+        // Low-numbered, commonly used tags
+        return this.WithTag(bigintTag.ToInt32Checked());
+      } else {
+        if (bigintTag.CompareTo(UInt64MaxValue) > 0) {
+          throw new ArgumentException(
+            "tag more than 18446744073709551615 (" + bigintTag + ")");
+        }
+        var tagLow = 0;
+        var tagHigh = 0;
+        byte[] bytes = bigintTag.ToBytes(true);
+        for (var i = 0; i < Math.Min(4, bytes.Length); ++i) {
+          int b = ((int)bytes[i]) & 0xff;
+          tagLow = unchecked(tagLow | (((int)b) << (i * 8)));
+        }
+        for (int i = 4; i < Math.Min(8, bytes.Length); ++i) {
+          int b = ((int)bytes[i]) & 0xff;
+          tagHigh = unchecked(tagHigh | (((int)b) << (i * 8)));
+        }
+        return new CBORObject(this, tagLow, tagHigh);
+      }
     }
 
     /// <summary>Generates a CBOR object from an arbitrary object and gives
@@ -2740,25 +2772,7 @@ FromObject((long)value);
         throw new ArgumentException(
           "tag more than 18446744073709551615 (" + bigintTag + ")");
       }
-      CBORObject c = FromObject(valueOb);
-      if (bigintTag.CanFitInInt32()) {
-        // Low-numbered, commonly used tags
-        return FromObjectAndTag(c, bigintTag.ToInt32Checked());
-      } else {
-        var tagLow = 0;
-        var tagHigh = 0;
-        byte[] bytes = bigintTag.ToBytes(true);
-        for (var i = 0; i < Math.Min(4, bytes.Length); ++i) {
-          int b = ((int)bytes[i]) & 0xff;
-          tagLow = unchecked(tagLow | (((int)b) << (i * 8)));
-        }
-        for (int i = 4; i < Math.Min(8, bytes.Length); ++i) {
-          int b = ((int)bytes[i]) & 0xff;
-          tagHigh = unchecked(tagHigh | (((int)b) << (i * 8)));
-        }
-        var c2 = new CBORObject(c, tagLow, tagHigh);
-        return c2;
-      }
+      return FromObject(valueOb).WithTag(bigintTag);
     }
 
     /// <summary>Generates a CBOR object from an arbitrary object and gives
@@ -2777,7 +2791,11 @@ FromObject((long)value);
     /// <exception cref='ArgumentException'>The parameter <paramref
     /// name='smallTag'/> is less than 0.</exception>
     public CBORObject WithTag(int smallTag) {
-     return FromObjectAndTag(this, smallTag);
+      if (smallTag < 0) {
+        throw new ArgumentException("smallTag(" + smallTag +
+          ") is less than 0");
+      }
+      return new CBORObject(this, smallTag, 0);
     }
 
     /// <summary>Generates a CBOR object from an arbitrary object and gives
@@ -2813,9 +2831,7 @@ FromObject((long)value);
         throw new ArgumentException("smallTag(" + smallTag +
           ") is less than 0");
       }
-      CBORObject c = FromObject(valueObValue);
-      c = new CBORObject(c, smallTag, 0);
-      return c;
+      return FromObject(valueObValue).WithTag(smallTag);
     }
 
     /// <summary>Creates a CBOR object from a simple value
@@ -2883,6 +2899,13 @@ FromObject((long)value);
     /// <returns>A new CBOR array.</returns>
     public static CBORObject NewArray() {
       return new CBORObject(CBORObjectTypeArray, new List<CBORObject>());
+    }
+
+    internal static CBORObject NewArray(CBORObject o1, CBORObject o2) {
+      var list = new List<CBORObject>(2);
+      list.Add(o1);
+      list.Add(o2);
+      return new CBORObject(CBORObjectTypeArray, list);
     }
 
     /// <summary>Creates a new empty CBOR map.</summary>
