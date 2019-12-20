@@ -39,8 +39,9 @@ namespace PeterO.Cbor {
 
     private string NextJSONString() {
       int c;
-      this.sb = this.sb ?? new StringBuilder();
-      this.sb.Remove(0, this.sb.Length);
+      var unescaped = true;
+      int startIndex = this.index;
+      var endIndex = -1;
       while (true) {
         c = this.index < this.endPos ? ((int)this.jstring[this.index++]) &
           0xffff : -1;
@@ -49,8 +50,13 @@ namespace PeterO.Cbor {
         }
         switch (c) {
           case '\\':
+            endIndex = this.index - 1;
             c = this.index < this.endPos ? ((int)this.jstring[this.index++]) &
               0xffff : -1;
+            unescaped = false;
+            this.sb = this.sb ?? new StringBuilder();
+            this.sb.Remove(0, this.sb.Length);
+            this.sb.Append(this.jstring, startIndex, endIndex - startIndex);
             switch (c) {
               case '\\':
               case '/':
@@ -139,17 +145,26 @@ namespace PeterO.Cbor {
             }
             break;
           case 0x22: // double quote
-            return this.sb.ToString();
+          if (unescaped) {
+              return this.jstring.Substring(startIndex, (this.index - 1) -
+startIndex);
+            } else {
+ return this.sb.ToString();
+}
           default: {
             // NOTE: Differs from CBORJson2
             if ((c & 0xf800) != 0xd800) {
               // Non-surrogate
-              this.sb.Append((char)c);
+              if (!unescaped) {
+                this.sb.Append((char)c);
+              }
             } else if ((c & 0xfc00) == 0xd800 && this.index < this.endPos &&
               (this.jstring[this.index] & 0xfc00) == 0xdc00) {
               // Surrogate pair
-              this.sb.Append((char)c);
-              this.sb.Append(this.jstring[this.index]);
+              if (!unescaped) {
+                this.sb.Append((char)c);
+                this.sb.Append(this.jstring[this.index]);
+              }
               ++this.index;
             } else {
               this.RaiseError("Unpaired surrogate code point");

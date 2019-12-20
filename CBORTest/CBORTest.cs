@@ -2733,7 +2733,7 @@ bytes = new byte[] { 0x5f, 0x41, 0x30, 0x41, 0x31, 0xff };
 try {
  CBORObject.DecodeFromBytes(bytes);
 } catch (Exception ex) {
-Assert.Fail(ex.ToString());
+Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] { 0x5f, 0x41, 0x30, 0x00, 0xff };
@@ -2743,7 +2743,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] { 0x5f, 0x41, 0x30, 0x18, 0, 0xff };
@@ -2753,7 +2753,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] { 0x5f, 0x41, 0x30, 0x20, 0xff };
@@ -2763,7 +2763,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] { 0x5f, 0x41, 0x30, 0x38, 0, 0xff };
@@ -2773,7 +2773,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] { 0x5f, 0x41, 0x30, 0x60, 0xff };
@@ -2783,7 +2783,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] { 0x5f, 0x41, 0x30, 0x61, 0x31, 0xff };
@@ -2793,7 +2793,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 
@@ -2804,7 +2804,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] { 0x5f, 0x41, 0x30, 0x81, 0, 0xff };
@@ -2814,7 +2814,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 
@@ -2825,7 +2825,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] { 0x5f, 0x41, 0x30, 0xa1, 0, 0xff };
@@ -2835,7 +2835,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 
@@ -2846,7 +2846,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] { 0x5f, 0x41, 0x30, 0xd8, 0xff, 0, 0xff };
@@ -2856,7 +2856,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 
@@ -2867,7 +2867,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 
@@ -2878,7 +2878,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 
@@ -2889,7 +2889,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] { 0x5f, 0x41, 0x30, 0xfa, 0xff, 0xff, 0xff, 0xff, 0xff };
@@ -2899,7 +2899,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] {
@@ -2912,184 +2912,184 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
-bytes = new byte[] { 0x7f, 0x41, 0x30, 0x61, 0x31, 0xff };
+bytes = new byte[] { 0x7f, 0x61, 0x30, 0x61, 0x31, 0xff };
 try {
  CBORObject.DecodeFromBytes(bytes);
 } catch (Exception ex) {
-Assert.Fail(ex.ToString());
+Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
 }
-bytes = new byte[] { 0x7f, 0x41, 0x30, 0x00, 0xff };
+bytes = new byte[] { 0x7f, 0x61, 0x30, 0x00, 0xff };
 try {
  CBORObject.DecodeFromBytes(bytes);
  Assert.Fail("Should have failed");
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
-bytes = new byte[] { 0x7f, 0x41, 0x30, 0x18, 0, 0xff };
+bytes = new byte[] { 0x7f, 0x61, 0x30, 0x18, 0, 0xff };
 try {
  CBORObject.DecodeFromBytes(bytes);
  Assert.Fail("Should have failed");
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
-bytes = new byte[] { 0x7f, 0x41, 0x30, 0x20, 0xff };
+bytes = new byte[] { 0x7f, 0x61, 0x30, 0x20, 0xff };
 try {
  CBORObject.DecodeFromBytes(bytes);
  Assert.Fail("Should have failed");
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
-bytes = new byte[] { 0x7f, 0x41, 0x30, 0x38, 0, 0xff };
+bytes = new byte[] { 0x7f, 0x61, 0x30, 0x38, 0, 0xff };
 try {
  CBORObject.DecodeFromBytes(bytes);
  Assert.Fail("Should have failed");
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
-bytes = new byte[] { 0x7f, 0x41, 0x30, 0x40, 0xff };
+bytes = new byte[] { 0x7f, 0x61, 0x30, 0x40, 0xff };
 try {
  CBORObject.DecodeFromBytes(bytes);
  Assert.Fail("Should have failed");
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
-bytes = new byte[] { 0x7f, 0x41, 0x30, 0x41, 0x31, 0xff };
+bytes = new byte[] { 0x7f, 0x61, 0x30, 0x41, 0x31, 0xff };
 try {
  CBORObject.DecodeFromBytes(bytes);
  Assert.Fail("Should have failed");
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-
-bytes = new byte[] { 0x7f, 0x41, 0x30, 0x80, 0xff };
-try {
- CBORObject.DecodeFromBytes(bytes);
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-bytes = new byte[] { 0x7f, 0x41, 0x30, 0x81, 0, 0xff };
-try {
- CBORObject.DecodeFromBytes(bytes);
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 
-bytes = new byte[] { 0x7f, 0x41, 0x30, 0xa0, 0xff };
+bytes = new byte[] { 0x7f, 0x61, 0x30, 0x80, 0xff };
 try {
  CBORObject.DecodeFromBytes(bytes);
  Assert.Fail("Should have failed");
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
-bytes = new byte[] { 0x7f, 0x41, 0x30, 0xa1, 0, 0xff };
+bytes = new byte[] { 0x7f, 0x61, 0x30, 0x81, 0, 0xff };
 try {
  CBORObject.DecodeFromBytes(bytes);
  Assert.Fail("Should have failed");
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-
-bytes = new byte[] { 0x7f, 0x41, 0x30, 0xc0, 0, 0xff };
-try {
- CBORObject.DecodeFromBytes(bytes);
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-bytes = new byte[] { 0x7f, 0x41, 0x30, 0xd8, 0xff, 0, 0xff };
-try {
- CBORObject.DecodeFromBytes(bytes);
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 
-bytes = new byte[] { 0x7f, 0x41, 0x30, 0xe0, 0xff };
+bytes = new byte[] { 0x7f, 0x61, 0x30, 0xa0, 0xff };
 try {
  CBORObject.DecodeFromBytes(bytes);
  Assert.Fail("Should have failed");
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+bytes = new byte[] { 0x7f, 0x61, 0x30, 0xa1, 0, 0xff };
+try {
+ CBORObject.DecodeFromBytes(bytes);
+ Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 
-bytes = new byte[] { 0x7f, 0x41, 0x30, 0xf8, 0xff, 0xff };
+bytes = new byte[] { 0x7f, 0x61, 0x30, 0xc0, 0, 0xff };
 try {
  CBORObject.DecodeFromBytes(bytes);
  Assert.Fail("Should have failed");
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+bytes = new byte[] { 0x7f, 0x61, 0x30, 0xd8, 0xff, 0, 0xff };
+try {
+ CBORObject.DecodeFromBytes(bytes);
+ Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 
-bytes = new byte[] { 0x7f, 0x41, 0x30, 0xf9, 0xff, 0xff, 0xff };
+bytes = new byte[] { 0x7f, 0x61, 0x30, 0xe0, 0xff };
 try {
  CBORObject.DecodeFromBytes(bytes);
  Assert.Fail("Should have failed");
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
-bytes = new byte[] { 0x7f, 0x41, 0x30, 0xfa, 0xff, 0xff, 0xff, 0xff, 0xff };
+
+bytes = new byte[] { 0x7f, 0x61, 0x30, 0xf8, 0xff, 0xff };
 try {
  CBORObject.DecodeFromBytes(bytes);
  Assert.Fail("Should have failed");
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+
+bytes = new byte[] { 0x7f, 0x61, 0x30, 0xf9, 0xff, 0xff, 0xff };
+try {
+ CBORObject.DecodeFromBytes(bytes);
+ Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+bytes = new byte[] { 0x7f, 0x61, 0x30, 0xfa, 0xff, 0xff, 0xff, 0xff, 0xff };
+try {
+ CBORObject.DecodeFromBytes(bytes);
+ Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] {
-  0x7f, 0x41, 0x30, 0xfb, 0xff, 0xff, 0xff, 0xff, 0xff,
+  0x7f, 0x61, 0x30, 0xfb, 0xff, 0xff, 0xff, 0xff, 0xff,
   0xff, 0xff, 0xff, 0xff,
 };
 try {
@@ -3098,7 +3098,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 
@@ -3106,7 +3106,7 @@ bytes = new byte[] { 0x5f, 0x41, 0x31, 0xff };
 try {
  CBORObject.DecodeFromBytes(bytes);
 } catch (Exception ex) {
-Assert.Fail(ex.ToString());
+Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] { 0x5f, 0x00, 0xff };
@@ -3116,7 +3116,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] { 0x5f, 0x18, 0, 0xff };
@@ -3126,7 +3126,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] { 0x5f, 0x20, 0xff };
@@ -3136,7 +3136,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] { 0x5f, 0x38, 0, 0xff };
@@ -3146,7 +3146,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] { 0x5f, 0x60, 0xff };
@@ -3156,7 +3156,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] { 0x5f, 0x61, 0x31, 0xff };
@@ -3166,7 +3166,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 
@@ -3177,7 +3177,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] { 0x5f, 0x81, 0, 0xff };
@@ -3187,7 +3187,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 
@@ -3198,7 +3198,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] { 0x5f, 0xa1, 0, 0xff };
@@ -3208,7 +3208,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 
@@ -3219,7 +3219,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] { 0x5f, 0xd8, 0xff, 0, 0xff };
@@ -3229,7 +3229,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 
@@ -3240,7 +3240,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 
@@ -3251,7 +3251,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 
@@ -3262,7 +3262,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] { 0x5f, 0xfa, 0xff, 0xff, 0xff, 0xff, 0xff };
@@ -3272,12 +3272,12 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] {
   0x5f, 0xfb, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
-  0xff, 0xff
+  0xff, 0xff,
 };
 try {
  CBORObject.DecodeFromBytes(bytes);
@@ -3285,14 +3285,14 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] { 0x7f, 0x61, 0x31, 0xff };
 try {
  CBORObject.DecodeFromBytes(bytes);
 } catch (Exception ex) {
-Assert.Fail(ex.ToString());
+Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] { 0x7f, 0x00, 0xff };
@@ -3302,7 +3302,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] { 0x7f, 0x18, 0, 0xff };
@@ -3312,7 +3312,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] { 0x7f, 0x20, 0xff };
@@ -3322,7 +3322,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] { 0x7f, 0x38, 0, 0xff };
@@ -3332,7 +3332,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] { 0x7f, 0x40, 0xff };
@@ -3342,7 +3342,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] { 0x7f, 0x41, 0x31, 0xff };
@@ -3352,7 +3352,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 
@@ -3363,7 +3363,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] { 0x7f, 0x81, 0, 0xff };
@@ -3373,7 +3373,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 
@@ -3384,7 +3384,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] { 0x7f, 0xa1, 0, 0xff };
@@ -3394,7 +3394,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 
@@ -3405,7 +3405,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] { 0x7f, 0xd8, 0xff, 0, 0xff };
@@ -3415,7 +3415,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 
@@ -3426,7 +3426,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 
@@ -3437,7 +3437,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 
@@ -3448,7 +3448,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] { 0x7f, 0xfa, 0xff, 0xff, 0xff, 0xff, 0xff };
@@ -3458,12 +3458,12 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 bytes = new byte[] {
   0x7f, 0xfb, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
-  0xff, 0xff
+  0xff, 0xff,
 };
 try {
  CBORObject.DecodeFromBytes(bytes);
@@ -3471,7 +3471,7 @@ try {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString());
+ Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" + ex.ToString());
  throw new InvalidOperationException(String.Empty, ex);
 }
 }
