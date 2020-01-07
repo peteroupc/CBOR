@@ -13,6 +13,7 @@ using PeterO;
 using PeterO.Numbers;
 
 // TODO: In next major version, make .Keys and .Values read-only
+// TODO: Consider storing text strings as bytes, at least in some cases
 namespace PeterO.Cbor {
   /// <summary>
   /// <para>Represents an object in Concise Binary Object Representation

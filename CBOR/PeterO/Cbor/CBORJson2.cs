@@ -42,7 +42,7 @@ namespace PeterO.Cbor {
         if (this.index >= this.endPos) {
           this.RaiseError("Unterminated string");
         }
-        c = (int)this.bytes[this.index++];
+        c = ((int)this.bytes[this.index++]) & 0xff;
         if (c < 0x20) {
           this.RaiseError("Invalid character in string literal");
         }
@@ -66,7 +66,7 @@ namespace PeterO.Cbor {
       while (true) {
         c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
           0xff : -1;
-          if (c == -1) {
+        if (c == -1) {
           this.RaiseError("Unterminated string");
         }
         if (c < 0x20) {
@@ -103,7 +103,7 @@ namespace PeterO.Cbor {
                 // Consists of 4 hex digits
                 for (var i = 0; i < 4; ++i) {
                   int ch = this.index < this.endPos ?
-                    ((int)this.bytes[this.index++]) & 0xff : -1;
+                    (int)this.bytes[this.index++] : -1;
                   if (ch >= '0' && ch <= '9') {
                     c <<= 4;
                     c |= ch - '0';
@@ -122,12 +122,13 @@ namespace PeterO.Cbor {
                   // Non-surrogate
                   this.sb.Append((char)c);
                 } else if ((c & 0xfc00) == 0xd800) {
-                  int ch = this.index < this.endPos ?
-                    ((int)this.bytes[this.index++]) & 0xff : -1;
-                  if (ch != '\\' || (this.index < this.endPos ?
-                      ((int)this.bytes[this.index++]) & 0xff : -1) != 'u') {
+                  int ch;
+                  if (this.index >= this.endPos - 1 ||
+                    this.bytes[this.index] != (byte)'\\' ||
+                    this.bytes[this.index + 1] != (byte)0x75) {
                     this.RaiseError("Invalid escaped character");
                   }
+                  this.index += 2;
                   var c2 = 0;
                   for (var i = 0; i < 4; ++i) {
                     ch = this.index < this.endPos ?
@@ -204,11 +205,10 @@ namespace PeterO.Cbor {
               c = ((c - 0xc0) << 12) | ((c1 - 0x80) << 12) | ((c2 - 0x80) <<
                   6) | (c3 - 0x80);
               if (c <= 0xffff) {
-                { this.sb.Append((char)c);
-                }
+                this.sb.Append((char)c);
               } else if (c <= 0x10ffff) {
                 this.sb.Append((char)((((c - 0x10000) >> 10) & 0x3ff) |
-0xd800));
+                    0xd800));
                 this.sb.Append((char)(((c - 0x10000) & 0x3ff) | 0xdc00));
               }
             } else {
@@ -444,7 +444,7 @@ namespace PeterO.Cbor {
     }
 
     public CBORJson2(byte[] bytes, int index, int endPos, JSONOptions
-options) {
+      options) {
       #if DEBUG
       if (bytes == null) {
         throw new ArgumentNullException(nameof(bytes));

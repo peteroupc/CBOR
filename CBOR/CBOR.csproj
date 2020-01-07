@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk='Microsoft.NET.Sdk'>
 
   <PropertyGroup>
     <TargetFrameworks>netstandard1.0</TargetFrameworks>
@@ -25,24 +25,24 @@ Version 4.1:
     <PackOnBuild>true</PackOnBuild>
   <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet><PackageLicenseExpression>CC0-1.0</PackageLicenseExpression></PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=' &apos;$(Configuration)|$(Platform)&apos; == &apos;Debug|AnyCPU&apos; '>
     <DocumentationFile>bin\Debug\netstandard1.0\CBOR.xml</DocumentationFile>
 
   <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet></PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType />
+  <PropertyGroup Condition=' &apos;$(Configuration)|$(Platform)&apos; == &apos;Release|AnyCPU&apos; '>
+    <DebugType/>
     <DocumentationFile>bin\Release\netstandard1.0\CBOR.xml</DocumentationFile>
 
   <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet></PropertyGroup>
   <ItemGroup>
 
-  <PackageReference Include="StyleCop.Analyzers" PrivateAssets="All" Version="1.1.118" />
- <AdditionalFiles Include="stylecop.json" />
-<AdditionalFiles Include="rules.ruleset" /><PackageReference Include="PeterO.URIUtility" Version="1.0.0" />
-<PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" PrivateAssets="All" Version="2.9.8" />
-<PackageReference Include="PeterO.Numbers" Version="1.5.1" />
-</ItemGroup>
+  <PackageReference Include='StyleCop.Analyzers' PrivateAssets='All' Version='1.2.0-beta.113'/>
+ <AdditionalFiles Include='stylecop.json'/>
+<AdditionalFiles Include='rules.ruleset'/><PackageReference Include='PeterO.URIUtility' Version='1.0.0'/>
+
+<PackageReference Include='PeterO.Numbers' Version='1.5.1'/>
+<PackageReference Include='Microsoft.CodeAnalysis.FxCopAnalyzers' PrivateAssets='All' Version='2.9.8'/></ItemGroup>
   <ItemGroup>
-    <Compile Remove="PeterO\Cbor\FastInteger2.cs" />
+    <Compile Remove='PeterO\Cbor\FastInteger2.cs'/>
   </ItemGroup>
    </Project>

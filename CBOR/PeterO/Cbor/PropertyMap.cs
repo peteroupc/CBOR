@@ -170,6 +170,14 @@ namespace PeterO.Cbor {
       return type.IsGenericType;
     }
 
+    private static bool IsClassOrValueType(Type type) {
+      return type.IsClass || type.IsValueType;
+    }
+
+    private static Type FirstGenericArgument(Type type) {
+      return type.GetGenericArguments()[0];
+    }
+
     private static IEnumerable<PropertyInfo> GetTypeProperties(Type t) {
       return t.GetProperties(BindingFlags.Public |
           BindingFlags.Instance);
@@ -177,6 +185,10 @@ namespace PeterO.Cbor {
 
     private static IEnumerable<FieldInfo> GetTypeFields(Type t) {
       return t.GetFields(BindingFlags.Public | BindingFlags.Instance);
+    }
+
+    private static IEnumerable<Type> GetTypeInterfaces(Type t) {
+      return t.GetInterfaces();
     }
 
     private static bool IsAssignableFrom(Type superType, Type subType) {
@@ -206,6 +218,14 @@ namespace PeterO.Cbor {
       return type.GetTypeInfo().IsGenericType;
     }
 
+    private static bool IsClassOrValueType(Type type) {
+      return type.GetTypeInfo().IsClass || type.GetTypeInfo().IsValueType;
+    }
+
+    private static Type FirstGenericArgument(Type type) {
+      return type.GenericTypeArguments[0];
+    }
+
     private static bool IsAssignableFrom(Type superType, Type subType) {
       return
 superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
@@ -217,6 +237,10 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
 
     private static IEnumerable<FieldInfo> GetTypeFields(Type t) {
       return t.GetRuntimeFields();
+    }
+
+    private static IEnumerable<Type> GetTypeInterfaces(Type t) {
+      return t.GetTypeInfo().ImplementedInterfaces;
     }
 
     private static MethodInfo GetTypeMethod(
@@ -594,7 +618,8 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
       object methodInfo,
       object obj,
       object argument) {
-      return ((MethodInfo)methodInfo).Invoke(obj, new[] { argument });
+      var mi = (MethodInfo)methodInfo;
+      return mi.Invoke(obj, new[] { argument });
     }
 
     public static byte[] UUIDToBytes(Guid guid) {
@@ -750,6 +775,7 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
         Type objectType = typeof(object);
         var isList = false;
         object listObject = null;
+        object genericListObject = null;
         #if NET40 || NET20
         if (IsAssignableFrom(typeof(Array), t)) {
           Type elementType = t.GetElementType();
@@ -793,9 +819,8 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
         if (t.GetTypeInfo().IsGenericType) {
           Type td = t.GetGenericTypeDefinition();
           isList = td.Equals(typeof(List<>)) || td.Equals(typeof(IList<>)) ||
-td.Equals(typeof(ICollection<>)) ||
-
-            td.Equals(typeof(IEnumerable<>));
+              td.Equals(typeof(ICollection<>)) ||
+              td.Equals(typeof(IEnumerable<>));
         }
         isList = isList && t.GenericTypeArguments.Length == 1;
         if (isList) {
@@ -809,7 +834,43 @@ td.Equals(typeof(ICollection<>)) ||
             t.Equals(typeof(ICollection)) || t.Equals(typeof(IEnumerable))) {
             listObject = new List<object>();
             objectType = typeof(object);
+          } else if (IsClassOrValueType(t)) {
+            // TODO: write Java equivalent
+            var implementsList = false;
+            foreach (var interf in GetTypeInterfaces(t)) {
+              if (IsGenericType(interf) &&
+interf.GetGenericTypeDefinition().Equals(typeof(IList<>))) {
+if (implementsList) {
+                   { implementsList = false;
+                }
+                break; } else { implementsList = true;
+                objectType =
+FirstGenericArgument(interf); }
+              }
+            }
+            if (implementsList) {
+              // DebugUtility.Log("assignable from list<>");
+              genericListObject = Activator.CreateInstance(t);
+            } else {
+              // DebugUtility.Log("not assignable from list<> " + t);
+            }
           }
+        }
+        if (genericListObject != null) {
+          object addMethod = FindOneArgumentMethod(
+            genericListObject,
+            "Add",
+            objectType);
+          if (addMethod == null) {
+            throw new CBORException();
+          }
+          foreach (CBORObject value in objThis.Values) {
+            PropertyMap.InvokeOneArgumentMethod(
+              addMethod,
+              genericListObject,
+              value.ToObject(objectType, mapper, options, depth + 1));
+          }
+          return genericListObject;
         }
         if (listObject != null) {
           System.Collections.IList ie = (System.Collections.IList)listObject;
