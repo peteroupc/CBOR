@@ -5465,14 +5465,10 @@
 
 </doc>
 <doc name="T:PeterO.Cbor.CharacterReader.IByteReader">
-
-            <summary>Not documented yet.</summary>
-
+<summary>Not documented yet.</summary>
 </doc>
 <doc name="M:PeterO.Cbor.CharacterReader.IByteReader.ReadByte">
-
-            <summary>Not documented yet.</summary><returns>The return value is not documented yet.</returns>
-
+<summary>Not documented yet.</summary><returns>The return value is not documented yet.</returns>
 </doc>
 <doc name="T:PeterO.Cbor.ICBORConverter`1">
 
@@ -5495,122 +5491,192 @@
 </doc>
 <doc name="M:PeterO.Cbor.ICBORNumber.Abs(System.Object)">
 
-            <summary>Not documented yet.</summary><param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param><returns>The return value is not documented yet.</returns>
+            <summary>Not documented yet.</summary>
+            <param name='obj'>The parameter <paramref name='obj'/> is an
+            arbitrary object.</param>
+            <returns>The return value is not documented yet.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.ICBORNumber.AsDouble(System.Object)">
 
-            <summary>Not documented yet.</summary><param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param><returns>The return value is not documented yet.</returns>
+            <summary>Not documented yet.</summary>
+            <param name='obj'>The parameter <paramref name='obj'/> is an
+            arbitrary object.</param>
+            <returns>The return value is not documented yet.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.ICBORNumber.AsEDecimal(System.Object)">
 
-            <summary>Not documented yet.</summary><param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param><returns>The return value is not documented yet.</returns>
+            <summary>Not documented yet.</summary>
+            <param name='obj'>The parameter <paramref name='obj'/> is an
+            arbitrary object.</param>
+            <returns>The return value is not documented yet.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.ICBORNumber.AsEFloat(System.Object)">
 
-            <summary>Not documented yet.</summary><param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param><returns>The return value is not documented yet.</returns>
+            <summary>Not documented yet.</summary>
+            <param name='obj'>The parameter <paramref name='obj'/> is an
+            arbitrary object.</param>
+            <returns>The return value is not documented yet.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.ICBORNumber.AsEInteger(System.Object)">
 
-            <summary>Not documented yet.</summary><param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param><returns>The return value is not documented yet.</returns>
+            <summary>Not documented yet.</summary>
+            <param name='obj'>The parameter <paramref name='obj'/> is an
+            arbitrary object.</param>
+            <returns>The return value is not documented yet.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.ICBORNumber.AsERational(System.Object)">
 
-            <summary>Not documented yet.</summary><param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param><returns>The return value is not documented yet.</returns>
+            <summary>Not documented yet.</summary>
+            <param name='obj'>The parameter <paramref name='obj'/> is an
+            arbitrary object.</param>
+            <returns>The return value is not documented yet.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.ICBORNumber.AsInt32(System.Object,System.Int32,System.Int32)">
 
-            <summary>Not documented yet.</summary><returns>The return value is not documented yet.</returns>
+            <summary>Not documented yet.</summary>
+            <returns>The return value is not documented yet.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.ICBORNumber.AsInt64(System.Object)">
 
-            <summary>Not documented yet.</summary><param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param><returns>The return value is not documented yet.</returns>
+            <summary>Not documented yet.</summary>
+            <param name='obj'>The parameter <paramref name='obj'/> is an
+            arbitrary object.</param>
+            <returns>The return value is not documented yet.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.ICBORNumber.AsSingle(System.Object)">
 
-            <summary>Not documented yet.</summary><param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param><returns>The return value is not documented yet.</returns>
+            <summary>Not documented yet.</summary>
+            <param name='obj'>The parameter <paramref name='obj'/> is an
+            arbitrary object.</param>
+            <returns>The return value is not documented yet.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.ICBORNumber.CanFitInDouble(System.Object)">
 
-            <summary>Not documented yet.</summary><param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param><returns>The return value is not documented yet.</returns>
+            <summary>Not documented yet.</summary>
+            <param name='obj'>The parameter <paramref name='obj'/> is an
+            arbitrary object.</param>
+            <returns>The return value is not documented yet.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.ICBORNumber.CanFitInInt32(System.Object)">
 
-            <summary>Not documented yet.</summary><param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param><returns>The return value is not documented yet.</returns>
+            <summary>Not documented yet.</summary>
+            <param name='obj'>The parameter <paramref name='obj'/> is an
+            arbitrary object.</param>
+            <returns>The return value is not documented yet.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.ICBORNumber.CanFitInInt64(System.Object)">
 
-            <summary>Not documented yet.</summary><param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param><returns>The return value is not documented yet.</returns>
+            <summary>Not documented yet.</summary>
+            <param name='obj'>The parameter <paramref name='obj'/> is an
+            arbitrary object.</param>
+            <returns>The return value is not documented yet.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.ICBORNumber.CanFitInSingle(System.Object)">
 
-            <summary>Not documented yet.</summary><param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param><returns>The return value is not documented yet.</returns>
+            <summary>Not documented yet.</summary>
+            <param name='obj'>The parameter <paramref name='obj'/> is an
+            arbitrary object.</param>
+            <returns>The return value is not documented yet.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.ICBORNumber.CanTruncatedIntFitInInt32(System.Object)">
 
-            <summary>Not documented yet.</summary><param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param><returns>The return value is not documented yet.</returns>
+            <summary>Not documented yet.</summary>
+            <param name='obj'>The parameter <paramref name='obj'/> is an
+            arbitrary object.</param>
+            <returns>The return value is not documented yet.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.ICBORNumber.CanTruncatedIntFitInInt64(System.Object)">
 
-            <summary>Not documented yet.</summary><param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param><returns>The return value is not documented yet.</returns>
+            <summary>Not documented yet.</summary>
+            <param name='obj'>The parameter <paramref name='obj'/> is an
+            arbitrary object.</param>
+            <returns>The return value is not documented yet.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.ICBORNumber.IsInfinity(System.Object)">
 
-            <summary>Not documented yet.</summary><param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param><returns>The return value is not documented yet.</returns>
+            <summary>Not documented yet.</summary>
+            <param name='obj'>The parameter <paramref name='obj'/> is an
+            arbitrary object.</param>
+            <returns>The return value is not documented yet.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.ICBORNumber.IsIntegral(System.Object)">
 
-            <summary>Not documented yet.</summary><param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param><returns>The return value is not documented yet.</returns>
+            <summary>Not documented yet.</summary>
+            <param name='obj'>The parameter <paramref name='obj'/> is an
+            arbitrary object.</param>
+            <returns>The return value is not documented yet.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.ICBORNumber.IsNaN(System.Object)">
 
-            <summary>Not documented yet.</summary><param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param><returns>The return value is not documented yet.</returns>
+            <summary>Not documented yet.</summary>
+            <param name='obj'>The parameter <paramref name='obj'/> is an
+            arbitrary object.</param>
+            <returns>The return value is not documented yet.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.ICBORNumber.IsNegative(System.Object)">
 
-            <summary>Not documented yet.</summary><param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param><returns>The return value is not documented yet.</returns>
+            <summary>Not documented yet.</summary>
+            <param name='obj'>The parameter <paramref name='obj'/> is an
+            arbitrary object.</param>
+            <returns>The return value is not documented yet.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.ICBORNumber.IsNegativeInfinity(System.Object)">
 
-            <summary>Not documented yet.</summary><param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param><returns>The return value is not documented yet.</returns>
+            <summary>Not documented yet.</summary>
+            <param name='obj'>The parameter <paramref name='obj'/> is an
+            arbitrary object.</param>
+            <returns>The return value is not documented yet.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.ICBORNumber.IsNumberZero(System.Object)">
 
-            <summary>Not documented yet.</summary><param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param><returns>The return value is not documented yet.</returns>
+            <summary>Not documented yet.</summary>
+            <param name='obj'>The parameter <paramref name='obj'/> is an
+            arbitrary object.</param>
+            <returns>The return value is not documented yet.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.ICBORNumber.IsPositiveInfinity(System.Object)">
 
-            <summary>Not documented yet.</summary><param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param><returns>The return value is not documented yet.</returns>
+            <summary>Not documented yet.</summary>
+            <param name='obj'>The parameter <paramref name='obj'/> is an
+            arbitrary object.</param>
+            <returns>The return value is not documented yet.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.ICBORNumber.Negate(System.Object)">
 
-            <summary>Not documented yet.</summary><param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param><returns>The return value is not documented yet.</returns>
+            <summary>Not documented yet.</summary>
+            <param name='obj'>The parameter <paramref name='obj'/> is an
+            arbitrary object.</param>
+            <returns>The return value is not documented yet.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.ICBORNumber.Sign(System.Object)">
 
-            <summary>Not documented yet.</summary><param name='obj'>The parameter <paramref name='obj'/> is an arbitrary object.</param><returns>The return value is not documented yet.</returns>
+            <summary>Not documented yet.</summary>
+            <param name='obj'>The parameter <paramref name='obj'/> is an
+            arbitrary object.</param>
+            <returns>The return value is not documented yet.</returns>
 
 </doc>
 <doc name="T:PeterO.Cbor.ICBORObjectConverter`1">
