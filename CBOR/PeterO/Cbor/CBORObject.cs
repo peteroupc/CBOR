@@ -2035,8 +2035,10 @@ checked(size + 5) : checked(size + 9);
         if (bigValue.IsSignalingNaN()) {
           options += 6;
         }
-        cbor = CBORObject.NewArray().Add(bigValue.Exponent)
-          .Add(bigValue.UnsignedMantissa).Add(options);
+        cbor = CBORObject.NewArray(
+          CBORObject.FromObject(bigValue.Exponent),
+          CBORObject.FromObject(bigValue.UnsignedMantissa),
+          CBORObject.FromObject(options));
         tag = 269;
       } else {
         EInteger exponent = bigValue.Exponent;
@@ -2107,8 +2109,10 @@ checked(size + 5) : checked(size + 9);
         }
         #endif
 
-        cbor = CBORObject.NewArray().Add(bigValue.UnsignedNumerator)
-          .Add(bigValue.Denominator).Add(options);
+        cbor = CBORObject.NewArray(
+          FromObject(bigValue.UnsignedNumerator),
+          FromObject(bigValue.Denominator),
+          FromObject(options));
         tag = 270;
       } else {
         tag = 30;
@@ -2153,8 +2157,10 @@ checked(size + 5) : checked(size + 9);
         if (bigValue.IsSignalingNaN()) {
           options += 6;
         }
-        cbor = CBORObject.NewArray().Add(bigValue.Exponent)
-          .Add(bigValue.UnsignedMantissa).Add(options);
+        cbor = CBORObject.NewArray(
+          FromObject(bigValue.Exponent),
+          FromObject(bigValue.UnsignedMantissa),
+          FromObject(options));
         tag = 268;
       } else {
         EInteger exponent = bigValue.Exponent;
@@ -2284,7 +2290,8 @@ FromObject((long)value);
       if (array == null) {
         return CBORObject.Null;
       }
-      IList<CBORObject> list = new List<CBORObject>(array.Length);
+      IList<CBORObject> list = new List<CBORObject>(array.Length ==
+Int32.MaxValue ? array.Length : (array.Length + 1));
       foreach (CBORObject cbor in array) {
         list.Add(cbor);
       }
@@ -2301,7 +2308,8 @@ FromObject((long)value);
       if (array == null) {
         return CBORObject.Null;
       }
-      IList<CBORObject> list = new List<CBORObject>(array.Length);
+      IList<CBORObject> list = new List<CBORObject>(array.Length ==
+Int32.MaxValue ? array.Length : (array.Length + 1));
       foreach (int i in array) {
         list.Add(FromObject(i));
       }
@@ -2318,7 +2326,8 @@ FromObject((long)value);
       if (array == null) {
         return CBORObject.Null;
       }
-      IList<CBORObject> list = new List<CBORObject>(array.Length);
+      IList<CBORObject> list = new List<CBORObject>(array.Length ==
+Int32.MaxValue ? array.Length : (array.Length + 1));
       foreach (long i in array) {
         list.Add(FromObject(i));
       }
@@ -2906,6 +2915,17 @@ FromObject((long)value);
       var list = new List<CBORObject>(2);
       list.Add(o1);
       list.Add(o2);
+      return new CBORObject(CBORObjectTypeArray, list);
+    }
+
+    internal static CBORObject NewArray(
+      CBORObject o1,
+      CBORObject o2,
+      CBORObject o3) {
+      var list = new List<CBORObject>(2);
+      list.Add(o1);
+      list.Add(o2);
+      list.Add(o3);
       return new CBORObject(CBORObjectTypeArray, list);
     }
 
@@ -7269,7 +7289,7 @@ this.MostOuterTag.Equals(bigTagValue);
       object parent,
       object child) {
       if (stack == null) {
-        stack = new List<object>();
+        stack = new List<object>(4);
         stack.Add(parent);
       }
       foreach (object o in stack) {
