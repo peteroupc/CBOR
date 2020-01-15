@@ -42,8 +42,32 @@ namespace PeterO.Cbor {
       var unescaped = true;
       int startIndex = this.index;
       var endIndex = -1;
+      int ep = this.endPos;
+      string js = this.jstring;
+      int idx = this.index;
       while (true) {
-        c = this.index < this.endPos ? ((int)this.jstring[this.index++]) &
+        c = idx < ep ? ((int)js[idx++]) &
+          0xffff : -1;
+        if (c == -1 || c < 0x20) {
+          this.index = idx;
+          this.RaiseError("Unterminated string");
+        } else if (c == '"') {
+          int iend = idx - 1;
+          this.index = idx;
+          return js.Substring(
+                startIndex,
+                iend - startIndex);
+        } else if (c == '\\' || (c & 0xf800) == 0xd800) {
+          this.index = idx - 1;
+          endIndex = this.index;
+          break;
+        }
+      }
+      this.sb = this.sb ?? new StringBuilder();
+      this.sb.Remove(0, this.sb.Length);
+      this.sb.Append(js, startIndex, endIndex - startIndex);
+      while (true) {
+        c = this.index < ep ? ((int)js[this.index++]) &
           0xffff : -1;
         if (c == -1 || c < 0x20) {
           this.RaiseError("Unterminated string");
@@ -51,14 +75,8 @@ namespace PeterO.Cbor {
         switch (c) {
           case '\\':
             endIndex = this.index - 1;
-            c = this.index < this.endPos ? ((int)this.jstring[this.index++]) &
+            c = this.index < ep ? ((int)js[this.index++]) &
               0xffff : -1;
-            if (unescaped) {
-              unescaped = false;
-              this.sb = this.sb ?? new StringBuilder();
-              this.sb.Remove(0, this.sb.Length);
-              this.sb.Append(this.jstring, startIndex, endIndex - startIndex);
-            }
             switch (c) {
               case '\\':
               case '/':
@@ -85,8 +103,8 @@ namespace PeterO.Cbor {
                 c = 0;
                 // Consists of 4 hex digits
                 for (var i = 0; i < 4; ++i) {
-                  int ch = this.index < this.endPos ?
-                    ((int)this.jstring[this.index++]) : -1;
+                  int ch = this.index < ep ?
+                    ((int)js[this.index++]) : -1;
                   if (ch >= '0' && ch <= '9') {
                     c <<= 4;
                     c |= ch - '0';
@@ -105,16 +123,15 @@ namespace PeterO.Cbor {
                   // Non-surrogate
                   this.sb.Append((char)c);
                 } else if ((c & 0xfc00) == 0xd800) {
-                  int ch = this.index < this.endPos ?
-                    ((int)this.jstring[this.index++]) : -1;
-                  if (ch != '\\' || (this.index < this.endPos ?
-                      ((int)this.jstring[this.index++]) : -1) != 'u') {
+                  int ch = this.index < ep ? ((int)js[this.index++]) : -1;
+                  if (ch != '\\' || (this.index < ep ?
+                      ((int)js[this.index++]) : -1) != 'u') {
                     this.RaiseError("Invalid escaped character");
                   }
                   var c2 = 0;
                   for (var i = 0; i < 4; ++i) {
-                    ch = this.index < this.endPos ?
-                      ((int)this.jstring[this.index++]) : -1;
+                    ch = this.index < ep ?
+                      ((int)js[this.index++]) : -1;
                     if (ch >= '0' && ch <= '9') {
                       c2 <<= 4;
                       c2 |= ch - '0';
@@ -147,28 +164,17 @@ namespace PeterO.Cbor {
             }
             break;
           case 0x22: // double quote
-            if (unescaped) {
-              int iend = this.index - 1;
-              return this.jstring.Substring(
-                startIndex,
-                iend - startIndex);
-            } else {
-              return this.sb.ToString();
-            }
+          return this.sb.ToString();
           default: {
             // NOTE: Differs from CBORJson2
             if ((c & 0xf800) != 0xd800) {
               // Non-surrogate
-              if (!unescaped) {
-                this.sb.Append((char)c);
-              }
-            } else if ((c & 0xfc00) == 0xd800 && this.index < this.endPos &&
-              (this.jstring[this.index] & 0xfc00) == 0xdc00) {
+              this.sb.Append((char)c);
+            } else if ((c & 0xfc00) == 0xd800 && this.index < ep &&
+              (js[this.index] & 0xfc00) == 0xdc00) {
               // Surrogate pair
-              if (!unescaped) {
-                this.sb.Append((char)c);
-                this.sb.Append(this.jstring[this.index]);
-              }
+              this.sb.Append((char)c);
+              this.sb.Append(js[this.index]);
               ++this.index;
             } else {
               this.RaiseError("Unpaired surrogate code point");

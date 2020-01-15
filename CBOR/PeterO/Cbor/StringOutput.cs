@@ -46,7 +46,9 @@ namespace PeterO.Cbor {
     }
 
     public void WriteString(string str, int index, int length) {
-      if (this.outputStream != null) {
+      if (this.outputStream == null) {
+        this.builder.Append(str, index, length);
+      } else {
         if (length == 1) {
           this.WriteCodePoint((int)str[index]);
         } else {
@@ -60,12 +62,18 @@ namespace PeterO.Cbor {
             throw new ArgumentException("str has an unpaired surrogate");
           }
         }
-      } else {
-        this.builder.Append(str, index, length);
       }
     }
 
     public void WriteCodePoint(int codePoint) {
+      if ((codePoint >> 8) == 0) {
+        if (this.outputStream == null) {
+          this.builder.Append((char)codePoint);
+        } else {
+ this.outputStream.WriteByte((byte)codePoint);
+}
+        return;
+      }
       if (codePoint < 0) {
         throw new ArgumentException("codePoint(" + codePoint +
           ") is less than 0");

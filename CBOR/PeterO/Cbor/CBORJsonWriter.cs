@@ -11,14 +11,21 @@ namespace PeterO.Cbor {
       string str,
       StringOutput sb,
       JSONOptions options) {
-      var first = true;
-      for (var i = 0; i < str.Length; ++i) {
+      var i = 0;
+      for (; i < str.Length; ++i) {
+        char c = str[i];
+        if (c < 0x20 || c >= 0x7f || c == '\\' || c == '"') {
+           sb.WriteString(str, 0, i);
+           break;
+        }
+      }
+      if (i == str.Length) {
+        sb.WriteString(str, 0, i);
+        return;
+      }
+      for (; i < str.Length; ++i) {
         char c = str[i];
         if (c == '\\' || c == '"') {
-          if (first) {
-            first = false;
-            sb.WriteString(str, 0, i);
-          }
           sb.WriteCodePoint((int)'\\');
           sb.WriteCodePoint((int)c);
         } else if (c < 0x20 || (c >= 0x7f && (c == 0x2028 || c == 0x2029 ||
@@ -27,10 +34,6 @@ namespace PeterO.Cbor {
           // Control characters, and also the line and paragraph separators
           // which apparently can't appear in JavaScript (as opposed to
           // JSON) strings
-          if (first) {
-            first = false;
-            sb.WriteString(str, 0, i);
-          }
           if (c == 0x0d) {
             sb.WriteString("\\r");
           } else if (c == 0x0a) {
@@ -54,36 +57,24 @@ namespace PeterO.Cbor {
             sb.WriteCodePoint((int)Hex16[(int)(c >> 4)]);
             sb.WriteCodePoint((int)Hex16[(int)(c & 15)]);
           }
-        } else {
-          if ((c & 0xfc00) == 0xd800) {
+        } else if ((c & 0xfc00) == 0xd800) {
             if (i >= str.Length - 1 || (str[i + 1] & 0xfc00) != 0xdc00) {
               // NOTE: RFC 8259 doesn't prohibit any particular
               // error-handling behavior when a writer of JSON
               // receives a string with an unpaired surrogate.
               if (options.ReplaceSurrogates) {
-                if (first) {
-                  first = false;
-                  sb.WriteString(str, 0, i);
-                }
                 // Replace unpaired surrogate with U+FFFD
-                c = (char)0xfffd;
+                sb.WriteCodePoint(0xfffd);
               } else {
                 throw new CBORException("Unpaired surrogate in string");
               }
-            }
-          }
-          if (!first) {
-            if ((c & 0xfc00) == 0xd800) {
+            } else {
               sb.WriteString(str, i, 2);
               ++i;
-            } else {
-              sb.WriteCodePoint((int)c);
             }
-          }
+        } else {
+          sb.WriteCodePoint((int)c);
         }
-      }
-      if (first) {
-        sb.WriteString(str);
       }
     }
 

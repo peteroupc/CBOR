@@ -2444,6 +2444,12 @@ CBOREncodeOptions(false, false, true));
       aba = "{\"a\":1,\"a\":4}";
       cbor = TestSucceedingJSON(aba, new JSONOptions("allowduplicatekeys=1"));
       Assert.AreEqual(ToObjectTest.TestToFromObjectRoundTrip(4), cbor["a"]);
+      aba = "{\"a\" :1}";
+      cbor = TestSucceedingJSON(aba);
+      Assert.AreEqual(ToObjectTest.TestToFromObjectRoundTrip(1), cbor["a"]);
+      aba = "{\"a\" : 1}";
+      cbor = TestSucceedingJSON(aba);
+      Assert.AreEqual(ToObjectTest.TestToFromObjectRoundTrip(1), cbor["a"]);
       cbor = TestSucceedingJSON("\"\\t\"");
       {
         string stringTemp = cbor.AsString();
