@@ -39,15 +39,13 @@ namespace PeterO.Cbor {
 
     private string NextJSONString() {
       int c;
-      var unescaped = true;
       int startIndex = this.index;
       var endIndex = -1;
       int ep = this.endPos;
       string js = this.jstring;
       int idx = this.index;
       while (true) {
-        c = idx < ep ? ((int)js[idx++]) &
-          0xffff : -1;
+        c = idx < ep ? ((int)js[idx++]) & 0xffff : -1;
         if (c == -1 || c < 0x20) {
           this.index = idx;
           this.RaiseError("Unterminated string");
