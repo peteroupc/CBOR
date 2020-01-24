@@ -98,6 +98,7 @@
     <Compile Include="StringAndBigInt.cs" />
     <Compile Include="TestCommon.cs" />
     <Compile Include="XorShift128Plus.cs" />
+    <Compile Include="JSONGenerator.cs" />
     <Compile Include="JSONPatch.cs" />
     <Compile Include="JSONPointer.cs" />
     <Compile Include="DateTest.cs" />

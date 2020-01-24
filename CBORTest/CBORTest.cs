@@ -902,7 +902,7 @@ ed.AsNumber().CanFitInSingle()) {
       CBORObject obj = CBORTestCommon.FromBytesTestAB(
           new byte[] { (byte)0xc4, (byte)0x82, 0x3, 0x1a, 1, 2, 3, 4 });
       try {
-        Console.WriteLine(obj.ToObject(typeof(EDecimal)));
+        Console.WriteLine(String.Empty + obj.ToObject(typeof(EDecimal)));
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -916,7 +916,7 @@ ed.AsNumber().CanFitInSingle()) {
         1,
       });
       try {
-        Console.WriteLine(obj.ToObject(typeof(EDecimal)));
+        Console.WriteLine(String.Empty + obj.ToObject(typeof(EDecimal)));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -935,7 +935,7 @@ ed.AsNumber().CanFitInSingle()) {
         1, 2, 3, 4,
       });
       try {
-        Console.WriteLine(obj.ToObject(typeof(EDecimal)));
+        Console.WriteLine(String.Empty + obj.ToObject(typeof(EDecimal)));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -954,7 +954,7 @@ ed.AsNumber().CanFitInSingle()) {
         1, 2, 3, 4,
       });
       try {
-        Console.WriteLine(cbor.ToObject(typeof(EFloat)));
+        Console.WriteLine(String.Empty + cbor.ToObject(typeof(EFloat)));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -1174,7 +1174,7 @@ ed.AsNumber().CanFitInSingle()) {
         cbor = CBORObject.NewArray().Add(-3).Add(99999);
         cbortag = CBORObject.FromObjectAndTag(cbor, tag);
         try {
-          Console.WriteLine(cbortag.ToObject(typeof(EDecimal)));
+          Console.WriteLine(String.Empty + cbortag.ToObject(typeof(EDecimal)));
           Assert.Fail("Should have failed " + cbortag.ToString());
         } catch (InvalidOperationException) {
           // NOTE: Intentionally empty
@@ -1188,7 +1188,7 @@ ed.AsNumber().CanFitInSingle()) {
         cbor = CBORObject.NewArray().Add(-3).Add(99999).Add(-1);
         cbortag = CBORObject.FromObjectAndTag(cbor, tag);
         try {
-          Console.WriteLine(cbortag.ToObject(typeof(EDecimal)));
+          Console.WriteLine(String.Empty + cbortag.ToObject(typeof(EDecimal)));
           Assert.Fail("Should have failed " + cbortag.ToString());
         } catch (InvalidOperationException) {
           // NOTE: Intentionally empty
@@ -1199,7 +1199,7 @@ ed.AsNumber().CanFitInSingle()) {
         cbor = CBORObject.NewArray().Add(-3).Add(99999).Add(2);
         cbortag = CBORObject.FromObjectAndTag(cbor, tag);
         try {
-          Console.WriteLine(cbortag.ToObject(typeof(EDecimal)));
+          Console.WriteLine(String.Empty + cbortag.ToObject(typeof(EDecimal)));
           Assert.Fail("Should have failed " + cbortag.ToString());
         } catch (InvalidOperationException) {
           // NOTE: Intentionally empty
@@ -1216,7 +1216,7 @@ ed.AsNumber().CanFitInSingle()) {
         cbor = CBORObject.NewArray().Add(-3).Add(99999).Add(8);
         cbortag = CBORObject.FromObjectAndTag(cbor, tag);
         try {
-          Console.WriteLine(cbortag.ToObject(typeof(EDecimal)));
+          Console.WriteLine(String.Empty + cbortag.ToObject(typeof(EDecimal)));
           Assert.Fail("Should have failed " + cbortag.ToString());
         } catch (InvalidOperationException) {
           // NOTE: Intentionally empty
@@ -3872,7 +3872,7 @@ ex.ToString());
       };
       CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
       var options = new CBOREncodeOptions("ctap2canonical=true");
-      Console.WriteLine(cbor);
+      Console.WriteLine(String.Empty + cbor);
       try {
         cbor.EncodeToBytes(options);
         Assert.Fail("Should have failed");
@@ -3916,7 +3916,7 @@ ex.ToString());
       };
       CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
       var options = new CBOREncodeOptions("ctap2canonical=true");
-      Console.WriteLine(cbor);
+      Console.WriteLine(String.Empty + cbor);
       try {
         cbor.EncodeToBytes(options);
         Assert.Fail("Should have failed");
@@ -3963,7 +3963,7 @@ ex.ToString());
       };
       CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
       var options = new CBOREncodeOptions("ctap2canonical=true");
-      Console.WriteLine(cbor);
+      Console.WriteLine(String.Empty + cbor);
       try {
         cbor.EncodeToBytes(options);
         Assert.Fail("Should have failed");
@@ -4005,7 +4005,7 @@ ex.ToString());
       };
       CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
       var options = new CBOREncodeOptions("ctap2canonical=true");
-      Console.WriteLine(cbor);
+      Console.WriteLine(String.Empty + cbor);
       try {
         cbor.EncodeToBytes(options);
         Assert.Fail("Should have failed");
@@ -4045,7 +4045,7 @@ ex.ToString());
       };
       CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
       var options = new CBOREncodeOptions("ctap2canonical=true");
-      Console.WriteLine(cbor);
+      Console.WriteLine(String.Empty + cbor);
       try {
         cbor.EncodeToBytes(options);
         Assert.Fail("Should have failed");
@@ -4188,8 +4188,8 @@ ex.ToString());
       }
       CBORObject objB = CBORObject.FromJSONString(obj.ToJSONString());
       if (!objA.Equals(objB)) {
-        Console.WriteLine(objA);
-        Console.WriteLine(objB);
+        Console.WriteLine(String.Empty + objA);
+        Console.WriteLine(String.Empty + objB);
         Assert.Fail("WriteJSONTo gives different results from ToJSONString");
       }
     }

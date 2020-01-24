@@ -45,4 +45,4 @@ Version 4.1:
   <ItemGroup>
     <Compile Remove='PeterO\Cbor\FastInteger2.cs'/>
   </ItemGroup>
-   </Project>
+      </Project>

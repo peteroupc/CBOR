@@ -53,8 +53,8 @@ namespace PeterO.Cbor {
           int iend = idx - 1;
           this.index = idx;
           return js.Substring(
-                startIndex,
-                iend - startIndex);
+              startIndex,
+              iend - startIndex);
         } else if (c == '\\' || (c & 0xf800) == 0xd800) {
           this.index = idx - 1;
           endIndex = this.index;
@@ -162,7 +162,7 @@ namespace PeterO.Cbor {
             }
             break;
           case 0x22: // double quote
-          return this.sb.ToString();
+            return this.sb.ToString();
           default: {
             // NOTE: Differs from CBORJson2
             if ((c & 0xf800) != 0xd800) {

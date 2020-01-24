@@ -17,41 +17,41 @@ using PeterO.Numbers;
 namespace PeterO.Cbor {
   internal static class PropertyMap {
     private sealed class ReadOnlyWrapper<T> : ICollection<T> {
-       private readonly ICollection<T> o;
-       public ReadOnlyWrapper(ICollection<T> o) {
-          this.o = o;
-       }
-       public void Add(T v) {
-         throw new NotSupportedException();
-       }
-       public void Clear() {
-         throw new NotSupportedException();
-       }
-       public void CopyTo(T[] a, int off) {
-         this.o.CopyTo(a, off);
-       }
-       public bool Remove(T v) {
-         throw new NotSupportedException();
-       }
-       public bool Contains(T v) {
-         return this.o.Contains(v);
-       }
-       public int Count {
-         get {
-           return this.o.Count;
-         }
-       }
-       public bool IsReadOnly {
-         get {
-           return true;
-         }
-       }
-       public IEnumerator<T> GetEnumerator() {
-         return this.o.GetEnumerator();
-       }
-       IEnumerator IEnumerable.GetEnumerator() {
-         return ((IEnumerable)this.o).GetEnumerator();
-       }
+      private readonly ICollection<T> o;
+      public ReadOnlyWrapper(ICollection<T> o) {
+        this.o = o;
+      }
+      public void Add(T v) {
+        throw new NotSupportedException();
+      }
+      public void Clear() {
+        throw new NotSupportedException();
+      }
+      public void CopyTo(T[] a, int off) {
+        this.o.CopyTo(a, off);
+      }
+      public bool Remove(T v) {
+        throw new NotSupportedException();
+      }
+      public bool Contains(T v) {
+        return this.o.Contains(v);
+      }
+      public int Count {
+        get {
+          return this.o.Count;
+        }
+      }
+      public bool IsReadOnly {
+        get {
+          return true;
+        }
+      }
+      public IEnumerator<T> GetEnumerator() {
+        return this.o.GetEnumerator();
+      }
+      IEnumerator IEnumerable.GetEnumerator() {
+        return ((IEnumerable)this.o).GetEnumerator();
+      }
     }
 
     private sealed class PropertyData {
@@ -101,12 +101,12 @@ namespace PeterO.Cbor {
       }
 
       #if NET20 || NET40
-      public static bool HasUsableGetter(PropertyInfo pi) {
+      public static bool HasUsableGetter (PropertyInfo pi) {
         return pi != null && pi.CanRead && !pi.GetGetMethod().IsStatic &&
           pi.GetGetMethod().IsPublic;
       }
 
-      public static bool HasUsableSetter(PropertyInfo pi) {
+      public static bool HasUsableSetter (PropertyInfo pi) {
         return pi != null && pi.CanWrite && !pi.GetSetMethod().IsStatic &&
           pi.GetSetMethod().IsPublic;
       }
@@ -166,47 +166,47 @@ namespace PeterO.Cbor {
     }
 
     #if NET40 || NET20
-    private static bool IsGenericType(Type type) {
+    private static bool IsGenericType (Type type) {
       return type.IsGenericType;
     }
 
-    private static bool IsClassOrValueType(Type type) {
+    private static bool IsClassOrValueType (Type type) {
       return type.IsClass || type.IsValueType;
     }
 
-    private static Type FirstGenericArgument(Type type) {
+    private static Type FirstGenericArgument (Type type) {
       return type.GetGenericArguments()[0];
     }
 
-    private static IEnumerable<PropertyInfo> GetTypeProperties(Type t) {
-      return t.GetProperties(BindingFlags.Public |
+    private static IEnumerable<PropertyInfo> GetTypeProperties (Type t) {
+      return t.GetProperties (BindingFlags.Public |
           BindingFlags.Instance);
     }
 
-    private static IEnumerable<FieldInfo> GetTypeFields(Type t) {
-      return t.GetFields(BindingFlags.Public | BindingFlags.Instance);
+    private static IEnumerable<FieldInfo> GetTypeFields (Type t) {
+      return t.GetFields (BindingFlags.Public | BindingFlags.Instance);
     }
 
-    private static IEnumerable<Type> GetTypeInterfaces(Type t) {
+    private static IEnumerable<Type> GetTypeInterfaces (Type t) {
       return t.GetInterfaces();
     }
 
-    private static bool IsAssignableFrom(Type superType, Type subType) {
-      return superType.IsAssignableFrom(subType);
+    private static bool IsAssignableFrom (Type superType, Type subType) {
+      return superType.IsAssignableFrom (subType);
     }
 
     private static MethodInfo GetTypeMethod(
       Type t,
       string name,
       Type[] parameters) {
-      return t.GetMethod(name, parameters);
+      return t.GetMethod (name, parameters);
     }
 
     private static bool HasCustomAttribute(
       Type t,
       string name) {
-      foreach (var attr in t.GetCustomAttributes(false)) {
-        if (attr.GetType().FullName.Equals(name,
+      foreach (var attr in t.GetCustomAttributes (false)) {
+        if (attr.GetType().FullName.Equals (name,
             StringComparison.Ordinal)) {
           return true;
         }
@@ -227,8 +227,7 @@ namespace PeterO.Cbor {
     }
 
     private static bool IsAssignableFrom(Type superType, Type subType) {
-      return
-superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
+      return superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
     }
 
     private static IEnumerable<PropertyInfo> GetTypeProperties(Type t) {
@@ -277,11 +276,11 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
           return ValuePropertyLists[t];
         }
         bool anonymous = HasCustomAttribute(
-          t,
-          "System.Runtime.CompilerServices.CompilerGeneratedAttribute") ||
-         HasCustomAttribute(
-           t,
-           "Microsoft.FSharp.Core.CompilationMappingAttribute");
+            t,
+            "System.Runtime.CompilerServices.CompilerGeneratedAttribute") ||
+          HasCustomAttribute(
+            t,
+            "Microsoft.FSharp.Core.CompilationMappingAttribute");
         var names = new Dictionary<string, int>();
         foreach (PropertyInfo pi in GetTypeProperties(t)) {
           var pn = RemoveIsPrefix(pi.Name);
@@ -503,10 +502,10 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
         int len = arr.GetLength(0);
         for (var i = 0; i < len; ++i) {
           object item = cbor[i].ToObject(
-            elementType,
-            mapper,
-            options,
-            depth + 1);
+              elementType,
+              mapper,
+              options,
+              depth + 1);
           arr.SetValue(
             item,
             i);
@@ -523,8 +522,8 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
       }
       do {
         object item = GetCBORObject(
-          cbor,
-          index).ToObject(
+            cbor,
+            index).ToObject(
             elementType,
             mapper,
             options,
@@ -601,7 +600,7 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
     }
 
     public static ICollection<KeyValuePair<TKey, TValue>>
-         GetEntries<TKey, TValue>(
+    GetEntries<TKey, TValue>(
       IDictionary<TKey, TValue> dict) {
       var c = (ICollection<KeyValuePair<TKey, TValue>>)dict;
       return new ReadOnlyWrapper<KeyValuePair<TKey, TValue>>(c);
@@ -753,13 +752,13 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
             return Activator.CreateInstance(t);
           } else {
             object wrappedObj = objThis.ToObject(
-              nullableType,
-              mapper,
-              options,
-              depth + 1);
+                nullableType,
+                mapper,
+                options,
+                depth + 1);
             return Activator.CreateInstance(
-              t,
-              wrappedObj);
+                t,
+                wrappedObj);
           }
         }
       }
@@ -777,30 +776,30 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
         object listObject = null;
         object genericListObject = null;
         #if NET40 || NET20
-        if (IsAssignableFrom(typeof(Array), t)) {
+        if (IsAssignableFrom (typeof(Array), t)) {
           Type elementType = t.GetElementType();
           Array array = Array.CreateInstance(
               elementType,
-              GetDimensions(objThis));
+              GetDimensions (objThis));
           return FillArray(
-            array,
-            elementType,
-            objThis,
-            mapper,
-            options,
-            depth);
+              array,
+              elementType,
+              objThis,
+              mapper,
+              options,
+              depth);
         }
         if (t.IsGenericType) {
           Type td = t.GetGenericTypeDefinition();
-          isList = td.Equals(typeof(List<>)) || td.Equals(typeof(IList<>)) ||
-            td.Equals(typeof(ICollection<>)) ||
-            td.Equals(typeof(IEnumerable<>));
+          isList = td.Equals (typeof(List<>)) || td.Equals (typeof(IList<>)) ||
+            td.Equals (typeof(ICollection<>)) ||
+            td.Equals (typeof(IEnumerable<>));
         }
         isList = isList && t.GetGenericArguments().Length == 1;
         if (isList) {
           objectType = t.GetGenericArguments()[0];
-          Type listType = typeof(List<>).MakeGenericType(objectType);
-          listObject = Activator.CreateInstance(listType);
+          Type listType = typeof(List<>).MakeGenericType (objectType);
+          listObject = Activator.CreateInstance (listType);
         }
         #else
         if (IsAssignableFrom(typeof(Array), t)) {
@@ -809,18 +808,18 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
               elementType,
               GetDimensions(objThis));
           return FillArray(
-            array,
-            elementType,
-            objThis,
-            mapper,
-            options,
-            depth);
+              array,
+              elementType,
+              objThis,
+              mapper,
+              options,
+              depth);
         }
         if (t.GetTypeInfo().IsGenericType) {
           Type td = t.GetGenericTypeDefinition();
           isList = td.Equals(typeof(List<>)) || td.Equals(typeof(IList<>)) ||
-              td.Equals(typeof(ICollection<>)) ||
-              td.Equals(typeof(IEnumerable<>));
+            td.Equals(typeof(ICollection<>)) ||
+            td.Equals(typeof(IEnumerable<>));
         }
         isList = isList && t.GenericTypeArguments.Length == 1;
         if (isList) {
@@ -839,13 +838,15 @@ superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
             var implementsList = false;
             foreach (var interf in GetTypeInterfaces(t)) {
               if (IsGenericType(interf) &&
-interf.GetGenericTypeDefinition().Equals(typeof(IList<>))) {
-if (implementsList) {
-                   { implementsList = false;
+                interf.GetGenericTypeDefinition().Equals(typeof(IList<>))) {
+                if (implementsList) {
+                  { implementsList = false;
+                  }
+                  break;
+                } else {
+                  implementsList = true;
+                  objectType = FirstGenericArgument(interf);
                 }
-                break; } else { implementsList = true;
-                objectType =
-FirstGenericArgument(interf); }
               }
             }
             if (implementsList) {
@@ -858,9 +859,9 @@ FirstGenericArgument(interf); }
         }
         if (genericListObject != null) {
           object addMethod = FindOneArgumentMethod(
-            genericListObject,
-            "Add",
-            objectType);
+              genericListObject,
+              "Add",
+              objectType);
           if (addMethod == null) {
             throw new CBORException();
           }
@@ -889,8 +890,8 @@ FirstGenericArgument(interf); }
         isDict = t.IsGenericType;
         if (t.IsGenericType) {
           Type td = t.GetGenericTypeDefinition();
-          isDict = td.Equals(typeof(Dictionary<,>)) ||
-            td.Equals(typeof(IDictionary<,>));
+          isDict = td.Equals (typeof(Dictionary<,>)) ||
+            td.Equals (typeof(IDictionary<,>));
         }
         // DebugUtility.Log("list=" + isDict);
         isDict = isDict && t.GetGenericArguments().Length == 2;
@@ -899,9 +900,9 @@ FirstGenericArgument(interf); }
           keyType = t.GetGenericArguments()[0];
           valueType = t.GetGenericArguments()[1];
           Type listType = typeof(Dictionary<,>).MakeGenericType(
-            keyType,
-            valueType);
-          dictObject = Activator.CreateInstance(listType);
+              keyType,
+              valueType);
+          dictObject = Activator.CreateInstance (listType);
         }
         #else
         isDict = t.GetTypeInfo().IsGenericType;
@@ -917,8 +918,8 @@ FirstGenericArgument(interf); }
           keyType = t.GenericTypeArguments[0];
           valueType = t.GenericTypeArguments[1];
           Type listType = typeof(Dictionary<,>).MakeGenericType(
-            keyType,
-            valueType);
+              keyType,
+              valueType);
           dictObject = Activator.CreateInstance(listType);
         }
         #endif
@@ -960,8 +961,8 @@ FirstGenericArgument(interf); }
         }
         var values = new List<KeyValuePair<string, CBORObject>>();
         var propNames = PropertyMap.GetPropertyNames(
-          t,
-          options != null ? options.UseCamelCase : true);
+            t,
+            options != null ? options.UseCamelCase : true);
         foreach (string key in propNames) {
           if (objThis.ContainsKey(key)) {
             CBORObject cborValue = objThis[key];
@@ -972,11 +973,11 @@ FirstGenericArgument(interf); }
           }
         }
         return PropertyMap.ObjectWithProperties(
-          t,
-          values,
-          mapper,
-          options,
-          depth);
+            t,
+            values,
+            mapper,
+            options,
+            depth);
       } else {
         throw new CBORException();
       }
@@ -1005,10 +1006,10 @@ FirstGenericArgument(interf); }
               options.UseCamelCase : true);
           if (dict.ContainsKey(name)) {
             object dobj = dict[name].ToObject(
-              key.PropertyType,
-              mapper,
-              options,
-              depth + 1);
+                key.PropertyType,
+                mapper,
+                options,
+                depth + 1);
             key.SetValue(
               o,
               dobj);
@@ -1024,18 +1025,18 @@ FirstGenericArgument(interf); }
       CBORTypeMapper.ConverterInfo convinfo,
       object obj) {
       return (CBORObject)PropertyMap.InvokeOneArgumentMethod(
-        convinfo.ToObject,
-        convinfo.Converter,
-        obj);
+          convinfo.ToObject,
+          convinfo.Converter,
+          obj);
     }
 
     public static object CallFromObject(
       CBORTypeMapper.ConverterInfo convinfo,
       CBORObject obj) {
       return (object)PropertyMap.InvokeOneArgumentMethod(
-        convinfo.FromObject,
-        convinfo.Converter,
-        obj);
+          convinfo.FromObject,
+          convinfo.Converter,
+          obj);
     }
 
     public static IEnumerable<KeyValuePair<string, object>> GetProperties(
