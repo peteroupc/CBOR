@@ -83,6 +83,7 @@
     <Compile Include="CBORDataUtilitiesTest.cs" />
     <Compile Include="CBORExceptionTest.cs" />
     <Compile Include="CBORExtraTest.cs" />
+    <Compile Include="CBORGenerator.cs" />
     <Compile Include="CBORNumberTest.cs" />
     <Compile Include="CBORObjectTest.cs" />
     <Compile Include="CBORSupplementTest.cs" />

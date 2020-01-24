@@ -4170,7 +4170,7 @@ ex.ToString());
       Assert.AreEqual(longString, cbor2.AsString());
     }
 
-    private static void TestWriteToJSON(CBORObject obj) {
+    public static void TestWriteToJSON(CBORObject obj) {
       CBORObject objA = null;
       string jsonString = String.Empty;
       using (var ms = new MemoryStream()) {
@@ -4188,9 +4188,8 @@ ex.ToString());
       }
       CBORObject objB = CBORObject.FromJSONString(obj.ToJSONString());
       if (!objA.Equals(objB)) {
-        Console.WriteLine(String.Empty + objA);
-        Console.WriteLine(String.Empty + objB);
-        Assert.Fail("WriteJSONTo gives different results from ToJSONString");
+        Assert.Fail("WriteJSONTo gives different results from ToJSONString\nobj=" + 
+           TestCommon.ToByteArrayString(obj.EncodeToBytes()));
       }
     }
   }
