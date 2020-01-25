@@ -325,7 +325,7 @@ namespace Test {
 public void TestWriteToJSONSpecific() {
  var bytes = new byte[] {
    0x6a, 0x25, 0x7f, 0x41, 0x58, 0x11, 0x54,
-   (byte)0xc3, (byte)0x94, 0x19, 0x49
+   (byte)0xc3, (byte)0x94, 0x19, 0x49,
  };
  TestWriteToJSON(CBORObject.DecodeFromBytes(bytes));
 }
@@ -4184,6 +4184,9 @@ ex.ToString());
       string jsonString = String.Empty;
       using (var ms = new MemoryStream()) {
         try {
+          if (obj == null) {
+            throw new ArgumentNullException(nameof(obj));
+          }
           obj.WriteJSONTo(ms);
           jsonString = DataUtilities.GetUtf8String(
               ms.ToArray(),
@@ -4194,6 +4197,9 @@ ex.ToString());
         } catch (IOException ex) {
           throw new InvalidOperationException(String.Empty, ex);
         }
+      }
+      if (obj == null) {
+        throw new ArgumentNullException(nameof(obj));
       }
       CBORObject objB = CBORObject.FromJSONString(obj.ToJSONString());
       if (!objA.Equals(objB)) {

@@ -25,7 +25,7 @@ namespace Test {
       }
       public byte[] ToBytes() {
         var newbytes = new byte[this.pos];
-        Array.Copy(this.bytes, 0, newbytes, 0, pos);
+        Array.Copy(this.bytes, 0, newbytes, 0, this.pos);
         return newbytes;
       }
     }
@@ -37,8 +37,8 @@ namespace Test {
       ByteWriter bs) {
       var minArg = 0;
       var maxArg = 4;
-      minArg = (len < 0x18) ? (0) : ((len <= 0xff) ? 1 : ((len <= 0xffff) ?
-2 : (3)));
+      minArg = (len < 0x18) ? 0 : ((len <= 0xff) ? 1 : ((len <= 0xffff) ? 2:
+(3)));
       var sh = 0;
       int arg = minArg + r.UniformInt(maxArg - minArg + 1);
       switch (arg) {

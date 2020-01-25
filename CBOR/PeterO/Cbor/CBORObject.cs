@@ -14,6 +14,7 @@ using PeterO.Numbers;
 
 // TODO: In next major version, make .Keys and .Values read-only
 // TODO: Consider storing text strings as bytes, at least in some cases
+// TODO: Consider using red/black trees rather than hash tables as maps
 namespace PeterO.Cbor {
   /// <summary>
   /// <para>Represents an object in Concise Binary Object Representation
