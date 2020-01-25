@@ -49,9 +49,8 @@ namespace PeterO.DocGen {
       } else if (obj is MethodInfo) {
         string objname = ((MethodInfo)obj).Name;
         anchor = IsNonconversionOperator(objname) ?
-            objname :
-            DocVisitor.FormatMethod((MethodInfo)obj, true);
-      } else {
+            objname : DocVisitor.FormatMethod((MethodInfo)obj, true);
+          } else {
          anchor = (obj is PropertyInfo) ?
            DocVisitor.FormatProperty((PropertyInfo)obj, true) :
              ((obj is FieldInfo) ?

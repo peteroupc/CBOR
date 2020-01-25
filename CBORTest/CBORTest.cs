@@ -321,6 +321,15 @@ namespace Test {
         new byte[] { 0x5f, 0x41, 0x20, 0x41, 0x20, (byte)0xff });
     }
 
+[Test]
+public void TestWriteToJSONSpecific() {
+ var bytes = new byte[] {
+   0x6a, 0x25, 0x7f, 0x41, 0x58, 0x11, 0x54,
+   (byte)0xc3, (byte)0x94, 0x19, 0x49
+ };
+ TestWriteToJSON(CBORObject.DecodeFromBytes(bytes));
+}
+
     [Test]
     public void TestEmptyIndefiniteLength() {
       CBORObject cbor;
@@ -4178,7 +4187,7 @@ ex.ToString());
           obj.WriteJSONTo(ms);
           jsonString = DataUtilities.GetUtf8String(
               ms.ToArray(),
-              true);
+              false);
           objA = CBORObject.FromJSONString(jsonString);
         } catch (CBORException ex) {
           throw new InvalidOperationException(jsonString, ex);
@@ -4188,7 +4197,8 @@ ex.ToString());
       }
       CBORObject objB = CBORObject.FromJSONString(obj.ToJSONString());
       if (!objA.Equals(objB)) {
-        Assert.Fail("WriteJSONTo gives different results from ToJSONString\nobj=" + 
+        Assert.Fail("WriteJSONTo gives different results from " +
+           "ToJSONString\nobj=" +
            TestCommon.ToByteArrayString(obj.EncodeToBytes()));
       }
     }
