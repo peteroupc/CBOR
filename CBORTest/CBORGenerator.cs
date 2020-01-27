@@ -37,10 +37,9 @@ namespace Test {
       ByteWriter bs) {
       var minArg = 0;
       var maxArg = 4;
-      minArg = (len < 0x18) ? 0 : ((len <= 0xff) ? 1 : ((len <= 0xffff) ? 2:
+      minArg = (len < 0x18) ? 0 : ((len <= 0xff) ? 1 : ((len <= 0xffff) ? 2 :
 (3)));
-      var sh = 0;
-      int arg = minArg + r.UniformInt(maxArg - minArg + 1);
+var sh = 0; int arg = minArg + r.UniformInt(maxArg - minArg + 1);
       switch (arg) {
         case 0:
           bs.Write(majorType * 0x20 + len);
