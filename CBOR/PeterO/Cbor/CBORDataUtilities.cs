@@ -80,7 +80,7 @@ namespace PeterO.Cbor {
           break;
         case CBORType.FloatingPoint: {
           double f = obj.AsDoubleValue();
-          simvalue = Double.IsNegativeInfinity(f) ? "-Infinity":
+          simvalue = Double.IsNegativeInfinity(f) ? "-Infinity" :
 (Double.IsPositiveInfinity(f) ? "Infinity" : (Double.IsNaN(f) ?
 
                 "NaN" : obj.Untag().ToJSONString()));
