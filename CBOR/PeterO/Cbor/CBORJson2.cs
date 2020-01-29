@@ -202,15 +202,11 @@ namespace PeterO.Cbor {
                 c3 < 0x80 || c3 > 0xbf) {
                 this.RaiseError("Invalid encoding");
               }
-              c = ((c - 0xc0) << 12) | ((c1 - 0x80) << 12) | ((c2 - 0x80) <<
+              c = ((c - 0xc0) << 18) | ((c1 - 0x80) << 12) | ((c2 - 0x80) <<
                   6) | (c3 - 0x80);
-              if (c <= 0xffff) {
-                this.sb.Append((char)c);
-              } else if (c <= 0x10ffff) {
-                this.sb.Append((char)((((c - 0x10000) >> 10) & 0x3ff) |
+              this.sb.Append((char)((((c - 0x10000) >> 10) & 0x3ff) |
                     0xd800));
-                this.sb.Append((char)(((c - 0x10000) & 0x3ff) | 0xdc00));
-              }
+              this.sb.Append((char)(((c - 0x10000) & 0x3ff) | 0xdc00));
             } else {
               this.RaiseError("Invalid encoding");
             }

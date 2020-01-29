@@ -644,12 +644,16 @@ namespace PeterO.Cbor {
             lv = -lv;
           }
           if (!negative || lv != 0) {
-            CBORObject cbor = CBORObject.FromObject(
-            new CBORObject[] {
-              CBORObject.FromObject(expo),
-              CBORObject.FromObject(lv),
-            });
-            return cbor.WithTag(4);
+            if (expo == 0) {
+              return CBORObject.FromObject(lv);
+            } else {
+              CBORObject cbor = CBORObject.FromObject(
+              new CBORObject[] {
+                CBORObject.FromObject(expo),
+                CBORObject.FromObject(lv),
+              });
+              return cbor.WithTag(4);
+            }
           }
         }
         EDecimal ed = EDecimal.FromString(
@@ -657,14 +661,21 @@ namespace PeterO.Cbor {
             initialOffset,
             endPos - initialOffset);
         if (ed.IsZero && negative) {
-          if (preserveNegativeZero && ed.Exponent.IsZero) {
-            // TODO: In next major version, use EDecimal
-            return CBORObject.FromFloatingPointBits(0x8000, 2);
-          } else if (!preserveNegativeZero) {
-            ed = ed.Negate();
+          if (ed.Exponent.IsZero) {
+           // TODO: In next major version, use EDecimal
+           // for preserveNegativeZero
+           return preserveNegativeZero ?
+              CBORObject.FromFloatingPointBits(0x8000, 2) :
+              CBORObject.FromObject(0);
+            } else if (!preserveNegativeZero) {
+              return CBORObject.FromObject(ed.Negate());
+            } else {
+            return CBORObject.FromObject(ed);
           }
+        } else {
+          return ed.Exponent.IsZero ? CBORObject.FromObject(ed.Mantissa) :
+CBORObject.FromObject(ed);
         }
-        return CBORObject.FromObject(ed);
       } else if (kind == JSONOptions.ConversionMode.Double) {
         double dbl = EFloat.FromString(
             str,

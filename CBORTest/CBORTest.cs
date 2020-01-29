@@ -887,6 +887,40 @@ ed.AsNumber().CanFitInSingle()) {
       CBORTestCommon.AssertRoundTrip(cbor);
     }
 
+[Test]
+public void TestEquivJSON() {
+ var jsonBytes = new byte[] {
+   0x22, 0x48, 0x54, 0x30, 0x43, 0x5c, 0x75,
+   0x64, 0x61, 0x62, 0x43, 0x5c, 0x75, 0x64, 0x64, 0x32, 0x39, 0x48,
+   (byte)0xdc,
+   (byte)0x9a, 0x4e,
+   (byte)0xc2, (byte)0xa3, 0x49, 0x4d, 0x43, 0x40, 0x25, 0x31, 0x3b, 0x22,
+ };
+ this.TestEquivJSONOne(jsonBytes);
+ jsonBytes = new byte[] {
+   0x22, 0x35, 0x54, 0x30, 0x4d, 0x2d, 0x2b, 0x5c,
+   0x75, 0x64, 0x38, 0x36, 0x38, 0x5c, 0x75, 0x44, 0x63, 0x46, 0x32, 0x4f,
+   0x34, 0x4e, 0x34,
+   (byte)0xe0, (byte)0xa3, (byte)0xac, 0x2b, 0x31, 0x23, 0x22,
+ };
+ this.TestEquivJSONOne(jsonBytes);
+}
+
+public void TestEquivJSONOne(byte[] bytes) {
+   CBORObject cbo = CBORObject.FromJSONBytes(bytes);
+   Assert.IsTrue(cbo != null);
+   CBORObject cbo2 = CBORObject.FromJSONString(cbo.ToJSONString());
+   Assert.IsTrue(cbo2 != null);
+   if (!cbo.Equals(cbo2)) {
+     Assert.AreEqual(cbo, cbo2, "differs for JSONString");
+   }
+   cbo2 = CBORObject.FromJSONBytes(cbo.ToJSONBytes());
+   Assert.IsTrue(cbo2 != null);
+   if (!cbo.Equals(cbo2)) {
+     Assert.AreEqual(cbo, cbo2, "differs for JSONBytes");
+   }
+}
+
     [Test]
     public void TestDecFracCompareIntegerVsBigFraction() {
       CBORObject o1 = null;

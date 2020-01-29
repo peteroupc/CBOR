@@ -101,7 +101,7 @@ namespace PeterO.Cbor {
           this.outputStream.WriteByte((byte)(0x80 | (codePoint & 0x3f)));
         } else {
           this.outputStream.WriteByte((byte)(0xf0 | ((codePoint >> 18) &
-                0x08)));
+                0x07)));
           this.outputStream.WriteByte((byte)(0x80 | ((codePoint >> 12) &
                 0x3f)));
           this.outputStream.WriteByte((byte)(0x80 | ((codePoint >> 6) &

@@ -91,6 +91,7 @@
     <Compile Include="CBORTestCommon.cs" />
     <Compile Include="DataUtilitiesTest.cs" />
     <Compile Include="IRandomGen.cs" />
+    <Compile Include="IRandomGenExtended.cs" />
     <Compile Include="MiniCBOR.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomGenerator.cs" />
