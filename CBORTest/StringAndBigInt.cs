@@ -26,12 +26,12 @@ namespace Test {
       }
     }
 
-    public static StringAndBigInt Generate(RandomGenerator rand, int radix) {
+    public static StringAndBigInt Generate(IRandomGenExtended rand, int radix) {
       return Generate(rand, radix, 50);
     }
 
     public static StringAndBigInt Generate(
-      RandomGenerator rand,
+      IRandomGenExtended rand,
       int radix,
       int maxNumDigits) {
       if (radix < 2) {
@@ -44,10 +44,10 @@ namespace Test {
       }
       EInteger bv = EInteger.Zero;
       var sabi = new StringAndBigInt();
-      int numDigits = 1 + rand.UniformInt(maxNumDigits);
+      int numDigits = 1 + rand.GetInt32(maxNumDigits);
       var negative = false;
       var builder = new StringBuilder();
-      if (rand.UniformInt(2) == 0) {
+      if (rand.GetInt32(2) == 0) {
         builder.Append('-');
         negative = true;
       }
@@ -56,7 +56,7 @@ namespace Test {
       EInteger radixpow1 = EInteger.FromInt32(radix);
       var count = 0;
       for (int i = 0; i < numDigits - 4; i += 4) {
-        int digitvalues = rand.UniformInt(radixpowint);
+        int digitvalues = rand.GetInt32(radixpowint);
         int digit = digitvalues % radix;
         digitvalues /= radix;
         int digit2 = digitvalues % radix;
@@ -66,7 +66,7 @@ namespace Test {
         int digit4 = digitvalues % radix;
         digitvalues /= radix;
         count += 4;
-        int bits = rand.UniformInt(16);
+        int bits = rand.GetInt32(16);
         if ((bits & 0x01) == 0) {
           builder.Append(ValueDigits[digit]);
         } else {
@@ -94,8 +94,8 @@ namespace Test {
         bv += bigintTmp;
       }
       for (int i = count; i < numDigits; ++i) {
-        int digit = rand.UniformInt(radix);
-        if (rand.UniformInt(2) == 0) {
+        int digit = rand.GetInt32(radix);
+        if (rand.GetInt32(2) == 0) {
           builder.Append(ValueDigits[digit]);
         } else {
           builder.Append(ValueDigitsLower[digit]);
