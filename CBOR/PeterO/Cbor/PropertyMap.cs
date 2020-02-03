@@ -563,8 +563,12 @@ namespace PeterO.Cbor {
       if (obj.IsNumber && obj.AsNumber().IsInteger()) {
         ret = Enum.ToObject(enumType, TypeToIntegerObject(obj, utype));
         if (!Enum.IsDefined(enumType, ret)) {
-          throw new CBORException("Unrecognized enum value: " +
-            obj.ToString());
+          string estr = ret.ToString();
+          if (estr == null || estr.Length == 0 || estr[0]=='-' ||
+(estr[0] >= '0' && estr[0] <= '9')) {
+            throw new CBORException("Unrecognized enum value: " +
+              obj.ToString());
+          }
         }
         return ret;
       } else if (obj.Type == CBORType.TextString) {

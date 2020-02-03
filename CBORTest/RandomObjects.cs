@@ -25,9 +25,7 @@ namespace Test {
       }
       int x = rand.GetInt32(MaxExclusiveStringLength);
       var bytes = new byte[x];
-      for (var i = 0; i < x; ++i) {
-        bytes[i] = unchecked((byte)rand.GetInt32(256));
-      }
+      rand.GetBytes(bytes, 0, bytes.Length);
       return bytes;
     }
 
@@ -37,9 +35,7 @@ namespace Test {
       }
       int x = rand.GetInt32(MaxExclusiveShortStringLength);
       var bytes = new byte[x];
-      for (var i = 0; i < x; ++i) {
-        bytes[i] = unchecked((byte)rand.GetInt32(256));
-      }
+      rand.GetBytes(bytes, 0, bytes.Length);
       return bytes;
     }
 
@@ -157,12 +153,13 @@ namespace Test {
         // Signaling NaN currently not generated because
         // it doesn't round-trip as well
       }
-      string str = RandomDecimalString(r);
-      if (str.Length < 1000 || str.IndexOf('E') < 0) {
-        return EDecimal.FromString(str);
-      } else {
-        return EDecimal.Create(RandomEInteger(r), RandomEInteger(r));
+      if (r.GetInt32(100) < 10) {
+        string str = RandomDecimalString(r);
+        if (str.Length < 500) {
+          return EDecimal.FromString(str);
+        }
       }
+      return EDecimal.Create(RandomEInteger(r), RandomEInteger(r));
     }
 
     public static EInteger RandomEInteger(IRandomGenExtended r) {
@@ -173,9 +170,8 @@ namespace Test {
       if (selection < 10) {
         int count = r.GetInt32(MaxNumberLength) + 1;
         var bytes = new byte[count];
-        for (var i = 0; i < count; ++i) {
-          bytes[i] = (byte)((int)r.GetInt32(256));
-        }
+        r.GetBytes(bytes, 0, bytes.Length);
+
         return EInteger.FromBytes(bytes, true);
       }
       if (selection < 50) {
@@ -187,9 +183,7 @@ namespace Test {
       } else {
         int count = r.GetInt32(MaxShortNumberLength) + 1;
         var bytes = new byte[count];
-        for (var i = 0; i < count; ++i) {
-          bytes[i] = (byte)((int)r.GetInt32(256));
-        }
+        r.GetBytes(bytes, 0, bytes.Length);
         return EInteger.FromBytes(bytes, true);
       }
     }
@@ -282,6 +276,8 @@ r.GetInt32(MaxNumberLength)) / MaxNumberLength;
         sb.Append('.');
         count = ((long)r.GetInt32(MaxNumberLength) *
 r.GetInt32(MaxNumberLength)) / MaxNumberLength;
+        count = ((long)count *
+r.GetInt32(MaxNumberLength)) / MaxNumberLength;
         count = Math.Max(1, count);
         for (var i = 0; i < count; ++i) {
           sb.Append((char)('0' + r.GetInt32(10)));
@@ -300,6 +296,8 @@ r.GetInt32(MaxNumberLength)) / MaxNumberLength;
    sb.Append(TestCommon.IntToString(r.GetInt32(10000)));
         } else {
           count = ((long)r.GetInt32(MaxNumberLength) *
+r.GetInt32(MaxNumberLength)) / MaxNumberLength;
+          count = ((long)count *
 r.GetInt32(MaxNumberLength)) / MaxNumberLength;
           count = Math.Max(1, count);
           for (var i = 0; i < count; ++i) {

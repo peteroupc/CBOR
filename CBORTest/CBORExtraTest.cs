@@ -160,6 +160,10 @@ namespace Test {
     public enum CustomEnum {
 A, B, C, };
 
+    [Flags]
+    public enum CFE {
+A = 1, B = 2, C = 4, };
+
     public sealed class CustomIListContainer {
       public CustomIList CList { get; set; }
     }
@@ -229,6 +233,18 @@ System.Collections.IEnumerable.GetEnumerator() {
         return ((IList<CustomEnum>)this.w).GetEnumerator();
     }
     }
+
+[Test]
+public void TestCustomFlagsEnum() {
+ var cbor = CBORObject.FromObject(CFE.A | CFE.B);
+ Assert.AreEqual(CBORObject.FromObject(3), cbor);
+ var cfe = cbor.ToObject<CFE>();
+ Assert.AreEqual(CFE.A | CFE.B, cfe);
+ cbor = CBORObject.FromObject(CFE.A);
+ Assert.AreEqual(CBORObject.FromObject(1), cbor);
+ cfe = cbor.ToObject<CFE>();
+ Assert.AreEqual(CFE.A, cfe);
+}
 
     [Test]
     public void TestCustomIList() {
