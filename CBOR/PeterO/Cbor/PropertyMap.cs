@@ -564,7 +564,7 @@ namespace PeterO.Cbor {
         ret = Enum.ToObject(enumType, TypeToIntegerObject(obj, utype));
         if (!Enum.IsDefined(enumType, ret)) {
           string estr = ret.ToString();
-          if (estr == null || estr.Length == 0 || estr[0]=='-' ||
+          if (estr == null || estr.Length == 0 || estr[0] == '-' ||
 (estr[0] >= '0' && estr[0] <= '9')) {
             throw new CBORException("Unrecognized enum value: " +
               obj.ToString());
