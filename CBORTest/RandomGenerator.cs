@@ -442,7 +442,7 @@ namespace PeterO {
         return minInclusive + this.UniformLong(maxExclusive - minInclusive);
       } else {
         if ((maxExclusive < 0 && Int64.MaxValue + maxExclusive <
-minInclusive) ||
+            minInclusive) ||
           (maxExclusive > 0 && Int64.MinValue + maxExclusive > minInclusive) ||
           minInclusive - maxExclusive < 0) {
           // Difference is greater than MaxValue
@@ -528,13 +528,13 @@ minInclusive) ||
       }
     }
 
-public long GetInt64(long maxExclusive) {
-  return this.UniformLong(maxExclusive);
-}
+    public long GetInt64(long maxExclusive) {
+      return this.UniformLong(maxExclusive);
+    }
 
-public int GetInt32(int maxExclusive) {
-  return this.UniformInt(maxExclusive);
-}
+    public int GetInt32(int maxExclusive) {
+      return this.UniformInt(maxExclusive);
+    }
 
     /// <summary>Generates a random 32-bit signed integer 0 or greater and
     /// less than the given number.</summary>

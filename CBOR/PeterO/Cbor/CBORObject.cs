@@ -6979,10 +6979,10 @@ this.MostOuterTag.Equals(bigTagValue);
       a) {
       // To simplify matters, we use just the count of
       // the map as the basis for the hash code. More complicated
-      // hash code calculation would generally involve defining
-      // how CBORObjects ought to be compared (since a stable
-      // sort order is necessary for two equal maps to have the
-      // same hash code), which is much too difficult to do.
+      // hash code calculation would involve the sum of the hash codes of
+      // the map's key-value pairs (an approach that works regardless of the order
+      // in which map keys are iterated), but this could take much more time
+      // to calculate, especially if the keys and values are very big.
       return unchecked(a.Count.GetHashCode() * 19);
     }
 
