@@ -159,9 +159,12 @@ namespace Test {
       return BitConverter.ToSingle(BitConverter.GetBytes((int)r), 0);
     }
 
-    private static string GenerateEDecimalSmallString(IRandomGenExtended
+    public static string RandomDecimalStringShort(IRandomGenExtended
 wrapper, bool extended) {
        var sb = new StringBuilder();
+       if (wrapper == null) {
+         throw new ArgumentNullException(nameof(wrapper));
+       }
        int len = 1 + wrapper.GetInt32(4);
        if (!extended) {
         sb.Append((char)('1' + wrapper.GetInt32(9)));
@@ -188,7 +191,7 @@ wrapper, bool extended) {
          int exp = wrapper.GetInt32(25) - 12;
          return EDecimal.Create(eix, exp);
        }
-       return EDecimal.FromString(GenerateEDecimalSmallString(wrapper, false));
+       return EDecimal.FromString(RandomDecimalStringShort(wrapper, false));
     }
 
     public static EDecimal RandomEDecimal(IRandomGenExtended r) {
@@ -223,7 +226,7 @@ decimalString) {
         // Signaling NaN currently not generated because
         // it doesn't round-trip as well
       }
-      if (r.GetInt32(100) < 10) {
+      if (r.GetInt32(100) < 30) {
         string str = RandomDecimalString(r);
         if (str.Length < 500) {
           if (decimalString != null) {
@@ -233,7 +236,18 @@ decimalString) {
         }
       }
       EInteger emant = RandomEInteger(r);
-      EInteger eexp = RandomEInteger(r);
+      EInteger eexp = null;
+      if (r.GetInt32(100) < 95) {
+        int exp = 0;
+        if (r.GetInt32(100) < 80) {
+          exp = r.GetInt32(50) - 25;
+        } else {
+          exp = r.GetInt32(5000) - 2500;
+        }
+        eexp = EInteger.FromInt32(exp);
+      } else {
+        eexp = RandomEInteger(r);
+      }
       EDecimal ed = EDecimal.Create(emant, eexp);
       if (decimalString != null) {
         decimalString[0] = emant.ToString() + "E" + eexp.ToString();
@@ -261,6 +275,16 @@ MaxNumberLength);
           r.GetInt32(MaxShortNumberLength) + 1);
         return EInteger.FromBytes(bytes, true);
       }
+    }
+
+    public static EInteger RandomEIntegerSmall(IRandomGenExtended r) {
+      if (r == null) {
+        throw new ArgumentNullException(nameof(r));
+      }
+      byte[] bytes = RandomByteString(
+        r,
+        r.GetInt32(MaxShortNumberLength) + 1);
+      return EInteger.FromBytes(bytes, true);
     }
 
     public static EFloat RandomEFloat(IRandomGenExtended r) {
@@ -324,7 +348,7 @@ MaxNumberLength);
     };
 
     // Special 10-digit-long strings
-    private static string[] SpecialDecimals = {
+    private static string[] valueSpecialDecimals = {
       "1000000000",
       "0000000001",
       "4999999999",
@@ -336,7 +360,7 @@ MaxNumberLength);
     };
 
     // Special 40-digit-long strings
-    private static string[] SpecialDecimals2 = {
+    private static string[] valueSpecialDecimals2 = {
       "1000000000000000000000000000000000000000",
       "0000000000000000000000000000000000000001",
       "4999999999999999999999999999999999999999",
@@ -370,13 +394,15 @@ MaxNumberLength);
                 --count;
                 ++i;
               } else if (count >= 40 && i + 1 < buflen) {
-                int y = (((int)buffer[i + 1]) & 0xff) % SpecialDecimals2.Length;
-                sb.Append(SpecialDecimals2[y]);
+                int y = (((int)buffer[i + 1]) & 0xff) %
+valueSpecialDecimals2.Length;
+                sb.Append(valueSpecialDecimals2[y]);
                 count -= 40;
                 i += 2;
               } else if (count >= 10 && i + 1 < buflen) {
-                int y = (((int)buffer[i + 1]) & 0xff) % SpecialDecimals.Length;
-                sb.Append(SpecialDecimals[y]);
+                int y = (((int)buffer[i + 1]) & 0xff) %
+valueSpecialDecimals.Length;
+                sb.Append(valueSpecialDecimals[y]);
                 count -= 10;
                 i += 2;
               } else {
@@ -394,6 +420,11 @@ MaxNumberLength);
       AppendRandomDecimalsLong(r, sb, smallCount);
     }
 
+    public static String RandomDecimalStringShort(
+      IRandomGenExtended r) {
+     return RandomDecimalStringShort(r, false);
+    }
+
     public static String RandomDecimalString(
       IRandomGenExtended r,
       bool extended,
@@ -401,8 +432,8 @@ MaxNumberLength);
       if (r == null) {
         throw new ArgumentNullException(nameof(r));
       }
-      if (r.GetInt32(100) < 10) {
-        return GenerateEDecimalSmallString(r, extended);
+      if (r.GetInt32(100) < 95) {
+        return RandomDecimalStringShort(r, extended);
       }
       long count = ((long)r.GetInt32(MaxNumberLength) *
 r.GetInt32(MaxNumberLength)) / MaxNumberLength;

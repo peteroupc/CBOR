@@ -1,5 +1,5 @@
 /*
-Written by Peter O. in 2014.
+Written by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
@@ -262,7 +262,7 @@ namespace PeterO.Cbor {
     #endif
 
     private static readonly IDictionary<Type, IList<PropertyData>>
-    ValuePropertyLists = new Dictionary<Type, IList<PropertyData>>();
+    ValuePropertyLists = new SortedDictionary<Type, IList<PropertyData>>();
 
     private static string RemoveIsPrefix(string pn) {
       return CBORUtilities.NameStartsWithWord(pn, "Is") ? pn.Substring(2) :
@@ -281,7 +281,7 @@ namespace PeterO.Cbor {
           HasCustomAttribute(
             t,
             "Microsoft.FSharp.Core.CompilationMappingAttribute");
-        var names = new Dictionary<string, int>();
+        var names = new SortedDictionary<string, int>();
         foreach (PropertyInfo pi in GetTypeProperties(t)) {
           var pn = RemoveIsPrefix(pi.Name);
           if (names.ContainsKey(pn)) {
@@ -929,7 +929,7 @@ namespace PeterO.Cbor {
         #endif
         if (dictObject == null) {
           if (t.Equals(typeof(IDictionary))) {
-            dictObject = new Dictionary<object, object>();
+            dictObject = new SortedDictionary<object, object>();
             keyType = typeof(object);
             valueType = typeof(object);
           }
@@ -995,7 +995,7 @@ namespace PeterO.Cbor {
       int depth) {
       try {
         object o = Activator.CreateInstance(t);
-        var dict = new Dictionary<string, CBORObject>();
+        var dict = new SortedDictionary<string, CBORObject>();
         foreach (var kv in keysValues) {
           var name = kv.Key;
           dict[name] = kv.Value;

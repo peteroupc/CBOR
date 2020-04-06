@@ -1,5 +1,5 @@
 /*
-Written by Peter O. in 2013.
+Written by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
@@ -29,7 +29,15 @@ namespace PeterO.Cbor {
       if (strB.Length == 0) {
         return strA.Length == 0 ? 0 : 1;
       }
-      if (strA.Length < 64 && strB.Length < 64) {
+      long strAUpperBound = strA.Length * 3;
+      if (strAUpperBound < strB.Length) {
+        return -1;
+      }
+      long strBUpperBound = strB.Length * 3;
+      if (strBUpperBound < strA.Length) {
+        return 1;
+      }
+      if (strA.Length < 128 && strB.Length < 128) {
         if (strA.Length == strB.Length) {
           var equalStrings = true;
           for (int i = 0; i < strA.Length; ++i) {
@@ -42,18 +50,33 @@ namespace PeterO.Cbor {
             return 0;
           }
         }
+        var nonAscii = false;
         for (int i = 0; i < strA.Length; ++i) {
-          if ((strA[i] & ((byte)0x80)) != 0) {
-            return -2; // non-ASCII
+          if ((strA[i] & 0xf800) == 0xd800) {
+            return -2; // has surrogates
+          } else if (strA[i] > 0x80) {
+            nonAscii = true;
+            break;
           }
         }
         for (int i = 0; i < strB.Length; ++i) {
-          if ((strB[i] & ((byte)0x80)) != 0) {
-            return -2; // non-ASCII
+          if ((strB[i] & 0xf800) == 0xd800) {
+            return -2; // has surrogates
+          } else if (strB[i] > 0x80) {
+            nonAscii = true;
+            break;
           }
         }
-        if (strA.Length != strB.Length) {
-          return strA.Length < strB.Length ? -1 : 1;
+        if (nonAscii) {
+          long cplA = DataUtilities.GetUtf8Length(strA, true);
+          long cplB = DataUtilities.GetUtf8Length(strB, true);
+          if (cplA != cplB) {
+            return cplA < cplB ? -1 : 1;
+          }
+        } else {
+          if (strA.Length != strB.Length) {
+            return strA.Length < strB.Length ? -1 : 1;
+          }
         }
         for (int i = 0; i < strA.Length; ++i) {
           if (strA[i] != strB[i]) {
@@ -63,6 +86,111 @@ namespace PeterO.Cbor {
         return 0;
       }
       return -2; // not short enough
+    }
+
+    public static int Utf8CodePointAt(byte[] utf8, int offset) {
+       int endPos = utf8.Length;
+       if (offset < 0 || offset >= endPos) {
+         return -1;
+       }
+       int c = ((int)utf8[offset]) & 0xff;
+       if (c <= 0x7f) {
+         return c;
+       } else if (c >= 0xc2 && c <= 0xdf) {
+         ++offset;
+              int c1 = offset < endPos ?
+                ((int)utf8[offset++]) & 0xff : -1;
+              if (c1 < 0x80 || c1 > 0xbf) {
+                throw new InvalidOperationException("Invalid encoding");
+              }
+              return ((c - 0xc0) << 6) | (c1 - 0x80);
+            } else if (c >= 0xe0 && c <= 0xef) {
+              ++offset;
+              int c1 = offset < endPos ? ((int)utf8[offset++]) & 0xff : -1;
+              int c2 = offset < endPos ? ((int)utf8[offset++]) & 0xff : -1;
+              int lower = (c == 0xe0) ? 0xa0 : 0x80;
+              int upper = (c == 0xed) ? 0x9f : 0xbf;
+              if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf) {
+                throw new InvalidOperationException("Invalid encoding");
+              }
+              return ((c - 0xc0) << 12) | ((c1 - 0x80) << 6) | (c2 - 0x80);
+            } else if (c >= 0xf0 && c <= 0xf4) {
+              ++offset;
+              int c1 = offset < endPos ? ((int)utf8[offset++]) & 0xff : -1;
+              int c2 = offset < endPos ? ((int)utf8[offset++]) & 0xff : -1;
+              int c3 = offset < endPos ? ((int)utf8[offset++]) & 0xff : -1;
+              int lower = (c == 0xf0) ? 0x90 : 0x80;
+              int upper = (c == 0xf4) ? 0x8f : 0xbf;
+              if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf ||
+                c3 < 0x80 || c3 > 0xbf) {
+                throw new InvalidOperationException("Invalid encoding");
+              }
+              return ((c - 0xc0) << 18) | ((c1 - 0x80) << 12) | ((c2 - 0x80) <<
+                  6) | (c3 - 0x80);
+            } else {
+              throw new InvalidOperationException("Invalid encoding");
+            }
+    }
+
+    public static void CheckUtf8(byte[] utf8) {
+      var upos = 0;
+      while (true) {
+         int sc = Utf8CodePointAt(utf8, upos);
+         if (sc == -1) {
+           return;
+         }
+         if (sc >= 0x10000) {
+           upos += 4;
+         } else if (sc >= 0x800) {
+           upos += 3;
+         } else if (sc >= 0x80) {
+           upos += 2;
+         } else {
+           ++upos;
+         }
+      }
+    }
+
+    public static bool StringEqualsUtf8(string str, byte[] utf8) {
+      if (str == null) {
+        return utf8 == null;
+      }
+      if (utf8 == null) {
+        return false;
+      }
+      long strAUpperBound = str.Length * 3;
+      if (strAUpperBound < utf8.Length) {
+        return false;
+      }
+      long strBUpperBound = utf8.Length * 3;
+      if (strBUpperBound < str.Length) {
+        return false;
+      }
+      var spos = 0;
+      var upos = 0;
+      while (true) {
+         int sc = DataUtilities.CodePointAt(str, spos, 1);
+         int uc = Utf8CodePointAt(utf8, upos);
+         if (sc == -1) {
+           return uc == -1;
+         }
+if (sc != uc) {
+           return false;
+         }
+         if (sc >= 0x10000) {
+           spos += 2;
+           upos += 4;
+         } else if (sc >= 0x800) {
+           ++spos;
+           upos += 3;
+         } else if (sc >= 0x80) {
+           ++spos;
+           upos += 2;
+         } else {
+           ++spos;
+           ++upos;
+         }
+      }
     }
 
     public static bool ByteArrayEquals(byte[] a, byte[] b) {

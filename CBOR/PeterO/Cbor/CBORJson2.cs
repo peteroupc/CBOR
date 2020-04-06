@@ -1,5 +1,5 @@
 /*
-Written by Peter O. in 2014.
+Written by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
@@ -34,37 +34,70 @@ namespace PeterO.Cbor {
     private StringBuilder sb;
     private int index;
     private int endPos;
+    private static byte[] valueEmptyBytes = new byte[0];
 
-    private string NextJSONString() {
+    private byte[] NextJSONString() {
       int c;
       int startIndex = this.index;
-      for (var i = 0; i < 64; ++i) {
+      byte[] jbytes = this.bytes;
+      for (var i = 0; i < 256; ++i) {
         if (this.index >= this.endPos) {
           this.RaiseError("Unterminated string");
         }
-        c = ((int)this.bytes[this.index++]) & 0xff;
+        c = ((int)jbytes[this.index++]) & 0xff;
         if (c < 0x20) {
           this.RaiseError("Invalid character in string literal");
         }
-        if (c == '\\' || c >= 0x80) {
+        if (c == '\\') {
           break;
-        }
-        if (c == 0x22) {
-          if (i == 0) {
-            return String.Empty;
+        } else if (c == 0x22) {
+          int isize = (this.index - startIndex) - 1;
+          if (isize == 0) {
+            return valueEmptyBytes;
           }
-          var buf = new char[i];
-          for (var j = 0; j < i; ++j) {
-            buf[j] = (char)this.bytes[startIndex + j];
-          }
-          return new String(buf, 0, buf.Length);
+          var buf = new byte[isize];
+          Array.Copy(jbytes, startIndex, buf, 0, isize);
+          return buf;
+        } else if (c < 0x80) {
+          continue;
+        } else if (c >= 0xc2 && c <= 0xdf) {
+              int c1 = this.index < this.endPos ?
+                ((int)this.bytes[this.index++]) & 0xff : -1;
+              if (c1 < 0x80 || c1 > 0xbf) {
+                this.RaiseError("Invalid encoding");
+              }
+        } else if (c >= 0xe0 && c <= 0xef) {
+              int c1 = this.index < this.endPos ?
+                ((int)this.bytes[this.index++]) & 0xff : -1;
+              int c2 = this.index < this.endPos ?
+                ((int)this.bytes[this.index++]) & 0xff : -1;
+              int lower = (c == 0xe0) ? 0xa0 : 0x80;
+              int upper = (c == 0xed) ? 0x9f : 0xbf;
+              if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf) {
+                this.RaiseError("Invalid encoding");
+              }
+        } else if (c >= 0xf0 && c <= 0xf4) {
+              int c1 = this.index < this.endPos ?
+                ((int)this.bytes[this.index++]) & 0xff : -1;
+              int c2 = this.index < this.endPos ?
+                ((int)this.bytes[this.index++]) & 0xff : -1;
+              int c3 = this.index < this.endPos ?
+                ((int)this.bytes[this.index++]) & 0xff : -1;
+              int lower = (c == 0xf0) ? 0x90 : 0x80;
+              int upper = (c == 0xf4) ? 0x8f : 0xbf;
+              if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf ||
+                c3 < 0x80 || c3 > 0xbf) {
+                this.RaiseError("Invalid encoding");
+              }
+        } else {
+              this.RaiseError("Invalid encoding");
         }
       }
       this.index = startIndex;
       this.sb = this.sb ?? new StringBuilder();
       this.sb.Remove(0, this.sb.Length);
       while (true) {
-        c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
+        c = this.index < this.endPos ? ((int)jbytes[this.index++]) &
           0xff : -1;
         if (c == -1) {
           this.RaiseError("Unterminated string");
@@ -74,7 +107,7 @@ namespace PeterO.Cbor {
         }
         switch (c) {
           case '\\':
-            c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
+            c = this.index < this.endPos ? ((int)jbytes[this.index++]) &
               0xff : -1;
             switch (c) {
               case '\\':
@@ -103,7 +136,7 @@ namespace PeterO.Cbor {
                 // Consists of 4 hex digits
                 for (var i = 0; i < 4; ++i) {
                   int ch = this.index < this.endPos ?
-                    (int)this.bytes[this.index++] : -1;
+                    (int)jbytes[this.index++] : -1;
                   if (ch >= '0' && ch <= '9') {
                     c <<= 4;
                     c |= ch - '0';
@@ -124,15 +157,15 @@ namespace PeterO.Cbor {
                 } else if ((c & 0xfc00) == 0xd800) {
                   int ch;
                   if (this.index >= this.endPos - 1 ||
-                    this.bytes[this.index] != (byte)'\\' ||
-                    this.bytes[this.index + 1] != (byte)0x75) {
+                    jbytes[this.index] != (byte)'\\' ||
+                    jbytes[this.index + 1] != (byte)0x75) {
                     this.RaiseError("Invalid escaped character");
                   }
                   this.index += 2;
                   var c2 = 0;
                   for (var i = 0; i < 4; ++i) {
                     ch = this.index < this.endPos ?
-                      ((int)this.bytes[this.index++]) & 0xff : -1;
+                      ((int)jbytes[this.index++]) & 0xff : -1;
                     if (ch >= '0' && ch <= '9') {
                       c2 <<= 4;
                       c2 |= ch - '0';
@@ -165,13 +198,13 @@ namespace PeterO.Cbor {
             }
             break;
           case 0x22: // double quote
-            return this.sb.ToString();
+            return DataUtilities.GetUtf8Bytes(this.sb.ToString(), false);
           default: {
             if (c <= 0x7f) {
               this.sb.Append((char)c);
             } else if (c >= 0xc2 && c <= 0xdf) {
               int c1 = this.index < this.endPos ?
-                ((int)this.bytes[this.index++]) & 0xff : -1;
+                ((int)jbytes[this.index++]) & 0xff : -1;
               if (c1 < 0x80 || c1 > 0xbf) {
                 this.RaiseError("Invalid encoding");
               }
@@ -179,9 +212,9 @@ namespace PeterO.Cbor {
               this.sb.Append((char)c);
             } else if (c >= 0xe0 && c <= 0xef) {
               int c1 = this.index < this.endPos ?
-                ((int)this.bytes[this.index++]) & 0xff : -1;
+                ((int)jbytes[this.index++]) & 0xff : -1;
               int c2 = this.index < this.endPos ?
-                ((int)this.bytes[this.index++]) & 0xff : -1;
+                ((int)jbytes[this.index++]) & 0xff : -1;
               int lower = (c == 0xe0) ? 0xa0 : 0x80;
               int upper = (c == 0xed) ? 0x9f : 0xbf;
               if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf) {
@@ -191,11 +224,11 @@ namespace PeterO.Cbor {
               this.sb.Append((char)c);
             } else if (c >= 0xf0 && c <= 0xf4) {
               int c1 = this.index < this.endPos ?
-                ((int)this.bytes[this.index++]) & 0xff : -1;
+                ((int)jbytes[this.index++]) & 0xff : -1;
               int c2 = this.index < this.endPos ?
-                ((int)this.bytes[this.index++]) & 0xff : -1;
+                ((int)jbytes[this.index++]) & 0xff : -1;
               int c3 = this.index < this.endPos ?
-                ((int)this.bytes[this.index++]) & 0xff : -1;
+                ((int)jbytes[this.index++]) & 0xff : -1;
               int lower = (c == 0xf0) ? 0x90 : 0x80;
               int upper = (c == 0xf4) ? 0x8f : 0xbf;
               if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf ||
@@ -362,7 +395,7 @@ namespace PeterO.Cbor {
           // The tokenizer already checked the string for invalid
           // surrogate pairs, so just call the CBORObject
           // constructor directly
-          obj = CBORObject.FromRaw(this.NextJSONString());
+          obj = CBORObject.FromRawUtf8(this.NextJSONString());
           nextChar[0] = this.SkipWhitespaceJSON();
           return obj;
         }
@@ -551,7 +584,7 @@ namespace PeterO.Cbor {
       CBORObject obj;
       var nextchar = new int[1];
       var seenComma = false;
-      var myHashMap = new Dictionary<CBORObject, CBORObject>();
+      var myHashMap = new SortedDictionary<CBORObject, CBORObject>();
       while (true) {
         c = this.SkipWhitespaceJSON();
         switch (c) {
@@ -579,7 +612,7 @@ namespace PeterO.Cbor {
             // The tokenizer already checked the string for invalid
             // surrogate pairs, so just call the CBORObject
             // constructor directly
-            obj = CBORObject.FromRaw(this.NextJSONString());
+            obj = CBORObject.FromRawUtf8(this.NextJSONString());
             key = obj;
             if (!this.options.AllowDuplicateKeys &&
               myHashMap.ContainsKey(obj)) {

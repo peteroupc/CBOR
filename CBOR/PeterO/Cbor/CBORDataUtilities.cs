@@ -1,5 +1,5 @@
 /*
-Written by Peter O. in 2013.
+Written by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
@@ -79,6 +79,7 @@ namespace PeterO.Cbor {
           sb.Append(simvalue);
           break;
         case CBORType.FloatingPoint: {
+          // TODO: Avoid converting to double
           double f = obj.AsDoubleValue();
           simvalue = Double.IsNegativeInfinity(f) ? "-Infinity" :
 (Double.IsPositiveInfinity(f) ? "Infinity" : (Double.IsNaN(f) ?
@@ -677,6 +678,7 @@ namespace PeterO.Cbor {
 CBORObject.FromObject(ed);
         }
       } else if (kind == JSONOptions.ConversionMode.Double) {
+        // TODO: Avoid converting to double
         double dbl = EFloat.FromString(
             str,
             initialOffset,
@@ -697,6 +699,7 @@ CBORObject.FromObject(ed);
         }
         return CBORObject.FromObject(ed);
       } else if (kind == JSONOptions.ConversionMode.IntOrFloatFromDouble) {
+        // TODO: Avoid converting to double
         double dbl = EFloat.FromString(
             str,
             initialOffset,
@@ -710,6 +713,7 @@ CBORObject.FromObject(ed);
         return CBORObject.FromObject(dbl);
       } else if (kind == JSONOptions.ConversionMode.IntOrFloat) {
         EContext ctx = EContext.Binary64.WithBlankFlags();
+        // TODO: Avoid converting to double
         double dbl = EFloat.FromString(
             str,
             initialOffset,

@@ -1,5 +1,5 @@
 /*
-Written by Peter O. in 2013.
+Written by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
@@ -32,6 +32,8 @@ namespace PeterO {
   /// unpaired surrogate as a replacement character
   /// (U+FFFD).</para></summary>
   public static class DataUtilities {
+// TODO: In CodePointAt/CodePointBefore, consider adding
+// mode to return -2 or throw an exception on unpaired surrogate
     private const int StreamedStringBufferLength = 4096;
 
     /// <summary>Generates a text string from a UTF-8 byte array.</summary>

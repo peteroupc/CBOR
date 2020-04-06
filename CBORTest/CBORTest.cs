@@ -1,5 +1,5 @@
 /*
-Written by Peter O. in 2013.
+Written by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
@@ -558,8 +558,7 @@ namespace Test {
           Assert.Fail(ObjectMessage(ed));
         }
         if (!ed.AsNumber().IsInfinity() && !ed.AsNumber().IsNaN()) {
-          ed2 = EDecimal.FromEInteger(AsED(ed).ToEInteger());
-          if ((AsED(ed).CompareTo(ed2) == 0) != ed.AsNumber().IsInteger()) {
+          if (AsED(ed).IsInteger() != ed.AsNumber().IsInteger()) {
             Assert.Fail(ObjectMessage(ed));
           }
         }
@@ -895,17 +894,17 @@ namespace Test {
         (byte)0xc2, (byte)0xa3, 0x49, 0x4d, 0x43, 0x40, 0x25, 0x31, 0x3b,
         0x22,
       };
-      this.TestEquivJSONOne(jsonBytes);
+      TestEquivJSONOne(jsonBytes);
       jsonBytes = new byte[] {
         0x22, 0x35, 0x54, 0x30, 0x4d, 0x2d, 0x2b, 0x5c,
         0x75, 0x64, 0x38, 0x36, 0x38, 0x5c, 0x75, 0x44, 0x63, 0x46, 0x32, 0x4f,
         0x34, 0x4e, 0x34,
         (byte)0xe0, (byte)0xa3, (byte)0xac, 0x2b, 0x31, 0x23, 0x22,
       };
-      this.TestEquivJSONOne(jsonBytes);
+      TestEquivJSONOne(jsonBytes);
     }
 
-    public void TestEquivJSONOne(byte[] bytes) {
+    public static void TestEquivJSONOne(byte[] bytes) {
       CBORObject cbo = CBORObject.FromJSONBytes(bytes);
       Assert.IsTrue(cbo != null);
       CBORObject cbo2 = CBORObject.FromJSONString(cbo.ToJSONString());

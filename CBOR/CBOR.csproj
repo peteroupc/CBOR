@@ -36,12 +36,12 @@ Version 4.1:
   <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet></PropertyGroup>
   <ItemGroup>
 
-  <PackageReference Include='StyleCop.Analyzers' PrivateAssets='All' Version='1.2.0-beta.113'/>
+  <PackageReference Include='StyleCop.Analyzers' PrivateAssets='All' Version='1.2.0-beta.164'/>
  <AdditionalFiles Include='stylecop.json'/>
 <AdditionalFiles Include='rules.ruleset'/><PackageReference Include='PeterO.URIUtility' Version='1.0.0'/>
 
-<PackageReference Include='PeterO.Numbers' Version='1.5.1'/>
-<PackageReference Include='Microsoft.CodeAnalysis.FxCopAnalyzers' PrivateAssets='All' Version='2.9.8'/></ItemGroup>
+<PackageReference Include='PeterO.Numbers' Version='1.6.0'/>
+<PackageReference Include='Microsoft.CodeAnalysis.FxCopAnalyzers' PrivateAssets='All' Version='3.0.0-beta3.final'/></ItemGroup>
   <ItemGroup>
     <Compile Remove='PeterO\Cbor\FastInteger2.cs'/>
   </ItemGroup>

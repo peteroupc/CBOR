@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="../packages/Microsoft.NetFramework.Analyzers.2.9.8/build/Microsoft.NetFramework.Analyzers.props" Condition="Exists('../packages/Microsoft.NetFramework.Analyzers.2.9.8/build/Microsoft.NetFramework.Analyzers.props')" />
-  <Import Project="../packages/Microsoft.NetCore.Analyzers.2.9.8/build/Microsoft.NetCore.Analyzers.props" Condition="Exists('../packages/Microsoft.NetCore.Analyzers.2.9.8/build/Microsoft.NetCore.Analyzers.props')" />
-  <Import Project="../packages/Microsoft.CodeQuality.Analyzers.2.9.8/build/Microsoft.CodeQuality.Analyzers.props" Condition="Exists('../packages/Microsoft.CodeQuality.Analyzers.2.9.8/build/Microsoft.CodeQuality.Analyzers.props')" />
-  <Import Project="../packages/Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8/build/Microsoft.CodeAnalysis.VersionCheckAnalyzer.props" Condition="Exists('../packages/Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8/build/Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" />
-  <Import Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />
+<?xml version='1.0' encoding='UTF-8'?>
+<Project DefaultTargets='Build' ToolsVersion='4.0' xmlns='http://schemas.microsoft.com/developer/msbuild/2003'>
+  <Import Condition='Exists(&apos;../packages/Microsoft.NetFramework.Analyzers.2.9.8/build/Microsoft.NetFramework.Analyzers.props&apos;)' Project='../packages/Microsoft.NetFramework.Analyzers.2.9.8/build/Microsoft.NetFramework.Analyzers.props'/>
+  <Import Condition='Exists(&apos;../packages/Microsoft.NetCore.Analyzers.2.9.8/build/Microsoft.NetCore.Analyzers.props&apos;)' Project='../packages/Microsoft.NetCore.Analyzers.2.9.8/build/Microsoft.NetCore.Analyzers.props'/>
+  <Import Condition='Exists(&apos;../packages/Microsoft.CodeQuality.Analyzers.2.9.8/build/Microsoft.CodeQuality.Analyzers.props&apos;)' Project='../packages/Microsoft.CodeQuality.Analyzers.2.9.8/build/Microsoft.CodeQuality.Analyzers.props'/>
+  <Import Condition='Exists(&apos;../packages/Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8/build/Microsoft.CodeAnalysis.VersionCheckAnalyzer.props&apos;)' Project='../packages/Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8/build/Microsoft.CodeAnalysis.VersionCheckAnalyzer.props'/>
+  <Import Condition='Exists(&apos;$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props&apos;)' Project='$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props'/>
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Configuration Condition=' &apos;$(Configuration)&apos; == &apos;&apos; '>Debug</Configuration>
+    <Platform Condition=' &apos;$(Platform)&apos; == &apos;&apos; '>AnyCPU</Platform>
     <ProjectGuid>{B38659A7-A3DB-4CD1-8DFF-641B579E5092}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -16,10 +16,10 @@
     <AssemblyName>CBORDocs2</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp />
+    <NuGetPackageImportStamp/>
     <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=' &apos;$(Configuration)|$(Platform)&apos; == &apos;Debug|AnyCPU&apos; '>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -31,7 +31,7 @@
     <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=' &apos;$(Configuration)|$(Platform)&apos; == &apos;Release|AnyCPU&apos; '>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
@@ -43,34 +43,34 @@
     <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <AdditionalFiles Include="stylecop.json" />
-    <AdditionalFiles Include="rules.ruleset" />
-    <PackageReference Include="StyleCop.Analyzers">
+    <Compile Include='Program.cs'/>
+    <Compile Include='Properties\AssemblyInfo.cs'/>
+    <AdditionalFiles Include='stylecop.json'/>
+    <AdditionalFiles Include='rules.ruleset'/>
+    <PackageReference Include='StyleCop.Analyzers'>
       <Version>1.1.118</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers">
-      <Version>2.9.8</Version>
+    <PackageReference Include='Microsoft.CodeAnalysis.FxCopAnalyzers'>
+      <Version>3.0.0-beta3.final</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CBORDocs\CBORDocs.csproj">
+    <ProjectReference Include='..\CBORDocs\CBORDocs.csproj'>
       <Project>{B4719819-FE90-4A02-A71B-0169583B4752}</Project>
       <Name>CBORDocs</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project='$(MSBuildToolsPath)\Microsoft.CSharp.targets'/>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.<Target Name="BeforeBuild"></Target><Target Name="AfterBuild"></Target>-->
-  <PropertyGroup />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+  <PropertyGroup/>
+  <Target BeforeTargets='PrepareForBuild' Name='EnsureNuGetPackageBuildImports'>
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105.The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('../packages/Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8/build/Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" Text="$([System.String]::Format('$(ErrorText)', '../packages/Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8/build/Microsoft.CodeAnalysis.VersionCheckAnalyzer.props'))" />
-    <Error Condition="!Exists('../packages/Microsoft.CodeQuality.Analyzers.2.9.8/build/Microsoft.CodeQuality.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '../packages/Microsoft.CodeQuality.Analyzers.2.9.8/build/Microsoft.CodeQuality.Analyzers.props'))" />
-    <Error Condition="!Exists('../packages/Microsoft.NetCore.Analyzers.2.9.8/build/Microsoft.NetCore.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '../packages/Microsoft.NetCore.Analyzers.2.9.8/build/Microsoft.NetCore.Analyzers.props'))" />
-    <Error Condition="!Exists('../packages/Microsoft.NetFramework.Analyzers.2.9.8/build/Microsoft.NetFramework.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '../packages/Microsoft.NetFramework.Analyzers.2.9.8/build/Microsoft.NetFramework.Analyzers.props'))" />
+    <Error Condition='!Exists(&apos;../packages/Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8/build/Microsoft.CodeAnalysis.VersionCheckAnalyzer.props&apos;)' Text='$([System.String]::Format(&apos;$(ErrorText)&apos;, &apos;../packages/Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8/build/Microsoft.CodeAnalysis.VersionCheckAnalyzer.props&apos;))'/>
+    <Error Condition='!Exists(&apos;../packages/Microsoft.CodeQuality.Analyzers.2.9.8/build/Microsoft.CodeQuality.Analyzers.props&apos;)' Text='$([System.String]::Format(&apos;$(ErrorText)&apos;, &apos;../packages/Microsoft.CodeQuality.Analyzers.2.9.8/build/Microsoft.CodeQuality.Analyzers.props&apos;))'/>
+    <Error Condition='!Exists(&apos;../packages/Microsoft.NetCore.Analyzers.2.9.8/build/Microsoft.NetCore.Analyzers.props&apos;)' Text='$([System.String]::Format(&apos;$(ErrorText)&apos;, &apos;../packages/Microsoft.NetCore.Analyzers.2.9.8/build/Microsoft.NetCore.Analyzers.props&apos;))'/>
+    <Error Condition='!Exists(&apos;../packages/Microsoft.NetFramework.Analyzers.2.9.8/build/Microsoft.NetFramework.Analyzers.props&apos;)' Text='$([System.String]::Format(&apos;$(ErrorText)&apos;, &apos;../packages/Microsoft.NetFramework.Analyzers.2.9.8/build/Microsoft.NetFramework.Analyzers.props&apos;))'/>
   </Target>
 </Project>

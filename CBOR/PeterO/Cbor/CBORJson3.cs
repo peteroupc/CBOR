@@ -1,5 +1,5 @@
 /*
-Written by Peter O. in 2014.
+Written by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
@@ -558,7 +558,7 @@ namespace PeterO.Cbor {
       CBORObject obj;
       var nextchar = new int[1];
       var seenComma = false;
-      var myHashMap = new Dictionary<CBORObject, CBORObject>();
+      var myHashMap = new SortedDictionary<CBORObject, CBORObject>();
       while (true) {
         c = this.SkipWhitespaceJSON();
         switch (c) {

@@ -31,20 +31,20 @@ namespace Test {
       }
     }
 
-    private static int[] MajorTypes = {
+    private static int[] valueMajorTypes = {
       0, 1, 3, 4, 5,
     };
-    private static int[] MajorTypesTop = {
+    private static int[] valueMajorTypesTop = {
       0, 1, 3, 4, 4, 4, 4, 4, 5, 5, 5,
       5, 5, 5, 5, 5, 5, 5, 5, 5,
     };
 
-    private static int[] Escapes = {
+    private static int[] valueEscapes = {
       (int)'\\', (int)'/', (int)'\"',
       (int)'b', (int)'f', (int)'n', (int)'r', (int)'t', (int)'u',
     };
 
-    private static char[] EscapeChars = {
+    private static char[] valueEscapeChars = {
       '\\', '/', '\"',
       (char)8, (char)12, '\n', '\r', '\t', (char)0,
     };
@@ -60,7 +60,7 @@ namespace Test {
         if (c < 10) {
           bs.Write(0x30 + c);
         } else {
-          bs.Write(0x41 + (c - 10) + ra.GetInt32(2) * 0x20);
+          bs.Write(0x41 + (c - 10) + (ra.GetInt32(2) * 0x20));
         }
         shift -= 4;
       }
@@ -94,11 +94,12 @@ namespace Test {
         }
       }
     }
-    private static void GenerateWhitespace(IRandomGenExtended ra, ByteWriter
-bs) {
+    private static void GenerateWhitespace(
+      IRandomGenExtended ra,
+      ByteWriter bs) {
       if (ra.GetInt32(10) == 0) {
         int len = ra.GetInt32(20);
-        int[] ws = {0x09, 0x0d, 0x0a, 0x20 };
+        int[] ws = { 0x09, 0x0d, 0x0a, 0x20 };
         if (ra.GetInt32(100) == 0) {
           len = ra.GetInt32(100);
         }
@@ -227,13 +228,13 @@ bs) {
             ++i;
           } else if (r == 1) {
             bs.Write((int)'\\');
-            int escindex = ra.GetInt32(Escapes.Length);
-            int esc = Escapes[escindex];
+            int escindex = ra.GetInt32(valueEscapes.Length);
+            int esc = valueEscapes[escindex];
             bs.Write((int)esc);
             if (esc == (int)'u') {
               GenerateUtf16(ra, bs, sb);
             } else {
-              sb.Append(EscapeChars[escindex]);
+              sb.Append(valueEscapeChars[escindex]);
             }
           } else {
             GenerateUtf8(ra, bs, sb, len - i);
@@ -278,7 +279,7 @@ bs) {
           ++i;
         } else if (r == 1) {
           bs.Write((int)'\\');
-          int esc = Escapes[ra.GetInt32(Escapes.Length)];
+          int esc = valueEscapes[ra.GetInt32(valueEscapes.Length)];
           bs.Write((int)esc);
           if (esc == (int)'u') {
             GenerateUtf16(ra, bs, null);
@@ -292,9 +293,9 @@ bs) {
 
     private void Generate(IRandomGenExtended r, int depth, ByteWriter bs) {
       int majorType;
-      majorType = MajorTypes[r.GetInt32(MajorTypes.Length)];
+      majorType = valueMajorTypes[r.GetInt32(valueMajorTypes.Length)];
       if (depth == 0) {
-        majorType = MajorTypesTop[r.GetInt32(MajorTypes.Length)];
+        majorType = valueMajorTypesTop[r.GetInt32(valueMajorTypes.Length)];
       }
       GenerateWhitespace(r, bs);
       if (bs.ByteLength > 2000000) {

@@ -1,5 +1,5 @@
 /*
-Written by Peter O. in 2013.
+Written by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
@@ -37,7 +37,6 @@ namespace PeterO {
   new CBORDataUtilitiesTest().TestParseJSONNumber();
   new CBORDataUtilitiesTest().TestParseJSONNumberObsolete();
   new CBORObjectTest().TestFromJSONString();
-  new CBORExtraTest().TestCustomIList();
   new CBORObjectTest().TestFromJsonStringLongKindIntOrFloat();
   new CBORObjectTest().TestFromJsonStringLongKindIntOrFloatFromDouble();
   new CBORObjectTest().TestFromJsonStringLongKindFullBad();

@@ -59,7 +59,7 @@
       <Version>1.1.118</Version>
     </PackageReference>
     <PackageReference Include='Microsoft.CodeAnalysis.FxCopAnalyzers'>
-      <Version>2.9.8</Version>
+      <Version>3.0.0-beta3.final</Version>
     </PackageReference>
     <PackageReference Include='PeterO.DataUtilities'>
       <Version>1.1.0</Version>

@@ -30,26 +30,26 @@ namespace Test {
       }
     }
 
-    private void GenerateArgument(
+    private static void GenerateArgument(
       IRandomGenExtended r,
       int majorType,
       int len,
       ByteWriter bs) {
-      var minArg = 0;
       var maxArg = 4;
-      minArg = (len < 0x18) ? 0 : ((len <= 0xff) ? 1 : ((len <= 0xffff) ? 2 :
-            (3)));
-            var sh = 0; int arg = minArg + r.GetInt32(maxArg - minArg + 1);
+      var sh = 0;
+      int minArg = (len < 0x18) ? 0 : ((len <= 0xff) ? 1 :
+          ((len <= 0xffff) ? 2 : 3));
+      int arg = minArg + r.GetInt32(maxArg - minArg + 1);
       switch (arg) {
         case 0:
-          bs.Write((majorType * 0x20) + len);;
+          bs.Write((majorType * 0x20) + len);
           break;
         case 1:
-          bs.Write((majorType * 0x20) + 0x18);;
+          bs.Write((majorType * 0x20) + 0x18);
           bs.Write(len & 0xff);
           break;
         case 2:
-          bs.Write((majorType * 0x20) + 0x19);;
+          bs.Write((majorType * 0x20) + 0x19);
           sh = 8;
           for (int i = 0; i < 2; ++i) {
             bs.Write((len >> sh) & 0xff);
@@ -57,7 +57,7 @@ namespace Test {
           }
           break;
         case 3:
-          bs.Write((majorType * 0x20) + 0x1a);;
+          bs.Write((majorType * 0x20) + 0x1a);
           sh = 24;
           for (int i = 0; i < 4; ++i) {
             bs.Write((len >> sh) & 0xff);
@@ -65,7 +65,7 @@ namespace Test {
           }
           break;
         case 4:
-          bs.Write((majorType * 0x20) + 0x1b);;
+          bs.Write((majorType * 0x20) + 0x1b);
           for (int i = 0; i < 4; ++i) {
             bs.Write(0);
           }
@@ -79,11 +79,11 @@ namespace Test {
     }
 
     private static int[]
-    MajorTypes = {
+    valueMajorTypes = {
       0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4,
       4, 5, 6, 6, 7, 7, 7, 7, 7, 7,
     };
-    private static int[] MajorTypesHighLength = {
+    private static int[] valueMajorTypesHighLength = {
       0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 6,
       6, 7, 7, 7, 7, 7, 7,
     };
@@ -127,10 +127,10 @@ namespace Test {
     }
 
     private void Generate(IRandomGenExtended r, int depth, ByteWriter bs) {
-      int majorType = MajorTypes[r.GetInt32(MajorTypes.Length)];
+      int majorType = valueMajorTypes[r.GetInt32(valueMajorTypes.Length)];
       if (bs.ByteLength > 2000000) {
-        majorType = MajorTypesHighLength[r.GetInt32(
-              MajorTypesHighLength.Length)];
+        majorType = valueMajorTypesHighLength[r.GetInt32(
+              valueMajorTypesHighLength.Length)];
       }
       if (majorType == 3 || majorType == 2) {
         int len = r.GetInt32(1000);
@@ -144,10 +144,10 @@ namespace Test {
         // TODO: Ensure key uniqueness
         if (r.GetInt32(2) == 0) {
           // Indefinite length
-          bs.Write(0x1f + (majorType * 0x20));;
+          bs.Write(0x1f + (majorType * 0x20));
           while (len > 0) {
             int sublen = r.GetInt32(len + 1);
-            this.GenerateArgument(r, majorType, sublen, bs);
+            GenerateArgument(r, majorType, sublen, bs);
             if (majorType == 3) {
               GenerateUtf8(r, bs, sublen);
             } else {
@@ -160,7 +160,7 @@ namespace Test {
           bs.Write(0xff);
         } else {
           // Definite length
-          this.GenerateArgument(r, majorType, len, bs);
+          GenerateArgument(r, majorType, len, bs);
           if (majorType == 3) {
             GenerateUtf8(r, bs, len);
           } else {
@@ -178,9 +178,9 @@ namespace Test {
         }
         bool indefiniteLength = r.GetInt32(2) == 0;
         if (indefiniteLength) {
-          bs.Write(0x1f + (majorType * 0x20));;
+          bs.Write(0x1f + (majorType * 0x20));
         } else {
-          this.GenerateArgument(r, majorType, len, bs);
+          GenerateArgument(r, majorType, len, bs);
         }
         for (int i = 0; i < len; ++i) {
           this.Generate(r, depth + 1, bs);
@@ -196,10 +196,10 @@ namespace Test {
       int arg = r.GetInt32(5);
       switch (arg) {
         case 0:
-          bs.Write(majorType * 0x20 + r.GetInt32(0x18));
+          bs.Write((majorType * 0x20) + r.GetInt32(0x18));
           break;
         case 1:
-          bs.Write((majorType * 0x20) + 0x18);;
+          bs.Write((majorType * 0x20) + 0x18);
           if (majorType == 7) {
             bs.Write(32 + r.GetInt32(224));
           } else {
@@ -207,19 +207,19 @@ namespace Test {
           }
           break;
         case 2:
-          bs.Write((majorType * 0x20) + 0x19);;
+          bs.Write((majorType * 0x20) + 0x19);
           for (int i = 0; i < 2; ++i) {
             bs.Write(r.GetInt32(256));
           }
           break;
         case 3:
-          bs.Write((majorType * 0x20) + 0x1a);;
+          bs.Write((majorType * 0x20) + 0x1a);
           for (int i = 0; i < 4; ++i) {
             bs.Write(r.GetInt32(256));
           }
           break;
         case 4:
-          bs.Write((majorType * 0x20) + 0x1b);;
+          bs.Write((majorType * 0x20) + 0x1b);
           for (int i = 0; i < 8; ++i) {
             bs.Write(r.GetInt32(256));
           }

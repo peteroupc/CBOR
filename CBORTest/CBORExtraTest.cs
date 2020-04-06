@@ -1,6 +1,8 @@
 #pragma warning disable SA1118
+#pragma warning disable SA1034
+#pragma warning disable SA2227
 /*
-Written by Peter O. in 2013.
+Written by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
@@ -161,23 +163,23 @@ namespace Test {
       A,
       B,
       C,
-    };
+    }
 
     [Flags]
-    public enum CFE {
+    public enum CustomBits {
       A = 1,
       B = 2,
       C = 4,
-    };
+    }
 
-    public sealed class CustomIListContainer {
-      public CustomIList CList {
+    public sealed class CustomCollectionContainer {
+      public CustomCollection CList {
         get;
         set;
       }
     }
 
-    public sealed class CustomIList : IList<CustomEnum> {
+    public sealed class CustomCollection : IList<CustomEnum> {
       private List<CustomEnum> w = new List<CustomEnum>();
 
       public CustomEnum this[int index] {
@@ -246,19 +248,19 @@ System.Collections.IEnumerable.GetEnumerator() {
 
     [Test]
     public void TestCustomFlagsEnum() {
-      var cbor = CBORObject.FromObject(CFE.A | CFE.B);
+      var cbor = CBORObject.FromObject(CustomBits.A | CustomBits.B);
       Assert.AreEqual(CBORObject.FromObject(3), cbor);
-      var cfe = cbor.ToObject<CFE>();
-      Assert.AreEqual(CFE.A | CFE.B, cfe);
-      cbor = CBORObject.FromObject(CFE.A);
+      var cfe = cbor.ToObject<CustomBits>();
+      Assert.AreEqual(CustomBits.A | CustomBits.B, cfe);
+      cbor = CBORObject.FromObject(CustomBits.A);
       Assert.AreEqual(CBORObject.FromObject(1), cbor);
-      cfe = cbor.ToObject<CFE>();
-      Assert.AreEqual(CFE.A, cfe);
+      cfe = cbor.ToObject<CustomBits>();
+      Assert.AreEqual(CustomBits.A, cfe);
     }
 
     [Test]
-    public void TestCustomIList() {
-      var clist = new CustomIList();
+    public void TestCustomCollection() {
+      var clist = new CustomCollection();
       clist.Add(CustomEnum.A);
       clist.Add(CustomEnum.B);
       clist.Add(CustomEnum.C);
@@ -267,7 +269,7 @@ System.Collections.IEnumerable.GetEnumerator() {
       if (cbor == null) {
         Assert.Fail();
       }
-      var clist2 = cbor.ToObject<CustomIList>();
+      var clist2 = cbor.ToObject<CustomCollection>();
       Assert.AreEqual(3, clist2.Count);
       Assert.AreEqual(CustomEnum.A, clist2[0]);
       Assert.AreEqual(CustomEnum.B, clist2[1]);
@@ -275,14 +277,14 @@ System.Collections.IEnumerable.GetEnumerator() {
       if (clist2 == null) {
         Assert.Fail();
       }
-      var clc = new CustomIListContainer();
+      var clc = new CustomCollectionContainer();
       clc.CList = clist2;
       cbor = CBORObject.FromObject(clc);
       Console.WriteLine(cbor);
       if (cbor == null) {
         Assert.Fail();
       }
-      var clistc = cbor.ToObject<CustomIListContainer>();
+      var clistc = cbor.ToObject<CustomCollectionContainer>();
       Assert.AreEqual(3, clistc.CList.Count);
       Assert.AreEqual(CustomEnum.A, clistc.CList[0]);
       Assert.AreEqual(CustomEnum.B, clistc.CList[1]);

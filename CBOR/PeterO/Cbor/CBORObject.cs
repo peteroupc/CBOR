@@ -14,7 +14,6 @@ using PeterO.Numbers;
 
 // TODO: In next major version, make .Keys and .Values read-only
 // TODO: Consider storing text strings as bytes, at least in some cases
-// TODO: Consider using red/black trees rather than hash tables as maps
 namespace PeterO.Cbor {
   /// <summary>
   /// <para>Represents an object in Concise Binary Object Representation
@@ -179,6 +178,7 @@ CBORObject.FromObject(Double.NaN);
     private const int CBORObjectTypeTagged = 6;
     private const int CBORObjectTypeSimpleValue = 7;
     private const int CBORObjectTypeDouble = 8;
+    private const int CBORObjectTypeTextStringUtf8 = 9;
 
     private const int StreamedStringBufferLength = 4096;
 
@@ -522,9 +522,9 @@ CBORObject.FromObject(Double.NaN);
           case CBORObjectTypeByteString:
             return CBORType.ByteString;
           case CBORObjectTypeTextString:
+          case CBORObjectTypeTextStringUtf8:
             return CBORType.TextString;
-          default:
-            throw new InvalidOperationException("Unexpected data type");
+          default: throw new InvalidOperationException("Unexpected data type");
         }
       }
     }
@@ -1911,6 +1911,11 @@ if (value >= 0L && value < 24L) {
         }
         cbor = cbor.UntagOne();
       }
+      if (cbor.ItemType == CBORObjectTypeTextStringUtf8) {
+        byte[] bytes = (byte[])this.ThisItem;
+        size = checked(size + IntegerByteLength(bytes.Length));
+        return checked(size + bytes.Length);
+      }
       switch (cbor.Type) {
         case CBORType.Integer: {
           if (cbor.CanValueFitInInt64()) {
@@ -2935,7 +2940,7 @@ Int32.MaxValue ? array.Length : (array.Length + 1));
     public static CBORObject NewMap() {
       return new CBORObject(
           CBORObjectTypeMap,
-          new Dictionary<CBORObject, CBORObject>());
+          new SortedDictionary<CBORObject, CBORObject>());
     }
 
     /// <summary>
@@ -4636,6 +4641,9 @@ bytes[offset + 1] != 0) {
         case CBORObjectTypeTextString: {
           return (string)this.ThisItem;
         }
+        case CBORObjectTypeTextStringUtf8: {
+          return DataUtilities.GetUtf8String((byte[])this.ThisItem, false);
+        }
         default: throw new InvalidOperationException("Not a text string type");
       }
     }
@@ -4829,7 +4837,8 @@ bytes[offset + 1] != 0) {
                 other.EncodeToBytes());
             break;
           }
-          case CBORObjectTypeByteString: {
+          case CBORObjectTypeByteString:
+          case CBORObjectTypeTextStringUtf8: {
             cmp = CBORUtilities.ByteArrayCompareLengthFirst((byte[])objA,
                 (byte[])objB);
             break;
@@ -4885,10 +4894,16 @@ bytes[offset + 1] != 0) {
         cmp = CBORUtilities.ByteArrayCompare(
             this.EncodeToBytes(),
             other.EncodeToBytes());
+      } else if ((typeB == CBORObjectTypeTextString && typeA ==
+          CBORObjectTypeTextStringUtf8) ||
+          (typeA == CBORObjectTypeTextString && typeB ==
+          CBORObjectTypeTextStringUtf8)) {
+        throw new NotImplementedException();
       } else {
         /* NOTE: itemtypeValue numbers are ordered such that they
         // correspond to the lexicographical order of their CBOR encodings
-        // (with the exception of Integer and EInteger together, which
+        // (with the exception of Integer and EInteger together,
+        // and TextString and TextStringUtf8 together which
         // are handled above) */
         cmp = (typeA < typeB) ? -1 : 1;
       }
@@ -5075,6 +5090,10 @@ bytes[offset + 1] != 0) {
             }
             break;
           }
+          case CBORObjectTypeTextStringUtf8: {
+            // TODO: Implement this case
+            break;
+          }
           case CBORObjectTypeSimpleValue: {
             if (tagged) {
               var simpleBytes = new byte[] { tagbyte, (byte)0xf4 };
@@ -5173,11 +5192,24 @@ bytes[offset + 1] != 0) {
       if (this == otherValue) {
         return true;
       }
+      if (this.itemtypeValue == CBORObjectTypeTextString &&
+          otherValue.itemtypeValue == CBORObjectTypeTextStringUtf8) {
+         return CBORUtilities.StringEqualsUtf8(
+             (string)this.itemValue,
+             (byte[])otherValue.itemValue);
+      }
+      if (otherValue.itemtypeValue == CBORObjectTypeTextString &&
+          this.itemtypeValue == CBORObjectTypeTextStringUtf8) {
+         return CBORUtilities.StringEqualsUtf8(
+             (string)otherValue.itemValue,
+             (byte[])this.itemValue);
+      }
       if (this.itemtypeValue != otherValue.itemtypeValue) {
         return false;
       }
       switch (this.itemtypeValue) {
         case CBORObjectTypeByteString:
+        case CBORObjectTypeTextStringUtf8:
           return CBORUtilities.ByteArrayEquals(
               (byte[])this.itemValue,
               otherValue.itemValue as byte[]);
@@ -5240,6 +5272,8 @@ bytes[offset + 1] != 0) {
             case CBORObjectTypeTextString:
               itemHashCode = StringHashCode((string)this.itemValue);
               break;
+            case CBORObjectTypeTextStringUtf8:
+              throw new NotImplementedException("TODO: Implement");
             case CBORObjectTypeSimpleValue:
               itemHashCode = (int)this.itemValue;
               break;
@@ -6669,8 +6703,9 @@ this.MostOuterTag.Equals(bigTagValue);
           Write((EInteger)this.ThisItem, stream);
           break;
         }
-        case CBORObjectTypeByteString: {
-          byte[] arr = this.GetByteString();
+        case CBORObjectTypeByteString:
+        case CBORObjectTypeTextStringUtf8: {
+          byte[] arr = (byte[])this.ThisItem;
           WritePositiveInt(
             (this.Type == CBORType.ByteString) ? 2 : 3,
             arr.Length,
@@ -6723,6 +6758,13 @@ this.MostOuterTag.Equals(bigTagValue);
       return new CBORObject(CBORObjectTypeByteString, bytes);
     }
 
+    internal static CBORObject FromRawUtf8(byte[] bytes) {
+      #if DEBUG
+      CBORUtilities.CheckUtf8(bytes);
+      #endif
+      return new CBORObject(CBORObjectTypeTextStringUtf8, bytes);
+    }
+
     internal static CBORObject FromRaw(string str) {
       return new CBORObject(CBORObjectTypeTextString, str);
     }
@@ -6733,6 +6775,11 @@ this.MostOuterTag.Equals(bigTagValue);
 
     internal static CBORObject FromRaw(IDictionary<CBORObject, CBORObject>
       map) {
+      #if DEBUG
+      if (!(map is SortedDictionary<CBORObject, CBORObject>)) {
+        throw new InvalidOperationException();
+      }
+      #endif
       return new CBORObject(CBORObjectTypeMap, map);
     }
 
@@ -6751,13 +6798,6 @@ this.MostOuterTag.Equals(bigTagValue);
         return fixedObj;
       }
       int majortype = firstbyte >> 5;
-      if (firstbyte >= 0x61 && firstbyte < 0x78) {
-        // text string length 1 to 23
-        string s = GetOptimizedStringIfShortAscii(data, 0);
-        if (s != null) {
-          return new CBORObject(CBORObjectTypeTextString, s);
-        }
-      }
       if ((firstbyte & 0x1c) == 0x18) {
         // contains 1 to 8 extra bytes of additional information
         long uadditional = 0;
@@ -6846,14 +6886,9 @@ this.MostOuterTag.Equals(bigTagValue);
         return new CBORObject(CBORObjectTypeByteString, ret);
       }
       if (majortype == 3) { // short text string
-        var ret = new StringBuilder(firstbyte - 0x60);
-        DataUtilities.ReadUtf8FromBytes(
-          data,
-          1,
-          firstbyte - 0x60,
-          ret,
-          false);
-        return new CBORObject(CBORObjectTypeTextString, ret.ToString());
+        var ret = new byte[firstbyte - 0x60];
+        Array.Copy(data, 1, ret, 0, firstbyte - 0x60);
+        return new CBORObject(CBORObjectTypeTextStringUtf8, ret);
       }
       if (firstbyte == 0x80) {
         // empty array
