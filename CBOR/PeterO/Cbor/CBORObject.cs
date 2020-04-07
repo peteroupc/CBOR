@@ -6760,7 +6760,9 @@ this.MostOuterTag.Equals(bigTagValue);
 
     internal static CBORObject FromRawUtf8(byte[] bytes) {
       #if DEBUG
-      CBORUtilities.CheckUtf8(bytes);
+      if (!CBORUtilities.CheckUtf8(bytes)) {
+        throw new InvalidOperationException();
+      }
       #endif
       return new CBORObject(CBORObjectTypeTextStringUtf8, bytes);
     }
@@ -6888,6 +6890,9 @@ this.MostOuterTag.Equals(bigTagValue);
       if (majortype == 3) { // short text string
         var ret = new byte[firstbyte - 0x60];
         Array.Copy(data, 1, ret, 0, firstbyte - 0x60);
+      if (!CBORUtilities.CheckUtf8(ret)) {
+          throw new CBORException("Invalid encoding");
+        }
         return new CBORObject(CBORObjectTypeTextStringUtf8, ret);
       }
       if (firstbyte == 0x80) {

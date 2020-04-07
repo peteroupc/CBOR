@@ -6495,41 +6495,28 @@
 </doc>
 <doc name="M:PeterO.DataUtilities.CodePointAt(System.String,System.Int32)">
 
-            <summary>Gets the Unicode code point at the given index of the
-            string.</summary>
-            <param name='str'>The parameter <paramref name='str'/> is a text
-            string.</param>
-            <param name='index'>Index of the current position into the
-            string.</param>
-            <returns>The Unicode code point at the given position. Returns -1
-            if <paramref name='index'/> is 0 or less, or is greater than the
-            string's length. Returns the replacement character (U+FFFD) if the
+        <summary>Gets the Unicode code point at the given index of the
+            string.</summary><param name='str'>The parameter <paramref name='str'/> is a text
+            string.</param><param name='index'>Index of the current position into the
+            string.</param><returns>The Unicode code point at the given position. Returns -1
+            if <paramref name='index'/> is 0 or less, or is at least the string's length. Returns the replacement character (U+FFFD) if the
             code point at that position is an unpaired surrogate code point. If
             the return value is 65536 (0x10000) or greater, the code point
-            takes up two UTF-16 code units.</returns>
-            <exception cref='ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception>
-
+            takes up two UTF-16 code units.</returns><exception cref='ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.DataUtilities.CodePointAt(System.String,System.Int32,System.Int32)">
 
-            <summary>Gets the Unicode code point at the given index of the
-            string.</summary>
-            <param name='str'>The parameter <paramref name='str'/> is a text
-            string.</param>
-            <param name='index'>Index of the current position into the
-            string.</param>
-            <param name='surrogateBehavior'>Specifies what kind of value to
+        <summary>Gets the Unicode code point at the given index of the
+            string.</summary><param name='str'>The parameter <paramref name='str'/> is a text
+            string.</param><param name='index'>Index of the current position into the
+            string.</param><param name='surrogateBehavior'>Specifies what kind of value to
             return if the code point at the given index is an unpaired
             surrogate code point: if 0, return the replacement character (U+FFFD); if 1, return the value of the surrogate code point; if
-            neither 0 nor 1, return -1.</param>
-            <returns>The Unicode code point at the given position. Returns -1
-            if <paramref name='index'/> is 0 or less, or is greater than the
-            string's length. Returns a value as specified under <paramref name='surrogateBehavior'/> if the code point at that position is an
+            neither 0 nor 1, return -1.</param><returns>The Unicode code point at the given position. Returns -1
+            if <paramref name='index'/> is 0 or less, or is at least the string's length. Returns a value as specified under <paramref name='surrogateBehavior'/> if the code point at that position is an
             unpaired surrogate code point. If the return value is 65536
             (0x10000) or greater, the code point takes up two UTF-16 code
-            units.</returns>
-            <exception cref='ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception>
-            <example><para>The following example shows how to iterate a text string code
+            units.</returns><exception cref='ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception><example><para>The following example shows how to iterate a text string code
             point by code point, terminating the loop when an unpaired
             surrogate is found.</para>
             <code>for (var i = 0;i&lt;str.Length; ++i) { int codePoint =
@@ -6537,46 +6524,32 @@
             Unpaired surrogate */ } Console.WriteLine("codePoint:"+codePoint); if
             (codePoint &gt;= 0x10000) { i++; /* Supplementary code point */ } }</code> .
             </example>
-
 </doc>
 <doc name="M:PeterO.DataUtilities.CodePointBefore(System.String,System.Int32)">
 
-            <summary>Gets the Unicode code point just before the given index of
-            the string.</summary>
-            <param name='str'>The parameter <paramref name='str'/> is a text
-            string.</param>
-            <param name='index'>Index of the current position into the
-            string.</param>
-            <returns>The Unicode code point at the previous position. Returns
-            -1 if <paramref name='index'/> is 0 or less, or is greater than the
-            string's length. Returns the replacement character (U+FFFD) if the
+        <summary>Gets the Unicode code point just before the given index of
+            the string.</summary><param name='str'>The parameter <paramref name='str'/> is a text
+            string.</param><param name='index'>Index of the current position into the
+            string.</param><returns>The Unicode code point at the previous position. Returns
+            -1 if <paramref name='index'/> is 0 or less, or is at least the string's length. Returns the replacement character (U+FFFD) if the
             code point at the previous position is an unpaired surrogate code
             point. If the return value is 65536 (0x10000) or greater, the code
-            point takes up two UTF-16 code units.</returns>
-            <exception cref='ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception>
-
+            point takes up two UTF-16 code units.</returns><exception cref='ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.DataUtilities.CodePointBefore(System.String,System.Int32,System.Int32)">
 
-            <summary>Gets the Unicode code point just before the given index of
-            the string.</summary>
-            <param name='str'>The parameter <paramref name='str'/> is a text
-            string.</param>
-            <param name='index'>Index of the current position into the
-            string.</param>
-            <param name='surrogateBehavior'>Specifies what kind of value to
+        <summary>Gets the Unicode code point just before the given index of
+            the string.</summary><param name='str'>The parameter <paramref name='str'/> is a text
+            string.</param><param name='index'>Index of the current position into the
+            string.</param><param name='surrogateBehavior'>Specifies what kind of value to
             return if the previous code point is an unpaired surrogate code
             point: if 0, return the replacement character (U+FFFD); if 1,
             return the value of the surrogate code point; if neither 0 nor 1,
-            return -1.</param>
-            <returns>The Unicode code point at the previous position. Returns
-            -1 if <paramref name='index'/> is 0 or less, or is greater than the
-            string's length. Returns a value as specified under <paramref name='surrogateBehavior'/> if the code point at the previous
+            return -1.</param><returns>The Unicode code point at the previous position. Returns
+            -1 if <paramref name='index'/> is 0 or less, or is at least the string's length. Returns a value as specified under <paramref name='surrogateBehavior'/> if the code point at the previous
             position is an unpaired surrogate code point. If the return value
             is 65536 (0x10000) or greater, the code point takes up two UTF-16
-            code units.</returns>
-            <exception cref='ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception>
-
+            code units.</returns><exception cref='ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.DataUtilities.CodePointCompare(System.String,System.String)">
 

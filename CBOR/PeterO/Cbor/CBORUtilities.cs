@@ -98,22 +98,19 @@ namespace PeterO.Cbor {
          return c;
        } else if (c >= 0xc2 && c <= 0xdf) {
          ++offset;
-              int c1 = offset < endPos ?
+         int c1 = offset < endPos ?
                 ((int)utf8[offset++]) & 0xff : -1;
-              if (c1 < 0x80 || c1 > 0xbf) {
-                throw new InvalidOperationException("Invalid encoding");
-              }
-              return ((c - 0xc0) << 6) | (c1 - 0x80);
+                return (
+                  c1 < 0x80 || c1 > 0xbf) ? (-2) : (((c - 0xc0) << 6) |
+(c1 - 0x80));
             } else if (c >= 0xe0 && c <= 0xef) {
               ++offset;
               int c1 = offset < endPos ? ((int)utf8[offset++]) & 0xff : -1;
               int c2 = offset < endPos ? ((int)utf8[offset++]) & 0xff : -1;
               int lower = (c == 0xe0) ? 0xa0 : 0x80;
               int upper = (c == 0xed) ? 0x9f : 0xbf;
-              if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf) {
-                throw new InvalidOperationException("Invalid encoding");
-              }
-              return ((c - 0xc0) << 12) | ((c1 - 0x80) << 6) | (c2 - 0x80);
+              return (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf) ?
+(-2) : (((c - 0xc0) << 12) | ((c1 - 0x80) << 6) | (c2 - 0x80));
             } else if (c >= 0xf0 && c <= 0xf4) {
               ++offset;
               int c1 = offset < endPos ? ((int)utf8[offset++]) & 0xff : -1;
@@ -123,21 +120,24 @@ namespace PeterO.Cbor {
               int upper = (c == 0xf4) ? 0x8f : 0xbf;
               if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf ||
                 c3 < 0x80 || c3 > 0xbf) {
-                throw new InvalidOperationException("Invalid encoding");
+                return -2;
               }
               return ((c - 0xc0) << 18) | ((c1 - 0x80) << 12) | ((c2 - 0x80) <<
                   6) | (c3 - 0x80);
             } else {
-              throw new InvalidOperationException("Invalid encoding");
+                return -2;
             }
     }
 
-    public static void CheckUtf8(byte[] utf8) {
+    public static bool CheckUtf8(byte[] utf8) {
       var upos = 0;
       while (true) {
          int sc = Utf8CodePointAt(utf8, upos);
          if (sc == -1) {
-           return;
+           return true;
+         }
+         if (sc == -2) {
+           return false;
          }
          if (sc >= 0x10000) {
            upos += 4;
@@ -171,15 +171,18 @@ namespace PeterO.Cbor {
       while (true) {
          int sc = DataUtilities.CodePointAt(str, spos, 1);
          int uc = Utf8CodePointAt(utf8, upos);
+         if (uc == -2) {
+           throw new InvalidOperationException("Invalid encoding");
+         }
          if (sc == -1) {
            return uc == -1;
          }
-if (sc != uc) {
+         if (sc != uc) {
            return false;
          }
          if (sc >= 0x10000) {
            spos += 2;
-           upos += 4;
+  upos += 4;
          } else if (sc >= 0x800) {
            ++spos;
            upos += 3;

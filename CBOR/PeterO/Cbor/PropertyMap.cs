@@ -262,7 +262,7 @@ namespace PeterO.Cbor {
     #endif
 
     private static readonly IDictionary<Type, IList<PropertyData>>
-    ValuePropertyLists = new SortedDictionary<Type, IList<PropertyData>>();
+    ValuePropertyLists = new Dictionary<Type, IList<PropertyData>>();
 
     private static string RemoveIsPrefix(string pn) {
       return CBORUtilities.NameStartsWithWord(pn, "Is") ? pn.Substring(2) :
@@ -929,7 +929,7 @@ namespace PeterO.Cbor {
         #endif
         if (dictObject == null) {
           if (t.Equals(typeof(IDictionary))) {
-            dictObject = new SortedDictionary<object, object>();
+            dictObject = new Dictionary<object, object>();
             keyType = typeof(object);
             valueType = typeof(object);
           }
