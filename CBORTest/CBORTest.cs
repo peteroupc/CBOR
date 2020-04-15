@@ -15,150 +15,150 @@ using PeterO.Numbers;
 namespace Test {
   [TestFixture]
   public class CBORTest {
-private static byte[] RandomUtf8Bytes(RandomGenerator rg) {
-    using (var ms = new MemoryStream()) {
-      for (var i = 0; i < 5; ++i) {
-       int v = rg.UniformInt(4);
-       if (v == 0) {
-         int b = 0xe0 + rg.UniformInt(0xee - 0xe1);
-         ms.WriteByte((byte)b);
-       if (b == 0xe0) {
-         ms.WriteByte((byte)(0xa0 + rg.UniformInt(0x20)));
-       } else if (b == 0xed) {
-         ms.WriteByte((byte)(0x80 + rg.UniformInt(0x20)));
- } else {
- ms.WriteByte((byte)(0x80 + rg.UniformInt(0x40)));
-}
-         ms.WriteByte((byte)(0x80 + rg.UniformInt(0x40)));
-       } else if (v == 1) {
-         int b = 0xf0 + rg.UniformInt(0xf5 - 0xf0);
-         ms.WriteByte((byte)b);
-       if (b == 0xf0) {
-         ms.WriteByte((byte)(0x90 + rg.UniformInt(0x30)));
-       } else if (b == 0xf4) {
-         ms.WriteByte((byte)(0x80 + rg.UniformInt(0x10)));
- } else {
- ms.WriteByte((byte)(0x80 + rg.UniformInt(0x40)));
-}
-         ms.WriteByte((byte)(0x80 + rg.UniformInt(0x40)));
-         ms.WriteByte((byte)(0x80 + rg.UniformInt(0x40)));
-       } else if (v == 2) {
-         ms.WriteByte((byte)(0xc2 + rg.UniformInt(0xe0 - 0xc2)));
-         ms.WriteByte((byte)(0x80 + rg.UniformInt(0x40)));
-       } else {
-         int ch = rg.UniformInt(0x80);
-         if (ch == (int)'\\' || ch == (int)'\"' || ch < 0x20) {
-           ch = (int)'?';
-         }
-         ms.WriteByte((byte)ch);
-       }
-       }
-      return ms.ToArray();
+    private static byte[] RandomUtf8Bytes(RandomGenerator rg) {
+      using (var ms = new MemoryStream()) {
+        for (var i = 0; i < 5; ++i) {
+          int v = rg.UniformInt(4);
+          if (v == 0) {
+            int b = 0xe0 + rg.UniformInt(0xee - 0xe1);
+            ms.WriteByte((byte)b);
+            if (b == 0xe0) {
+              ms.WriteByte((byte)(0xa0 + rg.UniformInt(0x20)));
+            } else if (b == 0xed) {
+              ms.WriteByte((byte)(0x80 + rg.UniformInt(0x20)));
+            } else {
+              ms.WriteByte((byte)(0x80 + rg.UniformInt(0x40)));
+            }
+            ms.WriteByte((byte)(0x80 + rg.UniformInt(0x40)));
+          } else if (v == 1) {
+            int b = 0xf0 + rg.UniformInt(0xf5 - 0xf0);
+            ms.WriteByte((byte)b);
+            if (b == 0xf0) {
+              ms.WriteByte((byte)(0x90 + rg.UniformInt(0x30)));
+            } else if (b == 0xf4) {
+              ms.WriteByte((byte)(0x80 + rg.UniformInt(0x10)));
+            } else {
+              ms.WriteByte((byte)(0x80 + rg.UniformInt(0x40)));
+            }
+            ms.WriteByte((byte)(0x80 + rg.UniformInt(0x40)));
+            ms.WriteByte((byte)(0x80 + rg.UniformInt(0x40)));
+          } else if (v == 2) {
+            ms.WriteByte((byte)(0xc2 + rg.UniformInt(0xe0 - 0xc2)));
+            ms.WriteByte((byte)(0x80 + rg.UniformInt(0x40)));
+          } else {
+            int ch = rg.UniformInt(0x80);
+            if (ch == (int)'\\' || ch == (int)'\"' || ch < 0x20) {
+              ch = (int)'?';
+            }
+            ms.WriteByte((byte)ch);
+          }
+        }
+        return ms.ToArray();
+      }
     }
-}
 
-[Test]
-public void TestCorrectUtf8Specific() {
-TestJsonUtf8One(new byte[] {
-  (byte)0xe8,
-  (byte)0xad,
-  (byte)0xbd,
-  (byte)0xf1,
-  (byte)0x81,
-  (byte)0x95,
-  (byte)0xb9,
-  (byte)0xc3, (byte)0x84, (byte)0xcc, (byte)0xb6, (byte)0xcd, (byte)0xa3,
-});
-TestJsonUtf8One(new byte[] {
-  (byte)0xe8,
-  (byte)0x89,
-  (byte)0xa0,
-  (byte)0xf2,
-  (byte)0x97,
-  (byte)0x84, (byte)0xbb, 0x3f, (byte)0xd1, (byte)0x83, (byte)0xd1,
-  (byte)0xb9,
-});
-TestJsonUtf8One(new byte[] {
-  (byte)0xf3,
-  (byte)0xbb,
-  (byte)0x98,
-  (byte)0x8a,
-  (byte)0xc3,
-  (byte)0x9f,
-  (byte)0xe7,
-  (byte)0xa5,
-  (byte)0x96, (byte)0xd9, (byte)0x92, (byte)0xe1, (byte)0xa3, (byte)0xad,
-});
-TestJsonUtf8One(new byte[] {
-  (byte)0xf0,
-  (byte)0xa7,
-  (byte)0xbf,
-  (byte)0x84, 0x70, 0x55,
-  (byte)0xd0, (byte)0x91, (byte)0xe8, (byte)0xbe, (byte)0x9f,
-});
-TestJsonUtf8One(new byte[] {
-  (byte)0xd9,
-  (byte)0xae,
-  (byte)0xe4,
-  (byte)0xa1,
-  (byte)0xa0,
-  (byte)0xf3,
-  (byte)0x90,
-  (byte)0x94,
-  (byte)0x99,
-  (byte)0xf3,
-  (byte)0xab,
-  (byte)0x8a, (byte)0xad, (byte)0xf4, (byte)0x88, (byte)0x9a, (byte)0x9a,
-});
-TestJsonUtf8One(new byte[] {
-  0x3d,
-  (byte)0xf2,
-  (byte)0x83,
-  (byte)0xa9,
-  (byte)0xbe,
-  (byte)0xea,
-  (byte)0xb9,
-  (byte)0xbd, (byte)0xd7, (byte)0x8b, (byte)0xe7, (byte)0xbc, (byte)0x83,
-});
-TestJsonUtf8One(new byte[] {
-  (byte)0xc4,
-  (byte)0xab, (byte)0xf4, (byte)0x8e, (byte)0x8a, (byte)0x91, 0x61, 0x4d,
-  0x3b,
-});
-TestJsonUtf8One(new byte[] {
-  (byte)0xf1,
-  (byte)0xae,
-  (byte)0x86, (byte)0xad, 0x5f, (byte)0xd0, (byte)0xb7, 0x6e, (byte)0xda,
-  (byte)0x85,
-});
-}
-
-public static void TestJsonUtf8One(byte[] bytes) {
-    string str = DataUtilities.GetUtf8String(bytes, false);
-    if (bytes == null) {
-      throw new ArgumentNullException(nameof(bytes));
+    [Test]
+    public void TestCorrectUtf8Specific() {
+      TestJsonUtf8One(new byte[] {
+        (byte)0xe8,
+        (byte)0xad,
+        (byte)0xbd,
+        (byte)0xf1,
+        (byte)0x81,
+        (byte)0x95,
+        (byte)0xb9,
+        (byte)0xc3, (byte)0x84, (byte)0xcc, (byte)0xb6, (byte)0xcd, (byte)0xa3,
+      });
+      TestJsonUtf8One(new byte[] {
+        (byte)0xe8,
+        (byte)0x89,
+        (byte)0xa0,
+        (byte)0xf2,
+        (byte)0x97,
+        (byte)0x84, (byte)0xbb, 0x3f, (byte)0xd1, (byte)0x83, (byte)0xd1,
+        (byte)0xb9,
+      });
+      TestJsonUtf8One(new byte[] {
+        (byte)0xf3,
+        (byte)0xbb,
+        (byte)0x98,
+        (byte)0x8a,
+        (byte)0xc3,
+        (byte)0x9f,
+        (byte)0xe7,
+        (byte)0xa5,
+        (byte)0x96, (byte)0xd9, (byte)0x92, (byte)0xe1, (byte)0xa3, (byte)0xad,
+      });
+      TestJsonUtf8One(new byte[] {
+        (byte)0xf0,
+        (byte)0xa7,
+        (byte)0xbf,
+        (byte)0x84, 0x70, 0x55,
+        (byte)0xd0, (byte)0x91, (byte)0xe8, (byte)0xbe, (byte)0x9f,
+      });
+      TestJsonUtf8One(new byte[] {
+        (byte)0xd9,
+        (byte)0xae,
+        (byte)0xe4,
+        (byte)0xa1,
+        (byte)0xa0,
+        (byte)0xf3,
+        (byte)0x90,
+        (byte)0x94,
+        (byte)0x99,
+        (byte)0xf3,
+        (byte)0xab,
+        (byte)0x8a, (byte)0xad, (byte)0xf4, (byte)0x88, (byte)0x9a, (byte)0x9a,
+      });
+      TestJsonUtf8One(new byte[] {
+        0x3d,
+        (byte)0xf2,
+        (byte)0x83,
+        (byte)0xa9,
+        (byte)0xbe,
+        (byte)0xea,
+        (byte)0xb9,
+        (byte)0xbd, (byte)0xd7, (byte)0x8b, (byte)0xe7, (byte)0xbc, (byte)0x83,
+      });
+      TestJsonUtf8One(new byte[] {
+        (byte)0xc4,
+        (byte)0xab, (byte)0xf4, (byte)0x8e, (byte)0x8a, (byte)0x91, 0x61, 0x4d,
+        0x3b,
+      });
+      TestJsonUtf8One(new byte[] {
+        (byte)0xf1,
+        (byte)0xae,
+        (byte)0x86, (byte)0xad, 0x5f, (byte)0xd0, (byte)0xb7, 0x6e, (byte)0xda,
+        (byte)0x85,
+      });
     }
-    var bytes2 = new byte[bytes.Length + 2];
-    bytes2[0] = 0x22;
-    Array.Copy(bytes, 0, bytes2, 1, bytes.Length);
-    bytes2[bytes2.Length - 1] = 0x22;
-    string str2 = CBORObject.FromJSONBytes(bytes2)
-         .AsString();
-    if (!str.Equals(str2, StringComparison.Ordinal)) {
-      Assert.AreEqual(
-        str,
-        str2,
-        TestCommon.ToByteArrayString(bytes));
-    }
-}
 
-[Test]
-public void TestCorrectUtf8() {
-  var rg = new RandomGenerator();
-  for (var i = 0; i < 500; ++i) {
-    TestJsonUtf8One(RandomUtf8Bytes(rg));
-  }
-}
+    public static void TestJsonUtf8One(byte[] bytes) {
+      string str = DataUtilities.GetUtf8String(bytes, false);
+      if (bytes == null) {
+        throw new ArgumentNullException(nameof(bytes));
+      }
+      var bytes2 = new byte[bytes.Length + 2];
+      bytes2[0] = 0x22;
+      Array.Copy(bytes, 0, bytes2, 1, bytes.Length);
+      bytes2[bytes2.Length - 1] = 0x22;
+      string str2 = CBORObject.FromJSONBytes(bytes2)
+        .AsString();
+      if (!str.Equals(str2, StringComparison.Ordinal)) {
+        Assert.AreEqual(
+          str,
+          str2,
+          TestCommon.ToByteArrayString(bytes));
+      }
+    }
+
+    [Test]
+    public void TestCorrectUtf8() {
+      var rg = new RandomGenerator();
+      for (var i = 0; i < 500; ++i) {
+        TestJsonUtf8One(RandomUtf8Bytes(rg));
+      }
+    }
 
     [Test]
     public void TestLexOrderSpecific1() {
@@ -306,7 +306,7 @@ public void TestCorrectUtf8() {
           ToObjectTest.TestToFromObjectRoundTrip(1)));
       {
         int varintTemp2 = cbor[
-          ToObjectTest.TestToFromObjectRoundTrip(1)]
+            ToObjectTest.TestToFromObjectRoundTrip(1)]
           .AsInt32();
         Assert.AreEqual(2, varintTemp2);
       }
@@ -372,7 +372,7 @@ public void TestCorrectUtf8() {
 
         Assert.IsTrue(
           ToObjectTest.TestToFromObjectRoundTrip(
-          bi).AsNumber().IsInteger());
+            bi).AsNumber().IsInteger());
 
         CBORTestCommon.AssertRoundTrip(
           ToObjectTest.TestToFromObjectRoundTrip(bi));
@@ -986,8 +986,8 @@ public void TestCorrectUtf8() {
         AddSubCompare(objectTemp, objectTemp2);
       }
       CBORObject cbor = CBORObject.FromObjectAndTag(
-        Double.NegativeInfinity,
-        1956611);
+          Double.NegativeInfinity,
+          1956611);
       CBORTestCommon.AssertRoundTrip(cbor);
       cbor =
 
@@ -1116,7 +1116,7 @@ public void TestCorrectUtf8() {
           new byte[] { (byte)0xc5, (byte)0x82, 0x3, (byte)0xc2, 0x41, 1 });
       {
         long numberTemp = EFloat.FromString("8").CompareTo(
-  (EFloat)o.ToObject(typeof(EFloat)));
+            (EFloat)o.ToObject(typeof(EFloat)));
 
         Assert.AreEqual(0, numberTemp);
       }
@@ -1128,10 +1128,10 @@ public void TestCorrectUtf8() {
       for (var i = 0; i < 3000; ++i) {
         CBORObject o1 =
           ToObjectTest.TestToFromObjectRoundTrip(
-  RandomObjects.RandomEInteger(r));
+            RandomObjects.RandomEInteger(r));
 
         CBORObject o2 = ToObjectTest.TestToFromObjectRoundTrip(
-  RandomObjects.RandomEInteger(r));
+            RandomObjects.RandomEInteger(r));
 
         if (o2.AsNumber().IsZero()) {
           continue;
@@ -1141,7 +1141,7 @@ public void TestCorrectUtf8() {
           ERational objectTemp = er;
           ERational objectTemp2;
           CBORNumber cn = CBORObject.FromObject(o1).AsNumber()
-             .Divide(CBORObject.FromObject(o2).AsNumber());
+            .Divide(CBORObject.FromObject(o2).AsNumber());
           objectTemp2 = cn.ToERational();
           TestCommon.CompareTestEqual(objectTemp, objectTemp2);
         }
@@ -1179,7 +1179,7 @@ public void TestCorrectUtf8() {
             Double.NegativeInfinity)
           .ToObject(typeof(EDecimal))).IsNegativeInfinity());
       Assert.IsTrue(
-  ((EDecimal)ToObjectTest.TestToFromObjectRoundTrip(Double.NaN)
+        ((EDecimal)ToObjectTest.TestToFromObjectRoundTrip(Double.NaN)
 
           .ToObject(typeof(EDecimal))).IsNaN());
       for (int i = -65539; i <= 65539; ++i) {
@@ -1266,7 +1266,7 @@ public void TestCorrectUtf8() {
             Single.NegativeInfinity)
           .ToObject(typeof(EDecimal))).IsNegativeInfinity());
       Assert.IsTrue(
-  ((EDecimal)ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
+        ((EDecimal)ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
 
           .ToObject(typeof(EDecimal))).IsNaN());
       for (int i = -65539; i <= 65539; ++i) {
@@ -1437,7 +1437,7 @@ public void TestCorrectUtf8() {
         throw new InvalidOperationException(String.Empty, ex);
       }
       {
-        string stringTemp = CBORObject.FromJSONString("true").ToJSONString();
+        string stringTemp = CBORObject.FromJSONString(" true ").ToJSONString();
         Assert.AreEqual(
           "true",
           stringTemp);
@@ -1493,11 +1493,11 @@ public void TestCorrectUtf8() {
     public void TestLong() {
       long[] ranges = {
         -65539, 65539, 0xfffff000L, 0x100000400L,
-        Int64.MaxValue - 1000,
-        Int64.MaxValue,
-        Int64.MinValue,
-        Int64.MinValue + 1000,
-      };
+          Int64.MaxValue - 1000,
+          Int64.MaxValue,
+          Int64.MinValue,
+          Int64.MinValue + 1000,
+        };
       for (var i = 0; i < ranges.Length; i += 2) {
         long j = ranges[i];
         while (true) {
@@ -1651,11 +1651,11 @@ public void TestCorrectUtf8() {
     [Test]
     [Timeout(5000)]
     public void TestCtap2CanonicalReferenceTest() {
-       for (var i = 4; i <= 60; ++i) {
-           // has high recursive reference depths, higher than
-           // Ctap2Canonical supports, which is 4
-           TestCtap2CanonicalReferenceTestOne(ReferenceTestObject(i));
-       }
+      for (var i = 4; i <= 60; ++i) {
+        // has high recursive reference depths, higher than
+        // Ctap2Canonical supports, which is 4
+        TestCtap2CanonicalReferenceTestOne(ReferenceTestObject(i));
+      }
     }
     public static void TestCtap2CanonicalReferenceTestOne(CBORObject root) {
       if (root == null) {
@@ -1687,25 +1687,25 @@ public void TestCorrectUtf8() {
     [Test]
     [Timeout(50000)]
     public void TestNoRecursiveExpansion() {
-       for (var i = 5; i <= 60; ++i) {
-           // has high recursive reference depths
-// var sw = new System.Diagnostics.Stopwatch();sw.Start();
-// Console.WriteLine("depth = "+i);
-           TestNoRecursiveExpansionOne(ReferenceTestObject(i));
-// Console.WriteLine("elapsed=" + sw.ElapsedMilliseconds + " ms");
-       }
+      for (var i = 5; i <= 60; ++i) {
+        // has high recursive reference depths
+        // var sw = new System.Diagnostics.Stopwatch();sw.Start();
+        // Console.WriteLine("depth = "+i);
+        TestNoRecursiveExpansionOne(ReferenceTestObject(i));
+        // Console.WriteLine("elapsed=" + sw.ElapsedMilliseconds + " ms");
+      }
     }
 
     [Test]
     [Timeout(50000)]
     public void TestNoRecursiveExpansionJSON() {
-       for (var i = 5; i <= 60; ++i) {
-           // has high recursive reference depths
-// var sw = new System.Diagnostics.Stopwatch();sw.Start();
-// Console.WriteLine("depth = "+i);
-           TestNoRecursiveExpansionJSONOne(ReferenceTestObject(i));
-// Console.WriteLine("elapsed=" + sw.ElapsedMilliseconds + " ms");
-       }
+      for (var i = 5; i <= 60; ++i) {
+        // has high recursive reference depths
+        // var sw = new System.Diagnostics.Stopwatch();sw.Start();
+        // Console.WriteLine("depth = "+i);
+        TestNoRecursiveExpansionJSONOne(ReferenceTestObject(i));
+        // Console.WriteLine("elapsed=" + sw.ElapsedMilliseconds + " ms");
+      }
     }
 
     public static void TestNoRecursiveExpansionOne(CBORObject root) {
@@ -1904,8 +1904,8 @@ public void TestCorrectUtf8() {
                     ex.InnerException.ToString()) +
                   "\n" + ToByteArrayStringFrom(array, objpos);
                 failString = failString.Substring(
-                  0,
-                  Math.Min(2000, failString.Length));
+                    0,
+                    Math.Min(2000, failString.Length));
                 Assert.Fail(failString);
                 throw new InvalidOperationException(String.Empty, ex);
               }
@@ -1926,8 +1926,8 @@ public void TestCorrectUtf8() {
                     ex.InnerException.ToString()) +
                   "\n" + ToByteArrayStringFrom(o.EncodeToBytes(), 0);
                 failString = failString.Substring(
-                  0,
-                  Math.Min(2000, failString.Length));
+                    0,
+                    Math.Min(2000, failString.Length));
                 Assert.Fail(failString);
                 throw new InvalidOperationException(String.Empty, ex);
               }
@@ -1940,8 +1940,8 @@ public void TestCorrectUtf8() {
                   ex.InnerException.ToString()) +
                 "\n" + ToByteArrayStringFrom(array, objpos);
               failString = failString.Substring(
-                0,
-                Math.Min(2000, failString.Length));
+                  0,
+                  Math.Min(2000, failString.Length));
               Assert.Fail(failString);
               throw new InvalidOperationException(String.Empty, ex);
               // }
@@ -1975,8 +1975,8 @@ public void TestCorrectUtf8() {
                   ex.InnerException.ToString());
               failString += "\n" + TestCommon.ToByteArrayString(array);
               failString = failString.Substring(
-                0,
-                Math.Min(2000, failString.Length));
+                  0,
+                  Math.Min(2000, failString.Length));
               Assert.Fail(failString);
               throw new InvalidOperationException(String.Empty, ex);
             }
@@ -2003,8 +2003,8 @@ public void TestCorrectUtf8() {
                   ex.InnerException.ToString());
               failString += "\n" + TestCommon.ToByteArrayString(array);
               failString = failString.Substring(
-                0,
-                Math.Min(2000, failString.Length));
+                  0,
+                  Math.Min(2000, failString.Length));
               Assert.Fail(failString);
               throw new InvalidOperationException(String.Empty, ex);
             }
@@ -2017,8 +2017,8 @@ public void TestCorrectUtf8() {
                 ex.InnerException.ToString());
             failString += "\n" + TestCommon.ToByteArrayString(array);
             failString = failString.Substring(
-              0,
-              Math.Min(2000, failString.Length));
+                0,
+                Math.Min(2000, failString.Length));
             Assert.Fail(failString);
             throw new InvalidOperationException(String.Empty, ex);
           }
@@ -2039,30 +2039,30 @@ public void TestCorrectUtf8() {
 
     private static void TestReadWriteIntOne(int val) {
       try {
-          {
-            using (var ms = new MemoryStream()) {
-              MiniCBOR.WriteInt32(val, ms);
-              byte[] msarray = ms.ToArray();
-              using (var ms2 = new MemoryStream(msarray)) {
-                Assert.AreEqual(
-                   val,
-                   MiniCBOR.ReadInt32(ms2),
-                   TestCommon.ToByteArrayString(msarray));
-              }
+        {
+          using (var ms = new MemoryStream()) {
+            MiniCBOR.WriteInt32(val, ms);
+            byte[] msarray = ms.ToArray();
+            using (var ms2 = new MemoryStream(msarray)) {
+              Assert.AreEqual(
+                val,
+                MiniCBOR.ReadInt32(ms2),
+                TestCommon.ToByteArrayString(msarray));
             }
           }
-          {
-            using (var ms = new MemoryStream()) {
-              CBORObject.Write(val, ms);
-              byte[] msarray = ms.ToArray();
-              using (var ms2 = new MemoryStream(msarray)) {
-                Assert.AreEqual(
-                   val,
-                   MiniCBOR.ReadInt32(ms2),
-                   TestCommon.ToByteArrayString(msarray));
-              }
+        }
+        {
+          using (var ms = new MemoryStream()) {
+            CBORObject.Write(val, ms);
+            byte[] msarray = ms.ToArray();
+            using (var ms2 = new MemoryStream(msarray)) {
+              Assert.AreEqual(
+                val,
+                MiniCBOR.ReadInt32(ms2),
+                TestCommon.ToByteArrayString(msarray));
             }
           }
+        }
       } catch (IOException ioex) {
         Assert.Fail(ioex.Message);
       }
@@ -2075,9 +2075,9 @@ public void TestCorrectUtf8() {
         TestReadWriteIntOne(i);
       }
       for (var i = 0; i < 100000; ++i) {
-          int val = unchecked((int)RandomObjects.RandomInt64(r));
-          TestReadWriteIntOne(val);
-        }
+        int val = unchecked((int)RandomObjects.RandomInt64(r));
+        TestReadWriteIntOne(val);
+      }
     }
 
     [Test]
@@ -2949,7 +2949,7 @@ public void TestCorrectUtf8() {
       }
       {
         string stringTemp = cbor[CBORObject.FromObject(
-            (double)0.0)].AsString();
+              (double)0.0)].AsString();
         Assert.AreEqual(
           "testpointzero",
           stringTemp);
@@ -2966,7 +2966,7 @@ public void TestCorrectUtf8() {
       }
       {
         string stringTemp = cbor[CBORObject.FromObject(
-            (double)0.0)].AsString();
+              (double)0.0)].AsString();
         Assert.AreEqual(
           "testpointzero",
           stringTemp);
@@ -2984,7 +2984,7 @@ public void TestCorrectUtf8() {
       }
       {
         string stringTemp = cbor[CBORObject.FromObject(
-            (double)3.0)].AsString();
+              (double)3.0)].AsString();
         Assert.AreEqual(
           "testpointzero",
           stringTemp);
@@ -3001,7 +3001,7 @@ public void TestCorrectUtf8() {
       }
       {
         string stringTemp = cbor[CBORObject.FromObject(
-            (double)3.0)].AsString();
+              (double)3.0)].AsString();
         Assert.AreEqual(
           "testpointzero",
           stringTemp);
@@ -3022,7 +3022,7 @@ public void TestCorrectUtf8() {
       EInteger minCborInteger = EInteger.FromString("-18446744073709551616");
       EInteger minInt64 = EInteger.FromString("-9223372036854775808");
       EInteger pastMaxCborInteger = EInteger.FromString(
-        "18446744073709551616");
+          "18446744073709551616");
       EInteger pastMaxInt64 = EInteger.FromString("9223372036854775808");
       EInteger pastMinCborInteger =
         EInteger.FromString("-18446744073709551617");
@@ -3202,7 +3202,7 @@ public void TestCorrectUtf8() {
       }
       try {
         CBORObject.DecodeFromBytes(CBORTestCommon.CheckEncodeToBytes(cbor),
-  options);
+          options);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
         // NOTE: Intentionally empty
@@ -3246,7 +3246,7 @@ public void TestCorrectUtf8() {
       }
       try {
         CBORObject.DecodeFromBytes(CBORTestCommon.CheckEncodeToBytes(cbor),
-  options);
+          options);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
         // NOTE: Intentionally empty
@@ -3293,7 +3293,7 @@ public void TestCorrectUtf8() {
       }
       try {
         CBORObject.DecodeFromBytes(CBORTestCommon.CheckEncodeToBytes(cbor),
-  options);
+          options);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
         // NOTE: Intentionally empty
@@ -3335,7 +3335,7 @@ public void TestCorrectUtf8() {
       }
       try {
         CBORObject.DecodeFromBytes(CBORTestCommon.CheckEncodeToBytes(cbor),
-  options);
+          options);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
         // NOTE: Intentionally empty
@@ -3375,7 +3375,7 @@ public void TestCorrectUtf8() {
       }
       try {
         CBORObject.DecodeFromBytes(CBORTestCommon.CheckEncodeToBytes(cbor),
-  options);
+          options);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
         // NOTE: Intentionally empty
@@ -3462,12 +3462,12 @@ public void TestCorrectUtf8() {
       CBORObject cbor, cbor2;
       cbor = ToObjectTest.TestToFromObjectRoundTrip(longString);
       cbor2 =
-CBORTestCommon.FromBytesTestAB(CBORTestCommon.CheckEncodeToBytes(cbor));
+        CBORTestCommon.FromBytesTestAB(CBORTestCommon.CheckEncodeToBytes(cbor));
       {
         object objectTemp = longString;
         object objectTemp2 =
-CBORObject.DecodeFromBytes(
-  CBORTestCommon.CheckEncodeToBytes(cbor)).AsString();
+          CBORObject.DecodeFromBytes(
+            CBORTestCommon.CheckEncodeToBytes(cbor)).AsString();
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       {
