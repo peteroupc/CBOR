@@ -15,7 +15,152 @@ using PeterO.Numbers;
 namespace Test {
   [TestFixture]
   public class CBORTest {
-    [Test]
+  [Test]
+private static byte[] RandomUtf8Bytes(IRandomGenExtended rg) {
+    using (var ms = new MemoryStream()) {
+      for (var i = 0; i < 5; ++i) {
+       int v = rg.GetInt32(4);
+       if (v == 0) {
+         int b = 0xe0 + rg.GetInt32(0xee - 0xe1);
+         ms.WriteByte((byte)b);
+       if (b == 0xe0) {
+         ms.WriteByte((byte)(0xa0 + rg.GetInt32(0x20)));
+       } else if (b == 0xed) {
+         ms.WriteByte((byte)(0x80 + rg.GetInt32(0x20)));
+ } else {
+ ms.WriteByte((byte)(0x80 + rg.GetInt32(0x40)));
+}
+         ms.WriteByte((byte)(0x80 + rg.GetInt32(0x40)));
+       } else if (v == 1) {
+         int b = 0xf0 + rg.GetInt32(0xf5 - 0xf0);
+         ms.WriteByte((byte)b);
+       if (b == 0xf0) {
+         ms.WriteByte((byte)(0x90 + rg.GetInt32(0x30)));
+       } else if (b == 0xf4) {
+         ms.WriteByte((byte)(0x80 + rg.GetInt32(0x10)));
+ } else {
+ ms.WriteByte((byte)(0x80 + rg.GetInt32(0x40)));
+}
+         ms.WriteByte((byte)(0x80 + rg.GetInt32(0x40)));
+         ms.WriteByte((byte)(0x80 + rg.GetInt32(0x40)));
+       } else if (v == 2) {
+         ms.WriteByte((byte)(0xc2 + rg.GetInt32(0xe0 - 0xc2)));
+         ms.WriteByte((byte)(0x80 + rg.GetInt32(0x40)));
+       } else {
+         int ch = rg.GetInt32(0x80);
+         if (ch == (int)'\\' || ch== (int)'\"' || ch < 0x20) {
+           ch = (int)'?';
+         }
+         ms.WriteByte((byte)ch);
+       }
+       }
+      return ms.ToArray();
+    }
+}
+
+[Test]
+public void TestCorrectUtf8Specific() {
+TestJsonUtf8One(new byte[] {
+  (byte)0xe8,
+  (byte)0xad,
+  (byte)0xbd,
+  (byte)0xf1,
+  (byte)0x81,
+  (byte)0x95,
+  (byte)0xb9,
+  (byte)0xc3, (byte)0x84, (byte)0xcc, (byte)0xb6, (byte)0xcd, (byte)0xa3,
+});
+TestJsonUtf8One(new byte[] {
+  (byte)0xe8,
+  (byte)0x89,
+  (byte)0xa0,
+  (byte)0xf2,
+  (byte)0x97,
+  (byte)0x84, (byte)0xbb, 0x3f, (byte)0xd1, (byte)0x83, (byte)0xd1,
+  (byte)0xb9,
+});
+TestJsonUtf8One(new byte[] {
+  (byte)0xf3,
+  (byte)0xbb,
+  (byte)0x98,
+  (byte)0x8a,
+  (byte)0xc3,
+  (byte)0x9f,
+  (byte)0xe7,
+  (byte)0xa5,
+  (byte)0x96, (byte)0xd9, (byte)0x92, (byte)0xe1, (byte)0xa3, (byte)0xad,
+});
+TestJsonUtf8One(new byte[] {
+  (byte)0xf0,
+  (byte)0xa7,
+  (byte)0xbf,
+  (byte)0x84, 0x70, 0x55,
+  (byte)0xd0, (byte)0x91, (byte)0xe8, (byte)0xbe, (byte)0x9f,
+});
+TestJsonUtf8One(new byte[] {
+  (byte)0xd9,
+  (byte)0xae,
+  (byte)0xe4,
+  (byte)0xa1,
+  (byte)0xa0,
+  (byte)0xf3,
+  (byte)0x90,
+  (byte)0x94,
+  (byte)0x99,
+  (byte)0xf3,
+  (byte)0xab,
+  (byte)0x8a, (byte)0xad, (byte)0xf4, (byte)0x88, (byte)0x9a, (byte)0x9a,
+});
+TestJsonUtf8One(new byte[] {
+  0x3d,
+  (byte)0xf2,
+  (byte)0x83,
+  (byte)0xa9,
+  (byte)0xbe,
+  (byte)0xea,
+  (byte)0xb9,
+  (byte)0xbd, (byte)0xd7, (byte)0x8b, (byte)0xe7, (byte)0xbc, (byte)0x83,
+});
+TestJsonUtf8One(new byte[] {
+  (byte)0xc4,
+  (byte)0xab, (byte)0xf4, (byte)0x8e, (byte)0x8a, (byte)0x91, 0x61, 0x4d,
+  0x3b,
+});
+TestJsonUtf8One(new byte[] {
+  (byte)0xf1,
+  (byte)0xae,
+  (byte)0x86, (byte)0xad, 0x5f, (byte)0xd0, (byte)0xb7, 0x6e, (byte)0xda,
+  (byte)0x85,
+});
+}
+
+public static void TestJsonUtf8One(byte[] bytes) {
+    string str = DataUtilities.GetUtf8String(bytes, false);
+    if (bytes == null) {
+      throw new ArgumentNullException(nameof(bytes));
+    }
+    var bytes2 = new byte[bytes.Length + 2];
+    bytes2[0] = 0x22;
+    Array.Copy(bytes, 0, bytes2, 1, bytes.Length);
+    bytes2[bytes2.Length - 1] = 0x22;
+    string str2 = CBORObject.FromJSONBytes(bytes2)
+         .AsString();
+    if (!str.Equals(str2, StringComparison.Ordinal)) {
+      Assert.AreEqual(
+        str,
+        str2,
+        TestCommon.ToByteArrayString(bytes));
+    }
+}
+
+[Test]
+public void TestCorrectUtf8() {
+  var rg = new RandomGenerator();
+  for (var i = 0; i < 500; ++i) {
+    TestJsonUtf8One(RandomUtf8Bytes(rg));
+  }
+}
+
     public void TestLexOrderSpecific1() {
       var bytes1 = new byte[] {
         129, 165, 27, 0, 0, 65, 2, 0, 0, 144, 172, 71,
@@ -548,40 +693,51 @@ namespace Test {
       for (var i = 0; i < 5000; ++i) {
         CBORObject ed = CBORTestCommon.RandomNumber(r);
         EDecimal ed2;
+        CBORNumber edNumber = ed.AsNumber();
 
         ed2 = EDecimal.FromDouble(AsED(ed).ToDouble());
-        if ((AsED(ed).CompareTo(ed2) == 0) != ed.AsNumber().CanFitInDouble()) {
+        if ((AsED(ed).CompareTo(ed2) == 0) != edNumber.CanFitInDouble()) {
           Assert.Fail(ObjectMessage(ed));
         }
         ed2 = EDecimal.FromSingle(AsED(ed).ToSingle());
-        if ((AsED(ed).CompareTo(ed2) == 0) != ed.AsNumber().CanFitInSingle()) {
+        if ((AsED(ed).CompareTo(ed2) == 0) != edNumber.CanFitInSingle()) {
           Assert.Fail(ObjectMessage(ed));
         }
-        if (!ed.AsNumber().IsInfinity() && !ed.AsNumber().IsNaN()) {
-          if (AsED(ed).IsInteger() != ed.AsNumber().IsInteger()) {
+        if (!edNumber.IsInfinity() && !edNumber.IsNaN()) {
+          if (AsED(ed).IsInteger() != edNumber.IsInteger()) {
             Assert.Fail(ObjectMessage(ed));
           }
         }
-        if (!ed.AsNumber().IsInfinity() && !ed.AsNumber().IsNaN()) {
-          EInteger bi = AsEI(ed);
-          if (ed.AsNumber().IsInteger()) {
-            if ((bi.GetSignedBitLengthAsEInteger().ToInt32Checked() <= 31) !=
-              ed.AsNumber().CanFitInInt32()) {
+        if (!edNumber.IsInfinity() && !edNumber.IsNaN()) {
+          EDecimal edec = AsED(ed);
+          EInteger bi = null;
+          try {
+             bi = edec.ToSizedEInteger(128);
+          } catch (OverflowException) {
+             bi = null;
+          }
+          if (edNumber.IsInteger()) {
+            if ((bi != null &&
+bi.GetSignedBitLengthAsEInteger().ToInt32Checked() <= 31) !=
+              edNumber.CanFitInInt32()) {
               Assert.Fail(ObjectMessage(ed));
             }
           }
-          if ((bi.GetSignedBitLengthAsEInteger().ToInt32Checked() <= 31) !=
-            ed.AsNumber().CanTruncatedIntFitInInt32()) {
+          if ((bi != null &&
+bi.GetSignedBitLengthAsEInteger().ToInt32Checked() <= 31) !=
+            edNumber.CanTruncatedIntFitInInt32()) {
             Assert.Fail(ObjectMessage(ed));
           }
-          if (ed.AsNumber().IsInteger()) {
-            if ((bi.GetSignedBitLengthAsEInteger().ToInt32Checked() <= 63) !=
-              ed.AsNumber().CanFitInInt64()) {
+          if (edNumber.IsInteger()) {
+            if ((bi != null &&
+bi.GetSignedBitLengthAsEInteger().ToInt32Checked() <= 63) !=
+              edNumber.CanFitInInt64()) {
               Assert.Fail(ObjectMessage(ed));
             }
           }
-          if ((bi.GetSignedBitLengthAsEInteger().ToInt32Checked() <= 63) !=
-            ed.AsNumber().CanTruncatedIntFitInInt64()) {
+          if ((bi != null &&
+bi.GetSignedBitLengthAsEInteger().ToInt32Checked() <= 63) !=
+            edNumber.CanTruncatedIntFitInInt64()) {
             Assert.Fail(ObjectMessage(ed));
           }
         }
@@ -1810,8 +1966,7 @@ namespace Test {
                 failString = failString.Substring(
                     0,
                     Math.Min(2000, failString.Length));
-                Assert.Fail(failString);
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(failString);
               }
               String jsonString = String.Empty;
               try {
@@ -1832,13 +1987,11 @@ namespace Test {
                 failString = failString.Substring(
                     0,
                     Math.Min(2000, failString.Length));
-                Assert.Fail(failString);
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(failString);
               }
             } catch (CBORException) {
               // Expected exception
             } catch (Exception ex) {
-              // if (!ex.Message.Equals("Not a number type")) {
               string failString = ex.ToString() +
                 (ex.InnerException == null ? String.Empty : "\n" +
                   ex.InnerException.ToString()) +
@@ -1846,9 +1999,7 @@ namespace Test {
               failString = failString.Substring(
                   0,
                   Math.Min(2000, failString.Length));
-              Assert.Fail(failString);
-              throw new InvalidOperationException(String.Empty, ex);
-              // }
+              throw new InvalidOperationException(failString);
             }
           }
         }

@@ -99,34 +99,52 @@ namespace PeterO.Cbor {
        } else if (c >= 0xc2 && c <= 0xdf) {
          ++offset;
          int c1 = offset < endPos ?
-                ((int)utf8[offset++]) & 0xff : -1;
+                ((int)utf8[offset]) & 0xff : -1;
                 return (
-                  c1 < 0x80 || c1 > 0xbf) ? (-2) : (((c - 0xc0) << 6) |
+                  c1 < 0x80 || c1 > 0xbf) ? -2 : (((c - 0xc0) << 6) |
 (c1 - 0x80));
             } else if (c >= 0xe0 && c <= 0xef) {
               ++offset;
               int c1 = offset < endPos ? ((int)utf8[offset++]) & 0xff : -1;
-              int c2 = offset < endPos ? ((int)utf8[offset++]) & 0xff : -1;
+              int c2 = offset < endPos ? ((int)utf8[offset]) & 0xff : -1;
               int lower = (c == 0xe0) ? 0xa0 : 0x80;
               int upper = (c == 0xed) ? 0x9f : 0xbf;
               return (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf) ?
-(-2) : (((c - 0xc0) << 12) | ((c1 - 0x80) << 6) | (c2 - 0x80));
+-2 : (((c - 0xe0) << 12) | ((c1 - 0x80) << 6) | (c2 - 0x80));
             } else if (c >= 0xf0 && c <= 0xf4) {
               ++offset;
               int c1 = offset < endPos ? ((int)utf8[offset++]) & 0xff : -1;
               int c2 = offset < endPos ? ((int)utf8[offset++]) & 0xff : -1;
-              int c3 = offset < endPos ? ((int)utf8[offset++]) & 0xff : -1;
+              int c3 = offset < endPos ? ((int)utf8[offset]) & 0xff : -1;
               int lower = (c == 0xf0) ? 0x90 : 0x80;
               int upper = (c == 0xf4) ? 0x8f : 0xbf;
               if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf ||
                 c3 < 0x80 || c3 > 0xbf) {
                 return -2;
               }
-              return ((c - 0xc0) << 18) | ((c1 - 0x80) << 12) | ((c2 - 0x80) <<
+              return ((c - 0xf0) << 18) | ((c1 - 0x80) << 12) | ((c2 - 0x80) <<
                   6) | (c3 - 0x80);
             } else {
                 return -2;
             }
+    }
+
+    public static bool CheckUtf16(string str) {
+      var upos = 0;
+      while (true) {
+        if (upos == str.Length) {
+          return true;
+        }
+        int sc = DataUtilities.CodePointAt(str, upos, 1);
+        if (sc < 0) {
+          return false;
+        }
+        if (sc >= 0x10000) {
+          upos += 2;
+        } else {
+           ++upos;
+         }
+      }
     }
 
     public static bool CheckUtf8(byte[] utf8) {
@@ -182,7 +200,7 @@ namespace PeterO.Cbor {
          }
          if (sc >= 0x10000) {
            spos += 2;
-  upos += 4;
+           upos += 4;
          } else if (sc >= 0x800) {
            ++spos;
            upos += 3;

@@ -1,6 +1,10 @@
 Release notes
 ---------------------
 
+### Version 4.1.1
+
+- Fix issue where some non-basic characters in JSON strings encoded in UTF-8 were read incorrectly by the CBORObject.FromJSONBytes method
+
 ### Version 4.1
 
 - Added the following to the CBORObject class: Entries property; ToJSONBytes, CalcEncodedSize, WithTag, and FromJSONBytes methods.

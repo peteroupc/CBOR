@@ -238,12 +238,8 @@ decimalString) {
       EInteger emant = RandomEInteger(r);
       EInteger eexp = null;
       if (r.GetInt32(100) < 95) {
-        int exp = 0;
-        if (r.GetInt32(100) < 80) {
-          exp = r.GetInt32(50) - 25;
-        } else {
-          exp = r.GetInt32(5000) - 2500;
-        }
+        int exp = (r.GetInt32(100) < 80) ? (r.GetInt32(50) - 25) :
+(r.GetInt32(5000) - 2500);
         eexp = EInteger.FromInt32(exp);
       } else {
         eexp = RandomEInteger(r);

@@ -220,7 +220,7 @@ namespace PeterO.Cbor {
               if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf) {
                 this.RaiseError("Invalid encoding");
               }
-              c = ((c - 0xc0) << 12) | ((c1 - 0x80) << 6) | (c2 - 0x80);
+              c = ((c - 0xe0) << 12) | ((c1 - 0x80) << 6) | (c2 - 0x80);
               this.sb.Append((char)c);
             } else if (c >= 0xf0 && c <= 0xf4) {
               int c1 = this.index < this.endPos ?
@@ -235,7 +235,7 @@ namespace PeterO.Cbor {
                 c3 < 0x80 || c3 > 0xbf) {
                 this.RaiseError("Invalid encoding");
               }
-              c = ((c - 0xc0) << 18) | ((c1 - 0x80) << 12) | ((c2 - 0x80) <<
+              c = ((c - 0xf0) << 18) | ((c1 - 0x80) << 12) | ((c2 - 0x80) <<
                   6) | (c3 - 0x80);
               this.sb.Append((char)((((c - 0x10000) >> 10) & 0x3ff) |
                     0xd800));

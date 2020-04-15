@@ -255,6 +255,10 @@ CBORObject.FromObject(Double.NaN);
       if (type == CBORObjectTypeArray && !(item is IList<CBORObject>)) {
         throw new InvalidOperationException();
       }
+      if (type == CBORObjectTypeTextStringUtf8 &&
+          !CBORUtilities.CheckUtf8((byte[])item)) {
+        throw new InvalidOperationException();
+      }
       #endif
       this.itemtypeValue = type;
       this.itemValue = item;
@@ -6759,15 +6763,15 @@ this.MostOuterTag.Equals(bigTagValue);
     }
 
     internal static CBORObject FromRawUtf8(byte[] bytes) {
-      #if DEBUG
-      if (!CBORUtilities.CheckUtf8(bytes)) {
-        throw new InvalidOperationException();
-      }
-      #endif
       return new CBORObject(CBORObjectTypeTextStringUtf8, bytes);
     }
 
     internal static CBORObject FromRaw(string str) {
+      #if DEBUG
+      if (!CBORUtilities.CheckUtf16(str)) {
+        throw new InvalidOperationException();
+      }
+      #endif
       return new CBORObject(CBORObjectTypeTextString, str);
     }
 
