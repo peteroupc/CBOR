@@ -66,7 +66,7 @@ namespace Test {
         var numberString = (string)numberinfo["number"]
           .ToObject(typeof(string));
         CBORObject cbornumber =
-          ToObjectTest.TestToFromObjectRoundTrip (
+          ToObjectTest.TestToFromObjectRoundTrip(
             EDecimal.FromString(numberString));
         if (!numberinfo["integer"].Equals(CBORObject.Null)) {
           Assert.AreEqual(
@@ -615,7 +615,7 @@ namespace Test {
         Assert.AreEqual(objectTemp, objectTemp2);
       }
 
-      bool bnan = ToObjectTest.TestToFromObjectRoundTrip (
+      bool bnan = ToObjectTest.TestToFromObjectRoundTrip(
           ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
           .ToObject(typeof(ERational))).AsNumber().IsNaN();
       Assert.IsTrue(bnan);
@@ -633,8 +633,8 @@ namespace Test {
           .ToObject(typeof(ERational));
         Assert.AreEqual(objectTemp, objectTemp2);
       }
-      Assert.IsTrue (
-        ToObjectTest.TestToFromObjectRoundTrip (
+      Assert.IsTrue(
+        ToObjectTest.TestToFromObjectRoundTrip(
           ToObjectTest.TestToFromObjectRoundTrip(Double.NaN)
           .ToObject(typeof(ERational))).AsNumber().IsNaN());
     }
@@ -699,7 +699,7 @@ namespace Test {
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
-          ToObjectTest.TestToFromObjectRoundTrip (
+          ToObjectTest.TestToFromObjectRoundTrip(
             EDecimal.FromString((string)numberinfo["number"].ToObject(
               typeof(string))));
         if ((bool)numberinfo["int16"].AsBoolean()) {
@@ -1189,7 +1189,7 @@ namespace Test {
       co.Add("a", 1);
       co.Add("b", 2);
       Dictionary<string, int> intDict =
-        (Dictionary<string, int>)co.ToObject (
+        (Dictionary<string, int>)co.ToObject(
           typeof(Dictionary<string, int>));
       Assert.AreEqual(2, intDict.Count);
       Assert.IsTrue(intDict.ContainsKey("a"));
@@ -1200,7 +1200,7 @@ namespace Test {
       if (intDict["b"] != 2) {
         Assert.Fail();
       }
-      IDictionary<string, int> iintDict = (IDictionary<string, int>)co.ToObject (
+      IDictionary<string, int> iintDict = (IDictionary<string, int>)co.ToObject(
           typeof(IDictionary<string, int>));
       Assert.AreEqual(2, iintDict.Count);
       Assert.IsTrue(iintDict.ContainsKey("a"));
@@ -1426,7 +1426,7 @@ namespace Test {
         }
         if (!obj.Equals(obj2)) {
           if (obj is byte[]) {
-            TestCommon.AssertByteArraysEqual (
+            TestCommon.AssertByteArraysEqual(
               (byte[])obj,
               (byte[])obj2);
           } else if (obj is string[]) {

@@ -1,5 +1,5 @@
 /*
-Written by Peter O. in 2013.
+Written by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
@@ -16,32 +16,39 @@ namespace Test {
   [TestFixture]
   public class CBORTest {
 private static byte[] RandomUtf8Bytes(RandomGenerator rg) {
-    using(var ms=new MemoryStream()) {
-       for(var i=0;i<5;i++){
-       int v=rg.UniformInt(4);
-       if(v==0) {
-         int b=0xe0+rg.UniformInt(0xee-0xe1);
+    using (var ms = new MemoryStream()) {
+      for (var i = 0; i < 5; ++i) {
+       int v = rg.UniformInt(4);
+       if (v == 0) {
+         int b = 0xe0 + rg.UniformInt(0xee - 0xe1);
          ms.WriteByte((byte)b);
-         if(b==0xe0)ms.WriteByte((byte)(0xa0+rg.UniformInt(0x20)));
-         else if(b==0xed)ms.WriteByte((byte)(0x80+rg.UniformInt(0x20)));
-         else ms.WriteByte((byte)(0x80+rg.UniformInt(0x40)));
-         ms.WriteByte((byte)(0x80+rg.UniformInt(0x40)));
-       } else if(v==1){
-         int b=0xf0+rg.UniformInt(0xf5-0xf0);
+       if (b == 0xe0) {
+         ms.WriteByte((byte)(0xa0 + rg.UniformInt(0x20)));
+       } else if (b == 0xed) {
+         ms.WriteByte((byte)(0x80 + rg.UniformInt(0x20)));
+ } else {
+ ms.WriteByte((byte)(0x80 + rg.UniformInt(0x40)));
+}
+         ms.WriteByte((byte)(0x80 + rg.UniformInt(0x40)));
+       } else if (v == 1) {
+         int b = 0xf0 + rg.UniformInt(0xf5 - 0xf0);
          ms.WriteByte((byte)b);
-         if(b==0xf0)ms.WriteByte((byte)(0x90+rg.UniformInt(0x30)));
-         else if(b==0xf4)ms.WriteByte((byte)(0x80+rg.UniformInt(0x10)));
-         else ms.WriteByte((byte)(0x80+rg.UniformInt(0x40)));
-         ms.WriteByte((byte)(0x80+rg.UniformInt(0x40)));
-         ms.WriteByte((byte)(0x80+rg.UniformInt(0x40)));
-       } else if(v==2){
-         ms.WriteByte((byte)(0xc2+rg.UniformInt(0xe0-0xc2)));
-         ms.WriteByte((byte)(0x80+rg.UniformInt(0x40)));
+       if (b == 0xf0) {
+         ms.WriteByte((byte)(0x90 + rg.UniformInt(0x30)));
+       } else if (b == 0xf4) {
+         ms.WriteByte((byte)(0x80 + rg.UniformInt(0x10)));
+ } else {
+ ms.WriteByte((byte)(0x80 + rg.UniformInt(0x40)));
+}
+         ms.WriteByte((byte)(0x80 + rg.UniformInt(0x40)));
+         ms.WriteByte((byte)(0x80 + rg.UniformInt(0x40)));
+       } else if (v == 2) {
+         ms.WriteByte((byte)(0xc2 + rg.UniformInt(0xe0 - 0xc2)));
+         ms.WriteByte((byte)(0x80 + rg.UniformInt(0x40)));
        } else {
-         int ch=rg.UniformInt(0x80);
-         if(ch==(int)'\\' || ch==(int)'\"' || 
-            ch<0x20) {
-           ch=(int)'?';
+         int ch = rg.UniformInt(0x80);
+         if (ch == (int)'\\' || ch == (int)'\"' || ch < 0x20) {
+           ch = (int)'?';
          }
          ms.WriteByte((byte)ch);
        }
@@ -52,34 +59,103 @@ private static byte[] RandomUtf8Bytes(RandomGenerator rg) {
 
 [Test]
 public void TestCorrectUtf8Specific() {
-TestJsonUtf8One(new byte[] {(byte)0xE8,(byte)0xAD,(byte)0xBD,(byte)0xF1,(byte)0x81,(byte)0x95,(byte)0xB9,(byte)0xC3,(byte)0x84,(byte)0xCC,(byte)0xB6,(byte)0xCD,(byte)0xA3,});
-TestJsonUtf8One(new byte[] {(byte)0xE8,(byte)0x89,(byte)0xA0,(byte)0xF2,(byte)0x97,(byte)0x84,(byte)0xBB,0x3F,(byte)0xD1,(byte)0x83,(byte)0xD1,(byte)0xB9,});
-TestJsonUtf8One(new byte[] {(byte)0xF3,(byte)0xBB,(byte)0x98,(byte)0x8A,(byte)0xC3,(byte)0x9F,(byte)0xE7,(byte)0xA5,(byte)0x96,(byte)0xD9,(byte)0x92,(byte)0xE1,(byte)0xA3,(byte)0xAD,});
-TestJsonUtf8One(new byte[] {(byte)0xF0,(byte)0xA7,(byte)0xBF,(byte)0x84,0x70,0x55,(byte)0xD0,(byte)0x91,(byte)0xE8,(byte)0xBE,(byte)0x9F,});
-TestJsonUtf8One(new byte[] {(byte)0xD9,(byte)0xAE,(byte)0xE4,(byte)0xA1,(byte)0xA0,(byte)0xF3,(byte)0x90,(byte)0x94,(byte)0x99,(byte)0xF3,(byte)0xAB,(byte)0x8A,(byte)0xAD,(byte)0xF4,(byte)0x88,(byte)0x9A,(byte)0x9A,});
-TestJsonUtf8One(new byte[] {0x3D,(byte)0xF2,(byte)0x83,(byte)0xA9,(byte)0xBE,(byte)0xEA,(byte)0xB9,(byte)0xBD,(byte)0xD7,(byte)0x8B,(byte)0xE7,(byte)0xBC,(byte)0x83,});
-TestJsonUtf8One(new byte[] {(byte)0xC4,(byte)0xAB,(byte)0xF4,(byte)0x8E,(byte)0x8A,(byte)0x91,0x61,0x4D,0x3B,});
-TestJsonUtf8One(new byte[] { (byte)0xF1,(byte)0xAE,(byte)0x86,(byte)0xAD,0x5F,(byte)0xD0,(byte)0xB7,0x6E,(byte)0xDA,(byte)0x85});
+TestJsonUtf8One(new byte[] {
+  (byte)0xe8,
+  (byte)0xad,
+  (byte)0xbd,
+  (byte)0xf1,
+  (byte)0x81,
+  (byte)0x95,
+  (byte)0xb9,
+  (byte)0xc3, (byte)0x84, (byte)0xcc, (byte)0xb6, (byte)0xcd, (byte)0xa3,
+});
+TestJsonUtf8One(new byte[] {
+  (byte)0xe8,
+  (byte)0x89,
+  (byte)0xa0,
+  (byte)0xf2,
+  (byte)0x97,
+  (byte)0x84, (byte)0xbb, 0x3f, (byte)0xd1, (byte)0x83, (byte)0xd1,
+  (byte)0xb9,
+});
+TestJsonUtf8One(new byte[] {
+  (byte)0xf3,
+  (byte)0xbb,
+  (byte)0x98,
+  (byte)0x8a,
+  (byte)0xc3,
+  (byte)0x9f,
+  (byte)0xe7,
+  (byte)0xa5,
+  (byte)0x96, (byte)0xd9, (byte)0x92, (byte)0xe1, (byte)0xa3, (byte)0xad,
+});
+TestJsonUtf8One(new byte[] {
+  (byte)0xf0,
+  (byte)0xa7,
+  (byte)0xbf,
+  (byte)0x84, 0x70, 0x55,
+  (byte)0xd0, (byte)0x91, (byte)0xe8, (byte)0xbe, (byte)0x9f,
+});
+TestJsonUtf8One(new byte[] {
+  (byte)0xd9,
+  (byte)0xae,
+  (byte)0xe4,
+  (byte)0xa1,
+  (byte)0xa0,
+  (byte)0xf3,
+  (byte)0x90,
+  (byte)0x94,
+  (byte)0x99,
+  (byte)0xf3,
+  (byte)0xab,
+  (byte)0x8a, (byte)0xad, (byte)0xf4, (byte)0x88, (byte)0x9a, (byte)0x9a,
+});
+TestJsonUtf8One(new byte[] {
+  0x3d,
+  (byte)0xf2,
+  (byte)0x83,
+  (byte)0xa9,
+  (byte)0xbe,
+  (byte)0xea,
+  (byte)0xb9,
+  (byte)0xbd, (byte)0xd7, (byte)0x8b, (byte)0xe7, (byte)0xbc, (byte)0x83,
+});
+TestJsonUtf8One(new byte[] {
+  (byte)0xc4,
+  (byte)0xab, (byte)0xf4, (byte)0x8e, (byte)0x8a, (byte)0x91, 0x61, 0x4d,
+  0x3b,
+});
+TestJsonUtf8One(new byte[] {
+  (byte)0xf1,
+  (byte)0xae,
+  (byte)0x86, (byte)0xad, 0x5f, (byte)0xd0, (byte)0xb7, 0x6e, (byte)0xda,
+  (byte)0x85,
+});
 }
 
 public static void TestJsonUtf8One(byte[] bytes) {
-    string str=DataUtilities.GetUtf8String(bytes,false);
-    byte[] bytes2=new byte[bytes.Length+2];
-    bytes2[0]=0x22;
-    Array.Copy(bytes,0,bytes2,1,bytes.Length);
-    bytes2[bytes2.Length-1]=0x22;
-    string str2=CBORObject.FromJSONBytes(bytes2)
+    string str = DataUtilities.GetUtf8String(bytes, false);
+    if (bytes == null) {
+      throw new ArgumentNullException(nameof(bytes));
+    }
+    var bytes2 = new byte[bytes.Length + 2];
+    bytes2[0] = 0x22;
+    Array.Copy(bytes, 0, bytes2, 1, bytes.Length);
+    bytes2[bytes2.Length - 1] = 0x22;
+    string str2 = CBORObject.FromJSONBytes(bytes2)
          .AsString();
-    if(!str.Equals(str2)) {
-      Assert.AreEqual(str, str2,
+    if (!str.Equals(str2, StringComparison.Ordinal)) {
+      Assert.AreEqual(
+        str,
+        str2,
         TestCommon.ToByteArrayString(bytes));
     }
 }
 
 [Test]
 public void TestCorrectUtf8() {
-  RandomGenerator rg=new RandomGenerator();
-  for(var i=0;i<500;i++) {
+  var rg = new RandomGenerator();
+  for (var i = 0; i < 500; ++i) {
     TestJsonUtf8One(RandomUtf8Bytes(rg));
   }
 }
