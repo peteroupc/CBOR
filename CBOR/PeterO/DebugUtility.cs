@@ -16,13 +16,9 @@ namespace PeterO {
       string name,
       Type[] parameters) {
       #if NET40 || NET20
-      {
         return t.GetMethod(name, parameters);
-      }
       #else
-{
         return t?.GetRuntimeMethod(name, parameters);
-      }
       #endif
     }
 
@@ -31,7 +27,7 @@ namespace PeterO {
       var types = new[] { typeof(string) };
       var typeMethod = GetTypeMethod(type, "WriteLine", types);
       if (typeMethod != null) {
-        typeMethod.Invoke (
+        typeMethod.Invoke(
           type,
           new object[] { str });
       }

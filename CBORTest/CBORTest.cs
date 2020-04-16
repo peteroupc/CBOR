@@ -15,48 +15,59 @@ using PeterO.Numbers;
 namespace Test {
   [TestFixture]
   public class CBORTest {
-  [Test]
-private static byte[] RandomUtf8Bytes(IRandomGenExtended rg) {
-    using (var ms = new MemoryStream()) {
-      for (var i = 0; i < 5; ++i) {
-       int v = rg.GetInt32(4);
-       if (v == 0) {
-         int b = 0xe0 + rg.GetInt32(0xee - 0xe1);
-         ms.WriteByte((byte)b);
-       if (b == 0xe0) {
-         ms.WriteByte((byte)(0xa0 + rg.GetInt32(0x20)));
-       } else if (b == 0xed) {
-         ms.WriteByte((byte)(0x80 + rg.GetInt32(0x20)));
- } else {
- ms.WriteByte((byte)(0x80 + rg.GetInt32(0x40)));
-}
-         ms.WriteByte((byte)(0x80 + rg.GetInt32(0x40)));
-       } else if (v == 1) {
-         int b = 0xf0 + rg.GetInt32(0xf5 - 0xf0);
-         ms.WriteByte((byte)b);
-       if (b == 0xf0) {
-         ms.WriteByte((byte)(0x90 + rg.GetInt32(0x30)));
-       } else if (b == 0xf4) {
-         ms.WriteByte((byte)(0x80 + rg.GetInt32(0x10)));
- } else {
- ms.WriteByte((byte)(0x80 + rg.GetInt32(0x40)));
-}
-         ms.WriteByte((byte)(0x80 + rg.GetInt32(0x40)));
-         ms.WriteByte((byte)(0x80 + rg.GetInt32(0x40)));
-       } else if (v == 2) {
-         ms.WriteByte((byte)(0xc2 + rg.GetInt32(0xe0 - 0xc2)));
-         ms.WriteByte((byte)(0x80 + rg.GetInt32(0x40)));
-       } else {
-         int ch = rg.GetInt32(0x80);
-         if (ch == (int)'\\' || ch== (int)'\"' || ch < 0x20) {
-           ch = (int)'?';
-         }
-         ms.WriteByte((byte)ch);
-       }
-       }
-      return ms.ToArray();
+    public static int ByteArrayCompareLengthFirst(byte[] a, byte[] b) {
+      if (a == null) {
+        return (b == null) ? 0 : -1;
+      }
+      if (b == null) {
+        return 1;
+      }
+      if (a.Length != b.Length) {
+        return a.Length < b.Length ? -1 : 1;
+      }
+      for (var i = 0; i < a.Length; ++i) {
+        if (a[i] != b[i]) {
+          return (a[i] < b[i]) ? -1 : 1;
+        }
+      }
+      return 0;
     }
+/*
+[Test]
+public static void TestCompareLengthFirst() {
+  var rg = new RandomGenerator();
+  for (var i = 0; i < 500; ++i) {
+    byte[] b1 = RandomObjects.RandomUtf8Bytes(rg);
+    byte[] b2 = RandomObjects.RandomUtf8Bytes(rg);
+    int cmp = ByteArrayCompareLengthFirst(b1, b2);
+    string s1 = DataUtilities.GetUtf8String(b1, true);
+    string s2 = DataUtilities.GetUtf8String(b2, true);
+    string sb=TestCommon.ToByteArrayString(b1)+", "+
+      TestCommon.ToByteArrayString(b2);
+    Assert.AreEqual(0, CompareUtf16Utf8LengthFirst(s1, b1), sb);
+    Assert.AreEqual(0, CompareUtf16Utf8LengthFirst(s2, b2), sb);
+    if (cmp == 0) {
+      Assert.AreEqual(0, DataUtilities.CodePointCompare(s1, s2), sb);
+      Assert.AreEqual(0, DataUtilities.CodePointCompare(s2, s1), sb);
+      Assert.AreEqual(0, CompareStringsAsUtf8LengthFirst(s1, s2), sb);
+      Assert.AreEqual(0, CompareStringsAsUtf8LengthFirst(s2, s1), sb);
+      Assert.IsTrue(StringEqualsUtf8(s1, b1), sb);
+      Assert.IsTrue(StringEqualsUtf8(s1, b2), sb);
+      Assert.IsTrue(StringEqualsUtf8(s2, b1), sb);
+      Assert.IsTrue(StringEqualsUtf8(s2, b2), sb);
+      Assert.AreEqual(0, CompareUtf16Utf8LengthFirst(s1, b2), sb);
+      Assert.AreEqual(0, CompareUtf16Utf8LengthFirst(s2, b1), sb);
+    } else {
+      Assert.IsTrue(!StringEqualsUtf8(s1, b2), sb);
+      Assert.IsTrue(!StringEqualsUtf8(s2, b1), sb);
+      Assert.AreEqual(cmp, CompareStringsAsUtf8LengthFirst(s1, s2), sb);
+      Assert.AreEqual(-cmp, CompareStringsAsUtf8LengthFirst(s2, s1), sb);
+      Assert.AreEqual(cmp, CompareUtf16Utf8LengthFirst(s1, b2), sb);
+      Assert.AreEqual(-cmp, CompareUtf16Utf8LengthFirst(s2, b1), sb);
+    }
+  }
 }
+*/
 
 [Test]
 public void TestCorrectUtf8Specific() {
@@ -157,10 +168,11 @@ public static void TestJsonUtf8One(byte[] bytes) {
 public void TestCorrectUtf8() {
   var rg = new RandomGenerator();
   for (var i = 0; i < 500; ++i) {
-    TestJsonUtf8One(RandomUtf8Bytes(rg));
+    TestJsonUtf8One(RandomObjects.RandomUtf8Bytes(rg, true));
   }
 }
 
+  [Test]
     public void TestLexOrderSpecific1() {
       var bytes1 = new byte[] {
         129, 165, 27, 0, 0, 65, 2, 0, 0, 144, 172, 71,

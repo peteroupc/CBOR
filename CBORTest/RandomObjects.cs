@@ -6,6 +6,7 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/
  */
 using System;
+using System.IO;
 using System.Text;
 using PeterO;
 using PeterO.Numbers;
@@ -17,6 +18,65 @@ namespace Test {
     private const int MaxExclusiveShortStringLength = 50;
     private const int MaxNumberLength = 50000;
     private const int MaxShortNumberLength = 40;
+
+public static byte[] RandomUtf8Bytes(
+      IRandomGenExtended rg) {
+  return RandomUtf8Bytes(rg, false);
+}
+
+public static byte[] RandomUtf8Bytes(
+  IRandomGenExtended rg,
+  bool jsonSafe) {
+    using (var ms = new MemoryStream()) {
+      if (rg == null) {
+        throw new ArgumentNullException(nameof(rg));
+      }
+      int length = 1 + rg.GetInt32(6);
+      for (var i = 0; i < length; ++i) {
+       int v = rg.GetInt32(4);
+       if (v == 0) {
+         int b = 0xe0 + rg.GetInt32(0xee - 0xe1);
+         ms.WriteByte((byte)b);
+       if (b == 0xe0) {
+         ms.WriteByte((byte)(0xa0 + rg.GetInt32(0x20)));
+       } else if (b == 0xed) {
+         ms.WriteByte((byte)(0x80 + rg.GetInt32(0x20)));
+ } else {
+ ms.WriteByte((byte)(0x80 + rg.GetInt32(0x40)));
+}
+         ms.WriteByte((byte)(0x80 + rg.GetInt32(0x40)));
+       } else if (v == 1) {
+         int b = 0xf0 + rg.GetInt32(0xf5 - 0xf0);
+         ms.WriteByte((byte)b);
+       if (b == 0xf0) {
+         ms.WriteByte((byte)(0x90 + rg.GetInt32(0x30)));
+       } else if (b == 0xf4) {
+         ms.WriteByte((byte)(0x80 + rg.GetInt32(0x10)));
+ } else {
+ ms.WriteByte((byte)(0x80 + rg.GetInt32(0x40)));
+}
+         ms.WriteByte((byte)(0x80 + rg.GetInt32(0x40)));
+         ms.WriteByte((byte)(0x80 + rg.GetInt32(0x40)));
+       } else if (v == 2) {
+         if (rg.GetInt32(100) < 5) {
+           // 0x80, to help detect ASCII off-by-one errors
+           ms.WriteByte((byte)0xc2);
+           ms.WriteByte((byte)0x80);
+         } else {
+           ms.WriteByte((byte)(0xc2 + rg.GetInt32(0xe0 - 0xc2)));
+           ms.WriteByte((byte)(0x80 + rg.GetInt32(0x40)));
+         }
+       } else {
+         int ch = rg.GetInt32(0x80);
+         if (jsonSafe && (ch == (int)'\\' || ch == (int)'\"' || ch < 0x20)) {
+           ch = (int)'?';
+         }
+         ms.WriteByte((byte)ch);
+       }
+       }
+      return ms.ToArray();
+    }
+}
 
     public static byte[] RandomByteString(IRandomGenExtended rand) {
       if (rand == null) {
@@ -72,6 +132,9 @@ namespace Test {
           sb.Append((char)x);
           x = rand.GetInt32(0x400) + 0xdc00;
           sb.Append((char)x);
+        } else if (rand.GetInt32(100) < 5) {
+          // 0x80, to help detect ASCII off-by-one errors
+          sb.Append((char)0x80);
         } else {
           // BMP character
           x = 0x20 + rand.GetInt32(0xffe0);

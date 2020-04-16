@@ -4850,14 +4850,9 @@ bytes[offset + 1] != 0) {
           case CBORObjectTypeTextString: {
             var strA = (string)objA;
             var strB = (string)objB;
-            cmp = CBORUtilities.FastPathStringCompare(
+            cmp = CBORUtilities.CompareStringsAsUtf8LengthFirst(
                 strA,
                 strB);
-            if (cmp < -1) {
-              cmp = CBORUtilities.ByteArrayCompare(
-                  this.EncodeToBytes(),
-                  other.EncodeToBytes());
-            }
             break;
           }
           case CBORObjectTypeArray: {
@@ -4898,11 +4893,16 @@ bytes[offset + 1] != 0) {
         cmp = CBORUtilities.ByteArrayCompare(
             this.EncodeToBytes(),
             other.EncodeToBytes());
-      } else if ((typeB == CBORObjectTypeTextString && typeA ==
-          CBORObjectTypeTextStringUtf8) ||
-          (typeA == CBORObjectTypeTextString && typeB ==
-          CBORObjectTypeTextStringUtf8)) {
-        throw new NotImplementedException();
+      } else if (typeB == CBORObjectTypeTextString && typeA ==
+          CBORObjectTypeTextStringUtf8) {
+        cmp = -CBORUtilities.CompareUtf16Utf8LengthFirst(
+          (string)objB,
+          (byte[])objA);
+      } else if (typeA == CBORObjectTypeTextString && typeB ==
+          CBORObjectTypeTextStringUtf8) {
+        cmp = CBORUtilities.CompareUtf16Utf8LengthFirst(
+          (string)objA,
+          (byte[])objB);
       } else {
         /* NOTE: itemtypeValue numbers are ordered such that they
         // correspond to the lexicographical order of their CBOR encodings
@@ -5267,6 +5267,10 @@ bytes[offset + 1] != 0) {
               itemHashCode =
                 CBORUtilities.ByteArrayHashCode(this.GetByteString());
               break;
+            case CBORObjectTypeTextStringUtf8:
+              itemHashCode =
+                CBORUtilities.ByteArrayHashCode((byte[])this.ThisItem);
+              break;
             case CBORObjectTypeMap:
               itemHashCode = CBORMapHashCode(this.AsMap());
               break;
@@ -5276,8 +5280,6 @@ bytes[offset + 1] != 0) {
             case CBORObjectTypeTextString:
               itemHashCode = StringHashCode((string)this.itemValue);
               break;
-            case CBORObjectTypeTextStringUtf8:
-              throw new NotImplementedException("TODO: Implement");
             case CBORObjectTypeSimpleValue:
               itemHashCode = (int)this.itemValue;
               break;

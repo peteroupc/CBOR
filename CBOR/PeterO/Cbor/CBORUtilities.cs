@@ -16,7 +16,8 @@ namespace PeterO.Cbor {
   internal static class CBORUtilities {
     private const string HexAlphabet = "0123456789ABCDEF";
 
-    public static int FastPathStringCompare(string strA, string strB) {
+    public static int CompareStringsAsUtf8LengthFirst(string strA, string
+strB) {
       if (strA == null) {
         return (strB == null) ? 0 : -1;
       }
@@ -52,40 +53,179 @@ namespace PeterO.Cbor {
         }
         var nonAscii = false;
         for (int i = 0; i < strA.Length; ++i) {
-          if ((strA[i] & 0xf800) == 0xd800) {
-            return -2; // has surrogates
-          } else if (strA[i] > 0x80) {
+          if (strA[i] >= 0x80) {
             nonAscii = true;
             break;
           }
         }
         for (int i = 0; i < strB.Length; ++i) {
-          if ((strB[i] & 0xf800) == 0xd800) {
-            return -2; // has surrogates
-          } else if (strB[i] > 0x80) {
+          if (strB[i] >= 0x80) {
             nonAscii = true;
             break;
           }
         }
-        if (nonAscii) {
-          long cplA = DataUtilities.GetUtf8Length(strA, true);
-          long cplB = DataUtilities.GetUtf8Length(strB, true);
-          if (cplA != cplB) {
-            return cplA < cplB ? -1 : 1;
-          }
-        } else {
+        if (!nonAscii) {
           if (strA.Length != strB.Length) {
             return strA.Length < strB.Length ? -1 : 1;
           }
         }
-        for (int i = 0; i < strA.Length; ++i) {
-          if (strA[i] != strB[i]) {
-            return strA[i] < strB[i] ? -1 : 1;
+      }
+      var sapos = 0;
+      var sbpos = 0;
+      long sautf8 = 0L;
+      long sbutf8 = 0L;
+      var cmp = 0;
+      var haveboth = true;
+      while (true) {
+        int sa = 0, sb = 0;
+        if (sapos == strA.Length) {
+          haveboth = false;
+          if (sbutf8 > sautf8) {
+            return -1;
+          } else if (sbpos == strB.Length) {
+            break;
+          } else if (cmp == 0) {
+            cmp = -1;
+          }
+        } else {
+          sa = DataUtilities.CodePointAt(strA, sapos, 1);
+          if (sa < 0) {
+            throw new ArgumentException();
+          }
+          if (sa >= 0x10000) {
+            sautf8 += 4;
+  sapos += 2;
+          } else if (sa >= 0x800) {
+            sautf8 += 3;
+            ++sapos;
+          } else if (sa >= 0x80) {
+            sautf8 += 2;
+            ++sapos;
+          } else {
+            ++sautf8;
+            ++sapos;
           }
         }
-        return 0;
+        if (sbpos == strB.Length) {
+          haveboth = false;
+          if (sautf8 > sbutf8) {
+            return 1;
+          } else if (sapos == strA.Length) {
+            break;
+          } else if (cmp == 0) {
+            cmp = 1;
+          }
+        } else {
+          sb = DataUtilities.CodePointAt(strB, sbpos, 1);
+          if (sb < 0) {
+            throw new ArgumentException();
+          }
+          if (sb >= 0x10000) {
+            sbutf8 += 4;
+  sbpos += 2;
+          } else if (sb >= 0x800) {
+            sbutf8 += 3;
+            ++sbpos;
+          } else if (sb >= 0x80) {
+            ++sbpos;
+            sbutf8 += 2;
+          } else {
+            ++sbpos;
+            ++sbutf8;
+          }
+        }
+        if (haveboth && cmp == 0 && sa != sb) {
+          cmp = (sa < sb) ? -1 : 1;
+        }
       }
-      return -2; // not short enough
+      return (sautf8 != sbutf8) ? (sautf8 < sbutf8 ? -1 : 1) : cmp;
+    }
+
+    public static int CompareUtf16Utf8LengthFirst(string utf16, byte[] utf8) {
+      if (utf16 == null) {
+        return (utf8 == null) ? 0 : -1;
+      }
+      if (utf8 == null) {
+        return 1;
+      }
+      if (utf16.Length == 0) {
+        return utf8.Length == 0 ? 0 : -1;
+      }
+      if (utf16.Length == 0) {
+        return utf8.Length == 0 ? 0 : 1;
+      }
+      long strAUpperBound = utf16.Length * 3;
+      if (strAUpperBound < utf8.Length) {
+        return -1;
+      }
+      long strBUpperBound = utf16.Length * 3;
+      if (strBUpperBound < utf8.Length) {
+        return 1;
+      }
+      var u16pos = 0;
+      var u8pos = 0;
+      long u16u8length = 0L;
+      var cmp = 0;
+      var haveboth = true;
+      while (true) {
+        int u16 = 0, u8 = 0;
+        if (u16pos == utf16.Length) {
+          haveboth = false;
+          if (u8pos > u16u8length) {
+            return -1;
+          } else if (u8pos == utf8.Length) {
+            break;
+          } else if (cmp == 0) {
+            cmp = -1;
+          }
+        } else {
+          u16 = DataUtilities.CodePointAt(utf16, u16pos, 1);
+          if (u16 < 0) {
+            throw new ArgumentException();
+          }
+          if (u16 >= 0x10000) {
+            u16u8length += 4;
+  u16pos += 2;
+          } else if (u16 >= 0x800) {
+            u16u8length += 3;
+            ++u16pos;
+          } else if (u16 >= 0x80) {
+            u16u8length += 2;
+            ++u16pos;
+          } else {
+            ++u16u8length;
+            ++u16pos;
+          }
+        }
+        if (u8pos == utf8.Length) {
+          haveboth = false;
+          if (cmp == 0) {
+            return 1;
+          } else if (u16pos == utf16.Length) {
+            break;
+          } else if (cmp == 0) {
+            cmp = 1;
+          }
+        } else {
+          u8 = Utf8CodePointAt(utf8, u8pos);
+          if (u8 < 0) {
+            throw new ArgumentException();
+          }
+          if (u8 >= 0x10000) {
+            u8pos += 4;
+          } else if (u8 >= 0x800) {
+            u8pos += 3;
+          } else if (u8 >= 0x80) {
+            u8pos += 2;
+          } else {
+            ++u8pos;
+          }
+        }
+        if (haveboth && cmp == 0 && u16 != u8) {
+          cmp = (u16 < u8) ? -1 : 1;
+        }
+      }
+      return (u16u8length != u8pos) ? (u16u8length < u8pos ? -1 : 1) : cmp;
     }
 
     public static int Utf8CodePointAt(byte[] utf8, int offset) {
@@ -213,7 +353,6 @@ namespace PeterO.Cbor {
          }
       }
     }
-
     public static bool ByteArrayEquals(byte[] a, byte[] b) {
       if (a == null) {
         return b == null;
