@@ -215,7 +215,7 @@ using (var stream = new FileStream("object6.json", FileMode.Create)) {
 There are several ways to check whether a CBOR object is a 32-bit integer.  Which
 one to use depends on the application's needs.  Some of them follow (written in C#).
 
-```
+```c#
 /* Accept any untagged CBOR integer
   that can fit the Int32 range */
 if(!cbor.IsTagged && cbor.Type==CBORType.Integer &&
