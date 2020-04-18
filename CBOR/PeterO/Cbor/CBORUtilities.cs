@@ -30,20 +30,23 @@ strB) {
       if (strB.Length == 0) {
         return strA.Length == 0 ? 0 : 1;
       }
-      long strAUpperBound = strA.Length * 3;
-      if (strAUpperBound < strB.Length) {
-        return -1;
-      }
-      long strBUpperBound = strB.Length * 3;
-      if (strBUpperBound < strA.Length) {
-        return 1;
-      }
+      var cmp = 0;
       if (strA.Length < 128 && strB.Length < 128) {
+        int istrAUpperBound = strA.Length * 3;
+        if (istrAUpperBound < strB.Length) {
+          return -1;
+        }
+        int istrBUpperBound = strB.Length * 3;
+        if (istrBUpperBound < strA.Length) {
+          return 1;
+        }
+        cmp = 0;
         if (strA.Length == strB.Length) {
           var equalStrings = true;
           for (int i = 0; i < strA.Length; ++i) {
             if (strA[i] != strB[i]) {
               equalStrings = false;
+              cmp = (strA[i] < strB[i]) ? -1 : 1;
               break;
             }
           }
@@ -68,13 +71,26 @@ strB) {
           if (strA.Length != strB.Length) {
             return strA.Length < strB.Length ? -1 : 1;
           }
+          if (strA.Length == strB.Length) {
+            return cmp;
+          }
+        }
+      } else {
+        long strAUpperBound = strA.Length * 3;
+        if (strAUpperBound < strB.Length) {
+          return -1;
+        }
+        long strBUpperBound = strB.Length * 3;
+        if (strBUpperBound < strA.Length) {
+          return 1;
         }
       }
+      // DebugUtility.Log("slow path "+strA.Length+","+strB.Length);
       var sapos = 0;
       var sbpos = 0;
       long sautf8 = 0L;
       long sbutf8 = 0L;
-      var cmp = 0;
+      cmp = 0;
       var haveboth = true;
       while (true) {
         int sa = 0, sb = 0;
@@ -94,7 +110,7 @@ strB) {
           }
           if (sa >= 0x10000) {
             sautf8 += 4;
-  sapos += 2;
+            sapos += 2;
           } else if (sa >= 0x800) {
             sautf8 += 3;
             ++sapos;
@@ -122,7 +138,7 @@ strB) {
           }
           if (sb >= 0x10000) {
             sbutf8 += 4;
-  sbpos += 2;
+            sbpos += 2;
           } else if (sb >= 0x800) {
             sbutf8 += 3;
             ++sbpos;
@@ -185,7 +201,7 @@ strB) {
           }
           if (u16 >= 0x10000) {
             u16u8length += 4;
-  u16pos += 2;
+            u16pos += 2;
           } else if (u16 >= 0x800) {
             u16u8length += 3;
             ++u16pos;
@@ -267,6 +283,55 @@ strB) {
             } else {
                 return -2;
             }
+    }
+
+    // NOTE: StringHashCode and Utf8HashCode must
+    // return the same hash code for the same sequence
+    // of Unicode code points. Both must treat an illegally
+    // encoded subsequence as ending the sequence for
+    // this purpose.
+    public static int StringHashCode(string str) {
+      var upos = 0;
+      var code = 0x7edede19;
+      while (true) {
+        if (upos == str.Length) {
+          return code;
+        }
+        int sc = DataUtilities.CodePointAt(str, upos, 1);
+        if (sc < 0) {
+          return code;
+        }
+        code = unchecked((code * 31) + sc);
+        if (sc >= 0x10000) {
+          upos += 2;
+        } else {
+           ++upos;
+         }
+      }
+    }
+
+    public static int Utf8HashCode(byte[] utf8) {
+      var upos = 0;
+      var code = 0x7edede19;
+      while (true) {
+         int sc = Utf8CodePointAt(utf8, upos);
+         if (sc == -1) {
+           return code;
+         }
+         if (sc == -2) {
+           return code;
+         }
+         code = unchecked((code * 31) + sc);
+         if (sc >= 0x10000) {
+           upos += 4;
+         } else if (sc >= 0x800) {
+           upos += 3;
+         } else if (sc >= 0x80) {
+           upos += 2;
+         } else {
+           ++upos;
+         }
+      }
     }
 
     public static bool CheckUtf16(string str) {

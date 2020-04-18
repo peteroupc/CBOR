@@ -248,17 +248,17 @@ CBORObject.FromObject(Double.NaN);
           "\u0020range for Integer");
       }
       if ((type == CBORObjectTypeEInteger) &&
-((EInteger)item).GetSignedBitLengthAsEInteger().CompareTo(64) > 0) {
+((EInteger)item).GetSignedBitLengthAsInt64() > 64) {
         throw new ArgumentException("arbitrary-precision integer does not " +
           "fit major type 0 or 1");
       }
       if (type == CBORObjectTypeArray && !(item is IList<CBORObject>)) {
         throw new InvalidOperationException();
       }
-      if (type == CBORObjectTypeTextStringUtf8 &&
-          !CBORUtilities.CheckUtf8((byte[])item)) {
-        throw new InvalidOperationException();
-      }
+      // if (type == CBORObjectTypeTextStringUtf8 &&
+      // !CBORUtilities.CheckUtf8((byte[])item)) {
+      // throw new InvalidOperationException();
+      // }
       #endif
       this.itemtypeValue = type;
       this.itemValue = item;
@@ -2058,7 +2058,7 @@ checked(size + 5) : checked(size + 9);
                 CBORObject.FromObject(exponent.ToInt64Checked()),
                 CBORObject.FromObject(bigValue.Mantissa));
            } else {
-          tag = (exponent.GetSignedBitLengthAsEInteger().CompareTo(64) > 0) ?
+          tag = (exponent.GetSignedBitLengthAsInt64() > 64) ?
             265 : 5;
           cbor = CBORObject.NewArray(
                 CBORObject.FromObject(exponent),
@@ -2180,7 +2180,7 @@ checked(size + 5) : checked(size + 9);
              CBORObject.FromObject(exponent.ToInt64Checked()),
              CBORObject.FromObject(bigValue.Mantissa));
            } else {
-          tag = (exponent.GetSignedBitLengthAsEInteger().CompareTo(64) > 0) ?
+          tag = (exponent.GetSignedBitLengthAsInt64() > 64) ?
             264 : 4;
           cbor = CBORObject.NewArray(
              CBORObject.FromObject(exponent),
@@ -3597,7 +3597,7 @@ bytes[offset + 1] != 0) {
       if (exponent.CanFitInInt64()) {
         stream.WriteByte(0xc5); // tag 5
         stream.WriteByte(0x82); // array, length 2
-      } else if (exponent.GetSignedBitLengthAsEInteger().CompareTo(64) > 0) {
+      } else if (exponent.GetSignedBitLengthAsInt64() > 64) {
         stream.WriteByte(0xd9); // tag 265
         stream.WriteByte(0x01);
         stream.WriteByte(0x09);
@@ -3669,7 +3669,7 @@ bytes[offset + 1] != 0) {
       if (exponent.CanFitInInt64()) {
         stream.WriteByte(0xc4); // tag 4
         stream.WriteByte(0x82); // array, length 2
-      } else if (exponent.GetSignedBitLengthAsEInteger().CompareTo(64) > 0) {
+      } else if (exponent.GetSignedBitLengthAsInt64() > 64) {
         stream.WriteByte(0xd9); // tag 264
         stream.WriteByte(0x01);
         stream.WriteByte(0x08);
@@ -5268,8 +5268,8 @@ bytes[offset + 1] != 0) {
                 CBORUtilities.ByteArrayHashCode(this.GetByteString());
               break;
             case CBORObjectTypeTextStringUtf8:
-              itemHashCode =
-                CBORUtilities.ByteArrayHashCode((byte[])this.ThisItem);
+              itemHashCode = CBORUtilities.Utf8HashCode(
+                (byte[])this.itemValue);
               break;
             case CBORObjectTypeMap:
               itemHashCode = CBORMapHashCode(this.AsMap());
@@ -5278,7 +5278,8 @@ bytes[offset + 1] != 0) {
               itemHashCode = CBORArrayHashCode(this.AsList());
               break;
             case CBORObjectTypeTextString:
-              itemHashCode = StringHashCode((string)this.itemValue);
+              itemHashCode = CBORUtilities.StringHashCode(
+                (string)this.itemValue);
               break;
             case CBORObjectTypeSimpleValue:
               itemHashCode = (int)this.itemValue;
@@ -6958,21 +6959,6 @@ this.MostOuterTag.Equals(bigTagValue);
         ret = (ret * 31) + count;
         for (var i = 0; i < count; ++i) {
           ret = (ret * 31) + list[i].GetHashCode();
-        }
-      }
-      return ret;
-    }
-
-    private static int StringHashCode(string str) {
-      if (str == null) {
-        return 0;
-      }
-      var ret = 19;
-      int count = str.Length;
-      unchecked {
-        ret = (ret * 31) + count;
-        for (var i = 0; i < count; ++i) {
-          ret = (ret * 31) + (int)str[i];
         }
       }
       return ret;

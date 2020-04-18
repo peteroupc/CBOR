@@ -146,10 +146,10 @@ TestJsonUtf8One(new byte[] {
 }
 
 public static void TestJsonUtf8One(byte[] bytes) {
-    string str = DataUtilities.GetUtf8String(bytes, false);
     if (bytes == null) {
       throw new ArgumentNullException(nameof(bytes));
     }
+    string str = DataUtilities.GetUtf8String(bytes, false);
     var bytes2 = new byte[bytes.Length + 2];
     bytes2[0] = 0x22;
     Array.Copy(bytes, 0, bytes2, 1, bytes.Length);
@@ -1665,15 +1665,18 @@ bi.GetSignedBitLengthAsEInteger().ToInt32Checked() <= 63) !=
       CBORTestCommon.AssertRoundTrip(oo);
     }
 
-    [Test]
-    public void TestParseDecimalStrings() {
-      var rand = new RandomGenerator();
-      for (var i = 0; i < 3000; ++i) {
-        string r = RandomObjects.RandomDecimalString(rand);
+public static void TestParseDecimalStringsOne(string r) {
         CBORObject o = ToObjectTest.TestToFromObjectRoundTrip(
             EDecimal.FromString(r));
         CBORObject o2 = CBORDataUtilities.ParseJSONNumber(r);
         TestCommon.CompareTestEqual(o.AsNumber(), o2.AsNumber());
+}
+
+    [Test]
+    public void TestParseDecimalStrings() {
+      var rand = new RandomGenerator();
+      for (var i = 0; i < 3000; ++i) {
+        TestParseDecimalStringsOne(RandomObjects.RandomDecimalString(rand));
       }
     }
 
@@ -4280,18 +4283,17 @@ bi.GetSignedBitLengthAsEInteger().ToInt32Checked() <= 63) !=
       }
     }
 
-    [Test]
-    public void TestCtap2CanonicalDecodeEncode() {
-      var r = new RandomGenerator();
-
+    public static void TestCtap2CanonicalDecodeEncodeOne(
+       CBORObject cbor) {
       var options = new CBOREncodeOptions("ctap2canonical=true");
-      for (var i = 0; i < 3000; ++i) {
-        CBORObject cbor = CBORTestCommon.RandomCBORObject(r);
-        byte[] e2bytes = CBORTestCommon.CheckEncodeToBytes(cbor);
-        byte[] bytes = e2bytes;
-        cbor = CBORObject.DecodeFromBytes(bytes);
-        CBORObject cbor2 = null;
-        try {
+      if (cbor == null) {
+        throw new ArgumentNullException(nameof(cbor));
+      }
+      byte[] e2bytes = CBORTestCommon.CheckEncodeToBytes(cbor);
+      byte[] bytes = e2bytes;
+      cbor = CBORObject.DecodeFromBytes(bytes);
+      CBORObject cbor2 = null;
+      try {
           bytes = cbor.EncodeToBytes(options);
           try {
             cbor2 = CBORObject.DecodeFromBytes(bytes, options);
@@ -4314,6 +4316,14 @@ bi.GetSignedBitLengthAsEInteger().ToInt32Checked() <= 63) !=
             throw new InvalidOperationException(String.Empty, ex3);
           }
         }
+    }
+
+    [Test]
+    public void TestCtap2CanonicalDecodeEncode() {
+      var r = new RandomGenerator();
+      for (var i = 0; i < 3000; ++i) {
+       TestCtap2CanonicalDecodeEncodeOne(
+         CBORTestCommon.RandomCBORObject(r));
       }
     }
 
@@ -4353,13 +4363,30 @@ bi.GetSignedBitLengthAsEInteger().ToInt32Checked() <= 63) !=
       CBORObjectTest.CompareDecimals(o1, o2);
     }
 
-    private static void TestTextStringStreamOne(string longString) {
+public static bool CheckUtf16(string str) {
+  if (str == null) { return false;
+}
+  for (int i = 0; i < str.Length; ++i) {
+    char c = str[i];
+    if ((c & 0xfc00) == 0xd800 && i + 1 < str.Length &&
+       (str[i] & 0xfc00) == 0xdc00) {
+      ++i;
+    } else if ((c & 0xf800) == 0xd800) {
+      return false;
+    }
+  }
+  return true;
+}
+
+    public static bool TestTextStringStreamOne(string longString) {
+      if (!CheckUtf16(longString)) { return false;
+}
       CBORObject cbor, cbor2;
       cbor = ToObjectTest.TestToFromObjectRoundTrip(longString);
       cbor2 = CBORTestCommon.FromBytesTestAB(
   CBORTestCommon.CheckEncodeToBytes(
             cbor));
-      {
+          {
         object objectTemp = longString;
         object objectTemp2 = CBORObject.DecodeFromBytes(
             CBORTestCommon.CheckEncodeToBytes(cbor)).AsString();
@@ -4372,7 +4399,8 @@ bi.GetSignedBitLengthAsEInteger().ToInt32Checked() <= 63) !=
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       TestCommon.AssertEqualsHashCode(cbor, cbor2);
-      Assert.AreEqual(longString, cbor2.AsString());
+    Assert.AreEqual(longString, cbor2.AsString());
+  return true;
     }
 
     public static void TestWriteToJSON(CBORObject obj) {
@@ -4389,9 +4417,13 @@ bi.GetSignedBitLengthAsEInteger().ToInt32Checked() <= 63) !=
               false);
           objA = CBORObject.FromJSONString(jsonString);
         } catch (CBORException ex) {
-          throw new InvalidOperationException(jsonString, ex);
+          throw new InvalidOperationException(
+            jsonString + "\n" + ex.ToString(),
+            ex);
         } catch (IOException ex) {
-          throw new InvalidOperationException(String.Empty, ex);
+          throw new InvalidOperationException(
+            "IOException\n" + ex.ToString(),
+          ex);
         }
       }
       if (obj == null) {
