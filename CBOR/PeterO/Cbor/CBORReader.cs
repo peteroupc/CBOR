@@ -1,5 +1,5 @@
 /*
-Written by Peter O. in 2014.
+Written by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
@@ -67,6 +67,17 @@ namespace PeterO.Cbor {
       }
       return cbor;
     }
+
+    private CBORObject ObjectFromUtf8Array(byte[] data, int lengthHint) {
+      CBORObject cbor = data.Length == 0 ?
+         CBORObject.FromObject(String.Empty) :
+         CBORObject.FromRawUtf8(data);
+      if (this.stringRefs != null) {
+        this.stringRefs.AddStringIfNeeded(cbor, lengthHint);
+      }
+      return cbor;
+    }
+
     private static CBORObject ResolveSharedRefs(
       CBORObject obj,
       SharedRefs sharedRefs) {
@@ -80,7 +91,7 @@ namespace PeterO.Cbor {
         if (untagged.IsTagged ||
           untagged.Type != CBORType.Integer ||
 untagged.AsNumber().IsNegative()) {
-          throw new CBORException (
+          throw new CBORException(
             "Shared ref index must be an untagged integer 0 or greater");
         }
         return sharedRefs.GetObject(untagged.AsEIntegerValue());
@@ -141,7 +152,7 @@ untagged.AsNumber().IsNegative()) {
 
     private CBORObject ReadStringArrayMap(int type, long uadditional) {
       bool canonical = this.options.Ctap2Canonical;
-      if (type == 2) { // Byte string
+      if (type == 2 || type == 3) { // Byte string or text string
         if ((uadditional >> 31) != 0) {
           throw new CBORException("Length of " +
             ToUnsignedEInteger(uadditional).ToString() + " is bigger" +
@@ -150,36 +161,14 @@ untagged.AsNumber().IsNegative()) {
         int hint = (uadditional > Int32.MaxValue ||
             (uadditional >> 63) != 0) ? Int32.MaxValue : (int)uadditional;
         byte[] data = ReadByteData(this.stream, uadditional, null);
-        return this.ObjectFromByteArray(data, hint);
-      }
-      if (type == 3) { // Text string
-        if ((uadditional >> 31) != 0) {
-          throw new CBORException("Length of " +
-            ToUnsignedEInteger(uadditional).ToString() + " is bigger" +
-            "\u0020than supported");
-        }
-        if (PropertyMap.ExceedsKnownLength(this.stream, uadditional)) {
-          throw new CBORException("Premature end of data");
-        }
-        var builder = new StringBuilder();
-        switch (
-          DataUtilities.ReadUtf8 (
-            this.stream,
-            (int)uadditional,
-            builder,
-            false)) {
-          case -1:
+        if (type == 3) {
+          if (!CBORUtilities.CheckUtf8(data)) {
             throw new CBORException("Invalid UTF-8");
-          case -2:
-            throw new CBORException("Premature end of data");
+          }
+          return this.ObjectFromUtf8Array(data, hint);
+        } else {
+          return this.ObjectFromByteArray(data, hint);
         }
-        CBORObject cbor = CBORObject.FromRaw(builder.ToString());
-        if (this.stringRefs != null) {
-          int hint = (uadditional > Int32.MaxValue || (uadditional >> 63) !=
-              0) ? Int32.MaxValue : (int)uadditional;
-          this.stringRefs.AddStringIfNeeded(cbor, hint);
-        }
-        return cbor;
       }
       if (type == 4) { // Array
         if (this.options.Ctap2Canonical && this.depth >= 4) {
@@ -197,7 +186,7 @@ untagged.AsNumber().IsNegative()) {
         }
         ++this.depth;
         for (long i = 0; i < uadditional; ++i) {
-          cbor.Add (
+          cbor.Add(
             this.ReadInternal());
         }
         --this.depth;
@@ -283,7 +272,7 @@ untagged.AsNumber().IsNegative()) {
             CBORObject.FromObject(ToUnsignedEInteger(uadditional)) :
             CBORObject.FromObject(uadditional);
           } else if (type == 1) {
-          return (uadditional >> 63) != 0 ? CBORObject.FromObject (
+          return (uadditional >> 63) != 0 ? CBORObject.FromObject(
               ToUnsignedEInteger(uadditional).Add(1).Negate()) :
             CBORObject.FromObject((-uadditional) - 1L);
           } else if (type == 7) {
@@ -389,7 +378,7 @@ untagged.AsNumber().IsNegative()) {
                   throw new CBORException("Premature end of data");
                 }
                 switch (
-                  DataUtilities.ReadUtf8 (
+                  DataUtilities.ReadUtf8(
                     this.stream,
                     (int)len,
                     builder,
@@ -417,7 +406,7 @@ untagged.AsNumber().IsNegative()) {
                 break;
               }
               ++this.depth;
-              CBORObject o = this.ReadForFirstByte (
+              CBORObject o = this.ReadForFirstByte(
                   headByte);
               --this.depth;
               cbor.Add(o);
@@ -469,7 +458,7 @@ untagged.AsNumber().IsNegative()) {
           this.HandleItemTag(uadditional);
         }
         ++this.depth;
-        CBORObject o = haveFirstByte ? this.ReadForFirstByte (
+        CBORObject o = haveFirstByte ? this.ReadForFirstByte(
             newFirstByte) : this.ReadInternal();
         --this.depth;
         if ((uadditional >> 63) != 0) {
@@ -494,23 +483,25 @@ untagged.AsNumber().IsNegative()) {
                 return this.stringRefs.GetString(o.AsEIntegerValue());
             }
           }
-          return CBORObject.FromObjectAndTag (
+          return CBORObject.FromObjectAndTag(
               o,
               (int)uadditional);
         }
-        return CBORObject.FromObjectAndTag (
+        return CBORObject.FromObjectAndTag(
             o,
             (EInteger)uadditional);
       }
       throw new CBORException("Unexpected data encountered");
     }
 
+    private static readonly byte[] EmptyByteArray = new byte[0];
+
     private static byte[] ReadByteData(
       Stream stream,
       long uadditional,
       Stream outputStream) {
       if (uadditional == 0) {
-        return new byte[0];
+        return EmptyByteArray;
       }
       if ((uadditional >> 63) != 0 || uadditional > Int32.MaxValue) {
         throw new CBORException("Length" + ToUnsignedEInteger(uadditional) +

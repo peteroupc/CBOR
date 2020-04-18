@@ -32,7 +32,6 @@ namespace PeterO.Cbor {
 
     private readonly byte[] bytes;
     private readonly JSONOptions options;
-    private StringBuilder sb;
     private int index;
     private int endPos;
     private static byte[] valueEmptyBytes = new byte[0];
@@ -65,239 +64,238 @@ namespace PeterO.Cbor {
         } else if (c < 0x80) {
           continue;
         } else if (c >= 0xc2 && c <= 0xdf) {
-              int c1 = this.index < this.endPos ?
-                ((int)this.bytes[this.index++]) & 0xff : -1;
-              if (c1 < 0x80 || c1 > 0xbf) {
-                this.RaiseError("Invalid encoding");
-              }
+          int c1 = this.index < this.endPos ?
+            ((int)this.bytes[this.index++]) & 0xff : -1;
+          if (c1 < 0x80 || c1 > 0xbf) {
+            this.RaiseError("Invalid encoding");
+          }
         } else if (c >= 0xe0 && c <= 0xef) {
-              int c1 = this.index < this.endPos ?
-                ((int)this.bytes[this.index++]) & 0xff : -1;
-              int c2 = this.index < this.endPos ?
-                ((int)this.bytes[this.index++]) & 0xff : -1;
-              int lower = (c == 0xe0) ? 0xa0 : 0x80;
-              int upper = (c == 0xed) ? 0x9f : 0xbf;
-              if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf) {
-                this.RaiseError("Invalid encoding");
-              }
+          int c1 = this.index < this.endPos ?
+            ((int)this.bytes[this.index++]) & 0xff : -1;
+          int c2 = this.index < this.endPos ?
+            ((int)this.bytes[this.index++]) & 0xff : -1;
+          int lower = (c == 0xe0) ? 0xa0 : 0x80;
+          int upper = (c == 0xed) ? 0x9f : 0xbf;
+          if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf) {
+            this.RaiseError("Invalid encoding");
+          }
         } else if (c >= 0xf0 && c <= 0xf4) {
-              int c1 = this.index < this.endPos ?
-                ((int)this.bytes[this.index++]) & 0xff : -1;
-              int c2 = this.index < this.endPos ?
-                ((int)this.bytes[this.index++]) & 0xff : -1;
-              int c3 = this.index < this.endPos ?
-                ((int)this.bytes[this.index++]) & 0xff : -1;
-              int lower = (c == 0xf0) ? 0x90 : 0x80;
-              int upper = (c == 0xf4) ? 0x8f : 0xbf;
-              if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf ||
-                c3 < 0x80 || c3 > 0xbf) {
-                this.RaiseError("Invalid encoding");
-              }
+          int c1 = this.index < this.endPos ?
+            ((int)this.bytes[this.index++]) & 0xff : -1;
+          int c2 = this.index < this.endPos ?
+            ((int)this.bytes[this.index++]) & 0xff : -1;
+          int c3 = this.index < this.endPos ?
+            ((int)this.bytes[this.index++]) & 0xff : -1;
+          int lower = (c == 0xf0) ? 0x90 : 0x80;
+          int upper = (c == 0xf4) ? 0x8f : 0xbf;
+          if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf ||
+            c3 < 0x80 || c3 > 0xbf) {
+            this.RaiseError("Invalid encoding");
+          }
         } else {
-              this.RaiseError("Invalid encoding");
+          this.RaiseError("Invalid encoding");
         }
       }
       using (var ms = new MemoryStream()) {
         if (batchEnd > batchIndex) {
-        ms.Write(jbytes, batchIndex, batchEnd - batchIndex);
-        this.index = batchEnd;
-        batchIndex = batchEnd;
-      } else {
-        this.index = startIndex;
-        batchIndex = startIndex;
-      }
-      while (true) {
-        batchEnd = this.index;
-        c = this.index < this.endPos ? ((int)jbytes[this.index++]) &
-          0xff : -1;
-        if (c == -1) {
-          this.RaiseError("Unterminated string");
+          ms.Write(jbytes, batchIndex, batchEnd - batchIndex);
+          this.index = batchEnd;
+          batchIndex = batchEnd;
+        } else {
+          this.index = startIndex;
+          batchIndex = startIndex;
         }
-        if (c < 0x20) {
-          this.RaiseError("Invalid character in string literal");
-        }
-        switch (c) {
-          case '\\':
-            c = this.index < this.endPos ? ((int)jbytes[this.index++]) &
-              0xff : -1;
-            switch (c) {
-              case '\\':
-              case '/':
-              case '\"':
-                // Slash is now allowed to be escaped under RFC 8259
-if (batchEnd > batchIndex) {
-  ms.Write(jbytes, batchIndex, batchEnd - batchIndex);
-}
-                batchIndex = this.index;
-                ms.WriteByte((byte)c);
-              break;
-              case 'b':
-if (batchEnd > batchIndex) {
-  ms.Write(jbytes, batchIndex, batchEnd - batchIndex);
-}
-                batchIndex = this.index;
-                ms.WriteByte((byte)'\b');
-              break;
-              case 'f':
-if (batchEnd > batchIndex) {
-  ms.Write(jbytes, batchIndex, batchEnd - batchIndex);
-}
-                batchIndex = this.index;
-                ms.WriteByte((byte)'\f');
-              break;
-              case 'n':
-if (batchEnd > batchIndex) {
-  ms.Write(jbytes, batchIndex, batchEnd - batchIndex);
-}
-                batchIndex = this.index;
-                ms.WriteByte((byte)'\n');
-              break;
-              case 'r':
-if (batchEnd > batchIndex) {
-  ms.Write(jbytes, batchIndex, batchEnd - batchIndex);
-}
-                batchIndex = this.index;
-                ms.WriteByte((byte)'\r');
-              break;
-              case 't':
-if (batchEnd > batchIndex) {
-  ms.Write(jbytes, batchIndex, batchEnd - batchIndex);
-}
-                batchIndex = this.index;
-                ms.WriteByte((byte)'\t');
-              break;
-              case 'u': { // Unicode escape
-                c = 0;
-                // Consists of 4 hex digits
-                for (var i = 0; i < 4; ++i) {
-                  int ch = this.index < this.endPos ?
-                    (int)jbytes[this.index++] : -1;
-                  if (ch >= '0' && ch <= '9') {
-                    c <<= 4;
-                    c |= ch - '0';
-                  } else if (ch >= 'A' && ch <= 'F') {
-                    c <<= 4;
-                    c |= ch + 10 - 'A';
-                  } else if (ch >= 'a' && ch <= 'f') {
-                    c <<= 4;
-                    c |= ch + 10 - 'a';
-                  } else {
-                    this.RaiseError(
-                      "Invalid Unicode escaped character");
+        while (true) {
+          batchEnd = this.index;
+          c = this.index < this.endPos ? ((int)jbytes[this.index++]) &
+            0xff : -1;
+          if (c == -1) {
+            this.RaiseError("Unterminated string");
+          }
+          if (c < 0x20) {
+            this.RaiseError("Invalid character in string literal");
+          }
+          switch (c) {
+            case '\\':
+              c = this.index < this.endPos ? ((int)jbytes[this.index++]) &
+                0xff : -1;
+              switch (c) {
+                case '\\':
+                case '/':
+                case '\"':
+                  // Slash is now allowed to be escaped under RFC 8259
+                  if (batchEnd > batchIndex) {
+                    ms.Write(jbytes, batchIndex, batchEnd - batchIndex);
                   }
-                }
-                if ((c & 0xf800) != 0xd800) {
-                  // Non-surrogate
-if (batchEnd > batchIndex) {
-  ms.Write(jbytes, batchIndex, batchEnd - batchIndex);
-}
                   batchIndex = this.index;
-                  int ic = c;
-                  if (c >= 0x800) {
-                     ms.WriteByte((byte)(0xe0 | ((ic >> 12) & 0x0f)));
-                     ms.WriteByte((byte)(0x80 | ((ic >> 6) & 0x3f)));
-                     ms.WriteByte((byte)(0x80 | (ic & 0x3f)));
-                  } else if (c >= 0x80) {
-                    ms.WriteByte((byte)(0xc0 | ((ic >> 6) & 0x1f)));
-                  ms.WriteByte((byte)(0x80 | (ic & 0x3f)));
-                  } else {
-                     ms.WriteByte((byte)ic);
+                  ms.WriteByte((byte)c);
+                  break;
+                case 'b':
+                  if (batchEnd > batchIndex) {
+                    ms.Write(jbytes, batchIndex, batchEnd - batchIndex);
                   }
-                } else if ((c & 0xfc00) == 0xd800) {
-                  int ch;
-                  if (this.index >= this.endPos - 1 ||
-                    jbytes[this.index] != (byte)'\\' ||
-                    jbytes[this.index + 1] != (byte)0x75) {
-                    this.RaiseError("Invalid escaped character");
+                  batchIndex = this.index;
+                  ms.WriteByte((byte)'\b');
+                  break;
+                case 'f':
+                  if (batchEnd > batchIndex) {
+                    ms.Write(jbytes, batchIndex, batchEnd - batchIndex);
                   }
-                  this.index += 2;
-                  var c2 = 0;
+                  batchIndex = this.index;
+                  ms.WriteByte((byte)'\f');
+                  break;
+                case 'n':
+                  if (batchEnd > batchIndex) {
+                    ms.Write(jbytes, batchIndex, batchEnd - batchIndex);
+                  }
+                  batchIndex = this.index;
+                  ms.WriteByte((byte)'\n');
+                  break;
+                case 'r':
+                  if (batchEnd > batchIndex) {
+                    ms.Write(jbytes, batchIndex, batchEnd - batchIndex);
+                  }
+                  batchIndex = this.index;
+                  ms.WriteByte((byte)'\r');
+                  break;
+                case 't':
+                  if (batchEnd > batchIndex) {
+                    ms.Write(jbytes, batchIndex, batchEnd - batchIndex);
+                  }
+                  batchIndex = this.index;
+                  ms.WriteByte((byte)'\t');
+                  break;
+                case 'u': { // Unicode escape
+                  c = 0;
+                  // Consists of 4 hex digits
                   for (var i = 0; i < 4; ++i) {
-                    ch = this.index < this.endPos ?
-                      ((int)jbytes[this.index++]) & 0xff : -1;
+                    int ch = this.index < this.endPos ?
+                      (int)jbytes[this.index++] : -1;
                     if (ch >= '0' && ch <= '9') {
-                      c2 <<= 4;
-                      c2 |= ch - '0';
+                      c <<= 4;
+                      c |= ch - '0';
                     } else if (ch >= 'A' && ch <= 'F') {
-                      c2 <<= 4;
-                      c2 |= ch + 10 - 'A';
+                      c <<= 4;
+                      c |= ch + 10 - 'A';
                     } else if (ch >= 'a' && ch <= 'f') {
-                      c2 <<= 4;
-                      c2 |= ch + 10 - 'a';
+                      c <<= 4;
+                      c |= ch + 10 - 'a';
                     } else {
                       this.RaiseError(
                         "Invalid Unicode escaped character");
                     }
                   }
-                  if ((c2 & 0xfc00) != 0xdc00) {
-                    this.RaiseError("Unpaired surrogate code point");
-                  } else {
-if (batchEnd > batchIndex) {
-  ms.Write(jbytes, batchIndex, batchEnd - batchIndex);
-}
+                  if ((c & 0xf800) != 0xd800) {
+                    // Non-surrogate
+                    if (batchEnd > batchIndex) {
+                      ms.Write(jbytes, batchIndex, batchEnd - batchIndex);
+                    }
                     batchIndex = this.index;
-                    int ic = 0x10000 + (((int)c & 0x3ff) << 10) +
-                      ((int)c2 & 0x3ff);
-                    ms.WriteByte((byte)(0xf0 | ((ic >> 18) & 0x07)));
-                  ms.WriteByte((byte)(0x80 | ((ic >> 12) & 0x3f)));
-                ms.WriteByte((byte)(0x80 | ((ic >> 6) & 0x3f)));
-              ms.WriteByte((byte)(0x80 | (ic & 0x3f)));
+                    int ic = c;
+                    if (c >= 0x800) {
+                      ms.WriteByte((byte)(0xe0 | ((ic >> 12) & 0x0f)));
+                      ms.WriteByte((byte)(0x80 | ((ic >> 6) & 0x3f)));
+                      ms.WriteByte((byte)(0x80 | (ic & 0x3f)));
+                    } else if (c >= 0x80) {
+                      ms.WriteByte((byte)(0xc0 | ((ic >> 6) & 0x1f)));
+                      ms.WriteByte((byte)(0x80 | (ic & 0x3f)));
+                    } else {
+                      ms.WriteByte((byte)ic);
+                    }
+                  } else if ((c & 0xfc00) == 0xd800) {
+                    int ch;
+                    if (this.index >= this.endPos - 1 ||
+                      jbytes[this.index] != (byte)'\\' ||
+                      jbytes[this.index + 1] != (byte)0x75) {
+                      this.RaiseError("Invalid escaped character");
+                    }
+                    this.index += 2;
+                    var c2 = 0;
+                    for (var i = 0; i < 4; ++i) {
+                      ch = this.index < this.endPos ?
+                        ((int)jbytes[this.index++]) & 0xff : -1;
+                      if (ch >= '0' && ch <= '9') {
+                        c2 <<= 4;
+                        c2 |= ch - '0';
+                      } else if (ch >= 'A' && ch <= 'F') {
+                        c2 <<= 4;
+                        c2 |= ch + 10 - 'A';
+                      } else if (ch >= 'a' && ch <= 'f') {
+                        c2 <<= 4;
+                        c2 |= ch + 10 - 'a';
+                      } else {
+                        this.RaiseError(
+                          "Invalid Unicode escaped character");
+                      }
+                    }
+                    if ((c2 & 0xfc00) != 0xdc00) {
+                      this.RaiseError("Unpaired surrogate code point");
+                    } else {
+                      if (batchEnd > batchIndex) {
+                        ms.Write(jbytes, batchIndex, batchEnd - batchIndex);
+                      }
+                      batchIndex = this.index;
+                      int ic = 0x10000 + (((int)c & 0x3ff) << 10) +
+                        ((int)c2 & 0x3ff);
+                      ms.WriteByte((byte)(0xf0 | ((ic >> 18) & 0x07)));
+                      ms.WriteByte((byte)(0x80 | ((ic >> 12) & 0x3f)));
+                      ms.WriteByte((byte)(0x80 | ((ic >> 6) & 0x3f)));
+                      ms.WriteByte((byte)(0x80 | (ic & 0x3f)));
+                    }
+                  } else {
+                    this.RaiseError("Unpaired surrogate code point");
                   }
-                } else {
-                  this.RaiseError("Unpaired surrogate code point");
+                  break;
                 }
-                break;
+                default: {
+                  this.RaiseError("Invalid escaped character");
+                  break;
+                }
               }
-              default: {
-                this.RaiseError("Invalid escaped character");
-                break;
+              break;
+            case 0x22: // double quote
+              if (batchEnd > batchIndex) {
+                ms.Write(jbytes, batchIndex, batchEnd - batchIndex);
               }
+              return ms.ToArray();
+            default: {
+              if (c <= 0x7f) {
+                // Deliberately empty
+              } else if (c >= 0xc2 && c <= 0xdf) {
+                int c1 = this.index < this.endPos ?
+                  ((int)jbytes[this.index++]) & 0xff : -1;
+                if (c1 < 0x80 || c1 > 0xbf) {
+                  this.RaiseError("Invalid encoding");
+                }
+              } else if (c >= 0xe0 && c <= 0xef) {
+                int c1 = this.index < this.endPos ?
+                  ((int)jbytes[this.index++]) & 0xff : -1;
+                int c2 = this.index < this.endPos ?
+                  ((int)jbytes[this.index++]) & 0xff : -1;
+                int lower = (c == 0xe0) ? 0xa0 : 0x80;
+                int upper = (c == 0xed) ? 0x9f : 0xbf;
+                if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf) {
+                  this.RaiseError("Invalid encoding");
+                }
+              } else if (c >= 0xf0 && c <= 0xf4) {
+                int c1 = this.index < this.endPos ?
+                  ((int)jbytes[this.index++]) & 0xff : -1;
+                int c2 = this.index < this.endPos ?
+                  ((int)jbytes[this.index++]) & 0xff : -1;
+                int c3 = this.index < this.endPos ?
+                  ((int)jbytes[this.index++]) & 0xff : -1;
+                int lower = (c == 0xf0) ? 0x90 : 0x80;
+                int upper = (c == 0xf4) ? 0x8f : 0xbf;
+                if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf ||
+                  c3 < 0x80 || c3 > 0xbf) {
+                  this.RaiseError("Invalid encoding");
+                }
+              } else {
+                this.RaiseError("Invalid encoding");
+              }
+              break;
             }
-            break;
-          case 0x22: // double quote
-            // DebugUtility.Log("slowpath "+this.sb.Length);
-          if (batchEnd > batchIndex) {
-            ms.Write(jbytes, batchIndex, batchEnd - batchIndex);
           }
-            return ms.ToArray();
-          default: {
-            if (c <= 0x7f) {
-              // Deliberately empty
-            } else if (c >= 0xc2 && c <= 0xdf) {
-              int c1 = this.index < this.endPos ?
-                ((int)jbytes[this.index++]) & 0xff : -1;
-              if (c1 < 0x80 || c1 > 0xbf) {
-                this.RaiseError("Invalid encoding");
-              }
-            } else if (c >= 0xe0 && c <= 0xef) {
-              int c1 = this.index < this.endPos ?
-                ((int)jbytes[this.index++]) & 0xff : -1;
-              int c2 = this.index < this.endPos ?
-                ((int)jbytes[this.index++]) & 0xff : -1;
-              int lower = (c == 0xe0) ? 0xa0 : 0x80;
-              int upper = (c == 0xed) ? 0x9f : 0xbf;
-              if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf) {
-                this.RaiseError("Invalid encoding");
-              }
-            } else if (c >= 0xf0 && c <= 0xf4) {
-              int c1 = this.index < this.endPos ?
-                ((int)jbytes[this.index++]) & 0xff : -1;
-              int c2 = this.index < this.endPos ?
-                ((int)jbytes[this.index++]) & 0xff : -1;
-              int c3 = this.index < this.endPos ?
-                ((int)jbytes[this.index++]) & 0xff : -1;
-              int lower = (c == 0xf0) ? 0x90 : 0x80;
-              int upper = (c == 0xf4) ? 0x8f : 0xbf;
-              if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf ||
-                c3 < 0x80 || c3 > 0xbf) {
-                this.RaiseError("Invalid encoding");
-              }
-            } else {
-              this.RaiseError("Invalid encoding");
-            }
-            break;
-          }
-        }
         }
       }
     }
@@ -553,7 +551,6 @@ if (batchEnd > batchIndex) {
       }
       #endif
 
-      this.sb = null;
       this.bytes = bytes;
       this.index = index;
       this.endPos = endPos;

@@ -47,7 +47,7 @@ Gets the Unicode code point at the given index of the string.
 <b>Return Value:</b>
 
 The Unicode code point at the given position. Returns -1 if  <i>index</i>
- is 0 or less, or is greater than the string's length. Returns the replacement character (U+FFFD) if the code point at that position is an unpaired surrogate code point. If the return value is 65536 (0x10000) or greater, the code point takes up two UTF-16 code units.
+ is 0 or less, or is greater than or equal to the string's length. Returns the replacement character (U+FFFD) if the code point at that position is an unpaired surrogate code point. If the return value is 65536 (0x10000) or greater, the code point takes up two UTF-16 code units.
 
 <b>Exceptions:</b>
 
@@ -86,7 +86,7 @@ The following example shows how to iterate a text string code point by code poin
 <b>Return Value:</b>
 
 The Unicode code point at the given position. Returns -1 if  <i>index</i>
- is 0 or less, or is greater than the string's length. Returns a value as specified under  <i>surrogateBehavior</i>
+ is 0 or less, or is greater than or equal to the string's length. Returns a value as specified under  <i>surrogateBehavior</i>
  if the code point at that position is an unpaired surrogate code point. If the return value is 65536 (0x10000) or greater, the code point takes up two UTF-16 code units.
 
 <b>Exceptions:</b>
@@ -114,7 +114,7 @@ Gets the Unicode code point just before the given index of the string.
 <b>Return Value:</b>
 
 The Unicode code point at the previous position. Returns -1 if  <i>index</i>
- is 0 or less, or is greater than the string's length. Returns the replacement character (U+FFFD) if the code point at the previous position is an unpaired surrogate code point. If the return value is 65536 (0x10000) or greater, the code point takes up two UTF-16 code units.
+ is 0 or less, or is greater than or equal to the string's length. Returns the replacement character (U+FFFD) if the code point at the previous position is an unpaired surrogate code point. If the return value is 65536 (0x10000) or greater, the code point takes up two UTF-16 code units.
 
 <b>Exceptions:</b>
 
@@ -144,7 +144,7 @@ Gets the Unicode code point just before the given index of the string.
 <b>Return Value:</b>
 
 The Unicode code point at the previous position. Returns -1 if  <i>index</i>
- is 0 or less, or is greater than the string's length. Returns a value as specified under  <i>surrogateBehavior</i>
+ is 0 or less, or is greater than or equal to the string's length. Returns a value as specified under  <i>surrogateBehavior</i>
  if the code point at the previous position is an unpaired surrogate code point. If the return value is 65536 (0x10000) or greater, the code point takes up two UTF-16 code units.
 
 <b>Exceptions:</b>

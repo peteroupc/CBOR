@@ -13,7 +13,6 @@ using PeterO;
 using PeterO.Numbers;
 
 // TODO: In next major version, make .Keys and .Values read-only
-// TODO: Consider storing text strings as bytes, at least in some cases
 namespace PeterO.Cbor {
   /// <summary>
   /// <para>Represents an object in Concise Binary Object Representation
@@ -116,16 +115,15 @@ namespace PeterO.Cbor {
     /// <summary>Represents the value false.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
-      "Microsoft.Security",
-      "CA2104",
-      Justification = "This CBORObject is immutable")]
+        "Microsoft.Security",
+        "CA2104",
+        Justification = "This CBORObject is immutable")]
     #endif
     public static readonly CBORObject False =
       CBORObject.ConstructSimpleValue(20);
 
     /// <summary>A not-a-number value.</summary>
-    public static readonly CBORObject NaN =
-CBORObject.FromObject(Double.NaN);
+    public static readonly CBORObject NaN = CBORObject.FromObject(Double.NaN);
 
     /// <summary>The value negative infinity.</summary>
     public static readonly CBORObject NegativeInfinity =
@@ -134,9 +132,9 @@ CBORObject.FromObject(Double.NaN);
     /// <summary>Represents the value null.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
-      "Microsoft.Security",
-      "CA2104",
-      Justification = "This CBORObject is immutable")]
+        "Microsoft.Security",
+        "CA2104",
+        Justification = "This CBORObject is immutable")]
     #endif
     public static readonly CBORObject Null =
       CBORObject.ConstructSimpleValue(22);
@@ -148,9 +146,9 @@ CBORObject.FromObject(Double.NaN);
     /// <summary>Represents the value true.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
-      "Microsoft.Security",
-      "CA2104",
-      Justification = "This CBORObject is immutable")]
+        "Microsoft.Security",
+        "CA2104",
+        Justification = "This CBORObject is immutable")]
     #endif
     public static readonly CBORObject True =
       CBORObject.ConstructSimpleValue(21);
@@ -158,9 +156,9 @@ CBORObject.FromObject(Double.NaN);
     /// <summary>Represents the value undefined.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
-      "Microsoft.Security",
-      "CA2104",
-      Justification = "This CBORObject is immutable")]
+        "Microsoft.Security",
+        "CA2104",
+        Justification = "This CBORObject is immutable")]
     #endif
     public static readonly CBORObject Undefined =
       CBORObject.ConstructSimpleValue(23);
@@ -248,7 +246,7 @@ CBORObject.FromObject(Double.NaN);
           "\u0020range for Integer");
       }
       if ((type == CBORObjectTypeEInteger) &&
-((EInteger)item).GetSignedBitLengthAsInt64() > 64) {
+        ((EInteger)item).GetSignedBitLengthAsInt64() > 64) {
         throw new ArgumentException("arbitrary-precision integer does not " +
           "fit major type 0 or 1");
       }
@@ -299,8 +297,8 @@ CBORObject.FromObject(Double.NaN);
           return (EInteger)previtem.tagLow;
         }
         return LowHighToEInteger(
-          previtem.tagLow,
-          previtem.tagHigh);
+            previtem.tagLow,
+            previtem.tagHigh);
       }
     }
 
@@ -428,7 +426,7 @@ CBORObject.FromObject(Double.NaN);
     /// <value><c>true</c> if this object is a negative number; otherwise,
     /// <c>false</c>.</value>
     [Obsolete("Instead, use \u0028cbor.IsNumber() &&" +
-"\u0020cbor.AsNumber().IsNegative()).")]
+        "\u0020cbor.AsNumber().IsNegative()).")]
     public bool IsNegative {
       get {
         CBORNumber cn = CBORNumber.FromCBORObject(this);
@@ -451,8 +449,8 @@ CBORObject.FromObject(Double.NaN);
           return (EInteger)this.tagLow;
         }
         return LowHighToEInteger(
-          this.tagLow,
-          this.tagHigh);
+            this.tagLow,
+            this.tagHigh);
       }
     }
 
@@ -465,8 +463,9 @@ CBORObject.FromObject(Double.NaN);
     /// represent a number, or this object is a not-a-number (NaN)
     /// value.</exception>
     [Obsolete("Instead, convert this object to a number with .AsNumber()," +
-"\u0020 and use the Sign property in .NET or the signum method in Java." +
-" Either will treat not-a-number (NaN) values differently than here.")]
+        "\u0020 and use the Sign property in .NET or the signum method in" +
+"\u0020Java." +
+        " Either will treat not-a-number (NaN) values differently than here.")]
     public int Sign {
       get {
         CBORNumber cn = CBORNumber.FromCBORObject(this);
@@ -711,9 +710,9 @@ CBORObject.FromObject(Double.NaN);
     /// <exception cref='InvalidOperationException'>This object is not a
     /// map or an array.</exception>
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
-      "Microsoft.Design",
-      "CA1043",
-      Justification = "Represents a logical data store")]
+        "Microsoft.Design",
+        "CA1043",
+        Justification = "Represents a logical data store")]
     public CBORObject this[CBORObject key] {
       get {
         /* "The CBORObject class represents a logical data store." +
@@ -1213,7 +1212,7 @@ CBORObject.FromObject(Double.NaN);
         throw new ArgumentNullException(nameof(jsonoptions));
       }
       return FromJSONString(str, 0, str.Length, jsonoptions);
-   }
+    }
 
     /// <summary>
     /// <para>Generates a CBOR object from a text string in JavaScript
@@ -1838,11 +1837,11 @@ CBORObject.FromObject(Double.NaN);
     /// 64-bit signed integer.</param>
     /// <returns>A CBOR object.</returns>
     public static CBORObject FromObject(long value) {
-if (value >= 0L && value < 24L) {
-  return FixedObjects[(int)value];
-} else {
- return (value >= -24L && value < 0L) ? FixedObjects[0x20 - (int)(value +
-1L)] : new CBORObject(CBORObjectTypeInteger, value);
+      if (value >= 0L && value < 24L) {
+        return FixedObjects[(int)value];
+      } else {
+        return (value >= -24L && value < 0L) ? FixedObjects[0x20 - (int)(value +
+              1L)] : new CBORObject(CBORObjectTypeInteger, value);
       }
     }
 
@@ -1883,20 +1882,20 @@ if (value >= 0L && value < 24L) {
       }
     }
 
-  /// <summary>Calculates the number of bytes this CBOR object takes when
-  /// serialized as a byte array using the <c>EncodeToBytes()</c> method.
-  /// This calculation assumes that integers, lengths of maps and arrays,
-  /// lengths of text and byte strings, and tag numbers are encoded in
-  /// their shortest form; that floating-point numbers are encoded in
-  /// their shortest value-preserving form; and that no indefinite-length
-  /// encodings are used.</summary>
-  /// <returns>The number of bytes this CBOR object takes when serialized
-  /// as a byte array using the <c>EncodeToBytes()</c> method.</returns>
-  /// <exception cref='PeterO.Cbor.CBORException'>The CBOR object has an
-  /// extremely deep level of nesting, including if the CBOR object is or
-  /// has an array or map that includes itself.</exception>
+    /// <summary>Calculates the number of bytes this CBOR object takes when
+    /// serialized as a byte array using the <c>EncodeToBytes()</c> method.
+    /// This calculation assumes that integers, lengths of maps and arrays,
+    /// lengths of text and byte strings, and tag numbers are encoded in
+    /// their shortest form; that floating-point numbers are encoded in
+    /// their shortest value-preserving form; and that no indefinite-length
+    /// encodings are used.</summary>
+    /// <returns>The number of bytes this CBOR object takes when serialized
+    /// as a byte array using the <c>EncodeToBytes()</c> method.</returns>
+    /// <exception cref='PeterO.Cbor.CBORException'>The CBOR object has an
+    /// extremely deep level of nesting, including if the CBOR object is or
+    /// has an array or map that includes itself.</exception>
     public long CalcEncodedSize() {
-       return this.CalcEncodedSize(0);
+      return this.CalcEncodedSize(0);
     }
 
     private long CalcEncodedSize(int depth) {
@@ -1937,7 +1936,7 @@ if (value >= 0L && value < 24L) {
             return checked(size + 3);
           }
           return CBORUtilities.DoubleRetainsSameValueInSingle(valueBits) ?
-checked(size + 5) : checked(size + 9);
+            checked(size + 5) : checked(size + 9);
         }
         case CBORType.Array:
           size = checked(size + IntegerByteLength(cbor.Count));
@@ -1948,7 +1947,7 @@ checked(size + 5) : checked(size + 9);
           return size;
         case CBORType.Map: {
           ICollection<KeyValuePair<CBORObject, CBORObject>> entries =
-             this.Entries;
+            this.Entries;
           size = checked(size + IntegerByteLength(entries.Count));
           foreach (KeyValuePair<CBORObject, CBORObject> entry in entries) {
             CBORObject key = entry.Key;
@@ -2046,23 +2045,23 @@ checked(size + 5) : checked(size + 9);
           options += 6;
         }
         cbor = CBORObject.NewArray(
-          CBORObject.FromObject(bigValue.Exponent),
-          CBORObject.FromObject(bigValue.UnsignedMantissa),
-          CBORObject.FromObject(options));
+            CBORObject.FromObject(bigValue.Exponent),
+            CBORObject.FromObject(bigValue.UnsignedMantissa),
+            CBORObject.FromObject(options));
         tag = 269;
       } else {
         EInteger exponent = bigValue.Exponent;
         if (exponent.CanFitInInt64()) {
           tag = 5;
           cbor = CBORObject.NewArray(
-                CBORObject.FromObject(exponent.ToInt64Checked()),
-                CBORObject.FromObject(bigValue.Mantissa));
-           } else {
+              CBORObject.FromObject(exponent.ToInt64Checked()),
+              CBORObject.FromObject(bigValue.Mantissa));
+        } else {
           tag = (exponent.GetSignedBitLengthAsInt64() > 64) ?
             265 : 5;
           cbor = CBORObject.NewArray(
-                CBORObject.FromObject(exponent),
-                CBORObject.FromObject(bigValue.Mantissa));
+              CBORObject.FromObject(exponent),
+              CBORObject.FromObject(bigValue.Mantissa));
         }
       }
       return cbor.WithTag(tag);
@@ -2120,15 +2119,15 @@ checked(size + 5) : checked(size + 9);
         #endif
 
         cbor = CBORObject.NewArray(
-          FromObject(bigValue.UnsignedNumerator),
-          FromObject(bigValue.Denominator),
-          FromObject(options));
+            FromObject(bigValue.UnsignedNumerator),
+            FromObject(bigValue.Denominator),
+            FromObject(options));
         tag = 270;
       } else {
         tag = 30;
         cbor = CBORObject.NewArray(
-          CBORObject.FromObject(bigValue.Numerator),
-          CBORObject.FromObject(bigValue.Denominator));
+            CBORObject.FromObject(bigValue.Numerator),
+            CBORObject.FromObject(bigValue.Denominator));
       }
       return cbor.WithTag(tag);
     }
@@ -2168,23 +2167,23 @@ checked(size + 5) : checked(size + 9);
           options += 6;
         }
         cbor = CBORObject.NewArray(
-          FromObject(bigValue.Exponent),
-          FromObject(bigValue.UnsignedMantissa),
-          FromObject(options));
+            FromObject(bigValue.Exponent),
+            FromObject(bigValue.UnsignedMantissa),
+            FromObject(options));
         tag = 268;
       } else {
         EInteger exponent = bigValue.Exponent;
         if (exponent.CanFitInInt64()) {
           tag = 4;
           cbor = CBORObject.NewArray(
-             CBORObject.FromObject(exponent.ToInt64Checked()),
-             CBORObject.FromObject(bigValue.Mantissa));
-           } else {
+              CBORObject.FromObject(exponent.ToInt64Checked()),
+              CBORObject.FromObject(bigValue.Mantissa));
+        } else {
           tag = (exponent.GetSignedBitLengthAsInt64() > 64) ?
             264 : 4;
           cbor = CBORObject.NewArray(
-             CBORObject.FromObject(exponent),
-             CBORObject.FromObject(bigValue.Mantissa));
+              CBORObject.FromObject(exponent),
+              CBORObject.FromObject(bigValue.Mantissa));
         }
       }
       return cbor.WithTag(tag);
@@ -2200,6 +2199,9 @@ checked(size + 5) : checked(size + 9);
       if (strValue == null) {
         return CBORObject.Null;
       }
+      if (strValue.Length == 0) {
+        return GetFixedObject(0x60);
+      }
       if (DataUtilities.GetUtf8Length(strValue, false) < 0) {
         throw new ArgumentException("String contains an unpaired " +
           "surrogate code point.");
@@ -2213,12 +2215,12 @@ checked(size + 5) : checked(size + 9);
     /// 32-bit signed integer.</param>
     /// <returns>A CBOR object.</returns>
     public static CBORObject FromObject(int value) {
-if (value >= 0 && value < 24) {
-  return FixedObjects[value];
-} else {
- return (value >= -24 && value < 0) ? FixedObjects[0x20 - (value + 1)] :
-FromObject((long)value);
-}
+      if (value >= 0 && value < 24) {
+        return FixedObjects[value];
+      } else {
+        return (value >= -24 && value < 0) ? FixedObjects[0x20 - (value + 1)] :
+          FromObject((long)value);
+      }
     }
 
     /// <summary>Generates a CBOR object from a 16-bit signed
@@ -2227,12 +2229,12 @@ FromObject((long)value);
     /// 16-bit signed integer.</param>
     /// <returns>A CBOR object generated from the given integer.</returns>
     public static CBORObject FromObject(short value) {
-if (value >= 0 && value < 24) {
-  return FixedObjects[value];
-} else {
- return (value >= -24 && value < 0) ? FixedObjects[0x20 - (value + 1)] :
-FromObject((long)value);
-}
+      if (value >= 0 && value < 24) {
+        return FixedObjects[value];
+      } else {
+        return (value >= -24 && value < 0) ? FixedObjects[0x20 - (value + 1)] :
+          FromObject((long)value);
+      }
     }
 
     /// <summary>Returns the CBOR true value or false value, depending on
@@ -2301,7 +2303,7 @@ FromObject((long)value);
         return CBORObject.Null;
       }
       IList<CBORObject> list = new List<CBORObject>(array.Length ==
-Int32.MaxValue ? array.Length : (array.Length + 1));
+        Int32.MaxValue ? array.Length : (array.Length + 1));
       foreach (CBORObject cbor in array) {
         list.Add(cbor);
       }
@@ -2319,7 +2321,7 @@ Int32.MaxValue ? array.Length : (array.Length + 1));
         return CBORObject.Null;
       }
       IList<CBORObject> list = new List<CBORObject>(array.Length ==
-Int32.MaxValue ? array.Length : (array.Length + 1));
+        Int32.MaxValue ? array.Length : (array.Length + 1));
       foreach (int i in array) {
         list.Add(FromObject(i));
       }
@@ -2337,7 +2339,7 @@ Int32.MaxValue ? array.Length : (array.Length + 1));
         return CBORObject.Null;
       }
       IList<CBORObject> list = new List<CBORObject>(array.Length ==
-Int32.MaxValue ? array.Length : (array.Length + 1));
+        Int32.MaxValue ? array.Length : (array.Length + 1));
       foreach (long i in array) {
         list.Add(FromObject(i));
       }
@@ -2649,15 +2651,15 @@ Int32.MaxValue ? array.Length : (array.Length + 1));
           System.Collections.DictionaryEntry
           kvp = (System.Collections.DictionaryEntry)keyPair;
           CBORObject objKey = CBORObject.FromObject(
-            kvp.Key,
-            options,
-            mapper,
-            depth + 1);
+              kvp.Key,
+              options,
+              mapper,
+              depth + 1);
           objret[objKey] = CBORObject.FromObject(
-            kvp.Value,
-            options,
-            mapper,
-            depth + 1);
+              kvp.Value,
+              options,
+              mapper,
+              depth + 1);
         }
         return objret;
       }
@@ -2694,10 +2696,10 @@ Int32.MaxValue ? array.Length : (array.Length + 1));
           obj,
           options.UseCamelCase)) {
         objret[key.Key] = CBORObject.FromObject(
-          key.Value,
-          options,
-          mapper,
-          depth + 1);
+            key.Value,
+            options,
+            mapper,
+            depth + 1);
       }
       return objret;
     }
@@ -2879,8 +2881,8 @@ Int32.MaxValue ? array.Length : (array.Length + 1));
         return FixedObjects[0xe0 + simpleValue];
       }
       return new CBORObject(
-        CBORObjectTypeSimpleValue,
-        simpleValue);
+          CBORObjectTypeSimpleValue,
+          simpleValue);
     }
 
     /// <summary>Multiplies two CBOR numbers.</summary>
@@ -3181,7 +3183,7 @@ Int32.MaxValue ? array.Length : (array.Length + 1));
     /// then write the line feed byte (0x0a). RFC 7464, however, uses a
     /// more liberal syntax for parsing JSON text sequences.</remarks>
     public static CBORObject[] ReadJSONSequence(Stream stream, JSONOptions
-jsonoptions) {
+      jsonoptions) {
       if (stream == null) {
         throw new ArgumentNullException(nameof(stream));
       }
@@ -3194,9 +3196,9 @@ jsonoptions) {
       try {
         var nextchar = new int[1];
         CBORObject[] objlist = CBORJson.ParseJSONSequence(
-          reader,
-          jsonoptions,
-          nextchar);
+            reader,
+            jsonoptions,
+            nextchar);
         if (nextchar[0] != -1) {
           reader.RaiseError("End of data stream not reached");
         }
@@ -3245,9 +3247,9 @@ jsonoptions) {
       try {
         var nextchar = new int[1];
         CBORObject obj = CBORJson.ParseJSONValue(
-          reader,
-          jsonoptions,
-          nextchar);
+            reader,
+            jsonoptions,
+            nextchar);
         if (nextchar[0] != -1) {
           reader.RaiseError("End of data stream not reached");
         }
@@ -3361,7 +3363,7 @@ jsonoptions) {
     /// name='bytes'/> 's length minus <paramref name='offset'/> is less
     /// than <paramref name='count'/>.</exception>
     public static CBORObject FromJSONBytes(byte[] bytes, int offset, int
-count) {
+      count) {
       return FromJSONBytes(bytes, offset, count, JSONOptions.Default);
     }
 
@@ -3415,35 +3417,35 @@ count) {
       }
       if (offset < 0) {
         throw new ArgumentException("offset (" + offset + ") is not greater" +
-"\u0020or equal to 0");
+          "\u0020or equal to 0");
       }
       if (offset > bytes.Length) {
         throw new ArgumentException("offset (" + offset + ") is not less or" +
-"\u0020equal to " + bytes.Length);
+          "\u0020equal to " + bytes.Length);
       }
       if (count < 0) {
         throw new ArgumentException("count (" + count + ") is not greater or" +
-"\u0020equal to 0");
+          "\u0020equal to 0");
       }
       if (count > bytes.Length) {
         throw new ArgumentException("count (" + count + ") is not less or" +
-"\u0020equal to " + bytes.Length);
+          "\u0020equal to " + bytes.Length);
       }
       if (bytes.Length - offset < count) {
         throw new ArgumentException("bytes's length minus " + offset + " (" +
-(bytes.Length - offset) + ") is not greater or equal to " + count);
+          (bytes.Length - offset) + ") is not greater or equal to " + count);
       }
       if (count == 0) {
         throw new CBORException("Byte array is empty");
       }
       if (bytes[offset] >= 0x01 && bytes[offset] <= 0x7f && count >= 2 &&
-bytes[offset + 1] != 0) {
+        bytes[offset + 1] != 0) {
         // UTF-8 JSON bytes
         return CBORJson2.ParseJSONValue(
-          bytes,
-          offset,
-          offset + count,
-          jsonoptions);
+            bytes,
+            offset,
+            offset + count,
+            jsonoptions);
       } else {
         // Other than UTF-8 without byte order mark
         try {
@@ -4370,8 +4372,9 @@ bytes[offset + 1] != 0) {
     /// <exception cref='OverflowException'>This object's value exceeds the
     /// range of a 16-bit signed integer.</exception>
     [Obsolete("Instead, use the following:" +
-"\u0020\u0028cbor.AsNumber().ToInt16Checked()), or .ToObject<short>() in" +
-"\u0020.NET.")]
+        "\u0020\u0028cbor.AsNumber().ToInt16Checked()), or" +
+"\u0020.ToObject<short>() in" +
+        "\u0020.NET.")]
     public short AsInt16() {
       return (short)this.AsInt32(Int16.MinValue, Int16.MaxValue);
     }
@@ -4609,7 +4612,8 @@ bytes[offset + 1] != 0) {
     ///  .
     /// </example>
     [Obsolete("Instead, use the following:" +
-"\u0020\u0028cbor.AsNumber().ToInt64Checked()), or .ToObject<long>() in .NET.")]
+        "\u0020\u0028cbor.AsNumber().ToInt64Checked()), or .ToObject<long>()" +
+"\u0020in .NET.")]
     public long AsInt64() {
       CBORNumber cn = this.AsNumber();
       return cn.GetNumberInterface().AsInt64(cn.GetValue());
@@ -4648,7 +4652,8 @@ bytes[offset + 1] != 0) {
         case CBORObjectTypeTextStringUtf8: {
           return DataUtilities.GetUtf8String((byte[])this.ThisItem, false);
         }
-        default: throw new InvalidOperationException("Not a text string type");
+        default:
+          throw new InvalidOperationException("Not a text string type");
       }
     }
 
@@ -4729,7 +4734,8 @@ bytes[offset + 1] != 0) {
     /// integer by discarding its fractional part, would be -(2^31) or
     /// greater, and less than 2^31; otherwise, <c>false</c>.</returns>
     [Obsolete("Instead, use the following: \u0028cbor.CanValueFitInInt32()" +
-"\u0020if only integers of any tag are allowed, or \u0028cbor.IsNumber &&" +
+        "\u0020if only integers of any tag are allowed, or" +
+"\u0020\u0028cbor.IsNumber &&" +
         "\u0020cbor.AsNumber().CanTruncatedIntFitInInt32()).")]
     public bool CanTruncatedIntFitInInt32() {
       CBORNumber cn = CBORNumber.FromCBORObject(this);
@@ -4744,7 +4750,8 @@ bytes[offset + 1] != 0) {
     /// integer by discarding its fractional part, would be -(2^63) or
     /// greater, and less than 2^63; otherwise, <c>false</c>.</returns>
     [Obsolete("Instead, use the following: \u0028cbor.CanValueFitInInt64()" +
-"\u0020if only integers of any tag are allowed, or \u0028cbor.IsNumber &&" +
+        "\u0020if only integers of any tag are allowed, or" +
+"\u0020\u0028cbor.IsNumber &&" +
         "\u0020cbor.AsNumber().CanTruncatedIntFitInInt64()).")]
     public bool CanTruncatedIntFitInInt64() {
       CBORNumber cn = CBORNumber.FromCBORObject(this);
@@ -4894,15 +4901,15 @@ bytes[offset + 1] != 0) {
             this.EncodeToBytes(),
             other.EncodeToBytes());
       } else if (typeB == CBORObjectTypeTextString && typeA ==
-          CBORObjectTypeTextStringUtf8) {
+        CBORObjectTypeTextStringUtf8) {
         cmp = -CBORUtilities.CompareUtf16Utf8LengthFirst(
-          (string)objB,
-          (byte[])objA);
+            (string)objB,
+            (byte[])objA);
       } else if (typeA == CBORObjectTypeTextString && typeB ==
-          CBORObjectTypeTextStringUtf8) {
+        CBORObjectTypeTextStringUtf8) {
         cmp = CBORUtilities.CompareUtf16Utf8LengthFirst(
-          (string)objA,
-          (byte[])objB);
+            (string)objA,
+            (byte[])objB);
       } else {
         /* NOTE: itemtypeValue numbers are ordered such that they
         // correspond to the lexicographical order of their CBOR encodings
@@ -5197,16 +5204,16 @@ bytes[offset + 1] != 0) {
         return true;
       }
       if (this.itemtypeValue == CBORObjectTypeTextString &&
-          otherValue.itemtypeValue == CBORObjectTypeTextStringUtf8) {
-         return CBORUtilities.StringEqualsUtf8(
-             (string)this.itemValue,
-             (byte[])otherValue.itemValue);
+        otherValue.itemtypeValue == CBORObjectTypeTextStringUtf8) {
+        return CBORUtilities.StringEqualsUtf8(
+            (string)this.itemValue,
+            (byte[])otherValue.itemValue);
       }
       if (otherValue.itemtypeValue == CBORObjectTypeTextString &&
-          this.itemtypeValue == CBORObjectTypeTextStringUtf8) {
-         return CBORUtilities.StringEqualsUtf8(
-             (string)otherValue.itemValue,
-             (byte[])this.itemValue);
+        this.itemtypeValue == CBORObjectTypeTextStringUtf8) {
+        return CBORUtilities.StringEqualsUtf8(
+            (string)otherValue.itemValue,
+            (byte[])this.itemValue);
       }
       if (this.itemtypeValue != otherValue.itemtypeValue) {
         return false;
@@ -5269,7 +5276,7 @@ bytes[offset + 1] != 0) {
               break;
             case CBORObjectTypeTextStringUtf8:
               itemHashCode = CBORUtilities.Utf8HashCode(
-                (byte[])this.itemValue);
+                  (byte[])this.itemValue);
               break;
             case CBORObjectTypeMap:
               itemHashCode = CBORMapHashCode(this.AsMap());
@@ -5279,7 +5286,7 @@ bytes[offset + 1] != 0) {
               break;
             case CBORObjectTypeTextString:
               itemHashCode = CBORUtilities.StringHashCode(
-                (string)this.itemValue);
+                  (string)this.itemValue);
               break;
             case CBORObjectTypeSimpleValue:
               itemHashCode = (int)this.itemValue;
@@ -5412,8 +5419,7 @@ bytes[offset + 1] != 0) {
         throw new ArgumentException("bigTagValue(" + bigTagValue +
           ") is less than 0");
       }
-      return (!this.IsTagged) ? false :
-this.MostInnerTag.Equals(bigTagValue);
+      return (!this.IsTagged) ? false : this.MostInnerTag.Equals(bigTagValue);
     }
 
     /// <summary>Returns whether this object has an outermost tag and that
@@ -5448,8 +5454,7 @@ this.MostInnerTag.Equals(bigTagValue);
         throw new ArgumentException("bigTagValue(" + bigTagValue +
           ") is less than 0");
       }
-      return (!this.IsTagged) ? false :
-this.MostOuterTag.Equals(bigTagValue);
+      return (!this.IsTagged) ? false : this.MostOuterTag.Equals(bigTagValue);
     }
 
     /// <summary>Returns whether this object has a tag of the given
@@ -6439,8 +6444,7 @@ this.MostOuterTag.Equals(bigTagValue);
           return 1;
         } else if (value < 32) {
           throw new ArgumentException("value is from 24 to 31 and major" +
-"\u0020type" +
-            "\u0020is 7");
+            "\u0020type" + "\u0020is 7");
         } else {
           outputStream.WriteByte((byte)0xf8);
           outputStream.WriteByte((byte)value);
@@ -6874,8 +6878,8 @@ this.MostOuterTag.Equals(bigTagValue);
                     unchecked((int)uadditional));
               }
               return new CBORObject(
-                CBORObjectTypeDouble,
-                dblbits);
+                  CBORObjectTypeDouble,
+                  dblbits);
             }
             if (firstbyte == 0xf8) {
               if ((int)uadditional < 32) {
@@ -6897,7 +6901,7 @@ this.MostOuterTag.Equals(bigTagValue);
       if (majortype == 3) { // short text string
         var ret = new byte[firstbyte - 0x60];
         Array.Copy(data, 1, ret, 0, firstbyte - 0x60);
-      if (!CBORUtilities.CheckUtf8(ret)) {
+        if (!CBORUtilities.CheckUtf8(ret)) {
           throw new CBORException("Invalid encoding");
         }
         return new CBORObject(CBORObjectTypeTextStringUtf8, ret);
@@ -7013,7 +7017,8 @@ this.MostOuterTag.Equals(bigTagValue);
       // the map as the basis for the hash code. More complicated
       // hash code calculation would involve the sum of the hash codes of
       // the map's key-value pairs (an approach that works regardless of the order
-      // in which map keys are iterated), but this could take much more time
+      // in which map keys are iterated, because wraparound addition
+      // is commutative and associative), but this could take much more time
       // to calculate, especially if the keys and values are very big.
       return unchecked(a.Count.GetHashCode() * 19);
     }
@@ -7328,7 +7333,7 @@ this.MostOuterTag.Equals(bigTagValue);
       foreach (object o in stack) {
         if (o == child) {
           throw new ArgumentException("Circular reference in data" +
-"\u0020structure");
+            "\u0020structure");
         }
       }
       stack.Add(child);
@@ -7419,17 +7424,17 @@ this.MostOuterTag.Equals(bigTagValue);
         CBORObject key = entry.Key;
         CBORObject value = entry.Value;
         stack = WriteChildObject(
-          thisObj,
-          key,
-          outputStream,
-          stack,
-          options);
+            thisObj,
+            key,
+            outputStream,
+            stack,
+            options);
         stack = WriteChildObject(
-          thisObj,
-          value,
-          outputStream,
-          stack,
-          options);
+            thisObj,
+            value,
+            outputStream,
+            stack,
+            options);
       }
     }
 
@@ -7458,8 +7463,8 @@ this.MostOuterTag.Equals(bigTagValue);
       int bufferLength = Math.Min(StreamedStringBufferLength, str.Length);
       if (bufferLength < StreamedStringBufferLength) {
         bufferLength = Math.Min(
-          StreamedStringBufferLength,
-          bufferLength * 3);
+            StreamedStringBufferLength,
+            bufferLength * 3);
       }
       bytes = new byte[bufferLength];
       var byteIndex = 0;
