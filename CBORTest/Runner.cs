@@ -9,6 +9,7 @@ using System;
 using System.Reflection;
 using NUnit.Framework;
 using PeterO.Cbor;
+using PeterO.Numbers;
 using Test;
 
 namespace PeterO {
@@ -36,7 +37,6 @@ namespace PeterO {
   new CBORDataUtilitiesTest().TestParseJSONNumber();
   new CBORDataUtilitiesTest().TestParseJSONNumberObsolete();
   new CBORObjectTest().TestFromJSONString();
-  new CBORObjectTest().TestFromJsonStringLongSpecific1();
   new CBORObjectTest().TestFromJsonStringLongKindIntOrFloat();
   new CBORObjectTest().TestFromJsonStringLongKindIntOrFloatFromDouble();
   new CBORObjectTest().TestFromJsonStringLongKindFullBad();

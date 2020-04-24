@@ -9,7 +9,7 @@ using System;
 
 namespace PeterO.Cbor {
   internal class CBORUuidConverter : ICBORToFromConverter<Guid> {
-    private CBORObject ValidateObject(CBORObject obj) {
+    private static CBORObject ValidateObject(CBORObject obj) {
       if (obj.Type != CBORType.ByteString) {
         throw new CBORException("UUID must be a byte string");
       }
@@ -33,7 +33,7 @@ namespace PeterO.Cbor {
       if (!obj.HasMostOuterTag(37)) {
         throw new CBORException("Must have outermost tag 37");
       }
-      this.ValidateObject(obj);
+      ValidateObject(obj);
       byte[] bytes = obj.GetByteString();
       var guidChars = new char[36];
       string hex = "0123456789abcdef";

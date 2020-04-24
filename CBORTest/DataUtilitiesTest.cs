@@ -83,10 +83,10 @@ namespace Test {
       Assert.AreEqual(0xfffd, DataUtilities.CodePointAt("\udc00X", 0));
       Assert.AreEqual(0xfffd, DataUtilities.CodePointAt("\ud800\ud800", 0));
       Assert.AreEqual(0xfffd, DataUtilities.CodePointAt("\udc00\ud800", 0));
-      Assert.AreEqual (
+      Assert.AreEqual(
         0xfffd,
         DataUtilities.CodePointAt("\ud800\ud800\udc00", 0));
-      Assert.AreEqual (
+      Assert.AreEqual(
         0xfffd,
         DataUtilities.CodePointAt("\udc00\ud800\udc00", 0));
       Assert.AreEqual(0xfffd, DataUtilities.CodePointAt("\udc00\udc00", 0));
@@ -111,10 +111,10 @@ namespace Test {
           0);
         Assert.AreEqual(objectTemp, objectTemp2);
 }
-      Assert.AreEqual (
+      Assert.AreEqual(
         0xfffd,
         DataUtilities.CodePointAt("\ud800\ud800\udc00", 0, 0));
-      Assert.AreEqual (
+      Assert.AreEqual(
         0xfffd,
         DataUtilities.CodePointAt("\udc00\ud800\udc00", 0, 0));
       {
@@ -146,7 +146,7 @@ namespace Test {
           1);
         Assert.AreEqual(objectTemp, objectTemp2);
 }
-      Assert.AreEqual (
+      Assert.AreEqual(
         0xd800,
         DataUtilities.CodePointAt("\ud800\ud800\udc00", 0, 1));
       {
@@ -157,7 +157,7 @@ namespace Test {
           1);
         Assert.AreEqual(objectTemp, objectTemp2);
 }
-      Assert.AreEqual (
+      Assert.AreEqual(
         0xdc00,
         DataUtilities.CodePointAt("\udc00\ud800\udc00", 0, 1));
       {
@@ -222,16 +222,16 @@ namespace Test {
       Assert.AreEqual(-1, DataUtilities.CodePointBefore("A", -1));
       Assert.AreEqual((int)'A', DataUtilities.CodePointBefore("A", 1));
       Assert.AreEqual(-1, DataUtilities.CodePointBefore("A", 2));
-      Assert.AreEqual (
+      Assert.AreEqual(
         (int)'A',
         DataUtilities.CodePointBefore("A\ud800\udc00B", 1));
-      Assert.AreEqual (
+      Assert.AreEqual(
         0x10000,
         DataUtilities.CodePointBefore("A\ud800\udc00B", 3));
-      Assert.AreEqual (
+      Assert.AreEqual(
         0xfffd,
         DataUtilities.CodePointBefore("A\ud800\udc00B", 2));
-      Assert.AreEqual (
+      Assert.AreEqual(
         0xd800,
         DataUtilities.CodePointBefore("A\ud800\udc00B", 2, 1));
       {
@@ -304,11 +304,11 @@ namespace Test {
         Assert.AreEqual(1, numberTemp);
       }
       Assert.IsTrue(DataUtilities.CodePointCompare("abc", "def") < 0);
-      Assert.IsTrue (
+      Assert.IsTrue(
         DataUtilities.CodePointCompare(
           "a\ud800\udc00",
           "a\ud900\udc00") < 0);
-      Assert.IsTrue (
+      Assert.IsTrue(
         DataUtilities.CodePointCompare(
           "a\ud800\udc00",
           "a\ud800\udc00") == 0);
@@ -316,23 +316,23 @@ namespace Test {
 == 0);
       Assert.IsTrue(DataUtilities.CodePointCompare("a\udc00", "a\udc00")
 == 0);
-      Assert.IsTrue (
+      Assert.IsTrue(
         DataUtilities.CodePointCompare(
           "a\ud800\udc00",
           "a\ud800\udd00") < 0);
-      Assert.IsTrue (
+      Assert.IsTrue(
         DataUtilities.CodePointCompare(
           "a\ud800\ufffd",
           "a\ud800\udc00") < 0);
-      Assert.IsTrue (
+      Assert.IsTrue(
         DataUtilities.CodePointCompare(
           "a\ud800\ud7ff",
           "a\ud800\udc00") < 0);
-      Assert.IsTrue (
+      Assert.IsTrue(
         DataUtilities.CodePointCompare(
           "a\ufffd\udc00",
           "a\ud800\udc00") < 0);
-      Assert.IsTrue (
+      Assert.IsTrue(
         DataUtilities.CodePointCompare(
           "a\ud7ff\udc00",
           "a\ud800\udc00") < 0);
@@ -493,37 +493,37 @@ namespace Test {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      TestCommon.AssertByteArraysEqual (
+      TestCommon.AssertByteArraysEqual(
         new byte[] { 0xf0, 0x90, 0x80, 0x80 },
         DataUtilities.GetUtf8Bytes("\ud800\udc00", false));
-      TestCommon.AssertByteArraysEqual (
+      TestCommon.AssertByteArraysEqual(
         new byte[] { 0xef, 0xbf, 0xbd },
         DataUtilities.GetUtf8Bytes("\ud800", true));
-      TestCommon.AssertByteArraysEqual (
+      TestCommon.AssertByteArraysEqual(
         new byte[] { 0xef, 0xbf, 0xbd },
         DataUtilities.GetUtf8Bytes("\udc00", true));
-      TestCommon.AssertByteArraysEqual (
+      TestCommon.AssertByteArraysEqual(
         new byte[] { 0xef, 0xbf, 0xbd, 88 },
         DataUtilities.GetUtf8Bytes("\ud800X", true));
-      TestCommon.AssertByteArraysEqual (
+      TestCommon.AssertByteArraysEqual(
         new byte[] { 0xef, 0xbf, 0xbd, 88 },
         DataUtilities.GetUtf8Bytes("\udc00X", true));
-      TestCommon.AssertByteArraysEqual (
+      TestCommon.AssertByteArraysEqual(
         new byte[] { 0xef, 0xbf, 0xbd, 0xef, 0xbf, 0xbd },
         DataUtilities.GetUtf8Bytes("\ud800\ud800", true));
-      TestCommon.AssertByteArraysEqual (
+      TestCommon.AssertByteArraysEqual(
         new byte[] { 0xef, 0xbf, 0xbd, 0xef, 0xbf, 0xbd },
         DataUtilities.GetUtf8Bytes("\udc00\ud800", true));
-      TestCommon.AssertByteArraysEqual (
+      TestCommon.AssertByteArraysEqual(
         new byte[] { 0xef, 0xbf, 0xbd, 0xf0, 0x90, 0x80, 0x80 },
         DataUtilities.GetUtf8Bytes("\udc00\ud800\udc00", true));
-      TestCommon.AssertByteArraysEqual (
+      TestCommon.AssertByteArraysEqual(
         new byte[] { 0xef, 0xbf, 0xbd, 0xf0, 0x90, 0x80, 0x80 },
         DataUtilities.GetUtf8Bytes("\ud800\ud800\udc00", true));
-      TestCommon.AssertByteArraysEqual (
+      TestCommon.AssertByteArraysEqual(
         new byte[] { 0xef, 0xbf, 0xbd, 0xef, 0xbf, 0xbd },
         DataUtilities.GetUtf8Bytes("\udc00\udc00", true));
-      TestCommon.AssertByteArraysEqual (
+      TestCommon.AssertByteArraysEqual(
         new byte[] { 0xf0, 0x90, 0x80, 0x80 },
         DataUtilities.GetUtf8Bytes("\ud800\udc00", false));
     }
@@ -730,7 +730,7 @@ namespace Test {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      string strtemp = DataUtilities.GetUtf8String (
+      string strtemp = DataUtilities.GetUtf8String(
           new byte[] { 0x41, 0x42, 0x43 },
           0,
           3,
@@ -739,7 +739,7 @@ namespace Test {
         "ABC",
         strtemp);
       {
-        string stringTemp = DataUtilities.GetUtf8String (
+        string stringTemp = DataUtilities.GetUtf8String(
             new byte[] { 0x41, 0x42, 0x43, 0x80 },
             0,
             4,
@@ -749,7 +749,7 @@ namespace Test {
           stringTemp);
       }
       try {
-        DataUtilities.GetUtf8String (
+        DataUtilities.GetUtf8String(
           new byte[] { 0x41, 0x42, 0x43, 0x80 },
           0,
           4,
@@ -900,130 +900,130 @@ namespace Test {
           }
         }
       }
-      DoTestReadUtf8 (
+      DoTestReadUtf8(
         new byte[] { 0x21, 0x21, 0x21 },
         0,
         "!!!",
         0,
         "!!!");
-      DoTestReadUtf8 (
+      DoTestReadUtf8(
         new byte[] { 0x20, 0xc2, 0x80 },
         0,
         " \u0080",
         0,
         " \u0080");
-      DoTestReadUtf8 (
+      DoTestReadUtf8(
         new byte[] { 0x20, 0xc2, 0x80, 0x20 },
         0,
         " \u0080 ",
         0,
         " \u0080 ");
-      DoTestReadUtf8 (
+      DoTestReadUtf8(
         new byte[] { 0x20, 0xc2, 0x80, 0xc2 },
         0,
         " \u0080\ufffd",
         -1,
         null);
-      DoTestReadUtf8 (
+      DoTestReadUtf8(
         new byte[] { 0x20, 0xc2, 0x21, 0x21 },
         0,
         " \ufffd!!",
         -1,
         null);
-      DoTestReadUtf8 (
+      DoTestReadUtf8(
         new byte[] { 0x20, 0xc2, 0xff, 0x20 },
         0,
         " \ufffd\ufffd ",
         -1,
         null);
-      DoTestReadUtf8 (
+      DoTestReadUtf8(
         new byte[] { 0x20, 0xe0, 0xa0, 0x80 },
         0,
         " \u0800",
         0,
         " \u0800");
-      DoTestReadUtf8 (
+      DoTestReadUtf8(
         new byte[] { 0x20, 0xe0, 0xa0, 0x80, 0x20 },
         0,
         " \u0800 ",
         0,
         "\u0020\u0800 ");
-      DoTestReadUtf8 (
+      DoTestReadUtf8(
         new byte[] { 0x20, 0xf0, 0x90, 0x80, 0x80 },
         0,
         " \ud800\udc00",
         0,
         " \ud800\udc00");
-      DoTestReadUtf8 (
+      DoTestReadUtf8(
         new byte[] { 0x20, 0xf0, 0x90, 0x80, 0x80 },
         3,
         0,
         " \ufffd",
         -1,
         null);
-      DoTestReadUtf8 (
+      DoTestReadUtf8(
         new byte[] { 0x20, 0xf0, 0x90 },
         5,
         -2,
         null,
         -1,
         null);
-      DoTestReadUtf8 (
+      DoTestReadUtf8(
         new byte[] { 0x20, 0x20, 0x20 },
         5,
         -2,
         null,
         -2,
         null);
-      DoTestReadUtf8 (
+      DoTestReadUtf8(
         new byte[] { 0x20, 0xf0, 0x90, 0x80, 0x80, 0x20 },
         0,
         " \ud800\udc00 ",
         0,
         " \ud800\udc00 ");
-      DoTestReadUtf8 (
+      DoTestReadUtf8(
         new byte[] { 0x20, 0xf0, 0x90, 0x80, 0x20 },
         0,
         " \ufffd ",
         -1,
         null);
-      DoTestReadUtf8 (
+      DoTestReadUtf8(
         new byte[] { 0x20, 0xf0, 0x90, 0x20 },
         0,
         " \ufffd ",
         -1,
         null);
-      DoTestReadUtf8 (
+      DoTestReadUtf8(
         new byte[] { 0x20, 0xf0, 0x90, 0x80, 0xff },
         0,
         " \ufffd\ufffd",
         -1,
         null);
-      DoTestReadUtf8 (
+      DoTestReadUtf8(
         new byte[] { 0x20, 0xf0, 0x90, 0xff },
         0,
         " \ufffd\ufffd",
         -1,
         null);
-      DoTestReadUtf8 (
+      DoTestReadUtf8(
         new byte[] { 0x20, 0xe0, 0xa0, 0x20 },
         0,
         " \ufffd ",
         -1,
         null);
-      DoTestReadUtf8 (
+      DoTestReadUtf8(
         new byte[] { 0x20, 0xe0, 0x20 },
         0,
         " \ufffd ",
         -1,
         null);
-      DoTestReadUtf8 (
+      DoTestReadUtf8(
         new byte[] { 0x20, 0xe0, 0xa0, 0xff },
         0,
         " \ufffd\ufffd",
         -1,
         null);
-      DoTestReadUtf8 (
+      DoTestReadUtf8(
         new byte[] { 0x20, 0xe0, 0xff },
         0,
         " \ufffd\ufffd",
@@ -1052,7 +1052,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        DataUtilities.ReadUtf8FromBytes (
+        DataUtilities.ReadUtf8FromBytes(
           new byte[] { 0 },
           -1,
           1,
@@ -1066,7 +1066,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        DataUtilities.ReadUtf8FromBytes (
+        DataUtilities.ReadUtf8FromBytes(
           new byte[] { 0 },
           2,
           1,
@@ -1080,7 +1080,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        DataUtilities.ReadUtf8FromBytes (
+        DataUtilities.ReadUtf8FromBytes(
           new byte[] { 0 },
           0,
           -1,
@@ -1094,7 +1094,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        DataUtilities.ReadUtf8FromBytes (
+        DataUtilities.ReadUtf8FromBytes(
           new byte[] { 0 },
           0,
           2,
@@ -1108,7 +1108,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        DataUtilities.ReadUtf8FromBytes (
+        DataUtilities.ReadUtf8FromBytes(
           new byte[] { 0 },
           1,
           1,
@@ -1132,7 +1132,7 @@ namespace Test {
       }
       builder = new StringBuilder();
       {
-        long numberTemp = DataUtilities.ReadUtf8FromBytes (
+        long numberTemp = DataUtilities.ReadUtf8FromBytes(
             new byte[] { 0xf0, 0x90, 0x80, 0x80 },
             0,
             4,
@@ -1440,7 +1440,7 @@ namespace Test {
           {
             using (var ms = new MemoryStream()) {
               DataUtilities.WriteUtf8("0\r1", 0, 3, ms, true, true);
-              TestCommon.AssertByteArraysEqual (
+              TestCommon.AssertByteArraysEqual(
                 new byte[] { 0x30, 0x0d, 0x0a, 0x31 },
                 ms.ToArray());
             }
@@ -1448,7 +1448,7 @@ namespace Test {
           {
             using (var ms = new MemoryStream()) {
               DataUtilities.WriteUtf8("0\n1", 0, 3, ms, true, true);
-              TestCommon.AssertByteArraysEqual (
+              TestCommon.AssertByteArraysEqual(
                 new byte[] { 0x30, 0x0d, 0x0a, 0x31 },
                 ms.ToArray());
             }
@@ -1456,7 +1456,7 @@ namespace Test {
           {
             using (var ms = new MemoryStream()) {
               DataUtilities.WriteUtf8("0\r\n1", 0, 4, ms, true, true);
-              TestCommon.AssertByteArraysEqual (
+              TestCommon.AssertByteArraysEqual(
                 new byte[] { 0x30, 0x0d, 0x0a, 0x31 },
                 ms.ToArray());
             }
@@ -1464,7 +1464,7 @@ namespace Test {
           {
             using (var ms = new MemoryStream()) {
               DataUtilities.WriteUtf8("0\r\r1", 0, 4, ms, true, true);
-              TestCommon.AssertByteArraysEqual (
+              TestCommon.AssertByteArraysEqual(
                 new byte[] { 0x30, 0x0d, 0x0a, 0x0d, 0x0a, 0x31 },
                 ms.ToArray());
             }
@@ -1472,7 +1472,7 @@ namespace Test {
           {
             using (var ms = new MemoryStream()) {
               DataUtilities.WriteUtf8("0\n\r1", 0, 4, ms, true, true);
-              TestCommon.AssertByteArraysEqual (
+              TestCommon.AssertByteArraysEqual(
                 new byte[] { 0x30, 0x0d, 0x0a, 0x0d, 0x0a, 0x31 },
                 ms.ToArray());
             }
@@ -1480,7 +1480,7 @@ namespace Test {
           {
             using (var ms = new MemoryStream()) {
               DataUtilities.WriteUtf8("0\r\r\n1", 0, 5, ms, true, true);
-              TestCommon.AssertByteArraysEqual (
+              TestCommon.AssertByteArraysEqual(
                 new byte[] { 0x30, 0x0d, 0x0a, 0x0d, 0x0a, 0x31 },
                 ms.ToArray());
             }
@@ -1488,7 +1488,7 @@ namespace Test {
           {
             using (var ms = new MemoryStream()) {
               DataUtilities.WriteUtf8("0\n\r\n1", 0, 5, ms, true, true);
-              TestCommon.AssertByteArraysEqual (
+              TestCommon.AssertByteArraysEqual(
                 new byte[] { 0x30, 0x0d, 0x0a, 0x0d, 0x0a, 0x31 },
                 ms.ToArray());
             }
@@ -1496,7 +1496,7 @@ namespace Test {
           {
             using (var ms = new MemoryStream()) {
               DataUtilities.WriteUtf8("0\n\n\r1", 0, 5, ms, true, true);
-              TestCommon.AssertByteArraysEqual (
+              TestCommon.AssertByteArraysEqual(
                 new byte[] { 0x30, 0x0d, 0x0a, 0x0d, 0x0a, 0x0d, 0x0a, 0x31 },
                 ms.ToArray());
             }
@@ -1504,7 +1504,7 @@ namespace Test {
           {
             using (var ms = new MemoryStream()) {
               DataUtilities.WriteUtf8("0\r\r\r1", 0, 5, ms, true, true);
-              TestCommon.AssertByteArraysEqual (
+              TestCommon.AssertByteArraysEqual(
                 new byte[] { 0x30, 0x0d, 0x0a, 0x0d, 0x0a, 0x0d, 0x0a, 0x31 },
                 ms.ToArray());
             }

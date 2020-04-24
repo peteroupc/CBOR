@@ -9,7 +9,7 @@ namespace PeterO {
   /// <para><b>Thread safety:</b> The methods in this class are safe for
   /// concurrent use by multiple threads, as long as the underlying
   /// random byte generator is as well.</para></summary>
-  public sealed class RandomGenerator {
+  public sealed class RandomGenerator : IRandomGenExtended {
     private bool valueHaveLastNormal;
     private IRandomGen valueIrg;
     private double valueLastNormal;
@@ -57,6 +57,10 @@ namespace PeterO {
     /// <returns>A 32-bit signed integer.</returns>
     public int Binomial(int trials) {
       return this.Binomial(trials, 0.5);
+    }
+
+    public int GetBytes(byte[] bytes, int offset, int count) {
+      return this.valueIrg.GetBytes(bytes, offset, count);
     }
 
     /// <summary>Conceptually, generates either 1 or 0 the given number of
@@ -438,7 +442,7 @@ namespace PeterO {
         return minInclusive + this.UniformLong(maxExclusive - minInclusive);
       } else {
         if ((maxExclusive < 0 && Int64.MaxValue + maxExclusive <
-minInclusive) ||
+            minInclusive) ||
           (maxExclusive > 0 && Int64.MinValue + maxExclusive > minInclusive) ||
           minInclusive - maxExclusive < 0) {
           // Difference is greater than MaxValue
@@ -476,6 +480,10 @@ minInclusive) ||
       }
       if (maxExclusive <= 1) {
         return 0;
+      }
+      var rge = this.valueIrg as IRandomGenExtended;
+      if (rge != null) {
+        return rge.GetInt32(maxExclusive);
       }
       var b = new byte[4];
       switch (maxExclusive) {
@@ -520,6 +528,14 @@ minInclusive) ||
       }
     }
 
+    public long GetInt64(long maxExclusive) {
+      return this.UniformLong(maxExclusive);
+    }
+
+    public int GetInt32(int maxExclusive) {
+      return this.UniformInt(maxExclusive);
+    }
+
     /// <summary>Generates a random 32-bit signed integer 0 or greater and
     /// less than the given number.</summary>
     /// <param name='maxExclusive'>One plus the largest possible value of
@@ -532,6 +548,10 @@ minInclusive) ||
       }
       if (maxExclusive <= Int32.MaxValue) {
         return this.UniformInt((int)maxExclusive);
+      }
+      var rge = this.valueIrg as IRandomGenExtended;
+      if (rge != null) {
+        return rge.GetInt64(maxExclusive);
       }
       long lb = 0;
       long maxexc;

@@ -1,5 +1,5 @@
 /*
-Written by Peter O. in 2014.
+Written by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
@@ -176,19 +176,19 @@ namespace Test {
     }
     [Test]
     public void TestCBORObjectArgumentValidation() {
-      Assert.AreEqual (
+      Assert.AreEqual(
         CBORObject.Null,
         ToObjectTest.TestToFromObjectRoundTrip((byte[])null));
-      Assert.AreEqual (
+      Assert.AreEqual(
         CBORObject.Null,
         ToObjectTest.TestToFromObjectRoundTrip((CBORObject[])null));
-      Assert.AreEqual (
+      Assert.AreEqual(
         CBORObject.True,
         ToObjectTest.TestToFromObjectRoundTrip(true));
-      Assert.AreEqual (
+      Assert.AreEqual(
         CBORObject.False,
         ToObjectTest.TestToFromObjectRoundTrip(false));
-      Assert.AreEqual (
+      Assert.AreEqual(
         ToObjectTest.TestToFromObjectRoundTrip(8),
         ToObjectTest.TestToFromObjectRoundTrip((byte)8));
 
@@ -560,11 +560,11 @@ namespace Test {
       });
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
 
-      cbor = CBORObject.DecodeFromBytes (
+      cbor = CBORObject.DecodeFromBytes(
           new byte[] { 0xd8, 0x1e, 0x9f, 0xff, });
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
 
-      cbor = CBORObject.DecodeFromBytes (
+      cbor = CBORObject.DecodeFromBytes(
           new byte[] { 0xd9, 0x01, 0x0e, 0x9f, 0xff, });
       Assert.IsFalse(cbor.IsNumber, cbor.ToString());
       cbor = CBORObject.DecodeFromBytes(new byte[] {
@@ -841,7 +841,7 @@ namespace Test {
     [Test]
     public void TestStringRefs() {
       var encodeOptions = new CBOREncodeOptions("resolvereferences=true");
-      CBORObject cbor = CBORObject.DecodeFromBytes (
+      CBORObject cbor = CBORObject.DecodeFromBytes(
       new byte[] {
         0xd9, 1, 0, 0x9f, 0x64, 0x61, 0x62, 0x63, 0x64, 0xd8,
         0x19, 0x00, 0xd8, 0x19, 0x00, 0x64, 0x62, 0x62, 0x63, 0x64, 0xd8, 0x19,

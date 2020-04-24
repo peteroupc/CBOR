@@ -9,26 +9,26 @@ using System;
 
 namespace PeterO.Cbor {
   internal class CBORUriConverter : ICBORToFromConverter<Uri> {
-    private CBORObject ValidateObject(CBORObject obj) {
+    private static CBORObject ValidateObject(CBORObject obj) {
       if (obj.Type != CBORType.TextString) {
         throw new CBORException("URI/IRI must be a text string");
       }
       bool isiri = obj.HasMostOuterTag(266);
       bool isiriref = obj.HasMostOuterTag(267);
       if (
-        isiriref && !URIUtility.IsValidIRI (
+        isiriref && !URIUtility.IsValidIRI(
           obj.AsString(),
           URIUtility.ParseMode.IRIStrict)) {
         throw new CBORException("String is not a valid IRI Reference");
       }
       if (
-        isiri && (!URIUtility.IsValidIRI (
+        isiri && (!URIUtility.IsValidIRI(
             obj.AsString(),
             URIUtility.ParseMode.IRIStrict) ||
           !URIUtility.HasScheme(obj.AsString()))) {
         throw new CBORException("String is not a valid IRI");
       }
-      if (!URIUtility.IsValidIRI (
+      if (!URIUtility.IsValidIRI(
           obj.AsString(),
           URIUtility.ParseMode.URIStrict) ||
         !URIUtility.HasScheme(obj.AsString())) {
@@ -41,7 +41,7 @@ namespace PeterO.Cbor {
       if (obj.HasMostOuterTag(32) ||
              obj.HasMostOuterTag(266) ||
              obj.HasMostOuterTag(267)) {
-        this.ValidateObject(obj);
+        ValidateObject(obj);
         try {
           return new Uri(obj.AsString());
         } catch (Exception ex) {

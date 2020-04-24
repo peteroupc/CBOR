@@ -1,5 +1,5 @@
 /*
-Written by Peter O. in 2014.
+Written by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
@@ -80,7 +80,7 @@ namespace PeterO.Cbor {
         if (untagged.IsTagged ||
           untagged.Type != CBORType.Integer ||
 untagged.AsNumber().IsNegative()) {
-          throw new CBORException (
+          throw new CBORException(
             "Shared ref index must be an untagged integer 0 or greater");
         }
         return sharedRefs.GetObject(untagged.AsEIntegerValue());
@@ -163,7 +163,7 @@ untagged.AsNumber().IsNegative()) {
         }
         var builder = new StringBuilder();
         switch (
-          DataUtilities.ReadUtf8 (
+          DataUtilities.ReadUtf8(
             this.stream,
             (int)uadditional,
             builder,
@@ -197,7 +197,7 @@ untagged.AsNumber().IsNegative()) {
         }
         ++this.depth;
         for (long i = 0; i < uadditional; ++i) {
-          cbor.Add (
+          cbor.Add(
             this.ReadInternal());
         }
         --this.depth;
@@ -283,7 +283,7 @@ untagged.AsNumber().IsNegative()) {
             CBORObject.FromObject(ToUnsignedEInteger(uadditional)) :
             CBORObject.FromObject(uadditional);
           } else if (type == 1) {
-          return (uadditional >> 63) != 0 ? CBORObject.FromObject (
+          return (uadditional >> 63) != 0 ? CBORObject.FromObject(
               ToUnsignedEInteger(uadditional).Add(1).Negate()) :
             CBORObject.FromObject((-uadditional) - 1L);
           } else if (type == 7) {
@@ -389,7 +389,7 @@ untagged.AsNumber().IsNegative()) {
                   throw new CBORException("Premature end of data");
                 }
                 switch (
-                  DataUtilities.ReadUtf8 (
+                  DataUtilities.ReadUtf8(
                     this.stream,
                     (int)len,
                     builder,
@@ -417,7 +417,7 @@ untagged.AsNumber().IsNegative()) {
                 break;
               }
               ++this.depth;
-              CBORObject o = this.ReadForFirstByte (
+              CBORObject o = this.ReadForFirstByte(
                   headByte);
               --this.depth;
               cbor.Add(o);
@@ -469,7 +469,7 @@ untagged.AsNumber().IsNegative()) {
           this.HandleItemTag(uadditional);
         }
         ++this.depth;
-        CBORObject o = haveFirstByte ? this.ReadForFirstByte (
+        CBORObject o = haveFirstByte ? this.ReadForFirstByte(
             newFirstByte) : this.ReadInternal();
         --this.depth;
         if ((uadditional >> 63) != 0) {
@@ -494,11 +494,11 @@ untagged.AsNumber().IsNegative()) {
                 return this.stringRefs.GetString(o.AsEIntegerValue());
             }
           }
-          return CBORObject.FromObjectAndTag (
+          return CBORObject.FromObjectAndTag(
               o,
               (int)uadditional);
         }
-        return CBORObject.FromObjectAndTag (
+        return CBORObject.FromObjectAndTag(
             o,
             (EInteger)uadditional);
       }

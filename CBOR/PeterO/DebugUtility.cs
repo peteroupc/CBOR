@@ -31,7 +31,7 @@ namespace PeterO {
       var types = new[] { typeof(string) };
       var typeMethod = GetTypeMethod(type, "WriteLine", types);
       if (typeMethod != null) {
-        typeMethod.Invoke (
+        typeMethod.Invoke(
           type,
           new object[] { str });
       }

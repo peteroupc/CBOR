@@ -1,9 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk='Microsoft.NET.Sdk'>
 
   <PropertyGroup>
     <TargetFrameworks>netstandard1.0</TargetFrameworks>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>4.1.1</Version>
+    <Version>4.1.2</Version>
     <Owners>Peter Occil</Owners>
     <Description>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049.</Description>
     <Summary>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049. </Summary>
@@ -13,6 +13,10 @@
     <PackageLicenseExpression>CC0-1.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/peteroupc/CBOR</PackageProjectUrl>
     <PackageReleaseNotes>
+### Version 4.1.2
+
+- Fix issue with Numbers library dependency; etc.
+
 ### Version 4.1.1
 
 - Fix issue where some non-basic characters in JSON strings encoded in UTF-8 were read incorrectly by the CBORObject.FromJSONBytes method
@@ -41,24 +45,21 @@
     <PackOnBuild>true</PackOnBuild>
   <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet><PackageLicenseExpression>CC0-1.0</PackageLicenseExpression></PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=' &apos;$(Configuration)|$(Platform)&apos; == &apos;Debug|AnyCPU&apos; '>
     <DocumentationFile>bin\Debug\netstandard1.0\CBOR.xml</DocumentationFile>
 
   <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet></PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType />
+  <PropertyGroup Condition=' &apos;$(Configuration)|$(Platform)&apos; == &apos;Release|AnyCPU&apos; '>
+    <DebugType/>
     <DocumentationFile>bin\Release\netstandard1.0\CBOR.xml</DocumentationFile>
 
   <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet></PropertyGroup>
   <ItemGroup>
 
-  <PackageReference Include="StyleCop.Analyzers" PrivateAssets="All" Version="1.1.118" />
- <AdditionalFiles Include="stylecop.json" />
-<AdditionalFiles Include="rules.ruleset" /><PackageReference Include="PeterO.URIUtility" Version="1.0.0" />
-<PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" PrivateAssets="All" Version="2.9.8" />
-<PackageReference Include="PeterO.Numbers" Version="1.5.1" />
+  <PackageReference Include='StyleCop.Analyzers' PrivateAssets='All' Version='1.2.0-beta.164'/>
+ <AdditionalFiles Include='stylecop.json'/>
+<AdditionalFiles Include='rules.ruleset'/><PackageReference Include='PeterO.URIUtility' Version='1.0.0'/>
+<PackageReference Include='Microsoft.CodeAnalysis.FxCopAnalyzers' PrivateAssets='All' Version='3.0.0-beta3.final'/>
+<PackageReference Include='PeterO.Numbers' Version='1.6.0'/>
 </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="PeterO\Cbor\FastInteger2.cs" />
-  </ItemGroup>
-   </Project>
+      </Project>

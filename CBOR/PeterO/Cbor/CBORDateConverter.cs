@@ -1,5 +1,5 @@
 /*
-Written by Peter O. in 2014.
+Written by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
@@ -15,13 +15,6 @@ namespace PeterO.Cbor {
       var year = new EInteger[1];
       PropertyMap.BreakDownDateTime(bi, year, lesserFields);
       return CBORUtilities.ToAtomDateTimeString(year[0], lesserFields);
-    }
-
-    public CBORObject ValidateObject(CBORObject obj) {
-      if (obj.Type != CBORType.TextString) {
-        throw new CBORException("Not a text string");
-      }
-      return obj;
     }
 
     public DateTime FromCBORObject(CBORObject obj) {

@@ -36,7 +36,7 @@ namespace PeterO.Cbor {
       var er = (ERational)obj;
       return
 
-        er.ToEDecimalExactIfPossible (
+        er.ToEDecimalExactIfPossible(
           EContext.Decimal128.WithUnlimitedExponents());
     }
 
@@ -44,7 +44,7 @@ namespace PeterO.Cbor {
       var er = (ERational)obj;
       return
 
-        er.ToEFloatExactIfPossible (
+        er.ToEFloatExactIfPossible(
           EContext.Binary128.WithUnlimitedExponents());
     }
 

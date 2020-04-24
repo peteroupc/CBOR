@@ -1509,6 +1509,7 @@ JSONOptions("allowduplicatekeys=false");
       Console.WriteLine(cbor2);
       TestCommon.CompareTestLess(cbor1.AsNumber(), cbor2.AsNumber());
     }
+
     private static string TrimStr(string str, int len) {
       return str.Substring(0, Math.Min(len, str.Length));
     }
@@ -2444,6 +2445,12 @@ CBOREncodeOptions(false, false, true));
       aba = "{\"a\":1,\"a\":4}";
       cbor = TestSucceedingJSON(aba, new JSONOptions("allowduplicatekeys=1"));
       Assert.AreEqual(ToObjectTest.TestToFromObjectRoundTrip(4), cbor["a"]);
+      aba = "{\"a\" :1}";
+      cbor = TestSucceedingJSON(aba);
+      Assert.AreEqual(ToObjectTest.TestToFromObjectRoundTrip(1), cbor["a"]);
+      aba = "{\"a\" : 1}";
+      cbor = TestSucceedingJSON(aba);
+      Assert.AreEqual(ToObjectTest.TestToFromObjectRoundTrip(1), cbor["a"]);
       cbor = TestSucceedingJSON("\"\\t\"");
       {
         string stringTemp = cbor.AsString();
@@ -5139,6 +5146,27 @@ CBOREncodeOptions(false, false, true));
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
+    }
+
+    [Test]
+    public void TestCompareToUnicodeString() {
+       CBORObject cbora;
+       CBORObject cborb;
+       cbora = CBORObject.FromObject("aa\ud200\ue000");
+       cborb = CBORObject.FromObject("aa\ud200\ue001");
+       TestCommon.CompareTestLess(cbora, cborb);
+       cbora = CBORObject.FromObject("aa\ud200\ue000");
+       cborb = CBORObject.FromObject("aa\ud201\ue000");
+       TestCommon.CompareTestLess(cbora, cborb);
+       cbora = CBORObject.FromObject("aa\ud800\udc00\ue000");
+       cborb = CBORObject.FromObject("aa\ue001\ue000");
+       TestCommon.CompareTestGreater(cbora, cborb);
+       cbora = CBORObject.FromObject("aa\ud800\udc00\ue000");
+       cborb = CBORObject.FromObject("aa\ud800\udc01\ue000");
+       TestCommon.CompareTestLess(cbora, cborb);
+       cbora = CBORObject.FromObject("aa\ud800\udc00\ue000");
+       cborb = CBORObject.FromObject("aa\ud801\udc00\ue000");
+       TestCommon.CompareTestLess(cbora, cborb);
     }
 
     [Test]
