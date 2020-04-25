@@ -1,6 +1,10 @@
 Release notes
 ---------------------
 
+### Version 4.1.2
+
+- Fix issue with Numbers library dependency; etc.
+
 ### Version 4.1.1
 
 - Fix issue where some non-basic characters in JSON strings encoded in UTF-8 were read incorrectly by the CBORObject.FromJSONBytes method

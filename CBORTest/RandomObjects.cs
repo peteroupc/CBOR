@@ -14,9 +14,9 @@ using PeterO.Numbers;
 namespace Test {
   /// <summary>Description of RandomObjects.</summary>
   public static class RandomObjects {
-    private const int MaxExclusiveStringLength = 0x2000;
+    private const int MaxExclusiveStringLength = 0x200;
     private const int MaxExclusiveShortStringLength = 50;
-    private const int MaxNumberLength = 50000;
+    private const int MaxNumberLength = 500;
     private const int MaxShortNumberLength = 40;
 
     public static byte[] RandomUtf8Bytes(
