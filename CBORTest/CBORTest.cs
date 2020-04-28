@@ -703,29 +703,28 @@ namespace Test {
         .Append("); /").Append("/ ").Append(obj.ToJSONString()).ToString();
     }
 
-    [Test]
-    public void TestCanFitIn() {
-      var r = new RandomGenerator();
-      for (var i = 0; i < 5000; ++i) {
-        CBORObject ed = CBORTestCommon.RandomNumber(r);
+    public static void TestCanFitInOne(CBORObject ed) {
         EDecimal ed2;
+        if (ed == null) {
+          throw new ArgumentNullException(nameof(ed));
+        }
         CBORNumber edNumber = ed.AsNumber();
-
-        ed2 = EDecimal.FromDouble(AsED(ed).ToDouble());
-        if ((AsED(ed).CompareTo(ed2) == 0) != edNumber.CanFitInDouble()) {
+        EDecimal edNumberED = AsED(ed);
+        ed2 = EDecimal.FromDouble(edNumberED.ToDouble());
+        if ((edNumberED.CompareTo(ed2) == 0) != edNumber.CanFitInDouble()) {
           Assert.Fail(ObjectMessage(ed));
         }
         ed2 = EDecimal.FromSingle(AsED(ed).ToSingle());
-        if ((AsED(ed).CompareTo(ed2) == 0) != edNumber.CanFitInSingle()) {
+        if ((edNumberED.CompareTo(ed2) == 0) != edNumber.CanFitInSingle()) {
           Assert.Fail(ObjectMessage(ed));
         }
         if (!edNumber.IsInfinity() && !edNumber.IsNaN()) {
-          if (AsED(ed).IsInteger() != edNumber.IsInteger()) {
+          if (edNumberED.IsInteger() != edNumber.IsInteger()) {
             Assert.Fail(ObjectMessage(ed));
           }
         }
         if (!edNumber.IsInfinity() && !edNumber.IsNaN()) {
-          EDecimal edec = AsED(ed);
+          EDecimal edec = edNumberED;
           EInteger bi = null;
           try {
             bi = edec.ToSizedEInteger(128);
@@ -733,30 +732,34 @@ namespace Test {
             bi = null;
           }
           if (edNumber.IsInteger()) {
-            if ((bi != null &&
-                bi.GetSignedBitLengthAsEInteger().ToInt32Checked() <= 31) !=
+            if ((bi != null && bi.GetSignedBitLengthAsInt64() <= 31) !=
               edNumber.CanFitInInt32()) {
               Assert.Fail(ObjectMessage(ed));
             }
           }
-          if ((bi != null &&
-              bi.GetSignedBitLengthAsEInteger().ToInt32Checked() <= 31) !=
+          if ((bi != null && bi.GetSignedBitLengthAsInt64() <= 31) !=
             edNumber.CanTruncatedIntFitInInt32()) {
             Assert.Fail(ObjectMessage(ed));
           }
           if (edNumber.IsInteger()) {
-            if ((bi != null &&
-                bi.GetSignedBitLengthAsEInteger().ToInt32Checked() <= 63) !=
+            if ((bi != null && bi.GetSignedBitLengthAsInt64() <= 63) !=
               edNumber.CanFitInInt64()) {
               Assert.Fail(ObjectMessage(ed));
             }
           }
-          if ((bi != null &&
-              bi.GetSignedBitLengthAsEInteger().ToInt32Checked() <= 63) !=
+          if ((bi != null && bi.GetSignedBitLengthAsInt64() <= 63) !=
             edNumber.CanTruncatedIntFitInInt64()) {
             Assert.Fail(ObjectMessage(ed));
           }
         }
+    }
+
+    [Test]
+    public void TestCanFitIn() {
+      var r = new RandomGenerator();
+      for (var i = 0; i < 5000; ++i) {
+        CBORObject ed = CBORTestCommon.RandomNumber(r);
+        TestCanFitInOne(ed);
       }
     }
 
@@ -771,18 +774,16 @@ namespace Test {
         cbor.ToObject(typeof(EInteger)));
 
       Assert.IsFalse(
-        AsEI(cbor).GetSignedBitLengthAsEInteger().ToInt32Checked()
+        AsEI(cbor).GetSignedBitLengthAsInt64()
         <= 31);
       Assert.IsFalse(cbor.AsNumber().CanTruncatedIntFitInInt32());
       cbor = CBORObject.DecodeFromBytes(new byte[] {
         (byte)0xc5, (byte)0x82,
         0x18, 0x2f, 0x32,
       }); // -2674012278751232
-      {
-        int intTemp = AsEI(cbor)
-        .GetSignedBitLengthAsEInteger().ToInt32Checked();
-        Assert.AreEqual(52, intTemp);
-      }
+      Assert.AreEqual(
+            52L,
+            AsEI(cbor).GetSignedBitLengthAsInt64());
       Assert.IsTrue(cbor.AsNumber().CanFitInInt64());
       Assert.IsFalse(ToObjectTest.TestToFromObjectRoundTrip(2554895343L)
         .AsNumber().CanFitInSingle());
@@ -993,6 +994,94 @@ namespace Test {
 
       CBORTestCommon.AssertRoundTrip(
         ToObjectTest.TestToFromObjectRoundTrip(Single.PositiveInfinity));
+    }
+
+    public static void TestCompareToOne(byte[] bytes) {
+  CBORObject cbor = CBORObject.DecodeFromBytes(bytes, new CBOREncodeOptions("allowduplicatekeys=1"));
+  byte[] bytes2=cbor.EncodeToBytes();
+  CBORObject cbor2 = CBORObject.DecodeFromBytes(bytes2);
+  if(!cbor.Equals(cbor2)) {
+    string sbytes = TestCommon.ToByteArrayString(bytes);
+    Assert.AreEqual(cbor, cbor2, sbytes);
+  } else {
+    Assert.AreEqual(cbor, cbor2);
+  }
+  if(cbor.CompareTo(cbor2)!=0) {
+    string sbytes = TestCommon.ToByteArrayString(bytes);
+    Assert.AreEqual(0, cbor.CompareTo(cbor2), sbytes);
+  } else {
+    Assert.AreEqual(0, cbor.CompareTo(cbor2));
+  }
+    }
+
+    [Test]
+    public void TestCompareToSpecificA() {
+byte[] bytes = new byte[] { (byte)0xfa, (byte)0xb3, 0x00, 0x00, 0x00 };
+TestCompareToOne(bytes);
+    }
+
+    [Test]
+    public void TestCompareToSpecificE() {
+byte[] bytes = new byte[] { (byte)0xBF,(byte)0xF9,(byte)0xCE,(byte)0xDC,(byte)0x99,0x00,0x01,(byte)0xF8,(byte)0xA0,0x61,0x37,0x12,0x7F,0x78,0x0D,0x1C,0x78,0x4A,0x48,0x3E,(byte)0xE1,(byte)0xA5,(byte)0xB2,(byte)0xF4,(byte)0x82,(byte)0x8F,(byte)0x8A,0x32,0x7B,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x04,0x2D,0x57,0x55,0x08,0x7B,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x02,0x41,0x28,(byte)0xFF,(byte)0xE3,(byte)0xFF};
+TestCompareToOne(bytes);
+    }
+
+    [Test]
+    public void TestCompareToSpecificC() {
+byte[] bytes = new byte[] { (byte)0xB9,0x00,0x02,(byte)0xFA,(byte)0x93,(byte)0x96,(byte)0xF3,(byte)0xCB,0x1B,(byte)0xE7,0x65,0x72,(byte)0x83,(byte)0xA0,0x39,(byte)0xA0,(byte)0xFE,0x7F,0x7B,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x01,0x2E,0x7A,0x00,0x00,0x00,0x03,0x1E,0x33,0x52,0x60,0x7A,0x00,0x00,0x00,0x03,0x62,0x1E,0x23,(byte)0xFF,0x18,(byte)0x89};
+TestCompareToOne(bytes);
+    }
+
+    [Test]
+    public void TestCompareToSpecificD() {
+byte[] bytes = new byte[] { (byte)0xBF,0x00,0x00,(byte)0xE0,0x00,0x7F,0x78,0x10,0x64,0x6B,0x05,0x77,0x38,0x3C,0x51,0x66,0x7C,0x02,0x31,0x51,0x56,0x33,0x56,0x6A,0x7B,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x07,0x70,0x16,0x20,0x2F,0x29,0x1A,0x1F,0x7B,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x78,0x01,0x5C,(byte)0xFF,(byte)0xFA,(byte)0xA1,(byte)0xEB,(byte)0xC3,0x1D,(byte)0xFF};
+TestCompareToOne(bytes);
+    }
+
+
+    [Test]
+    public void TestCompareToSpecificB() {
+byte[] bytes = new byte[] {
+  (byte)0xa4,
+  (byte)0xe3,
+  (byte)0xf8, 0x70,
+  (byte)0xdb, 0x02, 0x2d, 0x0d, 0x30, 0x39, 0x14,
+  (byte)0xf5,
+  (byte)0x8c, 0x39, 0x56, 0x1c, 0x3a,
+  (byte)0x92, 0x27, 0x00, 0x04, 0x39, 0x1e, 0x05,
+  (byte)0xf9, 0x73,
+  (byte)0xac, 0x7f, 0x78, 0x05, 0x2d,
+  (byte)0xe5,
+  (byte)0xad,
+  (byte)0xb8, 0x0b, 0x63, 0x27, 0x50, 0x7e, 0x78, 0x02, 0x04, 0x56,
+  (byte)0xff, 0x1b,
+  (byte)0x9d, (byte)0x8c, 0x66, (byte)0xaf, 0x18, 0x1d, 0x01, (byte)0x8e,
+};
+TestCompareToOne(bytes);
+    }
+
+    [Test]
+    public void TestCompareToSpecific() {
+byte[] bytes;
+bytes = new byte[] {
+  (byte)0xa2,
+  (byte)0xf8,
+  (byte)0xf7, 0x19,
+  (byte)0xde,
+  (byte)0x91, 0x7f, 0x79, 0x00, 0x11, 0x7b, 0x1b, 0x29, 0x59, 0x57, 0x6a,
+  0x70, 0x68,
+  (byte)0xe3,
+  (byte)0x98,
+  (byte)0xba, 0x6a, 0x49, 0x50, 0x54, 0x0b, 0x21, 0x62, 0x32, 0x17, 0x7b,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x67, 0x43, 0x37, 0x42,
+  0x5f, 0x22, 0x7c, 0x0e, 0x68, 0x13, 0x74, 0x43, 0x1e, 0x4c, 0x5b, 0x2b,
+  0x6c, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7a, 0x00,
+  0x00, 0x00, 0x00, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x78, 0x01, 0x38, 0x78, 0x00, 0x78, 0x00, 0x7b, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x01, 0x39,
+  (byte)0xff, (byte)0x9f, (byte)0xff,
+};
+TestCompareToOne(bytes);
     }
 
     [Test]
@@ -2430,7 +2519,7 @@ namespace Test {
         while (true) {
           EInteger ei = bigintTemp;
           EInteger bigintNext = ei.Add(EInteger.One);
-          if (bigintTemp.GetSignedBitLengthAsEInteger().ToInt32Checked() <=
+          if (bigintTemp.GetSignedBitLengthAsInt64() <=
             31) {
             int bc = ei.ToInt32Checked();
             if (bc >= -1 && bc <= 37) {
