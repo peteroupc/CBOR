@@ -12,7 +12,7 @@ namespace PeterO.Cbor {
 
     private sealed class CtapByteComparer : IComparer<KeyValuePair<byte[],
       byte[]>> {
-      public int Compare (
+      public int Compare(
         KeyValuePair<byte[], byte[]> kva,
         KeyValuePair<byte[], byte[]> kvb) {
         byte[] bytesA = kva.Key;

@@ -69,8 +69,7 @@ namespace PeterO.Cbor {
     }
 
     private CBORObject ObjectFromUtf8Array(byte[] data, int lengthHint) {
-      CBORObject cbor = data.Length == 0 ?
-         CBORObject.FromObject(String.Empty) :
+      CBORObject cbor = data.Length == 0 ? CBORObject.FromObject(String.Empty) :
          CBORObject.FromRawUtf8(data);
       if (this.stringRefs != null) {
         this.stringRefs.AddStringIfNeeded(cbor, lengthHint);

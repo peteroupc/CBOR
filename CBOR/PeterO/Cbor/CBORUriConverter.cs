@@ -1,5 +1,5 @@
 /*
-Written by Peter O. in 2014.
+Written by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
@@ -16,19 +16,19 @@ namespace PeterO.Cbor {
       bool isiri = obj.HasMostOuterTag(266);
       bool isiriref = obj.HasMostOuterTag(267);
       if (
-        isiriref && !URIUtility.IsValidIRI (
+        isiriref && !URIUtility.IsValidIRI(
           obj.AsString(),
           URIUtility.ParseMode.IRIStrict)) {
         throw new CBORException("String is not a valid IRI Reference");
       }
       if (
-        isiri && (!URIUtility.IsValidIRI (
+        isiri && (!URIUtility.IsValidIRI(
             obj.AsString(),
             URIUtility.ParseMode.IRIStrict) ||
           !URIUtility.HasScheme(obj.AsString()))) {
         throw new CBORException("String is not a valid IRI");
       }
-      if (!URIUtility.IsValidIRI (
+      if (!URIUtility.IsValidIRI(
           obj.AsString(),
           URIUtility.ParseMode.URIStrict) ||
         !URIUtility.HasScheme(obj.AsString())) {

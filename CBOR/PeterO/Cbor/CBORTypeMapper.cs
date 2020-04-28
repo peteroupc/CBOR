@@ -49,10 +49,10 @@ namespace PeterO.Cbor {
         "ToCBORObject",
         type);
       if (ci.ToObject == null) {
-        throw new ArgumentException (
+        throw new ArgumentException(
           "Converter doesn't contain a proper ToCBORObject method");
       }
-      ci.FromObject = PropertyMap.FindOneArgumentMethod (
+      ci.FromObject = PropertyMap.FindOneArgumentMethod(
           converter,
           "FromCBORObject",
           typeof(CBORObject));

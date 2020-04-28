@@ -26,9 +26,9 @@ namespace Test {
     internal static readonly ERational RatNegInf =
       ERational.NegativeInfinity;
 
-    public static CBORObject RandomNumber(RandomGenerator rand) {
+    public static CBORObject RandomNumber(IRandomGenExtended rand) {
       object o = null;
-      switch (rand.UniformInt(6)) {
+      switch (rand.GetInt32(6)) {
         case 0:
           o = RandomObjects.RandomDouble(
             rand,
@@ -55,9 +55,9 @@ namespace Test {
       }
     }
 
-    public static CBORObject RandomNumberOrRational(RandomGenerator rand) {
+    public static CBORObject RandomNumberOrRational(IRandomGenExtended rand) {
       object o = null;
-      switch (rand.UniformInt(7)) {
+      switch (rand.GetInt32(7)) {
         case 0:
           o = RandomObjects.RandomDouble(
             rand,
@@ -87,8 +87,8 @@ namespace Test {
       }
     }
 
-    public static CBORObject RandomCBORMap(RandomGenerator rand, int depth) {
-      int x = rand.UniformInt(100);
+    public static CBORObject RandomCBORMap(IRandomGenExtended rand, int depth) {
+      int x = rand.GetInt32(100);
       int count = (x < 80) ? 2 : ((x < 93) ? 1 : ((x < 98) ? 0 : 10));
       CBORObject cborRet = CBORObject.NewMap();
       for (var i = 0; i < count; ++i) {
@@ -99,41 +99,41 @@ namespace Test {
       return cborRet;
     }
 
-    public static EInteger RandomEIntegerMajorType0(RandomGenerator rand) {
-      int v = rand.UniformInt(0x10000);
+    public static EInteger RandomEIntegerMajorType0(IRandomGenExtended rand) {
+      int v = rand.GetInt32(0x10000);
       EInteger ei = EInteger.FromInt32(v);
-      ei = ei.ShiftLeft(16).Add(rand.UniformInt(0x10000));
-      ei = ei.ShiftLeft(16).Add(rand.UniformInt(0x10000));
-      ei = ei.ShiftLeft(16).Add(rand.UniformInt(0x10000));
+      ei = ei.ShiftLeft(16).Add(rand.GetInt32(0x10000));
+      ei = ei.ShiftLeft(16).Add(rand.GetInt32(0x10000));
+      ei = ei.ShiftLeft(16).Add(rand.GetInt32(0x10000));
       return ei;
     }
 
-    public static EInteger RandomEIntegerMajorType0Or1(RandomGenerator rand) {
-      int v = rand.UniformInt(0x10000);
+    public static EInteger RandomEIntegerMajorType0Or1(IRandomGenExtended rand) {
+      int v = rand.GetInt32(0x10000);
       EInteger ei = EInteger.FromInt32(v);
-      ei = ei.ShiftLeft(16).Add(rand.UniformInt(0x10000));
-      ei = ei.ShiftLeft(16).Add(rand.UniformInt(0x10000));
-      ei = ei.ShiftLeft(16).Add(rand.UniformInt(0x10000));
-      if (rand.UniformInt(2) == 0) {
+      ei = ei.ShiftLeft(16).Add(rand.GetInt32(0x10000));
+      ei = ei.ShiftLeft(16).Add(rand.GetInt32(0x10000));
+      ei = ei.ShiftLeft(16).Add(rand.GetInt32(0x10000));
+      if (rand.GetInt32(2) == 0) {
         ei = ei.Add(1).Negate();
       }
       return ei;
     }
 
     public static CBORObject RandomCBORTaggedObject(
-      RandomGenerator rand,
+      IRandomGenExtended rand,
       int depth) {
       var tag = 0;
-      if (rand.UniformInt(2) == 0) {
+      if (rand.GetInt32(2) == 0) {
         int[] tagselection = {
           2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 30, 30,
           30, 0, 1, 25, 26, 27,
         };
-        tag = tagselection[rand.UniformInt(tagselection.Length)];
-      } else if (rand.UniformInt(100) < 90) {
+        tag = tagselection[rand.GetInt32(tagselection.Length)];
+      } else if (rand.GetInt32(100) < 90) {
         return CBORObject.FromObjectAndTag (
             RandomCBORObject(rand, depth + 1),
-            rand.UniformInt(0x100000));
+            rand.GetInt32(0x100000));
       } else {
         return CBORObject.FromObjectAndTag (
             RandomCBORObject(rand, depth + 1),
@@ -174,8 +174,8 @@ namespace Test {
       }
     }
 
-    public static CBORObject RandomCBORArray(RandomGenerator rand, int depth) {
-      int x = rand.UniformInt(100);
+    public static CBORObject RandomCBORArray(IRandomGenExtended rand, int depth) {
+      int x = rand.GetInt32(100);
       int count = (x < 80) ? 2 : ((x < 93) ? 1 : ((x < 98) ? 0 : 10));
       CBORObject cborRet = CBORObject.NewArray();
       for (var i = 0; i < count; ++i) {
@@ -184,13 +184,13 @@ namespace Test {
       return cborRet;
     }
 
-    public static CBORObject RandomCBORObject(RandomGenerator rand) {
+    public static CBORObject RandomCBORObject(IRandomGenExtended rand) {
       return RandomCBORObject(rand, 0);
     }
 
-    public static CBORObject RandomCBORObject(RandomGenerator rand, int
+    public static CBORObject RandomCBORObject(IRandomGenExtended rand, int
       depth) {
-      int nextval = rand.UniformInt(11);
+      int nextval = rand.GetInt32(11);
       switch (nextval) {
         case 0:
         case 1:
@@ -198,9 +198,9 @@ namespace Test {
         case 3:
           return RandomNumberOrRational(rand);
         case 4:
-          return rand.UniformInt(2) == 0 ? CBORObject.True : CBORObject.False;
+          return rand.GetInt32(2) == 0 ? CBORObject.True : CBORObject.False;
         case 5:
-          return rand.UniformInt(2) == 0 ? CBORObject.Null :
+          return rand.GetInt32(2) == 0 ? CBORObject.Null :
             CBORObject.Undefined;
         case 6:
           return ToObjectTest.TestToFromObjectRoundTrip (
