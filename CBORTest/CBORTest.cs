@@ -1002,13 +1002,21 @@ CBOREncodeOptions("allowduplicatekeys=1"));
   byte[] bytes2 = cbor.EncodeToBytes();
   CBORObject cbor2 = CBORObject.DecodeFromBytes(bytes2);
   if (!cbor.Equals(cbor2)) {
-    string sbytes = TestCommon.ToByteArrayString(bytes);
+    string sbytes = TestCommon.ToByteArrayString(bytes) +
+        "\ncbor=" + cbor +
+        "\ncborbytes=" + TestCommon.ToByteArrayString(bytes2) +
+        "\ncbor2=" + cbor2 +
+        "\ncborbytes2=" + TestCommon.ToByteArrayString(cbor2.EncodeToBytes());
     Assert.AreEqual(cbor, cbor2, sbytes);
   } else {
     Assert.AreEqual(cbor, cbor2);
   }
   if (cbor.CompareTo(cbor2) != 0) {
-    string sbytes = TestCommon.ToByteArrayString(bytes);
+    string sbytes = TestCommon.ToByteArrayString(bytes) +
+        "\ncbor=" + cbor +
+        "\ncborbytes=" + TestCommon.ToByteArrayString(bytes2) +
+        "\ncbor2=" + cbor2 +
+        "\ncborbytes2=" + TestCommon.ToByteArrayString(cbor2.EncodeToBytes());
     Assert.AreEqual(0, cbor.CompareTo(cbor2), sbytes);
   } else {
     Assert.AreEqual(0, cbor.CompareTo(cbor2));

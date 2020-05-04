@@ -41,7 +41,7 @@ Version 4.1:
 <AdditionalFiles Include='rules.ruleset'/><PackageReference Include='PeterO.URIUtility' Version='1.0.0'/>
 
 <PackageReference Include='PeterO.Numbers' Version='1.6.0'/>
-<PackageReference Include='Microsoft.CodeAnalysis.FxCopAnalyzers' PrivateAssets='All' Version='3.0.0-beta3.final'/></ItemGroup>
+<PackageReference Include='Microsoft.CodeAnalysis.FxCopAnalyzers' PrivateAssets='All' Version='3.0.0'/></ItemGroup>
   <ItemGroup>
     <Compile Remove='PeterO\Cbor\FastInteger2.cs'/>
   </ItemGroup>

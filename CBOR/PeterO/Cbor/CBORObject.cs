@@ -5102,8 +5102,11 @@ namespace PeterO.Cbor {
             break;
           }
           case CBORObjectTypeTextStringUtf8: {
-            // TODO: Implement this case
-            break;
+         if (!tagged && !options.UseIndefLengthStrings) {
+           byte[] bytes = (byte[])this.ThisItem;
+           return SerializeUtf8(bytes);
+         }
+         break;
           }
           case CBORObjectTypeSimpleValue: {
             if (tagged) {
@@ -6129,7 +6132,7 @@ namespace PeterO.Cbor {
         case 4:
 
           value = CBORUtilities.SingleToDoublePrecision(
-              unchecked((int)(floatingBits & 0xffffL)));
+              unchecked((int)(floatingBits & 0xffffffffL)));
           return new CBORObject(CBORObjectTypeDouble, value);
         case 8:
           return new CBORObject(CBORObjectTypeDouble, floatingBits);
@@ -7126,6 +7129,36 @@ namespace PeterO.Cbor {
         }
       }
       return null;
+    }
+
+    private static byte[] SerializeUtf8(byte[] utf8) {
+      byte[] bytes;
+      if (utf8.Length < 24) {
+         bytes = new byte[utf8.Length + 1];
+         bytes[0] = (byte)(utf8.Length | 0x60);
+         Array.Copy(utf8, 0, bytes, 1, utf8.Length);
+       return bytes;
+      }
+      if (utf8.Length <= 0xffL) {
+        bytes = new byte[utf8.Length + 2];
+        bytes[0] = (byte)0x78;
+        bytes[1] = (byte)utf8.Length;
+        Array.Copy(utf8, 0, bytes, 2, utf8.Length);
+      return bytes;
+      }
+      if (utf8.Length <= 0xffffL) {
+        bytes = new byte[utf8.Length + 3];
+        bytes[0] = (byte)0x79;
+        bytes[1] = (byte)((utf8.Length >> 8) & 0xff);
+        bytes[2] = (byte)(utf8.Length & 0xff);
+        Array.Copy(utf8, 0, bytes, 3, utf8.Length);
+      return bytes;
+      }
+      byte[] posbytes = GetPositiveInt64Bytes(3, utf8.Length);
+      bytes = new byte[utf8.Length + posbytes.Length];
+      Array.Copy(posbytes, 0, bytes, 0, posbytes.Length);
+      Array.Copy(utf8, 0, bytes, posbytes.Length, utf8.Length);
+      return bytes;
     }
 
     private static byte[] GetPositiveInt64Bytes(int type, long value) {
