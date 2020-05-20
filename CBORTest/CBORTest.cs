@@ -996,6 +996,57 @@ namespace Test {
         ToObjectTest.TestToFromObjectRoundTrip(Single.PositiveInfinity));
     }
 
+    public static bool TestEquivJSONNumberOne(byte[] bytes) {
+   // Assume the JSON begins and ends with a digit
+if (!(bytes.length > 0)) {
+  return false;
+}
+if (!((bytes[0] >= 0x30 && bytes[0] <= 0x39) || bytes[0] == (byte)'-')) {
+  return false;
+}
+if (!(bytes[bytes.length -1] >= 0x30 && bytes[bytes.length-1] <= 0x39)) {
+  return false;
+}
+   CBORObject cbor, cbor2, cbored, cbor3;
+   var jsoptions = new JSONOptions("numberconversion=full");
+   string str = DataUtilities.GetUtf8String(bytes, true);
+   EDecimal ed = EDecimal.FromString(str);
+   // Test consistency between JSON conversion methods
+   cbor = CBORObject.FromJSONBytes(bytes, jsoptions);
+   cbor2 = CBORDataUtilities.ParseJSONNumber(str, jsoptions);
+   cbor3 = CBORObject.FromJSONString(str, jsoptions);
+cbored = (ed.Exponent.CompareTo(0) == 0 && !(ed.IsNegative && ed.Sign == 0))?
+(CBORObject.FromObject(ed.Mantissa)) : (CBORObject.FromObject(ed));
+   Assert.AreEqual(cbor, cbor2, "["+str +"] cbor2");
+ Assert.AreEqual(cbor, cbor3, "["+str +"] cbor3");
+ Assert.AreEqual(cbor, cbored, "["+str +"] cbored");
+ return true;
+    }
+    public static bool TestEquivJSONNumberDecimal128One(byte[] bytes) {
+   // Assume the JSON begins and ends with a digit
+if (!(bytes.length > 0)) {
+  return false;
+}
+if (!((bytes[0] >= 0x30 && bytes[0] <= 0x39) || bytes[0] == (byte)'-')) {
+  return false;
+}
+if (!(bytes[bytes.length -1] >= 0x30 && bytes[bytes.length-1] <= 0x39)) {
+  return false;
+}
+   CBORObject cbor, cbor2, cbored, cbor3;
+   var jsoptions = new JSONOptions("numberconversion=decimal128");
+   string str = DataUtilities.GetUtf8String(bytes, true);
+   // Test consistency between JSON conversion methods
+   EDecimal ed = EDecimal.FromString(str, EContext.Decimal128);
+   cbor = CBORObject.FromJSONBytes(bytes, jsoptions);
+   cbor2 = CBORDataUtilities.ParseJSONNumber(str, jsoptions);
+   cbor3 = CBORObject.FromJSONString(str, jsoptions);
+   cbored = CBORObject.FromObject(ed);
+   Assert.AreEqual(cbor, cbor2, "["+str +"] cbor2");
+ Assert.AreEqual(cbor, cbor3, "["+str +"] cbor3");
+ Assert.AreEqual(cbor, cbored, "["+str +"] cbored");
+ return true;
+    }
     public static void TestCompareToOne(byte[] bytes) {
   CBORObject cbor = CBORObject.DecodeFromBytes(bytes, new
 CBOREncodeOptions("allowduplicatekeys=1"));

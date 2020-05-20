@@ -1114,7 +1114,7 @@ namespace PeterO.Cbor {
       long mant = bits & 0xfffffffffffffL;
       int sign = unchecked((int)(bits >> 48)) & (1 << 15);
       int sexp = exp - 1008;
-      // DebugUtility.Log("bits={0:X8}, exp=" + exp + " sexp=" + (sexp));
+      // DebugUtility.Log("bits={0:X8}, exp=" + exp + " sexp=" + (sexp),bits);
       if (exp == 2047) { // Infinity and NaN
         int newmant = unchecked((int)(mant >> 42));
         return ((mant & ((1L << 42) - 1)) == 0) ? (sign | 0x7c00 | newmant) :
@@ -1127,8 +1127,13 @@ namespace PeterO.Cbor {
         return ((mant & ((1L << 42) - 1)) == 0) ? (sign | (sexp << 10) |
             RoundedShift(mant, 42)) : -1;
       } else { // subnormal and zero
-        return ((mant & ((1L << (42 - (sexp - 1))) - 1)) == 0) ? (sign |
-            RoundedShift(mant | (1L << 52), 42 - (sexp - 1))) : -1;
+        int rs = RoundedShift(mant | (1L << 52), 42 - (sexp - 1));
+        // DebugUtility.Log("mant=" + mant + " rs=" + (rs));
+        if (sexp == -10 && rs == 0) {
+{ return -1;
+} }
+        return ((mant & ((1L << (42 - (sexp - 1))) - 1)) == 0) ? (sign | rs):
+-1;
       }
     }
 
@@ -1143,6 +1148,9 @@ namespace PeterO.Cbor {
         return false;
       } else if (sexp > 0) { // normal
         return (mant & ((1L << 29) - 1)) == 0;
+      } else if (sexp == -23) {
+        return (mant & ((1L << (29 - (sexp - 1))) - 1)) == 0 &&
+           RoundedShift(mant | (1L << 52), 29 - (sexp - 1)) != 0;
       } else { // subnormal and zero
         return (mant & ((1L << (29 - (sexp - 1))) - 1)) == 0;
       }
@@ -1228,11 +1236,14 @@ namespace PeterO.Cbor {
         return -1;
       } else if (exp <= 112) { // Subnormal
         int shift = 126 - exp;
-        return (bits & ((1 << shift) - 1)) == 0 ? sign +
-          (1024 >> (145 - exp)) + (mant >> shift) : -1;
+        int rs = (1024 >> (145 - exp)) + (mant >> shift);
+        if (mant != 0 && exp == 103) { {
+  return -1;
+ } }
+        return (bits & ((1 << shift) - 1)) == 0 ? sign + rs : -1;
       } else {
         return (bits & 0x1fff) == 0 ? sign + ((exp - 112) << 10) +
-          (mant >> 13) : -1;
+-(mant >> 13) : -1;
       }
     }
 
