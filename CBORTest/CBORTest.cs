@@ -996,6 +996,46 @@ namespace Test {
         ToObjectTest.TestToFromObjectRoundTrip(Single.PositiveInfinity));
     }
 
+    [Test]
+    public void TestEquivJSONSpecificA() {
+      TestEquivJSONOne(new byte[] {
+        0x2d, 0x37, 0x30, 0x31, 0x39, 0x34,
+        0x38, 0x33, 0x35, 0x39, 0x31, 0x33, 0x37, 0x34, 0x38, 0x45, 0x30,
+      });
+    }
+
+    public static bool TestEquivJSONOne(byte[] bytes) {
+if (!(bytes.length > 0)) {
+  return false;
+}
+   CBORObject cbo = CBORObject.FromJSONBytes(bytes);
+   Assert.IsTrue(cbo != null);
+   CBORObject cbo2 = CBORObject.FromJSONString(cbo.ToJSONString());
+   Assert.IsTrue(cbo2 != null);
+   if (!cbo.equals(cbo2)) {
+     Console.Write("jsonstring");
+     Console.Write(TestCommon.ToByteArrayString(bytes));
+     Console.Write(DataUtilities.GetUtf8String(bytes, true));
+     Console.Write("old " + TestCommon.ToByteArrayString(cbo.ToJSONBytes()));
+     Console.Write(cbo.ToJSONString());
+     Console.Write("new " + TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
+     Console.Write(cbo2.ToJSONString());
+     Assert.AreEqual(cbo, cbo2);
+   }
+   cbo2 = CBORObject.FromJSONBytes(cbo.ToJSONBytes());
+   Assert.IsTrue(cbo2 != null);
+   if (!cbo.Equals(cbo2)) {
+     Console.Write("jsonbytes");
+     Console.Write(TestCommon.ToByteArrayString(bytes));
+     Console.Write(DataUtilities.GetUtf8String(bytes, true));
+     Console.Write("old " + TestCommon.ToByteArrayString(cbo.ToJSONBytes()));
+     Console.Write(cbo.ToJSONString());
+     Console.Write("new " + TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
+     Console.Write(cbo2.ToJSONString());
+     Assert.AreEqual(cbo, cbo2);
+   }
+   return true;
+    }
     public static bool TestEquivJSONNumberOne(byte[] bytes) {
    // Assume the JSON begins and ends with a digit
 if (!(bytes.length > 0)) {
@@ -1004,7 +1044,7 @@ if (!(bytes.length > 0)) {
 if (!((bytes[0] >= 0x30 && bytes[0] <= 0x39) || bytes[0] == (byte)'-')) {
   return false;
 }
-if (!(bytes[bytes.length -1] >= 0x30 && bytes[bytes.length-1] <= 0x39)) {
+if (!(bytes[bytes.length - 1] >= 0x30 && bytes[bytes.length - 1] <= 0x39)) {
   return false;
 }
    CBORObject cbor, cbor2, cbored, cbor3;
@@ -1015,11 +1055,11 @@ if (!(bytes[bytes.length -1] >= 0x30 && bytes[bytes.length-1] <= 0x39)) {
    cbor = CBORObject.FromJSONBytes(bytes, jsoptions);
    cbor2 = CBORDataUtilities.ParseJSONNumber(str, jsoptions);
    cbor3 = CBORObject.FromJSONString(str, jsoptions);
-cbored = (ed.Exponent.CompareTo(0) == 0 && !(ed.IsNegative && ed.Sign == 0))?
-(CBORObject.FromObject(ed.Mantissa)) : (CBORObject.FromObject(ed));
-   Assert.AreEqual(cbor, cbor2, "["+str +"] cbor2");
- Assert.AreEqual(cbor, cbor3, "["+str +"] cbor3");
- Assert.AreEqual(cbor, cbored, "["+str +"] cbored");
+cbored = (ed.Exponent.CompareTo(0) == 0 && !(ed.IsNegative && ed.Sign == 0)) ?
+   CBORObject.FromObject(ed.Mantissa) : CBORObject.FromObject(ed);
+ Assert.AreEqual(cbor, cbor2, "[" + str + "] cbor2");
+ Assert.AreEqual(cbor, cbor3, "[" + str + "] cbor3");
+ Assert.AreEqual(cbor, cbored, "[" + str + "] cbored");
  return true;
     }
     public static bool TestEquivJSONNumberDecimal128One(byte[] bytes) {
@@ -1030,7 +1070,7 @@ if (!(bytes.length > 0)) {
 if (!((bytes[0] >= 0x30 && bytes[0] <= 0x39) || bytes[0] == (byte)'-')) {
   return false;
 }
-if (!(bytes[bytes.length -1] >= 0x30 && bytes[bytes.length-1] <= 0x39)) {
+if (!(bytes[bytes.length - 1] >= 0x30 && bytes[bytes.length - 1] <= 0x39)) {
   return false;
 }
    CBORObject cbor, cbor2, cbored, cbor3;
@@ -1042,9 +1082,9 @@ if (!(bytes[bytes.length -1] >= 0x30 && bytes[bytes.length-1] <= 0x39)) {
    cbor2 = CBORDataUtilities.ParseJSONNumber(str, jsoptions);
    cbor3 = CBORObject.FromJSONString(str, jsoptions);
    cbored = CBORObject.FromObject(ed);
-   Assert.AreEqual(cbor, cbor2, "["+str +"] cbor2");
- Assert.AreEqual(cbor, cbor3, "["+str +"] cbor3");
- Assert.AreEqual(cbor, cbored, "["+str +"] cbored");
+   Assert.AreEqual(cbor, cbor2, "[" + str + "] cbor2");
+ Assert.AreEqual(cbor, cbor3, "[" + str + "] cbor3");
+ Assert.AreEqual(cbor, cbored, "[" + str + "] cbored");
  return true;
     }
     public static void TestCompareToOne(byte[] bytes) {
@@ -1264,21 +1304,6 @@ TestCompareToOne(bytes);
         (byte)0xe0, (byte)0xa3, (byte)0xac, 0x2b, 0x31, 0x23, 0x22,
       };
       TestEquivJSONOne(jsonBytes);
-    }
-
-    public static void TestEquivJSONOne(byte[] bytes) {
-      CBORObject cbo = CBORObject.FromJSONBytes(bytes);
-      Assert.IsTrue(cbo != null);
-      CBORObject cbo2 = CBORObject.FromJSONString(cbo.ToJSONString());
-      Assert.IsTrue(cbo2 != null);
-      if (!cbo.Equals(cbo2)) {
-        Assert.AreEqual(cbo, cbo2, "differs for JSONString");
-      }
-      cbo2 = CBORObject.FromJSONBytes(cbo.ToJSONBytes());
-      Assert.IsTrue(cbo2 != null);
-      if (!cbo.Equals(cbo2)) {
-        Assert.AreEqual(cbo, cbo2, "differs for JSONBytes");
-      }
     }
 
     [Test]

@@ -1132,7 +1132,7 @@ namespace PeterO.Cbor {
         if (sexp == -10 && rs == 0) {
 { return -1;
 } }
-        return ((mant & ((1L << (42 - (sexp - 1))) - 1)) == 0) ? (sign | rs):
+        return ((mant & ((1L << (42 - (sexp - 1))) - 1)) == 0) ? (sign | rs) :
 -1;
       }
     }
