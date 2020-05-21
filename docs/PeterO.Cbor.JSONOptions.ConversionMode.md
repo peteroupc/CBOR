@@ -34,7 +34,7 @@ JSON numbers are decoded to CBOR as their closest-rounded approximation as 64-bi
 
     public static PeterO.Cbor.JSONOptions.ConversionMode Full = 0;
 
-JSON numbers are decoded to CBOR using the full precision given in the JSON text. This may involve numbers being converted to arbitrary-precision integers or decimal numbers, where appropriate.
+JSON numbers are decoded to CBOR using the full precision given in the JSON text. The number will be converted to a CBOR object as follows: If the number's exponent is 0 (after shifting the decimal point to the end of the number without changing its value), using the rules given in the  `CBORObject.FromObject(EInteger)`  method; otherwise, using the rules given in the  `CBORObject.FromObject(EDecimal)`  method. An exception in version 4.x involves negative zeros; if the negative zero's exponent is 0, it's written as a CBOR floating-point number; otherwise the negative zero is written as an EDecimal.
 
 <a id="IntOrFloat"></a>
 ### IntOrFloat

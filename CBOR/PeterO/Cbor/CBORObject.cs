@@ -4792,7 +4792,7 @@ bytes[offset + 1] != 0) {
           case CBORObjectTypeTextString: {
             var strA = (string)objA;
             var strB = (string)objB;
-            cmp = CBORUtilities.FastPathStringCompare(
+            cmp = CBORUtilities.CompareStringsAsUtf8LengthFirst(
                 strA,
                 strB);
             if (cmp < -1) {
@@ -6038,7 +6038,7 @@ this.MostOuterTag.Equals(bigTagValue);
         case 4:
 
           value = CBORUtilities.SingleToDoublePrecision(
-              unchecked((int)(floatingBits & 0xffffL)));
+              unchecked((int)(floatingBits & 0xffffffffL)));
           return new CBORObject(CBORObjectTypeDouble, value);
         case 8:
           return new CBORObject(CBORObjectTypeDouble, floatingBits);

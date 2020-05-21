@@ -16,7 +16,8 @@ namespace PeterO.Cbor {
   internal static class CBORUtilities {
     private const string HexAlphabet = "0123456789ABCDEF";
 
-    public static int FastPathStringCompare(string strA, string strB) {
+    public static int CompareStringsAsUtf8LengthFirst(string strA, string
+      strB) {
       if (strA == null) {
         return (strB == null) ? 0 : -1;
       }
@@ -29,12 +30,23 @@ namespace PeterO.Cbor {
       if (strB.Length == 0) {
         return strA.Length == 0 ? 0 : 1;
       }
-      if (strA.Length < 64 && strB.Length < 64) {
+      var cmp = 0;
+      if (strA.Length < 128 && strB.Length < 128) {
+        int istrAUpperBound = strA.Length * 3;
+        if (istrAUpperBound < strB.Length) {
+          return -1;
+        }
+        int istrBUpperBound = strB.Length * 3;
+        if (istrBUpperBound < strA.Length) {
+          return 1;
+        }
+        cmp = 0;
         if (strA.Length == strB.Length) {
           var equalStrings = true;
           for (int i = 0; i < strA.Length; ++i) {
             if (strA[i] != strB[i]) {
               equalStrings = false;
+              cmp = (strA[i] < strB[i]) ? -1 : 1;
               break;
             }
           }
@@ -42,29 +54,370 @@ namespace PeterO.Cbor {
             return 0;
           }
         }
+        var nonAscii = false;
         for (int i = 0; i < strA.Length; ++i) {
-          if ((strA[i] & ((byte)0x80)) != 0) {
-            return -2; // non-ASCII
+          if (strA[i] >= 0x80) {
+            nonAscii = true;
+            break;
           }
         }
         for (int i = 0; i < strB.Length; ++i) {
-          if ((strB[i] & ((byte)0x80)) != 0) {
-            return -2; // non-ASCII
+          if (strB[i] >= 0x80) {
+            nonAscii = true;
+            break;
           }
         }
-        if (strA.Length != strB.Length) {
-          return strA.Length < strB.Length ? -1 : 1;
-        }
-        for (int i = 0; i < strA.Length; ++i) {
-          if (strA[i] != strB[i]) {
-            return strA[i] < strB[i] ? -1 : 1;
+        if (!nonAscii) {
+          if (strA.Length != strB.Length) {
+            return strA.Length < strB.Length ? -1 : 1;
+          }
+          if (strA.Length == strB.Length) {
+            return cmp;
           }
         }
-        return 0;
+      } else {
+        long strAUpperBound = strA.Length * 3;
+        if (strAUpperBound < strB.Length) {
+          return -1;
+        }
+        long strBUpperBound = strB.Length * 3;
+        if (strBUpperBound < strA.Length) {
+          return 1;
+        }
       }
-      return -2; // not short enough
+      // DebugUtility.Log("slow path "+strA.Length+","+strB.Length);
+      var sapos = 0;
+      var sbpos = 0;
+      long sautf8 = 0L;
+      long sbutf8 = 0L;
+      cmp = 0;
+      var haveboth = true;
+      while (true) {
+        int sa = 0, sb = 0;
+        if (sapos == strA.Length) {
+          haveboth = false;
+          if (sbutf8 > sautf8) {
+            return -1;
+          } else if (sbpos == strB.Length) {
+            break;
+          } else if (cmp == 0) {
+            cmp = -1;
+          }
+        } else {
+          sa = DataUtilities.CodePointAt(strA, sapos, 1);
+          if (sa < 0) {
+            throw new ArgumentException();
+          }
+          if (sa >= 0x10000) {
+            sautf8 += 4;
+            sapos += 2;
+          } else if (sa >= 0x800) {
+            sautf8 += 3;
+            ++sapos;
+          } else if (sa >= 0x80) {
+            sautf8 += 2;
+            ++sapos;
+          } else {
+            ++sautf8;
+            ++sapos;
+          }
+        }
+        if (sbpos == strB.Length) {
+          haveboth = false;
+          if (sautf8 > sbutf8) {
+            return 1;
+          } else if (sapos == strA.Length) {
+            break;
+          } else if (cmp == 0) {
+            cmp = 1;
+          }
+        } else {
+          sb = DataUtilities.CodePointAt(strB, sbpos, 1);
+          if (sb < 0) {
+            throw new ArgumentException();
+          }
+          if (sb >= 0x10000) {
+            sbutf8 += 4;
+            sbpos += 2;
+          } else if (sb >= 0x800) {
+            sbutf8 += 3;
+            ++sbpos;
+          } else if (sb >= 0x80) {
+            ++sbpos;
+            sbutf8 += 2;
+          } else {
+            ++sbpos;
+            ++sbutf8;
+          }
+        }
+        if (haveboth && cmp == 0 && sa != sb) {
+          cmp = (sa < sb) ? -1 : 1;
+        }
+      }
+      return (sautf8 != sbutf8) ? (sautf8 < sbutf8 ? -1 : 1) : cmp;
     }
 
+    public static int CompareUtf16Utf8LengthFirst(string utf16, byte[] utf8) {
+      if (utf16 == null) {
+        return (utf8 == null) ? 0 : -1;
+      }
+      if (utf8 == null) {
+        return 1;
+      }
+      if (utf16.Length == 0) {
+        return utf8.Length == 0 ? 0 : -1;
+      }
+      if (utf16.Length == 0) {
+        return utf8.Length == 0 ? 0 : 1;
+      }
+      long strAUpperBound = utf16.Length * 3;
+      if (strAUpperBound < utf8.Length) {
+        return -1;
+      }
+      long strBUpperBound = utf16.Length * 3;
+      if (strBUpperBound < utf8.Length) {
+        return 1;
+      }
+      var u16pos = 0;
+      var u8pos = 0;
+      long u16u8length = 0L;
+      var cmp = 0;
+      var haveboth = true;
+      while (true) {
+        int u16 = 0, u8 = 0;
+        if (u16pos == utf16.Length) {
+          haveboth = false;
+          if (u8pos > u16u8length) {
+            return -1;
+          } else if (u8pos == utf8.Length) {
+            break;
+          } else if (cmp == 0) {
+            cmp = -1;
+          }
+        } else {
+          u16 = DataUtilities.CodePointAt(utf16, u16pos, 1);
+          if (u16 < 0) {
+            throw new ArgumentException();
+          }
+          if (u16 >= 0x10000) {
+            u16u8length += 4;
+            u16pos += 2;
+          } else if (u16 >= 0x800) {
+            u16u8length += 3;
+            ++u16pos;
+          } else if (u16 >= 0x80) {
+            u16u8length += 2;
+            ++u16pos;
+          } else {
+            ++u16u8length;
+            ++u16pos;
+          }
+        }
+        if (u8pos == utf8.Length) {
+          haveboth = false;
+          if (cmp == 0) {
+            return 1;
+          } else if (u16pos == utf16.Length) {
+            break;
+          } else if (cmp == 0) {
+            cmp = 1;
+          }
+        } else {
+          u8 = Utf8CodePointAt(utf8, u8pos);
+          if (u8 < 0) {
+            throw new ArgumentException();
+          }
+          if (u8 >= 0x10000) {
+            u8pos += 4;
+          } else if (u8 >= 0x800) {
+            u8pos += 3;
+          } else if (u8 >= 0x80) {
+            u8pos += 2;
+          } else {
+            ++u8pos;
+          }
+        }
+        if (haveboth && cmp == 0 && u16 != u8) {
+          cmp = (u16 < u8) ? -1 : 1;
+        }
+      }
+      return (u16u8length != u8pos) ? (u16u8length < u8pos ? -1 : 1) : cmp;
+    }
+
+    public static int Utf8CodePointAt(byte[] utf8, int offset) {
+      int endPos = utf8.Length;
+      if (offset < 0 || offset >= endPos) {
+        return -1;
+      }
+      int c = ((int)utf8[offset]) & 0xff;
+      if (c <= 0x7f) {
+        return c;
+      } else if (c >= 0xc2 && c <= 0xdf) {
+        ++offset;
+        int c1 = offset < endPos ?
+          ((int)utf8[offset]) & 0xff : -1;
+        return (
+            c1 < 0x80 || c1 > 0xbf) ? -2 : (((c - 0xc0) << 6) |
+            (c1 - 0x80));
+      } else if (c >= 0xe0 && c <= 0xef) {
+        ++offset;
+        int c1 = offset < endPos ? ((int)utf8[offset++]) & 0xff : -1;
+        int c2 = offset < endPos ? ((int)utf8[offset]) & 0xff : -1;
+        int lower = (c == 0xe0) ? 0xa0 : 0x80;
+        int upper = (c == 0xed) ? 0x9f : 0xbf;
+        return (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf) ?
+          -2 : (((c - 0xe0) << 12) | ((c1 - 0x80) << 6) | (c2 - 0x80));
+      } else if (c >= 0xf0 && c <= 0xf4) {
+        ++offset;
+        int c1 = offset < endPos ? ((int)utf8[offset++]) & 0xff : -1;
+        int c2 = offset < endPos ? ((int)utf8[offset++]) & 0xff : -1;
+        int c3 = offset < endPos ? ((int)utf8[offset]) & 0xff : -1;
+        int lower = (c == 0xf0) ? 0x90 : 0x80;
+        int upper = (c == 0xf4) ? 0x8f : 0xbf;
+        if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf ||
+          c3 < 0x80 || c3 > 0xbf) {
+          return -2;
+        }
+        return ((c - 0xf0) << 18) | ((c1 - 0x80) << 12) | ((c2 - 0x80) <<
+            6) | (c3 - 0x80);
+      } else {
+        return -2;
+      }
+    }
+
+    // NOTE: StringHashCode and Utf8HashCode must
+    // return the same hash code for the same sequence
+    // of Unicode code points. Both must treat an illegally
+    // encoded subsequence as ending the sequence for
+    // this purpose.
+    public static int StringHashCode(string str) {
+      var upos = 0;
+      var code = 0x7edede19;
+      while (true) {
+        if (upos == str.Length) {
+          return code;
+        }
+        int sc = DataUtilities.CodePointAt(str, upos, 1);
+        if (sc < 0) {
+          return code;
+        }
+        code = unchecked((code * 31) + sc);
+        if (sc >= 0x10000) {
+          upos += 2;
+        } else {
+          ++upos;
+        }
+      }
+    }
+
+    public static int Utf8HashCode(byte[] utf8) {
+      var upos = 0;
+      var code = 0x7edede19;
+      while (true) {
+        int sc = Utf8CodePointAt(utf8, upos);
+        if (sc == -1) {
+          return code;
+        }
+        if (sc == -2) {
+          return code;
+        }
+        code = unchecked((code * 31) + sc);
+        if (sc >= 0x10000) {
+          upos += 4;
+        } else if (sc >= 0x800) {
+          upos += 3;
+        } else if (sc >= 0x80) {
+          upos += 2;
+        } else {
+          ++upos;
+        }
+      }
+    }
+
+    public static bool CheckUtf16(string str) {
+      var upos = 0;
+      while (true) {
+        if (upos == str.Length) {
+          return true;
+        }
+        int sc = DataUtilities.CodePointAt(str, upos, 1);
+        if (sc < 0) {
+          return false;
+        }
+        if (sc >= 0x10000) {
+          upos += 2;
+        } else {
+          ++upos;
+        }
+      }
+    }
+
+    public static bool CheckUtf8(byte[] utf8) {
+      var upos = 0;
+      while (true) {
+        int sc = Utf8CodePointAt(utf8, upos);
+        if (sc == -1) {
+          return true;
+        }
+        if (sc == -2) {
+          return false;
+        }
+        if (sc >= 0x10000) {
+          upos += 4;
+        } else if (sc >= 0x800) {
+          upos += 3;
+        } else if (sc >= 0x80) {
+          upos += 2;
+        } else {
+          ++upos;
+        }
+      }
+    }
+
+    public static bool StringEqualsUtf8(string str, byte[] utf8) {
+      if (str == null) {
+        return utf8 == null;
+      }
+      if (utf8 == null) {
+        return false;
+      }
+      long strAUpperBound = str.Length * 3;
+      if (strAUpperBound < utf8.Length) {
+        return false;
+      }
+      long strBUpperBound = utf8.Length * 3;
+      if (strBUpperBound < str.Length) {
+        return false;
+      }
+      var spos = 0;
+      var upos = 0;
+      while (true) {
+        int sc = DataUtilities.CodePointAt(str, spos, 1);
+        int uc = Utf8CodePointAt(utf8, upos);
+        if (uc == -2) {
+          throw new InvalidOperationException("Invalid encoding");
+        }
+        if (sc == -1) {
+          return uc == -1;
+        }
+        if (sc != uc) {
+          return false;
+        }
+        if (sc >= 0x10000) {
+          spos += 2;
+          upos += 4;
+        } else if (sc >= 0x800) {
+          ++spos;
+          upos += 3;
+        } else if (sc >= 0x80) {
+          ++spos;
+          upos += 2;
+        } else {
+          ++spos;
+          ++upos;
+        }
+      }
+    }
     public static bool ByteArrayEquals(byte[] a, byte[] b) {
       if (a == null) {
         return b == null;
@@ -282,8 +635,7 @@ namespace PeterO.Cbor {
       }
       int[] dayArray = (year.Remainder(4).Sign != 0 || (
             year.Remainder(100).Sign == 0 && year.Remainder(400).Sign !=
-0)) ?
-        ValueNormalDays : ValueLeapDays;
+            0)) ? ValueNormalDays : ValueLeapDays;
       if (day.CompareTo(101) > 0) {
         EInteger count = day.Subtract(100).Divide(146097);
         day = day.Subtract(count.Multiply(146097));
@@ -303,7 +655,7 @@ namespace PeterO.Cbor {
                   year.Remainder(100).Sign == 0 &&
                   year.Remainder(400).Sign != 0)) ? ValueNormalDays :
               ValueLeapDays;
-            } else {
+          } else {
             ++month;
           }
         }
@@ -378,14 +730,14 @@ namespace PeterO.Cbor {
             year.Remainder(100).Sign == 0 && year.Remainder(400).Sign != 0)) {
           numDays = numDays.Subtract(365 - ValueNormalToMonth[month])
             .Subtract(ValueNormalDays[month] - mday + 1);
-          } else {
+        } else {
           numDays = numDays
             .Subtract(366 - ValueLeapToMonth[month])
             .Subtract(ValueLeapDays[month] - mday + 1);
         }
       } else {
         bool isNormalYear = year.Remainder(4).Sign != 0 ||
-(year.Remainder(100).Sign == 0 && year.Remainder(400).Sign != 0);
+          (year.Remainder(100).Sign == 0 && year.Remainder(400).Sign != 0);
 
         EInteger ei = EInteger.FromInt32(startYear);
         if (ei.Add(401).CompareTo(year) < 0) {
@@ -456,8 +808,7 @@ namespace PeterO.Cbor {
       int wl = word.Length;
       return name.Length > wl && name.Substring(0, wl).Equals(word,
           StringComparison.Ordinal) && !(name[wl] >= 'a' && name[wl] <=
-'z') &&
-        !(name[wl] >= '0' && name[wl] <= '9');
+          'z') && !(name[wl] >= '0' && name[wl] <= '9');
     }
 
     public static String FirstCharLower(String name) {
@@ -763,12 +1114,12 @@ namespace PeterO.Cbor {
       long mant = bits & 0xfffffffffffffL;
       int sign = unchecked((int)(bits >> 48)) & (1 << 15);
       int sexp = exp - 1008;
-      // DebugUtility.Log("bits={0:X8}, exp=" + exp + " sexp=" + (sexp));
+      // DebugUtility.Log("bits={0:X8}, exp=" + exp + " sexp=" + (sexp),bits);
       if (exp == 2047) { // Infinity and NaN
         int newmant = unchecked((int)(mant >> 42));
         return ((mant & ((1L << 42) - 1)) == 0) ? (sign | 0x7c00 | newmant) :
           -1;
-        } else if (sexp >= 31) { // overflow
+      } else if (sexp >= 31) { // overflow
         return -1;
       } else if (sexp < -10) { // underflow
         return -1;
@@ -776,8 +1127,13 @@ namespace PeterO.Cbor {
         return ((mant & ((1L << 42) - 1)) == 0) ? (sign | (sexp << 10) |
             RoundedShift(mant, 42)) : -1;
       } else { // subnormal and zero
-        return ((mant & ((1L << (42 - (sexp - 1))) - 1)) == 0) ? (sign |
-            RoundedShift(mant | (1L << 52), 42 - (sexp - 1))) : -1;
+        int rs = RoundedShift(mant | (1L << 52), 42 - (sexp - 1));
+        // DebugUtility.Log("mant=" + mant + " rs=" + (rs));
+        if (sexp == -10 && rs == 0) {
+{ return -1;
+} }
+        return ((mant & ((1L << (42 - (sexp - 1))) - 1)) == 0) ? (sign | rs):
+-1;
       }
     }
 
@@ -792,6 +1148,9 @@ namespace PeterO.Cbor {
         return false;
       } else if (sexp > 0) { // normal
         return (mant & ((1L << 29) - 1)) == 0;
+      } else if (sexp == -23) {
+        return (mant & ((1L << (29 - (sexp - 1))) - 1)) == 0 &&
+           RoundedShift(mant | (1L << 52), 29 - (sexp - 1)) != 0;
       } else { // subnormal and zero
         return (mant & ((1L << (29 - (sexp - 1))) - 1)) == 0;
       }
@@ -808,7 +1167,7 @@ namespace PeterO.Cbor {
         return (mant != 0 && newmant == 0) ?
           // signaling NaN truncated to have mantissa 0
           (sign | 0x7c01) : (sign | 0x7c00 | newmant);
-        } else if (sexp >= 31) { // overflow
+      } else if (sexp >= 31) { // overflow
         return sign | 0x7c00;
       } else if (sexp < -10) { // underflow
         return sign;
@@ -830,7 +1189,7 @@ namespace PeterO.Cbor {
         return (mant != 0 && newmant == 0) ?
           // signaling NaN truncated to have mantissa 0
           (sign | 0x7c01) : (sign | 0x7c00 | newmant);
-        } else if (sexp >= 31) { // overflow
+      } else if (sexp >= 31) { // overflow
         return sign | 0x7c00;
       } else if (sexp < -10) { // underflow
         return sign;
@@ -852,7 +1211,7 @@ namespace PeterO.Cbor {
         return (mant != 0 && newmant == 0) ?
           // signaling NaN truncated to have mantissa 0
           (sign | 0x7f800001) : (sign | 0x7f800000 | newmant);
-        } else if (sexp >= 255) { // overflow
+      } else if (sexp >= 255) { // overflow
         return sign | 0x7f800000;
       } else if (sexp < -23) { // underflow
         return sign;
@@ -877,11 +1236,14 @@ namespace PeterO.Cbor {
         return -1;
       } else if (exp <= 112) { // Subnormal
         int shift = 126 - exp;
-        return (bits & ((1 << shift) - 1)) == 0 ? sign +
-          (1024 >> (145 - exp)) + (mant >> shift) : -1;
-        } else {
+        int rs = (1024 >> (145 - exp)) + (mant >> shift);
+        if (mant != 0 && exp == 103) { {
+  return -1;
+ } }
+        return (bits & ((1 << shift) - 1)) == 0 ? sign + rs : -1;
+      } else {
         return (bits & 0x1fff) == 0 ? sign + ((exp - 112) << 10) +
-          (mant >> 13) : -1;
+-(mant >> 13) : -1;
       }
     }
 
