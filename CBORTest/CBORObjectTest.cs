@@ -5486,6 +5486,85 @@ CBOREncodeOptions(false, false, true));
     }
 
     [Test]
+    public void TestToFloatingPointBits() {
+      try {
+ CBORObject.FromFloatingPointBits(0, 0);
+ Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.FromFloatingPointBits(0, 1);
+ Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.FromFloatingPointBits(0, 3);
+ Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.FromFloatingPointBits(0, 5);
+ Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.FromFloatingPointBits(0, 6);
+ Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.FromFloatingPointBits(0, 7);
+ Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.FromFloatingPointBits(0, 9);
+ Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+    }
+
+    [Test]
+    public void TestToFloatingPointBitsSingle() {
+      // Regression test
+      CBORObject o;
+      o = CBORObject.FromFloatingPointBits(2140148306L, 4);
+      Assert.IsTrue(Double.IsNaN(o.AsDoubleValue()));
+      o = CBORObject.FromFloatingPointBits(1651724151L, 4);
+      Assert.IsTrue(o.AsDoubleValue() == 1.1220712138406615E21);
+      o = CBORObject.FromFloatingPointBits(-1566356128L, 4);
+      Assert.IsTrue(o.AsDoubleValue() == -4.426316249665156E-18);
+    }
+
+    [Test]
     public void TestToJSONString_ByteArray_Padding() {
       CBORObject o;
       var options = new JSONOptions(String.Empty);

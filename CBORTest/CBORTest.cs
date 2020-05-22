@@ -996,6 +996,50 @@ namespace Test {
         ToObjectTest.TestToFromObjectRoundTrip(Single.PositiveInfinity));
     }
 
+    [Test]
+    public void TestEquivJSONSpecificA() {
+      TestEquivJSONOne(new byte[] {
+        0x2d, 0x37, 0x30, 0x31, 0x39, 0x34,
+        0x38, 0x33, 0x35, 0x39, 0x31, 0x33, 0x37, 0x34, 0x38, 0x45, 0x30,
+      });
+    }
+
+    public static bool TestEquivJSONOne(byte[] bytes) {
+if (!(bytes.length > 0)) {
+  return false;
+}
+   CBORObject cbo = CBORObject.FromJSONBytes(bytes);
+   Assert.IsTrue(cbo != null);
+   CBORObject cbo2 = CBORObject.FromJSONString(cbo.ToJSONString());
+   Assert.IsTrue(cbo2 != null);
+   if (!cbo.equals(cbo2)) {
+     Console.WriteLine("jsonstring");
+     Console.WriteLine(TestCommon.ToByteArrayString(bytes));
+     Console.WriteLine(DataUtilities.GetUtf8String(bytes, true));
+     Console.WriteLine("old " +
+TestCommon.ToByteArrayString(cbo.ToJSONBytes()));
+     Console.WriteLine(cbo.ToJSONString());
+     Console.WriteLine("new " +
+TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
+     Console.WriteLine(cbo2.ToJSONString());
+     Assert.AreEqual(cbo, cbo2);
+   }
+   cbo2 = CBORObject.FromJSONBytes(cbo.ToJSONBytes());
+   Assert.IsTrue(cbo2 != null);
+   if (!cbo.Equals(cbo2)) {
+     Console.WriteLine("jsonbytes");
+     Console.WriteLine(TestCommon.ToByteArrayString(bytes));
+     Console.WriteLine(DataUtilities.GetUtf8String(bytes, true));
+     Console.WriteLine("old " +
+TestCommon.ToByteArrayString(cbo.ToJSONBytes()));
+     Console.WriteLine(cbo.ToJSONString());
+     Console.WriteLine("new " +
+TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
+     Console.WriteLine(cbo2.ToJSONString());
+     Assert.AreEqual(cbo, cbo2);
+   }
+   return true;
+    }
     public static bool TestEquivJSONNumberOne(byte[] bytes) {
    // Assume the JSON begins and ends with a digit
 if (!(bytes.length > 0)) {
@@ -1266,21 +1310,6 @@ TestCompareToOne(bytes);
       TestEquivJSONOne(jsonBytes);
     }
 
-    public static void TestEquivJSONOne(byte[] bytes) {
-      CBORObject cbo = CBORObject.FromJSONBytes(bytes);
-      Assert.IsTrue(cbo != null);
-      CBORObject cbo2 = CBORObject.FromJSONString(cbo.ToJSONString());
-      Assert.IsTrue(cbo2 != null);
-      if (!cbo.Equals(cbo2)) {
-        Assert.AreEqual(cbo, cbo2, "differs for JSONString");
-      }
-      cbo2 = CBORObject.FromJSONBytes(cbo.ToJSONBytes());
-      Assert.IsTrue(cbo2 != null);
-      if (!cbo.Equals(cbo2)) {
-        Assert.AreEqual(cbo, cbo2, "differs for JSONBytes");
-      }
-    }
-
     [Test]
     public void TestDecFracCompareIntegerVsBigFraction() {
       CBORObject o1 = null;
@@ -1537,7 +1566,8 @@ TestCompareToOne(bytes);
           .ToObject(typeof(EDecimal))).IsNaN());
       for (int i = -65539; i <= 65539; ++i) {
         CBORObject o = ToObjectTest.TestToFromObjectRoundTrip((float)i);
-        // Console.Write("jsonser i=" + (// i) + " o=" + (o.ToString()) + " json=" +
+        // Console.WriteLine("jsonser i=" + (// i) + " o=" + (o.ToString()) + " json="
+        // +
         // (o.ToJSONString()) + " type=" + (o.Type));
         CBORTestCommon.AssertJSONSer(
           o,
@@ -2274,7 +2304,7 @@ TestCompareToOne(bytes);
             }
           } catch (CBORException ex) {
             // Expected exception
-            Console.Write(ex.Message.Substring(0, 0));
+            Console.WriteLine(ex.Message.Substring(0, 0));
           } catch (InvalidOperationException ex) {
             string failString = ex.ToString() +
               (ex.InnerException == null ? String.Empty : "\n" +
