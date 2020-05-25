@@ -1016,11 +1016,9 @@ if (!(bytes.length > 0)) {
      Console.WriteLine("jsonstring");
      Console.WriteLine(TestCommon.ToByteArrayString(bytes));
      Console.WriteLine(DataUtilities.GetUtf8String(bytes, true));
-     Console.WriteLine("old " +
-TestCommon.ToByteArrayString(cbo.ToJSONBytes()));
+     Console.WriteLine("old " + TestCommon.ToByteArrayString(cbo.ToJSONBytes()));
      Console.WriteLine(cbo.ToJSONString());
-     Console.WriteLine("new " +
-TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
+     Console.WriteLine("new " + TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
      Console.WriteLine(cbo2.ToJSONString());
      Assert.AreEqual(cbo, cbo2);
    }
@@ -1030,11 +1028,9 @@ TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
      Console.WriteLine("jsonbytes");
      Console.WriteLine(TestCommon.ToByteArrayString(bytes));
      Console.WriteLine(DataUtilities.GetUtf8String(bytes, true));
-     Console.WriteLine("old " +
-TestCommon.ToByteArrayString(cbo.ToJSONBytes()));
+     Console.WriteLine("old " + TestCommon.ToByteArrayString(cbo.ToJSONBytes()));
      Console.WriteLine(cbo.ToJSONString());
-     Console.WriteLine("new " +
-TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
+     Console.WriteLine("new " + TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
      Console.WriteLine(cbo2.ToJSONString());
      Assert.AreEqual(cbo, cbo2);
    }
@@ -1566,8 +1562,7 @@ TestCompareToOne(bytes);
           .ToObject(typeof(EDecimal))).IsNaN());
       for (int i = -65539; i <= 65539; ++i) {
         CBORObject o = ToObjectTest.TestToFromObjectRoundTrip((float)i);
-        // Console.WriteLine("jsonser i=" + (// i) + " o=" + (o.ToString()) + " json="
-        // +
+        // Console.WriteLine("jsonser i=" + (// i) + " o=" + (o.ToString()) + " json=" +
         // (o.ToJSONString()) + " type=" + (o.Type));
         CBORTestCommon.AssertJSONSer(
           o,
