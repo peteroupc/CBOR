@@ -378,6 +378,9 @@ namespace PeterO.Cbor {
       if (options != null && options.NumberConversion ==
         JSONOptions.ConversionMode.Double) {
         return CBORObject.FromObject((double)(-digit));
+      } else if (options != null && options.NumberConversion ==
+        JSONOptions.ConversionMode.Decimal128) {
+        return CBORObject.FromObject(EDecimal.FromInt32(-digit));
       } else {
         // NOTE: Assumes digit is greater than zero, so PreserveNegativeZeros is
         // irrelevant
@@ -397,6 +400,9 @@ namespace PeterO.Cbor {
       if (options != null && options.NumberConversion ==
         JSONOptions.ConversionMode.Double) {
         return CBORObject.FromObject((double)digit);
+      } else if (options != null && options.NumberConversion ==
+        JSONOptions.ConversionMode.Decimal128) {
+        return CBORObject.FromObject(EDecimal.FromInt32(digit));
       } else {
         // NOTE: Assumes digit is nonnegative, so PreserveNegativeZeros is irrelevant
         return CBORObject.FromObject(digit);
