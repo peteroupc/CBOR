@@ -4759,6 +4759,10 @@ namespace PeterO.Cbor {
         cn.GetNumberInterface().CanTruncatedIntFitInInt64(cn.GetValue());
     }
 
+    private static string Chop(string str) {
+      return str.Substring(0, Math.Min(100, str.Length));
+    }
+
     /// <summary>Compares two CBOR objects. This implementation was changed
     /// in version 4.0.
     /// <para>In this implementation:</para>
@@ -4815,6 +4819,14 @@ namespace PeterO.Cbor {
       int typeB = other.itemtypeValue;
       object objA = this.itemValue;
       object objB = other.itemValue;
+      // DebugUtility.Log("typeA=" + typeA);
+      // DebugUtility.Log("typeB=" + typeB);
+      // DebugUtility.Log("objA=" + Chop(this.ItemType ==
+      // CBORObjectTypeMap ? "(map)" :
+      // this.ToString()));
+      // DebugUtility.Log("objB=" + Chop(other.ItemType ==
+      // CBORObjectTypeMap ? "(map)" :
+      // other.ToString()));
       int cmp;
       if (typeA == typeB) {
         switch (typeA) {
@@ -4911,14 +4923,17 @@ namespace PeterO.Cbor {
             (string)objA,
             (byte[])objB);
       } else {
+        int ta = (typeA == CBORObjectTypeTextStringUtf8) ?
+             CBORObjectTypeTextString : typeA;
+        int tb = (typeB == CBORObjectTypeTextStringUtf8) ?
+             CBORObjectTypeTextString : typeB;
         /* NOTE: itemtypeValue numbers are ordered such that they
         // correspond to the lexicographical order of their CBOR encodings
         // (with the exception of Integer and EInteger together,
-        // and TextString and TextStringUtf8 together which
-        // are handled above) */
-        cmp = (typeA < typeB) ? -1 : 1;
+        // and TextString/TextStringUtf8) */
+        cmp = (ta < tb) ? -1 : 1;
       }
-      // DebugUtility.Log("" + this + " " + other + " -> " + (cmp));
+      // DebugUtility.Log(" -> " + (cmp));
       return cmp;
     }
 
@@ -7327,11 +7342,24 @@ namespace PeterO.Cbor {
       }
       var sortedASet = new List<CBORObject>(mapA.Keys);
       var sortedBSet = new List<CBORObject>(mapB.Keys);
+      // DebugUtility.Log("---sorting mapA's keys");
       sortedASet.Sort();
+      // DebugUtility.Log("---sorting mapB's keys");
       sortedBSet.Sort();
+      // DebugUtility.Log("---done sorting");
       listACount = sortedASet.Count;
       listBCount = sortedBSet.Count;
       // Compare the keys
+      /* for (var i = 0; i < listACount; ++i) {
+        string str = sortedASet[i].ToString();
+        str = str.Substring(0, Math.Min(100, str.Length));
+        DebugUtility.Log("A " + i + "=" + str);
+      }
+      for (var i = 0; i < listBCount; ++i) {
+        string str = sortedBSet[i].ToString();
+        str = str.Substring(0, Math.Min(100, str.Length));
+        DebugUtility.Log("B " + i + "=" + str);
+      }*/
       for (var i = 0; i < listACount; ++i) {
         CBORObject itemA = sortedASet[i];
         CBORObject itemB = sortedBSet[i];
@@ -7339,15 +7367,19 @@ namespace PeterO.Cbor {
           return -1;
         }
         int cmp = itemA.CompareTo(itemB);
-        // DebugUtility.Log("" + itemA + ", " + itemB + " -> cmp=" + (cmp));
-        if (cmp != 0) {
-          return cmp;
-        }
+        // string ot = itemA + "/" +
+        // (cmp != 0 ? itemB.ToString() : "~") +
+        // " -> cmp=" + (cmp);
+        // DebugUtility.Log(ot);
+      if (cmp != 0) {
+        return cmp;
+      }
         // Both maps have the same key, so compare
         // the value under that key
         cmp = mapA[itemA].CompareTo(mapB[itemB]);
-        // DebugUtility.Log("{0}, {1} -> {2}, {3} ->
-        // cmp={4}",itemA,itemB,mapA[itemA],mapB[itemB],cmp);
+        // DebugUtility.Log(itemA + "/~" +
+        // " -> "+mapA[itemA]+", "+(cmp != 0 ? mapB[itemB].ToString() :
+        // "~") + " -> cmp=" + cmp);
         if (cmp != 0) {
           return cmp;
         }

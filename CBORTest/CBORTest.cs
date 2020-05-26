@@ -1005,14 +1005,17 @@ namespace Test {
     }
 
     public static bool TestEquivJSONOne(byte[] bytes) {
-if (!(bytes.length > 0)) {
+if (bytes == null) {
+  throw new ArgumentNullException(nameof(bytes));
+}
+if (!(bytes.Length > 0)) {
   return false;
 }
    CBORObject cbo = CBORObject.FromJSONBytes(bytes);
    Assert.IsTrue(cbo != null);
    CBORObject cbo2 = CBORObject.FromJSONString(cbo.ToJSONString());
    Assert.IsTrue(cbo2 != null);
-   if (!cbo.equals(cbo2)) {
+   if (!cbo.Equals(cbo2)) {
      Console.Write("jsonstring");
      Console.Write(TestCommon.ToByteArrayString(bytes));
      Console.Write(DataUtilities.GetUtf8String(bytes, true));
@@ -1038,13 +1041,16 @@ if (!(bytes.length > 0)) {
     }
     public static bool TestEquivJSONNumberOne(byte[] bytes) {
    // Assume the JSON begins and ends with a digit
-if (!(bytes.length > 0)) {
+if (bytes == null) {
+  throw new ArgumentNullException(nameof(bytes));
+}
+if (!(bytes.Length > 0)) {
   return false;
 }
 if (!((bytes[0] >= 0x30 && bytes[0] <= 0x39) || bytes[0] == (byte)'-')) {
   return false;
 }
-if (!(bytes[bytes.length - 1] >= 0x30 && bytes[bytes.length - 1] <= 0x39)) {
+if (!(bytes[bytes.Length - 1] >= 0x30 && bytes[bytes.Length - 1] <= 0x39)) {
   return false;
 }
    CBORObject cbor, cbor2, cbored, cbor3;
@@ -1064,13 +1070,16 @@ cbored = (ed.Exponent.CompareTo(0) == 0 && !(ed.IsNegative && ed.Sign == 0)) ?
     }
     public static bool TestEquivJSONNumberDecimal128One(byte[] bytes) {
    // Assume the JSON begins and ends with a digit
-if (!(bytes.length > 0)) {
+if (bytes == null) {
+  throw new ArgumentNullException(nameof(bytes));
+}
+if (!(bytes.Length > 0)) {
   return false;
 }
 if (!((bytes[0] >= 0x30 && bytes[0] <= 0x39) || bytes[0] == (byte)'-')) {
   return false;
 }
-if (!(bytes[bytes.length - 1] >= 0x30 && bytes[bytes.length - 1] <= 0x39)) {
+if (!(bytes[bytes.Length - 1] >= 0x30 && bytes[bytes.Length - 1] <= 0x39)) {
   return false;
 }
    CBORObject cbor, cbor2, cbored, cbor3;
@@ -1225,6 +1234,75 @@ bytes = new byte[] {
 TestCompareToOne(bytes);
     }
 
+ [Test]
+ public void TestCompareB1() {
+  byte[] bytes;
+  CBORObject o;
+  bytes = new byte[] {
+    (byte)0xbb, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x02,
+    (byte)0xf8, 0x2d, 0x11, 0x7f, 0x79, 0x00, 0x2e, 0x7c, 0x2c, 0x18, 0x40,
+    0x3e,
+    (byte)0xc7,
+    (byte)0xa9, 0x0c, 0x57, 0x50, 0x63, 0x30, 0x0f, 0x07, 0x76, 0x14, 0x31,
+    0x52, 0x5c, 0x0a, 0x43, 0x4a, 0x6f, 0x08, 0x11, 0x25, 0x0b, 0x1a, 0x10,
+    0x74,
+    (byte)0xf1,
+    (byte)0x84,
+    (byte)0xbd,
+    (byte)0x93, 0x4f, 0x74, 0x23, 0x5b, 0x7c, 0x5c, 0x76, 0x70, 0x0a,
+    (byte)0xde,
+    (byte)0xa3, 0x5e, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0b,
+    0x76,
+    (byte)0xf0,
+    (byte)0xad,
+    (byte)0xbf,
+    (byte)0xba, 0x14, 0x45, 0x0d, 0x2e, 0x6e, 0x62, 0x62, 0x10, 0x63,
+    (byte)0xff, 0x35,
+  };
+  o = CBORObject.DecodeFromBytes(bytes, new
+CBOREncodeOptions("allowduplicatekeys=1"));
+  CBORTestCommon.AssertRoundTrip(o);
+  bytes = new byte[] {
+    (byte)0xd9, 0x0e, 0x02,
+    (byte)0xbf, 0x7f, 0x78, 0x07, 0x12, 0x45, 0x2f, 0x48,
+    (byte)0xc8,
+    (byte)0xb7, 0x5a, 0x79, 0x00, 0x01, 0x5e, 0x7b, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x01, 0x72, 0x78, 0x00, 0x7a, 0x00, 0x00, 0x00, 0x01,
+    0x49, 0x61, 0x6d, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01,
+    0x13,
+    (byte)0xff,
+    (byte)0xed,
+    (byte)0xfb,
+    (byte)0x82, 0x18,
+    (byte)0xc9, 0x6c, 0x3b, (byte)0xc0, 0x53, 0x1f, (byte)0xeb, (byte)0xff,
+  };
+  o = CBORObject.DecodeFromBytes(bytes, new
+CBOREncodeOptions("allowduplicatekeys=1"));
+  CBORTestCommon.AssertRoundTrip(o);
+  bytes = new byte[] {
+    (byte)0xbf,
+    (byte)0xfa,
+    (byte)0xc5, 0x7f, 0x16,
+    (byte)0xe2,
+    (byte)0xf9, 0x05, 0x2d, 0x7f, 0x79, 0x00, 0x02, 0x4f, 0x0a, 0x67, 0x1a,
+    0x17, 0x17, 0x1d, 0x0a, 0x74, 0x0a, 0x79, 0x00, 0x0e, 0x48, 0x23, 0x4e,
+    0x32, 0x53, 0x74, 0x78,
+    (byte)0xf0,
+    (byte)0xa9,
+    (byte)0x8b,
+    (byte)0xb9, 0x03, 0x68, 0x3b, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x02, 0x67, 0x0e, 0x7a, 0x00, 0x00, 0x00, 0x02, 0x74, 0x37, 0x79,
+    0x00, 0x09, 0x6f, 0x11, 0x60, 0x3c, 0x24, 0x13, 0x16, 0x25, 0x35, 0x78,
+    0x01, 0x6a,
+    (byte)0xff, (byte)0xf9, (byte)0xc0, 0x69, 0x19, 0x0b, (byte)0x8a, 0x05,
+    (byte)0xff,
+  };
+  o = CBORObject.DecodeFromBytes(bytes, new
+CBOREncodeOptions("allowduplicatekeys=1"));
+  CBORTestCommon.AssertRoundTrip(o);
+ }
+
     [Test]
     public void TestCompareB() {
       {
@@ -1260,27 +1338,19 @@ TestCompareToOne(bytes);
           Double.NegativeInfinity,
           1956611);
       CBORTestCommon.AssertRoundTrip(cbor);
-      cbor =
-
-        CBORObject.FromObjectAndTag(
+      cbor = CBORObject.FromObjectAndTag(
           ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity),
           1956611);
       CBORTestCommon.AssertRoundTrip(cbor);
-      cbor =
-
-        CBORObject.FromObjectAndTag(
+      cbor = CBORObject.FromObjectAndTag(
           ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf),
           1956611);
       CBORTestCommon.AssertRoundTrip(cbor);
-      cbor =
-
-        CBORObject.FromObjectAndTag(
+      cbor = CBORObject.FromObjectAndTag(
           ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecNegInf),
           1956611);
       CBORTestCommon.AssertRoundTrip(cbor);
-      cbor =
-
-        CBORObject.FromObjectAndTag(
+      cbor = CBORObject.FromObjectAndTag(
           ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf),
           1956611);
       CBORTestCommon.AssertRoundTrip(cbor);

@@ -104,11 +104,23 @@ namespace PeterO.Cbor {
           break;
         }
         case CBORType.TextString: {
-          if (sb == null) {
-            return "\"" + obj.AsString() + "\"";
-          }
+          sb = sb == null ? new StringBuilder() : sb;
           sb.Append('\"');
-          sb.Append(obj.AsString());
+          string ostring = obj.AsString();
+          sb.Append(ostring);
+          /*
+          for (var i = 0; i < ostring.Length; ++i) {
+            if (ostring[i] >= 0x20 && ostring[i] <= 0x7f) {
+              sb.Append(ostring[i]);
+            } else {
+                 sb.Append("\\u");
+                 sb.Append(HexAlphabet[(ostring[i] >> 12) & 15]);
+                 sb.Append(HexAlphabet[(ostring[i] >> 8) & 15]);
+                 sb.Append(HexAlphabet[(ostring[i] >> 4) & 15]);
+                 sb.Append(HexAlphabet[ostring[i] & 15]);
+             }
+          }
+          */
           sb.Append('\"');
           break;
         }
