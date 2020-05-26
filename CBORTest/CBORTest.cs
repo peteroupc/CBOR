@@ -1005,50 +1005,46 @@ namespace Test {
     }
 
     public static bool TestEquivJSONOne(byte[] bytes) {
-if (!(bytes.length > 0)) {
+if (!(bytes.Length > 0)) {
   return false;
 }
    CBORObject cbo = CBORObject.FromJSONBytes(bytes);
    Assert.IsTrue(cbo != null);
    CBORObject cbo2 = CBORObject.FromJSONString(cbo.ToJSONString());
    Assert.IsTrue(cbo2 != null);
-   if (!cbo.equals(cbo2)) {
-     Console.WriteLine("jsonstring");
-     Console.WriteLine(TestCommon.ToByteArrayString(bytes));
-     Console.WriteLine(DataUtilities.GetUtf8String(bytes, true));
-     Console.WriteLine("old " +
-TestCommon.ToByteArrayString(cbo.ToJSONBytes()));
-     Console.WriteLine(cbo.ToJSONString());
-     Console.WriteLine("new " +
-TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
-     Console.WriteLine(cbo2.ToJSONString());
+   if (!cbo.Equals(cbo2)) {
+     Console.Write("jsonstring");
+     Console.Write(TestCommon.ToByteArrayString(bytes));
+     Console.Write(DataUtilities.GetUtf8String(bytes, true));
+     Console.Write("old " + TestCommon.ToByteArrayString(cbo.ToJSONBytes()));
+     Console.Write(cbo.ToJSONString());
+     Console.Write("new " + TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
+     Console.Write(cbo2.ToJSONString());
      Assert.AreEqual(cbo, cbo2);
    }
    cbo2 = CBORObject.FromJSONBytes(cbo.ToJSONBytes());
    Assert.IsTrue(cbo2 != null);
    if (!cbo.Equals(cbo2)) {
-     Console.WriteLine("jsonbytes");
-     Console.WriteLine(TestCommon.ToByteArrayString(bytes));
-     Console.WriteLine(DataUtilities.GetUtf8String(bytes, true));
-     Console.WriteLine("old " +
-TestCommon.ToByteArrayString(cbo.ToJSONBytes()));
-     Console.WriteLine(cbo.ToJSONString());
-     Console.WriteLine("new " +
-TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
-     Console.WriteLine(cbo2.ToJSONString());
+     Console.Write("jsonbytes");
+     Console.Write(TestCommon.ToByteArrayString(bytes));
+     Console.Write(DataUtilities.GetUtf8String(bytes, true));
+     Console.Write("old " + TestCommon.ToByteArrayString(cbo.ToJSONBytes()));
+     Console.Write(cbo.ToJSONString());
+     Console.Write("new " + TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
+     Console.Write(cbo2.ToJSONString());
      Assert.AreEqual(cbo, cbo2);
    }
    return true;
     }
     public static bool TestEquivJSONNumberOne(byte[] bytes) {
    // Assume the JSON begins and ends with a digit
-if (!(bytes.length > 0)) {
+if (!(bytes.Length > 0)) {
   return false;
 }
 if (!((bytes[0] >= 0x30 && bytes[0] <= 0x39) || bytes[0] == (byte)'-')) {
   return false;
 }
-if (!(bytes[bytes.length - 1] >= 0x30 && bytes[bytes.length - 1] <= 0x39)) {
+if (!(bytes[bytes.Length - 1] >= 0x30 && bytes[bytes.Length - 1] <= 0x39)) {
   return false;
 }
    CBORObject cbor, cbor2, cbored, cbor3;
@@ -1068,13 +1064,13 @@ cbored = (ed.Exponent.CompareTo(0) == 0 && !(ed.IsNegative && ed.Sign == 0)) ?
     }
     public static bool TestEquivJSONNumberDecimal128One(byte[] bytes) {
    // Assume the JSON begins and ends with a digit
-if (!(bytes.length > 0)) {
+if (!(bytes.Length > 0)) {
   return false;
 }
 if (!((bytes[0] >= 0x30 && bytes[0] <= 0x39) || bytes[0] == (byte)'-')) {
   return false;
 }
-if (!(bytes[bytes.length - 1] >= 0x30 && bytes[bytes.length - 1] <= 0x39)) {
+if (!(bytes[bytes.Length - 1] >= 0x30 && bytes[bytes.Length - 1] <= 0x39)) {
   return false;
 }
    CBORObject cbor, cbor2, cbored, cbor3;
@@ -1229,6 +1225,21 @@ bytes = new byte[] {
 TestCompareToOne(bytes);
     }
 
+ [Test]
+ public void TestCompareB1() {
+  byte[] bytes;
+  CBORObject o;
+  bytes=new byte[] { (byte)0xBB,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x02,(byte)0xF8,0x2D,0x11,0x7F,0x79,0x00,0x2E,0x7C,0x2C,0x18,0x40,0x3E,(byte)0xC7,(byte)0xA9,0x0C,0x57,0x50,0x63,0x30,0x0F,0x07,0x76,0x14,0x31,0x52,0x5C,0x0A,0x43,0x4A,0x6F,0x08,0x11,0x25,0x0B,0x1A,0x10,0x74,(byte)0xF1,(byte)0x84,(byte)0xBD,(byte)0x93,0x4F,0x74,0x23,0x5B,0x7C,0x5C,0x76,0x70,0x0A,(byte)0xDE,(byte)0xA3,0x5E,0x7B,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x0B,0x76,(byte)0xF0,(byte)0xAD,(byte)0xBF,(byte)0xBA,0x14,0x45,0x0D,0x2E,0x6E,0x62,0x62,0x10,0x63,(byte)0xFF,0x35};
+  o = CBORObject.DecodeFromBytes(bytes, new CBOREncodeOptions("allowduplicatekeys=1"));
+  CBORTestCommon.AssertRoundTrip(o);
+  bytes=new byte[] { (byte)0xD9,0x0E,0x02,(byte)0xBF,0x7F,0x78,0x07,0x12,0x45,0x2F,0x48,(byte)0xC8,(byte)0xB7,0x5A,0x79,0x00,0x01,0x5E,0x7B,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x01,0x72,0x78,0x00,0x7A,0x00,0x00,0x00,0x01,0x49,0x61,0x6D,0x7B,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x01,0x13,(byte)0xFF,(byte)0xED,(byte)0xFB,(byte)0x82,0x18,(byte)0xC9,0x6C,0x3B,(byte)0xC0,0x53,0x1F,(byte)0xEB,(byte)0xFF};
+  o = CBORObject.DecodeFromBytes(bytes, new CBOREncodeOptions("allowduplicatekeys=1"));
+  CBORTestCommon.AssertRoundTrip(o);
+  bytes=new byte[] { (byte)0xBF,(byte)0xFA,(byte)0xC5,0x7F,0x16,(byte)0xE2,(byte)0xF9,0x05,0x2D,0x7F,0x79,0x00,0x02,0x4F,0x0A,0x67,0x1A,0x17,0x17,0x1D,0x0A,0x74,0x0A,0x79,0x00,0x0E,0x48,0x23,0x4E,0x32,0x53,0x74,0x78,(byte)0xF0,(byte)0xA9,(byte)0x8B,(byte)0xB9,0x03,0x68,0x3B,0x7B,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x02,0x67,0x0E,0x7A,0x00,0x00,0x00,0x02,0x74,0x37,0x79,0x00,0x09,0x6F,0x11,0x60,0x3C,0x24,0x13,0x16,0x25,0x35,0x78,0x01,0x6A,(byte)0xFF,(byte)0xF9,(byte)0xC0,0x69,0x19,0x0B,(byte)0x8A,0x05,(byte)0xFF};
+  o = CBORObject.DecodeFromBytes(bytes, new CBOREncodeOptions("allowduplicatekeys=1"));
+  CBORTestCommon.AssertRoundTrip(o);
+ }
+
     [Test]
     public void TestCompareB() {
       {
@@ -1264,27 +1275,19 @@ TestCompareToOne(bytes);
           Double.NegativeInfinity,
           1956611);
       CBORTestCommon.AssertRoundTrip(cbor);
-      cbor =
-
-        CBORObject.FromObjectAndTag(
+      cbor = CBORObject.FromObjectAndTag(
           ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity),
           1956611);
       CBORTestCommon.AssertRoundTrip(cbor);
-      cbor =
-
-        CBORObject.FromObjectAndTag(
+      cbor = CBORObject.FromObjectAndTag(
           ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf),
           1956611);
       CBORTestCommon.AssertRoundTrip(cbor);
-      cbor =
-
-        CBORObject.FromObjectAndTag(
+      cbor = CBORObject.FromObjectAndTag(
           ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecNegInf),
           1956611);
       CBORTestCommon.AssertRoundTrip(cbor);
-      cbor =
-
-        CBORObject.FromObjectAndTag(
+      cbor = CBORObject.FromObjectAndTag(
           ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf),
           1956611);
       CBORTestCommon.AssertRoundTrip(cbor);
@@ -1566,8 +1569,7 @@ TestCompareToOne(bytes);
           .ToObject(typeof(EDecimal))).IsNaN());
       for (int i = -65539; i <= 65539; ++i) {
         CBORObject o = ToObjectTest.TestToFromObjectRoundTrip((float)i);
-        // Console.WriteLine("jsonser i=" + (// i) + " o=" + (o.ToString()) + " json="
-        // +
+        // Console.Write("jsonser i=" + (// i) + " o=" + (o.ToString()) + " json=" +
         // (o.ToJSONString()) + " type=" + (o.Type));
         CBORTestCommon.AssertJSONSer(
           o,
@@ -2304,7 +2306,7 @@ TestCompareToOne(bytes);
             }
           } catch (CBORException ex) {
             // Expected exception
-            Console.WriteLine(ex.Message.Substring(0, 0));
+            Console.Write(ex.Message.Substring(0, 0));
           } catch (InvalidOperationException ex) {
             string failString = ex.ToString() +
               (ex.InnerException == null ? String.Empty : "\n" +
