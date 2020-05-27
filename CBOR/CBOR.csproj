@@ -45,4 +45,6 @@ Version 4.1:
   <ItemGroup>
     <Compile Remove='PeterO\Cbor\FastInteger2.cs'/>
   </ItemGroup>
-      </Project>
+         <Target Name="DisableAnalyzers" BeforeTargets="CoreCompile" Condition="'$(UseRoslynAnalyzers)' == 'false'">
+   <ItemGroup><Analyzer Remove="@(Analyzer)" /></ItemGroup>
+   </Target></Project>

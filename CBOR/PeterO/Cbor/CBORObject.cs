@@ -6179,6 +6179,7 @@ namespace PeterO.Cbor {
       Stream outputStream,
       long floatingBits,
       int byteCount) {
+      // TODO: Add overload with autobytecount or shortestForm
       if (outputStream == null) {
         throw new ArgumentNullException(nameof(outputStream));
       }

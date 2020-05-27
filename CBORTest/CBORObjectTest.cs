@@ -319,6 +319,7 @@ JSONOptions("allowduplicatekeys=false");
       return (EDecimal)obj.ToObject(typeof(EDecimal));
     }
     [Test]
+    [Timeout(200000)]
     public void TestAsNumberAdd() {
       var r = new RandomGenerator();
       for (var i = 0; i < 1000; ++i) {
@@ -3652,6 +3653,7 @@ CBOREncodeOptions(false, false, true));
       }
     }
     [Test]
+    [Timeout(200000)]
     public void TestAsNumberMultiply() {
       var r = new RandomGenerator();
       for (var i = 0; i < 3000; ++i) {
@@ -5136,6 +5138,7 @@ CBOREncodeOptions(false, false, true));
       }
     }
     [Test]
+    [Timeout(200000)]
     public void TestAsNumberSubtract() {
       try {
         ToObjectTest.TestToFromObjectRoundTrip(2).AsNumber().Subtract(null);
@@ -7147,25 +7150,47 @@ CBOREncodeOptions(false, false, true));
       return FromJSON(json, new JSONOptions("numberconversion=" + numconv));
     }
 
-    private static void AssertJSONDouble(
+    public static void AssertJSONDouble(
       string json,
       string numconv,
       double dbl) {
       CBORObject cbor = FromJSON(json, numconv);
-      Assert.AreEqual(CBORType.FloatingPoint, cbor.Type);
+      Assert.AreEqual(CBORType.FloatingPoint, cbor.Type, json+" "+numconv+"
+" + dbl);
       double cbordbl = cbor.AsDoubleValue();
       if (dbl != cbordbl) {
         Assert.Fail("dbl = " + dbl + ", cbordbl = " + cbordbl);
       }
     }
 
-    private static void AssertJSONInteger(
+    public static void AssertJSONInteger(
+      string json,
+      string numconv,
+      long longval) {
+      CBORObject cbor = FromJSON(json, numconv);
+      if (cbor.Type != CBORType.Integer) {
+        string msg = json+" "+numconv+" " + longval;
+        msg = msg.Substring(0, Math.Min(100, msg.Length));
+if (msg.Length > 100) {
+           { msg += "...";
+        } }
+        Assert.AreEqual(CBORType.Integer, cbor.Type, msg);
+      }
+      Assert.AreEqual(longval, cbor.AsInt64Value());
+    }
+
+    public static void AssertJSONInteger(
       string json,
       string numconv,
       int intval) {
       CBORObject cbor = FromJSON(json, numconv);
       if (cbor.Type != CBORType.Integer) {
-        Assert.AreEqual(CBORType.Integer, cbor.Type);
+        string msg = json+" "+numconv+" " + intval;
+        msg = msg.Substring(0, Math.Min(100, msg.Length));
+if (msg.Length > 100) {
+           { msg += "...";
+        } }
+        Assert.AreEqual(CBORType.Integer, cbor.Type, msg);
       }
       Assert.AreEqual(intval, cbor.AsInt32Value());
     }
@@ -7203,92 +7228,82 @@ throw new InvalidOperationException(String.Empty, ex);
         "0e-" + manyzeros,
         "double",
         0.0);
-      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
+
       AssertJSONDouble(
         "0." + manyzeros,
         "double",
         0.0);
-      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
+
       AssertJSONDouble(
         "0." + manyzeros + "e-9999999999999",
         "double",
         0.0);
-      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
+
       AssertJSONDouble(
         manythrees + "e-9999999999999",
         "double",
         0.0);
-      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
+
       AssertJSONDouble(
         manythrees + "e-9999999999999",
         "intorfloat",
         0.0);
-      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
+
       AssertJSONInteger(
         manythrees + "e-9999999999999",
         "intorfloatfromdouble",
         0);
-      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
+
       AssertJSONDouble(
         "0." + manyzeros + "e-99999999",
         "double",
         0.0);
-      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
+
       AssertJSONDouble(
         manythrees + "e-99999999",
         "double",
         0.0);
-      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
+
       AssertJSONDouble(
         manythrees + "e-99999999",
         "intorfloat",
         0.0);
-      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONInteger(
         manythrees + "e-99999999",
         "intorfloatfromdouble",
         0);
-      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONInteger(
         "0e-" + manyzeros,
         "intorfloat",
         0);
-      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONInteger(
         "0e-" + manyzeros,
         "intorfloatfromdouble",
         0);
-      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONInteger(
         "-0e-" + manyzeros,
         "intorfloat",
         0);
-      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONInteger(
         "-0e-" + manyzeros,
         "intorfloatfromdouble",
         0);
-      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONInteger(
         "0." + manyzeros,
         "intorfloat",
         0);
-      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONInteger(
         "0." + manyzeros,
         "intorfloatfromdouble",
         0);
-      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONInteger(
         "-0." + manyzeros,
         "intorfloat",
         0);
-      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
       AssertJSONInteger(
         "-0." + manyzeros,
         "intorfloatfromdouble",
         0);
-      // Console.WriteLine("time: " + sw.ElapsedMilliseconds + " ms");
     }
 
     [Test]

@@ -421,6 +421,142 @@ namespace PeterO.Cbor {
       }
     }
 
+    // TODO: Use EFloat.ToDoubleBits when next version of
+    // Numbers is available
+    private static long ToDoubleBits(EFloat ef) {
+      if (ef.IsPositiveInfinity()) {
+        return unchecked((long)0x7ff0000000000000L);
+      }
+      if (ef.IsNegativeInfinity()) {
+        return unchecked((long)0xfff0000000000000L);
+      }
+      if (ef.IsNaN()) {
+        int[] nan = { 0, 0x7ff00000 };
+        if (ef.IsNegative) {
+          nan[1] |= unchecked((int)(1 << 31));
+        }
+        if (ef.IsQuietNaN()) {
+          // Quiet NaN is a NaN in which the highest bit of
+          // the mantissa area is set
+          nan[1] |= 0x80000;
+        } else if (ef.UnsignedMantissa.IsZero) {
+          // Set the 0x40000 bit to keep the mantissa from
+          // being zero if this is a signaling NaN
+          nan[1] |= 0x40000;
+        }
+        if (!ef.UnsignedMantissa.IsZero) {
+          // Copy diagnostic information
+          int[] words = new int[2];
+          EInteger um=ef.UnsignedMantissa;
+          words[0]=um.ToInt32Unchecked();
+          words[1]=um.ShiftRight(32).ToInt32Unchecked();
+          nan[0] = words[0];
+          nan[1] |= words[1] & 0x7ffff;
+          if ((words[0] | (words[1] & 0x7ffff)) == 0 && !ef.IsQuietNaN()) {
+            // Set the 0x40000 bit to keep the mantissa from
+            // being zero if this is a signaling NaN
+            nan[1] |= 0x40000;
+          }
+        }
+        long lret = unchecked(((long)nan[0]) & 0xffffffffL);
+        lret |= unchecked(((long)nan[1]) << 32);
+        return lret;
+      }
+      EFloat thisValue = ef;
+      // Check whether rounding can be avoided for common cases
+      // where the value already fits a double
+      if (!thisValue.IsFinite ||
+        thisValue.UnsignedMantissa.GetUnsignedBitLengthAsInt64() > 53 ||
+        thisValue.Exponent.CompareTo(-900) < 0 ||
+        thisValue.Exponent.CompareTo(900) > 0) {
+        thisValue = ef.RoundToPrecision(EContext.Binary64);
+      }
+      if (!thisValue.IsFinite) {
+        return ToDoubleBits(thisValue);
+      }
+      long longmant = thisValue.UnsignedMantissa.ToInt64Checked();
+      if (thisValue.IsNegative && longmant == 0) {
+        return 1L << 63;
+      } else if (longmant == 0) {
+        return 0L;
+      }
+      // DebugUtility.Log("todouble -->" + this);
+      long longBitLength = EInteger.FromInt64(longmant)
+          .GetUnsignedBitLengthAsInt64();
+      int expo = thisValue.Exponent.ToInt32Checked();
+      var subnormal = false;
+      if (longBitLength < 53) {
+        int diff = 53 - (int)longBitLength;
+        expo -= diff;
+        if (expo < -1074) {
+          // DebugUtility.Log("Diff changed from " + diff + " to " + (diff -
+          // (-1074 - expo)));
+          diff -= -1074 - expo;
+          expo = -1074;
+          subnormal = true;
+        }
+        longmant <<= diff;
+      }
+              // Clear the high bits where the exponent and sign are
+              longmant &= 0xfffffffffffffL;
+              if (!subnormal) {
+                longmant |= (long)(expo + 1075) << 52;
+              }
+              if (thisValue.IsNegative) {
+                longmant |= unchecked((long)(1L << 63));
+              }
+              return longmant;
+    }
+
+    private static bool IsBeyondSafeRange(long bits) {
+       // Absolute value of double is greater than 9007199254740991.0,
+       // or value is NaN
+       return (bits&~(1L<<63)) > (0x7FFL << 52) ||
+                    (bits&~(1L<<63)) > 0x433FFFFFFFFFFFFFL;
+    }
+
+    private static bool IsIntegerValue(long bits) {
+       bits&=~(1L<<63);
+       // Infinity and NaN
+       if( bits >= (0x7FFL << 52)) {
+           return false;
+       }
+       // Beyond non-integer range
+       if ((bits >> 52) >= 0x433) {
+           return true;
+       }
+       // Less than 1
+       if ((bits >> 52) <= 0x3FE) {
+           return false;
+       }
+       int exp=(int)(bits>>52);
+       long mant=bits&((1L<<52)-1);
+       int shift=52-(exp-0x3FF);
+       return ((mant>>shift)<<shift) == mant;
+    }
+
+    private static long GetIntegerValue(long bits) {
+       long sign=((bits & (1L<<63))!=0) ? -1 : 1;
+       bits&=~(1L<<63);
+       // Infinity and NaN
+       if( bits >= (0x7FFL << 52)) {
+           throw new NotSupportedException();
+       }
+       // Beyond safe range
+       if ((bits >> 52) >= 0x434) {
+           throw new NotSupportedException();
+       }
+       // Less than 1
+       if ((bits >> 52) <= 0x3FE) {
+           throw new NotSupportedException();
+       }
+       int exp=(int)(bits>>52);
+       long mant=bits&((1L<<52)-1);
+       mant|=(1L<<52);
+       int shift=52-(exp-0x3FF);
+       return (mant >> shift) * sign;
+    }
+
     /// <summary>Parses a number whose format follows the JSON
     /// specification (RFC 8259) and converts that number to a CBOR
     /// object.</summary>
@@ -595,7 +731,7 @@ namespace PeterO.Cbor {
           if (kind == JSONOptions.ConversionMode.Double ||
             kind == JSONOptions.ConversionMode.IntOrFloat) {
             if (!negative) {
-              return CBORObject.FromObject((double)0.0);
+              return CBORObject.FromFloatingPointBits(0, 2);
             } else {
               return CBORObject.FromFloatingPointBits(0x8000, 2);
             }
@@ -608,8 +744,8 @@ namespace PeterO.Cbor {
           if (kind == JSONOptions.ConversionMode.Double ||
             kind == JSONOptions.ConversionMode.IntOrFloatFromDouble ||
             kind == JSONOptions.ConversionMode.IntOrFloat) {
-            return CBORObject.FromObject(
-                negative ? Double.NegativeInfinity : Double.PositiveInfinity);
+            return CBORObject.FromFloatingPointBits(
+                negative ? (0xFFFL << 52) : (0x7FFL << 52), 8);
           } else if (kind == JSONOptions.ConversionMode.Decimal128) {
             return CBORObject.FromObject(negative ?
                 EDecimal.NegativeInfinity : EDecimal.PositiveInfinity);
@@ -630,7 +766,7 @@ namespace PeterO.Cbor {
             v = -v;
           }
           if (kind == JSONOptions.ConversionMode.Double) {
-            return CBORObject.FromObject((double)v);
+            return CBORObject.FromObject(ToDoubleBits(EFloat.FromInt64(v)));
           } else if (kind == JSONOptions.ConversionMode.Decimal128) {
             return CBORObject.FromObject(EDecimal.FromInt64(v));
           } else {
@@ -696,16 +832,16 @@ namespace PeterO.Cbor {
 CBORObject.FromObject(ed);
         }
       } else if (kind == JSONOptions.ConversionMode.Double) {
-        // TODO: Avoid converting to double
-        double dbl = EFloat.FromString(
+        EFloat ef = EFloat.FromString(
             str,
             initialOffset,
             endPos - initialOffset,
-            EContext.Binary64).ToDouble();
-        if (!preserveNegativeZero && dbl == 0.0) {
-          dbl = 0.0;
+            EContext.Binary64);
+        long lb=ToDoubleBits(ef);
+        if (!preserveNegativeZero && (lb == 1L<<63 || lb== 0L)) {
+          lb = 0L;
         }
-        return CBORObject.FromObject(dbl);
+        return CBORObject.FromFloatingPointBits(lb, 8);
       } else if (kind == JSONOptions.ConversionMode.Decimal128) {
         EDecimal ed = EDecimal.FromString(
             str,
@@ -717,42 +853,38 @@ CBORObject.FromObject(ed);
         }
         return CBORObject.FromObject(ed);
       } else if (kind == JSONOptions.ConversionMode.IntOrFloatFromDouble) {
-        // TODO: Avoid converting to double
-        double dbl = EFloat.FromString(
+        EFloat ef = EFloat.FromString(
             str,
             initialOffset,
             endPos - initialOffset,
-            EContext.Binary64).ToDouble();
-        if (!Double.IsNaN(dbl) && dbl >= -9007199254740991.0 &&
-          dbl <= 9007199254740991.0 && Math.Floor(dbl) == dbl) {
-          var idbl = (long)dbl;
-          return CBORObject.FromObject(idbl);
+            EContext.Binary64);
+        long lb=ToDoubleBits(ef);
+        if (!IsBeyondSafeRange(lb) && IsIntegerValue(lb)) {
+          return CBORObject.FromObject(GetIntegerValue(lb));
         }
-        return CBORObject.FromObject(dbl);
+        return CBORObject.FromFloatingPointBits(lb, 8);
       } else if (kind == JSONOptions.ConversionMode.IntOrFloat) {
         EContext ctx = EContext.Binary64.WithBlankFlags();
-        // TODO: Avoid converting to double
-        double dbl = EFloat.FromString(
+        EFloat ef = EFloat.FromString(
             str,
             initialOffset,
             endPos - initialOffset,
-            ctx).ToDouble();
+            ctx);
+        long lb=ToDoubleBits(ef);
         if ((ctx.Flags & EContext.FlagInexact) != 0) {
           // Inexact conversion to double, meaning that the string doesn't
           // represent an integer in [-(2^53)+1, 2^53), which is representable
           // exactly as double, so treat as ConversionMode.Double
-          if (!preserveNegativeZero && dbl == 0.0) {
-            dbl = 0.0;
+          if (!preserveNegativeZero && (lb == 1L<<63 || lb== 0L)) {
+            lb = 0L;
           }
-          return CBORObject.FromObject(dbl);
+          return CBORObject.FromFloatingPointBits(lb, 8);
         } else {
           // Exact conversion; treat as ConversionMode.IntToFloatFromDouble
-          if (!Double.IsNaN(dbl) && dbl >= -9007199254740991.0 &&
-            dbl <= 9007199254740991.0 && Math.Floor(dbl) == dbl) {
-            var idbl = (long)dbl;
-            return CBORObject.FromObject(idbl);
+          if (!IsBeyondSafeRange(lb) && IsIntegerValue(lb)) {
+            return CBORObject.FromObject(GetIntegerValue(lb));
           }
-          return CBORObject.FromObject(dbl);
+          return CBORObject.FromFloatingPointBits(lb, 8);
         }
       } else {
         throw new ArgumentException("Unsupported conversion kind.");

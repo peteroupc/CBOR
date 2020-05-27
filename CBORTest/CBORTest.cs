@@ -755,6 +755,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(200000)]
     public void TestCanFitIn() {
       var r = new RandomGenerator();
       for (var i = 0; i < 5000; ++i) {
@@ -2565,6 +2566,7 @@ CBOREncodeOptions("allowduplicatekeys=1"));
     }
 
     [Test]
+    [Timeout(200000)]
     public void TestAsNumberAdd() {
       var r = new RandomGenerator();
       for (var i = 0; i < 3000; ++i) {
@@ -2584,6 +2586,7 @@ CBOREncodeOptions("allowduplicatekeys=1"));
     }
 
     [Test]
+    [Timeout(200000)]
     public void TestAsNumberSubtract() {
       var r = new RandomGenerator();
       for (var i = 0; i < 3000; ++i) {
