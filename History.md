@@ -1,5 +1,8 @@
 Release notes
 ---------------------
+### Version 4.1.3
+
+- Bug fixes
 
 ### Version 4.1.2
 
