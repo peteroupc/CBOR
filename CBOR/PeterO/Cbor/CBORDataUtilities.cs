@@ -446,10 +446,10 @@ namespace PeterO.Cbor {
         }
         if (!ef.UnsignedMantissa.IsZero) {
           // Copy diagnostic information
-          int[] words = new int[2];
-          EInteger um=ef.UnsignedMantissa;
-          words[0]=um.ToInt32Unchecked();
-          words[1]=um.ShiftRight(32).ToInt32Unchecked();
+          var words = new int[2];
+          EInteger um = ef.UnsignedMantissa;
+          words[0] = um.ToInt32Unchecked();
+          words[1] = um.ShiftRight(32).ToInt32Unchecked();
           nan[0] = words[0];
           nan[1] |= words[1] & 0x7ffff;
           if ((words[0] | (words[1] & 0x7ffff)) == 0 && !ef.IsQuietNaN()) {
@@ -511,49 +511,56 @@ namespace PeterO.Cbor {
     private static bool IsBeyondSafeRange(long bits) {
        // Absolute value of double is greater than 9007199254740991.0,
        // or value is NaN
-       return (bits&~(1L<<63)) > (0x7FFL << 52) ||
-                    (bits&~(1L<<63)) > 0x433FFFFFFFFFFFFFL;
+       bits &= ~(1L << 63);
+       return bits > (0x7ffL << 52) || bits > 0x433fffffffffffffL;
     }
 
     private static bool IsIntegerValue(long bits) {
-       bits&=~(1L<<63);
+       bits &= ~(1L << 63);
+       if (bits == 0) {
+         return true;
+       }
        // Infinity and NaN
-       if( bits >= (0x7FFL << 52)) {
-           return false;
+       if (bits >= (0x7ffL << 52)) {
+         return false;
        }
        // Beyond non-integer range
        if ((bits >> 52) >= 0x433) {
-           return true;
+         return true;
        }
        // Less than 1
-       if ((bits >> 52) <= 0x3FE) {
-           return false;
+       if ((bits >> 52) <= 0x3fe) {
+         return false;
        }
-       int exp=(int)(bits>>52);
-       long mant=bits&((1L<<52)-1);
-       int shift=52-(exp-0x3FF);
-       return ((mant>>shift)<<shift) == mant;
+       var exp = (int)(bits >> 52);
+       long mant = bits & ((1L << 52) - 1);
+       int shift = 52 - (exp - 0x3ff);
+       return ((mant >> shift) << shift) == mant;
     }
 
     private static long GetIntegerValue(long bits) {
-       long sign=((bits & (1L<<63))!=0) ? -1 : 1;
-       bits&=~(1L<<63);
+       long sgn;
+       sgn = ((bits >> 63) != 0) ? -1L : 1L;
+       bits &= ~(1L << 63);
+       if (bits == 0) {
+         return 0;
+       }
        // Infinity and NaN
-       if( bits >= (0x7FFL << 52)) {
-           throw new NotSupportedException();
+       if (bits >= (0x7ffL << 52)) {
+         throw new NotSupportedException();
        }
        // Beyond safe range
        if ((bits >> 52) >= 0x434) {
-           throw new NotSupportedException();
+         throw new NotSupportedException();
        }
        // Less than 1
-       if ((bits >> 52) <= 0x3FE) {
-           throw new NotSupportedException();
+       if ((bits >> 52) <= 0x3fe) {
+         throw new NotSupportedException();
        }
-       int exp=(int)(bits>>52);
-       long mant=bits&((1L<<52)-1);
-       mant|=(1L<<52);
-       int shift=52-(exp-0x3FF);
+       var exp = (int)(bits >> 52);
+       long mant = bits & ((1L << 52) - 1);
+       mant |= 1L << 52;
+       int shift = 52 - (exp - 0x3ff);
        return (mant >> shift) * sign;
     }
 
@@ -745,7 +752,8 @@ namespace PeterO.Cbor {
             kind == JSONOptions.ConversionMode.IntOrFloatFromDouble ||
             kind == JSONOptions.ConversionMode.IntOrFloat) {
             return CBORObject.FromFloatingPointBits(
-                negative ? (0xFFFL << 52) : (0x7FFL << 52), 8);
+              negative ? (0xfffL << 52) : (0x7ffL << 52),
+              8);
           } else if (kind == JSONOptions.ConversionMode.Decimal128) {
             return CBORObject.FromObject(negative ?
                 EDecimal.NegativeInfinity : EDecimal.PositiveInfinity);
@@ -837,8 +845,8 @@ CBORObject.FromObject(ed);
             initialOffset,
             endPos - initialOffset,
             EContext.Binary64);
-        long lb=ToDoubleBits(ef);
-        if (!preserveNegativeZero && (lb == 1L<<63 || lb== 0L)) {
+        long lb = ToDoubleBits(ef);
+        if (!preserveNegativeZero && (lb == 1L << 63 || lb == 0L)) {
           lb = 0L;
         }
         return CBORObject.FromFloatingPointBits(lb, 8);
@@ -858,11 +866,10 @@ CBORObject.FromObject(ed);
             initialOffset,
             endPos - initialOffset,
             EContext.Binary64);
-        long lb=ToDoubleBits(ef);
-        if (!IsBeyondSafeRange(lb) && IsIntegerValue(lb)) {
-          return CBORObject.FromObject(GetIntegerValue(lb));
-        }
-        return CBORObject.FromFloatingPointBits(lb, 8);
+        long lb = ToDoubleBits(ef);
+        return (!IsBeyondSafeRange(lb) && IsIntegerValue(lb)) ?
+CBORObject.FromObject(GetIntegerValue(lb)) :
+CBORObject.FromFloatingPointBits(lb, 8);
       } else if (kind == JSONOptions.ConversionMode.IntOrFloat) {
         EContext ctx = EContext.Binary64.WithBlankFlags();
         EFloat ef = EFloat.FromString(
@@ -870,21 +877,20 @@ CBORObject.FromObject(ed);
             initialOffset,
             endPos - initialOffset,
             ctx);
-        long lb=ToDoubleBits(ef);
+        long lb = ToDoubleBits(ef);
         if ((ctx.Flags & EContext.FlagInexact) != 0) {
           // Inexact conversion to double, meaning that the string doesn't
           // represent an integer in [-(2^53)+1, 2^53), which is representable
           // exactly as double, so treat as ConversionMode.Double
-          if (!preserveNegativeZero && (lb == 1L<<63 || lb== 0L)) {
+          if (!preserveNegativeZero && (lb == 1L << 63 || lb == 0L)) {
             lb = 0L;
           }
           return CBORObject.FromFloatingPointBits(lb, 8);
         } else {
           // Exact conversion; treat as ConversionMode.IntToFloatFromDouble
-          if (!IsBeyondSafeRange(lb) && IsIntegerValue(lb)) {
-            return CBORObject.FromObject(GetIntegerValue(lb));
-          }
-          return CBORObject.FromFloatingPointBits(lb, 8);
+          return (!IsBeyondSafeRange(lb) && IsIntegerValue(lb)) ?
+CBORObject.FromObject(GetIntegerValue(lb)) :
+CBORObject.FromFloatingPointBits(lb, 8);
         }
       } else {
         throw new ArgumentException("Unsupported conversion kind.");

@@ -15,11 +15,14 @@ namespace Test {
       "\"\\ud800\udc00\"",
       "\"\ud800\\udc00\"", "\"\\U0023\"", "\"\\u002x\"", "\"\\u00xx\"",
       "\"\\u0xxx\"", "\"\\u0\"", "\"\\u00\"", "\"\\u000\"", "trbb",
-      "trub", "falsb", "nulb", "[true", "[true,", "[true]!",
+      "trub", "falsb", "nulb", "[true", "[true,", "[true]!","tr
+","tr","fa","nu",
+      "fa ","nu ","fa lse","nu ll","tr ue",
       "[\"\ud800\\udc00\"]", "[\"\\ud800\udc00\"]",
       "[\"\\udc00\ud800\udc00\"]", "[\"\\ud800\ud800\udc00\"]",
       "[\"\\ud800\"]", "[1,2,", "[1,2,3", "{,\"0\":0,\"1\":1}",
-      "{\"0\":0,,\"1\":1}", "{\"0\":0,\"1\":1,}", "[,0,1,2]", "[0,,1,2]",
+      "{\"0\"::0}","{\"0\":0,,\"1\":1}",
+      "{\"0\":0,\"1\":1,}", "[,0,1,2]", "[0,,1,2]","[0:1]","[0:1:2]",
       "[0,1,,2]", "[0,1,2,]", "[0001]", "{a:true}",
       "{\"a\"://comment\ntrue}", "{\"a\":/*comment*/true}", "{'a':true}",
       "{\"a\":'b'}", "{\"a\t\":true}", "{\"a\r\":true}", "{\"a\n\":true}",
@@ -38,6 +41,21 @@ namespace Test {
       "[0xf]", "[0x20]", "[0x01]", "[.2]", "[.05]", "[-.2]", "[-.05]",
       "[23.]", "[23.e0]", "[23.e1]", "[0.]", "\"abc", "\"ab\u0004c\"",
       "\u0004\"abc\"",
+      "{\"x\":true \"y\":true}",
+      "{\"x\":true\n\"y\":true}",
+      "0,1,2,3","\"x\",true",
+      "\"x\",true",
+      "\"x\":true",
+      "\"x\":true,\"y\":true",
+      "\"x\":true\n\"y\":true",
+      "\"x\":true \"y\":true",
+      "{\"x\":true,\"y\"}",
+      "{\"x\",\"y\":true}",
+      "{\"x\":true, \"y\"}",
+      "{\"x\", \"y\":true}",
+      "{[\"x\"]:true}",
+      "{null:true}","{true:true}","{false:true}",
+      "{[0]:true}","{1:true}","{{\"a\":true}:true}",
       "[1,\u0004" + "2]",
     };
 
@@ -7155,8 +7173,10 @@ CBOREncodeOptions(false, false, true));
       string numconv,
       double dbl) {
       CBORObject cbor = FromJSON(json, numconv);
-      Assert.AreEqual(CBORType.FloatingPoint, cbor.Type, json+" "+numconv+"
-" + dbl);
+      Assert.AreEqual(
+        CBORType.FloatingPoint,
+        cbor.Type,
+        json + " " + numconv + " " + dbl);
       double cbordbl = cbor.AsDoubleValue();
       if (dbl != cbordbl) {
         Assert.Fail("dbl = " + dbl + ", cbordbl = " + cbordbl);
@@ -7172,8 +7192,8 @@ CBOREncodeOptions(false, false, true));
         string msg = json+" "+numconv+" " + longval;
         msg = msg.Substring(0, Math.Min(100, msg.Length));
 if (msg.Length > 100) {
-           { msg += "...";
-        } }
+           msg += "...";
+        }
         Assert.AreEqual(CBORType.Integer, cbor.Type, msg);
       }
       Assert.AreEqual(longval, cbor.AsInt64Value());
