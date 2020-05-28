@@ -15,14 +15,14 @@ namespace Test {
       "\"\\ud800\udc00\"",
       "\"\ud800\\udc00\"", "\"\\U0023\"", "\"\\u002x\"", "\"\\u00xx\"",
       "\"\\u0xxx\"", "\"\\u0\"", "\"\\u00\"", "\"\\u000\"", "trbb",
-      "trub", "falsb", "nulb", "[true", "[true,", "[true]!","tr
-","tr","fa","nu",
-      "fa ","nu ","fa lse","nu ll","tr ue",
+      "trub", "falsb", "nulb", "[true", "[true,", "[true]!", "tr\u0020",
+      "tr", "fa", "nu",
+      "fa ", "nu ", "fa lse", "nu ll", "tr ue",
       "[\"\ud800\\udc00\"]", "[\"\\ud800\udc00\"]",
       "[\"\\udc00\ud800\udc00\"]", "[\"\\ud800\ud800\udc00\"]",
       "[\"\\ud800\"]", "[1,2,", "[1,2,3", "{,\"0\":0,\"1\":1}",
-      "{\"0\"::0}","{\"0\":0,,\"1\":1}",
-      "{\"0\":0,\"1\":1,}", "[,0,1,2]", "[0,,1,2]","[0:1]","[0:1:2]",
+      "{\"0\"::0}", "{\"0\":0,,\"1\":1}",
+      "{\"0\":0,\"1\":1,}", "[,0,1,2]", "[0,,1,2]", "[0:1]", "[0:1:2]",
       "[0,1,,2]", "[0,1,2,]", "[0001]", "{a:true}",
       "{\"a\"://comment\ntrue}", "{\"a\":/*comment*/true}", "{'a':true}",
       "{\"a\":'b'}", "{\"a\t\":true}", "{\"a\r\":true}", "{\"a\n\":true}",
@@ -35,7 +35,8 @@ namespace Test {
       "true\u0005", "8024\"", "8024x", "8024}", "8024\u0300",
       "8024\u0005", "{\"test\":5}}", "{\"test\":5}{", "[5]]", "[5][",
       "0000", "0x1", "0xf", "0x20", "0x01",
-      "-3x", "-3e89x",
+      "-3x", "-3e89x", "\u0005true", "\"x\\u0005z\"",
+      "0,2", "0,05", "-0,2", "-0,05",
       "0X1", "0Xf", "0X20", "0X01", ".2", ".05", "-.2",
       "-.05", "23.", "23.e0", "23.e1", "0.", "[0000]", "[0x1]",
       "[0xf]", "[0x20]", "[0x01]", "[.2]", "[.05]", "[-.2]", "[-.05]",
@@ -43,7 +44,7 @@ namespace Test {
       "\u0004\"abc\"",
       "{\"x\":true \"y\":true}",
       "{\"x\":true\n\"y\":true}",
-      "0,1,2,3","\"x\",true",
+      "0,1,2,3", "\"x\",true",
       "\"x\",true",
       "\"x\":true",
       "\"x\":true,\"y\":true",
@@ -54,8 +55,8 @@ namespace Test {
       "{\"x\":true, \"y\"}",
       "{\"x\", \"y\":true}",
       "{[\"x\"]:true}",
-      "{null:true}","{true:true}","{false:true}",
-      "{[0]:true}","{1:true}","{{\"a\":true}:true}",
+      "{null:true}", "{true:true}", "{false:true}",
+      "{[0]:true}", "{1:true}", "{{\"a\":true}:true}",
       "[1,\u0004" + "2]",
     };
 
@@ -64,7 +65,7 @@ namespace Test {
       "[0.1]",
       "[0.1001]",
       "[0.0]",
-      "[-3 " + ",-5]",
+      "[-3 " + ",-5]", "\n\r\t\u0020true",
       "[0.00]", "[0.000]", "[0.01]", "[0.001]", "[0.5]", "[0E5]",
       "[0E+6]", "[\"\ud800\udc00\"]", "[\"\\ud800\\udc00\"]",
       "[\"\\ud800\\udc00\ud800\udc00\"]", "23.0e01", "23.0e00", "[23.0e01]",
@@ -7189,9 +7190,9 @@ CBOREncodeOptions(false, false, true));
       long longval) {
       CBORObject cbor = FromJSON(json, numconv);
       if (cbor.Type != CBORType.Integer) {
-        string msg = json+" "+numconv+" " + longval;
+        string msg = json+ " " + numconv + " " + longval;
         msg = msg.Substring(0, Math.Min(100, msg.Length));
-if (msg.Length > 100) {
+        if (msg.Length > 100) {
            msg += "...";
         }
         Assert.AreEqual(CBORType.Integer, cbor.Type, msg);
@@ -7205,9 +7206,9 @@ if (msg.Length > 100) {
       int intval) {
       CBORObject cbor = FromJSON(json, numconv);
       if (cbor.Type != CBORType.Integer) {
-        string msg = json+" "+numconv+" " + intval;
+        string msg = json+ " " + numconv + " " + intval;
         msg = msg.Substring(0, Math.Min(100, msg.Length));
-if (msg.Length > 100) {
+        if (msg.Length > 100) {
            { msg += "...";
         } }
         Assert.AreEqual(CBORType.Integer, cbor.Type, msg);

@@ -561,7 +561,7 @@ namespace PeterO.Cbor {
        long mant = bits & ((1L << 52) - 1);
        mant |= 1L << 52;
        int shift = 52 - (exp - 0x3ff);
-       return (mant >> shift) * sign;
+       return (mant >> shift) * sgn;
     }
 
     /// <summary>Parses a number whose format follows the JSON
