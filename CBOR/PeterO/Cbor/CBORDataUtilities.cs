@@ -17,6 +17,9 @@ namespace PeterO.Cbor {
   public static class CBORDataUtilities {
     private const string HexAlphabet = "0123456789ABCDEF";
 
+    private const long DoubleNegInfinity = unchecked((long)(0xfffL << 52));
+    private const long DoublePosInfinity = unchecked((long)(0x7ffL << 52));
+
     internal static string ToStringHelper(CBORObject obj, int depth) {
       StringBuilder sb = null;
       string simvalue = null;
@@ -79,12 +82,10 @@ namespace PeterO.Cbor {
           sb.Append(simvalue);
           break;
         case CBORType.FloatingPoint: {
-          // TODO: Avoid converting to double
-          double f = obj.AsDoubleValue();
-          simvalue = Double.IsNegativeInfinity(f) ? "-Infinity" :
-(Double.IsPositiveInfinity(f) ? "Infinity" : (Double.IsNaN(f) ?
-
-                "NaN" : obj.Untag().ToJSONString()));
+          long bits = obj.AsDoubleBits();
+          simvalue = bits == DoubleNegInfinity ? "-Infinity" : (
+             bits == DoublePosInfinity ? "Infinity" : (
+             DoubleIsNaN(bits) ? "NaN" : obj.Untag().ToJSONString()));
           if (sb == null) {
             return simvalue;
           }
@@ -508,11 +509,16 @@ namespace PeterO.Cbor {
               return longmant;
     }
 
+    private static bool DoubleIsNaN(long bits) {
+       bits &= ~(1L << 63);
+       return bits > DoublePosInfinity && (bits & 0xfffffffffffffL) != 0L;
+    }
+
     private static bool IsBeyondSafeRange(long bits) {
        // Absolute value of double is greater than 9007199254740991.0,
        // or value is NaN
        bits &= ~(1L << 63);
-       return bits > (0x7ffL << 52) || bits > 0x433fffffffffffffL;
+       return bits > DoublePosInfinity || bits > 0x433fffffffffffffL;
     }
 
     private static bool IsIntegerValue(long bits) {
@@ -521,7 +527,7 @@ namespace PeterO.Cbor {
          return true;
        }
        // Infinity and NaN
-       if (bits >= (0x7ffL << 52)) {
+       if (bits >= DoublePosInfinity) {
          return false;
        }
        // Beyond non-integer range
@@ -546,7 +552,7 @@ namespace PeterO.Cbor {
          return 0;
        }
        // Infinity and NaN
-       if (bits >= (0x7ffL << 52)) {
+       if (bits >= DoublePosInfinity) {
          throw new NotSupportedException();
        }
        // Beyond safe range
@@ -752,7 +758,7 @@ namespace PeterO.Cbor {
             kind == JSONOptions.ConversionMode.IntOrFloatFromDouble ||
             kind == JSONOptions.ConversionMode.IntOrFloat) {
             return CBORObject.FromFloatingPointBits(
-              negative ? (0xfffL << 52) : (0x7ffL << 52),
+              negative ? DoubleNegInfinity : DoublePosInfinity,
               8);
           } else if (kind == JSONOptions.ConversionMode.Decimal128) {
             return CBORObject.FromObject(negative ?
