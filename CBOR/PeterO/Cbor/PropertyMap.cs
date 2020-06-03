@@ -838,14 +838,12 @@ namespace PeterO.Cbor {
             listObject = new List<object>();
             objectType = typeof(object);
           } else if (IsClassOrValueType(t)) {
-            // TODO: write Java equivalent
             var implementsList = false;
             foreach (var interf in GetTypeInterfaces(t)) {
               if (IsGenericType(interf) &&
                 interf.GetGenericTypeDefinition().Equals(typeof(IList<>))) {
                 if (implementsList) {
-                  { implementsList = false;
-                  }
+                  implementsList = false;
                   break;
                 } else {
                   implementsList = true;
