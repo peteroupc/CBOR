@@ -755,7 +755,7 @@ namespace Test {
     }
 
     [Test]
-    // TIMEOUTOVERRIDE200000
+    [Timeout(200000)]
     public void TestCanFitIn() {
       var r = new RandomGenerator();
       for (var i = 0; i < 5000; ++i) {
@@ -1581,7 +1581,7 @@ CBOREncodeOptions("allowduplicatekeys=1"));
     }
 
     [Test]
-    // TIMEOUTOVERRIDE5000
+    [Timeout(5000)]
     public void TestExtendedExtremeExponent() {
       // Values with extremely high or extremely low exponents;
       // we just check whether this test method runs reasonably fast
@@ -1604,7 +1604,7 @@ CBOREncodeOptions("allowduplicatekeys=1"));
     }
 
     [Test]
-    // TIMEOUTOVERRIDE5000
+    [Timeout(5000)]
     public void TestExtendedExtremeExponentCompare() {
       CBORObject cbor1 = ToObjectTest.TestToFromObjectRoundTrip(
           EDecimal.FromString("333333e-2"));
@@ -1851,7 +1851,7 @@ CBOREncodeOptions("allowduplicatekeys=1"));
     }
 
     [Test]
-    // TIMEOUTOVERRIDE100000
+    [Timeout(100000)]
     public void TestLong() {
       long[] ranges = {
         -65539, 65539, 0xfffff000L, 0x100000400L,
@@ -1971,7 +1971,7 @@ CBOREncodeOptions("allowduplicatekeys=1"));
     }
 
     [Test]
-    // TIMEOUTOVERRIDE50000
+    [Timeout(50000)]
     public void TestRandomData() {
       var rand = new RandomGenerator();
       CBORObject obj;
@@ -2014,7 +2014,7 @@ CBOREncodeOptions("allowduplicatekeys=1"));
     }
 
     [Test]
-    // TIMEOUTOVERRIDE5000
+    [Timeout(5000)]
     public void TestCtap2CanonicalReferenceTest() {
       for (var i = 4; i <= 60; ++i) {
         // has high recursive reference depths, higher than
@@ -2050,7 +2050,7 @@ CBOREncodeOptions("allowduplicatekeys=1"));
     }
 
     [Test]
-    // TIMEOUTOVERRIDE50000
+    [Timeout(50000)]
     public void TestNoRecursiveExpansion() {
       for (var i = 5; i <= 60; ++i) {
         // has high recursive reference depths
@@ -2062,7 +2062,7 @@ CBOREncodeOptions("allowduplicatekeys=1"));
     }
 
     [Test]
-    // TIMEOUTOVERRIDE50000
+    [Timeout(50000)]
     public void TestNoRecursiveExpansionJSON() {
       for (var i = 5; i <= 60; ++i) {
         // has high recursive reference depths
@@ -2234,7 +2234,7 @@ CBOREncodeOptions("allowduplicatekeys=1"));
     }
 
     [Test]
-    // TIMEOUTOVERRIDE500000
+    [Timeout(500000)]
     public void TestRandomNonsense() {
       var rand = new RandomGenerator();
       for (var i = 0; i < 1000; ++i) {
@@ -2566,7 +2566,7 @@ CBOREncodeOptions("allowduplicatekeys=1"));
     }
 
     [Test]
-    // TIMEOUTOVERRIDE200000
+    [Timeout(200000)]
     public void TestAsNumberAdd() {
       var r = new RandomGenerator();
       for (var i = 0; i < 3000; ++i) {
@@ -2586,7 +2586,7 @@ CBOREncodeOptions("allowduplicatekeys=1"));
     }
 
     [Test]
-    // TIMEOUTOVERRIDE200000
+    [Timeout(200000)]
     public void TestAsNumberSubtract() {
       var r = new RandomGenerator();
       for (var i = 0; i < 3000; ++i) {
@@ -2606,7 +2606,7 @@ CBOREncodeOptions("allowduplicatekeys=1"));
     }
 
     [Test]
-    // TIMEOUTOVERRIDE10000
+    [Timeout(10000)]
     public void TestTaggedUntagged() {
       for (int i = 200; i < 1000; ++i) {
         CBORObject o, o2;
@@ -2694,7 +2694,7 @@ CBOREncodeOptions("allowduplicatekeys=1"));
     }
 
     [Test]
-    // TIMEOUTOVERRIDE15000
+    [Timeout(15000)]
     public void TestTags() {
       EInteger maxuint = EInteger.FromString("18446744073709551615");
       EInteger[] ranges = {
