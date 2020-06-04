@@ -142,4 +142,6 @@
   </Target>
    <Target Name="DisableAnalyzers" BeforeTargets="CoreCompile" Condition="'$(UseRoslynAnalyzers)' == 'false'">
    <ItemGroup><Analyzer Remove="@(Analyzer)" /></ItemGroup>
+   </Target>   <Target Name="DisableAnalyzers" BeforeTargets="CoreCompile" Condition="'$(UseRoslynAnalyzers)' == 'false'">
+   <ItemGroup><Analyzer Remove="@(Analyzer)" /></ItemGroup>
    </Target></Project>

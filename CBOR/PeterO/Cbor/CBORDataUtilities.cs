@@ -390,7 +390,7 @@ namespace PeterO.Cbor {
 
       if (options != null && options.NumberConversion ==
         JSONOptions.ConversionMode.Double) {
-        return CBORObject.FromObject((double)(-digit));
+        return CBORObject.FromFloatingPointBits(IntegerToDoubleBits(-digit), 8);
       } else if (options != null && options.NumberConversion ==
         JSONOptions.ConversionMode.Decimal128) {
         return CBORObject.FromObject(EDecimal.FromInt32(-digit));
@@ -412,7 +412,7 @@ namespace PeterO.Cbor {
 
       if (options != null && options.NumberConversion ==
         JSONOptions.ConversionMode.Double) {
-        return CBORObject.FromObject((double)digit);
+        return CBORObject.FromFloatingPointBits(IntegerToDoubleBits(digit), 8);
       } else if (options != null && options.NumberConversion ==
         JSONOptions.ConversionMode.Decimal128) {
         return CBORObject.FromObject(EDecimal.FromInt32(digit));
@@ -420,6 +420,25 @@ namespace PeterO.Cbor {
         // NOTE: Assumes digit is nonnegative, so PreserveNegativeZeros is irrelevant
         return CBORObject.FromObject(digit);
       }
+    }
+
+    private static long IntegerToDoubleBits(int i) {
+      if (i == Int32.MinValue) {
+        return unchecked((long)0xc1e0000000000000L);
+      }
+      long longmant = Math.Abs(i);
+      var expo = 0;
+      while (longmant < (1 << 52)) {
+        longmant <<= 1;
+        --expo;
+      }
+              // Clear the high bits where the exponent and sign are
+              longmant &= 0xfffffffffffffL;
+              longmant |= (long)(expo + 1075) << 52;
+              if (i < 0) {
+                longmant |= unchecked((long)(1L << 63));
+              }
+              return longmant;
     }
 
     // TODO: Use EFloat.ToDoubleBits when next version of
