@@ -3924,8 +3924,11 @@ namespace PeterO.Cbor {
       if (stream == null) {
         throw new ArgumentNullException(nameof(stream));
       }
-      byte[] data = GetDoubleBytes(value, 0);
-      stream.Write(data, 0, data.Length);
+      WriteFloatingPointBits(
+        stream,
+        CBORUtilities.SingleToInt32Bits(value),
+      4,
+      true);
     }
 
     /// <summary>Writes a 64-bit floating-point number in CBOR format to a
@@ -3942,10 +3945,11 @@ namespace PeterO.Cbor {
       if (stream == null) {
         throw new ArgumentNullException(nameof(stream));
       }
-      byte[] data = GetDoubleBytes(
-          CBORUtilities.DoubleToInt64Bits(value),
-          0);
-      stream.Write(data, 0, data.Length);
+      WriteFloatingPointBits(
+        stream,
+        CBORUtilities.DoubleToInt64Bits(value),
+      8,
+      true);
     }
 
     /// <summary>Writes a CBOR object to a CBOR data stream.</summary>
@@ -5029,29 +5033,6 @@ namespace PeterO.Cbor {
    (byte)((valueBits >> 32) & 0xff), (byte)((valueBits >> 24) & 0xff),
    (byte)((valueBits >> 16) & 0xff), (byte)((valueBits >> 8) & 0xff),
    (byte)(valueBits & 0xff),
- };
-    }
-
-    private static byte[] GetDoubleBytes(float value, int tagbyte) {
-      int bits = CBORUtilities.SingleToHalfPrecisionIfSameValue(value);
-      if (bits != -1) {
-        return tagbyte != 0 ? new[] {
-          (byte)tagbyte, (byte)0xf9,
-          (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff),
-        } : new[] {
-   (byte)0xf9, (byte)((bits >> 8) & 0xff),
-   (byte)(bits & 0xff),
- };
-      }
-      bits = CBORUtilities.SingleToInt32Bits(value);
-      return tagbyte != 0 ? new[] {
-        (byte)tagbyte, (byte)0xfa,
-        (byte)((bits >> 24) & 0xff), (byte)((bits >> 16) & 0xff),
-        (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff),
-      } : new[] {
-   (byte)0xfa, (byte)((bits >> 24) & 0xff),
-   (byte)((bits >> 16) & 0xff), (byte)((bits >> 8) & 0xff),
-   (byte)(bits & 0xff),
  };
     }
 
@@ -6168,7 +6149,8 @@ namespace PeterO.Cbor {
     /// lowest (least significant) 32 bits identify the floating-point
     /// number in IEEE 754r binary32 format; or 8 if "floatingBits"
     /// identifies the floating point number in IEEE 754r binary64 format.
-    /// Any other values for this parameter are invalid.</param>
+    /// Any other values for this parameter are invalid. This method will
+    /// write one plus this many bytes to the data stream.</param>
     /// <returns>The number of 8-bit bytes ordered to be written to the
     /// data stream.</returns>
     /// <exception cref='ArgumentException'>The parameter <paramref
@@ -6179,9 +6161,61 @@ namespace PeterO.Cbor {
       Stream outputStream,
       long floatingBits,
       int byteCount) {
-      // TODO: Add overload with autobytecount or shortestForm
+      return WriteFloatingPointBits(outputStream, floatingBits, byteCount,
+  false);
+    }
+
+    /// <summary>Writes the bits of a floating-point number in CBOR format
+    /// to a data stream.</summary>
+    /// <param name='outputStream'>A writable data stream.</param>
+    /// <param name='floatingBits'>The bits of a floating-point number
+    /// number to write.</param>
+    /// <param name='byteCount'>The number of bytes of the stored
+    /// floating-point number; this also specifies the format of the
+    /// "floatingBits" parameter. This value can be 2 if "floatingBits"'s
+    /// lowest (least significant) 16 bits identify the floating-point
+    /// number in IEEE 754r binary16 format; or 4 if "floatingBits"'s
+    /// lowest (least significant) 32 bits identify the floating-point
+    /// number in IEEE 754r binary32 format; or 8 if "floatingBits"
+    /// identifies the floating point number in IEEE 754r binary64 format.
+    /// Any other values for this parameter are invalid.</param>
+    /// <param name='shortestForm'>If true, writes the shortest form of the
+    /// floating-point number that preserves its value. If false, this
+    /// method will write the number in the form given by 'floatingBits' by
+    /// writing one plus the number of bytes given by 'byteCount' to the
+    /// data stream.</param>
+    /// <returns>The number of 8-bit bytes ordered to be written to the
+    /// data stream.</returns>
+    /// <exception cref='ArgumentException'>The parameter <paramref
+    /// name='byteCount'/> is other than 2, 4, or 8.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='outputStream'/> is null.</exception>
+    public static int WriteFloatingPointBits(
+      Stream outputStream,
+      long floatingBits,
+      int byteCount,
+      bool shortestForm) {
       if (outputStream == null) {
         throw new ArgumentNullException(nameof(outputStream));
+      }
+      if (shortestForm) {
+        if (byteCount == 8) {
+          int bits =
+CBORUtilities.DoubleToHalfPrecisionIfSameValue(floatingBits);
+          if (bits != -1) {
+            return WriteFloatingPointBits(outputStream, (long)bits, 2, false);
+          }
+          if (CBORUtilities.DoubleRetainsSameValueInSingle(floatingBits)) {
+            bits = CBORUtilities.DoubleToRoundedSinglePrecision(floatingBits);
+            return WriteFloatingPointBits(outputStream, (long)bits, 4, false);
+          }
+        } else if (byteCount == 4) {
+           int bits =
+CBORUtilities.SingleToHalfPrecisionIfSameValue(floatingBits);
+           if (bits != -1) {
+             return WriteFloatingPointBits(outputStream, (long)bits, 2, false);
+           }
+        }
       }
       byte[] bytes;
       switch (byteCount) {
@@ -6261,7 +6295,6 @@ namespace PeterO.Cbor {
           return WriteFloatingPointBits(outputStream, bits, 4);
         case 8:
           bits = CBORUtilities.DoubleToInt64Bits(doubleVal);
-          // DebugUtility.Log("dbl " + doubleVal + " -> " + (bits));
           return WriteFloatingPointBits(outputStream, bits, 8);
         default: throw new ArgumentOutOfRangeException(nameof(byteCount));
       }
@@ -6774,8 +6807,7 @@ namespace PeterO.Cbor {
           break;
         }
         case CBORObjectTypeDouble: {
-          byte[] data = GetDoubleBytes(this.AsDoubleBits(), 0);
-          stream.Write(data, 0, data.Length);
+          WriteFloatingPointBits(stream, this.AsDoubleBits(), 8, true);
           break;
         }
         default: {

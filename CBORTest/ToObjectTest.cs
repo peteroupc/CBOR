@@ -1134,7 +1134,7 @@ o = ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
     }
 
     [Test]
-    [Timeout(5000)]
+    /* TIMEOUTOVERRIDE5000 */
     public void TestToObject() {
       var ao = new PODClass();
       CBORObject co = CBORObject.FromObject(ao);
