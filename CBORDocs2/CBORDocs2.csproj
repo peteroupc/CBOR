@@ -73,6 +73,4 @@
     <Error Condition='!Exists(&apos;../packages/Microsoft.NetCore.Analyzers.2.9.8/build/Microsoft.NetCore.Analyzers.props&apos;)' Text='$([System.String]::Format(&apos;$(ErrorText)&apos;, &apos;../packages/Microsoft.NetCore.Analyzers.2.9.8/build/Microsoft.NetCore.Analyzers.props&apos;))'/>
     <Error Condition='!Exists(&apos;../packages/Microsoft.NetFramework.Analyzers.2.9.8/build/Microsoft.NetFramework.Analyzers.props&apos;)' Text='$([System.String]::Format(&apos;$(ErrorText)&apos;, &apos;../packages/Microsoft.NetFramework.Analyzers.2.9.8/build/Microsoft.NetFramework.Analyzers.props&apos;))'/>
   </Target>
-   <Target Name="DisableAnalyzers" BeforeTargets="CoreCompile" Condition="'$(UseRoslynAnalyzers)' == 'false'">
-   <ItemGroup><Analyzer Remove="@(Analyzer)" /></ItemGroup>
-   </Target></Project>
+   </Project>
