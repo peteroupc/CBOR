@@ -957,8 +957,7 @@
             integer.</returns>
             <exception cref='OverflowException'>This value is infinity or
             not-a-number, or the number, once converted to an integer by
-            discarding its fractional part, is less than -32768 or greater than
-            32767.</exception>
+            discarding its fractional part, is less than -32768 or greater than 32767.</exception>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORNumber.ToInt16IfExact">
@@ -3934,8 +3933,7 @@
             a not-a-number value, or does not represent a number (currently
             InvalidOperationException, but may change in the next major
             version), or if the value, once converted to an integer by
-            discarding its fractional part, is less than -32768 or greater than
-            32767 (currently OverflowException, but may change in the next
+            discarding its fractional part, is less than -32768 or greater than 32767 (currently OverflowException, but may change in the next
             major version).</item>
              <item>If the type is <c>long</c> , returns
             this number as a 64-bit signed integer after converting its value
@@ -4748,7 +4746,35 @@
             lowest (least significant) 32 bits identify the floating-point
             number in IEEE 754r binary32 format; or 8 if "floatingBits"
             identifies the floating point number in IEEE 754r binary64 format.
+            Any other values for this parameter are invalid. This method will
+            write one plus this many bytes to the data stream.</param>
+            <returns>The number of 8-bit bytes ordered to be written to the
+            data stream.</returns>
+            <exception cref='ArgumentException'>The parameter <paramref name='byteCount'/> is other than 2, 4, or 8.</exception>
+            <exception cref='ArgumentNullException'>The parameter <paramref name='outputStream'/> is null.</exception>
+
+</doc>
+<doc name="M:PeterO.Cbor.CBORObject.WriteFloatingPointBits(System.IO.Stream,System.Int64,System.Int32,System.Boolean)">
+
+            <summary>Writes the bits of a floating-point number in CBOR format
+            to a data stream.</summary>
+            <param name='outputStream'>A writable data stream.</param>
+            <param name='floatingBits'>The bits of a floating-point number
+            number to write.</param>
+            <param name='byteCount'>The number of bytes of the stored
+            floating-point number; this also specifies the format of the
+            "floatingBits" parameter. This value can be 2 if "floatingBits"'s
+            lowest (least significant) 16 bits identify the floating-point
+            number in IEEE 754r binary16 format; or 4 if "floatingBits"'s
+            lowest (least significant) 32 bits identify the floating-point
+            number in IEEE 754r binary32 format; or 8 if "floatingBits"
+            identifies the floating point number in IEEE 754r binary64 format.
             Any other values for this parameter are invalid.</param>
+            <param name='shortestForm'>If true, writes the shortest form of the
+            floating-point number that preserves its value. If false, this
+            method will write the number in the form given by 'floatingBits' by
+            writing one plus the number of bytes given by 'byteCount' to the
+            data stream.</param>
             <returns>The number of 8-bit bytes ordered to be written to the
             data stream.</returns>
             <exception cref='ArgumentException'>The parameter <paramref name='byteCount'/> is other than 2, 4, or 8.</exception>

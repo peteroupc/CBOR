@@ -329,7 +329,7 @@ System.Collections.IEnumerable.GetEnumerator() {
     }
 
     [Test]
-    // TIMEOUTOVERRIDE5000
+    [Timeout(5000)]
     public void TestPODOptions() {
       var ao = new { PropA = 0, PropB = 0, IsPropC = false };
       var valueCcTF = new PODOptions(true, false);

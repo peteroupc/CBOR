@@ -248,6 +248,7 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[Write(ulong, System.IO.Stream)](#Write_ulong_System_IO_Stream)</code> - Writes a 64-bit unsigned integer in CBOR format to a data stream.
 * <code>[Write(ushort, System.IO.Stream)](#Write_ushort_System_IO_Stream)</code> - Writes a 16-bit unsigned integer in CBOR format to a data stream.
 * <code>[WriteFloatingPointBits(System.IO.Stream, long, int)](#WriteFloatingPointBits_System_IO_Stream_long_int)</code> - Writes the bits of a floating-point number in CBOR format to a data stream.
+* <code>[WriteFloatingPointBits(System.IO.Stream, long, int, bool)](#WriteFloatingPointBits_System_IO_Stream_long_int_bool)</code> - Writes the bits of a floating-point number in CBOR format to a data stream.
 * <code>[WriteFloatingPointValue(System.IO.Stream, double, int)](#WriteFloatingPointValue_System_IO_Stream_double_int)</code> - Writes a 64-bit binary floating-point number in CBOR format to a data stream, either in its 64-bit form, or its rounded 32-bit or 16-bit equivalent.
 * <code>[WriteFloatingPointValue(System.IO.Stream, float, int)](#WriteFloatingPointValue_System_IO_Stream_float_int)</code> - Writes a 32-bit binary floating-point number in CBOR format to a data stream, either in its 64- or 32-bit form, or its rounded 16-bit equivalent.
 * <code>[WriteJSON(object, System.IO.Stream)](#WriteJSON_object_System_IO_Stream)</code> - Converts an arbitrary object to a text string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8.
@@ -4013,7 +4014,7 @@ Converts this CBOR object to an object of an arbitrary type. The following cases
 
  * If the type is  `bool`  (  `boolean`  in Java), returns the result of AsBoolean.
 
- * If the type is  `short`  , returns this number as a 16-bit signed integer after converting its value to an integer by discarding its fractional part, and throws an exception if this object's value is infinity or a not-a-number value, or does not represent a number (currently InvalidOperationException, but may change in the next major version), or if the value, once converted to an integer by discarding its fractional part, is less than -32768 or greater than 32767 (currently OverflowException, but may change in the next major version).
+ * If the type is  `short`  , returns this number as a 16-bit signed integer after converting its value to an integer by discarding its fractional part, and throws an exception if this object's value is infinity or a not-a-number value, or does not represent a number (currently InvalidOperationException, but may change in the next major version), or if the value, once converted to an integer by discarding its fractional part, is less than -32768 or greater tha 32767 (currently OverflowException, but may change in the next major version).
 
  * If the type is  `long`  , returns this number as a 64-bit signed integer after converting its value to an integer by discarding its fractional part, and throws an exception if this object's value is infinity or a not-a-number value, or does not represent a number (currently InvalidOperationException, but may change in the next major version), or if the value, once converted to an integer by discarding its fractional part, is less than -2^63 or greater than 2^63-1 (currently OverflowException, but may change in the next major version).
 
@@ -4814,7 +4815,42 @@ Writes the bits of a floating-point number in CBOR format to a data stream.
 
  * <i>floatingBits</i>: The bits of a floating-point number number to write.
 
+ * <i>byteCount</i>: The number of bytes of the stored floating-point number; this also specifies the format of the "floatingBits" parameter. This value can be 2 if "floatingBits"'s lowest (least significant) 16 bits identify the floating-point number in IEEE 754r binary16 format; or 4 if "floatingBits"'s lowest (least significant) 32 bits identify the floating-point number in IEEE 754r binary32 format; or 8 if "floatingBits" identifies the floating point number in IEEE 754r binary64 format. Any other values for this parameter are invalid. This method will write one plus this many bytes to the data stream.
+
+<b>Return Value:</b>
+
+The number of 8-bit bytes ordered to be written to the data stream.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentException:
+The parameter  <i>byteCount</i>
+ is other than 2, 4, or 8.
+
+ * System.ArgumentNullException:
+The parameter  <i>outputStream</i>
+ is null.
+
+<a id="WriteFloatingPointBits_System_IO_Stream_long_int_bool"></a>
+### WriteFloatingPointBits
+
+    public static int WriteFloatingPointBits(
+        System.IO.Stream outputStream,
+        long floatingBits,
+        int byteCount,
+        bool shortestForm);
+
+Writes the bits of a floating-point number in CBOR format to a data stream.
+
+<b>Parameters:</b>
+
+ * <i>outputStream</i>: A writable data stream.
+
+ * <i>floatingBits</i>: The bits of a floating-point number number to write.
+
  * <i>byteCount</i>: The number of bytes of the stored floating-point number; this also specifies the format of the "floatingBits" parameter. This value can be 2 if "floatingBits"'s lowest (least significant) 16 bits identify the floating-point number in IEEE 754r binary16 format; or 4 if "floatingBits"'s lowest (least significant) 32 bits identify the floating-point number in IEEE 754r binary32 format; or 8 if "floatingBits" identifies the floating point number in IEEE 754r binary64 format. Any other values for this parameter are invalid.
+
+ * <i>shortestForm</i>: If true, writes the shortest form of the floating-point number that preserves its value. If false, this method will write the number in the form given by 'floatingBits' by writing one plus the number of bytes given by 'byteCount' to the data stream.
 
 <b>Return Value:</b>
 
