@@ -10,6 +10,7 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
+  [Obsolete("TODO: Use CBORDoubleBits instead")]
   internal class CBORDouble : ICBORNumber {
     public bool IsPositiveInfinity(object obj) {
       return Double.IsPositiveInfinity((double)obj);

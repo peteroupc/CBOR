@@ -38,7 +38,7 @@ namespace PeterO.Cbor {
 
     private static readonly ICBORNumber[] NumberInterfaces = {
       new CBORInteger(),
-      new CBORDouble(),
+      new CBORDoubleBits(),
       new CBOREInteger(),
       new CBORExtendedDecimal(),
       new CBORExtendedFloat(),
@@ -144,7 +144,7 @@ this.GetNumberInterface().Sign(this.value);
           return new CBORNumber(NumberKind.EInteger, o.AsEIntegerValue());
         }
       } else if (!o.IsTagged && o.Type == CBORType.FloatingPoint) {
-        return CBORNumber.FromObject(o.AsDoubleValue());
+        return CBORNumber.FromDoubleBits(o.AsDoubleBits());
       }
       if (o.HasOneTag(2) || o.HasOneTag(3)) {
         return BignumToNumber(o);
@@ -864,13 +864,12 @@ this.ToEIntegerIfExact().ToInt64Checked();
     internal string ToJSONString() {
       switch (this.kind) {
         case NumberKind.Double: {
-            var f = (double)this.value;
-            if (Double.IsNegativeInfinity(f) ||
-                         Double.IsPositiveInfinity(f) ||
-                         Double.IsNaN(f)) {
+            // TODO: Avoid converting to double
+            var f = (long)this.value;
+            if (!CBORUtilities.DoubleBitsFinite(f)) {
               return "null";
             }
-            string dblString = CBORUtilities.DoubleToString(f);
+            string dblString = CBORUtilities.DoubleBitsToString(f);
             return CBORUtilities.TrimDotZero(dblString);
           }
         case NumberKind.Integer: {
@@ -899,13 +898,12 @@ this.ToEIntegerIfExact().ToInt64Checked();
               // Too inefficient to convert to a decimal number
               // from a bigfloat with a very high exponent,
               // so convert to double instead
-              double f = flo.ToDouble();
-              if (Double.IsNegativeInfinity(f) ||
-                             Double.IsPositiveInfinity(f) ||
-                             Double.IsNaN(f)) {
+              // TODO: Use ToDoubleBits once available
+              long f = CBORUtilities.DoubleToInt64Bits(flo.ToDouble());
+              if (!CBORUtilities.DoubleBitsFinite(f)) {
                 return "null";
               }
-              string dblString = CBORUtilities.DoubleToString(f);
+              string dblString = CBORUtilities.DoubleBitsToString(f);
               return CBORUtilities.TrimDotZero(dblString);
             }
             return flo.ToString();
@@ -930,8 +928,8 @@ this.ToEIntegerIfExact().ToInt64Checked();
     internal static CBORNumber FromObject(long longValue) {
       return new CBORNumber(NumberKind.Integer, longValue);
     }
-    internal static CBORNumber FromObject(double doubleValue) {
-      return new CBORNumber(NumberKind.Double, doubleValue);
+    internal static CBORNumber FromDoubleBits(long doubleBits) {
+      return new CBORNumber(NumberKind.Double, doubleBits);
     }
     internal static CBORNumber FromObject(EInteger eivalue) {
       return new CBORNumber(NumberKind.EInteger, eivalue);

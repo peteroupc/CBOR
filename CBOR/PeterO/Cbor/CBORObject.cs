@@ -464,7 +464,7 @@ namespace PeterO.Cbor {
     /// value.</exception>
     [Obsolete("Instead, convert this object to a number with .AsNumber()," +
         "\u0020 and use the Sign property in .NET or the signum method in" +
-"\u0020Java." +
+        "\u0020Java." +
         " Either will treat not-a-number (NaN) values differently than here.")]
     public int Sign {
       get {
@@ -3927,8 +3927,8 @@ namespace PeterO.Cbor {
       WriteFloatingPointBits(
         stream,
         CBORUtilities.SingleToInt32Bits(value),
-      4,
-      true);
+        4,
+        true);
     }
 
     /// <summary>Writes a 64-bit floating-point number in CBOR format to a
@@ -3948,8 +3948,8 @@ namespace PeterO.Cbor {
       WriteFloatingPointBits(
         stream,
         CBORUtilities.DoubleToInt64Bits(value),
-      8,
-      true);
+        8,
+        true);
     }
 
     /// <summary>Writes a CBOR object to a CBOR data stream.</summary>
@@ -4377,8 +4377,7 @@ namespace PeterO.Cbor {
     /// range of a 16-bit signed integer.</exception>
     [Obsolete("Instead, use the following:" +
         "\u0020\u0028cbor.AsNumber().ToInt16Checked()), or" +
-"\u0020.ToObject<short>() in" +
-        "\u0020.NET.")]
+        "\u0020.ToObject<short>() in" + "\u0020.NET.")]
     public short AsInt16() {
       return (short)this.AsInt32(Int16.MinValue, Int16.MaxValue);
     }
@@ -4617,7 +4616,7 @@ namespace PeterO.Cbor {
     /// </example>
     [Obsolete("Instead, use the following:" +
         "\u0020\u0028cbor.AsNumber().ToInt64Checked()), or .ToObject<long>()" +
-"\u0020in .NET.")]
+        "\u0020in .NET.")]
     public long AsInt64() {
       CBORNumber cn = this.AsNumber();
       return cn.GetNumberInterface().AsInt64(cn.GetValue());
@@ -4739,7 +4738,7 @@ namespace PeterO.Cbor {
     /// greater, and less than 2^31; otherwise, <c>false</c>.</returns>
     [Obsolete("Instead, use the following: \u0028cbor.CanValueFitInInt32()" +
         "\u0020if only integers of any tag are allowed, or" +
-"\u0020\u0028cbor.IsNumber &&" +
+        "\u0020\u0028cbor.IsNumber &&" +
         "\u0020cbor.AsNumber().CanTruncatedIntFitInInt32()).")]
     public bool CanTruncatedIntFitInInt32() {
       CBORNumber cn = CBORNumber.FromCBORObject(this);
@@ -4755,7 +4754,7 @@ namespace PeterO.Cbor {
     /// greater, and less than 2^63; otherwise, <c>false</c>.</returns>
     [Obsolete("Instead, use the following: \u0028cbor.CanValueFitInInt64()" +
         "\u0020if only integers of any tag are allowed, or" +
-"\u0020\u0028cbor.IsNumber &&" +
+        "\u0020\u0028cbor.IsNumber &&" +
         "\u0020cbor.AsNumber().CanTruncatedIntFitInInt64()).")]
     public bool CanTruncatedIntFitInInt64() {
       CBORNumber cn = CBORNumber.FromCBORObject(this);
@@ -4928,9 +4927,9 @@ namespace PeterO.Cbor {
             (byte[])objB);
       } else {
         int ta = (typeA == CBORObjectTypeTextStringUtf8) ?
-             CBORObjectTypeTextString : typeA;
+          CBORObjectTypeTextString : typeA;
         int tb = (typeB == CBORObjectTypeTextStringUtf8) ?
-             CBORObjectTypeTextString : typeB;
+          CBORObjectTypeTextString : typeB;
         /* NOTE: itemtypeValue numbers are ordered such that they
         // correspond to the lexicographical order of their CBOR encodings
         // (with the exception of Integer and EInteger together,
@@ -5098,11 +5097,11 @@ namespace PeterO.Cbor {
             break;
           }
           case CBORObjectTypeTextStringUtf8: {
-         if (!tagged && !options.UseIndefLengthStrings) {
-           byte[] bytes = (byte[])this.ThisItem;
-           return SerializeUtf8(bytes);
-         }
-         break;
+            if (!tagged && !options.UseIndefLengthStrings) {
+              byte[] bytes = (byte[])this.ThisItem;
+              return SerializeUtf8(bytes);
+            }
+            break;
           }
           case CBORObjectTypeSimpleValue: {
             if (tagged) {
@@ -6162,10 +6161,10 @@ namespace PeterO.Cbor {
       long floatingBits,
       int byteCount) {
       return WriteFloatingPointBits(
-        outputStream,
-        floatingBits,
-        byteCount,
-        false);
+          outputStream,
+          floatingBits,
+          byteCount,
+          false);
     }
 
     /// <summary>Writes the bits of a floating-point number in CBOR format
@@ -6204,7 +6203,7 @@ namespace PeterO.Cbor {
       if (shortestForm) {
         if (byteCount == 8) {
           int bits =
-CBORUtilities.DoubleToHalfPrecisionIfSameValue(floatingBits);
+            CBORUtilities.DoubleToHalfPrecisionIfSameValue(floatingBits);
           if (bits != -1) {
             return WriteFloatingPointBits(outputStream, (long)bits, 2, false);
           }
@@ -6213,11 +6212,11 @@ CBORUtilities.DoubleToHalfPrecisionIfSameValue(floatingBits);
             return WriteFloatingPointBits(outputStream, (long)bits, 4, false);
           }
         } else if (byteCount == 4) {
-           int bits =
-CBORUtilities.SingleToHalfPrecisionIfSameValue(floatingBits);
-           if (bits != -1) {
-             return WriteFloatingPointBits(outputStream, (long)bits, 2, false);
-           }
+          int bits =
+            CBORUtilities.SingleToHalfPrecisionIfSameValue(floatingBits);
+          if (bits != -1) {
+            return WriteFloatingPointBits(outputStream, (long)bits, 2, false);
+          }
         }
       }
       byte[] bytes;
@@ -7185,17 +7184,17 @@ CBORUtilities.SingleToHalfPrecisionIfSameValue(floatingBits);
     private static byte[] SerializeUtf8(byte[] utf8) {
       byte[] bytes;
       if (utf8.Length < 24) {
-         bytes = new byte[utf8.Length + 1];
-         bytes[0] = (byte)(utf8.Length | 0x60);
-         Array.Copy(utf8, 0, bytes, 1, utf8.Length);
-       return bytes;
+        bytes = new byte[utf8.Length + 1];
+        bytes[0] = (byte)(utf8.Length | 0x60);
+        Array.Copy(utf8, 0, bytes, 1, utf8.Length);
+        return bytes;
       }
       if (utf8.Length <= 0xffL) {
         bytes = new byte[utf8.Length + 2];
         bytes[0] = (byte)0x78;
         bytes[1] = (byte)utf8.Length;
         Array.Copy(utf8, 0, bytes, 2, utf8.Length);
-      return bytes;
+        return bytes;
       }
       if (utf8.Length <= 0xffffL) {
         bytes = new byte[utf8.Length + 3];
@@ -7203,7 +7202,7 @@ CBORUtilities.SingleToHalfPrecisionIfSameValue(floatingBits);
         bytes[1] = (byte)((utf8.Length >> 8) & 0xff);
         bytes[2] = (byte)(utf8.Length & 0xff);
         Array.Copy(utf8, 0, bytes, 3, utf8.Length);
-      return bytes;
+        return bytes;
       }
       byte[] posbytes = GetPositiveInt64Bytes(3, utf8.Length);
       bytes = new byte[utf8.Length + posbytes.Length];
@@ -7407,9 +7406,9 @@ CBORUtilities.SingleToHalfPrecisionIfSameValue(floatingBits);
         // (cmp != 0 ? itemB.ToString() : "~") +
         // " -> cmp=" + (cmp);
         // DebugUtility.Log(ot);
-      if (cmp != 0) {
-        return cmp;
-      }
+        if (cmp != 0) {
+          return cmp;
+        }
         // Both maps have the same key, so compare
         // the value under that key
         cmp = mapA[itemA].CompareTo(mapB[itemB]);

@@ -7,7 +7,7 @@ using PeterO.Numbers;
 namespace Test {
   [TestFixture]
   public class CBORDataUtilitiesTest {
-    private void AssertNegative(CBORObject obj) {
+    private static void AssertNegative(CBORObject obj) {
       Assert.IsTrue(obj.AsNumber().IsNegative());
       CBORTestCommon.AssertRoundTrip(obj);
     }
@@ -76,7 +76,7 @@ namespace Test {
       };
       foreach (var str in assertNegatives) {
         cbor = CBORDataUtilities.ParseJSONNumber(str, false, false, true);
-        this.AssertNegative(cbor);
+        AssertNegative(cbor);
       }
     }
 

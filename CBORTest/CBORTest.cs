@@ -704,54 +704,54 @@ namespace Test {
     }
 
     public static void TestCanFitInOne(CBORObject ed) {
-        EDecimal ed2;
-        if (ed == null) {
-          throw new ArgumentNullException(nameof(ed));
-        }
-        CBORNumber edNumber = ed.AsNumber();
-        EDecimal edNumberED = AsED(ed);
-        ed2 = EDecimal.FromDouble(edNumberED.ToDouble());
-        if ((edNumberED.CompareTo(ed2) == 0) != edNumber.CanFitInDouble()) {
+      EDecimal ed2;
+      if (ed == null) {
+        throw new ArgumentNullException(nameof(ed));
+      }
+      CBORNumber edNumber = ed.AsNumber();
+      EDecimal edNumberED = AsED(ed);
+      ed2 = EDecimal.FromDouble(edNumberED.ToDouble());
+      if ((edNumberED.CompareTo(ed2) == 0) != edNumber.CanFitInDouble()) {
+        Assert.Fail(ObjectMessage(ed));
+      }
+      ed2 = EDecimal.FromSingle(AsED(ed).ToSingle());
+      if ((edNumberED.CompareTo(ed2) == 0) != edNumber.CanFitInSingle()) {
+        Assert.Fail(ObjectMessage(ed));
+      }
+      if (!edNumber.IsInfinity() && !edNumber.IsNaN()) {
+        if (edNumberED.IsInteger() != edNumber.IsInteger()) {
           Assert.Fail(ObjectMessage(ed));
         }
-        ed2 = EDecimal.FromSingle(AsED(ed).ToSingle());
-        if ((edNumberED.CompareTo(ed2) == 0) != edNumber.CanFitInSingle()) {
-          Assert.Fail(ObjectMessage(ed));
+      }
+      if (!edNumber.IsInfinity() && !edNumber.IsNaN()) {
+        EDecimal edec = edNumberED;
+        EInteger bi = null;
+        try {
+          bi = edec.ToSizedEInteger(128);
+        } catch (OverflowException) {
+          bi = null;
         }
-        if (!edNumber.IsInfinity() && !edNumber.IsNaN()) {
-          if (edNumberED.IsInteger() != edNumber.IsInteger()) {
-            Assert.Fail(ObjectMessage(ed));
-          }
-        }
-        if (!edNumber.IsInfinity() && !edNumber.IsNaN()) {
-          EDecimal edec = edNumberED;
-          EInteger bi = null;
-          try {
-            bi = edec.ToSizedEInteger(128);
-          } catch (OverflowException) {
-            bi = null;
-          }
-          if (edNumber.IsInteger()) {
-            if ((bi != null && bi.GetSignedBitLengthAsInt64() <= 31) !=
-              edNumber.CanFitInInt32()) {
-              Assert.Fail(ObjectMessage(ed));
-            }
-          }
+        if (edNumber.IsInteger()) {
           if ((bi != null && bi.GetSignedBitLengthAsInt64() <= 31) !=
-            edNumber.CanTruncatedIntFitInInt32()) {
-            Assert.Fail(ObjectMessage(ed));
-          }
-          if (edNumber.IsInteger()) {
-            if ((bi != null && bi.GetSignedBitLengthAsInt64() <= 63) !=
-              edNumber.CanFitInInt64()) {
-              Assert.Fail(ObjectMessage(ed));
-            }
-          }
-          if ((bi != null && bi.GetSignedBitLengthAsInt64() <= 63) !=
-            edNumber.CanTruncatedIntFitInInt64()) {
+            edNumber.CanFitInInt32()) {
             Assert.Fail(ObjectMessage(ed));
           }
         }
+        if ((bi != null && bi.GetSignedBitLengthAsInt64() <= 31) !=
+          edNumber.CanTruncatedIntFitInInt32()) {
+          Assert.Fail(ObjectMessage(ed));
+        }
+        if (edNumber.IsInteger()) {
+          if ((bi != null && bi.GetSignedBitLengthAsInt64() <= 63) !=
+            edNumber.CanFitInInt64()) {
+            Assert.Fail(ObjectMessage(ed));
+          }
+        }
+        if ((bi != null && bi.GetSignedBitLengthAsInt64() <= 63) !=
+          edNumber.CanTruncatedIntFitInInt64()) {
+          Assert.Fail(ObjectMessage(ed));
+        }
+      }
     }
 
     [Test]
@@ -783,8 +783,8 @@ namespace Test {
         0x18, 0x2f, 0x32,
       }); // -2674012278751232
       Assert.AreEqual(
-            52L,
-            AsEI(cbor).GetSignedBitLengthAsInt64());
+        52L,
+        AsEI(cbor).GetSignedBitLengthAsInt64());
       Assert.IsTrue(cbor.AsNumber().CanFitInInt64());
       Assert.IsFalse(ToObjectTest.TestToFromObjectRoundTrip(2554895343L)
         .AsNumber().CanFitInSingle());
@@ -1006,303 +1006,311 @@ namespace Test {
     }
 
     public static bool TestEquivJSONOne(byte[] bytes) {
-if (bytes == null) {
-  throw new ArgumentNullException(nameof(bytes));
-}
-if (!(bytes.Length > 0)) {
-  return false;
-}
-   CBORObject cbo = CBORObject.FromJSONBytes(bytes);
-   Assert.IsTrue(cbo != null);
-   CBORObject cbo2 = CBORObject.FromJSONString(cbo.ToJSONString());
-   Assert.IsTrue(cbo2 != null);
-   if (!cbo.Equals(cbo2)) {
-     Console.Write("jsonstring");
-     Console.Write(TestCommon.ToByteArrayString(bytes));
-     Console.Write(DataUtilities.GetUtf8String(bytes, true));
-     Console.Write("old " + TestCommon.ToByteArrayString(cbo.ToJSONBytes()));
-     Console.Write(cbo.ToJSONString());
-     Console.Write("new " + TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
-     Console.Write(cbo2.ToJSONString());
-     Assert.AreEqual(cbo, cbo2);
-   }
-   cbo2 = CBORObject.FromJSONBytes(cbo.ToJSONBytes());
-   Assert.IsTrue(cbo2 != null);
-   if (!cbo.Equals(cbo2)) {
-     Console.Write("jsonbytes");
-     Console.Write(TestCommon.ToByteArrayString(bytes));
-     Console.Write(DataUtilities.GetUtf8String(bytes, true));
-     Console.Write("old " + TestCommon.ToByteArrayString(cbo.ToJSONBytes()));
-     Console.Write(cbo.ToJSONString());
-     Console.Write("new " + TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
-     Console.Write(cbo2.ToJSONString());
-     Assert.AreEqual(cbo, cbo2);
-   }
-   return true;
+      if (bytes == null) {
+        throw new ArgumentNullException(nameof(bytes));
+      }
+      if (!(bytes.Length > 0)) {
+        return false;
+      }
+      CBORObject cbo = CBORObject.FromJSONBytes(bytes);
+      Assert.IsTrue(cbo != null);
+      CBORObject cbo2 = CBORObject.FromJSONString(cbo.ToJSONString());
+      Assert.IsTrue(cbo2 != null);
+      if (!cbo.Equals(cbo2)) {
+        Console.Write("jsonstring");
+        Console.Write(TestCommon.ToByteArrayString(bytes));
+        Console.Write(DataUtilities.GetUtf8String(bytes, true));
+        Console.Write("old " + TestCommon.ToByteArrayString(cbo.ToJSONBytes()));
+        Console.Write(cbo.ToJSONString());
+        Console.Write("new " +
+TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
+        Console.Write(cbo2.ToJSONString());
+        Assert.AreEqual(cbo, cbo2);
+      }
+      cbo2 = CBORObject.FromJSONBytes(cbo.ToJSONBytes());
+      Assert.IsTrue(cbo2 != null);
+      if (!cbo.Equals(cbo2)) {
+        Console.Write("jsonbytes");
+        Console.Write(TestCommon.ToByteArrayString(bytes));
+        Console.Write(DataUtilities.GetUtf8String(bytes, true));
+        Console.Write("old " + TestCommon.ToByteArrayString(cbo.ToJSONBytes()));
+        Console.Write(cbo.ToJSONString());
+        Console.Write("new " +
+TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
+        Console.Write(cbo2.ToJSONString());
+        Assert.AreEqual(cbo, cbo2);
+      }
+      return true;
     }
     public static bool TestEquivJSONNumberOne(byte[] bytes) {
-   // Assume the JSON begins and ends with a digit
-if (bytes == null) {
-  throw new ArgumentNullException(nameof(bytes));
-}
-if (!(bytes.Length > 0)) {
-  return false;
-}
-if (!((bytes[0] >= 0x30 && bytes[0] <= 0x39) || bytes[0] == (byte)'-')) {
-  return false;
-}
-if (!(bytes[bytes.Length - 1] >= 0x30 && bytes[bytes.Length - 1] <= 0x39)) {
-  return false;
-}
-   CBORObject cbor, cbor2, cbored, cbor3;
-   var jsoptions = new JSONOptions("numberconversion=full");
-   string str = DataUtilities.GetUtf8String(bytes, true);
-   EDecimal ed = EDecimal.FromString(str);
-   // Test consistency between JSON conversion methods
-   cbor = CBORObject.FromJSONBytes(bytes, jsoptions);
-   cbor2 = CBORDataUtilities.ParseJSONNumber(str, jsoptions);
-   cbor3 = CBORObject.FromJSONString(str, jsoptions);
-cbored = (ed.Exponent.CompareTo(0) == 0 && !(ed.IsNegative && ed.Sign == 0)) ?
-   CBORObject.FromObject(ed.Mantissa) : CBORObject.FromObject(ed);
- Assert.AreEqual(cbor, cbor2, "[" + str + "] cbor2");
- Assert.AreEqual(cbor, cbor3, "[" + str + "] cbor3");
- Assert.AreEqual(cbor, cbored, "[" + str + "] cbored");
- return true;
+      // Assume the JSON begins and ends with a digit
+      if (bytes == null) {
+        throw new ArgumentNullException(nameof(bytes));
+      }
+      if (!(bytes.Length > 0)) {
+        return false;
+      }
+      if (!((bytes[0] >= 0x30 && bytes[0] <= 0x39) || bytes[0] == (byte)'-')) {
+        return false;
+      }
+      if (!(bytes[bytes.Length - 1] >= 0x30 && bytes[bytes.Length - 1] <=
+0x39)) {
+        return false;
+      }
+      CBORObject cbor, cbor2, cbored, cbor3;
+      var jsoptions = new JSONOptions("numberconversion=full");
+      string str = DataUtilities.GetUtf8String(bytes, true);
+      EDecimal ed = EDecimal.FromString(str);
+      // Test consistency between JSON conversion methods
+      cbor = CBORObject.FromJSONBytes(bytes, jsoptions);
+      cbor2 = CBORDataUtilities.ParseJSONNumber(str, jsoptions);
+      cbor3 = CBORObject.FromJSONString(str, jsoptions);
+      cbored = (ed.Exponent.CompareTo(0) == 0 && !(ed.IsNegative && ed.Sign
+== 0)) ?
+        CBORObject.FromObject(ed.Mantissa) : CBORObject.FromObject(ed);
+      Assert.AreEqual(cbor, cbor2, "[" + str + "] cbor2");
+      Assert.AreEqual(cbor, cbor3, "[" + str + "] cbor3");
+      Assert.AreEqual(cbor, cbored, "[" + str + "] cbored");
+      return true;
     }
     public static bool TestEquivJSONNumberDecimal128One(byte[] bytes) {
-   // Assume the JSON begins and ends with a digit
-if (bytes == null) {
-  throw new ArgumentNullException(nameof(bytes));
-}
-if (!(bytes.Length > 0)) {
-  return false;
-}
-if (!((bytes[0] >= 0x30 && bytes[0] <= 0x39) || bytes[0] == (byte)'-')) {
-  return false;
-}
-if (!(bytes[bytes.Length - 1] >= 0x30 && bytes[bytes.Length - 1] <= 0x39)) {
-  return false;
-}
-   CBORObject cbor, cbor2, cbored, cbor3;
-   var jsoptions = new JSONOptions("numberconversion=decimal128");
-   string str = DataUtilities.GetUtf8String(bytes, true);
-   // Test consistency between JSON conversion methods
-   EDecimal ed = EDecimal.FromString(str, EContext.Decimal128);
-   cbor = CBORObject.FromJSONBytes(bytes, jsoptions);
-   cbor2 = CBORDataUtilities.ParseJSONNumber(str, jsoptions);
-   cbor3 = CBORObject.FromJSONString(str, jsoptions);
-   cbored = CBORObject.FromObject(ed);
-   Assert.AreEqual(cbor, cbor2, "[" + str + "] cbor2");
- Assert.AreEqual(cbor, cbor3, "[" + str + "] cbor3");
- Assert.AreEqual(cbor, cbored, "[" + str + "] cbored");
- return true;
+      // Assume the JSON begins and ends with a digit
+      if (bytes == null) {
+        throw new ArgumentNullException(nameof(bytes));
+      }
+      if (!(bytes.Length > 0)) {
+        return false;
+      }
+      if (!((bytes[0] >= 0x30 && bytes[0] <= 0x39) || bytes[0] == (byte)'-')) {
+        return false;
+      }
+      if (!(bytes[bytes.Length - 1] >= 0x30 && bytes[bytes.Length - 1] <=
+0x39)) {
+        return false;
+      }
+      CBORObject cbor, cbor2, cbored, cbor3;
+      var jsoptions = new JSONOptions("numberconversion=decimal128");
+      string str = DataUtilities.GetUtf8String(bytes, true);
+      // Test consistency between JSON conversion methods
+      EDecimal ed = EDecimal.FromString(str, EContext.Decimal128);
+      cbor = CBORObject.FromJSONBytes(bytes, jsoptions);
+      cbor2 = CBORDataUtilities.ParseJSONNumber(str, jsoptions);
+      cbor3 = CBORObject.FromJSONString(str, jsoptions);
+      cbored = CBORObject.FromObject(ed);
+      Assert.AreEqual(cbor, cbor2, "[" + str + "] cbor2");
+      Assert.AreEqual(cbor, cbor3, "[" + str + "] cbor3");
+      Assert.AreEqual(cbor, cbored, "[" + str + "] cbored");
+      return true;
     }
     public static void TestCompareToOne(byte[] bytes) {
-  CBORObject cbor = CBORObject.DecodeFromBytes(bytes, new
-CBOREncodeOptions("allowduplicatekeys=1"));
-  byte[] bytes2 = cbor.EncodeToBytes();
-  CBORObject cbor2 = CBORObject.DecodeFromBytes(bytes2);
-  if (!cbor.Equals(cbor2)) {
-    string sbytes = TestCommon.ToByteArrayString(bytes) +
-        "\ncbor=" + cbor +
-        "\ncborbytes=" + TestCommon.ToByteArrayString(bytes2) +
-        "\ncbor2=" + cbor2 +
-        "\ncborbytes2=" + TestCommon.ToByteArrayString(cbor2.EncodeToBytes());
-    Assert.AreEqual(cbor, cbor2, sbytes);
-  } else {
-    Assert.AreEqual(cbor, cbor2);
-  }
-  if (cbor.CompareTo(cbor2) != 0) {
-    string sbytes = TestCommon.ToByteArrayString(bytes) +
-        "\ncbor=" + cbor +
-        "\ncborbytes=" + TestCommon.ToByteArrayString(bytes2) +
-        "\ncbor2=" + cbor2 +
-        "\ncborbytes2=" + TestCommon.ToByteArrayString(cbor2.EncodeToBytes());
-    Assert.AreEqual(0, cbor.CompareTo(cbor2), sbytes);
-  } else {
-    Assert.AreEqual(0, cbor.CompareTo(cbor2));
-  }
+      CBORObject cbor = CBORObject.DecodeFromBytes(bytes, new
+          CBOREncodeOptions("allowduplicatekeys=1"));
+      byte[] bytes2 = cbor.EncodeToBytes();
+      CBORObject cbor2 = CBORObject.DecodeFromBytes(bytes2);
+      if (!cbor.Equals(cbor2)) {
+        string sbytes = TestCommon.ToByteArrayString(bytes) +
+          "\ncbor=" + cbor +
+          "\ncborbytes=" + TestCommon.ToByteArrayString(bytes2) +
+          "\ncbor2=" + cbor2 +
+          "\ncborbytes2=" + TestCommon.ToByteArrayString(cbor2.EncodeToBytes());
+        Assert.AreEqual(cbor, cbor2, sbytes);
+      } else {
+        Assert.AreEqual(cbor, cbor2);
+      }
+      if (cbor.CompareTo(cbor2) != 0) {
+        string sbytes = TestCommon.ToByteArrayString(bytes) +
+          "\ncbor=" + cbor +
+          "\ncborbytes=" + TestCommon.ToByteArrayString(bytes2) +
+          "\ncbor2=" + cbor2 +
+          "\ncborbytes2=" + TestCommon.ToByteArrayString(cbor2.EncodeToBytes());
+        Assert.AreEqual(0, cbor.CompareTo(cbor2), sbytes);
+      } else {
+        Assert.AreEqual(0, cbor.CompareTo(cbor2));
+      }
     }
 
     [Test]
     public void TestCompareToSpecificA() {
-byte[] bytes = new byte[] { (byte)0xfa, (byte)0xb3, 0x00, 0x00, 0x00 };
-TestCompareToOne(bytes);
+      var bytes = new byte[] { (byte)0xfa, (byte)0xb3, 0x00, 0x00, 0x00 };
+      TestCompareToOne(bytes);
     }
 
     [Test]
     public void TestCompareToSpecificE() {
-byte[] bytes = new byte[] {
-  (byte)0xbf,
-  (byte)0xf9,
-  (byte)0xce,
-  (byte)0xdc,
-  (byte)0x99, 0x00, 0x01,
-  (byte)0xf8,
-  (byte)0xa0, 0x61, 0x37, 0x12, 0x7f, 0x78, 0x0d, 0x1c, 0x78, 0x4a, 0x48, 0x3e,
-  (byte)0xe1,
-  (byte)0xa5,
-  (byte)0xb2,
-  (byte)0xf4,
-  (byte)0x82,
-  (byte)0x8f,
-  (byte)0x8a, 0x32, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04,
-  0x2d, 0x57, 0x55, 0x08, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-  0x02, 0x41, 0x28,
-  (byte)0xff, (byte)0xe3, (byte)0xff,
-};
-TestCompareToOne(bytes);
+      var bytes = new byte[] {
+        (byte)0xbf,
+        (byte)0xf9,
+        (byte)0xce,
+        (byte)0xdc,
+        (byte)0x99, 0x00, 0x01,
+        (byte)0xf8,
+        (byte)0xa0, 0x61, 0x37, 0x12, 0x7f, 0x78, 0x0d, 0x1c, 0x78, 0x4a,
+        0x48, 0x3e,
+        (byte)0xe1,
+        (byte)0xa5,
+        (byte)0xb2,
+        (byte)0xf4,
+        (byte)0x82,
+        (byte)0x8f,
+        (byte)0x8a, 0x32, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04,
+        0x2d, 0x57, 0x55, 0x08, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x02, 0x41, 0x28,
+        (byte)0xff, (byte)0xe3, (byte)0xff,
+      };
+      TestCompareToOne(bytes);
     }
 
     [Test]
     public void TestCompareToSpecificC() {
-byte[] bytes = new byte[] {
-  (byte)0xb9, 0x00, 0x02,
-  (byte)0xfa,
-  (byte)0x93,
-  (byte)0x96,
-  (byte)0xf3,
-  (byte)0xcb, 0x1b,
-  (byte)0xe7, 0x65, 0x72,
-  (byte)0x83,
-  (byte)0xa0, 0x39,
-  (byte)0xa0,
-  (byte)0xfe, 0x7f, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01,
-  0x2e, 0x7a, 0x00, 0x00, 0x00, 0x03, 0x1e, 0x33, 0x52, 0x60, 0x7a, 0x00,
-  0x00, 0x00, 0x03, 0x62, 0x1e, 0x23,
-  (byte)0xff, 0x18, (byte)0x89,
-};
-TestCompareToOne(bytes);
+      var bytes = new byte[] {
+        (byte)0xb9, 0x00, 0x02,
+        (byte)0xfa,
+        (byte)0x93,
+        (byte)0x96,
+        (byte)0xf3,
+        (byte)0xcb, 0x1b,
+        (byte)0xe7, 0x65, 0x72,
+        (byte)0x83,
+        (byte)0xa0, 0x39,
+        (byte)0xa0,
+        (byte)0xfe, 0x7f, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01,
+        0x2e, 0x7a, 0x00, 0x00, 0x00, 0x03, 0x1e, 0x33, 0x52, 0x60, 0x7a, 0x00,
+        0x00, 0x00, 0x03, 0x62, 0x1e, 0x23,
+        (byte)0xff, 0x18, (byte)0x89,
+      };
+      TestCompareToOne(bytes);
     }
 
     [Test]
     public void TestCompareToSpecificD() {
-byte[] bytes = new byte[] {
-  (byte)0xbf, 0x00, 0x00,
-  (byte)0xe0, 0x00, 0x7f, 0x78, 0x10, 0x64, 0x6b, 0x05, 0x77, 0x38, 0x3c,
-  0x51, 0x66, 0x7c, 0x02, 0x31, 0x51, 0x56, 0x33, 0x56, 0x6a, 0x7b, 0x00,
-  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x07, 0x70, 0x16, 0x20, 0x2f, 0x29,
-  0x1a, 0x1f, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x78,
-  0x01, 0x5c,
-  (byte)0xff, (byte)0xfa, (byte)0xa1, (byte)0xeb, (byte)0xc3, 0x1d,
-  (byte)0xff,
-};
-TestCompareToOne(bytes);
+      var bytes = new byte[] {
+        (byte)0xbf, 0x00, 0x00,
+        (byte)0xe0, 0x00, 0x7f, 0x78, 0x10, 0x64, 0x6b, 0x05, 0x77, 0x38, 0x3c,
+        0x51, 0x66, 0x7c, 0x02, 0x31, 0x51, 0x56, 0x33, 0x56, 0x6a, 0x7b, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x07, 0x70, 0x16, 0x20, 0x2f, 0x29,
+        0x1a, 0x1f, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x78,
+        0x01, 0x5c,
+        (byte)0xff, (byte)0xfa, (byte)0xa1, (byte)0xeb, (byte)0xc3, 0x1d,
+        (byte)0xff,
+      };
+      TestCompareToOne(bytes);
     }
 
     [Test]
     public void TestCompareToSpecificB() {
-byte[] bytes = new byte[] {
-  (byte)0xa4,
-  (byte)0xe3,
-  (byte)0xf8, 0x70,
-  (byte)0xdb, 0x02, 0x2d, 0x0d, 0x30, 0x39, 0x14,
-  (byte)0xf5,
-  (byte)0x8c, 0x39, 0x56, 0x1c, 0x3a,
-  (byte)0x92, 0x27, 0x00, 0x04, 0x39, 0x1e, 0x05,
-  (byte)0xf9, 0x73,
-  (byte)0xac, 0x7f, 0x78, 0x05, 0x2d,
-  (byte)0xe5,
-  (byte)0xad,
-  (byte)0xb8, 0x0b, 0x63, 0x27, 0x50, 0x7e, 0x78, 0x02, 0x04, 0x56,
-  (byte)0xff, 0x1b,
-  (byte)0x9d, (byte)0x8c, 0x66, (byte)0xaf, 0x18, 0x1d, 0x01, (byte)0x8e,
-};
-TestCompareToOne(bytes);
+      var bytes = new byte[] {
+        (byte)0xa4,
+        (byte)0xe3,
+        (byte)0xf8, 0x70,
+        (byte)0xdb, 0x02, 0x2d, 0x0d, 0x30, 0x39, 0x14,
+        (byte)0xf5,
+        (byte)0x8c, 0x39, 0x56, 0x1c, 0x3a,
+        (byte)0x92, 0x27, 0x00, 0x04, 0x39, 0x1e, 0x05,
+        (byte)0xf9, 0x73,
+        (byte)0xac, 0x7f, 0x78, 0x05, 0x2d,
+        (byte)0xe5,
+        (byte)0xad,
+        (byte)0xb8, 0x0b, 0x63, 0x27, 0x50, 0x7e, 0x78, 0x02, 0x04, 0x56,
+        (byte)0xff, 0x1b,
+        (byte)0x9d, (byte)0x8c, 0x66, (byte)0xaf, 0x18, 0x1d, 0x01,
+        (byte)0x8e,
+      };
+      TestCompareToOne(bytes);
     }
 
     [Test]
     public void TestCompareToSpecific() {
-byte[] bytes;
-bytes = new byte[] {
-  (byte)0xa2,
-  (byte)0xf8,
-  (byte)0xf7, 0x19,
-  (byte)0xde,
-  (byte)0x91, 0x7f, 0x79, 0x00, 0x11, 0x7b, 0x1b, 0x29, 0x59, 0x57, 0x6a,
-  0x70, 0x68,
-  (byte)0xe3,
-  (byte)0x98,
-  (byte)0xba, 0x6a, 0x49, 0x50, 0x54, 0x0b, 0x21, 0x62, 0x32, 0x17, 0x7b,
-  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x67, 0x43, 0x37, 0x42,
-  0x5f, 0x22, 0x7c, 0x0e, 0x68, 0x13, 0x74, 0x43, 0x1e, 0x4c, 0x5b, 0x2b,
-  0x6c, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7a, 0x00,
-  0x00, 0x00, 0x00, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-  0x78, 0x01, 0x38, 0x78, 0x00, 0x78, 0x00, 0x7b, 0x00, 0x00, 0x00, 0x00,
-  0x00, 0x00, 0x00, 0x01, 0x39,
-  (byte)0xff, (byte)0x9f, (byte)0xff,
-};
-TestCompareToOne(bytes);
+      byte[] bytes;
+      bytes = new byte[] {
+        (byte)0xa2,
+        (byte)0xf8,
+        (byte)0xf7, 0x19,
+        (byte)0xde,
+        (byte)0x91, 0x7f, 0x79, 0x00, 0x11, 0x7b, 0x1b, 0x29, 0x59, 0x57, 0x6a,
+        0x70, 0x68,
+        (byte)0xe3,
+        (byte)0x98,
+        (byte)0xba, 0x6a, 0x49, 0x50, 0x54, 0x0b, 0x21, 0x62, 0x32, 0x17, 0x7b,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x67, 0x43, 0x37, 0x42,
+        0x5f, 0x22, 0x7c, 0x0e, 0x68, 0x13, 0x74, 0x43, 0x1e, 0x4c, 0x5b, 0x2b,
+        0x6c, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7a, 0x00,
+        0x00, 0x00, 0x00, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x78, 0x01, 0x38, 0x78, 0x00, 0x78, 0x00, 0x7b, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x01, 0x39,
+        (byte)0xff, (byte)0x9f, (byte)0xff,
+      };
+      TestCompareToOne(bytes);
     }
 
- [Test]
- public void TestCompareB1() {
-  byte[] bytes;
-  CBORObject o;
-  bytes = new byte[] {
-    (byte)0xbb, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x02,
-    (byte)0xf8, 0x2d, 0x11, 0x7f, 0x79, 0x00, 0x2e, 0x7c, 0x2c, 0x18, 0x40,
-    0x3e,
-    (byte)0xc7,
-    (byte)0xa9, 0x0c, 0x57, 0x50, 0x63, 0x30, 0x0f, 0x07, 0x76, 0x14, 0x31,
-    0x52, 0x5c, 0x0a, 0x43, 0x4a, 0x6f, 0x08, 0x11, 0x25, 0x0b, 0x1a, 0x10,
-    0x74,
-    (byte)0xf1,
-    (byte)0x84,
-    (byte)0xbd,
-    (byte)0x93, 0x4f, 0x74, 0x23, 0x5b, 0x7c, 0x5c, 0x76, 0x70, 0x0a,
-    (byte)0xde,
-    (byte)0xa3, 0x5e, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0b,
-    0x76,
-    (byte)0xf0,
-    (byte)0xad,
-    (byte)0xbf,
-    (byte)0xba, 0x14, 0x45, 0x0d, 0x2e, 0x6e, 0x62, 0x62, 0x10, 0x63,
-    (byte)0xff, 0x35,
-  };
-  o = CBORObject.DecodeFromBytes(bytes, new
-CBOREncodeOptions("allowduplicatekeys=1"));
-  CBORTestCommon.AssertRoundTrip(o);
-  bytes = new byte[] {
-    (byte)0xd9, 0x0e, 0x02,
-    (byte)0xbf, 0x7f, 0x78, 0x07, 0x12, 0x45, 0x2f, 0x48,
-    (byte)0xc8,
-    (byte)0xb7, 0x5a, 0x79, 0x00, 0x01, 0x5e, 0x7b, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x01, 0x72, 0x78, 0x00, 0x7a, 0x00, 0x00, 0x00, 0x01,
-    0x49, 0x61, 0x6d, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01,
-    0x13,
-    (byte)0xff,
-    (byte)0xed,
-    (byte)0xfb,
-    (byte)0x82, 0x18,
-    (byte)0xc9, 0x6c, 0x3b, (byte)0xc0, 0x53, 0x1f, (byte)0xeb, (byte)0xff,
-  };
-  o = CBORObject.DecodeFromBytes(bytes, new
-CBOREncodeOptions("allowduplicatekeys=1"));
-  CBORTestCommon.AssertRoundTrip(o);
-  bytes = new byte[] {
-    (byte)0xbf,
-    (byte)0xfa,
-    (byte)0xc5, 0x7f, 0x16,
-    (byte)0xe2,
-    (byte)0xf9, 0x05, 0x2d, 0x7f, 0x79, 0x00, 0x02, 0x4f, 0x0a, 0x67, 0x1a,
-    0x17, 0x17, 0x1d, 0x0a, 0x74, 0x0a, 0x79, 0x00, 0x0e, 0x48, 0x23, 0x4e,
-    0x32, 0x53, 0x74, 0x78,
-    (byte)0xf0,
-    (byte)0xa9,
-    (byte)0x8b,
-    (byte)0xb9, 0x03, 0x68, 0x3b, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x02, 0x67, 0x0e, 0x7a, 0x00, 0x00, 0x00, 0x02, 0x74, 0x37, 0x79,
-    0x00, 0x09, 0x6f, 0x11, 0x60, 0x3c, 0x24, 0x13, 0x16, 0x25, 0x35, 0x78,
-    0x01, 0x6a,
-    (byte)0xff, (byte)0xf9, (byte)0xc0, 0x69, 0x19, 0x0b, (byte)0x8a, 0x05,
-    (byte)0xff,
-  };
-  o = CBORObject.DecodeFromBytes(bytes, new
-CBOREncodeOptions("allowduplicatekeys=1"));
-  CBORTestCommon.AssertRoundTrip(o);
- }
+    [Test]
+    public void TestCompareB1() {
+      byte[] bytes;
+      CBORObject o;
+      bytes = new byte[] {
+        (byte)0xbb, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x02,
+        (byte)0xf8, 0x2d, 0x11, 0x7f, 0x79, 0x00, 0x2e, 0x7c, 0x2c, 0x18, 0x40,
+        0x3e,
+        (byte)0xc7,
+        (byte)0xa9, 0x0c, 0x57, 0x50, 0x63, 0x30, 0x0f, 0x07, 0x76, 0x14, 0x31,
+        0x52, 0x5c, 0x0a, 0x43, 0x4a, 0x6f, 0x08, 0x11, 0x25, 0x0b, 0x1a, 0x10,
+        0x74,
+        (byte)0xf1,
+        (byte)0x84,
+        (byte)0xbd,
+        (byte)0x93, 0x4f, 0x74, 0x23, 0x5b, 0x7c, 0x5c, 0x76, 0x70, 0x0a,
+        (byte)0xde,
+        (byte)0xa3, 0x5e, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0b,
+        0x76,
+        (byte)0xf0,
+        (byte)0xad,
+        (byte)0xbf,
+        (byte)0xba, 0x14, 0x45, 0x0d, 0x2e, 0x6e, 0x62, 0x62, 0x10, 0x63,
+        (byte)0xff, 0x35,
+      };
+      o = CBORObject.DecodeFromBytes(bytes, new
+          CBOREncodeOptions("allowduplicatekeys=1"));
+      CBORTestCommon.AssertRoundTrip(o);
+      bytes = new byte[] {
+        (byte)0xd9, 0x0e, 0x02,
+        (byte)0xbf, 0x7f, 0x78, 0x07, 0x12, 0x45, 0x2f, 0x48,
+        (byte)0xc8,
+        (byte)0xb7, 0x5a, 0x79, 0x00, 0x01, 0x5e, 0x7b, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x01, 0x72, 0x78, 0x00, 0x7a, 0x00, 0x00, 0x00, 0x01,
+        0x49, 0x61, 0x6d, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01,
+        0x13,
+        (byte)0xff,
+        (byte)0xed,
+        (byte)0xfb,
+        (byte)0x82, 0x18,
+        (byte)0xc9, 0x6c, 0x3b, (byte)0xc0, 0x53, 0x1f, (byte)0xeb,
+        (byte)0xff,
+      };
+      o = CBORObject.DecodeFromBytes(bytes, new
+          CBOREncodeOptions("allowduplicatekeys=1"));
+      CBORTestCommon.AssertRoundTrip(o);
+      bytes = new byte[] {
+        (byte)0xbf,
+        (byte)0xfa,
+        (byte)0xc5, 0x7f, 0x16,
+        (byte)0xe2,
+        (byte)0xf9, 0x05, 0x2d, 0x7f, 0x79, 0x00, 0x02, 0x4f, 0x0a, 0x67, 0x1a,
+        0x17, 0x17, 0x1d, 0x0a, 0x74, 0x0a, 0x79, 0x00, 0x0e, 0x48, 0x23, 0x4e,
+        0x32, 0x53, 0x74, 0x78,
+        (byte)0xf0,
+        (byte)0xa9,
+        (byte)0x8b,
+        (byte)0xb9, 0x03, 0x68, 0x3b, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x02, 0x67, 0x0e, 0x7a, 0x00, 0x00, 0x00, 0x02, 0x74, 0x37, 0x79,
+        0x00, 0x09, 0x6f, 0x11, 0x60, 0x3c, 0x24, 0x13, 0x16, 0x25, 0x35, 0x78,
+        0x01, 0x6a,
+        (byte)0xff, (byte)0xf9, (byte)0xc0, 0x69, 0x19, 0x0b, (byte)0x8a, 0x05,
+        (byte)0xff,
+      };
+      o = CBORObject.DecodeFromBytes(bytes, new
+          CBOREncodeOptions("allowduplicatekeys=1"));
+      CBORTestCommon.AssertRoundTrip(o);
+    }
 
     [Test]
     public void TestCompareB() {
@@ -4727,7 +4735,11 @@ CBOREncodeOptions("allowduplicatekeys=1"));
       if (!objA.Equals(objB)) {
         Assert.Fail("WriteJSONTo gives different results from " +
           "ToJSONString\nobj=" +
-          TestCommon.ToByteArrayString(obj.EncodeToBytes()));
+          TestCommon.ToByteArrayString(obj.EncodeToBytes()) +
+          "\nobjA=" + TestCommon.ToByteArrayString(objA.EncodeToBytes()) +
+          "\nobjB=" + TestCommon.ToByteArrayString(objB.EncodeToBytes()) +
+          "\njsonstring=" + jsonString +
+          "\ntojsonstring=" + obj.ToJSONString());
       }
     }
   }

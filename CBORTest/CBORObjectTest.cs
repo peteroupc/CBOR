@@ -2651,7 +2651,7 @@ CBOREncodeOptions(false, false, true));
       }
     }
 
-    private void CheckKeyValue(CBORObject o, string key, object value) {
+    private static void CheckKeyValue(CBORObject o, string key, object value) {
       if (!o.ContainsKey(key)) {
         Assert.Fail("Expected " + key + " to exist: " + o.ToString());
       }
@@ -2776,8 +2776,8 @@ CBOREncodeOptions(false, false, true));
       dict["TestKey"] = "TestValue";
       dict["TestKey2"] = "TestValue2";
       CBORObject c = CBORObject.FromObject(dict);
-      this.CheckKeyValue(c, "TestKey", "TestValue");
-      this.CheckKeyValue(c, "TestKey2", "TestValue2");
+      CheckKeyValue(c, "TestKey", "TestValue");
+      CheckKeyValue(c, "TestKey2", "TestValue2");
       dict = (IDictionary<string, string>)c.ToObject(
           typeof(IDictionary<string, string>));
       Assert.AreEqual(2, dict.Keys.Count);
@@ -3612,7 +3612,7 @@ CBOREncodeOptions(false, false, true));
       }
     }
 
-    private void Sink(object obj) {
+    private static void Sink(object obj) {
       Console.WriteLine("Sink for " + obj);
       Assert.Fail();
     }
@@ -3622,7 +3622,7 @@ CBOREncodeOptions(false, false, true));
       CBORObject co;
       try {
         co = CBORObject.True;
-        this.Sink(co.Keys);
+        Sink(co.Keys);
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -3631,7 +3631,7 @@ CBOREncodeOptions(false, false, true));
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        this.Sink(ToObjectTest.TestToFromObjectRoundTrip(0).Keys);
+        Sink(ToObjectTest.TestToFromObjectRoundTrip(0).Keys);
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -3640,7 +3640,7 @@ CBOREncodeOptions(false, false, true));
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        this.Sink(ToObjectTest.TestToFromObjectRoundTrip("string").Keys);
+        Sink(ToObjectTest.TestToFromObjectRoundTrip("string").Keys);
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -3649,7 +3649,7 @@ CBOREncodeOptions(false, false, true));
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        this.Sink(CBORObject.NewArray().Keys);
+        Sink(CBORObject.NewArray().Keys);
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -3658,7 +3658,7 @@ CBOREncodeOptions(false, false, true));
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        this.Sink(ToObjectTest.TestToFromObjectRoundTrip(
+        Sink(ToObjectTest.TestToFromObjectRoundTrip(
             new byte[] { 0 }).Keys);
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {

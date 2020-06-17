@@ -510,10 +510,18 @@ namespace PeterO.Cbor {
           0);
     }
 
+    [Obsolete]
     public static string DoubleToString(double dbl) {
       return EFloat.FromDouble(dbl).ToShortestString(EContext.Binary64);
     }
 
+    public static string DoubleBitsToString(long dblbits) {
+      // TODO: Use FromDoubleBits when available
+      return EFloat.FromDouble(Int64BitsToDouble(dblbits))
+           .ToShortestString(EContext.Binary64);
+    }
+
+    [Obsolete]
     public static string SingleToString(float sing) {
       return EFloat.FromSingle(sing).ToShortestString(EContext.Binary32);
     }
@@ -681,8 +689,8 @@ namespace PeterO.Cbor {
        // Example: Apple Time is a 32-bit unsigned integer
        // of the number of seconds since the start of 1904.
        // EInteger appleTime = GetNumberOfDaysProlepticGregorian(
-         // year, // month
-         //,
+         // year,
+         month //,
          day)
        // .Subtract(GetNumberOfDaysProlepticGregorian(
        // EInteger.FromInt32(1904),
@@ -1028,10 +1036,14 @@ namespace PeterO.Cbor {
       return new String(charbuf, 0, charbufLength);
     }
 
+    [Obsolete]
     public static EInteger BigIntegerFromDouble(double dbl) {
-      long lvalue = BitConverter.ToInt64(
+      return BigIntegerFromDoubleBits(BitConverter.ToInt64(
           BitConverter.GetBytes((double)dbl),
-          0);
+          0));
+    }
+
+    public static EInteger BigIntegerFromDoubleBits(long lvalue) {
       int value0 = unchecked((int)(lvalue & 0xffffffffL));
       int value1 = unchecked((int)((lvalue >> 32) & 0xffffffffL));
       var floatExponent = (int)((value1 >> 20) & 0x7ff);
@@ -1091,6 +1103,12 @@ namespace PeterO.Cbor {
       }
     }
 
+    public static bool DoubleBitsFinite(long bits) {
+      // Neither NaN nor infinity
+      bits &= ~(1L << 63);
+      return bits < unchecked((long)(0x7ffL << 52));
+    }
+
     private static int RoundedShift(long mant, int shift) {
       long mask = (1L << shift) - 1;
       long half = 1L << (shift - 1);
@@ -1130,8 +1148,8 @@ namespace PeterO.Cbor {
         int rs = RoundedShift(mant | (1L << 52), 42 - (sexp - 1));
         // DebugUtility.Log("mant=" + mant + " rs=" + (rs));
         if (sexp == -10 && rs == 0) {
-{ return -1;
-} }
+          return -1;
+        }
         return ((mant & ((1L << (42 - (sexp - 1))) - 1)) == 0) ? (sign | rs) :
 -1;
       }
@@ -1237,10 +1255,8 @@ namespace PeterO.Cbor {
       } else if (exp <= 112) { // Subnormal
         int shift = 126 - exp;
         int rs = (1024 >> (145 - exp)) + (mant >> shift);
-        if (mant != 0 && exp == 103) { {
-  return -1;
- } }
-        return (bits & ((1 << shift) - 1)) == 0 ? sign + rs : -1;
+        return (mant != 0 && exp == 103) ? (-1) : ((bits & ((1 << shift) -
+1)) == 0 ? sign + rs : -1);
       } else {
         return (bits & 0x1fff) == 0 ? sign + ((exp - 112) << 10) +
 -(mant >> 13) : -1;
