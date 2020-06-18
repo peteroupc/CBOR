@@ -5912,7 +5912,9 @@ namespace PeterO.Cbor {
           return this.AsEIntegerValue().ToString();
         }
         case CBORType.FloatingPoint: {
-          return CBORNumber.FromObject(this.AsDoubleValue()).ToJSONString();
+          long dblbits = this.AsDoubleBits();
+          return CBORUtilities.DoubleBitsFinite(dblbits) ?
+               CBORUtilities.DoubleBitsToString(dblbits) : "null";
         }
         default: {
           var sb = new StringBuilder();

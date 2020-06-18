@@ -1103,6 +1103,12 @@ namespace PeterO.Cbor {
       }
     }
 
+    public static bool DoubleBitsNaN(long bits) {
+      // Is NaN
+      bits &= ~(1L << 63);
+      return bits > unchecked((long)(0x7ffL << 52));
+    }
+
     public static bool DoubleBitsFinite(long bits) {
       // Neither NaN nor infinity
       bits &= ~(1L << 63);

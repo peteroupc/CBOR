@@ -489,6 +489,16 @@ namespace Test {
         (byte)0xc3, (byte)0x94, 0x19, 0x49,
       };
       TestWriteToJSON(CBORObject.DecodeFromBytes(bytes));
+      bytes = new byte[] {
+        (byte)0xfb, 0x61, (byte)0x90, 0x00, 0x00, 0x7c,
+        0x01, 0x5a, 0x0a,
+      };
+      TestWriteToJSON(CBORObject.DecodeFromBytes(bytes));
+      bytes = new byte[] {
+        (byte)0xfb, 0x36, (byte)0x90, 0x01, 0x00, 0x3f,
+        (byte)0xd9, 0x2b, (byte)0xdb,
+      };
+      TestWriteToJSON(CBORObject.DecodeFromBytes(bytes));
     }
 
     [Test]
@@ -4738,7 +4748,8 @@ TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
           TestCommon.ToByteArrayString(obj.EncodeToBytes()) +
           "\nobjA=" + TestCommon.ToByteArrayString(objA.EncodeToBytes()) +
           "\nobjB=" + TestCommon.ToByteArrayString(objB.EncodeToBytes()) +
-          "\njsonstring=" + jsonString +
+          "\nobj=" + obj.ToString() + "\nobjA=" + objA.ToString() +
+          "\nobjB=" + objB.ToString() + "\njsonstring=" + jsonString +
           "\ntojsonstring=" + obj.ToJSONString());
       }
     }

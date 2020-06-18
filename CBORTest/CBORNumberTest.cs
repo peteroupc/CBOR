@@ -12,13 +12,13 @@ namespace Test {
 
     [Test]
     public void TestAbs() {
-      TestCommon.CompareTestEqual (
+      TestCommon.CompareTestEqual(
         ToCN(2),
         ToCN(-2).Abs());
-      TestCommon.CompareTestEqual (
+      TestCommon.CompareTestEqual(
         ToCN(2),
         ToCN(2).Abs());
-      TestCommon.CompareTestEqual (
+      TestCommon.CompareTestEqual(
         ToCN(2.5),
         ToCN(-2.5).Abs());
       {
@@ -56,11 +56,19 @@ namespace Test {
     }
     [Test]
     public void TestCanFitInInt64() {
-      // not implemented yet
+      Assert.IsTrue(CBORObject.FromObject(0).AsNumber().CanFitInInt64());
+      Assert.IsTrue(CBORObject.FromObject(99).AsNumber().CanFitInInt64());
+      Assert.IsFalse(CBORObject.PositiveInfinity.AsNumber().CanFitInInt64());
+      Assert.IsFalse(CBORObject.NegativeInfinity.AsNumber().CanFitInInt64());
+      Assert.IsFalse(CBORObject.NaN.AsNumber().CanFitInInt64());
     }
     [Test]
     public void TestIsInfinity() {
-      // not implemented yet
+      Assert.IsFalse(CBORObject.FromObject(0).AsNumber().IsInfinity());
+      Assert.IsFalse(CBORObject.FromObject(99).AsNumber().IsInfinity());
+      Assert.IsTrue(CBORObject.PositiveInfinity.AsNumber().IsInfinity());
+      Assert.IsTrue(CBORObject.NegativeInfinity.AsNumber().IsInfinity());
+      Assert.IsFalse(CBORObject.NaN.AsNumber().IsInfinity());
     }
     [Test]
     public void TestIsNaN() {
@@ -69,6 +77,8 @@ namespace Test {
       Assert.IsFalse(CBORObject.PositiveInfinity.AsNumber().IsNaN());
       Assert.IsFalse(CBORObject.NegativeInfinity.AsNumber().IsNaN());
       Assert.IsTrue(CBORObject.NaN.AsNumber().IsNaN());
+      Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Double.NaN)
+        .AsNumber().IsNaN());
     }
     [Test]
     public void TestNegate() {
@@ -104,7 +114,7 @@ namespace Test {
         EDecimal cmpDecFrac = AsED(o1).Multiply(AsED(o2));
         EDecimal cmpCobj = ToCN(o1).Multiply(ToCN(o2)).ToEDecimal();
         if (!cmpDecFrac.Equals(cmpCobj)) {
-          TestCommon.CompareTestEqual (
+          TestCommon.CompareTestEqual(
             cmpDecFrac,
             cmpCobj,
             o1.ToString() + "\n" + o2.ToString());
@@ -165,7 +175,7 @@ namespace Test {
     [Test]
     public void TestAsEInteger() {
       try {
-        ToObjectTest.TestToFromObjectRoundTrip (
+        ToObjectTest.TestToFromObjectRoundTrip(
           (object)null).AsNumber().ToEInteger();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
@@ -236,7 +246,7 @@ namespace Test {
           ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(
             numberString));
         if (!numberinfo["integer"].Equals(CBORObject.Null)) {
-          Assert.AreEqual (
+          Assert.AreEqual(
             numberinfo["integer"].AsString(),
             cbornumber.AsNumber().ToEInteger().ToString());
         } else {
@@ -303,7 +313,7 @@ namespace Test {
       {
         string stringTemp =
 
-          ToObjectTest.TestToFromObjectRoundTrip (
+          ToObjectTest.TestToFromObjectRoundTrip(
             (float)328323f).AsNumber().ToEInteger().ToString();
         Assert.AreEqual(
           "328323",
@@ -385,7 +395,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip (
+        ToObjectTest.TestToFromObjectRoundTrip(
           Single.NaN).AsNumber().ToEInteger();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
@@ -415,7 +425,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip (
+        ToObjectTest.TestToFromObjectRoundTrip(
           Double.NaN).AsNumber().ToEInteger();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
@@ -466,7 +476,7 @@ namespace Test {
       {
         object objectTemp = "NaN";
         object objectTemp2 =
-          ToObjectTest.TestToFromObjectRoundTrip (
+          ToObjectTest.TestToFromObjectRoundTrip(
             Double.NaN).AsNumber().ToEDecimal()
           .ToString();
         Assert.AreEqual(objectTemp, objectTemp2);
@@ -517,7 +527,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip (
+        ToObjectTest.TestToFromObjectRoundTrip(
           String.Empty).AsNumber().ToEDecimal();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
@@ -559,8 +569,6 @@ namespace Test {
           .AsNumber().ToEFloat();
         Assert.AreEqual(objectTemp, objectTemp2);
       }
-      Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Double.NaN)
-        .AsNumber().IsNaN());
     }
     [Test]
     public void TestAsERational() {
@@ -579,8 +587,8 @@ namespace Test {
         Assert.AreEqual(objectTemp, objectTemp2);
       }
 
-      Assert.IsTrue (
-        ToObjectTest.TestToFromObjectRoundTrip (
+      Assert.IsTrue(
+        ToObjectTest.TestToFromObjectRoundTrip(
           ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
           .AsNumber().ToERational()).AsNumber().IsNaN());
       {
@@ -597,7 +605,7 @@ namespace Test {
           .AsNumber().ToERational();
         Assert.AreEqual(objectTemp, objectTemp2);
       }
-      Assert.IsTrue (
+      Assert.IsTrue(
         ToObjectTest.TestToFromObjectRoundTrip(Double.NaN)
         .AsNumber().ToERational().IsNaN());
     }

@@ -855,6 +855,10 @@ this.ToEIntegerIfExact().ToInt64Checked();
             var longItem = (long)this.value;
             return CBORUtilities.LongToString(longItem);
           }
+        case NumberKind.Double: {
+            var longItem = (long)this.value;
+            return CBORUtilities.DoubleBitsToString(longItem);
+          }
         default:
           return (this.value == null) ? String.Empty :
             this.value.ToString();
@@ -864,7 +868,6 @@ this.ToEIntegerIfExact().ToInt64Checked();
     internal string ToJSONString() {
       switch (this.kind) {
         case NumberKind.Double: {
-            // TODO: Avoid converting to double
             var f = (long)this.value;
             if (!CBORUtilities.DoubleBitsFinite(f)) {
               return "null";
@@ -1430,13 +1433,17 @@ this.ToEIntegerIfExact().ToInt64Checked();
               break;
             }
           case NumberKind.Double: {
-              var a = (double)objA;
-              var b = (double)objB;
+              var a = (long)objA;
+              var b = (long)objB;
               // Treat NaN as greater than all other numbers
-              cmp = Double.IsNaN(a) ? (Double.IsNaN(b) ? 0 : 1) : (Double.IsNaN(
-                  b) ? (-1) : ((a == b) ? 0 : ((a < b) ? -1 :
-
-                      1)));
+              if (CBORUtilities.DoubleBitsNaN(a)) {
+                cmp = CBORUtilities.DoubleBitsNaN(b) ? 0 : 1;
+              } else if (CBORUtilities.DoubleBitsNaN(a)) {
+                cmp = -1;
+              } else {
+ cmp = ((a < 0) != (b < 0)) ? ((a < b) ? -1 : 1) : (((a == b) ? 0 : (((a< b)
+^ (a < 0)) ? -1 : 1)));
+}
               break;
             }
           case NumberKind.EDecimal: {
