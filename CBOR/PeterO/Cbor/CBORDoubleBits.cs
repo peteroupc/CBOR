@@ -51,7 +51,34 @@ namespace PeterO.Cbor {
     }
 
     public long AsInt64(object obj) {
-       throw new NotImplementedException();
+      if (this.IsNaN(obj) || this.IsInfinity(obj)) {
+        throw new OverflowException("This object's value is out of range");
+      }
+      long b = DoubleBitsRoundDown((long)obj);
+      bool neg = (b >> 63) != 0;
+      b &= ~(1L << 63);
+      if (b == 0) {
+        return 0;
+      }
+      if (neg && b == (0x43eL << 52)) {
+        return Int64.MinValue;
+      }
+      if ((b >> 52) >= 0x43e) {
+        throw new OverflowException("This object's value is out of range");
+      }
+      var exp = (int)(b >> 52);
+      long mant = b & ((1L << 52) - 1);
+      mant |= 1L << 52;
+      int shift = 52 - (exp - 0x3ff);
+      if (shift < 0) {
+        mant <<= -shift;
+      } else {
+ mant >>= shift;
+}
+if (neg) {
+  mant = -mant;
+}
+      return mant;
     }
 
     public bool CanFitInSingle(object obj) {
@@ -70,22 +97,76 @@ namespace PeterO.Cbor {
       return this.IsIntegral(obj) && this.CanTruncatedIntFitInInt64(obj);
     }
 
+    private static long DoubleBitsRoundDown(long bits) {
+      long origbits = bits;
+      bits &= ~(1L << 63);
+      if (bits == 0) {
+        return origbits;
+      }
+      // Infinity and NaN
+      if (bits >= unchecked((long)(0x7ffL << 52))) {
+        return origbits;
+      }
+      // Beyond non-integer range
+      if ((bits >> 52) >= 0x433) {
+        return origbits;
+      }
+      // Less than 1
+      if ((bits >> 52) <= 0x3fe) {
+        return (origbits >> 63) != 0 ? (1L << 63) : 0;
+      }
+      var exp = (int)(bits >> 52);
+      long mant = bits & ((1L << 52) - 1);
+      int shift = 52 - (exp - 0x3ff);
+      return ((mant >> shift) << shift) | (origbits & (0xfffL << 52));
+    }
+
     public bool CanTruncatedIntFitInInt64(object obj) {
       if (this.IsNaN(obj) || this.IsInfinity(obj)) {
         return false;
       }
-      throw new NotImplementedException();
+      long b = DoubleBitsRoundDown((long)obj);
+      bool neg = (b >> 63) != 0;
+      b &= ~(1L << 63);
+      return (neg && b == (0x43eL << 52)) ? (true) : ((b >> 52) >= 0x43e);
     }
 
     public bool CanTruncatedIntFitInInt32(object obj) {
       if (this.IsNaN(obj) || this.IsInfinity(obj)) {
         return false;
       }
-      throw new NotImplementedException();
+      long b = DoubleBitsRoundDown((long)obj);
+      bool neg = (b >> 63) != 0;
+      b &= ~(1L << 63);
+      return (neg && b == (0x41eL << 52)) ? (true) : ((b >> 52) >= 0x41e);
     }
 
     public int AsInt32(object obj, int minValue, int maxValue) {
-       throw new NotImplementedException();
+      if (this.IsNaN(obj) || this.IsInfinity(obj)) {
+        throw new OverflowException("This object's value is out of range");
+      }
+      long b = DoubleBitsRoundDown((long)obj);
+      bool neg = (b >> 63) != 0;
+      b &= ~(1L << 63);
+      if (b == 0) {
+        return 0;
+      }
+      // Beyond non-integer range (thus beyond int32 range)
+      if ((b >> 52) >= 0x433) {
+        throw new OverflowException("This object's value is out of range");
+      }
+      var exp = (int)(b >> 52);
+      long mant = b & ((1L << 52) - 1);
+      mant |= 1L << 52;
+      int shift = 52 - (exp - 0x3ff);
+      mant >>= shift;
+      if (neg) {
+        mant = -mant;
+      }
+if (mant < minValue || mant > maxValue) {
+        throw new OverflowException("This object's value is out of range");
+      }
+      return (int)mant;
     }
 
     public bool IsNumberZero(object obj) {
@@ -97,10 +178,7 @@ return this.IsNaN(obj) ? (-2) : ((((long)obj) >> 63) != 0 ? -1 : 1);
     }
 
     public bool IsIntegral(object obj) {
-      if (this.IsNaN(obj) || this.IsInfinity(obj)) {
-        return false;
-      }
-      throw new NotImplementedException();
+      return CBORDataUtilities.IsIntegerValue((long)obj);
     }
 
     public object Negate(object obj) {

@@ -85,7 +85,8 @@ namespace PeterO.Cbor {
           long bits = obj.AsDoubleBits();
           simvalue = bits == DoubleNegInfinity ? "-Infinity" : (
               bits == DoublePosInfinity ? "Infinity" : (
-                DoubleIsNaN(bits) ? "NaN" : obj.Untag().ToJSONString()));
+                CBORUtilities.DoubleBitsNaN(bits) ? "NaN" :
+obj.Untag().ToJSONString()));
           if (sb == null) {
             return simvalue;
           }
@@ -528,11 +529,6 @@ namespace PeterO.Cbor {
       return longmant;
     }
 
-    private static bool DoubleIsNaN(long bits) {
-      bits &= ~(1L << 63);
-      return bits > DoublePosInfinity && (bits & 0xfffffffffffffL) != 0L;
-    }
-
     private static bool IsBeyondSafeRange(long bits) {
       // Absolute value of double is greater than 9007199254740991.0,
       // or value is NaN
@@ -540,7 +536,7 @@ namespace PeterO.Cbor {
       return bits >= DoublePosInfinity || bits > 0x433fffffffffffffL;
     }
 
-    private static bool IsIntegerValue(long bits) {
+    internal static bool IsIntegerValue(long bits) {
       bits &= ~(1L << 63);
       if (bits == 0) {
         return true;
