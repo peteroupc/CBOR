@@ -47,7 +47,7 @@ namespace PeterO.Cbor {
     }
 
     public EInteger AsEInteger(object obj) {
-      return CBORUtilities.BigIntegerFromDoubleBits((long)obj);
+      return CBORUtilities.EIntegerFromDoubleBits((long)obj);
     }
 
     public long AsInt64(object obj) {
@@ -128,7 +128,7 @@ if (neg) {
       long b = DoubleBitsRoundDown((long)obj);
       bool neg = (b >> 63) != 0;
       b &= ~(1L << 63);
-      return (neg && b == (0x43eL << 52)) ? (true) : ((b >> 52) >= 0x43e);
+      return (neg && b == (0x43eL << 52)) || ((b >> 52) < 0x43e);
     }
 
     public bool CanTruncatedIntFitInInt32(object obj) {
@@ -138,7 +138,7 @@ if (neg) {
       long b = DoubleBitsRoundDown((long)obj);
       bool neg = (b >> 63) != 0;
       b &= ~(1L << 63);
-      return (neg && b == (0x41eL << 52)) ? (true) : ((b >> 52) >= 0x41e);
+      return (neg && b == (0x41eL << 52)) || ((b >> 52) < 0x41e);
     }
 
     public int AsInt32(object obj, int minValue, int maxValue) {
@@ -163,7 +163,7 @@ if (neg) {
       if (neg) {
         mant = -mant;
       }
-if (mant < minValue || mant > maxValue) {
+      if (mant < minValue || mant > maxValue) {
         throw new OverflowException("This object's value is out of range");
       }
       return (int)mant;

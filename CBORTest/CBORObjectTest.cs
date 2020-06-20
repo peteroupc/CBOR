@@ -1226,13 +1226,13 @@ JSONOptions("allowduplicatekeys=false");
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
-        CBORObject cbornumber =
-          ToObjectTest.TestToFromObjectRoundTrip(
-            EDecimal.FromString(numberinfo["number"].AsString()));
+        string numberString = numberinfo["number"].AsString();
+        CBORObject cbornumber = ToObjectTest.TestToFromObjectRoundTrip(
+            EDecimal.FromString(numberString));
         if (numberinfo["int32"].AsBoolean()) {
-          Assert.IsTrue(cbornumber.CanTruncatedIntFitInInt32());
+          Assert.IsTrue(cbornumber.CanTruncatedIntFitInInt32(), numberString);
         } else {
-          Assert.IsFalse(cbornumber.CanTruncatedIntFitInInt32());
+          Assert.IsFalse(cbornumber.CanTruncatedIntFitInInt32(), numberString);
         }
       }
 

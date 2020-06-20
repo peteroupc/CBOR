@@ -1037,13 +1037,13 @@ namespace PeterO.Cbor {
     }
 
     [Obsolete]
-    public static EInteger BigIntegerFromDouble(double dbl) {
-      return BigIntegerFromDoubleBits(BitConverter.ToInt64(
+    public static EInteger EIntegerFromDouble(double dbl) {
+      return EIntegerFromDoubleBits(BitConverter.ToInt64(
           BitConverter.GetBytes((double)dbl),
           0));
     }
 
-    public static EInteger BigIntegerFromDoubleBits(long lvalue) {
+    public static EInteger EIntegerFromDoubleBits(long lvalue) {
       int value0 = unchecked((int)(lvalue & 0xffffffffL));
       int value1 = unchecked((int)((lvalue >> 32) & 0xffffffffL));
       var floatExponent = (int)((value1 >> 20) & 0x7ff);

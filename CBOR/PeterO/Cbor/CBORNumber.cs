@@ -1436,13 +1436,10 @@ this.ToEIntegerIfExact().ToInt64Checked();
               var a = (long)objA;
               var b = (long)objB;
               // Treat NaN as greater than all other numbers
-              if (CBORUtilities.DoubleBitsNaN(a)) {
-                cmp = CBORUtilities.DoubleBitsNaN(b) ? 0 : 1;
-              } else {
- cmp = (CBORUtilities.DoubleBitsNaN(a)) ? (-1) : (((a < 0) != (b < 0)) ? ((a<
-b) ? -1 : 1) : (((a == b) ? 0 : (((a < b) ^ (a < 0)) ? -1 : 1))));
-}
-              break;
+              cmp = CBORUtilities.DoubleBitsNaN(a) ?
+(CBORUtilities.DoubleBitsNaN(b) ? 0 : 1) : (CBORUtilities.DoubleBitsNaN(a) ?
+(-1) : (((a < 0) != (b < 0)) ? ((a< b) ? -1 : 1) : (((a == b) ? 0 : (((a <
+b) ^ (a < 0)) ? -1 : 1))))); break;
             }
           case NumberKind.EDecimal: {
               cmp = ((EDecimal)objA).CompareTo((EDecimal)objB);
