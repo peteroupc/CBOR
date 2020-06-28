@@ -1479,7 +1479,7 @@ namespace PeterO.Cbor {
     /// a not-a-number value, or does not represent a number (currently
     /// InvalidOperationException, but may change in the next major
     /// version), or if the value, once converted to an integer by
-    /// discarding its fractional part, is less than -32768 or greater tha
+    /// discarding its fractional part, is less than -32768 or greater than
     /// 32767 (currently OverflowException, but may change in the next
     /// major version).</item>
     ///  <item>If the type is <c>long</c>

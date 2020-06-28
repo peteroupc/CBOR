@@ -950,26 +950,20 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORNumber.ToInt16Checked">
 
-            <summary>Converts this number's value to a 16-bit signed integer if
+        <summary>Converts this number's value to a 16-bit signed integer if
             it can fit in a 16-bit signed integer after converting it to an
-            integer by discarding its fractional part.</summary>
-            <returns>This number's value, truncated to a 16-bit signed
-            integer.</returns>
-            <exception cref='OverflowException'>This value is infinity or
+            integer by discarding its fractional part.</summary><returns>This number's value, truncated to a 16-bit signed
+            integer.</returns><exception cref='OverflowException'>This value is infinity or
             not-a-number, or the number, once converted to an integer by
             discarding its fractional part, is less than -32768 or greater than 32767.</exception>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORNumber.ToInt16IfExact">
 
-            <summary>Converts this number's value to a 16-bit signed integer if
+        <summary>Converts this number's value to a 16-bit signed integer if
             it can fit in a 16-bit signed integer without rounding to a
-            different numerical value.</summary>
-            <returns>This number's value as a 16-bit signed integer.</returns>
-            <exception cref='ArithmeticException'>This value is infinity or
+            different numerical value.</summary><returns>This number's value as a 16-bit signed integer.</returns><exception cref='ArithmeticException'>This value is infinity or
             not-a-number, is not an exact integer, or is less than -32768 or
             greater than 32767.</exception>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORNumber.ToInt16Unchecked">
 
@@ -3904,7 +3898,7 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.ToObject(System.Type,PeterO.Cbor.CBORTypeMapper,PeterO.Cbor.PODOptions)">
 
-            <summary><para>Converts this CBOR object to an object of an
+        <summary><para>Converts this CBOR object to an object of an
             arbitrary type. The following cases are checked in the logical
             order given (rather than the strict order in which they are
             implemented by this library):</para>
@@ -4095,9 +4089,7 @@
             not supported even if they contain eligible setters. For the Java
             version, the object creation may fail in the case of a nested
             nonstatic class.</item>
-             </list>
-             </summary>
-            <param name='t'>The type, class, or interface that this method's
+             </list></summary><param name='t'>The type, class, or interface that this method's
             return value will belong to. To express a generic type in Java, see
             the example. <b>Note:</b> For security reasons, an application
             should not base this parameter on user input or other externally
@@ -4106,20 +4098,14 @@
             <c>String</c> , or a plain-old-data type (POCO or POJO type) within
             the control of the application. If the plain-old-data type
             references other data types, those types should likewise meet
-            either criterion above.</param>
-            <param name='mapper'>This parameter controls which data types are
+            either criterion above.</param><param name='mapper'>This parameter controls which data types are
             eligible for Plain-Old-Data deserialization and includes custom
             converters from CBOR objects to certain data types. Can be
-            null.</param>
-            <param name='options'>Specifies options for controlling
-            deserialization of CBOR objects.</param>
-            <returns>The converted object.</returns>
-            <exception cref='PeterO.Cbor.CBORException'>The given type
+            null.</param><param name='options'>Specifies options for controlling
+            deserialization of CBOR objects.</param><returns>The converted object.</returns><exception cref='PeterO.Cbor.CBORException'>The given type
             <paramref name='t'/> , or this object's CBOR type, is not
             supported, or the given object's nesting is too deep, or another
-            error occurred when serializing the object.</exception>
-            <exception cref='ArgumentNullException'>The parameter <paramref name='t'/> or <paramref name='options'/> is null.</exception>
-            <example><para>Java offers no easy way to express a generic type, at least
+            error occurred when serializing the object.</exception><exception cref='ArgumentNullException'>The parameter <paramref name='t'/> or <paramref name='options'/> is null.</exception><example><para>Java offers no easy way to express a generic type, at least
             none as easy as C#'s <c>typeof</c> operator. The following example,
             written in Java, is a way to specify that the return value will be
             an ArrayList of String objects.</para>
@@ -4134,7 +4120,6 @@
             <code>var array = (List&lt;String&gt;)cborArray.ToObject(
             typeof(List&lt;String&gt;));</code> .
             </example>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.ToObject(System.Type,PeterO.Cbor.PODOptions)">
 

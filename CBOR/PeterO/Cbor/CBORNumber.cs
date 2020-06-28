@@ -673,7 +673,7 @@ this.GetNumberInterface().CanTruncatedIntFitInInt32(this.GetValue());
     /// integer.</returns>
     /// <exception cref='OverflowException'>This value is infinity or
     /// not-a-number, or the number, once converted to an integer by
-    /// discarding its fractional part, is less than -32768 or greater tha
+    /// discarding its fractional part, is less than -32768 or greater than
     /// 32767.</exception>
     public short ToInt16Checked() {
       if (!this.IsFinite()) {
@@ -697,7 +697,7 @@ this.GetNumberInterface().CanTruncatedIntFitInInt32(this.GetValue());
     /// <returns>This number's value as a 16-bit signed integer.</returns>
     /// <exception cref='ArithmeticException'>This value is infinity or
     /// not-a-number, is not an exact integer, or is less than -32768 or
-    /// greater tha 32767.</exception>
+    /// greater than 32767.</exception>
     public short ToInt16IfExact() {
       if (!this.IsFinite()) {
         throw new OverflowException("Value is infinity or NaN");
@@ -1437,10 +1437,11 @@ this.ToEIntegerIfExact().ToInt64Checked();
               var b = (long)objB;
               // Treat NaN as greater than all other numbers
               cmp = CBORUtilities.DoubleBitsNaN(a) ?
-(CBORUtilities.DoubleBitsNaN(b) ? 0 : 1) : (CBORUtilities.DoubleBitsNaN(a) ?
-(-1) : (((a < 0) != (b < 0)) ? ((a< b) ? -1 : 1) : (((a == b) ? 0 : (((a <
-b) ^ (a < 0)) ? -1 : 1))))); break;
-            }
+                  (CBORUtilities.DoubleBitsNaN(b) ? 0 : 1) :
+                  (CBORUtilities.DoubleBitsNaN(a) ?
+                  -1 : (((a < 0) != (b < 0)) ? ((a < b) ? -1 : 1) :
+                 (((a == b) ? 0 : (((a < b) ^ (a < 0)) ? -1 : 1)))));
+                 break; }
           case NumberKind.EDecimal: {
               cmp = ((EDecimal)objA).CompareTo((EDecimal)objB);
               break;
