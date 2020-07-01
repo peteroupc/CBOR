@@ -9,7 +9,7 @@ using System;
 
 namespace PeterO.Cbor {
   internal class CBORUriConverter : ICBORToFromConverter<Uri> {
-    private CBORObject ValidateObject(CBORObject obj) {
+    private static CBORObject ValidateObject(CBORObject obj) {
       if (obj.Type != CBORType.TextString) {
         throw new CBORException("URI/IRI must be a text string");
       }
@@ -41,7 +41,7 @@ namespace PeterO.Cbor {
       if (obj.HasMostOuterTag(32) ||
              obj.HasMostOuterTag(266) ||
              obj.HasMostOuterTag(267)) {
-        this.ValidateObject(obj);
+        ValidateObject(obj);
         try {
           return new Uri(obj.AsString());
         } catch (Exception ex) {

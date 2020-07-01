@@ -89,7 +89,7 @@ namespace PeterO.DocGen {
       }
     }
 
-    private INode ReadNode(XmlReader reader) {
+    private static INode ReadNode(XmlReader reader) {
       var node = new Node(reader.LocalName, true, String.Empty);
       var emptyElement = reader.IsEmptyElement;
       if (reader.HasAttributes) {
@@ -222,9 +222,9 @@ namespace PeterO.DocGen {
               reader.Read();
               while (reader.IsStartElement()) {
                 if (reader.LocalName.Equals("member",
-  StringComparison.Ordinal)) {
+                     StringComparison.Ordinal)) {
                   string memberName = reader.GetAttribute("name");
-                  var node = this.ReadNode(reader);
+                  var node = ReadNode(reader);
                   this.memberNodes[memberName] = node;
                 } else {
                   reader.Skip();

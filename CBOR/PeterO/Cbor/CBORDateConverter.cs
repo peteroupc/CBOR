@@ -17,18 +17,13 @@ namespace PeterO.Cbor {
       return CBORUtilities.ToAtomDateTimeString(year[0], lesserFields);
     }
 
-    public CBORObject ValidateObject(CBORObject obj) {
-      if (obj.Type != CBORType.TextString) {
-        throw new CBORException("Not a text string");
-      }
-      return obj;
-    }
-
     public DateTime FromCBORObject(CBORObject obj) {
       if (obj.HasMostOuterTag(0)) {
         try {
           return StringToDateTime(obj.AsString());
         } catch (OverflowException ex) {
+          throw new CBORException(ex.Message, ex);
+        } catch (InvalidOperationException ex) {
           throw new CBORException(ex.Message, ex);
         } catch (ArgumentException ex) {
           throw new CBORException(ex.Message, ex);
