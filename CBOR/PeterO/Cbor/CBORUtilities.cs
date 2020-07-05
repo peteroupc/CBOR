@@ -516,9 +516,7 @@ namespace PeterO.Cbor {
     }
 
     public static string DoubleBitsToString(long dblbits) {
-      // TODO: Use FromDoubleBits when available
-      return EFloat.FromDouble(Int64BitsToDouble(dblbits))
-           .ToShortestString(EContext.Binary64);
+      return EFloat.FromDoubleBits(dblbits).ToShortestString(EContext.Binary64);
     }
 
     [Obsolete]
@@ -690,7 +688,7 @@ namespace PeterO.Cbor {
        // of the number of seconds since the start of 1904.
        // EInteger appleTime = GetNumberOfDaysProlepticGregorian(
          // year,
-         month //,
+         month // ,
          day)
        // .Subtract(GetNumberOfDaysProlepticGregorian(
        // EInteger.FromInt32(1904),

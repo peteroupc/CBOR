@@ -426,14 +426,16 @@ namespace Test {
         (byte)0xc2, 0x41,
         (byte)0x88,
       });
-      Assert.AreEqual(EInteger.FromRadixString("88", 16),
+      Assert.AreEqual(
+        EInteger.FromRadixString("88", 16),
         o.ToObject(typeof(EInteger)));
       o = CBORTestCommon.FromBytesTestAB(new byte[] {
         (byte)0xc2, 0x42,
         (byte)0x88,
         0x77,
       });
-      Assert.AreEqual(EInteger.FromRadixString("8877", 16),
+      Assert.AreEqual(
+        EInteger.FromRadixString("8877", 16),
         o.ToObject(typeof(EInteger)));
       o = CBORTestCommon.FromBytesTestAB(new byte[] {
         (byte)0xc2, 0x44,
@@ -516,6 +518,7 @@ namespace Test {
       Assert.AreEqual(CBORType.Map, cbor.Type);
       Assert.AreEqual(0, cbor.Count);
     }
+
     [Test]
     public void TestByteStringStreamNoIndefiniteWithinDefinite() {
       try {
@@ -687,6 +690,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
+
     [Test]
     public void TestByteStringStreamNoTagsBeforeDefinite() {
       try {
@@ -1052,6 +1056,7 @@ TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
       }
       return true;
     }
+
     public static bool TestEquivJSONNumberOne(byte[] bytes) {
       // Assume the JSON begins and ends with a digit
       if (bytes == null) {
@@ -1083,6 +1088,7 @@ TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
       Assert.AreEqual(cbor, cbored, "[" + str + "] cbored");
       return true;
     }
+
     public static bool TestEquivJSONNumberDecimal128One(byte[] bytes) {
       // Assume the JSON begins and ends with a digit
       if (bytes == null) {
@@ -1112,6 +1118,7 @@ TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
       Assert.AreEqual(cbor, cbored, "[" + str + "] cbored");
       return true;
     }
+
     public static void TestCompareToOne(byte[] bytes) {
       CBORObject cbor = CBORObject.DecodeFromBytes(bytes, new
           CBOREncodeOptions("allowduplicatekeys=1"));
@@ -1425,6 +1432,7 @@ TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
+
     [Test]
     public void TestDecimalFracExactlyTwoElements() {
       CBORObject obj = CBORTestCommon.FromBytesTestAB(new byte[] {
@@ -1442,6 +1450,7 @@ TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
+
     [Test]
     public void TestDecimalFracExponentMustNotBeBignum() {
       CBORObject obj = CBORObject.DecodeFromBytes(new byte[] {
@@ -1461,6 +1470,7 @@ TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
+
     [Test]
     public void TestBigFloatExponentMustNotBeBignum() {
       CBORObject cbor = CBORObject.DecodeFromBytes(new byte[] {
@@ -1572,6 +1582,7 @@ TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
           TestCommon.IntToString(i));
       }
     }
+
     [Test]
     public void TestDoubleCompare() {
       CBORObject oldobj = null;
@@ -1658,6 +1669,7 @@ TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
           TestCommon.IntToString(i));
       }
     }
+
     [Test]
     public void TestHalfPrecision() {
       CBORObject o = CBORObject.DecodeFromBytes(
@@ -2008,9 +2020,11 @@ TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
         }
       }
     }
+
     public static CBORObject ReferenceTestObject() {
       return ReferenceTestObject(50);
     }
+
     public static CBORObject ReferenceTestObject(int nests) {
       CBORObject root = CBORObject.NewArray();
       CBORObject arr = CBORObject.NewArray().Add("xxx").Add("yyy");
@@ -2040,6 +2054,7 @@ TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
         TestCtap2CanonicalReferenceTestOne(ReferenceTestObject(i));
       }
     }
+
     public static void TestCtap2CanonicalReferenceTestOne(CBORObject root) {
       if (root == null) {
         throw new ArgumentNullException(nameof(root));
@@ -2696,6 +2711,7 @@ TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
         Assert.AreEqual(exp, act);
       }
     }
+
     private static void AssertEquals(object oexp, object oact) {
       // Much less overhead than Assert alone if the
       // two arguments are equal
@@ -2703,6 +2719,7 @@ TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
         Assert.AreEqual(oexp, oact);
       }
     }
+
     private static void AssertEquals(object oexp, object oact, string str) {
       // Much less overhead than Assert alone if the
       // two arguments are equal
@@ -4097,6 +4114,7 @@ TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
       });
       CBORTestCommon.AssertRoundTrip(cbor);
     }
+
     [Test]
     public void TestTagThenBreak() {
       try {
@@ -4125,6 +4143,7 @@ TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
       TestTextStringStreamOne(TestCommon.Repeat('\u3000', 200000));
       TestTextStringStreamOne(TestCommon.Repeat("\ud800\udc00", 200000));
     }
+
     [Test]
     public void TestTextStringStreamNoIndefiniteWithinDefinite() {
       try {

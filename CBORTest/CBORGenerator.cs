@@ -7,6 +7,7 @@ namespace Test {
     private sealed class ByteWriter {
       private byte[] bytes = new byte[64];
       private int pos = 0;
+
       public ByteWriter Write(int b) {
         if (this.pos < this.bytes.Length) {
           this.bytes[this.pos++] = (byte)b;
@@ -18,11 +19,13 @@ namespace Test {
         }
         return this;
       }
+
       public int ByteLength {
         get {
           return this.pos;
         }
       }
+
       public byte[] ToBytes() {
         var newbytes = new byte[this.pos];
         Array.Copy(this.bytes, 0, newbytes, 0, this.pos);
@@ -83,6 +86,7 @@ namespace Test {
       0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4,
       4, 5, 6, 6, 7, 7, 7, 7, 7, 7,
     };
+
     private static int[] valueMajorTypesHighLength = {
       0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 6,
       6, 7, 7, 7, 7, 7, 7,

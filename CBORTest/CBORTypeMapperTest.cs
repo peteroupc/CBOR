@@ -33,6 +33,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
+
     [Test]
     public void TestAddTypePrefix() {
       var tm = new CBORTypeMapper();

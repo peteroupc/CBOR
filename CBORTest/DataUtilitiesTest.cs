@@ -207,6 +207,7 @@ namespace Test {
         Assert.AreEqual(objectTemp, objectTemp2);
 }
     }
+
     [Test]
     public void TestCodePointBefore() {
       try {
@@ -255,6 +256,7 @@ namespace Test {
 }
       Assert.AreEqual(-1, DataUtilities.CodePointBefore("A\udc00B", 2, 2));
     }
+
     [Test]
     public void TestCodePointCompare() {
       int integerTemp3;
@@ -527,6 +529,7 @@ namespace Test {
         new byte[] { 0xf0, 0x90, 0x80, 0x80 },
         DataUtilities.GetUtf8Bytes("\ud800\udc00", false));
     }
+
     [Test]
     public void TestGetUtf8Length() {
       try {
@@ -643,6 +646,7 @@ namespace Test {
         Assert.AreEqual(4, numberTemp);
       }
     }
+
     [Test]
     public void TestGetUtf8String() {
       TestUtf8RoundTrip("A" + Repeat("\u00e0", 10000));
@@ -863,6 +867,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
+
     [Test]
     public void TestReadUtf8() {
       try {
@@ -1030,6 +1035,7 @@ namespace Test {
         -1,
         null);
     }
+
     [Test]
     public void TestReadUtf8FromBytes() {
       var builder = new StringBuilder();
@@ -1158,6 +1164,7 @@ namespace Test {
         }
       }
     }
+
     [Test]
     public void TestReadUtf8ToString() {
       try {
@@ -1204,6 +1211,7 @@ namespace Test {
         }
       }
     }
+
     [Test]
     public void TestToLowerCaseAscii() {
       if (DataUtilities.ToLowerCaseAscii(null) != null) {
@@ -1222,6 +1230,7 @@ namespace Test {
           stringTemp);
       }
     }
+
     [Test]
     public void TestToUpperCaseAscii() {
       if (DataUtilities.ToUpperCaseAscii(null) != null) {
@@ -1240,6 +1249,7 @@ namespace Test {
           stringTemp);
       }
     }
+
     [Test]
     public void TestWriteUtf8() {
       try {

@@ -337,6 +337,10 @@ namespace PeterO.Cbor {
       }
     }
 
+    public static IList<CBORObject> ListFromArray(CBORObject[] array) {
+       return new List<CBORObject>(array);
+    }
+
     public static bool ExceedsKnownLength(Stream inStream, long size) {
       return (inStream is MemoryStream) && (size > (inStream.Length -
             inStream.Position));

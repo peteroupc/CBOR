@@ -10,9 +10,9 @@ namespace PeterO.Cbor {
   /// floating-point numbers; or arbitrary-precision integers, decimal
   /// numbers, binary numbers, or rational numbers.</summary>
   [System.Diagnostics.CodeAnalysis.SuppressMessage(
-    "Microsoft.Design",
-    "CA1036",
-    Justification = "Arbitrary size.")]
+      "Microsoft.Design",
+      "CA1036",
+      Justification = "Arbitrary size.")]
   public sealed partial class CBORNumber : IComparable<CBORNumber> {
     /// <summary>Specifies the underlying form of this CBOR number
     /// object.</summary>
@@ -98,7 +98,7 @@ namespace PeterO.Cbor {
     public int Sign {
       get {
         return this.IsNaN() ? (this.IsNegative() ? -1 : 1) :
-this.GetNumberInterface().Sign(this.value);
+          this.GetNumberInterface().Sign(this.value);
       }
     }
 
@@ -476,8 +476,8 @@ this.GetNumberInterface().Sign(this.value);
     /// <value>The underlying form of this CBOR number object.</value>
     public NumberKind Kind {
       get {
-  return this.kind;
- }
+        return this.kind;
+      }
     }
 
     /// <summary>Returns whether this object's value, converted to an
@@ -488,7 +488,7 @@ this.GetNumberInterface().Sign(this.value);
     /// greater, and less than 2^31; otherwise, <c>false</c>.</returns>
     public bool CanTruncatedIntFitInInt32() {
       return
-this.GetNumberInterface().CanTruncatedIntFitInInt32(this.GetValue());
+        this.GetNumberInterface().CanTruncatedIntFitInInt32(this.GetValue());
     }
 
     /// <summary>Returns whether this object's value, converted to an
@@ -504,8 +504,8 @@ this.GetNumberInterface().CanTruncatedIntFitInInt32(this.GetValue());
         default:
           return
 
-              this.GetNumberInterface()
-.CanTruncatedIntFitInInt64(this.GetValue());
+            this.GetNumberInterface()
+            .CanTruncatedIntFitInInt64(this.GetValue());
       }
     }
 
@@ -703,7 +703,7 @@ this.GetNumberInterface().CanTruncatedIntFitInInt32(this.GetValue());
         throw new OverflowException("Value is infinity or NaN");
       }
       return this.IsZero() ? ((short)0) :
-this.ToEIntegerIfExact().ToInt16Checked();
+        this.ToEIntegerIfExact().ToInt16Checked();
     }
 
     /// <summary>Converts a 16-bit signed integer to an arbitrary-precision
@@ -754,7 +754,7 @@ this.ToEIntegerIfExact().ToInt16Checked();
         throw new OverflowException("Value is infinity or NaN");
       }
       return this.IsZero() ? ((int)0) :
-this.ToEIntegerIfExact().ToInt32Checked();
+        this.ToEIntegerIfExact().ToInt32Checked();
     }
 
     /// <summary>Converts this number's value to a 64-bit signed integer if
@@ -795,7 +795,7 @@ this.ToEIntegerIfExact().ToInt32Checked();
         throw new OverflowException("Value is infinity or NaN");
       }
       return this.IsZero() ? 0L :
-this.ToEIntegerIfExact().ToInt64Checked();
+        this.ToEIntegerIfExact().ToInt64Checked();
     }
     // End integer conversions
     private static CBORNumber BignumToNumber(CBORObject o) {
@@ -852,13 +852,13 @@ this.ToEIntegerIfExact().ToInt64Checked();
     public override string ToString() {
       switch (this.kind) {
         case NumberKind.Integer: {
-            var longItem = (long)this.value;
-            return CBORUtilities.LongToString(longItem);
-          }
+          var longItem = (long)this.value;
+          return CBORUtilities.LongToString(longItem);
+        }
         case NumberKind.Double: {
-            var longItem = (long)this.value;
-            return CBORUtilities.DoubleBitsToString(longItem);
-          }
+          var longItem = (long)this.value;
+          return CBORUtilities.DoubleBitsToString(longItem);
+        }
         default:
           return (this.value == null) ? String.Empty :
             this.value.ToString();
@@ -868,59 +868,58 @@ this.ToEIntegerIfExact().ToInt64Checked();
     internal string ToJSONString() {
       switch (this.kind) {
         case NumberKind.Double: {
-            var f = (long)this.value;
+          var f = (long)this.value;
+          if (!CBORUtilities.DoubleBitsFinite(f)) {
+            return "null";
+          }
+          string dblString = CBORUtilities.DoubleBitsToString(f);
+          return CBORUtilities.TrimDotZero(dblString);
+        }
+        case NumberKind.Integer: {
+          var longItem = (long)this.value;
+          return CBORUtilities.LongToString(longItem);
+        }
+        case NumberKind.EInteger: {
+          object eiobj = this.value;
+          return ((EInteger)eiobj).ToString();
+        }
+        case NumberKind.EDecimal: {
+          var dec = (EDecimal)this.value;
+          if (dec.IsInfinity() || dec.IsNaN()) {
+            return "null";
+          } else {
+            return dec.ToString();
+          }
+        }
+        case NumberKind.EFloat: {
+          var flo = (EFloat)this.value;
+          if (flo.IsInfinity() || flo.IsNaN()) {
+            return "null";
+          }
+          if (flo.IsFinite &&
+            flo.Exponent.Abs().CompareTo((EInteger)2500) > 0) {
+            // Too inefficient to convert to a decimal number
+            // from a bigfloat with a very high exponent,
+            // so convert to double instead
+            long f = flo.ToDoubleBits();
             if (!CBORUtilities.DoubleBitsFinite(f)) {
               return "null";
             }
             string dblString = CBORUtilities.DoubleBitsToString(f);
             return CBORUtilities.TrimDotZero(dblString);
           }
-        case NumberKind.Integer: {
-            var longItem = (long)this.value;
-            return CBORUtilities.LongToString(longItem);
-          }
-        case NumberKind.EInteger: {
-            object eiobj = this.value;
-            return ((EInteger)eiobj).ToString();
-          }
-        case NumberKind.EDecimal: {
-            var dec = (EDecimal)this.value;
-            if (dec.IsInfinity() || dec.IsNaN()) {
-              return "null";
-            } else {
-              return dec.ToString();
-            }
-          }
-        case NumberKind.EFloat: {
-            var flo = (EFloat)this.value;
-            if (flo.IsInfinity() || flo.IsNaN()) {
-              return "null";
-            }
-            if (flo.IsFinite &&
-              flo.Exponent.Abs().CompareTo((EInteger)2500) > 0) {
-              // Too inefficient to convert to a decimal number
-              // from a bigfloat with a very high exponent,
-              // so convert to double instead
-              // TODO: Use ToDoubleBits once available
-              long f = CBORUtilities.DoubleToInt64Bits(flo.ToDouble());
-              if (!CBORUtilities.DoubleBitsFinite(f)) {
-                return "null";
-              }
-              string dblString = CBORUtilities.DoubleBitsToString(f);
-              return CBORUtilities.TrimDotZero(dblString);
-            }
-            return flo.ToString();
-          }
+          return flo.ToString();
+        }
         case NumberKind.ERational: {
-            var dec = (ERational)this.value;
-            EDecimal f = dec.ToEDecimalExactIfPossible(
-                EContext.Decimal128.WithUnlimitedExponents());
-            if (!f.IsFinite) {
-              return "null";
-            } else {
-              return f.ToString();
-            }
+          var dec = (ERational)this.value;
+          EDecimal f = dec.ToEDecimalExactIfPossible(
+              EContext.Decimal128.WithUnlimitedExponents());
+          if (!f.IsFinite) {
+            return "null";
+          } else {
+            return f.ToString();
           }
+        }
         default: throw new InvalidOperationException();
       }
     }
@@ -1031,19 +1030,19 @@ this.ToEIntegerIfExact().ToInt64Checked();
     public CBORNumber Abs() {
       switch (this.kind) {
         case NumberKind.Integer: {
-            var longValue = (long)this.value;
-            if (longValue == Int64.MinValue) {
-              return FromObject(EInteger.FromInt64(longValue).Negate());
-            } else {
-              return longValue >= 0 ? this : new CBORNumber(
-                  this.kind,
-                  Math.Abs(longValue));
-            }
+          var longValue = (long)this.value;
+          if (longValue == Int64.MinValue) {
+            return FromObject(EInteger.FromInt64(longValue).Negate());
+          } else {
+            return longValue >= 0 ? this : new CBORNumber(
+                this.kind,
+                Math.Abs(longValue));
           }
+        }
         case NumberKind.EInteger: {
-            var eivalue = (EInteger)this.value;
-            return eivalue.Sign >= 0 ? this : FromObject(eivalue.Abs());
-          }
+          var eivalue = (EInteger)this.value;
+          return eivalue.Sign >= 0 ? this : FromObject(eivalue.Abs());
+        }
         default:
           return new CBORNumber(this.kind,
               this.GetNumberInterface().Abs(this.GetValue()));
@@ -1057,15 +1056,15 @@ this.ToEIntegerIfExact().ToInt64Checked();
     public CBORNumber Negate() {
       switch (this.kind) {
         case NumberKind.Integer: {
-            var longValue = (long)this.value;
-            if (longValue == 0) {
-              return FromObject(EDecimal.NegativeZero);
-            } else if (longValue == Int64.MinValue) {
-              return FromObject(EInteger.FromInt64(longValue).Negate());
-            } else {
-              return new CBORNumber(this.kind, -longValue);
-            }
+          var longValue = (long)this.value;
+          if (longValue == 0) {
+            return FromObject(EDecimal.NegativeZero);
+          } else if (longValue == Int64.MinValue) {
+            return FromObject(EInteger.FromInt64(longValue).Negate());
+          } else {
+            return new CBORNumber(this.kind, -longValue);
           }
+        }
         case NumberKind.EInteger: {
           var eiValue = (EInteger)this.value;
           if (eiValue.IsZero) {
@@ -1265,7 +1264,7 @@ this.ToEIntegerIfExact().ToInt64Checked();
         var valueB = (long)objB;
         if (valueB == 0) {
           return (valueA == 0) ? CBORNumber.FromObject(EDecimal.NaN) :
-((valueA < 0) ? CBORNumber.FromObject(EDecimal.NegativeInfinity) :
+            ((valueA < 0) ? CBORNumber.FromObject(EDecimal.NegativeInfinity) :
 
               CBORNumber.FromObject(EDecimal.PositiveInfinity));
         }
@@ -1421,42 +1420,43 @@ this.ToEIntegerIfExact().ToInt64Checked();
       if (typeA == typeB) {
         switch (typeA) {
           case NumberKind.Integer: {
-              var a = (long)objA;
-              var b = (long)objB;
-              cmp = (a == b) ? 0 : ((a < b) ? -1 : 1);
-              break;
-            }
+            var a = (long)objA;
+            var b = (long)objB;
+            cmp = (a == b) ? 0 : ((a < b) ? -1 : 1);
+            break;
+          }
           case NumberKind.EInteger: {
-              var bigintA = (EInteger)objA;
-              var bigintB = (EInteger)objB;
-              cmp = bigintA.CompareTo(bigintB);
-              break;
-            }
+            var bigintA = (EInteger)objA;
+            var bigintB = (EInteger)objB;
+            cmp = bigintA.CompareTo(bigintB);
+            break;
+          }
           case NumberKind.Double: {
-              var a = (long)objA;
-              var b = (long)objB;
-              // Treat NaN as greater than all other numbers
-              cmp = CBORUtilities.DoubleBitsNaN(a) ?
-                  (CBORUtilities.DoubleBitsNaN(b) ? 0 : 1) :
-                  (CBORUtilities.DoubleBitsNaN(a) ?
-                  -1 : (((a < 0) != (b < 0)) ? ((a < b) ? -1 : 1) :
-                 (((a == b) ? 0 : (((a < b) ^ (a < 0)) ? -1 : 1)))));
-                 break; } case NumberKind.EDecimal: {
-              cmp = ((EDecimal)objA).CompareTo((EDecimal)objB);
-              break;
-            }
+            var a = (long)objA;
+            var b = (long)objB;
+            // Treat NaN as greater than all other numbers
+            cmp = CBORUtilities.DoubleBitsNaN(a) ?
+              (CBORUtilities.DoubleBitsNaN(b) ? 0 : 1) :
+              (CBORUtilities.DoubleBitsNaN(a) ?
+                -1 : (((a < 0) != (b < 0)) ? ((a < b) ? -1 : 1) :
+                  (((a == b) ? 0 : (((a < b) ^ (a < 0)) ? -1 : 1)))));
+                  break; }
+          case NumberKind.EDecimal: {
+            cmp = ((EDecimal)objA).CompareTo((EDecimal)objB);
+            break;
+          }
           case NumberKind.EFloat: {
-              cmp = ((EFloat)objA).CompareTo(
-                  (EFloat)objB);
-              break;
-            }
+            cmp = ((EFloat)objA).CompareTo(
+                (EFloat)objB);
+            break;
+          }
           case NumberKind.ERational: {
-              cmp = ((ERational)objA).CompareTo(
-                  (ERational)objB);
-              break;
-            }
+            cmp = ((ERational)objA).CompareTo(
+                (ERational)objB);
+            break;
+          }
           default: throw new InvalidOperationException(
-       "Unexpected data type");
+              "Unexpected data type");
         }
       } else {
         int s1 = GetNumberInterface(typeA).Sign(objA);

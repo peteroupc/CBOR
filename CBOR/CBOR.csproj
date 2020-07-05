@@ -7,7 +7,7 @@
     <Owners>Peter Occil</Owners>
     <Description>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049.</Description>
     <Summary>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049. </Summary>
-    <Copyright>Written by Peter O. in 2013-2019.  Any copyright is released to the Public Domain.</Copyright>
+    <Copyright>Written by Peter O.  Any copyright is released to the Public Domain.</Copyright>
     <Authors>Peter Occil</Authors>
     <PackageId>PeterO.Cbor</PackageId>
     <PackageLicenseExpression>CC0-1.0</PackageLicenseExpression>
@@ -40,9 +40,6 @@ Version 4.1:
  <AdditionalFiles Include='stylecop.json'/>
 <AdditionalFiles Include='rules.ruleset'/><PackageReference Include='PeterO.URIUtility' Version='1.0.0'/>
 
-<PackageReference Include='PeterO.Numbers' Version='1.6.0'/>
+<PackageReference Include='PeterO.Numbers' Version='1.7.1'/>
 <PackageReference Include='Microsoft.CodeAnalysis.FxCopAnalyzers' PrivateAssets='All' Version='3.0.0'/></ItemGroup>
-  <ItemGroup>
-    <Compile Remove='PeterO\Cbor\FastInteger2.cs'/>
-  </ItemGroup>
             </Project>

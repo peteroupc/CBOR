@@ -40,13 +40,68 @@
             allowed to contain white space characters, including
             spaces.</remarks>
 </doc>
+<doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.Byte[])">
+<summary>Parses a number from a byte sequence whose format follows
+            the JSON specification. The method uses a JSONOptions with all
+            default properties except for a PreserveNegativeZero property of
+            false.</summary><param name='bytes'>A byte sequence to parse as a JSON
+            number.</param><returns>A CBOR object that represents the parsed number. Returns
+            positive zero if the number is a zero that starts with a minus sign
+            (such as "-0" or "-0.0"). Returns null if the parsing fails,
+            including if the byte sequence is null or empty.</returns>
+</doc>
+<doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.Byte[],PeterO.Cbor.JSONOptions)">
+<summary>Parses a number from a byte sequence whose format follows
+            the JSON specification (RFC 8259) and converts that number to a
+            CBOR object.</summary><returns>A CBOR object that represents the parsed number. Returns
+            null if the parsing fails, including if the byte sequence is null
+            or empty.</returns><remarks>Roughly speaking, a valid JSON number consists of an
+            optional minus sign, one or more basic digits (starting with 1 to 9
+            unless there is only one digit and that digit is 0), an optional
+            decimal point (".", full stop) with one or more basic digits, and
+            an optional letter E or e with an optional plus or minus sign and
+            one or more basic digits (the exponent). A byte sequence
+            representing a valid JSON number is not allowed to contain white
+            space characters, including spaces.</remarks>
+</doc>
+<doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.Byte[],System.Int32,System.Int32)">
+<summary>Parses a number whose format follows the JSON
+            specification (RFC 8259) from a portion of a byte sequence, and
+            converts that number to a CBOR object.</summary><returns>A CBOR object that represents the parsed number. Returns
+            null if the parsing fails, including if the byte sequence is null
+            or empty.</returns><exception cref='ArgumentException'>Either <paramref name='offset'/> or <paramref name='count'/> is less than 0 or
+            greater than <paramref name='str'/> 's length, or <paramref name='str'/> 's length minus <paramref name='offset'/> is less than
+            <paramref name='count'/>.</exception><exception cref='ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception><remarks>Roughly speaking, a valid JSON number consists of an
+            optional minus sign, one or more basic digits (starting with 1 to 9
+            unless there is only one digit and that digit is 0), an optional
+            decimal point (".", full stop) with one or more basic digits, and
+            an optional letter E or e with an optional plus or minus sign and
+            one or more basic digits (the exponent). A byte sequence
+            representing a valid JSON number is not allowed to contain white
+            space characters, including spaces.</remarks>
+</doc>
+<doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.Byte[],System.Int32,System.Int32,PeterO.Cbor.JSONOptions)">
+<summary>Parses a number from a byte sequence whose format follows
+            the JSON specification (RFC 8259) and converts that number to a
+            CBOR object.</summary><returns>A CBOR object that represents the parsed number. Returns
+            null if the parsing fails, including if the byte sequence is null
+            or empty or <paramref name='count'/> is 0 or less.</returns><exception cref='ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception><exception cref='ArgumentException'>Unsupported conversion
+            kind.</exception><remarks>Roughly speaking, a valid JSON number consists of an
+            optional minus sign, one or more basic digits (starting with 1 to 9
+            unless there is only one digit and that digit is 0), an optional
+            decimal point (".", full stop) with one or more basic digits, and
+            an optional letter E or e with an optional plus or minus sign and
+            one or more basic digits (the exponent). A byte sequence
+            representing a valid JSON number is not allowed to contain white
+            space characters, including spaces.</remarks>
+</doc>
 <doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String)">
 
             <summary>Parses a number whose format follows the JSON
             specification. The method uses a JSONOptions with all default
             properties except for a PreserveNegativeZero property of
             false.</summary>
-            <param name='str'>A text string to parse as a JSON string.</param>
+            <param name='str'>A text string to parse as a JSON number.</param>
             <returns>A CBOR object that represents the parsed number. Returns
             positive zero if the number is a zero that starts with a minus sign
             (such as "-0" or "-0.0"). Returns null if the parsing fails,
@@ -71,9 +126,9 @@
             unless there is only one digit and that digit is 0), an optional
             decimal point (".", full stop) with one or more basic digits, and
             an optional letter E or e with an optional plus or minus sign and
-            one or more basic digits (the exponent). A string representing a
-            valid JSON number is not allowed to contain white space characters,
-            including spaces.</remarks>
+            one or more basic digits (the exponent). A text string representing
+            a valid JSON number is not allowed to contain white space
+            characters, including spaces.</remarks>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,System.Boolean,System.Boolean)">
@@ -97,9 +152,9 @@
             unless there is only one digit and that digit is 0), an optional
             decimal point (".", full stop) with one or more basic digits, and
             an optional letter E or e with an optional plus or minus sign and
-            one or more basic digits (the exponent). A string representing a
-            valid JSON number is not allowed to contain white space characters,
-            including spaces.</remarks>
+            one or more basic digits (the exponent). A text string representing
+            a valid JSON number is not allowed to contain white space
+            characters, including spaces.</remarks>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,System.Boolean,System.Boolean,System.Boolean)">
@@ -123,9 +178,9 @@
             unless there is only one digit and that digit is 0), an optional
             decimal point (".", full stop) with one or more basic digits, and
             an optional letter E or e with an optional plus or minus sign and
-            one or more basic digits (the exponent). A string representing a
-            valid JSON number is not allowed to contain white space characters,
-            including spaces.</remarks>
+            one or more basic digits (the exponent). A text string representing
+            a valid JSON number is not allowed to contain white space
+            characters, including spaces.</remarks>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,System.Int32,System.Int32)">
@@ -151,9 +206,9 @@
             unless there is only one digit and that digit is 0), an optional
             decimal point (".", full stop) with one or more basic digits, and
             an optional letter E or e with an optional plus or minus sign and
-            one or more basic digits (the exponent). A string representing a
-            valid JSON number is not allowed to contain white space characters,
-            including spaces.</remarks>
+            one or more basic digits (the exponent). A text string representing
+            a valid JSON number is not allowed to contain white space
+            characters, including spaces.</remarks>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,System.Int32,System.Int32,PeterO.Cbor.JSONOptions)">
@@ -181,9 +236,9 @@
             unless there is only one digit and that digit is 0), an optional
             decimal point (".", full stop) with one or more basic digits, and
             an optional letter E or e with an optional plus or minus sign and
-            one or more basic digits (the exponent). A string representing a
-            valid JSON number is not allowed to contain white space characters,
-            including spaces.</remarks>
+            one or more basic digits (the exponent). A text string representing
+            a valid JSON number is not allowed to contain white space
+            characters, including spaces.</remarks>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,System.Int32,System.Int32,System.Boolean,PeterO.Cbor.JSONOptions)">
@@ -950,20 +1005,27 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORNumber.ToInt16Checked">
 
-        <summary>Converts this number's value to a 16-bit signed integer if
+            <summary>Converts this number's value to a 16-bit signed integer if
             it can fit in a 16-bit signed integer after converting it to an
-            integer by discarding its fractional part.</summary><returns>This number's value, truncated to a 16-bit signed
-            integer.</returns><exception cref='OverflowException'>This value is infinity or
+            integer by discarding its fractional part.</summary>
+            <returns>This number's value, truncated to a 16-bit signed
+            integer.</returns>
+            <exception cref='OverflowException'>This value is infinity or
             not-a-number, or the number, once converted to an integer by
-            discarding its fractional part, is less than -32768 or greater than 32767.</exception>
+            discarding its fractional part, is less than -32768 or greater than
+            32767.</exception>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORNumber.ToInt16IfExact">
 
-        <summary>Converts this number's value to a 16-bit signed integer if
+            <summary>Converts this number's value to a 16-bit signed integer if
             it can fit in a 16-bit signed integer without rounding to a
-            different numerical value.</summary><returns>This number's value as a 16-bit signed integer.</returns><exception cref='ArithmeticException'>This value is infinity or
+            different numerical value.</summary>
+            <returns>This number's value as a 16-bit signed integer.</returns>
+            <exception cref='ArithmeticException'>This value is infinity or
             not-a-number, is not an exact integer, or is less than -32768 or
             greater than 32767.</exception>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORNumber.ToInt16Unchecked">
 
@@ -3898,7 +3960,7 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.ToObject(System.Type,PeterO.Cbor.CBORTypeMapper,PeterO.Cbor.PODOptions)">
 
-        <summary><para>Converts this CBOR object to an object of an
+            <summary><para>Converts this CBOR object to an object of an
             arbitrary type. The following cases are checked in the logical
             order given (rather than the strict order in which they are
             implemented by this library):</para>
@@ -3927,7 +3989,8 @@
             a not-a-number value, or does not represent a number (currently
             InvalidOperationException, but may change in the next major
             version), or if the value, once converted to an integer by
-            discarding its fractional part, is less than -32768 or greater than 32767 (currently OverflowException, but may change in the next
+            discarding its fractional part, is less than -32768 or greater than
+            32767 (currently OverflowException, but may change in the next
             major version).</item>
              <item>If the type is <c>long</c> , returns
             this number as a 64-bit signed integer after converting its value
@@ -4089,7 +4152,9 @@
             not supported even if they contain eligible setters. For the Java
             version, the object creation may fail in the case of a nested
             nonstatic class.</item>
-             </list></summary><param name='t'>The type, class, or interface that this method's
+             </list>
+             </summary>
+            <param name='t'>The type, class, or interface that this method's
             return value will belong to. To express a generic type in Java, see
             the example. <b>Note:</b> For security reasons, an application
             should not base this parameter on user input or other externally
@@ -4098,14 +4163,20 @@
             <c>String</c> , or a plain-old-data type (POCO or POJO type) within
             the control of the application. If the plain-old-data type
             references other data types, those types should likewise meet
-            either criterion above.</param><param name='mapper'>This parameter controls which data types are
+            either criterion above.</param>
+            <param name='mapper'>This parameter controls which data types are
             eligible for Plain-Old-Data deserialization and includes custom
             converters from CBOR objects to certain data types. Can be
-            null.</param><param name='options'>Specifies options for controlling
-            deserialization of CBOR objects.</param><returns>The converted object.</returns><exception cref='PeterO.Cbor.CBORException'>The given type
+            null.</param>
+            <param name='options'>Specifies options for controlling
+            deserialization of CBOR objects.</param>
+            <returns>The converted object.</returns>
+            <exception cref='PeterO.Cbor.CBORException'>The given type
             <paramref name='t'/> , or this object's CBOR type, is not
             supported, or the given object's nesting is too deep, or another
-            error occurred when serializing the object.</exception><exception cref='ArgumentNullException'>The parameter <paramref name='t'/> or <paramref name='options'/> is null.</exception><example><para>Java offers no easy way to express a generic type, at least
+            error occurred when serializing the object.</exception>
+            <exception cref='ArgumentNullException'>The parameter <paramref name='t'/> or <paramref name='options'/> is null.</exception>
+            <example><para>Java offers no easy way to express a generic type, at least
             none as easy as C#'s <c>typeof</c> operator. The following example,
             written in Java, is a way to specify that the return value will be
             an ArrayList of String objects.</para>
@@ -4120,6 +4191,7 @@
             <code>var array = (List&lt;String&gt;)cborArray.ToObject(
             typeof(List&lt;String&gt;));</code> .
             </example>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.ToObject(System.Type,PeterO.Cbor.PODOptions)">
 

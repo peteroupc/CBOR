@@ -174,6 +174,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
+
     [Test]
     public void TestCBORObjectArgumentValidation() {
       Assert.AreEqual(
@@ -863,6 +864,7 @@ namespace Test {
   "[\"abcd\",\"aa\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]";
       Assert.AreEqual(expected, cbor.ToJSONString());
     }
+
     [Test]
     public void TestCPOD() {
       var m = new CPOD();

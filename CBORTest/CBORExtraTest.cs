@@ -186,6 +186,7 @@ namespace Test {
         get {
           return ((IList<CustomEnum>)this.w)[index];
         }
+
         set {
           ((IList<CustomEnum>)this.w)[index] = value;
         }
@@ -317,6 +318,7 @@ System.Collections.IEnumerable.GetEnumerator() {
       /// <summary>An arbitrary value.</summary>
       B,
     }
+
     [Test]
     public void TestCPOD2() {
       var m = new CPOD2();
@@ -6129,6 +6131,7 @@ from i in RangeExclusive(0, 10)
 
     private struct ExoticStruct {
       public readonly int Pvalue;
+
       public ExoticStruct(int pv) {
         this.Pvalue = pv;
       }

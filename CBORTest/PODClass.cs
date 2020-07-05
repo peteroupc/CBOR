@@ -1,4 +1,5 @@
 using System;
+
 // One property returns an array for testing purposes
 #pragma warning disable CA1819
 namespace Test {

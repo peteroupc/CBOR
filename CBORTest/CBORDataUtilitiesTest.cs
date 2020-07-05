@@ -11,6 +11,7 @@ namespace Test {
       Assert.IsTrue(obj.AsNumber().IsNegative());
       CBORTestCommon.AssertRoundTrip(obj);
     }
+
     // testing obsolete method
     #pragma warning disable CS0618
     [Test]
@@ -112,6 +113,7 @@ namespace Test {
           jsonDecimal.ToString());
       }
     }
+
     private static readonly string[] GoodJsonNumbers = {
       "5.2", "5e+1", "-5.2", "-5e+1",
       "5.2", "5e+01", "-5.2", "-5e+01",
@@ -119,6 +121,7 @@ namespace Test {
       "5.000e-01", "-5e-01",
       "5.000e01", "-5e01",
     };
+
     private static readonly string[] BadJsonNumbers = {
       null, "100.", "-100.", "100.e+20", "-100.e+20",
       "100.e20", "+0.1", "0.", "-0.", "+0",

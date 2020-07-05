@@ -81,7 +81,7 @@ namespace Test {
             throw new ArgumentException("Patch " + valueOpStr + " value");
           }
           value = patchOp["value"];
-          o = ReplaceOperation (
+          o = ReplaceOperation(
               o,
               valueOpStr,
               GetString(patchOp, "path"),
@@ -126,7 +126,7 @@ namespace Test {
               valueOpStr + " " + fromPath);
           }
           CBORObject copiedObj = pointer.GetValue();
-          o = AddOperation (
+          o = AddOperation(
               o,
               valueOpStr,
               path,
@@ -175,7 +175,7 @@ namespace Test {
         if (pointer.GetParent().Type == CBORType.Array) {
           ((CBORObject)pointer.GetParent()).RemoveAt(pointer.GetIndex());
         } else if (pointer.GetParent().Type == CBORType.Map) {
-          ((CBORObject)pointer.GetParent()).Remove (
+((CBORObject)pointer.GetParent()).Remove(
             CBORObject.FromObject(pointer.GetKey()));
         }
         return o;

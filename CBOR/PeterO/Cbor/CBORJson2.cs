@@ -329,16 +329,24 @@ namespace PeterO.Cbor {
               - '0'),
             this.options);
       } else {
-        var ssb = new StringBuilder(numberEndIndex - numberStartIndex);
-        int ki;
-        for (ki = numberStartIndex; ki < numberEndIndex; ++ki) {
-          ssb.Append((char)(((int)this.bytes[ki]) & 0xff));
+        obj = CBORDataUtilities.ParseJSONNumber(
+            this.bytes,
+            numberStartIndex,
+            numberEndIndex - numberStartIndex,
+            this.options);
+        #if DEBUG
+        if ((
+  (EDecimal)obj.ToObject(
+  typeof(EDecimal))).CompareToValue(EDecimal.FromString(this.bytes,
+           numberStartIndex,
+           numberEndIndex - numberStartIndex)) != 0) {
+             this.RaiseError(String.Empty + obj);
         }
-        string str = ssb.ToString();
-        obj = CBORDataUtilities.ParseJSONNumber(str, this.options);
+        #endif
         if (obj == null) {
-          string errstr = (str.Length <= 100) ? str : (str.Substring(0,
-                100) + "...");
+          string errstr = String.Empty;
+          // errstr = (str.Length <= 100) ? str : (str.Substring(0,
+          // 100) + "...");
           this.RaiseError("JSON number can't be parsed. " + errstr);
         }
       }
@@ -353,7 +361,6 @@ namespace PeterO.Cbor {
     private CBORObject NextJSONNonnegativeNumber(int c, int[] nextChar) {
       // Assumes the last character read was a digit
       CBORObject obj = null;
-      string str;
       int cval = c - '0';
       int cstart = c;
       int startIndex = this.index - 1;
@@ -388,6 +395,14 @@ namespace PeterO.Cbor {
                 '9'))) {
             // All-digit number that's short enough
             obj = CBORDataUtilities.ParseSmallNumber(cval, this.options);
+            #if DEBUG
+            if ((
+  (EDecimal)obj.ToObject(
+  typeof(EDecimal))).CompareToValue(EDecimal.FromInt32(cval)) !=
+0) {
+               this.RaiseError(String.Empty + obj);
+            }
+            #endif
             needObj = false;
           }
         } else if (!(c == '-' || c == '+' || c == '.' || c == 'e' || c
@@ -395,6 +410,13 @@ namespace PeterO.Cbor {
           // Optimize for common case where JSON number
           // is two digits without sign, decimal point, or exponent
           obj = CBORDataUtilities.ParseSmallNumber(cval, this.options);
+          #if DEBUG
+          if ((
+  (EDecimal)obj.ToObject(
+  typeof(EDecimal))).CompareToValue(EDecimal.FromInt32(cval)) !=
+0) { this.RaiseError(String.Empty + obj);
+}
+          #endif
           needObj = false;
         }
       }
@@ -410,16 +432,23 @@ namespace PeterO.Cbor {
           this.RaiseError("Invalid character after JSON number");
         }
         int numberEndIndex = c < 0 ? this.endPos : this.index - 1;
-        var ssb = new StringBuilder(numberEndIndex - startIndex);
-        int ki;
-        for (ki = startIndex; ki < numberEndIndex; ++ki) {
-          ssb.Append((char)(((int)this.bytes[ki]) & 0xff));
-        }
-        str = ssb.ToString();
-        obj = CBORDataUtilities.ParseJSONNumber(str, this.options);
+        obj = CBORDataUtilities.ParseJSONNumber(
+           this.bytes,
+           numberStartIndex,
+           numberEndIndex - numberStartIndex,
+           this.options);
+        #if DEBUG
+        if ((
+  (EDecimal)obj.ToObject(
+  typeof(EDecimal))).CompareToValue(EDecimal.FromString(this.bytes,
+           numberStartIndex,
+           numberEndIndex - numberStartIndex)) != 0) {
+          this.RaiseError(String.Empty + obj); }
+        #endif
         if (obj == null) {
-          string errstr = (str.Length <= 100) ? str : (str.Substring(0,
-                100) + "...");
+          string errstr = String.Empty;
+          // errstr = (str.Length <= 100) ? str : (str.Substring(0,
+          // 100) + "...");
           this.RaiseError("JSON number can't be parsed. " + errstr);
         }
       }

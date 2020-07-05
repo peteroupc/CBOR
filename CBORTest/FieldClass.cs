@@ -1,4 +1,5 @@
 using System;
+
 namespace Test {
 #pragma warning disable CA1823
 #pragma warning disable CS0169

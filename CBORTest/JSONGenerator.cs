@@ -8,6 +8,7 @@ namespace Test {
     private sealed class ByteWriter {
       private byte[] bytes = new byte[64];
       private int pos = 0;
+
       public ByteWriter Write(int b) {
         if (this.pos < this.bytes.Length) {
           this.bytes[this.pos++] = (byte)b;
@@ -19,11 +20,13 @@ namespace Test {
         }
         return this;
       }
+
       public int ByteLength {
         get {
           return this.pos;
         }
       }
+
       public byte[] ToBytes() {
         var newbytes = new byte[this.pos];
         Array.Copy(this.bytes, 0, newbytes, 0, this.pos);
@@ -34,6 +37,7 @@ namespace Test {
     private static int[] valueMajorTypes = {
       0, 1, 3, 4, 5,
     };
+
     private static int[] valueMajorTypesTop = {
       0, 1, 3, 4, 4, 4, 4, 4, 5, 5, 5,
       5, 5, 5, 5, 5, 5, 5, 5, 5,
@@ -94,6 +98,7 @@ namespace Test {
         }
       }
     }
+
     private static void GenerateWhitespace(
       IRandomGenExtended ra,
       ByteWriter bs) {

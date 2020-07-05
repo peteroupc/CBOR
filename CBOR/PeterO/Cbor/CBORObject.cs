@@ -2302,11 +2302,18 @@ namespace PeterO.Cbor {
       if (array == null) {
         return CBORObject.Null;
       }
-      IList<CBORObject> list = new List<CBORObject>(array.Length ==
-        Int32.MaxValue ? array.Length : (array.Length + 1));
+      IList<CBORObject> list = new List<CBORObject>();
       foreach (CBORObject cbor in array) {
         list.Add(cbor);
       }
+      return new CBORObject(CBORObjectTypeArray, list);
+    }
+
+    internal static CBORObject FromArrayBackedObject(CBORObject[] array) {
+      if (array == null) {
+        return CBORObject.Null;
+      }
+      IList<CBORObject> list = PropertyMap.ListFromArray(array);
       return new CBORObject(CBORObjectTypeArray, list);
     }
 

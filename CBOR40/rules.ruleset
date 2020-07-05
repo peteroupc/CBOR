@@ -7,6 +7,7 @@
     <Rule Action='None' Id='CA2234'/>
     <!--Return value of Uri methods rule disabled; these are often breaking changes -->
     <Rule Action='None' Id='CA1055'/>
+    <Rule Id='CA1200' Action='None'/>
   </Rules>
   <Rules AnalyzerId='StyleCop.Analyzers' RuleNamespace='StyleCop.Analyzers'>
     <!--SA1009 disabled for now due to bug with cref attributes that end in closing parenthesis -->
@@ -20,6 +21,7 @@
     <!--"... where T : ..." rule disabled -->
     <Rule Action='None' Id='SA1127'/>
     <Rule Action='None' Id='SA1128'/>
+    <Rule Action='None' Id='SA1200'/>
     <Rule Action='None' Id='SA1201'/>
     <Rule Action='None' Id='SA1202'/>
     <Rule Action='None' Id='SA1204'/>

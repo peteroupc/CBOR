@@ -343,7 +343,7 @@ namespace Test {
       return list;
     }
 
-    private static void GetPointersWithKey (
+    private static void GetPointersWithKey(
       CBORObject root,
       string keyToFind,
       string currentPointer,

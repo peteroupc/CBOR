@@ -249,6 +249,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
+
     [Test]
     public void TestAsBoolean() {
       Assert.AreEqual(true, CBORObject.True.ToObject(typeof(bool)));
@@ -561,6 +562,7 @@ o = ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
+
     [Test]
     public void TestAsEFloat() {
       {
@@ -598,6 +600,7 @@ o = ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
         .ToObject(typeof(EFloat));
       Assert.IsTrue(ef.IsNaN());
     }
+
     [Test]
     public void TestAsERational() {
       {
@@ -638,6 +641,7 @@ o = ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
           ToObjectTest.TestToFromObjectRoundTrip(Double.NaN)
           .ToObject(typeof(ERational))).AsNumber().IsNaN());
     }
+
     [Test]
     public void TestAsInt16() {
       try {
@@ -849,6 +853,7 @@ o = ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
         }
       }
     }
+
     [Test]
     public void TestAsInt64() {
       try {
@@ -978,6 +983,7 @@ o = ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
         }
       }
     }
+
     [Test]
     public void TestAsSingle() {
       try {
@@ -1051,6 +1057,7 @@ o = ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
         }
       }
     }
+
     [Test]
     public void TestAsString() {
       {
@@ -1134,7 +1141,7 @@ o = ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
     }
 
     [Test]
-    /* TIMEOUTOVERRIDE5000 */
+    [Timeout(5000)]
     public void TestToObject() {
       var ao = new PODClass();
       CBORObject co = CBORObject.FromObject(ao);
@@ -1272,6 +1279,7 @@ o = ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
       dt[19] = 'Z';
       return new String(dt);
     }
+
     [Test]
     public void TestDateRoundTrip() {
       var rand = new RandomGenerator();
@@ -1284,6 +1292,7 @@ o = ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
         TestToFromObjectRoundTrip(dtime);
       }
     }
+
     [Test]
     public void TestBadDate() {
       CBORObject cbor = CBORObject.FromObjectAndTag(

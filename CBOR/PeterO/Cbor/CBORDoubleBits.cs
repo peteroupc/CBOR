@@ -32,13 +32,11 @@ namespace PeterO.Cbor {
     }
 
     public EDecimal AsEDecimal(object obj) {
-      // TODO: Use FromDoubleBits once available
-      return EDecimal.FromDouble(this.AsDouble(obj));
+      return EDecimal.FromDoubleBits((long)obj);
     }
 
     public EFloat AsEFloat(object obj) {
-      // TODO: Use FromDoubleBits once available
-      return EFloat.FromDouble(this.AsDouble(obj));
+      return EFloat.FromDoubleBits((long)obj);
     }
 
     public float AsSingle(object obj) {
@@ -190,8 +188,7 @@ return this.IsNaN(obj) ? (-2) : ((((long)obj) >> 63) != 0 ? -1 : 1);
     }
 
     public ERational AsERational(object obj) {
-      // TODO: Use FromDoubleBits once available
-      return ERational.FromDouble(this.AsDouble(obj));
+      return ERational.FromDoubleBits((long)obj);
     }
 
     public bool IsNegative(object obj) {

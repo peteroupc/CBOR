@@ -3,6 +3,7 @@ using NUnit.Framework;
 using PeterO;
 using PeterO.Cbor;
 using PeterO.Numbers;
+
 namespace Test {
   [TestFixture]
   public class CBORNumberTest {
@@ -38,22 +39,27 @@ namespace Test {
         TestCommon.CompareTestEqual(objectTemp, objectTemp2);
       }
     }
+
     [Test]
     public void TestToCBORObject() {
       // not implemented yet
     }
+
     [Test]
     public void TestFromCBORObject() {
       // not implemented yet
     }
+
     [Test]
     public void TestToString() {
       // not implemented yet
     }
+
     [Test]
     public void TestCanFitInInt32() {
       // not implemented yet
     }
+
     [Test]
     public void TestCanFitInInt64() {
       Assert.IsTrue(CBORObject.FromObject(0).AsNumber().CanFitInInt64());
@@ -62,6 +68,7 @@ namespace Test {
       Assert.IsFalse(CBORObject.NegativeInfinity.AsNumber().CanFitInInt64());
       Assert.IsFalse(CBORObject.NaN.AsNumber().CanFitInInt64());
     }
+
     [Test]
     public void TestIsInfinity() {
       Assert.IsFalse(CBORObject.FromObject(0).AsNumber().IsInfinity());
@@ -70,6 +77,7 @@ namespace Test {
       Assert.IsTrue(CBORObject.NegativeInfinity.AsNumber().IsInfinity());
       Assert.IsFalse(CBORObject.NaN.AsNumber().IsInfinity());
     }
+
     [Test]
     public void TestIsNaN() {
       Assert.IsFalse(CBORObject.FromObject(0).AsNumber().IsNaN());
@@ -80,14 +88,17 @@ namespace Test {
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Double.NaN)
         .AsNumber().IsNaN());
     }
+
     [Test]
     public void TestNegate() {
       // not implemented yet
     }
+
     [Test]
     public void TestAdd() {
       // not implemented yet
     }
+
     [Test]
     public void TestSubtract() {
       // not implemented yet
@@ -96,6 +107,7 @@ namespace Test {
     private static EDecimal AsED(CBORObject obj) {
       return (EDecimal)obj.ToObject(typeof(EDecimal));
     }
+
     [Test]
     public void TestMultiply() {
       try {
@@ -123,6 +135,7 @@ namespace Test {
         CBORTestCommon.AssertRoundTrip(o2);
       }
     }
+
     [Test]
     public void TestDivide() {
       try {
@@ -135,6 +148,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
+
     [Test]
     public void TestRemainder() {
       try {
@@ -147,26 +161,32 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
+
     [Test]
     public void TestCompareTo() {
       // not implemented yet
     }
+
     [Test]
     public void TestLessThan() {
       // not implemented yet
     }
+
     [Test]
     public void TestLessThanOrEqual() {
       // not implemented yet
     }
+
     [Test]
     public void TestGreaterThan() {
       // not implemented yet
     }
+
     [Test]
     public void TestGreaterThanOrEqual() {
       // not implemented yet
     }
+
     [Test]
     public void TestGetType() {
       // not implemented yet
@@ -537,6 +557,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
+
     [Test]
     public void TestAsEFloat() {
       {
@@ -570,6 +591,7 @@ namespace Test {
         Assert.AreEqual(objectTemp, objectTemp2);
       }
     }
+
     [Test]
     public void TestAsERational() {
       {

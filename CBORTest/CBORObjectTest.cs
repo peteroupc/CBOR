@@ -320,6 +320,7 @@ JSONOptions("allowduplicatekeys=false");
         return new String(charbuf, 0, index);
       }
     }
+
     [Test]
     public void TestAdd() {
       CBORObject cbor = CBORObject.NewMap();
@@ -329,6 +330,7 @@ JSONOptions("allowduplicatekeys=false");
       cbor.Add("key", null);
       Assert.AreEqual(CBORObject.Null, cbor["key"]);
     }
+
     [Test]
     public void TestAddConverter() {
       // not implemented yet
@@ -337,6 +339,7 @@ JSONOptions("allowduplicatekeys=false");
     private static EDecimal AsED(CBORObject obj) {
       return (EDecimal)obj.ToObject(typeof(EDecimal));
     }
+
     [Test]
     [Timeout(200000)]
     public void TestAsNumberAdd() {
@@ -373,6 +376,7 @@ JSONOptions("allowduplicatekeys=false");
       Assert.IsTrue(CBORObject.NewArray().AsBoolean());
       Assert.IsTrue(CBORObject.NewMap().AsBoolean());
     }
+
     [Test]
     public void TestAsByte() {
       try {
@@ -746,6 +750,7 @@ JSONOptions("allowduplicatekeys=false");
         }
       }
     }
+
     [Test]
     public void TestAsInt64() {
       try {
@@ -863,10 +868,12 @@ JSONOptions("allowduplicatekeys=false");
         }
       }
     }
+
     [Test]
     public void TestAsSByte() {
       // not implemented yet
     }
+
     [Test]
     public void TestAsSingle() {
       try {
@@ -937,6 +944,7 @@ JSONOptions("allowduplicatekeys=false");
         }
       }
     }
+
     [Test]
     public void TestAsString() {
       {
@@ -1001,18 +1009,22 @@ JSONOptions("allowduplicatekeys=false");
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
+
     [Test]
     public void TestAsUInt16() {
       // not implemented yet
     }
+
     [Test]
     public void TestAsUInt32() {
       // not implemented yet
     }
+
     [Test]
     public void TestAsUInt64() {
       // not implemented yet
     }
+
     [Test]
     public void TestCanFitInDouble() {
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(
@@ -1046,6 +1058,7 @@ JSONOptions("allowduplicatekeys=false");
         Assert.IsTrue(cbornumber.CanFitInDouble());
       }
     }
+
     [Test]
     public void TestCanFitInInt32() {
       Assert.IsTrue(CInt32(ToObjectTest.TestToFromObjectRoundTrip(0)));
@@ -1075,6 +1088,7 @@ JSONOptions("allowduplicatekeys=false");
         }
       }
     }
+
     private static bool CInt64(CBORObject cbor) {
       return cbor.IsNumber && cbor.AsNumber().CanFitInInt64();
     }
@@ -1082,6 +1096,7 @@ JSONOptions("allowduplicatekeys=false");
     private static bool CInt32(CBORObject cbor) {
       return cbor.IsNumber && cbor.AsNumber().CanFitInInt32();
     }
+
     [Test]
     public void TestCanFitInInt64() {
       Assert.IsTrue(CInt64(ToObjectTest.TestToFromObjectRoundTrip(0)));
@@ -1148,6 +1163,7 @@ JSONOptions("allowduplicatekeys=false");
         }
       }
     }
+
     [Test]
     public void TestCanFitInSingle() {
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(
@@ -1184,6 +1200,7 @@ JSONOptions("allowduplicatekeys=false");
               i)).CanFitInSingle());
       }
     }
+
     [Test]
     public void TestCanTruncatedIntFitInInt32() {
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(EFloat.Create(
@@ -1367,6 +1384,7 @@ JSONOptions("allowduplicatekeys=false");
         }
       }
     }
+
     [Test]
     [Timeout(1000)]
     public void TestSlowCompareTo2() {
@@ -1424,6 +1442,7 @@ JSONOptions("allowduplicatekeys=false");
       Console.WriteLine(cbor2);
       TestCommon.CompareTestReciprocal(cbor1.AsNumber(), cbor2.AsNumber());
     }
+
     [Test]
     [Timeout(1000)]
     public void TestSlowCompareTo5() {
@@ -1533,6 +1552,7 @@ JSONOptions("allowduplicatekeys=false");
     private static string TrimStr(string str, int len) {
       return str.Substring(0, Math.Min(len, str.Length));
     }
+
     [Test]
     public void CompareLongDouble() {
       CBORObject cbor1 = CBORObject.FromObject(3.5E-15);
@@ -1688,10 +1708,12 @@ JSONOptions("allowduplicatekeys=false");
         CBORObject.FromObject(10).AsNumber(),
         CBORObject.FromObject(ERational.Create(10, 1)).AsNumber());
     }
+
     [Test]
     public void TestContainsKey() {
       // not implemented yet
     }
+
     [Test]
     public void TestCount() {
       Assert.AreEqual(0, CBORObject.True.Count);
@@ -2512,6 +2534,7 @@ CBOREncodeOptions(false, false, true));
       etags = obj.GetAllTags();
       Assert.AreEqual(0, etags.Length);
     }
+
     [Test]
     public void TestEI() {
       CBORObject cbor =
@@ -2543,6 +2566,7 @@ CBOREncodeOptions(false, false, true));
       cbor = ToObjectTest.TestToFromObjectRoundTrip(ERational.Create(1, 2));
       Assert.IsTrue(cbor.IsNumber);
     }
+
     [Test]
     public void TestFromObject() {
       var cborarray = new CBORObject[2];
@@ -3001,6 +3025,7 @@ CBOREncodeOptions(false, false, true));
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
+
     [Test]
     public void TestFromSimpleValue() {
       try {
@@ -3095,6 +3120,7 @@ CBOREncodeOptions(false, false, true));
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
+
     [Test]
     public void TestGetByteString() {
       try {
@@ -3152,14 +3178,17 @@ CBOREncodeOptions(false, false, true));
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
+
     [Test]
     public void TestGetHashCode() {
       // not implemented yet
     }
+
     [Test]
     public void TestGetTags() {
       // not implemented yet
     }
+
     [Test]
     public void TestHasTag() {
       try {
@@ -3193,18 +3222,22 @@ CBOREncodeOptions(false, false, true));
       Assert.IsFalse(CBORObject.True.HasTag(0));
       Assert.IsFalse(CBORObject.True.HasTag(EInteger.Zero));
     }
+
     [Test]
     public void TestMostInnerTag() {
       // not implemented yet
     }
+
     [Test]
     public void TestInsert() {
       // not implemented yet
     }
+
     [Test]
     public void TestIsFalse() {
       // not implemented yet
     }
+
     [Test]
     public void TestIsFinite() {
       CBORObject cbor;
@@ -3250,6 +3283,7 @@ CBOREncodeOptions(false, false, true));
         // NOTE: A nonintegral number is not necessarily non-finite
       }
     }
+
     [Test]
     public void TestIsInfinity() {
       Assert.IsTrue(CBORObject.PositiveInfinity.AsNumber().IsInfinity());
@@ -3333,6 +3367,7 @@ CBOREncodeOptions(false, false, true));
         }
       }
     }
+
     [Test]
     public void TestAsNumber() {
       try {
@@ -3399,6 +3434,7 @@ CBOREncodeOptions(false, false, true));
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
+
     [Test]
     public void TestAsNumberIsNegativeInfinity() {
       Assert.IsFalse(CBORObject.FromObject(
@@ -3411,6 +3447,7 @@ CBOREncodeOptions(false, false, true));
         CBORObject.NegativeInfinity.AsNumber().IsNegativeInfinity());
       Assert.IsFalse(CBORObject.NaN.AsNumber().IsNegativeInfinity());
     }
+
     [Test]
     public void TestIsNull() {
       Assert.IsFalse(CBORObject.True.IsNull);
@@ -3425,6 +3462,7 @@ CBOREncodeOptions(false, false, true));
       Assert.IsFalse(CBORObject.NegativeInfinity.IsNull);
       Assert.IsFalse(CBORObject.NaN.IsNull);
     }
+
     [Test]
     public void TestAsNumberIsPositiveInfinity() {
       Assert.IsFalse(CBORObject.FromObject(
@@ -3437,14 +3475,17 @@ CBOREncodeOptions(false, false, true));
         CBORObject.NegativeInfinity.AsNumber().IsPositiveInfinity());
       Assert.IsFalse(CBORObject.NaN.AsNumber().IsPositiveInfinity());
     }
+
     [Test]
     public void TestIsTagged() {
       // not implemented yet
     }
+
     [Test]
     public void TestIsTrue() {
       // not implemented yet
     }
+
     [Test]
     public void TestIsUndefined() {
       Assert.IsFalse(CBORObject.True.IsUndefined);
@@ -3459,10 +3500,12 @@ CBOREncodeOptions(false, false, true));
       Assert.IsFalse(CBORObject.NegativeInfinity.IsUndefined);
       Assert.IsFalse(CBORObject.NaN.IsUndefined);
     }
+
     [Test]
     public void TestIsZero() {
       // not implemented yet
     }
+
     [Test]
     public void TestItem2() {
       CBORObject cbor = CBORObject.True;
@@ -3671,6 +3714,7 @@ CBOREncodeOptions(false, false, true));
         Assert.Fail();
       }
     }
+
     [Test]
     [Timeout(200000)]
     public void TestAsNumberMultiply() {
@@ -3688,6 +3732,7 @@ CBOREncodeOptions(false, false, true));
         }
       }
     }
+
     [Test]
     public void TestAsNumberNegate() {
       TestCommon.CompareTestEqual(
@@ -3721,34 +3766,42 @@ CBOREncodeOptions(false, false, true));
           EDecimal.FromString("-0"));
       CBORTestCommon.AssertRoundTrip(negzero);
     }
+
     [Test]
     public void TestNewArray() {
       // not implemented yet
     }
+
     [Test]
     public void TestNewMap() {
       // not implemented yet
     }
+
     [Test]
     public void TestOperatorAddition() {
       // not implemented yet
     }
+
     [Test]
     public void TestOperatorDivision() {
       // not implemented yet
     }
+
     [Test]
     public void TestOperatorModulus() {
       // not implemented yet
     }
+
     [Test]
     public void TestOperatorMultiply() {
       // not implemented yet
     }
+
     [Test]
     public void TestOperatorSubtraction() {
       // not implemented yet
     }
+
     [Test]
     public void TestMostOuterTag() {
       CBORObject cbor = CBORObject.FromObjectAndTag(CBORObject.True, 999);
@@ -3757,6 +3810,7 @@ CBOREncodeOptions(false, false, true));
       cbor = CBORObject.True;
       Assert.AreEqual(EInteger.FromString("-1"), cbor.MostOuterTag);
     }
+
     [Test]
     public void TestRead() {
       try {
@@ -4682,6 +4736,7 @@ CBOREncodeOptions(false, false, true));
         Assert.Fail(ex.Message);
       }
     }
+
     private static void ReadJsonFail(byte[] msbytes) {
       using (var msjson = new MemoryStream(msbytes)) {
         try {
@@ -4991,6 +5046,7 @@ CBOREncodeOptions(false, false, true));
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
+
     [Test]
     public void TestRemoveAt() {
       CBORObject cbor;
@@ -5038,6 +5094,7 @@ CBOREncodeOptions(false, false, true));
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
+
     [Test]
     public void TestSet() {
       CBORObject cbor = CBORObject.NewMap().Add("x", 0).Add("y", 1);
@@ -5092,6 +5149,7 @@ CBOREncodeOptions(false, false, true));
       cbor.Set(3, 199);
       Assert.AreEqual(199, cbor[3].AsInt32());
     }
+
     [Test]
     public void TestSign() {
       try {
@@ -5156,6 +5214,7 @@ CBOREncodeOptions(false, false, true));
         }
       }
     }
+
     [Test]
     [Timeout(200000)]
     public void TestAsNumberSubtract() {
@@ -5848,6 +5907,7 @@ CBOREncodeOptions(false, false, true));
         CBORType.SimpleValue,
         cbor.Type);
     }
+
     [Test]
     public void TestUntag() {
       CBORObject o = CBORObject.FromObjectAndTag("test", 999);
@@ -5855,10 +5915,12 @@ CBOREncodeOptions(false, false, true));
       o = o.Untag();
       Assert.AreEqual(EInteger.FromString("-1"), o.MostInnerTag);
     }
+
     [Test]
     public void TestUntagOne() {
       // not implemented yet
     }
+
     [Test]
     public void TestValues() {
       // not implemented yet
@@ -6556,6 +6618,7 @@ CBOREncodeOptions(false, false, true));
         throw new InvalidOperationException(ex.ToString(), ex);
       }
     }
+
     [Test]
     public void TestWriteJSON() {
       // not implemented yet
@@ -6589,10 +6652,12 @@ CBOREncodeOptions(false, false, true));
         throw new InvalidOperationException(ex.ToString(), ex);
       }
     }
+
     [Test]
     public void TestWriteJSONTo() {
       // not implemented yet
     }
+
     [Test]
     public void TestWriteTo() {
       // not implemented yet
