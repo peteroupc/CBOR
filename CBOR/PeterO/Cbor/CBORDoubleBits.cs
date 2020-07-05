@@ -180,11 +180,11 @@ return this.IsNaN(obj) ? (-2) : ((((long)obj) >> 63) != 0 ? -1 : 1);
     }
 
     public object Negate(object obj) {
-       throw new NotImplementedException();
+       return (((long)obj) ^ (1L << 63));
     }
 
     public object Abs(object obj) {
-       throw new NotImplementedException();
+       return (((long)obj) & ~(1L << 63));
     }
 
     public ERational AsERational(object obj) {

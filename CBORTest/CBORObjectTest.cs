@@ -199,7 +199,7 @@ JSONOptions("allowduplicatekeys=false");
         // Check only FromJSONString
         try {
           CBORObject.FromJSONString(str, opt);
-          Assert.Fail("Should have failed");
+          Assert.Fail("Should have failed [str = " + str + "]");
         } catch (CBORException) {
           // NOTE: Intentionally empty
         } catch (Exception ex) {
@@ -341,7 +341,7 @@ JSONOptions("allowduplicatekeys=false");
     }
 
     [Test]
-    [Timeout(200000)]
+    [Timeout(5000)]
     public void TestAsNumberAdd() {
       var r = new RandomGenerator();
       for (var i = 0; i < 1000; ++i) {
@@ -5216,7 +5216,7 @@ CBOREncodeOptions(false, false, true));
     }
 
     [Test]
-    [Timeout(200000)]
+    [Timeout(1000)]
     public void TestAsNumberSubtract() {
       try {
         ToObjectTest.TestToFromObjectRoundTrip(2).AsNumber().Subtract(null);
