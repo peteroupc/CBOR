@@ -567,7 +567,8 @@ obj.Untag().ToJSONString()));
     /// one or more basic digits (the exponent). A byte sequence
     /// representing a valid JSON number is not allowed to contain white
     /// space characters, including spaces.</remarks>
-    /// <param name='bytes'>A sequence of bytes to parse as a JSON number.</param>
+    /// <param name='bytes'>A sequence of bytes to parse as a JSON
+    /// number.</param>
     /// <param name='offset'>An index, starting at 0, showing where the
     /// desired portion of <paramref name='bytes'/> begins.</param>
     /// <param name='count'>The length, in code units, of the desired
@@ -599,7 +600,8 @@ obj.Untag().ToJSONString()));
     /// one or more basic digits (the exponent). A byte sequence
     /// representing a valid JSON number is not allowed to contain white
     /// space characters, including spaces.</remarks>
-    /// <param name='bytes'>A sequence of bytes to parse as a JSON number.</param>
+    /// <param name='bytes'>A sequence of bytes to parse as a JSON
+    /// number.</param>
     /// <param name='options'>An object containing options to control how
     /// JSON numbers are decoded to CBOR objects. Can be null, in which
     /// case a JSONOptions object with all default properties is used
@@ -623,8 +625,8 @@ obj.Untag().ToJSONString()));
     /// <exception cref='ArgumentException'>Either <paramref
     /// name='offset'/> or <paramref name='count'/> is less than 0 or
     /// greater than <paramref name='bytes'/> 's length, or <paramref
-    /// name='bytes'/> 's length minus <paramref name='offset'/> is less than
-    /// <paramref name='count'/>.</exception>
+    /// name='bytes'/> 's length minus <paramref name='offset'/> is less
+    /// than <paramref name='count'/>.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bytes'/> is null.</exception>
     /// <remarks>Roughly speaking, a valid JSON number consists of an
@@ -635,7 +637,8 @@ obj.Untag().ToJSONString()));
     /// one or more basic digits (the exponent). A byte sequence
     /// representing a valid JSON number is not allowed to contain white
     /// space characters, including spaces.</remarks>
-    /// <param name='bytes'>A sequence of bytes to parse as a JSON number.</param>
+    /// <param name='bytes'>A sequence of bytes to parse as a JSON
+    /// number.</param>
     /// <param name='offset'>An index, starting at 0, showing where the
     /// desired portion of <paramref name='bytes'/> begins.</param>
     /// <param name='count'>The length, in code units, of the desired

@@ -1,5 +1,5 @@
 /*
-Written by Peter O. in 2014-2018.
+Written by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
@@ -11,6 +11,15 @@ using System.Reflection;
 
 namespace PeterO {
   internal static class DebugUtility {
+    private static Action<string> writer = null;
+    internal static readonly object writerLock = new Object();
+
+    public static void SetWriter(Action<string> wr) {
+       lock (writerLock) {
+         writer = wr;
+       }
+    }
+
     private static MethodInfo GetTypeMethod(
       Type t,
       string name,
@@ -26,12 +35,27 @@ namespace PeterO {
 
     public static void Log(string str) {
       Type type = Type.GetType("System.Console");
+      if (type == null) {
+         Action<string> wr = null;
+         lock (writerLock) {
+           wr = writer;
+         }
+         if (wr != null) {
+           System.Diagnostics.Debug.WriteLine(str);
+         wr(str);
+       return;
+         } else {
+            throw new NotSupportedException("System.Console not found");
+         }
+      }
       var types = new[] { typeof(string) };
       var typeMethod = GetTypeMethod(type, "WriteLine", types);
       if (typeMethod != null) {
         typeMethod.Invoke(
           type,
           new object[] { str });
+      } else {
+        throw new NotSupportedException("System.Console.WriteLine not found");
       }
     }
 

@@ -80,7 +80,8 @@ namespace PeterO.Cbor {
     }
 
     public bool CanFitInSingle(object obj) {
-       throw new NotImplementedException();
+      return this.IsNaN(obj) ||
+CBORUtilities.DoubleRetainsSameValueInSingle((long)obj);
     }
 
     public bool CanFitInDouble(object obj) {
@@ -180,11 +181,11 @@ return this.IsNaN(obj) ? (-2) : ((((long)obj) >> 63) != 0 ? -1 : 1);
     }
 
     public object Negate(object obj) {
-       return (((long)obj) ^ (1L << 63));
+       return ((long)obj) ^ (1L << 63);
     }
 
     public object Abs(object obj) {
-       return (((long)obj) & ~(1L << 63));
+       return ((long)obj) & ~(1L << 63);
     }
 
     public ERational AsERational(object obj) {

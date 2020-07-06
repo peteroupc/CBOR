@@ -1680,6 +1680,7 @@ JSONOptions("allowduplicatekeys=false");
       TestCommon.CompareTestLess(sp, dnan);
       TestCommon.CompareTestLess(dn, dp);
       TestCommon.CompareTestLess(dp, dnan);
+      TestCommon.CompareTestLess(dn, dnan);
       Assert.AreEqual(1, CBORObject.True.CompareTo(null));
       Assert.AreEqual(1, CBORObject.False.CompareTo(null));
       Assert.AreEqual(1, CBORObject.Null.CompareTo(null));
@@ -5204,7 +5205,8 @@ CBOREncodeOptions(false, false, true));
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
           }
-        } else if (numberinfo["number"].AsString().IndexOf('-') == 0) {
+        } else if (numberinfo["number"].AsString().IndexOf('-',
+  StringComparison.Ordinal) == 0) {
           Assert.AreEqual(-1, cbornumber.Sign);
         } else if (numberinfo["number"].AsString().Equals("0",
             StringComparison.Ordinal)) {
