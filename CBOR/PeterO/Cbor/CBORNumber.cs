@@ -912,8 +912,16 @@ namespace PeterO.Cbor {
         }
         case NumberKind.ERational: {
           var dec = (ERational)this.value;
+          string nnstr = dec.Numerator.ToString();
+          string dnstr = dec.Denominator.ToString();
+          // DebugUtility.Log(
+          // "numlen="+nnstr.Length +
+          // " denlen="+dnstr.Length +
+          // "\nstart="+DateTime.UtcNow);
           EDecimal f = dec.ToEDecimalExactIfPossible(
               EContext.Decimal128.WithUnlimitedExponents());
+          // DebugUtility.Log(
+          // " end="+DateTime.UtcNow);
           if (!f.IsFinite) {
             return "null";
           } else {
@@ -1080,10 +1088,10 @@ namespace PeterO.Cbor {
 
     private static ERational CheckOverflow(
       ERational e1,
- ERational e2,
- ERational eresult) {
+      ERational e2,
+      ERational eresult) {
         if (e1.IsFinite && e2.IsFinite && eresult.IsNaN()) {
-           throw new OverflowException("Result might be too big to fit in" +
+           throw new OutOfMemoryException("Result might be too big to fit in" +
 "\u0020memory");
         }
         return eresult;
@@ -1091,10 +1099,10 @@ namespace PeterO.Cbor {
 
     private static EDecimal CheckOverflow(EDecimal e1, EDecimal e2, EDecimal
 eresult) {
-        DebugUtility.Log("ED e1.Exp=" + e1.Exponent);
-        DebugUtility.Log("ED e2.Exp=" + e2.Exponent);
+        // DebugUtility.Log("ED e1.Exp="+e1.Exponent);
+        // DebugUtility.Log("ED e2.Exp="+e2.Exponent);
         if (e1.IsFinite && e2.IsFinite && eresult.IsNaN()) {
-           throw new OverflowException("Result might be too big to fit in" +
+           throw new OutOfMemoryException("Result might be too big to fit in" +
 "\u0020memory");
         }
         return eresult;
@@ -1102,17 +1110,37 @@ eresult) {
 
     private static EFloat CheckOverflow(EFloat e1, EFloat e2, EFloat eresult) {
         if (e1.IsFinite && e2.IsFinite && eresult.IsNaN()) {
-           throw new OverflowException("Result might be too big to fit in" +
+           throw new OutOfMemoryException("Result might be too big to fit in" +
 "\u0020memory");
         }
         return eresult;
     }
 
-    // [System.Diagnostics.Conditional("DEBUG")]
-    // public static void SetWriter(Action<string> writer) {
-       // TODO: Temporary
-       // DebugUtility.SetWriter(writer);
-    // }
+    private static NumberKind GetConvertKind(CBORNumber a, CBORNumber b) {
+      NumberKind typeA = a.kind;
+      NumberKind typeB = b.kind;
+      NumberKind convertKind = NumberKind.EInteger;
+      if (!a.IsFinite()) {
+        convertKind = (typeB == NumberKind.Integer || typeB ==
+NumberKind.EInteger) ? ((typeA == NumberKind.Double) ? NumberKind.EFloat :
+typeA) : ((typeB == NumberKind.Double) ? NumberKind.EFloat : typeB);
+      } else if (!b.IsFinite()) {
+        convertKind = (typeA == NumberKind.Integer || typeA ==
+NumberKind.EInteger) ? ((typeB == NumberKind.Double) ? NumberKind.EFloat :
+typeB) : ((typeA == NumberKind.Double) ? NumberKind.EFloat : typeA);
+      } else if (typeA == NumberKind.ERational ||
+        typeB == NumberKind.ERational) {
+        convertKind = NumberKind.ERational;
+      } else if (typeA == NumberKind.EDecimal ||
+        typeB == NumberKind.EDecimal) {
+        convertKind = NumberKind.EDecimal;
+      }
+      else convertKind = (typeA == NumberKind.EFloat || typeB ==
+NumberKind.EFloat ||
+        typeA == NumberKind.Double || typeB == NumberKind.Double) ?
+NumberKind.EFloat : NumberKind.EInteger;
+      return convertKind;
+    }
 
     /// <summary>Returns the sum of this number and another
     /// number.</summary>
@@ -1120,7 +1148,7 @@ eresult) {
     /// <returns>The sum of this number and another number.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='b'/> is null.</exception>
-    /// <exception cref='OverflowException'>The exact result of the
+    /// <exception cref='OutOfMemoryException'>The exact result of the
     /// operation might be too big to fit in memory (or might require more
     /// than 2 gigabytes of memory to store).</exception>
     public CBORNumber Add(CBORNumber b) {
@@ -1143,34 +1171,44 @@ eresult) {
         }
         return new CBORNumber(NumberKind.Integer, valueA + valueB);
       }
-      if (typeA == NumberKind.ERational ||
-        typeB == NumberKind.ERational) {
-        DebugUtility.Log("Rational/Rational");
+      NumberKind convertKind = GetConvertKind(a, b);
+      if (convertKind == NumberKind.ERational) {
+        // DebugUtility.Log("Rational/Rational");
         ERational e1 = GetNumberInterface(typeA).AsERational(objA);
         ERational e2 = GetNumberInterface(typeB).AsERational(objB);
-        DebugUtility.Log("conv Rational/Rational");
+        // DebugUtility.Log("conv Rational/Rational");
         return new CBORNumber(NumberKind.ERational,
-  CheckOverflow(e1, e2, e1.Add(e2)));
+ CheckOverflow(
+          e1,
+          e2,
+          e1.Add(e2)));
       }
-      if (typeA == NumberKind.EDecimal || typeB == NumberKind.EDecimal) {
-        DebugUtility.Log("Decimal/Decimal");
+      if (convertKind == NumberKind.EDecimal) {
+        // DebugUtility.Log("Decimal/Decimal");
         EDecimal e1 = GetNumberInterface(typeA).AsEDecimal(objA);
         EDecimal e2 = GetNumberInterface(typeB).AsEDecimal(objB);
-        DebugUtility.Log("ED e1.Exp=" + e1.Exponent);
-        DebugUtility.Log("ED e2.Exp=" + e2.Exponent);
+        // DebugUtility.Log("ED e1.Exp="+e1.Exponent);
+        // DebugUtility.Log("ED e2.Exp="+e2.Exponent);
         return new CBORNumber(NumberKind.EDecimal,
-  CheckOverflow(e1, e2, e1.Add(e2)));
+ CheckOverflow(
+          e1,
+          e2,
+          e1.Add(e2)));
       }
-      if (typeA == NumberKind.EFloat || typeB == NumberKind.EFloat ||
-        typeA == NumberKind.Double || typeB == NumberKind.Double) {
-        DebugUtility.Log("Float/Float");
+      if (convertKind == NumberKind.EFloat) {
+        // DebugUtility.Log("Float/Float");
         EFloat e1 = GetNumberInterface(typeA).AsEFloat(objA);
         EFloat e2 = GetNumberInterface(typeB).AsEFloat(objB);
-        DebugUtility.Log("EF e1.Exp=" + e1.Exponent);
-        DebugUtility.Log("EF e2.Exp=" + e2.Exponent);
+        // DebugUtility.Log("EF e1.Exp="+e1.Exponent);
+        // DebugUtility.Log("EF e2.Exp="+e2.Exponent);
         return new CBORNumber(NumberKind.EFloat,
-  CheckOverflow(e1, e2, e1.Add(e2)));
+ CheckOverflow(
+          e1,
+          e2,
+          e1.Add(e2)));
       } else {
+        // DebugUtility.Log("type=" + typeA + "/" + typeB + " finite=" +
+        // (// this.IsFinite()) + "/" + (b.IsFinite()));
         EInteger b1 = GetNumberInterface(typeA).AsEInteger(objA);
         EInteger b2 = GetNumberInterface(typeB).AsEInteger(objB);
         return new CBORNumber(NumberKind.EInteger, b1 + (EInteger)b2);
@@ -1184,7 +1222,7 @@ eresult) {
     /// number.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='b'/> is null.</exception>
-    /// <exception cref='OverflowException'>The exact result of the
+    /// <exception cref='OutOfMemoryException'>The exact result of the
     /// operation might be too big to fit in memory (or might require more
     /// than 2 gigabytes of memory to store).</exception>
     public CBORNumber Subtract(CBORNumber b) {
@@ -1208,25 +1246,36 @@ eresult) {
         }
         return new CBORNumber(NumberKind.Integer, valueA - valueB);
       }
-      if (typeA == NumberKind.ERational || typeB == NumberKind.ERational) {
+      NumberKind convertKind = GetConvertKind(a, b);
+      if (convertKind == NumberKind.ERational) {
         ERational e1 = GetNumberInterface(typeA).AsERational(objA);
         ERational e2 = GetNumberInterface(typeB).AsERational(objB);
         return new CBORNumber(NumberKind.ERational,
-  CheckOverflow(e1, e2, e1.Subtract(e2)));
+ CheckOverflow(
+          e1,
+          e2,
+          e1.Subtract(e2)));
       }
-      if (typeA == NumberKind.EDecimal || typeB == NumberKind.EDecimal) {
+      if (convertKind == NumberKind.EDecimal) {
         EDecimal e1 = GetNumberInterface(typeA).AsEDecimal(objA);
         EDecimal e2 = GetNumberInterface(typeB).AsEDecimal(objB);
         return new CBORNumber(NumberKind.EDecimal,
-  CheckOverflow(e1, e2, e1.Subtract(e2)));
+ CheckOverflow(
+          e1,
+          e2,
+          e1.Subtract(e2)));
       }
-      if (typeA == NumberKind.EFloat || typeB == NumberKind.EFloat ||
-        typeA == NumberKind.Double || typeB == NumberKind.Double) {
+      if (convertKind == NumberKind.EFloat) {
         EFloat e1 = GetNumberInterface(typeA).AsEFloat(objA);
         EFloat e2 = GetNumberInterface(typeB).AsEFloat(objB);
         return new CBORNumber(NumberKind.EFloat,
-  CheckOverflow(e1, e2, e1.Subtract(e2)));
+ CheckOverflow(
+          e1,
+          e2,
+          e1.Subtract(e2)));
       } else {
+        // DebugUtility.Log("type=" + typeA + "/" + typeB + " finite=" +
+        // (// this.IsFinite()) + "/" + (b.IsFinite()));
         EInteger b1 = GetNumberInterface(typeA).AsEInteger(objA);
         EInteger b2 = GetNumberInterface(typeB).AsEInteger(objB);
         return new CBORNumber(NumberKind.EInteger, b1 - (EInteger)b2);
@@ -1241,7 +1290,7 @@ eresult) {
     /// given number.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='b'/> is null.</exception>
-    /// <exception cref='OverflowException'>The exact result of the
+    /// <exception cref='OutOfMemoryException'>The exact result of the
     /// operation might be too big to fit in memory (or might require more
     /// than 2 gigabytes of memory to store).</exception>
     public CBORNumber Multiply(CBORNumber b) {
@@ -1271,29 +1320,28 @@ eresult) {
         }
         return CBORNumber.FromObject(valueA * valueB);
       }
-      if (typeA == NumberKind.ERational ||
-        typeB == NumberKind.ERational) {
-        ERational e1 =
-          GetNumberInterface(typeA).AsERational(objA);
+      NumberKind convertKind = GetConvertKind(a, b);
+      if (convertKind == NumberKind.ERational) {
+        ERational e1 = GetNumberInterface(typeA).AsERational(objA);
         ERational e2 = GetNumberInterface(typeB).AsERational(objB);
         return CBORNumber.FromObject(CheckOverflow(e1, e2, e1.Multiply(e2)));
       }
-      if (typeA == NumberKind.EDecimal ||
-        typeB == NumberKind.EDecimal) {
-        EDecimal e1 =
-          GetNumberInterface(typeA).AsEDecimal(objA);
+      if (convertKind == NumberKind.EDecimal) {
+        EDecimal e1 = GetNumberInterface(typeA).AsEDecimal(objA);
         EDecimal e2 = GetNumberInterface(typeB).AsEDecimal(objB);
         return CBORNumber.FromObject(CheckOverflow(e1, e2, e1.Multiply(e2)));
       }
-      if (typeA == NumberKind.EFloat || typeB ==
-        NumberKind.EFloat || typeA == NumberKind.Double || typeB ==
-        NumberKind.Double) {
-        EFloat e1 =
-          GetNumberInterface(typeA).AsEFloat(objA);
+      if (convertKind == NumberKind.EFloat) {
+        EFloat e1 = GetNumberInterface(typeA).AsEFloat(objA);
         EFloat e2 = GetNumberInterface(typeB).AsEFloat(objB);
         return new CBORNumber(NumberKind.EFloat,
-  CheckOverflow(e1, e2, e1.Multiply(e2)));
+ CheckOverflow(
+          e1,
+          e2,
+          e1.Multiply(e2)));
       } else {
+        // DebugUtility.Log("type=" + typeA + "/" + typeB + " finite=" +
+        // (// this.IsFinite()) + "/" + (b.IsFinite()));
         EInteger b1 = GetNumberInterface(typeA).AsEInteger(objA);
         EInteger b2 = GetNumberInterface(typeB).AsEInteger(objB);
         return new CBORNumber(NumberKind.EInteger, b1 * (EInteger)b2);
@@ -1307,7 +1355,7 @@ eresult) {
     /// <returns>The quotient of this number and another one.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='b'/> is null.</exception>
-    /// <exception cref='OverflowException'>The exact result of the
+    /// <exception cref='OutOfMemoryException'>The exact result of the
     /// operation might be too big to fit in memory (or might require more
     /// than 2 gigabytes of memory to store).</exception>
     public CBORNumber Divide(CBORNumber b) {
@@ -1339,13 +1387,17 @@ eresult) {
               (EInteger)valueA,
               (EInteger)valueB));
       }
-      if (typeA == NumberKind.ERational || typeB == NumberKind.ERational) {
+      NumberKind convertKind = GetConvertKind(a, b);
+      if (convertKind == NumberKind.ERational) {
         ERational e1 = GetNumberInterface(typeA).AsERational(objA);
         ERational e2 = GetNumberInterface(typeB).AsERational(objB);
         return new CBORNumber(NumberKind.ERational,
-  CheckOverflow(e1, e2, e1.Divide(e2)));
+ CheckOverflow(
+          e1,
+          e2,
+          e1.Divide(e2)));
       }
-      if (typeA == NumberKind.EDecimal || typeB == NumberKind.EDecimal) {
+      if (convertKind == NumberKind.EDecimal) {
         EDecimal e1 = GetNumberInterface(typeA).AsEDecimal(objA);
         EDecimal e2 = GetNumberInterface(typeB).AsEDecimal(objB);
         if (e1.IsZero && e2.IsZero) {
@@ -1360,13 +1412,13 @@ eresult) {
         ERational er1 = GetNumberInterface(typeA).AsERational(objA);
         ERational er2 = GetNumberInterface(typeB).AsERational(objB);
         return new CBORNumber(NumberKind.ERational,
-  CheckOverflow(er1, er2, er1.Divide(er2)));
+ CheckOverflow(
+          er1,
+          er2,
+          er1.Divide(er2)));
       }
-      if (typeA == NumberKind.EFloat || typeB ==
-        NumberKind.EFloat || typeA == NumberKind.Double || typeB ==
-        NumberKind.Double) {
-        EFloat e1 =
-          GetNumberInterface(typeA).AsEFloat(objA);
+      if (convertKind == NumberKind.EFloat) {
+        EFloat e1 = GetNumberInterface(typeA).AsEFloat(objA);
         EFloat e2 = GetNumberInterface(typeB).AsEFloat(objB);
         if (e1.IsZero && e2.IsZero) {
           return CBORNumber.FromObject(EDecimal.NaN);
@@ -1380,8 +1432,13 @@ eresult) {
         ERational er1 = GetNumberInterface(typeA).AsERational(objA);
         ERational er2 = GetNumberInterface(typeB).AsERational(objB);
         return new CBORNumber(NumberKind.ERational,
-  CheckOverflow(er1, er2, er1.Divide(er2)));
+ CheckOverflow(
+          er1,
+          er2,
+          er1.Divide(er2)));
       } else {
+        // DebugUtility.Log("type=" + typeA + "/" + typeB + " finite=" +
+        // (// this.IsFinite()) + "/" + (b.IsFinite()));
         EInteger b1 = GetNumberInterface(typeA).AsEInteger(objA);
         EInteger b2 = GetNumberInterface(typeB).AsEInteger(objB);
         if (b2.IsZero) {
@@ -1409,7 +1466,7 @@ eresult) {
     /// number.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='b'/> is null.</exception>
-    /// <exception cref='OverflowException'>The exact result of the
+    /// <exception cref='OutOfMemoryException'>The exact result of the
     /// operation might be too big to fit in memory (or might require more
     /// than 2 gigabytes of memory to store).</exception>
     public CBORNumber Remainder(CBORNumber b) {
@@ -1426,30 +1483,26 @@ eresult) {
         return (valueA == Int64.MinValue && valueB == -1) ?
           CBORNumber.FromObject(0) : CBORNumber.FromObject(valueA % valueB);
       }
-      if (typeA == NumberKind.ERational ||
-        typeB == NumberKind.ERational) {
-        ERational e1 =
-          GetNumberInterface(typeA).AsERational(objA);
+      NumberKind convertKind = GetConvertKind(this, b);
+      if (convertKind == NumberKind.ERational) {
+        ERational e1 = GetNumberInterface(typeA).AsERational(objA);
         ERational e2 = GetNumberInterface(typeB).AsERational(objB);
         return CBORNumber.FromObject(CheckOverflow(e1, e2, e1.Remainder(e2)));
       }
-      if (typeA == NumberKind.EDecimal ||
-        typeB == NumberKind.EDecimal) {
-        EDecimal e1 =
-          GetNumberInterface(typeA).AsEDecimal(objA);
+      if (convertKind == NumberKind.EDecimal) {
+        EDecimal e1 = GetNumberInterface(typeA).AsEDecimal(objA);
         EDecimal e2 = GetNumberInterface(typeB).AsEDecimal(objB);
         return CBORNumber.FromObject(CheckOverflow(e1, e2, e1.Remainder(e2,
   null)));
       }
-      if (typeA == NumberKind.EFloat ||
-        typeB == NumberKind.EFloat || typeA == NumberKind.Double || typeB ==
-        NumberKind.Double) {
-        EFloat e1 =
-          GetNumberInterface(typeA).AsEFloat(objA);
+      if (convertKind == NumberKind.EFloat) {
+        EFloat e1 = GetNumberInterface(typeA).AsEFloat(objA);
         EFloat e2 = GetNumberInterface(typeB).AsEFloat(objB);
         return CBORNumber.FromObject(CheckOverflow(e1, e2, e1.Remainder(e2,
   null)));
       } else {
+        // DebugUtility.Log("type=" + typeA + "/" + typeB + " finite=" +
+        // (// this.IsFinite()) + "/" + (b.IsFinite()));
         EInteger b1 = GetNumberInterface(typeA).AsEInteger(objA);
         EInteger b2 = GetNumberInterface(typeB).AsEInteger(objB);
         return CBORNumber.FromObject(b1 % (EInteger)b2);
@@ -1505,8 +1558,8 @@ eresult) {
               (CBORUtilities.DoubleBitsNaN(b) ? 0 : 1) :
               (CBORUtilities.DoubleBitsNaN(b) ?
                 -1 : (((a < 0) != (b < 0)) ? ((a < b) ? -1 : 1) :
-                  (((a == b) ? 0 : (((a < b) ^ (a < 0)) ? -1 : 1))))); break; }
-          case NumberKind.EDecimal: {
+                  (((a == b) ? 0 : (((a < b) ^ (a < 0)) ? -1 : 1)))));
+                  break; } case NumberKind.EDecimal: {
             cmp = ((EDecimal)objA).CompareTo((EDecimal)objB);
             break;
           }

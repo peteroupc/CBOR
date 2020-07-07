@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard1.0</TargetFrameworks>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>4.1.0</Version>
+    <Version>4.2.0-a0</Version>
     <Owners>Peter Occil</Owners>
     <Description>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049.</Description>
     <Summary>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049. </Summary>
@@ -25,11 +25,11 @@ Version 4.1:
     <PackOnBuild>true</PackOnBuild>
   <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet><PackageLicenseExpression>CC0-1.0</PackageLicenseExpression></PropertyGroup>
 
-  <PropertyGroup Condition=' &apos;$(Configuration)|$(Platform)&apos; == &apos;Debug|AnyCPU&apos; '>
+  <PropertyGroup Condition=' &apos;$(Configuration)&apos;==&apos;Debug&apos; '>
     <DocumentationFile>bin\Debug\netstandard1.0\CBOR.xml</DocumentationFile>
 
   <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet></PropertyGroup>
-  <PropertyGroup Condition=' &apos;$(Configuration)|$(Platform)&apos; == &apos;Release|AnyCPU&apos; '>
+  <PropertyGroup Condition=' &apos;$(Configuration)&apos;==&apos;Release&apos; '>
     <DebugType/>
     <DocumentationFile>bin\Release\netstandard1.0\CBOR.xml</DocumentationFile>
 

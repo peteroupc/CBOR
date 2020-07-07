@@ -347,8 +347,13 @@ JSONOptions("allowduplicatekeys=false");
       for (var i = 0; i < 1000; ++i) {
         CBORObject o1 = CBORTestCommon.RandomNumber(r);
         CBORObject o2 = CBORTestCommon.RandomNumber(r);
+        EDecimal cmpCobj = null;
+        try {
+           cmpCobj = o1.AsNumber().Add(o2.AsNumber()).ToEDecimal();
+        } catch (OutOfMemoryException) {
+           continue;
+        }
         EDecimal cmpDecFrac = AsED(o1).Add(AsED(o2));
-        EDecimal cmpCobj = o1.AsNumber().Add(o2.AsNumber()).ToEDecimal();
         TestCommon.CompareTestEqual(cmpDecFrac, cmpCobj);
         CBORTestCommon.AssertRoundTrip(o1);
         CBORTestCommon.AssertRoundTrip(o2);
@@ -5192,9 +5197,10 @@ CBOREncodeOptions(false, false, true));
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
+        string numberString = numberinfo["number"].AsString();
         CBORObject cbornumber =
           ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(
-              numberinfo["number"].AsString()));
+              numberString));
         if (cbornumber.AsNumber().IsNaN()) {
           try {
             Assert.Fail(String.Empty + cbornumber.Sign);
@@ -5205,8 +5211,7 @@ CBOREncodeOptions(false, false, true));
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
           }
-        } else if (numberinfo["number"].AsString().IndexOf('-',
-  StringComparison.Ordinal) == 0) {
+        } else if (numberString.Length > 0 && numberString[0]=='-') {
           Assert.AreEqual(-1, cbornumber.Sign);
         } else if (numberinfo["number"].AsString().Equals("0",
             StringComparison.Ordinal)) {
@@ -6710,6 +6715,11 @@ CBOREncodeOptions(false, false, true));
       }
     }
 
+    private static string Chop(string str) {
+       if(str.Length<100)return str;
+       return str.Substring(0, 100)+"...";
+    }
+
     private static void AssertReadThree(byte[] bytes) {
       try {
         using (var ms = new MemoryStream(bytes)) {
@@ -6744,8 +6754,8 @@ CBOREncodeOptions(false, false, true));
         }
       } catch (Exception ex) {
         Assert.Fail(ex.ToString() + "\r\n" +
-          TestCommon.ToByteArrayString(bytes) + "\r\n" +
-          "cbor = " + cbor.ToString() + "\r\n");
+          Chop(TestCommon.ToByteArrayString(bytes)) + "\r\n" +
+          "cbor = " + Chop(cbor.ToString()) + "\r\n");
         throw new InvalidOperationException(ex.ToString(), ex);
       }
     }

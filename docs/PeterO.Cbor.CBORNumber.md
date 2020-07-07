@@ -124,6 +124,9 @@ The sum of this number and another number.
 The parameter  <i>b</i>
  is null.
 
+ * System.OutOfMemoryException:
+The exact result of the operation might be too big to fit in memory (or might require more than 2 gigabytes of memory to store).
+
 <a id="CanFitInDouble"></a>
 ### CanFitInDouble
 
@@ -230,6 +233,9 @@ The quotient of this number and another one.
  * System.ArgumentNullException:
 The parameter  <i>b</i>
  is null.
+
+ * System.OutOfMemoryException:
+The exact result of the operation might be too big to fit in memory (or might require more than 2 gigabytes of memory to store).
 
 <a id="FromByte_byte"></a>
 ### FromByte
@@ -389,6 +395,9 @@ A number expressing the product of this number and the given number.
 The parameter  <i>b</i>
  is null.
 
+ * System.OutOfMemoryException:
+The exact result of the operation might be too big to fit in memory (or might require more than 2 gigabytes of memory to store).
+
 <a id="Negate"></a>
 ### Negate
 
@@ -522,6 +531,9 @@ The remainder when this number is divided by the other number.
 The parameter  <i>b</i>
  is null.
 
+ * System.OutOfMemoryException:
+The exact result of the operation might be too big to fit in memory (or might require more than 2 gigabytes of memory to store).
+
 <a id="Subtract_PeterO_Cbor_CBORNumber"></a>
 ### Subtract
 
@@ -543,6 +555,9 @@ A CBOR number that expresses this number minus the given number.
  * System.ArgumentNullException:
 The parameter  <i>b</i>
  is null.
+
+ * System.OutOfMemoryException:
+The exact result of the operation might be too big to fit in memory (or might require more than 2 gigabytes of memory to store).
 
 <a id="ToByteChecked"></a>
 ### ToByteChecked

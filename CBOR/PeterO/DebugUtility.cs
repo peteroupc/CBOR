@@ -5,7 +5,6 @@ http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/
  */
-#if DEBUG
 using System;
 using System.Reflection;
 
@@ -14,6 +13,7 @@ namespace PeterO {
     private static Action<string> writer = null;
     internal static readonly object writerLock = new Object();
 
+    [System.Diagnostics.Conditional("DEBUG")]
     public static void SetWriter(Action<string> wr) {
        lock (writerLock) {
          writer = wr;
@@ -59,6 +59,7 @@ namespace PeterO {
       }
     }
 
+    [System.Diagnostics.Conditional("DEBUG")]
     public static void Log(string format, params object[] args) {
       Log(String.Format(
         System.Globalization.CultureInfo.CurrentCulture,
@@ -67,4 +68,3 @@ namespace PeterO {
     }
   }
 }
-#endif

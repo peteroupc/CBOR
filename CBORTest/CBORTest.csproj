@@ -1,30 +1,30 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk='Microsoft.NET.Sdk'>
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net45</TargetFramework>
     <GenerateProgramFile>false</GenerateProgramFile>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=' &apos;$(Configuration)&apos;==&apos;Debug&apos; '>
     <DebugType>full</DebugType>
     <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet></PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=' &apos;$(Configuration)&apos;==&apos;Release&apos; '>
     <DebugType>none</DebugType>
     <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet></PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CBOR\CBOR.csproj" />
-  <AdditionalFiles Include="stylecop.json"></AdditionalFiles><AdditionalFiles Include="rules.ruleset"></AdditionalFiles></ItemGroup>
+    <ProjectReference Include='..\CBOR\CBOR.csproj'/>
+  <AdditionalFiles Include='stylecop.json'/><AdditionalFiles Include='rules.ruleset'/></ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources.restext">
+    <EmbeddedResource Include='Resources.restext'>
       <LogicalName>Resources.resources</LogicalName>
     </EmbeddedResource></ItemGroup>
       <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
-        <PackageReference Include="NUnit" Version="3.12.0" />
-        <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" PrivateAssets="All" Version="3.0.0" />
-        <PackageReference Include="NUnit3TestAdapter" Version="3.16.1">
+        <PackageReference Include='Microsoft.NET.Test.Sdk' Version='16.6.1'/>
+        <PackageReference Include='NUnit' Version='3.12.0'/>
+        <PackageReference Include='Microsoft.CodeAnalysis.FxCopAnalyzers' PrivateAssets='All' Version='3.0.0'/>
+        <PackageReference Include='NUnit3TestAdapter' Version='3.16.1'>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
           <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="StyleCop.Analyzers" PrivateAssets="All" Version="1.2.0-beta.164" />
-        <PackageReference Include="PeterO.Numbers" Version="1.7.1" />
+        <PackageReference Include='StyleCop.Analyzers' PrivateAssets='All' Version='1.2.0-beta.164'/>
+        <PackageReference Include='PeterO.Numbers' Version='1.7.2-a0'/>
       </ItemGroup>
 </Project>
