@@ -5211,7 +5211,7 @@ CBOREncodeOptions(false, false, true));
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
           }
-        } else if (numberString.Length > 0 && numberString[0]=='-') {
+        } else if (numberString.Length > 0 && numberString[0] == '-') {
           Assert.AreEqual(-1, cbornumber.Sign);
         } else if (numberinfo["number"].AsString().Equals("0",
             StringComparison.Ordinal)) {
@@ -6716,8 +6716,7 @@ CBOREncodeOptions(false, false, true));
     }
 
     private static string Chop(string str) {
-       if(str.Length<100)return str;
-       return str.Substring(0, 100)+"...";
+       return (str.Length < 100) ? str : (str.Substring(0, 100) + "...");
     }
 
     private static void AssertReadThree(byte[] bytes) {

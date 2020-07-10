@@ -2253,8 +2253,14 @@ TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
 
     public static byte[] SlightlyModify(byte[] array,
       IRandomGenExtended rand) {
+      if (array == null) {
+        throw new ArgumentNullException(nameof(array));
+      }
       if (array.Length > 50000) {
         Console.WriteLine(String.Empty + array.Length);
+      }
+      if (rand == null) {
+        throw new ArgumentNullException(nameof(rand));
       }
       int count2 = rand.GetInt32(10) + 1;
       for (int j = 0; j < count2; ++j) {
@@ -2475,42 +2481,193 @@ TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
     }
 
     private static string Chop(string str) {
-       if(str.Length<100)return str;
-       return str.Substring(0, 100)+"...";
+return (str.Length < 100) ? str : (str.Substring(0, 100) + "...");
     }
 
-    private static void VerifyEqual(CBORNumber expected, CBORNumber actual, CBORObject o1, CBORObject o2){
+    private static void VerifyEqual(
+      CBORNumber expected,
+      CBORNumber actual,
+      CBORObject o1,
+      CBORObject o2) {
         if (expected.CompareTo(actual) != 0) {
-          string msg = "o1=" + Chop(o1.ToString()) + ", o2=" + Chop(o2.ToString());
+          string msg = "o1=" + Chop(o1.ToString()) + ", o2=" +
+Chop(o2.ToString());
           TestCommon.CompareTestEqual(expected, actual, msg);
         }
     }
 
     [Test]
+    public void TestRational1() {
+var eb1 = new byte[] {
+  (byte)0xd8, 0x1e,
+  (byte)0x82,
+  (byte)0xc2, 0x58, 0x22, 0x24,
+  (byte)0xba, 0x21,
+  (byte)0xf3,
+  (byte)0xa9,
+  (byte)0xfb, 0x1c,
+  (byte)0xde,
+  (byte)0xc5, 0x49,
+  (byte)0xd2, 0x2c,
+  (byte)0x94, 0x27,
+  (byte)0xb1, 0x0d, 0x36,
+  (byte)0xea, 0x1c,
+  (byte)0xcb, 0x5d,
+  (byte)0xe9, 0x13,
+  (byte)0xef,
+  (byte)0xf2, 0x2c,
+  (byte)0xbf,
+  (byte)0xc8,
+  (byte)0xad, 0x42,
+  (byte)0x8a,
+  (byte)0xae, 0x65,
+  (byte)0x85,
+  (byte)0xc2, 0x58, 0x19, 0x74,
+  (byte)0xf5, 0x20, 0x74, 0x43,
+  (byte)0xd4,
+  (byte)0xdf,
+  (byte)0x93, 0x12,
+  (byte)0xc3,
+  (byte)0x89,
+  (byte)0xdd, 0x53, 0x62,
+  (byte)0xdf, 0x5c, 0x66, 0x2f, 0x4d,
+  (byte)0xbd, 0x7e, 0x57, (byte)0xdd, (byte)0x91, 0x6c,
+};
+Console.WriteLine(String.Empty +
+CBORObject.DecodeFromBytes(eb1).ToObject(typeof(ERational)));
+TestRandomOne(eb1);
+    }
+
+    [Test]
+    public void TestRational2() {
+var eb1 = new byte[] {
+  (byte)0xd8, 0x1e,
+  (byte)0x82,
+  (byte)0xc2, 0x58, 0x18, 0x2d,
+  (byte)0x8e, 0x6b, 0x70, 0x4e,
+  (byte)0xf2,
+  (byte)0xc9, 0x15,
+  (byte)0xe3, 0x34, 0x5f, 0x7c,
+  (byte)0xbb, 0x07, 0x22,
+  (byte)0xd3, 0x40, 0x37, 0x52,
+  (byte)0xbd, 0x75, 0x3a, 0x4b,
+  (byte)0xe0,
+  (byte)0xc2, 0x51, 0x28, 0x42,
+  (byte)0x81,
+  (byte)0x93, 0x22, 0x6e,
+  (byte)0x94, 0x4d,
+  (byte)0xff, (byte)0xdb, 0x45, (byte)0x97, 0x0c, 0x56, 0x04, (byte)0xe3,
+  0x21,
+};
+Console.WriteLine(String.Empty +
+CBORObject.DecodeFromBytes(eb1).ToObject(typeof(ERational)));
+TestRandomOne(eb1);
+    }
+
+    [Test]
+    public void TestRational3() {
+var eb1 = new byte[] {
+  (byte)0xd8, 0x1e,
+  (byte)0x82, 0x1b, 0x00, 0x00, 0x26,
+  (byte)0xbd, 0x75, 0x51,
+  (byte)0x9a, 0x7b,
+  (byte)0xc2, 0x57, 0x0c,
+  (byte)0xb4, 0x04,
+  (byte)0xe3, 0x21,
+  (byte)0xf0,
+  (byte)0xb6, 0x2d,
+  (byte)0xd3, 0x6b,
+  (byte)0xd8, 0x4e,
+  (byte)0xf2,
+  (byte)0xc9, 0x15, (byte)0xe3, 0x34, (byte)0xa2, 0x16, 0x07, 0x07, 0x0d,
+  (byte)0xd3,
+};
+Console.WriteLine(String.Empty +
+CBORObject.DecodeFromBytes(eb1).ToObject(typeof(ERational)));
+TestRandomOne(eb1);
+    }
+
+    [Test]
     [Timeout(20000)]
     public void TestAsNumberAddSubtractSpecific() {
-       var eb1 = new byte[] { (byte)0xD9,0x01,0x08,(byte)0x82,(byte)0xC3,0x57,0x0F,(byte)0xF2,(byte)0xA2,(byte)0x97,0x0B,(byte)0xEE,(byte)0xA8,(byte)0x9C,(byte)0xA1,0x3F,0x7B,0x22,0x5F,(byte)0x82,0x4F,(byte)0xFA,0x3D,(byte)0xAA,(byte)0xFC,0x27,0x64,(byte)0xF0,0x2F,(byte)0xC2,0x58,0x19,0x16,0x01,(byte)0xE6,0x6A,0x7F,(byte)0xE4,(byte)0x90,(byte)0x9E,0x28,0x33,0x1D,(byte)0x87,(byte)0xCD,0x1E,0x37,(byte)0xDB,0x5D,(byte)0xD1,(byte)0xC2,(byte)0xC9,0x40,(byte)0xA6,0x1B,(byte)0xB5,(byte)0x87};
-       var eb2 = new byte[] { (byte)0xC5,(byte)0x82,0x18,(byte)0xBE,(byte)0xC2,0x58,0x26,0x06,0x5D,0x42,(byte)0xC3,(byte)0x88,(byte)0xBE,(byte)0x86,(byte)0xBE,0x15,(byte)0x9F,(byte)0x99,(byte)0x81,(byte)0x96,(byte)0xA6,(byte)0xAC,0x4B,0x37,(byte)0xB4,0x43,(byte)0xF8,0x17,0x6D,0x7E,0x10,0x38,(byte)0xDA,0x65,(byte)0x90,(byte)0xA9,(byte)0x80,(byte)0xEF,(byte)0xA3,0x65,(byte)0xCA,0x7D,0x4F,(byte)0xA8,0x27};
+       var eb1 = new byte[] {
+         (byte)0xd9, 0x01, 0x08,
+         (byte)0x82,
+         (byte)0xc3, 0x57, 0x0f,
+         (byte)0xf2,
+         (byte)0xa2,
+         (byte)0x97, 0x0b,
+         (byte)0xee,
+         (byte)0xa8,
+         (byte)0x9c,
+         (byte)0xa1, 0x3f, 0x7b, 0x22, 0x5f,
+         (byte)0x82, 0x4f,
+         (byte)0xfa, 0x3d,
+         (byte)0xaa,
+         (byte)0xfc, 0x27, 0x64,
+         (byte)0xf0, 0x2f,
+         (byte)0xc2, 0x58, 0x19, 0x16, 0x01,
+         (byte)0xe6, 0x6a, 0x7f,
+         (byte)0xe4,
+         (byte)0x90,
+         (byte)0x9e, 0x28, 0x33, 0x1d,
+         (byte)0x87,
+         (byte)0xcd, 0x1e, 0x37,
+         (byte)0xdb, 0x5d,
+         (byte)0xd1, (byte)0xc2, (byte)0xc9, 0x40, (byte)0xa6, 0x1b,
+         (byte)0xb5, (byte)0x87,
+       };
+       var eb2 = new byte[] {
+         (byte)0xc5,
+         (byte)0x82, 0x18,
+         (byte)0xbe,
+         (byte)0xc2, 0x58, 0x26, 0x06, 0x5d, 0x42,
+         (byte)0xc3,
+         (byte)0x88,
+         (byte)0xbe,
+         (byte)0x86,
+         (byte)0xbe, 0x15,
+         (byte)0x9f,
+         (byte)0x99,
+         (byte)0x81,
+         (byte)0x96,
+         (byte)0xa6,
+         (byte)0xac, 0x4b, 0x37,
+         (byte)0xb4, 0x43,
+         (byte)0xf8, 0x17, 0x6d, 0x7e, 0x10, 0x38,
+         (byte)0xda, 0x65,
+         (byte)0x90,
+         (byte)0xa9,
+         (byte)0x80, (byte)0xef, (byte)0xa3, 0x65, (byte)0xca, 0x7d, 0x4f,
+         (byte)0xa8, 0x27,
+       };
        CBORObject cbor1 = CBORObject.DecodeFromBytes(eb1);
        CBORObject cbor2 = CBORObject.DecodeFromBytes(eb2);
        EDecimal ed1 = AsED(cbor1);
        EDecimal ed2 = AsED(cbor2);
        // Should return NaN due to memory issues
-       ed1=ed1.Add(ed2);
+       ed1 = ed1.Add(ed2);
        Assert.IsTrue(ed1.IsNaN());
     }
 
     [Test]
     [Timeout(20000)]
     public void TestAsNumberAddSubtractSpecific2() {
-       var eb1 = new byte[] { (byte)0xC4,(byte)0x82,0x1B,0x00,0x00,0x00,0x6E,0x1C,0x51,0x6C,0x6E,(byte)0xC3,0x4F,0x7C,0x0F,0x6E,0x1D,(byte)0x89,0x26,(byte)0x8D,0x57,(byte)0xEC,0x00,0x54,(byte)0xB9,0x51,(byte)0xAE,0x43};
-       var eb2 = new byte[] { (byte)0xFA,0x75,0x00,0x57,(byte)0xBE};
+       var eb1 = new byte[] {
+         (byte)0xc4,
+         (byte)0x82, 0x1b, 0x00, 0x00, 0x00, 0x6e, 0x1c, 0x51, 0x6c, 0x6e,
+         (byte)0xc3, 0x4f, 0x7c, 0x0f, 0x6e, 0x1d,
+         (byte)0x89, 0x26,
+         (byte)0x8d, 0x57, (byte)0xec, 0x00, 0x54, (byte)0xb9, 0x51,
+         (byte)0xae, 0x43,
+       };
+       var eb2 = new byte[] { (byte)0xfa, 0x75, 0x00, 0x57, (byte)0xbe };
        CBORObject cbor1 = CBORObject.DecodeFromBytes(eb1);
        CBORObject cbor2 = CBORObject.DecodeFromBytes(eb2);
        EDecimal ed1 = AsED(cbor1);
        EDecimal ed2 = AsED(cbor2);
        // Should return NaN due to memory issues
-       ed1=ed1.Add(ed2);
+       ed1 = ed1.Add(ed2);
        Assert.IsTrue(ed1.IsNaN());
     }
 
@@ -2518,12 +2675,12 @@ TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
     [Timeout(100000)]
     public void TestAsNumberAddSubtract() {
       var r = new RandomGenerator();
-      //CBORNumber.SetWriter(s=>Console.WriteLine(s));
+      // CBORNumber.SetWriter(s=>Console.WriteLine(s));
       for (var i = 0; i < 3000; ++i) {
         CBORObject o1 = CBORTestCommon.RandomNumber(r);
         CBORObject o2 = CBORTestCommon.RandomNumber(r);
-        byte[] eb1=o1.EncodeToBytes();
-        byte[] eb2=o2.EncodeToBytes();
+        byte[] eb1 = o1.EncodeToBytes();
+        byte[] eb2 = o2.EncodeToBytes();
         CBORTestCommon.AssertRoundTrip(o1);
         CBORTestCommon.AssertRoundTrip(o2);
         CBORNumber on1 = o1.AsNumber();
@@ -2533,24 +2690,30 @@ TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
         // Console.WriteLine(i+" "+Chop(o2.ToString()));
         // Console.WriteLine(i+" "+TestCommon.ToByteArrayString(eb1));
         // Console.WriteLine(i+" "+TestCommon.ToByteArrayString(eb2));
-        CBORNumber onSum=null;
+        CBORNumber onSum = null;
         try {
             onSum = on1.Add(on2);
-        } catch(OutOfMemoryException) {
+        } catch (OutOfMemoryException) {
             continue;
         }
-        if(!onSum.IsFinite()) {
-           Console.WriteLine("on1="+o1);
-           Console.WriteLine("on2="+o2);
+        if (!onSum.IsFinite()) {
+           Console.WriteLine("on1=" + o1);
+           Console.WriteLine("on2=" + o2);
            continue;
         }
-        if(!onSum.IsFinite())Assert.Fail(o1.ToString());
+        if (!onSum.IsFinite()) {
+          Assert.Fail(o1.ToString());
+        }
         CBORNumber on2a = onSum.Subtract(on1);
-        if(!on2a.IsFinite())Assert.Fail(o1.ToString());
-        VerifyEqual(on2a, on2,o1,o2);
+        if (!on2a.IsFinite()) {
+          Assert.Fail(o1.ToString());
+        }
+        VerifyEqual(on2a, on2, o1, o2);
         CBORNumber on1a = onSum.Subtract(on2);
-        if(!on1a.IsFinite())Assert.Fail(o1.ToString());
-        VerifyEqual(on1a, on1,o1,o2);
+        if (!on1a.IsFinite()) {
+          Assert.Fail(o1.ToString());
+        }
+        VerifyEqual(on1a, on1, o1, o2);
       }
     }
 
@@ -2561,34 +2724,40 @@ TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
       for (var i = 0; i < 3000; ++i) {
         CBORObject o1 = CBORTestCommon.RandomNumber(r);
         CBORObject o2 = CBORTestCommon.RandomNumber(r);
-        byte[] eb1=o1.EncodeToBytes();
-        byte[] eb2=o2.EncodeToBytes();
+        byte[] eb1 = o1.EncodeToBytes();
+        byte[] eb2 = o2.EncodeToBytes();
         CBORTestCommon.AssertRoundTrip(o1);
         CBORTestCommon.AssertRoundTrip(o2);
         CBORNumber on1 = o1.AsNumber();
         CBORNumber on2 = o2.AsNumber();
-        CBORNumber onSum=null;
+        CBORNumber onSum = null;
         try {
             onSum = on1.Multiply(on2);
-        } catch(OutOfMemoryException) {
+        } catch (OutOfMemoryException) {
             continue;
         }
-        if(!onSum.IsFinite()) {
-           Console.WriteLine("on1="+o1);
-           Console.WriteLine("on2="+o2);
+        if (!onSum.IsFinite()) {
+           Console.WriteLine("on1=" + o1);
+           Console.WriteLine("on2=" + o2);
            continue;
         }
-        //Console.WriteLine(i+"");
-        //Console.WriteLine(i+" "+Chop(o1.ToString()));
-        //Console.WriteLine(i+" "+Chop(o2.ToString()));
-        Console.WriteLine(i+" "+Chop(onSum.ToString()));
-        if(!onSum.IsFinite())Assert.Fail(o1.ToString());
+        // Console.WriteLine(i+"");
+        // Console.WriteLine(i+" "+Chop(o1.ToString()));
+        // Console.WriteLine(i+" "+Chop(o2.ToString()));
+        Console.WriteLine(i + " " + Chop(onSum.ToString()));
+      if (!onSum.IsFinite()) {
+        Assert.Fail(o1.ToString());
+      }
         CBORNumber on2a = onSum.Divide(on1);
-        if(!on2a.IsFinite())Assert.Fail(o1.ToString());
-        VerifyEqual(on2a, on2,o1,o2);
+        if (!on2a.IsFinite()) {
+          Assert.Fail(o1.ToString());
+        }
+        VerifyEqual(on2a, on2, o1, o2);
         CBORNumber on1a = onSum.Divide(on2);
-        if(!on1a.IsFinite())Assert.Fail(o1.ToString());
-        VerifyEqual(on1a, on1,o1,o2);
+        if (!on1a.IsFinite()) {
+          Assert.Fail(o1.ToString());
+        }
+        VerifyEqual(on1a, on1, o1, o2);
       }
     }
 

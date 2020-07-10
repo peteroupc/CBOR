@@ -41,9 +41,11 @@ namespace PeterO {
            wr = writer;
          }
          if (wr != null) {
-           System.Diagnostics.Debug.WriteLine(str);
-         wr(str);
-       return;
+          #if !NET20
+          System.Diagnostics.Debug.WriteLine(str);
+          #endif
+          wr(str);
+          return;
          } else {
             throw new NotSupportedException("System.Console not found");
          }

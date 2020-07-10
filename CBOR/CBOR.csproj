@@ -42,4 +42,4 @@ Version 4.1:
 
 <PackageReference Include='PeterO.Numbers' Version='1.7.1'/>
 <PackageReference Include='Microsoft.CodeAnalysis.FxCopAnalyzers' PrivateAssets='All' Version='3.0.0'/></ItemGroup>
-            </Project>
+               </Project>
