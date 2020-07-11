@@ -2588,7 +2588,7 @@ TestRandomOne(eb1);
     }
 
     [Test]
-    [Timeout(20000)]
+    [Timeout(60000)]
     public void TestAsNumberAddSubtractSpecific() {
        var eb1 = new byte[] {
          (byte)0xd9, 0x01, 0x08,
@@ -2651,7 +2651,7 @@ TestRandomOne(eb1);
     }
 
     [Test]
-    [Timeout(20000)]
+    [Timeout(60000)]
     public void TestAsNumberAddSubtractSpecific2() {
        var eb1 = new byte[] {
          (byte)0xc4,

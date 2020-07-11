@@ -345,8 +345,9 @@ JSONOptions("allowduplicatekeys=false");
     public void TestAsNumberAdd() {
       var r = new RandomGenerator();
       for (var i = 0; i < 1000; ++i) {
-        CBORObject o1 = CBORTestCommon.RandomNumber(r);
-        CBORObject o2 = CBORTestCommon.RandomNumber(r);
+        // NOTE: Avoid generating high-exponent numbers for this test
+        CBORObject o1 = CBORTestCommon.RandomNumber(r, true);
+        CBORObject o2 = CBORTestCommon.RandomNumber(r, true);
         EDecimal cmpCobj = null;
         try {
            cmpCobj = o1.AsNumber().Add(o2.AsNumber()).ToEDecimal();
