@@ -2675,10 +2675,10 @@ TestRandomOne(eb1);
     [Timeout(100000)]
     public void TestAsNumberAddSubtract() {
       var r = new RandomGenerator();
-      // CBORNumber.SetWriter(s=>Console.WriteLine(s));
       for (var i = 0; i < 3000; ++i) {
-        CBORObject o1 = CBORTestCommon.RandomNumber(r);
-        CBORObject o2 = CBORTestCommon.RandomNumber(r);
+        // NOTE: Avoid generating high-exponent numbers for this test
+        CBORObject o1 = CBORTestCommon.RandomNumber(r, true);
+        CBORObject o2 = CBORTestCommon.RandomNumber(r, true);
         byte[] eb1 = o1.EncodeToBytes();
         byte[] eb2 = o2.EncodeToBytes();
         CBORTestCommon.AssertRoundTrip(o1);
@@ -2697,8 +2697,8 @@ TestRandomOne(eb1);
             continue;
         }
         if (!onSum.IsFinite()) {
-           Console.WriteLine("on1=" + o1);
-           Console.WriteLine("on2=" + o2);
+           // Console.WriteLine("on1=" + o1);
+           // Console.WriteLine("on2=" + o2);
            continue;
         }
         if (!onSum.IsFinite()) {
@@ -2737,14 +2737,14 @@ TestRandomOne(eb1);
             continue;
         }
         if (!onSum.IsFinite()) {
-           Console.WriteLine("on1=" + o1);
-           Console.WriteLine("on2=" + o2);
+           // Console.WriteLine("on1=" + o1);
+           // Console.WriteLine("on2=" + o2);
            continue;
         }
         // Console.WriteLine(i+"");
         // Console.WriteLine(i+" "+Chop(o1.ToString()));
         // Console.WriteLine(i+" "+Chop(o2.ToString()));
-        Console.WriteLine(i + " " + Chop(onSum.ToString()));
+        // Console.WriteLine(i + " " + Chop(onSum.ToString()));
       if (!onSum.IsFinite()) {
         Assert.Fail(o1.ToString());
       }
@@ -4801,13 +4801,13 @@ TestRandomOne(eb1);
     }
 
     private static EDecimal AsED(CBORObject obj) {
-      return EDecimal.FromString(
-          obj.ToObject(typeof(EDecimal)).ToString());
+      object o = obj.ToObject(typeof(EDecimal));
+      return (EDecimal)o;
     }
 
     private static ERational AsER(CBORObject obj) {
-      return ERational.FromString(
-          obj.ToObject(typeof(ERational)).ToString());
+      object o = obj.ToObject(typeof(ERational));
+      return (ERational)o;
     }
 
     private static void AddSubCompare(CBORObject o1, CBORObject o2) {

@@ -26,7 +26,30 @@ namespace Test {
     internal static readonly ERational RatNegInf =
       ERational.NegativeInfinity;
 
+    private static EFloat RandomEFloatLowExponent(IRandomGenExtended rand) {
+      while (true) {
+         EFloat ef = RandomObjects.RandomEFloat(rand);
+if (ef.Exponent.CompareTo(-20000) >= 0 && ef.Exponent.CompareTo(20000) <= 0) {
+  return ef;
+}
+       }
+    }
+
+    private static EDecimal RandomEDecimalLowExponent(IRandomGenExtended rand) {
+      while (true) {
+         EDecimal ef = RandomObjects.RandomEDecimal(rand);
+if (ef.Exponent.CompareTo(-20000) >= 0 && ef.Exponent.CompareTo(20000) <= 0) {
+  return ef;
+}
+       }
+    }
+
     public static CBORObject RandomNumber(IRandomGenExtended rand) {
+      return RandomNumber(rand, false);
+    }
+
+    public static CBORObject RandomNumber(IRandomGenExtended rand, bool
+lowExponent) {
       object o = null;
       switch (rand.GetInt32(6)) {
         case 0:
@@ -43,10 +66,12 @@ namespace Test {
           return CBORObject.FromObject(
               RandomObjects.RandomEInteger(rand));
         case 3:
-          return CBORObject.FromObject(
-              RandomObjects.RandomEFloat(rand));
+          o = lowExponent ? RandomEFloatLowExponent(rand) :
+               RandomObjects.RandomEFloat(rand);
+          return CBORObject.FromObject(o);
         case 4:
-          o = RandomObjects.RandomEDecimal(rand);
+          o = lowExponent ? RandomEDecimalLowExponent(rand) :
+               RandomObjects.RandomEDecimal(rand);
           return CBORObject.FromObject(o);
         case 5:
           o = RandomObjects.RandomInt64(rand);

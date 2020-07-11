@@ -35,7 +35,7 @@ namespace Test {
       "true\u0005", "8024\"", "8024x", "8024}", "8024\u0300",
       "8024\u0005", "{\"test\":5}}", "{\"test\":5}{", "[5]]", "[5][",
       "0000", "0x1", "0xf", "0x20", "0x01",
-      "-3x", "-3e89x", "\u0005true", "\"x\\u0005z\"",
+      "-3x", "-3e89x", "\u0005true", "x\\u0005z",
       "0,2", "0,05", "-0,2", "-0,05",
       "0X1", "0Xf", "0X20", "0X01", ".2", ".05", "-.2",
       "-.05", "23.", "23.e0", "23.e1", "0.", "[0000]", "[0x1]",
@@ -65,7 +65,7 @@ namespace Test {
       "[0.1]",
       "[0.1001]",
       "[0.0]",
-      "[-3 " + ",-5]", "\n\r\t\u0020true",
+      "[-3 " + ",-5]", "\n\r\t\u0020true", "\"x\\u0005z\"",
       "[0.00]", "[0.000]", "[0.01]", "[0.001]", "[0.5]", "[0E5]",
       "[0E+6]", "[\"\ud800\udc00\"]", "[\"\\ud800\\udc00\"]",
       "[\"\\ud800\\udc00\ud800\udc00\"]", "23.0e01", "23.0e00", "[23.0e01]",
@@ -199,7 +199,7 @@ JSONOptions("allowduplicatekeys=false");
         // Check only FromJSONString
         try {
           CBORObject.FromJSONString(str, opt);
-          Assert.Fail("Should have failed [str = " + str + "]");
+          Assert.Fail("Should have failed: str = " + str);
         } catch (CBORException) {
           // NOTE: Intentionally empty
         } catch (Exception ex) {
@@ -211,7 +211,7 @@ JSONOptions("allowduplicatekeys=false");
       using (var ms = new MemoryStream(bytes)) {
         try {
           CBORObject.ReadJSON(ms, opt);
-          Assert.Fail("Should have failed");
+          Assert.Fail("Should have failed: str = " + str);
         } catch (CBORException) {
           // NOTE: Intentionally empty
         } catch (Exception ex) {
@@ -221,7 +221,7 @@ JSONOptions("allowduplicatekeys=false");
       }
       try {
         CBORObject.FromJSONString(str, opt);
-        Assert.Fail("Should have failed");
+        Assert.Fail("Should have failed: str = " + str);
       } catch (CBORException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
