@@ -25,6 +25,6 @@
           <PrivateAssets>all</PrivateAssets>
         </PackageReference>
         <PackageReference Include='StyleCop.Analyzers' PrivateAssets='All' Version='1.2.0-beta.164'/>
-        <PackageReference Include='PeterO.Numbers' Version='1.7.2-a0'/>
+        <PackageReference Include='PeterO.Numbers' Version='1.7.1'/>
       </ItemGroup>
 </Project>

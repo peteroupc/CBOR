@@ -29,18 +29,22 @@ namespace Test {
     private static EFloat RandomEFloatLowExponent(IRandomGenExtended rand) {
       while (true) {
          EFloat ef = RandomObjects.RandomEFloat(rand);
-if (ef.Exponent.CompareTo(-20000) >= 0 && ef.Exponent.CompareTo(20000) <= 0) {
-  return ef;
-}
+         if (
+           ef.Exponent.CompareTo(-20000) >= 0 &&
+ef.Exponent.CompareTo(20000) <= 0) {
+           return ef;
+         }
        }
     }
 
     private static EDecimal RandomEDecimalLowExponent(IRandomGenExtended rand) {
       while (true) {
          EDecimal ef = RandomObjects.RandomEDecimal(rand);
-if (ef.Exponent.CompareTo(-20000) >= 0 && ef.Exponent.CompareTo(20000) <= 0) {
-  return ef;
-}
+         if (
+           ef.Exponent.CompareTo(-20000) >= 0 &&
+ef.Exponent.CompareTo(20000) <= 0) {
+           return ef;
+         }
        }
     }
 
