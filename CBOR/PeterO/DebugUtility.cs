@@ -41,7 +41,7 @@ namespace PeterO {
            wr = writer;
          }
          if (wr != null) {
-          #if !NET20
+          #if !NET20 && !NET40
           System.Diagnostics.Debug.WriteLine(str);
           #endif
           wr(str);

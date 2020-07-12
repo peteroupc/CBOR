@@ -218,7 +218,7 @@ namespace PeterO.Cbor {
       // is a JSON number
       var endIndex = new int[1];
       endIndex[0] = numberStartIndex;
-      obj = CBORDataUtilities.ParseJSONNumber(
+      obj = CBORDataUtilitiesTextString.ParseJSONNumber(
           this.jstring,
           numberStartIndex,
           this.endPos - numberStartIndex,
@@ -312,7 +312,7 @@ namespace PeterO.Cbor {
         // is a JSON number
         var endIndex = new int[1];
         endIndex[0] = numberStartIndex;
-        obj = CBORDataUtilities.ParseJSONNumber(
+        obj = CBORDataUtilitiesTextString.ParseJSONNumber(
             this.jstring,
             numberStartIndex,
             this.endPos - numberStartIndex,
