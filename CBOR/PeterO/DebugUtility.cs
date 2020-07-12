@@ -7,7 +7,9 @@ at: http://peteroupc.github.io/
  */
 using System;
 using System.Reflection;
-
+// Use directives rather than the Conditional attribute,
+// to avoid the chance of logging statements leaking in release builds
+#if DEBUG
 namespace PeterO {
   internal static class DebugUtility {
     private static readonly object WriterLock = new Object();
@@ -70,3 +72,4 @@ namespace PeterO {
     }
   }
 }
+#endif

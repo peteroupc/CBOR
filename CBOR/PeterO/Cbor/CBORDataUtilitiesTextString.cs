@@ -12,10 +12,7 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-  /// <summary>Contains methods useful for reading and writing data, with
-  /// a focus on CBOR.</summary>
-  public static class CBORDataUtilitiesTextString {
-    private const string HexAlphabet = "0123456789ABCDEF";
+  internal static class CBORDataUtilitiesTextString {
 
     private const long DoubleNegInfinity = unchecked((long)(0xfffL << 52));
     private const long DoublePosInfinity = unchecked((long)(0x7ffL << 52));
@@ -303,9 +300,9 @@ namespace PeterO.Cbor {
             endPos - initialOffset,
             EContext.Binary64);
         long lb = ef.ToDoubleBits();
-        return (!CBORDataUtilities.IsBeyondSafeRange(lb) &&
-CBORDataUtilities.IsIntegerValue(lb)) ?
-          CBORObject.FromObject(CBORDataUtilities.GetIntegerValue(lb)) :
+        return (!CBORUtilities.IsBeyondSafeRange(lb) &&
+CBORUtilities.IsIntegerValue(lb)) ?
+          CBORObject.FromObject(CBORUtilities.GetIntegerValue(lb)) :
           CBORObject.FromFloatingPointBits(lb, 8);
       } else if (kind == JSONOptions.ConversionMode.IntOrFloat) {
         EContext ctx = EContext.Binary64.WithBlankFlags();
@@ -325,9 +322,9 @@ CBORDataUtilities.IsIntegerValue(lb)) ?
           return CBORObject.FromFloatingPointBits(lb, 8);
         } else {
           // Exact conversion; treat as ConversionMode.IntToFloatFromDouble
-          return (!CBORDataUtilities.IsBeyondSafeRange(lb) &&
-CBORDataUtilities.IsIntegerValue(lb)) ?
-            CBORObject.FromObject(CBORDataUtilities.GetIntegerValue(lb)) :
+          return (!CBORUtilities.IsBeyondSafeRange(lb) &&
+CBORUtilities.IsIntegerValue(lb)) ?
+            CBORObject.FromObject(CBORUtilities.GetIntegerValue(lb)) :
             CBORObject.FromFloatingPointBits(lb, 8);
         }
       } else {

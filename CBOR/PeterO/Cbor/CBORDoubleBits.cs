@@ -177,7 +177,7 @@ return this.IsNaN(obj) ? (-2) : ((((long)obj) >> 63) != 0 ? -1 : 1);
     }
 
     public bool IsIntegral(object obj) {
-      return CBORDataUtilities.IsIntegerValue((long)obj);
+      return CBORUtilities.IsIntegerValue((long)obj);
     }
 
     public object Negate(object obj) {

@@ -104,6 +104,48 @@ namespace Test {
       }
     }
 
+    public static void AssertByteArraysEqual(
+      byte[] arr1,
+      int offset,
+      int length,
+      byte[] arr2) {
+      if (!ByteArraysEqual(arr1, offset, length, arr2, 0, arr2 == null ? 0 :
+arr2.Length)) {
+        Assert.Fail("Expected " + ToByteArrayString(arr1) + ",\ngot..... " +
+          ToByteArrayString(arr2));
+      }
+    }
+
+    public static void AssertByteArraysEqual(
+      byte[] arr1,
+      byte[] arr2,
+      int offset2,
+      int length2) {
+      if (!ByteArraysEqual(
+        arr1,
+        0,
+        arr1 == null ? 0 : arr1.Length,
+        arr2,
+        offset2,
+        length2)) {
+        Assert.Fail("Expected " + ToByteArrayString(arr1) + ",\ngot..... " +
+          ToByteArrayString(arr2));
+      }
+    }
+
+    public static void AssertByteArraysEqual(
+      byte[] arr1,
+      int offset,
+      int length,
+      byte[] arr2,
+      int offset2,
+      int length2) {
+      if (!ByteArraysEqual(arr1, offset, length, arr2, offset2, length2)) {
+        Assert.Fail("Expected " + ToByteArrayString(arr1) + ",\ngot..... " +
+          ToByteArrayString(arr2));
+      }
+    }
+
     public static void AssertNotEqual(object o, object o2, string msg) {
       if (o == null) {
         throw new ArgumentNullException(nameof(o));
@@ -588,25 +630,124 @@ namespace Test {
     }
 
     public static string ToByteArrayString(byte[] bytes) {
+      return (bytes == null) ? "null" : (ToByteArrayString(bytes, 0,
+  bytes.Length));
+    }
+
+    public static string ToByteArrayString(byte[] bytes, int offset, int
+length) {
       if (bytes == null) {
         return "null";
+      }
+      if (bytes == null) {
+        throw new ArgumentNullException(nameof(bytes));
+      }
+      if (offset < 0) {
+        throw new ArgumentException("\"offset\" (" + offset + ") is not" +
+"\u0020greater or equal to 0");
+      }
+      if (offset > bytes.Length) {
+        throw new ArgumentException("\"offset\" (" + offset + ") is not less" +
+"\u0020or equal to " + bytes.Length);
+      }
+      if (length < 0) {
+        throw new ArgumentException(" (" + length + ") is not greater or" +
+"\u0020equal to 0");
+      }
+      if (length > bytes.Length) {
+        throw new ArgumentException(" (" + length + ") is not less or equal" +
+"\u0020to " + bytes.Length);
+      }
+      if (bytes.Length - offset < length) {
+        throw new ArgumentException("\"bytes\" + \"'s length minus \" +" +
+"\u0020offset (" + (bytes.Length - offset) + ") is not greater or equal to " +
+length);
       }
       var sb = new System.Text.StringBuilder();
       const string ValueHex = "0123456789ABCDEF";
       sb.Append("new byte[] { ");
-      for (var i = 0; i < bytes.Length; ++i) {
+      for (var i = 0; i < length; ++i) {
         if (i > 0) {
           sb.Append(","); }
-        if ((bytes[i] & 0x80) != 0) {
+        if ((bytes[offset + i] & 0x80) != 0) {
           sb.Append("(byte)0x");
         } else {
           sb.Append("0x");
         }
-        sb.Append(ValueHex[(bytes[i] >> 4) & 0xf]);
-        sb.Append(ValueHex[bytes[i] & 0xf]);
+        sb.Append(ValueHex[(bytes[offset + i] >> 4) & 0xf]);
+        sb.Append(ValueHex[bytes[offset + i] & 0xf]);
       }
       sb.Append("}");
       return sb.ToString();
+    }
+
+    private static bool ByteArraysEqual(
+      byte[] arr1,
+      int offset,
+      int length,
+      byte[] arr2,
+      int offset2,
+      int length2) {
+      if (arr1 == null) {
+        return arr2 == null;
+      }
+      if (arr2 == null) {
+        return false;
+      }
+      if (offset < 0) {
+        throw new ArgumentException("\"offset\" (" + offset + ") is not" +
+"\u0020greater or equal to 0");
+      }
+      if (offset > arr1.Length) {
+        throw new ArgumentException("\"offset\" (" + offset + ") is not less" +
+"\u0020or equal to " + arr1.Length);
+      }
+      if (length < 0) {
+        throw new ArgumentException(" (" + length + ") is not greater or" +
+"\u0020equal to 0");
+      }
+      if (length > arr1.Length) {
+        throw new ArgumentException(" (" + length + ") is not less or equal" +
+"\u0020to " + arr1.Length);
+      }
+      if (arr1.Length - offset < length) {
+        throw new ArgumentException("\"arr1\" + \"'s length minus \" +" +
+"\u0020offset (" + (arr1.Length - offset) + ") is not greater or equal to " +
+length);
+      }
+      if (arr2 == null) {
+        throw new ArgumentNullException(nameof(arr2));
+      }
+      if (offset2 < 0) {
+        throw new ArgumentException("\"offset2\" (" + offset2 + ") is not" +
+"\u0020greater or equal to 0");
+      }
+      if (offset2 > arr2.Length) {
+        throw new ArgumentException("\"offset2\" (" + offset2 + ") is not" +
+"\u0020less or equal to " + arr2.Length);
+      }
+      if (length2 < 0) {
+        throw new ArgumentException(" (" + length2 + ") is not greater or" +
+"\u0020equal to 0");
+      }
+      if (length2 > arr2.Length) {
+        throw new ArgumentException(" (" + length2 + ") is not less or equal" +
+"\u0020to " + arr2.Length);
+      }
+      if (arr2.Length - offset2 < length2) {
+        throw new ArgumentException("\"arr2\"'s length minus " +
+"\u0020offset2 (" + (arr2.Length - offset2) + ") is not greater or equal to " +
+length2);
+      }
+      if (length != length2) {
+        return false;
+      }
+      for (var i = 0; i < length; ++i) {
+        if (arr1[offset + i] != arr2[offset + i]) {
+          return false;
+        }
+      }
+      return true;
     }
 
     private static bool ByteArraysEqual(byte[] arr1, byte[] arr2) {

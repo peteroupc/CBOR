@@ -391,7 +391,9 @@ obj.Untag().ToJSONString()));
 
       if (options != null && options.NumberConversion ==
         JSONOptions.ConversionMode.Double) {
-        return CBORObject.FromFloatingPointBits(IntegerToDoubleBits(-digit), 8);
+        return CBORObject.FromFloatingPointBits(
+           CBORUtilities.IntegerToDoubleBits(-digit),
+           8);
       } else if (options != null && options.NumberConversion ==
         JSONOptions.ConversionMode.Decimal128) {
         return CBORObject.FromObject(EDecimal.FromInt32(-digit));
@@ -413,7 +415,9 @@ obj.Untag().ToJSONString()));
 
       if (options != null && options.NumberConversion ==
         JSONOptions.ConversionMode.Double) {
-        return CBORObject.FromFloatingPointBits(IntegerToDoubleBits(digit), 8);
+        return CBORObject.FromFloatingPointBits(
+           CBORUtilities.IntegerToDoubleBits(digit),
+           8);
       } else if (options != null && options.NumberConversion ==
         JSONOptions.ConversionMode.Decimal128) {
         return CBORObject.FromObject(EDecimal.FromInt32(digit));
@@ -421,81 +425,6 @@ obj.Untag().ToJSONString()));
         // NOTE: Assumes digit is nonnegative, so PreserveNegativeZeros is irrelevant
         return CBORObject.FromObject(digit);
       }
-    }
-
-    internal static long IntegerToDoubleBits(int i) {
-      if (i == Int32.MinValue) {
-        return unchecked((long)0xc1e0000000000000L);
-      }
-      long longmant = Math.Abs(i);
-      var expo = 0;
-      while (longmant < (1 << 52)) {
-        longmant <<= 1;
-        --expo;
-      }
-      // Clear the high bits where the exponent and sign are
-      longmant &= 0xfffffffffffffL;
-      longmant |= (long)(expo + 1075) << 52;
-      if (i < 0) {
-        longmant |= unchecked((long)(1L << 63));
-      }
-      return longmant;
-    }
-
-    internal static bool IsBeyondSafeRange(long bits) {
-      // Absolute value of double is greater than 9007199254740991.0,
-      // or value is NaN
-      bits &= ~(1L << 63);
-      return bits >= DoublePosInfinity || bits > 0x433fffffffffffffL;
-    }
-
-    internal static bool IsIntegerValue(long bits) {
-      bits &= ~(1L << 63);
-      if (bits == 0) {
-        return true;
-      }
-      // Infinity and NaN
-      if (bits >= DoublePosInfinity) {
-        return false;
-      }
-      // Beyond non-integer range
-      if ((bits >> 52) >= 0x433) {
-        return true;
-      }
-      // Less than 1
-      if ((bits >> 52) <= 0x3fe) {
-        return false;
-      }
-      var exp = (int)(bits >> 52);
-      long mant = bits & ((1L << 52) - 1);
-      int shift = 52 - (exp - 0x3ff);
-      return ((mant >> shift) << shift) == mant;
-    }
-
-    internal static long GetIntegerValue(long bits) {
-      long sgn;
-      sgn = ((bits >> 63) != 0) ? -1L : 1L;
-      bits &= ~(1L << 63);
-      if (bits == 0) {
-        return 0;
-      }
-      // Infinity and NaN
-      if (bits >= DoublePosInfinity) {
-        throw new NotSupportedException();
-      }
-      // Beyond safe range
-      if ((bits >> 52) >= 0x434) {
-        throw new NotSupportedException();
-      }
-      // Less than 1
-      if ((bits >> 52) <= 0x3fe) {
-        throw new NotSupportedException();
-      }
-      var exp = (int)(bits >> 52);
-      long mant = bits & ((1L << 52) - 1);
-      mant |= 1L << 52;
-      int shift = 52 - (exp - 0x3ff);
-      return (mant >> shift) * sgn;
     }
 
     /// <summary>Parses a number whose format follows the JSON

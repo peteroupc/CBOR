@@ -137,6 +137,99 @@
             space characters, including spaces.</remarks>
 
 </doc>
+<doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.Char[])">
+
+            <summary>Parses a number from a sequence of <c>char</c> s whose
+            format follows the JSON specification. The method uses a
+            JSONOptions with all default properties except for a
+            PreserveNegativeZero property of false.</summary>
+            <param name='chars'>A sequence of <c>char</c> s to parse as a JSON
+            number.</param>
+            <returns>A CBOR object that represents the parsed number. Returns
+            positive zero if the number is a zero that starts with a minus sign
+            (such as "-0" or "-0.0"). Returns null if the parsing fails,
+            including if the sequence of <c>char</c> s is null or
+            empty.</returns>
+
+</doc>
+<doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.Char[],PeterO.Cbor.JSONOptions)">
+
+            <summary>Parses a number from a sequence of <c>char</c> s whose
+            format follows the JSON specification (RFC 8259) and converts that
+            number to a CBOR object.</summary>
+            <param name='chars'>A sequence of <c>char</c> s to parse as a JSON
+            number.</param>
+            <param name='options'>An object containing options to control how
+            JSON numbers are decoded to CBOR objects. Can be null, in which
+            case a JSONOptions object with all default properties is used
+            instead.</param>
+            <returns>A CBOR object that represents the parsed number. Returns
+            null if the parsing fails, including if the sequence of <c>char</c> s is null or empty.</returns>
+            <remarks>Roughly speaking, a valid JSON number consists of an
+            optional minus sign, one or more basic digits (starting with 1 to 9
+            unless there is only one digit and that digit is 0), an optional
+            decimal point (".", full stop) with one or more basic digits, and
+            an optional letter E or e with an optional plus or minus sign and
+            one or more basic digits (the exponent). A sequence of <c>char</c> s representing a valid JSON number is not allowed to contain white
+            space characters, including spaces.</remarks>
+
+</doc>
+<doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.Char[],System.Int32,System.Int32)">
+
+            <summary>Parses a number whose format follows the JSON
+            specification (RFC 8259) from a portion of a sequence of
+            <c>char</c> s, and converts that number to a CBOR object.</summary>
+            <param name='chars'>A sequence of <c>char</c> s to parse as a JSON
+            number.</param>
+            <param name='offset'>An index, starting at 0, showing where the
+            desired portion of <paramref name='chars'/> begins.</param>
+            <param name='count'>The length, in code units, of the desired
+            portion of <paramref name='chars'/> (but not more than <paramref name='chars'/> 's length).</param>
+            <returns>A CBOR object that represents the parsed number. Returns
+            null if the parsing fails, including if the sequence of <c>char</c> s is null or empty.</returns>
+            <exception cref='ArgumentException'>Either <paramref name='offset'/> or <paramref name='count'/> is less than 0 or
+            greater than <paramref name='chars'/> 's length, or <paramref name='chars'/> 's length minus <paramref name='offset'/> is less
+            than <paramref name='count'/>.</exception>
+            <exception cref='ArgumentNullException'>The parameter <paramref name='chars'/> is null.</exception>
+            <remarks>Roughly speaking, a valid JSON number consists of an
+            optional minus sign, one or more basic digits (starting with 1 to 9
+            unless there is only one digit and that digit is 0), an optional
+            decimal point (".", full stop) with one or more basic digits, and
+            an optional letter E or e with an optional plus or minus sign and
+            one or more basic digits (the exponent). A sequence of <c>char</c> s representing a valid JSON number is not allowed to contain white
+            space characters, including spaces.</remarks>
+
+</doc>
+<doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.Char[],System.Int32,System.Int32,PeterO.Cbor.JSONOptions)">
+
+            <summary>Parses a number from a sequence of <c>char</c> s whose
+            format follows the JSON specification (RFC 8259) and converts that
+            number to a CBOR object.</summary>
+            <param name='chars'>A sequence of <c>char</c> s to parse as a JSON
+            number.</param>
+            <param name='offset'>An index, starting at 0, showing where the
+            desired portion of <paramref name='chars'/> begins.</param>
+            <param name='count'>The length, in code units, of the desired
+            portion of <paramref name='chars'/> (but not more than <paramref name='chars'/> 's length).</param>
+            <param name='options'>An object containing options to control how
+            JSON numbers are decoded to CBOR objects. Can be null, in which
+            case a JSONOptions object with all default properties is used
+            instead.</param>
+            <returns>A CBOR object that represents the parsed number. Returns
+            null if the parsing fails, including if the sequence of <c>char</c> s is null or empty or <paramref name='count'/> is 0 or
+            less.</returns>
+            <exception cref='ArgumentNullException'>The parameter <paramref name='chars'/> is null.</exception>
+            <exception cref='ArgumentException'>Unsupported conversion
+            kind.</exception>
+            <remarks>Roughly speaking, a valid JSON number consists of an
+            optional minus sign, one or more basic digits (starting with 1 to 9
+            unless there is only one digit and that digit is 0), an optional
+            decimal point (".", full stop) with one or more basic digits, and
+            an optional letter E or e with an optional plus or minus sign and
+            one or more basic digits (the exponent). A sequence of <c>char</c> s representing a valid JSON number is not allowed to contain white
+            space characters, including spaces.</remarks>
+
+</doc>
 <doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String)">
 
             <summary>Parses a number whose format follows the JSON
@@ -362,6 +455,14 @@
             (the exponent). A string representing a valid JSON number is not
             allowed to contain white space characters, including
             spaces.</remarks>
+</doc>
+<doc name="T:PeterO.Cbor.CBORDataUtilitiesByteArrayString">
+<summary>Contains methods useful for reading and writing data, with
+            a focus on CBOR.</summary>
+</doc>
+<doc name="T:PeterO.Cbor.CBORDataUtilitiesTextString">
+<summary>Contains methods useful for reading and writing data, with
+            a focus on CBOR.</summary>
 </doc>
 <doc name="T:PeterO.Cbor.CBOREncodeOptions">
 

@@ -40,6 +40,6 @@ Version 4.1:
  <AdditionalFiles Include='stylecop.json'/>
 <AdditionalFiles Include='rules.ruleset'/><PackageReference Include='PeterO.URIUtility' Version='1.0.0'/>
 
-<PackageReference Include='PeterO.Numbers' Version='1.7.2-a0'/>
+<PackageReference Include='PeterO.Numbers' Version='1.7.2'/>
 <PackageReference Include='Microsoft.CodeAnalysis.FxCopAnalyzers' PrivateAssets='All' Version='3.0.0'/></ItemGroup>
                </Project>
