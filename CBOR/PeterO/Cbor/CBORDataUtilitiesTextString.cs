@@ -13,7 +13,6 @@ using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   internal static class CBORDataUtilitiesTextString {
-
     private const long DoubleNegInfinity = unchecked((long)(0xfffL << 52));
     private const long DoublePosInfinity = unchecked((long)(0x7ffL << 52));
 

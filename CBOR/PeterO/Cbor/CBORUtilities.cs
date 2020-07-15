@@ -14,7 +14,6 @@ namespace PeterO.Cbor {
   /// <summary>Contains utility methods that may have use outside of the
   /// CBORObject class.</summary>
   internal static class CBORUtilities {
-    private const long DoubleNegInfinity = unchecked((long)(0xfffL << 52));
     private const long DoublePosInfinity = unchecked((long)(0x7ffL << 52));
     private const string HexAlphabet = "0123456789ABCDEF";
 
@@ -1237,6 +1236,9 @@ namespace PeterO.Cbor {
     }
 
     public static bool DoubleRetainsSameValueInSingle(long bits) {
+      if ((bits & ~(1L << 63)) == 0) {
+        return true;
+      }
       int exp = unchecked((int)((bits >> 52) & 0x7ffL));
       long mant = bits & 0xfffffffffffffL;
       int sexp = exp - 896;

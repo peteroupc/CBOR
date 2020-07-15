@@ -12,7 +12,9 @@ using PeterO;
 using PeterO.Numbers;
 
 namespace Test {
-  /// <summary>Description of RandomObjects.</summary>
+  /// <summary>Generates random objects of various kinds for purposes of
+  /// testing code that uses them. The methods will not necessarily
+  /// sample uniformly from all objects of a particular kind.</summary>
   public static class RandomObjects {
     private const int MaxExclusiveStringLength = 0x2000;
     private const int MaxExclusiveShortStringLength = 50;
@@ -314,6 +316,33 @@ namespace Test {
       return ed;
     }
 
+    private static EInteger BitHeavyEInteger(IRandomGenExtended rg, int count) {
+      var sb = new StringBuilder();
+      int[] oneChances = {
+        999, 1, 980, 20, 750, 250, 980,
+        20, 980, 20, 980, 20, 750, 250,
+      };
+      int oneChance = oneChances[rg.GetInt32(oneChances.Length)];
+      for (var i = 0; i < count; ++i) {
+        sb.Append((rg.GetInt32(1000) >= oneChance) ? '0' : '1');
+      }
+      return EInteger.FromRadixString(sb.ToString(), 2);
+    }
+
+    private static EInteger DigitHeavyEInteger(IRandomGenExtended rg, int
+count) {
+      var sb = new StringBuilder();
+      int[] oneChances = {
+        999, 1, 980, 20, 750, 250, 980,
+        20, 980, 20, 980, 20, 750, 250,
+      };
+      int oneChance = oneChances[rg.GetInt32(oneChances.Length)];
+      for (var i = 0; i < count; ++i) {
+        sb.Append((rg.GetInt32(1000) >= oneChance) ? '0' : '9');
+      }
+      return EInteger.FromRadixString(sb.ToString(), 10);
+    }
+
     public static EInteger RandomEInteger(IRandomGenExtended r) {
       if (r == null) {
         throw new ArgumentNullException(nameof(r));
@@ -326,6 +355,11 @@ namespace Test {
         count = (int)(((long)count * r.GetInt32(MaxNumberLength)) /
             MaxNumberLength);
         count = Math.Max(count, 1);
+        if (selection == 0 || selection == 1) {
+          return BitHeavyEInteger(r, count);
+        } else if ((selection == 2 || selection == 3) && count < 500) {
+          return DigitHeavyEInteger(r, count);
+        }
         byte[] bytes = RandomByteString(r, count);
         return EInteger.FromBytes(bytes, true);
       } else {
@@ -346,6 +380,32 @@ namespace Test {
       return EInteger.FromBytes(bytes, true);
     }
 
+    private static int IntInRange(IRandomGenExtended rg, int minInc, int
+maxExc) {
+       return minInc + rg.GetInt32(maxExc - minInc);
+    }
+
+    public static EFloat CloseToPowerOfTwo(IRandomGenExtended rg) {
+        if (rg == null) {
+          throw new ArgumentNullException(nameof(rg));
+        }
+        int pwr = (rg.GetInt32(100) < 80) ? IntInRange(rg, -20, 20) :
+IntInRange(rg, -300, 300);
+        int pwr2 = pwr - (rg.GetInt32(100) < 80 ? IntInRange(rg, 51, 61) :
+IntInRange(rg, 2, 300));
+        EFloat ef = null;
+        ef = (rg.GetInt32(2) == 0) ? (EFloat.Create(1,
+  pwr).Add(EFloat.Create(1, pwr2))) : (EFloat.Create(1,
+  pwr).Subtract(EFloat.Create(1, pwr2)));
+        if (rg.GetInt32(10) == 0) {
+          pwr2 = pwr - (rg.GetInt32(100) < 80 ? IntInRange(rg, 51, 61) :
+IntInRange(rg, 2, 300));
+          ef = (rg.GetInt32(2) == 0) ? (ef.Add(EFloat.Create(1, pwr2))) :
+(ef.Subtract(EFloat.Create(1, pwr2)));
+        }
+        return ef;
+    }
+
     public static EFloat RandomEFloat(IRandomGenExtended r) {
       if (r == null) {
         throw new ArgumentNullException(nameof(r));
@@ -361,6 +421,9 @@ namespace Test {
         if (x == 2) {
           return EFloat.NaN;
         }
+      }
+      if (r.GetInt32(100) == 3) {
+        return CloseToPowerOfTwo(r);
       }
       return EFloat.Create(
           RandomEInteger(r),

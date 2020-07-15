@@ -690,15 +690,15 @@ namespace Test {
       EDecimal edNumberED = AsED(ed);
       ed2 = EDecimal.FromDouble(edNumberED.ToDouble());
       if ((edNumberED.CompareTo(ed2) == 0) != edNumber.CanFitInDouble()) {
-        Assert.Fail(ObjectMessage(ed));
+        Assert.Fail(ObjectMessage(ed) + "\n// CanFitInDouble");
       }
       ed2 = EDecimal.FromSingle(AsED(ed).ToSingle());
       if ((edNumberED.CompareTo(ed2) == 0) != edNumber.CanFitInSingle()) {
-        Assert.Fail(ObjectMessage(ed));
+        Assert.Fail(ObjectMessage(ed) + "\n// CanFitInSingle");
       }
       if (!edNumber.IsInfinity() && !edNumber.IsNaN()) {
         if (edNumberED.IsInteger() != edNumber.IsInteger()) {
-          Assert.Fail(ObjectMessage(ed));
+          Assert.Fail(ObjectMessage(ed) + "\n// IsInteger");
         }
       }
       if (!edNumber.IsInfinity() && !edNumber.IsNaN()) {
@@ -712,22 +712,22 @@ namespace Test {
         if (edNumber.IsInteger()) {
           if ((bi != null && bi.GetSignedBitLengthAsInt64() <= 31) !=
             edNumber.CanFitInInt32()) {
-            Assert.Fail(ObjectMessage(ed));
+            Assert.Fail(ObjectMessage(ed) + "\n// Int32");
           }
         }
         if ((bi != null && bi.GetSignedBitLengthAsInt64() <= 31) !=
           edNumber.CanTruncatedIntFitInInt32()) {
-          Assert.Fail(ObjectMessage(ed));
+          Assert.Fail(ObjectMessage(ed) + "\n// TruncInt32");
         }
         if (edNumber.IsInteger()) {
           if ((bi != null && bi.GetSignedBitLengthAsInt64() <= 63) !=
             edNumber.CanFitInInt64()) {
-            Assert.Fail(ObjectMessage(ed));
+            Assert.Fail(ObjectMessage(ed) + "\n// Int64");
           }
         }
         if ((bi != null && bi.GetSignedBitLengthAsInt64() <= 63) !=
           edNumber.CanTruncatedIntFitInInt64()) {
-          Assert.Fail(ObjectMessage(ed));
+          Assert.Fail(ObjectMessage(ed) + "\n// TruncInt64");
         }
       }
     }
@@ -740,6 +740,11 @@ namespace Test {
         CBORObject ed = CBORTestCommon.RandomNumber(r);
         TestCanFitInOne(ed);
       }
+      CBORObject cbor = CBORObject.DecodeFromBytes(new byte[] {
+        (byte)0xfb,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+      });
+      TestCanFitInOne(cbor);
     }
 
     [Test]
@@ -2717,13 +2722,12 @@ namespace Test {
       }
     }
 
-    [Test]
-    [Timeout(100000)]
-    public void TestAsNumberMultiplyDivide() {
-      var r = new RandomGenerator();
-      for (var i = 0; i < 3000; ++i) {
-        CBORObject o1 = CBORTestCommon.RandomNumber(r);
-        CBORObject o2 = CBORTestCommon.RandomNumber(r);
+    public static bool TestAsNumberMultiplyDivideOne(
+      CBORObject o1,
+      CBORObject o2) {
+        if (!o1.IsNumber || !o2.IsNumber) {
+          return false;
+        }
         byte[] eb1 = o1.EncodeToBytes();
         byte[] eb2 = o2.EncodeToBytes();
         CBORTestCommon.AssertRoundTrip(o1);
@@ -2734,12 +2738,12 @@ namespace Test {
         try {
           onSum = on1.Multiply(on2);
         } catch (OutOfMemoryException) {
-          continue;
+            return false;
         }
         if (!onSum.IsFinite()) {
           // Console.WriteLine("on1=" + o1);
           // Console.WriteLine("on2=" + o2);
-          continue;
+            return false;
         }
         // Console.WriteLine(i+"");
         // Console.WriteLine(i+" "+Chop(o1.ToString()));
@@ -2751,19 +2755,46 @@ namespace Test {
             "o2=" + TestCommon.ToByteArrayString(eb2) + "\n");
         }
         CBORNumber on2a = onSum.Divide(on1);
-        if (!on2a.IsFinite()) {
+        // NOTE: Ignore if divisor is zero
+        if (!on1.IsZero() && !on2a.IsFinite()) {
           Assert.Fail("on2a is not finite\n" +
             "o1=" + TestCommon.ToByteArrayString(eb1) + "\n" +
             "o2=" + TestCommon.ToByteArrayString(eb2) + "\n");
         }
         VerifyEqual(on2a, on2, o1, o2);
         CBORNumber on1a = onSum.Divide(on2);
-        if (!on1a.IsFinite()) {
+        // NOTE: Ignore if divisor is zero
+        if (!on2.IsZero() && !on1a.IsFinite()) {
           Assert.Fail("on1a is not finite\n" +
-            "o1=" + TestCommon.ToByteArrayString(eb1) + "\n" +
-            "o2=" + TestCommon.ToByteArrayString(eb2) + "\n");
+            "o1=" + on1 + "\n" + "o2=" + on2 + "\n" +
+            "{\nbyte[] bytes1 = " + TestCommon.ToByteArrayString(eb1) + ";\n" +
+            "byte[] bytes2 =" + TestCommon.ToByteArrayString(eb2) + ";\n" +
+            "TestAsNumberMultiplyDivideOne(\nCBORObject.D" +
+            "ecodeFromBytes(bytes1),\n" +
+            "CBORObject.DecodeFromBytes(bytes2));\n}\n");
         }
-        VerifyEqual(on1a, on1, o1, o2);
+        if (!o1.IsZero() && !o2.IsZero()) {
+          VerifyEqual(on1a, on1, o1, o2);
+        }
+        return true;
+    }
+
+    [Test]
+    [Timeout(100000)]
+    public void TestAsNumberMultiplyDivide() {
+      var bo1 = new byte[] {
+        0x1b, 0x75, (byte)0xdd, (byte)0xb0, (byte)0xcc,
+        0x50, (byte)0x9b, (byte)0xd0, 0x2b,
+      };
+      var bo2 = new byte[] { (byte)0xc5, (byte)0x82, 0x23, 0x00 };
+      CBORObject cbor1 = CBORObject.DecodeFromBytes(bo1);
+      CBORObject cbor2 = CBORObject.DecodeFromBytes(bo2);
+      TestAsNumberMultiplyDivideOne(cbor1, cbor2);
+      var r = new RandomGenerator();
+      for (var i = 0; i < 3000; ++i) {
+        CBORObject o1 = CBORTestCommon.RandomNumber(r);
+        CBORObject o2 = CBORTestCommon.RandomNumber(r);
+        TestAsNumberMultiplyDivideOne(o1, o2);
       }
     }
 

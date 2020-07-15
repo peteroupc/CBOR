@@ -8,7 +8,7 @@ at: http://peteroupc.github.io/
 using System;
 using System.Reflection;
 // Use directives rather than the Conditional attribute,
-// to avoid the chance of logging statements leaking in release builds
+  // to avoid the chance of logging statements leaking in release builds
 #if DEBUG
 namespace PeterO {
   internal static class DebugUtility {
@@ -49,7 +49,14 @@ namespace PeterO {
           wr(str);
           return;
          } else {
-            throw new NotSupportedException("System.Console not found");
+          #if !NET20 && !NET40
+          System.Diagnostics.Debug.WriteLine(str);
+          return;
+          #else
+{
+ throw new NotSupportedException("System.Console not found");
+}
+          #endif
          }
       }
       var types = new[] { typeof(string) };

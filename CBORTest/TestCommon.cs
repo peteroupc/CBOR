@@ -109,8 +109,13 @@ namespace Test {
       int offset,
       int length,
       byte[] arr2) {
-      if (!ByteArraysEqual(arr1, offset, length, arr2, 0, arr2 == null ? 0 :
-arr2.Length)) {
+      if (!ByteArraysEqual(
+         arr1,
+         offset,
+         length,
+         arr2,
+         0,
+         arr2 == null ? 0 : arr2.Length)) {
         Assert.Fail("Expected " + ToByteArrayString(arr1) + ",\ngot..... " +
           ToByteArrayString(arr2));
       }
@@ -630,12 +635,16 @@ arr2.Length)) {
     }
 
     public static string ToByteArrayString(byte[] bytes) {
-      return (bytes == null) ? "null" : (ToByteArrayString(bytes, 0,
-  bytes.Length));
+      return (bytes == null) ? "null" : ToByteArrayString(
+         bytes,
+         0,
+         bytes.Length);
     }
 
-    public static string ToByteArrayString(byte[] bytes, int offset, int
-length) {
+    public static string ToByteArrayString(
+       byte[] bytes,
+       int offset,
+       int length) {
       if (bytes == null) {
         return "null";
       }
@@ -743,7 +752,7 @@ length2);
         return false;
       }
       for (var i = 0; i < length; ++i) {
-        if (arr1[offset + i] != arr2[offset + i]) {
+        if (arr1[offset + i] != arr2[offset2 + i]) {
           return false;
         }
       }
