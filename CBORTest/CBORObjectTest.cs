@@ -7303,7 +7303,7 @@ CBOREncodeOptions(false, false, true));
     }
 
     [Test]
-    [Timeout(2000)]
+    [Timeout(10000)]
     public void TestFromJsonStringLongSpecific1() {
       JSONOptions jsonop = JSONOptions.Default;
       string json = "{\"x\":-9.2574033594381E-7962\u002c\"1\":" +
@@ -7432,7 +7432,7 @@ throw new InvalidOperationException(String.Empty, ex);
     }
 
     [Test]
-    [Timeout(2000)]
+    [Timeout(10000)]
     public void TestFromJsonStringLongKindFullBad() {
       Console.WriteLine("FullBad 1");
       var jsonop = new JSONOptions("numberconversion=full");
@@ -7470,7 +7470,7 @@ throw new InvalidOperationException(String.Empty, ex);
     }
 
     [Test]
-    [Timeout(2000)]
+    [Timeout(10000)]
     public void TestFromJsonStringLongKindsBad() {
       JSONOptions jsonop;
       string json = TestCommon.Repeat("7", 1000000) + "x";
@@ -7538,7 +7538,7 @@ throw new InvalidOperationException(String.Empty, ex);
     }
 
     [Test]
-    [Timeout(2000)]
+    [Timeout(10000)]
     public void TestFromJsonStringLongKindIntOrFloatFromDouble() {
       var jsonop = new JSONOptions("numberconversion=intorfloatfromdouble");
       string manysevens = TestCommon.Repeat("7", 1000000);
@@ -7557,7 +7557,7 @@ throw new InvalidOperationException(String.Empty, ex);
     }
 
     [Test]
-    [Timeout(2000)]
+    [Timeout(10000)]
     public void TestFromJsonStringLongKindIntOrFloat() {
       var jsonop = new JSONOptions("numberconversion=intorfloat");
       string json = TestCommon.Repeat("7", 1000000);
@@ -7567,7 +7567,7 @@ throw new InvalidOperationException(String.Empty, ex);
     }
 
     [Test]
-    [Timeout(2000)]
+    [Timeout(10000)]
     public void TestFromJsonStringLongKindIntOrFloat2() {
       var jsonop = new JSONOptions("numberconversion=intorfloat");
       string json = "-" + TestCommon.Repeat("7", 1000000);

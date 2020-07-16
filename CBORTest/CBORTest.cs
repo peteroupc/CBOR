@@ -2725,6 +2725,12 @@ namespace Test {
     public static bool TestAsNumberMultiplyDivideOne(
       CBORObject o1,
       CBORObject o2) {
+        if (o1 == null) {
+          throw new ArgumentNullException(nameof(o1));
+        }
+        if (o2 == null) {
+          throw new ArgumentNullException(nameof(o2));
+        }
         if (!o1.IsNumber || !o2.IsNumber) {
           return false;
         }
@@ -2761,7 +2767,9 @@ namespace Test {
             "o1=" + TestCommon.ToByteArrayString(eb1) + "\n" +
             "o2=" + TestCommon.ToByteArrayString(eb2) + "\n");
         }
-        VerifyEqual(on2a, on2, o1, o2);
+        if (!on1.IsZero() && !on2.IsZero()) {
+          VerifyEqual(on2a, on2, o1, o2);
+        }
         CBORNumber on1a = onSum.Divide(on2);
         // NOTE: Ignore if divisor is zero
         if (!on2.IsZero() && !on1a.IsFinite()) {
@@ -2773,7 +2781,7 @@ namespace Test {
             "ecodeFromBytes(bytes1),\n" +
             "CBORObject.DecodeFromBytes(bytes2));\n}\n");
         }
-        if (!o1.IsZero() && !o2.IsZero()) {
+        if (!on1.IsZero() && !on2.IsZero()) {
           VerifyEqual(on1a, on1, o1, o2);
         }
         return true;
@@ -2783,8 +2791,8 @@ namespace Test {
     [Timeout(100000)]
     public void TestAsNumberMultiplyDivide() {
       var bo1 = new byte[] {
-        0x1b, 0x75, (byte)0xdd, (byte)0xb0, (byte)0xcc,
-        0x50, (byte)0x9b, (byte)0xd0, 0x2b,
+        0x1b, 0x75, (byte)0xdd, (byte)0xb0,
+        (byte)0xcc, 0x50, (byte)0x9b, (byte)0xd0, 0x2b,
       };
       var bo2 = new byte[] { (byte)0xc5, (byte)0x82, 0x23, 0x00 };
       CBORObject cbor1 = CBORObject.DecodeFromBytes(bo1);

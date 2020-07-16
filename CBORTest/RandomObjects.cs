@@ -400,8 +400,8 @@ IntInRange(rg, 2, 300));
         if (rg.GetInt32(10) == 0) {
           pwr2 = pwr - (rg.GetInt32(100) < 80 ? IntInRange(rg, 51, 61) :
 IntInRange(rg, 2, 300));
-          ef = (rg.GetInt32(2) == 0) ? (ef.Add(EFloat.Create(1, pwr2))) :
-(ef.Subtract(EFloat.Create(1, pwr2)));
+          ef = (rg.GetInt32(2) == 0) ? ef.Add(EFloat.Create(1, pwr2)) :
+ef.Subtract(EFloat.Create(1, pwr2));
         }
         return ef;
     }
