@@ -67,42 +67,47 @@ namespace PeterO.Cbor {
       string alphabet = classic ? Base64Classic : Base64URL;
       int length = offset + count;
       int i = offset;
-      var buffer = new char[4];
+      var buffer = new byte[32];
+      var bufferOffset = 0;
       for (i = offset; i < (length - 2); i += 3) {
-        buffer[0] = (char)alphabet[(data[i] >> 2) & 63];
-        buffer[1] = (char)alphabet[((data[i] & 3) << 4) +
+        if (bufferOffset >= buffer.Length) {
+           writer.WriteAscii(buffer, 0, bufferOffset);
+           bufferOffset = 0;
+        }
+        buffer[bufferOffset++] = (byte)alphabet[(data[i] >> 2) & 63];
+        buffer[bufferOffset++] = (byte)alphabet[((data[i] & 3) << 4) +
             ((data[i + 1] >> 4) & 15)];
-        buffer[2] = (char)alphabet[((data[i + 1] & 15) << 2) + ((data[i +
+        buffer[bufferOffset++] = (byte)alphabet[((data[i + 1] & 15) << 2) +
+((data[i +
                   2] >> 6) & 3)];
-        buffer[3] = (char)alphabet[data[i + 2] & 63];
-        writer.WriteCodePoint((int)buffer[0]);
-        writer.WriteCodePoint((int)buffer[1]);
-        writer.WriteCodePoint((int)buffer[2]);
-        writer.WriteCodePoint((int)buffer[3]);
+        buffer[bufferOffset++] = (byte)alphabet[data[i + 2] & 63];
       }
       int lenmod3 = count % 3;
       if (lenmod3 != 0) {
+        if (bufferOffset >= buffer.Length) {
+           writer.WriteAscii(buffer, 0, bufferOffset);
+           bufferOffset = 0;
+        }
         i = length - lenmod3;
-        buffer[0] = (char)alphabet[(data[i] >> 2) & 63];
+        buffer[bufferOffset++] = (byte)alphabet[(data[i] >> 2) & 63];
         if (lenmod3 == 2) {
-          buffer[1] = (char)alphabet[((data[i] & 3) << 4) + ((data[i + 1] >>
+          buffer[bufferOffset++] = (byte)alphabet[((data[i] & 3) << 4) +
+((data[i + 1] >>
                   4) & 15)];
-          buffer[2] = (char)alphabet[(data[i + 1] & 15) << 2];
-          writer.WriteCodePoint((int)buffer[0]);
-          writer.WriteCodePoint((int)buffer[1]);
-          writer.WriteCodePoint((int)buffer[2]);
+          buffer[bufferOffset++] = (byte)alphabet[(data[i + 1] & 15) << 2];
           if (padding) {
-            writer.WriteCodePoint((int)'=');
+            buffer[bufferOffset++] = (byte)'=';
           }
         } else {
-          buffer[1] = (char)alphabet[(data[i] & 3) << 4];
-          writer.WriteCodePoint((int)buffer[0]);
-          writer.WriteCodePoint((int)buffer[1]);
+          buffer[bufferOffset++] = (byte)alphabet[(data[i] & 3) << 4];
           if (padding) {
-            writer.WriteCodePoint((int)'=');
-            writer.WriteCodePoint((int)'=');
+            buffer[bufferOffset++] = (byte)'=';
+            buffer[bufferOffset++] = (byte)'=';
           }
         }
+      }
+      if (bufferOffset >= 0) {
+        writer.WriteAscii(buffer, 0, bufferOffset);
       }
     }
   }

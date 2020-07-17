@@ -1970,7 +1970,7 @@ namespace Test {
     }
 
     [Test]
-    [Timeout(50000)]
+    [Timeout(200000)]
     public void TestRandomData() {
       var rand = new RandomGenerator();
       CBORObject obj;
@@ -2240,18 +2240,9 @@ namespace Test {
     public void TestRandomNonsense() {
       var rand = new RandomGenerator();
       for (var i = 0; i < 1000; ++i) {
-        var array = new byte[rand.UniformInt(1000000) + 1];
-        for (int j = 0; j < array.Length; ++j) {
-          if (j + 3 <= array.Length) {
-            int r = rand.UniformInt(0x1000000);
-            array[j] = (byte)(r & (byte)0xff);
-            array[j + 1] = (byte)((r >> 8) & (byte)0xff);
-            array[j + 2] = (byte)((r >> 16) & (byte)0xff);
-            j += 2;
-          } else {
-            array[j] = (byte)rand.UniformInt(256);
-          }
-        }
+        Console.WriteLine(i + ": " + DateTime.UtcNow);
+        var array = new byte[rand.UniformInt(100000) + 1];
+        rand.GetBytes(array, 0, array.Length);
         TestRandomOne(array);
       }
     }
@@ -2280,10 +2271,19 @@ namespace Test {
         while (inputStream.Position != inputStream.Length) {
           try {
             CBORObject o;
+            long oldPos = inputStream.Position;
             o = CBORObject.Read(inputStream);
+            long cborlen = inputStream.Position - oldPos;
+            if (cborlen > 3000) {
+               Console.WriteLine("pos=" + inputStream.Position + " of " +
+inputStream.Length + ", cborlen=" + cborlen);
+            }
             byte[] encodedBytes = (o == null) ? null : o.EncodeToBytes();
             try {
               CBORObject.DecodeFromBytes(encodedBytes);
+            if (cborlen > 3000) {
+                Console.WriteLine("end DecodeFromBytes");
+              }
             } catch (Exception ex) {
               throw new InvalidOperationException(ex.Message, ex);
             }
@@ -2294,14 +2294,29 @@ namespace Test {
               }
               if (o != null) {
                 try {
+if (cborlen > 3000) {
+                    Console.WriteLine("toJSONString " + DateTime.UtcNow);
+                  }
                   jsonString = o.ToJSONString();
+if (cborlen > 3000) {
+                    Console.WriteLine("jsonStringLen = " + jsonString.Length);
+                  }
                 } catch (CBORException ex) {
                   Console.WriteLine(ex.Message);
                   jsonString = String.Empty;
                 }
                 if (jsonString.Length > 0) {
+                  if (cborlen > 3000) {
+                    Console.WriteLine("fromJSONString " + DateTime.UtcNow);
+                  }
                   CBORObject.FromJSONString(jsonString);
+                if (cborlen > 3000) {
+                    Console.WriteLine("writeToJSON " + DateTime.UtcNow);
+                  }
                   TestWriteToJSON(o);
+                if (cborlen > 3000) {
+                    Console.WriteLine("endJSON " + DateTime.UtcNow);
+                  }
                 }
               }
             } catch (Exception ex) {

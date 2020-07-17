@@ -34,14 +34,19 @@ namespace PeterO {
     }
 
     public static bool Extra() {
-  new CBORDataUtilitiesTest().TestParseJSONNumber();
-  new CBORDataUtilitiesTest().TestParseJSONNumberObsolete();
-  new CBORObjectTest().TestFromJSONString();
-  new CBORObjectTest().TestFromJsonStringLongKindIntOrFloat();
-  new CBORObjectTest().TestFromJsonStringLongKindIntOrFloatFromDouble();
-  new CBORObjectTest().TestFromJsonStringLongKindFullBad();
-  new CBORObjectTest().TestFromJsonStringFastCases();
-  return false;
+      var rand = new RandomGenerator();
+      for (var i = 0; i < 20; ++i) {
+        var array = new byte[rand.UniformInt(100000) + 1];
+        rand.GetBytes(array, 0, array.Length);
+        DateTime utcn = DateTime.UtcNow;
+        CBORTest.TestRandomOne(array);
+        var span = DateTime.UtcNow - utcn;
+        if (span.Seconds > 3) {
+           Console.WriteLine("----" + i + ": " + span.Seconds + " " +
+array.Length);
+        }
+      }
+      return false;
     }
 
     public static void Main() {

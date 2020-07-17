@@ -183,4 +183,6 @@
     <Error Condition="!Exists('../packages/Microsoft.NetFramework.Analyzers.3.0.0/build/Microsoft.NetFramework.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '../packages/Microsoft.NetFramework.Analyzers.3.0.0/build/Microsoft.NetFramework.Analyzers.props'))" />
     <Error Condition="!Exists('../packages/Microsoft.CodeAnalysis.FxCopAnalyzers.3.0.0/build/Microsoft.CodeAnalysis.FxCopAnalyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '../packages/Microsoft.CodeAnalysis.FxCopAnalyzers.3.0.0/build/Microsoft.CodeAnalysis.FxCopAnalyzers.props'))" />
   </Target>
-</Project>
+   <Target Name="DisableAnalyzers" BeforeTargets="CoreCompile" Condition="'$(UseRoslynAnalyzers)' == 'false'">
+   <ItemGroup><Analyzer Remove="@(Analyzer)" /></ItemGroup>
+   </Target></Project>

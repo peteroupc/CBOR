@@ -1,6 +1,15 @@
 Release notes
 ---------------------
 
+### Version 4.2
+
+- Some arithmetic methods in CBORNumber do basic overflow checks.
+- Add char array and byte array overloads to ParseJSONNumber
+- Support implementations of IList in CBORObject deserialization
+- Internally, the code avoids storing doubles (64-bit floating-point numbers) directly in CBORNumbers, uses sorted maps rather than hash tables in some CBOR objects, and can now store text strings as UTF-8 byte arrays.  This could help avoid unnecessary string conversions in many case.
+- Bug fixes and performance improvements
+- Now uses Numbers library version 1.7.3
+
 ### Version 4.1.1
 
 - Fix issue where some non-basic characters in JSON strings encoded in UTF-8 were read incorrectly by the CBORObject.FromJSONBytes method

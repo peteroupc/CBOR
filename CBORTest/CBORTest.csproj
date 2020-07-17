@@ -27,4 +27,6 @@
         <PackageReference Include='StyleCop.Analyzers' PrivateAssets='All' Version='1.2.0-beta.164'/>
         <PackageReference Include='PeterO.Numbers' Version='1.7.3'/>
       </ItemGroup>
-</Project>
+   <Target Name="DisableAnalyzers" BeforeTargets="CoreCompile" Condition="'$(UseRoslynAnalyzers)' == 'false'">
+   <ItemGroup><Analyzer Remove="@(Analyzer)" /></ItemGroup>
+   </Target></Project>

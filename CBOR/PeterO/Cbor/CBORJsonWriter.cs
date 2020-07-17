@@ -23,6 +23,9 @@ namespace PeterO.Cbor {
         sb.WriteString(str, 0, i);
         return;
       }
+      // int bufferlen = Math.Min(Math.Max(4, str.Length), 64);
+      // byte[] buffer = new byte[bufferlen];
+      // int bufferpos = 0;
       for (; i < str.Length; ++i) {
         char c = str[i];
         if (c == '\\' || c == '"') {

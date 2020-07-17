@@ -65,6 +65,49 @@ namespace PeterO.Cbor {
       }
     }
 
+    public void WriteAscii(byte[] bytes, int index, int length) {
+      if (bytes == null) {
+        throw new ArgumentNullException(nameof(bytes));
+      }
+      if (index < 0) {
+        throw new ArgumentException("\"index\" (" + index + ") is not" +
+"\u0020greater or equal to 0");
+      }
+      if (index > bytes.Length) {
+        throw new ArgumentException("\"index\" (" + index + ") is not less" +
+"\u0020or equal to " + bytes.Length);
+      }
+      if (length < 0) {
+        throw new ArgumentException(" (" + length + ") is not greater or" +
+"\u0020equal to 0");
+      }
+      if (length > bytes.Length) {
+        throw new ArgumentException(" (" + length + ") is not less or equal" +
+"\u0020to " + bytes.Length);
+      }
+      if (bytes.Length - index < length) {
+        throw new ArgumentException("\"bytes\" + \"'s length minus \" +" +
+"\u0020index (" + (bytes.Length - index) + ") is not greater or equal to " +
+length);
+      }
+      if (this.outputStream == null) {
+          DataUtilities.ReadUtf8FromBytes(
+            bytes,
+            index,
+            length,
+            this.builder,
+            false);
+      } else {
+          for (var i = 0; i < length; ++i) {
+             byte b = bytes[i + index];
+             if ((((int)b) & 0x7f) != b) {
+                throw new ArgumentException("str is non-ASCII");
+             }
+          }
+          this.outputStream.Write(bytes, index, length);
+      }
+    }
+
     public void WriteCodePoint(int codePoint) {
       if ((codePoint >> 7) == 0) {
         // Code point is in the Basic Latin range (U+0000 to U+007F)
