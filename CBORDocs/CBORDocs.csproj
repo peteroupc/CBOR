@@ -16,6 +16,7 @@
     <RootNamespace>CBORDocs</RootNamespace>
     <AssemblyName>CBORDocs</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <RuntimeIdentifiers>win</RuntimeIdentifiers>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile/>
     <NuGetPackageImportStamp/>
@@ -81,7 +82,7 @@
     <Compile Include='IVisitor.cs'/>
   </ItemGroup>
   <Import Project='$(MSBuildToolsPath)\Microsoft.CSharp.targets'/>
-  <PropertyGroup/>
+
   <Target BeforeTargets='PrepareForBuild' Name='EnsureNuGetPackageBuildImports'>
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105.The missing file is {0}.</ErrorText>
