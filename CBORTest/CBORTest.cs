@@ -2240,7 +2240,6 @@ namespace Test {
     public void TestRandomNonsense() {
       var rand = new RandomGenerator();
       for (var i = 0; i < 1000; ++i) {
-        Console.WriteLine(i + ": " + DateTime.UtcNow);
         var array = new byte[rand.UniformInt(100000) + 1];
         rand.GetBytes(array, 0, array.Length);
         TestRandomOne(array);
@@ -2274,16 +2273,13 @@ namespace Test {
             long oldPos = inputStream.Position;
             o = CBORObject.Read(inputStream);
             long cborlen = inputStream.Position - oldPos;
-            if (cborlen > 3000) {
-               Console.WriteLine("pos=" + inputStream.Position + " of " +
-inputStream.Length + ", cborlen=" + cborlen);
-            }
+            // if (cborlen > 3000) {
+            //  Console.WriteLine("pos=" + inputStream.Position + " of " +
+            //    inputStream.Length + ", cborlen=" + cborlen);
+            // }
             byte[] encodedBytes = (o == null) ? null : o.EncodeToBytes();
             try {
               CBORObject.DecodeFromBytes(encodedBytes);
-            if (cborlen > 3000) {
-                Console.WriteLine("end DecodeFromBytes");
-              }
             } catch (Exception ex) {
               throw new InvalidOperationException(ex.Message, ex);
             }
@@ -2294,29 +2290,14 @@ inputStream.Length + ", cborlen=" + cborlen);
               }
               if (o != null) {
                 try {
-if (cborlen > 3000) {
-                    Console.WriteLine("toJSONString " + DateTime.UtcNow);
-                  }
                   jsonString = o.ToJSONString();
-if (cborlen > 3000) {
-                    Console.WriteLine("jsonStringLen = " + jsonString.Length);
-                  }
                 } catch (CBORException ex) {
                   Console.WriteLine(ex.Message);
                   jsonString = String.Empty;
                 }
                 if (jsonString.Length > 0) {
-                  if (cborlen > 3000) {
-                    Console.WriteLine("fromJSONString " + DateTime.UtcNow);
-                  }
                   CBORObject.FromJSONString(jsonString);
-                if (cborlen > 3000) {
-                    Console.WriteLine("writeToJSON " + DateTime.UtcNow);
-                  }
                   TestWriteToJSON(o);
-                if (cborlen > 3000) {
-                    Console.WriteLine("endJSON " + DateTime.UtcNow);
-                  }
                 }
               }
             } catch (Exception ex) {
@@ -2740,66 +2721,66 @@ if (cborlen > 3000) {
     public static bool TestAsNumberMultiplyDivideOne(
       CBORObject o1,
       CBORObject o2) {
-        if (o1 == null) {
-          throw new ArgumentNullException(nameof(o1));
-        }
-        if (o2 == null) {
-          throw new ArgumentNullException(nameof(o2));
-        }
-        if (!o1.IsNumber || !o2.IsNumber) {
-          return false;
-        }
-        byte[] eb1 = o1.EncodeToBytes();
-        byte[] eb2 = o2.EncodeToBytes();
-        CBORTestCommon.AssertRoundTrip(o1);
-        CBORTestCommon.AssertRoundTrip(o2);
-        CBORNumber on1 = o1.AsNumber();
-        CBORNumber on2 = o2.AsNumber();
-        CBORNumber onSum = null;
-        try {
-          onSum = on1.Multiply(on2);
-        } catch (OutOfMemoryException) {
-            return false;
-        }
-        if (!onSum.IsFinite()) {
-          // Console.WriteLine("on1=" + o1);
-          // Console.WriteLine("on2=" + o2);
-            return false;
-        }
-        // Console.WriteLine(i+"");
-        // Console.WriteLine(i+" "+Chop(o1.ToString()));
-        // Console.WriteLine(i+" "+Chop(o2.ToString()));
-        // Console.WriteLine(i + " " + Chop(onSum.ToString()));
-        if (!onSum.IsFinite()) {
-          Assert.Fail("onSum is not finite\n" +
-            "o1=" + TestCommon.ToByteArrayString(eb1) + "\n" +
-            "o2=" + TestCommon.ToByteArrayString(eb2) + "\n");
-        }
-        CBORNumber on2a = onSum.Divide(on1);
-        // NOTE: Ignore if divisor is zero
-        if (!on1.IsZero() && !on2a.IsFinite()) {
-          Assert.Fail("on2a is not finite\n" +
-            "o1=" + TestCommon.ToByteArrayString(eb1) + "\n" +
-            "o2=" + TestCommon.ToByteArrayString(eb2) + "\n");
-        }
-        if (!on1.IsZero() && !on2.IsZero()) {
-          VerifyEqual(on2a, on2, o1, o2);
-        }
-        CBORNumber on1a = onSum.Divide(on2);
-        // NOTE: Ignore if divisor is zero
-        if (!on2.IsZero() && !on1a.IsFinite()) {
-          Assert.Fail("on1a is not finite\n" +
-            "o1=" + on1 + "\n" + "o2=" + on2 + "\n" +
-            "{\nbyte[] bytes1 = " + TestCommon.ToByteArrayString(eb1) + ";\n" +
-            "byte[] bytes2 =" + TestCommon.ToByteArrayString(eb2) + ";\n" +
-            "TestAsNumberMultiplyDivideOne(\nCBORObject.D" +
-            "ecodeFromBytes(bytes1),\n" +
-            "CBORObject.DecodeFromBytes(bytes2));\n}\n");
-        }
-        if (!on1.IsZero() && !on2.IsZero()) {
-          VerifyEqual(on1a, on1, o1, o2);
-        }
-        return true;
+      if (o1 == null) {
+        throw new ArgumentNullException(nameof(o1));
+      }
+      if (o2 == null) {
+        throw new ArgumentNullException(nameof(o2));
+      }
+      if (!o1.IsNumber || !o2.IsNumber) {
+        return false;
+      }
+      byte[] eb1 = o1.EncodeToBytes();
+      byte[] eb2 = o2.EncodeToBytes();
+      CBORTestCommon.AssertRoundTrip(o1);
+      CBORTestCommon.AssertRoundTrip(o2);
+      CBORNumber on1 = o1.AsNumber();
+      CBORNumber on2 = o2.AsNumber();
+      CBORNumber onSum = null;
+      try {
+        onSum = on1.Multiply(on2);
+      } catch (OutOfMemoryException) {
+        return false;
+      }
+      if (!onSum.IsFinite()) {
+        // Console.WriteLine("on1=" + o1);
+        // Console.WriteLine("on2=" + o2);
+        return false;
+      }
+      // Console.WriteLine(i+"");
+      // Console.WriteLine(i+" "+Chop(o1.ToString()));
+      // Console.WriteLine(i+" "+Chop(o2.ToString()));
+      // Console.WriteLine(i + " " + Chop(onSum.ToString()));
+      if (!onSum.IsFinite()) {
+        Assert.Fail("onSum is not finite\n" +
+          "o1=" + TestCommon.ToByteArrayString(eb1) + "\n" +
+          "o2=" + TestCommon.ToByteArrayString(eb2) + "\n");
+      }
+      CBORNumber on2a = onSum.Divide(on1);
+      // NOTE: Ignore if divisor is zero
+      if (!on1.IsZero() && !on2a.IsFinite()) {
+        Assert.Fail("on2a is not finite\n" +
+          "o1=" + TestCommon.ToByteArrayString(eb1) + "\n" +
+          "o2=" + TestCommon.ToByteArrayString(eb2) + "\n");
+      }
+      if (!on1.IsZero() && !on2.IsZero()) {
+        VerifyEqual(on2a, on2, o1, o2);
+      }
+      CBORNumber on1a = onSum.Divide(on2);
+      // NOTE: Ignore if divisor is zero
+      if (!on2.IsZero() && !on1a.IsFinite()) {
+        Assert.Fail("on1a is not finite\n" +
+          "o1=" + on1 + "\n" + "o2=" + on2 + "\n" +
+          "{\nbyte[] bytes1 = " + TestCommon.ToByteArrayString(eb1) + ";\n" +
+          "byte[] bytes2 =" + TestCommon.ToByteArrayString(eb2) + ";\n" +
+          "TestAsNumberMultiplyDivideOne(\nCBORObject.D" +
+          "ecodeFromBytes(bytes1),\n" +
+          "CBORObject.DecodeFromBytes(bytes2));\n}\n");
+      }
+      if (!on1.IsZero() && !on2.IsZero()) {
+        VerifyEqual(on1a, on1, o1, o2);
+      }
+      return true;
     }
 
     [Test]

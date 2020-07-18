@@ -7317,7 +7317,6 @@ throw new InvalidOperationException(String.Empty, ex);
     }
 
     [Test]
-    [Timeout(5000)]
     public void TestFromJsonStringFastCases() {
       var op = new JSONOptions("numberconversion=double");
       Assert.AreEqual(

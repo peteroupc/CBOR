@@ -390,18 +390,18 @@ maxExc) {
           throw new ArgumentNullException(nameof(rg));
         }
         int pwr = (rg.GetInt32(100) < 80) ? IntInRange(rg, -20, 20) :
-IntInRange(rg, -300, 300);
+          IntInRange(rg, -300, 300);
         int pwr2 = pwr - (rg.GetInt32(100) < 80 ? IntInRange(rg, 51, 61) :
-IntInRange(rg, 2, 300));
+          IntInRange(rg, 2, 300));
         EFloat ef = null;
-        ef = (rg.GetInt32(2) == 0) ? (EFloat.Create(1,
-  pwr).Add(EFloat.Create(1, pwr2))) : (EFloat.Create(1,
-  pwr).Subtract(EFloat.Create(1, pwr2)));
+        ef = (rg.GetInt32(2) == 0) ? EFloat.Create(1,
+          pwr).Add(EFloat.Create(1, pwr2)) : EFloat.Create(1,
+          pwr).Subtract(EFloat.Create(1, pwr2));
         if (rg.GetInt32(10) == 0) {
           pwr2 = pwr - (rg.GetInt32(100) < 80 ? IntInRange(rg, 51, 61) :
-IntInRange(rg, 2, 300));
+            IntInRange(rg, 2, 300));
           ef = (rg.GetInt32(2) == 0) ? ef.Add(EFloat.Create(1, pwr2)) :
-ef.Subtract(EFloat.Create(1, pwr2));
+            ef.Subtract(EFloat.Create(1, pwr2));
         }
         return ef;
     }

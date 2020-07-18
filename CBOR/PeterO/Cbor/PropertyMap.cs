@@ -101,12 +101,12 @@ namespace PeterO.Cbor {
       }
 
       #if NET20 || NET40
-      public static bool HasUsableGetter (PropertyInfo pi) {
+      public static bool HasUsableGetter(PropertyInfo pi) {
         return pi != null && pi.CanRead && !pi.GetGetMethod().IsStatic &&
           pi.GetGetMethod().IsPublic;
       }
 
-      public static bool HasUsableSetter (PropertyInfo pi) {
+      public static bool HasUsableSetter(PropertyInfo pi) {
         return pi != null && pi.CanWrite && !pi.GetSetMethod().IsStatic &&
           pi.GetSetMethod().IsPublic;
       }
@@ -166,47 +166,47 @@ namespace PeterO.Cbor {
     }
 
     #if NET40 || NET20
-    private static bool IsGenericType (Type type) {
+    private static bool IsGenericType(Type type) {
       return type.IsGenericType;
     }
 
-    private static bool IsClassOrValueType (Type type) {
+    private static bool IsClassOrValueType(Type type) {
       return type.IsClass || type.IsValueType;
     }
 
-    private static Type FirstGenericArgument (Type type) {
+    private static Type FirstGenericArgument(Type type) {
       return type.GetGenericArguments()[0];
     }
 
-    private static IEnumerable<PropertyInfo> GetTypeProperties (Type t) {
-      return t.GetProperties (BindingFlags.Public |
+    private static IEnumerable<PropertyInfo> GetTypeProperties(Type t) {
+      return t.GetProperties(BindingFlags.Public |
           BindingFlags.Instance);
     }
 
-    private static IEnumerable<FieldInfo> GetTypeFields (Type t) {
-      return t.GetFields (BindingFlags.Public | BindingFlags.Instance);
+    private static IEnumerable<FieldInfo> GetTypeFields(Type t) {
+      return t.GetFields(BindingFlags.Public | BindingFlags.Instance);
     }
 
-    private static IEnumerable<Type> GetTypeInterfaces (Type t) {
+    private static IEnumerable<Type> GetTypeInterfaces(Type t) {
       return t.GetInterfaces();
     }
 
-    private static bool IsAssignableFrom (Type superType, Type subType) {
-      return superType.IsAssignableFrom (subType);
+    private static bool IsAssignableFrom(Type superType, Type subType) {
+      return superType.IsAssignableFrom(subType);
     }
 
     private static MethodInfo GetTypeMethod(
       Type t,
       string name,
       Type[] parameters) {
-      return t.GetMethod (name, parameters);
+      return t.GetMethod(name, parameters);
     }
 
     private static bool HasCustomAttribute(
       Type t,
       string name) {
-      foreach (var attr in t.GetCustomAttributes (false)) {
-        if (attr.GetType().FullName.Equals (name,
+      foreach (var attr in t.GetCustomAttributes(false)) {
+        if (attr.GetType().FullName.Equals(name,
             StringComparison.Ordinal)) {
           return true;
         }
@@ -784,11 +784,11 @@ namespace PeterO.Cbor {
         object listObject = null;
         object genericListObject = null;
         #if NET40 || NET20
-        if (IsAssignableFrom (typeof(Array), t)) {
+        if (IsAssignableFrom(typeof(Array), t)) {
           Type elementType = t.GetElementType();
           Array array = Array.CreateInstance(
               elementType,
-              GetDimensions (objThis));
+              GetDimensions(objThis));
           return FillArray(
               array,
               elementType,
@@ -799,15 +799,15 @@ namespace PeterO.Cbor {
         }
         if (t.IsGenericType) {
           Type td = t.GetGenericTypeDefinition();
-          isList = td.Equals (typeof(List<>)) || td.Equals (typeof(IList<>)) ||
-            td.Equals (typeof(ICollection<>)) ||
-            td.Equals (typeof(IEnumerable<>));
+          isList = td.Equals(typeof(List<>)) || td.Equals(typeof(IList<>)) ||
+            td.Equals(typeof(ICollection<>)) ||
+            td.Equals(typeof(IEnumerable<>));
         }
         isList = isList && t.GetGenericArguments().Length == 1;
         if (isList) {
           objectType = t.GetGenericArguments()[0];
-          Type listType = typeof(List<>).MakeGenericType (objectType);
-          listObject = Activator.CreateInstance (listType);
+          Type listType = typeof(List<>).MakeGenericType(objectType);
+          listObject = Activator.CreateInstance(listType);
         }
         #else
         if (IsAssignableFrom(typeof(Array), t)) {
@@ -896,8 +896,8 @@ namespace PeterO.Cbor {
         isDict = t.IsGenericType;
         if (t.IsGenericType) {
           Type td = t.GetGenericTypeDefinition();
-          isDict = td.Equals (typeof(Dictionary<,>)) ||
-            td.Equals (typeof(IDictionary<,>));
+          isDict = td.Equals(typeof(Dictionary<,>)) ||
+            td.Equals(typeof(IDictionary<,>));
         }
         // DebugUtility.Log("list=" + isDict);
         isDict = isDict && t.GetGenericArguments().Length == 2;
@@ -908,7 +908,7 @@ namespace PeterO.Cbor {
           Type listType = typeof(Dictionary<,>).MakeGenericType(
               keyType,
               valueType);
-          dictObject = Activator.CreateInstance (listType);
+          dictObject = Activator.CreateInstance(listType);
         }
         #else
         isDict = t.GetTypeInfo().IsGenericType;

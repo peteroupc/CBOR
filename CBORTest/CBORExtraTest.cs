@@ -172,13 +172,25 @@ namespace Test {
       C = 4,
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+      "Microsoft.Design",
+      "CA1034",
+      Justification = "Testing whether serialization works " + "on nested public types")]
     public sealed class CustomCollectionContainer {
+      [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "Microsoft.Usage",
+        "CA2227",
+        Justification = "Testing whether serialization works " + "on public properties of nested public types")]
       public CustomCollection CList {
         get;
         set;
       }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+      "Microsoft.Design",
+      "CA1034",
+      Justification = "Testing whether serialization works " + "on nested public types")]
     public sealed class CustomCollection : IList<CustomEnum> {
       private List<CustomEnum> w = new List<CustomEnum>();
 

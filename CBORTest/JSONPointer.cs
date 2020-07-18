@@ -343,6 +343,30 @@ namespace Test {
       return list;
     }
 
+    private static String Replace(string str, char c, string srep) {
+      var j = -1;
+      for (int i = 0; i < str.Length; ++i) {
+        if (str[i] == c) {
+          j = i;
+          break;
+        }
+      }
+      if (j == -1) {
+        return str;
+      }
+      var sb = new StringBuilder();
+      sb.Append(str.Substring(0, j));
+      sb.Append(srep);
+      for (int i = j + 1; i < str.Length; ++i) {
+        if (str[i] == c) {
+          sb.Append(srep);
+        } else {
+          sb.Append(str[i]);
+        }
+      }
+      return sb.ToString();
+    }
+
     private static void GetPointersWithKey(
       CBORObject root,
       string keyToFind,
@@ -365,8 +389,8 @@ namespace Test {
         // Search the key's values
         foreach (CBORObject key in rootObj.Keys) {
           string ptrkey = key.AsString();
-          ptrkey = ptrkey.Replace("~", "~0");
-          ptrkey = ptrkey.Replace("/", "~1");
+          ptrkey = Replace(ptrkey, '~', "~0");
+          ptrkey = Replace(ptrkey, '/', "~1");
           GetPointersWithKey(
             rootObj[key],
             keyToFind,
