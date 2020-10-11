@@ -261,7 +261,7 @@ namespace PeterO.Cbor {
     }
     #endif
 
-    private static readonly IDictionary<Type, IList<PropertyData>>
+    [ThreadStatic] private static readonly IDictionary<Type, IList<PropertyData>>
     ValuePropertyLists = new Dictionary<Type, IList<PropertyData>>();
 
     private static string RemoveIsPrefix(string pn) {
@@ -270,7 +270,7 @@ namespace PeterO.Cbor {
     }
 
     private static IList<PropertyData> GetPropertyList(Type t) {
-      lock (ValuePropertyLists) {
+      {
         IList<PropertyData> ret = new List<PropertyData>();
         if (ValuePropertyLists.ContainsKey(t)) {
           return ValuePropertyLists[t];
