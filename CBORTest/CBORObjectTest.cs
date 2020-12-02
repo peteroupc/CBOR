@@ -7242,6 +7242,81 @@ CBOREncodeOptions(false, false, true));
       }
     }
 
+    public static void Timeout(int duration, Action action, string msg) {
+      string stackTrace = null;
+      var stackTraceLock = new Object();
+      var thread = new System.Threading.Thread(
+      () => {
+        try {
+          action();
+        } catch (Exception ex) {
+          lock (stackTraceLock) {
+            stackTrace = ex.GetType().FullName + "\n" + ex.Message +
+              "\n" + msg + "\n" + ex.StackTrace;
+            System.Threading.Monitor.PulseAll(stackTraceLock);
+          }
+        }
+      });
+      thread.Start();
+      if (!thread.Join(duration)) {
+        thread.Abort();
+        string trace = null;
+        lock (stackTraceLock) {
+          while (stackTrace == null) {
+            System.Threading.Monitor.Wait(stackTraceLock);
+          }
+          trace = stackTrace;
+        }
+        if (trace != null) {
+          Assert.Fail(trace);
+        }
+      }
+    }
+
+    [Test]
+    [Timeout(10000)]
+    public void TestDateTimeTag1One() {
+       // Test speed
+       EInteger ei=EInteger.FromString("-14261178672295354872");
+       CBORObject cbornum = CBORObject.FromObjectAndTag(ei, 1);
+       var dtx = (DateTime)cbornum.ToObject(typeof(DateTime));
+       ToObjectTest.TestToFromObjectRoundTrip(dtx);
+    }
+
+    [Test]
+    [Timeout(20000)]
+    public void TestDateTimeTag1() {
+      CBORObject cbornum;
+      var rg = new RandomGenerator();
+      DateTime dt, dt2;
+      for (var i = 0; i < 1000; ++i) {
+        EInteger ei = CBORTestCommon.RandomEIntegerMajorType0Or1(rg);
+        ei = ei.Abs(); // TODO: Eventually support negative dates
+        cbornum = CBORObject.FromObjectAndTag(ei, 1);
+        Timeout(1000, ()=> {DateTime dtx =
+(DateTime)cbornum.ToObject(typeof(DateTime));
+
+                 ToObjectTest.TestToFromObjectRoundTrip(
+                   dtx);}, cbornum.ToString());
+      }
+      for (var i = 0; i < 1000; ++i) {
+        double dbl = RandomObjects.RandomFiniteDouble(rg);
+        dbl = Math.Abs(dbl); // TODO: Eventually support negative dates
+        cbornum = CBORObject.FromObjectAndTag(dbl, 1);
+        Timeout(1000, ()=> {DateTime dtx =
+(DateTime)cbornum.ToObject(typeof(DateTime));
+
+                  ToObjectTest.TestToFromObjectRoundTrip(
+                    dtx);}, cbornum.ToString());
+      }
+      string dateStr = "1970-01-01T00.00:00.000Z";
+      CBORObject cbor = CBORObject.FromObjectAndTag(dateStr, 0);
+      dt = (DateTime)cbor.ToObject(typeof(DateTime));
+      CBORObject cbor2 = CBORObject.FromObjectAndTag(0, 1);
+      dt2 = (DateTime)cbor.ToObject(typeof(DateTime));
+      Assert.AreEqual(dt2, dt);
+    }
+
     private static CBORObject FromJSON(string json, JSONOptions jsonop) {
       // var sw = new System.Diagnostics.Stopwatch();
       // sw.Start();

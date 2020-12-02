@@ -261,7 +261,8 @@ namespace PeterO.Cbor {
     }
     #endif
 
-    [ThreadStatic] private static readonly IDictionary<Type, IList<PropertyData>>
+    [ThreadStatic]
+    private static readonly IDictionary<Type, IList<PropertyData>>
     ValuePropertyLists = new Dictionary<Type, IList<PropertyData>>();
 
     private static string RemoveIsPrefix(string pn) {

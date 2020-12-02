@@ -8,7 +8,7 @@ using System.Reflection;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Peter Occil")]
 [assembly: AssemblyCopyright(
-  "Written by Peter O. in 2013-2015. Any copyright is " +
+  "Written by Peter O. Any copyright is " +
   "dedicated to the Public Domain. " +
   "<http://creativecommons.org/publicdomain/zero/1.0/>")]
 [assembly: AssemblyProduct("CBORDocs2")]

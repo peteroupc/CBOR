@@ -195,6 +195,14 @@ namespace Test {
       return BitConverter.ToDouble(BitConverter.GetBytes((long)r), 0);
     }
 
+    public static double RandomFiniteDouble(IRandomGenExtended rand) {
+      long r = 0;
+      do {
+        r = RandomInt64(rand);
+      } while (((r >> 52) & 0x7ff) == 0x7ff);
+      return BitConverter.ToDouble(BitConverter.GetBytes((long)r), 0);
+    }
+
     public static double RandomDouble(IRandomGenExtended rand) {
       long r = RandomInt64(rand);
       return BitConverter.ToDouble(BitConverter.GetBytes((long)r), 0);

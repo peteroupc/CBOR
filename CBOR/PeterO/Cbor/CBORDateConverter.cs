@@ -29,11 +29,12 @@ namespace PeterO.Cbor {
           throw new CBORException(ex.Message, ex);
         }
       } else if (obj.HasMostOuterTag(1)) {
-        if (!obj.IsNumber || !obj.AsNumber().IsFinite()) {
+        CBORObject untagobj = obj.UntagOne();
+        if (!untagobj.IsNumber || !untagobj.AsNumber().IsFinite()) {
           throw new CBORException("Not a finite number");
         }
         EDecimal dec;
-        dec = (EDecimal)obj.ToObject(typeof(EDecimal));
+        dec = (EDecimal)untagobj.ToObject(typeof(EDecimal));
         var lesserFields = new int[7];
         var year = new EInteger[1];
         CBORUtilities.BreakDownSecondsSinceEpoch(

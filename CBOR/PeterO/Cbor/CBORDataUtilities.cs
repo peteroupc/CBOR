@@ -70,7 +70,7 @@ namespace PeterO.Cbor {
               c = (char)(0x30 + thisItemInt);
             }
             sb.Append(c);
-            sb.Append(")");
+            sb.Append(')');
           }
           break;
         case CBORType.Boolean:
@@ -102,7 +102,7 @@ obj.Untag().ToJSONString()));
             sb.Append(HexAlphabet[(data[i] >> 4) & 15]);
             sb.Append(HexAlphabet[data[i] & 15]);
           }
-          sb.Append("'");
+          sb.Append(''');
           break;
         }
         case CBORType.TextString: {
@@ -129,7 +129,7 @@ obj.Untag().ToJSONString()));
         case CBORType.Array: {
           sb = sb ?? new StringBuilder();
           var first = true;
-          sb.Append("[");
+          sb.Append('[');
           if (depth >= 50) {
             sb.Append("...");
           } else {
@@ -141,13 +141,13 @@ obj.Untag().ToJSONString()));
               first = false;
             }
           }
-          sb.Append("]");
+          sb.Append(']');
           break;
         }
         case CBORType.Map: {
           sb = sb ?? new StringBuilder();
           var first = true;
-          sb.Append("{");
+          sb.Append('{');
           if (depth >= 50) {
             sb.Append("...");
           } else {
@@ -166,7 +166,7 @@ obj.Untag().ToJSONString()));
               first = false;
             }
           }
-          sb.Append("}");
+          sb.Append('}');
           break;
         }
         default: {

@@ -688,8 +688,8 @@ namespace PeterO.Cbor {
        // Example: Apple Time is a 32-bit unsigned integer
        // of the number of seconds since the start of 1904.
        // EInteger appleTime = GetNumberOfDaysProlepticGregorian(
-         // year,
-         month // ,
+            year,
+            month ,
          day)
        // .Subtract(GetNumberOfDaysProlepticGregorian(
        // EInteger.FromInt32(1904),
