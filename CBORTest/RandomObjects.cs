@@ -611,7 +611,7 @@ maxExc) {
       if (exponentCount > 0) {
         int rr = r.GetInt32(3);
         if (rr == 0) {
-          sb.Append("E");
+          sb.Append('E');
         } else if (rr == 1) {
           sb.Append("E+");
         } else if (rr == 2) {

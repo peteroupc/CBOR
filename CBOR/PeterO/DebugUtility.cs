@@ -13,7 +13,7 @@ using System.Reflection;
 namespace PeterO {
   internal static class DebugUtility {
     private static readonly object WriterLock = new Object();
-    private static Action<string> writer = null;
+    private static Action<string> writer;
 
     [System.Diagnostics.Conditional("DEBUG")]
     public static void SetWriter(Action<string> wr) {

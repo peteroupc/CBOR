@@ -102,7 +102,7 @@ obj.Untag().ToJSONString()));
             sb.Append(HexAlphabet[(data[i] >> 4) & 15]);
             sb.Append(HexAlphabet[data[i] & 15]);
           }
-          sb.Append(''');
+          sb.Append((char)0x27);
           break;
         }
         case CBORType.TextString: {
@@ -110,19 +110,6 @@ obj.Untag().ToJSONString()));
           sb.Append('\"');
           string ostring = obj.AsString();
           sb.Append(ostring);
-          /*
-          for (var i = 0; i < ostring.Length; ++i) {
-            if (ostring[i] >= 0x20 && ostring[i] <= 0x7f) {
-              sb.Append(ostring[i]);
-            } else {
-                 sb.Append("\\u");
-                 sb.Append(HexAlphabet[(ostring[i] >> 12) & 15]);
-                 sb.Append(HexAlphabet[(ostring[i] >> 8) & 15]);
-                 sb.Append(HexAlphabet[(ostring[i] >> 4) & 15]);
-                 sb.Append(HexAlphabet[ostring[i] & 15]);
-             }
-          }
-          */
           sb.Append('\"');
           break;
         }

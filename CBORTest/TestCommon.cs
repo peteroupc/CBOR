@@ -677,7 +677,8 @@ length);
       sb.Append("new byte[] { ");
       for (var i = 0; i < length; ++i) {
         if (i > 0) {
-          sb.Append(","); }
+          sb.Append(',');
+        }
         if ((bytes[offset + i] & 0x80) != 0) {
           sb.Append("(byte)0x");
         } else {
@@ -686,7 +687,7 @@ length);
         sb.Append(ValueHex[(bytes[offset + i] >> 4) & 0xf]);
         sb.Append(ValueHex[bytes[offset + i] & 0xf]);
       }
-      sb.Append("}");
+      sb.Append('}');
       return sb.ToString();
     }
 
