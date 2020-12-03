@@ -7,7 +7,7 @@ namespace Test {
   public sealed class JSONGenerator {
     private sealed class ByteWriter {
       private byte[] bytes = new byte[64];
-      private int pos = 0;
+      private int pos;
 
       public ByteWriter Write(int b) {
         if (this.pos < this.bytes.Length) {
