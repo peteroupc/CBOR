@@ -3,24 +3,21 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard1.0</TargetFrameworks>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>4.2.0</Version>
+    <Version>4.3.0</Version>
     <Owners>Peter Occil</Owners>
     <Description>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049.</Description>
     <Summary>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049. </Summary>
-    <Copyright>Written by Peter O.  Any copyright is released to the Public Domain.</Copyright>
+    <Copyright>2020. Written by Peter O.  Any copyright to this work is released to the Public Domain.  In case this is not possible, this work is also released under Creative Commons Zero (CC0).</Copyright>
     <Authors>Peter Occil</Authors>
     <PackageId>PeterO.Cbor</PackageId>
     <PackageLicenseExpression>CC0-1.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/peteroupc/CBOR</PackageProjectUrl>
     <PackageReleaseNotes>
-Version 4.2:
+Version 4.3:
 
-- Some arithmetic methods in CBORNumber do basic overflow checks.
-- Add char array and byte array overloads to ParseJSONNumber
-- Support implementations of IList in CBORObject deserialization
-- Internally, the code avoids storing doubles (64-bit floating-point numbers) directly in CBORNumbers, uses sorted maps rather than hash tables in some CBOR objects, and can now store text strings as UTF-8 byte arrays.  This could help avoid unnecessary string conversions in many case.
-- Bug fixes and performance improvements
-- Now uses Numbers library version 1.7.3
+- Fixed bugs in DateTime support
+- Added CompareTo overloads in CBORNumber class
+- Add NewOrderedMap method based on a suggestion by a GitHub user
 
 </PackageReleaseNotes>
     <PackageTags>cbor data serialization binary json</PackageTags>

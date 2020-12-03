@@ -1,11 +1,14 @@
 /*
 Written by Peter O.
-Any copyright is dedicated to the Public Domain.
+Any copyright to this work is released to the Public Domain.
+In case this is not possible, this work is also
+licensed under Creative Commons Zero (CC0):
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/
  */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 using PeterO;
@@ -2800,6 +2803,38 @@ namespace Test {
         CBORObject o2 = CBORTestCommon.RandomNumber(r);
         TestAsNumberMultiplyDivideOne(o1, o2);
       }
+    }
+
+    [Test]
+    public void TestOrderedMap() {
+CBORObject cbor;
+IList<CBORObject> list;
+cbor=CBORObject.NewOrderedMap().Add("a",1).Add("b",2).Add("c",3);
+list = new List<CBORObject>();
+foreach (CBORObject obj in cbor.Keys) {
+  list.Add(obj);
+}
+Assert.AreEqual(3, list.Count);
+TestCommon.AssertEqualsHashCode(CBORObject.FromObject("a"),list[0]);
+TestCommon.AssertEqualsHashCode(CBORObject.FromObject("b"),list[1]);
+TestCommon.AssertEqualsHashCode(CBORObject.FromObject("c"),list[2]);
+cbor=CBORObject.NewOrderedMap().Add("c",1).Add("a",2).Add("vv",3);
+list = new List<CBORObject>();
+foreach (CBORObject obj in cbor.Keys) {
+  list.Add(obj);
+}
+Assert.AreEqual(3, list.Count);
+TestCommon.AssertEqualsHashCode(CBORObject.FromObject("c"),list[0]);
+TestCommon.AssertEqualsHashCode(CBORObject.FromObject("a"),list[1]);
+TestCommon.AssertEqualsHashCode(CBORObject.FromObject("vv"),list[2]);
+list = new List<CBORObject>();
+foreach (CBORObject obj in cbor.Values) {
+  list.Add(obj);
+}
+Assert.AreEqual(3, list.Count);
+TestCommon.AssertEqualsHashCode(CBORObject.FromObject(1), list[0]);
+TestCommon.AssertEqualsHashCode(CBORObject.FromObject(2), list[1]);
+TestCommon.AssertEqualsHashCode(CBORObject.FromObject(3), list[2]);
     }
 
     [Test]

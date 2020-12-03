@@ -1,6 +1,8 @@
 /*
 Written by Peter O.
-Any copyright is dedicated to the Public Domain.
+Any copyright to this work is released to the Public Domain.
+In case this is not possible, this work is also
+licensed under Creative Commons Zero (CC0):
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/
@@ -16,6 +18,271 @@ using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   internal static class PropertyMap {
+    private sealed class OrderedDictionary<TKey, TValue> : IDictionary<TKey, TValue> {
+      // NOTE: Must use SortedDictionary for correctness in key comparison.
+      // This is because TKey and TValue are both CBORObject in this library,
+      // that class's CompareTo is inconsistent with Equals, and SortedDictionary
+      // uses CompareTo for key comparison unlike Dictionary which uses Equals.
+      private readonly SortedDictionary<TKey, TValue> dict;
+      private readonly LinkedList<TKey> list;
+      public OrderedDictionary() {
+        this.dict = new SortedDictionary<TKey, TValue>();
+        this.list = new LinkedList<TKey>();
+      }
+      public void Add(KeyValuePair<TKey, TValue> kvp) {
+        this.Add(kvp.Key, kvp.Value);
+      }
+      public void Add(TKey k, TValue v) {
+        if (this.dict.ContainsKey(k)) {
+           throw new ArgumentException("duplicate key");
+        } else {
+           // CheckKeyDoesNotExist(k);
+           this.dict.Add(k, v);
+           // if (this.dict.Count != this.list.Count) {
+           // throw new InvalidOperationException();
+           // }
+           this.list.AddLast(k);
+           // CheckKeyExists(k);
+           // if (this.dict.Count != this.list.Count) {
+           // throw new InvalidOperationException();
+           // }
+        }
+      }
+      public TValue this[TKey key] {
+        get {
+           TValue v = default(TValue);
+           // NOTE: Don't use dict[key], since if it fails it could
+           // print the key in the exception's message, which could
+           // cause an infinite loop
+           if (!this.dict.TryGetValue(key, out v)) {
+             throw new ArgumentException("key not found");
+           }
+           return v;
+        }
+        set {
+          if (this.dict.ContainsKey(key)) {
+            this.dict[key] = value;
+            this.list.Remove(key);
+            this.list.AddLast(key);
+            // if (this.dict.Count != this.list.Count) {
+            // throw new InvalidOperationException();
+            // }
+          } else {
+            this.dict.Add(key, value);
+            this.list.AddLast(key);
+            // if (this.dict.Count != this.list.Count) {
+            // throw new InvalidOperationException();
+            // }
+          }
+        }
+      }
+      public void Clear() {
+        this.dict.Clear();
+        this.list.Clear();
+      }
+      public void CopyTo(KeyValuePair<TKey, TValue>[] a, int off) {
+        foreach (var kv in this) {
+          a[off++] = kv;
+        }
+      }
+      public bool Remove(KeyValuePair<TKey, TValue> kvp) {
+        if (this.Contains(kvp)) {
+          // CheckKeyExists(kvp.Key);
+          this.dict.Remove(kvp.Key);
+          this.list.Remove(kvp.Key);
+          // CheckKeyExists(kvp.Key);
+          return true;
+        }
+        return false;
+      }
+      public bool Remove(TKey key) {
+        if (this.dict.ContainsKey(key)) {
+          // CheckKeyExists(key);
+          this.dict.Remove(key);
+          this.list.Remove(key);
+          // CheckKeyDoesNotExist(key);
+          return true;
+        }
+        return false;
+      }
+      public bool Contains(KeyValuePair<TKey, TValue> kvp) {
+        if (this.dict.ContainsKey(kvp.Key)) {
+          if (this.dict[kvp.Key].Equals(kvp.Value)) {
+            return true;
+          }
+        }
+        return false;
+      }
+      public bool ContainsKey(TKey key) {
+        return this.dict.ContainsKey(key);
+      }
+      public bool TryGetValue(TKey key, out TValue val) {
+        return this.dict.TryGetValue(key, out val);
+      }
+      public int Count {
+        get {
+          return this.dict.Count;
+        }
+      }
+      public bool IsReadOnly {
+        get {
+          return false;
+        }
+      }
+
+      [System.Diagnostics.Conditional("DEBUG")]
+      private void CheckKeyExists(TKey key) {
+           TValue v = default(TValue);
+           // NOTE: Don't use dict[k], since if it fails it could
+           // print the key in the exception's message, which could
+           // cause an infinite loop
+           if (!this.dict.TryGetValue(key, out v)) {
+             throw new ArgumentException("key not found");
+           }
+           if (this.dict.Count != this.list.Count) {
+             throw new InvalidOperationException();
+           }
+      }
+
+      [System.Diagnostics.Conditional("DEBUG")]
+      private void CheckKeyDoesNotExist(TKey key) {
+           TValue v = default(TValue);
+           // NOTE: Don't use dict[k], since if it fails it could
+           // print the key in the exception's message, which could
+           // cause an infinite loop
+           if (!this.dict.TryGetValue(key, out v)) {
+             if (this.dict.Count != this.list.Count) {
+               throw new InvalidOperationException();
+             }
+             return;
+           }
+           throw new ArgumentException("key found");
+      }
+
+      public ICollection<TKey> Keys { get {
+          return new KeyWrapper<TKey, TValue>(this.dict, this.list);
+      }}
+
+      public ICollection<TValue> Values { get {
+          return new ValueWrapper<TKey, TValue>(this.dict, this.list);
+      }}
+
+      private IEnumerable<KeyValuePair<TKey, TValue>> Iterate() {
+        foreach (var k in this.list) {
+           TValue v = default(TValue);
+           // NOTE: Don't use dict[k], since if it fails it could
+           // print the key in the exception's message, which could
+           // cause an infinite loop
+           if (!this.dict.TryGetValue(k, out v)) {
+             throw new ArgumentException("key not found");
+           }
+           yield return new KeyValuePair<TKey, TValue>(k, v);
+        }
+      }
+
+      public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() {
+        return this.Iterate().GetEnumerator();
+      }
+      IEnumerator IEnumerable.GetEnumerator() {
+        return ((IEnumerable)this.Iterate()).GetEnumerator();
+      }
+    }
+
+    private sealed class ValueWrapper<TKey, TValue> : ICollection<TValue> {
+      private readonly IDictionary<TKey, TValue> dict;
+      private readonly LinkedList<TKey> list;
+      public ValueWrapper(IDictionary<TKey, TValue> dict, LinkedList<TKey>
+list) {
+        this.dict = dict;
+        this.list = list;
+      }
+      public void Add(TValue v) {
+        throw new NotSupportedException();
+      }
+      public void Clear() {
+        throw new NotSupportedException();
+      }
+      public void CopyTo(TValue[] a, int off) {
+        foreach (var k in this.list) {
+          a[off++] = this.dict[k];
+        }
+      }
+      public bool Remove(TValue v) {
+        throw new NotSupportedException();
+      }
+      public bool Contains(TValue v) {
+        foreach (var k in this.list) {
+          if (this.dict[k].Equals(v)) {
+            return true;
+          }
+        }
+        return false;
+      }
+      public int Count {
+        get {
+          return this.dict.Count;
+        }
+      }
+      public bool IsReadOnly {
+        get {
+          return true;
+        }
+      }
+
+      private IEnumerable<TValue> Iterate() {
+        foreach (var k in this.list) {
+          yield return this.dict[k];
+        }
+      }
+
+      public IEnumerator<TValue> GetEnumerator() {
+        return this.Iterate().GetEnumerator();
+      }
+      IEnumerator IEnumerable.GetEnumerator() {
+        return ((IEnumerable)this.Iterate()).GetEnumerator();
+      }
+    }
+
+    private sealed class KeyWrapper<TKey, TValue> : ICollection<TKey> {
+      private readonly IDictionary<TKey, TValue> dict;
+      private readonly LinkedList<TKey> list;
+      public KeyWrapper(IDictionary<TKey, TValue> dict, LinkedList<TKey> list) {
+        this.dict = dict;
+        this.list = list;
+      }
+      public void Add(TKey v) {
+        throw new NotSupportedException();
+      }
+      public void Clear() {
+        throw new NotSupportedException();
+      }
+      public void CopyTo(TKey[] a, int off) {
+        this.list.CopyTo(a, off);
+      }
+      public bool Remove(TKey v) {
+        throw new NotSupportedException();
+      }
+      public bool Contains(TKey v) {
+        return this.dict.ContainsKey(v);
+      }
+      public int Count {
+        get {
+          return this.dict.Count;
+        }
+      }
+      public bool IsReadOnly {
+        get {
+          return true;
+        }
+      }
+      public IEnumerator<TKey> GetEnumerator() {
+        return this.list.GetEnumerator();
+      }
+      IEnumerator IEnumerable.GetEnumerator() {
+        return ((IEnumerable)this.list).GetEnumerator();
+      }
+    }
+
     private sealed class ReadOnlyWrapper<T> : ICollection<T> {
       private readonly ICollection<T> o;
       public ReadOnlyWrapper(ICollection<T> o) {
@@ -615,6 +882,10 @@ namespace PeterO.Cbor {
       return new ReadOnlyWrapper<KeyValuePair<TKey, TValue>>(c);
     }
 
+    public static IDictionary<CBORObject, CBORObject> NewOrderedDict() {
+      return new OrderedDictionary<CBORObject, CBORObject>();
+    }
+
     public static object FindOneArgumentMethod(
       object obj,
       string name,
@@ -1097,7 +1368,7 @@ namespace PeterO.Cbor {
     }
 
     public static DateTime BuildUpDateTime(EInteger year, int[] dt) {
-      if (year.CompareTo(9999)>0 || year.CompareTo(0) <= 0) {
+      if (year.CompareTo(9999) > 0 || year.CompareTo(0) <= 0) {
         throw new CBORException("Year is too big or too small for DateTime.");
       }
       return new DateTime(
@@ -1107,8 +1378,7 @@ namespace PeterO.Cbor {
           dt[2],
           dt[3],
           dt[4],
-          DateTimeKind.Utc)
-        .AddMinutes(-dt[6]).AddTicks((long)(dt[5] / 100));
+          DateTimeKind.Utc).AddMinutes(-dt[6]).AddTicks((long)(dt[5] / 100));
     }
   }
 }

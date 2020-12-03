@@ -1511,9 +1511,10 @@ NumberKind.ERational) {
       }
     }
 
-    /// <summary>Compares this CBOR number with a 32-bit signed integer. In this implementation, the two
-    /// numbers' mathematical values are compared. Here, NaN (not-a-number)
-    /// is considered greater than any number.</summary>
+    /// <summary>Compares this CBOR number with a 32-bit signed integer. In
+    /// this implementation, the two numbers' mathematical values are
+    /// compared. Here, NaN (not-a-number) is considered greater than any
+    /// number.</summary>
     /// <param name='other'>A value to compare with. Can be null.</param>
     /// <returns>A negative number, if this value is less than the other
     /// object; or 0, if both values are equal; or a positive number, if
@@ -1526,13 +1527,14 @@ NumberKind.ERational) {
     /// <c>Comparable.compareTo()</c> in Java ought to throw an exception
     /// if they receive a null argument rather than treating null as less
     /// or greater than any object.</para>.</returns>
-    public int CompareTo(int other){
-      return CompareTo(CBORObject.FromObject(other).AsNumber());
+    public int CompareTo(int other) {
+      return this.CompareTo(CBORObject.FromObject(other).AsNumber());
     }
 
-    /// <summary>Compares this CBOR number with a 64-bit signed integer. In this implementation, the two
-    /// numbers' mathematical values are compared. Here, NaN (not-a-number)
-    /// is considered greater than any number.</summary>
+    /// <summary>Compares this CBOR number with a 64-bit signed integer. In
+    /// this implementation, the two numbers' mathematical values are
+    /// compared. Here, NaN (not-a-number) is considered greater than any
+    /// number.</summary>
     /// <param name='other'>A value to compare with. Can be null.</param>
     /// <returns>A negative number, if this value is less than the other
     /// object; or 0, if both values are equal; or a positive number, if
@@ -1545,13 +1547,14 @@ NumberKind.ERational) {
     /// <c>Comparable.compareTo()</c> in Java ought to throw an exception
     /// if they receive a null argument rather than treating null as less
     /// or greater than any object.</para>.</returns>
-    public int CompareTo(long other){
-      return CompareTo(CBORObject.FromObject(other).AsNumber());
+    public int CompareTo(long other) {
+      return this.CompareTo(CBORObject.FromObject(other).AsNumber());
     }
 
-    /// <summary>Compares this CBOR number with another. In this implementation, the two
-    /// numbers' mathematical values are compared. Here, NaN (not-a-number)
-    /// is considered greater than any number.</summary>
+    /// <summary>Compares this CBOR number with another. In this
+    /// implementation, the two numbers' mathematical values are compared.
+    /// Here, NaN (not-a-number) is considered greater than any
+    /// number.</summary>
     /// <param name='other'>A value to compare with. Can be null.</param>
     /// <returns>A negative number, if this value is less than the other
     /// object; or 0, if both values are equal; or a positive number, if

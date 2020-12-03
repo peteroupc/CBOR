@@ -4831,7 +4831,7 @@ CBOREncodeOptions(false, false, true));
     }
 
     [Test]
-    public void TestCalcEncodedSizeCircularRefs() {
+    public void TestCalcEncodedSizeCircularRefs1() {
       CBORObject cbor = CBORObject.NewArray().Add(1).Add(2);
       cbor.Add(cbor);
       try {
@@ -4843,29 +4843,10 @@ CBOREncodeOptions(false, false, true));
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
-      cbor.Add(cbor, "test");
-      try {
-        cbor.CalcEncodedSize();
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
-      cbor.Add("test", cbor);
-      try {
-        cbor.CalcEncodedSize();
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      cbor = CBORObject.NewArray().Add(1).Add(2);
+    }
+    [Test]
+    public void TestCalcEncodedSizeCircularRefs4() {
+      CBORObject cbor = CBORObject.NewArray().Add(1).Add(2);
       cbor.Add(CBORObject.NewArray().Add(cbor));
       try {
         cbor.CalcEncodedSize();
@@ -4876,7 +4857,38 @@ CBOREncodeOptions(false, false, true));
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
+    }
+    [Test]
+    public void TestCalcEncodedSizeCircularRefs2() {
+      CBORObject cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
+      cbor.Add(cbor, "test");
+      try {
+        cbor.CalcEncodedSize();
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
+    [Test]
+    public void TestCalcEncodedSizeCircularRefs3() {
+      CBORObject cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
+      cbor.Add("test", cbor);
+      try {
+        cbor.CalcEncodedSize();
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
+    [Test]
+    public void TestCalcEncodedSizeCircularRefs5() {
+      CBORObject cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
       cbor.Add(CBORObject.NewArray().Add(cbor), "test");
       try {
         cbor.CalcEncodedSize();
@@ -4887,7 +4899,67 @@ CBOREncodeOptions(false, false, true));
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
+    }
+    [Test]
+    public void TestCalcEncodedSizeCircularRefs6() {
+      CBORObject cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
+      cbor.Add("test", CBORObject.NewArray().Add(cbor));
+      try {
+        cbor.CalcEncodedSize();
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
+
+    [Test]
+    public void TestCalcEncodedSizeCircularRefs2a() {
+      CBORObject cbor = CBORObject.NewOrderedMap().Add(1, 2).Add(3, 4);
+      cbor.Add(cbor, "test");
+      try {
+        cbor.CalcEncodedSize();
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
+    [Test]
+    public void TestCalcEncodedSizeCircularRefs3a() {
+      CBORObject cbor = CBORObject.NewOrderedMap().Add(1, 2).Add(3, 4);
+      cbor.Add("test", cbor);
+      try {
+        cbor.CalcEncodedSize();
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
+    [Test]
+    public void TestCalcEncodedSizeCircularRefs5a() {
+      CBORObject cbor = CBORObject.NewOrderedMap().Add(1, 2).Add(3, 4);
+      cbor.Add(CBORObject.NewArray().Add(cbor), "test");
+      try {
+        cbor.CalcEncodedSize();
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
+    [Test]
+    public void TestCalcEncodedSizeCircularRefs6a() {
+      CBORObject cbor = CBORObject.NewOrderedMap().Add(1, 2).Add(3, 4);
       cbor.Add("test", CBORObject.NewArray().Add(cbor));
       try {
         cbor.CalcEncodedSize();
@@ -7260,9 +7332,9 @@ CBOREncodeOptions(false, false, true));
        }
        if (ei.CanFitInInt64()) {
          cbornum = CBORObject.FromObjectAndTag(ei.ToInt64Checked(), 1);
-         dtx2 = (DateTime)cbornum.ToObject(typeof(DateTime));
-         TestCommon.AssertEqualsHashCode(dtx, dtx2);
-       ToObjectTest.TestToFromObjectRoundTrip(dtx2);
+          dtx2 = (DateTime)cbornum.ToObject(typeof(DateTime));
+          TestCommon.AssertEqualsHashCode(dtx, dtx2);
+          ToObjectTest.TestToFromObjectRoundTrip(dtx2);
        }
        EFloat ef1 = EFloat.FromEInteger(ei).Plus(EContext.Binary64);
        EFloat ef2 = EFloat.FromEInteger(ei);
