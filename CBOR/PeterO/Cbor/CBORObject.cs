@@ -1,6 +1,8 @@
 /*
 Written by Peter O.
-Any copyright is dedicated to the Public Domain.
+Any copyright to this work is released to the Public Domain.
+In case this is not possible, this work is also
+licensed under Creative Commons Zero (CC0):
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/
@@ -1554,13 +1556,16 @@ namespace PeterO.Cbor {
     ///  library (in .NET) or the <a
     /// href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c>
     /// </a>
-    ///  artifact (in Java), converts the given object to a number of
-    /// the corresponding type and throws an exception (currently
-    /// InvalidOperationException) if the object does not represent a
-    /// number (for this purpose, infinity and not-a-number values, but not
-    /// <c>CBORObject.Null</c>
-    ///  , are considered numbers). Currently, this
-    /// is equivalent to the result of <c>AsEFloat()</c>
+    ///  artifact (in Java), or if the type is <c>BigInteger</c>
+    ///  or
+    /// <c>BigDecimal</c>
+    ///  in the Java version, converts the given object to
+    /// a number of the corresponding type and throws an exception
+    /// (currently InvalidOperationException) if the object does not
+    /// represent a number (for this purpose, infinity and not-a-number
+    /// values, but not <c>CBORObject.Null</c>
+    ///  , are considered numbers).
+    /// Currently, this is equivalent to the result of <c>AsEFloat()</c>
     ///  ,
     /// <c>AsEDecimal()</c>
     ///  , <c>AsEInteger</c>
@@ -2464,6 +2469,9 @@ namespace PeterO.Cbor {
     /// <c>CBORObject.Null</c> if the nullable's value is <c>null</c>, or
     /// converted according to the nullable's underlying type, if that type
     /// is supported by this method.</item>
+    /// <item>In the Java version, a number of type <c>BigInteger</c> or
+    /// <c>BigDecimal</c> is converted to the corresponding CBOR
+    /// number.</item>
     /// <item>A number of type <c>EDecimal</c>, <c>EFloat</c>,
     /// <c>EInteger</c>, and <c>ERational</c> in the
     /// <a
@@ -2696,6 +2704,10 @@ namespace PeterO.Cbor {
       }
       if (obj is Guid) {
         return new CBORUuidConverter().ToCBORObject((Guid)obj);
+      }
+      objret = PropertyMap.FromObjectOther(obj);
+      if (objret != null) {
+        return objret;
       }
       objret = CBORObject.NewMap();
       foreach (KeyValuePair<string, object> key in

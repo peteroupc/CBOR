@@ -1,6 +1,8 @@
 /*
 Written by Peter O.
-Any copyright is dedicated to the Public Domain.
+Any copyright to this work is released to the Public Domain.
+In case this is not possible, this work is also
+licensed under Creative Commons Zero (CC0):
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/
@@ -990,6 +992,10 @@ namespace PeterO.Cbor {
       }
     }
 
+    public static CBORObject FromObjectOther(object obj) {
+       return null;
+    }
+
     public static object ObjectWithProperties(
       Type t,
       IEnumerable<KeyValuePair<string, CBORObject>> keysValues,
@@ -1091,6 +1097,9 @@ namespace PeterO.Cbor {
     }
 
     public static DateTime BuildUpDateTime(EInteger year, int[] dt) {
+      if (year.CompareTo(9999) > 0 || year.CompareTo(0) <= 0) {
+        throw new CBORException("Year is too big or too small for DateTime.");
+      }
       return new DateTime(
           year.ToInt32Checked(),
           dt[0],
@@ -1098,8 +1107,7 @@ namespace PeterO.Cbor {
           dt[2],
           dt[3],
           dt[4],
-          DateTimeKind.Utc)
-        .AddMinutes(-dt[6]).AddTicks((long)(dt[5] / 100));
+          DateTimeKind.Utc).AddMinutes(-dt[6]).AddTicks((long)(dt[5] / 100));
     }
   }
 }

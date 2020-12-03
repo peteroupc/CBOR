@@ -30,9 +30,14 @@ namespace PeterO.Cbor {
         }
       } else if (obj.HasMostOuterTag(1)) {
         CBORObject untagobj = obj.UntagOne();
-        if (!untagobj.IsNumber || !untagobj.AsNumber().IsFinite()) {
+        if (!untagobj.IsNumber) {
           throw new CBORException("Not a finite number");
         }
+        CBORNumber num = untagobj.AsNumber();
+        if (!num.IsFinite()) {
+          throw new CBORException("Not a finite number");
+        }
+        // TODO: Compare num with max possible value for DateTime
         EDecimal dec;
         dec = (EDecimal)untagobj.ToObject(typeof(EDecimal));
         var lesserFields = new int[7];
