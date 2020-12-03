@@ -37,7 +37,10 @@ namespace PeterO.Cbor {
         if (!num.IsFinite()) {
           throw new CBORException("Not a finite number");
         }
-        // TODO: Compare num with max possible value for DateTime
+        if (num.CompareTo(Int64.MaxValue) < 0 ||
+            num.CompareTo(Int64.MinValue) > 0) {
+          throw new CBORException("Too big or small to fit a DateTime");
+        }
         EDecimal dec;
         dec = (EDecimal)untagobj.ToObject(typeof(EDecimal));
         var lesserFields = new int[7];
