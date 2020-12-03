@@ -37,8 +37,8 @@ namespace PeterO.Cbor {
         if (!num.IsFinite()) {
           throw new CBORException("Not a finite number");
         }
-        if (num.CompareTo(Int64.MaxValue) < 0 ||
-            num.CompareTo(Int64.MinValue) > 0) {
+        if (num.CompareTo(Int64.MinValue) < 0 ||
+            num.CompareTo(Int64.MaxValue) > 0) {
           throw new CBORException("Too big or small to fit a DateTime");
         }
         EDecimal dec;
