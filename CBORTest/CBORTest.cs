@@ -4565,13 +4565,13 @@ CBORObject.FromObject(er).ToJSONString();
     public void TestRationalJSONSpecificB() {
 ERational
   er2=ERational.FromString("1117037884940373468269515037592447741921166676191625235424/13699696515096285881634845839085271311137");
-CBORObject.FromObject(er).ToJSONString();
+CBORObject.FromObject(er2).ToJSONString();
     }
     [Test]
     public void TestRationalJSONSpecificC() {
 ERational
   er2=ERational.FromString("42595158956667/1216724793801972483341765319799605241541780250657492435");
-CBORObject.FromObject(er).ToJSONString();
+CBORObject.FromObject(er2).ToJSONString();
     }
 
     [Test]

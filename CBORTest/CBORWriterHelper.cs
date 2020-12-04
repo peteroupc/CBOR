@@ -34,12 +34,12 @@ namespace Test {
     }
 
     public CBORWriterHelper WriteStartArray() {
-      CBORObject.WriteValue((int)0x9f);
+      this.outputStream.WriteByte((int)0x9f);
       return this;
     }
 
     public CBORWriterHelper WriteStartMap() {
-      CBORObject.WriteValue((int)0xbf);
+      this.outputStream.WriteByte((int)0xbf);
       return this;
     }
 
@@ -60,7 +60,7 @@ namespace Test {
     }
 
     public CBORWriterHelper Write(object value) {
-      CBORObject.Write(key, this.outputStream);
+      CBORObject.Write(value, this.outputStream);
       return this;
     }
   }
