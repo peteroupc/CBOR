@@ -62,8 +62,6 @@ namespace PeterO.Cbor {
         set {
           if (this.dict.ContainsKey(key)) {
             this.dict[key] = value;
-            this.list.Remove(key);
-            this.list.AddLast(key);
             // if (this.dict.Count != this.list.Count) {
             // throw new InvalidOperationException();
             // }

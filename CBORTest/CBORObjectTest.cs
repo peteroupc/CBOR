@@ -4944,6 +4944,190 @@ CBOREncodeOptions(false, false, true));
       }
     }
     [Test]
+    public void TestCalcEncodedSizeCircularRefs3b() {
+      CBORObject cbor;
+      cbor = CBORObject.NewOrderedMap().Add(1, 2).Add(3, 4);
+      cbor.Add("test", cbor);
+      try {
+ cbor.CalcEncodedSize();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      cbor = CBORObject.NewOrderedMap().Add("abc", 2).Add("def", 4);
+      cbor.Add("test", cbor);
+      try {
+ cbor.CalcEncodedSize();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
+      cbor.Add("test", cbor);
+      try {
+ cbor.CalcEncodedSize();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
+      cbor.Add(CBORObject.NewOrderedMap().Add("jkl",cbor),"test");
+      try {
+ cbor.CalcEncodedSize();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
+      cbor.Add("test",CBORObject.NewOrderedMap().Add("jkl",cbor));
+      try {
+ cbor.CalcEncodedSize();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
+      cbor.Add(CBORObject.NewOrderedMap().Add(cbor,"jkl"),"test");
+      try {
+ cbor.CalcEncodedSize();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
+      cbor.Add("test",CBORObject.NewOrderedMap().Add(cbor,"jkl"));
+      try {
+ cbor.CalcEncodedSize();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
+      cbor.Add(CBORObject.NewOrderedMap().Add(cbor,"jkl").Add("mno",1),"test");
+      try {
+ cbor.CalcEncodedSize();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
+      cbor.Add("test",CBORObject.NewOrderedMap().Add(cbor,"jkl").Add("mno",1));
+      try {
+ cbor.CalcEncodedSize();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
+      cbor.Add("test",CBORObject.NewOrderedMap().Add("mno",1).Add(cbor,"jkl"));
+      try {
+ cbor.CalcEncodedSize();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
+      cbor.Add(CBORObject.NewOrderedMap().Add("mno",1).Add(cbor,"jkl"),"test");
+      try {
+ cbor.CalcEncodedSize();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      // No circular refs
+      cbor = CBORObject.NewOrderedMap().Add(1, 2).Add(3, 4);
+      cbor.Add("test", CBORObject.NewOrderedMap());
+      TestCommon.CompareTestLess(2, cbor.CalcEncodedSize());
+      cbor = CBORObject.NewOrderedMap().Add("abc", 2).Add("def", 4);
+      cbor.Add("test", CBORObject.NewOrderedMap());
+      TestCommon.CompareTestLess(2, cbor.CalcEncodedSize());
+      cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
+      cbor.Add("test", CBORObject.NewOrderedMap());
+      TestCommon.CompareTestLess(2, cbor.CalcEncodedSize());
+      cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
+
+  cbor.Add(CBORObject.NewOrderedMap().Add("jkl",CBORObject.NewOrderedMap()),"test");
+      TestCommon.CompareTestLess(2, cbor.CalcEncodedSize());
+      cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
+
+  cbor.Add("test",CBORObject.NewOrderedMap().Add("jkl",CBORObject.NewOrderedMap()));
+      TestCommon.CompareTestLess(2, cbor.CalcEncodedSize());
+      cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
+
+  cbor.Add(CBORObject.NewOrderedMap().Add(CBORObject.NewOrderedMap(),"jkl"),"test");
+      TestCommon.CompareTestLess(2, cbor.CalcEncodedSize());
+      cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
+
+  cbor.Add("test",CBORObject.NewOrderedMap().Add(CBORObject.NewOrderedMap(),"jkl"));
+      TestCommon.CompareTestLess(2, cbor.CalcEncodedSize());
+      cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
+      {
+        object objectTemp =
+  CBORObject.NewOrderedMap().Add(CBORObject.NewOrderedMap(),"jkl").Add("mno",1);
+        object objectTemp2 = "test";
+        cbor.Add(objectTemp, objectTemp2);
+      }
+      TestCommon.CompareTestLess(2, cbor.CalcEncodedSize());
+      cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
+      {
+        string stringTemp = "test";
+        string stringTemp2 =
+  CBORObject.NewOrderedMap().Add(CBORObject.NewOrderedMap(),"jkl").Add("mno",1);
+        cbor.Add(stringTemp, stringTemp2);
+      }
+      TestCommon.CompareTestLess(2, cbor.CalcEncodedSize());
+      cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
+      {
+        string stringTemp = "test";
+        string stringTemp2 =
+  CBORObject.NewOrderedMap().Add("mno",1).Add(CBORObject.NewOrderedMap(),"jkl");
+        cbor.Add(stringTemp, stringTemp2);
+      }
+      TestCommon.CompareTestLess(2, cbor.CalcEncodedSize());
+      cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
+      {
+        object objectTemp =
+  CBORObject.NewOrderedMap().Add("mno",1).Add(CBORObject.NewOrderedMap(),"jkl");
+        object objectTemp2 = "test";
+        cbor.Add(objectTemp, objectTemp2);
+      }
+      TestCommon.CompareTestLess(2, cbor.CalcEncodedSize());
+    }
+
+    [Test]
     public void TestCalcEncodedSizeCircularRefs5a() {
       CBORObject cbor = CBORObject.NewOrderedMap().Add(1, 2).Add(3, 4);
       cbor.Add(CBORObject.NewArray().Add(cbor), "test");
