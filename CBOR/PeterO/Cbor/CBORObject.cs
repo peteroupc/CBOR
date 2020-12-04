@@ -6418,6 +6418,14 @@ namespace PeterO.Cbor {
     /// interval [0, 23] or [32, 255].</param>
     /// <returns>The number of bytes ordered to be written to the data
     /// stream.</returns>
+    /// <remarks>There are other useful things to note when encoding CBOR
+    /// that are not covered by this WriteValue method. To mark the start
+    /// of an indefinite-length array, write the 8-bit byte 0x9f to the
+    /// output stream. To mark the start of an indefinite-length map, write
+    /// the 8-bit byte 0xbf to the output stream. To mark the end of an
+    /// indefinite-length array or map, write the 8-bit byte 0xff to the
+    /// output stream. For examples, see the WriteValue(Stream, int, int)
+    /// overload.</remarks>
     /// <exception cref='ArgumentException'>Value is from 24 to 31 and
     /// major type is 7.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -6488,6 +6496,13 @@ namespace PeterO.Cbor {
     /// major type is 7.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='outputStream'/> is null.</exception>
+    /// <remarks>There are other useful things to note when encoding CBOR
+    /// that are not covered by this WriteValue method. To mark the start
+    /// of an indefinite-length array, write the 8-bit byte 0x9f to the
+    /// output stream. To mark the start of an indefinite-length map, write
+    /// the 8-bit byte 0xbf to the output stream. To mark the end of an
+    /// indefinite-length array or map, write the 8-bit byte 0xff to the
+    /// output stream.</remarks>
     /// <example>
     /// <para>In the following example, an array of three objects is
     /// written as CBOR to a data stream.</para>
@@ -6576,6 +6591,13 @@ namespace PeterO.Cbor {
     /// this number may not be greater than 2^64 - 1.</param>
     /// <returns>The number of bytes ordered to be written to the data
     /// stream.</returns>
+    /// <remarks>There are other useful things to note when encoding CBOR
+    /// that are not covered by this WriteValue method. To mark the start
+    /// of an indefinite-length array, write the 8-bit byte 0x9f to the
+    /// output stream. To mark the start of an indefinite-length map, write
+    /// the 8-bit byte 0xbf to the output stream. To mark the end of an
+    /// indefinite-length array or map, write the 8-bit byte 0xff to the
+    /// output stream.</remarks>
     /// <exception cref='ArgumentException'>The parameter <paramref
     /// name='majorType'/> is 7 and value is greater than 255.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -6653,8 +6675,9 @@ namespace PeterO.Cbor {
     /// . Only keys found in 'keys' will be written if they exist
     /// in 'mapObj'.</para>
     /// <code>private static void WriteKeysToMap(CBORObject mapObj,
-    /// IList&lt;CBORObject&gt; keys, Stream outputStream) { if (mapObj == null)
-    /// { throw new ArgumentNullException(nameof(mapObj));}
+    /// IList&lt;CBORObject&gt; keys, Stream outputStream) {
+    /// if (mapObj == null) {
+    /// throw new ArgumentNullException(nameof(mapObj));}
     /// if (keys == null)
     /// {throw new ArgumentNullException(nameof(keys));}
     /// if (outputStream ==

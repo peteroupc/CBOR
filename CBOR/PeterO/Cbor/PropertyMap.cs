@@ -159,11 +159,13 @@ namespace PeterO.Cbor {
 
       public ICollection<TKey> Keys { get {
           return new KeyWrapper<TKey, TValue>(this.dict, this.list);
-      }}
+      }
+      }
 
       public ICollection<TValue> Values { get {
           return new ValueWrapper<TKey, TValue>(this.dict, this.list);
-      }}
+      }
+      }
 
       private IEnumerable<KeyValuePair<TKey, TValue>> Iterate() {
         foreach (var k in this.list) {

@@ -14,7 +14,9 @@ An instance of a number that CBOR or certain CBOR tags can represent. For this p
 * <code>[CanFitInSingle()](#CanFitInSingle)</code> - Returns whether this object's value can be converted to a 32-bit floating point number without its value being rounded to another numerical value.
 * <code>[CanTruncatedIntFitInInt32()](#CanTruncatedIntFitInInt32)</code> - Returns whether this object's value, converted to an integer by discarding its fractional part, would be -(2^31) or greater, and less than 2^31.
 * <code>[CanTruncatedIntFitInInt64()](#CanTruncatedIntFitInInt64)</code> - Returns whether this object's value, converted to an integer by discarding its fractional part, would be -(2^63) or greater, and less than 2^63.
-* <code>[CompareTo(PeterO.Cbor.CBORNumber)](#CompareTo_PeterO_Cbor_CBORNumber)</code> - Compares two CBOR numbers.
+* <code>[CompareTo(int)](#CompareTo_int)</code> - Compares this CBOR number with a 32-bit signed integer.
+* <code>[CompareTo(long)](#CompareTo_long)</code> - Compares this CBOR number with a 64-bit signed integer.
+* <code>[CompareTo(PeterO.Cbor.CBORNumber)](#CompareTo_PeterO_Cbor_CBORNumber)</code> - Compares this CBOR number with another.
 * <code>[Divide(PeterO.Cbor.CBORNumber)](#Divide_PeterO_Cbor_CBORNumber)</code> - Returns the quotient of this number and another number.
 * <code>[FromByte(byte)](#FromByte_byte)</code> - Converts a byte (from 0 to 255) to an arbitrary-precision decimal number.
 * <code>[FromCBORObject(PeterO.Cbor.CBORObject)](#FromCBORObject_PeterO_Cbor_CBORObject)</code> - Creates a CBOR number object from a CBOR object representing a number (that is, one for which the IsNumber property in.
@@ -193,13 +195,51 @@ Returns whether this object's value, converted to an integer by discarding its f
 
  `true`  if this object's value, converted to an integer by discarding its fractional part, would be -(2^63) or greater, and less than 2^63; otherwise,  `false` .
 
+<a id="CompareTo_int"></a>
+### CompareTo
+
+    public int CompareTo(
+        int other);
+
+Compares this CBOR number with a 32-bit signed integer. In this implementation, the two numbers' mathematical values are compared. Here, NaN (not-a-number) is considered greater than any number.
+
+<b>Parameters:</b>
+
+ * <i>other</i>: A value to compare with. Can be null.
+
+<b>Return Value:</b>
+
+A negative number, if this value is less than the other object; or 0, if both values are equal; or a positive number, if this value is less than the other object or if the other object is null. This implementation returns a positive number if  <i>other</i>
+ is null, to conform to the.NET definition of CompareTo. This is the case even in the Java version of this library, for consistency's sake, even though implementations of  `Comparable.compareTo()`  in Java ought to throw an exception if they receive a null argument rather than treating null as less or greater than any object.
+
+.
+
+<a id="CompareTo_long"></a>
+### CompareTo
+
+    public int CompareTo(
+        long other);
+
+Compares this CBOR number with a 64-bit signed integer. In this implementation, the two numbers' mathematical values are compared. Here, NaN (not-a-number) is considered greater than any number.
+
+<b>Parameters:</b>
+
+ * <i>other</i>: A value to compare with. Can be null.
+
+<b>Return Value:</b>
+
+A negative number, if this value is less than the other object; or 0, if both values are equal; or a positive number, if this value is less than the other object or if the other object is null. This implementation returns a positive number if  <i>other</i>
+ is null, to conform to the.NET definition of CompareTo. This is the case even in the Java version of this library, for consistency's sake, even though implementations of  `Comparable.compareTo()`  in Java ought to throw an exception if they receive a null argument rather than treating null as less or greater than any object.
+
+.
+
 <a id="CompareTo_PeterO_Cbor_CBORNumber"></a>
 ### CompareTo
 
     public sealed int CompareTo(
         PeterO.Cbor.CBORNumber other);
 
-Compares two CBOR numbers. In this implementation, the two numbers' mathematical values are compared. Here, NaN (not-a-number) is considered greater than any number.
+Compares this CBOR number with another. In this implementation, the two numbers' mathematical values are compared. Here, NaN (not-a-number) is considered greater than any number.
 
 <b>Parameters:</b>
 
