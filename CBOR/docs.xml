@@ -841,9 +841,10 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORNumber.CompareTo(PeterO.Cbor.CBORNumber)">
 
-            <summary>Compares two CBOR numbers. In this implementation, the two
-            numbers' mathematical values are compared. Here, NaN (not-a-number)
-            is considered greater than any number.</summary>
+            <summary>Compares this CBOR number with another. In this
+            implementation, the two numbers' mathematical values are compared.
+            Here, NaN (not-a-number) is considered greater than any
+            number.</summary>
             <param name='other'>A value to compare with. Can be null.</param>
             <returns>A negative number, if this value is less than the other
             object; or 0, if both values are equal; or a positive number, if
@@ -856,6 +857,40 @@
             if they receive a null argument rather than treating null as less
             or greater than any object.</para>.</returns>
 
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.CompareTo(System.Int32)">
+<summary>Compares this CBOR number with a 32-bit signed integer. In
+            this implementation, the two numbers' mathematical values are
+            compared. Here, NaN (not-a-number) is considered greater than any
+            number.</summary>
+            <param name='other'>A value to compare with. Can be null.</param>
+            <returns>A negative number, if this value is less than the other
+            object; or 0, if both values are equal; or a positive number, if
+            this value is less than the other object or if the other object is
+            null.
+            <para>This implementation returns a positive number if <paramref name='other'/> is null, to conform to the.NET definition of
+            CompareTo. This is the case even in the Java version of this
+            library, for consistency's sake, even though implementations of
+            <c>Comparable.compareTo()</c> in Java ought to throw an exception
+            if they receive a null argument rather than treating null as less
+            or greater than any object.</para>.</returns>
+</doc>
+<doc name="M:PeterO.Cbor.CBORNumber.CompareTo(System.Int64)">
+<summary>Compares this CBOR number with a 64-bit signed integer. In
+            this implementation, the two numbers' mathematical values are
+            compared. Here, NaN (not-a-number) is considered greater than any
+            number.</summary>
+            <param name='other'>A value to compare with. Can be null.</param>
+            <returns>A negative number, if this value is less than the other
+            object; or 0, if both values are equal; or a positive number, if
+            this value is less than the other object or if the other object is
+            null.
+            <para>This implementation returns a positive number if <paramref name='other'/> is null, to conform to the.NET definition of
+            CompareTo. This is the case even in the Java version of this
+            library, for consistency's sake, even though implementations of
+            <c>Comparable.compareTo()</c> in Java ought to throw an exception
+            if they receive a null argument rather than treating null as less
+            or greater than any object.</para>.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORNumber.Divide(PeterO.Cbor.CBORNumber)">
 
@@ -1448,7 +1483,7 @@
 
             <summary><para>Represents an object in Concise Binary Object Representation
             (CBOR) and contains methods for reading and writing CBOR data. CBOR
-            is defined in RFC 7049.</para></summary>
+            is defined in RFC 8949.</para></summary>
             <remarks>
             <para><b>Converting CBOR objects</b></para>
             <para>There are many ways to get a CBOR object, including from
@@ -2279,8 +2314,9 @@
 
             <summary><para>Writes the binary representation of this CBOR object and
             returns a byte array of that representation. If the CBOR object
-            contains CBOR maps, or is a CBOR map itself, the keys to the map
-            are written out to the byte array in an undefined order. The
+            contains CBOR maps, or is a CBOR map itself, the order in which the
+            keys to the map are written out to the byte array is undefined
+            unless the map was created using the NewOrderedMap method. The
             example code given in
             <see cref='PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)'/> can
             be used to write out certain keys of a CBOR map in a given order.
@@ -2309,7 +2345,9 @@
 
             <summary>Gets a collection of the key/value pairs stored in this
             CBOR object, if it's a map. Returns one entry for each key/value
-            pair in the map in an undefined order.</summary>
+            pair in the map. In general, the order in which those entries occur
+            is undefined unless this is a map created using the NewOrderedMap
+            method.</summary>
             <value>A collection of the key/value pairs stored in this CBOR map,
             as a read-only view of those pairs. To avoid potential problems,
             the calling code should not modify the CBOR map while iterating
@@ -3523,8 +3561,9 @@
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.Keys">
 
-            <summary>Gets a collection of the keys of this CBOR object in an
-            undefined order.</summary>
+            <summary>Gets a collection of the keys of this CBOR object. In
+            general, the order in which those keys occur is undefined unless
+            this is a map created using the NewOrderedMap method.</summary>
             <value>A collection of the keys of this CBOR object. To avoid
             potential problems, the calling code should not modify the CBOR map
             or the returned collection while iterating over the returned
@@ -3590,9 +3629,15 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.NewMap">
 
-            <summary>Creates a new empty CBOR map.</summary>
+            <summary>Creates a new empty CBOR map that stores its keys in an
+            undefined order.</summary>
             <returns>A new CBOR map.</returns>
 
+</doc>
+<doc name="M:PeterO.Cbor.CBORObject.NewOrderedMap">
+<summary>Creates a new empty CBOR map that ensures that keys are
+            stored in the order in which they are inserted.</summary>
+            <returns>A new CBOR map.</returns>
 </doc>
 <doc name="F:PeterO.Cbor.CBORObject.Null">
 
@@ -3939,13 +3984,14 @@
             Notation (JSON) format. See the overload to ToJSONString taking a
             JSONOptions argument for further information.
             <para>If the CBOR object contains CBOR maps, or is a CBOR map
-            itself, the keys to the map are written out to the JSON string in
-            an undefined order. Map keys other than untagged text strings are
+            itself, the order in which the keys to the map are written out to
+            the JSON string is undefined unless the map was created using the
+            NewOrderedMap method. Map keys other than untagged text strings are
             converted to JSON strings before writing them out (for example,
             <c>22("Test")</c> is converted to <c>"Test"</c> and <c>true</c> is
-            converted to <c>"true"</c> ). If, after such conversion, two or
-            more map keys are identical, this method throws a CBORException.
-            The example code given in
+            converted to <c>"true"</c> ). After such conversion, if two or more
+            map keys are identical, this method throws a CBORException. The
+            example code given in
             <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b> can be used to write out certain keys of a CBOR map in a given
             order to a JSON string, or to write out a CBOR object as part of a
             JSON text sequence.</para>
@@ -3977,38 +4023,39 @@
             (the IsNumber property, or isNumber() method in Java, returns
             true), then it is written out as a number.</item>
              <item>If the CBOR
-            object contains CBOR maps, or is a CBOR map itself, the keys to the
-            map are written out to the JSON string in an undefined order. Map
-            keys other than untagged text strings are converted to JSON strings
-            before writing them out (for example, <c>22("Test")</c> is
-            converted to <c>"Test"</c> and <c>true</c> is converted to
-            <c>"true"</c> ). If, after such conversion, two or more map keys
-            are identical, this method throws a CBORException.</item>
-             <item>If
-            a number in the form of an arbitrary-precision binary
-            floating-point number has a very high binary exponent, it will be
-            converted to a double before being converted to a JSON string. (The
-            resulting double could overflow to infinity, in which case the
-            arbitrary-precision binary floating-point number is converted to
-            null.)</item>
-             <item>The string will not begin with a byte-order
-            mark (U+FEFF); RFC 8259 (the JSON specification) forbids placing a
-            byte-order mark at the beginning of a JSON string.</item>
-            <item>Byte strings are converted to Base64 URL without whitespace
-            or padding by default (see section 4.1 of RFC 7049). A byte string
-            will instead be converted to traditional base64 without whitespace
-            and with padding if it has tag 22, or base16 for tag 23. (To create
-            a CBOR object with a given tag, call the
-            <c>CBORObject.FromObjectAndTag</c> method and pass the CBOR object
-            and the desired tag number to that method.)</item>
-             <item>Rational
-            numbers will be converted to their exact form, if possible,
-            otherwise to a high-precision approximation. (The resulting
-            approximation could overflow to infinity, in which case the
-            rational number is converted to null.)</item>
-             <item>Simple values
-            other than true and false will be converted to null. (This doesn't
-            include floating-point numbers.)</item>
+            object contains CBOR maps, or is a CBOR map itself, the order in
+            which the keys to the map are written out to the JSON string is
+            undefined unless the map was created using the NewOrderedMap
+            method. Map keys other than untagged text strings are converted to
+            JSON strings before writing them out (for example,
+            <c>22("Test")</c> is converted to <c>"Test"</c> and <c>true</c> is
+            converted to <c>"true"</c> ). If, after such conversion, two or
+            more map keys are identical, this method throws a
+            CBORException.</item>
+             <item>If a number in the form of an
+            arbitrary-precision binary floating-point number has a very high
+            binary exponent, it will be converted to a double before being
+            converted to a JSON string. (The resulting double could overflow to
+            infinity, in which case the arbitrary-precision binary
+            floating-point number is converted to null.)</item>
+             <item>The
+            string will not begin with a byte-order mark (U+FEFF); RFC 8259
+            (the JSON specification) forbids placing a byte-order mark at the
+            beginning of a JSON string.</item>
+             <item>Byte strings are converted
+            to Base64 URL without whitespace or padding by default (see section
+            4.1 of RFC 8949). A byte string will instead be converted to
+            traditional base64 without whitespace and with padding if it has
+            tag 22, or base16 for tag 23. (To create a CBOR object with a given
+            tag, call the <c>CBORObject.FromObjectAndTag</c> method and pass
+            the CBOR object and the desired tag number to that method.)</item>
+            <item>Rational numbers will be converted to their exact form, if
+            possible, otherwise to a high-precision approximation. (The
+            resulting approximation could overflow to infinity, in which case
+            the rational number is converted to null.)</item>
+             <item>Simple
+            values other than true and false will be converted to null. (This
+            doesn't include floating-point numbers.)</item>
              <item>Infinity and
             not-a-number will be converted to null.</item>
              </list>
@@ -4527,10 +4574,12 @@
 
             <summary>Gets a collection of the values of this CBOR object, if
             it's a map or an array. If this object is a map, returns one value
-            for each key in the map in an undefined order. If this is an array,
-            returns all the values of the array in the order they are listed.
-            (This method can't be used to get the bytes in a CBOR byte string;
-            for that, use the GetByteString method instead.).</summary>
+            for each key in the map; in general, the order in which those keys
+            occur is undefined unless this is a map created using the
+            NewOrderedMap method. If this is an array, returns all the values
+            of the array in the order they are listed. (This method can't be
+            used to get the bytes in a CBOR byte string; for that, use the
+            GetByteString method instead.).</summary>
             <value>A collection of the values of this CBOR map or array. To
             avoid potential problems, the calling code should not modify the
             CBOR map or array or the returned collection while iterating over
@@ -4843,16 +4892,18 @@
             <summary>Writes an arbitrary object to a CBOR data stream, using
             the specified options for controlling how the object is encoded to
             CBOR data format. If the object is convertible to a CBOR map or a
-            CBOR object that contains CBOR maps, the keys to those maps are
-            written out to the data stream in an undefined order. The example
+            CBOR object that contains CBOR maps, the order in which the keys to
+            those maps are written out to the data stream is undefined unless
+            the map was created using the NewOrderedMap method. The example
             code given in
             <see cref='PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)'/> can
             be used to write out certain keys of a CBOR map in a given order.
             Currently, the following objects are supported:
             <list type=''>
             <item>Lists of CBORObject.</item>
-            <item>Maps of CBORObject. The keys to the map are written out to
-            the data stream in an undefined order.</item>
+            <item>Maps of CBORObject. The order in which the keys to the map
+            are written out to the data stream is undefined unless the map was
+            created using the NewOrderedMap method.</item>
             <item>Null.</item>
             <item>Byte arrays, which will always be written as definite-length
             byte strings.</item>
@@ -5045,8 +5096,9 @@
             JavaScript Object Notation (JSON) format, as in the ToJSONString
             method, and writes that string to a data stream in UTF-8. If the
             object is convertible to a CBOR map, or to a CBOR object that
-            contains CBOR maps, the keys to those maps are written out to the
-            JSON string in an undefined order. The example code given in
+            contains CBOR maps, the order in which the keys to those maps are
+            written out to the JSON string is undefined unless the map was
+            created using the NewOrderedMap method. The example code given in
             <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b> can be used to write out certain keys of a CBOR map in a given
             order to a JSON string.</summary>
             <param name='obj'>The parameter <paramref name='obj'/> is an
@@ -5068,8 +5120,9 @@
             <summary>Converts this object to a text string in JavaScript Object
             Notation (JSON) format, as in the ToJSONString method, and writes
             that string to a data stream in UTF-8. If the CBOR object contains
-            CBOR maps, or is a CBOR map, the keys to the map are written out to
-            the JSON string in an undefined order. The example code given in
+            CBOR maps, or is a CBOR map, the order in which the keys to the map
+            are written out to the JSON string is undefined unless the map was
+            created using the NewOrderedMap method. The example code given in
             <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b> can be used to write out certain keys of a CBOR map in a given
             order to a JSON string.</summary>
             <param name='outputStream'>A writable data stream.</param>
@@ -5146,8 +5199,9 @@
             Notation (JSON) format, as in the ToJSONString method, and writes
             that string to a data stream in UTF-8, using the given JSON options
             to control the encoding process. If the CBOR object contains CBOR
-            maps, or is a CBOR map, the keys to the map are written out to the
-            JSON string in an undefined order. The example code given in
+            maps, or is a CBOR map, the order in which the keys to the map are
+            written out to the JSON string is undefined unless the map was
+            created using the NewOrderedMap method. The example code given in
             <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b> can be used to write out certain keys of a CBOR map in a given
             order to a JSON string.</summary>
             <param name='outputStream'>A writable data stream.</param>
@@ -5161,14 +5215,15 @@
 <doc name="M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)">
 
             <summary><para>Writes this CBOR object to a data stream. If the
-            CBOR object contains CBOR maps, or is a CBOR map, the keys to the
-            map are written out to the data stream in an undefined order. See
-            the examples (originally written in C# for the.NET version) for
-            ways to write out certain keys of a CBOR map in a given order. In
-            the case of CBOR objects of type FloatingPoint, the number is
-            written using the shortest floating-point encoding possible; this
-            is a change from previous versions.</para>
-             </summary>
+            CBOR object contains CBOR maps, or is a CBOR map, the order in
+            which the keys to the map are written out to the data stream is
+            undefined unless the map was created using the NewOrderedMap
+            method. See the examples (originally written in C# for the.NET
+            version) for ways to write out certain keys of a CBOR map in a
+            given order. In the case of CBOR objects of type FloatingPoint, the
+            number is written using the shortest floating-point encoding
+            possible; this is a change from previous versions.</para>
+            </summary>
             <param name='stream'>A writable data stream.</param>
             <exception cref='ArgumentNullException'>The parameter <paramref name='stream'/> is null.</exception>
             <exception cref='System.IO.IOException'>An I/O error
@@ -5179,8 +5234,9 @@
             map</b> . Only keys found in 'keys' will be written if they exist
             in 'mapObj'.</para>
             <code>private static void WriteKeysToMap(CBORObject mapObj,
-            IList&lt;CBORObject&gt; keys, Stream outputStream) { if (mapObj == null)
-            { throw new ArgumentNullException(nameof(mapObj));}
+            IList&lt;CBORObject&gt; keys, Stream outputStream) {
+            if (mapObj == null) {
+            throw new ArgumentNullException(nameof(mapObj));}
             if (keys == null)
             {throw new ArgumentNullException(nameof(keys));}
             if (outputStream ==
@@ -5282,8 +5338,9 @@
 
             <summary>Writes this CBOR object to a data stream, using the
             specified options for encoding the data to CBOR format. If the CBOR
-            object contains CBOR maps, or is a CBOR map, the keys to the map
-            are written out to the data stream in an undefined order. The
+            object contains CBOR maps, or is a CBOR map, the order in which the
+            keys to the map are written out to the data stream is undefined
+            unless the map was created using the NewOrderedMap method. The
             example code given in
             <see cref='PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)'/> can
             be used to write out certain keys of a CBOR map in a given order.
@@ -5302,33 +5359,32 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,PeterO.Numbers.EInteger)">
 
-            <summary>Writes a CBOR major type number and an integer 0 or
+        <summary>Writes a CBOR major type number and an integer 0 or
             greater associated with it to a data stream, where that integer is
             passed to this method as an arbitrary-precision integer. This is a
             low-level method that is useful for implementing custom CBOR
             encoding methodologies. This method encodes the given major type
             and value in the shortest form allowed for the major
-            type.</summary>
-            <param name='outputStream'>A writable data stream.</param>
-            <param name='majorType'>The CBOR major type to write. This is a
+            type.</summary><param name='outputStream'>A writable data stream.</param><param name='majorType'>The CBOR major type to write. This is a
             number from 0 through 7 as follows. 0: integer 0 or greater; 1:
             negative integer; 2: byte string; 3: UTF-8 text string; 4: array;
-            5: map; 6: tag; 7: simple value. See RFC 7049 for details on these
-            major types.</param>
-            <param name='bigintValue'>An integer 0 or greater associated with
+            5: map; 6: tag; 7: simple value. See RFC 8949 for details on these
+            major types.</param><param name='bigintValue'>An integer 0 or greater associated with
             the major type, as follows. 0: integer 0 or greater; 1: the
             negative integer's absolute value is 1 plus this number; 2: length
             in bytes of the byte string; 3: length in bytes of the UTF-8 text
             string; 4: number of items in the array; 5: number of key-value
             pairs in the map; 6: tag number; 7: simple value number, which must
             be in the interval [0, 23] or [32, 255]. For major types 0 to 6,
-            this number may not be greater than 2^64 - 1.</param>
-            <returns>The number of bytes ordered to be written to the data
-            stream.</returns>
-            <exception cref='ArgumentException'>The parameter <paramref name='majorType'/> is 7 and value is greater than 255.</exception>
-            <exception cref='ArgumentNullException'>The parameter <paramref name='outputStream'/> or <paramref name='bigintValue'/> is
-            null.</exception>
-
+            this number may not be greater than 2^64 - 1.</param><returns>The number of bytes ordered to be written to the data
+            stream.</returns><exception cref='ArgumentException'>The parameter <paramref name='majorType'/> is 7 and value is greater than 255.</exception><exception cref='ArgumentNullException'>The parameter <paramref name='outputStream'/> or <paramref name='bigintValue'/> is
+            null.</exception><remarks>There are other useful things to note when encoding CBOR
+            that are not covered by this WriteValue method. To mark the start
+            of an indefinite-length array, write the 8-bit byte 0x9f to the
+            output stream. To mark the start of an indefinite-length map, write
+            the 8-bit byte 0xbf to the output stream. To mark the end of an
+            indefinite-length array or map, write the 8-bit byte 0xff to the
+            output stream.</remarks>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,System.Int32)">
 
@@ -5343,7 +5399,7 @@
             <param name='majorType'>The CBOR major type to write. This is a
             number from 0 through 7 as follows. 0: integer 0 or greater; 1:
             negative integer; 2: byte string; 3: UTF-8 text string; 4: array;
-            5: map; 6: tag; 7: simple value. See RFC 7049 for details on these
+            5: map; 6: tag; 7: simple value. See RFC 8949 for details on these
             major types.</param>
             <param name='value'>An integer 0 or greater associated with the
             major type, as follows. 0: integer 0 or greater; 1: the negative
@@ -5357,6 +5413,13 @@
             <exception cref='ArgumentException'>Value is from 24 to 31 and
             major type is 7.</exception>
             <exception cref='ArgumentNullException'>The parameter <paramref name='outputStream'/> is null.</exception>
+            <remarks>There are other useful things to note when encoding CBOR
+            that are not covered by this WriteValue method. To mark the start
+            of an indefinite-length array, write the 8-bit byte 0x9f to the
+            output stream. To mark the start of an indefinite-length map, write
+            the 8-bit byte 0xbf to the output stream. To mark the end of an
+            indefinite-length array or map, write the 8-bit byte 0xff to the
+            output stream.</remarks>
             <example><para>In the following example, an array of three objects is
             written as CBOR to a data stream.</para>
             <code>&#x2f;&#x2a; array, length 3&#x2a;&#x2f;
@@ -5382,32 +5445,32 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,System.Int64)">
 
-            <summary>Writes a CBOR major type number and an integer 0 or
+        <summary>Writes a CBOR major type number and an integer 0 or
             greater associated with it to a data stream, where that integer is
             passed to this method as a 64-bit signed integer. This is a
             low-level method that is useful for implementing custom CBOR
             encoding methodologies. This method encodes the given major type
             and value in the shortest form allowed for the major
-            type.</summary>
-            <param name='outputStream'>A writable data stream.</param>
-            <param name='majorType'>The CBOR major type to write. This is a
+            type.</summary><param name='outputStream'>A writable data stream.</param><param name='majorType'>The CBOR major type to write. This is a
             number from 0 through 7 as follows. 0: integer 0 or greater; 1:
             negative integer; 2: byte string; 3: UTF-8 text string; 4: array;
-            5: map; 6: tag; 7: simple value. See RFC 7049 for details on these
-            major types.</param>
-            <param name='value'>An integer 0 or greater associated with the
+            5: map; 6: tag; 7: simple value. See RFC 8949 for details on these
+            major types.</param><param name='value'>An integer 0 or greater associated with the
             major type, as follows. 0: integer 0 or greater; 1: the negative
             integer's absolute value is 1 plus this number; 2: length in bytes
             of the byte string; 3: length in bytes of the UTF-8 text string; 4:
             number of items in the array; 5: number of key-value pairs in the
             map; 6: tag number; 7: simple value number, which must be in the
-            interval [0, 23] or [32, 255].</param>
-            <returns>The number of bytes ordered to be written to the data
-            stream.</returns>
-            <exception cref='ArgumentException'>Value is from 24 to 31 and
-            major type is 7.</exception>
-            <exception cref='ArgumentNullException'>The parameter <paramref name='outputStream'/> is null.</exception>
-
+            interval [0, 23] or [32, 255].</param><returns>The number of bytes ordered to be written to the data
+            stream.</returns><exception cref='ArgumentException'>Value is from 24 to 31 and
+            major type is 7.</exception><exception cref='ArgumentNullException'>The parameter <paramref name='outputStream'/> is null.</exception><remarks>There are other useful things to note when encoding CBOR
+            that are not covered by this WriteValue method. To mark the start
+            of an indefinite-length array, write the 8-bit byte 0x9f to the
+            output stream. To mark the start of an indefinite-length map, write
+            the 8-bit byte 0xbf to the output stream. To mark the end of an
+            indefinite-length array or map, write the 8-bit byte 0xff to the
+            output stream. For examples, see the WriteValue(Stream, int, int)
+            overload.</remarks>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.WriteValue(System.IO.Stream,System.Int32,System.UInt32)">
 
@@ -6164,7 +6227,9 @@
             <summary>JSON numbers are decoded to CBOR as their closest-rounded
             approximation to an IEEE 854 decimal128 value, using the rules for
             the EDecimal form of that approximation as given in the
-            <c>CBORObject.FromObject(EDecimal)</c> method.</summary>
+            <c>CBORObject.FromObject(EDecimal)</c> method. (In some cases,
+            numbers extremely close to zero may underflow to zero, and numbers
+            of extremely large magnitude may overflow to infinity.).</summary>
 
 </doc>
 <doc name="F:PeterO.Cbor.JSONOptions.ConversionMode.Double">
@@ -6182,8 +6247,8 @@
             given in the JSON text. The number will be converted to a CBOR
             object as follows: If the number's exponent is 0 (after shifting
             the decimal point to the end of the number without changing its
-            value), using the rules given in the
-            <c>CBORObject.FromObject(EInteger)</c> method; otherwise, using the
+            value), use the rules given in the
+            <c>CBORObject.FromObject(EInteger)</c> method; otherwise, use the
             rules given in the <c>CBORObject.FromObject(EDecimal)</c> method.
             An exception in version 4.x involves negative zeros; if the
             negative zero's exponent is 0, it's written as a CBOR
@@ -6198,10 +6263,11 @@
             least -(2^53)+1 and less than 2^53, or as their closest-rounded
             approximation as 64-bit binary floating-point numbers otherwise.
             For example, the JSON number 0.99999999999999999999999999999999999
-            is not an integer, so it's converted to its closest floating-point
-            approximation, namely 1.0. (In some cases, numbers extremely close
-            to zero may underflow to positive or negative zero, and numbers of
-            extremely large magnitude may overflow to infinity.).</summary>
+            is not an integer, so it's converted to its closest 64-bit binary
+            floating-point approximation, namely 1.0. (In some cases, numbers
+            extremely close to zero may underflow to positive or negative zero,
+            and numbers of extremely large magnitude may overflow to
+            infinity.).</summary>
 
 </doc>
 <doc name="F:PeterO.Cbor.JSONOptions.ConversionMode.IntOrFloatFromDouble">
@@ -6212,10 +6278,11 @@
             least -(2^53)+1 and less than 2^53, or as that approximation
             otherwise. For example, the JSON number
             0.99999999999999999999999999999999999 is the integer 1 when rounded
-            to its closest floating-point approximation (1.0), so it's
-            converted to the CBOR integer 1 (major type 0). (In some cases,
-            numbers extremely close to zero may underflow to zero, and numbers
-            of extremely large magnitude may overflow to infinity.).</summary>
+            to its closest 64-bit binary floating-point approximation (1.0), so
+            it's converted to the CBOR integer 1 (major type 0). (In some
+            cases, numbers extremely close to zero may underflow to zero, and
+            numbers of extremely large magnitude may overflow to
+            infinity.).</summary>
 
 </doc>
 <doc name="F:PeterO.Cbor.JSONOptions.Default">
@@ -6272,8 +6339,9 @@
 </doc>
 <doc name="T:PeterO.Cbor.PODOptions">
 
-            <summary>Options for converting "plain old data" objects (better
-            known as POCOs in .NET or POJOs in Java) to CBOR objects.</summary>
+            <summary>Options for controlling how certain.NET or Java objects,
+            such as so-called "plain old data" objects (better known as POCOs
+            in.NET or POJOs in Java), are converted to CBOR objects.</summary>
 
 </doc>
 <doc name="M:PeterO.Cbor.PODOptions.#ctor">

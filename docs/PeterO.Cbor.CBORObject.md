@@ -4,7 +4,7 @@
         System.IComparable,
         System.IEquatable
 
-Represents an object in Concise Binary Object Representation (CBOR) and contains methods for reading and writing CBOR data. CBOR is defined in RFC 7049.
+Represents an object in Concise Binary Object Representation (CBOR) and contains methods for reading and writing CBOR data. CBOR is defined in RFC 8949.
 
 <b>Converting CBOR objects</b>
 
@@ -3871,7 +3871,7 @@ A byte array containing the converted in JSON format.
 
  * The string will not begin with a byte-order mark (U+FEFF); RFC 8259 (the JSON specification) forbids placing a byte-order mark at the beginning of a JSON string.
 
- * Byte strings are converted to Base64 URL without whitespace or padding by default (see section 4.1 of RFC 7049). A byte string will instead be converted to traditional base64 without whitespace and with padding if it has tag 22, or base16 for tag 23. (To create a CBOR object with a given tag, call the  `CBORObject.FromObjectAndTag`  method and pass the CBOR object and the desired tag number to that method.)
+ * Byte strings are converted to Base64 URL without whitespace or padding by default (see section 4.1 of RFC 8949). A byte string will instead be converted to traditional base64 without whitespace and with padding if it has tag 22, or base16 for tag 23. (To create a CBOR object with a given tag, call the  `CBORObject.FromObjectAndTag`  method and pass the CBOR object and the desired tag number to that method.)
 
  * Rational numbers will be converted to their exact form, if possible, otherwise to a high-precision approximation. (The resulting approximation could overflow to infinity, in which case the rational number is converted to null.)
 
@@ -3884,22 +3884,22 @@ A byte array containing the converted in JSON format.
 The example code given below (originally written in C# for the.NET version) can be used to write out certain keys of a CBOR map in a given order to a JSON string.
 
     /* Generates a JSON string of 'mapObj' whose keys are in the order
-                 given
-                 in 'keys' . Only keys found in 'keys' will be written if they exist in
-                 'mapObj'. */ private static string KeysToJSONMap(CBORObject mapObj,
-                 IList<CBORObject> keys) { if (mapObj == null) { throw new
-                 ArgumentNullException)nameof(mapObj));}
-                 if (keys == null) { throw new
-                 ArgumentNullException)nameof(keys));}
-                 if (obj.Type != CBORType.Map) {
-                 throw new ArgumentException("'obj' is not a map."); } StringBuilder
-                 builder = new StringBuilder(); var first = true; builder.Append("{");
-                 for (CBORObject key in keys) { if (mapObj.ContainsKey(key)) { if
-                 (!first) {builder.Append(", ");} var keyString=(key.CBORType ==
-                 CBORType.String) ? key.AsString() : key.ToJSONString();
-                 builder.Append(CBORObject.FromObject(keyString) .ToJSONString())
-                 .Append(":").Append(mapObj[key].ToJSONString()); first=false; } } return
-                 builder.Append("}").ToString(); }
+                given
+                in 'keys' . Only keys found in 'keys' will be written if they exist in
+                'mapObj'. */ private static string KeysToJSONMap(CBORObject mapObj,
+                IList<CBORObject> keys) { if (mapObj == null) { throw new
+                ArgumentNullException)nameof(mapObj));}
+                if (keys == null) { throw new
+                ArgumentNullException)nameof(keys));}
+                if (obj.Type != CBORType.Map) {
+                throw new ArgumentException("'obj' is not a map."); } StringBuilder
+                builder = new StringBuilder(); var first = true; builder.Append("{");
+                for (CBORObject key in keys) { if (mapObj.ContainsKey(key)) { if
+                (!first) {builder.Append(", ");} var keyString=(key.CBORType ==
+                CBORType.String) ? key.AsString() : key.ToJSONString();
+                builder.Append(CBORObject.FromObject(keyString) .ToJSONString())
+                .Append(":").Append(mapObj[key].ToJSONString()); first=false; } } return
+                builder.Append("}").ToString(); }
 
  .
 
@@ -5081,8 +5081,9 @@ Writes this CBOR object to a data stream. If the CBOR object contains CBOR maps,
 The following example shows a method that writes each key of 'mapObj' to 'outputStream', in the order given in 'keys', where 'mapObj' is written out in the form of a CBOR <b>definite-length map</b> . Only keys found in 'keys' will be written if they exist in 'mapObj'.
 
     private static void WriteKeysToMap(CBORObject mapObj,
-                IList<CBORObject> keys, Stream outputStream) { if (mapObj == null)
-                { throw new ArgumentNullException(nameof(mapObj));}
+                IList<CBORObject> keys, Stream outputStream) {
+                if (mapObj == null) {
+                throw new ArgumentNullException(nameof(mapObj));}
                 if (keys == null)
                 {throw new ArgumentNullException(nameof(keys));}
                 if (outputStream ==
@@ -5224,6 +5225,8 @@ Unexpected data type".
 
 Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as a 32-bit signed integer. This is a low-level method that is useful for implementing custom CBOR encoding methodologies. This method encodes the given major type and value in the shortest form allowed for the major type.
 
+There are other useful things to note when encoding CBOR that are not covered by this WriteValue method. To mark the start of an indefinite-length array, write the 8-bit byte 0x9f to the output stream. To mark the start of an indefinite-length map, write the 8-bit byte 0xbf to the output stream. To mark the end of an indefinite-length array or map, write the 8-bit byte 0xff to the output stream.
+
 In the following example, an array of three objects is written as CBOR to a data stream.
 
     /* array, length 3*/
@@ -5254,7 +5257,7 @@ In the following example (originally written in C# for the.NET Framework version
 
  * <i>outputStream</i>: A writable data stream.
 
- * <i>majorType</i>: The CBOR major type to write. This is a number from 0 through 7 as follows. 0: integer 0 or greater; 1: negative integer; 2: byte string; 3: UTF-8 text string; 4: array; 5: map; 6: tag; 7: simple value. See RFC 7049 for details on these major types.
+ * <i>majorType</i>: The CBOR major type to write. This is a number from 0 through 7 as follows. 0: integer 0 or greater; 1: negative integer; 2: byte string; 3: UTF-8 text string; 4: array; 5: map; 6: tag; 7: simple value. See RFC 8949 for details on these major types.
 
  * <i>value</i>: An integer 0 or greater associated with the major type, as follows. 0: integer 0 or greater; 1: the negative integer's absolute value is 1 plus this number; 2: length in bytes of the byte string; 3: length in bytes of the UTF-8 text string; 4: number of items in the array; 5: number of key-value pairs in the map; 6: tag number; 7: simple value number, which must be in the interval [0, 23] or [32, 255].
 
@@ -5281,11 +5284,13 @@ The parameter  <i>outputStream</i>
 
 Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as a 64-bit signed integer. This is a low-level method that is useful for implementing custom CBOR encoding methodologies. This method encodes the given major type and value in the shortest form allowed for the major type.
 
+There are other useful things to note when encoding CBOR that are not covered by this WriteValue method. To mark the start of an indefinite-length array, write the 8-bit byte 0x9f to the output stream. To mark the start of an indefinite-length map, write the 8-bit byte 0xbf to the output stream. To mark the end of an indefinite-length array or map, write the 8-bit byte 0xff to the output stream. For examples, see the WriteValue(Stream, int, int) overload.
+
 <b>Parameters:</b>
 
  * <i>outputStream</i>: A writable data stream.
 
- * <i>majorType</i>: The CBOR major type to write. This is a number from 0 through 7 as follows. 0: integer 0 or greater; 1: negative integer; 2: byte string; 3: UTF-8 text string; 4: array; 5: map; 6: tag; 7: simple value. See RFC 7049 for details on these major types.
+ * <i>majorType</i>: The CBOR major type to write. This is a number from 0 through 7 as follows. 0: integer 0 or greater; 1: negative integer; 2: byte string; 3: UTF-8 text string; 4: array; 5: map; 6: tag; 7: simple value. See RFC 8949 for details on these major types.
 
  * <i>value</i>: An integer 0 or greater associated with the major type, as follows. 0: integer 0 or greater; 1: the negative integer's absolute value is 1 plus this number; 2: length in bytes of the byte string; 3: length in bytes of the UTF-8 text string; 4: number of items in the array; 5: number of key-value pairs in the map; 6: tag number; 7: simple value number, which must be in the interval [0, 23] or [32, 255].
 
@@ -5312,11 +5317,13 @@ The parameter  <i>outputStream</i>
 
 Writes a CBOR major type number and an integer 0 or greater associated with it to a data stream, where that integer is passed to this method as an arbitrary-precision integer. This is a low-level method that is useful for implementing custom CBOR encoding methodologies. This method encodes the given major type and value in the shortest form allowed for the major type.
 
+There are other useful things to note when encoding CBOR that are not covered by this WriteValue method. To mark the start of an indefinite-length array, write the 8-bit byte 0x9f to the output stream. To mark the start of an indefinite-length map, write the 8-bit byte 0xbf to the output stream. To mark the end of an indefinite-length array or map, write the 8-bit byte 0xff to the output stream.
+
 <b>Parameters:</b>
 
  * <i>outputStream</i>: A writable data stream.
 
- * <i>majorType</i>: The CBOR major type to write. This is a number from 0 through 7 as follows. 0: integer 0 or greater; 1: negative integer; 2: byte string; 3: UTF-8 text string; 4: array; 5: map; 6: tag; 7: simple value. See RFC 7049 for details on these major types.
+ * <i>majorType</i>: The CBOR major type to write. This is a number from 0 through 7 as follows. 0: integer 0 or greater; 1: negative integer; 2: byte string; 3: UTF-8 text string; 4: array; 5: map; 6: tag; 7: simple value. See RFC 8949 for details on these major types.
 
  * <i>bigintValue</i>: An integer 0 or greater associated with the major type, as follows. 0: integer 0 or greater; 1: the negative integer's absolute value is 1 plus this number; 2: length in bytes of the byte string; 3: length in bytes of the UTF-8 text string; 4: number of items in the array; 5: number of key-value pairs in the map; 6: tag number; 7: simple value number, which must be in the interval [0, 23] or [32, 255]. For major types 0 to 6, this number may not be greater than 2^64 - 1.
 

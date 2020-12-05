@@ -19,7 +19,7 @@ namespace PeterO.Cbor {
   /// <summary>
   /// <para>Represents an object in Concise Binary Object Representation
   /// (CBOR) and contains methods for reading and writing CBOR data. CBOR
-  /// is defined in RFC 7049.</para></summary>
+  /// is defined in RFC 8949.</para></summary>
   /// <remarks>
   /// <para><b>Converting CBOR objects</b></para>
   /// <para>There are many ways to get a CBOR object, including from
@@ -5883,7 +5883,7 @@ namespace PeterO.Cbor {
     /// beginning of a JSON string.</item>
     ///  <item>Byte strings are converted
     /// to Base64 URL without whitespace or padding by default (see section
-    /// 4.1 of RFC 7049). A byte string will instead be converted to
+    /// 4.1 of RFC 8949). A byte string will instead be converted to
     /// traditional base64 without whitespace and with padding if it has
     /// tag 22, or base16 for tag 23. (To create a CBOR object with a given
     /// tag, call the <c>CBORObject.FromObjectAndTag</c>
@@ -6407,7 +6407,7 @@ namespace PeterO.Cbor {
     /// <param name='majorType'>The CBOR major type to write. This is a
     /// number from 0 through 7 as follows. 0: integer 0 or greater; 1:
     /// negative integer; 2: byte string; 3: UTF-8 text string; 4: array;
-    /// 5: map; 6: tag; 7: simple value. See RFC 7049 for details on these
+    /// 5: map; 6: tag; 7: simple value. See RFC 8949 for details on these
     /// major types.</param>
     /// <param name='value'>An integer 0 or greater associated with the
     /// major type, as follows. 0: integer 0 or greater; 1: the negative
@@ -6418,6 +6418,10 @@ namespace PeterO.Cbor {
     /// interval [0, 23] or [32, 255].</param>
     /// <returns>The number of bytes ordered to be written to the data
     /// stream.</returns>
+    /// <exception cref='ArgumentException'>Value is from 24 to 31 and
+    /// major type is 7.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='outputStream'/> is null.</exception>
     /// <remarks>There are other useful things to note when encoding CBOR
     /// that are not covered by this WriteValue method. To mark the start
     /// of an indefinite-length array, write the 8-bit byte 0x9f to the
@@ -6426,10 +6430,6 @@ namespace PeterO.Cbor {
     /// indefinite-length array or map, write the 8-bit byte 0xff to the
     /// output stream. For examples, see the WriteValue(Stream, int, int)
     /// overload.</remarks>
-    /// <exception cref='ArgumentException'>Value is from 24 to 31 and
-    /// major type is 7.</exception>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='outputStream'/> is null.</exception>
     public static int WriteValue(
       Stream outputStream,
       int majorType,
@@ -6481,7 +6481,7 @@ namespace PeterO.Cbor {
     /// <param name='majorType'>The CBOR major type to write. This is a
     /// number from 0 through 7 as follows. 0: integer 0 or greater; 1:
     /// negative integer; 2: byte string; 3: UTF-8 text string; 4: array;
-    /// 5: map; 6: tag; 7: simple value. See RFC 7049 for details on these
+    /// 5: map; 6: tag; 7: simple value. See RFC 8949 for details on these
     /// major types.</param>
     /// <param name='value'>An integer 0 or greater associated with the
     /// major type, as follows. 0: integer 0 or greater; 1: the negative
@@ -6579,7 +6579,7 @@ namespace PeterO.Cbor {
     /// <param name='majorType'>The CBOR major type to write. This is a
     /// number from 0 through 7 as follows. 0: integer 0 or greater; 1:
     /// negative integer; 2: byte string; 3: UTF-8 text string; 4: array;
-    /// 5: map; 6: tag; 7: simple value. See RFC 7049 for details on these
+    /// 5: map; 6: tag; 7: simple value. See RFC 8949 for details on these
     /// major types.</param>
     /// <param name='bigintValue'>An integer 0 or greater associated with
     /// the major type, as follows. 0: integer 0 or greater; 1: the
@@ -6591,6 +6591,11 @@ namespace PeterO.Cbor {
     /// this number may not be greater than 2^64 - 1.</param>
     /// <returns>The number of bytes ordered to be written to the data
     /// stream.</returns>
+    /// <exception cref='ArgumentException'>The parameter <paramref
+    /// name='majorType'/> is 7 and value is greater than 255.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='outputStream'/> or <paramref name='bigintValue'/> is
+    /// null.</exception>
     /// <remarks>There are other useful things to note when encoding CBOR
     /// that are not covered by this WriteValue method. To mark the start
     /// of an indefinite-length array, write the 8-bit byte 0x9f to the
@@ -6598,11 +6603,6 @@ namespace PeterO.Cbor {
     /// the 8-bit byte 0xbf to the output stream. To mark the end of an
     /// indefinite-length array or map, write the 8-bit byte 0xff to the
     /// output stream.</remarks>
-    /// <exception cref='ArgumentException'>The parameter <paramref
-    /// name='majorType'/> is 7 and value is greater than 255.</exception>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='outputStream'/> or <paramref name='bigintValue'/> is
-    /// null.</exception>
     public static int WriteValue(
       Stream outputStream,
       int majorType,

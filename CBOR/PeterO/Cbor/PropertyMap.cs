@@ -528,25 +528,22 @@ list) {
     }
     #endif
 
-    // Give each thread its own version of ValuePropertyLists using ThreadStatic
+    // Give each thread its own version of propertyLists using ThreadStatic
     [ThreadStatic]
     private static IDictionary<Type, IList<PropertyData>>
-    ValuePropertyLists;
+    propertyLists;
 
     private static string RemoveIsPrefix(string pn) {
       return CBORUtilities.NameStartsWithWord(pn, "Is") ? pn.Substring(2) :
         pn;
     }
 
-
     private static IList<PropertyData> GetPropertyList(Type t) {
       {
         IList<PropertyData> ret = new List<PropertyData>();
-        if (ValuePropertyLists == null) {
-          ValuePropertyLists = new Dictionary<Type, IList<PropertyData>>();
-        }
-        if (ValuePropertyLists.ContainsKey(t)) {
-          return ValuePropertyLists[t];
+        propertyLists = propertyLists ?? (new Dictionary<Type, IList<PropertyData>>());
+        if (propertyLists.ContainsKey(t)) {
+          return propertyLists[t];
         }
         bool anonymous = HasCustomAttribute(
             t,
@@ -603,7 +600,7 @@ list) {
             }
           }
         }
-        ValuePropertyLists.Add(
+        propertyLists.Add(
           t,
           ret);
         return ret;
