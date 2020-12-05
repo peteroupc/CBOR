@@ -15,9 +15,8 @@ namespace Test {
       var i = 0;
       for (; i < str.Length; ++i) {
         char c = str[i];
-        if (c < 0x20 || c >= 0x7f || c == '\\' || c == '"' || c == '&' || c
-== '<'||
-          c == '>') {
+        if (c < 0x20 || c >= 0x7f || c == '\\' || c == '"' || c == '&' ||
+            c == '<' || c == '>') {
           sb.WriteString(str, 0, i);
           break;
         }
@@ -29,7 +28,8 @@ namespace Test {
       for (; i < str.Length; ++i) {
         char c = str[i];
         // TODO: XML doesn't support all Unicode code points, even if escaped.
-        // Therefore, replace all unsupported code points with replacement characters.
+        // Therefore, replace all unsupported code points with replacement
+        // characters.
         if (c == '\\' || c == '"') {
           sb.WriteCodePoint((int)'\\');
           sb.WriteCodePoint((int)c);
@@ -71,9 +71,9 @@ namespace Test {
       CBORObject obj,
       StringOutput writer,
       JSONOptions options) {
-      writer.WriteString("<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST
-1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\"><plist
-version='1.0'>");
+      writer.WriteString("<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST");
+      writer.WriteString(" 1.0//EN\" \"http://www.apple.com/DTDs/");
+      writer.WriteString("PropertyList-1.0.dtd\"><plist version='1.0'>");
       WritePlistToInternalCore(obj, writer, options);
       writer.WriteString("</plist>");
     }
@@ -193,15 +193,15 @@ version='1.0'>");
             }
             writer.WriteString("</string>");
           } else {
-            writer.WriteString("<string>");
-            // Base64url no padding
-            Base64.WriteBase64URL(
+            writer.WriteString("<data>");
+            // Base64 with padding
+            Base64.WriteBase64(
               writer,
               byteArray,
               0,
               byteArray.Length,
-              false);
-            writer.WriteString("</string>");
+              true);
+            writer.WriteString("</data>");
           }
           break;
         }

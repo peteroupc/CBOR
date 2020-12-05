@@ -541,7 +541,7 @@ list) {
     private static IList<PropertyData> GetPropertyList(Type t) {
       {
         IList<PropertyData> ret = new List<PropertyData>();
-        propertyLists = propertyLists ?? (new Dictionary<Type, IList<PropertyData>>());
+        propertyLists = propertyLists ?? new Dictionary<Type, IList<PropertyData>>();
         if (propertyLists.ContainsKey(t)) {
           return propertyLists[t];
         }

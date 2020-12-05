@@ -1732,6 +1732,7 @@ namespace Test {
     public void TestPlist() {
       CBORObject o;
       o = CBORObject.FromJSONString("[1,2,null,true,false,\"\"]");
+      o.Add(new byte[] { 32, 33, 44, 55 });
       Console.WriteLine(o.ToJSONString());
       Console.WriteLine(CBORPlistWriter.ToPlistString(o));
     }
