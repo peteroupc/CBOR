@@ -24,6 +24,6 @@
 
  * [PeterO.Cbor.JSONOptions.ConversionMode](PeterO.Cbor.JSONOptions.ConversionMode.md) - Specifies how JSON numbers are converted to CBOR when decoding JSON.
 
- * [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) - Options for controlling how certain.
+ * [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) - Options for controlling how certain DotNET or Java objects, such as so-called "plain old data" objects (better known as POCOs in DotNET or POJOs in Java), are converted to CBOR objects.
 
  * [PeterO.DataUtilities](PeterO.DataUtilities.md) - Contains methods useful for reading and writing text strings.

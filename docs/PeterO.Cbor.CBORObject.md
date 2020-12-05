@@ -3865,13 +3865,13 @@ A byte array containing the converted in JSON format.
 
  * If this object represents a number (the IsNumber property, or isNumber() method in Java, returns true), then it is written out as a number.
 
- * If the CBOR object contains CBOR maps, or is a CBOR map itself, the order in which the keys to the map are written out to the JSON string is undefined unless the map was created using the NewOrderedMap method. Map keys other than untagged text strings are converted to JSON strings before writing them out (for example,  `22("Test")`  is converted to  `"Test"`  and  `true`  is converted to  `"true"`  ). If, after such conversion, two or more map keys are identical, this method throws a CBORException.
+ * If the CBOR object contains CBOR maps, or is a CBOR map itself, the order in which the keys to the map are written out to the JSON string is undefined unless the map was created using the NewOrderedMap method. Map keys other than untagged text strings are converted to JSON strings before writing them out (for example,  `22("Test")`  is converted to  `"Test"`  and  `true`  is converted to  `"true"`  ). After such conversion, if two or more keys for the same map are identical, this method throws a CBORException.
 
  * If a number in the form of an arbitrary-precision binary floating-point number has a very high binary exponent, it will be converted to a double before being converted to a JSON string. (The resulting double could overflow to infinity, in which case the arbitrary-precision binary floating-point number is converted to null.)
 
  * The string will not begin with a byte-order mark (U+FEFF); RFC 8259 (the JSON specification) forbids placing a byte-order mark at the beginning of a JSON string.
 
- * Byte strings are converted to Base64 URL without whitespace or padding by default (see section 4.1 of RFC 8949). A byte string will instead be converted to traditional base64 without whitespace and with padding if it has tag 22, or base16 for tag 23. (To create a CBOR object with a given tag, call the  `CBORObject.FromObjectAndTag`  method and pass the CBOR object and the desired tag number to that method.)
+ * Byte strings are converted to Base64 URL without whitespace or padding by default (see section 3.4.5.3 of RFC 8949). A byte string will instead be converted to traditional base64 without whitespace and with padding if it has tag 22, or base16 for tag 23. (To create a CBOR object with a given tag, call the  `CBORObject.FromObjectAndTag`  method and pass the CBOR object and the desired tag number to that method.)
 
  * Rational numbers will be converted to their exact form, if possible, otherwise to a high-precision approximation. (The resulting approximation could overflow to infinity, in which case the rational number is converted to null.)
 
@@ -3884,22 +3884,22 @@ A byte array containing the converted in JSON format.
 The example code given below (originally written in C# for the.NET version) can be used to write out certain keys of a CBOR map in a given order to a JSON string.
 
     /* Generates a JSON string of 'mapObj' whose keys are in the order
-                given
-                in 'keys' . Only keys found in 'keys' will be written if they exist in
-                'mapObj'. */ private static string KeysToJSONMap(CBORObject mapObj,
-                IList<CBORObject> keys) { if (mapObj == null) { throw new
-                ArgumentNullException)nameof(mapObj));}
-                if (keys == null) { throw new
-                ArgumentNullException)nameof(keys));}
-                if (obj.Type != CBORType.Map) {
-                throw new ArgumentException("'obj' is not a map."); } StringBuilder
-                builder = new StringBuilder(); var first = true; builder.Append("{");
-                for (CBORObject key in keys) { if (mapObj.ContainsKey(key)) { if
-                (!first) {builder.Append(", ");} var keyString=(key.CBORType ==
-                CBORType.String) ? key.AsString() : key.ToJSONString();
-                builder.Append(CBORObject.FromObject(keyString) .ToJSONString())
-                .Append(":").Append(mapObj[key].ToJSONString()); first=false; } } return
-                builder.Append("}").ToString(); }
+                 given
+                 in 'keys' . Only keys found in 'keys' will be written if they exist in
+                 'mapObj'. */ private static string KeysToJSONMap(CBORObject mapObj,
+                 IList<CBORObject> keys) { if (mapObj == null) { throw new
+                 ArgumentNullException)nameof(mapObj));}
+                 if (keys == null) { throw new
+                 ArgumentNullException)nameof(keys));}
+                 if (obj.Type != CBORType.Map) {
+                 throw new ArgumentException("'obj' is not a map."); } StringBuilder
+                 builder = new StringBuilder(); var first = true; builder.Append("{");
+                 for (CBORObject key in keys) { if (mapObj.ContainsKey(key)) { if
+                 (!first) {builder.Append(", ");} var keyString=(key.CBORType ==
+                 CBORType.String) ? key.AsString() : key.ToJSONString();
+                 builder.Append(CBORObject.FromObject(keyString) .ToJSONString())
+                 .Append(":").Append(mapObj[key].ToJSONString()); first=false; } } return
+                 builder.Append("}").ToString(); }
 
  .
 
@@ -3922,7 +3922,7 @@ The parameter  <i>options</i>
 
     public string ToJSONString();
 
-Converts this object to a text string in JavaScript Object Notation (JSON) format. See the overload to ToJSONString taking a JSONOptions argument for further information. If the CBOR object contains CBOR maps, or is a CBOR map itself, the order in which the keys to the map are written out to the JSON string is undefined unless the map was created using the NewOrderedMap method. Map keys other than untagged text strings are converted to JSON strings before writing them out (for example,  `22("Test")`  is converted to  `"Test"`  and  `true`  is converted to  `"true"`  ). After such conversion, if two or more map keys are identical, this method throws a CBORException. The example code given in <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b> can be used to write out certain keys of a CBOR map in a given order to a JSON string, or to write out a CBOR object as part of a JSON text sequence.
+Converts this object to a text string in JavaScript Object Notation (JSON) format. See the overload to ToJSONString taking a JSONOptions argument for further information. If the CBOR object contains CBOR maps, or is a CBOR map itself, the order in which the keys to the map are written out to the JSON string is undefined unless the map was created using the NewOrderedMap method. Map keys other than untagged text strings are converted to JSON strings before writing them out (for example,  `22("Test")`  is converted to  `"Test"`  and  `true`  is converted to  `"true"`  ). After such conversion, if two or more keys for the same map are identical, this method throws a CBORException. The example code given in <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b> can be used to write out certain keys of a CBOR map in a given order to a JSON string, or to write out a CBOR object as part of a JSON text sequence.
 
 <b>Warning:</b> In general, if this CBOR object contains integer map keys or uses other features not supported in JSON, and the application converts this CBOR object to JSON and back to CBOR, the application <i>should not</i> expect the new CBOR object to be exactly the same as the original. This is because the conversion in many cases may have to convert unsupported features in JSON to supported features which correspond to a different feature in CBOR (such as converting integer map keys, which are supported in CBOR but not JSON, to text strings, which are supported in both).
 
@@ -4064,7 +4064,7 @@ Converts this CBOR object to an object of an arbitrary type. The following cases
 
  * If the type is an enumeration constant ("enum"), and this CBOR object is an integer or text string, returns the enumeration constant with the given number or name, respectively. (Enumeration constants made up of multiple enumeration constants, as allowed by .NET, can only be matched by number this way.)
 
- * If the type is  `DateTime`  (or  `Date`  in Java) , returns a date/time object if the CBOR object's outermost tag is 0 or 1. For tag 1, this method treats the CBOR object as a number of seconds since the start of 1970, which is based on the POSIX definition of "seconds since the Epoch", a definition that does not count leap seconds. In this method, this number of seconds assumes the use of a proleptic Gregorian calendar, in which the rules regarding the number of days in each month and which years are leap years are the same for all years as they were in 1970 (including without regard to transitions from other calendars to the Gregorian). For tag 1, CBOR objects that express infinity or not-a-number (NaN) are treated as invalid by this method.
+ * If the type is  `DateTime`  (or  `Date`  in Java) , returns a date/time object if the CBOR object's outermost tag is 0 or 1. For tag 1, this method treats the CBOR object as a number of seconds since the start of 1970, which is based on the POSIX definition of "seconds since the Epoch", a definition that does not count leap seconds. In this method, this number of seconds assumes the use of a proleptic Gregorian calendar, in which the rules regarding the number of days in each month and which years are leap years are the same for all years as they were in 1970 (including without regard to transitions from other calendars to the Gregorian). The string format used in tag 0 supports only years up to 4 decimal digits long. For tag 1, CBOR objects that express infinity or not-a-number (NaN) are treated as invalid by this method.
 
  * If the type is  `Uri`  (or  `URI`  in Java), returns a URI object if possible.
 

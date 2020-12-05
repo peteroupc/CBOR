@@ -1669,56 +1669,58 @@ namespace PeterO.Cbor {
     /// regarding the number of days in each month and which years are leap
     /// years are the same for all years as they were in 1970 (including
     /// without regard to transitions from other calendars to the
-    /// Gregorian). For tag 1, CBOR objects that express infinity or
-    /// not-a-number (NaN) are treated as invalid by this method.</item>
-    /// <item>If the type is <c>Uri</c>
+    /// Gregorian). The string format used in tag 0 supports only years up
+    /// to 4 decimal digits long. For tag 1, CBOR objects that express
+    /// infinity or not-a-number (NaN) are treated as invalid by this
+    /// method.</item>
+    ///  <item>If the type is <c>Uri</c>
     ///  (or <c>URI</c>
-    ///  in Java), returns a
-    /// URI object if possible.</item>
-    ///  <item>If the type is <c>Guid</c>
-    ///  (or
-    /// <c>UUID</c>
-    ///  in Java), returns a UUID object if possible.</item>
-    /// <item>Plain-Old-Data deserialization: If the object is a type not
-    /// specially handled above, the type includes a zero-parameter
-    /// constructor (default or not), this CBOR object is a CBOR map, and
-    /// the "mapper" parameter (if any) allows this type to be eligible for
-    /// Plain-Old-Data deserialization, then this method checks the given
-    /// type for eligible setters as follows:</item>
-    ///  <item>(*) In the .NET
-    /// version, eligible setters are the public, nonstatic setters of
-    /// properties with a public, nonstatic getter. Eligible setters also
-    /// include public, nonstatic, non- <c>const</c>
-    ///  , non- <c>readonly</c>
-    /// fields. If a class has two properties and/or fields of the form "X"
-    /// and "IsX", where "X" is any name, or has multiple properties and/or
-    /// fields with the same name, those properties and fields are
-    /// ignored.</item>
-    ///  <item>(*) In the Java version, eligible setters are
-    /// public, nonstatic methods starting with "set" followed by a
-    /// character other than a basic digit or lower-case letter, that is,
-    /// other than "a" to "z" or "0" to "9", that take one parameter. The
-    /// class containing an eligible setter must have a public, nonstatic
-    /// method with the same name, but starting with "get" or "is" rather
-    /// than "set", that takes no parameters and does not return void. (For
-    /// example, if a class has "public setValue(String)" and "public
-    /// getValue()", "setValue" is an eligible setter. However,
-    /// "setValue()" and "setValue(String, int)" are not eligible setters.)
-    /// In addition, public, nonstatic, nonfinal fields are also eligible
-    /// setters. If a class has two or more otherwise eligible setters
-    /// (methods and/or fields) with the same name, but different parameter
-    /// type, they are not eligible setters.</item>
-    ///  <item>Then, the method
-    /// creates an object of the given type and invokes each eligible
-    /// setter with the corresponding value in the CBOR map, if any. Key
-    /// names in the map are matched to eligible setters according to the
-    /// rules described in the <see cref='PeterO.Cbor.PODOptions'/>
-    /// documentation. Note that for security reasons, certain types are
-    /// not supported even if they contain eligible setters. For the Java
-    /// version, the object creation may fail in the case of a nested
-    /// nonstatic class.</item>
+    ///  in
+    /// Java), returns a URI object if possible.</item>
+    ///  <item>If the type
+    /// is <c>Guid</c>
+    ///  (or <c>UUID</c>
+    ///  in Java), returns a UUID object if
+    /// possible.</item>
+    ///  <item>Plain-Old-Data deserialization: If the
+    /// object is a type not specially handled above, the type includes a
+    /// zero-parameter constructor (default or not), this CBOR object is a
+    /// CBOR map, and the "mapper" parameter (if any) allows this type to
+    /// be eligible for Plain-Old-Data deserialization, then this method
+    /// checks the given type for eligible setters as follows:</item>
+    /// <item>(*) In the .NET version, eligible setters are the public,
+    /// nonstatic setters of properties with a public, nonstatic getter.
+    /// Eligible setters also include public, nonstatic, non- <c>const</c>
+    /// , non- <c>readonly</c>
+    ///  fields. If a class has two properties and/or
+    /// fields of the form "X" and "IsX", where "X" is any name, or has
+    /// multiple properties and/or fields with the same name, those
+    /// properties and fields are ignored.</item>
+    ///  <item>(*) In the Java
+    /// version, eligible setters are public, nonstatic methods starting
+    /// with "set" followed by a character other than a basic digit or
+    /// lower-case letter, that is, other than "a" to "z" or "0" to "9",
+    /// that take one parameter. The class containing an eligible setter
+    /// must have a public, nonstatic method with the same name, but
+    /// starting with "get" or "is" rather than "set", that takes no
+    /// parameters and does not return void. (For example, if a class has
+    /// "public setValue(String)" and "public getValue()", "setValue" is an
+    /// eligible setter. However, "setValue()" and "setValue(String, int)"
+    /// are not eligible setters.) In addition, public, nonstatic, nonfinal
+    /// fields are also eligible setters. If a class has two or more
+    /// otherwise eligible setters (methods and/or fields) with the same
+    /// name, but different parameter type, they are not eligible
+    /// setters.</item>
+    ///  <item>Then, the method creates an object of the
+    /// given type and invokes each eligible setter with the corresponding
+    /// value in the CBOR map, if any. Key names in the map are matched to
+    /// eligible setters according to the rules described in the <see
+    /// cref='PeterO.Cbor.PODOptions'/> documentation. Note that for
+    /// security reasons, certain types are not supported even if they
+    /// contain eligible setters. For the Java version, the object creation
+    /// may fail in the case of a nested nonstatic class.</item>
     ///  </list>
-    ///  </summary>
+    /// </summary>
     /// <param name='t'>The type, class, or interface that this method's
     /// return value will belong to. To express a generic type in Java, see
     /// the example. <b>Note:</b>
@@ -5822,8 +5824,8 @@ namespace PeterO.Cbor {
     /// converted to JSON strings before writing them out (for example,
     /// <c>22("Test")</c> is converted to <c>"Test"</c> and <c>true</c> is
     /// converted to <c>"true"</c> ). After such conversion, if two or more
-    /// map keys are identical, this method throws a CBORException. The
-    /// example code given in
+    /// keys for the same map are identical, this method throws a
+    /// CBORException. The example code given in
     /// <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b>
     /// can be used to write out certain keys of a CBOR map in a given
     /// order to a JSON string, or to write out a CBOR object as part of a
@@ -5868,8 +5870,8 @@ namespace PeterO.Cbor {
     ///  and <c>true</c>
     ///  is
     /// converted to <c>"true"</c>
-    ///  ). If, after such conversion, two or
-    /// more map keys are identical, this method throws a
+    ///  ). After such conversion, if two or more
+    /// keys for the same map are identical, this method throws a
     /// CBORException.</item>
     ///  <item>If a number in the form of an
     /// arbitrary-precision binary floating-point number has a very high
@@ -5883,7 +5885,7 @@ namespace PeterO.Cbor {
     /// beginning of a JSON string.</item>
     ///  <item>Byte strings are converted
     /// to Base64 URL without whitespace or padding by default (see section
-    /// 4.1 of RFC 8949). A byte string will instead be converted to
+    /// 3.4.5.3 of RFC 8949). A byte string will instead be converted to
     /// traditional base64 without whitespace and with padding if it has
     /// tag 22, or base16 for tag 23. (To create a CBOR object with a given
     /// tag, call the <c>CBORObject.FromObjectAndTag</c>
@@ -6418,10 +6420,6 @@ namespace PeterO.Cbor {
     /// interval [0, 23] or [32, 255].</param>
     /// <returns>The number of bytes ordered to be written to the data
     /// stream.</returns>
-    /// <exception cref='ArgumentException'>Value is from 24 to 31 and
-    /// major type is 7.</exception>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='outputStream'/> is null.</exception>
     /// <remarks>There are other useful things to note when encoding CBOR
     /// that are not covered by this WriteValue method. To mark the start
     /// of an indefinite-length array, write the 8-bit byte 0x9f to the
@@ -6430,6 +6428,10 @@ namespace PeterO.Cbor {
     /// indefinite-length array or map, write the 8-bit byte 0xff to the
     /// output stream. For examples, see the WriteValue(Stream, int, int)
     /// overload.</remarks>
+    /// <exception cref='ArgumentException'>Value is from 24 to 31 and
+    /// major type is 7.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='outputStream'/> is null.</exception>
     public static int WriteValue(
       Stream outputStream,
       int majorType,
@@ -6591,11 +6593,6 @@ namespace PeterO.Cbor {
     /// this number may not be greater than 2^64 - 1.</param>
     /// <returns>The number of bytes ordered to be written to the data
     /// stream.</returns>
-    /// <exception cref='ArgumentException'>The parameter <paramref
-    /// name='majorType'/> is 7 and value is greater than 255.</exception>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='outputStream'/> or <paramref name='bigintValue'/> is
-    /// null.</exception>
     /// <remarks>There are other useful things to note when encoding CBOR
     /// that are not covered by this WriteValue method. To mark the start
     /// of an indefinite-length array, write the 8-bit byte 0x9f to the
@@ -6603,6 +6600,11 @@ namespace PeterO.Cbor {
     /// the 8-bit byte 0xbf to the output stream. To mark the end of an
     /// indefinite-length array or map, write the 8-bit byte 0xff to the
     /// output stream.</remarks>
+    /// <exception cref='ArgumentException'>The parameter <paramref
+    /// name='majorType'/> is 7 and value is greater than 255.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='outputStream'/> or <paramref name='bigintValue'/> is
+    /// null.</exception>
     public static int WriteValue(
       Stream outputStream,
       int majorType,
