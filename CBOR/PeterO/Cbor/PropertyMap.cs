@@ -24,10 +24,10 @@ namespace PeterO.Cbor {
       // for example:
       // - 'Add'ing a key, then changing it, then calling CompareTo on the changed
       // key can fail to find the key in the Dictionary, even though the old and new
-      //versions
+      // versions
       // of the key have the same reference.
       // - The same can happen if an object that contains a Dictionary is 'Add'ed to
-      //that
+      // that
       // Dictionary.
       private readonly IDictionary<TKey, TValue> dict;
       private readonly LinkedList<TKey> list;
@@ -42,16 +42,16 @@ namespace PeterO.Cbor {
         if (this.dict.ContainsKey(k)) {
            throw new ArgumentException("duplicate key");
         } else {
-           //CheckKeyDoesNotExist(k);
-           //DebugUtility.Log("Adding: " + (k.GetHashCode()) + " [Type=" + (CS(k)) +
-           //"]");
+           // CheckKeyDoesNotExist(k);
+           // DebugUtility.Log("Adding: " + (k.GetHashCode()) + " [Type=" + (CS(k)) +
+           // "]");
            int keycnt = this.dict.Count;
            this.dict.Add(k, v);
-           //if (keycnt == this.dict.Count) {
-           //  throw new InvalidOperationException();
-           //}
+           // if (keycnt == this.dict.Count) {
+           // throw new InvalidOperationException();
+           // }
            this.list.AddLast(k);
-           //CheckKeyExists(k);
+           // CheckKeyExists(k);
         }
       }
       public TValue this[TKey key] {
@@ -67,16 +67,17 @@ namespace PeterO.Cbor {
         }
         set {
           if (this.dict.ContainsKey(key)) {
-            //DebugUtility.Log("Set existing: " + (key.GetHashCode()) + " [Type=" +
-            //(CS(key)) + "]");
+            // DebugUtility.Log("Set existing: " + (key.GetHashCode()) + " [Type=" +
+            // (CS(key)) + "]");
             this.dict[key] = value;
-            //CheckKeyExists(key);
+            // CheckKeyExists(key);
           } else {
-            //DebugUtility.Log("Set new: " + (key.GetHashCode()) + " [Type=" + (CS(key)) +
-            //"]");
+            // DebugUtility.Log("Set new: " + (key.GetHashCode()) + " [Type=" + (CS(key))
+            // +
+            // "]");
             this.dict.Add(key, value);
             this.list.AddLast(key);
-            //CheckKeyExists(key);
+            // CheckKeyExists(key);
           }
         }
       }
@@ -162,10 +163,8 @@ CBORObject).Type) + "]");
 (CS(key)) + "]");
               foreach (var k in this.dict.Keys) {
                 DebugUtility.Log(
-                     "key {0} {1}" +
-                      "\u0020" +
-                      "\u0020 [{2}]",
-                    k.Equals(key),k.GetHashCode(),CS(k),CS(key),
+                "key {0} {1}" + "\u0020" + "\u0020 [{2}]",
+                    k.Equals(key), k.GetHashCode(), CS(k), CS(key),
                   this.dict.ContainsKey(k));
              } */
              throw new ArgumentException("key not found (ContainsKey)");
@@ -206,8 +205,8 @@ CBORObject).Type) + "]");
       private IEnumerable<KeyValuePair<TKey, TValue>> Iterate() {
         foreach (var k in this.list) {
            TValue v = default(TValue);
-           //DebugUtility.Log("Enumerating: " + (k.GetHashCode()) + " [Type=" + ((k as
-           //CBORObject).Type) + "]");
+           // DebugUtility.Log("Enumerating: " + (k.GetHashCode()) + " [Type=" + ((k as
+           // CBORObject).Type) + "]");
            // NOTE: Don't use dict[k], since if it fails it could
            // print the key in the exception's message, which could
            // cause an infinite loop

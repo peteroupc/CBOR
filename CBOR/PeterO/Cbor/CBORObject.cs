@@ -1914,7 +1914,7 @@ namespace PeterO.Cbor {
       if (depth > 1000) {
         throw new CBORException("Too deeply nested");
       }
-      //DebugUtility.Log("type="+this.Type+" depth="+depth);
+      // DebugUtility.Log("type="+this.Type+" depth="+depth);
       long size = 0L;
       CBORObject cbor = this;
       while (cbor.IsTagged) {

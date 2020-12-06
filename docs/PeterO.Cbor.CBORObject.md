@@ -4,7 +4,7 @@
         System.IComparable,
         System.IEquatable
 
-Represents an object in Concise Binary Object Representation (CBOR) and contains methods for reading and writing CBOR data. CBOR is defined in RFC 8949.
+Represents an object in Concise Binary Object Representation (CBOR) and contains methods for reading and writing CBOR data. CBOR is an Internet Standard and defined in RFC 8949.
 
 <b>Converting CBOR objects</b>
 
