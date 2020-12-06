@@ -19,7 +19,7 @@ namespace PeterO.Cbor {
   /// <summary>
   /// <para>Represents an object in Concise Binary Object Representation
   /// (CBOR) and contains methods for reading and writing CBOR data. CBOR
-  /// is defined in RFC 8949.</para></summary>
+  /// is an Internet Standard and defined in RFC 8949.</para></summary>
   /// <remarks>
   /// <para><b>Converting CBOR objects</b></para>
   /// <para>There are many ways to get a CBOR object, including from
@@ -1914,6 +1914,7 @@ namespace PeterO.Cbor {
       if (depth > 1000) {
         throw new CBORException("Too deeply nested");
       }
+      //DebugUtility.Log("type="+this.Type+" depth="+depth);
       long size = 0L;
       CBORObject cbor = this;
       while (cbor.IsTagged) {
@@ -1961,11 +1962,19 @@ namespace PeterO.Cbor {
           ICollection<KeyValuePair<CBORObject, CBORObject>> entries =
             this.Entries;
           size = checked(size + IntegerByteLength(entries.Count));
-          foreach (KeyValuePair<CBORObject, CBORObject> entry in entries) {
-            CBORObject key = entry.Key;
-            CBORObject value = entry.Value;
-            size = checked(size + key.CalcEncodedSize(depth + 1));
-            size = checked(size + value.CalcEncodedSize(depth + 1));
+          try {
+            foreach (KeyValuePair<CBORObject, CBORObject> entry in entries) {
+              CBORObject key = entry.Key;
+              CBORObject value = entry.Value;
+              size = checked(size + key.CalcEncodedSize(depth + 1));
+              size = checked(size + value.CalcEncodedSize(depth + 1));
+            }
+          } catch (InvalidOperationException ex) {
+            // Additional error that may occur in iteration
+            throw new CBORException(ex.Message, ex);
+          } catch (ArgumentException ex) {
+            // Additional error that may occur in iteration
+            throw new CBORException(ex.Message, ex);
           }
           return size;
         }
@@ -6420,6 +6429,10 @@ namespace PeterO.Cbor {
     /// interval [0, 23] or [32, 255].</param>
     /// <returns>The number of bytes ordered to be written to the data
     /// stream.</returns>
+    /// <exception cref='ArgumentException'>Value is from 24 to 31 and
+    /// major type is 7.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='outputStream'/> is null.</exception>
     /// <remarks>There are other useful things to note when encoding CBOR
     /// that are not covered by this WriteValue method. To mark the start
     /// of an indefinite-length array, write the 8-bit byte 0x9f to the
@@ -6428,10 +6441,6 @@ namespace PeterO.Cbor {
     /// indefinite-length array or map, write the 8-bit byte 0xff to the
     /// output stream. For examples, see the WriteValue(Stream, int, int)
     /// overload.</remarks>
-    /// <exception cref='ArgumentException'>Value is from 24 to 31 and
-    /// major type is 7.</exception>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='outputStream'/> is null.</exception>
     public static int WriteValue(
       Stream outputStream,
       int majorType,
@@ -6593,6 +6602,11 @@ namespace PeterO.Cbor {
     /// this number may not be greater than 2^64 - 1.</param>
     /// <returns>The number of bytes ordered to be written to the data
     /// stream.</returns>
+    /// <exception cref='ArgumentException'>The parameter <paramref
+    /// name='majorType'/> is 7 and value is greater than 255.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='outputStream'/> or <paramref name='bigintValue'/> is
+    /// null.</exception>
     /// <remarks>There are other useful things to note when encoding CBOR
     /// that are not covered by this WriteValue method. To mark the start
     /// of an indefinite-length array, write the 8-bit byte 0x9f to the
@@ -6600,11 +6614,6 @@ namespace PeterO.Cbor {
     /// the 8-bit byte 0xbf to the output stream. To mark the end of an
     /// indefinite-length array or map, write the 8-bit byte 0xff to the
     /// output stream.</remarks>
-    /// <exception cref='ArgumentException'>The parameter <paramref
-    /// name='majorType'/> is 7 and value is greater than 255.</exception>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='outputStream'/> or <paramref name='bigintValue'/> is
-    /// null.</exception>
     public static int WriteValue(
       Stream outputStream,
       int majorType,

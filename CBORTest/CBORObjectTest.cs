@@ -73,7 +73,7 @@ namespace Test {
     };
 
     private static readonly JSONOptions ValueNoDuplicateKeys = new
-    JSONOptions("allowduplicatekeys=false");
+JSONOptions("allowduplicatekeys=false");
 
     internal static void CheckPropertyNames(
       object ao,
@@ -350,9 +350,9 @@ namespace Test {
         CBORObject o2 = CBORTestCommon.RandomNumber(r, true);
         EDecimal cmpCobj = null;
         try {
-          cmpCobj = o1.AsNumber().Add(o2.AsNumber()).ToEDecimal();
+           cmpCobj = o1.AsNumber().Add(o2.AsNumber()).ToEDecimal();
         } catch (OutOfMemoryException) {
-          continue;
+           continue;
         }
         EDecimal cmpDecFrac = AsED(o1).Add(AsED(o2));
         TestCommon.CompareTestEqual(cmpDecFrac, cmpCobj);
@@ -1811,7 +1811,7 @@ namespace Test {
       bytes = new byte[] { 0xa2, 0x01, 0x00, 0x02, 0x03 };
       try {
         CBORObject.DecodeFromBytes(bytes, new
-          CBOREncodeOptions("allowduplicatekeys=0"));
+CBOREncodeOptions("allowduplicatekeys=0"));
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1819,7 +1819,7 @@ namespace Test {
       bytes = new byte[] { 0xa2, 0x01, 0x00, 0x01, 0x03 };
       try {
         CBORObject.DecodeFromBytes(bytes, new
-          CBOREncodeOptions("allowduplicatekeys=0"));
+CBOREncodeOptions("allowduplicatekeys=0"));
         Assert.Fail("Should have failed");
       } catch (CBORException) {
         // NOTE: Intentionally empty
@@ -1830,7 +1830,7 @@ namespace Test {
       bytes = new byte[] { 0xa2, 0x01, 0x00, 0x01, 0x03 };
       try {
         CBORObject.DecodeFromBytes(bytes, new
-          CBOREncodeOptions("allowduplicatekeys=1;useindefencoding=1"));
+CBOREncodeOptions("allowduplicatekeys=1;useindefencoding=1"));
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1838,7 +1838,7 @@ namespace Test {
       bytes = new byte[] { 0xa2, 0x60, 0x00, 0x60, 0x03 };
       try {
         CBORObject.DecodeFromBytes(bytes, new
-          CBOREncodeOptions("allowduplicatekeys=0"));
+CBOREncodeOptions("allowduplicatekeys=0"));
         Assert.Fail("Should have failed");
       } catch (CBORException) {
         // NOTE: Intentionally empty
@@ -1852,7 +1852,7 @@ namespace Test {
       };
       try {
         CBORObject.DecodeFromBytes(bytes, new
-          CBOREncodeOptions("allowduplicatekeys=0"));
+CBOREncodeOptions("allowduplicatekeys=0"));
         Assert.Fail("Should have failed");
       } catch (CBORException) {
         // NOTE: Intentionally empty
@@ -1863,7 +1863,7 @@ namespace Test {
       bytes = new byte[] { 0xa2, 0x61, 0x41, 0x00, 0x61, 0x41, 0x03 };
       try {
         CBORObject.DecodeFromBytes(bytes, new
-          CBOREncodeOptions("allowduplicatekeys=0"));
+CBOREncodeOptions("allowduplicatekeys=0"));
         Assert.Fail("Should have failed");
       } catch (CBORException) {
         // NOTE: Intentionally empty
@@ -2073,7 +2073,7 @@ namespace Test {
           }
           bytes =
             ToObjectTest.TestToFromObjectRoundTrip(j).EncodeToBytes(new
-              CBOREncodeOptions(false, false, true));
+CBOREncodeOptions(false, false, true));
           if (bytes.Length != ranges[i + 2]) {
             string i2s = TestCommon.IntToString(j);
             Assert.AreEqual(
@@ -4916,20 +4916,6 @@ namespace Test {
     }
 
     [Test]
-    public void TestCalcEncodedSizeCircularRefs2a() {
-      CBORObject cbor = CBORObject.NewOrderedMap().Add(1, 2).Add(3, 4);
-      cbor.Add(cbor, "test");
-      try {
-        cbor.CalcEncodedSize();
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-    }
-    [Test]
     public void TestCalcEncodedSizeCircularRefs3a() {
       CBORObject cbor = CBORObject.NewOrderedMap().Add(1, 2).Add(3, 4);
       cbor.Add("test", cbor);
@@ -4949,124 +4935,141 @@ namespace Test {
       cbor = CBORObject.NewOrderedMap().Add(1, 2).Add(3, 4);
       cbor.Add("test", cbor);
       try {
-        cbor.CalcEncodedSize();
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
+ cbor.CalcEncodedSize();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+  }
+
+    [Test]
+    public void TestCalcEncodedSizeCircularRefs3ba() {
+CBORObject cbor;
+
       cbor = CBORObject.NewOrderedMap().Add("abc", 2).Add("def", 4);
       cbor.Add("test", cbor);
       try {
-        cbor.CalcEncodedSize();
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
+ cbor.CalcEncodedSize();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+  }
+
+    [Test]
+    public void TestCalcEncodedSizeCircularRefs3bb() {
+CBORObject cbor;
+
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
       cbor.Add("test", cbor);
       try {
-        cbor.CalcEncodedSize();
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
+ cbor.CalcEncodedSize();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+  }
+
+    [Test]
+    public void TestCalcEncodedSizeCircularRefs3bc() {
+CBORObject cbor;
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
       cbor.Add(CBORObject.NewOrderedMap().Add("jkl",cbor),"test");
       try {
-        cbor.CalcEncodedSize();
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
+ cbor.CalcEncodedSize();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
       cbor.Add("test",CBORObject.NewOrderedMap().Add("jkl",cbor));
       try {
-        cbor.CalcEncodedSize();
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
+ cbor.CalcEncodedSize();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
       cbor.Add(CBORObject.NewOrderedMap().Add(cbor,"jkl"),"test");
       try {
-        cbor.CalcEncodedSize();
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
+ cbor.CalcEncodedSize();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
       cbor.Add("test",CBORObject.NewOrderedMap().Add(cbor,"jkl"));
       try {
-        cbor.CalcEncodedSize();
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
+ cbor.CalcEncodedSize();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
       cbor.Add(CBORObject.NewOrderedMap().Add(cbor,"jkl").Add("mno",1),"test");
       try {
-        cbor.CalcEncodedSize();
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
+ cbor.CalcEncodedSize();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
       cbor.Add("test",CBORObject.NewOrderedMap().Add(cbor,"jkl").Add("mno",1));
       try {
-        cbor.CalcEncodedSize();
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
+ cbor.CalcEncodedSize();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
       cbor.Add("test",CBORObject.NewOrderedMap().Add("mno",1).Add(cbor,"jkl"));
       try {
-        cbor.CalcEncodedSize();
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
+ cbor.CalcEncodedSize();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
       cbor.Add(CBORObject.NewOrderedMap().Add("mno",1).Add(cbor,"jkl"),"test");
       try {
-        cbor.CalcEncodedSize();
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
+ cbor.CalcEncodedSize();
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
       // No circular refs
       cbor = CBORObject.NewOrderedMap().Add(1, 2).Add(3, 4);
       cbor.Add("test", CBORObject.NewOrderedMap());
@@ -5079,39 +5082,23 @@ namespace Test {
       Assert.IsTrue(cbor.CalcEncodedSize() > 2);
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
 
-      cbor.Add (CBORObject.NewOrderedMap().Add ("jkl",
-  CBORObject.NewOrderedMap()),
-        "test");
+  cbor.Add(CBORObject.NewOrderedMap().Add("jkl",CBORObject.NewOrderedMap()),"test");
       Assert.IsTrue(cbor.CalcEncodedSize() > 2);
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
 
-      {
-        object objectTemp = "test";
-object objectTemp2 = CBORObject.NewOrderedMap().Add ("jkl",
-          CBORObject.NewOrderedMap());
-cbor.Add(objectTemp, objectTemp2);
-}
+  cbor.Add("test",CBORObject.NewOrderedMap().Add("jkl",CBORObject.NewOrderedMap()));
       Assert.IsTrue(cbor.CalcEncodedSize() > 2);
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
 
-      cbor.Add (CBORObject.NewOrderedMap().Add (CBORObject.NewOrderedMap(),
-  "jkl"),
-        "test");
+  cbor.Add(CBORObject.NewOrderedMap().Add(CBORObject.NewOrderedMap(),"jkl"),"test");
       Assert.IsTrue(cbor.CalcEncodedSize() > 2);
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
 
-      {
-        object objectTemp = "test";
-object objectTemp2 = CBORObject.NewOrderedMap().Add (CBORObject.NewOrderedMap(),
-          "jkl");
-cbor.Add(objectTemp, objectTemp2);
-}
+  cbor.Add("test",CBORObject.NewOrderedMap().Add(CBORObject.NewOrderedMap(),"jkl"));
       Assert.IsTrue(cbor.CalcEncodedSize() > 2);
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
       {
-        CBORObject.NewOrderedMap().Add (CBORObject.NewOrderedMap(),
-  "jkl").Add ("mno",
-          1);
+  CBORObject.NewOrderedMap().Add(CBORObject.NewOrderedMap(),"jkl").Add("mno",1);
         object objectTemp2 = "test";
         cbor.Add("test", objectTemp2);
       }
@@ -5119,36 +5106,46 @@ cbor.Add(objectTemp, objectTemp2);
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
       {
         object objectTemp2 =
-          CBORObject.NewOrderedMap().Add (CBORObject.NewOrderedMap(),
-  "jkl").Add ("mno",
-            1);
+  CBORObject.NewOrderedMap().Add(CBORObject.NewOrderedMap(),"jkl").Add("mno",1);
         cbor.Add("test", objectTemp2);
       }
       Assert.IsTrue(cbor.CalcEncodedSize() > 2);
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
       {
         object objectTemp2 =
-          CBORObject.NewOrderedMap().Add ("mno", 1).Add
-(CBORObject.NewOrderedMap(),
-            "jkl");
+  CBORObject.NewOrderedMap().Add("mno",1).Add(CBORObject.NewOrderedMap(),"jkl");
         cbor.Add("test", objectTemp2);
       }
       Assert.IsTrue(cbor.CalcEncodedSize() > 2);
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
       {
         object objectTemp =
-          CBORObject.NewOrderedMap().Add ("mno", 1).Add
-(CBORObject.NewOrderedMap(),
-            "jkl");
+  CBORObject.NewOrderedMap().Add("mno",1).Add(CBORObject.NewOrderedMap(),"jkl");
         cbor.Add(objectTemp, "test");
       }
       Assert.IsTrue(cbor.CalcEncodedSize() > 2);
     }
 
     [Test]
+    public void TestCalcEncodedSizeCircularRefs2a() {
+      CBORObject cbor = CBORObject.NewOrderedMap().Add(1, 2).Add(3, 4);
+      cbor.Add(cbor, "test");
+      try {
+        cbor.CalcEncodedSize();
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
+
+    [Test]
     public void TestCalcEncodedSizeCircularRefs5a() {
       CBORObject cbor = CBORObject.NewOrderedMap().Add(1, 2).Add(3, 4);
-      cbor.Add(CBORObject.NewArray().Add(cbor), "test");
+      CBORObject cbor2 = CBORObject.NewArray().Add(cbor);
+      cbor.Add(cbor2, "test");
       try {
         cbor.CalcEncodedSize();
         Assert.Fail("Should have failed");
@@ -5513,23 +5510,23 @@ cbor.Add(objectTemp, objectTemp2);
 
     [Test]
     public void TestCompareToUnicodeString() {
-      CBORObject cbora;
-      CBORObject cborb;
-      cbora = CBORObject.FromObject("aa\ud200\ue000");
-      cborb = CBORObject.FromObject("aa\ud200\ue001");
-      TestCommon.CompareTestLess(cbora, cborb);
-      cbora = CBORObject.FromObject("aa\ud200\ue000");
-      cborb = CBORObject.FromObject("aa\ud201\ue000");
-      TestCommon.CompareTestLess(cbora, cborb);
-      cbora = CBORObject.FromObject("aa\ud800\udc00\ue000");
-      cborb = CBORObject.FromObject("aa\ue001\ue000");
-      TestCommon.CompareTestGreater(cbora, cborb);
-      cbora = CBORObject.FromObject("aa\ud800\udc00\ue000");
-      cborb = CBORObject.FromObject("aa\ud800\udc01\ue000");
-      TestCommon.CompareTestLess(cbora, cborb);
-      cbora = CBORObject.FromObject("aa\ud800\udc00\ue000");
-      cborb = CBORObject.FromObject("aa\ud801\udc00\ue000");
-      TestCommon.CompareTestLess(cbora, cborb);
+       CBORObject cbora;
+       CBORObject cborb;
+       cbora = CBORObject.FromObject("aa\ud200\ue000");
+       cborb = CBORObject.FromObject("aa\ud200\ue001");
+       TestCommon.CompareTestLess(cbora, cborb);
+       cbora = CBORObject.FromObject("aa\ud200\ue000");
+       cborb = CBORObject.FromObject("aa\ud201\ue000");
+       TestCommon.CompareTestLess(cbora, cborb);
+       cbora = CBORObject.FromObject("aa\ud800\udc00\ue000");
+       cborb = CBORObject.FromObject("aa\ue001\ue000");
+       TestCommon.CompareTestGreater(cbora, cborb);
+       cbora = CBORObject.FromObject("aa\ud800\udc00\ue000");
+       cborb = CBORObject.FromObject("aa\ud800\udc01\ue000");
+       TestCommon.CompareTestLess(cbora, cborb);
+       cbora = CBORObject.FromObject("aa\ud800\udc00\ue000");
+       cborb = CBORObject.FromObject("aa\ud801\udc00\ue000");
+       TestCommon.CompareTestLess(cbora, cborb);
     }
 
     [Test]
@@ -5851,68 +5848,68 @@ cbor.Add(objectTemp, objectTemp2);
     [Test]
     public void TestToFloatingPointBits() {
       try {
-        CBORObject.FromFloatingPointBits(0, 0);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
+ CBORObject.FromFloatingPointBits(0, 0);
+ Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
       try {
-        CBORObject.FromFloatingPointBits(0, 1);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
+ CBORObject.FromFloatingPointBits(0, 1);
+ Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
       try {
-        CBORObject.FromFloatingPointBits(0, 3);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
+ CBORObject.FromFloatingPointBits(0, 3);
+ Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
       try {
-        CBORObject.FromFloatingPointBits(0, 5);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
+ CBORObject.FromFloatingPointBits(0, 5);
+ Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
       try {
-        CBORObject.FromFloatingPointBits(0, 6);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
+ CBORObject.FromFloatingPointBits(0, 6);
+ Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
       try {
-        CBORObject.FromFloatingPointBits(0, 7);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
+ CBORObject.FromFloatingPointBits(0, 7);
+ Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
       try {
-        CBORObject.FromFloatingPointBits(0, 9);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentException) {
-        // NOTE: Intentionally empty
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
+ CBORObject.FromFloatingPointBits(0, 9);
+ Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
     }
 
     [Test]
@@ -6220,72 +6217,14 @@ cbor.Add(objectTemp, objectTemp2);
 
     public static void TestWriteExtraOne(long longValue) {
       try {
-        {
-          CBORObject cborTemp1 =
-            ToObjectTest.TestToFromObjectRoundTrip(longValue);
-          CBORObject cborTemp2 =
-            ToObjectTest.TestToFromObjectRoundTrip((object)longValue);
-          TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
-          try {
-            CBORObject.Write(longValue, null);
-            Assert.Fail("Should have failed");
-          } catch (ArgumentNullException) {
-            // NOTE: Intentionally empty
-          } catch (Exception ex) {
-            Assert.Fail(ex.ToString());
-            throw new InvalidOperationException(String.Empty, ex);
-          }
-          AssertWriteThrow(cborTemp1);
-          using (var ms = new MemoryStream()) {
-            CBORObject.Write(longValue, ms);
-            CBORObject.Write(cborTemp1, ms);
-            cborTemp1.WriteTo(ms);
-            AssertReadThree(
-              ms.ToArray(),
-              ToObjectTest.TestToFromObjectRoundTrip(longValue));
-          }
-          TestWriteObj((object)longValue, longValue);
-        }
-
-        EInteger bigintVal = EInteger.FromInt64(longValue);
-        {
-          CBORObject cborTemp1 =
-            ToObjectTest.TestToFromObjectRoundTrip(bigintVal);
-          CBORObject cborTemp2 =
-            ToObjectTest.TestToFromObjectRoundTrip((object)bigintVal);
-          TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
-          try {
-            CBORObject.Write(bigintVal, null);
-            Assert.Fail("Should have failed");
-          } catch (ArgumentNullException) {
-            // NOTE: Intentionally empty
-          } catch (Exception ex) {
-            Assert.Fail(ex.ToString());
-            throw new InvalidOperationException(String.Empty, ex);
-          }
-          AssertWriteThrow(cborTemp1);
-          using (var ms = new MemoryStream()) {
-            CBORObject.Write(bigintVal, ms);
-            CBORObject.Write(cborTemp1, ms);
-            cborTemp1.WriteTo(ms);
-            AssertReadThree(
-              ms.ToArray(),
-              ToObjectTest.TestToFromObjectRoundTrip(bigintVal));
-          }
-          TestWriteObj((object)bigintVal, bigintVal);
-        }
-
-        if (longValue >= (long)Int32.MinValue && longValue <=
-          (long)Int32.MaxValue) {
-          var intval = (int)longValue;
           {
             CBORObject cborTemp1 =
-              ToObjectTest.TestToFromObjectRoundTrip(intval);
+              ToObjectTest.TestToFromObjectRoundTrip(longValue);
             CBORObject cborTemp2 =
-              ToObjectTest.TestToFromObjectRoundTrip((object)intval);
+              ToObjectTest.TestToFromObjectRoundTrip((object)longValue);
             TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
             try {
-              CBORObject.Write(intval, null);
+              CBORObject.Write(longValue, null);
               Assert.Fail("Should have failed");
             } catch (ArgumentNullException) {
               // NOTE: Intentionally empty
@@ -6295,56 +6234,25 @@ cbor.Add(objectTemp, objectTemp2);
             }
             AssertWriteThrow(cborTemp1);
             using (var ms = new MemoryStream()) {
-              CBORObject.Write(intval, ms);
+              CBORObject.Write(longValue, ms);
               CBORObject.Write(cborTemp1, ms);
               cborTemp1.WriteTo(ms);
               AssertReadThree(
                 ms.ToArray(),
-                ToObjectTest.TestToFromObjectRoundTrip(intval));
+                ToObjectTest.TestToFromObjectRoundTrip(longValue));
             }
-            TestWriteObj((object)intval, intval);
+            TestWriteObj((object)longValue, longValue);
           }
-        }
-        if (longValue >= -32768L && longValue <= 32767) {
-          var shortval = (short)longValue;
-          CBORObject cborTemp1 = ToObjectTest
-            .TestToFromObjectRoundTrip(shortval);
-          CBORObject cborTemp2 =
-            ToObjectTest.TestToFromObjectRoundTrip((object)shortval);
-          TestCommon.CompareTestEqualAndConsistent(
-            cborTemp1,
-            cborTemp2);
-          try {
-            CBORObject.Write(shortval, null);
-            Assert.Fail("Should have failed");
-          } catch (ArgumentNullException) {
-            // NOTE: Intentionally empty
-          } catch (Exception ex) {
-            Assert.Fail(ex.ToString());
-            throw new InvalidOperationException(String.Empty, ex);
-          }
-          AssertWriteThrow(cborTemp1);
-          using (var ms = new MemoryStream()) {
-            CBORObject.Write(shortval, ms);
-            CBORObject.Write(cborTemp1, ms);
-            cborTemp1.WriteTo(ms);
-            AssertReadThree(
-              ms.ToArray(),
-              ToObjectTest.TestToFromObjectRoundTrip(shortval));
-          }
-          TestWriteObj((object)shortval, shortval);
-        }
-        if (longValue >= 0L && longValue <= 255) {
-          var byteval = (byte)longValue;
+
+          EInteger bigintVal = EInteger.FromInt64(longValue);
           {
             CBORObject cborTemp1 =
-              ToObjectTest.TestToFromObjectRoundTrip(byteval);
+              ToObjectTest.TestToFromObjectRoundTrip(bigintVal);
             CBORObject cborTemp2 =
-              ToObjectTest.TestToFromObjectRoundTrip((object)byteval);
-            TestCommon.CompareTestEqualAndConsistent(cborTemp1,
-              cborTemp2);
+              ToObjectTest.TestToFromObjectRoundTrip((object)bigintVal);
+            TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
             try {
-              CBORObject.Write(byteval, null);
+              CBORObject.Write(bigintVal, null);
               Assert.Fail("Should have failed");
             } catch (ArgumentNullException) {
               // NOTE: Intentionally empty
@@ -6354,15 +6262,104 @@ cbor.Add(objectTemp, objectTemp2);
             }
             AssertWriteThrow(cborTemp1);
             using (var ms = new MemoryStream()) {
-              CBORObject.Write(byteval, ms);
+              CBORObject.Write(bigintVal, ms);
               CBORObject.Write(cborTemp1, ms);
               cborTemp1.WriteTo(ms);
               AssertReadThree(
                 ms.ToArray(),
-                ToObjectTest.TestToFromObjectRoundTrip(byteval));
+                ToObjectTest.TestToFromObjectRoundTrip(bigintVal));
             }
-            TestWriteObj((object)byteval, byteval);
+            TestWriteObj((object)bigintVal, bigintVal);
           }
+
+          if (longValue >= (long)Int32.MinValue && longValue <=
+            (long)Int32.MaxValue) {
+            var intval = (int)longValue;
+            {
+              CBORObject cborTemp1 =
+                ToObjectTest.TestToFromObjectRoundTrip(intval);
+              CBORObject cborTemp2 =
+                ToObjectTest.TestToFromObjectRoundTrip((object)intval);
+              TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
+              try {
+                CBORObject.Write(intval, null);
+                Assert.Fail("Should have failed");
+              } catch (ArgumentNullException) {
+                // NOTE: Intentionally empty
+              } catch (Exception ex) {
+                Assert.Fail(ex.ToString());
+                throw new InvalidOperationException(String.Empty, ex);
+              }
+              AssertWriteThrow(cborTemp1);
+              using (var ms = new MemoryStream()) {
+                CBORObject.Write(intval, ms);
+                CBORObject.Write(cborTemp1, ms);
+                cborTemp1.WriteTo(ms);
+                AssertReadThree(
+                  ms.ToArray(),
+                  ToObjectTest.TestToFromObjectRoundTrip(intval));
+              }
+              TestWriteObj((object)intval, intval);
+            }
+          }
+          if (longValue >= -32768L && longValue <= 32767) {
+            var shortval = (short)longValue;
+            CBORObject cborTemp1 = ToObjectTest
+              .TestToFromObjectRoundTrip(shortval);
+            CBORObject cborTemp2 =
+              ToObjectTest.TestToFromObjectRoundTrip((object)shortval);
+            TestCommon.CompareTestEqualAndConsistent(
+              cborTemp1,
+              cborTemp2);
+            try {
+              CBORObject.Write(shortval, null);
+              Assert.Fail("Should have failed");
+            } catch (ArgumentNullException) {
+              // NOTE: Intentionally empty
+            } catch (Exception ex) {
+              Assert.Fail(ex.ToString());
+              throw new InvalidOperationException(String.Empty, ex);
+            }
+            AssertWriteThrow(cborTemp1);
+            using (var ms = new MemoryStream()) {
+              CBORObject.Write(shortval, ms);
+              CBORObject.Write(cborTemp1, ms);
+              cborTemp1.WriteTo(ms);
+              AssertReadThree(
+                ms.ToArray(),
+                ToObjectTest.TestToFromObjectRoundTrip(shortval));
+            }
+            TestWriteObj((object)shortval, shortval);
+          }
+          if (longValue >= 0L && longValue <= 255) {
+            var byteval = (byte)longValue;
+            {
+              CBORObject cborTemp1 =
+                ToObjectTest.TestToFromObjectRoundTrip(byteval);
+              CBORObject cborTemp2 =
+                ToObjectTest.TestToFromObjectRoundTrip((object)byteval);
+              TestCommon.CompareTestEqualAndConsistent(cborTemp1,
+                cborTemp2);
+              try {
+                CBORObject.Write(byteval, null);
+                Assert.Fail("Should have failed");
+              } catch (ArgumentNullException) {
+                // NOTE: Intentionally empty
+              } catch (Exception ex) {
+                Assert.Fail(ex.ToString());
+                throw new InvalidOperationException(String.Empty, ex);
+              }
+              AssertWriteThrow(cborTemp1);
+              using (var ms = new MemoryStream()) {
+                CBORObject.Write(byteval, ms);
+                CBORObject.Write(cborTemp1, ms);
+                cborTemp1.WriteTo(ms);
+                AssertReadThree(
+                  ms.ToArray(),
+                  ToObjectTest.TestToFromObjectRoundTrip(byteval));
+              }
+              TestWriteObj((object)byteval, byteval);
+            }
         }
       } catch (IOException ex) {
         Assert.Fail(ex.ToString());
@@ -6991,7 +6988,7 @@ cbor.Add(objectTemp, objectTemp2);
     }
 
     private static string Chop(string str) {
-      return (str.Length < 100) ? str : (str.Substring(0, 100) + "...");
+       return (str.Length < 100) ? str : (str.Substring(0, 100) + "...");
     }
 
     private static void AssertReadThree(byte[] bytes) {
@@ -7521,344 +7518,344 @@ cbor.Add(objectTemp, objectTemp2);
     }
 
     public static void TestDateTimeTag1One(string str, EInteger ei) {
-      CBORObject cbornum;
-      cbornum = CBORObject.FromObjectAndTag(str, 0);
-      var dtx = (DateTime)cbornum.ToObject(typeof(DateTime));
-      ToObjectTest.TestToFromObjectRoundTrip(dtx);
-      cbornum = CBORObject.FromObjectAndTag(ei, 1);
-      var dtx2 = (DateTime)cbornum.ToObject(typeof(DateTime));
-      ToObjectTest.TestToFromObjectRoundTrip(dtx2);
-      TestCommon.AssertEqualsHashCode(dtx, dtx2);
-      if (ei == null) {
-        throw new ArgumentNullException(nameof(ei));
-      }
-      if (ei.CanFitInInt64()) {
-        cbornum = CBORObject.FromObjectAndTag(ei.ToInt64Checked(), 1);
-        dtx2 = (DateTime)cbornum.ToObject(typeof(DateTime));
-        TestCommon.AssertEqualsHashCode(dtx, dtx2);
-        ToObjectTest.TestToFromObjectRoundTrip(dtx2);
-      }
-      EFloat ef1 = EFloat.FromEInteger(ei).Plus(EContext.Binary64);
-      EFloat ef2 = EFloat.FromEInteger(ei);
-      if (ef1.CompareTo(ef2) == 0) {
-        cbornum = CBORObject.FromObjectAndTag(ef1, 1);
-        dtx2 = (DateTime)cbornum.ToObject(typeof(DateTime));
-        TestCommon.AssertEqualsHashCode(dtx, dtx2);
-        ToObjectTest.TestToFromObjectRoundTrip(dtx2);
-        cbornum = CBORObject.FromObjectAndTag(ef1.ToDouble(), 1);
-        dtx2 = (DateTime)cbornum.ToObject(typeof(DateTime));
-        TestCommon.AssertEqualsHashCode(dtx, dtx2);
-        ToObjectTest.TestToFromObjectRoundTrip(dtx2);
-      }
+       CBORObject cbornum;
+       cbornum = CBORObject.FromObjectAndTag(str, 0);
+       var dtx = (DateTime)cbornum.ToObject(typeof(DateTime));
+       ToObjectTest.TestToFromObjectRoundTrip(dtx);
+       cbornum = CBORObject.FromObjectAndTag(ei, 1);
+       var dtx2 = (DateTime)cbornum.ToObject(typeof(DateTime));
+       ToObjectTest.TestToFromObjectRoundTrip(dtx2);
+       TestCommon.AssertEqualsHashCode(dtx, dtx2);
+       if (ei == null) {
+         throw new ArgumentNullException(nameof(ei));
+       }
+       if (ei.CanFitInInt64()) {
+         cbornum = CBORObject.FromObjectAndTag(ei.ToInt64Checked(), 1);
+          dtx2 = (DateTime)cbornum.ToObject(typeof(DateTime));
+          TestCommon.AssertEqualsHashCode(dtx, dtx2);
+          ToObjectTest.TestToFromObjectRoundTrip(dtx2);
+       }
+       EFloat ef1 = EFloat.FromEInteger(ei).Plus(EContext.Binary64);
+       EFloat ef2 = EFloat.FromEInteger(ei);
+       if (ef1.CompareTo(ef2) == 0) {
+          cbornum = CBORObject.FromObjectAndTag(ef1, 1);
+          dtx2 = (DateTime)cbornum.ToObject(typeof(DateTime));
+          TestCommon.AssertEqualsHashCode(dtx, dtx2);
+          ToObjectTest.TestToFromObjectRoundTrip(dtx2);
+          cbornum = CBORObject.FromObjectAndTag(ef1.ToDouble(), 1);
+          dtx2 = (DateTime)cbornum.ToObject(typeof(DateTime));
+          TestCommon.AssertEqualsHashCode(dtx, dtx2);
+          ToObjectTest.TestToFromObjectRoundTrip(dtx2);
+       }
     }
 
     public static void TestDateTimeTag1One(string str, double dbl) {
-      CBORObject cbornum;
-      cbornum = CBORObject.FromObjectAndTag(str, 0);
-      var dtx = (DateTime)cbornum.ToObject(typeof(DateTime));
-      ToObjectTest.TestToFromObjectRoundTrip(dtx);
-      cbornum = CBORObject.FromObjectAndTag(dbl, 1);
-      var dtx2 = (DateTime)cbornum.ToObject(typeof(DateTime));
-      ToObjectTest.TestToFromObjectRoundTrip(dtx2);
-      TestCommon.AssertEqualsHashCode(dtx, dtx2);
+       CBORObject cbornum;
+       cbornum = CBORObject.FromObjectAndTag(str, 0);
+       var dtx = (DateTime)cbornum.ToObject(typeof(DateTime));
+       ToObjectTest.TestToFromObjectRoundTrip(dtx);
+       cbornum = CBORObject.FromObjectAndTag(dbl, 1);
+       var dtx2 = (DateTime)cbornum.ToObject(typeof(DateTime));
+       ToObjectTest.TestToFromObjectRoundTrip(dtx2);
+       TestCommon.AssertEqualsHashCode(dtx, dtx2);
     }
 
     [Test]
     [Timeout(10000)]
     public void TestDateTimeTag1Specific1() {
-      // Test speed
-      EInteger ei = EInteger.FromString("-14261178672295354872");
-      CBORObject cbornum = CBORObject.FromObjectAndTag(ei, 1);
-      try {
-        var dtx = (DateTime)cbornum.ToObject(typeof(DateTime));
-        ToObjectTest.TestToFromObjectRoundTrip(dtx);
-      } catch (CBORException) {
-        Console.WriteLine("Not supported: " + ei);
-      }
+       // Test speed
+       EInteger ei = EInteger.FromString("-14261178672295354872");
+       CBORObject cbornum = CBORObject.FromObjectAndTag(ei, 1);
+       try {
+           var dtx = (DateTime)cbornum.ToObject(typeof(DateTime));
+           ToObjectTest.TestToFromObjectRoundTrip(dtx);
+       } catch (CBORException) {
+           Console.WriteLine("Not supported: " + ei);
+       }
     }
 
     [Test]
     public void TestDateTimeSpecific2() {
-      TestDateTimeTag1One("1758-09-28T23:25:24Z", -6666626076L);
-      TestDateTimeTag1One("1758-09-28T23:25:24.000Z", -6666626076L);
-      TestDateTimeTag1One("1758-09-28T23:25:24.500Z", -6666626075.5);
-      TestDateTimeTag1One("2325-11-08T01:47:40Z", 11229587260L);
-      TestDateTimeTag1One("2325-11-08T01:47:40.000Z", 11229587260L);
-      TestDateTimeTag1One("2325-11-08T01:47:40.500Z", 11229587260.5);
-      TestDateTimeTag1One("1787-03-04T10:21:24Z", -5769495516L);
-      TestDateTimeTag1One("1787-03-04T10:21:24.000Z", -5769495516L);
-      TestDateTimeTag1One("1787-03-04T10:21:24.500Z", -5769495515.5);
-      TestDateTimeTag1One("1828-11-17T11:59:01Z", -4453358459L);
-      TestDateTimeTag1One("1828-11-17T11:59:01.000Z", -4453358459L);
-      TestDateTimeTag1One("1828-11-17T11:59:01.500Z", -4453358458.5);
-      TestDateTimeTag1One("2379-01-22T01:20:02Z", 12908596802L);
-      TestDateTimeTag1One("2379-01-22T01:20:02.000Z", 12908596802L);
-      TestDateTimeTag1One("1699-05-31T22:37:24Z", -8538830556L);
-      TestDateTimeTag1One("1699-05-31T22:37:24.000Z", -8538830556L);
-      TestDateTimeTag1One("1699-05-31T22:37:24.500Z", -8538830555.5);
-      TestDateTimeTag1One("2248-02-13T03:16:17Z", 8776523777L);
-      TestDateTimeTag1One("2248-02-13T03:16:17.000Z", 8776523777L);
-      TestDateTimeTag1One("2248-02-13T03:16:17.500Z", 8776523777.5);
-      TestDateTimeTag1One("2136-04-15T16:45:29Z", 5247564329L);
-      TestDateTimeTag1One("2136-04-15T16:45:29.000Z", 5247564329L);
-      TestDateTimeTag1One("1889-09-05T00:23:45Z", -2534715375L);
-      TestDateTimeTag1One("1889-09-05T00:23:45.000Z", -2534715375L);
-      TestDateTimeTag1One("1889-09-05T00:23:45.500Z", -2534715374.5);
-      TestDateTimeTag1One("2095-08-13T20:04:08Z", 3964104248L);
-      TestDateTimeTag1One("2095-08-13T20:04:08.000Z", 3964104248L);
-      TestDateTimeTag1One("2095-08-13T20:04:08.500Z", 3964104248.5);
-      TestDateTimeTag1One("2475-03-27T17:41:48Z", 15943714908L);
-      TestDateTimeTag1One("2475-03-27T17:41:48.000Z", 15943714908L);
-      TestDateTimeTag1One("2475-03-27T17:41:48.500Z", 15943714908.5);
-      TestDateTimeTag1One("1525-11-18T07:47:54Z", -14015088726L);
-      TestDateTimeTag1One("1525-11-18T07:47:54.000Z", -14015088726L);
-      TestDateTimeTag1One("2353-01-12T09:36:32Z", 12087308192L);
-      TestDateTimeTag1One("2353-01-12T09:36:32.000Z", 12087308192L);
-      TestDateTimeTag1One("2353-01-12T09:36:32.500Z", 12087308192.5);
-      TestDateTimeTag1One("2218-11-29T08:23:31Z", 7854827011L);
-      TestDateTimeTag1One("2218-11-29T08:23:31.000Z", 7854827011L);
-      TestDateTimeTag1One("2377-08-21T09:44:12Z", 12863785452L);
-      TestDateTimeTag1One("2377-08-21T09:44:12.000Z", 12863785452L);
-      TestDateTimeTag1One("2377-08-21T09:44:12.500Z", 12863785452.5);
-      TestDateTimeTag1One("1530-09-02T02:13:52Z", -13863995168L);
-      TestDateTimeTag1One("1530-09-02T02:13:52.000Z", -13863995168L);
-      TestDateTimeTag1One("1530-09-02T02:13:52.500Z", -13863995167.5);
-      TestDateTimeTag1One("2319-03-11T18:18:48Z", 11019349128L);
-      TestDateTimeTag1One("2319-03-11T18:18:48.000Z", 11019349128L);
-      TestDateTimeTag1One("2319-03-11T18:18:48.500Z", 11019349128.5);
-      TestDateTimeTag1One("1602-12-05T09:36:58Z", -11583699782L);
-      TestDateTimeTag1One("1602-12-05T09:36:58.000Z", -11583699782L);
-      TestDateTimeTag1One("1874-01-25T21:14:10Z", -3027293150L);
-      TestDateTimeTag1One("1874-01-25T21:14:10.000Z", -3027293150L);
-      TestDateTimeTag1One("1874-01-25T21:14:10.500Z", -3027293149.5);
-      TestDateTimeTag1One("1996-02-26T04:09:49Z", 825307789L);
-      TestDateTimeTag1One("1996-02-26T04:09:49.000Z", 825307789L);
-      TestDateTimeTag1One("1996-02-26T04:09:49.500Z", 825307789.5);
-      TestDateTimeTag1One("2113-11-27T22:16:09Z", 4541264169L);
-      TestDateTimeTag1One("2113-11-27T22:16:09.000Z", 4541264169L);
-      TestDateTimeTag1One("2113-11-27T22:16:09.500Z", 4541264169.5);
-      TestDateTimeTag1One("1612-01-07T16:25:51Z", -11296827249L);
-      TestDateTimeTag1One("1612-01-07T16:25:51.000Z", -11296827249L);
-      TestDateTimeTag1One("1612-01-07T16:25:51.500Z", -11296827248.5);
-      TestDateTimeTag1One("2077-12-08T22:15:00Z", 3406227300L);
-      TestDateTimeTag1One("2077-12-08T22:15:00.000Z", 3406227300L);
-      TestDateTimeTag1One("2077-12-08T22:15:00.500Z", 3406227300.5);
-      TestDateTimeTag1One("1820-07-06T12:06:08Z", -4717396432L);
-      TestDateTimeTag1One("1820-07-06T12:06:08.000Z", -4717396432L);
-      TestDateTimeTag1One("1820-07-06T12:06:08.500Z", -4717396431.5);
-      TestDateTimeTag1One("1724-01-17T16:42:20Z", -7761597460L);
-      TestDateTimeTag1One("1724-01-17T16:42:20.000Z", -7761597460L);
-      TestDateTimeTag1One("1724-01-17T16:42:20.500Z", -7761597459.5);
-      TestDateTimeTag1One("2316-03-11T00:46:54Z", 10924678014L);
-      TestDateTimeTag1One("2316-03-11T00:46:54.000Z", 10924678014L);
-      TestDateTimeTag1One("2495-07-18T22:11:29Z", 16584646289L);
-      TestDateTimeTag1One("2495-07-18T22:11:29.000Z", 16584646289L);
-      TestDateTimeTag1One("2495-07-18T22:11:29.500Z", 16584646289.5);
-      TestDateTimeTag1One("1874-04-25T08:52:46Z", -3019561634L);
-      TestDateTimeTag1One("1874-04-25T08:52:46.000Z", -3019561634L);
-      TestDateTimeTag1One("1874-04-25T08:52:46.500Z", -3019561633.5);
-      TestDateTimeTag1One("2226-05-18T19:38:50Z", 8090480330L);
-      TestDateTimeTag1One("2226-05-18T19:38:50.000Z", 8090480330L);
-      TestDateTimeTag1One("2226-05-18T19:38:50.500Z", 8090480330.5);
-      TestDateTimeTag1One("2108-06-26T09:01:48Z", 4370144508L);
-      TestDateTimeTag1One("2108-06-26T09:01:48.000Z", 4370144508L);
-      TestDateTimeTag1One("2108-06-26T09:01:48.500Z", 4370144508.5);
-      TestDateTimeTag1One("1955-10-03T06:06:55Z", -449603585L);
-      TestDateTimeTag1One("1955-10-03T06:06:55.000Z", -449603585L);
-      TestDateTimeTag1One("1955-10-03T06:06:55.500Z", -449603584.5);
-      TestDateTimeTag1One("1906-03-26T17:32:58Z", -2012365622L);
-      TestDateTimeTag1One("1906-03-26T17:32:58.000Z", -2012365622L);
-      TestDateTimeTag1One("1906-03-26T17:32:58.500Z", -2012365621.5);
-      TestDateTimeTag1One("1592-03-10T03:46:03Z", -11922581637L);
-      TestDateTimeTag1One("1592-03-10T03:46:03.000Z", -11922581637L);
-      TestDateTimeTag1One("1592-03-10T03:46:03.500Z", -11922581636.5);
-      TestDateTimeTag1One("2433-12-19T01:24:19Z", 14641349059L);
-      TestDateTimeTag1One("2433-12-19T01:24:19.000Z", 14641349059L);
-      TestDateTimeTag1One("2433-12-19T01:24:19.500Z", 14641349059.5);
-      TestDateTimeTag1One("1802-02-07T09:43:23Z", -5298358597L);
-      TestDateTimeTag1One("1802-02-07T09:43:23.000Z", -5298358597L);
-      TestDateTimeTag1One("2318-04-11T20:11:23Z", 10990498283L);
-      TestDateTimeTag1One("2318-04-11T20:11:23.000Z", 10990498283L);
-      TestDateTimeTag1One("2318-04-11T20:11:23.500Z", 10990498283.5);
-      TestDateTimeTag1One("2083-01-06T11:06:22Z", 3566459182L);
-      TestDateTimeTag1One("2083-01-06T11:06:22.000Z", 3566459182L);
-      TestDateTimeTag1One("2083-01-06T11:06:22.500Z", 3566459182.5);
-      TestDateTimeTag1One("1561-08-16T19:31:48Z", -12887094492L);
-      TestDateTimeTag1One("1561-08-16T19:31:48.000Z", -12887094492L);
-      TestDateTimeTag1One("1561-08-16T19:31:48.500Z", -12887094491.5);
-      TestDateTimeTag1One("2475-11-05T21:20:03Z", 15962995203L);
-      TestDateTimeTag1One("2475-11-05T21:20:03.000Z", 15962995203L);
-      TestDateTimeTag1One("2475-11-05T21:20:03.500Z", 15962995203.5);
-      TestDateTimeTag1One("2209-05-13T09:31:56Z", 7553554316L);
-      TestDateTimeTag1One("2209-05-13T09:31:56.000Z", 7553554316L);
-      TestDateTimeTag1One("2209-05-13T09:31:56.500Z", 7553554316.5);
-      TestDateTimeTag1One("1943-06-25T19:09:49Z", -836887811L);
-      TestDateTimeTag1One("1943-06-25T19:09:49.000Z", -836887811L);
-      TestDateTimeTag1One("1943-06-25T19:09:49.500Z", -836887810.5);
-      TestDateTimeTag1One("1751-09-18T07:31:00Z", -6888472140L);
-      TestDateTimeTag1One("1751-09-18T07:31:00.000Z", -6888472140L);
-      TestDateTimeTag1One("1751-09-18T07:31:00.500Z", -6888472139.5);
-      TestDateTimeTag1One("1538-05-07T23:40:25Z", -13621652375L);
-      TestDateTimeTag1One("1538-05-07T23:40:25.000Z", -13621652375L);
-      TestDateTimeTag1One("1538-05-07T23:40:25.500Z", -13621652374.5);
-      TestDateTimeTag1One("1628-02-10T00:07:33Z", -10789026747L);
-      TestDateTimeTag1One("1628-02-10T00:07:33.000Z", -10789026747L);
-      TestDateTimeTag1One("1628-02-10T00:07:33.500Z", -10789026746.5);
-      TestDateTimeTag1One("1584-08-23T09:30:49Z", -12160679351L);
-      TestDateTimeTag1One("1584-08-23T09:30:49.000Z", -12160679351L);
-      TestDateTimeTag1One("1584-08-23T09:30:49.500Z", -12160679350.5);
-      TestDateTimeTag1One("2230-08-28T23:13:43Z", 8225536423L);
-      TestDateTimeTag1One("2230-08-28T23:13:43.000Z", 8225536423L);
-      TestDateTimeTag1One("1846-02-19T20:02:33Z", -3908750247L);
-      TestDateTimeTag1One("1846-02-19T20:02:33.000Z", -3908750247L);
-      TestDateTimeTag1One("1846-02-19T20:02:33.500Z", -3908750246.5);
-      TestDateTimeTag1One("2114-07-28T00:06:13Z", 4562179573L);
-      TestDateTimeTag1One("2114-07-28T00:06:13.000Z", 4562179573L);
-      TestDateTimeTag1One("2114-07-28T00:06:13.500Z", 4562179573.5);
-      TestDateTimeTag1One("1855-04-03T15:29:33Z", -3621054627L);
-      TestDateTimeTag1One("1855-04-03T15:29:33.000Z", -3621054627L);
-      TestDateTimeTag1One("1855-04-03T15:29:33.500Z", -3621054626.5);
-      TestDateTimeTag1One("1532-02-04T13:08:22Z", -13819027898L);
-      TestDateTimeTag1One("1532-02-04T13:08:22.000Z", -13819027898L);
-      TestDateTimeTag1One("2285-12-28T16:35:29Z", 9971742929L);
-      TestDateTimeTag1One("2285-12-28T16:35:29.000Z", 9971742929L);
-      TestDateTimeTag1One("2285-12-28T16:35:29.500Z", 9971742929.5);
-      TestDateTimeTag1One("1784-08-08T15:25:01Z", -5850520499L);
-      TestDateTimeTag1One("1784-08-08T15:25:01.000Z", -5850520499L);
-      TestDateTimeTag1One("2190-06-25T10:55:10Z", 6957744910L);
-      TestDateTimeTag1One("2190-06-25T10:55:10.000Z", 6957744910L);
-      TestDateTimeTag1One("2190-06-25T10:55:10.500Z", 6957744910.5);
-      TestDateTimeTag1One("2263-10-08T20:28:28Z", 9270448108L);
-      TestDateTimeTag1One("2263-10-08T20:28:28.000Z", 9270448108L);
-      TestDateTimeTag1One("2263-10-08T20:28:28.500Z", 9270448108.5);
-      TestDateTimeTag1One("2036-05-12T10:02:45Z", 2094199365L);
-      TestDateTimeTag1One("2036-05-12T10:02:45.000Z", 2094199365L);
-      TestDateTimeTag1One("2036-05-12T10:02:45.500Z", 2094199365.5);
-      TestDateTimeTag1One("2166-09-08T09:25:14Z", 6206837114L);
-      TestDateTimeTag1One("2166-09-08T09:25:14.000Z", 6206837114L);
-      TestDateTimeTag1One("2166-09-08T09:25:14.500Z", 6206837114.5);
-      TestDateTimeTag1One("1698-12-30T18:31:11Z", -8551978129L);
-      TestDateTimeTag1One("1698-12-30T18:31:11.000Z", -8551978129L);
-      TestDateTimeTag1One("1780-10-16T15:02:56Z", -5970790624L);
-      TestDateTimeTag1One("1780-10-16T15:02:56.000Z", -5970790624L);
-      TestDateTimeTag1One("1780-10-16T15:02:56.500Z", -5970790623.5);
-      TestDateTimeTag1One("1710-10-12T20:07:58Z", -8180193122L);
-      TestDateTimeTag1One("1710-10-12T20:07:58.000Z", -8180193122L);
-      TestDateTimeTag1One("1710-10-12T20:07:58.500Z", -8180193121.5);
-      TestDateTimeTag1One("2034-09-28T04:45:04Z", 2043031504L);
-      TestDateTimeTag1One("2034-09-28T04:45:04.000Z", 2043031504L);
-      TestDateTimeTag1One("2034-09-28T04:45:04.500Z", 2043031504.5);
-      TestDateTimeTag1One("1801-12-10T15:45:47Z", -5303434453L);
-      TestDateTimeTag1One("1801-12-10T15:45:47.000Z", -5303434453L);
-      TestDateTimeTag1One("1537-08-24T13:13:09Z", -13643808411L);
-      TestDateTimeTag1One("1537-08-24T13:13:09.000Z", -13643808411L);
-      TestDateTimeTag1One("1537-08-24T13:13:09.500Z", -13643808410.5);
-      TestDateTimeTag1One("2249-09-24T21:07:14Z", 8827477634L);
-      TestDateTimeTag1One("2249-09-24T21:07:14.000Z", 8827477634L);
-      TestDateTimeTag1One("2249-09-24T21:07:14.500Z", 8827477634.5);
-      TestDateTimeTag1One("2137-11-27T05:22:38Z", 5298585758L);
-      TestDateTimeTag1One("2137-11-27T05:22:38.000Z", 5298585758L);
-      TestDateTimeTag1One("2137-11-27T05:22:38.500Z", 5298585758.5);
-      TestDateTimeTag1One("2123-07-31T13:09:34Z", 4846482574L);
-      TestDateTimeTag1One("2123-07-31T13:09:34.000Z", 4846482574L);
-      TestDateTimeTag1One("2123-07-31T13:09:34.500Z", 4846482574.5);
-      TestDateTimeTag1One("2242-01-31T12:14:20Z", 8586130460L);
-      TestDateTimeTag1One("2242-01-31T12:14:20.000Z", 8586130460L);
-      TestDateTimeTag1One("2242-01-31T12:14:20.500Z", 8586130460.5);
-      TestDateTimeTag1One("2232-11-04T21:12:33Z", 8294562753L);
-      TestDateTimeTag1One("2232-11-04T21:12:33.000Z", 8294562753L);
-      TestDateTimeTag1One("1590-12-06T04:30:48Z", -11962322952L);
-      TestDateTimeTag1One("1590-12-06T04:30:48.000Z", -11962322952L);
-      TestDateTimeTag1One("1590-12-06T04:30:48.500Z", -11962322951.5);
-      TestDateTimeTag1One("1910-05-16T17:54:04Z", -1881727556L);
-      TestDateTimeTag1One("1910-05-16T17:54:04.000Z", -1881727556L);
-      TestDateTimeTag1One("1910-05-16T17:54:04.500Z", -1881727555.5);
-      TestDateTimeTag1One("2482-06-15T23:28:00Z", 16171572480L);
-      TestDateTimeTag1One("2482-06-15T23:28:00.000Z", 16171572480L);
-      TestDateTimeTag1One("2482-06-15T23:28:00.500Z", 16171572480.5);
-      TestDateTimeTag1One("1808-01-17T13:11:23Z", -5110858117L);
-      TestDateTimeTag1One("1808-01-17T13:11:23.000Z", -5110858117L);
-      TestDateTimeTag1One("1872-05-04T12:15:05Z", -3081843895L);
-      TestDateTimeTag1One("1872-05-04T12:15:05.000Z", -3081843895L);
-      TestDateTimeTag1One("1872-05-04T12:15:05.500Z", -3081843894.5);
-      TestDateTimeTag1One("1719-05-18T16:44:33Z", -7908909327L);
-      TestDateTimeTag1One("1719-05-18T16:44:33.000Z", -7908909327L);
-      TestDateTimeTag1One("2137-05-26T02:17:32Z", 5282590652L);
-      TestDateTimeTag1One("2137-05-26T02:17:32.000Z", 5282590652L);
-      TestDateTimeTag1One("2137-05-26T02:17:32.500Z", 5282590652.5);
-      TestDateTimeTag1One("1714-06-15T13:41:14Z", -8064267526L);
-      TestDateTimeTag1One("1714-06-15T13:41:14.000Z", -8064267526L);
-      TestDateTimeTag1One("1714-06-15T13:41:14.500Z", -8064267525.5);
-      TestDateTimeTag1One("1878-12-03T20:14:03Z", -2874109557L);
-      TestDateTimeTag1One("1878-12-03T20:14:03.000Z", -2874109557L);
-      TestDateTimeTag1One("1878-12-03T20:14:03.500Z", -2874109556.5);
-      TestDateTimeTag1One("2190-11-26T23:45:55Z", 6971096755L);
-      TestDateTimeTag1One("2190-11-26T23:45:55.000Z", 6971096755L);
-      TestDateTimeTag1One("2020-01-22T15:58:52Z", 1579708732L);
-      TestDateTimeTag1One("2020-01-22T15:58:52.000Z", 1579708732L);
-      TestDateTimeTag1One("2020-01-22T15:58:52.500Z", 1579708732.5);
-      TestDateTimeTag1One("2245-10-06T15:40:51Z", 8702264451L);
-      TestDateTimeTag1One("2245-10-06T15:40:51.000Z", 8702264451L);
-      TestDateTimeTag1One("2245-10-06T15:40:51.500Z", 8702264451.5);
-      TestDateTimeTag1One("1647-08-10T21:26:16Z", -10173695624L);
-      TestDateTimeTag1One("1647-08-10T21:26:16.000Z", -10173695624L);
-      TestDateTimeTag1One("1647-08-10T21:26:16.500Z", -10173695623.5);
-      TestDateTimeTag1One("1628-11-10T01:03:36Z", -10765349784L);
-      TestDateTimeTag1One("1628-11-10T01:03:36.000Z", -10765349784L);
-      TestDateTimeTag1One("1628-11-10T01:03:36.500Z", -10765349783.5);
-      TestDateTimeTag1One("2359-11-30T16:24:04Z", 12304455844L);
-      TestDateTimeTag1One("2359-11-30T16:24:04.000Z", 12304455844L);
-      TestDateTimeTag1One("2359-11-30T16:24:04.500Z", 12304455844.5);
-      TestDateTimeTag1One("1833-10-12T18:44:22Z", -4298678138L);
-      TestDateTimeTag1One("1833-10-12T18:44:22.000Z", -4298678138L);
-      TestDateTimeTag1One("1833-10-12T18:44:22.500Z", -4298678137.5);
-      TestDateTimeTag1One("1550-07-27T20:11:15Z", -13235975325L);
-      TestDateTimeTag1One("1550-07-27T20:11:15.000Z", -13235975325L);
-      TestDateTimeTag1One("1550-07-27T20:11:15.500Z", -13235975324.5);
-      TestDateTimeTag1One("2376-11-23T23:17:49Z", 12840419869L);
-      TestDateTimeTag1One("2376-11-23T23:17:49.000Z", 12840419869L);
-      TestDateTimeTag1One("2376-11-23T23:17:49.500Z", 12840419869.5);
-      TestDateTimeTag1One("2291-11-16T10:53:45Z", 10157396025L);
-      TestDateTimeTag1One("2291-11-16T10:53:45.000Z", 10157396025L);
-      TestDateTimeTag1One("2291-11-16T10:53:45.500Z", 10157396025.5);
-      TestDateTimeTag1One("2349-11-15T11:45:50Z", 11987610350L);
-      TestDateTimeTag1One("2349-11-15T11:45:50.000Z", 11987610350L);
-      TestDateTimeTag1One("2059-05-22T21:03:13Z", 2820862993L);
-      TestDateTimeTag1One("2059-05-22T21:03:13.000Z", 2820862993L);
-      TestDateTimeTag1One("2059-05-22T21:03:13.500Z", 2820862993.5);
-      TestDateTimeTag1One("1601-04-03T01:34:37Z", -11636519123L);
-      TestDateTimeTag1One("1601-04-03T01:34:37.000Z", -11636519123L);
-      TestDateTimeTag1One("1601-04-03T01:34:37.500Z", -11636519122.5);
-      TestDateTimeTag1One("1853-11-01T19:05:56Z", -3665796844L);
-      TestDateTimeTag1One("1853-11-01T19:05:56.000Z", -3665796844L);
-      TestDateTimeTag1One("1853-11-01T19:05:56.500Z", -3665796843.5);
-      TestDateTimeTag1One("2465-03-10T00:10:34Z", 15626650234L);
-      TestDateTimeTag1One("2465-03-10T00:10:34.000Z", 15626650234L);
-      TestDateTimeTag1One("1961-06-28T14:59:41Z", -268563619L);
-      TestDateTimeTag1One("1961-06-28T14:59:41.000Z", -268563619L);
-      TestDateTimeTag1One("1961-06-28T14:59:41.500Z", -268563618.5);
-      TestDateTimeTag1One("2078-02-03T01:57:23Z", 3411079043L);
-      TestDateTimeTag1One("2078-02-03T01:57:23.000Z", 3411079043L);
-      TestDateTimeTag1One("2078-02-03T01:57:23.500Z", 3411079043.5);
-      TestDateTimeTag1One("2325-11-05T11:53:57Z", 11229364437L);
-      TestDateTimeTag1One("2325-11-05T11:53:57.000Z", 11229364437L);
-      TestDateTimeTag1One("2325-11-05T11:53:57.500Z", 11229364437.5);
-      TestDateTimeTag1One("2189-02-10T04:55:14Z", 6914523314L);
-      TestDateTimeTag1One("2189-02-10T04:55:14.000Z", 6914523314L);
-      TestDateTimeTag1One("2189-02-10T04:55:14.500Z", 6914523314.5);
-      TestDateTimeTag1One("2416-04-20T21:48:33Z", 14083969713L);
-      TestDateTimeTag1One("2416-04-20T21:48:33.000Z", 14083969713L);
-      TestDateTimeTag1One("2416-04-20T21:48:33.500Z", 14083969713.5);
-      TestDateTimeTag1One("2009-06-24T20:06:34Z", 1245873994L);
-      TestDateTimeTag1One("2009-06-24T20:06:34.000Z", 1245873994L);
-      TestDateTimeTag1One("2009-06-24T20:06:34.500Z", 1245873994.5);
-      TestDateTimeTag1One("2488-05-20T22:56:10Z", 16358712970L);
-      TestDateTimeTag1One("2488-05-20T22:56:10.000Z", 16358712970L);
-      TestDateTimeTag1One("1519-07-05T21:55:20Z", -14216177080L);
-      TestDateTimeTag1One("1519-07-05T21:55:20.000Z", -14216177080L);
-      TestDateTimeTag1One("1519-07-05T21:55:20.500Z", -14216177079.5);
-      TestDateTimeTag1One("2349-05-25T11:44:14Z", 11972576654L);
-      TestDateTimeTag1One("2349-05-25T11:44:14.000Z", 11972576654L);
+TestDateTimeTag1One("1758-09-28T23:25:24Z", -6666626076L);
+TestDateTimeTag1One("1758-09-28T23:25:24.000Z", -6666626076L);
+TestDateTimeTag1One("1758-09-28T23:25:24.500Z", -6666626075.5);
+TestDateTimeTag1One("2325-11-08T01:47:40Z", 11229587260L);
+TestDateTimeTag1One("2325-11-08T01:47:40.000Z", 11229587260L);
+TestDateTimeTag1One("2325-11-08T01:47:40.500Z", 11229587260.5);
+TestDateTimeTag1One("1787-03-04T10:21:24Z", -5769495516L);
+TestDateTimeTag1One("1787-03-04T10:21:24.000Z", -5769495516L);
+TestDateTimeTag1One("1787-03-04T10:21:24.500Z", -5769495515.5);
+TestDateTimeTag1One("1828-11-17T11:59:01Z", -4453358459L);
+TestDateTimeTag1One("1828-11-17T11:59:01.000Z", -4453358459L);
+TestDateTimeTag1One("1828-11-17T11:59:01.500Z", -4453358458.5);
+TestDateTimeTag1One("2379-01-22T01:20:02Z", 12908596802L);
+TestDateTimeTag1One("2379-01-22T01:20:02.000Z", 12908596802L);
+TestDateTimeTag1One("1699-05-31T22:37:24Z", -8538830556L);
+TestDateTimeTag1One("1699-05-31T22:37:24.000Z", -8538830556L);
+TestDateTimeTag1One("1699-05-31T22:37:24.500Z", -8538830555.5);
+TestDateTimeTag1One("2248-02-13T03:16:17Z", 8776523777L);
+TestDateTimeTag1One("2248-02-13T03:16:17.000Z", 8776523777L);
+TestDateTimeTag1One("2248-02-13T03:16:17.500Z", 8776523777.5);
+TestDateTimeTag1One("2136-04-15T16:45:29Z", 5247564329L);
+TestDateTimeTag1One("2136-04-15T16:45:29.000Z", 5247564329L);
+TestDateTimeTag1One("1889-09-05T00:23:45Z", -2534715375L);
+TestDateTimeTag1One("1889-09-05T00:23:45.000Z", -2534715375L);
+TestDateTimeTag1One("1889-09-05T00:23:45.500Z", -2534715374.5);
+TestDateTimeTag1One("2095-08-13T20:04:08Z", 3964104248L);
+TestDateTimeTag1One("2095-08-13T20:04:08.000Z", 3964104248L);
+TestDateTimeTag1One("2095-08-13T20:04:08.500Z", 3964104248.5);
+TestDateTimeTag1One("2475-03-27T17:41:48Z", 15943714908L);
+TestDateTimeTag1One("2475-03-27T17:41:48.000Z", 15943714908L);
+TestDateTimeTag1One("2475-03-27T17:41:48.500Z", 15943714908.5);
+TestDateTimeTag1One("1525-11-18T07:47:54Z", -14015088726L);
+TestDateTimeTag1One("1525-11-18T07:47:54.000Z", -14015088726L);
+TestDateTimeTag1One("2353-01-12T09:36:32Z", 12087308192L);
+TestDateTimeTag1One("2353-01-12T09:36:32.000Z", 12087308192L);
+TestDateTimeTag1One("2353-01-12T09:36:32.500Z", 12087308192.5);
+TestDateTimeTag1One("2218-11-29T08:23:31Z", 7854827011L);
+TestDateTimeTag1One("2218-11-29T08:23:31.000Z", 7854827011L);
+TestDateTimeTag1One("2377-08-21T09:44:12Z", 12863785452L);
+TestDateTimeTag1One("2377-08-21T09:44:12.000Z", 12863785452L);
+TestDateTimeTag1One("2377-08-21T09:44:12.500Z", 12863785452.5);
+TestDateTimeTag1One("1530-09-02T02:13:52Z", -13863995168L);
+TestDateTimeTag1One("1530-09-02T02:13:52.000Z", -13863995168L);
+TestDateTimeTag1One("1530-09-02T02:13:52.500Z", -13863995167.5);
+TestDateTimeTag1One("2319-03-11T18:18:48Z", 11019349128L);
+TestDateTimeTag1One("2319-03-11T18:18:48.000Z", 11019349128L);
+TestDateTimeTag1One("2319-03-11T18:18:48.500Z", 11019349128.5);
+TestDateTimeTag1One("1602-12-05T09:36:58Z", -11583699782L);
+TestDateTimeTag1One("1602-12-05T09:36:58.000Z", -11583699782L);
+TestDateTimeTag1One("1874-01-25T21:14:10Z", -3027293150L);
+TestDateTimeTag1One("1874-01-25T21:14:10.000Z", -3027293150L);
+TestDateTimeTag1One("1874-01-25T21:14:10.500Z", -3027293149.5);
+TestDateTimeTag1One("1996-02-26T04:09:49Z", 825307789L);
+TestDateTimeTag1One("1996-02-26T04:09:49.000Z", 825307789L);
+TestDateTimeTag1One("1996-02-26T04:09:49.500Z", 825307789.5);
+TestDateTimeTag1One("2113-11-27T22:16:09Z", 4541264169L);
+TestDateTimeTag1One("2113-11-27T22:16:09.000Z", 4541264169L);
+TestDateTimeTag1One("2113-11-27T22:16:09.500Z", 4541264169.5);
+TestDateTimeTag1One("1612-01-07T16:25:51Z", -11296827249L);
+TestDateTimeTag1One("1612-01-07T16:25:51.000Z", -11296827249L);
+TestDateTimeTag1One("1612-01-07T16:25:51.500Z", -11296827248.5);
+TestDateTimeTag1One("2077-12-08T22:15:00Z", 3406227300L);
+TestDateTimeTag1One("2077-12-08T22:15:00.000Z", 3406227300L);
+TestDateTimeTag1One("2077-12-08T22:15:00.500Z", 3406227300.5);
+TestDateTimeTag1One("1820-07-06T12:06:08Z", -4717396432L);
+TestDateTimeTag1One("1820-07-06T12:06:08.000Z", -4717396432L);
+TestDateTimeTag1One("1820-07-06T12:06:08.500Z", -4717396431.5);
+TestDateTimeTag1One("1724-01-17T16:42:20Z", -7761597460L);
+TestDateTimeTag1One("1724-01-17T16:42:20.000Z", -7761597460L);
+TestDateTimeTag1One("1724-01-17T16:42:20.500Z", -7761597459.5);
+TestDateTimeTag1One("2316-03-11T00:46:54Z", 10924678014L);
+TestDateTimeTag1One("2316-03-11T00:46:54.000Z", 10924678014L);
+TestDateTimeTag1One("2495-07-18T22:11:29Z", 16584646289L);
+TestDateTimeTag1One("2495-07-18T22:11:29.000Z", 16584646289L);
+TestDateTimeTag1One("2495-07-18T22:11:29.500Z", 16584646289.5);
+TestDateTimeTag1One("1874-04-25T08:52:46Z", -3019561634L);
+TestDateTimeTag1One("1874-04-25T08:52:46.000Z", -3019561634L);
+TestDateTimeTag1One("1874-04-25T08:52:46.500Z", -3019561633.5);
+TestDateTimeTag1One("2226-05-18T19:38:50Z", 8090480330L);
+TestDateTimeTag1One("2226-05-18T19:38:50.000Z", 8090480330L);
+TestDateTimeTag1One("2226-05-18T19:38:50.500Z", 8090480330.5);
+TestDateTimeTag1One("2108-06-26T09:01:48Z", 4370144508L);
+TestDateTimeTag1One("2108-06-26T09:01:48.000Z", 4370144508L);
+TestDateTimeTag1One("2108-06-26T09:01:48.500Z", 4370144508.5);
+TestDateTimeTag1One("1955-10-03T06:06:55Z", -449603585L);
+TestDateTimeTag1One("1955-10-03T06:06:55.000Z", -449603585L);
+TestDateTimeTag1One("1955-10-03T06:06:55.500Z", -449603584.5);
+TestDateTimeTag1One("1906-03-26T17:32:58Z", -2012365622L);
+TestDateTimeTag1One("1906-03-26T17:32:58.000Z", -2012365622L);
+TestDateTimeTag1One("1906-03-26T17:32:58.500Z", -2012365621.5);
+TestDateTimeTag1One("1592-03-10T03:46:03Z", -11922581637L);
+TestDateTimeTag1One("1592-03-10T03:46:03.000Z", -11922581637L);
+TestDateTimeTag1One("1592-03-10T03:46:03.500Z", -11922581636.5);
+TestDateTimeTag1One("2433-12-19T01:24:19Z", 14641349059L);
+TestDateTimeTag1One("2433-12-19T01:24:19.000Z", 14641349059L);
+TestDateTimeTag1One("2433-12-19T01:24:19.500Z", 14641349059.5);
+TestDateTimeTag1One("1802-02-07T09:43:23Z", -5298358597L);
+TestDateTimeTag1One("1802-02-07T09:43:23.000Z", -5298358597L);
+TestDateTimeTag1One("2318-04-11T20:11:23Z", 10990498283L);
+TestDateTimeTag1One("2318-04-11T20:11:23.000Z", 10990498283L);
+TestDateTimeTag1One("2318-04-11T20:11:23.500Z", 10990498283.5);
+TestDateTimeTag1One("2083-01-06T11:06:22Z", 3566459182L);
+TestDateTimeTag1One("2083-01-06T11:06:22.000Z", 3566459182L);
+TestDateTimeTag1One("2083-01-06T11:06:22.500Z", 3566459182.5);
+TestDateTimeTag1One("1561-08-16T19:31:48Z", -12887094492L);
+TestDateTimeTag1One("1561-08-16T19:31:48.000Z", -12887094492L);
+TestDateTimeTag1One("1561-08-16T19:31:48.500Z", -12887094491.5);
+TestDateTimeTag1One("2475-11-05T21:20:03Z", 15962995203L);
+TestDateTimeTag1One("2475-11-05T21:20:03.000Z", 15962995203L);
+TestDateTimeTag1One("2475-11-05T21:20:03.500Z", 15962995203.5);
+TestDateTimeTag1One("2209-05-13T09:31:56Z", 7553554316L);
+TestDateTimeTag1One("2209-05-13T09:31:56.000Z", 7553554316L);
+TestDateTimeTag1One("2209-05-13T09:31:56.500Z", 7553554316.5);
+TestDateTimeTag1One("1943-06-25T19:09:49Z", -836887811L);
+TestDateTimeTag1One("1943-06-25T19:09:49.000Z", -836887811L);
+TestDateTimeTag1One("1943-06-25T19:09:49.500Z", -836887810.5);
+TestDateTimeTag1One("1751-09-18T07:31:00Z", -6888472140L);
+TestDateTimeTag1One("1751-09-18T07:31:00.000Z", -6888472140L);
+TestDateTimeTag1One("1751-09-18T07:31:00.500Z", -6888472139.5);
+TestDateTimeTag1One("1538-05-07T23:40:25Z", -13621652375L);
+TestDateTimeTag1One("1538-05-07T23:40:25.000Z", -13621652375L);
+TestDateTimeTag1One("1538-05-07T23:40:25.500Z", -13621652374.5);
+TestDateTimeTag1One("1628-02-10T00:07:33Z", -10789026747L);
+TestDateTimeTag1One("1628-02-10T00:07:33.000Z", -10789026747L);
+TestDateTimeTag1One("1628-02-10T00:07:33.500Z", -10789026746.5);
+TestDateTimeTag1One("1584-08-23T09:30:49Z", -12160679351L);
+TestDateTimeTag1One("1584-08-23T09:30:49.000Z", -12160679351L);
+TestDateTimeTag1One("1584-08-23T09:30:49.500Z", -12160679350.5);
+TestDateTimeTag1One("2230-08-28T23:13:43Z", 8225536423L);
+TestDateTimeTag1One("2230-08-28T23:13:43.000Z", 8225536423L);
+TestDateTimeTag1One("1846-02-19T20:02:33Z", -3908750247L);
+TestDateTimeTag1One("1846-02-19T20:02:33.000Z", -3908750247L);
+TestDateTimeTag1One("1846-02-19T20:02:33.500Z", -3908750246.5);
+TestDateTimeTag1One("2114-07-28T00:06:13Z", 4562179573L);
+TestDateTimeTag1One("2114-07-28T00:06:13.000Z", 4562179573L);
+TestDateTimeTag1One("2114-07-28T00:06:13.500Z", 4562179573.5);
+TestDateTimeTag1One("1855-04-03T15:29:33Z", -3621054627L);
+TestDateTimeTag1One("1855-04-03T15:29:33.000Z", -3621054627L);
+TestDateTimeTag1One("1855-04-03T15:29:33.500Z", -3621054626.5);
+TestDateTimeTag1One("1532-02-04T13:08:22Z", -13819027898L);
+TestDateTimeTag1One("1532-02-04T13:08:22.000Z", -13819027898L);
+TestDateTimeTag1One("2285-12-28T16:35:29Z", 9971742929L);
+TestDateTimeTag1One("2285-12-28T16:35:29.000Z", 9971742929L);
+TestDateTimeTag1One("2285-12-28T16:35:29.500Z", 9971742929.5);
+TestDateTimeTag1One("1784-08-08T15:25:01Z", -5850520499L);
+TestDateTimeTag1One("1784-08-08T15:25:01.000Z", -5850520499L);
+TestDateTimeTag1One("2190-06-25T10:55:10Z", 6957744910L);
+TestDateTimeTag1One("2190-06-25T10:55:10.000Z", 6957744910L);
+TestDateTimeTag1One("2190-06-25T10:55:10.500Z", 6957744910.5);
+TestDateTimeTag1One("2263-10-08T20:28:28Z", 9270448108L);
+TestDateTimeTag1One("2263-10-08T20:28:28.000Z", 9270448108L);
+TestDateTimeTag1One("2263-10-08T20:28:28.500Z", 9270448108.5);
+TestDateTimeTag1One("2036-05-12T10:02:45Z", 2094199365L);
+TestDateTimeTag1One("2036-05-12T10:02:45.000Z", 2094199365L);
+TestDateTimeTag1One("2036-05-12T10:02:45.500Z", 2094199365.5);
+TestDateTimeTag1One("2166-09-08T09:25:14Z", 6206837114L);
+TestDateTimeTag1One("2166-09-08T09:25:14.000Z", 6206837114L);
+TestDateTimeTag1One("2166-09-08T09:25:14.500Z", 6206837114.5);
+TestDateTimeTag1One("1698-12-30T18:31:11Z", -8551978129L);
+TestDateTimeTag1One("1698-12-30T18:31:11.000Z", -8551978129L);
+TestDateTimeTag1One("1780-10-16T15:02:56Z", -5970790624L);
+TestDateTimeTag1One("1780-10-16T15:02:56.000Z", -5970790624L);
+TestDateTimeTag1One("1780-10-16T15:02:56.500Z", -5970790623.5);
+TestDateTimeTag1One("1710-10-12T20:07:58Z", -8180193122L);
+TestDateTimeTag1One("1710-10-12T20:07:58.000Z", -8180193122L);
+TestDateTimeTag1One("1710-10-12T20:07:58.500Z", -8180193121.5);
+TestDateTimeTag1One("2034-09-28T04:45:04Z", 2043031504L);
+TestDateTimeTag1One("2034-09-28T04:45:04.000Z", 2043031504L);
+TestDateTimeTag1One("2034-09-28T04:45:04.500Z", 2043031504.5);
+TestDateTimeTag1One("1801-12-10T15:45:47Z", -5303434453L);
+TestDateTimeTag1One("1801-12-10T15:45:47.000Z", -5303434453L);
+TestDateTimeTag1One("1537-08-24T13:13:09Z", -13643808411L);
+TestDateTimeTag1One("1537-08-24T13:13:09.000Z", -13643808411L);
+TestDateTimeTag1One("1537-08-24T13:13:09.500Z", -13643808410.5);
+TestDateTimeTag1One("2249-09-24T21:07:14Z", 8827477634L);
+TestDateTimeTag1One("2249-09-24T21:07:14.000Z", 8827477634L);
+TestDateTimeTag1One("2249-09-24T21:07:14.500Z", 8827477634.5);
+TestDateTimeTag1One("2137-11-27T05:22:38Z", 5298585758L);
+TestDateTimeTag1One("2137-11-27T05:22:38.000Z", 5298585758L);
+TestDateTimeTag1One("2137-11-27T05:22:38.500Z", 5298585758.5);
+TestDateTimeTag1One("2123-07-31T13:09:34Z", 4846482574L);
+TestDateTimeTag1One("2123-07-31T13:09:34.000Z", 4846482574L);
+TestDateTimeTag1One("2123-07-31T13:09:34.500Z", 4846482574.5);
+TestDateTimeTag1One("2242-01-31T12:14:20Z", 8586130460L);
+TestDateTimeTag1One("2242-01-31T12:14:20.000Z", 8586130460L);
+TestDateTimeTag1One("2242-01-31T12:14:20.500Z", 8586130460.5);
+TestDateTimeTag1One("2232-11-04T21:12:33Z", 8294562753L);
+TestDateTimeTag1One("2232-11-04T21:12:33.000Z", 8294562753L);
+TestDateTimeTag1One("1590-12-06T04:30:48Z", -11962322952L);
+TestDateTimeTag1One("1590-12-06T04:30:48.000Z", -11962322952L);
+TestDateTimeTag1One("1590-12-06T04:30:48.500Z", -11962322951.5);
+TestDateTimeTag1One("1910-05-16T17:54:04Z", -1881727556L);
+TestDateTimeTag1One("1910-05-16T17:54:04.000Z", -1881727556L);
+TestDateTimeTag1One("1910-05-16T17:54:04.500Z", -1881727555.5);
+TestDateTimeTag1One("2482-06-15T23:28:00Z", 16171572480L);
+TestDateTimeTag1One("2482-06-15T23:28:00.000Z", 16171572480L);
+TestDateTimeTag1One("2482-06-15T23:28:00.500Z", 16171572480.5);
+TestDateTimeTag1One("1808-01-17T13:11:23Z", -5110858117L);
+TestDateTimeTag1One("1808-01-17T13:11:23.000Z", -5110858117L);
+TestDateTimeTag1One("1872-05-04T12:15:05Z", -3081843895L);
+TestDateTimeTag1One("1872-05-04T12:15:05.000Z", -3081843895L);
+TestDateTimeTag1One("1872-05-04T12:15:05.500Z", -3081843894.5);
+TestDateTimeTag1One("1719-05-18T16:44:33Z", -7908909327L);
+TestDateTimeTag1One("1719-05-18T16:44:33.000Z", -7908909327L);
+TestDateTimeTag1One("2137-05-26T02:17:32Z", 5282590652L);
+TestDateTimeTag1One("2137-05-26T02:17:32.000Z", 5282590652L);
+TestDateTimeTag1One("2137-05-26T02:17:32.500Z", 5282590652.5);
+TestDateTimeTag1One("1714-06-15T13:41:14Z", -8064267526L);
+TestDateTimeTag1One("1714-06-15T13:41:14.000Z", -8064267526L);
+TestDateTimeTag1One("1714-06-15T13:41:14.500Z", -8064267525.5);
+TestDateTimeTag1One("1878-12-03T20:14:03Z", -2874109557L);
+TestDateTimeTag1One("1878-12-03T20:14:03.000Z", -2874109557L);
+TestDateTimeTag1One("1878-12-03T20:14:03.500Z", -2874109556.5);
+TestDateTimeTag1One("2190-11-26T23:45:55Z", 6971096755L);
+TestDateTimeTag1One("2190-11-26T23:45:55.000Z", 6971096755L);
+TestDateTimeTag1One("2020-01-22T15:58:52Z", 1579708732L);
+TestDateTimeTag1One("2020-01-22T15:58:52.000Z", 1579708732L);
+TestDateTimeTag1One("2020-01-22T15:58:52.500Z", 1579708732.5);
+TestDateTimeTag1One("2245-10-06T15:40:51Z", 8702264451L);
+TestDateTimeTag1One("2245-10-06T15:40:51.000Z", 8702264451L);
+TestDateTimeTag1One("2245-10-06T15:40:51.500Z", 8702264451.5);
+TestDateTimeTag1One("1647-08-10T21:26:16Z", -10173695624L);
+TestDateTimeTag1One("1647-08-10T21:26:16.000Z", -10173695624L);
+TestDateTimeTag1One("1647-08-10T21:26:16.500Z", -10173695623.5);
+TestDateTimeTag1One("1628-11-10T01:03:36Z", -10765349784L);
+TestDateTimeTag1One("1628-11-10T01:03:36.000Z", -10765349784L);
+TestDateTimeTag1One("1628-11-10T01:03:36.500Z", -10765349783.5);
+TestDateTimeTag1One("2359-11-30T16:24:04Z", 12304455844L);
+TestDateTimeTag1One("2359-11-30T16:24:04.000Z", 12304455844L);
+TestDateTimeTag1One("2359-11-30T16:24:04.500Z", 12304455844.5);
+TestDateTimeTag1One("1833-10-12T18:44:22Z", -4298678138L);
+TestDateTimeTag1One("1833-10-12T18:44:22.000Z", -4298678138L);
+TestDateTimeTag1One("1833-10-12T18:44:22.500Z", -4298678137.5);
+TestDateTimeTag1One("1550-07-27T20:11:15Z", -13235975325L);
+TestDateTimeTag1One("1550-07-27T20:11:15.000Z", -13235975325L);
+TestDateTimeTag1One("1550-07-27T20:11:15.500Z", -13235975324.5);
+TestDateTimeTag1One("2376-11-23T23:17:49Z", 12840419869L);
+TestDateTimeTag1One("2376-11-23T23:17:49.000Z", 12840419869L);
+TestDateTimeTag1One("2376-11-23T23:17:49.500Z", 12840419869.5);
+TestDateTimeTag1One("2291-11-16T10:53:45Z", 10157396025L);
+TestDateTimeTag1One("2291-11-16T10:53:45.000Z", 10157396025L);
+TestDateTimeTag1One("2291-11-16T10:53:45.500Z", 10157396025.5);
+TestDateTimeTag1One("2349-11-15T11:45:50Z", 11987610350L);
+TestDateTimeTag1One("2349-11-15T11:45:50.000Z", 11987610350L);
+TestDateTimeTag1One("2059-05-22T21:03:13Z", 2820862993L);
+TestDateTimeTag1One("2059-05-22T21:03:13.000Z", 2820862993L);
+TestDateTimeTag1One("2059-05-22T21:03:13.500Z", 2820862993.5);
+TestDateTimeTag1One("1601-04-03T01:34:37Z", -11636519123L);
+TestDateTimeTag1One("1601-04-03T01:34:37.000Z", -11636519123L);
+TestDateTimeTag1One("1601-04-03T01:34:37.500Z", -11636519122.5);
+TestDateTimeTag1One("1853-11-01T19:05:56Z", -3665796844L);
+TestDateTimeTag1One("1853-11-01T19:05:56.000Z", -3665796844L);
+TestDateTimeTag1One("1853-11-01T19:05:56.500Z", -3665796843.5);
+TestDateTimeTag1One("2465-03-10T00:10:34Z", 15626650234L);
+TestDateTimeTag1One("2465-03-10T00:10:34.000Z", 15626650234L);
+TestDateTimeTag1One("1961-06-28T14:59:41Z", -268563619L);
+TestDateTimeTag1One("1961-06-28T14:59:41.000Z", -268563619L);
+TestDateTimeTag1One("1961-06-28T14:59:41.500Z", -268563618.5);
+TestDateTimeTag1One("2078-02-03T01:57:23Z", 3411079043L);
+TestDateTimeTag1One("2078-02-03T01:57:23.000Z", 3411079043L);
+TestDateTimeTag1One("2078-02-03T01:57:23.500Z", 3411079043.5);
+TestDateTimeTag1One("2325-11-05T11:53:57Z", 11229364437L);
+TestDateTimeTag1One("2325-11-05T11:53:57.000Z", 11229364437L);
+TestDateTimeTag1One("2325-11-05T11:53:57.500Z", 11229364437.5);
+TestDateTimeTag1One("2189-02-10T04:55:14Z", 6914523314L);
+TestDateTimeTag1One("2189-02-10T04:55:14.000Z", 6914523314L);
+TestDateTimeTag1One("2189-02-10T04:55:14.500Z", 6914523314.5);
+TestDateTimeTag1One("2416-04-20T21:48:33Z", 14083969713L);
+TestDateTimeTag1One("2416-04-20T21:48:33.000Z", 14083969713L);
+TestDateTimeTag1One("2416-04-20T21:48:33.500Z", 14083969713.5);
+TestDateTimeTag1One("2009-06-24T20:06:34Z", 1245873994L);
+TestDateTimeTag1One("2009-06-24T20:06:34.000Z", 1245873994L);
+TestDateTimeTag1One("2009-06-24T20:06:34.500Z", 1245873994.5);
+TestDateTimeTag1One("2488-05-20T22:56:10Z", 16358712970L);
+TestDateTimeTag1One("2488-05-20T22:56:10.000Z", 16358712970L);
+TestDateTimeTag1One("1519-07-05T21:55:20Z", -14216177080L);
+TestDateTimeTag1One("1519-07-05T21:55:20.000Z", -14216177080L);
+TestDateTimeTag1One("1519-07-05T21:55:20.500Z", -14216177079.5);
+TestDateTimeTag1One("2349-05-25T11:44:14Z", 11972576654L);
+TestDateTimeTag1One("2349-05-25T11:44:14.000Z", 11972576654L);
     }
 
     [Test]
@@ -7871,20 +7868,20 @@ cbor.Add(objectTemp, objectTemp2);
         EInteger ei = CBORTestCommon.RandomEIntegerMajorType0Or1(rg);
         cbornum = CBORObject.FromObjectAndTag(ei, 1);
         try {
-          var dtx = (DateTime)cbornum.ToObject(typeof(DateTime));
-          ToObjectTest.TestToFromObjectRoundTrip(dtx);
+           var dtx = (DateTime)cbornum.ToObject(typeof(DateTime));
+           ToObjectTest.TestToFromObjectRoundTrip(dtx);
         } catch (CBORException) {
-          // Console.WriteLine("Not supported: "+ei);
+           // Console.WriteLine("Not supported: "+ei);
         }
       }
       for (var i = 0; i < 1000; ++i) {
         double dbl = RandomObjects.RandomFiniteDouble(rg);
         cbornum = CBORObject.FromObjectAndTag(dbl, 1);
         try {
-          var dtx = (DateTime)cbornum.ToObject(typeof(DateTime));
-          ToObjectTest.TestToFromObjectRoundTrip(dtx);
+           var dtx = (DateTime)cbornum.ToObject(typeof(DateTime));
+           ToObjectTest.TestToFromObjectRoundTrip(dtx);
         } catch (CBORException) {
-          // Console.WriteLine("Not supported: "+dbl);
+           // Console.WriteLine("Not supported: "+dbl);
         }
       }
       string dateStr = "1970-01-01T00:00:00.000Z";
@@ -7932,7 +7929,7 @@ cbor.Add(objectTemp, objectTemp2);
         string msg = json + " " + numconv + " " + longval;
         msg = msg.Substring(0, Math.Min(100, msg.Length));
         if (msg.Length > 100) {
-          msg += "...";
+           msg += "...";
         }
         Assert.AreEqual(CBORType.Integer, cbor.Type, msg);
       }
@@ -7948,9 +7945,8 @@ cbor.Add(objectTemp, objectTemp2);
         string msg = json + " " + numconv + " " + intval;
         msg = msg.Substring(0, Math.Min(100, msg.Length));
         if (msg.Length > 100) {
-          { msg += "...";
-          }
-        }
+           { msg += "...";
+        } }
         Assert.AreEqual(CBORType.Integer, cbor.Type, msg);
       }
       Assert.AreEqual(intval, cbor.AsInt32Value());
@@ -7963,11 +7959,11 @@ cbor.Add(objectTemp, objectTemp2);
       string json = "{\"x\":-9.2574033594381E-7962\u002c\"1\":" +
         "-2.8131427974929237E+240}";
       try {
-        FromJSON(json, jsonop);
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
+ FromJSON(json, jsonop);
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
     }
 
     [Test]

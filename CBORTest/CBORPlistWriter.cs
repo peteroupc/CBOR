@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using PeterO;
 using PeterO.Cbor;
@@ -33,7 +34,7 @@ namespace Test {
         if (c == '\\' || c == '"') {
           sb.WriteCodePoint((int)'\\');
           sb.WriteCodePoint((int)c);
-        } else if (c < 0x20 || c == '&' || c == '<' || c == '>' || (c >= 0x7f&&
+        } else if (c < 0x20 || c == '&' || c == '<' || c == '>' || (c >= 0x7f &&
             (c == 0x2028 || c == 0x2029 ||
               (c >= 0x7f && c <= 0xa0) || c == 0xfeff || c == 0xfffe ||
               c == 0xffff))) {
@@ -63,8 +64,13 @@ namespace Test {
 
     internal static string ToPlistString(CBORObject obj) {
       var builder = new StringBuilder();
-      WritePlistToInternal(obj, new StringOutput(builder), JSONOptions.Default);
-      return builder.ToString();
+      try {
+         WritePlistToInternal(obj, new StringOutput(builder),
+  JSONOptions.Default);
+         return builder.ToString();
+      } catch (IOException ex) {
+         throw new CBORException(ex.Message, ex);
+      }
     }
 
     internal static void WritePlistToInternal(
@@ -279,7 +285,7 @@ namespace Test {
                   str = sb.ToString();
                   break;
                 }
-                default: str = key.ToJSONString (options);
+                default: str = key.ToJSONString(options);
                   break;
               }
               if (stringMap.ContainsKey(str)) {

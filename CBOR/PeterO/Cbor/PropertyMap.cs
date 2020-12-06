@@ -19,14 +19,20 @@ using PeterO.Numbers;
 namespace PeterO.Cbor {
   internal static class PropertyMap {
     private sealed class OrderedDictionary<TKey, TValue> : IDictionary<TKey, TValue> {
-      // NOTE: Must use SortedDictionary for correctness in key comparison.
-      // This is because TKey and TValue are both CBORObject in this library,
-      // that class's CompareTo is inconsistent with Equals, and SortedDictionary
-      // uses CompareTo for key comparison unlike Dictionary which uses Equals.
-      private readonly SortedDictionary<TKey, TValue> dict;
+      // NOTE: Note that this class will be used with CBORObjects, some of which are
+      // mutable. Storing mutable keys in an ordinary Dictionary can cause problems;
+      // for example:
+      // - 'Add'ing a key, then changing it, then calling CompareTo on the changed
+      // key can fail to find the key in the Dictionary, even though the old and new
+      //versions
+      // of the key have the same reference.
+      // - The same can happen if an object that contains a Dictionary is 'Add'ed to
+      //that
+      // Dictionary.
+      private readonly IDictionary<TKey, TValue> dict;
       private readonly LinkedList<TKey> list;
       public OrderedDictionary() {
-        this.dict = new SortedDictionary<TKey, TValue>();
+        this.dict = new Dictionary<TKey, TValue>();
         this.list = new LinkedList<TKey>();
       }
       public void Add(KeyValuePair<TKey, TValue> kvp) {
@@ -36,16 +42,16 @@ namespace PeterO.Cbor {
         if (this.dict.ContainsKey(k)) {
            throw new ArgumentException("duplicate key");
         } else {
-           // CheckKeyDoesNotExist(k);
+           //CheckKeyDoesNotExist(k);
+           //DebugUtility.Log("Adding: " + (k.GetHashCode()) + " [Type=" + (CS(k)) +
+           //"]");
+           int keycnt = this.dict.Count;
            this.dict.Add(k, v);
-           // if (this.dict.Count != this.list.Count) {
-           // throw new InvalidOperationException();
-           // }
+           //if (keycnt == this.dict.Count) {
+  throw new InvalidOperationException();
+}
            this.list.AddLast(k);
-           // CheckKeyExists(k);
-           // if (this.dict.Count != this.list.Count) {
-           // throw new InvalidOperationException();
-           // }
+           //CheckKeyExists(k);
         }
       }
       public TValue this[TKey key] {
@@ -61,16 +67,16 @@ namespace PeterO.Cbor {
         }
         set {
           if (this.dict.ContainsKey(key)) {
+            //DebugUtility.Log("Set existing: " + (key.GetHashCode()) + " [Type=" +
+            //(CS(key)) + "]");
             this.dict[key] = value;
-            // if (this.dict.Count != this.list.Count) {
-            // throw new InvalidOperationException();
-            // }
+            //CheckKeyExists(key);
           } else {
+            //DebugUtility.Log("Set new: " + (key.GetHashCode()) + " [Type=" + (CS(key)) +
+            //"]");
             this.dict.Add(key, value);
             this.list.AddLast(key);
-            // if (this.dict.Count != this.list.Count) {
-            // throw new InvalidOperationException();
-            // }
+            //CheckKeyExists(key);
           }
         }
       }
@@ -88,7 +94,6 @@ namespace PeterO.Cbor {
           // CheckKeyExists(kvp.Key);
           this.dict.Remove(kvp.Key);
           this.list.Remove(kvp.Key);
-          // CheckKeyExists(kvp.Key);
           return true;
         }
         return false;
@@ -98,7 +103,6 @@ namespace PeterO.Cbor {
           // CheckKeyExists(key);
           this.dict.Remove(key);
           this.list.Remove(key);
-          // CheckKeyDoesNotExist(key);
           return true;
         }
         return false;
@@ -128,14 +132,48 @@ namespace PeterO.Cbor {
         }
       }
 
+      /* private class IEC : IEqualityComparer<TKey> {
+          public bool Equals(TKey a, TKey b) {
+             bool ret = a.Equals(b);
+             CBORType c1=(a as CBORObject).Type;
+             CBORType c2=(b as CBORObject).Type;
+             DebugUtility.Log("Equality: " + ret + " [a=" + c1 + " b=" + c2+
+"]");
+             return ret;
+          }
+          public int GetHashCode(TKey a) {
+             int ret = a.GetHashCode();
+             DebugUtility.Log("HashCode: " + ret + " [Type=" + ((a as
+CBORObject).Type) + "]");
+             return ret;
+          }
+      }
+      */
+
+      private string CS(TKey k) {
+       return String.Empty; // CBORDataUtilities.ToStringHelper(k as
+CBORObject, 48);
+      }
+
       [System.Diagnostics.Conditional("DEBUG")]
       private void CheckKeyExists(TKey key) {
            TValue v = default(TValue);
+           if (!this.dict.ContainsKey(key)) {
+              DebugUtility.Log("hash " + (key.GetHashCode()) + " [" +
+(CS(key)) + "]");
+              foreach (var k in this.dict.Keys) {
+                DebugUtility.Log("key {0} {1}" +
+"\u0020" +
+"\u0020
+  [{2}]",k.Equals(key),k.GetHashCode(),CS(k),CS(key),this.dict.ContainsKey(k));
+             }
+             throw new ArgumentException("key not found (ContainsKey)");
+           }
            // NOTE: Don't use dict[k], since if it fails it could
            // print the key in the exception's message, which could
            // cause an infinite loop
            if (!this.dict.TryGetValue(key, out v)) {
-             throw new ArgumentException("key not found");
+             throw new ArgumentException("key not found (TryGetValue)");
            }
            if (this.dict.Count != this.list.Count) {
              throw new InvalidOperationException();
@@ -149,9 +187,6 @@ namespace PeterO.Cbor {
            // print the key in the exception's message, which could
            // cause an infinite loop
            if (!this.dict.TryGetValue(key, out v)) {
-             if (this.dict.Count != this.list.Count) {
-               throw new InvalidOperationException();
-             }
              return;
            }
            throw new ArgumentException("key found");
@@ -170,6 +205,8 @@ namespace PeterO.Cbor {
       private IEnumerable<KeyValuePair<TKey, TValue>> Iterate() {
         foreach (var k in this.list) {
            TValue v = default(TValue);
+           //DebugUtility.Log("Enumerating: " + (k.GetHashCode()) + " [Type=" + ((k as
+           //CBORObject).Type) + "]");
            // NOTE: Don't use dict[k], since if it fails it could
            // print the key in the exception's message, which could
            // cause an infinite loop
