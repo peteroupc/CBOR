@@ -48,8 +48,8 @@ namespace PeterO.Cbor {
            int keycnt = this.dict.Count;
            this.dict.Add(k, v);
            //if (keycnt == this.dict.Count) {
-  throw new InvalidOperationException();
-}
+           //  throw new InvalidOperationException();
+           //}
            this.list.AddLast(k);
            //CheckKeyExists(k);
         }
@@ -151,22 +151,23 @@ CBORObject).Type) + "]");
       */
 
       private string CS(TKey k) {
-       return String.Empty; // CBORDataUtilities.ToStringHelper(k as
-CBORObject, 48);
+       return String.Empty;
       }
 
       [System.Diagnostics.Conditional("DEBUG")]
       private void CheckKeyExists(TKey key) {
            TValue v = default(TValue);
            if (!this.dict.ContainsKey(key)) {
-              DebugUtility.Log("hash " + (key.GetHashCode()) + " [" +
+              /* DebugUtility.Log("hash " + (key.GetHashCode()) + " [" +
 (CS(key)) + "]");
               foreach (var k in this.dict.Keys) {
-                DebugUtility.Log("key {0} {1}" +
-"\u0020" +
-"\u0020
-  [{2}]",k.Equals(key),k.GetHashCode(),CS(k),CS(key),this.dict.ContainsKey(k));
-             }
+                DebugUtility.Log(
+                     "key {0} {1}" +
+                      "\u0020" +
+                      "\u0020 [{2}]",
+                    k.Equals(key),k.GetHashCode(),CS(k),CS(key),
+                  this.dict.ContainsKey(k));
+             } */
              throw new ArgumentException("key not found (ContainsKey)");
            }
            // NOTE: Don't use dict[k], since if it fails it could
