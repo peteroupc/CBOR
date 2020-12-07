@@ -149,11 +149,11 @@ CBORObject).Type) + "]");
              return ret;
           }
       }
-      */
 
       private string CS(TKey k) {
        return String.Empty;
       }
+      */
 
       [System.Diagnostics.Conditional("DEBUG")]
       private void CheckKeyExists(TKey key) {

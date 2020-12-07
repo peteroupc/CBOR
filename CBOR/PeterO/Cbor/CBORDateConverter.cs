@@ -13,10 +13,14 @@ using PeterO.Numbers;
 namespace PeterO.Cbor {
   internal class CBORDateConverter : ICBORToFromConverter<DateTime> {
     private static string DateTimeToString(DateTime bi) {
-      var lesserFields = new int[7];
-      var year = new EInteger[1];
-      PropertyMap.BreakDownDateTime(bi, year, lesserFields);
-      return CBORUtilities.ToAtomDateTimeString(year[0], lesserFields);
+      try {
+        var lesserFields = new int[7];
+        var year = new EInteger[1];
+        PropertyMap.BreakDownDateTime(bi, year, lesserFields);
+        return CBORUtilities.ToAtomDateTimeString(year[0], lesserFields);
+      } catch (ArgumentException ex) {
+          throw new CBORException(ex.Message, ex);
+      }
     }
 
     public DateTime FromCBORObject(CBORObject obj) {

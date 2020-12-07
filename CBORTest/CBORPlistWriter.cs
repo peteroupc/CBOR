@@ -65,8 +65,10 @@ namespace Test {
     internal static string ToPlistString(CBORObject obj) {
       var builder = new StringBuilder();
       try {
-         WritePlistToInternal(obj, new StringOutput(builder),
-  JSONOptions.Default);
+         WritePlistToInternal(
+            obj,
+            new StringOutput(builder),
+            JSONOptions.Default);
          return builder.ToString();
       } catch (IOException ex) {
          throw new CBORException(ex.Message, ex);

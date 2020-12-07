@@ -17,7 +17,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '3.1.301'
+        dotnet-version: '2.2.402'
     - name: Test
       run: |
         dotnet add CBORTest package Microsoft.NET.Test.Sdk # Update is required for GitHubActionsTestLogger to print anything

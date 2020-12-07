@@ -18,6 +18,7 @@ Version 4.3:
 - Fixed bugs in DateTime support
 - Added CompareTo overloads in CBORNumber class
 - Add NewOrderedMap method based on a suggestion by a GitHub user
+- Other bug fixes
 
 </PackageReleaseNotes>
     <PackageTags>cbor data serialization binary json</PackageTags>

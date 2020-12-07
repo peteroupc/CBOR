@@ -1,8 +1,8 @@
 using System.Reflection;
 [assembly: System.CLSCompliant(true)]
-[assembly: AssemblyInformationalVersion("4.2.0")]
-[assembly: AssemblyVersion("4.2.0.0")]
-[assembly: AssemblyFileVersion("4.2.0.0")]
+[assembly: AssemblyInformationalVersion("4.3.0")]
+[assembly: AssemblyVersion("4.3.0.0")]
+[assembly: AssemblyFileVersion("4.3.0.0")]
 [assembly: AssemblyProduct("CBOR (Concise Binary Object Representati" +
 "on)")]
 [assembly: AssemblyTitle("CBOR (Concise Binary Object Representati" +
@@ -10,6 +10,6 @@ using System.Reflection;
 [assembly: AssemblyDescription("A C# implementation of Concise Binary Ob" +
 "ject Representation (CBOR), a general-pu" +
 "rpose binary data format defined in RFC " +
-"7049.")]
+"8949.")]
 [assembly: AssemblyCompany("Peter Occil")]
 [assembly: AssemblyCopyright("CC0-1.0")]
