@@ -2933,8 +2933,7 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Object,PeterO.Cbor.CBORTypeMapper,PeterO.Cbor.PODOptions)">
-
-            <summary><para>Generates a CBORObject from an arbitrary object, using the
+<summary><para>Generates a CBORObject from an arbitrary object, using the
             given options to control how certain objects are converted to CBOR
             objects. The following cases are checked in the logical order given
             (rather than the strict order in which they are implemented by this
@@ -3059,7 +3058,6 @@
             <exception cref='ArgumentNullException'>The parameter <paramref name='options'/> is null.</exception>
             <exception cref='PeterO.Cbor.CBORException'>An error occurred while
             converting the given object to a CBOR object.</exception>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Object,PeterO.Cbor.PODOptions)">
 

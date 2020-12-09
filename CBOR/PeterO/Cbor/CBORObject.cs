@@ -2465,15 +2465,15 @@ namespace PeterO.Cbor {
     /// change in version 4.0 from previous versions, which converted
     /// <c>char</c>, except surrogate code points from 0xd800 through
     /// 0xdfff, into single-character text strings.)</item>
-    /// <item>A <c>bool</c> ( <c>boolean</c> in Java) is converted to
+    /// <item>A <c>bool</c> (<c>boolean</c> in Java) is converted to
     /// <c>CBORObject.True</c> or <c>CBORObject.False</c>.</item>
     /// <item>A <c>byte</c> is converted to a CBOR integer from 0 through
     /// 255.</item>
-    /// <item>A primitive integer type ( <c>int</c>, <c>short</c>,
+    /// <item>A primitive integer type (<c>int</c>, <c>short</c>,
     /// <c>long</c>, as well as <c>sbyte</c>, <c>ushort</c>, <c>uint</c>
     /// , and <c>ulong</c> in.NET) is converted to the corresponding CBOR
     /// integer.</item>
-    /// <item>A primitive floating-point type ( <c>float</c>,
+    /// <item>A primitive floating-point type (<c>float</c>,
     /// <c>double</c>, as well as <c>decimal</c> in.NET) is converted to
     /// the corresponding CBOR number.</item>
     /// <item>A <c>String</c> is converted to a CBOR text string. To create
@@ -2491,10 +2491,10 @@ namespace PeterO.Cbor {
     /// <item>A number of type <c>EDecimal</c>, <c>EFloat</c>,
     /// <c>EInteger</c>, and <c>ERational</c> in the
     /// <a
-    ///   href='https://www.nuget.org/packages/PeterO.Numbers'><c>PeterO.Numbers</c></a>
+    /// href='https://www.nuget.org/packages/PeterO.Numbers'><c>PeterO.Numbers</c></a>
     /// library (in .NET) or the
     /// <a
-    ///   href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c></a>
+    /// href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c></a>
     /// artifact (in Java) is converted to the corresponding CBOR
     /// number.</item>
     /// <item>An array other than <c>byte[]</c> is converted to a CBOR
@@ -2509,11 +2509,11 @@ namespace PeterO.Cbor {
     /// to a CBOR map containing the keys and values enumerated.</item>
     /// <item>An object implementing IEnumerable (Iterable in Java) is
     /// converted to a CBOR array containing the items enumerated.</item>
-    /// <item>An enumeration ( <c>Enum</c> ) object is converted to its
+    /// <item>An enumeration (<c>Enum</c>) object is converted to its
     /// <i>underlying value</i> in the.NET version, or the result of its
     /// <c>ordinal()</c> method in the Java version.</item>
     /// <item>An object of type <c>DateTime</c>, <c>Uri</c>, or
-    /// <c>Guid</c> ( <c>Date</c>, <c>URI</c>, or <c>UUID</c>,
+    /// <c>Guid</c> (<c>Date</c>, <c>URI</c>, or <c>UUID</c>,
     /// respectively, in Java) will be converted to a tagged CBOR object of
     /// the appropriate kind. <c>DateTime</c> / <c>Date</c> will be
     /// converted to a tag-0 string following the date format used in the
@@ -2548,21 +2548,37 @@ namespace PeterO.Cbor {
     /// <see cref='PeterO.Cbor.PODOptions'/> documentation. Note that for
     /// security reasons, certain types are not supported even if they
     /// contain eligible getters.</item></list>
-    /// <para><b>REMARK:</b>.NET enumeration ( <c>Enum</c> ) constants
+    /// <para><b>REMARK:</b>.NET enumeration (<c>Enum</c>) constants
     /// could also have been converted to text strings with
     /// <c>ToString()</c>, but that method will return multiple names if
     /// the given Enum object is a combination of Enum objects (e.g. if the
-    /// object is <c>FileAccess.Read | FileAccess.Write</c> ). More
+    /// object is <c>FileAccess.Read | FileAccess.Write</c>). More
     /// generally, if Enums are converted to text strings, constants from
     /// Enum types with the <c>Flags</c> attribute, and constants from the
     /// same Enum type that share an underlying value, should not be passed
     /// to this method.</para></summary>
+    /// <example><para>The following example generates a CBOR object from a 64-bit
+    /// signed integer that is treated as a 64-bit unsigned integer (such as.NET's
+    /// UInt64, which has no direct equivalent in the Java language), in the sense
+    /// that the value is treated as 2^64 plus the original value if it's
+    /// negative.</para>
+    /// <code>long x = -40L; // Example 64-bit value treated as 2^64-40.
+    /// CBORObject obj = CBORObject.FromObject(
+    /// v < 0 ? EInteger.FromInt32(1).ShiftLeft(64).Add(v) :
+    /// EInteger.FromInt64(v));</code>
+    /// <para>In the Java version, which has java.math.BigInteger, the following
+    /// can be used instead:</para>
+    /// <code>long x = -40L; // Example 64-bit value treated as 2^64-40.
+    /// CBORObject obj = CBORObject.FromObject(
+    /// v < 0 ? BigInteger.valueOf(1).shiftLeft(64).add(BigInteger.valueOf(v)) :
+    /// BigInteger.valueOf(v));</code>
+    /// </example>
     /// <param name='obj'>An arbitrary object to convert to a CBOR object.
     /// <para><b>NOTE:</b> For security reasons, whenever possible, an
     /// application should not base this parameter on user input or other
     /// externally supplied data unless the application limits this
     /// parameter's inputs to types specially handled by this method (such
-    /// as <c>int</c> or <c>String</c> ) and/or to plain-old-data types
+    /// as <c>int</c> or <c>String</c>) and/or to plain-old-data types
     /// (POCO or POJO types) within the control of the application. If the
     /// plain-old-data type references other data types, those types should
     /// likewise meet either criterion above.</para>.</param>
@@ -2573,7 +2589,7 @@ namespace PeterO.Cbor {
     /// certain objects are converted to CBOR objects.</param>
     /// <returns>A CBOR object corresponding to the given object. Returns
     /// CBORObject.Null if the object is null.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// <exception cref="ArgumentNullException">The parameter <paramref
     /// name='options'/> is null.</exception>
     /// <exception cref='PeterO.Cbor.CBORException'>An error occurred while
     /// converting the given object to a CBOR object.</exception>

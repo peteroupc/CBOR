@@ -119,7 +119,7 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[FromObject(long[])](#FromObject_long)</code> - Generates a CBOR object from a 64-bit signed integer. Generates a CBOR object from an array of 64-bit integers.
 * <code>[FromObject(object)](#FromObject_object)</code> - Generates a CBORObject from an arbitrary object.
 * <code>[FromObject(object, PeterO.Cbor.CBORTypeMapper)](#FromObject_object_PeterO_Cbor_CBORTypeMapper)</code> - Generates a CBORObject from an arbitrary object.
-* <code>[FromObject(object, PeterO.Cbor.CBORTypeMapper, PeterO.Cbor.PODOptions)](#FromObject_object_PeterO_Cbor_CBORTypeMapper_PeterO_Cbor_PODOptions)</code> - Generates a CBORObject from an arbitrary object, using the given options to control how certain objects are converted to CBOR objects.
+* <code>[FromObject(object, PeterO.Cbor.CBORTypeMapper, PeterO.Cbor.PODOptions)](#FromObject_object_PeterO_Cbor_CBORTypeMapper_PeterO_Cbor_PODOptions)</code> -
 * <code>[FromObject(object, PeterO.Cbor.PODOptions)](#FromObject_object_PeterO_Cbor_PODOptions)</code> - Generates a CBORObject from an arbitrary object.
 * <code>[FromObject(PeterO.Cbor.CBORObject[])](#FromObject_PeterO_Cbor_CBORObject)</code> - Generates a CBOR object from a CBOR object. Generates a CBOR object from an array of CBOR objects.
 * <code>[FromObject(PeterO.Numbers.EDecimal)](#FromObject_PeterO_Numbers_EDecimal)</code> - Generates a CBOR object from a decimal number.
@@ -2284,87 +2284,6 @@ A CBOR object corresponding to the given object. Returns CBORObject.Null if the 
  * System.ArgumentNullException:
 The parameter  <i>mapper</i>
  is null.
-
-<a id="FromObject_object_PeterO_Cbor_CBORTypeMapper_PeterO_Cbor_PODOptions"></a>
-### FromObject
-
-    public static PeterO.Cbor.CBORObject FromObject(
-        object obj,
-        PeterO.Cbor.CBORTypeMapper mapper,
-        PeterO.Cbor.PODOptions options);
-
-Generates a CBORObject from an arbitrary object, using the given options to control how certain objects are converted to CBOR objects. The following cases are checked in the logical order given (rather than the strict order in which they are implemented by this library):
-
- *  `null`  is converted to  `CBORObject.Null` .
-
- * A  `CBORObject`  is returned as itself.
-
- * If the object is of a type corresponding to a type converter mentioned in the  <i>mapper</i>
- parameter, that converter will be used to convert the object to a CBOR object. Type converters can be used to override the default conversion behavior of almost any object.
-
- * A  `char`  is converted to an integer (from 0 through 65535), and returns a CBOR object of that integer. (This is a change in version 4.0 from previous versions, which converted  `char` , except surrogate code points from 0xd800 through 0xdfff, into single-character text strings.)
-
- * A  `bool`  (  `boolean`  in Java) is converted to  `CBORObject.True`  or  `CBORObject.False` .
-
- * A  `byte`  is converted to a CBOR integer from 0 through 255.
-
- * A primitive integer type (  `int` ,  `short` ,  `long` , as well as  `sbyte` ,  `ushort` ,  `uint`  , and  `ulong`  in.NET) is converted to the corresponding CBOR integer.
-
- * A primitive floating-point type (  `float` ,  `double` , as well as  `decimal`  in.NET) is converted to the corresponding CBOR number.
-
- * A  `String`  is converted to a CBOR text string. To create a CBOR byte string object from  `String` , see the example given in **M:PeterO.Cbor.CBORObject.FromObject(System.Byte[])**.
-
- * In the.NET version, a nullable is converted to  `CBORObject.Null`  if the nullable's value is  `null` , or converted according to the nullable's underlying type, if that type is supported by this method.
-
- * In the Java version, a number of type  `BigInteger`  or  `BigDecimal`  is converted to the corresponding CBOR number.
-
- * A number of type  `EDecimal` ,  `EFloat` ,  `EInteger` , and  `ERational`  in the <a href="https://www.nuget.org/packages/PeterO.Numbers"> `PeterO.Numbers` </a> library (in .NET) or the <a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers` </a> artifact (in Java) is converted to the corresponding CBOR number.
-
- * An array other than  `byte[]`  is converted to a CBOR array. In the.NET version, a multidimensional array is converted to an array of arrays.
-
- * A  `byte[]`  (1-dimensional byte array) is converted to a CBOR byte string; the byte array is copied to a new byte array in this process. (This method can't be used to decode CBOR data from a byte array; for that, use the <b>DecodeFromBytes</b> method instead.)
-
- * An object implementing IDictionary (Map in Java) is converted to a CBOR map containing the keys and values enumerated.
-
- * An object implementing IEnumerable (Iterable in Java) is converted to a CBOR array containing the items enumerated.
-
- * An enumeration (  `Enum`  ) object is converted to its <i>underlying value</i> in the.NET version, or the result of its  `ordinal()`  method in the Java version.
-
- * An object of type  `DateTime` ,  `Uri` , or  `Guid`  (  `Date` ,  `URI` , or  `UUID` , respectively, in Java) will be converted to a tagged CBOR object of the appropriate kind.  `DateTime`  /  `Date`  will be converted to a tag-0 string following the date format used in the Atom syndication format.
-
- * If the object is a type not specially handled above, this method checks the  <i>obj</i>
- parameter for eligible getters as follows:
-
- * (*) In the .NET version, eligible getters are the public, nonstatic getters of read/write properties (and also those of read-only properties in the case of a compiler-generated type or an F# type). Eligible getters also include public, nonstatic, non-  `const` , non-  `readonly`  fields. If a class has two properties and/or fields of the form "X" and "IsX", where "X" is any name, or has multiple properties and/or fields with the same name, those properties and fields are ignored.
-
- * (*) In the Java version, eligible getters are public, nonstatic methods starting with "get" or "is" (either word followed by a character other than a basic digit or lower-case letter, that is, other than "a" to "z" or "0" to "9"), that take no parameters and do not return void, except that methods named "getClass" are not eligible getters. In addition, public, nonstatic, nonfinal fields are also eligible getters. If a class has two otherwise eligible getters (methods and/or fields) of the form "isX" and "getX", where "X" is the same in both, or two such getters with the same name but different return type, they are not eligible getters.
-
- * Then, the method returns a CBOR map with each eligible getter's name or property name as each key, and with the corresponding value returned by that getter as that key's value. Before adding a key-value pair to the map, the key's name is adjusted according to the rules described in the [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) documentation. Note that for security reasons, certain types are not supported even if they contain eligible getters.
-
-<b>REMARK:</b>.NET enumeration (  `Enum`  ) constants could also have been converted to text strings with  `ToString()` , but that method will return multiple names if the given Enum object is a combination of Enum objects (e.g. if the object is  `FileAccess.Read | FileAccess.Write`  ). More generally, if Enums are converted to text strings, constants from Enum types with the  `Flags`  attribute, and constants from the same Enum type that share an underlying value, should not be passed to this method.
-
-<b>Parameters:</b>
-
- * <i>obj</i>: An arbitrary object to convert to a CBOR object. <b>NOTE:</b> For security reasons, whenever possible, an application should not base this parameter on user input or other externally supplied data unless the application limits this parameter's inputs to types specially handled by this method (such as  `int`  or  `String`  ) and/or to plain-old-data types (POCO or POJO types) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
-
-.
-
- * <i>mapper</i>: An object containing optional converters to convert objects of certain types to CBOR objects. Can be null.
-
- * <i>options</i>: An object containing options to control how certain objects are converted to CBOR objects.
-
-<b>Return Value:</b>
-
-A CBOR object corresponding to the given object. Returns CBORObject.Null if the object is null.
-
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>options</i>
- is null.
-
- * PeterO.Cbor.CBORException:
-An error occurred while converting the given object to a CBOR object.
 
 <a id="FromObject_object_PeterO_Cbor_PODOptions"></a>
 ### FromObject

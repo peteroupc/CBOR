@@ -2378,6 +2378,42 @@ namespace Test {
       }
     }
 
+    // TODO: Note this trick in FromObject documentation
+    public static EInteger UnsignedLongToEInteger(long v) {
+      if (v >= 0) {
+        return EInteger.FromInt64(v);
+      } else {
+        return EInteger.FromInt32(1).ShiftLeft(64).Add(v);
+      }
+    }
+
+    public static void TestUnsignedLongOne(long v, string expectedStr) {
+         EInteger ei = UnsignedLongToEInteger(v);
+
+         Assert.AreEqual(
+           expectedStr,
+           DataUtilities.ToLowerCaseAscii(ei.ToRadixString(16)));
+         CBORObject c1 = CBORObject.FromObject(ei);
+         Assert.IsTrue(c1.AsNumber().Sign >= 0);
+
+         TestCommon.AssertEqualsHashCode(
+           ei,
+           (EInteger)c1.ToObject(typeof(EInteger)));
+    }
+
+    [Test]
+    public void TestUnsignedLong() {
+       TestUnsignedLongOne(0x0L, "0");
+       TestUnsignedLongOne(0xFL, "f");
+       TestUnsignedLongOne(0xFFFFFFFFL, "ffffffff");
+       TestUnsignedLongOne(-1, "ffffffffffffffff");
+       TestUnsignedLongOne(-3, "fffffffffffffffd");
+       TestUnsignedLongOne(Int64.MaxValue, "7fffffffffffffff");
+       TestUnsignedLongOne(Int64.MaxValue - 1, "7ffffffffffffffe");
+       TestUnsignedLongOne(Int64.MinValue, "8000000000000000");
+       TestUnsignedLongOne(Int64.MinValue + 1, "8000000000000001");
+    }
+
     [Test]
     public void TestReadWriteInt() {
       var r = new RandomGenerator();
