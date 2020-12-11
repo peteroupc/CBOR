@@ -2378,7 +2378,6 @@ namespace Test {
       }
     }
 
-    // TODO: Note this trick in FromObject documentation
     public static EInteger UnsignedLongToEInteger(long v) {
       if (v >= 0) {
         return EInteger.FromInt64(v);
