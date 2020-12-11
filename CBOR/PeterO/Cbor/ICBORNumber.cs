@@ -122,11 +122,19 @@ namespace PeterO.Cbor {
   /// <returns>The return value is an internal value.</returns>
     bool CanFitInInt64(Object obj);
 
+    bool CanFitInUInt64(Object obj);
+
   /// <summary>This is an internal API.</summary>
   /// <param name='obj'>The parameter <paramref name='obj'/> is an
   /// arbitrary object.</param>
   /// <returns>The return value is an internal value.</returns>
     bool CanTruncatedIntFitInInt64(Object obj);
+
+  /// <summary>This is an internal API.</summary>
+  /// <param name='obj'>The parameter <paramref name='obj'/> is an
+  /// arbitrary object.</param>
+  /// <returns>The return value is an internal value.</returns>
+    bool CanTruncatedIntFitInUInt64(Object obj);
 
   /// <summary>This is an internal API.</summary>
   /// <param name='obj'>The parameter <paramref name='obj'/> is an

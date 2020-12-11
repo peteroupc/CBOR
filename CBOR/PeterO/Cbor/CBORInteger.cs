@@ -93,6 +93,16 @@ namespace PeterO.Cbor {
       return val >= Int32.MinValue && val <= Int32.MaxValue;
     }
 
+    public bool CanTruncatedIntFitInUInt64(object obj) {
+      var val = (long)obj;
+      return val >= 0;
+    }
+
+    public bool CanFitInUInt64(object obj) {
+      var val = (long)obj;
+      return val >= 0;
+    }
+
     public bool CanTruncatedIntFitInInt64(object obj) {
       return true;
     }

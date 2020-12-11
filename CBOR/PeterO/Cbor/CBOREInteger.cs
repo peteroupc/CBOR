@@ -81,8 +81,17 @@ namespace PeterO.Cbor {
       return bi.CanFitInInt64();
     }
 
+    public bool CanFitInUInt64(object obj) {
+      var bi = (EInteger)obj;
+      return bi.Sign >= 0 && bi.GetUnsignedBitLengthAsInt64() <= 64;
+    }
+
     public bool CanTruncatedIntFitInInt64(object obj) {
       return this.CanFitInInt64(obj);
+    }
+
+    public bool CanTruncatedIntFitInUInt64(object obj) {
+      return this.CanFitInUInt64(obj);
     }
 
     public bool CanTruncatedIntFitInInt32(object obj) {

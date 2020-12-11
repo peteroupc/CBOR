@@ -509,6 +509,17 @@ namespace PeterO.Cbor {
       }
     }
 
+    /// <summary>Returns whether this object's value, converted to an
+    /// integer by discarding its fractional part, would be 0 or greater,
+    /// and less than 2^64.</summary>
+    /// <returns><c>true</c> if this object's value, converted to an
+    /// integer by discarding its fractional part, would be 0 or greater,
+    /// and less than 2^64; otherwise, <c>false</c>.</returns>
+    public bool CanTruncatedIntFitInUInt64() {
+          return this.GetNumberInterface()
+            .CanTruncatedIntFitInUInt64(this.GetValue());
+    }
+
     /// <summary>Returns whether this object's value can be converted to a
     /// 32-bit floating point number without its value being rounded to
     /// another numerical value.</summary>
@@ -976,6 +987,15 @@ namespace PeterO.Cbor {
     /// <c>false</c>.</returns>
     public bool CanFitInInt64() {
       return this.GetNumberInterface().CanFitInInt64(this.GetValue());
+    }
+
+    /// <summary>Returns whether this object's numerical value is an
+    /// integer, is 0 or greater, and is less than 2^64.</summary>
+    /// <returns><c>true</c> if this object's numerical value is an
+    /// integer, is 0 or greater, and is less than 2^64; otherwise,
+    /// <c>false</c>.</returns>
+    public bool CanFitInUInt64() {
+      return this.GetNumberInterface().CanFitInUInt64(this.GetValue());
     }
 
     /// <summary>Gets a value indicating whether this object represents

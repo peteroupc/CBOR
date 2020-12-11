@@ -91,6 +91,10 @@ namespace PeterO.Cbor {
       return this.IsIntegral(obj) && this.CanTruncatedIntFitInInt64(obj);
     }
 
+    public bool CanFitInUInt64(object obj) {
+      return this.IsIntegral(obj) && this.CanTruncatedIntFitInUInt64(obj);
+    }
+
     public bool CanTruncatedIntFitInInt64(object obj) {
       var ef = (ERational)obj;
       if (!ef.IsFinite) {
@@ -107,6 +111,15 @@ namespace PeterO.Cbor {
       }
       EInteger bi = ef.ToEInteger();
       return bi.CanFitInInt32();
+    }
+
+    public bool CanTruncatedIntFitInUInt64(object obj) {
+      var ef = (ERational)obj;
+      if (!ef.IsFinite) {
+        return false;
+      }
+      EInteger bi = ef.ToEInteger();
+      return bi.Sign >= 0 && bi.GetUnsignedBitLengthAsInt64() <= 64;
     }
 
     public bool IsNumberZero(object obj) {
