@@ -71,37 +71,62 @@ namespace Test {
 
     [Test]
     public void TestCanFitInUInt64() {
-      Assert.IsTrue(CBORObject.FromObject(0).AsNumber().CanFitInUInt64());
-      Assert.IsTrue(CBORObject.FromObject(99).AsNumber().CanFitInUInt64());
-      Assert.IsTrue(CBORObject.FromObject(99.0).AsNumber().CanFitInUInt64());
-      Assert.IsTrue(CBORObject.FromObject(-0.0).AsNumber().CanFitInUInt64());
-      Assert.IsFalse(CBORObject.FromObject(-99).AsNumber().CanFitInUInt64());
-      Assert.IsFalse(CBORObject.FromObject(-99.0).AsNumber().CanFitInUInt64());
-      Assert.IsFalse(CBORObject.FromObject(0.1).AsNumber().CanFitInUInt64());
+      Assert.IsTrue(CBORObject.FromObject(0).AsNumber().CanFitInUInt64(), "0");
+      Assert.IsTrue(CBORObject.FromObject(99).AsNumber().CanFitInUInt64(),
+  "99");
+
+  Assert.IsTrue(CBORObject.FromObject(99.0).AsNumber().CanFitInUInt64(),
+  "99.0");
+
+  Assert.IsTrue(CBORObject.FromObject(1.0).AsNumber().CanFitInUInt64(), "99.0");
+
+  Assert.IsTrue(CBORObject.FromObject(-0.0).AsNumber().CanFitInUInt64(),
+  "-0.0");
+      bool
+b = CBORObject.FromObject(
+  EInteger.FromInt32(1).ShiftLeft(65)).AsNumber().CanFitInUInt64();
+      Assert.IsFalse(b);
+
+  Assert.IsFalse(CBORObject.FromObject(-99).AsNumber().CanFitInUInt64(), "-99");
+
+  Assert.IsFalse(CBORObject.FromObject(-99.0).AsNumber().CanFitInUInt64(),
+  "-99.0");
+
+  Assert.IsFalse(CBORObject.FromObject(0.1).AsNumber().CanFitInUInt64(), "0.1");
+      Assert.IsFalse(CBORObject.FromObject(-0.1).AsNumber().CanFitInUInt64());
       Assert.IsFalse(CBORObject.FromObject(99.1).AsNumber().CanFitInUInt64());
+      Assert.IsFalse(CBORObject.FromObject(-99.1).AsNumber().CanFitInUInt64());
       Assert.IsFalse(CBORObject.PositiveInfinity.AsNumber().CanFitInUInt64());
       Assert.IsFalse(CBORObject.NegativeInfinity.AsNumber().CanFitInUInt64());
-      Assert.IsFalse(CBORObject.NaN.AsNumber().CanFitInUInt64());
+      Assert.IsFalse(CBORObject.NaN.AsNumber().CanFitInUInt64(), "NaN");
     }
 
     [Test]
     public void TestCanTruncatedIntFitInUInt64() {
       Assert.IsTrue(
-        CBORObject.FromObject(0).AsNumber().CanTruncatedIntFitInUInt64());
+        CBORObject.FromObject(0).AsNumber().CanTruncatedIntFitInUInt64(),
+        "0");
 
       Assert.IsTrue(
-        CBORObject.FromObject(99).AsNumber().CanTruncatedIntFitInUInt64());
+        CBORObject.FromObject(99).AsNumber().CanTruncatedIntFitInUInt64(),
+      "99");
 
       Assert.IsTrue(
-        CBORObject.FromObject(
-        99.0).AsNumber().CanTruncatedIntFitInUInt64());
-
-      Assert.IsTrue(
-        CBORObject.FromObject(
-        -0.0).AsNumber().CanTruncatedIntFitInUInt64());
+        CBORObject.FromObject(99.0).AsNumber().CanTruncatedIntFitInUInt64(),
+        "99.0");
+      {
+        object objectTemp = CBORObject.FromObject(
+        -0.0).AsNumber().CanTruncatedIntFitInUInt64();
+      object objectTemp2 = "-0.0";
+      Assert.IsTrue(objectTemp, objectTemp2);
+}
 
       Assert.IsFalse(
         CBORObject.FromObject(-99).AsNumber().CanTruncatedIntFitInUInt64());
+      bool
+b = CBORObject.FromObject(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
+            .CanTruncatedIntFitInUInt64();
+      Assert.IsFalse(b);
 
       Assert.IsFalse(
         CBORObject.FromObject(
@@ -109,14 +134,19 @@ namespace Test {
 
       Assert.IsTrue(
         CBORObject.FromObject(0.1).AsNumber().CanTruncatedIntFitInUInt64());
+      {
+        object objectTemp = CBORObject.FromObject(
+        -0.1).AsNumber().CanTruncatedIntFitInUInt64();
+      object objectTemp2 = "-0.1";
+      Assert.IsTrue(objectTemp, objectTemp2);
+}
 
-      Assert.IsTrue(
-        CBORObject.FromObject(
-        -0.1).AsNumber().CanTruncatedIntFitInUInt64());
-
-      Assert.IsTrue(
-        CBORObject.FromObject(
-        99.1).AsNumber().CanTruncatedIntFitInUInt64());
+      {
+        object objectTemp = CBORObject.FromObject(
+        99.1).AsNumber().CanTruncatedIntFitInUInt64();
+        object objectTemp2 = "99.1";
+        Assert.IsTrue(objectTemp, objectTemp2);
+      }
 
       Assert.IsFalse(
         CBORObject.PositiveInfinity.AsNumber()

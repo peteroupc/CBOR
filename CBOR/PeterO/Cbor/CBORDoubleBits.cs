@@ -143,7 +143,7 @@ CBORUtilities.DoubleRetainsSameValueInSingle((long)obj);
       long b = DoubleBitsRoundDown((long)obj);
       bool neg = (b >> 63) != 0;
       b &= ~(1L << 63);
-      return (neg && b == 0) || ((b >> 52) < 0x43f);
+      return (neg && b == 0) || (!neg && (b >> 52) < 0x43f);
     }
 
     public bool CanTruncatedIntFitInInt32(object obj) {
