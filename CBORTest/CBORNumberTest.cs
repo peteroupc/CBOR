@@ -72,8 +72,9 @@ namespace Test {
     [Test]
     public void TestCanFitInUInt64() {
       Assert.IsTrue(CBORObject.FromObject(0).AsNumber().CanFitInUInt64(), "0");
-      Assert.IsTrue(CBORObject.FromObject(99).AsNumber().CanFitInUInt64(),
-  "99");
+      Assert.IsTrue(
+        CBORObject.FromObject(99).AsNumber().CanFitInUInt64(),
+        "99");
 
   Assert.IsTrue(CBORObject.FromObject(99.0).AsNumber().CanFitInUInt64(),
   "99.0");
@@ -114,12 +115,8 @@ b = CBORObject.FromObject(
       Assert.IsTrue(
         CBORObject.FromObject(99.0).AsNumber().CanTruncatedIntFitInUInt64(),
         "99.0");
-      {
-        object objectTemp = CBORObject.FromObject(
-        -0.0).AsNumber().CanTruncatedIntFitInUInt64();
-      object objectTemp2 = "-0.0";
-      Assert.IsTrue(objectTemp, objectTemp2);
-}
+      Assert.IsTrue(CBORObject.FromObject(
+        -0.0).AsNumber().CanTruncatedIntFitInUInt64());
 
       Assert.IsFalse(
         CBORObject.FromObject(-99).AsNumber().CanTruncatedIntFitInUInt64());
@@ -134,19 +131,10 @@ b = CBORObject.FromObject(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
 
       Assert.IsTrue(
         CBORObject.FromObject(0.1).AsNumber().CanTruncatedIntFitInUInt64());
-      {
-        object objectTemp = CBORObject.FromObject(
-        -0.1).AsNumber().CanTruncatedIntFitInUInt64();
-      object objectTemp2 = "-0.1";
-      Assert.IsTrue(objectTemp, objectTemp2);
-}
-
-      {
-        object objectTemp = CBORObject.FromObject(
-        99.1).AsNumber().CanTruncatedIntFitInUInt64();
-        object objectTemp2 = "99.1";
-        Assert.IsTrue(objectTemp, objectTemp2);
-      }
+      Assert.IsTrue(CBORObject.FromObject(
+        -0.1).AsNumber().CanTruncatedIntFitInUInt64());
+      Assert.IsTrue(CBORObject.FromObject(
+        99.1).AsNumber().CanTruncatedIntFitInUInt64());
 
       Assert.IsFalse(
         CBORObject.PositiveInfinity.AsNumber()
