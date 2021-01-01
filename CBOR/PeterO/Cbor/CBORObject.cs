@@ -3064,7 +3064,7 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Creates a new empty CBOR map that ensures that keys are
-    /// stored in the order in which they are inserted.</summary>
+    /// stored in the order in which they are first inserted.</summary>
     /// <returns>A new CBOR map.</returns>
     public static CBORObject NewOrderedMap() {
       return new CBORObject(
