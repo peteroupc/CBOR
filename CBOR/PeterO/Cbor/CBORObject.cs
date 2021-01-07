@@ -1774,6 +1774,188 @@ namespace PeterO.Cbor {
       return this.ToObject(t, mapper, options, 0);
     }
 
+    /// <summary>Generates an object of an arbitrary type from an array of
+    /// CBOR-encoded bytes, using the given <c>CBOREncodeOptions</c> object
+    /// to control the decoding process. It is equivalent to
+    /// DecodeFromBytes followed by ToObject. See the documentation for
+    /// those methods for more information.</summary>
+    /// <param name='data'>A byte array in which a single CBOR object is
+    /// encoded.</param>
+    /// <param name='enc'>Specifies options to control how the CBOR object
+    /// is decoded. See
+    /// <see cref='PeterO.Cbor.CBOREncodeOptions'/> for more
+    /// information.</param>
+    /// <param name='t'>The type, class, or interface that this method's
+    /// return value will belong to. To express a generic type in Java, see
+    /// the example. <b>Note:</b> For security reasons, an application
+    /// should not base this parameter on user input or other externally
+    /// supplied data. Whenever possible, this parameter should be either a
+    /// type specially handled by this method, such as <c>int</c> or
+    /// <c>String</c>, or a plain-old-data type (POCO or POJO type) within
+    /// the control of the application. If the plain-old-data type
+    /// references other data types, those types should likewise meet
+    /// either criterion above.</param>
+    /// <param name='mapper'>This parameter controls which data types are
+    /// eligible for Plain-Old-Data deserialization and includes custom
+    /// converters from CBOR objects to certain data types. Can be
+    /// null.</param>
+    /// <param name='pod'>Specifies options for controlling deserialization
+    /// of CBOR objects.</param>
+    /// <returns>An object of the given type decoded from the given byte
+    /// array. Returns null (as opposed to CBORObject.Null) if <paramref
+    /// name='data'/> is empty and the AllowEmpty property is set on the
+    /// given CBOREncodeOptions object.</returns>
+    /// <exception cref='PeterO.Cbor.CBORException'>There was an error in
+    /// reading or parsing the data. This includes cases where not all of
+    /// the byte array represents a CBOR object. This exception is also
+    /// thrown if the parameter <paramref name='data'/> is empty unless the
+    /// AllowEmpty property is set on the given options object. Also thrown
+    /// if the given type <paramref name='t'/>, or this object's CBOR
+    /// type, is not supported, or the given object's nesting is too deep,
+    /// or another error occurred when serializing the object.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='data'/> is null, or the parameter <paramref name='enc'/> is
+    /// null, or the parameter <paramref name='t'/> or <paramref
+    /// name='pod'/> is null.</exception>
+    public static object DecodeObjectFromBytes(
+      byte[] data,
+      CBOREncodeOptions enc,
+      Type t,
+      CBORTypeMapper mapper,
+      PODOptions pod) {
+      if (pod == null) {
+        throw new ArgumentNullException(nameof(pod));
+      }
+      if (enc == null) {
+        throw new ArgumentNullException(nameof(enc));
+      }
+      return DecodeFromBytes(data, enc).ToObject(t, mapper, pod);
+    }
+
+    /// <summary>Generates an object of an arbitrary type from an array of
+    /// CBOR-encoded bytes, using the given <c>CBOREncodeOptions</c> object
+    /// to control the decoding process. It is equivalent to
+    /// DecodeFromBytes followed by ToObject. See the documentation for
+    /// those methods for more information.</summary>
+    /// <param name='data'>A byte array in which a single CBOR object is
+    /// encoded.</param>
+    /// <param name='enc'>Specifies options to control how the CBOR object
+    /// is decoded. See
+    /// <see cref='PeterO.Cbor.CBOREncodeOptions'/> for more
+    /// information.</param>
+    /// <param name='t'>The type, class, or interface that this method's
+    /// return value will belong to. To express a generic type in Java, see
+    /// the example. <b>Note:</b> For security reasons, an application
+    /// should not base this parameter on user input or other externally
+    /// supplied data. Whenever possible, this parameter should be either a
+    /// type specially handled by this method, such as <c>int</c> or
+    /// <c>String</c>, or a plain-old-data type (POCO or POJO type) within
+    /// the control of the application. If the plain-old-data type
+    /// references other data types, those types should likewise meet
+    /// either criterion above.</param>
+    /// <returns>An object of the given type decoded from the given byte
+    /// array. Returns null (as opposed to CBORObject.Null) if <paramref
+    /// name='data'/> is empty and the AllowEmpty property is set on the
+    /// given CBOREncodeOptions object.</returns>
+    /// <exception cref='PeterO.Cbor.CBORException'>There was an error in
+    /// reading or parsing the data. This includes cases where not all of
+    /// the byte array represents a CBOR object. This exception is also
+    /// thrown if the parameter <paramref name='data'/> is empty unless the
+    /// AllowEmpty property is set on the given options object. Also thrown
+    /// if the given type <paramref name='t'/>, or this object's CBOR
+    /// type, is not supported, or the given object's nesting is too deep,
+    /// or another error occurred when serializing the object.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='data'/> is null, or the parameter <paramref name='enc'/> is
+    /// null, or the parameter <paramref name='t'/> is null.</exception>
+    public static object DecodeObjectFromBytes(
+      byte[] data,
+      CBOREncodeOptions enc,
+      Type t) {
+       return DecodeFromBytes(data, enc).ToObject(t);
+    }
+
+    /// <summary>Generates an object of an arbitrary type from an array of
+    /// CBOR-encoded bytes. It is equivalent to DecodeFromBytes followed by
+    /// ToObject. See the documentation for those methods for more
+    /// information.</summary>
+    /// <param name='data'>A byte array in which a single CBOR object is
+    /// encoded.</param>
+    /// <param name='t'>The type, class, or interface that this method's
+    /// return value will belong to. To express a generic type in Java, see
+    /// the example. <b>Note:</b> For security reasons, an application
+    /// should not base this parameter on user input or other externally
+    /// supplied data. Whenever possible, this parameter should be either a
+    /// type specially handled by this method, such as <c>int</c> or
+    /// <c>String</c>, or a plain-old-data type (POCO or POJO type) within
+    /// the control of the application. If the plain-old-data type
+    /// references other data types, those types should likewise meet
+    /// either criterion above.</param>
+    /// <param name='mapper'>This parameter controls which data types are
+    /// eligible for Plain-Old-Data deserialization and includes custom
+    /// converters from CBOR objects to certain data types. Can be
+    /// null.</param>
+    /// <param name='pod'>Specifies options for controlling deserialization
+    /// of CBOR objects.</param>
+    /// <returns>An object of the given type decoded from the given byte
+    /// array. Returns null (as opposed to CBORObject.Null) if <paramref
+    /// name='data'/> is empty and the AllowEmpty property is set on the
+    /// given CBOREncodeOptions object.</returns>
+    /// <exception cref='PeterO.Cbor.CBORException'>There was an error in
+    /// reading or parsing the data. This includes cases where not all of
+    /// the byte array represents a CBOR object. This exception is also
+    /// thrown if the parameter <paramref name='data'/> is empty unless the
+    /// AllowEmpty property is set on the given options object. Also thrown
+    /// if the given type <paramref name='t'/>, or this object's CBOR
+    /// type, is not supported, or the given object's nesting is too deep,
+    /// or another error occurred when serializing the object.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='data'/> is null, or the parameter <paramref name='t'/> or
+    /// <paramref name='pod'/> is null.</exception>
+    public static object DecodeObjectFromBytes(
+      byte[] data,
+      Type t,
+      CBORTypeMapper mapper,
+      PODOptions pod) {
+       return
+DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
+    }
+
+    /// <summary>Generates an object of an arbitrary type from an array of
+    /// CBOR-encoded bytes. It is equivalent to DecodeFromBytes followed by
+    /// ToObject. See the documentation for those methods for more
+    /// information.</summary>
+    /// <param name='data'>A byte array in which a single CBOR object is
+    /// encoded.</param>
+    /// <param name='t'>The type, class, or interface that this method's
+    /// return value will belong to. To express a generic type in Java, see
+    /// the example. <b>Note:</b> For security reasons, an application
+    /// should not base this parameter on user input or other externally
+    /// supplied data. Whenever possible, this parameter should be either a
+    /// type specially handled by this method, such as <c>int</c> or
+    /// <c>String</c>, or a plain-old-data type (POCO or POJO type) within
+    /// the control of the application. If the plain-old-data type
+    /// references other data types, those types should likewise meet
+    /// either criterion above.</param>
+    /// <returns>An object of the given type decoded from the given byte
+    /// array. Returns null (as opposed to CBORObject.Null) if <paramref
+    /// name='data'/> is empty and the AllowEmpty property is set on the
+    /// given CBOREncodeOptions object.</returns>
+    /// <exception cref='PeterO.Cbor.CBORException'>There was an error in
+    /// reading or parsing the data. This includes cases where not all of
+    /// the byte array represents a CBOR object. This exception is also
+    /// thrown if the parameter <paramref name='data'/> is empty unless the
+    /// AllowEmpty property is set on the given options object. Also thrown
+    /// if the given type <paramref name='t'/>, or this object's CBOR
+    /// type, is not supported, or the given object's nesting is too deep,
+    /// or another error occurred when serializing the object.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='data'/> is null, or the parameter <paramref name='t'/> is
+    /// null.</exception>
+    public static object DecodeObjectFromBytes(byte[] data, Type t) {
+       return DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t);
+    }
+
     internal object ToObject(
       Type t,
       CBORTypeMapper mapper,
@@ -2614,23 +2796,6 @@ namespace PeterO.Cbor {
     /// that share an underlying value, should not be passed to this
     /// method.</para>
     ///  </summary>
-    /// <example>
-    /// <para>The following example generates a CBOR object from a 64-bit
-    /// signed integer that is treated as a 64-bit unsigned integer (such
-    /// as.NET's UInt64, which has no direct equivalent in the Java
-    /// language), in the sense that the value is treated as 2^64 plus the
-    /// original value if it's negative.</para>
-    /// <code>long x = -40L; // Example 64-bit value treated as 2^64-40.
-    /// CBORObject obj = CBORObject.FromObject(
-    /// v &lt; 0 ? EInteger.FromInt32(1).ShiftLeft(64).Add(v) :
-    /// EInteger.FromInt64(v));</code>
-    /// <para>In the Java version, which has java.math.BigInteger, the
-    /// following can be used instead:</para>
-    /// <code>long x = -40L; // Example 64-bit value treated as 2^64-40.
-    /// CBORObject obj = CBORObject.FromObject(
-    /// v &lt; 0 ? BigInteger.valueOf(1).shiftLeft(64).add(BigInteger.valueOf(v)) :
-    /// BigInteger.valueOf(v));</code>
-    /// </example>
     /// <param name='obj'>An arbitrary object to convert to a CBOR object.
     /// <para><b>NOTE:</b>
     ///  For security reasons, whenever possible, an
@@ -2655,6 +2820,23 @@ namespace PeterO.Cbor {
     /// name='options'/> is null.</exception>
     /// <exception cref='PeterO.Cbor.CBORException'>An error occurred while
     /// converting the given object to a CBOR object.</exception>
+    /// <example>
+    /// <para>The following example generates a CBOR object from a 64-bit
+    /// signed integer that is treated as a 64-bit unsigned integer (such
+    /// as.NET's UInt64, which has no direct equivalent in the Java
+    /// language), in the sense that the value is treated as 2^64 plus the
+    /// original value if it's negative.</para>
+    /// <code>long x = -40L; &#x2f;&#x2a; Example 64-bit value treated as 2^64-40.&#x2a;&#x2f;
+    /// CBORObject obj = CBORObject.FromObject(
+    /// v &lt; 0 ? EInteger.FromInt32(1).ShiftLeft(64).Add(v) :
+    /// EInteger.FromInt64(v));</code>
+    /// <para>In the Java version, which has java.math.BigInteger, the
+    /// following can be used instead:</para>
+    /// <code>long x = -40L; &#x2f;&#x2a; Example 64-bit value treated as 2^64-40.&#x2a;&#x2f;
+    /// CBORObject obj = CBORObject.FromObject(
+    /// v &lt; 0 ? BigInteger.valueOf(1).shiftLeft(64).add(BigInteger.valueOf(v)) :
+    /// BigInteger.valueOf(v));</code>
+    /// </example>
     public static CBORObject FromObject(
       object obj,
       CBORTypeMapper mapper,

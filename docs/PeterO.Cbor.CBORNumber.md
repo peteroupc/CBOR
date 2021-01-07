@@ -12,8 +12,10 @@ An instance of a number that CBOR or certain CBOR tags can represent. For this p
 * <code>[CanFitInInt32()](#CanFitInInt32)</code> - Returns whether this object's numerical value is an integer, is -(2^31) or greater, and is less than 2^31.
 * <code>[CanFitInInt64()](#CanFitInInt64)</code> - Returns whether this object's numerical value is an integer, is -(2^63) or greater, and is less than 2^63.
 * <code>[CanFitInSingle()](#CanFitInSingle)</code> - Returns whether this object's value can be converted to a 32-bit floating point number without its value being rounded to another numerical value.
+* <code>[CanFitInUInt64()](#CanFitInUInt64)</code> - Returns whether this object's numerical value is an integer, is 0 or greater, and is less than 2^64.
 * <code>[CanTruncatedIntFitInInt32()](#CanTruncatedIntFitInInt32)</code> - Returns whether this object's value, converted to an integer by discarding its fractional part, would be -(2^31) or greater, and less than 2^31.
 * <code>[CanTruncatedIntFitInInt64()](#CanTruncatedIntFitInInt64)</code> - Returns whether this object's value, converted to an integer by discarding its fractional part, would be -(2^63) or greater, and less than 2^63.
+* <code>[CanTruncatedIntFitInUInt64()](#CanTruncatedIntFitInUInt64)</code> - Returns whether this object's value, converted to an integer by discarding its fractional part, would be 0 or greater, and less than 2^64.
 * <code>[CompareTo(int)](#CompareTo_int)</code> - Compares this CBOR number with a 32-bit signed integer.
 * <code>[CompareTo(long)](#CompareTo_long)</code> - Compares this CBOR number with a 64-bit signed integer.
 * <code>[CompareTo(PeterO.Cbor.CBORNumber)](#CompareTo_PeterO_Cbor_CBORNumber)</code> - Compares this CBOR number with another.
@@ -173,6 +175,17 @@ Returns whether this object's value can be converted to a 32-bit floating point 
 
  `true`  if this object's value can be converted to a 32-bit floating point number without its value being rounded to another numerical value, or if this is a not-a-number value, even if the value's diagnostic information can' t fit in a 32-bit floating point number; otherwise,  `false` .
 
+<a id="CanFitInUInt64"></a>
+### CanFitInUInt64
+
+    public bool CanFitInUInt64();
+
+Returns whether this object's numerical value is an integer, is 0 or greater, and is less than 2^64.
+
+<b>Return Value:</b>
+
+ `true`  if this object's numerical value is an integer, is 0 or greater, and is less than 2^64; otherwise,  `false` .
+
 <a id="CanTruncatedIntFitInInt32"></a>
 ### CanTruncatedIntFitInInt32
 
@@ -194,6 +207,17 @@ Returns whether this object's value, converted to an integer by discarding its f
 <b>Return Value:</b>
 
  `true`  if this object's value, converted to an integer by discarding its fractional part, would be -(2^63) or greater, and less than 2^63; otherwise,  `false` .
+
+<a id="CanTruncatedIntFitInUInt64"></a>
+### CanTruncatedIntFitInUInt64
+
+    public bool CanTruncatedIntFitInUInt64();
+
+Returns whether this object's value, converted to an integer by discarding its fractional part, would be 0 or greater, and less than 2^64.
+
+<b>Return Value:</b>
+
+ `true`  if this object's value, converted to an integer by discarding its fractional part, would be 0 or greater, and less than 2^64; otherwise,  `false` .
 
 <a id="CompareTo_int"></a>
 ### CompareTo

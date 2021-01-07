@@ -16,7 +16,7 @@ There are many ways to get a CBOR object, including from bytes, objects, streams
 
 <b>To and from other objects:</b> The  `CBORObject.FromObject`  method converts many kinds of objects to a CBOR object, including numbers, strings, and arrays and maps of numbers and strings. Methods like AsNumber and AsString convert a CBOR object to different types of object. The  `CBORObject.ToObject`  method converts a CBOR object to an object of a given type; for example, a CBOR array to a native  `List`  (or  `ArrayList`  in Java), or a CBOR integer to an  `int`  or  `long` .
 
-<b>To and from JSON:</b> This class also doubles as a reader and writer of JavaScript Object Notation (JSON). The CBORObject.FromJSONString method converts JSON to a CBOR object, and the ToJSONString method converts a CBOR object to a JSON string. (Note that the conversion from CBOR to JSON is not always without loss and may make it impossible to recover the original object when converting the JSON back to CBOR. See the ToJSONString documentation.)
+<b>To and from JSON:</b> This class also doubles as a reader and writer of JavaScript Object Notation (JSON). The CBORObject.FromJSONString method converts JSON in text string form to a CBOR object, and the ToJSONString method converts a CBOR object to a JSON string. (Note that the conversion from CBOR to JSON is not always without loss and may make it impossible to recover the original object when converting the JSON back to CBOR. See the ToJSONString documentation.) Likewise, ToJSONBytes and FromJSONBytes work with JSON in the form of byte arrays rather than text strings.
 
 In addition, the CBORObject.WriteJSON method writes many kinds of objects as JSON to a data stream, including numbers, CBOR objects, strings, and arrays of numbers and strings. The CBORObject.Read method reads a CBOR object from a JSON data stream.
 
@@ -89,6 +89,14 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[Count](#Count)</code> - Gets the number of keys in this map, or the number of items in this array, or 0 if this item is neither an array nor a map.
 * <code>[DecodeFromBytes(byte[])](#DecodeFromBytes_byte)</code> - Generates a CBOR object from an array of CBOR-encoded bytes.
 * <code>[DecodeFromBytes(byte[], PeterO.Cbor.CBOREncodeOptions)](#DecodeFromBytes_byte_PeterO_Cbor_CBOREncodeOptions)</code> - Generates a CBOR object from an array of CBOR-encoded bytes, using the given CBOREncodeOptions object to control the decoding process.
+* <code>[DecodeObjectFromBytes(byte[], PeterO.Cbor.CBOREncodeOptions, System.Type)](#DecodeObjectFromBytes_byte_PeterO_Cbor_CBOREncodeOptions_System_Type)</code> - Generates an object of an arbitrary type from an array of CBOR-encoded bytes, using the given CBOREncodeOptions object to control the decoding process.
+* <code>[DecodeObjectFromBytes(byte[], PeterO.Cbor.CBOREncodeOptions, System.Type, PeterO.Cbor.CBORTypeMapper, PeterO.Cbor.PODOptions)](#DecodeObjectFromBytes_byte_PeterO_Cbor_CBOREncodeOptions_System_Type_PeterO_Cbor_CBORTypeMapper_PeterO_Cbor_PODOptions)</code> - Generates an object of an arbitrary type from an array of CBOR-encoded bytes, using the given CBOREncodeOptions object to control the decoding process.
+* <code>[DecodeObjectFromBytes(byte[], System.Type)](#DecodeObjectFromBytes_byte_System_Type)</code> - Generates an object of an arbitrary type from an array of CBOR-encoded bytes.
+* <code>[DecodeObjectFromBytes(byte[], System.Type, PeterO.Cbor.CBORTypeMapper, PeterO.Cbor.PODOptions)](#DecodeObjectFromBytes_byte_System_Type_PeterO_Cbor_CBORTypeMapper_PeterO_Cbor_PODOptions)</code> - Generates an object of an arbitrary type from an array of CBOR-encoded bytes.
+* <code>[DecodeObjectFromBytes&lt;T&gt;(byte[])](#DecodeObjectFromBytes_T_byte)</code> - Generates an object of an arbitrary type from an array of CBOR-encoded bytes.
+* <code>[DecodeObjectFromBytes&lt;T&gt;(byte[], PeterO.Cbor.CBOREncodeOptions)](#DecodeObjectFromBytes_T_byte_PeterO_Cbor_CBOREncodeOptions)</code> - Generates an object of an arbitrary type from an array of CBOR-encoded bytes, using the given CBOREncodeOptions object to control the decoding process.
+* <code>[DecodeObjectFromBytes&lt;T&gt;(byte[], PeterO.Cbor.CBOREncodeOptions, PeterO.Cbor.CBORTypeMapper, PeterO.Cbor.PODOptions)](#DecodeObjectFromBytes_T_byte_PeterO_Cbor_CBOREncodeOptions_PeterO_Cbor_CBORTypeMapper_PeterO_Cbor_PODOptions)</code> - Generates an object of an arbitrary type from an array of CBOR-encoded bytes, using the given CBOREncodeOptions object to control the decoding process.
+* <code>[DecodeObjectFromBytes&lt;T&gt;(byte[], PeterO.Cbor.CBORTypeMapper, PeterO.Cbor.PODOptions)](#DecodeObjectFromBytes_T_byte_PeterO_Cbor_CBORTypeMapper_PeterO_Cbor_PODOptions)</code> - Generates an object of an arbitrary type from an array of CBOR-encoded bytes.
 * <code>[DecodeSequenceFromBytes(byte[])](#DecodeSequenceFromBytes_byte)</code> - Generates a sequence of CBOR objects from an array of CBOR-encoded bytes.
 * <code>[DecodeSequenceFromBytes(byte[], PeterO.Cbor.CBOREncodeOptions)](#DecodeSequenceFromBytes_byte_PeterO_Cbor_CBOREncodeOptions)</code> - Generates a sequence of CBOR objects from an array of CBOR-encoded bytes.
 * <code>[Divide(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#Divide_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject)</code> - <b>Deprecated:</b> Instead, convert both CBOR objects to numbers (with .AsNumber()), and use the first number's .Divide() method.
@@ -119,7 +127,7 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[FromObject(long[])](#FromObject_long)</code> - Generates a CBOR object from a 64-bit signed integer. Generates a CBOR object from an array of 64-bit integers.
 * <code>[FromObject(object)](#FromObject_object)</code> - Generates a CBORObject from an arbitrary object.
 * <code>[FromObject(object, PeterO.Cbor.CBORTypeMapper)](#FromObject_object_PeterO_Cbor_CBORTypeMapper)</code> - Generates a CBORObject from an arbitrary object.
-* <code>[FromObject(object, PeterO.Cbor.CBORTypeMapper, PeterO.Cbor.PODOptions)](#FromObject_object_PeterO_Cbor_CBORTypeMapper_PeterO_Cbor_PODOptions)</code> -
+* <code>[FromObject(object, PeterO.Cbor.CBORTypeMapper, PeterO.Cbor.PODOptions)](#FromObject_object_PeterO_Cbor_CBORTypeMapper_PeterO_Cbor_PODOptions)</code> - Generates a CBORObject from an arbitrary object, using the given options to control how certain objects are converted to CBOR objects.
 * <code>[FromObject(object, PeterO.Cbor.PODOptions)](#FromObject_object_PeterO_Cbor_PODOptions)</code> - Generates a CBORObject from an arbitrary object.
 * <code>[FromObject(PeterO.Cbor.CBORObject[])](#FromObject_PeterO_Cbor_CBORObject)</code> - Generates a CBOR object from a CBOR object. Generates a CBOR object from an array of CBOR objects.
 * <code>[FromObject(PeterO.Numbers.EDecimal)](#FromObject_PeterO_Numbers_EDecimal)</code> - Generates a CBOR object from a decimal number.
@@ -173,7 +181,7 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[public static readonly PeterO.Cbor.CBORObject NegativeInfinity;](#NegativeInfinity)</code> - The value negative infinity.
 * <code>[NewArray()](#NewArray)</code> - Creates a new empty CBOR array.
 * <code>[NewMap()](#NewMap)</code> - Creates a new empty CBOR map that stores its keys in an undefined order.
-* <code>[NewOrderedMap()](#NewOrderedMap)</code> - Creates a new empty CBOR map that ensures that keys are stored in the order in which they are inserted.
+* <code>[NewOrderedMap()](#NewOrderedMap)</code> - Creates a new empty CBOR map that ensures that keys are stored in the order in which they are first inserted.
 * <code>[public static readonly PeterO.Cbor.CBORObject Null;](#Null)</code> - Represents the value null.
 * <code>[PeterO.Cbor.CBORObject operator +(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#op_Addition)</code> - <b>Deprecated:</b> May be removed in the next major version. Consider converting the objects to CBOR numbers and performing the operation there.
 * <code>[PeterO.Cbor.CBORObject operator /(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#op_Division)</code> - <b>Deprecated:</b> May be removed in the next major version. Consider converting the objects to CBOR numbers and performing the operation there.
@@ -1500,6 +1508,294 @@ The parameter  <i>data</i>
  is null, or the parameter  <i>options</i>
  is null.
 
+<a id="DecodeObjectFromBytes_byte_PeterO_Cbor_CBOREncodeOptions_System_Type"></a>
+### DecodeObjectFromBytes
+
+    public static object DecodeObjectFromBytes(
+        byte[] data,
+        PeterO.Cbor.CBOREncodeOptions enc,
+        System.Type t);
+
+Generates an object of an arbitrary type from an array of CBOR-encoded bytes, using the given  `CBOREncodeOptions`  object to control the decoding process. It is equivalent to DecodeFromBytes followed by ToObject. See the documentation for those methods for more information.
+
+<b>Parameters:</b>
+
+ * <i>data</i>: A byte array in which a single CBOR object is encoded.
+
+ * <i>enc</i>: Specifies options to control how the CBOR object is decoded. See [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) for more information.
+
+ * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method, such as  `int`  or  `String` , or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+
+<b>Return Value:</b>
+
+An object of the given type decoded from the given byte array. Returns null (as opposed to CBORObject.Null) if  <i>data</i>
+ is empty and the AllowEmpty property is set on the given CBOREncodeOptions object.
+
+<b>Exceptions:</b>
+
+ * PeterO.Cbor.CBORException:
+There was an error in reading or parsing the data. This includes cases where not all of the byte array represents a CBOR object. This exception is also thrown if the parameter  <i>data</i>
+ is empty unless the AllowEmpty property is set on the given options object. Also thrown if the given type  <i>t</i>
+, or this object's CBOR type, is not supported, or the given object's nesting is too deep, or another error occurred when serializing the object.
+
+ * System.ArgumentNullException:
+The parameter  <i>data</i>
+ is null, or the parameter  <i>enc</i>
+ is null, or the parameter  <i>t</i>
+ is null.
+
+<a id="DecodeObjectFromBytes_byte_PeterO_Cbor_CBOREncodeOptions_System_Type_PeterO_Cbor_CBORTypeMapper_PeterO_Cbor_PODOptions"></a>
+### DecodeObjectFromBytes
+
+    public static object DecodeObjectFromBytes(
+        byte[] data,
+        PeterO.Cbor.CBOREncodeOptions enc,
+        System.Type t,
+        PeterO.Cbor.CBORTypeMapper mapper,
+        PeterO.Cbor.PODOptions pod);
+
+Generates an object of an arbitrary type from an array of CBOR-encoded bytes, using the given  `CBOREncodeOptions`  object to control the decoding process. It is equivalent to DecodeFromBytes followed by ToObject. See the documentation for those methods for more information.
+
+<b>Parameters:</b>
+
+ * <i>data</i>: A byte array in which a single CBOR object is encoded.
+
+ * <i>enc</i>: Specifies options to control how the CBOR object is decoded. See [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) for more information.
+
+ * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method, such as  `int`  or  `String` , or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+
+ * <i>mapper</i>: This parameter controls which data types are eligible for Plain-Old-Data deserialization and includes custom converters from CBOR objects to certain data types. Can be null.
+
+ * <i>pod</i>: Specifies options for controlling deserialization of CBOR objects.
+
+<b>Return Value:</b>
+
+An object of the given type decoded from the given byte array. Returns null (as opposed to CBORObject.Null) if  <i>data</i>
+ is empty and the AllowEmpty property is set on the given CBOREncodeOptions object.
+
+<b>Exceptions:</b>
+
+ * PeterO.Cbor.CBORException:
+There was an error in reading or parsing the data. This includes cases where not all of the byte array represents a CBOR object. This exception is also thrown if the parameter  <i>data</i>
+ is empty unless the AllowEmpty property is set on the given options object. Also thrown if the given type  <i>t</i>
+, or this object's CBOR type, is not supported, or the given object's nesting is too deep, or another error occurred when serializing the object.
+
+ * System.ArgumentNullException:
+The parameter  <i>data</i>
+ is null, or the parameter  <i>enc</i>
+ is null, or the parameter  <i>t</i>
+ or  <i>pod</i>
+ is null.
+
+<a id="DecodeObjectFromBytes_byte_System_Type"></a>
+### DecodeObjectFromBytes
+
+    public static object DecodeObjectFromBytes(
+        byte[] data,
+        System.Type t);
+
+Generates an object of an arbitrary type from an array of CBOR-encoded bytes. It is equivalent to DecodeFromBytes followed by ToObject. See the documentation for those methods for more information.
+
+<b>Parameters:</b>
+
+ * <i>data</i>: A byte array in which a single CBOR object is encoded.
+
+ * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method, such as  `int`  or  `String` , or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+
+<b>Return Value:</b>
+
+An object of the given type decoded from the given byte array. Returns null (as opposed to CBORObject.Null) if  <i>data</i>
+ is empty and the AllowEmpty property is set on the given CBOREncodeOptions object.
+
+<b>Exceptions:</b>
+
+ * PeterO.Cbor.CBORException:
+There was an error in reading or parsing the data. This includes cases where not all of the byte array represents a CBOR object. This exception is also thrown if the parameter  <i>data</i>
+ is empty unless the AllowEmpty property is set on the given options object. Also thrown if the given type  <i>t</i>
+, or this object's CBOR type, is not supported, or the given object's nesting is too deep, or another error occurred when serializing the object.
+
+ * System.ArgumentNullException:
+The parameter  <i>data</i>
+ is null, or the parameter  <i>t</i>
+ is null.
+
+<a id="DecodeObjectFromBytes_byte_System_Type_PeterO_Cbor_CBORTypeMapper_PeterO_Cbor_PODOptions"></a>
+### DecodeObjectFromBytes
+
+    public static object DecodeObjectFromBytes(
+        byte[] data,
+        System.Type t,
+        PeterO.Cbor.CBORTypeMapper mapper,
+        PeterO.Cbor.PODOptions pod);
+
+Generates an object of an arbitrary type from an array of CBOR-encoded bytes. It is equivalent to DecodeFromBytes followed by ToObject. See the documentation for those methods for more information.
+
+<b>Parameters:</b>
+
+ * <i>data</i>: A byte array in which a single CBOR object is encoded.
+
+ * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method, such as  `int`  or  `String` , or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+
+ * <i>mapper</i>: This parameter controls which data types are eligible for Plain-Old-Data deserialization and includes custom converters from CBOR objects to certain data types. Can be null.
+
+ * <i>pod</i>: Specifies options for controlling deserialization of CBOR objects.
+
+<b>Return Value:</b>
+
+An object of the given type decoded from the given byte array. Returns null (as opposed to CBORObject.Null) if  <i>data</i>
+ is empty and the AllowEmpty property is set on the given CBOREncodeOptions object.
+
+<b>Exceptions:</b>
+
+ * PeterO.Cbor.CBORException:
+There was an error in reading or parsing the data. This includes cases where not all of the byte array represents a CBOR object. This exception is also thrown if the parameter  <i>data</i>
+ is empty unless the AllowEmpty property is set on the given options object. Also thrown if the given type  <i>t</i>
+, or this object's CBOR type, is not supported, or the given object's nesting is too deep, or another error occurred when serializing the object.
+
+ * System.ArgumentNullException:
+The parameter  <i>data</i>
+ is null, or the parameter  <i>t</i>
+ or  <i>pod</i>
+ is null.
+
+<a id="DecodeObjectFromBytes_T_byte"></a>
+### DecodeObjectFromBytes
+
+    public static T DecodeObjectFromBytes<T>(
+        byte[] data);
+
+Generates an object of an arbitrary type from an array of CBOR-encoded bytes. It is equivalent to DecodeFromBytes followed by ToObject. See the documentation for those methods for more information.
+
+<b>Parameters:</b>
+
+ * <i>data</i>: A byte array in which a single CBOR object is encoded.
+
+ * &lt;T&gt;: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method, such as  `int`  or  `String` , or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+
+<b>Return Value:</b>
+
+An object of the given type decoded from the given byte array. Returns null (as opposed to CBORObject.Null) if  <i>data</i>
+ is empty and the AllowEmpty property is set on the given CBOREncodeOptions object.
+
+<b>Exceptions:</b>
+
+ * PeterO.Cbor.CBORException:
+There was an error in reading or parsing the data. This includes cases where not all of the byte array represents a CBOR object. This exception is also thrown if the parameter  <i>data</i>
+ is empty unless the AllowEmpty property is set on the given options object. Also thrown if the given type "T", or this object's CBOR type, is not supported, or the given object's nesting is too deep, or another error occurred when serializing the object.
+
+ * System.ArgumentNullException:
+The parameter  <i>data</i>
+ is null.
+
+<a id="DecodeObjectFromBytes_T_byte_PeterO_Cbor_CBOREncodeOptions"></a>
+### DecodeObjectFromBytes
+
+    public static T DecodeObjectFromBytes<T>(
+        byte[] data,
+        PeterO.Cbor.CBOREncodeOptions enc);
+
+Generates an object of an arbitrary type from an array of CBOR-encoded bytes, using the given  `CBOREncodeOptions`  object to control the decoding process. It is equivalent to DecodeFromBytes followed by ToObject. See the documentation for those methods for more information.
+
+<b>Parameters:</b>
+
+ * <i>data</i>: A byte array in which a single CBOR object is encoded.
+
+ * <i>enc</i>: Specifies options to control how the CBOR object is decoded. See [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) for more information.
+
+ * &lt;T&gt;: The type, class, or interface that this method's return value will belong to. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method, such as  `int`  or  `String` , or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+
+<b>Return Value:</b>
+
+An object of the given type decoded from the given byte array. Returns null (as opposed to CBORObject.Null) if  <i>data</i>
+ is empty and the AllowEmpty property is set on the given CBOREncodeOptions object.
+
+<b>Exceptions:</b>
+
+ * PeterO.Cbor.CBORException:
+There was an error in reading or parsing the data. This includes cases where not all of the byte array represents a CBOR object. This exception is also thrown if the parameter  <i>data</i>
+ is empty unless the AllowEmpty property is set on the given options object. Also thrown if the given type "T", or this object's CBOR type, is not supported, or the given object's nesting is too deep, or another error occurred when serializing the object.
+
+ * System.ArgumentNullException:
+The parameter  <i>data</i>
+ is null, or the parameter  <i>enc</i>
+ is null.
+
+<a id="DecodeObjectFromBytes_T_byte_PeterO_Cbor_CBOREncodeOptions_PeterO_Cbor_CBORTypeMapper_PeterO_Cbor_PODOptions"></a>
+### DecodeObjectFromBytes
+
+    public static T DecodeObjectFromBytes<T>(
+        byte[] data,
+        PeterO.Cbor.CBOREncodeOptions enc,
+        PeterO.Cbor.CBORTypeMapper mapper,
+        PeterO.Cbor.PODOptions pod);
+
+Generates an object of an arbitrary type from an array of CBOR-encoded bytes, using the given  `CBOREncodeOptions`  object to control the decoding process. It is equivalent to DecodeFromBytes followed by ToObject. See the documentation for those methods for more information.
+
+<b>Parameters:</b>
+
+ * <i>data</i>: A byte array in which a single CBOR object is encoded.
+
+ * <i>enc</i>: Specifies options to control how the CBOR object is decoded. See [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) for more information.
+
+ * &lt;T&gt;: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method, such as  `int`  or  `String` , or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+
+ * <i>mapper</i>: This parameter controls which data types are eligible for Plain-Old-Data deserialization and includes custom converters from CBOR objects to certain data types. Can be null.
+
+ * <i>pod</i>: Specifies options for controlling deserialization of CBOR objects.
+
+<b>Return Value:</b>
+
+An object of the given type decoded from the given byte array. Returns null (as opposed to CBORObject.Null) if  <i>data</i>
+ is empty and the AllowEmpty property is set on the given CBOREncodeOptions object.
+
+<b>Exceptions:</b>
+
+ * PeterO.Cbor.CBORException:
+There was an error in reading or parsing the data. This includes cases where not all of the byte array represents a CBOR object. This exception is also thrown if the parameter  <i>data</i>
+ is empty unless the AllowEmpty property is set on the given options object. Also thrown if the given type "T", or this object's CBOR type, is not supported, or the given object's nesting is too deep, or another error occurred when serializing the object.
+
+ * System.ArgumentNullException:
+The parameter  <i>data</i>
+ is null, or the parameter  <i>enc</i>
+ is null, or the parameter "T" or  <i>pod</i>
+ is null.
+
+<a id="DecodeObjectFromBytes_T_byte_PeterO_Cbor_CBORTypeMapper_PeterO_Cbor_PODOptions"></a>
+### DecodeObjectFromBytes
+
+    public static T DecodeObjectFromBytes<T>(
+        byte[] data,
+        PeterO.Cbor.CBORTypeMapper mapper,
+        PeterO.Cbor.PODOptions pod);
+
+Generates an object of an arbitrary type from an array of CBOR-encoded bytes. It is equivalent to DecodeFromBytes followed by ToObject. See the documentation for those methods for more information.
+
+<b>Parameters:</b>
+
+ * <i>data</i>: A byte array in which a single CBOR object is encoded.
+
+ * &lt;T&gt;: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method, such as  `int`  or  `String` , or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+
+ * <i>mapper</i>: This parameter controls which data types are eligible for Plain-Old-Data deserialization and includes custom converters from CBOR objects to certain data types. Can be null.
+
+ * <i>pod</i>: Specifies options for controlling deserialization of CBOR objects.
+
+<b>Return Value:</b>
+
+An object of the given type decoded from the given byte array. Returns null (as opposed to CBORObject.Null) if  <i>data</i>
+ is empty and the AllowEmpty property is set on the given CBOREncodeOptions object.
+
+<b>Exceptions:</b>
+
+ * PeterO.Cbor.CBORException:
+There was an error in reading or parsing the data. This includes cases where not all of the byte array represents a CBOR object. This exception is also thrown if the parameter  <i>data</i>
+ is empty unless the AllowEmpty property is set on the given options object. Also thrown if the given type "T", or this object's CBOR type, is not supported, or the given object's nesting is too deep, or another error occurred when serializing the object.
+
+ * System.ArgumentNullException:
+The parameter  <i>data</i>
+ is null, or the parameter "T" or  <i>pod</i>
+ is null.
+
 <a id="DecodeSequenceFromBytes_byte"></a>
 ### DecodeSequenceFromBytes
 
@@ -2284,6 +2580,101 @@ A CBOR object corresponding to the given object. Returns CBORObject.Null if the 
  * System.ArgumentNullException:
 The parameter  <i>mapper</i>
  is null.
+
+<a id="FromObject_object_PeterO_Cbor_CBORTypeMapper_PeterO_Cbor_PODOptions"></a>
+### FromObject
+
+    public static PeterO.Cbor.CBORObject FromObject(
+        object obj,
+        PeterO.Cbor.CBORTypeMapper mapper,
+        PeterO.Cbor.PODOptions options);
+
+Generates a CBORObject from an arbitrary object, using the given options to control how certain objects are converted to CBOR objects. The following cases are checked in the logical order given (rather than the strict order in which they are implemented by this library):
+
+ *  `null`  is converted to  `CBORObject.Null`  .
+
+ * A  `CBORObject`  is returned as itself.
+
+ * If the object is of a type corresponding to a type converter mentioned in the  <i>mapper</i>
+ parameter, that converter will be used to convert the object to a CBOR object. Type converters can be used to override the default conversion behavior of almost any object.
+
+ * A  `char`  is converted to an integer (from 0 through 65535), and returns a CBOR object of that integer. (This is a change in version 4.0 from previous versions, which converted  `char`  , except surrogate code points from 0xd800 through 0xdfff, into single-character text strings.)
+
+ * A  `bool`  (  `boolean`  in Java) is converted to  `CBORObject.True`  or  `CBORObject.False`  .
+
+ * A  `byte`  is converted to a CBOR integer from 0 through 255.
+
+ * A primitive integer type (  `int`  ,  `short`  ,  `long`  , as well as  `sbyte`  ,  `ushort`  ,  `uint`  , and  `ulong`  in.NET) is converted to the corresponding CBOR integer.
+
+ * A primitive floating-point type (  `float`  ,  `double`  , as well as  `decimal`  in.NET) is converted to the corresponding CBOR number.
+
+ * A  `String`  is converted to a CBOR text string. To create a CBOR byte string object from  `String`  , see the example given in **M:PeterO.Cbor.CBORObject.FromObject(System.Byte[])**.
+
+ * In the.NET version, a nullable is converted to  `CBORObject.Null`  if the nullable's value is  `null`  , or converted according to the nullable's underlying type, if that type is supported by this method.
+
+ * In the Java version, a number of type  `BigInteger`  or  `BigDecimal`  is converted to the corresponding CBOR number.
+
+ * A number of type  `EDecimal`  ,  `EFloat`  ,  `EInteger`  , and  `ERational`  in the <a href="https://www.nuget.org/packages/PeterO.Numbers"> `PeterO.Numbers` </a> library (in .NET) or the <a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers` </a> artifact (in Java) is converted to the corresponding CBOR number.
+
+ * An array other than  `byte[]`  is converted to a CBOR array. In the.NET version, a multidimensional array is converted to an array of arrays.
+
+ * A  `byte[]`  (1-dimensional byte array) is converted to a CBOR byte string; the byte array is copied to a new byte array in this process. (This method can't be used to decode CBOR data from a byte array; for that, use the <b>DecodeFromBytes</b> method instead.)
+
+ * An object implementing IDictionary (Map in Java) is converted to a CBOR map containing the keys and values enumerated.
+
+ * An object implementing IEnumerable (Iterable in Java) is converted to a CBOR array containing the items enumerated.
+
+ * An enumeration (  `Enum`  ) object is converted to its <i>underlying value</i> in the.NET version, or the result of its  `ordinal()`  method in the Java version.
+
+ * An object of type  `DateTime`  ,  `Uri`  , or  `Guid`  (  `Date`  ,  `URI`  , or  `UUID`  , respectively, in Java) will be converted to a tagged CBOR object of the appropriate kind.  `DateTime`  /  `Date`  will be converted to a tag-0 string following the date format used in the Atom syndication format.
+
+ * If the object is a type not specially handled above, this method checks the  <i>obj</i>
+ parameter for eligible getters as follows:
+
+ * (*) In the .NET version, eligible getters are the public, nonstatic getters of read/write properties (and also those of read-only properties in the case of a compiler-generated type or an F# type). Eligible getters also include public, nonstatic, non-  `const`  , non-  `readonly`  fields. If a class has two properties and/or fields of the form "X" and "IsX", where "X" is any name, or has multiple properties and/or fields with the same name, those properties and fields are ignored.
+
+ * (*) In the Java version, eligible getters are public, nonstatic methods starting with "get" or "is" (either word followed by a character other than a basic digit or lower-case letter, that is, other than "a" to "z" or "0" to "9"), that take no parameters and do not return void, except that methods named "getClass" are not eligible getters. In addition, public, nonstatic, nonfinal fields are also eligible getters. If a class has two otherwise eligible getters (methods and/or fields) of the form "isX" and "getX", where "X" is the same in both, or two such getters with the same name but different return type, they are not eligible getters.
+
+ * Then, the method returns a CBOR map with each eligible getter's name or property name as each key, and with the corresponding value returned by that getter as that key's value. Before adding a key-value pair to the map, the key's name is adjusted according to the rules described in the [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) documentation. Note that for security reasons, certain types are not supported even if they contain eligible getters.
+
+<b>REMARK:</b> .NET enumeration (  `Enum`  ) constants could also have been converted to text strings with  `ToString()`  , but that method will return multiple names if the given Enum object is a combination of Enum objects (e.g. if the object is  `FileAccess.Read | FileAccess.Write`  ). More generally, if Enums are converted to text strings, constants from Enum types with the  `Flags`  attribute, and constants from the same Enum type that share an underlying value, should not be passed to this method.
+
+The following example generates a CBOR object from a 64-bit signed integer that is treated as a 64-bit unsigned integer (such as.NET's UInt64, which has no direct equivalent in the Java language), in the sense that the value is treated as 2^64 plus the original value if it's negative.
+
+    long x = -40L; // Example 64-bit value treated as 2^64-40.
+                CBORObject obj = CBORObject.FromObject(
+                v < 0 ? EInteger.FromInt32(1).ShiftLeft(64).Add(v) :
+                EInteger.FromInt64(v));
+
+In the Java version, which has java.math.BigInteger, the following can be used instead:
+
+    long x = -40L; // Example 64-bit value treated as 2^64-40.
+                CBORObject obj = CBORObject.FromObject(
+                v < 0 ? BigInteger.valueOf(1).shiftLeft(64).add(BigInteger.valueOf(v)) :
+                BigInteger.valueOf(v));
+
+<b>Parameters:</b>
+
+ * <i>obj</i>: An arbitrary object to convert to a CBOR object. <b>NOTE:</b> For security reasons, whenever possible, an application should not base this parameter on user input or other externally supplied data unless the application limits this parameter's inputs to types specially handled by this method (such as  `int`  or  `String`  ) and/or to plain-old-data types (POCO or POJO types) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+
+ .
+
+ * <i>mapper</i>: An object containing optional converters to convert objects of certain types to CBOR objects. Can be null.
+
+ * <i>options</i>: An object containing options to control how certain objects are converted to CBOR objects.
+
+<b>Return Value:</b>
+
+A CBOR object corresponding to the given object. Returns CBORObject.Null if the object is null.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter  <i>options</i>
+ is null.
+
+ * PeterO.Cbor.CBORException:
+An error occurred while converting the given object to a CBOR object.
 
 <a id="FromObject_object_PeterO_Cbor_PODOptions"></a>
 ### FromObject
@@ -3092,7 +3483,7 @@ A new CBOR map.
 
     public static PeterO.Cbor.CBORObject NewOrderedMap();
 
-Creates a new empty CBOR map that ensures that keys are stored in the order in which they are inserted.
+Creates a new empty CBOR map that ensures that keys are stored in the order in which they are first inserted.
 
 <b>Return Value:</b>
 
@@ -3107,7 +3498,7 @@ A new CBOR map.
 
 <b>Deprecated.</b> May be removed in the next major version. Consider converting the objects to CBOR numbers and performing the operation there.
 
-Adds two CBOR objects and returns their result.
+Does an addition on two CBOR objects and returns their result.
 
 <b>Parameters:</b>
 
