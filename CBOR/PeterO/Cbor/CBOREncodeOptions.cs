@@ -221,8 +221,8 @@ namespace PeterO.Cbor {
     /// <summary>Gets a value indicating whether CBOR objects:
     /// <list>
     /// <item>When encoding, are written out using the CTAP2 canonical CBOR
-    /// encoding form, which is useful for implementing Web
-    /// Authentication.</item>
+    /// encoding form, which is useful for implementing Web Authentication
+    /// (WebAuthn).</item>
     /// <item>When decoding, are checked for compliance with the CTAP2
     /// canonical encoding form.</item></list> In this form, CBOR tags are
     /// not used, map keys are written out in a canonical order, a maximum
