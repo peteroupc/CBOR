@@ -133,28 +133,6 @@ namespace PeterO.Cbor {
         }
       }
 
-      /* private class IEC : IEqualityComparer<TKey> {
-          public bool Equals(TKey a, TKey b) {
-             bool ret = a.Equals(b);
-             CBORType c1=(a as CBORObject).Type;
-             CBORType c2=(b as CBORObject).Type;
-             DebugUtility.Log("Equality: " + ret + " [a=" + c1 + " b=" + c2+
-"]");
-             return ret;
-          }
-          public int GetHashCode(TKey a) {
-             int ret = a.GetHashCode();
-             DebugUtility.Log("HashCode: " + ret + " [Type=" + ((a as
-CBORObject).Type) + "]");
-             return ret;
-          }
-      }
-
-      private string CS(TKey k) {
-       return String.Empty;
-      }
-      */
-
       [System.Diagnostics.Conditional("DEBUG")]
       private void CheckKeyExists(TKey key) {
            TValue v = default(TValue);

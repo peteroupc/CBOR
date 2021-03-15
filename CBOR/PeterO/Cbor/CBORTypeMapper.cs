@@ -21,7 +21,13 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Registers an object that converts objects of a given type
-    /// to CBOR objects (called a CBOR converter).</summary>
+    /// to CBOR objects (called a CBOR converter). If the CBOR converter
+    /// converts to and from CBOR objects, it should implement the
+    /// ICBORToFromConverter interface and provide ToCBORObject and
+    /// FromCBORObject methods. If the CBOR converter only supports
+    /// converting to (not from) CBOR objects, it should implement the
+    /// ICBORConverter interface and provide a ToCBORObject
+    /// method.</summary>
     /// <param name='type'>A Type object specifying the type that the
     /// converter converts to CBOR objects.</param>
     /// <param name='converter'>The parameter <paramref name='converter'/>
