@@ -7,7 +7,7 @@ Specifies options for encoding and decoding CBOR objects.
 ### Member Summary
 * <code>[AllowDuplicateKeys](#AllowDuplicateKeys)</code> - Gets a value indicating whether to allow duplicate keys when reading CBOR objects from a data stream.
 * <code>[AllowEmpty](#AllowEmpty)</code> - Gets a value indicating whether decoding a CBOR object will return null instead of a CBOR object if the stream has no content or the end of the stream is reached before decoding begins.
-* <code>[Ctap2Canonical](#Ctap2Canonical)</code> - Gets a value indicating whether CBOR objects: When encoding, are written out using the CTAP2 canonical CBOR encoding form, which is useful for implementing Web Authentication.
+* <code>[Ctap2Canonical](#Ctap2Canonical)</code> - Gets a value indicating whether CBOR objects: When encoding, are written out using the CTAP2 canonical CBOR encoding form, which is useful for implementing Web Authentication (WebAuthn).
 * <code>[public static readonly PeterO.Cbor.CBOREncodeOptions Default;](#Default)</code> - Default options for CBOR objects.
 * <code>[public static readonly PeterO.Cbor.CBOREncodeOptions DefaultCtap2Canonical;](#DefaultCtap2Canonical)</code> - Default options for CBOR objects serialized using the CTAP2 canonicalization (used in Web Authentication, among other specifications).
 * <code>[ResolveReferences](#ResolveReferences)</code> - Gets a value indicating whether to resolve references to sharable objects and sharable strings in the process of decoding a CBOR object.
@@ -115,7 +115,7 @@ A value indicating whether decoding a CBOR object will return  `null`  instead o
 
 Gets a value indicating whether CBOR objects:
 
- * When encoding, are written out using the CTAP2 canonical CBOR encoding form, which is useful for implementing Web Authentication.
+ * When encoding, are written out using the CTAP2 canonical CBOR encoding form, which is useful for implementing Web Authentication (WebAuthn).
 
  * When decoding, are checked for compliance with the CTAP2 canonical encoding form.
 

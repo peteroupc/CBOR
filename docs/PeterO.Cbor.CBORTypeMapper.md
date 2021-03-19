@@ -24,7 +24,7 @@ Initializes a new instance of the [PeterO.Cbor.CBORTypeMapper](PeterO.Cbor.CBORT
         System.Type type,
         PeterO.Cbor.ICBORConverter<T> converter);
 
-Registers an object that converts objects of a given type to CBOR objects (called a CBOR converter).
+Registers an object that converts objects of a given type to CBOR objects (called a CBOR converter). If the CBOR converter converts to and from CBOR objects, it should implement the ICBORToFromConverter interface and provide ToCBORObject and FromCBORObject methods. If the CBOR converter only supports converting to (not from) CBOR objects, it should implement the ICBORConverter interface and provide a ToCBORObject method.
 
 <b>Parameters:</b>
 

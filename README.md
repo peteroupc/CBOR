@@ -240,6 +240,50 @@ if(cbor.IsNumber && cbor.AsNumber().CanValueFitInInt32()) {
 }
 ```
 
+The following example illustrates a custom strategy for converting objects
+of a given class into CBOR objects.
+```
+    public class CPOD3 {
+       public string Aa { get; set; }
+       public string Bb { get; set; }
+       public string Cc { get; set; }
+    }
+
+    private class CPOD3Converter : ICBORToFromConverter<CPOD3> {
+       public CBORObject ToCBORObject(CPOD3 cpod) {
+          return CBORObject.NewMap()
+             .Add(0,cpod.Aa)
+             .Add(1,cpod.Bb)
+             .Add(2,cpod.Cc);
+       }
+       public CPOD3 FromCBORObject(CBORObject obj) {
+          if (obj.Type!=CBORType.Map) {
+             throw new CBORException();
+          }
+          var ret=new CPOD3();
+          ret.Aa=obj[0].AsString();
+          ret.Bb=obj[1].AsString();
+          ret.Cc=obj[2].AsString();
+          return ret;
+       }
+    }
+
+    //////////
+    //  And in the code...
+
+       var cp2=new CPOD3();
+       cp2.Aa="AA";
+       cp2.Bb="BB";
+       cp2.Cc="CC";
+       var tm=new CBORTypeMapper().AddConverter(
+           typeof(CPOD3),
+           new CPOD3Converter());
+       // Serialize CBOR object
+       var cbor=CBORObject.FromObject(cp2,tm);
+       // Deserialize CBOR object
+       cp2=cbor.ToObject<CPOD3>();
+```
+
 NOTE: All code samples in this section are released to the Public Domain,
 as explained in <http://creativecommons.org/publicdomain/zero/1.0/>.
 

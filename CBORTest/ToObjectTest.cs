@@ -1379,6 +1379,115 @@ o = ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
       }
     }
 
+    private class CPOD3Converter : ICBORToFromConverter<CPOD3> {
+       public CBORObject ToCBORObject(CPOD3 cpod) {
+          return CBORObject.NewMap().Add(0, cpod.Aa)
+             .Add(1, cpod.Bb).Add(2, cpod.Cc);
+       }
+       public CPOD3 FromCBORObject(CBORObject obj) {
+          if (obj.Type != CBORType.Map) {
+            throw new CBORException();
+          }
+          var ret = new CPOD3();
+          ret.Aa = obj[0].AsString();
+          ret.Bb = obj[1].AsString();
+          ret.Cc = obj[2].AsString();
+          return ret;
+       }
+    }
+
+    [Test]
+    public void TestCBORTypeMapper() {
+       var cp = new CPOD3();
+       cp.Aa = "aa";
+       cp.Bb = "bb";
+       cp.Cc = "cc";
+       var cp2 = new CPOD3();
+       cp2.Aa = "AA";
+       cp2.Bb = "BB";
+       cp2.Cc = "CC";
+       var tm = new CBORTypeMapper().AddConverter(
+           typeof(CPOD3),
+           new CPOD3Converter());
+       CBORObject cbor;
+       CBORObject cbor2;
+       cbor = CBORObject.FromObject(cp, tm);
+       Assert.AreEqual(CBORType.Map, cbor.Type);
+       Assert.AreEqual(3, cbor.Count);
+       {
+         string stringTemp = cbor[0].AsString();
+         Assert.AreEqual(
+           "aa",
+           stringTemp);
+}
+       Assert.IsFalse(cbor.ContainsKey("aa"));
+       Assert.IsFalse(cbor.ContainsKey("Aa"));
+       {
+         string stringTemp = cbor[1].AsString();
+         Assert.AreEqual(
+           "bb",
+           stringTemp);
+}
+       {
+         string stringTemp = cbor[2].AsString();
+         Assert.AreEqual(
+           "cc",
+           stringTemp);
+}
+       var cpx = (CPOD3)cbor.ToObject(typeof(CPOD3), tm);
+       Assert.AreEqual("aa", cpx.Aa);
+       Assert.AreEqual("bb", cpx.Bb);
+       Assert.AreEqual("cc", cpx.Cc);
+       cbor = CBORObject.FromObject(new CPOD3[] { cp, cp2}, tm);
+       Assert.AreEqual(CBORType.Array, cbor.Type);
+       Assert.AreEqual(2, cbor.Count);
+       cbor2 = cbor[0];
+       {
+         string stringTemp = cbor2[0].AsString();
+         Assert.AreEqual(
+           "aa",
+           stringTemp);
+}
+       {
+         string stringTemp = cbor2[1].AsString();
+         Assert.AreEqual(
+           "bb",
+           stringTemp);
+}
+       {
+         string stringTemp = cbor2[2].AsString();
+         Assert.AreEqual(
+           "cc",
+           stringTemp);
+}
+       cbor2 = cbor[1];
+       {
+         string stringTemp = cbor2[0].AsString();
+         Assert.AreEqual(
+           "AA",
+           stringTemp);
+}
+       {
+         string stringTemp = cbor2[1].AsString();
+         Assert.AreEqual(
+           "BB",
+           stringTemp);
+}
+       {
+         string stringTemp = cbor2[2].AsString();
+         Assert.AreEqual(
+           "CC",
+           stringTemp);
+}
+       CPOD3[] cpa = (CPOD3[])cbor.ToObject(typeof(CPOD3[]), tm);
+       Assert.AreEqual("aa", cpa[0].Aa);
+       Assert.AreEqual("bb", cpa[0].Bb);
+       Assert.AreEqual("cc", cpa[0].Cc);
+       Assert.AreEqual("AA", cpa[1].Aa);
+       Assert.AreEqual("BB", cpa[1].Bb);
+       Assert.AreEqual("CC", cpa[1].Cc);
+    }
+
     [Test]
     public void TestUUIDRoundTrip() {
       var rng = new RandomGenerator();

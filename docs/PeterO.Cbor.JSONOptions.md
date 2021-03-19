@@ -8,7 +8,7 @@ Includes options to control how CBOR objects are converted to JSON.
 * <code>[AllowDuplicateKeys](#AllowDuplicateKeys)</code> - Gets a value indicating whether to allow duplicate keys when reading JSON.
 * <code>[Base64Padding](#Base64Padding)</code> - <b>Deprecated:</b> This property now has no effect. This library now includes necessary padding when writing traditional base64 to JSON and includes no padding when writing base64url to JSON, in accordance with the revision of the CBOR specification.
 * <code>[public static readonly PeterO.Cbor.JSONOptions Default;](#Default)</code> - The default options for converting CBOR objects to JSON.
-* <code>[NumberConversion](#NumberConversion)</code> - Gets a value indicating how JSON numbers are decoded to CBOR.
+* <code>[NumberConversion](#NumberConversion)</code> - Gets a value indicating how JSON numbers are decoded to CBOR objects.
 * <code>[PreserveNegativeZero](#PreserveNegativeZero)</code> - Gets a value indicating whether the JSON decoder should preserve the distinction between positive zero and negative zero when the decoder decodes JSON to a floating-point number format that makes this distinction.
 * <code>[ReplaceSurrogates](#ReplaceSurrogates)</code> - Gets a value indicating whether surrogate code points not part of a surrogate pair (which consists of two consecutive char s forming one Unicode code point) are each replaced with a replacement character (U+FFFD).
 * <code>[ToString()](#ToString)</code> - Gets the values of this options object's properties in text form.
@@ -108,7 +108,7 @@ A value indicating whether the Base64Padding property is true.
 
     public PeterO.Cbor.JSONOptions.ConversionMode NumberConversion { get; }
 
-Gets a value indicating how JSON numbers are decoded to CBOR.
+Gets a value indicating how JSON numbers are decoded to CBOR objects. None of the conversion modes affects how CBOR objects are later encoded (such as via  `EncodeToBytes`  ).
 
 <b>Returns:</b>
 

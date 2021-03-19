@@ -573,8 +573,8 @@
             <summary>Gets a value indicating whether CBOR objects:
             <list>
             <item>When encoding, are written out using the CTAP2 canonical CBOR
-            encoding form, which is useful for implementing Web
-            Authentication.</item>
+            encoding form, which is useful for implementing Web Authentication
+            (WebAuthn).</item>
             <item>When decoding, are checked for compliance with the CTAP2
             canonical encoding form.</item></list> In this form, CBOR tags are
             not used, map keys are written out in a canonical order, a maximum
@@ -820,10 +820,12 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORNumber.CanFitInUInt64">
-<summary>Returns whether this object's numerical value is an
+
+            <summary>Returns whether this object's numerical value is an
             integer, is 0 or greater, and is less than 2^64.</summary>
             <returns><c>true</c> if this object's numerical value is an
             integer, is 0 or greater, and is less than 2^64; otherwise, <c>false</c>.</returns>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORNumber.CanTruncatedIntFitInInt32">
 
@@ -846,12 +848,14 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORNumber.CanTruncatedIntFitInUInt64">
-<summary>Returns whether this object's value, converted to an
+
+            <summary>Returns whether this object's value, converted to an
             integer by discarding its fractional part, would be 0 or greater,
             and less than 2^64.</summary>
             <returns><c>true</c> if this object's value, converted to an
             integer by discarding its fractional part, would be 0 or greater,
             and less than 2^64; otherwise, <c>false</c>.</returns>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORNumber.CompareTo(PeterO.Cbor.CBORNumber)">
 
@@ -2281,7 +2285,8 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.DecodeObjectFromBytes(System.Byte[],PeterO.Cbor.CBOREncodeOptions,System.Type)">
-<summary>Generates an object of an arbitrary type from an array of
+
+            <summary>Generates an object of an arbitrary type from an array of
             CBOR-encoded bytes, using the given <c>CBOREncodeOptions</c> object
             to control the decoding process. It is equivalent to
             DecodeFromBytes followed by ToObject. See the documentation for
@@ -2315,9 +2320,11 @@
             or another error occurred when serializing the object.</exception>
             <exception cref='ArgumentNullException'>The parameter <paramref name='data'/> is null, or the parameter <paramref name='enc'/> is
             null, or the parameter <paramref name='t'/> is null.</exception>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.DecodeObjectFromBytes(System.Byte[],PeterO.Cbor.CBOREncodeOptions,System.Type,PeterO.Cbor.CBORTypeMapper,PeterO.Cbor.PODOptions)">
-<summary>Generates an object of an arbitrary type from an array of
+
+            <summary>Generates an object of an arbitrary type from an array of
             CBOR-encoded bytes, using the given <c>CBOREncodeOptions</c> object
             to control the decoding process. It is equivalent to
             DecodeFromBytes followed by ToObject. See the documentation for
@@ -2357,9 +2364,11 @@
             or another error occurred when serializing the object.</exception>
             <exception cref='ArgumentNullException'>The parameter <paramref name='data'/> is null, or the parameter <paramref name='enc'/> is
             null, or the parameter <paramref name='t'/> or <paramref name='pod'/> is null.</exception>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.DecodeObjectFromBytes(System.Byte[],System.Type)">
-<summary>Generates an object of an arbitrary type from an array of
+
+            <summary>Generates an object of an arbitrary type from an array of
             CBOR-encoded bytes. It is equivalent to DecodeFromBytes followed by
             ToObject. See the documentation for those methods for more
             information.</summary>
@@ -2386,10 +2395,13 @@
             if the given type <paramref name='t'/>, or this object's CBOR
             type, is not supported, or the given object's nesting is too deep,
             or another error occurred when serializing the object.</exception>
-            <exception cref='ArgumentNullException'>The parameter <paramref name='data'/> is null, or the parameter <paramref name='t'/> is null.</exception>
+            <exception cref='ArgumentNullException'>The parameter <paramref name='data'/> is null, or the parameter <paramref name='t'/> is
+            null.</exception>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.DecodeObjectFromBytes(System.Byte[],System.Type,PeterO.Cbor.CBORTypeMapper,PeterO.Cbor.PODOptions)">
-<summary>Generates an object of an arbitrary type from an array of
+
+            <summary>Generates an object of an arbitrary type from an array of
             CBOR-encoded bytes. It is equivalent to DecodeFromBytes followed by
             ToObject. See the documentation for those methods for more
             information.</summary>
@@ -2422,10 +2434,13 @@
             if the given type <paramref name='t'/>, or this object's CBOR
             type, is not supported, or the given object's nesting is too deep,
             or another error occurred when serializing the object.</exception>
-            <exception cref='ArgumentNullException'>The parameter <paramref name='data'/> is null,  or the parameter <paramref name='t'/> or <paramref name='pod'/> is null.</exception>
+            <exception cref='ArgumentNullException'>The parameter <paramref name='data'/> is null, or the parameter <paramref name='t'/> or
+            <paramref name='pod'/> is null.</exception>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.DecodeObjectFromBytes``1(System.Byte[])">
-<summary>Generates an object of an arbitrary type from an array of
+
+            <summary>Generates an object of an arbitrary type from an array of
             CBOR-encoded bytes. It is equivalent to DecodeFromBytes followed by
             ToObject. See the documentation for those methods for more
             information.</summary>
@@ -2453,9 +2468,11 @@
             supported, or the given object's nesting is too deep, or another
             error occurred when serializing the object.</exception>
             <exception cref='ArgumentNullException'>The parameter <paramref name='data'/> is null.</exception>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.DecodeObjectFromBytes``1(System.Byte[],PeterO.Cbor.CBOREncodeOptions)">
-<summary>Generates an object of an arbitrary type from an array of
+
+            <summary>Generates an object of an arbitrary type from an array of
             CBOR-encoded bytes, using the given <c>CBOREncodeOptions</c> object
             to control the decoding process. It is equivalent to
             DecodeFromBytes followed by ToObject. See the documentation for
@@ -2488,21 +2505,28 @@
             error occurred when serializing the object.</exception>
             <exception cref='ArgumentNullException'>The parameter <paramref name='data'/> is null, or the parameter <paramref name='enc'/> is
             null.</exception>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.DecodeObjectFromBytes``1(System.Byte[],PeterO.Cbor.CBOREncodeOptions,PeterO.Cbor.CBORTypeMapper,PeterO.Cbor.PODOptions)">
-<summary>Generates an object of an arbitrary type from an array of
+
+            <summary>Generates an object of an arbitrary type from an array of
             CBOR-encoded bytes, using the given <c>CBOREncodeOptions</c> object
             to control the decoding process. It is equivalent to
             DecodeFromBytes followed by ToObject. See the documentation for
-            those methods for more information.</summary><param name='data'>A byte array in which a single CBOR object is
-            encoded.</param><param name='enc'>Specifies options to control how the CBOR object
+            those methods for more information.</summary>
+            <param name='data'>A byte array in which a single CBOR object is
+            encoded.</param>
+            <param name='enc'>Specifies options to control how the CBOR object
             is decoded. See
             <see cref='PeterO.Cbor.CBOREncodeOptions'/> for more
-            information.</param><param name='mapper'>This parameter controls which data types are
+            information.</param>
+            <param name='mapper'>This parameter controls which data types are
             eligible for Plain-Old-Data deserialization and includes custom
             converters from CBOR objects to certain data types. Can be
-            null.</param><param name='pod'>Specifies options for controlling deserialization
-            of CBOR objects.</param><typeparam name='T'>The type, class, or interface that this
+            null.</param>
+            <param name='pod'>Specifies options for controlling deserialization
+            of CBOR objects.</param>
+            <typeparam name='T'>The type, class, or interface that this
             method's return value will belong to. To express a generic type in
             Java, see the example. <b>Note:</b> For security reasons, an
             application should not base this parameter on user input or other
@@ -2511,29 +2535,38 @@
             <c>int</c> or <c>String</c>, or a plain-old-data type (POCO or
             POJO type) within the control of the application. If the
             plain-old-data type references other data types, those types should
-            likewise meet either criterion above.</typeparam><returns>An object of the given type decoded from the given byte
+            likewise meet either criterion above.</typeparam>
+            <returns>An object of the given type decoded from the given byte
             array. Returns null (as opposed to CBORObject.Null) if <paramref name='data'/> is empty and the AllowEmpty property is set on the
-            given CBOREncodeOptions object.</returns><exception cref='PeterO.Cbor.CBORException'>There was an error in
+            given CBOREncodeOptions object.</returns>
+            <exception cref='PeterO.Cbor.CBORException'>There was an error in
             reading or parsing the data. This includes cases where not all of
             the byte array represents a CBOR object. This exception is also
             thrown if the parameter <paramref name='data'/> is empty unless the
             AllowEmpty property is set on the given options object. Also thrown
             if the given type "T", or this object's CBOR type, is not
             supported, or the given object's nesting is too deep, or another
-            error occurred when serializing the object.</exception><exception cref='ArgumentNullException'>The parameter <paramref name='data'/> is null, or the parameter <paramref name='enc'/> is
+            error occurred when serializing the object.</exception>
+            <exception cref='ArgumentNullException'>The parameter <paramref name='data'/> is null, or the parameter <paramref name='enc'/> is
             null, or the parameter "T" or <paramref name='pod'/> is
             null.</exception>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.DecodeObjectFromBytes``1(System.Byte[],PeterO.Cbor.CBORTypeMapper,PeterO.Cbor.PODOptions)">
-<summary>Generates an object of an arbitrary type from an array of
+
+            <summary>Generates an object of an arbitrary type from an array of
             CBOR-encoded bytes. It is equivalent to DecodeFromBytes followed by
             ToObject. See the documentation for those methods for more
-            information.</summary><param name='data'>A byte array in which a single CBOR object is
-            encoded.</param><param name='mapper'>This parameter controls which data types are
+            information.</summary>
+            <param name='data'>A byte array in which a single CBOR object is
+            encoded.</param>
+            <param name='mapper'>This parameter controls which data types are
             eligible for Plain-Old-Data deserialization and includes custom
             converters from CBOR objects to certain data types. Can be
-            null.</param><param name='pod'>Specifies options for controlling deserialization
-            of CBOR objects.</param><typeparam name='T'>The type, class, or interface that this
+            null.</param>
+            <param name='pod'>Specifies options for controlling deserialization
+            of CBOR objects.</param>
+            <typeparam name='T'>The type, class, or interface that this
             method's return value will belong to. To express a generic type in
             Java, see the example. <b>Note:</b> For security reasons, an
             application should not base this parameter on user input or other
@@ -2542,17 +2575,20 @@
             <c>int</c> or <c>String</c>, or a plain-old-data type (POCO or
             POJO type) within the control of the application. If the
             plain-old-data type references other data types, those types should
-            likewise meet either criterion above.</typeparam><returns>An object of the given type decoded from the given byte
+            likewise meet either criterion above.</typeparam>
+            <returns>An object of the given type decoded from the given byte
             array. Returns null (as opposed to CBORObject.Null) if <paramref name='data'/> is empty and the AllowEmpty property is set on the
-            given CBOREncodeOptions object.</returns><exception cref='PeterO.Cbor.CBORException'>There was an error in
+            given CBOREncodeOptions object.</returns>
+            <exception cref='PeterO.Cbor.CBORException'>There was an error in
             reading or parsing the data. This includes cases where not all of
             the byte array represents a CBOR object. This exception is also
             thrown if the parameter <paramref name='data'/> is empty unless the
             AllowEmpty property is set on the given options object. Also thrown
             if the given type "T", or this object's CBOR type, is not
             supported, or the given object's nesting is too deep, or another
-            error occurred when serializing the object.</exception><exception cref='ArgumentNullException'>The parameter <paramref name='data'/> is null, or the parameter "T" or <paramref name='pod'/> is
-            null.</exception>
+            error occurred when serializing the object.</exception>
+            <exception cref='ArgumentNullException'>The parameter <paramref name='data'/> is null, or the parameter "T" or <paramref name='pod'/> is null.</exception>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.DecodeSequenceFromBytes(System.Byte[])">
 
@@ -3224,7 +3260,7 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Object,PeterO.Cbor.CBORTypeMapper,PeterO.Cbor.PODOptions)">
 
-        <summary><para>Generates a CBORObject from an arbitrary object,
+            <summary><para>Generates a CBORObject from an arbitrary object,
             using the given options to control how certain objects are
             converted to CBOR objects. The following cases are checked in the
             logical order given (rather than the strict order in which they are
@@ -3334,7 +3370,9 @@
             Enums are converted to text strings, constants from Enum types with
             the <c>Flags</c> attribute, and constants from the same Enum type
             that share an underlying value, should not be passed to this
-            method.</para></summary><param name='obj'>An arbitrary object to convert to a CBOR object.
+            method.</para>
+             </summary>
+            <param name='obj'>An arbitrary object to convert to a CBOR object.
             <para><b>NOTE:</b> For security reasons, whenever possible, an
             application should not base this parameter on user input or other
             externally supplied data unless the application limits this
@@ -3343,12 +3381,18 @@
             (POCO or POJO types) within the control of the application. If the
             plain-old-data type references other data types, those types should
             likewise meet either criterion above.</para>
-            .</param><param name='mapper'>An object containing optional converters to
+            .</param>
+            <param name='mapper'>An object containing optional converters to
             convert objects of certain types to CBOR objects. Can be
-            null.</param><param name='options'>An object containing options to control how
-            certain objects are converted to CBOR objects.</param><returns>A CBOR object corresponding to the given object. Returns
-            CBORObject.Null if the object is null.</returns><exception cref='ArgumentNullException'>The parameter <paramref name='options'/> is null.</exception><exception cref='PeterO.Cbor.CBORException'>An error occurred while
-            converting the given object to a CBOR object.</exception><example><para>The following example generates a CBOR object from a 64-bit
+            null.</param>
+            <param name='options'>An object containing options to control how
+            certain objects are converted to CBOR objects.</param>
+            <returns>A CBOR object corresponding to the given object. Returns
+            CBORObject.Null if the object is null.</returns>
+            <exception cref='ArgumentNullException'>The parameter <paramref name='options'/> is null.</exception>
+            <exception cref='PeterO.Cbor.CBORException'>An error occurred while
+            converting the given object to a CBOR object.</exception>
+            <example><para>The following example generates a CBOR object from a 64-bit
             signed integer that is treated as a 64-bit unsigned integer (such
             as.NET's UInt64, which has no direct equivalent in the Java
             language), in the sense that the value is treated as 2^64 plus the
@@ -3362,6 +3406,7 @@
             CBORObject obj = CBORObject.FromObject(
             v &lt; 0 ? BigInteger.valueOf(1).shiftLeft(64).add(BigInteger.valueOf(v)) :
             BigInteger.valueOf(v));</code>.</example>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Object,PeterO.Cbor.PODOptions)">
 
@@ -5859,7 +5904,8 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.op_Addition(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
 
-            <summary>Does an addition on two CBOR objects and returns their result.</summary>
+            <summary>Does an addition on two CBOR objects and returns their
+            result.</summary>
             <param name='a'>The parameter <paramref name='a'/> is a CBOR
             object.</param>
             <param name='b'>The parameter <paramref name='b'/> is a CBOR
@@ -6034,7 +6080,13 @@
 <doc name="M:PeterO.Cbor.CBORTypeMapper.AddConverter``1(System.Type,PeterO.Cbor.ICBORConverter{``0})">
 
             <summary>Registers an object that converts objects of a given type
-            to CBOR objects (called a CBOR converter).</summary>
+            to CBOR objects (called a CBOR converter). If the CBOR converter
+            converts to and from CBOR objects, it should implement the
+            ICBORToFromConverter interface and provide ToCBORObject and
+            FromCBORObject methods. If the CBOR converter only supports
+            converting to (not from) CBOR objects, it should implement the
+            ICBORConverter interface and provide a ToCBORObject
+            method.</summary>
             <param name='type'>A Type object specifying the type that the
             converter converts to CBOR objects.</param>
             <param name='converter'>The parameter <paramref name='converter'/>
@@ -6235,10 +6287,12 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.ICBORNumber.CanTruncatedIntFitInUInt64(System.Object)">
-<summary>This is an internal API.</summary>
+
+            <summary>This is an internal API.</summary>
             <param name='obj'>The parameter <paramref name='obj'/> is an
             arbitrary object.</param>
             <returns>The return value is an internal value.</returns>
+
 </doc>
 <doc name="M:PeterO.Cbor.ICBORNumber.IsInfinity(System.Object)">
 
@@ -6549,8 +6603,10 @@
 </doc>
 <doc name="T:PeterO.Cbor.JSONOptions.ConversionMode">
 
-            <summary>Specifies how JSON numbers are converted to CBOR when
-            decoding JSON.</summary>
+            <summary>Specifies how JSON numbers are converted to CBOR objects
+            when decoding JSON (such as via <c>FromJSONString</c> or
+            <c>ReadJSON</c> ). None of these conversion modes affects how CBOR
+            objects are later encoded (such as via <c>EncodeToBytes</c> ).</summary>
 
 </doc>
 <doc name="F:PeterO.Cbor.JSONOptions.ConversionMode.Decimal128">
@@ -6569,7 +6625,14 @@
             approximation as 64-bit binary floating-point numbers. (In some
             cases, numbers extremely close to zero may underflow to positive or
             negative zero, and numbers of extremely large magnitude may
-            overflow to infinity.).</summary>
+            overflow to infinity.). It's important to note that this mode
+            affects only how JSON numbers are <c>decoded</c> to a CBOR object;
+            it doesn't affect how <c>EncodeToBytes</c> and other methods encode
+            CBOR objects. Notably, by default, <c>EncodeToBytes</c> encodes
+            CBOR floating-point values to the CBOR format in their 16-bit
+            ("half-float"), 32-bit ("single-precision"), or 64-bit
+            ("double-precision") encoding form depending on the
+            value.</summary>
 
 </doc>
 <doc name="F:PeterO.Cbor.JSONOptions.ConversionMode.Full">
@@ -6589,31 +6652,46 @@
 </doc>
 <doc name="F:PeterO.Cbor.JSONOptions.ConversionMode.IntOrFloat">
 
-            <summary>A JSON number is decoded to CBOR either as a CBOR integer
-            (major type 0 or 1) if the JSON number represents an integer at
-            least -(2^53)+1 and less than 2^53, or as their closest-rounded
-            approximation as 64-bit binary floating-point numbers otherwise.
-            For example, the JSON number 0.99999999999999999999999999999999999
-            is not an integer, so it's converted to its closest 64-bit binary
-            floating-point approximation, namely 1.0. (In some cases, numbers
-            extremely close to zero may underflow to positive or negative zero,
-            and numbers of extremely large magnitude may overflow to
-            infinity.).</summary>
+            <summary>A JSON number is decoded to CBOR objects either as a CBOR
+            integer (major type 0 or 1) if the JSON number represents an
+            integer at least -(2^53)+1 and less than 2^53, or as their
+            closest-rounded approximation as 64-bit binary floating-point
+            numbers otherwise. For example, the JSON number
+            0.99999999999999999999999999999999999 is not an integer, so it's
+            converted to its closest 64-bit binary floating-point
+            approximation, namely 1.0. (In some cases, numbers extremely close
+            to zero may underflow to positive or negative zero, and numbers of
+            extremely large magnitude may overflow to infinity.). It's
+            important to note that this mode affects only how JSON numbers are
+            <c>decoded</c> to a CBOR object; it doesn't affect how
+            <c>EncodeToBytes</c> and other methods encode CBOR objects.
+            Notably, by default, <c>EncodeToBytes</c> encodes CBOR
+            floating-point values to the CBOR format in their 16-bit
+            ("half-float"), 32-bit ("single-precision"), or 64-bit
+            ("double-precision") encoding form depending on the
+            value.</summary>
 
 </doc>
 <doc name="F:PeterO.Cbor.JSONOptions.ConversionMode.IntOrFloatFromDouble">
 
-            <summary>A JSON number is decoded to CBOR either as a CBOR integer
-            (major type 0 or 1) if the number's closest-rounded approximation
-            as a 64-bit binary floating-point number represents an integer at
-            least -(2^53)+1 and less than 2^53, or as that approximation
-            otherwise. For example, the JSON number
+            <summary>A JSON number is decoded to CBOR objects either as a CBOR
+            integer (major type 0 or 1) if the number's closest-rounded
+            approximation as a 64-bit binary floating-point number represents
+            an integer at least -(2^53)+1 and less than 2^53, or as that
+            approximation otherwise. For example, the JSON number
             0.99999999999999999999999999999999999 is the integer 1 when rounded
             to its closest 64-bit binary floating-point approximation (1.0), so
             it's converted to the CBOR integer 1 (major type 0). (In some
             cases, numbers extremely close to zero may underflow to zero, and
-            numbers of extremely large magnitude may overflow to
-            infinity.).</summary>
+            numbers of extremely large magnitude may overflow to infinity.).
+            It's important to note that this mode affects only how JSON numbers
+            are <c>decoded</c> to a CBOR object; it doesn't affect how
+            <c>EncodeToBytes</c> and other methods encode CBOR objects.
+            Notably, by default, <c>EncodeToBytes</c> encodes CBOR
+            floating-point values to the CBOR format in their 16-bit
+            ("half-float"), 32-bit ("single-precision"), or 64-bit
+            ("double-precision") encoding form depending on the
+            value.</summary>
 
 </doc>
 <doc name="F:PeterO.Cbor.JSONOptions.Default">
@@ -6625,7 +6703,8 @@
 <doc name="P:PeterO.Cbor.JSONOptions.NumberConversion">
 
             <summary>Gets a value indicating how JSON numbers are decoded to
-            CBOR.</summary>
+            CBOR objects. None of the conversion modes affects how CBOR objects
+            are later encoded (such as via <c>EncodeToBytes</c> ).</summary>
             <value>A value indicating how JSON numbers are decoded to CBOR. The
             default is <c>ConversionMode.Full</c>.</value>
 

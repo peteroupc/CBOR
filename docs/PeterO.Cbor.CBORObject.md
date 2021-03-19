@@ -1737,11 +1737,11 @@ Generates an object of an arbitrary type from an array of CBOR-encoded bytes, us
 
  * <i>enc</i>: Specifies options to control how the CBOR object is decoded. See [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) for more information.
 
- * &lt;T&gt;: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method, such as  `int`  or  `String` , or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
-
  * <i>mapper</i>: This parameter controls which data types are eligible for Plain-Old-Data deserialization and includes custom converters from CBOR objects to certain data types. Can be null.
 
  * <i>pod</i>: Specifies options for controlling deserialization of CBOR objects.
+
+ * &lt;T&gt;: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method, such as  `int`  or  `String` , or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
 
 <b>Return Value:</b>
 
@@ -1774,11 +1774,11 @@ Generates an object of an arbitrary type from an array of CBOR-encoded bytes. It
 
  * <i>data</i>: A byte array in which a single CBOR object is encoded.
 
- * &lt;T&gt;: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method, such as  `int`  or  `String` , or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
-
  * <i>mapper</i>: This parameter controls which data types are eligible for Plain-Old-Data deserialization and includes custom converters from CBOR objects to certain data types. Can be null.
 
  * <i>pod</i>: Specifies options for controlling deserialization of CBOR objects.
+
+ * &lt;T&gt;: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method, such as  `int`  or  `String` , or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
 
 <b>Return Value:</b>
 
@@ -2641,14 +2641,14 @@ Generates a CBORObject from an arbitrary object, using the given options to cont
 
 The following example generates a CBOR object from a 64-bit signed integer that is treated as a 64-bit unsigned integer (such as.NET's UInt64, which has no direct equivalent in the Java language), in the sense that the value is treated as 2^64 plus the original value if it's negative.
 
-    long x = -40L; // Example 64-bit value treated as 2^64-40.
+    long x = -40L; /* Example 64-bit value treated as 2^64-40.*/
                 CBORObject obj = CBORObject.FromObject(
                 v < 0 ? EInteger.FromInt32(1).ShiftLeft(64).Add(v) :
                 EInteger.FromInt64(v));
 
 In the Java version, which has java.math.BigInteger, the following can be used instead:
 
-    long x = -40L; // Example 64-bit value treated as 2^64-40.
+    long x = -40L; /* Example 64-bit value treated as 2^64-40.*/
                 CBORObject obj = CBORObject.FromObject(
                 v < 0 ? BigInteger.valueOf(1).shiftLeft(64).add(BigInteger.valueOf(v)) :
                 BigInteger.valueOf(v));
