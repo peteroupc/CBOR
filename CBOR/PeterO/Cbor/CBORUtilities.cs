@@ -1003,8 +1003,8 @@ currentYear.Remainder(100).ToInt32Checked());
          return EFloat.FromEInteger(seconds);
       }
       // Add seconds and incorporate nanoseconds
-      EDecimal
-d = EDecimal.FromInt32(lesserFields[5]).Divide(1000000000L).Add(seconds);
+      EDecimal d = EDecimal.FromInt32(lesserFields[5]).Divide(1000000000L)
+         .Add(EDecimal.FromEInteger(seconds));
       double dbl = d.ToDouble();
       if (Double.IsPositiveInfinity(dbl) ||
              Double.IsNegativeInfinity(dbl) ||

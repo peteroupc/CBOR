@@ -2387,30 +2387,30 @@ namespace Test {
     }
 
     public static void TestUnsignedLongOne(long v, string expectedStr) {
-         EInteger ei = UnsignedLongToEInteger(v);
+      EInteger ei = UnsignedLongToEInteger(v);
 
-         Assert.AreEqual(
-           expectedStr,
-           DataUtilities.ToLowerCaseAscii(ei.ToRadixString(16)));
-         CBORObject c1 = CBORObject.FromObject(ei);
-         Assert.IsTrue(c1.AsNumber().Sign >= 0);
-
-         TestCommon.AssertEqualsHashCode(
-           ei,
-           (EInteger)c1.ToObject(typeof(EInteger)));
+      Assert.AreEqual(
+        expectedStr,
+        DataUtilities.ToLowerCaseAscii(ei.ToRadixString(16)));
+      CBORObject cbor = CBORObject.FromObject(ei);
+      Assert.IsTrue(cbor.AsNumber().Sign >= 0);
+      var c1ei = (EInteger)cbor.ToObject(typeof(EInteger));
+      TestCommon.AssertEqualsHashCode(
+        ei,
+        c1ei);
     }
 
     [Test]
     public void TestUnsignedLong() {
-       TestUnsignedLongOne(0x0L, "0");
-       TestUnsignedLongOne(0xFL, "f");
-       TestUnsignedLongOne(0xFFFFFFFFL, "ffffffff");
-       TestUnsignedLongOne(-1, "ffffffffffffffff");
-       TestUnsignedLongOne(-3, "fffffffffffffffd");
-       TestUnsignedLongOne(Int64.MaxValue, "7fffffffffffffff");
-       TestUnsignedLongOne(Int64.MaxValue - 1, "7ffffffffffffffe");
-       TestUnsignedLongOne(Int64.MinValue, "8000000000000000");
-       TestUnsignedLongOne(Int64.MinValue + 1, "8000000000000001");
+      TestUnsignedLongOne(0x0L, "0");
+      TestUnsignedLongOne(0xFL, "f");
+      TestUnsignedLongOne(0xFFFFFFFFL, "ffffffff");
+      TestUnsignedLongOne(-1, "ffffffffffffffff");
+      TestUnsignedLongOne(-3, "fffffffffffffffd");
+      TestUnsignedLongOne(Int64.MaxValue, "7fffffffffffffff");
+      TestUnsignedLongOne(Int64.MaxValue - 1, "7ffffffffffffffe");
+      TestUnsignedLongOne(Int64.MinValue, "8000000000000000");
+      TestUnsignedLongOne(Int64.MinValue + 1, "8000000000000001");
     }
 
     [Test]
@@ -2854,34 +2854,34 @@ namespace Test {
 
     [Test]
     public void TestOrderedMap() {
-CBORObject cbor;
-IList<CBORObject> list;
-cbor = CBORObject.NewOrderedMap().Add("a", 1).Add("b", 2).Add("c", 3);
-list = new List<CBORObject>();
-foreach (CBORObject obj in cbor.Keys) {
-  list.Add(obj);
-}
-Assert.AreEqual(3, list.Count);
-TestCommon.AssertEqualsHashCode(CBORObject.FromObject("a"), list[0]);
-TestCommon.AssertEqualsHashCode(CBORObject.FromObject("b"), list[1]);
-TestCommon.AssertEqualsHashCode(CBORObject.FromObject("c"), list[2]);
-cbor = CBORObject.NewOrderedMap().Add("c", 1).Add("a", 2).Add("vv", 3);
-list = new List<CBORObject>();
-foreach (CBORObject obj in cbor.Keys) {
-  list.Add(obj);
-}
-Assert.AreEqual(3, list.Count);
-TestCommon.AssertEqualsHashCode(CBORObject.FromObject("c"), list[0]);
-TestCommon.AssertEqualsHashCode(CBORObject.FromObject("a"), list[1]);
-TestCommon.AssertEqualsHashCode(CBORObject.FromObject("vv"), list[2]);
-list = new List<CBORObject>();
-foreach (CBORObject obj in cbor.Values) {
-  list.Add(obj);
-}
-Assert.AreEqual(3, list.Count);
-TestCommon.AssertEqualsHashCode(CBORObject.FromObject(1), list[0]);
-TestCommon.AssertEqualsHashCode(CBORObject.FromObject(2), list[1]);
-TestCommon.AssertEqualsHashCode(CBORObject.FromObject(3), list[2]);
+      CBORObject cbor;
+      IList<CBORObject> list;
+      cbor = CBORObject.NewOrderedMap().Add("a", 1).Add("b", 2).Add("c", 3);
+      list = new List<CBORObject>();
+      foreach (CBORObject obj in cbor.Keys) {
+        list.Add(obj);
+      }
+      Assert.AreEqual(3, list.Count);
+      TestCommon.AssertEqualsHashCode(CBORObject.FromObject("a"), list[0]);
+      TestCommon.AssertEqualsHashCode(CBORObject.FromObject("b"), list[1]);
+      TestCommon.AssertEqualsHashCode(CBORObject.FromObject("c"), list[2]);
+      cbor = CBORObject.NewOrderedMap().Add("c", 1).Add("a", 2).Add("vv", 3);
+      list = new List<CBORObject>();
+      foreach (CBORObject obj in cbor.Keys) {
+        list.Add(obj);
+      }
+      Assert.AreEqual(3, list.Count);
+      TestCommon.AssertEqualsHashCode(CBORObject.FromObject("c"), list[0]);
+      TestCommon.AssertEqualsHashCode(CBORObject.FromObject("a"), list[1]);
+      TestCommon.AssertEqualsHashCode(CBORObject.FromObject("vv"), list[2]);
+      list = new List<CBORObject>();
+      foreach (CBORObject obj in cbor.Values) {
+        list.Add(obj);
+      }
+      Assert.AreEqual(3, list.Count);
+      TestCommon.AssertEqualsHashCode(CBORObject.FromObject(1), list[0]);
+      TestCommon.AssertEqualsHashCode(CBORObject.FromObject(2), list[1]);
+      TestCommon.AssertEqualsHashCode(CBORObject.FromObject(3), list[2]);
     }
 
     [Test]
@@ -4601,26 +4601,24 @@ TestCommon.AssertEqualsHashCode(CBORObject.FromObject(3), list[2]);
 
     [Test]
     public void TestRationalJSONSpecificA() {
-ERational er =
+      ERational er =
 
   ERational.FromString("1088692579850251977918382727683876451288883451475551838663907953515213777772897669/734154292316019508508581520803142368704146796235662433292652");
-CBORObject.FromObject(er).ToJSONString();
+      CBORObject.FromObject(er).ToJSONString();
     }
     [Test]
     public void TestRationalJSONSpecificB() {
-ERational
-  er2 =
+      ERational er2 =
 
   ERational.FromString("1117037884940373468269515037592447741921166676191625235424/13699696515096285881634845839085271311137");
-CBORObject.FromObject(er2).ToJSONString();
+      CBORObject.FromObject(er2).ToJSONString();
     }
     [Test]
     public void TestRationalJSONSpecificC() {
-ERational
-  er2 =
+      ERational er2 =
 
   ERational.FromString("42595158956667/1216724793801972483341765319799605241541780250657492435");
-CBORObject.FromObject(er2).ToJSONString();
+      CBORObject.FromObject(er2).ToJSONString();
     }
 
     [Test]

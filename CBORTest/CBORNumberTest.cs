@@ -76,24 +76,27 @@ namespace Test {
         CBORObject.FromObject(99).AsNumber().CanFitInUInt64(),
         "99");
 
-  Assert.IsTrue(CBORObject.FromObject(99.0).AsNumber().CanFitInUInt64(),
+      Assert.IsTrue(CBORObject.FromObject(99.0).AsNumber().CanFitInUInt64(),
+        "99.0");
+
+      Assert.IsTrue(CBORObject.FromObject(1.0).AsNumber().CanFitInUInt64(),
   "99.0");
 
-  Assert.IsTrue(CBORObject.FromObject(1.0).AsNumber().CanFitInUInt64(), "99.0");
-
-  Assert.IsTrue(CBORObject.FromObject(-0.0).AsNumber().CanFitInUInt64(),
-  "-0.0");
+      Assert.IsTrue(CBORObject.FromObject(-0.0).AsNumber().CanFitInUInt64(),
+        "-0.0");
       bool
-b = CBORObject.FromObject(
-  EInteger.FromInt32(1).ShiftLeft(65)).AsNumber().CanFitInUInt64();
+      b = CBORObject.FromObject(
+          EInteger.FromInt32(1).ShiftLeft(65)).AsNumber().CanFitInUInt64();
       Assert.IsFalse(b);
 
-  Assert.IsFalse(CBORObject.FromObject(-99).AsNumber().CanFitInUInt64(), "-99");
+      Assert.IsFalse(CBORObject.FromObject(-99).AsNumber().CanFitInUInt64(),
+  "-99");
 
-  Assert.IsFalse(CBORObject.FromObject(-99.0).AsNumber().CanFitInUInt64(),
-  "-99.0");
+      Assert.IsFalse(CBORObject.FromObject(-99.0).AsNumber().CanFitInUInt64(),
+        "-99.0");
 
-  Assert.IsFalse(CBORObject.FromObject(0.1).AsNumber().CanFitInUInt64(), "0.1");
+      Assert.IsFalse(CBORObject.FromObject(0.1).AsNumber().CanFitInUInt64(),
+  "0.1");
       Assert.IsFalse(CBORObject.FromObject(-0.1).AsNumber().CanFitInUInt64());
       Assert.IsFalse(CBORObject.FromObject(99.1).AsNumber().CanFitInUInt64());
       Assert.IsFalse(CBORObject.FromObject(-99.1).AsNumber().CanFitInUInt64());
@@ -110,39 +113,39 @@ b = CBORObject.FromObject(
 
       Assert.IsTrue(
         CBORObject.FromObject(99).AsNumber().CanTruncatedIntFitInUInt64(),
-      "99");
+        "99");
 
       Assert.IsTrue(
         CBORObject.FromObject(99.0).AsNumber().CanTruncatedIntFitInUInt64(),
         "99.0");
       Assert.IsTrue(CBORObject.FromObject(
-        -0.0).AsNumber().CanTruncatedIntFitInUInt64());
+          -0.0).AsNumber().CanTruncatedIntFitInUInt64());
 
       Assert.IsFalse(
         CBORObject.FromObject(-99).AsNumber().CanTruncatedIntFitInUInt64());
       bool
-b = CBORObject.FromObject(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
-            .CanTruncatedIntFitInUInt64();
+      b = CBORObject.FromObject(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
+        .CanTruncatedIntFitInUInt64();
       Assert.IsFalse(b);
 
       Assert.IsFalse(
         CBORObject.FromObject(
-        -99.0).AsNumber().CanTruncatedIntFitInUInt64());
+          -99.0).AsNumber().CanTruncatedIntFitInUInt64());
 
       Assert.IsTrue(
         CBORObject.FromObject(0.1).AsNumber().CanTruncatedIntFitInUInt64());
       Assert.IsTrue(CBORObject.FromObject(
-        -0.1).AsNumber().CanTruncatedIntFitInUInt64());
+          -0.1).AsNumber().CanTruncatedIntFitInUInt64());
       Assert.IsTrue(CBORObject.FromObject(
-        99.1).AsNumber().CanTruncatedIntFitInUInt64());
+          99.1).AsNumber().CanTruncatedIntFitInUInt64());
 
       Assert.IsFalse(
         CBORObject.PositiveInfinity.AsNumber()
-.CanTruncatedIntFitInUInt64());
+        .CanTruncatedIntFitInUInt64());
 
       Assert.IsFalse(
         CBORObject.NegativeInfinity.AsNumber()
-.CanTruncatedIntFitInUInt64());
+        .CanTruncatedIntFitInUInt64());
       Assert.IsFalse(CBORObject.NaN.AsNumber().CanTruncatedIntFitInUInt64());
     }
 
@@ -341,7 +344,7 @@ b = CBORObject.FromObject(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
         string numberString = numberinfo["number"].AsString();
         CBORObject cbornumber =
           ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(
-            numberString));
+              numberString));
         if (!numberinfo["integer"].Equals(CBORObject.Null)) {
           Assert.AreEqual(
             numberinfo["integer"].AsString(),
@@ -419,7 +422,7 @@ b = CBORObject.FromObject(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
       {
         string stringTemp =
           ToObjectTest.TestToFromObjectRoundTrip(
-          (double)0.75).AsNumber().ToEInteger()
+            (double)0.75).AsNumber().ToEInteger()
           .ToString();
         Assert.AreEqual(
           "0",
@@ -427,7 +430,7 @@ b = CBORObject.FromObject(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
       }
       {
         string stringTemp = ToObjectTest.TestToFromObjectRoundTrip(
-          (double)0.99).AsNumber().ToEInteger().ToString();
+            (double)0.99).AsNumber().ToEInteger().ToString();
         Assert.AreEqual(
           "0",
           stringTemp);
@@ -442,7 +445,7 @@ b = CBORObject.FromObject(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
       }
       {
         string stringTemp = ToObjectTest.TestToFromObjectRoundTrip(
-          (double)0.5).AsNumber().ToEInteger().ToString();
+            (double)0.5).AsNumber().ToEInteger().ToString();
         Assert.AreEqual(
           "0",
           stringTemp);
@@ -450,7 +453,7 @@ b = CBORObject.FromObject(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
       {
         string stringTemp =
           ToObjectTest.TestToFromObjectRoundTrip(
-          (double)1.5).AsNumber().ToEInteger()
+            (double)1.5).AsNumber().ToEInteger()
           .ToString();
         Assert.AreEqual(
           "1",
@@ -458,7 +461,7 @@ b = CBORObject.FromObject(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
       }
       {
         string stringTemp = ToObjectTest.TestToFromObjectRoundTrip(
-          (double)2.5).AsNumber().ToEInteger().ToString();
+            (double)2.5).AsNumber().ToEInteger().ToString();
         Assert.AreEqual(
           "2",
           stringTemp);
@@ -551,7 +554,7 @@ b = CBORObject.FromObject(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
       }
       {
         string stringTemp = ToObjectTest.TestToFromObjectRoundTrip(
-          Single.NaN).AsNumber().ToEDecimal().ToString();
+            Single.NaN).AsNumber().ToEDecimal().ToString();
         Assert.AreEqual(
           "NaN",
           stringTemp);

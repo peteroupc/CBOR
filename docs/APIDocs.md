@@ -2,6 +2,10 @@
 
  * [PeterO.Cbor.CBORDataUtilities](PeterO.Cbor.CBORDataUtilities.md) - Contains methods useful for reading and writing data, with a focus on CBOR.
 
+ * [PeterO.Cbor.CBORDateConverter](PeterO.Cbor.CBORDateConverter.md) - A class for converting date-time objects to and from tagged CBOR objects.
+
+ * [PeterO.Cbor.CBORDateConverter.ConversionType](PeterO.Cbor.CBORDateConverter.ConversionType.md) - Conversion type for date-time conversion.
+
  * [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) - Specifies options for encoding and decoding CBOR objects.
 
  * [PeterO.Cbor.CBORException](PeterO.Cbor.CBORException.md) - Exception thrown for errors involving CBOR data.

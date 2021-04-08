@@ -262,7 +262,7 @@ namespace Test {
       {
         object objectTemp = true;
         var objectTemp2 =
-(object)ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
+          (object)ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
 
           .ToObject(typeof(bool));
         Assert.AreEqual(objectTemp, objectTemp2);
@@ -342,7 +342,7 @@ namespace Test {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
           ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(
-  (string)numberinfo["number"].ToObject(typeof(string))));
+              (string)numberinfo["number"].ToObject(typeof(string))));
 
         if ((bool)numberinfo["byte"].AsBoolean()) {
           int i1 = TestCommon.StringToInt((string)numberinfo["integer"]
@@ -363,7 +363,7 @@ namespace Test {
       }
       for (var i = 0; i < 255; ++i) {
         object
-o = ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
+        o = ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
         Assert.AreEqual((byte)i, (byte)o);
       }
       for (int i = -200; i < 0; ++i) {
@@ -451,9 +451,9 @@ o = ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
           ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(
-  (string)numberinfo["number"].ToObject(typeof(string))));
+              (string)numberinfo["number"].ToObject(typeof(string))));
         dbl = (double)EDecimal.FromString(
-          (string)numberinfo["number"].ToObject(typeof(string)))
+            (string)numberinfo["number"].ToObject(typeof(string)))
           .ToDouble();
         object dblobj = cbornumber.ToObject(typeof(double));
         CBORObjectTest.AreEqualExact(
@@ -705,10 +705,10 @@ o = ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
         CBORObject cbornumber =
           ToObjectTest.TestToFromObjectRoundTrip(
             EDecimal.FromString((string)numberinfo["number"].ToObject(
-              typeof(string))));
+                typeof(string))));
         if ((bool)numberinfo["int16"].AsBoolean()) {
           var sh = (short)TestCommon.StringToInt(
-             (string)numberinfo["integer"].ToObject(typeof(string)));
+              (string)numberinfo["integer"].ToObject(typeof(string)));
           object o = cbornumber.ToObject(typeof(short));
           Assert.AreEqual(sh, (short)o);
         } else {
@@ -802,20 +802,20 @@ o = ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
           object o = cbornumber.ToObject(typeof(int));
           Assert.AreEqual(
             TestCommon.StringToInt((string)numberinfo["integer"].ToObject(
-              typeof(string))),
+                typeof(string))),
             (int)o);
           if (isdouble) {
             o = cbornumberdouble.ToObject(typeof(int));
             Assert.AreEqual(
               TestCommon.StringToInt((string)numberinfo["integer"].ToObject(
-                typeof(string))),
+                  typeof(string))),
               (int)o);
           }
           if (issingle) {
             o = cbornumbersingle.ToObject(typeof(int));
             Assert.AreEqual(
               TestCommon.StringToInt((string)numberinfo["integer"].ToObject(
-                typeof(string))),
+                  typeof(string))),
               (int)o);
           }
         } else {
@@ -930,7 +930,7 @@ o = ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
           object o = cbornumber.ToObject(typeof(long));
           Assert.AreEqual(
             TestCommon.StringToLong((string)numberinfo["integer"].ToObject(
-              typeof(string))),
+                typeof(string))),
             (long)o);
           if (isdouble) {
             long strlong = TestCommon.StringToLong(
@@ -1046,11 +1046,11 @@ o = ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
           ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(
-  (string)numberinfo["number"].ToObject(typeof(string))));
+              (string)numberinfo["number"].ToObject(typeof(string))));
 
         var f1 =
-(float)EDecimal.FromString((string)numberinfo["number"].ToObject(
-            typeof(string))).ToSingle();
+          (float)EDecimal.FromString((string)numberinfo["number"].ToObject(
+              typeof(string))).ToSingle();
         Object f2 = cbornumber.ToObject(typeof(float));
         if (!((object)f1).Equals(f2)) {
           Assert.Fail();
@@ -1191,7 +1191,7 @@ o = ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
       Assert.AreEqual("hello", stringList[0]);
       Assert.AreEqual("world", stringList[1]);
       IList<string> istringList = (IList<string>)co.ToObject(
-  typeof(IList<string>));
+          typeof(IList<string>));
 
       Assert.AreEqual(2, istringList.Count);
       Assert.AreEqual("hello", istringList[0]);
@@ -1223,8 +1223,8 @@ o = ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
         Assert.Fail();
       }
       co = CBORObject.FromObjectAndTag(
-        "2000-01-01T00:00:00Z",
-        0);
+          "2000-01-01T00:00:00Z",
+          0);
       try {
         co.ToObject(typeof(DateTime));
       } catch (Exception ex) {
@@ -1294,10 +1294,60 @@ o = ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
     }
 
     [Test]
+    public void TestDateRoundTripNumber() {
+      var rand = new RandomGenerator();
+      var typemapper = new CBORTypeMapper().AddConverter(
+         typeof(DateTime),
+         CBORDateConverter.TaggedNumber);
+      for (var i = 0; i < 5000; ++i) {
+        string s = RandomDate(rand);
+        CBORObject cbor = CBORObject.FromObjectAndTag(s, 0);
+        var dtime = (DateTime)cbor.ToObject(typeof(DateTime));
+        CBORObject cbor2 = CBORObject.FromObject(dtime);
+        Assert.AreEqual(s, cbor2.AsString());
+        CBORObject cborNumber = CBORObject.FromObject(dtime, typemapper);
+        Assert.IsTrue(cborNumber.Type == CBORType.Integer ||
+           cborNumber.Type == CBORType.FloatingPoint);
+        var dtime2 = (DateTime)cborNumber.ToObject(typeof(DateTime),
+  typemapper);
+        cbor2 = CBORObject.FromObject(dtime2, typemapper);
+        Assert.IsTrue(cbor2.Type == CBORType.Integer ||
+           cbor2.Type == CBORType.FloatingPoint);
+        Assert.AreEqual(cbor2, cborNumber, s);
+        TestToFromObjectRoundTrip(dtime);
+      }
+    }
+
+    [Test]
+    public void TestDateRoundTripUntaggedNumber() {
+      var rand = new RandomGenerator();
+      var typemapper = new CBORTypeMapper().AddConverter(
+         typeof(DateTime),
+         CBORDateConverter.UntaggedNumber);
+      for (var i = 0; i < 5000; ++i) {
+        string s = RandomDate(rand);
+        CBORObject cbor = CBORObject.FromObjectAndTag(s, 0);
+        var dtime = (DateTime)cbor.ToObject(typeof(DateTime));
+        CBORObject cbor2 = CBORObject.FromObject(dtime);
+        Assert.AreEqual(s, cbor2.AsString());
+        CBORObject cborNumber = CBORObject.FromObject(dtime, typemapper);
+        Assert.IsTrue(cborNumber.Type == CBORType.Integer ||
+           cborNumber.Type == CBORType.FloatingPoint);
+        var dtime2 = (DateTime)cborNumber.ToObject(typeof(DateTime),
+  typemapper);
+        cbor2 = CBORObject.FromObject(dtime2, typemapper);
+        Assert.IsTrue(cbor2.Type == CBORType.Integer ||
+           cbor2.Type == CBORType.FloatingPoint);
+        Assert.AreEqual(cbor2, cborNumber, s);
+        TestToFromObjectRoundTrip(dtime);
+      }
+    }
+
+    [Test]
     public void TestBadDate() {
       CBORObject cbor = CBORObject.FromObjectAndTag(
-        "2000-1-01T00:00:00Z",
-        0);
+          "2000-1-01T00:00:00Z",
+          0);
       try {
         cbor.ToObject(typeof(DateTime));
         Assert.Fail("Should have failed");
@@ -1308,8 +1358,8 @@ o = ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
         throw new InvalidOperationException(String.Empty, ex);
       }
       cbor = CBORObject.FromObjectAndTag(
-        "2000-01-1T00:00:00Z",
-        0);
+          "2000-01-1T00:00:00Z",
+          0);
       try {
         cbor.ToObject(typeof(DateTime));
         Assert.Fail("Should have failed");
@@ -1320,8 +1370,8 @@ o = ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
         throw new InvalidOperationException(String.Empty, ex);
       }
       cbor = CBORObject.FromObjectAndTag(
-        "2000-01-01T0:00:00Z",
-        0);
+          "2000-01-01T0:00:00Z",
+          0);
       try {
         cbor.ToObject(typeof(DateTime));
         Assert.Fail("Should have failed");
@@ -1332,8 +1382,8 @@ o = ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
         throw new InvalidOperationException(String.Empty, ex);
       }
       cbor = CBORObject.FromObjectAndTag(
-        "2000-01-01T00:0:00Z",
-        0);
+          "2000-01-01T00:0:00Z",
+          0);
       try {
         cbor.ToObject(typeof(DateTime));
         Assert.Fail("Should have failed");
@@ -1344,8 +1394,8 @@ o = ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
         throw new InvalidOperationException(String.Empty, ex);
       }
       cbor = CBORObject.FromObjectAndTag(
-        "2000-01-01T00:00:0Z",
-        0);
+          "2000-01-01T00:00:0Z",
+          0);
       try {
         cbor.ToObject(typeof(DateTime));
         Assert.Fail("Should have failed");
@@ -1356,8 +1406,8 @@ o = ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
         throw new InvalidOperationException(String.Empty, ex);
       }
       cbor = CBORObject.FromObjectAndTag(
-        "T01:01:01Z",
-        0);
+          "T01:01:01Z",
+          0);
       try {
         cbor.ToObject(typeof(DateTime));
         Assert.Fail("Should have failed");
@@ -1380,112 +1430,114 @@ o = ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
     }
 
     private class CPOD3Converter : ICBORToFromConverter<CPOD3> {
-       public CBORObject ToCBORObject(CPOD3 cpod) {
-          return CBORObject.NewMap().Add(0, cpod.Aa)
-             .Add(1, cpod.Bb).Add(2, cpod.Cc);
-       }
-       public CPOD3 FromCBORObject(CBORObject obj) {
-          if (obj.Type != CBORType.Map) {
-            throw new CBORException();
-          }
-          var ret = new CPOD3();
-          ret.Aa = obj[0].AsString();
-          ret.Bb = obj[1].AsString();
-          ret.Cc = obj[2].AsString();
-          return ret;
-       }
+      public CBORObject ToCBORObject(CPOD3 cpod) {
+        return CBORObject.NewMap().Add(0, cpod.Aa)
+          .Add(1, cpod.Bb).Add(2, cpod.Cc);
+      }
+      public CPOD3 FromCBORObject(CBORObject obj) {
+        if (obj.Type != CBORType.Map) {
+          throw new CBORException();
+        }
+        var ret = new CPOD3();
+        ret.Aa = obj[0].AsString();
+        ret.Bb = obj[1].AsString();
+        ret.Cc = obj[2].AsString();
+        return ret;
+      }
     }
 
     [Test]
     public void TestCBORTypeMapper() {
-       var cp = new CPOD3();
-       cp.Aa = "aa";
-       cp.Bb = "bb";
-       cp.Cc = "cc";
-       var cp2 = new CPOD3();
-       cp2.Aa = "AA";
-       cp2.Bb = "BB";
-       cp2.Cc = "CC";
-       var tm = new CBORTypeMapper().AddConverter(
-           typeof(CPOD3),
-           new CPOD3Converter());
-       CBORObject cbor;
-       CBORObject cbor2;
-       cbor = CBORObject.FromObject(cp, tm);
-       Assert.AreEqual(CBORType.Map, cbor.Type);
-       Assert.AreEqual(3, cbor.Count);
-       {
-         string stringTemp = cbor[0].AsString();
-         Assert.AreEqual(
-           "aa",
-           stringTemp);
-}
-       Assert.IsFalse(cbor.ContainsKey("aa"));
-       Assert.IsFalse(cbor.ContainsKey("Aa"));
-       {
-         string stringTemp = cbor[1].AsString();
-         Assert.AreEqual(
-           "bb",
-           stringTemp);
-}
-       {
-         string stringTemp = cbor[2].AsString();
-         Assert.AreEqual(
-           "cc",
-           stringTemp);
-}
-       var cpx = (CPOD3)cbor.ToObject(typeof(CPOD3), tm);
-       Assert.AreEqual("aa", cpx.Aa);
-       Assert.AreEqual("bb", cpx.Bb);
-       Assert.AreEqual("cc", cpx.Cc);
-       cbor = CBORObject.FromObject(new CPOD3[] { cp, cp2}, tm);
-       Assert.AreEqual(CBORType.Array, cbor.Type);
-       Assert.AreEqual(2, cbor.Count);
-       cbor2 = cbor[0];
-       {
-         string stringTemp = cbor2[0].AsString();
-         Assert.AreEqual(
-           "aa",
-           stringTemp);
-}
-       {
-         string stringTemp = cbor2[1].AsString();
-         Assert.AreEqual(
-           "bb",
-           stringTemp);
-}
-       {
-         string stringTemp = cbor2[2].AsString();
-         Assert.AreEqual(
-           "cc",
-           stringTemp);
-}
-       cbor2 = cbor[1];
-       {
-         string stringTemp = cbor2[0].AsString();
-         Assert.AreEqual(
-           "AA",
-           stringTemp);
-}
-       {
-         string stringTemp = cbor2[1].AsString();
-         Assert.AreEqual(
-           "BB",
-           stringTemp);
-}
-       {
-         string stringTemp = cbor2[2].AsString();
-         Assert.AreEqual(
-           "CC",
-           stringTemp);
-}
-       CPOD3[] cpa = (CPOD3[])cbor.ToObject(typeof(CPOD3[]), tm);
-       Assert.AreEqual("aa", cpa[0].Aa);
-       Assert.AreEqual("bb", cpa[0].Bb);
-       Assert.AreEqual("cc", cpa[0].Cc);
-       Assert.AreEqual("AA", cpa[1].Aa);
-       Assert.AreEqual("BB", cpa[1].Bb);
-       Assert.AreEqual("CC", cpa[1].Cc);
+      var cp = new CPOD3();
+      cp.Aa = "aa";
+      cp.Bb = "bb";
+      cp.Cc = "cc";
+      var cp2 = new CPOD3();
+      cp2.Aa = "AA";
+      cp2.Bb = "BB";
+      cp2.Cc = "CC";
+      var tm = new CBORTypeMapper().AddConverter(
+        typeof(CPOD3),
+        new CPOD3Converter());
+      CBORObject cbor;
+      CBORObject cbor2;
+      cbor = CBORObject.FromObject(cp, tm);
+      Assert.AreEqual(CBORType.Map, cbor.Type);
+      Assert.AreEqual(3, cbor.Count);
+      {
+        string stringTemp = cbor[0].AsString();
+        Assert.AreEqual(
+          "aa",
+          stringTemp);
+      }
+      Assert.IsFalse(cbor.ContainsKey("aa"));
+      Assert.IsFalse(cbor.ContainsKey("Aa"));
+      {
+        string stringTemp = cbor[1].AsString();
+        Assert.AreEqual(
+          "bb",
+          stringTemp);
+      }
+      {
+        string stringTemp = cbor[2].AsString();
+        Assert.AreEqual(
+          "cc",
+          stringTemp);
+      }
+      var cpx = (CPOD3)cbor.ToObject(typeof(CPOD3), tm);
+      Assert.AreEqual("aa", cpx.Aa);
+      Assert.AreEqual("bb", cpx.Bb);
+      Assert.AreEqual("cc", cpx.Cc);
+      cbor = CBORObject.FromObject(new CPOD3[] { cp, cp2}, tm);
+      Assert.AreEqual(CBORType.Array, cbor.Type);
+      Assert.AreEqual(2, cbor.Count);
+      cbor2 = cbor[0];
+      {
+        string stringTemp = cbor2[0].AsString();
+        Assert.AreEqual(
+          "aa",
+          stringTemp);
+      }
+      {
+        string stringTemp = cbor2[1].AsString();
+        Assert.AreEqual(
+          "bb",
+          stringTemp);
+      }
+      {
+        string stringTemp = cbor2[2].AsString();
+        Assert.AreEqual(
+          "cc",
+          stringTemp);
+      }
+      cbor2 = cbor[1];
+      {
+        string stringTemp = cbor2[0].AsString();
+        Assert.AreEqual(
+          "AA",
+          stringTemp);
+      }
+      {
+        string stringTemp = cbor2[1].AsString();
+        Assert.AreEqual(
+          "BB",
+          stringTemp);
+      }
+      {
+        string stringTemp = cbor2[2].AsString();
+        Assert.AreEqual(
+          "CC",
+          stringTemp);
+      }
+      CPOD3[] cpa = (CPOD3[])cbor.ToObject(typeof(CPOD3[]), tm);
+      cpx = cpa[0];
+      Assert.AreEqual("aa", cpx.Aa);
+      Assert.AreEqual("bb", cpx.Bb);
+      Assert.AreEqual("cc", cpx.Cc);
+      cpx = cpa[1];
+      Assert.AreEqual("AA", cpx.Aa);
+      Assert.AreEqual("BB", cpx.Bb);
+      Assert.AreEqual("CC", cpx.Cc);
     }
 
     [Test]
@@ -1499,46 +1551,29 @@ o = ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
     public static object RandomUUID(RandomGenerator rand) {
       string hex = "0123456789ABCDEF";
       var sb = new StringBuilder();
+      if (rand == null) {
+          throw new ArgumentNullException(nameof(rand));
+      }
       for (var i = 0; i < 8; ++i) {
-        if (rand == null) {
-          throw new ArgumentNullException(nameof(rand));
-        }
         sb.Append(hex[rand.UniformInt(16)]);
       }
       sb.Append('-');
       for (var i = 0; i < 4; ++i) {
-        if (rand == null) {
-          throw new ArgumentNullException(nameof(rand));
-        }
         sb.Append(hex[rand.UniformInt(16)]);
       }
       sb.Append('-');
       for (var i = 0; i < 4; ++i) {
-        if (rand == null) {
-          throw new ArgumentNullException(nameof(rand));
-        }
         sb.Append(hex[rand.UniformInt(16)]);
       }
       sb.Append('-');
       for (var i = 0; i < 4; ++i) {
-        if (rand == null) {
-          throw new ArgumentNullException(nameof(rand));
-        }
         sb.Append(hex[rand.UniformInt(16)]);
       }
       sb.Append('-');
-    for (var i = 0; i < 4; ++i) {
-      sb.Append(hex[rand.UniformInt(16)]);
-    }
-    sb.Append('-');
-  for (var i = 0; i < 4; ++i) {
-    sb.Append(hex[rand.UniformInt(16)]);
-  }
-  sb.Append('-');
-  for (var i = 0; i < 12; ++i) {
-    sb.Append(hex[rand.UniformInt(16)]);
-  }
-  return new Guid(sb.ToString());
+      for (var i = 0; i < 12; ++i) {
+        sb.Append(hex[rand.UniformInt(16)]);
+      }
+      return new Guid(sb.ToString());
     }
 
     public static CBORObject TestToFromObjectRoundTrip(object obj) {
@@ -1562,6 +1597,14 @@ o = ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
             Assert.AreEqual(obj, obj2, cbor + "\n" + obj.GetType());
           }
         }
+        // Tests for DecodeObjectFromBytes
+        byte[] encdata = cbor.EncodeToBytes();
+        object obj3 =
+          CBORObject.DecodeFromBytes(encdata).ToObject(obj.GetType());
+        object obj4 = CBORObject.DecodeObjectFromBytes(encdata, obj.GetType());
+        TestCommon.AssertEqualsHashCode(obj, obj2);
+        TestCommon.AssertEqualsHashCode(obj, obj3);
+        TestCommon.AssertEqualsHashCode(obj, obj4);
       }
       return cbor;
     }

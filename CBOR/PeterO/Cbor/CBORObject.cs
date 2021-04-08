@@ -1672,55 +1672,61 @@ namespace PeterO.Cbor {
     /// Gregorian). The string format used in tag 0 supports only years up
     /// to 4 decimal digits long. For tag 1, CBOR objects that express
     /// infinity or not-a-number (NaN) are treated as invalid by this
-    /// method.</item>
-    ///  <item>If the type is <c>Uri</c>
+    /// method. This default behavior for <c>DateTime</c>
+    ///  and <c>Date</c>
+    /// can be changed by passing a suitable CBORTypeMapper to this method,
+    /// such as a CBORTypeMapper that registers a CBORDateConverter for
+    /// <c>DateTime</c>
+    ///  or <c>Date</c>
+    ///  objects. See the examples.</item>
+    /// <item>If the type is <c>Uri</c>
     ///  (or <c>URI</c>
-    ///  in
-    /// Java), returns a URI object if possible.</item>
-    ///  <item>If the type
-    /// is <c>Guid</c>
-    ///  (or <c>UUID</c>
-    ///  in Java), returns a UUID object if
-    /// possible.</item>
-    ///  <item>Plain-Old-Data deserialization: If the
-    /// object is a type not specially handled above, the type includes a
-    /// zero-parameter constructor (default or not), this CBOR object is a
-    /// CBOR map, and the "mapper" parameter (if any) allows this type to
-    /// be eligible for Plain-Old-Data deserialization, then this method
-    /// checks the given type for eligible setters as follows:</item>
-    /// <item>(*) In the .NET version, eligible setters are the public,
-    /// nonstatic setters of properties with a public, nonstatic getter.
-    /// Eligible setters also include public, nonstatic, non- <c>const</c>
-    /// , non- <c>readonly</c>
-    ///  fields. If a class has two properties and/or
-    /// fields of the form "X" and "IsX", where "X" is any name, or has
-    /// multiple properties and/or fields with the same name, those
-    /// properties and fields are ignored.</item>
-    ///  <item>(*) In the Java
-    /// version, eligible setters are public, nonstatic methods starting
-    /// with "set" followed by a character other than a basic digit or
-    /// lower-case letter, that is, other than "a" to "z" or "0" to "9",
-    /// that take one parameter. The class containing an eligible setter
-    /// must have a public, nonstatic method with the same name, but
-    /// starting with "get" or "is" rather than "set", that takes no
-    /// parameters and does not return void. (For example, if a class has
-    /// "public setValue(String)" and "public getValue()", "setValue" is an
-    /// eligible setter. However, "setValue()" and "setValue(String, int)"
-    /// are not eligible setters.) In addition, public, nonstatic, nonfinal
-    /// fields are also eligible setters. If a class has two or more
-    /// otherwise eligible setters (methods and/or fields) with the same
-    /// name, but different parameter type, they are not eligible
-    /// setters.</item>
-    ///  <item>Then, the method creates an object of the
-    /// given type and invokes each eligible setter with the corresponding
-    /// value in the CBOR map, if any. Key names in the map are matched to
-    /// eligible setters according to the rules described in the <see
-    /// cref='PeterO.Cbor.PODOptions'/> documentation. Note that for
-    /// security reasons, certain types are not supported even if they
-    /// contain eligible setters. For the Java version, the object creation
-    /// may fail in the case of a nested nonstatic class.</item>
+    ///  in Java), returns a
+    /// URI object if possible.</item>
+    ///  <item>If the type is <c>Guid</c>
+    ///  (or
+    /// <c>UUID</c>
+    ///  in Java), returns a UUID object if possible.</item>
+    /// <item>Plain-Old-Data deserialization: If the object is a type not
+    /// specially handled above, the type includes a zero-parameter
+    /// constructor (default or not), this CBOR object is a CBOR map, and
+    /// the "mapper" parameter (if any) allows this type to be eligible for
+    /// Plain-Old-Data deserialization, then this method checks the given
+    /// type for eligible setters as follows:</item>
+    ///  <item>(*) In the .NET
+    /// version, eligible setters are the public, nonstatic setters of
+    /// properties with a public, nonstatic getter. Eligible setters also
+    /// include public, nonstatic, non- <c>const</c>
+    ///  , non- <c>readonly</c>
+    /// fields. If a class has two properties and/or fields of the form "X"
+    /// and "IsX", where "X" is any name, or has multiple properties and/or
+    /// fields with the same name, those properties and fields are
+    /// ignored.</item>
+    ///  <item>(*) In the Java version, eligible setters are
+    /// public, nonstatic methods starting with "set" followed by a
+    /// character other than a basic digit or lower-case letter, that is,
+    /// other than "a" to "z" or "0" to "9", that take one parameter. The
+    /// class containing an eligible setter must have a public, nonstatic
+    /// method with the same name, but starting with "get" or "is" rather
+    /// than "set", that takes no parameters and does not return void. (For
+    /// example, if a class has "public setValue(String)" and "public
+    /// getValue()", "setValue" is an eligible setter. However,
+    /// "setValue()" and "setValue(String, int)" are not eligible setters.)
+    /// In addition, public, nonstatic, nonfinal fields are also eligible
+    /// setters. If a class has two or more otherwise eligible setters
+    /// (methods and/or fields) with the same name, but different parameter
+    /// type, they are not eligible setters.</item>
+    ///  <item>Then, the method
+    /// creates an object of the given type and invokes each eligible
+    /// setter with the corresponding value in the CBOR map, if any. Key
+    /// names in the map are matched to eligible setters according to the
+    /// rules described in the <see cref='PeterO.Cbor.PODOptions'/>
+    /// documentation. Note that for security reasons, certain types are
+    /// not supported even if they contain eligible setters. For the Java
+    /// version, the object creation may fail in the case of a nested
+    /// nonstatic class.</item>
     ///  </list>
-    /// </summary>
+    ///  </summary>
     /// <param name='t'>The type, class, or interface that this method's
     /// return value will belong to. To express a generic type in Java, see
     /// the example. <b>Note:</b>
@@ -1748,6 +1754,14 @@ namespace PeterO.Cbor {
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='t'/> or <paramref name='options'/> is null.</exception>
     /// <example>
+    /// <para>The following example (originally written in C# for the
+    /// DotNet version) uses a CBORTypeMapper to change how CBOR objects
+    /// are converted to DateTime objects. In this case, the ToObject
+    /// method assumes the CBOR object is an untagged number giving the
+    /// number of seconds since the start of 1970.</para>
+    /// <code>var conv = new CBORTypeMapper().AddConverter(typeof(DateTime),
+    /// CBORDateConverter.UntaggedNumber);
+    /// var obj = CBORObject.FromObject().ToObject&lt;DateTime&gt;(conv);</code>
     /// <para>Java offers no easy way to express a generic type, at least
     /// none as easy as C#'s <c>typeof</c>
     ///  operator. The following example,
@@ -2741,40 +2755,44 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// , <c>URI</c>
     ///  , or <c>UUID</c>
     ///  , respectively, in Java) will be
-    /// converted to a tagged CBOR object of the appropriate kind.
-    /// <c>DateTime</c>
+    /// converted to a tagged CBOR object of the appropriate kind. By
+    /// default, <c>DateTime</c>
     ///  / <c>Date</c>
-    ///  will be converted to a tag-0 string
-    /// following the date format used in the Atom syndication
-    /// format.</item>
-    ///  <item>If the object is a type not specially handled
-    /// above, this method checks the <paramref name='obj'/> parameter for
-    /// eligible getters as follows:</item>
-    ///  <item>(*) In the .NET version,
-    /// eligible getters are the public, nonstatic getters of read/write
-    /// properties (and also those of read-only properties in the case of a
-    /// compiler-generated type or an F# type). Eligible getters also
-    /// include public, nonstatic, non- <c>const</c>
+    ///  will be converted to a tag-0
+    /// string following the date format used in the Atom syndication
+    /// format, but this behavior can be changed by passing a suitable
+    /// CBORTypeMapper to this method, such as a CBORTypeMapper that
+    /// registers a CBORDateConverter for <c>DateTime</c>
+    ///  or <c>Date</c>
+    /// objects. See the examples.</item>
+    ///  <item>If the object is a type not
+    /// specially handled above, this method checks the <paramref
+    /// name='obj'/> parameter for eligible getters as follows:</item>
+    /// <item>(*) In the .NET version, eligible getters are the public,
+    /// nonstatic getters of read/write properties (and also those of
+    /// read-only properties in the case of a compiler-generated type or an
+    /// F# type). Eligible getters also include public, nonstatic, non-
+    /// <c>const</c>
     ///  , non- <c>readonly</c>
-    /// fields. If a class has two properties and/or fields of the form "X"
-    /// and "IsX", where "X" is any name, or has multiple properties and/or
-    /// fields with the same name, those properties and fields are
-    /// ignored.</item>
-    ///  <item>(*) In the Java version, eligible getters are
-    /// public, nonstatic methods starting with "get" or "is" (either word
-    /// followed by a character other than a basic digit or lower-case
-    /// letter, that is, other than "a" to "z" or "0" to "9"), that take no
-    /// parameters and do not return void, except that methods named
-    /// "getClass" are not eligible getters. In addition, public,
-    /// nonstatic, nonfinal fields are also eligible getters. If a class
-    /// has two otherwise eligible getters (methods and/or fields) of the
-    /// form "isX" and "getX", where "X" is the same in both, or two such
-    /// getters with the same name but different return type, they are not
-    /// eligible getters.</item>
-    ///  <item>Then, the method returns a CBOR map
-    /// with each eligible getter's name or property name as each key, and
-    /// with the corresponding value returned by that getter as that key's
-    /// value. Before adding a key-value pair to the map, the key's name is
+    ///  fields. If a class has two
+    /// properties and/or fields of the form "X" and "IsX", where "X" is
+    /// any name, or has multiple properties and/or fields with the same
+    /// name, those properties and fields are ignored.</item>
+    ///  <item>(*) In
+    /// the Java version, eligible getters are public, nonstatic methods
+    /// starting with "get" or "is" (either word followed by a character
+    /// other than a basic digit or lower-case letter, that is, other than
+    /// "a" to "z" or "0" to "9"), that take no parameters and do not
+    /// return void, except that methods named "getClass" are not eligible
+    /// getters. In addition, public, nonstatic, nonfinal fields are also
+    /// eligible getters. If a class has two otherwise eligible getters
+    /// (methods and/or fields) of the form "isX" and "getX", where "X" is
+    /// the same in both, or two such getters with the same name but
+    /// different return type, they are not eligible getters.</item>
+    /// <item>Then, the method returns a CBOR map with each eligible
+    /// getter's name or property name as each key, and with the
+    /// corresponding value returned by that getter as that key's value.
+    /// Before adding a key-value pair to the map, the key's name is
     /// adjusted according to the rules described in the <see
     /// cref='PeterO.Cbor.PODOptions'/> documentation. Note that for
     /// security reasons, certain types are not supported even if they
@@ -2821,9 +2839,17 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// <exception cref='PeterO.Cbor.CBORException'>An error occurred while
     /// converting the given object to a CBOR object.</exception>
     /// <example>
+    /// <para>The following example (originally written in C# for the
+    /// DotNet version) uses a CBORTypeMapper to change how DateTime
+    /// objects are converted to CBOR. In this case, such objects are
+    /// converted to CBOR objects with tag 1 that store numbers giving the
+    /// number of seconds since the start of 1970.</para>
+    /// <code>var conv = new CBORTypeMapper().AddConverter(typeof(DateTime),
+    /// CBORDateConverter.TaggedNumber);
+    /// CBORObject obj = CBORObject.FromObject(DateTime.Now, conv);</code>
     /// <para>The following example generates a CBOR object from a 64-bit
     /// signed integer that is treated as a 64-bit unsigned integer (such
-    /// as.NET's UInt64, which has no direct equivalent in the Java
+    /// as DotNet's UInt64, which has no direct equivalent in the Java
     /// language), in the sense that the value is treated as 2^64 plus the
     /// original value if it's negative.</para>
     /// <code>long x = -40L; &#x2f;&#x2a; Example 64-bit value treated as 2^64-40.&#x2a;&#x2f;

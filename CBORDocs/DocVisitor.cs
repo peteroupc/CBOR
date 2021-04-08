@@ -108,7 +108,7 @@ namespace PeterO.DocGen {
         builder.Append("readonly ");
       }
       builder.Append(FormatType(field.FieldType));
-      builder.Append(" ");
+      builder.Append((char)0x20); // space
       builder.Append(field.Name);
       if (field.IsLiteral) {
         try {
@@ -118,13 +118,13 @@ namespace PeterO.DocGen {
           } else if (obj is long) {
             builder.Append(" = " + (long)obj + "L;");
           } else {
-            builder.Append(";");
+            builder.Append(';');
           }
         } catch (InvalidOperationException) {
-          builder.Append(";");
+          builder.Append(';');
         }
       } else {
-        builder.Append(";");
+        builder.Append(';');
       }
       return builder.ToString();
     }
@@ -183,7 +183,7 @@ IsMethodOverride((MethodInfo)method)) {
           if (!shortform) {
             builder.Append(FormatType(methodInfo.ReturnType));
           }
-          builder.Append(" ");
+          builder.Append((char)0x20);
           builder.Append(method.Name);
         }
       } else {
@@ -211,7 +211,7 @@ IsMethodOverride((MethodInfo)method)) {
         if (!shortform) {
           builder.Append("\r\n" + FourSpaces + FourSpaces);
         } else if (!first) {
-          builder.Append(" ");
+          builder.Append((char)0x20);
         }
         if (first && isExtension) {
           builder.Append("this ");
@@ -222,7 +222,7 @@ IsMethodOverride((MethodInfo)method)) {
         }
         builder.Append(FormatType(param.ParameterType));
         if (!shortform) {
-          builder.Append(" ");
+          builder.Append((char)0x20);
           builder.Append(param.Name);
         }
         first = false;
@@ -232,7 +232,7 @@ IsMethodOverride((MethodInfo)method)) {
         AppendConstraints(method.GetGenericArguments(), builder);
       }
       if (!shortform) {
-        builder.Append(";");
+        builder.Append(';');
       }
       return builder.ToString();
     }
@@ -277,7 +277,7 @@ IsMethodOverride((MethodInfo)method)) {
           }
         }
         builder.Append(FormatType(property.PropertyType));
-        builder.Append(" ");
+        builder.Append((char)0x20);
       }
       bool first;
       var indexParams = property.GetIndexParameters();
@@ -300,7 +300,7 @@ IsMethodOverride((MethodInfo)method)) {
         }
         builder.Append(FormatType(param.ParameterType));
         if (!shortform) {
-          builder.Append(" ");
+          builder.Append((char)0x20);
           builder.Append(param.Name);
         }
         first = false;
