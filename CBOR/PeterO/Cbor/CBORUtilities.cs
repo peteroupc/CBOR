@@ -982,6 +982,40 @@ currentYear.Remainder(100).ToInt32Checked());
       return dt;
     }
 
+    public static EFloat DateTimeToIntegerOrDouble(
+      EInteger bigYear,
+      int[] lesserFields,
+      int[] status) {
+      // Status is 0 for integer, 1 for (lossy) double, 2 for failure
+      if (lesserFields[6] != 0) {
+        throw new NotSupportedException(
+          "Local time offsets not supported");
+      }
+      EInteger seconds = GetNumberOfDaysProlepticGregorian(
+        bigYear,
+        lesserFields[0],
+        lesserFields[1]);
+      seconds = seconds.Multiply(24).Add(lesserFields[2])
+          .Multiply(60).Add(lesserFields[3]).Multiply(60).Add(lesserFields[4]);
+      if (lesserFields[5] == 0 && seconds.GetUnsignedBitLengthAsInt64() <= 64) {
+         // Can fit in major type 1 or 2
+         status[0] = 0;
+         return EFloat.FromEInteger(seconds);
+      }
+      // Add seconds and incorporate nanoseconds
+      EDecimal
+d = EDecimal.FromInt32(lesserFields[5]).Divide(1000000000L).Add(seconds);
+      double dbl = d.ToDouble();
+      if (Double.IsPositiveInfinity(dbl) ||
+             Double.IsNegativeInfinity(dbl) ||
+             Double.IsNaN(dbl)) {
+         status[0] = 2;
+         return null;
+      }
+      status[1] = 1;
+      return EFloat.FromDouble(dbl);
+    }
+
     public static string ToAtomDateTimeString(
       EInteger bigYear,
       int[] lesserFields) {
