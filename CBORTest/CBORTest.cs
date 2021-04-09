@@ -1733,6 +1733,7 @@ namespace Test {
       CBORObject o;
       o = CBORObject.FromJSONString("[1,2,null,true,false,\"\"]");
       o.Add(new byte[] { 32, 33, 44, 55 });
+      o.Add(CBORObject.FromObjectAndTag(9999, 1));
       Console.WriteLine(o.ToJSONString());
       Console.WriteLine(CBORPlistWriter.ToPlistString(o));
     }
@@ -2394,10 +2395,9 @@ namespace Test {
         DataUtilities.ToLowerCaseAscii(ei.ToRadixString(16)));
       CBORObject cbor = CBORObject.FromObject(ei);
       Assert.IsTrue(cbor.AsNumber().Sign >= 0);
-      var c1ei = (EInteger)cbor.ToObject(typeof(EInteger));
       TestCommon.AssertEqualsHashCode(
         ei,
-        c1ei);
+        cbor.ToObject(typeof(EInteger)));
     }
 
     [Test]

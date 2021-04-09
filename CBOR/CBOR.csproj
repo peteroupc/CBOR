@@ -39,10 +39,10 @@ Version 4.3:
   <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet></PropertyGroup>
   <ItemGroup>
 
-  <PackageReference Include='StyleCop.Analyzers' PrivateAssets='All' Version='1.2.0-beta.205'/>
+  <PackageReference Include='StyleCop.Analyzers' PrivateAssets='All' Version='1.2.0-beta.333'/>
  <AdditionalFiles Include='stylecop.json'/>
 <AdditionalFiles Include='rules.ruleset'/><PackageReference Include='PeterO.URIUtility' Version='1.0.0'/>
 
 <PackageReference Include='PeterO.Numbers' Version='1.7.4'/>
-<PackageReference Include='Microsoft.CodeAnalysis.FxCopAnalyzers' PrivateAssets='All' Version='3.3.0'/></ItemGroup>
+<PackageReference Include='Microsoft.CodeAnalysis.FxCopAnalyzers' PrivateAssets='All' Version='3.3.2'/></ItemGroup>
                   </Project>

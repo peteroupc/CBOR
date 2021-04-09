@@ -465,60 +465,128 @@
             a focus on CBOR.</summary>
 </doc>
 <doc name="T:PeterO.Cbor.CBORDateConverter">
-<summary><para>A class for converting date-time objects to and from tagged CBOR
-            objects.</para><para>In this method's documentation, the "number of
-            seconds since the start of 1970" is based on the POSIX
-            definition of "seconds since the Epoch", a definition that does not
-            count leap seconds. This number of seconds assumes
-            the use of a proleptic Gregorian calendar, in which the rules
-            regarding the number of days in each month and which years are leap
-            years are the same for all years as they were in 1970 (including
-            without regard to transitions from other calendars to the
-            Gregorian).</para></summary>
+
+            <summary><para>A class for converting date-time objects to and from tagged
+            CBOR objects.</para>
+            <para>In this method's documentation, the "number of seconds since
+            the start of 1970" is based on the POSIX definition of "seconds
+            since the Epoch", a definition that does not count leap seconds.
+            This number of seconds assumes the use of a proleptic Gregorian
+            calendar, in which the rules regarding the number of days in each
+            month and which years are leap years are the same for all years as
+            they were in 1970 (including without regard to time zone differences or transitions from
+            other calendars to the Gregorian).</para></summary>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORDateConverter.#ctor">
-<summary>Initializes a new instance of the <see cref='CBORDateConverter'/> class.</summary>
+
+            <summary>Initializes a new instance of the
+            <see cref='PeterO.Cbor.CBORDateConverter'/> class.</summary>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORDateConverter.#ctor(PeterO.Cbor.CBORDateConverter.ConversionType)">
-<summary>Initializes a new instance of the <see cref='CBORDateConverter'/> class.</summary><param name='convType'>The parameter <paramref name='convType'/> is a Cbor.CBORDateConverter.ConversionType object.</param>
+
+            <summary>Initializes a new instance of the
+            <see cref='PeterO.Cbor.CBORDateConverter'/> class.</summary>
+            <param name='convType'>The parameter <paramref name='convType'/> is
+            a Cbor.CBORDateConverter.ConversionType object.</param>
+
 </doc>
 <doc name="T:PeterO.Cbor.CBORDateConverter.ConversionType">
-<summary>Conversion type for date-time conversion.</summary>
+
+            <summary>Conversion type for date-time conversion.</summary>
+
 </doc>
 <doc name="F:PeterO.Cbor.CBORDateConverter.ConversionType.TaggedNumber">
-<summary>FromCBORObject accepts objects with tag 0 (date/time strings)
-            and tag 1 (number of seconds since the start of 1970), and ToCBORObject converts date/time objects
-            to CBOR
-            objects of tag 1.  The ToCBORObject conversion is lossless only if the number of seconds since the start of 1970 can be represented exactly as an integer in the interval [-(2^64), 2^64 - 1] or as a 64-bit floating-point number in the IEEE 754r binary64 format; the conversion is lossy otherwise.  The ToCBORObject conversion will throw an exception if the conversion to binary64 results in positive infinity, negative infinity, or not-a-number.</summary>
+
+            <summary>FromCBORObject accepts objects with tag 0 (date/time
+            strings) and tag 1 (number of seconds since the start of 1970), and
+            ToCBORObject converts date/time objects to CBOR objects of tag 1.
+            The ToCBORObject conversion is lossless only if the number of
+            seconds since the start of 1970 can be represented exactly as an
+            integer in the interval [-(2^64), 2^64 - 1] or as a 64-bit
+            floating-point number in the IEEE 754r binary64 format; the
+            conversion is lossy otherwise. The ToCBORObject conversion will
+            throw an exception if the conversion to binary64 results in
+            positive infinity, negative infinity, or not-a-number.</summary>
+
 </doc>
 <doc name="F:PeterO.Cbor.CBORDateConverter.ConversionType.TaggedString">
-<summary>FromCBORObject accepts CBOR objects with tag 0 (date/time strings)
-            and tag 1 (number of seconds since the start of 1970), and ToCBORObject converts date/time objects
-            to CBOR
-            objects of tag 0.</summary>
+
+            <summary>FromCBORObject accepts CBOR objects with tag 0 (date/time
+            strings) and tag 1 (number of seconds since the start of 1970), and
+            ToCBORObject converts date/time objects to CBOR objects of tag
+            0.</summary>
+
 </doc>
 <doc name="F:PeterO.Cbor.CBORDateConverter.ConversionType.UntaggedNumber">
-<summary>FromCBORObject accepts untagged CBOR integer or CBOR floating-point objects that give the number of seconds since the start of 1970, and ToCBORObject converts date/time objects (DateTime in DotNet, and Date in Java) to such untagged CBOR objects.  The ToCBORObject conversion is lossless only if the number of seconds since the start of 1970 can be represented exactly as an integer in the interval [-(2^64), 2^64 - 1] or as a 64-bit floating-point number in the IEEE 754r binary64 format; the conversion is lossy otherwise.  The ToCBORObject conversion will throw an exception if the conversion to binary64 results in positive infinity, negative infinity, or not-a-number.</summary>
+
+            <summary>FromCBORObject accepts untagged CBOR integer or CBOR
+            floating-point objects that give the number of seconds since the
+            start of 1970, and ToCBORObject converts date/time objects
+            (DateTime in DotNet, and Date in Java) to such untagged CBOR
+            objects. The ToCBORObject conversion is lossless only if the number
+            of seconds since the start of 1970 can be represented exactly as an
+            integer in the interval [-(2^64), 2^64 - 1] or as a 64-bit
+            floating-point number in the IEEE 754r binary64 format; the
+            conversion is lossy otherwise. The ToCBORObject conversion will
+            throw an exception if the conversion to binary64 results in
+            positive infinity, negative infinity, or not-a-number.</summary>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORDateConverter.FromCBORObject(PeterO.Cbor.CBORObject)">
-<param name='obj'>The parameter <paramref name='obj'/> is a Cbor.CBORObject object.</param><returns>The return value is not documented yet.</returns><exception cref='ArgumentNullException'>The parameter <paramref name='obj'/> is null.</exception>
+
+            <summary>Not documented yet.</summary><param name='obj'>The parameter <paramref name='obj'/> is a
+            Cbor.CBORObject object.</param><returns>The return value is not documented yet.</returns><exception cref='ArgumentNullException'>The parameter <paramref name='obj'/> is null.</exception>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORDateConverter.StringToDateTime(System.String)">
 <param name='str'>The parameter <paramref name='str'/> is a text string.</param><returns>The return value is not documented yet.</returns>
 </doc>
 <doc name="F:PeterO.Cbor.CBORDateConverter.TaggedNumber">
-<summary>A converter object where FromCBORObject accepts CBOR objects with tag 0 (date/time strings)
-            and tag 1 (number of seconds since the start of 1970), and ToCBORObject converts date/time objects (DateTime in DotNet, and Date in Java) to CBOR objects of tag 1.  The ToCBORObject conversion is lossless only if the number of seconds since the start of 1970 can be represented exactly as an integer in the interval [-(2^64), 2^64 - 1] or as a 64-bit floating-point number in the IEEE 754r binary64 format; the conversion is lossy otherwise.  The ToCBORObject conversion will throw an exception if the conversion to binary64 results in positive infinity, negative infinity, or not-a-number.</summary>
+
+            <summary>A converter object where FromCBORObject accepts CBOR
+            objects with tag 0 (date/time strings) and tag 1 (number of seconds
+            since the start of 1970), and ToCBORObject converts date/time
+            objects (DateTime in DotNet, and Date in Java) to CBOR objects of
+            tag 1. The ToCBORObject conversion is lossless only if the number
+            of seconds since the start of 1970 can be represented exactly as an
+            integer in the interval [-(2^64), 2^64 - 1] or as a 64-bit
+            floating-point number in the IEEE 754r binary64 format; the
+            conversion is lossy otherwise. The ToCBORObject conversion will
+            throw an exception if the conversion to binary64 results in
+            positive infinity, negative infinity, or not-a-number.</summary>
+
 </doc>
 <doc name="F:PeterO.Cbor.CBORDateConverter.TaggedString">
-<summary>A converter object where FromCBORObject accepts CBOR objects with tag 0 (date/time strings)
-            and tag 1 (number of seconds since the start of 1970), and ToCBORObject converts date/time objects (DateTime in DotNet, and Date in Java) to CBOR objects of tag 0.</summary>
+
+            <summary>A converter object where FromCBORObject accepts CBOR
+            objects with tag 0 (date/time strings) and tag 1 (number of seconds
+            since the start of 1970), and ToCBORObject converts date/time
+            objects (DateTime in DotNet, and Date in Java) to CBOR objects of
+            tag 0.</summary>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORDateConverter.ToCBORObject(System.DateTime)">
-<param name='obj'>The parameter <paramref name='obj'/> is a DateTime object.</param><returns>The return value is not documented yet.</returns>
+
+            <summary>Not documented yet.</summary><param name='obj'>The parameter <paramref name='obj'/> is a
+            DateTime object.</param><returns>The return value is not documented yet.</returns>
+
 </doc>
 <doc name="F:PeterO.Cbor.CBORDateConverter.UntaggedNumber">
-<summary>A converter object where FromCBORObject accepts untagged CBOR integer or CBOR floating-point objects that give the number of seconds since the start of 1970, and where ToCBORObject converts date/time objects (DateTime in DotNet, and Date in Java) to such untagged CBOR objects.  The ToCBORObject conversion is lossless only if the number of seconds since the start of 1970 can be represented exactly as an integer in the interval [-(2^64), 2^64 - 1] or as a 64-bit floating-point number in the IEEE 754r binary64 format; the conversion is lossy otherwise.  The ToCBORObject conversion will throw an exception if the conversion to binary64 results in positive infinity, negative infinity, or not-a-number.</summary>
+
+            <summary>A converter object where FromCBORObject accepts untagged
+            CBOR integer or CBOR floating-point objects that give the number of
+            seconds since the start of 1970, and where ToCBORObject converts
+            date/time objects (DateTime in DotNet, and Date in Java) to such
+            untagged CBOR objects. The ToCBORObject conversion is lossless only
+            if the number of seconds since the start of 1970 can be represented
+            exactly as an integer in the interval [-(2^64), 2^64 - 1] or as a
+            64-bit floating-point number in the IEEE 754r binary64 format; the
+            conversion is lossy otherwise. The ToCBORObject conversion will
+            throw an exception if the conversion to binary64 results in
+            positive infinity, negative infinity, or not-a-number.</summary>
+
 </doc>
 <doc name="T:PeterO.Cbor.CBOREncodeOptions">
 
@@ -1586,14 +1654,12 @@
             <c>int</c> or <c>long</c>.</para>
             <para><b>To and from JSON:</b> This class also doubles as a reader
             and writer of JavaScript Object Notation (JSON). The
-            CBORObject.FromJSONString method converts JSON in text string form
-            to a CBOR object, and the ToJSONString method converts a CBOR
-            object to a JSON string. (Note that the conversion from CBOR to
-            JSON is not always without loss and may make it impossible to
-            recover the original object when converting the JSON back to CBOR.
-            See the ToJSONString documentation.) Likewise, ToJSONBytes and
-            FromJSONBytes work with JSON in the form of byte arrays rather than
-            text strings.</para>
+            CBORObject.FromJSONString method converts JSON to a CBOR object,
+            and the ToJSONString method converts a CBOR object to a JSON
+            string. (Note that the conversion from CBOR to JSON is not always
+            without loss and may make it impossible to recover the original
+            object when converting the JSON back to CBOR. See the ToJSONString
+            documentation.)</para>
             <para>In addition, the CBORObject.WriteJSON method writes many
             kinds of objects as JSON to a data stream, including numbers, CBOR
             objects, strings, and arrays of numbers and strings. The
@@ -3383,38 +3449,37 @@
             <c>ordinal()</c> method in the Java version.</item>
              <item>An object
             of type <c>DateTime</c> , <c>Uri</c> , or <c>Guid</c> ( <c>Date</c> , <c>URI</c> , or <c>UUID</c> , respectively, in Java) will be
-            converted to a tagged CBOR object of the appropriate kind.
-            By default, <c>DateTime</c> / <c>Date</c> will be converted to a tag-0 string
-            following the date format used in the Atom syndication
-            format, but this behavior can be changed by passing a suitable CBORTypeMapper
-            to this method, such as a CBORTypeMapper that registers a CBORDateConverter
-            for <c>DateTime</c> or <c>Date</c> objects.  See the examples.</item>
-             <item>If the object is a type not specially handled
-            above, this method checks the <paramref name='obj'/> parameter for
-            eligible getters as follows:</item>
-             <item>(*) In the .NET version,
-            eligible getters are the public, nonstatic getters of read/write
-            properties (and also those of read-only properties in the case of a
-            compiler-generated type or an F# type). Eligible getters also
-            include public, nonstatic, non- <c>const</c> , non- <c>readonly</c> fields. If a class has two properties and/or fields of the form "X"
-            and "IsX", where "X" is any name, or has multiple properties and/or
-            fields with the same name, those properties and fields are
-            ignored.</item>
-             <item>(*) In the Java version, eligible getters are
-            public, nonstatic methods starting with "get" or "is" (either word
-            followed by a character other than a basic digit or lower-case
-            letter, that is, other than "a" to "z" or "0" to "9"), that take no
-            parameters and do not return void, except that methods named
-            "getClass" are not eligible getters. In addition, public,
-            nonstatic, nonfinal fields are also eligible getters. If a class
-            has two otherwise eligible getters (methods and/or fields) of the
-            form "isX" and "getX", where "X" is the same in both, or two such
-            getters with the same name but different return type, they are not
-            eligible getters.</item>
-             <item>Then, the method returns a CBOR map
-            with each eligible getter's name or property name as each key, and
-            with the corresponding value returned by that getter as that key's
-            value. Before adding a key-value pair to the map, the key's name is
+            converted to a tagged CBOR object of the appropriate kind. By
+            default, <c>DateTime</c> / <c>Date</c> will be converted to a tag-0
+            string following the date format used in the Atom syndication
+            format, but this behavior can be changed by passing a suitable
+            CBORTypeMapper to this method, such as a CBORTypeMapper that
+            registers a CBORDateConverter for <c>DateTime</c> or <c>Date</c> objects. See the examples.</item>
+             <item>If the object is a type not
+            specially handled above, this method checks the <paramref name='obj'/> parameter for eligible getters as follows:</item>
+            <item>(*) In the .NET version, eligible getters are the public,
+            nonstatic getters of read/write properties (and also those of
+            read-only properties in the case of a compiler-generated type or an
+            F# type). Eligible getters also include public, nonstatic, non-
+            <c>const</c> , non- <c>readonly</c> fields. If a class has two
+            properties and/or fields of the form "X" and "IsX", where "X" is
+            any name, or has multiple properties and/or fields with the same
+            name, those properties and fields are ignored.</item>
+             <item>(*) In
+            the Java version, eligible getters are public, nonstatic methods
+            starting with "get" or "is" (either word followed by a character
+            other than a basic digit or lower-case letter, that is, other than
+            "a" to "z" or "0" to "9"), that take no parameters and do not
+            return void, except that methods named "getClass" are not eligible
+            getters. In addition, public, nonstatic, nonfinal fields are also
+            eligible getters. If a class has two otherwise eligible getters
+            (methods and/or fields) of the form "isX" and "getX", where "X" is
+            the same in both, or two such getters with the same name but
+            different return type, they are not eligible getters.</item>
+            <item>Then, the method returns a CBOR map with each eligible
+            getter's name or property name as each key, and with the
+            corresponding value returned by that getter as that key's value.
+            Before adding a key-value pair to the map, the key's name is
             adjusted according to the rules described in the <see cref='PeterO.Cbor.PODOptions'/> documentation. Note that for
             security reasons, certain types are not supported even if they
             contain eligible getters.</item>
@@ -3450,11 +3515,11 @@
             <exception cref='ArgumentNullException'>The parameter <paramref name='options'/> is null.</exception>
             <exception cref='PeterO.Cbor.CBORException'>An error occurred while
             converting the given object to a CBOR object.</exception>
-            <example><para>The following example (originally written in C# for the DotNet version)
-            uses a CBORTypeMapper to change how
-            DateTime objects are converted to CBOR.  In this case, such objects
-            are converted to CBOR objects with tag 1 that store numbers giving
-            the number of seconds since the start of 1970.</para>
+            <example><para>The following example (originally written in C# for the
+            DotNet version) uses a CBORTypeMapper to change how DateTime
+            objects are converted to CBOR. In this case, such objects are
+            converted to CBOR objects with tag 1 that store numbers giving the
+            number of seconds since the start of 1970.</para>
             <code>var conv = new CBORTypeMapper().AddConverter(typeof(DateTime),
             CBORDateConverter.TaggedNumber);
             CBORObject obj = CBORObject.FromObject(DateTime.Now, conv);</code> <para>The following example generates a CBOR object from a 64-bit
@@ -4585,7 +4650,8 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.ToObject(System.Type,PeterO.Cbor.CBORTypeMapper,PeterO.Cbor.PODOptions)">
-<summary><para>Converts this CBOR object to an object of an
+
+            <summary><para>Converts this CBOR object to an object of an
             arbitrary type. The following cases are checked in the logical
             order given (rather than the strict order in which they are
             implemented by this library):</para>
@@ -4735,52 +4801,55 @@
             the use of a proleptic Gregorian calendar, in which the rules
             regarding the number of days in each month and which years are leap
             years are the same for all years as they were in 1970 (including
-            without regard to transitions from other calendars to the
+            without regard to time zone differences or transitions from other calendars to the
             Gregorian). The string format used in tag 0 supports only years up
             to 4 decimal digits long. For tag 1, CBOR objects that express
             infinity or not-a-number (NaN) are treated as invalid by this
-            method.</item>
-             <item>If the type is <c>Uri</c> (or <c>URI</c> in
-            Java), returns a URI object if possible.</item>
-             <item>If the type
-            is <c>Guid</c> (or <c>UUID</c> in Java), returns a UUID object if
-            possible.</item>
-             <item>Plain-Old-Data deserialization: If the
-            object is a type not specially handled above, the type includes a
-            zero-parameter constructor (default or not), this CBOR object is a
-            CBOR map, and the "mapper" parameter (if any) allows this type to
-            be eligible for Plain-Old-Data deserialization, then this method
-            checks the given type for eligible setters as follows:</item>
-            <item>(*) In the .NET version, eligible setters are the public,
-            nonstatic setters of properties with a public, nonstatic getter.
-            Eligible setters also include public, nonstatic, non- <c>const</c> , non- <c>readonly</c> fields. If a class has two properties and/or
-            fields of the form "X" and "IsX", where "X" is any name, or has
-            multiple properties and/or fields with the same name, those
-            properties and fields are ignored.</item>
-             <item>(*) In the Java
-            version, eligible setters are public, nonstatic methods starting
-            with "set" followed by a character other than a basic digit or
-            lower-case letter, that is, other than "a" to "z" or "0" to "9",
-            that take one parameter. The class containing an eligible setter
-            must have a public, nonstatic method with the same name, but
-            starting with "get" or "is" rather than "set", that takes no
-            parameters and does not return void. (For example, if a class has
-            "public setValue(String)" and "public getValue()", "setValue" is an
-            eligible setter. However, "setValue()" and "setValue(String, int)"
-            are not eligible setters.) In addition, public, nonstatic, nonfinal
-            fields are also eligible setters. If a class has two or more
-            otherwise eligible setters (methods and/or fields) with the same
-            name, but different parameter type, they are not eligible
-            setters.</item>
-             <item>Then, the method creates an object of the
-            given type and invokes each eligible setter with the corresponding
-            value in the CBOR map, if any. Key names in the map are matched to
-            eligible setters according to the rules described in the <see cref='PeterO.Cbor.PODOptions'/> documentation. Note that for
-            security reasons, certain types are not supported even if they
-            contain eligible setters. For the Java version, the object creation
-            may fail in the case of a nested nonstatic class.</item>
+            method. This default behavior for <c>DateTime</c> and <c>Date</c> can be changed by passing a suitable CBORTypeMapper to this method,
+            such as a CBORTypeMapper that registers a CBORDateConverter for
+            <c>DateTime</c> or <c>Date</c> objects. See the examples.</item>
+            <item>If the type is <c>Uri</c> (or <c>URI</c> in Java), returns a
+            URI object if possible.</item>
+             <item>If the type is <c>Guid</c> (or
+            <c>UUID</c> in Java), returns a UUID object if possible.</item>
+            <item>Plain-Old-Data deserialization: If the object is a type not
+            specially handled above, the type includes a zero-parameter
+            constructor (default or not), this CBOR object is a CBOR map, and
+            the "mapper" parameter (if any) allows this type to be eligible for
+            Plain-Old-Data deserialization, then this method checks the given
+            type for eligible setters as follows:</item>
+             <item>(*) In the .NET
+            version, eligible setters are the public, nonstatic setters of
+            properties with a public, nonstatic getter. Eligible setters also
+            include public, nonstatic, non- <c>const</c> , non- <c>readonly</c> fields. If a class has two properties and/or fields of the form "X"
+            and "IsX", where "X" is any name, or has multiple properties and/or
+            fields with the same name, those properties and fields are
+            ignored.</item>
+             <item>(*) In the Java version, eligible setters are
+            public, nonstatic methods starting with "set" followed by a
+            character other than a basic digit or lower-case letter, that is,
+            other than "a" to "z" or "0" to "9", that take one parameter. The
+            class containing an eligible setter must have a public, nonstatic
+            method with the same name, but starting with "get" or "is" rather
+            than "set", that takes no parameters and does not return void. (For
+            example, if a class has "public setValue(String)" and "public
+            getValue()", "setValue" is an eligible setter. However,
+            "setValue()" and "setValue(String, int)" are not eligible setters.)
+            In addition, public, nonstatic, nonfinal fields are also eligible
+            setters. If a class has two or more otherwise eligible setters
+            (methods and/or fields) with the same name, but different parameter
+            type, they are not eligible setters.</item>
+             <item>Then, the method
+            creates an object of the given type and invokes each eligible
+            setter with the corresponding value in the CBOR map, if any. Key
+            names in the map are matched to eligible setters according to the
+            rules described in the <see cref='PeterO.Cbor.PODOptions'/>
+            documentation. Note that for security reasons, certain types are
+            not supported even if they contain eligible setters. For the Java
+            version, the object creation may fail in the case of a nested
+            nonstatic class.</item>
              </list>
-            </summary>
+             </summary>
             <param name='t'>The type, class, or interface that this method's
             return value will belong to. To express a generic type in Java, see
             the example. <b>Note:</b> For security reasons, an application
@@ -4803,7 +4872,14 @@
             supported, or the given object's nesting is too deep, or another
             error occurred when serializing the object.</exception>
             <exception cref='ArgumentNullException'>The parameter <paramref name='t'/> or <paramref name='options'/> is null.</exception>
-            <example><para>Java offers no easy way to express a generic type, at least
+            <example><para>The following example (originally written in C# for the
+            DotNet version) uses a CBORTypeMapper to change how CBOR objects
+            are converted to DateTime objects. In this case, the ToObject
+            method assumes the CBOR object is an untagged number giving the
+            number of seconds since the start of 1970.</para>
+            <code>var conv = new CBORTypeMapper().AddConverter(typeof(DateTime),
+            CBORDateConverter.UntaggedNumber);
+            var obj = CBORObject.FromObject().ToObject&lt;DateTime&gt;(conv);</code> <para>Java offers no easy way to express a generic type, at least
             none as easy as C#'s <c>typeof</c> operator. The following example,
             written in Java, is a way to specify that the return value will be
             an ArrayList of String objects.</para>
@@ -4818,6 +4894,7 @@
             <code>var array = (List&lt;String&gt;)cborArray.ToObject(
             typeof(List&lt;String&gt;));</code> .
             </example>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.ToObject(System.Type,PeterO.Cbor.PODOptions)">
 

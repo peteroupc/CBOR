@@ -202,11 +202,11 @@ IsMethodOverride((MethodInfo)method)) {
         }
         builder.Append('>');
       }
-      builder.Append("(");
+      builder.Append('(');
       first = true;
       foreach (var param in method.GetParameters()) {
         if (!first) {
-          builder.Append(",");
+          builder.Append(',');
         }
         if (!shortform) {
           builder.Append("\r\n" + FourSpaces + FourSpaces);
@@ -227,7 +227,7 @@ IsMethodOverride((MethodInfo)method)) {
         }
         first = false;
       }
-      builder.Append(")");
+      builder.Append(')');
       if (method is MethodInfo && method.GetGenericArguments().Length > 0) {
         AppendConstraints(method.GetGenericArguments(), builder);
       }
@@ -306,7 +306,7 @@ IsMethodOverride((MethodInfo)method)) {
         first = false;
       }
       if (indexParams.Length > 0) {
-        builder.Append("]");
+        builder.Append(']');
       }
       if (!shortform) {
         builder.Append(" { ");
@@ -316,7 +316,7 @@ IsMethodOverride((MethodInfo)method)) {
         if (setter != null && !setter.IsPrivate) {
           builder.Append("set; ");
         }
-        builder.Append("}");
+        builder.Append('}');
       }
       return builder.ToString();
     }
@@ -555,7 +555,7 @@ xmlName.Equals("em", StringComparison.Ordinal)) {
             sb.Append("\"" + DocGenUtil.HtmlEscape(
               node.GetAttribute(attr)) + "\"");
           }
-          sb.Append(">");
+          sb.Append('>');
           this.Write(sb.ToString());
           XmlDoc.VisitInnerNode(node, this);
           this.Write("</" + xmlName + ">");

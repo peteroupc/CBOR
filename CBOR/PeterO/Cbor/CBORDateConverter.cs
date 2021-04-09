@@ -20,8 +20,9 @@ namespace PeterO.Cbor {
   /// This number of seconds assumes the use of a proleptic Gregorian
   /// calendar, in which the rules regarding the number of days in each
   /// month and which years are leap years are the same for all years as
-  /// they were in 1970 (including without regard to transitions from
-  /// other calendars to the Gregorian).</para></summary>
+  /// they were in 1970 (including without regard to time zone
+  /// differences or transitions from other calendars to the
+  /// Gregorian).</para></summary>
   public sealed class CBORDateConverter : ICBORToFromConverter<DateTime> {
     private readonly ConversionType convType;
 
@@ -96,11 +97,12 @@ namespace PeterO.Cbor {
     }
 
   /// <summary>Initializes a new instance of the
-  /// <see cref='CBORDateConverter'/> class.</summary>
-    public CBORDateConverter() : this(ConversionType.TaggedString) {}
+  /// <see cref='PeterO.Cbor.CBORDateConverter'/> class.</summary>
+    public CBORDateConverter() : this(ConversionType.TaggedString) {
+}
 
   /// <summary>Initializes a new instance of the
-  /// <see cref='CBORDateConverter'/> class.</summary>
+  /// <see cref='PeterO.Cbor.CBORDateConverter'/> class.</summary>
   /// <param name='convType'>The parameter <paramref name='convType'/> is
   /// a Cbor.CBORDateConverter.ConversionType object.</param>
     public CBORDateConverter(ConversionType convType) {
@@ -118,92 +120,149 @@ namespace PeterO.Cbor {
       }
     }
 
+  /// <summary>Not documented yet.</summary>
   /// <param name='obj'>The parameter <paramref name='obj'/> is a
   /// Cbor.CBORObject object.</param>
   /// <returns>The return value is not documented yet.</returns>
   /// <exception cref='ArgumentNullException'>The parameter <paramref
   /// name='obj'/> is null.</exception>
-  /// <summary>Not documented yet.</summary>
     public DateTime FromCBORObject(CBORObject obj) {
-      if (this.convType == ConversionType.UntaggedNumber) {
-        if (obj == null) {
-          throw new ArgumentNullException(nameof(obj));
-        }
-        if (obj.IsTagged) {
-         throw new CBORException("May not be tagged");
+      if (obj == null) {
+        throw new ArgumentNullException(nameof(obj));
+      }
+      var lesserFields = new int[7];
+      var year = new EInteger[1];
+      string str = this.TryGetDateTimeFieldsInternal(obj, year, lesserFields);
+      if (str == null) {
+        return PropertyMap.BuildUpDateTime(year[0], lesserFields);
+      }
+      throw new CBORException(str);
+    }
+
+  /// <summary>Not documented yet.</summary>
+  /// <summary>Not documented yet.</summary>
+  /// <returns>The return value is not documented yet.</returns>
+  /// <param name='obj'>Not documented yet.</param>
+  /// <param name='year'>Not documented yet.</param>
+  /// <param name='lesserFields'>Not documented yet.</param>
+  /// <exception cref='ArgumentNullException'>The parameter <paramref
+  /// name='year'/> or <paramref name='lesserFields'/> is
+  /// null.</exception>
+    public bool TryGetDateTimeFields(CBORObject obj, EInteger[] year, int[]
+lesserFields) {
+       if (year == null) {
+         throw new ArgumentNullException(nameof(year));
+       }
+       if (year.Length < 1) {
+         throw new ArgumentException("\"year\" + \"'s length\" (" +
+year.Length + ") is not greater or equal to 1");
+       }
+       if (lesserFields == null) {
+         throw new ArgumentNullException(nameof(lesserFields));
+       }
+       if (lesserFields.Length < 7) {
+         throw new ArgumentException("\"lesserFields\" + \"'s length\" (" +
+lesserFields.Length + ") is not greater or equal to 7");
+       }
+       string str = this.TryGetDateTimeFieldsInternal(obj, year, lesserFields);
+       if (str == null) {
+          // No error string
+          return true;
+       } else {
+          // With error string
+          year[0] = null;
+          for (var i = 0; i < 7; ++i) {
+            lesserFields[i] = 0;
+          }
+          return false;
+       }
+    }
+
+    private string TryGetDateTimeFieldsInternal(
+      CBORObject obj,
+      EInteger[] year,
+      int[] lesserFields) {
+if (obj == null) {
+         return "Object is null";
+       }
+       if (year == null) {
+         throw new ArgumentNullException(nameof(year));
+       }
+       if (year.Length < 1) {
+         throw new ArgumentException("\"year\" + \"'s length\" (" +
+year.Length + ") is not greater or equal to 1");
+       }
+       if (lesserFields == null) {
+         throw new ArgumentNullException(nameof(lesserFields));
+       }
+       if (lesserFields.Length < 7) {
+         throw new ArgumentException("\"lesserFields\" + \"'s length\" (" +
+lesserFields.Length + ") is not greater or equal to 7");
+       }
+       if (this.convType == ConversionType.UntaggedNumber) {
+         if (obj.IsTagged) {
+         return "May not be tagged";
       }
       CBORObject untagobj = obj;
       if (!untagobj.IsNumber) {
-          throw new CBORException("Not a finite number");
+          return "Not a finite number";
       }
       CBORNumber num = untagobj.AsNumber();
       if (!num.IsFinite()) {
-          throw new CBORException("Not a finite number");
+          return "Not a finite number";
       }
       if (num.CompareTo(Int64.MinValue) < 0 ||
             num.CompareTo(Int64.MaxValue) > 0) {
-          throw new CBORException("Too big or small to fit a DateTime");
+          return "Too big or small to fit a DateTime";
       }
       EDecimal dec;
       dec = (EDecimal)untagobj.ToObject(typeof(EDecimal));
-      var lesserFields = new int[7];
-      var year = new EInteger[1];
       CBORUtilities.BreakDownSecondsSinceEpoch(
           dec,
           year,
           lesserFields);
-        return PropertyMap.BuildUpDateTime(year[0], lesserFields);
-      }
-      if (obj == null) {
-        throw new ArgumentNullException(nameof(obj));
+        return null; // no error
       }
       if (obj.HasMostOuterTag(0)) {
+        string str = obj.AsString();
         try {
-          return StringToDateTime(obj.AsString());
+          CBORUtilities.ParseAtomDateTimeString(str, year, lesserFields);
+          return null; // no error
         } catch (OverflowException ex) {
-          throw new CBORException(ex.Message, ex);
+          return ex.Message;
         } catch (InvalidOperationException ex) {
-          throw new CBORException(ex.Message, ex);
+          return ex.Message;
         } catch (ArgumentException ex) {
-          throw new CBORException(ex.Message, ex);
+          return ex.Message;
         }
       } else if (obj.HasMostOuterTag(1)) {
         CBORObject untagobj = obj.UntagOne();
         if (!untagobj.IsNumber) {
-          throw new CBORException("Not a finite number");
+          return "Not a finite number";
         }
         CBORNumber num = untagobj.AsNumber();
         if (!num.IsFinite()) {
-          throw new CBORException("Not a finite number");
+          return "Not a finite number";
         }
         if (num.CompareTo(Int64.MinValue) < 0 ||
             num.CompareTo(Int64.MaxValue) > 0) {
-          throw new CBORException("Too big or small to fit a DateTime");
+          return "Too big or small to fit a DateTime";
         }
         EDecimal dec;
         dec = (EDecimal)untagobj.ToObject(typeof(EDecimal));
-        var lesserFields = new int[7];
-        var year = new EInteger[1];
         CBORUtilities.BreakDownSecondsSinceEpoch(
           dec,
           year,
           lesserFields);
-        return PropertyMap.BuildUpDateTime(year[0], lesserFields);
+        return null; // No error
       }
-      throw new CBORException("Not tag 0 or 1");
+      return "Not tag 0 or 1";
     }
 
-    private static DateTime StringToDateTime(string str) {
-      var lesserFields = new int[7];
-      var year = new EInteger[1];
-      CBORUtilities.ParseAtomDateTimeString(str, year, lesserFields);
-      return PropertyMap.BuildUpDateTime(year[0], lesserFields);
-    }
-
+  /// <summary>Not documented yet.</summary>
   /// <param name='obj'>The parameter <paramref name='obj'/> is a
   /// DateTime object.</param>
   /// <returns>The return value is not documented yet.</returns>
-  /// <summary>Not documented yet.</summary>
     public CBORObject ToCBORObject(DateTime obj) {
       switch (this.convType) {
         case ConversionType.TaggedString:

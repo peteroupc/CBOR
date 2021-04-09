@@ -81,7 +81,7 @@ namespace PeterO.DocGen {
         builder.Append(" }\n");
       }
       builder.Append(" }\n");
-      builder.Append("}");
+      builder.Append('}');
       var filename = Path.Combine(directory, name + "Test.cs");
       if (!File.Exists(filename)) {
         File.WriteAllText(filename, builder.ToString());

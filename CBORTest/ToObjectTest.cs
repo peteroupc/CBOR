@@ -1552,7 +1552,7 @@ namespace Test {
       string hex = "0123456789ABCDEF";
       var sb = new StringBuilder();
       if (rand == null) {
-          throw new ArgumentNullException(nameof(rand));
+        throw new ArgumentNullException(nameof(rand));
       }
       for (var i = 0; i < 8; ++i) {
         sb.Append(hex[rand.UniformInt(16)]);

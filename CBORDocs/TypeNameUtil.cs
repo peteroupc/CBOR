@@ -73,7 +73,7 @@ namespace PeterO.DocGen {
               var ggastr = Convert.ToString(
                 types[i].GetGenericArguments().Length,
                 System.Globalization.CultureInfo.InvariantCulture);
-              sb.Append("`").Append(ggastr);
+              sb.Append('`').Append(ggastr);
             }
           }
         }
@@ -142,7 +142,7 @@ mi.Name.Equals("op_Implicit", StringComparison.Ordinal)) {
       if (obj is PropertyInfo) {
         var pi = obj as PropertyInfo;
         var msb = new StringBuilder().Append("P:")
-          .Append(XmlDocTypeName(pi.DeclaringType)).Append(".")
+          .Append(XmlDocTypeName(pi.DeclaringType)).Append('.')
           .Append(pi.Name);
         if (pi.GetIndexParameters().Length > 0) {
           msb.Append('(');

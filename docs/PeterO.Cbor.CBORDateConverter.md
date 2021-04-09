@@ -6,11 +6,10 @@
 
 A class for converting date-time objects to and from tagged CBOR objects.
 
-In this method's documentation, the "number of seconds since the start of 1970" is based on the POSIX definition of "seconds since the Epoch", a definition that does not count leap seconds. This number of seconds assumes the use of a proleptic Gregorian calendar, in which the rules regarding the number of days in each month and which years are leap years are the same for all years as they were in 1970 (including without regard to transitions from other calendars to the Gregorian).
+In this method's documentation, the "number of seconds since the start of 1970" is based on the POSIX definition of "seconds since the Epoch", a definition that does not count leap seconds. This number of seconds assumes the use of a proleptic Gregorian calendar, in which the rules regarding the number of days in each month and which years are leap years are the same for all years as they were in 1970 (including without regard to time zone differences or transitions from other calendars to the Gregorian).
 
 ### Member Summary
 * <code>[FromCBORObject(PeterO.Cbor.CBORObject)](#FromCBORObject_PeterO_Cbor_CBORObject)</code> - Not documented yet.
-* <code>[StringToDateTime(string)](#StringToDateTime_string)</code> - Not documented yet.
 * <code>[public static readonly PeterO.Cbor.CBORDateConverter TaggedNumber;](#TaggedNumber)</code> - A converter object where FromCBORObject accepts CBOR objects with tag 0 (date/time strings) and tag 1 (number of seconds since the start of 1970), and ToCBORObject converts date/time objects (DateTime in DotNet, and Date in Java) to CBOR objects of tag 1.
 * <code>[public static readonly PeterO.Cbor.CBORDateConverter TaggedString;](#TaggedString)</code> - A converter object where FromCBORObject accepts CBOR objects with tag 0 (date/time strings) and tag 1 (number of seconds since the start of 1970), and ToCBORObject converts date/time objects (DateTime in DotNet, and Date in Java) to CBOR objects of tag 0.
 * <code>[ToCBORObject(System.DateTime)](#ToCBORObject_System_DateTime)</code> - Not documented yet.
@@ -22,22 +21,19 @@ In this method's documentation, the "number of seconds since the start of 1970" 
     public CBORDateConverter(
         PeterO.Cbor.CBORDateConverter.ConversionType convType);
 
-Initializes a new instance of the CBORDateConverter class.
-
-Initializes a new instance of the CBORDateConverter class.
+Initializes a new instance of the [PeterO.Cbor.CBORDateConverter](PeterO.Cbor.CBORDateConverter.md) class.
 
 <b>Parameters:</b>
 
- * <i>convType</i>:
+ * <i>convType</i>: The parameter  <i>convType</i>
+ is a Cbor.CBORDateConverter.ConversionType object.
 
 <a id="Void_ctor"></a>
 ### CBORDateConverter Constructor
 
     public CBORDateConverter();
 
-Initializes a new instance of the CBORDateConverter class.
-
-Initializes a new instance of the CBORDateConverter class.
+Initializes a new instance of the [PeterO.Cbor.CBORDateConverter](PeterO.Cbor.CBORDateConverter.md) class.
 
 <a id="TaggedNumber"></a>
 ### TaggedNumber
@@ -68,11 +64,10 @@ A converter object where FromCBORObject accepts untagged CBOR integer or CBOR fl
 
 Not documented yet.
 
-Not documented yet.
-
 <b>Parameters:</b>
 
- * <i>obj</i>: Not documented yet.
+ * <i>obj</i>: The parameter  <i>obj</i>
+ is a Cbor.CBORObject object.
 
 <b>Return Value:</b>
 
@@ -84,24 +79,6 @@ The return value is not documented yet.
 The parameter  <i>obj</i>
  is null.
 
-<a id="StringToDateTime_string"></a>
-### StringToDateTime
-
-    public static System.DateTime StringToDateTime(
-        string str);
-
-Not documented yet.
-
-Not documented yet.
-
-<b>Parameters:</b>
-
- * <i>str</i>: Not documented yet.
-
-<b>Return Value:</b>
-
-The return value is not documented yet.
-
 <a id="ToCBORObject_System_DateTime"></a>
 ### ToCBORObject
 
@@ -110,11 +87,10 @@ The return value is not documented yet.
 
 Not documented yet.
 
-Not documented yet.
-
 <b>Parameters:</b>
 
- * <i>obj</i>: Not documented yet.
+ * <i>obj</i>: The parameter  <i>obj</i>
+ is a DateTime object.
 
 <b>Return Value:</b>
 
