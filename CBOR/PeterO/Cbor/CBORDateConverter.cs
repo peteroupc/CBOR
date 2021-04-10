@@ -139,15 +139,35 @@ namespace PeterO.Cbor {
       throw new CBORException(str);
     }
 
-  /// <summary>Not documented yet.</summary>
-  /// <summary>Not documented yet.</summary>
-  /// <returns>The return value is not documented yet.</returns>
+  /// <summary>Tries to extract the fields of a date and time in the form
+  /// of a CBOR object.</summary>
+  /// <returns>Either "true" if the method is successful, or "false"
+  /// otherwise.</returns>
   /// <param name='obj'>Not documented yet.</param>
-  /// <param name='year'>Not documented yet.</param>
-  /// <param name='lesserFields'>Not documented yet.</param>
+  /// <param name='year'>An array whose first element will store the
+  /// year. The array's length must be 1 or greater. If this function
+  /// fails, the first element is set to null.</param>
+  /// <param name='lesserFields'>An array that will store the fields
+  /// (other than the year) of the date and time. The array's length must
+  /// be 7 or greater. If this function fails, the first seven elements
+  /// are set to 0. If this method is successful, the first seven
+  /// elements of the array (starting at 0) will be as follows:
+  /// <list>
+  /// <item>0 - Month of the year, from 1 (January) through 12
+  /// (December).</item>
+  /// <item>1 - Day of the month, from 1 through 31.</item>
+  /// <item>2 - Hour of the day, from 0 through 23.</item>
+  /// <item>3 - Minute of the hour, from 0 through 59.</item>
+  /// <item>4 - Second of the minute, from 0 through 59.</item>
+  /// <item>5 - Fractional seconds, expressed in nanoseconds. This value
+  /// cannot be less than 0.</item>
+  /// <item>6 - Number of minutes to subtract from this date and time to
+  /// get global time. This number can be positive or negative, but
+  /// cannot be less than -1439 or greater than 1439. For tags 0 and 1,
+  /// this value is always 0.</item></list></param>
   /// <exception cref='ArgumentNullException'>The parameter <paramref
-  /// name='year'/> or <paramref name='lesserFields'/> is
-  /// null.</exception>
+  /// name='year'/> or <paramref name='lesserFields'/> is null, or
+  /// contains fewer elements than required.</exception>
     public bool TryGetDateTimeFields(CBORObject obj, EInteger[] year, int[]
 lesserFields) {
        if (year == null) {

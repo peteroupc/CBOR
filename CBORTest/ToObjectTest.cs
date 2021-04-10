@@ -1141,6 +1141,31 @@ namespace Test {
     }
 
     [Test]
+    public void TestToObjectDictStringString() {
+      CBORObject cbor = CBORObject.NewMap().Add("a", "b").Add("c", "d");
+      Dictionary<string, string> stringDict =
+        (Dictionary<string, string>)cbor.ToObject(
+          typeof(Dictionary<string, string>));
+      Assert.AreEqual(2, stringDict.Count);
+      Assert.IsTrue(stringDict.ContainsKey("a"));
+      Assert.IsTrue(stringDict.ContainsKey("c"));
+      Assert.AreEqual("b", stringDict["a"]);
+      Assert.AreEqual("d", stringDict["c"]);
+    }
+    [Test]
+    public void TestToObjectIDictStringString() {
+      CBORObject cbor = CBORObject.NewMap().Add("a", "b").Add("c", "d");
+      IDictionary<string, string> stringDict2 =
+        (IDictionary<string, string>)cbor.ToObject(
+          typeof(IDictionary<string, string>));
+      Assert.AreEqual(2, stringDict2.Count);
+      Assert.IsTrue(stringDict2.ContainsKey("a"));
+      Assert.IsTrue(stringDict2.ContainsKey("c"));
+      Assert.AreEqual("b", stringDict2["a"]);
+      Assert.AreEqual("d", stringDict2["c"]);
+    }
+
+    [Test]
     [Timeout(5000)]
     public void TestToObject() {
       var ao = new PODClass();
@@ -1549,6 +1574,9 @@ namespace Test {
     }
 
     public static object RandomUUID(RandomGenerator rand) {
+      if (rand == null) {
+        throw new ArgumentNullException(nameof(rand));
+      }
       string hex = "0123456789ABCDEF";
       var sb = new StringBuilder();
       if (rand == null) {

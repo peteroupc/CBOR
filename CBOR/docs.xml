@@ -1654,12 +1654,14 @@
             <c>int</c> or <c>long</c>.</para>
             <para><b>To and from JSON:</b> This class also doubles as a reader
             and writer of JavaScript Object Notation (JSON). The
-            CBORObject.FromJSONString method converts JSON to a CBOR object,
-            and the ToJSONString method converts a CBOR object to a JSON
-            string. (Note that the conversion from CBOR to JSON is not always
-            without loss and may make it impossible to recover the original
-            object when converting the JSON back to CBOR. See the ToJSONString
-            documentation.)</para>
+            CBORObject.FromJSONString method converts JSON in text string form
+            to a CBOR object, and the ToJSONString method converts a CBOR
+            object to a JSON string. (Note that the conversion from CBOR to
+            JSON is not always without loss and may make it impossible to
+            recover the original object when converting the JSON back to CBOR.
+            See the ToJSONString documentation.) Likewise, ToJSONBytes and
+            FromJSONBytes work with JSON in the form of byte arrays rather than
+            text strings.</para>
             <para>In addition, the CBORObject.WriteJSON method writes many
             kinds of objects as JSON to a data stream, including numbers, CBOR
             objects, strings, and arrays of numbers and strings. The
