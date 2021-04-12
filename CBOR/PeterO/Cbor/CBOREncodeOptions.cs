@@ -1,7 +1,6 @@
 using System;
 
-// TODO: Add option to encode/decode date-times as untagged CBOR,
-  // and add tests for this option
+// TODO: Add option to encode CBOR floating point in 64-bit form only
 namespace PeterO.Cbor {
   /// <summary>Specifies options for encoding and decoding CBOR
   /// objects.</summary>

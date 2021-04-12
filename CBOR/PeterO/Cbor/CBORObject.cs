@@ -5334,6 +5334,23 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
       return false;
     }
 
+    private static byte[] GetDoubleBytes64(long valueBits, int tagbyte) {
+      // Encode as double precision
+      return tagbyte != 0 ? new[] {
+        (byte)tagbyte, (byte)0xfb,
+        (byte)((valueBits >> 56) & 0xff), (byte)((valueBits >> 48) & 0xff),
+        (byte)((valueBits >> 40) & 0xff), (byte)((valueBits >> 32) & 0xff),
+        (byte)((valueBits >> 24) & 0xff), (byte)((valueBits >> 16) & 0xff),
+        (byte)((valueBits >> 8) & 0xff), (byte)(valueBits & 0xff),
+      } : new[] {
+   (byte)0xfb, (byte)((valueBits >> 56) & 0xff),
+   (byte)((valueBits >> 48) & 0xff), (byte)((valueBits >> 40) & 0xff),
+   (byte)((valueBits >> 32) & 0xff), (byte)((valueBits >> 24) & 0xff),
+   (byte)((valueBits >> 16) & 0xff), (byte)((valueBits >> 8) & 0xff),
+   (byte)(valueBits & 0xff),
+ };
+    }
+
     private static byte[] GetDoubleBytes(long valueBits, int tagbyte) {
       int bits = CBORUtilities.DoubleToHalfPrecisionIfSameValue(valueBits);
       if (bits != -1) {
@@ -5357,20 +5374,7 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
    (byte)(bits & 0xff),
  };
       }
-      // Encode as double precision
-      return tagbyte != 0 ? new[] {
-        (byte)tagbyte, (byte)0xfb,
-        (byte)((valueBits >> 56) & 0xff), (byte)((valueBits >> 48) & 0xff),
-        (byte)((valueBits >> 40) & 0xff), (byte)((valueBits >> 32) & 0xff),
-        (byte)((valueBits >> 24) & 0xff), (byte)((valueBits >> 16) & 0xff),
-        (byte)((valueBits >> 8) & 0xff), (byte)(valueBits & 0xff),
-      } : new[] {
-   (byte)0xfb, (byte)((valueBits >> 56) & 0xff),
-   (byte)((valueBits >> 48) & 0xff), (byte)((valueBits >> 40) & 0xff),
-   (byte)((valueBits >> 32) & 0xff), (byte)((valueBits >> 24) & 0xff),
-   (byte)((valueBits >> 16) & 0xff), (byte)((valueBits >> 8) & 0xff),
-   (byte)(valueBits & 0xff),
- };
+      return GetDoubleBytes64(valueBits, tagbyte);
     }
 
     /// <summary>

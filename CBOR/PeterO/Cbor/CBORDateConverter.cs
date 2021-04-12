@@ -141,8 +141,8 @@ namespace PeterO.Cbor {
 
   /// <summary>Tries to extract the fields of a date and time in the form
   /// of a CBOR object.</summary>
-  /// <returns>Either "true" if the method is successful, or "false"
-  /// otherwise.</returns>
+  /// <returns>Either <c>true</c> if the method is successful, or
+  /// <c>false</c> otherwise.</returns>
   /// <param name='obj'>Not documented yet.</param>
   /// <param name='year'>An array whose first element will store the
   /// year. The array's length must be 1 or greater. If this function
@@ -279,23 +279,41 @@ lesserFields.Length + ") is not greater or equal to 7");
       return "Not tag 0 or 1";
     }
 
-  /// <summary>Not documented yet.</summary>
-  /// <param name='obj'>The parameter <paramref name='obj'/> is a
-  /// DateTime object.</param>
-  /// <returns>The return value is not documented yet.</returns>
-    public CBORObject ToCBORObject(DateTime obj) {
-      switch (this.convType) {
-        case ConversionType.TaggedString:
-           return CBORObject.FromObjectAndTag(DateTimeToString(obj), 0);
+    public CBORObject DateFieldsToCBORObject(int smallYear, int month, int
+day) {
+      return DateFieldsToCBORObject(EInteger.FromInt32(smallYear), new int[] { month, day, 0, 0, 0, 0, 0 });
+    }
+
+    public CBORObject DateFieldsToCBORObject(int smallYear, int month, int
+day, int hour, int minute, int second) {
+      return DateFieldsToCBORObject(EInteger.FromInt32(smallYear), new int[] { month, day, hour, minute, second, 0, 0 });
+    }
+
+    public CBORObject DateFieldsToCBORObject(EInteger bigYear, int[]
+lesserFields) {
+       if (year == null) {
+         throw new ArgumentNullException(nameof(year));
+       }
+       if (lesserFields == null) {
+         throw new ArgumentNullException(nameof(lesserFields));
+       }
+       if (lesserFields.Length < 7) {
+         throw new ArgumentException("\"lesserFields\" + \"'s length\" (" +
+lesserFields.Length + ") is not greater or equal to 7");
+       }
+       try {
+        switch (this.convType) {
+          case ConversionType.TaggedString: {
+             string str = CBORUtilities.ToAtomDateTimeString(bigYear,
+  lesserFields);
+             return CBORObject.FromObjectAndTag(str, 0);
+          }
         case ConversionType.TaggedNumber:
         case ConversionType.UntaggedNumber:
         try {
-           var lesserFields = new int[7];
-           var year = new EInteger[1];
-           PropertyMap.BreakDownDateTime(obj, year, lesserFields);
          var status = new int[1];
          EFloat ef = CBORUtilities.DateTimeToIntegerOrDouble(
-           year[0],
+           bigYear,
            lesserFields,
            status);
          if (status[0] == 0) {
@@ -310,6 +328,26 @@ lesserFields.Length + ") is not greater or equal to 7");
           throw new CBORException("Too big or small to fit an integer or" +
 "\u0020floating-point number");
         }
+         } catch (ArgumentException ex) {
+          throw new CBORException(ex.Message, ex);
+      }
+      default: throw new CBORException("Internal error");
+        }
+      } catch (ArgumentException ex) {
+          throw new CBORException(ex.Message, ex);
+      }
+    }
+
+  /// <summary>Not documented yet.</summary>
+  /// <param name='obj'>The parameter <paramref name='obj'/> is a
+  /// DateTime object.</param>
+  /// <returns>The return value is not documented yet.</returns>
+    public CBORObject ToCBORObject(DateTime obj) {
+        try {
+           var lesserFields = new int[7];
+           var year = new EInteger[1];
+           PropertyMap.BreakDownDateTime(obj, year, lesserFields);
+           return DateFieldsToCBORObject(year[0], lesserFields);
          } catch (ArgumentException ex) {
           throw new CBORException(ex.Message, ex);
       }
