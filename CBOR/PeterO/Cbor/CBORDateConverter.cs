@@ -141,9 +141,8 @@ namespace PeterO.Cbor {
 
   /// <summary>Tries to extract the fields of a date and time in the form
   /// of a CBOR object.</summary>
-  /// <returns>Either <c>true</c> if the method is successful, or
-  /// <c>false</c> otherwise.</returns>
-  /// <param name='obj'>Not documented yet.</param>
+  /// <param name='obj'>The parameter <paramref name='obj'/> is a
+  /// Cbor.CBORObject object.</param>
   /// <param name='year'>An array whose first element will store the
   /// year. The array's length must be 1 or greater. If this function
   /// fails, the first element is set to null.</param>
@@ -164,7 +163,9 @@ namespace PeterO.Cbor {
   /// <item>6 - Number of minutes to subtract from this date and time to
   /// get global time. This number can be positive or negative, but
   /// cannot be less than -1439 or greater than 1439. For tags 0 and 1,
-  /// this value is always 0.</item></list></param>
+  /// this value is always 0.</item></list>.</param>
+  /// <returns>Either <c>true</c> if the method is successful, or
+  /// <c>false</c> otherwise.</returns>
   /// <exception cref='ArgumentNullException'>The parameter <paramref
   /// name='year'/> or <paramref name='lesserFields'/> is null, or
   /// contains fewer elements than required.</exception>
@@ -279,20 +280,61 @@ lesserFields.Length + ") is not greater or equal to 7");
       return "Not tag 0 or 1";
     }
 
+  /// <param name='smallYear'>The parameter <paramref name='smallYear'/>
+  /// is a 32-bit signed integer.</param>
+  /// <param name='month'>The parameter <paramref name='month'/> is a
+  /// 32-bit signed integer.</param>
+  /// <param name='day'>The parameter <paramref name='day'/> is a 32-bit
+  /// signed integer.</param>
+  /// <returns>The return value is not documented yet.</returns>
+  /// <summary>Not documented yet.</summary>
     public CBORObject DateFieldsToCBORObject(int smallYear, int month, int
 day) {
-      return DateFieldsToCBORObject(EInteger.FromInt32(smallYear), new int[] { month, day, 0, 0, 0, 0, 0 });
+      return this.DateFieldsToCBORObject(EInteger.FromInt32(smallYear),
+ new
+int[] { month, day, 0, 0, 0, 0, 0 });
     }
 
-    public CBORObject DateFieldsToCBORObject(int smallYear, int month, int
-day, int hour, int minute, int second) {
-      return DateFieldsToCBORObject(EInteger.FromInt32(smallYear), new int[] { month, day, hour, minute, second, 0, 0 });
+  /// <param name='smallYear'>The parameter <paramref name='smallYear'/>
+  /// is a 32-bit signed integer.</param>
+  /// <param name='month'>The parameter <paramref name='month'/> is a
+  /// 32-bit signed integer.</param>
+  /// <param name='day'>The parameter <paramref name='day'/> is a 32-bit
+  /// signed integer.</param>
+  /// <param name='hour'>The parameter <paramref name='hour'/> is a
+  /// 32-bit signed integer.</param>
+  /// <param name='minute'>The parameter <paramref name='minute'/> is a
+  /// 32-bit signed integer.</param>
+  /// <param name='second'>The parameter <paramref name='second'/> is a
+  /// 32-bit signed integer.</param>
+  /// <returns>The return value is not documented yet.</returns>
+  /// <summary>Not documented yet.</summary>
+    public CBORObject DateFieldsToCBORObject(
+      int smallYear,
+      int month,
+      int day,
+      int hour,
+      int minute,
+      int second) {
+      return this.DateFieldsToCBORObject(EInteger.FromInt32(smallYear),
+ new
+int[] { month, day, hour, minute, second, 0, 0 });
     }
 
+  /// <param name='bigYear'>The parameter <paramref name='bigYear'/> is a
+  /// Numbers.EInteger object.</param>
+  /// <param name='lesserFields'>The parameter <paramref
+  /// name='lesserFields'/> is an array of 32-bit unsigned
+  /// integers.</param>
+  /// <returns>The return value is not documented yet.</returns>
+  /// <exception cref='ArgumentNullException'>The parameter <paramref
+  /// name='bigYear'/> or <paramref name='lesserFields'/> is
+  /// null.</exception>
+  /// <summary>Not documented yet.</summary>
     public CBORObject DateFieldsToCBORObject(EInteger bigYear, int[]
 lesserFields) {
-       if (year == null) {
-         throw new ArgumentNullException(nameof(year));
+       if (bigYear == null) {
+         throw new ArgumentNullException(nameof(bigYear));
        }
        if (lesserFields == null) {
          throw new ArgumentNullException(nameof(lesserFields));
@@ -308,8 +350,8 @@ lesserFields.Length + ") is not greater or equal to 7");
   lesserFields);
              return CBORObject.FromObjectAndTag(str, 0);
           }
-        case ConversionType.TaggedNumber:
-        case ConversionType.UntaggedNumber:
+          case ConversionType.TaggedNumber:
+          case ConversionType.UntaggedNumber:
         try {
          var status = new int[1];
          EFloat ef = CBORUtilities.DateTimeToIntegerOrDouble(
@@ -347,11 +389,9 @@ lesserFields.Length + ") is not greater or equal to 7");
            var lesserFields = new int[7];
            var year = new EInteger[1];
            PropertyMap.BreakDownDateTime(obj, year, lesserFields);
-           return DateFieldsToCBORObject(year[0], lesserFields);
+           return this.DateFieldsToCBORObject(year[0], lesserFields);
          } catch (ArgumentException ex) {
           throw new CBORException(ex.Message, ex);
-      }
-      default: throw new CBORException("Internal error");
       }
     }
   }

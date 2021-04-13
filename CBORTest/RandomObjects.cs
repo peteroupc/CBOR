@@ -234,8 +234,9 @@ namespace Test {
       return BitConverter.ToSingle(BitConverter.GetBytes((int)r), 0);
     }
 
-    public static string RandomDecimalStringShort(IRandomGenExtended
-      wrapper, bool extended) {
+    public static string RandomDecimalStringShort(
+      IRandomGenExtended wrapper,
+      bool extended) {
       var sb = new StringBuilder();
       if (wrapper == null) {
         throw new ArgumentNullException(nameof(wrapper));
