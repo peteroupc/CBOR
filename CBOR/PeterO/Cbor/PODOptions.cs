@@ -36,19 +36,20 @@ namespace PeterO.Cbor {
     /// <c>usecamelcase=true</c>. The key can be any one of the following
     /// where the letters can be any combination of basic upper-case and/or
     /// basic lower-case letters: <c>usecamelcase</c>. Other keys are
-    /// ignored. (Keys are compared using a basic case-insensitive
-    /// comparison, in which two strings are equal if they match after
-    /// converting the basic upper-case letters A to Z (U+0041 to U+005A)
-    /// in both strings to basic lower-case letters.) If two or more
-    /// key/value pairs have equal keys (in a basic case-insensitive
-    /// comparison), the value given for the last such key is used. The key
-    /// just given can have a value of <c>1</c>, <c>true</c>, <c>yes</c>
-    /// , or <c>on</c> (where the letters can be any combination of basic
-    /// upper-case and/or basic lower-case letters), which means true, and
-    /// any other value meaning false. For example, <c>usecamelcase=Yes</c>
-    /// and <c>usecamelcase=1</c> both set the <c>UseCamelCase</c> property
-    /// to true. In the future, this class may allow other keys to store
-    /// other kinds of values, not just true or false.</param>
+    /// ignored in this version of the CBOR library. (Keys are compared
+    /// using a basic case-insensitive comparison, in which two strings are
+    /// equal if they match after converting the basic upper-case letters A
+    /// to Z (U+0041 to U+005A) in both strings to basic lower-case
+    /// letters.) If two or more key/value pairs have equal keys (in a
+    /// basic case-insensitive comparison), the value given for the last
+    /// such key is used. The key just given can have a value of <c>1</c>,
+    /// <c>true</c>, <c>yes</c>, or <c>on</c> (where the letters can be
+    /// any combination of basic upper-case and/or basic lower-case
+    /// letters), which means true, and any other value meaning false. For
+    /// example, <c>usecamelcase=Yes</c> and <c>usecamelcase=1</c> both set
+    /// the <c>UseCamelCase</c> property to true. In the future, this class
+    /// may allow other keys to store other kinds of values, not just true
+    /// or false.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='paramString'/> is null.</exception>
     public PODOptions(string paramString) {

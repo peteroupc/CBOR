@@ -2038,6 +2038,73 @@ namespace Test {
     }
 
     [Test]
+    public void TestEncodeFloat64() {
+       var rg = new RandomGenerator();
+       var options = new CBOREncodeOptions("float64=true");
+       for (var i = 0; i < 10000; ++i) {
+         double dbl = 0.0;
+         if (i == 0) {
+           dbl = Double.PositiveInfinity;
+         } else {
+ dbl = (i == 1) ? (Double.NegativeInfinity) : (RandomObjects.RandomDouble(rg));
+}
+         CBORObject cbor = CBORObject.FromObject(dbl);
+         byte[] bytes = cbor.EncodeToBytes(options);
+         Assert.AreEqual(9, bytes.Length);
+         TestCommon.AssertEqualsHashCode(
+           cbor,
+           CBORObject.DecodeFromBytes(bytes));
+         using (var ms = new MemoryStream()) {
+           cbor.WriteTo(ms, options);
+           bytes = ms.ToArray();
+           Assert.AreEqual(9, bytes.Length);
+         }
+         using (var ms = new MemoryStream()) {
+           CBORObject.Write(dbl, ms, options);
+           bytes = ms.ToArray();
+           Assert.AreEqual(9, bytes.Length);
+         }
+         using (var ms = new MemoryStream()) {
+           CBORObject.Write(cbor, ms, options);
+           bytes = ms.ToArray();
+           Assert.AreEqual(9, bytes.Length);
+         }
+         CBORObject cbor2 = CBORObject.NewArray().Add(cbor);
+         bytes = cbor2.EncodeToBytes(options);
+         TestCommon.AssertEqualsHashCode(
+           cbor2,
+           CBORObject.DecodeFromBytes(bytes));
+         Assert.AreEqual(10, bytes.Length);
+         using (var ms = new MemoryStream()) {
+           cbor2.WriteTo(ms, options);
+           bytes = ms.ToArray();
+           Assert.AreEqual(10, bytes.Length);
+         }
+         using (var ms = new MemoryStream()) {
+           CBORObject.Write(cbor2, ms, options);
+           bytes = ms.ToArray();
+           Assert.AreEqual(10, bytes.Length);
+         }
+         cbor2 = cbor.WithTag(1);
+         bytes = cbor2.EncodeToBytes(options);
+         Assert.AreEqual(10, bytes.Length);
+         TestCommon.AssertEqualsHashCode(
+           cbor2,
+           CBORObject.DecodeFromBytes(bytes));
+         using (var ms = new MemoryStream()) {
+           cbor2.WriteTo(ms, options);
+           bytes = ms.ToArray();
+           Assert.AreEqual(10, bytes.Length);
+         }
+         using (var ms = new MemoryStream()) {
+           CBORObject.Write(cbor2, ms, options);
+           bytes = ms.ToArray();
+           Assert.AreEqual(10, bytes.Length);
+         }
+       }
+    }
+
+    [Test]
     public void TestEncodeToBytes() {
       // Test minimum data length
       int[] ranges = {

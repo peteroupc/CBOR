@@ -31,7 +31,7 @@ namespace PeterO.Cbor {
        /// numbers extremely close to zero may underflow to positive or
        /// negative zero, and numbers of extremely large absolute value may
        /// overflow to infinity.). It's important to note that this mode
-       /// affects only how JSON numbers are <c>decoded</c> to a CBOR object;
+       /// affects only how JSON numbers are <i>decoded</i> to a CBOR object;
        /// it doesn't affect how <c>EncodeToBytes</c> and other methods encode
        /// CBOR objects. Notably, by default, <c>EncodeToBytes</c> encodes
        /// CBOR floating-point values to the CBOR format in their 16-bit
@@ -52,7 +52,7 @@ namespace PeterO.Cbor {
        /// to zero may underflow to positive or negative zero, and numbers of
        /// extremely large absolute value may overflow to infinity.). It's
        /// important to note that this mode affects only how JSON numbers are
-       /// <c>decoded</c> to a CBOR object; it doesn't affect how
+       /// <i>decoded</i> to a CBOR object; it doesn't affect how
        /// <c>EncodeToBytes</c> and other methods encode CBOR objects.
        /// Notably, by default, <c>EncodeToBytes</c> encodes CBOR
        /// floating-point values to the CBOR format in their 16-bit
@@ -73,7 +73,7 @@ namespace PeterO.Cbor {
        /// cases, numbers extremely close to zero may underflow to zero, and
        /// numbers of extremely large absolute value may overflow to
        /// infinity.). It's important to note that this mode affects only how
-       /// JSON numbers are <c>decoded</c> to a CBOR object; it doesn't affect
+       /// JSON numbers are <i>decoded</i> to a CBOR object; it doesn't affect
        /// how <c>EncodeToBytes</c> and other methods encode CBOR objects.
        /// Notably, by default, <c>EncodeToBytes</c> encodes CBOR
        /// floating-point values to the CBOR format in their 16-bit
@@ -141,21 +141,21 @@ namespace PeterO.Cbor {
     /// of basic upper-case and/or basic lower-case letters:
     /// <c>base64padding</c>, <c>replacesurrogates</c>,
     /// <c>allowduplicatekeys</c>, <c>preservenegativezero</c>,
-    /// <c>numberconversion</c>. Other keys are ignored. (Keys are
-    /// compared using a basic case-insensitive comparison, in which two
-    /// strings are equal if they match after converting the basic
-    /// upper-case letters A to Z (U+0041 to U+005A) in both strings to
-    /// basic lower-case letters.) If two or more key/value pairs have
-    /// equal keys (in a basic case-insensitive comparison), the value
-    /// given for the last such key is used. The first four keys just given
-    /// can have a value of <c>1</c>, <c>true</c>, <c>yes</c>, or
-    /// <c>on</c> (where the letters can be any combination of basic
-    /// upper-case and/or basic lower-case letters), which means true, and
-    /// any other value meaning false. The last key,
-    /// <c>numberconversion</c>, can have a value of any name given in the
-    /// <c>JSONOptions.ConversionMode</c> enumeration (where the letters
-    /// can be any combination of basic upper-case and/or basic lower-case
-    /// letters), and any other value is unrecognized. (If the
+    /// <c>numberconversion</c>. Other keys are ignored in this version of
+    /// the CBOR library. (Keys are compared using a basic case-insensitive
+    /// comparison, in which two strings are equal if they match after
+    /// converting the basic upper-case letters A to Z (U+0041 to U+005A)
+    /// in both strings to basic lower-case letters.) If two or more
+    /// key/value pairs have equal keys (in a basic case-insensitive
+    /// comparison), the value given for the last such key is used. The
+    /// first four keys just given can have a value of <c>1</c>,
+    /// <c>true</c>, <c>yes</c>, or <c>on</c> (where the letters can be
+    /// any combination of basic upper-case and/or basic lower-case
+    /// letters), which means true, and any other value meaning false. The
+    /// last key, <c>numberconversion</c>, can have a value of any name
+    /// given in the <c>JSONOptions.ConversionMode</c> enumeration (where
+    /// the letters can be any combination of basic upper-case and/or basic
+    /// lower-case letters), and any other value is unrecognized. (If the
     /// <c>numberconversion</c> key is not given, its value is treated as
     /// <c>full</c>. If that key is given, but has an unrecognized value,
     /// an exception is thrown.) For example, <c>base64padding=Yes</c> and

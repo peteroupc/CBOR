@@ -1,6 +1,5 @@
 using System;
 
-// TODO: Add option to encode CBOR floating point in 64-bit form only
 namespace PeterO.Cbor {
   /// <summary>Specifies options for encoding and decoding CBOR
   /// objects.</summary>
@@ -71,17 +70,19 @@ namespace PeterO.Cbor {
     /// of basic upper-case and/or basic lower-case letters:
     /// <c>allowduplicatekeys</c>, <c>ctap2canonical</c>,
     /// <c>resolvereferences</c>, <c>useindeflengthstrings</c>,
-    /// <c>allowempty</c>. Keys other than these are ignored. (Keys are
-    /// compared using a basic case-insensitive comparison, in which two
-    /// strings are equal if they match after converting the basic
-    /// upper-case letters A to Z (U+0041 to U+005A) in both strings to
-    /// basic lower-case letters.) If two or more key/value pairs have
-    /// equal keys (in a basic case-insensitive comparison), the value
-    /// given for the last such key is used. The four keys just given can
-    /// have a value of <c>1</c>, <c>true</c>, <c>yes</c>, or <c>on</c>
-    /// (where the letters can be any combination of basic upper-case
-    /// and/or basic lower-case letters), which means true, and any other
-    /// value meaning false. For example, <c>allowduplicatekeys=Yes</c> and
+    /// <c>allowempty</c>, <c>float64</c>. Keys other than these are
+    /// ignored in this version of the CBOR library. The key <c>float64</c>
+    /// was introduced in version 4.4 of this library. (Keys are compared
+    /// using a basic case-insensitive comparison, in which two strings are
+    /// equal if they match after converting the basic upper-case letters A
+    /// to Z (U+0041 to U+005A) in both strings to basic lower-case
+    /// letters.) If two or more key/value pairs have equal keys (in a
+    /// basic case-insensitive comparison), the value given for the last
+    /// such key is used. The four keys just given can have a value of
+    /// <c>1</c>, <c>true</c>, <c>yes</c>, or <c>on</c> (where the
+    /// letters can be any combination of basic upper-case and/or basic
+    /// lower-case letters), which means true, and any other value meaning
+    /// false. For example, <c>allowduplicatekeys=Yes</c> and
     /// <c>allowduplicatekeys=1</c> both set the <c>AllowDuplicateKeys</c>
     /// property to true. In the future, this class may allow other keys to
     /// store other kinds of values, not just true or false.</param>
@@ -96,6 +97,9 @@ namespace PeterO.Cbor {
           false);
       this.UseIndefLengthStrings = parser.GetBoolean(
         "useindeflengthstrings",
+        false);
+      this.Float64 = parser.GetBoolean(
+        "float64",
         false);
       this.AllowDuplicateKeys = parser.GetBoolean("allowduplicatekeys",
           false);
@@ -114,6 +118,7 @@ namespace PeterO.Cbor {
         .Append(this.AllowDuplicateKeys ? "true" : "false")
         .Append(";useindeflengthstrings=")
         .Append(this.UseIndefLengthStrings ? "true" : "false")
+        .Append(";float64=").Append(this.Float64 ? "true" : "false")
         .Append(";ctap2canonical=")
         .Append(this.Ctap2Canonical ? "true" : "false")
         .Append(";resolvereferences=")
@@ -215,6 +220,20 @@ namespace PeterO.Cbor {
     /// reading CBOR objects from a data stream. The default is
     /// false.</value>
     public bool AllowDuplicateKeys {
+      get;
+      private set;
+    }
+
+    /// <summary>Gets a value indicating whether to encode floating-point
+    /// numbers in a CBOR object in their 64-bit encoding form regardless
+    /// of whether their value can be encoded without loss in a smaller
+    /// form. Used only when encoding CBOR objects.</summary>
+    /// <value>Gets a value indicating whether to encode floating-point
+    /// numbers in a CBOR object in their 64-bit encoding form regardless
+    /// of whether their value can be encoded without loss in a smaller
+    /// form. Used only when encoding CBOR objects. The default is
+    /// false.</value>
+    public bool Float64 {
       get;
       private set;
     }

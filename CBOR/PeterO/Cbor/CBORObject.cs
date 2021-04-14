@@ -5501,9 +5501,15 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
             return ret2;
           }
           case CBORObjectTypeDouble: {
+            if (options.Float64) {
+            return GetDoubleBytes64(
+                this.AsDoubleBits(),
+                ((int)tagbyte) & 0xff);
+            } else {
             return GetDoubleBytes(
                 this.AsDoubleBits(),
                 ((int)tagbyte) & 0xff);
+            }
           }
         }
       }
@@ -7184,7 +7190,8 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
           break;
         }
         case CBORObjectTypeDouble: {
-          WriteFloatingPointBits(stream, this.AsDoubleBits(), 8, true);
+          WriteFloatingPointBits(stream, this.AsDoubleBits(), 8,
+             !options.Float64);
           break;
         }
         default: {

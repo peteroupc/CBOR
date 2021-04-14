@@ -21,26 +21,39 @@ namespace Test {
       CBORDateConverter dtc,
       EInteger year,
       int[] lesserFields) {
-       string fieldsString = (String.Empty + year + "," + lesserFields[0] +
-"," + lesserFields[1] + "," + lesserFields[2] + "," + lesserFields[3] + ","+
+       if (lesserFields == null) {
+         throw new ArgumentNullException(nameof(lesserFields));
+       }
+       if (year == null) {
+         throw new ArgumentNullException(nameof(year));
+       }
+       string yearString = year.ToString();
+       string fieldsString = (yearString + "," + lesserFields[0] + "," +
+lesserFields[1] + "," + lesserFields[2] + "," + lesserFields[3] + ","+
 lesserFields[4] + "," + lesserFields[5] + "," + lesserFields[6]);
        try {
+       if (dtc == null) {
+         throw new ArgumentNullException(nameof(dtc));
+       }
        CBORObject obj = dtc.DateTimeFieldsToCBORObject(year, lesserFields);
-       fieldsString+="\n"+obj.ToString();
+       fieldsString += "\n" + obj.ToString();
        var newYear = new EInteger[1];
        var newLesserFields = new int[7];
        if (dtc.TryGetDateTimeFields(obj, newYear, newLesserFields)) {
-         Assert.AreEqual(
-           lesserFields,
-           newLesserFields,
-           "lesserFields\n" + fieldsString);
+         for (var i = 0; i < lesserFields.Length; ++i) {
+           Assert.AreEqual(
+             lesserFields[i],
+             newLesserFields[i],
+             fieldsString);
+         }
          Assert.AreEqual(year, newYear[0], "year\n" + fieldsString);
        } else {
          Assert.Fail(fieldsString);
        }
        } catch (Exception ex) {
-         throw new InvalidOperationException(ex.Message+ "\n" +
-fieldsString, ex);
+         throw new InvalidOperationException(
+           ex.Message + "\n" + fieldsString,
+           ex);
        }
     }
 
@@ -48,14 +61,19 @@ fieldsString, ex);
        return EInteger.FromInt32(irg.GetInt32(9998) + 1);
     }
 
-    private static bool IsLeapYear(EInteger year) {
-      year = year.Remainder(400);
-      if (year.Sign < 0) {
-        year = year.Add(400);
+    private static EInteger RandomExpandedYear(IRandomGenExtended irg) {
+       return EInteger.FromInt32(irg.GetInt32(1000000) - 500000);
+    }
+
+    private static bool IsLeapYear(EInteger bigYear) {
+      bigYear = bigYear.Remainder(400);
+      if (bigYear.Sign < 0) {
+        bigYear = bigYear.Add(400);
       }
-      return ((year.Remainder(4).Sign == 0) && (year.Remainder(100).Sign !=
+      return ((bigYear.Remainder(4).Sign == 0) &&
+(bigYear.Remainder(100).Sign !=
 0)) ||
-          (year.Remainder(400).Sign == 0);
+          (bigYear.Remainder(400).Sign == 0);
     }
 
     private static readonly int[] ValueNormalDays = {
@@ -103,8 +121,8 @@ ValueNormalDays[month];
          CBORDateConverter.TaggedNumber,
          CBORDateConverter.UntaggedNumber,
        };
-       for (var i = 0; i < 10000; ++i) {
-          EInteger year = RandomYear(rg);
+       for (var i = 0; i < 30000; ++i) {
+          EInteger year = RandomExpandedYear(rg);
           int[] lesserFields = RandomLesserFields(rg, year);
           // Don't check fractional seconds because conversion is lossy
           lesserFields[5] = 0;
@@ -112,10 +130,30 @@ ValueNormalDays[month];
             DateConverterRoundTripOne(dtcs[j], year, lesserFields);
           }
        }
-       DateConverterRoundTripOne(CBORDateConverter.TaggedString,
-         9328, new int[] { 2, 11, 7, 59, 3, 0, 0 });
-       DateConverterRoundTripOne(CBORDateConverter.UntaggedNumber,
-         9328, new int[] { 2, 11, 7, 59, 3, 0, 0 });
+       DateConverterRoundTripOne(
+         CBORDateConverter.TaggedString,
+         9328,
+         new int[] {
+           2,
+           11,
+           7,
+           59,
+           3,
+           0,
+           0,
+         });
+       DateConverterRoundTripOne(
+         CBORDateConverter.UntaggedNumber,
+         9328,
+         new int[] {
+           2,
+           11,
+           7,
+           59,
+           3,
+           0,
+           0,
+         });
     }
   }
 }

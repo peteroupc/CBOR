@@ -112,9 +112,9 @@ namespace PeterO.Cbor {
     private static string DateTimeToString(DateTime bi) {
       try {
         var lesserFields = new int[7];
-        var year = new EInteger[1];
-        PropertyMap.BreakDownDateTime(bi, year, lesserFields);
-        return CBORUtilities.ToAtomDateTimeString(year[0], lesserFields);
+        var outYear = new EInteger[1];
+        PropertyMap.BreakDownDateTime(bi, outYear, lesserFields);
+        return CBORUtilities.ToAtomDateTimeString(outYear[0], lesserFields);
       } catch (ArgumentException ex) {
           throw new CBORException(ex.Message, ex);
       }
@@ -131,10 +131,13 @@ namespace PeterO.Cbor {
         throw new ArgumentNullException(nameof(obj));
       }
       var lesserFields = new int[7];
-      var year = new EInteger[1];
-      string str = this.TryGetDateTimeFieldsInternal(obj, year, lesserFields);
+      var outYear = new EInteger[1];
+      string str = this.TryGetDateTimeFieldsInternal(
+        obj,
+        outYear,
+        lesserFields);
       if (str == null) {
-        return PropertyMap.BuildUpDateTime(year[0], lesserFields);
+        return PropertyMap.BuildUpDateTime(outYear[0], lesserFields);
       }
       throw new CBORException(str);
     }
@@ -174,9 +177,10 @@ lesserFields) {
        if (year == null) {
          throw new ArgumentNullException(nameof(year));
        }
-       if (year.Length < 1) {
+       EInteger[] outYear = year;
+       if (outYear.Length < 1) {
          throw new ArgumentException("\"year\" + \"'s length\" (" +
-year.Length + ") is not greater or equal to 1");
+outYear.Length + ") is not greater or equal to 1");
        }
        if (lesserFields == null) {
          throw new ArgumentNullException(nameof(lesserFields));
@@ -185,13 +189,16 @@ year.Length + ") is not greater or equal to 1");
          throw new ArgumentException("\"lesserFields\" + \"'s length\" (" +
 lesserFields.Length + ") is not greater or equal to 7");
        }
-       string str = this.TryGetDateTimeFieldsInternal(obj, year, lesserFields);
+       string str = this.TryGetDateTimeFieldsInternal(
+         obj,
+         outYear,
+         lesserFields);
        if (str == null) {
-          // No error string
+          // No error string was returned
           return true;
        } else {
-          // With error string
-          year[0] = null;
+          // With error string was returned
+          outYear[0] = null;
           for (var i = 0; i < 7; ++i) {
             lesserFields[i] = 0;
           }
@@ -209,9 +216,10 @@ if (obj == null) {
        if (year == null) {
          throw new ArgumentNullException(nameof(year));
        }
-       if (year.Length < 1) {
+       EInteger[] outYear = year;
+       if (outYear.Length < 1) {
          throw new ArgumentException("\"year\" + \"'s length\" (" +
-year.Length + ") is not greater or equal to 1");
+outYear.Length + ") is not greater or equal to 1");
        }
        if (lesserFields == null) {
          throw new ArgumentNullException(nameof(lesserFields));
@@ -240,14 +248,14 @@ lesserFields.Length + ") is not greater or equal to 7");
       dec = (EDecimal)untagobj.ToObject(typeof(EDecimal));
       CBORUtilities.BreakDownSecondsSinceEpoch(
           dec,
-          year,
+          outYear,
           lesserFields);
         return null; // no error
       }
       if (obj.HasMostOuterTag(0)) {
         string str = obj.AsString();
         try {
-          CBORUtilities.ParseAtomDateTimeString(str, year, lesserFields);
+          CBORUtilities.ParseAtomDateTimeString(str, outYear, lesserFields);
           return null; // no error
         } catch (OverflowException ex) {
           return ex.Message;
@@ -269,7 +277,7 @@ lesserFields.Length + ") is not greater or equal to 7");
         dec = (EDecimal)untagobj.ToObject(typeof(EDecimal));
         CBORUtilities.BreakDownSecondsSinceEpoch(
           dec,
-          year,
+          outYear,
           lesserFields);
         return null; // No error
       }
@@ -381,9 +389,9 @@ lesserFields.Length + ") is not greater or equal to 7");
     public CBORObject ToCBORObject(DateTime obj) {
         try {
            var lesserFields = new int[7];
-           var year = new EInteger[1];
-           PropertyMap.BreakDownDateTime(obj, year, lesserFields);
-           return this.DateTimeFieldsToCBORObject(year[0], lesserFields);
+           var outYear = new EInteger[1];
+           PropertyMap.BreakDownDateTime(obj, outYear, lesserFields);
+           return this.DateTimeFieldsToCBORObject(outYear[0], lesserFields);
          } catch (ArgumentException ex) {
           throw new CBORException(ex.Message, ex);
       }

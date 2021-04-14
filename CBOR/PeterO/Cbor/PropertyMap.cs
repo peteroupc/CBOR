@@ -18,6 +18,9 @@ using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   internal static class PropertyMap {
+    private const int TicksDivFracSeconds =
+CBORUtilities.FractionalSeconds / 10000000;
+
     private sealed class OrderedDictionary<TKey, TValue> : IDictionary<TKey, TValue> {
       // NOTE: Note that this class will be used with CBORObjects, some of which are
       // mutable. Storing mutable keys in an ordinary Dictionary can cause problems;
@@ -1365,13 +1368,13 @@ list) {
       }
     }
 
-    private const int TicksDivFracSeconds = CBORUtilities.FractionalSeconds/10000000;
-
     public static void BreakDownDateTime(
       DateTime bi,
       EInteger[] year,
       int[] lf) {
-      if(TicksDivFracSeconds==0)throw new InvalidOperationException();
+if (TicksDivFracSeconds == 0) {
+  throw new InvalidOperationException();
+}
       #if NET20
       DateTime dt = bi.ToUniversalTime();
       #else
@@ -1388,7 +1391,9 @@ list) {
     }
 
     public static DateTime BuildUpDateTime(EInteger year, int[] dt) {
-      if(TicksDivFracSeconds==0)throw new InvalidOperationException();
+if (TicksDivFracSeconds == 0) {
+  throw new InvalidOperationException();
+}
       if (year.CompareTo(9999) > 0 || year.CompareTo(0) <= 0) {
         throw new CBORException("Year is too big or too small for DateTime.");
       }
@@ -1399,7 +1404,8 @@ list) {
           dt[2],
           dt[3],
           dt[4],
-          DateTimeKind.Utc).AddMinutes(-dt[6]).AddTicks((long)(dt[5] / TicksDivFracSeconds));
+          DateTimeKind.Utc).AddMinutes(-dt[6]).AddTicks((long)(dt[5] /
+TicksDivFracSeconds));
     }
   }
 }
