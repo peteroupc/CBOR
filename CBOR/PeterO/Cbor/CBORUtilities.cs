@@ -986,6 +986,39 @@ currentYear.Remainder(100).ToInt32Checked());
       EInteger bigYear,
       int[] lesserFields,
       int[] status) {
+      if (bigYear == null) {
+        throw new ArgumentNullException(nameof(bigYear));
+      }
+      if (lesserFields == null) {
+        throw new ArgumentNullException(nameof(lesserFields));
+      }
+      if (7 < 0) {
+        throw new ArgumentException(" (" + 7 + ") is not greater or equal to" +
+"\u00200");
+      }
+      if (7 > lesserFields.Length) {
+        throw new ArgumentException(" (" + 7 + ") is not less or equal to " +
+lesserFields.Length);
+      }
+      if (lesserFields.Length < 7) {
+        throw new ArgumentException("\"lesserFields\" + \"'s length\" (" +
+lesserFields.Length + ") is not greater or equal to 7");
+      }
+      if (status == null) {
+        throw new ArgumentNullException(nameof(status));
+      }
+      if (1 < 0) {
+        throw new ArgumentException(" (" + 1 + ") is not greater or equal to" +
+"\u00200");
+      }
+      if (1 > status.Length) {
+        throw new ArgumentException(" (" + 1 + ") is not less or equal to " +
+status.Length);
+      }
+      if (status.Length < 1) {
+        throw new ArgumentException("\"status\" + \"'s length\" (" +
+status.Length + ") is not greater or equal to 1");
+      }
       // Status is 0 for integer, 1 for (lossy) double, 2 for failure
       if (lesserFields[6] != 0) {
         throw new NotSupportedException(
@@ -1012,7 +1045,7 @@ currentYear.Remainder(100).ToInt32Checked());
          status[0] = 2;
          return null;
       }
-      status[1] = 1;
+      status[0] = 1;
       return EFloat.FromDouble(dbl);
     }
 

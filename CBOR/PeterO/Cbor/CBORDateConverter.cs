@@ -14,7 +14,7 @@ namespace PeterO.Cbor {
   /// <summary>
   /// <para>A class for converting date-time objects to and from tagged
   /// CBOR objects.</para>
-  /// <para>In this method's documentation, the "number of seconds since
+  /// <para>In this class's documentation, the "number of seconds since
   /// the start of 1970" is based on the POSIX definition of "seconds
   /// since the Epoch", a definition that does not count leap seconds.
   /// This number of seconds assumes the use of a proleptic Gregorian
@@ -280,58 +280,56 @@ lesserFields.Length + ") is not greater or equal to 7");
       return "Not tag 0 or 1";
     }
 
-  /// <param name='smallYear'>The parameter <paramref name='smallYear'/>
-  /// is a 32-bit signed integer.</param>
-  /// <param name='month'>The parameter <paramref name='month'/> is a
-  /// 32-bit signed integer.</param>
-  /// <param name='day'>The parameter <paramref name='day'/> is a 32-bit
-  /// signed integer.</param>
-  /// <returns>The return value is not documented yet.</returns>
+  /// <param name='smallYear'>The year.</param>
+  /// <param name='month'>Month of the year, from 1 (January) through 12
+  /// (December).</param>
+  /// <param name='day'>Day of the month, from 1 through 31.</param>
+  /// <returns>A CBOR object encoding the given date fields according to
+  /// the conversion type used to create this date converter.</returns>
   /// <summary>Not documented yet.</summary>
-    public CBORObject DateFieldsToCBORObject(int smallYear, int month, int
+    public CBORObject DateTimeFieldsToCBORObject(int smallYear, int month, int
 day) {
-      return this.DateFieldsToCBORObject(EInteger.FromInt32(smallYear),
+      return this.DateTimeFieldsToCBORObject(EInteger.FromInt32(smallYear),
  new
 int[] { month, day, 0, 0, 0, 0, 0 });
     }
 
-  /// <param name='smallYear'>The parameter <paramref name='smallYear'/>
-  /// is a 32-bit signed integer.</param>
-  /// <param name='month'>The parameter <paramref name='month'/> is a
-  /// 32-bit signed integer.</param>
-  /// <param name='day'>The parameter <paramref name='day'/> is a 32-bit
-  /// signed integer.</param>
-  /// <param name='hour'>The parameter <paramref name='hour'/> is a
-  /// 32-bit signed integer.</param>
-  /// <param name='minute'>The parameter <paramref name='minute'/> is a
-  /// 32-bit signed integer.</param>
-  /// <param name='second'>The parameter <paramref name='second'/> is a
-  /// 32-bit signed integer.</param>
-  /// <returns>The return value is not documented yet.</returns>
+  /// <param name='smallYear'>The year.</param>
+  /// <param name='month'>Month of the year, from 1 (January) through 12
+  /// (December).</param>
+  /// <param name='day'>Day of the month, from 1 through 31.</param>
+  /// <param name='hour'>Hour of the day, from 0 through 23.</param>
+  /// <param name='minute'>Minute of the hour, from 0 through 59.</param>
+  /// <param name='second'>Second of the minute, from 0 through
+  /// 59.</param>
   /// <summary>Not documented yet.</summary>
-    public CBORObject DateFieldsToCBORObject(
+  /// <returns>A CBOR object encoding the given date fields according to
+  /// the conversion type used to create this date converter.</returns>
+    public CBORObject DateTimeFieldsToCBORObject(
       int smallYear,
       int month,
       int day,
       int hour,
       int minute,
       int second) {
-      return this.DateFieldsToCBORObject(EInteger.FromInt32(smallYear),
+      return this.DateTimeFieldsToCBORObject(EInteger.FromInt32(smallYear),
  new
 int[] { month, day, hour, minute, second, 0, 0 });
     }
 
   /// <param name='bigYear'>The parameter <paramref name='bigYear'/> is a
   /// Numbers.EInteger object.</param>
-  /// <param name='lesserFields'>The parameter <paramref
-  /// name='lesserFields'/> is an array of 32-bit unsigned
-  /// integers.</param>
-  /// <returns>The return value is not documented yet.</returns>
+  /// <param name='lesserFields'>An array that will store the fields
+  /// (other than the year) of the date and time. See the
+  /// TryGetDateTimeFields method for information on the "lesserFields"
+  /// parameter.</param>
+  /// <summary>Not documented yet.</summary>
   /// <exception cref='ArgumentNullException'>The parameter <paramref
   /// name='bigYear'/> or <paramref name='lesserFields'/> is
   /// null.</exception>
-  /// <summary>Not documented yet.</summary>
-    public CBORObject DateFieldsToCBORObject(EInteger bigYear, int[]
+  /// <returns>A CBOR object encoding the given date fields according to
+  /// the conversion type used to create this date converter.</returns>
+    public CBORObject DateTimeFieldsToCBORObject(EInteger bigYear, int[]
 lesserFields) {
        if (bigYear == null) {
          throw new ArgumentNullException(nameof(bigYear));
@@ -364,8 +362,8 @@ lesserFields.Length + ") is not greater or equal to 7");
              CBORObject.FromObject(ef.ToEInteger());
         } else if (status[0] == 1) {
           return this.convType == ConversionType.TaggedNumber ?
-             CBORObject.FromObjectAndTag(ef.ToDouble(), 1) :
-             CBORObject.FromObject(ef.ToDouble());
+             CBORObject.FromObjectAndTag(ef.ToDoubleBits(), 1) :
+             CBORObject.FromObject(ef.ToDoubleBits());
         } else {
           throw new CBORException("Too big or small to fit an integer or" +
 "\u0020floating-point number");
@@ -389,7 +387,7 @@ lesserFields.Length + ") is not greater or equal to 7");
            var lesserFields = new int[7];
            var year = new EInteger[1];
            PropertyMap.BreakDownDateTime(obj, year, lesserFields);
-           return this.DateFieldsToCBORObject(year[0], lesserFields);
+           return this.DateTimeFieldsToCBORObject(year[0], lesserFields);
          } catch (ArgumentException ex) {
           throw new CBORException(ex.Message, ex);
       }

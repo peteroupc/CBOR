@@ -2110,6 +2110,7 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
       return this.CalcEncodedSize(0);
     }
 
+    // TODO: Use CBOREncodeOptions in CalcEncodedSize
     private long CalcEncodedSize(int depth) {
       if (depth > 1000) {
         throw new CBORException("Too deeply nested");
