@@ -1365,14 +1365,13 @@ list) {
       }
     }
 
-    private const int TicksDivFracSeconds =
-CBORUtilities.FractionalSeconds / 10000000;
+    private const int TicksDivFracSeconds = CBORUtilities.FractionalSeconds/10000000;
 
     public static void BreakDownDateTime(
       DateTime bi,
       EInteger[] year,
       int[] lf) {
-      DebugAssert.NotEqual(0, TicksDivFracSeconds);
+      if(TicksDivFracSeconds==0)throw new InvalidOperationException();
       #if NET20
       DateTime dt = bi.ToUniversalTime();
       #else
@@ -1389,7 +1388,7 @@ CBORUtilities.FractionalSeconds / 10000000;
     }
 
     public static DateTime BuildUpDateTime(EInteger year, int[] dt) {
-      DebugAssert.NotEqual(0, TicksDivFracSeconds);
+      if(TicksDivFracSeconds==0)throw new InvalidOperationException();
       if (year.CompareTo(9999) > 0 || year.CompareTo(0) <= 0) {
         throw new CBORException("Year is too big or too small for DateTime.");
       }
@@ -1400,8 +1399,7 @@ CBORUtilities.FractionalSeconds / 10000000;
           dt[2],
           dt[3],
           dt[4],
-          DateTimeKind.Utc).AddMinutes(-dt[6]).AddTicks((long)(dt[5] /
-TicksDivFracSeconds));
+          DateTimeKind.Utc).AddMinutes(-dt[6]).AddTicks((long)(dt[5] / TicksDivFracSeconds));
     }
   }
 }
