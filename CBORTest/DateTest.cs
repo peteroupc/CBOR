@@ -9,15 +9,26 @@ namespace Test {
   public class DateTest {
     public static void DateConverterRoundTripOne(
       CBORDateConverter dtc,
+      int smallYear,
+      int[] lesserFields) {
+       DateConverterRoundTripOne(
+         dtc,
+         EInteger.FromInt32(smallYear),
+         lesserFields);
+    }
+
+    public static void DateConverterRoundTripOne(
+      CBORDateConverter dtc,
       EInteger year,
       int[] lesserFields) {
-       try {
-       CBORObject obj = dtc.DateTimeFieldsToCBORObject(year, lesserFields);
-       var newYear = new EInteger[1];
-       var newLesserFields = new int[7];
        string fieldsString = (String.Empty + year + "," + lesserFields[0] +
 "," + lesserFields[1] + "," + lesserFields[2] + "," + lesserFields[3] + ","+
 lesserFields[4] + "," + lesserFields[5] + "," + lesserFields[6]);
+       try {
+       CBORObject obj = dtc.DateTimeFieldsToCBORObject(year, lesserFields);
+       fieldsString+="\n"+obj.ToString();
+       var newYear = new EInteger[1];
+       var newLesserFields = new int[7];
        if (dtc.TryGetDateTimeFields(obj, newYear, newLesserFields)) {
          Assert.AreEqual(
            lesserFields,
@@ -79,17 +90,32 @@ ValueNormalDays[month];
     public void DateConverterRoundTrip() {
        var dtcs = new CBORDateConverter[] {
          CBORDateConverter.TaggedString,
-         CBORDateConverter.TaggedNumber,
-         CBORDateConverter.UntaggedNumber,
        };
        var rg = new RandomGenerator();
-       for (var i = 0; i < 1000; ++i) {
+       for (var i = 0; i < 10000; ++i) {
           EInteger year = RandomYear(rg);
           int[] lesserFields = RandomLesserFields(rg, year);
           for (var j = 0; j < dtcs.Length; ++j) {
             DateConverterRoundTripOne(dtcs[j], year, lesserFields);
           }
        }
+       dtcs = new CBORDateConverter[] {
+         CBORDateConverter.TaggedNumber,
+         CBORDateConverter.UntaggedNumber,
+       };
+       for (var i = 0; i < 10000; ++i) {
+          EInteger year = RandomYear(rg);
+          int[] lesserFields = RandomLesserFields(rg, year);
+          // Don't check fractional seconds because conversion is lossy
+          lesserFields[5] = 0;
+          for (var j = 0; j < dtcs.Length; ++j) {
+            DateConverterRoundTripOne(dtcs[j], year, lesserFields);
+          }
+       }
+       DateConverterRoundTripOne(CBORDateConverter.TaggedString,
+         9328, new int[] { 2, 11, 7, 59, 3, 0, 0 });
+       DateConverterRoundTripOne(CBORDateConverter.UntaggedNumber,
+         9328, new int[] { 2, 11, 7, 59, 3, 0, 0 });
     }
   }
 }

@@ -18,6 +18,8 @@ namespace PeterO.Cbor {
   internal static class CBORUtilities {
     private const long DoublePosInfinity = unchecked((long)(0x7ffL << 52));
     private const string HexAlphabet = "0123456789ABCDEF";
+    // Fractional seconds used in date conversion methods
+    public const int FractionalSeconds = 1000 * 1000 * 1000;
 
     public static int CompareStringsAsUtf8LengthFirst(string strA, string
       strB) {
@@ -798,7 +800,7 @@ currentYear.Remainder(100).ToInt32Checked());
         .ToEInteger();
       EDecimal fractionalPart = edec.Abs()
         .Subtract(EDecimal.FromEInteger(integerPart).Abs());
-      int nanoseconds = fractionalPart.Multiply(1000000000)
+      int fractionalSeconds = fractionalPart.Multiply(FractionalSeconds)
         .ToInt32Checked();
       var normPart = new EInteger[3];
       EInteger days = FloorDiv(
@@ -817,7 +819,7 @@ currentYear.Remainder(100).ToInt32Checked());
       lesserFields[2] = secondsInDay / 3600;
       lesserFields[3] = (secondsInDay % 3600) / 60;
       lesserFields[4] = secondsInDay % 60;
-      lesserFields[5] = nanoseconds / 100;
+      lesserFields[5] = fractionalSeconds;
       lesserFields[6] = 0;
       year[0] = normPart[0];
     }
@@ -874,7 +876,7 @@ currentYear.Remainder(100).ToInt32Checked());
       return !(dateTime[3] < 0 || dateTime[4] < 0 || dateTime[5] < 0 ||
           dateTime[3] >= 24 || dateTime[4] >= 60 || dateTime[5] >= 61 ||
           dateTime[6] < 0 ||
-          dateTime[6] >= 1000000000 || dateTime[7] <= -1440 ||
+          dateTime[6] >= FractionalSeconds || dateTime[7] <= -1440 ||
           dateTime[7] >= 1440);
     }
 
@@ -1036,7 +1038,7 @@ status.Length + ") is not greater or equal to 1");
          return EFloat.FromEInteger(seconds);
       }
       // Add seconds and incorporate nanoseconds
-      EDecimal d = EDecimal.FromInt32(lesserFields[5]).Divide(1000000000L)
+      EDecimal d = EDecimal.FromInt32(lesserFields[5]).Divide(FractionalSeconds)
          .Add(EDecimal.FromEInteger(seconds));
       double dbl = d.ToDouble();
       if (Double.IsPositiveInfinity(dbl) ||
@@ -1095,7 +1097,8 @@ status.Length + ") is not greater or equal to 1");
       if (fracSeconds > 0) {
         charbuf[19] = '.';
         ++charbufLength;
-        var digitdiv = 100000000;
+        var digitdiv = (int)FractionalSeconds;
+        digitdiv /= 10;
         var index = 20;
         while (digitdiv > 0 && fracSeconds != 0) {
           int digit = (fracSeconds / digitdiv) % 10;

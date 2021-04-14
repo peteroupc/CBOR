@@ -265,10 +265,6 @@ lesserFields.Length + ") is not greater or equal to 7");
         if (!num.IsFinite()) {
           return "Not a finite number";
         }
-        if (num.CompareTo(Int64.MinValue) < 0 ||
-            num.CompareTo(Int64.MaxValue) > 0) {
-          return "Too big or small to fit a DateTime";
-        }
         EDecimal dec;
         dec = (EDecimal)untagobj.ToObject(typeof(EDecimal));
         CBORUtilities.BreakDownSecondsSinceEpoch(
@@ -362,8 +358,8 @@ lesserFields.Length + ") is not greater or equal to 7");
              CBORObject.FromObject(ef.ToEInteger());
         } else if (status[0] == 1) {
           return this.convType == ConversionType.TaggedNumber ?
-             CBORObject.FromObjectAndTag(ef.ToDoubleBits(), 1) :
-             CBORObject.FromObject(ef.ToDoubleBits());
+             CBORObject.FromFloatingPointBits(ef.ToDoubleBits(), 8).WithTag(1) :
+             CBORObject.FromFloatingPointBits(ef.ToDoubleBits(), 8);
         } else {
           throw new CBORException("Too big or small to fit an integer or" +
 "\u0020floating-point number");
