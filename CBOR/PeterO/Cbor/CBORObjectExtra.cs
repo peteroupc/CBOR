@@ -239,15 +239,19 @@ namespace PeterO.Cbor {
       return ((EDecimal)dec).ToEInteger();
     }
 
-    /// <summary>Converts this object to a.NET decimal.</summary>
+    /// <summary>Converts this object to a DotNet decimal.</summary>
     /// <returns>The closest big integer to this object.</returns>
     /// <exception cref='InvalidOperationException'>This object does not
     /// represent a number (for this purpose, infinities and not-a-number
     /// or NaN values, but not CBORObject.Null, are considered
     /// numbers).</exception>
     /// <exception cref='OverflowException'>This object's value exceeds the
-    /// range of a.NET decimal.</exception>
+    /// range of a DotNet decimal.</exception>
+    [Obsolete("Instead, use " + ".ToObject<decimal>\u0028).")]
     public decimal AsDecimal() {
+      return this.AsDecimalLegacy();
+    }
+    internal decimal AsDecimalLegacy() {
       return (this.ItemType == CBORObjectTypeInteger) ?
 ((decimal)(long)this.ThisItem) : ((this.HasOneTag(30) ||
 

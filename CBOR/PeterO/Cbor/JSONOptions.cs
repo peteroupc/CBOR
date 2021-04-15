@@ -31,10 +31,11 @@ namespace PeterO.Cbor {
        /// numbers extremely close to zero may underflow to positive or
        /// negative zero, and numbers of extremely large absolute value may
        /// overflow to infinity.). It's important to note that this mode
-       /// affects only how JSON numbers are <i>decoded</i> to a CBOR object;
-       /// it doesn't affect how <c>EncodeToBytes</c> and other methods encode
-       /// CBOR objects. Notably, by default, <c>EncodeToBytes</c> encodes
-       /// CBOR floating-point values to the CBOR format in their 16-bit
+       /// affects only how JSON numbers are
+       /// <i>decoded</i> to a CBOR object; it doesn't affect how
+       /// <c>EncodeToBytes</c> and other methods encode CBOR objects.
+       /// Notably, by default, <c>EncodeToBytes</c> encodes CBOR
+       /// floating-point values to the CBOR format in their 16-bit
        /// ("half-float"), 32-bit ("single-precision"), or 64-bit
        /// ("double-precision") encoding form depending on the
        /// value.</summary>
@@ -73,8 +74,9 @@ namespace PeterO.Cbor {
        /// cases, numbers extremely close to zero may underflow to zero, and
        /// numbers of extremely large absolute value may overflow to
        /// infinity.). It's important to note that this mode affects only how
-       /// JSON numbers are <i>decoded</i> to a CBOR object; it doesn't affect
-       /// how <c>EncodeToBytes</c> and other methods encode CBOR objects.
+       /// JSON numbers are
+       /// <i>decoded</i> to a CBOR object; it doesn't affect how
+       /// <c>EncodeToBytes</c> and other methods encode CBOR objects.
        /// Notably, by default, <c>EncodeToBytes</c> encodes CBOR
        /// floating-point values to the CBOR format in their 16-bit
        /// ("half-float"), 32-bit ("single-precision"), or 64-bit

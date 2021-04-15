@@ -50,7 +50,7 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[Addition(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#Addition_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject)</code> - <b>Deprecated:</b> Instead, convert both CBOR objects to numbers (with .AsNumber()), and use the first number's .Add() method.
 * <code>[AsBoolean()](#AsBoolean)</code> - Returns false if this object is a CBOR false, null, or undefined value (whether or not the object has tags); otherwise, true.
 * <code>[AsByte()](#AsByte)</code> - <b>Deprecated:</b> Instead, use .ToObject&lt;byte&gt;() in .NET or .ToObject(Byte.class) in Java.
-* <code>[AsDecimal()](#AsDecimal)</code> - Converts this object to a.
+* <code>[AsDecimal()](#AsDecimal)</code> - <b>Deprecated:</b> Instead, use .ToObject&lt;decimal&gt;().
 * <code>[AsDouble()](#AsDouble)</code> - Converts this object to a 64-bit floating point number.
 * <code>[AsDoubleBits()](#AsDoubleBits)</code> - Converts this object to the bits of a 64-bit floating-point number if this CBOR object's type is FloatingPoint.
 * <code>[AsDoubleValue()](#AsDoubleValue)</code> - Converts this object to a 64-bit floating-point number if this CBOR object's type is FloatingPoint.
@@ -790,7 +790,9 @@ This object's value exceeds the range of a byte (would be less than 0 or greater
 
     public decimal AsDecimal();
 
-Converts this object to a.NET decimal.
+<b>Deprecated.</b> Instead, use .ToObject&lt;decimal&gt;().
+
+Converts this object to a DotNet decimal.
 
 <b>Return Value:</b>
 
@@ -802,7 +804,7 @@ The closest big integer to this object.
 This object does not represent a number (for this purpose, infinities and not-a-number or NaN values, but not CBORObject.Null, are considered numbers).
 
  * System.OverflowException:
-This object's value exceeds the range of a.NET decimal.
+This object's value exceeds the range of a DotNet decimal.
 
 <a id="AsDouble"></a>
 ### AsDouble

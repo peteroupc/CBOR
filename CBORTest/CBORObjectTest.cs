@@ -2043,11 +2043,8 @@ namespace Test {
        var options = new CBOREncodeOptions("float64=true");
        for (var i = 0; i < 10000; ++i) {
          double dbl = 0.0;
-         if (i == 0) {
-           dbl = Double.PositiveInfinity;
-         } else {
- dbl = (i == 1) ? (Double.NegativeInfinity) : (RandomObjects.RandomDouble(rg));
-}
+         dbl = (i == 0) ? Double.PositiveInfinity : ((i == 1) ?
+(Double.NegativeInfinity) : (RandomObjects.RandomDouble(rg)));
          CBORObject cbor = CBORObject.FromObject(dbl);
          byte[] bytes = cbor.EncodeToBytes(options);
          Assert.AreEqual(9, bytes.Length);

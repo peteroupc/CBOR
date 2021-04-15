@@ -19,9 +19,10 @@ using PeterO.Numbers;
 namespace PeterO.Cbor {
   internal static class PropertyMap {
     private const int TicksDivFracSeconds =
-CBORUtilities.FractionalSeconds / 10000000;
+      CBORUtilities.FractionalSeconds / 10000000;
 
-    private sealed class OrderedDictionary<TKey, TValue> : IDictionary<TKey, TValue> {
+    private sealed class OrderedDictionary<TKey, TValue> :
+      IDictionary<TKey, TValue> {
       // NOTE: Note that this class will be used with CBORObjects, some of which are
       // mutable. Storing mutable keys in an ordinary Dictionary can cause problems;
       // for example:
@@ -43,30 +44,30 @@ CBORUtilities.FractionalSeconds / 10000000;
       }
       public void Add(TKey k, TValue v) {
         if (this.dict.ContainsKey(k)) {
-           throw new ArgumentException("duplicate key");
+          throw new ArgumentException("duplicate key");
         } else {
-           // CheckKeyDoesNotExist(k);
-           // DebugUtility.Log("Adding: " + (k.GetHashCode()) + " [Type=" + (CS(k)) +
-           // "]");
-           int keycnt = this.dict.Count;
-           this.dict.Add(k, v);
-           // if (keycnt == this.dict.Count) {
-           // throw new InvalidOperationException();
-           // }
-           this.list.AddLast(k);
-           // CheckKeyExists(k);
+          // CheckKeyDoesNotExist(k);
+          // DebugUtility.Log("Adding: " + (k.GetHashCode()) + " [Type=" + (CS(k)) +
+          // "]");
+          int keycnt = this.dict.Count;
+          this.dict.Add(k, v);
+          // if (keycnt == this.dict.Count) {
+          // throw new InvalidOperationException();
+          // }
+          this.list.AddLast(k);
+          // CheckKeyExists(k);
         }
       }
       public TValue this[TKey key] {
         get {
-           TValue v = default(TValue);
-           // NOTE: Don't use dict[key], since if it fails it could
-           // print the key in the exception's message, which could
-           // cause an infinite loop
-           if (!this.dict.TryGetValue(key, out v)) {
-             throw new ArgumentException("key not found");
-           }
-           return v;
+          TValue v = default(TValue);
+          // NOTE: Don't use dict[key], since if it fails it could
+          // print the key in the exception's message, which could
+          // cause an infinite loop
+          if (!this.dict.TryGetValue(key, out v)) {
+            throw new ArgumentException("key not found");
+          }
+          return v;
         }
         set {
           if (this.dict.ContainsKey(key)) {
@@ -138,63 +139,65 @@ CBORUtilities.FractionalSeconds / 10000000;
 
       [System.Diagnostics.Conditional("DEBUG")]
       private void CheckKeyExists(TKey key) {
-           TValue v = default(TValue);
-           if (!this.dict.ContainsKey(key)) {
-              /* DebugUtility.Log("hash " + (key.GetHashCode()) + " [" +
-(CS(key)) + "]");
-              foreach (var k in this.dict.Keys) {
-                DebugUtility.Log(
-                "key {0} {1}" + "\u0020" + "\u0020 [{2}]",
-                    k.Equals(key), k.GetHashCode(), CS(k), CS(key),
-                  this.dict.ContainsKey(k));
-             } */
-             throw new ArgumentException("key not found (ContainsKey)");
-           }
-           // NOTE: Don't use dict[k], since if it fails it could
-           // print the key in the exception's message, which could
-           // cause an infinite loop
-           if (!this.dict.TryGetValue(key, out v)) {
-             throw new ArgumentException("key not found (TryGetValue)");
-           }
-           if (this.dict.Count != this.list.Count) {
-             throw new InvalidOperationException();
-           }
+        TValue v = default(TValue);
+        if (!this.dict.ContainsKey(key)) {
+          /* DebugUtility.Log("hash " + (key.GetHashCode()) + " [" +
+          (CS(key)) + "]");
+          foreach (var k in this.dict.Keys) {
+            DebugUtility.Log(
+            "key {0} {1}" + "\u0020" + "\u0020 [{2}]",
+                k.Equals(key), k.GetHashCode(), CS(k), CS(key),
+              this.dict.ContainsKey(k));
+          } */
+          throw new ArgumentException("key not found (ContainsKey)");
+        }
+        // NOTE: Don't use dict[k], since if it fails it could
+        // print the key in the exception's message, which could
+        // cause an infinite loop
+        if (!this.dict.TryGetValue(key, out v)) {
+          throw new ArgumentException("key not found (TryGetValue)");
+        }
+        if (this.dict.Count != this.list.Count) {
+          throw new InvalidOperationException();
+        }
       }
 
       [System.Diagnostics.Conditional("DEBUG")]
       private void CheckKeyDoesNotExist(TKey key) {
-           TValue v = default(TValue);
-           // NOTE: Don't use dict[k], since if it fails it could
-           // print the key in the exception's message, which could
-           // cause an infinite loop
-           if (!this.dict.TryGetValue(key, out v)) {
-             return;
-           }
-           throw new ArgumentException("key found");
+        TValue v = default(TValue);
+        // NOTE: Don't use dict[k], since if it fails it could
+        // print the key in the exception's message, which could
+        // cause an infinite loop
+        if (!this.dict.TryGetValue(key, out v)) {
+          return;
+        }
+        throw new ArgumentException("key found");
       }
 
-      public ICollection<TKey> Keys { get {
+      public ICollection<TKey> Keys {
+        get {
           return new KeyWrapper<TKey, TValue>(this.dict, this.list);
-      }
+        }
       }
 
-      public ICollection<TValue> Values { get {
+      public ICollection<TValue> Values {
+        get {
           return new ValueWrapper<TKey, TValue>(this.dict, this.list);
-      }
+        }
       }
 
       private IEnumerable<KeyValuePair<TKey, TValue>> Iterate() {
         foreach (var k in this.list) {
-           TValue v = default(TValue);
-           // DebugUtility.Log("Enumerating: " + (k.GetHashCode()) + " [Type=" + ((k as
-           // CBORObject).Type) + "]");
-           // NOTE: Don't use dict[k], since if it fails it could
-           // print the key in the exception's message, which could
-           // cause an infinite loop
-           if (!this.dict.TryGetValue(k, out v)) {
-             throw new ArgumentException("key not found");
-           }
-           yield return new KeyValuePair<TKey, TValue>(k, v);
+          TValue v = default(TValue);
+          // DebugUtility.Log("Enumerating: " + (k.GetHashCode()) + " [Type=" + ((k as
+          // CBORObject).Type) + "]");
+          // NOTE: Don't use dict[k], since if it fails it could
+          // print the key in the exception's message, which could
+          // cause an infinite loop
+          if (!this.dict.TryGetValue(k, out v)) {
+            throw new ArgumentException("key not found");
+          }
+          yield return new KeyValuePair<TKey, TValue>(k, v);
         }
       }
 
@@ -210,7 +213,7 @@ CBORUtilities.FractionalSeconds / 10000000;
       private readonly IDictionary<TKey, TValue> dict;
       private readonly LinkedList<TKey> list;
       public ValueWrapper(IDictionary<TKey, TValue> dict, LinkedList<TKey>
-list) {
+        list) {
         this.dict = dict;
         this.list = list;
       }
@@ -626,7 +629,7 @@ list) {
     }
 
     public static IList<CBORObject> ListFromArray(CBORObject[] array) {
-       return new List<CBORObject>(array);
+      return new List<CBORObject>(array);
     }
 
     public static bool ExceedsKnownLength(Stream inStream, long size) {
@@ -857,7 +860,7 @@ list) {
         if (!Enum.IsDefined(enumType, ret)) {
           string estr = ret.ToString();
           if (estr == null || estr.Length == 0 || estr[0] == '-' ||
-(estr[0] >= '0' && estr[0] <= '9')) {
+            (estr[0] >= '0' && estr[0] <= '9')) {
             throw new CBORException("Unrecognized enum value: " +
               obj.ToString());
           }
@@ -1006,7 +1009,7 @@ list) {
         return objThis.AsDouble();
       }
       if (t.Equals(typeof(decimal))) {
-        return objThis.AsDecimal();
+        return objThis.AsDecimalLegacy();
       }
       if (t.Equals(typeof(float))) {
         return objThis.AsSingle();
@@ -1283,7 +1286,7 @@ list) {
 
 #pragma warning disable CA1801
     public static CBORObject FromObjectOther(object obj) {
-       return null;
+      return null;
     }
 #pragma warning restore CA1801
 
@@ -1372,9 +1375,9 @@ list) {
       DateTime bi,
       EInteger[] year,
       int[] lf) {
-if (TicksDivFracSeconds == 0) {
-  throw new InvalidOperationException();
-}
+      if (TicksDivFracSeconds == 0) {
+        throw new InvalidOperationException();
+      }
       #if NET20
       DateTime dt = bi.ToUniversalTime();
       #else
@@ -1391,9 +1394,9 @@ if (TicksDivFracSeconds == 0) {
     }
 
     public static DateTime BuildUpDateTime(EInteger year, int[] dt) {
-if (TicksDivFracSeconds == 0) {
-  throw new InvalidOperationException();
-}
+      if (TicksDivFracSeconds == 0) {
+        throw new InvalidOperationException();
+      }
       if (year.CompareTo(9999) > 0 || year.CompareTo(0) <= 0) {
         throw new CBORException("Year is too big or too small for DateTime.");
       }
@@ -1405,7 +1408,7 @@ if (TicksDivFracSeconds == 0) {
           dt[3],
           dt[4],
           DateTimeKind.Utc).AddMinutes(-dt[6]).AddTicks((long)(dt[5] /
-TicksDivFracSeconds));
+            TicksDivFracSeconds));
     }
   }
 }

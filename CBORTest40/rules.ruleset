@@ -8,9 +8,6 @@
     <!--Return value of Uri methods rule disabled; these are often breaking changes -->
     <Rule Action='None' Id='CA1055'/>
     <Rule Id='CA1200' Action='None'/>
-    <Rule Id='CA1031' Action='None'/>
-    <Rule Id='CA1707' Action='None'/>
-    <Rule Id='CA1825' Action='None'/>
   </Rules>
   <Rules AnalyzerId='StyleCop.Analyzers' RuleNamespace='StyleCop.Analyzers'>
     <!--SA1009 disabled for now due to bug with cref attributes that end in closing parenthesis -->

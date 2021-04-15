@@ -468,7 +468,7 @@
 
             <summary><para>A class for converting date-time objects to and from tagged
             CBOR objects.</para>
-            <para>In this method's documentation, the "number of seconds since
+            <para>In this class's documentation, the "number of seconds since
             the start of 1970" is based on the POSIX definition of "seconds
             since the Epoch", a definition that does not count leap seconds.
             This number of seconds assumes the use of a proleptic Gregorian
@@ -535,27 +535,40 @@
             positive infinity, negative infinity, or not-a-number.</summary>
 
 </doc>
-<doc name="M:PeterO.Cbor.CBORDateConverter.DateFieldsToCBORObject(PeterO.Numbers.EInteger,System.Int32[])">
-<param name='bigYear'>The parameter <paramref name='bigYear'/> is a Numbers.EInteger object.</param><param name='lesserFields'>The parameter <paramref name='lesserFields'/> is an array of 32-bit unsigned integers.</param><returns>The return value is not documented yet.</returns><exception cref='ArgumentNullException'>The parameter <paramref name='bigYear'/> or <paramref name='lesserFields'/> is
-            null.</exception>
+<doc name="M:PeterO.Cbor.CBORDateConverter.DateTimeFieldsToCBORObject(PeterO.Numbers.EInteger,System.Int32[])">
+
+            <summary>Converts a date/time in the form of a year, month, day, hour, minute, second, fractional seconds, and time offset to a CBOR object.</summary><param name='bigYear'>The parameter <paramref name='bigYear'/> is a
+            Numbers.EInteger object.</param><param name='lesserFields'>An array that will store the fields
+            (other than the year) of the date and time. See the
+            TryGetDateTimeFields method for information on the "lesserFields"
+            parameter.</param><returns>A CBOR object encoding the given date fields according to
+            the conversion type used to create this date converter.</returns><exception cref='ArgumentNullException'>The parameter <paramref name='bigYear'/> or <paramref name='lesserFields'/> is
+            null.</exception><exception cref='PeterO.Cbor.CBORException'>An error occurred in conversion.</exception>
+
 </doc>
-<doc name="M:PeterO.Cbor.CBORDateConverter.DateFieldsToCBORObject(System.Int32,System.Int32,System.Int32)">
-<param name='smallYear'>The parameter <paramref name='smallYear'/> is a 32-bit signed integer.</param><param name='month'>The parameter <paramref name='month'/> is a 32-bit signed integer.</param><param name='day'>The parameter <paramref name='day'/> is a 32-bit signed integer.</param><returns>The return value is not documented yet.</returns>
+<doc name="M:PeterO.Cbor.CBORDateConverter.DateTimeFieldsToCBORObject(System.Int32,System.Int32,System.Int32)">
+
+            <summary>Converts a date/time in the form of a year, month, and day to a CBOR object.  The hour, minute, and second are treated as 00:00:00 by this method, and the time offset is treated as 0 by this method.</summary><param name='smallYear'>The year.</param><param name='month'>Month of the year, from 1 (January) through 12
+            (December).</param><param name='day'>Day of the month, from 1 through 31.</param><returns>A CBOR object encoding the given date fields according to
+            the conversion type used to create this date converter.</returns><exception cref='PeterO.Cbor.CBORException'>An error occurred in conversion.</exception>
+
 </doc>
-<doc name="M:PeterO.Cbor.CBORDateConverter.DateFieldsToCBORObject(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
-<param name='smallYear'>The parameter <paramref name='smallYear'/> is a 32-bit signed integer.</param><param name='month'>The parameter <paramref name='month'/> is a 32-bit signed integer.</param><param name='day'>The parameter <paramref name='day'/> is a 32-bit signed integer.</param><param name='hour'>The parameter <paramref name='hour'/> is a 32-bit signed integer.</param><param name='minute'>The parameter <paramref name='minute'/> is a 32-bit signed integer.</param><param name='second'>The parameter <paramref name='second'/> is a 32-bit signed integer.</param><returns>The return value is not documented yet.</returns>
+<doc name="M:PeterO.Cbor.CBORDateConverter.DateTimeFieldsToCBORObject(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+
+            <summary>Converts a date/time in the form of a year, month, day, hour, minute, and second to a CBOR object.  The time offset is treated as 0 by this method.</summary><param name='smallYear'>The year.</param><param name='month'>Month of the year, from 1 (January) through 12
+            (December).</param><param name='day'>Day of the month, from 1 through 31.</param><param name='hour'>Hour of the day, from 0 through 23.</param><param name='minute'>Minute of the hour, from 0 through 59.</param><param name='second'>Second of the minute, from 0 through
+            59.</param><returns>A CBOR object encoding the given date fields according to
+            the conversion type used to create this date converter.</returns><exception cref='PeterO.Cbor.CBORException'>An error occurred in conversion.</exception>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORDateConverter.FromCBORObject(PeterO.Cbor.CBORObject)">
 
-            <summary>Not documented yet.</summary>
-            <param name='obj'>The parameter <paramref name='obj'/> is a
-            Cbor.CBORObject object.</param>
-            <returns>The return value is not documented yet.</returns>
+            <summary>Converts a CBOR object to a DateTime (in DotNet) or a Date (in Java).</summary>
+            <param name='obj'>A CBOR object that specifies a date/time according to the conversion type used to create this date converter.</param>
+            <returns>A DateTime or Date that encodes the date/time specified in the CBOR object.</returns>
             <exception cref='ArgumentNullException'>The parameter <paramref name='obj'/> is null.</exception>
+            <exception cref='PeterO.Cbor.CBORException'>The format of the CBOR object is not supported, or another error occurred in conversion.</exception>
 
-</doc>
-<doc name="M:PeterO.Cbor.CBORDateConverter.StringToDateTime(System.String)">
-<param name='str'>The parameter <paramref name='str'/> is a text string.</param><returns>The return value is not documented yet.</returns>
 </doc>
 <doc name="F:PeterO.Cbor.CBORDateConverter.TaggedNumber">
 
@@ -583,17 +596,23 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORDateConverter.ToCBORObject(System.DateTime)">
 
-            <summary>Not documented yet.</summary>
+            <summary>Converts a DateTime (in DotNet) or Date (in Java) to a CBOR object in a manner specified by this converter's conversion type.</summary>
             <param name='obj'>The parameter <paramref name='obj'/> is a
             DateTime object.</param>
-            <returns>The return value is not documented yet.</returns>
+            <returns>A CBOR object encoding the date/time in the DateTime or Date according to
+            the conversion type used to create this date converter.</returns>
+            <exception cref='PeterO.Cbor.CBORException'>An error occurred in conversion.</exception>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORDateConverter.TryGetDateTimeFields(PeterO.Cbor.CBORObject,PeterO.Numbers.EInteger[],System.Int32[])">
-<summary>Tries to extract the fields of a date and time in the form
-            of a CBOR object.</summary><param name='obj'>The parameter <paramref name='obj'/> is a Cbor.CBORObject object.</param><param name='year'>An array whose first element will store the
+
+            <summary>Tries to extract the fields of a date and time in the form
+            of a CBOR object.</summary>
+            <param name='obj'>A CBOR object that specifies a date/time according to the conversion type used to create this date converter.</param>
+            <param name='year'>An array whose first element will store the
             year. The array's length must be 1 or greater. If this function
-            fails, the first element is set to null.</param><param name='lesserFields'>An array that will store the fields
+            fails, the first element is set to null.</param>
+            <param name='lesserFields'>An array that will store the fields
             (other than the year) of the date and time. The array's length must
             be 7 or greater. If this function fails, the first seven elements
             are set to 0. If this method is successful, the first seven
@@ -610,9 +629,17 @@
             <item>6 - Number of minutes to subtract from this date and time to
             get global time. This number can be positive or negative, but
             cannot be less than -1439 or greater than 1439. For tags 0 and 1,
-            this value is always 0.</item></list>.</param><returns>Either <c>true</c> if the method is successful, or
-            <c>false</c> otherwise.</returns><exception cref='ArgumentNullException'>The parameter <paramref name='year'/> or <paramref name='lesserFields'/> is null, or
+            this value is always 0.</item></list>.</param>
+            <returns>Either <c>true</c> if the method is successful, or
+            <c>false</c> otherwise.</returns>
+            <exception cref='ArgumentNullException'>The parameter <paramref name='year'/> or <paramref name='lesserFields'/> is null, or
             contains fewer elements than required.</exception>
+
+</doc>
+<doc name="P:PeterO.Cbor.CBORDateConverter.Type">
+
+            <summary>Gets the conversion type for this date converter.</summary>
+
 </doc>
 <doc name="F:PeterO.Cbor.CBORDateConverter.UntaggedNumber">
 
@@ -683,16 +710,18 @@
             of basic upper-case and/or basic lower-case letters:
             <c>allowduplicatekeys</c>, <c>ctap2canonical</c>,
             <c>resolvereferences</c>, <c>useindeflengthstrings</c>,
-            <c>allowempty</c>. Keys other than these are ignored. (Keys are
-            compared using a basic case-insensitive comparison, in which two
-            strings are equal if they match after converting the basic
-            upper-case letters A to Z (U+0041 to U+005A) in both strings to
-            basic lower-case letters.) If two or more key/value pairs have
-            equal keys (in a basic case-insensitive comparison), the value
-            given for the last such key is used. The four keys just given can
-            have a value of <c>1</c>, <c>true</c>, <c>yes</c>, or <c>on</c> (where the letters can be any combination of basic upper-case
-            and/or basic lower-case letters), which means true, and any other
-            value meaning false. For example, <c>allowduplicatekeys=Yes</c> and
+            <c>allowempty</c>, <c>float64</c>. Keys other than these are
+            ignored in this version of the CBOR library. The key <c>float64</c> was introduced in version 4.4 of this library. (Keys are compared
+            using a basic case-insensitive comparison, in which two strings are
+            equal if they match after converting the basic upper-case letters A
+            to Z (U+0041 to U+005A) in both strings to basic lower-case
+            letters.) If two or more key/value pairs have equal keys (in a
+            basic case-insensitive comparison), the value given for the last
+            such key is used. The four keys just given can have a value of
+            <c>1</c>, <c>true</c>, <c>yes</c>, or <c>on</c> (where the
+            letters can be any combination of basic upper-case and/or basic
+            lower-case letters), which means true, and any other value meaning
+            false. For example, <c>allowduplicatekeys=Yes</c> and
             <c>allowduplicatekeys=1</c> both set the <c>AllowDuplicateKeys</c> property to true. In the future, this class may allow other keys to
             store other kinds of values, not just true or false.</param>
             <exception cref='ArgumentNullException'>The parameter <paramref name='paramString'/> is null.</exception>
@@ -768,6 +797,19 @@
             CTAP2 canonicalization (used in Web Authentication, among other
             specifications). Disallow duplicate keys, and always encode strings
             using definite-length encoding.</summary>
+
+</doc>
+<doc name="P:PeterO.Cbor.CBOREncodeOptions.Float64">
+
+            <summary>Gets a value indicating whether to encode floating-point
+            numbers in a CBOR object in their 64-bit encoding form regardless
+            of whether their value can be encoded without loss in a smaller
+            form. Used only when encoding CBOR objects.</summary>
+            <value>Gets a value indicating whether to encode floating-point
+            numbers in a CBOR object in their 64-bit encoding form regardless
+            of whether their value can be encoded without loss in a smaller
+            form. Used only when encoding CBOR objects. The default is
+            false.</value>
 
 </doc>
 <doc name="F:PeterO.Cbor.CBOREncodeOptions.NoDuplicateKeys">
@@ -1877,14 +1919,14 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsDecimal">
 
-            <summary>Converts this object to a.NET decimal.</summary>
+            <summary>Converts this object to a DotNet decimal.</summary>
             <returns>The closest big integer to this object.</returns>
             <exception cref='InvalidOperationException'>This object does not
             represent a number (for this purpose, infinities and not-a-number
             or NaN values, but not CBORObject.Null, are considered
             numbers).</exception>
             <exception cref='OverflowException'>This object's value exceeds the
-            range of a.NET decimal.</exception>
+            range of a DotNet decimal.</exception>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsDouble">
@@ -6694,21 +6736,21 @@
             of basic upper-case and/or basic lower-case letters:
             <c>base64padding</c>, <c>replacesurrogates</c>,
             <c>allowduplicatekeys</c>, <c>preservenegativezero</c>,
-            <c>numberconversion</c>. Other keys are ignored. (Keys are
-            compared using a basic case-insensitive comparison, in which two
-            strings are equal if they match after converting the basic
-            upper-case letters A to Z (U+0041 to U+005A) in both strings to
-            basic lower-case letters.) If two or more key/value pairs have
-            equal keys (in a basic case-insensitive comparison), the value
-            given for the last such key is used. The first four keys just given
-            can have a value of <c>1</c>, <c>true</c>, <c>yes</c>, or
-            <c>on</c> (where the letters can be any combination of basic
-            upper-case and/or basic lower-case letters), which means true, and
-            any other value meaning false. The last key,
-            <c>numberconversion</c>, can have a value of any name given in the
-            <c>JSONOptions.ConversionMode</c> enumeration (where the letters
-            can be any combination of basic upper-case and/or basic lower-case
-            letters), and any other value is unrecognized. (If the
+            <c>numberconversion</c>. Other keys are ignored in this version of
+            the CBOR library. (Keys are compared using a basic case-insensitive
+            comparison, in which two strings are equal if they match after
+            converting the basic upper-case letters A to Z (U+0041 to U+005A)
+            in both strings to basic lower-case letters.) If two or more
+            key/value pairs have equal keys (in a basic case-insensitive
+            comparison), the value given for the last such key is used. The
+            first four keys just given can have a value of <c>1</c>,
+            <c>true</c>, <c>yes</c>, or <c>on</c> (where the letters can be
+            any combination of basic upper-case and/or basic lower-case
+            letters), which means true, and any other value meaning false. The
+            last key, <c>numberconversion</c>, can have a value of any name
+            given in the <c>JSONOptions.ConversionMode</c> enumeration (where
+            the letters can be any combination of basic upper-case and/or basic
+            lower-case letters), and any other value is unrecognized. (If the
             <c>numberconversion</c> key is not given, its value is treated as
             <c>full</c>. If that key is given, but has an unrecognized value,
             an exception is thrown.) For example, <c>base64padding=Yes</c> and
@@ -6810,7 +6852,7 @@
             numbers extremely close to zero may underflow to positive or
             negative zero, and numbers of extremely large absolute value may
             overflow to infinity.). It's important to note that this mode
-            affects only how JSON numbers are <c>decoded</c> to a CBOR object;
+            affects only how JSON numbers are <i>decoded</i> to a CBOR object;
             it doesn't affect how <c>EncodeToBytes</c> and other methods encode
             CBOR objects. Notably, by default, <c>EncodeToBytes</c> encodes
             CBOR floating-point values to the CBOR format in their 16-bit
@@ -6848,7 +6890,7 @@
             to zero may underflow to positive or negative zero, and numbers of
             extremely large absolute value may overflow to infinity.). It's
             important to note that this mode affects only how JSON numbers are
-            <c>decoded</c> to a CBOR object; it doesn't affect how
+            <i>decoded</i> to a CBOR object; it doesn't affect how
             <c>EncodeToBytes</c> and other methods encode CBOR objects.
             Notably, by default, <c>EncodeToBytes</c> encodes CBOR
             floating-point values to the CBOR format in their 16-bit
@@ -6871,7 +6913,7 @@
             cases, numbers extremely close to zero may underflow to zero, and
             numbers of extremely large absolute value may overflow to
             infinity.). It's important to note that this mode affects only how
-            JSON numbers are <c>decoded</c> to a CBOR object; it doesn't affect
+            JSON numbers are <i>decoded</i> to a CBOR object; it doesn't affect
             how <c>EncodeToBytes</c> and other methods encode CBOR objects.
             Notably, by default, <c>EncodeToBytes</c> encodes CBOR
             floating-point values to the CBOR format in their 16-bit
@@ -6970,17 +7012,20 @@
             <c>usecamelcase=true</c>. The key can be any one of the following
             where the letters can be any combination of basic upper-case and/or
             basic lower-case letters: <c>usecamelcase</c>. Other keys are
-            ignored. (Keys are compared using a basic case-insensitive
-            comparison, in which two strings are equal if they match after
-            converting the basic upper-case letters A to Z (U+0041 to U+005A)
-            in both strings to basic lower-case letters.) If two or more
-            key/value pairs have equal keys (in a basic case-insensitive
-            comparison), the value given for the last such key is used. The key
-            just given can have a value of <c>1</c>, <c>true</c>, <c>yes</c> , or <c>on</c> (where the letters can be any combination of basic
-            upper-case and/or basic lower-case letters), which means true, and
-            any other value meaning false. For example, <c>usecamelcase=Yes</c> and <c>usecamelcase=1</c> both set the <c>UseCamelCase</c> property
-            to true. In the future, this class may allow other keys to store
-            other kinds of values, not just true or false.</param>
+            ignored in this version of the CBOR library. (Keys are compared
+            using a basic case-insensitive comparison, in which two strings are
+            equal if they match after converting the basic upper-case letters A
+            to Z (U+0041 to U+005A) in both strings to basic lower-case
+            letters.) If two or more key/value pairs have equal keys (in a
+            basic case-insensitive comparison), the value given for the last
+            such key is used. The key just given can have a value of <c>1</c>,
+            <c>true</c>, <c>yes</c>, or <c>on</c> (where the letters can be
+            any combination of basic upper-case and/or basic lower-case
+            letters), which means true, and any other value meaning false. For
+            example, <c>usecamelcase=Yes</c> and <c>usecamelcase=1</c> both set
+            the <c>UseCamelCase</c> property to true. In the future, this class
+            may allow other keys to store other kinds of values, not just true
+            or false.</param>
             <exception cref='ArgumentNullException'>The parameter <paramref name='paramString'/> is null.</exception>
 
 </doc>

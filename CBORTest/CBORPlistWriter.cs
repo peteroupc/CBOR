@@ -18,7 +18,7 @@ namespace Test {
       for (; i < str.Length; ++i) {
         char c = str[i];
         if (c < 0x20 || c >= 0x7f || c == '\\' || c == '"' || c == '&' ||
-            c == '<' || c == '>') {
+          c == '<' || c == '>') {
           sb.WriteString(str, 0, i);
           break;
         }
@@ -30,8 +30,7 @@ namespace Test {
       for (; i < str.Length; ++i) {
         char c = str[i];
         if ((c < 0x20 && (c != 0x09 || c != 0x0a || c != 0x0d)) || c ==
-0xfffe ||
-c == 0xffff) {
+          0xfffe || c == 0xffff) {
           // XML doesn't support certain code points even if escaped.
           // Therefore, replace all unsupported code points with replacement
           // characters.
@@ -70,13 +69,13 @@ c == 0xffff) {
     internal static string ToPlistString(CBORObject obj) {
       var builder = new StringBuilder();
       try {
-         WritePlistToInternal(
-            obj,
-            new StringOutput(builder),
-            JSONOptions.Default);
-         return builder.ToString();
+        WritePlistToInternal(
+          obj,
+          new StringOutput(builder),
+          JSONOptions.Default);
+        return builder.ToString();
       } catch (IOException ex) {
-         throw new CBORException(ex.Message, ex);
+        throw new CBORException(ex.Message, ex);
       }
     }
 
@@ -207,7 +206,7 @@ c == 0xffff) {
         var year = new EInteger[1];
         var lesserFields = new int[7];
         if (!conv.TryGetDateTimeFields(obj, year, lesserFields)) {
-           throw new InvalidOperationException("Unsupported date/time");
+          throw new InvalidOperationException("Unsupported date/time");
         }
         writer.WriteString("<date>");
         writer.WriteString(ToIso8601DateTimeString(year[0], lesserFields));
@@ -299,10 +298,10 @@ c == 0xffff) {
             return;
           }
           writer.WriteString("<str");
-        writer.WriteString("ing>");
+          writer.WriteString("ing>");
           WritePlistStringUnquoted(thisString, writer, options);
-        writer.WriteString("</str");
-      writer.WriteString("ing>");
+          writer.WriteString("</str");
+          writer.WriteString("ing>");
           break;
         }
         case CBORType.Array: {

@@ -58,7 +58,7 @@ namespace Test {
           CBORTestCommon.AssertRoundTrip(obj);
           decimal decimalOther = 0m;
           try {
-            decimalOther = obj.AsDecimal();
+            decimalOther = obj.ToObject<decimal>();
           } catch (Exception ex) {
             Assert.Fail(ex.ToString() + "\r\n" +
               CBORTest.ObjectMessage(obj));
@@ -68,7 +68,7 @@ namespace Test {
         }
       }
       try {
-        CBORObject.FromObject(EDecimal.NaN).AsDecimal();
+        CBORObject.FromObject(EDecimal.NaN).ToObject<decimal>();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         // NOTE: Intentionally empty
@@ -78,7 +78,7 @@ namespace Test {
       }
       try {
         CBORObject.FromObject(
-          EDecimal.SignalingNaN).AsDecimal();
+          EDecimal.SignalingNaN).ToObject<decimal>();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         // NOTE: Intentionally empty
@@ -88,7 +88,7 @@ namespace Test {
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecPosInf)
-        .AsDecimal();
+        .ToObject<decimal>();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         // NOTE: Intentionally empty
@@ -98,7 +98,7 @@ namespace Test {
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecNegInf)
-        .AsDecimal();
+        .ToObject<decimal>();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         // NOTE: Intentionally empty
@@ -107,7 +107,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        ToObjectTest.TestToFromObjectRoundTrip(EFloat.NaN).AsDecimal();
+        ToObjectTest.TestToFromObjectRoundTrip(EFloat.NaN).ToObject<decimal>();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         // NOTE: Intentionally empty
@@ -116,7 +116,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.FromObject(EFloat.SignalingNaN).AsDecimal();
+        CBORObject.FromObject(EFloat.SignalingNaN).ToObject<decimal>();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         // NOTE: Intentionally empty
@@ -126,7 +126,7 @@ namespace Test {
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatPosInf)
-        .AsDecimal();
+        .ToObject<decimal>();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         // NOTE: Intentionally empty
@@ -136,7 +136,7 @@ namespace Test {
       }
       try {
         ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf)
-        .AsDecimal();
+        .ToObject<decimal>();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         // NOTE: Intentionally empty
