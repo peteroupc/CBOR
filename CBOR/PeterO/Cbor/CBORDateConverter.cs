@@ -112,8 +112,8 @@ namespace PeterO.Cbor {
 
     /// <summary>Initializes a new instance of the
     /// <see cref='PeterO.Cbor.CBORDateConverter'/> class.</summary>
-    /// <param name='convType'>The parameter <paramref name='convType'/> is
-    /// a Cbor.CBORDateConverter.ConversionType object.</param>
+    /// <param name='convType'>Conversion type giving the rules for
+    /// converting dates and times to and from CBOR objects.</param>
     public CBORDateConverter(ConversionType convType) {
       this.convType = convType;
     }

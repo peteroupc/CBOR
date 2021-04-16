@@ -132,58 +132,6 @@ namespace Test {
       return true;
     }
 
-    private static string ToIso8601DateTimeString(
-      EInteger bigYear,
-      int[] lesserFields) {
-      if (bigYear == null) {
-        throw new ArgumentNullException(nameof(bigYear));
-      }
-      if (lesserFields == null) {
-        throw new ArgumentNullException(nameof(lesserFields));
-      }
-      if (lesserFields[6] != 0) {
-        throw new NotSupportedException(
-          "Local time offsets not supported");
-      }
-      int smallYear = bigYear.ToInt32Checked();
-      if (smallYear < 0) {
-        throw new ArgumentException("year(" + smallYear +
-          ") is not greater or equal to 0");
-      }
-      if (smallYear > 9999) {
-        throw new ArgumentException("year(" + smallYear +
-          ") is not less or equal to 9999");
-      }
-      int month = lesserFields[0];
-      int day = lesserFields[1];
-      int hour = lesserFields[2];
-      int minute = lesserFields[3];
-      int second = lesserFields[4];
-      int fracSeconds = lesserFields[5];
-      var charbuf = new char[19];
-      charbuf[0] = (char)('0' + ((smallYear / 1000) % 10));
-      charbuf[1] = (char)('0' + ((smallYear / 100) % 10));
-      charbuf[2] = (char)('0' + ((smallYear / 10) % 10));
-      charbuf[3] = (char)('0' + (smallYear % 10));
-      charbuf[4] = '-';
-      charbuf[5] = (char)('0' + ((month / 10) % 10));
-      charbuf[6] = (char)('0' + (month % 10));
-      charbuf[7] = '-';
-      charbuf[8] = (char)('0' + ((day / 10) % 10));
-      charbuf[9] = (char)('0' + (day % 10));
-      charbuf[10] = 'T';
-      charbuf[11] = (char)('0' + ((hour / 10) % 10));
-      charbuf[12] = (char)('0' + (hour % 10));
-      charbuf[13] = ':';
-      charbuf[14] = (char)('0' + ((minute / 10) % 10));
-      charbuf[15] = (char)('0' + (minute % 10));
-      charbuf[16] = ':';
-      charbuf[17] = (char)('0' + ((second / 10) % 10));
-      charbuf[18] = (char)('0' + (second % 10));
-      // Fractional seconds ignored
-      return new String(charbuf, 0, 19);
-    }
-
     internal static void WritePlistToInternalCore(
       CBORObject obj,
       StringOutput writer,
@@ -208,8 +156,14 @@ namespace Test {
         if (!conv.TryGetDateTimeFields(obj, year, lesserFields)) {
           throw new InvalidOperationException("Unsupported date/time");
         }
+        // Set fractional seconds and offset to 0, since
+        // they're not needed
+        lesserFields[5] = 0;
+        lesserFields[6] = 0;
+        CBORObject newobj = conv.DateTimeFieldsToCBORObject(year[0],
+  lesserFields);
         writer.WriteString("<date>");
-        writer.WriteString(ToIso8601DateTimeString(year[0], lesserFields));
+        writer.WriteString(newobj.AsString());
         writer.WriteString("</date>");
         return;
       }

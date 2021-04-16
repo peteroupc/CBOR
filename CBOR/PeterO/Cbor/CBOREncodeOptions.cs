@@ -7,18 +7,19 @@ namespace PeterO.Cbor {
     /// <summary>Default options for CBOR objects. Disallow duplicate keys,
     /// and always encode strings using definite-length encoding.</summary>
     public static readonly CBOREncodeOptions Default =
-      new CBOREncodeOptions(false, false);
+      new CBOREncodeOptions();
 
     /// <summary>Default options for CBOR objects serialized using the
     /// CTAP2 canonicalization (used in Web Authentication, among other
     /// specifications). Disallow duplicate keys, and always encode strings
     /// using definite-length encoding.</summary>
     public static readonly CBOREncodeOptions DefaultCtap2Canonical =
-      new CBOREncodeOptions(false, false, true);
+      new CBOREncodeOptions("ctap2canonical=true");
 
     /// <summary>Initializes a new instance of the
-    /// <see cref='PeterO.Cbor.CBOREncodeOptions'/> class.</summary>
-    public CBOREncodeOptions() : this(false, false) {
+    /// <see cref='PeterO.Cbor.CBOREncodeOptions'/> class with all the
+    /// default options.</summary>
+    public CBOREncodeOptions() : this(String.Empty) {
     }
 
     /// <summary>Initializes a new instance of the
@@ -28,6 +29,7 @@ namespace PeterO.Cbor {
     /// <param name='allowDuplicateKeys'>A value indicating whether to
     /// disallow duplicate keys when reading CBOR objects from a data
     /// stream.</param>
+    [Obsolete("Use the more readable string constructor instead.")]
     public CBOREncodeOptions(
       bool useIndefLengthStrings,
       bool allowDuplicateKeys)
@@ -45,12 +47,14 @@ namespace PeterO.Cbor {
     /// <param name='ctap2Canonical'>A value indicating whether CBOR
     /// objects are written out using the CTAP2 canonical CBOR encoding
     /// form, which is useful for implementing Web Authentication.</param>
+    [Obsolete("Use the more readable string constructor instead.")]
     public CBOREncodeOptions(
       bool useIndefLengthStrings,
       bool allowDuplicateKeys,
       bool ctap2Canonical) {
       this.ResolveReferences = false;
       this.AllowEmpty = false;
+      this.Float64 = false;
       this.UseIndefLengthStrings = useIndefLengthStrings;
       this.AllowDuplicateKeys = allowDuplicateKeys;
       this.Ctap2Canonical = ctap2Canonical;

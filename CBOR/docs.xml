@@ -489,8 +489,7 @@
 
             <summary>Initializes a new instance of the
             <see cref='PeterO.Cbor.CBORDateConverter'/> class.</summary>
-            <param name='convType'>The parameter <paramref name='convType'/> is
-            a Cbor.CBORDateConverter.ConversionType object.</param>
+            <param name='convType'>Conversion type giving the rules for converting dates and times to and from CBOR objects.</param>
 
 </doc>
 <doc name="T:PeterO.Cbor.CBORDateConverter.ConversionType">
@@ -537,37 +536,71 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORDateConverter.DateTimeFieldsToCBORObject(PeterO.Numbers.EInteger,System.Int32[])">
 
-            <summary>Converts a date/time in the form of a year, month, day, hour, minute, second, fractional seconds, and time offset to a CBOR object.</summary><param name='bigYear'>The parameter <paramref name='bigYear'/> is a
-            Numbers.EInteger object.</param><param name='lesserFields'>An array that will store the fields
+            <summary>Converts a date/time in the form of a year, month, day,
+            hour, minute, second, fractional seconds, and time offset to a CBOR
+            object.</summary>
+            <param name='bigYear'>The parameter <paramref name='bigYear'/> is a
+            Numbers.EInteger object.</param>
+            <param name='lesserFields'>An array that will store the fields
             (other than the year) of the date and time. See the
             TryGetDateTimeFields method for information on the "lesserFields"
-            parameter.</param><returns>A CBOR object encoding the given date fields according to
-            the conversion type used to create this date converter.</returns><exception cref='ArgumentNullException'>The parameter <paramref name='bigYear'/> or <paramref name='lesserFields'/> is
-            null.</exception><exception cref='PeterO.Cbor.CBORException'>An error occurred in conversion.</exception>
+            parameter.</param>
+            <returns>A CBOR object encoding the given date fields according to
+            the conversion type used to create this date converter.</returns>
+            <exception cref='ArgumentNullException'>The parameter <paramref name='bigYear'/> or <paramref name='lesserFields'/> is
+            null.</exception>
+            <exception cref='PeterO.Cbor.CBORException'>An error occurred in
+            conversion.</exception>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORDateConverter.DateTimeFieldsToCBORObject(System.Int32,System.Int32,System.Int32)">
 
-            <summary>Converts a date/time in the form of a year, month, and day to a CBOR object.  The hour, minute, and second are treated as 00:00:00 by this method, and the time offset is treated as 0 by this method.</summary><param name='smallYear'>The year.</param><param name='month'>Month of the year, from 1 (January) through 12
-            (December).</param><param name='day'>Day of the month, from 1 through 31.</param><returns>A CBOR object encoding the given date fields according to
-            the conversion type used to create this date converter.</returns><exception cref='PeterO.Cbor.CBORException'>An error occurred in conversion.</exception>
+            <summary>Converts a date/time in the form of a year, month, and day
+            to a CBOR object. The hour, minute, and second are treated as
+            00:00:00 by this method, and the time offset is treated as 0 by
+            this method.</summary>
+            <param name='smallYear'>The year.</param>
+            <param name='month'>Month of the year, from 1 (January) through 12
+            (December).</param>
+            <param name='day'>Day of the month, from 1 through 31.</param>
+            <returns>A CBOR object encoding the given date fields according to
+            the conversion type used to create this date converter.</returns>
+            <exception cref='PeterO.Cbor.CBORException'>An error occurred in
+            conversion.</exception>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORDateConverter.DateTimeFieldsToCBORObject(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
 
-            <summary>Converts a date/time in the form of a year, month, day, hour, minute, and second to a CBOR object.  The time offset is treated as 0 by this method.</summary><param name='smallYear'>The year.</param><param name='month'>Month of the year, from 1 (January) through 12
-            (December).</param><param name='day'>Day of the month, from 1 through 31.</param><param name='hour'>Hour of the day, from 0 through 23.</param><param name='minute'>Minute of the hour, from 0 through 59.</param><param name='second'>Second of the minute, from 0 through
-            59.</param><returns>A CBOR object encoding the given date fields according to
-            the conversion type used to create this date converter.</returns><exception cref='PeterO.Cbor.CBORException'>An error occurred in conversion.</exception>
+            <summary>Converts a date/time in the form of a year, month, day,
+            hour, minute, and second to a CBOR object. The time offset is
+            treated as 0 by this method.</summary>
+            <param name='smallYear'>The year.</param>
+            <param name='month'>Month of the year, from 1 (January) through 12
+            (December).</param>
+            <param name='day'>Day of the month, from 1 through 31.</param>
+            <param name='hour'>Hour of the day, from 0 through 23.</param>
+            <param name='minute'>Minute of the hour, from 0 through 59.</param>
+            <param name='second'>Second of the minute, from 0 through
+            59.</param>
+            <returns>A CBOR object encoding the given date fields according to
+            the conversion type used to create this date converter.</returns>
+            <exception cref='PeterO.Cbor.CBORException'>An error occurred in
+            conversion.</exception>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORDateConverter.FromCBORObject(PeterO.Cbor.CBORObject)">
 
-            <summary>Converts a CBOR object to a DateTime (in DotNet) or a Date (in Java).</summary>
-            <param name='obj'>A CBOR object that specifies a date/time according to the conversion type used to create this date converter.</param>
-            <returns>A DateTime or Date that encodes the date/time specified in the CBOR object.</returns>
+            <summary>Converts a CBOR object to a DateTime (in DotNet) or a Date
+            (in Java).</summary>
+            <param name='obj'>A CBOR object that specifies a date/time
+            according to the conversion type used to create this date
+            converter.</param>
+            <returns>A DateTime or Date that encodes the date/time specified in
+            the CBOR object.</returns>
             <exception cref='ArgumentNullException'>The parameter <paramref name='obj'/> is null.</exception>
-            <exception cref='PeterO.Cbor.CBORException'>The format of the CBOR object is not supported, or another error occurred in conversion.</exception>
+            <exception cref='PeterO.Cbor.CBORException'>The format of the CBOR
+            object is not supported, or another error occurred in
+            conversion.</exception>
 
 </doc>
 <doc name="F:PeterO.Cbor.CBORDateConverter.TaggedNumber">
@@ -596,19 +629,25 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORDateConverter.ToCBORObject(System.DateTime)">
 
-            <summary>Converts a DateTime (in DotNet) or Date (in Java) to a CBOR object in a manner specified by this converter's conversion type.</summary>
+            <summary>Converts a DateTime (in DotNet) or Date (in Java) to a
+            CBOR object in a manner specified by this converter's conversion
+            type.</summary>
             <param name='obj'>The parameter <paramref name='obj'/> is a
             DateTime object.</param>
-            <returns>A CBOR object encoding the date/time in the DateTime or Date according to
-            the conversion type used to create this date converter.</returns>
-            <exception cref='PeterO.Cbor.CBORException'>An error occurred in conversion.</exception>
+            <returns>A CBOR object encoding the date/time in the DateTime or
+            Date according to the conversion type used to create this date
+            converter.</returns>
+            <exception cref='PeterO.Cbor.CBORException'>An error occurred in
+            conversion.</exception>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORDateConverter.TryGetDateTimeFields(PeterO.Cbor.CBORObject,PeterO.Numbers.EInteger[],System.Int32[])">
 
             <summary>Tries to extract the fields of a date and time in the form
             of a CBOR object.</summary>
-            <param name='obj'>A CBOR object that specifies a date/time according to the conversion type used to create this date converter.</param>
+            <param name='obj'>A CBOR object that specifies a date/time
+            according to the conversion type used to create this date
+            converter.</param>
             <param name='year'>An array whose first element will store the
             year. The array's length must be 1 or greater. If this function
             fails, the first element is set to null.</param>
@@ -638,7 +677,9 @@
 </doc>
 <doc name="P:PeterO.Cbor.CBORDateConverter.Type">
 
-            <summary>Gets the conversion type for this date converter.</summary>
+            <summary>Gets the conversion type for this date
+            converter.</summary>
+            <value>The conversion type for this date converter.</value>
 
 </doc>
 <doc name="F:PeterO.Cbor.CBORDateConverter.UntaggedNumber">
@@ -6852,10 +6893,11 @@
             numbers extremely close to zero may underflow to positive or
             negative zero, and numbers of extremely large absolute value may
             overflow to infinity.). It's important to note that this mode
-            affects only how JSON numbers are <i>decoded</i> to a CBOR object;
-            it doesn't affect how <c>EncodeToBytes</c> and other methods encode
-            CBOR objects. Notably, by default, <c>EncodeToBytes</c> encodes
-            CBOR floating-point values to the CBOR format in their 16-bit
+            affects only how JSON numbers are
+            <i>decoded</i> to a CBOR object; it doesn't affect how
+            <c>EncodeToBytes</c> and other methods encode CBOR objects.
+            Notably, by default, <c>EncodeToBytes</c> encodes CBOR
+            floating-point values to the CBOR format in their 16-bit
             ("half-float"), 32-bit ("single-precision"), or 64-bit
             ("double-precision") encoding form depending on the
             value.</summary>
@@ -6913,8 +6955,9 @@
             cases, numbers extremely close to zero may underflow to zero, and
             numbers of extremely large absolute value may overflow to
             infinity.). It's important to note that this mode affects only how
-            JSON numbers are <i>decoded</i> to a CBOR object; it doesn't affect
-            how <c>EncodeToBytes</c> and other methods encode CBOR objects.
+            JSON numbers are
+            <i>decoded</i> to a CBOR object; it doesn't affect how
+            <c>EncodeToBytes</c> and other methods encode CBOR objects.
             Notably, by default, <c>EncodeToBytes</c> encodes CBOR
             floating-point values to the CBOR format in their 16-bit
             ("half-float"), 32-bit ("single-precision"), or 64-bit

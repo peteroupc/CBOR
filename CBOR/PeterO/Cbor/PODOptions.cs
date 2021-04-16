@@ -7,8 +7,9 @@ namespace PeterO.Cbor {
   /// objects.</summary>
   public class PODOptions {
     /// <summary>Initializes a new instance of the
-    /// <see cref='PeterO.Cbor.PODOptions'/> class.</summary>
-    public PODOptions() : this(true, true) {
+    /// <see cref='PeterO.Cbor.PODOptions'/> class with all the default
+    /// options.</summary>
+    public PODOptions() : this(String.Empty) {
     }
 
     /// <summary>Initializes a new instance of the
@@ -20,6 +21,7 @@ namespace PeterO.Cbor {
       "Microsoft.Usage",
       "CA1801",
       Justification = "'removeIsPrefix' is present for backward compatibility.")]
+    [Obsolete("Use the more readable string constructor instead.")]
     public PODOptions(bool removeIsPrefix, bool useCamelCase) {
       this.UseCamelCase = useCamelCase;
     }

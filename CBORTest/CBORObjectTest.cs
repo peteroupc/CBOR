@@ -2045,8 +2045,8 @@ namespace Test {
          double dbl = 0.0;
          dbl = (i == 0) ? Double.PositiveInfinity : ((i == 1) ?
 (Double.NegativeInfinity) : (RandomObjects.RandomDouble(rg)));
-         CBORObject cbor = CBORObject.FromObject(dbl);
-         byte[] bytes = cbor.EncodeToBytes(options);
+CBORObject cbor = CBORObject.FromObject(dbl); byte[] bytes =
+cbor.EncodeToBytes(options);
          Assert.AreEqual(9, bytes.Length);
          TestCommon.AssertEqualsHashCode(
            cbor,

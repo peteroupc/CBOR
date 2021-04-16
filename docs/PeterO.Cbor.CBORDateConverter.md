@@ -30,8 +30,7 @@ Initializes a new instance of the [PeterO.Cbor.CBORDateConverter](PeterO.Cbor.CB
 
 <b>Parameters:</b>
 
- * <i>convType</i>: The parameter  <i>convType</i>
- is a Cbor.CBORDateConverter.ConversionType object.
+ * <i>convType</i>: Conversion type giving the rules for converting dates and times to and from CBOR objects.
 
 <a id="Void_ctor"></a>
 ### CBORDateConverter Constructor
@@ -67,6 +66,10 @@ A converter object where FromCBORObject accepts untagged CBOR integer or CBOR fl
     public PeterO.Cbor.CBORDateConverter.ConversionType Type { get; }
 
 Gets the conversion type for this date converter.
+
+<b>Returns:</b>
+
+The conversion type for this date converter.
 
 <a id="DateTimeFieldsToCBORObject_int_int_int"></a>
 ### DateTimeFieldsToCBORObject

@@ -106,7 +106,7 @@ namespace PeterO.Cbor {
     /// <param name='base64Padding'>Whether padding is included when
     /// writing data in base64url or traditional base64 format to
     /// JSON.</param>
-    [Obsolete("Use the string constructor instead.")]
+    [Obsolete("Use the more readable string constructor instead.")]
     public JSONOptions(bool base64Padding)
       : this("base64Padding=" + (base64Padding ? "1" : "0")) {
     }
@@ -123,7 +123,7 @@ namespace PeterO.Cbor {
     /// with a replacement character (U+FFFD). The default is false; an
     /// exception is thrown when such code points are encountered.</param>
 #pragma warning disable CS0618
-    [Obsolete("Use the string constructor instead.")]
+    [Obsolete("Use the more readable string constructor instead.")]
     public JSONOptions(bool base64Padding, bool replaceSurrogates)
       : this("base64Padding=" + (base64Padding ? "1" : "0") +
            ";replacesurrogates=" + (replaceSurrogates ? "1" : "0")) {
