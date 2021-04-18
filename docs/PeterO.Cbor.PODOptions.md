@@ -16,6 +16,8 @@ Options for controlling how certain DotNET or Java objects, such as so-called "p
         bool removeIsPrefix,
         bool useCamelCase);
 
+<b>Deprecated.</b> Use the more readable string constructor instead.
+
 Initializes a new instance of the [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) class.
 
 <b>Parameters:</b>
@@ -47,7 +49,7 @@ The parameter  <i>paramString</i>
 
     public PODOptions();
 
-Initializes a new instance of the [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) class.
+Initializes a new instance of the [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) class with all the default options.
 
 <a id="Default"></a>
 ### Default

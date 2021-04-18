@@ -348,10 +348,10 @@ System.Collections.IEnumerable.GetEnumerator() {
     [Timeout(5000)]
     public void TestPODOptions() {
       var ao = new { PropA = 0, PropB = 0, IsPropC = false };
-      var valueCcTF = new PODOptions(true, false);
-      var valueCcFF = new PODOptions(false, false);
-      var valueCcFT = new PODOptions(false, true);
-      var valueCcTT = new PODOptions(true, true);
+      var valueCcTF = new PODOptions("removeisprefix=true;usecamelcase=false");
+      var valueCcFF = new PODOptions("removeisprefix=false;usecamelcase=false");
+      var valueCcFT = new PODOptions("removeisprefix=false;usecamelcase=true");
+      var valueCcTT = new PODOptions("removeisprefix=true;usecamelcase=true");
       CBORObjectTest.CheckPropertyNames(ao);
       var arrao = new[] { ao, ao };
       var co = CBORObject.FromObject(arrao, valueCcTF);

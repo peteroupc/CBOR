@@ -19,7 +19,7 @@ Includes options to control how CBOR objects are converted to JSON.
     public JSONOptions(
         bool base64Padding);
 
-<b>Deprecated.</b> Use the string constructor instead.
+<b>Deprecated.</b> Use the more readable string constructor instead.
 
 Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) class with the given value for the Base64Padding option.
 
@@ -34,7 +34,7 @@ Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOpti
         bool base64Padding,
         bool replaceSurrogates);
 
-<b>Deprecated.</b> Use the string constructor instead.
+<b>Deprecated.</b> Use the more readable string constructor instead.
 
 Initializes a new instance of the [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) class with the given values for the options.
 

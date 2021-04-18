@@ -4997,9 +4997,14 @@ namespace Test {
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       {
+        string cc = "useindeflengthstrings";
+        cc += "=";
+        cc += "false,allowduplicatekeys";
+        cc += "=";
+        cc += "true";
         object objectTemp = longString;
         object objectTemp2 = CBORObject.DecodeFromBytes(cbor.EncodeToBytes(
-              new CBOREncodeOptions(false, true))).AsString();
+              new CBOREncodeOptions(cc))).AsString();
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       TestCommon.AssertEqualsHashCode(cbor, cbor2);

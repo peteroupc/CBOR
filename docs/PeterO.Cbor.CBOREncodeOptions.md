@@ -22,6 +22,8 @@ Specifies options for encoding and decoding CBOR objects.
         bool useIndefLengthStrings,
         bool allowDuplicateKeys);
 
+<b>Deprecated.</b> Use the more readable string constructor instead.
+
 Initializes a new instance of the [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) class.
 
 <b>Parameters:</b>
@@ -37,6 +39,8 @@ Initializes a new instance of the [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CB
         bool useIndefLengthStrings,
         bool allowDuplicateKeys,
         bool ctap2Canonical);
+
+<b>Deprecated.</b> Use the more readable string constructor instead.
 
 Initializes a new instance of the [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) class.
 
@@ -71,7 +75,7 @@ The parameter  <i>paramString</i>
 
     public CBOREncodeOptions();
 
-Initializes a new instance of the [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) class.
+Initializes a new instance of the [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) class with all the default options.
 
 <a id="Default"></a>
 ### Default

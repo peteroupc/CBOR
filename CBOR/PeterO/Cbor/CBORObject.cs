@@ -7190,7 +7190,10 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
           break;
         }
         case CBORObjectTypeDouble: {
-          WriteFloatingPointBits(stream, this.AsDoubleBits(), 8,
+          WriteFloatingPointBits(
+             stream,
+             this.AsDoubleBits(),
+             8,
              !options.Float64);
           break;
         }

@@ -1513,7 +1513,8 @@ namespace Test {
       Assert.AreEqual("aa", cpx.Aa);
       Assert.AreEqual("bb", cpx.Bb);
       Assert.AreEqual("cc", cpx.Cc);
-      cbor = CBORObject.FromObject(new CPOD3[] { cp, cp2}, tm);
+      var cpodArray = new CPOD3[] { cp, cp2 };
+      cbor = CBORObject.FromObject(cpodArray, tm);
       Assert.AreEqual(CBORType.Array, cbor.Type);
       Assert.AreEqual(2, cbor.Count);
       cbor2 = cbor[0];

@@ -2039,14 +2039,15 @@ namespace Test {
 
     [Test]
     public void TestEncodeFloat64() {
+       try {
        var rg = new RandomGenerator();
        var options = new CBOREncodeOptions("float64=true");
        for (var i = 0; i < 10000; ++i) {
          double dbl = 0.0;
          dbl = (i == 0) ? Double.PositiveInfinity : ((i == 1) ?
-(Double.NegativeInfinity) : (RandomObjects.RandomDouble(rg)));
-CBORObject cbor = CBORObject.FromObject(dbl); byte[] bytes =
-cbor.EncodeToBytes(options);
+            Double.NegativeInfinity : RandomObjects.RandomDouble(rg));
+         CBORObject cbor = CBORObject.FromObject(dbl);
+         byte[] bytes = cbor.EncodeToBytes(options);
          Assert.AreEqual(9, bytes.Length);
          TestCommon.AssertEqualsHashCode(
            cbor,
@@ -2099,6 +2100,10 @@ cbor.EncodeToBytes(options);
            Assert.AreEqual(10, bytes.Length);
          }
        }
+        } catch (IOException ex) {
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
+        }
     }
 
     [Test]
