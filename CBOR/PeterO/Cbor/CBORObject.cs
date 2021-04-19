@@ -2110,7 +2110,6 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
       return this.CalcEncodedSize(0);
     }
 
-    // TODO: Use CBOREncodeOptions in CalcEncodedSize
     private long CalcEncodedSize(int depth) {
       if (depth > 1000) {
         throw new CBORException("Too deeply nested");
@@ -6374,13 +6373,13 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// cborObject.WriteJSONTo(new FilterOutputStream(ba) {
     /// private int size = 0;
     /// public void write(byte[] b, int off, int len) throws IOException {
-    /// if (len>(maxSize-size)) {
+    /// if (len&gt;(maxSize-size)) {
     /// throw new UnsupportedOperationException();
     /// }
     /// size+=len; out.write(b, off, len);
     /// }
     /// public void write(byte b) throws IOException {
-    /// if (size >= maxSize) {
+    /// if (size &gt;= maxSize) {
     /// throw new UnsupportedOperationException();
     /// }
     /// size++; out.write(b);
@@ -7062,13 +7061,13 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// cborObject.WriteTo(new FilterOutputStream(ba) {
     /// private int size = 0;
     /// public void write(byte[] b, int off, int len) throws IOException {
-    /// if (len>(maxSize-size)) {
+    /// if (len&gt;(maxSize-size)) {
     /// throw new UnsupportedOperationException();
     /// }
     /// size+=len; out.write(b, off, len);
     /// }
     /// public void write(byte b) throws IOException {
-    /// if (size >= maxSize) {
+    /// if (size &gt;= maxSize) {
     /// throw new UnsupportedOperationException();
     /// }
     /// size++; out.write(b);

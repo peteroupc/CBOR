@@ -7,7 +7,7 @@
     <Owners>Peter Occil</Owners>
     <Description>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 8949.</Description>
     <Summary>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 8949. </Summary>
-    <Copyright>2020. Written by Peter O.  Any copyright to this work is released to the Public Domain.  In case this is not possible, this work is also released under Creative Commons Zero (CC0).</Copyright>
+    <Copyright>2021. Written by Peter O.  Any copyright to this work is released to the Public Domain.  In case this is not possible, this work is also released under Creative Commons Zero (CC0).</Copyright>
     <Authors>Peter Occil</Authors>
     <PackageId>PeterO.Cbor</PackageId>
     <PackageLicenseExpression>CC0-1.0</PackageLicenseExpression>
@@ -15,7 +15,12 @@
     <PackageReleaseNotes>
 Version 4.4:
 
-TODO: Add release notes.
+- Boolean constructors of PODOptions and CBOREncodeOptions were obsolete
+- Float64 option of CBOREncodeOptions for encoding floating-point values as 64-bit only
+- CBORDateConverter made public and expanded to enable conversion between various
+  date/time formats and CBOR objects
+- Added CanFitInUInt64 and CanTruncatedIntFitInUInt64 methods
+- Bug fixes
 
 </PackageReleaseNotes>
     <PackageTags>cbor data serialization binary json</PackageTags>
