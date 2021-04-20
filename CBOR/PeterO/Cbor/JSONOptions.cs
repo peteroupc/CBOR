@@ -85,8 +85,9 @@ namespace PeterO.Cbor {
        IntOrFloatFromDouble,
 
        /// <summary>JSON numbers are decoded to CBOR as their closest-rounded
-       /// approximation to an IEEE 854 decimal128 value, using the rules for
-       /// the EDecimal form of that approximation as given in the
+       /// approximation to an IEEE 854 decimal128 value, using the
+       /// round-to-nearest/ties-to-even rounding mode and the rules for the
+       /// EDecimal form of that approximation as given in the
        /// <c>CBORObject.FromObject(EDecimal)</c> method. (In some cases,
        /// numbers extremely close to zero may underflow to zero, and numbers
        /// of extremely large absolute value may overflow to
