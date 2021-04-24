@@ -9,7 +9,7 @@
 Specifies how JSON numbers are converted to CBOR objects when decoding JSON (such as via  `FromJSONString`  or  `ReadJSON`  ). None of these conversion modes affects how CBOR objects are later encoded (such as via  `EncodeToBytes`  ).
 
 ### Member Summary
-* <code>[public static PeterO.Cbor.JSONOptions.ConversionMode Decimal128 = 4;](#Decimal128)</code> - JSON numbers are decoded to CBOR as their closest-rounded approximation to an IEEE 854 decimal128 value, using the rules for the EDecimal form of that approximation as given in the CBORObject.
+* <code>[public static PeterO.Cbor.JSONOptions.ConversionMode Decimal128 = 4;](#Decimal128)</code> - JSON numbers are decoded to CBOR as their closest-rounded approximation to an IEEE 854 decimal128 value, using the round-to-nearest/ties-to-even rounding mode and the rules for the EDecimal form of that approximation as given in the CBORObject.
 * <code>[public static PeterO.Cbor.JSONOptions.ConversionMode Double = 1;](#Double)</code> - JSON numbers are decoded to CBOR as their closest-rounded approximation as 64-bit binary floating-point numbers (using the round-to-nearest/ties-to-even rounding mode).
 * <code>[public static PeterO.Cbor.JSONOptions.ConversionMode Full = 0;](#Full)</code> - JSON numbers are decoded to CBOR using the full precision given in the JSON text.
 * <code>[public static PeterO.Cbor.JSONOptions.ConversionMode IntOrFloat = 2;](#IntOrFloat)</code> - A JSON number is decoded to CBOR objects either as a CBOR integer (major type 0 or 1) if the JSON number represents an integer at least -(2^53)+1 and less than 2^53, or as their closest-rounded approximation as 64-bit binary floating-point numbers (using the round-to-nearest/ties-to-even rounding mode) otherwise.
@@ -20,7 +20,7 @@ Specifies how JSON numbers are converted to CBOR objects when decoding JSON (suc
 
     public static PeterO.Cbor.JSONOptions.ConversionMode Decimal128 = 4;
 
-JSON numbers are decoded to CBOR as their closest-rounded approximation to an IEEE 854 decimal128 value, using the rules for the EDecimal form of that approximation as given in the  `CBORObject.FromObject(EDecimal)`  method. (In some cases, numbers extremely close to zero may underflow to zero, and numbers of extremely large absolute value may overflow to infinity.).
+JSON numbers are decoded to CBOR as their closest-rounded approximation to an IEEE 854 decimal128 value, using the round-to-nearest/ties-to-even rounding mode and the rules for the EDecimal form of that approximation as given in the  `CBORObject.FromObject(EDecimal)`  method. (In some cases, numbers extremely close to zero may underflow to zero, and numbers of extremely large absolute value may overflow to infinity.).
 
 <a id="Double"></a>
 ### Double

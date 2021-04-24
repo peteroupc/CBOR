@@ -489,7 +489,8 @@
 
             <summary>Initializes a new instance of the
             <see cref='PeterO.Cbor.CBORDateConverter'/> class.</summary>
-            <param name='convType'>Conversion type giving the rules for converting dates and times to and from CBOR objects.</param>
+            <param name='convType'>Conversion type giving the rules for
+            converting dates and times to and from CBOR objects.</param>
 
 </doc>
 <doc name="T:PeterO.Cbor.CBORDateConverter.ConversionType">
@@ -706,7 +707,8 @@
 <doc name="M:PeterO.Cbor.CBOREncodeOptions.#ctor">
 
             <summary>Initializes a new instance of the
-            <see cref='PeterO.Cbor.CBOREncodeOptions'/> class.</summary>
+            <see cref='PeterO.Cbor.CBOREncodeOptions'/> class with all the
+            default options.</summary>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBOREncodeOptions.#ctor(System.Boolean,System.Boolean)">
@@ -5775,13 +5777,13 @@
             cborObject.WriteJSONTo(new FilterOutputStream(ba) {
             private int size = 0;
             public void write(byte[] b, int off, int len) throws IOException {
-            if (len>(maxSize-size)) {
+            if (len&gt;(maxSize-size)) {
             throw new UnsupportedOperationException();
             }
             size+=len; out.write(b, off, len);
             }
             public void write(byte b) throws IOException {
-            if (size >= maxSize) {
+            if (size &gt;= maxSize) {
             throw new UnsupportedOperationException();
             }
             size++; out.write(b);
@@ -5916,13 +5918,13 @@
             cborObject.WriteTo(new FilterOutputStream(ba) {
             private int size = 0;
             public void write(byte[] b, int off, int len) throws IOException {
-            if (len>(maxSize-size)) {
+            if (len&gt;(maxSize-size)) {
             throw new UnsupportedOperationException();
             }
             size+=len; out.write(b, off, len);
             }
             public void write(byte b) throws IOException {
-            if (size >= maxSize) {
+            if (size &gt;= maxSize) {
             throw new UnsupportedOperationException();
             }
             size++; out.write(b);
@@ -6877,8 +6879,9 @@
 <doc name="F:PeterO.Cbor.JSONOptions.ConversionMode.Decimal128">
 
             <summary>JSON numbers are decoded to CBOR as their closest-rounded
-            approximation to an IEEE 854 decimal128 value, using the rules for
-            the EDecimal form of that approximation as given in the
+            approximation to an IEEE 854 decimal128 value, using the
+            round-to-nearest/ties-to-even rounding mode and the rules for the
+            EDecimal form of that approximation as given in the
             <c>CBORObject.FromObject(EDecimal)</c> method. (In some cases,
             numbers extremely close to zero may underflow to zero, and numbers
             of extremely large absolute value may overflow to
@@ -7029,7 +7032,8 @@
 <doc name="M:PeterO.Cbor.PODOptions.#ctor">
 
             <summary>Initializes a new instance of the
-            <see cref='PeterO.Cbor.PODOptions'/> class.</summary>
+            <see cref='PeterO.Cbor.PODOptions'/> class with all the default
+            options.</summary>
 
 </doc>
 <doc name="M:PeterO.Cbor.PODOptions.#ctor(System.Boolean,System.Boolean)">
