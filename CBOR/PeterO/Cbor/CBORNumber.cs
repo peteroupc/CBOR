@@ -839,17 +839,22 @@ namespace PeterO.Cbor {
         ++neededLength;
         extended = true;
       }
-      bytes = new byte[neededLength];
-      for (var i = 0; i < data.Length; ++i) {
-        bytes[i] = data[data.Length - 1 - i];
-        if (negative) {
-          bytes[i] = (byte)((~((int)bytes[i])) & 0xff);
+      if (extended || negative) {
+        bytes = new byte[neededLength];
+        Array.Copy(data, 0, bytes, neededLength-data.Length, data.Length);
+        if(negative) {
+          for (var i = neededLength-data.Length; i < neededLength; ++i) {
+            bytes[i] ^= (byte)0xff;
+          }
         }
+        if (extended) {
+          bytes[0] = negative ? (byte)0xff : (byte)0;
+        }
+        bi = EInteger.FromBytes(bytes, false);
+      } else {
+        // No data conversion needed
+        bi = EInteger.FromBytes(data, false);
       }
-      if (extended) {
-        bytes[bytes.Length - 1] = negative ? (byte)0xff : (byte)0;
-      }
-      bi = EInteger.FromBytes(bytes, true);
       if (bi.CanFitInInt64()) {
         return new CBORNumber(NumberKind.Integer, bi.ToInt64Checked());
       } else {
