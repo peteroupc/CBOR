@@ -1120,14 +1120,14 @@ status.Length + ") is not greater or equal to 1");
       if (i == Int32.MinValue) {
         return unchecked((long)0xc1e0000000000000L);
       }
-      if (i==0) {
+      if (i == 0) {
         return 0L;
       }
       long longmant = Math.Abs(i);
       var expo = 0;
       while (longmant < (1L << 10)) {
         longmant <<= 42;
-        expo-=42;
+        expo -= 42;
       }
       while (longmant < (1L << 52)) {
         longmant <<= 1;

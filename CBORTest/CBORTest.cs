@@ -4981,6 +4981,89 @@ namespace Test {
       return true;
     }
 
+    [Test]
+    public void TestJSONOptions() {
+       var jsonop1 = new JSONOptions("numberconversion=intorfloat");
+       {
+         object objectTemp = jsonop1.ToString();
+         object objectTemp2 = new
+JSONOptions(jsonop1.ToString()).ToString();
+         Assert.AreEqual(objectTemp, objectTemp2);
+       }
+       var jsonop2 = new JSONOptions("numberconversion=decimal128");
+       {
+         object objectTemp = jsonop2.ToString();
+         object objectTemp2 = new
+JSONOptions(jsonop2.ToString()).ToString();
+         Assert.AreEqual(objectTemp, objectTemp2);
+       }
+       var jsonop3 = new JSONOptions("numberconversion=intorfloatfromdouble");
+       {
+         object objectTemp = jsonop3.ToString();
+         object objectTemp2 = new
+JSONOptions(jsonop3.ToString()).ToString();
+         Assert.AreEqual(objectTemp, objectTemp2);
+       }
+       var jsonop4 = new JSONOptions("numberconversion=double");
+       {
+         object objectTemp = jsonop4.ToString();
+         object objectTemp2 = new
+JSONOptions(jsonop4.ToString()).ToString();
+         Assert.AreEqual(objectTemp, objectTemp2);
+       }
+    }
+
+    [Test]
+    public void TestPODOptions() {
+       PODOptions podop = PODOptions.Default;
+       {
+         object objectTemp = podop.ToString();
+         object objectTemp2 = new
+PODOptions(podop.ToString()).ToString();
+         Assert.AreEqual(objectTemp, objectTemp2);
+       }
+    }
+
+    [Test]
+    public void TestCBOREncodeOptions() {
+       CBOREncodeOptions encodeop = CBOREncodeOptions.Default;
+       {
+         object objectTemp = encodeop.ToString();
+         object objectTemp2 = new
+CBOREncodeOptions(encodeop.ToString()).ToString();
+         Assert.AreEqual(objectTemp, objectTemp2);
+       }
+    }
+
+    [Test]
+    public void TestRandomJSON() {
+       var jsongen = new JSONGenerator();
+       var rg = new RandomGenerator();
+       var jsonop1 = new JSONOptions("numberconversion=intorfloat");
+       var jsonop2 = new JSONOptions("numberconversion=decimal128");
+       var jsonop3 = new JSONOptions("numberconversion=intorfloatfromdouble");
+       var jsonop4 = new JSONOptions("numberconversion=double");
+       for (var i = 0; i < 1000; ++i) {
+          byte[] json = jsongen.Generate(rg);
+          Console.WriteLine(String.Empty + i + " len=" + json.Length);
+          JSONOptions currop = null;
+          try {
+             currop = jsonop1;
+             CBORObject.FromJSONBytes(json, jsonop1);
+             currop = jsonop2;
+             CBORObject.FromJSONBytes(json, jsonop2);
+             currop = jsonop3;
+             CBORObject.FromJSONBytes(json, jsonop3);
+             currop = jsonop4;
+             CBORObject.FromJSONBytes(json, jsonop4);
+           } catch (CBORException ex) {
+              string msg = ex.Message + "\n" +
+                 DataUtilities.GetUtf8String(json, true) + "\n" + currop;
+              throw new InvalidOperationException(msg, ex);
+           }
+       }
+    }
+
     public static bool TestTextStringStreamOne(string longString) {
       if (!CheckUtf16(longString)) {
         return false;

@@ -8183,34 +8183,35 @@ namespace Test {
     [Timeout(10000)]
     public void TestFromJsonStringSmallDouble() {
        CBORObject cbor;
-       AssertJSONDouble("0","double",0.0);
-       cbor=FromJSON("[0, 1, 2, 3]", "double");
-       Assert.AreEqual(4,cbor.Count);
-       Assert.AreEqual(0.0,cbor[0].AsDouble());
-       Assert.AreEqual(1.0,cbor[1].AsDouble());
-       Assert.AreEqual(2.0,cbor[2].AsDouble());
-       Assert.AreEqual(3.0,cbor[3].AsDouble());
-       cbor=FromJSON("[0]", "double");
-       Assert.AreEqual(1,cbor.Count);
-       Assert.AreEqual(0.0,cbor[0].AsDouble());
-       cbor=FromJSON("[-0]", "double");
-       Assert.AreEqual(1,cbor.Count);
-       cbor=FromJSON("[1]", "double");
-       Assert.AreEqual(1,cbor.Count);
-       Assert.AreEqual(1.0,cbor[0].AsDouble());
-       cbor=FromJSON("[-1]", "double");
-       Assert.AreEqual(1,cbor.Count);
-       Assert.AreEqual(-1.0,cbor[0].AsDouble());
-       cbor=FromJSON("[-1022,-1023,-1024,-1025,1022,1023,1024,1025]", "double");
-       Assert.AreEqual(8,cbor.Count);
-       Assert.AreEqual(-1022.0,cbor[0].AsDouble());
-       Assert.AreEqual(-1023.0,cbor[1].AsDouble());
-       Assert.AreEqual(-1024.0,cbor[2].AsDouble());
-       Assert.AreEqual(-1025.0,cbor[3].AsDouble());
-       Assert.AreEqual(1022.0,cbor[0].AsDouble());
-       Assert.AreEqual(1023.0,cbor[1].AsDouble());
-       Assert.AreEqual(1024.0,cbor[2].AsDouble());
-       Assert.AreEqual(1025.0,cbor[3].AsDouble());
+       AssertJSONDouble("0", "double", 0.0);
+       cbor = FromJSON("[0, 1, 2, 3]", "double");
+       Assert.AreEqual(4, cbor.Count);
+       Assert.AreEqual(0.0, cbor[0].AsDouble());
+       Assert.AreEqual(1.0, cbor[1].AsDouble());
+       Assert.AreEqual(2.0, cbor[2].AsDouble());
+       Assert.AreEqual(3.0, cbor[3].AsDouble());
+       cbor = FromJSON("[0]", "double");
+       Assert.AreEqual(1, cbor.Count);
+       Assert.AreEqual(0.0, cbor[0].AsDouble());
+       cbor = FromJSON("[-0]", "double");
+       Assert.AreEqual(1, cbor.Count);
+       cbor = FromJSON("[1]", "double");
+       Assert.AreEqual(1, cbor.Count);
+       Assert.AreEqual(1.0, cbor[0].AsDouble());
+       cbor = FromJSON("[-1]", "double");
+       Assert.AreEqual(1, cbor.Count);
+       Assert.AreEqual(-1.0, cbor[0].AsDouble());
+       cbor = FromJSON("[-1022,-1023,-1024,-1025,1022,1023,1024,1025]",
+  "double");
+       Assert.AreEqual(8, cbor.Count);
+       Assert.AreEqual(-1022.0, cbor[0].AsDouble());
+       Assert.AreEqual(-1023.0, cbor[1].AsDouble());
+       Assert.AreEqual(-1024.0, cbor[2].AsDouble());
+       Assert.AreEqual(-1025.0, cbor[3].AsDouble());
+       Assert.AreEqual(1022.0, cbor[0].AsDouble());
+       Assert.AreEqual(1023.0, cbor[1].AsDouble());
+       Assert.AreEqual(1024.0, cbor[2].AsDouble());
+       Assert.AreEqual(1025.0, cbor[3].AsDouble());
     }
 
     [Test]

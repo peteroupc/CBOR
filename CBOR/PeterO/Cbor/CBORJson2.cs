@@ -337,7 +337,7 @@ namespace PeterO.Cbor {
             numberEndIndex - numberStartIndex,
             this.options);
         #if DEBUG
-        if ((
+        if (this.options.NumberConversion == JSONOptions.ConversionMode.Full && (
   (EDecimal)obj.ToObject(
   typeof(EDecimal))).CompareToValue(EDecimal.FromString(this.bytes,
            numberStartIndex,
@@ -440,7 +440,7 @@ namespace PeterO.Cbor {
            numberEndIndex - numberStartIndex,
            this.options);
         #if DEBUG
-        if ((
+        if (this.options.NumberConversion == JSONOptions.ConversionMode.Full && (
   (EDecimal)obj.ToObject(
   typeof(EDecimal))).CompareToValue(EDecimal.FromString(this.bytes,
            numberStartIndex,

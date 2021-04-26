@@ -202,6 +202,7 @@ namespace PeterO.Cbor {
         .Append("base64padding=").Append(this.Base64Padding ? "true" : "false")
         .Append(";replacesurrogates=")
         .Append(this.ReplaceSurrogates ? "true" : "false")
+        .Append(";preservenegativezero=")
         .Append(this.PreserveNegativeZero ? "true" : "false")
         .Append(";numberconversion=").Append(this.FromNumberConversion())
         .Append(";allowduplicatekeys=")
