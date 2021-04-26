@@ -841,9 +841,10 @@ namespace PeterO.Cbor {
       }
       if (extended || negative) {
         bytes = new byte[neededLength];
-        Array.Copy(data, 0, bytes, neededLength-data.Length, data.Length);
-        if(negative) {
-          for (var i = neededLength-data.Length; i < neededLength; ++i) {
+        Array.Copy(data, 0, bytes, neededLength - data.Length, data.Length);
+        if (negative) {
+          int i;
+          for (i = neededLength - data.Length; i < neededLength; ++i) {
             bytes[i] ^= (byte)0xff;
           }
         }
