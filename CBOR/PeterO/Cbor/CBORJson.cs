@@ -222,6 +222,7 @@ namespace PeterO.Cbor {
       str = this.sb.ToString();
       // DebugUtility.Log("negb=" + sw.ElapsedMilliseconds + " ms");
       obj = CBORDataUtilities.ParseJSONNumber(str, this.options);
+      // DebugUtility.Log("str=" + str + " obj=" + (obj));
       // DebugUtility.Log("negc=" + sw.ElapsedMilliseconds + " ms");
       if (obj == null) {
         string errstr = (str.Length <= 100) ? str : (str.Substring(0,

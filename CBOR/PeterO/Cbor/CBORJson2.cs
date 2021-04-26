@@ -337,7 +337,8 @@ namespace PeterO.Cbor {
             numberEndIndex - numberStartIndex,
             this.options);
         #if DEBUG
-        if (this.options.NumberConversion == JSONOptions.ConversionMode.Full && (
+        if (this.options.NumberConversion == JSONOptions.ConversionMode.Full&&
+(
   (EDecimal)obj.ToObject(
   typeof(EDecimal))).CompareToValue(EDecimal.FromString(this.bytes,
            numberStartIndex,
@@ -439,8 +440,14 @@ namespace PeterO.Cbor {
            numberStartIndex,
            numberEndIndex - numberStartIndex,
            this.options);
-        #if DEBUG
-        if (this.options.NumberConversion == JSONOptions.ConversionMode.Full && (
+        /*
+        DebugUtility.Log("ParseJSONNumber
+{0}->{1}",EDecimal.FromString(this.bytes,
+           numberStartIndex,
+           numberEndIndex - numberStartIndex), obj);
+        */ #if DEBUG
+        if (this.options.NumberConversion == JSONOptions.ConversionMode.Full&&
+(
   (EDecimal)obj.ToObject(
   typeof(EDecimal))).CompareToValue(EDecimal.FromString(this.bytes,
            numberStartIndex,

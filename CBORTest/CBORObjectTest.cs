@@ -8025,14 +8025,22 @@ namespace Test {
       string json,
       string numconv,
       double dbl) {
-      CBORObject cbor = FromJSON(json, numconv);
-      Assert.AreEqual(
-        CBORType.FloatingPoint,
-        cbor.Type,
-        json + " " + numconv + " " + dbl);
-      double cbordbl = cbor.AsDoubleValue();
-      if (dbl != cbordbl) {
-        Assert.Fail("dbl = " + dbl + ", cbordbl = " + cbordbl);
+      JSONOptions opt=new JSONOptions("numberconversion=" + numconv);
+      CBORObject[] cbors = {
+        FromJSON(json, numconv),
+        CBORDataUtilities.ParseJSONNumber(json, opt)
+      };
+      foreach (CBORObject cbor in cbors) {
+        if (cbor.Type != CBORType.FloatingPoint) {
+          Assert.AreEqual(
+            CBORType.FloatingPoint,
+            cbor.Type,
+            json + " " + numconv + " " + dbl);
+        }
+        double cbordbl = cbor.AsDoubleValue();
+        if (dbl != cbordbl) {
+          Assert.Fail("dbl = " + dbl + ", cbordbl = " + cbordbl);
+        }
       }
     }
 
@@ -8040,33 +8048,44 @@ namespace Test {
       string json,
       string numconv,
       long longval) {
-      CBORObject cbor = FromJSON(json, numconv);
-      if (cbor.Type != CBORType.Integer) {
+      JSONOptions opt=new JSONOptions("numberconversion=" + numconv);
+      CBORObject[] cbors = {
+        FromJSON(json, numconv),
+        CBORDataUtilities.ParseJSONNumber(json, opt)
+      };
+      foreach (CBORObject cbor in cbors) {
+        if (cbor.Type != CBORType.Integer) {
         string msg = json + " " + numconv + " " + longval;
         msg = msg.Substring(0, Math.Min(100, msg.Length));
         if (msg.Length > 100) {
           msg += "...";
         }
         Assert.AreEqual(CBORType.Integer, cbor.Type, msg);
+       }
+       Assert.AreEqual(longval, cbor.AsInt64Value());
       }
-      Assert.AreEqual(longval, cbor.AsInt64Value());
     }
 
     public static void AssertJSONInteger(
       string json,
       string numconv,
       int intval) {
-      CBORObject cbor = FromJSON(json, numconv);
-      if (cbor.Type != CBORType.Integer) {
+      JSONOptions opt=new JSONOptions("numberconversion=" + numconv);
+      CBORObject[] cbors = {
+        FromJSON(json, numconv),
+        CBORDataUtilities.ParseJSONNumber(json, opt)
+      };
+      foreach (CBORObject cbor in cbors) {
+        if (cbor.Type != CBORType.Integer) {
         string msg = json + " " + numconv + " " + intval;
         msg = msg.Substring(0, Math.Min(100, msg.Length));
         if (msg.Length > 100) {
-          { msg += "...";
-          }
+          msg += "...";
         }
         Assert.AreEqual(CBORType.Integer, cbor.Type, msg);
+       }
+       Assert.AreEqual(intval, cbor.AsInt32Value());
       }
-      Assert.AreEqual(intval, cbor.AsInt32Value());
     }
 
     [Test]
@@ -8180,38 +8199,107 @@ namespace Test {
     }
 
     [Test]
+    public void TestFromJsonStringFiniteDoubleSpec() {
+       RandomGenerator rg = new RandomGenerator();
+       for (var i = 0; i < 10000; ++i) {
+          double dbl = RandomObjects.RandomFiniteDouble(rg);
+          EFloat efd = EFloat.FromDouble(dbl);
+          AssertJSONDouble(
+             efd.ToShortestString(EContext.Binary64),
+             "double",
+             dbl);
+          AssertJSONDouble(
+             efd.ToString(),
+             "double",
+             dbl);
+       }
+    }
+
+    [Test]
+    public void TestFromJsonStringEDecimalSpec() {
+       RandomGenerator rg = new RandomGenerator();
+       for (var i = 0; i < 1000; ++i) {
+          string[] decstring = new string[1];
+          EDecimal ed = RandomObjects.RandomEDecimal(rg, decstring);
+          if ((decstring[0]) == null) {
+            Assert.Fail();
+          }
+          double dbl = ed.ToDouble();
+          if (Double.IsPositiveInfinity(dbl) ||
+                     Double.IsNegativeInfinity(dbl) ||
+                     Double.IsNaN(dbl)) {
+            continue;
+          }
+          AssertJSONDouble(
+             decstring[0],
+             "double",
+             dbl);
+       }
+    }
+
+    [Test]
+    public void TestFromJsonStringSmallDoubleSpec() {
+       RandomGenerator rg = new RandomGenerator();
+       for (var i = 0; i < 10000; ++i) {
+          int rv = rg.GetInt32(Int32.MaxValue) * (rg.GetInt32(2)*2-1);
+          string rvstring = TestCommon.IntToString(rv);
+          AssertJSONDouble(
+             rvstring,
+             "double",
+             (double)rv);
+          AssertJSONInteger(
+             rvstring,
+             "intorfloat",
+             rv);
+       }
+       AssertJSONDouble("511","double",511);
+       AssertJSONDouble("-511","double",-511);
+       AssertJSONDouble(
+             TestCommon.IntToString(Int32.MaxValue),
+             "double",
+             (double)Int32.MaxValue);
+       AssertJSONDouble(
+             TestCommon.IntToString(Int32.MaxValue),
+             "double",
+             (double)Int32.MaxValue);
+       AssertJSONDouble(
+             TestCommon.IntToString(Int32.MinValue),
+             "double",
+             (double)Int32.MinValue);
+    }
+
+    [Test]
     [Timeout(10000)]
     public void TestFromJsonStringSmallDouble() {
        CBORObject cbor;
-       AssertJSONDouble("0", "double", 0.0);
-       cbor = FromJSON("[0, 1, 2, 3]", "double");
+       AssertJSONDouble("0","double",0.0);
+       cbor=FromJSON("[0, 1, 2, 3]", "double");
        Assert.AreEqual(4, cbor.Count);
        Assert.AreEqual(0.0, cbor[0].AsDouble());
        Assert.AreEqual(1.0, cbor[1].AsDouble());
        Assert.AreEqual(2.0, cbor[2].AsDouble());
        Assert.AreEqual(3.0, cbor[3].AsDouble());
-       cbor = FromJSON("[0]", "double");
+       cbor=FromJSON("[0]", "double");
        Assert.AreEqual(1, cbor.Count);
        Assert.AreEqual(0.0, cbor[0].AsDouble());
-       cbor = FromJSON("[-0]", "double");
+       cbor=FromJSON("[-0]", "double");
        Assert.AreEqual(1, cbor.Count);
-       cbor = FromJSON("[1]", "double");
+       cbor=FromJSON("[1]", "double");
        Assert.AreEqual(1, cbor.Count);
        Assert.AreEqual(1.0, cbor[0].AsDouble());
-       cbor = FromJSON("[-1]", "double");
+       cbor=FromJSON("[-1]", "double");
        Assert.AreEqual(1, cbor.Count);
        Assert.AreEqual(-1.0, cbor[0].AsDouble());
-       cbor = FromJSON("[-1022,-1023,-1024,-1025,1022,1023,1024,1025]",
-  "double");
+       cbor=FromJSON("[-1022,-1023,-1024,-1025,1022,1023,1024,1025]", "double");
        Assert.AreEqual(8, cbor.Count);
        Assert.AreEqual(-1022.0, cbor[0].AsDouble());
        Assert.AreEqual(-1023.0, cbor[1].AsDouble());
        Assert.AreEqual(-1024.0, cbor[2].AsDouble());
        Assert.AreEqual(-1025.0, cbor[3].AsDouble());
-       Assert.AreEqual(1022.0, cbor[0].AsDouble());
-       Assert.AreEqual(1023.0, cbor[1].AsDouble());
-       Assert.AreEqual(1024.0, cbor[2].AsDouble());
-       Assert.AreEqual(1025.0, cbor[3].AsDouble());
+       Assert.AreEqual(1022.0, cbor[4].AsDouble());
+       Assert.AreEqual(1023.0, cbor[5].AsDouble());
+       Assert.AreEqual(1024.0, cbor[6].AsDouble());
+       Assert.AreEqual(1025.0, cbor[7].AsDouble());
     }
 
     [Test]

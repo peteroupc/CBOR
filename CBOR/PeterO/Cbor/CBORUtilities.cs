@@ -1139,7 +1139,9 @@ status.Length + ") is not greater or equal to 1");
       if (i < 0) {
         longmant |= unchecked((long)(1L << 63));
       }
-      return longmant;
+      /*
+      DebugUtility.Log("" + i + "->" + (longmant==DoubleToInt64Bits(i)));
+      */ return longmant;
     }
 
     public static bool IsBeyondSafeRange(long bits) {
