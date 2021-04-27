@@ -1,5 +1,9 @@
 <package
-><metadata><version>4.4.0</version><id>PeterO.Cbor</id><requireLicenseAcceptance>false</requireLicenseAcceptance><releaseNotes>Version 4.4:
+><metadata><version>4.4.1</version><id>PeterO.Cbor</id><requireLicenseAcceptance>false</requireLicenseAcceptance><releaseNotes>Version 4.4.1:
+
+- Fix bugs when parsing JSON with the JSON option &apos;numberconversion=double&apos;
+
+Version 4.4:
 
 - Boolean constructors of PODOptions and CBOREncodeOptions were obsolete
 - Float64 option of CBOREncodeOptions for encoding floating-point values as 64-bit only

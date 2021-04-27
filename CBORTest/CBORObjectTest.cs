@@ -2039,71 +2039,71 @@ namespace Test {
 
     [Test]
     public void TestEncodeFloat64() {
-       try {
-       var rg = new RandomGenerator();
-       var options = new CBOREncodeOptions("float64=true");
-       for (var i = 0; i < 10000; ++i) {
-         double dbl = 0.0;
-         dbl = (i == 0) ? Double.PositiveInfinity : ((i == 1) ?
-            Double.NegativeInfinity : RandomObjects.RandomDouble(rg));
-         CBORObject cbor = CBORObject.FromObject(dbl);
-         byte[] bytes = cbor.EncodeToBytes(options);
-         Assert.AreEqual(9, bytes.Length);
-         TestCommon.AssertEqualsHashCode(
-           cbor,
-           CBORObject.DecodeFromBytes(bytes));
-         using (var ms = new MemoryStream()) {
-           cbor.WriteTo(ms, options);
-           bytes = ms.ToArray();
-           Assert.AreEqual(9, bytes.Length);
-         }
-         using (var ms = new MemoryStream()) {
-           CBORObject.Write(dbl, ms, options);
-           bytes = ms.ToArray();
-           Assert.AreEqual(9, bytes.Length);
-         }
-         using (var ms = new MemoryStream()) {
-           CBORObject.Write(cbor, ms, options);
-           bytes = ms.ToArray();
-           Assert.AreEqual(9, bytes.Length);
-         }
-         CBORObject cbor2 = CBORObject.NewArray().Add(cbor);
-         bytes = cbor2.EncodeToBytes(options);
-         TestCommon.AssertEqualsHashCode(
-           cbor2,
-           CBORObject.DecodeFromBytes(bytes));
-         Assert.AreEqual(10, bytes.Length);
-         using (var ms = new MemoryStream()) {
-           cbor2.WriteTo(ms, options);
-           bytes = ms.ToArray();
-           Assert.AreEqual(10, bytes.Length);
-         }
-         using (var ms = new MemoryStream()) {
-           CBORObject.Write(cbor2, ms, options);
-           bytes = ms.ToArray();
-           Assert.AreEqual(10, bytes.Length);
-         }
-         cbor2 = cbor.WithTag(1);
-         bytes = cbor2.EncodeToBytes(options);
-         Assert.AreEqual(10, bytes.Length);
-         TestCommon.AssertEqualsHashCode(
-           cbor2,
-           CBORObject.DecodeFromBytes(bytes));
-         using (var ms = new MemoryStream()) {
-           cbor2.WriteTo(ms, options);
-           bytes = ms.ToArray();
-           Assert.AreEqual(10, bytes.Length);
-         }
-         using (var ms = new MemoryStream()) {
-           CBORObject.Write(cbor2, ms, options);
-           bytes = ms.ToArray();
-           Assert.AreEqual(10, bytes.Length);
-         }
-       }
-        } catch (IOException ex) {
-          Assert.Fail(ex.ToString());
-          throw new InvalidOperationException(String.Empty, ex);
+      try {
+        var rg = new RandomGenerator();
+        var options = new CBOREncodeOptions("float64=true");
+        for (var i = 0; i < 10000; ++i) {
+          double dbl = 0.0;
+          dbl = (i == 0) ? Double.PositiveInfinity : ((i == 1) ?
+              Double.NegativeInfinity : RandomObjects.RandomDouble(rg));
+          CBORObject cbor = CBORObject.FromObject(dbl);
+          byte[] bytes = cbor.EncodeToBytes(options);
+          Assert.AreEqual(9, bytes.Length);
+          TestCommon.AssertEqualsHashCode(
+            cbor,
+            CBORObject.DecodeFromBytes(bytes));
+          using (var ms = new MemoryStream()) {
+            cbor.WriteTo(ms, options);
+            bytes = ms.ToArray();
+            Assert.AreEqual(9, bytes.Length);
+          }
+          using (var ms = new MemoryStream()) {
+            CBORObject.Write(dbl, ms, options);
+            bytes = ms.ToArray();
+            Assert.AreEqual(9, bytes.Length);
+          }
+          using (var ms = new MemoryStream()) {
+            CBORObject.Write(cbor, ms, options);
+            bytes = ms.ToArray();
+            Assert.AreEqual(9, bytes.Length);
+          }
+          CBORObject cbor2 = CBORObject.NewArray().Add(cbor);
+          bytes = cbor2.EncodeToBytes(options);
+          TestCommon.AssertEqualsHashCode(
+            cbor2,
+            CBORObject.DecodeFromBytes(bytes));
+          Assert.AreEqual(10, bytes.Length);
+          using (var ms = new MemoryStream()) {
+            cbor2.WriteTo(ms, options);
+            bytes = ms.ToArray();
+            Assert.AreEqual(10, bytes.Length);
+          }
+          using (var ms = new MemoryStream()) {
+            CBORObject.Write(cbor2, ms, options);
+            bytes = ms.ToArray();
+            Assert.AreEqual(10, bytes.Length);
+          }
+          cbor2 = cbor.WithTag(1);
+          bytes = cbor2.EncodeToBytes(options);
+          Assert.AreEqual(10, bytes.Length);
+          TestCommon.AssertEqualsHashCode(
+            cbor2,
+            CBORObject.DecodeFromBytes(bytes));
+          using (var ms = new MemoryStream()) {
+            cbor2.WriteTo(ms, options);
+            bytes = ms.ToArray();
+            Assert.AreEqual(10, bytes.Length);
+          }
+          using (var ms = new MemoryStream()) {
+            CBORObject.Write(cbor2, ms, options);
+            bytes = ms.ToArray();
+            Assert.AreEqual(10, bytes.Length);
+          }
         }
+      } catch (IOException ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
 
     [Test]
@@ -4105,9 +4105,9 @@ namespace Test {
           }
         }
         using (var ms = new MemoryStream(new byte[] {
-          0xef, 0xbb, 0xbf,
-          0x7b, 0x7d,
-        })) {
+        0xef, 0xbb, 0xbf,
+        0x7b, 0x7d,
+      })) {
           try {
             CBORObject.ReadJSON(ms);
           } catch (Exception ex) {
@@ -4117,9 +4117,9 @@ namespace Test {
         }
         // whitespace followed by BOM
         using (var ms2 = new MemoryStream(new byte[] {
-          0x20, 0xef, 0xbb,
-          0xbf, 0x7b, 0x7d,
-        })) {
+        0x20, 0xef, 0xbb,
+        0xbf, 0x7b, 0x7d,
+      })) {
           try {
             CBORObject.ReadJSON(ms2);
             Assert.Fail("Should have failed");
@@ -4154,9 +4154,9 @@ namespace Test {
         }
         // two BOMs
         using (var ms3 = new MemoryStream(new byte[] {
-          0xef, 0xbb, 0xbf,
-          0xef, 0xbb, 0xbf, 0x7b, 0x7d,
-        })) {
+        0xef, 0xbb, 0xbf,
+        0xef, 0xbb, 0xbf, 0x7b, 0x7d,
+      })) {
           try {
             CBORObject.ReadJSON(ms3);
             Assert.Fail("Should have failed");
@@ -4168,82 +4168,82 @@ namespace Test {
           }
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0, 0, 0xfe, 0xff, 0,
-          0,
-          0,
-          0x74, 0, 0, 0, 0x72, 0, 0, 0, 0x75, 0, 0, 0,
-          0x65,
-        })) {
+        0, 0, 0xfe, 0xff, 0,
+        0,
+        0,
+        0x74, 0, 0, 0, 0x72, 0, 0, 0, 0x75, 0, 0, 0,
+        0x65,
+      })) {
           Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0, 0, 0, 0x74, 0, 0,
-          0, 0x72, 0,
-          0, 0, 0x75, 0, 0, 0, 0x65,
-        })) {
+        0, 0, 0, 0x74, 0, 0,
+        0, 0x72, 0,
+        0, 0, 0x75, 0, 0, 0, 0x65,
+      })) {
           Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0xff, 0xfe, 0, 0,
-          0x74, 0, 0, 0,
-          0x72, 0, 0, 0, 0x75, 0, 0, 0, 0x65, 0, 0, 0,
-        })) {
+        0xff, 0xfe, 0, 0,
+        0x74, 0, 0, 0,
+        0x72, 0, 0, 0, 0x75, 0, 0, 0, 0x65, 0, 0, 0,
+      })) {
           Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0x74, 0, 0, 0, 0x72,
-          0,
-          0,
-          0,
-          0x75, 0, 0, 0, 0x65, 0, 0, 0,
-        })) {
+        0x74, 0, 0, 0, 0x72,
+        0,
+        0,
+        0,
+        0x75, 0, 0, 0, 0x65, 0, 0, 0,
+      })) {
           Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0xfe, 0xff, 0, 0x74,
-          0, 0x72, 0,
-          0x75, 0, 0x65,
-        })) {
+        0xfe, 0xff, 0, 0x74,
+        0, 0x72, 0,
+        0x75, 0, 0x65,
+      })) {
           Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0, 0x74, 0, 0x72, 0,
-          0x75, 0, 0x65,
-        })) {
+        0, 0x74, 0, 0x72, 0,
+        0x75, 0, 0x65,
+      })) {
           Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0xff, 0xfe, 0x74, 0,
-          0x72,
-          0,
-          0x75,
-          0, 0x65, 0,
-        })) {
+        0xff, 0xfe, 0x74, 0,
+        0x72,
+        0,
+        0x75,
+        0, 0x65, 0,
+      })) {
           Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0x74, 0, 0x72, 0,
-          0x75, 0, 0x65, 0,
-        })) {
+        0x74, 0, 0x72, 0,
+        0x75, 0, 0x65, 0,
+      })) {
           Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0xef, 0xbb, 0xbf,
-          0x74, 0x72, 0x75, 0x65,
-        })) {
+        0xef, 0xbb, 0xbf,
+        0x74, 0x72, 0x75, 0x65,
+      })) {
           Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0x74, 0x72, 0x75,
-          0x65,
-        })) {
+        0x74, 0x72, 0x75,
+        0x65,
+      })) {
           Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0, 0, 0xfe, 0xff, 0,
-          0, 0, 0x22,
-          0, 1, 0, 0, 0, 0, 0, 0x22,
-        })) {
+        0, 0, 0xfe, 0xff, 0,
+        0, 0, 0x22,
+        0, 1, 0, 0, 0, 0, 0, 0x22,
+      })) {
           {
             string stringTemp = CBORObject.ReadJSON(msjson).AsString();
             Assert.AreEqual(
@@ -4252,10 +4252,10 @@ namespace Test {
           }
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0, 0, 0, 0x22, 0, 1,
-          0, 0, 0, 0,
-          0, 0x22,
-        })) {
+        0, 0, 0, 0x22, 0, 1,
+        0, 0, 0, 0,
+        0, 0x22,
+      })) {
           {
             string stringTemp = CBORObject.ReadJSON(msjson).AsString();
             Assert.AreEqual(
@@ -4264,10 +4264,10 @@ namespace Test {
           }
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0xff, 0xfe, 0, 0,
-          0x22, 0, 0, 0,
-          0, 0, 1, 0, 0x22, 0, 0, 0,
-        })) {
+        0xff, 0xfe, 0, 0,
+        0x22, 0, 0, 0,
+        0, 0, 1, 0, 0x22, 0, 0, 0,
+      })) {
           {
             string stringTemp = CBORObject.ReadJSON(msjson).AsString();
             Assert.AreEqual(
@@ -4276,11 +4276,11 @@ namespace Test {
           }
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0x22, 0, 0, 0, 0, 0,
-          1, 0, 0x22,
-          0,
-          0, 0,
-        })) {
+        0x22, 0, 0, 0, 0, 0,
+        1, 0, 0x22,
+        0,
+        0, 0,
+      })) {
           {
             string stringTemp = CBORObject.ReadJSON(msjson).AsString();
             Assert.AreEqual(
@@ -4289,11 +4289,11 @@ namespace Test {
           }
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0xfe, 0xff, 0,
-          0x22, 0xd8,
-          0,
-          0xdc, 0, 0, 0x22,
-        })) {
+        0xfe, 0xff, 0,
+        0x22, 0xd8,
+        0,
+        0xdc, 0, 0, 0x22,
+      })) {
           {
             string stringTemp = CBORObject.ReadJSON(msjson).AsString();
             Assert.AreEqual(
@@ -4302,9 +4302,9 @@ namespace Test {
           }
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0, 0x22, 0xd8, 0,
-          0xdc, 0, 0, 0x22,
-        })) {
+        0, 0x22, 0xd8, 0,
+        0xdc, 0, 0, 0x22,
+      })) {
           {
             string stringTemp = CBORObject.ReadJSON(msjson).AsString();
             Assert.AreEqual(
@@ -4313,10 +4313,10 @@ namespace Test {
           }
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0xff, 0xfe, 0x22, 0,
-          0, 0xd8, 0,
-          0xdc, 0x22, 0,
-        })) {
+        0xff, 0xfe, 0x22, 0,
+        0, 0xd8, 0,
+        0xdc, 0x22, 0,
+      })) {
           {
             string stringTemp = CBORObject.ReadJSON(msjson).AsString();
             Assert.AreEqual(
@@ -4325,9 +4325,9 @@ namespace Test {
           }
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0x22, 0, 0, 0xd8, 0,
-          0xdc, 0x22, 0,
-        })) {
+        0x22, 0, 0, 0xd8, 0,
+        0xdc, 0x22, 0,
+      })) {
           {
             string stringTemp = CBORObject.ReadJSON(msjson).AsString();
             Assert.AreEqual(
@@ -4336,10 +4336,10 @@ namespace Test {
           }
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0, 0, 0xfe, 0xff, 0,
-          0, 0, 0x22,
-          0, 0, 0xd8, 0, 0, 0, 0, 0x22,
-        })) {
+        0, 0, 0xfe, 0xff, 0,
+        0, 0, 0x22,
+        0, 0, 0xd8, 0, 0, 0, 0, 0x22,
+      })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -4351,11 +4351,11 @@ namespace Test {
           }
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0, 0, 0, 0x22, 0, 0,
-          0xd8, 0, 0,
-          0,
-          0, 0x22,
-        })) {
+        0, 0, 0, 0x22, 0, 0,
+        0xd8, 0, 0,
+        0,
+        0, 0x22,
+      })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -4367,10 +4367,10 @@ namespace Test {
           }
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0xff, 0xfe, 0, 0,
-          0x22, 0, 0, 0,
-          0, 0xd8, 0, 0, 0x22, 0, 0, 0,
-        })) {
+        0xff, 0xfe, 0, 0,
+        0x22, 0, 0, 0,
+        0, 0xd8, 0, 0, 0x22, 0, 0, 0,
+      })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -4382,12 +4382,12 @@ namespace Test {
           }
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0x22, 0, 0, 0, 0,
-          0xd8,
-          0,
-          0,
-          0x22, 0, 0, 0,
-        })) {
+        0x22, 0, 0, 0, 0,
+        0xd8,
+        0,
+        0,
+        0x22, 0, 0, 0,
+      })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -4399,10 +4399,10 @@ namespace Test {
           }
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0xfe, 0xff, 0, 0x22,
-          0, 0xdc, 0,
-          0xdc, 0, 0, 0x22,
-        })) {
+        0xfe, 0xff, 0, 0x22,
+        0, 0xdc, 0,
+        0xdc, 0, 0, 0x22,
+      })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -4414,10 +4414,10 @@ namespace Test {
           }
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0, 0x22, 0, 0xdc, 0,
-          0xdc, 0, 0,
-          0x22,
-        })) {
+        0, 0x22, 0, 0xdc, 0,
+        0xdc, 0, 0,
+        0x22,
+      })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -4429,10 +4429,10 @@ namespace Test {
           }
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0xff, 0xfe, 0x22, 0,
-          0, 0xdc, 0,
-          0xdc, 0x22, 0,
-        })) {
+        0xff, 0xfe, 0x22, 0,
+        0, 0xdc, 0,
+        0xdc, 0x22, 0,
+      })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -4444,9 +4444,9 @@ namespace Test {
           }
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0x22, 0, 0, 0xdc, 0,
-          0xdc, 0x22, 0,
-        })) {
+        0x22, 0, 0, 0xdc, 0,
+        0xdc, 0x22, 0,
+      })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -4481,9 +4481,9 @@ namespace Test {
         }
         // Illegal UTF-16
         using (var msjson = new MemoryStream(new byte[] {
-          0xfe, 0xff, 0x20,
-          0x20, 0x20,
-        })) {
+        0xfe, 0xff, 0x20,
+        0x20, 0x20,
+      })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -4495,9 +4495,9 @@ namespace Test {
           }
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0xff, 0xfe, 0x20,
-          0x20, 0x20,
-        })) {
+        0xff, 0xfe, 0x20,
+        0x20, 0x20,
+      })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -4509,9 +4509,9 @@ namespace Test {
           }
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0xfe, 0xff, 0xd8,
-          0x00,
-        })) {
+        0xfe, 0xff, 0xd8,
+        0x00,
+      })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -4523,9 +4523,9 @@ namespace Test {
           }
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0xfe, 0xff, 0xdc,
-          0x00,
-        })) {
+        0xfe, 0xff, 0xdc,
+        0x00,
+      })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -4537,9 +4537,9 @@ namespace Test {
           }
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0xfe, 0xff, 0xd8,
-          0x00, 0x20, 0x00,
-        })) {
+        0xfe, 0xff, 0xd8,
+        0x00, 0x20, 0x00,
+      })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -4551,9 +4551,9 @@ namespace Test {
           }
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0xfe, 0xff, 0xdc,
-          0x00, 0x20, 0x00,
-        })) {
+        0xfe, 0xff, 0xdc,
+        0x00, 0x20, 0x00,
+      })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -4565,9 +4565,9 @@ namespace Test {
           }
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0xfe, 0xff, 0xd8,
-          0x00, 0xd8, 0x00,
-        })) {
+        0xfe, 0xff, 0xd8,
+        0x00, 0xd8, 0x00,
+      })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -4579,9 +4579,9 @@ namespace Test {
           }
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0xfe, 0xff, 0xdc,
-          0x00, 0xd8, 0x00,
-        })) {
+        0xfe, 0xff, 0xdc,
+        0x00, 0xd8, 0x00,
+      })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -4593,9 +4593,9 @@ namespace Test {
           }
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0xfe, 0xff, 0xdc,
-          0x00, 0xd8, 0x00, 0xdc, 0x00,
-        })) {
+        0xfe, 0xff, 0xdc,
+        0x00, 0xd8, 0x00, 0xdc, 0x00,
+      })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -4607,9 +4607,9 @@ namespace Test {
           }
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0xfe, 0xff, 0xdc,
-          0x00, 0xdc, 0x00,
-        })) {
+        0xfe, 0xff, 0xdc,
+        0x00, 0xdc, 0x00,
+      })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -4622,9 +4622,9 @@ namespace Test {
         }
 
         using (var msjson = new MemoryStream(new byte[] {
-          0xff, 0xfe, 0x00,
-          0xd8,
-        })) {
+        0xff, 0xfe, 0x00,
+        0xd8,
+      })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -4636,9 +4636,9 @@ namespace Test {
           }
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0xff, 0xfe, 0x00,
-          0xdc,
-        })) {
+        0xff, 0xfe, 0x00,
+        0xdc,
+      })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -4650,9 +4650,9 @@ namespace Test {
           }
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0xff, 0xfe, 0x00,
-          0xd8, 0x00, 0x20,
-        })) {
+        0xff, 0xfe, 0x00,
+        0xd8, 0x00, 0x20,
+      })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -4664,9 +4664,9 @@ namespace Test {
           }
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0xff, 0xfe, 0x00,
-          0xdc, 0x00, 0x20,
-        })) {
+        0xff, 0xfe, 0x00,
+        0xdc, 0x00, 0x20,
+      })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -4678,9 +4678,9 @@ namespace Test {
           }
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0xff, 0xfe, 0x00,
-          0xd8, 0x00, 0xd8,
-        })) {
+        0xff, 0xfe, 0x00,
+        0xd8, 0x00, 0xd8,
+      })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -4692,9 +4692,9 @@ namespace Test {
           }
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0xff, 0xfe, 0x00,
-          0xdc, 0x00, 0xd8,
-        })) {
+        0xff, 0xfe, 0x00,
+        0xdc, 0x00, 0xd8,
+      })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -4706,9 +4706,9 @@ namespace Test {
           }
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0xff, 0xfe, 0x00,
-          0xdc, 0x00, 0xd8, 0x00, 0xdc,
-        })) {
+        0xff, 0xfe, 0x00,
+        0xdc, 0x00, 0xd8, 0x00, 0xdc,
+      })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -4720,9 +4720,9 @@ namespace Test {
           }
         }
         using (var msjson = new MemoryStream(new byte[] {
-          0xff, 0xfe, 0x00,
-          0xdc, 0x00, 0xdc,
-        })) {
+        0xff, 0xfe, 0x00,
+        0xdc, 0x00, 0xdc,
+      })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -4736,8 +4736,8 @@ namespace Test {
 
         // Illegal UTF-32
         using (var msjson = new MemoryStream(new byte[] {
-          0, 0, 0, 0x20, 0,
-        })) {
+        0, 0, 0, 0x20, 0,
+      })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -5098,7 +5098,7 @@ namespace Test {
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
       {
         object objectTemp = CBORObject.NewOrderedMap().Add(cbor,
-  "jkl").Add("mno",
+            "jkl").Add("mno",
             1);
         object objectTemp2 = "test";
         cbor.Add(objectTemp, objectTemp2);
@@ -8025,10 +8025,10 @@ namespace Test {
       string json,
       string numconv,
       double dbl) {
-      JSONOptions opt=new JSONOptions("numberconversion=" + numconv);
+      var opt = new JSONOptions("numberconversion=" + numconv);
       CBORObject[] cbors = {
         FromJSON(json, numconv),
-        CBORDataUtilities.ParseJSONNumber(json, opt)
+        CBORDataUtilities.ParseJSONNumber(json, opt),
       };
       foreach (CBORObject cbor in cbors) {
         if (cbor.Type != CBORType.FloatingPoint) {
@@ -8048,21 +8048,21 @@ namespace Test {
       string json,
       string numconv,
       long longval) {
-      JSONOptions opt=new JSONOptions("numberconversion=" + numconv);
+      var opt = new JSONOptions("numberconversion=" + numconv);
       CBORObject[] cbors = {
         FromJSON(json, numconv),
-        CBORDataUtilities.ParseJSONNumber(json, opt)
+        CBORDataUtilities.ParseJSONNumber(json, opt),
       };
       foreach (CBORObject cbor in cbors) {
         if (cbor.Type != CBORType.Integer) {
-        string msg = json + " " + numconv + " " + longval;
-        msg = msg.Substring(0, Math.Min(100, msg.Length));
-        if (msg.Length > 100) {
-          msg += "...";
+          string msg = json + " " + numconv + " " + longval;
+          msg = msg.Substring(0, Math.Min(100, msg.Length));
+          if (msg.Length > 100) {
+            msg += "...";
+          }
+          Assert.AreEqual(CBORType.Integer, cbor.Type, msg);
         }
-        Assert.AreEqual(CBORType.Integer, cbor.Type, msg);
-       }
-       Assert.AreEqual(longval, cbor.AsInt64Value());
+        Assert.AreEqual(longval, cbor.AsInt64Value());
       }
     }
 
@@ -8070,21 +8070,21 @@ namespace Test {
       string json,
       string numconv,
       int intval) {
-      JSONOptions opt=new JSONOptions("numberconversion=" + numconv);
+      var opt = new JSONOptions("numberconversion=" + numconv);
       CBORObject[] cbors = {
         FromJSON(json, numconv),
-        CBORDataUtilities.ParseJSONNumber(json, opt)
+        CBORDataUtilities.ParseJSONNumber(json, opt),
       };
       foreach (CBORObject cbor in cbors) {
         if (cbor.Type != CBORType.Integer) {
-        string msg = json + " " + numconv + " " + intval;
-        msg = msg.Substring(0, Math.Min(100, msg.Length));
-        if (msg.Length > 100) {
-          msg += "...";
+          string msg = json + " " + numconv + " " + intval;
+          msg = msg.Substring(0, Math.Min(100, msg.Length));
+          if (msg.Length > 100) {
+            msg += "...";
+          }
+          Assert.AreEqual(CBORType.Integer, cbor.Type, msg);
         }
-        Assert.AreEqual(CBORType.Integer, cbor.Type, msg);
-       }
-       Assert.AreEqual(intval, cbor.AsInt32Value());
+        Assert.AreEqual(intval, cbor.AsInt32Value());
       }
     }
 
@@ -8200,106 +8200,107 @@ namespace Test {
 
     [Test]
     public void TestFromJsonStringFiniteDoubleSpec() {
-       RandomGenerator rg = new RandomGenerator();
-       for (var i = 0; i < 10000; ++i) {
-          double dbl = RandomObjects.RandomFiniteDouble(rg);
-          EFloat efd = EFloat.FromDouble(dbl);
-          AssertJSONDouble(
-             efd.ToShortestString(EContext.Binary64),
-             "double",
-             dbl);
-          AssertJSONDouble(
-             efd.ToString(),
-             "double",
-             dbl);
-       }
+      var rg = new RandomGenerator();
+      for (var i = 0; i < 10000; ++i) {
+        double dbl = RandomObjects.RandomFiniteDouble(rg);
+        EFloat efd = EFloat.FromDouble(dbl);
+        AssertJSONDouble(
+          efd.ToShortestString(EContext.Binary64),
+          "double",
+          dbl);
+        AssertJSONDouble(
+          efd.ToString(),
+          "double",
+          dbl);
+      }
     }
 
     [Test]
     public void TestFromJsonStringEDecimalSpec() {
-       RandomGenerator rg = new RandomGenerator();
-       for (var i = 0; i < 1000; ++i) {
-          string[] decstring = new string[1];
-          EDecimal ed = RandomObjects.RandomEDecimal(rg, decstring);
-          if ((decstring[0]) == null) {
-            Assert.Fail();
-          }
-          double dbl = ed.ToDouble();
-          if (Double.IsPositiveInfinity(dbl) ||
-                     Double.IsNegativeInfinity(dbl) ||
-                     Double.IsNaN(dbl)) {
-            continue;
-          }
-          AssertJSONDouble(
-             decstring[0],
-             "double",
-             dbl);
-       }
+      var rg = new RandomGenerator();
+      for (var i = 0; i < 1000; ++i) {
+        var decstring = new string[1];
+        EDecimal ed = RandomObjects.RandomEDecimal(rg, decstring);
+        if (decstring[0] == null) {
+          Assert.Fail();
+        }
+        double dbl = ed.ToDouble();
+        if (Double.IsPositiveInfinity(dbl) ||
+          Double.IsNegativeInfinity(dbl) ||
+          Double.IsNaN(dbl)) {
+          continue;
+        }
+        AssertJSONDouble(
+          decstring[0],
+          "double",
+          dbl);
+      }
     }
 
     [Test]
     public void TestFromJsonStringSmallDoubleSpec() {
-       RandomGenerator rg = new RandomGenerator();
-       for (var i = 0; i < 10000; ++i) {
-          int rv = rg.GetInt32(Int32.MaxValue) * (rg.GetInt32(2)*2-1);
-          string rvstring = TestCommon.IntToString(rv);
-          AssertJSONDouble(
-             rvstring,
-             "double",
-             (double)rv);
-          AssertJSONInteger(
-             rvstring,
-             "intorfloat",
-             rv);
-       }
-       AssertJSONDouble("511","double",511);
-       AssertJSONDouble("-511","double",-511);
-       AssertJSONDouble(
-             TestCommon.IntToString(Int32.MaxValue),
-             "double",
-             (double)Int32.MaxValue);
-       AssertJSONDouble(
-             TestCommon.IntToString(Int32.MaxValue),
-             "double",
-             (double)Int32.MaxValue);
-       AssertJSONDouble(
-             TestCommon.IntToString(Int32.MinValue),
-             "double",
-             (double)Int32.MinValue);
+      var rg = new RandomGenerator();
+      for (var i = 0; i < 10000; ++i) {
+        int rv = rg.GetInt32(Int32.MaxValue) * ((rg.GetInt32(2) * 2) - 1);
+        string rvstring = TestCommon.IntToString(rv);
+        AssertJSONDouble(
+          rvstring,
+          "double",
+          (double)rv);
+        AssertJSONInteger(
+          rvstring,
+          "intorfloat",
+          rv);
+      }
+      AssertJSONDouble("511", "double", 511);
+      AssertJSONDouble("-511", "double", -511);
+      AssertJSONDouble(
+        TestCommon.IntToString(Int32.MaxValue),
+        "double",
+        (double)Int32.MaxValue);
+      AssertJSONDouble(
+        TestCommon.IntToString(Int32.MaxValue),
+        "double",
+        (double)Int32.MaxValue);
+      AssertJSONDouble(
+        TestCommon.IntToString(Int32.MinValue),
+        "double",
+        (double)Int32.MinValue);
     }
 
     [Test]
     [Timeout(10000)]
     public void TestFromJsonStringSmallDouble() {
-       CBORObject cbor;
-       AssertJSONDouble("0","double",0.0);
-       cbor=FromJSON("[0, 1, 2, 3]", "double");
-       Assert.AreEqual(4, cbor.Count);
-       Assert.AreEqual(0.0, cbor[0].AsDouble());
-       Assert.AreEqual(1.0, cbor[1].AsDouble());
-       Assert.AreEqual(2.0, cbor[2].AsDouble());
-       Assert.AreEqual(3.0, cbor[3].AsDouble());
-       cbor=FromJSON("[0]", "double");
-       Assert.AreEqual(1, cbor.Count);
-       Assert.AreEqual(0.0, cbor[0].AsDouble());
-       cbor=FromJSON("[-0]", "double");
-       Assert.AreEqual(1, cbor.Count);
-       cbor=FromJSON("[1]", "double");
-       Assert.AreEqual(1, cbor.Count);
-       Assert.AreEqual(1.0, cbor[0].AsDouble());
-       cbor=FromJSON("[-1]", "double");
-       Assert.AreEqual(1, cbor.Count);
-       Assert.AreEqual(-1.0, cbor[0].AsDouble());
-       cbor=FromJSON("[-1022,-1023,-1024,-1025,1022,1023,1024,1025]", "double");
-       Assert.AreEqual(8, cbor.Count);
-       Assert.AreEqual(-1022.0, cbor[0].AsDouble());
-       Assert.AreEqual(-1023.0, cbor[1].AsDouble());
-       Assert.AreEqual(-1024.0, cbor[2].AsDouble());
-       Assert.AreEqual(-1025.0, cbor[3].AsDouble());
-       Assert.AreEqual(1022.0, cbor[4].AsDouble());
-       Assert.AreEqual(1023.0, cbor[5].AsDouble());
-       Assert.AreEqual(1024.0, cbor[6].AsDouble());
-       Assert.AreEqual(1025.0, cbor[7].AsDouble());
+      CBORObject cbor;
+      AssertJSONDouble("0", "double", 0.0);
+      cbor = FromJSON("[0, 1, 2, 3]", "double");
+      Assert.AreEqual(4, cbor.Count);
+      Assert.AreEqual((double)0.0, cbor[0].AsDouble());
+      Assert.AreEqual((double)1.0, cbor[1].AsDouble());
+      Assert.AreEqual((double)2.0, cbor[2].AsDouble());
+      Assert.AreEqual((double)3.0, cbor[3].AsDouble());
+      cbor = FromJSON("[0]", "double");
+      Assert.AreEqual(1, cbor.Count);
+      Assert.AreEqual((double)0.0, cbor[0].AsDouble());
+      cbor = FromJSON("[-0]", "double");
+      Assert.AreEqual(1, cbor.Count);
+      cbor = FromJSON("[1]", "double");
+      Assert.AreEqual(1, cbor.Count);
+      Assert.AreEqual((double)1.0, cbor[0].AsDouble());
+      cbor = FromJSON("[-1]", "double");
+      Assert.AreEqual(1, cbor.Count);
+      Assert.AreEqual((double)-1.0, cbor[0].AsDouble());
+      cbor = FromJSON("[-1022,-1023,-1024,-1025,1022,1023,1024,1025]",
+          "double");
+      Assert.AreEqual(8, cbor.Count);
+      Assert.AreEqual((double)-1022.0, cbor[0].AsDouble());
+      Assert.AreEqual((double)-1023.0, cbor[1].AsDouble());
+      Assert.AreEqual((double)-1024.0, cbor[2].AsDouble());
+      Assert.AreEqual((double)-1025.0, cbor[3].AsDouble());
+      Assert.AreEqual((double)1022.0, cbor[4].AsDouble());
+      Assert.AreEqual((double)1023.0, cbor[5].AsDouble());
+      Assert.AreEqual((double)1024.0, cbor[6].AsDouble());
+      Assert.AreEqual((double)1025.0, cbor[7].AsDouble());
     }
 
     [Test]

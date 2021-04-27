@@ -4983,45 +4983,69 @@ namespace Test {
 
     [Test]
     public void TestJSONOptions() {
-       var jsonop1=new JSONOptions("numberconversion=intorfloat");
-       Assert.AreEqual(jsonop1.ToString(), new
-JSONOptions(jsonop1.ToString()).ToString());
-       var jsonop2=new JSONOptions("numberconversion=decimal128");
-       Assert.AreEqual(jsonop2.ToString(), new
-JSONOptions(jsonop2.ToString()).ToString());
-       var jsonop3=new JSONOptions("numberconversion=intorfloatfromdouble");
-       Assert.AreEqual(jsonop3.ToString(), new
-JSONOptions(jsonop3.ToString()).ToString());
-       var jsonop4=new JSONOptions("numberconversion=double");
-       Assert.AreEqual(jsonop4.ToString(), new
-JSONOptions(jsonop4.ToString()).ToString());
+       var jsonop1 = new JSONOptions("numberconversion=intorfloat");
+       {
+         object objectTemp = jsonop1.ToString();
+         object objectTemp2 = new
+JSONOptions(jsonop1.ToString()).ToString();
+         Assert.AreEqual(objectTemp, objectTemp2);
+       }
+       var jsonop2 = new JSONOptions("numberconversion=decimal128");
+       {
+         object objectTemp = jsonop2.ToString();
+         object objectTemp2 = new
+JSONOptions(jsonop2.ToString()).ToString();
+         Assert.AreEqual(objectTemp, objectTemp2);
+       }
+       var jsonop3 = new JSONOptions("numberconversion=intorfloatfromdouble");
+       {
+         object objectTemp = jsonop3.ToString();
+         object objectTemp2 = new
+JSONOptions(jsonop3.ToString()).ToString();
+         Assert.AreEqual(objectTemp, objectTemp2);
+       }
+       var jsonop4 = new JSONOptions("numberconversion=double");
+       {
+         object objectTemp = jsonop4.ToString();
+         object objectTemp2 = new
+JSONOptions(jsonop4.ToString()).ToString();
+         Assert.AreEqual(objectTemp, objectTemp2);
+       }
     }
 
     [Test]
     public void TestPODOptions() {
        PODOptions podop = PODOptions.Default;
-       Assert.AreEqual(podop.ToString(), new
-PODOptions(podop.ToString()).ToString());
+       {
+         object objectTemp = podop.ToString();
+         object objectTemp2 = new
+PODOptions(podop.ToString()).ToString();
+         Assert.AreEqual(objectTemp, objectTemp2);
+       }
     }
 
     [Test]
     public void TestCBOREncodeOptions() {
        CBOREncodeOptions encodeop = CBOREncodeOptions.Default;
-       Assert.AreEqual(encodeop.ToString(), new
-CBOREncodeOptions(encodeop.ToString()).ToString());
+       {
+         object objectTemp = encodeop.ToString();
+         object objectTemp2 = new
+CBOREncodeOptions(encodeop.ToString()).ToString();
+         Assert.AreEqual(objectTemp, objectTemp2);
+       }
     }
 
     [Test]
     public void TestRandomJSON() {
        var jsongen = new JSONGenerator();
        var rg = new RandomGenerator();
-       var jsonop1=new JSONOptions("numberconversion=intorfloat");
-       var jsonop2=new JSONOptions("numberconversion=decimal128");
-       var jsonop3=new JSONOptions("numberconversion=intorfloatfromdouble");
-       var jsonop4=new JSONOptions("numberconversion=double");
+       var jsonop1 = new JSONOptions("numberconversion=intorfloat");
+       var jsonop2 = new JSONOptions("numberconversion=decimal128");
+       var jsonop3 = new JSONOptions("numberconversion=intorfloatfromdouble");
+       var jsonop4 = new JSONOptions("numberconversion=double");
        for (var i = 0; i < 200; ++i) {
           byte[] json = jsongen.Generate(rg);
-          Console.WriteLine("" + i + " len=" + (json.Length));
+          Console.WriteLine(String.Empty + i + " len=" + json.Length);
           JSONOptions currop = null;
           try {
              currop = jsonop1;
@@ -5034,7 +5058,7 @@ CBOREncodeOptions(encodeop.ToString()).ToString());
              CBORObject.FromJSONBytes(json, jsonop4);
            } catch (CBORException ex) {
               string msg = ex.Message + "\n" +
-                 DataUtilities.GetUtf8String(json,true) + "\n" + currop;
+                 DataUtilities.GetUtf8String(json, true) + "\n" + currop;
               throw new InvalidOperationException(msg, ex);
            }
        }
