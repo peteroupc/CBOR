@@ -3,23 +3,18 @@
 xmlns='http://schemas.microsoft.com/developer/msbuild/2003'>
   <Import Condition='Exists(
   &#x27;../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.props&#x27;)'
-
   Project='../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.props'/>
   <Import Condition='Exists(
   &#x27;../packages/Microsoft.NetFramework.Analyzers.3.3.2/build/Microsoft.NetFramework.Analyzers.props&#x27;)'
-
   Project='../packages/Microsoft.NetFramework.Analyzers.3.3.2/build/Microsoft.NetFramework.Analyzers.props'/>
   <Import Condition='Exists(
   &#x27;../packages/Microsoft.NetCore.Analyzers.3.3.2/build/Microsoft.NetCore.Analyzers.props&#x27;)'
-
   Project='../packages/Microsoft.NetCore.Analyzers.3.3.2/build/Microsoft.NetCore.Analyzers.props'/>
   <Import Condition='Exists(
   &#x27;../packages/Microsoft.CodeQuality.Analyzers.3.3.2/build/Microsoft.CodeQuality.Analyzers.props&#x27;)'
-
   Project='../packages/Microsoft.CodeQuality.Analyzers.3.3.2/build/Microsoft.CodeQuality.Analyzers.props'/>
   <Import Condition='Exists(
   &#x27;../packages/Microsoft.CodeAnalysis.VersionCheckAnalyzer.3.3.2/build/Microsoft.CodeAnalysis.VersionCheckAnalyzer.props&#x27;)'
-
   Project='../packages/Microsoft.CodeAnalysis.VersionCheckAnalyzer.3.3.2/build/Microsoft.CodeAnalysis.VersionCheckAnalyzer.props'/>
   <Import Condition='Exists(
   &#x27;$(
@@ -156,27 +151,21 @@ Text='$([System.String]::Format(&#x27;$(ErrorText)&#x27;,
   </Target>
   <Import Condition='Exists(
   &#x27;../packages/Microsoft.CodeAnalysis.VersionCheckAnalyzer.3.3.2/build/Microsoft.CodeAnalysis.VersionCheckAnalyzer.targets&#x27;)'
-
   Project='../packages/Microsoft.CodeAnalysis.VersionCheckAnalyzer.3.3.2/build/Microsoft.CodeAnalysis.VersionCheckAnalyzer.targets'/>
   <Import Condition='Exists(
   &#x27;../packages/Microsoft.CodeQuality.Analyzers.3.3.2/build/Microsoft.CodeQuality.Analyzers.targets&#x27;)'
-
   Project='../packages/Microsoft.CodeQuality.Analyzers.3.3.2/build/Microsoft.CodeQuality.Analyzers.targets'/>
   <Import Condition='Exists(
   &#x27;../packages/Microsoft.NetCore.Analyzers.3.3.2/build/Microsoft.NetCore.Analyzers.targets&#x27;)'
-
   Project='../packages/Microsoft.NetCore.Analyzers.3.3.2/build/Microsoft.NetCore.Analyzers.targets'/>
   <Import Condition='Exists(
   &#x27;../packages/Microsoft.NetFramework.Analyzers.3.3.2/build/Microsoft.NetFramework.Analyzers.targets&#x27;)'
-
   Project='../packages/Microsoft.NetFramework.Analyzers.3.3.2/build/Microsoft.NetFramework.Analyzers.targets'/>
   <Import Condition='Exists(
   &#x27;../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.targets&#x27;)'
-
   Project='../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.targets'/>
   <Import Condition='Exists(
   &#x27;../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.targets&#x27;)'
-
   Project='../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.targets'/>
   <!-- To modify your build process, add your task inside one of the targets
 below and uncomment it.

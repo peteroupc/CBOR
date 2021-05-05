@@ -366,6 +366,31 @@ depth) {
     }
 
     // Tests the equivalence of the DecodeFromBytes and Read methods.
+    public static CBORObject FromBytesTestAB(byte[] b, CBOREncodeOptions
+options) {
+      CBORObject oa = FromBytesA(b, options);
+      CBORObject ob = FromBytesB(b, options);
+      if (!oa.Equals(ob)) {
+        Assert.AreEqual(oa, ob);
+      }
+      return oa;
+    }
+
+    private static CBORObject FromBytesA(byte[] b, CBOREncodeOptions options) {
+      return CBORObject.DecodeFromBytes(b, options);
+    }
+
+    private static CBORObject FromBytesB(byte[] b, CBOREncodeOptions options) {
+      using (var ms = new System.IO.MemoryStream(b)) {
+        CBORObject o = CBORObject.Read(ms, options);
+        if (ms.Position != ms.Length) {
+          throw new CBORException("not at EOF");
+        }
+        return o;
+      }
+    }
+
+    // Tests the equivalence of the DecodeFromBytes and Read methods.
     public static CBORObject FromBytesTestAB(byte[] b) {
       CBORObject oa = FromBytesA(b);
       CBORObject ob = FromBytesB(b);

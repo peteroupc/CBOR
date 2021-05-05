@@ -2224,6 +2224,13 @@
             conversion, use the following idiom (originally written in C# for
             the.NET version): <c>(cbor == null || cbor.IsNull) ? null :
             cbor.AsString()</c>.</exception>
+            <remarks>This method is not the "reverse" of the <c>FromObject</c> method in the sense that FromObject can take either a text string or <c>null</c>,
+            but this method can accept only text strings.  The <c>ToObject</c> method is closer to a "reverse" version to <c>FromObject</c> than the
+            <c>AsString</c> method: <c>ToObject&lt;String&gt;(cbor)</c> in DotNet,
+            or <c>ToObject(String.class)</c> in Java, will convert a CBOR object to
+            a DotNet or Java String if it represents a text string, or to <c>null</c> if
+            <c>IsNull</c> returns <c>true</c> for the CBOR object, and will fail in
+            other cases.</remarks>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsUInt16">

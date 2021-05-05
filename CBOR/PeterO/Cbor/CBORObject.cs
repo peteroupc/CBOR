@@ -1990,6 +1990,9 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
         return this;
       }
       if (this.IsNull) {
+        // TODO: In next major version, consider returning null
+        // here only if this object is untagged, to allow behavior
+        // to be customizable by CBORTypeMapper
         return null;
       }
       if (mapper != null) {
@@ -4984,6 +4987,16 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// conversion, use the following idiom (originally written in C# for
     /// the.NET version): <c>(cbor == null || cbor.IsNull) ? null :
     /// cbor.AsString()</c>.</exception>
+    /// <remarks>This method is not the "reverse" of the <c>FromObject</c>
+    /// method in the sense that FromObject can take either a text string
+    /// or <c>null</c>, but this method can accept only text strings. The
+    /// <c>ToObject</c> method is closer to a "reverse" version to
+    /// <c>FromObject</c> than the <c>AsString</c> method:
+    /// <c>ToObject&lt;String&gt;(cbor)</c> in DotNet, or
+    /// <c>ToObject(String.class)</c> in Java, will convert a CBOR object
+    /// to a DotNet or Java String if it represents a text string, or to
+    /// <c>null</c> if <c>IsNull</c> returns <c>true</c> for the CBOR
+    /// object, and will fail in other cases.</remarks>
     public string AsString() {
       int type = this.ItemType;
       switch (type) {
@@ -6161,6 +6174,7 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// options to control the encoding process. This function
     /// works not only with arrays and maps, but also integers,
     /// strings, byte arrays, and other JSON data types. Notes:
+    ///
     /// <list type=''><item>If this object contains maps with non-string
     /// keys, the keys are converted to JSON strings before writing the map
     /// as a JSON string.</item>
@@ -7968,7 +7982,7 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
           bytes[byteIndex++] = (byte)c;
         } else if (c <= 0x7ff) {
           if (byteIndex + 2 > StreamedStringBufferLength) {
-            // Write bytes retrieved so far - the next three bytes
+            // Write bytes retrieved so far - the next two bytes
             // would exceed the length, and the CBOR spec forbids
             // splitting characters when generating text strings
             if (!streaming) {
