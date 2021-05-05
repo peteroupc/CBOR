@@ -2821,8 +2821,9 @@ namespace Test {
       if (!on2.IsZero() && !on1a.IsFinite()) {
         Assert.Fail("on1a is not finite\n" +
           "o1=" + on1 + "\n" + "o2=" + on2 + "\n" +
-          "{\nbyte[] bytes1 = " + TestCommon.ToByteArrayString(eb1) + ";\n" +
-          "byte[] bytes2 =" + TestCommon.ToByteArrayString(eb2) + ";\n" +
+          "{\nbyte[] by" +
+          "tes1 = " + TestCommon.ToByteArrayString(eb1) + ";\n" +
+          "byte[] by" + "tes2 =" + TestCommon.ToByteArrayString(eb2) + ";\n" +
           "TestAsNumberMultiplyDivideOne(\nCBORObject.D" +
           "ecodeFromBytes(bytes1),\n" +
           "CBORObject.DecodeFromBytes(bytes2));\n}\n");
@@ -3636,10 +3637,10 @@ namespace Test {
       TestSucceedingDecode(bytes);
       bytes = new byte[] { 0x7f, 0x63, 0xe2, 0x80, 0x80, 0xff };
       TestSucceedingDecode(bytes);
-      bytes = new byte[] { 0x7f, 0x64, 0xe2, 0x80, 0x80, 0x80, 0xff };
+      bytes = new byte[] { 0x7f, 0x64, 0xf2, 0x80, 0x80, 0x80, 0xff };
       TestSucceedingDecode(bytes);
-      // Disallow splitting code points in an indefinite-length
-      // text string
+      // Disallow splitting code points in indefinite-length
+      // text strings
       bytes = new byte[] { 0x7f, 0x61, 0xc2, 0x61, 0x80, 0xff };
       TestFailingDecode(bytes);
       bytes = new byte[] { 0x7f, 0x61, 0xe2, 0x62, 0x80, 0x80, 0xff };
@@ -3662,7 +3663,10 @@ namespace Test {
       TestFailingDecode(bytes);
       bytes = new byte[] { 0x7f, 0x62, 0xe2, 0x80, 0x62, 0x80, 0x20, 0xff };
       TestFailingDecode(bytes);
-      bytes = new byte[] { 0x7f, 0x63, 0xf2, 0x80, 0x80, 0x62, 0x80, 0x20, 0xff };
+      bytes = new byte[] {
+        0x7f, 0x63, 0xf2, 0x80, 0x80, 0x62, 0x80, 0x20,
+        0xff,
+      };
       TestFailingDecode(bytes);
     }
 

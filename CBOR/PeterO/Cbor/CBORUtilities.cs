@@ -659,6 +659,59 @@ namespace PeterO.Cbor {
         day = day.Add(count.Multiply(146097));
         year = year.Subtract(count.Multiply(400));
       }
+      if (year.CanFitInInt32() && day.CanFitInInt32()) {
+        long longYear = year.ToInt32Checked();
+        int intDay = day.ToInt32Checked();
+        if (longYear == 1970 && month == 1 && intDay >= 10957) {
+           // Add enough days to move from 1/1970 to 1/2000
+           longYear = 2000;
+           intDay -= 10957;
+           dayArray = ((longYear & 0x03) != 0 || (
+                  longYear % 100 == 0 &&
+                longYear % 400 != 0)) ? ValueNormalDays : ValueLeapDays;
+        }
+        if (longYear == 2000 && month == 1 && intDay < 35064) {
+           // Add enough days to move from 1/2000 to closest 4-year block
+           // in the century.
+           int intCount = intDay / 1461;
+           intDay += intCount * 1461;
+           longYear -= intCount * 400;
+           dayArray = ((longYear & 0x03) != 0 || (
+                longYear % 100 == 0 && longYear %400 != 0)) ? ValueNormalDays :
+              ValueLeapDays;
+         }
+         while (true) {
+        int intDays = dayArray[month];
+        if (intDay > 0 && intDay <= intDays) {
+          break;
+        }
+        if (intDay > intDays) {
+          intDay -= intDays;
+          if (month == 12) {
+            month = 1;
+            ++longYear;
+            dayArray = ((longYear & 0x03) != 0 || (
+                  longYear % 100 == 0 &&
+                longYear % 400 != 0)) ? ValueNormalDays : ValueLeapDays;
+          } else {
+            ++month;
+          }
+        }
+        if (intDay <= 0) {
+          --month;
+          if (month <= 0) {
+            --longYear;
+            month = 12;
+            dayArray = ((longYear & 0x03) != 0 || (
+                longYear % 100 == 0 && longYear %400 != 0)) ? ValueNormalDays :
+            ValueLeapDays;
+          }
+          intDay += dayArray[month];
+        }
+      }
+      year = EInteger.FromInt64(longYear);
+      day = EInteger.FromInt32(intDay);
+      } else {
       while (true) {
         EInteger days = EInteger.FromInt32(dayArray[month]);
         if (day.Sign > 0 && day.CompareTo(days) <= 0) {
@@ -682,13 +735,14 @@ namespace PeterO.Cbor {
           if (month <= 0) {
             year = year.Add(-1);
             month = 12;
-          }
-          dayArray = (year.Remainder(4).Sign != 0 || (
+            dayArray = (year.Remainder(4).Sign != 0 || (
                 year.Remainder(100).Sign == 0 &&
                 year.Remainder(400).Sign != 0)) ? ValueNormalDays :
-            ValueLeapDays;
+              ValueLeapDays;
+          }
           day = day.Add(dayArray[month]);
         }
+      }
       }
       dest[0] = year;
       dest[1] = EInteger.FromInt32(month);
