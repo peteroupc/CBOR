@@ -431,12 +431,12 @@ untagged.AsNumber().IsNegative()) {
               CBORObject key = this.ReadForFirstByte(headByte);
               CBORObject value = this.ReadInternal();
               --this.depth;
-              if (!this.options.AllowDuplicateKeys) {
-                if (cbor.ContainsKey(key)) {
-                  throw new CBORException("Duplicate key already exists");
-                }
-              }
+              int oldCount = cbor.Count;
               cbor[key] = value;
+              int newCount = cbor.Count;
+              if (!this.options.AllowDuplicateKeys && oldCount == newCount) {
+                  throw new CBORException("Duplicate key already exists");
+              }
             }
             return cbor;
           }

@@ -1284,6 +1284,15 @@ namespace PeterO.Cbor {
       }
     }
 
+public static CBORObject GetOrDefault(IDictionary<CBORObject, CBORObject> map,
+    CBORObject key, CBORObject defaultValue){
+        CBORObject ret = null;
+        if(!map.TryGetValue(key, out ret)){
+           return defaultValue;
+        }
+        return ret;
+}
+
 #pragma warning disable CA1801
     public static CBORObject FromObjectOther(object obj) {
       return null;

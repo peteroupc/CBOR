@@ -29,29 +29,33 @@ namespace PeterO.Cbor {
       if (strB == null) {
         return 1;
       }
-      if (strA.Length == 0) {
-        return strB.Length == 0 ? 0 : -1;
+      int alen = strA.Length;
+      int blen = strB.Length;
+      if (alen == 0) {
+        return blen == 0 ? 0 : -1;
       }
-      if (strB.Length == 0) {
-        return strA.Length == 0 ? 0 : 1;
+      if (blen == 0) {
+        return alen == 0 ? 0 : 1;
       }
       var cmp = 0;
-      if (strA.Length < 128 && strB.Length < 128) {
-        int istrAUpperBound = strA.Length * 3;
-        if (istrAUpperBound < strB.Length) {
+      if (alen < 128 && blen < 128) {
+        int istrAUpperBound = alen * 3;
+        if (istrAUpperBound < blen) {
           return -1;
         }
-        int istrBUpperBound = strB.Length * 3;
-        if (istrBUpperBound < strA.Length) {
+        int istrBUpperBound = blen * 3;
+        if (istrBUpperBound < alen) {
           return 1;
         }
         cmp = 0;
-        if (strA.Length == strB.Length) {
+        if (alen == blen) {
           var equalStrings = true;
-          for (int i = 0; i < strA.Length; ++i) {
-            if (strA[i] != strB[i]) {
+          for (int i = 0; i < alen; ++i) {
+            char sai=strA[i];
+            char sbi=strB[i];
+            if (sai!=sbi) {
               equalStrings = false;
-              cmp = (strA[i] < strB[i]) ? -1 : 1;
+              cmp = (sai<sbi) ? -1 : 1;
               break;
             }
           }
@@ -60,37 +64,37 @@ namespace PeterO.Cbor {
           }
         }
         var nonAscii = false;
-        for (int i = 0; i < strA.Length; ++i) {
+        for (int i = 0; i < alen; ++i) {
           if (strA[i] >= 0x80) {
             nonAscii = true;
             break;
           }
         }
-        for (int i = 0; i < strB.Length; ++i) {
+        for (int i = 0; i < blen; ++i) {
           if (strB[i] >= 0x80) {
             nonAscii = true;
             break;
           }
         }
         if (!nonAscii) {
-          if (strA.Length != strB.Length) {
-            return strA.Length < strB.Length ? -1 : 1;
+          if (alen!=blen) {
+            return alen < blen ? -1 : 1;
           }
-          if (strA.Length == strB.Length) {
+          if (alen == blen) {
             return cmp;
           }
         }
       } else {
-        long strAUpperBound = strA.Length * 3;
-        if (strAUpperBound < strB.Length) {
+        long strAUpperBound = alen * 3;
+        if (strAUpperBound < blen) {
           return -1;
         }
-        long strBUpperBound = strB.Length * 3;
-        if (strBUpperBound < strA.Length) {
+        long strBUpperBound = blen * 3;
+        if (strBUpperBound < alen) {
           return 1;
         }
       }
-      // DebugUtility.Log("slow path "+strA.Length+","+strB.Length);
+      // DebugUtility.Log("slow path "+alen+","+blen);
       var sapos = 0;
       var sbpos = 0;
       long sautf8 = 0L;
@@ -99,11 +103,11 @@ namespace PeterO.Cbor {
       var haveboth = true;
       while (true) {
         int sa = 0, sb = 0;
-        if (sapos == strA.Length) {
+        if (sapos == alen) {
           haveboth = false;
           if (sbutf8 > sautf8) {
             return -1;
-          } else if (sbpos == strB.Length) {
+          } else if (sbpos == blen) {
             break;
           } else if (cmp == 0) {
             cmp = -1;
@@ -127,11 +131,11 @@ namespace PeterO.Cbor {
             ++sapos;
           }
         }
-        if (sbpos == strB.Length) {
+        if (sbpos == blen) {
           haveboth = false;
           if (sautf8 > sbutf8) {
             return 1;
-          } else if (sapos == strA.Length) {
+          } else if (sapos == alen) {
             break;
           } else if (cmp == 0) {
             cmp = 1;
@@ -607,8 +611,18 @@ namespace PeterO.Cbor {
           EInteger.FromInt32(-1).Subtract(a).Divide(n));
     }
 
+    private static long FloorDiv(long longA, int longN) {
+      return longA>=0 ? longA/longN : (-1-longA)/longN;
+    }
+
     private static EInteger FloorMod(EInteger a, EInteger n) {
       return a.Subtract(FloorDiv(a, n).Multiply(n));
+    }
+
+    private static long FloorModLong(long longA, int longN) {
+      checked {
+         return longA-FloorDiv(longA,longN)*longN;
+      }
     }
 
     private static readonly int[] ValueNormalDays = {
@@ -662,7 +676,7 @@ namespace PeterO.Cbor {
       if (year.CanFitInInt32() && day.CanFitInInt32()) {
         long longYear = year.ToInt32Checked();
         int intDay = day.ToInt32Checked();
-        if (longYear == 1970 && month == 1 && intDay >= 10957) {
+        if (longYear == 1970 && month == 1 && intDay > 0 && intDay >= 10957) {
            // Add enough days to move from 1/1970 to 1/2000
            longYear = 2000;
            intDay -= 10957;
@@ -670,12 +684,12 @@ namespace PeterO.Cbor {
                   longYear % 100 == 0 &&
                 longYear % 400 != 0)) ? ValueNormalDays : ValueLeapDays;
         }
-        if (longYear == 2000 && month == 1 && intDay < 35064) {
+        if (longYear == 2000 && month == 1 && intDay > 0 && intDay < 35064) {
            // Add enough days to move from 1/2000 to closest 4-year block
            // in the century.
            int intCount = intDay / 1461;
            intDay += intCount * 1461;
-           longYear -= intCount * 400;
+           longYear -= intCount * 4;
            dayArray = ((longYear & 0x03) != 0 || (
                 longYear % 100 == 0 && longYear %400 != 0)) ? ValueNormalDays :
               ValueLeapDays;
@@ -844,6 +858,29 @@ currentYear.Remainder(100).ToInt32Checked());
           .Add(mday - 1);
       }
       return numDays;
+    }
+
+    public static void BreakDownSecondsSinceEpoch(
+      long seconds,
+      EInteger[] year,
+      int[] lesserFields) {
+      var normPart = new EInteger[3];
+      long longDays = FloorDiv(seconds, 86400)+1;
+      long longSecondsInDay = FloorModLong(seconds, 86400);
+      int secondsInDay = checked((int)longSecondsInDay);
+      GetNormalizedPartProlepticGregorian(
+        EInteger.FromInt32(1970),
+        1,
+        EInteger.FromInt64(longDays),
+        normPart);
+      lesserFields[0] = normPart[1].ToInt32Checked();
+      lesserFields[1] = normPart[2].ToInt32Checked();
+      lesserFields[2] = secondsInDay / 3600;
+      lesserFields[3] = (secondsInDay % 3600) / 60;
+      lesserFields[4] = secondsInDay % 60;
+      lesserFields[5] = 0;
+      lesserFields[6] = 0;
+      year[0] = normPart[0];
     }
 
     public static void BreakDownSecondsSinceEpoch(

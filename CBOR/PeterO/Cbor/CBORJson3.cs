@@ -590,22 +590,24 @@ namespace PeterO.Cbor {
             // constructor directly
             obj = CBORObject.FromRaw(this.NextJSONString());
             key = obj;
-            if (!this.options.AllowDuplicateKeys &&
-              myHashMap.ContainsKey(obj)) {
-              this.RaiseError("Key already exists: " + key);
-              return null;
-            }
             break;
           }
         }
         if (this.SkipWhitespaceJSON() != ':') {
           this.RaiseError("Expected a ':' after a key");
         }
+        int oldCount = myHashMap.Count;
         // NOTE: Will overwrite existing value
         myHashMap[key] = this.NextJSONValue(
             this.SkipWhitespaceJSON(),
             nextchar,
             depth);
+        int newCount = myHashMap.Count;
+        if (!this.options.AllowDuplicateKeys &&
+              oldCount == newCount) {
+              this.RaiseError("Duplicate key already exists");
+              return null;
+        }
         switch (nextchar[0]) {
           case ',':
             seenComma = true;
