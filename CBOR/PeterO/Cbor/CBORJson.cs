@@ -614,7 +614,7 @@ namespace PeterO.Cbor {
             depth);
         int newCount = myHashMap.Count;
         if (!this.options.AllowDuplicateKeys &&
-              oldCount==newCount) {
+              oldCount == newCount) {
               this.RaiseError("Duplicate key already exists");
               return null;
             }

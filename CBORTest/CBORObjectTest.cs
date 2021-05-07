@@ -1035,24 +1035,49 @@ namespace Test {
     public void TestCanFitInDouble() {
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(
           0).CanFitInDouble());
+    }
+    [Test]
+    public void TestCanFitInDoubleA() {
       Assert.IsFalse(CBORObject.True.CanFitInDouble());
+    }
+    [Test]
+    public void TestCanFitInDoubleB() {
       Assert.IsFalse(ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
         .CanFitInDouble());
+    }
+    [Test]
+    public void TestCanFitInDoubleC() {
       Assert.IsFalse(CBORObject.NewArray().CanFitInDouble());
       Assert.IsFalse(CBORObject.NewMap().CanFitInDouble());
+    }
+    [Test]
+    public void TestCanFitInDoubleD() {
       Assert.IsFalse(CBORObject.False.CanFitInDouble());
       Assert.IsFalse(CBORObject.Null.CanFitInDouble());
+    }
+    [Test]
+    public void TestCanFitInDoubleE() {
       Assert.IsFalse(CBORObject.Undefined.CanFitInDouble());
+    }
+    [Test]
+    public void TestCanFitInDoubleF() {
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
           ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(
               numberinfo["number"].AsString()));
+        if (cbornumber == null) {
+          Assert.Fail();
+        }
         if (numberinfo["double"].AsBoolean()) {
-          Assert.IsTrue(cbornumber.CanFitInDouble());
+          if (!cbornumber.CanFitInDouble()) {
+            Assert.Fail(cbornumber.ToString());
+          }
         } else {
-          Assert.IsFalse(cbornumber.CanFitInDouble());
+if (cbornumber.CanFitInDouble()) {
+  Assert.Fail(cbornumber.ToString());
+}
         }
       }
       var rand = new RandomGenerator();
@@ -1061,6 +1086,9 @@ namespace Test {
         // exponent
         object o = RandomObjects.RandomDouble(rand, i);
         CBORObject cbornumber = ToObjectTest.TestToFromObjectRoundTrip(o);
+        if (cbornumber == null) {
+          Assert.Fail();
+        }
         Assert.IsTrue(cbornumber.CanFitInDouble());
       }
     }
@@ -1079,13 +1107,24 @@ namespace Test {
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
+        if (numberinfo["number"] == null) {
+          Assert.Fail();
+        }
+        if (numberinfo["int32"] == null) {
+          Assert.Fail();
+        }
+        if (numberinfo["isintegral"] == null) {
+          Assert.Fail();
+        }
         CBORObject cbornumber =
           ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(
               numberinfo["number"].AsString()));
+        if (cbornumber == null) {
+          Assert.Fail();
+        }
         if (numberinfo["int32"].AsBoolean() &&
           numberinfo["isintegral"].AsBoolean()) {
           Assert.IsTrue(CInt32(cbornumber));
-
           Assert.IsTrue(
             CInt32(ToObjectTest.TestToFromObjectRoundTrip(
                 cbornumber.AsInt32())));
@@ -1096,11 +1135,11 @@ namespace Test {
     }
 
     private static bool CInt64(CBORObject cbor) {
-      return cbor.IsNumber && cbor.AsNumber().CanFitInInt64();
+      return cbor != null && cbor.IsNumber && cbor.AsNumber().CanFitInInt64();
     }
 
     private static bool CInt32(CBORObject cbor) {
-      return cbor.IsNumber && cbor.AsNumber().CanFitInInt32();
+      return cbor != null && cbor.IsNumber && cbor.AsNumber().CanFitInInt32();
     }
 
     [Test]
@@ -1154,6 +1193,15 @@ namespace Test {
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
+        if (numberinfo["number"] == null) {
+          Assert.Fail();
+        }
+        if (numberinfo["int64"] == null) {
+          Assert.Fail();
+        }
+        if (numberinfo["isintegral"] == null) {
+          Assert.Fail();
+        }
         CBORObject cbornumber =
           ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(
               numberinfo["number"].AsString()));
@@ -1185,6 +1233,12 @@ namespace Test {
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
+        if (numberinfo["number"] == null) {
+          Assert.Fail();
+        }
+        if (numberinfo["single"] == null) {
+          Assert.Fail();
+        }
         CBORObject cbornumber =
           ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(
               numberinfo["number"].AsString()));
@@ -1249,6 +1303,12 @@ namespace Test {
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
+        if (numberinfo["number"] == null) {
+          Assert.Fail();
+        }
+        if (numberinfo["int32"] == null) {
+          Assert.Fail();
+        }
         string numberString = numberinfo["number"].AsString();
         CBORObject cbornumber = ToObjectTest.TestToFromObjectRoundTrip(
             EDecimal.FromString(numberString));

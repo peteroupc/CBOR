@@ -343,19 +343,20 @@ namespace PeterO.Cbor {
     }
 
     private sealed class PropertyData {
-      private string name;
-
+      private readonly string name;
+      private readonly MemberInfo prop;
+      private readonly string adjustedName;
+      private readonly string adjustedNameCamelCase;
       public string Name {
-        get {
-          return this.name;
-        }
+get {
+return this.name; } }
 
-        set {
-          this.name = value;
-        }
+      public PropertyData(string name, MemberInfo prop) {
+        this.name = name;
+        this.prop = prop;
+        this.adjustedNameCamelCase = this.GetAdjustedNameInternal(true);
+        this.adjustedName = this.GetAdjustedNameInternal(false);
       }
-
-      private MemberInfo prop;
 
       public Type PropertyType {
         get {
@@ -430,6 +431,11 @@ namespace PeterO.Cbor {
       }
 
       public string GetAdjustedName(bool useCamelCase) {
+            return useCamelCase ? this.adjustedNameCamelCase :
+this.adjustedName;
+      }
+
+      public string GetAdjustedNameInternal(bool useCamelCase) {
         string thisName = this.Name;
         if (useCamelCase) {
           if (CBORUtilities.NameStartsWithWord(thisName, "Is")) {
@@ -445,10 +451,6 @@ namespace PeterO.Cbor {
       public MemberInfo Prop {
         get {
           return this.prop;
-        }
-
-        set {
-          this.prop = value;
         }
       }
     }
@@ -590,10 +592,7 @@ namespace PeterO.Cbor {
           }
         }
         foreach (FieldInfo fi in GetTypeFields(t)) {
-          PropertyData pd = new PropertyMap.PropertyData() {
-            Name = fi.Name,
-            Prop = fi,
-          };
+          PropertyData pd = new PropertyMap.PropertyData(fi.Name, fi);
           if (pd.HasUsableGetter() || pd.HasUsableSetter()) {
             var pn = RemoveIsPrefix(pd.Name);
             // Ignore ambiguous properties
@@ -613,10 +612,7 @@ namespace PeterO.Cbor {
               if (names.ContainsKey(pn) && names[pn] > 1) {
                 continue;
               }
-              PropertyData pd = new PropertyMap.PropertyData() {
-                Name = pi.Name,
-                Prop = pi,
-              };
+              PropertyData pd = new PropertyMap.PropertyData(pi.Name, pi);
               ret.Add(pd);
             }
           }
@@ -1263,7 +1259,7 @@ namespace PeterO.Cbor {
         var values = new List<KeyValuePair<string, CBORObject>>();
         var propNames = PropertyMap.GetPropertyNames(
             t,
-            options != null ? options.UseCamelCase : true);
+            options == null || options.UseCamelCase);
         foreach (string key in propNames) {
           if (objThis.ContainsKey(key)) {
             CBORObject cborValue = objThis[key];
@@ -1285,12 +1281,10 @@ namespace PeterO.Cbor {
     }
 
 public static CBORObject GetOrDefault(IDictionary<CBORObject, CBORObject> map,
-    CBORObject key, CBORObject defaultValue){
+    CBORObject key,
+    CBORObject defaultValue) {
         CBORObject ret = null;
-        if(!map.TryGetValue(key, out ret)){
-           return defaultValue;
-        }
-        return ret;
+        return (!map.TryGetValue(key, out ret)) ? defaultValue : ret;
 }
 
 #pragma warning disable CA1801

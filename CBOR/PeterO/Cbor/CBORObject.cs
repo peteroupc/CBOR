@@ -19,7 +19,6 @@ using PeterO.Numbers;
 // for ReadJSON, FromJSONString, FromJSONBytes
 // TODO: In Java version add overloads for Class<T> in overloads
 // that take java.lang.reflect.Type
-// TODO: Add TryGetValue method
 namespace PeterO.Cbor {
   /// <summary>
   /// <para>Represents an object in Concise Binary Object Representation
@@ -186,6 +185,7 @@ namespace PeterO.Cbor {
     private const int CBORObjectTypeSimpleValue = 7;
     private const int CBORObjectTypeDouble = 8;
     private const int CBORObjectTypeTextStringUtf8 = 9;
+    private const int CBORObjectTypeTextStringAscii = 10;
 
     private const int StreamedStringBufferLength = 4096;
 
@@ -536,6 +536,7 @@ namespace PeterO.Cbor {
             return CBORType.ByteString;
           case CBORObjectTypeTextString:
           case CBORObjectTypeTextStringUtf8:
+          case CBORObjectTypeTextStringAscii:
             return CBORType.TextString;
           default: throw new InvalidOperationException("Unexpected data type");
         }
@@ -2138,6 +2139,11 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
         size = checked(size + IntegerByteLength(bytes.Length));
         return checked(size + bytes.Length);
       }
+      if (cbor.ItemType == CBORObjectTypeTextStringAscii) {
+        var str = (string)this.ThisItem;
+        size = checked(size + IntegerByteLength(str.Length));
+        return checked(size + str.Length);
+      }
       switch (cbor.Type) {
         case CBORType.Integer: {
           if (cbor.CanValueFitInInt64()) {
@@ -2429,11 +2435,14 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
       if (strValue.Length == 0) {
         return GetFixedObject(0x60);
       }
-      if (DataUtilities.GetUtf8Length(strValue, false) < 0) {
+      long utf8Length = DataUtilities.GetUtf8Length(strValue, false);
+      if (utf8Length < 0) {
         throw new ArgumentException("String contains an unpaired " +
           "surrogate code point.");
       }
-      return new CBORObject(CBORObjectTypeTextString, strValue);
+      return new CBORObject(
+        strValue.Length == utf8Length ? CBORObjectTypeTextStringAscii : CBORObjectTypeTextString,
+        strValue);
     }
 
     /// <summary>Generates a CBOR object from a 32-bit signed
@@ -4991,18 +5000,20 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// the.NET version): <c>(cbor == null || cbor.IsNull) ? null :
     /// cbor.AsString()</c>.</exception>
     /// <remarks>This method is not the "reverse" of the <c>FromObject</c>
-    /// method in the sense that FromObject can take either a text string or <c>null</c>,
-    /// but this method can accept only text strings.  The <c>ToObject</c>
-    /// method is closer to a "reverse" version to <c>FromObject</c> than the
-    /// <c>AsString</c> method: <c>ToObject&lt;String&gt;(cbor)</c> in DotNet,
-    /// or <c>ToObject(String.class)</c> in Java, will convert a CBOR object to
-    /// a DotNet or Java String if it represents a text string, or to <c>null</c> if
-    /// <c>IsNull</c> returns <c>true</c> for the CBOR object, and will fail in
-    /// other cases.</remarks>
+    /// method in the sense that FromObject can take either a text string
+    /// or <c>null</c>, but this method can accept only text strings. The
+    /// <c>ToObject</c> method is closer to a "reverse" version to
+    /// <c>FromObject</c> than the <c>AsString</c> method:
+    /// <c>ToObject&lt;String&gt;(cbor)</c> in DotNet, or
+    /// <c>ToObject(String.class)</c> in Java, will convert a CBOR object
+    /// to a DotNet or Java String if it represents a text string, or to
+    /// <c>null</c> if <c>IsNull</c> returns <c>true</c> for the CBOR
+    /// object, and will fail in other cases.</remarks>
     public string AsString() {
       int type = this.ItemType;
       switch (type) {
-        case CBORObjectTypeTextString: {
+        case CBORObjectTypeTextString:
+        case CBORObjectTypeTextStringAscii: {
           return (string)this.ThisItem;
         }
         case CBORObjectTypeTextStringUtf8: {
@@ -5222,6 +5233,15 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
                 (byte[])objB);
             break;
           }
+          case CBORObjectTypeTextStringAscii: {
+            var strA = (string)objA;
+            var strB = (string)objB;
+            int alen = strA.Length;
+            int blen = strB.Length;
+            cmp = (alen < blen) ? (-1) : ((alen > blen) ? 1 :
+String.CompareOrdinal(strA, strB));
+            break;
+          }
           case CBORObjectTypeTextString: {
             var strA = (string)objA;
             var strB = (string)objB;
@@ -5268,20 +5288,37 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
         cmp = CBORUtilities.ByteArrayCompare(
             this.EncodeToBytes(),
             other.EncodeToBytes());
-      } else if (typeB == CBORObjectTypeTextString && typeA ==
+      } else if ((typeB == CBORObjectTypeTextString || typeB ==
+CBORObjectTypeTextStringAscii) && typeA ==
         CBORObjectTypeTextStringUtf8) {
         cmp = -CBORUtilities.CompareUtf16Utf8LengthFirst(
             (string)objB,
             (byte[])objA);
-      } else if (typeA == CBORObjectTypeTextString && typeB ==
+      } else if ((typeA == CBORObjectTypeTextString || typeA ==
+CBORObjectTypeTextStringAscii) && typeB ==
+        CBORObjectTypeTextStringUtf8) {
+        cmp = CBORUtilities.CompareUtf16Utf8LengthFirst(
+            (string)objA,
+            (byte[])objB);
+      } else if ((typeA == CBORObjectTypeTextString && typeB ==
+CBORObjectTypeTextStringAscii) ||
+         (typeB == CBORObjectTypeTextString && typeA ==
+CBORObjectTypeTextStringAscii)) {
+        cmp = -CBORUtilities.CompareStringsAsUtf8LengthFirst(
+            (string)objB,
+            (string)objA);
+      } else if ((typeA == CBORObjectTypeTextString || typeA ==
+CBORObjectTypeTextStringAscii) && typeB ==
         CBORObjectTypeTextStringUtf8) {
         cmp = CBORUtilities.CompareUtf16Utf8LengthFirst(
             (string)objA,
             (byte[])objB);
       } else {
-        int ta = (typeA == CBORObjectTypeTextStringUtf8) ?
+        int ta = (typeA == CBORObjectTypeTextStringUtf8 || typeA ==
+CBORObjectTypeTextStringAscii) ?
           CBORObjectTypeTextString : typeA;
-        int tb = (typeB == CBORObjectTypeTextStringUtf8) ?
+        int tb = (typeB == CBORObjectTypeTextStringUtf8 || typeB ==
+CBORObjectTypeTextStringAscii) ?
           CBORObjectTypeTextString : typeB;
         /* NOTE: itemtypeValue numbers are ordered such that they
         // correspond to the lexicographical order of their CBOR encodings
@@ -5446,7 +5483,8 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
       }
       if (!hasComplexTag) {
         switch (this.ItemType) {
-          case CBORObjectTypeTextString: {
+          case CBORObjectTypeTextString:
+          case CBORObjectTypeTextStringAscii: {
             byte[] ret = GetOptimizedBytesIfShortAscii(
                 this.AsString(), tagged ? (((int)tagbyte) & 0xff) : -1);
             if (ret != null) {
@@ -5565,13 +5603,15 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
       if (this == otherValue) {
         return true;
       }
-      if (this.itemtypeValue == CBORObjectTypeTextString &&
+      if ((this.itemtypeValue == CBORObjectTypeTextString ||
+this.itemtypeValue == CBORObjectTypeTextStringAscii) &&
         otherValue.itemtypeValue == CBORObjectTypeTextStringUtf8) {
         return CBORUtilities.StringEqualsUtf8(
             (string)this.itemValue,
             (byte[])otherValue.itemValue);
       }
-      if (otherValue.itemtypeValue == CBORObjectTypeTextString &&
+      if ((otherValue.itemtypeValue == CBORObjectTypeTextString ||
+otherValue.itemtypeValue == CBORObjectTypeTextStringAscii) &&
         this.itemtypeValue == CBORObjectTypeTextStringUtf8) {
         return CBORUtilities.StringEqualsUtf8(
             (string)otherValue.itemValue,
@@ -5647,6 +5687,7 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
               itemHashCode = CBORArrayHashCode(this.AsList());
               break;
             case CBORObjectTypeTextString:
+            case CBORObjectTypeTextStringAscii:
               itemHashCode = CBORUtilities.StringHashCode(
                   (string)this.itemValue);
               break;
@@ -6176,6 +6217,7 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// options to control the encoding process. This function
     /// works not only with arrays and maps, but also integers,
     /// strings, byte arrays, and other JSON data types. Notes:
+    ///
     /// <list type=''><item>If this object contains maps with non-string
     /// keys, the keys are converted to JSON strings before writing the map
     /// as a JSON string.</item>
@@ -7172,7 +7214,8 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
           stream.Write(arr, 0, arr.Length);
           break;
         }
-        case CBORObjectTypeTextString: {
+        case CBORObjectTypeTextString:
+        case CBORObjectTypeTextStringAscii: {
           Write((string)this.ThisItem, stream, options);
           break;
         }
