@@ -178,7 +178,7 @@ namespace PeterO.Cbor {
     /// <item>3 - Minute of the hour, from 0 through 59.</item>
     /// <item>4 - Second of the minute, from 0 through 59.</item>
     /// <item>5 - Fractional seconds, expressed in nanoseconds. This value
-    /// cannot be less than 0.</item>
+    /// cannot be less than 0 and must be less than 1000*1000*1000.</item>
     /// <item>6 - Number of minutes to subtract from this date and time to
     /// get global time. This number can be positive or negative, but
     /// cannot be less than -1439 or greater than 1439. For tags 0 and 1,
@@ -371,11 +371,13 @@ namespace PeterO.Cbor {
       if (lesserFields == null) {
         throw new ArgumentNullException(nameof(lesserFields));
       }
+      // TODO: Make into CBORException in next major version
       if (lesserFields.Length < 7) {
         throw new ArgumentException("\"lesserFields\" + \"'s length\" (" +
           lesserFields.Length + ") is not greater or equal to 7");
       }
       try {
+        CBORUtilities.CheckYearAndLesserFields(bigYear, lesserFields);
         switch (this.convType) {
           case ConversionType.TaggedString: {
             string str = CBORUtilities.ToAtomDateTimeString(bigYear,

@@ -20,6 +20,8 @@ namespace PeterO.Cbor {
     private const string HexAlphabet = "0123456789ABCDEF";
     // Fractional seconds used in date conversion methods
     public const int FractionalSeconds = 1000 * 1000 * 1000;
+    private static readonly EInteger EInteger1970 = EInteger.FromInt32(1970);
+    private static readonly EInteger EInteger86400 = EInteger.FromInt32(86400);
 
     public static int CompareStringsAsUtf8LengthFirst(string strA, string
       strB) {
@@ -653,7 +655,8 @@ namespace PeterO.Cbor {
       EInteger year,
       int month,
       EInteger day,
-      EInteger[] dest) {
+      EInteger[] outYear,
+      int[] outMonthDay) {
       // NOTE: This method assumes month is 1 to 12
       if (month <= 0 || month > 12) {
         throw new ArgumentOutOfRangeException(nameof(month));
@@ -666,7 +669,7 @@ namespace PeterO.Cbor {
           // Number of days in a 400-year block
           int intCount = intDay / 146097;
           intDay = checked(intDay - (intCount * 146097));
-          longYear = checked(longYear + (intCount * 400));;
+          longYear = checked(longYear + (intCount * 400));
         }
         if (intDay < -101) {
         // Number of days in a 400-year block
@@ -675,16 +678,10 @@ namespace PeterO.Cbor {
         intDay = checked(intDay + (intCount * 146097));
         longYear = checked(longYear - (intCount * 400));
       }
-        dayArray = ((longYear & 3) != 0 || (
-            (longYear % 100) == 0 && (longYear % 400) !=
-            0)) ? ValueNormalDays : ValueLeapDays;
         if (longYear == 1970 && month == 1 && intDay > 0 && intDay >= 10957) {
            // Add enough days to move from 1/1970 to 1/2000
            longYear = 2000;
            intDay -= 10957;
-           dayArray = ((longYear & 0x03) != 0 || (
-                  longYear % 100 == 0 &&
-                longYear % 400 != 0)) ? ValueNormalDays : ValueLeapDays;
         }
         if (longYear == 2000 && month == 1 && intDay > 0 && intDay < 35064) {
            // Add enough days to move from 1/2000 to closest 4-year block
@@ -692,9 +689,6 @@ namespace PeterO.Cbor {
            int intCount = intDay / 1461;
            intDay += intCount * 1461;
            longYear -= intCount * 4;
-           dayArray = ((longYear & 0x03) != 0 || (
-                longYear % 100 == 0 && longYear % 400 != 0)) ? ValueNormalDays :
-              ValueLeapDays;
          }
          while (intDay > 366) {
            if ((longYear & 0x03) != 0 || (longYear % 100 == 0 && longYear %
@@ -706,7 +700,10 @@ namespace PeterO.Cbor {
                 intDay -= 366;
             }
          }
-         while (true) {
+        dayArray = ((longYear & 0x03) != 0 || (
+                longYear % 100 == 0 && longYear % 400 != 0)) ? ValueNormalDays :
+              ValueLeapDays;
+              while (true) {
         int intDays = dayArray[month];
         if (intDay > 0 && intDay <= intDays) {
           break;
@@ -735,8 +732,9 @@ namespace PeterO.Cbor {
           intDay += dayArray[month];
         }
       }
-      year = EInteger.FromInt64(longYear);
-      day = EInteger.FromInt32(intDay);
+      outMonthDay[0] = month;
+      outMonthDay[1] = intDay;
+      outYear[0] = EInteger.FromInt64(longYear);
       } else {
       if (day.CompareTo(100) > 0) {
         // Number of days in a 400-year block
@@ -784,10 +782,10 @@ namespace PeterO.Cbor {
           day = day.Add(dayArray[month]);
         }
       }
+      outMonthDay[0] = month;
+      outMonthDay[1] = day.ToInt32Checked();
+      outYear[0] = year;
       }
-      dest[0] = year;
-      dest[1] = EInteger.FromInt32(month);
-      dest[2] = day;
     }
 
     /*
@@ -896,18 +894,16 @@ currentYear.Remainder(100).ToInt32Checked());
       long longSecondsInDay = FloorModLong(seconds, 86400);
       int secondsInDay = checked((int)longSecondsInDay);
       GetNormalizedPartProlepticGregorian(
-        EInteger.FromInt32(1970),
+        EInteger1970,
         1,
         EInteger.FromInt64(longDays),
-        normPart);
-      lesserFields[0] = normPart[1].ToInt32Checked();
-      lesserFields[1] = normPart[2].ToInt32Checked();
+        year,
+        lesserFields); // Fills out month and day in lesserFields[0]/[1]
       lesserFields[2] = secondsInDay / 3600;
       lesserFields[3] = (secondsInDay % 3600) / 60;
       lesserFields[4] = secondsInDay % 60;
       lesserFields[5] = 0;
       lesserFields[6] = 0;
-      year[0] = normPart[0];
     }
 
     public static void BreakDownSecondsSinceEpoch(
@@ -920,26 +916,23 @@ currentYear.Remainder(100).ToInt32Checked());
         .Subtract(EDecimal.FromEInteger(integerPart).Abs());
       int fractionalSeconds = fractionalPart.Multiply(FractionalSeconds)
         .ToInt32Checked();
-      var normPart = new EInteger[3];
       EInteger days = FloorDiv(
           integerPart,
-          EInteger.FromInt32(86400)).Add(1);
+          EInteger86400).Add(1);
       int secondsInDay = FloorMod(
           integerPart,
-          EInteger.FromInt32(86400)).ToInt32Checked();
+          EInteger86400).ToInt32Checked();
       GetNormalizedPartProlepticGregorian(
-        EInteger.FromInt32(1970),
+        EInteger1970,
         1,
         days,
-        normPart);
-      lesserFields[0] = normPart[1].ToInt32Checked();
-      lesserFields[1] = normPart[2].ToInt32Checked();
+        year,
+        lesserFields); // Fills out month and day in lesserFields[0]/[1]
       lesserFields[2] = secondsInDay / 3600;
       lesserFields[3] = (secondsInDay % 3600) / 60;
       lesserFields[4] = secondsInDay % 60;
       lesserFields[5] = fractionalSeconds;
       lesserFields[6] = 0;
-      year[0] = normPart[0];
     }
 
     public static bool NameStartsWithWord(String name, String word) {
@@ -1127,14 +1120,6 @@ lesserFields.Length + ") is not greater or equal to 7");
       if (status == null) {
         throw new ArgumentNullException(nameof(status));
       }
-      if (1 < 0) {
-        throw new ArgumentException(" (" + 1 + ") is not greater or equal to" +
-"\u00200");
-      }
-      if (status.Length < 1) {
-        throw new ArgumentException(" (" + 1 + ") is not less or equal to " +
-status.Length);
-      }
       if (status.Length < 1) {
         throw new ArgumentException("\"status\" + \"'s length\" (" +
 status.Length + ") is not greater or equal to 1");
@@ -1169,9 +1154,123 @@ status.Length + ") is not greater or equal to 1");
       return EFloat.FromDouble(dbl);
     }
 
+    public static void CheckYearAndLesserFields(int smallYear, int[]
+lesserFields) {
+       CheckLesserFields(lesserFields);
+       if (lesserFields[0] == 2 && lesserFields[1] == 29 &&
+!IsLeapYear(smallYear)) {
+         throw new ArgumentException();
+       }
+    }
+
+    public static void CheckYearAndLesserFields(EInteger bigYear, int[]
+lesserFields) {
+       CheckLesserFields(lesserFields);
+     if (lesserFields[0] == 2 && lesserFields[1] == 29 &&
+(bigYear.Remainder(4).Sign != 0 || (
+            bigYear.Remainder(100).Sign == 0 && bigYear.Remainder(400).Sign !=
+            0))) {
+          throw new ArgumentException();
+       }
+    }
+
+    public static void CheckLesserFields(int[] lesserFields) {
+      if (lesserFields == null) {
+        throw new ArgumentNullException(nameof(lesserFields));
+      }
+      if (lesserFields.Length < 7) {
+        throw new ArgumentException(" (" + 7 + ") is not less or equal to " +
+lesserFields.Length);
+      }
+      if (lesserFields.Length < 7) {
+        throw new ArgumentException("\"lesserFields\" + \"'s length\" (" +
+lesserFields.Length + ") is not greater or equal to 7");
+      }
+      if (lesserFields[0] < 1) {
+        throw new ArgumentException("\"month\" (" + lesserFields[0] + ") is" +
+"\u0020not" +
+"\u0020greater or equal to 1");
+      }
+      if (lesserFields[0] > 12) {
+        throw new ArgumentException("\"month\" (" + lesserFields[0] + ") is" +
+"\u0020not less" +
+"\u0020or equal to 12");
+      }
+      if (lesserFields[1] < 1) {
+        throw new ArgumentException("\"intDay\" (" + lesserFields[1] + ") is" +
+"\u0020not greater or" +
+"\u0020equal to 1");
+      }
+      if (lesserFields[1] > 31) {
+        throw new ArgumentException("\"day\" (" + lesserFields[1] + ") is" +
+"\u0020not less or" +
+"\u0020equal to 31");
+      }
+      if (lesserFields[1] > ValueLeapDays[lesserFields[0]]) {
+        throw new ArgumentException();
+      }
+      if (lesserFields[2] < 0) {
+        throw new ArgumentException("\"hour\" (" + lesserFields[2] + ") is" +
+"\u0020not greater" +
+"\u0020or equal to 0");
+      }
+      if (lesserFields[2] > 23) {
+        throw new ArgumentException("\"hour\" (" + lesserFields[2] + ") is" +
+"\u0020not less or" +
+"\u0020equal to 23");
+      }
+      if (lesserFields[3] < 0) {
+        throw new ArgumentException("\"minute\" (" + lesserFields[3] + ") is" +
+"\u0020not" +
+"\u0020greater or equal to 0");
+      }
+      if (lesserFields[3] > 59) {
+        throw new ArgumentException("\"minute\" (" + lesserFields[3] + ") is" +
+"\u0020not less" +
+"\u0020or equal to 59");
+      }
+      if (lesserFields[4] < 0) {
+        throw new ArgumentException("\"second\" (" + lesserFields[4] + ") is" +
+"\u0020not" +
+"\u0020greater or equal to 0");
+      }
+      if (lesserFields[4] > 59) {
+        throw new ArgumentException("\"second\" (" + lesserFields[4] + ") is" +
+"\u0020not less" +
+"\u0020or equal to 59");
+      }
+      if (lesserFields[5] < 0) {
+        throw new ArgumentException("\"lesserFields[5]\" (" +
+lesserFields[5] + ") is not greater or equal to 0");
+      }
+      if (lesserFields[5] >= FractionalSeconds) {
+        throw new ArgumentException("\"lesserFields[5]\" (" +
+lesserFields[5] + ") is not less than " + FractionalSeconds);
+      }
+      if (lesserFields[6] < -1439) {
+        throw new ArgumentException("\"lesserFields[6]\" (" +
+lesserFields[6] + ") is not greater or equal to " + (-1439));
+      }
+      if (lesserFields[6] > 1439) {
+        throw new ArgumentException("\"lesserFields[6]\" (" +
+lesserFields[6] + ") is not less or equal to 1439");
+      }
+    }
+
     public static string ToAtomDateTimeString(
       EInteger bigYear,
       int[] lesserFields) {
+      if (lesserFields == null) {
+        throw new ArgumentNullException(nameof(lesserFields));
+      }
+      if (lesserFields.Length < 7) {
+        throw new ArgumentException(" (" + 7 + ") is not less or equal to " +
+lesserFields.Length);
+      }
+      if (lesserFields.Length < 7) {
+        throw new ArgumentException("\"lesserFields\" + \"'s length\" (" +
+lesserFields.Length + ") is not greater or equal to 7");
+      }
       if (lesserFields[6] != 0) {
         throw new NotSupportedException(
           "Local time offsets not supported");
@@ -1185,8 +1284,9 @@ status.Length + ") is not greater or equal to 1");
         throw new ArgumentException("year(" + smallYear +
           ") is not less or equal to 9999");
       }
+      CheckYearAndLesserFields(smallYear, lesserFields);
       int month = lesserFields[0];
-      int day = lesserFields[1];
+      int intDay = lesserFields[1];
       int hour = lesserFields[2];
       int minute = lesserFields[3];
       int second = lesserFields[4];
@@ -1200,8 +1300,8 @@ status.Length + ") is not greater or equal to 1");
       charbuf[5] = (char)('0' + ((month / 10) % 10));
       charbuf[6] = (char)('0' + (month % 10));
       charbuf[7] = '-';
-      charbuf[8] = (char)('0' + ((day / 10) % 10));
-      charbuf[9] = (char)('0' + (day % 10));
+      charbuf[8] = (char)('0' + ((intDay / 10) % 10));
+      charbuf[9] = (char)('0' + (intDay % 10));
       charbuf[10] = 'T';
       charbuf[11] = (char)('0' + ((hour / 10) % 10));
       charbuf[12] = (char)('0' + (hour % 10));

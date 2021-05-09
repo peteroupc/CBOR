@@ -55,7 +55,7 @@ array.Length);
       if (!Extra()) {
         return;
       }
-      const String ValueParam = "TestFrom";
+      const String ValueParam = "TestBadDateFields";
       // Run all the tests in this assembly
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
         if (!HasAttribute(type, typeof(TestFixtureAttribute))) {

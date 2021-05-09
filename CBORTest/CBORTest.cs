@@ -3716,6 +3716,254 @@ options) {
       }
     }
 
+    private static int[][] valueBadLesserFields = {
+       new int[] { 0, 1, 0, 0, 0, 0, 0 },
+       new int[] { -1, 1, 0, 0, 0, 0, 0 },
+       new int[] { 1, 32, 0, 0, 0, 0, 0 },
+       new int[] { 2, 30, 0, 0, 0, 0, 0 },
+       new int[] { 3, 32, 0, 0, 0, 0, 0 },
+       new int[] { 4, 31, 0, 0, 0, 0, 0 },
+       new int[] { 5, 32, 0, 0, 0, 0, 0 },
+       new int[] { 6, 31, 0, 0, 0, 0, 0 },
+       new int[] { 7, 32, 0, 0, 0, 0, 0 },
+       new int[] { 8, 32, 0, 0, 0, 0, 0 },
+       new int[] { 9, 31, 0, 0, 0, 0, 0 },
+       new int[] { 10, 32, 0, 0, 0, 0, 0 },
+       new int[] { 11, 31, 0, 0, 0, 0, 0 },
+       new int[] { 12, 32, 0, 0, 0, 0, 0 },
+       new int[] { 13, 1, 0, 0, 0, 0, 0 },
+       new int[] { Int32.MinValue, 1, 0, 0, 0, 0, 0 },
+       new int[] { Int32.MaxValue, 1, 0, 0, 0, 0, 0 },
+       new int[] { 1, 0, 0, 0, 0, 0, 0 },
+       new int[] { 1, -1, 0, 0, 0, 0, 0 },
+       new int[] { 1, Int32.MinValue, 0, 0, 0, 0, 0 },
+       new int[] { 1, 32, 0, 0, 0, 0, 0 },
+       new int[] { 1, Int32.MaxValue, 0, 0, 0, 0, 0 },
+       new int[] { 1, 1, -1, 0, 0, 0, 0 },
+       new int[] { 1, 1, Int32.MinValue, 0, 0, 0, 0 },
+       new int[] { 1, 1, 24, 0, 0, 0, 0 },
+       new int[] { 1, 1, 59, 0, 0, 0, 0 },
+       new int[] { 1, 1, 60, 0, 0, 0, 0 },
+       new int[] { 1, 1, Int32.MaxValue, 0, 0, 0, 0 },
+       new int[] { 1, 1, 0, -1, 0, 0, 0 },
+       new int[] { 1, 1, 0, Int32.MinValue, 0, 0, 0 },
+       new int[] { 1, 1, 0, 60, 0, 0, 0 },
+       new int[] { 1, 1, 0, Int32.MaxValue, 0, 0, 0 },
+       new int[] { 1, 1, 0, 0, -1, 0, 0 },
+       new int[] { 1, 1, 0, 0, Int32.MinValue, 0, 0 },
+       new int[] { 1, 1, 0, 0, 60, 0, 0 },
+       new int[] { 1, 1, 0, 0, Int32.MaxValue, 0, 0 },
+       new int[] { 1, 1, 0, 0, 0, -1, 0 },
+       new int[] { 1, 1, 0, 0, 0, Int32.MinValue, 0 },
+       new int[] { 1, 1, 0, 0, 0, 1000*1000* 1000, 0 },
+       new int[] { 1, 1, 0, 0, 0, Int32.MaxValue, 0 },
+       new int[] { 1, 1, 0, 0, 0, 0, -1440 },
+       new int[] { 1, 1, 0, 0, 0, 0, Int32.MinValue },
+       new int[] { 1, 1, 0, 0, 0, 0, 1440 },
+       new int[] { 1, 1, 0, 0, 0, 0, Int32.MaxValue },
+    };
+
+    private static void TestBadDateFieldsOne(CBORDateConverter conv) {
+      EInteger eint = EInteger.FromInt32(2000);
+      int[] lesserFields;
+      for (var i = 0; i < valueBadLesserFields.Length; ++i) {
+         lesserFields = valueBadLesserFields[i];
+         Assert.AreEqual(7, lesserFields.Length, String.Empty + i);
+         if (lesserFields[3] ==0 && lesserFields[4]==0 && lesserFields[5]==0 &&
+lesserFields[6] ==0 && lesserFields[2]==0) {
+             try {
+ conv.DateTimeFieldsToCBORObject(2000, lesserFields[0], lesserFields[1]);
+ Assert.Fail(
+  ("Should have failed: " + lesserFields[0] + " " + (lesserFields[1]))); }
+catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+         }
+         if (lesserFields[5] ==0 && lesserFields[6]==0) {
+             try {
+ conv.DateTimeFieldsToCBORObject(
+   2000,
+   lesserFields[0],
+   lesserFields[1],
+   lesserFields[2],
+   lesserFields[3],
+   lesserFields[4]);
+ Assert.Fail(
+  String.Format("Should have failed: {0} {1} {2} {3}" +
+"\u0020 {4}",
+  lesserFields[0], lesserFields[1], lesserFields[2], lesserFields[3], lesserFields[4]));
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+         }
+         try {
+ conv.DateTimeFieldsToCBORObject(eint, lesserFields);
+ Assert.Fail(
+  String.Format("Should have failed: {0} {1} {2} {3} {4} {5}" +
+"\u0020 {6}",
+  lesserFields[0], lesserFields[1], lesserFields[2], lesserFields[3], lesserFields[4], lesserFields[5], lesserFields[6]));
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+      }
+      lesserFields = null;
+      try {
+ conv.DateTimeFieldsToCBORObject(2000, lesserFields);
+ Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+      // TODO: Make into CBORException in next major version
+      lesserFields = new int[] { 1 };
+      try {
+ conv.DateTimeFieldsToCBORObject(2000, lesserFields);
+ Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+      lesserFields = new int[] { 1, 1 };
+      try {
+ conv.DateTimeFieldsToCBORObject(2000, lesserFields);
+ Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+      lesserFields = new int[] { 1, 1, 0 };
+      try {
+ conv.DateTimeFieldsToCBORObject(2000, lesserFields);
+ Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+      lesserFields = new int[] { 1, 1, 0, 0 };
+      try {
+ conv.DateTimeFieldsToCBORObject(2000, lesserFields);
+ Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+      lesserFields = new int[] { 1, 1, 0, 0, 0 };
+      try {
+ conv.DateTimeFieldsToCBORObject(2000, lesserFields);
+ Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+      lesserFields = new int[] { 1, 1, 0, 0, 0, 0 };
+      try {
+ conv.DateTimeFieldsToCBORObject(2000, lesserFields);
+ Assert.Fail("Should have failed: 6");
+} catch (ArgumentException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ conv.DateTimeFieldsToCBORObject(2100, 2, 29);
+ Assert.Fail("Should have failed: 2100/2/29");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ conv.DateTimeFieldsToCBORObject(2001, 2, 29);
+ Assert.Fail("Should have failed: 2001/2/29");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ conv.DateTimeFieldsToCBORObject(2007, 2, 29);
+ Assert.Fail("Should have failed: 2007/2/29");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ conv.DateTimeFieldsToCBORObject(2000, 2, 28);
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ conv.DateTimeFieldsToCBORObject(2100, 2, 28);
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ conv.DateTimeFieldsToCBORObject(2001, 2, 28);
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ conv.DateTimeFieldsToCBORObject(2007, 2, 28);
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ conv.DateTimeFieldsToCBORObject(2004, 2, 29);
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ conv.DateTimeFieldsToCBORObject(2008, 2, 29);
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ conv.DateTimeFieldsToCBORObject(2000, 2, 29);
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+    }
+
+    [Test]
+    public void TestBadDateFields() {
+        TestBadDateFieldsOne(CBORDateConverter.TaggedNumber);
+        TestBadDateFieldsOne(CBORDateConverter.UntaggedNumber);
+        TestBadDateFieldsOne(CBORDateConverter.TaggedString);
+    }
+
     [Test]
     public void TestTags264And265() {
       CBORObject cbor;

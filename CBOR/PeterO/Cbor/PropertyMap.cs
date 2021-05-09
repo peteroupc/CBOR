@@ -348,8 +348,10 @@ namespace PeterO.Cbor {
       private readonly string adjustedName;
       private readonly string adjustedNameCamelCase;
       public string Name {
-get {
-return this.name; } }
+        get {
+          return this.name;
+        }
+      }
 
       public PropertyData(string name, MemberInfo prop) {
         this.name = name;
@@ -431,8 +433,8 @@ return this.name; } }
       }
 
       public string GetAdjustedName(bool useCamelCase) {
-            return useCamelCase ? this.adjustedNameCamelCase :
-this.adjustedName;
+        return useCamelCase ? this.adjustedNameCamelCase :
+          this.adjustedName;
       }
 
       public string GetAdjustedNameInternal(bool useCamelCase) {
@@ -1280,12 +1282,12 @@ this.adjustedName;
       }
     }
 
-public static CBORObject GetOrDefault(IDictionary<CBORObject, CBORObject> map,
-    CBORObject key,
-    CBORObject defaultValue) {
-        CBORObject ret = null;
-        return (!map.TryGetValue(key, out ret)) ? defaultValue : ret;
-}
+    public static CBORObject GetOrDefault(IDictionary<CBORObject, CBORObject> map,
+      CBORObject key,
+      CBORObject defaultValue) {
+      CBORObject ret = null;
+      return (!map.TryGetValue(key, out ret)) ? defaultValue : ret;
+    }
 
 #pragma warning disable CA1801
     public static CBORObject FromObjectOther(object obj) {

@@ -5617,6 +5617,12 @@ otherValue.itemtypeValue == CBORObjectTypeTextStringAscii) &&
             (string)otherValue.itemValue,
             (byte[])this.itemValue);
       }
+      if ((otherValue.itemtypeValue == CBORObjectTypeTextString &&
+this.itemtypeValue == CBORObjectTypeTextStringAscii) || (this.itemtypeValue
+== CBORObjectTypeTextString && otherValue.itemtypeValue ==
+CBORObjectTypeTextStringAscii)) {
+        return Object.Equals(this.itemValue, otherValue.itemValue);
+      }
       if (this.itemtypeValue != otherValue.itemtypeValue) {
         return false;
       }
