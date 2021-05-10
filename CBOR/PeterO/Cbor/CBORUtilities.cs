@@ -623,7 +623,7 @@ namespace PeterO.Cbor {
 
     private static long FloorModLong(long longA, int longN) {
       checked {
-         return longA - FloorDiv(longA, longN) * longN;
+        return longA - (FloorDiv(longA, longN) * longN);
       }
     }
 
@@ -672,119 +672,120 @@ namespace PeterO.Cbor {
           longYear = checked(longYear + (intCount * 400));
         }
         if (intDay < -101) {
-        // Number of days in a 400-year block
-        int intCount = (intDay == Int32.MinValue) ? 14699 : Math.Abs(intDay)
-/ 146097;
-        intDay = checked(intDay + (intCount * 146097));
-        longYear = checked(longYear - (intCount * 400));
-      }
+          // Number of days in a 400-year block
+          int intCount = (intDay == Int32.MinValue) ? 14699 : Math.Abs(intDay)
+            / 146097;
+          intDay = checked(intDay + (intCount * 146097));
+          longYear = checked(longYear - (intCount * 400));
+        }
         if (longYear == 1970 && month == 1 && intDay > 0 && intDay >= 10957) {
-           // Add enough days to move from 1/1970 to 1/2000
-           longYear = 2000;
-           intDay -= 10957;
+          // Add enough days to move from 1/1970 to 1/2000
+          longYear = 2000;
+          intDay -= 10957;
         }
         if (longYear == 2000 && month == 1 && intDay > 0 && intDay < 35064) {
-           // Add enough days to move from 1/2000 to closest 4-year block
-           // in the century.
-           int intCount = intDay / 1461;
-           intDay += intCount * 1461;
-           longYear -= intCount * 4;
-         }
-         while (intDay > 366) {
-           if ((longYear & 0x03) != 0 || (longYear % 100 == 0 && longYear %
-400 != 0)) {
-                ++longYear;
-                intDay -= 365;
-            } else {
-                ++longYear;
-                intDay -= 366;
-            }
-         }
-        dayArray = ((longYear & 0x03) != 0 || (
-                longYear % 100 == 0 && longYear % 400 != 0)) ? ValueNormalDays :
-              ValueLeapDays;
-              while (true) {
-        int intDays = dayArray[month];
-        if (intDay > 0 && intDay <= intDays) {
-          break;
+          // Add enough days to move from 1/2000 to closest 4-year block
+          // in the century.
+          int intCount = intDay / 1461;
+          intDay += intCount * 1461;
+          longYear -= intCount * 4;
         }
-        if (intDay > intDays) {
-          intDay -= intDays;
-          if (month == 12) {
-            month = 1;
+        while (intDay > 366) {
+          if ((longYear & 0x03) != 0 || (longYear % 100 == 0 && longYear %
+              400 != 0)) {
             ++longYear;
-            dayArray = ((longYear & 0x03) != 0 || (
-                  longYear % 100 == 0 &&
-                longYear % 400 != 0)) ? ValueNormalDays : ValueLeapDays;
+            intDay -= 365;
           } else {
-            ++month;
+            ++longYear;
+            intDay -= 366;
           }
         }
-        if (intDay <= 0) {
-          --month;
-          if (month <= 0) {
-            --longYear;
-            month = 12;
-            dayArray = ((longYear & 0x03) != 0 || (
-                longYear % 100 == 0 && longYear % 400 != 0)) ? ValueNormalDays :
-            ValueLeapDays;
+        dayArray = ((longYear & 0x03) != 0 || (
+              longYear % 100 == 0 && longYear % 400 != 0)) ? ValueNormalDays :
+          ValueLeapDays;
+        while (true) {
+          int intDays = dayArray[month];
+          if (intDay > 0 && intDay <= intDays) {
+            break;
           }
-          intDay += dayArray[month];
+          if (intDay > intDays) {
+            intDay -= intDays;
+            if (month == 12) {
+              month = 1;
+              ++longYear;
+              dayArray = ((longYear & 0x03) != 0 || (
+                    longYear % 100 == 0 &&
+                    longYear % 400 != 0)) ? ValueNormalDays : ValueLeapDays;
+            } else {
+              ++month;
+            }
+          }
+          if (intDay <= 0) {
+            --month;
+            if (month <= 0) {
+              --longYear;
+              month = 12;
+              dayArray = ((longYear & 0x03) != 0 || (
+                    longYear % 100 == 0 && longYear % 400 != 0)) ?
+ValueNormalDays :
+                ValueLeapDays;
+            }
+            intDay += dayArray[month];
+          }
         }
-      }
-      outMonthDay[0] = month;
-      outMonthDay[1] = intDay;
-      outYear[0] = EInteger.FromInt64(longYear);
+        outMonthDay[0] = month;
+        outMonthDay[1] = intDay;
+        outYear[0] = EInteger.FromInt64(longYear);
       } else {
-      if (day.CompareTo(100) > 0) {
-        // Number of days in a 400-year block
-        EInteger count = day.Divide(146097);
-        day = day.Subtract(count.Multiply(146097));
-        year = year.Add(count.Multiply(400));
-      }
-      if (day.CompareTo(-101) < 0) {
-        // Number of days in a 400-year block
-        EInteger count = day.Abs().Divide(146097);
-        day = day.Add(count.Multiply(146097));
-        year = year.Subtract(count.Multiply(400));
-      }
-      dayArray = (year.Remainder(4).Sign != 0 || (
-            year.Remainder(100).Sign == 0 && year.Remainder(400).Sign !=
-            0)) ? ValueNormalDays : ValueLeapDays;
-      while (true) {
-        EInteger days = EInteger.FromInt32(dayArray[month]);
-        if (day.Sign > 0 && day.CompareTo(days) <= 0) {
-          break;
+        if (day.CompareTo(100) > 0) {
+          // Number of days in a 400-year block
+          EInteger count = day.Divide(146097);
+          day = day.Subtract(count.Multiply(146097));
+          year = year.Add(count.Multiply(400));
         }
-        if (day.CompareTo(days) > 0) {
-          day = day.Subtract(days);
-          if (month == 12) {
-            month = 1;
-            year = year.Add(1);
-            dayArray = (year.Remainder(4).Sign != 0 || (
-                  year.Remainder(100).Sign == 0 &&
-                  year.Remainder(400).Sign != 0)) ? ValueNormalDays :
-              ValueLeapDays;
-          } else {
-            ++month;
+        if (day.CompareTo(-101) < 0) {
+          // Number of days in a 400-year block
+          EInteger count = day.Abs().Divide(146097);
+          day = day.Add(count.Multiply(146097));
+          year = year.Subtract(count.Multiply(400));
+        }
+        dayArray = (year.Remainder(4).Sign != 0 || (
+              year.Remainder(100).Sign == 0 && year.Remainder(400).Sign !=
+              0)) ? ValueNormalDays : ValueLeapDays;
+        while (true) {
+          EInteger days = EInteger.FromInt32(dayArray[month]);
+          if (day.Sign > 0 && day.CompareTo(days) <= 0) {
+            break;
+          }
+          if (day.CompareTo(days) > 0) {
+            day = day.Subtract(days);
+            if (month == 12) {
+              month = 1;
+              year = year.Add(1);
+              dayArray = (year.Remainder(4).Sign != 0 || (
+                    year.Remainder(100).Sign == 0 &&
+                    year.Remainder(400).Sign != 0)) ? ValueNormalDays :
+                ValueLeapDays;
+            } else {
+              ++month;
+            }
+          }
+          if (day.Sign <= 0) {
+            --month;
+            if (month <= 0) {
+              year = year.Add(-1);
+              month = 12;
+              dayArray = (year.Remainder(4).Sign != 0 || (
+                    year.Remainder(100).Sign == 0 &&
+                    year.Remainder(400).Sign != 0)) ? ValueNormalDays :
+                ValueLeapDays;
+            }
+            day = day.Add(dayArray[month]);
           }
         }
-        if (day.Sign <= 0) {
-          --month;
-          if (month <= 0) {
-            year = year.Add(-1);
-            month = 12;
-            dayArray = (year.Remainder(4).Sign != 0 || (
-                year.Remainder(100).Sign == 0 &&
-                year.Remainder(400).Sign != 0)) ? ValueNormalDays :
-              ValueLeapDays;
-          }
-          day = day.Add(dayArray[month]);
-        }
-      }
-      outMonthDay[0] = month;
-      outMonthDay[1] = day.ToInt32Checked();
-      outYear[0] = year;
+        outMonthDay[0] = month;
+        outMonthDay[1] = day.ToInt32Checked();
+        outYear[0] = year;
       }
     }
 
@@ -833,7 +834,7 @@ namespace PeterO.Cbor {
           }
           if (!(currentYear.Remainder(4).Sign != 0 || (
                 currentYear.Remainder(100).Sign == 0 &&
-currentYear.Remainder(400).Sign !=
+                currentYear.Remainder(400).Sign !=
                 0))) {
             numDays = numDays.Subtract(1);
           }
@@ -869,7 +870,7 @@ currentYear.Remainder(400).Sign !=
         numDays = numDays.Add(year.Subtract(eileap).Add(3).Divide(4));
         if (currentYear.Remainder(100).Sign != 0) {
           currentYear = currentYear.Add(100 -
-currentYear.Remainder(100).ToInt32Checked());
+              currentYear.Remainder(100).ToInt32Checked());
         }
         while (currentYear.CompareTo(year) < 0) {
           if (currentYear.Remainder(400).Sign != 0) {
@@ -1107,22 +1108,22 @@ currentYear.Remainder(100).ToInt32Checked());
       }
       if (7 < 0) {
         throw new ArgumentException(" (" + 7 + ") is not greater or equal to" +
-"\u00200");
+          "\u00200");
       }
       if (lesserFields.Length < 7) {
         throw new ArgumentException(" (" + 7 + ") is not less or equal to " +
-lesserFields.Length);
+          lesserFields.Length);
       }
       if (lesserFields.Length < 7) {
         throw new ArgumentException("\"lesserFields\" + \"'s length\" (" +
-lesserFields.Length + ") is not greater or equal to 7");
+          lesserFields.Length + ") is not greater or equal to 7");
       }
       if (status == null) {
         throw new ArgumentNullException(nameof(status));
       }
       if (status.Length < 1) {
         throw new ArgumentException("\"status\" + \"'s length\" (" +
-status.Length + ") is not greater or equal to 1");
+          status.Length + ") is not greater or equal to 1");
       }
       // Status is 0 for integer, 1 for (lossy) double, 2 for failure
       if (lesserFields[6] != 0) {
@@ -1130,48 +1131,48 @@ status.Length + ") is not greater or equal to 1");
           "Local time offsets not supported");
       }
       EInteger seconds = GetNumberOfDaysProlepticGregorian(
-        bigYear,
-        lesserFields[0],
-        lesserFields[1]);
+          bigYear,
+          lesserFields[0],
+          lesserFields[1]);
       seconds = seconds.Multiply(24).Add(lesserFields[2])
-          .Multiply(60).Add(lesserFields[3]).Multiply(60).Add(lesserFields[4]);
+        .Multiply(60).Add(lesserFields[3]).Multiply(60).Add(lesserFields[4]);
       if (lesserFields[5] == 0 && seconds.GetUnsignedBitLengthAsInt64() <= 64) {
-         // Can fit in major type 1 or 2
-         status[0] = 0;
-         return EFloat.FromEInteger(seconds);
+        // Can fit in major type 1 or 2
+        status[0] = 0;
+        return EFloat.FromEInteger(seconds);
       }
       // Add seconds and incorporate nanoseconds
       EDecimal d = EDecimal.FromInt32(lesserFields[5]).Divide(FractionalSeconds)
-         .Add(EDecimal.FromEInteger(seconds));
+        .Add(EDecimal.FromEInteger(seconds));
       double dbl = d.ToDouble();
       if (Double.IsPositiveInfinity(dbl) ||
              Double.IsNegativeInfinity(dbl) ||
              Double.IsNaN(dbl)) {
-         status[0] = 2;
-         return null;
+        status[0] = 2;
+        return null;
       }
       status[0] = 1;
       return EFloat.FromDouble(dbl);
     }
 
     public static void CheckYearAndLesserFields(int smallYear, int[]
-lesserFields) {
-       CheckLesserFields(lesserFields);
-       if (lesserFields[0] == 2 && lesserFields[1] == 29 &&
-!IsLeapYear(smallYear)) {
-         throw new ArgumentException();
-       }
+      lesserFields) {
+      CheckLesserFields(lesserFields);
+      if (lesserFields[0] == 2 && lesserFields[1] == 29 &&
+        !IsLeapYear(smallYear)) {
+        throw new ArgumentException();
+      }
     }
 
     public static void CheckYearAndLesserFields(EInteger bigYear, int[]
-lesserFields) {
-       CheckLesserFields(lesserFields);
-     if (lesserFields[0] == 2 && lesserFields[1] == 29 &&
-(bigYear.Remainder(4).Sign != 0 || (
+      lesserFields) {
+      CheckLesserFields(lesserFields);
+      if (lesserFields[0] == 2 && lesserFields[1] == 29 &&
+        (bigYear.Remainder(4).Sign != 0 || (
             bigYear.Remainder(100).Sign == 0 && bigYear.Remainder(400).Sign !=
             0))) {
-          throw new ArgumentException();
-       }
+        throw new ArgumentException();
+      }
     }
 
     public static void CheckLesserFields(int[] lesserFields) {
@@ -1180,80 +1181,70 @@ lesserFields) {
       }
       if (lesserFields.Length < 7) {
         throw new ArgumentException(" (" + 7 + ") is not less or equal to " +
-lesserFields.Length);
+          lesserFields.Length);
       }
       if (lesserFields.Length < 7) {
         throw new ArgumentException("\"lesserFields\" + \"'s length\" (" +
-lesserFields.Length + ") is not greater or equal to 7");
+          lesserFields.Length + ") is not greater or equal to 7");
       }
       if (lesserFields[0] < 1) {
         throw new ArgumentException("\"month\" (" + lesserFields[0] + ") is" +
-"\u0020not" +
-"\u0020greater or equal to 1");
+          "\u0020not" + "\u0020greater or equal to 1");
       }
       if (lesserFields[0] > 12) {
         throw new ArgumentException("\"month\" (" + lesserFields[0] + ") is" +
-"\u0020not less" +
-"\u0020or equal to 12");
+          "\u0020not less" + "\u0020or equal to 12");
       }
       if (lesserFields[1] < 1) {
         throw new ArgumentException("\"intDay\" (" + lesserFields[1] + ") is" +
-"\u0020not greater or" +
-"\u0020equal to 1");
+          "\u0020not greater or" + "\u0020equal to 1");
       }
       if (lesserFields[1] > 31) {
         throw new ArgumentException("\"day\" (" + lesserFields[1] + ") is" +
-"\u0020not less or" +
-"\u0020equal to 31");
+          "\u0020not less or" + "\u0020equal to 31");
       }
       if (lesserFields[1] > ValueLeapDays[lesserFields[0]]) {
         throw new ArgumentException();
       }
       if (lesserFields[2] < 0) {
         throw new ArgumentException("\"hour\" (" + lesserFields[2] + ") is" +
-"\u0020not greater" +
-"\u0020or equal to 0");
+          "\u0020not greater" + "\u0020or equal to 0");
       }
       if (lesserFields[2] > 23) {
         throw new ArgumentException("\"hour\" (" + lesserFields[2] + ") is" +
-"\u0020not less or" +
-"\u0020equal to 23");
+          "\u0020not less or" + "\u0020equal to 23");
       }
       if (lesserFields[3] < 0) {
         throw new ArgumentException("\"minute\" (" + lesserFields[3] + ") is" +
-"\u0020not" +
-"\u0020greater or equal to 0");
+          "\u0020not" + "\u0020greater or equal to 0");
       }
       if (lesserFields[3] > 59) {
         throw new ArgumentException("\"minute\" (" + lesserFields[3] + ") is" +
-"\u0020not less" +
-"\u0020or equal to 59");
+          "\u0020not less" + "\u0020or equal to 59");
       }
       if (lesserFields[4] < 0) {
         throw new ArgumentException("\"second\" (" + lesserFields[4] + ") is" +
-"\u0020not" +
-"\u0020greater or equal to 0");
+          "\u0020not" + "\u0020greater or equal to 0");
       }
       if (lesserFields[4] > 59) {
         throw new ArgumentException("\"second\" (" + lesserFields[4] + ") is" +
-"\u0020not less" +
-"\u0020or equal to 59");
+          "\u0020not less" + "\u0020or equal to 59");
       }
       if (lesserFields[5] < 0) {
         throw new ArgumentException("\"lesserFields[5]\" (" +
-lesserFields[5] + ") is not greater or equal to 0");
+          lesserFields[5] + ") is not greater or equal to 0");
       }
       if (lesserFields[5] >= FractionalSeconds) {
         throw new ArgumentException("\"lesserFields[5]\" (" +
-lesserFields[5] + ") is not less than " + FractionalSeconds);
+          lesserFields[5] + ") is not less than " + FractionalSeconds);
       }
       if (lesserFields[6] < -1439) {
         throw new ArgumentException("\"lesserFields[6]\" (" +
-lesserFields[6] + ") is not greater or equal to " + (-1439));
+          lesserFields[6] + ") is not greater or equal to " + (-1439));
       }
       if (lesserFields[6] > 1439) {
         throw new ArgumentException("\"lesserFields[6]\" (" +
-lesserFields[6] + ") is not less or equal to 1439");
+          lesserFields[6] + ") is not less or equal to 1439");
       }
     }
 
@@ -1265,11 +1256,11 @@ lesserFields[6] + ") is not less or equal to 1439");
       }
       if (lesserFields.Length < 7) {
         throw new ArgumentException(" (" + 7 + ") is not less or equal to " +
-lesserFields.Length);
+          lesserFields.Length);
       }
       if (lesserFields.Length < 7) {
         throw new ArgumentException("\"lesserFields\" + \"'s length\" (" +
-lesserFields.Length + ") is not greater or equal to 7");
+          lesserFields.Length + ") is not greater or equal to 7");
       }
       if (lesserFields[6] != 0) {
         throw new NotSupportedException(
@@ -1421,8 +1412,8 @@ lesserFields.Length + ") is not greater or equal to 7");
     [Obsolete]
     public static EInteger EIntegerFromDouble(double dbl) {
       return EIntegerFromDoubleBits(BitConverter.ToInt64(
-          BitConverter.GetBytes((double)dbl),
-          0));
+            BitConverter.GetBytes((double)dbl),
+            0));
     }
 
     public static EInteger EIntegerFromDoubleBits(long lvalue) {
@@ -1539,7 +1530,7 @@ lesserFields.Length + ") is not greater or equal to 7");
           return -1;
         }
         return ((mant & ((1L << (42 - (sexp - 1))) - 1)) == 0) ? (sign | rs) :
--1;
+          -1;
       }
     }
 
@@ -1559,7 +1550,7 @@ lesserFields.Length + ") is not greater or equal to 7");
         return (mant & ((1L << 29) - 1)) == 0;
       } else if (sexp == -23) {
         return (mant & ((1L << (29 - (sexp - 1))) - 1)) == 0 &&
-           RoundedShift(mant | (1L << 52), 29 - (sexp - 1)) != 0;
+          RoundedShift(mant | (1L << 52), 29 - (sexp - 1)) != 0;
       } else { // subnormal and zero
         return (mant & ((1L << (29 - (sexp - 1))) - 1)) == 0;
       }
@@ -1647,10 +1638,10 @@ lesserFields.Length + ") is not greater or equal to 7");
         int shift = 126 - exp;
         int rs = (1024 >> (145 - exp)) + (mant >> shift);
         return (mant != 0 && exp == 103) ? (-1) : ((bits & ((1 << shift) -
-1)) == 0 ? sign + rs : -1);
+                1)) == 0 ? sign + rs : -1);
       } else {
         return (bits & 0x1fff) == 0 ? sign + ((exp - 112) << 10) +
--(mant >> 13) : -1;
+          -(mant >> 13) : -1;
       }
     }
 

@@ -365,6 +365,8 @@ namespace PeterO.Cbor {
     /// conversion.</exception>
     public CBORObject DateTimeFieldsToCBORObject(EInteger bigYear, int[]
       lesserFields) {
+      // TODO: In next minor version, add overload that takes int rather than
+      // EInteger
       if (bigYear == null) {
         throw new ArgumentNullException(nameof(bigYear));
       }

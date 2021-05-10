@@ -2284,9 +2284,10 @@ namespace Test {
     public static void TestRandomOne(byte[] array) {
       using (var inputStream = new MemoryStream(array)) {
         while (inputStream.Position != inputStream.Length) {
+          long oldPos = 0L;
           try {
             CBORObject o;
-            long oldPos = inputStream.Position;
+            oldPos = inputStream.Position;
             o = CBORObject.Read(inputStream);
             long cborlen = inputStream.Position - oldPos;
             // if (cborlen > 3000) {
@@ -2326,6 +2327,8 @@ namespace Test {
             string failString = ex.ToString() +
               (ex.InnerException == null ? String.Empty : "\n" +
                 ex.InnerException.ToString());
+            failString += "\nlength: " + array.Length + " bytes";
+            failString += "\nstart pos: " + oldPos + ", truelen=" + (inputStream.Position - oldPos);
             failString += "\n" + TestCommon.ToByteArrayString(array);
             failString = failString.Substring(
                 0,
@@ -2343,7 +2346,7 @@ namespace Test {
       for (var i = 0; i < 2000; ++i) {
         CBORObject originalObject = CBORTestCommon.RandomCBORObject(rand);
         byte[] array = originalObject.EncodeToBytes();
-        // Console.WriteLine("i=" + i + " obj=" + array.Length);
+        Console.WriteLine("i=" + i + " obj=" + array.Length);
         TestRandomOne(SlightlyModify(array, rand));
       }
     }
@@ -3791,10 +3794,7 @@ catch (CBORException) {
    lesserFields[2],
    lesserFields[3],
    lesserFields[4]);
- Assert.Fail(
-  String.Format("Should have failed: {0} {1} {2} {3}" +
-"\u0020 {4}",
-  lesserFields[0], lesserFields[1], lesserFields[2], lesserFields[3], lesserFields[4]));
+ Assert.Fail("Should have failed");
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
@@ -3804,10 +3804,7 @@ catch (CBORException) {
          }
          try {
  conv.DateTimeFieldsToCBORObject(eint, lesserFields);
- Assert.Fail(
-  String.Format("Should have failed: {0} {1} {2} {3} {4} {5}" +
-"\u0020 {6}",
-  lesserFields[0], lesserFields[1], lesserFields[2], lesserFields[3], lesserFields[4], lesserFields[5], lesserFields[6]));
+ Assert.Fail("Should have failed");
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
@@ -3817,7 +3814,7 @@ catch (CBORException) {
       }
       lesserFields = null;
       try {
- conv.DateTimeFieldsToCBORObject(2000, lesserFields);
+ conv.DateTimeFieldsToCBORObject(eint, lesserFields);
  Assert.Fail("Should have failed");
 } catch (ArgumentNullException) {
 // NOTE: Intentionally empty
@@ -3828,7 +3825,7 @@ catch (CBORException) {
       // TODO: Make into CBORException in next major version
       lesserFields = new int[] { 1 };
       try {
- conv.DateTimeFieldsToCBORObject(2000, lesserFields);
+ conv.DateTimeFieldsToCBORObject(eint, lesserFields);
  Assert.Fail("Should have failed");
 } catch (ArgumentException) {
 // NOTE: Intentionally empty
@@ -3838,7 +3835,7 @@ catch (CBORException) {
 }
       lesserFields = new int[] { 1, 1 };
       try {
- conv.DateTimeFieldsToCBORObject(2000, lesserFields);
+ conv.DateTimeFieldsToCBORObject(eint, lesserFields);
  Assert.Fail("Should have failed");
 } catch (ArgumentException) {
 // NOTE: Intentionally empty
@@ -3848,7 +3845,7 @@ catch (CBORException) {
 }
       lesserFields = new int[] { 1, 1, 0 };
       try {
- conv.DateTimeFieldsToCBORObject(2000, lesserFields);
+ conv.DateTimeFieldsToCBORObject(eint, lesserFields);
  Assert.Fail("Should have failed");
 } catch (ArgumentException) {
 // NOTE: Intentionally empty
@@ -3858,7 +3855,7 @@ catch (CBORException) {
 }
       lesserFields = new int[] { 1, 1, 0, 0 };
       try {
- conv.DateTimeFieldsToCBORObject(2000, lesserFields);
+ conv.DateTimeFieldsToCBORObject(eint, lesserFields);
  Assert.Fail("Should have failed");
 } catch (ArgumentException) {
 // NOTE: Intentionally empty
@@ -3868,7 +3865,7 @@ catch (CBORException) {
 }
       lesserFields = new int[] { 1, 1, 0, 0, 0 };
       try {
- conv.DateTimeFieldsToCBORObject(2000, lesserFields);
+ conv.DateTimeFieldsToCBORObject(eint, lesserFields);
  Assert.Fail("Should have failed");
 } catch (ArgumentException) {
 // NOTE: Intentionally empty
@@ -3878,7 +3875,7 @@ catch (CBORException) {
 }
       lesserFields = new int[] { 1, 1, 0, 0, 0, 0 };
       try {
- conv.DateTimeFieldsToCBORObject(2000, lesserFields);
+ conv.DateTimeFieldsToCBORObject(eint, lesserFields);
  Assert.Fail("Should have failed: 6");
 } catch (ArgumentException) {
 // NOTE: Intentionally empty
@@ -4581,6 +4578,18 @@ throw new InvalidOperationException(String.Empty, ex);
       cmpCobj = o1.AsNumber().Subtract(o2.AsNumber()).ToEDecimal();
       TestCommon.CompareTestEqual(cmpDecFrac, cmpCobj);
       CBORObjectTest.CompareDecimals(o1, o2);
+    }
+
+    [Test]
+    public static void TestRationalJsonString() {
+       string s1="2314185985457202732189984229086860275536452482912712559300364012538811890519021609896348772904852567130731662638662357113651250315642348662481229868556065813139982071069333964882192144997551182445870403177326619887472161149361459394237531679153467064950578633985038857850930553390675215926785522674620921221013857844957579079905210161700278381169854796455676266121858525817919848944985101521416062436650605384179954486013171983603514573732843973878942460661051122207994787725632035785836247773451399551083190779512400561839577794870702499681043124072992405732619348558204728800270899359780143357389476977840367320292768181094717788094551212489822736249585469244387735363318078783976724668392554429679443922755068135350076319909649622682466354980725423633530350364989945871920048447230307815643527525431336201627641891131614532527580497256382071436840494627668584005384127077683035880018530366999707415485257695504047147523521952194384880231172509079788316925500613704258819197092976088140216280520582313645747413451716685429138670645309423396623806701594839731451445336814620082926910150739091172178600865482539725012429775997863264496120844788653020449046903816363344201802799558922359223708825558520103859838244276323990910167216851809090120320961066908102124848129364767874532700083684330840078660557364044159387179646160035386030868471110043830522222249658101959143096323641704675830142899751696476007503506009598273729872080504917363964684006707667515610753851782851579370526135223570019729110932882718719";
+       string s2="6662791484278690594826817847881545965329948329731867968121995135273120814985447625408875010164308165523077008393040907448927095816668472183767306507621988644226927007049807896601977790621449471807224544610921018712323247068196141241260970690722422573836727986751170029846748991630865560108915742912790575418880931905841405752318207096850143527159053198029648842245667818442862752212319584591326350903220882410151458427571245209321776934621224736963318933098990162346637307854541301688032696173626360523085187457965260167140087021479260407414362314681927575639118779628079152745063483804212029391314516551540082552323766393935679162832149309343521979435765872081112730566874916857979923774605127048865566043423311513224206112727810624953812129189407444425723013814542858953773303224750083748214186967592731457750110532337407558719554095585903998079748001889804344632924251379769721367766565683489037136792018541299840911134792202457550460405605363852082703644386814261111315827747899661812006358141505684436007974039689212221755906535319187254965909243842599581550882694985174561192357511545227109515529785121078195397742875082523296406527673130136841581998940369597346610553537051630040762759128694436878055285011408511186930096142698312900789328008870013582608819840691525856150433351282368061590406881127142805435230013505013582096402814554965693562771980924387951907732638686068565579913844909487962223859043024131114445573057517284388114134555750443506173757889119715387627461644374462498045130424821914143893279013612002227413094709860042079542320696728791055885208451681839380238306841352325674806804434188273228678316889664118537421135644047836961335665043472528998461372064871916691003281042407296035913958087310042321020211485879442799018303005446353339317990963540";
+
+ERational er=ERational.Create(
+   EInteger.FromString(s1),
+   EInteger.FromString(s2));
+CBORObject cbor=CBORObject.FromObject(er);
+cbor.ToJSONString();
     }
 
     public static bool CheckUtf16(string str) {

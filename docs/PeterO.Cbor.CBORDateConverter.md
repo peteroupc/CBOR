@@ -239,7 +239,7 @@ Tries to extract the fields of a date and time in the form of a CBOR object.
 
  * 4 - Second of the minute, from 0 through 59.
 
- * 5 - Fractional seconds, expressed in nanoseconds. This value cannot be less than 0.
+ * 5 - Fractional seconds, expressed in nanoseconds. This value cannot be less than 0 and must be less than 1000*1000*1000.
 
  * 6 - Number of minutes to subtract from this date and time to get global time. This number can be positive or negative, but cannot be less than -1439 or greater than 1439. For tags 0 and 1, this value is always 0.
 

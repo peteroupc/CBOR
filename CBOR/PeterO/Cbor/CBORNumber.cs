@@ -929,12 +929,6 @@ namespace PeterO.Cbor {
         }
         case NumberKind.ERational: {
           var dec = (ERational)this.value;
-          string nnstr = dec.Numerator.ToString();
-          string dnstr = dec.Denominator.ToString();
-          // DebugUtility.Log(
-          // "numlen="+nnstr.Length +
-          // " denlen="+dnstr.Length +
-          // "\nstart="+DateTime.UtcNow);
           EDecimal f = dec.ToEDecimalExactIfPossible(
               EContext.Decimal128.WithUnlimitedExponents());
           // DebugUtility.Log(
