@@ -614,7 +614,7 @@ namespace PeterO.Cbor {
     }
 
     private static long FloorDiv(long longA, int longN) {
-      return longA >= 0 ? longA / longN : (-1 - longA) / longN;
+      return longA >= 0 ? longA / longN : (-1 - ((-1 - longA) / longN));
     }
 
     private static EInteger FloorMod(EInteger a, EInteger n) {
@@ -893,7 +893,29 @@ ValueNormalDays :
       var normPart = new EInteger[3];
       long longDays = FloorDiv(seconds, 86400) + 1;
       long longSecondsInDay = FloorModLong(seconds, 86400);
+#if DEBUG
+      if (longSecondsInDay < 0) {
+        throw new ArgumentException("\"longSecondsInDay\" (" +
+longSecondsInDay + ") is not greater or equal to 0");
+      }
+      if (longSecondsInDay > 86399) {
+        throw new ArgumentException("\"longSecondsInDay\" (" +
+longSecondsInDay + ") is not less or equal to 86399");
+      }
+#endif
+
       int secondsInDay = checked((int)longSecondsInDay);
+#if DEBUG
+      if (secondsInDay < 0) {
+        throw new ArgumentException("\"secondsInDay\" (" + secondsInDay + ")" +
+"\u0020is not greater or equal to 0");
+      }
+      if (secondsInDay > 86399) {
+        throw new ArgumentException("\"secondsInDay\" (" + secondsInDay + ")" +
+"\u0020is not less or equal to 86399");
+      }
+#endif
+
       GetNormalizedPartProlepticGregorian(
         EInteger1970,
         1,
@@ -913,8 +935,8 @@ ValueNormalDays :
       int[] lesserFields) {
       EInteger integerPart = edec.Quantize(0, ERounding.Floor)
         .ToEInteger();
-      EDecimal fractionalPart = edec.Abs()
-        .Subtract(EDecimal.FromEInteger(integerPart).Abs());
+      EDecimal fractionalPart = edec.Subtract(
+          EDecimal.FromEInteger(integerPart)).Abs();
       int fractionalSeconds = fractionalPart.Multiply(FractionalSeconds)
         .ToInt32Checked();
       EInteger days = FloorDiv(
@@ -923,6 +945,17 @@ ValueNormalDays :
       int secondsInDay = FloorMod(
           integerPart,
           EInteger86400).ToInt32Checked();
+#if DEBUG
+      if (secondsInDay < 0) {
+        throw new ArgumentException("\"secondsInDay\" (" + secondsInDay + ")" +
+"\u0020is not greater or equal to 0");
+      }
+      if (secondsInDay > 86399) {
+        throw new ArgumentException("\"secondsInDay\" (" + secondsInDay + ")" +
+"\u0020is not less or equal to 86399");
+      }
+#endif
+
       GetNormalizedPartProlepticGregorian(
         EInteger1970,
         1,

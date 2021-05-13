@@ -1,12 +1,37 @@
 Release notes
 ---------------------
 
+### Version 4.4.2
+
+- Performance improvements in some cases, especially involving date/time conversions
+- Error checks in DateTimeFieldsToCBORObject method in CBORDateConverter
+
+### Version 4.4.1
+
+- Fix bugs when parsing JSON with the JSON option 'numberconversion=double'
+
+### Version 4.4
+
+- Boolean constructors of PODOptions and CBOREncodeOptions were obsolete
+- Float64 option of CBOREncodeOptions for encoding floating-point values as 64-bit only
+- CBORDateConverter made public and expanded to enable conversion between various
+  date/time formats and CBOR objects
+- Added CanFitInUInt64 and CanTruncatedIntFitInUInt64 methods
+- Bug fixes
+
+### Version 4.3
+
+- Fixed bugs in DateTime support
+- Added CompareTo overloads in CBORNumber class
+- Add NewOrderedMap method based on a suggestion by a GitHub user
+- Other bug fixes
+
 ### Version 4.2
 
 - Some arithmetic methods in CBORNumber do basic overflow checks.
 - Add char array and byte array overloads to ParseJSONNumber
 - Support implementations of IList in CBORObject deserialization
-- Internally, the code avoids storing doubles (64-bit floating-point numbers) directly in CBORNumbers, uses sorted maps rather than hash tables in some CBOR objects, and can now store text strings as UTF-8 byte arrays.  This could help avoid unnecessary string conversions in many case.
+- Internally, the code avoids storing doubles (64-bit floating-point numbers) directly in CBORNumbers, uses sorted maps rather than hash tables in some CBOR objects, and can now store text strings as UTF-8 byte arrays.  This could help avoid unnecessary string conversions in many cases.
 - Bug fixes and performance improvements
 - Now uses Numbers library version 1.7.3
 

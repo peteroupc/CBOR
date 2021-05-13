@@ -1866,12 +1866,13 @@ namespace Test {
     [Timeout(100000)]
     public void TestLong() {
       long[] ranges = {
-        -65539, 65539, 0xfffff000L, 0x100000400L,
+        0, 65539, 0xfffff000L, 0x100000400L,
         Int64.MaxValue - 1000,
         Int64.MaxValue,
         Int64.MinValue,
         Int64.MinValue + 1000,
       };
+      ranges[0] = -65539;
       for (var i = 0; i < ranges.Length; i += 2) {
         long j = ranges[i];
         while (true) {
@@ -2329,7 +2330,7 @@ namespace Test {
                 ex.InnerException.ToString());
             failString += "\nlength: " + array.Length + " bytes";
             failString += "\nstart pos: " + oldPos + ", truelen=" +
-(inputStream.Position - oldPos);
+              (inputStream.Position - oldPos);
             failString += "\n" + TestCommon.ToByteArrayString(array);
             failString = failString.Substring(
                 0,
@@ -3707,7 +3708,7 @@ namespace Test {
     }
 
     private static void TestFailingDecode(byte[] bytes, CBOREncodeOptions
-options) {
+      options) {
       try {
         CBORTestCommon.FromBytesTestAB(bytes, options);
         Assert.Fail("Should have failed");
@@ -3721,246 +3722,249 @@ options) {
     }
 
     private static int[][] valueBadLesserFields = {
-       new int[] { 0, 1, 0, 0, 0, 0, 0 },
-       new int[] { -1, 1, 0, 0, 0, 0, 0 },
-       new int[] { 1, 32, 0, 0, 0, 0, 0 },
-       new int[] { 2, 30, 0, 0, 0, 0, 0 },
-       new int[] { 3, 32, 0, 0, 0, 0, 0 },
-       new int[] { 4, 31, 0, 0, 0, 0, 0 },
-       new int[] { 5, 32, 0, 0, 0, 0, 0 },
-       new int[] { 6, 31, 0, 0, 0, 0, 0 },
-       new int[] { 7, 32, 0, 0, 0, 0, 0 },
-       new int[] { 8, 32, 0, 0, 0, 0, 0 },
-       new int[] { 9, 31, 0, 0, 0, 0, 0 },
-       new int[] { 10, 32, 0, 0, 0, 0, 0 },
-       new int[] { 11, 31, 0, 0, 0, 0, 0 },
-       new int[] { 12, 32, 0, 0, 0, 0, 0 },
-       new int[] { 13, 1, 0, 0, 0, 0, 0 },
-       new int[] { Int32.MinValue, 1, 0, 0, 0, 0, 0 },
-       new int[] { Int32.MaxValue, 1, 0, 0, 0, 0, 0 },
-       new int[] { 1, 0, 0, 0, 0, 0, 0 },
-       new int[] { 1, -1, 0, 0, 0, 0, 0 },
-       new int[] { 1, Int32.MinValue, 0, 0, 0, 0, 0 },
-       new int[] { 1, 32, 0, 0, 0, 0, 0 },
-       new int[] { 1, Int32.MaxValue, 0, 0, 0, 0, 0 },
-       new int[] { 1, 1, -1, 0, 0, 0, 0 },
-       new int[] { 1, 1, Int32.MinValue, 0, 0, 0, 0 },
-       new int[] { 1, 1, 24, 0, 0, 0, 0 },
-       new int[] { 1, 1, 59, 0, 0, 0, 0 },
-       new int[] { 1, 1, 60, 0, 0, 0, 0 },
-       new int[] { 1, 1, Int32.MaxValue, 0, 0, 0, 0 },
-       new int[] { 1, 1, 0, -1, 0, 0, 0 },
-       new int[] { 1, 1, 0, Int32.MinValue, 0, 0, 0 },
-       new int[] { 1, 1, 0, 60, 0, 0, 0 },
-       new int[] { 1, 1, 0, Int32.MaxValue, 0, 0, 0 },
-       new int[] { 1, 1, 0, 0, -1, 0, 0 },
-       new int[] { 1, 1, 0, 0, Int32.MinValue, 0, 0 },
-       new int[] { 1, 1, 0, 0, 60, 0, 0 },
-       new int[] { 1, 1, 0, 0, Int32.MaxValue, 0, 0 },
-       new int[] { 1, 1, 0, 0, 0, -1, 0 },
-       new int[] { 1, 1, 0, 0, 0, Int32.MinValue, 0 },
-       new int[] { 1, 1, 0, 0, 0, 1000 * 1000 * 1000, 0 },
-       new int[] { 1, 1, 0, 0, 0, Int32.MaxValue, 0 },
-       new int[] { 1, 1, 0, 0, 0, 0, -1440 },
-       new int[] { 1, 1, 0, 0, 0, 0, Int32.MinValue },
-       new int[] { 1, 1, 0, 0, 0, 0, 1440 },
-       new int[] { 1, 1, 0, 0, 0, 0, Int32.MaxValue },
+      new int[] { 0, 1, 0, 0, 0, 0, 0 },
+      new int[] { -1, 1, 0, 0, 0, 0, 0 },
+      new int[] { 1, 32, 0, 0, 0, 0, 0 },
+      new int[] { 2, 30, 0, 0, 0, 0, 0 },
+      new int[] { 3, 32, 0, 0, 0, 0, 0 },
+      new int[] { 4, 31, 0, 0, 0, 0, 0 },
+      new int[] { 5, 32, 0, 0, 0, 0, 0 },
+      new int[] { 6, 31, 0, 0, 0, 0, 0 },
+      new int[] { 7, 32, 0, 0, 0, 0, 0 },
+      new int[] { 8, 32, 0, 0, 0, 0, 0 },
+      new int[] { 9, 31, 0, 0, 0, 0, 0 },
+      new int[] { 10, 32, 0, 0, 0, 0, 0 },
+      new int[] { 11, 31, 0, 0, 0, 0, 0 },
+      new int[] { 12, 32, 0, 0, 0, 0, 0 },
+      new int[] { 13, 1, 0, 0, 0, 0, 0 },
+      new int[] { Int32.MinValue, 1, 0, 0, 0, 0, 0 },
+      new int[] { Int32.MaxValue, 1, 0, 0, 0, 0, 0 },
+      new int[] { 1, 0, 0, 0, 0, 0, 0 },
+      new int[] { 1, -1, 0, 0, 0, 0, 0 },
+      new int[] { 1, Int32.MinValue, 0, 0, 0, 0, 0 },
+      new int[] { 1, 32, 0, 0, 0, 0, 0 },
+      new int[] { 1, Int32.MaxValue, 0, 0, 0, 0, 0 },
+      new int[] { 1, 1, -1, 0, 0, 0, 0 },
+      new int[] { 1, 1, Int32.MinValue, 0, 0, 0, 0 },
+      new int[] { 1, 1, 24, 0, 0, 0, 0 },
+      new int[] { 1, 1, 59, 0, 0, 0, 0 },
+      new int[] { 1, 1, 60, 0, 0, 0, 0 },
+      new int[] { 1, 1, Int32.MaxValue, 0, 0, 0, 0 },
+      new int[] { 1, 1, 0, -1, 0, 0, 0 },
+      new int[] { 1, 1, 0, Int32.MinValue, 0, 0, 0 },
+      new int[] { 1, 1, 0, 60, 0, 0, 0 },
+      new int[] { 1, 1, 0, Int32.MaxValue, 0, 0, 0 },
+      new int[] { 1, 1, 0, 0, -1, 0, 0 },
+      new int[] { 1, 1, 0, 0, Int32.MinValue, 0, 0 },
+      new int[] { 1, 1, 0, 0, 60, 0, 0 },
+      new int[] { 1, 1, 0, 0, Int32.MaxValue, 0, 0 },
+      new int[] { 1, 1, 0, 0, 0, -1, 0 },
+      new int[] { 1, 1, 0, 0, 0, Int32.MinValue, 0 },
+      new int[] { 1, 1, 0, 0, 0, 1000 * 1000 * 1000, 0 },
+      new int[] { 1, 1, 0, 0, 0, Int32.MaxValue, 0 },
+      new int[] { 1, 1, 0, 0, 0, 0, -1440 },
+      new int[] { 1, 1, 0, 0, 0, 0, Int32.MinValue },
+      new int[] { 1, 1, 0, 0, 0, 0, 1440 },
+      new int[] { 1, 1, 0, 0, 0, 0, Int32.MaxValue },
     };
 
     private static void TestBadDateFieldsOne(CBORDateConverter conv) {
       EInteger eint = EInteger.FromInt32(2000);
       int[] lesserFields;
       for (var i = 0; i < valueBadLesserFields.Length; ++i) {
-         lesserFields = valueBadLesserFields[i];
-         Assert.AreEqual(7, lesserFields.Length, String.Empty + i);
-         if (lesserFields[3] == 0 && lesserFields[4] ==0 &&
-lesserFields[5]==0 &&
-lesserFields[6] == 0 && lesserFields[2] == 0) {
-             try {
- conv.DateTimeFieldsToCBORObject(2000, lesserFields[0], lesserFields[1]);
- Assert.Fail(
-  "Should have failed: " + lesserFields[0] + " " + (lesserFields[1])); }
-catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-         }
-         if (lesserFields[5] == 0 && lesserFields[6] == 0) {
-             try {
- conv.DateTimeFieldsToCBORObject(
-   2000,
-   lesserFields[0],
-   lesserFields[1],
-   lesserFields[2],
-   lesserFields[3],
-   lesserFields[4]);
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-         }
-         try {
- conv.DateTimeFieldsToCBORObject(eint, lesserFields);
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        lesserFields = valueBadLesserFields[i];
+        Assert.AreEqual(7, lesserFields.Length, String.Empty + i);
+        if (lesserFields[3] == 0 && lesserFields[4] == 0 &&
+          lesserFields[5] == 0 &&
+          lesserFields[6] == 0 && lesserFields[2] == 0) {
+          try {
+            conv.DateTimeFieldsToCBORObject(
+              2000,
+              lesserFields[0],
+              lesserFields[1]);
+            Assert.Fail(
+              "Should have failed: " + lesserFields[0] + " " + lesserFields[1]);
+          } catch (CBORException) {
+            // NOTE: Intentionally empty
+          } catch (Exception ex) {
+            Assert.Fail(ex.ToString());
+            throw new InvalidOperationException(String.Empty, ex);
+          }
+        }
+        if (lesserFields[5] == 0 && lesserFields[6] == 0) {
+          try {
+            conv.DateTimeFieldsToCBORObject(
+              2000,
+              lesserFields[0],
+              lesserFields[1],
+              lesserFields[2],
+              lesserFields[3],
+              lesserFields[4]);
+            Assert.Fail("Should have failed");
+          } catch (CBORException) {
+            // NOTE: Intentionally empty
+          } catch (Exception ex) {
+            Assert.Fail(ex.ToString());
+            throw new InvalidOperationException(String.Empty, ex);
+          }
+        }
+        try {
+          conv.DateTimeFieldsToCBORObject(eint, lesserFields);
+          Assert.Fail("Should have failed");
+        } catch (CBORException) {
+          // NOTE: Intentionally empty
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
+        }
       }
       lesserFields = null;
       try {
- conv.DateTimeFieldsToCBORObject(eint, lesserFields);
- Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        conv.DateTimeFieldsToCBORObject(eint, lesserFields);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       // TODO: Make into CBORException in next major version
       lesserFields = new int[] { 1 };
       try {
- conv.DateTimeFieldsToCBORObject(eint, lesserFields);
- Assert.Fail("Should have failed");
-} catch (ArgumentException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        conv.DateTimeFieldsToCBORObject(eint, lesserFields);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       lesserFields = new int[] { 1, 1 };
       try {
- conv.DateTimeFieldsToCBORObject(eint, lesserFields);
- Assert.Fail("Should have failed");
-} catch (ArgumentException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        conv.DateTimeFieldsToCBORObject(eint, lesserFields);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       lesserFields = new int[] { 1, 1, 0 };
       try {
- conv.DateTimeFieldsToCBORObject(eint, lesserFields);
- Assert.Fail("Should have failed");
-} catch (ArgumentException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        conv.DateTimeFieldsToCBORObject(eint, lesserFields);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       lesserFields = new int[] { 1, 1, 0, 0 };
       try {
- conv.DateTimeFieldsToCBORObject(eint, lesserFields);
- Assert.Fail("Should have failed");
-} catch (ArgumentException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        conv.DateTimeFieldsToCBORObject(eint, lesserFields);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       lesserFields = new int[] { 1, 1, 0, 0, 0 };
       try {
- conv.DateTimeFieldsToCBORObject(eint, lesserFields);
- Assert.Fail("Should have failed");
-} catch (ArgumentException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        conv.DateTimeFieldsToCBORObject(eint, lesserFields);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       lesserFields = new int[] { 1, 1, 0, 0, 0, 0 };
       try {
- conv.DateTimeFieldsToCBORObject(eint, lesserFields);
- Assert.Fail("Should have failed: 6");
-} catch (ArgumentException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        conv.DateTimeFieldsToCBORObject(eint, lesserFields);
+        Assert.Fail("Should have failed: 6");
+      } catch (ArgumentException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- conv.DateTimeFieldsToCBORObject(2100, 2, 29);
- Assert.Fail("Should have failed: 2100/2/29");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        conv.DateTimeFieldsToCBORObject(2100, 2, 29);
+        Assert.Fail("Should have failed: 2100/2/29");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- conv.DateTimeFieldsToCBORObject(2001, 2, 29);
- Assert.Fail("Should have failed: 2001/2/29");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        conv.DateTimeFieldsToCBORObject(2001, 2, 29);
+        Assert.Fail("Should have failed: 2001/2/29");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- conv.DateTimeFieldsToCBORObject(2007, 2, 29);
- Assert.Fail("Should have failed: 2007/2/29");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+        conv.DateTimeFieldsToCBORObject(2007, 2, 29);
+        Assert.Fail("Should have failed: 2007/2/29");
+      } catch (CBORException) {
+        // NOTE: Intentionally empty
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- conv.DateTimeFieldsToCBORObject(2000, 2, 28);
-} catch (Exception ex) {
-Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        conv.DateTimeFieldsToCBORObject(2000, 2, 28);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- conv.DateTimeFieldsToCBORObject(2100, 2, 28);
-} catch (Exception ex) {
-Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        conv.DateTimeFieldsToCBORObject(2100, 2, 28);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- conv.DateTimeFieldsToCBORObject(2001, 2, 28);
-} catch (Exception ex) {
-Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        conv.DateTimeFieldsToCBORObject(2001, 2, 28);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- conv.DateTimeFieldsToCBORObject(2007, 2, 28);
-} catch (Exception ex) {
-Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        conv.DateTimeFieldsToCBORObject(2007, 2, 28);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- conv.DateTimeFieldsToCBORObject(2004, 2, 29);
-} catch (Exception ex) {
-Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        conv.DateTimeFieldsToCBORObject(2004, 2, 29);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- conv.DateTimeFieldsToCBORObject(2008, 2, 29);
-} catch (Exception ex) {
-Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        conv.DateTimeFieldsToCBORObject(2008, 2, 29);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- conv.DateTimeFieldsToCBORObject(2000, 2, 29);
-} catch (Exception ex) {
-Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        conv.DateTimeFieldsToCBORObject(2000, 2, 29);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
 
     [Test]
     public void TestBadDateFields() {
-        TestBadDateFieldsOne(CBORDateConverter.TaggedNumber);
-        TestBadDateFieldsOne(CBORDateConverter.UntaggedNumber);
-        TestBadDateFieldsOne(CBORDateConverter.TaggedString);
+      TestBadDateFieldsOne(CBORDateConverter.TaggedNumber);
+      TestBadDateFieldsOne(CBORDateConverter.UntaggedNumber);
+      TestBadDateFieldsOne(CBORDateConverter.TaggedString);
     }
 
     [Test]
@@ -4002,17 +4006,17 @@ throw new InvalidOperationException(String.Empty, ex);
       TestTextStringStreamOne(TestCommon.Repeat('\u3000', 200000));
       TestTextStringStreamOne(TestCommon.Repeat("\ud800\udc00", 200000));
       TestTextStringStreamOne(
-         "A" + TestCommon.Repeat('\u00e0', 200000));
+        "A" + TestCommon.Repeat('\u00e0', 200000));
       TestTextStringStreamOne(
-         "A" + TestCommon.Repeat('\u3000', 200000));
+        "A" + TestCommon.Repeat('\u3000', 200000));
       TestTextStringStreamOne(
-         "AA" + TestCommon.Repeat('\u3000', 200000));
+        "AA" + TestCommon.Repeat('\u3000', 200000));
       TestTextStringStreamOne(
-         "A" + TestCommon.Repeat("\ud800\udc00", 200000));
+        "A" + TestCommon.Repeat("\ud800\udc00", 200000));
       TestTextStringStreamOne(
-         "AA" + TestCommon.Repeat("\ud800\udc00", 200000));
+        "AA" + TestCommon.Repeat("\ud800\udc00", 200000));
       TestTextStringStreamOne(
-         "AAA" + TestCommon.Repeat("\ud800\udc00", 200000));
+        "AAA" + TestCommon.Repeat("\ud800\udc00", 200000));
     }
 
     [Test]
@@ -4583,17 +4587,19 @@ throw new InvalidOperationException(String.Empty, ex);
     }
 
     [Test]
-    public static void TestRationalJsonString() {
-       string s1 =
+    public void TestRationalJsonString() {
+      string s1 =
+
   "2314185985457202732189984229086860275536452482912712559300364012538811890519021609896348772904852567130731662638662357113651250315642348662481229868556065813139982071069333964882192144997551182445870403177326619887472161149361459394237531679153467064950578633985038857850930553390675215926785522674620921221013857844957579079905210161700278381169854796455676266121858525817919848944985101521416062436650605384179954486013171983603514573732843973878942460661051122207994787725632035785836247773451399551083190779512400561839577794870702499681043124072992405732619348558204728800270899359780143357389476977840367320292768181094717788094551212489822736249585469244387735363318078783976724668392554429679443922755068135350076319909649622682466354980725423633530350364989945871920048447230307815643527525431336201627641891131614532527580497256382071436840494627668584005384127077683035880018530366999707415485257695504047147523521952194384880231172509079788316925500613704258819197092976088140216280520582313645747413451716685429138670645309423396623806701594839731451445336814620082926910150739091172178600865482539725012429775997863264496120844788653020449046903816363344201802799558922359223708825558520103859838244276323990910167216851809090120320961066908102124848129364767874532700083684330840078660557364044159387179646160035386030868471110043830522222249658101959143096323641704675830142899751696476007503506009598273729872080504917363964684006707667515610753851782851579370526135223570019729110932882718719";
-       string s2 =
+      string s2 =
+
   "6662791484278690594826817847881545965329948329731867968121995135273120814985447625408875010164308165523077008393040907448927095816668472183767306507621988644226927007049807896601977790621449471807224544610921018712323247068196141241260970690722422573836727986751170029846748991630865560108915742912790575418880931905841405752318207096850143527159053198029648842245667818442862752212319584591326350903220882410151458427571245209321776934621224736963318933098990162346637307854541301688032696173626360523085187457965260167140087021479260407414362314681927575639118779628079152745063483804212029391314516551540082552323766393935679162832149309343521979435765872081112730566874916857979923774605127048865566043423311513224206112727810624953812129189407444425723013814542858953773303224750083748214186967592731457750110532337407558719554095585903998079748001889804344632924251379769721367766565683489037136792018541299840911134792202457550460405605363852082703644386814261111315827747899661812006358141505684436007974039689212221755906535319187254965909243842599581550882694985174561192357511545227109515529785121078195397742875082523296406527673130136841581998940369597346610553537051630040762759128694436878055285011408511186930096142698312900789328008870013582608819840691525856150433351282368061590406881127142805435230013505013582096402814554965693562771980924387951907732638686068565579913844909487962223859043024131114445573057517284388114134555750443506173757889119715387627461644374462498045130424821914143893279013612002227413094709860042079542320696728791055885208451681839380238306841352325674806804434188273228678316889664118537421135644047836961335665043472528998461372064871916691003281042407296035913958087310042321020211485879442799018303005446353339317990963540";
 
-ERational er = ERational.Create(
-   EInteger.FromString(s1),
-   EInteger.FromString(s2));
- CBORObject cbor = CBORObject.FromObject(er);
- cbor.ToJSONString();
+      ERational er = ERational.Create(
+          EInteger.FromString(s1),
+          EInteger.FromString(s2));
+      CBORObject cbor = CBORObject.FromObject(er);
+      cbor.ToJSONString();
     }
 
     public static bool CheckUtf16(string str) {
@@ -4614,85 +4620,80 @@ ERational er = ERational.Create(
 
     [Test]
     public void TestJSONOptions() {
-       var jsonop1 = new JSONOptions("numberconversion=intorfloat");
-       {
-         object objectTemp = jsonop1.ToString();
-         object objectTemp2 = new
-JSONOptions(jsonop1.ToString()).ToString();
-         Assert.AreEqual(objectTemp, objectTemp2);
-       }
-       var jsonop2 = new JSONOptions("numberconversion=decimal128");
-       {
-         object objectTemp = jsonop2.ToString();
-         object objectTemp2 = new
-JSONOptions(jsonop2.ToString()).ToString();
-         Assert.AreEqual(objectTemp, objectTemp2);
-       }
-       var jsonop3 = new JSONOptions("numberconversion=intorfloatfromdouble");
-       {
-         object objectTemp = jsonop3.ToString();
-         object objectTemp2 = new
-JSONOptions(jsonop3.ToString()).ToString();
-         Assert.AreEqual(objectTemp, objectTemp2);
-       }
-       var jsonop4 = new JSONOptions("numberconversion=double");
-       {
-         object objectTemp = jsonop4.ToString();
-         object objectTemp2 = new
-JSONOptions(jsonop4.ToString()).ToString();
-         Assert.AreEqual(objectTemp, objectTemp2);
-       }
+      var jsonop1 = new JSONOptions("numberconversion=intorfloat");
+      {
+        object objectTemp = jsonop1.ToString();
+        object objectTemp2 = new JSONOptions(jsonop1.ToString()).ToString();
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
+      var jsonop2 = new JSONOptions("numberconversion=decimal128");
+      {
+        object objectTemp = jsonop2.ToString();
+        object objectTemp2 = new JSONOptions(jsonop2.ToString()).ToString();
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
+      var jsonop3 = new JSONOptions("numberconversion=intorfloatfromdouble");
+      {
+        object objectTemp = jsonop3.ToString();
+        object objectTemp2 = new JSONOptions(jsonop3.ToString()).ToString();
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
+      var jsonop4 = new JSONOptions("numberconversion=double");
+      {
+        object objectTemp = jsonop4.ToString();
+        object objectTemp2 = new JSONOptions(jsonop4.ToString()).ToString();
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
     }
 
     [Test]
     public void TestPODOptions() {
-       PODOptions podop = PODOptions.Default;
-       {
-         object objectTemp = podop.ToString();
-         object objectTemp2 = new
-PODOptions(podop.ToString()).ToString();
-         Assert.AreEqual(objectTemp, objectTemp2);
-       }
+      PODOptions podop = PODOptions.Default;
+      {
+        object objectTemp = podop.ToString();
+        object objectTemp2 = new PODOptions(podop.ToString()).ToString();
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
     }
 
     [Test]
     public void TestCBOREncodeOptions() {
-       CBOREncodeOptions encodeop = CBOREncodeOptions.Default;
-       {
-         object objectTemp = encodeop.ToString();
-         object objectTemp2 = new
-CBOREncodeOptions(encodeop.ToString()).ToString();
-         Assert.AreEqual(objectTemp, objectTemp2);
-       }
+      CBOREncodeOptions encodeop = CBOREncodeOptions.Default;
+      {
+        object objectTemp = encodeop.ToString();
+        object objectTemp2 = new
+        CBOREncodeOptions(encodeop.ToString()).ToString();
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
     }
 
     [Test]
     public void TestRandomJSON() {
-       var jsongen = new JSONGenerator();
-       var rg = new RandomGenerator();
-       var jsonop1 = new JSONOptions("numberconversion=intorfloat");
-       var jsonop2 = new JSONOptions("numberconversion=decimal128");
-       var jsonop3 = new JSONOptions("numberconversion=intorfloatfromdouble");
-       var jsonop4 = new JSONOptions("numberconversion=double");
-       for (var i = 0; i < 200; ++i) {
-          byte[] json = jsongen.Generate(rg);
-          Console.WriteLine(String.Empty + i + " len=" + json.Length);
-          JSONOptions currop = null;
-          try {
-             currop = jsonop1;
-             CBORObject.FromJSONBytes(json, jsonop1);
-             currop = jsonop2;
-             CBORObject.FromJSONBytes(json, jsonop2);
-             currop = jsonop3;
-             CBORObject.FromJSONBytes(json, jsonop3);
-             currop = jsonop4;
-             CBORObject.FromJSONBytes(json, jsonop4);
-           } catch (CBORException ex) {
-              string msg = ex.Message + "\n" +
-                 DataUtilities.GetUtf8String(json, true) + "\n" + currop;
-              throw new InvalidOperationException(msg, ex);
-           }
-       }
+      var jsongen = new JSONGenerator();
+      var rg = new RandomGenerator();
+      var jsonop1 = new JSONOptions("numberconversion=intorfloat");
+      var jsonop2 = new JSONOptions("numberconversion=decimal128");
+      var jsonop3 = new JSONOptions("numberconversion=intorfloatfromdouble");
+      var jsonop4 = new JSONOptions("numberconversion=double");
+      for (var i = 0; i < 200; ++i) {
+        byte[] json = jsongen.Generate(rg);
+        Console.WriteLine(String.Empty + i + " len=" + json.Length);
+        JSONOptions currop = null;
+        try {
+          currop = jsonop1;
+          CBORObject.FromJSONBytes(json, jsonop1);
+          currop = jsonop2;
+          CBORObject.FromJSONBytes(json, jsonop2);
+          currop = jsonop3;
+          CBORObject.FromJSONBytes(json, jsonop3);
+          currop = jsonop4;
+          CBORObject.FromJSONBytes(json, jsonop4);
+        } catch (CBORException ex) {
+          string msg = ex.Message + "\n" +
+            DataUtilities.GetUtf8String(json, true) + "\n" + currop;
+          throw new InvalidOperationException(msg, ex);
+        }
+      }
     }
 
     public static bool TestTextStringStreamOne(string longString) {
