@@ -3,6 +3,7 @@
 
 - Performance improvements in some cases, especially involving date/time conversions
 - Error checks in DateTimeFieldsToCBORObject method in CBORDateConverter
+- Bug fixes
 
 Version 4.4.1:
 
