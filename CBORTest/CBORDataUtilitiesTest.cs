@@ -169,6 +169,10 @@ namespace Test {
         if (CBORDataUtilities.ParseJSONNumber(str) != null) {
           Assert.Fail(str);
         }
+        if (CBORDataUtilities.ParseJSONNumber(str, JSONOptions.Default) !=
+null) {
+          Assert.Fail(str);
+        }
         if (CBORDataUtilities.ParseJSONNumber(str, false, false, true) !=
           null) {
           Assert.Fail(str);

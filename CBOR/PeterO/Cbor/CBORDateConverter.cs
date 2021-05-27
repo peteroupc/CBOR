@@ -23,7 +23,8 @@ namespace PeterO.Cbor {
   /// they were in 1970 (including without regard to time zone
   /// differences or transitions from other calendars to the
   /// Gregorian).</para></summary>
-  public sealed class CBORDateConverter : ICBORToFromConverter<DateTime> {
+  public sealed partial class CBORDateConverter :
+ICBORToFromConverter<DateTime> {
     private readonly ConversionType convType;
 
     /// <summary>A converter object where FromCBORObject accepts CBOR
@@ -193,8 +194,6 @@ namespace PeterO.Cbor {
       // TODO: In next major version, return false instead of throwing an
       // exception if the arguments are invalid, to conform to convention
       // with Try* methods in DotNet.
-      // TODO: In next minor version, add overload that takes an out parameter
-      // for year to DotNet version.
       if (year == null) {
         throw new ArgumentNullException(nameof(year));
       }
@@ -366,8 +365,27 @@ namespace PeterO.Cbor {
     /// <summary>Converts a date/time in the form of a year, month, day,
     /// hour, minute, second, fractional seconds, and time offset to a CBOR
     /// object.</summary>
-    /// <param name='bigYear'>The parameter <paramref name='bigYear'/> is a
-    /// Numbers.EInteger object.</param>
+    /// <returns>A CBOR object encoding the given date fields according to
+    /// the conversion type used to create this date converter.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='lesserFields'/> is null.</exception>
+    /// <exception cref='PeterO.Cbor.CBORException'>An error occurred in
+    /// conversion.</exception>
+    /// <param name='year'>The year.</param>
+    /// <param name='lesserFields'>An array that will store the fields
+    /// (other than the year) of the date and time. See the
+    /// TryGetDateTimeFields method for information on the "lesserFields"
+    /// parameter.</param>
+    public CBORObject DateTimeFieldsToCBORObject(int year, int[]
+      lesserFields) {
+      return this.DateTimeFieldsToCBORObject(EInteger.FromInt32(year),
+  lesserFields);
+    }
+
+    /// <summary>Converts a date/time in the form of a year, month, day,
+    /// hour, minute, second, fractional seconds, and time offset to a CBOR
+    /// object.</summary>
+    /// <param name='bigYear'>The year.</param>
     /// <param name='lesserFields'>An array that will store the fields
     /// (other than the year) of the date and time. See the
     /// TryGetDateTimeFields method for information on the "lesserFields"
@@ -381,8 +399,6 @@ namespace PeterO.Cbor {
     /// conversion.</exception>
     public CBORObject DateTimeFieldsToCBORObject(EInteger bigYear, int[]
       lesserFields) {
-      // TODO: In next minor version, add overload that takes int rather than
-      // EInteger
       if (bigYear == null) {
         throw new ArgumentNullException(nameof(bigYear));
       }

@@ -12,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using PeterO.Cbor;
-using PeterO.Numbers;
 
 namespace Test {
   public sealed class JSONPointer {
@@ -30,7 +29,7 @@ namespace Test {
         }
         if (obj.Type == CBORType.Array) {
           if (index >= pointer.Length || pointer[index] != '/') {
-            throw new ArgumentException(pointer);
+            throw new ArgumentException("Invalid pointer");
           }
           ++index;
           var value = new int[] { 0 };
@@ -41,7 +40,7 @@ namespace Test {
               // Index at the end of the array
               return new JSONPointer(obj, "-");
             }
-            throw new ArgumentException(pointer);
+            throw new ArgumentException("Invalid pointer");
           }
           if (newIndex == pointer.Length) {
             return new JSONPointer(obj, pointer.Substring(index));
@@ -52,10 +51,10 @@ namespace Test {
           index = newIndex;
         } else if (obj.Type == CBORType.Map) {
           if (obj.Equals(CBORObject.Null)) {
-            throw new KeyNotFoundException(pointer);
+            throw new KeyNotFoundException("Invalid pointer");
           }
           if (index >= pointer.Length || pointer[index] != '/') {
-            throw new ArgumentException(pointer);
+            throw new ArgumentException("Invalid pointer");
           }
           ++index;
           string key = null;
@@ -96,7 +95,7 @@ namespace Test {
                     continue;
                   }
                 }
-                throw new ArgumentException(pointer);
+                throw new ArgumentException("Invalid pointer");
               } else {
                 sb.Append((char)c);
               }
@@ -110,7 +109,7 @@ namespace Test {
             obj = ((CBORObject)obj)[key];
           }
         } else {
-          throw new KeyNotFoundException(pointer);
+          throw new KeyNotFoundException("Invalid pointer");
         }
       }
     }
@@ -127,12 +126,12 @@ namespace Test {
     /// <param name='pointer'>A JSON pointer according to RFC 6901.</param>
     /// <returns>An object within the specified JSON object, or <paramref
     /// name='obj'/> if pointer is the empty string, if the pointer is
-    /// null, if the pointer is invalid , if there is no JSON object at the
+    /// null, if the pointer is invalid, if there is no JSON object at the
     /// given pointer, or if <paramref name='obj'/> is not of type
     /// CBORObject, unless pointer is the empty string.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='pointer'/> is null.</exception>
-    public static Object GetObject(CBORObject obj, string pointer) {
+    public static CBORObject GetObject(CBORObject obj, string pointer) {
       if (pointer == null) {
         throw new ArgumentNullException(nameof(pointer));
       }
@@ -265,18 +264,20 @@ namespace Test {
     }
 
     /// <summary>Gets all children of the specified JSON object that
-    /// contain the specified key. The method will not remove matching
-    /// keys. As an example, consider this object:
+    /// contain the specified key; the method will remove matching keys. As
+    /// an example, consider this object:
     /// <pre>[{"key":"value1","foo":"foovalue"},
     /// {"key":"value2","bar":"barvalue"}, {"baz":"bazvalue"}]</pre> If
     /// getPointersToKey is called on this object with a keyToFind called
     /// "key", we get the following Map as the return value:
     /// <pre>{ "/0" => "value1", // "/0" points to {"foo":"foovalue"} "/1"
-    /// => "value2" // "/1" points to {"bar":"barvalue"} }</pre> and the
+    /// => "value2" /* "/1" points to {"bar":"barvalue"} */ }</pre> and the
     /// JSON object will change to the following:
     /// <pre>[{"foo":"foovalue"}, {"bar":"barvalue"},
-    /// {"baz","bazvalue"}]</pre> @param root object to search @param
-    /// keyToFind the key to search for. @return a map:
+    /// {"baz","bazvalue"}]</pre>.</summary>
+    /// <param name='root'>The object to search.</param>
+    /// <param name='keyToFind'>The key to search for.</param>
+    /// <returns>A map:
     /// <list>
     /// <item>The keys in the map are JSON Pointers to the objects within
     /// <i>root</i> that contained a key named
@@ -286,18 +287,13 @@ namespace Test {
     /// <item>The values in the map are the values of each of those keys
     /// named
     /// <i>keyToFind</i>.</item></list> The JSON Pointers are relative to
-    /// the root object.</summary>
-    /// <param name='root'>The parameter <paramref name='root'/> is not
-    /// documented yet.</param>
-    /// <param name='keyToFind'>The parameter <paramref name='keyToFind'/>
-    /// is not documented yet.</param>
-    /// <returns>An IDictionary(string, Object) object.</returns>
+    /// the root object</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='root'/> is null.</exception>
-    public static IDictionary<string, Object> GetPointersWithKeyAndRemove(
+    public static IDictionary<string, CBORObject> GetPointersWithKeyAndRemove(
       CBORObject root,
       string keyToFind) {
-      IDictionary<string, Object> list = new Dictionary<string, Object>();
+      IDictionary<string, CBORObject> list = new Dictionary<string, CBORObject>();
       if (root == null) {
         throw new ArgumentNullException(nameof(root));
       }
@@ -306,8 +302,8 @@ namespace Test {
     }
 
     /// <summary>Gets all children of the specified JSON object that
-    /// contain the specified key. The method will remove matching keys. As
-    /// an example, consider this object:
+    /// contain the specified key; the method will not remove matching
+    /// keys. As an example, consider this object:
     /// <pre>[{"key":"value1","foo":"foovalue"},
     /// {"key":"value2","bar":"barvalue"}, {"baz":"bazvalue"}]</pre> If
     /// getPointersToKey is called on this object with a keyToFind called
@@ -331,13 +327,13 @@ namespace Test {
     /// documented yet.</param>
     /// <param name='keyToFind'>The parameter <paramref name='keyToFind'/>
     /// is not documented yet.</param>
-    /// <returns>An IDictionary(string, Object) object.</returns>
+    /// <returns>An IDictionary(string, CBORObject) object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='root'/> is null.</exception>
-    public static IDictionary<string, Object> GetPointersWithKey(
+    public static IDictionary<string, CBORObject> GetPointersWithKey(
       CBORObject root,
       string keyToFind) {
-      IDictionary<string, Object> list = new Dictionary<string, Object>();
+      IDictionary<string, CBORObject> list = new Dictionary<string, CBORObject>();
       if (root == null) {
         throw new ArgumentNullException(nameof(root));
       }
@@ -373,14 +369,14 @@ namespace Test {
       CBORObject root,
       string keyToFind,
       string currentPointer,
-      IDictionary<string, Object> pointerList,
+      IDictionary<string, CBORObject> pointerList,
       bool remove) {
       if (root.Type == CBORType.Map) {
         var rootObj = (CBORObject)root;
         if (rootObj.ContainsKey(keyToFind)) {
           // Key found in this object,
           // add this object's JSON pointer
-          Object pointerKey = rootObj[keyToFind];
+          CBORObject pointerKey = rootObj[keyToFind];
           pointerList.Add(currentPointer, pointerKey);
           // and remove the key from the object
           // if necessary

@@ -262,10 +262,6 @@ namespace PeterO.Cbor {
       if (type == CBORObjectTypeArray && !(item is IList<CBORObject>)) {
         throw new InvalidOperationException();
       }
-      // if (type == CBORObjectTypeTextStringUtf8 &&
-      // !CBORUtilities.CheckUtf8((byte[])item)) {
-      // throw new InvalidOperationException();
-      // }
       #endif
       this.itemtypeValue = type;
       this.itemValue = item;
@@ -7530,7 +7526,8 @@ CBORObjectTypeTextStringAscii)) {
         throw new CBORException("Premature end of data");
       }
       if (actualLength > expectedLength) {
-        throw new CBORException("Too many bytes");
+        throw new CBORException(
+            "Too many bytes. There is data beyond the decoded CBOR object.");
       }
     }
 
@@ -7540,7 +7537,8 @@ CBORObjectTypeTextStringAscii)) {
         throw new CBORException("Premature end of data");
       }
       if (actualLength > expectedLength) {
-        throw new CBORException("Too many bytes");
+        throw new CBORException(
+            "Too many bytes. There is data beyond the decoded CBOR object.");
       }
     }
 

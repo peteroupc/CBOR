@@ -304,7 +304,7 @@ In version 1.3:
 
 In version 1.2:
 
-- The WriteJSON and WriteToJSON methods were added to CBORObject
+- The WriteJSON and WriteJSONTo methods were added to CBORObject
 - Bugs were fixed in the Set and Add methods of CBORObject
 
 In version 1.1 there were many additions and bug fixes in arbitrary-precision

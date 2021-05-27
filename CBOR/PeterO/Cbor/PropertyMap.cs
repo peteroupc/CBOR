@@ -1064,6 +1064,7 @@ namespace PeterO.Cbor {
         }
       }
       if (objThis.Type == CBORType.ByteString) {
+        // TODO: Consider converting base64 strings
         if (t.Equals(typeof(byte[]))) {
           byte[] bytes = objThis.GetByteString();
           var byteret = new byte[bytes.Length];

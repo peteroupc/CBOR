@@ -1755,7 +1755,7 @@ namespace Test {
       using (var ms2a = new MemoryStream(new byte[] { })) {
         try {
           CBORObject.ReadJSON(ms2a);
-          Assert.Fail("Should have failed");
+          Assert.Fail("Should have failed A");
         } catch (CBORException) {
           // NOTE: Intentionally empty
         } catch (Exception ex) {
@@ -1766,7 +1766,7 @@ namespace Test {
       using (var ms2b = new MemoryStream(new byte[] { 0x20 })) {
         try {
           CBORObject.ReadJSON(ms2b);
-          Assert.Fail("Should have failed");
+          Assert.Fail("Should have failed B");
         } catch (CBORException) {
           // NOTE: Intentionally empty
         } catch (Exception ex) {
@@ -1776,7 +1776,7 @@ namespace Test {
       }
       try {
         CBORObject.FromJSONString(String.Empty);
-        Assert.Fail("Should have failed");
+        Assert.Fail("Should have failed C");
       } catch (CBORException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -1785,7 +1785,7 @@ namespace Test {
       }
       try {
         CBORObject.FromJSONString("[.1]");
-        Assert.Fail("Should have failed");
+        Assert.Fail("Should have failed D");
       } catch (CBORException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -1794,7 +1794,7 @@ namespace Test {
       }
       try {
         CBORObject.FromJSONString("[-.1]");
-        Assert.Fail("Should have failed");
+        Assert.Fail("Should have failed E");
       } catch (CBORException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -1803,7 +1803,7 @@ namespace Test {
       }
       try {
         CBORObject.FromJSONString("\u0020");
-        Assert.Fail("Should have failed");
+        Assert.Fail("Should have failed F");
       } catch (CBORException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -1973,6 +1973,39 @@ namespace Test {
           EDecimal.FromString(r));
       CBORObject o2 = CBORDataUtilities.ParseJSONNumber(r);
       TestCommon.CompareTestEqual(o.AsNumber(), o2.AsNumber());
+    }
+
+    [Test]
+    public void TestJSONWithComments() {
+      IDictionary<string, string> dict;
+      string str = "[\n {\n # Bm\n\"a\":1,\n\"b\":2\n},{\n #" +
+"\u0020Sm\n\"a\":3,\n\"b\":4\n}\n]";
+      CBORObject obj = JSONWithComments.FromJSONString(str);
+      Console.WriteLine(obj);
+      str = "[\n {\n # B\n # Dm\n\"a\":1,\n\"b\":2\n},{\n #" +
+       "\u0020Sm\n\"a\":3,\n\"b\":4\n}\n]";
+       obj = JSONWithComments.FromJSONString(str);
+      Console.WriteLine(obj);
+      str = "[\n {\n # B A C\n # Dm\n\"a\":1,\n\"b\":2\n},{\n #" +
+       "\u0020Sm\n\"a\":3,\n\"b\":4\n}\n]";
+       obj = JSONWithComments.FromJSONString(str);
+      Console.WriteLine(obj);
+      str = "[\n {\n # B\t \tA C\n # Dm\n\"a\":1,\n\"b\":2\n},{\n #" +
+       "\u0020Sm\n\"a\":3,\n\"b\":4\n}\n]";
+       obj = JSONWithComments.FromJSONString(str);
+      Console.WriteLine(obj);
+      dict = new Dictionary<string, string>();
+      str = "{\"f\":[\n {\n # B\t \tA C\n # Dm\n\"a\":1,\n\"b\":2\n},{\n #" +
+       "\u0020Sm\n\"a\":3,\n\"b\":4\n}\n]}";
+       obj = JSONWithComments.FromJSONString(str);
+      Console.WriteLine(obj);
+    obj = JSONWithComments.FromJSONStringWithPointers(str, dict);
+    foreach (string key in dict.Keys) {
+         Console.WriteLine(key);
+         Console.WriteLine(dict[key]);
+         Console.WriteLine(JSONPointer.GetObject(obj, dict[key]));
+       }
+      Console.WriteLine(obj);
     }
 
     [Test]
