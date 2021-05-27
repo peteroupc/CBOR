@@ -5574,7 +5574,7 @@ CBORObjectTypeTextStringAscii) ?
   /// <summary>Not documented yet.</summary>
   /// <summary>Not documented yet.</summary>
   /// <param name='pointer'>Not documented yet.</param>
-  /// <returns/>
+  /// <returns>The return value is not documented yet.</returns>
   /// <exception cref='ArgumentNullException'>The parameter <paramref
   /// name='pointer'/> is null.</exception>
     public CBORObject AtJSONPointer(string pointer) {
@@ -5587,7 +5587,7 @@ CBORObjectTypeTextStringAscii) ?
   /// <summary>Not documented yet.</summary>
   /// <summary>Not documented yet.</summary>
   /// <param name='patch'>Not documented yet.</param>
-  /// <returns/>
+  /// <returns>The return value is not documented yet.</returns>
     public CBORObject ApplyJSONPatch(CBORObject patch) {
       return JSONPatch.Patch(this, patch);
     }

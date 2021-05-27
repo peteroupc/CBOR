@@ -138,16 +138,6 @@ Text='$([System.String]::Format(&#x27;$(ErrorText)&#x27;,
 Text='$([System.String]::Format(&#x27;$(ErrorText)&#x27;,
 
   &#x27;../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.targets&#x27;))'/>
-    <Error Condition='!Exists(
-  &#x27;../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.props&#x27;)'
-Text='$([System.String]::Format(&#x27;$(ErrorText)&#x27;,
-
-  &#x27;../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.props&#x27;))'/>
-    <Error Condition='!Exists(
-  &#x27;../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.targets&#x27;)'
-Text='$([System.String]::Format(&#x27;$(ErrorText)&#x27;,
-
-  &#x27;../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.targets&#x27;))'/>
   </Target>
   <Import Condition='Exists(
   &#x27;../packages/Microsoft.CodeAnalysis.VersionCheckAnalyzer.3.3.2/build/Microsoft.CodeAnalysis.VersionCheckAnalyzer.targets&#x27;)'
@@ -161,9 +151,6 @@ Text='$([System.String]::Format(&#x27;$(ErrorText)&#x27;,
   <Import Condition='Exists(
   &#x27;../packages/Microsoft.NetFramework.Analyzers.3.3.2/build/Microsoft.NetFramework.Analyzers.targets&#x27;)'
   Project='../packages/Microsoft.NetFramework.Analyzers.3.3.2/build/Microsoft.NetFramework.Analyzers.targets'/>
-  <Import Condition='Exists(
-  &#x27;../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.targets&#x27;)'
-  Project='../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.targets'/>
   <Import Condition='Exists(
   &#x27;../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.targets&#x27;)'
   Project='../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.targets'/>

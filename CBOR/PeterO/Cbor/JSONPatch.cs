@@ -51,25 +51,48 @@ namespace PeterO.Cbor {
       }
     }
 
+    private static string GetString(CBORObject o, string str) {
+#if DEBUG
+      if (o == null) {
+        throw new ArgumentNullException(nameof(o));
+      }
+      if (str == null) {
+        throw new ArgumentNullException(nameof(str));
+      }
+#endif
+
+      CBORObject co = o.GetOrDefault(str, null);
+      if (str == null) {
+        throw new CBORException(str + " not found");
+      }
+      return co.AsString();
+    }
+
     // TODO: Check whether this method supports "whole cloth" replacements
     public static CBORObject Patch(CBORObject o, CBORObject ptch) {
       // clone the object in case of failure
       if (o == null) {
         throw new ArgumentNullException(nameof(o));
       }
-      o = CloneCbor(o);
       if (ptch == null) {
         throw new ArgumentNullException(nameof(ptch));
       }
+      if (ptch.Type != CBORType.Array) {
+        throw new CBORException("patch is not an array");
+      }
+      o = CloneCbor(o);
       for (int i = 0; i < ptch.Count; ++i) {
         CBORObject patchOp = ptch[i];
+#if DEBUG
+        if (patchOp == null) {
+          throw new ArgumentNullException(nameof(patchOp));
+        }
+#endif
+
         // NOTE: This algorithm requires "op" to exist
         // only once; the CBORObject, however, does not
         // allow duplicates
-        string valueOpStr = patchOp.GetOrDefault("op", null).AsString();
-        if (valueOpStr == null) {
-          throw new CBORException("Patch");
-        }
+        string valueOpStr = GetString(patchOp, "op");
         if ("add".Equals(valueOpStr, StringComparison.Ordinal)) {
           // operation
           CBORObject value = null;
@@ -77,9 +100,7 @@ namespace PeterO.Cbor {
             throw new CBORException("Patch " + valueOpStr + " value");
           }
           value = patchOp["value"];
-          o = AddOperation(o, valueOpStr, patchOp.GetOrDefault(
-            "path",
-            null).AsString(),
+          o = AddOperation(o, valueOpStr, GetString(patchOp, "path"),
  value);
         } else if ("replace".Equals(valueOpStr, StringComparison.Ordinal)) {
           // operation
@@ -91,26 +112,25 @@ namespace PeterO.Cbor {
           o = ReplaceOperation(
               o,
               valueOpStr,
-              patchOp.GetOrDefault("path", null).AsString(),
+              GetString(patchOp, "path"),
               value);
         } else if ("remove".Equals(valueOpStr, StringComparison.Ordinal)) {
           // Remove operation
-          string path = patchOp["path"].AsString();
+          string path = GetString(patchOp, "path");
           if (path == null) {
             throw new CBORException("Patch " + valueOpStr + " path");
           }
           if (path.Length == 0) {
             o = null;
           } else {
-            RemoveOperation(o, valueOpStr, patchOp.GetOrDefault("path",
-  null).AsString());
+            RemoveOperation(o, valueOpStr, GetString(patchOp, "path"));
           }
         } else if ("move".Equals(valueOpStr, StringComparison.Ordinal)) {
-          string path = patchOp["path"].AsString();
+          string path = GetString(patchOp, "path");
           if (path == null) {
             throw new CBORException("Patch " + valueOpStr + " path");
           }
-          string fromPath = patchOp["from"].AsString();
+          string fromPath = GetString(patchOp, "from");
           if (fromPath == null) {
             throw new CBORException("Patch " + valueOpStr + " from");
           }
@@ -120,8 +140,8 @@ namespace PeterO.Cbor {
           CBORObject movedObj = RemoveOperation(o, valueOpStr, fromPath);
           o = AddOperation(o, valueOpStr, path, CloneCbor(movedObj));
         } else if ("copy".Equals(valueOpStr, StringComparison.Ordinal)) {
-          string path = patchOp["path"].AsString();
-          string fromPath = patchOp["from"].AsString();
+          string path = GetString(patchOp, "path");
+          string fromPath = GetString(patchOp, "from");
           if (path == null) {
             throw new CBORException("Patch " + valueOpStr + " path");
           }
@@ -140,7 +160,7 @@ namespace PeterO.Cbor {
               path,
               CloneCbor(copiedObj));
         } else if ("test".Equals(valueOpStr, StringComparison.Ordinal)) {
-          string path = patchOp["path"].AsString();
+          string path = GetString(patchOp, "path");
           if (path == null) {
             throw new CBORException("Patch " + valueOpStr + " path");
           }
