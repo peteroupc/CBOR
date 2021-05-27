@@ -7727,6 +7727,95 @@ if (cbornumber.CanFitInDouble()) {
         TestDateTimeStringNumberOne("2100-01-03T00:00:01Z", 4102617601L);
     }
 
+    public void TestApplyJSONPatchOpAdd(
+      CBORObject expected,
+      CBORObject src,
+      string path,
+      object obj) {
+      CBORObject actual = CBORObject.DecodeFromBytes(src.EncodeToBytes());
+      CBORObject patch = CBORObject.NewMap().Add("op", "add")
+          .Add("path", path).Add("value",CBORObject.FromObject(obj));
+      if (expected == null) {
+       try {
+ actual.ApplyJSONPatch(patch);
+ Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+      } else {
+       try {
+ actual.ApplyJSONPatch(patch);
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+       Assert.AreEqual(expected, actual);
+      }
+    }
+
+    [Test]
+    public void TestApplyJSONPatch() {
+      // TODO: Finish tests for ApplyJSONPatch
+      this.TestApplyJSONPatchOpAdd(
+         CBORObject.NewArray().Add(1),
+         CBORObject.NewArray(),
+         "/-",
+         1);
+      this.TestApplyJSONPatchOpAdd(
+         CBORObject.NewArray().Add(1),
+         CBORObject.NewArray(),
+         "/0",
+         1);
+      this.TestApplyJSONPatchOpAdd(
+         null,
+         CBORObject.NewArray(),
+         "/1",
+         1);
+      this.TestApplyJSONPatchOpAdd(
+         CBORObject.NewArray().Add(1).Add(2),
+         CBORObject.NewArray().Add(1),
+         "/-",
+         2);
+      this.TestApplyJSONPatchOpAdd(
+         CBORObject.NewArray().Add(0).Add(1).Add(2),
+         CBORObject.NewArray().Add(1).Add(2),
+         "/0",
+         0);
+      this.TestApplyJSONPatchOpAdd(
+         CBORObject.NewArray().Add(1).Add(0).Add(2),
+         CBORObject.NewArray().Add(1).Add(2),
+         "/1",
+         0);
+      this.TestApplyJSONPatchOpAdd(
+         CBORObject.NewArray().Add(1).Add(2).Add(0),
+         CBORObject.NewArray().Add(1).Add(2),
+         "/2",
+         0);
+      this.TestApplyJSONPatchOpAdd(
+         null,
+         CBORObject.NewArray().Add(1).Add(2),
+         "/3",
+         0);
+      this.TestApplyJSONPatchOpAdd(
+         null,
+         CBORObject.NewArray().Add(1).Add(2),
+         "/foo",
+         0);
+      this.TestApplyJSONPatchOpAdd(
+         CBORObject.NewMap().Add("foo", "bar"),
+         CBORObject.NewMap(),
+         "/foo",
+         "bar");
+      this.TestApplyJSONPatchOpAdd(
+         CBORObject.NewMap().Add("foo", "baz"),
+         CBORObject.NewMap().Add("foo", "bar"),
+         "/foo",
+         "baz");
+    }
+
     [Test]
     public void TestDateTime() {
       var dateList = new List<string>();

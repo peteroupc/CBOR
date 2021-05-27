@@ -2003,7 +2003,7 @@ namespace Test {
     foreach (string key in dict.Keys) {
          Console.WriteLine(key);
          Console.WriteLine(dict[key]);
-         Console.WriteLine(JSONPointer.GetObject(obj, dict[key]));
+         Console.WriteLine(obj.AtJSONPointer(dict[key]));
        }
       Console.WriteLine(obj);
     }

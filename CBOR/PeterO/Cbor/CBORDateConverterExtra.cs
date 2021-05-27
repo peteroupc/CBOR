@@ -31,13 +31,6 @@ ICBORToFromConverter<DateTime> {
     /// overload of this method.</param>
     /// <returns>Either <c>true</c> if the method is successful, or
     /// <c>false</c> otherwise.</returns>
-    /// <returns>Not documented yet.</returns>
-    /// <returns>Not documented yet.</returns>
-    /// <returns>Not documented yet.</returns>
-    /// <returns>Not documented yet.</returns>
-    /// <returns>Not documented yet.</returns>
-    /// <returns>Not documented yet.</returns>
-    /// <returns>Not documented yet.</returns>
     public bool TryGetDateTimeFields(CBORObject obj, out EInteger year, int[]
       lesserFields) {
       // TODO: In next minor version, add overload that takes an out parameter

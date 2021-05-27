@@ -9,6 +9,7 @@ A class for converting date-time objects to and from tagged CBOR objects.
 In this class's documentation, the "number of seconds since the start of 1970" is based on the POSIX definition of "seconds since the Epoch", a definition that does not count leap seconds. This number of seconds assumes the use of a proleptic Gregorian calendar, in which the rules regarding the number of days in each month and which years are leap years are the same for all years as they were in 1970 (including without regard to time zone differences or transitions from other calendars to the Gregorian).
 
 ### Member Summary
+* <code>[DateTimeFieldsToCBORObject(int, int[])](#DateTimeFieldsToCBORObject_int_int)</code> - Converts a date/time in the form of a year, month, day, hour, minute, second, fractional seconds, and time offset to a CBOR object.
 * <code>[DateTimeFieldsToCBORObject(int, int, int)](#DateTimeFieldsToCBORObject_int_int_int)</code> - Converts a date/time in the form of a year, month, and day to a CBOR object.
 * <code>[DateTimeFieldsToCBORObject(int, int, int, int, int, int)](#DateTimeFieldsToCBORObject_int_int_int_int_int_int)</code> - Converts a date/time in the form of a year, month, day, hour, minute, and second to a CBOR object.
 * <code>[DateTimeFieldsToCBORObject(PeterO.Numbers.EInteger, int[])](#DateTimeFieldsToCBORObject_PeterO_Numbers_EInteger_int)</code> - Converts a date/time in the form of a year, month, day, hour, minute, second, fractional seconds, and time offset to a CBOR object.
@@ -16,7 +17,7 @@ In this class's documentation, the "number of seconds since the start of 1970" i
 * <code>[public static readonly PeterO.Cbor.CBORDateConverter TaggedNumber;](#TaggedNumber)</code> - A converter object where FromCBORObject accepts CBOR objects with tag 0 (date/time strings) and tag 1 (number of seconds since the start of 1970), and ToCBORObject converts date/time objects (DateTime in DotNet, and Date in Java) to CBOR objects of tag 1.
 * <code>[public static readonly PeterO.Cbor.CBORDateConverter TaggedString;](#TaggedString)</code> - A converter object where FromCBORObject accepts CBOR objects with tag 0 (date/time strings) and tag 1 (number of seconds since the start of 1970), and ToCBORObject converts date/time objects (DateTime in DotNet, and Date in Java) to CBOR objects of tag 0.
 * <code>[ToCBORObject(System.DateTime)](#ToCBORObject_System_DateTime)</code> - Converts a DateTime (in DotNet) or Date (in Java) to a CBOR object in a manner specified by this converter's conversion type.
-* <code>[TryGetDateTimeFields(PeterO.Cbor.CBORObject, PeterO.Numbers.EInteger[], int[])](#TryGetDateTimeFields_PeterO_Cbor_CBORObject_PeterO_Numbers_EInteger_int)</code> - Tries to extract the fields of a date and time in the form of a CBOR object.
+* <code>[TryGetDateTimeFields(PeterO.Cbor.CBORObject, PeterO.Numbers.EInteger&amp;, int[])](#TryGetDateTimeFields_PeterO_Cbor_CBORObject_PeterO_Numbers_EInteger_int)</code> - Tries to extract the fields of a date and time in the form of a CBOR object. Tries to extract the fields of a date and time in the form of a CBOR object.
 * <code>[Type](#Type)</code> - Gets the conversion type for this date converter.
 * <code>[public static readonly PeterO.Cbor.CBORDateConverter UntaggedNumber;](#UntaggedNumber)</code> - A converter object where FromCBORObject accepts untagged CBOR integer or CBOR floating-point objects that give the number of seconds since the start of 1970, and where ToCBORObject converts date/time objects (DateTime in DotNet, and Date in Java) to such untagged CBOR objects.
 
@@ -134,6 +135,34 @@ A CBOR object encoding the given date fields according to the conversion type us
  * PeterO.Cbor.CBORException:
 An error occurred in conversion.
 
+<a id="DateTimeFieldsToCBORObject_int_int"></a>
+### DateTimeFieldsToCBORObject
+
+    public PeterO.Cbor.CBORObject DateTimeFieldsToCBORObject(
+        int year,
+        int[] lesserFields);
+
+Converts a date/time in the form of a year, month, day, hour, minute, second, fractional seconds, and time offset to a CBOR object.
+
+<b>Parameters:</b>
+
+ * <i>year</i>: The year.
+
+ * <i>lesserFields</i>: An array that will store the fields (other than the year) of the date and time. See the TryGetDateTimeFields method for information on the "lesserFields" parameter.
+
+<b>Return Value:</b>
+
+A CBOR object encoding the given date fields according to the conversion type used to create this date converter.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter  <i>lesserFields</i>
+ is null.
+
+ * PeterO.Cbor.CBORException:
+An error occurred in conversion.
+
 <a id="DateTimeFieldsToCBORObject_PeterO_Numbers_EInteger_int"></a>
 ### DateTimeFieldsToCBORObject
 
@@ -145,8 +174,7 @@ Converts a date/time in the form of a year, month, day, hour, minute, second, fr
 
 <b>Parameters:</b>
 
- * <i>bigYear</i>: The parameter  <i>bigYear</i>
- is a Numbers.EInteger object.
+ * <i>bigYear</i>: The year.
 
  * <i>lesserFields</i>: An array that will store the fields (other than the year) of the date and time. See the TryGetDateTimeFields method for information on the "lesserFields" parameter.
 
@@ -210,6 +238,56 @@ A CBOR object encoding the date/time in the DateTime or Date according to the co
 
  * PeterO.Cbor.CBORException:
 An error occurred in conversion.
+
+<a id="TryGetDateTimeFields_PeterO_Cbor_CBORObject_PeterO_Numbers_EInteger_int"></a>
+### TryGetDateTimeFields
+
+    public bool TryGetDateTimeFields(
+        PeterO.Cbor.CBORObject obj,
+        PeterO.Numbers.EInteger& year,
+        int[] lesserFields);
+
+Tries to extract the fields of a date and time in the form of a CBOR object.
+
+<b>Parameters:</b>
+
+ * <i>obj</i>: A CBOR object that specifies a date/time according to the conversion type used to create this date converter.
+
+ * <i>year</i>: An array whose first element will store the year. The array's length must be 1 or greater. If this function fails, the year is set to null.
+
+ * <i>lesserFields</i>: An array that will store the fields (other than the year) of the date and time. The array's length must be 7 or greater. If this function fails, the first seven elements are set to 0. For more information, see the (EInteger[], int) overload of this method.
+
+<b>Return Value:</b>
+
+Either  `true`  if the method is successful, or  `false`  otherwise.
+
+<b>Return Value:</b>
+
+Not documented yet.
+
+<b>Return Value:</b>
+
+Not documented yet.
+
+<b>Return Value:</b>
+
+Not documented yet.
+
+<b>Return Value:</b>
+
+Not documented yet.
+
+<b>Return Value:</b>
+
+Not documented yet.
+
+<b>Return Value:</b>
+
+Not documented yet.
+
+<b>Return Value:</b>
+
+Not documented yet.
 
 <a id="TryGetDateTimeFields_PeterO_Cbor_CBORObject_PeterO_Numbers_EInteger_int"></a>
 ### TryGetDateTimeFields

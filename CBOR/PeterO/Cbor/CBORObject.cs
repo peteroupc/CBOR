@@ -5571,6 +5571,27 @@ CBORObjectTypeTextStringAscii) ?
       }
     }
 
+  /// <summary>Not documented yet.</summary>
+  /// <summary>Not documented yet.</summary>
+  /// <param name='pointer'>Not documented yet.</param>
+  /// <returns/>
+  /// <exception cref='ArgumentNullException'>The parameter <paramref
+  /// name='pointer'/> is null.</exception>
+    public CBORObject AtJSONPointer(string pointer) {
+      if (pointer == null) {
+        throw new ArgumentNullException(nameof(pointer));
+      }
+      throw new NotImplementedException();
+    }
+
+  /// <summary>Not documented yet.</summary>
+  /// <summary>Not documented yet.</summary>
+  /// <param name='patch'>Not documented yet.</param>
+  /// <returns/>
+    public CBORObject ApplyJSONPatch(CBORObject patch) {
+      return JSONPatch.Patch(this, patch);
+    }
+
     /// <summary>Determines whether this object and another object are
     /// equal and have the same type. Not-a-number values can be considered
     /// equal by this method.</summary>

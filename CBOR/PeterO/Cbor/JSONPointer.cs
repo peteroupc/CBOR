@@ -11,10 +11,10 @@ at: http://peteroupc.github.io/
 using System;
 using System.Collections.Generic;
 using System.Text;
-using PeterO.Cbor;
+using PeterO.Numbers;
 
-namespace Test {
-  public sealed class JSONPointer {
+namespace PeterO.Cbor {
+  internal sealed class JSONPointer {
     public static JSONPointer FromPointer(CBORObject obj, string pointer) {
       var index = 0;
       if (pointer == null) {
@@ -132,6 +132,10 @@ namespace Test {
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='pointer'/> is null.</exception>
     public static CBORObject GetObject(CBORObject obj, string pointer) {
+      // TODO: Consider adding this method to CBORObject class
+      if (obj == null) {
+        throw new ArgumentNullException(nameof(obj));
+      }
       if (pointer == null) {
         throw new ArgumentNullException(nameof(pointer));
       }
@@ -287,7 +291,7 @@ namespace Test {
     /// <item>The values in the map are the values of each of those keys
     /// named
     /// <i>keyToFind</i>.</item></list> The JSON Pointers are relative to
-    /// the root object</returns>
+    /// the root object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='root'/> is null.</exception>
     public static IDictionary<string, CBORObject> GetPointersWithKeyAndRemove(

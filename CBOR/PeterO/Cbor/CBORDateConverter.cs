@@ -365,17 +365,17 @@ ICBORToFromConverter<DateTime> {
     /// <summary>Converts a date/time in the form of a year, month, day,
     /// hour, minute, second, fractional seconds, and time offset to a CBOR
     /// object.</summary>
+    /// <param name='year'>The year.</param>
+    /// <param name='lesserFields'>An array that will store the fields
+    /// (other than the year) of the date and time. See the
+    /// TryGetDateTimeFields method for information on the "lesserFields"
+    /// parameter.</param>
     /// <returns>A CBOR object encoding the given date fields according to
     /// the conversion type used to create this date converter.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='lesserFields'/> is null.</exception>
     /// <exception cref='PeterO.Cbor.CBORException'>An error occurred in
     /// conversion.</exception>
-    /// <param name='year'>The year.</param>
-    /// <param name='lesserFields'>An array that will store the fields
-    /// (other than the year) of the date and time. See the
-    /// TryGetDateTimeFields method for information on the "lesserFields"
-    /// parameter.</param>
     public CBORObject DateTimeFieldsToCBORObject(int year, int[]
       lesserFields) {
       return this.DateTimeFieldsToCBORObject(EInteger.FromInt32(year),

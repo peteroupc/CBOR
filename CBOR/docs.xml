@@ -540,8 +540,7 @@
             <summary>Converts a date/time in the form of a year, month, day,
             hour, minute, second, fractional seconds, and time offset to a CBOR
             object.</summary>
-            <param name='bigYear'>The parameter <paramref name='bigYear'/> is a
-            Numbers.EInteger object.</param>
+            <param name='bigYear'>The year.</param>
             <param name='lesserFields'>An array that will store the fields
             (other than the year) of the date and time. See the
             TryGetDateTimeFields method for information on the "lesserFields"
@@ -588,6 +587,16 @@
             <exception cref='PeterO.Cbor.CBORException'>An error occurred in
             conversion.</exception>
 
+</doc>
+<doc name="M:PeterO.Cbor.CBORDateConverter.DateTimeFieldsToCBORObject(System.Int32,System.Int32[])">
+<summary>Converts a date/time in the form of a year, month, day,
+            hour, minute, second, fractional seconds, and time offset to a CBOR
+            object.</summary><param name='year'>The year.</param><param name='lesserFields'>An array that will store the fields
+            (other than the year) of the date and time. See the
+            TryGetDateTimeFields method for information on the "lesserFields"
+            parameter.</param><returns>A CBOR object encoding the given date fields according to
+            the conversion type used to create this date converter.</returns><exception cref='ArgumentNullException'>The parameter <paramref name='lesserFields'/> is null.</exception><exception cref='PeterO.Cbor.CBORException'>An error occurred in
+            conversion.</exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORDateConverter.FromCBORObject(PeterO.Cbor.CBORObject)">
 
@@ -641,6 +650,19 @@
             <exception cref='PeterO.Cbor.CBORException'>An error occurred in
             conversion.</exception>
 
+</doc>
+<doc name="M:PeterO.Cbor.CBORDateConverter.TryGetDateTimeFields(PeterO.Cbor.CBORObject,PeterO.Numbers.EInteger@,System.Int32[])">
+<summary>Tries to extract the fields of a date and time in the form
+            of a CBOR object.</summary><param name='obj'>A CBOR object that specifies a date/time
+            according to the conversion type used to create this date
+            converter.</param><param name='year'>An array whose first element will store the
+            year. The array's length must be 1 or greater. If this function
+            fails, the year is set to null.</param><param name='lesserFields'>An array that will store the fields
+            (other than the year) of the date and time. The array's length must
+            be 7 or greater. If this function fails, the first seven elements
+            are set to 0. For more information, see the (EInteger[], int)
+            overload of this method.</param><returns>Either <c>true</c> if the method is successful, or
+            <c>false</c> otherwise.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORDateConverter.TryGetDateTimeFields(PeterO.Cbor.CBORObject,PeterO.Numbers.EInteger[],System.Int32[])">
 
