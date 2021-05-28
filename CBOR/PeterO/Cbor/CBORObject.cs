@@ -4,8 +4,7 @@ Any copyright to this work is released to the Public Domain.
 In case this is not possible, this work is also
 licensed under Creative Commons Zero (CC0):
 http://creativecommons.org/publicdomain/zero/1.0/
-If you like this, you should donate to Peter O.
-at: http://peteroupc.github.io/
+
  */
 using System;
 using System.Collections.Generic;
@@ -5574,7 +5573,7 @@ CBORObjectTypeTextStringAscii) ?
   /// <summary>Not documented yet.</summary>
   /// <summary>Not documented yet.</summary>
   /// <param name='pointer'>Not documented yet.</param>
-  /// <returns/>
+  /// <returns>The return value is not documented yet.</returns>
     public CBORObject AtJSONPointer(string pointer) {
       CBORObject ret = this.AtJSONPointer(pointer, null);
       if (ret == null) {
@@ -5585,7 +5584,9 @@ CBORObjectTypeTextStringAscii) ?
 
   /// <summary>Not documented yet.</summary>
   /// <summary>Not documented yet.</summary>
-  /// <returns/>
+  /// <returns>The return value is not documented yet.</returns>
+  /// <param name='pointer'>Not documented yet.</param>
+  /// <param name='defaultValue'>Not documented yet.</param>
     public CBORObject AtJSONPointer(string pointer, CBORObject defaultValue) {
       return JSONPointer.GetObject(this, pointer, null);
     }
@@ -5593,7 +5594,7 @@ CBORObjectTypeTextStringAscii) ?
   /// <summary>Not documented yet.</summary>
   /// <summary>Not documented yet.</summary>
   /// <param name='patch'>Not documented yet.</param>
-  /// <returns/>
+  /// <returns>The return value is not documented yet.</returns>
     public CBORObject ApplyJSONPatch(CBORObject patch) {
       return JSONPatch.Patch(this, patch);
     }

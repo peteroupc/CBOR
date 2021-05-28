@@ -7753,7 +7753,7 @@ if (cbornumber.CanFitInDouble()) {
 Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
 }
-       Assert.AreEqual(expected, actual, "add "+ path + " " + obj);
+       Assert.AreEqual(expected, actual, "add " + path + " " + obj);
       }
     }
 
@@ -7816,11 +7816,10 @@ throw new InvalidOperationException(String.Empty, ex);
          "/foo",
          "baz");
     }
-    
+
     [Test]
     public void TestAtJSONPointer() {
       // TODO: Finish tests for AtJSONPointer
-
     }
 
     [Test]
