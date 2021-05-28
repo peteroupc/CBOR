@@ -24,16 +24,22 @@ namespace PeterO.Cbor {
       if (path.Length == 0) {
         o = value;
       } else {
+        // DebugUtility.Log("pointer--->"+path);
         JSONPointer pointer = JSONPointer.FromPointer(o, path);
+        CBORObject parent = pointer.GetParent();
+        // DebugUtility.Log("addop pointer "+path+" ["+parent+"]");
         if (pointer.GetParent().Type == CBORType.Array) {
           int index = pointer.GetIndex();
+          // DebugUtility.Log("index "+index);
           if (index < 0) {
             throw new CBORException("Patch " + valueOpStr + " path");
           }
-          ((CBORObject)pointer.GetParent()).Insert(index, value);
+          // DebugUtility.Log("before "+parent+"");
+          parent.Insert(index, value);
+          // DebugUtility.Log("after "+parent+"");
         } else if (pointer.GetParent().Type == CBORType.Map) {
           string key = pointer.GetKey();
-          ((CBORObject)pointer.GetParent()).Set(key, value);
+          parent.Set(key, value);
         } else {
           throw new CBORException("Patch " + valueOpStr + " path");
         }
@@ -100,8 +106,11 @@ namespace PeterO.Cbor {
             throw new CBORException("Patch " + valueOpStr + " value");
           }
           value = patchOp["value"];
-          o = AddOperation(o, valueOpStr, GetString(patchOp, "path"),
- value);
+          o = AddOperation(
+            o,
+            valueOpStr,
+            GetString(patchOp, "path"),
+          value);
         } else if ("replace".Equals(valueOpStr, StringComparison.Ordinal)) {
           // operation
           CBORObject value = patchOp.GetOrDefault("value", null);
@@ -177,7 +186,7 @@ namespace PeterO.Cbor {
           Object testedObj = pointer.GetValue();
           if ((testedObj == null) ? (value != null) :
             !testedObj.Equals(value)) {
-            throw new InvalidOperationException("Patch " + valueOpStr);
+            throw new CBORException("Patch " + valueOpStr);
           }
         }
       }

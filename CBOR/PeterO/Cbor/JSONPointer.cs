@@ -29,7 +29,7 @@ namespace PeterO.Cbor {
         }
         if (obj.Type == CBORType.Array) {
           if (index >= pointer.Length || pointer[index] != '/') {
-            throw new ArgumentException("Invalid pointer");
+            throw new CBORException("Invalid pointer");
           }
           ++index;
           var value = new int[] { 0 };
@@ -40,7 +40,7 @@ namespace PeterO.Cbor {
               // Index at the end of the array
               return new JSONPointer(obj, "-");
             }
-            throw new ArgumentException("Invalid pointer");
+            throw new CBORException("Invalid pointer");
           }
           if (newIndex == pointer.Length) {
             return new JSONPointer(obj, pointer.Substring(index));
@@ -54,7 +54,7 @@ namespace PeterO.Cbor {
             throw new KeyNotFoundException("Invalid pointer");
           }
           if (index >= pointer.Length || pointer[index] != '/') {
-            throw new ArgumentException("Invalid pointer");
+            throw new CBORException("Invalid pointer");
           }
           ++index;
           string key = null;
@@ -95,7 +95,7 @@ namespace PeterO.Cbor {
                     continue;
                   }
                 }
-                throw new ArgumentException("Invalid pointer");
+                throw new CBORException("Invalid pointer");
               } else {
                 sb.Append((char)c);
               }
@@ -121,26 +121,41 @@ namespace PeterO.Cbor {
     /// <pre>/foo/2/bar</pre> means the same as
     /// <pre>obj['foo'][2]['bar']</pre> in JavaScript. If "~" and/or "/"
     /// occurs in a key, it must be escaped with "~0" or "~1",
-    /// respectively, in a JSON pointer.</summary>
+    /// respectively, in a JSON pointer. JSON pointers also support the
+    /// special key "-" (as in "/foo/-") to indicate the end of an array,
+    /// but this method treats this key as an error since it refers to a
+    /// nonexistent item.</summary>
     /// <param name='obj'>A CBOR object.</param>
     /// <param name='pointer'>A JSON pointer according to RFC 6901.</param>
-    /// <returns>An object within the specified JSON object, or <paramref
-    /// name='obj'/> if pointer is the empty string, if the pointer is
-    /// null, if the pointer is invalid, if there is no JSON object at the
-    /// given pointer, or if <paramref name='obj'/> is not of type
-    /// CBORObject, unless pointer is the empty string.</returns>
+    /// <returns>An object within the specified JSON object. Returns
+    /// <paramref name='obj'/> if pointer is the empty string (even if
+    /// "obj" has a CBOR type other than array or map). Returns <paramref
+    /// name='defaultValue'/> if the pointer is null, if the pointer is
+    /// invalid, or if there is no object at the given pointer, or the
+    /// special key "-" appears in the pointer. (Note that RFC 6901 was
+    /// published before JSON was extended to support top-level values
+    /// other than arrays and key-value dictionaries.)</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='pointer'/> is null.</exception>
-    public static CBORObject GetObject(CBORObject obj, string pointer) {
-      // TODO: Consider adding this method to CBORObject class
+    /// name='pointer'/> or <paramref name='obj'/> is null.</exception>
+    /// <param name='defaultValue'/>
+    public static CBORObject GetObject(
+      CBORObject obj,
+      string pointer,
+      CBORObject defaultValue) {
       if (obj == null) {
         throw new ArgumentNullException(nameof(obj));
       }
       if (pointer == null) {
-        throw new ArgumentNullException(nameof(pointer));
+        return defaultValue;
       }
-      return (pointer.Length == 0) ? obj :
-        JSONPointer.FromPointer(obj, pointer).GetValue();
+      if (pointer.Length == 0) {
+        return obj;
+      }
+      if (obj.Type != CBORType.Array && obj.Type != CBORType.Map) {
+        return defaultValue;
+      }
+      CBORObject cobj = JSONPointer.FromPointer(obj, pointer).GetValue();
+      return cobj == null ? defaultValue : cobj;
     }
 
     private static int ReadPositiveInteger(

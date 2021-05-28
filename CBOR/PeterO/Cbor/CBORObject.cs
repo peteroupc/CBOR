@@ -5574,20 +5574,26 @@ CBORObjectTypeTextStringAscii) ?
   /// <summary>Not documented yet.</summary>
   /// <summary>Not documented yet.</summary>
   /// <param name='pointer'>Not documented yet.</param>
-  /// <returns>The return value is not documented yet.</returns>
-  /// <exception cref='ArgumentNullException'>The parameter <paramref
-  /// name='pointer'/> is null.</exception>
+  /// <returns/>
     public CBORObject AtJSONPointer(string pointer) {
-      if (pointer == null) {
-        throw new ArgumentNullException(nameof(pointer));
+      CBORObject ret = this.AtJSONPointer(pointer, null);
+      if (ret == null) {
+         throw new CBORException("Invalid JSON pointer");
       }
-      throw new NotImplementedException();
+      return ret;
+    }
+
+  /// <summary>Not documented yet.</summary>
+  /// <summary>Not documented yet.</summary>
+  /// <returns/>
+    public CBORObject AtJSONPointer(string pointer, CBORObject defaultValue) {
+      return JSONPointer.GetObject(this, pointer, null);
     }
 
   /// <summary>Not documented yet.</summary>
   /// <summary>Not documented yet.</summary>
   /// <param name='patch'>Not documented yet.</param>
-  /// <returns>The return value is not documented yet.</returns>
+  /// <returns/>
     public CBORObject ApplyJSONPatch(CBORObject patch) {
       return JSONPatch.Patch(this, patch);
     }
