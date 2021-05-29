@@ -49,7 +49,7 @@ namespace PeterO.Cbor {
           index = newIndex;
         } else if (obj.Type == CBORType.Map) {
           if (obj.Equals(CBORObject.Null)) {
-            throw new KeyNotFoundException("Invalid pointer");
+            throw new CBORException("Invalid pointer");
           }
           if (index >= pointer.Length || pointer[index] != '/') {
             throw new CBORException("Invalid pointer");
@@ -107,7 +107,7 @@ namespace PeterO.Cbor {
             obj = ((CBORObject)obj)[key];
           }
         } else {
-          throw new KeyNotFoundException("Invalid pointer");
+          throw new CBORException("Invalid pointer");
         }
       }
     }

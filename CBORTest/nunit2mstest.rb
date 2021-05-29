@@ -1,7 +1,7 @@
 #!/usr/bin/ruby
 # Written in 2013 by Peter Occil.
 # Any copyright to this work is released to the Public Domain.
-# http://creativecommons.org/publicdomain/zero/1.0/
+# https://creativecommons.org/publicdomain/zero/1.0/
 #
 #
 

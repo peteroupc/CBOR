@@ -3,7 +3,7 @@ Written in 2013 by Peter Occil.
 Any copyright to this work is released to the Public Domain.
 In case this is not possible, this work is also
 licensed under Creative Commons Zero (CC0):
-http://creativecommons.org/publicdomain/zero/1.0/
+https://creativecommons.org/publicdomain/zero/1.0/
 
 */
 using System;
@@ -66,8 +66,11 @@ namespace PeterO.Cbor {
 #endif
 
       CBORObject co = o.GetOrDefault(str, null);
-      if (str == null) {
+      if (co == null) {
         throw new CBORException(str + " not found");
+      }
+      if (co.Type != CBORType.TextString) {
+        throw new CBORException("Not a text string type");
       }
       return co.AsString();
     }
@@ -99,8 +102,8 @@ namespace PeterO.Cbor {
         string valueOpStr = GetString(patchOp, "op");
         if ("add".Equals(valueOpStr, StringComparison.Ordinal)) {
           // operation
-          CBORObject value = null;
-          if (!patchOp.ContainsKey("value")) {
+          CBORObject value = patchOp.GetOrDefault("value", null);
+          if (value == null) {
             throw new CBORException("Patch " + valueOpStr + " value");
           }
           value = patchOp["value"];
@@ -157,7 +160,7 @@ namespace PeterO.Cbor {
           }
           JSONPointer pointer = JSONPointer.FromPointer(o, path);
           if (!pointer.Exists()) {
-            throw new KeyNotFoundException("Patch " +
+            throw new CBORException("Patch " +
               valueOpStr + " " + fromPath);
           }
           CBORObject copiedObj = pointer.GetValue();
@@ -203,7 +206,7 @@ namespace PeterO.Cbor {
       } else {
         JSONPointer pointer = JSONPointer.FromPointer(o, path);
         if (!pointer.Exists()) {
-          throw new KeyNotFoundException("Patch " +
+          throw new CBORException("Patch " +
             valueOpStr + " " + path);
         }
         o = pointer.GetValue();
@@ -230,7 +233,7 @@ namespace PeterO.Cbor {
       } else {
         JSONPointer pointer = JSONPointer.FromPointer(o, path);
         if (!pointer.Exists()) {
-          throw new KeyNotFoundException("Patch " +
+          throw new CBORException("Patch " +
             valueOpStr + " " + path);
         }
         if (pointer.GetParent().Type == CBORType.Array) {
