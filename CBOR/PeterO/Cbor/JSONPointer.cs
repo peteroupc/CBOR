@@ -164,18 +164,16 @@ namespace PeterO.Cbor {
       var haveZeros = false;
       int oldIndex = index;
       result[0] = -1;
-      while (index < str.Length) { // skip zeros
-        int c = str[index++];
-        if (c != '0') {
-          --index;
-          break;
-        }
-        if (haveZeros) {
-          --index;
-          return index;
-        }
-        haveNumber = true;
-        haveZeros = true;
+      if (index == str.Length) {
+        return index;
+      }
+      if (str.Length - 1 == index && str[index] =='0') {
+        result[0] = 0;
+        return index + 1;
+      }
+      if (str[index] == '0') {
+         // NOTE: Leading zeros not allowed in JSON Pointer numbers
+         return index;
       }
       long lvalue = 0;
       while (index < str.Length) {

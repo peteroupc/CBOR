@@ -189,6 +189,8 @@ namespace PeterO.Cbor {
             !testedObj.Equals(value)) {
             throw new CBORException("Patch " + valueOpStr);
           }
+        } else {
+            throw new CBORException("Unrecognized op");
         }
       }
       return (o == null) ? CBORObject.Null : o;
