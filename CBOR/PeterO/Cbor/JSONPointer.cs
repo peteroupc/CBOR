@@ -18,12 +18,15 @@ namespace PeterO.Cbor {
       if (pointer == null) {
         throw new ArgumentNullException(nameof(pointer));
       }
+      if (obj == null) {
+        throw new ArgumentNullException(nameof(obj));
+      }
       if (pointer.Length == 0) {
         return new JSONPointer(obj, pointer);
       }
       while (true) {
         if (obj == null) {
-          throw new ArgumentNullException(nameof(obj));
+            throw new CBORException("Invalid pointer: obj is null");
         }
         if (obj.Type == CBORType.Array) {
           if (index >= pointer.Length || pointer[index] != '/') {
@@ -42,8 +45,21 @@ namespace PeterO.Cbor {
           }
           if (newIndex == pointer.Length) {
             return new JSONPointer(obj, pointer.Substring(index));
+          } else if (value[0] > obj.Count) {
+            throw new CBORException("Invalid array index in pointer");
+          } else if (value[0] == obj.Count) {
+            if (newIndex + 1 == pointer.Length) {
+              return new JSONPointer(obj, pointer.Substring(index));
+            }
+            throw new CBORException("Invalid array index in pointer");
           } else {
             obj = obj[value[0]];
+#if DEBUG
+            if (obj == null) {
+              throw new ArgumentNullException(nameof(obj));
+            }
+#endif
+
             index = newIndex;
           }
           index = newIndex;
@@ -104,7 +120,12 @@ namespace PeterO.Cbor {
           if (index == pointer.Length) {
             return new JSONPointer(obj, key);
           } else {
-            obj = ((CBORObject)obj)[key];
+            obj = obj[key];
+#if DEBUG
+            if (obj == null) {
+              throw new ArgumentNullException(nameof(obj));
+            }
+#endif
           }
         } else {
           throw new CBORException("Invalid pointer");
@@ -167,7 +188,7 @@ namespace PeterO.Cbor {
       if (index == str.Length) {
         return index;
       }
-      if (str.Length - 1 == index && str[index] =='0') {
+      if (str.Length - 1 == index && str[index] == '0') {
         result[0] = 0;
         return index + 1;
       }
@@ -258,9 +279,6 @@ namespace PeterO.Cbor {
     }
 
     public CBORObject GetValue() {
-      if (this.refValue.Length == 0) {
-        return this.jsonobj;
-      }
       CBORObject tmpcbor = null;
       if (this.jsonobj.Type == CBORType.Array) {
         int index = this.GetIndex();
@@ -271,6 +289,8 @@ namespace PeterO.Cbor {
           return null;
         }
       } else if (this.jsonobj.Type == CBORType.Map) {
+        // DebugUtility.Log("jsonobj=" + this.jsonobj + " refValue=[" + this.refValue
+        //+ "]");
         tmpcbor = this.jsonobj;
         return tmpcbor[this.refValue];
       } else {

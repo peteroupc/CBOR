@@ -7771,15 +7771,13 @@ if (cbornumber.CanFitInDouble()) {
 } catch (CBORException) {
 // NOTE: Intentionally empty
 } catch (Exception ex) {
- Assert.Fail(ex.ToString() + "\n" + patch);
- throw new InvalidOperationException(String.Empty, ex);
+ throw new InvalidOperationException(ex.ToString() + "\n" + patch);
 }
       } else {
        try {
  actual = actual.ApplyJSONPatch(patch);
 } catch (Exception ex) {
-Assert.Fail(ex.ToString() + "\n" + patch);
-throw new InvalidOperationException(String.Empty, ex);
+throw new InvalidOperationException(ex.ToString() + "\n" + patch);
 }
        Assert.AreEqual(expected, actual);
       }
@@ -7791,6 +7789,9 @@ throw new InvalidOperationException(String.Empty, ex);
       CBORObject tests = CBORObject.FromJSONString(JSONPatchTests,
          new JSONOptions("allowduplicatekeys=1"));
       foreach (CBORObject testcbor in tests.Values) {
+        if (testcbor.GetOrDefault("disabled", CBORObject.False).AsBoolean()) {
+          continue;
+        }
         string
 err = testcbor.GetOrDefault("error",
   CBORObject.FromObject(String.Empty)).AsString();
@@ -7807,8 +7808,12 @@ err = testcbor.GetOrDefault("error",
               testcbor["patch"]);
           }
         } catch (Exception ex) {
-          string exmsg = ex.GetType()+"\n"+comment+"\n" +err;
+          Console.WriteLine("*********");
+          string exmsg = ex.GetType()+"\n"+comment +"\n" + err;
           Console.WriteLine(exmsg);
+          Console.WriteLine(testcbor + String.Empty);
+          Console.WriteLine(ex);
+          Console.WriteLine("*********");
           // throw new InvalidOperationException(exmsg, ex);
         }
       }
@@ -7816,7 +7821,7 @@ err = testcbor.GetOrDefault("error",
 
     [Test]
     public void TestApplyJSONPatchTest() {
-      CBORObject patch, testval;
+      CBORObject patch;
       patch = CBORObject.NewMap().Add("op", "test")
           .Add("path", String.Empty).Add("value",
   CBORObject.NewArray().Add(1).Add(2));

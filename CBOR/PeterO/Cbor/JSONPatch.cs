@@ -118,7 +118,12 @@ namespace PeterO.Cbor {
           if (value == null) {
             throw new CBORException("Patch " + valueOpStr + " value");
           }
-          value = patchOp["value"];
+#if DEBUG
+          if (o == null) {
+            throw new ArgumentNullException(nameof(o));
+          }
+#endif
+
           o = ReplaceOperation(
               o,
               valueOpStr,
@@ -144,9 +149,17 @@ namespace PeterO.Cbor {
           if (fromPath == null) {
             throw new CBORException("Patch " + valueOpStr + " from");
           }
-          if (path.StartsWith(fromPath, StringComparison.Ordinal)) {
-            throw new CBORException("Patch " + valueOpStr);
+          if (path.Equals(fromPath)) {
+            JSONPointer pointer = JSONPointer.FromPointer(o, path);
+            if (pointer.Exists()) {
+                // Moving to the same path, so return
+                return o;
+             }
           }
+          // if (path.StartsWith(fromPath, StringComparison.Ordinal)) {
+          // throw new CBORException("Patch " + valueOpStr + ": startsWith failed " +
+          // "[" + path + "] [" + fromPath + "]");
+          // }
           CBORObject movedObj = RemoveOperation(o, valueOpStr, fromPath);
           o = AddOperation(o, valueOpStr, path, CloneCbor(movedObj));
         } else if ("copy".Equals(valueOpStr, StringComparison.Ordinal)) {
@@ -158,7 +171,7 @@ namespace PeterO.Cbor {
           if (fromPath == null) {
             throw new CBORException("Patch " + valueOpStr + " from");
           }
-          JSONPointer pointer = JSONPointer.FromPointer(o, path);
+          JSONPointer pointer = JSONPointer.FromPointer(o, fromPath);
           if (!pointer.Exists()) {
             throw new CBORException("Patch " +
               valueOpStr + " " + fromPath);
@@ -187,6 +200,10 @@ namespace PeterO.Cbor {
           Object testedObj = pointer.GetValue();
           if ((testedObj == null) ? (value != null) :
             !testedObj.Equals(value)) {
+            #if DEBUG
+            DebugUtility.Log("testedObj=" + testedObj);
+            DebugUtility.Log("value=" + value);
+            #endif
             throw new CBORException("Patch " + valueOpStr);
           }
         } else {
@@ -230,6 +247,12 @@ namespace PeterO.Cbor {
       if (path == null) {
         throw new CBORException("Patch " + valueOpStr);
       }
+#if DEBUG
+      if (o == null) {
+        throw new ArgumentNullException(nameof(o));
+      }
+#endif
+
       if (path.Length == 0) {
         o = value;
       } else {
