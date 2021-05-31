@@ -261,34 +261,6 @@ Tries to extract the fields of a date and time in the form of a CBOR object.
 
 Either  `true`  if the method is successful, or  `false`  otherwise.
 
-<b>Return Value:</b>
-
-Not documented yet.
-
-<b>Return Value:</b>
-
-Not documented yet.
-
-<b>Return Value:</b>
-
-Not documented yet.
-
-<b>Return Value:</b>
-
-Not documented yet.
-
-<b>Return Value:</b>
-
-Not documented yet.
-
-<b>Return Value:</b>
-
-Not documented yet.
-
-<b>Return Value:</b>
-
-Not documented yet.
-
 <a id="TryGetDateTimeFields_PeterO_Cbor_CBORObject_PeterO_Numbers_EInteger_int"></a>
 ### TryGetDateTimeFields
 

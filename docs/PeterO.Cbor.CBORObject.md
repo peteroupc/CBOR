@@ -48,6 +48,7 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[Add(object, object)](#Add_object_object)</code> - Adds a new key and its value to this CBOR map, or adds the value if the key doesn't exist.
 * <code>[Add(PeterO.Cbor.CBORObject)](#Add_PeterO_Cbor_CBORObject)</code> - Adds a new object to the end of this array.
 * <code>[Addition(PeterO.Cbor.CBORObject, PeterO.Cbor.CBORObject)](#Addition_PeterO_Cbor_CBORObject_PeterO_Cbor_CBORObject)</code> - <b>Deprecated:</b> Instead, convert both CBOR objects to numbers (with .AsNumber()), and use the first number's .Add() method.
+* <code>[ApplyJSONPatch(PeterO.Cbor.CBORObject)](#ApplyJSONPatch_PeterO_Cbor_CBORObject)</code> - Returns a copy of this object after applying the operations in a JSON patch, in the form of a CBOR object.
 * <code>[AsBoolean()](#AsBoolean)</code> - Returns false if this object is a CBOR false, null, or undefined value (whether or not the object has tags); otherwise, true.
 * <code>[AsByte()](#AsByte)</code> - <b>Deprecated:</b> Instead, use .ToObject&lt;byte&gt;() in .NET or .ToObject(Byte.class) in Java.
 * <code>[AsDecimal()](#AsDecimal)</code> - <b>Deprecated:</b> Instead, use .ToObject&lt;decimal&gt;().
@@ -71,6 +72,8 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[AsUInt16()](#AsUInt16)</code> - <b>Deprecated:</b> Instead, use the following: (cbor.AsNumber().ToUInt16Checked()), or .ToObject&lt;ushort&gt;().
 * <code>[AsUInt32()](#AsUInt32)</code> - <b>Deprecated:</b> Instead, use the following: (cbor.AsNumber().ToUInt32Checked()), or .ToObject&lt;uint&gt;().
 * <code>[AsUInt64()](#AsUInt64)</code> - <b>Deprecated:</b> Instead, use the following: (cbor.AsNumber().ToUInt64Checked()), or .ToObject&lt;ulong&gt;().
+* <code>[AtJSONPointer(string)](#AtJSONPointer_string)</code> - Gets the CBOR object referred to by a JSON Pointer according to RFC6901.
+* <code>[AtJSONPointer(string, PeterO.Cbor.CBORObject)](#AtJSONPointer_string_PeterO_Cbor_CBORObject)</code> - Gets the CBOR object referred to by a JSON Pointer according to RFC6901, or a default value if the operation fails.
 * <code>[CalcEncodedSize()](#CalcEncodedSize)</code> - Calculates the number of bytes this CBOR object takes when serialized as a byte array using the EncodeToBytes() method.
 * <code>[CanFitInDouble()](#CanFitInDouble)</code> - <b>Deprecated:</b> Instead, use the following: (cbor.IsNumber &amp;&amp; cbor.AsNumber().CanFitInDouble()).
 * <code>[CanFitInInt32()](#CanFitInInt32)</code> - <b>Deprecated:</b> Instead, use .CanValueFitInInt32(), if the application allows only CBOR integers, or (cbor.IsNumber &amp;&amp;cbor.AsNumber().CanFitInInt32()), if the application allows any CBOR object convertible to an integer.
@@ -753,6 +756,37 @@ The parameter  <i>first</i>
  or  <i>second</i>
  is null.
 
+<a id="ApplyJSONPatch_PeterO_Cbor_CBORObject"></a>
+### ApplyJSONPatch
+
+    public PeterO.Cbor.CBORObject ApplyJSONPatch(
+        PeterO.Cbor.CBORObject patch);
+
+Returns a copy of this object after applying the operations in a JSON patch, in the form of a CBOR object. JSON patches are specified in RFC 6902 and their format is summarized in the remarks below.
+
+<b>Remarks:</b> A JSON patch is an array with one or more maps. Each map has the following keys:
+
+ * "op" - Required. This key's value is the patch operation and must be "add", "remove", "move", "copy", "test", or "replace", in basic lower case letters and no other case combination.
+
+ * "value" - Required if the operation is "add", "replace", or "test" and specifies the item to add (insert), or that will replace the existing item, or to check an existing item for equality, respectively. (For "test", the operation fails if the existing item doesn't match the specified value.)
+
+ * "path" - Required for all operations. A JSON Pointer (RFC 6901) specifying the destination path in the CBOR object for the operation. For more information, see RFC 6901 or the documentation for AtJSONPointer(pointer, defaultValue).
+
+ * "from" - Required if the operation is "move" or "copy". A JSON Pointer (RFC 6901) specifying the path in the CBOR object where the source value is located.
+
+<b>Parameters:</b>
+
+ * <i>patch</i>: A JSON patch in the form of a CBOR object; it has the form summarized in the remarks.
+
+<b>Return Value:</b>
+
+The result of the patch operation.
+
+<b>Exceptions:</b>
+
+ * PeterO.Cbor.CBORException:
+The parameter "patch" is null or the patch operation failed.
+
 <a id="AsBoolean"></a>
 ### AsBoolean
 
@@ -1217,6 +1251,47 @@ This object does not represent a number (for this purpose, infinities and not-a-
 
  * System.OverflowException:
 This object's value, if converted to an integer by discarding its fractional part, is outside the range of a 64-bit unsigned integer.
+
+<a id="AtJSONPointer_string"></a>
+### AtJSONPointer
+
+    public PeterO.Cbor.CBORObject AtJSONPointer(
+        string pointer);
+
+Gets the CBOR object referred to by a JSON Pointer according to RFC6901. For more information, see the overload taking a default value parameter.
+
+<b>Parameters:</b>
+
+ * <i>pointer</i>: A JSON pointer according to RFC 6901.
+
+<b>Return Value:</b>
+
+An object within this CBOR object. Returns this object if pointer is the empty string (even if this object has a CBOR type other than array or map).
+
+<b>Exceptions:</b>
+
+ * PeterO.Cbor.CBORException:
+Thrown if the pointer is null, or if the pointer is invalid, or if there is no object at the given pointer, or the special key "-" appears in the pointer, or if the pointer is non-empty and this object has a CBOR type other than array or map.
+
+<a id="AtJSONPointer_string_PeterO_Cbor_CBORObject"></a>
+### AtJSONPointer
+
+    public PeterO.Cbor.CBORObject AtJSONPointer(
+        string pointer,
+        PeterO.Cbor.CBORObject defaultValue);
+
+Gets the CBOR object referred to by a JSON Pointer according to RFC6901, or a default value if the operation fails. The syntax for a JSON Pointer is: '/' KEY '/' KEY [...] where KEY represents a key into the JSON object or its sub-objects in the hierarchy. For example, /foo/2/bar means the same as obj['foo'][2]['bar'] in JavaScript. If "~" and/or "/" occurs in a key, it must be escaped with "~0" or "~1", respectively, in a JSON pointer. JSON pointers also support the special key "-" (as in "/foo/-") to indicate the end of an array, but this method treats this key as an error since it refers to a nonexistent item. Indices to arrays (such as 2 in the example) must contain only basic digits 0 to 9 and no leading zeros. (Note that RFC 6901 was published before JSON was extended to support top-level values other than arrays and key-value dictionaries.).
+
+<b>Parameters:</b>
+
+ * <i>pointer</i>: A JSON pointer according to RFC 6901.
+
+ * <i>defaultValue</i>:
+
+<b>Return Value:</b>
+
+An object within the specified JSON object. Returns this object if pointer is the empty string (even if this object has a CBOR type other than array or map). Returns  <i>defaultValue</i>
+ if the pointer is null, or if the pointer is invalid, or if there is no object at the given pointer, or the special key "-" appears in the pointer, or if the pointer is non-empty and this object has a CBOR type other than array or map.
 
 <a id="CalcEncodedSize"></a>
 ### CalcEncodedSize

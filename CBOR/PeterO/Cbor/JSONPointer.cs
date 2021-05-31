@@ -132,33 +132,6 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>Gets the CBOR object referred to by a JSON Pointer
-    /// according to RFC6901. The syntax for pointers is:
-    /// <pre>'/' KEY '/' KEY [...]</pre> where KEY represents a key into
-    /// the JSON object or its sub-objects in the hierarchy. For example,
-    /// <pre>/foo/2/bar</pre> means the same as
-    /// <pre>obj['foo'][2]['bar']</pre> in JavaScript. If "~" and/or "/"
-    /// occurs in a key, it must be escaped with "~0" or "~1",
-    /// respectively, in a JSON pointer. JSON pointers also support the
-    /// special key "-" (as in "/foo/-") to indicate the end of an array,
-    /// but this method treats this key as an error since it refers to a
-    /// nonexistent item. Indices to arrays (such as 2 in the example) must
-    /// contain only basic digits 0 to 9 and no leading zeros.</summary>
-    /// <returns>An object within the specified JSON object. Returns this
-    /// object if pointer is the empty string (even if this object has a
-    /// CBOR type other than array or map). Returns <paramref
-    /// name='defaultValue'/> if the pointer is null, or if the pointer is
-    /// invalid, or if there is no object at the given pointer, or the
-    /// special key "-" appears in the pointer, or if the pointer is
-    /// non-empty and this object has a CBOR type other than array or map.
-    /// (Note that RFC 6901 was published before JSON was extended to
-    /// support top-level values other than arrays and key-value
-    /// dictionaries.)</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='pointer'/> or <paramref name='obj'/> is null.</exception>
-    /// <param name='obj'>Not documented yet.</param>
-    /// <param name='pointer'>Not documented yet.</param>
-    /// <param name='defaultValue'>Not documented yet.</param>
     public static CBORObject GetObject(
       CBORObject obj,
       string pointer,
@@ -176,8 +149,12 @@ namespace PeterO.Cbor {
       if (obj.Type != CBORType.Array && obj.Type != CBORType.Map) {
         return defaultValue;
       }
-      CBORObject cobj = JSONPointer.FromPointer(obj, pointer).GetValue();
-      return cobj == null ? defaultValue : cobj;
+      try {
+         CBORObject cobj = JSONPointer.FromPointer(obj, pointer).GetValue();
+         return cobj == null ? defaultValue : cobj;
+      } catch (CBORException) {
+         return defaultValue;
+      }
     }
 
     private static int ReadPositiveInteger(
@@ -243,6 +220,10 @@ namespace PeterO.Cbor {
     }
 
     public bool Exists() {
+      if (this.refValue.Length == 0) {
+        // Root always exists
+        return true;
+      }
       if (this.jsonobj.Type == CBORType.Array) {
         if (this.refValue.Equals("-", StringComparison.Ordinal)) {
           return false;
@@ -287,6 +268,10 @@ namespace PeterO.Cbor {
     }
 
     public CBORObject GetValue() {
+      if (this.refValue.Length == 0) {
+        // Root always exists
+        return this.jsonobj;
+      }
       CBORObject tmpcbor = null;
       if (this.jsonobj.Type == CBORType.Array) {
         int index = this.GetIndex();
@@ -300,7 +285,7 @@ namespace PeterO.Cbor {
         // DebugUtility.Log("jsonobj=" + this.jsonobj + " refValue=[" + this.refValue
         // + "]");
         tmpcbor = this.jsonobj;
-        return tmpcbor[this.refValue];
+        return tmpcbor.GetOrDefault(this.refValue, null);
       } else {
         return (this.refValue.Length == 0) ? this.jsonobj : null;
       }
@@ -354,8 +339,7 @@ namespace PeterO.Cbor {
     /// <pre>{ "/0" => "value1", // "/0" points to
     /// {"key":"value1","foo":"foovalue"} "/1" => "value2" // "/1" points
     /// to {"key":"value2","bar":"barvalue"} }</pre> and the JSON object
-    /// will remain unchanged. @param root object to search @param
-    /// keyToFind the key to search for. @return a map:
+    /// will remain unchanged.
     /// <list>
     /// <item>The keys in the map are JSON Pointers to the objects within
     /// <i>root</i> that contained a key named
@@ -366,11 +350,9 @@ namespace PeterO.Cbor {
     /// named
     /// <i>keyToFind</i>.</item></list> The JSON Pointers are relative to
     /// the root object.</summary>
-    /// <param name='root'>The parameter <paramref name='root'/> is not
-    /// documented yet.</param>
-    /// <param name='keyToFind'>The parameter <paramref name='keyToFind'/>
-    /// is not documented yet.</param>
-    /// <returns>An IDictionary(string, CBORObject) object.</returns>
+    /// <param name='root'>Object to search.</param>
+    /// <param name='keyToFind'>The key to search for.</param>
+    /// <returns>A map:.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='root'/> is null.</exception>
     public static IDictionary<string, CBORObject> GetPointersWithKey(

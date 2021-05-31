@@ -589,14 +589,21 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORDateConverter.DateTimeFieldsToCBORObject(System.Int32,System.Int32[])">
-<summary>Converts a date/time in the form of a year, month, day,
+
+            <summary>Converts a date/time in the form of a year, month, day,
             hour, minute, second, fractional seconds, and time offset to a CBOR
-            object.</summary><param name='year'>The year.</param><param name='lesserFields'>An array that will store the fields
+            object.</summary>
+            <param name='year'>The year.</param>
+            <param name='lesserFields'>An array that will store the fields
             (other than the year) of the date and time. See the
             TryGetDateTimeFields method for information on the "lesserFields"
-            parameter.</param><returns>A CBOR object encoding the given date fields according to
-            the conversion type used to create this date converter.</returns><exception cref='ArgumentNullException'>The parameter <paramref name='lesserFields'/> is null.</exception><exception cref='PeterO.Cbor.CBORException'>An error occurred in
+            parameter.</param>
+            <returns>A CBOR object encoding the given date fields according to
+            the conversion type used to create this date converter.</returns>
+            <exception cref='ArgumentNullException'>The parameter <paramref name='lesserFields'/> is null.</exception>
+            <exception cref='PeterO.Cbor.CBORException'>An error occurred in
             conversion.</exception>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORDateConverter.FromCBORObject(PeterO.Cbor.CBORObject)">
 
@@ -652,17 +659,23 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORDateConverter.TryGetDateTimeFields(PeterO.Cbor.CBORObject,PeterO.Numbers.EInteger@,System.Int32[])">
-<summary>Tries to extract the fields of a date and time in the form
-            of a CBOR object.</summary><param name='obj'>A CBOR object that specifies a date/time
+
+            <summary>Tries to extract the fields of a date and time in the form
+            of a CBOR object.</summary>
+            <param name='obj'>A CBOR object that specifies a date/time
             according to the conversion type used to create this date
-            converter.</param><param name='year'>An array whose first element will store the
+            converter.</param>
+            <param name='year'>An array whose first element will store the
             year. The array's length must be 1 or greater. If this function
-            fails, the year is set to null.</param><param name='lesserFields'>An array that will store the fields
+            fails, the year is set to null.</param>
+            <param name='lesserFields'>An array that will store the fields
             (other than the year) of the date and time. The array's length must
             be 7 or greater. If this function fails, the first seven elements
             are set to 0. For more information, see the (EInteger[], int)
-            overload of this method.</param><returns>Either <c>true</c> if the method is successful, or
+            overload of this method.</param>
+            <returns>Either <c>true</c> if the method is successful, or
             <c>false</c> otherwise.</returns>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORDateConverter.TryGetDateTimeFields(PeterO.Cbor.CBORObject,PeterO.Numbers.EInteger[],System.Int32[])">
 
@@ -1957,6 +1970,31 @@
             <exception cref='ArgumentNullException'>The parameter <paramref name='first'/> or <paramref name='second'/> is null.</exception>
 
 </doc>
+<doc name="M:PeterO.Cbor.CBORObject.ApplyJSONPatch(PeterO.Cbor.CBORObject)">
+<summary>Returns a copy of this object after applying the
+            operations in a JSON patch, in the form of a CBOR object. JSON
+            patches are specified in RFC 6902 and their format is summarized in
+            the remarks below.</summary><param name='patch'>A JSON patch in the form of a CBOR object; it
+            has the form summarized in the remarks.</param><returns>The result of the patch operation.</returns><exception cref='PeterO.Cbor.CBORException'>The parameter <paramref name='patch'/> is null or
+            the patch operation failed.</exception><remarks><b>Remarks:</b> A JSON patch is an array with one or more
+            maps. Each map has the following keys:
+            <list>
+            <item>"op" - Required. This key's value is the patch operation and
+            must be "add", "remove", "move", "copy", "test", or "replace", in
+            basic lower case letters and no other case combination.</item>
+            <item>"value" - Required if the operation is "add", "replace", or
+            "test" and specifies the item to add (insert), or that will replace
+            the existing item, or to check an existing item for equality,
+            respectively. (For "test", the operation fails if the existing item
+            doesn't match the specified value.)</item>
+            <item>"path" - Required for all operations. A JSON Pointer (RFC
+            6901) specifying the destination path in the CBOR object for the
+            operation. For more information, see RFC 6901 or the documentation
+            for AtJSONPointer(pointer, defaultValue).</item>
+            <item>"from" - Required if the operation is "move" or "copy". A
+            JSON Pointer (RFC 6901) specifying the path in the CBOR object
+            where the source value is located.</item></list></remarks>
+</doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsBoolean">
 
             <summary>Returns false if this object is a CBOR false, null, or
@@ -2298,6 +2336,41 @@
             converted to an integer by discarding its fractional part, is
             outside the range of a 64-bit unsigned integer.</exception>
 
+</doc>
+<doc name="M:PeterO.Cbor.CBORObject.AtJSONPointer(System.String)">
+<summary>Gets the CBOR object referred to by a JSON Pointer
+            according to RFC6901. For more information, see the overload taking
+            a default value parameter.</summary><param name='pointer'>A JSON pointer according to RFC 6901.</param><returns>An object within this CBOR object. Returns this object if
+            pointer is the empty string (even if this object has a CBOR type
+            other than array or map).</returns><exception cref='PeterO.Cbor.CBORException'>Thrown if the pointer is null, or
+            if the pointer is invalid, or if there is no object at the given
+            pointer, or the special key "-" appears in the pointer, or if the
+            pointer is non-empty and this object has a CBOR type other than
+            array or map.</exception>
+</doc>
+<doc name="M:PeterO.Cbor.CBORObject.AtJSONPointer(System.String,PeterO.Cbor.CBORObject)">
+<summary>Gets the CBOR object referred to by a JSON Pointer
+            according to RFC6901, or a default value if the operation fails.
+            The syntax for a JSON Pointer is:
+            <pre>'/' KEY '/' KEY [...]</pre> where KEY represents a key into
+            the JSON object or its sub-objects in the hierarchy. For example,
+            <pre>/foo/2/bar</pre> means the same as
+            <pre>obj['foo'][2]['bar']</pre> in JavaScript. If "~" and/or "/"
+            occurs in a key, it must be escaped with "~0" or "~1",
+            respectively, in a JSON pointer. JSON pointers also support the
+            special key "-" (as in "/foo/-") to indicate the end of an array,
+            but this method treats this key as an error since it refers to a
+            nonexistent item. Indices to arrays (such as 2 in the example) must
+            contain only basic digits 0 to 9 and no leading zeros. (Note that
+            RFC 6901 was published before JSON was extended to support
+            top-level values other than arrays and key-value
+            dictionaries.).</summary><param name='pointer'>A JSON pointer according to RFC 6901.</param><param name='defaultValue'>The parameter <paramref name='defaultValue'/> is a Cbor.CBORObject object.</param><returns>An object within the specified JSON object. Returns this
+            object if pointer is the empty string (even if this object has a
+            CBOR type other than array or map). Returns <paramref name='defaultValue'/> if the pointer is null, or if the pointer is
+            invalid, or if there is no object at the given pointer, or the
+            special key "-" appears in the pointer, or if the pointer is
+            non-empty and this object has a CBOR type other than array or
+            map.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.CalcEncodedSize">
 
@@ -4177,7 +4250,8 @@
             <returns>The CBOR object referred to by index or key in this array
             or map. If this is a CBOR map, returns <c>null</c> (not
             <c>CBORObject.Null</c> ) if an item with the given key doesn't
-            exist.</returns>
+            exist (but this behavior may change to throwing an exception in
+            version 5.0 or later).</returns>
             <exception cref='InvalidOperationException'>This object is not an
             array or map.</exception>
             <exception cref='ArgumentException'>This object is an array and the
@@ -7051,6 +7125,62 @@
             object's properties. The format of the string is the same as the
             one described in the String constructor for this class.</returns>
 
+</doc>
+<doc name="M:PeterO.Cbor.JSONPointer.GetIndex">
+<summary>Gets an index into the specified object, if the object is
+            an array and is not greater than the array's length.</summary>
+            <returns>The index contained in this instance, or -1 if the object
+            isn't a JSON array or is greater than the array's length.</returns>
+</doc>
+<doc name="M:PeterO.Cbor.JSONPointer.GetPointersWithKey(PeterO.Cbor.CBORObject,System.String)">
+<summary>Gets all children of the specified JSON object that
+            contain the specified key; the method will not remove matching
+            keys. As an example, consider this object:
+            <pre>[{"key":"value1","foo":"foovalue"},
+            {"key":"value2","bar":"barvalue"}, {"baz":"bazvalue"}]</pre> If
+            getPointersToKey is called on this object with a keyToFind called
+            "key", we get the following Map as the return value:
+            <pre>{ "/0" => "value1", // "/0" points to
+            {"key":"value1","foo":"foovalue"} "/1" => "value2" // "/1" points
+            to {"key":"value2","bar":"barvalue"} }</pre> and the JSON object
+            will remain unchanged. <list>
+            <item>The keys in the map are JSON Pointers to the objects within
+            <i>root</i> that contained a key named
+            <i>keyToFind</i>. To get the actual JSON object, call
+            JSONPointer.GetObject, passing
+            <i>root</i> and the pointer as arguments.</item>
+            <item>The values in the map are the values of each of those keys
+            named
+            <i>keyToFind</i>.</item></list> The JSON Pointers are relative to
+            the root object.</summary><param name='root'>Object to search.</param><param name='keyToFind'>The key to search for.</param><returns>A map:.</returns><exception cref='ArgumentNullException'>The parameter <paramref name='root'/> is null.</exception>
+</doc>
+<doc name="M:PeterO.Cbor.JSONPointer.GetPointersWithKeyAndRemove(PeterO.Cbor.CBORObject,System.String)">
+<summary>Gets all children of the specified JSON object that
+            contain the specified key; the method will remove matching keys. As
+            an example, consider this object:
+            <pre>[{"key":"value1","foo":"foovalue"},
+            {"key":"value2","bar":"barvalue"}, {"baz":"bazvalue"}]</pre> If
+            getPointersToKey is called on this object with a keyToFind called
+            "key", we get the following Map as the return value:
+            <pre>{ "/0" => "value1", // "/0" points to {"foo":"foovalue"} "/1"
+            => "value2" /* "/1" points to {"bar":"barvalue"} */ }</pre> and the
+            JSON object will change to the following:
+            <pre>[{"foo":"foovalue"}, {"bar":"barvalue"},
+            {"baz","bazvalue"}]</pre>.</summary>
+            <param name='root'>The object to search.</param>
+            <param name='keyToFind'>The key to search for.</param>
+            <returns>A map:
+            <list>
+            <item>The keys in the map are JSON Pointers to the objects within
+            <i>root</i> that contained a key named
+            <i>keyToFind</i>. To get the actual JSON object, call
+            JSONPointer.GetObject, passing
+            <i>root</i> and the pointer as arguments.</item>
+            <item>The values in the map are the values of each of those keys
+            named
+            <i>keyToFind</i>.</item></list> The JSON Pointers are relative to
+            the root object.</returns>
+            <exception cref='ArgumentNullException'>The parameter <paramref name='root'/> is null.</exception>
 </doc>
 <doc name="T:PeterO.Cbor.PODOptions">
 

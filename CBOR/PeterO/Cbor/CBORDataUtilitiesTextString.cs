@@ -46,6 +46,7 @@ namespace PeterO.Cbor {
       var haveDecimalPoint = false;
       var haveDigits = false;
       var haveDigitsAfterDecimal = false;
+      var haveNonzeroDigits = false;
       var haveExponent = false;
       int i = offset;
       var decimalPointPos = -1;
@@ -60,9 +61,13 @@ namespace PeterO.Cbor {
       }
       for (; k < endPos; ++k) {
         char c = chars[k];
-        if (c >= '0' && c <= '9') {
+        if (c == '0') {
           haveDigits = true;
           haveDigitsAfterDecimal |= haveDecimalPoint;
+        } else if (c >= '1' && c <= '9') {
+          haveDigits = true;
+          haveDigitsAfterDecimal |= haveDecimalPoint;
+          haveNonzeroDigits = true;
         } else if (c == '.') {
           if (!haveDigits || haveDecimalPoint) {
             // no digits before the decimal point,
@@ -151,7 +156,20 @@ namespace PeterO.Cbor {
         // Exponent too high for precision to overcome (which
         // has a length no bigger than Int32.MaxValue, which is 10 digits
         // long)
-        if (negativeExp) {
+        if (!haveNonzeroDigits) {
+          // zero
+          if (kind == JSONOptions.ConversionMode.Double) {
+            if (!negative) {
+              return CBORObject.FromFloatingPointBits(0, 2);
+            } else {
+              return CBORObject.FromFloatingPointBits(0x8000, 2);
+            }
+          } else if (kind ==
+            JSONOptions.ConversionMode.IntOrFloatFromDouble ||
+            kind == JSONOptions.ConversionMode.IntOrFloat) {
+            return CBORObject.FromObject(0);
+          }
+        } else if (negativeExp) {
           // underflow
           if (kind == JSONOptions.ConversionMode.Double ||
             kind == JSONOptions.ConversionMode.IntOrFloat) {

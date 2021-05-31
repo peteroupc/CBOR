@@ -5573,10 +5573,18 @@ CBORObjectTypeTextStringAscii) ?
       }
     }
 
-  /// <summary>Not documented yet.</summary>
-  /// <summary>Not documented yet.</summary>
-  /// <param name='pointer'>Not documented yet.</param>
-  /// <returns>The return value is not documented yet.</returns>
+    /// <summary>Gets the CBOR object referred to by a JSON Pointer
+    /// according to RFC6901. For more information, see the overload taking
+    /// a default value parameter.</summary>
+    /// <param name='pointer'>A JSON pointer according to RFC 6901.</param>
+    /// <returns>An object within this CBOR object. Returns this object if
+    /// pointer is the empty string (even if this object has a CBOR type
+    /// other than array or map).</returns>
+    /// <exception cref='PeterO.Cbor.CBORException'>Thrown if the pointer
+    /// is null, or if the pointer is invalid, or if there is no object at
+    /// the given pointer, or the special key "-" appears in the pointer,
+    /// or if the pointer is non-empty and this object has a CBOR type
+    /// other than array or map.</exception>
     public CBORObject AtJSONPointer(string pointer) {
       CBORObject ret = this.AtJSONPointer(pointer, null);
       if (ret == null) {
@@ -5585,11 +5593,33 @@ CBORObjectTypeTextStringAscii) ?
       return ret;
     }
 
-  /// <summary>Not documented yet.</summary>
-  /// <summary>Not documented yet.</summary>
-  /// <returns>The return value is not documented yet.</returns>
-  /// <param name='pointer'>Not documented yet.</param>
-  /// <param name='defaultValue'>Not documented yet.</param>
+    /// <summary>Gets the CBOR object referred to by a JSON Pointer
+    /// according to RFC6901, or a default value if the operation fails.
+    /// The syntax for a JSON Pointer is:
+    /// <pre>'/' KEY '/' KEY [...]</pre> where KEY represents a key into
+    /// the JSON object or its sub-objects in the hierarchy. For example,
+    /// <pre>/foo/2/bar</pre> means the same as
+    /// <pre>obj['foo'][2]['bar']</pre> in JavaScript. If "~" and/or "/"
+    /// occurs in a key, it must be escaped with "~0" or "~1",
+    /// respectively, in a JSON pointer. JSON pointers also support the
+    /// special key "-" (as in "/foo/-") to indicate the end of an array,
+    /// but this method treats this key as an error since it refers to a
+    /// nonexistent item. Indices to arrays (such as 2 in the example) must
+    /// contain only basic digits 0 to 9 and no leading zeros. (Note that
+    /// RFC 6901 was published before JSON was extended to support
+    /// top-level values other than arrays and key-value
+    /// dictionaries.).</summary>
+    /// <param name='pointer'>A JSON pointer according to RFC 6901.</param>
+    /// <param name='defaultValue'>The parameter <paramref
+    /// name='defaultValue'/> is a Cbor.CBORObject object.</param>
+    /// <returns>An object within the specified JSON object. Returns this
+    /// object if pointer is the empty string (even if this object has a
+    /// CBOR type other than array or map). Returns <paramref
+    /// name='defaultValue'/> if the pointer is null, or if the pointer is
+    /// invalid, or if there is no object at the given pointer, or the
+    /// special key "-" appears in the pointer, or if the pointer is
+    /// non-empty and this object has a CBOR type other than array or
+    /// map.</returns>
     public CBORObject AtJSONPointer(string pointer, CBORObject defaultValue) {
       return JSONPointer.GetObject(this, pointer, null);
     }
@@ -5601,25 +5631,26 @@ CBORObjectTypeTextStringAscii) ?
   /// <param name='patch'>A JSON patch in the form of a CBOR object; it
   /// has the form summarized in the remarks.</param>
   /// <returns>The result of the patch operation.</returns>
-  /// <exception cref='CBORException'>The parameter "patch" is null or
-  /// the patch operation failed.</exception>
+  /// <exception cref='PeterO.Cbor.CBORException'>The parameter <paramref
+  /// name='patch'/> is null or the patch operation failed.</exception>
   /// <remarks><b>Remarks:</b> A JSON patch is an array with one or more
   /// maps. Each map has the following keys:
   /// <list>
   /// <item>"op" - Required. This key's value is the patch operation and
   /// must be "add", "remove", "move", "copy", "test", or "replace", in
-  /// lower case and no other case combination.</item>
+  /// basic lower case letters and no other case combination.</item>
   /// <item>"value" - Required if the operation is "add", "replace", or
   /// "test" and specifies the item to add (insert), or that will replace
   /// the existing item, or to check an existing item for equality,
   /// respectively. (For "test", the operation fails if the existing item
   /// doesn't match the specified value.)</item>
   /// <item>"path" - Required for all operations. A JSON Pointer (RFC
-  /// 6901) specifying the target path in the CBOR object for the
-  /// operation.</item>
+  /// 6901) specifying the destination path in the CBOR object for the
+  /// operation. For more information, see RFC 6901 or the documentation
+  /// for AtJSONPointer(pointer, defaultValue).</item>
   /// <item>"from" - Required if the operation is "move" or "copy". A
-  /// JSON Pointer (RFC 6901) specifying the target path in the CBOR
-  /// object where the source value is located.</item></list></remarks>
+  /// JSON Pointer (RFC 6901) specifying the path in the CBOR object
+  /// where the source value is located.</item></list></remarks>
     public CBORObject ApplyJSONPatch(CBORObject patch) {
       return JSONPatch.Patch(this, patch);
     }
