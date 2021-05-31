@@ -7775,7 +7775,12 @@ if (cbornumber.CanFitInDouble()) {
 }
       } else {
        try {
- actual = actual.ApplyJSONPatch(patch);
+          byte[] oldactualbytes = actual.EncodeToBytes();
+          CBORObject oldactual = actual;
+          actual = actual.ApplyJSONPatch(patch);
+          byte[] newactualbytes = oldactual.EncodeToBytes();
+          // Check whether the patch didn't change the existing object
+          TestCommon.AssertByteArraysEqual(oldactualbytes, newactualbytes);
 } catch (Exception ex) {
 throw new InvalidOperationException(ex.ToString() + "\n" + patch);
 }
@@ -7808,13 +7813,8 @@ err = testcbor.GetOrDefault("error",
               testcbor["patch"]);
           }
         } catch (Exception ex) {
-          Console.WriteLine("*********");
           string exmsg = ex.GetType()+"\n"+comment +"\n" + err;
-          Console.WriteLine(exmsg);
-          Console.WriteLine(testcbor + String.Empty);
-          Console.WriteLine(ex);
-          Console.WriteLine("*********");
-          // throw new InvalidOperationException(exmsg, ex);
+          throw new InvalidOperationException(exmsg, ex);
         }
       }
     }

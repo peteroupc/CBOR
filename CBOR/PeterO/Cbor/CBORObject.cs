@@ -617,7 +617,8 @@ namespace PeterO.Cbor {
     /// <returns>The CBOR object referred to by index or key in this array
     /// or map. If this is a CBOR map, returns <c>null</c> (not
     /// <c>CBORObject.Null</c> ) if an item with the given key doesn't
-    /// exist.</returns>
+    /// exist (but this behavior may change to throwing an exception in
+    /// version 5.0 or later).</returns>
     /// <exception cref='InvalidOperationException'>This object is not an
     /// array or map.</exception>
     /// <exception cref='ArgumentException'>This object is an array and the
@@ -636,6 +637,8 @@ namespace PeterO.Cbor {
         if (this.Type == CBORType.Map) {
           IDictionary<CBORObject, CBORObject> map = this.AsMap();
           CBORObject key = CBORObject.FromObject(index);
+          // TODO: In next major version, consider throwing an exception
+          // instead if key does not exist.
           return (!map.ContainsKey(key)) ? null : map[key];
         }
         throw new InvalidOperationException("Not an array or map");
@@ -5591,10 +5594,32 @@ CBORObjectTypeTextStringAscii) ?
       return JSONPointer.GetObject(this, pointer, null);
     }
 
-  /// <summary>Not documented yet.</summary>
-  /// <summary>Not documented yet.</summary>
-  /// <param name='patch'>Not documented yet.</param>
-  /// <returns>The return value is not documented yet.</returns>
+  /// <summary>Returns a copy of this object after applying the
+  /// operations in a JSON patch, in the form of a CBOR object. JSON
+  /// patches are specified in RFC 6902 and their format is summarized in
+  /// the remarks below.</summary>
+  /// <param name='patch'>A JSON patch in the form of a CBOR object; it
+  /// has the form summarized in the remarks.</param>
+  /// <returns>The result of the patch operation.</returns>
+  /// <exception cref='CBORException'>The parameter "patch" is null or
+  /// the patch operation failed.</exception>
+  /// <remarks><b>Remarks:</b> A JSON patch is an array with one or more
+  /// maps. Each map has the following keys:
+  /// <list>
+  /// <item>"op" - Required. This key's value is the patch operation and
+  /// must be "add", "remove", "move", "copy", "test", or "replace", in
+  /// lower case and no other case combination.</item>
+  /// <item>"value" - Required if the operation is "add", "replace", or
+  /// "test" and specifies the item to add (insert), or that will replace
+  /// the existing item, or to check an existing item for equality,
+  /// respectively. (For "test", the operation fails if the existing item
+  /// doesn't match the specified value.)</item>
+  /// <item>"path" - Required for all operations. A JSON Pointer (RFC
+  /// 6901) specifying the target path in the CBOR object for the
+  /// operation.</item>
+  /// <item>"from" - Required if the operation is "move" or "copy". A
+  /// JSON Pointer (RFC 6901) specifying the target path in the CBOR
+  /// object where the source value is located.</item></list></remarks>
     public CBORObject ApplyJSONPatch(CBORObject patch) {
       return JSONPatch.Patch(this, patch);
     }

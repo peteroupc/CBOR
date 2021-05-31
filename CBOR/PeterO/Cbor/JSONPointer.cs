@@ -34,7 +34,9 @@ namespace PeterO.Cbor {
           }
           ++index;
           var value = new int[] { 0 };
+          // DebugUtility.Log("index parse 0: " + (pointer.Substring(index)));
           int newIndex = ReadPositiveInteger(pointer, index, value);
+          // DebugUtility.Log("index parse 1: " + (pointer.Substring(newIndex)));
           if (value[0] < 0) {
             if (index < pointer.Length && pointer[index] == '-' &&
               (index + 1 == pointer.Length || pointer[index + 1] == '/')) {
@@ -64,13 +66,12 @@ namespace PeterO.Cbor {
           }
           index = newIndex;
         } else if (obj.Type == CBORType.Map) {
-          if (obj.Equals(CBORObject.Null)) {
-            throw new CBORException("Invalid pointer");
-          }
+          // DebugUtility.Log("Parsing map key(0) " + (pointer.Substring(index)));
           if (index >= pointer.Length || pointer[index] != '/') {
             throw new CBORException("Invalid pointer");
           }
           ++index;
+          // DebugUtility.Log("Parsing map key " + (pointer.Substring(index)));
           string key = null;
           int oldIndex = index;
           var tilde = false;
@@ -120,12 +121,10 @@ namespace PeterO.Cbor {
           if (index == pointer.Length) {
             return new JSONPointer(obj, key);
           } else {
-            obj = obj[key];
-#if DEBUG
+            obj = obj.GetOrDefault(key, null);
             if (obj == null) {
-              throw new ArgumentNullException(nameof(obj));
+              throw new CBORException("Invalid pointer; key not found");
             }
-#endif
           }
         } else {
           throw new CBORException("Invalid pointer");
@@ -133,7 +132,7 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>Gets the JSON object referred to by a JSON Pointer
+    /// <summary>Gets the CBOR object referred to by a JSON Pointer
     /// according to RFC6901. The syntax for pointers is:
     /// <pre>'/' KEY '/' KEY [...]</pre> where KEY represents a key into
     /// the JSON object or its sub-objects in the hierarchy. For example,
@@ -143,24 +142,28 @@ namespace PeterO.Cbor {
     /// respectively, in a JSON pointer. JSON pointers also support the
     /// special key "-" (as in "/foo/-") to indicate the end of an array,
     /// but this method treats this key as an error since it refers to a
-    /// nonexistent item.</summary>
-    /// <param name='obj'>A CBOR object.</param>
-    /// <param name='pointer'>A JSON pointer according to RFC 6901.</param>
-    /// <returns>An object within the specified JSON object. Returns
-    /// <paramref name='obj'/> if pointer is the empty string (even if
-    /// "obj" has a CBOR type other than array or map). Returns <paramref
-    /// name='defaultValue'/> if the pointer is null, if the pointer is
+    /// nonexistent item. Indices to arrays (such as 2 in the example) must
+    /// contain only basic digits 0 to 9 and no leading zeros.</summary>
+    /// <returns>An object within the specified JSON object. Returns this
+    /// object if pointer is the empty string (even if this object has a
+    /// CBOR type other than array or map). Returns <paramref
+    /// name='defaultValue'/> if the pointer is null, or if the pointer is
     /// invalid, or if there is no object at the given pointer, or the
-    /// special key "-" appears in the pointer. (Note that RFC 6901 was
-    /// published before JSON was extended to support top-level values
-    /// other than arrays and key-value dictionaries.)</returns>
+    /// special key "-" appears in the pointer, or if the pointer is
+    /// non-empty and this object has a CBOR type other than array or map.
+    /// (Note that RFC 6901 was published before JSON was extended to
+    /// support top-level values other than arrays and key-value
+    /// dictionaries.)</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='pointer'/> or <paramref name='obj'/> is null.</exception>
-    /// <param name='defaultValue'/>
+    /// <param name='obj'>Not documented yet.</param>
+    /// <param name='pointer'>Not documented yet.</param>
+    /// <param name='defaultValue'>Not documented yet.</param>
     public static CBORObject GetObject(
       CBORObject obj,
       string pointer,
       CBORObject defaultValue) {
+      // TODO: Avoid CBORException
       if (obj == null) {
         throw new ArgumentNullException(nameof(obj));
       }
@@ -189,6 +192,11 @@ namespace PeterO.Cbor {
         return index;
       }
       if (str.Length - 1 == index && str[index] == '0') {
+        result[0] = 0;
+        return index + 1;
+      }
+      if (str.Length - 1 > index && str[index] == '0' && str[index + 1] !=
+'0') {
         result[0] = 0;
         return index + 1;
       }
@@ -290,7 +298,7 @@ namespace PeterO.Cbor {
         }
       } else if (this.jsonobj.Type == CBORType.Map) {
         // DebugUtility.Log("jsonobj=" + this.jsonobj + " refValue=[" + this.refValue
-        //+ "]");
+        // + "]");
         tmpcbor = this.jsonobj;
         return tmpcbor[this.refValue];
       } else {

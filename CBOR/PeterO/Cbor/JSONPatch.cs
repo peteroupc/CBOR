@@ -75,14 +75,13 @@ namespace PeterO.Cbor {
       return co.AsString();
     }
 
-    // TODO: Check whether this method supports "whole cloth" replacements
     public static CBORObject Patch(CBORObject o, CBORObject ptch) {
       // clone the object in case of failure
       if (o == null) {
-        throw new ArgumentNullException(nameof(o));
+        throw new CBORException("object is null");
       }
       if (ptch == null) {
-        throw new ArgumentNullException(nameof(ptch));
+        throw new CBORException("patch is null");
       }
       if (ptch.Type != CBORType.Array) {
         throw new CBORException("patch is not an array");
@@ -128,7 +127,7 @@ namespace PeterO.Cbor {
               o,
               valueOpStr,
               GetString(patchOp, "path"),
-              value);
+              CloneCbor(value));
         } else if ("remove".Equals(valueOpStr, StringComparison.Ordinal)) {
           // Remove operation
           string path = GetString(patchOp, "path");
@@ -200,10 +199,6 @@ namespace PeterO.Cbor {
           Object testedObj = pointer.GetValue();
           if ((testedObj == null) ? (value != null) :
             !testedObj.Equals(value)) {
-            #if DEBUG
-            DebugUtility.Log("testedObj=" + testedObj);
-            DebugUtility.Log("value=" + value);
-            #endif
             throw new CBORException("Patch " + valueOpStr);
           }
         } else {
