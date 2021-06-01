@@ -337,7 +337,6 @@ namespace PeterO.Cbor {
             ") is not greater or equal to " + numberStartIndex);
         }
         #endif
-
         c = numberEndIndex >= this.endPos ? -1 : this.jstring[numberEndIndex];
         // check if character can validly appear after a JSON number
         if (c != ',' && c != ']' && c != '}' && c != -1 &&
@@ -347,6 +346,12 @@ namespace PeterO.Cbor {
         // DebugUtility.Log("endIndex="+endIndex[0]+", "+
         // this.jstring.Substring(endIndex[0],
         // Math.Min(20, this.endPos-endIndex[0])));
+      } else {
+        // check if character can validly appear after a JSON number
+        if (c != ',' && c != ']' && c != '}' && c != -1 &&
+          c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) {
+          this.RaiseError("Invalid character after JSON number");
+        }
       }
       if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)) {
         nextChar[0] = c;

@@ -305,7 +305,8 @@ CBORObject.FromObject(js.Substring(
       IDictionary<string, string> valpointers) {
       // Parse nonstandard comments before JSON keys
       var hasHash = false;
-      for (var i = index; i < endPos; ++i) {
+      var i = 0;
+      for (i = index; i < endPos; ++i) {
         if (jstring[i] == '#') {
            {hasHash = true;
         }
@@ -339,7 +340,8 @@ CBORObject.FromObject(js.Substring(
       JSONOptions options) {
       // Parse nonstandard comments before JSON keys
       var hasHash = false;
-      for (var i = index; i < endPos; ++i) {
+      var i = 0;
+      for (i = index; i < endPos; ++i) {
         if (jstring[i] == '#') {
            {hasHash = true;
         }

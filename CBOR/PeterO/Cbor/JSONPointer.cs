@@ -136,9 +136,8 @@ namespace PeterO.Cbor {
       CBORObject obj,
       string pointer,
       CBORObject defaultValue) {
-      // TODO: Avoid CBORException
       if (obj == null) {
-        throw new ArgumentNullException(nameof(obj));
+        throw new CBORException("obj");
       }
       if (pointer == null) {
         return defaultValue;

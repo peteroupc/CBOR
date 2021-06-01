@@ -454,6 +454,12 @@ namespace PeterO.Cbor {
           // 100) + "...");
           this.RaiseError("JSON number can't be parsed. " + errstr);
         }
+      } else {
+        // check if character can validly appear after a JSON number
+        if (c != ',' && c != ']' && c != '}' && c != -1 &&
+          c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) {
+          this.RaiseError("Invalid character after JSON number");
+        }
       }
       if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)) {
         nextChar[0] = c;

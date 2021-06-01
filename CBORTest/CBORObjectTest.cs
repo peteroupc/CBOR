@@ -16,7 +16,13 @@ namespace Test {
       "\"\ud800\\udc00\"", "\"\\U0023\"", "\"\\u002x\"", "\"\\u00xx\"",
       "\"\\u0xxx\"", "\"\\u0\"", "\"\\u00\"", "\"\\u000\"", "trbb",
       "trub", "falsb", "nulb", "[true", "[true,", "[true]!", "tr\u0020",
-      "tr", "fa", "nu",
+      "tr", "fa", "nu", "True", "False","Null","TRUE","FALSE","NULL",
+      "truE", "falsE", "nulL","tRUE","fALSE","nULL","tRuE","fAlSe","nUlL",
+      "[tr]", "[fa]",
+      "[nu]", "[True]","[False]","[Null]","[TRUE]","[FALSE]","[NULL]",
+
+  "[truE]", "[falsE]",
+  "[nulL]","[tRUE]","[fALSE]","[nULL]","[tRuE]","[fAlSe]","[nUlL]",
       "fa ", "nu ", "fa lse", "nu ll", "tr ue",
       "[\"\ud800\\udc00\"]", "[\"\\ud800\udc00\"]",
       "[\"\\udc00\ud800\udc00\"]", "[\"\\ud800\ud800\udc00\"]",
@@ -24,6 +30,7 @@ namespace Test {
       "{\"0\"::0}", "{\"0\":0,,\"1\":1}",
       "{\"0\":0,\"1\":1,}", "[,0,1,2]", "[0,,1,2]", "[0:1]", "[0:1:2]",
       "[0,1,,2]", "[0,1,2,]", "[0001]", "{a:true}",
+      "{\"a\":#comment\ntrue}",
       "{\"a\"://comment\ntrue}", "{\"a\":/*comment*/true}", "{'a':true}",
       "{\"a\":'b'}", "{\"a\t\":true}", "{\"a\r\":true}", "{\"a\n\":true}",
       "['a']", "{\"a\":\"a\t\"}", "[\"a\\'\"]", "[NaN]", "[+Infinity]",
@@ -34,11 +41,17 @@ namespace Test {
       "{\"test\":5}\u0005", "true\"", "truex", "true}", "true\u0300",
       "true\u0005", "8024\"", "8024x", "8024}", "8024\u0300",
       "8024\u0005", "{\"test\":5}}", "{\"test\":5}{", "[5]]", "[5][",
+      "00", "000", "001", "0001", "00.0", "001.0", "0001.0","01E-4","01.1E-4",
+      "01E4", "01.1E4", "01e-4","01.1e-4",
+      "01e4", "01.1e4",
+      "+0", "+1", "+0.0","+1e4","+1e-4","+1.0","+1.0e4","+1.0e+4","+1.0e-4",
       "0000", "0x1", "0xf", "0x20", "0x01",
       "-3x", "-3e89x", "\u0005true", "x\\u0005z",
-      "0,2", "0,05", "-0,2", "-0,05",
+      "0,2", "0,05", "-0,2", "-0,05", "\u007F0.0", "\u00010.0","0.0\u007F",
+      "0.0\u0001", "-1.D\r\n", "-1.D\u0020","-1.5L","-0.0L","0L","1L","1.5L",
+      "0.0L",
       "0X1", "0Xf", "0X20", "0X01", ".2", ".05", "-.2",
-      "-.05", "23.", "23.e0", "23.e1", "0.", "[0000]", "[0x1]",
+      "-.05", "23.", "23.e0", "23.e1", "0.", "-0.", "[0000]", "[0x1]",
       "[0xf]", "[0x20]", "[0x01]", "[.2]", "[.05]", "[-.2]", "[-.05]",
       "[23.]", "[23.e0]", "[23.e1]", "[0.]", "\"abc", "\"ab\u0004c\"",
       "\u0004\"abc\"",
@@ -64,9 +77,9 @@ namespace Test {
       "[0]",
       "[0.1]",
       "[0.1001]",
-      "[0.0]",
+      "[0.0]", "true\n\r\t\u0020",
       "[-3 " + ",-5]", "\n\r\t\u0020true", "\"x\\u0005z\"",
-      "[0.00]", "[0.000]", "[0.01]", "[0.001]", "[0.5]", "[0E5]",
+      "[0.00]", "[0.000]", "[0.01]", "[0.001]", "[0.5]", "[0E5]", "[0e5]",
       "[0E+6]", "[\"\ud800\udc00\"]", "[\"\\ud800\\udc00\"]",
       "[\"\\ud800\\udc00\ud800\udc00\"]", "23.0e01", "23.0e00", "[23.0e01]",
       "[23.0e00]", "0", "1", "0.2", "0.05", "-0.2", "-0.05",
@@ -7813,7 +7826,7 @@ err = testcbor.GetOrDefault("error",
               testcbor["patch"]);
           }
         } catch (Exception ex) {
-          string exmsg = ex.GetType()+"\n" +comment + "\n" + err;
+          string exmsg = ex.GetType() + "\n" + comment + "\n" + err;
           throw new InvalidOperationException(exmsg, ex);
         }
       }
@@ -8857,6 +8870,144 @@ err = testcbor.GetOrDefault("error",
           "double",
           dbl);
       }
+    }
+
+    [Test]
+    public void TestFromJsonCTLInString() {
+       for (var i = 0; i <= 0x20; ++i) {
+          byte[] bytes = {0x22, (byte)i, 0x22 };
+          char[] chars = {(char)0x22, (char)i, (char)0x22 };
+          string str = new String(chars, 0, chars.Length);
+          if (i == 0x20) {
+             try {
+ CBORObject.FromJSONString(str);
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+             try {
+ CBORObject.FromJSONBytes(bytes);
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+          } else {
+             try {
+ CBORObject.FromJSONString(str);
+ Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+             try {
+ CBORObject.FromJSONBytes(bytes);
+ Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+          }
+        }
+     }
+
+    // [Test]
+    public void TestFromJsonLeadingTrailingCTLBytes() {
+       // TODO: Reenable eventually, once UTF-8 only support
+       // for CBORObject.FromJSONBytes is implemented
+       for (var i = 0; i <= 0x20; ++i) {
+          // Leading CTL
+          byte[] bytes = { (byte)i, 0x31 };
+          if (i == 0x09 || i == 0x0d || i == 0x0a || i == 0x20) {
+             try {
+ CBORObject.FromJSONBytes(bytes);
+} catch (Exception ex) {
+Assert.Fail(ex.ToString() + "bytes " + i);
+throw new InvalidOperationException(String.Empty, ex);
+}
+          } else {
+             try {
+ CBORObject.FromJSONBytes(bytes);
+ Assert.Fail("Should have failed bytes " + i);
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+          }
+          // Trailing CTL
+          bytes = new byte[] { 0x31, (byte)i };
+          if (i == 0x09 || i == 0x0d || i == 0x0a || i == 0x20) {
+             try {
+ CBORObject.FromJSONBytes(bytes);
+} catch (Exception ex) {
+Assert.Fail(ex.ToString() + "bytes " + i);
+throw new InvalidOperationException(String.Empty, ex);
+}
+          } else {
+             try {
+ CBORObject.FromJSONBytes(bytes);
+ Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString() + "bytes " + i);
+ throw new InvalidOperationException(String.Empty, ex);
+}
+          }
+       }
+    }
+
+    [Test]
+    public void TestFromJsonLeadingTrailingCTL() {
+       for (var i = 0; i <= 0x20; ++i) {
+          // Leading CTL
+          char[] chars = {(char)i, (char)0x31 };
+          string str = new String(chars, 0, chars.Length);
+          if (i == 0x09 || i == 0x0d || i == 0x0a || i == 0x20) {
+             try {
+ CBORObject.FromJSONString(str);
+} catch (Exception ex) {
+Assert.Fail(ex.ToString() + "string " + i);
+throw new InvalidOperationException(String.Empty, ex);
+}
+          } else {
+             try {
+ CBORObject.FromJSONString(str);
+ Assert.Fail("Should have failed string " + i);
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+          }
+          // Trailing CTL
+          chars = new char[] { (char)0x31, (char)i};
+          str = new String(chars, 0, chars.Length);
+          if (i == 0x09 || i == 0x0d || i == 0x0a || i == 0x20) {
+             try {
+ CBORObject.FromJSONString(str);
+} catch (Exception ex) {
+Assert.Fail(ex.ToString() + "string " + i);
+throw new InvalidOperationException(String.Empty, ex);
+}
+          } else {
+             try {
+ CBORObject.FromJSONString(str);
+ Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString() + "string " + i);
+ throw new InvalidOperationException(String.Empty, ex);
+}
+          }
+       }
     }
 
     [Test]
