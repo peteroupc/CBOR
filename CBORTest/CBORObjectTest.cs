@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using NUnit.Framework;
 using PeterO;
 using PeterO.Cbor;
@@ -20,9 +21,8 @@ namespace Test {
       "truE", "falsE", "nulL", "tRUE", "fALSE", "nULL", "tRuE", "fAlSe", "nUlL",
       "[tr]", "[fa]",
       "[nu]", "[True]", "[False]", "[Null]", "[TRUE]", "[FALSE]", "[NULL]",
-
-  "[truE]", "[falsE]",
-  "[nulL]","[tRUE]","[fALSE]","[nULL]","[tRuE]","[fAlSe]","[nUlL]",
+      "[truE]", "[falsE]",
+      "[nulL]", "[tRUE]", "[fALSE]","[nULL]","[tRuE]","[fAlSe]","[nUlL]",
       "fa ", "nu ", "fa lse", "nu ll", "tr ue",
       "[\"\ud800\\udc00\"]", "[\"\\ud800\udc00\"]",
       "[\"\\udc00\ud800\udc00\"]", "[\"\\ud800\ud800\udc00\"]",
@@ -8549,14 +8549,56 @@ err = testcbor.GetOrDefault("error",
       Assert.AreEqual(dt2, dt);
     }
 
+    private static string RandomQueryStringLike(IRandomGenExtended irg) {
+       var sb = new StringBuilder();
+       while (true) {
+          int x = irg.GetInt32(100);
+          if (x == 0) {
+            break;
+          } else if (x < 10) {
+            sb.Append('&');
+          } else if (x < 20) {
+            sb.Append('=');
+          } else if (x < 25) {
+            string hex = "0123456789ABCDEF";
+            sb.Append('%');
+            sb.Append(hex[irg.GetInt32(hex.Length)]);
+            sb.Append(hex[irg.GetInt32(hex.Length)]);
+          } else if (x < 30) {
+            string hex = "0123456789abcdef";
+            sb.Append('%');
+            sb.Append(hex[irg.GetInt32(hex.Length)]);
+            sb.Append(hex[irg.GetInt32(hex.Length)]);
+          } else if (x < 95) {
+            sb.Append((char)(irg.GetInt32(0x5e) + 0x21));
+          } else {
+            sb.Append((char)irg.GetInt32(0x80));
+          }
+       }
+       return sb.ToString();
+    }
+
     [Test]
     public void TestQueryStrings() {
+      // TODO: Add utility to create query strings
       String test = "a=b&c=d&e=f&g[0]=h&g[1]=j&g[2][a]=k&g[2][b]=m";
-      CBORObject
-cbor = CBORObject.FromObject(QueryStringHelper.QueryStringToDict(test));
+      CBORObject cbor =
+CBORObject.FromObject(QueryStringHelper.QueryStringToDict(test));
       Console.WriteLine(cbor.ToJSONString());
       cbor = CBORObject.FromObject(QueryStringHelper.QueryStringToCBOR(test));
       Console.WriteLine(cbor.ToJSONString());
+      var rg = new RandomGenerator();
+      for (var i = 0; i < 100000; ++i) {
+        string str = RandomQueryStringLike(rg);
+        try {
+          cbor = QueryStringHelper.QueryStringToCBOR(str);
+          Console.WriteLine("succ: " + str);
+          Console.WriteLine(cbor.ToJSONString());
+        } catch (InvalidOperationException) {
+          // Console.WriteLine("throws: "+str);
+        }
+      }
+      throw new InvalidOperationException();
     }
 
     private static CBORObject FromJSON(string json, JSONOptions jsonop) {

@@ -11,7 +11,8 @@ using PeterO.Cbor;
 
 namespace Test {
   public sealed class QueryStringHelper {
-    private QueryStringHelper() {}
+    private QueryStringHelper() {
+}
     private static string[] SplitAt(string s, string delimiter) {
       if (delimiter == null || delimiter.Length == 0) {
         throw new ArgumentException();
@@ -36,7 +37,7 @@ namespace Test {
             strings = new List<string>();
             first = false;
           }
-          string newstr = s.Substring(index, (index2) - (index));
+          string newstr = s.Substring(index, index2 - index);
           strings.Add(newstr);
           index = index2 + delimLength;
         }
@@ -199,7 +200,7 @@ namespace Test {
         string name = str;
         string value = String.Empty; // value is empty if there is no key
         if (index >= 0) {
-          name = str.Substring(0, (index) - (0));
+          name = str.Substring(0, index - 0);
           value = str.Substring(index + 1);
         }
         name = name.Replace('+', ' ');
@@ -221,7 +222,7 @@ namespace Test {
         return new string[] { s};
       }
       var path = new List<string>();
-      path.Add(s.Substring(0, (index) - (0)));
+      path.Add(s.Substring(0, index - 0));
       ++index; // move to after the bracket
       while (true) {
         int endBracket = s.IndexOf(']', index);
@@ -229,7 +230,7 @@ namespace Test {
           path.Add(s.Substring(index));
           break;
         }
-        path.Add(s.Substring(index, (endBracket) - (index)));
+        path.Add(s.Substring(index, endBracket - index));
         index = endBracket + 1; // move to after the end bracket
         index = s.IndexOf('[', index);
         if (index < 0) { // start bracket not found
@@ -441,6 +442,9 @@ null);
           if (!leaf.ContainsKey(path[i])) {
             // node doesn't exist so add it
             IDictionary<string, Object> newLeaf = new Dictionary<string, Object>();
+            if (leaf.ContainsKey(path[i])) {
+              throw new InvalidOperationException();
+            }
             leaf.Add(path[i], newLeaf);
             leaf = newLeaf;
           } else {
@@ -456,6 +460,9 @@ null);
           }
         }
         if (leaf != null) {
+          if (leaf.ContainsKey(path[path.Length - 1])) {
+            throw new InvalidOperationException();
+          }
           leaf.Add(path[path.Length - 1], keyvalue[1]);
         }
       }
