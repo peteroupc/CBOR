@@ -8549,6 +8549,16 @@ err = testcbor.GetOrDefault("error",
       Assert.AreEqual(dt2, dt);
     }
 
+    [Test]
+    public void TestQueryStrings() {
+      String test = "a=b&c=d&e=f&g[0]=h&g[1]=j&g[2][a]=k&g[2][b]=m";
+      CBORObject
+cbor = CBORObject.FromObject(QueryStringHelper.QueryStringToDict(test));
+      Console.WriteLine(cbor.ToJSONString());
+      cbor = CBORObject.FromObject(QueryStringHelper.QueryStringToCBOR(test));
+      Console.WriteLine(cbor.ToJSONString());
+    }
+
     private static CBORObject FromJSON(string json, JSONOptions jsonop) {
       // var sw = new System.Diagnostics.Stopwatch();
       // sw.Start();
