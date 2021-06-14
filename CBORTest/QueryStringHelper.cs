@@ -1,7 +1,6 @@
 // Written by Peter O.
 // Any copyright to this work is released to the Public Domain.
 // https://creativecommons.org/publicdomain/zero/1.0/
-//
 
 using System;
 using System.Collections.Generic;
@@ -345,7 +344,7 @@ namespace Test {
     private static CBORObject ConvertListsToCBOR(IList<Object> dict) {
       CBORObject cbor = CBORObject.NewArray();
       for (int i = 0; i < dict.Count; ++i) {
-        IDictionary<string, Object> value = ((dict[i] is IDictionary<string, Object>) ? (IDictionary<string, Object>)dict[i] : null);
+        IDictionary<string, Object> value = (dict[i] is IDictionary<string, Object>) ? (IDictionary<string, Object>)dict[i] : null;
         // A list contains only indexes 0, 1, 2, and so on,
         // with no gaps.
         if (IsList(value)) {
@@ -387,7 +386,7 @@ null);
 
     private static void ConvertLists(IList<Object> dict) {
       for (int i = 0; i < dict.Count; ++i) {
-        IDictionary<string, Object> value = ((dict[i] is IDictionary<string, Object>) ? (IDictionary<string, Object>)dict[i] : null);
+        IDictionary<string, Object> value = (dict[i] is IDictionary<string, Object>) ? (IDictionary<string, Object>)dict[i] : null;
         // A list contains only indexes 0, 1, 2, and so on,
         // with no gaps.
         if (IsList(value)) {
