@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using PeterO;
@@ -22,7 +23,7 @@ namespace Test {
       "[tr]", "[fa]",
       "[nu]", "[True]", "[False]", "[Null]", "[TRUE]", "[FALSE]", "[NULL]",
       "[truE]", "[falsE]",
-      "[nulL]", "[tRUE]", "[fALSE]", "[nULL]", "[tRuE]", "[fAlSe]", "[nUlL]",
+      "[nulL]", "[tRUE]", "[fALSE]", "[nULL]","[tRuE]","[fAlSe]","[nUlL]",
       "fa ", "nu ", "fa lse", "nu ll", "tr ue",
       "[\"\ud800\\udc00\"]", "[\"\\ud800\udc00\"]",
       "[\"\\udc00\ud800\udc00\"]", "[\"\\ud800\ud800\udc00\"]",
@@ -8592,8 +8593,8 @@ CBORObject.FromObject(QueryStringHelper.QueryStringToDict(test));
         string str = RandomQueryStringLike(rg);
         try {
           cbor = QueryStringHelper.QueryStringToCBOR(str);
-          Console.WriteLine("succ: " + str);
-          Console.WriteLine(cbor.ToJSONString());
+          // Console.WriteLine("succ: " + str);
+          // Console.WriteLine(cbor.ToJSONString());
         } catch (InvalidOperationException) {
           // Console.WriteLine("throws: "+str);
         }

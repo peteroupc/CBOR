@@ -1074,9 +1074,9 @@ namespace PeterO.Cbor {
       if (objThis.Type == CBORType.Array) {
         Type objectType = typeof(object);
         var isList = false;
+        bool isReadOnlyCollection = false;
         object listObject = null;
         object genericListObject = null;
-        #if NET40 || NET20
         if (IsAssignableFrom(typeof(Array), t)) {
           Type elementType = t.GetElementType();
           Array array = Array.CreateInstance(
@@ -1090,40 +1090,46 @@ namespace PeterO.Cbor {
               options,
               depth);
         }
+        #if NET40 || NET20
         if (t.IsGenericType) {
           Type td = t.GetGenericTypeDefinition();
           isList = td.Equals(typeof(List<>)) || td.Equals(typeof(IList<>)) ||
             td.Equals(typeof(ICollection<>)) ||
             td.Equals(typeof(IEnumerable<>));
+          isReadOnlyCollection = (td.Equals(typeof(IReadOnlyCollection<>)) ||
+             td.Equals(typeof(IReadOnlyList<>)) ||
+             td.Equals(typeof(System.Collections.ObjectModel.ReadOnlyCollection<>))) &&
+             t.GenericTypeArguments.Length == 1;
         }
         isList = isList && t.GetGenericArguments().Length == 1;
-        if (isList) {
+        if (isReadOnlyCollection) {
+          objectType = t.GenericTypeArguments[0];
+          Type listType = typeof(List<>).MakeGenericType(objectType);
+          listObject = Activator.CreateInstance(listType);
+        } else if (isList) {
           objectType = t.GetGenericArguments()[0];
           Type listType = typeof(List<>).MakeGenericType(objectType);
           listObject = Activator.CreateInstance(listType);
         }
         #else
-        if (IsAssignableFrom(typeof(Array), t)) {
-          Type elementType = t.GetElementType();
-          Array array = Array.CreateInstance(
-              elementType,
-              GetDimensions(objThis));
-          return FillArray(
-              array,
-              elementType,
-              objThis,
-              mapper,
-              options,
-              depth);
-        }
+        // TODO: Document new support of IReadOnlyCollection/IReadOnlyList
+        // and add tests
         if (t.GetTypeInfo().IsGenericType) {
           Type td = t.GetGenericTypeDefinition();
           isList = td.Equals(typeof(List<>)) || td.Equals(typeof(IList<>)) ||
             td.Equals(typeof(ICollection<>)) ||
             td.Equals(typeof(IEnumerable<>));
+          isReadOnlyCollection = (td.Equals(typeof(IReadOnlyCollection<>)) ||
+             td.Equals(typeof(IReadOnlyList<>)) ||
+             td.Equals(typeof(System.Collections.ObjectModel.ReadOnlyCollection<>))) &&
+             t.GenericTypeArguments.Length == 1;
         }
         isList = isList && t.GenericTypeArguments.Length == 1;
-        if (isList) {
+        if (isReadOnlyCollection) {
+          objectType = t.GenericTypeArguments[0];
+          Type listType = typeof(List<>).MakeGenericType(objectType);
+          listObject = Activator.CreateInstance(listType);
+        } else if (isList) {
           objectType = t.GenericTypeArguments[0];
           Type listType = typeof(List<>).MakeGenericType(objectType);
           listObject = Activator.CreateInstance(listType);
@@ -1149,10 +1155,10 @@ namespace PeterO.Cbor {
               }
             }
             if (implementsList) {
-              // DebugUtility.Log("assignable from list<>");
+              // DebugUtility.Log("assignable from ilist<>");
               genericListObject = Activator.CreateInstance(t);
             } else {
-              // DebugUtility.Log("not assignable from list<> " + t);
+              // DebugUtility.Log("not assignable from ilist<> " + t);
             }
           }
         }
@@ -1162,7 +1168,7 @@ namespace PeterO.Cbor {
               "Add",
               objectType);
           if (addMethod == null) {
-            throw new CBORException();
+            throw new CBORException("no add method");
           }
           foreach (CBORObject value in objThis.Values) {
             PropertyMap.InvokeOneArgumentMethod(
@@ -1176,6 +1182,12 @@ namespace PeterO.Cbor {
           System.Collections.IList ie = (System.Collections.IList)listObject;
           foreach (CBORObject value in objThis.Values) {
             ie.Add(value.ToObject(objectType, mapper, options, depth + 1));
+          }
+          if (isReadOnlyCollection) {
+            objectType = t.GenericTypeArguments[0];
+            Type rocType = typeof(System.Collections.ObjectModel.ReadOnlyCollection<>)
+               .MakeGenericType(objectType);
+            listObject = Activator.CreateInstance(rocType, listObject);
           }
           return listObject;
         }

@@ -60,8 +60,8 @@ namespace Test {
           if (escaped) {
             return CBORObject.FromJSONString(js.Substring(
                 startIndex - 1,
-                (endIndex - (startIndex - 1)))); }
-                return CBORObject.FromObject(js.Substring(startIndex,
+                (endIndex - (startIndex - 1)))); } return
+CBORObject.FromObject(js.Substring(startIndex,
               (endIndex - 1) - startIndex));
         } else if (c == '\\') {
           this.index = idx++;
