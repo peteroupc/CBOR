@@ -1074,7 +1074,7 @@ namespace PeterO.Cbor {
       if (objThis.Type == CBORType.Array) {
         Type objectType = typeof(object);
         var isList = false;
-        var isReadOnlyCollection = false;
+        bool isReadOnlyCollection = false;
         object listObject = null;
         object genericListObject = null;
         if (IsAssignableFrom(typeof(Array), t)) {
@@ -1098,10 +1098,7 @@ namespace PeterO.Cbor {
             td.Equals(typeof(IEnumerable<>));
           isReadOnlyCollection = (td.Equals(typeof(IReadOnlyCollection<>)) ||
              td.Equals(typeof(IReadOnlyList<>)) ||
-
-             td.Equals(
-               typeof(System.Collections.ObjectModel.ReadOnlyCollection<>)))
-&&
+             td.Equals(typeof(System.Collections.ObjectModel.ReadOnlyCollection<>))) &&
              t.GenericTypeArguments.Length == 1;
         }
         isList = isList && t.GetGenericArguments().Length == 1;
@@ -1125,10 +1122,7 @@ namespace PeterO.Cbor {
             td.Equals(typeof(IEnumerable<>));
           isReadOnlyCollection = (td.Equals(typeof(IReadOnlyCollection<>)) ||
              td.Equals(typeof(IReadOnlyList<>)) ||
-
-             td.Equals(
-               typeof(System.Collections.ObjectModel.ReadOnlyCollection<>)))
-&&
+             td.Equals(typeof(System.Collections.ObjectModel.ReadOnlyCollection<>))) &&
              t.GenericTypeArguments.Length == 1;
         }
         isList = isList && t.GenericTypeArguments.Length == 1;
@@ -1192,8 +1186,7 @@ namespace PeterO.Cbor {
           }
           if (isReadOnlyCollection) {
             objectType = t.GenericTypeArguments[0];
-            Type rocType =
-typeof(System.Collections.ObjectModel.ReadOnlyCollection<>)
+            Type rocType = typeof(System.Collections.ObjectModel.ReadOnlyCollection<>)
                .MakeGenericType(objectType);
             listObject = Activator.CreateInstance(rocType, listObject);
           }
@@ -1202,6 +1195,7 @@ typeof(System.Collections.ObjectModel.ReadOnlyCollection<>)
       }
       if (objThis.Type == CBORType.Map) {
         var isDict = false;
+        var isReadOnlyDict = false;
         Type keyType = null;
         Type valueType = null;
         object dictObject = null;
@@ -1211,11 +1205,14 @@ typeof(System.Collections.ObjectModel.ReadOnlyCollection<>)
           Type td = t.GetGenericTypeDefinition();
           isDict = td.Equals(typeof(Dictionary<,>)) ||
             td.Equals(typeof(IDictionary<,>));
+          isReadOnlyDict = (td.Equals(typeof(System.Collections.ObjectModel.ReadOnlyDictionary<,>)) ||
+            td.Equals(typeof(IReadOnlyDictionary<,>))) &&
+            t.GetGenericArguments().Length == 2;
         }
         // DebugUtility.Log("list=" + isDict);
         isDict = isDict && t.GetGenericArguments().Length == 2;
         // DebugUtility.Log("list=" + isDict);
-        if (isDict) {
+        if (isDict || isReadOnlyDict) {
           keyType = t.GetGenericArguments()[0];
           valueType = t.GetGenericArguments()[1];
           Type listType = typeof(Dictionary<,>).MakeGenericType(
@@ -1229,11 +1226,14 @@ typeof(System.Collections.ObjectModel.ReadOnlyCollection<>)
           Type td = t.GetGenericTypeDefinition();
           isDict = td.Equals(typeof(Dictionary<,>)) ||
             td.Equals(typeof(IDictionary<,>));
+          isReadOnlyDict = (td.Equals(typeof(System.Collections.ObjectModel.ReadOnlyDictionary<,>)) ||
+            td.Equals(typeof(IReadOnlyDictionary<,>))) &&
+            t.GenericTypeArguments.Length == 2;
         }
         // DebugUtility.Log("list=" + isDict);
         isDict = isDict && t.GenericTypeArguments.Length == 2;
         // DebugUtility.Log("list=" + isDict);
-        if (isDict) {
+        if (isDict || isReadOnlyDict) {
           keyType = t.GenericTypeArguments[0];
           valueType = t.GenericTypeArguments[1];
           Type listType = typeof(Dictionary<,>).MakeGenericType(
@@ -1257,6 +1257,12 @@ typeof(System.Collections.ObjectModel.ReadOnlyCollection<>)
             idic.Add(
               key.ToObject(keyType, mapper, options, depth + 1),
               value.ToObject(valueType, mapper, options, depth + 1));
+          }
+          if (isReadOnlyDict) {
+            Type listType = typeof(System.Collections.ObjectModel.ReadOnlyDictionary<,>).MakeGenericType(
+              keyType,
+              valueType);
+            dictObject = Activator.CreateInstance(listType, dictObject);
           }
           return dictObject;
         }

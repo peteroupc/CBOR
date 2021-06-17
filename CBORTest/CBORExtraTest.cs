@@ -588,8 +588,26 @@ expected = CBORObject.NewArray().Add(0).Add(1).Add(99).Add(2).Add(3).Add(99);
       Assert.AreEqual(2, list[3]);
       Assert.AreEqual(3, list[4]);
       Assert.AreEqual(99, list[5]);
+      try {
+ cbor.ToObject<ReadOnlyDictionary<int, int>>();
+ Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ cbor.ToObject<IReadOnlyDictionary<int, int>>();
+ Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
       // TODO: In next major version, change to CBORException rather than
-      // InvalidOperationException
+      // InvalidOperationException (due to AsString)
       try {
  cbor.ToObject<ReadOnlyCollection<string>>();
  Assert.Fail("Should have failed");
@@ -610,6 +628,51 @@ expected = CBORObject.NewArray().Add(0).Add(1).Add(99).Add(2).Add(3).Add(99);
 }
       try {
  cbor.ToObject<IReadOnlyCollection<string>>();
+ Assert.Fail("Should have failed");
+} catch (InvalidOperationException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+    }
+
+    [Test]
+    public void TestReadOnlyDictionary() {
+      var dict = new Dictionary<string, int>();
+      dict["a"] = 1;
+      dict["b"] = 2;
+      dict["c"] = 3;
+      IReadOnlyDictionary<string, int> roc = new
+ReadOnlyDictionary<string, int>(dict);
+      CBORObject cbor;
+      CBORObject
+expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c",3);
+      cbor = CBORObject.FromObject(roc);
+      Assert.AreEqual(expected, cbor);
+      roc = cbor.ToObject<ReadOnlyDictionary<string, int>>();
+      Assert.AreEqual(3, roc.Count);
+      Assert.AreEqual(1, roc["a"]);
+      Assert.AreEqual(2, roc["b"]);
+      Assert.AreEqual(3, roc["c"]);
+      roc = cbor.ToObject<IReadOnlyDictionary<string, int>>();
+      Assert.AreEqual(3, roc.Count);
+      Assert.AreEqual(1, roc["a"]);
+      Assert.AreEqual(2, roc["b"]);
+      Assert.AreEqual(3, roc["c"]);
+      // TODO: In next major version, change to CBORException rather than
+      // InvalidOperationException
+      try {
+ cbor.ToObject<ReadOnlyDictionary<int, int>>();
+ Assert.Fail("Should have failed");
+} catch (InvalidOperationException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ cbor.ToObject<IReadOnlyDictionary<int, int>>();
  Assert.Fail("Should have failed");
 } catch (InvalidOperationException) {
 // NOTE: Intentionally empty
