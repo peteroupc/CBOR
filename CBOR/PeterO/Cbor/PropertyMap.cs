@@ -1074,7 +1074,7 @@ namespace PeterO.Cbor {
       if (objThis.Type == CBORType.Array) {
         Type objectType = typeof(object);
         var isList = false;
-        bool isReadOnlyCollection = false;
+        var isReadOnlyCollection = false;
         object listObject = null;
         object genericListObject = null;
         if (IsAssignableFrom(typeof(Array), t)) {
@@ -1098,7 +1098,10 @@ namespace PeterO.Cbor {
             td.Equals(typeof(IEnumerable<>));
           isReadOnlyCollection = (td.Equals(typeof(IReadOnlyCollection<>)) ||
              td.Equals(typeof(IReadOnlyList<>)) ||
-             td.Equals(typeof(System.Collections.ObjectModel.ReadOnlyCollection<>))) &&
+
+             td.Equals(
+               typeof(System.Collections.ObjectModel.ReadOnlyCollection<>)))
+&&
              t.GenericTypeArguments.Length == 1;
         }
         isList = isList && t.GetGenericArguments().Length == 1;
@@ -1114,6 +1117,7 @@ namespace PeterO.Cbor {
         #else
         // TODO: Document new support of IReadOnlyCollection/IReadOnlyList
         // and add tests
+        // TODO: Support IReadOnlyDictionary
         if (t.GetTypeInfo().IsGenericType) {
           Type td = t.GetGenericTypeDefinition();
           isList = td.Equals(typeof(List<>)) || td.Equals(typeof(IList<>)) ||
@@ -1121,7 +1125,10 @@ namespace PeterO.Cbor {
             td.Equals(typeof(IEnumerable<>));
           isReadOnlyCollection = (td.Equals(typeof(IReadOnlyCollection<>)) ||
              td.Equals(typeof(IReadOnlyList<>)) ||
-             td.Equals(typeof(System.Collections.ObjectModel.ReadOnlyCollection<>))) &&
+
+             td.Equals(
+               typeof(System.Collections.ObjectModel.ReadOnlyCollection<>)))
+&&
              t.GenericTypeArguments.Length == 1;
         }
         isList = isList && t.GenericTypeArguments.Length == 1;
@@ -1185,7 +1192,8 @@ namespace PeterO.Cbor {
           }
           if (isReadOnlyCollection) {
             objectType = t.GenericTypeArguments[0];
-            Type rocType = typeof(System.Collections.ObjectModel.ReadOnlyCollection<>)
+            Type rocType =
+typeof(System.Collections.ObjectModel.ReadOnlyCollection<>)
                .MakeGenericType(objectType);
             listObject = Activator.CreateInstance(rocType, listObject);
           }

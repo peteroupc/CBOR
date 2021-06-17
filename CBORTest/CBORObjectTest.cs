@@ -23,7 +23,7 @@ namespace Test {
       "[tr]", "[fa]",
       "[nu]", "[True]", "[False]", "[Null]", "[TRUE]", "[FALSE]", "[NULL]",
       "[truE]", "[falsE]",
-      "[nulL]", "[tRUE]", "[fALSE]", "[nULL]","[tRuE]","[fAlSe]","[nUlL]",
+      "[nulL]", "[tRUE]", "[fALSE]", "[nULL]", "[tRuE]", "[fAlSe]", "[nUlL]",
       "fa ", "nu ", "fa lse", "nu ll", "tr ue",
       "[\"\ud800\\udc00\"]", "[\"\\ud800\udc00\"]",
       "[\"\\udc00\ud800\udc00\"]", "[\"\\ud800\ud800\udc00\"]",
@@ -8582,7 +8582,8 @@ err = testcbor.GetOrDefault("error",
     [Test]
     public void TestQueryStrings() {
       // TODO: Add utility to create query strings
-      String test = "a=b&c=d&e=f&g[0]=h&g[1]=j&g[2][a]=k&g[2][b]=m";
+      String test = "a=b&c=d&e=f&g\u005b0]=h&g\u005b1]=j&g\u005b2]\u005b";
+      test += "a]=k&g\u005b2]\u005bb]=m";
       CBORObject cbor =
 CBORObject.FromObject(QueryStringHelper.QueryStringToDict(test));
       Console.WriteLine(cbor.ToJSONString());

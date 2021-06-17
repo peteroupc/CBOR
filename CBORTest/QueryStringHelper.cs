@@ -41,7 +41,7 @@ namespace Test {
           index = index2 + delimLength;
         }
       }
-      return strings.ToArray();
+      return (string[])strings.ToArray();
     }
 
     private static int ToHexNumber(int c) {
@@ -207,7 +207,7 @@ namespace Test {
         var pair = new string[] { name, value};
         pairs.Add(pair);
       }
-      foreach (var pair in pairs) {
+      foreach (string[] pair in pairs) {
         // percent decode the key and value if necessary
         pair[0] = PercentDecodeUTF8(pair[0]);
         pair[1] = PercentDecodeUTF8(pair[1]);
@@ -237,7 +237,7 @@ namespace Test {
         }
         ++index; // move to after the start bracket
       }
-      return path.ToArray();
+      return (string[])path.ToArray();
     }
 
     private static readonly string Digits = "0123456789";
@@ -344,7 +344,8 @@ namespace Test {
     private static CBORObject ConvertListsToCBOR(IList<Object> dict) {
       CBORObject cbor = CBORObject.NewArray();
       for (int i = 0; i < dict.Count; ++i) {
-        IDictionary<string, Object> value = (dict[i] is IDictionary<string, Object>) ? (IDictionary<string, Object>)dict[i] : null;
+        object di = dict[i];
+        IDictionary<string, Object> value = di as IDictionary<string, Object>;
         // A list contains only indexes 0, 1, 2, and so on,
         // with no gaps.
         if (IsList(value)) {
@@ -364,10 +365,9 @@ namespace Test {
     private static CBORObject ConvertListsToCBOR(IDictionary<string, Object>
 dict) {
       CBORObject cbor = CBORObject.NewMap();
-      foreach (var key in new List<string>(dict.Keys)) {
-        IDictionary<string, Object> value = ((dict[key] is
-IDictionary<string, Object>) ? (IDictionary<string, Object>)dict[key] :
-null);
+      foreach (string key in new List<string>(dict.Keys)) {
+        object di = dict[key];
+        IDictionary<string, Object> value = di as IDictionary<string, Object>;
         // A list contains only indexes 0, 1, 2, and so on,
         // with no gaps.
         if (IsList(value)) {
@@ -384,14 +384,15 @@ null);
       return cbor;
     }
 
-    private static void ConvertLists(IList<Object> dict) {
-      for (int i = 0; i < dict.Count; ++i) {
-        IDictionary<string, Object> value = (dict[i] is IDictionary<string, Object>) ? (IDictionary<string, Object>)dict[i] : null;
+    private static void ConvertLists(IList<Object> list) {
+      for (int i = 0; i < list.Count; ++i) {
+        object di = list[i];
+        IDictionary<string, Object> value = di as IDictionary<string, Object>;
         // A list contains only indexes 0, 1, 2, and so on,
         // with no gaps.
         if (IsList(value)) {
           IList<Object> newList = ConvertToList(value);
-          dict[i] = newList;
+          list[i] = newList;
           ConvertLists(newList);
         } else if (value != null) {
           // Convert the list's descendents
@@ -403,10 +404,9 @@ null);
 
     private static IDictionary<string, Object> ConvertLists(
   IDictionary<string, Object> dict) {
-      foreach (var key in new List<string>(dict.Keys)) {
-        IDictionary<string, Object> value = ((dict[key] is
-IDictionary<string, Object>) ? (IDictionary<string, Object>)dict[key] :
-null);
+      foreach (string key in new List<string>(dict.Keys)) {
+        object di = dict[key];
+        IDictionary<string, Object> value = di as IDictionary<string, Object>;
         // A list contains only indexes 0, 1, 2, and so on,
         // with no gaps.
         if (IsList(value)) {
@@ -434,7 +434,7 @@ null);
       string query,
       string delimiter) {
       IDictionary<string, Object> root = new Dictionary<string, Object>();
-      foreach (var keyvalue in ParseQueryString(query, delimiter)) {
+      foreach (string[] keyvalue in ParseQueryString(query, delimiter)) {
         string[] path = GetKeyPath(keyvalue[0]);
         IDictionary<string, Object> leaf = root;
         for (int i = 0; i < path.Length - 1; ++i) {
@@ -447,9 +447,8 @@ null);
             leaf.Add(path[i], newLeaf);
             leaf = newLeaf;
           } else {
-            IDictionary<string, Object> o = ((leaf[path[i]] is
-IDictionary<string, Object>) ? (IDictionary<string, Object>)leaf[path[i]] :
-null);
+            object di = leaf[path[i]];
+            IDictionary<string, Object> o = di as IDictionary<string, Object>;
             if (o != null) {
               leaf = o;
             } else {
