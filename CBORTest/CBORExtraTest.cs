@@ -647,7 +647,7 @@ expected = CBORObject.NewArray().Add(0).Add(1).Add(99).Add(2).Add(3).Add(99);
 ReadOnlyDictionary<string, int>(dict);
       CBORObject cbor;
       CBORObject
-expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c",3);
+expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       cbor = CBORObject.FromObject(roc);
       Assert.AreEqual(expected, cbor);
       roc = cbor.ToObject<ReadOnlyDictionary<string, int>>();

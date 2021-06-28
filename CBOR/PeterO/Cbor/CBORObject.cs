@@ -3637,7 +3637,7 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// (This behavior may change to supporting only UTF-8, with or without
     /// a byte order mark, in version 5.0 or later, perhaps with an option
     /// to restore the previous behavior of also supporting UTF-16 and
-    /// UTF-32.)</param>
+    /// UTF-32.).</param>
     /// <returns>A CBOR object containing the JSON data decoded.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bytes'/> is null.</exception>
@@ -3666,7 +3666,7 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// (This behavior may change to supporting only UTF-8, with or without
     /// a byte order mark, in version 5.0 or later, perhaps with an option
     /// to restore the previous behavior of also supporting UTF-16 and
-    /// UTF-32.)</param>
+    /// UTF-32.).</param>
     /// <param name='jsonoptions'>Specifies options to control how the JSON
     /// data is decoded to CBOR. See the JSONOptions class.</param>
     /// <returns>A CBOR object containing the JSON data decoded.</returns>
@@ -3711,7 +3711,7 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// a nonzero basic character (U+0001 to U+007F). (This behavior may
     /// change to supporting only UTF-8, with or without a byte order mark,
     /// in version 5.0 or later, perhaps with an option to restore the
-    /// previous behavior of also supporting UTF-16 and UTF-32.)</param>
+    /// previous behavior of also supporting UTF-16 and UTF-32.).</param>
     /// <param name='offset'>An index, starting at 0, showing where the
     /// desired portion of <paramref name='bytes'/> begins.</param>
     /// <param name='count'>The length, in bytes, of the desired portion of
@@ -3750,7 +3750,7 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// a nonzero basic character (U+0001 to U+007F). (This behavior may
     /// change to supporting only UTF-8, with or without a byte order mark,
     /// in version 5.0 or later, perhaps with an option to restore the
-    /// previous behavior of also supporting UTF-16 and UTF-32.)</param>
+    /// previous behavior of also supporting UTF-16 and UTF-32.).</param>
     /// <param name='offset'>An index, starting at 0, showing where the
     /// desired portion of <paramref name='bytes'/> begins.</param>
     /// <param name='count'>The length, in bytes, of the desired portion of
@@ -5596,15 +5596,15 @@ CBORObjectTypeTextStringAscii) ?
     /// <summary>Gets the CBOR object referred to by a JSON Pointer
     /// according to RFC6901. For more information, see the overload taking
     /// a default value parameter.</summary>
+    /// <param name='pointer'>A JSON pointer according to RFC 6901.</param>
     /// <returns>An object within this CBOR object. Returns this object if
     /// pointer is the empty string (even if this object has a CBOR type
     /// other than array or map).</returns>
-    /// <param name='pointer'>A JSON pointer according to RFC 6901.</param>
-    /// <exception cref='CBORException'>Thrown if the pointer is null, or
-    /// if the pointer is invalid, or if there is no object at the given
-    /// pointer, or the special key "-" appears in the pointer, or if the
-    /// pointer is non-empty and this object has a CBOR type other than
-    /// array or map.</exception>
+    /// <exception cref='PeterO.Cbor.CBORException'>Thrown if the pointer
+    /// is null, or if the pointer is invalid, or if there is no object at
+    /// the given pointer, or the special key "-" appears in the pointer,
+    /// or if the pointer is non-empty and this object has a CBOR type
+    /// other than array or map.</exception>
     public CBORObject AtJSONPointer(string pointer) {
       CBORObject ret = this.AtJSONPointer(pointer, null);
       if (ret == null) {
@@ -5630,6 +5630,8 @@ CBORObjectTypeTextStringAscii) ?
     /// top-level values other than arrays and key-value
     /// dictionaries.).</summary>
     /// <param name='pointer'>A JSON pointer according to RFC 6901.</param>
+    /// <param name='defaultValue'>The parameter <paramref
+    /// name='defaultValue'/> is a Cbor.CBORObject object.</param>
     /// <returns>An object within the specified JSON object. Returns this
     /// object if pointer is the empty string (even if this object has a
     /// CBOR type other than array or map). Returns <paramref
@@ -5638,7 +5640,6 @@ CBORObjectTypeTextStringAscii) ?
     /// special key "-" appears in the pointer, or if the pointer is
     /// non-empty and this object has a CBOR type other than array or
     /// map.</returns>
-    /// <param name='defaultValue'/>
     public CBORObject AtJSONPointer(string pointer, CBORObject defaultValue) {
       return JSONPointer.GetObject(this, pointer, null);
     }
@@ -5650,8 +5651,8 @@ CBORObjectTypeTextStringAscii) ?
   /// <param name='patch'>A JSON patch in the form of a CBOR object; it
   /// has the form summarized in the remarks.</param>
   /// <returns>The result of the patch operation.</returns>
-  /// <exception cref='CBORException'>The parameter "patch" is null or
-  /// the patch operation failed.</exception>
+  /// <exception cref='PeterO.Cbor.CBORException'>The parameter <paramref
+  /// name='patch'/> is null or the patch operation failed.</exception>
   /// <remarks><b>Remarks:</b> A JSON patch is an array with one or more
   /// maps. Each map has the following keys:
   /// <list>
