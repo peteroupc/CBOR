@@ -8697,6 +8697,73 @@ CBORObject.FromObject(QueryStringHelper.QueryStringToDict(test));
       }
     }
 
+    private static readonly JSONOptions JSONOptionsDouble = new JSONOptions(
+        "numberconversion=double");
+    private static readonly JSONOptions JSONOptionsFull = new JSONOptions(
+        "numberconversion=full");
+
+    [Test]
+    public static void TestParseNumberFxxLine(string line) {
+      // Parse test case format used in:
+      // https://github.com/nigeltao/parse-number-fxx-test-data
+      string f16 = line.Substring(0, 4);
+      if (line[4] != ' ') {
+        Assert.Fail(line);
+      }
+      string f32 = line.Substring(4 + 1, 8);
+      if (line[4+ 1 + 8] != ' ') {
+        Assert.Fail(line);
+      }
+      string f64 = line.Substring(4 + 1 + 8 + 1, 16);
+      if (line[4+1+8+1 + 16] != ' ') {
+        Assert.Fail(line);
+      }
+      string str = line.Substring(4 + 1 + 8 + 1 + 16 + 1);
+      short sf16 = EInteger.FromRadixString(f16, 16).ToInt16Unchecked();
+      int sf32 = EInteger.FromRadixString(f32, 16).ToInt32Unchecked();
+      long sf64 = EInteger.FromRadixString(f64, 16).ToInt64Unchecked();
+      TestParseNumberFxx(str, sf16, sf32, sf64, line);
+    }
+
+    public static void TestParseNumberFxx(
+      string str,
+      short _f16,
+      int f32,
+      long f64,
+      string line) {
+       if (str[0] == '.') {
+          // Not a valid JSON number, so skip
+          // Console.WriteLine(str);
+          return;
+       }
+       CBORObject cbor = CBORDataUtilities.ParseJSONNumber(str,
+  JSONOptionsDouble);
+       if (cbor == null) {
+         Console.WriteLine(str);
+         return;
+       }
+       Assert.AreEqual(f64, cbor.AsDoubleBits(), line);
+       cbor = CBORObject.FromJSONString(str, JSONOptionsDouble);
+       Assert.AreEqual(f64, cbor.AsDoubleBits(), line);
+       cbor = CBORObject.FromJSONBytes(
+          DataUtilities.GetUtf8Bytes(str, false),
+          JSONOptionsDouble);
+       Assert.AreEqual(f64, cbor.AsDoubleBits(), line);
+       float sing = CBORObject.FromFloatingPointBits(f32, 4).AsSingle();
+       cbor = CBORDataUtilities.ParseJSONNumber(str, JSONOptionsFull);
+       if (cbor == null) {
+         Assert.Fail();
+       }
+       Assert.AreEqual(sing, cbor.AsSingle(), line);
+       cbor = CBORObject.FromJSONString(str, JSONOptionsFull);
+       Assert.AreEqual(sing, cbor.AsSingle(), line);
+       cbor = CBORObject.FromJSONBytes(
+          DataUtilities.GetUtf8Bytes(str, false),
+          JSONOptionsFull);
+       Assert.AreEqual(sing, cbor.AsSingle(), line);
+       // TODO: Test f16
+    }
+
     [Test]
     public void TestFromJsonStringFastCases() {
       var op = new JSONOptions("numberconversion=double");
