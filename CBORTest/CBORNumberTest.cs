@@ -556,13 +556,6 @@ namespace Test {
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       {
-        string stringTemp = ToObjectTest.TestToFromObjectRoundTrip(
-            Single.NaN).AsNumber().ToEDecimal().ToString();
-        Assert.AreEqual(
-          "NaN",
-          stringTemp);
-      }
-      {
         object objectTemp = CBORTestCommon.DecPosInf;
         object objectTemp2 =
           ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity)
@@ -577,12 +570,15 @@ namespace Test {
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       {
-        object objectTemp = "NaN";
-        object objectTemp2 =
+        bool bo = ToObjectTest.TestToFromObjectRoundTrip(
+            Double.NaN).AsNumber().ToEDecimal().IsNaN();
+        Assert.IsTrue(bo);
+      }
+      {
+        bool bo =
           ToObjectTest.TestToFromObjectRoundTrip(
-            Double.NaN).AsNumber().ToEDecimal()
-          .ToString();
-        Assert.AreEqual(objectTemp, objectTemp2);
+            Single.NaN).AsNumber().ToEDecimal().IsNaN();
+        Assert.IsTrue(bo);
       }
       try {
         CBORObject.NewArray().AsNumber().ToEDecimal();
