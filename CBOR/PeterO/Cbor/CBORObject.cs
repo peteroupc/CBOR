@@ -2490,7 +2490,17 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     }
 
     /// <summary>Generates a CBOR object from a 32-bit floating-point
-    /// number.</summary>
+    /// number. The input value can be a not-a-number (NaN) value (such as
+    /// <c>Single.NaN</c> in DotNet or Float.NaN in Java); however, NaN
+    /// values have multiple forms that are equivalent for many
+    /// applications' purposes, and <c>Single.NaN</c> / <c>Float.NaN</c> is
+    /// only one of these equivalent forms. In fact,
+    /// <c>CBORObject.FromObject(Single.NaN)</c> or
+    /// <c>CBORObject.FromObject(Float.NaN)</c> could produce a
+    /// CBOR-encoded object that differs between DotNet and Java, because
+    /// <c>Single.NaN</c> / <c>Float.NaN</c> may have a different form in
+    /// DotNet and Java (for example, the NaN value's sign may be negative
+    /// in DotNet, but positive in Java).</summary>
     /// <param name='value'>The parameter <paramref name='value'/> is a
     /// 32-bit floating-point number.</param>
     /// <returns>A CBOR object generated from the given number.</returns>
@@ -2501,7 +2511,15 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     }
 
     /// <summary>Generates a CBOR object from a 64-bit floating-point
-    /// number.</summary>
+    /// number. The input value can be a not-a-number (NaN) value (such as
+    /// <c>Double.NaN</c> ); however, NaN values have multiple forms that
+    /// are equivalent for many applications' purposes, and
+    /// <c>Double.NaN</c> is only one of these equivalent forms. In fact,
+    /// <c>CBORObject.FromObject(Double.NaN)</c> could produce a
+    /// CBOR-encoded object that differs between DotNet and Java, because
+    /// <c>Double.NaN</c> may have a different form in DotNet and Java (for
+    /// example, the NaN value's sign may be negative in DotNet, but
+    /// positive in Java).</summary>
     /// <param name='value'>The parameter <paramref name='value'/> is a
     /// 64-bit floating-point number.</param>
     /// <returns>A CBOR object generated from the given number.</returns>
