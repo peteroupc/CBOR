@@ -7743,8 +7743,6 @@ if (cbornumber.CanFitInDouble()) {
         TestDateTimeStringNumberOne("2100-01-03T00:00:01Z", 4102617601L);
     }
 
-
-
     [Test]
     public void TestDateTime() {
       var dateList = new List<string>();
@@ -8308,11 +8306,11 @@ CBORObject.FromObject(QueryStringHelper.QueryStringToDict(test));
         Assert.Fail(line);
       }
       string f32 = line.Substring(4 + 1, 8);
-      if (line[4+ 1 + 8] != ' ') {
+      if (line[4 + 9] != ' ') {
         Assert.Fail(line);
       }
       string f64 = line.Substring(4 + 1 + 8 + 1, 16);
-      if (line[4+1+8+1 + 16] != ' ') {
+      if (line[4+ 1 + 25] != ' ') {
         Assert.Fail(line);
       }
       string str = line.Substring(4 + 1 + 8 + 1 + 16 + 1);
@@ -8328,7 +8326,7 @@ CBORObject.FromObject(QueryStringHelper.QueryStringToDict(test));
       int f32,
       long f64,
       string line) {
-       if (str[0] == '.' || str[str.Length - 1] =='.' ||
+       if (str[0] == '.' || str[str.Length - 1] == '.' ||
             str.Contains(".e") || str.Contains(".E")) {
           // Not a valid JSON number, so skip
           // Console.WriteLine(str);

@@ -3,9 +3,8 @@ Written by Peter O.
 Any copyright to this work is released to the Public Domain.
 In case this is not possible, this work is also
 licensed under Creative Commons Zero (CC0):
-http://creativecommons.org/publicdomain/zero/1.0/
-If you like this, you should donate to Peter O.
-at: http://peteroupc.github.io/
+https://creativecommons.org/publicdomain/zero/1.0/
+
  */
 using System;
 using System.Collections.Generic;
@@ -6223,6 +6222,7 @@ CBORObjectTypeTextStringAscii)) {
     /// options to control the encoding process. This function
     /// works not only with arrays and maps, but also integers,
     /// strings, byte arrays, and other JSON data types. Notes:
+    ///
     /// <list type=''><item>If this object contains maps with non-string
     /// keys, the keys are converted to JSON strings before writing the map
     /// as a JSON string.</item>
