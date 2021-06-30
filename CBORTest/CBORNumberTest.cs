@@ -79,8 +79,9 @@ namespace Test {
       Assert.IsTrue(CBORObject.FromObject(99.0).AsNumber().CanFitInUInt64(),
         "99.0");
 
-      Assert.IsTrue(CBORObject.FromObject(1.0).AsNumber().CanFitInUInt64(),
-  "99.0");
+      Assert.IsTrue(
+        CBORObject.FromObject(1.0).AsNumber().CanFitInUInt64(),
+        "99.0");
 
       Assert.IsTrue(CBORObject.FromObject(-0.0).AsNumber().CanFitInUInt64(),
         "-0.0");
@@ -89,14 +90,16 @@ namespace Test {
           EInteger.FromInt32(1).ShiftLeft(65)).AsNumber().CanFitInUInt64();
       Assert.IsFalse(b);
 
-      Assert.IsFalse(CBORObject.FromObject(-99).AsNumber().CanFitInUInt64(),
-  "-99");
+      Assert.IsFalse(
+        CBORObject.FromObject(-99).AsNumber().CanFitInUInt64(),
+        "-99");
 
       Assert.IsFalse(CBORObject.FromObject(-99.0).AsNumber().CanFitInUInt64(),
         "-99.0");
 
-      Assert.IsFalse(CBORObject.FromObject(0.1).AsNumber().CanFitInUInt64(),
-  "0.1");
+      Assert.IsFalse(
+        CBORObject.FromObject(0.1).AsNumber().CanFitInUInt64(),
+        "0.1");
       Assert.IsFalse(CBORObject.FromObject(-0.1).AsNumber().CanFitInUInt64());
       Assert.IsFalse(CBORObject.FromObject(99.1).AsNumber().CanFitInUInt64());
       Assert.IsFalse(CBORObject.FromObject(-99.1).AsNumber().CanFitInUInt64());

@@ -3,9 +3,8 @@ Written by Peter O.
 Any copyright to this work is released to the Public Domain.
 In case this is not possible, this work is also
 licensed under Creative Commons Zero (CC0):
-http://creativecommons.org/publicdomain/zero/1.0/
-If you like this, you should donate to Peter O.
-at: http://peteroupc.github.io/
+https://creativecommons.org/publicdomain/zero/1.0/
+
  */
 using System;
 using System.Collections.Generic;
@@ -1729,6 +1728,22 @@ namespace Test {
     }
 
     [Test]
+    public void TestRoundTripNaN() {
+      long doublennan = unchecked((long)0xfff8000000000000L);
+      long doublepnan = unchecked((long)0x7ff8000000000000L);
+      int singlennan = unchecked((int)0xffc00000);
+      int singlepnan = unchecked((int)0x7fc00000);
+      int halfnnan = 0xfe00;
+      int halfpnan = 0x7e00;
+      Assert.AreEqual(doublennan, CBORObject.FromFloatingPointBits(doublennan,8).AsDoubleBits());
+      Assert.AreEqual(doublepnan, CBORObject.FromFloatingPointBits(doublepnan,8).AsDoubleBits());
+      Assert.AreEqual(doublennan, CBORObject.FromFloatingPointBits(singlennan,4).AsDoubleBits());
+      Assert.AreEqual(doublepnan, CBORObject.FromFloatingPointBits(singlepnan,4).AsDoubleBits());
+      Assert.AreEqual(doublennan, CBORObject.FromFloatingPointBits(halfnnan,2).AsDoubleBits());
+      Assert.AreEqual(doublepnan, CBORObject.FromFloatingPointBits(halfpnan,2).AsDoubleBits());
+    }
+
+    [Test]
     public void TestPlist() {
       CBORObject o;
       o = CBORObject.FromJSONString("[1,2,null,true,false,\"\"]");
@@ -1755,7 +1770,7 @@ namespace Test {
       using (var ms2a = new MemoryStream(new byte[] { })) {
         try {
           CBORObject.ReadJSON(ms2a);
-          Assert.Fail("Should have failed");
+          Assert.Fail("Should have failed A");
         } catch (CBORException) {
           // NOTE: Intentionally empty
         } catch (Exception ex) {
@@ -1766,7 +1781,7 @@ namespace Test {
       using (var ms2b = new MemoryStream(new byte[] { 0x20 })) {
         try {
           CBORObject.ReadJSON(ms2b);
-          Assert.Fail("Should have failed");
+          Assert.Fail("Should have failed B");
         } catch (CBORException) {
           // NOTE: Intentionally empty
         } catch (Exception ex) {
@@ -1776,7 +1791,7 @@ namespace Test {
       }
       try {
         CBORObject.FromJSONString(String.Empty);
-        Assert.Fail("Should have failed");
+        Assert.Fail("Should have failed C");
       } catch (CBORException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -1785,7 +1800,7 @@ namespace Test {
       }
       try {
         CBORObject.FromJSONString("[.1]");
-        Assert.Fail("Should have failed");
+        Assert.Fail("Should have failed D");
       } catch (CBORException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -1794,7 +1809,7 @@ namespace Test {
       }
       try {
         CBORObject.FromJSONString("[-.1]");
-        Assert.Fail("Should have failed");
+        Assert.Fail("Should have failed E");
       } catch (CBORException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
@@ -1803,7 +1818,7 @@ namespace Test {
       }
       try {
         CBORObject.FromJSONString("\u0020");
-        Assert.Fail("Should have failed");
+        Assert.Fail("Should have failed F");
       } catch (CBORException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {

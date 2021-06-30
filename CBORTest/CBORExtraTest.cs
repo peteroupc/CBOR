@@ -6,12 +6,12 @@ Written by Peter O.
 Any copyright to this work is released to the Public Domain.
 In case this is not possible, this work is also
 licensed under Creative Commons Zero (CC0):
-http://creativecommons.org/publicdomain/zero/1.0/
-If you like this, you should donate to Peter O.
-at: http://peteroupc.github.io/
+https://creativecommons.org/publicdomain/zero/1.0/
+
  */
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 #if !NET20
 using System.Linq;
@@ -550,6 +550,7 @@ from i in RangeExclusive(0, 10)
     }
 
 #pragma warning disable CA1814
+
     [Test]
     public void TestMultidimArray() {
       int[,] arr = { { 0, 1, 99 }, { 2, 3, 299 } };

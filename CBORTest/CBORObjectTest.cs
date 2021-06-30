@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
 using NUnit.Framework;
 using PeterO;
 using PeterO.Cbor;
@@ -16,7 +18,12 @@ namespace Test {
       "\"\ud800\\udc00\"", "\"\\U0023\"", "\"\\u002x\"", "\"\\u00xx\"",
       "\"\\u0xxx\"", "\"\\u0\"", "\"\\u00\"", "\"\\u000\"", "trbb",
       "trub", "falsb", "nulb", "[true", "[true,", "[true]!", "tr\u0020",
-      "tr", "fa", "nu",
+      "tr", "fa", "nu", "True", "False", "Null", "TRUE", "FALSE", "NULL",
+      "truE", "falsE", "nulL", "tRUE", "fALSE", "nULL", "tRuE", "fAlSe", "nUlL",
+      "[tr]", "[fa]",
+      "[nu]", "[True]", "[False]", "[Null]", "[TRUE]", "[FALSE]", "[NULL]",
+      "[truE]", "[falsE]",
+      "[nulL]", "[tRUE]", "[fALSE]", "[nULL]", "[tRuE]", "[fAlSe]", "[nUlL]",
       "fa ", "nu ", "fa lse", "nu ll", "tr ue",
       "[\"\ud800\\udc00\"]", "[\"\\ud800\udc00\"]",
       "[\"\\udc00\ud800\udc00\"]", "[\"\\ud800\ud800\udc00\"]",
@@ -24,6 +31,7 @@ namespace Test {
       "{\"0\"::0}", "{\"0\":0,,\"1\":1}",
       "{\"0\":0,\"1\":1,}", "[,0,1,2]", "[0,,1,2]", "[0:1]", "[0:1:2]",
       "[0,1,,2]", "[0,1,2,]", "[0001]", "{a:true}",
+      "{\"a\":#comment\ntrue}",
       "{\"a\"://comment\ntrue}", "{\"a\":/*comment*/true}", "{'a':true}",
       "{\"a\":'b'}", "{\"a\t\":true}", "{\"a\r\":true}", "{\"a\n\":true}",
       "['a']", "{\"a\":\"a\t\"}", "[\"a\\'\"]", "[NaN]", "[+Infinity]",
@@ -34,11 +42,19 @@ namespace Test {
       "{\"test\":5}\u0005", "true\"", "truex", "true}", "true\u0300",
       "true\u0005", "8024\"", "8024x", "8024}", "8024\u0300",
       "8024\u0005", "{\"test\":5}}", "{\"test\":5}{", "[5]]", "[5][",
+      "00", "000", "001", "0001", "00.0", "001.0", "0001.0", "01E-4", "01.1E-4",
+      "01E4", "01.1E4", "01e-4", "01.1e-4",
+      "01e4", "01.1e4",
+      "+0", "+1", "+0.0", "+1e4", "+1e-4", "+1.0", "+1.0e4",
+      "+1.0e+4", "+1.0e-4",
       "0000", "0x1", "0xf", "0x20", "0x01",
       "-3x", "-3e89x", "\u0005true", "x\\u0005z",
-      "0,2", "0,05", "-0,2", "-0,05",
+      "0,2", "0,05", "-0,2", "-0,05", "\u007F0.0", "\u00010.0", "0.0\u007F",
+      "0.0\u0001", "-1.D\r\n", "-1.D\u0020", "-1.5L", "-0.0L", "0L", "1L",
+      "1.5L",
+      "0.0L",
       "0X1", "0Xf", "0X20", "0X01", ".2", ".05", "-.2",
-      "-.05", "23.", "23.e0", "23.e1", "0.", "[0000]", "[0x1]",
+      "-.05", "23.", "23.e0", "23.e1", "0.", "-0.", "[0000]", "[0x1]",
       "[0xf]", "[0x20]", "[0x01]", "[.2]", "[.05]", "[-.2]", "[-.05]",
       "[23.]", "[23.e0]", "[23.e1]", "[0.]", "\"abc", "\"ab\u0004c\"",
       "\u0004\"abc\"",
@@ -64,9 +80,9 @@ namespace Test {
       "[0]",
       "[0.1]",
       "[0.1001]",
-      "[0.0]",
+      "[0.0]", "true\n\r\t\u0020",
       "[-3 " + ",-5]", "\n\r\t\u0020true", "\"x\\u0005z\"",
-      "[0.00]", "[0.000]", "[0.01]", "[0.001]", "[0.5]", "[0E5]",
+      "[0.00]", "[0.000]", "[0.01]", "[0.001]", "[0.5]", "[0E5]", "[0e5]",
       "[0E+6]", "[\"\ud800\udc00\"]", "[\"\\ud800\\udc00\"]",
       "[\"\\ud800\\udc00\ud800\udc00\"]", "23.0e01", "23.0e00", "[23.0e01]",
       "[23.0e00]", "0", "1", "0.2", "0.05", "-0.2", "-0.05",
@@ -7727,6 +7743,8 @@ if (cbornumber.CanFitInDouble()) {
         TestDateTimeStringNumberOne("2100-01-03T00:00:01Z", 4102617601L);
     }
 
+
+
     [Test]
     public void TestDateTime() {
       var dateList = new List<string>();
@@ -8130,6 +8148,58 @@ if (cbornumber.CanFitInDouble()) {
       Assert.AreEqual(dt2, dt);
     }
 
+    private static string RandomQueryStringLike(IRandomGenExtended irg) {
+       var sb = new StringBuilder();
+       while (true) {
+          int x = irg.GetInt32(100);
+          if (x == 0) {
+            break;
+          } else if (x < 10) {
+            sb.Append('&');
+          } else if (x < 20) {
+            sb.Append('=');
+          } else if (x < 25) {
+            string hex = "0123456789ABCDEF";
+            sb.Append('%');
+            sb.Append(hex[irg.GetInt32(hex.Length)]);
+            sb.Append(hex[irg.GetInt32(hex.Length)]);
+          } else if (x < 30) {
+            string hex = "0123456789abcdef";
+            sb.Append('%');
+            sb.Append(hex[irg.GetInt32(hex.Length)]);
+            sb.Append(hex[irg.GetInt32(hex.Length)]);
+          } else if (x < 95) {
+            sb.Append((char)(irg.GetInt32(0x5e) + 0x21));
+          } else {
+            sb.Append((char)irg.GetInt32(0x80));
+          }
+       }
+       return sb.ToString();
+    }
+
+    [Test]
+    public void TestQueryStrings() {
+      // TODO: Add utility to create query strings
+      String test = "a=b&c=d&e=f&g\u005b0]=h&g\u005b1]=j&g\u005b2]\u005b";
+      test += "a]=k&g\u005b2]\u005bb]=m";
+      CBORObject cbor =
+CBORObject.FromObject(QueryStringHelper.QueryStringToDict(test));
+      Console.WriteLine(cbor.ToJSONString());
+      cbor = CBORObject.FromObject(QueryStringHelper.QueryStringToCBOR(test));
+      Console.WriteLine(cbor.ToJSONString());
+      var rg = new RandomGenerator();
+      for (var i = 0; i < 100000; ++i) {
+        string str = RandomQueryStringLike(rg);
+        try {
+          cbor = QueryStringHelper.QueryStringToCBOR(str);
+          // Console.WriteLine("succ: " + str);
+          // Console.WriteLine(cbor.ToJSONString());
+        } catch (InvalidOperationException) {
+          // Console.WriteLine("throws: "+str);
+        }
+      }
+    }
+
     private static CBORObject FromJSON(string json, JSONOptions jsonop) {
       // var sw = new System.Diagnostics.Stopwatch();
       // sw.Start();
@@ -8161,7 +8231,8 @@ if (cbornumber.CanFitInDouble()) {
         }
         double cbordbl = cbor.AsDoubleValue();
         if (dbl != cbordbl) {
-          Assert.Fail("dbl = " + dbl + ", cbordbl = " + cbordbl);
+          Assert.Fail("dbl = " + dbl + ", cbordbl = " + cbordbl + ", " +
+             json + " " + numconv + " " + dbl);
         }
       }
     }
@@ -8224,6 +8295,102 @@ if (cbornumber.CanFitInDouble()) {
       }
     }
 
+    private static readonly JSONOptions JSONOptionsDouble = new JSONOptions(
+        "numberconversion=double");
+    private static readonly JSONOptions JSONOptionsFull = new JSONOptions(
+        "numberconversion=full");
+
+    public static void TestParseNumberFxxLine(string line) {
+      // Parse test case format used in:
+      // https://github.com/nigeltao/parse-number-fxx-test-data
+      string f16 = line.Substring(0, 4);
+      if (line[4] != ' ') {
+        Assert.Fail(line);
+      }
+      string f32 = line.Substring(4 + 1, 8);
+      if (line[4+ 1 + 8] != ' ') {
+        Assert.Fail(line);
+      }
+      string f64 = line.Substring(4 + 1 + 8 + 1, 16);
+      if (line[4+1+8+1 + 16] != ' ') {
+        Assert.Fail(line);
+      }
+      string str = line.Substring(4 + 1 + 8 + 1 + 16 + 1);
+      short sf16 = EInteger.FromRadixString(f16, 16).ToInt16Unchecked();
+      int sf32 = EInteger.FromRadixString(f32, 16).ToInt32Unchecked();
+      long sf64 = EInteger.FromRadixString(f64, 16).ToInt64Unchecked();
+      TestParseNumberFxx(str, sf16, sf32, sf64, line);
+    }
+
+    public static void TestParseNumberFxx(
+      string str,
+      short _f16,
+      int f32,
+      long f64,
+      string line) {
+       if (str[0] == '.' || str[str.Length - 1] =='.' ||
+            str.Contains(".e") || str.Contains(".E")) {
+          // Not a valid JSON number, so skip
+          // Console.WriteLine(str);
+          return;
+       }
+       CBORObject cbor = CBORDataUtilities.ParseJSONNumber(str,
+  JSONOptionsDouble);
+       if (cbor == null) {
+         Console.WriteLine(str);
+         return;
+       }
+       Assert.AreEqual(f64, cbor.AsDoubleBits(), line);
+       cbor = CBORObject.FromJSONString(str, JSONOptionsDouble);
+       Assert.AreEqual(f64, cbor.AsDoubleBits(), line);
+       cbor = CBORObject.FromJSONBytes(
+          DataUtilities.GetUtf8Bytes(str, false),
+          JSONOptionsDouble);
+       Assert.AreEqual(f64, cbor.AsDoubleBits(), line);
+       float sing = CBORObject.FromFloatingPointBits(f32, 4).AsSingle();
+       cbor = CBORDataUtilities.ParseJSONNumber(str, JSONOptionsFull);
+       if (cbor == null) {
+         Assert.Fail();
+       }
+       Assert.AreEqual(sing, cbor.AsSingle(), line);
+       cbor = CBORObject.FromJSONString(str, JSONOptionsFull);
+       Assert.AreEqual(sing, cbor.AsSingle(), line);
+       cbor = CBORObject.FromJSONBytes(
+          DataUtilities.GetUtf8Bytes(str, false),
+          JSONOptionsFull);
+       Assert.AreEqual(sing, cbor.AsSingle(), line);
+       // TODO: Test f16
+    }
+
+     [Test]
+     public void TestCloseToPowerOfTwo() {
+        for (var i = 31; i < 129; ++i) {
+           EInteger ei = EInteger.FromInt32(1).ShiftLeft(i);
+           {
+              AssertJSONDouble(
+                 ei.ToString(),
+                 "double",
+                 EFloat.FromEInteger(ei).ToDouble());
+              AssertJSONDouble(
+                 ei.Add(1).ToString(),
+                 "double",
+                 EFloat.FromEInteger(ei.Add(1)).ToDouble());
+              AssertJSONDouble(
+                 ei.Subtract(2).ToString(),
+                 "double",
+                 EFloat.FromEInteger(ei.Subtract(2)).ToDouble());
+              AssertJSONDouble(
+                 ei.Add(2).ToString(),
+                 "double",
+                 EFloat.FromEInteger(ei.Add(2)).ToDouble());
+              AssertJSONDouble(
+                 ei.Subtract(2).ToString(),
+                 "double",
+                 EFloat.FromEInteger(ei.Subtract(2)).ToDouble());
+           }
+        }
+     }
+
     [Test]
     public void TestFromJsonStringFastCases() {
       var op = new JSONOptions("numberconversion=double");
@@ -8234,8 +8401,6 @@ if (cbornumber.CanFitInDouble()) {
       Assert.AreEqual(
         JSONOptions.ConversionMode.IntOrFloat,
         op.NumberConversion);
-      // var sw = new System.Diagnostics.Stopwatch();
-      // sw.Start();
       string manyzeros = TestCommon.Repeat("0", 1000000);
       string manythrees = TestCommon.Repeat("3", 1000000);
       AssertJSONDouble(
@@ -8338,9 +8503,104 @@ if (cbornumber.CanFitInDouble()) {
     }
 
     [Test]
+    public void TestEDecimalEFloatWithHighExponent() {
+      string decstr = "0E100441809235791722330759976";
+      Assert.AreEqual(0L, EDecimal.FromString(decstr).ToDoubleBits());
+      Assert.AreEqual(0L, EFloat.FromString(decstr).ToDoubleBits());
+    {
+        object objectTemp = 0L;
+        object objectTemp2 = EDecimal.FromString(decstr,
+  EContext.Decimal32).ToDoubleBits();
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
+      {
+        object objectTemp = 0L;
+        object objectTemp2 = EFloat.FromString(decstr,
+  EContext.Binary64).ToDoubleBits();
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
+      decstr = "0E-100441809235791722330759976";
+      Assert.AreEqual(0L, EDecimal.FromString(decstr).ToDoubleBits());
+      Assert.AreEqual(0L, EFloat.FromString(decstr).ToDoubleBits());
+    {
+        object objectTemp = 0L;
+        object objectTemp2 = EDecimal.FromString(decstr,
+  EContext.Decimal32).ToDoubleBits();
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
+      {
+        object objectTemp = 0L;
+        object objectTemp2 = EFloat.FromString(decstr,
+  EContext.Binary64).ToDoubleBits();
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
+      decstr = "-0E100441809235791722330759976";
+      long negzero = 1L << 63;
+      Assert.AreEqual(negzero, EDecimal.FromString(decstr).ToDoubleBits());
+      Assert.AreEqual(negzero, EFloat.FromString(decstr).ToDoubleBits());
+    {
+        object objectTemp = negzero;
+        object objectTemp2 = EDecimal.FromString(decstr,
+  EContext.Decimal32).ToDoubleBits();
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
+      {
+        object objectTemp = negzero;
+        object objectTemp2 = EFloat.FromString(decstr,
+  EContext.Binary64).ToDoubleBits();
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
+      decstr = "-0E-100441809235791722330759976";
+      Assert.AreEqual(negzero, EDecimal.FromString(decstr).ToDoubleBits());
+      Assert.AreEqual(negzero, EFloat.FromString(decstr).ToDoubleBits());
+    {
+        object objectTemp = negzero;
+        object objectTemp2 = EDecimal.FromString(decstr,
+  EContext.Decimal32).ToDoubleBits();
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
+      {
+        object objectTemp = negzero;
+        object objectTemp2 = EFloat.FromString(decstr,
+  EContext.Binary64).ToDoubleBits();
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
+    }
+
+    [Test]
+    public void TestFromJsonStringZeroWithHighExponent() {
+      string decstr = "0E100441809235791722330759976";
+      EDecimal ed = EDecimal.FromString(decstr);
+      double dbl = ed.ToDouble();
+      Assert.AreEqual((double)0, dbl);
+      AssertJSONDouble(decstr, "double", dbl);
+      AssertJSONInteger(decstr, "intorfloat", 0);
+      decstr = "0E1321909565013040040586";
+      ed = EDecimal.FromString(decstr);
+      dbl = ed.ToDouble();
+      Assert.AreEqual((double)0, dbl);
+      AssertJSONDouble(decstr, "double", dbl);
+      AssertJSONInteger(decstr, "intorfloat", 0);
+      double dblnegzero = EFloat.FromString("-0").ToDouble();
+      AssertJSONDouble("0E-1321909565013040040586", "double", 0.0);
+      AssertJSONInteger("0E-1321909565013040040586", "intorfloat", 0);
+      AssertJSONDouble("-0E1321909565013040040586", "double", dblnegzero);
+      AssertJSONInteger("-0E1321909565013040040586", "intorfloat", 0);
+      AssertJSONDouble("-0E-1321909565013040040586", "double", dblnegzero);
+      AssertJSONInteger("-0E-1321909565013040040586", "intorfloat", 0);
+
+      AssertJSONDouble("0E-100441809235791722330759976", "double", 0.0);
+      AssertJSONInteger("0E-100441809235791722330759976", "intorfloat", 0);
+      AssertJSONDouble("-0E100441809235791722330759976", "double", dblnegzero);
+      AssertJSONInteger("-0E100441809235791722330759976", "intorfloat", 0);
+      AssertJSONDouble("-0E-100441809235791722330759976", "double", dblnegzero);
+      AssertJSONInteger("-0E-100441809235791722330759976", "intorfloat", 0);
+    }
+
+    [Test]
     public void TestFromJsonStringEDecimalSpec() {
       var rg = new RandomGenerator();
-      for (var i = 0; i < 1000; ++i) {
+      for (var i = 0; i < 2000; ++i) {
         var decstring = new string[1];
         EDecimal ed = RandomObjects.RandomEDecimal(rg, decstring);
         if (decstring[0] == null) {
@@ -8357,6 +8617,144 @@ if (cbornumber.CanFitInDouble()) {
           "double",
           dbl);
       }
+    }
+
+    [Test]
+    public void TestFromJsonCTLInString() {
+       for (var i = 0; i <= 0x20; ++i) {
+          byte[] bytes = {0x22, (byte)i, 0x22 };
+          char[] chars = {(char)0x22, (char)i, (char)0x22 };
+          string str = new String(chars, 0, chars.Length);
+          if (i == 0x20) {
+             try {
+ CBORObject.FromJSONString(str);
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+             try {
+ CBORObject.FromJSONBytes(bytes);
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+          } else {
+             try {
+ CBORObject.FromJSONString(str);
+ Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+             try {
+ CBORObject.FromJSONBytes(bytes);
+ Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+          }
+        }
+     }
+
+    // [Test]
+    public void TestFromJsonLeadingTrailingCTLBytes() {
+       // TODO: Reenable eventually, once UTF-8 only support
+       // for CBORObject.FromJSONBytes is implemented
+       for (var i = 0; i <= 0x20; ++i) {
+          // Leading CTL
+          byte[] bytes = { (byte)i, 0x31 };
+          if (i == 0x09 || i == 0x0d || i == 0x0a || i == 0x20) {
+             try {
+ CBORObject.FromJSONBytes(bytes);
+} catch (Exception ex) {
+Assert.Fail(ex.ToString() + "bytes " + i);
+throw new InvalidOperationException(String.Empty, ex);
+}
+          } else {
+             try {
+ CBORObject.FromJSONBytes(bytes);
+ Assert.Fail("Should have failed bytes " + i);
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+          }
+          // Trailing CTL
+          bytes = new byte[] { 0x31, (byte)i };
+          if (i == 0x09 || i == 0x0d || i == 0x0a || i == 0x20) {
+             try {
+ CBORObject.FromJSONBytes(bytes);
+} catch (Exception ex) {
+Assert.Fail(ex.ToString() + "bytes " + i);
+throw new InvalidOperationException(String.Empty, ex);
+}
+          } else {
+             try {
+ CBORObject.FromJSONBytes(bytes);
+ Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString() + "bytes " + i);
+ throw new InvalidOperationException(String.Empty, ex);
+}
+          }
+       }
+    }
+
+    [Test]
+    public void TestFromJsonLeadingTrailingCTL() {
+       for (var i = 0; i <= 0x20; ++i) {
+          // Leading CTL
+          char[] chars = {(char)i, (char)0x31 };
+          string str = new String(chars, 0, chars.Length);
+          if (i == 0x09 || i == 0x0d || i == 0x0a || i == 0x20) {
+             try {
+ CBORObject.FromJSONString(str);
+} catch (Exception ex) {
+Assert.Fail(ex.ToString() + "string " + i);
+throw new InvalidOperationException(String.Empty, ex);
+}
+          } else {
+             try {
+ CBORObject.FromJSONString(str);
+ Assert.Fail("Should have failed string " + i);
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
+}
+          }
+          // Trailing CTL
+          chars = new char[] { (char)0x31, (char)i};
+          str = new String(chars, 0, chars.Length);
+          if (i == 0x09 || i == 0x0d || i == 0x0a || i == 0x20) {
+             try {
+ CBORObject.FromJSONString(str);
+} catch (Exception ex) {
+Assert.Fail(ex.ToString() + "string " + i);
+throw new InvalidOperationException(String.Empty, ex);
+}
+          } else {
+             try {
+ CBORObject.FromJSONString(str);
+ Assert.Fail("Should have failed");
+} catch (CBORException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString() + "string " + i);
+ throw new InvalidOperationException(String.Empty, ex);
+}
+          }
+       }
     }
 
     [Test]

@@ -3,9 +3,8 @@ Written in 2013 by Peter Occil.
 Any copyright to this work is released to the Public Domain.
 In case this is not possible, this work is also
 licensed under Creative Commons Zero (CC0):
-http://creativecommons.org/publicdomain/zero/1.0/
-If you like this, you should donate to Peter O.
-at: http://peteroupc.github.io/
+https://creativecommons.org/publicdomain/zero/1.0/
+
  */
 using System;
 using System.Collections.Generic;
@@ -123,70 +122,8 @@ namespace PeterO {
       if (longValue == 0L) {
         return "0";
       }
-      if (longValue == (long)Int32.MinValue) {
-        return "-2147483648";
-      }
-      bool neg = longValue < 0;
-      var count = 0;
-      char[] chars;
-      int intlongValue = unchecked((int)longValue);
-      if ((long)intlongValue == longValue) {
-        chars = new char[12];
-        count = 11;
-        if (neg) {
-          intlongValue = -intlongValue;
-        }
-        while (intlongValue > 43698) {
-          int intdivValue = intlongValue / 10;
-          char digit = ValueDigits[(int)(intlongValue - (intdivValue *
-10))];
-          chars[count--] = digit;
-          intlongValue = intdivValue;
-        }
-        while (intlongValue > 9) {
-          int intdivValue = (intlongValue * 26215) >> 18;
-          char digit = ValueDigits[(int)(intlongValue - (intdivValue *
-10))];
-          chars[count--] = digit;
-          intlongValue = intdivValue;
-        }
-        if (intlongValue != 0) {
-          chars[count--] = ValueDigits[(int)intlongValue];
-        }
-        if (neg) {
-          chars[count] = '-';
-        } else {
-          ++count;
-        }
-        return new String(chars, count, 12 - count);
-      } else {
-        chars = new char[24];
-        count = 23;
-        if (neg) {
-          longValue = -longValue;
-        }
-        while (longValue > 43698) {
-          long divValue = longValue / 10;
-          char digit = ValueDigits[(int)(longValue - (divValue * 10))];
-          chars[count--] = digit;
-          longValue = divValue;
-        }
-        while (longValue > 9) {
-          long divValue = (longValue * 26215) >> 18;
-          char digit = ValueDigits[(int)(longValue - (divValue * 10))];
-          chars[count--] = digit;
-          longValue = divValue;
-        }
-        if (longValue != 0) {
-          chars[count--] = ValueDigits[(int)longValue];
-        }
-        if (neg) {
-          chars[count] = '-';
-        } else {
-          ++count;
-        }
-        return new String(chars, count, 24 - count);
-      }
+      return (longValue == (long)Int32.MinValue) ? "-2147483648" :
+EInteger.FromInt64(longValue).ToString();
     }
 
     private static CBORObject ReadString(Stream stream, char firstChar) {

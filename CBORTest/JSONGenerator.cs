@@ -114,22 +114,34 @@ namespace Test {
       }
     }
 
-    private static void GenerateJsonNumber(IRandomGenExtended ra, ByteWriter
-bs) {
+    private static void GenerateJsonNumber(
+        IRandomGenExtended ra,
+        ByteWriter bs) {
       if (ra.GetInt32(2) == 0) {
         bs.Write((int)'-');
       }
-      int len = ((ra.GetInt32(2000) * ra.GetInt32(2000)) / 2000) + 1;
-      bs.Write(0x31 + ra.GetInt32(9));
-      for (int i = 0; i < len; ++i) {
-        bs.Write(0x30 + ra.GetInt32(10));
-      }
-      if (ra.GetInt32(2) == 0) {
-        bs.Write(0x2e);
-        len = ((ra.GetInt32(2000) * ra.GetInt32(2000)) / 2000) + 1;
+      bool shortLen = ra.GetInt32(100) < 75;
+      var len = 0;
+      if (ra.GetInt32(100) < 2) {
+        // Integer part is zero
+        bs.Write(0x30);
+      } else {
+        // Integer part
+        len = shortLen ? ra.GetInt32(10) + 1 :
+           ((ra.GetInt32(2000) * ra.GetInt32(2000)) / 2000) + 1;
+        bs.Write(0x31 + ra.GetInt32(9));
         for (int i = 0; i < len; ++i) {
           bs.Write(0x30 + ra.GetInt32(10));
         }
+      }
+      // Fractional part
+      if (ra.GetInt32(2) == 0) {
+          bs.Write(0x2e);
+          len = shortLen ? ra.GetInt32(10) + 1 :
+           ((ra.GetInt32(2000) * ra.GetInt32(2000)) / 2000) + 1;
+          for (int i = 0; i < len; ++i) {
+            bs.Write(0x30 + ra.GetInt32(10));
+          }
       }
       if (ra.GetInt32(2) == 0) {
         int rr = ra.GetInt32(3);
