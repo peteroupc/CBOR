@@ -2444,7 +2444,7 @@ A CBORObject object with the same value as the.NET decimal.
     public static PeterO.Cbor.CBORObject FromObject(
         double value);
 
-Generates a CBOR object from a 64-bit floating-point number.
+Generates a CBOR object from a 64-bit floating-point number. The input value can be a not-a-number (NaN) value (such as  `Double.NaN`  ); however, NaN values have multiple forms that are equivalent for many applications' purposes, and  `Double.NaN`  is only one of these equivalent forms. In fact,  `CBORObject.FromObject(Double.NaN)`  could produce a CBOR-encoded object that differs between DotNet and Java, because  `Double.NaN`  may have a different form in DotNet and Java (for example, the NaN value's sign may be negative in DotNet, but positive in Java).
 
 <b>Parameters:</b>
 
@@ -2461,7 +2461,7 @@ A CBOR object generated from the given number.
     public static PeterO.Cbor.CBORObject FromObject(
         float value);
 
-Generates a CBOR object from a 32-bit floating-point number.
+Generates a CBOR object from a 32-bit floating-point number. The input value can be a not-a-number (NaN) value (such as  `Single.NaN`  in DotNet or Float.NaN in Java); however, NaN values have multiple forms that are equivalent for many applications' purposes, and  `Single.NaN`  /  `Float.NaN`  is only one of these equivalent forms. In fact,  `CBORObject.FromObject(Single.NaN)`  or  `CBORObject.FromObject(Float.NaN)`  could produce a CBOR-encoded object that differs between DotNet and Java, because  `Single.NaN`  /  `Float.NaN`  may have a different form in DotNet and Java (for example, the NaN value's sign may be negative in DotNet, but positive in Java).
 
 <b>Parameters:</b>
 
@@ -4204,22 +4204,22 @@ A byte array containing the converted in JSON format.
 The example code given below (originally written in C# for the.NET version) can be used to write out certain keys of a CBOR map in a given order to a JSON string.
 
     /* Generates a JSON string of 'mapObj' whose keys are in the order
-                given
-                in 'keys' . Only keys found in 'keys' will be written if they exist in
-                'mapObj'. */ private static string KeysToJSONMap(CBORObject mapObj,
-                IList<CBORObject> keys) { if (mapObj == null) { throw new
-                ArgumentNullException)nameof(mapObj));}
-                if (keys == null) { throw new
-                ArgumentNullException)nameof(keys));}
-                if (obj.Type != CBORType.Map) {
-                throw new ArgumentException("'obj' is not a map."); } StringBuilder
-                builder = new StringBuilder(); var first = true; builder.Append("{");
-                for (CBORObject key in keys) { if (mapObj.ContainsKey(key)) { if
-                (!first) {builder.Append(", ");} var keyString=(key.CBORType ==
-                CBORType.String) ? key.AsString() : key.ToJSONString();
-                builder.Append(CBORObject.FromObject(keyString) .ToJSONString())
-                .Append(":").Append(mapObj[key].ToJSONString()); first=false; } } return
-                builder.Append("}").ToString(); }
+                 given
+                 in 'keys' . Only keys found in 'keys' will be written if they exist in
+                 'mapObj'. */ private static string KeysToJSONMap(CBORObject mapObj,
+                 IList<CBORObject> keys) { if (mapObj == null) { throw new
+                 ArgumentNullException)nameof(mapObj));}
+                 if (keys == null) { throw new
+                 ArgumentNullException)nameof(keys));}
+                 if (obj.Type != CBORType.Map) {
+                 throw new ArgumentException("'obj' is not a map."); } StringBuilder
+                 builder = new StringBuilder(); var first = true; builder.Append("{");
+                 for (CBORObject key in keys) { if (mapObj.ContainsKey(key)) { if
+                 (!first) {builder.Append(", ");} var keyString=(key.CBORType ==
+                 CBORType.String) ? key.AsString() : key.ToJSONString();
+                 builder.Append(CBORObject.FromObject(keyString) .ToJSONString())
+                 .Append(":").Append(mapObj[key].ToJSONString()); first=false; } } return
+                 builder.Append("}").ToString(); }
 
  .
 
