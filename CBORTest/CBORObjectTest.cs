@@ -8731,7 +8731,8 @@ CBORObject.FromObject(QueryStringHelper.QueryStringToDict(test));
       int f32,
       long f64,
       string line) {
-       if (str[0] == '.') {
+       if (str[0] == '.' || str[str.Length - 1] =='.' ||
+            str.Contains(".e") || str.Contains(".E")) {
           // Not a valid JSON number, so skip
           // Console.WriteLine(str);
           return;
@@ -8764,6 +8765,35 @@ CBORObject.FromObject(QueryStringHelper.QueryStringToDict(test));
        // TODO: Test f16
     }
 
+     [Test]
+     public void TestCloseToPowerOfTwo() {
+        for (var i = 31; i < 129; ++i) {
+           EInteger ei = EInteger.FromInt32(1).ShiftLeft(i);
+           {
+              AssertJSONDouble(
+                 ei.ToString(),
+                 "double",
+                 EFloat.FromEInteger(ei).ToDouble());
+              AssertJSONDouble(
+                 ei.Add(1).ToString(),
+                 "double",
+                 EFloat.FromEInteger(ei.Add(1)).ToDouble());
+              AssertJSONDouble(
+                 ei.Subtract(2).ToString(),
+                 "double",
+                 EFloat.FromEInteger(ei.Subtract(2)).ToDouble());
+              AssertJSONDouble(
+                 ei.Add(2).ToString(),
+                 "double",
+                 EFloat.FromEInteger(ei.Add(2)).ToDouble());
+              AssertJSONDouble(
+                 ei.Subtract(2).ToString(),
+                 "double",
+                 EFloat.FromEInteger(ei.Subtract(2)).ToDouble());
+           }
+        }
+     }
+
     [Test]
     public void TestFromJsonStringFastCases() {
       var op = new JSONOptions("numberconversion=double");
@@ -8774,8 +8804,6 @@ CBORObject.FromObject(QueryStringHelper.QueryStringToDict(test));
       Assert.AreEqual(
         JSONOptions.ConversionMode.IntOrFloat,
         op.NumberConversion);
-      // var sw = new System.Diagnostics.Stopwatch();
-      // sw.Start();
       string manyzeros = TestCommon.Repeat("0", 1000000);
       string manythrees = TestCommon.Repeat("3", 1000000);
       AssertJSONDouble(

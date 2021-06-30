@@ -1728,6 +1728,22 @@ namespace Test {
     }
 
     [Test]
+    public void TestRoundTripNaN() {
+      long doublennan = unchecked((long)0xfff8000000000000L);
+      long doublepnan = unchecked((long)0x7ff8000000000000L);
+      int singlennan = unchecked((int)0xffc00000);
+      int singlepnan = unchecked((int)0x7fc00000);
+      int halfnnan = 0xfe00;
+      int halfpnan = 0x7e00;
+      Assert.AreEqual(doublennan, CBORObject.FromFloatingPointBits(doublennan,8).AsDoubleBits());
+      Assert.AreEqual(doublepnan, CBORObject.FromFloatingPointBits(doublepnan,8).AsDoubleBits());
+      Assert.AreEqual(doublennan, CBORObject.FromFloatingPointBits(singlennan,4).AsDoubleBits());
+      Assert.AreEqual(doublepnan, CBORObject.FromFloatingPointBits(singlepnan,4).AsDoubleBits());
+      Assert.AreEqual(doublennan, CBORObject.FromFloatingPointBits(halfnnan,2).AsDoubleBits());
+      Assert.AreEqual(doublepnan, CBORObject.FromFloatingPointBits(halfpnan,2).AsDoubleBits());
+    }
+
+    [Test]
     public void TestPlist() {
       CBORObject o;
       o = CBORObject.FromJSONString("[1,2,null,true,false,\"\"]");
