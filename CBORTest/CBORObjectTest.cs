@@ -1091,9 +1091,9 @@ namespace Test {
             Assert.Fail(cbornumber.ToString());
           }
         } else {
-if (cbornumber.CanFitInDouble()) {
-  Assert.Fail(cbornumber.ToString());
-}
+          if (cbornumber.CanFitInDouble()) {
+            Assert.Fail(cbornumber.ToString());
+          }
         }
       }
       var rand = new RandomGenerator();
@@ -7683,64 +7683,64 @@ if (cbornumber.CanFitInDouble()) {
     }
 
     private static void TestDateTimeStringNumberOne(string str, long num) {
-        CBORObject dtstring = CBORObject.FromObject(str).WithTag(0);
-        CBORObject dtnum = CBORObject.FromObject(num).WithTag(1);
-        TestDateTimeStringNumberOne(dtstring, dtnum);
+      CBORObject dtstring = CBORObject.FromObject(str).WithTag(0);
+      CBORObject dtnum = CBORObject.FromObject(num).WithTag(1);
+      TestDateTimeStringNumberOne(dtstring, dtnum);
     }
     private static void TestDateTimeStringNumberOne(string str, double num) {
-        CBORObject dtstring = CBORObject.FromObject(str).WithTag(0);
-        CBORObject dtnum = CBORObject.FromObject(num).WithTag(1);
-        TestDateTimeStringNumberOne(dtstring, dtnum);
+      CBORObject dtstring = CBORObject.FromObject(str).WithTag(0);
+      CBORObject dtnum = CBORObject.FromObject(num).WithTag(1);
+      TestDateTimeStringNumberOne(dtstring, dtnum);
     }
     private static void TestDateTimeStringNumberOne(CBORObject dtstring,
-  CBORObject dtnum) {
-        CBORDateConverter convNumber = CBORDateConverter.TaggedNumber;
-        CBORDateConverter convString = CBORDateConverter.TaggedString;
-        CBORObject cbor;
-        var eiYear = new EInteger[1];
-        var lesserFields = new int[7];
-        string strnum = dtstring + ", " + dtnum;
-        cbor = convNumber.ToCBORObject(convNumber.FromCBORObject(dtstring));
-        Assert.AreEqual(dtnum, cbor, strnum);
-        if (!convNumber.TryGetDateTimeFields(dtstring, eiYear, lesserFields)) {
-          Assert.Fail(strnum);
-        }
-        cbor = convNumber.DateTimeFieldsToCBORObject(eiYear[0], lesserFields);
-        Assert.AreEqual(dtnum, cbor, strnum);
-        cbor = convString.DateTimeFieldsToCBORObject(eiYear[0], lesserFields);
-        Assert.AreEqual(dtstring, cbor, strnum);
-        cbor = convString.ToCBORObject(convString.FromCBORObject(dtnum));
-        Assert.AreEqual(dtstring, cbor, strnum);
-        if (!convString.TryGetDateTimeFields(dtnum, eiYear, lesserFields)) {
-          Assert.Fail(strnum);
-        }
-        cbor = convNumber.DateTimeFieldsToCBORObject(eiYear[0], lesserFields);
-        Assert.AreEqual(dtnum, cbor, strnum);
-        cbor = convString.DateTimeFieldsToCBORObject(eiYear[0], lesserFields);
-        Assert.AreEqual(dtstring, cbor, strnum);
+      CBORObject dtnum) {
+      CBORDateConverter convNumber = CBORDateConverter.TaggedNumber;
+      CBORDateConverter convString = CBORDateConverter.TaggedString;
+      CBORObject cbor;
+      var eiYear = new EInteger[1];
+      var lesserFields = new int[7];
+      string strnum = dtstring + ", " + dtnum;
+      cbor = convNumber.ToCBORObject(convNumber.FromCBORObject(dtstring));
+      Assert.AreEqual(dtnum, cbor, strnum);
+      if (!convNumber.TryGetDateTimeFields(dtstring, eiYear, lesserFields)) {
+        Assert.Fail(strnum);
+      }
+      cbor = convNumber.DateTimeFieldsToCBORObject(eiYear[0], lesserFields);
+      Assert.AreEqual(dtnum, cbor, strnum);
+      cbor = convString.DateTimeFieldsToCBORObject(eiYear[0], lesserFields);
+      Assert.AreEqual(dtstring, cbor, strnum);
+      cbor = convString.ToCBORObject(convString.FromCBORObject(dtnum));
+      Assert.AreEqual(dtstring, cbor, strnum);
+      if (!convString.TryGetDateTimeFields(dtnum, eiYear, lesserFields)) {
+        Assert.Fail(strnum);
+      }
+      cbor = convNumber.DateTimeFieldsToCBORObject(eiYear[0], lesserFields);
+      Assert.AreEqual(dtnum, cbor, strnum);
+      cbor = convString.DateTimeFieldsToCBORObject(eiYear[0], lesserFields);
+      Assert.AreEqual(dtstring, cbor, strnum);
     }
 
     [Test]
     public void TestDateTimeStringNumber() {
-        TestDateTimeStringNumberOne("1970-01-01T00:00:00.25Z", 0.25);
-        TestDateTimeStringNumberOne("1970-01-01T00:00:00.75Z", 0.75);
-        TestDateTimeStringNumberOne("1969-12-31T23:59:59.75Z", -0.25);
-        TestDateTimeStringNumberOne("1969-12-31T23:59:59.25Z", -0.75);
-        TestDateTimeStringNumberOne("1970-01-03T00:00:00Z", 172800);
-        TestDateTimeStringNumberOne("1970-01-03T00:00:00Z", 172800);
-        TestDateTimeStringNumberOne("1970-01-03T00:00:00Z", 172800);
-        TestDateTimeStringNumberOne("2001-01-03T00:00:00Z", 978480000);
-        TestDateTimeStringNumberOne("2001-01-03T00:00:00.25Z", 978480000.25);
-        TestDateTimeStringNumberOne("1960-01-03T00:00:00Z", -315446400);
-        TestDateTimeStringNumberOne("1400-01-03T00:00:00Z", -17987270400L);
-        TestDateTimeStringNumberOne("2100-01-03T00:00:00Z", 4102617600L);
-        TestDateTimeStringNumberOne("1970-01-03T00:00:01Z", 172801);
-        TestDateTimeStringNumberOne("2001-01-03T00:00:01Z", 978480001);
-        TestDateTimeStringNumberOne("1960-01-03T00:00:01Z", -315446399);
-        TestDateTimeStringNumberOne("1960-01-03T00:00:00.25Z", -315446399.75);
-        TestDateTimeStringNumberOne("1960-01-03T00:00:00.75Z", -315446399.25);
-        TestDateTimeStringNumberOne("1400-01-03T00:00:01Z", -17987270399L);
-        TestDateTimeStringNumberOne("2100-01-03T00:00:01Z", 4102617601L);
+      TestDateTimeStringNumberOne("1970-01-01T00:00:00.25Z", 0.25);
+      TestDateTimeStringNumberOne("1970-01-01T00:00:00.75Z", 0.75);
+      TestDateTimeStringNumberOne("1969-12-31T23:59:59.75Z", -0.25);
+      TestDateTimeStringNumberOne("1969-12-31T23:59:59.25Z", -0.75);
+      TestDateTimeStringNumberOne("1970-01-03T00:00:00Z", 172800);
+      TestDateTimeStringNumberOne("1970-01-03T00:00:00Z", 172800);
+      TestDateTimeStringNumberOne("1970-01-03T00:00:00Z", 172800);
+      TestDateTimeStringNumberOne("2001-01-03T00:00:00Z", 978480000);
+      TestDateTimeStringNumberOne("2001-01-03T00:00:00.25Z", 978480000.25);
+      TestDateTimeStringNumberOne("1960-01-03T00:00:00Z", -315446400);
+      TestDateTimeStringNumberOne("1400-01-03T00:00:00Z", -17987270400L);
+      TestDateTimeStringNumberOne("2100-01-03T00:00:00Z", 4102617600L);
+      TestDateTimeStringNumberOne("1970-01-03T00:00:01Z", 172801);
+      TestDateTimeStringNumberOne("2001-01-03T00:00:01Z", 978480001);
+      TestDateTimeStringNumberOne("1960-01-03T00:00:01Z", -315446399);
+      TestDateTimeStringNumberOne("1960-01-03T00:00:00.25Z", -315446399.75);
+      TestDateTimeStringNumberOne("1960-01-03T00:00:00.75Z", -315446399.25);
+      TestDateTimeStringNumberOne("1400-01-03T00:00:01Z", -17987270399L);
+      TestDateTimeStringNumberOne("2100-01-03T00:00:01Z", 4102617601L);
     }
 
     public void TestApplyJSONPatchOpAdd(
@@ -7749,7 +7749,7 @@ if (cbornumber.CanFitInDouble()) {
       string path,
       object obj) {
       CBORObject patch = CBORObject.NewMap().Add("op", "add")
-          .Add("path", path).Add("value", CBORObject.FromObject(obj));
+        .Add("path", path).Add("value", CBORObject.FromObject(obj));
       patch = CBORObject.NewArray().Add(patch);
       this.TestApplyJSONPatchOp(expected, src, patch);
     }
@@ -7760,7 +7760,7 @@ if (cbornumber.CanFitInDouble()) {
       string path,
       object obj) {
       CBORObject patch = CBORObject.NewMap().Add("op", "replace")
-          .Add("path", path).Add("value", CBORObject.FromObject(obj));
+        .Add("path", path).Add("value", CBORObject.FromObject(obj));
       patch = CBORObject.NewArray().Add(patch);
       this.TestApplyJSONPatchOp(expected, src, patch);
     }
@@ -7770,7 +7770,7 @@ if (cbornumber.CanFitInDouble()) {
       CBORObject src,
       string path) {
       CBORObject patch = CBORObject.NewMap().Add("op", "remove")
-          .Add("path", path);
+        .Add("path", path);
       patch = CBORObject.NewArray().Add(patch);
       this.TestApplyJSONPatchOp(expected, src, patch);
     }
@@ -7781,26 +7781,26 @@ if (cbornumber.CanFitInDouble()) {
       CBORObject patch) {
       CBORObject actual = CBORObject.DecodeFromBytes(src.EncodeToBytes());
       if (expected == null) {
-       try {
- actual.ApplyJSONPatch(patch);
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- throw new InvalidOperationException(ex.ToString() + "\n" + patch);
-}
+        try {
+          actual.ApplyJSONPatch(patch);
+          Assert.Fail("Should have failed");
+        } catch (CBORException) {
+          // NOTE: Intentionally empty
+        } catch (Exception ex) {
+          throw new InvalidOperationException(ex.ToString() + "\n" + patch);
+        }
       } else {
-       try {
+        try {
           byte[] oldactualbytes = actual.EncodeToBytes();
           CBORObject oldactual = actual;
           actual = actual.ApplyJSONPatch(patch);
           byte[] newactualbytes = oldactual.EncodeToBytes();
           // Check whether the patch didn't change the existing object
           TestCommon.AssertByteArraysEqual(oldactualbytes, newactualbytes);
-} catch (Exception ex) {
-throw new InvalidOperationException(ex.ToString() + "\n" + patch);
-}
-       Assert.AreEqual(expected, actual);
+        } catch (Exception ex) {
+          throw new InvalidOperationException(ex.ToString() + "\n" + patch);
+        }
+        Assert.AreEqual(expected, actual);
       }
     }
     private static readonly string JSONPatchTests = "[]";
@@ -7808,17 +7808,15 @@ throw new InvalidOperationException(ex.ToString() + "\n" + patch);
     [Test]
     public void TestApplyJSONPatchJSONTests() {
       CBORObject tests = CBORObject.FromJSONString(JSONPatchTests,
-         new JSONOptions("allowduplicatekeys=1"));
+          new JSONOptions("allowduplicatekeys=1"));
       foreach (CBORObject testcbor in tests.Values) {
         if (testcbor.GetOrDefault("disabled", CBORObject.False).AsBoolean()) {
           continue;
         }
-        string
-err = testcbor.GetOrDefault("error",
-  CBORObject.FromObject(String.Empty)).AsString();
-        string
-  comment = testcbor.GetOrDefault("comment",
-  CBORObject.FromObject(String.Empty)).AsString();
+        string err = testcbor.GetOrDefault("error",
+            CBORObject.FromObject(String.Empty)).AsString();
+        string comment = testcbor.GetOrDefault("comment",
+            CBORObject.FromObject(String.Empty)).AsString();
         try {
           if (testcbor.ContainsKey("error")) {
             this.TestApplyJSONPatchOp(null, testcbor["doc"], testcbor["patch"]);
@@ -7839,33 +7837,33 @@ err = testcbor.GetOrDefault("error",
     public void TestApplyJSONPatchTest() {
       CBORObject patch;
       patch = CBORObject.NewMap().Add("op", "test")
-          .Add("path", String.Empty).Add("value",
-  CBORObject.NewArray().Add(1).Add(2));
+        .Add("path", String.Empty).Add("value",
+          CBORObject.NewArray().Add(1).Add(2));
       patch = CBORObject.NewArray().Add(patch);
       CBORObject exp;
       exp = CBORObject.NewArray().Add(1).Add(2);
       this.TestApplyJSONPatchOp(exp, exp, patch);
       patch = CBORObject.NewMap().Add("op", "test")
-          .Add("path", String.Empty).Add("value",
-  CBORObject.NewArray().Add(1).Add(3));
+        .Add("path", String.Empty).Add("value",
+          CBORObject.NewArray().Add(1).Add(3));
       patch = CBORObject.NewArray().Add(patch);
       this.TestApplyJSONPatchOp(null, exp, patch);
       patch = CBORObject.NewMap().Add("op", "test")
-          .Add("path", String.Empty).Add("value",
-  CBORObject.NewArray().Add(2).Add(2));
+        .Add("path", String.Empty).Add("value",
+          CBORObject.NewArray().Add(2).Add(2));
       patch = CBORObject.NewArray().Add(patch);
       this.TestApplyJSONPatchOp(null, exp, patch);
       patch = CBORObject.NewMap().Add("op", "test")
-          .Add("path", String.Empty).Add("value", CBORObject.NewMap().Add(2,
-  2));
+        .Add("path", String.Empty).Add("value", CBORObject.NewMap().Add(2,
+            2));
       patch = CBORObject.NewArray().Add(patch);
       this.TestApplyJSONPatchOp(null, exp, patch);
       patch = CBORObject.NewMap().Add("op", "test")
-          .Add("path", String.Empty).Add("value", CBORObject.True);
+        .Add("path", String.Empty).Add("value", CBORObject.True);
       patch = CBORObject.NewArray().Add(patch);
       this.TestApplyJSONPatchOp(null, exp, patch);
       patch = CBORObject.NewMap().Add("op", "test")
-          .Add("path", String.Empty).Add("value", CBORObject.Null);
+        .Add("path", String.Empty).Add("value", CBORObject.Null);
       patch = CBORObject.NewArray().Add(patch);
       this.TestApplyJSONPatchOp(null, exp, patch);
     }
@@ -7875,271 +7873,272 @@ err = testcbor.GetOrDefault("error",
       // TODO: Finish tests for ApplyJSONPatch
       CBORObject patch;
       patch = CBORObject.NewArray().Add(
-         CBORObject.NewMap().Add("path", "/0"));
+          CBORObject.NewMap().Add("path", "/0"));
       this.TestApplyJSONPatchOp(
-         null,
-         CBORObject.NewArray().Add(1),
-         patch);
+        null,
+        CBORObject.NewArray().Add(1),
+        patch);
 
       patch = CBORObject.NewArray().Add(
-         CBORObject.NewMap().Add("op", "ADD").Add("path", "/0").Add("value",
-  3));
+          CBORObject.NewMap().Add("op", "ADD").Add("path", "/0").Add("value",
+            3));
       this.TestApplyJSONPatchOp(
-         null,
-         CBORObject.NewArray().Add(1),
-         patch);
+        null,
+        CBORObject.NewArray().Add(1),
+        patch);
 
       patch = CBORObject.NewArray().Add(
-  CBORObject.NewMap().Add("op", "RePlAcE").Add("path", "/0").Add("value", 3));
+          CBORObject.NewMap().Add("op", "RePlAcE").Add("path",
+  "/0").Add("value", 3));
       this.TestApplyJSONPatchOp(
-         null,
-         CBORObject.NewArray().Add(1),
-         patch);
+        null,
+        CBORObject.NewArray().Add(1),
+        patch);
 
       patch = CBORObject.NewArray().Add(
-         CBORObject.NewMap().Add("op", "unknown").Add("path", "/0"));
+          CBORObject.NewMap().Add("op", "unknown").Add("path", "/0"));
       this.TestApplyJSONPatchOp(
-         null,
-         CBORObject.NewArray().Add(1),
-         patch);
+        null,
+        CBORObject.NewArray().Add(1),
+        patch);
       patch = CBORObject.NewArray().Add(
-         CBORObject.NewMap().Add("op", "add").Add("path", String.Empty)
-            .Add("value", CBORObject.True));
+          CBORObject.NewMap().Add("op", "add").Add("path", String.Empty)
+          .Add("value", CBORObject.True));
       this.TestApplyJSONPatchOp(
-         CBORObject.True,
-         CBORObject.NewArray().Add(1),
-         patch);
+        CBORObject.True,
+        CBORObject.NewArray().Add(1),
+        patch);
       patch = CBORObject.NewArray().Add(
-         CBORObject.NewMap().Add("op", "add").Add("path", String.Empty)
-             .Add("value", CBORObject.NewMap()));
+          CBORObject.NewMap().Add("op", "add").Add("path", String.Empty)
+          .Add("value", CBORObject.NewMap()));
       this.TestApplyJSONPatchOp(
-         CBORObject.NewMap(),
-         CBORObject.NewArray().Add(1),
-         patch);
+        CBORObject.NewMap(),
+        CBORObject.NewArray().Add(1),
+        patch);
 
       patch = CBORObject.NewArray().Add(
-         CBORObject.NewMap().Add("op", "add").Add("path", "/0"));
+          CBORObject.NewMap().Add("op", "add").Add("path", "/0"));
       this.TestApplyJSONPatchOp(
-         null,
-         CBORObject.NewArray().Add(1),
-         patch);
+        null,
+        CBORObject.NewArray().Add(1),
+        patch);
       patch = CBORObject.NewArray().Add(
-         CBORObject.NewMap().Add("op", "add").Add("path", null).Add("value",
-  2));
+          CBORObject.NewMap().Add("op", "add").Add("path", null).Add("value",
+            2));
       this.TestApplyJSONPatchOp(
-         null,
-         CBORObject.NewArray().Add(1),
-         patch);
+        null,
+        CBORObject.NewArray().Add(1),
+        patch);
       patch = CBORObject.NewArray().Add(
-         CBORObject.NewMap().Add("op", "add").Add("value", 2));
+          CBORObject.NewMap().Add("op", "add").Add("value", 2));
       this.TestApplyJSONPatchOp(
-         null,
-         CBORObject.NewArray().Add(1),
-         patch);
+        null,
+        CBORObject.NewArray().Add(1),
+        patch);
       patch = CBORObject.NewArray().Add(
-         CBORObject.NewMap().Add("op", "remove"));
+          CBORObject.NewMap().Add("op", "remove"));
       this.TestApplyJSONPatchOp(
-         null,
-         CBORObject.NewArray().Add(1),
-         patch);
+        null,
+        CBORObject.NewArray().Add(1),
+        patch);
       patch = CBORObject.NewArray().Add(
-         CBORObject.NewMap().Add("op", "remove").Add("value", 2));
+          CBORObject.NewMap().Add("op", "remove").Add("value", 2));
       this.TestApplyJSONPatchOp(
-         null,
-         CBORObject.NewArray().Add(1),
-         patch);
+        null,
+        CBORObject.NewArray().Add(1),
+        patch);
 
       this.TestApplyJSONPatchOp(
-         null,
-         CBORObject.NewArray().Add(1),
-         patch);
+        null,
+        CBORObject.NewArray().Add(1),
+        patch);
       patch = CBORObject.NewArray().Add(
-         CBORObject.NewMap().Add("op", "replace"));
+          CBORObject.NewMap().Add("op", "replace"));
       this.TestApplyJSONPatchOp(
-         null,
-         CBORObject.NewArray().Add(1),
-         patch);
+        null,
+        CBORObject.NewArray().Add(1),
+        patch);
       patch = CBORObject.NewArray().Add(
-         CBORObject.NewMap().Add("op", "replace").Add("valuuuuu", 2));
+          CBORObject.NewMap().Add("op", "replace").Add("valuuuuu", 2));
       this.TestApplyJSONPatchOp(
-         null,
-         CBORObject.NewArray().Add(1),
-         patch);
+        null,
+        CBORObject.NewArray().Add(1),
+        patch);
       patch = CBORObject.NewArray().Add(
-         CBORObject.NewMap().Add("op", "replace").Add("path", "/0"));
+          CBORObject.NewMap().Add("op", "replace").Add("path", "/0"));
       this.TestApplyJSONPatchOp(
-         null,
-         CBORObject.NewArray().Add(1),
-         patch);
+        null,
+        CBORObject.NewArray().Add(1),
+        patch);
 
       this.TestApplyJSONPatchOpReplace(
-         CBORObject.NewArray().Add(1).Add(3),
-         CBORObject.NewArray().Add(1).Add(2),
-         "/1",
-         3);
+        CBORObject.NewArray().Add(1).Add(3),
+        CBORObject.NewArray().Add(1).Add(2),
+        "/1",
+        3);
       this.TestApplyJSONPatchOpReplace(
-         CBORObject.NewArray().Add(3).Add(2),
-         CBORObject.NewArray().Add(1).Add(2),
-         "/0",
-         3);
+        CBORObject.NewArray().Add(3).Add(2),
+        CBORObject.NewArray().Add(1).Add(2),
+        "/0",
+        3);
       this.TestApplyJSONPatchOpReplace(
-         null,
-         CBORObject.NewArray().Add(1).Add(2),
-         "/00",
-         3);
+        null,
+        CBORObject.NewArray().Add(1).Add(2),
+        "/00",
+        3);
       this.TestApplyJSONPatchOpReplace(
-         null,
-         CBORObject.NewArray().Add(1).Add(2),
-         "/00000",
-         3);
+        null,
+        CBORObject.NewArray().Add(1).Add(2),
+        "/00000",
+        3);
       this.TestApplyJSONPatchOpReplace(
-         CBORObject.NewMap().Add("f1", "f2").Add("f3", 3),
-         CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
-         "/f3",
-         3);
+        CBORObject.NewMap().Add("f1", "f2").Add("f3", 3),
+        CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
+        "/f3",
+        3);
       this.TestApplyJSONPatchOpReplace(
-         CBORObject.NewMap().Add("f1", 3).Add("f3", "f4"),
-         CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
-         "/f1",
-         3);
+        CBORObject.NewMap().Add("f1", 3).Add("f3", "f4"),
+        CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
+        "/f1",
+        3);
       this.TestApplyJSONPatchOpReplace(
-         null,
-         CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
-         "/foo",
-         3);
+        null,
+        CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
+        "/foo",
+        3);
       this.TestApplyJSONPatchOpReplace(
-         null,
-         CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
-         "/f1/xyz",
-         3);
+        null,
+        CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
+        "/f1/xyz",
+        3);
       this.TestApplyJSONPatchOpReplace(
-         null,
-         CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
-         "/f1/",
-         3);
+        null,
+        CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
+        "/f1/",
+        3);
       this.TestApplyJSONPatchOpReplace(
-         null,
-         CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
-         "/0",
-         3);
+        null,
+        CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
+        "/0",
+        3);
       this.TestApplyJSONPatchOpReplace(
-         null,
-         CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
-         "/-",
-         3);
+        null,
+        CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
+        "/-",
+        3);
       this.TestApplyJSONPatchOpReplace(
-         null,
-         CBORObject.NewArray().Add(1).Add(2),
-         "/-",
-         3);
+        null,
+        CBORObject.NewArray().Add(1).Add(2),
+        "/-",
+        3);
       this.TestApplyJSONPatchOpReplace(
-         null,
-         CBORObject.NewArray().Add(1).Add(2),
-         "/foo",
-         3);
+        null,
+        CBORObject.NewArray().Add(1).Add(2),
+        "/foo",
+        3);
       this.TestApplyJSONPatchOpRemove(
-         CBORObject.NewArray().Add(1),
-         CBORObject.NewArray().Add(1).Add(2),
-         "/1");
+        CBORObject.NewArray().Add(1),
+        CBORObject.NewArray().Add(1).Add(2),
+        "/1");
       this.TestApplyJSONPatchOpRemove(
-         null,
-         CBORObject.NewArray().Add(1).Add(2),
-         "/01");
+        null,
+        CBORObject.NewArray().Add(1).Add(2),
+        "/01");
       this.TestApplyJSONPatchOpRemove(
-         CBORObject.NewArray().Add(2),
-         CBORObject.NewArray().Add(1).Add(2),
-         "/0");
+        CBORObject.NewArray().Add(2),
+        CBORObject.NewArray().Add(1).Add(2),
+        "/0");
       this.TestApplyJSONPatchOpRemove(
-         CBORObject.NewMap().Add("f1", "f2"),
-         CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
-         "/f3");
+        CBORObject.NewMap().Add("f1", "f2"),
+        CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
+        "/f3");
       this.TestApplyJSONPatchOpRemove(
-         CBORObject.NewMap().Add("f3", "f4"),
-         CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
-         "/f1");
+        CBORObject.NewMap().Add("f3", "f4"),
+        CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
+        "/f1");
       this.TestApplyJSONPatchOpRemove(
-         null,
-         CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
-         "/foo");
+        null,
+        CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
+        "/foo");
       this.TestApplyJSONPatchOpRemove(
-         null,
-         CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
-         "/f1/xyz");
+        null,
+        CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
+        "/f1/xyz");
       this.TestApplyJSONPatchOpRemove(
-         null,
-         CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
-         "/f1/");
+        null,
+        CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
+        "/f1/");
       this.TestApplyJSONPatchOpRemove(
-         null,
-         CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
-         "/0");
+        null,
+        CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
+        "/0");
       this.TestApplyJSONPatchOpRemove(
-         null,
-         CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
-         "/-");
+        null,
+        CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
+        "/-");
       this.TestApplyJSONPatchOpRemove(
-         null,
-         CBORObject.NewArray().Add(1).Add(2),
-         "/-");
+        null,
+        CBORObject.NewArray().Add(1).Add(2),
+        "/-");
       this.TestApplyJSONPatchOpRemove(
-         null,
-         CBORObject.NewArray().Add(1).Add(2),
-         "/foo");
+        null,
+        CBORObject.NewArray().Add(1).Add(2),
+        "/foo");
       this.TestApplyJSONPatchOpAdd(
-         CBORObject.NewArray().Add(1),
-         CBORObject.NewArray(),
-         "/-",
-         1);
+        CBORObject.NewArray().Add(1),
+        CBORObject.NewArray(),
+        "/-",
+        1);
       this.TestApplyJSONPatchOpAdd(
-         CBORObject.NewArray().Add(1),
-         CBORObject.NewArray(),
-         "/0",
-         1);
+        CBORObject.NewArray().Add(1),
+        CBORObject.NewArray(),
+        "/0",
+        1);
       this.TestApplyJSONPatchOpAdd(
-         null,
-         CBORObject.NewArray(),
-         "/1",
-         1);
+        null,
+        CBORObject.NewArray(),
+        "/1",
+        1);
       this.TestApplyJSONPatchOpAdd(
-         CBORObject.NewArray().Add(1).Add(2),
-         CBORObject.NewArray().Add(1),
-         "/-",
-         2);
+        CBORObject.NewArray().Add(1).Add(2),
+        CBORObject.NewArray().Add(1),
+        "/-",
+        2);
       this.TestApplyJSONPatchOpAdd(
-         CBORObject.NewArray().Add(0).Add(1).Add(2),
-         CBORObject.NewArray().Add(1).Add(2),
-         "/0",
-         0);
+        CBORObject.NewArray().Add(0).Add(1).Add(2),
+        CBORObject.NewArray().Add(1).Add(2),
+        "/0",
+        0);
       this.TestApplyJSONPatchOpAdd(
-         CBORObject.NewArray().Add(1).Add(0).Add(2),
-         CBORObject.NewArray().Add(1).Add(2),
-         "/1",
-         0);
+        CBORObject.NewArray().Add(1).Add(0).Add(2),
+        CBORObject.NewArray().Add(1).Add(2),
+        "/1",
+        0);
       this.TestApplyJSONPatchOpAdd(
-         CBORObject.NewArray().Add(1).Add(2).Add(0),
-         CBORObject.NewArray().Add(1).Add(2),
-         "/2",
-         0);
+        CBORObject.NewArray().Add(1).Add(2).Add(0),
+        CBORObject.NewArray().Add(1).Add(2),
+        "/2",
+        0);
       this.TestApplyJSONPatchOpAdd(
-         null,
-         CBORObject.NewArray().Add(1).Add(2),
-         "/3",
-         0);
+        null,
+        CBORObject.NewArray().Add(1).Add(2),
+        "/3",
+        0);
       this.TestApplyJSONPatchOpAdd(
-         null,
-         CBORObject.NewArray().Add(1).Add(2),
-         "/foo",
-         0);
+        null,
+        CBORObject.NewArray().Add(1).Add(2),
+        "/foo",
+        0);
       this.TestApplyJSONPatchOpAdd(
-         CBORObject.NewMap().Add("foo", "bar"),
-         CBORObject.NewMap(),
-         "/foo",
-         "bar");
+        CBORObject.NewMap().Add("foo", "bar"),
+        CBORObject.NewMap(),
+        "/foo",
+        "bar");
       this.TestApplyJSONPatchOpAdd(
-         CBORObject.NewMap().Add("foo", "baz"),
-         CBORObject.NewMap().Add("foo", "bar"),
-         "/foo",
-         "baz");
+        CBORObject.NewMap().Add("foo", "baz"),
+        CBORObject.NewMap().Add("foo", "bar"),
+        "/foo",
+        "baz");
     }
 
     [Test]
@@ -8551,32 +8550,32 @@ err = testcbor.GetOrDefault("error",
     }
 
     private static string RandomQueryStringLike(IRandomGenExtended irg) {
-       var sb = new StringBuilder();
-       while (true) {
-          int x = irg.GetInt32(100);
-          if (x == 0) {
-            break;
-          } else if (x < 10) {
-            sb.Append('&');
-          } else if (x < 20) {
-            sb.Append('=');
-          } else if (x < 25) {
-            string hex = "0123456789ABCDEF";
-            sb.Append('%');
-            sb.Append(hex[irg.GetInt32(hex.Length)]);
-            sb.Append(hex[irg.GetInt32(hex.Length)]);
-          } else if (x < 30) {
-            string hex = "0123456789abcdef";
-            sb.Append('%');
-            sb.Append(hex[irg.GetInt32(hex.Length)]);
-            sb.Append(hex[irg.GetInt32(hex.Length)]);
-          } else if (x < 95) {
-            sb.Append((char)(irg.GetInt32(0x5e) + 0x21));
-          } else {
-            sb.Append((char)irg.GetInt32(0x80));
-          }
-       }
-       return sb.ToString();
+      var sb = new StringBuilder();
+      while (true) {
+        int x = irg.GetInt32(100);
+        if (x == 0) {
+          break;
+        } else if (x < 10) {
+          sb.Append('&');
+        } else if (x < 20) {
+          sb.Append('=');
+        } else if (x < 25) {
+          string hex = "0123456789ABCDEF";
+          sb.Append('%');
+          sb.Append(hex[irg.GetInt32(hex.Length)]);
+          sb.Append(hex[irg.GetInt32(hex.Length)]);
+        } else if (x < 30) {
+          string hex = "0123456789abcdef";
+          sb.Append('%');
+          sb.Append(hex[irg.GetInt32(hex.Length)]);
+          sb.Append(hex[irg.GetInt32(hex.Length)]);
+        } else if (x < 95) {
+          sb.Append((char)(irg.GetInt32(0x5e) + 0x21));
+        } else {
+          sb.Append((char)irg.GetInt32(0x80));
+        }
+      }
+      return sb.ToString();
     }
 
     [Test]
@@ -8585,7 +8584,7 @@ err = testcbor.GetOrDefault("error",
       String test = "a=b&c=d&e=f&g\u005b0]=h&g\u005b1]=j&g\u005b2]\u005b";
       test += "a]=k&g\u005b2]\u005bb]=m";
       CBORObject cbor =
-CBORObject.FromObject(QueryStringHelper.QueryStringToDict(test));
+        CBORObject.FromObject(QueryStringHelper.QueryStringToDict(test));
       Console.WriteLine(cbor.ToJSONString());
       cbor = CBORObject.FromObject(QueryStringHelper.QueryStringToCBOR(test));
       Console.WriteLine(cbor.ToJSONString());
@@ -8634,7 +8633,7 @@ CBORObject.FromObject(QueryStringHelper.QueryStringToDict(test));
         double cbordbl = cbor.AsDoubleValue();
         if (dbl != cbordbl) {
           Assert.Fail("dbl = " + dbl + ", cbordbl = " + cbordbl + ", " +
-             json + " " + numconv + " " + dbl);
+            json + " " + numconv + " " + dbl);
         }
       }
     }
@@ -8698,11 +8697,10 @@ CBORObject.FromObject(QueryStringHelper.QueryStringToDict(test));
     }
 
     private static readonly JSONOptions JSONOptionsDouble = new JSONOptions(
-        "numberconversion=double");
+      "numberconversion=double");
     private static readonly JSONOptions JSONOptionsFull = new JSONOptions(
-        "numberconversion=full");
+      "numberconversion=full");
 
-    [Test]
     public static void TestParseNumberFxxLine(string line) {
       // Parse test case format used in:
       // https://github.com/nigeltao/parse-number-fxx-test-data
@@ -8711,7 +8709,7 @@ CBORObject.FromObject(QueryStringHelper.QueryStringToDict(test));
         Assert.Fail(line);
       }
       string f32 = line.Substring(4 + 1, 8);
-      if (line[4+ 1 + 8] != ' ') {
+      if (line[4 + 9] != ' ') {
         Assert.Fail(line);
       }
       string f64 = line.Substring(4 + 1 + 8 + 1, 16);
@@ -8731,68 +8729,68 @@ CBORObject.FromObject(QueryStringHelper.QueryStringToDict(test));
       int f32,
       long f64,
       string line) {
-       if (str[0] == '.' || str[str.Length - 1] =='.' ||
-            str.Contains(".e") || str.Contains(".E")) {
-          // Not a valid JSON number, so skip
-          // Console.WriteLine(str);
-          return;
-       }
-       CBORObject cbor = CBORDataUtilities.ParseJSONNumber(str,
-  JSONOptionsDouble);
-       if (cbor == null) {
-         Console.WriteLine(str);
-         return;
-       }
-       Assert.AreEqual(f64, cbor.AsDoubleBits(), line);
-       cbor = CBORObject.FromJSONString(str, JSONOptionsDouble);
-       Assert.AreEqual(f64, cbor.AsDoubleBits(), line);
-       cbor = CBORObject.FromJSONBytes(
+      if (str[0] == '.' || str[str.Length - 1] == '.' ||
+        str.Contains(".e") || str.Contains(".E")) {
+        // Not a valid JSON number, so skip
+        // Console.WriteLine(str);
+        return;
+      }
+      CBORObject cbor = CBORDataUtilities.ParseJSONNumber(str,
+          JSONOptionsDouble);
+      if (cbor == null) {
+        Console.WriteLine(str);
+        return;
+      }
+      Assert.AreEqual(f64, cbor.AsDoubleBits(), line);
+      cbor = CBORObject.FromJSONString(str, JSONOptionsDouble);
+      Assert.AreEqual(f64, cbor.AsDoubleBits(), line);
+      cbor = CBORObject.FromJSONBytes(
           DataUtilities.GetUtf8Bytes(str, false),
           JSONOptionsDouble);
-       Assert.AreEqual(f64, cbor.AsDoubleBits(), line);
-       float sing = CBORObject.FromFloatingPointBits(f32, 4).AsSingle();
-       cbor = CBORDataUtilities.ParseJSONNumber(str, JSONOptionsFull);
-       if (cbor == null) {
-         Assert.Fail();
-       }
-       Assert.AreEqual(sing, cbor.AsSingle(), line);
-       cbor = CBORObject.FromJSONString(str, JSONOptionsFull);
-       Assert.AreEqual(sing, cbor.AsSingle(), line);
-       cbor = CBORObject.FromJSONBytes(
+      Assert.AreEqual(f64, cbor.AsDoubleBits(), line);
+      float sing = CBORObject.FromFloatingPointBits(f32, 4).AsSingle();
+      cbor = CBORDataUtilities.ParseJSONNumber(str, JSONOptionsFull);
+      if (cbor == null) {
+        Assert.Fail();
+      }
+      Assert.AreEqual(sing, cbor.AsSingle(), line);
+      cbor = CBORObject.FromJSONString(str, JSONOptionsFull);
+      Assert.AreEqual(sing, cbor.AsSingle(), line);
+      cbor = CBORObject.FromJSONBytes(
           DataUtilities.GetUtf8Bytes(str, false),
           JSONOptionsFull);
-       Assert.AreEqual(sing, cbor.AsSingle(), line);
-       // TODO: Test f16
+      Assert.AreEqual(sing, cbor.AsSingle(), line);
+      // TODO: Test f16
     }
 
-     [Test]
-     public void TestCloseToPowerOfTwo() {
-        for (var i = 31; i < 129; ++i) {
-           EInteger ei = EInteger.FromInt32(1).ShiftLeft(i);
-           {
-              AssertJSONDouble(
-                 ei.ToString(),
-                 "double",
-                 EFloat.FromEInteger(ei).ToDouble());
-              AssertJSONDouble(
-                 ei.Add(1).ToString(),
-                 "double",
-                 EFloat.FromEInteger(ei.Add(1)).ToDouble());
-              AssertJSONDouble(
-                 ei.Subtract(2).ToString(),
-                 "double",
-                 EFloat.FromEInteger(ei.Subtract(2)).ToDouble());
-              AssertJSONDouble(
-                 ei.Add(2).ToString(),
-                 "double",
-                 EFloat.FromEInteger(ei.Add(2)).ToDouble());
-              AssertJSONDouble(
-                 ei.Subtract(2).ToString(),
-                 "double",
-                 EFloat.FromEInteger(ei.Subtract(2)).ToDouble());
-           }
+    [Test]
+    public void TestCloseToPowerOfTwo() {
+      for (var i = 31; i < 129; ++i) {
+        EInteger ei = EInteger.FromInt32(1).ShiftLeft(i);
+        {
+          AssertJSONDouble(
+            ei.ToString(),
+            "double",
+            EFloat.FromEInteger(ei).ToDouble());
+          AssertJSONDouble(
+            ei.Add(1).ToString(),
+            "double",
+            EFloat.FromEInteger(ei.Add(1)).ToDouble());
+          AssertJSONDouble(
+            ei.Subtract(2).ToString(),
+            "double",
+            EFloat.FromEInteger(ei.Subtract(2)).ToDouble());
+          AssertJSONDouble(
+            ei.Add(2).ToString(),
+            "double",
+            EFloat.FromEInteger(ei.Add(2)).ToDouble());
+          AssertJSONDouble(
+            ei.Subtract(2).ToString(),
+            "double",
+            EFloat.FromEInteger(ei.Subtract(2)).ToDouble());
         }
-     }
+      }
+    }
 
     [Test]
     public void TestFromJsonStringFastCases() {
@@ -8910,62 +8908,62 @@ CBORObject.FromObject(QueryStringHelper.QueryStringToDict(test));
       string decstr = "0E100441809235791722330759976";
       Assert.AreEqual(0L, EDecimal.FromString(decstr).ToDoubleBits());
       Assert.AreEqual(0L, EFloat.FromString(decstr).ToDoubleBits());
-    {
+      {
         object objectTemp = 0L;
         object objectTemp2 = EDecimal.FromString(decstr,
-  EContext.Decimal32).ToDoubleBits();
+            EContext.Decimal32).ToDoubleBits();
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       {
         object objectTemp = 0L;
         object objectTemp2 = EFloat.FromString(decstr,
-  EContext.Binary64).ToDoubleBits();
+            EContext.Binary64).ToDoubleBits();
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       decstr = "0E-100441809235791722330759976";
       Assert.AreEqual(0L, EDecimal.FromString(decstr).ToDoubleBits());
       Assert.AreEqual(0L, EFloat.FromString(decstr).ToDoubleBits());
-    {
+      {
         object objectTemp = 0L;
         object objectTemp2 = EDecimal.FromString(decstr,
-  EContext.Decimal32).ToDoubleBits();
+            EContext.Decimal32).ToDoubleBits();
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       {
         object objectTemp = 0L;
         object objectTemp2 = EFloat.FromString(decstr,
-  EContext.Binary64).ToDoubleBits();
+            EContext.Binary64).ToDoubleBits();
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       decstr = "-0E100441809235791722330759976";
       long negzero = 1L << 63;
       Assert.AreEqual(negzero, EDecimal.FromString(decstr).ToDoubleBits());
       Assert.AreEqual(negzero, EFloat.FromString(decstr).ToDoubleBits());
-    {
+      {
         object objectTemp = negzero;
         object objectTemp2 = EDecimal.FromString(decstr,
-  EContext.Decimal32).ToDoubleBits();
+            EContext.Decimal32).ToDoubleBits();
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       {
         object objectTemp = negzero;
         object objectTemp2 = EFloat.FromString(decstr,
-  EContext.Binary64).ToDoubleBits();
+            EContext.Binary64).ToDoubleBits();
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       decstr = "-0E-100441809235791722330759976";
       Assert.AreEqual(negzero, EDecimal.FromString(decstr).ToDoubleBits());
       Assert.AreEqual(negzero, EFloat.FromString(decstr).ToDoubleBits());
-    {
+      {
         object objectTemp = negzero;
         object objectTemp2 = EDecimal.FromString(decstr,
-  EContext.Decimal32).ToDoubleBits();
+            EContext.Decimal32).ToDoubleBits();
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       {
         object objectTemp = negzero;
         object objectTemp2 = EFloat.FromString(decstr,
-  EContext.Binary64).ToDoubleBits();
+            EContext.Binary64).ToDoubleBits();
         Assert.AreEqual(objectTemp, objectTemp2);
       }
     }
@@ -9024,140 +9022,140 @@ CBORObject.FromObject(QueryStringHelper.QueryStringToDict(test));
 
     [Test]
     public void TestFromJsonCTLInString() {
-       for (var i = 0; i <= 0x20; ++i) {
-          byte[] bytes = {0x22, (byte)i, 0x22 };
-          char[] chars = {(char)0x22, (char)i, (char)0x22 };
-          string str = new String(chars, 0, chars.Length);
-          if (i == 0x20) {
-             try {
- CBORObject.FromJSONString(str);
-} catch (Exception ex) {
-Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
-             try {
- CBORObject.FromJSONBytes(bytes);
-} catch (Exception ex) {
-Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
-          } else {
-             try {
- CBORObject.FromJSONString(str);
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
-             try {
- CBORObject.FromJSONBytes(bytes);
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+      for (var i = 0; i <= 0x20; ++i) {
+        byte[] bytes = { 0x22, (byte)i, 0x22 };
+        char[] chars = { (char)0x22, (char)i, (char)0x22 };
+        string str = new String(chars, 0, chars.Length);
+        if (i == 0x20) {
+          try {
+            CBORObject.FromJSONString(str);
+          } catch (Exception ex) {
+            Assert.Fail(ex.ToString());
+            throw new InvalidOperationException(String.Empty, ex);
+          }
+          try {
+            CBORObject.FromJSONBytes(bytes);
+          } catch (Exception ex) {
+            Assert.Fail(ex.ToString());
+            throw new InvalidOperationException(String.Empty, ex);
+          }
+        } else {
+          try {
+            CBORObject.FromJSONString(str);
+            Assert.Fail("Should have failed");
+          } catch (CBORException) {
+            // NOTE: Intentionally empty
+          } catch (Exception ex) {
+            Assert.Fail(ex.ToString());
+            throw new InvalidOperationException(String.Empty, ex);
+          }
+          try {
+            CBORObject.FromJSONBytes(bytes);
+            Assert.Fail("Should have failed");
+          } catch (CBORException) {
+            // NOTE: Intentionally empty
+          } catch (Exception ex) {
+            Assert.Fail(ex.ToString());
+            throw new InvalidOperationException(String.Empty, ex);
           }
         }
-     }
+      }
+    }
 
     // [Test]
     public void TestFromJsonLeadingTrailingCTLBytes() {
-       // TODO: Reenable eventually, once UTF-8 only support
-       // for CBORObject.FromJSONBytes is implemented
-       for (var i = 0; i <= 0x20; ++i) {
-          // Leading CTL
-          byte[] bytes = { (byte)i, 0x31 };
-          if (i == 0x09 || i == 0x0d || i == 0x0a || i == 0x20) {
-             try {
- CBORObject.FromJSONBytes(bytes);
-} catch (Exception ex) {
-Assert.Fail(ex.ToString() + "bytes " + i);
-throw new InvalidOperationException(String.Empty, ex);
-}
-          } else {
-             try {
- CBORObject.FromJSONBytes(bytes);
- Assert.Fail("Should have failed bytes " + i);
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+      // TODO: Reenable eventually, once UTF-8 only support
+      // for CBORObject.FromJSONBytes is implemented
+      for (var i = 0; i <= 0x20; ++i) {
+        // Leading CTL
+        byte[] bytes = { (byte)i, 0x31 };
+        if (i == 0x09 || i == 0x0d || i == 0x0a || i == 0x20) {
+          try {
+            CBORObject.FromJSONBytes(bytes);
+          } catch (Exception ex) {
+            Assert.Fail(ex.ToString() + "bytes " + i);
+            throw new InvalidOperationException(String.Empty, ex);
           }
-          // Trailing CTL
-          bytes = new byte[] { 0x31, (byte)i };
-          if (i == 0x09 || i == 0x0d || i == 0x0a || i == 0x20) {
-             try {
- CBORObject.FromJSONBytes(bytes);
-} catch (Exception ex) {
-Assert.Fail(ex.ToString() + "bytes " + i);
-throw new InvalidOperationException(String.Empty, ex);
-}
-          } else {
-             try {
- CBORObject.FromJSONBytes(bytes);
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString() + "bytes " + i);
- throw new InvalidOperationException(String.Empty, ex);
-}
+        } else {
+          try {
+            CBORObject.FromJSONBytes(bytes);
+            Assert.Fail("Should have failed bytes " + i);
+          } catch (CBORException) {
+            // NOTE: Intentionally empty
+          } catch (Exception ex) {
+            Assert.Fail(ex.ToString());
+            throw new InvalidOperationException(String.Empty, ex);
           }
-       }
+        }
+        // Trailing CTL
+        bytes = new byte[] { 0x31, (byte)i };
+        if (i == 0x09 || i == 0x0d || i == 0x0a || i == 0x20) {
+          try {
+            CBORObject.FromJSONBytes(bytes);
+          } catch (Exception ex) {
+            Assert.Fail(ex.ToString() + "bytes " + i);
+            throw new InvalidOperationException(String.Empty, ex);
+          }
+        } else {
+          try {
+            CBORObject.FromJSONBytes(bytes);
+            Assert.Fail("Should have failed");
+          } catch (CBORException) {
+            // NOTE: Intentionally empty
+          } catch (Exception ex) {
+            Assert.Fail(ex.ToString() + "bytes " + i);
+            throw new InvalidOperationException(String.Empty, ex);
+          }
+        }
+      }
     }
 
     [Test]
     public void TestFromJsonLeadingTrailingCTL() {
-       for (var i = 0; i <= 0x20; ++i) {
-          // Leading CTL
-          char[] chars = {(char)i, (char)0x31 };
-          string str = new String(chars, 0, chars.Length);
-          if (i == 0x09 || i == 0x0d || i == 0x0a || i == 0x20) {
-             try {
- CBORObject.FromJSONString(str);
-} catch (Exception ex) {
-Assert.Fail(ex.ToString() + "string " + i);
-throw new InvalidOperationException(String.Empty, ex);
-}
-          } else {
-             try {
- CBORObject.FromJSONString(str);
- Assert.Fail("Should have failed string " + i);
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
- throw new InvalidOperationException(String.Empty, ex);
-}
+      for (var i = 0; i <= 0x20; ++i) {
+        // Leading CTL
+        char[] chars = { (char)i, (char)0x31 };
+        string str = new String(chars, 0, chars.Length);
+        if (i == 0x09 || i == 0x0d || i == 0x0a || i == 0x20) {
+          try {
+            CBORObject.FromJSONString(str);
+          } catch (Exception ex) {
+            Assert.Fail(ex.ToString() + "string " + i);
+            throw new InvalidOperationException(String.Empty, ex);
           }
-          // Trailing CTL
-          chars = new char[] { (char)0x31, (char)i};
-          str = new String(chars, 0, chars.Length);
-          if (i == 0x09 || i == 0x0d || i == 0x0a || i == 0x20) {
-             try {
- CBORObject.FromJSONString(str);
-} catch (Exception ex) {
-Assert.Fail(ex.ToString() + "string " + i);
-throw new InvalidOperationException(String.Empty, ex);
-}
-          } else {
-             try {
- CBORObject.FromJSONString(str);
- Assert.Fail("Should have failed");
-} catch (CBORException) {
-// NOTE: Intentionally empty
-} catch (Exception ex) {
- Assert.Fail(ex.ToString() + "string " + i);
- throw new InvalidOperationException(String.Empty, ex);
-}
+        } else {
+          try {
+            CBORObject.FromJSONString(str);
+            Assert.Fail("Should have failed string " + i);
+          } catch (CBORException) {
+            // NOTE: Intentionally empty
+          } catch (Exception ex) {
+            Assert.Fail(ex.ToString());
+            throw new InvalidOperationException(String.Empty, ex);
           }
-       }
+        }
+        // Trailing CTL
+        chars = new char[] { (char)0x31, (char)i};
+        str = new String(chars, 0, chars.Length);
+        if (i == 0x09 || i == 0x0d || i == 0x0a || i == 0x20) {
+          try {
+            CBORObject.FromJSONString(str);
+          } catch (Exception ex) {
+            Assert.Fail(ex.ToString() + "string " + i);
+            throw new InvalidOperationException(String.Empty, ex);
+          }
+        } else {
+          try {
+            CBORObject.FromJSONString(str);
+            Assert.Fail("Should have failed");
+          } catch (CBORException) {
+            // NOTE: Intentionally empty
+          } catch (Exception ex) {
+            Assert.Fail(ex.ToString() + "string " + i);
+            throw new InvalidOperationException(String.Empty, ex);
+          }
+        }
+      }
     }
 
     [Test]

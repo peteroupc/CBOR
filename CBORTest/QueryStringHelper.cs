@@ -11,7 +11,7 @@ using PeterO.Cbor;
 namespace Test {
   public sealed class QueryStringHelper {
     private QueryStringHelper() {
-}
+    }
     private static string[] SplitAt(string s, string delimiter) {
       if (delimiter == null || delimiter.Length == 0) {
         throw new ArgumentException();
@@ -140,9 +140,9 @@ namespace Test {
                   }
                 } else {
                   retString.Append((char)((((ret - 0x10000) >> 10) &
-                     0x3ff) | 0xd800));
+                        0x3ff) | 0xd800));
                   retString.Append((char)(((ret - 0x10000) & 0x3ff) |
-                     0xdc00));
+                      0xdc00));
                 }
                 continue;
               }
@@ -161,9 +161,9 @@ namespace Test {
       }
       if (bytesNeeded > 0) {
         // we expected further bytes here,
-          // so throw an exception
-          throw new InvalidOperationException();
-        }
+        // so throw an exception
+        throw new InvalidOperationException();
+      }
       return retString.ToString();
     }
     public static IList<string[]> ParseQueryString(
@@ -257,11 +257,11 @@ namespace Test {
       int count;
       if (value < 100000) {
         if (neg) {
-         chars = new char[6];
-         count = 5;
+          chars = new char[6];
+          count = 5;
         } else {
-         chars = new char[5];
-         count = 4;
+          chars = new char[5];
+          count = 4;
         }
         while (value > 9) {
           int intdivvalue = unchecked((((value >> 1) * 52429) >> 18) & 16383);
@@ -363,7 +363,7 @@ namespace Test {
     }
 
     private static CBORObject ConvertListsToCBOR(IDictionary<string, Object>
-dict) {
+      dict) {
       CBORObject cbor = CBORObject.NewMap();
       foreach (string key in new List<string>(dict.Keys)) {
         object di = dict[key];
@@ -403,7 +403,7 @@ dict) {
     }
 
     private static IDictionary<string, Object> ConvertLists(
-  IDictionary<string, Object> dict) {
+      IDictionary<string, Object> dict) {
       foreach (string key in new List<string>(dict.Keys)) {
         object di = dict[key];
         IDictionary<string, Object> value = di as IDictionary<string, Object>;
@@ -465,15 +465,15 @@ dict) {
         }
       }
       return root;
-      }
+    }
 
-   public static IDictionary<string, Object> QueryStringToDict(string query,
+    public static IDictionary<string, Object> QueryStringToDict(string query,
       string delimiter) {
       // Convert array-like dictionaries to ILists
       return ConvertLists(QueryStringToDictInternal(query, delimiter));
     }
 
-   public static CBORObject QueryStringToCBOR(string query,
+    public static CBORObject QueryStringToCBOR(string query,
       string delimiter) {
       // Convert array-like dictionaries to ILists
       return ConvertListsToCBOR(QueryStringToDictInternal(query, delimiter));

@@ -59,10 +59,10 @@ namespace Test {
           this.index = idx;
           if (escaped) {
             return CBORObject.FromJSONString(js.Substring(
-                startIndex - 1,
-                (endIndex - (startIndex - 1)))); } return
-CBORObject.FromObject(js.Substring(startIndex,
-              (endIndex - 1) - startIndex));
+                  startIndex - 1,
+                  (endIndex - (startIndex - 1)))); } return
+            CBORObject.FromObject(js.Substring(startIndex,
+                (endIndex - 1) - startIndex));
         } else if (c == '\\') {
           this.index = idx++;
           escaped = true;
@@ -81,16 +81,16 @@ CBORObject.FromObject(js.Substring(startIndex,
           0xffff : -1;
         if (!(c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
             c == 'e' || c == 'E')) {
-           numberEndIndex = c < 0 ? this.index : this.index - 1;
-           obj = CBORDataUtilities.ParseJSONNumber(
-             this.jstring.Substring(
-               numberStartIndex,
-               numberEndIndex - numberStartIndex),
-             this.options);
-           if (obj == null) {
-              this.RaiseError("Invalid JSON number");
-           }
-           break;
+          numberEndIndex = c < 0 ? this.index : this.index - 1;
+          obj = CBORDataUtilities.ParseJSONNumber(
+              this.jstring.Substring(
+                numberStartIndex,
+                numberEndIndex - numberStartIndex),
+              this.options);
+          if (obj == null) {
+            this.RaiseError("Invalid JSON number");
+          }
+          break;
         }
       }
       c = numberEndIndex >= this.endPos ? -1 : this.jstring[numberEndIndex];
@@ -272,9 +272,9 @@ CBORObject.FromObject(js.Substring(startIndex,
         throw new ArgumentNullException(nameof(jstring));
       }
       return FromJSONStringWithPointers(
-        jstring,
-        JSONOptions.Default,
-        valpointers);
+          jstring,
+          JSONOptions.Default,
+          valpointers);
     }
 
     public static CBORObject FromJSONStringWithPointers(
@@ -285,16 +285,18 @@ CBORObject.FromObject(js.Substring(startIndex,
         throw new ArgumentNullException(nameof(jstring));
       }
       return ParseJSONValueWithPointers(
-        jstring,
-        0,
-        jstring.Length,
-        options,
-        valpointers);
+          jstring,
+          0,
+          jstring.Length,
+          options,
+          valpointers);
     }
 
-    internal IList<string[]> Pointers { get {
-  return this.pointers;
- } }
+    internal IList<string[]> Pointers {
+      get {
+        return this.pointers;
+      }
+    }
 
     internal static CBORObject ParseJSONValueWithPointers(
       string jstring,
@@ -307,9 +309,10 @@ CBORObject.FromObject(js.Substring(startIndex,
       var i = 0;
       for (i = index; i < endPos; ++i) {
         if (jstring[i] == '#') {
-           {hasHash = true;
+          { hasHash = true;
+          }
+          break;
         }
-        break; }
       }
       // No nonstandard comments, so just use FromJSONString
       if (!hasHash) {
@@ -342,9 +345,10 @@ CBORObject.FromObject(js.Substring(startIndex,
       var i = 0;
       for (i = index; i < endPos; ++i) {
         if (jstring[i] == '#') {
-           {hasHash = true;
+          { hasHash = true;
+          }
+          break;
         }
-        break; }
       }
       // No nonstandard comments, so just use FromJSONString
       if (!hasHash) {
@@ -381,31 +385,31 @@ CBORObject.FromObject(js.Substring(startIndex,
         if (c < 0x10000) {
           ++this.index;
         } else {
- this.index += 2;
-}
+          this.index += 2;
+        }
         if (c == 0x0d || c == 0x09 || c == 0x20) {
           while (this.index < this.endPos) {
-             c = this.jstring[this.index++];
-             if (c != 0x0d && c != 0x09 && c != 0x20) {
-                --this.index;
-                break;
-             }
-           }
-           sb.Append((char)0x20);
+            c = this.jstring[this.index++];
+            if (c != 0x0d && c != 0x09 && c != 0x20) {
+              --this.index;
+              break;
+            }
+          }
+          sb.Append((char)0x20);
         } else if (c == 0x0a) {
           c = this.SkipWhitespaceJSON();
           if (c != 0x23) { // '#' character
-              // Console.WriteLine("last: " + ((char)c));
-              return c;
-           }
+            // Console.WriteLine("last: " + ((char)c));
+            return c;
+          }
         } else {
-if (c <= 0xffff) {
-              { sb.Append((char)c);
-           }
-} else if (c <= 0x10ffff) {
-  sb.Append((char)((((c - 0x10000) >> 10) & 0x3ff) | 0xd800));
-  sb.Append((char)(((c - 0x10000) & 0x3ff) | 0xdc00));
-}
+          if (c <= 0xffff) {
+            { sb.Append((char)c);
+            }
+          } else if (c <= 0x10ffff) {
+            sb.Append((char)((((c - 0x10000) >> 10) & 0x3ff) | 0xd800));
+            sb.Append((char)(((c - 0x10000) & 0x3ff) | 0xdc00));
+          }
         }
       }
       return -1;
@@ -431,7 +435,7 @@ if (c <= 0xffff) {
             }
           }
         } else {
-           this.RaiseError("Internal error");
+          this.RaiseError("Internal error");
         }
       }
       return sb.ToString();
@@ -453,14 +457,14 @@ if (c <= 0xffff) {
       while (true) {
         c = this.SkipWhitespaceJSON();
         if (c == '#') {
-            // Nonstandard comment
-            if (myHashMap.Count == 0) {
-              var sb = new StringBuilder();
-              c = this.NextComment(sb);
-              commentKey = sb.ToString();
-            } else {
-              this.RaiseError("Unexpected comment");
-            }
+          // Nonstandard comment
+          if (myHashMap.Count == 0) {
+            var sb = new StringBuilder();
+            c = this.NextComment(sb);
+            commentKey = sb.ToString();
+          } else {
+            this.RaiseError("Unexpected comment");
+          }
         }
         switch (c) {
           case -1:
@@ -473,8 +477,8 @@ if (c <= 0xffff) {
               return null;
             }
             if (commentKey != null) {
-               string[] keyptr = { commentKey, this.GetJSONPointer() };
-               this.pointers.Add(keyptr);
+              string[] keyptr = { commentKey, this.GetJSONPointer() };
+              this.pointers.Add(keyptr);
             }
             this.PopPointer();
             return CBORObject.FromObject(myHashMap);
@@ -506,9 +510,9 @@ if (c <= 0xffff) {
             depth);
         int newCount = myHashMap.Count;
         if (!this.options.AllowDuplicateKeys &&
-              oldCount == newCount) {
-              this.RaiseError("Duplicate key already exists");
-              return null;
+          oldCount == newCount) {
+          this.RaiseError("Duplicate key already exists");
+          return null;
         }
         switch (nextchar[0]) {
           case ',':
@@ -517,36 +521,37 @@ if (c <= 0xffff) {
           case '}':
             this.PopPointer();
             if (commentKey != null) {
-               string[] keyptr = { commentKey, this.GetJSONPointer() };
-               this.pointers.Add(keyptr);
+              string[] keyptr = { commentKey, this.GetJSONPointer() };
+              this.pointers.Add(keyptr);
             }
             return CBORObject.FromObject(myHashMap);
-          default: this.RaiseError("Expected a ',' or '}'");
+          default:
+            this.RaiseError("Expected a ',' or '}'");
             break;
         }
       }
     }
 
     private void SetPointer(CBORObject obj) {
-       this.currPointer[this.currPointerStackSize - 1] = obj;
+      this.currPointer[this.currPointerStackSize - 1] = obj;
     }
 
     private void PushPointer() {
-if (this.currPointerStackSize > this.currPointer.Count) {
-         this.RaiseError("Internal error");
-       };
-       if (this.currPointerStackSize == this.currPointer.Count) {
-         this.currPointer.Add(CBORObject.Null);
-       } else {
-          this.currPointer[this.currPointerStackSize] = CBORObject.Null;
-       }
-       ++this.currPointerStackSize;
+      if (this.currPointerStackSize > this.currPointer.Count) {
+        this.RaiseError("Internal error");
+      };
+      if (this.currPointerStackSize == this.currPointer.Count) {
+        this.currPointer.Add(CBORObject.Null);
+      } else {
+        this.currPointer[this.currPointerStackSize] = CBORObject.Null;
+      }
+      ++this.currPointerStackSize;
     }
     private void PopPointer() {
-if (this.currPointerStackSize < 0) {
-         this.RaiseError("Internal error");
-       };
-       --this.currPointerStackSize;
+      if (this.currPointerStackSize < 0) {
+        this.RaiseError("Internal error");
+      };
+      --this.currPointerStackSize;
     }
 
     internal CBORObject ParseJSONArray(int depth) {
@@ -587,7 +592,8 @@ if (this.currPointerStackSize < 0) {
             break;
           case ']':
             return myArrayList;
-          default: this.RaiseError("Expected a ',' or ']'");
+          default:
+            this.RaiseError("Expected a ',' or ']'");
             break;
         }
       }

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard1.0</TargetFrameworks>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>4.4.2</Version>
+    <Version>4.5</Version>
     <Owners>Peter Occil</Owners>
     <Description>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 8949.</Description>
     <Summary>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 8949. </Summary>
@@ -56,6 +56,6 @@ Version 4.4:
  <AdditionalFiles Include='stylecop.json'/>
 <AdditionalFiles Include='rules.ruleset'/><PackageReference Include='PeterO.URIUtility' Version='1.0.0'/>
 
-<PackageReference Include='PeterO.Numbers' Version='1.8.0'/>
+<PackageReference Include='PeterO.Numbers' Version='1.8.1'/>
 <PackageReference Include='Microsoft.CodeAnalysis.NetAnalyzers' PrivateAssets='All' Version='5.0.3'/></ItemGroup>
                   </Project>

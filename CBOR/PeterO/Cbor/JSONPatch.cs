@@ -50,20 +50,20 @@ namespace PeterO.Cbor {
         case CBORType.ByteString:
         case CBORType.Map:
         case CBORType.Array:
-           return CBORObject.DecodeFromBytes(o.EncodeToBytes());
+          return CBORObject.DecodeFromBytes(o.EncodeToBytes());
         default: return o;
       }
     }
 
     private static string GetString(CBORObject o, string str) {
-#if DEBUG
+      #if DEBUG
       if (o == null) {
         throw new ArgumentNullException(nameof(o));
       }
       if (str == null) {
         throw new ArgumentNullException(nameof(str));
       }
-#endif
+      #endif
 
       CBORObject co = o.GetOrDefault(str, null);
       if (co == null) {
@@ -89,11 +89,11 @@ namespace PeterO.Cbor {
       o = CloneCbor(o);
       for (int i = 0; i < ptch.Count; ++i) {
         CBORObject patchOp = ptch[i];
-#if DEBUG
+        #if DEBUG
         if (patchOp == null) {
           throw new ArgumentNullException(nameof(patchOp));
         }
-#endif
+        #endif
 
         // NOTE: This algorithm requires "op" to exist
         // only once; the CBORObject, however, does not
@@ -107,21 +107,21 @@ namespace PeterO.Cbor {
           }
           value = patchOp["value"];
           o = AddOperation(
-            o,
-            valueOpStr,
-            GetString(patchOp, "path"),
-          value);
+              o,
+              valueOpStr,
+              GetString(patchOp, "path"),
+              value);
         } else if ("replace".Equals(valueOpStr, StringComparison.Ordinal)) {
           // operation
           CBORObject value = patchOp.GetOrDefault("value", null);
           if (value == null) {
             throw new CBORException("Patch " + valueOpStr + " value");
           }
-#if DEBUG
+          #if DEBUG
           if (o == null) {
             throw new ArgumentNullException(nameof(o));
           }
-#endif
+          #endif
 
           o = ReplaceOperation(
               o,
@@ -151,9 +151,9 @@ namespace PeterO.Cbor {
           if (path.Equals(fromPath)) {
             JSONPointer pointer = JSONPointer.FromPointer(o, path);
             if (pointer.Exists()) {
-                // Moving to the same path, so return
-                return o;
-             }
+              // Moving to the same path, so return
+              return o;
+            }
           }
           // if (path.StartsWith(fromPath, StringComparison.Ordinal)) {
           // throw new CBORException("Patch " + valueOpStr + ": startsWith failed " +
@@ -202,7 +202,7 @@ namespace PeterO.Cbor {
             throw new CBORException("Patch " + valueOpStr);
           }
         } else {
-            throw new CBORException("Unrecognized op");
+          throw new CBORException("Unrecognized op");
         }
       }
       return (o == null) ? CBORObject.Null : o;
@@ -227,8 +227,8 @@ namespace PeterO.Cbor {
         if (pointer.GetParent().Type == CBORType.Array) {
           ((CBORObject)pointer.GetParent()).RemoveAt(pointer.GetIndex());
         } else if (pointer.GetParent().Type == CBORType.Map) {
-           ((CBORObject)pointer.GetParent()).Remove(
-               CBORObject.FromObject(pointer.GetKey()));
+          ((CBORObject)pointer.GetParent()).Remove(
+            CBORObject.FromObject(pointer.GetKey()));
         }
         return o;
       }
@@ -242,11 +242,11 @@ namespace PeterO.Cbor {
       if (path == null) {
         throw new CBORException("Patch " + valueOpStr);
       }
-#if DEBUG
+      #if DEBUG
       if (o == null) {
         throw new ArgumentNullException(nameof(o));
       }
-#endif
+      #endif
 
       if (path.Length == 0) {
         o = value;

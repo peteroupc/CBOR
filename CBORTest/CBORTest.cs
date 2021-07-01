@@ -1733,14 +1733,44 @@ namespace Test {
       long doublepnan = unchecked((long)0x7ff8000000000000L);
       int singlennan = unchecked((int)0xffc00000);
       int singlepnan = unchecked((int)0x7fc00000);
-      int halfnnan = 0xfe00;
-      int halfpnan = 0x7e00;
-      Assert.AreEqual(doublennan, CBORObject.FromFloatingPointBits(doublennan,8).AsDoubleBits());
-      Assert.AreEqual(doublepnan, CBORObject.FromFloatingPointBits(doublepnan,8).AsDoubleBits());
-      Assert.AreEqual(doublennan, CBORObject.FromFloatingPointBits(singlennan,4).AsDoubleBits());
-      Assert.AreEqual(doublepnan, CBORObject.FromFloatingPointBits(singlepnan,4).AsDoubleBits());
-      Assert.AreEqual(doublennan, CBORObject.FromFloatingPointBits(halfnnan,2).AsDoubleBits());
-      Assert.AreEqual(doublepnan, CBORObject.FromFloatingPointBits(halfpnan,2).AsDoubleBits());
+      var halfnnan = 0xfe00;
+      var halfpnan = 0x7e00;
+      {
+        object objectTemp = doublennan;
+        object objectTemp2 = CBORObject.FromFloatingPointBits(doublennan,
+          8).AsDoubleBits();
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
+      {
+        object objectTemp = doublepnan;
+        object objectTemp2 = CBORObject.FromFloatingPointBits(doublepnan,
+          8).AsDoubleBits();
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
+      {
+        object objectTemp = doublennan;
+        object objectTemp2 = CBORObject.FromFloatingPointBits(singlennan,
+          4).AsDoubleBits();
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
+      {
+        object objectTemp = doublepnan;
+        object objectTemp2 = CBORObject.FromFloatingPointBits(singlepnan,
+          4).AsDoubleBits();
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
+      {
+        object objectTemp = doublennan;
+        object objectTemp2 = CBORObject.FromFloatingPointBits(halfnnan,
+          2).AsDoubleBits();
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
+      {
+        object objectTemp = doublepnan;
+        object objectTemp2 = CBORObject.FromFloatingPointBits(halfpnan,
+          2).AsDoubleBits();
+        Assert.AreEqual(objectTemp, objectTemp2);
+      }
     }
 
     [Test]
@@ -1994,32 +2024,32 @@ namespace Test {
     public void TestJSONWithComments() {
       IDictionary<string, string> dict;
       string str = "[\n {\n # Bm\n\"a\":1,\n\"b\":2\n},{\n #" +
-"\u0020Sm\n\"a\":3,\n\"b\":4\n}\n]";
+        "\u0020Sm\n\"a\":3,\n\"b\":4\n}\n]";
       CBORObject obj = JSONWithComments.FromJSONString(str);
       Console.WriteLine(obj);
       str = "[\n {\n # B\n # Dm\n\"a\":1,\n\"b\":2\n},{\n #" +
-       "\u0020Sm\n\"a\":3,\n\"b\":4\n}\n]";
-       obj = JSONWithComments.FromJSONString(str);
+        "\u0020Sm\n\"a\":3,\n\"b\":4\n}\n]";
+      obj = JSONWithComments.FromJSONString(str);
       Console.WriteLine(obj);
       str = "[\n {\n # B A C\n # Dm\n\"a\":1,\n\"b\":2\n},{\n #" +
-       "\u0020Sm\n\"a\":3,\n\"b\":4\n}\n]";
-       obj = JSONWithComments.FromJSONString(str);
+        "\u0020Sm\n\"a\":3,\n\"b\":4\n}\n]";
+      obj = JSONWithComments.FromJSONString(str);
       Console.WriteLine(obj);
       str = "[\n {\n # B\t \tA C\n # Dm\n\"a\":1,\n\"b\":2\n},{\n #" +
-       "\u0020Sm\n\"a\":3,\n\"b\":4\n}\n]";
-       obj = JSONWithComments.FromJSONString(str);
+        "\u0020Sm\n\"a\":3,\n\"b\":4\n}\n]";
+      obj = JSONWithComments.FromJSONString(str);
       Console.WriteLine(obj);
       dict = new Dictionary<string, string>();
       str = "{\"f\":[\n {\n # B\t \tA C\n # Dm\n\"a\":1,\n\"b\":2\n},{\n #" +
-       "\u0020Sm\n\"a\":3,\n\"b\":4\n}\n]}";
-       obj = JSONWithComments.FromJSONString(str);
+        "\u0020Sm\n\"a\":3,\n\"b\":4\n}\n]}";
+      obj = JSONWithComments.FromJSONString(str);
       Console.WriteLine(obj);
-    obj = JSONWithComments.FromJSONStringWithPointers(str, dict);
-    foreach (string key in dict.Keys) {
-         Console.WriteLine(key);
-         Console.WriteLine(dict[key]);
-         Console.WriteLine(obj.AtJSONPointer(dict[key]));
-       }
+      obj = JSONWithComments.FromJSONStringWithPointers(str, dict);
+      foreach (string key in dict.Keys) {
+        Console.WriteLine(key);
+        Console.WriteLine(dict[key]);
+        Console.WriteLine(obj.AtJSONPointer(dict[key]));
+      }
       Console.WriteLine(obj);
     }
 
