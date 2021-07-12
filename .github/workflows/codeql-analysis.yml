@@ -60,6 +60,6 @@ jobs:
         dotnet add CBORTest package GitHubActionsTestLogger
         dotnet add CBORTest package NUnit3TestAdapter
         dotnet build CBORTest -c Release
-        
+
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1

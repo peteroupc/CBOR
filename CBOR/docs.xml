@@ -1972,12 +1972,15 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.ApplyJSONPatch(PeterO.Cbor.CBORObject)">
 
-        <summary>Returns a copy of this object after applying the
+            <summary>Returns a copy of this object after applying the
             operations in a JSON patch, in the form of a CBOR object. JSON
             patches are specified in RFC 6902 and their format is summarized in
-            the remarks below.</summary><param name='patch'>A JSON patch in the form of a CBOR object; it
-            has the form summarized in the remarks.</param><returns>The result of the patch operation.</returns><exception cref='PeterO.Cbor.CBORException'>The parameter <paramref name='patch'/> is null or
-            the patch operation failed.</exception><remarks><b>Remarks:</b> A JSON patch is an array with one or more
+            the remarks below.</summary>
+            <param name='patch'>A JSON patch in the form of a CBOR object; it
+            has the form summarized in the remarks.</param>
+            <returns>The result of the patch operation.</returns>
+            <exception cref='PeterO.Cbor.CBORException'>The parameter <paramref name='patch'/> is null or the patch operation failed.</exception>
+            <remarks><b>Remarks:</b> A JSON patch is an array with one or more
             maps. Each map has the following keys:
             <list>
             <item>"op" - Required. This key's value is the patch operation and
@@ -1995,6 +1998,7 @@
             <item>"from" - Required if the operation is "move" or "copy". A
             JSON Pointer (RFC 6901) specifying the path in the CBOR object
             where the source value is located.</item></list></remarks>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsBoolean">
 
@@ -2340,19 +2344,23 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AtJSONPointer(System.String)">
 
-        <summary>Gets the CBOR object referred to by a JSON Pointer
+            <summary>Gets the CBOR object referred to by a JSON Pointer
             according to RFC6901. For more information, see the overload taking
-            a default value parameter.</summary><param name='pointer'>A JSON pointer according to RFC 6901.</param><returns>An object within this CBOR object. Returns this object if
+            a default value parameter.</summary>
+            <param name='pointer'>A JSON pointer according to RFC 6901.</param>
+            <returns>An object within this CBOR object. Returns this object if
             pointer is the empty string (even if this object has a CBOR type
-            other than array or map).</returns><exception cref='PeterO.Cbor.CBORException'>Thrown if the pointer is null, or
-            if the pointer is invalid, or if there is no object at the given
-            pointer, or the special key "-" appears in the pointer, or if the
-            pointer is non-empty and this object has a CBOR type other than
-            array or map.</exception>
+            other than array or map).</returns>
+            <exception cref='PeterO.Cbor.CBORException'>Thrown if the pointer
+            is null, or if the pointer is invalid, or if there is no object at
+            the given pointer, or the special key "-" appears in the pointer,
+            or if the pointer is non-empty and this object has a CBOR type
+            other than array or map.</exception>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AtJSONPointer(System.String,PeterO.Cbor.CBORObject)">
 
-        <summary>Gets the CBOR object referred to by a JSON Pointer
+            <summary>Gets the CBOR object referred to by a JSON Pointer
             according to RFC6901, or a default value if the operation fails.
             The syntax for a JSON Pointer is:
             <pre>'/' KEY '/' KEY [...]</pre> where KEY represents a key into
@@ -2367,13 +2375,17 @@
             contain only basic digits 0 to 9 and no leading zeros. (Note that
             RFC 6901 was published before JSON was extended to support
             top-level values other than arrays and key-value
-            dictionaries.).</summary><param name='pointer'>A JSON pointer according to RFC 6901.</param><param name='defaultValue'>The parameter <paramref name='defaultValue'/> is a Cbor.CBORObject object.</param><returns>An object within the specified JSON object. Returns this
+            dictionaries.).</summary>
+            <param name='pointer'>A JSON pointer according to RFC 6901.</param>
+            <param name='defaultValue'>The parameter <paramref name='defaultValue'/> is a Cbor.CBORObject object.</param>
+            <returns>An object within the specified JSON object. Returns this
             object if pointer is the empty string (even if this object has a
             CBOR type other than array or map). Returns <paramref name='defaultValue'/> if the pointer is null, or if the pointer is
             invalid, or if there is no object at the given pointer, or the
             special key "-" appears in the pointer, or if the pointer is
             non-empty and this object has a CBOR type other than array or
             map.</returns>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.CalcEncodedSize">
 
@@ -3092,7 +3104,7 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromJSONBytes(System.Byte[])">
 
-        <summary><para>Generates a CBOR object from a byte array in JavaScript
+            <summary><para>Generates a CBOR object from a byte array in JavaScript
             Object Notation (JSON) format.</para>
             <para>If a JSON object has duplicate keys, a CBORException is
             thrown.</para>
@@ -3101,7 +3113,8 @@
             this method, the new CBOR object will not necessarily be the same
             as the old CBOR object, especially if the old CBOR object uses data
             types not supported in JSON, such as integers in map
-            keys.</para></summary><param name='bytes'>A byte array in JSON format. The entire byte
+            keys.</para></summary>
+            <param name='bytes'>A byte array in JSON format. The entire byte
             array must contain a single JSON object and not multiple objects.
             The byte array may begin with a byte-order mark (U+FEFF). The byte
             array can be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is
@@ -3110,12 +3123,16 @@
             (This behavior may change to supporting only UTF-8, with or without
             a byte order mark, in version 5.0 or later, perhaps with an option
             to restore the previous behavior of also supporting UTF-16 and
-            UTF-32.).</param><returns>A CBOR object containing the JSON data decoded.</returns><exception cref='ArgumentNullException'>The parameter <paramref name='bytes'/> is null.</exception><exception cref='PeterO.Cbor.CBORException'>The byte array contains
+            UTF-32.).</param>
+            <returns>A CBOR object containing the JSON data decoded.</returns>
+            <exception cref='ArgumentNullException'>The parameter <paramref name='bytes'/> is null.</exception>
+            <exception cref='PeterO.Cbor.CBORException'>The byte array contains
             invalid encoding or is not in JSON format.</exception>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromJSONBytes(System.Byte[],PeterO.Cbor.JSONOptions)">
 
-        <summary>Generates a CBOR object from a byte array in JavaScript
+            <summary>Generates a CBOR object from a byte array in JavaScript
             Object Notation (JSON) format, using the specified options to
             control the decoding process.
             <para>Note that if a CBOR object is converted to JSON with
@@ -3123,7 +3140,8 @@
             this method, the new CBOR object will not necessarily be the same
             as the old CBOR object, especially if the old CBOR object uses data
             types not supported in JSON, such as integers in map
-            keys.</para></summary><param name='bytes'>A byte array in JSON format. The entire byte
+            keys.</para></summary>
+            <param name='bytes'>A byte array in JSON format. The entire byte
             array must contain a single JSON object and not multiple objects.
             The byte array may begin with a byte-order mark (U+FEFF). The byte
             array can be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is
@@ -3132,14 +3150,19 @@
             (This behavior may change to supporting only UTF-8, with or without
             a byte order mark, in version 5.0 or later, perhaps with an option
             to restore the previous behavior of also supporting UTF-16 and
-            UTF-32.).</param><param name='jsonoptions'>Specifies options to control how the JSON
-            data is decoded to CBOR. See the JSONOptions class.</param><returns>A CBOR object containing the JSON data decoded.</returns><exception cref='ArgumentNullException'>The parameter <paramref name='bytes'/> or <paramref name='jsonoptions'/> is
-            null.</exception><exception cref='PeterO.Cbor.CBORException'>The byte array contains
+            UTF-32.).</param>
+            <param name='jsonoptions'>Specifies options to control how the JSON
+            data is decoded to CBOR. See the JSONOptions class.</param>
+            <returns>A CBOR object containing the JSON data decoded.</returns>
+            <exception cref='ArgumentNullException'>The parameter <paramref name='bytes'/> or <paramref name='jsonoptions'/> is
+            null.</exception>
+            <exception cref='PeterO.Cbor.CBORException'>The byte array contains
             invalid encoding or is not in JSON format.</exception>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromJSONBytes(System.Byte[],System.Int32,System.Int32)">
 
-        <summary><para>Generates a CBOR object from a byte array in JavaScript
+            <summary><para>Generates a CBOR object from a byte array in JavaScript
             Object Notation (JSON) format.</para>
             <para>If a JSON object has duplicate keys, a CBORException is
             thrown.</para>
@@ -3148,7 +3171,8 @@
             this method, the new CBOR object will not necessarily be the same
             as the old CBOR object, especially if the old CBOR object uses data
             types not supported in JSON, such as integers in map
-            keys.</para></summary><param name='bytes'>A byte array, the specified portion of which is
+            keys.</para></summary>
+            <param name='bytes'>A byte array, the specified portion of which is
             in JSON format. The specified portion of the byte array must
             contain a single JSON object and not multiple objects. The portion
             may begin with a byte-order mark (U+FEFF). The portion can be in
@@ -3157,16 +3181,23 @@
             a nonzero basic character (U+0001 to U+007F). (This behavior may
             change to supporting only UTF-8, with or without a byte order mark,
             in version 5.0 or later, perhaps with an option to restore the
-            previous behavior of also supporting UTF-16 and UTF-32.).</param><param name='offset'>An index, starting at 0, showing where the
-            desired portion of <paramref name='bytes'/> begins.</param><param name='count'>The length, in bytes, of the desired portion of
-            <paramref name='bytes'/> (but not more than <paramref name='bytes'/> 's length).</param><returns>A CBOR object containing the JSON data decoded.</returns><exception cref='ArgumentNullException'>The parameter <paramref name='bytes'/> is null.</exception><exception cref='PeterO.Cbor.CBORException'>The byte array contains
-            invalid encoding or is not in JSON format.</exception><exception cref='ArgumentException'>Either <paramref name='offset'/> or <paramref name='count'/> is less than 0 or
+            previous behavior of also supporting UTF-16 and UTF-32.).</param>
+            <param name='offset'>An index, starting at 0, showing where the
+            desired portion of <paramref name='bytes'/> begins.</param>
+            <param name='count'>The length, in bytes, of the desired portion of
+            <paramref name='bytes'/> (but not more than <paramref name='bytes'/> 's length).</param>
+            <returns>A CBOR object containing the JSON data decoded.</returns>
+            <exception cref='ArgumentNullException'>The parameter <paramref name='bytes'/> is null.</exception>
+            <exception cref='PeterO.Cbor.CBORException'>The byte array contains
+            invalid encoding or is not in JSON format.</exception>
+            <exception cref='ArgumentException'>Either <paramref name='offset'/> or <paramref name='count'/> is less than 0 or
             greater than <paramref name='bytes'/> 's length, or <paramref name='bytes'/> 's length minus <paramref name='offset'/> is less
             than <paramref name='count'/>.</exception>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromJSONBytes(System.Byte[],System.Int32,System.Int32,PeterO.Cbor.JSONOptions)">
 
-        <summary>Generates a CBOR object from a byte array in JavaScript
+            <summary>Generates a CBOR object from a byte array in JavaScript
             Object Notation (JSON) format, using the specified options to
             control the decoding process.
             <para>Note that if a CBOR object is converted to JSON with
@@ -3174,7 +3205,8 @@
             this method, the new CBOR object will not necessarily be the same
             as the old CBOR object, especially if the old CBOR object uses data
             types not supported in JSON, such as integers in map
-            keys.</para></summary><param name='bytes'>A byte array, the specified portion of which is
+            keys.</para></summary>
+            <param name='bytes'>A byte array, the specified portion of which is
             in JSON format. The specified portion of the byte array must
             contain a single JSON object and not multiple objects. The portion
             may begin with a byte-order mark (U+FEFF). The portion can be in
@@ -3183,14 +3215,22 @@
             a nonzero basic character (U+0001 to U+007F). (This behavior may
             change to supporting only UTF-8, with or without a byte order mark,
             in version 5.0 or later, perhaps with an option to restore the
-            previous behavior of also supporting UTF-16 and UTF-32.).</param><param name='offset'>An index, starting at 0, showing where the
-            desired portion of <paramref name='bytes'/> begins.</param><param name='count'>The length, in bytes, of the desired portion of
-            <paramref name='bytes'/> (but not more than <paramref name='bytes'/> 's length).</param><param name='jsonoptions'>Specifies options to control how the JSON
-            data is decoded to CBOR. See the JSONOptions class.</param><returns>A CBOR object containing the JSON data decoded.</returns><exception cref='ArgumentNullException'>The parameter <paramref name='bytes'/> or <paramref name='jsonoptions'/> is
-            null.</exception><exception cref='PeterO.Cbor.CBORException'>The byte array contains
-            invalid encoding or is not in JSON format.</exception><exception cref='ArgumentException'>Either <paramref name='offset'/> or <paramref name='count'/> is less than 0 or
+            previous behavior of also supporting UTF-16 and UTF-32.).</param>
+            <param name='offset'>An index, starting at 0, showing where the
+            desired portion of <paramref name='bytes'/> begins.</param>
+            <param name='count'>The length, in bytes, of the desired portion of
+            <paramref name='bytes'/> (but not more than <paramref name='bytes'/> 's length).</param>
+            <param name='jsonoptions'>Specifies options to control how the JSON
+            data is decoded to CBOR. See the JSONOptions class.</param>
+            <returns>A CBOR object containing the JSON data decoded.</returns>
+            <exception cref='ArgumentNullException'>The parameter <paramref name='bytes'/> or <paramref name='jsonoptions'/> is
+            null.</exception>
+            <exception cref='PeterO.Cbor.CBORException'>The byte array contains
+            invalid encoding or is not in JSON format.</exception>
+            <exception cref='ArgumentException'>Either <paramref name='offset'/> or <paramref name='count'/> is less than 0 or
             greater than <paramref name='bytes'/> 's length, or <paramref name='bytes'/> 's length minus <paramref name='offset'/> is less
             than <paramref name='count'/>.</exception>
+
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromJSONSequenceBytes(System.Byte[])">
 
@@ -3505,7 +3545,15 @@
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Double)">
 
             <summary>Generates a CBOR object from a 64-bit floating-point
-            number.</summary>
+            number. The input value can be a not-a-number (NaN) value (such as
+            <c>Double.NaN</c> ); however, NaN values have multiple forms that
+            are equivalent for many applications' purposes, and
+            <c>Double.NaN</c> is only one of these equivalent forms. In fact,
+            <c>CBORObject.FromObject(Double.NaN)</c> could produce a
+            CBOR-encoded object that differs between DotNet and Java, because
+            <c>Double.NaN</c> may have a different form in DotNet and Java (for
+            example, the NaN value's sign may be negative in DotNet, but
+            positive in Java).</summary>
             <param name='value'>The parameter <paramref name='value'/> is a
             64-bit floating-point number.</param>
             <returns>A CBOR object generated from the given number.</returns>
@@ -3791,7 +3839,17 @@
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Single)">
 
             <summary>Generates a CBOR object from a 32-bit floating-point
-            number.</summary>
+            number. The input value can be a not-a-number (NaN) value (such as
+            <c>Single.NaN</c> in DotNet or Float.NaN in Java); however, NaN
+            values have multiple forms that are equivalent for many
+            applications' purposes, and <c>Single.NaN</c> / <c>Float.NaN</c> is
+            only one of these equivalent forms. In fact,
+            <c>CBORObject.FromObject(Single.NaN)</c> or
+            <c>CBORObject.FromObject(Float.NaN)</c> could produce a
+            CBOR-encoded object that differs between DotNet and Java, because
+            <c>Single.NaN</c> / <c>Float.NaN</c> may have a different form in
+            DotNet and Java (for example, the NaN value's sign may be negative
+            in DotNet, but positive in Java).</summary>
             <param name='value'>The parameter <paramref name='value'/> is a
             32-bit floating-point number.</param>
             <returns>A CBOR object generated from the given number.</returns>

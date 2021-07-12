@@ -5,6 +5,7 @@ name: Test
 
 on: [push, pull_request]
 jobs:
+
   Core:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -24,3 +25,6 @@ jobs:
         dotnet add CBORTest package GitHubActionsTestLogger
         dotnet add CBORTest package NUnit3TestAdapter
         dotnet test CBORTest -c Release
+
+permissions:
+  contents: read
