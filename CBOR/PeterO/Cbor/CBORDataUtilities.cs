@@ -110,7 +110,28 @@ obj.Untag().ToJSONString()));
           sb = sb == null ? new StringBuilder() : sb;
           sb.Append('\"');
           string ostring = obj.AsString();
-          sb.Append(ostring);
+          int length = ostring.Length;
+          for (var i = 0; i < length; ++i) {
+            int cp = DataUtilities.CodePointAt(ostring, i, 0);
+            if (cp >= 0x10000) {
+              sb.Append("\\U");
+              sb.Append(HexAlphabet[(cp >> 20) & 15]);
+              sb.Append(HexAlphabet[(cp >> 16) & 15]);
+              sb.Append(HexAlphabet[(cp >> 12) & 15]);
+              sb.Append(HexAlphabet[(cp >> 8) & 15]);
+              sb.Append(HexAlphabet[(cp >> 4) & 15]);
+              sb.Append(HexAlphabet[cp & 15]);
+            } else if (cp >= 0x7F || cp < 0x20 || cp == (int)'\\' || cp==
+(int)'\"') {
+              sb.Append("\\u");
+              sb.Append(HexAlphabet[(cp >> 12) & 15]);
+              sb.Append(HexAlphabet[(cp >> 8) & 15]);
+              sb.Append(HexAlphabet[(cp >> 4) & 15]);
+              sb.Append(HexAlphabet[cp & 15]);
+            } else {
+              sb.Append((char)cp);
+            }
+          }
           sb.Append('\"');
           break;
         }
