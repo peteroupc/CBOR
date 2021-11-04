@@ -144,28 +144,28 @@ namespace PeterO.Cbor {
     /// of basic upper-case and/or basic lower-case letters:
     /// <c>base64padding</c>, <c>replacesurrogates</c>,
     /// <c>allowduplicatekeys</c>, <c>preservenegativezero</c>,
-    /// <c>numberconversion</c>. Other keys are ignored in this version of
-    /// the CBOR library. (Keys are compared using a basic case-insensitive
-    /// comparison, in which two strings are equal if they match after
-    /// converting the basic upper-case letters A to Z (U+0041 to U+005A)
-    /// in both strings to basic lower-case letters.) If two or more
-    /// key/value pairs have equal keys (in a basic case-insensitive
-    /// comparison), the value given for the last such key is used. The
-    /// first four keys just given can have a value of <c>1</c>,
-    /// <c>true</c>, <c>yes</c>, or <c>on</c> (where the letters can be
-    /// any combination of basic upper-case and/or basic lower-case
-    /// letters), which means true, and any other value meaning false. The
-    /// last key, <c>numberconversion</c>, can have a value of any name
-    /// given in the <c>JSONOptions.ConversionMode</c> enumeration (where
-    /// the letters can be any combination of basic upper-case and/or basic
-    /// lower-case letters), and any other value is unrecognized. (If the
-    /// <c>numberconversion</c> key is not given, its value is treated as
-    /// <c>full</c>. If that key is given, but has an unrecognized value,
-    /// an exception is thrown.) For example, <c>base64padding=Yes</c> and
-    /// <c>base64padding=1</c> both set the <c>Base64Padding</c> property
-    /// to true, and <c>numberconversion=double</c> sets the
-    /// <c>NumberConversion</c> property to <c>ConversionMode.Double</c>
-    /// .</param>
+    /// <c>numberconversion</c>, <c>writebasic</c>. Other keys are
+    /// ignored in this version of the CBOR library. (Keys are compared
+    /// using a basic case-insensitive comparison, in which two strings are
+    /// equal if they match after converting the basic upper-case letters A
+    /// to Z (U+0041 to U+005A) in both strings to basic lower-case
+    /// letters.) If two or more key/value pairs have equal keys (in a
+    /// basic case-insensitive comparison), the value given for the last
+    /// such key is used. The first four keys just given can have a value
+    /// of <c>1</c>, <c>true</c>, <c>yes</c>, or <c>on</c> (where the
+    /// letters can be any combination of basic upper-case and/or basic
+    /// lower-case letters), which means true, and any other value meaning
+    /// false. The last key, <c>numberconversion</c>, can have a value of
+    /// any name given in the <c>JSONOptions.ConversionMode</c> enumeration
+    /// (where the letters can be any combination of basic upper-case
+    /// and/or basic lower-case letters), and any other value is
+    /// unrecognized. (If the <c>numberconversion</c> key is not given, its
+    /// value is treated as <c>full</c>. If that key is given, but has an
+    /// unrecognized value, an exception is thrown.) For example,
+    /// <c>base64padding=Yes</c> and <c>base64padding=1</c> both set the
+    /// <c>Base64Padding</c> property to true, and
+    /// <c>numberconversion=double</c> sets the <c>NumberConversion</c>
+    /// property to <c>ConversionMode.Double</c>.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='paramString'/> is null. In the future, this class may allow
     /// other keys to store other kinds of values, not just true or
@@ -190,6 +190,9 @@ namespace PeterO.Cbor {
       this.NumberConversion = ToNumberConversion(parser.GetLCString(
         "numberconversion",
         null));
+      this.WriteBasic = parser.GetBoolean(
+        "writebasic",
+        false);
     }
 
     /// <summary>Gets the values of this options object's properties in
@@ -207,6 +210,7 @@ namespace PeterO.Cbor {
         .Append(";numberconversion=").Append(this.FromNumberConversion())
         .Append(";allowduplicatekeys=")
         .Append(this.AllowDuplicateKeys ? "true" : "false")
+        .Append(";writebasic=").Append(this.WriteBasic ? "true" : "false")
         .ToString();
     }
 
@@ -293,6 +297,17 @@ namespace PeterO.Cbor {
     /// <value>A value indicating how JSON numbers are decoded to CBOR. The
     /// default is <c>ConversionMode.Full</c>.</value>
     public ConversionMode NumberConversion {
+      get;
+      private set;
+    }
+
+    /// <summary>Gets a value indicating whether JSON is written using only
+    /// code points from the Basic Latin block (U+0000 to U+007F), also
+    /// known as ASCII.</summary>
+    /// <value>A value indicating whether JSON is written using only code
+    /// points from the Basic Latin block (U+0000 to U+007F), also known as
+    /// ASCII. Default is false.</value>
+    public bool WriteBasic {
       get;
       private set;
     }

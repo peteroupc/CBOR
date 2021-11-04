@@ -68,10 +68,29 @@ namespace PeterO.Cbor {
               } else {
                 throw new CBORException("Unpaired surrogate in string");
               }
+            } else if (c >= 0x80 && options.WriteBasic) {
+              c = str[i];
+              sb.WriteString("\\u");
+            sb.WriteCodePoint((int)Hex16[(int)((c >> 12) & 15)]);
+          sb.WriteCodePoint((int)Hex16[(int)((c >> 8) & 15)]);
+        sb.WriteCodePoint((int)Hex16[(int)((c >> 4) & 15)]);
+      sb.WriteCodePoint((int)Hex16[(int)(c & 15)]);
+    c = str[i + 1];
+    sb.WriteString("\\u");
+  sb.WriteCodePoint((int)Hex16[(int)((c >> 12) & 15)]);
+  sb.WriteCodePoint((int)Hex16[(int)((c >> 8) & 15)]);
+  sb.WriteCodePoint((int)Hex16[(int)((c >> 4) & 15)]);
+  sb.WriteCodePoint((int)Hex16[(int)(c & 15)]);
             } else {
               sb.WriteString(str, i, 2);
-              ++i;
             }
+            ++i;
+        } else if (c >= 0x80 && options.WriteBasic) {
+            sb.WriteString("\\u");
+            sb.WriteCodePoint((int)Hex16[(int)((c >> 12) & 15)]);
+            sb.WriteCodePoint((int)Hex16[(int)((c >> 8) & 15)]);
+            sb.WriteCodePoint((int)Hex16[(int)((c >> 4) & 15)]);
+            sb.WriteCodePoint((int)Hex16[(int)(c & 15)]);
         } else {
           sb.WriteCodePoint((int)c);
         }

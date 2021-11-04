@@ -4697,6 +4697,32 @@ namespace Test {
     }
 
     [Test]
+    public void TestWriteBasic() {
+      var jsonop1=new JSONOptions("writebasic=true");
+      string json=CBORObject.FromObject("\uD800\uDC00").ToJSONString(jsonop1);
+      Assert.AreEqual("\"\\uD800\\uDC00\"",json);
+      json=CBORObject.FromObject("\u0800\u0C00").ToJSONString(jsonop1);
+      Assert.AreEqual("\"\\u0800\\u0C00\"",json);
+      json=CBORObject.FromObject("\u0085\uFFFF").ToJSONString(jsonop1);
+      Assert.AreEqual("\"\\u0085\\uFFFF\"",json);
+      var rg = new RandomGenerator();
+      for (var i = 0; i < 1000; ++i) {
+        string rts = RandomObjects.RandomTextString(rg);
+        CBORObject cbor = CBORObject.FromObject(rts);
+        json = cbor.ToJSONString(jsonop1);
+        // Check that the JSON contains only ASCII code points
+        for (var j = 0;j<json.Length; ++j) {
+          char c = json[j];
+          if ((c<0x20 && c != 0x09 && c != 0x0a && c != 0x0d) || c >= 0x7f) {
+            Assert.Fail(rts);
+          }
+        }
+        // Round-trip check
+        Assert.AreEqual(cbor, CBORObject.FromJSONString(json));
+      }
+    }
+
+    [Test]
     public void TestJSONOptions() {
       var jsonop1 = new JSONOptions("numberconversion=intorfloat");
       {
