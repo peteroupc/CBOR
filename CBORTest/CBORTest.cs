@@ -4794,7 +4794,7 @@ namespace Test {
           CBORObject.FromJSONBytes(jsonbytes, jsonop4);
         } catch (CBORException ex) {
           string msg = ex.Message + "\n" +
-            DataUtilities.GetUtf8String(json, true) + "\n" + currop;
+            DataUtilities.GetUtf8String(jsonbytes, true) + "\n" + currop;
           throw new InvalidOperationException(msg, ex);
         }
       }
