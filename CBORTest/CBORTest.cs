@@ -4780,18 +4780,18 @@ namespace Test {
       var jsonop3 = new JSONOptions("numberconversion=intorfloatfromdouble");
       var jsonop4 = new JSONOptions("numberconversion=double");
       for (var i = 0; i < 200; ++i) {
-        byte[] json = jsongen.Generate(rg);
-        Console.WriteLine(String.Empty + i + " len=" + json.Length);
+        byte[] jsonbytes = jsongen.Generate(rg);
+        //Console.WriteLine(String.Empty + i + " len=" + jsonbytes.Length);
         JSONOptions currop = null;
         try {
           currop = jsonop1;
-          CBORObject.FromJSONBytes(json, jsonop1);
+          CBORObject.FromJSONBytes(jsonbytes, jsonop1);
           currop = jsonop2;
-          CBORObject.FromJSONBytes(json, jsonop2);
+          CBORObject.FromJSONBytes(jsonbytes, jsonop2);
           currop = jsonop3;
-          CBORObject.FromJSONBytes(json, jsonop3);
+          CBORObject.FromJSONBytes(jsonbytes, jsonop3);
           currop = jsonop4;
-          CBORObject.FromJSONBytes(json, jsonop4);
+          CBORObject.FromJSONBytes(jsonbytes, jsonop4);
         } catch (CBORException ex) {
           string msg = ex.Message + "\n" +
             DataUtilities.GetUtf8String(json, true) + "\n" + currop;
