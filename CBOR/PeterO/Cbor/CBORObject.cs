@@ -764,7 +764,7 @@ namespace PeterO.Cbor {
 
       set {
         if (key == null) {
-          throw new ArgumentNullException(nameof(value));
+          throw new ArgumentNullException(nameof(key));
         }
         if (value == null) {
           throw new ArgumentNullException(nameof(value));
@@ -813,7 +813,7 @@ namespace PeterO.Cbor {
 
       set {
         if (key == null) {
-          throw new ArgumentNullException(nameof(value));
+          throw new ArgumentNullException(nameof(key));
         }
         if (value == null) {
           throw new ArgumentNullException(nameof(value));
