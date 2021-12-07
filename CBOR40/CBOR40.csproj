@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Condition="Exists(&#xA;  '../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.props')" Project="../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.props" />
-  <Import Condition="Exists(&#xA;  '../packages/Microsoft.NetFramework.Analyzers.3.3.0/build/Microsoft.NetFramework.Analyzers.props')" Project="../packages/Microsoft.NetFramework.Analyzers.3.3.0/build/Microsoft.NetFramework.Analyzers.props" />
-  <Import Condition="Exists(&#xA;  '../packages/Microsoft.NetCore.Analyzers.3.3.0/build/Microsoft.NetCore.Analyzers.props')" Project="../packages/Microsoft.NetCore.Analyzers.3.3.0/build/Microsoft.NetCore.Analyzers.props" />
-  <Import Condition="Exists(&#xA;  '../packages/Microsoft.CodeQuality.Analyzers.3.3.0/build/Microsoft.CodeQuality.Analyzers.props')" Project="../packages/Microsoft.CodeQuality.Analyzers.3.3.0/build/Microsoft.CodeQuality.Analyzers.props" />
-  <Import Condition="Exists(&#xA;  '../packages/Microsoft.CodeAnalysis.VersionCheckAnalyzer.3.3.0/build/Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" Project="../packages/Microsoft.CodeAnalysis.VersionCheckAnalyzer.3.3.0/build/Microsoft.CodeAnalysis.VersionCheckAnalyzer.props" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' ==&#xA;'' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == ''&#xA;">AnyCPU</Platform>
@@ -30,6 +25,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="&#xA;'$(Configuration)'=='Release'&#xA;">
     <Optimize>true</Optimize>
+    <SignAssembly>true</SignAssembly>
     <OutputPath>bin\Release</OutputPath>
     <DefineConstants>NET40</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -219,13 +215,5 @@ Package Restore to download them. For more information, see
 http://go.microsoft.com/fwlink/?LinkID = 322105.The missing file is
 {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists(&#xA;  '../packages/Microsoft.CodeAnalysis.VersionCheckAnalyzer.3.3.0/build/Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" Text="$([System.String]::Format('$(ErrorText)',&#xA;&#xA;  '../packages/Microsoft.CodeAnalysis.VersionCheckAnalyzer.3.3.0/build/Microsoft.CodeAnalysis.VersionCheckAnalyzer.props'))" />
-    <Error Condition="!Exists(&#xA;  '../packages/Microsoft.CodeQuality.Analyzers.3.3.0/build/Microsoft.CodeQuality.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)',&#xA;&#xA;  '../packages/Microsoft.CodeQuality.Analyzers.3.3.0/build/Microsoft.CodeQuality.Analyzers.props'))" />
-    <Error Condition="!Exists(&#xA;  '../packages/Microsoft.NetCore.Analyzers.3.3.0/build/Microsoft.NetCore.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)',&#xA;&#xA;  '../packages/Microsoft.NetCore.Analyzers.3.3.0/build/Microsoft.NetCore.Analyzers.props'))" />
-    <Error Condition="!Exists(&#xA;  '../packages/Microsoft.NetFramework.Analyzers.3.3.0/build/Microsoft.NetFramework.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)',&#xA;&#xA;  '../packages/Microsoft.NetFramework.Analyzers.3.3.0/build/Microsoft.NetFramework.Analyzers.props'))" />
-    <Error Condition="!Exists(&#xA;  '../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.props')" Text="$([System.String]::Format('$(ErrorText)',&#xA;&#xA;  '../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.props'))" />
-    <Error Condition="!Exists(&#xA;  '../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.props')" Text="$([System.String]::Format('$(ErrorText)',&#xA;&#xA;  '../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.props'))" />
-    <Error Condition="!Exists(&#xA;  '../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.targets')" Text="$([System.String]::Format('$(ErrorText)',&#xA;&#xA;  '../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.targets'))" />
   </Target>
-  <Import Condition="Exists(&#xA;  '../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.targets')" Project="../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.targets" />
 </Project>
