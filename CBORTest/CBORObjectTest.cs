@@ -7525,6 +7525,96 @@ namespace Test {
       }
     }
 
+[Test]
+public void TestKeepKeyOrder() {
+  byte[] bytes;
+  byte[] bytes2;
+  CBORObject cbor;
+  var list = new List<CBORObject>();
+  var options=new CBOREncodeOptions("keepkeyorder=true");
+  Assert.IsTrue(options.KeepKeyOrder);
+  bytes = new byte[] { (byte)0xa3, 0x01, 0, 0x02, 0, 0x03, 0 };
+  cbor = CBORObject.DecodeFromBytes(bytes, options);
+  foreach (CBORObject key in cbor.Keys) {
+    list.Add(key);
+  }
+  Assert.AreEqual(CBORObject.FromObject(1), list[0]);
+  Assert.AreEqual(CBORObject.FromObject(2), list[1]);
+  Assert.AreEqual(CBORObject.FromObject(3), list[2]);
+  bytes2 = cbor.EncodeToBytes();
+  TestCommon.AssertByteArraysEqual(bytes, bytes2);
+  list = new List<CBORObject>();
+  bytes = new byte[] { (byte)0xbf, 0x01, 0, 0x02, 0, 0x03, 0, 0xff };
+  cbor = CBORObject.DecodeFromBytes(bytes, options);
+  foreach (CBORObject key in cbor.Keys) {
+    list.Add(key);
+  }
+  Assert.AreEqual(CBORObject.FromObject(1), list[0]);
+  Assert.AreEqual(CBORObject.FromObject(2), list[1]);
+  Assert.AreEqual(CBORObject.FromObject(3), list[2]);
+  bytes = new byte[] { (byte)0xa3, 0x01, 0, 0x02, 0, 0x03, 0 };
+  bytes2 = cbor.EncodeToBytes();
+  TestCommon.AssertByteArraysEqual(bytes, bytes2);
+   list = new List<CBORObject>();
+  bytes = new byte[] { (byte)0xa3, 0x03, 0, 0x02, 0, 0x01, 0 };
+  cbor = CBORObject.DecodeFromBytes(bytes, options);
+  foreach (CBORObject key in cbor.Keys) {
+    list.Add(key);
+  }
+  Assert.AreEqual(CBORObject.FromObject(3), list[0]);
+  Assert.AreEqual(CBORObject.FromObject(2), list[1]);
+  Assert.AreEqual(CBORObject.FromObject(1), list[2]);
+  bytes2 = cbor.EncodeToBytes();
+  TestCommon.AssertByteArraysEqual(bytes, bytes2);
+   list = new List<CBORObject>();
+  bytes = new byte[] { (byte)0xbf, 0x03, 0, 0x02, 0, 0x01, 0, 0xff };
+  cbor = CBORObject.DecodeFromBytes(bytes, options);
+  foreach (CBORObject key in cbor.Keys) {
+    list.Add(key);
+  }
+  Assert.AreEqual(CBORObject.FromObject(3), list[0]);
+  Assert.AreEqual(CBORObject.FromObject(2), list[1]);
+  Assert.AreEqual(CBORObject.FromObject(1), list[2]);
+  bytes = new byte[] { (byte)0xa3, 0x03, 0, 0x02, 0, 0x01, 0 };
+  bytes2 = cbor.EncodeToBytes();
+  TestCommon.AssertByteArraysEqual(bytes, bytes2);
+
+  // JSON
+  var joptions=new JSONOptions("keepkeyorder=true");
+  Assert.IsTrue(joptions.KeepKeyOrder);
+  string jsonstring;
+  jsonstring="{\"1\":0,\"2\":0,\"3\":0}";
+  cbor = CBORObject.FromJSONString(jsonstring, joptions);
+   list = new List<CBORObject>();
+  foreach (CBORObject key in cbor.Keys) {
+    list.Add(key);
+  }
+  Assert.AreEqual(CBORObject.FromObject("1"),list[0]);
+  Assert.AreEqual(CBORObject.FromObject("2"),list[1]);
+  Assert.AreEqual(CBORObject.FromObject("3"),list[2]);
+
+  jsonstring="{\"3\":0,\"2\":0,\"1\":0}";
+  cbor = CBORObject.FromJSONString(jsonstring, joptions);
+   list = new List<CBORObject>();
+  foreach (CBORObject key in cbor.Keys) {
+    list.Add(key);
+  }
+  Assert.AreEqual(CBORObject.FromObject("3"),list[0]);
+  Assert.AreEqual(CBORObject.FromObject("2"),list[1]);
+  Assert.AreEqual(CBORObject.FromObject("1"),list[2]);
+
+  jsonstring="{\"3\":0,\"2\":0,\"1\":0}";
+  bytes = DataUtilities.GetUtf8Bytes(jsonstring, false);
+  cbor = CBORObject.FromJSONBytes(bytes, joptions);
+   list = new List<CBORObject>();
+  foreach (CBORObject key in cbor.Keys) {
+    list.Add(key);
+  }
+  Assert.AreEqual(CBORObject.FromObject("3"),list[0]);
+  Assert.AreEqual(CBORObject.FromObject("2"),list[1]);
+  Assert.AreEqual(CBORObject.FromObject("1"),list[2]);
+}
+
     [Test]
     public void TestWriteFloatingPointValue() {
       var r = new RandomGenerator();

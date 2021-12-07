@@ -144,28 +144,29 @@ namespace PeterO.Cbor {
     /// of basic upper-case and/or basic lower-case letters:
     /// <c>base64padding</c>, <c>replacesurrogates</c>,
     /// <c>allowduplicatekeys</c>, <c>preservenegativezero</c>,
-    /// <c>numberconversion</c>, <c>writebasic</c>. Other keys are
-    /// ignored in this version of the CBOR library. (Keys are compared
-    /// using a basic case-insensitive comparison, in which two strings are
-    /// equal if they match after converting the basic upper-case letters A
-    /// to Z (U+0041 to U+005A) in both strings to basic lower-case
-    /// letters.) If two or more key/value pairs have equal keys (in a
-    /// basic case-insensitive comparison), the value given for the last
-    /// such key is used. The first four keys just given can have a value
-    /// of <c>1</c>, <c>true</c>, <c>yes</c>, or <c>on</c> (where the
-    /// letters can be any combination of basic upper-case and/or basic
-    /// lower-case letters), which means true, and any other value meaning
-    /// false. The last key, <c>numberconversion</c>, can have a value of
-    /// any name given in the <c>JSONOptions.ConversionMode</c> enumeration
-    /// (where the letters can be any combination of basic upper-case
-    /// and/or basic lower-case letters), and any other value is
-    /// unrecognized. (If the <c>numberconversion</c> key is not given, its
-    /// value is treated as <c>full</c>. If that key is given, but has an
-    /// unrecognized value, an exception is thrown.) For example,
-    /// <c>base64padding=Yes</c> and <c>base64padding=1</c> both set the
-    /// <c>Base64Padding</c> property to true, and
-    /// <c>numberconversion=double</c> sets the <c>NumberConversion</c>
-    /// property to <c>ConversionMode.Double</c>.</param>
+    /// <c>numberconversion</c>, <c>writebasic</c>, <c>keepkeyorder</c>.
+    /// Other keys are ignored in this version of the CBOR library. (Keys
+    /// are compared using a basic case-insensitive comparison, in which
+    /// two strings are equal if they match after converting the basic
+    /// upper-case letters A to Z (U+0041 to U+005A) in both strings to
+    /// basic lower-case letters.) If two or more key/value pairs have
+    /// equal keys (in a basic case-insensitive comparison), the value
+    /// given for the last such key is used. The first four keys just given
+    /// can have a value of <c>1</c>, <c>true</c>, <c>yes</c>, or
+    /// <c>on</c> (where the letters can be any combination of basic
+    /// upper-case and/or basic lower-case letters), which means true, and
+    /// any other value meaning false. The last key,
+    /// <c>numberconversion</c>, can have a value of any name given in the
+    /// <c>JSONOptions.ConversionMode</c> enumeration (where the letters
+    /// can be any combination of basic upper-case and/or basic lower-case
+    /// letters), and any other value is unrecognized. (If the
+    /// <c>numberconversion</c> key is not given, its value is treated as
+    /// <c>full</c>. If that key is given, but has an unrecognized value,
+    /// an exception is thrown.) For example, <c>base64padding=Yes</c> and
+    /// <c>base64padding=1</c> both set the <c>Base64Padding</c> property
+    /// to true, and <c>numberconversion=double</c> sets the
+    /// <c>NumberConversion</c> property to <c>ConversionMode.Double</c>
+    /// .</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='paramString'/> is null. In the future, this class may allow
     /// other keys to store other kinds of values, not just true or
@@ -182,6 +183,9 @@ namespace PeterO.Cbor {
         true);
       this.AllowDuplicateKeys = parser.GetBoolean(
         "allowduplicatekeys",
+        false);
+      this.KeepKeyOrder = parser.GetBoolean(
+        "keepkeyorder",
         false);
       this.Base64Padding = parser.GetBoolean("base64padding", true);
       this.ReplaceSurrogates = parser.GetBoolean(
@@ -207,6 +211,7 @@ namespace PeterO.Cbor {
         .Append(this.ReplaceSurrogates ? "true" : "false")
         .Append(";preservenegativezero=")
         .Append(this.PreserveNegativeZero ? "true" : "false")
+        .Append(";keepkeyorder=").Append(this.KeepKeyOrder ? "true" : "false")
         .Append(";numberconversion=").Append(this.FromNumberConversion())
         .Append(";allowduplicatekeys=")
         .Append(this.AllowDuplicateKeys ? "true" : "false")
@@ -308,6 +313,17 @@ namespace PeterO.Cbor {
     /// points from the Basic Latin block (U+0000 to U+007F), also known as
     /// ASCII. Default is false.</value>
     public bool WriteBasic {
+      get;
+      private set;
+    }
+
+    /// <summary>Gets a value indicating whether to preserve the order in
+    /// which a map's keys appear when decoding JSON, by using maps created
+    /// as though by CBORObject.NewOrderedMap.</summary>
+    /// <value>A value indicating whether to preserve the order in which a
+    /// CBOR map's keys appear when decoding JSON. The default is
+    /// false.</value>
+    public bool KeepKeyOrder {
       get;
       private set;
     }

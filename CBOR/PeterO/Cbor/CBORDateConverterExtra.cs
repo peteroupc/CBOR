@@ -20,9 +20,8 @@ ICBORToFromConverter<DateTime> {
     /// <param name='obj'>A CBOR object that specifies a date/time
     /// according to the conversion type used to create this date
     /// converter.</param>
-    /// <param name='year'>An array whose first element will store the
-    /// year. The array's length must be 1 or greater. If this function
-    /// fails, the year is set to null.</param>
+    /// <param name='year'>Will store the year. If this function fails, the
+    /// year is set to null.</param>
     /// <param name='lesserFields'>An array that will store the fields
     /// (other than the year) of the date and time. The array's length must
     /// be 7 or greater. If this function fails, the first seven elements
@@ -32,8 +31,6 @@ ICBORToFromConverter<DateTime> {
     /// <c>false</c> otherwise.</returns>
     public bool TryGetDateTimeFields(CBORObject obj, out EInteger year, int[]
       lesserFields) {
-      // TODO: In next minor version, add overload that takes an out parameter
-      // for year to DotNet version.
       if (lesserFields == null) {
         year = null;
         return false;

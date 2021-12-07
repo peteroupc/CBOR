@@ -74,22 +74,24 @@ namespace PeterO.Cbor {
     /// of basic upper-case and/or basic lower-case letters:
     /// <c>allowduplicatekeys</c>, <c>ctap2canonical</c>,
     /// <c>resolvereferences</c>, <c>useindeflengthstrings</c>,
-    /// <c>allowempty</c>, <c>float64</c>. Keys other than these are
-    /// ignored in this version of the CBOR library. The key <c>float64</c>
-    /// was introduced in version 4.4 of this library. (Keys are compared
-    /// using a basic case-insensitive comparison, in which two strings are
-    /// equal if they match after converting the basic upper-case letters A
-    /// to Z (U+0041 to U+005A) in both strings to basic lower-case
-    /// letters.) If two or more key/value pairs have equal keys (in a
-    /// basic case-insensitive comparison), the value given for the last
-    /// such key is used. The four keys just given can have a value of
-    /// <c>1</c>, <c>true</c>, <c>yes</c>, or <c>on</c> (where the
-    /// letters can be any combination of basic upper-case and/or basic
-    /// lower-case letters), which means true, and any other value meaning
-    /// false. For example, <c>allowduplicatekeys=Yes</c> and
-    /// <c>allowduplicatekeys=1</c> both set the <c>AllowDuplicateKeys</c>
-    /// property to true. In the future, this class may allow other keys to
-    /// store other kinds of values, not just true or false.</param>
+    /// <c>allowempty</c>, <c>float64</c>, <c>keepkeyorder</c>. Keys
+    /// other than these are ignored in this version of the CBOR library.
+    /// The key <c>float64</c> was introduced in version 4.4 of this
+    /// library. The key <c>keepkeyorder</c> was introduced in version 4.5
+    /// of this library.(Keys are compared using a basic case-insensitive
+    /// comparison, in which two strings are equal if they match after
+    /// converting the basic upper-case letters A to Z (U+0041 to U+005A)
+    /// in both strings to basic lower-case letters.) If two or more
+    /// key/value pairs have equal keys (in a basic case-insensitive
+    /// comparison), the value given for the last such key is used. The
+    /// four keys just given can have a value of <c>1</c>, <c>true</c>,
+    /// <c>yes</c>, or <c>on</c> (where the letters can be any combination
+    /// of basic upper-case and/or basic lower-case letters), which means
+    /// true, and any other value meaning false. For example,
+    /// <c>allowduplicatekeys=Yes</c> and <c>allowduplicatekeys=1</c> both
+    /// set the <c>AllowDuplicateKeys</c> property to true. In the future,
+    /// this class may allow other keys to store other kinds of values, not
+    /// just true or false.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='paramString'/> is null.</exception>
     public CBOREncodeOptions(string paramString) {
@@ -106,6 +108,8 @@ namespace PeterO.Cbor {
         "float64",
         false);
       this.AllowDuplicateKeys = parser.GetBoolean("allowduplicatekeys",
+          false);
+      this.KeepKeyOrder = parser.GetBoolean("keepkeyorder",
           false);
       this.AllowEmpty = parser.GetBoolean("allowempty", false);
       this.Ctap2Canonical = parser.GetBoolean("ctap2canonical", false);
@@ -125,6 +129,7 @@ namespace PeterO.Cbor {
         .Append(";float64=").Append(this.Float64 ? "true" : "false")
         .Append(";ctap2canonical=")
         .Append(this.Ctap2Canonical ? "true" : "false")
+        .Append(";keepkeyorder=").Append(this.KeepKeyOrder ? "true" : "false")
         .Append(";resolvereferences=")
         .Append(this.ResolveReferences ? "true" : "false")
         .Append(";allowempty=").Append(this.AllowEmpty ? "true" : "false")
@@ -198,6 +203,17 @@ namespace PeterO.Cbor {
     /// indefinite-length encoding under certain circumstances. The default
     /// is false.</value>
     public bool UseIndefLengthStrings {
+      get;
+      private set;
+    }
+
+    /// <summary>Gets a value indicating whether to preserve the order in
+    /// which a CBOR map's keys appear when decoding a CBOR object, by
+    /// using maps created as though by CBORObject.NewOrderedMap.</summary>
+    /// <value>A value indicating whether to preserve the order in which a
+    /// CBOR map's keys appear when decoding a CBOR object. The default is
+    /// false.</value>
+    public bool KeepKeyOrder {
       get;
       private set;
     }

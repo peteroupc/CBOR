@@ -575,7 +575,9 @@ namespace PeterO.Cbor {
       CBORObject obj;
       var nextChar = new int[1];
       var seenComma = false;
-      var myHashMap = new SortedDictionary<CBORObject, CBORObject>();
+      IDictionary<CBORObject, CBORObject> myHashMap =
+this.options.KeepKeyOrder ? PropertyMap.NewOrderedDict() : new
+SortedDictionary<CBORObject, CBORObject>();
       while (true) {
         c = this.SkipWhitespaceJSON();
         switch (c) {

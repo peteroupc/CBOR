@@ -7406,11 +7406,6 @@ CBORObjectTypeTextStringAscii)) {
 
     internal static CBORObject FromRaw(IDictionary<CBORObject, CBORObject>
       map) {
-      #if DEBUG
-      if (!(map is SortedDictionary<CBORObject, CBORObject>)) {
-        throw new InvalidOperationException();
-      }
-      #endif
       return new CBORObject(CBORObjectTypeMap, map);
     }
 
@@ -7530,7 +7525,7 @@ CBORObjectTypeTextStringAscii)) {
       }
       if (firstbyte == 0xa0) {
         // empty map
-        return CBORObject.NewMap();
+        return CBORObject.NewOrderedMap();
       }
       throw new CBORException("Unexpected data encountered");
     }
