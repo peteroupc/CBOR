@@ -1096,7 +1096,7 @@ namespace PeterO.Cbor {
           isList = td.Equals(typeof(List<>)) || td.Equals(typeof(IList<>)) ||
             td.Equals(typeof(ICollection<>)) ||
             td.Equals(typeof(IEnumerable<>));
-          #if NET20
+          #if NET20 || NET40
           isReadOnlyCollection = false;
           #else
           isReadOnlyCollection = (td.Equals(typeof(IReadOnlyCollection<>)) ||
@@ -1119,8 +1119,6 @@ namespace PeterO.Cbor {
           listObject = Activator.CreateInstance(listType);
         }
         #else
-        // TODO: Document new support of IReadOnlyCollection/IReadOnlyList
-        // and add tests
         // TODO: Support IReadOnlyDictionary
         if (t.GetTypeInfo().IsGenericType) {
           Type td = t.GetGenericTypeDefinition();
@@ -1216,7 +1214,7 @@ typeof(System.Collections.ObjectModel.ReadOnlyCollection<>)
           Type td = t.GetGenericTypeDefinition();
           isDict = td.Equals(typeof(Dictionary<,>)) ||
             td.Equals(typeof(IDictionary<,>));
-          #if NET20
+          #if NET20 || NET40
           isReadOnlyDict = false;
           #else
           isReadOnlyDict =
@@ -1275,7 +1273,7 @@ typeof(System.Collections.ObjectModel.ReadOnlyCollection<>)
               key.ToObject(keyType, mapper, options, depth + 1),
               value.ToObject(valueType, mapper, options, depth + 1));
           }
-          #if !NET20
+          #if !NET20 && !NET40
           if (isReadOnlyDict) {
             Type listType =
 typeof(
