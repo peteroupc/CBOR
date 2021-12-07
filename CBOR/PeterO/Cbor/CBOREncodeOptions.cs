@@ -55,6 +55,7 @@ namespace PeterO.Cbor {
       this.ResolveReferences = false;
       this.AllowEmpty = false;
       this.Float64 = false;
+      this.KeepKeyOrder = false;
       this.UseIndefLengthStrings = useIndefLengthStrings;
       this.AllowDuplicateKeys = allowDuplicateKeys;
       this.Ctap2Canonical = ctap2Canonical;
@@ -209,7 +210,9 @@ namespace PeterO.Cbor {
 
     /// <summary>Gets a value indicating whether to preserve the order in
     /// which a CBOR map's keys appear when decoding a CBOR object, by
-    /// using maps created as though by CBORObject.NewOrderedMap.</summary>
+    /// using maps created as though by CBORObject.NewOrderedMap. If false,
+    /// key order is not guaranteed to be preserved when decoding
+    /// CBOR.</summary>
     /// <value>A value indicating whether to preserve the order in which a
     /// CBOR map's keys appear when decoding a CBOR object. The default is
     /// false.</value>

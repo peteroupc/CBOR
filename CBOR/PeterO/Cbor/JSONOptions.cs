@@ -319,7 +319,8 @@ namespace PeterO.Cbor {
 
     /// <summary>Gets a value indicating whether to preserve the order in
     /// which a map's keys appear when decoding JSON, by using maps created
-    /// as though by CBORObject.NewOrderedMap.</summary>
+    /// as though by CBORObject.NewOrderedMap. If false, key order is not
+    /// guaranteed to be preserved when decoding JSON.</summary>
     /// <value>A value indicating whether to preserve the order in which a
     /// CBOR map's keys appear when decoding JSON. The default is
     /// false.</value>
