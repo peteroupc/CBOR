@@ -11,6 +11,7 @@ Specifies options for encoding and decoding CBOR objects.
 * <code>[public static readonly PeterO.Cbor.CBOREncodeOptions Default;](#Default)</code> - Default options for CBOR objects.
 * <code>[public static readonly PeterO.Cbor.CBOREncodeOptions DefaultCtap2Canonical;](#DefaultCtap2Canonical)</code> - Default options for CBOR objects serialized using the CTAP2 canonicalization (used in Web Authentication, among other specifications).
 * <code>[Float64](#Float64)</code> - Gets a value indicating whether to encode floating-point numbers in a CBOR object in their 64-bit encoding form regardless of whether their value can be encoded without loss in a smaller form.
+* <code>[KeepKeyOrder](#KeepKeyOrder)</code> - Gets a value indicating whether to preserve the order in which a CBOR map's keys appear when decoding a CBOR object, by using maps created as though by CBORObject.
 * <code>[ResolveReferences](#ResolveReferences)</code> - Gets a value indicating whether to resolve references to sharable objects and sharable strings in the process of decoding a CBOR object.
 * <code>[ToString()](#ToString)</code> - Gets the values of this options object's properties in text form.
 * <code>[UseIndefLengthStrings](#UseIndefLengthStrings)</code> - Gets a value indicating whether to encode strings with an indefinite-length encoding under certain circumstances.
@@ -62,7 +63,7 @@ Initializes a new instance of the [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CB
 
 <b>Parameters:</b>
 
- * <i>paramString</i>: A string setting forth the options to use. This is a semicolon-separated list of options, each of which has a key and a value separated by an equal sign ("="). Whitespace and line separators are not allowed to appear between the semicolons or between the equal signs, nor may the string begin or end with whitespace. The string can be empty, but cannot be null. The following is an example of this parameter:  `allowduplicatekeys=true;ctap2Canonical=true` . The key can be any one of the following where the letters can be any combination of basic upper-case and/or basic lower-case letters:  `allowduplicatekeys` ,  `ctap2canonical` ,  `resolvereferences` ,  `useindeflengthstrings` ,  `allowempty` ,  `float64` . Keys other than these are ignored in this version of the CBOR library. The key  `float64`  was introduced in version 4.4 of this library. (Keys are compared using a basic case-insensitive comparison, in which two strings are equal if they match after converting the basic upper-case letters A to Z (U+0041 to U+005A) in both strings to basic lower-case letters.) If two or more key/value pairs have equal keys (in a basic case-insensitive comparison), the value given for the last such key is used. The four keys just given can have a value of  `1` ,  `true` ,  `yes` , or  `on`  (where the letters can be any combination of basic upper-case and/or basic lower-case letters), which means true, and any other value meaning false. For example,  `allowduplicatekeys=Yes`  and  `allowduplicatekeys=1`  both set the  `AllowDuplicateKeys`  property to true. In the future, this class may allow other keys to store other kinds of values, not just true or false.
+ * <i>paramString</i>: A string setting forth the options to use. This is a semicolon-separated list of options, each of which has a key and a value separated by an equal sign ("="). Whitespace and line separators are not allowed to appear between the semicolons or between the equal signs, nor may the string begin or end with whitespace. The string can be empty, but cannot be null. The following is an example of this parameter:  `allowduplicatekeys=true;ctap2Canonical=true` . The key can be any one of the following where the letters can be any combination of basic upper-case and/or basic lower-case letters:  `allowduplicatekeys` ,  `ctap2canonical` ,  `resolvereferences` ,  `useindeflengthstrings` ,  `allowempty` ,  `float64` ,  `keepkeyorder` . Keys other than these are ignored in this version of the CBOR library. The key  `float64`  was introduced in version 4.4 of this library. The key  `keepkeyorder`  was introduced in version 4.5 of this library.(Keys are compared using a basic case-insensitive comparison, in which two strings are equal if they match after converting the basic upper-case letters A to Z (U+0041 to U+005A) in both strings to basic lower-case letters.) If two or more key/value pairs have equal keys (in a basic case-insensitive comparison), the value given for the last such key is used. The four keys just given can have a value of  `1` ,  `true` ,  `yes` , or  `on`  (where the letters can be any combination of basic upper-case and/or basic lower-case letters), which means true, and any other value meaning false. For example,  `allowduplicatekeys=Yes`  and  `allowduplicatekeys=1`  both set the  `AllowDuplicateKeys`  property to true. In the future, this class may allow other keys to store other kinds of values, not just true or false.
 
 <b>Exceptions:</b>
 
@@ -140,6 +141,17 @@ Gets a value indicating whether to encode floating-point numbers in a CBOR objec
 <b>Returns:</b>
 
 Gets a value indicating whether to encode floating-point numbers in a CBOR object in their 64-bit encoding form regardless of whether their value can be encoded without loss in a smaller form. Used only when encoding CBOR objects. The default is false.
+
+<a id="KeepKeyOrder"></a>
+### KeepKeyOrder
+
+    public bool KeepKeyOrder { get; }
+
+Gets a value indicating whether to preserve the order in which a CBOR map's keys appear when decoding a CBOR object, by using maps created as though by CBORObject.NewOrderedMap. If false, key order is not guaranteed to be preserved when decoding CBOR.
+
+<b>Returns:</b>
+
+A value indicating whether to preserve the order in which a CBOR map's keys appear when decoding a CBOR object. The default is false.
 
 <a id="ResolveReferences"></a>
 ### ResolveReferences

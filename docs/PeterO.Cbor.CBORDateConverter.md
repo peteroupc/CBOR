@@ -253,7 +253,7 @@ Tries to extract the fields of a date and time in the form of a CBOR object.
 
  * <i>obj</i>: A CBOR object that specifies a date/time according to the conversion type used to create this date converter.
 
- * <i>year</i>: An array whose first element will store the year. The array's length must be 1 or greater. If this function fails, the year is set to null.
+ * <i>year</i>: Will store the year. If this function fails, the year is set to null.
 
  * <i>lesserFields</i>: An array that will store the fields (other than the year) of the date and time. The array's length must be 7 or greater. If this function fails, the first seven elements are set to 0. For more information, see the (EInteger[], int) overload of this method.
 
