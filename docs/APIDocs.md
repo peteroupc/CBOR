@@ -24,7 +24,7 @@
 
  * [PeterO.Cbor.ICBORToFromConverter&lt;T&gt;](PeterO.Cbor.ICBORToFromConverter-T.md) - Classes that implement this interface can support conversions from CBOR objects to a custom type and back.
 
- * [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) - Includes options to control how CBOR objects are converted to JSON.
+ * [PeterO.Cbor.JSONOptions](PeterO.Cbor.JSONOptions.md) - Includes options to control how CBOR objects are converted to and from JavaScript Object Notation (JSON).
 
  * [PeterO.Cbor.JSONOptions.ConversionMode](PeterO.Cbor.JSONOptions.ConversionMode.md) - Specifies how JSON numbers are converted to CBOR objects when decoding JSON (such as via FromJSONString or ReadJSON ).
 

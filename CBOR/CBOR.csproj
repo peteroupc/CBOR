@@ -13,24 +13,13 @@
     <PackageLicenseExpression>CC0-1.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/peteroupc/CBOR</PackageProjectUrl>
     <PackageReleaseNotes>
-Version 4.4.2:
+Version 4.5:
 
-- Performance improvements in some cases, especially involving date/time conversions
-- Error checks in DateTimeFieldsToCBORObject method in CBORDateConverter
-- Bug fixes
-
-Version 4.4.1:
-
-- Fix bugs when parsing JSON with the JSON option 'numberconversion=double'
-
-Version 4.4:
-
-- Boolean constructors of PODOptions and CBOREncodeOptions were obsolete
-- Float64 option of CBOREncodeOptions for encoding floating-point values as 64-bit only
-- CBORDateConverter made public and expanded to enable conversion between various
-  date/time formats and CBOR objects
-- Added CanFitInUInt64 and CanTruncatedIntFitInUInt64 methods
-- Bug fixes
+- Add support for JSON Pointers and JSON Patches
+- Add option to keep map key order when decoding CBOR and JSON
+- Add option to write JSON using only ASCII characters
+- CBORObject.ToString renders strings as ASCII
+- Add support for deserializing CBOR objects to IReadOnlyList, IReadOnlyCollection, and ReadOnlyDictionary
 
 </PackageReleaseNotes>
     <PackageTags>cbor data serialization binary json</PackageTags>

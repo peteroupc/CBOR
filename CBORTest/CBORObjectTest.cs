@@ -2183,20 +2183,22 @@ namespace Test {
       }
     }
 
+    public static readonly int[] EtbRanges = {
+      -24, 23, 1,
+      -256, -25, 2,
+      24, 255, 2,
+      256, 266, 3,
+      -266, -257, 3,
+      65525, 65535, 3,
+      -65536, -65525, 3,
+      65536, 65546, 5,
+      -65547, -65537, 5,
+    };
+
     [Test]
     public void TestEncodeToBytes() {
       // Test minimum data length
-      int[] ranges = {
-        -24, 23, 1,
-        -256, -25, 2,
-        24, 255, 2,
-        256, 266, 3,
-        -266, -257, 3,
-        65525, 65535, 3,
-        -65536, -65525, 3,
-        65536, 65546, 5,
-        -65547, -65537, 5,
-      };
+      int[] ranges = EtbRanges;
       string[] bigRanges = {
         "4294967285", "4294967295",
         "4294967296", "4294967306",
@@ -7531,7 +7533,7 @@ namespace Test {
       byte[] bytes2;
       CBORObject cbor;
       var list = new List<CBORObject>();
-      var options=new CBOREncodeOptions("keepkeyorder=true");
+      var options = new CBOREncodeOptions("keepkeyorder=true");
       Assert.IsTrue(options.KeepKeyOrder);
       bytes = new byte[] { (byte)0xa3, 0x01, 0, 0x02, 0, 0x03, 0 };
       cbor = CBORObject.DecodeFromBytes(bytes, options);
@@ -7580,7 +7582,7 @@ namespace Test {
       TestCommon.AssertByteArraysEqual(bytes, bytes2);
 
       // JSON
-      var joptions=new JSONOptions("keepkeyorder=true");
+      var joptions = new JSONOptions("keepkeyorder=true");
       Assert.IsTrue(joptions.KeepKeyOrder);
       string jsonstring;
       jsonstring = "{\"1\":0,\"2\":0,\"3\":0}";
@@ -7589,9 +7591,9 @@ namespace Test {
       foreach (CBORObject key in cbor.Keys) {
         list.Add(key);
       }
-      Assert.AreEqual(CBORObject.FromObject("1"),list[0]);
-      Assert.AreEqual(CBORObject.FromObject("2"),list[1]);
-      Assert.AreEqual(CBORObject.FromObject("3"),list[2]);
+      Assert.AreEqual(CBORObject.FromObject("1"), list[0]);
+      Assert.AreEqual(CBORObject.FromObject("2"), list[1]);
+      Assert.AreEqual(CBORObject.FromObject("3"), list[2]);
 
       jsonstring = "{\"3\":0,\"2\":0,\"1\":0}";
       cbor = CBORObject.FromJSONString(jsonstring, joptions);
@@ -7599,9 +7601,9 @@ namespace Test {
       foreach (CBORObject key in cbor.Keys) {
         list.Add(key);
       }
-      Assert.AreEqual(CBORObject.FromObject("3"),list[0]);
-      Assert.AreEqual(CBORObject.FromObject("2"),list[1]);
-      Assert.AreEqual(CBORObject.FromObject("1"),list[2]);
+      Assert.AreEqual(CBORObject.FromObject("3"), list[0]);
+      Assert.AreEqual(CBORObject.FromObject("2"), list[1]);
+      Assert.AreEqual(CBORObject.FromObject("1"), list[2]);
 
       jsonstring = "{\"3\":0,\"2\":0,\"1\":0}";
       bytes = DataUtilities.GetUtf8Bytes(jsonstring, false);
@@ -7610,9 +7612,9 @@ namespace Test {
       foreach (CBORObject key in cbor.Keys) {
         list.Add(key);
       }
-      Assert.AreEqual(CBORObject.FromObject("3"),list[0]);
-      Assert.AreEqual(CBORObject.FromObject("2"),list[1]);
-      Assert.AreEqual(CBORObject.FromObject("1"),list[2]);
+      Assert.AreEqual(CBORObject.FromObject("3"), list[0]);
+      Assert.AreEqual(CBORObject.FromObject("2"), list[1]);
+      Assert.AreEqual(CBORObject.FromObject("1"), list[2]);
     }
 
     [Test]
@@ -8059,67 +8061,67 @@ namespace Test {
         CBORObject.NewArray().Add(1),
         patch);
 
-      TestApplyJSONPatchOpReplace(
+      this.TestApplyJSONPatchOpReplace(
         CBORObject.NewArray().Add(1).Add(3),
         CBORObject.NewArray().Add(1).Add(2),
         "/1",
         3);
-      TestApplyJSONPatchOpReplace(
+      this.TestApplyJSONPatchOpReplace(
         CBORObject.NewArray().Add(3).Add(2),
         CBORObject.NewArray().Add(1).Add(2),
         "/0",
         3);
-      TestApplyJSONPatchOpReplace(
+      this.TestApplyJSONPatchOpReplace(
         null,
         CBORObject.NewArray().Add(1).Add(2),
         "/00",
         3);
-      TestApplyJSONPatchOpReplace(
+      this.TestApplyJSONPatchOpReplace(
         null,
         CBORObject.NewArray().Add(1).Add(2),
         "/00000",
         3);
-      TestApplyJSONPatchOpReplace(
+      this.TestApplyJSONPatchOpReplace(
         CBORObject.NewMap().Add("f1", "f2").Add("f3", 3),
         CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
         "/f3",
         3);
-      TestApplyJSONPatchOpReplace(
+      this.TestApplyJSONPatchOpReplace(
         CBORObject.NewMap().Add("f1", 3).Add("f3", "f4"),
         CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
         "/f1",
         3);
-      TestApplyJSONPatchOpReplace(
+      this.TestApplyJSONPatchOpReplace(
         null,
         CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
         "/foo",
         3);
-      TestApplyJSONPatchOpReplace(
+      this.TestApplyJSONPatchOpReplace(
         null,
         CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
         "/f1/xyz",
         3);
-      TestApplyJSONPatchOpReplace(
+      this.TestApplyJSONPatchOpReplace(
         null,
         CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
         "/f1/",
         3);
-      TestApplyJSONPatchOpReplace(
+      this.TestApplyJSONPatchOpReplace(
         null,
         CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
         "/0",
         3);
-      TestApplyJSONPatchOpReplace(
+      this.TestApplyJSONPatchOpReplace(
         null,
         CBORObject.NewMap().Add("f1", "f2").Add("f3", "f4"),
         "/-",
         3);
-      TestApplyJSONPatchOpReplace(
+      this.TestApplyJSONPatchOpReplace(
         null,
         CBORObject.NewArray().Add(1).Add(2),
         "/-",
         3);
-      TestApplyJSONPatchOpReplace(
+      this.TestApplyJSONPatchOpReplace(
         null,
         CBORObject.NewArray().Add(1).Add(2),
         "/foo",
@@ -8232,7 +8234,7 @@ namespace Test {
     [Test]
     public void TestAtJSONPointer() {
       CBORObject cbor;
-      cbor=CBORObject.FromObject("xyz");
+      cbor = CBORObject.FromObject("xyz");
       Assert.AreEqual(cbor, cbor.AtJSONPointer(String.Empty));
       try {
         cbor.AtJSONPointer(null);
@@ -8378,7 +8380,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       cbor.Add(3);
-      Assert.AreEqual(cbor[0],cbor.AtJSONPointer("/0"));
+      Assert.AreEqual(cbor[0], cbor.AtJSONPointer("/0"));
       try {
         cbor.AtJSONPointer("/1");
         Assert.Fail("Should have failed");
@@ -8397,7 +8399,7 @@ namespace Test {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      cbor=CBORObject.NewMap().Add("foo",0);
+      cbor = CBORObject.NewMap().Add("foo", 0);
       Assert.AreEqual(cbor, cbor.AtJSONPointer(String.Empty));
       try {
         cbor.AtJSONPointer(null);
@@ -8417,7 +8419,7 @@ namespace Test {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      Assert.AreEqual(cbor["foo"],cbor.AtJSONPointer("/foo"));
+      Assert.AreEqual(cbor["foo"], cbor.AtJSONPointer("/foo"));
       try {
         cbor.AtJSONPointer("/bar");
         Assert.Fail("Should have failed");
@@ -8427,19 +8429,22 @@ namespace Test {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      cbor=CBORObject.NewMap().Add("f~o",0);
-      Assert.AreEqual(cbor["f~o"],cbor.AtJSONPointer("/f~0o"));
-      cbor=CBORObject.NewMap().Add("f~0o",0);
-      Assert.AreEqual(cbor["f~0o"],cbor.AtJSONPointer("/f~00o"));
-      cbor=CBORObject.NewMap().Add("f~1o",0);
-      Assert.AreEqual(cbor["f~1o"],cbor.AtJSONPointer("/f~01o"));
-      cbor=CBORObject.NewMap().Add("f/o",0);
-      Assert.AreEqual(cbor["f/o"],cbor.AtJSONPointer("/f~1o"));
-      cbor=CBORObject.NewMap().Add("foo",CBORObject.NewMap().Add("bar",345));
+      cbor = CBORObject.NewMap().Add("f~o", 0);
+      Assert.AreEqual(cbor["f~o"], cbor.AtJSONPointer("/f~0o"));
+      cbor = CBORObject.NewMap().Add("f~0o", 0);
+      Assert.AreEqual(cbor["f~0o"], cbor.AtJSONPointer("/f~00o"));
+      cbor = CBORObject.NewMap().Add("f~1o", 0);
+      Assert.AreEqual(cbor["f~1o"], cbor.AtJSONPointer("/f~01o"));
+      cbor = CBORObject.NewMap().Add("f/o", 0);
+      Assert.AreEqual(cbor["f/o"], cbor.AtJSONPointer("/f~1o"));
+      cbor = CBORObject.NewMap().Add("foo", CBORObject.NewMap().Add("bar",
+            345));
 
-  Assert.AreEqual(CBORObject.FromObject(345),cbor.AtJSONPointer("/foo/bar"));
-      cbor=CBORObject.NewMap().Add("foo",CBORObject.NewArray().Add(678));
-      Assert.AreEqual(CBORObject.FromObject(678),cbor.AtJSONPointer("/foo/0"));
+      Assert.AreEqual(
+        CBORObject.FromObject(345),
+        cbor.AtJSONPointer("/foo/bar"));
+      cbor = CBORObject.NewMap().Add("foo", CBORObject.NewArray().Add(678));
+      Assert.AreEqual(CBORObject.FromObject(678), cbor.AtJSONPointer("/foo/0"));
       try {
         cbor.AtJSONPointer("/foo/1");
         Assert.Fail("Should have failed");
@@ -8467,10 +8472,10 @@ namespace Test {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      cbor=CBORObject.NewMap().Add("-",0);
-      Assert.AreEqual(cbor["-"],cbor.AtJSONPointer("/-"));
+      cbor = CBORObject.NewMap().Add("-", 0);
+      Assert.AreEqual(cbor["-"], cbor.AtJSONPointer("/-"));
       cbor = CBORObject.NewMap().Add(String.Empty, 0);
-      Assert.AreEqual(cbor[String.Empty],cbor.AtJSONPointer("/"));
+      Assert.AreEqual(cbor[String.Empty], cbor.AtJSONPointer("/"));
     }
 
     [Test]
@@ -9052,7 +9057,7 @@ namespace Test {
 
     public static void TestParseNumberFxx(
       string str,
-      short _f16,
+      short f16,
       int f32,
       long f64,
       string line) {
@@ -9061,6 +9066,9 @@ namespace Test {
         // Not a valid JSON number, so skip
         // Console.WriteLine(str);
         return;
+      }
+      if (CBORObject.FromObject(f16) == null) {
+        Assert.Fail();
       }
       CBORObject cbor = CBORDataUtilities.ParseJSONNumber(str,
           JSONOptionsDouble);
@@ -9300,13 +9308,13 @@ namespace Test {
       string decstr = "0E100441809235791722330759976";
       EDecimal ed = EDecimal.FromString(decstr);
       double dbl = ed.ToDouble();
-      Assert.AreEqual((double)0, dbl);
+      Assert.AreEqual(0.0d, dbl);
       AssertJSONDouble(decstr, "double", dbl);
       AssertJSONInteger(decstr, "intorfloat", 0);
       decstr = "0E1321909565013040040586";
       ed = EDecimal.FromString(decstr);
       dbl = ed.ToDouble();
-      Assert.AreEqual((double)0, dbl);
+      Assert.AreEqual(0.0d, dbl);
       AssertJSONDouble(decstr, "double", dbl);
       AssertJSONInteger(decstr, "intorfloat", 0);
       double dblnegzero = EFloat.FromString("-0").ToDouble();
@@ -9462,7 +9470,7 @@ namespace Test {
           }
         }
         // Trailing CTL
-        chars = new char[] { (char)0x31, (char)i};
+        chars = new char[] { (char)0x31, (char)i };
         str = new String(chars, 0, chars.Length);
         if (i == 0x09 || i == 0x0d || i == 0x0a || i == 0x20) {
           try {

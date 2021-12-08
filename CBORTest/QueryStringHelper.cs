@@ -17,7 +17,7 @@ namespace Test {
         throw new ArgumentException();
       }
       if (s == null || s.Length == 0) {
-        return new string[] { String.Empty};
+        return new string[] { String.Empty };
       }
       var index = 0;
       var first = true;
@@ -27,7 +27,7 @@ namespace Test {
         int index2 = s.IndexOf(delimiter, index, StringComparison.Ordinal);
         if (index2 < 0) {
           if (first) {
-            return new string[] { s};
+            return new string[] { s };
           }
           strings.Add(s.Substring(index));
           break;
@@ -204,7 +204,7 @@ namespace Test {
         }
         name = name.Replace('+', ' ');
         value = value.Replace('+', ' ');
-        var pair = new string[] { name, value};
+        var pair = new string[] { name, value };
         pairs.Add(pair);
       }
       foreach (string[] pair in pairs) {
@@ -218,7 +218,7 @@ namespace Test {
     private static string[] GetKeyPath(string s) {
       int index = s.IndexOf('[');
       if (index < 0) { // start bracket not found
-        return new string[] { s};
+        return new string[] { s };
       }
       var path = new List<string>();
       path.Add(s.Substring(0, index - 0));

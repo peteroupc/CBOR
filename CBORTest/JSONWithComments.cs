@@ -18,6 +18,14 @@ using PeterO.Numbers;
 // only the standard JSON format
 namespace Test {
   internal sealed class JSONWithComments {
+    private readonly string jstring;
+    private readonly IList<CBORObject> currPointer;
+    private readonly JSONOptions options;
+    private int currPointerStackSize;
+    private IList<string[]> pointers;
+    private int index;
+    private int endPos;
+
     // JSON parsing method
     private int SkipWhitespaceJSON() {
       while (this.index < this.endPos) {
@@ -33,14 +41,6 @@ namespace Test {
       throw new CBORException(str + " (approx. offset: " +
         Math.Max(0, this.index - 1) + ")");
     }
-
-    private readonly string jstring;
-    private readonly IList<CBORObject> currPointer;
-    private int currPointerStackSize;
-    private readonly JSONOptions options;
-    private IList<string[]> pointers;
-    private int index;
-    private int endPos;
 
     private CBORObject NextJSONString() {
       int c;
@@ -60,8 +60,10 @@ namespace Test {
           if (escaped) {
             return CBORObject.FromJSONString(js.Substring(
                   startIndex - 1,
-                  endIndex - (startIndex - 1))); } return
-CBORObject.FromObject(js.Substring(startIndex,
+                  endIndex - (startIndex - 1)));
+          }
+          return
+            CBORObject.FromObject(js.Substring(startIndex,
                 (endIndex - 1) - startIndex));
         } else if (c == '\\') {
           this.index = idx++;

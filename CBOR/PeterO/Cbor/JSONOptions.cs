@@ -4,7 +4,7 @@ using System.Text;
 
 namespace PeterO.Cbor {
   /// <summary>Includes options to control how CBOR objects are converted
-  /// to JSON.</summary>
+  /// to and from JavaScript Object Notation (JSON).</summary>
   public sealed class JSONOptions {
     /// <summary>Specifies how JSON numbers are converted to CBOR objects
     /// when decoding JSON (such as via <c>FromJSONString</c> or

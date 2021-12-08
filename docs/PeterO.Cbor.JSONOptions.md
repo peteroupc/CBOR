@@ -2,7 +2,7 @@
 
     public sealed class JSONOptions
 
-Includes options to control how CBOR objects are converted to JSON.
+Includes options to control how CBOR objects are converted to and from JavaScript Object Notation (JSON).
 
 ### Member Summary
 * <code>[AllowDuplicateKeys](#AllowDuplicateKeys)</code> - Gets a value indicating whether to allow duplicate keys when reading JSON.
