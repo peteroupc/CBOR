@@ -1272,7 +1272,7 @@ An object within this CBOR object. Returns this object if pointer is the empty s
 <b>Exceptions:</b>
 
  * PeterO.Cbor.CBORException:
-Thrown if the pointer is null, or if the pointer is invalid, or if there is no object at the given pointer, or the special key "-" appears in the pointer, or if the pointer is non-empty and this object has a CBOR type other than array or map.
+Thrown if the pointer is null, or if the pointer is invalid, or if there is no object at the given pointer, or the special key "-" appears in the pointer in the context of an array (not a map), or if the pointer is non-empty and this object has a CBOR type other than array or map.
 
 <a id="AtJSONPointer_string_PeterO_Cbor_CBORObject"></a>
 ### AtJSONPointer
@@ -1293,7 +1293,7 @@ Gets the CBOR object referred to by a JSON Pointer according to RFC6901, or a de
 <b>Return Value:</b>
 
 An object within the specified JSON object. Returns this object if pointer is the empty string (even if this object has a CBOR type other than array or map). Returns  <i>defaultValue</i>
- if the pointer is null, or if the pointer is invalid, or if there is no object at the given pointer, or the special key "-" appears in the pointer, or if the pointer is non-empty and this object has a CBOR type other than array or map.
+ if the pointer is null, or if the pointer is invalid, or if there is no object at the given pointer, or the special key "-" appears in the pointer in the context of an array (not a map), or if the pointer is non-empty and this object has a CBOR type other than array or map.
 
 <a id="CalcEncodedSize"></a>
 ### CalcEncodedSize
@@ -4455,9 +4455,9 @@ Converts this CBOR object to an object of an arbitrary type. The following cases
 
  * If the type is a one-dimensional or multidimensional array type and this CBOR object is an array, returns an array containing the items in this CBOR object.
 
- * If the type is List or the generic or non-generic IList, ICollection, or IEnumerable, (or ArrayList, List, Collection, or Iterable in Java), and if this CBOR object is an array, returns an object conforming to the type, class, or interface passed to this method, where the object will contain all items in this CBOR array.
+ * If the type is List, ReadOnlyCollection or the generic or non-generic IList, ICollection, IEnumerable, IReadOnlyCollection, or IReadOnlyList (or ArrayList, List, Collection, or Iterable in Java), and if this CBOR object is an array, returns an object conforming to the type, class, or interface passed to this method, where the object will contain all items in this CBOR array.
 
- * If the type is Dictionary or the generic or non-generic IDictionary (or HashMap or Map in Java), and if this CBOR object is a map, returns an object conforming to the type, class, or interface passed to this method, where the object will contain all keys and values in this CBOR map.
+ * If the type is Dictionary, ReadOnlyDictionary or the generic or non-generic IDictionary or IReadOnlyDictionary (or HashMap or Map in Java), and if this CBOR object is a map, returns an object conforming to the type, class, or interface passed to this method, where the object will contain all keys and values in this CBOR map.
 
  * If the type is an enumeration constant ("enum"), and this CBOR object is an integer or text string, returns the enumeration constant with the given number or name, respectively. (Enumeration constants made up of multiple enumeration constants, as allowed by .NET, can only be matched by number this way.)
 

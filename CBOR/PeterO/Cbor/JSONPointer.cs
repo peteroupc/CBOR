@@ -13,6 +13,10 @@ using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   internal sealed class JSONPointer {
+    private readonly string refValue;
+    private readonly bool isRoot;
+    private readonly CBORObject jsonobj;
+
     public static JSONPointer FromPointer(CBORObject obj, string pointer) {
       var index = 0;
       if (pointer == null) {
@@ -22,7 +26,7 @@ namespace PeterO.Cbor {
         throw new ArgumentNullException(nameof(obj));
       }
       if (pointer.Length == 0) {
-        return new JSONPointer(obj, pointer);
+        return new JSONPointer(obj, pointer, true);
       }
       while (true) {
         if (obj == null) {
@@ -204,16 +208,17 @@ namespace PeterO.Cbor {
       return index;
     }
 
-    private string refValue;
+    private JSONPointer(CBORObject jsonobj, string refValue)
+        : this(jsonobj, refValue, false) {
+    }
 
-    private CBORObject jsonobj;
-
-    private JSONPointer(CBORObject jsonobj, string refValue) {
+    private JSONPointer(CBORObject jsonobj, string refValue, bool isRoot) {
       #if DEBUG
       if (!(refValue != null)) {
         throw new InvalidOperationException("doesn't satisfy refValue!=null");
       }
       #endif
+      this.isRoot = isRoot;
       this.jsonobj = jsonobj;
       this.refValue = refValue;
     }
@@ -267,7 +272,7 @@ namespace PeterO.Cbor {
     }
 
     public CBORObject GetValue() {
-      if (this.refValue.Length == 0) {
+      if (this.isRoot) {
         // Root always exists
         return this.jsonobj;
       }

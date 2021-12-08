@@ -5624,9 +5624,10 @@ CBORObjectTypeTextStringAscii) ?
     /// other than array or map).</returns>
     /// <exception cref='PeterO.Cbor.CBORException'>Thrown if the pointer
     /// is null, or if the pointer is invalid, or if there is no object at
-    /// the given pointer, or the special key "-" appears in the pointer,
-    /// or if the pointer is non-empty and this object has a CBOR type
-    /// other than array or map.</exception>
+    /// the given pointer, or the special key "-" appears in the pointer in
+    /// the context of an array (not a map), or if the pointer is non-empty
+    /// and this object has a CBOR type other than array or
+    /// map.</exception>
     public CBORObject AtJSONPointer(string pointer) {
       CBORObject ret = this.AtJSONPointer(pointer, null);
       if (ret == null) {
@@ -5659,9 +5660,9 @@ CBORObjectTypeTextStringAscii) ?
     /// CBOR type other than array or map). Returns <paramref
     /// name='defaultValue'/> if the pointer is null, or if the pointer is
     /// invalid, or if there is no object at the given pointer, or the
-    /// special key "-" appears in the pointer, or if the pointer is
-    /// non-empty and this object has a CBOR type other than array or
-    /// map.</returns>
+    /// special key "-" appears in the pointer in the context of an array
+    /// (not a map), or if the pointer is non-empty and this object has a
+    /// CBOR type other than array or map.</returns>
     public CBORObject AtJSONPointer(string pointer, CBORObject defaultValue) {
       return JSONPointer.GetObject(this, pointer, null);
     }

@@ -15,8 +15,8 @@ namespace PeterO.Cbor {
       for (; i < str.Length; ++i) {
         char c = str[i];
         if (c < 0x20 || c >= 0x7f || c == '\\' || c == '"') {
-           sb.WriteString(str, 0, i);
-           break;
+          sb.WriteString(str, 0, i);
+          break;
         }
       }
       if (i == str.Length) {
@@ -58,39 +58,39 @@ namespace PeterO.Cbor {
             sb.WriteCodePoint((int)Hex16[(int)(c & 15)]);
           }
         } else if ((c & 0xfc00) == 0xd800) {
-            if (i >= str.Length - 1 || (str[i + 1] & 0xfc00) != 0xdc00) {
-              // NOTE: RFC 8259 doesn't prohibit any particular
-              // error-handling behavior when a writer of JSON
-              // receives a string with an unpaired surrogate.
-              if (options.ReplaceSurrogates) {
-                // Replace unpaired surrogate with U+FFFD
-                sb.WriteCodePoint(0xfffd);
-              } else {
-                throw new CBORException("Unpaired surrogate in string");
-              }
-            } else if (c >= 0x80 && options.WriteBasic) {
-              c = str[i];
-              sb.WriteString("\\u");
-            sb.WriteCodePoint((int)Hex16[(int)((c >> 12) & 15)]);
-          sb.WriteCodePoint((int)Hex16[(int)((c >> 8) & 15)]);
-        sb.WriteCodePoint((int)Hex16[(int)((c >> 4) & 15)]);
-      sb.WriteCodePoint((int)Hex16[(int)(c & 15)]);
-    c = str[i + 1];
-    sb.WriteString("\\u");
-  sb.WriteCodePoint((int)Hex16[(int)((c >> 12) & 15)]);
-  sb.WriteCodePoint((int)Hex16[(int)((c >> 8) & 15)]);
-  sb.WriteCodePoint((int)Hex16[(int)((c >> 4) & 15)]);
-  sb.WriteCodePoint((int)Hex16[(int)(c & 15)]);
+          if (i >= str.Length - 1 || (str[i + 1] & 0xfc00) != 0xdc00) {
+            // NOTE: RFC 8259 doesn't prohibit any particular
+            // error-handling behavior when a writer of JSON
+            // receives a string with an unpaired surrogate.
+            if (options.ReplaceSurrogates) {
+              // Replace unpaired surrogate with U+FFFD
+              sb.WriteCodePoint(0xfffd);
             } else {
-              sb.WriteString(str, i, 2);
+              throw new CBORException("Unpaired surrogate in string");
             }
-            ++i;
-        } else if (c >= 0x80 && options.WriteBasic) {
+          } else if (c >= 0x80 && options.WriteBasic) {
+            c = str[i];
             sb.WriteString("\\u");
             sb.WriteCodePoint((int)Hex16[(int)((c >> 12) & 15)]);
             sb.WriteCodePoint((int)Hex16[(int)((c >> 8) & 15)]);
             sb.WriteCodePoint((int)Hex16[(int)((c >> 4) & 15)]);
             sb.WriteCodePoint((int)Hex16[(int)(c & 15)]);
+            c = str[i + 1];
+            sb.WriteString("\\u");
+            sb.WriteCodePoint((int)Hex16[(int)((c >> 12) & 15)]);
+            sb.WriteCodePoint((int)Hex16[(int)((c >> 8) & 15)]);
+            sb.WriteCodePoint((int)Hex16[(int)((c >> 4) & 15)]);
+            sb.WriteCodePoint((int)Hex16[(int)(c & 15)]);
+          } else {
+            sb.WriteString(str, i, 2);
+          }
+          ++i;
+        } else if (c >= 0x80 && options.WriteBasic) {
+          sb.WriteString("\\u");
+          sb.WriteCodePoint((int)Hex16[(int)((c >> 12) & 15)]);
+          sb.WriteCodePoint((int)Hex16[(int)((c >> 8) & 15)]);
+          sb.WriteCodePoint((int)Hex16[(int)((c >> 4) & 15)]);
+          sb.WriteCodePoint((int)Hex16[(int)(c & 15)]);
         } else {
           sb.WriteCodePoint((int)c);
         }
@@ -110,8 +110,8 @@ namespace PeterO.Cbor {
     }
 
     private static void PopRefIfNeeded(
-        IList<CBORObject> stack,
-        bool pop) {
+      IList<CBORObject> stack,
+      bool pop) {
       if (pop && stack != null) {
         stack.RemoveAt(stack.Count - 1);
       }
