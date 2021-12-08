@@ -20,7 +20,8 @@
   </PropertyGroup>
   <PropertyGroup Condition='
 &apos;$(Configuration)&apos;==&apos;Release&apos;
-'><Optimize>true</Optimize><SignAssembly>true</SignAssembly>
+'><Optimize>true</Optimize><SignAssembly>true</SignAssembly>    <AssemblyOriginatorKeyFile>..\CBOR\PeterO.snk</AssemblyOriginatorKeyFile>
+
     <OutputPath>bin\Release</OutputPath>
     <DefineConstants>NET40</DefineConstants>
     <ErrorReport>prompt</ErrorReport>

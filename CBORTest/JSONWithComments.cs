@@ -541,7 +541,7 @@ namespace Test {
     private void PushPointer() {
       if (this.currPointerStackSize > this.currPointer.Count) {
         this.RaiseError("Internal error");
-      };
+      }
       if (this.currPointerStackSize == this.currPointer.Count) {
         this.currPointer.Add(CBORObject.Null);
       } else {
@@ -552,7 +552,7 @@ namespace Test {
     private void PopPointer() {
       if (this.currPointerStackSize < 0) {
         this.RaiseError("Internal error");
-      };
+      }
       --this.currPointerStackSize;
     }
 

@@ -1,20 +1,9 @@
 <package
-><metadata><version>4.5</version><id>PeterO.Cbor</id><requireLicenseAcceptance>false</requireLicenseAcceptance><releaseNotes>Version 4.4.2:
+><metadata><version>4.5</version><id>PeterO.Cbor</id><requireLicenseAcceptance>false</requireLicenseAcceptance><releaseNotes>Version 4.5:
 
-- Performance improvements in some cases, especially involving date/time conversions
-- Error checks in DateTimeFieldsToCBORObject method in CBORDateConverter
-- Bug fixes
-
-Version 4.4.1:
-
-- Fix bugs when parsing JSON with the JSON option &apos;numberconversion=double&apos;
-
-Version 4.4:
-
-- Boolean constructors of PODOptions and CBOREncodeOptions were obsolete
-- Float64 option of CBOREncodeOptions for encoding floating-point values as 64-bit only
-- CBORDateConverter made public and expanded to enable conversion between various
-  date/time formats and CBOR objects
-- Added CanFitInUInt64 and CanTruncatedIntFitInUInt64 methods
-- Bug fixes</releaseNotes><summary></summary><license type='expression'>CC0-1.0</license><projectUrl>https://github.com/peteroupc/CBOR</projectUrl><authors>Peter Occil</authors><description>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 8949.</description><owners>Peter Occil</owners><title>CBOR (Concise Binary Object Representation)</title><tags>cbor data serialization binary json</tags><dependencies><group targetFramework='.NETStandard1.0'><dependency id='PeterO.URIUtility' version='1.0.0' /><dependency id='PeterO.Numbers' version='1.8.2' /></group><group targetFramework='.NETFramework2.0'><dependency id='PeterO.URIUtility' version='1.0.0' /><dependency id='PeterO.Numbers' version='1.8.2' /></group><group targetFramework='.NETFramework4.0'><dependency id='PeterO.URIUtility' version='1.0.0' /><dependency id='PeterO.Numbers' version='1.8.2' /></group></dependencies></metadata><files><file src='CBOR/bin/Release/netstandard1.0/CBOR.dll' target='/lib/netstandard1.0' /><file src='CBOR/bin/Release/netstandard1.0/CBOR.xml' target='/lib/netstandard1.0' /><file src='CBOR20/bin/Release/CBOR.dll' target='/lib/net20' /><file src='CBOR20/bin/Release/CBOR.xml' target='/lib/net20' /><file src='CBOR40/bin/Release/CBOR.dll' target='/lib/net40' /><file src='CBOR40/bin/Release/CBOR.xml' target='/lib/net40' /></files></package
+- Add support for JSON Pointers and JSON Patches
+- Add option to keep map key order when decoding CBOR and JSON
+- Add option to write JSON using only ASCII characters
+- CBORObject.ToString renders strings as ASCII
+- Add support for deserializing CBOR objects to IReadOnlyList, IReadOnlyCollection, and ReadOnlyDictionary</releaseNotes><summary></summary><license type='expression'>CC0-1.0</license><projectUrl>https://github.com/peteroupc/CBOR</projectUrl><authors>Peter Occil</authors><description>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 8949.</description><owners>Peter Occil</owners><title>CBOR (Concise Binary Object Representation)</title><tags>cbor data serialization binary json</tags><dependencies><group targetFramework='.NETStandard1.0'><dependency id='PeterO.URIUtility' version='1.0.0' /><dependency id='PeterO.Numbers' version='1.8.2' /></group><group targetFramework='.NETFramework2.0'><dependency id='PeterO.URIUtility' version='1.0.0' /><dependency id='PeterO.Numbers' version='1.8.2' /></group><group targetFramework='.NETFramework4.0'><dependency id='PeterO.URIUtility' version='1.0.0' /><dependency id='PeterO.Numbers' version='1.8.2' /></group></dependencies></metadata><files><file src='CBOR/bin/Release/netstandard1.0/CBOR.dll' target='/lib/netstandard1.0' /><file src='CBOR/bin/Release/netstandard1.0/CBOR.xml' target='/lib/netstandard1.0' /><file src='CBOR20/bin/Release/CBOR.dll' target='/lib/net20' /><file src='CBOR20/bin/Release/CBOR.xml' target='/lib/net20' /><file src='CBOR40/bin/Release/CBOR.dll' target='/lib/net40' /><file src='CBOR40/bin/Release/CBOR.xml' target='/lib/net40' /></files></package
 >

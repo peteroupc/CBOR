@@ -18,7 +18,8 @@
     <DocumentationFile>bin\Debug\CBOR.xml</DocumentationFile>
     <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition=' &apos;$(Configuration)&apos;==&apos;Release&apos; '><Optimize>true</Optimize><SignAssembly>true</SignAssembly>
+  <PropertyGroup Condition=' &apos;$(Configuration)&apos;==&apos;Release&apos; '><Optimize>true</Optimize><SignAssembly>true</SignAssembly>    <AssemblyOriginatorKeyFile>..\CBOR\PeterO.snk</AssemblyOriginatorKeyFile>
+
     <OutputPath>bin\Release</OutputPath>
     <DefineConstants>NET20</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
