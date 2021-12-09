@@ -17,6 +17,8 @@ Finally, this implementation supports arbitrary-precision binary and decimal flo
 
 Source code is available in the [project page](https://github.com/peteroupc/CBOR).
 
+Note that after version 4.5x, the CBOR library's repository will stop including special projects for .NET 2.0 and .NET 4.0, leaving the .NET-Standard project for building the library.
+
 How to Install
 ---------
 Starting with version 0.21.0, the C# implementation is available in the

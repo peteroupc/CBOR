@@ -2,7 +2,7 @@
 <Project DefaultTargets='Build' ToolsVersion='4.0' xmlns='http://schemas.microsoft.com/developer/msbuild/2003'><PropertyGroup><Configuration Condition=' &apos;$(Configuration)&apos; == &apos;&apos; '>Debug</Configuration><Platform Condition=' &apos;$(Platform)&apos; == &apos;&apos; '>AnyCPU</Platform>
     <OutputType>Library</OutputType>
     <AssemblyName>CBOR</AssemblyName>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>true</SignAssembly><PublicSign>False</PublicSign>
     <AssemblyOriginatorKeyFile>..\CBOR\PeterO.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <ProjectGuid>{C53FD486-9486-43EA-9257-FDD713F57050}</ProjectGuid>
@@ -18,7 +18,7 @@
     <DocumentationFile>bin\Debug\CBOR.xml</DocumentationFile>
     <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition=' &apos;$(Configuration)&apos;==&apos;Release&apos; '><Optimize>true</Optimize><SignAssembly>true</SignAssembly>    <AssemblyOriginatorKeyFile>..\CBOR\PeterO.snk</AssemblyOriginatorKeyFile>
+  <PropertyGroup Condition=' &apos;$(Configuration)&apos;==&apos;Release&apos; '><Optimize>true</Optimize><SignAssembly>true</SignAssembly>   <PublicSign>False</PublicSign> <AssemblyOriginatorKeyFile>..\CBOR\PeterO.snk</AssemblyOriginatorKeyFile>
 
     <OutputPath>bin\Release</OutputPath>
     <DefineConstants>NET20</DefineConstants>

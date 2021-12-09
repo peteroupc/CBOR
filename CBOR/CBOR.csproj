@@ -21,6 +21,8 @@ Version 4.5:
 - CBORObject.ToString renders strings as ASCII
 - Add support for deserializing CBOR objects to IReadOnlyList, IReadOnlyCollection, and ReadOnlyDictionary
 
+Note that after version 4.5x, the CBOR library's repository will stop including special projects for .NET 2.0 and .NET 4.0, leaving the .NET-Standard project for building the library.
+
 </PackageReleaseNotes>
     <PackageTags>cbor data serialization binary json</PackageTags>
     <SignAssembly>True</SignAssembly>

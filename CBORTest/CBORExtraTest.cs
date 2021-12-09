@@ -551,6 +551,7 @@ from i in RangeExclusive(0, 10)
 
 #pragma warning disable CA1814
 
+#if !NET20 && !NET40
     [Test]
     public void TestReadOnlyCollection() {
       IReadOnlyCollection<int> roc = new ReadOnlyCollection<int>(new int[] {
@@ -681,6 +682,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
  throw new InvalidOperationException(String.Empty, ex);
 }
     }
+#endif
 
     [Test]
     public void TestMultidimArray() {
