@@ -56,8 +56,7 @@ jobs:
       with:
         dotnet-version: '5.0'
     - run: |
-        dotnet clean
-        dotnet build CBORTest -c Release
+        dotnet clean; dotnet build CBORTest -c Release
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
