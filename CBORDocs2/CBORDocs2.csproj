@@ -1,141 +1,19 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<Project DefaultTargets='Build' ToolsVersion='4.0' xmlns='http://schemas.microsoft.com/developer/msbuild/2003'>
-  <Import Condition='Exists(
-  &#x27;../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.props&#x27;)' Project='../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.props'/>
-  <Import Condition='Exists(
-  &#x27;../packages/Microsoft.NetFramework.Analyzers.3.3.2/build/Microsoft.NetFramework.Analyzers.props&#x27;)' Project='../packages/Microsoft.NetFramework.Analyzers.3.3.2/build/Microsoft.NetFramework.Analyzers.props'/>
-  <Import Condition='Exists(
-  &#x27;../packages/Microsoft.NetCore.Analyzers.3.3.2/build/Microsoft.NetCore.Analyzers.props&#x27;)' Project='../packages/Microsoft.NetCore.Analyzers.3.3.2/build/Microsoft.NetCore.Analyzers.props'/>
-  <Import Condition='Exists(
-  &#x27;../packages/Microsoft.CodeQuality.Analyzers.3.3.2/build/Microsoft.CodeQuality.Analyzers.props&#x27;)' Project='../packages/Microsoft.CodeQuality.Analyzers.3.3.2/build/Microsoft.CodeQuality.Analyzers.props'/>
-  <Import Condition='Exists(
-  &#x27;../packages/Microsoft.CodeAnalysis.VersionCheckAnalyzer.3.3.2/build/Microsoft.CodeAnalysis.VersionCheckAnalyzer.props&#x27;)' Project='../packages/Microsoft.CodeAnalysis.VersionCheckAnalyzer.3.3.2/build/Microsoft.CodeAnalysis.VersionCheckAnalyzer.props'/>
-  <Import Condition='Exists(
-  &#x27;$(
-  MSBuildExtensionsPath)\$(
-  MSBuildToolsVersion)\Microsoft.Common.props&#x27;)' Project='$(
-  MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props'/>
+<Project Sdk='Microsoft.NET.Sdk'>
   <PropertyGroup>
-    <Configuration Condition=' &#x27;$(Configuration)&#x27; == &#x27;&#x27;
-'>Debug</Configuration>
-    <Platform Condition=' &#x27;$(Platform)&#x27; == &#x27;&#x27;
-'>AnyCPU</Platform>
-    <ProjectGuid> {B38659A7-A3DB-4CD1-8DFF-641B579E5092}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
-    <RootNamespace>CBORDocs2</RootNamespace>
-    <AssemblyName>CBORDocs2</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <RuntimeIdentifiers>win</RuntimeIdentifiers>
-    <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp/>
-    <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet>
+    <TargetFramework>netcoreapp5.0</TargetFramework>
+    <!--<GenerateProgramFile>false</GenerateProgramFile>-->
   </PropertyGroup>
   <PropertyGroup Condition=' &apos;$(Configuration)&apos;==&apos;Debug&apos; '>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition='
-&apos;$(Configuration)&apos;==&apos;Release&apos; '>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
+    <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet></PropertyGroup>
+  <PropertyGroup Condition=' &apos;$(Configuration)&apos;==&apos;Release&apos; '>
+    <DebugType>none</DebugType>
+    <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet></PropertyGroup>
   <ItemGroup>
-    <Compile Include='Program.cs'/>
-    <Compile Include='Properties\AssemblyInfo.cs'/>
-    <AdditionalFiles Include='stylecop.json'/>
-    <AdditionalFiles Include='rules.ruleset'/>
-    <PackageReference Include='StyleCop.Analyzers'>
-      <Version>1.1.118</Version>
-    </PackageReference>
-    <PackageReference Include='Microsoft.CodeAnalysis.NetAnalyzers'>
-      <Version>5.0.3</Version>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include='..\CBORDocs\CBORDocs.csproj'>
-      <Project> {B4719819-FE90-4A02-A71B-0169583B4752}</Project>
-      <Name>CBORDocs</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project='$(MSBuildToolsPath)\Microsoft.CSharp.targets'/>
-  <Target BeforeTargets='PrepareForBuild' Name='EnsureNuGetPackageBuildImports'>
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing
-on this computer. Enable NuGet Package Restore to download them. For more
-information, see http://go.microsoft.com/fwlink/?LinkID = 322105.The missing
-file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition='!Exists(
-  &#x27;../packages/Microsoft.CodeAnalysis.VersionCheckAnalyzer.3.3.2/build/Microsoft.CodeAnalysis.VersionCheckAnalyzer.props&#x27;)' Text='$([System.String]::Format(&#x27;$(ErrorText)&#x27;,
-
-  &#x27;../packages/Microsoft.CodeAnalysis.VersionCheckAnalyzer.3.3.2/build/Microsoft.CodeAnalysis.VersionCheckAnalyzer.props&#x27;))'/>
-    <Error Condition='!Exists(
-  &#x27;../packages/Microsoft.CodeAnalysis.VersionCheckAnalyzer.3.3.2/build/Microsoft.CodeAnalysis.VersionCheckAnalyzer.targets&#x27;)' Text='$([System.String]::Format(&#x27;$(ErrorText)&#x27;,
-
-  &#x27;../packages/Microsoft.CodeAnalysis.VersionCheckAnalyzer.3.3.2/build/Microsoft.CodeAnalysis.VersionCheckAnalyzer.targets&#x27;))'/>
-    <Error Condition='!Exists(
-  &#x27;../packages/Microsoft.CodeQuality.Analyzers.3.3.2/build/Microsoft.CodeQuality.Analyzers.props&#x27;)' Text='$([System.String]::Format(&#x27;$(ErrorText)&#x27;,
-
-  &#x27;../packages/Microsoft.CodeQuality.Analyzers.3.3.2/build/Microsoft.CodeQuality.Analyzers.props&#x27;))'/>
-    <Error Condition='!Exists(
-  &#x27;../packages/Microsoft.CodeQuality.Analyzers.3.3.2/build/Microsoft.CodeQuality.Analyzers.targets&#x27;)' Text='$([System.String]::Format(&#x27;$(ErrorText)&#x27;,
-
-  &#x27;../packages/Microsoft.CodeQuality.Analyzers.3.3.2/build/Microsoft.CodeQuality.Analyzers.targets&#x27;))'/>
-    <Error Condition='!Exists(
-  &#x27;../packages/Microsoft.NetCore.Analyzers.3.3.2/build/Microsoft.NetCore.Analyzers.props&#x27;)' Text='$([System.String]::Format(&#x27;$(ErrorText)&#x27;,
-
-  &#x27;../packages/Microsoft.NetCore.Analyzers.3.3.2/build/Microsoft.NetCore.Analyzers.props&#x27;))'/>
-    <Error Condition='!Exists(
-  &#x27;../packages/Microsoft.NetCore.Analyzers.3.3.2/build/Microsoft.NetCore.Analyzers.targets&#x27;)' Text='$([System.String]::Format(&#x27;$(ErrorText)&#x27;,
-
-  &#x27;../packages/Microsoft.NetCore.Analyzers.3.3.2/build/Microsoft.NetCore.Analyzers.targets&#x27;))'/>
-    <Error Condition='!Exists(
-  &#x27;../packages/Microsoft.NetFramework.Analyzers.3.3.2/build/Microsoft.NetFramework.Analyzers.props&#x27;)' Text='$([System.String]::Format(&#x27;$(ErrorText)&#x27;,
-
-  &#x27;../packages/Microsoft.NetFramework.Analyzers.3.3.2/build/Microsoft.NetFramework.Analyzers.props&#x27;))'/>
-    <Error Condition='!Exists(
-  &#x27;../packages/Microsoft.NetFramework.Analyzers.3.3.2/build/Microsoft.NetFramework.Analyzers.targets&#x27;)' Text='$([System.String]::Format(&#x27;$(ErrorText)&#x27;,
-
-  &#x27;../packages/Microsoft.NetFramework.Analyzers.3.3.2/build/Microsoft.NetFramework.Analyzers.targets&#x27;))'/>
-    <Error Condition='!Exists(
-  &#x27;../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.props&#x27;)' Text='$([System.String]::Format(&#x27;$(ErrorText)&#x27;,
-
-  &#x27;../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.props&#x27;))'/>
-    <Error Condition='!Exists(
-  &#x27;../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.targets&#x27;)' Text='$([System.String]::Format(&#x27;$(ErrorText)&#x27;,
-
-  &#x27;../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.targets&#x27;))'/>
-  </Target>
-  <Import Condition='Exists(
-  &#x27;../packages/Microsoft.CodeAnalysis.VersionCheckAnalyzer.3.3.2/build/Microsoft.CodeAnalysis.VersionCheckAnalyzer.targets&#x27;)' Project='../packages/Microsoft.CodeAnalysis.VersionCheckAnalyzer.3.3.2/build/Microsoft.CodeAnalysis.VersionCheckAnalyzer.targets'/>
-  <Import Condition='Exists(
-  &#x27;../packages/Microsoft.CodeQuality.Analyzers.3.3.2/build/Microsoft.CodeQuality.Analyzers.targets&#x27;)' Project='../packages/Microsoft.CodeQuality.Analyzers.3.3.2/build/Microsoft.CodeQuality.Analyzers.targets'/>
-  <Import Condition='Exists(
-  &#x27;../packages/Microsoft.NetCore.Analyzers.3.3.2/build/Microsoft.NetCore.Analyzers.targets&#x27;)' Project='../packages/Microsoft.NetCore.Analyzers.3.3.2/build/Microsoft.NetCore.Analyzers.targets'/>
-  <Import Condition='Exists(
-  &#x27;../packages/Microsoft.NetFramework.Analyzers.3.3.2/build/Microsoft.NetFramework.Analyzers.targets&#x27;)' Project='../packages/Microsoft.NetFramework.Analyzers.3.3.2/build/Microsoft.NetFramework.Analyzers.targets'/>
-  <Import Condition='Exists(
-  &#x27;../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.targets&#x27;)' Project='../packages/Microsoft.CodeAnalysis.NetAnalyzers.5.0.3/build/Microsoft.CodeAnalysis.NetAnalyzers.targets'/>
-  <!-- To modify your build process, add your task inside one of the targets
-below and uncomment it.
-       Other similar extension points exist, see
-Microsoft.Common.targets.<Target Name="BeforeBuild"></Target><Target
-Name="AfterBuild"></Target>-->
-</Project>
+    <ProjectReference Include='..\CBORDocs\CBORDocs.csproj'/>
+  <AdditionalFiles Include='stylecop.json'/><AdditionalFiles Include='rules.ruleset'/></ItemGroup>
+      <ItemGroup>
+        <PackageReference Include='Microsoft.CodeAnalysis.NetAnalyzers' PrivateAssets='All' Version='5.0.3'/>
+        <PackageReference Include='StyleCop.Analyzers' PrivateAssets='All' Version='1.2.0-beta.354'/>
+      </ItemGroup>
+   </Project>

@@ -57,8 +57,6 @@ jobs:
         dotnet-version: '5.0'
     - name: Autobuild
       uses: github/codeql-action/autobuild@v1
-      with:
-        dotnet-version: '5.0'
 
     #- run: |
     #    dotnet clean; dotnet build CBORTest -c Release

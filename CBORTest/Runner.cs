@@ -49,7 +49,7 @@ array.Length);
       }
       return false;
     }
-
+/*
     public static void Main() {
       if (!Extra()) {
         return;
@@ -89,5 +89,6 @@ array.Length);
         }
       }
     }
+*/
   }
 }
