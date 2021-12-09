@@ -56,9 +56,6 @@ jobs:
       with:
         dotnet-version: '5.0'
     - run: |
-        dotnet add CBORTest package Microsoft.NET.Test.Sdk # Update is required for GitHubActionsTestLogger to print anything
-        dotnet add CBORTest package GitHubActionsTestLogger
-        dotnet add CBORTest package NUnit3TestAdapter
         dotnet build CBORTest -c Release
 
     - name: Perform CodeQL Analysis
