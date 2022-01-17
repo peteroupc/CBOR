@@ -7945,9 +7945,9 @@ CBORObjectTypeTextStringAscii)) {
       var sortedASet = new List<CBORObject>(mapA.Keys);
       var sortedBSet = new List<CBORObject>(mapB.Keys);
       // DebugUtility.Log("---sorting mapA's keys");
-      sortedASet.Sort();
+      // sortedASet.Sort();
       // DebugUtility.Log("---sorting mapB's keys");
-      sortedBSet.Sort();
+      // sortedBSet.Sort();
       // DebugUtility.Log("---done sorting");
       listACount = sortedASet.Count;
       listBCount = sortedBSet.Count;

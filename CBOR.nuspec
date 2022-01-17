@@ -1,5 +1,9 @@
 <package
-><metadata><version>4.5</version><id>PeterO.Cbor</id><requireLicenseAcceptance>false</requireLicenseAcceptance><releaseNotes>Version 4.5:
+><metadata><version>4.5.1</version><id>PeterO.Cbor</id><requireLicenseAcceptance>false</requireLicenseAcceptance><releaseNotes>Version 4.5.1
+
+- Fix reported security issue
+    
+Version 4.5:
 
 - Add support for JSON Pointers and JSON Patches
 - Add option to keep map key order when decoding CBOR and JSON
