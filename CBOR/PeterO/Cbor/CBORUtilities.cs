@@ -469,8 +469,10 @@ namespace PeterO.Cbor {
       }
       int c = Math.Min(a.Length, b.Length);
       for (var i = 0; i < c; ++i) {
-        if (a[i] != b[i]) {
-          return ((((int)a[i]) & 0xff) < (((int)b[i]) & 0xff)) ? -1 : 1;
+        byte ai = a[i];
+        byte bi = b[i];
+        if (ai != bi) {
+          return ((((int)ai) & 0xff) < (((int)bi) & 0xff)) ? -1 : 1;
         }
       }
       return (a.Length != b.Length) ? ((a.Length < b.Length) ? -1 : 1) : 0;
@@ -487,8 +489,10 @@ namespace PeterO.Cbor {
         return a.Length < b.Length ? -1 : 1;
       }
       for (var i = 0; i < a.Length; ++i) {
-        if (a[i] != b[i]) {
-          return ((((int)a[i]) & 0xff) < (((int)b[i]) & 0xff)) ? -1 : 1;
+        byte ai = a[i];
+        byte bi = b[i];
+        if (ai != bi) {
+          return ((((int)ai) & 0xff) < (((int)bi) & 0xff)) ? -1 : 1;
         }
       }
       return 0;
