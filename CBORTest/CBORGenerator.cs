@@ -142,19 +142,19 @@ namespace Test {
         GenerateArgument(r, 0, r.GetInt32(100), bs);
       } else if (v < 35) {
         bs.Write(0x41);
-      bs.Write(0x20);
+        bs.Write(0x20);
       } else if (v < 45) {
         bs.Write(0x41);
-      bs.Write(0x20);
+        bs.Write(0x20);
       } else if (v < 50) {
         bs.Write(0x81);
-      this.GenerateSmall(r, depth + 1, bs);
+        this.GenerateSmall(r, depth + 1, bs);
       } else if (v < 53) {
         bs.Write(0xa2);
-      bs.Write(0xf7);
-    bs.Write(0xf6);
-  this.GenerateSmall(r, depth + 1, bs);
-  bs.Write(0xf5);
+        bs.Write(0xf7);
+        bs.Write(0xf6);
+        this.GenerateSmall(r, depth + 1, bs);
+        bs.Write(0xf5);
       } else if (v < 80) {
         bs.Write(r.GetInt32(0x40));
       } else if (v < 100) {
