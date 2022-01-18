@@ -119,7 +119,8 @@ lowExponent) {
     public static CBORObject RandomCBORMap(IRandomGenExtended rand, int depth) {
       int x = rand.GetInt32(100);
       int count = (x < 80) ? 2 : ((x < 93) ? 1 : ((x < 98) ? 0 : 10));
-      CBORObject cborRet = CBORObject.NewMap();
+      CBORObject cborRet = rand.GetInt32(100) < 30 ?
+         CBORObject.NewOrderedMap() : CBORObject.NewMap();
       for (var i = 0; i < count; ++i) {
         CBORObject key = RandomCBORObject(rand, depth + 1);
         CBORObject value = RandomCBORObject(rand, depth + 1);

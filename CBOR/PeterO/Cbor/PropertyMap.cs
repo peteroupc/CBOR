@@ -35,7 +35,7 @@ namespace PeterO.Cbor {
       private readonly IDictionary<TKey, TValue> dict;
       private readonly LinkedList<TKey> list;
       public OrderedDictionary() {
-        this.dict = new Dictionary<TKey, TValue>();
+        this.dict = new SortedDictionary<TKey, TValue>();
         this.list = new LinkedList<TKey>();
       }
       public void Add(KeyValuePair<TKey, TValue> kvp) {
@@ -176,6 +176,12 @@ namespace PeterO.Cbor {
       public ICollection<TKey> Keys {
         get {
           return new KeyWrapper<TKey, TValue>(this.dict, this.list);
+        }
+      }
+
+      public ICollection<TKey> SortedKeys {
+        get {
+           return this.dict.Keys;
         }
       }
 
@@ -893,6 +899,21 @@ namespace PeterO.Cbor {
           Convert.ToInt64(value,
             CultureInfo.InvariantCulture) :
           Convert.ToInt32(value, CultureInfo.InvariantCulture));
+    }
+
+    public static ICollection<TKey>
+    GetSortedKeys<TKey, TValue>(
+      IDictionary<TKey, TValue> dict) {
+      var odict = dict as OrderedDictionary<TKey, TValue>;
+      if (odict != null) {
+        return odict.SortedKeys;
+      }
+      var sdict = dict as SortedDictionary<TKey, TValue>;
+      if (sdict != null) {
+        return sdict.Keys;
+      }
+      throw new InvalidOperationException("Internal error: Map doesn't" +
+"\u0020support sorted keys");
     }
 
     public static ICollection<KeyValuePair<TKey, TValue>>
