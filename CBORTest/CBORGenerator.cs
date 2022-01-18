@@ -84,7 +84,13 @@ namespace Test {
     private static int[]
     valueMajorTypes = {
       0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4,
-      4, 5, 6, 6, 7, 7, 7, 7, 7, 7,
+      4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 6, 6, 7, 7, 7, 7, 7, 7,
+    };
+
+    private static int[]
+    valueMajorTypesHighDepth = {
+      0, 1, 2, 3, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+      5, 5, 5, 5, 5, 5, 6, 7,
     };
 
     private static int[] valueMajorTypesHighLength = {
@@ -130,20 +136,50 @@ namespace Test {
       }
     }
 
+    private void GenerateSmall(IRandomGenExtended r, int depth, ByteWriter bs) {
+      int v = r.GetInt32(100);
+      if (v < 25) {
+        GenerateArgument(r, 0, r.GetInt32(100), bs);
+      } else if (v < 35) {
+        bs.Write(0x41);
+      bs.Write(0x20);
+      } else if (v < 45) {
+        bs.Write(0x41);
+      bs.Write(0x20);
+      } else if (v < 50) {
+        bs.Write(0x81);
+      this.GenerateSmall(r, depth + 1, bs);
+      } else if (v < 53) {
+        bs.Write(0xa2);
+      bs.Write(0xf7);
+    bs.Write(0xf6);
+  this.GenerateSmall(r, depth + 1, bs);
+  bs.Write(0xf5);
+      } else if (v < 80) {
+        bs.Write(r.GetInt32(0x40));
+      } else if (v < 100) {
+        bs.Write(r.GetInt32(0x60));
+      }
+    }
     private void Generate(IRandomGenExtended r, int depth, ByteWriter bs) {
       int majorType = valueMajorTypes[r.GetInt32(valueMajorTypes.Length)];
+      if (depth > 6) {
+        majorType = valueMajorTypesHighDepth[r.GetInt32(
+              valueMajorTypesHighDepth.Length)];
+      }
       if (bs.ByteLength > 2000000) {
         majorType = valueMajorTypesHighLength[r.GetInt32(
               valueMajorTypesHighLength.Length)];
       }
-      if (majorType == 3 || majorType == 2) {
+      if (majorType == 3 || majorType == 2) { // Byte and text strings
         int len = r.GetInt32(1000);
         if (r.GetInt32(50) == 0 && depth < 2) {
           var v = (long)r.GetInt32(100000) * r.GetInt32(100000);
           len = (int)(v / 100000);
-        }
-        if (depth > 6) {
+        } else if (depth > 6) {
           len = r.GetInt32(100) == 0 ? 1 : 0;
+        } else if (depth > 2) {
+          len = r.GetInt32(16) + 1;
         }
         // TODO: Ensure key uniqueness
         if (r.GetInt32(2) == 0) {
@@ -174,11 +210,18 @@ namespace Test {
           }
         }
         return;
-      } else if (majorType == 4 || majorType == 5) {
+      } else if (majorType == 4 || majorType == 5) { // Arrays and maps
         int len = r.GetInt32(8);
         if (r.GetInt32(50) == 0 && depth < 2) {
           var v = (long)r.GetInt32(1000) * r.GetInt32(1000);
           len = (int)(v / 1000);
+        } else if (depth > 6) {
+          len = r.GetInt32(100) == 0 ? 1 : 0;
+        } else if (depth > 2) {
+          len = r.GetInt32(3) + 1;
+        }
+        if (depth > 6) {
+          len = r.GetInt32(100) < 50 ? 1 : (r.GetInt32(100) < 10 ? 2 : 0);
         }
         bool indefiniteLength = r.GetInt32(2) == 0;
         if (indefiniteLength) {
@@ -187,7 +230,11 @@ namespace Test {
           GenerateArgument(r, majorType, len, bs);
         }
         for (int i = 0; i < len; ++i) {
-          this.Generate(r, depth + 1, bs);
+          if (depth > 6) {
+            this.GenerateSmall(r, depth + 1, bs);
+          } else {
+            this.Generate(r, depth + 1, bs);
+          }
           if (majorType == 5) {
             this.Generate(r, depth + 1, bs);
           }
@@ -229,7 +276,7 @@ namespace Test {
           }
           break;
       }
-      if (majorType == 6) {
+      if (majorType == 6) { // Tags
         this.Generate(r, depth + 1, bs);
       }
     }

@@ -7942,12 +7942,8 @@ CBORObjectTypeTextStringAscii)) {
       if (listACount != listBCount) {
         return listACount < listBCount ? -1 : 1;
       }
-      var sortedASet = new List<CBORObject>(mapA.Keys);
-      var sortedBSet = new List<CBORObject>(mapB.Keys);
-      // DebugUtility.Log("---sorting mapA's keys");
-      // sortedASet.Sort();
-      // DebugUtility.Log("---sorting mapB's keys");
-      // sortedBSet.Sort();
+      var sortedASet = new List<CBORObject>(PropertyMap.GetSortedKeys(mapA));
+      var sortedBSet = new List<CBORObject>(PropertyMap.GetSortedKeys(mapB));
       // DebugUtility.Log("---done sorting");
       listACount = sortedASet.Count;
       listBCount = sortedBSet.Count;
