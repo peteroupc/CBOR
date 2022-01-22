@@ -5,7 +5,7 @@ using System.Reflection;
 namespace PeterO.DocGen {
     /// <summary>A documentation generator.</summary>
   public static class DocGenerator {
-    public static void Generate(string assemblyFile, string docdir) {
+    internal static void Generate(string assemblyFile, string docdir) {
       if (assemblyFile == null) {
         throw new ArgumentNullException(nameof(assemblyFile));
       }

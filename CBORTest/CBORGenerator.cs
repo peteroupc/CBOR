@@ -156,9 +156,9 @@ namespace Test {
   this.GenerateSmall(r, depth + 1, bs);
   bs.Write(0xf5);
       } else if (v < 80) {
-        bs.Write(r.GetInt32(0x40));
+        bs.Write(0x40);
       } else if (v < 100) {
-        bs.Write(r.GetInt32(0x60));
+        bs.Write(0x60);
       }
     }
     private void Generate(IRandomGenExtended r, int depth, ByteWriter bs) {

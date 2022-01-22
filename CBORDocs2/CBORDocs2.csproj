@@ -13,7 +13,8 @@
     <ProjectReference Include='..\CBORDocs\CBORDocs.csproj'/>
   <AdditionalFiles Include='stylecop.json'/><AdditionalFiles Include='rules.ruleset'/></ItemGroup>
       <ItemGroup>
-        <PackageReference Include='Microsoft.CodeAnalysis.NetAnalyzers' PrivateAssets='All' Version='5.0.3'/>
+        <PackageReference Include='Microsoft.CodeAnalysis.NetAnalyzers' PrivateAssets='All' Version='5.0.3'/><PackageReference Include='PeterO.URIUtility' Version='1.0.0'/>
+  <PackageReference Include='PeterO.DataUtilities' Version='1.1.0'/>
         <PackageReference Include='StyleCop.Analyzers' PrivateAssets='All' Version='1.2.0-beta.354'/>
       </ItemGroup>
    </Project>
