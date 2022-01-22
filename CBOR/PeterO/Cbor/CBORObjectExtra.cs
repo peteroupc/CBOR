@@ -421,12 +421,13 @@ namespace PeterO.Cbor {
     /// object, which can be null.
     /// <para><b>NOTE:</b> For security reasons, whenever possible, an
     /// application should not base this parameter on user input or other
-    /// externally supplied data unless the application limits this
-    /// parameter's inputs to types specially handled by this method (such
-    /// as <c>int</c> or <c>String</c> ) and/or to plain-old-data types
-    /// (POCO or POJO types) within the control of the application. If the
-    /// plain-old-data type references other data types, those types should
-    /// likewise meet either criterion above.</para>.</param>
+    /// externally supplied data, and whenever possible, the application
+    /// should limit this parameter's inputs to types specially handled by
+    /// this method (such as <c>int</c> or <c>String</c> ) and/or to
+    /// plain-old-data types (POCO or POJO types) within the control of the
+    /// application. If the plain-old-data type references other data
+    /// types, those types should likewise meet either criterion
+    /// above.</para>.</param>
     /// <param name='tag'>A 64-bit integer that specifies a tag number. The
     /// tag number 55799 can be used to mark a "self-described CBOR"
     /// object. This document does not attempt to list all CBOR tags and

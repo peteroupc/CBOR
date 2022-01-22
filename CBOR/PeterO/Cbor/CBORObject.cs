@@ -2616,12 +2616,13 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// arbitrary object, which can be null.
     /// <para><b>NOTE:</b> For security reasons, whenever possible, an
     /// application should not base this parameter on user input or other
-    /// externally supplied data unless the application limits this
-    /// parameter's inputs to types specially handled by this method (such
-    /// as <c>int</c> or <c>String</c> ) and/or to plain-old-data types
-    /// (POCO or POJO types) within the control of the application. If the
-    /// plain-old-data type references other data types, those types should
-    /// likewise meet either criterion above.</para>.</param>
+    /// externally supplied data, and whenever possible, the application
+    /// should limit this parameter's inputs to types specially handled by
+    /// this method (such as <c>int</c> or <c>String</c> ) and/or to
+    /// plain-old-data types (POCO or POJO types) within the control of the
+    /// application. If the plain-old-data type references other data
+    /// types, those types should likewise meet either criterion
+    /// above.</para>.</param>
     /// <returns>A CBOR object corresponding to the given object. Returns
     /// CBORObject.Null if the object is null.</returns>
     public static CBORObject FromObject(object obj) {
@@ -2635,12 +2636,13 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// arbitrary object.
     /// <para><b>NOTE:</b> For security reasons, whenever possible, an
     /// application should not base this parameter on user input or other
-    /// externally supplied data unless the application limits this
-    /// parameter's inputs to types specially handled by this method (such
-    /// as <c>int</c> or <c>String</c> ) and/or to plain-old-data types
-    /// (POCO or POJO types) within the control of the application. If the
-    /// plain-old-data type references other data types, those types should
-    /// likewise meet either criterion above.</para>.</param>
+    /// externally supplied data, and whenever possible, the application
+    /// should limit this parameter's inputs to types specially handled by
+    /// this method (such as <c>int</c> or <c>String</c> ) and/or to
+    /// plain-old-data types (POCO or POJO types) within the control of the
+    /// application. If the plain-old-data type references other data
+    /// types, those types should likewise meet either criterion
+    /// above.</para>.</param>
     /// <param name='options'>An object containing options to control how
     /// certain objects are converted to CBOR objects.</param>
     /// <returns>A CBOR object corresponding to the given object. Returns
@@ -2660,12 +2662,13 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// arbitrary object.
     /// <para><b>NOTE:</b> For security reasons, whenever possible, an
     /// application should not base this parameter on user input or other
-    /// externally supplied data unless the application limits this
-    /// parameter's inputs to types specially handled by this method (such
-    /// as <c>int</c> or <c>String</c> ) and/or to plain-old-data types
-    /// (POCO or POJO types) within the control of the application. If the
-    /// plain-old-data type references other data types, those types should
-    /// likewise meet either criterion above.</para>.</param>
+    /// externally supplied data, and whenever possible, the application
+    /// should limit this parameter's inputs to types specially handled by
+    /// this method (such as <c>int</c> or <c>String</c> ) and/or to
+    /// plain-old-data types (POCO or POJO types) within the control of the
+    /// application. If the plain-old-data type references other data
+    /// types, those types should likewise meet either criterion
+    /// above.</para>.</param>
     /// <param name='mapper'>An object containing optional converters to
     /// convert objects of certain types to CBOR objects.</param>
     /// <returns>A CBOR object corresponding to the given object. Returns
@@ -2857,14 +2860,15 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// <para><b>NOTE:</b>
     ///  For security reasons, whenever possible, an
     /// application should not base this parameter on user input or other
-    /// externally supplied data unless the application limits this
-    /// parameter's inputs to types specially handled by this method (such
-    /// as <c>int</c>
+    /// externally supplied data, and whenever possible, the application
+    /// should limit this parameter's inputs to types specially handled by
+    /// this method (such as <c>int</c>
     ///  or <c>String</c>
-    ///  ) and/or to plain-old-data types
-    /// (POCO or POJO types) within the control of the application. If the
-    /// plain-old-data type references other data types, those types should
-    /// likewise meet either criterion above.</para>
+    ///  ) and/or to
+    /// plain-old-data types (POCO or POJO types) within the control of the
+    /// application. If the plain-old-data type references other data
+    /// types, those types should likewise meet either criterion
+    /// above.</para>
     /// .</param>
     /// <param name='mapper'>An object containing optional converters to
     /// convert objects of certain types to CBOR objects. Can be
@@ -3119,12 +3123,13 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// an arbitrary object, which can be null.
     /// <para><b>NOTE:</b> For security reasons, whenever possible, an
     /// application should not base this parameter on user input or other
-    /// externally supplied data unless the application limits this
-    /// parameter's inputs to types specially handled by this method (such
-    /// as <c>int</c> or <c>String</c> ) and/or to plain-old-data types
-    /// (POCO or POJO types) within the control of the application. If the
-    /// plain-old-data type references other data types, those types should
-    /// likewise meet either criterion above.</para>.</param>
+    /// externally supplied data, and whenever possible, the application
+    /// should limit this parameter's inputs to types specially handled by
+    /// this method (such as <c>int</c> or <c>String</c> ) and/or to
+    /// plain-old-data types (POCO or POJO types) within the control of the
+    /// application. If the plain-old-data type references other data
+    /// types, those types should likewise meet either criterion
+    /// above.</para>.</param>
     /// <param name='bigintTag'>Tag number. The tag number 55799 can be
     /// used to mark a "self-described CBOR" object. This document does not
     /// attempt to list all CBOR tags and their meanings. An up-to-date
@@ -3187,12 +3192,13 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// name='valueObValue'/> is an arbitrary object, which can be null.
     /// <para><b>NOTE:</b> For security reasons, whenever possible, an
     /// application should not base this parameter on user input or other
-    /// externally supplied data unless the application limits this
-    /// parameter's inputs to types specially handled by this method (such
-    /// as <c>int</c> or <c>String</c> ) and/or to plain-old-data types
-    /// (POCO or POJO types) within the control of the application. If the
-    /// plain-old-data type references other data types, those types should
-    /// likewise meet either criterion above.</para>.</param>
+    /// externally supplied data, and whenever possible, the application
+    /// should limit this parameter's inputs to types specially handled by
+    /// this method (such as <c>int</c> or <c>String</c> ) and/or to
+    /// plain-old-data types (POCO or POJO types) within the control of the
+    /// application. If the plain-old-data type references other data
+    /// types, those types should likewise meet either criterion
+    /// above.</para>.</param>
     /// <param name='smallTag'>A 32-bit integer that specifies a tag
     /// number. The tag number 55799 can be used to mark a "self-described
     /// CBOR" object. This document does not attempt to list all CBOR tags
@@ -4395,12 +4401,13 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// be null.
     /// <para><b>NOTE:</b> For security reasons, whenever possible, an
     /// application should not base this parameter on user input or other
-    /// externally supplied data unless the application limits this
-    /// parameter's inputs to types specially handled by this method (such
-    /// as <c>int</c> or <c>String</c> ) and/or to plain-old-data types
-    /// (POCO or POJO types) within the control of the application. If the
-    /// plain-old-data type references other data types, those types should
-    /// likewise meet either criterion above.</para>.</param>
+    /// externally supplied data, and whenever possible, the application
+    /// should limit this parameter's inputs to types specially handled by
+    /// this method (such as <c>int</c> or <c>String</c> ) and/or to
+    /// plain-old-data types (POCO or POJO types) within the control of the
+    /// application. If the plain-old-data type references other data
+    /// types, those types should likewise meet either criterion
+    /// above.</para>.</param>
     /// <param name='output'>A writable data stream.</param>
     /// <param name='options'>CBOR options for encoding the CBOR object to
     /// bytes.</param>
@@ -4463,12 +4470,13 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// arbitrary object. Can be null.
     /// <para><b>NOTE:</b> For security reasons, whenever possible, an
     /// application should not base this parameter on user input or other
-    /// externally supplied data unless the application limits this
-    /// parameter's inputs to types specially handled by this method (such
-    /// as <c>int</c> or <c>String</c> ) and/or to plain-old-data types
-    /// (POCO or POJO types) within the control of the application. If the
-    /// plain-old-data type references other data types, those types should
-    /// likewise meet either criterion above.</para>.</param>
+    /// externally supplied data, and whenever possible, the application
+    /// should limit this parameter's inputs to types specially handled by
+    /// this method (such as <c>int</c> or <c>String</c> ) and/or to
+    /// plain-old-data types (POCO or POJO types) within the control of the
+    /// application. If the plain-old-data type references other data
+    /// types, those types should likewise meet either criterion
+    /// above.</para>.</param>
     /// <param name='outputStream'>A writable data stream.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='outputStream'/> is null.</exception>
