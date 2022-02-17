@@ -382,7 +382,7 @@ options) {
     }
 
     private static CBORObject FromBytesB(byte[] b, CBOREncodeOptions options) {
-      using (var ms = new System.IO.MemoryStream(b)) {
+      using (var ms = new Test.DelayingStream(b)) {
         CBORObject o = CBORObject.Read(ms, options);
         if (ms.Position != ms.Length) {
           throw new CBORException("not at EOF");
@@ -406,7 +406,7 @@ options) {
     }
 
     private static CBORObject FromBytesB(byte[] b) {
-      using (var ms = new System.IO.MemoryStream(b)) {
+      using (var ms = new Test.DelayingStream(b)) {
         CBORObject o = CBORObject.Read(ms);
         if (ms.Position != ms.Length) {
           throw new CBORException("not at EOF");

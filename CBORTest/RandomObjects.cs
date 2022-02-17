@@ -30,7 +30,7 @@ namespace Test {
     public static byte[] RandomUtf8Bytes(
       IRandomGenExtended rg,
       bool jsonSafe) {
-      using (var ms = new MemoryStream()) {
+      using (var ms = new Test.DelayingStream()) {
         if (rg == null) {
           throw new ArgumentNullException(nameof(rg));
         }

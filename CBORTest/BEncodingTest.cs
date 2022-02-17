@@ -10,7 +10,7 @@ namespace Test {
   public class BEncodingTest {
     private static CBORObject EncodingFromBytes(byte[] b) {
       try {
-        using (var s = new MemoryStream(b)) {
+        using (var s = new Test.DelayingStream(b)) {
           return BEncoding.Read(s);
         }
       } catch (IOException ex) {
@@ -20,7 +20,7 @@ namespace Test {
 
     private static byte[] EncodingToBytes(CBORObject b) {
       try {
-        using (var ms = new MemoryStream()) {
+        using (var ms = new Test.DelayingStream()) {
           BEncoding.Write(b, ms);
           return ms.ToArray();
         }
