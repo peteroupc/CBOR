@@ -223,7 +223,7 @@ namespace Test {
         }
         return;
       }
-      using (var ms = new MemoryStream(bytes)) {
+      using (var ms = new Test.DelayingStream(bytes)) {
         try {
           CBORObject.ReadJSON(ms, opt);
           Assert.Fail("Should have failed: str = " + str);
@@ -254,7 +254,7 @@ namespace Test {
       JSONOptions options) {
       byte[] bytes = DataUtilities.GetUtf8Bytes(str, false);
       try {
-        using (var ms = new MemoryStream(bytes)) {
+        using (var ms = new Test.DelayingStream(bytes)) {
           CBORObject obj = options == null ? CBORObject.ReadJSON(ms) :
             CBORObject.ReadJSON(ms, options);
           CBORObject obj2 = options == null ? CBORObject.FromJSONString(str) :
@@ -2017,7 +2017,7 @@ namespace Test {
       CBORObject[] objs;
       byte[] bytes;
       bytes = new byte[] { 0 };
-      using (var ms = new MemoryStream(bytes)) {
+      using (var ms = new Test.DelayingStream(bytes)) {
         objs = null;
         try {
           objs = CBORObject.ReadSequence(ms);
@@ -2029,7 +2029,7 @@ namespace Test {
       Assert.AreEqual(1, objs.Length);
       Assert.AreEqual(CBORObject.FromObject(0), objs[0]);
       bytes = new byte[] { 0, 1, 2 };
-      using (var ms = new MemoryStream(bytes)) {
+      using (var ms = new Test.DelayingStream(bytes)) {
         objs = null;
         try {
           objs = CBORObject.ReadSequence(ms);
@@ -2043,7 +2043,7 @@ namespace Test {
       Assert.AreEqual(CBORObject.FromObject(1), objs[1]);
       Assert.AreEqual(CBORObject.FromObject(2), objs[2]);
       bytes = new byte[] { 0, 1, 0x61 };
-      using (var ms = new MemoryStream(bytes)) {
+      using (var ms = new Test.DelayingStream(bytes)) {
         try {
           CBORObject.ReadSequence(ms);
           Assert.Fail("Should have failed");
@@ -2055,7 +2055,7 @@ namespace Test {
         }
       }
       bytes = new byte[] { 0x61 };
-      using (var ms = new MemoryStream(bytes)) {
+      using (var ms = new Test.DelayingStream(bytes)) {
         try {
           CBORObject.ReadSequence(ms);
           Assert.Fail("Should have failed");
@@ -2067,7 +2067,7 @@ namespace Test {
         }
       }
       bytes = new byte[] { 0, 1, 0x61, 0x41 };
-      using (var ms = new MemoryStream(bytes)) {
+      using (var ms = new Test.DelayingStream(bytes)) {
         objs = null;
         try {
           objs = CBORObject.ReadSequence(ms);
@@ -2081,7 +2081,7 @@ namespace Test {
       Assert.AreEqual(CBORObject.FromObject(1), objs[1]);
       Assert.AreEqual(CBORObject.FromObject("A"), objs[2]);
       bytes = new byte[] { };
-      using (var ms = new MemoryStream(bytes)) {
+      using (var ms = new Test.DelayingStream(bytes)) {
         objs = null;
         try {
           objs = CBORObject.ReadSequence(ms);
@@ -2100,7 +2100,7 @@ namespace Test {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      using (var ms = new MemoryStream(bytes)) {
+      using (var ms = new Test.DelayingStream(bytes)) {
         try {
           CBORObject.ReadSequence(ms, null);
           Assert.Fail("Should have failed");
@@ -2128,17 +2128,17 @@ namespace Test {
           TestCommon.AssertEqualsHashCode(
             cbor,
             CBORObject.DecodeFromBytes(bytes));
-          using (var ms = new MemoryStream()) {
+          using (var ms = new Test.DelayingStream()) {
             cbor.WriteTo(ms, options);
             bytes = ms.ToArray();
             Assert.AreEqual(9, bytes.Length);
           }
-          using (var ms = new MemoryStream()) {
+          using (var ms = new Test.DelayingStream()) {
             CBORObject.Write(dbl, ms, options);
             bytes = ms.ToArray();
             Assert.AreEqual(9, bytes.Length);
           }
-          using (var ms = new MemoryStream()) {
+          using (var ms = new Test.DelayingStream()) {
             CBORObject.Write(cbor, ms, options);
             bytes = ms.ToArray();
             Assert.AreEqual(9, bytes.Length);
@@ -2149,12 +2149,12 @@ namespace Test {
             cbor2,
             CBORObject.DecodeFromBytes(bytes));
           Assert.AreEqual(10, bytes.Length);
-          using (var ms = new MemoryStream()) {
+          using (var ms = new Test.DelayingStream()) {
             cbor2.WriteTo(ms, options);
             bytes = ms.ToArray();
             Assert.AreEqual(10, bytes.Length);
           }
-          using (var ms = new MemoryStream()) {
+          using (var ms = new Test.DelayingStream()) {
             CBORObject.Write(cbor2, ms, options);
             bytes = ms.ToArray();
             Assert.AreEqual(10, bytes.Length);
@@ -2165,12 +2165,12 @@ namespace Test {
           TestCommon.AssertEqualsHashCode(
             cbor2,
             CBORObject.DecodeFromBytes(bytes));
-          using (var ms = new MemoryStream()) {
+          using (var ms = new Test.DelayingStream()) {
             cbor2.WriteTo(ms, options);
             bytes = ms.ToArray();
             Assert.AreEqual(10, bytes.Length);
           }
-          using (var ms = new MemoryStream()) {
+          using (var ms = new Test.DelayingStream()) {
             CBORObject.Write(cbor2, ms, options);
             bytes = ms.ToArray();
             Assert.AreEqual(10, bytes.Length);
@@ -3977,7 +3977,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        using (var ms2 = new MemoryStream(new byte[] { 0 })) {
+        using (var ms2 = new Test.DelayingStream(new byte[] { 0 })) {
           try {
             CBORObject.Read(ms2, null);
             Assert.Fail("Should have failed");
@@ -3995,7 +3995,7 @@ namespace Test {
     }
 
     public static void ExpectJsonSequenceError(byte[] bytes) {
-      using (var ms = new MemoryStream(bytes)) {
+      using (var ms = new Test.DelayingStream(bytes)) {
         try {
           CBORObject.ReadJSONSequence(ms);
           Assert.Fail("Should have failed");
@@ -4010,7 +4010,7 @@ namespace Test {
 
     public static void ExpectJsonSequenceZero(byte[] bytes) {
       try {
-        using (var ms = new MemoryStream(bytes)) {
+        using (var ms = new Test.DelayingStream(bytes)) {
           string ss = TestCommon.ToByteArrayString(bytes);
           CBORObject[] array = CBORObject.ReadJSONSequence(ms);
           Assert.AreEqual(0, array.Length, ss);
@@ -4022,7 +4022,7 @@ namespace Test {
 
     public static void ExpectJsonSequenceOne(byte[] bytes, CBORObject o1) {
       try {
-        using (var ms = new MemoryStream(bytes)) {
+        using (var ms = new Test.DelayingStream(bytes)) {
           string ss = TestCommon.ToByteArrayString(bytes);
           CBORObject[] array = CBORObject.ReadJSONSequence(ms);
           Assert.AreEqual(1, array.Length, ss);
@@ -4038,7 +4038,7 @@ namespace Test {
       CBORObject o1,
       CBORObject o2) {
       try {
-        using (var ms = new MemoryStream(bytes)) {
+        using (var ms = new Test.DelayingStream(bytes)) {
           string ss = TestCommon.ToByteArrayString(bytes);
           CBORObject[] array = CBORObject.ReadJSONSequence(ms);
           Assert.AreEqual(2, array.Length, ss);
@@ -4162,7 +4162,7 @@ namespace Test {
     [Test]
     public void TestReadJSON() {
       try {
-        using (var ms2 = new MemoryStream(new byte[] { 0x30 })) {
+        using (var ms2 = new Test.DelayingStream(new byte[] { 0x30 })) {
           try {
             CBORObject.ReadJSON(ms2, (CBOREncodeOptions)null);
             Assert.Fail("Should have failed");
@@ -4182,9 +4182,9 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-        using (var ms = new MemoryStream(new byte[] {
-          0xef, 0xbb, 0xbf,
-          0x7b, 0x7d,
+        using (var ms = new Test.DelayingStream(new byte[] {
+          0xef, 0xbb,
+          0xbf, 0x7b, 0x7d,
         })) {
           try {
             CBORObject.ReadJSON(ms);
@@ -4194,9 +4194,9 @@ namespace Test {
           }
         }
         // whitespace followed by BOM
-        using (var ms2 = new MemoryStream(new byte[] {
-          0x20, 0xef, 0xbb,
-          0xbf, 0x7b, 0x7d,
+        using (var ms2 = new Test.DelayingStream(new byte[] {
+          0x20, 0xef,
+          0xbb, 0xbf, 0x7b, 0x7d,
         })) {
           try {
             CBORObject.ReadJSON(ms2);
@@ -4208,7 +4208,10 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-        using (var ms2a = new MemoryStream(new byte[] { 0x7b, 0x05, 0x7d })) {
+        using (var ms2a = new Test.DelayingStream(new byte[] {
+          0x7b, 0x05,
+          0x7d,
+        })) {
           try {
             CBORObject.ReadJSON(ms2a);
             Assert.Fail("Should have failed");
@@ -4219,7 +4222,10 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-        using (var ms2b = new MemoryStream(new byte[] { 0x05, 0x7b, 0x7d })) {
+        using (var ms2b = new Test.DelayingStream(new byte[] {
+          0x05, 0x7b,
+          0x7d,
+        })) {
           try {
             CBORObject.ReadJSON(ms2b);
             Assert.Fail("Should have failed");
@@ -4231,9 +4237,9 @@ namespace Test {
           }
         }
         // two BOMs
-        using (var ms3 = new MemoryStream(new byte[] {
-          0xef, 0xbb, 0xbf,
-          0xef, 0xbb, 0xbf, 0x7b, 0x7d,
+        using (var ms3 = new Test.DelayingStream(new byte[] {
+          0xef, 0xbb,
+          0xbf, 0xef, 0xbb, 0xbf, 0x7b, 0x7d,
         })) {
           try {
             CBORObject.ReadJSON(ms3);
@@ -4245,8 +4251,9 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0, 0, 0xfe, 0xff, 0,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0, 0, 0xfe,
+          0xff, 0,
           0,
           0,
           0x74, 0, 0, 0, 0x72, 0, 0, 0, 0x75, 0, 0, 0,
@@ -4254,22 +4261,25 @@ namespace Test {
         })) {
           Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0, 0, 0, 0x74, 0, 0,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0, 0, 0,
+          0x74, 0, 0,
           0, 0x72, 0,
           0, 0, 0x75, 0, 0, 0, 0x65,
         })) {
           Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0xff, 0xfe, 0, 0,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0xff, 0xfe,
+          0, 0,
           0x74, 0, 0, 0,
           0x72, 0, 0, 0, 0x75, 0, 0, 0, 0x65, 0, 0, 0,
         })) {
           Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0x74, 0, 0, 0, 0x72,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0x74, 0, 0,
+          0, 0x72,
           0,
           0,
           0,
@@ -4277,21 +4287,24 @@ namespace Test {
         })) {
           Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0xfe, 0xff, 0, 0x74,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0xfe, 0xff,
+          0, 0x74,
           0, 0x72, 0,
           0x75, 0, 0x65,
         })) {
           Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0, 0x74, 0, 0x72, 0,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0, 0x74, 0,
+          0x72, 0,
           0x75, 0, 0x65,
         })) {
           Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0xff, 0xfe, 0x74, 0,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0xff, 0xfe,
+          0x74, 0,
           0x72,
           0,
           0x75,
@@ -4299,26 +4312,28 @@ namespace Test {
         })) {
           Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0x74, 0, 0x72, 0,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0x74, 0,
+          0x72, 0,
           0x75, 0, 0x65, 0,
         })) {
           Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0xef, 0xbb, 0xbf,
-          0x74, 0x72, 0x75, 0x65,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0xef, 0xbb,
+          0xbf, 0x74, 0x72, 0x75, 0x65,
         })) {
           Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0x74, 0x72, 0x75,
-          0x65,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0x74, 0x72,
+          0x75, 0x65,
         })) {
           Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0, 0, 0xfe, 0xff, 0,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0, 0, 0xfe,
+          0xff, 0,
           0, 0, 0x22,
           0, 1, 0, 0, 0, 0, 0, 0x22,
         })) {
@@ -4329,8 +4344,9 @@ namespace Test {
               stringTemp);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0, 0, 0, 0x22, 0, 1,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0, 0, 0,
+          0x22, 0, 1,
           0, 0, 0, 0,
           0, 0x22,
         })) {
@@ -4341,8 +4357,9 @@ namespace Test {
               stringTemp);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0xff, 0xfe, 0, 0,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0xff, 0xfe,
+          0, 0,
           0x22, 0, 0, 0,
           0, 0, 1, 0, 0x22, 0, 0, 0,
         })) {
@@ -4353,8 +4370,9 @@ namespace Test {
               stringTemp);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0x22, 0, 0, 0, 0, 0,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0x22, 0, 0,
+          0, 0, 0,
           1, 0, 0x22,
           0,
           0, 0,
@@ -4366,7 +4384,7 @@ namespace Test {
               stringTemp);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] {
+        using (var msjson = new Test.DelayingStream(new byte[] {
           0xfe, 0xff, 0,
           0x22, 0xd8,
           0,
@@ -4379,8 +4397,9 @@ namespace Test {
               stringTemp);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0, 0x22, 0xd8, 0,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0, 0x22,
+          0xd8, 0,
           0xdc, 0, 0, 0x22,
         })) {
           {
@@ -4390,8 +4409,9 @@ namespace Test {
               stringTemp);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0xff, 0xfe, 0x22, 0,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0xff, 0xfe,
+          0x22, 0,
           0, 0xd8, 0,
           0xdc, 0x22, 0,
         })) {
@@ -4402,8 +4422,9 @@ namespace Test {
               stringTemp);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0x22, 0, 0, 0xd8, 0,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0x22, 0, 0,
+          0xd8, 0,
           0xdc, 0x22, 0,
         })) {
           {
@@ -4413,8 +4434,9 @@ namespace Test {
               stringTemp);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0, 0, 0xfe, 0xff, 0,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0, 0, 0xfe,
+          0xff, 0,
           0, 0, 0x22,
           0, 0, 0xd8, 0, 0, 0, 0, 0x22,
         })) {
@@ -4428,8 +4450,9 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0, 0, 0, 0x22, 0, 0,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0, 0, 0,
+          0x22, 0, 0,
           0xd8, 0, 0,
           0,
           0, 0x22,
@@ -4444,8 +4467,9 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0xff, 0xfe, 0, 0,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0xff, 0xfe,
+          0, 0,
           0x22, 0, 0, 0,
           0, 0xd8, 0, 0, 0x22, 0, 0, 0,
         })) {
@@ -4459,8 +4483,9 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0x22, 0, 0, 0, 0,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0x22, 0, 0,
+          0, 0,
           0xd8,
           0,
           0,
@@ -4476,8 +4501,9 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0xfe, 0xff, 0, 0x22,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0xfe, 0xff,
+          0, 0x22,
           0, 0xdc, 0,
           0xdc, 0, 0, 0x22,
         })) {
@@ -4491,8 +4517,9 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0, 0x22, 0, 0xdc, 0,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0, 0x22, 0,
+          0xdc, 0,
           0xdc, 0, 0,
           0x22,
         })) {
@@ -4506,8 +4533,9 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0xff, 0xfe, 0x22, 0,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0xff, 0xfe,
+          0x22, 0,
           0, 0xdc, 0,
           0xdc, 0x22, 0,
         })) {
@@ -4521,8 +4549,9 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0x22, 0, 0, 0xdc, 0,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0x22, 0, 0,
+          0xdc, 0,
           0xdc, 0x22, 0,
         })) {
           try {
@@ -4535,7 +4564,7 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] { 0xfc })) {
+        using (var msjson = new Test.DelayingStream(new byte[] { 0xfc })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -4546,7 +4575,7 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] { 0, 0 })) {
+        using (var msjson = new Test.DelayingStream(new byte[] { 0, 0 })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -4558,9 +4587,9 @@ namespace Test {
           }
         }
         // Illegal UTF-16
-        using (var msjson = new MemoryStream(new byte[] {
-          0xfe, 0xff, 0x20,
-          0x20, 0x20,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0xfe, 0xff,
+          0x20, 0x20, 0x20,
         })) {
           try {
             CBORObject.ReadJSON(msjson);
@@ -4572,9 +4601,9 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0xff, 0xfe, 0x20,
-          0x20, 0x20,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0xff, 0xfe,
+          0x20, 0x20, 0x20,
         })) {
           try {
             CBORObject.ReadJSON(msjson);
@@ -4586,9 +4615,9 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0xfe, 0xff, 0xd8,
-          0x00,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0xfe, 0xff,
+          0xd8, 0x00,
         })) {
           try {
             CBORObject.ReadJSON(msjson);
@@ -4600,9 +4629,9 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0xfe, 0xff, 0xdc,
-          0x00,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0xfe, 0xff,
+          0xdc, 0x00,
         })) {
           try {
             CBORObject.ReadJSON(msjson);
@@ -4614,9 +4643,9 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0xfe, 0xff, 0xd8,
-          0x00, 0x20, 0x00,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0xfe, 0xff,
+          0xd8, 0x00, 0x20, 0x00,
         })) {
           try {
             CBORObject.ReadJSON(msjson);
@@ -4628,9 +4657,9 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0xfe, 0xff, 0xdc,
-          0x00, 0x20, 0x00,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0xfe, 0xff,
+          0xdc, 0x00, 0x20, 0x00,
         })) {
           try {
             CBORObject.ReadJSON(msjson);
@@ -4642,9 +4671,9 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0xfe, 0xff, 0xd8,
-          0x00, 0xd8, 0x00,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0xfe, 0xff,
+          0xd8, 0x00, 0xd8, 0x00,
         })) {
           try {
             CBORObject.ReadJSON(msjson);
@@ -4656,9 +4685,9 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0xfe, 0xff, 0xdc,
-          0x00, 0xd8, 0x00,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0xfe, 0xff,
+          0xdc, 0x00, 0xd8, 0x00,
         })) {
           try {
             CBORObject.ReadJSON(msjson);
@@ -4670,9 +4699,9 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0xfe, 0xff, 0xdc,
-          0x00, 0xd8, 0x00, 0xdc, 0x00,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0xfe, 0xff,
+          0xdc, 0x00, 0xd8, 0x00, 0xdc, 0x00,
         })) {
           try {
             CBORObject.ReadJSON(msjson);
@@ -4684,9 +4713,9 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0xfe, 0xff, 0xdc,
-          0x00, 0xdc, 0x00,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0xfe, 0xff,
+          0xdc, 0x00, 0xdc, 0x00,
         })) {
           try {
             CBORObject.ReadJSON(msjson);
@@ -4699,9 +4728,9 @@ namespace Test {
           }
         }
 
-        using (var msjson = new MemoryStream(new byte[] {
-          0xff, 0xfe, 0x00,
-          0xd8,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0xff, 0xfe,
+          0x00, 0xd8,
         })) {
           try {
             CBORObject.ReadJSON(msjson);
@@ -4713,9 +4742,9 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0xff, 0xfe, 0x00,
-          0xdc,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0xff, 0xfe,
+          0x00, 0xdc,
         })) {
           try {
             CBORObject.ReadJSON(msjson);
@@ -4727,9 +4756,9 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0xff, 0xfe, 0x00,
-          0xd8, 0x00, 0x20,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0xff, 0xfe,
+          0x00, 0xd8, 0x00, 0x20,
         })) {
           try {
             CBORObject.ReadJSON(msjson);
@@ -4741,9 +4770,9 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0xff, 0xfe, 0x00,
-          0xdc, 0x00, 0x20,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0xff, 0xfe,
+          0x00, 0xdc, 0x00, 0x20,
         })) {
           try {
             CBORObject.ReadJSON(msjson);
@@ -4755,9 +4784,9 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0xff, 0xfe, 0x00,
-          0xd8, 0x00, 0xd8,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0xff, 0xfe,
+          0x00, 0xd8, 0x00, 0xd8,
         })) {
           try {
             CBORObject.ReadJSON(msjson);
@@ -4769,9 +4798,9 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0xff, 0xfe, 0x00,
-          0xdc, 0x00, 0xd8,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0xff, 0xfe,
+          0x00, 0xdc, 0x00, 0xd8,
         })) {
           try {
             CBORObject.ReadJSON(msjson);
@@ -4783,9 +4812,9 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0xff, 0xfe, 0x00,
-          0xdc, 0x00, 0xd8, 0x00, 0xdc,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0xff, 0xfe,
+          0x00, 0xdc, 0x00, 0xd8, 0x00, 0xdc,
         })) {
           try {
             CBORObject.ReadJSON(msjson);
@@ -4797,9 +4826,9 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-        using (var msjson = new MemoryStream(new byte[] {
-          0xff, 0xfe, 0x00,
-          0xdc, 0x00, 0xdc,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0xff, 0xfe,
+          0x00, 0xdc, 0x00, 0xdc,
         })) {
           try {
             CBORObject.ReadJSON(msjson);
@@ -4813,8 +4842,9 @@ namespace Test {
         }
 
         // Illegal UTF-32
-        using (var msjson = new MemoryStream(new byte[] {
-          0, 0, 0, 0x20, 0,
+        using (var msjson = new Test.DelayingStream(new byte[] {
+          0, 0, 0,
+          0x20, 0,
         })) {
           try {
             CBORObject.ReadJSON(msjson);
@@ -4892,7 +4922,7 @@ namespace Test {
     }
 
     private static void ReadJsonFail(byte[] msbytes) {
-      using (var msjson = new MemoryStream(msbytes)) {
+      using (var msjson = new Test.DelayingStream(msbytes)) {
         try {
           CBORObject.ReadJSON(msjson);
           Assert.Fail("Should have failed");
@@ -6427,7 +6457,7 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
           AssertWriteThrow(cborTemp1);
-          using (var ms = new MemoryStream()) {
+          using (var ms = new Test.DelayingStream()) {
             CBORObject.Write(longValue, ms);
             CBORObject.Write(cborTemp1, ms);
             cborTemp1.WriteTo(ms);
@@ -6455,7 +6485,7 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
           AssertWriteThrow(cborTemp1);
-          using (var ms = new MemoryStream()) {
+          using (var ms = new Test.DelayingStream()) {
             CBORObject.Write(bigintVal, ms);
             CBORObject.Write(cborTemp1, ms);
             cborTemp1.WriteTo(ms);
@@ -6485,7 +6515,7 @@ namespace Test {
               throw new InvalidOperationException(String.Empty, ex);
             }
             AssertWriteThrow(cborTemp1);
-            using (var ms = new MemoryStream()) {
+            using (var ms = new Test.DelayingStream()) {
               CBORObject.Write(intval, ms);
               CBORObject.Write(cborTemp1, ms);
               cborTemp1.WriteTo(ms);
@@ -6515,7 +6545,7 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
           AssertWriteThrow(cborTemp1);
-          using (var ms = new MemoryStream()) {
+          using (var ms = new Test.DelayingStream()) {
             CBORObject.Write(shortval, ms);
             CBORObject.Write(cborTemp1, ms);
             cborTemp1.WriteTo(ms);
@@ -6544,7 +6574,7 @@ namespace Test {
               throw new InvalidOperationException(String.Empty, ex);
             }
             AssertWriteThrow(cborTemp1);
-            using (var ms = new MemoryStream()) {
+            using (var ms = new Test.DelayingStream()) {
               CBORObject.Write(byteval, ms);
               CBORObject.Write(cborTemp1, ms);
               cborTemp1.WriteTo(ms);
@@ -6580,7 +6610,7 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
           AssertWriteThrow(cborTemp1);
-          using (var ms = new MemoryStream()) {
+          using (var ms = new Test.DelayingStream()) {
             CBORObject.Write(str, ms);
             CBORObject.Write(cborTemp1, ms);
             cborTemp1.WriteTo(ms);
@@ -6607,7 +6637,7 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
           AssertWriteThrow(cborTemp1);
-          using (var ms = new MemoryStream()) {
+          using (var ms = new Test.DelayingStream()) {
             CBORObject.Write("test", ms);
             CBORObject.Write(cborTemp1, ms);
             cborTemp1.WriteTo(ms);
@@ -6636,7 +6666,7 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
           AssertWriteThrow(cborTemp1);
-          using (var ms = new MemoryStream()) {
+          using (var ms = new Test.DelayingStream()) {
             CBORObject.Write(str, ms);
             CBORObject.Write(cborTemp1, ms);
             cborTemp1.WriteTo(ms);
@@ -6674,7 +6704,7 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
           AssertWriteThrow(cborTemp1);
-          using (var ms = new MemoryStream()) {
+          using (var ms = new Test.DelayingStream()) {
             CBORObject.Write(0.0f, ms);
             CBORObject.Write(cborTemp1, ms);
             cborTemp1.WriteTo(ms);
@@ -6700,7 +6730,7 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
           AssertWriteThrow(cborTemp1);
-          using (var ms = new MemoryStream()) {
+          using (var ms = new Test.DelayingStream()) {
             CBORObject.Write(2.6, ms);
             CBORObject.Write(cborTemp1, ms);
             cborTemp1.WriteTo(ms);
@@ -6727,7 +6757,7 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
           AssertWriteThrow(cborTemp1);
-          using (var ms = new MemoryStream()) {
+          using (var ms = new Test.DelayingStream()) {
             CBORObject.Write(cbor, ms);
             CBORObject.Write(cborTemp1, ms);
             cborTemp1.WriteTo(ms);
@@ -6754,7 +6784,7 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
           AssertWriteThrow(cborTemp1);
-          using (var ms = new MemoryStream()) {
+          using (var ms = new Test.DelayingStream()) {
             CBORObject.Write(aobj, ms);
             CBORObject.Write(cborTemp1, ms);
             cborTemp1.WriteTo(ms);
@@ -6777,7 +6807,7 @@ namespace Test {
       try {
         for (var i = 0; i < 256; ++i) {
           var b = (byte)(i & 0xff);
-          using (var ms = new MemoryStream()) {
+          using (var ms = new Test.DelayingStream()) {
             CBORObject.Write((byte)b, ms);
             CBORObject cobj = CBORObject.DecodeFromBytes(ms.ToArray());
             Assert.AreEqual(i, cobj.AsInt32());
@@ -6801,7 +6831,7 @@ namespace Test {
               throw new InvalidOperationException(String.Empty, ex);
             }
             AssertWriteThrow(cborTemp1);
-            using (var ms = new MemoryStream()) {
+            using (var ms = new Test.DelayingStream()) {
               CBORObject.Write(ef, ms);
               CBORObject.Write(cborTemp1, ms);
               cborTemp1.WriteTo(ms);
@@ -6830,7 +6860,7 @@ namespace Test {
               throw new InvalidOperationException(String.Empty, ex);
             }
             AssertWriteThrow(cborTemp1);
-            using (var ms = new MemoryStream()) {
+            using (var ms = new Test.DelayingStream()) {
               CBORObject.Write(ef, ms);
               CBORObject.Write(cborTemp1, ms);
               cborTemp1.WriteTo(ms);
@@ -6862,7 +6892,7 @@ namespace Test {
               throw new InvalidOperationException(String.Empty, ex);
             }
             AssertWriteThrow(cborTemp1);
-            using (var ms = new MemoryStream()) {
+            using (var ms = new Test.DelayingStream()) {
               CBORObject.Write(ed, ms);
               CBORObject.Write(cborTemp1, ms);
               cborTemp1.WriteTo(ms);
@@ -6897,7 +6927,7 @@ namespace Test {
               throw new InvalidOperationException(String.Empty, ex);
             }
             AssertWriteThrow(cborTemp1);
-            using (var ms = new MemoryStream()) {
+            using (var ms = new Test.DelayingStream()) {
               CBORObject.Write(ed, ms);
               CBORObject.Write(cborTemp1, ms);
               cborTemp1.WriteTo(ms);
@@ -6935,7 +6965,7 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
           AssertWriteThrow(cborTemp1);
-          using (var ms = new MemoryStream()) {
+          using (var ms = new Test.DelayingStream()) {
             CBORObject.Write(ef, ms);
             CBORObject.Write(cborTemp1, ms);
             cborTemp1.WriteTo(ms);
@@ -6962,7 +6992,7 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
           AssertWriteThrow(cborTemp1);
-          using (var ms = new MemoryStream()) {
+          using (var ms = new Test.DelayingStream()) {
             CBORObject.Write(ef, ms);
             CBORObject.Write(cborTemp1, ms);
             cborTemp1.WriteTo(ms);
@@ -6989,7 +7019,7 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
           AssertWriteThrow(cborTemp1);
-          using (var ms = new MemoryStream()) {
+          using (var ms = new Test.DelayingStream()) {
             CBORObject.Write(er, ms);
             CBORObject.Write(cborTemp1, ms);
             cborTemp1.WriteTo(ms);
@@ -7017,7 +7047,7 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
           AssertWriteThrow(cborTemp1);
-          using (var ms = new MemoryStream()) {
+          using (var ms = new Test.DelayingStream()) {
             CBORObject.Write(er, ms);
             CBORObject.Write(cborTemp1, ms);
             cborTemp1.WriteTo(ms);
@@ -7048,7 +7078,7 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
           AssertWriteThrow(cborTemp1);
-          using (var ms = new MemoryStream()) {
+          using (var ms = new Test.DelayingStream()) {
             CBORObject.Write(ed, ms);
             CBORObject.Write(cborTemp1, ms);
             cborTemp1.WriteTo(ms);
@@ -7076,7 +7106,7 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
           AssertWriteThrow(cborTemp1);
-          using (var ms = new MemoryStream()) {
+          using (var ms = new Test.DelayingStream()) {
             CBORObject.Write(bigint, ms);
             CBORObject.Write(cborTemp1, ms);
             cborTemp1.WriteTo(ms);
@@ -7096,25 +7126,25 @@ namespace Test {
     public void TestWriteJSON() {
       // not implemented yet
       try {
-        using (var ms = new MemoryStream()) {
+        using (var ms = new Test.DelayingStream()) {
           CBORObject.WriteJSON(CBORObject.True, ms);
           byte[] bytes = ms.ToArray();
           string str = DataUtilities.GetUtf8String(bytes, false);
           Assert.AreEqual("true", str);
         }
-        using (var ms = new MemoryStream()) {
+        using (var ms = new Test.DelayingStream()) {
           CBORObject.True.WriteJSONTo(ms);
           byte[] bytes = ms.ToArray();
           string str = DataUtilities.GetUtf8String(bytes, false);
           Assert.AreEqual("true", str);
         }
-        using (var ms = new MemoryStream()) {
+        using (var ms = new Test.DelayingStream()) {
           CBORObject.WriteJSON(CBORObject.False, ms);
           byte[] bytes = ms.ToArray();
           string str = DataUtilities.GetUtf8String(bytes, false);
           Assert.AreEqual("false", str);
         }
-        using (var ms = new MemoryStream()) {
+        using (var ms = new Test.DelayingStream()) {
           CBORObject.False.WriteJSONTo(ms);
           byte[] bytes = ms.ToArray();
           string str = DataUtilities.GetUtf8String(bytes, false);
@@ -7187,7 +7217,7 @@ namespace Test {
 
     private static void AssertReadThree(byte[] bytes) {
       try {
-        using (var ms = new MemoryStream(bytes)) {
+        using (var ms = new Test.DelayingStream(bytes)) {
           CBORObject cbor1, cbor2, cbor3;
           cbor1 = CBORObject.Read(ms);
           cbor2 = CBORObject.Read(ms);
@@ -7206,7 +7236,7 @@ namespace Test {
 
     private static void AssertReadThree(byte[] bytes, CBORObject cbor) {
       try {
-        using (var ms = new MemoryStream(bytes)) {
+        using (var ms = new Test.DelayingStream(bytes)) {
           CBORObject cbor1, cbor2, cbor3;
           cbor1 = CBORObject.Read(ms);
           cbor2 = CBORObject.Read(ms);
@@ -7285,7 +7315,7 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
           AssertWriteThrow(cborTemp1);
-          using (var ms = new MemoryStream()) {
+          using (var ms = new Test.DelayingStream()) {
             CBORObject.Write(obj, ms);
             CBORObject.Write(ToObjectTest.TestToFromObjectRoundTrip(obj), ms);
             ToObjectTest.TestToFromObjectRoundTrip(obj).WriteTo(ms);
@@ -7319,7 +7349,7 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
           AssertWriteThrow(cborTemp1);
-          using (var ms = new MemoryStream()) {
+          using (var ms = new Test.DelayingStream()) {
             CBORObject.Write(obj, ms);
             CBORObject.Write(ToObjectTest.TestToFromObjectRoundTrip(obj), ms);
             ToObjectTest.TestToFromObjectRoundTrip(obj).WriteTo(ms);
@@ -7382,7 +7412,7 @@ namespace Test {
           Assert.Fail(ex.ToString());
           throw new InvalidOperationException(String.Empty, ex);
         }
-        using (var ms = new MemoryStream()) {
+        using (var ms = new Test.DelayingStream()) {
           try {
             CBORObject.WriteValue(ms, -1, 0);
             Assert.Fail("Should have failed");
@@ -7627,14 +7657,14 @@ namespace Test {
           bytes[2] = (byte)(i & 0xff);
           CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
           if (!cbor.AsNumber().IsNaN()) {
-            using (var ms = new MemoryStream()) {
+            using (var ms = new Test.DelayingStream()) {
               CBORObject.WriteFloatingPointValue(
                 ms,
                 cbor.AsDouble(),
                 2);
               TestCommon.AssertByteArraysEqual(bytes, ms.ToArray());
             }
-            using (var ms = new MemoryStream()) {
+            using (var ms = new Test.DelayingStream()) {
               CBORObject.WriteFloatingPointValue(
                 ms,
                 cbor.AsSingle(),
@@ -7653,14 +7683,14 @@ namespace Test {
 
           CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
           if (!cbor.AsNumber().IsNaN()) {
-            using (var ms = new MemoryStream()) {
+            using (var ms = new Test.DelayingStream()) {
               CBORObject.WriteFloatingPointValue(
                 ms,
                 cbor.AsDouble(),
                 4);
               TestCommon.AssertByteArraysEqual(bytes, ms.ToArray());
             }
-            using (var ms = new MemoryStream()) {
+            using (var ms = new Test.DelayingStream()) {
               CBORObject.WriteFloatingPointValue(
                 ms,
                 cbor.AsSingle(),
@@ -7678,7 +7708,7 @@ namespace Test {
           }
           CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
           if (!cbor.AsNumber().IsNaN()) {
-            using (var ms = new MemoryStream()) {
+            using (var ms = new Test.DelayingStream()) {
               CBORObject.WriteFloatingPointValue(
                 ms,
                 cbor.AsDouble(),
@@ -7687,7 +7717,7 @@ namespace Test {
             }
             CBORObject c2 = null;
             byte[] c2bytes = null;
-            using (var ms = new MemoryStream()) {
+            using (var ms = new Test.DelayingStream()) {
               CBORObject.WriteFloatingPointValue(
                 ms,
                 cbor.AsSingle(),
@@ -7696,7 +7726,7 @@ namespace Test {
               c2 = CBORObject.DecodeFromBytes(
                   c2bytes);
             }
-            using (var ms = new MemoryStream()) {
+            using (var ms = new Test.DelayingStream()) {
               CBORObject.WriteFloatingPointValue(
                 ms,
                 c2.AsSingle(),
@@ -7704,7 +7734,7 @@ namespace Test {
               TestCommon.AssertByteArraysEqual(c2bytes, ms.ToArray());
             }
             if (i == 0) {
-              using (var ms = new MemoryStream()) {
+              using (var ms = new Test.DelayingStream()) {
                 try {
                   CBORObject.WriteFloatingPointValue(ms, cbor.AsSingle(), 5);
                   Assert.Fail("Should have failed");

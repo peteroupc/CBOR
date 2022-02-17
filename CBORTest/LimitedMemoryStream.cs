@@ -5,7 +5,7 @@ namespace Test {
   /// <summary>Writable stream with a maximum supported byte
   /// size.</summary>
   public sealed class LimitedMemoryStream : Stream {
-    private readonly MemoryStream ms;
+    private readonly Test.DelayingStream ms;
     private readonly int maxSize;
 
     public LimitedMemoryStream(int maxSize) {
@@ -13,7 +13,7 @@ namespace Test {
         throw new ArgumentException(
           "maxSize (" + maxSize + ") is not greater or equal to 0");
       }
-      this.ms = new MemoryStream();
+      this.ms = new Test.DelayingStream();
       this.maxSize = maxSize;
     }
 

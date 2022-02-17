@@ -1797,7 +1797,7 @@ namespace Test {
       o = CBORObject.FromJSONString("[1.5,2.6,3.7,4.0,222.22]");
       double actual = o[0].AsDouble();
       Assert.AreEqual((double)1.5, actual);
-      using (var ms2a = new MemoryStream(new byte[] { })) {
+      using (var ms2a = new Test.DelayingStream(new byte[] { })) {
         try {
           CBORObject.ReadJSON(ms2a);
           Assert.Fail("Should have failed A");
@@ -1808,7 +1808,7 @@ namespace Test {
           throw new InvalidOperationException(String.Empty, ex);
         }
       }
-      using (var ms2b = new MemoryStream(new byte[] { 0x20 })) {
+      using (var ms2b = new Test.DelayingStream(new byte[] { 0x20 })) {
         try {
           CBORObject.ReadJSON(ms2b);
           Assert.Fail("Should have failed B");
@@ -2134,7 +2134,7 @@ namespace Test {
         Assert.Fail();
       }
       try {
-        using (var lms = new MemoryStream()) {
+        using (var lms = new Test.DelayingStream()) {
           root.WriteTo(lms, encodeOptions);
           Assert.Fail("Should have failed");
         }
@@ -2361,7 +2361,7 @@ namespace Test {
     }
 
     public static void TestRandomOne(byte[] array) {
-      using (var inputStream = new MemoryStream(array)) {
+      using (var inputStream = new Test.DelayingStream(array)) {
         while (inputStream.Position != inputStream.Length) {
           long oldPos = 0L;
           try {
@@ -2434,10 +2434,10 @@ namespace Test {
     private static void TestReadWriteIntOne(int val) {
       try {
         {
-          using (var ms = new MemoryStream()) {
+          using (var ms = new Test.DelayingStream()) {
             MiniCBOR.WriteInt32(val, ms);
             byte[] msarray = ms.ToArray();
-            using (var ms2 = new MemoryStream(msarray)) {
+            using (var ms2 = new Test.DelayingStream(msarray)) {
               Assert.AreEqual(
                 val,
                 MiniCBOR.ReadInt32(ms2),
@@ -2446,10 +2446,10 @@ namespace Test {
           }
         }
         {
-          using (var ms = new MemoryStream()) {
+          using (var ms = new Test.DelayingStream()) {
             CBORObject.Write(val, ms);
             byte[] msarray = ms.ToArray();
-            using (var ms2 = new MemoryStream(msarray)) {
+            using (var ms2 = new Test.DelayingStream(msarray)) {
               Assert.AreEqual(
                 val,
                 MiniCBOR.ReadInt32(ms2),
@@ -2458,7 +2458,7 @@ namespace Test {
           }
         }
       } catch (IOException ioex) {
-        Assert.Fail(ioex.Message);
+        Assert.Fail(ioex.Message+ " val=" + val);
       }
     }
 
@@ -4243,7 +4243,7 @@ namespace Test {
           Assert.AreEqual(0, cbor[0].TagCount);
         }
         try {
-          using (var ms = new MemoryStream()) {
+          using (var ms = new Test.DelayingStream()) {
             CBORObject.Write(ef, ms);
             cbor = CBORObject.DecodeFromBytes(ms.ToArray());
             Assert.IsTrue(cbor.IsNumber, cbor.ToString());
@@ -4275,7 +4275,7 @@ namespace Test {
             Assert.AreEqual(CBORType.Integer, cbor[0].Type);
             Assert.AreEqual(0, cbor[0].TagCount);
           }
-          using (var ms2 = new MemoryStream()) {
+          using (var ms2 = new Test.DelayingStream()) {
             CBORObject.Write(ed, ms2);
             cbor = CBORObject.DecodeFromBytes(ms2.ToArray());
             Assert.IsTrue(cbor.IsNumber, cbor.ToString());
@@ -4336,7 +4336,7 @@ namespace Test {
       }
       options = new CBOREncodeOptions("allowempty=true");
       Assert.AreEqual(null, CBORObject.DecodeFromBytes(bytes, options));
-      using (var ms = new MemoryStream(bytes)) {
+      using (var ms = new Test.DelayingStream(bytes)) {
         options = new CBOREncodeOptions(String.Empty);
         try {
           CBORObject.Read(ms, options);
@@ -4348,7 +4348,7 @@ namespace Test {
           throw new InvalidOperationException(String.Empty, ex);
         }
       }
-      using (var ms = new MemoryStream(bytes)) {
+      using (var ms = new Test.DelayingStream(bytes)) {
         options = new CBOREncodeOptions("allowempty=true");
         Assert.AreEqual(null, CBORObject.Read(ms, options));
       }
@@ -4843,7 +4843,7 @@ namespace Test {
     public static void TestWriteToJSON(CBORObject obj) {
       CBORObject objA = null;
       string jsonString = String.Empty;
-      using (var ms = new MemoryStream()) {
+      using (var ms = new Test.DelayingStream()) {
         try {
           if (obj == null) {
             throw new ArgumentNullException(nameof(obj));

@@ -235,6 +235,30 @@ untagged.AsNumber().IsNegative()) {
       return null;
     }
 
+    private static void ReadHelper(
+      Stream stream,
+      byte[] bytes,
+      int offset,
+      int count) {
+      // Assert.CheckBuffer(bytes, offset, count);
+           int t = count;
+           var tpos = offset;
+           while (t > 0) {
+              int rcount = stream.Read(bytes, tpos, t);
+              if (rcount <= 0) {
+                 throw new CBORException("Premature end of data");
+              }
+              if (rcount > t) {
+                 throw new CBORException("Internal error");
+              }
+              tpos = checked(tpos + rcount);
+              t = checked(t - rcount);
+           }
+           if (t != 0) {
+             throw new CBORException("Internal error");
+           }
+    }
+
     public CBORObject ReadForFirstByte(int firstbyte) {
       if (this.depth > 500) {
         throw new CBORException("Too deeply nested");
@@ -313,10 +337,8 @@ untagged.AsNumber().IsNegative()) {
         // include the first byte because GetFixedLengthObject
         // will assume it exists for some head bytes
         data[0] = unchecked((byte)firstbyte);
-        if (expectedLength > 1 &&
-          this.stream.Read(data, 1, expectedLength - 1) != expectedLength
-          - 1) {
-          throw new CBORException("Premature end of data");
+        if (expectedLength > 1) {
+          ReadHelper(this.stream, data, 1, expectedLength - 1);
         }
         CBORObject cbor = CBORObject.GetFixedLengthObject(firstbyte, data);
         if (this.stringRefs != null && (type == 2 || type == 3)) {
@@ -341,8 +363,7 @@ untagged.AsNumber().IsNegative()) {
                 }
                 long len = ReadDataLength(this.stream, nextByte, 2);
                 if ((len >> 63) != 0 || len > Int32.MaxValue) {
-                  throw new CBORException("Length" + ToUnsignedEInteger(len)
-+
+                throw new CBORException("Length" + ToUnsignedEInteger(len) +
                     " is bigger than supported ");
                 }
                 if (nextByte != 0x40) {
@@ -515,9 +536,7 @@ untagged.AsNumber().IsNegative()) {
       if (uadditional <= 0x10000) {
         // Simple case: small size
         var data = new byte[(int)uadditional];
-        if (stream.Read(data, 0, data.Length) != data.Length) {
-          throw new CBORException("Premature end of stream");
-        }
+        ReadHelper(stream, data, 0, data.Length);
         if (outputStream != null) {
           outputStream.Write(data, 0, data.Length);
           return null;
@@ -529,9 +548,7 @@ untagged.AsNumber().IsNegative()) {
         if (outputStream != null) {
           while (total > 0) {
             int bufsize = Math.Min(tmpdata.Length, total);
-            if (stream.Read(tmpdata, 0, bufsize) != bufsize) {
-              throw new CBORException("Premature end of stream");
-            }
+            ReadHelper(stream, tmpdata, 0, bufsize);
             outputStream.Write(tmpdata, 0, bufsize);
             total -= bufsize;
           }
@@ -540,9 +557,7 @@ untagged.AsNumber().IsNegative()) {
         using (var ms = new MemoryStream(0x10000)) {
           while (total > 0) {
             int bufsize = Math.Min(tmpdata.Length, total);
-            if (stream.Read(tmpdata, 0, bufsize) != bufsize) {
-              throw new CBORException("Premature end of stream");
-            }
+            ReadHelper(stream, tmpdata, 0, bufsize);
             ms.Write(tmpdata, 0, bufsize);
             total -= bufsize;
           }
@@ -586,9 +601,7 @@ untagged.AsNumber().IsNegative()) {
           return tmp;
         }
         case 25: {
-          if (stream.Read(data, 0, 2) != 2) {
-            throw new CBORException("Premature end of data");
-          }
+          ReadHelper(stream, data, 0, 2);
           int lowAdditional = ((int)(data[0] & (int)0xff)) << 8;
           lowAdditional |= (int)(data[1] & (int)0xff);
           if (!allowNonShortest && lowAdditional < 256) {
@@ -597,9 +610,7 @@ untagged.AsNumber().IsNegative()) {
           return lowAdditional;
         }
         case 26: {
-          if (stream.Read(data, 0, 4) != 4) {
-            throw new CBORException("Premature end of data");
-          }
+          ReadHelper(stream, data, 0, 4);
           long uadditional = ((long)(data[0] & 0xffL)) << 24;
           uadditional |= ((long)(data[1] & 0xffL)) << 16;
           uadditional |= ((long)(data[2] & 0xffL)) << 8;
@@ -610,9 +621,7 @@ untagged.AsNumber().IsNegative()) {
           return uadditional;
         }
         case 27: {
-          if (stream.Read(data, 0, 8) != 8) {
-            throw new CBORException("Premature end of data");
-          }
+          ReadHelper(stream, data, 0, 8);
           // Treat return value as an unsigned integer
           long uadditional = ((long)(data[0] & 0xffL)) << 56;
           uadditional |= ((long)(data[1] & 0xffL)) << 48;

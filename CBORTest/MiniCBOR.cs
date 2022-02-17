@@ -21,6 +21,30 @@ namespace Test {
       return BitConverter.ToDouble(BitConverter.GetBytes(value), 0);
     }
 
+    private static void ReadHelper(
+      Stream stream,
+      byte[] bytes,
+      int offset,
+      int count) {
+      // Assert.CheckBuffer(bytes, offset, count);
+           int t = count;
+           var tpos = offset;
+           while (t > 0) {
+              int rcount = stream.Read(bytes, tpos, t);
+              if (rcount <= 0) {
+                 throw new IOException("Premature end of data");
+              }
+              if (rcount > t) {
+                 throw new IOException("Internal error");
+              }
+              tpos = checked(tpos + rcount);
+              t = checked(t - rcount);
+           }
+           if (t != 0) {
+             throw new IOException("Internal error");
+           }
+    }
+
     private static float HalfPrecisionToSingle(int value) {
       int negvalue = (value >= 0x8000) ? (1 << 31) : 0;
       value &= 0x7fff;
@@ -133,9 +157,7 @@ namespace Test {
       }
       if (kind == 0x19) {
         var bytes = new byte[2];
-        if (stream.Read(bytes, 0, bytes.Length) != bytes.Length) {
-          throw new IOException("Premature end of stream");
-        }
+        ReadHelper(stream, bytes, 0, bytes.Length);
         int b = ((int)bytes[0]) & 0xff;
         b <<= 8;
         b |= ((int)bytes[1]) & 0xff;
@@ -143,9 +165,7 @@ namespace Test {
       }
       if (kind == 0x1a || kind == 0x3a) {
         var bytes = new byte[4];
-        if (stream.Read(bytes, 0, bytes.Length) != bytes.Length) {
-          throw new IOException("Premature end of stream");
-        }
+        ReadHelper(stream, bytes, 0, bytes.Length);
         long b = ((long)bytes[0]) & 0xff;
         b <<= 8;
         b |= ((long)bytes[1]) & 0xff;
@@ -160,9 +180,7 @@ namespace Test {
       }
       if (headByte == 0x1b || headByte == 0x3b) {
         var bytes = new byte[8];
-        if (stream.Read(bytes, 0, bytes.Length) != bytes.Length) {
-          throw new IOException("Premature end of stream");
-        }
+        ReadHelper(stream, bytes, 0, bytes.Length);
         long b;
         if (check32bit && (bytes[0] != 0 || bytes[1] != 0 || bytes[2] != 0 ||
             bytes[3] != 0)) {
@@ -198,9 +216,7 @@ namespace Test {
       if (headByte == 0xf9) {
         // Half-precision
         var bytes = new byte[2];
-        if (stream.Read(bytes, 0, bytes.Length) != bytes.Length) {
-          throw new IOException("Premature end of stream");
-        }
+        ReadHelper(stream, bytes, 0, bytes.Length);
         b = ((int)bytes[0]) & 0xff;
         b <<= 8;
         b |= ((int)bytes[1]) & 0xff;
@@ -208,9 +224,7 @@ namespace Test {
       }
       if (headByte == 0xfa) {
         var bytes = new byte[4];
-        if (stream.Read(bytes, 0, bytes.Length) != bytes.Length) {
-          throw new IOException("Premature end of stream");
-        }
+        ReadHelper(stream, bytes, 0, bytes.Length);
         b = ((int)bytes[0]) & 0xff;
         b <<= 8;
         b |= ((int)bytes[1]) & 0xff;
@@ -222,9 +236,7 @@ namespace Test {
       }
       if (headByte == 0xfb) {
         var bytes = new byte[8];
-        if (stream.Read(bytes, 0, bytes.Length) != bytes.Length) {
-          throw new IOException("Premature end of stream");
-        }
+        ReadHelper(stream, bytes, 0, bytes.Length);
         long lb;
         lb = ((long)bytes[0]) & 0xff;
         lb <<= 8;
