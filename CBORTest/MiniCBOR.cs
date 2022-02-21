@@ -26,10 +26,33 @@ namespace Test {
       byte[] bytes,
       int offset,
       int count) {
-      // Assert.CheckBuffer(bytes, offset, count);
-           int t = count;
-           var tpos = offset;
-           while (t > 0) {
+      if (bytes == null) {
+        throw new ArgumentNullException(nameof(bytes));
+      }
+      if (offset < 0) {
+        throw new ArgumentException("\"offset\" (" + offset + ") is not" +
+"\u0020greater or equal to 0");
+      }
+      if (offset > bytes.Length) {
+        throw new ArgumentException("\"offset\" (" + offset + ") is not less" +
+"\u0020or equal to " + bytes.Length);
+      }
+      if (count < 0) {
+        throw new ArgumentException(" (" + count + ") is not greater or" +
+"\u0020equal to 0");
+      }
+      if (count > bytes.Length) {
+        throw new ArgumentException(" (" + count + ") is not less or equal" +
+"\u0020to " + bytes.Length);
+      }
+      if (bytes.Length - offset < count) {
+        throw new ArgumentException("\"bytes\" + \"'s length minus \" +" +
+"\u0020offset (" + (bytes.Length - offset) + ") is not greater or equal to " +
+count);
+      }
+      int t = count;
+      int tpos = offset;
+      while (t > 0) {
               int rcount = stream.Read(bytes, tpos, t);
               if (rcount <= 0) {
                  throw new IOException("Premature end of data");

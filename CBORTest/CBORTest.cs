@@ -2458,7 +2458,7 @@ namespace Test {
           }
         }
       } catch (IOException ioex) {
-        Assert.Fail(ioex.Message+ " val=" + val);
+        Assert.Fail(ioex.Message + " val=" + val);
       }
     }
 
