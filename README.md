@@ -314,7 +314,7 @@ Here are specifications by this implementation's author on certain CBOR tags:
 
 * Tag 30: [Rational numbers](http://peteroupc.github.io/CBOR/rational.html)
 * Tag 257: [Binary MIME messages](http://peteroupc.github.io/CBOR/binarymime.html)
-* Tag 38: [Language-tagged strings](http://peteroupc.github.io/CBOR/langtags.html)
+* Tag 38: [Language-tagged strings](http://peteroupc.github.io/CBOR/langtags.html) (Expected to be superseded by an RFC; see the Internet Draft draft-ietf-core-problem-details).
 * Tag 264 and 265: [Arbitrary-exponent numbers](http://peteroupc.github.io/CBOR/bigfrac.html)
 
 Acknowledgments
