@@ -1280,7 +1280,7 @@ typeof(System.Collections.ObjectModel.ReadOnlyCollection<>)
         #endif
         if (dictObject == null) {
           if (t.Equals(typeof(IDictionary))) {
-            dictObject = new Dictionary<object, object>();
+            dictObject = new SortedDictionary<object, object>();
             keyType = typeof(object);
             valueType = typeof(object);
           }

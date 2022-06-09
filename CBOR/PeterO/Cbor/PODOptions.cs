@@ -100,7 +100,8 @@ namespace PeterO.Cbor {
     /// with that word, then the name is converted to camel case, meaning
     /// the first letter in the name is converted to a basic lower-case
     /// letter if it's a basic upper-case letter ("A" to "Z"). (For
-    /// example, "Name" and "IsName" both become "name".)</item>
+    /// example, "Name" and "IsName" both become "name", and "IsIsName"
+    /// becomes "isName".)</item>
     /// <item>In the Java version: For each eligible method name, the word
     /// "get", "set", or "is" is removed from the name if the name starts
     /// with that word, then the name is converted to camel case. (For

@@ -4281,22 +4281,22 @@ A byte array containing the converted in JSON format.
 The example code given below (originally written in C# for the.NET version) can be used to write out certain keys of a CBOR map in a given order to a JSON string.
 
     /* Generates a JSON string of 'mapObj' whose keys are in the order
-                 given
-                 in 'keys' . Only keys found in 'keys' will be written if they exist in
-                 'mapObj'. */ private static string KeysToJSONMap(CBORObject mapObj,
-                 IList<CBORObject> keys) { if (mapObj == null) { throw new
-                 ArgumentNullException)nameof(mapObj));}
-                 if (keys == null) { throw new
-                 ArgumentNullException)nameof(keys));}
-                 if (obj.Type != CBORType.Map) {
-                 throw new ArgumentException("'obj' is not a map."); } StringBuilder
-                 builder = new StringBuilder(); var first = true; builder.Append("{");
-                 for (CBORObject key in keys) { if (mapObj.ContainsKey(key)) { if
-                 (!first) {builder.Append(", ");} var keyString=(key.CBORType ==
-                 CBORType.String) ? key.AsString() : key.ToJSONString();
-                 builder.Append(CBORObject.FromObject(keyString) .ToJSONString())
-                 .Append(":").Append(mapObj[key].ToJSONString()); first=false; } } return
-                 builder.Append("}").ToString(); }
+                given
+                in 'keys' . Only keys found in 'keys' will be written if they exist in
+                'mapObj'. */ private static string KeysToJSONMap(CBORObject mapObj,
+                IList<CBORObject> keys) { if (mapObj == null) { throw new
+                ArgumentNullException)nameof(mapObj));}
+                if (keys == null) { throw new
+                ArgumentNullException)nameof(keys));}
+                if (obj.Type != CBORType.Map) {
+                throw new ArgumentException("'obj' is not a map."); } StringBuilder
+                builder = new StringBuilder(); var first = true; builder.Append("{");
+                for (CBORObject key in keys) { if (mapObj.ContainsKey(key)) { if
+                (!first) {builder.Append(", ");} var keyString=(key.CBORType ==
+                CBORType.String) ? key.AsString() : key.ToJSONString();
+                builder.Append(CBORObject.FromObject(keyString) .ToJSONString())
+                .Append(":").Append(mapObj[key].ToJSONString()); first=false; } } return
+                builder.Append("}").ToString(); }
 
  .
 
