@@ -277,10 +277,10 @@ of a given class into CBOR objects.
        var tm=new CBORTypeMapper().AddConverter(
            typeof(CPOD3),
            new CPOD3Converter());
-       // Serialize CBOR object
+       // Serialize CBOR object, passing the type mapper
        var cbor=CBORObject.FromObject(cp2,tm);
-       // Deserialize CBOR object
-       cp2=cbor.ToObject<CPOD3>();
+       // Deserialize CBOR object, passing the type mapper
+       cp2=cbor.ToObject<CPOD3>(tm);
 ```
 
 NOTE: All code samples in this section are released to the Public Domain,
