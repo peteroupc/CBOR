@@ -25,6 +25,7 @@
 *.less eol=lf
 *.xml eol=lf
 *.ruleset eol=lf
+*.yml eol=lf
 .gitattributes eol=lf
 .gitignore eol=lf
 .npmignore eol=lf
